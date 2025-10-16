@@ -1,11 +1,63 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Academic Claims Extraction Schema v2.0",
+  "title": "Academic Claims Extraction Schema v2.1",
   "description": "Schema for extracting and assessing claims from research papers with hierarchical organization and dual-layer uncertainty tracking",
-  "version": "2.0",
+  "version": "2.1",
   "last_updated": "2025-10-16",
+  "changelog": {
+    "2.1": "Post-calibration refinements: Formalized Type 3 (disciplinary_assumption) extraction; added optional COI field to implicit arguments",
+    "2.0": "Initial comprehensive schema with dual-layer uncertainty and four-level hierarchy"
+  },
   
   "definitions": {
+    "implicit_argument": {
+      "type": "object",
+      "description": "Unstated assumptions, logical implications, or deep disciplinary assumptions underlying claims",
+      "required": ["ia_id", "argument", "type", "status", "supports_claims"],
+      "properties": {
+        "ia_id": {
+          "type": "string",
+          "pattern": "^IA[0-9]+$",
+          "description": "Unique identifier (IA001, IA002, ...)"
+        },
+        "argument": {
+          "type": "string",
+          "description": "The implicit argument, assumption, or logical implication"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["logical_implication", "unstated_assumption", "bridging_claim", "disciplinary_assumption"],
+          "description": "Type of implicit argument. disciplinary_assumption = Type 3 deep assumptions (meta-level, paradigmatic)"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["unstated_but_implied", "assumed_without_acknowledgment", "disciplinary_assumption"],
+          "description": "How the implicit argument functions in the paper"
+        },
+        "supports_claims": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "IDs of explicit claims this implicit argument supports"
+        },
+        "assessment_notes": {
+          "type": "string",
+          "description": "Why this implicit argument matters for credibility assessment"
+        },
+        "coi_note": {
+          "type": "string",
+          "description": "Optional: Note if author conflict of interest (e.g., platform developers, funding sources) affects interpretation of this implicit argument"
+        },
+        "location": {
+          "type": "object",
+          "properties": {
+            "section": {"type": "string"},
+            "page": {"type": "integer"},
+            "paragraph": {"type": "integer"}
+          }
+        }
+      }
+    },
+    
     "evidence": {
       "type": "object",
       "description": "Raw observations, measurements, or data points that support claims",
@@ -43,7 +95,7 @@
         },
         "declared_uncertainty": {
           "type": "object",
-          "description": "Uncertainty explicitly declared by authors",
+          "description": "Uncertainty explicitly declared by the paper",
           "properties": {
             "uncertainty_type": {
               "type": "string",
@@ -52,79 +104,52 @@
             },
             "bounded_range": {
               "type": "string",
-              "description": "Range provided by authors (e.g., '50-65 hours', '800-600 BC')"
+              "description": "e.g., '800-600 BC', '50-65 hours'"
             },
             "error_margin": {
               "type": "string",
-              "description": "Statistical error (e.g., '±87', '±2σ')"
+              "description": "e.g., 'Â±87', 'Â±2Ïƒ'"
             },
             "point_estimate_with_error": {
               "type": "string",
-              "description": "Combined format (e.g., '2567 BP ±87', '14.2m ±0.3m')"
+              "description": "e.g., '2567 BP Â±87'"
             },
             "hedging_language": {
               "type": "array",
               "items": {"type": "string"},
-              "description": "Qualifiers used by authors (e.g., 'approximately', 'about', 'ca.', 'estimated', 'roughly')"
+              "description": "Words like 'approximately', 'ca.', 'about', 'estimated'"
             },
             "confidence_level": {
               "type": "string",
-              "description": "Stated confidence (e.g., '95% CI', 'p<0.05', 'high confidence')"
+              "description": "e.g., '95% CI', 'p<0.05'"
             },
             "stated_limitations": {
               "type": "array",
               "items": {"type": "string"},
-              "description": "Limitations explicitly acknowledged by authors"
-            }
-          }
-        },
-        "expected_uncertainty": {
-          "type": "object",
-          "description": "Uncertainty that SHOULD have been declared but wasn't",
-          "properties": {
-            "should_have_error_margin": {
-              "type": "boolean",
-              "description": "Should radiometric/measurement data have ± error?"
-            },
-            "should_have_range": {
-              "type": "boolean",
-              "description": "Should estimate/proxy have bounded range?"
-            },
-            "missing_uncertainty_types": {
-              "type": "array",
-              "items": {"type": "string"},
-              "description": "What types of uncertainty are absent that should be present"
-            },
-            "false_precision_flag": {
-              "type": "boolean",
-              "description": "Is precision overstated given measurement method?"
-            },
-            "assessor_notes": {
-              "type": "string",
-              "description": "Why we expect uncertainty that wasn't declared"
+              "description": "Limitations authors explicitly acknowledge"
             }
           }
         },
         
-        "_comment_assessor_layer": "Our evaluation of this evidence",
+        "_comment_assessor_layer": "Our evaluation of the evidence",
         "assessor_confidence": {
           "type": "string",
           "enum": ["high", "medium", "medium-low", "low"],
-          "description": "How confident WE are about this evidence"
+          "description": "Our confidence in this evidence"
         },
         "assessor_notes": {
           "type": "string",
-          "description": "Why we are/aren't confident; what concerns us about this evidence"
+          "description": "Why we are/aren't confident about this evidence"
         },
         "information_gaps": {
           "type": "array",
           "items": {"type": "string"},
-          "description": "What the paper should have explained but didn't"
+          "description": "Expected information that's missing (e.g., 'No bounded range despite proxy measurement')"
         },
         "extraction_confidence": {
           "type": "string",
           "enum": ["explicit", "inferred", "ambiguous", "assumed"],
-          "description": "How certain we are about our extraction itself"
+          "description": "How confident we are in our extraction"
         },
         "credibility_flags": {
           "type": "array",
@@ -132,7 +157,7 @@
             "type": "string",
             "enum": [
               "TRANSPARENCY_GOOD",
-              "TRANSPARENCY_PARTIAL", 
+              "TRANSPARENCY_PARTIAL",
               "TRANSPARENCY_INCOMPLETE",
               "PRECISION_OVERSTATED",
               "MEASUREMENT_QUALITY_VARIABLE",
@@ -140,22 +165,36 @@
               "UNCERTAINTY_UNACKNOWLEDGED",
               "IMPLICIT_EVIDENCE_UNEXPLAINED"
             ]
-          },
-          "description": "Flags for credibility assessment"
+          }
         },
+        
+        "expected_uncertainty": {
+          "type": "object",
+          "description": "Uncertainty we expect but paper doesn't declare",
+          "properties": {
+            "should_have_error_margin": {"type": "boolean"},
+            "should_have_range": {"type": "boolean"},
+            "missing_uncertainty_types": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "false_precision_flag": {"type": "boolean"},
+            "assessor_notes": {
+              "type": "string",
+              "description": "Why we expect uncertainty that wasn't declared"
+            }
+          }
+        },
+        
         "implicit_evidence": {
           "type": "object",
-          "description": "When evidence exists but is implicit/unstated rather than missing",
+          "description": "When evidence comes from implicit sources like professional judgment",
           "properties": {
             "evidence_type": {
               "type": "string",
-              "enum": ["author_observation", "professional_judgment", "team_consensus", "disciplinary_knowledge", "common_knowledge"],
-              "description": "Type of implicit evidence"
+              "enum": ["author_observation", "professional_judgment", "team_consensus", "disciplinary_knowledge", "common_knowledge"]
             },
-            "explanation_provided": {
-              "type": "boolean",
-              "description": "Did authors explain the implicit evidence basis?"
-            },
+            "explanation_provided": {"type": "boolean"},
             "assessor_notes": {
               "type": "string",
               "description": "Our interpretation of the implicit evidence"
@@ -202,68 +241,56 @@
         "claim_role": {
           "type": "string",
           "enum": ["core", "intermediate", "supporting", "evidence", "background", "transitional", "methodological"],
-          "description": "Role in the paper's argument structure. Four-level hierarchy: core → intermediate → supporting → evidence (plus background/transitional/methodological)"
+          "description": "Role in the paper's argument structure"
         },
         "claim_function": {
           "type": "object",
-          "description": "Function in argument chain - hierarchical to capture multiple roles",
           "properties": {
             "primary_function": {
               "type": "string",
-              "enum": ["premise", "finding", "conclusion", "recommendation"],
-              "description": "Primary role in argument"
+              "enum": ["premise", "finding", "conclusion", "recommendation"]
             },
             "secondary_function": {
               "type": "string",
-              "enum": ["premise", "finding", "conclusion", "recommendation", "none"],
-              "description": "Secondary role if claim serves multiple functions"
+              "enum": ["premise", "finding", "conclusion", "recommendation", "none"]
             }
           }
         },
         "claim_scope": {
           "type": "string",
           "enum": ["project", "domain", "general"],
-          "description": "Scope of generalizability claimed"
+          "description": "Scope of applicability"
         },
         
-        "_comment_claim_nature": "Additional characterization",
+        "_comment_claim_nature": "Characteristics of the claim",
         "claim_nature": {
           "type": "string",
-          "enum": ["quantitative", "qualitative", "mixed", "definitional"],
-          "description": "Whether claim is quantitative or qualitative"
+          "enum": ["quantitative", "qualitative", "mixed", "definitional"]
         },
         "quantitative_details": {
           "type": "object",
-          "description": "Additional details for quantitative claims",
           "properties": {
             "source": {
               "type": "string",
-              "enum": ["measurement", "calculation", "estimate", "statistical"],
-              "description": "How quantitative value was derived"
+              "enum": ["measurement", "calculation", "estimate", "statistical"]
             },
-            "confidence_basis": {
-              "type": "string",
-              "description": "What gives us confidence in the number"
-            },
-            "bounded_range": {
-              "type": "string",
-              "description": "Uncertainty range if provided"
-            },
-            "arithmetic_verifiable": {
-              "type": "boolean",
-              "description": "Can we verify this through calculation?"
-            }
+            "confidence_basis": {"type": "string"},
+            "bounded_range": {"type": "string"},
+            "arithmetic_verifiable": {"type": "boolean"}
           }
         },
         
-        "_comment_author_layer": "Author's presentation of claim",
+        "_comment_author_layer": "What paper states about this claim",
         "author_confidence": {
           "type": "string",
-          "enum": ["definite", "probable", "speculative", "hedged"],
-          "description": "How confidently authors state this claim"
+          "enum": ["definite", "probable", "speculative", "hedged"]
+        },
+        "declared_uncertainty": {
+          "type": "object",
+          "description": "Same structure as evidence declared_uncertainty"
         },
         
-        "_comment_assessor_layer": "Our evaluation of claim",
+        "_comment_assessor_layer": "Our evaluation of the claim",
         "assessment_priority": {
           "type": "string",
           "enum": ["high", "medium", "low", "not_assessed"],
@@ -271,38 +298,34 @@
         },
         "assessor_confidence": {
           "type": "string",
-          "enum": ["high", "medium", "low"],
-          "description": "How confident WE are about this claim"
+          "enum": ["high", "medium", "low"]
         },
-        "assessor_notes": {
-          "type": "string",
-          "description": "Our evaluation notes"
-        },
+        "assessor_notes": {"type": "string"},
         "information_gaps": {
           "type": "array",
-          "items": {"type": "string"},
-          "description": "Expected information not provided"
+          "items": {"type": "string"}
         },
         "extraction_confidence": {
           "type": "string",
-          "enum": ["explicit", "inferred", "ambiguous"],
-          "description": "Confidence in our extraction"
+          "enum": ["explicit", "inferred", "ambiguous"]
         },
         "credibility_flags": {
           "type": "array",
-          "items": {"type": "string"},
-          "description": "Issues for assessment phase"
+          "items": {"type": "string"}
+        },
+        "expected_uncertainty": {
+          "type": "object",
+          "description": "Same structure as evidence expected_uncertainty"
         },
         
-        "_comment_composition": "How claim is built from components",
+        "_comment_composition": "For complex claims composed of multiple elements",
         "composed_of": {
           "type": "object",
-          "description": "Components that make up this claim",
           "properties": {
             "evidence": {
               "type": "array",
               "items": {"type": "string"},
-              "description": "Evidence IDs that support this claim"
+              "description": "Evidence IDs this claim bundles"
             },
             "calculations": {
               "type": "array",
@@ -372,61 +395,31 @@
           "description": "Exact text from paper"
         }
       }
-    },
-    
-    "implicit_argument": {
-      "type": "object",
-      "description": "Unstated assumptions or logical implications",
-      "required": ["ia_id", "argument", "type"],
-      "properties": {
-        "ia_id": {
-          "type": "string",
-          "pattern": "^IA[0-9]+$",
-          "description": "Unique identifier (IA001, IA002, ...)"
-        },
-        "argument": {
-          "type": "string",
-          "description": "The implicit argument being made"
-        },
-        "type": {
-          "type": "string",
-          "enum": ["logical_implication", "unstated_assumption", "bridging_claim", "omitted_caveat"],
-          "description": "Type of implicit argument"
-        },
-        "status": {
-          "type": "string",
-          "enum": ["unstated_but_implied", "assumed_without_acknowledgment", "disciplinary_assumption"],
-          "description": "How this argument relates to paper"
-        },
-        "supports_claims": {
-          "type": "array",
-          "items": {"type": "string"},
-          "description": "Which claims depend on this argument"
-        },
-        "assessment_notes": {
-          "type": "string",
-          "description": "Why this matters for credibility"
-        }
-      }
     }
   },
   
   "type": "object",
+  "required": ["paper_metadata", "evidence", "claims", "implicit_arguments"],
   "properties": {
     "paper_metadata": {
       "type": "object",
+      "required": ["title", "authors", "year"],
       "properties": {
         "title": {"type": "string"},
-        "authors": {"type": "array", "items": {"type": "string"}},
+        "authors": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
         "year": {"type": "integer"},
         "doi": {"type": "string"},
-        "extraction_date": {"type": "string", "format": "date"},
+        "extraction_date": {"type": "string"},
         "extractor": {"type": "string"}
       }
     },
+    
     "expected_information_checklists": {
       "type": "object",
-      "description": "Standard expectations for different claim types - absence of expected information is a transparency flag",
+      "description": "Checklists for identifying missing information in different claim types",
       "properties": {
         "quantitative_claims": {
           "type": "array",
@@ -486,6 +479,7 @@
         }
       }
     },
+    
     "evidence": {
       "type": "array",
       "items": {"$ref": "#/definitions/evidence"}

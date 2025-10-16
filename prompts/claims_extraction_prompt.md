@@ -1,6 +1,6 @@
-# Claims Extraction Prompt v2.0
+# Claims Extraction Prompt v2.1
 **For extracting evidence, claims, and implicit arguments from research papers**
-**Last updated:** October 16, 2025
+**Last updated:** October 16, 2025 (v2.1 - Post-calibration refinements)
 
 ## Overview
 
@@ -24,7 +24,7 @@ Work through the paper systematically, section by section. Focus on WHAT is clai
 
 **Examples:**
 - "Students worked 189.4 hours" (from timestamps)
-- "2567 BP ±87" (radiocarbon date)
+- "2567 BP Â±87" (radiocarbon date)
 - "Pottery sherds from Layer 3"
 
 **CLAIMS** = Require interpretive framing
@@ -45,20 +45,20 @@ Track TWO types of uncertainty:
 
 **LAYER 1: Author-Declared Uncertainty** (what the paper says)
 - Bounded ranges: "800-600 BC", "50-65 hours"
-- Error margins: "2567 BP ±87", "14.2m ±0.3m"
+- Error margins: "2567 BP Â±87", "14.2m Â±0.3m"
 - Hedging language: "approximately", "ca.", "about", "estimated", "roughly"
 - Confidence levels: "95% CI", "p<0.05", "high confidence"
 
 **LAYER 2: Assessor-Expected Uncertainty** (what SHOULD be declared but isn't)
-- Missing error margins on dates (C14 dates without ±)
+- Missing error margins on dates (C14 dates without Â±)
 - False precision (stylistic date as "725 BC" instead of "ca. 725 BC" or "750-700 BC")
 - Absent bounded ranges for estimates
 - Overstated precision given measurement method
 
 **Critical distinction:** 
-- "2567 BP ±87" → good documentation, no flag
-- "2567 BP" → missing error margin, FLAG: should_have_error_margin=true
-- "Iron Age pottery dated to 725 BC" → false precision, FLAG: false_precision_flag=true
+- "2567 BP Â±87" â†’ good documentation, no flag
+- "2567 BP" â†’ missing error margin, FLAG: should_have_error_margin=true
+- "Iron Age pottery dated to 725 BC" â†’ false precision, FLAG: false_precision_flag=true
 
 ### 3. Hierarchical Organization (Four Levels)
 
@@ -95,18 +95,23 @@ Extract unstated reasoning for HIGH-PRIORITY claims only:
 
 **TYPE 1: Logical Implications** (extract these)
 - Direct inferences the paper expects readers to make
-- Example: "X is 3x faster than Y" → [implicit: "X is more efficient"]
+- Example: "X is 3x faster than Y" â†’ [implicit: "X is more efficient"]
 
 **TYPE 2: Unstated Assumptions** (extract these)
 - Essential assumptions never stated
 - Bridge claims that link evidence to conclusions
-- Example: "Students prefer touch-screens" → [implicit: "Preference affects performance"]
+- Example: "Students prefer touch-screens" â†’ [implicit: "Preference affects performance"]
 
-**TYPE 3: Deep Assumptions** (flag but don't fully extract)
+**TYPE 3: Deep Assumptions** (extract and label clearly)
 - Disciplinary background knowledge
-- May require domain expertise to identify
-- Example: "Familiar interfaces" → [implicit: "Familiarity breeds efficiency"]
-- **Action:** Note when you encounter these, but don't spend effort fully extracting unless they're questionable
+- Foundational economic/methodological principles  
+- Meta-level framing assumptions
+- Example: "More features = more value" (assumes completeness > selectivity)
+- Example: "Efficiency is primary selection criterion" (frames decision-making)
+
+Extract using same JSON format but mark type: "disciplinary_assumption"
+
+These provide valuable context for assessment but are evaluated differently than Type 1/2 - they reveal underlying paradigms and values rather than specific logical gaps.
 
 ---
 
@@ -128,8 +133,8 @@ Extract unstated reasoning for HIGH-PRIORITY claims only:
   "declared_uncertainty": {
     "uncertainty_type": "[none_stated | bounded_range | error_margin | stylistic_range | confidence_interval | hedged_language]",
     "bounded_range": "[e.g., '800-600 BC', '50-65 hours']",
-    "error_margin": "[e.g., '±87', '±2σ']",
-    "point_estimate_with_error": "[e.g., '2567 BP ±87']",
+    "error_margin": "[e.g., 'Â±87', 'Â±2Ïƒ']",
+    "point_estimate_with_error": "[e.g., '2567 BP Â±87']",
     "hedging_language": ["approximately", "ca.", "about"],
     "confidence_level": "[e.g., '95% CI', 'p<0.05']",
     "stated_limitations": ["Any limitations authors acknowledge"]
@@ -237,10 +242,12 @@ Extract for HIGH-PRIORITY claims only (core and key intermediate claims):
 {
   "ia_id": "IA###",
   "argument": "[The implicit argument]",
-  "type": "[logical_implication | unstated_assumption | bridging_claim]",
+  "type": "[logical_implication | unstated_assumption | bridging_claim | disciplinary_assumption]",
   "status": "[unstated_but_implied | assumed_without_acknowledgment | disciplinary_assumption]",
   "supports_claims": ["C###"],
-  "assessment_notes": "[Why this matters for credibility]"
+  "assessment_notes": "[Why this matters for credibility]",
+  "coi_note": "[Optional: Note if author COI affects interpretation]",
+  "location": {"section": "", "page": #, "paragraph": #}
 }
 ```
 
@@ -252,6 +259,7 @@ Extract for HIGH-PRIORITY claims only (core and key intermediate claims):
 - Read the abstract and conclusion
 - Identify the 5-10 CORE claims (main thesis)
 - Note the paper's structure
+- Check for any COI declarations (author affiliations, funding sources, platform developers)
 
 ### STEP 2: Section-by-Section Extraction
 
@@ -273,6 +281,7 @@ For each section:
    - What logical implications are unstated?
    - What assumptions must be true for this claim to hold?
    - Are there bridging claims linking evidence to conclusions?
+   - What disciplinary assumptions frame the argument?
 
 4. **Map Relationships**
    - Which claims support which other claims?
@@ -298,6 +307,7 @@ For each section:
 - Are information gaps identified?
 - Are credibility flags appropriate?
 - Do implicit arguments actually support high-priority claims?
+- Note any relevant conflicts of interest if they affect interpretation of implicit arguments
 
 ---
 
@@ -306,40 +316,40 @@ For each section:
 Use these to identify missing information:
 
 ### Quantitative Claims
-☐ Measurement method explained
-☐ Instrument specification or calibration mentioned
-☐ Error margins or confidence intervals provided
-☐ Sample size or n stated
-☐ Bounded ranges for estimates given
-☐ Precision justified given method
-☐ Units clearly stated
+â˜ Measurement method explained
+â˜ Instrument specification or calibration mentioned
+â˜ Error margins or confidence intervals provided
+â˜ Sample size or n stated
+â˜ Bounded ranges for estimates given
+â˜ Precision justified given method
+â˜ Units clearly stated
 
 ### Comparative Claims
-☐ Comparison basis made explicit
-☐ What is held constant specified
-☐ Alternative explanations considered
-☐ Fairness of comparison justified
-☐ Like-for-like comparison (not apples to oranges)
+â˜ Comparison basis made explicit
+â˜ What is held constant specified
+â˜ Alternative explanations considered
+â˜ Fairness of comparison justified
+â˜ Like-for-like comparison (not apples to oranges)
 
 ### Methodological Claims
-☐ Justification for choices provided
-☐ Limitations acknowledged
-☐ Alternatives considered
-☐ Verification evidence provided (or implicit evidence explained)
-☐ Replicability information included
+â˜ Justification for choices provided
+â˜ Limitations acknowledged
+â˜ Alternatives considered
+â˜ Verification evidence provided (or implicit evidence explained)
+â˜ Replicability information included
 
 ### Causal Claims
-☐ Mechanism explained
-☐ Confounds addressed
-☐ Temporal precedence established
-☐ Alternative causes ruled out
-☐ Strength of causal language appropriate to evidence
+â˜ Mechanism explained
+â˜ Confounds addressed
+â˜ Temporal precedence established
+â˜ Alternative causes ruled out
+â˜ Strength of causal language appropriate to evidence
 
 ### Generalizability Claims
-☐ Scope of generalization made explicit
-☐ Evidence supports claimed scope
-☐ Boundary conditions acknowledged
-☐ Population or domain clearly defined
+â˜ Scope of generalization made explicit
+â˜ Evidence supports claimed scope
+â˜ Boundary conditions acknowledged
+â˜ Population or domain clearly defined
 
 ---
 
@@ -369,7 +379,7 @@ Use these standardized flags in the `credibility_flags` array:
    - "ArcGIS proved difficult for novices" = claim about method
 
 3. **Don't miss implicit uncertainty**
-   - "2567 BP" without ± = RED FLAG, not acceptable
+   - "2567 BP" without Â± = RED FLAG, not acceptable
    - "About 50 hours" = declared uncertainty, document the "about"
 
 4. **Don't over-extract background claims**
@@ -383,6 +393,10 @@ Use these standardized flags in the `credibility_flags` array:
 6. **Don't forget location and verbatim quotes**
    - Every evidence/claim needs exact source location
    - Verbatim quotes enable verification
+
+7. **Don't skip Type 3 deep assumptions**
+   - These reveal underlying paradigms and values
+   - Extract them even though they're assessed differently
 
 ---
 
@@ -411,13 +425,14 @@ Produce valid JSON following the schema structure. For each paper:
 ## Quality Criteria
 
 Good extraction should:
-- ✅ Clearly distinguish evidence from claims
-- ✅ Document both declared and expected uncertainty
-- ✅ Identify information gaps systematically
-- ✅ Build clear hierarchical relationships
-- ✅ Extract implicit arguments for high-priority claims
-- ✅ Apply appropriate credibility flags
-- ✅ Include verbatim quotes and precise locations
-- ✅ Flag when evidence quality is variable or unclear
+- âœ… Clearly distinguish evidence from claims
+- âœ… Document both declared and expected uncertainty
+- âœ… Identify information gaps systematically
+- âœ… Build clear hierarchical relationships
+- âœ… Extract implicit arguments (Type 1, 2, AND 3) for high-priority claims
+- âœ… Apply appropriate credibility flags
+- âœ… Include verbatim quotes and precise locations
+- âœ… Flag when evidence quality is variable or unclear
+- âœ… Note relevant conflicts of interest when they affect interpretation
 
 Remember: **The goal is to enable credibility assessment, not to assess credibility yourself. Extract the information needed for others to make informed judgments about the paper's claims.**
