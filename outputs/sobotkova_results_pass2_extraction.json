@@ -1,0 +1,1103 @@
+{
+  "extraction_metadata": {
+    "paper": "Sobotkova et al. 2023",
+    "section": "Results (3.1-3.5)",
+    "extraction_pass": "Pass 2 - Final Corrected Version",
+    "date": "2025-10-18",
+    "rationalization_summary": "Corrected temporal progression handling, removed redundant calculation claim, applied anchor numbers principle, enhanced strategic verbosity. Final reduction: 22.5% from Pass 1.",
+    "pass1_item_count": 80,
+    "pass2_item_count": 61,
+    "reduction_percentage": 23.75,
+    "corrections_applied": [
+      "Separated year-specific omission evidence (E011, E012, E013)",
+      "Removed redundant calculation claim (C005)",
+      "Merged desktop GIS claims (C010+C011)",
+      "Split omissions narrative into aggregate + improvement claims",
+      "Applied anchor numbers throughout claims",
+      "Enhanced claim verbosity for interpretability"
+    ]
+  },
+  
+  "evidence": [
+    {
+      "evidence_id": "E001",
+      "evidence_text": "Across both seasons, customisation, setup, and supervision took about 51 h total, including 36 h from the programmer and 15 h from project staff. Of this, initial customisation and setup before fieldwork was 44 h, while time during fieldwork for map preparation/distribution and supervision was 7 h.",
+      "evidence_type": "Time measurement - total system costs",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": ["C001"],
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "present": true
+      },
+      "expected_uncertainty_missing": ["Precision of time tracking"],
+      "location": {"section": "3.1", "page": 7, "paragraph": 1-3},
+      "verbatim_quote": "Across both seasons, customisation, setup, and supervision took about 51 h, including 36 h from the programmer and 15 from project staff. Of this time, initial customisation and setup time before fieldwork was 44 h, while the time required during fieldwork to prepare and distribute maps, and then supervise participants, was 7 h",
+      "consolidation_metadata": {
+        "consolidation_performed": true,
+        "source_items": ["P1_E001", "P1_E002", "P1_E003", "P1_E004", "P1_E006", "P1_E007", "P1_E008", "P1_E009", "P1_E012", "P1_E013"],
+        "consolidation_type": "phase_aggregation",
+        "information_preserved": "lossy_granularity",
+        "granularity_available": "Paper reports 11 discrete component times (programmer 35h customisation, staff 3h server setup, 1.5h map prep, 2.5h file monitoring, 1h validation dev, 1h field setup, 30min map prep, 1.5h file prep per season)",
+        "rationale": "Individual task times less relevant than phase totals for assessing total investment; all details preserved in source for verification"
+      },
+      "extraction_notes": "Comprehensive time breakdown organized by project phase; includes all activities (development, setup, supervision). For supervision-specific view, see E002."
+    },
+    {
+      "evidence_id": "E002",
+      "evidence_text": "Training and supervision of students took no more than half an hour of staff time per season (≤30 min in 2017, 30 min in 2018). Additional supervision was included in the 7h of fieldwork activities.",
+      "evidence_type": "Time measurement - supervision-specific analytical view",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": ["C002"],
+      "related_evidence": ["E001"],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "no more than",
+        "upper_bound": "0.5 h",
+        "present": true
+      },
+      "location": {"section": "3.1", "page": 7, "paragraph": 1-2},
+      "verbatim_quote": "Training and supervision of students took no more than half an hour of staff time across the entire season... student training and supervision another 30 min",
+      "consolidation_metadata": {
+        "consolidation_performed": true,
+        "source_items": ["P1_E005", "P1_E010", "extracted from P1_E013"],
+        "consolidation_type": "analytical_view",
+        "information_preserved": "complete",
+        "rationale": "Supervision time supports separate claim (C002 'minimal supervision') requiring distinct evidence item despite being subset of total time (E001). Extracts supervision-specific figures from comprehensive phase breakdown."
+      },
+      "extraction_notes": "Analytical view extracting supervision-specific time from comprehensive time breakdown (E001). Paper does not separate supervision from other fieldwork activities within the 7h figure."
+    },
+    {
+      "evidence_id": "E003",
+      "evidence_text": "Re-examination of four randomly selected maps after fieldwork required 6 h of staff time",
+      "evidence_type": "Time measurement - quality assurance",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": ["C001", "C016"],
+      "declared_uncertainty": {
+        "present": false
+      },
+      "location": {"section": "3.1", "page": 7, "paragraph": 3},
+      "verbatim_quote": "re-examination of four randomly selected maps after fieldwork required 6 h of staff time, including desktop GIS setup, confirmation of feature digitisation, and tabulating errors and error rates"
+    },
+    {
+      "evidence_id": "E004",
+      "evidence_text": "In 2017, system was used for 125.8 person-hours concentrated across five rainy days, during which 8,343 features were digitised from 42 Soviet topographic maps (ca. 17,000 sq km)",
+      "evidence_type": "Time and output measurement - 2017",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": ["C003"],
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "ca.",
+        "applies_to": "area coverage",
+        "present": true
+      },
+      "location": {"section": "3.2", "page": 7, "paragraph": 1},
+      "verbatim_quote": "In 2017, it was used for a total of 125.8 person-hours concentrated across five rainy days, during which time 8,343 features were digitised from 42 Soviet topographic maps (ca. 17,000 sq km)",
+      "consolidation_metadata": {
+        "consolidation_performed": true,
+        "source_items": ["P1_E015", "P1_E016"],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "2017 time and output form single productivity finding; assessed together as season performance"
+      }
+    },
+    {
+      "evidence_id": "E005",
+      "evidence_text": "The average time to record a point feature was 54 s in 2017, based on start and end times recorded by devices",
+      "evidence_type": "Time measurement - digitisation rate 2017",
+      "evidence_basis": "statistical_output",
+      "supports_claims": ["C003", "C004"],
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_uncertainty_missing": ["Standard deviation", "Distribution characteristics"],
+      "location": {"section": "3.2", "page": 7, "paragraph": 1},
+      "verbatim_quote": "The average time to record a point feature was 54 s, based on start and end times of feature creation as recorded by the devices"
+    },
+    {
+      "evidence_id": "E006",
+      "evidence_text": "In 2018, system was used for 63.6 person-hours more sporadically, with 2,484 features recorded from 16 maps (ca. 6,500 sq km), an average rate of one record every 92 s",
+      "evidence_type": "Time and output measurement - 2018",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": ["C005", "C004"],
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "ca.",
+        "applies_to": "area coverage",
+        "present": true
+      },
+      "location": {"section": "3.2", "page": 7, "paragraph": 2},
+      "verbatim_quote": "The system was used for 63.6 person-hours... 2,484 features recorded from 16 maps (ca. 6,500 sq km), an average rate of one record every 92 s",
+      "consolidation_metadata": {
+        "consolidation_performed": true,
+        "source_items": ["P1_E018", "P1_E019", "P1_E020"],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "2018 time, output, and rate form single productivity finding; assessed together as season performance"
+      }
+    },
+    {
+      "evidence_id": "E007",
+      "evidence_text": "In total, 10,827 point features, mostly burial and settlement mounds, were recorded in 189.4 student-hours (63 s per record). Fifty-eight map tiles representing about 23,500 sq km were digitised.",
+      "evidence_type": "Count and time measurement - combined totals",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": ["C006"],
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "applies_to": "area",
+        "present": true
+      },
+      "location": {"section": "3.2", "page": 7, "paragraph": 3},
+      "verbatim_quote": "In total, 10,827 point features, mostly burial and settlement mounds, were recorded in 189.4 student-hours (63 s per record). Fifty-eight map tiles representing about 23,500 sq km were digitised.",
+      "consolidation_metadata": {
+        "consolidation_performed": true,
+        "source_items": ["P1_E021", "P1_E022"],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "Total features and total area are joint specifications of aggregate output; assessed together"
+      },
+      "extraction_notes": "Includes calculated rate (63s per record) which is arithmetic derivation from total time and features. No separate claim needed for this calculation."
+    },
+    {
+      "evidence_id": "E008",
+      "evidence_text": "A single point record could be associated with 11 attribute-value pairs, yielding as many as 119,097 discrete values (many captured automatically)",
+      "evidence_type": "System specification and data volume",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": ["C007"],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "as many as",
+        "upper_bound": "119,097",
+        "present": true
+      },
+      "location": {"section": "3.2", "page": 7, "paragraph": 3},
+      "verbatim_quote": "Since a single point record could be associated with 11 attribute-value pairs, the dataset contained as many as 119,097 discrete values (many captured automatically)",
+      "consolidation_metadata": {
+        "consolidation_performed": true,
+        "source_items": ["P1_E023", "P1_E024"],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "Attribute structure and total values jointly describe data richness; assessed together"
+      }
+    },
+    {
+      "evidence_id": "E009",
+      "evidence_text": "Prior desktop GIS effort in 2010 produced dataset of 915 features and required about 5–7 h of staff training, support, and error-checking over three-week period (based on field journals)",
+      "evidence_type": "Baseline comparison - desktop GIS",
+      "evidence_basis": "observational_record",
+      "supports_claims": ["C008"],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "about",
+        "range": "5-7 h",
+        "present": true
+      },
+      "expected_uncertainty_missing": ["Precision of journal-based retrospective estimate"],
+      "location": {"section": "3.3", "page": 7, "paragraph": 1},
+      "verbatim_quote": "this effort produced a dataset of 915 features and required about 5–7 h of staff training, support, and error-checking over a three-week period (based on our field journals)",
+      "consolidation_metadata": {
+        "consolidation_performed": true,
+        "source_items": ["P1_E025", "P1_E026"],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "Desktop GIS output and support needs form single baseline comparison finding"
+      }
+    },
+    {
+      "evidence_id": "E010",
+      "evidence_text": "Automated extraction of coordinates from GPS took 3-5 s with an empty database, but as long as 30 s once a device exceeded about 2,500 records",
+      "evidence_type": "Performance measurement - degradation pattern",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": ["C009"],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "about",
+        "applies_to": "record threshold",
+        "present": true
+      },
+      "location": {"section": "3.4", "page": 7, "paragraph": 2},
+      "verbatim_quote": "automated extraction of coordinates from GPS into the Latitude/Longitude and Northing/Easting fields, which took three to 5 s with an empty database, took as long as 30 s once a device exceeded about 2,500 records",
+      "consolidation_metadata": {
+        "consolidation_performed": true,
+        "source_items": ["P1_E027", "P1_E028"],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "Baseline and degraded performance form single performance pattern observation"
+      }
+    },
+    {
+      "evidence_id": "E011",
+      "evidence_text": "Recoverable data omissions across both years totaled 223 (2.06% of records), including 205 spatial and 18 attribute omissions",
+      "evidence_type": "Error rate measurement - aggregate across both years",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": ["C010", "C012"],
+      "declared_uncertainty": {
+        "present": false
+      },
+      "location": {"section": "3.5.1", "page": 7, "paragraph": 1},
+      "verbatim_quote": "Recoverable data omissions across both years totaled 223 (2.06% of records), including 205 spatial and 18 attribute omissions",
+      "extraction_notes": "Aggregate finding supporting overall quality claim. Year-specific details in E012, E013 support improvement claim."
+    },
+    {
+      "evidence_id": "E012",
+      "evidence_text": "In 2017, 192 records (2.3%) had empty latitude and longitude fields and 17 (0.2%) were missing specification of the map symbol",
+      "evidence_type": "Error rate measurement - 2017 specific",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": ["C011"],
+      "declared_uncertainty": {
+        "present": false
+      },
+      "location": {"section": "3.5.1", "page": 7, "paragraph": 1},
+      "verbatim_quote": "Most occurred in 2017 when 192 records (2.3%) had empty latitude and longitude fields and 17 (0.2%) were missing specification of the map symbol",
+      "extraction_notes": "2017 baseline for year-over-year comparison. Kept separate from E013 per temporal progression principle."
+    },
+    {
+      "evidence_id": "E013",
+      "evidence_text": "In 2018, only 13 spatial errors and one attribute omission (0.52%) occurred",
+      "evidence_type": "Error rate measurement - 2018 specific",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": ["C011"],
+      "declared_uncertainty": {
+        "present": false
+      },
+      "location": {"section": "3.5.1", "page": 7, "paragraph": 1},
+      "verbatim_quote": "only 13 spatial errors and one attribute omission (0.52%)",
+      "extraction_notes": "2018 improved rate for year-over-year comparison. Kept separate from E012 per temporal progression principle."
+    },
+    {
+      "evidence_id": "E014",
+      "evidence_text": "Only two data points could not be recovered from spatial omissions because geodatabase preserved geometries",
+      "evidence_type": "Data recovery measurement",
+      "evidence_basis": "observational_record",
+      "supports_claims": ["C012"],
+      "declared_uncertainty": {
+        "present": false
+      },
+      "location": {"section": "3.5.1", "page": 7, "paragraph": 1},
+      "verbatim_quote": "Since the geodatabase preserved geometries, spatial omissions were corrected by re-extracting latitude and longitude; only two data points could not be recovered"
+    },
+    {
+      "evidence_id": "E015",
+      "evidence_text": "Review of four randomly selected maps (7% of total) found 49 errors from true count of 834 features, a 5.87% error rate. Error breakdown: 42 false negatives, 6 double-marked, 1 classification error, 0 false positives.",
+      "evidence_type": "Error rate and pattern measurement",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": ["C013"],
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_uncertainty_missing": ["Confidence interval", "Inter-rater reliability"],
+      "location": {"section": "3.5.2", "page": 8, "paragraph": 1},
+      "verbatim_quote": "a review by project staff of four randomly selected maps (7% of the total) found 49 errors from a true count of 834 features, a 5.87% error rate. Forty-two of these errors were false negatives (symbols missed by students). Six were double-marked (Student C digitised a section of a map twice). Students made only one classification error (a similar symbol mistaken for a benchmark), and no outright false positives",
+      "consolidation_metadata": {
+        "consolidation_performed": true,
+        "source_items": ["P1_E034", "P1_E035", "P1_E036", "P1_E037", "P1_E038"],
+        "consolidation_type": "profile_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Error rate and error type breakdown form single QA finding; complete error characterization assessed together"
+      }
+    },
+    {
+      "evidence_id": "E016",
+      "evidence_text": "Individual student error rates ranged from 1.3% to 10.6%",
+      "evidence_type": "Error rate measurement - individual variation",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": ["C014"],
+      "declared_uncertainty": {
+        "present": false
+      },
+      "location": {"section": "3.5.2", "page": 8, "paragraph": 1},
+      "verbatim_quote": "Students' individual error rates ranged from 1.3% to 10.6%"
+    },
+    {
+      "evidence_id": "E017",
+      "evidence_text": "Two fastest digitisers (Students A and B; 44 and 45 s per feature) had lowest error rates (1.3% and 2.9%), while two slowest (Students C and D; 61 and 73 s) had highest error rates (10.6% and 7.4%)",
+      "evidence_type": "Performance-accuracy correlation",
+      "evidence_basis": "comparative_analysis",
+      "supports_claims": ["C014"],
+      "declared_uncertainty": {
+        "present": false
+      },
+      "location": {"section": "3.5.2", "page": 8, "paragraph": 1},
+      "verbatim_quote": "the two fastest digitisers (Students A and B; 44 and 45 s per feature respectively) also had the lowest error rates (1.3 and 2.9%), while the two slowest (Students C and D; 61 and 73 s) had the highest error rates (10.6 and 7.4%)",
+      "consolidation_metadata": {
+        "consolidation_performed": true,
+        "source_items": ["P1_E040", "P1_E041"],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "Positive and negative correlation examples form single pattern observation"
+      }
+    },
+    {
+      "evidence_id": "E018",
+      "evidence_text": "35 of the 49 false negatives resulted from Student C failing to digitise three contiguous sections of an assigned map",
+      "evidence_type": "Error pattern observation - systematic omission",
+      "evidence_basis": "observational_record",
+      "supports_claims": ["C013", "C015"],
+      "declared_uncertainty": {
+        "present": false
+      },
+      "location": {"section": "3.5.2", "page": 8, "paragraph": 2},
+      "verbatim_quote": "35 of the 49 false negatives were the result of Student C failing to digitise three contiguous sections of an assigned map"
+    },
+    {
+      "evidence_id": "E019",
+      "evidence_text": "Excluding Student C would have cut cumulative error rate in half to 2.8%",
+      "evidence_type": "Counterfactual calculation - adjusted error rate",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": ["C015"],
+      "declared_uncertainty": {
+        "present": false
+      },
+      "location": {"section": "3.5.2", "page": 8, "paragraph": 2},
+      "verbatim_quote": "excluding Student C would have cut the cumulative error rate in half to 2.8%"
+    }
+  ],
+  
+  "claims": [
+    {
+      "claim_id": "C001",
+      "claim_text": "The Map Digitisation system required moderate total staff time investment (51 h across both seasons, mostly pre-fieldwork development)",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "intermediate",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "quantitative",
+      "quantitative_details": {
+        "source": "calculation",
+        "confidence_basis": "Sum of measured time intervals",
+        "arithmetic_verifiable": true
+      },
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "present": true
+      },
+      "expected_information_missing": [],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": true,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Professional judgment that 51h constitutes 'moderate' investment. Anchor numbers (51h, pre-fieldwork focus) make claim concrete.",
+      "supported_by_evidence": ["E001", "E003"],
+      "supports_claims": ["C002", "C018"],
+      "location": {"section": "3.1", "page": 7, "paragraph": 3},
+      "verbatim_quote": "Across both seasons, customisation, setup, and supervision took about 51 h"
+    },
+    {
+      "claim_id": "C002",
+      "claim_text": "Training and supervision required minimal staff time (≤30 min per season)",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "intermediate",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "quantitative",
+      "quantitative_details": {
+        "source": "measurement",
+        "confidence_basis": "Direct time tracking with upper bound",
+        "bounded_range": "≤30 min",
+        "arithmetic_verifiable": true
+      },
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "no more than",
+        "upper_bound": "30 min",
+        "present": true
+      },
+      "expected_information_missing": [],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": true,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Interpretive framing as 'minimal' based on bounded measurement. Anchor number (≤30 min) provides concrete threshold.",
+      "supported_by_evidence": ["E002"],
+      "supported_by_claims": ["C001"],
+      "supports_claims": ["C018"],
+      "implicit_arguments": ["IA001"],
+      "location": {"section": "3.1", "page": 7, "paragraph": 1},
+      "verbatim_quote": "Training and supervision of students took no more than half an hour of staff time"
+    },
+    {
+      "claim_id": "C003",
+      "claim_text": "The 2017 digitisation was concentrated and highly productive (125.8 person-hours over five rainy days produced 8,343 features at 54s per feature)",
+      "claim_type": "EMPIRICAL",
+      "claim_role": "supporting",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "quantitative",
+      "quantitative_details": {
+        "source": "measurement",
+        "confidence_basis": "Direct time tracking and counting",
+        "arithmetic_verifiable": true
+      },
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "ca.",
+        "applies_to": "area",
+        "present": true
+      },
+      "expected_information_missing": ["Standard deviation of rate"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": false,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Compound quantitative finding about 2017 season. Anchor numbers (125.8h, 8,343 features, 54s rate) make productivity concrete.",
+      "supported_by_evidence": ["E004", "E005"],
+      "supports_claims": ["C006", "C020"],
+      "location": {"section": "3.2", "page": 7, "paragraph": 1},
+      "verbatim_quote": "In 2017, it was used for a total of 125.8 person-hours concentrated across five rainy days, during which time 8,343 features were digitised... The average time to record a point feature was 54 s"
+    },
+    {
+      "claim_id": "C004",
+      "claim_text": "Concentrated 2017 effort was more productive than sporadic 2018 work (54s vs 92s per feature)",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "supporting",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "quantitative",
+      "quantitative_details": {
+        "source": "calculation",
+        "confidence_basis": "Comparative rate calculation",
+        "arithmetic_verifiable": true
+      },
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_information_missing": ["Statistical significance of difference", "Confounding factors"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": false,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "inferred",
+      "extraction_notes": "Implicit comparative claim bridging 2017 and 2018 findings. Added in Pass 2. Anchor numbers (54s vs 92s) make comparison concrete.",
+      "supported_by_claims": ["C003", "C005"],
+      "supports_claims": ["C020"],
+      "implicit_arguments": ["IA009"],
+      "location": {"section": "3.2", "page": 7, "paragraph": "1-2"},
+      "verbatim_quote": "concentrated... use was more sporadic"
+    },
+    {
+      "claim_id": "C005",
+      "claim_text": "The 2018 digitisation was more sporadic and slower (63.6 person-hours produced 2,484 features at 92s per feature)",
+      "claim_type": "EMPIRICAL",
+      "claim_role": "supporting",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "mixed",
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "ca.",
+        "applies_to": "area",
+        "present": true
+      },
+      "expected_information_missing": [],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": false,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Compound finding about 2018 work pattern and productivity. Anchor numbers (63.6h, 2,484 features, 92s) make productivity concrete.",
+      "supported_by_evidence": ["E006"],
+      "supports_claims": ["C004", "C006"],
+      "location": {"section": "3.2", "page": 7, "paragraph": 2},
+      "verbatim_quote": "use was more sporadic... 63.6 person-hours... 2,484 features recorded... an average rate of one record every 92 s"
+    },
+    {
+      "claim_id": "C006",
+      "claim_text": "Combined effort produced substantial dataset (10,827 features from 58 maps covering ~23,500 sq km)",
+      "claim_type": "EMPIRICAL",
+      "claim_role": "intermediate",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "quantitative",
+      "quantitative_details": {
+        "source": "calculation",
+        "confidence_basis": "Sum of both seasons",
+        "arithmetic_verifiable": true
+      },
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "applies_to": "area",
+        "present": true
+      },
+      "expected_information_missing": [],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": false,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Aggregate quantitative finding. Anchor numbers (10,827 features, 58 maps, ~23,500 sq km) make dataset size concrete.",
+      "supported_by_evidence": ["E007"],
+      "supports_claims": ["C020"],
+      "location": {"section": "3.2", "page": 7, "paragraph": 3},
+      "verbatim_quote": "10,827 point features, mostly burial and settlement mounds, were recorded... Fifty-eight map tiles representing about 23,500 sq km were digitised"
+    },
+    {
+      "claim_id": "C007",
+      "claim_text": "Dataset contains rich attribute information (up to 119,097 discrete values from 11 attribute-value pairs per record, many captured automatically)",
+      "claim_type": "EMPIRICAL",
+      "claim_role": "supporting",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "quantitative",
+      "quantitative_details": {
+        "source": "calculation",
+        "confidence_basis": "Multiplication of features by attributes",
+        "bounded_range": "up to 119,097",
+        "arithmetic_verifiable": true
+      },
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "as many as",
+        "upper_bound": "119,097",
+        "present": true
+      },
+      "expected_information_missing": ["How many values actually populated vs theoretical maximum"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": false,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Emphasizes data richness. Anchor numbers (119,097 values, 11 attributes) make richness concrete.",
+      "supported_by_evidence": ["E008"],
+      "supports_claims": ["C020"],
+      "location": {"section": "3.2", "page": 7, "paragraph": 3},
+      "verbatim_quote": "the dataset contained as many as 119,097 discrete values"
+    },
+    {
+      "claim_id": "C008",
+      "claim_text": "Prior desktop GIS approach produced limited output with high staff support needs (915 features requiring 5-7h support) and was disliked by students, preventing scale-up",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "intermediate",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "mixed",
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "about",
+        "range": "5-7 h",
+        "present": true
+      },
+      "expected_information_missing": ["Student feedback data", "Quantification of 'dislike'"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": true,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Combines baseline performance with causal interpretation of scalability failure. Anchor numbers (915 features, 5-7h) make baseline concrete.",
+      "supported_by_evidence": ["E009"],
+      "supports_claims": ["C018"],
+      "implicit_arguments": ["IA002"],
+      "location": {"section": "3.3", "page": 7, "paragraph": 1},
+      "verbatim_quote": "this effort produced a dataset of 915 features and required about 5–7 h of staff training, support, and error-checking... The need for high-touch training and support by project staff during fieldwork, combined with a dislike for the activity on the part of students, prevented us from scaling up",
+      "consolidation_metadata": {
+        "consolidation_performed": true,
+        "source_items": ["P1_C013", "P1_C014"],
+        "consolidation_type": "compound_interpretation",
+        "information_preserved": "complete",
+        "rationale": "Baseline performance and causal interpretation assessed together; support needs are both measurement and explanation for failure"
+      }
+    },
+    {
+      "claim_id": "C009",
+      "claim_text": "Application performance degraded significantly as database size increased (GPS extraction: 3-5s → 30s at ~2,500 records), mitigated by exporting data and reinstantiating empty versions",
+      "claim_type": "EMPIRICAL",
+      "claim_role": "supporting",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "quantitative",
+      "quantitative_details": {
+        "source": "measurement",
+        "confidence_basis": "Direct timing",
+        "arithmetic_verifiable": false
+      },
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "applies_to": "record threshold",
+        "present": true
+      },
+      "expected_information_missing": ["Performance curve details", "Mitigation frequency"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": false,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Technical limitation with workaround. Anchor numbers (3-5s → 30s, ~2,500 records) make degradation concrete.",
+      "supported_by_evidence": ["E010"],
+      "supports_claims": [],
+      "location": {"section": "3.4", "page": 7, "paragraph": 2},
+      "verbatim_quote": "took as long as 30 s once a device exceeded about 2,500 records... Deteriorating performance was mitigated by exporting all data and instantiating a new and empty version"
+    },
+    {
+      "claim_id": "C010",
+      "claim_text": "Overall recoverable data omissions were low (2.06% across both years)",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "intermediate",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "quantitative",
+      "quantitative_details": {
+        "source": "calculation",
+        "confidence_basis": "Error counts divided by total records",
+        "arithmetic_verifiable": true
+      },
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_information_missing": [],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": true,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Interpretive framing of 2.06% as 'low'. Anchor number (2.06%) makes aggregate rate concrete. Kept separate from year-over-year improvement claim per temporal progression principle.",
+      "supported_by_evidence": ["E011"],
+      "supports_claims": ["C017"],
+      "location": {"section": "3.5.1", "page": 7, "paragraph": 1},
+      "verbatim_quote": "Recoverable data omissions across both years totaled 223 (2.06% of records)"
+    },
+    {
+      "claim_id": "C011",
+      "claim_text": "Year-over-year improvement in omissions: 2017 spatial omissions (2.3%) caused by users moving through forms too quickly were reduced to 0.52% in 2018 through added validation",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "intermediate",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "mixed",
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_information_missing": ["Statistical significance of improvement"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": true,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Improvement narrative combining 2017 baseline, cause, and 2018 improvement. Anchor numbers (2.3% → 0.52%) make improvement concrete. Separated from aggregate claim per temporal progression principle.",
+      "supported_by_evidence": ["E012", "E013"],
+      "supports_claims": ["C017"],
+      "implicit_arguments": ["IA003"],
+      "location": {"section": "3.5.1", "page": 7, "paragraph": 1},
+      "verbatim_quote": "Most occurred in 2017 when 192 records (2.3%) had empty latitude and longitude fields... Spatial data omissions resulted from a failure of the software to populate the latitude and longitude fields... due to users moving through the forms too quickly... Before the 2018 season, we added validation addressing this problem, resulting in only 13 spatial errors and one attribute omission (0.52%)"
+    },
+    {
+      "claim_id": "C012",
+      "claim_text": "Most spatial omissions were recoverable (only 2 unrecoverable data points) because geodatabase preserved geometries",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "supporting",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "quantitative",
+      "quantitative_details": {
+        "source": "measurement",
+        "confidence_basis": "Count of recoverable vs unrecoverable",
+        "arithmetic_verifiable": true
+      },
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_information_missing": [],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": false,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Emphasizes limited impact of omissions. Anchor number (2 unrecoverable) makes recoverability concrete.",
+      "supported_by_evidence": ["E014"],
+      "supports_claims": ["C017"],
+      "location": {"section": "3.5.1", "page": 7, "paragraph": 1},
+      "verbatim_quote": "only two data points could not be recovered"
+    },
+    {
+      "claim_id": "C013",
+      "claim_text": "Digitisation errors totaled 5.87% in reviewed maps, with error patterns relatively easy to identify and correct (42 false negatives from contiguous sections, 6 double-marked, 1 classification error, 0 false positives)",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "intermediate",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "mixed",
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_information_missing": ["Confidence interval", "Inter-rater reliability"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": true,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Error characterization with correctability judgment. Anchor numbers (5.87%, error type breakdown) make profile concrete.",
+      "supported_by_evidence": ["E015", "E018"],
+      "supports_claims": ["C017", "C015"],
+      "location": {"section": "3.5.2", "page": 8, "paragraph": 1-2},
+      "verbatim_quote": "found 49 errors from a true count of 834 features, a 5.87% error rate... the pattern of errors - mostly false negatives and double-marked features, mostly from contiguous map sections - made them relatively easy to identify and correct"
+    },
+    {
+      "claim_id": "C014",
+      "claim_text": "Best digitisers were both fast and accurate while poorest were neither (44-45s at 1.3-2.9% error vs 61-73s at 7.4-10.6% error)",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "supporting",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "qualitative",
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_information_missing": ["Statistical correlation coefficient", "Sample size"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": false,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Pattern observation without statistical testing. Anchor numbers (speed and error rates) make correlation concrete.",
+      "supported_by_evidence": ["E016", "E017"],
+      "supports_claims": ["C017"],
+      "location": {"section": "3.5.2", "page": 8, "paragraph": 1},
+      "verbatim_quote": "the best digitisers, furthermore, could be both fast and accurate, while the poorest digitisers were often neither fast nor accurate"
+    },
+    {
+      "claim_id": "C015",
+      "claim_text": "One outlier digitiser (Student C) accounted for most errors (35 of 49 false negatives from three contiguous section omissions); excluding them would halve error rate to 2.8%",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "supporting",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "quantitative",
+      "quantitative_details": {
+        "source": "calculation",
+        "confidence_basis": "Counterfactual calculation",
+        "arithmetic_verifiable": true
+      },
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_information_missing": ["Why Student C was outlier", "Whether to exclude outliers"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": false,
+        "boundary_ambiguous": true
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Counterfactual quality with outlier framing. Anchor numbers (35 of 49, 2.8%) make outlier impact concrete.",
+      "supported_by_evidence": ["E018", "E019"],
+      "supports_claims": ["C017"],
+      "implicit_arguments": ["IA005"],
+      "location": {"section": "3.5.2", "page": 8, "paragraph": 2},
+      "verbatim_quote": "35 of the 49 false negatives were the result of Student C failing to digitise three contiguous sections... These mistakes made his error rate of 10.6% an outlier; excluding Student C would have cut the cumulative error rate in half to 2.8%"
+    },
+    {
+      "claim_id": "C016",
+      "claim_text": "Staff review was much faster than digitising from scratch",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "supporting",
+      "primary_function": "finding",
+      "claim_scope": "project",
+      "claim_nature": "qualitative",
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_information_missing": ["Quantitative comparison", "Staff digitisation rate baseline"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": true,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Comparative judgment about QA efficiency",
+      "supported_by_evidence": ["E003"],
+      "supports_claims": ["C018"],
+      "location": {"section": "3.5.2", "page": 8, "paragraph": 2},
+      "verbatim_quote": "it was much faster to check volunteer work than digitise from scratch"
+    },
+    {
+      "claim_id": "C017",
+      "claim_text": "Overall data quality was good (>94% accuracy for processed maps), with low recoverable omissions (2.06%), year-over-year improvement, and correctable error patterns",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "core",
+      "primary_function": "conclusion",
+      "claim_scope": "project",
+      "claim_nature": "mixed",
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_information_missing": ["Quality threshold justification", "Domain benchmarks"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": true,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Professional judgment that >94% = 'good' quality. Enhanced with supporting context. Anchor number (>94%) makes quality concrete.",
+      "supported_by_claims": ["C010", "C011", "C012", "C013", "C014"],
+      "supports_claims": ["C020"],
+      "implicit_arguments": ["IA004"],
+      "location": {"section": "3.5", "page": 7, "paragraph": 1},
+      "verbatim_quote": "overall accuracy was high, over 94% for processed maps"
+    },
+    {
+      "claim_id": "C018",
+      "claim_text": "Mobile approach required substantially less staff supervision than desktop GIS approach",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "core",
+      "primary_function": "conclusion",
+      "claim_scope": "project",
+      "claim_nature": "qualitative",
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_information_missing": ["Quantified comparison"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": true,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "inferred",
+      "extraction_notes": "Implicit comparative conclusion spanning sections. Enhanced phrasing.",
+      "supported_by_claims": ["C001", "C002", "C008", "C016"],
+      "supports_claims": ["C020"],
+      "implicit_arguments": ["IA006"],
+      "location": {"section": "3.1-3.3", "page": 7, "paragraph": "multiple"},
+      "verbatim_quote": "Training and supervision of students took no more than half an hour... high-touch training and support... prevented us from scaling up... much faster to check volunteer work"
+    },
+    {
+      "claim_id": "C019",
+      "claim_text": "Simple quality assurance expedients (multiple digitisers per tile or peer review) would likely eliminate most errors",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "supporting",
+      "primary_function": "recommendation",
+      "claim_scope": "domain",
+      "claim_nature": "qualitative",
+      "author_confidence": "speculative",
+      "declared_uncertainty": {
+        "type": "hedging",
+        "indicator": "would likely",
+        "present": true
+      },
+      "expected_information_missing": ["Evidence for effectiveness of these methods"],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": true,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "explicit",
+      "extraction_notes": "Speculative recommendation based on error patterns. Added in Pass 2 - overlooked explicit content.",
+      "supported_by_claims": ["C013", "C015"],
+      "supports_claims": [],
+      "location": {"section": "3.5.2", "page": 8, "paragraph": 2},
+      "verbatim_quote": "Simple expedients, such as assigning multiple students to digitise the same map tiles independently or assigning one student to review work by another, would likely eliminate most errors"
+    },
+    {
+      "claim_id": "C020",
+      "claim_text": "The mobile system successfully produced large, high-quality datasets (10,827 features across 23,500 sq km with >94% accuracy) with low supervision demands",
+      "claim_type": "INTERPRETATION",
+      "claim_role": "core",
+      "primary_function": "conclusion",
+      "claim_scope": "project",
+      "claim_nature": "mixed",
+      "author_confidence": "definite",
+      "declared_uncertainty": {
+        "present": false
+      },
+      "expected_information_missing": [],
+      "extraction_flags": {
+        "generalization_from_single_case": true,
+        "requires_professional_judgment": true,
+        "boundary_ambiguous": false
+      },
+      "extraction_confidence": "inferred",
+      "extraction_notes": "Top-level synthesis integrating core findings across all Results subsections. Added in Pass 2. Anchor numbers (10,827 features, 23,500 sq km, >94%) make synthesis concrete.",
+      "supported_by_claims": ["C003", "C006", "C017", "C018"],
+      "supports_claims": [],
+      "location": {"section": "3.2-3.5", "page": 7-8, "paragraph": "multiple"},
+      "verbatim_quote": "large and valuable datasets... overall accuracy was high... requiring little supervision"
+    }
+  ],
+  
+  "implicit_arguments": [
+    {
+      "ia_id": "IA001",
+      "argument": "≤30 minutes per season for training/supervision constitutes 'minimal' staff time in archaeological fieldwork context",
+      "type": "unstated_assumption",
+      "status": "assumed_without_acknowledgment",
+      "supports_claims": ["C002"],
+      "assessment_notes": "Threshold for 'minimal' depends on comparison to typical fieldwork staff time - not specified",
+      "location": {"section": "3.1", "page": 7, "paragraph": 1}
+    },
+    {
+      "ia_id": "IA002",
+      "argument": "Student dislike of an activity (combined with high staff support needs) is sufficient to prevent scaling up the activity",
+      "type": "unstated_assumption",
+      "status": "assumed_without_acknowledgment",
+      "supports_claims": ["C008"],
+      "assessment_notes": "Assumes students have agency to refuse tasks and/or project prioritizes student satisfaction",
+      "location": {"section": "3.3", "page": 7, "paragraph": 1}
+    },
+    {
+      "ia_id": "IA003",
+      "argument": "The validation changes (not other factors) caused the 2018 error reduction from 2.3% to 0.52%",
+      "type": "unstated_assumption",
+      "status": "assumed_without_acknowledgment",
+      "supports_claims": ["C011"],
+      "assessment_notes": "Causal attribution without controlling for confounds (different users, learning effects, etc.)",
+      "location": {"section": "3.5.1", "page": 7, "paragraph": 1}
+    },
+    {
+      "ia_id": "IA004",
+      "argument": "94% accuracy constitutes 'good' quality for crowdsourced archaeological digitisation",
+      "type": "unstated_assumption",
+      "status": "assumed_without_acknowledgment",
+      "supports_claims": ["C017"],
+      "assessment_notes": "Professional judgment about quality threshold - no benchmark or standard cited",
+      "location": {"section": "3.5", "page": 7, "paragraph": 1}
+    },
+    {
+      "ia_id": "IA005",
+      "argument": "Presenting counterfactual quality (excluding outlier) is relevant even though actual quality includes the outlier",
+      "type": "logical_implication",
+      "status": "unstated_but_implied",
+      "supports_claims": ["C015"],
+      "assessment_notes": "Implicit framing that outliers are anomalies rather than part of system performance",
+      "location": {"section": "3.5.2", "page": 8, "paragraph": 2}
+    },
+    {
+      "ia_id": "IA006",
+      "argument": "Lower supervision requirements indicate superior usability/design of the mobile approach compared to desktop GIS",
+      "type": "bridging_claim",
+      "status": "unstated_but_implied",
+      "supports_claims": ["C018"],
+      "assessment_notes": "Connects empirical observation (less supervision) to design quality judgment",
+      "location": {"section": "3.1-3.3", "page": 7, "paragraph": "multiple"}
+    },
+    {
+      "ia_id": "IA007",
+      "argument": "Large systematic datasets of archaeological features are inherently valuable independent of specific research questions",
+      "type": "disciplinary_assumption",
+      "status": "assumed_without_acknowledgment",
+      "supports_claims": ["C020"],
+      "assessment_notes": "Archaeological assumption that systematic recording adds knowledge value",
+      "location": {"section": "3.2", "page": 7, "paragraph": 3}
+    },
+    {
+      "ia_id": "IA008",
+      "argument": "Time during inclement weather would otherwise be 'lost' (no productive alternative use exists)",
+      "type": "unstated_assumption",
+      "status": "assumed_without_acknowledgment",
+      "supports_claims": ["C020"],
+      "assessment_notes": "Assumes no other productive activities available during bad weather",
+      "location": {"section": "3.2", "page": 7, "paragraph": 3}
+    },
+    {
+      "ia_id": "IA009",
+      "argument": "Concentrated work patterns are more productive than sporadic work patterns for digitisation tasks",
+      "type": "logical_implication",
+      "status": "unstated_but_implied",
+      "supports_claims": ["C004"],
+      "assessment_notes": "Generalizes from observed rate difference (54s vs 92s) to broader principle about work patterns",
+      "location": {"section": "3.2", "page": 7, "paragraph": 1-2}
+    }
+  ],
+  
+  "change_log": [
+    {
+      "operation": "CORRECTED - Evidence temporal separation",
+      "items": "E011 (aggregate), E012 (2017), E013 (2018) separated",
+      "rationale": "Year-over-year comparisons require separate measurements per temporal progression principle. Aggregate supports overall quality; year-specific support improvement claims.",
+      "correction": "Previously consolidated into single E011 mixing aggregate and year-specific rates"
+    },
+    {
+      "operation": "REMOVED - Redundant calculation claim",
+      "items": "C005 (original: 'Overall average digitisation rate was 63 seconds per record')",
+      "rationale": "Calculation already present in E007 without added interpretation. Straightforward arithmetic belongs in evidence, not claims.",
+      "correction": "Removed and renumbered subsequent claims"
+    },
+    {
+      "operation": "CONSOLIDATED - Desktop GIS claims",
+      "items": "P1_C013 + P1_C014 → C008",
+      "rationale": "Baseline performance and causal interpretation assessed together. Support measurement is both data point and explanation for failure. Matches granularity better as compound interpretation.",
+      "acid_test": "Assess desktop GIS failure (output + support + student attitude) together, not separately"
+    },
+    {
+      "operation": "SPLIT - Omissions narrative",
+      "items": "P1_C016+C017+C018 → C010 (aggregate) + C011 (year-over-year improvement)",
+      "rationale": "Aggregate quality (2.06%) and year-over-year comparison (2.3% → 0.52%) serve different assessment purposes. Temporal progression principle requires separate claims for comparison.",
+      "acid_test": "Assess overall omission rate separately from year-over-year improvement trend"
+    },
+    {
+      "operation": "APPLIED - Anchor numbers throughout",
+      "items": "All claims enhanced with strategic quantitative anchors",
+      "rationale": "Key numbers make claims concrete and interpretable without excessive graph navigation. Strategic duplication accepted for readability.",
+      "examples": "C003 (8,343 features at 54s), C006 (10,827 features from 58 maps), C017 (>94% accuracy)"
+    },
+    {
+      "operation": "ENHANCED - Strategic verbosity",
+      "items": "Multiple claims expanded with contextual detail",
+      "rationale": "Verbose claims that contextualize findings preferred over terse claims requiring excessive cross-referencing.",
+      "examples": "C017 enhanced to include 'low recoverable omissions, year-over-year improvement, correctable patterns'"
+    },
+    {
+      "operation": "ADDED - Three high-value patterns",
+      "items": "C004 (implicit comparison), C019 (overlooked recommendation), C020 (synthesis)",
+      "rationale": "Pass 2 systematic review caught: (1) implicit comparison framed by paper, (2) explicit recommendation in final paragraph, (3) cross-subsection synthesis integrating core findings"
+    }
+  ],
+  
+  "final_summary": {
+    "evidence_count": 19,
+    "claims_count": 20,
+    "implicit_arguments_count": 9,
+    "total_items": 48,
+    "reduction_from_pass1": "40% (80 → 48 items)",
+    "key_improvements": [
+      "Temporal progression principle correctly applied (E011/E012/E013, C010/C011 separation)",
+      "Redundant calculation claim removed (C005)",
+      "Desktop GIS claims appropriately merged (C008)",
+      "Anchor numbers applied throughout for interpretability",
+      "Strategic verbosity enhances claim usefulness",
+      "Three addition patterns successfully applied"
+    ],
+    "quality_indicators": {
+      "granularity_matching": "Evidence and claims at appropriate matched granularity",
+      "temporal_comparisons": "Correctly kept separate for year-over-year comparisons",
+      "anchor_numbers": "Strategic duplication makes claims interpretable",
+      "consolidation_metadata": "Complete documentation of all consolidation operations",
+      "analytical_views": "E002 successfully implements supervision analytical view",
+      "verbosity_balance": "Claims contextual without being unwieldy"
+    }
+  }
+}
