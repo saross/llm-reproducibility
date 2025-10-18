@@ -1,9 +1,9 @@
-# Schema Crosswalk v1.0
+# Schema Crosswalk v1.1
 
-**Version:** 1.0  
-**Last Updated:** 2025-10-17  
+**Version:** 1.1  
+**Last Updated:** 2025-10-18  
 **Purpose:** Map our schema elements to existing ontologies for future formalization  
-**Schema Version:** v2.2
+**Schema Version:** v2.3
 
 ---
 
@@ -38,11 +38,24 @@ This document tracks mappings between our pragmatic JSON schema and existing for
 |--------------|---------------|--------------|---------------|-------|
 | **evidence.evidence_basis** | Novel (empirical) | Related | prov:Entity subtypes | Observable classification of evidence source |
 | **evidence.declared_uncertainty** | Novel (empirical) | Related | Multiple sources | Captures author-stated uncertainty |
+| **evidence.declared_uncertainty.indicator** | Novel (v2.3) | Related | Hedging linguistics | Linguistic markers (ca., about, ~, ±) |
+| **evidence.declared_uncertainty.applies_to** | Novel (v2.3) | - | - | Specifies scope of uncertainty |
+| **evidence.declared_uncertainty.upper_bound** | Novel (v2.3) | Related | Statistical bounds | For bounded range uncertainties |
+| **evidence.declared_uncertainty.range** | Novel (v2.3) | Related | Statistical bounds | For range-type uncertainties |
 | **evidence.expected_information_missing** | Novel (empirical) | - | - | Assessment preparation, not in existing schemas |
+| **evidence.expected_uncertainty_missing** | Novel (v2.3) | - | - | Extended from claims to evidence |
 | **evidence.implicit_evidence** | Novel (empirical) | Related | Professional judgment sources | Distinguishes unstated evidence |
 | **evidence.provenance** | PROV-O | Exact | prov:wasGeneratedBy, prov:wasAttributedTo, prov:wasDerivedFrom | Low-hanging formalization |
+| **evidence.related_evidence** | Novel (v2.3) | Related | owl:seeAlso | Cross-references for analytical view pattern |
+| **evidence.consolidation_metadata** | Novel (v2.3) | Related | prov:wasDerivedFrom, prov:qualifiedDerivation | Pass 2 rationalization provenance |
 | **claim.claim_type** | Novel (empirical) | Related | Multiple | EMPIRICAL/INTERPRETATION/METHODOLOGICAL/THEORETICAL |
 | **claim.claim_role** | Novel (empirical) | Related | Hierarchy concepts | Four-level structure for assessment prioritization |
+| **claim.claim_role: "synthesis"** | Novel (v2.3) | Related | doco:Conclusion | Cross-subsection integration claims |
+| **claim.primary_function** | Novel (v2.3) | Related | toulmin:Claim, aif:I-node | Argumentative role (premise/finding/conclusion/recommendation) |
+| **claim.claim_nature** | Novel (v2.3) | - | - | Epistemic classification (quantitative/qualitative/mixed/definitional) |
+| **claim.quantitative_details** | Novel (v2.3) | Related | Statistics ontologies | Nested structure for quantitative claims |
+| **claim.quantitative_details.source** | Novel (v2.3) | Related | prov:wasGeneratedBy | Measurement/calculation/estimate/statistical |
+| **claim.quantitative_details.arithmetic_verifiable** | Novel (v2.3) | - | - | Flags calculations vs measurements |
 | **claim.claim_status** | Novel (empirical) | Related | prov:derivedByInference | explicit vs implicit distinction |
 | **claim.author_confidence** | Novel (empirical) | Related | Hedging taxonomies | Captures authorial epistemic stance |
 | **claim.extraction_flags** | Novel (empirical) | - | - | All three flags empirically identified |
@@ -57,11 +70,16 @@ This document tracks mappings between our pragmatic JSON schema and existing for
 | **claim.credibility_assessment.comprehensibility** | repliCATS | Adapted | replicats:Comprehensibility | Clarity of methods/claims |
 | **claim.credibility_assessment.replicability** | repliCATS | Adapted | replicats:Replicability | Sufficient detail to replicate |
 | **claim.credibility_assessment.generalizability** | repliCATS | Adapted | replicats:Generalizability | Scope appropriately bounded |
+| **claim.consolidation_metadata** | Novel (v2.3) | Related | prov:wasDerivedFrom | Pass 2 rationalization provenance |
 | **evidence.evidence_strength** | Multiple | Synthesized | legal:EvidenceWeight, cochrane:QualityOfEvidence | Hybrid from legal + systematic review frameworks |
 | **implicit_argument.type** | Novel/Adapted | Related | walton:ArgumentationScheme | Type 1/2 = argument schemes; Type 3 = novel |
 | **implicit_argument.type (disciplinary_assumption)** | Novel (empirical) | - | - | Type 3: meta-level, paradigmatic assumptions |
 | **implicit_argument.argumentation_scheme** | Walton | Related | walton:ArgumentationScheme | Critical questions framework |
 | **implicit_argument.coi_note** | Novel (empirical) | Related | Conflict of interest declarations | Author stake in findings |
+| **implicit_argument.consolidation_metadata** | Novel (v2.3) | Related | prov:wasDerivedFrom | Pass 2 rationalization provenance |
+| **consolidation_metadata.consolidation_type** | Novel (v2.3) | Related | prov:qualifiedDerivation | Taxonomy of 9 consolidation operations |
+| **consolidation_metadata.information_preserved** | Novel (v2.3) | Related | dcat:DataQuality | Tracks lossy vs lossless transformations |
+| **consolidation_metadata.granularity_available** | Novel (v2.3) | - | - | Documents detail in source not extracted |
 | **supports_claims, supported_by_claims** | Multiple | Related | micropub:supports, aif:supports | Support relationships |
 | **supported_by_evidence** | Multiple | Related | micropub:supportedBy | Evidence-claim links |
 
@@ -72,27 +90,9 @@ This document tracks mappings between our pragmatic JSON schema and existing for
 | Our Structure | Source Schema | Mapping Type | URI/Reference | Notes |
 |---------------|---------------|--------------|---------------|-------|
 | **Four-level hierarchy** (core → intermediate → supporting → evidence) | Novel (empirical) | - | - | Assessment prioritization structure |
-| **Dual-layer uncertainty** (declared + expected) | Novel (empirical) | - | - | Author layer + assessor layer separation |
-| **Extraction vs assessment separation** | repliCATS | Adapted | - | Phase 1 (identify) vs Phase 2 (evaluate) |
-| **Project metadata separation** | Novel (empirical) | - | - | Context vs evidence distinction |
-| **Two-pass workflow** (liberal → rationalization) | Novel (empirical) | - | - | Over-capture then consolidate strategy |
-
----
-
-## Novel Elements (No Direct Mapping)
-
-These elements emerged from empirical work and have no clear precedent in surveyed schemas:
-
-| Element | Rationale | Future Formalization Path | Status |
-|---------|-----------|---------------------------|--------|
-| **project_metadata** | Separates context from evidence; emerged from Methods rationalization | Could map to dcterms:description or custom HASS vocab | Empirically validated |
-| **claim_status (explicit/implicit)** | Tracks extraction artifact vs stated content | Consider prov:derivedByInference or custom property | Empirically validated |
-| **generalization_from_single_case** | Abductive reasoning pattern in HASS research | Subtype of walton:ArgumentFromGeneralization | Empirically validated |
-| **extraction_flags structure** | Quality tracking during extraction phase | May not need formalization (extraction metadata) | In use, refinement ongoing |
-| **expected_information_missing** | Assessment preparation, not knowledge representation | May not need formalization (extraction metadata) | In use, refinement ongoing |
-| **extraction_notes** | Extractor observations and concerns | May not need formalization (extraction metadata) | In use, refinement ongoing |
-| **Dual-layer uncertainty** | Separates declared (author) from expected (assessor) | Novel contribution to research evaluation | Empirically validated |
-| **Type 3 disciplinary assumptions** | Meta-level, paradigmatic, values-based foundations | Extension of implicit argument taxonomy | Newly formalized, testing in progress |
+| **Dual-layer uncertainty** (declared + expected) | Novel (empirical) | - | - | Author layer + assessor layer separation; **v2.3:** Enhanced with indicator, applies_to, bounds fields |
+| **Extraction vs assessment separation** | Novel (methodological) | Related | Annotation workflows | Clear phase distinction with field-level marking |
+| **Two-pass extraction workflow** | Novel (methodological) | Related | PROV-O workflow patterns | Pass 1: liberal extraction; Pass 2: rationalization; **v2.3:** Now requires consolidation_metadata |
 | **evidence_basis enumeration** | Observable source classification for extraction | Could inform prov:Entity subtypes | Empirically validated |
 | **Four-level hierarchy** | Assessment prioritization (core > intermediate > supporting > evidence) | Could map to importance/priority ontologies | In use, may simplify to 3 levels |
 
@@ -131,6 +131,29 @@ These will be refined after 10+ paper extractions:
 - comparative_analysis
 
 **Future mapping:** ResearchObject:Process + HASS qualitative extensions
+
+---
+
+## Novel Elements (No Direct Mapping)
+
+| Element | Rationale | Future Formalization Path |
+|---------|-----------|---------------------------|
+| **project_metadata** | Empirically identified - separates context from evidence | Could map to dcterms:description or custom HASS vocab |
+| **claim_status (explicit/implicit)** | Empirically identified - extraction artifact tracking | Consider prov:derivedByInference or custom property |
+| **generalization_from_single_case** | Empirically identified - abductive reasoning pattern | Subtype of walton:ArgumentFromGeneralization |
+| **requires_professional_judgment** | Empirically identified - flags claims needing domain expertise | Related to walton:ExpertOpinionScheme |
+| **boundary_ambiguous** | Empirically identified - extraction quality tracking | Extraction metadata, may not need formalization |
+| **consolidation_metadata** | Empirically identified (v2.3) - Pass 2 rationalization traceability needed | Map to PROV-O qualified derivation pattern |
+| **consolidation_metadata.consolidation_type** | Empirically identified (v2.3) - taxonomy of 9 consolidation operations | Custom vocabulary; could extend PROV-O derivation types |
+| **consolidation_metadata.information_preserved** | Empirically identified (v2.3) - lossy vs lossless tracking | Related to dcat:DataQuality; could formalize as quality metric |
+| **consolidation_metadata.granularity_available** | Empirically identified (v2.3) - documents detail not extracted | Extraction metadata describing source richness |
+| **related_evidence** | Empirically identified (v2.3) - analytical view pattern needs cross-referencing | Map to owl:seeAlso or custom relation property |
+| **primary_function** | Empirically identified (v2.3) - argumentative role distinct from claim_role | Map to Toulmin model components (claim/data/warrant/backing) |
+| **claim_nature** | Empirically identified (v2.3) - epistemic classification for assessment | Consider formal epistemology ontologies |
+| **quantitative_details** | Empirically identified (v2.3) - structured quantitative claim metadata | Map to statistics/measurement ontologies (QUDT, OM) |
+| **Multi-dimensional evidence pattern** | Empirically identified (v2.3) - Results test revealed need for multiple organizational views | Document as extraction pattern, not ontology concept; enables analytical views |
+| **Anchor numbers principle** | Empirically identified (v2.3) - strategic duplication for interpretability | Methodological principle, not schema element |
+| **Temporal progression separation** | Empirically identified (v2.3) - year-over-year comparisons require separate items | Extraction guideline, not schema element |
 
 ---
 
@@ -230,6 +253,37 @@ These will be addressed when moving to formal ontology:
 }
 ```
 
+### Example 3: Consolidation Metadata with PROV-O (v2.3)
+
+**Our JSON:**
+```json
+{
+  "evidence_id": "E001",
+  "consolidation_metadata": {
+    "consolidation_performed": true,
+    "source_items": ["P1_E001", "P1_E002", "P1_E003"],
+    "consolidation_type": "phase_aggregation",
+    "information_preserved": "lossy_granularity"
+  }
+}
+```
+
+**Potential PROV-O mapping:**
+```json
+{
+  "@context": {
+    "prov": "http://www.w3.org/ns/prov#"
+  },
+  "@id": "E001",
+  "prov:wasDerivedFrom": ["P1_E001", "P1_E002", "P1_E003"],
+  "prov:qualifiedDerivation": {
+    "@type": "prov:Derivation",
+    "prov:hadActivity": "phase_aggregation",
+    "custom:informationPreserved": "lossy_granularity"
+  }
+}
+```
+
 ---
 
 ## Usage Notes
@@ -264,6 +318,18 @@ These will be addressed when moving to formal ontology:
 ---
 
 ## Update History
+
+**v1.1 (2025-10-18):**
+- Updated to reflect schema v2.3 changes
+- Added consolidation_metadata mappings (15 new property entries)
+- Added related_evidence for analytical view pattern
+- Added primary_function, claim_nature, quantitative_details mappings
+- Enhanced declared_uncertainty structure documentation (4 new subfields)
+- Added expected_uncertainty_missing to evidence
+- Added "synthesis" to claim_role enum mapping
+- Documented 6 new novel elements with formalization paths
+- Updated structural elements section for v2.3 enhancements
+- Added Example 3 showing consolidation_metadata PROV-O mapping
 
 **v1.0 (2025-10-17):**
 - Initial crosswalk based on schema v2.2
