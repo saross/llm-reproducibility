@@ -1,16 +1,61 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Academic Claims Extraction Schema v2.2",
-  "description": "Schema for extracting and assessing claims from research papers with hierarchical organization, dual-layer uncertainty tracking, and assessment-ready structure",
-  "version": "2.2",
-  "last_updated": "2025-10-17",
+  "title": "Academic Claims Extraction Schema v2.3",
+  "description": "Schema for extracting and assessing claims from research papers with hierarchical organization, dual-layer uncertainty tracking, and consolidation traceability",
+  "version": "2.3",
+  "last_updated": "2025-10-18",
   "changelog": {
+    "2.3": "Added consolidation_metadata to evidence, claims, and implicit arguments for traceability; added related_evidence field; enhanced claim structure with primary_function, claim_nature, quantitative_details; added 'synthesis' to claim_role enum; enhanced declared_uncertainty structure with additional fields",
     "2.2": "Separated extraction-time vs assessment-time fields; added credibility_assessment structure (populated during assessment pass); enhanced evidence_strength for extraction-time observations",
     "2.1": "Post-calibration refinements: Formalized Type 3 (disciplinary_assumption) extraction; added optional COI field to implicit arguments",
     "2.0": "Initial comprehensive schema with dual-layer uncertainty and four-level hierarchy"
   },
   
   "definitions": {
+    "consolidation_metadata": {
+      "type": "object",
+      "description": "Documents consolidation operations performed in Pass 2 rationalization",
+      "properties": {
+        "consolidation_performed": {
+          "type": "boolean",
+          "description": "Whether this item was created by consolidating Pass 1 items"
+        },
+        "source_items": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Pass 1 item IDs that were merged to create this item (e.g., ['P1_E001', 'P1_E002'])"
+        },
+        "consolidation_type": {
+          "type": "string",
+          "enum": [
+            "granularity_reduction",
+            "compound_finding", 
+            "analytical_view",
+            "phase_aggregation",
+            "profile_consolidation",
+            "redundancy_elimination",
+            "narrative_consolidation",
+            "compound_interpretation",
+            "synthesis"
+          ],
+          "description": "Type of consolidation operation performed"
+        },
+        "information_preserved": {
+          "type": "string",
+          "enum": ["complete", "lossy_granularity", "lossy_redundancy"],
+          "description": "Whether consolidation lost information vs just reorganized"
+        },
+        "granularity_available": {
+          "type": "string",
+          "description": "Description of additional granularity available in source paper but not extracted"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Brief explanation of why consolidation was appropriate"
+        }
+      }
+    },
+    
     "evidence": {
       "type": "object",
       "description": "Raw observations, measurements, or data points from the paper",
@@ -41,17 +86,40 @@
           "items": {"type": "string"},
           "description": "Claim IDs this evidence supports"
         },
+        "related_evidence": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Other evidence IDs related to this item (e.g., analytical view references comprehensive item)"
+        },
         "declared_uncertainty": {
           "type": "object",
           "description": "Uncertainty as stated by authors",
           "properties": {
             "type": {
               "type": "string",
-              "enum": ["statistical", "measurement_error", "bounded_range", "confidence_interval", "stylistic_range", "hedging_language", "none_stated"]
+              "enum": ["statistical", "measurement_error", "bounded_range", "confidence_interval", "stylistic_range", "approximation", "hedging"]
             },
-            "value": {"type": "string"},
-            "source": {"type": "string"}
+            "indicator": {
+              "type": "string",
+              "description": "Linguistic marker of uncertainty (ca., about, approximately, ±, etc.)"
+            },
+            "applies_to": {
+              "type": "string",
+              "description": "What the uncertainty applies to (e.g., 'area coverage', 'record threshold')"
+            },
+            "point_estimate_with_error": {"type": "string"},
+            "upper_bound": {"type": "string"},
+            "bounded_range": {"type": "string"},
+            "range": {"type": "string"},
+            "confidence_level": {"type": "number"},
+            "hedging_language": {"type": "array", "items": {"type": "string"}},
+            "present": {"type": "boolean"}
           }
+        },
+        "expected_uncertainty_missing": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Uncertainty information we would expect but is absent"
         },
         
         "_comment_extraction_observations": "Observations made during extraction (not full assessment)",
@@ -63,6 +131,11 @@
         "extraction_notes": {
           "type": "string",
           "description": "Extractor observations about this evidence (quality concerns, gaps, ambiguities)"
+        },
+        "extraction_confidence": {
+          "type": "string",
+          "enum": ["explicit", "inferred", "ambiguous"],
+          "description": "How confident extractor is in classification"
         },
         "implicit_evidence": {
           "type": "object",
@@ -103,12 +176,16 @@
           }
         },
         
+        "consolidation_metadata": {
+          "$ref": "#/definitions/consolidation_metadata"
+        },
+        
         "location": {
           "type": "object",
           "properties": {
             "section": {"type": "string"},
-            "page": {"type": "integer"},
-            "paragraph": {"type": "integer"}
+            "page": {"type": "number"},
+            "paragraph": {"type": ["number", "string"]}
           }
         },
         "verbatim_quote": {
@@ -141,8 +218,13 @@
         },
         "claim_role": {
           "type": "string",
-          "enum": ["core", "intermediate", "supporting", "evidence", "background", "transitional", "methodological"],
+          "enum": ["core", "intermediate", "supporting", "evidence", "background", "transitional", "methodological", "synthesis"],
           "description": "Role in the paper's argument structure"
+        },
+        "primary_function": {
+          "type": "string",
+          "enum": ["premise", "finding", "conclusion", "recommendation", "none"],
+          "description": "Primary argumentative function of the claim"
         },
         "claim_scope": {
           "type": "string",
@@ -154,6 +236,24 @@
           "enum": ["explicit", "implicit"],
           "description": "Whether stated in paper or inferred by extractor"
         },
+        "claim_nature": {
+          "type": "string",
+          "enum": ["quantitative", "qualitative", "mixed", "definitional"],
+          "description": "Nature of the claim"
+        },
+        "quantitative_details": {
+          "type": "object",
+          "description": "Additional details for quantitative claims",
+          "properties": {
+            "source": {
+              "type": "string",
+              "enum": ["measurement", "calculation", "estimate", "statistical"]
+            },
+            "confidence_basis": {"type": "string"},
+            "bounded_range": {"type": "string"},
+            "arithmetic_verifiable": {"type": "boolean"}
+          }
+        },
         
         "_comment_extraction_time_observations": "What extractor observes during extraction",
         "author_confidence": {
@@ -163,7 +263,25 @@
         },
         "declared_uncertainty": {
           "type": "object",
-          "description": "Uncertainty as stated by authors"
+          "description": "Uncertainty as stated by authors",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["statistical", "measurement_error", "bounded_range", "confidence_interval", "stylistic_range", "approximation", "hedging"]
+            },
+            "indicator": {
+              "type": "string",
+              "description": "Linguistic marker of uncertainty"
+            },
+            "applies_to": {"type": "string"},
+            "point_estimate_with_error": {"type": "string"},
+            "upper_bound": {"type": "string"},
+            "bounded_range": {"type": "string"},
+            "range": {"type": "string"},
+            "confidence_level": {"type": "number"},
+            "hedging_language": {"type": "array", "items": {"type": "string"}},
+            "present": {"type": "boolean"}
+          }
         },
         "expected_information_missing": {
           "type": "array",
@@ -336,17 +454,72 @@
           "description": "Implicit argument IDs this claim relies on"
         },
         
+        "consolidation_metadata": {
+          "$ref": "#/definitions/consolidation_metadata"
+        },
+        
         "location": {
           "type": "object",
           "properties": {
             "section": {"type": "string"},
-            "page": {"type": "integer"},
-            "paragraph": {"type": "integer"}
+            "page": {"type": "number"},
+            "paragraph": {"type": ["number", "string"]}
           }
         },
         "verbatim_quote": {
           "type": "string",
           "description": "Exact text from paper"
+        }
+      }
+    },
+    
+    "implicit_argument": {
+      "type": "object",
+      "description": "Unstated reasoning that underlies explicit claims",
+      "required": ["ia_id", "argument", "type", "status"],
+      "properties": {
+        "ia_id": {
+          "type": "string",
+          "pattern": "^IA[0-9]+$",
+          "description": "Unique identifier (IA001, IA002, ...)"
+        },
+        "argument": {
+          "type": "string",
+          "description": "The implicit argument being made"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["logical_implication", "unstated_assumption", "bridging_claim", "disciplinary_assumption"],
+          "description": "Type of implicit reasoning"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["unstated_but_implied", "assumed_without_acknowledgment", "disciplinary_assumption"],
+          "description": "How implicit the argument is"
+        },
+        "supports_claims": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Claims that depend on this implicit argument"
+        },
+        "assessment_notes": {
+          "type": "string",
+          "description": "Why this matters for credibility"
+        },
+        "coi_note": {
+          "type": "string",
+          "description": "Optional: Note if author COI affects interpretation"
+        },
+        "consolidation_metadata": {
+          "$ref": "#/definitions/consolidation_metadata"
+        },
+        "location": {
+          "type": "object",
+          "properties": {
+            "section": {"type": "string"},
+            "page": {"type": "number"},
+            "paragraph": {"type": ["number", "string"]}
+          }
         }
       }
     }
@@ -390,6 +563,10 @@
     "claims": {
       "type": "array",
       "items": {"$ref": "#/definitions/claim"}
+    },
+    "implicit_arguments": {
+      "type": "array",
+      "items": {"$ref": "#/definitions/implicit_argument"}
     }
   }
 }
