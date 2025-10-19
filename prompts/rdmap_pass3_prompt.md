@@ -8,17 +8,22 @@
 
 ## Your Task
 
-Perform automated integrity checks on the Pass 2 RDMAP extraction. Identify structural issues, broken references, schema violations, and completeness gaps. **Do NOT modify the extraction** - produce a validation report only.
+Perform automated integrity checks on the rationalized extraction. Identify structural issues, broken references, schema violations, and completeness gaps. **Do NOT modify the extraction** - produce a validation report only.
 
 **This is NOT quality assessment** - you are checking structural integrity, not methodological quality.
 
-**You have:**
-- Pass 2 rationalized extraction JSON
-- This validation prompt
+**Input:** JSON extraction document from Pass 2
+- May contain only RDMAP arrays (RDMAP-only validation)
+- May contain both RDMAP and claims/evidence arrays (unified validation)
+- Validation adapts to what's present
 
-**You produce:**
-- Validation report in JSON format
-- Issues categorized by severity (critical/important/minor)
+**Your responsibility:** Validate whatever object types are present:
+- If RDMAP arrays present → validate RDMAP thoroughly
+- If claims/evidence arrays present → validate those too
+- Cross-references between object types validated when both present
+- Note when referenced arrays not yet extracted (deferred validation)
+
+**Output:** Validation report in JSON format with issues categorized by severity
 
 ---
 
@@ -26,9 +31,15 @@ Perform automated integrity checks on the Pass 2 RDMAP extraction. Identify stru
 
 **Purpose:** Ensure extraction is structurally sound, internally consistent, and schema-compliant.
 
+**Flexible validation:**
+- Validates whatever object types are present in the extraction
+- RDMAP-only: Validates research_designs, methods, protocols thoroughly
+- Unified: Validates RDMAP + claims + evidence + implicit arguments
+- Notes when cross-references point to not-yet-extracted arrays (deferred validation)
+
 **Scope:**
 - Cross-reference integrity (all IDs exist, bidirectional consistency)
-- Hierarchy validation (Design → Methods → Protocols chains)
+- Hierarchy validation (Design → Methods → Protocols chains; Claims hierarchy)
 - Schema compliance (required fields, valid enums, ID formats)
 - Expected information completeness (aggregated gaps)
 - Consolidation metadata consistency
@@ -75,10 +86,12 @@ Perform automated integrity checks on the Pass 2 RDMAP extraction. Identify stru
     "field": "validated_by_evidence",
     "missing_id": "E046",
     "severity": "important",
-    "note": "Evidence not yet extracted - defer validation"
+    "note": "Evidence array not present in extraction - deferred validation until claims/evidence extracted"
   }
 ]
 ```
+
+**Note:** If referenced object type not present in extraction (e.g., RDMAP references claims but claims array empty), mark as "deferred validation" with severity "important" rather than "critical". This allows RDMAP-only validation during testing.
 
 ---
 
@@ -615,18 +628,24 @@ Perform automated integrity checks on the Pass 2 RDMAP extraction. Identify stru
 
 ## Usage
 
-**Input:** Pass 2 rationalized extraction JSON
+**Input:** Rationalized extraction JSON (from Pass 2)
+- May be RDMAP-only (for testing RDMAP extraction independently)
+- May be unified (RDMAP + claims/evidence for full paper validation)
 
 **Process:**
-1. Run all validation checks systematically
-2. Categorize issues by severity
-3. Aggregate expected information gaps
-4. Generate recommendations
-5. Determine overall status
+1. Detect which object types are present
+2. Run all validation checks systematically for present types
+3. Mark cross-references to absent types as "deferred validation"
+4. Categorize issues by severity
+5. Aggregate expected information gaps
+6. Generate recommendations
+7. Determine overall status
 
 **Output:** Validation report JSON (do not modify extraction)
 
-**Next step:** If PASS or PASS_WITH_ISSUES → proceed to assessment. If FAIL → return to Pass 2 for fixes.
+**Next step:** 
+- If PASS or PASS_WITH_ISSUES → proceed to assessment (or next extraction phase)
+- If FAIL → return to Pass 2 for fixes
 
 ---
 

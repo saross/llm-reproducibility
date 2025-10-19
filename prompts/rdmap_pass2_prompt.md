@@ -8,11 +8,23 @@
 
 ## Your Task
 
-Review the Pass 1 RDMAP extraction and apply consolidation principles to produce a rationalized, high-quality extraction. Pass 1 intentionally over-extracted (~40-50% more items than needed). Your job is to consolidate, refine tier assignments, validate cross-references, and verify completeness.
+Review Pass 1 RDMAP extraction and apply consolidation principles to produce rationalized, high-quality extraction. Pass 1 intentionally over-extracted (~40-50%). Your job is to consolidate, refine tier assignments, validate cross-references, and verify completeness.
 
-**You have access to:**
-1. Pass 1 extraction JSON (likely over-extracted and over-granular)
-2. Original section text (for verification and fact-checking)
+**Input:** JSON extraction document with RDMAP arrays populated from Pass 1
+- May also contain claims/evidence arrays from separate extraction
+
+**Your responsibility:** Refine these arrays in place:
+- `research_designs`
+- `methods`
+- `protocols`
+
+**Leave untouched:**
+- `evidence`, `claims`, `implicit_arguments` (rationalized separately)
+- Any other arrays not your responsibility
+
+**Output:** Same JSON document with RDMAP arrays rationalized
+
+**You also have access to:** Original section text (for verification)
 
 ---
 
@@ -655,7 +667,7 @@ Required fields:
 
 ## Output Format
 
-Provide rationalized extraction as JSON following schema v2.4:
+**Return the same JSON document with RDMAP arrays rationalized:**
 
 ```json
 {
@@ -663,9 +675,14 @@ Provide rationalized extraction as JSON following schema v2.4:
   "extraction_timestamp": "ISO 8601",
   "extractor": "Claude Sonnet 4.5",
   
-  "research_designs": [research_design_object],
-  "methods": [method_object],
-  "protocols": [protocol_object],
+  // These arrays remain unchanged if already populated:
+  "evidence": [...],           // Leave untouched
+  "claims": [...],             // Leave untouched
+  "implicit_arguments": [...], // Leave untouched
+  
+  "research_designs": [research_design_object],  // Rationalized
+  "methods": [method_object],                    // Rationalized
+  "protocols": [protocol_object],                // Rationalized
   
   "extraction_notes": {
     "pass": 2,
@@ -705,6 +722,7 @@ Before finalizing rationalization:
 - [ ] Expected information gaps categorized (critical/important/minor)
 - [ ] Location fields preserved for all items
 - [ ] Verbatim quotes represent consolidated items accurately
+- [ ] Other arrays (claims/evidence) left unchanged?
 
 ---
 
@@ -718,5 +736,6 @@ Before finalizing rationalization:
 - Finalize tier assignments
 - Document all consolidations
 - Prepare for Pass 3 validation
+- **Don't touch claims/evidence arrays** - those are rationalized separately
 
 **Your goal:** Produce a rationalized, high-quality extraction ready for validation and assessment.

@@ -1,332 +1,315 @@
-# Claims Extraction Prompt - PASS 2: Rationalization v2.4
+# Claims & Evidence Extraction Prompt - PASS 2: Rationalization v2.4
 
 **Version:** 2.4 Pass 2  
-**Last Updated:** 2025-10-18  
-**Workflow Stage:** Pass 2 of 2 - Consolidate and refine Pass 1 extraction
-
-**Changes in v2.4:**
-- Reorganized for clarity: priority hierarchy, decision trees, boxed references
-- 15% length reduction through consolidation and example compression
-- All v2.3 patterns and distinctions preserved
+**Last Updated:** 2025-10-19  
+**Workflow Stage:** Pass 2 - Consolidate and refine Pass 1 extraction  
+**Update:** Clarified iterative accumulation workflow; integrated v2.3 consolidation metadata and multi-dimensional evidence patterns
 
 ---
 
 ## Your Task
 
-Review the Pass 1 extraction and apply consolidation principles to produce a rationalized, high-quality extraction. Pass 1 intentionally over-extracted (~40-50% more items than needed). Your job is to consolidate, correct, and verify.
+Review Pass 1 extraction and apply consolidation principles to produce rationalized, high-quality evidence/claims/implicit arguments. Pass 1 intentionally over-extracted (~40-50%). Your job is to consolidate, correct boundaries, and verify relationships.
+
+**Input:** JSON extraction document with evidence/claims/implicit arguments populated from Pass 1
+- May also contain RDMAP arrays from separate extraction
+
+**Your responsibility:** Refine these arrays in place:
+- `evidence`
+- `claims`
+- `implicit_arguments`
+- `project_metadata`
+
+**Leave untouched:**
+- `research_designs`, `methods`, `protocols` (RDMAP arrays - rationalized separately)
+- Any other arrays not your responsibility
+
+**Output:** Same JSON document with evidence/claims/implicit arguments rationalized
+
+**You also have access to:** Original section text (for verification)
+
+---
+
+## RATIONALIZATION PHILOSOPHY FOR PASS 2
+
+**Goals:**
+- Reduce over-extraction to appropriate granularity (target 15-20% reduction)
+- Correct evidence/claim boundary errors
+- Remove items that don't support claims (move to project_metadata)
+- Consolidate redundant or over-granular items
+- Add missing implicit generalizations
+- Verify all relationships accurate
 
 **Expected outcome:**
 - 15-20% reduction in total items (may be higher for measurement-heavy sections)
 - Better evidence/claim boundaries
-- Appropriate consolidation without loss of information
+- Appropriate consolidation without information loss
 - All claims have clear evidential support
-- Accurate citations and no hallucinations
 - Complete consolidation traceability via metadata
 
----
-
-## PATTERN PRIORITY HIERARCHY
-
-### ⭐⭐⭐ CRITICAL PATTERNS (Never Miss These)
-
-**1. Profile vs Comparison Dimensions**
-- **LUMP:** Profile/characteristic dimensions (error types, quality metrics, component features)
-- **SPLIT:** Comparison dimensions (year-over-year, before/after, treatment/control)
-- **Why critical:** Merging temporal comparisons destroys the comparison claim
-
-**2. Multi-Dimensional Evidence → Analytical Views**
-- When evidence serves multiple dimensions AND dimension 2 supports distinct claim
-- Create primary item + analytical view(s), cross-reference via `related_evidence`
-- **Why critical:** Enables one dataset, multiple assessment perspectives
-
-**3. The Acid Test**
-- "Would I assess the credibility of these statements TOGETHER or SEPARATELY?"
-- Together → LUMP | Separately → SPLIT
-- **Why critical:** Primary consolidation decision criterion
-
-### ⭐⭐ SECONDARY PATTERNS (Apply When Recognized)
-
-**4. Three High-Value Addition Patterns**
-- Implicit comparisons (contrastive framing without explicit statement)
-- Overlooked explicit content (recommendations, forward-looking statements)
-- Cross-subsection synthesis (overarching messages spanning subsections)
-
-**5. Anchor Numbers in Claims**
-- Include key quantitative values that make claims interpretable
-- Strategic duplication for readability vs full evidence reproduction
-
-**6. Calculation Claims vs Evidence**
-- Straightforward arithmetic → evidence
-- Interpretation/comparison beyond arithmetic → claims
-
-### 📋 REFERENCE INFORMATION (Consult as Needed)
-
-- Consolidation_metadata field structure (see Reference Box A)
-- Consolidation type taxonomy (see Reference Box B)
-- Expected information checklists (inherited from Pass 1)
+**NOT expansion:** Pass 2 consolidates and refines. Do not add new items unless clearly missed in Pass 1.
 
 ---
 
-## CORE CONSOLIDATION PRINCIPLES
+## Core Consolidation Principles
 
-### Match Evidence Granularity to Claim Granularity
+### The Lumping/Splitting Decision Framework
+
+**PRIMARY PRINCIPLE: Match Evidence Granularity to Claim Granularity**
 
 Evidence should be at the same level of detail as the claims they support:
-- If claim assesses components **together** → consolidate evidence
-- If claim assesses components **separately** → keep evidence separate
-- If claims need both views → consider analytical view pattern
+- If claim assesses components **together** → consolidate evidence into compound finding
+- If claim assesses components **separately** → keep evidence items separate
+- If claims need both views → consider multi-dimensional evidence pattern (see below)
 
-### Lumping/Splitting Decision Framework
-
-```
-Apply ACID TEST: "Assess together or separately?"
-│
-├─ TOGETHER → Check lumping patterns:
-│  ├─ Multiple specs for same entity? → LUMP (specifications)
-│  ├─ Compound professional judgment? → LUMP (interpretation)
-│  ├─ Joint technical capabilities? → LUMP (capability profile)
-│  └─ Single workflow steps? → LUMP (process aggregation)
-│
-└─ SEPARATELY → Check splitting requirements:
-   ├─ Different observations support different claims? → SPLIT
-   ├─ Different assessment requirements? → SPLIT
-   ├─ Different sources or methods? → SPLIT
-   ├─ Temporal comparison IS the claim? → SPLIT (critical)
-   └─ Multi-dimensional with different supported claims? → ANALYTICAL VIEW
-```
-
-**When to LUMP:**
-1. **Same entity specifications** - Map scale + source + date → "Historical maps at 1:5000 scale from 1920s paper sources"
-2. **Compound interpretation** - "Accurate" + "Pre-modern" → "Maps accurately represent pre-modern landscapes"
-3. **Joint capabilities** - 8 automation features → "Platform provides comprehensive automation"
-4. **Single workflow** - Multiple prep tasks → "Staff handled geospatial preparation"
-
-**When to SPLIT:**
-1. **Different claims** - Hours worked (efficiency) vs features generated (output)
-2. **Different assessments** - Accuracy 95.7% vs Completeness 83% (independent quality dimensions)
-3. **Different sources** - Direct measurement vs professional judgment
-4. **Temporal comparisons** - 2017 vs 2018 (comparison IS the claim - never merge)
-5. **Multi-dimensional** - Time by phase vs time by activity type (see analytical view pattern)
+**ACID TEST:** "Would I assess the credibility of these statements TOGETHER or SEPARATELY?"
+- Together → CONSOLIDATE
+- Separately → KEEP DISTINCT
 
 ---
 
-## MULTI-DIMENSIONAL EVIDENCE: ANALYTICAL VIEW PATTERN
+### Anchor Numbers Principle (Strategic Duplication)
 
-### Decision Tree
+**Rule:** Claims can include key quantitative values that provide necessary context, even if these numbers appear in evidence. This is acceptable strategic duplication that makes claims interpretable.
 
-```
-Does evidence serve multiple analytical dimensions?
-├─ NO → Create single item, organized by dominant dimension
-└─ YES → Does dimension 2 support a distinct claim?
-    ├─ NO → Keep in primary item only
-    └─ YES → CREATE ANALYTICAL VIEW
-        ├─ Primary item (dimension 1, comprehensive)
-        ├─ Analytical view item (dimension 2, extracted/reorganized)
-        ├─ Cross-reference via related_evidence
-        └─ Document in consolidation_metadata
-```
+**Good anchor numbers:**
+- ✅ Essential context: "System produced 8,343 features at 54 seconds per feature"
+- ✅ Scale indicators: "Completed 125.8 person-hours of survey"
+- ✅ Key metrics: "Achieved 95.7% accuracy"
 
-### Example Pattern
+**Avoid full duplication:**
+- ❌ Reproducing entire evidence verbatim in claim
+- ❌ Including every number from evidence in claim
 
-**Primary Item (E001):** Time by phase (comprehensive)
-- Supports claim about total investment
-- Organized chronologically
-
-**Analytical View (E002):** Time by activity type (supervision extracted)
-- Supports claim about minimal supervision
-- Extracted from primary, different lens
-- `related_evidence: ["E001"]`
-- `consolidation_type: "analytical_view"`
-
-**Key principle:** Same underlying data, different analytical perspectives for different claims.
+**Balance:** Make claims interpretable while maintaining claim-evidence graph traceability
 
 ---
 
-## STRATEGIC DECISIONS
+### Multi-Dimensional Evidence Pattern (NEW v2.3)
 
-### Anchor Numbers Principle
+**Problem:** Some observations contain multiple analytically distinct dimensions that support different claims
 
-Claims can include key quantitative values for interpretability, even if numbers appear in evidence.
+**Example:** Supervision time data
+- **Dimension 1 (Temporal):** "2.4 hours in 2017, 1.5 hours in 2018" → supports temporal comparison claim
+- **Dimension 2 (Total):** "3.9 hours total" → supports efficiency claim
 
-**Include anchor numbers when:**
-- Numbers are central to claim meaning
-- Omitting makes claim too vague
-- Provides concrete grounding
+**Solution:** Create "analytical views" of same underlying data
 
-**Example:**
-- ✅ "Produced 8,343 features at 54s per feature"
-- ✅ "Overall quality was good (>94% accuracy)"
-- ❌ Full verbatim reproduction of evidence text
-
-### Calculation Claims vs Evidence
-
-**Test:** "Does this require reasoning beyond arithmetic?"
-- **NO** → Evidence (e.g., "63s per record" from total÷count)
-- **YES** → Claim (e.g., "2018 was slower" requires comparative judgment)
-
-**Remove redundant calculation claims:** If claim merely restates calculation in evidence without interpretation.
-
-### Strategic Verbosity in Claims
-
-**Balance:** Readable and interpretable vs requiring excessive graph navigation
-
-**Good verbosity:**
-- "Overall data quality was good (>94% accuracy), with low recoverable omissions"
-- Connects to subclaims, includes anchor numbers, interpretable standalone
-
-**Bad verbosity:**
-- Reproducing full evidence text
-- Losing clarity in excessive qualification
-
----
-
-## PASS 2 OPERATIONS
-
-### STEP 1: Review Pass 1 Extraction
-- Read all items against source text
-- Identify consolidation opportunities
-- Flag boundary errors
-- Check for missing implicit content
-
-### STEP 2: Apply Operations
-
-**CONSOLIDATE** redundant/over-granular items
-- Apply lumping patterns
-- Use appropriate consolidation_type
-- Document via consolidation_metadata
-
-**CREATE ANALYTICAL VIEWS** for multi-dimensional evidence
-- Primary item + view(s) for dimensions supporting different claims
-- Cross-reference via related_evidence
-
-**SPLIT** over-consolidated items (rare)
-- When Pass 1 merged items needing separate assessment
-
-**RECLASSIFY** boundary errors
-- Professional judgment → claims
-- Direct measurements → evidence
-
-**ADD** missing content (three high-value patterns)
-- **Implicit comparisons:** Contrastive framing → explicit comparison claim
-- **Overlooked explicit:** Recommendations, forward-looking statements
-- **Cross-subsection synthesis:** Overarching messages spanning findings
-
-**REMOVE** items not supporting claims
-- Move to project_metadata (timeline, location, resources, track record)
-
-**VERIFY** relationships
-- Update supports_claims arrays
-- Check support chains
-- Maintain hierarchy
-
-### STEP 3: Quality Checks
-
-- Citation accuracy (no hallucinations)
-- Support chain integrity (no broken links)
-- Consolidation traceability (complete metadata)
-- Information preservation (verify via verbatim_quotes)
-
----
-
-## OUTPUT REQUIREMENTS
-
-**1. Rationalized JSON** (schema v2.4)
-- All items properly consolidated
-- Consolidation_metadata complete
-- Analytical views cross-referenced
-- Relationships verified
-
-**2. Change Log:**
+**Primary evidence item:**
 ```json
 {
-  "operation": "CONSOLIDATE | ADD | REMOVE | SPLIT | RECLASSIFY | ANALYTICAL_VIEW",
-  "items": "What was affected",
-  "rationale": "Why this operation was performed",
-  "acid_test": "For consolidations: 'together' or 'separately'?"
+  "evidence_id": "E001",
+  "evidence_text": "Supervision time: 2.4 hours (2017), 1.5 hours (2018), 3.9 hours total",
+  "related_evidence": ["E002"]
 }
 ```
 
-**3. Summary Statistics:**
-- Pass 1 vs Pass 2 item counts
-- Reduction percentages
-- Operations breakdown
+**Analytical view:**
+```json
+{
+  "evidence_id": "E002", 
+  "evidence_text": "Total supervision time: 3.9 hours across both field seasons",
+  "related_evidence": ["E001"],
+  "extraction_notes": "Analytical view of E001 emphasizing total rather than temporal progression"
+}
+```
+
+**When to use:**
+- Multiple analytically distinct dimensions in same observation
+- Each dimension supports different claim
+- Dimensions would be assessed separately
+
+**When NOT to use:**
+- Simply redundant measurements → consolidate
+- Different observations → keep separate (not views)
+- Dimensions assessed together → single consolidated item
 
 ---
 
-## QUALITY CRITERIA
+### Consolidation Metadata (REQUIRED v2.3)
 
-**Good rationalization demonstrates:**
-- ✅ Appropriate consolidation (15-20% reduction without information loss)
-- ✅ Boundary accuracy (evidence/claim classifications correct)
-- ✅ Relationship integrity (all support chains valid)
-- ✅ Citation accuracy (no hallucinations)
-- ✅ Completeness (no important content missed)
-- ✅ Granularity match (items at appropriate level for assessment)
-- ✅ Consolidation traceability (complete metadata)
-- ✅ Analytical views used appropriately
-
-**Common mistakes to avoid:**
-- Over-consolidation (merging items needing separate assessment)
-- Consolidating temporal comparisons (year-over-year, before/after must stay separate)
-- Breaking support chains (consolidating evidence without updating claims)
-- Citation errors (inaccuracies during text merging)
-- Missing analytical views (consolidating multi-dimensional evidence inappropriately)
-- Incomplete metadata (not documenting consolidation operations)
-- Hallucination (adding content not in source)
-
----
-
-## REMEMBER
-
-- **Acid test is primary criterion** for lumping/splitting
-- **Profile dimensions consolidate, comparison dimensions split**
-- **Multi-dimensional evidence** gets analytical views when dimensions support different claims
-- **Document everything** via consolidation_metadata
-- **When uncertain, keep separate** - splitting beats over-lumping
-- **Every claim needs support** - verify relationships after consolidation
-- **Check against source** - no hallucinations
-- **Project context ≠ Evidence** - move non-supportive items to metadata
-
----
-
-## REFERENCE BOX A: Consolidation Metadata Structure
-
-**Populate for EVERY consolidated item:**
+**ALL consolidated items MUST have complete consolidation_metadata.**
 
 ```json
 "consolidation_metadata": {
-  "consolidation_performed": true,
-  "source_items": ["P1_E001", "P1_E002", ...],
-  "consolidation_type": "[see Reference Box B]",
+  "consolidated_from": ["P1_E001", "P1_E002"],
+  "consolidation_type": "granularity_reduction | compound_finding | analytical_view | phase_aggregation | profile_consolidation | redundancy_elimination | narrative_consolidation | compound_interpretation | synthesis",
   "information_preserved": "complete | lossy_granularity | lossy_redundancy",
-  "granularity_available": "Description of additional detail in source",
-  "rationale": "Why this consolidation was appropriate"
+  "granularity_available": "Description of additional detail available in source",
+  "rationale": "Why consolidation appropriate"
+}
+```
+
+**Consolidation types:**
+
+**Evidence:**
+- `granularity_reduction` - Fine measurements → aggregate
+- `compound_finding` - Multiple measurements → single finding
+- `analytical_view` - Reorganize by different dimension
+- `phase_aggregation` - Temporal combination
+- `profile_consolidation` - Multiple characteristics → complete profile
+- `redundancy_elimination` - Overlapping items merged
+
+**Claims:**
+- `narrative_consolidation` - Problem + cause + solution → story
+- `compound_interpretation` - Multiple judgments → integrated assessment
+- `synthesis` - Cross-subsection integration → overarching conclusion
+
+---
+
+### Strategic Verbosity in Claims (NEW v2.3)
+
+**Principle:** Contextualized claims are more useful than terse claims
+
+**Good verbosity:** Provides interpretive context
+- ✅ "Mobile platform enabled collection of 8,343 features across 22 sites with minimal supervision"
+- ❌ "Platform worked well"
+
+**Bad verbosity:** Just longer without adding meaning
+- ❌ "The mobile platform that was used enabled the collection of many features"
+
+**Balance:** Make claims interpretable without full evidence reproduction
+
+---
+
+### Calculation Claims vs Evidence (NEW v2.3)
+
+**Rule:** If a claim simply restates arithmetic already clear in evidence → remove it
+
+**Test:** "Does this claim require reasoning beyond straightforward arithmetic?"
+- If NO → It's redundant, remove it
+- If YES → It's interpretation, keep it
+
+**Example - Remove:**
+- Evidence: "40 hours in 2017, 35 hours in 2018"
+- Claim: "Total of 75 hours across both seasons" ← This is arithmetic, not interpretation
+
+**Example - Keep:**
+- Evidence: "40 hours in 2017, 35 hours in 2018"
+- Claim: "Efficiency improved in second season" ← This is interpretation requiring judgment
+
+---
+
+## Pass 2 Addition Patterns (NEW v2.3)
+
+Pass 1 consistently under-extracts certain claim types. **Actively look for and add these in Pass 2:**
+
+**Pattern 1: Implicit Comparisons**
+- **Trigger:** Evidence compares values but no explicit comparison claim
+- **Look for:** Measurements side-by-side with implicit "better/worse" framing
+- **Example:** Platform differences with no explicit superiority claim
+- **Test:** "Is there an implicit judgment being made without explicit claim?"
+
+**Pattern 2: Overlooked Explicit Content**
+- **Trigger:** Explicit recommendations or forward-looking statements missed in Pass 1
+- **Look for:** "Should," "would likely," "future work," "recommendations" language
+- **Example:** Final paragraph recommendation about QA methods
+- **Test:** "Did I capture all explicit recommendations and forward-looking statements?"
+
+**Pattern 3: Cross-Subsection Synthesis**
+- **Trigger:** Pass 1 focuses on local claims, misses global integration
+- **Look for:** Overarching messages spanning multiple subsections
+- **Example:** Integration of output + quality + efficiency findings
+- **Test:** "What's the overall takeaway integrating findings across this section?"
+
+---
+
+## Consolidation Workflow
+
+### STEP 1: Boundary Verification
+- Check evidence/claim classifications
+- Move misclassified arguments to claims
+- Move context to project_metadata
+- Reclassify professional judgment claims
+
+### STEP 2: Consolidation
+- Apply lumping/splitting test
+- Match evidence granularity to claims
+- Create analytical views where appropriate
+- Document all consolidations with metadata
+- Add missing synthesis/comparison/recommendation claims
+- Remove redundant calculation claims
+
+### STEP 3: Relationship Verification
+- Update supports_claims arrays after consolidation
+- Check supported_by_evidence links
+- Verify hierarchical claim structure
+- Validate analytical view cross-references
+
+### STEP 4: Quality Checks
+- No hallucinations
+- All verbatim_quotes verified
+- Support chain integrity
+- Consolidation traceability
+- Information preservation verified
+- Strategic verbosity applied
+- Other arrays (RDMAP) untouched
+
+---
+
+## Output Format
+
+**Return the same JSON document with these arrays rationalized:**
+
+```json
+{
+  "schema_version": "2.4",
+  "extraction_timestamp": "ISO 8601",
+  "extractor": "Claude Sonnet 4.5",
+  
+  "evidence": [evidence_object],          // Rationalized
+  "claims": [claim_object],               // Rationalized
+  "implicit_arguments": [IA_object],      // Rationalized
+  "project_metadata": {...},              // Rationalized
+  
+  // These arrays remain unchanged:
+  "research_designs": [...],              // Leave untouched
+  "methods": [...],                       // Leave untouched
+  "protocols": [...],                     // Leave untouched
+  
+  "extraction_notes": {
+    "pass": 2,
+    "section_extracted": "string",
+    "items_before_rationalization": 85,
+    "items_after_rationalization": 69,
+    "reduction_percentage": 18.8,
+    "consolidations_performed": 16,
+    "additions_performed": 3,
+    "boundary_corrections": 2
+  }
 }
 ```
 
 ---
 
-## REFERENCE BOX B: Consolidation Type Taxonomy
+## Quality Checklist for Pass 2
 
-**For Evidence:**
-- `granularity_reduction`: Fine-grain → aggregate (task times → phase totals)
-- `compound_finding`: Multiple measurements → single finding (time + output → productivity)
-- `analytical_view`: Reorganize by different dimension (supervision from phase breakdown)
-- `phase_aggregation`: Sequential/temporal items combined (2017 + 2018 → total)
-- `profile_consolidation`: Multiple characteristics → complete profile (error types)
-- `redundancy_elimination`: Overlapping items merged (rare in Pass 1)
+Before finalizing:
 
-**For Claims:**
-- `narrative_consolidation`: Problem + cause + solution → story
-- `compound_interpretation`: Multiple judgments → integrated assessment
-- `synthesis`: Cross-subsection integration → overarching conclusion
-
-**For Implicit Arguments:**
-- Same types as claims when consolidating multiple IAs
+- [ ] 15-20% reduction achieved (higher for measurement-heavy sections OK)
+- [ ] All consolidations have complete consolidation_metadata
+- [ ] No information loss from consolidations
+- [ ] No remaining redundancy
+- [ ] Evidence/claim boundaries accurate
+- [ ] All claims have evidential support
+- [ ] Multi-dimensional evidence appropriately handled
+- [ ] Anchor numbers appropriately included in claims
+- [ ] Redundant calculation claims removed
+- [ ] Strategic verbosity applied
+- [ ] Addition patterns checked (comparisons, recommendations, synthesis)
+- [ ] All relationships verified and bidirectional
+- [ ] Other arrays (RDMAP) untouched
 
 ---
 
-**Version:** 2.4  
-**Schema:** v2.4 (with consolidation_metadata)  
-**Length:** ~410 lines (15% reduction from v2.3)  
-**Date:** 2025-10-18
+## Remember
+
+**Pass 2 is about CONSOLIDATION AND REFINEMENT, not expansion.**
+
+- Reduce granularity appropriately
+- Preserve all critical information
+- Document all consolidations
+- Verify all relationships
+- **Don't touch RDMAP arrays** - those are rationalized separately
+
+**Your goal:** Produce rationalized, high-quality extraction ready for validation and assessment.

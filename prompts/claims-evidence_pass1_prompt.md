@@ -1,19 +1,31 @@
-# Claims Extraction Prompt - PASS 1: Liberal Extraction v2.3
+# Claims & Evidence Extraction Prompt - PASS 1: Liberal Extraction v2.4
 
-**Version:** 2.3 Pass 1  
-**Last Updated:** 2025-10-18  
-**Workflow Stage:** Pass 1 of 2 - Liberal extraction with over-capture strategy
-
-**Changes in v2.3:**
-- 10% length reduction through example compression and reference boxing
-- Boxed expected information checklists for easier reference
-- All extraction patterns and guidance preserved
+**Version:** 2.4 Pass 1  
+**Last Updated:** 2025-10-19  
+**Workflow Stage:** Pass 1 - Liberal extraction with over-capture strategy  
+**Update:** Clarified iterative accumulation workflow
 
 ---
 
 ## Your Task
 
-Extract evidence, claims, and implicit arguments from a research paper section using the provided JSON schema. This is **Pass 1: Liberal Extraction** - when uncertain, err on the side of inclusion. Pass 2 will consolidate and refine.
+Extract evidence, claims, and implicit arguments from a research paper section. This is **Pass 1: Liberal Extraction** - when uncertain, err on the side of inclusion. Pass 2 will consolidate and refine.
+
+**Input:** JSON extraction document (schema v2.4)
+- May be blank template (starting fresh)
+- May be partially populated (if RDMAP or other sections already extracted)
+
+**Your responsibility:** Populate these arrays:
+- `evidence`
+- `claims`
+- `implicit_arguments`
+- `project_metadata`
+
+**Leave untouched:** 
+- `research_designs`, `methods`, `protocols` (RDMAP arrays - extracted separately)
+- Any other arrays already populated
+
+**Output:** Same JSON document with evidence/claims/implicit arguments arrays populated
 
 ---
 
@@ -22,7 +34,7 @@ Extract evidence, claims, and implicit arguments from a research paper section u
 **When uncertain whether something qualifies as evidence/claim: INCLUDE IT.**
 
 - Better to over-extract and consolidate later than miss important content
-- Preserve granularity - we will consolidate in Pass 2
+- Preserve granularity - we will consolidate in Pass 2 rationalization
 - Accept some over-extraction as expected and manageable
 - Focus on comprehensive capture, not perfect classification
 
@@ -38,11 +50,11 @@ Extract evidence, claims, and implicit arguments from a research paper section u
 
 ---
 
-## CORE EXTRACTION PRINCIPLES
+## Core Extraction Principles
 
 ### 1. Evidence vs. Claims Distinction
 
-**EVIDENCE** = Raw observations, measurements, or data requiring minimal interpretation
+**EVIDENCE** = Raw observations, measurements, or data that require minimal interpretation
 - Direct measurements (e.g., "125.8 person-hours")
 - Observations (e.g., "12 students owned smartphones")
 - Data points (e.g., "95.7% accuracy")
@@ -55,7 +67,9 @@ Extract evidence, claims, and implicit arguments from a research paper section u
 - Involve framing or definitional choices
 - Connect evidence to broader patterns
 
-**Professional Judgment Boundary:** Statements requiring expertise to assess (e.g., "these maps are accurate") are **CLAIMS** supported by implicit professional judgment, not evidence. Extract as INTERPRETATION claims.
+**Professional Judgment Boundary:** Statements requiring expertise to assess (e.g., "these maps are accurate") are **CLAIMS** supported by implicit professional judgment, not evidence. Extract as INTERPRETATION claims, not observations.
+
+---
 
 ### 2. Evidence Must Support Claims
 
@@ -65,234 +79,87 @@ Extract observations only if they support specific claims. Context that doesn't 
 - If YES → Evidence
 - If NO → Project metadata (timeline, location, resources, track record)
 
-**Track Record = Context, Not Evidence:** "Method X worked before" justifies attempting the approach but doesn't support current project claims. Move to `project_metadata`.
-
-### 3. Uncertainty Tracking (Dual Layer)
-
-**Author Layer (Declared):** What the paper explicitly states
-- Statistical ranges (±)
-- Confidence intervals
-- Hedging language ("approximately," "roughly," "around")
-- Stylistic ranges ("10-20 minutes")
-
-**Assessor Layer (Expected):** What we expect to see but might be missing
-- For measurements: precision, error margins, sample size
-- For estimates: bounded ranges, confidence basis
-- For comparisons: what was held constant, fairness justification
-- Use expected_information_checklists (Reference Box) to identify gaps
-
-### 4. Hierarchical Organization (Four Levels)
-
-**1. CORE** (5-10 claims) - Main thesis arguments
-- The central conclusions the paper seeks to establish
-- Example: "Crowdsourcing is suitable for datasets of 10,000-60,000 features"
-
-**2. INTERMEDIATE** (10-15 claims) - Major supporting arguments
-- Build toward core claims
-- Example: "The approach yields 190 features per staff-hour"
-
-**3. SUPPORTING** (15-25 claims) - Specific findings
-- Detailed results and analyses
-- Example: "In 2017, 54 seconds average per feature"
-
-**4. EVIDENCE** (30-50 items) - Observations and measurements
-- Raw data points
-- Example: "125.8 person-hours of digitization work"
-
-**Additional roles:** BACKGROUND (literature context), METHODOLOGICAL (about methods), TRANSITIONAL (narrative scaffolding)
-
-### 5. Implicit Arguments
-
-Extract unstated reasoning for HIGH-PRIORITY claims only (core and key intermediate claims):
-
-**TYPE 1: Logical Implications** - Direct inferences the paper expects readers to make
-- Example: "X is 3x faster than Y" → [implicit: "X is more efficient"]
-
-**TYPE 2: Unstated Assumptions** - Essential assumptions never stated
-- Bridge claims linking evidence to conclusions
-- Specific causal links or predictions needed for THIS argument
-- Example: "Ease of learning leads to sustained productivity" (specific prediction)
-
-**TYPE 3: Deep Disciplinary Assumptions** - Paradigmatic foundational principles
-- **Distinguishing criteria:** Paradigmatic, foundational, values-based, meta-level
-- Frame entire research programs, not just this paper's argument
-- Example: "More features = more value" (assumes completeness > selectivity)
-- Mark type: "disciplinary_assumption" and status: "disciplinary_assumption"
-
-Extract using same JSON format; mark type and status appropriately. These reveal underlying paradigms and values rather than specific logical gaps in the argument chain.
+**Track Record = Context, Not Evidence:** "Method X worked before" justifies attempting the approach but doesn't support current project claims. Move to `project_metadata`, not evidence.
 
 ---
 
-## SPECIAL EXTRACTION PATTERNS
+### 3. Four-Level Hierarchy (Claims)
 
-### Pattern: Implicit Generalization from Single Cases
+**CORE claims** (typically 5-10 per paper)
+- Main thesis, key findings, primary contributions
+- What authors want you to remember
+- Top of argument structure
 
-When project-specific observation (e.g., "12 students had mobile devices") supports domain-level claim (e.g., "volunteers prefer mobile devices"):
+**INTERMEDIATE claims** (vary by paper)
+- Support core claims
+- May have their own supporting claims
+- Middle layers of argument
 
-Extract BOTH:
-1. **Evidence**: Specific observation with precise details
-2. **Claim** (mark as `claim_status: "implicit"`): Generalized pattern
-   - Set `extraction_flags.generalization_from_single_case: true`
-   - Note in `extraction_notes` what would make generalization more robust
+**SUPPORTING claims** 
+- Directly supported by evidence
+- Bottom layer of claim hierarchy
+- Connect evidence to higher claims
 
-**Why this matters:** Single-case generalizations are common in HASS research but represent validity threats. Flagging them enables credibility assessment.
-
----
-
-## JSON OUTPUT STRUCTURE
-
-### For EVIDENCE:
-
-```json
-{
-  "evidence_id": "E###",
-  "evidence_text": "[Observation or measurement]",
-  "evidence_type": "[Type - free text for now]",
-  "evidence_basis": "[direct_measurement | statistical_output | observational_record | 
-                      archival_document | professional_judgment | author_assertion | 
-                      derived_calculation | comparative_analysis]",
-  "supports_claims": ["C###", "C###"],
-  
-  "declared_uncertainty": {
-    "type": "[statistical | measurement_error | bounded_range | confidence_interval | 
-             stylistic_range | hedging_language | none_stated]",
-    "value": "[The uncertainty value if stated]",
-    "source": "[How authors express it]"
-  },
-  
-  "expected_information_missing": ["[What should be present but isn't]"],
-  "extraction_notes": "[Observations about quality, gaps, ambiguities]",
-  
-  "implicit_evidence": {
-    "evidence_type": "[author_observation | professional_judgment | team_consensus | 
-                       disciplinary_knowledge | common_knowledge]",
-    "explanation_provided": [true/false]
-  },
-  
-  "location": {"section": "", "page": #, "paragraph": #},
-  "verbatim_quote": "[Exact text]"
-}
-```
-
-### For CLAIMS:
-
-```json
-{
-  "claim_id": "C###",
-  "claim_text": "[The assertion being made]",
-  "claim_status": "[explicit | implicit]",
-  
-  // CLASSIFICATION
-  "claim_type": "[EMPIRICAL | INTERPRETATION | METHODOLOGICAL | THEORETICAL]",
-  "claim_role": "[core | intermediate | supporting | evidence | background | 
-                  transitional | methodological]",
-  "claim_function": {
-    "primary_function": "[premise | finding | conclusion | recommendation]",
-    "secondary_function": "[premise | finding | conclusion | recommendation | none]"
-  },
-  "claim_scope": "[project | domain | general]",
-  
-  // NATURE
-  "claim_nature": "[quantitative | qualitative | mixed | definitional]",
-  "quantitative_details": {
-    "source": "[measurement | calculation | estimate | statistical]",
-    "confidence_basis": "[What gives confidence]",
-    "bounded_range": "[If provided]",
-    "arithmetic_verifiable": [true/false]
-  },
-  
-  // AUTHOR LAYER
-  "author_confidence": "[definite | probable | speculative | hedged]",
-  "declared_uncertainty": {
-    // Same structure as evidence
-  },
-  
-  // EXTRACTION OBSERVATIONS
-  "expected_information_missing": ["[Expected information not provided]"],
-  "extraction_flags": {
-    "generalization_from_single_case": [true/false],
-    "requires_professional_judgment": [true/false],
-    "boundary_ambiguous": [true/false]
-  },
-  "extraction_confidence": "[explicit | inferred | ambiguous]",
-  "extraction_notes": "[Observations about this claim]",
-  
-  // COMPOSITION (for complex claims)
-  "composed_of": {
-    "evidence": ["E###", "E###"],
-    "calculations": ["[Arithmetic operations]"],
-    "boundary_decisions": ["[Definitional choices made]"],
-    "causal_framing": "[How causality is framed]"
-  },
-  
-  // RELATIONSHIPS
-  "supports_claims": ["C###"],
-  "supported_by_claims": ["C###"],
-  "supported_by_evidence": ["E###"],
-  "related_claims": {
-    "alternatives": ["C###"],
-    "qualifications": ["C###"],
-    "contradicts": ["[Prior literature claims]"]
-  },
-  "implicit_arguments": ["IA###"],
-  
-  "location": {"section": "", "page": #, "paragraph": #},
-  "verbatim_quote": "[Exact text]"
-}
-```
-
-### For IMPLICIT ARGUMENTS:
-
-Extract for HIGH-PRIORITY claims only:
-
-```json
-{
-  "ia_id": "IA###",
-  "argument": "[The implicit argument]",
-  "type": "[logical_implication | unstated_assumption | bridging_claim | 
-           disciplinary_assumption]",
-  "status": "[unstated_but_implied | assumed_without_acknowledgment | 
-             disciplinary_assumption]",
-  "supports_claims": ["C###"],
-  "assessment_notes": "[Why this matters for credibility]",
-  "coi_note": "[Optional: Note if author COI affects interpretation]",
-  "location": {"section": "", "page": #, "paragraph": #}
-}
-```
-
-### For PROJECT METADATA:
-
-```json
-{
-  "project_metadata": {
-    "timeline": {
-      "field_seasons": ["year"],
-      "phases": [{"phase": "name", "years": "range", "focus": "description"}]
-    },
-    "location": {
-      "field_sites": ["locations"],
-      "work_contexts": ["contexts"]
-    },
-    "resources": {
-      "constraints": ["resource limitations"],
-      "infrastructure": ["available resources"]
-    },
-    "track_record": {
-      "prior_uses": ["previous applications of method/tool"]
-    }
-  }
-}
-```
+**EVIDENCE**
+- Observations, measurements, data
+- Support claims but aren't claims themselves
 
 ---
 
-## EXTRACTION WORKFLOW
+### 4. Implicit Arguments (HIGH-PRIORITY claims only)
+
+**Extract implicit arguments ONLY for core and key intermediate claims.**
+
+**Four types:**
+
+**Type 1: Logical Implications** - Unstated steps in reasoning chain
+- IF the explicit claims are true, THEN X must also be true
+- Example: "Method is accurate" implies "Equipment was calibrated"
+
+**Type 2: Unstated Assumptions** - Prerequisites assumed without acknowledgment
+- Authors assume X is true without stating or justifying it
+- Example: Spatial analysis assumes GPS accuracy adequate
+
+**Type 3: Bridging Claims** - Missing links between evidence and conclusions
+- Evidence → ??? → Claim (what's the ???)
+- Example: "Complete data" → "High quality data" needs bridging argument about what makes data "high quality"
+
+**Type 4: Disciplinary Assumptions** - Field-specific taken-for-granted knowledge
+- Domain experts assume X without stating it
+- May be invisible to practitioners but crucial for outsiders
+- Example: Archaeologists assume surface visibility relates to artifact presence
+
+---
+
+### 5. Expected Information Checklists
+
+**For Quantitative Claims:**
+- Method specified?
+- Error margins/confidence intervals?
+- Sample size reported?
+- Precision justified?
+
+**For Comparative Claims:**
+- Basis of comparison explicit?
+- What was held constant?
+- Alternative explanations considered?
+
+**For Causal Claims:**
+- Mechanism proposed?
+- Alternative causes ruled out?
+- Temporal sequence established?
+
+**Flag missing expected information** in `expected_information_missing` field.
+
+---
+
+## Extraction Workflow
 
 ### STEP 1: Initial Scan
 - Read abstract and conclusion
 - Identify 5-10 CORE claims (main thesis)
-- Note paper structure
-- Check for COI declarations (affiliations, funding, platform developers)
+- Note paper's structure
+- Check for any COI declarations
 
 ### STEP 2: Section-by-Section Extraction
 
@@ -303,133 +170,94 @@ For each section:
    - Check for declared uncertainty (ranges, errors, hedging)
    - Note missing uncertainty that should be present
    - Extract source and confidence information
-   - **When uncertain: INCLUDE IT** (Pass 2 will filter)
+   - Apply evidence test: does it support a claim?
+   - **When uncertain: INCLUDE IT**
 
 2. **Then Identify Claims**
    - Look for assertions that interpret/frame evidence
-   - Classify by role (core/intermediate/supporting/evidence)
+   - Classify by role (core/intermediate/supporting)
    - Identify what evidence supports each claim
+   - Check for composed claims (bundles of evidence + framing)
    - Watch for single-case generalizations
-   - **When uncertain: INCLUDE IT** (Pass 2 will consolidate)
+   - **When uncertain: INCLUDE IT**
 
 3. **Check for Implicit Arguments** (high-priority claims only)
    - What logical implications are unstated?
-   - What assumptions must be true for this claim to hold?
-   - What bridging claims link evidence to conclusions?
+   - What assumptions must be true?
+   - Are there bridging claims missing?
    - What disciplinary assumptions frame the argument?
 
 4. **Map Relationships**
    - Which claims support which other claims?
-   - Are there alternatives, qualifications, contradictions?
+   - Are there alternatives or qualifications?
+   - Does this contradict prior literature?
 
-5. **Apply Expected Information Checklists** (see Reference Box)
-   - Check for missing uncertainty, precision, sample sizes
-   - Note gaps in `expected_information_missing` fields
-
-6. **Separate Project Context**
-   - Timeline, location, resources → `project_metadata`
-   - Track record of methods → `project_metadata`
-   - Only extract as evidence if directly supports a claim
-
-### STEP 3: Build Hierarchy
-- Organize claims into four levels
-- Verify support relationships
-- Ensure core claims have clear evidential chains
-
-### STEP 4: Quality Check
-- Does each claim have a verbatim quote?
-- Is uncertainty properly documented (declared and expected)?
-- Are information gaps identified?
-- Are extraction flags appropriate?
-- Do implicit arguments support high-priority claims?
-- Is project metadata separated from evidence?
-- Are single-case generalizations flagged?
+5. **Apply Expected Information Checklists**
+   - Flag missing expected information
+   - Don't penalize, just document
 
 ---
 
-## REFERENCE BOX: Expected Information Checklists
+## Output Format
 
-Use these to populate `expected_information_missing` fields:
+**Return the same JSON document you received, with these arrays populated:**
 
-**For Quantitative Claims:**
-- Measurement method specified
-- Error margins or confidence intervals
-- Sample size or n
-- Bounded ranges for estimates
-- Precision justification
-- Units clearly stated
-
-**For Comparative Claims:**
-- Comparison basis explicit
-- What was held constant
-- Alternative explanations considered
-- Fairness of comparison justified
-- Like-for-like comparison
-
-**For Methodological Claims:**
-- Justification for choices
-- Limitations acknowledged
-- Alternatives considered
-- Verification evidence provided
-- Replicability information
-
-**For Causal Claims:**
-- Mechanism explained
-- Confounds addressed
-- Temporal precedence established
-- Alternative causes ruled out
-- Strength of causal language appropriate
-
-**For Generalizability Claims:**
-- Scope of generalization explicit
-- Evidence supports scope
-- Boundary conditions acknowledged
-- Population or domain defined
-- Number of cases/instances specified
+```json
+{
+  "schema_version": "2.4",
+  "extraction_timestamp": "ISO 8601",
+  "extractor": "Claude Sonnet 4.5",
+  
+  "evidence": [evidence_object],
+  "claims": [claim_object],
+  "implicit_arguments": [implicit_argument_object],
+  "project_metadata": {
+    "timeline": {...},
+    "location": {...},
+    "resources": {...},
+    "track_record": {...}
+  },
+  
+  // These arrays remain unchanged if already populated:
+  "research_designs": [...],  // Leave untouched
+  "methods": [...],           // Leave untouched
+  "protocols": [...],         // Leave untouched
+  
+  "extraction_notes": {
+    "pass": 1,
+    "section_extracted": "string",
+    "extraction_strategy": "Liberal extraction with over-capture",
+    "known_uncertainties": ["string"]
+  }
+}
+```
 
 ---
 
-## COMMON PITFALLS TO AVOID
+## Quality Checklist for Pass 1
 
-1. **Under-extraction (CRITICAL FOR PASS 1):** Missing items because you're uncertain → INCLUDE when uncertain
-2. **Being too conservative:** Worrying about over-extraction → Accept over-extraction in Pass 1
-3. **Over-consolidation:** Merging distinct items prematurely → Preserve granularity for Pass 2
-4. **Missing implicit content:** Not flagging unstated generalizations and assumptions
-5. **Mixing context with evidence:** Track record, resources, timeline → project_metadata
-6. **Weak relationships:** Every claim should have clear evidential support
+Before finalizing extraction:
 
----
-
-## QUALITY CRITERIA FOR PASS 1
-
-Good Pass 1 extraction demonstrates:
-- **Comprehensiveness:** All potentially relevant content captured (err on inclusion)
-- **Verbatim anchoring:** Every item traceable to specific text in paper
-- **Flag awareness:** Extraction flags used to mark uncertain/problematic items
-- **Implicit content detection:** Generalizations and assumptions surfaced
-- **Context separation:** Project metadata separated from evidence
-- **Relationship mapping:** Support chains documented
-
-**Accept in Pass 1:**
-- Over-extraction (40-50% more items than final)
-- Excessive granularity (will be consolidated)
-- Marginal items (will be filtered)
-- Some boundary ambiguity (flag it, don't resolve it)
+- [ ] All potentially relevant evidence captured?
+- [ ] All claims identified (core, intermediate, supporting)?
+- [ ] Implicit arguments extracted for high-priority claims?
+- [ ] Evidence-claim support relationships mapped?
+- [ ] Expected information gaps flagged?
+- [ ] Project metadata separated from evidence?
+- [ ] All items have location tracking?
+- [ ] Uncertain items marked in extraction_notes?
+- [ ] Other arrays (RDMAP) left unchanged?
 
 ---
 
-## NOTES
+## Remember
 
-- Use schema v2.3 for all extractions
-- This is **Pass 1: Liberal Extraction** - comprehensive capture with over-inclusion strategy
-- Pass 2 will rationalize, consolidate, and refine
-- Focus on NOT MISSING anything important
-- This is an **extraction** task (identifying and structuring content), not an **assessment** task (evaluating credibility)
-- Assessment fields like `credibility_assessment` remain unpopulated during extraction
+**Pass 1 is about COMPREHENSIVE CAPTURE, not perfect classification.**
 
----
+- Over-extract rather than under-extract
+- Preserve granularity
+- Mark uncertainties
+- Let Pass 2 consolidate and rationalize
+- **Don't touch RDMAP arrays** - those are extracted separately
 
-**Version:** 2.3  
-**Schema:** v2.3  
-**Length:** ~380 lines (10% reduction from v2.2)  
-**Date:** 2025-10-18
+**Your goal:** Ensure nothing important is missed. Pass 2 will refine.

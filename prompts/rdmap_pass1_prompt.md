@@ -8,12 +8,27 @@
 
 ## Your Task
 
-Extract Research Design, Methods, and Protocols (RDMAP) from research paper sections using the provided JSON schema. This is **Pass 1: Liberal Extraction** - when uncertain about tier assignment or boundaries, err on the side of inclusion. Pass 2 will consolidate and rationalize.
+Extract Research Design, Methods, and Protocols (RDMAP) from research paper sections. This is **Pass 1: Liberal Extraction** - when uncertain about tier assignment or boundaries, err on the side of inclusion. Pass 2 will consolidate and rationalize.
+
+**Input:** JSON extraction document (schema v2.4)
+- May be blank template (starting fresh)
+- May be partially populated (if claims/evidence already extracted)
+
+**Your responsibility:** Populate these arrays:
+- `research_designs`
+- `methods`
+- `protocols`
+
+**Leave untouched:**
+- `evidence`, `claims`, `implicit_arguments` (extracted separately)
+- Any other arrays already populated
 
 **What you're extracting:**
 - **Research Designs** - Strategic decisions about WHY research was framed this way
 - **Methods** - Tactical approaches about WHAT was done at high level
 - **Protocols** - Operational procedures about HOW specifically it was done
+
+**Output:** Same JSON document with RDMAP arrays populated
 
 ---
 
@@ -802,7 +817,7 @@ Could be:
 
 ## Output Format
 
-Provide extraction as JSON following schema v2.4:
+**Return the same JSON document you received, with RDMAP arrays populated:**
 
 ```json
 {
@@ -810,9 +825,14 @@ Provide extraction as JSON following schema v2.4:
   "extraction_timestamp": "ISO 8601",
   "extractor": "Claude Sonnet 4.5",
   
-  "research_designs": [research_design_object],
-  "methods": [method_object],
-  "protocols": [protocol_object],
+  // These arrays remain unchanged if already populated:
+  "evidence": [...],           // Leave untouched
+  "claims": [...],             // Leave untouched
+  "implicit_arguments": [...], // Leave untouched
+  
+  "research_designs": [research_design_object],  // Your work
+  "methods": [method_object],                    // Your work
+  "protocols": [protocol_object],                // Your work
   
   "extraction_notes": {
     "pass": 1,
@@ -841,6 +861,7 @@ Before finalizing extraction:
 - [ ] Location tracking complete and accurate?
 - [ ] Missing information flagged appropriately?
 - [ ] Uncertain items marked in extraction_notes?
+- [ ] Other arrays (claims/evidence) left unchanged?
 
 ---
 
@@ -852,5 +873,6 @@ Before finalizing extraction:
 - Preserve granularity
 - Mark uncertainties
 - Let Pass 2 consolidate and rationalize
+- **Don't touch claims/evidence arrays** - those are extracted separately
 
 **Your goal:** Ensure nothing important is missed. Pass 2 will refine.
