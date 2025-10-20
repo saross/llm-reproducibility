@@ -69,6 +69,8 @@ Extract evidence, claims, and implicit arguments from a research paper section. 
 
 **Professional Judgment Boundary:** Statements requiring expertise to assess (e.g., "these maps are accurate") are **CLAIMS** supported by implicit professional judgment, not evidence. Extract as INTERPRETATION claims, not observations.
 
+**→ For detailed decision framework, see `references/checklists/tier-assignment-guide.md`**
+
 ---
 
 ### 2. Evidence Must Support Claims
@@ -151,6 +153,8 @@ Extract observations only if they support specific claims. Context that doesn't 
 
 **Flag missing expected information** in `expected_information_missing` field.
 
+**→ For comprehensive checklists by domain, see `references/checklists/expected-information.md`**
+
 ---
 
 ## Extraction Workflow
@@ -231,6 +235,8 @@ For each section:
   }
 }
 ```
+
+**→ For complete object structure and field definitions, see `references/schema/schema-guide.md`**
 
 ---
 

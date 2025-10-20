@@ -1,14 +1,15 @@
 # RDMAP Extraction Prompt - PASS 2: Rationalization v2.4
 
 **Version:** 2.4 Pass 2  
-**Last Updated:** 2025-10-19  
-**Workflow Stage:** Pass 2 of 3 - Consolidate and refine Pass 1 RDMAP extraction
+**Last Updated:** 2025-10-20  
+**Workflow Stage:** Pass 2 of 3 - Consolidate and refine Pass 1 RDMAP extraction  
+**Skill Context:** This prompt is part of the research-assessor skill
 
 ---
 
 ## Your Task
 
-Review Pass 1 RDMAP extraction and apply consolidation principles to produce rationalized, high-quality extraction. Pass 1 intentionally over-extracted (~40-50%). Your job is to consolidate, refine tier assignments, validate cross-references, and verify completeness.
+Review Pass 1 RDMAP extraction and apply consolidation principles to produce rationalized, high-quality research designs, methods, and protocols. Pass 1 intentionally over-extracted (~40-50%). Your job is to consolidate, correct tier boundaries, and verify relationships.
 
 **Input:** JSON extraction document with RDMAP arrays populated from Pass 1
 - May also contain claims/evidence arrays from separate extraction
@@ -24,29 +25,44 @@ Review Pass 1 RDMAP extraction and apply consolidation principles to produce rat
 
 **Output:** Same JSON document with RDMAP arrays rationalized
 
-**You also have access to:** Original section text (for verification)
+---
+
+## Quality Checklist for Pass 2
+
+Use this checklist as your roadmap. Before finalizing:
+
+- [ ] 15-20% reduction achieved (may vary by section type)
+- [ ] All consolidations have complete consolidation_metadata
+- [ ] No information loss from consolidations
+- [ ] No remaining redundancy (check for duplicate tool specs, repeated rationales)
+- [ ] Tier assignments accurate (WHY → Design, WHAT → Method, HOW → Protocol)
+- [ ] All cross-references bidirectional and valid
+- [ ] RDMAP vs claims boundary accurate (descriptions vs arguments)
+- [ ] Reasoning approach consistent (claimed vs inferred match)
+- [ ] Expected information gaps flagged appropriately
+- [ ] Location fields preserved through consolidation
+- [ ] Other arrays (claims/evidence) untouched
 
 ---
 
-## RATIONALIZATION PHILOSOPHY FOR PASS 2
+## Rationalization Philosophy
 
 **Goals:**
 - Reduce over-extraction to appropriate granularity (target 15-20% reduction)
-- Correct tier assignment errors (Design vs Methods vs Protocols)
-- Consolidate redundant or over-granular items without information loss
-- Validate cross-reference chains
-- Verify expected information completeness
-- Finalize reasoning approach classifications
-- Ensure consolidation traceability
-
-**NOT expansion:** Pass 2 consolidates and refines. Do not add new items unless clearly missed in Pass 1.
+- Correct tier assignment errors (WHY vs WHAT vs HOW)
+- Consolidate redundant methodological descriptions
+- Verify boundary accuracy (RDMAP vs claims)
+- Validate all cross-references
+- Complete expected information review
 
 **Expected outcome:**
-- 15-20% reduction in total items (may vary by section)
-- Clearer three-tier hierarchy
+- 15-20% reduction in total items
+- Better tier boundaries (Design vs Method vs Protocol)
 - Appropriate consolidation without information loss
-- Valid cross-reference chains
-- Complete consolidation_metadata for all consolidated items
+- All cross-references bidirectional and valid
+- Complete traceability via metadata
+
+**NOT expansion:** Pass 2 consolidates and refines. Do not add new items unless clearly missed in Pass 1.
 
 ---
 
@@ -54,503 +70,226 @@ Review Pass 1 RDMAP extraction and apply consolidation principles to produce rat
 
 ### The Acid Test: "Would I Assess These Together or Separately?"
 
-**PRIMARY PRINCIPLE:** RDMAP items should be at granularity appropriate for transparency/replicability assessment.
+**PRIMARY PRINCIPLE:** Match granularity to assessment needs
 
-**Ask:** "Would someone assessing methodological transparency need to evaluate these items separately?"
-- **Together** → CONSOLIDATE (lump)
-- **Separately** → KEEP DISTINCT (split)
+For any potential consolidation, ask:
+**"Would I assess the credibility/transparency/replicability of these statements TOGETHER or SEPARATELY?"**
 
-**Examples:**
+- **Together** → CONSOLIDATE
+- **Separately** → KEEP DISTINCT
 
-**CONSOLIDATE:**
-- Multiple validation steps → comprehensive quality control method
-- Sequential protocol steps → unified procedure
-- Related sampling decisions → integrated sampling strategy
+**Test scenarios:**
+- Multiple rationales for same design choice → Together (rationale synthesis)
+- Scope boundaries (spatial + temporal + thematic) → Together (scope integration)
+- Sequential workflow steps → Together if single method, separate if different methods
+- GPS specs scattered across protocols → Together (tool specification)
+- Different tools for different purposes → Separate (different assessment implications)
 
-**KEEP DISTINCT:**
-- Different data collection approaches (even if related)
-- Methods addressing different research questions
-- Protocols using different tools or procedures
+**For detailed consolidation patterns and anti-patterns:**  
+→ See `references/checklists/consolidation-patterns.md`
 
 ---
 
 ### Granularity by Tier
 
-**Research Design Level - High-level consolidation:**
-- Multiple rationale statements → integrated design rationale
-- Related scope definitions → unified scope
-- Connected theoretical concepts → coherent framework
-- Separate research questions → consolidated if addressing same domain
+**Consolidation intensity varies by tier:**
 
-**Method Level - Moderate consolidation:**
-- Sequential workflow steps → unified method
-- Related quality control procedures → comprehensive QC approach
-- Connected sampling decisions → integrated sampling strategy
-- Separate data collection approaches → keep distinct unless truly redundant
+**Research Designs (High-level consolidation appropriate)**
+- Consolidate multiple rationales for same decision
+- Combine spatial/temporal/thematic scope statements
+- Integrate related research questions
+- Preserve distinct hypotheses (especially if different timing)
 
-**Protocol Level - Preserve operational detail:**
-- Consolidate only truly redundant specifications
-- Maintain replication-critical detail
-- Preserve tool specifications and parameter values
-- Keep decision rules and quality checks distinct unless identical
+**Methods (Moderate consolidation)**
+- Consolidate workflow sequences into unified methods
+- Combine related validation procedures
+- Keep different analytical approaches separate
+- Preserve sampling strategies as distinct methods
+
+**Protocols (Minimal consolidation)**
+- Only consolidate truly redundant specifications
+- Preserve measurement precision and parameters
+- Keep distinct procedures separate
+- Maintain replication-critical details
+
+**Principle:** The more operational (Protocol), the more detail to preserve
 
 ---
 
 ## RDMAP-Specific Consolidation Patterns
 
 ### Pattern 1: Design Rationale Synthesis
-
-**When to consolidate:** Multiple justifications for same design decision
-
-**Example - Pass 1 extracted:**
-- RD003: "Comparative design chosen to assess platform effectiveness"
-- RD004: "Comparison enables direct evaluation of recording quality differences"
-- RD005: "Comparative approach standard in mobile technology evaluation"
-
-**Consolidate to:**
-- RD003: "Comparative design chosen to enable direct assessment of platform effectiveness and recording quality differences, following standard practice in mobile technology evaluation"
-- `consolidation_metadata`:
-  - `source_items: ["RD003", "RD004", "RD005"]`
-  - `consolidation_type: "rationale_synthesis"`
-  - `information_preserved: "All three justifications integrated into unified rationale"`
-
----
+**Consolidate:** Multiple justifications for same design decision  
+**Example:** Three separate rationale statements → unified comprehensive rationale  
+**Type:** `rationale_synthesis`
 
 ### Pattern 2: Scope Definition Consolidation
-
-**When to consolidate:** Separate spatial/temporal/thematic scope statements
-
-**Example - Pass 1 extracted:**
-- RD007: "Survey area: 45 hectares around Site X"
-- RD008: "Temporal focus: Bronze Age (3000-1200 BCE)"
-- RD009: "Thematic scope: Domestic and ritual artifact categories"
-
-**Consolidate to:**
-- RD007: "Study scope: 45-hectare area around Site X, Bronze Age period (3000-1200 BCE), domestic and ritual artifact categories"
-- `consolidation_metadata`:
-  - `source_items: ["RD007", "RD008", "RD009"]`
-  - `consolidation_type: "scope_integration"`
-  - `information_preserved: "All spatial, temporal, and thematic boundaries combined"`
-
----
+**Consolidate:** Separate spatial/temporal/thematic scope statements  
+**Example:** Location + time period + artifact types → complete scope definition  
+**Type:** `scope_integration`
 
 ### Pattern 3: Workflow Method Aggregation
-
-**When to consolidate:** Sequential procedures that form unified method
-
-**Example - Pass 1 extracted:**
-- M015: "Pedestrian survey of transects"
-- M016: "Artifact observation and documentation"
-- M017: "GPS coordinate recording at artifact locations"
-- M018: "Photograph capture for each artifact"
-
-**Decision:** These are **sequential workflow** forming unified data collection method
-
-**Consolidate to:**
-- M015: "Pedestrian survey with integrated artifact documentation workflow: transect walking, artifact observation, GPS coordinate recording, and photographic documentation"
-- `consolidation_metadata`:
-  - `source_items: ["M015", "M016", "M017", "M018"]`
-  - `consolidation_type: "workflow_integration"`
-  - `information_preserved: "All workflow steps integrated; specific procedures retained in protocol-level objects"`
-
----
+**Consolidate:** Sequential procedures forming unified method  
+**Example:** Survey + observation + documentation + GPS recording → integrated survey method  
+**Type:** `workflow_integration`  
+**Note:** Keep as separate methods if assessed independently
 
 ### Pattern 4: Validation Chain Consolidation
-
-**When to consolidate:** Multiple validation steps forming comprehensive QC
-
-**Example - Pass 1 extracted:**
-- M022: "Inter-coder reliability testing (Cohen's kappa = 0.87)"
-- M023: "Member checking with survey team"
-- M024: "Peer debriefing sessions after each field week"
-
-**Consolidate to:**
-- M022: "Multi-faceted quality control: inter-coder reliability testing (Cohen's kappa = 0.87), member checking with survey team, and weekly peer debriefing"
-- `consolidation_metadata`:
-  - `source_items: ["M022", "M023", "M024"]`
-  - `consolidation_type: "validation_chain"`
-  - `information_preserved: "All QC procedures combined with quantitative metrics preserved"`
-
----
+**Consolidate:** Multiple QC steps forming comprehensive validation  
+**Example:** Inter-coder reliability + member checking + peer debriefing → multi-faceted QC  
+**Type:** `validation_chain`
 
 ### Pattern 5: Protocol Specification Consolidation
-
-**When to consolidate:** Redundant tool descriptions scattered across protocols
-
-**Example - Pass 1 extracted:**
-- P030: "GPS used for coordinate recording"
-- P031: "Garmin GPSMAP 64s handheld GPS"
-- P032: "GPS accuracy ±3cm with real-time kinematic correction"
-- P033: "GPS configured for WGS84 datum"
-
-**Consolidate to:**
-- P030: "GPS coordinate recording: Garmin GPSMAP 64s handheld unit, WGS84 datum, ±3cm accuracy with RTK correction"
-- `consolidation_metadata`:
-  - `source_items: ["P030", "P031", "P032", "P033"]`
-  - `consolidation_type: "tool_specification"`
-  - `information_preserved: "All GPS specifications integrated into complete tool description"`
-
----
+**Consolidate:** Redundant tool descriptions across protocols  
+**Example:** GPS device + model + accuracy + datum → complete GPS specification  
+**Type:** `tool_specification`
 
 ### Pattern 6: Parameter Aggregation
+**Consolidate:** Related parameter settings for same protocol  
+**Example:** Transect spacing + width + walking speed → complete transect parameters  
+**Type:** `parameter_integration`
 
-**When to consolidate:** Related parameter settings for same protocol
-
-**Example - Pass 1 extracted:**
-- P040: "Survey transects spaced 10m apart"
-- P041: "Transect width 2m (1m either side of centerline)"
-- P042: "Walking speed approximately 1m/s for adequate surface observation"
-
-**Consolidate to:**
-- P040: "Survey transect parameters: 10m spacing, 2m width (1m either side), ~1m/s walking speed for adequate observation"
-- `consolidation_metadata`:
-  - `source_items: ["P040", "P041", "P042"]`
-  - `consolidation_type: "parameter_integration"`
-  - `information_preserved: "All transect specifications combined into unified protocol"`
+**Critical:** All consolidations must preserve quantitative values and replication-critical details
 
 ---
 
-## Cross-Reference Validation
+## Verification Tasks
 
-**Every cross-reference must be valid and bidirectional.**
+### 1. Tier Assignment Verification
 
-### Design → Method References
+**Check each RDMAP item against tier criteria:**
 
-**Check:** Every method in `enables_methods` array should have this design in `implements_designs`
+**Research Design indicators:**
+- Explains WHY research framed this way
+- Contains research questions, hypotheses, theoretical frameworks
+- Provides study design rationale
+- Defines scope and boundaries
 
-**Example validation:**
-- RD001: `enables_methods: ["M008", "M010"]`
-- M008: Must have `implements_designs: ["RD001"]` ✓
-- M010: Must have `implements_designs: ["RD001"]` ✓
+**Method indicators:**
+- Explains WHAT was done at high level
+- Describes data collection approach, sampling strategy, analysis technique
+- General approach without implementation details
 
-**Fix if broken:** Add missing reference or remove invalid reference
+**Protocol indicators:**
+- Explains HOW specifically implemented
+- Contains exact procedures, tool configurations, parameter values
+- Sufficient detail for replication
 
----
+**If misclassified:** Move to correct tier and update cross-references
 
-### Method → Protocol References
-
-**Check:** Every protocol in `realized_through_protocols` array should have this method in `implements_methods`
-
-**Example validation:**
-- M008: `realized_through_protocols: ["P023", "P024"]`
-- P023: Must have `implements_methods: ["M008"]` ✓
-- P024: Must have `implements_methods: ["M008"]` ✓
-
----
-
-### Method → Evidence Validation
-
-**Check:** If method claims `validated_by_evidence: ["E046"]`, verify E046 exists and validates this method
-
-**Note:** Evidence objects may not be present if not yet extracted. Mark for future validation.
+**For detailed tier assignment guidance:**  
+→ See `references/checklists/tier-assignment-guide.md`
 
 ---
 
-### Method → Claim Justification
+### 2. Cross-Reference Validation
 
-**Check:** If method has `justification_claim: "C027"`, verify:
-- C027 exists
-- C027 has `claim_type: "methodological_argument"`
-- C027 has `supports_method: "M###"` pointing back
+**Verify bidirectional consistency for all cross-references:**
 
----
+**Design → Method:**
+- `research_designs[].enables_methods` ↔ `methods[].design_context`
+- Check: Every enabled method references back to design
 
-### Orphaned Items
+**Method → Protocol:**
+- `methods[].uses_protocols` ↔ `protocols[].implements_method`
+- Check: Every used protocol references back to method
 
-**Check for:** Items with no cross-references (orphans)
+**Method → Evidence/Claims:**
+- `methods[].supports_claims` ↔ `claims[].supported_by_evidence`
+- Verify method descriptions not making claims (boundary accuracy)
 
-**Research Designs:** Should enable ≥1 method
-- If orphan → verify it's truly strategic-level design
-- If actually method-level → reclassify
-
-**Methods:** Should implement ≥1 design AND be realized through ≥1 protocol
-- If orphan → verify tier assignment
-- May be high-level method without specific protocols (acceptable)
-
-**Protocols:** Should implement ≥1 method
-- If orphan → likely wrongly classified
-- Consider moving to method level OR linking to appropriate method
+**After consolidation:** Update all affected cross-references
 
 ---
 
-## Tier Assignment Verification
+### 3. Boundary Accuracy Review
 
-**Review tier assignments using Why/What/How test.**
+**RDMAP vs Claims distinction:**
 
-### Why → Research Design
+**RDMAP (methodological descriptions):**
+- ✓ "Used stratified random sampling with 30% coverage"
+- ✓ "GPS coordinates recorded at ±3cm accuracy"
+- ✓ "Inter-coder reliability testing with Cohen's kappa"
 
-**Indicators:**
-- Explains rationale or framing
-- Strategic decision
-- Shapes overall approach
-- Research questions, hypotheses, study design, scope, positionality
+**Claims (assertions about effectiveness):**
+- ✗ "Stratified sampling proved more efficient"
+- ✗ "High-accuracy GPS enabled better site mapping"
+- ✗ "Inter-coder reliability was excellent"
 
-**Common misclassifications to fix:**
-- Specific sampling strategy misclassified as design → move to methods
-- Particular tool choice misclassified as design → move to protocol
-- Methodological justification misclassified as design → move to claim
-
----
-
-### What → Method
-
-**Indicators:**
-- General approach or strategy
-- Tactical-level decisions
-- Data collection approaches, sampling, analysis, QC
-- Not yet specific about exact procedures
-
-**Common misclassifications to fix:**
-- Step-by-step procedures misclassified as method → move to protocol
-- Strategic framing misclassified as method → move to design
-- Tool specifications misclassified as method → move to protocol
+**Test:** "Is this describing HOW research was done, or ARGUING about how well it worked?"
+- Describing → RDMAP
+- Arguing → Move to claims array
 
 ---
 
-### How → Protocol
+### 4. Reasoning Approach Consistency
 
-**Indicators:**
-- Specific procedures and steps
-- Operational detail
-- Tools, parameters, recording standards
-- Enough detail for replication
+**For Research Designs, verify reasoning approach classification:**
 
-**Common misclassifications to fix:**
-- General approaches misclassified as protocol → move to method
-- Tool justification misclassified as protocol → move to claim
-- High-level strategy misclassified as protocol → move to method
+**Check claimed vs inferred consistency:**
+- If `explicit_statement` present → should match `inferred_approach`
+- If mismatch → document in `extraction_notes`, flag for review
 
----
+**Verify hypothesis timing inference:**
+- Pre-data: Stated in Introduction/Methods before Results
+- Post-data: First mentioned in Results/Discussion, or marked as "emerged"
+- Check timing basis and confidence level
 
-## Boundary Accuracy Review
-
-### RDMAP vs Claims Boundary
-
-**RDMAP objects** = What was done (descriptions)
-**Claim objects** = Why it was appropriate (arguments)
-
-**Check for misclassified arguments:**
-
-**Example - Should be Claim, not RDMAP:**
-- "Stratified sampling was appropriate because it ensured representation"
-  - → Extract as claim (methodological_argument)
-  - → Link to method via `supports_method`
-
-**Example - Correctly RDMAP:**
-- "Stratified random sampling stratified by site zone"
-  - → Correctly extracted as method
-  - → Justification should be separate claim
-
-**Fix:** Move argumentative statements to claims, keep descriptions in RDMAP
+**Mixed vs Unclear distinction:**
+- Mixed requires evidence of BOTH exploratory AND confirmatory
+- Don't default to "mixed" - use "unclear" if insufficient information
 
 ---
 
-## Reasoning Approach Consistency
+### 5. Expected Information Review
 
-**Verify reasoning approach classifications are well-supported.**
+**Flag missing information in `expected_information_missing` arrays:**
 
-### Check Claimed vs Inferred Consistency
+**Common gaps to check:**
+- Sample size justification
+- Tool specifications and versions
+- Parameter settings and values
+- Quality control procedures
+- Alternative methods considered
+- Stopping rules for data collection
 
-**If explicit statement present:**
-- Should match inferred approach
-- If mismatch → note in `extraction_notes`, flag for assessment
+**Don't penalize absence - just document for transparency assessment**
 
-**If no explicit statement:**
-- Is inference well-supported by indicators?
-- Is confidence level appropriate?
-- If weak indicators → consider changing to `unclear`
-
----
-
-### Verify Hypothesis Timing Inference
-
-**Check structural evidence:**
-- Hypothesis in intro/methods + presented before results → likely pre-data
-- Hypothesis first appears in results/discussion → likely post-data
-- Hypothesis phrasing suggests post-hoc ("We found that...") → likely post-data
-
-**Confidence appropriate?**
-- Clear structural placement → high confidence
-- Ambiguous placement → medium confidence  
-- Contradictory indicators → low confidence
+**For comprehensive domain-specific checklists:**  
+→ See `references/checklists/expected-information.md`
 
 ---
 
-### Mixed vs Unclear Distinction
+## Consolidation Metadata (REQUIRED)
 
-**"Mixed" requires:**
-- Explicit statement of multiple approaches, OR
-- Clear evidence of different reasoning in different phases
-- Should NOT be dumping ground for ambiguous cases
+**ALL consolidated items MUST have complete consolidation_metadata:**
 
-**If "mixed" without clear justification → change to "unclear"**
-
----
-
-## Expected Information Completeness Review
-
-**Aggregate `expected_information_missing` across all RDMAP objects.**
-
-### Categorize Missing Information
-
-**Critical gaps (assessment blockers):**
-- Methods without basic description of approach
-- Protocols missing core specifications
-- Sampling without target population or rationale
-- Major analysis approach not described
-
-**Important gaps (reduced confidence):**
-- Incomplete TIDieR elements for major methods
-- Limited protocol detail for key procedures
-- Missing quality control documentation
-- Sampling size without justification
-
-**Minor gaps (noted only):**
-- Additional technical detail available but not essential
-- Nice-to-have information that doesn't block assessment
-- Specialized information for specific domains
-
-**Aggregate in Pass 2 extraction_notes:**
-```json
-"extraction_notes": {
-  "pass": 2,
-  "expected_information_gaps": {
-    "critical": ["M008 missing quality control procedures"],
-    "important": ["P023 tool specifications incomplete", "M010 sample size not justified"],
-    "minor": ["RD001 alternatives considered not detailed"]
-  }
-}
-```
-
----
-
-## Consolidation Metadata Requirements
-
-**ALL consolidated items MUST have complete consolidation_metadata.**
-
-Required fields:
 ```json
 "consolidation_metadata": {
-  "consolidated_from": ["RD003", "RD004", "RD005"],
-  "consolidation_type": "rationale_synthesis",
-  "information_preserved": "All three justifications integrated into unified rationale without loss",
-  "rationale": "Multiple related rationale statements combined for coherent design justification"
+  "consolidated_from": ["P1_RD003", "P1_RD004"],
+  "consolidation_type": "rationale_synthesis | scope_integration | workflow_integration | validation_chain | tool_specification | parameter_integration",
+  "information_preserved": "complete | lossy_granularity | lossy_redundancy",
+  "granularity_available": "Description of additional detail in source",
+  "rationale": "Why consolidation appropriate"
 }
 ```
 
-**Consolidation types:**
-- `rationale_synthesis` - Multiple justifications combined
-- `scope_integration` - Spatial/temporal/thematic boundaries unified
-- `workflow_integration` - Sequential steps forming unified method
-- `validation_chain` - Multiple QC procedures combined
-- `tool_specification` - Scattered tool details consolidated
-- `parameter_integration` - Related parameters unified
-- `redundancy_removal` - Duplicate information eliminated
+**Information preservation values:**
+- `complete`: No information lost
+- `lossy_granularity`: Fine detail removed but aggregate preserved
+- `lossy_redundancy`: Redundant statements merged
 
 ---
 
-## Quality Checks Before Finalizing
+## Key Consolidation Examples
 
-### No Over-Consolidation (Information Loss)
-
-**Check:** Does consolidated item preserve all critical information from source items?
-
-**Red flags:**
-- Quantitative values lost (e.g., precision specifications)
-- Procedural steps missing (e.g., decision rules)
-- Rationale simplified away (e.g., justifications)
-- Distinct tools conflated (e.g., different instruments treated as one)
-
-**If information lost → split back out**
-
----
-
-### No Under-Consolidation (Redundancy Remains)
-
-**Check:** Are there still redundant items that should be consolidated?
-
-**Look for:**
-- Repeated tool specifications across protocols
-- Duplicate rationale statements across designs
-- Redundant workflow steps across methods
-- Multiple items describing same procedure
-
-**If redundancy remains → consolidate further**
-
----
-
-### Cross-References Intact
-
-**Check:** Did consolidation break cross-reference chains?
-
-**When consolidating multiple items:**
-- Aggregate all cross-references from source items
-- Remove duplicates
-- Verify bidirectional consistency
-
-**Example:**
-- M015, M016, M017 consolidated → M015
-- M015 must have all cross-references from M016 and M017
-- All items referencing M016 or M017 must be updated to reference M015
-
----
-
-### Location Fields Preserved
-
-**Check:** Are location fields maintained for consolidated items?
-
-**Rule:** Use location of primary/most comprehensive source item
-
-**Example:**
-```json
-"location": {
-  "section": "Methods",
-  "page": 5,
-  "paragraph": 2,
-  "note": "Consolidated from items spanning pages 5-6"
-}
-```
-
----
-
-### Verbatim Quotes Meaningful
-
-**Check:** Do verbatim quotes represent consolidated items well?
-
-**Options:**
-1. Use quote from most representative source item
-2. Combine key phrases from multiple sources
-3. Note consolidation in quote field
-
-**Example:**
-```json
-"verbatim_quote": "Stratified random sampling [p.5] stratified by site zone [p.5] with 10m transect spacing [p.6]",
-"location": {"note": "Quote consolidated from multiple statements"}
-```
-
----
-
-## Consolidation Examples
-
-### Example 1: Good Consolidation (Preserves Information, Improves Structure)
+### Example 1: Good Consolidation (Preserves Detail)
 
 **Pass 1 extracted:**
 ```json
-{
-  "method_id": "M025",
-  "method_text": "Inter-coder reliability testing",
-  "method_type": "quality_control"
-},
-{
-  "method_id": "M026",
-  "method_text": "Cohen's kappa calculated at 0.87",
-  "method_type": "quality_control"
-},
-{
-  "method_id": "M027",
-  "method_text": "Member checking with team",
-  "method_type": "validation"
-}
+{"method_id": "M025", "method_text": "Inter-coder reliability testing"},
+{"method_id": "M026", "method_text": "Cohen's kappa calculated at 0.87"},
+{"method_id": "M027", "method_text": "Member checking with team"}
 ```
 
 **Pass 2 consolidated:**
@@ -558,22 +297,16 @@ Required fields:
 {
   "method_id": "M025",
   "method_text": "Multi-faceted quality control: inter-coder reliability testing (Cohen's kappa = 0.87) and member checking with survey team",
-  "method_type": "quality_control",
-  "quality_control": {
-    "approach": "Triangulated validation through inter-coder reliability and member checking",
-    "validation_methods": ["Inter-coder reliability testing", "Member checking"],
-    "quantitative_metrics": ["Cohen's kappa = 0.87"]
-  },
   "consolidation_metadata": {
     "consolidated_from": ["M025", "M026", "M027"],
     "consolidation_type": "validation_chain",
-    "information_preserved": "All QC procedures and quantitative metrics maintained",
-    "rationale": "Related validation procedures combined into coherent quality control approach"
+    "information_preserved": "complete",
+    "rationale": "Related validation procedures combined into coherent QC approach"
   }
 }
 ```
 
-✓ **Good:** Preserves kappa value, maintains validation methods, improves coherence
+**Why good:** Preserves kappa value, maintains all validation methods, improves coherence
 
 ---
 
@@ -581,87 +314,94 @@ Required fields:
 
 **Pass 1 extracted:**
 ```json
-{
-  "protocol_id": "P035",
-  "protocol_text": "GPS coordinates recorded at ±3cm accuracy",
-  "parameters": {"accuracy": {"value": 3, "unit": "cm"}}
-},
-{
-  "protocol_id": "P036", 
-  "protocol_text": "RTK correction applied for high precision",
-  "parameters": {"correction_method": {"value": "RTK"}}
-}
+{"protocol_id": "P035", "protocol_text": "GPS coordinates at ±3cm accuracy"},
+{"protocol_id": "P036", "protocol_text": "RTK correction for high precision"}
 ```
 
 **Bad Pass 2:**
 ```json
 {
   "protocol_id": "P035",
-  "protocol_text": "GPS coordinates recorded with high precision",
-  "consolidation_metadata": {
-    "consolidated_from": ["P035", "P036"]
-  }
+  "protocol_text": "GPS coordinates with high precision"  // Lost ±3cm and RTK!
 }
 ```
-
-✗ **Bad:** Lost accuracy specification (±3cm) and correction method (RTK) - critical replication info
 
 **Correct Pass 2:**
 ```json
 {
   "protocol_id": "P035",
-  "protocol_text": "GPS coordinates recorded at ±3cm accuracy using RTK correction",
-  "parameters": {
-    "accuracy": {"value": 3, "unit": "cm", "criticality": "high"},
-    "correction_method": {"value": "RTK", "criticality": "high"}
-  },
+  "protocol_text": "GPS coordinates at ±3cm accuracy using RTK correction",
   "consolidation_metadata": {
     "consolidated_from": ["P035", "P036"],
     "consolidation_type": "parameter_integration",
-    "information_preserved": "Both accuracy specification and correction method maintained"
+    "information_preserved": "complete"
   }
 }
 ```
 
-✓ **Good:** Preserves all critical parameters
+**Critical:** Never lose quantitative values or replication-critical specifications
 
 ---
 
-### Example 3: Tier-Specific Consolidation Patterns
+### Example 3: Tier-Specific Granularity
 
-**Design-level (High-level consolidation):**
+**Design (high-level):**
 ```json
-// Multiple related rationales → unified rationale
-"study_design": {
-  "design_type": "comparative",
-  "rationale": "Direct comparison enables assessment of platform effectiveness, recording quality differences, and follows standard mobile technology evaluation practice"
-}
+// Consolidate multiple rationales
+"rationale": "Comparative design enables direct assessment of platform effectiveness, recording quality differences, and follows standard mobile technology evaluation practice"
 ```
 
-**Method-level (Moderate consolidation):**
+**Method (moderate):**
 ```json
-// Workflow steps → integrated method, but preserve distinctness of approaches
+// Consolidate workflow but preserve approach distinctness
 "data_collection_approach": {
   "approach": "survey",
-  "domain_specific_type": "pedestrian archaeological survey with integrated documentation workflow"
+  "domain_specific_type": "pedestrian archaeological survey with integrated documentation"
 }
 ```
 
-**Protocol-level (Minimal consolidation, preserve detail):**
+**Protocol (detailed):**
 ```json
-// Only consolidate truly redundant specs, keep distinct procedures separate
-"tools": [
-  {
-    "tool_name": "Garmin GPSMAP 64s",
-    "specifications": {
-      "accuracy": "±3cm with RTK",
-      "datum": "WGS84",
-      "satellite_minimum": 4,
-      "hdop_threshold": 2.0
-    }
-  }
-]
+// Minimal consolidation, preserve specifications
+"tools": [{
+  "tool_name": "Garmin GPSMAP 64s",
+  "specifications": {"accuracy": "±3cm with RTK", "datum": "WGS84"}
+}]
 ```
+
+---
+
+## Consolidation Workflow
+
+### STEP 1: Tier Verification
+- Check Design/Method/Protocol classifications
+- Move misclassified items to correct tier
+- Update cross-references after moves
+
+### STEP 2: Consolidation
+- Apply acid test to identify consolidation opportunities
+- Use RDMAP-specific patterns where appropriate
+- Document all consolidations with complete metadata
+- Preserve quantitative values and critical parameters
+
+### STEP 3: Cross-Reference Validation
+- Verify bidirectional consistency
+- Update references after consolidation
+- Check design → method → protocol chains
+- Validate method → claim boundaries
+
+### STEP 4: Boundary and Consistency Checks
+- Verify RDMAP vs claims boundary
+- Check reasoning approach consistency
+- Review hypothesis timing inference
+- Flag expected information gaps
+
+### STEP 5: Quality Verification
+- No information loss (or documented as lossy)
+- No remaining redundancy
+- All consolidation_metadata complete
+- Location fields preserved
+- Other arrays (claims/evidence) untouched
 
 ---
 
@@ -675,67 +415,40 @@ Required fields:
   "extraction_timestamp": "ISO 8601",
   "extractor": "Claude Sonnet 4.5",
   
-  // These arrays remain unchanged if already populated:
-  "evidence": [...],           // Leave untouched
-  "claims": [...],             // Leave untouched
-  "implicit_arguments": [...], // Leave untouched
+  // Rationalize these arrays:
+  "research_designs": [design_object],    
+  "methods": [method_object],             
+  "protocols": [protocol_object],         
   
-  "research_designs": [research_design_object],  // Rationalized
-  "methods": [method_object],                    // Rationalized
-  "protocols": [protocol_object],                // Rationalized
+  // Leave these untouched:
+  "evidence": [...],                      
+  "claims": [...],                        
+  "implicit_arguments": [...],            
   
   "extraction_notes": {
     "pass": 2,
     "section_extracted": "string",
-    "items_before_rationalization": 85,
-    "items_after_rationalization": 69,
-    "reduction_percentage": 18.8,
-    "consolidations_performed": 16,
-    "tier_reclassifications": 3,
-    "cross_reference_fixes": 5,
-    "expected_information_gaps": {
-      "critical": ["string"],
-      "important": ["string"],
-      "minor": ["string"]
-    },
-    "items_flagged_for_review": ["string"]
+    "items_before_rationalization": 47,
+    "items_after_rationalization": 38,
+    "reduction_percentage": 19.1,
+    "consolidations_performed": 9,
+    "tier_corrections": 2,
+    "boundary_corrections": 1
   }
 }
 ```
 
----
-
-## Quality Checklist for Pass 2
-
-Before finalizing rationalization:
-
-- [ ] 15-20% reduction achieved (acceptable range 10-25%)
-- [ ] All consolidations have complete consolidation_metadata
-- [ ] No information loss from consolidations (verify with checklist)
-- [ ] No remaining redundancy (check for duplicates)
-- [ ] All tier assignments verified with Why/What/How test
-- [ ] Cross-reference chains validated bidirectionally
-- [ ] Orphaned items reviewed and addressed
-- [ ] RDMAP vs claims boundary checked
-- [ ] Reasoning approach classifications consistent
-- [ ] Hypothesis timing inferences well-supported
-- [ ] Expected information gaps categorized (critical/important/minor)
-- [ ] Location fields preserved for all items
-- [ ] Verbatim quotes represent consolidated items accurately
-- [ ] Other arrays (claims/evidence) left unchanged?
+**For complete object structure and field definitions:**  
+→ See `references/schema/schema-guide.md`
 
 ---
 
-## Remember
+## Pass 2 Goal
 
-**Pass 2 is about CONSOLIDATION AND REFINEMENT, not expansion.**
-
-- Reduce granularity appropriately
-- Preserve all critical information
-- Validate cross-references
-- Finalize tier assignments
-- Document all consolidations
-- Prepare for Pass 3 validation
-- **Don't touch claims/evidence arrays** - those are rationalized separately
-
-**Your goal:** Produce a rationalized, high-quality extraction ready for validation and assessment.
+Produce rationalized RDMAP extraction with:
+- Appropriate granularity by tier (Design high-level, Protocol detailed)
+- Accurate tier assignments (WHY/WHAT/HOW verified)
+- Complete consolidation traceability
+- Verified bidirectional cross-references
+- No information loss
+- Ready for validation (Pass 3)

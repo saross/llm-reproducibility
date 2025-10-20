@@ -1,8 +1,9 @@
-# RDMAP Validation Prompt - PASS 3: Integrity Checks v2.4
+# Validation Prompt - PASS 3: Integrity Checks v2.4
 
 **Version:** 2.4 Pass 3  
-**Last Updated:** 2025-10-19  
-**Workflow Stage:** Pass 3 of 3 - Automated validation of Pass 2 RDMAP extraction
+**Last Updated:** 2025-10-20  
+**Workflow Stage:** Pass 3 of 3 - Automated validation of Pass 2 extraction  
+**Skill Context:** This prompt is part of the research-assessor skill
 
 ---
 
@@ -27,7 +28,42 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 ---
 
-## VALIDATION PHILOSOPHY
+## Validation Checklist
+
+Use this checklist as your roadmap. Execute all applicable checks:
+
+**Cross-Reference Integrity:**
+- [ ] All referenced IDs exist
+- [ ] Bidirectional references consistent
+- [ ] No orphaned objects (or appropriately flagged)
+
+**Hierarchy Validation:**
+- [ ] RDMAP chains valid (Design → Method → Protocol)
+- [ ] Claims hierarchy valid (if claims present)
+- [ ] Evidence chains valid (if evidence present)
+
+**Schema Compliance:**
+- [ ] Required fields present
+- [ ] Enum values valid
+- [ ] ID formats correct
+- [ ] Location objects structured properly
+
+**Expected Information:**
+- [ ] Missing information aggregated by category
+- [ ] Critical gaps flagged for assessment blockers
+- [ ] TIDieR/CONSORT completeness noted (if applicable)
+
+**Consolidation Metadata:**
+- [ ] All Pass 2 consolidations have complete metadata
+- [ ] consolidated_from IDs traceable
+
+**Type Consistency:**
+- [ ] Design types align with content
+- [ ] Method types align with content
+
+---
+
+## Validation Philosophy
 
 **Purpose:** Ensure extraction is structurally sound, internally consistent, and schema-compliant.
 
@@ -57,28 +93,32 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 #### Check 1.1: Referenced IDs Exist
 
-**For each RDMAP object, verify all referenced IDs exist in the extraction.**
+**Verify all referenced IDs exist in the extraction.**
 
-**Check these arrays:**
+**Check these reference fields:**
 
 **Research Designs:**
 - `enables_methods` → all M### IDs must exist
 - `informs_claims` → all C### IDs must exist (if claims extracted)
-- `implicit_assumptions` → all IA### IDs must exist (if implicit args extracted)
 
 **Methods:**
 - `implements_designs` → all RD### IDs must exist
 - `realized_through_protocols` → all P### IDs must exist
 - `validated_by_evidence` → all E### IDs must exist (if evidence extracted)
 - `justification_claim` → C### ID must exist (if claims extracted)
-- `implicit_assumptions` → all IA### IDs must exist (if implicit args extracted)
 
 **Protocols:**
 - `implements_methods` → all M### IDs must exist
 - `produces_evidence` → all E### IDs must exist (if evidence extracted)
-- `adapted_from` → P### ID must exist
 
-**Report:**
+**Claims (if present):**
+- `supported_by_evidence` → all E### or M### IDs must exist
+- `supports_claims` → all C### IDs must exist (for hierarchical claims)
+
+**Evidence (if present):**
+- `supports_claims` → all C### IDs must exist
+
+**Report format:**
 ```json
 "missing_references": [
   {
@@ -86,12 +126,12 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
     "field": "validated_by_evidence",
     "missing_id": "E046",
     "severity": "important",
-    "note": "Evidence array not present in extraction - deferred validation until claims/evidence extracted"
+    "note": "Evidence array not present - deferred validation"
   }
 ]
 ```
 
-**Note:** If referenced object type not present in extraction (e.g., RDMAP references claims but claims array empty), mark as "deferred validation" with severity "important" rather than "critical". This allows RDMAP-only validation during testing.
+**Deferred validation:** If referenced object type not present (e.g., RDMAP references claims but claims array empty), mark as "deferred validation" with severity "important" rather than "critical".
 
 ---
 
@@ -99,31 +139,21 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 **Verify cross-references are bidirectional.**
 
-**Design ↔ Method:**
-- If RD001 has `enables_methods: ["M008"]`
-- Then M008 must have `implements_designs: ["RD001"]`
+**Required bidirectional pairs:**
+- `research_designs[].enables_methods` ↔ `methods[].implements_designs`
+- `methods[].realized_through_protocols` ↔ `protocols[].implements_methods`
+- `methods[].validated_by_evidence` ↔ `evidence[].supports_claims`
+- `claims[].supported_by_evidence` ↔ `methods[].justification_claim` or `evidence[].supports_claims`
+- `claims[].supports_claims` ↔ `claims[].supported_by_evidence` (hierarchical)
 
-**Method ↔ Protocol:**
-- If M008 has `realized_through_protocols: ["P023", "P024"]`
-- Then P023 and P024 must have `implements_methods: ["M008"]`
-
-**Method ↔ Evidence:**
-- If M008 has `validated_by_evidence: ["E046"]`
-- Then E046 should have `validates_methods: ["M008"]` (if evidence extracted)
-
-**Method ↔ Claim:**
-- If M008 has `justification_claim: "C027"`
-- Then C027 should have `supports_method: "M008"` (if claims extracted)
-
-**Report:**
+**Report format:**
 ```json
 "bidirectional_inconsistencies": [
   {
-    "type": "design_method",
-    "forward": {"id": "RD001", "field": "enables_methods", "references": ["M008", "M010"]},
-    "backward": {"id": "M008", "field": "implements_designs", "references": ["RD001"], "status": "✓"},
-    "backward": {"id": "M010", "field": "implements_designs", "references": [], "status": "✗ MISSING"},
-    "severity": "critical"
+    "issue": "M008 enables_methods includes M015, but M015 doesn't reference M008",
+    "severity": "critical",
+    "forward_ref": "M008.realized_through_protocols = [P015]",
+    "missing_backward": "P015.implements_methods missing M008"
   }
 ]
 ```
@@ -132,30 +162,22 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 #### Check 1.3: Orphaned Objects
 
-**Find objects with no cross-references.**
+**Identify objects with no incoming references.**
 
-**Research Designs:**
-- Should have `enables_methods` with ≥1 item
-- If orphan → flag for review (may be high-level framing with no specific methods)
+**Severity classification:**
+- **Critical:** Orphaned protocols (must implement at least one method)
+- **Critical:** Methods with no design context (should reference at least one design)
+- **Minor:** Orphaned designs (may be high-level framing, acceptable)
+- **Minor:** Orphaned claims (may be standalone observations, acceptable with note)
 
-**Methods:**
-- Should have `implements_designs` with ≥1 item
-- Should have `realized_through_protocols` with ≥1 item OR be high-level method
-- If no design reference → critical issue
-
-**Protocols:**
-- Should have `implements_methods` with ≥1 item
-- If orphan → likely tier misclassification
-
-**Report:**
+**Report format:**
 ```json
 "orphaned_objects": [
   {
-    "id": "P045",
+    "id": "P023",
     "type": "protocol",
-    "issue": "No method references",
     "severity": "critical",
-    "suggestion": "Likely misclassified - consider moving to method tier"
+    "issue": "No method references this protocol"
   }
 ]
 ```
@@ -166,32 +188,20 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 #### Check 2.1: RDMAP Hierarchy Flow
 
-**Verify Design → Methods → Protocols chains are logical.**
+**Verify Design → Method → Protocol chains are valid.**
 
-**For each method:**
-- Must implement ≥1 design (unless high-level organizing method)
-- Should be realized through ≥1 protocol (unless high-level method)
+**Check:**
+- Every method in `enables_methods` must exist and link back
+- Every protocol in `realized_through_protocols` must exist and link back
+- Transitive chains valid (Design enables Method, Method uses Protocol)
 
-**For each protocol:**
-- Must implement ≥1 method
-- Should not skip tiers (protocol implementing design directly is suspicious)
-
-**Report:**
+**Report format:**
 ```json
 "hierarchy_issues": [
   {
-    "type": "method_without_design",
-    "id": "M012",
-    "issue": "Method implements no research design",
-    "severity": "critical",
-    "suggestion": "Link to appropriate design or reclassify"
-  },
-  {
-    "type": "tier_skipping",
-    "id": "P030",
-    "issue": "Protocol references design RD001 directly without method intermediary",
-    "severity": "important",
-    "suggestion": "Should implement method, which implements design"
+    "chain": "RD003 → M008 → P015",
+    "issue": "P015 doesn't reference M008",
+    "severity": "critical"
   }
 ]
 ```
@@ -200,50 +210,23 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 #### Check 2.2: Claims Hierarchy (if claims extracted)
 
-**Verify methodological argument claims are properly linked.**
+**Verify hierarchical claim relationships valid.**
 
-**For each claim with `claim_type: "methodological_argument"`:**
-- Should have `supports_method` or `supports_design` or `supports_protocol`
-- Supported RDMAP object should reference this claim
-
-**Report:**
-```json
-"claim_link_issues": [
-  {
-    "claim_id": "C027",
-    "claim_type": "methodological_argument",
-    "supports_method": "M008",
-    "issue": "M008 does not reference C027 in justification_claim field",
-    "severity": "important"
-  }
-]
-```
+**Check:**
+- Claims in `supports_claims` exist
+- No circular references (C001 → C002 → C001)
+- Evidence chains resolve (all claims ultimately have evidence support)
 
 ---
 
 #### Check 2.3: Evidence Chains (if evidence extracted)
 
-**Verify evidence properly links to methods/protocols.**
+**Verify evidence properly supports claims.**
 
-**For evidence validating methods:**
-- Method should reference evidence
-- Evidence should reference method
-
-**For evidence produced by protocols:**
-- Protocol should reference evidence
-- Evidence should note protocol source
-
-**Report:**
-```json
-"evidence_chain_issues": [
-  {
-    "evidence_id": "E046",
-    "validates_methods": ["M008"],
-    "issue": "M008 does not list E046 in validated_by_evidence",
-    "severity": "important"
-  }
-]
-```
+**Check:**
+- All evidence in `supported_by_evidence` exists
+- All claims have at least one evidence or method reference
+- Evidence doesn't support itself
 
 ---
 
@@ -253,14 +236,17 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 **Verify all required fields populated for each object type.**
 
-**All RDMAP objects require:**
-- `*_id` (design_id, method_id, protocol_id)
-- `*_text`
-- `*_type` (design_type, method_type, protocol_type)
-- `location` object with at minimum {section, page}
-- `extraction_confidence`
+**All objects require:**
+- `*_id` (design_id, method_id, protocol_id, claim_id, evidence_id)
+- `*_text` (design_text, method_text, etc.)
+- `*_type` (design_type, method_type, etc.)
+- `location` object with minimum {section, page}
+- `extraction_confidence` (high, medium, low)
 
-**Report:**
+**For complete field requirements:**  
+→ See `references/schema/schema-guide.md`
+
+**Report format:**
 ```json
 "missing_required_fields": [
   {
@@ -277,24 +263,16 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 **Check enum fields against schema v2.4 allowed values.**
 
-**Reasoning approaches:**
-- Valid: inductive, abductive, deductive, mixed, unclear
-- Invalid: anything else
+**Critical enums (closed lists):**
+- **Reasoning approaches:** inductive, abductive, deductive, mixed, unclear
+- **Analysis populations:** all_collected, quality_filtered, outliers_excluded, complete_cases_only
+- **Extraction confidence:** high, medium, low
 
-**Study designs (open list):**
-- Common: survey, excavation, ethnographic, experimental, comparative, longitudinal, case_study, mixed_methods
-- Accept free text but flag uncommon values for review
+**Open lists (flag uncommon but don't fail):**
+- Study designs (survey, excavation, ethnographic, experimental, comparative, etc.)
+- Sampling types (simple_random, stratified_random, purposive, convenience, etc.)
 
-**Sampling types (open list):**
-- Common probability: simple_random, stratified_random, systematic_random, cluster
-- Common non-probability: purposive, convenience, theoretical, snowball, judgmental
-- Accept free text but flag uncommon values
-
-**Analysis populations:**
-- Valid: all_collected, quality_filtered, outliers_excluded, complete_cases_only
-- Invalid: anything else
-
-**Report:**
+**Report format:**
 ```json
 "invalid_enum_values": [
   {
@@ -302,7 +280,6 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
     "field": "reasoning_approach.approach",
     "value": "exploratory",
     "severity": "critical",
-    "valid_values": ["inductive", "abductive", "deductive", "mixed", "unclear"],
     "suggestion": "Use 'inductive' for exploratory pattern-seeking"
   }
 ]
@@ -315,14 +292,14 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 **Verify ID formats follow schema pattern.**
 
 **Format rules:**
-- Research Design: `RD###` (RD001, RD002, etc.)
-- Method: `M###` (M001, M002, etc.)
-- Protocol: `P###` (P001, P002, etc.)
-- Claims: `C###` (C001, C002, etc.)
-- Evidence: `E###` (E001, E002, etc.)
-- Implicit Arguments: `IA###` (IA001, IA002, etc.)
+- Research Design: `RD###`
+- Method: `M###`
+- Protocol: `P###`
+- Claims: `C###`
+- Evidence: `E###`
+- Implicit Arguments: `IA###`
 
-**Report:**
+**Report format:**
 ```json
 "id_format_errors": [
   {
@@ -339,7 +316,7 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 **Verify location objects have required fields.**
 
-**Minimum required:**
+**Required:**
 - `section` (string)
 - `page` (number)
 
@@ -348,137 +325,73 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 - `sentence_start` (number)
 - `sentence_end` (number)
 
-**Report:**
-```json
-"location_issues": [
-  {
-    "id": "P023",
-    "issue": "Location missing required 'page' field",
-    "severity": "important"
-  }
-]
-```
-
 ---
 
 ### 4. Expected Information Completeness
 
 #### Check 4.1: Aggregate Missing Information
 
-**Compile all `expected_information_missing` across RDMAP objects.**
+**Aggregate all `expected_information_missing` arrays across objects.**
 
 **Categorize by severity:**
+- **Critical:** Assessment-blocking gaps (e.g., no sample size for quantitative claim, no tool specification for replication)
+- **Important:** Transparency gaps (e.g., missing quality control procedures, no alternative methods considered)
+- **Minor:** Recommended information (e.g., missing inter-observer reliability for qualitative data)
 
-**Critical gaps (assessment blockers):**
-- Methods without basic approach description
-- Protocols missing core specifications
-- Sampling without target population or rationale
-- Major tools without specifications
-- Quality control absent for major methods
-
-**Important gaps (reduced confidence):**
-- Incomplete TIDieR elements (missing >3 of 10)
-- Incomplete CONSORT-Outcomes elements (missing >2 of 8)
-- Sample size without justification
-- Missing modification/adaptation documentation
-
-**Minor gaps (noted only):**
-- Additional technical detail
-- Non-essential specifications
-- Nice-to-have documentation
-
-**Report:**
+**Report format:**
 ```json
-"expected_information_gaps": {
+"expected_information_completeness": {
   "critical": [
-    {"id": "M008", "missing": "Quality control procedures entirely absent"},
-    {"id": "P023", "missing": "Tool specifications incomplete - no version or configuration"}
+    {"issue": "Sample size justification", "affects": ["M008", "M015"], "count": 2}
   ],
   "important": [
-    {"id": "M010", "missing": "Sample size justification"},
-    {"id": "M015", "missing": "Personnel training and expertise (TIDieR Who element)"}
-  ],
-  "minor": [
-    {"id": "RD001", "missing": "Alternatives considered not detailed"}
+    {"issue": "Quality control procedures", "affects": ["M022"], "count": 1}
   ],
   "summary": {
-    "methods_with_critical_gaps": 2,
-    "methods_with_important_gaps": 5,
-    "protocols_with_critical_gaps": 1,
-    "incomplete_TIDieR_checklists": 3
+    "total_gaps": 12,
+    "critical": 2,
+    "important": 5,
+    "minor": 5
   }
 }
 ```
 
 ---
 
-#### Check 4.2: TIDieR Checklist Completeness
+#### Check 4.2: TIDieR/CONSORT Completeness (Optional)
 
-**For each method with TIDieR-applicable approach, check completeness.**
+**If methods reference TIDieR or CONSORT checklists, verify completeness.**
 
-**10 TIDieR elements:**
-1. Rationale (Why)
-2. Materials (What - physical)
-3. Procedures (What - actions)
-4. Personnel (Who)
-5. Mode (How)
-6. Setting (Where)
-7. Schedule (When/How Much)
-8. Tailoring (Planned adaptations)
-9. Modifications (Actual changes)
-10. Fidelity (Quality assurance)
+**TIDieR elements (10):** Rationale, Materials, Procedures, Personnel, Mode, Setting, Schedule, Tailoring, Modifications, Fidelity
 
-**Report methods with <7 of 10 elements.**
+**CONSORT-Outcomes elements (8):** Domain, Instrument, Metric, Aggregation, Time points, Reporter, Precision, Quality control
 
----
+**Report as information, not failure.**
 
-#### Check 4.3: CONSORT-Outcomes Completeness
-
-**For each protocol with measurement/observation, check completeness.**
-
-**8 CONSORT-Outcomes elements:**
-1. Domain (what measured)
-2. Instrument (tool/method)
-3. Metric (units/scale)
-4. Aggregation (how combined)
-5. Time points (when measured)
-6. Reporter/Observer (who)
-7. Precision (error/accuracy)
-8. Quality control (validation)
-
-**Report protocols with <6 of 8 elements.**
+**For complete domain-specific checklists:**  
+→ See `references/checklists/expected-information.md`
 
 ---
 
 ### 5. Consolidation Metadata Verification
 
-#### Check 5.1: Consolidation Metadata Consistency
+#### Check 5.1: Consolidation Metadata Present and Complete
 
-**For all items with `consolidation_metadata`, verify:**
+**For all objects with `consolidation_metadata`, verify:**
+- `consolidated_from` array not empty
+- `consolidation_type` specified
+- `information_preserved` specified
+- `rationale` provided
 
-**Required fields present:**
-- `consolidated_from` (array of source IDs)
-- `consolidation_type` (valid type)
-- `information_preserved` (description)
+**Exception:** Single-item "consolidations" (consolidated_from has 1 item) are minor issues
 
-**Source items documented:**
-- All IDs in `consolidated_from` are valid format
-- Number of source items >1 (consolidation should combine ≥2 items)
-
-**Report:**
+**Report format:**
 ```json
 "consolidation_issues": [
   {
-    "id": "M015",
-    "issue": "Has consolidation_metadata but consolidated_from has only 1 item",
-    "severity": "minor",
-    "suggestion": "Remove consolidation_metadata if not actually consolidated"
-  },
-  {
-    "id": "P030",
-    "issue": "consolidation_type 'merged' not recognized",
-    "severity": "important",
-    "valid_types": ["rationale_synthesis", "scope_integration", "workflow_integration", "validation_chain", "tool_specification", "parameter_integration", "redundancy_removal"]
+    "id": "M025",
+    "issue": "Missing consolidation_type",
+    "severity": "important"
   }
 ]
 ```
@@ -489,28 +402,31 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 #### Check 6.1: Design Type Alignment
 
-**Verify design_type and populated type-specific structures align.**
+**Verify design_type aligns with content.**
 
-**Examples:**
-- If `design_type: "research_question"` → should have `research_questions` array
-- If `design_type: "study_design"` → should have `study_design` object
-- If `design_type: "theoretical_framework"` → should have `theoretical_framework` object
+**If design_type = "research_question":**
+- Should have `research_questions` array populated
 
-**Report type/structure mismatches.**
+**If design_type = "hypothesis":**
+- Should have `hypotheses` array populated
+
+**If design_type = "study_design":**
+- Should have `study_design` object populated
 
 ---
 
 #### Check 6.2: Method Type Alignment
 
-**Verify method_type and populated type-specific structures align.**
+**Verify method_type aligns with fields populated.**
 
-**Examples:**
-- If `method_type: "data_collection"` → should have `data_collection_approach`
-- If `method_type: "sampling"` → should have `sampling_strategy`
-- If `method_type: "analysis"` → should have `analytical_approach`
-- If `method_type: "quality_control"` → should have `quality_control`
+**If method_type = "data_collection":**
+- Should have `data_collection_approach` populated
 
-**Report type/structure mismatches.**
+**If method_type = "sampling":**
+- Should have `sampling_strategy` populated
+
+**If method_type = "analysis":**
+- Should have `analytical_approach` populated
 
 ---
 
@@ -524,11 +440,12 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
   "validation_timestamp": "ISO 8601",
   "extraction_validated": {
     "schema_version": "2.4",
-    "extraction_timestamp": "ISO 8601",
     "total_items": {
       "research_designs": 12,
       "methods": 35,
-      "protocols": 28
+      "protocols": 28,
+      "claims": 45,
+      "evidence": 67
     }
   },
   
@@ -577,8 +494,7 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
   
   "recommendations": [
     "Fix 3 critical cross-reference issues before assessment",
-    "Review 2 orphaned protocols for tier reclassification",
-    "Address missing quality control documentation for M008 and M015"
+    "Review 2 orphaned protocols for tier reclassification"
   ]
 }
 ```
@@ -587,75 +503,51 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 ## Severity Levels
 
-**Critical:**
+**Critical (blocks assessment):**
 - Broken cross-references (referenced IDs don't exist)
 - Missing required fields
 - Invalid ID formats
-- Orphaned protocols (no method link)
-- Methods without design link
+- Orphaned protocols or methods without design
 - Bidirectional reference inconsistencies
+- Invalid closed-list enum values
 
-**Important:**
-- Incomplete bidirectional references (forward exists, backward missing)
-- Invalid enum values
+**Important (should fix but not blocking):**
+- Incomplete bidirectional references
 - Missing location details
 - Incomplete consolidation metadata
-- Critical expected information gaps (assessment blockers)
+- Critical expected information gaps
 - Type/structure mismatches
 
-**Minor:**
-- Orphaned designs (high-level framing may be acceptable)
+**Minor (good to fix):**
+- Orphaned designs (may be acceptable)
 - Location objects missing recommended fields
 - Minor expected information gaps
-- Consolidation metadata for single-item "consolidations"
 
-**Warnings (not issues, just flagging):**
-- Uncommon study design or sampling type values (open list)
-- Very high or very low expected information missing counts
+**Warnings (informational only):**
+- Uncommon open-list enum values
+- Very high/low expected information counts
 - Unusual reasoning approach combinations
 
 ---
 
 ## Overall Status Determination
 
-**PASS:** No critical issues, <5 important issues, extraction ready for assessment
+**PASS:** No critical or important issues  
+**PASS_WITH_ISSUES:** Critical or important issues present but extraction usable  
+**FAIL:** Critical issues make extraction unusable for assessment
 
-**PASS_WITH_ISSUES:** No critical issues, 5-15 important issues, extraction usable but should address issues
-
-**FAIL:** ≥1 critical issue, extraction needs fixes before assessment
-
----
-
-## Usage
-
-**Input:** Rationalized extraction JSON (from Pass 2)
-- May be RDMAP-only (for testing RDMAP extraction independently)
-- May be unified (RDMAP + claims/evidence for full paper validation)
-
-**Process:**
-1. Detect which object types are present
-2. Run all validation checks systematically for present types
-3. Mark cross-references to absent types as "deferred validation"
-4. Categorize issues by severity
-5. Aggregate expected information gaps
-6. Generate recommendations
-7. Determine overall status
-
-**Output:** Validation report JSON (do not modify extraction)
-
-**Next step:** 
-- If PASS or PASS_WITH_ISSUES → proceed to assessment (or next extraction phase)
-- If FAIL → return to Pass 2 for fixes
+**Note:** Deferred validation (references to not-yet-extracted arrays) should not cause FAIL status during partial extraction testing.
 
 ---
 
-## Remember
+## Validation Goal
 
-**Pass 3 validates STRUCTURE, not QUALITY.**
+Produce comprehensive validation report identifying:
+- All structural integrity issues
+- Cross-reference problems
+- Schema compliance violations
+- Completeness gaps for transparency assessment
+- Clear severity classifications
+- Actionable recommendations for fixes
 
-- Check integrity, not methodology
-- Report issues, don't fix them
-- Categorize severity appropriately
-- Enable human review of flagged items
-
-**Your goal:** Ensure extraction is structurally sound and ready for methodological assessment.
+**Remember:** You are checking structure, not assessing methodology quality.

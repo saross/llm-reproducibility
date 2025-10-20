@@ -1,9 +1,9 @@
 # Claims & Evidence Extraction Prompt - PASS 2: Rationalization v2.4
 
 **Version:** 2.4 Pass 2  
-**Last Updated:** 2025-10-19  
+**Last Updated:** 2025-10-20  
 **Workflow Stage:** Pass 2 - Consolidate and refine Pass 1 extraction  
-**Update:** Clarified iterative accumulation workflow; integrated v2.3 consolidation metadata and multi-dimensional evidence patterns
+**Skill Context:** This prompt is part of the research-assessor skill
 
 ---
 
@@ -26,11 +26,29 @@ Review Pass 1 extraction and apply consolidation principles to produce rationali
 
 **Output:** Same JSON document with evidence/claims/implicit arguments rationalized
 
-**You also have access to:** Original section text (for verification)
+---
+
+## Quality Checklist for Pass 2
+
+Use this checklist as your roadmap. Before finalizing:
+
+- [ ] 15-20% reduction achieved (higher for measurement-heavy sections OK)
+- [ ] All consolidations have complete consolidation_metadata
+- [ ] No information loss from consolidations
+- [ ] No remaining redundancy
+- [ ] Evidence/claim boundaries accurate
+- [ ] All claims have evidential support
+- [ ] Multi-dimensional evidence appropriately handled
+- [ ] Anchor numbers appropriately included in claims
+- [ ] Redundant calculation claims removed
+- [ ] Strategic verbosity applied
+- [ ] Addition patterns checked (comparisons, recommendations, synthesis)
+- [ ] All relationships verified and bidirectional
+- [ ] Other arrays (RDMAP) untouched
 
 ---
 
-## RATIONALIZATION PHILOSOPHY FOR PASS 2
+## Rationalization Philosophy
 
 **Goals:**
 - Reduce over-extraction to appropriate granularity (target 15-20% reduction)
@@ -53,22 +71,23 @@ Review Pass 1 extraction and apply consolidation principles to produce rationali
 
 ## Core Consolidation Principles
 
-### The Lumping/Splitting Decision Framework
-
-**PRIMARY PRINCIPLE: Match Evidence Granularity to Claim Granularity**
+### Primary Principle: Match Evidence Granularity to Claims
 
 Evidence should be at the same level of detail as the claims they support:
 - If claim assesses components **together** → consolidate evidence into compound finding
 - If claim assesses components **separately** → keep evidence items separate
-- If claims need both views → consider multi-dimensional evidence pattern (see below)
+- If claims need both views → consider multi-dimensional evidence pattern (below)
 
 **ACID TEST:** "Would I assess the credibility of these statements TOGETHER or SEPARATELY?"
 - Together → CONSOLIDATE
 - Separately → KEEP DISTINCT
 
+**For detailed consolidation patterns and guidance:**  
+→ See `references/checklists/consolidation-patterns.md`
+
 ---
 
-### Anchor Numbers Principle (Strategic Duplication)
+### Strategic Duplication: Anchor Numbers in Claims
 
 **Rule:** Claims can include key quantitative values that provide necessary context, even if these numbers appear in evidence. This is acceptable strategic duplication that makes claims interpretable.
 
@@ -85,7 +104,7 @@ Evidence should be at the same level of detail as the claims they support:
 
 ---
 
-### Multi-Dimensional Evidence Pattern (NEW v2.3)
+### Multi-Dimensional Evidence Pattern
 
 **Problem:** Some observations contain multiple analytically distinct dimensions that support different claims
 
@@ -126,7 +145,7 @@ Evidence should be at the same level of detail as the claims they support:
 
 ---
 
-### Consolidation Metadata (REQUIRED v2.3)
+### Consolidation Metadata (REQUIRED)
 
 **ALL consolidated items MUST have complete consolidation_metadata.**
 
@@ -140,7 +159,7 @@ Evidence should be at the same level of detail as the claims they support:
 }
 ```
 
-**Consolidation types:**
+**Common consolidation types:**
 
 **Evidence:**
 - `granularity_reduction` - Fine measurements → aggregate
@@ -155,9 +174,12 @@ Evidence should be at the same level of detail as the claims they support:
 - `compound_interpretation` - Multiple judgments → integrated assessment
 - `synthesis` - Cross-subsection integration → overarching conclusion
 
+**For complete consolidation patterns and examples:**  
+→ See `references/checklists/consolidation-patterns.md`
+
 ---
 
-### Strategic Verbosity in Claims (NEW v2.3)
+### Strategic Verbosity in Claims
 
 **Principle:** Contextualized claims are more useful than terse claims
 
@@ -172,7 +194,7 @@ Evidence should be at the same level of detail as the claims they support:
 
 ---
 
-### Calculation Claims vs Evidence (NEW v2.3)
+### Calculation Claims vs Evidence
 
 **Rule:** If a claim simply restates arithmetic already clear in evidence → remove it
 
@@ -180,33 +202,35 @@ Evidence should be at the same level of detail as the claims they support:
 - If NO → It's redundant, remove it
 - If YES → It's interpretation, keep it
 
-**Example - Remove:**
-- Evidence: "40 hours in 2017, 35 hours in 2018"
-- Claim: "Total of 75 hours across both seasons" ← This is arithmetic, not interpretation
+**Examples:**
 
-**Example - Keep:**
+**Remove this claim:**
 - Evidence: "40 hours in 2017, 35 hours in 2018"
-- Claim: "Efficiency improved in second season" ← This is interpretation requiring judgment
+- Claim: "Total of 75 hours across both seasons" ← Arithmetic, not interpretation
+
+**Keep this claim:**
+- Evidence: "40 hours in 2017, 35 hours in 2018"
+- Claim: "Efficiency improved in second season" ← Interpretation requiring judgment
 
 ---
 
-## Pass 2 Addition Patterns (NEW v2.3)
+## Pass 2 Addition Patterns
 
 Pass 1 consistently under-extracts certain claim types. **Actively look for and add these in Pass 2:**
 
-**Pattern 1: Implicit Comparisons**
+### Pattern 1: Implicit Comparisons
 - **Trigger:** Evidence compares values but no explicit comparison claim
 - **Look for:** Measurements side-by-side with implicit "better/worse" framing
 - **Example:** Platform differences with no explicit superiority claim
 - **Test:** "Is there an implicit judgment being made without explicit claim?"
 
-**Pattern 2: Overlooked Explicit Content**
+### Pattern 2: Overlooked Explicit Content
 - **Trigger:** Explicit recommendations or forward-looking statements missed in Pass 1
 - **Look for:** "Should," "would likely," "future work," "recommendations" language
 - **Example:** Final paragraph recommendation about QA methods
 - **Test:** "Did I capture all explicit recommendations and forward-looking statements?"
 
-**Pattern 3: Cross-Subsection Synthesis**
+### Pattern 3: Cross-Subsection Synthesis
 - **Trigger:** Pass 1 focuses on local claims, misses global integration
 - **Look for:** Overarching messages spanning multiple subsections
 - **Example:** Integration of output + quality + efficiency findings
@@ -217,13 +241,13 @@ Pass 1 consistently under-extracts certain claim types. **Actively look for and 
 ## Consolidation Workflow
 
 ### STEP 1: Boundary Verification
-- Check evidence/claim classifications
+- Check evidence/claim classifications (see Pass 1 prompt if unclear)
 - Move misclassified arguments to claims
 - Move context to project_metadata
 - Reclassify professional judgment claims
 
 ### STEP 2: Consolidation
-- Apply lumping/splitting test
+- Apply lumping/splitting acid test
 - Match evidence granularity to claims
 - Create analytical views where appropriate
 - Document all consolidations with metadata
@@ -231,16 +255,16 @@ Pass 1 consistently under-extracts certain claim types. **Actively look for and 
 - Remove redundant calculation claims
 
 ### STEP 3: Relationship Verification
-- Update supports_claims arrays after consolidation
-- Check supported_by_evidence links
-- Verify hierarchical claim structure
-- Validate analytical view cross-references
+- Update `supports_claims` arrays after consolidation
+- Check `supported_by_evidence` links
+- Verify hierarchical claim structure (`supports_claims` within claims array)
+- Validate analytical view cross-references (`related_evidence`)
 
 ### STEP 4: Quality Checks
 - No hallucinations
-- All verbatim_quotes verified
-- Support chain integrity
-- Consolidation traceability
+- All `verbatim_quotes` verified against source
+- Support chain integrity maintained
+- Consolidation traceability complete
 - Information preservation verified
 - Strategic verbosity applied
 - Other arrays (RDMAP) untouched
@@ -280,36 +304,16 @@ Pass 1 consistently under-extracts certain claim types. **Actively look for and 
 }
 ```
 
----
-
-## Quality Checklist for Pass 2
-
-Before finalizing:
-
-- [ ] 15-20% reduction achieved (higher for measurement-heavy sections OK)
-- [ ] All consolidations have complete consolidation_metadata
-- [ ] No information loss from consolidations
-- [ ] No remaining redundancy
-- [ ] Evidence/claim boundaries accurate
-- [ ] All claims have evidential support
-- [ ] Multi-dimensional evidence appropriately handled
-- [ ] Anchor numbers appropriately included in claims
-- [ ] Redundant calculation claims removed
-- [ ] Strategic verbosity applied
-- [ ] Addition patterns checked (comparisons, recommendations, synthesis)
-- [ ] All relationships verified and bidirectional
-- [ ] Other arrays (RDMAP) untouched
+**For complete object structure and field definitions:**  
+→ See `references/schema/schema-guide.md`
 
 ---
 
-## Remember
+## Pass 2 Goal
 
-**Pass 2 is about CONSOLIDATION AND REFINEMENT, not expansion.**
-
-- Reduce granularity appropriately
-- Preserve all critical information
-- Document all consolidations
-- Verify all relationships
-- **Don't touch RDMAP arrays** - those are rationalized separately
-
-**Your goal:** Produce rationalized, high-quality extraction ready for validation and assessment.
+Produce rationalized, high-quality extraction with:
+- Appropriate granularity matched to claims
+- Complete consolidation traceability
+- Verified relationships
+- No information loss
+- Ready for validation (Pass 3)
