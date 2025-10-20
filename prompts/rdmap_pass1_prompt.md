@@ -1,8 +1,9 @@
 # RDMAP Extraction Prompt - PASS 1: Liberal Extraction v2.4
 
 **Version:** 2.4 Pass 1  
-**Last Updated:** 2025-10-19  
-**Workflow Stage:** Pass 1 of 3 - Liberal RDMAP extraction with over-capture strategy
+**Last Updated:** 2025-10-20  
+**Workflow Stage:** Pass 1 of 3 - Liberal RDMAP extraction with over-capture strategy  
+**Skill Context:** This prompt is part of the research-assessor skill
 
 ---
 
@@ -32,7 +33,25 @@ Extract Research Design, Methods, and Protocols (RDMAP) from research paper sect
 
 ---
 
-## EXTRACTION PHILOSOPHY FOR PASS 1
+## Quality Checklist for Pass 1
+
+Use this checklist as your roadmap. Before finalizing:
+
+- [ ] All research designs extracted (questions, hypotheses, study designs, frameworks)
+- [ ] All methods extracted (data collection, sampling, analysis approaches)
+- [ ] All protocols extracted (specific procedures, tools, parameters, configurations)
+- [ ] Tier assignments marked (even if uncertain)
+- [ ] Cross-references populated (`enables_methods`, `uses_protocols`, etc.)
+- [ ] `expected_information_missing` flagged where appropriate
+- [ ] `extraction_notes` document uncertainties and decisions
+- [ ] Location tracking complete (section, page, paragraph)
+- [ ] Reasoning approaches classified (where applicable)
+- [ ] No hallucinations - only extract what's actually stated
+- [ ] Other arrays (claims/evidence) untouched
+
+---
+
+## Extraction Philosophy
 
 **When uncertain about tier assignment, inclusion, or boundaries: INCLUDE IT.**
 
@@ -54,35 +73,11 @@ Extract Research Design, Methods, and Protocols (RDMAP) from research paper sect
 
 ---
 
-## Core Extraction Principles
+## Core Decision Framework
 
 ### 1. Three-Tier Hierarchy: Design → Methods → Protocols
 
-**Research Design (Strategic Level - WHY)**
-- Research questions and hypotheses
-- Theoretical frameworks guiding interpretation
-- Study design choices (survey, excavation, experimental, comparative, etc.)
-- Scope definitions (spatial, temporal, thematic boundaries)
-- Positionality and reflexivity statements
-
-**Methods (Tactical Level - WHAT)**
-- Data collection approaches (how data gathered generally)
-- Sampling strategies (how units selected)
-- Analysis approaches (how data analyzed broadly)
-- Quality control methods (how quality ensured)
-- Validation approaches (how findings checked)
-- Temporal frameworks (field seasons, duration)
-
-**Protocols (Operational Level - HOW)**
-- Specific procedures with step-by-step detail
-- Tools and equipment specifications
-- Recording standards and formats
-- Parameter values and configurations
-- Measurement protocols with precision
-- Safety and ethics protocols
-
-**Decision Tree for Tier Assignment:**
-
+**Quick Decision Tree:**
 ```
 Does this explain WHY research was framed/designed this way?
 ├─ YES → Research Design
@@ -93,411 +88,202 @@ Does this explain WHY research was framed/designed this way?
         └─ NO → Likely project context (metadata, not RDMAP)
 ```
 
+**Research Design (Strategic - WHY)**
+- Research questions and hypotheses
+- Theoretical frameworks
+- Study design choices and rationale
+- Scope definitions
+- Positionality statements
+
+**Methods (Tactical - WHAT)**
+- Data collection approaches
+- Sampling strategies
+- Analysis approaches
+- Quality control methods
+- Validation approaches
+
+**Protocols (Operational - HOW)**
+- Specific procedures with detail
+- Tools and equipment specifications
+- Recording standards and formats
+- Parameter values and configurations
+- Measurement protocols with precision
+
 **When uncertain:** Extract at BOTH levels and mark `extraction_notes` with "Tier assignment uncertain - may belong at [alternative tier]"
+
+**For detailed tier assignment guidance and examples:**  
+→ See `references/checklists/tier-assignment-guide.md`
 
 ---
 
 ### 2. Description vs Argumentation Boundary
 
-**CRITICAL DISTINCTION:**
+**RDMAP = Methodological Descriptions (what was done)**
+- Research designs, data collection methods, analysis procedures
+- Extract as neutral descriptions
+- Example: "Used stratified random sampling with 30% coverage"
 
-**RDMAP objects** = Descriptions of what was done (methodological procedures)
-- "We used stratified random sampling"
-- "FAIMS Mobile platform was employed"
-- "GPS accuracy was ±3cm"
-- Reports methodology factually
+**Claims/Evidence = Argumentation (assertions about what worked)**
+- Effectiveness claims, quality assessments, comparisons
+- Extract separately in claims/evidence arrays
+- Example: "Stratified sampling proved more efficient than previous approaches"
 
-**Claim objects** = Arguments about why approaches were appropriate (methodological arguments)
-- "Stratified random sampling was appropriate because it ensured representation"
-- "FAIMS Mobile enabled efficient data capture in field conditions"
-- "±3cm GPS accuracy was sufficient for our research questions"
-- Justifies or defends methodology
+**Test:** "Is this describing HOW research was done, or ARGUING about how well it worked?"
+- Describing → RDMAP
+- Arguing → Claims/Evidence
 
-**Pattern Recognition:**
-
-Extract as **RDMAP** if the text reports what was done:
-- "We used X"
-- "Y approach was employed"
-- "Data collected using Z"
-- "Protocol followed ABC steps"
-
-Extract as **Claim** (type: methodological_argument) if the text argues appropriateness:
-- "X was appropriate for..."
-- "Y enabled us to..."
-- "Z ensured that..."
-- "This approach was chosen because..."
-
-**When statements combine both:** 
-- Extract the description as RDMAP object
-- Extract the justification as separate claim object
-- Link them: RDMAP `justification_claim: "C###"`, Claim `supports_method: "M###"`
-
-**Example:**
-"We used stratified random sampling to ensure adequate representation across site types" contains:
-- Method: "stratified random sampling" (what was done)
-- Claim: "ensured adequate representation across site types" (why it was appropriate)
+**If combined:** Extract description in RDMAP, assertion in claims, cross-reference them
 
 ---
 
-### 3. Reasoning Approach Framework
+### 3. Reasoning Approach Classification
 
-**Extract both explicit statements AND inferred reasoning approach with confidence.**
+**For Research Designs, classify reasoning approach:**
 
-**Reasoning Approach Types:**
+**Inductive** - Data to patterns to theory
+- Exploratory, pattern discovery, grounded theory
+- Indicator: "emerged from", "patterns suggested", "we observed"
 
-**Inductive (Pattern → Theory)**
-- Observations → patterns → generalizations
-- "We identified patterns in the data that suggest..."
-- "Repeated instances of X led us to propose..."
-- Generates theory from observations
-- Common in exploratory, grounded theory research
+**Abductive** - Anomaly to best explanation
+- Puzzle-solving, inference to best explanation
+- Indicator: "surprising finding", "best explained by", "accounts for"
 
-**Abductive (Anomaly → Best Explanation)**
-- Surprising observation → inference to best explanation
-- "The unexpected finding of X suggests..."
-- "This pattern is best explained by..."
-- Generates hypotheses to explain anomalies
-- Common in interpretive, theory-building research
+**Deductive** - Theory to predictions to test
+- Hypothesis testing, theory verification
+- Indicator: "we hypothesized", "predicted", "tested whether"
 
-**Deductive (Theory → Prediction → Test)**
-- Theory → hypothesis → test against data
-- "We hypothesized that X would correlate with Y"
-- "If theory Z is correct, we expect to observe..."
-- Tests predictions from existing theory
-- Common in hypothesis-testing research
+**Mixed** - Genuine combination (NOT default)
+- Explicit integration of approaches
+- Must show both exploratory AND confirmatory phases
+- Example: "Exploratory phase identified patterns, confirmatory phase tested hypotheses"
 
-**Mixed**
-- Genuine combination of approaches (NOT a dumping ground)
-- Multiple reasoning pathways clearly articulated
-- Different phases using different approaches
-- Example: "Exploratory analysis revealed patterns (inductive), which we then tested with hypotheses (deductive)"
+**Unclear** - Insufficient information
+- Use when approach not stated or inferable
 
-**Unclear**
-- Insufficient information to classify
-- Ambiguous or contradictory indicators
-- Use only when genuinely uncertain
-
-**What to extract:**
-- Explicit statements about reasoning approach
-- Inferred approach based on paper structure and language
-- Confidence in inference (high/medium/low)
-- Linguistic markers and structural patterns supporting inference
-
-**Confidence indicators:**
-- **High:** Explicit statement of approach OR very clear structural pattern
-- **Medium:** Strong indicators but no explicit statement
-- **Low:** Weak or ambiguous indicators
+**Important:** 
+- Look for explicit statements about approach
+- Check hypothesis timing (pre-data vs post-data)
+- Document confidence level
+- Don't default to "mixed" - be specific when possible
 
 ---
 
 ### 4. Research Questions vs Hypotheses
 
-**Extract separately and track formulation timing - CRITICAL for HARKing detection.**
+**Research Questions** - Open-ended inquiry
+- "How does X affect Y?"
+- "What is the relationship between X and Y?"
+- No prediction, exploratory stance
 
-**Research Questions:**
-- Open-ended questions guiding investigation
-- Do not predict specific outcomes
-- Common in exploratory research
-- Example: "How do mobile platforms affect data quality?"
+**Hypotheses** - Specific predictions
+- "X will increase Y"
+- "X is positively correlated with Y"
+- Testable prediction, confirmatory stance
 
-**Hypotheses:**
-- Specific, testable predictions
-- Predict relationships or outcomes
-- Common in confirmatory research
-- Example: "Mobile platforms will reduce recording errors compared to paper methods"
+**Critical distinction: Timing**
+- **Pre-data:** Stated before/during data collection
+- **Post-data:** Formulated after seeing patterns
+- Document timing basis and confidence
 
-**Formulation Timing (CRITICAL):**
-
-**Pre-data:**
-- Stated in introduction or methods before results
-- Clear indication formulated before data collection/analysis
-- Explicit preregistration statement (rare in unregistered papers)
-
-**Post-data:**
-- First appears in results or discussion section
-- Appears after presenting findings
-- Reframed after seeing patterns
-
-**Unclear:**
-- Timing cannot be determined from paper structure
-- Ambiguous presentation
-- Restructured narrative obscures timing
-
-**How to infer timing from paper structure:**
-1. Check introduction/background - hypothesis stated here → likely pre-data
-2. Check methods section - hypothesis stated here → likely pre-data
-3. Check results section - first mention here → likely post-data
-4. Check discussion - formulated here → definitely post-data
-5. Look for phrases: "We hypothesized..." (intro) vs "These findings suggest..." (results/discussion)
-
-**Emergent findings:**
-- Unexpected patterns or discoveries not anticipated
-- Track separately as emergent (not pre-formulated)
-- Note if later presented as if anticipated
+**If unclear:** Flag in `extraction_notes` and document reasoning
 
 ---
 
-### 5. Expected Information Checklists
+### 5. Expected Information & Missing Elements
 
-**Use these as GUIDES, not REQUIREMENTS. Flag what's missing, don't penalize papers for gaps.**
+For each RDMAP item, consider what information SHOULD be present but is MISSING.
 
-#### Method Documentation Checklist (Adapted from TIDieR)
+**Use the `expected_information_missing` field to document gaps:**
+- Don't penalize - just document
+- Helps assess transparency and replicability
+- Context-dependent (archaeology ≠ biology ≠ ethnography)
 
-For major data collection methods, look for:
+**For comprehensive checklists covering:**
+- Method documentation (TIDieR-adapted)
+- Measurement specifications (CONSORT-adapted)
+- Sampling strategies
+- Analysis methods
+- Domain-specific expectations (archaeology, biology, ethnography)
 
-1. **Rationale (Why)** - Why this method chosen, theoretical/practical justification
-2. **Materials (What - physical)** - Equipment, tools, instruments, platforms, specifications
-3. **Procedures (What - actions)** - Step-by-step process, order of operations
-4. **Personnel (Who)** - Team composition, training, expertise, roles
-5. **Mode (How)** - Approach to execution, technique details
-6. **Setting (Where)** - Location specifics, environmental context, spatial framework
-7. **Schedule (When/How Much)** - Duration, timing, frequency, intensity
-8. **Tailoring (Planned adaptations)** - Built-in flexibility, context-specific modifications
-9. **Modifications (Actual changes)** - What changed during execution, why, impact
-10. **Fidelity (Quality assurance)** - How adherence monitored, quality control, validation
+**→ See `references/checklists/expected-information.md`**
 
-**Document what's present in method object fields. Flag missing elements in `expected_information_missing`.**
-
----
-
-#### Measurement Specification Checklist (Adapted from CONSORT-Outcomes)
-
-For measurement and observation protocols, look for:
-
-1. **Domain** - What construct/phenomenon measured, conceptual definition
-2. **Instrument** - Specific tool/method/approach, equipment specifications
-3. **Metric** - How measurement expressed, units and scale
-4. **Aggregation** - How individual measurements combined, statistical summary
-5. **Time points** - When measurements taken, temporal sampling
-6. **Reporter/Observer** - Who made observations, training and expertise
-7. **Precision** - Measurement error, resolution, accuracy specifications
-8. **Quality control** - Inter-observer reliability, validation procedures
-
-**Document what's present in protocol object fields. Flag missing elements in `expected_information_missing`.**
+**Common missing elements to watch for:**
+- Sample size justification
+- Tool/equipment specifications
+- Parameter settings
+- Quality control procedures
+- Alternative methods considered
+- Stopping rules for sampling
 
 ---
 
-#### Sampling Strategy Checklist
+### 6. Fieldwork-Specific Considerations
 
-For any sampling approach, look for:
+**Opportunistic Decisions**
+- Unplanned adaptations during fieldwork
+- Response to field conditions
+- Mark as `opportunistic: true` in relevant RDMAP item
+- Example: "Extended survey due to high artifact density"
 
-1. **Sampling type** - Probability/purposive/opportunistic/coverage
-2. **Target population** - What universe being sampled, boundaries and scope
-3. **Sampling rationale** - Why this approach appropriate, how it addresses research questions
-4. **Sample size** - Planned or target size, actual size achieved
-5. **Selection procedure** - How units selected, specific criteria
-6. **Stopping rule** - How sample size determined (data saturation, predetermined N, resources)
-7. **Inclusion/exclusion criteria** - What qualifies, what excluded and why
+**Contingency Plans**
+- Pre-planned IF-THEN responses
+- Extract as protocols with `contingent: true`
+- Example: "If GPS unavailable, use total station"
 
-**Document in method.sampling_strategy. Flag missing elements in `expected_information_missing`.**
-
----
-
-#### Analysis Methods Checklist
-
-For analysis approaches, look for:
-
-1. **Analytical approach** - Overall strategy, specific techniques
-2. **Software/tools** - Programs used, versions where relevant
-3. **Analysis population** - What data included/excluded
-4. **Preprocessing** - Data transformations, cleaning procedures
-5. **Assumptions** - Statistical assumptions checked, interpretive framework
-6. **Decision rules** - How analytical choices made, contingency plans
-7. **Quality control** - Validation procedures, sensitivity analyses
-
-**Document in method.analytical_approach. Flag missing elements in `expected_information_missing`.**
+**Emergent Discoveries**
+- Patterns discovered during analysis
+- Hypotheses formulated post-data
+- Mark timing in research questions/hypotheses
+- Document emergence in `extraction_notes`
 
 ---
 
-### 6. Controlled Vocabularies (Open Lists)
+### 7. Cross-Referencing
 
-**These are SUGGESTIONS, not strict requirements. Accept free text and build vocabulary empirically.**
+**Populate bidirectional links:**
+- Research Designs `enables_methods` → Methods `design_context`
+- Methods `uses_protocols` → Protocols `implements_method`
+- Methods `supports_claims` ← Claims `supported_by_evidence`
 
-#### Reasoning Approaches (CLOSED list):
-- `inductive` - pattern to theory
-- `abductive` - anomaly to best explanation
-- `deductive` - theory to test
-- `mixed` - genuine combination (NOT dumping ground)
-- `unclear` - insufficient information
+**Don't over-reference:** Only link if there's a clear relationship
 
-#### Study Designs (OPEN list - starting vocabulary):
-- `survey` - systematic examination of area/population
-- `excavation` - systematic excavation and recording
-- `ethnographic` - participant observation and cultural study
-- `experimental` - controlled manipulation and observation
-- `comparative` - systematic comparison across cases
-- `longitudinal` - repeated observations over time
-- `case_study` - in-depth examination of specific case(s)
-- `mixed_methods` - integration of multiple approaches
-- **Accept free text** - many domain-specific designs
-
-#### Sampling Types (OPEN list - starting vocabulary):
-
-**Probability sampling:**
-- `simple_random` - equal probability
-- `stratified_random` - random within strata
-- `systematic_random` - regular intervals
-- `cluster` - random groups
-
-**Non-probability sampling:**
-- `purposive` - deliberate selection
-- `convenience` - accessibility-based
-- `theoretical` - theory-driven (grounded theory)
-- `snowball` - referral-based
-- `judgmental` - expert selection
-- `quota` - predetermined categories
-
-**Archaeological-specific:**
-- `total_collection` - all artifacts
-- `total_coverage` - complete census
-- **Accept free text** - many context-specific strategies
-
-#### Analysis Populations (ADAPTED from SPIRIT):
-- `all_collected` - all data collected (equivalent to ITT)
-- `quality_filtered` - meeting quality standards
-- `outliers_excluded` - statistical outliers removed
-- `complete_cases_only` - no missing data
-
----
-
-### 7. Fieldwork-Specific Guidance
-
-#### Opportunistic Decisions
-Fieldwork involves legitimate adaptations to field conditions. Capture systematically:
-
-**What to extract:**
-- Field condition triggers (weather, access, discoveries)
-- Original plan (what was intended)
-- Adaptation made (what was actually done)
-- Rationale (why adaptation was necessary)
-- Impact on comparability (how it affected results)
-- Whether maintained methodological rigor
-
-**Distinction:**
-- **Legitimate adaptation:** Transparent, justified, maintains rigor
-  - "Heavy rain prevented surface survey; we extended excavation season instead"
-- **Methodological opacity:** Silent changes, unexplained deviations
-  - "Some data excluded" (no explanation)
-
-**Extract both planned contingencies and actual adaptations.**
-
----
-
-#### Contingency Plans
-IF-THEN decision rules documented in advance:
-
-**Planned contingencies:** "If weather prevents survey, excavation will continue"
-**Actual responses:** "Due to heavy rain days 4-7, we extended excavation and shortened survey"
-
-**Extract:**
-- Condition triggers
-- Planned responses
-- Actual responses (if different)
-- Rationale for deviations
-
----
-
-#### Emergent Discoveries
-Serendipitous findings that change research scope or direction:
-
-**Examples:**
-- Unexpected artifact types prompting new research questions
-- Site extent larger than anticipated requiring scope adjustment
-- Chance discovery of new site types
-
-**Extract:**
-- What was discovered
-- How it changed research approach
-- New questions or hypotheses generated
-- How integrated into overall design
-
-**Distinguish:** Legitimate scientific response to discovery vs HARKing (claiming you predicted it)
-
----
-
-### 8. Cross-Reference Patterns
-
-**Use simple string ID arrays. Keep references liberal in Pass 1.**
-
-**Research Design cross-references:**
-- `enables_methods: ["M003", "M007"]` - which methods implement this design
-- `informs_claims: ["C089"]` - which claims this design supports
-- `implicit_assumptions: ["IA001"]` - unstated design assumptions
-
-**Method cross-references:**
-- `implements_designs: ["RD001"]` - which designs this method realizes
-- `realized_through_protocols: ["P011", "P012"]` - which protocols implement this method
-- `validated_by_evidence: ["E046"]` - which evidence validates this method
-- `justification_claim: "C027"` - claim arguing this method was appropriate
-- `implicit_assumptions: ["IA002"]` - unstated methodological assumptions
-
-**Protocol cross-references:**
-- `implements_methods: ["M003"]` - which methods this protocol operationalizes
-- `produces_evidence: ["E045"]` - which evidence this protocol generated
-- `adapted_from: "P010"` - source protocol if this is adaptation
-
-**When uncertain about cross-references in Pass 1:**
-- Include potential references with note in `extraction_notes`
-- Example: "May implement RD001, verify in Pass 2"
-- Pass 2 will validate and finalize
-
----
-
-### 9. Location Tracking
-
-**Precise location tracking enables verification and assessment.**
-
-Required for all RDMAP objects:
-```json
-"location": {
-  "section": "Methods",
-  "page": 5,
-  "paragraph": 3,
-  "sentence_start": 2,
-  "sentence_end": 4
-}
-```
-
-**Section types:**
-- "Abstract", "Introduction", "Methods", "Results", "Discussion", "Conclusion"
-- For multi-section papers, be specific: "Methods - Data Collection", "Results - Survey Findings"
+**Complete in Step 4** of workflow (after extracting all RDMAP items)
 
 ---
 
 ## Extraction Workflow
 
 ### Step 1: Identify Research Designs
-- Read introduction and methods for strategic framing
-- Look for: research questions, hypotheses, study design, theoretical framework, scope, positionality
-- Extract reasoning approach (explicit and inferred)
-- Track hypothesis formulation timing
+- Scan for research questions, hypotheses, theoretical frameworks
+- Extract study design choices and rationale
+- Classify reasoning approach
+- Track location information
 
 ### Step 2: Identify Methods
-- Read methods section for tactical approaches
-- Look for: data collection, sampling, analysis, quality control, validation, temporal framework
-- Apply expected information checklists
-- Note opportunistic decisions and contingency plans
-- Track exclusions and analysis populations
+- Look for data collection approaches
+- Extract sampling strategies
+- Identify analysis methods
+- Note quality control and validation approaches
+- Document expected missing information
 
 ### Step 3: Identify Protocols
-- Read methods for operational detail
-- Look for: procedures, tools, parameters, recording standards, precision, safety/ethics
-- Apply measurement specification checklist
-- Note adaptations and modifications
-- Track decision rules and quality control
+- Find specific procedures with implementation detail
+- Extract tool specifications and configurations
+- Capture parameter settings and values
+- Document recording standards and decision rules
+- Note measurement protocols
 
 ### Step 4: Cross-Reference
-- Link protocols → methods → designs
-- Link methods → evidence validation
-- Link methods → methodological argument claims
-- Link designs/methods → implicit assumptions
-- Mark uncertain references for Pass 2
+- Link designs to methods they enable
+- Link methods to protocols they use
+- Verify bidirectional consistency
+- Update `design_context` and `implements_method` fields
 
 ### Step 5: Flag Missing Information
-- Apply expected information checklists
-- Note gaps in `expected_information_missing` arrays
-- Don't penalize papers, just document
-- Distinguish critical gaps from nice-to-have
+- Review each RDMAP item against expected information
+- Populate `expected_information_missing` arrays
+- Document in `extraction_notes` if significant gaps
+- Don't penalize - just document for transparency
 
 ---
 
@@ -505,311 +291,162 @@ Required for all RDMAP objects:
 
 ### When Description and Argumentation are Combined
 
-**Example:** "We used stratified random sampling to ensure adequate representation across site types"
+**Pattern:** "We used [method] which was [assessment/claim]"
 
-**Extract as:**
-1. **Method object:** "Stratified random sampling"
-   - `sampling_strategy.type: "stratified_random"`
-   - `justification_claim: "C027"`
-   
-2. **Claim object (C027):** "Stratified sampling ensured adequate representation"
-   - `claim_type: "methodological_argument"`
-   - `supports_method: "M003"`
+**Solution:** Split into RDMAP + Claim
+- RDMAP: "We used [method]" 
+- Claim: "[Method] was [assessment]"
+- Cross-reference them
+
+**Example:**
+- Text: "We used mobile platform which proved more efficient than paper"
+- Method: "Mobile platform for data recording"
+- Claim: "Mobile platform was more efficient than paper"
+- Cross-reference: Method supports Claim
 
 ---
 
 ### When Tier Assignment is Ambiguous
 
-**Example:** "Survey transects spaced at 10m intervals"
+**Pattern:** Statement could fit multiple tiers
 
-Could be:
-- **Method:** Sampling strategy (tactical)
-- **Protocol:** Specific spacing parameter (operational)
+**Solution:** Include at primary tier, note alternative in `extraction_notes`
 
-**Pass 1 approach:**
-- Extract at BOTH levels if uncertain
-- Mark in `extraction_notes`: "Tier assignment uncertain - transect spacing could be method-level sampling strategy OR protocol-level parameter"
-- Pass 2 will rationalize
+**Example:**
+- "GPS points collected at 5m accuracy"
+- Could be: Method (general GPS approach) OR Protocol (specific 5m setting)
+- Decision: Protocol (specific parameter value)
+- Note: "Could also be considered method-level description of GPS approach"
+
+**When genuinely uncertain:** Extract at BOTH tiers with cross-reference
 
 ---
 
 ### When Reasoning Approach is Mixed
 
-**Example:** "We conducted exploratory analysis to identify patterns (clustering of artifact types by elevation), then tested specific hypotheses about elevation effects on site distribution"
+**Don't default to "mixed"** - requires evidence of BOTH approaches
 
-**Extract as:**
-- `reasoning_approach: "mixed"`
-- `reasoning_details: "Initial inductive pattern identification followed by deductive hypothesis testing"`
-- `reasoning_confidence: "high"`
+**Genuine mixed:**
+- Explicit exploratory phase THEN confirmatory phase
+- Both inductive and deductive elements documented
+- Example: "Exploratory analysis identified patterns, then tested via hypothesis"
 
-**NOT mixed:** Simply unclear or ambiguous reasoning. Use `unclear` for that.
+**Not mixed:**
+- Just unclear approach → `unclear`
+- Only one approach evident → classify specifically
+- No information → `unclear`
 
 ---
 
 ### When Hypothesis Timing is Ambiguous
 
-**Example:** Hypothesis mentioned in introduction but phrasing suggests post-hoc formulation
+**Pre-data indicators:**
+- Stated in Introduction/Methods before results
+- Uses future tense ("We will test")
+- Called "hypothesis" or "prediction" a priori
 
-**Extract as:**
-- `formulation_timing: "unclear"`
-- `timing_basis: "Stated in introduction but phrasing ('we found that...') suggests post-hoc formulation"`
-- `timing_confidence: "low"`
-- Note in `extraction_notes` for human review
+**Post-data indicators:**
+- First mentioned in Results/Discussion
+- Formed after seeing patterns
+- Called "emerged" or "suggested by"
+
+**Document:**
+- Timing basis (where/when stated)
+- Confidence level (high/medium/low)
+- Mark `emergent: true` if post-data
 
 ---
 
-## Examples (Archaeology Focus)
+## Key Examples
 
-### Example 1: Research Design - Study Design
+### Example 1: Research Design with Reasoning Approach
 
+**Text:** "We hypothesized that mobile platforms would be more efficient than paper-based recording. We also conducted exploratory analysis to identify usage patterns."
+
+**Extract as:**
 ```json
 {
   "design_id": "RD001",
-  "design_text": "Comparative assessment of mobile platform (FAIMS) versus traditional paper-based recording for archaeological survey",
-  "design_type": "study_design",
-  "study_design": {
-    "design_type": "comparative",
-    "rationale": "Direct comparison enables assessment of mobile platform effectiveness in field conditions",
-    "alternatives_considered": ["Single-method study", "Meta-analysis of existing studies"]
-  },
+  "design_type": "research_question",
+  "hypotheses": [{
+    "hypothesis": "Mobile platforms would be more efficient than paper-based recording",
+    "formulation_timing": "pre-data",
+    "timing_basis": "Stated in introduction before methods"
+  }],
   "reasoning_approach": {
     "approach": "mixed",
-    "explicit_statement": "Exploratory analysis of usage patterns combined with confirmatory comparison of data quality metrics",
-    "inferred_approach": "mixed",
     "reasoning_confidence": "high",
-    "indicators": ["Explicitly states exploratory and confirmatory phases", "Introduction presents hypotheses, results show exploratory patterns"]
-  },
-  "enables_methods": ["M003", "M008", "M015"],
-  "expected_information_missing": ["Sample size justification", "Power analysis"],
-  "extraction_notes": "Clear comparative design with explicit mixed reasoning approach",
-  "extraction_confidence": "high",
-  "location": {"section": "Introduction", "page": 2, "paragraph": 4}
+    "indicators": ["Explicit hypothesis (deductive)", "Exploratory analysis (inductive)"]
+  }
 }
 ```
 
 ---
 
-### Example 2: Research Design - Research Question vs Hypothesis
+### Example 2: Method with Opportunistic Decision
 
+**Text:** "Survey used systematic transects. Due to unexpectedly high artifact density in western section, survey coverage was increased from 20% to 40% in that area."
+
+**Extract as:**
 ```json
 {
-  "design_id": "RD002",
-  "design_text": "Research questions and hypotheses guiding the study",
-  "design_type": "research_question",
-  "research_questions": [
-    {
-      "question": "How does mobile platform use affect data recording efficiency in archaeological field survey?",
-      "formulation_timing": "pre-data",
-      "timing_basis": "Stated in introduction before methods section",
-      "timing_confidence": "high",
-      "how_addressed": "Measured via recording time per artifact"
-    }
-  ],
-  "hypotheses": [
-    {
-      "hypothesis": "Mobile platform recording will be faster than paper-based recording",
-      "formulation_timing": "pre-data",
-      "timing_basis": "Stated in introduction as a priori expectation",
-      "timing_confidence": "high",
-      "how_tested": "Systematic time measurement comparison between platforms"
-    },
-    {
-      "hypothesis": "Data completeness will correlate with recorder experience",
-      "formulation_timing": "post-data",
-      "timing_basis": "First mentioned in results section after presenting completeness findings",
-      "timing_confidence": "medium",
-      "how_tested": "Post-hoc correlation analysis",
-      "emergent": true,
-      "emergent_notes": "Pattern emerged during exploratory analysis, then tested"
-    }
-  ],
-  "expected_information_missing": [],
-  "extraction_notes": "Clear distinction between pre-registered RQ/H and emergent post-hoc hypothesis",
-  "extraction_confidence": "high",
-  "location": {"section": "Introduction", "page": 3, "paragraph": 2}
-}
-```
-
----
-
-### Example 3: Method - Data Collection with Opportunistic Decisions
-
-```json
-{
-  "method_id": "M008",
-  "method_text": "Archaeological pedestrian survey using mobile data collection platform (FAIMS Mobile)",
-  "method_type": "data_collection",
-  "data_collection_approach": {
-    "approach": "survey",
-    "domain_specific_type": "pedestrian archaeological survey",
-    "rationale": "Enables systematic artifact documentation with structured data capture"
-  },
-  "temporal_framework": {
-    "field_seasons": ["Summer 2019"],
-    "duration": "6 weeks",
-    "frequency": "Daily survey weather permitting"
-  },
-  "opportunistic_decisions": [
-    {
-      "trigger": "Heavy rainfall days 12-14 prevented surface survey",
-      "original_plan": "Complete survey of northern transects",
-      "adaptation": "Extended survey period by 3 days and prioritized high-density areas",
-      "justification": "Maintain planned sample coverage despite weather delays",
-      "impact_on_comparability": "Maintained spatial coverage, no methodological impact",
-      "maintained_rigor": true
-    }
-  ],
-  "implements_designs": ["RD001"],
-  "realized_through_protocols": ["P023", "P024", "P025"],
-  "validated_by_evidence": ["E046"],
-  "justification_claim": "C027",
-  "expected_information_missing": ["Surveyor training details", "Inter-surveyor reliability"],
-  "extraction_notes": "Clear opportunistic adaptation with transparent rationale",
-  "extraction_confidence": "high",
-  "location": {"section": "Methods", "page": 4, "paragraph": 2}
-}
-```
-
----
-
-### Example 4: Method - Sampling Strategy
-
-```json
-{
-  "method_id": "M010",
-  "method_text": "Stratified random sampling of survey transects across site zones",
-  "method_type": "sampling",
+  "method_id": "M003",
+  "method_text": "Systematic transect survey with adaptive coverage",
   "sampling_strategy": {
-    "type": "stratified_random",
-    "target_population": "Total site area of 45 hectares divided into 4 zones based on surface artifact density",
-    "rationale": "Ensures proportional representation across zones with different artifact densities",
-    "sample_size_planned": "20% of each zone (9 hectares total)",
-    "sample_size_actual": "8.7 hectares (19.3% - weather prevented completion of Zone 3)",
-    "selection_procedure": "Random selection of 10m x 10m survey units within each zone using random number generator",
-    "stopping_rule": "Predetermined sample size based on available field time and crew size",
-    "inclusion_criteria": ["Accessible terrain", "Vegetation clearance feasible"],
-    "exclusion_criteria": ["Private property without access permission", "Active agricultural fields"]
+    "sampling_type": "systematic",
+    "planned_coverage": "20%",
+    "actual_coverage": "20% overall, 40% in western section"
   },
-  "analysis_population": {
-    "type": "quality_filtered",
-    "definition": "Survey units with >50% surface visibility",
-    "n_excluded": 12,
-    "exclusion_criteria": ["Dense vegetation obscuring surface", "Heavy erosion"],
-    "exclusion_justification": "Cannot assess artifact presence with <50% visibility"
-  },
-  "implements_designs": ["RD001"],
-  "realized_through_protocols": ["P026"],
-  "expected_information_missing": ["Power analysis for sample size", "Pilot test results"],
-  "extraction_notes": "Comprehensive sampling documentation with clear exclusion transparency",
-  "extraction_confidence": "high",
-  "location": {"section": "Methods", "page": 5, "paragraph": 1}
+  "opportunistic": true,
+  "opportunistic_notes": "Coverage increased in western section due to high artifact density",
+  "expected_information_missing": ["Stopping rule for increased coverage", "Criteria for 'high density'"]
 }
 ```
 
 ---
 
-### Example 5: Protocol - Tool Specification
+### Example 3: Protocol with Tool Specification
 
+**Text:** "GPS coordinates recorded using Trimble GeoXH 6000 with real-time SBAS correction, accuracy target 1m horizontal."
+
+**Extract as:**
 ```json
 {
-  "protocol_id": "P023",
-  "protocol_text": "FAIMS Mobile v2.6 configured with custom archaeological survey module",
-  "protocol_type": "recording",
-  "tools": [
-    {
-      "tool_name": "FAIMS Mobile",
-      "tool_type": "software",
-      "version": "2.6",
-      "configuration": "Custom module with artifact attribute vocabulary, photo linking, GPS integration",
-      "specifications": {
-        "platform": "Android 7.0+",
-        "offline_capable": true,
-        "database": "SQLite local storage",
-        "sync_method": "Manual sync to server via WiFi"
-      }
-    },
-    {
-      "tool_name": "Samsung Galaxy Tab A",
-      "tool_type": "equipment",
-      "specifications": {
-        "screen_size": "10.1 inch",
-        "ruggedness": "IP67 rated case",
-        "battery_life": "10 hours field use"
-      }
-    }
-  ],
-  "recording_standards": {
-    "format": "Structured database records with controlled vocabulary",
-    "precision": "GPS coordinates to 5 decimal places (±1m)",
-    "metadata_captured": ["Timestamp", "Recorder ID", "Weather conditions", "Surface visibility"],
-    "quality_checks": ["Required field validation", "Photo linked to record", "GPS coordinate within survey bounds"]
-  },
-  "implements_methods": ["M008"],
-  "produces_evidence": ["E045", "E046"],
-  "expected_information_missing": ["Software validation testing", "Data backup procedures"],
-  "extraction_notes": "Comprehensive tool specification with recording standards",
-  "extraction_confidence": "high",
-  "location": {"section": "Methods", "page": 5, "paragraph": 3}
-}
-```
-
----
-
-### Example 6: Protocol - Measurement with Decision Rules
-
-```json
-{
-  "protocol_id": "P027",
-  "protocol_text": "GPS coordinate collection protocol with accuracy requirements and decision rules",
-  "protocol_type": "measurement",
-  "procedure": {
-    "steps": [
-      "Power on GPS unit and allow satellite acquisition (minimum 4 satellites)",
-      "Wait for HDOP <2.0 before recording",
-      "Record coordinates at artifact location",
-      "If HDOP >2.0 for >5 minutes, flag location for resurvey",
-      "Record accuracy estimate with each coordinate"
-    ],
-    "step_order_critical": true,
-    "decision_points": ["HDOP threshold", "Resurvey flag"]
-  },
+  "protocol_id": "P012",
+  "protocol_text": "GPS coordinate recording with real-time correction",
+  "tools_equipment": ["Trimble GeoXH 6000"],
   "parameters": {
-    "hdop_threshold": {
-      "value": 2.0,
-      "unit": "dimensionless",
-      "justification": "Ensures ~5m horizontal accuracy adequate for site-level analysis",
-      "criticality": "high"
-    },
-    "satellite_minimum": {
-      "value": 4,
-      "unit": "count",
-      "justification": "Minimum for 3D position fix",
-      "criticality": "high"
-    }
+    "correction_type": "real-time SBAS",
+    "accuracy_target": "1m horizontal"
   },
-  "decision_rules": [
-    {
-      "condition": "HDOP >2.0 for >5 minutes",
-      "action_planned": "Flag location, continue survey, resurvey later",
-      "action_actual": "Applied as planned for 23 locations, all successfully resurveyed",
-      "rationale": "Prevents survey delays while maintaining accuracy requirements"
-    }
-  ],
-  "measurement_specification": {
-    "domain": "Spatial location",
-    "instrument": "Garmin GPSMAP 64s",
-    "metric": "WGS84 decimal degrees",
-    "precision": "±3-5m horizontal accuracy at HDOP <2.0",
-    "time_points": "Point-in-time at artifact observation",
-    "observer": "Survey team member (trained in GPS use)",
-    "quality_control": ["HDOP monitoring", "Satellite count check", "Resurvey of flagged points"]
+  "expected_information_missing": ["Actual accuracy achieved", "Number of satellites required"]
+}
+```
+
+---
+
+### Example 4: Combined Description + Claim (Split)
+
+**Text:** "We used stratified random sampling which proved more representative than our previous convenience sampling."
+
+**Extract as RDMAP:**
+```json
+{
+  "method_id": "M007",
+  "method_text": "Stratified random sampling",
+  "sampling_strategy": {
+    "sampling_type": "stratified_random"
   },
-  "implements_methods": ["M008"],
-  "produces_evidence": ["E047"],
-  "expected_information_missing": ["GPS unit calibration procedures", "Accuracy validation against known points"],
-  "extraction_notes": "Excellent protocol specification with clear decision rules and quality control",
-  "extraction_confidence": "high",
-  "location": {"section": "Methods", "page": 6, "paragraph": 2}
+  "supports_claims": ["C045"]
+}
+```
+
+**Extract as Claim (in claims array):**
+```json
+{
+  "claim_id": "C045",
+  "claim_text": "Stratified random sampling proved more representative than previous convenience sampling",
+  "supported_by_evidence": ["M007"]
 }
 ```
 
@@ -817,7 +454,7 @@ Could be:
 
 ## Output Format
 
-**Return the same JSON document you received, with RDMAP arrays populated:**
+**Return the same JSON document with RDMAP arrays populated:**
 
 ```json
 {
@@ -825,54 +462,38 @@ Could be:
   "extraction_timestamp": "ISO 8601",
   "extractor": "Claude Sonnet 4.5",
   
-  // These arrays remain unchanged if already populated:
-  "evidence": [...],           // Leave untouched
-  "claims": [...],             // Leave untouched
-  "implicit_arguments": [...], // Leave untouched
+  // Populate these arrays:
+  "research_designs": [design_object],    
+  "methods": [method_object],             
+  "protocols": [protocol_object],         
   
-  "research_designs": [research_design_object],  // Your work
-  "methods": [method_object],                    // Your work
-  "protocols": [protocol_object],                // Your work
+  // Leave these untouched:
+  "evidence": [...],                      
+  "claims": [...],                        
+  "implicit_arguments": [...],            
   
   "extraction_notes": {
     "pass": 1,
     "section_extracted": "string",
-    "extraction_strategy": "Liberal extraction with over-capture",
-    "known_uncertainties": ["string"],
-    "items_needing_pass2_review": ["RD###", "M###", "P###"]
+    "total_rdmap_items": 47,
+    "designs": 8,
+    "methods": 23,
+    "protocols": 16,
+    "uncertain_classifications": 3
   }
 }
 ```
 
----
-
-## Quality Checklist for Pass 1
-
-Before finalizing extraction:
-
-- [ ] All research designs extracted (questions, hypotheses, study design, framework, scope, positionality)?
-- [ ] All major methods extracted (data collection, sampling, analysis, QC, validation)?
-- [ ] All documented protocols extracted (procedures, tools, parameters, standards)?
-- [ ] Reasoning approach classified with confidence?
-- [ ] Hypothesis formulation timing inferred?
-- [ ] Expected information checklists applied?
-- [ ] Opportunistic decisions and contingency plans captured?
-- [ ] Cross-references marked (even if tentative)?
-- [ ] Location tracking complete and accurate?
-- [ ] Missing information flagged appropriately?
-- [ ] Uncertain items marked in extraction_notes?
-- [ ] Other arrays (claims/evidence) left unchanged?
+**For complete object structure and field definitions:**  
+→ See `references/schema/schema-guide.md`
 
 ---
 
-## Remember
+## Pass 1 Goal
 
-**Pass 1 is about COMPREHENSIVE CAPTURE, not perfect classification.**
-
-- Over-extract rather than under-extract
-- Preserve granularity
-- Mark uncertainties
-- Let Pass 2 consolidate and rationalize
-- **Don't touch claims/evidence arrays** - those are extracted separately
-
-**Your goal:** Ensure nothing important is missed. Pass 2 will refine.
+Produce comprehensive RDMAP extraction with:
+- All methodological information captured (over-extraction OK)
+- Tier assignments made (even if uncertain)
+- Expected information gaps flagged
+- Cross-references populated
+- Ready for rationalization (Pass 2)
