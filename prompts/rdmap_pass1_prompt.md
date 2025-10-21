@@ -41,7 +41,7 @@ Use this checklist as your roadmap. Before finalizing:
 - [ ] All methods extracted (data collection, sampling, analysis approaches)
 - [ ] All protocols extracted (specific procedures, tools, parameters, configurations)
 - [ ] Tier assignments marked (even if uncertain)
-- [ ] Cross-references populated (`enables_methods`, `uses_protocols`, etc.)
+- [ ] Cross-references populated (`enables_methods`, `realized_through_protocols`, etc.)
 - [ ] `expected_information_missing` flagged where appropriate
 - [ ] `extraction_notes` document uncertainties and decisions
 - [ ] Location tracking complete (section, page, paragraph)
@@ -241,8 +241,8 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 ### 7. Cross-Referencing
 
 **Populate bidirectional links:**
-- Research Designs `enables_methods` → Methods `design_context`
-- Methods `uses_protocols` → Protocols `implements_method`
+- Research Designs `enables_methods` → Methods `implements_designs`
+- Methods `realized_through_protocols` → Protocols `implements_method`
 - Methods `supports_claims` ← Claims `supported_by_evidence`
 
 **Don't over-reference:** Only link if there's a clear relationship
@@ -277,7 +277,7 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 - Link designs to methods they enable
 - Link methods to protocols they use
 - Verify bidirectional consistency
-- Update `design_context` and `implements_method` fields
+- Update `implements_designs` and `implements_method` fields
 
 ### Step 5: Flag Missing Information
 - Review each RDMAP item against expected information

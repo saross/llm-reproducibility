@@ -1,0 +1,27 @@
+# PDF Text Extraction Configuration
+#
+# This file controls how PDFs are processed and cleaned.
+# Adjust these settings based on your PDF characteristics and needs.
+
+# Remove headers and footers from pages
+remove_headers_footers: true
+
+# Percentage of page height considered as header/footer regions (0.0-1.0)
+header_threshold: 0.08  # Top 8% of page
+footer_threshold: 0.92  # Bottom 8% of page
+
+# Attempt to detect and format section headings
+detect_sections: true
+
+# Extract tables using pdfplumber
+extract_tables: true
+
+# Attempt to extract abstract section separately
+extract_abstract: true
+
+# Use aggressive cleaning (more likely to break paragraphs correctly, but may be slow)
+# Try this if text extraction seems garbled or paragraphs are not properly formed
+aggressive_cleaning: false
+
+# Include PDF metadata (title, author, etc.) in output
+include_metadata: true

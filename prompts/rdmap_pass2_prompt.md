@@ -187,11 +187,11 @@ For any potential consolidation, ask:
 **Verify bidirectional consistency for all cross-references:**
 
 **Design → Method:**
-- `research_designs[].enables_methods` ↔ `methods[].design_context`
+- `research_designs[].enables_methods` ↔ `methods[].implements_designs`
 - Check: Every enabled method references back to design
 
 **Method → Protocol:**
-- `methods[].uses_protocols` ↔ `protocols[].implements_method`
+- `methods[].realized_through_protocols` ↔ `protocols[].implements_method`
 - Check: Every used protocol references back to method
 
 **Method → Evidence/Claims:**
