@@ -1,45 +1,53 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Academic Research Extraction Schema v2.4",
+  "title": "Academic Research Extraction Schema v2.5",
   "description": "Unified schema for extracting evidence, claims, implicit arguments, research design, methods, and protocols from research papers. Enables comprehensive methodological transparency assessment for fieldwork-based disciplines.",
-  "version": "2.4",
-  "last_updated": "2025-10-19",
-  
+  "version": "2.5",
+  "last_updated": "2025-10-21",
   "changelog": {
     "2.4": "Added RDMAP objects (research_design, method, protocol) with three-tier hierarchy; extended claim_type with 'methodological_argument'; extended implicit_argument.type with Type 4 (design_assumption) and Type 5 (methodological_assumption); added reasoning approach framework (inductive/abductive/deductive); added research questions vs hypotheses distinction; integrated TIDieR and CONSORT-Outcomes frameworks as expected information checklists; added fieldwork-specific adaptations (opportunistic decisions, field condition responses); maintained architectural consistency with v2.3",
     "2.3": "Added consolidation_metadata to evidence, claims, and implicit arguments for traceability; added related_evidence field; enhanced claim structure with primary_function, claim_nature, quantitative_details; added 'synthesis' to claim_role enum; enhanced declared_uncertainty structure",
     "2.2": "Separated extraction-time vs assessment-time fields; added credibility_assessment structure; enhanced evidence_strength for extraction-time observations",
     "2.1": "Formalized Type 3 (disciplinary_assumption) extraction; added optional COI field to implicit arguments",
-    "2.0": "Initial comprehensive schema with dual-layer uncertainty and four-level hierarchy"
+    "2.0": "Initial comprehensive schema with dual-layer uncertainty and four-level hierarchy",
+    "2.5": "BREAKING CHANGE - Hallucination Prevention: Made verbatim_quote REQUIRED for evidence and claims; added trigger_text/trigger_locations/inference_reasoning REQUIRED for implicit arguments; set verbatim_quote to null for implicit arguments; added source_verification object to evidence, claims, and implicit arguments for Pass 3 validation"
   },
-
   "definitions": {
     "_comment_shared_definitions": "These structures are used across all object types to prevent drift and ensure consistency",
-    
     "location": {
       "type": "object",
       "description": "Location of content in source paper",
-      "required": ["section"],
+      "required": [
+        "section"
+      ],
       "properties": {
         "section": {
           "type": "string",
           "description": "Section name (e.g., 'Methods', 'Results', 'Discussion')"
         },
         "page": {
-          "type": ["integer", "null"],
+          "type": [
+            "integer",
+            "null"
+          ],
           "description": "Page number if available"
         },
         "paragraph": {
-          "type": ["integer", "null"],
+          "type": [
+            "integer",
+            "null"
+          ],
           "description": "Paragraph number within section"
         },
         "line_numbers": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Specific line numbers if relevant"
         }
       }
     },
-
     "consolidation_metadata": {
       "type": "object",
       "description": "Documents consolidation operations performed in Pass 2 rationalization",
@@ -50,7 +58,9 @@
         },
         "source_items": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Pass 1 item IDs that were merged to create this item"
         },
         "consolidation_type": {
@@ -73,11 +83,18 @@
         },
         "information_preserved": {
           "type": "string",
-          "enum": ["complete", "lossy_granularity", "lossy_redundancy"],
+          "enum": [
+            "complete",
+            "lossy_granularity",
+            "lossy_redundancy"
+          ],
           "description": "Whether consolidation lost information vs just reorganized"
         },
         "granularity_available": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Description of additional granularity available in source paper but not extracted"
         },
         "rationale": {
@@ -86,7 +103,6 @@
         }
       }
     },
-
     "declared_uncertainty": {
       "type": "object",
       "description": "Uncertainty as explicitly stated by authors",
@@ -107,36 +123,45 @@
         },
         "indicator": {
           "type": "string",
-          "description": "Linguistic marker of uncertainty (ca., about, approximately, ±, etc.)"
+          "description": "Linguistic marker of uncertainty (ca., about, approximately, \u00c2\u00b1, etc.)"
         },
         "quantification": {
-          "type": ["string", "null"],
-          "description": "Numeric quantification if provided (e.g., '95% CI', '±5%')"
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Numeric quantification if provided (e.g., '95% CI', '\u00c2\u00b15%')"
         },
         "author_explanation": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Authors' explanation of uncertainty source"
         },
         "severity": {
           "type": "string",
-          "enum": ["minor", "moderate", "major"],
+          "enum": [
+            "minor",
+            "moderate",
+            "major"
+          ],
           "description": "Authors' characterization of uncertainty impact"
         }
       }
     },
-
     "reasoning_approach_definitions": {
       "type": "object",
       "description": "Self-documenting definitions of reasoning approaches for schema clarity",
       "properties": {
         "inductive": {
-          "const": "Data → patterns → generalizations. Researchers collect data and identify patterns to generate new hypotheses. Goal is hypothesis generation, not testing. Example: 'We excavated 47 sites and observed ceramic density increases near water sources across all periods.'"
+          "const": "Data \u00e2\u2020\u2019 patterns \u00e2\u2020\u2019 generalizations. Researchers collect data and identify patterns to generate new hypotheses. Goal is hypothesis generation, not testing. Example: 'We excavated 47 sites and observed ceramic density increases near water sources across all periods.'"
         },
         "abductive": {
-          "const": "Observations → inference to best explanation → testable predictions. Researchers propose explanatory frameworks that account for observed patterns and generate testable implications. Dominant mode in fieldwork. Example: 'Ceramic density near water [observation] is best explained by ritual water access practices [abduction], which predicts we should find votive deposits and specialized vessel forms near springs [testable implications].'"
+          "const": "Observations \u00e2\u2020\u2019 inference to best explanation \u00e2\u2020\u2019 testable predictions. Researchers propose explanatory frameworks that account for observed patterns and generate testable implications. Dominant mode in fieldwork. Example: 'Ceramic density near water [observation] is best explained by ritual water access practices [abduction], which predicts we should find votive deposits and specialized vessel forms near springs [testable implications].'"
         },
         "deductive": {
-          "const": "Theory/hypothesis → predictions → empirical test. Researchers state hypotheses derived from theory before data collection, then systematically test predictions. Example: 'If ritual water access was practiced [hypothesis], then we should find [specific predictions]. We test this by [systematic data collection].'"
+          "const": "Theory/hypothesis \u00e2\u2020\u2019 predictions \u00e2\u2020\u2019 empirical test. Researchers state hypotheses derived from theory before data collection, then systematically test predictions. Example: 'If ritual water access was practiced [hypothesis], then we should find [specific predictions]. We test this by [systematic data collection].'"
         },
         "mixed": {
           "const": "Genuine combination of reasoning modes (not confusion). Research intentionally combines inductive exploration, abductive explanation, and deductive testing in transparent sequence. Example: 'We inductively identified ceramic-water pattern, abductively proposed ritual explanation, then deductively tested predictions about votive deposits.'"
@@ -147,13 +172,16 @@
       }
     }
   },
-
   "_comment_v2_3_objects": "Evidence, claims, and implicit arguments from v2.3 with minimal changes",
-
   "evidence_object": {
     "type": "object",
     "description": "Raw observations, measurements, or data points from the paper",
-    "required": ["evidence_id", "evidence_text", "evidence_type"],
+    "required": [
+      "evidence_id",
+      "evidence_text",
+      "evidence_type",
+      "verbatim_quote"
+    ],
     "properties": {
       "evidence_id": {
         "type": "string",
@@ -164,7 +192,6 @@
         "type": "string",
         "description": "The actual evidence statement"
       },
-      
       "_comment_extraction_time": "Fields populated during EXTRACTION pass",
       "evidence_type": {
         "type": "string",
@@ -186,22 +213,30 @@
       },
       "supports_claims": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Claim IDs this evidence supports"
       },
       "related_evidence": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Other evidence IDs related to this item (e.g., analytical view references)"
       },
       "validates_methods": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Method IDs this evidence validates (e.g., accuracy results validate procedures) - NEW v2.4"
       },
       "validates_protocols": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Protocol IDs this evidence validates - NEW v2.4"
       },
       "declared_uncertainty": {
@@ -209,7 +244,9 @@
       },
       "expected_information_missing": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Information we would expect to see but is absent"
       },
       "extraction_notes": {
@@ -218,46 +255,98 @@
       },
       "extraction_confidence": {
         "type": "string",
-        "enum": ["high", "medium", "low"]
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ]
       },
       "location": {
         "$ref": "#/definitions/location"
       },
       "verbatim_quote": {
         "type": "string",
-        "description": "Exact text from paper"
+        "minLength": 1,
+        "description": "REQUIRED: Exact verbatim text from paper stating this evidence. Cannot extract without source quote."
       },
       "consolidation_metadata": {
         "$ref": "#/definitions/consolidation_metadata"
       },
-
       "_comment_assessment_time": "Fields populated during ASSESSMENT pass (future)",
       "credibility_assessment": {
         "type": "object",
         "properties": {
           "assessment_status": {
             "type": "string",
-            "enum": ["not_yet_assessed", "assessed"],
+            "enum": [
+              "not_yet_assessed",
+              "assessed"
+            ],
             "default": "not_yet_assessed"
           },
           "credibility_score": {
-            "type": ["number", "null"],
+            "type": [
+              "number",
+              "null"
+            ],
             "minimum": 0,
             "maximum": 1
           },
           "credibility_factors": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           }
         }
+      },
+      "source_verification": {
+        "type": "object",
+        "description": "Verification that content is properly sourced - populated in Pass 3",
+        "properties": {
+          "location_verified": {
+            "type": "boolean",
+            "description": "Confirmed: stated location exists and discusses topic"
+          },
+          "quote_verified": {
+            "type": "boolean",
+            "description": "Confirmed: verbatim_quote found in stated location"
+          },
+          "content_aligned": {
+            "type": "boolean",
+            "description": "Confirmed: content actually appears in quote"
+          },
+          "verification_notes": {
+            "type": "string",
+            "description": "Details of verification or reasons for failure"
+          },
+          "verified_by": {
+            "type": "string",
+            "enum": [
+              "extractor",
+              "validator",
+              "manual_review"
+            ],
+            "description": "Who performed verification"
+          }
+        },
+        "required": [
+          "location_verified",
+          "quote_verified",
+          "content_aligned"
+        ]
       }
     }
   },
-
   "claim_object": {
     "type": "object",
     "description": "Interpretive statements, assertions, or arguments made by authors",
-    "required": ["claim_id", "claim_text", "claim_type"],
+    "required": [
+      "claim_id",
+      "claim_text",
+      "claim_type",
+      "verbatim_quote"
+    ],
     "properties": {
       "claim_id": {
         "type": "string",
@@ -268,7 +357,6 @@
         "type": "string",
         "description": "The actual claim statement"
       },
-
       "_comment_extraction_time": "Fields populated during EXTRACTION pass",
       "claim_type": {
         "type": "string",
@@ -315,43 +403,85 @@
         ]
       },
       "supports_method": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "description": "Method ID this claim justifies (for methodological_argument type) - NEW v2.4"
       },
       "supports_protocol": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "description": "Protocol ID this claim justifies - NEW v2.4"
       },
       "supports_design": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "description": "Design ID this claim justifies - NEW v2.4"
       },
       "supported_by": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Evidence IDs supporting this claim"
       },
       "supports_claims": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Higher-level claim IDs this claim supports"
       },
       "implicit_assumptions": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Implicit argument IDs this claim relies on"
       },
       "quantitative_details": {
         "type": "object",
         "properties": {
-          "involves_quantification": {"type": "boolean"},
-          "metric": {"type": ["string", "null"]},
-          "comparison_type": {
-            "type": ["string", "null"],
-            "enum": ["absolute", "relative", "percentage_change", "ratio", "correlation", null]
+          "involves_quantification": {
+            "type": "boolean"
           },
-          "statistical_test": {"type": ["string", "null"]},
-          "effect_size": {"type": ["string", "null"]}
+          "metric": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "comparison_type": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "absolute",
+              "relative",
+              "percentage_change",
+              "ratio",
+              "correlation",
+              null
+            ]
+          },
+          "statistical_test": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "effect_size": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
         }
       },
       "declared_uncertainty": {
@@ -359,46 +489,113 @@
       },
       "expected_information_missing": {
         "type": "array",
-        "items": {"type": "string"}
+        "items": {
+          "type": "string"
+        }
       },
       "extraction_notes": {
         "type": "string"
       },
       "extraction_confidence": {
         "type": "string",
-        "enum": ["high", "medium", "low"]
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ]
       },
       "location": {
         "$ref": "#/definitions/location"
       },
       "verbatim_quote": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1,
+        "description": "REQUIRED: Exact verbatim text from paper stating this claim. Cannot extract without source quote."
       },
       "consolidation_metadata": {
         "$ref": "#/definitions/consolidation_metadata"
       },
-
       "_comment_assessment_time": "Fields for future assessment",
       "credibility_assessment": {
         "type": "object",
         "properties": {
           "assessment_status": {
             "type": "string",
-            "enum": ["not_yet_assessed", "assessed"],
+            "enum": [
+              "not_yet_assessed",
+              "assessed"
+            ],
             "default": "not_yet_assessed"
           },
-          "credibility_score": {"type": ["number", "null"]},
-          "evidential_support_quality": {"type": ["string", "null"]},
-          "reasoning_quality": {"type": ["string", "null"]}
+          "credibility_score": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "evidential_support_quality": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reasoning_quality": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
         }
+      },
+      "source_verification": {
+        "type": "object",
+        "description": "Verification that content is properly sourced - populated in Pass 3",
+        "properties": {
+          "location_verified": {
+            "type": "boolean",
+            "description": "Confirmed: stated location exists and discusses topic"
+          },
+          "quote_verified": {
+            "type": "boolean",
+            "description": "Confirmed: verbatim_quote found in stated location"
+          },
+          "content_aligned": {
+            "type": "boolean",
+            "description": "Confirmed: content actually appears in quote"
+          },
+          "verification_notes": {
+            "type": "string",
+            "description": "Details of verification or reasons for failure"
+          },
+          "verified_by": {
+            "type": "string",
+            "enum": [
+              "extractor",
+              "validator",
+              "manual_review"
+            ],
+            "description": "Who performed verification"
+          }
+        },
+        "required": [
+          "location_verified",
+          "quote_verified",
+          "content_aligned"
+        ]
       }
     }
   },
-
   "implicit_argument_object": {
     "type": "object",
     "description": "Unstated assumptions, logical implications, or bridging claims",
-    "required": ["implicit_id", "implicit_text", "type"],
+    "required": [
+      "implicit_id",
+      "implicit_text",
+      "type",
+      "trigger_text",
+      "trigger_locations",
+      "inference_reasoning"
+    ],
     "properties": {
       "implicit_id": {
         "type": "string",
@@ -409,7 +606,6 @@
         "type": "string",
         "description": "Statement of the implicit content"
       },
-
       "_comment_extraction_time": "Fields populated during EXTRACTION pass",
       "type": {
         "type": "string",
@@ -449,24 +645,37 @@
       },
       "connects_evidence": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Evidence IDs this implicit argument connects"
       },
       "enables_claim": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Claim IDs this implicit argument enables"
       },
       "supports_design": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "description": "Research design ID this assumption underlies - NEW v2.4"
       },
       "supports_method": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "description": "Method ID this assumption underlies - NEW v2.4"
       },
       "supports_protocol": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "description": "Protocol ID this assumption underlies - NEW v2.4"
       },
       "reasoning": {
@@ -475,7 +684,9 @@
       },
       "conflicts_of_interest": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Potential COI relevant to this assumption"
       },
       "extraction_notes": {
@@ -483,27 +694,108 @@
       },
       "extraction_confidence": {
         "type": "string",
-        "enum": ["high", "medium", "low"]
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ]
       },
       "location": {
         "$ref": "#/definitions/location"
       },
       "verbatim_quote": {
-        "type": ["string", "null"],
-        "description": "Text that triggered inference (not the implicit content itself)"
+        "type": "null",
+        "const": null,
+        "description": "Always null for implicit arguments - they are not explicitly stated. Use trigger_text instead."
       },
       "consolidation_metadata": {
         "$ref": "#/definitions/consolidation_metadata"
+      },
+      "trigger_text": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1,
+        "description": "REQUIRED: Verbatim passages from paper that triggered inference of this implicit argument. Array allows capturing multiple passages that together imply the argument."
+      },
+      "trigger_locations": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "section": {
+              "type": "string"
+            },
+            "subsection": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "paragraph": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          }
+        },
+        "minItems": 1,
+        "description": "REQUIRED: Location of each trigger passage (parallel to trigger_text array)"
+      },
+      "inference_reasoning": {
+        "type": "string",
+        "minLength": 1,
+        "description": "REQUIRED: Explanation of how trigger passages together imply this implicit argument"
+      },
+      "source_verification": {
+        "type": "object",
+        "description": "Verification that implicit argument is properly sourced - populated in Pass 3",
+        "properties": {
+          "trigger_locations_verified": {
+            "type": "boolean",
+            "description": "Confirmed: all trigger locations exist"
+          },
+          "trigger_quotes_verified": {
+            "type": "boolean",
+            "description": "Confirmed: all trigger_text passages found in stated locations"
+          },
+          "inference_reasonable": {
+            "type": "boolean",
+            "description": "Confirmed: inference_reasoning reasonably supported by triggers"
+          },
+          "verification_notes": {
+            "type": "string",
+            "description": "Details of verification or reasons for failure"
+          },
+          "verified_by": {
+            "type": "string",
+            "enum": [
+              "extractor",
+              "validator",
+              "manual_review"
+            ],
+            "description": "Who performed verification"
+          }
+        },
+        "required": [
+          "trigger_locations_verified",
+          "trigger_quotes_verified",
+          "inference_reasonable"
+        ]
       }
     }
   },
-
   "_comment_v2_4_new_objects": "Research Design, Methods, and Protocols - NEW for v2.4",
-
   "research_design_object": {
     "type": "object",
     "description": "Strategic-level research design decisions - WHY research was framed this way",
-    "required": ["design_id", "design_text", "design_type"],
+    "required": [
+      "design_id",
+      "design_text",
+      "design_type"
+    ],
     "properties": {
       "design_id": {
         "type": "string",
@@ -525,7 +817,6 @@
         ],
         "description": "Type of design element"
       },
-
       "_comment_research_framing": "Research questions, hypotheses, emergent findings - conditional on design_type",
       "research_framing": {
         "type": "object",
@@ -536,15 +827,28 @@
             "items": {
               "type": "object",
               "properties": {
-                "question": {"type": "string"},
+                "question": {
+                  "type": "string"
+                },
                 "formulation_timing": {
                   "type": "string",
-                  "enum": ["pre_data", "during_data", "post_data", "unclear"]
+                  "enum": [
+                    "pre_data",
+                    "during_data",
+                    "post_data",
+                    "unclear"
+                  ]
                 },
-                "basis_for_timing": {"type": "string"},
+                "basis_for_timing": {
+                  "type": "string"
+                },
                 "how_addressed": {
                   "type": "string",
-                  "enum": ["systematic_investigation", "exploratory_analysis", "not_clearly_addressed"]
+                  "enum": [
+                    "systematic_investigation",
+                    "exploratory_analysis",
+                    "not_clearly_addressed"
+                  ]
                 }
               }
             }
@@ -554,28 +858,54 @@
             "items": {
               "type": "object",
               "properties": {
-                "hypothesis": {"type": "string"},
+                "hypothesis": {
+                  "type": "string"
+                },
                 "type": {
                   "type": "string",
-                  "enum": ["directional", "non_directional", "null"]
+                  "enum": [
+                    "directional",
+                    "non_directional",
+                    "null"
+                  ]
                 },
                 "formulation_timing": {
                   "type": "string",
-                  "enum": ["pre_data", "post_data", "unclear"]
+                  "enum": [
+                    "pre_data",
+                    "post_data",
+                    "unclear"
+                  ]
                 },
-                "basis_for_timing": {"type": "string"},
-                "theoretical_basis": {"type": ["string", "null"]},
+                "basis_for_timing": {
+                  "type": "string"
+                },
+                "theoretical_basis": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "predictions": {
                   "type": "array",
-                  "items": {"type": "string"}
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "how_tested": {
                   "type": "string",
-                  "enum": ["systematic_test", "post_hoc_pattern_matching", "not_tested", "unclear"]
+                  "enum": [
+                    "systematic_test",
+                    "post_hoc_pattern_matching",
+                    "not_tested",
+                    "unclear"
+                  ]
                 },
                 "supported_by_evidence": {
                   "type": "array",
-                  "items": {"type": "string"}
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -585,19 +915,31 @@
             "items": {
               "type": "object",
               "properties": {
-                "finding": {"type": "string"},
+                "finding": {
+                  "type": "string"
+                },
                 "framed_as": {
                   "type": "string",
-                  "enum": ["unexpected_discovery", "post_hoc_hypothesis", "additional_exploration"]
+                  "enum": [
+                    "unexpected_discovery",
+                    "post_hoc_hypothesis",
+                    "additional_exploration"
+                  ]
                 },
-                "actually_appears_to_be": {"type": ["string", "null"]},
-                "extraction_notes": {"type": "string"}
+                "actually_appears_to_be": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "extraction_notes": {
+                  "type": "string"
+                }
               }
             }
           }
         }
       },
-
       "_comment_confirmatory_stance": "Reasoning approach and hypothesis timing - critical for HARKing detection",
       "confirmatory_stance": {
         "type": "object",
@@ -607,18 +949,30 @@
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["inductive", "abductive", "deductive", "mixed", "unclear"]
+                "enum": [
+                  "inductive",
+                  "abductive",
+                  "deductive",
+                  "mixed",
+                  "unclear"
+                ]
               },
               "definitions": {
                 "$ref": "#/definitions/reasoning_approach_definitions",
                 "description": "Self-documenting definitions for clarity"
               },
               "primary_mode": {
-                "type": ["string", "null"],
+                "type": [
+                  "string",
+                  "null"
+                ],
                 "description": "If mixed, what dominates?"
               },
               "explicit_statement": {
-                "type": ["string", "null"],
+                "type": [
+                  "string",
+                  "null"
+                ],
                 "description": "What paper claims about approach"
               },
               "inference_basis": {
@@ -627,7 +981,11 @@
               },
               "confidence": {
                 "type": "string",
-                "enum": ["high", "medium", "low"]
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ]
               }
             }
           },
@@ -636,7 +994,12 @@
             "properties": {
               "timing": {
                 "type": "string",
-                "enum": ["pre_data", "during_data", "post_data", "unclear"]
+                "enum": [
+                  "pre_data",
+                  "during_data",
+                  "post_data",
+                  "unclear"
+                ]
               },
               "basis": {
                 "type": "string",
@@ -646,7 +1009,6 @@
           }
         }
       },
-
       "_comment_theoretical_framework": "Theoretical/interpretive framework - conditional on design_type",
       "theoretical_framework": {
         "type": "object",
@@ -670,7 +1032,9 @@
           },
           "key_concepts": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           },
           "influences_interpretation": {
             "type": "string",
@@ -678,7 +1042,6 @@
           }
         }
       },
-
       "_comment_study_design": "Overall study design - conditional on design_type",
       "study_design": {
         "type": "object",
@@ -698,11 +1061,12 @@
           },
           "alternatives_considered": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
-
       "_comment_scope": "Research scope and boundaries - conditional on design_type",
       "scope": {
         "type": "object",
@@ -726,7 +1090,6 @@
           }
         }
       },
-
       "_comment_positionality": "Researcher positionality - conditional on design_type",
       "positionality": {
         "type": "object",
@@ -746,40 +1109,52 @@
           }
         }
       },
-
       "_comment_cross_references": "Simple string ID arrays for relationships",
       "enables_methods": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Method IDs enabled by this design"
       },
       "constrains_protocols": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Protocol IDs constrained by this design"
       },
       "informs_claims": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Claim IDs that are methodological arguments about this design"
       },
       "implicit_assumptions": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Implicit argument IDs underlying this design"
       },
-
       "_comment_standard_fields": "Common extraction fields",
       "expected_information_missing": {
         "type": "array",
-        "items": {"type": "string"}
+        "items": {
+          "type": "string"
+        }
       },
       "extraction_notes": {
         "type": "string"
       },
       "extraction_confidence": {
         "type": "string",
-        "enum": ["high", "medium", "low"]
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ]
       },
       "location": {
         "$ref": "#/definitions/location"
@@ -792,11 +1167,14 @@
       }
     }
   },
-
   "method_object": {
     "type": "object",
     "description": "Tactical-level methods - WHAT was done at high level",
-    "required": ["method_id", "method_text", "method_type"],
+    "required": [
+      "method_id",
+      "method_text",
+      "method_type"
+    ],
     "properties": {
       "method_id": {
         "type": "string",
@@ -819,7 +1197,6 @@
         ],
         "description": "Type of method"
       },
-
       "_comment_data_collection": "Conditional structure when method_type = 'data_collection'",
       "data_collection_approach": {
         "type": "object",
@@ -835,7 +1212,6 @@
           }
         }
       },
-
       "_comment_sampling_strategy": "Conditional structure when method_type = 'sampling'",
       "sampling_strategy": {
         "type": "object",
@@ -860,8 +1236,15 @@
           "actual_sample": {
             "type": "object",
             "properties": {
-              "size": {"type": ["number", "null"]},
-              "description": {"type": "string"}
+              "size": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "description": {
+                "type": "string"
+              }
             }
           },
           "stopping_rule": {
@@ -877,12 +1260,13 @@
                   "access_constraint"
                 ]
               },
-              "description": {"type": "string"}
+              "description": {
+                "type": "string"
+              }
             }
           }
         }
       },
-
       "_comment_analysis_approach": "Conditional structure when method_type = 'analysis'",
       "analysis_approach": {
         "type": "object",
@@ -894,24 +1278,35 @@
           },
           "specific_techniques": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           },
           "software_tools": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "tool_name": {"type": "string"},
-                "version": {"type": ["string", "null"]}
+                "tool_name": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
               }
             }
           },
           "theoretical_basis": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
-
       "_comment_analysis_population": "What data actually analyzed - critical for exclusion transparency",
       "analysis_population": {
         "type": "object",
@@ -931,7 +1326,10 @@
             "description": "How population defined"
           },
           "exclusions_count": {
-            "type": ["number", "null"]
+            "type": [
+              "number",
+              "null"
+            ]
           },
           "exclusion_criteria": {
             "type": "string"
@@ -941,7 +1339,6 @@
           }
         }
       },
-
       "_comment_quality_control": "Conditional structure when method_type = 'quality_control'",
       "quality_control": {
         "type": "object",
@@ -953,16 +1350,19 @@
           },
           "validation_methods": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           },
           "credibility_strategies": {
             "type": "array",
-            "items": {"type": "string"},
+            "items": {
+              "type": "string"
+            },
             "description": "For qualitative work: triangulation, member checking, peer debriefing, etc."
           }
         }
       },
-
       "_comment_temporal_framework": "Conditional structure when method_type = 'temporal_framework'",
       "temporal_framework": {
         "type": "object",
@@ -970,7 +1370,9 @@
         "properties": {
           "field_seasons": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           },
           "duration": {
             "type": "string"
@@ -980,7 +1382,6 @@
           }
         }
       },
-
       "_comment_blinding": "For experimental designs",
       "blinding": {
         "type": "object",
@@ -988,18 +1389,28 @@
         "properties": {
           "level": {
             "type": "string",
-            "enum": ["none", "single", "double", "triple", "quadruple"]
+            "enum": [
+              "none",
+              "single",
+              "double",
+              "triple",
+              "quadruple"
+            ]
           },
           "who_blinded": {
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["participants", "researchers", "outcome_assessors", "data_analysts"]
+              "enum": [
+                "participants",
+                "researchers",
+                "outcome_assessors",
+                "data_analysts"
+              ]
             }
           }
         }
       },
-
       "_comment_contingency_plans": "Planned and actual adaptations",
       "contingency_plans": {
         "type": "array",
@@ -1018,12 +1429,14 @@
               "type": "string"
             },
             "actually_triggered": {
-              "type": ["boolean", "null"]
+              "type": [
+                "boolean",
+                "null"
+              ]
             }
           }
         }
       },
-
       "_comment_opportunistic_decisions": "Field condition adaptations",
       "opportunistic_decisions": {
         "type": "array",
@@ -1035,7 +1448,10 @@
               "description": "What field condition occurred"
             },
             "original_plan": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "adaptation": {
               "type": "string",
@@ -1050,37 +1466,48 @@
           }
         }
       },
-
       "_comment_cross_references": "Simple string ID arrays",
       "implements_designs": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Research design IDs this method implements"
       },
       "realized_through_protocols": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Protocol IDs that realize this method"
       },
       "validated_by_evidence": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Evidence IDs that validate this method"
       },
       "justification_claim": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "description": "Claim ID that justifies this method (methodological_argument type)"
       },
       "implicit_assumptions": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Implicit argument IDs underlying this method"
       },
-
       "_comment_standard_fields": "Common extraction fields",
       "expected_information_missing": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Expected TIDieR elements or other information missing"
       },
       "extraction_notes": {
@@ -1088,7 +1515,11 @@
       },
       "extraction_confidence": {
         "type": "string",
-        "enum": ["high", "medium", "low"]
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ]
       },
       "location": {
         "$ref": "#/definitions/location"
@@ -1101,11 +1532,14 @@
       }
     }
   },
-
   "protocol_object": {
     "type": "object",
     "description": "Operational-level protocols - HOW specifically it was done",
-    "required": ["protocol_id", "protocol_text", "protocol_type"],
+    "required": [
+      "protocol_id",
+      "protocol_text",
+      "protocol_type"
+    ],
     "properties": {
       "protocol_id": {
         "type": "string",
@@ -1129,7 +1563,6 @@
         ],
         "description": "Type of protocol"
       },
-
       "_comment_procedure": "Step-by-step specification",
       "procedure": {
         "type": "object",
@@ -1139,9 +1572,15 @@
             "items": {
               "type": "object",
               "properties": {
-                "step_number": {"type": "integer"},
-                "step_description": {"type": "string"},
-                "critical_for_replication": {"type": "boolean"}
+                "step_number": {
+                  "type": "integer"
+                },
+                "step_description": {
+                  "type": "string"
+                },
+                "critical_for_replication": {
+                  "type": "boolean"
+                }
               }
             },
             "description": "Ordered steps - keep simple, avoid over-specification"
@@ -1151,30 +1590,49 @@
           },
           "decision_points": {
             "type": "array",
-            "items": {"type": "string"},
+            "items": {
+              "type": "string"
+            },
             "description": "Where choices made during execution"
           },
           "dependencies": {
             "type": "array",
-            "items": {"type": "string"},
+            "items": {
+              "type": "string"
+            },
             "description": "Other protocol IDs required first"
           }
         }
       },
-
       "_comment_tools": "Equipment, software, platforms",
       "tools": {
         "type": "array",
         "items": {
           "type": "object",
           "properties": {
-            "tool_name": {"type": "string"},
+            "tool_name": {
+              "type": "string"
+            },
             "tool_type": {
               "type": "string",
-              "enum": ["equipment", "software", "platform"]
+              "enum": [
+                "equipment",
+                "software",
+                "platform"
+              ]
             },
-            "version": {"type": ["string", "null"]},
-            "configuration": {"type": ["string", "null"]},
+            "version": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "configuration": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "specifications": {
               "type": "object",
               "description": "Flexible object for tool-specific details"
@@ -1182,7 +1640,6 @@
           }
         }
       },
-
       "_comment_parameters": "Settings and configurations",
       "parameters": {
         "type": "object",
@@ -1191,47 +1648,80 @@
           "type": "object",
           "properties": {
             "value": {
-              "type": ["string", "number"]
+              "type": [
+                "string",
+                "number"
+              ]
             },
-            "unit": {"type": ["string", "null"]},
-            "range": {"type": ["string", "null"]},
-            "justification": {"type": ["string", "null"]},
+            "unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "range": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "justification": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "criticality": {
               "type": "string",
-              "enum": ["high", "medium", "low"]
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
             }
           }
         }
       },
-
       "_comment_recording_standards": "How data captured",
       "recording_standards": {
         "type": "object",
         "properties": {
-          "format": {"type": "string"},
-          "precision": {"type": "string"},
+          "format": {
+            "type": "string"
+          },
+          "precision": {
+            "type": "string"
+          },
           "metadata_captured": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           },
           "quality_checks": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
-
       "_comment_adaptation": "Changes from standard or planned protocol",
       "adaptation": {
         "type": "object",
         "properties": {
           "adapted_from": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "Protocol ID or standard protocol name"
           },
           "modifications": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           },
           "justification": {
             "type": "string"
@@ -1244,11 +1734,13 @@
             "type": "boolean"
           },
           "field_conditions_trigger": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
-
       "_comment_decision_rules": "Conditional procedures",
       "decision_rules": {
         "type": "array",
@@ -1269,7 +1761,6 @@
           }
         }
       },
-
       "_comment_ethics": "Ethics and permissions - START SIMPLE",
       "ethics": {
         "type": "object",
@@ -1279,69 +1770,101 @@
           },
           "permissions_required": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           },
           "conflicts_of_interest": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           },
           "community_consultation": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "data_sovereignty": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "access_restrictions": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
-
       "_comment_replicability_indicators": "Flags, not scores - assessment comes later",
       "replicability_indicators": {
         "type": "object",
         "properties": {
           "specificity": {
             "type": "string",
-            "enum": ["high", "medium", "low"]
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
           },
           "completeness": {
             "type": "string",
-            "enum": ["complete", "partial", "minimal"]
+            "enum": [
+              "complete",
+              "partial",
+              "minimal"
+            ]
           },
           "accessibility": {
             "type": "string",
-            "enum": ["open", "restricted", "unavailable"]
+            "enum": [
+              "open",
+              "restricted",
+              "unavailable"
+            ]
           }
         }
       },
-
       "_comment_cross_references": "Simple string ID arrays",
       "implements_methods": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Method IDs this protocol implements"
       },
       "sub_protocols": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Protocol IDs that are components of this protocol"
       },
       "parent_protocol": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "description": "Protocol ID this is a sub-protocol of"
       },
       "produces_evidence": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Evidence IDs produced by this protocol"
       },
-
       "_comment_standard_fields": "Common extraction fields",
       "expected_information_missing": {
         "type": "array",
-        "items": {"type": "string"},
+        "items": {
+          "type": "string"
+        },
         "description": "Expected CONSORT-Outcomes elements or TIDieR elements missing"
       },
       "extraction_notes": {
@@ -1349,7 +1872,11 @@
       },
       "extraction_confidence": {
         "type": "string",
-        "enum": ["high", "medium", "low"]
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ]
       },
       "location": {
         "$ref": "#/definitions/location"
@@ -1362,15 +1889,17 @@
       }
     }
   },
-
   "_comment_extraction_output": "Complete output structure",
-
   "extraction_output": {
     "type": "object",
-    "required": ["schema_version", "extraction_timestamp", "project_metadata"],
+    "required": [
+      "schema_version",
+      "extraction_timestamp",
+      "project_metadata"
+    ],
     "properties": {
       "schema_version": {
-        "const": "2.4",
+        "const": "2.5",
         "description": "Schema version used for this extraction"
       },
       "extraction_timestamp": {
@@ -1382,19 +1911,31 @@
         "type": "string",
         "description": "Tool/system performing extraction"
       },
-
       "project_metadata": {
         "type": "object",
         "description": "Context about the paper being extracted",
         "properties": {
-          "paper_title": {"type": "string"},
+          "paper_title": {
+            "type": "string"
+          },
           "authors": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           },
-          "publication_year": {"type": "integer"},
-          "journal": {"type": "string"},
-          "doi": {"type": ["string", "null"]},
+          "publication_year": {
+            "type": "integer"
+          },
+          "journal": {
+            "type": "string"
+          },
+          "doi": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "paper_type": {
             "type": "string",
             "description": "e.g., research article, review, methods paper"
@@ -1409,41 +1950,50 @@
           }
         }
       },
-
       "_comment_v2_3_arrays": "Evidence, claims, implicit arguments from v2.3",
       "evidence": {
         "type": "array",
-        "items": {"$ref": "#/evidence_object"},
+        "items": {
+          "$ref": "#/evidence_object"
+        },
         "description": "All evidence extracted from paper"
       },
       "claims": {
         "type": "array",
-        "items": {"$ref": "#/claim_object"},
+        "items": {
+          "$ref": "#/claim_object"
+        },
         "description": "All claims extracted from paper"
       },
       "implicit_arguments": {
         "type": "array",
-        "items": {"$ref": "#/implicit_argument_object"},
+        "items": {
+          "$ref": "#/implicit_argument_object"
+        },
         "description": "All implicit arguments extracted from paper"
       },
-
       "_comment_v2_4_arrays": "NEW: Research design, methods, protocols",
       "research_designs": {
         "type": "array",
-        "items": {"$ref": "#/research_design_object"},
+        "items": {
+          "$ref": "#/research_design_object"
+        },
         "description": "All research design elements extracted from paper"
       },
       "methods": {
         "type": "array",
-        "items": {"$ref": "#/method_object"},
+        "items": {
+          "$ref": "#/method_object"
+        },
         "description": "All methods extracted from paper"
       },
       "protocols": {
         "type": "array",
-        "items": {"$ref": "#/protocol_object"},
+        "items": {
+          "$ref": "#/protocol_object"
+        },
         "description": "All protocols extracted from paper"
       },
-
       "extraction_notes": {
         "type": "object",
         "properties": {
@@ -1455,11 +2005,15 @@
           },
           "known_limitations": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           },
           "assessment_blockers": {
             "type": "array",
-            "items": {"type": "string"},
+            "items": {
+              "type": "string"
+            },
             "description": "Critical gaps that prevent assessment"
           }
         }
