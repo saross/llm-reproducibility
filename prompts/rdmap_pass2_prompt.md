@@ -1,9 +1,10 @@
-# RDMAP Extraction Prompt - PASS 2: Rationalization v2.4
+# RDMAP Extraction Prompt - PASS 2: Rationalization v2.5
 
-**Version:** 2.4 Pass 2  
-**Last Updated:** 2025-10-20  
+**Version:** 2.5 Pass 2  
+**Last Updated:** 2025-10-21  
 **Workflow Stage:** Pass 2 of 3 - Consolidate and refine Pass 1 RDMAP extraction  
-**Skill Context:** This prompt is part of the research-assessor skill
+**Skill Context:** This prompt is part of the research-assessor skill  
+**Schema Update:** Added source verification for consolidations (v2.5)
 
 ---
 
@@ -27,12 +28,35 @@ Review Pass 1 RDMAP extraction and apply consolidation principles to produce rat
 
 ---
 
+## Sourcing Discipline Reminder
+
+Pass 2 consolidations must maintain v2.5 sourcing requirements established in Pass 1.
+
+**Quick reminder** (see extraction-fundamentals.md for complete guidance):
+- **Explicit RDMAP (status = "explicit"):** Must preserve or synthesize `verbatim_quote` from Methods section
+- **Implicit RDMAP (status = "implicit"):** Must preserve all `trigger_text` passages + `trigger_locations`
+- **Consolidation rule:** Combined items must maintain source integrity and status accuracy
+
+When consolidating RDMAP items:
+- Explicit items: Synthesized quotes must represent actual Methods content
+- Implicit items: All trigger passages preserved, inference reasoning updated
+- Status fields: Verify status still accurate after consolidation
+- Most conservative confidence maintained
+
+**For complete sourcing fundamentals:** → See `references/extraction-fundamentals.md`
+
+---
+
 ## Quality Checklist for Pass 2
 
 Use this checklist as your roadmap. Before finalizing:
 
 - [ ] 15-20% reduction achieved (may vary by section type)
 - [ ] All consolidations have complete consolidation_metadata
+- [ ] **Source verification complete for consolidations**
+- [ ] **Status fields preserved/corrected after consolidation**
+- [ ] **Explicit items maintain verbatim_quote integrity**
+- [ ] **Implicit items maintain trigger_text integrity**
 - [ ] No information loss from consolidations
 - [ ] No remaining redundancy (check for duplicate tool specs, repeated rationales)
 - [ ] Tier assignments accurate (WHY → Design, WHAT → Method, HOW → Protocol)
@@ -384,6 +408,49 @@ For any potential consolidation, ask:
 - Document all consolidations with complete metadata
 - Preserve quantitative values and critical parameters
 
+**🚨 Source Verification for Consolidations (v2.5)**
+
+When consolidating RDMAP items, verify source integrity:
+
+**For explicit items:**
+- Ensure consolidated `verbatim_quote` preserves or synthesizes source text
+- All source quotes should come from same general location (Methods section)
+- Don't claim anything beyond what's in the verbatim quotes
+- If quotes conflict, flag in consolidation_metadata
+
+**For implicit items:**
+- Preserve all `trigger_text` passages when consolidating
+- Update `trigger_locations` to include all source locations
+- Update `inference_reasoning` to reflect consolidated understanding
+- Maintain most conservative `reconstruction_confidence` from sources
+
+**Adding implicit RDMAP in Pass 2:**
+
+Pass 2 may identify implicit RDMAP items missed in Pass 1, particularly:
+- **Cross-subsection synthesis** - Method implied across multiple sections
+- **Overlooked implicit content** - Protocol mentioned but not described
+- **Comparative designs** - Design rationale implied but not stated
+
+**If adding implicit RDMAP in Pass 2:**
+1. Must have `trigger_text` array with verbatim passages
+2. Must have `trigger_locations` for each passage
+3. Must have `inference_reasoning` explaining the inference
+4. Must have complete `implicit_metadata` object
+5. Must explain in extraction_notes why missed in Pass 1
+
+**Verification Reference:**
+
+**For detailed verification procedures:**  
+→ See `references/verification-procedures.md`
+
+**Pass 2 verification focuses:**
+- Consolidated items preserve source integrity
+- No information invented during consolidation
+- Status fields (explicit/implicit) remain accurate after consolidation
+- Trigger_text and verbatim_quotes updated appropriately
+
+**Remember:** Pass 2 consolidates and refines, but maintains same sourcing discipline established in Pass 1.
+
 ### STEP 3: Cross-Reference Validation
 - Verify bidirectional consistency
 - Update references after consolidation
@@ -411,7 +478,7 @@ For any potential consolidation, ask:
 
 ```json
 {
-  "schema_version": "2.4",
+  "schema_version": "2.5",
   "extraction_timestamp": "ISO 8601",
   "extractor": "Claude Sonnet 4.5",
   

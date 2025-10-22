@@ -29,38 +29,32 @@ Extract evidence, claims, and implicit arguments from a research paper section. 
 
 ---
 
-## 🚨 CRITICAL SOURCING REQUIREMENT 🚨
+## 🚨 CRITICAL: Sourcing Requirements
 
-**READ FIRST - BEFORE ANY EXTRACTION:**
-`/mnt/skills/user/research-assessor/verification-procedures.md`
+**READ FIRST:** `/mnt/skills/user/research-assessor/references/extraction-fundamentals.md`
 
-The verification procedures document contains:
-- Complete verification protocols for evidence/claims and implicit arguments
-- Decision trees for each verification step
-- Worked examples (passes and fails)
-- Red flags for hallucination detection
-- Edge cases and troubleshooting
+The fundamentals document covers universal sourcing requirements that apply to all object types. **Evidence, Claims, and Implicit Arguments require the same sourcing discipline as RDMAP.**
 
 **MANDATORY for all extractions:**
 
 **EVIDENCE & CLAIMS require:**
-1. `verbatim_quote` - Exact text from paper stating this content
-2. Precise location - Section, subsection, paragraph
-3. Faithful extraction - Extract ONLY what quote explicitly states
-4. If quote doesn't exist → DO NOT EXTRACT
+- `verbatim_quote` - Exact text from paper stating this content
+- Precise location - Section, subsection, paragraph
+- If quote doesn't exist → DO NOT EXTRACT
 
 **IMPLICIT ARGUMENTS require:**
-1. `trigger_text` array - Verbatim passages that imply (not state) the argument
-2. `trigger_locations` - Location of each trigger passage
-3. `inference_reasoning` - Explanation connecting triggers to argument
-4. If no trigger passages → DO NOT EXTRACT
+- `trigger_text` array - Verbatim passages that imply (not state) the argument
+- `trigger_locations` - Location of each trigger passage
+- `inference_reasoning` - Explanation connecting triggers to argument
+- If no trigger passages → DO NOT EXTRACT
 
 **Quick test before extracting:**
 - Evidence/Claims: "Can I point to the exact sentence that says this?"
 - Implicit Arguments: "Can I point to specific passages that together imply this?"
 - If NO → DO NOT EXTRACT
 
-See verification-procedures.md for complete guidance.
+**For complete sourcing fundamentals:** → `references/extraction-fundamentals.md`  
+**For detailed verification procedures:** → `references/verification-procedures.md`
 
 ---
 
@@ -82,6 +76,7 @@ See verification-procedures.md for complete guidance.
 - Missing important claims or evidence
 - Under-extracting due to uncertainty
 - Being too conservative
+- **Extracting items without proper sourcing (verbatim_quote OR trigger_text)**
 
 ---
 
@@ -170,25 +165,12 @@ Extract observations only if they support specific claims. Context that doesn't 
 
 ### 5. Expected Information Checklists
 
-**For Quantitative Claims:**
-- Method specified?
-- Error margins/confidence intervals?
-- Sample size reported?
-- Precision justified?
-
-**For Comparative Claims:**
-- Basis of comparison explicit?
-- What was held constant?
-- Alternative explanations considered?
-
-**For Causal Claims:**
-- Mechanism proposed?
-- Alternative causes ruled out?
-- Temporal sequence established?
+**For comprehensive checklists by claim type and domain:**  
+→ See `references/checklists/expected-information.md`
 
 **Flag missing expected information** in `expected_information_missing` field.
 
-**→ For comprehensive checklists by domain, see `references/checklists/expected-information.md`**
+**Quick examples:** Method specified? Error margins? Sample size? Comparison basis? Causal mechanisms? Alternative explanations?
 
 ---
 
@@ -277,16 +259,20 @@ For each section:
 
 ## Quality Checklist for Pass 1
 
-Before finalizing extraction:
+Use this checklist as your roadmap. Before finalizing:
 
 - [ ] All potentially relevant evidence captured?
 - [ ] All claims identified (core, intermediate, supporting)?
 - [ ] Implicit arguments extracted for high-priority claims?
+- [ ] **All evidence items have verbatim_quote populated**
+- [ ] **All claims have verbatim_quote populated**
+- [ ] **All implicit arguments have trigger_text, trigger_locations, inference_reasoning**
 - [ ] Evidence-claim support relationships mapped?
 - [ ] Expected information gaps flagged?
 - [ ] Project metadata separated from evidence?
 - [ ] All items have location tracking?
 - [ ] Uncertain items marked in extraction_notes?
+- [ ] **No hallucinations - only extract what's sourced**
 - [ ] Other arrays (RDMAP) left unchanged?
 
 ---
@@ -299,6 +285,7 @@ Before finalizing extraction:
 - Preserve granularity
 - Mark uncertainties
 - Let Pass 2 consolidate and rationalize
+- **All items must be properly sourced** (see extraction-fundamentals.md)
 - **Don't touch RDMAP arrays** - those are extracted separately
 
 **Your goal:** Ensure nothing important is missed. Pass 2 will refine.

@@ -1,9 +1,10 @@
-# RDMAP Extraction Prompt - PASS 1: Liberal Extraction v2.4
+# RDMAP Extraction Prompt - PASS 1: Liberal Extraction v2.5
 
-**Version:** 2.4 Pass 1  
-**Last Updated:** 2025-10-20  
+**Version:** 2.5 Pass 1  
+**Last Updated:** 2025-10-21  
 **Workflow Stage:** Pass 1 of 3 - Liberal RDMAP extraction with over-capture strategy  
-**Skill Context:** This prompt is part of the research-assessor skill
+**Skill Context:** This prompt is part of the research-assessor skill  
+**Schema Update:** Added mandatory sourcing (explicit/implicit distinction) to prevent hallucination
 
 ---
 
@@ -11,7 +12,7 @@
 
 Extract Research Design, Methods, and Protocols (RDMAP) from research paper sections. This is **Pass 1: Liberal Extraction** - when uncertain about tier assignment or boundaries, err on the side of inclusion. Pass 2 will consolidate and rationalize.
 
-**Input:** JSON extraction document (schema v2.4)
+**Input:** JSON extraction document (schema v2.5)
 - May be blank template (starting fresh)
 - May be partially populated (if claims/evidence already extracted)
 
@@ -33,6 +34,47 @@ Extract Research Design, Methods, and Protocols (RDMAP) from research paper sect
 
 ---
 
+## 🚨 CRITICAL: RDMAP Sourcing Requirements
+
+**READ FIRST:** `/mnt/skills/user/research-assessor/references/extraction-fundamentals.md`
+
+The fundamentals document covers universal sourcing requirements that apply to all object types. **RDMAP items have the same sourcing discipline as Evidence and Claims.**
+
+### RDMAP-Specific: Explicit vs Implicit Status
+
+**EXPLICIT = Documented in Methods section**
+- Procedural details provided with sufficient description
+- Extract with `verbatim_quote` field
+- Status: `design_status`, `method_status`, or `protocol_status` = `"explicit"`
+
+**IMPLICIT = Not documented in Methods section**
+- May be mentioned elsewhere without procedures (Results/Discussion)
+- May be inferred from outcomes or comparisons
+- Extract with `trigger_text` + `trigger_locations` + `inference_reasoning` + `implicit_metadata`
+- Status: `design_status`, `method_status`, or `protocol_status` = `"implicit"`
+
+**Decision rule:**
+```
+Is this RDMAP item described in the Methods section?
+├─ YES → Status = "explicit", extract with verbatim_quote
+└─ NO → Are there passages elsewhere that imply it existed?
+    ├─ YES → Status = "implicit", extract with trigger_text
+    └─ NO → DO NOT EXTRACT (absent, not implicit)
+```
+
+**Basis classification for implicit RDMAP:**
+- **mentioned_undocumented**: Paper mentions item but doesn't describe procedures
+  - Example: "Data were cleaned" but no cleaning procedure described
+- **inferred_from_results**: Never mentioned but implied by outcomes
+  - Example: Results show quality metrics but quality control never mentioned
+
+**Note:** Implicit status documents transparency gaps for assessment. It does NOT mean "bad methodology" - many legitimate decisions may not be fully documented.
+
+**For complete sourcing fundamentals:** → `references/extraction-fundamentals.md`  
+**For detailed verification procedures:** → `references/verification-procedures.md`
+
+---
+
 ## Quality Checklist for Pass 1
 
 Use this checklist as your roadmap. Before finalizing:
@@ -41,12 +83,16 @@ Use this checklist as your roadmap. Before finalizing:
 - [ ] All methods extracted (data collection, sampling, analysis approaches)
 - [ ] All protocols extracted (specific procedures, tools, parameters, configurations)
 - [ ] Tier assignments marked (even if uncertain)
+- [ ] **Status fields set for all RDMAP items (explicit or implicit)**
+- [ ] **All explicit items have verbatim_quote populated**
+- [ ] **All implicit items have trigger_text, trigger_locations, inference_reasoning**
+- [ ] **All implicit items have complete implicit_metadata**
 - [ ] Cross-references populated (`enables_methods`, `realized_through_protocols`, etc.)
 - [ ] `expected_information_missing` flagged where appropriate
 - [ ] `extraction_notes` document uncertainties and decisions
 - [ ] Location tracking complete (section, page, paragraph)
 - [ ] Reasoning approaches classified (where applicable)
-- [ ] No hallucinations - only extract what's actually stated
+- [ ] **No hallucinations - only extract what's sourced**
 - [ ] Other arrays (claims/evidence) untouched
 
 ---
@@ -70,6 +116,7 @@ Use this checklist as your roadmap. Before finalizing:
 - Missing important methodological information
 - Under-extracting due to uncertainty
 - Being too conservative about inclusion
+- **Extracting RDMAP items without proper sourcing (verbatim_quote OR trigger_text)**
 
 ---
 
@@ -215,6 +262,8 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 - Alternative methods considered
 - Stopping rules for sampling
 
+**Note:** Expected information is separate from implicit status. An explicit (documented) method can still be missing expected details. Implicit methods automatically have higher expected information gaps since they're not documented at all.
+
 ---
 
 ### 6. Fieldwork-Specific Considerations
@@ -257,6 +306,8 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 - Scan for research questions, hypotheses, theoretical frameworks
 - Extract study design choices and rationale
 - Classify reasoning approach
+- Determine explicit vs implicit status
+- Populate verbatim_quote OR trigger_text appropriately
 - Track location information
 
 ### Step 2: Identify Methods
@@ -264,6 +315,8 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 - Extract sampling strategies
 - Identify analysis methods
 - Note quality control and validation approaches
+- Determine explicit vs implicit status for each method
+- Populate verbatim_quote OR trigger_text + implicit_metadata
 - Document expected missing information
 
 ### Step 3: Identify Protocols
@@ -272,6 +325,8 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 - Capture parameter settings and values
 - Document recording standards and decision rules
 - Note measurement protocols
+- Determine explicit vs implicit status for each protocol
+- Populate verbatim_quote OR trigger_text + implicit_metadata
 
 ### Step 4: Cross-Reference
 - Link designs to methods they enable
@@ -287,87 +342,19 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 
 ---
 
-## Boundary Cases and Decisions
-
-### When Description and Argumentation are Combined
-
-**Pattern:** "We used [method] which was [assessment/claim]"
-
-**Solution:** Split into RDMAP + Claim
-- RDMAP: "We used [method]" 
-- Claim: "[Method] was [assessment]"
-- Cross-reference them
-
-**Example:**
-- Text: "We used mobile platform which proved more efficient than paper"
-- Method: "Mobile platform for data recording"
-- Claim: "Mobile platform was more efficient than paper"
-- Cross-reference: Method supports Claim
-
----
-
-### When Tier Assignment is Ambiguous
-
-**Pattern:** Statement could fit multiple tiers
-
-**Solution:** Include at primary tier, note alternative in `extraction_notes`
-
-**Example:**
-- "GPS points collected at 5m accuracy"
-- Could be: Method (general GPS approach) OR Protocol (specific 5m setting)
-- Decision: Protocol (specific parameter value)
-- Note: "Could also be considered method-level description of GPS approach"
-
-**When genuinely uncertain:** Extract at BOTH tiers with cross-reference
-
----
-
-### When Reasoning Approach is Mixed
-
-**Don't default to "mixed"** - requires evidence of BOTH approaches
-
-**Genuine mixed:**
-- Explicit exploratory phase THEN confirmatory phase
-- Both inductive and deductive elements documented
-- Example: "Exploratory analysis identified patterns, then tested via hypothesis"
-
-**Not mixed:**
-- Just unclear approach → `unclear`
-- Only one approach evident → classify specifically
-- No information → `unclear`
-
----
-
-### When Hypothesis Timing is Ambiguous
-
-**Pre-data indicators:**
-- Stated in Introduction/Methods before results
-- Uses future tense ("We will test")
-- Called "hypothesis" or "prediction" a priori
-
-**Post-data indicators:**
-- First mentioned in Results/Discussion
-- Formed after seeing patterns
-- Called "emerged" or "suggested by"
-
-**Document:**
-- Timing basis (where/when stated)
-- Confidence level (high/medium/low)
-- Mark `emergent: true` if post-data
-
----
-
 ## Key Examples
 
-### Example 1: Research Design with Reasoning Approach
+### Example 1: Explicit Research Design
 
-**Text:** "We hypothesized that mobile platforms would be more efficient than paper-based recording. We also conducted exploratory analysis to identify usage patterns."
+**Text (from Methods):** "We hypothesized that mobile platforms would be more efficient than paper-based recording. We also conducted exploratory analysis to identify usage patterns."
 
 **Extract as:**
 ```json
 {
   "design_id": "RD001",
   "design_type": "research_question",
+  "design_status": "explicit",
+  "verbatim_quote": "We hypothesized that mobile platforms would be more efficient than paper-based recording. We also conducted exploratory analysis to identify usage patterns.",
   "hypotheses": [{
     "hypothesis": "Mobile platforms would be more efficient than paper-based recording",
     "formulation_timing": "pre-data",
@@ -377,21 +364,24 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
     "approach": "mixed",
     "reasoning_confidence": "high",
     "indicators": ["Explicit hypothesis (deductive)", "Exploratory analysis (inductive)"]
-  }
+  },
+  "location": {"section": "Methods", "subsection": "2.1 Study Design", "paragraph": 1}
 }
 ```
 
 ---
 
-### Example 2: Method with Opportunistic Decision
+### Example 2: Explicit Method
 
-**Text:** "Survey used systematic transects. Due to unexpectedly high artifact density in western section, survey coverage was increased from 20% to 40% in that area."
+**Text (from Methods):** "Survey used systematic transects with 20% coverage. Due to high artifact density in western section, coverage was increased to 40% in that area."
 
 **Extract as:**
 ```json
 {
   "method_id": "M003",
   "method_text": "Systematic transect survey with adaptive coverage",
+  "method_status": "explicit",
+  "verbatim_quote": "Survey used systematic transects with 20% coverage. Due to high artifact density in western section, coverage was increased to 40% in that area.",
   "sampling_strategy": {
     "sampling_type": "systematic",
     "planned_coverage": "20%",
@@ -399,54 +389,84 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
   },
   "opportunistic": true,
   "opportunistic_notes": "Coverage increased in western section due to high artifact density",
-  "expected_information_missing": ["Stopping rule for increased coverage", "Criteria for 'high density'"]
+  "expected_information_missing": ["Stopping rule for increased coverage", "Criteria for 'high density'"],
+  "location": {"section": "Methods", "subsection": "2.3 Field Survey", "paragraph": 2}
 }
 ```
 
 ---
 
-### Example 3: Protocol with Tool Specification
+### Example 3: Implicit Method (mentioned_undocumented)
 
-**Text:** "GPS coordinates recorded using Trimble GeoXH 6000 with real-time SBAS correction, accuracy target 1m horizontal."
+**Text (from Discussion):** "Desktop quality control procedures ensured data consistency in 2010 season."
+
+**Methods section check:** No description of quality control procedures found.
 
 **Extract as:**
 ```json
 {
-  "protocol_id": "P012",
-  "protocol_text": "GPS coordinate recording with real-time correction",
-  "tools_equipment": ["Trimble GeoXH 6000"],
-  "parameters": {
-    "correction_type": "real-time SBAS",
-    "accuracy_target": "1m horizontal"
+  "method_id": "M018",
+  "method_text": "Desktop quality control procedures for 2010 season data consistency",
+  "method_status": "implicit",
+  "trigger_text": [
+    "Desktop quality control procedures ensured data consistency in 2010 season"
+  ],
+  "trigger_locations": [
+    {"section": "Discussion", "subsection": "4.2", "paragraph": 3}
+  ],
+  "inference_reasoning": "Discussion mentions quality control procedures for 2010 data, but Methods contains no description. Procedures were used but not documented.",
+  "implicit_metadata": {
+    "basis": "mentioned_undocumented",
+    "transparency_gap": "No description of QC procedures, criteria, or personnel",
+    "assessability_impact": "Cannot assess rigor or appropriateness of QC for 2010 data",
+    "reconstruction_confidence": "low"
   },
-  "expected_information_missing": ["Actual accuracy achieved", "Number of satellites required"]
+  "expected_information_missing": [
+    "QC procedure description",
+    "QC criteria and thresholds",
+    "Personnel who performed QC"
+  ],
+  "location": {"section": "Discussion", "subsection": "4.2", "paragraph": 3}
 }
 ```
 
 ---
 
-### Example 4: Combined Description + Claim (Split)
+### Example 4: Implicit Protocol (inferred_from_results)
 
-**Text:** "We used stratified random sampling which proved more representative than our previous convenience sampling."
+**Text (from Results):** "After removing GPS points with accuracy >10m, mean accuracy was 2.3m (SD = 1.1m, n = 1,247)."
 
-**Extract as RDMAP:**
+**Methods section check:** No mention of GPS point filtering.
+
+**Extract as:**
 ```json
 {
-  "method_id": "M007",
-  "method_text": "Stratified random sampling",
-  "sampling_strategy": {
-    "sampling_type": "stratified_random"
+  "protocol_id": "P025",
+  "protocol_text": "GPS point filtering procedure based on 10m accuracy threshold",
+  "protocol_status": "implicit",
+  "trigger_text": [
+    "After removing GPS points with accuracy >10m, mean accuracy was 2.3m"
+  ],
+  "trigger_locations": [
+    {"section": "Results", "subsection": "3.1", "paragraph": 2}
+  ],
+  "inference_reasoning": "Results state GPS points >10m were removed before analysis. Methods has no description of this filtering. Protocol must have been applied but wasn't documented.",
+  "implicit_metadata": {
+    "basis": "inferred_from_results",
+    "transparency_gap": "No description of filtering: how accuracy measured, when applied, automated vs manual",
+    "assessability_impact": "Cannot verify appropriateness of 10m threshold or assess impact on coverage",
+    "reconstruction_confidence": "medium"
   },
-  "supports_claims": ["C045"]
-}
-```
-
-**Extract as Claim (in claims array):**
-```json
-{
-  "claim_id": "C045",
-  "claim_text": "Stratified random sampling proved more representative than previous convenience sampling",
-  "supported_by_evidence": ["M007"]
+  "parameters": {
+    "accuracy_threshold": "10m"
+  },
+  "expected_information_missing": [
+    "How accuracy measured",
+    "Filtering stage",
+    "Number of points removed",
+    "Justification for 10m threshold"
+  ],
+  "location": {"section": "Results", "subsection": "3.1", "paragraph": 2}
 }
 ```
 
@@ -458,7 +478,7 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 
 ```json
 {
-  "schema_version": "2.4",
+  "schema_version": "2.5",
   "extraction_timestamp": "ISO 8601",
   "extractor": "Claude Sonnet 4.5",
   
@@ -479,6 +499,8 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
     "designs": 8,
     "methods": 23,
     "protocols": 16,
+    "explicit_items": 38,
+    "implicit_items": 9,
     "uncertain_classifications": 3
   }
 }
@@ -493,7 +515,9 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 
 Produce comprehensive RDMAP extraction with:
 - All methodological information captured (over-extraction OK)
+- All items properly sourced (explicit with verbatim_quote OR implicit with trigger_text)
 - Tier assignments made (even if uncertain)
+- Status fields set (explicit or implicit)
 - Expected information gaps flagged
 - Cross-references populated
 - Ready for rationalization (Pass 2)

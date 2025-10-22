@@ -32,12 +32,19 @@
           ],
           "description": "Page number if available"
         },
-        "paragraph": {
+        "start_paragraph": {
           "type": [
             "integer",
             "null"
           ],
-          "description": "Paragraph number within section"
+          "description": "Starting paragraph number (1-indexed). For single paragraph, start_paragraph = end_paragraph."
+        },
+        "end_paragraph": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Ending paragraph number (1-indexed, inclusive). For single paragraph, end_paragraph = start_paragraph."
         },
         "line_numbers": {
           "type": [
@@ -56,7 +63,7 @@
           "type": "boolean",
           "description": "Whether this item was created by consolidating Pass 1 items"
         },
-        "source_items": {
+        "consolidated_from": {
           "type": "array",
           "items": {
             "type": "string"
@@ -733,7 +740,13 @@
                 "null"
               ]
             },
-            "paragraph": {
+            "start_paragraph": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "end_paragraph": {
               "type": [
                 "integer",
                 "null"
@@ -1164,6 +1177,117 @@
       },
       "consolidation_metadata": {
         "$ref": "#/definitions/consolidation_metadata"
+      },
+      "design_status": {
+        "type": "string",
+        "enum": [
+          "explicit",
+          "implicit"
+        ],
+        "description": "Whether documented in Methods (explicit) or inferred (implicit)"
+      },
+      "trigger_text": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "type": "string"
+        },
+        "description": "Verbatim passages implying this design element (for implicit items)"
+      },
+      "trigger_locations": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "$ref": "#/definitions/location"
+        },
+        "description": "Locations of trigger passages (parallel to trigger_text array)"
+      },
+      "inference_reasoning": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Explanation of how triggers support inference (for implicit items)"
+      },
+      "implicit_metadata": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Additional metadata for implicit design elements",
+        "properties": {
+          "basis": {
+            "type": "string",
+            "enum": [
+              "mentioned_undocumented",
+              "inferred_from_results"
+            ],
+            "description": "How implicit item was inferred"
+          },
+          "transparency_gap": {
+            "type": "string",
+            "description": "What information is missing from Methods section"
+          },
+          "assessability_impact": {
+            "type": "string",
+            "description": "How lack of documentation affects credibility assessment"
+          },
+          "reconstruction_confidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "description": "Confidence in reconstruction of actual design"
+          }
+        },
+        "required": [
+          "basis",
+          "transparency_gap",
+          "assessability_impact",
+          "reconstruction_confidence"
+        ]
+      },
+      "source_verification": {
+        "type": "object",
+        "description": "Verification that content is properly sourced - populated in Pass 3",
+        "properties": {
+          "location_verified": {
+            "type": "boolean",
+            "description": "Confirmed: stated location exists and discusses design element"
+          },
+          "quote_verified": {
+            "type": "boolean",
+            "description": "For explicit: verbatim_quote found. For implicit: trigger_text found"
+          },
+          "content_aligned": {
+            "type": "boolean",
+            "description": "For explicit: design matches quote. For implicit: inference reasonable"
+          },
+          "verification_notes": {
+            "type": "string",
+            "description": "Details of verification or reasons for failure"
+          },
+          "verified_by": {
+            "type": "string",
+            "enum": [
+              "extractor",
+              "validator",
+              "manual_review"
+            ],
+            "description": "Who performed verification"
+          }
+        },
+        "required": [
+          "location_verified",
+          "quote_verified",
+          "content_aligned"
+        ]
       }
     }
   },
@@ -1529,6 +1653,117 @@
       },
       "consolidation_metadata": {
         "$ref": "#/definitions/consolidation_metadata"
+      },
+      "method_status": {
+        "type": "string",
+        "enum": [
+          "explicit",
+          "implicit"
+        ],
+        "description": "Whether documented in Methods (explicit) or inferred (implicit)"
+      },
+      "trigger_text": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "type": "string"
+        },
+        "description": "Verbatim passages implying this method (for implicit items)"
+      },
+      "trigger_locations": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "$ref": "#/definitions/location"
+        },
+        "description": "Locations of trigger passages (parallel to trigger_text array)"
+      },
+      "inference_reasoning": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Explanation of how triggers support inference (for implicit items)"
+      },
+      "implicit_metadata": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Additional metadata for implicit methods",
+        "properties": {
+          "basis": {
+            "type": "string",
+            "enum": [
+              "mentioned_undocumented",
+              "inferred_from_results"
+            ],
+            "description": "How implicit item was inferred"
+          },
+          "transparency_gap": {
+            "type": "string",
+            "description": "What information is missing from Methods section"
+          },
+          "assessability_impact": {
+            "type": "string",
+            "description": "How lack of documentation affects credibility assessment"
+          },
+          "reconstruction_confidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "description": "Confidence in reconstruction of actual method"
+          }
+        },
+        "required": [
+          "basis",
+          "transparency_gap",
+          "assessability_impact",
+          "reconstruction_confidence"
+        ]
+      },
+      "source_verification": {
+        "type": "object",
+        "description": "Verification that content is properly sourced - populated in Pass 3",
+        "properties": {
+          "location_verified": {
+            "type": "boolean",
+            "description": "Confirmed: stated location exists and discusses method"
+          },
+          "quote_verified": {
+            "type": "boolean",
+            "description": "For explicit: verbatim_quote found. For implicit: trigger_text found"
+          },
+          "content_aligned": {
+            "type": "boolean",
+            "description": "For explicit: method matches quote. For implicit: inference reasonable"
+          },
+          "verification_notes": {
+            "type": "string",
+            "description": "Details of verification or reasons for failure"
+          },
+          "verified_by": {
+            "type": "string",
+            "enum": [
+              "extractor",
+              "validator",
+              "manual_review"
+            ],
+            "description": "Who performed verification"
+          }
+        },
+        "required": [
+          "location_verified",
+          "quote_verified",
+          "content_aligned"
+        ]
       }
     }
   },
@@ -1886,6 +2121,117 @@
       },
       "consolidation_metadata": {
         "$ref": "#/definitions/consolidation_metadata"
+      },
+      "protocol_status": {
+        "type": "string",
+        "enum": [
+          "explicit",
+          "implicit"
+        ],
+        "description": "Whether documented in Methods (explicit) or inferred (implicit)"
+      },
+      "trigger_text": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "type": "string"
+        },
+        "description": "Verbatim passages implying this protocol (for implicit items)"
+      },
+      "trigger_locations": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "$ref": "#/definitions/location"
+        },
+        "description": "Locations of trigger passages (parallel to trigger_text array)"
+      },
+      "inference_reasoning": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Explanation of how triggers support inference (for implicit items)"
+      },
+      "implicit_metadata": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Additional metadata for implicit protocols",
+        "properties": {
+          "basis": {
+            "type": "string",
+            "enum": [
+              "mentioned_undocumented",
+              "inferred_from_results"
+            ],
+            "description": "How implicit item was inferred"
+          },
+          "transparency_gap": {
+            "type": "string",
+            "description": "What information is missing from Methods section"
+          },
+          "assessability_impact": {
+            "type": "string",
+            "description": "How lack of documentation affects credibility assessment"
+          },
+          "reconstruction_confidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "description": "Confidence in reconstruction of actual protocol"
+          }
+        },
+        "required": [
+          "basis",
+          "transparency_gap",
+          "assessability_impact",
+          "reconstruction_confidence"
+        ]
+      },
+      "source_verification": {
+        "type": "object",
+        "description": "Verification that content is properly sourced - populated in Pass 3",
+        "properties": {
+          "location_verified": {
+            "type": "boolean",
+            "description": "Confirmed: stated location exists and discusses protocol"
+          },
+          "quote_verified": {
+            "type": "boolean",
+            "description": "For explicit: verbatim_quote found. For implicit: trigger_text found"
+          },
+          "content_aligned": {
+            "type": "boolean",
+            "description": "For explicit: protocol matches quote. For implicit: inference reasonable"
+          },
+          "verification_notes": {
+            "type": "string",
+            "description": "Details of verification or reasons for failure"
+          },
+          "verified_by": {
+            "type": "string",
+            "enum": [
+              "extractor",
+              "validator",
+              "manual_review"
+            ],
+            "description": "Who performed verification"
+          }
+        },
+        "required": [
+          "location_verified",
+          "quote_verified",
+          "content_aligned"
+        ]
       }
     }
   },
