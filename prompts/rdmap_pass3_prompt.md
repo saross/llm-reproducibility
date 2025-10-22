@@ -1,9 +1,9 @@
-# Validation Prompt - PASS 3: Integrity Checks v2.4
+# Validation Prompt - PASS 3: Integrity Checks v2.5
 
-**Version:** 2.4 Pass 3  
-**Last Updated:** 2025-10-20  
+**Version:** 2.5 Pass 3  
+**Last Updated:** 2025-10-21  
 **Workflow Stage:** Pass 3 of 3 - Automated validation of Pass 2 extraction  
-**Skill Context:** This prompt is part of the research-assessor skill
+**Update:** Added source verification checks (hallucination prevention)
 
 ---
 
@@ -48,6 +48,12 @@ Use this checklist as your roadmap. Execute all applicable checks:
 - [ ] ID formats correct
 - [ ] Location objects structured properly
 
+**Source Verification:**
+- [ ] All evidence/claims have verbatim_quote
+- [ ] All implicit arguments have trigger_text and trigger_locations
+- [ ] Source verification fields populated
+- [ ] Verification pass rates acceptable (>95%)
+
 **Expected Information:**
 - [ ] Missing information aggregated by category
 - [ ] Critical gaps flagged for assessment blockers
@@ -77,6 +83,7 @@ Use this checklist as your roadmap. Execute all applicable checks:
 - Cross-reference integrity (all IDs exist, bidirectional consistency)
 - Hierarchy validation (Design → Methods → Protocols chains; Claims hierarchy)
 - Schema compliance (required fields, valid enums, ID formats)
+- Source verification (verbatim quotes, trigger text, verification completeness)
 - Expected information completeness (aggregated gaps)
 - Consolidation metadata consistency
 
@@ -261,7 +268,7 @@ Use this checklist as your roadmap. Execute all applicable checks:
 
 #### Check 3.2: Enum Values Valid
 
-**Check enum fields against schema v2.4 allowed values.**
+**Check enum fields against schema v2.5 allowed values.**
 
 **Critical enums (closed lists):**
 - **Reasoning approaches:** inductive, abductive, deductive, mixed, unclear
@@ -327,7 +334,71 @@ Use this checklist as your roadmap. Execute all applicable checks:
 
 ---
 
-### 4. Expected Information Completeness
+### 4. Source Verification
+
+**🚨 CRITICAL: Read verification procedures from skill before proceeding**
+
+All evidence, claims, and implicit arguments MUST pass source verification to prevent hallucinated content.
+
+**Read first:** `/mnt/skills/user/research-assessor/verification-procedures.md`
+
+The skill contains complete procedures, decision trees, worked examples, and quality metrics. This section specifies WHAT to validate and HOW to report results.
+
+---
+
+#### Check 4.1: Evidence & Claims Verification
+
+**Verify all evidence/claims have:**
+- `verbatim_quote` populated (required field)
+- `source_verification` object complete with fields: `location_verified`, `quote_verified`, `content_aligned`, `verification_notes`, `verified_by`
+
+**Report critical issues:**
+- Missing verbatim_quote
+- Any source_verification field = false
+- Include in `evidence_source_issues` array with id, issue description, severity "critical"
+
+---
+
+#### Check 4.2: Implicit Arguments Verification  
+
+**Verify all implicit arguments have:**
+- `trigger_text` and `trigger_locations` arrays populated (required fields)
+- `source_verification` object complete with fields: `trigger_locations_verified`, `trigger_quotes_verified`, `inference_reasonable`, `verification_notes`, `verified_by`
+
+**Report critical issues:**
+- Missing trigger_text or trigger_locations
+- Any source_verification field = false
+- Include in `implicit_argument_source_issues` array with id, issue description, severity "critical"
+
+---
+
+#### Check 4.3: Statistical Quality Metrics
+
+**Calculate and report pass rates:**
+- Overall pass rate (all three verification checks pass)
+- Per-check pass rates (location, quote, content for evidence/claims; triggers, inference for implicit arguments)
+- Total items verified
+
+**Quality thresholds:**
+- Target: >95% overall pass rate
+- Warning: 90-95% pass rate 
+- Critical: <90% pass rate (systematic quality issue)
+
+**Include in report:** `source_verification_metrics` section with pass rates and status for both evidence/claims and implicit arguments.
+
+---
+
+#### Check 4.4: Cross-Type Consistency
+
+**Flag inconsistencies:**
+- Implicit arguments contradicting explicit evidence/claims
+- trigger_text containing explicit statements (should be reclassified)
+
+**See verification-procedures.md for complete verification procedures, decision trees, examples, and detailed metrics guidance.**
+
+---
+
+### 5. Expected Information Completeness
 
 #### Check 4.1: Aggregate Missing Information
 
@@ -373,7 +444,7 @@ Use this checklist as your roadmap. Execute all applicable checks:
 
 ---
 
-### 5. Consolidation Metadata Verification
+### 6. Consolidation Metadata Verification
 
 #### Check 5.1: Consolidation Metadata Present and Complete
 
@@ -398,7 +469,7 @@ Use this checklist as your roadmap. Execute all applicable checks:
 
 ---
 
-### 6. Type Consistency Checks
+### 7. Type Consistency Checks
 
 #### Check 6.1: Design Type Alignment
 
@@ -436,10 +507,10 @@ Use this checklist as your roadmap. Execute all applicable checks:
 
 ```json
 {
-  "validation_version": "2.4",
+  "validation_version": "2.5",
   "validation_timestamp": "ISO 8601",
   "extraction_validated": {
-    "schema_version": "2.4",
+    "schema_version": "2.5",
     "total_items": {
       "research_designs": 12,
       "methods": 35,
@@ -474,6 +545,12 @@ Use this checklist as your roadmap. Execute all applicable checks:
     "invalid_enum_values": [...],
     "id_format_errors": [...],
     "location_issues": [...]
+  },
+  
+  "source_verification": {
+    "evidence_source_issues": [...],
+    "implicit_argument_source_issues": [...],
+    "source_verification_metrics": {...}
   },
   
   "expected_information_completeness": {

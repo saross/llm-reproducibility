@@ -1,9 +1,9 @@
-# Claims & Evidence Extraction Prompt - PASS 2: Rationalization v2.4
+# Claims & Evidence Extraction Prompt - PASS 2: Rationalization v2.5
 
-**Version:** 2.4 Pass 2  
-**Last Updated:** 2025-10-20  
+**Version:** 2.5 Pass 2  
+**Last Updated:** 2025-10-21  
 **Workflow Stage:** Pass 2 - Consolidate and refine Pass 1 extraction  
-**Skill Context:** This prompt is part of the research-assessor skill
+**Update:** Added source verification for consolidations
 
 ---
 
@@ -253,6 +253,10 @@ Pass 1 consistently under-extracts certain claim types. **Actively look for and 
 - Document all consolidations with metadata
 - Add missing synthesis/comparison/recommendation claims
 - Remove redundant calculation claims
+- **Verify consolidated sources:**
+  - All source quotes from same general location
+  - Consolidated text doesn't claim anything beyond quotes
+  - If sources conflict → flag for manual review, don't consolidate
 
 ### STEP 3: Relationship Verification
 - Update `supports_claims` arrays after consolidation
@@ -277,7 +281,7 @@ Pass 1 consistently under-extracts certain claim types. **Actively look for and 
 
 ```json
 {
-  "schema_version": "2.4",
+  "schema_version": "2.5",
   "extraction_timestamp": "ISO 8601",
   "extractor": "Claude Sonnet 4.5",
   
