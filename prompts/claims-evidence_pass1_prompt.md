@@ -1,9 +1,9 @@
-# Claims & Evidence Extraction Prompt - PASS 1: Liberal Extraction v2.4
+# Claims & Evidence Extraction Prompt - PASS 1: Liberal Extraction v2.5
 
-**Version:** 2.4 Pass 1  
-**Last Updated:** 2025-10-19  
+**Version:** 2.5 Pass 1  
+**Last Updated:** 2025-10-21  
 **Workflow Stage:** Pass 1 - Liberal extraction with over-capture strategy  
-**Update:** Clarified iterative accumulation workflow
+**Update:** Added mandatory sourcing requirements (hallucination prevention)
 
 ---
 
@@ -11,7 +11,7 @@
 
 Extract evidence, claims, and implicit arguments from a research paper section. This is **Pass 1: Liberal Extraction** - when uncertain, err on the side of inclusion. Pass 2 will consolidate and refine.
 
-**Input:** JSON extraction document (schema v2.4)
+**Input:** JSON extraction document (schema v2.5)
 - May be blank template (starting fresh)
 - May be partially populated (if RDMAP or other sections already extracted)
 
@@ -26,6 +26,41 @@ Extract evidence, claims, and implicit arguments from a research paper section. 
 - Any other arrays already populated
 
 **Output:** Same JSON document with evidence/claims/implicit arguments arrays populated
+
+---
+
+## 🚨 CRITICAL SOURCING REQUIREMENT 🚨
+
+**READ FIRST - BEFORE ANY EXTRACTION:**
+`/mnt/skills/user/research-assessor/verification-procedures.md`
+
+The verification procedures document contains:
+- Complete verification protocols for evidence/claims and implicit arguments
+- Decision trees for each verification step
+- Worked examples (passes and fails)
+- Red flags for hallucination detection
+- Edge cases and troubleshooting
+
+**MANDATORY for all extractions:**
+
+**EVIDENCE & CLAIMS require:**
+1. `verbatim_quote` - Exact text from paper stating this content
+2. Precise location - Section, subsection, paragraph
+3. Faithful extraction - Extract ONLY what quote explicitly states
+4. If quote doesn't exist → DO NOT EXTRACT
+
+**IMPLICIT ARGUMENTS require:**
+1. `trigger_text` array - Verbatim passages that imply (not state) the argument
+2. `trigger_locations` - Location of each trigger passage
+3. `inference_reasoning` - Explanation connecting triggers to argument
+4. If no trigger passages → DO NOT EXTRACT
+
+**Quick test before extracting:**
+- Evidence/Claims: "Can I point to the exact sentence that says this?"
+- Implicit Arguments: "Can I point to specific passages that together imply this?"
+- If NO → DO NOT EXTRACT
+
+See verification-procedures.md for complete guidance.
 
 ---
 
@@ -208,7 +243,7 @@ For each section:
 
 ```json
 {
-  "schema_version": "2.4",
+  "schema_version": "2.5",
   "extraction_timestamp": "ISO 8601",
   "extractor": "Claude Sonnet 4.5",
   
