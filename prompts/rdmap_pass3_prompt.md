@@ -1,9 +1,9 @@
 # Validation Prompt - PASS 3: Integrity Checks v2.5
 
 **Version:** 2.5 Pass 3  
-**Last Updated:** 2025-10-21  
+**Last Updated:** 2025-10-22  
 **Workflow Stage:** Pass 3 of 3 - Automated validation of Pass 2 extraction  
-**Update:** Added source verification checks (hallucination prevention)
+**Update:** Added source verification checks for ALL object types including RDMAP (hallucination prevention)
 
 ---
 
@@ -25,6 +25,23 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 - Note when referenced arrays not yet extracted (deferred validation)
 
 **Output:** Validation report in JSON format with issues categorized by severity
+
+---
+
+## 🚨 CRITICAL: Read Verification Procedures First
+
+**READ FIRST:** `/mnt/skills/user/research-assessor/references/verification-procedures.md`
+
+This file contains:
+- Complete verification procedures for all object types (Evidence, Claims, Implicit Arguments, RDMAP)
+- Decision trees for each verification check
+- Worked examples (passes and fails)
+- Quality metrics guidance
+- Red flags for hallucination detection
+
+**This prompt specifies WHAT to validate; the skill file explains HOW to validate.**
+
+Pass 3 validation cannot be done correctly without these procedures. Read the entire verification-procedures.md file before beginning validation.
 
 ---
 
@@ -51,6 +68,7 @@ Use this checklist as your roadmap. Execute all applicable checks:
 **Source Verification:**
 - [ ] All evidence/claims have verbatim_quote
 - [ ] All implicit arguments have trigger_text and trigger_locations
+- [ ] All RDMAP items properly sourced (explicit or implicit)
 - [ ] Source verification fields populated
 - [ ] Verification pass rates acceptable (>95%)
 
@@ -66,6 +84,7 @@ Use this checklist as your roadmap. Execute all applicable checks:
 **Type Consistency:**
 - [ ] Design types align with content
 - [ ] Method types align with content
+- [ ] Status fields (explicit/implicit) consistent with sourcing
 
 ---
 
@@ -98,142 +117,53 @@ Use this checklist as your roadmap. Execute all applicable checks:
 
 ### 1. Cross-Reference Integrity
 
-#### Check 1.1: Referenced IDs Exist
+**Check all ID references point to existing objects.**
 
-**Verify all referenced IDs exist in the extraction.**
+**What to verify:**
+- `methods_used` in Research Designs → Methods exist
+- `design_context` in Methods → Research Design exists
+- `method_implements` in Protocols → Method exists
+- `supporting_evidence` in Claims → Evidence exists
+- `supports_claims` in Evidence → Claims exist
+- `supports_implicit_arguments` in Evidence/Claims → Implicit Arguments exist
 
-**Check these reference fields:**
+**Report bidirectional inconsistencies:**
+- Design references Method but Method doesn't reference back
+- Method references Design that doesn't exist
 
-**Research Designs:**
-- `enables_methods` → all M### IDs must exist
-- `informs_claims` → all C### IDs must exist (if claims extracted)
+**Handle deferred validation:**
+- Note when references point to not-yet-extracted arrays
+- Don't fail validation for missing arrays when doing partial extraction
 
-**Methods:**
-- `implements_designs` → all RD### IDs must exist
-- `realized_through_protocols` → all P### IDs must exist
-- `validated_by_evidence` → all E### IDs must exist (if evidence extracted)
-- `justification_claim` → C### ID must exist (if claims extracted)
-
-**Protocols:**
-- `implements_methods` → all M### IDs must exist
-- `produces_evidence` → all E### IDs must exist (if evidence extracted)
-
-**Claims (if present):**
-- `supported_by_evidence` → all E### or M### IDs must exist
-- `supports_claims` → all C### IDs must exist (for hierarchical claims)
-
-**Evidence (if present):**
-- `supports_claims` → all C### IDs must exist
-
-**Report format:**
-```json
-"missing_references": [
-  {
-    "source_id": "M008",
-    "field": "validated_by_evidence",
-    "missing_id": "E046",
-    "severity": "important",
-    "note": "Evidence array not present - deferred validation"
-  }
-]
-```
-
-**Deferred validation:** If referenced object type not present (e.g., RDMAP references claims but claims array empty), mark as "deferred validation" with severity "important" rather than "critical".
-
----
-
-#### Check 1.2: Bidirectional Reference Consistency
-
-**Verify cross-references are bidirectional.**
-
-**Required bidirectional pairs:**
-- `research_designs[].enables_methods` ↔ `methods[].implements_designs`
-- `methods[].realized_through_protocols` ↔ `protocols[].implements_methods`
-- `methods[].validated_by_evidence` ↔ `evidence[].supports_claims`
-- `claims[].supported_by_evidence` ↔ `methods[].justification_claim` or `evidence[].supports_claims`
-- `claims[].supports_claims` ↔ `claims[].supported_by_evidence` (hierarchical)
-
-**Report format:**
-```json
-"bidirectional_inconsistencies": [
-  {
-    "issue": "M008 enables_methods includes M015, but M015 doesn't reference M008",
-    "severity": "critical",
-    "forward_ref": "M008.realized_through_protocols = [P015]",
-    "missing_backward": "P015.implements_methods missing M008"
-  }
-]
-```
-
----
-
-#### Check 1.3: Orphaned Objects
-
-**Identify objects with no incoming references.**
-
-**Severity classification:**
-- **Critical:** Orphaned protocols (must implement at least one method)
-- **Critical:** Methods with no design context (should reference at least one design)
-- **Minor:** Orphaned designs (may be high-level framing, acceptable)
-- **Minor:** Orphaned claims (may be standalone observations, acceptable with note)
-
-**Report format:**
-```json
-"orphaned_objects": [
-  {
-    "id": "P023",
-    "type": "protocol",
-    "severity": "critical",
-    "issue": "No method references this protocol"
-  }
-]
-```
+**For complete reference checking procedures:**  
+→ See `references/verification-procedures.md`
 
 ---
 
 ### 2. Hierarchy Validation
 
-#### Check 2.1: RDMAP Hierarchy Flow
+**Verify RDMAP three-tier hierarchy integrity.**
 
-**Verify Design → Method → Protocol chains are valid.**
+**RDMAP chains (Design → Methods → Protocols):**
+- Every Method references at least one Design
+- Every Protocol references at least one Method
+- Protocols transitively connect to Designs through Methods
 
-**Check:**
-- Every method in `enables_methods` must exist and link back
-- Every protocol in `realized_through_protocols` must exist and link back
-- Transitive chains valid (Design enables Method, Method uses Protocol)
+**Claims hierarchy (if present):**
+- Primary claims may have no parent
+- Secondary/tertiary claims must reference higher-tier parent
+- No circular references in claim ancestry
 
-**Report format:**
-```json
-"hierarchy_issues": [
-  {
-    "chain": "RD003 → M008 → P015",
-    "issue": "P015 doesn't reference M008",
-    "severity": "critical"
-  }
-]
-```
+**Evidence chains (if present):**
+- Evidence references at least one Claim or Implicit Argument
+- Evidence without references flagged (unless defensive extraction)
 
----
+**Orphaned objects:**
+- **Methods/Protocols without parent:** Critical issue (must connect to RDMAP hierarchy)
+- **Designs without children:** Warning only (may indicate incomplete extraction)
 
-#### Check 2.2: Claims Hierarchy (if claims extracted)
-
-**Verify hierarchical claim relationships valid.**
-
-**Check:**
-- Claims in `supports_claims` exist
-- No circular references (C001 → C002 → C001)
-- Evidence chains resolve (all claims ultimately have evidence support)
-
----
-
-#### Check 2.3: Evidence Chains (if evidence extracted)
-
-**Verify evidence properly supports claims.**
-
-**Check:**
-- All evidence in `supported_by_evidence` exists
-- All claims have at least one evidence or method reference
-- Evidence doesn't support itself
+**For detailed hierarchy rules and edge cases:**  
+→ See `references/verification-procedures.md`
 
 ---
 
@@ -241,28 +171,20 @@ Use this checklist as your roadmap. Execute all applicable checks:
 
 #### Check 3.1: Required Fields Present
 
-**Verify all required fields populated for each object type.**
+**Verify all required fields populated.**
 
-**All objects require:**
-- `*_id` (design_id, method_id, protocol_id, claim_id, evidence_id)
-- `*_text` (design_text, method_text, etc.)
-- `*_type` (design_type, method_type, etc.)
+**RDMAP minimums (all objects):**
+- ID string, text description
+- `design_status`/`method_status`/`protocol_status` (explicit or implicit)
+- Appropriate sourcing fields (verbatim_quote OR trigger_text/trigger_locations)
 - `location` object with minimum {section, page}
 - `extraction_confidence` (high, medium, low)
 
+**Claims/Evidence minimums (if present):**
+- ID, text, verbatim_quote, location, tier classification
+
 **For complete field requirements:**  
 → See `references/schema/schema-guide.md`
-
-**Report format:**
-```json
-"missing_required_fields": [
-  {
-    "id": "M015",
-    "missing_fields": ["extraction_confidence"],
-    "severity": "critical"
-  }
-]
-```
 
 ---
 
@@ -271,26 +193,13 @@ Use this checklist as your roadmap. Execute all applicable checks:
 **Check enum fields against schema v2.5 allowed values.**
 
 **Critical enums (closed lists):**
+- **Status fields:** explicit, implicit (RDMAP items)
 - **Reasoning approaches:** inductive, abductive, deductive, mixed, unclear
 - **Analysis populations:** all_collected, quality_filtered, outliers_excluded, complete_cases_only
 - **Extraction confidence:** high, medium, low
 
 **Open lists (flag uncommon but don't fail):**
-- Study designs (survey, excavation, ethnographic, experimental, comparative, etc.)
-- Sampling types (simple_random, stratified_random, purposive, convenience, etc.)
-
-**Report format:**
-```json
-"invalid_enum_values": [
-  {
-    "id": "RD003",
-    "field": "reasoning_approach.approach",
-    "value": "exploratory",
-    "severity": "critical",
-    "suggestion": "Use 'inductive' for exploratory pattern-seeking"
-  }
-]
-```
+- Study designs, sampling types, method categories
 
 ---
 
@@ -306,31 +215,14 @@ Use this checklist as your roadmap. Execute all applicable checks:
 - Evidence: `E###`
 - Implicit Arguments: `IA###`
 
-**Report format:**
-```json
-"id_format_errors": [
-  {
-    "id": "Method-008",
-    "severity": "critical",
-    "issue": "Incorrect format - should be M008"
-  }
-]
-```
-
 ---
 
 #### Check 3.4: Location Object Structure
 
 **Verify location objects have required fields.**
 
-**Required:**
-- `section` (string)
-- `page` (number)
-
-**Recommended:**
-- `paragraph` (number)
-- `sentence_start` (number)
-- `sentence_end` (number)
+**Required:** `section` (string), `page` (number)  
+**Recommended:** `paragraph` (number), `sentence_start` (number), `sentence_end` (number)
 
 ---
 
@@ -338,9 +230,9 @@ Use this checklist as your roadmap. Execute all applicable checks:
 
 **🚨 CRITICAL: Read verification procedures from skill before proceeding**
 
-All evidence, claims, and implicit arguments MUST pass source verification to prevent hallucinated content.
+All extracted items MUST pass source verification to prevent hallucinated content.
 
-**Read first:** `/mnt/skills/user/research-assessor/verification-procedures.md`
+**READ FIRST:** `/mnt/skills/user/research-assessor/references/verification-procedures.md`
 
 The skill contains complete procedures, decision trees, worked examples, and quality metrics. This section specifies WHAT to validate and HOW to report results.
 
@@ -372,35 +264,84 @@ The skill contains complete procedures, decision trees, worked examples, and qua
 
 ---
 
-#### Check 4.3: Statistical Quality Metrics
+#### Check 4.3: RDMAP Source Verification (NEW in v2.5)
 
-**Calculate and report pass rates:**
-- Overall pass rate (all three verification checks pass)
-- Per-check pass rates (location, quote, content for evidence/claims; triggers, inference for implicit arguments)
-- Total items verified
+**🚨 CRITICAL: RDMAP items require same sourcing discipline as Evidence/Claims**
 
-**Quality thresholds:**
-- Target: >95% overall pass rate
-- Warning: 90-95% pass rate 
-- Critical: <90% pass rate (systematic quality issue)
+Schema v2.5 requires all Research Designs, Methods, and Protocols to be properly sourced. Verify:
 
-**Include in report:** `source_verification_metrics` section with pass rates and status for both evidence/claims and implicit arguments.
+**For explicit RDMAP items (status = "explicit"):**
+- `verbatim_quote` populated (required field, non-empty string)
+- `source_verification` object complete with fields: `location_verified`, `quote_verified`, `content_aligned`, `verification_notes`, `verified_by`
+
+**For implicit RDMAP items (status = "implicit"):**
+- `trigger_text` array populated (required, minimum 1 passage)
+- `trigger_locations` array populated (required, parallel to trigger_text)
+- `inference_reasoning` populated (required, non-empty string)
+- `implicit_metadata` object complete with required fields:
+  - `basis`: "mentioned_undocumented" | "inferred_from_results"
+  - `transparency_gap`: string
+  - `assessability_impact`: string
+  - `reconstruction_confidence`: "high" | "medium" | "low"
+- `source_verification` object complete with fields: `trigger_locations_verified`, `trigger_quotes_verified`, `inference_reasonable`, `verification_notes`, `verified_by`
+
+**Report critical issues:**
+- Missing verbatim_quote for explicit items
+- Missing trigger_text/trigger_locations/inference_reasoning for implicit items
+- Any source_verification field = false
+- Status field missing or invalid
+- Include in `rdmap_source_issues` array with id, issue description, severity "critical"
+
+**For complete RDMAP verification procedures:**  
+→ See `references/verification-procedures.md` section on RDMAP sourcing validation
 
 ---
 
-#### Check 4.4: Cross-Type Consistency
+#### Check 4.4: Statistical Quality Metrics (EXPANDED for v2.5)
+
+**Calculate and report pass rates for ALL object types.**
+
+**Evidence & Claims:**
+- Overall pass rate (all three verification checks pass)
+- Per-check pass rates (location, quote, content alignment)
+- Total items verified
+
+**Implicit Arguments:**
+- Overall pass rate (all three verification checks pass)
+- Per-check pass rates (trigger locations, trigger quotes, inference reasonableness)
+- Total items verified
+
+**RDMAP (NEW in v2.5):**
+- **Research Designs:** explicit pass rate, implicit pass rate, overall
+- **Methods:** explicit pass rate, implicit pass rate, overall
+- **Protocols:** explicit pass rate, implicit pass rate, overall
+- **Combined RDMAP:** overall sourcing quality across all three tiers
+
+**Quality thresholds:**
+- Target: >95% overall pass rate (per object type)
+- Warning: 90-95% pass rate 
+- Critical: <90% pass rate (systematic quality issue)
+
+**Include in report:** `source_verification_metrics` section with pass rates and status for all object types present.
+
+---
+
+#### Check 4.5: Cross-Type Consistency
 
 **Flag inconsistencies:**
 - Implicit arguments contradicting explicit evidence/claims
 - trigger_text containing explicit statements (should be reclassified)
+- Status fields (explicit/implicit) not matching sourcing approach
+- RDMAP items with status="explicit" missing verbatim_quote
+- RDMAP items with status="implicit" missing trigger infrastructure
 
-**See verification-procedures.md for complete verification procedures, decision trees, examples, and detailed metrics guidance.**
+→ See `references/verification-procedures.md` for complete verification procedures, decision trees, examples, and detailed metrics guidance.
 
 ---
 
 ### 5. Expected Information Completeness
 
-#### Check 4.1: Aggregate Missing Information
+#### Check 5.1: Aggregate Missing Information
 
 **Aggregate all `expected_information_missing` arrays across objects.**
 
@@ -409,27 +350,14 @@ The skill contains complete procedures, decision trees, worked examples, and qua
 - **Important:** Transparency gaps (e.g., missing quality control procedures, no alternative methods considered)
 - **Minor:** Recommended information (e.g., missing inter-observer reliability for qualitative data)
 
-**Report format:**
-```json
-"expected_information_completeness": {
-  "critical": [
-    {"issue": "Sample size justification", "affects": ["M008", "M015"], "count": 2}
-  ],
-  "important": [
-    {"issue": "Quality control procedures", "affects": ["M022"], "count": 1}
-  ],
-  "summary": {
-    "total_gaps": 12,
-    "critical": 2,
-    "important": 5,
-    "minor": 5
-  }
-}
-```
+**Note:** Some "expected information" may be present as implicit RDMAP items. Missing information doesn't mean extraction error - it means the paper didn't document it. Items marked implicit already capture that the information is missing from Methods documentation.
+
+**For complete domain-specific checklists:**  
+→ See `references/checklists/expected-information.md`
 
 ---
 
-#### Check 4.2: TIDieR/CONSORT Completeness (Optional)
+#### Check 5.2: TIDieR/CONSORT Completeness (Optional)
 
 **If methods reference TIDieR or CONSORT checklists, verify completeness.**
 
@@ -439,104 +367,81 @@ The skill contains complete procedures, decision trees, worked examples, and qua
 
 **Report as information, not failure.**
 
-**For complete domain-specific checklists:**  
-→ See `references/checklists/expected-information.md`
-
 ---
 
 ### 6. Consolidation Metadata Verification
 
-#### Check 5.1: Consolidation Metadata Present and Complete
+#### Check 6.1: Consolidation Metadata Present and Complete
 
-**For all objects with `consolidation_metadata`, verify:**
-- `consolidated_from` array not empty
-- `consolidation_type` specified
-- `information_preserved` specified
-- `rationale` provided
+**Verify all Pass 2 consolidations documented.**
 
-**Exception:** Single-item "consolidations" (consolidated_from has 1 item) are minor issues
+**Required consolidation_metadata fields:**
+- `consolidated_from` (array of IDs)
+- `consolidation_rationale` (string)
+- `consolidation_date` (ISO string)
 
-**Report format:**
-```json
-"consolidation_issues": [
-  {
-    "id": "M025",
-    "issue": "Missing consolidation_type",
-    "severity": "important"
-  }
-]
-```
+**Verify:**
+- All IDs in `consolidated_from` were valid Pass 1 IDs
+- Consolidation rationale explains similarity/redundancy
+- At least 2 IDs consolidated (otherwise not a consolidation)
 
 ---
 
-### 7. Type Consistency Checks
+#### Check 6.2: Consolidation Source Integrity
 
-#### Check 6.1: Design Type Alignment
+**Verify consolidations preserve source integrity.**
 
-**Verify design_type aligns with content.**
+**For consolidated explicit items:**
+- `verbatim_quote` preserved or synthesized from sources
+- All source quotes from same general location
+- Source verification passed
 
-**If design_type = "research_question":**
-- Should have `research_questions` array populated
-
-**If design_type = "hypothesis":**
-- Should have `hypotheses` array populated
-
-**If design_type = "study_design":**
-- Should have `study_design` object populated
+**For consolidated implicit items:**
+- All `trigger_text` passages preserved
+- All `trigger_locations` included
+- `inference_reasoning` updated to reflect consolidated understanding
+- Most conservative `reconstruction_confidence` maintained
 
 ---
 
-#### Check 6.2: Method Type Alignment
+### 7. Type Consistency
 
-**Verify method_type aligns with fields populated.**
+**Verify object types align with content.**
 
-**If method_type = "data_collection":**
-- Should have `data_collection_approach` populated
+**Research Design types:**
+- Design type matches description (survey, excavation, experimental, etc.)
+- Reasoning approach aligns with design type
 
-**If method_type = "sampling":**
-- Should have `sampling_strategy` populated
+**Method types:**
+- Method category matches description (sampling, data_collection, analysis, etc.)
+- Sampling methods have appropriate sample_size fields
 
-**If method_type = "analysis":**
-- Should have `analytical_approach` populated
+**Flag mismatches:** Design described as "survey" but type="excavation"
 
 ---
 
 ## Validation Report Format
 
-**Produce validation report as JSON:**
-
 ```json
 {
-  "validation_version": "2.5",
-  "validation_timestamp": "ISO 8601",
-  "extraction_validated": {
-    "schema_version": "2.5",
-    "total_items": {
-      "research_designs": 12,
-      "methods": 35,
-      "protocols": 28,
-      "claims": 45,
-      "evidence": 67
-    }
-  },
-  
   "validation_summary": {
-    "critical_issues": 3,
-    "important_issues": 8,
-    "minor_issues": 15,
-    "warnings": 5,
-    "overall_status": "PASS_WITH_ISSUES"
+    "overall_status": "PASS" | "PASS_WITH_ISSUES" | "FAIL",
+    "total_issues": 7,
+    "critical": 0,
+    "important": 2,
+    "minor": 5,
+    "warnings": 0
   },
   
   "cross_reference_integrity": {
-    "missing_references": [...],
+    "broken_references": [...],
     "bidirectional_inconsistencies": [...],
     "orphaned_objects": [...]
   },
   
   "hierarchy_validation": {
-    "hierarchy_issues": [...],
-    "claim_link_issues": [...],
+    "rdmap_hierarchy_issues": [...],
+    "claims_hierarchy_issues": [...],
     "evidence_chain_issues": [...]
   },
   
@@ -544,20 +449,62 @@ The skill contains complete procedures, decision trees, worked examples, and qua
     "missing_required_fields": [...],
     "invalid_enum_values": [...],
     "id_format_errors": [...],
-    "location_issues": [...]
+    "location_structure_issues": [...]
   },
   
   "source_verification": {
     "evidence_source_issues": [...],
     "implicit_argument_source_issues": [...],
-    "source_verification_metrics": {...}
+    "rdmap_source_issues": [...],
+    "source_verification_metrics": {
+      "evidence_claims": {
+        "total": 45,
+        "passed": 43,
+        "pass_rate": 95.6,
+        "status": "target"
+      },
+      "implicit_arguments": {
+        "total": 3,
+        "passed": 3,
+        "pass_rate": 100,
+        "status": "target"
+      },
+      "rdmap": {
+        "research_designs": {
+          "explicit": {"total": 5, "passed": 5, "pass_rate": 100},
+          "implicit": {"total": 1, "passed": 1, "pass_rate": 100},
+          "overall": {"total": 6, "passed": 6, "pass_rate": 100}
+        },
+        "methods": {
+          "explicit": {"total": 18, "passed": 17, "pass_rate": 94.4},
+          "implicit": {"total": 2, "passed": 2, "pass_rate": 100},
+          "overall": {"total": 20, "passed": 19, "pass_rate": 95.0}
+        },
+        "protocols": {
+          "explicit": {"total": 25, "passed": 24, "pass_rate": 96.0},
+          "implicit": {"total": 1, "passed": 0, "pass_rate": 0},
+          "overall": {"total": 26, "passed": 24, "pass_rate": 92.3}
+        },
+        "rdmap_overall": {
+          "total": 52,
+          "passed": 49,
+          "pass_rate": 94.2,
+          "status": "warning"
+        }
+      }
+    }
   },
   
   "expected_information_completeness": {
     "critical": [...],
     "important": [...],
     "minor": [...],
-    "summary": {...}
+    "summary": {
+      "total_gaps": 12,
+      "critical": 2,
+      "important": 5,
+      "minor": 5
+    }
   },
   
   "consolidation_verification": {
@@ -566,12 +513,14 @@ The skill contains complete procedures, decision trees, worked examples, and qua
   
   "type_consistency": {
     "design_type_mismatches": [...],
-    "method_type_mismatches": [...]
+    "method_type_mismatches": [...],
+    "status_sourcing_mismatches": [...]
   },
   
   "recommendations": [
     "Fix 3 critical cross-reference issues before assessment",
-    "Review 2 orphaned protocols for tier reclassification"
+    "Review 2 orphaned protocols for tier reclassification",
+    "Improve RDMAP sourcing quality - currently at 94.2% (target: >95%)"
   ]
 }
 ```
@@ -587,6 +536,9 @@ The skill contains complete procedures, decision trees, worked examples, and qua
 - Orphaned protocols or methods without design
 - Bidirectional reference inconsistencies
 - Invalid closed-list enum values
+- Missing verbatim_quote for explicit items
+- Missing trigger infrastructure for implicit items
+- Source verification failures
 
 **Important (should fix but not blocking):**
 - Incomplete bidirectional references
@@ -594,11 +546,13 @@ The skill contains complete procedures, decision trees, worked examples, and qua
 - Incomplete consolidation metadata
 - Critical expected information gaps
 - Type/structure mismatches
+- Status field inconsistencies
 
 **Minor (good to fix):**
 - Orphaned designs (may be acceptable)
 - Location objects missing recommended fields
 - Minor expected information gaps
+- Uncommon but valid enum values
 
 **Warnings (informational only):**
 - Uncommon open-list enum values
@@ -623,6 +577,7 @@ Produce comprehensive validation report identifying:
 - All structural integrity issues
 - Cross-reference problems
 - Schema compliance violations
+- Source verification quality (including RDMAP)
 - Completeness gaps for transparency assessment
 - Clear severity classifications
 - Actionable recommendations for fixes

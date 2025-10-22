@@ -347,7 +347,571 @@ Is implicit argument directly stated in any passage?
 
 ---
 
-## PART 3: Worked Examples
+## PART 3: Verification for RDMAP Objects (Research Designs, Methods, Protocols)
+
+Apply these procedures to all research design, method, and protocol objects during Pass 3 validation.
+
+### Understanding RDMAP Explicit vs Implicit Status
+
+**RDMAP items have two distinct sourcing patterns:**
+
+**EXPLICIT RDMAP (status = "explicit")**
+- Documented in Methods section with procedural details
+- Should have `verbatim_quote` from Methods section
+- Verification similar to Evidence & Claims
+
+**IMPLICIT RDMAP (status = "implicit")**  
+- NOT documented in Methods section
+- Either mentioned but undocumented, OR inferred from Results/Discussion
+- Should have `trigger_text` + `trigger_locations` + `inference_reasoning`
+- Verification similar to Implicit Arguments
+
+**Critical:** Check the status field first to determine which verification procedure to apply.
+
+---
+
+### Explicit RDMAP Items (status = "explicit")
+
+For RDMAP items documented in the Methods section, follow the same three-step procedure as Evidence & Claims:
+
+#### Step 1: Location Verification
+
+**Question:** Does the stated location exist in Methods section and discuss this RDMAP item?
+
+**Procedure:**
+1. Navigate to stated location (should be in Methods or subsections)
+2. Verify section/subsection exists
+3. Confirm paragraph discusses this design/method/protocol
+
+**Decision Tree:**
+```
+Is location in Methods section (or subsections)?
+  NO → WARNING: Explicit RDMAP should be in Methods
+  YES → Does section exist?
+    NO → FAIL: location_verified = false
+    YES → Does subsection exist (if specified)?
+      NO → FAIL: location_verified = false
+      YES → Does paragraph exist?
+        NO → FAIL: location_verified = false
+        YES → Does paragraph discuss this RDMAP item?
+          NO → FAIL: location_verified = false
+          YES → PASS: location_verified = true
+```
+
+**Common Issues:**
+- Location in Results/Discussion instead of Methods (should be implicit if not in Methods)
+- Wrong subsection within Methods
+- Paragraph discusses different method/protocol
+
+**Example PASS:**
+- Method: "Pedestrian survey with 50m transects covering 22 sites"
+- Location: Methods 2.1 "Survey Strategy", paragraph 2
+- Check: Section 2.1 exists ✓, is Methods subsection ✓, paragraph 2 discusses survey approach ✓
+- **Result:** location_verified = true
+
+**Example FAIL:**
+- Protocol: "GPS coordinates recorded with ±5m accuracy"
+- Location: Results 3.2, paragraph 1
+- Check: Section 3.2 is Results, not Methods ✗
+- **Result:** location_verified = false, NOTE: Should be implicit if not in Methods
+
+---
+
+#### Step 2: Quote Verification
+
+**Question:** Is the verbatim_quote present in the stated Methods location?
+
+**Procedure:**
+1. Navigate to verified location
+2. Search for EXACT text of verbatim_quote
+3. Note: Methods descriptions often span multiple sentences
+
+**Decision Tree:**
+```
+Can you find exact quote in stated location?
+  NO → FAIL: quote_verified = false
+  YES → Is quote from Methods section?
+    NO → FAIL: quote_verified = false (wrong section)
+    YES → Is text verbatim?
+      NO → FAIL: quote_verified = false (paraphrased)
+      YES → PASS: quote_verified = true
+```
+
+**RDMAP-Specific Considerations:**
+- Methods descriptions may span multiple sentences (that's OK)
+- Quote may reference other parts of methods (that's OK)
+- Technical terminology should match exactly
+
+**Example PASS:**
+- verbatim_quote: "Survey teams walked 50m wide transects across each site, recording all visible surface artifacts with handheld GPS units"
+- Location: Methods 2.1, paragraph 3
+- Check: Found exact multi-sentence quote in Methods 2.1, paragraph 3 ✓
+- **Result:** quote_verified = true
+
+**Example FAIL:**
+- verbatim_quote: "GPS accuracy set to ±5 meters"
+- Location: Methods 2.2, paragraph 1
+- Search: Mentions "GPS" but NOT "accuracy" or specific values ✗
+- **Result:** quote_verified = false, FLAG: Details may be implicit
+
+---
+
+#### Step 3: Content-Quote Alignment
+
+**Question:** Does the RDMAP item description match what the quote actually says?
+
+**Procedure:**
+1. Read verbatim_quote
+2. Read design_text / method_text / protocol_text
+3. Compare: Are the procedural details consistent?
+4. Check: Are specifics (numbers, equipment, steps) from the quote?
+
+**Decision Tree:**
+```
+Does RDMAP description appear in quote?
+  NO → FAIL: content_aligned = false
+  YES → Are specific details (numbers, equipment, steps) in quote?
+    NO → FAIL: content_aligned = false (added details)
+    YES → Is interpretation faithful?
+      NO → FAIL: content_aligned = false (overinterpretation)
+      YES → PASS: content_aligned = true
+```
+
+**RDMAP Red Flags:**
+- Adding specificity not in quote (e.g., "±5m accuracy" when quote doesn't give precision)
+- Naming equipment not mentioned in quote
+- Claiming standardization when quote doesn't state it
+- Over-interpreting vague method descriptions
+
+**Example PASS:**
+- verbatim_quote: "Teams systematically walked 50m transects recording all visible artifacts"
+- method_text: "Systematic pedestrian survey using 50m wide transects with total coverage artifact collection"
+- Check: "systematic" in quote ✓, "50m transects" in quote ✓, "artifacts" in quote ✓
+- Interpretation faithful to quote ✓
+- **Result:** content_aligned = true
+
+**Example FAIL (Adding specificity):**
+- verbatim_quote: "GPS units used to record artifact locations"
+- protocol_text: "GPS coordinates recorded with ±5m horizontal accuracy using Garmin eTrex units"
+- Check: Quote mentions GPS ✓, but doesn't give accuracy ✗, doesn't name model ✗
+- **Result:** content_aligned = false, FLAG: Added details beyond quote
+
+**Example FAIL (Over-interpreting vague description):**
+- verbatim_quote: "artifacts were carefully recorded"
+- method_text: "Standardized recording protocol implemented with systematic quality checks"
+- Check: Quote says "carefully" but doesn't claim "standardized protocol" ✗
+- **Result:** content_aligned = false, FLAG: Overinterpretation
+
+---
+
+### Implicit RDMAP Items (status = "implicit")
+
+For RDMAP items NOT documented in Methods, follow the same three-step procedure as Implicit Arguments:
+
+#### Step 1: Trigger Location Verification
+
+**Question:** Do all stated trigger locations exist and relate to this RDMAP item?
+
+**Procedure:**
+1. For EACH location in trigger_locations array
+2. Verify section/subsection/paragraph exists
+3. Confirm location relates to this RDMAP topic
+4. Note: Triggers may be in Results, Discussion, or Introduction (not Methods)
+
+**Decision Tree:**
+```
+For each trigger_location:
+  Does section exist?
+    NO → FAIL: trigger_locations_verified = false
+    YES → Does paragraph exist?
+      NO → FAIL: trigger_locations_verified = false  
+      YES → Does location relate to RDMAP item?
+        NO → FAIL: trigger_locations_verified = false
+        YES → Continue to next location
+
+All locations verified?
+  YES → PASS: trigger_locations_verified = true
+```
+
+**RDMAP Implicit Triggers Often Appear In:**
+- Results: Descriptions of output implying procedures used
+- Discussion: Mentions of approach without details
+- Introduction: Mentions of planned methods without documentation
+- Captions: Figure/table descriptions revealing procedures
+
+**Example PASS (Implicit Protocol):**
+- Protocol: "Spatial coordinates captured with sub-10m accuracy"
+- Basis: "inferred_from_results" (precision mentioned but procedure not)
+- trigger_locations: [
+    {"section": "3.2", "paragraph": 1},  // Results mentions accuracy
+    {"section": "Figure 2", "paragraph": "caption"}  // Caption shows GPS data
+  ]
+- Check: Section 3.2 exists ✓, Figure 2 caption exists ✓, both relate to coordinates ✓
+- **Result:** trigger_locations_verified = true
+
+---
+
+#### Step 2: Trigger Quote Verification
+
+**Question:** Are all trigger passages found in their stated locations?
+
+**Procedure:**
+1. For EACH passage in trigger_text array
+2. Navigate to corresponding trigger_locations[i]
+3. Search for exact text
+4. Verify verbatim match
+
+**Decision Tree:**
+```
+For each (trigger_text[i], trigger_locations[i]) pair:
+  Can you find exact trigger text in stated location?
+    NO → FAIL: trigger_quotes_verified = false
+    YES → Is text verbatim (not paraphrased)?
+      NO → FAIL: trigger_quotes_verified = false
+      YES → Continue to next trigger
+
+All triggers verified?
+  YES → PASS: trigger_quotes_verified = true
+```
+
+**RDMAP Trigger Considerations:**
+- Triggers may be fragments or partial sentences (that's OK)
+- Triggers should IMPLY procedure, not STATE it (if stated = should be explicit)
+- Multiple triggers may be needed to establish implicit item
+
+**Example PASS:**
+- trigger_text[0]: "accuracy of ±5m or better"
+- trigger_text[1]: "GPS coordinates for each artifact"
+- trigger_locations[0]: Results 3.2, paragraph 1
+- trigger_locations[1]: Methods 2.3, paragraph 2
+- Check: First passage found in Results 3.2 ✓, second found in Methods 2.3 ✓
+- **Result:** trigger_quotes_verified = true
+
+**Example FAIL:**
+- trigger_text: "GPS calibrated daily"
+- trigger_locations: Methods 2.3, paragraph 1
+- Check: Methods 2.3 mentions "GPS" but not "calibrated" or "daily" ✗
+- **Result:** trigger_quotes_verified = false, FLAG: Invented detail
+
+---
+
+#### Step 3: Inference Reasonableness
+
+**Question:** Do the trigger passages reasonably support inferring this RDMAP item?
+
+**Procedure:**
+1. Read all trigger passages together
+2. Read the implicit RDMAP item text
+3. Read inference_reasoning
+4. Evaluate: Does inference follow reasonably from triggers?
+5. Check: Is RDMAP item truly implicit (not stated explicitly elsewhere)?
+
+**Decision Tree:**
+```
+Is RDMAP item explicitly stated in Methods?
+  YES → FAIL: Should be explicit RDMAP, not implicit
+  NO → Do trigger passages together provide basis for inference?
+    NO → FAIL: Weak inference
+    YES → Is inference explained in inference_reasoning?
+      NO → FAIL: Missing explanation
+      YES → Is reconstruction_confidence appropriate?
+        NO → FAIL: Over/under confidence
+        YES → PASS: inference_reasonable = true
+```
+
+**Two Types of Implicit RDMAP Basis:**
+
+**Type 1: mentioned_undocumented**
+- Procedure/tool/approach NAMED but details not provided
+- Example: "GPS units" mentioned but no accuracy/model/protocol
+- Triggers should show WHERE mentioned
+- Inference: Reasonable to infer standard commercial GPS procedures
+
+**Type 2: inferred_from_results**
+- Procedure NEVER mentioned but implied by Results/outputs
+- Example: Results show 0.5m precision but Methods silent on how achieved  
+- Triggers should show WHAT results imply procedure
+- Inference: Must be conservative (high uncertainty)
+
+**RDMAP Inference Red Flags:**
+- Inferring specific equipment/procedures from vague outputs
+- Assuming standardization not mentioned
+- Inventing quality control procedures
+- Over-confident reconstruction from minimal triggers
+
+**Example PASS (mentioned_undocumented):**
+- Protocol: "Standard GPS data collection procedures"
+- trigger_text: ["handheld GPS units were used", "coordinates recorded for each point"]
+- inference_reasoning: "GPS units and coordinate recording mentioned in Methods but specific protocols (accuracy requirements, calibration, error handling) not documented. Standard consumer GPS procedures can be inferred."
+- implicit_metadata.basis: "mentioned_undocumented"
+- implicit_metadata.reconstruction_confidence: "medium"
+- Check: GPS mentioned ✓, procedures not detailed ✓, inference reasonable ✓
+- **Result:** inference_reasonable = true
+
+**Example PASS (inferred_from_results):**
+- Protocol: "Sub-meter GPS accuracy achieved through differential correction or high-precision receivers"
+- trigger_text: ["coordinate accuracy of ±0.5m reported", "precision suitable for feature-level analysis"]
+- inference_reasoning: "Results report 0.5m accuracy but Methods doesn't explain how achieved. This precision exceeds standard consumer GPS (±5-10m), requiring either differential correction or survey-grade equipment. Cannot determine which."
+- implicit_metadata.basis: "inferred_from_results"
+- implicit_metadata.reconstruction_confidence: "low"
+- Check: Precision implies procedure ✓, uncertainty acknowledged ✓, conservative ✓
+- **Result:** inference_reasonable = true
+
+**Example FAIL (Over-confident inference):**
+- Protocol: "GPS calibrated daily using known control points"
+- trigger_text: ["GPS units achieved high accuracy"]
+- inference_reasoning: "High accuracy mentioned, therefore calibration must have been performed"
+- implicit_metadata.reconstruction_confidence: "high"
+- Check: "High accuracy" doesn't imply specific procedure ✗, many paths to accuracy ✗, confidence too high ✗
+- **Result:** inference_reasonable = false, FLAG: Speculative leap
+
+**Example FAIL (Should be explicit):**
+- Implicit protocol: "50m wide transects"
+- trigger_text: ["Teams walked 50m wide transects"]
+- Check: This IS explicitly stated ✗, should be explicit RDMAP not implicit ✗
+- **Result:** inference_reasonable = false, ACTION: Reclassify as explicit
+
+---
+
+### RDMAP-Specific Red Flags
+
+Watch for these common RDMAP verification issues:
+
+**For Explicit RDMAP:**
+- ❌ Quote in Results/Discussion instead of Methods (should be implicit)
+- ❌ Adding equipment models/specifications not in quote
+- ❌ Claiming standardization when Methods doesn't state it
+- ❌ Adding precision/accuracy values not in quote
+- ❌ Inventing quality control procedures
+
+**For Implicit RDMAP:**
+- ❌ Actually stated in Methods (should be explicit)
+- ❌ Inferring specific procedures from vague mentions
+- ❌ High reconstruction confidence with weak triggers
+- ❌ Inventing calibration/validation procedures
+- ❌ Assuming "standard" procedures without basis
+
+**Transparency Gap Flags:**
+- Methods mentions approach but gives no procedural details
+- Equipment named but specifications not provided
+- Protocol claimed but steps not documented
+- Quality control mentioned but procedures not described
+
+---
+
+### RDMAP Implicit Metadata Requirements
+
+All implicit RDMAP items must have complete `implicit_metadata`:
+
+**basis:**
+- "mentioned_undocumented" - Tool/approach named but not detailed
+- "inferred_from_results" - Never mentioned, inferred from output/results
+
+**transparency_gap:**
+- What specific information is missing from Methods?
+- "Methods mentions GPS but doesn't document accuracy requirements, calibration procedures, or error handling"
+- "Precision of results suggests specialized equipment but Methods silent on instruments used"
+
+**assessability_impact:**
+- How does this gap affect credibility assessment?
+- "Cannot assess calibration practices or equipment quality without documentation"
+- "Unable to evaluate whether accuracy claims match procedural capabilities"
+
+**reconstruction_confidence:**
+- "high" - Strong basis for inferring procedure, narrow range of possibilities
+- "medium" - Reasonable inference but some uncertainty
+- "low" - Weak basis, multiple possible procedures, high uncertainty
+
+**Example Complete Implicit Metadata:**
+```json
+{
+  "basis": "mentioned_undocumented",
+  "transparency_gap": "Methods section mentions 'handheld GPS units' and 'coordinate recording' but provides no details on: accuracy requirements, equipment models, calibration procedures, differential correction use, or quality control checks",
+  "assessability_impact": "Cannot assess GPS data quality, equipment capabilities, or accuracy claims without documented procedures. Cannot evaluate whether reported precision (±5m) matches equipment capabilities.",
+  "reconstruction_confidence": "medium"
+}
+```
+
+---
+
+### Worked Examples
+
+#### Example 1: Explicit Method - PASS ✓
+
+**Method M003:**
+```json
+{
+  "method_id": "M003",
+  "method_text": "Systematic pedestrian survey using 50m wide transects with complete surface coverage",
+  "method_type": "data_collection",
+  "method_status": "explicit",
+  "location": {"section": "2.1", "subsection": "Survey Strategy", "paragraph": 2},
+  "verbatim_quote": "Teams conducted systematic pedestrian survey walking 50m wide transects to ensure complete surface coverage of each site",
+  "source_verification": {}
+}
+```
+
+**Verification:**
+- **Step 1:** Section 2.1 exists ✓, is Methods subsection ✓, paragraph 2 discusses survey ✓
+- **Step 2:** Found exact quote in Methods 2.1, paragraph 2 ✓
+- **Step 3:** "systematic" in quote ✓, "50m transects" in quote ✓, "complete coverage" in quote ✓
+- **Result:** ALL PASS ✓
+
+**source_verification:**
+```json
+{
+  "location_verified": true,
+  "quote_verified": true,
+  "content_aligned": true,
+  "verification_notes": "Complete match - survey strategy fully documented in Methods",
+  "verified_by": "validator"
+}
+```
+
+---
+
+#### Example 2: Explicit Protocol - FAIL (Added Details)
+
+**Protocol P012:**
+```json
+{
+  "protocol_id": "P012",
+  "protocol_text": "GPS coordinates recorded with ±5m horizontal accuracy using Garmin eTrex 20x units with WAAS correction",
+  "protocol_status": "explicit",
+  "location": {"section": "2.3", "paragraph": 1},
+  "verbatim_quote": "GPS units used to record coordinates for all artifacts",
+  "source_verification": {}
+}
+```
+
+**Verification:**
+- **Step 1:** Section 2.3 exists ✓, paragraph discusses GPS ✓
+- **Step 2:** Found quote "GPS units used to record coordinates" ✓
+- **Step 3:** Quote mentions GPS ✓, but doesn't give accuracy ✗, doesn't name model ✗, doesn't mention WAAS ✗
+- **Result:** FAIL - content_aligned = false
+
+**Issue:** Protocol text adds specific details (±5m, model name, WAAS) not present in verbatim_quote
+
+**Action:** If these details appear elsewhere as implicit information, reclassify as implicit protocol with proper trigger_text
+
+**source_verification:**
+```json
+{
+  "location_verified": true,
+  "quote_verified": true,
+  "content_aligned": false,
+  "verification_notes": "FAIL: Protocol adds specificity (accuracy, model, WAAS) not in quote. Quote only states 'GPS units used to record coordinates'. Added details are invention unless found elsewhere as implicit.",
+  "verified_by": "validator"
+}
+```
+
+---
+
+#### Example 3: Implicit Protocol - PASS ✓
+
+**Protocol P015:**
+```json
+{
+  "protocol_id": "P015",
+  "protocol_text": "Standard consumer GPS procedures with estimated ±5-10m horizontal accuracy typical of handheld units without differential correction",
+  "protocol_status": "implicit",
+  "trigger_text": [
+    "handheld GPS units were used",
+    "Spatial accuracy adequate for site-level analysis"
+  ],
+  "trigger_locations": [
+    {"section": "2.3", "paragraph": 1},
+    {"section": "4.1", "paragraph": 3}
+  ],
+  "inference_reasoning": "Methods mentions handheld GPS but provides no accuracy specifications, calibration procedures, or equipment models. Discussion states accuracy 'adequate for site-level analysis' suggesting general-purpose consumer GPS. Standard consumer handheld GPS (without differential correction) provides ±5-10m accuracy, consistent with 'site-level' spatial resolution.",
+  "implicit_metadata": {
+    "basis": "mentioned_undocumented",
+    "transparency_gap": "GPS units mentioned but no documentation of: equipment models, accuracy requirements, calibration procedures, differential correction use, or quality control checks",
+    "assessability_impact": "Cannot verify equipment specifications or assess data quality procedures. Cannot determine if accuracy claims match equipment capabilities.",
+    "reconstruction_confidence": "medium"
+  },
+  "source_verification": {}
+}
+```
+
+**Verification:**
+- **Step 1:** Locations verified: Section 2.3 exists ✓, Section 4.1 exists ✓, both discuss GPS ✓
+- **Step 2:** 
+  - Trigger[0] "handheld GPS units" found in Methods 2.3 ✓
+  - Trigger[1] "adequate for site-level analysis" found in Discussion 4.1 ✓
+- **Step 3:** 
+  - GPS mentioned but not detailed ✓
+  - Inference reasonable (standard GPS accuracy) ✓
+  - Confidence appropriate (medium - reasonable inference but uncertainty) ✓
+  - Not stated explicitly anywhere ✓
+- **Result:** ALL PASS ✓
+
+**source_verification:**
+```json
+{
+  "location_verified": true,
+  "quote_verified": true,
+  "content_aligned": true,
+  "verification_notes": "PASS: Implicit protocol reasonably inferred. GPS mentioned without details, standard accuracy inferred conservatively. Reconstruction confidence appropriately medium given limited documentation.",
+  "verified_by": "validator"
+}
+```
+
+---
+
+#### Example 4: Implicit Method - FAIL (Weak Inference)
+
+**Method M008:**
+```json
+{
+  "method_id": "M008",
+  "method_text": "Daily calibration of GPS equipment using known survey control points",
+  "method_status": "implicit",
+  "trigger_text": [
+    "GPS units achieved high spatial accuracy"
+  ],
+  "trigger_locations": [
+    {"section": "3.2", "paragraph": 1}
+  ],
+  "inference_reasoning": "Results mention high accuracy, therefore daily calibration must have been performed",
+  "implicit_metadata": {
+    "basis": "inferred_from_results",
+    "transparency_gap": "No calibration procedures documented",
+    "assessability_impact": "Cannot assess quality control practices",
+    "reconstruction_confidence": "high"
+  },
+  "source_verification": {}
+}
+```
+
+**Verification:**
+- **Step 1:** Section 3.2 exists ✓, discusses accuracy ✓
+- **Step 2:** Trigger found "high spatial accuracy" ✓
+- **Step 3:** 
+  - "High accuracy" mentioned ✓
+  - But: Many paths to accuracy (equipment quality, differential correction, post-processing) ✗
+  - Inference: Assuming specific procedure (daily calibration) not justified ✗
+  - Confidence: "high" inappropriate for speculative inference ✗
+- **Result:** FAIL - inference_reasonable = false
+
+**Issue:** Single trigger "high accuracy" doesn't imply specific calibration procedure. Multiple pathways to accuracy. Reconstruction confidence too high for weak evidence.
+
+**Action:** DELETE this implicit method - inference too speculative
+
+**source_verification:**
+```json
+{
+  "location_verified": true,
+  "quote_verified": true,
+  "content_aligned": false,
+  "verification_notes": "FAIL: Inference unreasonable. Single mention of 'high accuracy' doesn't imply daily calibration procedures. Many alternative explanations (equipment quality, differential correction, post-processing). Reconstruction confidence 'high' inappropriate for speculative leap. DELETE.",
+  "verified_by": "validator"
+}
+```
+
+---
+
+## PART 4: Worked Examples
 
 ### Example 1: Evidence Verification - PASS ✓
 
@@ -548,7 +1112,7 @@ Is implicit argument directly stated in any passage?
 
 ---
 
-## PART 4: Red Flags for Hallucination
+## PART 5: Red Flags for Hallucination
 
 Watch for these warning signs during extraction and verification:
 
@@ -595,7 +1159,7 @@ Watch for these warning signs during extraction and verification:
 
 ---
 
-## PART 5: Edge Cases and Troubleshooting
+## PART 6: Edge Cases and Troubleshooting
 
 ### Edge Case 1: Discussion Mentions Topic Without Details
 
@@ -706,7 +1270,7 @@ Does paper use the word "rapid" or synonym?
 
 ---
 
-## PART 6: Quality Metrics and Statistical Checks
+## PART 7: Quality Metrics and Statistical Checks
 
 After completing verification for all items, calculate quality metrics:
 
@@ -755,7 +1319,7 @@ discussion_section_pass_rate = items_from_discussion_passing / items_from_discus
 
 ---
 
-## PART 7: Failure Handling Decision Tree
+## PART 8: Failure Handling Decision Tree
 
 When verification fails, follow this decision tree:
 
@@ -805,7 +1369,7 @@ Content fails only?
 
 ---
 
-## PART 8: Verification Workflow Summary
+## PART 9: Verification Workflow Summary
 
 ### Pass 3 Verification Checklist
 
@@ -866,6 +1430,62 @@ For EACH implicit argument:
 
 ---
 
+For EACH explicit RDMAP item (research design, method, or protocol with status = "explicit"):
+
+□ **Step 1:** Navigate to stated location
+  - □ Location in Methods section (or subsections)?
+  - □ Section exists?
+  - □ Subsection exists (if specified)?
+  - □ Paragraph exists?
+  - □ Paragraph discusses this RDMAP item?
+  - → Populate `location_verified` (true/false)
+
+□ **Step 2:** Search for verbatim_quote
+  - □ Exact text found in Methods location?
+  - □ Text is verbatim (not paraphrased)?
+  - □ In correct paragraph?
+  - → Populate `quote_verified` (true/false)
+
+□ **Step 3:** Compare RDMAP text to quote
+  - □ Procedural details in quote?
+  - □ Equipment/tools/steps match quote?
+  - □ No added specificity beyond quote?
+  - → Populate `content_aligned` (true/false)
+
+□ **Step 4:** Populate verification_notes
+□ **Step 5:** Set verified_by = "validator"
+□ **Step 6:** If any check failed, follow failure handling
+
+---
+
+For EACH implicit RDMAP item (with status = "implicit"):
+
+□ **Step 1:** Verify all trigger locations
+  - □ Each section/subsection exists?
+  - □ Each paragraph exists?
+  - □ Each location relates to RDMAP item?
+  - → Populate `trigger_locations_verified` (true/false)
+
+□ **Step 2:** Verify all trigger quotes
+  - □ Each passage found in corresponding location?
+  - □ Each passage verbatim?
+  - → Populate `trigger_quotes_verified` (true/false)
+
+□ **Step 3:** Evaluate inference
+  - □ RDMAP explicitly documented in Methods? (if yes → reclassify as explicit)
+  - □ Passages provide basis for inference?
+  - □ inference_reasoning clear?
+  - □ Inference reasonable (not speculative)?
+  - □ implicit_metadata complete (basis, transparency_gap, etc.)?
+  - □ reconstruction_confidence appropriate?
+  - → Populate `inference_reasonable` (true/false)
+
+□ **Step 4:** Populate verification_notes
+□ **Step 5:** Set verified_by = "validator"
+□ **Step 6:** If any check failed, follow failure handling
+
+---
+
 ## Critical Reminders
 
 1. **Verbatim means VERBATIM** - not "close enough", not paraphrased
@@ -887,6 +1507,10 @@ For EACH implicit argument:
 9. **Hallucination is CATASTROPHIC** - zero tolerance for fabrication
 
 10. **Trust but VERIFY** - extraction confidence ≠ verification confidence
+
+11. **RDMAP status matters** - Check status field first: explicit (in Methods) vs implicit (not in Methods)
+
+12. **Implicit RDMAP needs full metadata** - basis, transparency_gap, assessability_impact, reconstruction_confidence
 
 ---
 

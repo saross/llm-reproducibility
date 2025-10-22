@@ -127,21 +127,42 @@ Evidence should be at the same level of detail as the claims they support:
 
 ### Multi-Dimensional Evidence Pattern
 
-**Problem:** Some observations contain multiple analytically distinct dimensions supporting different claims.
+**Problem:** Some observations contain multiple analytically distinct dimensions that support different claims
 
-**Solution:** Create "analytical views" of same underlying data - one primary item plus view items linked via `related_evidence`.
+**Example:** Supervision time data
+- **Dimension 1 (Temporal):** "2.4 hours in 2017, 1.5 hours in 2018" → supports temporal comparison claim
+- **Dimension 2 (Total):** "3.9 hours total" → supports efficiency claim
 
-**Example:** Supervision time has temporal dimension (2017 vs 2018) AND total dimension (3.9 hours) supporting different claims. Create E001 (temporal) linked to E002 (total view).
+**Solution:** Create "analytical views" of same underlying data
+
+**Primary evidence item:**
+```json
+{
+  "evidence_id": "E001",
+  "evidence_text": "Supervision time: 2.4 hours (2017), 1.5 hours (2018), 3.9 hours total",
+  "related_evidence": ["E002"]
+}
+```
+
+**Analytical view:**
+```json
+{
+  "evidence_id": "E002", 
+  "evidence_text": "Total supervision time: 3.9 hours across both field seasons",
+  "related_evidence": ["E001"],
+  "extraction_notes": "Analytical view of E001 emphasizing total rather than temporal progression"
+}
+```
 
 **When to use:**
-- Multiple distinct dimensions in same observation
-- Each dimension supports different claim  
-- Dimensions assessed separately
+- Multiple analytically distinct dimensions in same observation
+- Each dimension supports different claim
+- Dimensions would be assessed separately
 
-**When NOT to use:** Simply redundant → consolidate | Different observations → keep separate | Dimensions assessed together → single item
-
-**For complete guidance with JSON examples and decision framework:**  
-→ See `references/checklists/consolidation-patterns.md` (Multi-Dimensional Evidence section)
+**When NOT to use:**
+- Simply redundant measurements → consolidate
+- Different observations → keep separate (not views)
+- Dimensions assessed together → single consolidated item
 
 ---
 
