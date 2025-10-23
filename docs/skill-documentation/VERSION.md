@@ -1,8 +1,37 @@
 # Version History
 
-**Current Version:** 2.4  
-**Release Date:** 2025-10-20  
+**Current Version:** 2.5
+**Release Date:** 2025-10-23
 **Status:** Production Ready
+
+---
+
+## Version 2.5 (2025-10-23)
+
+### Repository Rationalization Release
+
+**Focus:** Repository organization and FAIR4RS preparation
+
+**Repository Structure Changes:**
+- Consolidated all extraction tools into `extraction-system/` (skill, prompts, schema, scripts)
+- Organized documentation into `docs/` with user-guide/, skill-documentation/, development/, background-research/
+- Curated `examples/` with best extraction and blank template
+- Archived development history by version in `archive/extraction-development/`
+- Streamlined `reports/` to key milestones only (extraction-testing/, quality-assurance/)
+- Maintained active planning separate from archived development work
+
+**FAIR4RS Preparation:**
+- Added dual licensing (Apache 2.0 for code, CC-BY-4.0 International for documentation)
+- Created CITATION.cff for machine-readable citation
+- Added CHANGELOG.md from version history
+- Enhanced README with comprehensive project overview
+- Improved documentation navigation with README files at each level
+
+**No Schema or Prompt Changes:**
+- All extraction functionality remains unchanged from v2.4
+- Schema stays at v2.5 (already updated)
+- Prompts confirmed at v2.5 (already updated)
+- This is purely an organizational and documentation release
 
 ---
 
