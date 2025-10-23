@@ -39,7 +39,7 @@ The fundamentals document covers universal sourcing requirements that apply to a
 
 **EVIDENCE & CLAIMS require:**
 - `verbatim_quote` - Exact text from paper stating this content
-- Precise location - Section, subsection, paragraph
+- Precise location - Section, subsection, paragraph range
 - If quote doesn't exist → DO NOT EXTRACT
 
 **IMPLICIT ARGUMENTS require:**
