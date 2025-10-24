@@ -92,51 +92,49 @@ Use this checklist as your roadmap. Before finalizing:
 
 ## Core Consolidation Principles
 
-### The Acid Test: "Would I Assess These Together or Separately?"
+**Follow the consolidation hierarchy defined in the skill and reference materials:**
 
-**PRIMARY PRINCIPLE:** Match granularity to assessment needs
+### Consolidation Hierarchy
 
-For any potential consolidation, ask:
-**"Would I assess the credibility/transparency/replicability of these statements TOGETHER or SEPARATELY?"**
+**For RDMAP Items:**
 
-- **Together** → CONSOLIDATE
-- **Separately** → KEEP DISTINCT
+**PRIMARY:** Assessment Compatibility Test
+- RDMAP items (designs, methods, protocols) don't have "support patterns" like evidence
+- Use: *"Would I assess these TOGETHER or SEPARATELY?"*
+- Design rationale synthesis: Together
+- Workflow method sequences: Together if assessed as unified method
+- Protocol specifications: Together if describing same tool/procedure
+- Temporal comparisons: ALWAYS separate
 
-**Test scenarios:**
-- Multiple rationales for same design choice → Together (rationale synthesis)
-- Scope boundaries (spatial + temporal + thematic) → Together (scope integration)
-- Sequential workflow steps → Together if single method, separate if different methods
-- GPS specs scattered across protocols → Together (tool specification)
-- Different tools for different purposes → Separate (different assessment implications)
+**For detailed patterns and examples:**  
+→ See `/mnt/skills/user/research-assessor/references/checklists/consolidation-patterns.md`
 
-**For detailed consolidation patterns and anti-patterns:**  
-→ See `references/checklists/consolidation-patterns.md`
+**RDMAP-Specific Guidance:**
 
----
-
-### Granularity by Tier
-
-**Consolidation intensity varies by tier:**
-
-**Research Designs (High-level consolidation appropriate)**
+**Research Designs** (High-level consolidation appropriate)
 - Consolidate multiple rationales for same decision
 - Combine spatial/temporal/thematic scope statements
-- Integrate related research questions
 - Preserve distinct hypotheses (especially if different timing)
 
-**Methods (Moderate consolidation)**
+**Methods** (Moderate consolidation)
 - Consolidate workflow sequences into unified methods
 - Combine related validation procedures
 - Keep different analytical approaches separate
-- Preserve sampling strategies as distinct methods
 
-**Protocols (Minimal consolidation)**
+**Protocols** (Minimal consolidation)
 - Only consolidate truly redundant specifications
 - Preserve measurement precision and parameters
 - Keep distinct procedures separate
-- Maintain replication-critical details
 
-**Principle:** The more operational (Protocol), the more detail to preserve
+**CRITICAL:** Temporal comparisons (before/after, phase-by-phase) NEVER consolidate
+
+**Quick workflow:**
+```
+Step 1: Apply assessment compatibility test (Would I assess together?)
+Step 2: Check tier-specific guidance (Design/Method/Protocol)
+Step 3: Verify no temporal comparison
+Step 4: Document all consolidations with complete metadata
+```
 
 ---
 
@@ -291,7 +289,7 @@ For any potential consolidation, ask:
 ```json
 "consolidation_metadata": {
   "consolidated_from": ["P1_RD003", "P1_RD004"],
-  "consolidation_type": "rationale_synthesis | scope_integration | workflow_integration | validation_chain | tool_specification | parameter_integration",
+  "consolidation_type": "identical_support_pattern | rationale_synthesis | scope_integration | workflow_integration | validation_chain | tool_specification | parameter_integration",
   "information_preserved": "complete | lossy_granularity | lossy_redundancy",
   "granularity_available": "Description of additional detail in source",
   "rationale": "Why consolidation appropriate"
@@ -408,21 +406,33 @@ For any potential consolidation, ask:
 - Document all consolidations with complete metadata
 - Preserve quantitative values and critical parameters
 
-**🚨 Source Verification for Consolidations (v2.5)**
+**🚨 Source Verification (REQUIRED)**
 
-When consolidating RDMAP items, verify source integrity:
+**For ALL items (consolidated or not), verify:**
 
-**For explicit items:**
-- Ensure consolidated `verbatim_quote` preserves or synthesizes source text
-- All source quotes should come from same general location (Methods section)
-- Don't claim anything beyond what's in the verbatim quotes
-- If quotes conflict, flag in consolidation_metadata
+1. **Consolidation integrity** (if item was consolidated):
+   - Verbatim_quote/trigger_text preserves or synthesizes source appropriately
+   - No information invented
+   - Most conservative confidence maintained
 
-**For implicit items:**
-- Preserve all `trigger_text` passages when consolidating
-- Update `trigger_locations` to include all source locations
-- Update `inference_reasoning` to reflect consolidated understanding
-- Maintain most conservative `reconstruction_confidence` from sources
+2. **Quote compliance** (all explicit items):
+   - Read if uncertain: `references/verbatim-quote-requirements.md`
+   - Complete sentences only (no mid-sentence fragments)
+   - Exact text from paper (no paraphrasing)
+   - Verify quote exists: "Can I find this EXACT text in paper?"
+
+3. **Multi-location sourcing** (any item with discontinuous sources):
+   - **If item draws from multiple distinct locations → include quotes/trigger_text from ALL locations**
+   - This applies to: consolidated methods, cross-subsection implicit designs, synthesized protocols
+   - Document all locations in source_location/trigger_locations
+   - Example: Method described in both Methods and Results needs verbatim_quote/trigger_text from both locations
+
+4. **Fix if needed:**
+   - Missing sentence start → Add context to complete sentence
+   - Paraphrased text → Replace with actual verbatim text
+   - Incomplete multi-location sourcing → Add missing quotes/trigger_text
+   - Quote not found → Locate and update
+   - Cannot verify → Mark `extraction_confidence: "low"` with note
 
 **Adding implicit RDMAP in Pass 2:**
 

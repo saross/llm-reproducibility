@@ -92,19 +92,41 @@ Use this checklist as your roadmap. Before finalizing:
 
 ## Core Consolidation Principles
 
-### Primary Principle: Match Evidence Granularity to Claims
+**Follow the consolidation hierarchy defined in the skill and reference materials:**
 
-Evidence should be at the same level of detail as the claims they support:
-- If claim assesses components **together** → consolidate evidence into compound finding
-- If claim assesses components **separately** → keep evidence items separate
-- If claims need both views → consider multi-dimensional evidence pattern (below)
+### Consolidation Hierarchy
 
-**ACID TEST:** "Would I assess the credibility of these statements TOGETHER or SEPARATELY?"
-- Together → CONSOLIDATE
-- Separately → KEEP DISTINCT
+**For Evidence Items:**
 
-**For detailed consolidation patterns and guidance:**  
-→ See `references/checklists/consolidation-patterns.md`
+1. **Empirical Graph Analysis** (PRIMARY)
+   - Identify evidence with identical claim support patterns
+   - See SKILL.md lines 183-212 for complete algorithm
+   - See consolidation-patterns.md "PRIMARY: Empirical Graph Analysis" section for examples
+
+2. **Assessment Compatibility Test** (SECONDARY)  
+   - When graph analysis inconclusive: "Would I assess TOGETHER or SEPARATELY?"
+   - See consolidation-patterns.md for detailed patterns
+
+3. **Preserve Critical Distinctions** (ALWAYS)
+   - Temporal comparisons: NEVER consolidate (2017 vs 2018, before/after)
+   - Different assessment implications: Keep separate
+   - Subset patterns: Usually separate
+
+**For Claims:**
+- Graph analysis doesn't apply (claims don't have "support patterns")
+- Use Assessment Compatibility Test
+- Common patterns: narrative consolidation, compound interpretation, synthesis
+
+**For detailed patterns and examples:**  
+→ See `/mnt/skills/user/research-assessor/references/checklists/consolidation-patterns.md`
+
+**Quick workflow:**
+```
+Step 1: Map evidence support patterns → Find identical patterns
+Step 2: Verify no temporal comparison → Consolidate as identical_support_pattern
+Step 3: For remaining items, apply assessment compatibility test
+Step 4: Document all consolidations with complete metadata
+```
 
 ---
 
@@ -152,7 +174,7 @@ Evidence should be at the same level of detail as the claims they support:
 ```json
 "consolidation_metadata": {
   "consolidated_from": ["P1_E001", "P1_E002"],
-  "consolidation_type": "granularity_reduction | compound_finding | analytical_view | phase_aggregation | profile_consolidation | redundancy_elimination | narrative_consolidation | compound_interpretation | synthesis",
+  "consolidation_type": "identical_support_pattern | granularity_reduction | compound_finding | analytical_view | phase_aggregation | profile_consolidation | redundancy_elimination | narrative_consolidation | compound_interpretation | synthesis",
   "information_preserved": "complete | lossy_granularity | lossy_redundancy",
   "granularity_available": "Description of additional detail available in source",
   "rationale": "Why consolidation appropriate"
@@ -160,6 +182,9 @@ Evidence should be at the same level of detail as the claims they support:
 ```
 
 **Common consolidation types:**
+
+**PRIMARY (Evidence):**
+- `identical_support_pattern` - Items with identical claim support patterns, never cited independently (empirical graph analysis)
 
 **Evidence:**
 - `granularity_reduction` - Fine measurements → aggregate
@@ -254,21 +279,33 @@ Pass 1 consistently under-extracts certain claim types. **Actively look for and 
 - Add missing synthesis/comparison/recommendation claims
 - Remove redundant calculation claims
 
-**🚨 Source Verification for Consolidations (v2.5)**
+**🚨 Source Verification (REQUIRED)**
 
-When consolidating evidence/claims/implicit arguments, verify source integrity:
+**For ALL items (consolidated or not), verify:**
 
-**For evidence and claims (explicit items):**
-- Ensure consolidated `verbatim_quote` preserves or synthesizes source text
-- All source quotes should come from same general location
-- Don't claim anything beyond what's in the verbatim quotes
-- If quotes conflict, flag in consolidation_metadata
+1. **Consolidation integrity** (if item was consolidated):
+   - Verbatim_quote/trigger_text preserves or synthesizes source appropriately
+   - No information invented
+   - Most conservative confidence maintained
 
-**For implicit arguments:**
-- Preserve all `trigger_text` passages when consolidating
-- Update `trigger_locations` to include all source locations
-- Update `inference_reasoning` to reflect consolidated understanding
-- Maintain most conservative confidence from sources
+2. **Quote compliance** (all explicit items):
+   - Read if uncertain: `references/verbatim-quote-requirements.md`
+   - Complete sentences only (no mid-sentence fragments)
+   - Exact text from paper (no paraphrasing)
+   - Verify quote exists: "Can I find this EXACT text in paper?"
+
+3. **Multi-location sourcing** (any item with discontinuous sources):
+   - **If item draws from multiple distinct locations → include quotes/trigger_text from ALL locations**
+   - This applies to: consolidated evidence, cross-subsection implicit arguments, synthesized claims
+   - Document all locations in source_location/trigger_locations
+   - Example: Evidence consolidated from paragraphs on pages 3 and 7 needs verbatim_quote text from both locations
+
+4. **Fix if needed:**
+   - Missing sentence start → Add context to complete sentence
+   - Paraphrased text → Replace with actual verbatim text
+   - Incomplete multi-location sourcing → Add missing quotes/trigger_text
+   - Quote not found → Locate and update
+   - Cannot verify → Mark `extraction_confidence: "low"` with note
 
 **Adding implicit arguments in Pass 2:**
 
