@@ -29,6 +29,27 @@ Extract evidence, claims, and implicit arguments from a research paper section. 
 
 ---
 
+## 🚨 CRITICAL: Verbatim Quote Requirements
+
+**Before extracting any item:**
+
+Read if uncertain: `/mnt/skills/user/research-assessor/references/verbatim-quote-requirements.md`
+
+**Non-negotiable rules for all `verbatim_quote` fields:**
+
+1. **Complete sentences only** - Extract whole grammatical units, never mid-sentence fragments
+2. **Exact text only** - Copy-paste from paper, never paraphrase or reconstruct from memory  
+3. **Verify before committing** - Ensure exact quote exists in paper before adding to JSON
+4. **Single source only** - Never synthesize quotes from multiple locations
+
+**Self-check:** "Can I find this EXACT text string in the paper with simple search?"
+- If YES → Extract it
+- If NO → Quote is wrong; fix it or mark as implicit
+
+⚠️ **Failure to follow these rules causes 40-50% validation failures in Pass 3.**
+
+---
+
 ## 🚨 CRITICAL: Sourcing Requirements
 
 **READ FIRST:** `/mnt/skills/user/research-assessor/references/extraction-fundamentals.md`
