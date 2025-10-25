@@ -122,7 +122,7 @@ Use this checklist as your roadmap. Execute all applicable checks:
 **What to verify:**
 - `methods_used` in Research Designs → Methods exist
 - `design_context` in Methods → Research Design exists
-- `method_implements` in Protocols → Method exists
+- `implements_methods` in Protocols → Methods exist
 - `supporting_evidence` in Claims → Evidence exists
 - `supports_claims` in Evidence → Claims exist
 - `supports_implicit_arguments` in Evidence/Claims → Implicit Arguments exist
@@ -146,8 +146,15 @@ Use this checklist as your roadmap. Execute all applicable checks:
 
 **RDMAP chains (Design → Methods → Protocols):**
 - Every Method references at least one Design
-- Every Protocol references at least one Method
+- Every Protocol references at least one Method (via `implements_methods` array)
 - Protocols transitively connect to Designs through Methods
+
+**Protocol-Method Linking Completeness:**
+- Calculate: % of protocols with `implements_methods` populated
+- **Critical** if <50% of protocols linked (likely prompt/schema issue)
+- **Important** if 50-79% of protocols linked (incomplete extraction)
+- **Pass** if ≥80% of protocols linked
+- Report linking rate in validation summary
 
 **Claims hierarchy (if present):**
 - Primary claims may have no parent

@@ -312,7 +312,7 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 
 **Populate bidirectional links:**
 - Research Designs `enables_methods` → Methods `implements_designs`
-- Methods `realized_through_protocols` → Protocols `implements_method`
+- Methods `realized_through_protocols` → Protocols `implements_methods`
 - Methods `supports_claims` ← Claims `supported_by_evidence`
 
 **Don't over-reference:** Only link if there's a clear relationship
@@ -355,7 +355,13 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 - Link designs to methods they enable
 - Link methods to protocols they use
 - Verify bidirectional consistency
-- Update `implements_designs` and `implements_method` fields
+- Update `implements_designs` and `implements_methods` fields
+
+**Protocol-method linking (CRITICAL):**
+- `implements_methods` is an ARRAY of method IDs (plural, not singular)
+- Protocol implements ONE method: `"implements_methods": ["M001"]`
+- Protocol implements MULTIPLE methods: `"implements_methods": ["M001", "M002"]`
+- All protocols should link to at least one method (prevents orphaned protocols)
 
 ### Step 5: Flag Missing Information
 - Review each RDMAP item against expected information
