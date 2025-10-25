@@ -1,0 +1,96 @@
+{
+  "new_research_designs": [],
+  "new_methods": [],
+  "new_protocols": [
+    {
+      "protocol_id": "P010",
+      "protocol_text": "GPS coordinate extraction automation: automatic extraction of coordinates from GPS into Latitude/Longitude and Northing/Easting fields",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "automated extraction of coordinates from GPS into the Latitude/Longitude and Northing/Easting fields, which took three to 5 s with an empty database, took as long as 30 s once a device exceeded about 2,500 records"
+      ],
+      "trigger_locations": [
+        {"section": "Results", "subsection": "3.4", "page": 8}
+      ],
+      "inference_reasoning": "Results section mentions this automated extraction feature when discussing performance degradation, but Methods section does not describe how GPS coordinates were automatically populated into coordinate fields. This automation feature was used but not documented in Methods.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "No description of GPS coordinate extraction mechanism, when it occurs in workflow, or how handled when GPS unavailable (indoor digitization)",
+        "assessability_impact": "Cannot assess if GPS coordinates represent map symbol location or digitizer location during indoor map digitization",
+        "reconstruction_confidence": "medium"
+      },
+      "implements_method": "M001",
+      "expected_information_missing": [
+        "Source of GPS coordinates (device location vs extracted from georeferenced map)",
+        "When extraction occurs in record creation workflow",
+        "Behavior when GPS unavailable (indoor use)",
+        "Coordinate precision/accuracy"
+      ],
+      "location": {"section": "Results", "subsection": "3.4", "page": 8}
+    },
+    {
+      "protocol_id": "P011",
+      "protocol_text": "Performance mitigation protocol: when device performance degraded after ~2,500-6,000 records, export all data and instantiate new empty application version",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "Automated testing of other customisations suggested that performance would degrade once approximately 3,000–6,000 records had been created.",
+        "Deteriorating performance was mitigated by exporting all data and instantiating a new and empty version of the application. Since data structures were identical, aggregation of multiple exports was trivial."
+      ],
+      "trigger_locations": [
+        {"section": "Results", "subsection": "3.4", "page": 8}
+      ],
+      "inference_reasoning": "Results section describes performance degradation and mitigation strategy, but Methods section contains no description of this protocol. The mitigation was applied during fieldwork but not documented as a planned procedure.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "No description of when/how degradation detected, who performed resets, data integrity verification after reset",
+        "assessability_impact": "Cannot assess impact on data continuity, volunteer workflow disruption, or potential for data loss during resets",
+        "reconstruction_confidence": "medium"
+      },
+      "parameters": {
+        "performance_threshold": "approximately 2,500-6,000 records per device",
+        "coordinate_extraction_time_empty": "3-5 seconds",
+        "coordinate_extraction_time_degraded": "up to 30 seconds"
+      },
+      "implements_method": "M001",
+      "expected_information_missing": [
+        "Who decided when to perform reset (staff vs volunteers)",
+        "Data verification after export/reset",
+        "Number of resets performed across both seasons",
+        "Impact on volunteer workflow/productivity"
+      ],
+      "location": {"section": "Results", "subsection": "3.4", "page": 8}
+    },
+    {
+      "protocol_id": "P012",
+      "protocol_text": "Data omission correction protocol: spatial omissions corrected by re-extracting lat/long from preserved geodatabase geometries",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "Since the geodatabase preserved geometries, spatial omissions were corrected by re-extracting latitude and longitude; only two data points could not be recovered."
+      ],
+      "trigger_locations": [
+        {"section": "Results", "subsection": "3.5.1", "page": 8}
+      ],
+      "inference_reasoning": "Results mention correction procedure for spatial omissions but Methods contains no description of data cleaning/correction protocols. This post-processing step was applied but not documented as part of the planned workflow.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "No description of correction procedure, tools used, verification of corrected values, or treatment of 2 unrecoverable points",
+        "assessability_impact": "Cannot assess reliability of correction procedure or understand why 2 points were unrecoverable",
+        "reconstruction_confidence": "medium"
+      },
+      "procedure_description": "Post-processing correction: re-extract coordinates from SpatiaLite geodatabase for records with missing lat/long values",
+      "parameters": {
+        "records_requiring_correction": 205,
+        "records_successfully_corrected": 203,
+        "records_unrecoverable": 2
+      },
+      "implements_method": "M001",
+      "expected_information_missing": [
+        "Software/tools used for re-extraction",
+        "Verification method for corrected values",
+        "Root cause of 2 unrecoverable points",
+        "Treatment of unrecoverable points in final dataset"
+      ],
+      "location": {"section": "Results", "subsection": "3.5.1", "page": 8}
+    }
+  ]
+}
