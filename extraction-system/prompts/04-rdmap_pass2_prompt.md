@@ -223,8 +223,9 @@ Step 4: Document all consolidations with complete metadata
 - Check: Every enabled method references back to design
 
 **Method → Protocol:**
-- `methods[].realized_through_protocols` ↔ `protocols[].implements_method`
+- `methods[].realized_through_protocols` ↔ `protocols[].implements_methods`
 - Check: Every used protocol references back to method
+- Note: `implements_methods` is an array, e.g., `["M001"]` or `["M001", "M002"]`
 
 **Method → Evidence/Claims:**
 - `methods[].supports_claims` ↔ `claims[].supported_by_evidence`
