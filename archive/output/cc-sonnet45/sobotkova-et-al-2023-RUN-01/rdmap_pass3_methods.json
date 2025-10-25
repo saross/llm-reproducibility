@@ -1,0 +1,179 @@
+{
+  "new_research_designs": [],
+  "new_methods": [
+    {
+      "method_id": "M005",
+      "method_text": "Feature selection strategy: extracting symbols from 1:50,000 Soviet topographic maps that might represent burial or settlement mounds",
+      "method_status": "explicit",
+      "verbatim_quote": "The goal of the work was to extract archaeological features from 1:50,000 scale Soviet military topographic maps dating to the 1980s. Available as georeferenced GeoTIFFs (from http://web.uni-plovdiv.bg/vedrin/index_en.html in 2008), each of these maps covers ca 400 sq km. We wished to extract symbols from them that might represent burial or settlement mounds in our study area (see Fig. 2).",
+      "sampling_strategy": {
+        "sampling_type": "purposive",
+        "sampling_rationale": "Target symbols potentially representing burial/settlement mounds in Yambol region",
+        "spatial_coverage": "Soviet topographic map tiles covering Yambol region study area"
+      },
+      "implements_designs": ["RD001"],
+      "realized_through_protocols": ["P004"],
+      "expected_information_missing": [
+        "Symbol identification criteria (how to distinguish mound symbols from similar symbols)",
+        "Inclusion/exclusion rules for ambiguous symbols",
+        "Ground-truthing results informing symbol interpretation"
+      ],
+      "location": {"section": "Approach", "subsection": "2.1", "page": 4}
+    },
+    {
+      "method_id": "M006",
+      "method_text": "Data structure design: relatively simple records with point geometry, record number, plus ten attributes",
+      "method_status": "explicit",
+      "verbatim_quote": "The records we sought to create were relatively simple: a point for the feature, a record number, plus ten attributes.",
+      "data_structure": {
+        "geometry_type": "point",
+        "attributes_count": 10,
+        "identifier_field": "record_number"
+      },
+      "implements_designs": ["RD001"],
+      "realized_through_protocols": ["P005"],
+      "expected_information_missing": [
+        "Specific attribute names and data types",
+        "Controlled vocabularies used",
+        "Validation rules for each attribute"
+      ],
+      "location": {"section": "Approach", "subsection": "2.1", "page": 4}
+    }
+  ],
+  "new_protocols": [
+    {
+      "protocol_id": "P004",
+      "protocol_text": "Symbol recognition and digitization: volunteers locate target symbols (averaging 200 per tile, ranging 50-400 per tile) and create point geometries at their locations",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Such symbols occurred at a high density, averaging about 200 per tile (0.5 per sq km), with counts per tile ranging from about 50 to 400. The mound symbols were moderately obtrusive; some aspects of shape or colour were shared with other map symbols.",
+      "procedure_description": "Visual scan of map tiles to locate target symbols, followed by point placement at symbol location",
+      "parameters": {
+        "symbol_density_average": "200 per tile (0.5 per sq km)",
+        "symbol_density_range": "50-400 per tile",
+        "symbol_obtrusiveness": "moderate (some shape/color overlap with other symbols)"
+      },
+      "implements_method": "M005",
+      "expected_information_missing": [
+        "Symbol recognition training provided to volunteers",
+        "Reference guide or symbol key provided",
+        "Procedure for handling uncertain/ambiguous symbols"
+      ],
+      "location": {"section": "Approach", "subsection": "2.1", "page": 4}
+    },
+    {
+      "protocol_id": "P005",
+      "protocol_text": "FAIMS Mobile automated capabilities: applied SRS, rendered maps, provided layer management, enforced topology, displayed controlled vocabularies, recorded creation time/author, maintained data history, applied validation, merged multi-device data, exported to common formats",
+      "protocol_status": "explicit",
+      "verbatim_quote": "To support this workflow and make work easier for both project staff and participants, FAIMS Mobile automated a number of tasks and provided necessary capabilities. It applied the spatial reference system, rendered maps in the workspace, provided layer management (including a data entry layer), enforced shape topology, displayed pre-defined controlled vocabularies for attribute terms, recorded creation time and author for each record, maintained a history of all changes to data, applied validation to ensure record completeness, merged data from multiple devices, and exported data in common formats.",
+      "procedure_description": "FAIMS Mobile platform automatically handles spatial reference, map rendering, layer management, topology enforcement, vocabulary control, metadata capture, versioning, validation, data merging, and export",
+      "tools_used": ["FAIMS Mobile platform with customization"],
+      "automation_features": [
+        "Spatial reference system application",
+        "Map rendering",
+        "Layer management",
+        "Shape topology enforcement",
+        "Controlled vocabulary display",
+        "Automatic metadata (creation time, author)",
+        "Complete data history/versioning",
+        "Validation for record completeness",
+        "Multi-device data merging",
+        "Export to common formats"
+      ],
+      "implements_method": "M001",
+      "location": {"section": "Approach", "subsection": "2.4", "page": 5}
+    },
+    {
+      "protocol_id": "P006",
+      "protocol_text": "User interface design: streamlined interface with map view (layer toggle, pan, zoom, shape creation) and form view (attribute entry/editing), search/retrieval functions, record validation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The digitisation interface itself was as streamlined as possible (see Figs. 4 and 5). Volunteers could toggle between a map view for geospatial data interactions and a form view for attribute creation and editing. In the map, they could adjust layer focus and visibility, pan, and zoom. Existing records could be searched, retrieved, inspected, and edited.",
+      "procedure_description": "Two-view interface: map view for spatial operations, form view for attribute data; includes search and record management",
+      "ui_components": [
+        "Map view with layer controls, pan, zoom, shape creation tools",
+        "Form view with attribute entry fields",
+        "Toggle between map and form views",
+        "Search and retrieval functions",
+        "Record inspection and editing"
+      ],
+      "implements_method": "M001",
+      "expected_information_missing": [
+        "Specific UI layout screenshots in paper (referenced but images not extracted)",
+        "Touch gesture mappings",
+        "Keyboard shortcuts if any"
+      ],
+      "location": {"section": "Approach", "subsection": "2.4", "page": 6}
+    },
+    {
+      "protocol_id": "P007",
+      "protocol_text": "Time tracking methodology: programmer timesheets, device-recorded creation timestamps for volunteers, staff journals for configuration/support activities",
+      "protocol_status": "explicit",
+      "verbatim_quote": "To measure inputs, we collated the amount of time spent by various participants in the process, including the student programmer who instantiated the customisation, the student volunteers who undertook the digitisation, and project staff who configured the system, supported volunteers, exported data, and checked for errors. Project records provided much of this data (timesheets from the programmer; record creation timestamps for students using the system), while project staff logged time-on-task for activities in journals.",
+      "procedure_description": "Multi-method time tracking: timesheets for programmer, automated timestamps for volunteers, manual journals for staff",
+      "data_sources": [
+        "Programmer timesheets",
+        "Device-recorded feature creation timestamps",
+        "Staff journals for time-on-task"
+      ],
+      "parameters": {
+        "volunteer_time_calculation": "Based on start and end times of feature creation (represents work time excluding pauses between records)"
+      },
+      "implements_method": "M004",
+      "expected_information_missing": [
+        "Journal template or time-tracking categories",
+        "How pauses/breaks distinguished from active work time",
+        "Treatment of partial hours or estimation methods"
+      ],
+      "location": {"section": "Approach", "subsection": "2.5", "page": 6}
+    },
+    {
+      "protocol_id": "P008",
+      "protocol_text": "Quality assurance: random selection of 4 maps (7% of total), staff review to count true positives, false positives, false negatives, double-marking, and classification errors",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Finally, project staff reviewed randomly selected digitisation work completed by volunteers to characterise errors.",
+      "procedure_description": "Post-fieldwork random sampling of completed maps for manual error checking by staff using desktop GIS",
+      "parameters": {
+        "sample_size": "4 maps",
+        "sample_proportion": "7% of 58 total digitized maps",
+        "sampling_method": "random selection",
+        "error_categories": ["false positive", "false negative", "double-marked", "classification error"]
+      },
+      "implements_method": "M004",
+      "expected_information_missing": [
+        "Random selection method (random number generator, systematic, etc.)",
+        "Staff member qualifications for error checking",
+        "Inter-rater reliability if multiple staff checked",
+        "Definition/criteria for each error category"
+      ],
+      "location": {"section": "Approach", "subsection": "2.5", "page": 6}
+    },
+    {
+      "protocol_id": "P009",
+      "protocol_text": "Volunteer training: minimal training requiring only minutes before students could begin digitizing",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "Training and supervision of students took no more than half an hour of staff time across the entire season.",
+        "a simple and intuitive UI allowed students to begin digitising after only minutes of training"
+      ],
+      "trigger_locations": [
+        {"section": "Results", "subsection": "3.1", "page": 7},
+        {"section": "Approach", "subsection": "2.2", "page": 4}
+      ],
+      "inference_reasoning": "Paper states training took 'only minutes' and total supervision was 'no more than half an hour' across entire season, but provides no description of training content, delivery method, or materials in Methods section.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "No description of training curriculum, delivery format, materials provided, or quality assurance of training outcomes",
+        "assessability_impact": "Cannot assess training adequacy or identify which aspects of the system/task required explanation vs were immediately intuitive",
+        "reconstruction_confidence": "low"
+      },
+      "implements_method": "M001",
+      "expected_information_missing": [
+        "Training content/curriculum",
+        "Training delivery method (demo, hands-on, written guide)",
+        "Training materials (manual, video, etc.)",
+        "Training duration per volunteer",
+        "Training assessment or competency check"
+      ],
+      "location": {"section": "Approach", "subsection": "2.2", "page": 4}
+    }
+  ]
+}
