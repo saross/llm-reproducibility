@@ -67,6 +67,15 @@ Use this checklist as your roadmap. Before finalizing:
 - [ ] Location fields preserved through consolidation
 - [ ] Other arrays (claims/evidence) untouched
 
+**Research Design Count Check:**
+- [ ] If <3 research designs: Review for under-extraction
+  - Check Abstract/Intro/Methods for missed strategic decisions
+  - Check: Meta-level framing (comparative evaluation, case study rationale) extracted?
+  - Check: Theoretical frameworks recognized as RDs?
+  - Check: Design rationale vs method description distinction maintained?
+- [ ] If >10 research designs: Review for over-extraction (each RD needs independent justification)
+- [ ] Quality over count - extract what's genuinely present
+
 ---
 
 ## Rationalization Philosophy

@@ -323,15 +323,50 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 
 ## Extraction Workflow
 
+### Step 0: Pre-Scan for Research Designs (2-3 minutes)
+
+Before extracting RDMAP, quickly scan Abstract, Introduction, Background, and Methods/Approach sections for design elements:
+- Mark decision language ("chose," "selected," "because")
+- Mark frameworks ("guided by," "framework," "informed by")
+- Mark meta-level framing (comparative evaluation, case study rationale, efficiency hypothesis)
+
+See: `references/research-design-extraction-guide.md` for detailed pre-scan checklist.
+
 ### Step 1: Identify Research Designs
-- Scan Abstract, Introduction, Background carefully (RDs commonly appear here; also check Methods sections, especially those with design-oriented framing)
-- Scan for design language keywords (see tier-assignment-guide.md)
+
+⚠️ **Literature Review Warning:** Don't extract Research Designs from descriptions of PRIOR work.
+- If verbatim quote says "Smith et al. employed..." → Not current paper's design
+- If quote says "We build on comparative approaches..." → Check: Do they explain WHY they chose it for THIS study?
+- Test: Does this explain a strategic choice the AUTHORS made, or describe what others did?
+
+- Scan Abstract, Introduction, Background, and Methods/Approach sections systematically. RDs appear where they appear - don't prioritize sections.
+
+**Scan for design language:**
+- Decision: "chose," "selected," "opted for," "decision to"
+- Rationale: "because," "rationale," "reasoning"
+- Purpose: "aimed to," "sought to," "designed to"
+- Framework: "framework," "guided by," "informed by"
+- Comparison: "compared," "evaluated," "tested whether"
+
+See tier-assignment-guide.md for full patterns.
+
+**Systematically check:** For each major section, ask: questions stated? hypotheses stated? frameworks referenced? design rationale explained? See `references/research-design-extraction-guide.md` for complete checklist.
+
 - **Identify each distinct strategic decision point** (separate rationales = separate designs)
 - Extract theoretical frameworks as Research Designs
+
+**Meta-level framing:** Papers often have strategic designs that frame entire research:
+- "Comparative evaluation of X" → Design (comparison AS strategic choice)
+- "Case study to demonstrate Y" → Design (case study AS deliberate decision)
+Extract these even though they seem "obvious" - they're strategic choices requiring independent justification.
+
 - Classify reasoning approach for each
 - Determine explicit vs implicit status
 - Populate verbatim_quote OR trigger_text appropriately
 - **Liberal extraction:** Include "high-level" design elements - critical for transparency assessment
+
+⚠️ **If it feels "too obvious" or "everyone knows this" → EXTRACT IT ANYWAY**
+Meta-level designs (case study AS choice, comparative evaluation AS hypothesis) feel obvious because they frame the entire paper - that's exactly why they're Research Designs.
 
 ### Step 2: Identify Methods
 - Look for data collection approaches
@@ -372,6 +407,8 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 ---
 
 ## Key Examples
+
+**For worked examples showing 4-6 RD extraction from real paper:** See `references/research-design-extraction-guide.md` Section 6 (Sobotkova example).
 
 ### Example 1: Explicit Research Design
 
