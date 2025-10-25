@@ -24,6 +24,119 @@ Output (for each paper):
     └── summary.md             # Key findings summary
 ```
 
+## Extraction Methodology: Section-by-Section Approach
+
+**IMPORTANT**: Liberal extraction passes (prompt 01; prompt 03) should be executed **section-by-section**, not on the entire paper at once. This approach has been tested and found significantly more effective for:
+- Maintaining focus and thoroughness
+- Ensuring proper sourcing and verbatim quotes
+- Managing cognitive load
+- Producing higher-quality extractions
+
+### Required Section Grouping (Pass 1 & Pass 3 ONLY)
+
+**MANDATORY SECTION GROUPS for liberal extraction passes (01, 03):**
+
+Execute each pass by processing these section groups in order. Complete each group fully before moving to the next:
+
+1. **Abstract + Introduction** - Process together as ONE unit
+   - Includes: Abstract + ALL Introduction subsections (1.1, 1.2, 1.3, etc.)
+   - ⚠️ Do NOT stop after Abstract - continue through entire Introduction
+   - Save progress to JSON after completing this group
+
+2. **Methods/Approach** - Process as ONE unit
+   - Includes: ALL Methods subsections
+   - Save progress to JSON after completing this group
+
+3. **Results** - Process as ONE unit
+   - Includes: ALL Results subsections
+   - Save progress to JSON after completing this group
+
+4. **Discussion + Conclusion** - Process together as ONE unit
+   - ⚠️ Do NOT process separately - always together
+   - Save progress to JSON after completing this group
+
+**For rationalization passes (02, 04) and validation (05):**
+- Review all relevant extractions across the entire paper
+- Refer back to paper sections as needed
+- No section-by-section processing required
+
+**Adjust based on paper structure** - the key is manageable section sizes that maintain focus and thoroughness while completing logical units together.
+
+### Example: Complete Pass 1 Execution
+
+```
+Pass 1 execution (continuous, no stopping):
+1. Read prompt: 01-claims-evidence_pass1_prompt.md
+2. Extract from: Abstract + Introduction (ALL subsections) → save to extraction.json
+3. Extract from: Methods (ALL subsections) → save to extraction.json
+4. Extract from: Results (ALL subsections) → save to extraction.json
+5. Extract from: Discussion + Conclusion (together) → save to extraction.json
+6. Update queue.yaml: Mark Pass 1 complete
+7. Immediately proceed to Pass 2 (no user confirmation needed)
+
+Pass 2 execution (continuous, no stopping):
+1. Read prompt: 02-claims-evidence_pass2_prompt.md
+2. Review and rationalize all claims/evidence across full paper
+3. Save consolidated extraction.json
+4. Update queue.yaml: Mark Pass 2 complete
+5. Immediately proceed to Pass 3 (no user confirmation needed)
+
+Continue through all 5 passes autonomously...
+```
+
+## Autonomous Execution
+
+**IMPORTANT:** This workflow is designed for fully autonomous multi-pass execution across multiple sessions.
+
+### Continuous Operation
+
+**After completing each section group:**
+- Save progress to `extraction.json`
+- Update `queue.yaml` notes with current status
+- Immediately proceed to next section group
+- **DO NOT stop** for user confirmation
+
+**After completing each pass:**
+- Update `queue.yaml` with pass completion status
+- Immediately proceed to next pass
+- **DO NOT stop** for user confirmation
+
+**Work continues across auto-compact sessions** using saved state as memory.
+
+### Session Continuity After Auto-Compact
+
+When resuming after context reset (auto-compact):
+
+1. **Check current state:**
+   - Read `queue.yaml` to determine current paper and progress
+   - Read `extraction.json` to see what's been extracted
+
+2. **Identify checkpoint:**
+   - Which pass are we on? (Pass 1-5)
+   - Which section group is next? (Abstract+Intro, Methods, Results, Discussion+Conclusion)
+   - Or is this pass complete? (proceed to next pass)
+
+3. **Resume work:**
+   - Load appropriate prompt for current pass
+   - Continue from documented checkpoint
+   - Update `queue.yaml` notes as you progress
+
+4. **Maintain continuity:**
+   - Use JSON cross-references to understand existing extractions
+   - Build on previous work, don't duplicate
+   - Preserve established ID sequences (E001, C001, M001, etc.)
+
+### Stopping Conditions
+
+**Only stop execution if:**
+- ✅ **All extraction complete**: All 5 passes done, summary.md generated, queue.yaml status set to `completed`
+- ❌ **Error encountered**: Issue requires user intervention (document in queue.yaml notes)
+
+**Do NOT stop for:**
+- Context limits (auto-compact will occur, then resume autonomously)
+- Uncertainty about extraction (document in extraction_notes, continue)
+- Long sections (take breaks between section groups via auto-compact, but keep going)
+
 ## Workflow Steps
 
 ### Pre-Flight
@@ -33,46 +146,44 @@ Output (for each paper):
 4. **Update queue**: Set paper status to `in_progress`
 
 ### Pass 1: Claims & Evidence (Liberal)
-- **Prompt**: `extraction-system/prompts/claims-evidence_pass1_prompt.md`
-- **Action**: Extract all observations, measurements, claims, and arguments
-- **Output**: Update `outputs/{paper-slug}/extraction.json` with claims/evidence entities
+- **Prompt**: `extraction-system/prompts/01-claims-evidence_pass1_prompt.md`
+- **Action**: Extract all observations, measurements, claims, and arguments **section-by-section**
+- **Output**: Update `outputs/{paper-slug}/extraction.json` with claims/evidence entities after each section
 - **Goal**: Cast wide net; capture everything potentially relevant
+- **Approach**: Abstract+Intro → Methods → Results → Discussion+Conclusion
 
 ### Pass 2: Claims & Evidence (Rationalization)
-- **Prompt**: `extraction-system/prompts/claims-evidence_pass2_prompt.md`
-- **Action**: Review Pass 1 results, refine, consolidate, remove false positives
+- **Prompt**: `extraction-system/prompts/02-claims-evidence_pass2_prompt.md`
+- **Action**: Review Pass 1 results across entire paper, refine, consolidate, remove false positives
 - **Output**: Update same JSON file with refined claims/evidence
 - **Goal**: Improve accuracy and specificity
+- **Approach**: Review all extractions, refer back to entire paper as needed
 
 ### Pass 3: RDMAP (Research Designs, Methods, Protocols) - Liberal
-- **Prompt**: `extraction-system/prompts/rdmap_pass1_prompt.md`
-- **Action**: Extract research designs, methods, and protocols
-- **Output**: Append RDMAP entities to JSON
+- **Prompt**: `extraction-system/prompts/03-rdmap_pass1_prompt.md`
+- **Action**: Extract research designs, methods, and protocols **section-by-section**
+- **Output**: Append RDMAP entities to JSON after each section
 - **Goal**: Comprehensive methodology extraction
+- **Approach**: Abstract+Intro → Methods → Results → Discussion+Conclusion
 
 ### Pass 4: RDMAP Rationalization
-- **Prompt**: `extraction-system/prompts/rdmap_pass2_prompt.md`
-- **Action**: Refine RDMAP extraction, improve cross-references to claims/evidence
+- **Prompt**: `extraction-system/prompts/04-rdmap_pass2_prompt.md`
+- **Action**: Review Pass 3 results across entire paper, refine RDMAP extraction, improve cross-references to claims/evidence
 - **Output**: Update JSON with refined RDMAP data
 - **Goal**: Ensure methodology connects to claims/evidence
+- **Approach**: Review all extractions, refer back to entire paper as needed
 
 ### Pass 5: Validation & Reporting
-- **Prompt**: `extraction-system/prompts/rdmap_pass3_prompt.md`
-- **Action**: Verify structural integrity, check cross-references, assess completeness
+- **Prompt**: `extraction-system/prompts/05-rdmap_pass3_prompt.md`
+- **Action**: Verify structural integrity, check cross-references, assess completeness (whole paper)
 - **Output**: Write `validation-pass3.md` (NO changes to JSON)
 - **Goal**: Quality assurance and human-readable assessment
+- **Note**: Pass 5 is the only pass that reviews the entire paper at once
 
 ### Post-Processing
 1. **Generate summary**: Create `summary.md` with key entities and metadata from final JSON
 2. **Update queue**: Set paper status to `completed` in `queue.yaml`
 3. **Report completion**: Notify user with output locations
-
-## Session Continuity
-
-If context limits are approached:
-1. **Save state**: Ensure current pass results are written to JSON
-2. **Document progress**: Note which pass was completed in queue.yaml notes
-3. **Resume**: On restart, read JSON to determine where to continue
 
 ## Error Handling
 

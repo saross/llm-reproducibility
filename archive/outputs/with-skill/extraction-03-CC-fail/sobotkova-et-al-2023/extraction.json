@@ -1,0 +1,3186 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "schema_version": "2.5",
+  "extraction_timestamp": "2025-10-24T20:08:17Z",
+  "extractor": "Claude Sonnet 4.5",
+  "project_metadata": {
+    "paper_title": "Creating large, high-quality geospatial datasets from historical maps using novice volunteers",
+    "authors": [
+      "Adela Sobotkova",
+      "Shawn A. Ross",
+      "Christian Nassif-Haynes",
+      "Brian Ballsun-Stanton"
+    ],
+    "publication_year": 2023,
+    "journal": "Applied Geography",
+    "doi": "10.1016/j.apgeog.2023.102967",
+    "paper_type": "research article - methodological case study",
+    "discipline": "landscape archaeology / digital humanities / GIS / crowdsourcing",
+    "research_context": "The Tundzha Regional Archaeological Project (TRAP) in Bulgaria digitized burial mounds from Soviet military topographic maps during 2017-2018 archaeological fieldwork using customized mobile GIS (FAIMS Mobile) with undergraduate field school participants as volunteer digitizers.",
+    "timeline": {
+      "project_start": "2008",
+      "digitization_seasons": "2017-2018",
+      "earlier_attempts": "2010 (unsuccessful desktop GIS approach)"
+    },
+    "location": {
+      "study_area": "Yambol region and Kazanlak Valley, Bulgaria",
+      "map_coverage": "over 20,000 sq km of southeast Bulgaria",
+      "maps_used": "Soviet military 1:50,000 topographic maps (1980s)"
+    },
+    "resources": {
+      "software": "FAIMS Mobile (open-source, customized)",
+      "hardware": "Mobile devices (tablets/smartphones)",
+      "volunteers": "Undergraduate students from associated field school",
+      "programmer_cost": "ca. AUD $2,000"
+    },
+    "track_record": {
+      "prior_mounds_catalogued": "773 mounds in Kazanlak Valley (2008-2016), 431 mounds in Yambol region (2008-2016)",
+      "prior_methods": "pedestrian surface survey supported by manual digitization of satellite imagery and maps",
+      "2010_desktop_GIS_attempt": "915 features produced but approach unsuccessful due to volunteer attrition and high support needs"
+    }
+  },
+  "evidence": [
+    {
+      "evidence_id": "E001",
+      "evidence_text": "10,827 mound features digitized from Soviet military topographic maps",
+      "evidence_type": "project output count",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C001",
+        "C002",
+        "C011"
+      ],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "FAIMS Mobile was used to digitise 10,827 mound features from Soviet military topographic maps.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E002",
+      "evidence_text": "241 person-hours total digitization time",
+      "evidence_type": "time measurement",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C001",
+        "C002",
+        "C008"
+      ],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E003",
+      "evidence_text": "57 person-hours from staff",
+      "evidence_type": "time measurement - staff contribution",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C002",
+        "C008"
+      ],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E004",
+      "evidence_text": "184 person-hours from novice volunteers",
+      "evidence_type": "time measurement - volunteer contribution",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C002",
+        "C008",
+        "C012"
+      ],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E005",
+      "evidence_text": "Error rate under 6%",
+      "evidence_type": "accuracy measurement",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C001",
+        "C003"
+      ],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "under",
+        "quantification": "<6%",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E006",
+      "evidence_text": "Dataset was consistent, well-documented, and ready for analysis with a few hours of processing",
+      "evidence_type": "data quality assessment",
+      "evidence_basis": "professional_judgment",
+      "supports_claims": [
+        "C003",
+        "C004"
+      ],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "The resulting dataset was consistent, well-documented, and ready for analysis with a few hours of processing.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E007",
+      "evidence_text": "Digitization undertaken as a secondary activity on a landscape archaeology project focusing on pedestrian feature survey",
+      "evidence_type": "research context description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C011",
+        "C013"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Digitisation was undertaken as a secondary activity on a landscape archaeology project focusing on pedestrian feature survey.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E008",
+      "evidence_text": "Undergraduates in the associated field school digitised data from maps using a system repurposed from other project activities",
+      "evidence_type": "participant and system description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C012",
+        "C013"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Undergraduates in the associated field school digitised data from maps using a system repurposed from other project activities.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E009",
+      "evidence_text": "Approach required little training or supervision of students",
+      "evidence_type": "process efficiency observation",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C012",
+        "C015"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Compared to manual digitisation approaches based on desktop GIS, it required little training or supervision of students, used open-source software and low-cost equipment, yet produced a large, accurate, analysis-ready dataset.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E010",
+      "evidence_text": "Used open-source software and low-cost equipment",
+      "evidence_type": "resource description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C013",
+        "C014"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Compared to manual digitisation approaches based on desktop GIS, it required little training or supervision of students, used open-source software and low-cost equipment, yet produced a large, accurate, analysis-ready dataset.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E011",
+      "evidence_text": "Produced a large, accurate, analysis-ready dataset",
+      "evidence_type": "outcome description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C001",
+        "C003"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Compared to manual digitisation approaches based on desktop GIS, it required little training or supervision of students, used open-source software and low-cost equipment, yet produced a large, accurate, analysis-ready dataset.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E012",
+      "evidence_text": "Soviet military topographic maps at 1:50,000 scale dating to the 1980s",
+      "evidence_type": "data source specification",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C016"
+      ],
+      "location": {
+        "section": "Section 2.1",
+        "page": 4
+      },
+      "verbatim_quote": "The goal of the work was to extract archaeological features from 1:50,000 scale Soviet military topographic maps dating to the 1980s.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E013",
+      "evidence_text": "Each map covers ca 400 sq km",
+      "evidence_type": "map coverage measurement",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C016"
+      ],
+      "location": {
+        "section": "Section 2.1",
+        "page": 4
+      },
+      "verbatim_quote": "Available as georeferenced GeoTIFFs (from http://web.uni-plovdiv.bg/vedrin/index_en.html in 2008), each of these maps covers ca 400 sq km.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E014",
+      "evidence_text": "Mound symbols occurred at high density, averaging about 200 per tile (0.5 per sq km), ranging from about 50 to 400 per tile",
+      "evidence_type": "feature density measurement",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C016"
+      ],
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "quantification": "average 200 per tile, range 50-400",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 2.1",
+        "page": 4
+      },
+      "verbatim_quote": "Such symbols occurred at a high density, averaging about 200 per tile (0.5 per sq km), with counts per tile ranging from about 50 to 400.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E015",
+      "evidence_text": "Mound symbols were moderately obtrusive; some aspects of shape or colour were shared with other map symbols",
+      "evidence_type": "symbol characteristic description",
+      "evidence_basis": "professional_judgment",
+      "supports_claims": [
+        "C016"
+      ],
+      "location": {
+        "section": "Section 2.1",
+        "page": 4
+      },
+      "verbatim_quote": "The mound symbols were moderately obtrusive; some aspects of shape or colour were shared with other map symbols.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E016",
+      "evidence_text": "Records were relatively simple: a point for the feature, a record number, plus ten attributes",
+      "evidence_type": "data structure description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C017"
+      ],
+      "location": {
+        "section": "Section 2.1",
+        "page": 4
+      },
+      "verbatim_quote": "The records we sought to create were relatively simple: a point for the feature, a record number, plus ten attributes.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E017",
+      "evidence_text": "Maps of the Yambol region contained 1,000+ targeted symbols",
+      "evidence_type": "target feature count estimate",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C016"
+      ],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "1,000+",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 2.1",
+        "page": 4
+      },
+      "verbatim_quote": "We knew that the maps of the Yambol region contained 1,000+ of these targeted symbols.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E018",
+      "evidence_text": "Students came from a range of academic backgrounds in Arts and Humanities with most having no training in archaeology, cartography, or digital methods",
+      "evidence_type": "participant characteristics",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C012",
+        "C018"
+      ],
+      "location": {
+        "section": "Section 2.2",
+        "page": 4
+      },
+      "verbatim_quote": "Our students came from a range of academic backgrounds in Arts and Humanities. Most had no training in archaeology, cartography, or digital methods (unlike P\u0151d\u00f6r, 2015 or Can et al., 2021).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E019",
+      "evidence_text": "2010 volunteer effort using ArcGIS: novice volunteers found learning to configure and navigate desktop GIS challenging; many quit and those who continued required ongoing support",
+      "evidence_type": "failed approach outcome",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C019",
+        "C020"
+      ],
+      "location": {
+        "section": "Section 2.2",
+        "page": 4
+      },
+      "verbatim_quote": "Our experience was much like that of other projects: novice volunteers found learning to configure and navigate desktop GIS challenging; many quit and those who continued required ongoing support.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E020",
+      "evidence_text": "In the end, volunteer attrition combined with demands on staff time during the height of fieldwork rendered this approach unsuccessful",
+      "evidence_type": "approach failure explanation",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C019"
+      ],
+      "location": {
+        "section": "Section 2.2",
+        "page": 4
+      },
+      "verbatim_quote": "In the end, volunteer attrition combined with demands on staff time during the height of fieldwork rendered this approach unsuccessful.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E021",
+      "evidence_text": "In 2017, faced with a short field season and little time for student training, focus was on implementing tools that would empower volunteers to digitise maps independently",
+      "evidence_type": "design constraint description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C021",
+        "C022"
+      ],
+      "location": {
+        "section": "Section 2.2",
+        "page": 4
+      },
+      "verbatim_quote": "In 2017, faced with a short field season and little time for student training, we focused on implementing tools that would empower volunteers to digitise maps independently.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E022",
+      "evidence_text": "Approach sought to help novice users begin digitising quickly and then work productively for the duration of each field season with minimal support or frustration",
+      "evidence_type": "design goal description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C021",
+        "C022"
+      ],
+      "location": {
+        "section": "Section 2.2",
+        "page": 4
+      },
+      "verbatim_quote": "Our approach sought to help novice users begin digitising quickly and then work productively for the duration of each field season with minimal support or frustration.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E023",
+      "evidence_text": "Approach stripped GIS functionality to its essentials, focusing on three tasks: layer selection, shape digitisation, and annotation, with validation and automation to improve data quality",
+      "evidence_type": "system design description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C021",
+        "C023"
+      ],
+      "location": {
+        "section": "Section 2.2",
+        "page": 4
+      },
+      "verbatim_quote": "As such, it stripped GIS functionality to its essentials, focusing on three tasks: layer selection, shape digitisation, and annotation, with validation and automation to improve data quality.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E024",
+      "evidence_text": "Geospatial data preparation and management was relegated to staff, while a simple and intuitive UI allowed students to begin digitising after only minutes of training",
+      "evidence_type": "division of labor description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C022",
+        "C023"
+      ],
+      "location": {
+        "section": "Section 2.2",
+        "page": 4
+      },
+      "verbatim_quote": "Geospatial data preparation and management was relegated to staff, while a simple and intuitive UI allowed students to begin digitising after only minutes of training.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E025",
+      "evidence_text": "FAIMS Mobile worked offline",
+      "evidence_type": "platform capability",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C024",
+        "C025"
+      ],
+      "location": {
+        "section": "Section 2.3",
+        "page": 4
+      },
+      "verbatim_quote": "First, FAIMS Mobile worked offline. Our digitisation took place alongside fieldwork, at field bases in rural Bulgaria. Reliable internet connectivity could not be guaranteed under these circumstances; a system that tolerated degraded network connectivity was required.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E026",
+      "evidence_text": "Digitisation took place at field bases in rural Bulgaria where reliable internet connectivity could not be guaranteed",
+      "evidence_type": "fieldwork context",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C024",
+        "C025"
+      ],
+      "location": {
+        "section": "Section 2.3",
+        "page": 4
+      },
+      "verbatim_quote": "Our digitisation took place alongside fieldwork, at field bases in rural Bulgaria. Reliable internet connectivity could not be guaranteed under these circumstances; a system that tolerated degraded network connectivity was required.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E027",
+      "evidence_text": "FAIMS Mobile met functional requirements: production of customised map digitisation system with simple UI and streamlined workflow, while providing essential features",
+      "evidence_type": "system capability assessment",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C023",
+        "C025"
+      ],
+      "location": {
+        "section": "Section 2.3",
+        "page": 4
+      },
+      "verbatim_quote": "Second, this system met the functional requirements we identified for geospatial software. It supported the production of a customised map digitisation system with a simple UI and streamlined workflow, while still providing essential features including layer management, geometry creation and editing, capture and association of structured data, import and use of arbitrary rasters (scanned maps as geotiffs), automated metadata creation, and data validation.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E028",
+      "evidence_text": "Reusing FAIMS Mobile for digitisation offered consistent working environment, reduced administrative load, leveraged experience, and avoided additional hardware or software costs",
+      "evidence_type": "platform reuse benefits",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C013",
+        "C026"
+      ],
+      "location": {
+        "section": "Section 2.3",
+        "page": 4
+      },
+      "verbatim_quote": "Fourth, we were already using FAIMS Mobile for in-field legacy data verification, the project's main activity. Reusing the platform for digitisation offered a consistent working environment for users, reduced administrative load on staff, leveraged our experience with the platform, and avoided any additional hardware or software costs.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E029",
+      "evidence_text": "Student volunteers are accustomed to, and prefer, 'slippy-map', touch-screen interfaces on mobile devices over point-and-click, desktop UI idiom",
+      "evidence_type": "user preference observation",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C027"
+      ],
+      "location": {
+        "section": "Section 2.3",
+        "page": 4
+      },
+      "verbatim_quote": "Fifth, student volunteers are accustomed to, and even prefer, 'slippy-map', touch-screen interfaces on mobile devices over the point-and-click, desktop UI idiom.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E030",
+      "evidence_text": "Use of mobile interface reduced competition for limited number of computers, ESRI licences, and desk space available in the field, and allowed students to use their own devices",
+      "evidence_type": "practical benefit",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C014",
+        "C026"
+      ],
+      "location": {
+        "section": "Section 2.3",
+        "page": "4-5"
+      },
+      "verbatim_quote": "This choice also reduced competition for the limited number of computers, ESRI licences, and desk space available in the field, plus it allowed students to use their own devices (only two of 12 students brought computers, and none brought mice, but all had mobile devices).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E031",
+      "evidence_text": "Only two of 12 students brought computers, and none brought mice, but all had mobile devices",
+      "evidence_type": "equipment availability",
+      "evidence_basis": "observational_record",
+      "supports_claims": [
+        "C027",
+        "C030"
+      ],
+      "location": {
+        "section": "Section 2.3",
+        "page": 5
+      },
+      "verbatim_quote": "This choice also reduced competition for the limited number of computers, ESRI licences, and desk space available in the field, plus it allowed students to use their own devices (only two of 12 students brought computers, and none brought mice, but all had mobile devices).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E032",
+      "evidence_text": "FAIMS Mobile workflow: staff modelled data and workflow, junior developer customised system, staff defined SRS and imported maps, volunteers drew shapes and transcribed attributes, staff exported and accuracy-checked data",
+      "evidence_type": "workflow description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C022",
+        "C028"
+      ],
+      "location": {
+        "section": "Section 2.4",
+        "page": 5
+      },
+      "verbatim_quote": "The stages of FAIMS Mobile implementation (Fig. 3) included: (1) project staff modelled the data and workflow to ensure that the final dataset met research needs, (2) a junior software developer worked with project staff to customise the system, (3) project staff defined a spatial reference system (SRS) and imported preprocessed historical maps, (4) volunteers drew a shape (usually a point) wherever they saw a target symbol and (5) volunteers transcribed attributes from the map, (6) project staff exported data using the FAIMS Mobile server, (7) project staff undertook a targeted accuracy-checking exercise.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E033",
+      "evidence_text": "Approach moved activities requiring technical expertise to phases where specialists could contribute, while simplifying tasks assigned to student volunteers",
+      "evidence_type": "workflow design rationale",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C022",
+        "C028"
+      ],
+      "location": {
+        "section": "Section 2.4",
+        "page": 5
+      },
+      "verbatim_quote": "This approach moved activities requiring technical expertise to phases where specialists could contribute, while simplifying the tasks assigned to student volunteers as much as possible.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E034",
+      "evidence_text": "FAIMS Mobile automated numerous tasks: applied SRS, rendered maps, provided layer management, enforced topology, displayed controlled vocabularies, recorded metadata, maintained history, applied validation, merged data, and exported in common formats",
+      "evidence_type": "system automation capabilities",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C023",
+        "C029"
+      ],
+      "location": {
+        "section": "Section 2.4",
+        "page": 5
+      },
+      "verbatim_quote": "To support this workflow and make work easier for both project staff and participants, FAIMS Mobile automated a number of tasks and provided necessary capabilities. It applied the spatial reference system, rendered maps in the workspace, provided layer management (including a data entry layer), enforced shape topology, displayed pre-defined controlled vocabularies for attribute terms, recorded creation time and author for each record, maintained a history of all changes to data, applied validation to ensure record completeness, merged data from multiple devices, and exported data in common formats.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E035",
+      "evidence_text": "Digitisation interface was as streamlined as possible with map view for geospatial interactions and form view for attributes",
+      "evidence_type": "UI design description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C023"
+      ],
+      "location": {
+        "section": "Section 2.4",
+        "page": 5
+      },
+      "verbatim_quote": "The digitisation interface itself was as streamlined as possible (see Figs. 4 and 5). Volunteers could toggle between a map view for geospatial data interactions and a form view for attribute creation and editing.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E036",
+      "evidence_text": "Volunteers were insulated from friction of setup, layer management, data aggregation, export, and backup; GIS features not needed for digitisation were hidden or eliminated",
+      "evidence_type": "user experience design",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C022",
+        "C023"
+      ],
+      "location": {
+        "section": "Section 2.4",
+        "page": 6
+      },
+      "verbatim_quote": "Since project staff set up the infrastructure and pre-processed and loaded the required maps, volunteers were insulated from the friction of setup, layer management, data aggregation, export, and backup. GIS features not needed for digitisation were hidden or eliminated.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E037",
+      "evidence_text": "Users required almost no training and could focus on the act of digitisation without being distracted by the technology",
+      "evidence_type": "usability outcome",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C012",
+        "C022",
+        "C023"
+      ],
+      "location": {
+        "section": "Section 2.4",
+        "page": 6
+      },
+      "verbatim_quote": "As a result, users required almost no training and could focus on the act of digitisation without being distracted by the technology used to accomplish it (Pascoe et al., 2000).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E038",
+      "evidence_text": "Exported data was consistent and complete, ready for analysis with minimal cleaning, adhering to key elements of FAIR data principles",
+      "evidence_type": "data quality outcome",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C003",
+        "C029"
+      ],
+      "location": {
+        "section": "Section 2.4",
+        "page": 6
+      },
+      "verbatim_quote": "Exported data was consistent and complete, ready for analysis with minimal cleaning. This data adhered to key elements of the FAIR data principles, especially the production of 'rich' and 'plural' metadata at the time of data creation (principles F2, R1.1\u20131.3; GO-FAIR, 2017).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E039",
+      "evidence_text": "Project catalogued time invested by staff and volunteers and compared to features digitised to evaluate the approach",
+      "evidence_type": "evaluation methodology",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C030"
+      ],
+      "location": {
+        "section": "Section 2.5",
+        "page": 6
+      },
+      "verbatim_quote": "At that point, we decided to catalogue inputs (time invested by staff and volunteers) versus outputs (features digitised) as part of a research program to evaluate digital approaches to fieldwork (e.g., Sobotkova et al., 2016).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E040",
+      "evidence_text": "Input measurement sources: student programmer timesheets, record creation timestamps for students, staff time-on-task logs",
+      "evidence_type": "measurement methods",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C030"
+      ],
+      "location": {
+        "section": "Section 2.5",
+        "page": 6
+      },
+      "verbatim_quote": "To measure inputs, we collated the amount of time spent by various participants in the process, including the student programmer who instantiated the customisation, the student volunteers who undertook the digitisation, and project staff who configured the system, supported volunteers, exported data, and checked for errors. Project records provided much of this data (timesheets from the programmer; record creation timestamps for students using the system), while project staff logged time-on-task for activities in journals.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E041",
+      "evidence_text": "2017 customization required 35 hours from undergraduate student programmer plus 4 hours from staff",
+      "evidence_type": "time measurement - system development",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C031",
+        "C032"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "For the first season of use (2017), creating the Map Digitisation customisation of FAIMS Mobile required 35 h from an undergraduate student programmer plus 4 h from staff (Nassif-Haynes et al., 2021).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E042",
+      "evidence_text": "2017 in-field setup required 3 hours from staff",
+      "evidence_type": "time measurement - setup",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C031"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "Setup of the server and configuration of the client devices in the field required 3 h from staff.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E043",
+      "evidence_text": "2017 map preparation required about 1.5 hours",
+      "evidence_type": "time measurement - map prep",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C031"
+      ],
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "Map preparation (tiling, adding pyramids) required about 1.5 h.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E044",
+      "evidence_text": "2017 file compression, upload, and download took 2.5 hours",
+      "evidence_type": "time measurement - file management",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C031"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "Monitoring file compression, upload to the server, and download to devices took an additional 2.5 h.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E045",
+      "evidence_text": "2017 training and supervision of students took no more than half an hour of staff time across the entire season",
+      "evidence_type": "time measurement - training/supervision",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C012",
+        "C033"
+      ],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "no more than",
+        "quantification": "\u22640.5 hours",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "Training and supervision of students took no more than half an hour of staff time across the entire season.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E046",
+      "evidence_text": "2018 validation addition took 1 hour of programmer development time",
+      "evidence_type": "time measurement - enhancement",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C031"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "For the second season, adding additional validation to ensure population of latitude and longitude from GPS (see 'Recoverable data omissions and incomplete records' below) took 1 h of development from the programmer.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E047",
+      "evidence_text": "2018 in-field setup required 1 hour (reusing same equipment and system)",
+      "evidence_type": "time measurement - redeployment",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C031",
+        "C034"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "In-field set-up required an hour (reusing the same equipment and system as the previous year), map preparation 30 min, file preparation and transfer 1.5 h, and student training and supervision another 30 min.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E048",
+      "evidence_text": "2018 map preparation: 30 minutes",
+      "evidence_type": "time measurement - map prep",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C031",
+        "C034"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "In-field set-up required an hour (reusing the same equipment and system as the previous year), map preparation 30 min, file preparation and transfer 1.5 h, and student training and supervision another 30 min.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E049",
+      "evidence_text": "2018 file preparation and transfer: 1.5 hours",
+      "evidence_type": "time measurement - file management",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C031"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "In-field set-up required an hour (reusing the same equipment and system as the previous year), map preparation 30 min, file preparation and transfer 1.5 h, and student training and supervision another 30 min.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E050",
+      "evidence_text": "2018 student training and supervision: 30 minutes",
+      "evidence_type": "time measurement - training/supervision",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C012",
+        "C033"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "In-field set-up required an hour (reusing the same equipment and system as the previous year), map preparation 30 min, file preparation and transfer 1.5 h, and student training and supervision another 30 min.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E051",
+      "evidence_text": "Across both seasons: total 51 hours including 36 hours from programmer and 15 from project staff",
+      "evidence_type": "time measurement - total customization and setup",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C031",
+        "C032"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "Across both seasons, customisation, setup, and supervision took about 51 h, including 36 h from the programmer and 15 from project staff.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E052",
+      "evidence_text": "Initial customization and setup time before fieldwork: 44 hours",
+      "evidence_type": "time measurement - pre-field preparation",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C031"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "Of this time, initial customisation and setup time before fieldwork was 44 h, while the time required during fieldwork to prepare and distribute maps, and then supervise participants, was 7 h.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E053",
+      "evidence_text": "Time required during fieldwork to prepare, distribute maps, and supervise: 7 hours",
+      "evidence_type": "time measurement - in-field staff time",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C033"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "Of this time, initial customisation and setup time before fieldwork was 44 h, while the time required during fieldwork to prepare and distribute maps, and then supervise participants, was 7 h.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E054",
+      "evidence_text": "Post-fieldwork accuracy checking of 4 randomly selected maps (7% of total) required 6 hours of staff time",
+      "evidence_type": "time measurement - quality assurance",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C035"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "Finally, re-examination of four randomly selected maps after fieldwork required 6 h of staff time, including desktop GIS setup, confirmation of feature digitisation, and tabulating errors and error rates.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E055",
+      "evidence_text": "2017: 125.8 person-hours volunteer time concentrated across five rainy days, 8,343 features digitised from 42 maps (~17,000 sq km)",
+      "evidence_type": "digitization output measurement - 2017",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C001",
+        "C036"
+      ],
+      "location": {
+        "section": "Section 3.2",
+        "page": 7
+      },
+      "verbatim_quote": "In 2017, it was used for a total of 125.8 person-hours concentrated across five rainy days, during which time 8,343 features were digitised from 42 Soviet topographic maps (ca. 17,000 sq km).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E056",
+      "evidence_text": "2017 average time per record: 54 seconds (based on device-recorded start/end times, excluding pauses)",
+      "evidence_type": "digitization rate measurement",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C036"
+      ],
+      "location": {
+        "section": "Section 3.2",
+        "page": 7
+      },
+      "verbatim_quote": "The average time to record a point feature was 54 s, based on start and end times of feature creation as recorded by the devices (representing work time excluding pauses between records).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E057",
+      "evidence_text": "2018: 63.6 person-hours volunteer time, 2,484 features recorded from 16 maps (~6,500 sq km), average rate 92 seconds per record",
+      "evidence_type": "digitization output measurement - 2018",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C001",
+        "C037"
+      ],
+      "location": {
+        "section": "Section 3.2",
+        "page": 7
+      },
+      "verbatim_quote": "In 2018, use was more sporadic; participants who stayed at the base for any reason sometimes undertook digitisation. The system was used for 63.6 person-hours, with 2,484 features recorded from 16 maps (ca. 6,500 sq km), an average rate of one record every 92 s.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E058",
+      "evidence_text": "Total: 10,827 point features in 189.4 student-hours (63 seconds per record average)",
+      "evidence_type": "aggregate digitization statistics",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C001",
+        "C002"
+      ],
+      "location": {
+        "section": "Section 3.2",
+        "page": 7
+      },
+      "verbatim_quote": "In total, 10,827 point features, mostly burial and settlement mounds, were recorded in 189.4 student-hours (63 s per record).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E059",
+      "evidence_text": "58 map tiles representing about 23,500 sq km were digitised",
+      "evidence_type": "spatial coverage measurement",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C001"
+      ],
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 3.2",
+        "page": 7
+      },
+      "verbatim_quote": "Fifty-eight map tiles representing about 23,500 sq km were digitised.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E060",
+      "evidence_text": "Dataset contained as many as 119,097 discrete values (10,827 records \u00d7 up to 11 attribute-value pairs)",
+      "evidence_type": "dataset size measurement",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C001"
+      ],
+      "location": {
+        "section": "Section 3.2",
+        "page": 7
+      },
+      "verbatim_quote": "Since a single point record could be associated with 11 attribute-value pairs, the dataset contained as many as 119,097 discrete values (many captured automatically).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E061",
+      "evidence_text": "2017 concentrated digitisation was more productive than 2018 intermittent work, but both seasons yielded large valuable datasets with little supervision",
+      "evidence_type": "comparative productivity observation",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C036",
+        "C037"
+      ],
+      "location": {
+        "section": "Section 3.2",
+        "page": 7
+      },
+      "verbatim_quote": "The concentrated digitisation in 2017 was more productive than the intermittent work of 2018, but both seasons yielded large and valuable datasets utilising time that might otherwise have been lost (e.g., to inclement weather), while requiring little supervision by project staff.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E062",
+      "evidence_text": "2010 desktop GIS effort produced 915 features and required about 5-7 hours of staff training, support, and error-checking over three weeks",
+      "evidence_type": "baseline comparison measurement",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C019",
+        "C038"
+      ],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "about",
+        "quantification": "5-7 hours",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 3.3",
+        "page": 7
+      },
+      "verbatim_quote": "Although we did not maintain detailed volunteer time-on-task records, we know this effort produced a dataset of 915 features and required about 5\u20137 h of staff training, support, and error-checking over a three-week period (based on our field journals).",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E063",
+      "evidence_text": "2010: Most volunteers did not persevere long enough to repay their initial training time; one persistent student accounted for almost all digitised features",
+      "evidence_type": "volunteer attrition pattern",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C019",
+        "C020",
+        "C038"
+      ],
+      "location": {
+        "section": "Section 3.3",
+        "page": 7
+      },
+      "verbatim_quote": "Most volunteers did not persevere with the activity long enough to repay their initial training time. Indeed, one persistent student accounted for almost all the digitised features; without his perseverance, the digitisation effort would have failed entirely.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E064",
+      "evidence_text": "Low volunteer attrition indicated satisfaction with the mobile approach experience",
+      "evidence_type": "satisfaction indicator",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C039"
+      ],
+      "location": {
+        "section": "Section 3.3",
+        "page": 7
+      },
+      "verbatim_quote": "Low volunteer attrition indicated satisfaction with the experience.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E065",
+      "evidence_text": "Performance degraded once devices exceeded about 2,500 records; GPS coordinate extraction went from 3-5 seconds to 30 seconds",
+      "evidence_type": "performance degradation measurement",
+      "evidence_basis": "observational_record",
+      "supports_claims": [
+        "C040"
+      ],
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 3.4",
+        "page": 7
+      },
+      "verbatim_quote": "In use, automated extraction of coordinates from GPS into the Latitude/Longitude and Northing/Easting fields, which took three to 5 s with an empty database, took as long as 30 s once a device exceeded about 2,500 records.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E066",
+      "evidence_text": "Performance degradation was mitigated by exporting all data and instantiating a new empty version; aggregation of multiple exports was trivial",
+      "evidence_type": "mitigation strategy",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C040"
+      ],
+      "location": {
+        "section": "Section 3.4",
+        "page": 7
+      },
+      "verbatim_quote": "Deteriorating performance was mitigated by exporting all data and instantiating a new and empty version of the application. Since data structures were identical, aggregation of multiple exports was trivial.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E067",
+      "evidence_text": "Best digitisers could be both fast and accurate, while poorest were neither fast nor accurate",
+      "evidence_type": "performance correlation pattern",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C041"
+      ],
+      "location": {
+        "section": "Section 3.5",
+        "page": 7
+      },
+      "verbatim_quote": "The best digitisers, furthermore, could be both fast and accurate, while the poorest digitisers were often neither fast nor accurate (see Tables 1\u20133).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E068",
+      "evidence_text": "Total recoverable data omissions across both years: 223 (2.06% of records) - 205 spatial and 18 attribute omissions",
+      "evidence_type": "error measurement - omissions",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C042"
+      ],
+      "location": {
+        "section": "Section 3.5.1",
+        "page": 7
+      },
+      "verbatim_quote": "Recoverable data omissions across both years totaled 223 (2.06% of records), including 205 spatial and 18 attribute omissions.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E069",
+      "evidence_text": "2017: 192 records (2.3%) had empty lat/long fields, 17 (0.2%) missing map symbol specification",
+      "evidence_type": "error measurement - 2017 omissions",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C042"
+      ],
+      "location": {
+        "section": "Section 3.5.1",
+        "page": 7
+      },
+      "verbatim_quote": "Most occurred in 2017 when 192 records (2.3%) had empty latitude and longitude fields and 17 (0.2%) were missing specification of the map symbol.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E070",
+      "evidence_text": "2018: Only 13 spatial errors and 1 attribute omission (0.52%) after validation was added",
+      "evidence_type": "error measurement - 2018 omissions",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C042",
+        "C043"
+      ],
+      "location": {
+        "section": "Section 3.5.1",
+        "page": 7
+      },
+      "verbatim_quote": "Before the 2018 season, we added validation addressing this problem, resulting in only 13 spatial errors and one attribute omission (0.52%).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E071",
+      "evidence_text": "Spatial omissions were recoverable by re-extracting from geodatabase; only 2 data points could not be recovered",
+      "evidence_type": "error recovery outcome",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C042"
+      ],
+      "location": {
+        "section": "Section 3.5.1",
+        "page": 7
+      },
+      "verbatim_quote": "Since the geodatabase preserved geometries, spatial omissions were corrected by re-extracting latitude and longitude; only two data points could not be recovered.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E072",
+      "evidence_text": "Quality assurance review of 4 randomly selected maps (7% of total) found 49 errors from true count of 834 features, a 5.87% error rate",
+      "evidence_type": "error measurement - digitization errors",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C005",
+        "C044"
+      ],
+      "location": {
+        "section": "Section 3.5.2",
+        "page": "7-8"
+      },
+      "verbatim_quote": "Second, a review by project staff of four randomly selected maps (7% of the total) found 49 errors from a true count of 834 features, a 5.87% error rate (see Table 3).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E073",
+      "evidence_text": "Of 49 errors: 42 were false negatives (missed symbols), 6 were double-marked, 1 classification error, 0 false positives",
+      "evidence_type": "error type breakdown",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C044",
+        "C045"
+      ],
+      "location": {
+        "section": "Section 3.5.2",
+        "page": 8
+      },
+      "verbatim_quote": "Forty-two of these errors were false negatives (symbols missed by students). Six were double-marked (Student C digitised a section of a map twice). Students made only one classification error (a similar symbol mistaken for a benchmark), and no outright false positives.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E074",
+      "evidence_text": "Individual error rates ranged from 1.3% to 10.6%",
+      "evidence_type": "error rate range",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C041",
+        "C044"
+      ],
+      "location": {
+        "section": "Section 3.5.2",
+        "page": 8
+      },
+      "verbatim_quote": "Students' individual error rates ranged from 1.3% to 10.6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E075",
+      "evidence_text": "Two fastest digitisers (44 and 45 s per feature) also had lowest error rates (1.3% and 2.9%); two slowest (61 and 73 s) had highest error rates (10.6% and 7.4%)",
+      "evidence_type": "speed-accuracy correlation",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C041",
+        "C067"
+      ],
+      "location": {
+        "section": "Section 3.5.2",
+        "page": 8
+      },
+      "verbatim_quote": "Note that the two fastest digitisers (Students A and B; 44 and 45 s per feature respectively) also had the lowest error rates (1.3 and 2.9%), while the two slowest (Students C and D; 61 and 73 s) had the highest error rates (10.6 and 7.4%).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E076",
+      "evidence_text": "35 of 49 false negatives were from one student (Student C) failing to digitise three contiguous map sections",
+      "evidence_type": "error concentration pattern",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C045"
+      ],
+      "location": {
+        "section": "Section 3.5.2",
+        "page": 8
+      },
+      "verbatim_quote": "Moreover, 35 of the 49 false negatives were the result of Student C failing to digitise three contiguous sections of an assigned map.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E077",
+      "evidence_text": "Excluding Student C's outlier performance would have cut cumulative error rate in half to 2.8%",
+      "evidence_type": "adjusted error rate",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C045"
+      ],
+      "location": {
+        "section": "Section 3.5.2",
+        "page": 8
+      },
+      "verbatim_quote": "These mistakes made his error rate of 10.6% an outlier; excluding Student C would have cut the cumulative error rate in half to 2.8%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E078",
+      "evidence_text": "Error pattern - mostly false negatives and double-marked features from contiguous sections - made errors relatively easy to identify and correct",
+      "evidence_type": "error pattern assessment",
+      "evidence_basis": "professional_judgment",
+      "supports_claims": [
+        "C045"
+      ],
+      "location": {
+        "section": "Section 3.5.2",
+        "page": 8
+      },
+      "verbatim_quote": "Nevertheless, the overall rate of 5.9% exceeded our expectations. Moreover, the pattern of errors - mostly false negatives and double-marked features, mostly from contiguous map sections - made them relatively easy to identify and correct.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E079",
+      "evidence_text": "Project staff with desktop GIS experience could digitize at sustained rate of 60-75 features per staff-hour",
+      "evidence_type": "baseline digitization rate - expert staff",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C046",
+        "C047"
+      ],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "range",
+        "quantification": "60-75 features/hour",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 9
+      },
+      "verbatim_quote": "After brief workspace setup, project staff with desktop GIS experience could digitise at a sustained rate of 60\u201375 features per staff-hour.",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E080",
+      "evidence_text": "57 staff hours could produce 3,420-4,275 features if staff digitized directly using desktop GIS",
+      "evidence_type": "calculated threshold - expert digitization",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C046",
+        "C047"
+      ],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "quantification": "3,420-4,275 features",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 9
+      },
+      "verbatim_quote": "At this rate, the 57 h of staff time devoted to set-up, support, and quality assurance for our crowdsourcing system could have resulted in some 3,420\u20134,275 staff-digitised features (see Table 4).",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E081",
+      "evidence_text": "Based on 2010 rate of 130-180 features per staff-hour supervising volunteers with desktop GIS, 57 hours might produce 7,410-10,260 features",
+      "evidence_type": "calculated threshold - supervised desktop GIS",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C048"
+      ],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "quantification": "7,410-10,260 features",
+        "severity": "moderate"
+      },
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 9
+      },
+      "verbatim_quote": "Had specialist project staff instead trained and supervised volunteers to use desktop GIS for digitisation, based on our 2010 digitisation rate of 130\u2013180 features per staff-hour, 57 h might have produced 7,410\u201310,260 features.",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E082",
+      "evidence_text": "57 staff hours produced 10,827 features using crowdsourcing approach, or about 190 features per staff-hour",
+      "evidence_type": "crowdsourcing efficiency measurement",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C002",
+        "C049"
+      ],
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 9
+      },
+      "verbatim_quote": "By comparison, the 57 h of staff time required for our digitisation approach using a customisation of FAIMS Mobile produced 10,827 features, or about 190 features per staff-hour.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E083",
+      "evidence_text": "Only 21 of 57 staff hours came from project staff, while 36 hours were from outsourced student programmer",
+      "evidence_type": "time allocation breakdown",
+      "evidence_basis": "statistical_output",
+      "supports_claims": [
+        "C032",
+        "C049"
+      ],
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 9
+      },
+      "verbatim_quote": "First, customisation of systems like FAIMS Mobile can be outsourced more easily than other project activities. Only 21 of the 57 h needed to support the system came from project staff, while the other 36 h were completed by a student programmer for a modest cost (ca. AUD $2,000).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E084",
+      "evidence_text": "21 internal staff hours represent digitization rate of over 500 features per staff-hour",
+      "evidence_type": "efficiency calculation - internal staff only",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C049"
+      ],
+      "location": {
+        "section": "Section 4.1.1",
+        "page": "9-10"
+      },
+      "verbatim_quote": "Those 21 internal staff hours represent a digitisation rate of over 500 features per staff-hour.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E085",
+      "evidence_text": "21 internal staff hours would yield only 1,260-1,575 features if staff digitized directly, or 2,730-3,780 if supervising desktop GIS volunteers",
+      "evidence_type": "comparative threshold calculation",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C049"
+      ],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 10
+      },
+      "verbatim_quote": "Twenty-one hours would have yielded just 1,260\u20131,575 features if staff had digitised them directly, or 2,730\u20133,780 had we supervised students using desktop GIS.",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E086",
+      "evidence_text": "In-field support for volunteers was only 7 hours, representing about 1,550 features per in-field staff-hour",
+      "evidence_type": "in-field efficiency measurement",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C050"
+      ],
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 10
+      },
+      "verbatim_quote": "Across two seasons, in-field support for volunteers was only 7 h, representing about 1,550 features per in-field staff-hour.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E087",
+      "evidence_text": "7 in-field staff hours would only allow staff to directly digitize 420-525 features, or supervise digitization of 910-1,260 features",
+      "evidence_type": "in-field threshold comparison",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C050"
+      ],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 10
+      },
+      "verbatim_quote": "Seven hours would only allow staff to directly digitise 420\u2013525 features, or supervise the digitisation of 910-1,260.",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E088",
+      "evidence_text": "Marginal cost for each additional feature: 4.3 seconds of staff support (13 hours in-field support and QA \u00f7 10,827 features)",
+      "evidence_type": "marginal cost calculation",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C051"
+      ],
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 10
+      },
+      "verbatim_quote": "Third, the marginal cost for each additional feature digitised is low. This figure includes in-field support and quality assurance (13 h), and translates to 4.3 s of staff support per additional feature.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E089",
+      "evidence_text": "Preparing and distributing additional maps took only 6 minutes per map (6 hours for 58 maps)",
+      "evidence_type": "map preparation efficiency",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C051"
+      ],
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 10
+      },
+      "verbatim_quote": "Preparing and distributing additional maps took only 6 min per map (6 h for 58 maps).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E090",
+      "evidence_text": "Adding another field season only costs one additional hour of setup time (based on 2018 redeployment)",
+      "evidence_type": "redeployment cost",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": [
+        "C051"
+      ],
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 10
+      },
+      "verbatim_quote": "Even adding another field season only costs one additional hour of setup time (based on our 2018 redeployment).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E091",
+      "evidence_text": "Urban Occupations Project reported 1,250 hours of manual digitization to create training data for ML road classification",
+      "evidence_type": "ML training data requirement - external benchmark",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C052",
+        "C053"
+      ],
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "The ERC-funded Urban Occupations Project (Can, Gerrits, and Kabadayi 2021), however, provides one benchmark for judging when pursuing a ML approach might be worthwhile. This project reported 1,250 h of manual digitisation to create enough training data to classify roads visible in historical maps of the Ottoman Empire.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E092",
+      "evidence_text": "Urban Occupations ML expert spent seven days testing and fine-tuning the model after training data creation",
+      "evidence_type": "ML development time",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C052"
+      ],
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "Using this input, and after additional preprocessing and filtering, an ML expert spent seven days testing and fine tuning the model.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E093",
+      "evidence_text": "Urban Occupations ML approach required minimum of about 1,300 hours preparation time",
+      "evidence_type": "total ML setup time",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C052",
+        "C053"
+      ],
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "This example, which appears to have required a minimum of about 1,300 h of preparation time alone, suggests that ML approaches are worthwhile for large-scale projects that benefit from the consistent symbology and style (as found in British and Ottoman imperial maps).",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E094",
+      "evidence_text": "At crowdsourcing rate of 44.9 features/person-hour, 1,300 hours would yield about 58,400 records",
+      "evidence_type": "ML threshold calculation",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C053"
+      ],
+      "declared_uncertainty": {
+        "type": "approximation",
+        "indicator": "about",
+        "severity": "moderate"
+      },
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "We spent 44 staff hours customising and deploying a streamlined geospatial system in FAIMS Mobile, 184 participant-hours digitising features, seven staff-hours directly supporting that digitisation, and six staff hours checking for errors. These 241 h produced a dataset of 10,827 features, a rate of 44.9 features/person-hour. At that rate, the 1,300 h it took to deploy the ML approach taken by Can, Gerrits, and Kabadayi would yield about 58,400 records",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E095",
+      "evidence_text": "Crowdsourcing most suitable for datasets of 10,000-60,000 records (rounded estimate)",
+      "evidence_type": "efficiency range recommendation",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C004",
+        "C054"
+      ],
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "To summarise in round numbers, a crowdsourcing approach like ours is most suitable for datasets numbering perhaps 10,000\u201360,000 records, assuming similar feature characteristics and data collection requirements (see Table 5).",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E096",
+      "evidence_text": "Below 10,000 records, desktop GIS approaches should be considered",
+      "evidence_type": "threshold recommendation",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C054"
+      ],
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "Below 10,000 records, approaches using desktop GIS should be considered.",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E097",
+      "evidence_text": "Conservative payoff threshold: 3,500-4,500 features vs direct staff digitization; 7,500-10,000 vs supervised volunteers with desktop GIS",
+      "evidence_type": "threshold calculation - conservative",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C047",
+        "C048"
+      ],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "severity": "moderate"
+      },
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "Under the most conservative scenario that considers all invested time, the use of our system pays off between about 3,500\u20134,500 features versus direct digitisation by staff using desktop GIS, and about 7,500\u201310,000 features versus support for volunteers using desktop GIS.",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E098",
+      "evidence_text": "Projects where staff time is at premium may find mobile approach valuable for datasets below 1,000 records",
+      "evidence_type": "qualified threshold recommendation",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C005",
+        "C055"
+      ],
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "Projects where staff time is at a premium, or that operate alongside fieldwork where staff have many competing demands, may find it valuable for smaller datasets (even those below 1,000 records).",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E099",
+      "evidence_text": "Above 60,000 records, ML approaches should be contemplated, but only if project has access to requisite expertise",
+      "evidence_type": "threshold recommendation - ML",
+      "evidence_basis": "derived_calculation",
+      "supports_claims": [
+        "C053",
+        "C054"
+      ],
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "Above 60,000 records, ML approaches should be contemplated, but only if a project has access to the requisite expertise.",
+      "extraction_confidence": "medium"
+    },
+    {
+      "evidence_id": "E100",
+      "evidence_text": "A typical small project in history or archaeology may not be able to dedicate personnel, infrastructure, or attention needed for ML but could deploy collaborative geospatial system",
+      "evidence_type": "feasibility assessment",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C056"
+      ],
+      "location": {
+        "section": "Section 4.3",
+        "page": 10
+      },
+      "verbatim_quote": "Today, a typical project in history or archaeology - often small, under-resourced, and pursuing several research activities - may not be able to dedicate the personnel, infrastructure, or attention needed to incorporate ML successfully, but could deploy a collaborative geospatial system for crowdsourcing map digitisation.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E101",
+      "evidence_text": "A project with digital humanist or similar technologist with Software Carpentry-level skills can customize and operate a system like FAIMS Mobile",
+      "evidence_type": "technical skill requirement",
+      "evidence_basis": "author_assertion",
+      "supports_claims": [
+        "C056"
+      ],
+      "location": {
+        "section": "Section 4.3",
+        "page": 10
+      },
+      "verbatim_quote": "A project with a digital humanist or similar technologist with skills at the level of core Software Carpentry lessons (TheCarpentries, 2023) can customise and operate a generalised platform such as FAIMS Mobile to implement an effective crowdsourcing system.",
+      "extraction_confidence": "high"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C001",
+      "claim_text": "The crowdsourcing approach produced a large (>10,000 features), high-quality (<6% error rate) geospatial dataset from historical maps",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E001",
+        "E002",
+        "E005",
+        "E011"
+      ],
+      "supports_claims": [
+        "C007"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "features digitized and error rate",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "FAIMS Mobile was used to digitise 10,827 mound features from Soviet military topographic maps. This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C002",
+      "claim_text": "Crowdsourcing scales better than direct digitisation by experts",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "comparative",
+      "supported_by": [
+        "E002",
+        "E003",
+        "E004"
+      ],
+      "supports_claims": [
+        "C007",
+        "C010"
+      ],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "Crowdsourcing scales better than direct digitisation by experts, but requires an appropriate platform and the technical skills to adapt it.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C003",
+      "claim_text": "The resulting dataset was consistent, well-documented, and ready for analysis with minimal post-processing",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E005",
+        "E006",
+        "E011"
+      ],
+      "supports_claims": [
+        "C001",
+        "C007"
+      ],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "The resulting dataset was consistent, well-documented, and ready for analysis with a few hours of processing.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C004",
+      "claim_text": "A conservative estimate based on our work suggests our crowdsourcing approach is most efficient for digitisation projects of 10,000\u201360,000 features",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E001",
+        "E002",
+        "E006"
+      ],
+      "supports_claims": [
+        "C007"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "optimal dataset size range",
+        "comparison_type": "absolute"
+      },
+      "declared_uncertainty": {
+        "type": "hedging",
+        "indicator": "conservative estimate",
+        "severity": "moderate"
+      },
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "A conservative estimate based on our work suggests our crowdsourcing approach is most efficient for digitisation projects of 10,000\u201360,000 features, but may offer advantages for datasets as small as a few hundred records.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C005",
+      "claim_text": "The crowdsourcing approach may offer advantages for datasets as small as a few hundred records",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E002",
+        "E006"
+      ],
+      "supports_claims": [
+        "C004",
+        "C007"
+      ],
+      "declared_uncertainty": {
+        "type": "hedging",
+        "indicator": "may offer",
+        "severity": "moderate"
+      },
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "A conservative estimate based on our work suggests our crowdsourcing approach is most efficient for digitisation projects of 10,000\u201360,000 features, but may offer advantages for datasets as small as a few hundred records.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C006",
+      "claim_text": "Systems designed for field data collection, running on mobile devices, can be profitably customised to serve as participatory geospatial data systems accessible to novice volunteers",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E008",
+        "E009",
+        "E010",
+        "E011"
+      ],
+      "supports_claims": [
+        "C007"
+      ],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "Furthermore, it indicates that systems designed for field data collection, running on mobile devices, can be profitably customised to serve as participatory geospatial data systems accessible to novice volunteers.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C007",
+      "claim_text": "The value of this approach lies in the unanticipated success of a minimally resourced digitisation effort",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "evaluative",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E001",
+        "E002",
+        "E006",
+        "E007",
+        "E009",
+        "E010"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "The value of this approach lies in the unanticipated success of a minimally resourced digitisation effort, as well as the resulting dataset's value for archaeological research and cultural heritage management.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C008",
+      "claim_text": "The approach complements Machine Learning (ML) in that it requires less technical expertise, time, and resourcing to undertake",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "comparative",
+      "supported_by": [
+        "E002",
+        "E003"
+      ],
+      "supports_claims": [
+        "C010"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "It complements Machine Learning (ML) and other automated approaches in that it requires less technical expertise, time, and resourcing to undertake.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C009",
+      "claim_text": "The crowdsourcing approach is suitable for projects working with small to mid-sized data sources (100s\u201310,000s of features) that do not warrant the investment needed for successful ML-based data extraction",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E001",
+        "E002"
+      ],
+      "supports_claims": [
+        "C004",
+        "C008",
+        "C010"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "dataset size range",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Such an approach is suitable for projects working with small to mid-sized data sources (100s\u201310,000s of features) that do not warrant the investment needed for successful ML-based data extraction - as well as for exploratory work preceding automated analyses or the production of the training and quality assurance datasets needed for ML.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C010",
+      "claim_text": "The approach shows promise as a low-cost means of extracting locations and other data from historical maps concerning endangered and poorly documented material remains",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "evaluative",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E007",
+        "E009",
+        "E010",
+        "E011"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "As such, it shows promise as a low-cost means of extracting locations and other data from historical maps concerning endangered and poorly documented material remains.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C011",
+      "claim_text": "The approach can be replicated using other mobile GIS systems, scaled up, or applied to other types of archaeological features",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E001",
+        "E007",
+        "E008"
+      ],
+      "supports_claims": [
+        "C006",
+        "C010"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "The approach taken here can be replicated using other mobile GIS systems, scaled up, or applied to other types of archaeological features.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C012",
+      "claim_text": "The crowdsourcing approach required little training or supervision of students compared to desktop GIS approaches",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "comparative",
+      "supported_by": [
+        "E004",
+        "E008",
+        "E009"
+      ],
+      "supports_claims": [
+        "C002",
+        "C007",
+        "C015"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Compared to manual digitisation approaches based on desktop GIS, it required little training or supervision of students, used open-source software and low-cost equipment, yet produced a large, accurate, analysis-ready dataset.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C013",
+      "claim_text": "The digitization was undertaken as a secondary activity using a system repurposed from other project activities",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E007",
+        "E008",
+        "E010"
+      ],
+      "supports_claims": [
+        "C007"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Digitisation was undertaken as a secondary activity on a landscape archaeology project focusing on pedestrian feature survey. Undergraduates in the associated field school digitised data from maps using a system repurposed from other project activities.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C014",
+      "claim_text": "The approach used open-source software and low-cost equipment",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E010"
+      ],
+      "supports_claims": [
+        "C010",
+        "C013"
+      ],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Compared to manual digitisation approaches based on desktop GIS, it required little training or supervision of students, used open-source software and low-cost equipment, yet produced a large, accurate, analysis-ready dataset.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C015",
+      "claim_text": "Automatic extraction using Machine Learning (ML) requires extensive preparation and expertise",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supports_claims": [
+        "C002",
+        "C008"
+      ],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "Automatic extraction using Machine Learning (ML) requires extensive preparation and expertise.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C016",
+      "claim_text": "The target archaeological features (burial/settlement mounds) occurred at high density (~200 per map tile) in moderately obtrusive symbols on Soviet 1:50,000 topographic maps",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E012",
+        "E013",
+        "E014",
+        "E015",
+        "E017"
+      ],
+      "supports_claims": [
+        "C001",
+        "C017"
+      ],
+      "location": {
+        "section": "Section 2.1",
+        "page": 4
+      },
+      "verbatim_quote": "Such symbols occurred at a high density, averaging about 200 per tile (0.5 per sq km), with counts per tile ranging from about 50 to 400. The mound symbols were moderately obtrusive; some aspects of shape or colour were shared with other map symbols.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C017",
+      "claim_text": "The data structure required was relatively simple (point + 10 attributes), making the digitization task straightforward",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "primary_function": "methodological_justification",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E016"
+      ],
+      "supports_claims": [
+        "C021"
+      ],
+      "location": {
+        "section": "Section 2.1",
+        "page": 4
+      },
+      "verbatim_quote": "The records we sought to create were relatively simple: a point for the feature, a record number, plus ten attributes.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C018",
+      "claim_text": "The volunteer digitizers were novices with no prior training in archaeology, cartography, or digital methods",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E018"
+      ],
+      "supports_claims": [
+        "C012",
+        "C022"
+      ],
+      "location": {
+        "section": "Section 2.2",
+        "page": 4
+      },
+      "verbatim_quote": "Our students came from a range of academic backgrounds in Arts and Humanities. Most had no training in archaeology, cartography, or digital methods (unlike P\u0151d\u00f6r, 2015 or Can et al., 2021).",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C019",
+      "claim_text": "A 2010 attempt using desktop GIS (ArcGIS) with volunteers was unsuccessful due to volunteer attrition and high demands on staff time",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E019",
+        "E020"
+      ],
+      "supports_claims": [
+        "C002",
+        "C012",
+        "C020"
+      ],
+      "location": {
+        "section": "Section 2.2",
+        "page": 4
+      },
+      "verbatim_quote": "In the end, volunteer attrition combined with demands on staff time during the height of fieldwork rendered this approach unsuccessful.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C020",
+      "claim_text": "Novice volunteers found learning to configure and navigate desktop GIS challenging, with many quitting and continued volunteers requiring ongoing support",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E019"
+      ],
+      "supports_claims": [
+        "C019",
+        "C021"
+      ],
+      "location": {
+        "section": "Section 2.2",
+        "page": 4
+      },
+      "verbatim_quote": "Our experience was much like that of other projects: novice volunteers found learning to configure and navigate desktop GIS challenging; many quit and those who continued required ongoing support.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C021",
+      "claim_text": "The 2017 approach was designed to strip GIS functionality to essentials and enable volunteers to work independently with minimal training",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "primary_function": "methodological_justification",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E021",
+        "E022",
+        "E023"
+      ],
+      "supports_claims": [
+        "C006",
+        "C012",
+        "C022"
+      ],
+      "location": {
+        "section": "Section 2.2",
+        "page": 4
+      },
+      "verbatim_quote": "Our approach sought to help novice users begin digitising quickly and then work productively for the duration of each field season with minimal support or frustration. As such, it stripped GIS functionality to its essentials, focusing on three tasks: layer selection, shape digitisation, and annotation, with validation and automation to improve data quality.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C022",
+      "claim_text": "The system design separated complex technical tasks (managed by staff) from simple digitization tasks (performed by volunteers with minimal training)",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "primary_function": "methodological_justification",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E021",
+        "E022",
+        "E024",
+        "E032",
+        "E033",
+        "E036",
+        "E037"
+      ],
+      "supports_claims": [
+        "C012",
+        "C021",
+        "C023"
+      ],
+      "location": {
+        "section": "Section 2.2, 2.4",
+        "page": "4-5"
+      },
+      "verbatim_quote": "Geospatial data preparation and management was relegated to staff, while a simple and intuitive UI allowed students to begin digitising after only minutes of training.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C023",
+      "claim_text": "The streamlined, customized interface with automation and validation enabled volunteers to digitize accurately without being distracted by technology",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E023",
+        "E027",
+        "E034",
+        "E035",
+        "E036",
+        "E037"
+      ],
+      "supports_claims": [
+        "C003",
+        "C006",
+        "C012",
+        "C021"
+      ],
+      "location": {
+        "section": "Section 2.2, 2.4",
+        "page": "4-6"
+      },
+      "verbatim_quote": "As a result, users required almost no training and could focus on the act of digitisation without being distracted by the technology used to accomplish it (Pascoe et al., 2000).",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C024",
+      "claim_text": "Offline capability was essential because digitization took place in rural Bulgaria where reliable internet connectivity could not be guaranteed",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "primary_function": "methodological_justification",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E025",
+        "E026"
+      ],
+      "supports_claims": [
+        "C025"
+      ],
+      "location": {
+        "section": "Section 2.3",
+        "page": 4
+      },
+      "verbatim_quote": "Our digitisation took place alongside fieldwork, at field bases in rural Bulgaria. Reliable internet connectivity could not be guaranteed under these circumstances; a system that tolerated degraded network connectivity was required.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C025",
+      "claim_text": "FAIMS Mobile was chosen because it worked offline and met the functional requirements for customized map digitization",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E025",
+        "E026",
+        "E027"
+      ],
+      "supports_claims": [
+        "C006",
+        "C013"
+      ],
+      "location": {
+        "section": "Section 2.3",
+        "page": 4
+      },
+      "verbatim_quote": "First, FAIMS Mobile worked offline. Our digitisation took place alongside fieldwork, at field bases in rural Bulgaria. Reliable internet connectivity could not be guaranteed under these circumstances; a system that tolerated degraded network connectivity was required. Second, this system met the functional requirements we identified for geospatial software.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C026",
+      "claim_text": "Reusing FAIMS Mobile (already employed for field verification) reduced costs, administrative load, and provided consistent environment for users",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E028",
+        "E030"
+      ],
+      "supports_claims": [
+        "C013",
+        "C014"
+      ],
+      "location": {
+        "section": "Section 2.3",
+        "page": "4-5"
+      },
+      "verbatim_quote": "Reusing the platform for digitisation offered a consistent working environment for users, reduced administrative load on staff, leveraged our experience with the platform, and avoided any additional hardware or software costs.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C027",
+      "claim_text": "Student volunteers prefer mobile 'slippy-map' touch-screen interfaces over desktop point-and-click interfaces, making mobile approach more likely to encourage participation",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E029",
+        "E031"
+      ],
+      "supports_claims": [
+        "C006",
+        "C012"
+      ],
+      "location": {
+        "section": "Section 2.3",
+        "page": "4-5"
+      },
+      "verbatim_quote": "Fifth, student volunteers are accustomed to, and even prefer, 'slippy-map', touch-screen interfaces on mobile devices over the point-and-click, desktop UI idiom. We believed that the use of the former would make it easier for students to learn the system, and more likely to stick with digitisation.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C028",
+      "claim_text": "The workflow design moved technical expertise requirements to specialist phases while simplifying volunteer tasks",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "primary_function": "methodological_justification",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E032",
+        "E033"
+      ],
+      "supports_claims": [
+        "C022"
+      ],
+      "location": {
+        "section": "Section 2.4",
+        "page": 5
+      },
+      "verbatim_quote": "This approach moved activities requiring technical expertise to phases where specialists could contribute, while simplifying the tasks assigned to student volunteers as much as possible.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C029",
+      "claim_text": "FAIMS Mobile's automation and validation features produced consistent, FAIR-compliant data ready for analysis with minimal post-processing",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E034",
+        "E038"
+      ],
+      "supports_claims": [
+        "C003",
+        "C023"
+      ],
+      "location": {
+        "section": "Section 2.4",
+        "page": "5-6"
+      },
+      "verbatim_quote": "Exported data was consistent and complete, ready for analysis with minimal cleaning. This data adhered to key elements of the FAIR data principles, especially the production of 'rich' and 'plural' metadata at the time of data creation (principles F2, R1.1\u20131.3; GO-FAIR, 2017).",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C030",
+      "claim_text": "The project systematically measured time inputs from all participants (programmer, staff, volunteers) and compared to digitization outputs to evaluate the approach",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "primary_function": "methodological_justification",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E031",
+        "E039",
+        "E040"
+      ],
+      "supports_claims": [
+        "C002",
+        "C004"
+      ],
+      "location": {
+        "section": "Section 2.5",
+        "page": 6
+      },
+      "verbatim_quote": "To measure inputs, we collated the amount of time spent by various participants in the process, including the student programmer who instantiated the customisation, the student volunteers who undertook the digitisation, and project staff who configured the system, supported volunteers, exported data, and checked for errors.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C031",
+      "claim_text": "Total customization, setup, and supervision across both seasons required 51 hours (36 hours programmer, 15 hours staff), with 44 hours before fieldwork and only 7 hours during fieldwork",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E041",
+        "E042",
+        "E043",
+        "E044",
+        "E046",
+        "E047",
+        "E048",
+        "E049",
+        "E051",
+        "E052",
+        "E053"
+      ],
+      "supports_claims": [
+        "C002",
+        "C032",
+        "C033"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "staff time investment",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "Across both seasons, customisation, setup, and supervision took about 51 h, including 36 h from the programmer and 15 from project staff. Of this time, initial customisation and setup time before fieldwork was 44 h, while the time required during fieldwork to prepare and distribute maps, and then supervise participants, was 7 h.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C032",
+      "claim_text": "Customization could be outsourced to junior programmer for modest cost (ca. AUD $2,000), requiring only limited staff time (4-5 hours) for direction",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E041",
+        "E051"
+      ],
+      "supports_claims": [
+        "C010",
+        "C014"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "For the first season of use (2017), creating the Map Digitisation customisation of FAIMS Mobile required 35 h from an undergraduate student programmer plus 4 h from staff (Nassif-Haynes et al., 2021).",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C033",
+      "claim_text": "Training and supervision of volunteers required minimal staff time (0.5 hours in 2017, 0.5 hours in 2018) compared to desktop GIS approaches",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "comparative",
+      "supported_by": [
+        "E045",
+        "E050",
+        "E053"
+      ],
+      "supports_claims": [
+        "C002",
+        "C012",
+        "C038"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "training/supervision time",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "Training and supervision of students took no more than half an hour of staff time across the entire season.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C034",
+      "claim_text": "Redeployment in year 2 was much faster (1 hour setup vs 3 hours year 1; 0.5 hours map prep vs 1.5 hours year 1), demonstrating scalability",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "comparative",
+      "supported_by": [
+        "E042",
+        "E043",
+        "E047",
+        "E048"
+      ],
+      "supports_claims": [
+        "C002"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "redeployment time reduction",
+        "comparison_type": "percentage_change"
+      },
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "In-field set-up required an hour (reusing the same equipment and system as the previous year), map preparation 30 min, file preparation and transfer 1.5 h, and student training and supervision another 30 min.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C035",
+      "claim_text": "Quality assurance through accuracy checking was efficient (6 staff hours for 7% sample) and faster than digitizing from scratch",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E054"
+      ],
+      "supports_claims": [
+        "C002"
+      ],
+      "location": {
+        "section": "Section 3.1",
+        "page": 7
+      },
+      "verbatim_quote": "Finally, re-examination of four randomly selected maps after fieldwork required 6 h of staff time, including desktop GIS setup, confirmation of feature digitisation, and tabulating errors and error rates.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C036",
+      "claim_text": "2017 concentrated digitization (5 rainy days) was highly productive: 125.8 person-hours produced 8,343 features from 42 maps at 54 seconds per record",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E055",
+        "E056",
+        "E061"
+      ],
+      "supports_claims": [
+        "C001",
+        "C037"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "digitization rate and output",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 3.2",
+        "page": 7
+      },
+      "verbatim_quote": "In 2017, it was used for a total of 125.8 person-hours concentrated across five rainy days, during which time 8,343 features were digitised from 42 Soviet topographic maps (ca. 17,000 sq km). The average time to record a point feature was 54 s, based on start and end times of feature creation as recorded by the devices (representing work time excluding pauses between records).",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C037",
+      "claim_text": "2018 sporadic digitization was less efficient (92 seconds per record vs 54 seconds in 2017) but still productive, yielding 2,484 features with minimal supervision",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E057",
+        "E061"
+      ],
+      "supports_claims": [
+        "C001",
+        "C036"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "digitization rate and output",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 3.2",
+        "page": 7
+      },
+      "verbatim_quote": "In 2018, use was more sporadic; participants who stayed at the base for any reason sometimes undertook digitisation. The system was used for 63.6 person-hours, with 2,484 features recorded from 16 maps (ca. 6,500 sq km), an average rate of one record every 92 s.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C038",
+      "claim_text": "The mobile crowdsourcing approach met fundamental usability requirements that desktop GIS failed to meet, resulting in low volunteer attrition and high productivity",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E062",
+        "E063",
+        "E064"
+      ],
+      "supports_claims": [
+        "C002",
+        "C006",
+        "C012"
+      ],
+      "location": {
+        "section": "Section 3.3",
+        "page": 7
+      },
+      "verbatim_quote": "By contrast, our customised application met fundamental usability requirements (e.g., Nielsen, 2012), both due to careful design of the customisation itself, and the underlying platform's implementation of Google's Material Design guidelines.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C039",
+      "claim_text": "Low volunteer attrition indicated satisfaction with the mobile digitization experience",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "evaluative",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E064"
+      ],
+      "supports_claims": [
+        "C027",
+        "C038"
+      ],
+      "location": {
+        "section": "Section 3.3",
+        "page": 7
+      },
+      "verbatim_quote": "Low volunteer attrition indicated satisfaction with the experience.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C040",
+      "claim_text": "Application performance degraded after ~2,500 records per device but was easily mitigated by exporting data and starting fresh",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "limitation_acknowledgment",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E065",
+        "E066"
+      ],
+      "location": {
+        "section": "Section 3.4",
+        "page": 7
+      },
+      "verbatim_quote": "In use, automated extraction of coordinates from GPS into the Latitude/Longitude and Northing/Easting fields, which took three to 5 s with an empty database, took as long as 30 s once a device exceeded about 2,500 records. Deteriorating performance was mitigated by exporting all data and instantiating a new and empty version of the application.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C041",
+      "claim_text": "The best digitizers were both fast and accurate, while the poorest were neither fast nor accurate",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "correlational",
+      "supported_by": [
+        "E067",
+        "E074",
+        "E075"
+      ],
+      "supports_claims": [
+        "C044"
+      ],
+      "location": {
+        "section": "Section 3.5",
+        "page": "7-8"
+      },
+      "verbatim_quote": "The best digitisers, furthermore, could be both fast and accurate, while the poorest digitisers were often neither fast nor accurate (see Tables 1\u20133).",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C042",
+      "claim_text": "Recoverable data omissions were low (2.06% overall) and dramatically reduced in year 2 (0.52%) after validation was added",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E068",
+        "E069",
+        "E070",
+        "E071"
+      ],
+      "supports_claims": [
+        "C003",
+        "C043"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "omission rate",
+        "comparison_type": "percentage_change"
+      },
+      "location": {
+        "section": "Section 3.5.1",
+        "page": 7
+      },
+      "verbatim_quote": "Recoverable data omissions across both years totaled 223 (2.06% of records), including 205 spatial and 18 attribute omissions. Most occurred in 2017 when 192 records (2.3%) had empty latitude and longitude fields and 17 (0.2%) were missing specification of the map symbol. Before the 2018 season, we added validation addressing this problem, resulting in only 13 spatial errors and one attribute omission (0.52%).",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C043",
+      "claim_text": "Addition of validation between seasons successfully reduced data omissions by 77% (from 2.3% to 0.52%)",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E070"
+      ],
+      "supports_claims": [
+        "C023",
+        "C042"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "omission rate reduction",
+        "comparison_type": "percentage_change"
+      },
+      "location": {
+        "section": "Section 3.5.1",
+        "page": 7
+      },
+      "verbatim_quote": "Before the 2018 season, we added validation addressing this problem, resulting in only 13 spatial errors and one attribute omission (0.52%).",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C044",
+      "claim_text": "Overall digitization accuracy was high: 5.87% error rate in quality assurance sample (7% of maps), with individual rates ranging from 1.3% to 10.6%",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": [
+        "E005",
+        "E072",
+        "E073",
+        "E074"
+      ],
+      "supports_claims": [
+        "C001",
+        "C003",
+        "C045"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "error rate",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 3.5.2",
+        "page": "7-8"
+      },
+      "verbatim_quote": "Second, a review by project staff of four randomly selected maps (7% of the total) found 49 errors from a true count of 834 features, a 5.87% error rate (see Table 3).",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C045",
+      "claim_text": "Error patterns were predictable and easily correctable: mostly false negatives (missed features) and double-marking from contiguous sections, with one outlier volunteer accounting for most errors",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E073",
+        "E076",
+        "E077",
+        "E078"
+      ],
+      "supports_claims": [
+        "C003",
+        "C044"
+      ],
+      "location": {
+        "section": "Section 3.5.2",
+        "page": 8
+      },
+      "verbatim_quote": "Moreover, the pattern of errors - mostly false negatives and double-marked features, mostly from contiguous map sections - made them relatively easy to identify and correct. Simple expedients, such as assigning multiple students to digitise the same map tiles independently or assigning one student to review work by another, would likely eliminate most errors.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C046",
+      "claim_text": "Direct digitization by expert staff using desktop GIS would require 57 staff hours to produce 3,420-4,275 features, making it suitable only for smaller datasets",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E079",
+        "E080"
+      ],
+      "supports_claims": [
+        "C047",
+        "C054"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "efficiency threshold",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 9
+      },
+      "verbatim_quote": "At this rate, the 57 h of staff time devoted to set-up, support, and quality assurance for our crowdsourcing system could have resulted in some 3,420\u20134,275 staff-digitised features (see Table 4). Such a payoff threshold suggests that digitisation by project staff will be suitable only for smaller datasets.",
+      "extraction_confidence": "medium"
+    },
+    {
+      "claim_id": "C047",
+      "claim_text": "The crowdsourcing approach becomes worthwhile at around 3,500-4,500 features compared to direct staff digitization using desktop GIS",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E080",
+        "E082",
+        "E097"
+      ],
+      "supports_claims": [
+        "C004",
+        "C054"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "payoff threshold",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 4.1.1, 4.1.2",
+        "page": "9-10"
+      },
+      "verbatim_quote": "Under the most conservative scenario that considers all invested time, the use of our system pays off between about 3,500\u20134,500 features versus direct digitisation by staff using desktop GIS",
+      "extraction_confidence": "medium"
+    },
+    {
+      "claim_id": "C048",
+      "claim_text": "The crowdsourcing approach becomes worthwhile at around 7,500-10,000 features compared to supervising volunteers using desktop GIS",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E081",
+        "E082",
+        "E097"
+      ],
+      "supports_claims": [
+        "C004",
+        "C054"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "payoff threshold",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 4.1.1, 4.1.2",
+        "page": "9-10"
+      },
+      "verbatim_quote": "Under the most conservative scenario that considers all invested time, the use of our system pays off between about...7,500\u201310,000 features versus support for volunteers using desktop GIS.",
+      "extraction_confidence": "medium"
+    },
+    {
+      "claim_id": "C049",
+      "claim_text": "When accounting only for internal staff time (21 hours), the approach is much more efficient (>500 features per staff-hour) than alternatives",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E083",
+        "E084",
+        "E085"
+      ],
+      "supports_claims": [
+        "C002",
+        "C032"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "efficiency ratio",
+        "comparison_type": "ratio"
+      },
+      "location": {
+        "section": "Section 4.1.1",
+        "page": "9-10"
+      },
+      "verbatim_quote": "Only 21 of the 57 h needed to support the system came from project staff, while the other 36 h were completed by a student programmer for a modest cost (ca. AUD $2,000). Those 21 internal staff hours represent a digitisation rate of over 500 features per staff-hour.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C050",
+      "claim_text": "In-field staff time was minimal (7 hours) and highly efficient (~1,550 features per hour), making the approach particularly valuable during fieldwork when staff time is scarce",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E053",
+        "E086",
+        "E087"
+      ],
+      "supports_claims": [
+        "C002",
+        "C033",
+        "C055"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "in-field efficiency",
+        "comparison_type": "ratio"
+      },
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 10
+      },
+      "verbatim_quote": "Second, given competing responsibilities, staff time during the field season was scarce and valuable. We could afford to invest in customisation and setup beforehand, and error checking after, if it reduced staff obligations during fieldwork. Across two seasons, in-field support for volunteers was only 7 h, representing about 1,550 features per in-field staff-hour.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C051",
+      "claim_text": "The marginal cost per additional feature is low (4.3 seconds staff time), making the approach increasingly valuable as dataset size grows",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E088",
+        "E089",
+        "E090"
+      ],
+      "supports_claims": [
+        "C002"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "marginal cost",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 4.1.1",
+        "page": 10
+      },
+      "verbatim_quote": "Third, the marginal cost for each additional feature digitised is low. This figure includes in-field support and quality assurance (13 h), and translates to 4.3 s of staff support per additional feature. Thus, the larger the dataset, the more value is extracted from the setup and deployment time.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C052",
+      "claim_text": "Machine learning approaches require minimum ~1,300 hours investment for training data creation and model development",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E091",
+        "E092",
+        "E093"
+      ],
+      "supports_claims": [
+        "C008",
+        "C053"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "ML setup time",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "This example, which appears to have required a minimum of about 1,300 h of preparation time alone, suggests that ML approaches are worthwhile for large-scale projects that benefit from the consistent symbology and style (as found in British and Ottoman imperial maps).",
+      "extraction_confidence": "medium"
+    },
+    {
+      "claim_id": "C053",
+      "claim_text": "Machine learning becomes worthwhile above ~60,000 records, making crowdsourcing most suitable for the 10,000-60,000 record range",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E091",
+        "E093",
+        "E094",
+        "E099"
+      ],
+      "supports_claims": [
+        "C004",
+        "C008",
+        "C054"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "ML threshold",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "Above 60,000 records, ML approaches should be contemplated, but only if a project has access to the requisite expertise.",
+      "extraction_confidence": "medium"
+    },
+    {
+      "claim_id": "C054",
+      "claim_text": "Conservative efficiency estimates suggest: crowdsourcing is most suitable for 10,000-60,000 features; desktop GIS below 10,000; ML above 60,000",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E095",
+        "E096",
+        "E097",
+        "E099"
+      ],
+      "supports_claims": [
+        "C004",
+        "C007"
+      ],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "optimal range by approach",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "To summarise in round numbers, a crowdsourcing approach like ours is most suitable for datasets numbering perhaps 10,000\u201360,000 records, assuming similar feature characteristics and data collection requirements (see Table 5). Below 10,000 records, approaches using desktop GIS should be considered. Above 60,000 records, ML approaches should be contemplated",
+      "extraction_confidence": "medium"
+    },
+    {
+      "claim_id": "C055",
+      "claim_text": "For projects where staff time is at premium or operating during fieldwork, the mobile crowdsourcing approach may be valuable even for datasets below 1,000 records",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E098"
+      ],
+      "supports_claims": [
+        "C005",
+        "C050"
+      ],
+      "location": {
+        "section": "Section 4.1.2",
+        "page": 10
+      },
+      "verbatim_quote": "Projects where staff time is at a premium, or that operate alongside fieldwork where staff have many competing demands, may find it valuable for smaller datasets (even those below 1,000 records).",
+      "extraction_confidence": "medium"
+    },
+    {
+      "claim_id": "C056",
+      "claim_text": "Typical small HASS projects can feasibly deploy collaborative geospatial systems with Software Carpentry-level technical skills, but may not have resources for ML",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "evaluative",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E100",
+        "E101"
+      ],
+      "supports_claims": [
+        "C008",
+        "C010"
+      ],
+      "location": {
+        "section": "Section 4.3",
+        "page": 10
+      },
+      "verbatim_quote": "Today, a typical project in history or archaeology - often small, under-resourced, and pursuing several research activities - may not be able to dedicate the personnel, infrastructure, or attention needed to incorporate ML successfully, but could deploy a collaborative geospatial system for crowdsourcing map digitisation. A project with a digital humanist or similar technologist with skills at the level of core Software Carpentry lessons (TheCarpentries, 2023) can customise and operate a generalised platform such as FAIMS Mobile to implement an effective crowdsourcing system.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C057",
+      "claim_text": "Crowdsourcing and ML approaches are complementary rather than exclusive: crowdsourcing can produce training datasets and error-checking datasets for ML",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supports_claims": [
+        "C008",
+        "C009"
+      ],
+      "location": {
+        "section": "Section 4.2",
+        "page": 10
+      },
+      "verbatim_quote": "Finally, since training a model requires a manually produced dataset and a degree of manual error-checking, a combination of ML and crowdsourcing approaches might serve even large-scale projects. A dataset big enough to justify ML will likely need a training dataset big enough to warrant crowdsourcing, especially if the features or background are variable. Once the crowdsourcing platform has been built, moreover, it can be used to produce additional datasets for error-checking to confirm the accuracy of the ML results. The approaches are not exclusive, therefore, but complementary.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C058",
+      "claim_text": "The volunteer-based crowdsourcing effort proved unexpectedly successful for a minimally resourced, secondary activity producing >10,000 high-quality features",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "evaluative",
+      "claim_nature": "evaluative",
+      "supported_by": [
+        "E001",
+        "E002",
+        "E005",
+        "E058",
+        "E061"
+      ],
+      "location": {
+        "section": "Section 4",
+        "page": 9
+      },
+      "verbatim_quote": "Our crowdsourced digitisation effort involving novice volunteers using an adapted mobile application for data capture proved unexpectedly successful. It was only an auxiliary activity undertaken on a time-available basis, intentionally secondary to pedestrian survey. While volunteer-based geographic digitisation projects often enjoy high productivity at low-cost (Goodchild, 2007; Simon et al., 2015), they may face data-quality problems and require continuous access to a network (P\u0151d\u00f6r, 2015; Budig et al., 2016; Lin et al., 2014). Our approach was done under field conditions, with inexpensive equipment and limited internet connectivity, yet produced a large (>10,000 features), high-quality (<6% error rate) dataset while placing reasonable demands on both volunteers and staff compared to other approaches.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C059",
+      "claim_text": "More projects need to track and publish time data (expert, volunteer, training, support, QA) plus digitization characteristics to refine and generalize efficiency recommendations",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "future_direction",
+      "claim_nature": "evaluative",
+      "location": {
+        "section": "Section 5 (Conclusion)",
+        "page": 11
+      },
+      "verbatim_quote": "More projects - whether they use manual or automated approaches - need to track and publish the expert and volunteer time required for setup, training, support, and quality assurance related to map digitisation, as well as digitisation speed, error rates and types, the characteristics of the features being digitised, and the complexity of information extracted. More such data could refine and generalise the recommendations proposed here.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C060",
+      "claim_text": "The approach is readily transferable to other mobile GIS systems and map corpora",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supports_claims": [
+        "C006",
+        "C011"
+      ],
+      "location": {
+        "section": "Section 5 (Conclusion)",
+        "page": 11
+      },
+      "verbatim_quote": "This approach is readily transferable to other mobile GIS systems and map corpora, but our experience provides only a single data point for assessing the applicability of various digitisation approaches to historical maps.",
+      "extraction_confidence": "high"
+    }
+  ],
+  "implicit_arguments": [],
+  "research_designs": [],
+  "methods": [],
+  "protocols": [],
+  "extraction_notes": {
+    "pass": 1,
+    "section_extracted": "Complete paper - all sections",
+    "extraction_strategy": "Liberal extraction with over-capture - Pass 1, section-by-section approach",
+    "sections_completed": [
+      "Abstract + Introduction",
+      "Section 2 (Approach)",
+      "Section 3 (Results)",
+      "Sections 4-5 (Discussion + Conclusion)"
+    ],
+    "pass_1_complete": true,
+    "total_evidence_items": 101,
+    "total_claims": 60,
+    "known_uncertainties": [
+      "Error rate stated as 'under 6%' - exact figure is 5.87% from QA sample",
+      "'Few hours of processing' is approximate",
+      "Conservative estimate methodology involves assumptions about feature characteristics and similarity",
+      "ML comparison based on single external benchmark (Urban Occupations Project)",
+      "Efficiency thresholds assume similar feature density and complexity"
+    ]
+  }
+}

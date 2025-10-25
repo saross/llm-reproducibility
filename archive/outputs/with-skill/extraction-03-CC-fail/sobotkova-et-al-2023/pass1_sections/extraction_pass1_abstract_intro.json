@@ -1,0 +1,474 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "schema_version": "2.5",
+  "extraction_timestamp": "2025-10-24T01:00:00Z",
+  "extractor": "Claude Sonnet 4.5",
+
+  "project_metadata": {
+    "paper_title": "Creating large, high-quality geospatial datasets from historical maps using novice volunteers",
+    "authors": ["Adela Sobotkova", "Shawn A. Ross", "Christian Nassif-Haynes", "Brian Ballsun-Stanton"],
+    "publication_year": 2023,
+    "journal": "Applied Geography",
+    "doi": "10.1016/j.apgeog.2023.102967",
+    "paper_type": "research article - methodological case study",
+    "discipline": "landscape archaeology / digital humanities / GIS / crowdsourcing",
+    "research_context": "The Tundzha Regional Archaeological Project (TRAP) in Bulgaria digitized burial mounds from Soviet military topographic maps during 2017-2018 archaeological fieldwork using customized mobile GIS (FAIMS Mobile) with undergraduate field school participants as volunteer digitizers.",
+    "timeline": {
+      "project_start": "2008",
+      "digitization_seasons": "2017-2018",
+      "earlier_attempts": "2010 (unsuccessful desktop GIS approach)"
+    },
+    "location": {
+      "study_area": "Yambol region and Kazanlak Valley, Bulgaria",
+      "map_coverage": "over 20,000 sq km of southeast Bulgaria",
+      "maps_used": "Soviet military 1:50,000 topographic maps (1980s)"
+    },
+    "resources": {
+      "software": "FAIMS Mobile (open-source, customized)",
+      "hardware": "Mobile devices (tablets/smartphones)",
+      "volunteers": "Undergraduate students from associated field school",
+      "programmer_cost": "ca. AUD $2,000"
+    },
+    "track_record": {
+      "prior_mounds_catalogued": "773 mounds in Kazanlak Valley (2008-2016), 431 mounds in Yambol region (2008-2016)",
+      "prior_methods": "pedestrian surface survey supported by manual digitization of satellite imagery and maps",
+      "2010_desktop_GIS_attempt": "915 features produced but approach unsuccessful due to volunteer attrition and high support needs"
+    }
+  },
+
+  "evidence": [
+    {
+      "evidence_id": "E001",
+      "evidence_text": "10,827 mound features digitized from Soviet military topographic maps",
+      "evidence_type": "project output count",
+      "evidence_basis": "statistical_output",
+      "supports_claims": ["C001", "C002", "C011"],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "FAIMS Mobile was used to digitise 10,827 mound features from Soviet military topographic maps.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E002",
+      "evidence_text": "241 person-hours total digitization time",
+      "evidence_type": "time measurement",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": ["C001", "C002", "C008"],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E003",
+      "evidence_text": "57 person-hours from staff",
+      "evidence_type": "time measurement - staff contribution",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": ["C002", "C008"],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E004",
+      "evidence_text": "184 person-hours from novice volunteers",
+      "evidence_type": "time measurement - volunteer contribution",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": ["C002", "C008", "C012"],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E005",
+      "evidence_text": "Error rate under 6%",
+      "evidence_type": "accuracy measurement",
+      "evidence_basis": "statistical_output",
+      "supports_claims": ["C001", "C003"],
+      "declared_uncertainty": {
+        "type": "bounded_range",
+        "indicator": "under",
+        "quantification": "<6%",
+        "severity": "minor"
+      },
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E006",
+      "evidence_text": "Dataset was consistent, well-documented, and ready for analysis with a few hours of processing",
+      "evidence_type": "data quality assessment",
+      "evidence_basis": "professional_judgment",
+      "supports_claims": ["C003", "C004"],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "The resulting dataset was consistent, well-documented, and ready for analysis with a few hours of processing.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E007",
+      "evidence_text": "Digitization undertaken as a secondary activity on a landscape archaeology project focusing on pedestrian feature survey",
+      "evidence_type": "research context description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": ["C011", "C013"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Digitisation was undertaken as a secondary activity on a landscape archaeology project focusing on pedestrian feature survey.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E008",
+      "evidence_text": "Undergraduates in the associated field school digitised data from maps using a system repurposed from other project activities",
+      "evidence_type": "participant and system description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": ["C012", "C013"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Undergraduates in the associated field school digitised data from maps using a system repurposed from other project activities.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E009",
+      "evidence_text": "Approach required little training or supervision of students",
+      "evidence_type": "process efficiency observation",
+      "evidence_basis": "author_assertion",
+      "supports_claims": ["C012", "C015"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Compared to manual digitisation approaches based on desktop GIS, it required little training or supervision of students, used open-source software and low-cost equipment, yet produced a large, accurate, analysis-ready dataset.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E010",
+      "evidence_text": "Used open-source software and low-cost equipment",
+      "evidence_type": "resource description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": ["C013", "C014"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Compared to manual digitisation approaches based on desktop GIS, it required little training or supervision of students, used open-source software and low-cost equipment, yet produced a large, accurate, analysis-ready dataset.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E011",
+      "evidence_text": "Produced a large, accurate, analysis-ready dataset",
+      "evidence_type": "outcome description",
+      "evidence_basis": "author_assertion",
+      "supports_claims": ["C001", "C003"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Compared to manual digitisation approaches based on desktop GIS, it required little training or supervision of students, used open-source software and low-cost equipment, yet produced a large, accurate, analysis-ready dataset.",
+      "extraction_confidence": "high"
+    }
+  ],
+
+  "claims": [
+    {
+      "claim_id": "C001",
+      "claim_text": "The crowdsourcing approach produced a large (>10,000 features), high-quality (<6% error rate) geospatial dataset from historical maps",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": ["E001", "E002", "E005", "E011"],
+      "supports_claims": ["C007"],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "features digitized and error rate",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "FAIMS Mobile was used to digitise 10,827 mound features from Soviet military topographic maps. This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C002",
+      "claim_text": "Crowdsourcing scales better than direct digitisation by experts",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "comparative",
+      "supported_by": ["E002", "E003", "E004"],
+      "supports_claims": ["C007", "C010"],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "Crowdsourcing scales better than direct digitisation by experts, but requires an appropriate platform and the technical skills to adapt it.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C003",
+      "claim_text": "The resulting dataset was consistent, well-documented, and ready for analysis with minimal post-processing",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": ["E005", "E006", "E011"],
+      "supports_claims": ["C001", "C007"],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "The resulting dataset was consistent, well-documented, and ready for analysis with a few hours of processing.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C004",
+      "claim_text": "A conservative estimate based on our work suggests our crowdsourcing approach is most efficient for digitisation projects of 10,000–60,000 features",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": ["E001", "E002", "E006"],
+      "supports_claims": ["C007"],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "optimal dataset size range",
+        "comparison_type": "absolute"
+      },
+      "declared_uncertainty": {
+        "type": "hedging",
+        "indicator": "conservative estimate",
+        "severity": "moderate"
+      },
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "A conservative estimate based on our work suggests our crowdsourcing approach is most efficient for digitisation projects of 10,000–60,000 features, but may offer advantages for datasets as small as a few hundred records.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C005",
+      "claim_text": "The crowdsourcing approach may offer advantages for datasets as small as a few hundred records",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": ["E002", "E006"],
+      "supports_claims": ["C004", "C007"],
+      "declared_uncertainty": {
+        "type": "hedging",
+        "indicator": "may offer",
+        "severity": "moderate"
+      },
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "A conservative estimate based on our work suggests our crowdsourcing approach is most efficient for digitisation projects of 10,000–60,000 features, but may offer advantages for datasets as small as a few hundred records.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C006",
+      "claim_text": "Systems designed for field data collection, running on mobile devices, can be profitably customised to serve as participatory geospatial data systems accessible to novice volunteers",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supported_by": ["E008", "E009", "E010", "E011"],
+      "supports_claims": ["C007"],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "Furthermore, it indicates that systems designed for field data collection, running on mobile devices, can be profitably customised to serve as participatory geospatial data systems accessible to novice volunteers.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C007",
+      "claim_text": "The value of this approach lies in the unanticipated success of a minimally resourced digitisation effort",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "evaluative",
+      "claim_nature": "evaluative",
+      "supported_by": ["E001", "E002", "E006", "E007", "E009", "E010"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "The value of this approach lies in the unanticipated success of a minimally resourced digitisation effort, as well as the resulting dataset's value for archaeological research and cultural heritage management.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C008",
+      "claim_text": "The approach complements Machine Learning (ML) in that it requires less technical expertise, time, and resourcing to undertake",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "comparative",
+      "supported_by": ["E002", "E003"],
+      "supports_claims": ["C010"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "It complements Machine Learning (ML) and other automated approaches in that it requires less technical expertise, time, and resourcing to undertake.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C009",
+      "claim_text": "The crowdsourcing approach is suitable for projects working with small to mid-sized data sources (100s–10,000s of features) that do not warrant the investment needed for successful ML-based data extraction",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supported_by": ["E001", "E002"],
+      "supports_claims": ["C004", "C008", "C010"],
+      "quantitative_details": {
+        "involves_quantification": true,
+        "metric": "dataset size range",
+        "comparison_type": "absolute"
+      },
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Such an approach is suitable for projects working with small to mid-sized data sources (100s–10,000s of features) that do not warrant the investment needed for successful ML-based data extraction - as well as for exploratory work preceding automated analyses or the production of the training and quality assurance datasets needed for ML.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C010",
+      "claim_text": "The approach shows promise as a low-cost means of extracting locations and other data from historical maps concerning endangered and poorly documented material remains",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "evaluative",
+      "claim_nature": "evaluative",
+      "supported_by": ["E007", "E009", "E010", "E011"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "As such, it shows promise as a low-cost means of extracting locations and other data from historical maps concerning endangered and poorly documented material remains.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C011",
+      "claim_text": "The approach can be replicated using other mobile GIS systems, scaled up, or applied to other types of archaeological features",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "primary_function": "methodological_justification",
+      "claim_nature": "evaluative",
+      "supported_by": ["E001", "E007", "E008"],
+      "supports_claims": ["C006", "C010"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "The approach taken here can be replicated using other mobile GIS systems, scaled up, or applied to other types of archaeological features.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C012",
+      "claim_text": "The crowdsourcing approach required little training or supervision of students compared to desktop GIS approaches",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "comparative",
+      "supported_by": ["E004", "E008", "E009"],
+      "supports_claims": ["C002", "C007", "C015"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Compared to manual digitisation approaches based on desktop GIS, it required little training or supervision of students, used open-source software and low-cost equipment, yet produced a large, accurate, analysis-ready dataset.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C013",
+      "claim_text": "The digitization was undertaken as a secondary activity using a system repurposed from other project activities",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": ["E007", "E008", "E010"],
+      "supports_claims": ["C007"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Digitisation was undertaken as a secondary activity on a landscape archaeology project focusing on pedestrian feature survey. Undergraduates in the associated field school digitised data from maps using a system repurposed from other project activities.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C014",
+      "claim_text": "The approach used open-source software and low-cost equipment",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "claim_nature": "descriptive",
+      "supported_by": ["E010"],
+      "supports_claims": ["C010", "C013"],
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "verbatim_quote": "Compared to manual digitisation approaches based on desktop GIS, it required little training or supervision of students, used open-source software and low-cost equipment, yet produced a large, accurate, analysis-ready dataset.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C015",
+      "claim_text": "Automatic extraction using Machine Learning (ML) requires extensive preparation and expertise",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "comparative_assessment",
+      "claim_nature": "evaluative",
+      "supports_claims": ["C002", "C008"],
+      "location": {
+        "section": "Abstract",
+        "page": 1
+      },
+      "verbatim_quote": "Automatic extraction using Machine Learning (ML) requires extensive preparation and expertise.",
+      "extraction_confidence": "high"
+    }
+  ],
+
+  "implicit_arguments": [],
+
+  "research_designs": [],
+  "methods": [],
+  "protocols": [],
+
+  "extraction_notes": {
+    "pass": 1,
+    "section_extracted": "Abstract + Section 1 (Introduction)",
+    "extraction_strategy": "Liberal extraction with over-capture - Pass 1, section-by-section approach",
+    "sections_completed": ["Abstract", "Introduction"],
+    "sections_remaining": ["Section 2 (Approach)", "Section 3 (Results)", "Sections 4-5 (Discussion + Conclusion)"],
+    "known_uncertainties": [
+      "Error rate stated as 'under 6%' - exact figure not given in Abstract/Intro",
+      "'Few hours of processing' is approximate",
+      "Conservative estimate methodology not detailed in Abstract/Intro"
+    ]
+  }
+}
