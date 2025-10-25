@@ -1,8 +1,8 @@
 # Research Extraction Workflow
 
-**Version:** 2.6
+**Version:** 2.6.1
 **Skill:** research-assessor
-**Updated:** 2025-10-24
+**Updated:** 2025-10-25
 
 ---
 
@@ -61,6 +61,37 @@ Execute each pass by processing these section groups in order. Complete each gro
 - No section-by-section processing required
 
 **Adjust based on paper structure** - the key is manageable section sizes that maintain focus and thoroughness while completing logical units together.
+
+### File Management for Section-by-Section Extraction
+
+**IMPORTANT - Direct writes only:**
+
+For section-by-section extraction (Pass 1 and Pass 3):
+- **DO**: Update `extraction.json` directly using Write or Edit tool after each section group
+- **DO NOT**: Create intermediate files (e.g., `claims_pass1_methods.json`, `rdmap_pass3_results.json`)
+
+**Rationale:**
+- ✅ Simpler workflow with fewer files to manage
+- ✅ `extraction.json` serves as the checkpoint/audit trail
+- ✅ Git history provides version control if needed
+- ✅ Cleaner output directory
+- ✅ No cleanup needed after extraction completes
+
+**Example of correct approach:**
+```
+1. Extract from Abstract + Introduction
+2. Write to extraction.json (replaces entire file with updated content)
+3. Extract from Methods section
+4. Write to extraction.json (replaces entire file with updated content including previous extractions)
+... continue for all section groups
+```
+
+**Incorrect approach (DO NOT do this):**
+```
+❌ Write to claims_pass1_abstract.json
+❌ Write to claims_pass1_methods.json
+❌ Merge intermediate files into extraction.json
+```
 
 ### Example: Complete Pass 1 Execution
 
