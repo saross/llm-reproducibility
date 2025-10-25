@@ -324,12 +324,14 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 ## Extraction Workflow
 
 ### Step 1: Identify Research Designs
-- Scan for research questions, hypotheses, theoretical frameworks
-- Extract study design choices and rationale
-- Classify reasoning approach
+- Scan Abstract, Introduction, Background carefully (RDs commonly appear here; also check Methods sections, especially those with design-oriented framing)
+- Scan for design language keywords (see tier-assignment-guide.md)
+- **Identify each distinct strategic decision point** (separate rationales = separate designs)
+- Extract theoretical frameworks as Research Designs
+- Classify reasoning approach for each
 - Determine explicit vs implicit status
 - Populate verbatim_quote OR trigger_text appropriately
-- Track location information
+- **Liberal extraction:** Include "high-level" design elements - critical for transparency assessment
 
 ### Step 2: Identify Methods
 - Look for data collection approaches

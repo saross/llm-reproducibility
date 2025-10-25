@@ -1,8 +1,29 @@
-# Research Assessor v2.6 - Package Summary
+# Research Assessor v2.6.1 - Package Summary
 
-**Package Date:** 2025-10-24  
-**Package File:** research-assessor-v2.6.zip  
-**Size:** 58 KB (compressed), 215 KB (uncompressed)
+**Package Date:** 2025-10-25
+**Active Version:** `.claude/skills/research-assessor/` (used by Claude Code)
+**Archive Version:** `extraction-system/skill/research-assessor/` (for reference/documentation)
+**Previous Package:** research-assessor-v2.6.zip
+**Size:** ~220 KB (uncompressed)
+
+---
+
+## What's New in v2.6.1
+
+### Phase 3: Implicit Arguments Systematic Extraction
+✅ **Systematic 4-type framework** required for all core claims (Pass 1)
+✅ **Completeness review** added to Pass 2 for cross-section synthesis
+✅ **Documentation requirement** if <3 implicit arguments found
+✅ **Updated prompts:** 01-claims-evidence_pass1_prompt.md, 02-claims-evidence_pass2_prompt.md
+✅ **Expected improvement:** 0 → 8-12 implicit arguments per paper
+
+### Phase 4: Research Design Granularity Guidance
+✅ **Granularity principle** - each strategic decision requiring independent justification = separate RD
+✅ **Design language keywords** to identify strategic decisions
+✅ **Conservative consolidation** for Research Designs (preserve granularity)
+✅ **Updated references:** tier-assignment-guide.md, consolidation-patterns.md
+✅ **Updated prompts:** 03-rdmap_pass1_prompt.md, 04-rdmap_pass2_prompt.md
+✅ **Expected improvement:** 1-2 → 3-6 research designs per paper
 
 ---
 
@@ -26,7 +47,11 @@
 - `SKILL.md` - Main skill file with updated consolidation logic + verbatim reference
 
 ### references/ (10 files)
-**Updated Files:**
+**Updated Files (v2.6.1):**
+- `checklists/tier-assignment-guide.md` - Added Research Design granularity principle section
+- `checklists/consolidation-patterns.md` - Added Research Design consolidation rules
+
+**Updated Files (v2.6):**
 - `extraction-fundamentals.md` - Added verbatim quote section
 - `verbatim-quote-requirements.md` - **NEW** comprehensive verbatim guide
 - `checklists/consolidation-patterns.md` - Added empirical graph analysis section
@@ -35,7 +60,6 @@
 **Unchanged Files:**
 - `README.md` - References navigation guide
 - `verification-procedures.md` - Pass 3 validation procedures
-- `checklists/tier-assignment-guide.md` - Design/Method/Protocol decisions
 - `checklists/expected-information.md` - Completeness checklists
 - `schema/schema-guide.md` - Complete object definitions
 - `examples/sobotkova-example.md` - Worked example
@@ -52,13 +76,44 @@
 
 ## Runtime Prompts (Separate Directory)
 
-The following prompt files have been updated and are provided separately:
-- `claims-evidence_pass1_prompt.md` - Added verbatim critical reminder
-- `claims-evidence_pass2_prompt.md` - Updated consolidation hierarchy + enhanced verification
-- `rdmap_pass1_prompt.md` - Added verbatim critical reminder
-- `rdmap_pass2_prompt.md` - Updated consolidation hierarchy + enhanced verification
+The following prompt files have been updated:
 
-**Note:** These prompts are NOT included in the skill package per architectural design. Update them in your prompt management system.
+**v2.6.1 Updates:**
+- `01-claims-evidence_pass1_prompt.md` - Added systematic implicit argument extraction workflow
+- `02-claims-evidence_pass2_prompt.md` - Added STEP 3: Implicit Argument Completeness Review
+- `03-rdmap_pass1_prompt.md` - Updated Step 1 with Research Design granularity guidance
+- `04-rdmap_pass2_prompt.md` - Added Research Design consolidation section
+
+**v2.6 Updates:**
+- All prompts - Added verbatim critical reminder
+- Pass 2 prompts - Updated consolidation hierarchy + enhanced verification
+
+**Note:** These prompts are in `extraction-system/prompts/` and are NOT included in the skill package per architectural design.
+
+---
+
+## Schema Synchronization
+
+**Important:** The schema exists in two locations:
+
+**Source of Truth:**
+- `.claude/skills/research-assessor/references/schema/extraction_schema.json`
+- This is the version used by Claude Code when skill is invoked
+
+**Archive/Reference Copy:**
+- `extraction-system/schema/extraction_schema.json`
+
+**Current Status:** ✅ Both versions are identical (verified 2025-10-25)
+
+**Sync Protocol:**
+1. Always update the skill schema (`.claude/skills/`) first
+2. Copy to `extraction-system/schema/` for archival/documentation
+3. Verify sync with: `diff .claude/skills/research-assessor/references/schema/extraction_schema.json extraction-system/schema/extraction_schema.json`
+4. Commit both versions together to maintain sync
+
+**Why Two Copies?**
+- Skill version: Active runtime schema used by Claude Code
+- Extraction-system version: Documentation, reference for users, git tracking visibility
 
 ---
 
@@ -123,6 +178,7 @@ In addition to the skill package, the following files are provided:
 
 ## Version History
 
+- **v2.6.1** (2025-10-25) - Implicit arguments systematic extraction + Research Design granularity
 - **v2.6** (2025-10-24) - Consolidation refinement + verbatim quote requirements
 - **v2.5** (2025-10-21) - Hallucination prevention (mandatory sourcing)
 - **v2.4** - RDMAP objects (research_design, method, protocol)

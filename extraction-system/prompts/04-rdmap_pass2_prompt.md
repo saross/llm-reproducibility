@@ -140,6 +140,16 @@ Step 4: Document all consolidations with complete metadata
 
 ## RDMAP-Specific Consolidation Patterns
 
+### Research Design Consolidation
+
+**Conservative approach:** Research Designs generally stay separate (see consolidation-patterns.md for detailed rules).
+
+**Key test:** "Could reviewers independently assess transparency of these decisions?"
+- If YES → Keep separate (most cases)
+- If NO → Consider consolidation
+
+**Unlike Evidence:** Don't apply graph analysis. Preserve strategic decision granularity for assessment.
+
 ### Pattern 1: Design Rationale Synthesis
 **Consolidate:** Multiple justifications for same design decision  
 **Example:** Three separate rationale statements → unified comprehensive rationale  

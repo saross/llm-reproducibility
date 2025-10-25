@@ -161,7 +161,7 @@ Extract observations only if they support specific claims. Context that doesn't 
 
 ### 4. Implicit Arguments (HIGH-PRIORITY claims only)
 
-**Extract implicit arguments ONLY for core and key intermediate claims.**
+**Extract implicit arguments for all core claims (REQUIRED systematic search) and key intermediate claims (as applicable).**
 
 **Four types:**
 
@@ -223,11 +223,25 @@ For each section:
    - Watch for single-case generalizations
    - **When uncertain: INCLUDE IT**
 
-3. **Check for Implicit Arguments** (high-priority claims only)
-   - What logical implications are unstated?
-   - What assumptions must be true?
-   - Are there bridging claims missing?
-   - What disciplinary assumptions frame the argument?
+3. **Extract Implicit Arguments** (REQUIRED systematic search for all core claims)
+
+   For EACH core claim, run the 4-type checklist:
+
+   **Type 1 - Logical Implications:** "If this claim is true, what MUST also be true?"
+   - Look for unstated logical consequences
+
+   **Type 2 - Unstated Assumptions:** "What must be true for this claim to hold?"
+   - Look for prerequisites not acknowledged
+
+   **Type 3 - Bridging Claims:** "How do they get from evidence to this claim?"
+   - Look for missing argumentative steps
+
+   **Type 4 - Disciplinary Assumptions:** "What field-specific knowledge is taken for granted?"
+   - Look for insider assumptions invisible to outsiders
+
+   Document trigger passages for each implicit argument found.
+
+   **If no implicit arguments found after systematic search:** Document in extraction_notes why (e.g., "All reasoning explicit in this section"). Skipping the search is not acceptable.
 
 4. **Map Relationships**
    - Which claims support which other claims?
@@ -284,10 +298,11 @@ Use this checklist as your roadmap. Before finalizing:
 
 - [ ] All potentially relevant evidence captured?
 - [ ] All claims identified (core, intermediate, supporting)?
-- [ ] Implicit arguments extracted for high-priority claims?
+- [ ] **Systematic implicit argument search completed for all core claims**
+- [ ] **All implicit arguments have trigger_text, trigger_locations, inference_reasoning**
+- [ ] **If no implicit arguments found: documented in extraction_notes with rationale**
 - [ ] **All evidence items have verbatim_quote populated**
 - [ ] **All claims have verbatim_quote populated**
-- [ ] **All implicit arguments have trigger_text, trigger_locations, inference_reasoning**
 - [ ] Evidence-claim support relationships mapped?
 - [ ] Expected information gaps flagged?
 - [ ] Project metadata separated from evidence?

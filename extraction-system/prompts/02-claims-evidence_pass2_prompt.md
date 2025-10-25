@@ -64,6 +64,7 @@ Use this checklist as your roadmap. Before finalizing:
 - [ ] Redundant calculation claims removed
 - [ ] Strategic verbosity applied
 - [ ] Addition patterns checked (comparisons, recommendations, synthesis)
+- [ ] Systematic implicit argument completeness review complete (STEP 3)
 - [ ] All relationships verified and bidirectional
 - [ ] Other arrays (RDMAP) untouched
 
@@ -279,6 +280,24 @@ Pass 1 consistently under-extracts certain claim types. **Actively look for and 
 - Add missing synthesis/comparison/recommendation claims
 - Remove redundant calculation claims
 
+### STEP 3: Implicit Argument Completeness Review
+
+**Systematic review for implicit arguments missed in Pass 1:**
+
+With full-paper context, review all CORE claims for implicit arguments using the 4-type framework:
+
+**Type 1 - Logical Implications:** "If this claim is true, what MUST also be true?"
+**Type 2 - Unstated Assumptions:** "What must be true for this claim to hold?"
+**Type 3 - Bridging Claims:** "How do they get from evidence to this claim?"
+**Type 4 - Disciplinary Assumptions:** "What field-specific knowledge is taken for granted?"
+
+**Focus areas for Pass 2 cross-section synthesis:**
+- Assumptions spanning multiple sections (e.g., threshold criteria used throughout)
+- Comparative interpretations (implicit judgments about relative performance)
+- Methodological assumptions visible only when seeing full argument arc
+
+**Quality check:** If <3 implicit arguments total and paper makes complex arguments, verify reasoning is genuinely explicit (rare). Document verification in extraction_notes.
+
 **🚨 Source Verification (REQUIRED)**
 
 **For ALL items (consolidated or not), verify:**
@@ -309,7 +328,7 @@ Pass 1 consistently under-extracts certain claim types. **Actively look for and 
 
 **Adding implicit arguments in Pass 2:**
 
-Pass 2 may identify implicit arguments missed in Pass 1, particularly:
+Pass 2 systematically reviews for implicit arguments missed in Pass 1 (see STEP 3), particularly:
 - **Cross-subsection synthesis** - Unstated assumptions spanning multiple findings
 - **Overlooked logical implications** - Implicit reasoning not explicitly stated
 - **Comparative interpretations** - Implicit judgments about relative performance
