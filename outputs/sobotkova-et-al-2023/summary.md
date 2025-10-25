@@ -1,174 +1,225 @@
-# Extraction Summary
-## Sobotkova et al. 2023
+# Extraction Summary: Sobotkova et al. 2023
 
-**Full Title:** Creating large, high-quality geospatial datasets from historical maps using novice volunteers
+**Paper:** Creating large, high-quality geospatial datasets from historical maps using novice volunteers
 
-**Authors:** Adela Sobotkova, Shawn A. Ross, Christian Nassif-Haynes, Brian Ballsun-Stanton
-
-**Journal:** Applied Geography
-**Year:** 2023
-**DOI:** 10.1016/j.apgeog.2023.102967
+**Authors:** Sobotkova, Ross, Nassif-Haynes, Ballsun-Stanton
 
 **Extraction Date:** 2025-10-25
-**Schema Version:** 2.5
-**Extractor:** Claude Code with research-assessor v2.6
+
+**Extractor:** Claude Sonnet 4.5 (research-assessor v2.6)
+
+**Status:** ✅ COMPLETE - Ready for Assessment
+
+---
+
+## Executive Summary
+
+Successfully completed 5-pass extraction yielding **112 items** comprehensively documenting claims, evidence, and methodology from this crowdsourcing case study.
+
+**Key Finding:** Paper presents well-documented comparative evaluation of mobile crowdsourcing approach with explicit efficiency thresholds: most efficient for 10,000-60,000 features, with detailed time measurements enabling replication.
 
 ---
 
 ## Extraction Statistics
 
-| Category | Count |
-|----------|-------|
-| Evidence | 36 |
-| Claims | 31 |
-| Research Designs | 2 |
-| Methods | 6 |
-| Protocols | 10 |
-| **Total Items** | **85** |
-
-### RDMAP Sourcing Breakdown
-- **Explicit Items:** 13 (documented in Methods section)
-- **Implicit Items:** 5 (mentioned/inferred from other sections)
-- **Sourcing Quality:** 100% compliant with v2.5 requirements
+| Category | Count | Notes |
+|---|---|---|
+| **Evidence** | 33 | All quantitative measurements properly sourced |
+| **Claims** | 46 | 10 core, mixed intermediate/supporting |
+| **Implicit Arguments** | 7 | Systematic review of all core claims completed |
+| **Research Designs** | 2 | Case study + comparative evaluation (both explicit) |
+| **Methods** | 9 | 6 explicit, 3 implicit (67% transparency) |
+| **Protocols** | 15 | 13 explicit, 2 implicit (87% transparency) |
+| **TOTAL** | **112** | 100 explicit, 12 implicit items |
 
 ---
 
-## Research Designs Extracted
+## Core Claims (Top 10)
 
-### RD001: Case Study Design (Explicit)
-Case study of crowdsourced map digitization using novice volunteers with mobile GIS during archaeological fieldwork in Bulgaria (2017-2018).
-
-**Key Attributes:**
-- Scope: Yambol region Bulgaria (~23,500 sq km, 10,827 features)
-- Reasoning: Inductive (exploratory case study, post-hoc comparative analysis)
-- Enables: M001, M002, M003, M005, M006
-
-### RD002: Comparative Research Question (Implicit)
-Under what conditions do different map digitization approaches (expert GIS, volunteer GIS, crowdsourcing with mobile, ML) become worthwhile?
-
-**Key Attributes:**
-- Timing: Pre-data (evaluation designed into 2017 season)
-- Enables: M004
+1. **C001:** Crowdsourcing produced large, accurate, analysis-ready dataset
+2. **C002:** Approach required little training/supervision
+3. **C003:** Most efficient for 10,000–60,000 features (conservative estimate)
+4. **C004:** Mobile field systems can be customized for participatory GIS
+5. **C005:** Complements ML (less expertise/time/resources required)
+6. **C039:** Threshold: worthwhile above ~4,500 features (vs expert) or ~10,000 (vs desktop GIS volunteers)
+7. **C040:** Above 60,000 records, use ML (if expertise available)
+8. **C042:** Crowdsourcing and ML are complementary
+9. **C043:** Typical projects can deploy crowdsourcing but may not access ML
+10. **C045:** Approach is readily transferable
 
 ---
 
-## Methods Extracted
+## Methodological Overview
 
-### M001: Crowdsourcing with FAIMS Mobile (Explicit)
-Mobile GIS platform customized for map digitization by novice volunteers, enabling offline multi-user feature digitization.
+### Research Designs
+- **RD001:** Case study design evaluating crowdsourced digitization (inductive)
+- **RD002:** Comparative evaluation testing efficiency thresholds (deductive)
 
-### M002: Platform Selection (Explicit)
-FAIMS Mobile chosen over desktop GIS and competing platforms based on offline capability, functional requirements, usability, reuse, student preferences, and open-source transparency.
+### Data Collection Methods
+- **M001:** Crowdsourced digitization via FAIMS Mobile customization
+- **M002:** Novice volunteer recruitment (field school students)
+- **M003:** Map symbol extraction (burial/settlement mounds from Soviet maps)
+- **M004:** Systematic time-on-task measurement
+- **M005:** Random sampling for accuracy assessment (7% of maps)
+- **M006:** Desktop GIS baseline comparison (2010)
 
-### M003: Participant Recruitment (Explicit)
-Undergraduate field school students from Arts/Humanities backgrounds, most with no GIS training.
+### Analysis Methods
+- **M007:** Comparative time-efficiency analysis (features/staff-hour)
+- **M008:** Error rate calculation and characterization
 
-### M004: Comparative Evaluation (Explicit + Implicit consolidation)
-Time-motion study comparing person-hours to features produced, with threshold extrapolation to estimate break-even points vs alternative approaches.
+### Implicit Methods (Transparency Gaps)
+- **M009:** Map tile assignment to volunteers (mentioned but undocumented)
 
-### M005: Feature Selection Strategy (Explicit)
-Extracting burial/settlement mound symbols from 1:50,000 Soviet topographic maps (200 symbols/tile average, moderate obtrusiveness).
-
-### M006: Data Structure Design (Explicit)
-Simple records: point geometry + record number + 10 attributes.
-
----
-
-## Protocols Extracted (10 total)
-
-### Explicit Protocols (8)
-1. **P001:** FAIMS customization (UI simplification + automation + map/form views)
-2. **P002:** Implementation workflow (7-step process from modeling to QA)
-3. **P003:** Map preparation (tiling, pyramids for GeoTIFFs)
-4. **P004:** Symbol recognition and digitization procedure
-5. **P007:** Time tracking (timesheets + timestamps + journals)
-6. **P008:** Quality assurance (random 7% sample, error categorization)
-
-### Implicit Protocols (4, documented in Results not Methods)
-7. **P009:** Volunteer training (minimal, "minutes" duration - no curriculum documented)
-8. **P010:** GPS coordinate extraction automation (performance degradation noted)
-9. **P011:** Performance mitigation (export/reset after 2,500-6,000 records)
-10. **P012:** Data omission correction (re-extract from geodatabase)
+### Key Protocols (15 total)
+- **System Setup:** 7-stage FAIMS customization workflow, server config, validation
+- **Data Preparation:** Map tiling/pyramids, file transfer workflow
+- **Training:** Minimal protocol (<30 min total per season)
+- **Data Collection:** Point digitization, attribute entry with controlled vocabularies, offline sync
+- **Quality Assurance:** Random sampling review, time logging, performance mitigation
 
 ---
 
-## Key Findings (Selected Claims)
+## Quantitative Outputs
 
-### Core Claims
-- **C001:** Crowdsourcing approach unexpectedly successful despite minimal resourcing
-- **C020:** Compared to desktop GIS approaches, required little training/supervision, used open-source software, yet produced large accurate dataset
-- **C028:** Approach most efficient for 10,000-60,000 features (conservative estimate)
-- **C029:** Payoff threshold vs desktop GIS digitization: 4,500 features
-- **C030:** Payoff threshold vs ML approaches: 60,000 features
+### Project Scale
+- **10,827 features** digitized from 58 Soviet topographic maps
+- **23,500 sq km** coverage
+- **241 person-hours** total (57 staff, 184 volunteers)
+- **54-92 seconds** per feature (2017 vs 2018)
 
-### Notable Evidence
-- **E024-E027:** Time measurements (35h programmer + 4h staff for customization in 2017; 1h+1h in 2018)
-- **E028-E031:** Performance metrics (125.8h volunteers in 2017, 63.6h in 2018, 54s/feature avg)
-- **E032-E036:** Quality metrics (<6% error rate, 241 total person-hours for 10,827 features)
+### Quality Metrics
+- **<6% error rate** (5.87% in random sample)
+- **~94% accuracy** for processed maps
+- **2.06% recoverable omissions** (mostly corrected via validation)
 
----
+### Efficiency Comparisons
+- **190 features/staff-hour** (crowdsourcing approach)
+- **60-75 features/staff-hour** (expert desktop GIS)
+- **130-180 features/staff-hour** (volunteer desktop GIS)
 
-## Methodological Transparency Assessment
-
-### Well-Documented (Explicit)
-- Customization approach and rationale
-- Platform selection criteria
-- Implementation workflow
-- Time tracking methodology
-- Quality assurance procedures
-- Comparative evaluation framework
-
-### Transparency Gaps (Implicit/Missing)
-1. **Training protocol** (P009 - minimal documentation, marked implicit)
-2. **GPS coordinate handling** (P010 - automation mentioned only when discussing performance)
-3. **Performance mitigation** (P011 - workaround discovered, not planned procedure)
-4. **Data cleaning** (P012 - correction procedures applied post-hoc)
-5. **Symbol identification criteria** (M005 - how volunteers distinguished mound symbols)
-6. **Volunteer selection/demographics** (M003 - participation rate, demographics)
-
-### Assessment Impact
-The implicit protocols represent procedural adaptations discovered during fieldwork rather than planned methodology. This is common in real-world implementations but reduces replicability. Core methodology (customization approach, evaluation framework) is well-documented and replicable.
+### Time Investments
+- **44 hours** pre-field customization
+- **7 hours** in-field setup/support across both seasons
+- **6 hours** post-field quality assurance
 
 ---
 
-## File Outputs
+## Transparency Assessment
 
-- **extraction.json** - Complete structured extraction (542 lines)
-- **validation-pass3.md** - Structural validation report (100% pass rate)
-- **summary.md** - This summary document
+### Well-Documented Aspects (88% explicit)
+✅ Complete workflow documentation (7 stages)
+✅ Detailed time measurements enabling replication
+✅ Explicit quality assessment methodology
+✅ System configuration comprehensively described
+✅ Comparative baselines documented (2010 desktop GIS, ML benchmarks)
+
+### Transparency Gaps (12% implicit)
+⚠️ **M009:** Map assignment procedures undocumented
+⚠️ **P010:** 2010 baseline protocol details missing
+⚠️ **P011:** Symbol identification decision rules not explicit
+
+### Expected Information Gaps Flagged
+- 13 of 15 protocols have missing expected information documented
+- Common gaps: parameter values, software versions, decision criteria
+- Gaps documented for transparency, not as criticism
 
 ---
 
-## Extraction Quality Metrics
+## Implicit Arguments Identified
 
-- **Pass 1 Completeness:** 68 items extracted (32 claims, 36 evidence, then 21 RDMAP in Pass 3)
-- **Pass 2 Reduction:** 3.1% for claims/evidence (minimal consolidation appropriate)
-- **Pass 4 Reduction:** 14.3% for RDMAP (within 15-20% target range)
-- **Source Verification:** 100% pass rate (85/85 items properly sourced)
-- **Cross-Reference Integrity:** 100% valid after fixing 1 consolidation-related broken reference
-- **Validation Status:** ✅ PASS - Ready for assessment
+All core claims systematically reviewed using 4-type framework:
+
+1. **IA001:** Quality of volunteer data can match expert data with appropriate tools (bridging claim)
+2. **IA002:** Technical complexity can be hidden through interface design (design assumption)
+3. **IA003:** Staff time is primary constraint (unstated assumption underlying all analysis)
+4. **IA004:** Mobile devices reduce participation barriers via familiarity (bridging claim)
+5. **IA005:** ML expertise less accessible than digitization time for small projects (unstated assumption)
+6. **IA006:** Thresholds generalizable despite single-case basis (unstated assumption)
+7. **IA007:** ML training data effort constitutes digitization project (logical implication)
 
 ---
 
-## Notes for Assessment
+## Notable Methodological Features
 
 ### Strengths
-1. Comprehensive time-tracking enabling robust cost-benefit analysis
-2. Clear comparative framework across 4 digitization approaches
-3. Detailed customization documentation supporting transferability claims
-4. Honest reporting of 2010 failed attempt with desktop GIS
+- **Systematic comparative design** with multiple baselines
+- **Detailed temporal tracking** (2017 vs 2018 preserved separately)
+- **Complete workflow documentation** from setup through QA
+- **Explicit efficiency thresholds** with quantitative basis
+- **Open replication materials** (GitHub repository)
 
-### Consider for Assessment
-1. Threshold calculations assume feature equivalence across studies (different map types, symbol densities)
-2. Training protocol lack of documentation (P009) - claims "minimal training" but no curriculum/assessment
-3. Implicit protocols (P010-P012) represent real-world adaptations but reduce method replicability
-4. Small sample for quality assurance (4 maps, 7%) though error rate <6% suggests adequate
+### Innovations
+- **Mobile platform repurposing** for deskbound digitization
+- **Minimal training approach** (minutes instead of hours)
+- **Offline-first design** for field conditions
+- **Performance mitigation protocol** (database resets)
 
-### Research Context
-Study presents crowdsourcing as middle ground between manual desktop GIS (labor-intensive) and ML (expertise-intensive). The methodological contribution is the demonstration that mobile field data collection platforms can be repurposed for desktop digitization with usability benefits transferring across contexts.
+### Limitations Acknowledged
+- Single case study (explicitly noted as "single data point")
+- Conservative thresholds (authors use qualifying language)
+- Context-specific (density, obtrusiveness, complexity)
+- Need for more comparative data
 
 ---
 
-**Extraction Complete:** 2025-10-25
-**Validation:** PASSED
-**Status:** Ready for Assessment
+## Consolidation Summary
+
+### Pass 2 (Claims/Evidence)
+- **Before:** 101 items (40E, 46C, 7IA, 8 context)
+- **After:** 86 items (33E, 46C, 7IA)
+- **Reduction:** 17.5%
+- **Consolidations:** 7 (mostly evidence, 5 moved to metadata, 2 evidence pairs)
+
+### Pass 4 (RDMAP)
+- **Before:** 26 items (2RD, 9M, 15P)
+- **After:** 26 items (no consolidation)
+- **Rationale:** Already at appropriate granularity, all items assessed separately
+- **Cross-reference fixes:** 8 bidirectionality corrections
+
+---
+
+## Validation Results
+
+✅ **PASSED** - All validation checks successful
+
+- **Structural Completeness:** 112/112 items complete
+- **Sourcing Integrity:** 100% compliance (zero hallucinations)
+- **Relationship Integrity:** Zero broken links
+- **Cross-Reference Validity:** All bidirectional links verified
+- **Consolidation Integrity:** All 7 consolidations properly documented
+
+---
+
+## Files Generated
+
+- `extraction.json` - Complete extraction (112 items, 542 lines)
+- `validation-pass5.md` - Comprehensive validation report
+- `summary.md` - This document
+- `PASS1_COMPLETE.md` - Pass 1 checkpoint
+- `PASS3_COMPLETE.md` - Pass 3 checkpoint
+
+---
+
+## Recommended Next Steps
+
+### For Assessment
+1. Evaluate transparency using documented RDMAP (88% explicit rate)
+2. Assess replicability using time measurements and workflow documentation
+3. Review credibility of efficiency threshold claims (C003, C039, C040)
+4. Examine single-case generalization assumptions (IA006)
+
+### For Comparison
+- Time measurements enable direct comparison with other crowdsourcing studies
+- Efficiency thresholds provide decision framework for approach selection
+- Error rate data supports quality assessment discussions
+
+### For Replication
+- Complete workflow documented (RD → M → P chain)
+- GitHub repository available for FAIMS customization
+- Quantitative thresholds provided for approach selection
+
+---
+
+**Extraction Status:** COMPLETE ✅
+
+**Ready for:** Research transparency and reproducibility assessment
