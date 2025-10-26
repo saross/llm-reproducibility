@@ -2,7 +2,7 @@
 
 **Purpose:** Systematic quality assurance (find errors/inconsistencies/omissions) and quality improvement (identify optimization opportunities) for the research-assessor extraction workflow.
 
-**Scope:** Schema, prompts (all 5), skill package (SKILL.md + references)
+**Scope:** Schema, prompts (all 5), skill package (SKILL.md + references), WORKFLOW.md
 
 **Use:** Run this assessment after significant changes or periodically to maintain quality
 

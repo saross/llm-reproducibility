@@ -332,6 +332,8 @@ Before extracting RDMAP, quickly scan Abstract, Introduction, Background, and Me
 
 See: `references/research-design-extraction-guide.md` for detailed pre-scan checklist.
 
+⚠️ **Pre-Scan Mindset:** If a design element feels "too obvious" or "everyone knows this" → Mark it anyway. Meta-level designs (comparative evaluation, case study rationale) feel obvious because they frame the entire paper - that's exactly why they're Research Designs.
+
 ### Step 1: Identify Research Designs
 
 ⚠️ **Literature Review Warning:** Don't extract Research Designs from descriptions of PRIOR work.
@@ -365,9 +367,6 @@ Extract these even though they seem "obvious" - they're strategic choices requir
 - Populate verbatim_quote OR trigger_text appropriately
 - **Liberal extraction:** Include "high-level" design elements - critical for transparency assessment
 
-⚠️ **If it feels "too obvious" or "everyone knows this" → EXTRACT IT ANYWAY**
-Meta-level designs (case study AS choice, comparative evaluation AS hypothesis) feel obvious because they frame the entire paper - that's exactly why they're Research Designs.
-
 ### Step 2: Identify Methods
 - Look for data collection approaches
 - Extract sampling strategies
@@ -376,6 +375,7 @@ Meta-level designs (case study AS choice, comparative evaluation AS hypothesis) 
 - Determine explicit vs implicit status for each method
 - Populate verbatim_quote OR trigger_text + implicit_metadata
 - Document expected missing information
+- **When uncertain about tier or inclusion: INCLUDE IT**
 
 ### Step 3: Identify Protocols
 - Find specific procedures with implementation detail
@@ -385,6 +385,7 @@ Meta-level designs (case study AS choice, comparative evaluation AS hypothesis) 
 - Note measurement protocols
 - Determine explicit vs implicit status for each protocol
 - Populate verbatim_quote OR trigger_text + implicit_metadata
+- **When uncertain: INCLUDE IT**
 
 ### Step 4: Cross-Reference
 - Link designs to methods they enable
