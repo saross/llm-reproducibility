@@ -1,19 +1,228 @@
 {
   "permissions": {
-    "allowedTools": [
+    "allow": [
+      // ============================================
+      // CORE FILE OPERATIONS
+      // ============================================
       "Read",
-      "Edit", 
+      "Edit",
       "Write",
-      "Bash(cd *)",
-      "Bash(python3 *)",
-      "Bash(cat *)",
-      "Bash(git *)",
-      "Bash(mkdir *)",
-      "Bash(ls *)",
-      "Bash(jq *)"
+      
+      // ============================================
+      // WEB ACCESS
+      // ============================================
+      "WebSearch",
+      "WebFetch",
+      
+      // ============================================
+      // FILE SYSTEM READ PERMISSIONS
+      // ============================================
+      // Project files
+      "Read(/home/shawn/Code/llm-reproducibility/**)",
+      // Claude configuration
+      "Read(/home/shawn/.claude/**)",
+      
+      // ============================================
+      // NAVIGATION & FILE VIEWING
+      // ============================================
+      "Bash(cd *)",           // Change directory
+      "Bash(ls *)",           // List files
+      "Bash(tree *)",         // Directory tree view
+      "Bash(cat *)",          // View file contents
+      "Bash(head *)",         // View file headers
+      "Bash(tail *)",         // View file tail (ADDED)
+      "Bash(less *)",         // Page through files (ADDED)
+      "Bash(find *)",         // Find files
+      "Bash(wc *)",           // Count lines/words (ADDED)
+      
+      // ============================================
+      // FILE OPERATIONS
+      // ============================================
+      "Bash(cp *)",           // Copy files
+      "Bash(mv *)",           // Move/rename files
+      "Bash(mkdir *)",        // Create directories
+      "Bash(chmod *)",        // Change permissions
+      "Bash(unzip *)",        // Extract archives
+      "Bash(tar *)",          // Archive operations (ADDED)
+      "Bash(touch *)",        // Create/update files (ADDED)
+      "Bash(rm *)",           // Remove files (ADDED - but rm -rf blocked in deny)
+      
+      // ============================================
+      // TEXT PROCESSING
+      // ============================================
+      "Bash(echo *)",         // Output text
+      "Bash(awk *)",          // Text processing
+      "Bash(sed *)",          // Stream editor
+      "Bash(grep *)",         // Search text
+      "Bash(xargs *)",        // Build commands from input
+      "Bash(sort *)",         // Sort lines (ADDED)
+      "Bash(uniq *)",         // Remove duplicates (ADDED)
+      "Bash(cut *)",          // Cut columns (ADDED)
+      "Bash(paste *)",        // Merge lines (ADDED)
+      "Bash(tr *)",           // Translate characters (ADDED)
+      
+      // ============================================
+      // DATA PROCESSING
+      // ============================================
+      "Bash(jq *)",           // JSON processing
+      
+      // ============================================
+      // PYTHON & PACKAGE MANAGEMENT
+      // ============================================
+      // Python execution
+      "Bash(python3 *)",      // Direct Python execution
+      "Bash(python3 << *)",   // Python heredocs
+      "Bash(python *)",       // Python (any version) (ADDED)
+      
+      // Virtual environment
+      "Bash(python3 -m venv *)",
+      "Bash(./venv/bin/python *)",
+      "Bash(source venv/bin/activate)",  // Activate venv (ADDED)
+      "Bash(. venv/bin/activate)",       // Alt activate syntax (ADDED)
+      
+      // Package installation
+      "Bash(pip install *)",
+      "Bash(pip list *)",     // List packages (ADDED)
+      "Bash(pip show *)",     // Show package info (ADDED)
+      "Bash(./venv/bin/pip *)",
+      
+      // ============================================
+      // VERSION CONTROL (GIT)
+      // ============================================
+      "Bash(git *)",          // All git operations (except force push - see deny list)
+      
+      // ============================================
+      // BASH CONTROL STRUCTURES & UTILITIES
+      // ============================================
+      // Control flow
+      "Bash(for * in *)",     // For loops
+      "Bash(do)",             // Loop/conditional body start
+      "Bash(done)",           // Loop end
+      "Bash(if *)",           // Conditional start
+      "Bash(then)",           // Conditional body
+      "Bash(fi)",             // Conditional end
+      "Bash(else)",           // Else clause (ADDED)
+      "Bash(elif *)",         // Elif clause (ADDED)
+      "Bash(while *)",        // While loops (ADDED)
+      "Bash(until *)",        // Until loops (ADDED)
+      "Bash(case *)",         // Case statements (ADDED)
+      "Bash(esac)",           // Case end (ADDED)
+      
+      // Testing & comparison
+      "Bash(test *)",         // Test conditions
+      "Bash([ * ])",          // Test syntax (ADDED)
+      "Bash([[ * ]])",        // Extended test (ADDED)
+      
+      // Variable operations
+      "Bash(export *)",       // Export variables (ADDED)
+      "Bash(unset *)",        // Unset variables (ADDED)
+      "Bash(declare *)",      // Declare variables (ADDED)
+      "Bash(local *)",        // Local variables (ADDED)
+      
+      // Redirection & pipes
+      "Bash(* > *)",          // Output redirection (ADDED)
+      "Bash(* >> *)",         // Append redirection (ADDED)
+      "Bash(* | *)",          // Pipe (ADDED)
+      "Bash(* 2>&1)",         // Error redirection (ADDED)
+      
+      // Process management
+      "Bash(sleep *)",        // Sleep/pause (ADDED)
+      "Bash(wait *)",         // Wait for process (ADDED)
+      "Bash(ps *)",           // List processes (ADDED)
+      "Bash(kill *)",         // Kill processes (ADDED - for Claude's own processes)
+      
+      // String operations
+      "Bash(printf *)",       // Formatted output (ADDED)
+      "Bash(basename *)",     // Get filename (ADDED)
+      "Bash(dirname *)",      // Get directory (ADDED)
+      "Bash(realpath *)",     // Get absolute path (ADDED)
+      
+      // ============================================
+      // DIFF & COMPARISON
+      // ============================================
+      "Bash(diff *)",         // File comparison (ADDED)
+      "Bash(cmp *)",          // Binary comparison (ADDED)
+      "Bash(comm *)",         // Compare sorted files (ADDED)
+      
+      // ============================================
+      // CLAUDE CODE SKILLS
+      // ============================================
+      "Skill(research-assessor)",
+      "Skill(skill-creator)",
+      "Skill(example-skills:skill-creator)"
     ],
+    
+    // ============================================
+    // DENIED OPERATIONS (SAFETY)
+    // ============================================
     "deny": [
-
-    ]
+      // Destructive file operations
+      "Bash(rm -rf *)",       // Recursive force delete
+      "Bash(rm -r *)",        // Recursive delete (ADDED)
+      
+      // Privilege escalation
+      "Bash(sudo *)",
+      "Bash(su *)",           // Switch user (ADDED)
+      
+      // Dangerous git operations
+      "Bash(git push origin --force)",
+      "Bash(git push --force *)",     // Any force push (ADDED)
+      "Bash(git push -f *)",          // Force push short form (ADDED)
+      "Bash(git reset --hard *)",     // Hard reset (ADDED - could lose work)
+      "Bash(git clean -fd *)",        // Force clean (ADDED)
+      
+      // System file access
+      "Read(/etc/*)",
+      "Read(/root/*)",
+      
+      // SSH & credentials
+      "Read(/home/*/.ssh/*)",
+      "Read(**/.env)",        // Environment files (ADDED)
+      "Read(**/secrets/**)",  // Secrets directories (ADDED)
+      
+      // System modifications
+      "Bash(reboot)",         // System reboot (ADDED)
+      "Bash(shutdown *)",     // System shutdown (ADDED)
+      "Bash(halt)",           // System halt (ADDED)
+      "Bash(poweroff)",       // System poweroff (ADDED)
+      
+      // Package system modifications
+      "Bash(apt *)",          // System package manager (ADDED)
+      "Bash(yum *)",          // System package manager (ADDED)
+      "Bash(dnf *)",          // System package manager (ADDED)
+      
+      // Disk operations
+      "Bash(dd *)",           // Disk operations (ADDED)
+      "Bash(mkfs *)",         // Format filesystem (ADDED)
+      "Bash(fdisk *)",        // Partition disk (ADDED)
+      
+      // Network modifications
+      "Bash(iptables *)",     // Firewall rules (ADDED)
+      "Bash(ifconfig *)",     // Network config (ADDED)
+      "Bash(ip addr *)",      // Network config (ADDED)
+      
+      // Process management (system-wide)
+      "Bash(killall *)",      // Kill all processes (ADDED)
+      "Bash(pkill *)",        // Kill by pattern (ADDED)
+      
+      // Cron/scheduled tasks
+      "Bash(crontab *)",      // Modify cron jobs (ADDED)
+      "Bash(at *)",           // Schedule tasks (ADDED)
+      
+      // Service management
+      "Bash(systemctl *)",    // System services (ADDED)
+      "Bash(service *)"       // System services (ADDED)
+    ],
+    
+    // Ask for confirmation on these (currently empty - auto-approve via allow list)
+    "ask": []
+  },
+  
+  // ============================================
+  // ENVIRONMENT CONFIGURATION
+  // ============================================
+  "env": {
+    // Increase output token limit for large JSON files
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "64000"
   }
 }

@@ -1,0 +1,918 @@
+
+ ▐▛███▜▌   Claude Code v2.0.27
+▝▜█████▛▘  Sonnet 4.5 · Claude Max
+  ▘▘ ▝▝    /home/shawn/Code/llm-reproducibility
+════════════════════════════════════════ Conversation compacted · ctrl+o for history ════════════════════════════════════════
+  ⎿  Referenced file outputs/sobotkova-et-al-2023/extraction.json
+  ⎿  Read input/queue.yaml (18 lines)
+  ⎿  Read extraction-system/staging/queue.yaml (19 lines)
+  ⎿  Read extraction-system/prompts/01-claims-evidence_pass1_prompt.md (327 lines)
+  ⎿  Todo list read (7 items)
+
+● Continuing comprehensive liberal extraction from Methods sections 2.3-2.5...
+
+● Read(outputs/sobotkova-et-al-2023/extraction.json)
+  ⎿  Read 767 lines
+
+● Read(sources/original-pdf/Sobotkova et al. - 2023 - Creating large, high-quality geospatial datasets from historical maps
+      using novice volunteers.pdf)
+  ⎿  Read PDF (6.6MB)
+
+● Continuing liberal extraction from Methods sections 2.3-2.5...
+
+● Read(outputs/sobotkova-et-al-2023/extraction.json)
+  ⎿  Read 767 lines
+
+● Now extracting comprehensively from Methods sections 2.3-2.5. Reviewing pages 4-6 for all claims and evidence...
+
+● Write(outputs/sobotkova-et-al-2023/extraction.json)
+  ⎿  Updated outputs/sobotkova-et-al-2023/extraction.json with 673 additions and 10 removals                          
+       1    {
+       2      "schema_version": "2.5",
+       3 -    "extraction_timestamp": "2025-10-26T09:50:00Z",
+       3 +    "extraction_timestamp": "2025-10-26T10:15:00Z",
+       4      "extractor": "Claude (Sonnet 4.5) via research-assessor skill",
+       5      "project_metadata": {
+       6        "paper_title": "Creating large, high-quality geospatial datasets from historical maps using novice 
+           volunteers",
+     ...
+       300        },
+       301        {
+       302          "evidence_id": "E022",
+       303 -        "evidence_text": "Students could begin digitising after only minutes of training",
+       303 +        "evidence_text": "Simple and intuitive UI allowed students to 
+           +  begin digitising after only minutes of training",
+       304          "evidence_type": "observational_record",
+       305          "evidence_basis": "observational_record",
+       306 -        "supports_claims": ["C003", "C027"],
+       306 +        "supports_claims": ["C003", "C027", "C047"],
+       307          "location": {
+       308            "section": "2.2. Crowdsourcing digitisation with field-school participants",
+       309            "page": 4
+       310          },
+       311 -        "verbatim_quote": "This approach was refined during the 2018 field season.",
+       312 -        "extraction_confidence": "medium",
+       313 -        "extraction_notes": "Implied by 'simple and intuitive UI allowed students to begin digitising 
+           - after only minutes of training' context"
+       311 +        "verbatim_quote": "As such, it stripped GIS functionality to its essentials, focusing on three 
+           + tasks: layer selection, shape digitisation, and annotation, with validation and automation to improve 
+           + data quality. Geospatial data preparation and management was relegated to staff, while a simple and 
+           + intuitive UI allowed students to begin digitising after only minutes of training.",
+       312 +        "extraction_confidence": "high"
+       313 +      },
+       314 +      {
+       315 +        "evidence_id": "E023",
+       316 +        "evidence_text": "FAIMS Mobile had previously been used with some success for a student-led 
+           + ceramics recording project",
+       317 +        "evidence_type": "archival_document",
+       318 +        "evidence_basis": "author_assertion",
+       319 +        "supports_claims": ["C028"],
+       320 +        "location": {
+       321 +          "section": "2.3. Using a mobile application for map digitisation",
+       322 +          "page": 4
+       323 +        },
+       324 +        "verbatim_quote": "FAIMS Mobile had previously been used with some success for a student-led 
+           + ceramics recording project (VanValkenburgh et al., 2018), and improved recording efficiency in other 
+           + settings (Sobotkova et al., 2016).",
+       325 +        "extraction_confidence": "high"
+       326 +      },
+       327 +      {
+       328 +        "evidence_id": "E024",
+       329 +        "evidence_text": "FAIMS Mobile improved recording efficiency in other settings",
+       330 +        "evidence_type": "archival_document",
+       331 +        "evidence_basis": "author_assertion",
+       332 +        "supports_claims": ["C028"],
+       333 +        "location": {
+       334 +          "section": "2.3. Using a mobile application for map digitisation",
+       335 +          "page": 4
+       336 +        },
+       337 +        "verbatim_quote": "FAIMS Mobile had previously been used with some success for a student-led 
+           + ceramics recording project (VanValkenburgh et al., 2018), and improved recording efficiency in other 
+           + settings (Sobotkova et al., 2016).",
+       338 +        "extraction_confidence": "high"
+       339 +      },
+       340 +      {
+       341 +        "evidence_id": "E025",
+       342 +        "evidence_text": "Digitisation took place at field bases in rural Bulgaria",
+       343 +        "evidence_type": "observational_record",
+       344 +        "evidence_basis": "observational_record",
+       345 +        "supports_claims": ["C029"],
+       346 +        "location": {
+       347 +          "section": "2.3. Using a mobile application for map digitisation",
+       348 +          "page": 4
+       349 +        },
+       350 +        "verbatim_quote": "Our digitisation took place alongside fieldwork, at field bases in rural 
+           + Bulgaria.",
+       351 +        "extraction_confidence": "high"
+       352 +      },
+       353 +      {
+       354 +        "evidence_id": "E026",
+       355 +        "evidence_text": "Reliable internet connectivity could not be guaranteed in rural Bulgaria field 
+           + bases",
+       356 +        "evidence_type": "observational_record",
+       357 +        "evidence_basis": "observational_record",
+       358 +        "supports_claims": ["C029"],
+       359 +        "location": {
+       360 +          "section": "2.3. Using a mobile application for map digitisation",
+       361 +          "page": 4
+       362 +        },
+       363 +        "verbatim_quote": "Reliable internet connectivity could not be guaranteed under these 
+           + circumstances; a system that tolerated degraded network connectivity was required.",
+       364 +        "extraction_confidence": "high"
+       365 +      },
+       366 +      {
+       367 +        "evidence_id": "E027",
+       368 +        "evidence_text": "Only 2 of 12 students brought computers",
+       369 +        "evidence_type": "direct_measurement",
+       370 +        "evidence_basis": "direct_measurement",
+       371 +        "supports_claims": ["C034", "C035"],
+       372 +        "location": {
+       373 +          "section": "2.3. Using a mobile application for map digitisation",
+       374 +          "page": 5
+       375 +        },
+       376 +        "verbatim_quote": "This choice also reduced competition for the limited number of computers, ESRI 
+           + licences, and desk space available in the field, plus it allowed students to use their own devices (only 
+           + two of 12 students brought computers, and none brought mice, but all had mobile devices).",
+       377 +        "extraction_confidence": "high"
+       378 +      },
+       379 +      {
+       380 +        "evidence_id": "E028",
+       381 +        "evidence_text": "None of the students brought mice",
+       382 +        "evidence_type": "direct_measurement",
+       383 +        "evidence_basis": "direct_measurement",
+       384 +        "supports_claims": ["C034", "C035"],
+       385 +        "location": {
+       386 +          "section": "2.3. Using a mobile application for map digitisation",
+       387 +          "page": 5
+       388 +        },
+       389 +        "verbatim_quote": "This choice also reduced competition for the limited number of computers, ESRI 
+           + licences, and desk space available in the field, plus it allowed students to use their own devices (only 
+           + two of 12 students brought computers, and none brought mice, but all had mobile devices).",
+       390 +        "extraction_confidence": "high"
+       391 +      },
+       392 +      {
+       393 +        "evidence_id": "E029",
+       394 +        "evidence_text": "All 12 students had mobile devices",
+       395 +        "evidence_type": "direct_measurement",
+       396 +        "evidence_basis": "direct_measurement",
+       397 +        "supports_claims": ["C034", "C035"],
+       398 +        "location": {
+       399 +          "section": "2.3. Using a mobile application for map digitisation",
+       400 +          "page": 5
+       401 +        },
+       402 +        "verbatim_quote": "This choice also reduced competition for the limited number of computers, ESRI 
+           + licences, and desk space available in the field, plus it allowed students to use their own devices (only 
+           + two of 12 students brought computers, and none brought mice, but all had mobile devices).",
+       403 +        "extraction_confidence": "high"
+       404 +      },
+       405 +      {
+       406 +        "evidence_id": "E030",
+       407 +        "evidence_text": "ESRI ArcGIS Collector and Survey123 had disadvantages: need to divide recording 
+           + between apps, need for internet at setup stages, proprietary nature",
+       408 +        "evidence_type": "observational_record",
+       409 +        "evidence_basis": "author_assertion",
+       410 +        "supports_claims": ["C038"],
+       411 +        "location": {
+       412 +          "section": "2.3. Using a mobile application for map digitisation",
+       413 +          "page": 5
+       414 +        },
+       415 +        "verbatim_quote": "The primary alternatives assessed, ESRI ArcGIS Collector (now succeeded by 
+           + Field Maps) and Survey123, had a number of disadvantages, particularly the need to divide map-centric and
+           +  form-centric recording between the two applications and reconcile the data later, the need for internet 
+           + connectivity at crucial stages of project setup, and the proprietary nature of the system (Sobotkova et 
+           + al., 2021, p. 20).",
+       416 +        "extraction_confidence": "high"
+       417 +      },
+       418 +      {
+       419 +        "evidence_id": "E031",
+       420 +        "evidence_text": "FAIMS Mobile implementation included 7 stages: (1) staff modeled data/workflow, 
+           + (2) developer customized system, (3) staff defined SRS and imported maps, (4) volunteers drew shapes, (5)
+           +  volunteers transcribed attributes, (6) staff exported data, (7) staff did accuracy-checking",
+       421 +        "evidence_type": "observational_record",
+       422 +        "evidence_basis": "observational_record",
+       423 +        "supports_claims": ["C042"],
+       424 +        "location": {
+       425 +          "section": "2.4. Design and implementation of the recording system",
+       426 +          "page": 5
+       427 +        },
+       428 +        "verbatim_quote": "The stages of FAIMS Mobile implementation (Fig. 3) included: (1) project staff 
+           + modelled the data and workflow to ensure that the final dataset met research needs, (2) a junior software
+           +  developer worked with project staff to customise the system, (3) project staff defined a spatial 
+           + reference system (SRS) and imported preprocessed historical maps, (4) volunteers drew a shape (usually a 
+           + point) wherever they saw a target symbol and (5) volunteers transcribed attributes from the map, (6) 
+           + project staff exported data using the FAIMS Mobile server, (7) project staff undertook a targeted 
+           + accuracy-checking exercise.",
+       429 +        "extraction_confidence": "high"
+       430 +      },
+       431 +      {
+       432 +        "evidence_id": "E032",
+       433 +        "evidence_text": "FAIMS Mobile automated: applied SRS, rendered maps in workspace, provided layer 
+           + management including data entry layer, enforced shape topology, displayed pre-defined controlled 
+           + vocabularies, recorded creation time and author, maintained history of all changes, applied validation 
+           + for record completeness, merged data from multiple devices, exported data in common formats",
+       434 +        "evidence_type": "observational_record",
+       435 +        "evidence_basis": "observational_record",
+       436 +        "supports_claims": ["C044"],
+       437 +        "location": {
+       438 +          "section": "2.4. Design and implementation of the recording system",
+       439 +          "page": 5
+       440 +        },
+       441 +        "verbatim_quote": "To support this workflow and make work easier for both project staff and 
+           + participants, FAIMS Mobile automated a number of tasks and provided necessary capabilities. It applied 
+           + the spatial reference system, rendered maps in the workspace, provided layer management (including a data
+           +  entry layer), enforced shape topology, displayed pre-defined controlled vocabularies for attribute 
+           + terms, recorded creation time and author for each record, maintained a history of all changes to data, 
+           + applied validation to ensure record completeness, merged data from multiple devices, and exported data in
+           +  common formats.",
+       442 +        "extraction_confidence": "high"
+       443 +      },
+       444 +      {
+       445 +        "evidence_id": "E033",
+       446 +        "evidence_text": "Digitisation interface had map view for geospatial data interactions and form 
+           + view for attribute creation and editing",
+       447 +        "evidence_type": "observational_record",
+       448 +        "evidence_basis": "observational_record",
+       449 +        "supports_claims": ["C043"],
+       450 +        "location": {
+       451 +          "section": "2.4. Design and implementation of the recording system",
+       452 +          "page": 5
+       453 +        },
+       454 +        "verbatim_quote": "The digitisation interface itself was as streamlined as possible (see Figs. 4 
+           + and 5). Volunteers could toggle between a map view for geospatial data interactions and a form view for 
+           + attribute creation and editing.",
+       455 +        "extraction_confidence": "high"
+       456 +      },
+       457 +      {
+       458 +        "evidence_id": "E034",
+       459 +        "evidence_text": "In the map view, volunteers could adjust layer focus and visibility, pan, and 
+           + zoom; existing records could be searched, retrieved, inspected, and edited",
+       460 +        "evidence_type": "observational_record",
+       461 +        "evidence_basis": "observational_record",
+       462 +        "supports_claims": ["C043"],
+       463 +        "location": {
+       464 +          "section": "2.4. Design and implementation of the recording system",
+       465 +          "page": 5
+       466 +        },
+       467 +        "verbatim_quote": "In the map, they could adjust layer focus and visibility, pan, and zoom. 
+           + Existing records could be searched, retrieved, inspected, and edited.",
+       468 +        "extraction_confidence": "high"
+       469 +      },
+       470 +      {
+       471 +        "evidence_id": "E035",
+       472 +        "evidence_text": "Project staff set up infrastructure and pre-processed and loaded required maps",
+       473 +        "evidence_type": "observational_record",
+       474 +        "evidence_basis": "observational_record",
+       475 +        "supports_claims": ["C045"],
+       476 +        "location": {
+       477 +          "section": "2.4. Design and implementation of the recording system",
+       478 +          "page": 6
+       479 +        },
+       480 +        "verbatim_quote": "Since project staff set up the infrastructure and pre-processed and loaded the 
+           + required maps, volunteers were insulated from the friction of setup, layer management, data aggregation, 
+           + export, and backup.",
+       481 +        "extraction_confidence": "high"
+       482 +      },
+       483 +      {
+       484 +        "evidence_id": "E036",
+       485 +        "evidence_text": "GIS features not needed for digitisation were hidden or eliminated",
+       486 +        "evidence_type": "observational_record",
+       487 +        "evidence_basis": "observational_record",
+       488 +        "supports_claims": ["C043", "C045"],
+       489 +        "location": {
+       490 +          "section": "2.4. Design and implementation of the recording system",
+       491 +          "page": 6
+       492 +        },
+       493 +        "verbatim_quote": "GIS features not needed for digitisation were hidden or eliminated.",
+       494 +        "extraction_confidence": "high"
+       495 +      },
+       496 +      {
+       497 +        "evidence_id": "E037",
+       498 +        "evidence_text": "Students needed only to be capable of selecting files from a list, panning and 
+           + zooming a map, dropping a point, and filling out a form",
+       499 +        "evidence_type": "observational_record",
+       500 +        "evidence_basis": "observational_record",
+       501 +        "supports_claims": ["C046"],
+       502 +        "location": {
+       503 +          "section": "2.4. Design and implementation of the recording system",
+       504 +          "page": 6
+       505 +        },
+       506 +        "verbatim_quote": "Digitisation and metadata creation required no GIS or computing skills. 
+           + Students capable of selecting files from a list, panning and zooming a map, dropping a point, and filling
+           +  out a form were able to create data.",
+       507 +        "extraction_confidence": "high"
+       508 +      },
+       509 +      {
+       510 +        "evidence_id": "E038",
+       511 +        "evidence_text": "Only a few important controls were present: layer management, map navigation, 
+           + record search and retrieval, shape and attribute creation and editing",
+       512 +        "evidence_type": "observational_record",
+       513 +        "evidence_basis": "observational_record",
+       514 +        "supports_claims": ["C043", "C047"],
+       515 +        "location": {
+       516 +          "section": "2.4. Design and implementation of the recording system",
+       517 +          "page": 6
+       518 +        },
+       519 +        "verbatim_quote": "Only a few important controls, including layer management, map navigation, 
+           + record search and retrieval, and shape and attribute creation and editing, were present.",
+       520 +        "extraction_confidence": "high"
+       521 +      },
+       522 +      {
+       523 +        "evidence_id": "E039",
+       524 +        "evidence_text": "Users required almost no training",
+       525 +        "evidence_type": "observational_record",
+       526 +        "evidence_basis": "observational_record",
+       527 +        "supports_claims": ["C003", "C046", "C047"],
+       528 +        "location": {
+       529 +          "section": "2.4. Design and implementation of the recording system",
+       530 +          "page": 6
+       531 +        },
+       532 +        "verbatim_quote": "As a result, users required almost no training and could focus on the act of 
+           + digitisation without being distracted by the technology used to accomplish it (Pascoe et al., 2000).",
+       533 +        "extraction_confidence": "high"
+       534 +      },
+       535 +      {
+       536 +        "evidence_id": "E040",
+       537 +        "evidence_text": "Exported data was consistent and complete, ready for analysis with minimal 
+           + cleaning",
+       538 +        "evidence_type": "observational_record",
+       539 +        "evidence_basis": "observational_record",
+       540 +        "supports_claims": ["C002", "C048"],
+       541 +        "location": {
+       542 +          "section": "2.4. Design and implementation of the recording system",
+       543 +          "page": 6
+       544 +        },
+       545 +        "verbatim_quote": "Exported data was consistent and complete, ready for analysis with minimal 
+           + cleaning.",
+       546 +        "extraction_confidence": "high"
+       547 +      },
+       548 +      {
+       549 +        "evidence_id": "E041",
+       550 +        "evidence_text": "Data adhered to key elements of FAIR principles, especially production of rich 
+           + and plural metadata at time of creation (principles F2, R1.1–1.3)",
+       551 +        "evidence_type": "observational_record",
+       552 +        "evidence_basis": "author_assertion",
+       553 +        "supports_claims": ["C048"],
+       554 +        "location": {
+       555 +          "section": "2.4. Design and implementation of the recording system",
+       556 +          "page": 6
+       557 +        },
+       558 +        "verbatim_quote": "This data adhered to key elements of the FAIR data principles, especially the 
+           + production of 'rich' and 'plural' metadata at the time of data creation (principles F2, R1.1–1.3; 
+           + GO-FAIR, 2017).",
+       559 +        "extraction_confidence": "high"
+       560 +      },
+       561 +      {
+       562 +        "evidence_id": "E042",
+       563 +        "evidence_text": "Code defining customisation, description, and user guide available on GitHub",
+       564 +        "evidence_type": "observational_record",
+       565 +        "evidence_basis": "observational_record",
+       566 +        "supports_claims": ["C036"],
+       567 +        "location": {
+       568 +          "section": "2.4. Design and implementation of the recording system",
+       569 +          "page": 6
+       570 +        },
+       571 +        "verbatim_quote": "The code defining this customisation, along with a description and user guide, 
+           + can be found on GitHub (https://github.com/FAIMS/map-digitisation/releases/tag/map-dig-2018).",
+       572 +        "extraction_confidence": "high"
+       573 +      },
+       574 +      {
+       575 +        "evidence_id": "E043",
+       576 +        "evidence_text": "Success of approach became apparent early in 2017 field season, decision made to
+           +  catalogue inputs vs outputs",
+       577 +        "evidence_type": "observational_record",
+       578 +        "evidence_basis": "observational_record",
+       579 +        "supports_claims": ["C049"],
+       580 +        "location": {
+       581 +          "section": "2.5. Evaluating the digitisation approach",
+       582 +          "page": 6
+       583 +        },
+       584 +        "verbatim_quote": "The success of this approach became apparent early in the 2017 field season. At
+           +  that point, we decided to catalogue inputs (time invested by staff and volunteers) versus outputs 
+           + (features digitised) as part of a research program to evaluate digital approaches to fieldwork (e.g., 
+           + Sobotkova et al., 2016).",
+       585 +        "extraction_confidence": "high"
+       586 +      },
+       587 +      {
+       588 +        "evidence_id": "E044",
+       589 +        "evidence_text": "Time measurements: student programmer via timesheets, volunteers via record 
+           + creation timestamps, project staff via time-on-task journals",
+       590 +        "evidence_type": "observational_record",
+       591 +        "evidence_basis": "observational_record",
+       592 +        "supports_claims": ["C049"],
+       593 +        "location": {
+       594 +          "section": "2.5. Evaluating the digitisation approach",
+       595 +          "page": 6
+       596 +        },
+       597 +        "verbatim_quote": "To measure inputs, we collated the amount of time spent by various participants
+           +  in the process, including the student programmer who instantiated the customisation, the student 
+           + volunteers who undertook the digitisation, and project staff who configured the system, supported 
+           + volunteers, exported data, and checked for errors. Project records provided much of this data (timesheets
+           +  from the programmer; record creation timestamps for students using the system), while project staff 
+           + logged time-on-task for activities in journals.",
+       598 +        "extraction_confidence": "high"
+       599 +      },
+       600 +      {
+       601 +        "evidence_id": "E045",
+       602 +        "evidence_text": "Number of features digitised taken as the output measurement",
+       603 +        "evidence_type": "observational_record",
+       604 +        "evidence_basis": "observational_record",
+       605 +        "supports_claims": ["C049"],
+       606 +        "location": {
+       607 +          "section": "2.5. Evaluating the digitisation approach",
+       608 +          "page": 6
+       609 +        },
+       610 +        "verbatim_quote": "We took the number of features digitised as the output.",
+       611 +        "extraction_confidence": "high"
+       612 +      },
+       613 +      {
+       614 +        "evidence_id": "E046",
+       615 +        "evidence_text": "Additional care taken in 2018 season to ensure complete records and confirm 2017
+           +  time estimates",
+       616 +        "evidence_type": "observational_record",
+       617 +        "evidence_basis": "observational_record",
+       618 +        "supports_claims": ["C049"],
+       619 +        "location": {
+       620 +          "section": "2.5. Evaluating the digitisation approach",
+       621 +          "page": 6
+       622 +        },
+       623 +        "verbatim_quote": "Additional care was taken in the subsequent 2018 season to ensure these records
+           +  were as complete as possible, and confirm 2017 time estimates for system set-up, administration, and 
+           + support in the field.",
+       624 +        "extraction_confidence": "high"
+       625        }
+       626      ],
+       627      "claims": [
+     ...
+       337          "claim_role": "core",
+       338          "primary_function": "empirical_pattern",
+       339          "claim_nature": "evaluative",
+       340 -        "supported_by": ["E005", "E006"],
+       340 +        "supported_by": ["E005", "E006", "E040"],
+       341          "supports_claims": [],
+       342          "location": {
+       343            "section": "Abstract",
+     ...
+       353          "claim_role": "core",
+       354          "primary_function": "comparative_assessment",
+       355          "claim_nature": "comparative",
+       356 -        "supported_by": ["E003", "E004", "E022"],
+       356 +        "supported_by": ["E003", "E004", "E022", "E039"],
+       357          "supports_claims": [],
+       358          "location": {
+       359            "section": "Introduction",
+     ...
+        745          },
+        746          "verbatim_quote": "In 2017, faced with a short field season and little time for student training,
+               we focused on implementing tools that would empower volunteers to digitise maps independently.",
+        747          "extraction_confidence": "high"
+        748 +      },
+        749 +      {
+        750 +        "claim_id": "C028",
+        751 +        "claim_text": "FAIMS Mobile had proven track record in other archaeological recording contexts",
+        752 +        "claim_type": "empirical",
+        753 +        "claim_role": "supporting",
+        754 +        "primary_function": "methodological_justification",
+        755 +        "claim_nature": "descriptive",
+        756 +        "supported_by": ["E023", "E024"],
+        757 +        "supports_claims": ["C029"],
+        758 +        "location": {
+        759 +          "section": "2.3. Using a mobile application for map digitisation",
+        760 +          "page": 4
+        761 +        },
+        762 +        "verbatim_quote": "FAIMS Mobile had previously been used with some success for a student-led 
+            + ceramics recording project (VanValkenburgh et al., 2018), and improved recording efficiency in other 
+            + settings (Sobotkova et al., 2016).",
+        763 +        "extraction_confidence": "high"
+        764 +      },
+        765 +      {
+        766 +        "claim_id": "C029",
+        767 +        "claim_text": "FAIMS Mobile working offline was a primary decision factor for choosing the 
+            + platform",
+        768 +        "claim_type": "interpretation",
+        769 +        "claim_role": "intermediate",
+        770 +        "primary_function": "methodological_justification",
+        771 +        "claim_nature": "causal",
+        772 +        "supported_by": ["E025", "E026"],
+        773 +        "supports_claims": ["C031"],
+        774 +        "location": {
+        775 +          "section": "2.3. Using a mobile application for map digitisation",
+        776 +          "page": 4
+        777 +        },
+        778 +        "verbatim_quote": "The decision to use mobile software, and FAIMS Mobile in particular, was based
+            +  on several factors. First, FAIMS Mobile worked offline. Our digitisation took place alongside 
+            + fieldwork, at field bases in rural Bulgaria. Reliable internet connectivity could not be guaranteed 
+            + under these circumstances; a system that tolerated degraded network connectivity was required.",
+        779 +        "extraction_confidence": "high"
+        780 +      },
+        781 +      {
+        782 +        "claim_id": "C030",
+        783 +        "claim_text": "FAIMS Mobile met the functional requirements identified for geospatial software",
+        784 +        "claim_type": "interpretation",
+        785 +        "claim_role": "supporting",
+        786 +        "primary_function": "methodological_justification",
+        787 +        "claim_nature": "evaluative",
+        788 +        "supported_by": [],
+        789 +        "supports_claims": ["C031"],
+        790 +        "location": {
+        791 +          "section": "2.3. Using a mobile application for map digitisation",
+        792 +          "page": 4
+        793 +        },
+        794 +        "verbatim_quote": "Second, this system met the functional requirements we identified for 
+            + geospatial software. It supported the production of a customised map digitisation system with a simple 
+            + UI and streamlined workflow, while still providing essential features including layer management, 
+            + geometry creation and editing, capture and association of structured data, import and use of arbitrary 
+            + rasters (scanned maps as geotiffs), automated metadata creation, and data validation.",
+        795 +        "extraction_confidence": "high"
+        796 +      },
+        797 +      {
+        798 +        "claim_id": "C031",
+        799 +        "claim_text": "Reusing FAIMS Mobile for digitization offered consistent working environment, 
+            + reduced administrative load, leveraged experience, avoided additional costs",
+        800 +        "claim_type": "interpretation",
+        801 +        "claim_role": "intermediate",
+        802 +        "primary_function": "methodological_justification",
+        803 +        "claim_nature": "evaluative",
+        804 +        "supported_by": [],
+        805 +        "supports_claims": ["C005"],
+        806 +        "location": {
+        807 +          "section": "2.3. Using a mobile application for map digitisation",
+        808 +          "page": 4
+        809 +        },
+        810 +        "verbatim_quote": "Fourth, we were already using FAIMS Mobile for in-field legacy data 
+            + verification, the project's main activity. Reusing the platform for digitisation offered a consistent 
+            + working environment for users, reduced administrative load on staff, leveraged our experience with the 
+            + platform, and avoided any additional hardware or software costs.",
+        811 +        "extraction_confidence": "high"
+        812 +      },
+        813 +      {
+        814 +        "claim_id": "C032",
+        815 +        "claim_text": "Student volunteers are accustomed to and prefer slippy-map touch-screen interfaces
+            +  on mobile devices over desktop UI idiom",
+        816 +        "claim_type": "empirical",
+        817 +        "claim_role": "supporting",
+        818 +        "primary_function": "empirical_pattern",
+        819 +        "claim_nature": "descriptive",
+        820 +        "supported_by": [],
+        821 +        "supports_claims": ["C033"],
+        822 +        "location": {
+        823 +          "section": "2.3. Using a mobile application for map digitisation",
+        824 +          "page": 4
+        825 +        },
+        826 +        "verbatim_quote": "Fifth, student volunteers are accustomed to, and even prefer, 'slippy-map', 
+            + touch-screen interfaces on mobile devices over the point-and-click, desktop UI idiom.",
+        827 +        "extraction_confidence": "high"
+        828 +      },
+        829 +      {
+        830 +        "claim_id": "C033",
+        831 +        "claim_text": "Use of mobile interface would make it easier for students to learn the system and 
+            + more likely to stick with digitisation",
+        832 +        "claim_type": "interpretation",
+        833 +        "claim_role": "supporting",
+        834 +        "primary_function": "methodological_justification",
+        835 +        "claim_nature": "causal",
+        836 +        "supported_by": [],
+        837 +        "supports_claims": ["C003", "C027"],
+        838 +        "location": {
+        839 +          "section": "2.3. Using a mobile application for map digitisation",
+        840 +          "page": 4
+        841 +        },
+        842 +        "verbatim_quote": "We believed that the use of the former would make it easier for students to 
+            + learn the system, and more likely to stick with digitisation.",
+        843 +        "extraction_confidence": "high"
+        844 +      },
+        845 +      {
+        846 +        "claim_id": "C034",
+        847 +        "claim_text": "Mobile device choice reduced competition for limited computers, ESRI licenses, and
+            +  desk space in the field",
+        848 +        "claim_type": "interpretation",
+        849 +        "claim_role": "supporting",
+        850 +        "primary_function": "methodological_justification",
+        851 +        "claim_nature": "evaluative",
+        852 +        "supported_by": ["E027", "E028", "E029"],
+        853 +        "supports_claims": ["C031"],
+        854 +        "location": {
+        855 +          "section": "2.3. Using a mobile application for map digitisation",
+        856 +          "page": 5
+        857 +        },
+        858 +        "verbatim_quote": "This choice also reduced competition for the limited number of computers, ESRI
+            +  licences, and desk space available in the field, plus it allowed students to use their own devices 
+            + (only two of 12 students brought computers, and none brought mice, but all had mobile devices).",
+        859 +        "extraction_confidence": "high"
+        860 +      },
+        861 +      {
+        862 +        "claim_id": "C035",
+        863 +        "claim_text": "Mobile device choice allowed students to use their own devices",
+        864 +        "claim_type": "empirical",
+        865 +        "claim_role": "supporting",
+        866 +        "primary_function": "empirical_pattern",
+        867 +        "claim_nature": "descriptive",
+        868 +        "supported_by": ["E027", "E028", "E029"],
+        869 +        "supports_claims": ["C034"],
+        870 +        "location": {
+        871 +          "section": "2.3. Using a mobile application for map digitisation",
+        872 +          "page": 5
+        873 +        },
+        874 +        "verbatim_quote": "This choice also reduced competition for the limited number of computers, ESRI
+            +  licences, and desk space available in the field, plus it allowed students to use their own devices 
+            + (only two of 12 students brought computers, and none brought mice, but all had mobile devices).",
+        875 +        "extraction_confidence": "high"
+        876 +      },
+        877 +      {
+        878 +        "claim_id": "C036",
+        879 +        "claim_text": "Authors preferred open-source software customised via code for redeployability and
+            +  transparency advantages",
+        880 +        "claim_type": "interpretation",
+        881 +        "claim_role": "supporting",
+        882 +        "primary_function": "methodological_justification",
+        883 +        "claim_nature": "evaluative",
+        884 +        "supported_by": ["E042"],
+        885 +        "supports_claims": ["C005"],
+        886 +        "location": {
+        887 +          "section": "2.3. Using a mobile application for map digitisation",
+        888 +          "page": 5
+        889 +        },
+        890 +        "verbatim_quote": "Finally, we preferred the use of open-source software customised via code for 
+            + its redeployability and transparency advantages.",
+        891 +        "extraction_confidence": "high"
+        892 +      },
+        893 +      {
+        894 +        "claim_id": "C037",
+        895 +        "claim_text": "No existing system met requirements off-the-shelf without significant 
+            + customisation",
+        896 +        "claim_type": "empirical",
+        897 +        "claim_role": "supporting",
+        898 +        "primary_function": "limitation_acknowledgment",
+        899 +        "claim_nature": "evaluative",
+        900 +        "supported_by": [],
+        901 +        "supports_claims": ["C038"],
+        902 +        "location": {
+        903 +          "section": "2.3. Using a mobile application for map digitisation",
+        904 +          "page": 5
+        905 +        },
+        906 +        "verbatim_quote": "No existing system met these requirements 'off-the-shelf', without significant
+            +  customisation, and no competing product offered enough of an advantage to justify adopting a second 
+            + geospatial recording system.",
+        907 +        "extraction_confidence": "high"
+        908 +      },
+        909 +      {
+        910 +        "claim_id": "C038",
+        911 +        "claim_text": "No competing product offered enough advantage to justify adopting a second 
+            + geospatial recording system",
+        912 +        "claim_type": "interpretation",
+        913 +        "claim_role": "supporting",
+        914 +        "primary_function": "methodological_justification",
+        915 +        "claim_nature": "comparative",
+        916 +        "supported_by": ["E030"],
+        917 +        "supports_claims": ["C029", "C031"],
+        918 +        "location": {
+        919 +          "section": "2.3. Using a mobile application for map digitisation",
+        920 +          "page": 5
+        921 +        },
+        922 +        "verbatim_quote": "No existing system met these requirements 'off-the-shelf', without significant
+            +  customisation, and no competing product offered enough of an advantage to justify adopting a second 
+            + geospatial recording system.",
+        923 +        "extraction_confidence": "high"
+        924 +      },
+        925 +      {
+        926 +        "claim_id": "C039",
+        927 +        "claim_text": "Digitisation of scanned maps deviated from the core FAIMS Mobile use-case of field
+            +  data collection",
+        928 +        "claim_type": "interpretation",
+        929 +        "claim_role": "supporting",
+        930 +        "primary_function": "limitation_acknowledgment",
+        931 +        "claim_nature": "descriptive",
+        932 +        "supported_by": [],
+        933 +        "supports_claims": ["C040"],
+        934 +        "location": {
+        935 +          "section": "2.3. Using a mobile application for map digitisation",
+        936 +          "page": 5
+        937 +        },
+        938 +        "verbatim_quote": "Digitisation of scanned maps deviated from the 'core' FAIMS Mobile use-case of
+            +  field data collection, so it served both as a test of the platform's adaptability, and as an 
+            + exploration of the potential benefits offered by repurposing mobile applications for field data capture 
+            + to digitisation projects.",
+        939 +        "extraction_confidence": "high"
+        940 +      },
+        941 +      {
+        942 +        "claim_id": "C040",
+        943 +        "claim_text": "The project served as a test of FAIMS Mobile platform's adaptability",
+        944 +        "claim_type": "interpretation",
+        945 +        "claim_role": "supporting",
+        946 +        "primary_function": "methodological_justification",
+        947 +        "claim_nature": "evaluative",
+        948 +        "supported_by": [],
+        949 +        "supports_claims": ["C005"],
+        950 +        "location": {
+        951 +          "section": "2.3. Using a mobile application for map digitisation",
+        952 +          "page": 5
+        953 +        },
+        954 +        "verbatim_quote": "Digitisation of scanned maps deviated from the 'core' FAIMS Mobile use-case of
+            +  field data collection, so it served both as a test of the platform's adaptability, and as an 
+            + exploration of the potential benefits offered by repurposing mobile applications for field data capture 
+            + to digitisation projects.",
+        955 +        "extraction_confidence": "high"
+        956 +      },
+        957 +      {
+        958 +        "claim_id": "C041",
+        959 +        "claim_text": "The project was an exploration of potential benefits offered by repurposing mobile
+            +  applications for field data capture to digitisation projects",
+        960 +        "claim_type": "interpretation",
+        961 +        "claim_role": "intermediate",
+        962 +        "primary_function": "methodological_justification",
+        963 +        "claim_nature": "evaluative",
+        964 +        "supported_by": [],
+        965 +        "supports_claims": ["C005", "C040"],
+        966 +        "location": {
+        967 +          "section": "2.3. Using a mobile application for map digitisation",
+        968 +          "page": 5
+        969 +        },
+        970 +        "verbatim_quote": "Digitisation of scanned maps deviated from the 'core' FAIMS Mobile use-case of
+            +  field data collection, so it served both as a test of the platform's adaptability, and as an 
+            + exploration of the potential benefits offered by repurposing mobile applications for field data capture 
+            + to digitisation projects.",
+        971 +        "extraction_confidence": "high"
+        972 +      },
+        973 +      {
+        974 +        "claim_id": "C042",
+        975 +        "claim_text": "The approach moved activities requiring technical expertise to phases where 
+            + specialists could contribute while simplifying tasks for volunteers",
+        976 +        "claim_type": "interpretation",
+        977 +        "claim_role": "intermediate",
+        978 +        "primary_function": "methodological_justification",
+        979 +        "claim_nature": "descriptive",
+        980 +        "supported_by": ["E031"],
+        981 +        "supports_claims": ["C027", "C005"],
+        982 +        "location": {
+        983 +          "section": "2.4. Design and implementation of the recording system",
+        984 +          "page": 5
+        985 +        },
+        986 +        "verbatim_quote": "This approach moved activities requiring technical expertise to phases where 
+            + specialists could contribute, while simplifying the tasks assigned to student volunteers as much as 
+            + possible.",
+        987 +        "extraction_confidence": "high"
+        988 +      },
+        989 +      {
+        990 +        "claim_id": "C043",
+        991 +        "claim_text": "The digitisation interface was streamlined as much as possible",
+        992 +        "claim_type": "interpretation",
+        993 +        "claim_role": "supporting",
+        994 +        "primary_function": "methodological_justification",
+        995 +        "claim_nature": "evaluative",
+        996 +        "supported_by": ["E033", "E034", "E036", "E038"],
+        997 +        "supports_claims": ["C042", "C047"],
+        998 +        "location": {
+        999 +          "section": "2.4. Design and implementation of the recording system",
+       1000 +          "page": 5
+       1001 +        },
+       1002 +        "verbatim_quote": "The digitisation interface itself was as streamlined as possible (see Figs. 4 
+            + and 5).",
+       1003 +        "extraction_confidence": "high"
+       1004 +      },
+       1005 +      {
+       1006 +        "claim_id": "C044",
+       1007 +        "claim_text": "FAIMS Mobile automated numerous tasks to make work easier for both project staff 
+            + and participants",
+       1008 +        "claim_type": "empirical",
+       1009 +        "claim_role": "supporting",
+       1010 +        "primary_function": "methodological_justification",
+       1011 +        "claim_nature": "descriptive",
+       1012 +        "supported_by": ["E032"],
+       1013 +        "supports_claims": ["C042", "C047"],
+       1014 +        "location": {
+       1015 +          "section": "2.4. Design and implementation of the recording system",
+       1016 +          "page": 5
+       1017 +        },
+       1018 +        "verbatim_quote": "To support this workflow and make work easier for both project staff and 
+            + participants, FAIMS Mobile automated a number of tasks and provided necessary capabilities.",
+       1019 +        "extraction_confidence": "high"
+       1020 +      },
+       1021 +      {
+       1022 +        "claim_id": "C045",
+       1023 +        "claim_text": "Volunteers were insulated from the friction of setup, layer management, data 
+            + aggregation, export, and backup",
+       1024 +        "claim_type": "interpretation",
+       1025 +        "claim_role": "supporting",
+       1026 +        "primary_function": "methodological_justification",
+       1027 +        "claim_nature": "evaluative",
+       1028 +        "supported_by": ["E035", "E036"],
+       1029 +        "supports_claims": ["C042", "C047"],
+       1030 +        "location": {
+       1031 +          "section": "2.4. Design and implementation of the recording system",
+       1032 +          "page": 6
+       1033 +        },
+       1034 +        "verbatim_quote": "Since project staff set up the infrastructure and pre-processed and loaded the
+            +  required maps, volunteers were insulated from the friction of setup, layer management, data 
+            + aggregation, export, and backup.",
+       1035 +        "extraction_confidence": "high"
+       1036 +      },
+       1037 +      {
+       1038 +        "claim_id": "C046",
+       1039 +        "claim_text": "Digitisation and metadata creation required no GIS or computing skills",
+       1040 +        "claim_type": "empirical",
+       1041 +        "claim_role": "supporting",
+       1042 +        "primary_function": "empirical_pattern",
+       1043 +        "claim_nature": "evaluative",
+       1044 +        "supported_by": ["E037", "E039"],
+       1045 +        "supports_claims": ["C003", "C027"],
+       1046 +        "location": {
+       1047 +          "section": "2.4. Design and implementation of the recording system",
+       1048 +          "page": 6
+       1049 +        },
+       1050 +        "verbatim_quote": "Digitisation and metadata creation required no GIS or computing skills.",
+       1051 +        "extraction_confidence": "high"
+       1052 +      },
+       1053 +      {
+       1054 +        "claim_id": "C047",
+       1055 +        "claim_text": "Users could focus on the act of digitisation without being distracted by the 
+            + technology",
+       1056 +        "claim_type": "interpretation",
+       1057 +        "claim_role": "intermediate",
+       1058 +        "primary_function": "methodological_justification",
+       1059 +        "claim_nature": "evaluative",
+       1060 +        "supported_by": ["E022", "E038", "E039"],
+       1061 +        "supports_claims": ["C003", "C027", "C005"],
+       1062 +        "location": {
+       1063 +          "section": "2.4. Design and implementation of the recording system",
+       1064 +          "page": 6
+       1065 +        },
+       1066 +        "verbatim_quote": "As a result, users required almost no training and could focus on the act of 
+            + digitisation without being distracted by the technology used to accomplish it (Pascoe et al., 2000).",
+       1067 +        "extraction_confidence": "high"
+       1068 +      },
+       1069 +      {
+       1070 +        "claim_id": "C048",
+       1071 +        "claim_text": "Exported data was analysis-ready and adhered to FAIR principles",
+       1072 +        "claim_type": "empirical",
+       1073 +        "claim_role": "intermediate",
+       1074 +        "primary_function": "empirical_pattern",
+       1075 +        "claim_nature": "evaluative",
+       1076 +        "supported_by": ["E040", "E041"],
+       1077 +        "supports_claims": ["C002"],
+       1078 +        "location": {
+       1079 +          "section": "2.4. Design and implementation of the recording system",
+       1080 +          "page": 6
+       1081 +        },
+       1082 +        "verbatim_quote": "Exported data was consistent and complete, ready for analysis with minimal 
+            + cleaning. This data adhered to key elements of the FAIR data principles, especially the production of 
+            + 'rich' and 'plural' metadata at the time of data creation (principles F2, R1.1–1.3; GO-FAIR, 2017).",
+       1083 +        "extraction_confidence": "high"
+       1084 +      },
+       1085 +      {
+       1086 +        "claim_id": "C049",
+       1087 +        "claim_text": "Evaluation of inputs vs outputs was part of research program to evaluate digital 
+            + approaches to fieldwork",
+       1088 +        "claim_type": "interpretation",
+       1089 +        "claim_role": "supporting",
+       1090 +        "primary_function": "methodological_justification",
+       1091 +        "claim_nature": "descriptive",
+       1092 +        "supported_by": ["E043", "E044", "E045", "E046"],
+       1093 +        "supports_claims": [],
+       1094 +        "location": {
+       1095 +          "section": "2.5. Evaluating the digitisation approach",
+       1096 +          "page": 6
+       1097 +        },
+       1098 +        "verbatim_quote": "The success of this approach became apparent early in the 2017 field season. 
+            + At that point, we decided to catalogue inputs (time invested by staff and volunteers) versus outputs 
+            + (features digitised) as part of a research program to evaluate digital approaches to fieldwork (e.g., 
+            + Sobotkova et al., 2016).",
+       1099 +        "extraction_confidence": "high"
+       1100        }
+       1101      ],
+       1102      "implicit_arguments": [],
+     ...
+       757        "known_limitations": [],
+       758        "assessment_blockers": [],
+       759        "pass": 1,
+       760 -      "section_extracted": "Abstract + Introduction + Methods sections 2.1-2.2 (partial)",
+       760 +      "section_extracted": "Abstract + Introduction + Methods sections 2.1-2.5 (
+           +  complete through subsection 2.5)",
+       761        "extraction_strategy": "Liberal extraction with over-capture",
+       762        "known_uncertainties": [
+       763 -        "Continuing extraction from Methods sections 2.3-2.5, then Results, Discussion, Conclusion"
+       763 +        "Continuing extraction from Results section 3.1-3.5, then Discussion 4.1-4.3, and Conclusion
+           +   section 5"
+       764        ]
+       765      }
+       766    }
+
+● Validating write with jq to ensure no data loss...
+
+● Bash(jq '{evidence: (.evidence | length), claims: (.claims | length), implicit_arguments: (.implicit_arguments | length),
+      research_designs: (.research_designs | leng…)
+  ⎿  {                            
+       "evidence": 46,
+       "claims": 49,
+     … +5 lines (ctrl+o to expand)
+
+● Validation successful - no data loss! Updated totals: 46 evidence items, 49 claims.
+
+  Completed comprehensive liberal extraction through Methods sections 2.1-2.5, adding 24 new evidence items and 22 new
+  claims from sections covering:
+  - 2.3: Using a mobile application for map digitisation (decision factors for choosing FAIMS Mobile)
+  - 2.4: Design and implementation of the recording system (7-stage workflow, automation features, streamlined interface)
+  - 2.5: Evaluating the digitisation approach (inputs vs outputs tracking methodology)
+
+  Continuing with Results section 3.1-3.5 (pages 6-9)...
+
+
+
