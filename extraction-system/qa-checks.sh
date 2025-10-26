@@ -43,9 +43,11 @@ echo ""
 
 # Check 1: Schema-Prompt Fields
 echo "CHECK 1: Schema-Prompt Field Consistency"
-grep -roh '[a-z_]*_quote\|[a-z_]*_text\|[a-z_]*_metadata\|[a-z_]*_status' extraction-system/prompts/*.md 2>/dev/null | sort -u > /tmp/prompt_fields.txt
+# Scan only extraction prompts (0*.md, readme.md), exclude QA documentation
+grep -roE '\b[a-z_]+_(quote|text|metadata|status)\b' extraction-system/prompts/0*.md extraction-system/prompts/readme.md 2>/dev/null | cut -d: -f2 | sort -u > /tmp/prompt_fields.txt
 jq -r '.. | objects | keys[]' extraction-system/schema/extraction_schema.json 2>/dev/null | sort -u > /tmp/schema_fields.txt
-MISMATCHES=$(comm -23 /tmp/prompt_fields.txt /tmp/schema_fields.txt | grep -v "^$")
+# Filter out known validation report fields (legitimate, but not in extraction schema)
+MISMATCHES=$(comm -23 /tmp/prompt_fields.txt /tmp/schema_fields.txt | grep -v "^$" | grep -v "overall_status\|validation_status")
 if [ -z "$MISMATCHES" ]; then
   check_status "PASS" "All prompt fields exist in schema"
 else
@@ -76,8 +78,8 @@ echo ""
 
 # Check 3: Terminology Consistency
 echo "CHECK 3: Terminology Consistency"
-WRONG_VERBATIM=$(grep -r "verbatim_text" extraction-system/ --include="*.md" 2>/dev/null | grep -v ".git" | wc -l)
-WRONG_SOURCE=$(grep -r "source_items" extraction-system/ --include="*.md" 2>/dev/null | grep -v ".git" | wc -l)
+WRONG_VERBATIM=$(grep -r "verbatim_text" extraction-system/prompts/0*.md extraction-system/prompts/readme.md extraction-system/skill/ 2>/dev/null | wc -l)
+WRONG_SOURCE=$(grep -r "source_items" extraction-system/prompts/0*.md extraction-system/prompts/readme.md extraction-system/skill/ 2>/dev/null | wc -l)
 
 if [ $WRONG_VERBATIM -eq 0 ] && [ $WRONG_SOURCE -eq 0 ]; then
   check_status "PASS" "Terminology consistent"
@@ -133,7 +135,7 @@ if [ "$MODE" = "full" ]; then
   echo "CHECK 6: Regression Watch - Known Issues"
 
   # File safety rules
-  if grep -q "NEVER.*partial.*Read\|NEVER Partial Read Before Full Write" extraction-system/WORKFLOW.md 2>/dev/null; then
+  if grep -q "NEVER.*partial.*Read\|NEVER Partial Read Before Full Write" extraction-system/staging/WORKFLOW.md 2>/dev/null; then
     check_status "PASS" "File safety rules present in WORKFLOW.md"
   else
     check_status "FAIL" "File safety rules missing from WORKFLOW.md"

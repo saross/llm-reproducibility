@@ -429,108 +429,23 @@ Schema v2.5 requires all Research Designs, Methods, and Protocols to be properly
 
 ## Validation Report Format
 
-```json
-{
-  "validation_summary": {
-    "overall_status": "PASS" | "PASS_WITH_ISSUES" | "FAIL",
-    "total_issues": 7,
-    "critical": 0,
-    "important": 2,
-    "minor": 5,
-    "warnings": 0
-  },
-  
-  "cross_reference_integrity": {
-    "broken_references": [...],
-    "bidirectional_inconsistencies": [...],
-    "orphaned_objects": [...]
-  },
-  
-  "hierarchy_validation": {
-    "rdmap_hierarchy_issues": [...],
-    "claims_hierarchy_issues": [...],
-    "evidence_chain_issues": [...]
-  },
-  
-  "schema_compliance": {
-    "missing_required_fields": [...],
-    "invalid_enum_values": [...],
-    "id_format_errors": [...],
-    "location_structure_issues": [...]
-  },
-  
-  "source_verification": {
-    "evidence_source_issues": [...],
-    "implicit_argument_source_issues": [...],
-    "rdmap_source_issues": [...],
-    "source_verification_metrics": {
-      "evidence_claims": {
-        "total": 45,
-        "passed": 43,
-        "pass_rate": 95.6,
-        "status": "target"
-      },
-      "implicit_arguments": {
-        "total": 3,
-        "passed": 3,
-        "pass_rate": 100,
-        "status": "target"
-      },
-      "rdmap": {
-        "research_designs": {
-          "explicit": {"total": 5, "passed": 5, "pass_rate": 100},
-          "implicit": {"total": 1, "passed": 1, "pass_rate": 100},
-          "overall": {"total": 6, "passed": 6, "pass_rate": 100}
-        },
-        "methods": {
-          "explicit": {"total": 18, "passed": 17, "pass_rate": 94.4},
-          "implicit": {"total": 2, "passed": 2, "pass_rate": 100},
-          "overall": {"total": 20, "passed": 19, "pass_rate": 95.0}
-        },
-        "protocols": {
-          "explicit": {"total": 25, "passed": 24, "pass_rate": 96.0},
-          "implicit": {"total": 1, "passed": 0, "pass_rate": 0},
-          "overall": {"total": 26, "passed": 24, "pass_rate": 92.3}
-        },
-        "rdmap_overall": {
-          "total": 52,
-          "passed": 49,
-          "pass_rate": 94.2,
-          "status": "warning"
-        }
-      }
-    }
-  },
-  
-  "expected_information_completeness": {
-    "critical": [...],
-    "important": [...],
-    "minor": [...],
-    "summary": {
-      "total_gaps": 12,
-      "critical": 2,
-      "important": 5,
-      "minor": 5
-    }
-  },
-  
-  "consolidation_verification": {
-    "consolidation_issues": [...]
-  },
-  
-  "type_consistency": {
-    "design_type_mismatches": [...],
-    "method_type_mismatches": [...],
-    "status_sourcing_mismatches": [...]
-  },
-  
-  "recommendations": [
-    "Fix 3 critical cross-reference issues before assessment",
-    "Review 2 orphaned protocols for tier reclassification",
-    "Improve RDMAP sourcing quality - currently at 94.2% (target: >95%)"
-  ]
-}
-```
+Output your validation report as JSON following the template structure:
+
+**Template:** `extraction-system/templates/validation_report_template.json`
+
+**Key sections to populate:**
+
+1. **validation_summary:** Overall status (PASS/PASS_WITH_ISSUES/FAIL), issue counts by severity
+2. **cross_reference_integrity:** Broken references, bidirectional inconsistencies, orphaned objects
+3. **hierarchy_validation:** RDMAP tier issues, claims tier issues, evidence chain issues
+4. **schema_compliance:** Missing fields, invalid enums, ID format errors, location structure issues
+5. **source_verification:** Source issues + detailed pass rate metrics for all entity types
+6. **expected_information_completeness:** Critical/important/minor gaps with summary counts
+7. **consolidation_verification:** Consolidation metadata issues or inappropriate consolidations
+8. **type_consistency:** Design type, method type, status/sourcing mismatches
+9. **recommendations:** Prioritised actionable recommendations (most critical first)
+
+**Ensure all counts accurate and all issues documented with sufficient detail for fixes.**
 
 ---
 

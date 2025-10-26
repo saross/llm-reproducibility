@@ -242,6 +242,9 @@ This schema defines six object types for extracting research methodology and arg
 - `design_text`: Description of the design decision
 - `design_type`: `research_question | theoretical_framework | study_design | scope_definition | positionality`
 
+**Schema v2.6.2 Simplification:**
+Conditional objects (`research_framing`, `theoretical_framework`, `study_design`, `scope`, `positionality`) are **FULLY OPTIONAL**. You can create minimal Research Designs with just the three required fields above. Only populate conditional objects when detail is present and beneficial for assessment. This reduces consolidation pressure while preserving assessment capability for hypothesis timing, theoretical grounding, and design rationale.
+
 **Key fields:**
 - `enables_methods`: Array of method IDs this design enables
 - `reasoning_approach`: `inductive | deductive | abductive | mixed`

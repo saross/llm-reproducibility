@@ -1,0 +1,110 @@
+{
+  "_comment": "Validation Report Template for RDMAP Pass 3 (v2.5)",
+  "_comment_usage": "This template defines the structure for validation reports generated during Pass 3. All fields should be populated based on validation checks performed on extraction.json",
+
+  "validation_summary": {
+    "_comment": "High-level summary of validation status",
+    "overall_status": "PASS | PASS_WITH_ISSUES | FAIL",
+    "total_issues": 0,
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "warnings": 0
+  },
+
+  "cross_reference_integrity": {
+    "_comment": "Issues with cross-references between entities (broken references, bidirectional inconsistencies, orphaned objects)",
+    "broken_references": [],
+    "bidirectional_inconsistencies": [],
+    "orphaned_objects": []
+  },
+
+  "hierarchy_validation": {
+    "_comment": "Issues with tier hierarchies (RD→M→P, Core→Intermediate→Supporting claims, evidence chains)",
+    "rdmap_hierarchy_issues": [],
+    "claims_hierarchy_issues": [],
+    "evidence_chain_issues": []
+  },
+
+  "schema_compliance": {
+    "_comment": "Schema v2.5 compliance issues (missing required fields, invalid enum values, ID format errors, location structure issues)",
+    "missing_required_fields": [],
+    "invalid_enum_values": [],
+    "id_format_errors": [],
+    "location_structure_issues": []
+  },
+
+  "source_verification": {
+    "_comment": "Source verification for all items (explicit items must have verbatim_quote, implicit items must have trigger infrastructure)",
+    "evidence_source_issues": [],
+    "implicit_argument_source_issues": [],
+    "rdmap_source_issues": [],
+    "source_verification_metrics": {
+      "_comment": "Pass rates for sourcing quality by entity type",
+      "evidence_claims": {
+        "total": 0,
+        "passed": 0,
+        "pass_rate": 0.0,
+        "status": "target | warning | fail"
+      },
+      "implicit_arguments": {
+        "total": 0,
+        "passed": 0,
+        "pass_rate": 0.0,
+        "status": "target | warning | fail"
+      },
+      "rdmap": {
+        "research_designs": {
+          "explicit": {"total": 0, "passed": 0, "pass_rate": 0.0},
+          "implicit": {"total": 0, "passed": 0, "pass_rate": 0.0},
+          "overall": {"total": 0, "passed": 0, "pass_rate": 0.0}
+        },
+        "methods": {
+          "explicit": {"total": 0, "passed": 0, "pass_rate": 0.0},
+          "implicit": {"total": 0, "passed": 0, "pass_rate": 0.0},
+          "overall": {"total": 0, "passed": 0, "pass_rate": 0.0}
+        },
+        "protocols": {
+          "explicit": {"total": 0, "passed": 0, "pass_rate": 0.0},
+          "implicit": {"total": 0, "passed": 0, "pass_rate": 0.0},
+          "overall": {"total": 0, "passed": 0, "pass_rate": 0.0}
+        },
+        "rdmap_overall": {
+          "total": 0,
+          "passed": 0,
+          "pass_rate": 0.0,
+          "status": "target | warning | fail"
+        }
+      }
+    }
+  },
+
+  "expected_information_completeness": {
+    "_comment": "Tracking of expected but missing information (critical for transparency assessment)",
+    "critical": [],
+    "important": [],
+    "minor": [],
+    "summary": {
+      "total_gaps": 0,
+      "critical": 0,
+      "important": 0,
+      "minor": 0
+    }
+  },
+
+  "consolidation_verification": {
+    "_comment": "Issues with consolidation metadata or inappropriate consolidations",
+    "consolidation_issues": []
+  },
+
+  "type_consistency": {
+    "_comment": "Type/structure consistency issues (design types, method types, status/sourcing mismatches)",
+    "design_type_mismatches": [],
+    "method_type_mismatches": [],
+    "status_sourcing_mismatches": []
+  },
+
+  "recommendations": [
+    "_comment: Array of actionable recommendations for fixing issues, prioritized by severity"
+  ]
+}

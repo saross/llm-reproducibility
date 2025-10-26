@@ -1,7 +1,7 @@
 # Research Assessor - Reference Documentation
 
-**Version:** 2.5  
-**Last Updated:** 2025-10-22
+**Version:** 2.6.2
+**Last Updated:** 2025-10-26
 
 This directory contains decision frameworks, schema definitions, and examples to support the extraction workflow.
 
@@ -9,9 +9,8 @@ This directory contains decision frameworks, schema definitions, and examples to
 
 ```
 references/
-├── schema/                        # JSON schema and documentation
-│   ├── extraction_schema.json    # Complete v2.5 JSON schema
-│   └── schema-guide.md            # Human-readable schema documentation
+├── schema/                        # Schema documentation
+│   └── schema-guide.md            # Human-readable schema documentation (v2.6.2)
 ├── checklists/                    # Decision frameworks and guidelines
 │   ├── tier-assignment-guide.md
 │   ├── consolidation-patterns.md
@@ -38,13 +37,15 @@ references/
 
 ### Schema Documentation (`schema/`)
 
-Complete object structure definitions for v2.5:
-- **extraction_schema.json** - Complete JSON schema with all v2.5 fields
+Complete object structure definitions for v2.6.2:
 - **schema-guide.md** - Human-readable documentation for all six object types
   - Defines: evidence, claims, implicit_arguments, research_designs, methods, protocols
   - V2.5 sourcing requirements (verbatim_quote, trigger_text, trigger_locations)
+  - V2.6.2 Research Design simplification (conditional objects fully optional)
   - Explicit vs implicit RDMAP distinction
   - Complete field requirements, enumerations, cross-reference patterns
+
+Note: The canonical JSON schema is at `extraction-system/schema/extraction_schema.json` (provided in execution context)
 
 ### Decision Frameworks (`checklists/`)
 
