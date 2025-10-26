@@ -234,18 +234,52 @@ Re-run Sobotkova extraction with fixes:
 - Check implicit RDMAP items also preserved
 - Target: All 4 metrics in single run
 
-### P1 - High (Investigate Implicit RDMAP)
+### P1 - High (Investigate Implicit RDMAP) - ✅ INVESTIGATION COMPLETE
 
 **Current status:** 0/6 methods implicit, 0/8 protocols implicit
 
-**Was this also file bug or separate issue?**
+**Root cause identified:** **Cascading failure from Pass 1 file bug**
 
-Need to check:
-1. Were implicit RDMAP items extracted then deleted (file bug)?
-2. Or never extracted (prompt/execution issue)?
-3. Check RUN-02 transcript for implicit RDMAP extraction pattern
+**Investigation findings:**
 
-**Hypothesis:** Same file bug may have affected RDMAP items
+1. **RUN-02 baseline:** 3 implicit RDMAP items successfully extracted
+   - M009: Map tile assignment to student volunteers (mentioned_undocumented)
+   - P010: Desktop GIS digitization protocol 2010 baseline (mentioned_undocumented)
+   - P011: Symbol identification/classification criteria (inferred_from_results)
+
+2. **RUN-03 failure:** 0 implicit RDMAP items extracted
+   - All 14 RDMAP items marked as "explicit" (6 methods + 8 protocols)
+   - None of the 3 implicit items from RUN-02 appear in RUN-03 at all
+   - NOT extracted as explicit items (simply missing)
+
+3. **Timeline analysis:**
+   - Line 3518: Pass 1 Abstract+Intro complete (10E, 17C, **4 IAs**) ✓
+   - Line 3584: **FILE BUG** during Methods section write → 367 deletions (all claims + IAs lost)
+   - Lines 3584-4000+: Pass 1 Methods/Results/Discussion continued with **corrupted file**
+   - Pass 2: Rationalization worked on **empty claims/IAs arrays**
+   - **Pass 3-4: RDMAP extraction worked on corrupted file** (0 claims, 0 IAs)
+
+4. **RDMAP prompts depend on claims/evidence context:**
+   - Pass 1 prompt: "May be partially populated (if claims/evidence already extracted)"
+   - Pass 1 prompt: "Methods `supports_claims` ← Claims `supported_by_evidence`"
+   - Pass 2 prompt: "Verify method → claim boundaries"
+   - Pass 2 prompt: "Check claimed vs inferred consistency"
+   - **RDMAP extraction references claims arrays for cross-validation**
+
+5. **Cascading failure mechanism:**
+   - File bug deleted all claims + implicit arguments during Pass 1
+   - Pass 3-4 RDMAP extraction saw **empty claims/IAs arrays**
+   - **Without claims context:**
+     - Cannot identify "mentioned in claims but undocumented in Methods"
+     - Cannot detect transparency gaps via claim-method mismatches
+     - Cannot spot methods referenced in Discussion but missing from Methods
+   - Result: Only extracted methods/protocols **explicitly documented in Methods section**
+
+**Conclusion:** Same file bug caused BOTH regressions via cascading failure
+
+**Expected recovery:** Fixing file operation bug should restore BOTH:
+- Implicit arguments extraction (Pass 1-2)
+- Implicit RDMAP extraction (Pass 3-4, depends on claims context from Pass 1-2)
 
 ### P2 - Medium (Long-term Prevention)
 
