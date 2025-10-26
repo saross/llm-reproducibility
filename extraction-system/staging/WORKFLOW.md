@@ -93,6 +93,106 @@ For section-by-section extraction (Pass 1 and Pass 3):
 ❌ Merge intermediate files into extraction.json
 ```
 
+---
+
+### File Operation Safety Rules (CRITICAL)
+
+**⚠️ CRITICAL: Preventing Data Loss**
+
+A file operation bug in a previous run caused catastrophic data loss: a partial `Read(file, limit=14)` followed by `Write(file)` overwrote the entire 750+ line extraction.json, destroying all claims and implicit arguments (367 lines deleted, never recovered).
+
+**MANDATORY SAFETY RULES - Follow Without Exception:**
+
+#### Rule 1: NEVER Partial Read Before Full Write
+
+```
+❌ FORBIDDEN PATTERN (causes data loss):
+Read(extraction.json, limit=14)    # Reads only first 14 lines
+... modify in memory ...
+Write(extraction.json, content)     # Overwrites ENTIRE file with partial context
+→ RESULT: 367 line deletion, complete data loss
+```
+
+```
+✅ REQUIRED PATTERN (safe):
+Read(extraction.json)               # Read FULL file (no limit parameter)
+... modify in memory ...
+Write(extraction.json, content)     # Write complete updated file
+→ RESULT: All data preserved
+```
+
+**Absolute requirement:** Before ANY `Write(extraction.json)`, you MUST `Read(extraction.json)` with **NO limit parameter**.
+
+#### Rule 2: Prefer Edit Tool for Incremental Updates
+
+For adding items to existing arrays:
+```
+✅ PREFERRED: Edit(file, old_string, new_string)
+✅ ACCEPTABLE: Read(file) [full] → modify → Write(file)
+❌ FORBIDDEN: Read(file, limit=N) → Write(file)
+```
+
+#### Rule 3: Pre-Write Validation Checklist
+
+Before every `Write(extraction.json)`, verify:
+
+1. ✅ **Full context loaded**: Did you `Read()` the complete file (no limit)?
+2. ✅ **Preserving existing data**: Does your write include ALL previously extracted items?
+3. ✅ **Array integrity**: Are all six arrays present (evidence, claims, implicit_arguments, research_designs, methods, protocols)?
+4. ✅ **No accidental deletion**: Did you verify array counts before writing?
+
+**If you cannot answer YES to all four questions: STOP. Read the full file first.**
+
+#### Rule 4: Post-Write Validation (MANDATORY)
+
+After EVERY `Write(extraction.json)`, immediately run validation:
+
+```bash
+# Count items in each array
+jq '{
+  evidence: (.evidence | length),
+  claims: (.claims | length),
+  implicit_arguments: (.implicit_arguments | length),
+  research_designs: (.research_designs | length),
+  methods: (.methods | length),
+  protocols: (.protocols | length)
+}' outputs/{paper-slug}/extraction.json
+```
+
+**Validation checks:**
+
+- ✅ **Pass 1 complete?** Claims array should be non-empty (typically 15-50 items)
+- ✅ **Pass 1 complete?** Evidence array should be non-empty (typically 30-80 items)
+- ✅ **Pass 3 complete?** RDMAP arrays should be non-empty (typically 2-6 designs, 5-10 methods, 8-20 protocols)
+- ⚠️ **ALERT if zero:** If any array is unexpectedly empty after its pass completes, DATA LOSS may have occurred
+
+**Example validation output:**
+```json
+{
+  "evidence": 40,
+  "claims": 26,
+  "implicit_arguments": 4,
+  "research_designs": 0,    // ← OK if before Pass 3
+  "methods": 0,             // ← OK if before Pass 3
+  "protocols": 0            // ← OK if before Pass 3
+}
+```
+
+If you see **unexpected zeros** (e.g., claims=0 after Pass 1 section writes), **STOP IMMEDIATELY** and investigate. This indicates data loss.
+
+#### Emergency Recovery Procedure
+
+If validation reveals data loss:
+
+1. **STOP WORK** - Do not continue extraction
+2. **Check git history**: `git diff HEAD extraction.json` to see what was lost
+3. **Restore if possible**: `git checkout HEAD -- outputs/{paper-slug}/extraction.json`
+4. **Report to user**: Document what happened and request guidance
+5. **Review file operations**: Identify the bad Read→Write pattern
+6. **Retry with full Read**: Ensure complete file context before Write
+
+---
+
 ### Example: Complete Pass 1 Execution
 
 ```
