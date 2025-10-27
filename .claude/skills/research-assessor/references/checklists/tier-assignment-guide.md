@@ -185,9 +185,70 @@ Protocol: "Point collection at each feature center"
 | Method | 2-5 sentences | Approach description |
 | Protocol | 3-10+ sentences | Detailed specifications |
 
+## Description vs Argumentation Boundary
+
+**Critical distinction:** RDMAP describes methodology; Claims/Evidence present argumentation
+
+### RDMAP = Methodological Descriptions (what was done)
+
+- Research designs, data collection methods, analysis procedures
+- Extract as neutral descriptions
+- Example: "Used stratified random sampling with 30% coverage"
+- Example: "GPS coordinates recorded at ±3cm accuracy"
+- Example: "Inter-coder reliability testing with Cohen's kappa"
+
+### Claims/Evidence = Argumentation (assertions about what worked)
+
+- Effectiveness claims, quality assessments, comparisons
+- Extract separately in claims/evidence arrays
+- Example: "Stratified sampling proved more efficient than previous approaches"
+- Example: "High-accuracy GPS enabled better site mapping"
+- Example: "Inter-coder reliability was excellent"
+
+### The Boundary Test
+
+**Question:** "Is this describing HOW research was done, or ARGUING about how well it worked?"
+
+- **Describing HOW** → RDMAP
+- **Arguing about effectiveness** → Claims/Evidence
+
+### When Content is Combined
+
+**If a sentence contains both description and assertion:**
+
+1. Extract the **description** in RDMAP (research_designs, methods, or protocols)
+2. Extract the **assertion** in claims array
+3. Cross-reference them (method `supports_claims` → claim `supported_by_evidence`)
+
+**Example:**
+
+**Source text:** "Our stratified random sampling approach (30% coverage) proved highly efficient for site discovery"
+
+**Extract as:**
+- **Method (RDMAP):** "Stratified random sampling with 30% coverage"
+- **Claim:** "Sampling approach proved highly efficient for site discovery"
+- **Cross-reference:** Method M001 `supports_claims: ["C005"]`, Claim C005 `supported_by_evidence: ["M001"]`
+
+### Common Mistakes to Avoid
+
+**Mistake 1:** Extracting effectiveness claims as RDMAP
+- ❌ WRONG: Method M001: "Highly effective stratified sampling"
+- ✅ RIGHT: Method M001: "Stratified random sampling"; Claim C001: "Sampling approach highly effective"
+
+**Mistake 2:** Extracting pure description as claims
+- ❌ WRONG: Claim C001: "Used GPS with ±3cm accuracy"
+- ✅ RIGHT: Protocol P001: "GPS coordinates at ±3cm accuracy using RTK correction"
+
+**Mistake 3:** Losing the connection between description and assertion
+- ❌ WRONG: Extract claim without noting which method it's about
+- ✅ RIGHT: Cross-reference claim back to method/protocol
+
+---
+
 ## Remember
 
 - **When in doubt, favor finer granularity in Pass 1**
 - **The hierarchy should feel natural:** Designs → Methods → Protocols flows logically
 - **Cross-references should make sense:** If Protocol P implements Method M, and M implements Design D, the chain should be coherent
 - **Not all papers will have all three levels explicitly:** Some may have methods without explicit design discussion, or methods without protocol-level detail. That's okay - extract what's present.
+- **RDMAP describes; Claims argue:** Keep methodology separate from effectiveness assertions

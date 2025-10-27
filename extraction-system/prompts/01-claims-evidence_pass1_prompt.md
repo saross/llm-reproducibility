@@ -105,22 +105,16 @@ The fundamentals document covers universal sourcing requirements that apply to a
 
 ### 1. Evidence vs. Claims Distinction
 
-**EVIDENCE** = Raw observations, measurements, or data that require minimal interpretation
-- Direct measurements (e.g., "125.8 person-hours")
-- Observations (e.g., "12 students owned smartphones")
-- Data points (e.g., "95.7% accuracy")
-- Captured verbatim from the paper
-- Someone could verify by checking the source
+**EVIDENCE** = Raw observations, measurements, or data requiring minimal interpretation
 
 **CLAIMS** = Assertions that interpret, frame, or generalize from evidence
-- Require reasoning or expertise to assess
-- Make inferences beyond direct observation
-- Involve framing or definitional choices
-- Connect evidence to broader patterns
 
-**Professional Judgment Boundary:** Statements requiring expertise to assess (e.g., "these maps are accurate") are **CLAIMS** supported by implicit professional judgment, not evidence. Extract as INTERPRETATION claims, not observations.
+**Test:** "Does this require expertise to assess or just checking sources?"
 
-**→ For detailed decision framework, see `references/checklists/tier-assignment-guide.md`**
+**Professional Judgment Boundary:** Statements requiring expertise to assess (e.g., "these maps are accurate") are **CLAIMS** supported by implicit professional judgment, not evidence.
+
+**For complete decision framework with examples, edge cases, and worked examples:**
+→ See `references/checklists/evidence-vs-claims-guide.md`
 
 ---
 

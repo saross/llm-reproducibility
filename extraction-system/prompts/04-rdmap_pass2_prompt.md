@@ -200,25 +200,14 @@ Step 4: Document all consolidations with complete metadata
 
 **Check each RDMAP item against tier criteria:**
 
-**Research Design indicators:**
-- Explains WHY research framed this way
-- Contains research questions, hypotheses, theoretical frameworks
-- Provides study design rationale
-- Defines scope and boundaries
-
-**Method indicators:**
-- Explains WHAT was done at high level
-- Describes data collection approach, sampling strategy, analysis technique
-- General approach without implementation details
-
-**Protocol indicators:**
-- Explains HOW specifically implemented
-- Contains exact procedures, tool configurations, parameter values
-- Sufficient detail for replication
+**Apply the WHY/WHAT/HOW test:**
+- WHY research framed this way → Research Design
+- WHAT was done at high level → Method
+- HOW specifically implemented → Protocol
 
 **If misclassified:** Move to correct tier and update cross-references
 
-**For detailed tier assignment guidance:**  
+**For complete tier indicators, decision framework, and replication test:**
 → See `references/checklists/tier-assignment-guide.md`
 
 ---
@@ -264,22 +253,17 @@ Step 4: Document all consolidations with complete metadata
 
 ---
 
-### 4. Reasoning Approach Consistency
+### 4. Reasoning Approach Verification
 
-**For Research Designs, verify reasoning approach classification:**
+**For Research Designs:** Verify reasoning approach classification and hypothesis timing inference
 
-**Check claimed vs inferred consistency:**
-- If `explicit_statement` present → should match `inferred_approach`
-- If mismatch → document in `extraction_notes`, flag for review
+**Check:**
+- Claimed vs inferred consistency
+- Hypothesis timing (pre-data vs post-data)
+- Mixed vs unclear distinction
 
-**Verify hypothesis timing inference:**
-- Pre-data: Stated in Introduction/Methods before Results
-- Post-data: First mentioned in Results/Discussion, or marked as "emerged"
-- Check timing basis and confidence level
-
-**Mixed vs Unclear distinction:**
-- Mixed requires evidence of BOTH exploratory AND confirmatory
-- Don't default to "mixed" - use "unclear" if insufficient information
+**For complete verification procedures:**
+→ See `references/research-design-operational-guide.md` (Section 9: Reasoning Approach Classification, Verification subsection)
 
 ---
 

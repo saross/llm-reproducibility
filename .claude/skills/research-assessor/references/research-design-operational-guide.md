@@ -329,6 +329,398 @@ Does it state a question or hypothesis?
 
 ---
 
+## Section 9: Reasoning Approach Classification
+
+**Purpose:** Classify research designs by reasoning approach (inductive, abductive, deductive, mixed, unclear)
+
+**Critical for assessment:** Hypothesis timing (pre-data vs post-data), theoretical grounding, research transparency
+
+### The Five Reasoning Approaches
+
+#### Inductive - Data to patterns to theory
+
+**Characteristics:**
+- Exploratory, pattern discovery, grounded theory
+- No pre-stated hypotheses
+- Theory emerges from data
+
+**Indicators:**
+- "emerged from"
+- "patterns suggested"
+- "we observed"
+- "grounded in data"
+
+**Example:** "Patterns of artifact distribution emerged from spatial analysis"
+
+#### Abductive - Anomaly to best explanation
+
+**Characteristics:**
+- Puzzle-solving, inference to best explanation
+- Anomaly or surprising finding drives inquiry
+- Retroductive reasoning
+
+**Indicators:**
+- "surprising finding"
+- "best explained by"
+- "accounts for"
+- "puzzle of"
+
+**Example:** "The unexpected ceramic assemblage is best explained by trade networks"
+
+#### Deductive - Theory to predictions to test
+
+**Characteristics:**
+- Hypothesis testing, theory verification
+- Pre-stated predictions
+- Confirmatory analysis
+
+**Indicators:**
+- "we hypothesized"
+- "predicted"
+- "tested whether"
+- "expected that"
+
+**Example:** "We hypothesized that platform efficiency would exceed desktop GIS for datasets >10,000 features"
+
+#### Mixed - Genuine combination (NOT default)
+
+**Characteristics:**
+- Explicit integration of approaches
+- Must show BOTH exploratory AND confirmatory phases
+- Sequential or integrated combination
+
+**Important:** Don't default to "mixed" - requires explicit evidence
+
+**Indicators:**
+- "Exploratory phase identified patterns, confirmatory phase tested hypotheses"
+- "We first explored X, then tested predictions about Y"
+
+**Example:** "Initial exploratory analysis identified efficiency patterns; subsequent phase tested specific threshold hypotheses"
+
+#### Unclear - Insufficient information
+
+**Use when:**
+- Approach not explicitly stated
+- Cannot be reliably inferred from content
+- Ambiguous or contradictory indicators
+
+**Don't use "unclear" as default** - attempt to infer from available information first
+
+### Classification Workflow
+
+**Step 1:** Look for explicit statements about approach
+- Check Introduction, Methods sections
+- Look for methodological positioning
+
+**Step 2:** Check hypothesis timing
+- **Pre-data:** Hypotheses stated in Introduction/Methods before Results
+- **Post-data:** Hypotheses first mentioned in Results/Discussion, or marked as "emerged"
+- **Critical:** Pre-data = deductive; post-data = inductive/abductive
+
+**Step 3:** Assess confidence level
+- High: Explicit statement of approach
+- Medium: Strong indicators, clear timing
+- Low: Inferred from limited evidence
+
+**Step 4:** Document reasoning
+- Include in `extraction_notes` or research design object
+- Note evidence for classification
+- Flag if uncertain
+
+### Hypothesis Timing Inference
+
+**Critical for detecting HARKing (Hypothesising After Results are Known)**
+
+#### Pre-Data Indicators
+
+**Strong evidence:**
+- Hypotheses stated in Abstract or Introduction
+- "We predicted..." or "We hypothesized..." before Results
+- Registered study design (rare in fieldwork)
+
+**Medium evidence:**
+- Hypotheses in Methods section
+- Timing ambiguous but likely pre-data
+
+#### Post-Data Indicators
+
+**Strong evidence:**
+- Hypotheses first appear in Results or Discussion
+- Language: "emerged," "suggested," "we observed"
+- Marked as "unexpected" or "surprising"
+
+**Medium evidence:**
+- Timing unclear but language suggests discovery
+
+**Document:**
+- Timing basis (section location, language used)
+- Confidence level (high, medium, low)
+- Implications for assessment (HARKing risk)
+
+### Verification (Pass 2)
+
+**Check claimed vs inferred consistency:**
+- If `explicit_statement` present → should match `inferred_approach`
+- If mismatch → document in `extraction_notes`, flag for review
+
+**Verify hypothesis timing inference:**
+- Cross-check section locations
+- Verify language indicators
+- Assess confidence level
+
+**Mixed vs Unclear distinction:**
+- Mixed requires evidence of BOTH exploratory AND confirmatory
+- Don't default to "mixed" - use "unclear" if insufficient information
+
+**Common errors:**
+- Assuming "mixed" when approach not stated
+- Missing post-data hypothesis timing (HARKing)
+- Over-inferring from weak indicators
+
+---
+
+## Section 10: Research Questions vs Hypotheses
+
+**Purpose:** Distinguish research questions from hypotheses, assess timing implications
+
+**Critical for:** Detecting HARKing, assessing research transparency, understanding reasoning approach
+
+### The Core Distinction
+
+#### Research Questions - Open-ended inquiry
+
+**Characteristics:**
+- No specific prediction
+- Exploratory stance
+- "How" or "What" framing
+
+**Examples:**
+- "How does X affect Y?"
+- "What is the relationship between X and Y?"
+- "What factors influence Z?"
+
+**Reasoning approach:** Typically inductive or abductive
+
+#### Hypotheses - Specific predictions
+
+**Characteristics:**
+- Testable prediction
+- Confirmatory stance
+- Directional or specific expectation
+
+**Examples:**
+- "X will increase Y"
+- "X is positively correlated with Y"
+- "We hypothesized that efficiency would exceed baseline by >50%"
+
+**Reasoning approach:** Typically deductive
+
+### The Timing Distinction
+
+**Critical question:** When was this formulated?
+
+#### Pre-Data (Planned)
+
+**Indicators:**
+- Stated in Abstract, Introduction, or Methods
+- Before Results section
+- Language: "We asked," "We hypothesized," "We predicted"
+
+**Implications:**
+- Planned inquiry (transparent)
+- Deductive reasoning (if hypothesis)
+- Lower HARKing risk
+
+#### Post-Data (Emergent)
+
+**Indicators:**
+- First mentioned in Results or Discussion
+- Language: "emerged," "suggested," "we observed," "unexpected"
+- Marked as discovery
+
+**Implications:**
+- Exploratory discovery (acceptable if acknowledged)
+- Inductive/abductive reasoning
+- HARKing risk if presented as pre-data
+
+### Extraction Guidance
+
+**Document in research design object:**
+- `design_type`: "research_framing"
+- `design_text`: The question or hypothesis verbatim
+- `reasoning_approach`: Based on RQ vs hypothesis + timing
+- `extraction_notes`: Timing basis, confidence level
+
+**For research questions:**
+```json
+{
+  "design_id": "RD001",
+  "design_type": "research_framing",
+  "design_text": "How does mobile crowdsourcing efficiency compare to desktop GIS for archaeological georeferencing?",
+  "reasoning_approach": {
+    "claimed_approach": "unclear",
+    "inferred_approach": "inductive",
+    "timing_basis": "Research question stated in Introduction, no specific predictions",
+    "confidence": "medium"
+  }
+}
+```
+
+**For hypotheses:**
+```json
+{
+  "design_id": "RD002",
+  "design_type": "research_framing",
+  "design_text": "We hypothesized that mobile crowdsourcing becomes most efficient for datasets between 10,000-60,000 features",
+  "reasoning_approach": {
+    "claimed_approach": "deductive",
+    "inferred_approach": "deductive",
+    "hypothesis_timing": "pre-data",
+    "timing_basis": "Hypothesis stated in Introduction before data collection",
+    "confidence": "high"
+  }
+}
+```
+
+### If Unclear
+
+**Flag in `extraction_notes`:**
+- "Timing unclear - hypothesis mentioned in Methods but may be post-hoc"
+- "Language ambiguous - presented as prediction but first appears in Discussion"
+
+**Document reasoning:**
+- Evidence for pre-data vs post-data
+- Confidence level
+- Assessment implications
+
+**Pass 2 verification:**
+- Cross-check section locations
+- Verify language indicators
+- Resolve ambiguities if possible
+
+---
+
+## Section 11: Fieldwork-Specific Considerations
+
+**Purpose:** Recognise and document fieldwork-specific methodological patterns
+
+**Applies to:** Archaeological surveys, ethnographic fieldwork, ecological surveys, biological field studies
+
+### Pattern 1: Opportunistic Decisions
+
+**Definition:** Unplanned adaptations made during fieldwork in response to field conditions
+
+**Characteristics:**
+- Not pre-planned
+- Responsive to discoveries or conditions
+- Documented as methodological adaptations
+
+**Examples:**
+- "Extended survey area due to high artifact density"
+- "Added interview protocol based on emergent themes"
+- "Increased sampling intensity where rare species observed"
+
+**Extraction:**
+- Mark as `opportunistic: true` in relevant RDMAP item
+- Document in `extraction_notes`: Why change was made
+- Note in `expected_information_missing` if justification lacking
+
+**Example:**
+```json
+{
+  "method_id": "M005",
+  "method_text": "Extended pedestrian survey to additional 5 ha area based on observed artifact density",
+  "opportunistic": true,
+  "extraction_notes": "Methodological adaptation during fieldwork - responded to discovery of dense artifact scatter"
+}
+```
+
+### Pattern 2: Contingency Plans
+
+**Definition:** Pre-planned IF-THEN responses to anticipated field conditions
+
+**Characteristics:**
+- Pre-planned alternatives
+- Documented in advance (ideally)
+- Conditional protocols
+
+**Examples:**
+- "If GPS unavailable, use total station for backup positioning"
+- "If weather prevents outdoor surveys, conduct indoor interviews"
+- "If sample size <30, increase sampling effort or adjust analysis"
+
+**Extraction:**
+- Extract as protocols with `contingent: true`
+- Document trigger condition
+- Note whether actually triggered
+
+**Example:**
+```json
+{
+  "protocol_id": "P007",
+  "protocol_text": "If GPS signal unavailable (accuracy >10m), use total station with ±1cm accuracy for feature positioning",
+  "contingent": true,
+  "extraction_notes": "Pre-planned contingency protocol - triggered in 3 of 22 sites due to heavy tree cover"
+}
+```
+
+### Pattern 3: Emergent Discoveries
+
+**Definition:** Patterns or hypotheses discovered during data collection or analysis
+
+**Characteristics:**
+- Not pre-planned
+- Discovered from data
+- May lead to post-hoc hypotheses
+
+**Examples:**
+- "Unexpected ceramic pattern suggested trade networks"
+- "Artifact distribution revealed previously unknown site structure"
+- "Efficiency threshold emerged at ~25,000 features"
+
+**Extraction:**
+- Mark hypothesis timing in research questions/hypotheses
+- Document emergence in `extraction_notes`
+- Extract as research design with `hypothesis_timing: "post-data"`
+
+**Example:**
+```json
+{
+  "design_id": "RD003",
+  "design_type": "research_framing",
+  "design_text": "Analysis revealed efficiency threshold at approximately 25,000 features where mobile platform advantages diminish",
+  "reasoning_approach": {
+    "inferred_approach": "inductive",
+    "hypothesis_timing": "post-data",
+    "timing_basis": "Pattern emerged during analysis, first mentioned in Results section",
+    "confidence": "high"
+  },
+  "extraction_notes": "Emergent finding - not pre-stated hypothesis. Discovered during comparative efficiency analysis."
+}
+```
+
+### Fieldwork Transparency Assessment
+
+**Key questions for assessment:**
+- Were opportunistic changes documented and justified?
+- Were contingency plans pre-specified or post-hoc?
+- Were emergent discoveries acknowledged as such?
+- Is there sufficient documentation to assess validity of adaptations?
+
+**Expected information for fieldwork:**
+- Justification for opportunistic changes
+- Trigger conditions for contingencies
+- Acknowledgment of emergent vs planned findings
+- Field notes or documentation supporting adaptations
+
+**Common gaps:**
+- Opportunistic changes not documented
+- Contingencies presented as if they were primary plan
+- Post-hoc hypotheses presented as pre-data
+- Insufficient justification for methodological adaptations
+
+---
+
 ## Quick Reference
 
 **Pre-scan:** Abstract, Intro, Background, Methods/Approach for design elements (2-3 min)

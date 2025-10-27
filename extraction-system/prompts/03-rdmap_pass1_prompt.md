@@ -145,119 +145,43 @@ Use this checklist as your roadmap. Before finalizing:
 
 ### 1. Three-Tier Hierarchy: Design → Methods → Protocols
 
-**Quick Decision Tree:**
-```
-Does this explain WHY research was framed/designed this way?
-├─ YES → Research Design
-└─ NO → Does this explain WHAT general approach was used?
-    ├─ YES → Method
-    └─ NO → Does this explain HOW specifically something was done?
-        ├─ YES → Protocol
-        └─ NO → Likely project context (metadata, not RDMAP)
-```
+**Quick Test:**
+- **WHY** research was framed this way → Research Design
+- **WHAT** general approach was used → Method
+- **HOW** specifically implemented → Protocol
 
-**Research Design (Strategic - WHY)**
-- Research questions and hypotheses
-- Theoretical frameworks
-- Study design choices and rationale
-- Scope definitions
-- Positionality statements
+**When uncertain:** Extract at BOTH levels and mark as uncertain in `extraction_notes`
 
-**Methods (Tactical - WHAT)**
-- Data collection approaches
-- Sampling strategies
-- Analysis approaches
-- Quality control methods
-- Validation approaches
-
-**Protocols (Operational - HOW)**
-- Specific procedures with detail
-- Tools and equipment specifications
-- Recording standards and formats
-- Parameter values and configurations
-- Measurement protocols with precision
-
-**When uncertain:** Extract at BOTH levels and mark `extraction_notes` with "Tier assignment uncertain - may belong at [alternative tier]"
-
-**For detailed tier assignment guidance and examples:**  
+**For complete decision tree, tier indicators, and boundary guidance:**
 → See `references/checklists/tier-assignment-guide.md`
 
 ---
 
 ### 2. Description vs Argumentation Boundary
 
-**RDMAP = Methodological Descriptions (what was done)**
-- Research designs, data collection methods, analysis procedures
-- Extract as neutral descriptions
-- Example: "Used stratified random sampling with 30% coverage"
-
-**Claims/Evidence = Argumentation (assertions about what worked)**
-- Effectiveness claims, quality assessments, comparisons
-- Extract separately in claims/evidence arrays
-- Example: "Stratified sampling proved more efficient than previous approaches"
-
 **Test:** "Is this describing HOW research was done, or ARGUING about how well it worked?"
-- Describing → RDMAP
-- Arguing → Claims/Evidence
+- Describing HOW → RDMAP
+- Arguing about effectiveness → Claims/Evidence
 
 **If combined:** Extract description in RDMAP, assertion in claims, cross-reference them
 
----
-
-### 3. Reasoning Approach Classification
-
-**For Research Designs, classify reasoning approach:**
-
-**Inductive** - Data to patterns to theory
-- Exploratory, pattern discovery, grounded theory
-- Indicator: "emerged from", "patterns suggested", "we observed"
-
-**Abductive** - Anomaly to best explanation
-- Puzzle-solving, inference to best explanation
-- Indicator: "surprising finding", "best explained by", "accounts for"
-
-**Deductive** - Theory to predictions to test
-- Hypothesis testing, theory verification
-- Indicator: "we hypothesized", "predicted", "tested whether"
-
-**Mixed** - Genuine combination (NOT default)
-- Explicit integration of approaches
-- Must show both exploratory AND confirmatory phases
-- Example: "Exploratory phase identified patterns, confirmatory phase tested hypotheses"
-
-**Unclear** - Insufficient information
-- Use when approach not stated or inferable
-
-**Important:** 
-- Look for explicit statements about approach
-- Check hypothesis timing (pre-data vs post-data)
-- Document confidence level
-- Don't default to "mixed" - be specific when possible
+**For complete boundary guidance with examples:**
+→ See `references/checklists/tier-assignment-guide.md` (Description vs Argumentation Boundary section)
 
 ---
 
-### 4. Research Questions vs Hypotheses
+### 3. Reasoning Approach & Hypothesis Timing
 
-**Research Questions** - Open-ended inquiry
-- "How does X affect Y?"
-- "What is the relationship between X and Y?"
-- No prediction, exploratory stance
+**For Research Designs:** Classify reasoning approach (inductive, abductive, deductive, mixed, unclear) and assess hypothesis timing (pre-data vs post-data)
 
-**Hypotheses** - Specific predictions
-- "X will increase Y"
-- "X is positively correlated with Y"
-- Testable prediction, confirmatory stance
+**Critical for assessment:** Detecting HARKing (Hypothesising After Results are Known), transparency evaluation
 
-**Critical distinction: Timing**
-- **Pre-data:** Stated before/during data collection
-- **Post-data:** Formulated after seeing patterns
-- Document timing basis and confidence
-
-**If unclear:** Flag in `extraction_notes` and document reasoning
+**For complete classification framework, hypothesis timing indicators, and verification procedures:**
+→ See `references/research-design-operational-guide.md` (Sections 9-10: Reasoning Approach Classification and Research Questions vs Hypotheses)
 
 ---
 
-### 5. Expected Information & Missing Elements
+### 4. Expected Information & Missing Elements
 
 For each RDMAP item, consider what information SHOULD be present but is MISSING.
 
@@ -287,28 +211,16 @@ For each RDMAP item, consider what information SHOULD be present but is MISSING.
 
 ---
 
-### 6. Fieldwork-Specific Considerations
+### 5. Fieldwork-Specific Considerations
 
-**Opportunistic Decisions**
-- Unplanned adaptations during fieldwork
-- Response to field conditions
-- Mark as `opportunistic: true` in relevant RDMAP item
-- Example: "Extended survey due to high artifact density"
+**For fieldwork-based research:** Recognise opportunistic decisions, contingency plans, and emergent discoveries
 
-**Contingency Plans**
-- Pre-planned IF-THEN responses
-- Extract as protocols with `contingent: true`
-- Example: "If GPS unavailable, use total station"
-
-**Emergent Discoveries**
-- Patterns discovered during analysis
-- Hypotheses formulated post-data
-- Mark timing in research questions/hypotheses
-- Document emergence in `extraction_notes`
+**For complete fieldwork patterns and extraction guidance:**
+→ See `references/research-design-operational-guide.md` (Section 11: Fieldwork-Specific Considerations)
 
 ---
 
-### 7. Cross-Referencing
+### 6. Cross-Referencing
 
 **Populate bidirectional links:**
 - Research Designs `enables_methods` → Methods `implements_designs`

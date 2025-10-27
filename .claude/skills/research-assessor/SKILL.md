@@ -147,17 +147,14 @@ Follow the workflow guidance to:
 
 ### Evidence vs. Claims
 
-**Evidence** = Raw observations requiring minimal interpretation
-- Direct measurements, observations, data points
-- Someone could verify by checking the source
-- Example: "125.8 person-hours" or "12 students owned smartphones"
+**Evidence** = Raw observations requiring minimal interpretation (measurements, observations, data points)
 
-**Claims** = Assertions that interpret or generalize
-- Require reasoning or expertise to assess
-- Make inferences beyond direct observation
-- Example: "The platform was efficient" or "Data quality was high"
+**Claims** = Assertions that interpret or generalize (require reasoning or expertise to assess)
 
 **Test:** "Does this require expertise to assess or just checking sources?"
+
+**For complete decision framework with examples and edge cases:**
+→ See `references/checklists/evidence-vs-claims-guide.md`
 
 ### RDMAP Three-Tier Hierarchy
 
