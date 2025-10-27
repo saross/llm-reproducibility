@@ -243,6 +243,20 @@ For each section:
 
    **If no implicit arguments found after systematic search:** Document in extraction_notes why (e.g., "All reasoning explicit in this section"). Skipping the search is not acceptable.
 
+   **Common Pitfalls When Extracting Implicit Arguments:**
+
+   - ❌ Only scanning for Type 1 (logical implications), neglecting Types 2-4 which are often more assessment-critical
+   - ❌ Superficial scan instead of systematic 4-type review per core claim
+   - ❌ Missing cross-section assumptions (visible only when seeing full argument arc—note for Pass 2)
+   - ❌ Extracting your own critique (what they SHOULD have considered) vs what their reasoning depends on
+   - ❌ No trigger_text (your inference without textual basis = hallucination)
+   - ❌ Treating all domain knowledge as implicit (only extract if paper's reasoning relies on it)
+
+   **Quality Check:** For each core claim, can you demonstrate you ran all 4 type scans? Document scan methodology in extraction_notes if needed.
+
+   **For detailed recognition patterns and common mistakes:**
+   → See `references/extraction-fundamentals.md` (Implicit Arguments Extraction section)
+
 4. **Map Relationships**
    - Which claims support which other claims?
    - Are there alternatives or qualifications?

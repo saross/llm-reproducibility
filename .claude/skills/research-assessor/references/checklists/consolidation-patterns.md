@@ -406,6 +406,119 @@ Research Designs follow **different consolidation logic** than Evidence:
 6. Update all cross-references
 ```
 
+---
+
+## Cross-Reference Repair After Consolidation (MANDATORY)
+
+### The Problem
+
+When consolidating items, references from other arrays become stale:
+- Consolidate E012+E013+E014 → E011
+- But claims still reference E012, E013, E014 (now deleted)
+- Result: Broken cross-references
+
+### The Solution: Automated Repair
+
+**After ALL consolidations, before writing JSON, repair references using consolidation_metadata.**
+
+#### Algorithm
+
+1. **Build consolidation map** from metadata:
+   ```python
+   consolidation_map = {}  # old_id → new_id
+
+   for evidence in data['evidence']:
+       if evidence.get('consolidation_metadata'):
+           new_id = evidence['evidence_id']
+           for old_id in evidence['consolidation_metadata']['consolidated_from']:
+               consolidation_map[old_id] = new_id
+
+   # Repeat for methods, protocols, research_designs
+   ```
+
+2. **Update all cross-references**:
+   ```python
+   # Claims → Evidence
+   for claim in data['claims']:
+       if 'supported_by_evidence' in claim:
+           claim['supported_by_evidence'] = [
+               consolidation_map.get(eid, eid)
+               for eid in claim['supported_by_evidence']
+           ]
+
+   # Methods → Protocols
+   for method in data['methods']:
+       if 'realized_through_protocols' in method:
+           method['realized_through_protocols'] = [
+               consolidation_map.get(pid, pid)
+               for pid in method['realized_through_protocols']
+           ]
+
+   # Research Designs → Methods
+   for rd in data['research_designs']:
+       if 'enables_methods' in rd:
+           rd['enables_methods'] = [
+               consolidation_map.get(mid, mid)
+               for mid in rd['enables_methods']
+           ]
+
+   # Protocols → Methods (single value, not array)
+   for protocol in data['protocols']:
+       if 'implements_method' in protocol:
+           old = protocol['implements_method']
+           protocol['implements_method'] = consolidation_map.get(old, old)
+   ```
+
+3. **Remove duplicates** (consolidation may create duplicate refs):
+   ```python
+   claim['supported_by_evidence'] = list(dict.fromkeys(refs))
+   ```
+
+4. **Validate** no broken references remain (see validation section below)
+
+#### Complete Reference Implementation
+
+See `extraction-system/scripts/extraction/consolidation_template.py` for complete, commented implementation.
+
+### Validation After Repair
+
+After repair, validate cross-references:
+
+```python
+# Build ID sets
+evidence_ids = {e['evidence_id'] for e in data['evidence']}
+method_ids = {m['method_id'] for m in data['methods']}
+protocol_ids = {p['protocol_id'] for p in data['protocols']}
+rd_ids = {rd['design_id'] for rd in data['research_designs']}
+
+# Check claims → evidence
+for claim in data['claims']:
+    for eid in claim.get('supported_by_evidence', []):
+        assert eid in evidence_ids, f"Broken: {claim['claim_id']} → {eid}"
+
+# Check methods → protocols
+for method in data['methods']:
+    for pid in method.get('realized_through_protocols', []):
+        assert pid in protocol_ids, f"Broken: {method['method_id']} → {pid}"
+
+# Check research_designs → methods
+for rd in data['research_designs']:
+    for mid in rd.get('enables_methods', []):
+        assert mid in method_ids, f"Broken: {rd['design_id']} → {mid}"
+
+# Check protocols → methods
+for protocol in data['protocols']:
+    if protocol.get('implements_method'):
+        mid = protocol['implements_method']
+        assert mid in method_ids, f"Broken: {protocol['protocol_id']} → {mid}"
+```
+
+### When to Apply
+
+- **Pass 2 rationalisation**: After consolidating claims/evidence
+- **Pass 4 rationalisation**: After consolidating RDMAP items
+- **Required**: Not optional - consolidation without repair causes validation failures
+
 ## Remember
 
 - **Consolidation is about appropriate granularity, not just fewer items**

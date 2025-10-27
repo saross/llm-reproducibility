@@ -97,7 +97,7 @@ The prompts contain detailed instructions, examples, and decision frameworks for
 If you encounter uncertainty during extraction, consult:
 
 **Core Extraction Principles:**
-- `references/extraction-fundamentals.md` - Universal sourcing requirements (ALWAYS read first for Pass 1 & 2)
+- `references/extraction-fundamentals.md` - Universal sourcing requirements, explicit vs implicit extraction, systematic implicit RDMAP patterns, systematic implicit arguments patterns with 6 recognition patterns (ALWAYS read first for Pass 1 & 2)
 - `references/verbatim-quote-requirements.md` - Strict verbatim quote requirements (prevents 40-50% validation failures)
 - `references/verification-procedures.md` - Source verification for Pass 3 validation
 
@@ -107,7 +107,7 @@ If you encounter uncertainty during extraction, consult:
 
 **Decision Frameworks:**
 - `references/checklists/tier-assignment-guide.md` - Design vs Method vs Protocol decisions
-- `references/checklists/consolidation-patterns.md` - When to lump vs split items
+- `references/checklists/consolidation-patterns.md` - When to lump vs split items, cross-reference repair procedure (CRITICAL for Pass 2 & Pass 4)
 - `references/checklists/expected-information.md` - Domain-specific completeness checklists
 
 **Examples:**
