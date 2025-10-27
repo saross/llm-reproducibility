@@ -334,6 +334,12 @@ See: `references/research-design-operational-guide.md` for detailed pre-scan che
 
 ⚠️ **Pre-Scan Mindset:** If a design element feels "too obvious" or "everyone knows this" → Mark it anyway. Meta-level designs (comparative evaluation, case study rationale) feel obvious because they frame the entire paper - that's exactly why they're Research Designs.
 
+**For systematic implicit RDMAP recognition patterns:**
+→ See `references/extraction-fundamentals.md` (Implicit RDMAP Extraction section)
+- Covers 4 recognition patterns: Mentioned Procedure, Effects Implying Causes, Mentions Without Descriptions, Strategic Decisions
+- Section-by-section extraction workflow for finding implicit RDMAP items
+- Common mistakes to avoid
+
 ### Step 1: Identify Research Designs
 
 ⚠️ **Literature Review Warning:** Don't extract Research Designs from descriptions of PRIOR work.

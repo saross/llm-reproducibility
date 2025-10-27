@@ -358,6 +358,13 @@ Pass 2 systematically reviews for implicit arguments missed in Pass 1 (see STEP 
 - Verify hierarchical claim structure (`supports_claims` within claims array)
 - Validate analytical view cross-references (`related_evidence`)
 
+**🚨 CRITICAL: Cross-Reference Repair After Consolidation**
+
+When consolidating items, cross-references in OTHER arrays must be updated to point to the new consolidated IDs. This is MANDATORY to prevent broken references.
+
+**For complete cross-reference repair procedure (including algorithm and validation):**
+→ See `references/checklists/consolidation-patterns.md` (Cross-Reference Repair After Consolidation section, lines 411-520)
+
 ### STEP 4: Quality Checks
 - No hallucinations
 - **All evidence/claims have verified verbatim_quotes**

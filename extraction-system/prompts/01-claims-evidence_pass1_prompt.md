@@ -257,6 +257,9 @@ For each section:
    **For detailed recognition patterns and common mistakes:**
    → See `references/extraction-fundamentals.md` (Implicit Arguments Extraction section)
 
+   **For concrete examples with proper sourcing structure:**
+   → See `extraction-system/scripts/extraction/section_implicit_arguments_template.py` (4 worked examples, one per type)
+
 4. **Map Relationships**
    - Which claims support which other claims?
    - Are there alternatives or qualifications?

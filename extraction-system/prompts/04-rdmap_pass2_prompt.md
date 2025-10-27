@@ -115,8 +115,8 @@ Use this checklist as your roadmap. Before finalizing:
 - Protocol specifications: Together if describing same tool/procedure
 - Temporal comparisons: ALWAYS separate
 
-**For detailed patterns and examples:**  
-→ See `/mnt/skills/user/research-assessor/references/checklists/consolidation-patterns.md`
+**For detailed patterns and examples:**
+→ See `/mnt/skills/user/research-assessor/references/checklists/consolidation-patterns.md` (RDMAP Consolidation Patterns section)
 
 **RDMAP-Specific Guidance:**
 
@@ -486,6 +486,13 @@ Pass 2 may identify implicit RDMAP items missed in Pass 1, particularly:
 - Update references after consolidation
 - Check design → method → protocol chains
 - Validate method → claim boundaries
+
+**🚨 CRITICAL: Cross-Reference Repair After Consolidation**
+
+When consolidating RDMAP items, cross-references in OTHER arrays must be updated to point to the new consolidated IDs. This is MANDATORY to prevent broken references.
+
+**For complete cross-reference repair procedure (including algorithm and validation):**
+→ See `references/checklists/consolidation-patterns.md` (Cross-Reference Repair After Consolidation section, lines 411-520)
 
 ### STEP 4: Boundary and Consistency Checks
 - Verify RDMAP vs claims boundary
