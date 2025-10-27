@@ -33,7 +33,7 @@ Extract evidence, claims, and implicit arguments from a research paper section. 
 
 **Before extracting any item:**
 
-Read if uncertain: `/mnt/skills/user/research-assessor/references/verbatim-quote-requirements.md`
+Read if uncertain: `references/verbatim-quote-requirements.md`
 
 **Non-negotiable rules for all `verbatim_quote` fields:**
 
@@ -52,7 +52,7 @@ Read if uncertain: `/mnt/skills/user/research-assessor/references/verbatim-quote
 
 ## 🚨 CRITICAL: Sourcing Requirements
 
-**READ FIRST:** `/mnt/skills/user/research-assessor/references/extraction-fundamentals.md`
+**READ FIRST:** `references/extraction-fundamentals.md`
 
 The fundamentals document covers universal sourcing requirements that apply to all object types. **Evidence, Claims, and Implicit Arguments require the same sourcing discipline as RDMAP.**
 

@@ -30,7 +30,7 @@ Perform automated integrity checks on the rationalized extraction. Identify stru
 
 ## 🚨 CRITICAL: Read Verification Procedures First
 
-**READ FIRST:** `/mnt/skills/user/research-assessor/references/verification-procedures.md`
+**READ FIRST:** `references/verification-procedures.md`
 
 This file contains:
 - Complete verification procedures for all object types (Evidence, Claims, Implicit Arguments, RDMAP)
@@ -239,7 +239,7 @@ Use this checklist as your roadmap. Execute all applicable checks:
 
 All extracted items MUST pass source verification to prevent hallucinated content.
 
-**READ FIRST:** `/mnt/skills/user/research-assessor/references/verification-procedures.md`
+**READ FIRST:** `references/verification-procedures.md`
 
 The skill contains complete procedures, decision trees, worked examples, and quality metrics. This section specifies WHAT to validate and HOW to report results.
 

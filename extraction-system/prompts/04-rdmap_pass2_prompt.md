@@ -116,7 +116,7 @@ Use this checklist as your roadmap. Before finalizing:
 - Temporal comparisons: ALWAYS separate
 
 **For detailed patterns and examples:**
-→ See `/mnt/skills/user/research-assessor/references/checklists/consolidation-patterns.md` (RDMAP Consolidation Patterns section)
+→ See `references/checklists/consolidation-patterns.md` (RDMAP Consolidation Patterns section)
 
 **RDMAP-Specific Guidance:**
 

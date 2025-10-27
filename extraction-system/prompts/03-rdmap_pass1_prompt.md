@@ -38,7 +38,7 @@ Extract Research Design, Methods, and Protocols (RDMAP) from research paper sect
 
 **Before extracting any item:**
 
-Read if uncertain: `/mnt/skills/user/research-assessor/references/verbatim-quote-requirements.md`
+Read if uncertain: `references/verbatim-quote-requirements.md`
 
 **Non-negotiable rules for all `verbatim_quote` fields:**
 
@@ -57,7 +57,7 @@ Read if uncertain: `/mnt/skills/user/research-assessor/references/verbatim-quote
 
 ## 🚨 CRITICAL: RDMAP Sourcing Requirements
 
-**READ FIRST:** `/mnt/skills/user/research-assessor/references/extraction-fundamentals.md`
+**READ FIRST:** `references/extraction-fundamentals.md`
 
 The fundamentals document covers universal sourcing requirements that apply to all object types. **RDMAP items have the same sourcing discipline as Evidence and Claims.**
 

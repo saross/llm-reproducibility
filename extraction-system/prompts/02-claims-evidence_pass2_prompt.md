@@ -118,8 +118,8 @@ Use this checklist as your roadmap. Before finalizing:
 - Use Assessment Compatibility Test
 - Common patterns: narrative consolidation, compound interpretation, synthesis
 
-**For detailed patterns and examples:**  
-→ See `/mnt/skills/user/research-assessor/references/checklists/consolidation-patterns.md`
+**For detailed patterns and examples:**
+→ See `references/checklists/consolidation-patterns.md`
 
 **Quick workflow:**
 ```
