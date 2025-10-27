@@ -330,7 +330,7 @@ Before extracting RDMAP, quickly scan Abstract, Introduction, Background, and Me
 - Mark frameworks ("guided by," "framework," "informed by")
 - Mark meta-level framing (comparative evaluation, case study rationale, efficiency hypothesis)
 
-See: `references/research-design-extraction-guide.md` for detailed pre-scan checklist.
+See: `references/research-design-operational-guide.md` for detailed pre-scan checklist.
 
 ⚠️ **Pre-Scan Mindset:** If a design element feels "too obvious" or "everyone knows this" → Mark it anyway. Meta-level designs (comparative evaluation, case study rationale) feel obvious because they frame the entire paper - that's exactly why they're Research Designs.
 
@@ -350,9 +350,9 @@ See: `references/research-design-extraction-guide.md` for detailed pre-scan chec
 - Framework: "framework," "guided by," "informed by"
 - Comparison: "compared," "evaluated," "tested whether"
 
-See tier-assignment-guide.md for full patterns.
+See `references/checklists/tier-assignment-guide.md` for full patterns.
 
-**Systematically check:** For each major section, ask: questions stated? hypotheses stated? frameworks referenced? design rationale explained? See `references/research-design-extraction-guide.md` for complete checklist.
+**Systematically check:** For each major section, ask: questions stated? hypotheses stated? frameworks referenced? design rationale explained? See `references/research-design-operational-guide.md` for complete checklist.
 
 - **Identify each distinct strategic decision point** (separate rationales = separate designs)
 - Extract theoretical frameworks as Research Designs
@@ -409,7 +409,7 @@ Extract these even though they seem "obvious" - they're strategic choices requir
 
 ## Key Examples
 
-**For worked examples showing 4-6 RD extraction from real paper:** See `references/research-design-extraction-guide.md` Section 6 (Sobotkova example).
+**For worked examples showing 4-6 RD extraction from real paper:** See `references/research-design-operational-guide.md` Section 6 (Sobotkova example).
 
 ### Example 1: Explicit Research Design
 

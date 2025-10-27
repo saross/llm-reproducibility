@@ -101,7 +101,7 @@ Use this checklist as your roadmap. Before finalizing:
 
 1. **Empirical Graph Analysis** (PRIMARY)
    - Identify evidence with identical claim support patterns
-   - See SKILL.md lines 183-212 for complete algorithm
+   - See `references/checklists/consolidation-patterns.md` for complete algorithm and examples
    - See consolidation-patterns.md "PRIMARY: Empirical Graph Analysis" section for examples
 
 2. **Assessment Compatibility Test** (SECONDARY)  

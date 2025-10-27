@@ -102,16 +102,16 @@ If you encounter uncertainty during extraction, consult:
 - `references/verification-procedures.md` - Source verification for Pass 3 validation
 
 **Schema & Structure:**
-- `references/schema/schema-guide.md` - Complete object definitions
-- `references/schema/examples/` - JSON examples from real extractions
+- `references/schema/schema-guide.md` - Complete object definitions with inline examples
 
 **Decision Frameworks:**
 - `references/checklists/tier-assignment-guide.md` - Design vs Method vs Protocol decisions
+- `references/research-design-operational-guide.md` - Operational patterns for finding all Research Designs (4-6 expected)
 - `references/checklists/consolidation-patterns.md` - When to lump vs split items, cross-reference repair procedure (CRITICAL for Pass 2 & Pass 4)
 - `references/checklists/expected-information.md` - Domain-specific completeness checklists
 
 **Examples:**
-- `references/examples/sobotkova-methods.md` - Complete worked example
+- `references/examples/sobotkova-example.md` - Complete worked example
 
 ### Step 4: Execute and Return
 
@@ -161,67 +161,15 @@ Follow the workflow guidance to:
 
 ### RDMAP Three-Tier Hierarchy
 
-**Research Designs** (Strategic - WHY)
-- Research questions and hypotheses
-- Theoretical frameworks
-- Study design choices
-- **Test:** "Is this about framing and rationale?"
+Research Designs (WHY), Methods (WHAT), Protocols (HOW).
 
-**Methods** (Tactical - WHAT)
-- Data collection approaches
-- Sampling strategies
-- Analysis techniques
-- **Test:** "Is this the general approach at high level?"
-
-**Protocols** (Operational - HOW)
-- Specific procedures
-- Tool configurations
-- Parameter specifications  
-- **Test:** "Could someone replicate from this level of detail?"
+**For complete tier assignment guidance:** See `references/checklists/tier-assignment-guide.md`
 
 ### Consolidation Logic
 
-**PRIMARY: Empirical Graph Analysis (Identical Support Patterns)**
+Evidence items with **identical claim support patterns** that are **never cited independently** should be consolidated.
 
-For assessment-focused extraction, evidence items that are always used together should be consolidated.
-
-**The Rule:** If evidence items have identical claim support patterns and are never cited independently → CONSOLIDATE
-
-**How to identify:**
-1. Map each evidence item to claims it supports: `E001 → [C003, C005]`
-2. Find items with identical support patterns: `E002 → [C003, C005]`
-3. Verify neither item is cited independently in other claims
-4. If patterns match and no independent citations → consolidate as compound finding
-5. Document with consolidation_type: `identical_support_pattern`
-
-**Example:**
-```
-E032 → [C063] only
-E033 → [C063] only
-→ Identical patterns, never cited separately
-→ CONSOLIDATE as compound finding
-```
-
-**Rationale:** For credibility assessment, what matters is the analytical unit. If E001 and E002 are never assessed separately—always invoked together as joint support—they function as a single analytical unit and should be consolidated.
-
-**SECONDARY: Assessment Compatibility Test**
-
-When empirical graph analysis is inconclusive (e.g., no claim support, complex patterns), ask:
-
-*"Would I assess the credibility of these items TOGETHER or SEPARATELY?"*
-
-- Together → Consider consolidation
-- Separately → Keep distinct
-
-**Common patterns:**
-- Multiple rationales for same decision → Together
-- Problem + solution narrative → Together
-- Temporal comparisons (2017 vs 2018) → Separately (ALWAYS)
-- Different assessment implications → Separately
-
-**CRITICAL:** Temporal comparisons always separate—comparison requires distinct items, even if they have identical support patterns.
-
-**For detailed patterns, examples, and edge cases:**  
+**For complete algorithm, examples, and cross-reference repair:**
 → See `references/checklists/consolidation-patterns.md`
 
 ## Important Notes
