@@ -516,7 +516,7 @@ for protocol in data['protocols']:
 ### When to Apply
 
 - **Pass 2 rationalisation**: After consolidating claims/evidence
-- **Pass 4 rationalisation**: After consolidating RDMAP items
+- **Pass 5 rationalisation**: After consolidating RDMAP items
 - **Required**: Not optional - consolidation without repair causes validation failures
 
 ## Remember

@@ -1,8 +1,8 @@
 # Extraction Fundamentals - Universal Sourcing Requirements
 
-**Last Updated:** 2025-10-21  
-**Schema Version:** 2.5+  
-**Applies to:** All extraction passes (Pass 1, Pass 2)  
+**Last Updated:** 2025-10-28
+**Schema Version:** 2.5+
+**Applies to:** All extraction passes (Pass 1-5: Claims/Evidence and RDMAP extraction)
 **Purpose:** Core sourcing requirements that apply across all object types
 
 ---
@@ -399,9 +399,9 @@ With full-paper context, certain implicit arguments become visible that weren't 
 
 ---
 
-## Source Verification (Pass 3)
+## Source Verification (Pass 6)
 
-All extracted items are verified in Pass 3 using `source_verification` object:
+All extracted items are verified in Pass 6 (Validation) using `source_verification` object:
 
 ### Explicit Items Verification
 - `location_verified`: Stated location exists and discusses topic

@@ -265,7 +265,7 @@ Before adding any `verbatim_quote` to JSON, verify:
 
 ## Verification Test
 
-### Self-Check Before Pass 3 Validation
+### Self-Check Before Pass 6 Validation
 
 Every extractor should mentally verify their quotes:
 
@@ -387,7 +387,7 @@ Key consolidation task: **Fix non-verbatim quotes**
 
 ## Quality Metrics
 
-**Target:** >95% of items pass source verification in Pass 3
+**Target:** >95% of items pass source verification in Pass 6
 
 **Indicators of good verbatim quotes:**
 - Minimal character normalization needed
@@ -429,10 +429,10 @@ Key consolidation task: **Fix non-verbatim quotes**
 4. **Single source location per quote**
 5. **Normalize characters consistently**
 
-**Remember:** Source verification failure blocks credibility assessment. Taking extra 10 seconds per quote to ensure verbatim accuracy prevents hours of rework in Pass 3.
+**Remember:** Source verification failure blocks credibility assessment. Taking extra 10 seconds per quote to ensure verbatim accuracy prevents hours of rework in Pass 6.
 
 ---
 
 **End of Verbatim Quote Requirements**
 
-*See also: `extraction-fundamentals.md` for general sourcing requirements, `verification-procedures.md` for Pass 3 validation.*
+*See also: `extraction-fundamentals.md` for general sourcing requirements, `verification-procedures.md` for Pass 6 validation.*

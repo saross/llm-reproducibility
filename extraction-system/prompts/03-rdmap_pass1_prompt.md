@@ -1,25 +1,27 @@
-# RDMAP Extraction Prompt - PASS 1: Liberal Extraction v2.5
+# RDMAP Extraction Prompt - PASS 1: Explicit Extraction v2.5
 
-**Version:** 2.5 Pass 1  
-**Last Updated:** 2025-10-21  
-**Workflow Stage:** Pass 1 of 3 - Liberal RDMAP extraction with over-capture strategy  
-**Skill Context:** This prompt is part of the research-assessor skill  
-**Schema Update:** Added mandatory sourcing (explicit/implicit distinction) to prevent hallucination
+**Version:** 2.5 Pass 1
+**Last Updated:** 2025-10-28
+**Workflow Stage:** Pass 1 of 4 - Explicit RDMAP extraction (implicit extraction in Pass 1b)
+**Skill Context:** This prompt is part of the research-assessor skill
+**Schema Update:** Added mandatory sourcing to prevent hallucination
 
 ---
 
 ## Your Task
 
-Extract Research Design, Methods, and Protocols (RDMAP) from research paper sections. This is **Pass 1: Liberal Extraction** - when uncertain about tier assignment or boundaries, err on the side of inclusion. Pass 2 will consolidate and rationalize.
+Extract **explicit RDMAP items** from research paper Methods/Approach sections: strategic decisions, methods, and protocols that are documented with procedural details.
+
+**This is Pass 1: Liberal Extraction** - when uncertain about tier assignment or boundaries, err on the side of inclusion. Pass 2 will consolidate and rationalise.
 
 **Input:** JSON extraction document (schema v2.5)
 - May be blank template (starting fresh)
 - May be partially populated (if claims/evidence already extracted)
 
-**Your responsibility:** Populate these arrays:
-- `research_designs`
-- `methods`
-- `protocols`
+**Your responsibility:** Populate these arrays with EXPLICIT items:
+- `research_designs` (set `design_status = "explicit"`)
+- `methods` (set `method_status = "explicit"`)
+- `protocols` (set `protocol_status = "explicit"`)
 
 **Leave untouched:**
 - `evidence`, `claims`, `implicit_arguments` (extracted separately)
@@ -30,7 +32,9 @@ Extract Research Design, Methods, and Protocols (RDMAP) from research paper sect
 - **Methods** - Tactical approaches about WHAT was done at high level
 - **Protocols** - Operational procedures about HOW specifically it was done
 
-**Output:** Same JSON document with RDMAP arrays populated
+**Note:** Implicit RDMAP items (mentioned but undocumented, or inferred from Results/Discussion) will be extracted in Pass 1b (separate prompt). This pass focuses solely on documented methodology in Methods section.
+
+**Output:** Same JSON document with explicit RDMAP arrays populated
 
 ---
 
@@ -43,199 +47,108 @@ Read if uncertain: `references/verbatim-quote-requirements.md`
 **Non-negotiable rules for all `verbatim_quote` fields:**
 
 1. **Complete sentences only** - Extract whole grammatical units, never mid-sentence fragments
-2. **Exact text only** - Copy-paste from paper, never paraphrase or reconstruct from memory  
+2. **Exact text only** - Copy-paste from paper, never paraphrase or reconstruct from memory
 3. **Verify before committing** - Ensure exact quote exists in paper before adding to JSON
-4. **Single source only** - Never synthesize quotes from multiple locations
+4. **Single source only** - Never synthesise quotes from multiple locations
 
 **Self-check:** "Can I find this EXACT text string in the paper with simple search?"
 - If YES → Extract it
-- If NO → Quote is wrong; fix it or mark as implicit
+- If NO → Quote is wrong; fix it or skip (will be captured in Pass 1b if implicit)
 
 ⚠️ **Failure to follow these rules causes 40-50% validation failures in Pass 3.**
 
 ---
 
-## 🚨 CRITICAL: RDMAP Sourcing Requirements
+## 🚨 CRITICAL: Explicit RDMAP Sourcing
 
 **READ FIRST:** `references/extraction-fundamentals.md`
 
 The fundamentals document covers universal sourcing requirements that apply to all object types. **RDMAP items have the same sourcing discipline as Evidence and Claims.**
 
-### RDMAP-Specific: Explicit vs Implicit Status
+### Explicit RDMAP Definition
 
-**EXPLICIT = Documented in Methods section**
-- Procedural details provided with sufficient description
-- Extract with `verbatim_quote` field
+**EXPLICIT = Documented in Methods section with procedural details**
+- Strategic decisions described with rationale
+- Methods described with approach specifications
+- Protocols described with operational steps
+- Extract with `verbatim_quote` field from Methods/Approach section
 - Status: `design_status`, `method_status`, or `protocol_status` = `"explicit"`
 
-**IMPLICIT = Not documented in Methods section**
-- May be mentioned elsewhere without procedures (Results/Discussion)
-- May be inferred from outcomes or comparisons
-- Extract with `trigger_text` + `trigger_locations` + `inference_reasoning` + `implicit_metadata`
-- Status: `design_status`, `method_status`, or `protocol_status` = `"implicit"`
-
-**Decision rule:**
+**Decision rule for this pass:**
 ```
-Is this RDMAP item described in the Methods section?
-├─ YES → Status = "explicit", extract with verbatim_quote
-└─ NO → Are there passages elsewhere that imply it existed?
-    ├─ YES → Status = "implicit", extract with trigger_text
-    └─ NO → DO NOT EXTRACT (absent, not implicit)
+Is this RDMAP item described in the Methods section with procedural details?
+├─ YES → Extract as explicit (this pass)
+└─ NO → Skip (will be extracted in Pass 1b if implicit)
 ```
 
-**Basis classification for implicit RDMAP:**
-- **mentioned_undocumented**: Paper mentions item but doesn't describe procedures
-  - Example: "Data were cleaned" but no cleaning procedure described
-- **inferred_from_results**: Never mentioned but implied by outcomes
-  - Example: Results show quality metrics but quality control never mentioned
-
-**Note:** Implicit status documents transparency gaps for assessment. It does NOT mean "bad methodology" - many legitimate decisions may not be fully documented.
-
-**For complete sourcing fundamentals:** → `references/extraction-fundamentals.md`  
+**For complete sourcing fundamentals:** → `references/extraction-fundamentals.md`
 **For detailed verification procedures:** → `references/verification-procedures.md`
 
 ---
 
 ## Quality Checklist for Pass 1
 
-Use this checklist as your roadmap. Before finalizing:
+Use this checklist as your roadmap. Before finalising:
 
-- [ ] All research designs extracted (questions, hypotheses, study designs, frameworks)
-- [ ] All methods extracted (data collection, sampling, analysis approaches)
-- [ ] All protocols extracted (specific procedures, tools, parameters, configurations)
+- [ ] All explicit research designs extracted (questions, hypotheses, study designs, frameworks)
+- [ ] All explicit methods extracted (data collection, sampling, analysis approaches)
+- [ ] All explicit protocols extracted (specific procedures, tools, parameters, configurations)
 - [ ] Tier assignments marked (even if uncertain)
-- [ ] **Status fields set for all RDMAP items (explicit or implicit)**
-- [ ] **All explicit items have verbatim_quote populated**
-- [ ] **All implicit items have trigger_text, trigger_locations, inference_reasoning**
-- [ ] **All implicit items have complete implicit_metadata**
-- [ ] Cross-references populated (`enables_methods`, `realized_through_protocols`, etc.)
-- [ ] `expected_information_missing` flagged where appropriate
-- [ ] `extraction_notes` document uncertainties and decisions
-- [ ] Location tracking complete (section, page, paragraph)
-- [ ] Reasoning approaches classified (where applicable)
-- [ ] **No hallucinations - only extract what's sourced**
-- [ ] Other arrays (claims/evidence) untouched
+- [ ] Status fields set to "explicit" for all RDMAP items
+- [ ] All items have verbatim_quote populated
+- [ ] Expected missing information documented for each item
+- [ ] Liberal extraction applied (when uncertain, include it)
 
 ---
 
-## Extraction Philosophy
+## RDMAP Tier Hierarchy
 
-**When uncertain about tier assignment, inclusion, or boundaries: INCLUDE IT.**
+Research Designs → Methods → Protocols (strategic → tactical → operational)
 
-- Better to over-extract and consolidate later than miss important methodological information
-- Preserve granularity - Pass 2 will consolidate appropriately
-- Accept 40-50% over-extraction as expected and manageable
-- Focus on comprehensive capture, not perfect classification
+**Research Designs** are strategic decisions answering "WHY this approach?"
+- Research questions and hypotheses
+- Study designs (comparative evaluation, case study, experimental design)
+- Theoretical frameworks guiding the research
+- Sampling frames (WHAT to sample from)
 
-**You will NOT be penalized for:**
-- Extracting too many items (Pass 2 consolidates)
-- Being overly granular (Pass 2 lumps related items)
-- Including items at multiple tiers when uncertain
-- Marking uncertain boundaries
+**Methods** are tactical approaches answering "WHAT was done?"
+- Data collection approaches (observation, measurement, recording)
+- Sampling strategies (HOW to sample)
+- Analysis methods (statistical tests, qualitative coding, spatial analysis)
+- Validation and quality control approaches
 
-**You WILL be penalized for:**
-- Missing important methodological information
-- Under-extracting due to uncertainty
-- Being too conservative about inclusion
-- **Extracting RDMAP items without proper sourcing (verbatim_quote OR trigger_text)**
+**Protocols** are operational procedures answering "HOW SPECIFICALLY was it done?"
+- Step-by-step procedures
+- Tool configurations and parameters
+- Recording and data capture procedures
+- Processing and transformation procedures
 
----
-
-## Core Decision Framework
-
-### 1. Three-Tier Hierarchy: Design → Methods → Protocols
-
-**Quick Test:**
-- **WHY** research was framed this way → Research Design
-- **WHAT** general approach was used → Method
-- **HOW** specifically implemented → Protocol
-
-**When uncertain:** Extract at BOTH levels and mark as uncertain in `extraction_notes`
-
-**For complete decision tree, tier indicators, and boundary guidance:**
-→ See `references/checklists/tier-assignment-guide.md`
+**See:** `references/checklists/tier-assignment-guide.md` for complete classification guidance
 
 ---
 
-### 2. Description vs Argumentation Boundary
+## Liberal Extraction Philosophy
 
-**Test:** "Is this describing HOW research was done, or ARGUING about how well it worked?"
-- Describing HOW → RDMAP
-- Arguing about effectiveness → Claims/Evidence
+This is Pass 1: **LIBERAL EXTRACTION**
 
-**If combined:** Extract description in RDMAP, assertion in claims, cross-reference them
+**When uncertain:**
+- About tier (design vs method vs protocol): **INCLUDE IT** (Pass 2 will rationalise)
+- About boundaries (one item or two): **EXTRACT BOTH** (Pass 2 will consolidate)
+- About whether it qualifies as RDMAP: **INCLUDE IT** (Pass 2 will review)
 
-**For complete boundary guidance with examples:**
-→ See `references/checklists/tier-assignment-guide.md` (Description vs Argumentation Boundary section)
+**Accept 40-50% over-extraction:**
+- Pass 1 should over-capture
+- Pass 2 consolidates and rationalises
+- Better to extract too much than miss assessment-critical information
 
----
-
-### 3. Reasoning Approach & Hypothesis Timing
-
-**For Research Designs:** Classify reasoning approach (inductive, abductive, deductive, mixed, unclear) and assess hypothesis timing (pre-data vs post-data)
-
-**Critical for assessment:** Detecting HARKing (Hypothesising After Results are Known), transparency evaluation
-
-**For complete classification framework, hypothesis timing indicators, and verification procedures:**
-→ See `references/research-design-operational-guide.md` (Sections 9-10: Reasoning Approach Classification and Research Questions vs Hypotheses)
+**When to extract "high-level" or "obvious" designs:**
+- "Comparative evaluation of X vs Y" feels obvious? → EXTRACT IT (it's a strategic choice)
+- "Case study to demonstrate Z" feels obvious? → EXTRACT IT (case study is a design decision)
+- Meta-level framing that shapes entire paper → EXTRACT IT (these are Research Designs)
 
 ---
 
-### 4. Expected Information & Missing Elements
-
-For each RDMAP item, consider what information SHOULD be present but is MISSING.
-
-**Use the `expected_information_missing` field to document gaps:**
-- Don't penalize - just document
-- Helps assess transparency and replicability
-- Context-dependent (archaeology ≠ biology ≠ ethnography)
-
-**For comprehensive checklists covering:**
-- Method documentation (TIDieR-adapted)
-- Measurement specifications (CONSORT-adapted)
-- Sampling strategies
-- Analysis methods
-- Domain-specific expectations (archaeology, biology, ethnography)
-
-**→ See `references/checklists/expected-information.md`**
-
-**Common missing elements to watch for:**
-- Sample size justification
-- Tool/equipment specifications
-- Parameter settings
-- Quality control procedures
-- Alternative methods considered
-- Stopping rules for sampling
-
-**Note:** Expected information is separate from implicit status. An explicit (documented) method can still be missing expected details. Implicit methods automatically have higher expected information gaps since they're not documented at all.
-
----
-
-### 5. Fieldwork-Specific Considerations
-
-**For fieldwork-based research:** Recognise opportunistic decisions, contingency plans, and emergent discoveries
-
-**For complete fieldwork patterns and extraction guidance:**
-→ See `references/research-design-operational-guide.md` (Section 11: Fieldwork-Specific Considerations)
-
----
-
-### 6. Cross-Referencing
-
-**Populate bidirectional links:**
-- Research Designs `enables_methods` → Methods `implements_designs`
-- Methods `realized_through_protocols` → Protocols `implements_methods`
-- Methods `supports_claims` ← Claims `supported_by_evidence`
-
-**Don't over-reference:** Only link if there's a clear relationship
-
-**Complete in Step 4** of workflow (after extracting all RDMAP items)
-
----
-
-## Extraction Workflow
-
-### Step 0: Pre-Scan for Research Designs (2-3 minutes)
+## Step 0: Pre-Scan for Research Designs
 
 Before extracting RDMAP, quickly scan Abstract, Introduction, Background, and Methods/Approach sections for design elements:
 - Mark decision language ("chose," "selected," "because")
@@ -246,263 +159,210 @@ See: `references/research-design-operational-guide.md` for detailed pre-scan che
 
 ⚠️ **Pre-Scan Mindset:** If a design element feels "too obvious" or "everyone knows this" → Mark it anyway. Meta-level designs (comparative evaluation, case study rationale) feel obvious because they frame the entire paper - that's exactly why they're Research Designs.
 
-**For systematic implicit RDMAP recognition patterns:**
-→ See `references/extraction-fundamentals.md` (Implicit RDMAP Extraction section)
-- Covers 4 recognition patterns: Mentioned Procedure, Effects Implying Causes, Mentions Without Descriptions, Strategic Decisions
-- Section-by-section extraction workflow for finding implicit RDMAP items
-- Common mistakes to avoid
+---
 
-### Step 1: Identify Research Designs
+## Step 1: Extract Explicit Research Designs
 
 ⚠️ **Literature Review Warning:** Don't extract Research Designs from descriptions of PRIOR work.
 - If verbatim quote says "Smith et al. employed..." → Not current paper's design
 - If quote says "We build on comparative approaches..." → Check: Do they explain WHY they chose it for THIS study?
 - Test: Does this explain a strategic choice the AUTHORS made, or describe what others did?
 
-- Scan Abstract, Introduction, Background, and Methods/Approach sections systematically. RDs appear where they appear - don't prioritize sections.
+**Scan Abstract, Introduction, Background, and Methods/Approach sections for documented strategic decisions:**
 
-**Scan for design language:**
-- Decision: "chose," "selected," "opted for," "decision to"
-- Rationale: "because," "rationale," "reasoning"
-- Purpose: "aimed to," "sought to," "designed to"
-- Framework: "framework," "guided by," "informed by"
-- Comparison: "compared," "evaluated," "tested whether"
+**Look for design language:**
+- Decision markers: "chose," "selected," "opted for," "decision to"
+- Rationale markers: "because," "rationale," "reasoning"
+- Purpose markers: "aimed to," "sought to," "designed to"
+- Framework markers: "framework," "guided by," "informed by"
+- Comparison markers: "compared," "evaluated," "tested whether"
 
 See `references/checklists/tier-assignment-guide.md` for full patterns.
 
-**Systematically check:** For each major section, ask: questions stated? hypotheses stated? frameworks referenced? design rationale explained? See `references/research-design-operational-guide.md` for complete checklist.
-
+**For each explicit design found:**
+- Extract complete strategic decision with rationale
+- Set `design_status = "explicit"`
+- Extract `verbatim_quote` from paper
+- Classify reasoning approach for each
 - **Identify each distinct strategic decision point** (separate rationales = separate designs)
 - Extract theoretical frameworks as Research Designs
 
 **Meta-level framing:** Papers often have strategic designs that frame entire research:
 - "Comparative evaluation of X" → Design (comparison AS strategic choice)
 - "Case study to demonstrate Y" → Design (case study AS deliberate decision)
+
 Extract these even though they seem "obvious" - they're strategic choices requiring independent justification.
 
-- Classify reasoning approach for each
-- Determine explicit vs implicit status
-- Populate verbatim_quote OR trigger_text appropriately
-- **Liberal extraction:** Include "high-level" design elements - critical for transparency assessment
+**Systematically check:** For each major section, ask: questions stated? hypotheses stated? frameworks referenced? design rationale explained? See `references/research-design-operational-guide.md` for complete checklist.
 
-### Step 2: Identify Methods
-- Look for data collection approaches
-- Extract sampling strategies
-- Identify analysis methods
-- Note quality control and validation approaches
-- Determine explicit vs implicit status for each method
-- Populate verbatim_quote OR trigger_text + implicit_metadata
+**Liberal extraction:** Include "high-level" design elements - critical for transparency assessment.
+
+---
+
+## Step 2: Extract Explicit Methods
+
+**Scan Methods/Approach section for documented tactical approaches:**
+
+**Look for method types:**
+- Data collection approaches (recording, measurement, observation)
+- Sampling strategies (systematic, random, purposive, stratified)
+- Analysis methods (statistical tests, qualitative coding, spatial analysis)
+- Quality control approaches (validation, verification, cross-checking)
+
+**For each explicit method found:**
+- Extract high-level approach with context
+- Set `method_status = "explicit"`
+- Extract `verbatim_quote` from Methods section
 - Document expected missing information
-- **When uncertain about tier or inclusion: INCLUDE IT**
+- When uncertain about tier: **INCLUDE IT** (Pass 2 will consolidate)
 
-### Step 3: Identify Protocols
-- Find specific procedures with implementation detail
-- Extract tool specifications and configurations
-- Capture parameter settings and values
-- Document recording standards and decision rules
-- Note measurement protocols
-- Determine explicit vs implicit status for each protocol
-- Populate verbatim_quote OR trigger_text + implicit_metadata
-- **When uncertain: INCLUDE IT**
+**Systematically check:** For each subsection of Methods, ask: data collection described? sampling described? analysis approach described? quality control described?
 
-### Step 4: Cross-Reference
-- Link designs to methods they enable
-- Link methods to protocols they use
-- Verify bidirectional consistency
-- Update `implements_designs` and `implements_methods` fields
-
-**Protocol-method linking (CRITICAL):**
-- `implements_methods` is an ARRAY of method IDs (plural, not singular)
-- Protocol implements ONE method: `"implements_methods": ["M001"]`
-- Protocol implements MULTIPLE methods: `"implements_methods": ["M001", "M002"]`
-- All protocols should link to at least one method (prevents orphaned protocols)
-
-### Step 5: Flag Missing Information
-- Review each RDMAP item against expected information
-- Populate `expected_information_missing` arrays
-- Document in `extraction_notes` if significant gaps
-- Don't penalize - just document for transparency
+**Liberal extraction:** Include borderline items (might be method or protocol) - Pass 2 will rationalise tier assignments.
 
 ---
 
-## Key Examples
+## Step 3: Extract Explicit Protocols
 
-**For worked examples showing 4-6 RD extraction from real paper:** See `references/research-design-operational-guide.md` Section 6 (Sobotkova example).
+**Scan Methods/Approach section for documented operational procedures:**
 
-### Example 1: Explicit Research Design
+**Look for protocol types:**
+- Recording procedures (how data was captured)
+- Measurement procedures (how observations were made)
+- Processing procedures (how data was cleaned, transformed, aggregated)
+- Validation procedures (how quality was checked)
+- Configuration procedures (how tools/equipment were set up)
 
-**Text (from Methods):** "We hypothesized that mobile platforms would be more efficient than paper-based recording. We also conducted exploratory analysis to identify usage patterns."
+**For each explicit protocol found:**
+- Extract specific operational procedure
+- Set `protocol_status = "explicit"`
+- Extract `verbatim_quote` from Methods section
+- Record procedure steps if specified
+- Document parameters if specified
+- Note expected missing information
 
-**Extract as:**
-```json
-{
-  "design_id": "RD001",
-  "design_type": "research_question",
-  "design_status": "explicit",
-  "verbatim_quote": "We hypothesized that mobile platforms would be more efficient than paper-based recording. We also conducted exploratory analysis to identify usage patterns.",
-  "hypotheses": [{
-    "hypothesis": "Mobile platforms would be more efficient than paper-based recording",
-    "formulation_timing": "pre-data",
-    "timing_basis": "Stated in introduction before methods"
-  }],
-  "reasoning_approach": {
-    "approach": "mixed",
-    "reasoning_confidence": "high",
-    "indicators": ["Explicit hypothesis (deductive)", "Exploratory analysis (inductive)"]
-  },
-  "location": {"section": "Methods", "subsection": "2.1 Study Design", "paragraph": 1}
-}
-```
+**Protocol characteristics:**
+- More specific than methods (implementation detail)
+- Often includes parameters, settings, or step sequences
+- Answers "how specifically" rather than "what approach"
 
----
+**Systematically check:** For each method extracted, ask: are implementation procedures described? Are tool configurations specified? Are parameters documented?
 
-### Example 2: Explicit Method
-
-**Text (from Methods):** "Survey used systematic transects with 20% coverage. Due to high artifact density in western section, coverage was increased to 40% in that area."
-
-**Extract as:**
-```json
-{
-  "method_id": "M003",
-  "method_text": "Systematic transect survey with adaptive coverage",
-  "method_status": "explicit",
-  "verbatim_quote": "Survey used systematic transects with 20% coverage. Due to high artifact density in western section, coverage was increased to 40% in that area.",
-  "sampling_strategy": {
-    "sampling_type": "systematic",
-    "planned_coverage": "20%",
-    "actual_coverage": "20% overall, 40% in western section"
-  },
-  "opportunistic": true,
-  "opportunistic_notes": "Coverage increased in western section due to high artifact density",
-  "expected_information_missing": ["Stopping rule for increased coverage", "Criteria for 'high density'"],
-  "location": {"section": "Methods", "subsection": "2.3 Field Survey", "paragraph": 2}
-}
-```
+**Liberal extraction:** Include procedural details even if incomplete - captures what WAS documented for transparency assessment.
 
 ---
 
-### Example 3: Implicit Method (mentioned_undocumented)
+## Relationship Mapping
 
-**Text (from Discussion):** "Desktop quality control procedures ensured data consistency in 2010 season."
+**After extracting RDMAP items, map relationships:**
 
-**Methods section check:** No description of quality control procedures found.
+**Designs → Methods:**
+- Which methods implement/realise which research designs?
+- Use `implements_designs` field in methods
 
-**Extract as:**
-```json
-{
-  "method_id": "M018",
-  "method_text": "Desktop quality control procedures for 2010 season data consistency",
-  "method_status": "implicit",
-  "trigger_text": [
-    "Desktop quality control procedures ensured data consistency in 2010 season"
-  ],
-  "trigger_locations": [
-    {"section": "Discussion", "subsection": "4.2", "paragraph": 3}
-  ],
-  "inference_reasoning": "Discussion mentions quality control procedures for 2010 data, but Methods contains no description. Procedures were used but not documented.",
-  "implicit_metadata": {
-    "basis": "mentioned_undocumented",
-    "transparency_gap": "No description of QC procedures, criteria, or personnel",
-    "assessability_impact": "Cannot assess rigor or appropriateness of QC for 2010 data",
-    "reconstruction_confidence": "low"
-  },
-  "expected_information_missing": [
-    "QC procedure description",
-    "QC criteria and thresholds",
-    "Personnel who performed QC"
-  ],
-  "location": {"section": "Discussion", "subsection": "4.2", "paragraph": 3}
-}
-```
+**Methods → Protocols:**
+- Which protocols implement/realise which methods?
+- Use `implements_methods` field in protocols
+
+**Protocols → Methods:**
+- Reverse reference from protocol perspective
+- Use `realized_through_protocols` field in methods
+
+**Cross-tier connections:**
+- Research Designs may directly connect to protocols
+- Some designs validate specific claims
+- Document these relationships in appropriate fields
+
+**Liberal approach:** When uncertain about relationships, include them. Pass 2 will review.
 
 ---
 
-### Example 4: Implicit Protocol (inferred_from_results)
+## Expected Missing Information
 
-**Text (from Results):** "After removing GPS points with accuracy >10m, mean accuracy was 2.3m (SD = 1.1m, n = 1,247)."
+**For EVERY RDMAP item, document what's missing:**
 
-**Methods section check:** No mention of GPS point filtering.
+This is assessment-critical. Use `expected_information_missing` arrays to note:
 
-**Extract as:**
-```json
-{
-  "protocol_id": "P025",
-  "protocol_text": "GPS point filtering procedure based on 10m accuracy threshold",
-  "protocol_status": "implicit",
-  "trigger_text": [
-    "After removing GPS points with accuracy >10m, mean accuracy was 2.3m"
-  ],
-  "trigger_locations": [
-    {"section": "Results", "subsection": "3.1", "paragraph": 2}
-  ],
-  "inference_reasoning": "Results state GPS points >10m were removed before analysis. Methods has no description of this filtering. Protocol must have been applied but wasn't documented.",
-  "implicit_metadata": {
-    "basis": "inferred_from_results",
-    "transparency_gap": "No description of filtering: how accuracy measured, when applied, automated vs manual",
-    "assessability_impact": "Cannot verify appropriateness of 10m threshold or assess impact on coverage",
-    "reconstruction_confidence": "medium"
-  },
-  "parameters": {
-    "accuracy_threshold": "10m"
-  },
-  "expected_information_missing": [
-    "How accuracy measured",
-    "Filtering stage",
-    "Number of points removed",
-    "Justification for 10m threshold"
-  ],
-  "location": {"section": "Results", "subsection": "3.1", "paragraph": 2}
-}
-```
+**For Research Designs:**
+- Missing rationale or justification
+- Alternatives not discussed
+- Theoretical framework not specified
+
+**For Methods:**
+- Missing procedural details
+- Sample size not justified
+- Quality control not described
+
+**For Protocols:**
+- Parameters not specified
+- Tool configurations not documented
+- Validation procedures missing
+
+**This information feeds transparency assessment.** Be thorough about documenting gaps.
 
 ---
 
 ## Output Format
 
-**Return the same JSON document with RDMAP arrays populated:**
+**Return the same JSON document you received, with these arrays populated:**
 
 ```json
 {
   "schema_version": "2.5",
   "extraction_timestamp": "ISO 8601",
   "extractor": "Claude Sonnet 4.5",
-  
-  // Populate these arrays:
-  "research_designs": [design_object],    
-  "methods": [method_object],             
-  "protocols": [protocol_object],         
-  
-  // Leave these untouched:
-  "evidence": [...],                      
-  "claims": [...],                        
-  "implicit_arguments": [...],            
-  
+
+  "research_designs": [design_object],
+  "methods": [method_object],
+  "protocols": [protocol_object],
+
   "extraction_notes": {
     "pass": 1,
-    "section_extracted": "string",
-    "total_rdmap_items": 47,
-    "designs": 8,
-    "methods": 23,
-    "protocols": 16,
-    "explicit_items": 38,
-    "implicit_items": 9,
-    "uncertain_classifications": 3
+    "section_extracted": "RDMAP Pass 1: Explicit extraction complete. Implicit extraction pending (Pass 1b).",
+    "extraction_strategy": "Liberal explicit RDMAP extraction from Methods/Approach sections...",
+    "known_uncertainties": ["List any ambiguities, uncertain tier assignments, or items you're unsure about"]
   }
 }
 ```
 
-**For complete object structure and field definitions:**  
-→ See `references/schema/schema-guide.md`
+**IMPORTANT: Update extraction_notes:**
+- Set pass number
+- Document extraction strategy
+- Note any uncertainties or ambiguities
+- Document liberal extraction philosophy applied
 
 ---
 
-## Pass 1 Goal
+## Reference Materials
 
-Produce comprehensive RDMAP extraction with:
-- All methodological information captured (over-extraction OK)
-- All items properly sourced (explicit with verbatim_quote OR implicit with trigger_text)
-- Tier assignments made (even if uncertain)
-- Status fields set (explicit or implicit)
-- Expected information gaps flagged
-- Cross-references populated
-- Ready for rationalization (Pass 2)
+**For detailed RDMAP extraction fundamentals:**
+→ See `references/extraction-fundamentals.md` (Explicit RDMAP Extraction section)
+
+**For tier assignment guidance:**
+→ See `references/checklists/tier-assignment-guide.md`
+
+**For research design operational guide:**
+→ See `references/research-design-operational-guide.md`
+
+**For schema field definitions:**
+→ See `references/schema/schema-guide.md`
+
+**For verification procedures:**
+→ See `references/verification-procedures.md`
+
+**For implicit RDMAP extraction:**
+→ This will be handled in Pass 1b (Prompt 04) after explicit extraction is complete
+
+---
+
+## Examples
+
+See `references/examples/` for:
+- Worked RDMAP extraction examples
+- Tier assignment examples
+- Relationship mapping examples
+- Expected missing information examples
+
+---
+
+**End of Prompt 03**

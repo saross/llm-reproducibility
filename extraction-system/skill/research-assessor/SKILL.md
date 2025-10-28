@@ -1,6 +1,6 @@
 ---
 name: research-assessor
-description: Extracts and assesses research methodology, claims, and evidence from fieldwork-based research papers. Evaluates transparency, replicability, and credibility through systematic extraction of research designs, methods, protocols, claims, and evidence using a five-pass iterative workflow.
+description: Extracts and assesses research methodology, claims, and evidence from fieldwork-based research papers. Evaluates transparency, replicability, and credibility through systematic extraction of research designs, methods, protocols, claims, and evidence using a six-pass iterative workflow.
 license: Apache 2.0
 ---
 
@@ -13,8 +13,10 @@ Systematic extraction and assessment framework for research methodology, claims,
 This skill enables comprehensive extraction of research methodology and argumentation from academic papers through a structured multi-pass workflow:
 
 1. **Claims & Evidence Extraction** (Pass 1 & 2) - Extract observations, measurements, claims, and implicit arguments
-2. **RDMAP Extraction** (Pass 1 & 2) - Extract Research Designs, Methods, and Protocols  
-3. **Validation** (Pass 3) - Verify structural integrity and cross-reference consistency
+2. **RDMAP Explicit Extraction** (Pass 3) - Extract documented Research Designs, Methods, and Protocols from Methods section
+3. **RDMAP Implicit Extraction** (Pass 4) - Extract undocumented or inferred RDMAP items from Results/Discussion
+4. **RDMAP Rationalisation** (Pass 5) - Consolidate and refine all RDMAP items
+5. **Validation** (Pass 6) - Verify structural integrity and cross-reference consistency
 
 The extracted data enables assessment of research transparency, replicability, and credibility.
 
@@ -37,13 +39,15 @@ Blank JSON Template
     ↓
 Claims/Evidence Pass 1 (liberal extraction)
     ↓
-Claims/Evidence Pass 2 (rationalization)
+Claims/Evidence Pass 2 (rationalisation)
     ↓
-RDMAP Pass 1 (liberal extraction)
+RDMAP Pass 3 - Explicit (liberal extraction from Methods)
     ↓
-RDMAP Pass 2 (rationalization)
+RDMAP Pass 4 - Implicit (scan for undocumented items)
     ↓
-Validation Pass 3 (integrity checks)
+RDMAP Pass 5 (rationalisation)
+    ↓
+Validation Pass 6 (integrity checks)
     ↓
 Assessment-Ready Extraction
 ```
@@ -70,10 +74,12 @@ The user provides:
 
 Users will typically request extraction at a specific pass. Listen for:
 - "Extract claims/evidence Pass 1" → Liberal claims extraction
-- "Rationalize the claims" → Claims Pass 2
-- "Extract RDMAP" → RDMAP Pass 1
-- "Extract methodology" → RDMAP Pass 1
-- "Validate the extraction" → Pass 3
+- "Rationalise the claims" → Claims Pass 2
+- "Extract explicit RDMAP" → RDMAP Pass 3 (explicit only)
+- "Extract implicit RDMAP" → RDMAP Pass 4 (implicit only)
+- "Extract methodology" → RDMAP Pass 3 & 4
+- "Rationalise RDMAP" → RDMAP Pass 5
+- "Validate the extraction" → Pass 6
 
 ### Step 2: Receive the Extraction Prompt
 
@@ -81,14 +87,15 @@ The user will provide the extraction prompt for the specific pass they want. The
 
 **Claims/Evidence Extraction:**
 - **Pass 1:** Liberal extraction prompt (comprehensive capture with over-extraction)
-- **Pass 2:** Rationalization prompt (consolidation and refinement)
+- **Pass 2:** Rationalisation prompt (consolidation and refinement)
 
 **RDMAP Extraction:**
-- **Pass 1:** Liberal extraction prompt (three-tier hierarchy with over-extraction)
-- **Pass 2:** Rationalization prompt (consolidation and verification)
+- **Pass 3:** Explicit extraction prompt (documented methodology from Methods section)
+- **Pass 4:** Implicit extraction prompt (undocumented items from Results/Discussion)
+- **Pass 5:** Rationalisation prompt (consolidation and verification of all RDMAP)
 
 **Validation:**
-- **Pass 3:** Unified validation prompt (structural integrity checks across all arrays)
+- **Pass 6:** Unified validation prompt (structural integrity checks across all arrays)
 
 The prompts contain detailed instructions, examples, and decision frameworks for that specific extraction pass. Follow the prompt provided.
 
@@ -97,9 +104,9 @@ The prompts contain detailed instructions, examples, and decision frameworks for
 If you encounter uncertainty during extraction, consult:
 
 **Core Extraction Principles:**
-- `references/extraction-fundamentals.md` - Universal sourcing requirements, explicit vs implicit extraction, systematic implicit RDMAP patterns, systematic implicit arguments patterns with 6 recognition patterns (ALWAYS read first for Pass 1 & 2)
+- `references/extraction-fundamentals.md` - Universal sourcing requirements, explicit vs implicit extraction, systematic implicit RDMAP patterns, systematic implicit arguments patterns with 6 recognition patterns (ALWAYS read first for all extraction passes)
 - `references/verbatim-quote-requirements.md` - Strict verbatim quote requirements (prevents 40-50% validation failures)
-- `references/verification-procedures.md` - Source verification for Pass 3 validation
+- `references/verification-procedures.md` - Source verification for Pass 6 validation
 
 **Schema & Structure:**
 - `references/schema/schema-guide.md` - Complete object definitions with inline examples
@@ -107,7 +114,7 @@ If you encounter uncertainty during extraction, consult:
 **Decision Frameworks:**
 - `references/checklists/tier-assignment-guide.md` - Design vs Method vs Protocol decisions
 - `references/research-design-operational-guide.md` - Operational patterns for finding all Research Designs (4-6 expected)
-- `references/checklists/consolidation-patterns.md` - When to lump vs split items, cross-reference repair procedure (CRITICAL for Pass 2 & Pass 4)
+- `references/checklists/consolidation-patterns.md` - When to lump vs split items, cross-reference repair procedure (CRITICAL for Pass 2 & Pass 5)
 - `references/checklists/expected-information.md` - Domain-specific completeness checklists
 
 **Examples:**
@@ -134,9 +141,9 @@ Follow the workflow guidance to:
 - **Pass 2:** Consolidate (15-20% reduction target) - refined quality
 
 ### Separation of Concerns
-- **Claims/Evidence passes:** Touch evidence, claims, implicit_arguments arrays ONLY
-- **RDMAP passes:** Touch research_designs, methods, protocols arrays ONLY
-- **Validation pass:** Reads all, modifies none
+- **Claims/Evidence passes (Pass 1 & 2):** Touch evidence, claims, implicit_arguments arrays ONLY
+- **RDMAP passes (Pass 3, 4, & 5):** Touch research_designs, methods, protocols arrays ONLY
+- **Validation pass (Pass 6):** Reads all, modifies none
 
 ### Cross-Reference Architecture
 - Simple string ID arrays: `["M003", "M007"]`
@@ -180,9 +187,10 @@ Evidence items with **identical claim support patterns** that are **never cited 
 - Start with blank template OR pre-populated arrays
 
 **Expected outcomes:**
-- Pass 1: Comprehensive (intentional over-capture)
-- Pass 2: ~15-20% reduction through consolidation
-- Pass 3: Validation report (no modifications)
+- Pass 1 & 3: Comprehensive (intentional over-capture)
+- Pass 2 & 5: ~15-20% reduction through consolidation
+- Pass 4: Implicit items added (typically 20-40% of RDMAP total)
+- Pass 6: Validation report (no modifications)
 
 **Token efficiency:**
 - Only load workflow file needed for current pass

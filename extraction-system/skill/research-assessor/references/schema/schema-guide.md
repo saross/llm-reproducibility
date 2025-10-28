@@ -50,9 +50,32 @@ This schema defines six object types for extracting research methodology and arg
 - Status field set to `"implicit"`
 
 **Source Verification:**
-- All items have `source_verification` object for Pass 3 validation
+- All items have `source_verification` object for Pass 6 validation
 - Tracks: location_verified, quote_verified, content_aligned
 - Enables automated quality checks
+
+### Field Population Timeline
+
+**IMPORTANT:** Different fields are populated at different workflow stages.
+
+**Passes 1-5 (Extraction):** Populate the actual extraction content
+- Evidence items: `verbatim_quote`, `location`, `evidence_text`, `evidence_type`
+- Claims: `claim_text`, `verbatim_quote`, `supports_claims`, `claim_type`
+- Implicit Arguments: `trigger_text`, `trigger_locations`, `inference_reasoning`, `implicit_metadata`
+- RDMAP items: `*_text`, `*_type`, plus:
+  - Explicit: `verbatim_quote`, `location`
+  - Implicit: `trigger_text`, `trigger_locations`, `inference_reasoning`, `implicit_metadata`
+
+**Pass 6 (Validation):** Populate the verification metadata ONLY
+- Adds `source_verification` object to each item:
+  - `location_verified`: Does stated location exist in paper and discuss topic?
+  - `quote_verified`: Is verbatim_quote found at stated location?
+  - `content_aligned`: Does item content match what quote/triggers actually state?
+- **Does NOT modify** extraction content (evidence_text, claim_text, etc.)
+- **Does NOT add/remove** items from arrays
+- Only adds validation QA metadata to existing items
+
+**Key distinction:** Pass 6 validates and annotates the extraction, it does not perform extraction.
 
 ### Why This Matters
 
@@ -60,7 +83,7 @@ This schema defines six object types for extracting research methodology and arg
 
 - **Cannot extract without source:** Every item must have verbatim_quote OR trigger_text
 - **Location tracking:** Every source must have precise location
-- **Verification enabled:** Pass 3 can validate all extractions systematically
+- **Verification enabled:** Pass 6 can validate all extractions systematically
 - **Zero tolerance:** Fabricated content is catastrophic for credibility assessment
 
 ---
@@ -108,7 +131,7 @@ This schema defines six object types for extracting research methodology and arg
 
 **Key fields:**
 - `location`: `{section, page, start_paragraph, end_paragraph}` - Where the verbatim_quote appears
-- `source_verification`: Populated in Pass 3 (location_verified, quote_verified, content_aligned)
+- `source_verification`: Populated in Pass 6 (location_verified, quote_verified, content_aligned)
 - `declared_uncertainty`: Author-stated uncertainty (ranges, confidence intervals)
 - `expected_uncertainty_missing`: Uncertainty we would expect but is absent
 - `supports_claims`: Array of claim IDs `["C001", "C005"]`
@@ -148,7 +171,7 @@ This schema defines six object types for extracting research methodology and arg
 
 **Key fields:**
 - `location`: Where the verbatim_quote appears
-- `source_verification`: Populated in Pass 3
+- `source_verification`: Populated in Pass 6
 - `supported_by_evidence`: Array of evidence IDs `["E001", "E003"]`
 - `supported_by_claims`: Array of supporting claim IDs
 - `supports_claims`: Array of claims this supports
@@ -200,7 +223,7 @@ This schema defines six object types for extracting research methodology and arg
 **Key fields:**
 - `supports_claims`: Array of claim IDs this argument supports
 - `disciplinary_context`: Domain where this assumption holds
-- `source_verification`: Populated in Pass 3 (trigger verification)
+- `source_verification`: Populated in Pass 6 (trigger verification)
 - `confidence_in_inference`: How strongly triggers support inference
 
 **v2.5 Sourcing Rule:** Must have multiple trigger passages that together imply (not state) the argument. If explicitly stated anywhere → extract as Claim, not Implicit Argument.
@@ -528,6 +551,6 @@ All objects include location for traceability:
 Full JSON schema definitions with all fields, types, and constraints are available in:
 - `extraction_schema_v2.5.json` - Complete unified schema (Evidence, Claims, Implicit Arguments, RDMAP)
 - See also: `extraction-fundamentals.md` (sourcing requirements)
-- See also: `verification-procedures.md` (Pass 3 validation)
+- See also: `verification-procedures.md` (Pass 6 validation)
 
 The complete schema is in the project knowledge and can be consulted for comprehensive field definitions.

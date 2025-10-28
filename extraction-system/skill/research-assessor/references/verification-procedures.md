@@ -38,7 +38,7 @@ Before applying verification procedures, understand which type of content you're
 
 ## PART 1: Verification for Explicit Content (Evidence & Claims)
 
-Apply these procedures to every evidence item and claim during Pass 3 validation.
+Apply these procedures to every evidence item and claim during Pass 6 validation.
 
 ### Step 1: Location Verification
 
@@ -189,7 +189,7 @@ Does evidence/claim content appear in the quote?
 
 ## PART 2: Verification for Implicit Content (Implicit Arguments)
 
-Apply these procedures to every implicit argument during Pass 3 validation.
+Apply these procedures to every implicit argument during Pass 6 validation.
 
 ### Step 1: Trigger Location Verification
 
@@ -349,7 +349,7 @@ Is implicit argument directly stated in any passage?
 
 ## PART 3: Verification for RDMAP Objects (Research Designs, Methods, Protocols)
 
-Apply these procedures to all research design, method, and protocol objects during Pass 3 validation.
+Apply these procedures to all research design, method, and protocol objects during Pass 6 validation.
 
 ### Understanding RDMAP Explicit vs Implicit Status
 
@@ -1371,7 +1371,7 @@ Content fails only?
 
 ## PART 9: Verification Workflow Summary
 
-### Pass 3 Verification Checklist
+### Pass 6 Verification Checklist
 
 For EACH evidence item and claim:
 
@@ -1516,4 +1516,4 @@ For EACH implicit RDMAP item (with status = "implicit"):
 
 **End of Verification Procedures**
 
-These procedures are referenced by Pass 1 and Pass 3 prompts. Follow them systematically to prevent evidence hallucination and ensure extraction integrity.
+These procedures are referenced by extraction prompts (Pass 1-5) and the Pass 6 validation prompt. Follow them systematically to prevent evidence hallucination and ensure extraction integrity.

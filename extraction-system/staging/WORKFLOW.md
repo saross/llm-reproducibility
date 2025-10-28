@@ -1,14 +1,14 @@
 # Research Extraction Workflow
 
-**Version:** 2.6.1
+**Version:** 2.7.0
 **Skill:** research-assessor
-**Updated:** 2025-10-25
+**Updated:** 2025-10-28
 
 ---
 
 ## Overview
 
-This workflow extracts research methodology, claims, and evidence from academic papers through a structured 5-pass process. Each paper undergoes systematic extraction that populates a standardized JSON schema and produces human-readable validation reports.
+This workflow extracts research methodology, claims, and evidence from academic papers through a structured 6-pass process. Each paper undergoes systematic extraction that populates a standardised JSON schema and produces human-readable validation reports.
 
 ## Input/Output Structure
 
@@ -55,9 +55,14 @@ Execute each pass by processing these section groups in order. Complete each gro
    - ⚠️ Do NOT process separately - always together
    - Save progress to JSON after completing this group
 
-**For rationalization passes (02, 04) and validation (05):**
+**For rationalization passes (02, 05) and validation (06):**
 - Review all relevant extractions across the entire paper
 - Refer back to paper sections as needed
+- No section-by-section processing required
+
+**For implicit RDMAP pass (04):**
+- Scan across entire paper for implicit RDMAP items
+- Use already-extracted explicit RDMAP as seed list
 - No section-by-section processing required
 
 **Adjust based on paper structure** - the key is manageable section sizes that maintain focus and thoroughness while completing logical units together.
@@ -212,7 +217,7 @@ Pass 2 execution (continuous, no stopping):
 4. Update queue.yaml: Mark Pass 2 complete
 5. Immediately proceed to Pass 3 (no user confirmation needed)
 
-Continue through all 5 passes autonomously...
+Continue through all 6 passes autonomously...
 ```
 
 ## Autonomous Execution
@@ -243,7 +248,7 @@ When resuming after context reset (auto-compact):
    - Read `extraction.json` to see what's been extracted
 
 2. **Identify checkpoint:**
-   - Which pass are we on? (Pass 1-5)
+   - Which pass are we on? (Pass 1-6)
    - Which section group is next? (Abstract+Intro, Methods, Results, Discussion+Conclusion)
    - Or is this pass complete? (proceed to next pass)
 
@@ -260,7 +265,7 @@ When resuming after context reset (auto-compact):
 ### Stopping Conditions
 
 **Only stop execution if:**
-- ✅ **All extraction complete**: All 5 passes done, summary.md generated, queue.yaml status set to `completed`
+- ✅ **All extraction complete**: All 6 passes done, summary.md generated, queue.yaml status set to `completed`
 - ❌ **Error encountered**: Issue requires user intervention (document in queue.yaml notes)
 
 **Do NOT stop for:**
@@ -290,26 +295,34 @@ When resuming after context reset (auto-compact):
 - **Goal**: Improve accuracy and specificity
 - **Approach**: Review all extractions, refer back to entire paper as needed
 
-### Pass 3: RDMAP (Research Designs, Methods, Protocols) - Liberal
+### Pass 3: RDMAP Explicit Extraction (Liberal)
 - **Prompt**: `extraction-system/prompts/03-rdmap_pass1_prompt.md`
-- **Action**: Extract research designs, methods, and protocols **section-by-section**
-- **Output**: Append RDMAP entities to JSON after each section
-- **Goal**: Comprehensive methodology extraction
+- **Action**: Extract explicit research designs, methods, and protocols from Methods section **section-by-section**
+- **Output**: Append explicit RDMAP entities to JSON after each section
+- **Goal**: Liberal extraction of documented methodology
 - **Approach**: Abstract+Intro → Methods → Results → Discussion+Conclusion
 
-### Pass 4: RDMAP Rationalization
-- **Prompt**: `extraction-system/prompts/04-rdmap_pass2_prompt.md`
-- **Action**: Review Pass 3 results across entire paper, refine RDMAP extraction, improve cross-references to claims/evidence
+### Pass 4: RDMAP Implicit Extraction
+- **Prompt**: `extraction-system/prompts/04-rdmap_pass1b_implicit_prompt.md`
+- **Action**: Systematically scan for implicit RDMAP items (mentioned but undocumented, or inferred from Results/Discussion)
+- **Output**: Add implicit RDMAP entities to existing arrays in JSON
+- **Goal**: Identify transparency gaps and undocumented procedures
+- **Approach**: Scan across entire paper using 4-pattern recognition for each tier
+- **Note**: Uses already-extracted explicit RDMAP as seed list
+
+### Pass 5: RDMAP Rationalisation
+- **Prompt**: `extraction-system/prompts/05-rdmap_pass2_prompt.md`
+- **Action**: Review Pass 3 & 4 results across entire paper, refine RDMAP extraction, improve cross-references to claims/evidence
 - **Output**: Update JSON with refined RDMAP data
-- **Goal**: Ensure methodology connects to claims/evidence
+- **Goal**: Ensure methodology connects to claims/evidence, consolidate over-extracted items
 - **Approach**: Review all extractions, refer back to entire paper as needed
 
-### Pass 5: Validation & Reporting
-- **Prompt**: `extraction-system/prompts/05-rdmap_pass3_prompt.md`
+### Pass 6: Validation & Reporting
+- **Prompt**: `extraction-system/prompts/06-validation_prompt.md`
 - **Action**: Verify structural integrity, check cross-references, assess completeness (whole paper)
 - **Output**: Write `validation-pass3.md` (NO changes to JSON)
 - **Goal**: Quality assurance and human-readable assessment
-- **Note**: Pass 5 is the only pass that reviews the entire paper at once
+- **Note**: Pass 6 is the only pass that reviews the entire paper at once
 
 ### Post-Processing
 1. **Generate summary**: Create `summary.md` with key entities and metadata from final JSON
