@@ -1,0 +1,307 @@
+ Ready to code?
+
+ Here is Claude's plan:
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+ Phase A + B-1 Test Execution Plan
+
+ Test Paper: Sobotkova et al. 2023 - "Creating large, high-quality geospatial datasets from historical maps using
+ novice volunteers"
+ Output Directory: outputs/sobotkova-et-al-2023/
+ Test Purpose: Validate Phase A + B-1 implementation maintains extraction quality with new skill references
+
+ ---
+ Execution Overview
+
+ Autonomous Continuous Operation: No stops between sections, section groups, or passes. Work continuously through
+ all 5 passes until complete.
+
+ Section Groups (for Pass 1 & Pass 3 only):
+ 1. Abstract + Introduction (complete as one unit)
+ 2. Methods/Approach (all subsections)
+ 3. Results (all subsections)
+ 4. Discussion + Conclusion (together as one unit)
+
+ ---
+ Pre-Flight Setup (5 minutes)
+
+ 1. Invoke research-assessor skill:
+   - Use Skill tool with command: "research-assessor"
+   - This loads the skill prompt with all extraction frameworks and guidelines
+ 2. Create output directory structure:
+   - mkdir -p outputs/sobotkova-et-al-2023/
+ 3. Initialize extraction.json:
+   - Copy blank schema from extraction-system/schema/extraction_schema.json
+   - Populate project_metadata from PDF
+   - Set extraction_timestamp and extractor fields
+ 4. Update queue.yaml:
+   - Set status: in_progress
+   - Add notes: "Phase A + B-1 test run - Pass 1 starting"
+
+ ---
+ Pass 1: Claims & Evidence (Liberal Extraction)
+
+ Prompt: extraction-system/prompts/01-claims-evidence_pass1_prompt.md
+ Approach: Section-by-section extraction
+ Key Test: Evidence-vs-claims-guide.md reference used correctly
+
+ Execution Sequence:
+
+ 1.1 Abstract + Introduction (30-45 min)
+ - Extract all claims and evidence
+ - Apply evidence vs claims framework (via reference to evidence-vs-claims-guide.md)
+ - Save to extraction.json after completion
+ - Validate using jq count check
+ - Update queue.yaml: "Pass 1: Abstract+Intro complete"
+
+ 1.2 Methods Section (45-60 min)
+ - Continue extraction
+ - Read full extraction.json before writing
+ - Save updated extraction.json (preserving Abstract+Intro extractions)
+ - Validate using jq count check
+ - Update queue.yaml: "Pass 1: Methods complete"
+
+ 1.3 Results Section (45-60 min)
+ - Continue extraction
+ - Read full extraction.json before writing
+ - Save updated extraction.json (preserving all previous)
+ - Validate using jq count check
+ - Update queue.yaml: "Pass 1: Results complete"
+
+ 1.4 Discussion + Conclusion (30-45 min)
+ - Complete extraction
+ - Read full extraction.json before writing
+ - Save final Pass 1 extraction.json
+ - Validate using jq count check
+ - Update queue.yaml: "Pass 1: COMPLETE"
+
+ Expected Pass 1 Output:
+ - Evidence array: 30-80 items
+ - Claims array: 15-50 items
+ - Implicit_arguments: variable
+ - RDMAP arrays: empty (populated in Pass 3)
+
+ ---
+ Pass 2: Claims & Evidence (Rationalization)
+
+ Prompt: extraction-system/prompts/02-claims-evidence_pass2_prompt.md
+ Approach: Whole paper review (60-90 min)
+ Key Test: Consolidation patterns applied, evidence-vs-claims boundary maintained
+
+ Execution:
+
+ 1. Read full extraction.json (MANDATORY)
+ 2. Review all Pass 1 extractions across entire paper
+ 3. Refine, consolidate, remove false positives
+ 4. Apply consolidation_metadata where appropriate
+ 5. Save consolidated extraction.json
+ 6. Validate using jq count check
+ 7. Update queue.yaml: "Pass 2: COMPLETE"
+
+ Expected Pass 2 Output:
+ - Evidence count: may decrease (consolidation)
+ - Claims count: may decrease (refinement)
+ - Consolidation_metadata: present where items merged
+ - Quality: improved accuracy and specificity
+
+ ---
+ Pass 3: RDMAP (Liberal Extraction)
+
+ Prompt: extraction-system/prompts/03-rdmap_pass1_prompt.md
+ Approach: Section-by-section extraction
+ Key Tests:
+ - tier-assignment-guide.md referenced correctly
+ - research-design-operational-guide.md Sections 9-11 used
+ - Description vs Argumentation boundary accurate
+
+ Execution Sequence:
+
+ 3.1 Abstract + Introduction (30-45 min)
+ - Extract research designs, methods, protocols
+ - Apply WHY/WHAT/HOW tier framework (via tier-assignment-guide.md)
+ - Apply reasoning approach classification (Section 9)
+ - Apply RQ vs hypotheses distinction (Section 10)
+ - Read full extraction.json before writing
+ - Save updated extraction.json
+ - Validate using jq count check
+ - Update queue.yaml: "Pass 3: Abstract+Intro complete"
+
+ 3.2 Methods Section (60-90 min)
+ - Continue RDMAP extraction
+ - Apply fieldwork-specific patterns (Section 11)
+ - Read full extraction.json before writing
+ - Save updated extraction.json
+ - Validate using jq count check
+ - Update queue.yaml: "Pass 3: Methods complete"
+
+ 3.3 Results Section (30-45 min)
+ - Continue RDMAP extraction
+ - Read full extraction.json before writing
+ - Save updated extraction.json
+ - Validate using jq count check
+ - Update queue.yaml: "Pass 3: Results complete"
+
+ 3.4 Discussion + Conclusion (30-45 min)
+ - Complete RDMAP extraction
+ - Read full extraction.json before writing
+ - Save final Pass 3 extraction.json
+ - Validate using jq count check
+ - Update queue.yaml: "Pass 3: COMPLETE"
+
+ Expected Pass 3 Output:
+ - Research_designs: 2-6 items
+ - Methods: 5-10 items
+ - Protocols: 8-20 items
+ - All with proper tier assignments (WHY/WHAT/HOW)
+
+ ---
+ Pass 4: RDMAP (Rationalization)
+
+ Prompt: extraction-system/prompts/04-rdmap_pass2_prompt.md
+ Approach: Whole paper review (60-90 min)
+ Key Test: Reasoning verification procedures applied (via research-design-operational-guide.md)
+
+ Execution:
+
+ 1. Read full extraction.json (MANDATORY)
+ 2. Review all Pass 3 RDMAP extractions
+ 3. Refine tier assignments
+ 4. Verify reasoning approach consistency
+ 5. Improve cross-references to claims/evidence
+ 6. Save consolidated extraction.json
+ 7. Validate using jq count check
+ 8. Update queue.yaml: "Pass 4: COMPLETE"
+
+ Expected Pass 4 Output:
+ - RDMAP counts: may decrease (consolidation)
+ - Cross-references: improved accuracy
+ - Tier assignments: verified and accurate
+
+ ---
+ Pass 5: Validation & Reporting
+
+ Prompt: extraction-system/prompts/05-rdmap_pass3_prompt.md
+ Approach: Whole paper review (60-90 min)
+ Output: validation-pass3.md (NO changes to extraction.json)
+
+ Execution:
+
+ 1. Read extraction.json (reference only)
+ 2. Verify structural integrity
+ 3. Check cross-references (all IDs valid)
+ 4. Assess completeness
+ 5. Write validation-pass3.md (human-readable report)
+ 6. Update queue.yaml: "Pass 5: COMPLETE"
+
+ Expected Pass 5 Output:
+ - validation-pass3.md with assessment report
+ - No changes to extraction.json
+
+ ---
+ Post-Processing (10-15 minutes)
+
+ 1. Generate summary.md:
+   - Key entities and metadata from extraction.json
+   - Write to outputs/sobotkova-et-al-2023/summary.md
+ 2. Final validation check:
+ jq '{
+   evidence: (.evidence | length),
+   claims: (.claims | length),
+   implicit_arguments: (.implicit_arguments | length),
+   research_designs: (.research_designs | length),
+   methods: (.methods | length),
+   protocols: (.protocols | length)
+ }' outputs/sobotkova-et-al-2023/extraction.json
+ 3. Update queue.yaml:
+   - Set status: completed
+   - Add completion timestamp
+
+ ---
+ File Safety Protocol (CRITICAL)
+
+ MANDATORY before EVERY Write to extraction.json:
+
+ 1. ✅ Read(extraction.json) with NO limit parameter
+ 2. ✅ Verify all arrays present in memory
+ 3. ✅ Modify in memory
+ 4. ✅ Write complete updated file
+ 5. ✅ Immediately validate with jq count check
+
+ Post-Write Validation (after every save):
+ jq '{evidence: (.evidence|length), claims: (.claims|length), 
+      implicit_arguments: (.implicit_arguments|length), 
+      research_designs: (.research_designs|length), 
+      methods: (.methods|length), protocols: (.protocols|length)}'
+      outputs/sobotkova-et-al-2023/extraction.json
+
+ If unexpected zeros appear: STOP, investigate data loss, restore from git if needed
+
+ ---
+ Success Criteria (from handover)
+
+ Phase A Success Criteria:
+
+ - ✅ All references resolve correctly (evidence-vs-claims-guide.md, tier-assignment-guide.md)
+ - ✅ Evidence/claims boundary maintained
+ - ✅ Tier assignments correct (WHY/WHAT/HOW test applied)
+ - ✅ No extraction quality degradation vs baseline
+
+ Phase B-1 Success Criteria:
+
+ - ✅ All RDMAP patterns applied (reasoning approaches, fieldwork patterns)
+ - ✅ RD classification accurate (5 reasoning approaches correctly identified)
+ - ✅ Hypothesis timing correct (pre-data vs post-data)
+ - ✅ Fieldwork patterns extracted (opportunistic decisions, contingencies if present)
+ - ✅ Description vs Argumentation boundary accurate
+ - ✅ Quality maintained vs baseline
+
+ Overall Success:
+
+ - ✅ Extraction completeness comparable to baseline
+ - ✅ No missing patterns that baseline captured
+ - ✅ Framework references followed correctly
+ - ✅ Comprehensive reference files used when needed
+
+ ---
+ Estimated Timeline
+
+ - Pre-flight: 5 minutes
+ - Pass 1: 2.5-3.5 hours (4 section groups)
+ - Pass 2: 1-1.5 hours
+ - Pass 3: 2.5-3.5 hours (4 section groups)
+ - Pass 4: 1-1.5 hours
+ - Pass 5: 1-1.5 hours
+ - Post-processing: 15 minutes
+
+ Total: 8-11 hours continuous autonomous execution
+
+ ---
+ Key Testing Points
+
+ 1. Evidence vs Claims guide: Confirm reference read and applied in Pass 1
+ 2. Tier assignment guide: Confirm WHY/WHAT/HOW tests applied in Pass 3
+ 3. Research design guide Sections 9-11: Confirm all three sections referenced in Pass 3
+ 4. Reasoning approaches: Verify 5 types classified (inductive, abductive, deductive, mixed, unclear)
+ 5. Hypothesis timing: Verify pre-data vs post-data inference applied
+ 6. Fieldwork patterns: Check if opportunistic decisions/contingencies extracted
+
+ ---
+ Next Steps After Completion
+
+ 1. Review outputs: extraction.json, validation-pass3.md, summary.md
+ 2. Compare to baseline (if available)
+ 3. Assess success criteria (checklist above)
+ 4. Document findings: Any issues, quality assessment, reference usage
+ 5. Decide on Phase B-2: Proceed if tests pass, debug if issues found
+
+ ---
+ Ready to execute? This plan follows WORKFLOW.md autonomous execution requirements with continuous operation
+ through all 5 passes.
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+ Would you like to proceed?
+
+ ❯ 1. Yes, and auto-accept edits
+   2. Yes, and manually approve edits
+   3. No, keep planning
+
+ ctrl-g to edit plan in code

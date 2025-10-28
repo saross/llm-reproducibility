@@ -1,0 +1,411 @@
+{
+  "schema_version": "2.5",
+  "extraction_timestamp": "2025-10-27T00:00:00Z",
+  "extractor": "Claude (Sonnet 4.5) via research-assessor skill",
+  "project_metadata": {
+    "paper_title": "Creating large, high-quality geospatial datasets from historical maps using novice volunteers",
+    "authors": ["Adela Sobotkova", "Shawn A. Ross", "Christian Nassif-Haynes", "Brian Ballsun-Stanton"],
+    "publication_year": 2023,
+    "journal": "Applied Geography",
+    "doi": "10.1016/j.apgeog.2023.102967",
+    "paper_type": "research article",
+    "discipline": "archaeology",
+    "research_context": "Case study of crowdsourced cultural heritage digitisation from historical maps using FAIMS Mobile during 2017-2018 archaeological fieldwork in Bulgaria",
+    "timeline": {
+      "field_seasons": ["2017", "2018"],
+      "project_history": "TRAP catalogued 1,204 mounds 2008-2016; map digitisation 2017-2018"
+    },
+    "location": {
+      "region": "Yambol region, southeast Bulgaria",
+      "broader_project": "Tundzha Regional Archaeological Project (TRAP)"
+    },
+    "resources": {
+      "maps": "Soviet military 1:50,000 topographic maps (58 tiles, ~23,500 sq km)",
+      "platform": "FAIMS Mobile",
+      "devices": "Android mobile devices",
+      "participants": "Undergraduate field school students (novice volunteers)"
+    }
+  },
+  "evidence": [
+    {
+      "evidence_id": "E001",
+      "evidence_text": "10,827 mound features digitised from Soviet military topographic maps",
+      "evidence_type": "quantitative_output",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": ["C005", "C006", "C009"],
+      "location": {"section": "Abstract", "page": 1, "start_paragraph": 1, "end_paragraph": 1},
+      "verbatim_quote": "FAIMS Mobile was used to digitise 10,827 mound features from Soviet military topographic maps.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E002",
+      "evidence_text": "Digitisation required 241 person-hours (57 staff, 184 volunteers)",
+      "evidence_type": "time_measurement",
+      "evidence_basis": "direct_measurement",
+      "supports_claims": ["C005", "C006", "C009", "C020"],
+      "location": {"section": "Abstract", "page": 1, "start_paragraph": 1, "end_paragraph": 1},
+      "verbatim_quote": "This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E003",
+      "evidence_text": "Error rate under 6%",
+      "evidence_type": "accuracy_measurement",
+      "evidence_basis": "statistical_output",
+      "supports_claims": ["C006", "C009", "C027"],
+      "declared_uncertainty": {"type": "bounded_range", "indicator": "under", "quantification": "<6%"},
+      "location": {"section": "Abstract", "page": 1, "start_paragraph": 1, "end_paragraph": 1},
+      "verbatim_quote": "This digitisation required 241 person-hours (57 from staff; 184 from novice volunteers), with an error rate under 6%.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E010",
+      "evidence_text": "2017 season: 125.8 person-hours, 8,343 features digitised, average 54 seconds per feature",
+      "evidence_type": "performance_measurement",
+      "evidence_basis": "device_timestamp_analysis",
+      "supports_claims": ["C020", "C021"],
+      "location": {"section": "3.2 Student-volunteer digitisation velocity and volume", "page": 7, "start_paragraph": 1, "end_paragraph": 1},
+      "verbatim_quote": "In 2017, it was used for a total of 125.8 person-hours concentrated across five rainy days, during which time 8,343 features were digitised from 42 Soviet topographic maps (ca. 17,000 sq km). The average time to record a point feature was 54 s, based on start and end times of feature creation as recorded by the devices (representing work time excluding pauses between records).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E011",
+      "evidence_text": "2018 season: 63.6 person-hours, 2,484 features digitised, average 92 seconds per feature",
+      "evidence_type": "performance_measurement",
+      "evidence_basis": "device_timestamp_analysis",
+      "supports_claims": ["C020", "C021"],
+      "location": {"section": "3.2 Student-volunteer digitisation velocity and volume", "page": 7, "start_paragraph": 2, "end_paragraph": 2},
+      "verbatim_quote": "In 2018, use was more sporadic; participants who stayed at the base for any reason sometimes undertook digitisation. The system was used for 63.6 person-hours, with 2,484 features recorded from 16 maps (ca. 6,500 sq km), an average rate of one record every 92 s.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E012",
+      "evidence_text": "Total: 189.4 student-hours, 10,827 features, 63 seconds per record",
+      "evidence_type": "aggregate_measurement",
+      "evidence_basis": "statistical_aggregation",
+      "supports_claims": ["C020", "C021"],
+      "location": {"section": "3.2 Student-volunteer digitisation velocity and volume", "page": 7, "start_paragraph": 3, "end_paragraph": 3},
+      "verbatim_quote": "In total, 10,827 point features, mostly burial and settlement mounds, were recorded in 189.4 student-hours (63 s per record).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E013",
+      "evidence_text": "2010 desktop GIS attempt produced 915 features, required 5-7 hours staff support, high volunteer attrition",
+      "evidence_type": "comparative_baseline",
+      "evidence_basis": "project_records",
+      "supports_claims": ["C022", "C023"],
+      "location": {"section": "3.3 Digitisation comparison with desktop GIS", "page": 7, "start_paragraph": 1, "end_paragraph": 1},
+      "verbatim_quote": "TRAP had attempted an unsatisfactory digitisation effort in 2010 by students using ArcGIS. Although we did not maintain detailed volunteer time-on-task records, we know this effort produced a dataset of 915 features and required about 5–7 h of staff training, support, and error-checking over a three-week period (based on our field journals).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E014",
+      "evidence_text": "Customisation and setup took 51 hours total (36 programmer, 15 staff) across two seasons",
+      "evidence_type": "resource_measurement",
+      "evidence_basis": "timesheet_records",
+      "supports_claims": ["C024", "C025"],
+      "location": {"section": "3.1 Project staff time for setup, support, and accuracy-checking", "page": 7, "start_paragraph": 1, "end_paragraph": 3},
+      "verbatim_quote": "Across both seasons, customisation, setup, and supervision took about 51 h, including 36 h from the programmer and 15 from project staff.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E015",
+      "evidence_text": "Quality assurance check of 4 randomly selected maps (7% sample) found 5.87% error rate",
+      "evidence_type": "accuracy_measurement",
+      "evidence_basis": "manual_verification",
+      "supports_claims": ["C027"],
+      "location": {"section": "3.5.2 Digitisation errors", "page": 7, "start_paragraph": 2, "end_paragraph": 2},
+      "verbatim_quote": "A review by project staff of four randomly selected maps (7% of the total) found 49 errors from a true count of 834 features, a 5.87% error rate (see Table 3).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E016",
+      "evidence_text": "42 of 49 errors were false negatives (missed features), 6 double-marked, 1 classification error, 0 false positives",
+      "evidence_type": "error_breakdown",
+      "evidence_basis": "manual_verification",
+      "supports_claims": ["C027", "C028"],
+      "location": {"section": "3.5.2 Digitisation errors", "page": 8, "start_paragraph": 2, "end_paragraph": 3},
+      "verbatim_quote": "Forty-two of these errors were false negatives (symbols missed by students). Six were double-marked (Student C digitised a section of a map twice). Students made only one classification error (a similar symbol mistaken for a benchmark), and no outright false positives.",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E017",
+      "evidence_text": "Best digitisers were fastest (44-45s) and most accurate (1.3-2.9% error); worst were slowest (61-73s) and least accurate (7.4-10.6% error)",
+      "evidence_type": "performance_correlation",
+      "evidence_basis": "statistical_analysis",
+      "supports_claims": ["C028"],
+      "location": {"section": "3.5.2 Digitisation errors", "page": 9, "start_paragraph": 1, "end_paragraph": 1},
+      "verbatim_quote": "Note that the two fastest digitisers (Students A and B; 44 and 45 s per feature respectively) also had the lowest error rates (1.3 and 2.9%), while the two slowest (Students C and D; 61 and 73 s) had the highest error rates (10.6 and 7.4%).",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E018",
+      "evidence_text": "Conservative payoff threshold: crowdsourcing > staff digitisation at 3,400-4,300 features",
+      "evidence_type": "calculated_threshold",
+      "evidence_basis": "time_cost_analysis",
+      "supports_claims": ["C024", "C029"],
+      "location": {"section": "4.1.1 Desktop GIS approaches versus crowdsourcing", "page": 9, "start_paragraph": 2, "end_paragraph": 3},
+      "verbatim_quote": "At this rate, the 57 h of staff time devoted to set-up, support, and quality assurance for our crowdsourcing system could have resulted in some 3,420–4,275 staff-digitised features (see Table 4).",
+      "extraction_notes": "Calculated from staff digitisation rate of 60-75 features/hour",
+      "extraction_confidence": "high"
+    },
+    {
+      "evidence_id": "E019",
+      "evidence_text": "Urban Occupations Project required 1,250 hours manual digitisation for ML training data",
+      "evidence_type": "comparative_benchmark",
+      "evidence_basis": "literature",
+      "supports_claims": ["C030", "C031"],
+      "location": {"section": "4.1.2 Machine learning versus crowdsourcing", "page": 10, "start_paragraph": 1, "end_paragraph": 2},
+      "verbatim_quote": "The ERC-funded Urban Occupations Project (Can, Gerrits, and Kabadayi 2021), however, provides one benchmark for judging when pursuing a ML approach might be worthwhile. This project reported 1,250 h of manual digitisation to create enough training data to classify roads visible in historical maps of the Ottoman Empire.",
+      "extraction_confidence": "high"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C001",
+      "claim_text": "Unlocking data from historical maps for landscape analysis is costly",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "primary_function": "limitation_acknowledgment",
+      "claim_nature": "evaluative",
+      "supported_by": [],
+      "implicit_assumptions": ["IA001"],
+      "location": {"section": "Abstract", "page": 1},
+      "verbatim_quote": "Unlocking data from historical maps for landscape analysis is costly.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C002",
+      "claim_text": "Automatic extraction using Machine Learning requires extensive preparation and expertise",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "primary_function": "limitation_acknowledgment",
+      "supported_by": [],
+      "supports_claims": ["C001"],
+      "implicit_assumptions": ["IA002"],
+      "location": {"section": "Abstract", "page": 1},
+      "verbatim_quote": "Automatic extraction using Machine Learning (ML) requires extensive preparation and expertise.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C003",
+      "claim_text": "Crowdsourcing scales better than direct digitisation by experts but requires appropriate platform and adaptation skills",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "supported_by": [],
+      "supports_claims": ["C001"],
+      "implicit_assumptions": ["IA003"],
+      "location": {"section": "Abstract", "page": 1},
+      "verbatim_quote": "Crowdsourcing scales better than direct digitisation by experts, but requires an appropriate platform and the technical skills to adapt it.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C009",
+      "claim_text": "Crowdsourcing approach most efficient for 10,000–60,000 features, may offer advantages for datasets as small as few hundred records",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "empirical_pattern",
+      "supported_by": ["E001", "E002", "E003", "E012"],
+      "quantitative_details": {"involves_quantification": true, "metric": "feature count threshold"},
+      "declared_uncertainty": {"type": "hedging", "indicator": "conservative estimate, suggests, may"},
+      "location": {"section": "Abstract", "page": 1},
+      "verbatim_quote": "A conservative estimate based on our work suggests our crowdsourcing approach is most efficient for digitisation projects of 10,000–60,000 features, but may offer advantages for datasets as small as a few hundred records.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C010",
+      "claim_text": "Field data collection systems on mobile devices can be profitably customised as participatory geospatial systems for novices",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "theoretical_interpretation",
+      "supported_by": [],
+      "location": {"section": "Abstract", "page": 1},
+      "verbatim_quote": "Furthermore, it indicates that systems designed for field data collection, running on mobile devices, can be profitably customised to serve as participatory geospatial data systems accessible to novice volunteers.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C020",
+      "claim_text": "2017 concentrated digitisation was more productive than 2018 intermittent work",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "supported_by": ["E010", "E011", "E012"],
+      "quantitative_details": {"involves_quantification": true, "metric": "digitisation rate comparison"},
+      "location": {"section": "3.2 Student-volunteer digitisation velocity and volume", "page": 7},
+      "verbatim_quote": "The concentrated digitisation in 2017 was more productive than the intermittent work of 2018, but both seasons yielded large and valuable datasets utilising time that might otherwise have been lost (e.g., to inclement weather), while requiring little supervision by project staff.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C021",
+      "claim_text": "Both seasons yielded large valuable datasets with little staff supervision",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "supported_by": ["E010", "E011", "E012"],
+      "location": {"section": "3.2", "page": 7},
+      "verbatim_quote": "The concentrated digitisation in 2017 was more productive than the intermittent work of 2018, but both seasons yielded large and valuable datasets utilising time that might otherwise have been lost (e.g., to inclement weather), while requiring little supervision by project staff.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C022",
+      "claim_text": "Desktop GIS digitisation attempt in 2010 was unsatisfactory due to volunteer attrition and high staff demands",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "primary_function": "comparative_baseline",
+      "supported_by": ["E013"],
+      "location": {"section": "3.3 Digitisation comparison with desktop GIS", "page": 7},
+      "verbatim_quote": "TRAP had attempted an unsatisfactory digitisation effort in 2010 by students using ArcGIS.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C023",
+      "claim_text": "Customised mobile application met usability requirements and helped novices begin work with little training",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "supported_by": ["E013"],
+      "location": {"section": "3.3", "page": 7},
+      "verbatim_quote": "By contrast, our customised application met fundamental usability requirements (e.g., Nielsen, 2012), both due to careful design of the customisation itself, and the underlying platform's implementation of Google's Material Design guidelines.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C024",
+      "claim_text": "Crowdsourcing approach becomes worthwhile for datasets larger than about 4,500 features versus expert staff digitisation",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "primary_function": "empirical_pattern",
+      "supported_by": ["E014", "E018"],
+      "quantitative_details": {"involves_quantification": true, "metric": "payoff threshold"},
+      "location": {"section": "4.1.1", "page": 9},
+      "verbatim_quote": "Such a payoff threshold suggests that digitisation by project staff will be suitable only for smaller datasets.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C025",
+      "claim_text": "Crowdsourcing's marginal cost per additional feature is low, making larger datasets more valuable",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "economic_argument",
+      "supported_by": ["E014"],
+      "location": {"section": "4.1.1", "page": 10},
+      "verbatim_quote": "Third, the marginal cost for each additional feature digitised is low. This figure includes in-field support and quality assurance (13 h), and translates to 4.3 s of staff support per additional feature. Thus, the larger the dataset, the more value is extracted from the setup and deployment time.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C027",
+      "claim_text": "Overall digitisation accuracy was high, over 94% for processed maps",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "primary_function": "empirical_pattern",
+      "supported_by": ["E003", "E015", "E016"],
+      "quantitative_details": {"involves_quantification": true, "metric": "accuracy percentage"},
+      "location": {"section": "3.5.2 Digitisation errors", "page": 7},
+      "verbatim_quote": "Unlike some volunteer digitisation projects, overall accuracy was high, over 94% for processed maps.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C028",
+      "claim_text": "Error patterns were predictable and easily correctable (mostly false negatives from contiguous sections)",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "primary_function": "empirical_pattern",
+      "supported_by": ["E016", "E017"],
+      "location": {"section": "3.5.2", "page": 8},
+      "verbatim_quote": "Moreover, the pattern of errors - mostly false negatives and double-marked features, mostly from contiguous map sections - made them relatively easy to identify and correct.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C029",
+      "claim_text": "Crowdsourcing is most suitable for datasets of 10,000-60,000 records based on payoff threshold analysis",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "empirical_pattern",
+      "supported_by": ["E018", "E019"],
+      "quantitative_details": {"involves_quantification": true, "metric": "feature count range"},
+      "location": {"section": "4.1.2", "page": 10},
+      "verbatim_quote": "To summarise in round numbers, a crowdsourcing approach like ours is most suitable for datasets numbering perhaps 10,000–60,000 records, assuming similar feature characteristics and data collection requirements (see Table 5).",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C030",
+      "claim_text": "ML approaches should be considered above 60,000 records but require specific expertise",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "primary_function": "comparative_assessment",
+      "supported_by": ["E019"],
+      "quantitative_details": {"involves_quantification": true, "metric": "feature count threshold"},
+      "location": {"section": "4.1.2", "page": 10},
+      "verbatim_quote": "Above 60,000 records, ML approaches should be contemplated, but only if a project has access to the requisite expertise.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C031",
+      "claim_text": "Crowdsourcing and ML approaches are complementary, not exclusive",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "primary_function": "theoretical_integration",
+      "supported_by": ["E019"],
+      "location": {"section": "4.2", "page": 10},
+      "verbatim_quote": "The approaches are not exclusive, therefore, but complementary.",
+      "extraction_confidence": "high"
+    },
+    {
+      "claim_id": "C032",
+      "claim_text": "Typical small archaeology projects may not have resources for ML but can deploy collaborative geospatial systems",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "primary_function": "methodological_justification",
+      "location": {"section": "4.3 Overall feasibility", "page": 10},
+      "verbatim_quote": "Today, a typical project in history or archaeology - often small, under-resourced, and pursuing several research activities - may not be able to dedicate the personnel, infrastructure, or attention needed to incorporate ML successfully, but could deploy a collaborative geospatial system for crowdsourcing map digitisation.",
+      "extraction_confidence": "high"
+    }
+  ],
+  "implicit_arguments": [
+    {
+      "implicit_id": "IA001",
+      "implicit_text": "Cost is a significant barrier justifying alternative approaches",
+      "type": "unstated_assumption",
+      "enables_claim": ["C001"],
+      "trigger_text": ["Unlocking data from historical maps for landscape analysis is costly."],
+      "trigger_locations": [{"section": "Abstract", "page": 1}],
+      "inference_reasoning": "Paper opens with cost as problem without justifying why cost level is prohibitive. Entire rationale depends on accepting current costs are too high.",
+      "extraction_confidence": "high"
+    },
+    {
+      "implicit_id": "IA002",
+      "implicit_text": "ML expertise and preparation requirements are barriers for typical archaeology projects",
+      "type": "unstated_assumption",
+      "enables_claim": ["C002"],
+      "trigger_text": ["Automatic extraction using Machine Learning (ML) requires extensive preparation and expertise."],
+      "trigger_locations": [{"section": "Abstract", "page": 1}],
+      "inference_reasoning": "ML requirements framed as limitation without explaining why problematic. Assumption is typical archaeology projects lack ML expertise or cannot afford investment.",
+      "extraction_confidence": "high"
+    },
+    {
+      "implicit_id": "IA003",
+      "implicit_text": "Platform adaptation skills more accessible to archaeology projects than ML expertise",
+      "type": "bridging_claim",
+      "enables_claim": ["C003"],
+      "trigger_text": ["Crowdsourcing scales better than direct digitisation by experts, but requires an appropriate platform and the technical skills to adapt it."],
+      "trigger_locations": [{"section": "Abstract", "page": 1}],
+      "inference_reasoning": "For crowdsourcing to be meaningful advantage over ML despite requiring platform skills, platform adaptation must be more achievable than ML for typical projects.",
+      "extraction_confidence": "medium"
+    }
+  ],
+  "research_designs": [],
+  "methods": [],
+  "protocols": [],
+  "extraction_notes": {
+    "pass": 2,
+    "sections_extracted": "Full paper (Abstract through Conclusion) - Pass 2 rationalization complete",
+    "extraction_strategy": "Pass 1 extracted efficiently (13E, 17C, 3IA). Pass 2 review found extraction already appropriately consolidated with good evidence/claim boundaries. Minimal consolidation needed. Claims about efficiency thresholds appropriately distinct for different comparisons.",
+    "known_uncertainties": ["Quantitative thresholds are approximations from analysis", "Some comparative claims rely on implicit assumptions about project resource constraints"],
+    "implicit_arguments_search": "Systematic 4-type search completed. Three implicit arguments cover key unstated assumptions. Most reasoning explicit due to quantitative empirical focus of paper.",
+    "consolidation_summary": "Pass 2 reviewed all items. No consolidations performed - Pass 1 extraction already at appropriate granularity. Evidence items are distinct measurements; claims appropriately stratified across core/intermediate/supporting levels.",
+    "claims_evidence_extraction_complete": true,
+    "rdmap_extraction_complete": false,
+    "known_limitations": [],
+    "assessment_blockers": []
+  }
+}

@@ -1,240 +1,258 @@
 {
   "permissions": {
     "allow": [
-      // ============================================
-      // CORE FILE OPERATIONS
-      // ============================================
       "Read",
       "Edit",
       "Write",
-      
-      // ============================================
-      // WEB ACCESS
-      // ============================================
       "WebSearch",
       "WebFetch",
-      
-      // ============================================
-      // FILE SYSTEM READ PERMISSIONS
-      // ============================================
-      // Project files
       "Read(/home/shawn/Code/llm-reproducibility/**)",
-      // Claude configuration
       "Read(/home/shawn/.claude/**)",
       
-      // ============================================
-      // NAVIGATION & FILE VIEWING
-      // ============================================
-      "Bash(cd *)",           // Change directory
-      "Bash(ls *)",           // List files
-      "Bash(tree *)",         // Directory tree view
-      "Bash(cat *)",          // View file contents
-      "Bash(head *)",         // View file headers
-      "Bash(tail *)",         // View file tail
-      "Bash(less *)",         // Page through files
-      "Bash(find *)",         // Find files
-      "Bash(wc *)",           // Count lines/words
+      "Bash(cd *)",
+      "Bash(cd:*)",
+      "Bash(ls *)",
+      "Bash(ls:*)",
+      "Bash(tree *)",
+      "Bash(tree:*)",
+      "Bash(cat *)",
+      "Bash(cat:*)",
+      "Bash(head *)",
+      "Bash(head:*)",
+      "Bash(tail *)",
+      "Bash(tail:*)",
+      "Bash(less *)",
+      "Bash(less:*)",
+      "Bash(find *)",
+      "Bash(find:*)",
+      "Bash(wc *)",
+      "Bash(wc:*)",
       
-      // ============================================
-      // FILE OPERATIONS
-      // ============================================
-      "Bash(cp *)",           // Copy files
-      "Bash(mv *)",           // Move/rename files
-      "Bash(mkdir *)",        // Create directories
-      "Bash(chmod *)",        // Change permissions
-      "Bash(unzip *)",        // Extract archives
-      "Bash(tar *)",          // Archive operations
-      "Bash(touch *)",        // Create/update files
-      "Bash(rm *)",           // Remove files (but rm -rf blocked in deny)
+      "Bash(cp *)",
+      "Bash(cp:*)",
+      "Bash(mv *)",
+      "Bash(mv:*)",
+      "Bash(mkdir *)",
+      "Bash(mkdir:*)",
+      "Bash(chmod *)",
+      "Bash(chmod:*)",
+      "Bash(unzip *)",
+      "Bash(unzip:*)",
+      "Bash(tar *)",
+      "Bash(tar:*)",
+      "Bash(touch *)",
+      "Bash(touch:*)",
+      "Bash(rm *)",
+      "Bash(rm:*)",
       
-      // ============================================
-      // TEXT PROCESSING
-      // ============================================
-      "Bash(echo *)",         // Output text
-      "Bash(awk *)",          // Text processing
-      "Bash(sed *)",          // Stream editor
-      "Bash(grep *)",         // Search text
-      "Bash(xargs *)",        // Build commands from input
-      "Bash(sort *)",         // Sort lines
-      "Bash(uniq *)",         // Remove duplicates
-      "Bash(cut *)",          // Cut columns
-      "Bash(paste *)",        // Merge lines
-      "Bash(tr *)",           // Translate characters
+      "Bash(echo *)",
+      "Bash(echo:*)",
+      "Bash(awk *)",
+      "Bash(awk:*)",
+      "Bash(sed *)",
+      "Bash(sed:*)",
+      "Bash(grep *)",
+      "Bash(grep:*)",
+      "Bash(xargs *)",
+      "Bash(xargs:*)",
+      "Bash(sort *)",
+      "Bash(sort:*)",
+      "Bash(uniq *)",
+      "Bash(uniq:*)",
+      "Bash(cut *)",
+      "Bash(cut:*)",
+      "Bash(paste *)",
+      "Bash(paste:*)",
+      "Bash(tr *)",
+      "Bash(tr:*)",
       
-      // ============================================
-      // DATA PROCESSING
-      // ============================================
-      "Bash(jq *)",           // JSON processing
+      "Bash(jq *)",
+      "Bash(jq:*)",
       
-      // ============================================
-      // PYTHON & PACKAGE MANAGEMENT
-      // ============================================
-      // Python execution
-      "Bash(python3 *)",      // Direct Python execution
-      "Bash(python3 << *)",   // Python heredocs
-      "Bash(python *)",       // Python (any version)
-      
-      // Virtual environment
+      "Bash(python3 *)",
+      "Bash(python3:*)",
+      "Bash(python3 << *)",
+      "Bash(python3:<<:*)",
+      "Bash(python *)",
+      "Bash(python:*)",
       "Bash(python3 -m venv *)",
+      "Bash(python3:-m:venv:*)",
       "Bash(./venv/bin/python *)",
+      "Bash(./venv/bin/python:*)",
       "Bash(source venv/bin/activate)",
+      "Bash(source:venv/bin/activate)",
       "Bash(. venv/bin/activate)",
-      
-      // Package installation
+      "Bash(..:venv/bin/activate)",
       "Bash(pip install *)",
+      "Bash(pip:install:*)",
       "Bash(pip list *)",
+      "Bash(pip:list:*)",
       "Bash(pip show *)",
+      "Bash(pip:show:*)",
       "Bash(./venv/bin/pip *)",
+      "Bash(./venv/bin/pip:*)",
       
-      // ============================================
-      // SCRIPTS & EXECUTABLES
-      // ============================================
-      "Bash(./*.sh *)",       // Execute shell scripts in current directory
-      "Bash(./extraction-system/*.sh *)",  // Project-specific scripts
+      "Bash(./*.sh *)",
+      "Bash(./*.sh:*)",
+      "Bash(./extraction-system/*.sh *)",
+      "Bash(./extraction-system/*.sh:*)",
       
-      // ============================================
-      // VERSION CONTROL (GIT)
-      // ============================================
-      "Bash(git *)",          // All git operations (except force push - see deny list)
+      "Bash(git *)",
+      "Bash(git:*)",
       
-      // ============================================
-      // BASH CONTROL STRUCTURES & UTILITIES
-      // ============================================
-      // Control flow
-      "Bash(for * in *)",     // For loops
-      "Bash(do)",             // Loop/conditional body start
-      "Bash(done)",           // Loop end
-      "Bash(if *)",           // Conditional start
-      "Bash(then)",           // Conditional body
-      "Bash(fi)",             // Conditional end
-      "Bash(else)",           // Else clause
-      "Bash(elif *)",         // Elif clause
-      "Bash(while *)",        // While loops
-      "Bash(until *)",        // Until loops
-      "Bash(case *)",         // Case statements
-      "Bash(esac)",           // Case end
+      "Bash(for * in *)",
+      "Bash(for:*:in:*)",
+      "Bash(do)",
+      "Bash(do:)",
+      "Bash(done)",
+      "Bash(done:)",
+      "Bash(if *)",
+      "Bash(if:*)",
+      "Bash(then)",
+      "Bash(then:)",
+      "Bash(fi)",
+      "Bash(fi:)",
+      "Bash(else)",
+      "Bash(else:)",
+      "Bash(elif *)",
+      "Bash(elif:*)",
+      "Bash(while *)",
+      "Bash(while:*)",
+      "Bash(until *)",
+      "Bash(until:*)",
+      "Bash(case *)",
+      "Bash(case:*)",
+      "Bash(esac)",
+      "Bash(esac:)",
       
-      // Testing & comparison
-      "Bash(test *)",         // Test conditions
-      "Bash([ * ])",          // Test syntax
-      "Bash([[ * ]])",        // Extended test
+      "Bash(test *)",
+      "Bash(test:*)",
+      "Bash([ * ])",
+      "Bash([:*:])",
+      "Bash([[ * ]])",
+      "Bash([[*]])",
       
-      // Variable operations
-      "Bash(export *)",       // Export variables
-      "Bash(unset *)",        // Unset variables
-      "Bash(declare *)",      // Declare variables
-      "Bash(local *)",        // Local variables
+      "Bash(export *)",
+      "Bash(export:*)",
+      "Bash(unset *)",
+      "Bash(unset:*)",
+      "Bash(declare *)",
+      "Bash(declare:*)",
+      "Bash(local *)",
+      "Bash(local:*)",
       
-      // Redirection & pipes
-      "Bash(* > *)",          // Output redirection
-      "Bash(* >> *)",         // Append redirection
-      "Bash(* | *)",          // Pipe
-      "Bash(* 2>&1)",         // Error redirection
-      "Bash(* > /dev/null)",  // Null redirect
-      "Bash(* && *)",         // AND chaining
-      "Bash(* || *)",         // OR chaining
-      "Bash(* ; *)",          // Sequential execution
+      "Bash(* > *)",
+      "Bash(*:>:*)",
+      "Bash(* >> *)",
+      "Bash(*:>>:*)",
+      "Bash(* | *)",
+      "Bash(*:|:*)",
+      "Bash(* 2>&1)",
+      "Bash(*:2>&1)",
+      "Bash(* > /dev/null)",
+      "Bash(*:>:/dev/null)",
+      "Bash(* && *)",
+      "Bash(*:&&:*)",
+      "Bash(* || *)",
+      "Bash(*:||:*)",
+      "Bash(* ; *)",
+      "Bash(*:;:*)",
       
-      // Process management
-      "Bash(sleep *)",        // Sleep/pause
-      "Bash(wait *)",         // Wait for process
-      "Bash(ps *)",           // List processes
-      "Bash(kill *)",         // Kill processes (for Claude's own processes)
+      "Bash(sleep *)",
+      "Bash(sleep:*)",
+      "Bash(wait *)",
+      "Bash(wait:*)",
+      "Bash(ps *)",
+      "Bash(ps:*)",
+      "Bash(kill *)",
+      "Bash(kill:*)",
       
-      // String operations
-      "Bash(printf *)",       // Formatted output
-      "Bash(basename *)",     // Get filename
-      "Bash(dirname *)",      // Get directory
-      "Bash(realpath *)",     // Get absolute path
+      "Bash(printf *)",
+      "Bash(printf:*)",
+      "Bash(basename *)",
+      "Bash(basename:*)",
+      "Bash(dirname *)",
+      "Bash(dirname:*)",
+      "Bash(realpath *)",
+      "Bash(realpath:*)",
       
-      // ============================================
-      // DIFF & COMPARISON
-      // ============================================
-      "Bash(diff *)",         // File comparison
-      "Bash(cmp *)",          // Binary comparison
-      "Bash(comm *)",         // Compare sorted files
+      "Bash(diff *)",
+      "Bash(diff:*)",
+      "Bash(cmp *)",
+      "Bash(cmp:*)",
+      "Bash(comm *)",
+      "Bash(comm:*)",
       
-      // ============================================
-      // MCP (MODEL CONTEXT PROTOCOL) TOOLS
-      // ============================================
-      "mcp__ide__getDiagnostics",  // Get IDE diagnostics (linting, type errors, warnings)
-      
-      // ============================================
-      // CLAUDE CODE SKILLS
-      // ============================================
+      "mcp__ide__getDiagnostics",
       "Skill(research-assessor)",
       "Skill(skill-creator)",
       "Skill(example-skills:skill-creator)"
     ],
-    
-    // ============================================
-    // DENIED OPERATIONS (SAFETY)
-    // ============================================
     "deny": [
-      // Destructive file operations
       "Bash(rm -rf *)",
+      "Bash(rm:-rf:*)",
       "Bash(rm -r *)",
-      
-      // Privilege escalation
+      "Bash(rm:-r:*)",
       "Bash(sudo *)",
+      "Bash(sudo:*)",
       "Bash(su *)",
-      
-      // Dangerous git operations
+      "Bash(su:*)",
       "Bash(git push origin --force)",
+      "Bash(git:push:origin:--force)",
       "Bash(git push --force *)",
+      "Bash(git:push:--force:*)",
       "Bash(git push -f *)",
+      "Bash(git:push:-f:*)",
       "Bash(git reset --hard *)",
+      "Bash(git:reset:--hard:*)",
       "Bash(git clean -fd *)",
-      
-      // System file access
+      "Bash(git:clean:-fd:*)",
       "Read(/etc/*)",
       "Read(/root/*)",
-      
-      // SSH & credentials
       "Read(/home/*/.ssh/*)",
       "Read(**/.env)",
       "Read(**/secrets/**)",
-      
-      // System modifications
       "Bash(reboot)",
+      "Bash(reboot:)",
       "Bash(shutdown *)",
+      "Bash(shutdown:*)",
       "Bash(halt)",
+      "Bash(halt:)",
       "Bash(poweroff)",
-      
-      // Package system modifications
+      "Bash(poweroff:)",
       "Bash(apt *)",
+      "Bash(apt:*)",
       "Bash(yum *)",
+      "Bash(yum:*)",
       "Bash(dnf *)",
-      
-      // Disk operations
+      "Bash(dnf:*)",
       "Bash(dd *)",
+      "Bash(dd:*)",
       "Bash(mkfs *)",
+      "Bash(mkfs:*)",
       "Bash(fdisk *)",
-      
-      // Network modifications
+      "Bash(fdisk:*)",
       "Bash(iptables *)",
+      "Bash(iptables:*)",
       "Bash(ifconfig *)",
+      "Bash(ifconfig:*)",
       "Bash(ip addr *)",
-      
-      // Process management (system-wide)
+      "Bash(ip:addr:*)",
       "Bash(killall *)",
+      "Bash(killall:*)",
       "Bash(pkill *)",
-      
-      // Cron/scheduled tasks
+      "Bash(pkill:*)",
       "Bash(crontab *)",
+      "Bash(crontab:*)",
       "Bash(at *)",
-      
-      // Service management
+      "Bash(at:*)",
       "Bash(systemctl *)",
-      "Bash(service *)"
+      "Bash(systemctl:*)",
+      "Bash(service *)",
+      "Bash(service:*)"
     ],
-    
     "ask": []
   },
-  
-  // ============================================
-  // ENVIRONMENT CONFIGURATION
-  // ============================================
   "env": {
     "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "64000"
   }
