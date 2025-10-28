@@ -18,6 +18,8 @@
 
 **Total papers queued:** 8 papers (all status: pending)
 
+**Note:** Source PDFs are excluded from git tracking (copyright and storage concerns). Papers are available locally in `input/sources/original-pdf/` but not committed to repository. Queue configuration and paper metadata are tracked in `queue.yaml`.
+
 ### Paper 1: sobotkova-et-al-2023 (RE-RUN)
 **Purpose:** Test run-to-run variation
 
