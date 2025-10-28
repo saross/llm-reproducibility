@@ -2,11 +2,57 @@
 # Papers to process through the research-assessor workflow
 
 papers:
+  # Re-run for run-to-run variation testing
   - path: sources/original-pdf/Sobotkova et al. - 2023 - Creating large, high-quality geospatial datasets from historical maps using novice volunteers.pdf
     slug: sobotkova-et-al-2023
-    status: completed
-    notes: RUN-08 completed 2025-10-28. All 6 passes complete. Final extraction: 159 items (53 evidence, 61 claims, 16 implicit_arguments, 4 designs, 8 methods, 17 protocols). Conservative rationalization. All validation checks passed.
-    checkpoint: EXTRACTION COMPLETE - All 6 passes finished. Outputs: extraction.json, validation-pass6.md, summary.md 
+    status: pending
+    notes: Re-extracting to test run-to-run variation. Previous run (RUN-08) archived with 159 items.
+    checkpoint: Ready for extraction
+    previous_runs:
+      - RUN-08: 159 items (53 evidence, 61 claims, 16 implicit_arguments, 4 designs, 8 methods, 17 protocols)
+
+  # New papers for testing diverse corpus
+  - path: sources/original-pdf/Sobotkova et al. - 2024 - Validating Predictions of Burial Mounds with Field.pdf
+    slug: sobotkova-et-al-2024
+    status: pending
+    notes: Predictive modelling validation paper. Tests extraction on quantitative validation methods.
+    checkpoint: Ready for extraction
+
+  - path: sources/original-pdf/Sobotkova et al. - 2021 - Deploying an offline, multi-user mobile system for.pdf
+    slug: sobotkova-et-al-2021
+    status: pending
+    notes: Mobile GIS deployment paper. Tests extraction on system implementation and field deployment.
+    checkpoint: Ready for extraction
+
+  - path: sources/original-pdf/Eftimoski et al. - 2017 - The impact of land use and depopulation on burial mounds in the Kazanlak Valley, Bulgaria An ordere.pdf
+    slug: eftimoski-et-al-2017
+    status: pending
+    notes: Landscape archaeology paper. Tests extraction on land use change analysis.
+    checkpoint: Ready for extraction
+
+  - path: sources/original-pdf/Ross et al. - 2009 - Remote Sensing and Archaeological Prospection in Apulia, Italy.pdf
+    slug: ross-et-al-2009
+    status: pending
+    notes: Remote sensing methodology paper. Tests extraction on geophysical survey methods.
+    checkpoint: Ready for extraction
+
+  - path: sources/original-pdf/Penske et al. - 2023 - Early contact between late farming and pastoralist.pdf
+    slug: penske-et-al-2023
+    status: pending
+    notes: Prehistoric contact paper. Tests extraction on archaeological evidence synthesis.
+    checkpoint: Ready for extraction
+
+  - path: sources/original-pdf/Connor et al. - 2013 - Environmental conditions in the SE Balkans since t.pdf
+    slug: connor-et-al-2013
+    status: pending
+    notes: Palaeoenvironmental reconstruction paper. Tests extraction on proxy data and climate interpretation.
+    checkpoint: Ready for extraction
+
+  - path: sources/original-pdf/Ross - 2005 - Barbarophonos Language and Panhellenism in the Iliad.pdf
+    slug: ross-2005
+    status: pending
+    notes: Ancient history/philology paper. Tests extraction on literary analysis and historical interpretation.
+    checkpoint: Ready for extraction
 
 # Status values:
 # - pending: Not yet started
@@ -15,3 +61,26 @@ papers:
 # - error: Failed (see notes)
 
 # Workflow outputs will be saved to: outputs/{slug}/
+
+# Paper Diversity Notes:
+#
+# This corpus includes diverse HASS methodologies:
+# - Quantitative modelling (sobotkova-et-al-2024)
+# - System implementation (sobotkova-et-al-2021, sobotkova-et-al-2023)
+# - Landscape analysis (eftimoski-et-al-2017)
+# - Remote sensing (ross-et-al-2009)
+# - Archaeological synthesis (penske-et-al-2023)
+# - Palaeoenvironmental reconstruction (connor-et-al-2013)
+# - Literary/historical interpretation (ross-2005)
+#
+# Paper characteristics vary:
+# - Length: 166K (ross-2005) to 13M (penske-et-al-2023)
+# - Methods transparency: High (technical papers) to Lower (interpretive)
+# - Evidence types: Quantitative data, qualitative observations, textual analysis
+# - Domains: Archaeology, ancient history, environmental science
+#
+# Testing priorities:
+# 1. Run-to-run variation (sobotkova-et-al-2023 re-extraction)
+# 2. Generalization across method types
+# 3. Handling different transparency levels
+# 4. Extraction quality across domains
