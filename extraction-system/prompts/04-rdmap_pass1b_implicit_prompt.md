@@ -34,14 +34,18 @@ You have already extracted **explicit RDMAP items** (documented in Methods secti
 
 ## 🚨 CRITICAL: Why This Pass Matters
 
-**Implicit RDMAP extraction is assessment-critical:**
+**Implicit RDMAP items are PRIMARY CONTENT with equal priority to explicit RDMAP items.**
 
-- **Transparency gaps:** Reveals what methodological information is missing from documentation
-- **Reproducibility barriers:** Identifies procedures that cannot be replicated due to missing detail
-- **Credibility concerns:** Highlights undocumented decisions affecting results
-- **Assessment foundation:** Enables evaluating what WAS documented vs what SHOULD BE documented
+These are not optional "transparency metadata"—they are core extraction targets. Many papers mention procedures without documenting them, or imply methods through results. These undocumented procedures are assessment-critical because they:
 
-**Expected outcome:** Most empirical papers have 20-40% of RDMAP items implicit. Finding zero implicit items suggests either exceptional documentation (rare) or incomplete scanning (common).
+- **Transparency gaps:** Reveal what methodological information is missing from Methods documentation
+- **Reproducibility barriers:** Identify procedures mentioned but cannot be replicated due to missing detail
+- **Credibility concerns:** Highlight undocumented decisions affecting results without documented rationale
+- **Assessment foundation:** Enable comparison between what WAS documented and what SHOULD BE documented
+
+**Do not skip implicit scanning** because Methods section exists. Implicit items are found OUTSIDE Methods (Results/Discussion mentions without procedures).
+
+**Expected outcome:** Most empirical papers have 20-40% implicit RDMAP items. Finding zero suggests either exceptional documentation (rare) or incomplete scanning (common).
 
 ---
 
@@ -135,6 +139,39 @@ For EACH major section (Abstract, Introduction, Methods, Results, Discussion), r
 
 ---
 
+## Quick Reference: 4-Pattern Implicit Recognition
+
+Use these patterns to identify implicit RDMAP during systematic scanning:
+
+**Pattern 1 - Mentioned Procedure Without Description:**
+- **Question:** "Is procedure referenced but not described?"
+- **Look for:** Verbs without methods—"cleaned," "validated," "checked," "assigned," "exported," "monitored"
+- **Example:** "Data were cleaned prior to analysis" but no cleaning procedure described
+- **Extract as:** Implicit method/protocol (basis: mentioned_undocumented)
+
+**Pattern 2 - Effects Implying Undocumented Causes:**
+- **Question:** "Do results/outcomes suggest procedures not documented in Methods?"
+- **Look for:** Thresholds detected → monitoring, error rates → QA, accuracy metrics → validation
+- **Example:** "Performance degraded after 2,500 records" implies monitoring but method not documented
+- **Extract as:** Implicit protocol (basis: inferred_from_results)
+
+**Pattern 3 - Tools/Processes Mentioned Without Specifications:**
+- **Question:** "Are tools, equipment, or processes mentioned without operational detail?"
+- **Look for:** "GPS used" (no specs), "server configured" (no details), "students assigned" (no method)
+- **Example:** "Students assigned specific map tiles" but assignment procedure not described
+- **Extract as:** Implicit protocol (basis: mentioned_undocumented)
+
+**Pattern 4 - Strategic Positioning Without Explicit Statement:**
+- **Question:** "Does paper position work relative to alternatives without stating as design objective?"
+- **Look for:** Systematic comparisons in Discussion without design rationale in Methods/Introduction
+- **Example:** Compares to ML alternatives throughout but doesn't state comparative evaluation as design goal
+- **Extract as:** Implicit research design (basis: inferred_from_results)
+
+**For detailed examples and troubleshooting:**
+→ See `references/extraction-fundamentals.md` (Implicit RDMAP section, lines 68-158)
+
+---
+
 ## Sourcing Requirements for Implicit RDMAP
 
 **Every implicit RDMAP item MUST have:**
@@ -190,15 +227,13 @@ For EACH major section (Abstract, Introduction, Methods, Results, Discussion), r
 
 Before completing extraction, verify:
 
-- [ ] Completed 4-pattern scan for research designs across ALL major sections
-- [ ] Completed 4-pattern scan for methods across ALL major sections
-- [ ] Completed 4-pattern scan for protocols across ALL major sections
-- [ ] All implicit RDMAP items have complete sourcing (trigger_text, trigger_locations, inference_reasoning, implicit_metadata)
-- [ ] No duplication with explicit RDMAP items (checked against existing items)
-- [ ] Documented scan methodology in extraction_notes
-- [ ] If zero implicit items found: Documented why in extraction_notes (e.g., "Exceptionally thorough Methods section with all procedures explicitly documented and specified")
+- [ ] Completed 4-pattern scan for EACH RDMAP tier (designs, methods, protocols) across EACH major section (Abstract, Intro, Methods, Results, Discussion)
+- [ ] Documented scan methodology in extraction_notes for each section scanned, OR extracted implicit items found
+- [ ] All implicit RDMAP items have complete sourcing: trigger_text, trigger_locations, inference_reasoning, implicit_metadata
+- [ ] No duplication with explicit RDMAP items (compared against existing extraction)
+- [ ] **If zero implicit RDMAP found across all sections:** extraction_notes explains systematic scan methodology and why none found (e.g., "Exceptionally thorough Methods section with all strategic decisions, methods, and protocols documented with procedural details. Systematic Results/Discussion scan found no procedure mentions without descriptions.")
 
-**⚠️ Finding zero implicit RDMAP items after systematic scan is unusual.** Most papers have 1-3 implicit designs, 2-4 implicit methods, and 5-10 implicit protocols due to incomplete Methods documentation.
+**⚠️ Most papers have 20-40% implicit RDMAP.** Finding zero suggests either exceptional documentation (rare) or incomplete scanning (common). Document scan methodology to demonstrate which.
 
 ---
 
