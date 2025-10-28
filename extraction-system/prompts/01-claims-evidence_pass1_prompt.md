@@ -83,6 +83,25 @@ The fundamentals document covers universal sourcing requirements that apply to a
 
 **When uncertain whether something qualifies as evidence/claim: INCLUDE IT.**
 
+### Liberal Extraction Mental Model
+
+**Pass 1 job:** CAPTURE (comprehensively)
+**Pass 2 job:** CONSOLIDATE (rationally)
+
+**Active rules during Pass 1:**
+- ✓ When uncertain: EXTRACT IT
+- ✓ When granular: KEEP IT SEPARATE
+- ✓ When related items: DON'T CONSOLIDATE YET
+
+**Never think during Pass 1:**
+- ✗ "This seems too detailed for final output"
+- ✗ "These should probably merge"
+- ✗ "I'm over-extracting"
+
+**Remember:** Pass 2 can merge. Pass 1 cannot recover missed items.
+
+### Application
+
 - Better to over-extract and consolidate later than miss important content
 - Preserve granularity - we will consolidate in Pass 2 rationalization
 - Accept some over-extraction as expected and manageable
@@ -190,6 +209,23 @@ Extract observations only if they support specific claims. Context that doesn't 
 ---
 
 ## Extraction Workflow
+
+### STEP 0: MANDATORY Pre-Extraction (DO THIS FIRST)
+
+Before extraction begins, you MUST:
+
+1. **Read extraction fundamentals:**
+   - File: `references/extraction-fundamentals.md`
+   - Focus: Internalise the sourcing test: "Can I point to exact text?"
+
+2. **Acknowledge understanding:**
+   - State: "I have read extraction fundamentals and understand the sourcing discipline"
+
+3. **Only then proceed to extraction**
+
+**WITHOUT completing Step 0, extraction will fail sourcing requirements.**
+
+---
 
 ### STEP 1: Initial Scan
 - Read abstract and conclusion
