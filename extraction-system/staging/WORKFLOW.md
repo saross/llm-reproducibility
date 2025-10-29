@@ -34,38 +34,29 @@ Output (for each paper):
 
 ### Required Section Grouping (Pass 1 & Pass 3 ONLY)
 
-**MANDATORY SECTION GROUPS for liberal extraction passes (01, 03):**
+**Flexible section-by-section extraction for liberal passes (01, 03):**
 
-Execute each pass by processing these section groups in order. Complete each group fully before moving to the next:
+Execute by processing section groups in order, adapting to paper structure:
 
-1. **Abstract + Introduction** - Process together as ONE unit
-   - Includes: Abstract + ALL Introduction subsections (1.1, 1.2, 1.3, etc.)
-   - ⚠️ Do NOT stop after Abstract - continue through entire Introduction
-   - Save progress to JSON after completing this group
+1. **Abstract + following section** - Combined as ONE unit (save to JSON after)
+2. **Middle sections** - Each major section as ONE unit (save to JSON after)
+3. **Conclusion + preceding section** - Combined as ONE unit (save to JSON after)
 
-2. **Methods/Approach** - Process as ONE unit
-   - Includes: ALL Methods subsections
-   - Save progress to JSON after completing this group
+**Section size limits:** Target ~1000 words, maximum 1500 words. If section exceeds 1500 words, divide into roughly equal chunks at natural breaks (subsections > topic shifts > paragraph boundaries).
 
-3. **Results** - Process as ONE unit
-   - Includes: ALL Results subsections
-   - Save progress to JSON after completing this group
+**Papers without sections:** Process in ~1000-word chunks using paragraph/thematic boundaries.
 
-4. **Discussion + Conclusion** - Process together as ONE unit
-   - ⚠️ Do NOT process separately - always together
-   - Save progress to JSON after completing this group
+**Track chunking decisions:** Document section grouping and word counts in `extraction_notes.section_extracted` for quality review.
 
-**For rationalization passes (02, 05) and validation (06):**
-- Review all relevant extractions across the entire paper
-- Refer back to paper sections as needed
+**For detailed section handling guidance:** See "Section Handling" in prompts 01 and 03.
+
+**For rationalisation passes (02, 05) and validation (06):**
+- Review all extractions across entire paper
 - No section-by-section processing required
 
 **For implicit RDMAP pass (04):**
-- Scan across entire paper for implicit RDMAP items
-- Use already-extracted explicit RDMAP as seed list
+- Scan across entire paper
 - No section-by-section processing required
-
-**Adjust based on paper structure** - the key is manageable section sizes that maintain focus and thoroughness while completing logical units together.
 
 ### File Management for Section-by-Section Extraction
 

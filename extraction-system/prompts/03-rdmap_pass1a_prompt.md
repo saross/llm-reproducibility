@@ -38,6 +38,50 @@ Extract **explicit RDMAP items** from research paper Methods/Approach sections: 
 
 ---
 
+## Section Handling
+
+**Extract section-by-section using flexible grouping based on the paper's structure.**
+
+### Default Grouping
+
+1. **Abstract + following section** - Combined as one unit (save to JSON after)
+2. **Middle sections** - Each major section as one unit, combining subsections (save after each)
+3. **Conclusion + preceding section** - Combined as one unit (save to JSON after)
+
+**Adapt to what the paper gives you.** If Methods is called "Approach" or a section is thematic like "Landscape and Memory," treat it as a middle section.
+
+### Section Size Limits
+
+**Target ~1000 words per section. Maximum 1500 words.**
+
+If any section exceeds 1500 words, divide into roughly equal chunks using natural breaks:
+1. Subsection boundaries (3.1, 3.2, etc.) closest to midpoint/thirds
+2. Topic shifts or conceptual paragraph boundaries closest to equal division
+3. Any paragraph boundary closest to equal chunk sizes
+
+**Aim for 1000 ± 500 words per chunk** - never >1500 words.
+
+### Papers Without Formal Sections
+
+If the paper lacks section headings:
+1. **Abstract** - Usually labelled even without sections (combine with next ~1000 words)
+2. **Middle content** - Process in ~1000-word chunks using paragraph/thematic boundaries
+3. **Conclusion** - Recognisable by concluding language (combine with previous ~1000 words)
+
+If no Abstract/Conclusion identifiable: Process entire paper in ~1000-word chunks.
+
+### Tracking Section Decisions
+
+Document your section grouping decisions in `extraction_notes.section_extracted` after each section group:
+- Which sections were combined
+- **Word count of the section/chunk**
+- Where splits occurred and why (word count, break type used)
+- Any unusual structural features
+
+This enables prompt refinement and extraction performance analysis.
+
+---
+
 ## 🚨 CRITICAL: Verbatim Quote Requirements
 
 **Before extracting any item:**
