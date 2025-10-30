@@ -1,12 +1,12 @@
 ---
 name: research-assessor
-description: Extracts and assesses research methodology, claims, and evidence from fieldwork-based research papers. Evaluates transparency, replicability, and credibility through systematic extraction of research designs, methods, protocols, claims, and evidence using a six-pass iterative workflow.
+description: Extracts and assesses research methodology, claims, and evidence from research papers in HASS disciplines. Evaluates transparency, replicability, and credibility through systematic extraction of research designs, methods, protocols, claims, and evidence using a six-pass iterative workflow.
 license: Apache 2.0
 ---
 
 # Research Assessor
 
-Systematic extraction and assessment framework for research methodology, claims, and evidence in fieldwork-based disciplines (archaeology, biology, ethnography, ecology, etc.).
+Systematic extraction and assessment framework for research methodology, claims, and evidence in HASS disciplines (archaeology, biology, ethnography, ecology, literary studies, philology, etc.).
 
 ## What This Skill Does
 

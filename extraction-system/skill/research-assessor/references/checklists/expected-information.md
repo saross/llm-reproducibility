@@ -120,6 +120,35 @@ These checklists help identify what information SHOULD be present but is MISSING
 - [ ] Triangulation methods
 - [ ] Reflexivity practices
 
+### Literary Studies / Philology
+
+**Primary Source Evidence:**
+- [ ] ALL ancient text citations extracted as evidence (not just block quotes)
+- [ ] Inline citations to primary sources captured (e.g., "Il. 2.802-6", "Hdt. 8.144")
+- [ ] Passing mentions of primary texts included (e.g., "Unlike in Od. 19.172...")
+- [ ] Comparative references to other texts/versions recorded
+- [ ] Manuscript/edition information specified when discussed
+
+**Decision Rule:**
+"When paper references ancient text → evidence item"
+
+Includes:
+- Direct quotations (block quotes with translations)
+- Inline citations by reference (Il. X.Y, Od. X.Y, Hdt. X.Y)
+- Paraphrased passages from primary sources
+- Comparative references ("Similar to Hymn to Aphrodite...")
+- Manuscript variant discussions
+
+**Why This Matters:**
+In literary scholarship, every reference to a primary source is an act of evidence selection. What the scholar chooses to cite—and what they omit—is methodologically significant.
+
+**Common Omissions:**
+- [ ] Passing textual references not extracted as evidence
+- [ ] Comparative examples mentioned but not captured
+- [ ] Critical edition information missing
+- [ ] Translation choices not documented
+- [ ] Dating/authorship assumptions not explicit
+
 ## Sampling Checklists
 
 ### Probability Sampling
