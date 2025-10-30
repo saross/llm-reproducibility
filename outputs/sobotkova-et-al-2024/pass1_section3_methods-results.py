@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""
+Pass 1 Liberal Extraction - Section Group 3
+Section: Methods + Results (lines 376-559)
+Est words: ~2,200
+Dense with evidence, methodological details, and quantitative findings.
+"""
+
+import json
+from pathlib import Path
+
+extraction_file = Path("/home/shawn/Code/llm-reproducibility/outputs/sobotkova-et-al-2024/extraction.json")
+with open(extraction_file, 'r') as f:
+    extraction = json.load(f)
+
+# Evidence items - Methods and Results are evidence-dense
+evidence_items = [
+    {"evidence_id": "E023", "evidence_text": "Used ResNet-50 pre-trained CNN with ~25.6m trainable parameters", "evidence_type": "technical_specification", "evidence_status": "explicit", "verbatim_quote": "After some preliminary experimentation with a range of different pre-trained models, we concluded that ResNet-50 seemed to perform best for our data. This model is one of the smaller pre-trained CNNs available, with only around 25.6m trainable parameters", "location": {"section": "Methods", "subsection": "Transfer learning", "paragraph": 4}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C017"]},
+    {"evidence_id": "E024", "evidence_text": "Training data consisted of 773 MOUND cutouts generated from mound points", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "Mound points taken during fieldwork were used as centroids for the generation of 150 3 150 m square polygons (150 3 150 pixels at 1 m resolution), which were clipped from the IKONOS imagery. This process yielded 773 MOUND cutouts, each centred on a mound", "location": {"section": "Methods", "subsection": "Additional CNN training", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C017"]},
+    {"evidence_id": "E025", "evidence_text": "Training data ratio was approximately 1:2 positive to negative (32%-68%)", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "The ratio of positive to negative training data was approximately 1:2 (32%–68%).", "location": {"section": "Methods", "subsection": "Additional CNN training", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C017"]},
+    {"evidence_id": "E026", "evidence_text": "2021 run used all 773 cutouts regardless of visibility, 2022 run used 249 cutouts where mound was discernible", "evidence_type": "comparative_specification", "evidence_status": "explicit", "verbatim_quote": "In the 2021 run of the model, we used all 773 cutouts for training regardless of what was visible in the satellite image. In the 2022 run, we selected 249 cutouts where a mound was discernible with the naked eye.", "location": {"section": "Methods", "subsection": "Additional CNN training", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C018"]},
+    {"evidence_id": "E027", "evidence_text": "Training cutouts divided 70:20:10 ratio for training, validation, and test sets", "evidence_type": "technical_specification", "evidence_status": "explicit", "verbatim_quote": "After processing, cutouts were divided into training, validation, and test sets following a 70:20:10 ratio for automated performance validation.", "location": {"section": "Methods", "subsection": "Additional CNN training", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C017"]},
+    {"evidence_id": "E028", "evidence_text": "2021 model reported F1 score of 0.87", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "After image augmentation, the model reported good learning and model fit (F1 5 0.87).", "location": {"section": "Results", "subsection": "First run (2021)", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C018", "C019"]},
+    {"evidence_id": "E029", "evidence_text": "2021 model: only 19 of 148 tagged tiles (12.8%) actually contained mounds", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "Nevertheless, only 19 out of 148 tiles (12.8%) tagged by the model with at least a 60% chance of having a mound actually contained one", "location": {"section": "Results", "subsection": "First run (2021)", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C018", "C019"]},
+    {"evidence_id": "E030", "evidence_text": "2021 model: 129 of 148 tagged tiles (87.1%) were false positives", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "Some 129 of the tagged tiles (87.1%) were false positives.", "location": {"section": "Results", "subsection": "First run (2021)", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C018"]},
+    {"evidence_id": "E031", "evidence_text": "2021 model: 38 of 773 mounds detected (4.9%), 735 went undetected", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "The 19 true-positive tiles contained 38 mounds (1–9 mounds per tile), out of 773 in the study area (4.9%), while the remaining 735 mounds went undetected.", "location": {"section": "Results", "subsection": "First run (2021)", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C018"]},
+    {"evidence_id": "E032", "evidence_text": "2021 model: false negative rate of 95.3% (381 of 400 tiles containing mounds)", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "Undetected mounds were located in 381 tiles (1–20 mounds per tile) out of 400 tiles that actually contained mounds, a false negative rate of 95.3%", "location": {"section": "Results", "subsection": "First run (2021)", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C018"]},
+    {"evidence_id": "E033", "evidence_text": "2022 model reported F1 score of 0.62 (decline from 2021)", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "The second model's performance declined to an F1 score of 0.62", "location": {"section": "Results", "subsection": "Second run (2022)", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C018", "C020"]},
+    {"evidence_id": "E034", "evidence_text": "2022 model: only 21 of 773 mounds detected (2.7%), 752 went undetected (97.3%)", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "Validation revealed that only 21 of 773 mounds (2.7%) were detected, while 752 mounds (97.3%) remained undetected.", "location": {"section": "Results", "subsection": "Second run (2022)", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C020"]},
+    {"evidence_id": "E035", "evidence_text": "2022 model: flagged 288 tiles vs 148 in 2021 run", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "The number of tiles within the TRAP study area flagged as containing a mound (at a >60% probability) increased from 148 in the first run to 288 here.", "location": {"section": "Results", "subsection": "Second run (2022)", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C020"]},
+    {"evidence_id": "E036", "evidence_text": "2022 model: only 15 of 288 flagged tiles (5.2%) were true positives", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "Only 15 of these 288 tiles (5.2%), however, were true positives, containing the 21 detected mounds (1–4 mounds per tile; see Figure 6).", "location": {"section": "Results", "subsection": "Second run (2022)", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C020"]},
+    {"evidence_id": "E037", "evidence_text": "2022 model: 273 of 288 flagged tiles were false positives (94.8%)", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "The remaining 273 of 288 tiles were false positives (94.8%).", "location": {"section": "Results", "subsection": "Second run (2022)", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C020"]},
+    {"evidence_id": "E038", "evidence_text": "2022 model: false negative rate of 96.2% (384 of 399 tiles containing mounds)", "evidence_type": "quantitative_measurement", "evidence_status": "explicit", "verbatim_quote": "The undetected 752 mounds lay in 384 tiles (1–28 mounds per tile) out of 399 tiles that actually contained mounds, a false negative rate of 96.2%", "location": {"section": "Results", "subsection": "Second run (2022)", "paragraph": 1}, "uncertainty_declared": False, "uncertainty_missing": False, "confidence_declared": False, "supports_claims": ["C020"]}
+]
+
+claims_items = [
+    {"claim_id": "C017", "claim_text": "Transfer learning with pre-trained ResNet-50 CNN was adopted to leverage large-scale pre-training", "claim_type": "methodological", "claim_role": "supporting", "claim_status": "explicit", "verbatim_quote": "Rather than training our own model from scratch, we used a pre-trained CNN, a technique known as transfer learning", "location": {"section": "Methods", "subsection": "Transfer learning", "paragraph": 1}, "supported_by_evidence": ["E023", "E024", "E025", "E027"], "supported_by_claims": [], "supports_claims": ["C001", "C002"], "alternatives_mentioned": False, "qualifications": [], "contradicts": []},
+    {"claim_id": "C018", "claim_text": "First model run (2021, all mounds) had high false positive (87.1%) and false negative (95.3%) rates despite good F1 score (0.87)", "claim_type": "finding", "claim_role": "core", "claim_status": "explicit", "verbatim_quote": "After image augmentation, the model reported good learning and model fit (F1 5 0.87). Nevertheless, only 19 out of 148 tiles (12.8%) tagged by the model with at least a 60% chance of having a mound actually contained one", "location": {"section": "Results", "subsection": "First run (2021)", "paragraph": 1}, "supported_by_evidence": ["E028", "E029", "E030", "E031", "E032"], "supported_by_claims": [], "supports_claims": ["C002", "C003"], "alternatives_mentioned": False, "qualifications": [], "contradicts": []},
+    {"claim_id": "C019", "claim_text": "F1 score improvement of 0.05 over previous manually trained model did not translate to real-world performance", "claim_type": "finding", "claim_role": "supporting", "claim_status": "explicit", "verbatim_quote": "This F1 score indicated that the use of a pre-trained model improved performance by 0.05 compared to a previous, manually trained model (pers.comm Cormac Purcell; Kristensen-McLachlan and Mallon, 2021). Nevertheless, only 19 out of 148 tiles (12.8%) tagged by the model with at least a 60% chance of having a mound actually contained one", "location": {"section": "Results", "subsection": "First run (2021)", "paragraph": 1}, "supported_by_evidence": ["E028", "E029"], "supported_by_claims": [], "supports_claims": ["C018", "C003"], "alternatives_mentioned": False, "qualifications": [], "contradicts": []},
+    {"claim_id": "C020", "claim_text": "Second model run (2022, visible mounds only) performed worse with lower F1 (0.62) and higher false positive (94.8%) and false negative (96.2%) rates", "claim_type": "finding", "claim_role": "core", "claim_status": "explicit", "verbatim_quote": "The second model's performance declined to an F1 score of 0.62 (Kristensen-McLachlan and Mallon, 2022). Validation revealed that only 21 of 773 mounds (2.7%) were detected, while 752 mounds (97.3%) remained undetected.", "location": {"section": "Results", "subsection": "Second run (2022)", "paragraph": 1}, "supported_by_evidence": ["E033", "E034", "E035", "E036", "E037", "E038"], "supported_by_claims": [], "supports_claims": ["C001", "C002"], "alternatives_mentioned": False, "qualifications": [], "contradicts": []}
+]
+
+implicit_arguments = []  # No new core claims in Methods/Results requiring systematic implicit argument scan
+
+# Add items
+extraction["evidence"].extend(evidence_items)
+extraction["claims"].extend(claims_items)
+extraction["implicit_arguments"].extend(implicit_arguments)
+
+# Update extraction notes
+extraction["extraction_metadata"]["extraction_notes"].append({
+    "pass1_section3": {
+        "section_group": "Methods + Results",
+        "word_count_estimate": 2200,
+        "sections_combined": ["Methods (Transfer learning, Additional CNN training, Assessment)", "Results (First run 2021, Second run 2022)"],
+        "extraction_date": "2025-10-30",
+        "items_extracted": {"evidence": len(evidence_items), "claims": len(claims_items), "implicit_arguments": len(implicit_arguments)},
+        "notes": "Liberal extraction applied to quantitative results. Dense with performance metrics and validation statistics. 16 evidence items capturing model specifications and performance measurements. 4 claims including 2 core claims (C018, C020) about model failures."
+    }
+})
+
+# Save
+with open(extraction_file, 'w') as f:
+    json.dump(extraction, f, indent=2, ensure_ascii=False)
+
+print(f"✓ Pass 1 Section 3 extraction complete")
+print(f"  Evidence: {len(evidence_items)} items")
+print(f"  Claims: {len(claims_items)} items")
+print(f"  Implicit Arguments: {len(implicit_arguments)} items")
+print(f"  Total: {len(evidence_items) + len(claims_items) + len(implicit_arguments)} items")
