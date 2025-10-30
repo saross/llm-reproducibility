@@ -1,0 +1,1075 @@
+
+ ▐▛███▜▌   Claude Code v2.0.28
+▝▜█████▛▘  Sonnet 4.5 · Claude Max
+  ▘▘ ▝▝    /home/shawn/Code/llm-reproducibility
+
+> Hi CC, apologies, VS Code just crashed, here's what we were working on. We need to make section-handling in 
+the workflow more flexible, as we are now about to extract information from all of the papers in 
+input/queue.yaml.\
+\
+  What I found:
+  - WORKFLOW.md has basic section grouping: "Abstract + Introduction", "Methods", "Results", "Discussion +
+  Conclusion"
+  - Pass 1 prompt (01-claims-evidence_pass1_prompt.md) says "Section-by-Section Extraction" but has NO guidance
+   about:
+    - Scientific vs humanistic papers
+    - The 1500-word rule for breaking sections
+    - Thematic section handling
+    - Natural break identification (~1000 words ± 250)
+    - Combining Abstract+following section or Conclusion+preceding section
+
+  The prompt files I checked:
+  - ✅ 01-claims-evidence_pass1_prompt.md - exists, but lacks this guidance
+  - ✅ 03-rdmap_pass1a_prompt.md - exists (note: filename is "pass1a" not "pass1")
+  - No matches for "1500", "humanistic", "thematic", or "scientific paper" in the prompts directory
+
+  Implication: When I invoke the research-assessor skill and read these prompts, I won't have the section
+  handling rules you just described unless:
+  1. They're added to the prompts, OR
+  2. I carry forward the guidance you've just given me in this conversation
+
+  Question 2: Ancient Greek Text Handling
+
+  Understood! I'll:
+  - ✅ Ignore Ancient Greek text in block quotes (always has English translation)
+  - ✅ Handle individual Greek words discussed in arguments contextually, doing my best
+  - ✅ See how it goes with the Ross-2005 philology paper
+
+  ---
+  What Should We Do?
+
+  I see three options:
+
+  Option A: Proceed with your verbal guidance
+  - I remember the rules you just stated
+  - Apply them during extraction
+  - Risk: guidance not formally documented in prompts for future runs
+
+  Option B: Add section handling guidance to prompts first
+  - Update the relevant prompts (Pass 1 and Pass 3) with this guidance
+  - Then proceed with extraction
+  - Benefit: properly documented for reproducibility
+
+  Option C: Add to WORKFLOW.md instead
+  - Put the guidance in the workflow doc (lighter touch)
+  - Prompts reference workflow for section handling
+  - Then proceed
+
+  Which approach would you prefer?
+
+> no, it won't be in prompts yet, we're only just now expanding beyond the original test paper, we should write
+ this guidance out to WORKFLOW.md or to the two prompts calling for section-by-section analysis, whichever you 
+prefer, so that I don't have to repeat it again. Also, I forgot to ask, before we write out this guidance, do 
+you have any questions? Is it clear and actionable? 
+
+● Good question - let me verify I understand the guidance correctly and identify any ambiguities:
+
+  Clarity Questions:
+
+  1. Combining Abstract with "following section"
+
+  You said "combine Abstract with the following section" but WORKFLOW.md currently says "Abstract +
+  Introduction".
+
+  Question: Should I:
+  - Option A: Always combine Abstract with whatever section comes next (Introduction, Background, etc.)?
+  - Option B: Specifically look for Introduction and combine with that?
+  - Option C: Combine Abstract with the next section ONLY if it's Introduction?
+
+  (I'm assuming Option A based on your wording, but want to confirm)
+
+  2. Handling sections >1500 words in structured papers
+
+  For thematic sections in humanistic papers, you said "divide if >1500 words using a subsection or other
+  natural break."
+
+  Question: What if there are no clear subsections or natural breaks in a >1500 word section? Should I:
+  - Option A: Create an artificial break at roughly 1500 words?
+  - Option B: Keep the section intact (exceeding 1500)?
+  - Option C: Search harder for a natural break (paragraph boundaries, topic shifts)?
+
+  3. "Top-level section heading" with subsections
+
+  You mentioned "text under a top-level section heading."
+
+  Question: If a section has subsections (e.g., "3. Methods" with "3.1 Study Area", "3.2 Data Collection"), do
+  I:
+  - Option A: Treat the entire "3. Methods" as one unit (unless >1500 words total)?
+  - Option B: Treat 3.1, 3.2, etc. as separate extraction units?
+  - Option C: Combine subsections but be willing to break at subsection boundaries if >1500 words?
+
+  (I'm assuming Option A/C, but want to confirm)
+
+  4. Mixed conventional + thematic sections
+
+  You mentioned papers with "thematic sections...sometimes mixed with more conventional sections like
+  'Results'."
+
+  Confirmation: I should apply conventional handling (combine Conclusion with preceding, etc.) to conventional
+  sections, and thematic handling (break at 1500 words) to thematic sections, right?
+
+  5. Where to document - my preference
+
+  You asked which I prefer. My recommendation:
+
+  Option B (my preference): Add to the two prompts directly
+  - Why: The prompts are what I actively read during extraction
+  - Where: Add a new "Section Handling" section early in Pass 1 and Pass 3 prompts
+  - Bonus: Also add a summary to WORKFLOW.md with a note "See Pass 1/3 prompts for details"
+
+  Alternative (also good): Add full guidance to WORKFLOW.md, have prompts reference it
+  - Why: Single source of truth, avoid duplication
+  - Tradeoff: Extra step during extraction (read workflow, then prompt)
+
+  If guidance is clear:
+
+  Once you answer these questions, the guidance will be actionable and I can draft the text for whichever
+  location(s) you prefer.
+\
+\
+please review / resume and then I'll answer your questions 
+
+● I'll review the current state of the files to understand the context, then we can proceed with your answers
+  to my questions.
+
+● Read(input/queue.yaml)
+  ⎿  Read 88 lines
+
+● Read(input/WORKFLOW.md)
+  ⎿  Error reading file
+
+● Read(input/prompts/01-claims-evidence_pass1_prompt.md)
+  ⎿  Error reading file
+
+● Read(input/prompts/03-rdmap_pass1a_prompt.md)
+  ⎿  Error reading file
+
+● Let me find the correct paths for the workflow and prompt files:
+
+● Search(pattern: "**/WORKFLOW.md")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Search(pattern: "**/*prompt*.md")
+  ⎿  Found 19 files (ctrl+o to expand)
+
+● Read(extraction-system/staging/WORKFLOW.md)
+  ⎿  Read 374 lines
+
+● Read(extraction-system/prompts/01-claims-evidence_pass1_prompt.md)
+  ⎿  Read 374 lines
+
+● Read(extraction-system/prompts/03-rdmap_pass1a_prompt.md)
+  ⎿  Read 407 lines
+
+● Context Review Complete
+
+  I've reviewed the current state. Here's where we are:
+
+  Current Documentation
+
+  WORKFLOW.md (extraction-system/staging/WORKFLOW.md):
+  - Lines 35-68: Has basic section grouping (Abstract+Intro, Methods, Results, Discussion+Conclusion)
+  - Line 68: Generic note about adjusting based on paper structure
+  - Missing: All the flexible section-handling rules you described
+
+  Pass 1 Prompt (01-claims-evidence_pass1_prompt.md):
+  - Line 236: Says "Section-by-Section Extraction"
+  - Missing: Any guidance on what constitutes a section, when to break large sections, how to handle thematic
+  papers
+
+  Pass 3 Prompt (03-rdmap_pass1a_prompt.md):
+  - Missing: Section-handling guidance
+
+  The Gap We're Filling
+
+  You described flexible section-handling rules for:
+  - Scientific vs humanistic paper structures
+  - 1500-word threshold for breaking sections
+  - Natural break identification (~1000 words ± 250)
+  - Abstract combination with following section (not just Introduction)
+  - Thematic section handling in humanistic papers
+  - Mixed conventional + thematic sections
+
+  My 5 Clarifying Questions
+
+  Before documenting this guidance, I asked questions about:
+  1. Abstract combination (always with next section, or specifically Introduction?)
+  2. Handling >1500 word sections without clear breaks
+  3. Subsections and the 1500-word rule
+  4. Mixed conventional + thematic section handling
+  5. Where to document (my preference: prompts directly, with summary in WORKFLOW.md)
+
+  ---
+  Ready for your answers to these questions. Once clarified, I'll draft the guidance for the location(s) you
+  prefer.
+
+> 1. Combining Abstract with "following section"
+
+  You said "combine Abstract with the following section" but WORKFLOW.md currently says "Abstract +
+  Introduction".
+
+  - Option A: Always combine Abstract with whatever section comes next (Introduction, Background, etc.)?\
+\
+Likewise for Conclusion, always combine it with the previous section, whatever it is named.\
+\
+  2. Handling sections >1500 words in structured papers
+
+  For thematic sections in humanistic papers, you said "divide if >1500 words using a subsection or other
+  natural break."
+
+  Question: What if there are no clear subsections or natural breaks in a >1500 word section? Should I:
+
+  - Option C+A: Search harder for a natural break (paragraph boundaries, topic shifts) and choose the best 
+option, targeting sections of about 1000 words but allowing up to 1500 to find *some sort of* natural break. If
+ the section is >1500 and has *no* natural breaks, split it in half, or into ca. 1000-word chunks (use 
+paragraph breaks if nothing else). The generalised guidance here is: aim for sections of 1000 words. They can 
+be shorter or longer, but make sure none are >1500 words; divide in the most natural place(s) available.\
+\
+ion heading" with subsections
+
+  You mentioned "text under a top-level section heading."
+
+  Question: If a section has subsections (e.g., "3. Methods" with "3.1 Study Area", "3.2 Data Collection"), do
+  I:
+  - Option A: Treat the entire "3. Methods" as one unit (unless >1500 words total)
+  - Option C: Combine subsections but be willing to break at subsection boundaries if >1500 words
+
+  (I'm assuming Option A/C, but want to confirm) - YES CONFIRMED\
+\
+  4. Mixed conventional + thematic sections
+
+  You mentioned papers with "thematic sections...sometimes mixed with more conventional sections like
+  'Results'."
+
+  Confirmation: I should apply conventional handling (combine Conclusion with preceding, etc.) to conventional
+  sections, and thematic handling (break at 1500 words) to thematic sections, right? - YES, CORRECT
+\
+  5. Where to document - my preference
+
+  You asked which I prefer. My recommendation:
+
+  Option B (my preference): Add to the two prompts directly
+  - Why: The prompts are what I actively read during extraction
+  - Where: Add a new "Section Handling" section early in Pass 1 and Pass 3 prompts
+  - Bonus: Also add a summary to WORKFLOW.md with a note "See Pass 1/3 prompts for details"
+
+ YES, implement your preference, with the 'bonus' summary in workflow.md (replacing any superceded guidance 
+currently in that prompt).\
+\
+Does this answer your questions? Please share your plan for prompt upgrades. Remember we are trying to keep the
+ prompts lean, so keep additions consice while accomplishing what we need to do. 
+
+● Plan: Add Flexible Section-Handling Guidance
+
+  Based on your answers, here's my plan to add concise section-handling guidance to the prompts and workflow
+  documentation.
+
+  ---
+  Changes Summary
+
+  Files to modify:
+  1. extraction-system/prompts/01-claims-evidence_pass1_prompt.md - Add "Section Handling" section
+  2. extraction-system/prompts/03-rdmap_pass1a_prompt.md - Add "Section Handling" section
+  3. extraction-system/staging/WORKFLOW.md - Replace lines 35-68 with concise summary
+
+  Placement in prompts:
+  - Insert new "Section Handling" section after "Your Task" and before "Extraction Philosophy" (~line 30 in
+  both prompts)
+  - Keep it brief: ~20-25 lines maximum per prompt
+
+  ---
+  Draft Content
+
+  For Pass 1 & Pass 3 Prompts (identical section)
+
+  ## Section Handling
+
+  **Section-by-section extraction uses flexible section grouping based on paper structure.**
+
+  ### Default Section Groups
+
+  Extract in order, processing each group completely before moving to the next:
+
+  1. **Abstract + following section** (Introduction, Background, etc.) - combined as one unit
+  2. **Methods/Approach** - all subsections as one unit
+  3. **Results** - all subsections as one unit
+  4. **Conclusion + preceding section** (Discussion, etc.) - combined as one unit
+
+  **Adjust to paper structure:** Scientific papers often follow this pattern. Humanistic papers may have
+  thematic sections instead.
+
+  ### Section Size Limits
+
+  **Target ~1000 words per section. Maximum 1500 words.**
+
+  If a section exceeds 1500 words, divide using natural breaks:
+  - **First choice**: Subsection boundaries (e.g., 3.1, 3.2, 3.3)
+  - **Second choice**: Topic shifts or thematic boundaries
+  - **Third choice**: Paragraph boundaries at ~1000-word intervals
+  - **Last resort**: Split into ~1000-word chunks at paragraph breaks
+
+  **Aim for 1000 ± 500 words** - sections can be shorter or longer, but never >1500 words.
+
+  ### Thematic Papers (Common in Humanities)
+
+  Papers with thematic sections rather than conventional structure:
+  - Treat each major thematic section as extraction unit
+  - Apply 1500-word maximum rule using natural breaks
+  - Mixed papers: Use conventional handling for conventional sections (Abstract, Conclusion), thematic handling
+   for thematic content
+
+  For WORKFLOW.md (replacing lines 35-68)
+
+  ### Required Section Grouping (Pass 1 & Pass 3 ONLY)
+
+  **MANDATORY SECTION GROUPS for liberal extraction passes (01, 03):**
+
+  Execute each pass by processing section groups in order. Complete each group before moving to next:
+
+  1. **Abstract + following section** - Combined as ONE unit (save to JSON after)
+  2. **Methods/Approach** - All subsections as ONE unit (save to JSON after)
+  3. **Results** - All subsections as ONE unit (save to JSON after)
+  4. **Conclusion + preceding section** - Combined as ONE unit (save to JSON after)
+
+  **Section size limits:** Target ~1000 words per section, maximum 1500 words. If section exceeds 1500 words,
+  divide at natural breaks (subsections > topic shifts > paragraph boundaries).
+
+  **Adapt to paper structure:** Scientific papers often follow this pattern. Humanistic papers may use thematic
+   sections - apply 1500-word maximum to each thematic unit.
+
+  **For detailed section handling guidance:** See "Section Handling" in prompts 01 and 03.
+
+  **For rationalization passes (02, 05) and validation (06):**
+  - Review all relevant extractions across entire paper
+  - No section-by-section processing required
+
+  **For implicit RDMAP pass (04):**
+  - Scan across entire paper for implicit items
+  - No section-by-section processing required
+
+  ---
+  Implementation Notes
+
+  Conciseness achieved by:
+  - Bullet-point format for clarity
+  - Hierarchy of natural breaks (avoids lengthy explanation)
+  - Explicit word count targets (1000 ± 500, max 1500)
+  - Reference to prompts from WORKFLOW.md (avoid duplication)
+
+  Key guidance preserved:
+  - Abstract + following (not just Introduction)
+  - Conclusion + preceding (not just Discussion)
+  - 1500-word maximum with natural break hierarchy
+  - Scientific vs humanistic paper handling
+  - Mixed section handling
+
+  Total addition:
+  - ~25 lines per prompt (01 and 03)
+  - ~18 lines in WORKFLOW.md (replacing ~34 current lines)
+  - Net reduction in WORKFLOW.md length
+
+  ---
+  Does this plan address your needs while keeping the prompts lean?
+
+> Yes, just two questions: (1) what is the difference between:   \
+- **Third choice**: Paragraph boundaries at ~1000-word intervals AND
+- **Last resort**: Split into ~1000-word chunks at paragraph breaks?\
+(2) You've accomplished this very concisely, which I really appreciate, but can I confirm that guidance this 
+brief will be actionable? 
+
+● Excellent questions - let me address both:
+
+  Question 1: Third Choice vs Last Resort
+
+  You're absolutely right - those are redundant/confusing. I was trying to distinguish between:
+  - "Paragraph boundary at a topic shift" vs "arbitrary paragraph boundary"
+
+  But I didn't make that clear. Here's the clearer hierarchy:
+
+  1. First choice: Subsection boundaries (3.1, 3.2 - authorial structure)
+  2. Second choice: Topic shifts between paragraphs (conceptual boundaries, even without headers)
+  3. Last resort: Any paragraph boundary (arbitrary split at ~1000-word intervals)
+
+  The "third choice" and "last resort" should collapse into one clearer item.
+
+  Question 2: Is This Actionable?
+
+  That's the key question. The guidance is concise, but will I actually know what to do when extracting?
+
+  I think it's actionable for the core rules:
+  - ✅ Combine Abstract with next section (clear)
+  - ✅ Combine Conclusion with previous section (clear)
+  - ✅ 1500-word maximum (clear)
+  - ✅ Target ~1000 words (clear)
+  - ✅ Hierarchy of breaks (clear with fix above)
+
+  Potential ambiguity:
+  - ❓ "Thematic papers" - What does this look like in practice?
+  - ❓ "Mixed papers" - How do I recognize when to switch between conventional and thematic handling?
+
+  Options to improve actionability:
+
+  Option A: Add 1-2 brief examples
+  **Examples:**
+  - Scientific paper: Abstract+Intro (800w) → Methods (1200w) → Results (split at 3.1/3.2 if >1500w) →
+  Discussion+Conclusion (900w)
+  - Humanistic paper: Abstract+Background (600w) → "Landscape and Identity" (1400w) → "Material Evidence"
+  (split at topic shift if >1500w) → "Synthesis"+Conclusion (800w)
+
+  Option B: Add a quick recognition test for thematic papers
+  **Recognizing thematic papers:** Section headings describe themes/arguments rather than methods ("Landscape
+  and Memory", "Cultural Continuity") rather than conventional structure ("Methods", "Results").
+
+  Option C: Trust the concise version as-is and see how it performs in practice
+
+  My instinct: The core rules are clear enough. If you want maximum actionability, Option B adds ~2 lines and
+  helps with the "thematic vs conventional" recognition question. But Option C (current plan) is probably
+  sufficient for an experienced LLM following prompts.
+
+  Your call: Keep it as-is (with the redundancy fix), or add Option B for clarity?
+
+> would it be simpler to disregard 'mixed' papers and just treat them as 'thematic' papers if they have 
+thematic section? I'd like to accommodate the variability of papers (even 'scientific' ones) when, for example,
+ you might encounter one or two non-standard section headings in an otherwise 'normal' paper. 
+
+● Brilliant insight - yes, that's much simpler and more robust!
+
+  Revised Approach: Drop Paper Type Classification
+
+  Instead of classifying papers as "scientific/humanistic/mixed," just have one flexible rule set that handles 
+  all papers:
+
+  Simplified Rules
+
+  1. Always combine:
+    - Abstract + following section (whatever it's called)
+    - Conclusion + preceding section (whatever it's called)
+  2. Middle sections:
+    - Treat each major section as an extraction unit
+    - Combine subsections (3.1, 3.2, etc.) into their parent section
+    - Apply 1500-word maximum to each unit
+  3. If any unit >1500 words:
+    - Divide using natural breaks (subsections > topic shifts > paragraph boundaries)
+
+  This naturally handles:
+  - ✅ Pure scientific papers (Abstract+Intro, Methods, Results, Discussion+Conclusion)
+  - ✅ Pure thematic papers (Abstract+Background, Theme 1, Theme 2, Synthesis+Conclusion)
+  - ✅ "Mixed" papers (Abstract+Intro, Methods, "Landscape Memory", Results, Discussion+Conclusion)
+  - ✅ Weird edge cases (no special handling needed)
+
+  No classification required. Just follow the structure the authors gave you.
+
+  Revised Prompt Section (Much Simpler)
+
+  ## Section Handling
+
+  **Extract section-by-section using flexible grouping based on the paper's structure.**
+
+  ### Default Grouping
+
+  1. **Abstract + following section** - Combined as one unit (save to JSON after)
+  2. **Middle sections** - Each major section as one unit, combining subsections (save after each)
+  3. **Conclusion + preceding section** - Combined as one unit (save to JSON after)
+
+  **Adapt to what the paper gives you.** If Methods section is called "Approach" or "Materials and Methods,"
+  treat it as a middle section. If there's a thematic section like "Landscape and Memory," treat it as a middle
+   section.
+
+  ### Section Size Limits
+
+  **Target ~1000 words per section. Maximum 1500 words.**
+
+  If any section exceeds 1500 words, divide using natural breaks in this order:
+  1. Subsection boundaries (3.1, 3.2, etc.)
+  2. Topic shifts or paragraph boundaries with conceptual breaks
+  3. Any paragraph boundary at ~1000-word intervals
+
+  **Aim for sections of 1000 ± 500 words** - never >1500 words.
+
+  Benefits:
+  - Removes ~8 lines about paper types
+  - Eliminates need to classify papers or sections
+  - More robust to variability
+  - Clearer mental model: "just follow the paper's structure with size limits"
+
+  Does this feel right?
+
+> ok, great suggestion! The only other guidance I might add is that when splitting a section >1500 words, aim 
+to split it into roughly equal sized chunks (using the natural break closest to the middle). Oh, one other 
+thing, will this approach accommodate papers with *no* sections? We have one like that in the current batch. 
+
+● Excellent catches on both points!
+
+  Addition 1: Equal Chunks When Splitting
+
+  Current: "divide using natural breaks"
+  Better: "divide into roughly equal chunks using the natural break closest to the midpoint (or thirds,
+  quarters, etc.)"
+
+  Example:
+  - 2000-word section → split at natural break near 1000 words (not at 1500)
+  - 3500-word section → split into 3 chunks at natural breaks near 1167 and 2333 words
+
+  Addition 2: Papers Without Sections
+
+  This is a real scenario (Ross-2005 philology paper could be like this). We need fallback guidance.
+
+  Proposed addition:
+
+  ### Papers Without Formal Sections
+
+  If the paper lacks section headings:
+  1. **Abstract** - Usually labeled even without other sections (combine with next ~1000 words)
+  2. **Middle content** - Process in ~1000-word chunks using paragraph boundaries or thematic shifts
+  3. **Conclusion** - Usually recognizable by concluding language (combine with previous ~1000 words)
+
+  **If no Abstract/Conclusion identifiable:** Process entire paper in ~1000-word chunks using paragraph
+  boundaries.
+
+  Does this cover the edge case?
+
+  The logic is: try to identify functional Abstract/Conclusion zones even without headings, then chunk the
+  middle. Worst case: just chunk the whole thing at ~1000-word intervals.
+
+  Should I incorporate both additions into the final plan?
+
+> yes, incorporate these additions into the final plan, and we'll see how it goes. It might be good to also add
+ some tracking, perhaps in an existing 'notes' field in the schema, so that we can review where you decide to 
+chunk the papers and refine the prompts if the decisions are suboptimal. 
+  ⎿  User rejected Claude's plan:
+     ╭────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+     │ Add Flexible Section-Handling Guidance to Prompts                                                          │
+     │                                                                                                            │
+     │ Files to Modify                                                                                            │
+     │                                                                                                            │
+     │ 1. extraction-system/prompts/01-claims-evidence_pass1_prompt.md - Add "Section Handling" section           │
+     │ 2. extraction-system/prompts/03-rdmap_pass1a_prompt.md - Add "Section Handling" section                    │
+     │ 3. extraction-system/staging/WORKFLOW.md - Replace section grouping guidance (lines 35-68)                 │
+     │                                                                                                            │
+     │ Changes                                                                                                    │
+     │                                                                                                            │
+     │ 1. Pass 1 & Pass 3 Prompts (identical new section)                                                         │
+     │                                                                                                            │
+     │ Insert after "Your Task" section, before extraction philosophy (~line 30):                                 │
+     │                                                                                                            │
+     │ ## Section Handling                                                                                        │
+     │                                                                                                            │
+     │ **Extract section-by-section using flexible grouping based on the paper's structure.**                     │
+     │                                                                                                            │
+     │ ### Default Grouping                                                                                       │
+     │                                                                                                            │
+     │ 1. **Abstract + following section** - Combined as one unit (save to JSON after)                            │
+     │ 2. **Middle sections** - Each major section as one unit, combining subsections (save after each)           │
+     │ 3. **Conclusion + preceding section** - Combined as one unit (save to JSON after)                          │
+     │                                                                                                            │
+     │ **Adapt to what the paper gives you.** If Methods is called "Approach" or a section is thematic like       │
+     │ "Landscape and Memory," treat it as a middle section.                                                      │
+     │                                                                                                            │
+     │ ### Section Size Limits                                                                                    │
+     │                                                                                                            │
+     │ **Target ~1000 words per section. Maximum 1500 words.**                                                    │
+     │                                                                                                            │
+     │ If any section exceeds 1500 words, divide into roughly equal chunks using natural breaks:                  │
+     │ 1. Subsection boundaries (3.1, 3.2, etc.) closest to midpoint/thirds                                       │
+     │ 2. Topic shifts or conceptual paragraph boundaries closest to equal division                               │
+     │ 3. Any paragraph boundary closest to equal chunk sizes                                                     │
+     │                                                                                                            │
+     │ **Aim for 1000 ± 500 words per chunk** - never >1500 words.                                                │
+     │                                                                                                            │
+     │ ### Papers Without Formal Sections                                                                         │
+     │                                                                                                            │
+     │ If the paper lacks section headings:                                                                       │
+     │ 1. **Abstract** - Usually labeled even without sections (combine with next ~1000 words)                    │
+     │ 2. **Middle content** - Process in ~1000-word chunks using paragraph/thematic boundaries                   │
+     │ 3. **Conclusion** - Recognizable by concluding language (combine with previous ~1000 words)                │
+     │                                                                                                            │
+     │ If no Abstract/Conclusion identifiable: Process entire paper in ~1000-word chunks.                         │
+     │                                                                                                            │
+     │ ### Tracking Section Decisions                                                                             │
+     │                                                                                                            │
+     │ Document your section grouping decisions in `extraction_notes.section_extracted` after each section group: │
+     │ - Which sections were combined                                                                             │
+     │ - Where splits occurred and why (word count, break type used)                                              │
+     │ - Any unusual structural features                                                                          │
+     │                                                                                                            │
+     │ This enables prompt refinement based on chunking quality.                                                  │
+     │                                                                                                            │
+     │ 2. WORKFLOW.md Update                                                                                      │
+     │                                                                                                            │
+     │ Replace lines 35-68 with:                                                                                  │
+     │                                                                                                            │
+     │ ### Required Section Grouping (Pass 1 & Pass 3 ONLY)                                                       │
+     │                                                                                                            │
+     │ **Flexible section-by-section extraction for liberal passes (01, 03):**                                    │
+     │                                                                                                            │
+     │ Execute by processing section groups in order, adapting to paper structure:                                │
+     │                                                                                                            │
+     │ 1. **Abstract + following section** - Combined as ONE unit (save to JSON after)                            │
+     │ 2. **Middle sections** - Each major section as ONE unit (save to JSON after)                               │
+     │ 3. **Conclusion + preceding section** - Combined as ONE unit (save to JSON after)                          │
+     │                                                                                                            │
+     │ **Section size limits:** Target ~1000 words, maximum 1500 words. If section exceeds 1500 words, divide     │
+     │ into roughly equal chunks at natural breaks (subsections > topic shifts > paragraph boundaries).           │
+     │                                                                                                            │
+     │ **Papers without sections:** Process in ~1000-word chunks using paragraph/thematic boundaries.             │
+     │                                                                                                            │
+     │ **Track chunking decisions:** Document section grouping in `extraction_notes.section_extracted` for        │
+     │ quality review.                                                                                            │
+     │                                                                                                            │
+     │ **For detailed section handling guidance:** See "Section Handling" in prompts 01 and 03.                   │
+     │                                                                                                            │
+     │ **For rationalization passes (02, 05) and validation (06):**                                               │
+     │ - Review all extractions across entire paper                                                               │
+     │ - No section-by-section processing required                                                                │
+     │                                                                                                            │
+     │ **For implicit RDMAP pass (04):**                                                                          │
+     │ - Scan across entire paper                                                                                 │
+     │ - No section-by-section processing required                                                                │
+     │                                                                                                            │
+     │ Summary                                                                                                    │
+     │                                                                                                            │
+     │ - Simplified approach: No paper-type classification, just flexible rules that adapt to structure           │
+     │ - Size limits: 1000-word target, 1500-word maximum, equal chunks when splitting                            │
+     │ - Edge case handled: Papers without formal sections                                                        │
+     │ - Tracking added: Document chunking decisions in extraction_notes.section_extracted                        │
+     │ - Concise: ~30 lines in prompts, ~25 lines in WORKFLOW (net reduction overall)                             │
+     ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+> Sorry, could I ask for one more thing? In:\
+\
+ Document your section grouping decisions in `extraction_notes.section_extracted` after each section group:
+ - Which sections were combined
+ - Where splits occurred and why (word count, break type used)
+ - Any unusual structural features\
+\
+Could I also get a word count of the section? I'd like to monitor if chunks are actually being divided up 
+evenly, and this metadata might also help identify if there's a word count above a certain threshold where 
+extraction quality declines. 
+
+● Perfect addition! Word count tracking will give you good data on chunking quality and potential performance
+  thresholds.
+
+  Updated Tracking Section
+
+  ### Tracking Section Decisions
+
+  Document your section grouping decisions in `extraction_notes.section_extracted` after each section group:
+  - Which sections were combined
+  - **Word count of the section/chunk**
+  - Where splits occurred and why (word count, break type used)
+  - Any unusual structural features
+
+  This enables prompt refinement based on chunking quality and extraction performance analysis.
+
+  Example of what I'd write:
+  "Abstract + Introduction combined (1,247 words). Methods section split at subsection 3.3 boundary into
+  Methods 3.1-3.2 (982 words) and Methods 3.3-3.5 (1,104 words). Results processed as single unit (876 words).
+  Discussion + Conclusion combined (1,389 words)."
+
+  This will let you:
+  - ✅ Verify chunks stay within limits
+  - ✅ Check if splits are actually equal
+  - ✅ Correlate word count with extraction quality
+  - ✅ Identify optimal chunk size thresholds
+
+  Ready to finalize the plan with this addition?
+
+> yes, please finalise 
+                                                                                                              
+● User approved Claude's plan:
+  ⎿  Add Flexible Section-Handling Guidance to Prompts
+
+     Files to Modify
+
+     1. extraction-system/prompts/01-claims-evidence_pass1_prompt.md - Add "Section Handling" section
+     2. extraction-system/prompts/03-rdmap_pass1a_prompt.md - Add "Section Handling" section  
+     3. extraction-system/staging/WORKFLOW.md - Replace section grouping guidance (lines 35-68)
+
+     Changes
+
+     1. Pass 1 & Pass 3 Prompts (identical new section)
+
+     Insert after "Your Task" section, before extraction philosophy (~line 30):
+
+     ## Section Handling
+
+     **Extract section-by-section using flexible grouping based on the paper's structure.**
+
+     ### Default Grouping
+
+     1. **Abstract + following section** - Combined as one unit (save to JSON after)
+     2. **Middle sections** - Each major section as one unit, combining subsections (save after each)
+     3. **Conclusion + preceding section** - Combined as one unit (save to JSON after)
+
+     **Adapt to what the paper gives you.** If Methods is called "Approach" or a section is thematic like 
+     "Landscape and Memory," treat it as a middle section.
+
+     ### Section Size Limits
+
+     **Target ~1000 words per section. Maximum 1500 words.**
+
+     If any section exceeds 1500 words, divide into roughly equal chunks using natural breaks:
+     1. Subsection boundaries (3.1, 3.2, etc.) closest to midpoint/thirds
+     2. Topic shifts or conceptual paragraph boundaries closest to equal division
+     3. Any paragraph boundary closest to equal chunk sizes
+
+     **Aim for 1000 ± 500 words per chunk** - never >1500 words.
+
+     ### Papers Without Formal Sections
+
+     If the paper lacks section headings:
+     1. **Abstract** - Usually labeled even without sections (combine with next ~1000 words)
+     2. **Middle content** - Process in ~1000-word chunks using paragraph/thematic boundaries
+     3. **Conclusion** - Recognizable by concluding language (combine with previous ~1000 words)
+
+     If no Abstract/Conclusion identifiable: Process entire paper in ~1000-word chunks.
+
+     ### Tracking Section Decisions
+
+     Document your section grouping decisions in `extraction_notes.section_extracted` after each section group:
+     - Which sections were combined
+     - **Word count of the section/chunk**
+     - Where splits occurred and why (word count, break type used)
+     - Any unusual structural features
+
+     This enables prompt refinement and extraction performance analysis.
+
+     2. WORKFLOW.md Update
+
+     Replace lines 35-68 with:
+
+     ### Required Section Grouping (Pass 1 & Pass 3 ONLY)
+
+     **Flexible section-by-section extraction for liberal passes (01, 03):**
+
+     Execute by processing section groups in order, adapting to paper structure:
+
+     1. **Abstract + following section** - Combined as ONE unit (save to JSON after)
+     2. **Middle sections** - Each major section as ONE unit (save to JSON after)
+     3. **Conclusion + preceding section** - Combined as ONE unit (save to JSON after)
+
+     **Section size limits:** Target ~1000 words, maximum 1500 words. If section exceeds 1500 words, divide 
+     into roughly equal chunks at natural breaks (subsections > topic shifts > paragraph boundaries).
+
+     **Papers without sections:** Process in ~1000-word chunks using paragraph/thematic boundaries.
+
+     **Track chunking decisions:** Document section grouping and word counts in 
+     `extraction_notes.section_extracted` for quality review.
+
+     **For detailed section handling guidance:** See "Section Handling" in prompts 01 and 03.
+
+     **For rationalization passes (02, 05) and validation (06):**
+     - Review all extractions across entire paper
+     - No section-by-section processing required
+
+     **For implicit RDMAP pass (04):**
+     - Scan across entire paper
+     - No section-by-section processing required
+
+     Summary
+
+     - Simplified approach: No paper-type classification, flexible rules adapt to any structure
+     - Size limits: 1000-word target, 1500-word maximum, equal chunks when splitting
+     - Edge case handled: Papers without formal sections
+     - Tracking added: Document chunking decisions with word counts in extraction_notes.section_extracted
+     - Concise: ~32 lines in prompts, ~25 lines in WORKFLOW (net reduction overall)
+
+  ⎿
+
+● Update(extraction-system/prompts/01-claims-evidence_pass1_prompt.md)
+  ⎿  Updated extraction-system/prompts/01-claims-evidence_pass1_prompt.md with 44 additions                 
+       29    
+       30    ---
+       31    
+       32 +  ## Section Handling
+       33 +  
+       34 +  **Extract section-by-section using flexible grouping based on the paper's structure.**
+       35 +  
+       36 +  ### Default Grouping
+       37 +  
+       38 +  1. **Abstract + following section** - Combined as one unit (save to JSON after)
+       39 +  2. **Middle sections** - Each major section as one unit, combining subsections (save after 
+          + each)
+       40 +  3. **Conclusion + preceding section** - Combined as one unit (save to JSON after)
+       41 +  
+       42 +  **Adapt to what the paper gives you.** If Methods is called "Approach" or a section is thematic
+          +  like "Landscape and Memory," treat it as a middle section.
+       43 +  
+       44 +  ### Section Size Limits
+       45 +  
+       46 +  **Target ~1000 words per section. Maximum 1500 words.**
+       47 +  
+       48 +  If any section exceeds 1500 words, divide into roughly equal chunks using natural breaks:
+       49 +  1. Subsection boundaries (3.1, 3.2, etc.) closest to midpoint/thirds
+       50 +  2. Topic shifts or conceptual paragraph boundaries closest to equal division
+       51 +  3. Any paragraph boundary closest to equal chunk sizes
+       52 +  
+       53 +  **Aim for 1000 ± 500 words per chunk** - never >1500 words.
+       54 +  
+       55 +  ### Papers Without Formal Sections
+       56 +  
+       57 +  If the paper lacks section headings:
+       58 +  1. **Abstract** - Usually labelled even without sections (combine with next ~1000 words)
+       59 +  2. **Middle content** - Process in ~1000-word chunks using paragraph/thematic boundaries
+       60 +  3. **Conclusion** - Recognisable by concluding language (combine with previous ~1000 words)
+       61 +  
+       62 +  If no Abstract/Conclusion identifiable: Process entire paper in ~1000-word chunks.
+       63 +  
+       64 +  ### Tracking Section Decisions
+       65 +  
+       66 +  Document your section grouping decisions in `extraction_notes.section_extracted` after each 
+          + section group:
+       67 +  - Which sections were combined
+       68 +  - **Word count of the section/chunk**
+       69 +  - Where splits occurred and why (word count, break type used)
+       70 +  - Any unusual structural features
+       71 +  
+       72 +  This enables prompt refinement and extraction performance analysis.
+       73 +  
+       74 +  ---
+       75 +  
+       76    ## 🚨 CRITICAL: Verbatim Quote Requirements
+       77    
+       78    **Before extracting any item:**
+
+● Update(extraction-system/prompts/03-rdmap_pass1a_prompt.md)
+  ⎿  Updated extraction-system/prompts/03-rdmap_pass1a_prompt.md with 44 additions                          
+       38    
+       39    ---
+       40    
+       41 +  ## Section Handling
+       42 +  
+       43 +  **Extract section-by-section using flexible grouping based on the paper's structure.**
+       44 +  
+       45 +  ### Default Grouping
+       46 +  
+       47 +  1. **Abstract + following section** - Combined as one unit (save to JSON after)
+       48 +  2. **Middle sections** - Each major section as one unit, combining subsections (save after 
+          + each)
+       49 +  3. **Conclusion + preceding section** - Combined as one unit (save to JSON after)
+       50 +  
+       51 +  **Adapt to what the paper gives you.** If Methods is called "Approach" or a section is thematic
+          +  like "Landscape and Memory," treat it as a middle section.
+       52 +  
+       53 +  ### Section Size Limits
+       54 +  
+       55 +  **Target ~1000 words per section. Maximum 1500 words.**
+       56 +  
+       57 +  If any section exceeds 1500 words, divide into roughly equal chunks using natural breaks:
+       58 +  1. Subsection boundaries (3.1, 3.2, etc.) closest to midpoint/thirds
+       59 +  2. Topic shifts or conceptual paragraph boundaries closest to equal division
+       60 +  3. Any paragraph boundary closest to equal chunk sizes
+       61 +  
+       62 +  **Aim for 1000 ± 500 words per chunk** - never >1500 words.
+       63 +  
+       64 +  ### Papers Without Formal Sections
+       65 +  
+       66 +  If the paper lacks section headings:
+       67 +  1. **Abstract** - Usually labelled even without sections (combine with next ~1000 words)
+       68 +  2. **Middle content** - Process in ~1000-word chunks using paragraph/thematic boundaries
+       69 +  3. **Conclusion** - Recognisable by concluding language (combine with previous ~1000 words)
+       70 +  
+       71 +  If no Abstract/Conclusion identifiable: Process entire paper in ~1000-word chunks.
+       72 +  
+       73 +  ### Tracking Section Decisions
+       74 +  
+       75 +  Document your section grouping decisions in `extraction_notes.section_extracted` after each 
+          + section group:
+       76 +  - Which sections were combined
+       77 +  - **Word count of the section/chunk**
+       78 +  - Where splits occurred and why (word count, break type used)
+       79 +  - Any unusual structural features
+       80 +  
+       81 +  This enables prompt refinement and extraction performance analysis.
+       82 +  
+       83 +  ---
+       84 +  
+       85    ## 🚨 CRITICAL: Verbatim Quote Requirements
+       86    
+       87    **Before extracting any item:**
+
+● Update(extraction-system/staging/WORKFLOW.md)
+  ⎿  Updated extraction-system/staging/WORKFLOW.md with 13 additions and 22 removals                        
+       34    
+       35    ### Required Section Grouping (Pass 1 & Pass 3 ONLY)
+       36    
+       37 -  **MANDATORY SECTION GROUPS for liberal extraction passes (01, 03):**
+       37 +  **Flexible section-by-section extraction for liberal passes (01, 03):**
+       38    
+       39 -  Execute each pass by processing these section groups in order. Complete each group fully before
+          -  moving to the next:
+       39 +  Execute by processing section groups in order, adapting to paper structure:
+       40    
+       41 -  1. **Abstract + Introduction** - Process together as ONE unit
+       42 -     - Includes: Abstract + ALL Introduction subsections (1.1, 1.2, 1.3, etc.)
+       43 -     - ⚠️ Do NOT stop after Abstract - continue through entire Introduction
+       44 -     - Save progress to JSON after completing this group
+       41 +  1. **Abstract + following section** - Combined as ONE unit (save to JSON after)
+       42 +  2. **Middle sections** - Each major section as ONE unit (save to JSON after)
+       43 +  3. **Conclusion + preceding section** - Combined as ONE unit (save to JSON after)
+       44    
+       45 -  2. **Methods/Approach** - Process as ONE unit
+       46 -     - Includes: ALL Methods subsections
+       47 -     - Save progress to JSON after completing this group
+       45 +  **Section size limits:** Target ~1000 words, maximum 1500 words. If section exceeds 1500 words,
+          +  divide into roughly equal chunks at natural breaks (subsections > topic shifts > paragraph 
+          + boundaries).
+       46    
+       47 -  3. **Results** - Process as ONE unit
+       48 -     - Includes: ALL Results subsections
+       49 -     - Save progress to JSON after completing this group
+       47 +  **Papers without sections:** Process in ~1000-word chunks using paragraph/thematic boundaries.
+       48    
+       49 -  4. **Discussion + Conclusion** - Process together as ONE unit
+       50 -     - ⚠️ Do NOT process separately - always together
+       51 -     - Save progress to JSON after completing this group
+       49 +  **Track chunking decisions:** Document section grouping and word counts in 
+          + `extraction_notes.section_extracted` for quality review.
+       50    
+       51 -  **For rationalization passes (02, 05) and validation (06):**
+       52 -  - Review all relevant extractions across the entire paper
+       53 -  - Refer back to paper sections as needed
+       51 +  **For detailed section handling guidance:** See "Section Handling" in prompts 01 and 03.
+       52 +  
+       53 +  **For rationalisation passes (02, 05) and validation (06):**
+       54 +  - Review all extractions across entire paper
+       55    - No section-by-section processing required
+       56    
+       57    **For implicit RDMAP pass (04):**
+       58 -  - Scan across entire paper for implicit RDMAP items
+       59 -  - Use already-extracted explicit RDMAP as seed list
+       58 +  - Scan across entire paper
+       59    - No section-by-section processing required
+       60    
+       61 -  **Adjust based on paper structure** - the key is manageable section sizes that maintain focus 
+          - and thoroughness while completing logical units together.
+       62 -  
+       61    ### File Management for Section-by-Section Extraction
+       62    
+       63    **IMPORTANT - Direct writes only:**
+
+● Section-Handling Guidance Updated
+
+  All three files have been successfully updated with the flexible section-handling guidance.
+
+  What Changed
+
+  1. Pass 1 Prompt (01-claims-evidence_pass1_prompt.md)
+  - Added comprehensive "Section Handling" section after line 30
+  - Includes: default grouping, size limits, papers without sections, tracking requirements
+  - 43 lines added
+
+  2. Pass 3 Prompt (03-rdmap_pass1a_prompt.md)
+  - Added identical "Section Handling" section after line 40
+  - Same content as Pass 1 for consistency
+  - 43 lines added
+
+  3. WORKFLOW.md
+  - Replaced lines 35-68 (34 lines) with concise summary (25 lines)
+  - Net reduction: 9 lines
+  - References prompts for detailed guidance
+
+  Key Features Implemented
+
+  ✅ Flexible structure handling - No paper-type classification needed
+  ✅ Size limits - 1000-word target, 1500-word maximum
+  ✅ Equal chunk splitting - Divide at natural breaks closest to midpoint/thirds
+  ✅ Papers without sections - Fallback guidance for unsectioned papers
+  ✅ Word count tracking - Required documentation in extraction_notes.section_extracted
+
+  Tracking Format
+
+  When I extract from papers, I'll now document:
+  - Which sections were combined
+  - Word count of each section/chunk
+  - Where splits occurred and why
+  - Unusual structural features
+
+  This will give you data to monitor chunking quality and identify performance thresholds.
+
+  Ready to test with the papers in queue.yaml!
+
+> great, can you commit and push? Commit these changes in one commit, and then do a second commit for 
+everything else that has changed. Include informative brief / detailed commit messages. 
+
+● Bash(git status)
+  ⎿  On branch main                               
+     Your branch is up to date with 'origin/main'.
+     … +16 lines (ctrl+o to expand)
+
+● Bash(git add extraction-system/prompts/01-claims-evidence_pass1_prompt.md
+      extraction-system/prompts/03-rdmap_pass1a_prompt.md extraction-system/staging/WORKFLOW.md)
+  ⎿  (No content)
+
+● Bash(git commit -m "Add flexible section-handling guidance to extraction prompts…)
+  ⎿  [main de5a487] Add flexible section-handling guidance to extraction prompts
+      3 files changed, 101 insertions(+), 22 deletions(-)
+
+● Bash(git diff .claude/settings.json)
+  ⎿  diff --git a/.claude/settings.json b/.claude/settings.json
+     index 60e094c..752f824 100644
+     --- a/.claude/settings.json
+     … +14 lines (ctrl+o to expand)
+
+● Bash(git diff input/queue.yaml | head -30)
+  ⎿  diff --git a/input/queue.yaml b/input/queue.yaml
+     index a34087b..fbe40e3 100644
+     --- a/input/queue.yaml
+     … +33 lines (ctrl+o to expand)
+
+● Bash(git diff outputs/sobotkova-et-al-2023/extraction.json | head -50)
+  ⎿  diff --git a/outputs/sobotkova-et-al-2023/extraction.json b/outputs/sobotkova-et-al-2023/extraction.json
+     index 4a81318..645e5a7 100644
+     --- a/outputs/sobotkova-et-al-2023/extraction.json
+     … +53 lines (ctrl+o to expand)
+
+● Bash(ls -lh archive/cc-interactions/2025-10-29-a.txt outputs/sobotkova-et-al-2023/validation_report.json)
+  ⎿  -rw-rw-r-- 1 shawn shawn 15K Oct 29 14:22 archive/cc-interactions/2025-10-29-a.txt           
+     -rw-rw-r-- 1 shawn shawn 807 Oct 29 13:45 outputs/sobotkova-et-al-2023/validation_report.json
+
+● Bash(git add .claude/settings.json input/queue.yaml outputs/sobotkova-et-al-2023/extraction.json
+      archive/cc-interactions/2025-10-29-a.txt outputs/sobotkova-et-al-202…)
+  ⎿  (No content)
+
+● Bash(git commit -m "Complete RUN-09 extraction and update settings…)
+  ⎿  [main d05effd] Complete RUN-09 extraction and update settings          
+      5 files changed, 3178 insertions(+), 2226 deletions(-)
+      create mode 100644 archive/cc-interactions/2025-10-29-a.txt
+      create mode 100644 outputs/sobotkova-et-al-2023/validation_report.json
+
+● Bash(git push)
+  ⎿  To github.com:saross/llm-reproducibility.git
+        99da8b6..d05effd  main -> main
+
+● Commits Completed and Pushed
+
+  Successfully created two commits and pushed to remote:
+
+  Commit 1: Section-Handling Guidance
+
+  Commit hash: de5a487
+
+  Added flexible section-handling guidance to extraction prompts with:
+  - Comprehensive "Section Handling" section in Pass 1 and Pass 3 prompts
+  - Concise summary in WORKFLOW.md
+  - Flexible grouping that adapts to any paper structure
+  - Size limits and word count tracking requirements
+
+  Files changed: 3 files, 101 insertions(+), 22 deletions(-)
+
+  Commit 2: RUN-09 Completion and Settings
+
+  Commit hash: d05effd
+
+  Completed RUN-09 re-extraction with:
+  - Full extraction of sobotkova-et-al-2023 (158 items, validation: PASS)
+  - Queue status updates (completed RUN-09, started sobotkova-et-al-2024)
+  - Settings.json updates for Python heredoc automation
+  - Archived session notes
+
+  Files changed: 5 files, 3,178 insertions(+), 2,226 deletions(-)
+
+  Both commits pushed to main successfully.
+
+
+
