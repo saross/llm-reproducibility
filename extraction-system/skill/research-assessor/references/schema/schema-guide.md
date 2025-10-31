@@ -126,8 +126,39 @@ This schema defines six object types for extracting research methodology and arg
 **Required fields (v2.5):**
 - `evidence_id`: String matching pattern `E###` (E001, E002, ...)
 - `evidence_text`: String describing the observation
-- `evidence_type`: Enum of observation types
+- `evidence_type`: Enum of observation types (see below)
 - `verbatim_quote`: **REQUIRED** - Exact text from paper stating this observation
+
+**evidence_type values:**
+
+**For empirical/quantitative papers:**
+- `quantitative_observation` - Numerical measurements, counts, rates, frequencies
+- `qualitative_observation` - Descriptive observations, categorical data, patterns
+- `comparative_observation` - Comparative relationships, differences between groups/conditions
+- `measurement` - Instrument-based measurements with precision/error specification
+
+**For literary/historical papers:**
+- `primary_source_textual` - Citations from ancient/historical texts under study
+  - Use when: Scholar analyses original ancient/historical text (Homer, Herodotus, Plato, Biblical texts)
+  - Examples: Il. 2.802-6, Hdt. 8.144, Genesis 1:1, Republic 510b
+- `secondary_source_textual` - Modern scholars citing ancient sources as evidence
+  - Use when: Modern interpretation/historical account serves as evidence (not primary text itself)
+  - Examples: Gibbon on Rome, modern historian's account cited as evidence
+- `archaeological` - Physical artefacts, site features, material evidence
+  - Use when: Physical remains serve as evidence
+  - Examples: Pottery assemblages, architectural features, stratigraphy, burial goods
+- `inscriptional` - Epigraphic evidence, ancient inscriptions, documentary papyri
+  - Use when: Inscribed/written materials on physical media (not literary texts)
+  - Examples: IG inscriptions, CIL corpus, P.Oxy. papyri, coin legends, graffiti
+
+**Selection guidance:**
+- Literary analysis of Homer → `primary_source_textual`
+- Historian citing ancient inscription → `inscriptional`
+- Archaeologist describing pottery → `archaeological`
+- Scholar citing Tacitus → `primary_source_textual`
+- Scholar citing modern historian's account → `secondary_source_textual`
+- Quantitative site data → `quantitative_observation`
+- Lab measurements → `measurement`
 
 **Key fields:**
 - `location`: `{section, page, start_paragraph, end_paragraph}` - Where the verbatim_quote appears

@@ -75,14 +75,12 @@ This enables prompt refinement and extraction performance analysis.
 
 ## 🚨 CRITICAL: Verbatim Quote Requirements
 
-**Before extracting any item:**
-
-Read if uncertain: `references/verbatim-quote-requirements.md`
+**For comprehensive guide:** `references/verbatim-quote-requirements.md`
 
 **Non-negotiable rules for all `verbatim_quote` fields:**
 
-1. **Complete sentences only** - Extract whole grammatical units, never mid-sentence fragments
-2. **Exact text only** - Copy-paste from paper, never paraphrase or reconstruct from memory  
+1. **Complete sentences only** - Extract whole grammatical units, never fragments
+2. **Exact text only** - Copy-paste from paper, never paraphrase or reconstruct
 3. **Verify before committing** - Ensure exact quote exists in paper before adding to JSON
 4. **Single source only** - Never synthesize quotes from multiple locations
 
@@ -90,36 +88,29 @@ Read if uncertain: `references/verbatim-quote-requirements.md`
 - If YES → Extract it
 - If NO → Quote is wrong; fix it or mark as implicit
 
-⚠️ **Failure to follow these rules causes 40-50% validation failures in Pass 3.**
+⚠️ **Failure to follow causes 40-50% validation failures in Pass 3.**
 
 ---
 
 ## 🚨 CRITICAL: Sourcing Requirements
 
-**READ FIRST:** `references/extraction-fundamentals.md`
-
-The fundamentals document covers universal sourcing requirements that apply to all object types. **Evidence, Claims, and Implicit Arguments require the same sourcing discipline as RDMAP.**
+**For complete fundamentals:** `references/extraction-fundamentals.md`
 
 **MANDATORY for all extractions:**
-
 **EVIDENCE & CLAIMS require:**
 - `verbatim_quote` - Exact text from paper stating this content
 - Precise location - Section, subsection, paragraph range
 - If quote doesn't exist → DO NOT EXTRACT
-
 **IMPLICIT ARGUMENTS require:**
 - `trigger_text` array - Verbatim passages that imply (not state) the argument
 - `trigger_locations` - Location of each trigger passage
 - `inference_reasoning` - Explanation connecting triggers to argument
 - If no trigger passages → DO NOT EXTRACT
-
 **Quick test before extracting:**
 - Evidence/Claims: "Can I point to the exact sentence that says this?"
 - Implicit Arguments: "Can I point to specific passages that together imply this?"
 - If NO → DO NOT EXTRACT
-
-**For complete sourcing fundamentals:** → `references/extraction-fundamentals.md`  
-**For detailed verification procedures:** → `references/verification-procedures.md`
+**For verification:** `references/verification-procedures.md`
 
 ---
 
@@ -250,6 +241,39 @@ Extract observations only if they support specific claims. Context that doesn't 
 
 **Quick examples:** Method specified? Error margins? Sample size? Comparison basis? Causal mechanisms? Alternative explanations?
 
+### 6. Literary/Historical Source Papers: Evidence Extraction Adaptation
+
+**When analysing ancient/historical texts:**
+
+**DECISION RULE:** "When paper references primary source text → create evidence item"
+
+**Extraction steps:**
+
+1. **Scan for all primary source citations:**
+   - Citation patterns: Il. X.Y, Hdt. X.Y, Gen X:Y, Republic 510b
+   - Include both extensively analysed passages AND inline references
+   - Capture paraphrases with citations
+
+2. **Create evidence item for each citation:**
+   - `evidence_type`: "primary_source_textual"
+   - `source`: Use author's citation format ("Homer, Iliad 2.802-6" or "Il. 2.802-6")
+   - `verbatim_quote`: Extract author's English translation/paraphrase from body text
+   - `notes`: Document if bundled with other citations
+
+3. **Handle bundled citations** (e.g., "See Il. 2.802-6, 4.433-38"):
+   - Create separate evidence items for each citation
+   - Cross-reference via `related_evidence` array
+
+**Target:** 20-30 evidence items for literary/philological papers (vs 40-60 empirical)
+
+**For comprehensive guidance:**
+→ `references/checklists/expected-information.md` (Literary Studies / Philology section)
+  - Citation format patterns by discipline (Greco-Roman, Biblical, Medieval, Philosophical, Legal)
+  - Evidence type classification (primary vs secondary textual, archaeological, inscriptional)
+  - Boundary cases (what to include/exclude)
+  - Bundled citation handling details
+  - Post-extraction verification protocol with grep patterns
+
 ---
 
 ## Extraction Workflow
@@ -348,36 +372,14 @@ For each section:
 ## Output Format
 
 **Return the same JSON document you received, with these arrays populated:**
+- `evidence` - All evidence items extracted
+- `claims` - All claim items extracted (core, intermediate, supporting)
+- `implicit_arguments` - All implicit arguments extracted
+- `project_metadata` - Timeline, location, resources, track record context
 
-```json
-{
-  "schema_version": "2.5",
-  "extraction_timestamp": "ISO 8601",
-  "extractor": "Claude Sonnet 4.5",
-  
-  "evidence": [evidence_object],
-  "claims": [claim_object],
-  "implicit_arguments": [implicit_argument_object],
-  "project_metadata": {
-    "timeline": {...},
-    "location": {...},
-    "resources": {...},
-    "track_record": {...}
-  },
-  
-  // These arrays remain unchanged if already populated:
-  "research_designs": [...],  // Leave untouched
-  "methods": [...],           // Leave untouched
-  "protocols": [...],         // Leave untouched
-  
-  "extraction_notes": {
-    "pass": 1,
-    "section_extracted": "string",
-    "extraction_strategy": "Liberal extraction with over-capture",
-    "known_uncertainties": ["string"]
-  }
-}
-```
+**Leave unchanged:** `research_designs`, `methods`, `protocols` (RDMAP arrays extracted separately)
+
+**Update:** `extraction_notes` with pass number, section extracted, strategy, uncertainties
 
 **→ For complete object structure and field definitions, see `references/schema/schema-guide.md`**
 
