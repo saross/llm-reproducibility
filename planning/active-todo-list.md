@@ -243,10 +243,12 @@ Extraction prompts and skill may contain metrics, targets, or patterns calibrate
 
 **Phase 1: Empirical Analysis (4-6 hours) - NEXT STEP**
 - [ ] Extract count distributions from 10 completed papers
-- [ ] Quality assessment: identify goldilocks vs under/over-extracted papers
-- [ ] Granularity consistency check
+- [ ] Quality assessment using rubric: identify goldilocks vs under/over-extracted papers
+- [ ] Granularity consistency check using rubric
 - [ ] Identify evidence of target-seeking behaviour
 - [ ] Decision: Keep ranges with better framing, or remove numeric guidance entirely?
+
+**Assessment Tool:** Use `planning/extraction-assessment-rubric-v1.md` for systematic quality evaluation (Accuracy + Granularity dimensions)
 
 **Phase 2: Implementation (3-4 hours audit + 2-3 hours refinement)**
 1. Replace specific numbers with principles (e.g., "Expect 4-6 designs" → "Quality over count - if <3 review for under-extraction, if >10 review for over-extraction")
@@ -298,11 +300,64 @@ Current extraction does not systematically distinguish the role of secondary sou
 
 ---
 
+### 7. Multi-Run Extraction Comparison Study
+
+**Priority:** DEFERRED (medium-term project)
+**Status:** Awaiting Phase 1 empirical analysis completion and rubric validation
+**Effort:** 15-20 hours for 10-run study on single paper + analysis
+
+**Purpose:**
+Quantify extraction variability and assess completeness through repeated extractions rather than attempting direct completeness assessment (which requires re-extraction anyway).
+
+**Proposed Approach:**
+
+**Phase 1: Single-Paper Multi-Run Study (8-10 hours)**
+- [ ] Select representative paper (medium length, empirical)
+- [ ] Run extraction 10 times on same paper (fresh sessions, no memory)
+- [ ] Compare outputs using consistency metrics:
+  - Items appearing in all runs (high-confidence items)
+  - Items appearing in some runs (borderline/inconsistent)
+  - Items appearing in one run only (potential over-extraction or missed opportunities)
+- [ ] Calculate consistency rate: (Run1 ∩ Run2 ∩ ... ∩ Run10) / (Run1 ∪ Run2 ∪ ... ∪ Run10)
+- [ ] Identify high-variance sections/item types
+
+**Phase 2: Cross-Model Comparison (7-10 hours)**
+- [ ] Adapt workflow for another model (GPT-4.5, Gemini 2.5 Pro, or different Claude version)
+- [ ] Run 3-5 extractions with alternative model
+- [ ] Compare inter-model vs intra-model variability
+- [ ] Assess if core items are consistent across models
+
+**Metrics to Calculate:**
+- **Consistency rate:** How often do runs agree?
+- **Coverage variation:** Which sections show high variance?
+- **Item stability:** Which item types are most/least consistent?
+- **Granularity variation:** Do runs split/merge items differently?
+
+**Expected Insights:**
+- Quantify inherent variability in probabilistic extraction
+- Identify borderline items (appear in 3-5 runs but not all)
+- Validate liberal over-extraction principle (is 40-50% variation normal?)
+- Inform completeness expectations (what % agreement is "good enough"?)
+
+**When:** After:
+1. Phase 1 empirical analysis (Section 5) validates rubric
+2. Rubric pilot test on 1-2 papers confirms assessment methodology
+3. Metrics guidance decision (Section 5) informs what to measure
+
+**Dependencies:**
+- Validated assessment rubric (planning/extraction-assessment-rubric-v1.md)
+- Empirical analysis of 10-paper corpus
+- Potential workflow adaptation for cross-model testing
+
+**Subtask:** Adapt extraction workflow for alternative model (skill transfer challenge)
+
+---
+
 ## Low Priority / Nice to Have
 
-### 7. Additional Documentation
+### 8. Additional Documentation
 
-#### 7.1 Extraction Quality Metrics Documentation
+#### 8.1 Extraction Quality Metrics Documentation
 **File:** Create `docs/QUALITY_METRICS.md`
 
 **Contents:**
@@ -317,7 +372,7 @@ Current extraction does not systematically distinguish the role of secondary sou
 
 ---
 
-#### 7.2 Troubleshooting Guide
+#### 8.2 Troubleshooting Guide
 **File:** Create `docs/TROUBLESHOOTING.md`
 
 **Contents:**
