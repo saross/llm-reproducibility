@@ -1,3 +1,20 @@
+# ARCHIVED: Paper-Specific Extraction Plan
+
+**Archive Date:** 2025-10-31
+**Original Location:** extraction-system/EXTRACTION_PLAN_MODEL.md
+**Superseded By:** extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md
+**Archival Reason:** Consolidated into unified model for consistency across paper types
+
+**Historical Value:** This plan demonstrates successful extraction for a long empirical archaeogenetic paper with complex genetic methods. Key lessons incorporated into unified model:
+- 9-section structure for 23-page papers with word-length chunking
+- Methods section split into 3 parts (DNA Lab, Pop Genetics, Advanced Analysis)
+- High RDMAP counts due to complex genetic workflows (designs 5-8, methods 15-25, protocols 25-40)
+- Equal attention to all sections for research design extraction
+
+**Example Paper:** Penske et al. 2023 - Early contact between late farming and pastoralist societies in southeastern Europe (Nature)
+
+---
+
 # Extraction Plan Model
 
 **Version:** 1.0.0

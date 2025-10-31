@@ -14,9 +14,9 @@ You MUST work continuously without asking permission:
 
 - ✅ **Never ask "Would you like me to continue?"**
 - ✅ **Never ask "Should I proceed to the next section?"**
-- ✅ **Never stop between passes (1→2→3→4→5)**
+- ✅ **Never stop between passes (0→1→2→3→4→5→6)**
 - ✅ **Never stop between section groups**
-- ✅ **Work until all 5 passes complete**
+- ✅ **Work until all 7 passes complete**
 
 ### Continue Automatically After
 
@@ -29,7 +29,7 @@ You MUST work continuously without asking permission:
 
 ### Only Stop If
 
-- ✅ All 5 passes complete (extraction done)
+- ✅ All 7 passes complete (extraction done)
 - ✅ Error requires user intervention (document in queue.yaml)
 - ✅ Structural problem with input files
 
@@ -37,12 +37,16 @@ You MUST work continuously without asking permission:
 
 - **Auto-compact happens naturally** - resume from queue.yaml checkpoint when it does
 - **Don't ask before resuming** - check queue.yaml and continue
-- **Don't summarize progress between steps** - just do the work
+- **Don't summarise progress between steps** - just do the work
 - **Treat workflow as single continuous job**
 
 ## Workflow Reference
 
-**See `input/WORKFLOW.md`** for complete 5-pass extraction process and schema details.
+**Core workflow:** `input/WORKFLOW.md` - Complete 7-pass extraction process (Pass 0-6) with planning requirements
+
+**Planning guidance:** `extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md` - Flexible planning model adapted for diverse paper types (empirical/methodological/short/long/multi-proxy)
+
+**Launch prompt:** `input/EXTRACTION_LAUNCH.md` - Brief primer for starting new extractions
 
 ## File Operations Safety
 

@@ -110,7 +110,7 @@ Output:
     - [other outputs]
 
 Pass Context:
-    This script implements Pass [N] of the 6-pass extraction workflow.
+    This script implements Pass [N] of the 7-pass extraction workflow.
     [Brief explanation of this pass's role]
 
 Author: [if applicable]

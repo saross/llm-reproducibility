@@ -1,5 +1,104 @@
 # Research Extraction Workflow
 
+---
+
+# PLANNING MODE REQUIREMENTS - READ THIS FIRST
+
+When creating extraction plans in planning mode, you MUST include ALL of the following. These requirements address recurring issues where plans lack critical details.
+
+## ✓ Mandatory Plan Components
+
+### 1. Skill Invocation
+- [ ] **Invoke research-assessor skill at start of Pre-Flight**
+- [ ] **Keep skill invoked throughout ALL 7 passes**
+- [ ] **Never proceed without this skill active**
+
+**Why critical:** Skill provides extraction guidance, pattern recognition, and quality checks.
+
+### 2. Section Structure Definition (Pass 1 AND Pass 3)
+- [ ] Define section groups ONCE (will be used for BOTH Pass 1 and Pass 3)
+- [ ] Target: ~1000 words per section
+- [ ] Maximum: 1500 words per section (hard limit - MUST split if exceeded)
+- [ ] List ALL sections with:
+  - Section number and descriptive title
+  - Page range
+  - Estimated word count
+  - Content summary (what topics/methods/results covered)
+  - Natural boundary location (where section ends)
+
+**Why critical:** Consistent sectioning prevents under-extraction from long sections.
+
+### 3. Explicit Chunking Examples in Plan
+- [ ] Show actual section splits with word counts
+- [ ] Document chunking rationale when splitting oversized sections
+- [ ] Example format: "Section 2: Methods Part 1 (pp. 5-7, ~1100 words) - DNA extraction through library prep. [Natural break at subsection 2.2 boundary]"
+
+**Why critical:** Makes chunking strategy explicit, enables validation.
+
+### 4. Liberal Over-Extraction Approach
+- [ ] **Pass 1 (Claims/Evidence):** State "40-50% over-extraction expected"
+- [ ] **Pass 3 (RDMAP):** State "40-50% over-extraction expected"
+- [ ] **Especially liberal with research designs** (commonly under-extracted)
+
+**Why critical:** Ensures comprehensive capture, avoids conservative under-extraction.
+
+### 5. Pass 3 Equal Attention Strategy
+- [ ] Explicitly state: "Equal attention to ALL sections (not just Methods)"
+- [ ] Note where research designs appear: Introduction, Theory, Methods, Discussion, Conclusions
+- [ ] Warn against over-focusing on Methods section
+
+**Why critical:** Research designs scattered throughout paper; over-focus on Methods causes under-extraction.
+
+### 6. Chunking Metadata Recording
+- [ ] Plan to document word counts for each section
+- [ ] Plan to record split decisions and rationale
+- [ ] Plan to track natural boundaries used
+- [ ] Include in extraction_notes.section_extracted
+
+**Why critical:** Enables prompt refinement, extraction performance analysis.
+
+### 7. Use Unified Model Plan
+- [ ] Reference: `extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md`
+- [ ] Adapt guidelines for paper type (empirical/methodological/short/long/multi-proxy)
+
+**Why critical:** Provides consistent planning framework adapted for diverse paper types.
+
+---
+
+# Common Planning Mistakes - AVOID THESE
+
+## ❌ Mistake 1: Forgetting Skill Invocation
+**Problem:** Proceeding without research-assessor skill
+**Impact:** Missing extraction guidance, lower quality
+**Fix:** First step of every plan: "Invoke research-assessor skill"
+
+## ❌ Mistake 2: Section-Based Instead of Word-Length Chunking
+**Problem:** "Process Introduction section" (but Introduction is 3000 words)
+**Impact:** Systematic under-extraction from long sections
+**Fix:** Always check word counts, split sections >1500 words
+
+## ❌ Mistake 3: Different Sections for Pass 1 vs Pass 3
+**Problem:** Creating new section groups for Pass 3
+**Impact:** Inconsistent coverage, difficult to validate
+**Fix:** Explicitly state "SAME sections as Pass 1" in Pass 3 plan
+
+## ❌ Mistake 4: Over-Focus on Methods Section (Pass 3)
+**Problem:** Spending 70% of Pass 3 time on Methods section
+**Impact:** Under-extraction of research designs from Introduction/Discussion
+**Fix:** Allocate equal time/attention to each section
+
+## ❌ Mistake 5: Not Stating Liberal Approach
+**Problem:** Plan says "Extract RDMAP items" without "liberal over-extraction"
+**Impact:** Conservative extraction, missing items
+**Fix:** Always explicitly state "40-50% over-extraction expected"
+
+## ❌ Mistake 6: No Chunking Metadata
+**Problem:** Not documenting word counts or split decisions
+**Impact:** Can't validate chunking compliance, can't improve prompts
+**Fix:** Include word counts and split rationale for every section
+
+---
+
 ## Overview
 
 This document describes the 7-pass autonomous extraction workflow used to systematically extract research designs, methods, protocols, evidence, claims, and implicit arguments from research papers.
@@ -13,6 +112,42 @@ This document describes the 7-pass autonomous extraction workflow used to system
 - 100% sourcing discipline (verbatim_quote or trigger_text for every item)
 - Autonomous execution (no stopping between passes)
 - Iterative refinement maintaining cross-reference integrity
+
+---
+
+## Autonomous Execution Mode
+
+### Critical Rules
+
+**NEVER ask:**
+- "Would you like me to continue?"
+- "Should I proceed to the next section?"
+- "Shall I move to Pass X?"
+
+**Continue automatically after:**
+- Completing a section group
+- Completing a pass
+- Saving to extraction.json
+- Updating queue.yaml
+- Validation checks
+- Any intermediate step
+
+**ONLY stop if:**
+- All 7 passes complete (extraction fully done)
+- Critical error requires user intervention
+- Structural problem with input files
+
+### Session Behaviour
+
+**Auto-compact handling:**
+- Auto-compact will occur naturally during long extractions
+- When resuming: Check queue.yaml checkpoint
+- Resume from last checkpoint automatically
+- Do not ask before resuming
+- Do not summarise progress unnecessarily
+- Treat entire workflow as single continuous job
+
+---
 
 ## Workflow Stages
 
@@ -97,6 +232,14 @@ This document describes the 7-pass autonomous extraction workflow used to system
 
 **Purpose:** Cast wide net extracting all potential evidence, claims, and implicit arguments
 
+### CRITICAL PLANNING REQUIREMENTS for Pass 1:
+1. **Define section groups ONCE** (will reuse for Pass 3)
+2. **Word-length chunking**: Target 1000 words, max 1500 words
+3. **Liberal over-extraction**: 40-50% more than final target
+4. **Chunking examples**: Show actual splits with word counts in plan
+5. **Chunking metadata**: Plan to document word counts and split rationale
+6. **100% sourcing discipline**: Every item requires verbatim_quote
+
 **Input:** Entire paper, processed in section groups
 
 **Output:** Evidence, claims, and implicit_arguments arrays populated
@@ -107,7 +250,7 @@ This document describes the 7-pass autonomous extraction workflow used to system
 
 **Approach:**
 - **Liberal extraction** - Over-extract 40-50% to capture all potential items
-- **Section-by-section** - Process in 1500-word chunks with natural boundaries
+- **Section-by-section** - Process in ~1000-word chunks (max 1500 words) with natural boundaries
 - **100% sourcing** - Every item must have verbatim_quote
 
 **Section Handling:**
@@ -190,6 +333,14 @@ This document describes the 7-pass autonomous extraction workflow used to system
 ### Pass 3: Liberal RDMAP Extraction
 
 **Purpose:** Extract research designs, methods, and protocols
+
+### CRITICAL PLANNING REQUIREMENTS for Pass 3:
+1. **Use SAME section groups as Pass 1** (no new grouping)
+2. **Equal attention to ALL sections** (not just Methods)
+3. **Liberal over-extraction**: 40-50% more than final target
+4. **ESPECIALLY liberal with research designs** (commonly under-extracted)
+5. **Scan entire paper**: Designs appear in Intro, Theory, Methods, Discussion, Conclusions
+6. **Avoid Methods over-focus**: Over-focusing on Methods causes systematic under-extraction of designs
 
 **Input:** Entire paper, using SAME section groups as Pass 1
 
@@ -465,40 +616,6 @@ jq '{evidence: (.evidence | length), claims: (.claims | length), ...}' extractio
 - Resulted in 367-line file truncated to 100 lines
 - Lost 267 lines of extracted data
 - Required complete re-extraction
-
----
-
-## Autonomous Execution Mode
-
-### Critical Rules
-
-**NEVER ask:**
-- "Would you like me to continue?"
-- "Should I proceed to the next section?"
-- "Shall I move to Pass X?"
-
-**Continue automatically after:**
-- Completing a section group
-- Completing a pass
-- Saving to extraction.json
-- Updating queue.yaml
-- Validation checks
-- Any intermediate step
-
-**ONLY stop if:**
-- All 7 passes complete (extraction fully done)
-- Critical error requires user intervention
-- Structural problem with input files
-
-### Session Behaviour
-
-**Auto-compact handling:**
-- Auto-compact will occur naturally during long extractions
-- When resuming: Check queue.yaml checkpoint
-- Resume from last checkpoint automatically
-- Do not ask before resuming
-- Do not summarize progress unnecessarily
-- Treat entire workflow as single continuous job
 
 ---
 

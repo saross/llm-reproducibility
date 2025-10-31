@@ -1,3 +1,21 @@
+# ARCHIVED: Paper-Specific Extraction Plan
+
+**Archive Date:** 2025-10-31
+**Original Location:** extraction-system/EXTRACTION_PLAN_CONNOR_2013.md
+**Superseded By:** extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md
+**Archival Reason:** Consolidated into unified model for consistency across paper types
+
+**Historical Value:** This plan demonstrates successful extraction for a long, complex multi-proxy palaeoecological paper. Key lessons incorporated into unified model:
+- 13-section structure for 44-page papers requiring extensive Discussion subdivision
+- Chunking strategy for oversized sections (original Discussion ~6500 words split into 7 sections at natural subsection boundaries)
+- Multi-proxy integration tracking (pollen, charcoal, magnetics, NPPs)
+- Complex statistical methods extraction (DCA, cluster analysis, Bayesian modelling)
+- Very high RDMAP counts (designs 8-12, methods 35-45, protocols 85-105)
+
+**Example Paper:** Connor et al. 2013 - Environmental conditions in the SE Balkans since the Last Glacial Maximum (Quaternary Science Reviews)
+
+---
+
 # Extraction Plan Model: Connor et al. 2013
 
 **Version:** 1.0.0

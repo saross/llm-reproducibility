@@ -1,3 +1,22 @@
+# ARCHIVED: Obsolete Workflow Documentation
+
+**Archive Date:** 2025-10-31
+**Original Location:** extraction-system/staging/WORKFLOW.md
+**Version:** 2.7.0 (2025-10-28)
+**Superseded By:** input/WORKFLOW.md (v3.0.0, 2025-10-30)
+**Archival Reason:** Obsolete version superseded by comprehensive v3.0.0
+
+**Key Differences from Current Version:**
+- Missing Pass 0 (Metadata Extraction)
+- 6-pass structure instead of 7-pass
+- Less detailed planning guidance
+- Missing file safety rules documentation
+- Older autonomous execution guidance
+
+**Historical Value:** This version demonstrates the workflow structure before Pass 0 metadata extraction was added. Retained for reference only.
+
+---
+
 # Research Extraction Workflow
 
 **Version:** 2.7.0

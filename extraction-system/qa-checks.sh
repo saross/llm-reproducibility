@@ -135,7 +135,7 @@ if [ "$MODE" = "full" ]; then
   echo "CHECK 6: Regression Watch - Known Issues"
 
   # File safety rules
-  if grep -q "NEVER.*partial.*Read\|NEVER Partial Read Before Full Write" extraction-system/staging/WORKFLOW.md 2>/dev/null; then
+  if grep -q "NEVER.*partial.*Read\|NEVER Partial Read Before Full Write" input/WORKFLOW.md 2>/dev/null; then
     check_status "PASS" "File safety rules present in WORKFLOW.md"
   else
     check_status "FAIL" "File safety rules missing from WORKFLOW.md"

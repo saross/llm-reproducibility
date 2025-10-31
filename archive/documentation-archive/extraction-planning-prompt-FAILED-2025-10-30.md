@@ -1,3 +1,63 @@
+# ANTI-PATTERN: Failed Extraction Planning Prompt
+
+**Date Created:** 2025-10-30
+**Date Archived:** 2025-10-31
+**Original Location:** extraction-system/staging/extraction-planning-prompt.md
+**Reason for Failure:** Too prescriptive, acted as template rather than primer
+
+---
+
+## Why This Failed
+
+1. **Too directive:** Told Claude WHAT to write instead of HOW to think
+2. **Too long:** 148 lines - should be 10-20 lines core content
+3. **Template approach:** Tried to prescribe format instead of priming thought process
+4. **User feedback:** "Plans became much worse after using this - it failed, and your plans became much worse so I stopped using it"
+
+---
+
+## Lessons Learned
+
+### What Didn't Work
+
+- **Prescriptive templates**: Providing a fill-in-the-blank structure
+- **Duplicating documentation**: Repeating content already in WORKFLOW.md
+- **Example format sections**: Showing exact format to follow
+- **Long-form prompts**: Too much instruction creates cognitive overload
+
+### What Does Work
+
+- **Brief primers**: 10-20 lines that point to documentation
+- **Reference-based**: Point to WORKFLOW.md, don't duplicate it
+- **Thinking prompts**: Prime thought process, don't prescribe outputs
+- **Trust documentation**: Detailed guidance belongs in WORKFLOW.md, not launch prompts
+
+---
+
+## Replacement
+
+See `input/EXTRACTION_LAUNCH.md` for the corrected approach:
+- Brief (25 lines core content)
+- Points to documentation
+- Primes thinking without prescribing
+- Trusts WORKFLOW.md for detailed guidance
+
+---
+
+## Historical Context
+
+This prompt was created in response to recurring planning issues. The intent was good (ensure comprehensive plans), but the execution was flawed (too prescriptive). The issues it tried to address are now properly handled by:
+
+1. **WORKFLOW.md** "Planning Mode Requirements" section at top
+2. **EXTRACTION_PLAN_UNIFIED_MODEL.md** flexible planning model
+3. **EXTRACTION_LAUNCH.md** brief primer that references these documents
+
+---
+
+# Original Content Below
+
+---
+
 # Extraction Planning Prompt
 
 Use this prompt to initiate the extraction planning process for the next paper in the queue.
