@@ -1,0 +1,1433 @@
+
+  ▐▛███▜▌        Claude Code v2.0.30
+ ▝▜█████▛▘  ▄    Sonnet 4.5 · Claude Max
+   ▘▘ ▝▝   ███   /home/shawn/Code/llm-reproducibility
+══════════════════════════════════════════════════════ Conversation compacted · ctrl+o for history ═════════════════════════════════════════════════════
+  ⎿  Referenced file archive/documentation-archive/EXTRACTION_PLAN_ROSS_BALLSUN_STANTON_2022.md
+  ⎿  Referenced file archive/documentation-archive/EXTRACTION_PLAN_CONNOR_2013.md
+  ⎿  Read archive/documentation-archive/EXTRACTION_PLAN_MODEL-penske-2023.md (504 lines)
+  ⎿  Read archive/documentation-archive/extraction-planning-prompt-FAILED-2025-10-30.md (208 lines)
+  ⎿  Read input/EXTRACTION_LAUNCH.md (57 lines)
+  ⎿  Todo list read (8 items)
+
+● I'll continue by searching for any remaining references to the old model plans and paths, then update them before proceeding to validation.
+
+● Search(pattern: "EXTRACTION_PLAN_MODEL\.md")
+  ⎿  Found 2 files (ctrl+o to expand)
+
+● Search(pattern: "EXTRACTION_PLAN_CONNOR_2013\.md")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Search(pattern: "EXTRACTION_PLAN_ROSS_BALLSUN_STANTON_2022\.md")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Search(pattern: "extraction-system/staging/WORKFLOW\.md")
+  ⎿  Found 16 files (ctrl+o to expand)
+
+● Search(pattern: "5-pass")
+  ⎿  Found 39 files (ctrl+o to expand)
+
+● Search(pattern: "6-pass")
+  ⎿  Found 17 files (ctrl+o to expand)
+
+● Read(extraction-system/qa-checks.sh)
+  ⎿  Read 179 lines
+
+● Search(pattern: "6-pass", path: "input/WORKFLOW.md", output_mode: "content")
+  ⎿  Found 5 lines (ctrl+o to expand)
+
+● Search(pattern: "6-pass", path: "input/queue.yaml", output_mode: "content")
+  ⎿  Found 29 lines (ctrl+o to expand)
+
+● Read(planning/active-todo-list.md)
+  ⎿  Read 363 lines
+
+● Update(extraction-system/qa-checks.sh)
+  ⎿  Updated extraction-system/qa-checks.sh with 1 addition and 1 removal                                                                      
+       135      echo "CHECK 6: Regression Watch - Known Issues"
+       136    
+       137      # File safety rules
+       138 -    if grep -q "NEVER.*partial.*Read\|NEVER Partial Read Before Full Write" extraction-system/staging/WORKFLOW.md 2>/dev/null; then
+       138 +    if grep -q "NEVER.*partial.*Read\|NEVER Partial Read Before Full Write" input/WORKFLOW.md 2>/dev/null; then
+       139        check_status "PASS" "File safety rules present in WORKFLOW.md"
+       140      else
+       141        check_status "FAIL" "File safety rules missing from WORKFLOW.md"
+
+● Update(planning/active-todo-list.md)
+  ⎿  Updated planning/active-todo-list.md with 1 addition and 1 removal             
+       110        - [other outputs]
+       111    
+       112    Pass Context:
+       113 -      This script implements Pass [N] of the 6-pass extraction workflow.
+       113 +      This script implements Pass [N] of the 7-pass extraction workflow.
+       114        [Brief explanation of this pass's role]
+       115    
+       116    Author: [if applicable]
+
+● Bash(git status --short)
+  ⎿   M CLAUDE.md                                       
+      M archive/cc-interactions/2025-10-31-a.txt
+      D extraction-system/EXTRACTION_PLAN_CONNOR_2013.md
+     … +16 lines (ctrl+o to expand)
+
+● Read(input/WORKFLOW.md)
+  ⎿  Read 120 lines
+
+● Read(extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md)
+  ⎿  Read 100 lines
+
+● Bash(ls -lh archive/documentation-archive/)
+  ⎿  total 88K                                                                      
+     -rw-rw-r-- 1 shawn shawn  23K Oct 31 19:11 EXTRACTION_PLAN_CONNOR_2013.md
+     -rw-rw-r-- 1 shawn shawn  16K Oct 31 19:11 EXTRACTION_PLAN_MODEL-penske-2023.md
+     … +3 lines (ctrl+o to expand)
+
+● Read(archive/documentation-archive/WORKFLOW-v2.7.0-OBSOLETE.md)
+  ⎿  Read 15 lines
+
+● Read(archive/documentation-archive/extraction-planning-prompt-FAILED-2025-10-30.md)
+  ⎿  Read 25 lines
+
+● Read(archive/documentation-archive/EXTRACTION_PLAN_CONNOR_2013.md)
+  ⎿  Read 25 lines
+
+● Search(pattern: "EXTRACTION_PLAN", path: "docs")
+  ⎿  Found 0 files 
+
+● Search(pattern: "EXTRACTION_PLAN", path: "README.md")
+  ⎿  Found 0 files 
+
+● Bash(wc -l /home/shawn/Code/llm-reproducibility/extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md)
+  ⎿  1028 /home/shawn/Code/llm-reproducibility/extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md
+
+● Perfect! All reference searches complete. Now let me create a comprehensive validation report:
+
+  Validation Report
+
+  ✅ Core Objectives Achieved
+
+  Objective (a): Reconcile two copies of WORKFLOW.md
+  - Obsolete v2.7.0 from extraction-system/staging/ archived to archive/documentation-archive/WORKFLOW-v2.7.0-OBSOLETE.md with explanatory header
+  - Authoritative v3.0.0 in input/WORKFLOW.md retained as single source of truth
+  - All references updated to point to input/WORKFLOW.md
+
+  Objective (b): Eliminate 6 recurring clarification issues
+
+  All 6 issues now addressed in WORKFLOW.md "Planning Mode Requirements" section (lines 5-99):
+
+  1. ✅ Skill invocation (WORKFLOW.md:11-16): Mandatory Component #1 with checkbox
+  2. ✅ Word-length chunking (WORKFLOW.md:18-29): Mandatory Component #2 with explicit 1000 +/-500, max 1500 words
+  3. ✅ Equal attention to entire paper (WORKFLOW.md:45-50): Mandatory Component #5 warning against Methods over-focus
+  4. ✅ Same chunking for Pass 1 and Pass 3 (WORKFLOW.md:19): Explicit "ONCE (will be used for BOTH Pass 1 and Pass 3)"
+  5. ✅ Liberal over-extraction (WORKFLOW.md:38-43): Mandatory Component #4 with "40-50% over-extraction expected"
+  6. ✅ Chunking metadata recording (WORKFLOW.md:52-57): Mandatory Component #6 with specific recording requirements
+
+  Objective (modified): Distill three model plans into unified model
+  - Created extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md (1028 lines)
+  - Comprehensive 9-part structure covering all paper types
+  - Three original plans archived with headers explaining historical value
+  - All references updated
+
+  ✅ Files Created
+
+  1. extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md - Flexible planning model with:
+    - Part 1: Universal Planning Checklist
+    - Part 2: Paper Analysis Framework (empirical/methodological/multi-proxy/short/long)
+    - Part 3: Section Structure Planning Guide
+    - Part 4-9: Pass-by-pass templates, adaptation guidelines, worked examples
+  2. input/EXTRACTION_LAUNCH.md - Brief 57-line primer (not prescriptive template)
+  3. Five archived files in archive/documentation-archive/:
+    - WORKFLOW-v2.7.0-OBSOLETE.md
+    - extraction-planning-prompt-FAILED-2025-10-30.md
+    - EXTRACTION_PLAN_MODEL-penske-2023.md
+    - EXTRACTION_PLAN_CONNOR_2013.md
+    - EXTRACTION_PLAN_ROSS_BALLSUN_STANTON_2022.md
+
+  ✅ Files Modified
+
+  1. input/WORKFLOW.md:
+    - Added "Planning Mode Requirements - Read This First" section (lines 5-99)
+    - Added 7 mandatory plan components with checkboxes and "Why critical" explanations
+    - Added 6 common planning mistakes with problem/impact/fix structure
+    - Moved "Autonomous Execution Mode" section earlier (line 118)
+    - Strengthened Pass 1 and Pass 3 descriptions with critical planning requirements
+  2. CLAUDE.md:
+    - Updated pass count from 5 to 7 throughout
+    - Replaced single workflow reference with three distinct references
+  3. extraction-system/qa-checks.sh:
+    - Updated reference from extraction-system/staging/WORKFLOW.md to input/WORKFLOW.md (line 138)
+  4. planning/active-todo-list.md:
+    - Updated script template from "6-pass" to "7-pass" (line 113)
+
+  ✅ Reference Integrity
+
+  All references validated:
+  - No orphaned references to old model plans in active documentation
+  - input/queue.yaml historical "6-pass" references are accurate (describe completed extractions)
+  - Archive files correctly reference superseding files
+  - CLAUDE.md points to all three key files: WORKFLOW.md, EXTRACTION_PLAN_UNIFIED_MODEL.md, EXTRACTION_LAUNCH.md
+
+  ✅ Archive Quality
+
+  All archived files have comprehensive headers including:
+  - Archive date (2025-10-31)
+  - Original location
+  - Superseded by (with path)
+  - Archival reason
+  - Historical value / lessons learned
+
+  ✅ Structure Validation
+
+  New documentation hierarchy:
+  input/
+  ├── WORKFLOW.md (v3.0.0, authoritative, planning requirements at top)
+  └── EXTRACTION_LAUNCH.md (brief primer, 57 lines)
+
+  extraction-system/
+  └── EXTRACTION_PLAN_UNIFIED_MODEL.md (flexible planning model, 1028 lines)
+
+  archive/documentation-archive/
+  ├── WORKFLOW-v2.7.0-OBSOLETE.md
+  ├── extraction-planning-prompt-FAILED-2025-10-30.md
+  └── [3 model plans with historical value preserved]
+
+  Design principles validated:
+  - Brief primer (EXTRACTION_LAUNCH.md) points to comprehensive documentation
+  - Comprehensive documentation (WORKFLOW.md) has planning requirements at top
+  - Flexible model (EXTRACTION_PLAN_UNIFIED_MODEL.md) provides adaptation framework
+  - No duplication, no prescriptive templates
+  - "Prime thinking, don't prescribe format"
+
+● Summary
+
+  All housekeeping and workflow improvements complete! Here's what was accomplished:
+
+  ✅ Reconciliation Complete
+
+  - Obsolete WORKFLOW.md (v2.7.0) archived from staging/
+  - Single authoritative source: input/WORKFLOW.md (v3.0.0)
+  - All references updated throughout project
+
+  ✅ Six Recurring Issues Resolved
+
+  WORKFLOW.md now has "Planning Mode Requirements - Read This First" section at the top addressing all your recurring clarifications:
+
+  1. Skill invocation - Now Mandatory Component #1 with explicit "invoke at Pre-Flight, keep throughout"
+  2. Word-length chunking - Mandatory Component #2 with explicit "~1000 words, max 1500, must split if exceeded"
+  3. Equal attention strategy - Mandatory Component #5 with explicit warning against Methods over-focus
+  4. Same sections Pass 1/3 - Explicit "Define section groups ONCE (will be used for BOTH Pass 1 and Pass 3)"
+  5. Liberal over-extraction - Mandatory Component #4 with explicit "40-50% over-extraction expected"
+  6. Chunking metadata - Mandatory Component #6 with specific recording requirements
+
+  Each component includes:
+  - Checkbox for plan verification
+  - "Why critical" explanation
+  - Specific implementation guidance
+
+  Plus added "Common Planning Mistakes" section with problem/impact/fix structure for each issue.
+
+  ✅ Model Plans Consolidated
+
+  Created: extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md (1028 lines)
+  - Universal planning checklist (applies to all papers)
+  - Paper type analysis framework (empirical/methodological/multi-proxy/short/long)
+  - Adaptation guidelines by type
+  - Condensed worked examples from all three original plans
+
+  Archived: Three original model plans with headers explaining their historical value:
+  - Penske 2023 (archaeogenetics, 23 pages, 9 sections)
+  - Connor 2013 (multi-proxy palaeoecology, 44 pages, 13 sections)
+  - Ross & Ballsun-Stanton 2022 (methodological, 19 pages, 5 sections)
+
+  ✅ Launch Prompt Created
+
+  Created: input/EXTRACTION_LAUNCH.md (57 lines)
+  - Brief primer that points to documentation (not prescriptive template)
+  - References all key files (queue.yaml, WORKFLOW.md, unified model)
+  - Primes thinking without prescribing format
+
+  Archived: Failed extraction-planning-prompt.md with detailed anti-pattern explanation
+
+  Files Modified
+
+  - input/WORKFLOW.md - Planning requirements at top, autonomous mode moved earlier, strengthened Pass 1/3 descriptions
+  - CLAUDE.md - Updated to 7-pass, added three documentation references
+  - extraction-system/qa-checks.sh - Updated WORKFLOW.md path
+  - planning/active-todo-list.md - Updated to 7-pass
+
+  All changes validated, references checked, archive headers complete. Ready for next extraction!
+
+> great! please commit and push 
+
+● Bash(git add CLAUDE.md extraction-system/qa-checks.sh input/WORKFLOW.md input/EXTRACTION_LAUNCH.md extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md
+      planning/active…)
+  ⎿  (No content)
+
+● Bash(git status --short)
+  ⎿  M  CLAUDE.md                                                   
+      M archive/cc-interactions/2025-10-31-a.txt
+     A  archive/documentation-archive/EXTRACTION_PLAN_CONNOR_2013.md
+     … +20 lines (ctrl+o to expand)
+
+● Bash(git add extraction-system/EXTRACTION_PLAN_CONNOR_2013.md extraction-system/EXTRACTION_PLAN_MODEL.md
+      extraction-system/FUTURE_CONSOLIDATION_OPTIONS.md extraction…)
+  ⎿  (No content)
+
+● Bash(git status --short)
+  ⎿  M  CLAUDE.md                                                                                                       
+      M archive/cc-interactions/2025-10-31-a.txt
+     R  extraction-system/EXTRACTION_PLAN_CONNOR_2013.md -> archive/documentation-archive/EXTRACTION_PLAN_CONNOR_2013.md
+     … +15 lines (ctrl+o to expand)
+
+● Perfect! Git detected the renames. Now I'll create the commit with a comprehensive message:
+
+● Bash(git commit -m "docs: consolidate workflow documentation and eliminate recurring planning issues…)
+  ⎿  [main 7c2f128] docs: consolidate workflow documentation and eliminate recurring planning issues  
+      13 files changed, 1991 insertions(+), 42 deletions(-)
+      rename {extraction-system => archive/documentation-archive}/EXTRACTION_PLAN_CONNOR_2013.md (95%)
+     … +8 lines (ctrl+o to expand)
+
+● Bash(git push)
+  ⎿  To github.com:saross/llm-reproducibility.git
+        0886632..7c2f128  main -> main
+
+● Perfect! All changes committed and pushed successfully.
+
+  Commit: 7c2f128 - "docs: consolidate workflow documentation and eliminate recurring planning issues"
+
+  Summary:
+  - 13 files changed, 1991 insertions(+), 42 deletions(-)
+  - 5 files renamed/archived with historical value preserved
+  - 2 new files created (EXTRACTION_PLAN_UNIFIED_MODEL.md, EXTRACTION_LAUNCH.md)
+  - 6 files modified (WORKFLOW.md, CLAUDE.md, qa-checks.sh, queue.yaml, active-todo-list.md, FUTURE_CONSOLIDATION_OPTIONS.md)
+
+  The workflow documentation is now consolidated with planning requirements prominently placed, and all 6 recurring clarification issues have been
+  systematically addressed. Ready for the next extraction!
+
+> ok, great, can you scan the repo for obsolete or superceded files? Let me know what you find *before* archiving anything (do NOT delete anything) 
+
+● I'll scan the repository systematically for obsolete or superseded files. Let me start by exploring the directory structure:
+
+● Bash(find /home/shawn/Code/llm-reproducibility -type f -name "*.md" -o -name "*.txt" -o -name "*.yaml" -o -name "*.yml" | grep -v ".git" | grep -v
+      "node_modules" | s…)
+  ⎿  /home/shawn/Code/llm-reproducibility/archive/ARCHIVE_INDEX.md                
+     /home/shawn/Code/llm-reproducibility/archive/cc-interactions/2025-10-23-a.txt
+     /home/shawn/Code/llm-reproducibility/archive/cc-interactions/2025-10-24-a.txt
+     … +308 lines (ctrl+o to expand)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/extraction-system/staging/ 2>/dev/null || echo "staging/ directory empty or doesn't exist")
+  ⎿  total 12                                                      
+     drwxrwxr-x 2 shawn shawn 4096 Oct 31 19:10 .
+     drwxrwxr-x 8 shawn shawn 4096 Oct 31 19:15 ..
+     -rw-rw-r-- 1 shawn shawn  512 Oct 25 20:45 queue-template.yaml
+
+● Bash(find /home/shawn/Code/llm-reproducibility -type d -name "*staging*" -o -name "*temp*" -o -name "*tmp*" -o -name "*old*" -o -name "*backup*" |
+      grep -v ".git")
+  ⎿  /home/shawn/Code/llm-reproducibility/extraction-system/scripts/extraction/section_rdmap_template.py             
+     /home/shawn/Code/llm-reproducibility/extraction-system/scripts/extraction/consolidation_template.py
+     /home/shawn/Code/llm-reproducibility/extraction-system/scripts/extraction/section_implicit_arguments_template.py
+     … +11 lines (ctrl+o to expand)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/planning/)
+  ⎿  total 96                                       
+     drwxrwxr-x  4 shawn shawn  4096 Oct 31 19:15 .
+     drwxrwxr-x 12 shawn shawn  4096 Oct 31 19:12 ..
+     … +9 lines (ctrl+o to expand)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/docs/development/ 2>/dev/null || echo "No development directory")
+  ⎿  total 8                                      
+     drwxrwxr-x 2 shawn shawn 4096 Oct 28 22:40 .
+     drwxrwxr-x 7 shawn shawn 4096 Oct 27 07:24 ..
+
+● Read(planning/active-todo-list.md)
+  ⎿  Read 60 lines
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/docs/)
+  ⎿  total 36                                      
+     drwxrwxr-x  7 shawn shawn 4096 Oct 27 07:24 .
+     drwxrwxr-x 12 shawn shawn 4096 Oct 31 19:12 ..
+     … +6 lines (ctrl+o to expand)
+
+● Bash(find /home/shawn/Code/llm-reproducibility/outputs -name "*backup*.json" -o -name "*temp*.json" -o -name "*_temp.*")
+  ⎿  /home/shawn/Code/llm-reproducibility/outputs/sobotkova-et-al-2023/extraction_backup_p2.json
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/extraction-system/templates/)
+  ⎿  total 12                                                                  
+     drwxrwxr-x 2 shawn shawn 4096 Oct 26 21:55 .
+     drwxrwxr-x 8 shawn shawn 4096 Oct 31 19:15 ..
+     -rw-rw-r-- 1 shawn shawn 3752 Oct 26 21:55 validation_report_template.json
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/docs/schema/)
+  ⎿  total 44                                                            
+     drwxrwxr-x 2 shawn shawn  4096 Oct 28 22:39 .
+     drwxrwxr-x 7 shawn shawn  4096 Oct 27 07:24 ..
+     -rw-rw-r-- 1 shawn shawn 36807 Oct 27 07:42 schema_crosswalk_v1.2.md
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/extraction-system/scripts/)
+  ⎿  total 16                                     
+     drwxrwxr-x 4 shawn shawn 4096 Oct 27 13:22 .
+     drwxrwxr-x 8 shawn shawn 4096 Oct 31 19:15 ..
+     … +2 lines (ctrl+o to expand)
+
+● Read(planning/CLEANUP_SUMMARY.md)
+  ⎿  Read 50 lines
+
+● Read(planning/todo-assessment-post-run08.md)
+  ⎿  Read 50 lines
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/extraction-system/scripts/extraction/)
+  ⎿  total 40                                      
+     drwxrwxr-x 2 shawn shawn  4096 Oct 27 14:32 .
+     drwxrwxr-x 4 shawn shawn  4096 Oct 27 13:22 ..
+     … +3 lines (ctrl+o to expand)
+
+● Bash(find /home/shawn/Code/llm-reproducibility/outputs -name "EXTRACTION_PLAN*.md" -o -name "extraction_backup*.json" -o -name
+      "extraction_*_temp*.json")
+  ⎿  /home/shawn/Code/llm-reproducibility/outputs/sobotkova-et-al-2023/extraction_backup_p2.json
+     /home/shawn/Code/llm-reproducibility/outputs/ross-2005/EXTRACTION_PLAN_ROSS_2005_RUN02.md
+
+● Bash(ls -1 /home/shawn/Code/llm-reproducibility/outputs/sobotkova-et-al-2024/)
+  ⎿  extraction.json               
+     extraction_rate_comparison.md
+     EXTRACTION_SUMMARY.md
+     … +14 lines (ctrl+o to expand)
+
+● Read(planning/future-task-remove-sobotkova-specific-metrics.md)
+  ⎿  Read 30 lines
+
+● Bash(ls -1 /home/shawn/Code/llm-reproducibility/outputs/ross-2005/)
+  ⎿  evidence_verification_summary.md  
+     extraction.json
+     EXTRACTION_PLAN_ROSS_2005_RUN02.md
+     … +2 lines (ctrl+o to expand)
+
+● Read(archive/ARCHIVE_INDEX.md)
+  ⎿  Read 80 lines
+
+● Read(planning/README.md)
+  ⎿  Read 130 lines
+
+● Perfect! I've completed the scan. Here's my comprehensive report of potentially obsolete or superseded files:
+
+  ---
+  Obsolete/Superseded Files Scan Report
+
+  📁 Category 1: Empty Directory
+
+  docs/development/ - Empty directory
+  - Status: Contains no files
+  - Recommendation: Remove directory OR add README explaining its purpose if it's intentional
+
+  ---
+  📁 Category 2: Completed Planning Documents (active planning/ → archive/)
+
+  planning/CLEANUP_SUMMARY.md (5.3KB, dated 2025-10-28)
+  - Status: Documents completion of cleanup task
+  - Recommendation: Archive to archive/planning-completed/
+  - Reason: Historical record of 2025-10-28 cleanup, task complete
+
+  planning/todo-assessment-post-run08.md (10.5KB, dated 2025-10-28)
+  - Status: Assessment that led to active-todo-list.md
+  - Recommendation: Archive to archive/planning-completed/
+  - Reason: Superseded by planning/active-todo-list.md which is the current active document
+
+  ---
+  📁 Category 3: Future Task Documents (may be superseded)
+
+  planning/future-task-remove-sobotkova-specific-metrics.md (4.6KB, dated 2025-10-27)
+  - Status: Identifies potential issue with Sobotkova-specific calibration
+  - Recommendation: KEEP for now - this is a genuine future task
+  - Note: Should be tracked in active-todo-list.md if it's not already
+
+  planning/prompt-vs-skill-division-guidance.md (16.6KB, dated 2025-10-27)
+  - Status: Guidance on prompt/skill architecture
+  - Question: Is architecture now stable? Referenced in planning/README.md as part of completed work
+  - Recommendation: If architecture is finalized, archive to archive/planning-completed/
+
+  ---
+  📁 Category 4: Backup/Temporary Files in outputs/
+
+  outputs/sobotkova-et-al-2023/extraction_backup_p2.json
+  - Status: Backup file from Pass 2
+  - Recommendation: Archive to archive/output/cc-sonnet45/sobotkova-et-al-2023-CURRENT/ if needed, or delete if superseded
+
+  outputs/ross-2005/EXTRACTION_PLAN_ROSS_2005_RUN02.md
+  - Status: Extraction plan document in outputs directory
+  - Recommendation: These typically live in extraction planning, not final outputs
+  - Question: Is this a historical artifact? If so, consider moving to archive or deleting
+
+  ---
+  📁 Category 5: Template Files (unclear usage status)
+
+  extraction-system/scripts/extraction/*.py templates (3 files):
+  - consolidation_template.py (6.8KB)
+  - section_implicit_arguments_template.py (11.3KB)
+  - section_rdmap_template.py (8.9KB)
+
+  Question: Are these templates actually used to generate per-paper scripts?
+  - If YES - keep them
+  - If NO - they may be obsolete from earlier workflow versions
+
+  extraction-system/templates/validation_report_template.json (3.8KB)
+  - Question: Is this template actively used?
+  - If not, could be archived or removed
+
+  extraction-system/staging/queue-template.yaml (512B)
+  - Status: Template file in staging directory
+  - Question: Is this used for creating new queue entries?
+  - If YES - keep it
+  - If NO - obsolete
+
+  ---
+  📁 Category 6: Papers with Uncertain Status
+
+  outputs/sobotkova-et-al-2024/ - Contains various files including:
+  - EXTRACTION_SUMMARY.md
+  - SPOT_CHECK_ANALYSIS.md
+  - full_text.txt
+  - section_division.md
+  - Multiple pass scripts
+
+  Question: What's the status of this extraction?
+  - Check input/queue.yaml for status
+  - If failed/incomplete, consider archiving to archive/output/cc-sonnet45/sobotkova-et-al-2024-RUN-XX/
+
+  outputs/ross-2005/ - Contains:
+  - evidence_verification_summary.md
+  - EXTRACTION_PLAN_ROSS_2005_RUN02.md
+  - summary.md
+
+  Question: Is this a completed extraction or partial/failed?
+  - EXTRACTION_PLAN_ROSS_2005_RUN02.md suggests this might be a second attempt
+  - Check queue.yaml status
+
+  ---
+  📁 Category 7: Fellowship/Preliminary Work
+
+  planning/fellowship/ directory (contains 3 files)
+  - cwts_implementation_plan.md
+  - implementation_plan_supplement.md
+  - README.md
+
+  Status: Referenced in planning/README.md as active strategic documents
+  Recommendation: KEEP - these are strategic planning documents, not obsolete
+
+  planning/preliminary-work/ directory
+  - claims.md
+  - CWTS-proposal.md
+
+  Status: Historical context per planning/README.md
+  Recommendation: KEEP - valuable historical context
+
+  ---
+  📁 Category 8: Archive Directory Health Check
+
+  The archive/ directory appears well-organized with:
+  - Clear ARCHIVE_INDEX.md documentation
+  - Proper subdirectory structure (cc-interactions, output, planning-completed, docs-obsolete, documentation-archive)
+  - Recent cleanup on 2025-10-28 and 2025-10-31
+
+  No issues found with archive organization.
+
+  ---
+  Summary Statistics
+
+  Potentially Obsolete:
+  - 1 empty directory (docs/development/)
+  - 2 completed planning docs (CLEANUP_SUMMARY.md, todo-assessment-post-run08.md)
+  - 1 backup file (extraction_backup_p2.json)
+  - 1-2 possible planning docs if architecture is now stable
+  - 4-5 template files (need usage confirmation)
+
+  Uncertain Status (need clarification):
+  - outputs/sobotkova-et-al-2024/ extraction status
+  - outputs/ross-2005/ extraction status
+  - Template file usage (scripts/extraction/.py, templates/.json)
+
+  Definitely Keep:
+  - Fellowship strategic planning
+  - Preliminary work (historical context)
+  - Future task documents (genuine deferred work)
+  - Archive directories (well-maintained)
+
+  ---
+  Questions for You
+
+  Before archiving anything, please clarify:
+
+  1. Template Usage: Are the *.py templates in extraction-system/scripts/extraction/ actively used to generate per-paper scripts?
+  2. Extraction Status: What's the status of:
+    - outputs/sobotkova-et-al-2024/
+    - outputs/ross-2005/
+  3. Architecture Finalization: Is the prompt/skill architecture now stable? If so, prompt-vs-skill-division-guidance.md can be archived.
+  4. Empty Directory: Should docs/development/ be removed or does it serve a purpose?
+
+  Would you like me to proceed with archiving the clearly obsolete items (CLEANUP_SUMMARY.md, todo-assessment-post-run08.md) once you've clarified
+  these points?
+
+> (1) Yes, I believe they are in use, do not archive\
+(2) Everything in the outputs/ folder is current, do not archive, EXCEPT:   outputs/ross-2005/EXTRACTION_PLAN_ROSS_2005_RUN02.md which can be 
+archived\
+(3) Yes, it's stable, archive\
+(4) Remove if empty\
+\
+For  planning/future-task-remove-sobotkova-specific-metrics.md - this is still current (needs review and actioning), but can be merged with 'active 
+to-do' list.\
+\
+I think that covers all of your questions, please ask if I missed any 
+
+● Perfect, that covers everything! Let me summarize the actions I'll take:
+
+  Archive/Cleanup Plan
+
+  Will Archive:
+  1. planning/CLEANUP_SUMMARY.md → archive/planning-completed/
+  2. planning/todo-assessment-post-run08.md → archive/planning-completed/
+  3. planning/prompt-vs-skill-division-guidance.md → archive/planning-completed/
+  4. outputs/ross-2005/EXTRACTION_PLAN_ROSS_2005_RUN02.md → archive/output/cc-sonnet45/ross-2005-RUN-02-partial/ (if that directory exists)
+  5. planning/future-task-remove-sobotkova-specific-metrics.md → archive/planning-completed/ (after merging into active-todo-list.md)
+
+  Will Delete:
+  6. docs/development/ (if empty)
+
+  Will Modify:
+  7. planning/active-todo-list.md - add task about removing Sobotkova-specific metrics
+
+  Let me proceed with these actions:
+
+● Bash(test -d /home/shawn/Code/llm-reproducibility/docs/development && ls -la /home/shawn/Code/llm-reproducibility/docs/development/ | tail -n +4 | wc
+      -l)
+  ⎿  0
+
+● Bash(ls -d /home/shawn/Code/llm-reproducibility/archive/output/cc-sonnet45/ross-2005* 2>/dev/null)
+  ⎿  /home/shawn/Code/llm-reproducibility/archive/output/cc-sonnet45/ross-2005-RUN-01-FAIL   
+     /home/shawn/Code/llm-reproducibility/archive/output/cc-sonnet45/ross-2005-RUN-02-partial
+
+● Read(planning/future-task-remove-sobotkova-specific-metrics.md)
+  ⎿  Read 141 lines
+
+● Read(planning/active-todo-list.md)
+  ⎿  Read 100 lines
+
+● Now I'll merge the Sobotkova-specific metrics task into the active todo list and archive the files:
+
+● Update(planning/active-todo-list.md)
+  ⎿  Updated planning/active-todo-list.md with 34 additions and 1 removal                                                                        
+       216    
+       217    ---
+       218    
+       219 +  ### 5. Remove Sobotkova-Specific Metrics from Prompts/Skill
+       220 +  
+       221 +  **Priority:** MEDIUM
+       222 +  **Status:** DEFERRED until multi-paper testing phase
+       223 +  **Effort:** 3-4 hours audit + 2-3 hours refinement
+       224 +  
+       225 +  **Issue:**
+       226 +  Extraction prompts and skill may contain metrics, targets, or patterns calibrated to Sobotkova et al. 2023 rather than 
+           + generalizable across diverse fieldwork-based research.
+       227 +  
+       228 +  **Audit Locations (High Priority):**
+       229 +  - [ ] Prompt 03 (RDMAP Pass 1) - Research Design count guidance
+       230 +  - [ ] Prompt 04 (RDMAP Pass 2) - Consolidation targets
+       231 +  - [ ] Prompt 02 (Claims/Evidence Pass 2) - Consolidation targets
+       232 +  - [ ] references/checklists/expected-information.md - Completeness patterns
+       233 +  - [ ] .claude/skills/research-assessor/SKILL.md - Any metrics/targets
+       234 +  
+       235 +  **Audit Locations (Medium Priority):**
+       236 +  - [ ] Prompt 01 - Evidence/claims extraction targets
+       237 +  - [ ] Prompt 05 - Validation thresholds
+       238 +  - [ ] All reference files - Examples and patterns
+       239 +  
+       240 +  **Actions Needed:**
+       241 +  1. Replace specific numbers with principles (e.g., "Expect 4-6 designs" → "Quality over count - if <3 review for under-extraction, 
+           + if >10 review for over-extraction")
+       242 +  2. Use multiple paper examples where possible, label sources
+       243 +  3. Base standards on domain knowledge (TIDieR, CONSORT) not single paper
+       244 +  4. Test on 5-10 diverse papers to validate generalizability
+       245 +  
+       246 +  **When:** After current 10-paper extraction phase, during multi-paper analysis
+       247 +  
+       248 +  **Original documentation:** Archived in `archive/planning-completed/future-task-remove-sobotkova-specific-metrics.md`
+       249 +  
+       250 +  ---
+       251 +  
+       252    ## Low Priority / Nice to Have
+       253    
+       254 -  ### 5. Additional Documentation
+       254 +  ### 6. Additional Documentation
+       255    
+       256    #### 5.1 Extraction Quality Metrics Documentation
+       257    **File:** Create `docs/QUALITY_METRICS.md`
+
+● Update(planning/active-todo-list.md)
+  ⎿  Updated planning/active-todo-list.md with 1 addition and 1 removal
+       253    
+       254    ### 6. Additional Documentation
+       255    
+       256 -  #### 5.1 Extraction Quality Metrics Documentation
+       256 +  #### 6.1 Extraction Quality Metrics Documentation
+       257    **File:** Create `docs/QUALITY_METRICS.md`
+       258    
+       259    **Contents:**
+
+● Update(planning/active-todo-list.md)
+  ⎿  Updated planning/active-todo-list.md with 1 addition and 1 removal
+       268    
+       269    ---
+       270    
+       271 -  #### 5.2 Troubleshooting Guide
+       271 +  #### 6.2 Troubleshooting Guide
+       272    **File:** Create `docs/TROUBLESHOOTING.md`
+       273    
+       274    **Contents:**
+
+● Bash(cp /home/shawn/Code/llm-reproducibility/planning/CLEANUP_SUMMARY.md /home/shawn/Code/llm-reproducibility/archive/planning-completed/ && cp
+      /home/shawn/Code/llm-…)
+  ⎿  (No content)
+
+● Bash(mkdir -p /home/shawn/Code/llm-reproducibility/archive/output/cc-sonnet45/ross-2005-RUN-02-partial && cp
+      /home/shawn/Code/llm-reproducibility/outputs/ross-2005/E…)
+  ⎿  (No content)
+
+● Bash(rm -rf /home/shawn/Code/llm-reproducibility/docs/development)
+  ⎿  (No content)
+
+● Bash(git rm /home/shawn/Code/llm-reproducibility/planning/CLEANUP_SUMMARY.md
+      /home/shawn/Code/llm-reproducibility/planning/todo-assessment-post-run08.md /home/shawn/…)
+  ⎿  rm 'outputs/ross-2005/EXTRACTION_PLAN_ROSS_2005_RUN02.md'     
+     rm 'planning/CLEANUP_SUMMARY.md'
+     rm 'planning/future-task-remove-sobotkova-specific-metrics.md'
+     … +2 lines (ctrl+o to expand)
+
+● Bash(git add /home/shawn/Code/llm-reproducibility/archive/planning-completed/
+      /home/shawn/Code/llm-reproducibility/archive/output/cc-sonnet45/ross-2005-RUN-02-partia…)
+  ⎿  (No content)
+
+● Bash(test -d /home/shawn/Code/llm-reproducibility/docs/development && echo "Directory still exists" || echo "Directory successfully removed")
+  ⎿  Directory successfully removed
+
+● Bash(git status --short)
+  ⎿  M archive/cc-interactions/2025-10-31-a.txt                                                                                                    
+    R  outputs/ross-2005/EXTRACTION_PLAN_ROSS_2005_RUN02.md -> archive/output/cc-sonnet45/ross-2005-RUN-02-partial/EXTRACTION_PLAN_ROSS_2005_RUN02.
+    md
+    … +9 lines (ctrl+o to expand)
+
+
+● Read(archive/planning-completed/CLEANUP_SUMMARY.md)
+  ⎿  Read 5 lines
+
+● Update(archive/planning-completed/CLEANUP_SUMMARY.md)
+  ⎿  Updated archive/planning-completed/CLEANUP_SUMMARY.md with 7 additions and 1 removal
+        1 -  # Repository Cleanup Summary - 2025-10-28
+        1 +  # ARCHIVED: Repository Cleanup Summary - 2025-10-28
+        2    
+        3 +  **Archive Date:** 2025-10-31
+        4 +  **Original Location:** planning/CLEANUP_SUMMARY.md
+        5 +  **Archival Reason:** Cleanup task completed, historical record only
+        6 +  
+        7 +  ---
+        8 +  
+        9    **Milestone:** Post-RUN-08 production-ready extraction workflow
+       10    
+       11    ---
+
+● Read(archive/planning-completed/todo-assessment-post-run08.md)
+  ⎿  Read 5 lines
+
+● Update(archive/planning-completed/todo-assessment-post-run08.md)
+  ⎿  Updated archive/planning-completed/todo-assessment-post-run08.md with 8 additions and 1 removal                                     
+        1 -  # To-Do Assessment Post-RUN-08
+        1 +  # ARCHIVED: To-Do Assessment Post-RUN-08
+        2    
+        3 +  **Archive Date:** 2025-10-31
+        4 +  **Original Location:** planning/todo-assessment-post-run08.md
+        5 +  **Superseded By:** planning/active-todo-list.md
+        6 +  **Archival Reason:** Assessment completed, led to creation of active-todo-list.md
+        7 +  
+        8 +  ---
+        9 +  
+       10    **Date:** 2025-10-28
+       11    
+       12    **Context:** RUN-08 successfully achieved all extraction goals (balanced coverage, implicit arguments, implicit RDMAP). Now 
+            evaluating whether remaining to-do items are still worth pursuing.
+
+● Read(archive/planning-completed/prompt-vs-skill-division-guidance.md)
+  ⎿  Read 5 lines
+
+● Update(archive/planning-completed/prompt-vs-skill-division-guidance.md)
+  ⎿  Error editing file
+
+● Read(archive/planning-completed/future-task-remove-sobotkova-specific-metrics.md)
+  ⎿  Read 5 lines
+
+● Update(archive/planning-completed/future-task-remove-sobotkova-specific-metrics.md)
+  ⎿  Updated archive/planning-completed/future-task-remove-sobotkova-specific-metrics.md with 8 additions and 1 removal                       
+        1 -  # Future Task: Remove Sobotkova-Specific Metrics
+        1 +  # ARCHIVED: Future Task: Remove Sobotkova-Specific Metrics
+        2    
+        3 +  **Archive Date:** 2025-10-31
+        4 +  **Original Location:** planning/future-task-remove-sobotkova-specific-metrics.md
+        5 +  **Merged Into:** planning/active-todo-list.md (Section 5: Remove Sobotkova-Specific Metrics)
+        6 +  **Archival Reason:** Task consolidated into active todo list for better tracking
+        7 +  
+        8 +  ---
+        9 +  
+       10    **Date Identified**: 2025-10-27
+       11    **Priority**: MEDIUM
+       12    **Context**: During Phase A + B-1 implementation, identified that some extraction guidance may be calibrated to Sobotkova et al. 
+            2023
+
+● Read(archive/output/cc-sonnet45/ross-2005-RUN-02-partial/EXTRACTION_PLAN_ROSS_2005_RUN02.md)
+  ⎿  Read 10 lines
+
+● Update(archive/planning-completed/prompt-vs-skill-division-guidance.md)
+  ⎿  Updated archive/planning-completed/prompt-vs-skill-division-guidance.md with 7 additions and 1 removal                                    
+        1 -  # Prompt vs Skill Division: Skill-Creator Guidance
+        1 +  # ARCHIVED: Prompt vs Skill Division: Skill-Creator Guidance
+        2    
+        3 +  **Archive Date:** 2025-10-31
+        4 +  **Original Location:** planning/prompt-vs-skill-division-guidance.md
+        5 +  **Archival Reason:** Architecture now stable after 10 paper extractions, guidance finalized
+        6 +  
+        7 +  ---
+        8 +  
+        9    **Date**: 2025-10-27
+       10    **Context**: Applying skill-creator principles to research-assessor skill architecture
+       11    **User Question**: "Looking at the skills-creator skill, what is the guidance for division between prompt and skill (not SKILL.md 
+            and references)?"
+
+● Update(archive/output/cc-sonnet45/ross-2005-RUN-02-partial/EXTRACTION_PLAN_ROSS_2005_RUN02.md)
+  ⎿  Updated archive/output/cc-sonnet45/ross-2005-RUN-02-partial/EXTRACTION_PLAN_ROSS_2005_RUN02.md with 7 additions and 1 removal               
+        1 -  # Extraction Plan: Ross 2005 (RUN-02)
+        1 +  # ARCHIVED: Extraction Plan: Ross 2005 (RUN-02)
+        2    
+        3 +  **Archive Date:** 2025-10-31
+        4 +  **Original Location:** outputs/ross-2005/EXTRACTION_PLAN_ROSS_2005_RUN02.md
+        5 +  **Archival Reason:** Extraction plan archived with partial RUN-02 outputs; current extraction outputs remain in outputs/ross-2005/
+        6 +  
+        7 +  ---
+        8 +  
+        9    ## Paper Metadata
+       10    
+       11    **Full Citation**: Ross, S.A. (2005). Barbarophonos: Language and Panhellenism in the Iliad. *Classical Philology*, 100(4), 299-316.
+
+● Bash(git add /home/shawn/Code/llm-reproducibility/archive/planning-completed/
+      /home/shawn/Code/llm-reproducibility/archive/output/cc-sonnet45/ross-2005-RUN-02-partia…)
+  ⎿  (No content)
+
+● Bash(git status --short)
+  ⎿  M archive/cc-interactions/2025-10-31-a.txt                                                                                                    
+    R  outputs/ross-2005/EXTRACTION_PLAN_ROSS_2005_RUN02.md -> archive/output/cc-sonnet45/ross-2005-RUN-02-partial/EXTRACTION_PLAN_ROSS_2005_RUN02.
+    md
+    … +9 lines (ctrl+o to expand)
+
+
+● Perfect! Now I'll commit these changes:
+
+● Bash(git commit -m "chore: archive completed planning docs and remove obsolete files…)
+  ⎿  [main 6ac25e5] chore: archive completed planning docs and remove obsolete files                                            
+      6 files changed, 73 insertions(+), 8 deletions(-)
+      rename {outputs/ross-2005 => archive/output/cc-sonnet45/ross-2005-RUN-02-partial}/EXTRACTION_PLAN_ROSS_2005_RUN02.md (98%)
+     … +4 lines (ctrl+o to expand)
+
+● Bash(git push)
+  ⎿  To github.com:saross/llm-reproducibility.git
+        7c2f128..6ac25e5  main -> main
+
+● Perfect! All obsolete files have been archived and committed. Here's a summary:
+
+  Archive Cleanup Complete ✅
+
+  Commit: 6ac25e5 - "chore: archive completed planning docs and remove obsolete files"
+
+  Files Archived (4 planning documents → archive/planning-completed/)
+
+  1. CLEANUP_SUMMARY.md - Cleanup task complete, historical record
+  2. todo-assessment-post-run08.md - Superseded by active-todo-list.md
+  3. prompt-vs-skill-division-guidance.md - Architecture now stable after 10 extractions
+  4. future-task-remove-sobotkova-specific-metrics.md - Merged into active-todo-list.md
+
+  All archived files now have headers with:
+  - Archive date (2025-10-31)
+  - Original location
+  - Superseded by / merged into (where applicable)
+  - Archival reason
+
+  Files Archived (1 extraction plan → archive/output/)
+
+  5. ross-2005/EXTRACTION_PLAN_ROSS_2005_RUN02.md → archive/output/cc-sonnet45/ross-2005-RUN-02-partial/
+
+  Updated Files
+
+  - planning/active-todo-list.md - Added Section 5: Remove Sobotkova-Specific Metrics (comprehensive task with all audit locations and principles),
+  renumbered sections 5→6
+
+  Removed
+
+  - docs/development/ - Empty directory removed
+
+  Kept (per your instructions)
+
+  - All template .py files in extraction-system/scripts/extraction/ (actively used)
+  - All current outputs in outputs/ (current extractions)
+  - Fellowship and preliminary-work planning (strategic/historical value)
+
+  The repository is now cleaner with completed planning tasks properly archived and documented!
+
+> Ok, something we need to put on the to-do list as a longer-term project is to deal with the extraction of secondary source information (which may 
+constitute either claims or evidence - a paper could site previous results as evidence supporting a claim in the paper, or it could take a claim 
+from another paper and test it against new evidence, for example). We will, eventually, need to sort that out, but I think that it will need to be 
+driven by specific assessment goals, so I am defering it for now. 
+
+● Good point! This is an important methodological issue. Let me add it to the active todo list as a deferred task:
+
+● Read(planning/active-todo-list.md)
+  ⎿  Read 50 lines
+
+● Update(planning/active-todo-list.md)
+  ⎿  Updated planning/active-todo-list.md with 43 additions and 1 removal                                                                       
+       249    
+       250    ---
+       251    
+       252 +  ## Deferred / Future Projects
+       253 +  
+       254 +  ### 6. Secondary Source Attribution and Role Classification
+       255 +  
+       256 +  **Priority:** DEFERRED (long-term project)
+       257 +  **Status:** Awaiting specific assessment goals to drive requirements
+       258 +  **Effort:** TBD (requires methodological design)
+       259 +  
+       260 +  **Issue:**
+       261 +  Current extraction does not systematically distinguish the role of secondary sources (citations to previous work). A cited source 
+           + can function as:
+       262 +  
+       263 +  1. **Evidence supporting a claim in current paper** - "Previous results show X [citation], which supports our interpretation that 
+           + Y"
+       264 +  2. **Claim being tested/evaluated** - "Smith (2020) claims X, but our new evidence suggests Y"
+       265 +  3. **Background/context** - General citation for established knowledge
+       266 +  
+       267 +  **Current State:**
+       268 +  - Citations are captured in verbatim_quote fields when they appear in extracted items
+       269 +  - No systematic tracking of citation role or source attribution
+       270 +  - No distinction between primary evidence (generated by current paper) vs secondary evidence (cited from other papers)
+       271 +  
+       272 +  **Future Requirements (to be determined by assessment goals):**
+       273 +  - [ ] Define citation role taxonomy (evidence/claim/background/other)
+       274 +  - [ ] Determine if secondary source metadata should be structured (author, year, DOI)
+       275 +  - [ ] Decide if cited claims need separate extraction from paper's own claims
+       276 +  - [ ] Consider provenance tracking (chain of evidence across papers)
+       277 +  - [ ] Assess impact on credibility/transparency assessment framework
+       278 +  
+       279 +  **Implementation Approach:**
+       280 +  - Assessment-driven: Specific assessment needs will define schema requirements
+       281 +  - May require schema extension (e.g., `citation_role`, `source_type`, `cited_work` fields)
+       282 +  - Could leverage existing citation extraction tools/APIs
+       283 +  - Test on pilot papers with heavy citation use
+       284 +  
+       285 +  **When:** After Phase 2 (assessment framework development) defines concrete requirements
+       286 +  
+       287 +  **Dependencies:**
+       288 +  - Assessment framework design (Phase 2)
+       289 +  - Multi-paper corpus analysis
+       290 +  - Citation context analysis methodology
+       291 +  
+       292 +  ---
+       293 +  
+       294    ## Low Priority / Nice to Have
+       295    
+       296 -  ### 6. Additional Documentation
+       296 +  ### 7. Additional Documentation
+       297    
+       298    #### 6.1 Extraction Quality Metrics Documentation
+       299    **File:** Create `docs/QUALITY_METRICS.md`
+
+● Update(planning/active-todo-list.md)
+  ⎿  Updated planning/active-todo-list.md with 1 addition and 1 removal
+       295    
+       296    ### 7. Additional Documentation
+       297    
+       298 -  #### 6.1 Extraction Quality Metrics Documentation
+       298 +  #### 7.1 Extraction Quality Metrics Documentation
+       299    **File:** Create `docs/QUALITY_METRICS.md`
+       300    
+       301    **Contents:**
+
+● Update(planning/active-todo-list.md)
+  ⎿  Updated planning/active-todo-list.md with 1 addition and 1 removal
+       310    
+       311    ---
+       312    
+       313 -  #### 6.2 Troubleshooting Guide
+       313 +  #### 7.2 Troubleshooting Guide
+       314    **File:** Create `docs/TROUBLESHOOTING.md`
+       315    
+       316    **Contents:**
+
+● Bash(git add /home/shawn/Code/llm-reproducibility/planning/active-todo-list.md && git commit -m "docs: add secondary source attribution task to active
+       todo list…)
+  ⎿  [main 6473cc0] docs: add secondary source attribution task to active todo list
+      1 file changed, 45 insertions(+), 3 deletions(-)
+
+● Bash(git push)
+  ⎿  To github.com:saross/llm-reproducibility.git
+        6ac25e5..6473cc0  main -> main
+
+● Perfect! Added to the active todo list as Section 6: Secondary Source Attribution and Role Classification under "Deferred / Future Projects".
+
+  Commit: 6473cc0 - "docs: add secondary source attribution task to active todo list"
+
+  The task documents:
+
+  The Issue: Citations can serve different roles:
+  1. Evidence supporting current paper's claims
+  2. Claims being tested against new evidence
+  3. Background/context
+
+  Current State:
+  - Citations captured in verbatim_quote fields
+  - No systematic role tracking
+  - No primary vs secondary source distinction
+
+  Deferred Until: Phase 2 assessment framework development defines concrete requirements
+
+  Future Considerations:
+  - Citation role taxonomy
+  - Structured secondary source metadata (author, year, DOI)
+  - Potential schema extensions (citation_role, source_type, cited_work)
+  - Provenance tracking across papers
+
+  This is well-positioned as an assessment-driven enhancement - you'll know what you need once you have specific credibility/transparency assessment
+   goals. Good call deferring it!
+
+> do you have any thoughts on the distinction, and how to assess it? I'd like to brainstorm some aspects of a starting point while recent 
+extractions are fresh in our minds 
+
+● Great idea to brainstorm while it's fresh! Let me think through this with examples from the recent extractions.
+
+  Observations from Recent Extractions
+
+  Citation patterns vary by paper type:
+
+  1. Methodological papers (Ross & Ballsun-Stanton 2022):
+    - Heavy citation building argumentative claims
+    - Literature evidence used to support methodological arguments
+    - Citations often function as "here's the problem others identified"
+  2. Empirical papers (Penske et al. 2023, Connor et al. 2013):
+    - Method provenance: "qpAdm (Haak et al. 2015)"
+    - Comparative evidence: "Our pollen assemblages differ from those reported by Smith (2018)"
+    - Interpretive context: "This pattern is consistent with regional climate shifts (Jones et al. 2020)"
+  3. Literary/theoretical (Ross 2005):
+    - Engaging with scholarly interpretations
+    - Citations as claims being argued against
+    - "Smith (1995) argues X, but the textual evidence suggests Y"
+
+  Practical Taxonomy (Draft)
+
+  For Evidence Items
+
+  source_type field:
+  - primary - Generated/collected by current paper (measurements, observations, new data)
+  - secondary - Results cited from other papers used as evidence
+  - hybrid - Re-analysis of published data (e.g., existing databases, repositories)
+
+  Example distinctions:
+  - PRIMARY: "We obtained 47 new radiocarbon dates from the site"
+  - SECONDARY: "Previous excavations yielded dates of 4500-4200 BCE (Smith 2018)" [used as comparative evidence]
+  - HYBRID: "Re-analysis of published genetic data (1000 Genomes Project) using updated methods"
+
+  For Claims
+
+  claim_origin field:
+  - novel - New interpretation/conclusion from current paper
+  - tested - Claim from literature being evaluated/challenged
+  - supported - Claim from literature being corroborated by new evidence
+  - synthesized - Integration of current findings + cited work
+
+  Example distinctions:
+  - NOVEL: "Our results indicate early contact between farming and pastoralist populations by 4500 BCE"
+  - TESTED: "Contrary to Smith's (2015) claim of genetic isolation, we find evidence of admixture"
+  - SUPPORTED: "As proposed by Jones (2018), the pollen data confirm regional deforestation"
+  - SYNTHESIZED: "Combining our dates with those of Brown (2019), the transition spans 300 years"
+
+  For Methods/Protocols
+
+  method_provenance field:
+  - original - Developed in current paper
+  - adapted - Modified from cited work (need to extract what was modified)
+  - standard - Direct application of established method with citation
+  - comparative - Multiple methods compared
+
+  Example distinctions:
+  - ORIGINAL: "We developed a new Bayesian model for..."
+  - ADAPTED: "Modified the qpAdm approach of Haak et al. (2015) by adding..."
+  - STANDARD: "Pollen extracted following Faegri & Iversen (1989)"
+  - COMPARATIVE: "We compared results from three dating methods (Smith 2010, Jones 2012, Brown 2015)"
+
+  Assessment Dimensions This Would Enable
+
+  1. Transparency Assessment
+
+  Questions:
+  - Does the paper clearly distinguish new claims from cited claims?
+  - Is evidence provenance clear (primary vs secondary)?
+  - Are methods properly attributed?
+
+  Metrics:
+  - % of claims with clear origin attribution
+  - % of evidence marked as primary vs secondary
+  - Citation transparency score
+
+  2. Novelty/Contribution Assessment
+
+  Questions:
+  - What proportion of claims are genuinely novel?
+  - How much depends on re-interpretation vs new data?
+
+  Metrics:
+  - Novel claims / total claims
+  - Primary evidence / total evidence
+  - Ratio of novel to tested/supported claims
+
+  3. Evidence Chain Integrity
+
+  Questions:
+  - Can you trace claims back to primary sources?
+  - How many citation hops to primary evidence?
+  - Are secondary sources used appropriately?
+
+  Metrics:
+  - Citation depth (hops to primary source)
+  - Proportion of claims supported by primary (not secondary) evidence
+  - Misattribution risk (secondary sources treated as primary)
+
+  4. Citational Practice Quality
+
+  Questions:
+  - Are citations used accurately for their stated role?
+  - Is there citation inflation (unnecessary citations)?
+  - Are key sources missing?
+
+  Metrics:
+  - Citation role accuracy (if verifiable)
+  - Citation necessity (background vs essential)
+
+  Practical Extraction Challenges
+
+  Ambiguity issues I've encountered:
+
+  1. Synthesis claims are very common:
+    - "Our dates (4500-4200 BCE) align with those from nearby sites (Smith 2018: 4400-4100 BCE), suggesting regional synchronicity"
+    - Is this novel, supported, or synthesized? It's all three!
+  2. Implicit vs explicit attribution:
+    - "The genetic data show admixture" - Novel claim based on primary evidence
+    - "Genetic admixture is evident" - Could be novel OR restating cited consensus
+    - Context required, often subtle
+  3. Method chains:
+    - "We used qpAdm (Haak 2015) implemented in ADMIXTOOLS (Patterson 2012) with parameters from Lazaridis (2016)"
+    - Standard? Adapted? Multiple sources to track?
+  4. Background vs evidence citations:
+    - "Climate change occurred during this period (Smith 2015, Jones 2017, Brown 2019)"
+    - Is this evidence supporting a claim, or background context?
+    - Often depends on argumentative role in the paper
+
+  Proposed Starting Point
+
+  Phase 1: Simple Addition (Low Complexity)
+
+  Add optional fields to existing schema:
+
+  {
+    "evidence_id": "E001",
+    "evidence_type": "quantitative_data",
+    "source_type": "primary",  // NEW: primary/secondary/hybrid
+    "verbatim_quote": "...",
+    "page": 5
+  }
+
+  {
+    "claim_id": "C001",
+    "claim_type": "interpretation",
+    "claim_origin": "novel",  // NEW: novel/tested/supported/synthesized
+    "verbatim_quote": "...",
+    "page": 8
+  }
+
+  Extraction approach:
+  - During Pass 1, flag obvious cases (clearly primary evidence, explicitly tested claims)
+  - Leave ambiguous cases unmarked
+  - No requirement for 100% coverage initially
+  - Learn from patterns across multiple papers
+
+  Phase 2: Structured Citation Metadata (Medium Complexity)
+
+  Add structured citation tracking:
+
+  {
+    "claim_id": "C001",
+    "claim_origin": "tested",
+    "cited_claim": {
+      "source": "Smith 2015",
+      "claim_text": "genetic isolation throughout Copper Age",
+      "relationship": "contradicted_by_current_evidence"
+    }
+  }
+
+  Relationships:
+  - supports_claim - Citation supports current paper's claim
+  - contradicted_by_current_evidence - Claim being challenged
+  - corroborated_by_current_evidence - Claim being supported
+  - method_source - Citation for method used
+  - comparative_data - Cited data for comparison
+
+  Phase 3: Full Provenance Tracking (High Complexity)
+
+  Track evidence chains across papers:
+
+  {
+    "evidence_id": "E001",
+    "source_type": "secondary",
+    "cited_evidence": {
+      "source_paper": "Jones 2018",
+      "evidence_type": "radiocarbon_dates",
+      "primary_source": "Jones 2018",  // Could trace further back
+      "doi": "10.1234/example",
+      "reliability_flags": ["peer_reviewed", "published_data_available"]
+    }
+  }
+
+  Assessment-Driven Decision Points
+
+  Questions to answer before implementing:
+
+  1. What specific assessment goals require this?
+    - RepliCATS-style credibility scoring?
+    - Transparency tier assignment?
+    - Evidence strength weighting?
+  2. What's the extraction burden vs assessment value?
+    - Simple source_type field: Low burden, moderate value
+    - Full provenance tracking: High burden, uncertain value until we know assessment needs
+  3. How do we handle ambiguity?
+    - Allow "unclear" values?
+    - Multiple role tags (e.g., both "novel" and "synthesized")?
+    - Confidence scores?
+  4. Testing approach:
+    - Extract 2-3 papers with different citation patterns
+    - Try the simple taxonomy
+    - See what breaks, what's easy, what's actually useful for assessment
+
+  My Recommendation
+
+  Start conservative:
+  1. Pick 2-3 completed extractions with different profiles (methodological, empirical, theory-heavy)
+  2. Manually code 10-15 claims and evidence items each for source_type and claim_origin
+  3. Document ambiguous cases and resolution strategies
+  4. Assess: Does this categorization actually help with assessment goals?
+  5. Only then decide if it's worth schema extension and automated extraction
+
+  Key question to answer first:
+  What would you do with this information in your assessment framework? If the answer is "compare transparency of primary vs secondary source
+  attribution" or "weight claims by novelty", then it's worth pursuing. If it's "nice to have but not sure how to use it", defer until assessment
+  goals crystallize.
+
+  What assessment dimensions are you most interested in? That might help focus where to start.
+
+> This is great! thank you - I don't want to go down this rabbit hole *right* now, so let's save this work to a stand-along MD document in 
+'planning' and reference it from the active to-do list. 
+
+● Perfect! I'll create a standalone planning document and reference it from the todo list.
+
+● Write(planning/secondary-source-attribution-analysis.md)
+  ⎿  Wrote 532 lines to planning/secondary-source-attribution-analysis.md          
+     # Secondary Source Attribution and Role Classification - Analysis
+     **Date:** 2025-10-31
+     **Status:** Brainstorming / Requirements Analysis
+     **Context:** Post-10-extraction reflection on citation role tracking needs
+     **Priority:** DEFERRED until Phase 2 assessment framework defines requirements
+     ---
+     ## Overview
+     … +522 lines (ctrl+o to expand)
+
+● Update(planning/active-todo-list.md)
+  ⎿  Updated planning/active-todo-list.md with 9 additions and 13 removals                                                                      
+       257    **Status:** Awaiting specific assessment goals to drive requirements
+       258    **Effort:** TBD (requires methodological design)
+       259    
+       260 -  **Issue:**
+       260 +  **Detailed Analysis:** See `planning/secondary-source-attribution-analysis.md` for comprehensive brainstorming on taxonomy, 
+           + assessment dimensions, implementation phases, and extraction challenges.
+       261 +  
+       262 +  **Issue Summary:**
+       263    Current extraction does not systematically distinguish the role of secondary sources (citations to previous work). A cited source 
+             can function as:
+       264    
+       265    1. **Evidence supporting a claim in current paper** - "Previous results show X [citation], which supports our interpretation that 
+             Y"
+     ...
+       265    3. **Background/context** - General citation for established knowledge
+       266    
+       267    **Current State:**
+       268 -  - Citations are captured in verbatim_quote fields when they appear in extracted items
+       268 +  - Citations captured in verbatim_quote fields when they appear in extracted items
+       269    - No systematic tracking of citation role or source attribution
+       270    - No distinction between primary evidence (generated by current paper) vs secondary evidence (cited from other papers)
+       271    
+       272 -  **Future Requirements (to be determined by assessment goals):**
+       273 -  - [ ] Define citation role taxonomy (evidence/claim/background/other)
+       274 -  - [ ] Determine if secondary source metadata should be structured (author, year, DOI)
+       275 -  - [ ] Decide if cited claims need separate extraction from paper's own claims
+       276 -  - [ ] Consider provenance tracking (chain of evidence across papers)
+       277 -  - [ ] Assess impact on credibility/transparency assessment framework
+       272 +  **Proposed Approach (from analysis document):**
+       273 +  - Phase 1: Simple optional fields (`source_type`, `claim_origin`) - 6-7 hours
+       274 +  - Phase 2: Structured citation metadata with relationships - 15-18 hours
+       275 +  - Phase 3: Full provenance tracking - 34-44 hours
+       276    
+       277 -  **Implementation Approach:**
+       278 -  - Assessment-driven: Specific assessment needs will define schema requirements
+       279 -  - May require schema extension (e.g., `citation_role`, `source_type`, `cited_work` fields)
+       280 -  - Could leverage existing citation extraction tools/APIs
+       281 -  - Test on pilot papers with heavy citation use
+       277 +  **Decision point:** Run pilot study (4-6 hours) on 2-3 papers only after assessment framework defines specific needs.
+       278    
+       279    **When:** After Phase 2 (assessment framework development) defines concrete requirements
+       280    
+
+● Bash(git add /home/shawn/Code/llm-reproducibility/planning/secondary-source-attribution-analysis.md
+      /home/shawn/Code/llm-reproducibility/planning/active-todo-list.md…)
+  ⎿  [main 1f49e85] docs: add comprehensive secondary source attribution analysis
+      2 files changed, 541 insertions(+), 14 deletions(-)
+      create mode 100644 planning/secondary-source-attribution-analysis.md
+
+● Bash(git push)
+  ⎿  To github.com:saross/llm-reproducibility.git
+        6473cc0..1f49e85  main -> main
+
+● Perfect! Done and committed.
+
+  Created: planning/secondary-source-attribution-analysis.md (541 lines)
+
+  Commit: 1f49e85 - "docs: add comprehensive secondary source attribution analysis"
+
+  The analysis document now captures:
+  - Observations from your recent 10 extractions
+  - Draft taxonomy for evidence/claims/methods
+  - 4 assessment dimensions this would enable
+  - 4 major extraction challenges with examples
+  - 3 implementation phases with effort estimates
+  - Recommended pilot approach (4-6 hours on 2-3 papers)
+  - Key decision point: "What would you DO with this information?"
+
+  The active todo list Section 6 now references this document for detailed analysis, keeping the todo list concise while preserving all the
+  brainstorming work.
+
+  You can revisit this when Phase 2 assessment framework design clarifies what citation role tracking you actually need. Good to have it documented
+  while the extraction patterns are fresh!
+
+> can you please compose a /compact message? 
+
+● Session Summary: Workflow Documentation Consolidation and Planning
+
+  Completed Work
+
+  1. Workflow Documentation Consolidation (Commits: 7c2f128, 6ac25e5, 6473cc0, 1f49e85)
+
+  Reconciled WORKFLOW.md copies:
+  - Archived obsolete v2.7.0 from extraction-system/staging/ → archive/documentation-archive/WORKFLOW-v2.7.0-OBSOLETE.md
+  - Single authoritative source: input/WORKFLOW.md (v3.0.0, 7-pass workflow)
+
+  Eliminated 6 recurring planning issues by adding "Planning Mode Requirements - Read This First" section to input/WORKFLOW.md (lines 5-99):
+  1. Skill invocation (research-assessor throughout extraction) - Mandatory Component #1
+  2. Word-length chunking (1000 ±500 words, max 1500) - Mandatory Component #2
+  3. Equal attention to entire paper (not over-focus on Methods) - Mandatory Component #5
+  4. Same sections for Pass 1 and Pass 3 - Explicit in Component #2
+  5. Liberal over-extraction approach (40-50%) - Mandatory Component #4
+  6. Chunking metadata recording - Mandatory Component #6
+
+  Each component includes checkbox, "Why critical" explanation, and "Common Planning Mistakes" section with problem/impact/fix structure.
+
+  Consolidated three model extraction plans:
+  - Created extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md (1028 lines) - flexible planning model for diverse paper types
+  - Archived three paper-specific plans with historical value preserved:
+    - EXTRACTION_PLAN_MODEL-penske-2023.md (archaeogenetics, 23 pages)
+    - EXTRACTION_PLAN_CONNOR_2013.md (multi-proxy palaeoecology, 44 pages)
+    - EXTRACTION_PLAN_ROSS_BALLSUN_STANTON_2022.md (methodological, 19 pages)
+
+  Created extraction launch prompt:
+  - input/EXTRACTION_LAUNCH.md (57 lines) - brief primer pointing to documentation, not prescriptive template
+  - Archived failed extraction-planning-prompt.md as anti-pattern with detailed explanation
+
+  Updated references throughout:
+  - CLAUDE.md - Updated to 7-pass workflow, added three documentation references
+  - extraction-system/qa-checks.sh - Updated WORKFLOW.md path
+  - planning/active-todo-list.md - Updated to 7-pass
+
+  2. Repository Cleanup
+
+  Archived 5 files (all with explanatory headers):
+  1. planning/CLEANUP_SUMMARY.md → archive/planning-completed/ (cleanup task complete)
+  2. planning/todo-assessment-post-run08.md → archive/planning-completed/ (superseded by active-todo-list.md)
+  3. planning/prompt-vs-skill-division-guidance.md → archive/planning-completed/ (architecture now stable)
+  4. planning/future-task-remove-sobotkova-specific-metrics.md → archive/planning-completed/ (merged into active-todo-list.md)
+  5. outputs/ross-2005/EXTRACTION_PLAN_ROSS_2005_RUN02.md → archive/output/cc-sonnet45/ross-2005-RUN-02-partial/
+
+  Removed: docs/development/ (empty directory)
+
+  Updated active-todo-list.md:
+  - Merged Sobotkova-specific metrics task into Section 5 (comprehensive audit locations, principles for generalisability)
+  - Added Section 6: Secondary Source Attribution and Role Classification (deferred)
+
+  3. Secondary Source Attribution Analysis
+
+  Created planning/secondary-source-attribution-analysis.md (541 lines):
+
+  Observations from 10 recent extractions:
+  - Citation patterns by paper type (methodological/empirical/literary)
+  - Different roles citations play across disciplines
+
+  Proposed taxonomy:
+  - Evidence: source_type (primary/secondary/hybrid)
+  - Claims: claim_origin (novel/tested/supported/synthesised)
+  - Methods: method_provenance (original/adapted/standard/comparative)
+
+  Assessment dimensions enabled:
+  - Transparency assessment (provenance clarity)
+  - Novelty/contribution assessment (primary vs secondary evidence ratio)
+  - Evidence chain integrity (citation depth, misattribution risk)
+  - Citational practice quality
+
+  Extraction challenges documented:
+  - Synthesis claims (multiple simultaneous roles)
+  - Implicit vs explicit attribution
+  - Method citation chains
+  - Background vs evidence citations
+
+  Implementation phases:
+  - Phase 1: Simple optional fields (6-7 hours)
+  - Phase 2: Structured citation metadata (15-18 hours)
+  - Phase 3: Full provenance tracking (34-44 hours)
+
+  Recommendation: Defer until Phase 2 assessment framework defines specific needs, then run pilot study (4-6 hours) on 2-3 papers before committing
+  to implementation.
+
+  Key Files Modified
+
+  - input/WORKFLOW.md - Planning requirements at top, autonomous mode moved earlier, strengthened Pass 1/3 descriptions
+  - CLAUDE.md - Updated to 7-pass, three documentation references
+  - extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md - New unified model (1028 lines)
+  - input/EXTRACTION_LAUNCH.md - New brief launch prompt (57 lines)
+  - planning/active-todo-list.md - Merged Sobotkova metrics task, added secondary source attribution
+  - planning/secondary-source-attribution-analysis.md - New comprehensive analysis (541 lines)
+
+  Repository State
+
+  Current structure:
+  - Single authoritative WORKFLOW.md in input/
+  - Unified extraction plan model in extraction-system/
+  - Brief launch prompt in input/
+  - Well-organised archive with explanatory headers
+  - Active planning documents consolidated in planning/
+
+  Ready for: Next extraction using improved planning guidance
+
+
+
