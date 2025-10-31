@@ -1,4 +1,10 @@
-# Prompt vs Skill Division: Skill-Creator Guidance
+# ARCHIVED: Prompt vs Skill Division: Skill-Creator Guidance
+
+**Archive Date:** 2025-10-31
+**Original Location:** planning/prompt-vs-skill-division-guidance.md
+**Archival Reason:** Architecture now stable after 10 paper extractions, guidance finalized
+
+---
 
 **Date**: 2025-10-27
 **Context**: Applying skill-creator principles to research-assessor skill architecture

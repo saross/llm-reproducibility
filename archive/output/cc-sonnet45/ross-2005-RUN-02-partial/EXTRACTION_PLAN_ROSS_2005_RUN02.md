@@ -1,4 +1,10 @@
-# Extraction Plan: Ross 2005 (RUN-02)
+# ARCHIVED: Extraction Plan: Ross 2005 (RUN-02)
+
+**Archive Date:** 2025-10-31
+**Original Location:** outputs/ross-2005/EXTRACTION_PLAN_ROSS_2005_RUN02.md
+**Archival Reason:** Extraction plan archived with partial RUN-02 outputs; current extraction outputs remain in outputs/ross-2005/
+
+---
 
 ## Paper Metadata
 

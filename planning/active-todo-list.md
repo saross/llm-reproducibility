@@ -216,11 +216,44 @@ Add relationship mapping discipline section:
 
 ---
 
+### 5. Remove Sobotkova-Specific Metrics from Prompts/Skill
+
+**Priority:** MEDIUM
+**Status:** DEFERRED until multi-paper testing phase
+**Effort:** 3-4 hours audit + 2-3 hours refinement
+
+**Issue:**
+Extraction prompts and skill may contain metrics, targets, or patterns calibrated to Sobotkova et al. 2023 rather than generalizable across diverse fieldwork-based research.
+
+**Audit Locations (High Priority):**
+- [ ] Prompt 03 (RDMAP Pass 1) - Research Design count guidance
+- [ ] Prompt 04 (RDMAP Pass 2) - Consolidation targets
+- [ ] Prompt 02 (Claims/Evidence Pass 2) - Consolidation targets
+- [ ] references/checklists/expected-information.md - Completeness patterns
+- [ ] .claude/skills/research-assessor/SKILL.md - Any metrics/targets
+
+**Audit Locations (Medium Priority):**
+- [ ] Prompt 01 - Evidence/claims extraction targets
+- [ ] Prompt 05 - Validation thresholds
+- [ ] All reference files - Examples and patterns
+
+**Actions Needed:**
+1. Replace specific numbers with principles (e.g., "Expect 4-6 designs" → "Quality over count - if <3 review for under-extraction, if >10 review for over-extraction")
+2. Use multiple paper examples where possible, label sources
+3. Base standards on domain knowledge (TIDieR, CONSORT) not single paper
+4. Test on 5-10 diverse papers to validate generalizability
+
+**When:** After current 10-paper extraction phase, during multi-paper analysis
+
+**Original documentation:** Archived in `archive/planning-completed/future-task-remove-sobotkova-specific-metrics.md`
+
+---
+
 ## Low Priority / Nice to Have
 
-### 5. Additional Documentation
+### 6. Additional Documentation
 
-#### 5.1 Extraction Quality Metrics Documentation
+#### 6.1 Extraction Quality Metrics Documentation
 **File:** Create `docs/QUALITY_METRICS.md`
 
 **Contents:**
@@ -235,7 +268,7 @@ Add relationship mapping discipline section:
 
 ---
 
-#### 5.2 Troubleshooting Guide
+#### 6.2 Troubleshooting Guide
 **File:** Create `docs/TROUBLESHOOTING.md`
 
 **Contents:**

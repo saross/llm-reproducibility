@@ -1,4 +1,10 @@
-# Repository Cleanup Summary - 2025-10-28
+# ARCHIVED: Repository Cleanup Summary - 2025-10-28
+
+**Archive Date:** 2025-10-31
+**Original Location:** planning/CLEANUP_SUMMARY.md
+**Archival Reason:** Cleanup task completed, historical record only
+
+---
 
 **Milestone:** Post-RUN-08 production-ready extraction workflow
 

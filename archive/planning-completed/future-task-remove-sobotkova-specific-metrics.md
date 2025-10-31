@@ -1,4 +1,11 @@
-# Future Task: Remove Sobotkova-Specific Metrics
+# ARCHIVED: Future Task: Remove Sobotkova-Specific Metrics
+
+**Archive Date:** 2025-10-31
+**Original Location:** planning/future-task-remove-sobotkova-specific-metrics.md
+**Merged Into:** planning/active-todo-list.md (Section 5: Remove Sobotkova-Specific Metrics)
+**Archival Reason:** Task consolidated into active todo list for better tracking
+
+---
 
 **Date Identified**: 2025-10-27
 **Priority**: MEDIUM

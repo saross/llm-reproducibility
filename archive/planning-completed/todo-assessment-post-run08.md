@@ -1,4 +1,11 @@
-# To-Do Assessment Post-RUN-08
+# ARCHIVED: To-Do Assessment Post-RUN-08
+
+**Archive Date:** 2025-10-31
+**Original Location:** planning/todo-assessment-post-run08.md
+**Superseded By:** planning/active-todo-list.md
+**Archival Reason:** Assessment completed, led to creation of active-todo-list.md
+
+---
 
 **Date:** 2025-10-28
 
