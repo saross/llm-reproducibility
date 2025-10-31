@@ -219,11 +219,13 @@ Add relationship mapping discipline section:
 ### 5. Remove Sobotkova-Specific Metrics from Prompts/Skill
 
 **Priority:** MEDIUM
-**Status:** DEFERRED until multi-paper testing phase
+**Status:** DEFERRED until multi-paper testing phase - awaiting empirical analysis of 10 completed extractions
 **Effort:** 3-4 hours audit + 2-3 hours refinement
 
+**Related Analysis:** See `planning/extraction-metrics-guidance-analysis.md` for comprehensive discussion of whether numeric targets help or harm extraction quality (premature stopping vs forced extraction).
+
 **Issue:**
-Extraction prompts and skill may contain metrics, targets, or patterns calibrated to Sobotkova et al. 2023 rather than generalizable across diverse fieldwork-based research.
+Extraction prompts and skill may contain metrics, targets, or patterns calibrated to Sobotkova et al. 2023 rather than generalisable across diverse fieldwork-based research. Additionally, providing specific numeric targets (e.g., "expect 40-50 claims") may create perverse incentives: premature stopping when targets are reached, or forced extraction of marginal items to hit targets.
 
 **Audit Locations (High Priority):**
 - [ ] Prompt 03 (RDMAP Pass 1) - Research Design count guidance
@@ -238,12 +240,21 @@ Extraction prompts and skill may contain metrics, targets, or patterns calibrate
 - [ ] All reference files - Examples and patterns
 
 **Actions Needed:**
+
+**Phase 1: Empirical Analysis (4-6 hours) - NEXT STEP**
+- [ ] Extract count distributions from 10 completed papers
+- [ ] Quality assessment: identify goldilocks vs under/over-extracted papers
+- [ ] Granularity consistency check
+- [ ] Identify evidence of target-seeking behaviour
+- [ ] Decision: Keep ranges with better framing, or remove numeric guidance entirely?
+
+**Phase 2: Implementation (3-4 hours audit + 2-3 hours refinement)**
 1. Replace specific numbers with principles (e.g., "Expect 4-6 designs" → "Quality over count - if <3 review for under-extraction, if >10 review for over-extraction")
 2. Use multiple paper examples where possible, label sources
 3. Base standards on domain knowledge (TIDieR, CONSORT) not single paper
-4. Test on 5-10 diverse papers to validate generalizability
+4. Test revised approach on 2-3 new papers to validate
 
-**When:** After current 10-paper extraction phase, during multi-paper analysis
+**When:** Phase 1 NOW (10-paper extraction phase complete); Phase 2 after empirical analysis
 
 **Original documentation:** Archived in `archive/planning-completed/future-task-remove-sobotkova-specific-metrics.md`
 
