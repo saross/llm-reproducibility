@@ -121,6 +121,18 @@ def sample_items(items_by_type, sample_sizes, seed=None):
     return sampled
 
 
+def get_item_id(item, item_type):
+    """Get the ID field for an item based on its type."""
+    id_field_map = {
+        'claims': 'claim_id',
+        'evidence': 'evidence_id',
+        'methods': 'method_id',
+        'protocols': 'protocol_id',
+        'research_designs': 'design_id'
+    }
+    return item.get(id_field_map.get(item_type))
+
+
 def collect_mappings(sampled_items, depth):
     """Collect mappings to verify from sampled items."""
     mappings = []
@@ -129,17 +141,23 @@ def collect_mappings(sampled_items, depth):
     # Collect all sampled item IDs
     for item_type, items in sampled_items.items():
         for item in items:
-            sampled_ids.add(item['id'])
+            item_id = get_item_id(item, item_type)
+            if item_id:
+                sampled_ids.add(item_id)
 
     # Collect mappings where both endpoints are in sample
     for item_type, items in sampled_items.items():
         for item in items:
+            item_id = get_item_id(item, item_type)
+            if not item_id:
+                continue
+
             # Claim → Evidence links
             if item_type == 'claims' and 'evidence_links' in item:
                 for evidence_id in item.get('evidence_links', []):
                     if evidence_id in sampled_ids:
                         mappings.append({
-                            'item_a': item['id'],
+                            'item_a': item_id,
                             'item_b': evidence_id,
                             'mapping_type': 'claim_to_evidence'
                         })
@@ -149,7 +167,7 @@ def collect_mappings(sampled_items, depth):
                 method_id = item.get('method_id')
                 if method_id and method_id in sampled_ids:
                     mappings.append({
-                        'item_a': item['id'],
+                        'item_a': item_id,
                         'item_b': method_id,
                         'mapping_type': 'protocol_to_method'
                     })
@@ -159,7 +177,7 @@ def collect_mappings(sampled_items, depth):
                 rd_id = item.get('research_design_id')
                 if rd_id and rd_id in sampled_ids:
                     mappings.append({
-                        'item_a': item['id'],
+                        'item_a': item_id,
                         'item_b': rd_id,
                         'mapping_type': 'method_to_design'
                     })
@@ -196,27 +214,54 @@ def format_output(extraction_data, sampled_items, mappings, depth, sample_sizes)
         formatted_items = []
 
         for item in items:
+            item_id = get_item_id(item, item_type)
+
+            # Extract content based on item type
+            if item_type == 'claims':
+                content = item.get('claim_text', '')
+                location_obj = item.get('location', {})
+            elif item_type == 'evidence':
+                content = item.get('evidence_text', '')
+                location_obj = item.get('location', {})
+            elif item_type == 'methods':
+                content = item.get('method_description', '')
+                location_obj = item.get('source_location', {})
+            elif item_type == 'protocols':
+                content = item.get('protocol_description', '')
+                location_obj = item.get('source_location', {})
+            elif item_type == 'research_designs':
+                content = item.get('design_name', '') + ': ' + item.get('design_justification_text', '')
+                location_obj = item.get('location', {})
+            else:
+                content = ''
+                location_obj = {}
+
+            # Extract page number from location object
+            page = location_obj.get('page', '') if isinstance(location_obj, dict) else ''
+            section = location_obj.get('section', '') if isinstance(location_obj, dict) else ''
+
             formatted_item = {
-                'id': item['id'],
+                'id': item_id,
                 'type': item_type.rstrip('s'),  # 'claims' → 'claim'
-                'content': item.get('content', ''),
+                'content': content,
                 'verbatim_quote': item.get('verbatim_quote', ''),
-                'page_number': item.get('page_number', item.get('page', '')),
-                'context': item.get('context', ''),
+                'page_number': page,
+                'section': section,
             }
 
             # Add type-specific fields
             if item_type == 'claims':
                 formatted_item['claim_type'] = item.get('claim_type', '')
-                formatted_item['evidence_links'] = item.get('evidence_links', [])
+                formatted_item['supported_by'] = item.get('supported_by', [])
             elif item_type == 'evidence':
                 formatted_item['evidence_type'] = item.get('evidence_type', '')
+                formatted_item['supports_claims'] = item.get('supports_claims', [])
             elif item_type == 'methods':
                 formatted_item['method_type'] = item.get('method_type', '')
-                formatted_item['research_design_id'] = item.get('research_design_id', '')
+                formatted_item['implements_designs'] = item.get('implements_designs', [])
             elif item_type == 'protocols':
                 formatted_item['protocol_type'] = item.get('protocol_type', '')
-                formatted_item['method_id'] = item.get('method_id', '')
+                formatted_item['implements_methods'] = item.get('implements_methods', [])
             elif item_type == 'research_designs':
                 formatted_item['design_type'] = item.get('design_type', '')
 
