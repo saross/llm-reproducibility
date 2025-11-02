@@ -262,6 +262,87 @@ Extraction prompts and skill may contain metrics, targets, or patterns calibrate
 
 ---
 
+### 5a. Cross-Paper Error Analysis Follow-Up (Phase 2)
+
+**Priority:** MEDIUM
+**Status:** IN PROGRESS - 7 of 10 tasks complete (as of 2025-11-02)
+**Effort:** ~6 hours remaining
+**Context:** Systematic quality improvements based on cross-paper error analysis of 10 completed extractions
+
+**Completed Tasks (Week 1-2):**
+- ✅ Bidirectional validator with auto-correction script
+- ✅ JSON Schema validation rules
+- ✅ Pass 6 validation prompt integration
+- ✅ Bidirectional mapping reminders in prompts
+- ✅ Phase 2b/5b consolidation reconciliation workflow
+- ✅ Quote completeness requirements in prompts
+- ✅ RDMAP completeness checker script
+
+**Remaining Tasks:**
+
+#### 5a.1 Compound Claim Handling Guidance
+**File:** `extraction-system/prompts/01-claims-evidence_pass1_prompt.md`
+**Effort:** 2 hours
+
+**Issue:** Claims categorisation errors (12 instances, 4 papers) include complex claims with multiple assertions that need clearer guidance on extraction approach.
+
+**Tasks:**
+- [ ] Add section on identifying compound claims (multiple assertions in single sentence)
+- [ ] Provide decision framework: extract as one vs split into multiple claims
+- [ ] Add worked examples showing both approaches with rationale
+- [ ] Reference from Pass 2 prompt for consolidation guidance
+
+**Example scenarios to address:**
+- "Method X was effective AND reliable" (conjunctive claims)
+- "Results show both spatial clustering AND temporal patterns" (multiple findings)
+- "We used approach Y, which improved Z" (method + effectiveness claim)
+
+---
+
+#### 5a.2 Secondary Source Findings Documentation
+**File:** `planning/secondary-source-attribution-analysis.md`
+**Effort:** 2 hours
+
+**Issue:** Secondary sources categorisation findings from cross-paper error analysis (section flagged in reports/cross-paper-error-analysis.md) need to be appended to existing analysis document.
+
+**Tasks:**
+- [ ] Read `reports/cross-paper-error-analysis.md` secondary sources section
+- [ ] Append empirical findings to `planning/secondary-source-attribution-analysis.md`
+- [ ] Document observed patterns from 10-paper corpus
+- [ ] Note frequency and distribution of secondary source usage
+- [ ] Update Section 6 status with corpus findings
+
+**Note:** This does NOT implement secondary source tracking (still deferred to Section 6 below). This only documents observed patterns to inform future design decisions.
+
+---
+
+#### 5a.3 Schema Field Name Standardisation Script
+**File:** `extraction-system/scripts/migrate_field_names.py` (new)
+**Effort:** 5 hours
+
+**Issue:** Multiple schema field name variants exist across extractions due to schema evolution (e.g., `child_methods` vs `enables_methods` vs `implemented_by_methods`; `implements_method` singular vs `implements_methods` plural).
+
+**Tasks:**
+- [ ] Audit all extractions for field name variants used
+- [ ] Define canonical field names per schema v2.5
+- [ ] Create migration script to standardise field names
+- [ ] Test on 2-3 extractions
+- [ ] Document breaking changes and migration procedure
+- [ ] Run on all 10 completed extractions
+- [ ] Update validators to handle only canonical field names
+
+**Canonical field names (from schema v2.5):**
+- `research_designs[].implemented_by_methods` (not child_methods, enables_methods)
+- `methods[].implements_designs` (reverse reference)
+- `methods[].realized_through_protocols` (not child_protocols)
+- `protocols[].implements_methods` (plural, not singular implements_method)
+- `claims[].supported_by` (not supported_by_evidence)
+- `evidence[].supports_claims` (reverse reference)
+
+**Estimated completion:** Week 4 of quality improvement cycle
+
+---
+
 ## Deferred / Future Projects
 
 ### 6. Secondary Source Attribution and Role Classification
