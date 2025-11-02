@@ -326,6 +326,106 @@ Conditional objects (`research_framing`, `theoretical_framework`, `study_design`
 
 ---
 
+## Canonical Field Names (Schema v2.5)
+
+**IMPORTANT:** Use these canonical field names. Do not use variants from older extractions or schema versions.
+
+### RDMAP Relationship Fields
+
+**Research Design → Method connections:**
+
+✓ **Correct:** `implemented_by_methods` (array of method IDs)
+❌ **Deprecated:** `child_methods`, `enables_methods`, `supported_by_methods`
+
+```json
+{
+  "design_id": "RD001",
+  "implemented_by_methods": ["M003", "M008"]
+}
+```
+
+**Method → Design connections (reverse):**
+
+✓ **Correct:** `implements_designs` (array of design IDs)
+❌ **Deprecated:** `linked_designs`, `design_context`
+
+**Method → Protocol connections:**
+
+✓ **Correct:** `realized_through_protocols` (array of protocol IDs)
+❌ **Deprecated:** `child_protocols`, `implemented_by_protocols`
+
+```json
+{
+  "method_id": "M008",
+  "implements_designs": ["RD001"],
+  "realized_through_protocols": ["P023"]
+}
+```
+
+**Protocol → Method connections (reverse):**
+
+✓ **Correct:** `implements_methods` (array of method IDs, PLURAL)
+❌ **Deprecated:** `implements_method` (singular), `linked_methods`
+
+```json
+{
+  "protocol_id": "P023",
+  "implements_methods": ["M008"]
+}
+```
+
+### Claims-Evidence Relationship Fields
+
+**Claims → Evidence connections:**
+
+✓ **Correct:** `supported_by` (array of evidence IDs)
+❌ **Deprecated:** `supported_by_evidence`, `supporting_evidence`
+
+```json
+{
+  "claim_id": "C001",
+  "supported_by": ["E001", "E002"]
+}
+```
+
+**Evidence → Claims connections (reverse):**
+
+✓ **Correct:** `supports_claims` (array of claim IDs)
+
+```json
+{
+  "evidence_id": "E001",
+  "supports_claims": ["C001", "C005"]
+}
+```
+
+### Bidirectional Consistency Requirements
+
+**All relationship fields must be bidirectionally consistent:**
+
+**Rule:** If A references B in forward direction, then B must reference A in reverse direction.
+
+**Examples:**
+
+If `C001.supported_by = ["E001"]`
+Then `E001.supports_claims` must include `"C001"`
+
+If `M003.implements_designs = ["RD001"]`
+Then `RD001.implemented_by_methods` must include `"M003"`
+
+If `P023.implements_methods = ["M008"]`
+Then `M008.realized_through_protocols` must include `"P023"`
+
+**Validation:** Run `extraction-system/scripts/validate_bidirectional.py` to check consistency before finalising extraction. This validator will catch:
+- Forward references without reverse references
+- Reverse references without forward references
+- References to non-existent IDs
+- Inconsistent mappings after consolidation
+
+**Consolidation Impact:** When consolidating items (Pass 2+), you MUST update both forward and reverse references. See `consolidation-patterns.md` "Cross-Reference Repair" section for detailed procedure.
+
+---
+
 ## RDMAP Explicit vs Implicit (v2.5)
 
 **All RDMAP objects (Research Design, Method, Protocol) have status fields in v2.5:**

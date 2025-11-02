@@ -118,6 +118,14 @@ Use this checklist as your roadmap. Before finalizing:
 - Use Assessment Compatibility Test
 - Common patterns: narrative consolidation, compound interpretation, synthesis
 
+**Compound Claims Review:** For compound claims extracted in Pass 1 (multiple assertions in single sentence), apply the decision framework to determine if splitting is appropriate. See `references/checklists/evidence-vs-claims-guide.md` Case 6 for complete guidance.
+
+**Splitting criteria:**
+- Different evidence supports each part
+- Parts independently meaningful
+- No essential context lost
+- If splitting, use claim-to-claim relationships (qualifies_claims, qualified_by_claims)
+
 **For detailed patterns and examples:**
 → See `references/checklists/consolidation-patterns.md`
 

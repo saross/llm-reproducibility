@@ -204,6 +204,10 @@ This enables prompt refinement and extraction performance analysis.
 **For complete decision framework with examples, edge cases, and worked examples:**
 → See `references/checklists/evidence-vs-claims-guide.md`
 
+**Compound Claims (Multiple Assertions):** When encountering claims with multiple assertions in a single sentence (e.g., "Method X was effective AND reliable" or "Crowdsourcing scales better than expert digitisation, but requires platform adaptation"), see `references/checklists/evidence-vs-claims-guide.md` Case 6 for the decision framework.
+
+**Quick rule for Pass 1:** When uncertain, extract as single compound claim (easier to split in Pass 2 than reconstruct lost context). Document as compound in extraction_notes.
+
 ---
 
 ### 2. Evidence Must Support Claims
