@@ -90,16 +90,50 @@ Read if uncertain: `references/verbatim-quote-requirements.md`
 
 **Non-negotiable rules for all `verbatim_quote` fields:**
 
-1. **Complete sentences only** - Extract whole grammatical units, never mid-sentence fragments
+1. **Complete sentences with full context** - Extract whole grammatical units that preserve the meaning and context of the RDMAP item
+   - ✓ Include enough surrounding context to make the methodological description understandable
+   - ✓ If a sentence references "this approach" or "these methods", include the prior sentence for clarity
+   - ✗ Never extract sentence fragments or clauses without their main clause
+   - ✗ Never truncate sentences mid-way that lose essential methodological context
+
 2. **Exact text only** - Copy-paste from paper, never paraphrase or reconstruct from memory
+   - ✓ Whitespace normalisation acceptable (PDF conversion artefacts)
+   - ✓ Line breaks within sentences can be removed
+   - ✗ Never change words, add words, or rearrange text
+   - ✗ Never paraphrase or summarise
+
 3. **Verify before committing** - Ensure exact quote exists in paper before adding to JSON
+   - Use find/search to locate the exact text string
+   - If text can't be found with search, quote is wrong
+
 4. **Single source only** - Never synthesise quotes from multiple locations
+   - Each verbatim_quote must come from ONE contiguous passage
+   - If combining information from multiple locations, use multiple RDMAP items
+
+**Context completeness examples for RDMAP:**
+
+❌ **Incomplete (missing methodological context):**
+> "This approach was used to ensure reliability."
+
+✓ **Complete (includes method context):**
+> "Systematic transect surveys at 20m intervals were conducted across the study area. This approach was used to ensure reliability and comparability with the 2015 baseline survey."
+
+❌ **Incomplete (fragmented protocol):**
+> "using the ATLAS.ti software package"
+
+✓ **Complete (full protocol sentence):**
+> "Qualitative coding was performed using the ATLAS.ti software package (v9.1) with a grounded theory approach to identify emergent themes."
 
 **Self-check:** "Can I find this EXACT text string in the paper with simple search?"
 - If YES → Extract it
 - If NO → Quote is wrong; fix it or skip (will be captured in Pass 1b if implicit)
 
+**Context self-check:** "Does this quote make sense on its own without needing the previous sentence?"
+- If YES → Context sufficient
+- If NO → Expand quote to include necessary methodological context
+
 ⚠️ **Failure to follow these rules causes 40-50% validation failures in Pass 3.**
+⚠️ **Incomplete quotes (missing context) identified as top systemic issue in cross-paper error analysis (29 instances, 2 papers).**
 
 ---
 

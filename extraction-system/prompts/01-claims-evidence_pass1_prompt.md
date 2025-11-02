@@ -79,16 +79,50 @@ This enables prompt refinement and extraction performance analysis.
 
 **Non-negotiable rules for all `verbatim_quote` fields:**
 
-1. **Complete sentences only** - Extract whole grammatical units, never fragments
+1. **Complete sentences with full context** - Extract whole grammatical units that preserve the meaning and context of the claim/evidence
+   - ✓ Include enough surrounding context to make the statement understandable
+   - ✓ If a sentence references "this" or "these results", include the prior sentence for clarity
+   - ✗ Never extract sentence fragments or clauses without their main clause
+   - ✗ Never truncate sentences mid-way that lose essential context
+
 2. **Exact text only** - Copy-paste from paper, never paraphrase or reconstruct
+   - ✓ Whitespace normalisation acceptable (PDF conversion artefacts)
+   - ✓ Line breaks within sentences can be removed
+   - ✗ Never change words, add words, or rearrange text
+   - ✗ Never paraphrase or summarise
+
 3. **Verify before committing** - Ensure exact quote exists in paper before adding to JSON
-4. **Single source only** - Never synthesize quotes from multiple locations
+   - Use find/search to locate the exact text string
+   - If text can't be found with search, quote is wrong
+
+4. **Single source only** - Never synthesise quotes from multiple locations
+   - Each verbatim_quote must come from ONE contiguous passage
+   - If combining information from multiple locations, use multiple evidence items
+
+**Context completeness examples:**
+
+❌ **Incomplete (missing context):**
+> "These results support the hypothesis."
+
+✓ **Complete (includes context):**
+> "Radiocarbon dates from all three trenches cluster in the 12th-13th centuries CE. These results support the hypothesis that the settlement was occupied during the Medieval period."
+
+❌ **Incomplete (fragmented sentence):**
+> "significantly higher than control sites"
+
+✓ **Complete (full sentence with context):**
+> "Material density at the identified features was significantly higher than control sites (Mann-Whitney U test, p<0.001)."
 
 **Self-check:** "Can I find this EXACT text string in the paper with simple search?"
 - If YES → Extract it
 - If NO → Quote is wrong; fix it or mark as implicit
 
+**Context self-check:** "Does this quote make sense on its own without needing the previous sentence?"
+- If YES → Context sufficient
+- If NO → Expand quote to include necessary context
+
 ⚠️ **Failure to follow causes 40-50% validation failures in Pass 3.**
+⚠️ **Incomplete quotes (missing context) identified as top systemic issue in cross-paper error analysis (29 instances, 2 papers).**
 
 ---
 
