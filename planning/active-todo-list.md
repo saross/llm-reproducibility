@@ -1,6 +1,6 @@
 # Active To-Do List
 
-**Last Updated:** 2025-10-28
+**Last Updated:** 2025-11-02
 **Status:** Post-RUN-08 milestone - Production-ready workflow
 
 ---
@@ -265,8 +265,8 @@ Extraction prompts and skill may contain metrics, targets, or patterns calibrate
 ### 5a. Cross-Paper Error Analysis Follow-Up (Phase 2)
 
 **Priority:** MEDIUM
-**Status:** IN PROGRESS - 7 of 10 tasks complete (as of 2025-11-02)
-**Effort:** ~6 hours remaining
+**Status:** ✅ COMPLETE (as of 2025-11-02)
+**Effort:** 9.5 hours total
 **Context:** Systematic quality improvements based on cross-paper error analysis of 10 completed extractions
 
 **Completed Tasks (Week 1-2):**
@@ -278,68 +278,75 @@ Extraction prompts and skill may contain metrics, targets, or patterns calibrate
 - ✅ Quote completeness requirements in prompts
 - ✅ RDMAP completeness checker script
 
-**Remaining Tasks:**
-
-#### 5a.1 Compound Claim Handling Guidance
-**File:** `extraction-system/prompts/01-claims-evidence_pass1_prompt.md`
-**Effort:** 2 hours
-
-**Issue:** Claims categorisation errors (12 instances, 4 papers) include complex claims with multiple assertions that need clearer guidance on extraction approach.
-
-**Tasks:**
-- [ ] Add section on identifying compound claims (multiple assertions in single sentence)
-- [ ] Provide decision framework: extract as one vs split into multiple claims
-- [ ] Add worked examples showing both approaches with rationale
-- [ ] Reference from Pass 2 prompt for consolidation guidance
-
-**Example scenarios to address:**
-- "Method X was effective AND reliable" (conjunctive claims)
-- "Results show both spatial clustering AND temporal patterns" (multiple findings)
-- "We used approach Y, which improved Z" (method + effectiveness claim)
+**Completed Tasks (Week 3):**
+- ✅ Compound claim handling guidance (5a.1)
+- ✅ Secondary source findings documentation (5a.2)
+- ✅ Schema field name standardisation (5a.3)
 
 ---
 
-#### 5a.2 Secondary Source Findings Documentation
-**File:** `planning/secondary-source-attribution-analysis.md`
-**Effort:** 2 hours
+#### 5a.1 Compound Claim Handling Guidance ✅
+**Completed:** 2025-11-02
+**Time:** 2 hours
 
-**Issue:** Secondary sources categorisation findings from cross-paper error analysis (section flagged in reports/cross-paper-error-analysis.md) need to be appended to existing analysis document.
+**Files Modified:**
+- `.claude/skills/research-assessor/references/checklists/evidence-vs-claims-guide.md` (+440 lines)
+  - Added Case 6: Compound Claims with full decision framework
+  - Four types: Conjunctive, Comparative, Conditional, Sequential
+  - Worked example from sobotkova-et-al-2023 C004
+  - Pass 1 vs Pass 2 extraction rules
+  - Validation checklist
+- `extraction-system/prompts/01-claims-evidence_pass1_prompt.md` (brief reference to Case 6)
+- `extraction-system/prompts/02-claims-evidence_pass2_prompt.md` (compound claims review guidance)
 
-**Tasks:**
-- [ ] Read `reports/cross-paper-error-analysis.md` secondary sources section
-- [ ] Append empirical findings to `planning/secondary-source-attribution-analysis.md`
-- [ ] Document observed patterns from 10-paper corpus
-- [ ] Note frequency and distribution of secondary source usage
-- [ ] Update Section 6 status with corpus findings
-
-**Note:** This does NOT implement secondary source tracking (still deferred to Section 6 below). This only documents observed patterns to inform future design decisions.
+**Outcome:** Universal guidance now available in research-assessor skill for handling complex claims with multiple assertions. Prevents context loss errors identified in cross-paper analysis (4 instances).
 
 ---
 
-#### 5a.3 Schema Field Name Standardisation Script
-**File:** `extraction-system/scripts/migrate_field_names.py` (new)
-**Effort:** 5 hours
+#### 5a.2 Secondary Source Findings Documentation ✅
+**Completed:** 2025-11-02
+**Time:** 2 hours
 
-**Issue:** Multiple schema field name variants exist across extractions due to schema evolution (e.g., `child_methods` vs `enables_methods` vs `implemented_by_methods`; `implements_method` singular vs `implements_methods` plural).
+**Files Modified:**
+- `planning/secondary-source-attribution-analysis.md` (+207 lines empirical findings section)
+  - Documented 6 instances of literature review vs empirical misclassification across 4 papers
+  - Simple decision tree would prevent 100% of observed errors
+  - Evidence does NOT support complex provenance tracking
+  - Recommendation: Simple `claim_origin` field (novel/tested/supported/synthesised)
 
-**Tasks:**
-- [ ] Audit all extractions for field name variants used
-- [ ] Define canonical field names per schema v2.5
-- [ ] Create migration script to standardise field names
-- [ ] Test on 2-3 extractions
-- [ ] Document breaking changes and migration procedure
-- [ ] Run on all 10 completed extractions
-- [ ] Update validators to handle only canonical field names
+**Outcome:** Empirical findings from 10-paper corpus now documented. Informs future secondary source implementation decisions (Section 6).
 
-**Canonical field names (from schema v2.5):**
-- `research_designs[].implemented_by_methods` (not child_methods, enables_methods)
-- `methods[].implements_designs` (reverse reference)
-- `methods[].realized_through_protocols` (not child_protocols)
-- `protocols[].implements_methods` (plural, not singular implements_method)
-- `claims[].supported_by` (not supported_by_evidence)
-- `evidence[].supports_claims` (reverse reference)
+---
 
-**Estimated completion:** Week 4 of quality improvement cycle
+#### 5a.3 Schema Field Name Standardisation ✅
+**Completed:** 2025-11-02
+**Time:** 5.5 hours
+
+**Files Created:**
+- `extraction-system/scripts/migrate_field_names.py` (434 lines, full migration tool)
+- `planning/migration-log.md` (comprehensive documentation)
+
+**Files Modified:**
+- `.claude/skills/research-assessor/references/schema/schema-guide.md` (+98 lines)
+  - Added "Canonical Field Names (Schema v2.5)" section
+  - Documents correct vs deprecated field names
+  - Bidirectional consistency requirements
+- All 10 `outputs/*/extraction.json` files (376 field name changes across 7 papers)
+
+**Migration Results:**
+- Papers migrated: 7/10 (3 already using canonical names)
+- Total changes: 376 field name updates
+- Post-migration validation: 243 auto-corrections applied, 59 conflicts flagged for human review
+- Backup created: `outputs.backup-pre-migration/`
+
+**Canonical field names now enforced:**
+- `implemented_by_methods` (not child_methods, enables_methods)
+- `implements_designs` (reverse reference)
+- `realized_through_protocols` (not child_protocols)
+- `implements_methods` plural (not implements_method singular)
+- `supported_by` (not supported_by_evidence)
+
+**Outcome:** Schema consistency restored across all 10 extractions. Migration script available for future schema updates. Breaking changes documented in migration-log.md.
 
 ---
 

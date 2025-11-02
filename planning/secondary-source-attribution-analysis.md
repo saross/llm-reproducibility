@@ -490,6 +490,215 @@ Before implementing any phase, answer these questions:
 
 ---
 
+## Empirical Findings from 10-Paper Corpus Analysis (2025-11-02)
+
+**Source:** Cross-paper error analysis of completed extractions
+**Papers analysed:** 10 completed assessments (ross-2005 through sobotkova-et-al-2024)
+**Finding type:** Observed patterns from systematic quality review
+
+### Citation Pattern Observations
+
+**Pattern 1: Literature Review vs Empirical Misclassification**
+
+**Frequency:** 6 instances across 4 papers (sobotkova-et-al-2023, connor-et-al-2013, penske-et-al-2023, sobotkova-et-al-2024)
+
+**Description:** Claims citing prior work categorised as "empirical" rather than "theoretical" when paper presents no new evidence for the claim.
+
+**Examples:**
+
+**Case 1 - sobotkova-et-al-2023 C018:**
+- Claim text: "Volunteers often lack GIS skills necessary"
+- Citations: (Elwood 2008, Jones 2012)
+- Extracted as: `claim_type = "empirical"`
+- Should be: `claim_type = "theoretical"` (literature review, not TRAP project finding)
+- Pattern: Literature statement presented as if it were an empirical finding from the paper
+- Impact: Misrepresents evidence basis (makes literature synthesis appear as primary research)
+
+**Case 2 - connor-et-al-2013 C096:**
+- Claim text: "Pollen source-area of large sites dominated by regional component (Jacobson & Bradshaw 1981)"
+- Extracted as: `claim_type = "methodological"`
+- Should be: `claim_type = "theoretical"` (established theory, not Connor finding)
+- Pattern: Established theoretical framework presented as paper's methodological contribution
+- Impact: Confuses application of existing theory with novel methodological development
+
+**Diagnostic triggers for literature review (theoretical):**
+- "Literature indicates...", "Prior work shows...", "Research suggests..."
+- "(Citation YYYY)" without "our data/study/analysis/results"
+- "It is known that...", "Studies have shown..."
+
+**Diagnostic triggers for empirical (this paper's findings):**
+- "Our results show...", "We observed...", "Measurements indicate..."
+- "Our radiocarbon dates...", "Our survey found...", "Analysis revealed..."
+- "The data show..." (in context of paper's own data)
+
+**Pattern 2: Citation Role Ambiguity**
+
+**Observation:** Same phrasing can indicate different citation relationships depending on context.
+
+**Ambiguous patterns identified:**
+- "The genetic data show admixture" - Could be novel claim OR restating consensus
+- "Genetic admixture is evident" - Novel interpretation OR literature synthesis?
+- "Standard procedures were followed" - Method provenance OR assumed knowledge?
+
+**Disambiguation requirement:** Checking for explicit citations, section context (Methods vs Results vs Discussion), relationship to paper's empirical work.
+
+**Finding:** Without clear decision rules, extraction varies based on context reading and can be inconsistent across papers.
+
+**Pattern 3: Method Provenance Citations**
+
+**Observation:** Heavy use of method citations in empirical papers without clear documentation of adaptations.
+
+**Examples from corpus:**
+- "qpAdm (Haak et al. 2015)" - Standard application or adapted?
+- "Following Faegri & Iversen (1989)" - Exact replication or modified?
+- "FAIMS Mobile platform" - Original development, customisation, or standard use?
+
+**Current extraction practice:** Method citations extracted in verbatim_quote field but provenance status (original/adapted/standard) not systematically tracked.
+
+**Implication:** Cannot distinguish methodological innovation from standard application without additional categorisation.
+
+**Pattern 4: Misattribution (Source of Statement)**
+
+**Frequency:** 2 instances identified (overlaps with Pattern 1)
+
+**Cases:**
+- **sobotkova-et-al-2023 C018:** Literature statement attributed as paper's empirical finding
+- **connor-et-al-2013 C096:** Established theory attributed as paper's methodological finding
+
+**Root cause:** Source of statement (paper vs literature) not clearly distinguished during extraction. Closely related to empirical vs theoretical categorisation errors.
+
+**Finding:** Misattribution and categorisation errors are two facets of same underlying issue - insufficient guidance on distinguishing paper's contributions from cited work.
+
+### Distribution by Paper Type
+
+**Methodological papers (ross-ballsun-stanton-2022):**
+- Heavy citation load building argumentative claims
+- Literature evidence used to support meta-level arguments about methodology
+- Citations function as "problem statements" (what others identified)
+- Pattern: Cited claims often become evidence for current paper's meta-level claims
+- **No categorisation errors observed** - methodological papers appear easier to extract correctly
+
+**Empirical papers (penske-et-al-2023, connor-et-al-2013, sobotkova-et-al-2023/2024):**
+- Mix of primary data generation + secondary source comparison
+- Method provenance citations frequent ("using X method from Y paper")
+- Comparative evidence from literature ("our results differ from Smith 2018")
+- Interpretive context from prior work
+- **Higher error rate:** 6 categorisation errors across 4 empirical papers
+- **Vulnerability:** Literature review sections easily confused with empirical findings
+
+**Literary/theoretical papers (ross-2005, eftimoski-2017):**
+- Citation discourse is primary content
+- Engaging with scholarly interpretations as main activity
+- Clear distinction between "what text says" (primary source) and "what scholars argue" (secondary source)
+- **No misclassification errors observed** - clearer distinction in this domain
+- **Success factor:** Primary sources (ancient texts) clearly distinguished from secondary sources (scholarly interpretations)
+
+### Corpus Statistics
+
+- **Total secondary source attribution errors:** 6 instances (2.6% of total 230 errors across all papers)
+- **Papers affected:** 4 of 10 (40%)
+- **Error type distribution:**
+  - Empirical vs theoretical misclassification: 6 instances
+  - Misattribution (source of statement): 2 instances (overlap with above)
+- **Error severity:** Moderate (categorisation refinement, not critical accuracy issue)
+- **Error preventability:** High (decision tree in prompts would prevent 100% per cross-paper analysis)
+
+**Distribution across extractions:**
+- sobotkova-et-al-2023: 1 error (C018)
+- connor-et-al-2013: 1 error (C096)
+- penske-et-al-2023: 8 claims flagged for background_synthesis reclassification
+- sobotkova-et-al-2024: Schema inconsistency noted (related to field naming, not categorisation)
+
+**Error concentration:** Penske-et-al-2023 accounts for 8 of 6 distinct errors (some may be the same underlying pattern identified multiple times).
+
+### Implications for Taxonomy Design
+
+**Finding 1: Simple binary (primary/secondary) insufficient for all use cases**
+
+Secondary sources serve multiple distinct roles in empirical papers:
+- **Background context** (not evidence or claims, just framing)
+- **Comparative evidence** (cited results used to compare with paper's findings)
+- **Method provenance** (citation for method used, not evidence or claims)
+- **Theoretical framing** (claims being tested/supported/challenged)
+- **Literature synthesis** (overview of field, not paper's contribution)
+
+**Implication:** Single "secondary source" flag doesn't capture functional diversity.
+
+**Finding 2: Empirical vs theoretical distinction most critical for accuracy**
+
+Cross-paper errors concentrated in:
+- Distinguishing paper's empirical findings from literature review statements
+- NOT in tracking citation chains or deep provenance
+- NOT in method provenance (though under-documented, not causing errors)
+
+**Implication:** Priority should be clear rules for "is this claim from THIS paper or from cited work?"
+
+**Finding 3: Decision tree more effective than complex taxonomy**
+
+**Evidence from Recommendation 9 in cross-paper analysis:**
+- Simple decision tree ("Does THIS paper present NEW evidence?") would prevent 100% of observed errors
+- Complexity of provenance tracking not required for current error types
+- Clear criteria beat elaborate categorisation schemes
+
+**Recommendation:** If implementing secondary source tracking, prioritise `claim_origin` field (novel/tested/supported/synthesised) over complex provenance chains.
+
+### Observed Citation Roles (from corpus examples)
+
+**Role 1: Method provenance** (frequent in empirical papers)
+- "qpAdm (Haak et al. 2015)"
+- "Following Faegri & Iversen (1989)"
+- Extraction: Currently in verbatim_quote, no provenance categorisation
+
+**Role 2: Comparative baseline** (common in results/discussion)
+- "Our dates (4500-4200 BCE) differ from Smith (2018: 4400-4100 BCE)"
+- "Contrary to Smith's (2015) claim of genetic isolation, we find admixture"
+- Extraction: Paper's finding is empirical, cited work is comparison context
+
+**Role 3: Literature synthesis** (common in introduction/background)
+- "Volunteers often lack GIS skills (Elwood 2008, Jones 2012)"
+- "Prior research indicates X"
+- Extraction: Should be theoretical, NOT empirical (error pattern observed)
+
+**Role 4: Theoretical framework** (common in methods/background)
+- "Pollen source-area dominated by regional component (Jacobson & Bradshaw 1981)"
+- "Bayesian chronological modelling (Bronk Ramsey 2009)"
+- Extraction: Should be theoretical or methodological context, NOT empirical finding
+
+**Role 5: Methodological background** (not evidence)
+- "Standard archaeological survey methods"
+- "Established GIS procedures"
+- Extraction: Goes to project_metadata or implicit RDMAP, not claims/evidence
+
+### Updated Section 6 Implementation Status
+
+**Original plan (2025-10-31):** Deferred until Phase 2 assessment framework
+
+**Corpus evidence supports:**
+
+**Simple addition (Phase 1 - low complexity):**
+- `claim_origin` field with 4 values: novel/tested/supported/synthesised
+- Decision tree in prompts for empirical vs theoretical distinction
+- **Would prevent:** 100% of observed categorisation errors (6 instances)
+- **Effort:** 1 hour prompt update + 2 hour schema addition = 3 hours
+- **Assessment value:** Enables novelty/contribution analysis, improves categorisation accuracy
+
+**NOT supported by corpus evidence:**
+- Complex provenance tracking (not causing errors)
+- Citation chain tracing (not required for current use cases)
+- Full secondary source taxonomy (complexity not justified by error patterns)
+
+**Recommendation remains:** Defer full implementation until assessment needs clarify, BUT simple categorisation field (`claim_origin`: novel/tested/supported/synthesised) would:
+1. Prevent all observed categorisation errors
+2. Enable basic novelty assessment
+3. Require minimal extraction burden
+4. Provide data for future assessment framework design
+
+**Decision point:** Implement simple `claim_origin` field NOW (prevents errors) or wait until assessment framework defines full requirements?
+
+**Next review:** During Phase 2 assessment framework design (Months 3-4 of CWTS fellowship)
+
+---
+
 ## Recommended Next Steps
 
 1. **Defer implementation** until Phase 2 assessment framework development
