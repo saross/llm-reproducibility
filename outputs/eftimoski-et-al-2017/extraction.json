@@ -131,14 +131,14 @@
         },
         "indicator": {
           "type": "string",
-          "description": "Linguistic marker of uncertainty (ca., about, approximately, \u00c2\u00b1, etc.)"
+          "description": "Linguistic marker of uncertainty (ca., about, approximately, Â±, etc.)"
         },
         "quantification": {
           "type": [
             "string",
             "null"
           ],
-          "description": "Numeric quantification if provided (e.g., '95% CI', '\u00c2\u00b15%')"
+          "description": "Numeric quantification if provided (e.g., '95% CI', 'Â±5%')"
         },
         "author_explanation": {
           "type": [
@@ -163,13 +163,13 @@
       "description": "Self-documenting definitions of reasoning approaches for schema clarity",
       "properties": {
         "inductive": {
-          "const": "Data \u00e2\u2020\u2019 patterns \u00e2\u2020\u2019 generalizations. Researchers collect data and identify patterns to generate new hypotheses. Goal is hypothesis generation, not testing. Example: 'We excavated 47 sites and observed ceramic density increases near water sources across all periods.'"
+          "const": "Data â†’ patterns â†’ generalizations. Researchers collect data and identify patterns to generate new hypotheses. Goal is hypothesis generation, not testing. Example: 'We excavated 47 sites and observed ceramic density increases near water sources across all periods.'"
         },
         "abductive": {
-          "const": "Observations \u00e2\u2020\u2019 inference to best explanation \u00e2\u2020\u2019 testable predictions. Researchers propose explanatory frameworks that account for observed patterns and generate testable implications. Dominant mode in fieldwork. Example: 'Ceramic density near water [observation] is best explained by ritual water access practices [abduction], which predicts we should find votive deposits and specialized vessel forms near springs [testable implications].'"
+          "const": "Observations â†’ inference to best explanation â†’ testable predictions. Researchers propose explanatory frameworks that account for observed patterns and generate testable implications. Dominant mode in fieldwork. Example: 'Ceramic density near water [observation] is best explained by ritual water access practices [abduction], which predicts we should find votive deposits and specialized vessel forms near springs [testable implications].'"
         },
         "deductive": {
-          "const": "Theory/hypothesis \u00e2\u2020\u2019 predictions \u00e2\u2020\u2019 empirical test. Researchers state hypotheses derived from theory before data collection, then systematically test predictions. Example: 'If ritual water access was practiced [hypothesis], then we should find [specific predictions]. We test this by [systematic data collection].'"
+          "const": "Theory/hypothesis â†’ predictions â†’ empirical test. Researchers state hypotheses derived from theory before data collection, then systematically test predictions. Example: 'If ritual water access was practiced [hypothesis], then we should find [specific predictions]. We test this by [systematic data collection].'"
         },
         "mixed": {
           "const": "Genuine combination of reasoning modes (not confusion). Research intentionally combines inductive exploration, abductive explanation, and deductive testing in transparent sequence. Example: 'We inductively identified ceramic-water pattern, abductively proposed ritual explanation, then deductively tested predictions about votive deposits.'"
@@ -2417,6 +2417,12 @@
       "reduction_percentage": 0.0,
       "consolidations_performed": 0,
       "notes": "No consolidations needed. All 16 RDMAP items describe distinct strategic decisions, tactical approaches, or operational procedures. Relationships verified."
+    },
+    "field_migration": {
+      "migrated_at": "2025-11-02T14:42:02.267571",
+      "script_version": "1.0",
+      "changes_applied": 4,
+      "canonical_schema_version": "2.5"
     }
   },
   "evidence": [
@@ -2428,7 +2434,9 @@
       "supports_claims": [
         "C001",
         "C006",
-        "C007"
+        "C007",
+        "C002",
+        "C003"
       ],
       "location": {
         "section": "Abstract",
@@ -2472,7 +2480,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "The authors saw few examples mounds that had not been damaged either by development, looting, or agriculture during three years of \ufb01eldwork, despite having inventoried over 1000 of them in two Bulgarian provinces.",
+      "verbatim_quote": "The authors saw few examples mounds that had not been damaged either by development, looting, or agriculture during three years of ﬁeldwork, despite having inventoried over 1000 of them in two Bulgarian provinces.",
       "extraction_confidence": "high"
     },
     {
@@ -2489,7 +2497,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "The authors saw few examples mounds that had not been damaged either by development, looting, or agriculture during three years of \ufb01eldwork",
+      "verbatim_quote": "The authors saw few examples mounds that had not been damaged either by development, looting, or agriculture during three years of ﬁeldwork",
       "extraction_confidence": "high"
     },
     {
@@ -2544,7 +2552,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "Natural erosion rates are high (> 0.40 mm/year) in only a few areas of the valley, mostly at higher elevations; typical rates are only ca. 0.17\u20130.22 mm/year",
+      "verbatim_quote": "Natural erosion rates are high (> 0.40 mm/year) in only a few areas of the valley, mostly at higher elevations; typical rates are only ca. 0.17–0.22 mm/year",
       "extraction_confidence": "high"
     },
     {
@@ -2597,7 +2605,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Their contents vary from nothing (cenotaphs), to a simple burial with or without an enclosure, to elaborate stone or brick tombs with much architectural and artistic re\ufb01nement and intrinsically valuable burial goods",
+      "verbatim_quote": "Their contents vary from nothing (cenotaphs), to a simple burial with or without an enclosure, to elaborate stone or brick tombs with much architectural and artistic reﬁnement and intrinsically valuable burial goods",
       "extraction_confidence": "high"
     },
     {
@@ -2614,7 +2622,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "TRAP compiled the burial mound dataset during three archaeological surface survey campaigns in the Kazanlak Valley during 2009\u20132011 (Ross et al. forthcoming). GPS location, dimensions, surrounding land-use, and condition of 773 burial mounds were collected by trained personnel using standardised record sheets over the course of regional, total-coverage, pedestrian survey",
+      "verbatim_quote": "TRAP compiled the burial mound dataset during three archaeological surface survey campaigns in the Kazanlak Valley during 2009–2011 (Ross et al. forthcoming). GPS location, dimensions, surrounding land-use, and condition of 773 burial mounds were collected by trained personnel using standardised record sheets over the course of regional, total-coverage, pedestrian survey",
       "extraction_confidence": "high"
     },
     {
@@ -2653,7 +2661,8 @@
       "evidence_type": "quantitative_observation",
       "evidence_basis": "statistical_output",
       "supports_claims": [
-        "C041"
+        "C041",
+        "C067"
       ],
       "location": {
         "section": "2.2. Variables",
@@ -2678,7 +2687,7 @@
         "start_paragraph": 3,
         "end_paragraph": 3
       },
-      "verbatim_quote": "Conversely, annual agricultural \ufb01elds comprised 53.1% of the area (4564 ha), but contained only 13.5% of the mounds (104).",
+      "verbatim_quote": "Conversely, annual agricultural ﬁelds comprised 53.1% of the area (4564 ha), but contained only 13.5% of the mounds (104).",
       "extraction_confidence": "high"
     },
     {
@@ -2789,7 +2798,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "As noted above (Section 2.2), simulating a change in proximity to Kazanlak indicated that no realistic increase or decrease in its size would have a signi\ufb01cant impact on mound condition, despite the fact that Kazanlak is the regional center and approximately 10 times the size of the next largest town.",
+      "verbatim_quote": "As noted above (Section 2.2), simulating a change in proximity to Kazanlak indicated that no realistic increase or decrease in its size would have a signiﬁcant impact on mound condition, despite the fact that Kazanlak is the regional center and approximately 10 times the size of the next largest town.",
       "extraction_confidence": "high"
     },
     {
@@ -2816,7 +2825,9 @@
       "evidence_basis": "statistical_output",
       "supports_claims": [
         "C058",
-        "C059"
+        "C059",
+        "C065",
+        "C067"
       ],
       "declared_uncertainty": {
         "type": "approximation",
@@ -2840,7 +2851,8 @@
       "evidence_basis": "statistical_output",
       "supports_claims": [
         "C060",
-        "C061"
+        "C061",
+        "C073"
       ],
       "declared_uncertainty": {
         "type": "approximation",
@@ -2863,7 +2875,8 @@
       "evidence_type": "statistical_output",
       "evidence_basis": "statistical_output",
       "supports_claims": [
-        "C062"
+        "C062",
+        "C078"
       ],
       "declared_uncertainty": {
         "type": "statistical",
@@ -2876,7 +2889,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Calculating the 'effect' coef\ufb01cient for 'elevation' and 'height' produces values of 0.003 and \u22120.070 respectively. These values indicate, for example, that for every 1 m increase in elevation, the odds of a mound being in Category 5 versus any other category are 1.003 times greater.",
+      "verbatim_quote": "Calculating the 'effect' coefﬁcient for 'elevation' and 'height' produces values of 0.003 and −0.070 respectively. These values indicate, for example, that for every 1 m increase in elevation, the odds of a mound being in Category 5 versus any other category are 1.003 times greater.",
       "extraction_confidence": "high"
     },
     {
@@ -2885,7 +2898,9 @@
       "evidence_type": "statistical_output",
       "evidence_basis": "statistical_output",
       "supports_claims": [
-        "C063"
+        "C063",
+        "C074",
+        "C077"
       ],
       "declared_uncertainty": {
         "type": "statistical",
@@ -2920,7 +2935,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Pasture                          \u22122.246***                        0.666",
+      "verbatim_quote": "Pasture                          −2.246***                        0.666",
       "extraction_confidence": "high",
       "extraction_notes": "From Table 1. Negative coefficient indicates pasture associated with better condition"
     },
@@ -2943,7 +2958,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Forest                           \u22121.943***                        0.690",
+      "verbatim_quote": "Forest                           −1.943***                        0.690",
       "extraction_confidence": "high",
       "extraction_notes": "From Table 1. Negative coefficient indicates forest associated with better condition"
     },
@@ -2954,7 +2969,8 @@
       "evidence_basis": "statistical_output",
       "supports_claims": [
         "C065",
-        "C066"
+        "C066",
+        "C073"
       ],
       "location": {
         "section": "4.1. Burial mound vulnerability in the Kazanlak Valley",
@@ -2972,7 +2988,8 @@
       "evidence_type": "demographic_projection",
       "evidence_basis": "statistical_output",
       "supports_claims": [
-        "C066"
+        "C066",
+        "C073"
       ],
       "declared_uncertainty": {
         "type": "approximation",
@@ -3162,7 +3179,7 @@
         "start_paragraph": 3,
         "end_paragraph": 3
       },
-      "verbatim_quote": "Unlike typical predictive modelling for cultural heritage management, use of a logit regression on a large dataset quanti\ufb01es the probable impact of changing circumstances on monuments without relying on site location models, prior knowledge of speci\ufb01c hazards, or forecasts of future development.",
+      "verbatim_quote": "Unlike typical predictive modelling for cultural heritage management, use of a logit regression on a large dataset quantiﬁes the probable impact of changing circumstances on monuments without relying on site location models, prior knowledge of speciﬁc hazards, or forecasts of future development.",
       "extraction_confidence": "high"
     },
     {
@@ -3184,7 +3201,7 @@
         "start_paragraph": 3,
         "end_paragraph": 3
       },
-      "verbatim_quote": "This approach can be applied widely, wherever suf\ufb01cient observational data are available.",
+      "verbatim_quote": "This approach can be applied widely, wherever sufﬁcient observational data are available.",
       "extraction_confidence": "high"
     },
     {
@@ -3224,7 +3241,7 @@
         "start_paragraph": 3,
         "end_paragraph": 3
       },
-      "verbatim_quote": "and that depopulation \u2013 not just urban sprawl \u2013 can threaten cultural heritage.",
+      "verbatim_quote": "and that depopulation – not just urban sprawl – can threaten cultural heritage.",
       "extraction_confidence": "high"
     },
     {
@@ -3309,7 +3326,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Degradation associated with remoteness reveals that de-urbanisation and regional depopulation, and not only urban sprawl, threatens cultural heritage, a \ufb01nding relevant to much of Eastern Europe, the former Soviet Union, and elsewhere where cities are shrinking or villages are being abandoned.",
+      "verbatim_quote": "Degradation associated with remoteness reveals that de-urbanisation and regional depopulation, and not only urban sprawl, threatens cultural heritage, a ﬁnding relevant to much of Eastern Europe, the former Soviet Union, and elsewhere where cities are shrinking or villages are being abandoned.",
       "extraction_confidence": "high"
     },
     {
@@ -3445,7 +3462,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "Despite administrative and legal measures to combat illicit artefact traf\ufb01cking, such as a 2013 Memorandum of Understanding with the United States, looting probably still compromises more mounds that development",
+      "verbatim_quote": "Despite administrative and legal measures to combat illicit artefact trafﬁcking, such as a 2013 Memorandum of Understanding with the United States, looting probably still compromises more mounds that development",
       "extraction_confidence": "medium",
       "extraction_notes": "Typo in source: 'that' should be 'than'"
     },
@@ -3488,7 +3505,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "Farmers plough and harrow arable \ufb01elds annually, potentially affecting thousands of mounds across Bulgaria.",
+      "verbatim_quote": "Farmers plough and harrow arable ﬁelds annually, potentially affecting thousands of mounds across Bulgaria.",
       "extraction_confidence": "high"
     },
     {
@@ -3593,7 +3610,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Decorated burial chambers and rich \ufb01nds from tombs like these foster archaeological research and cultural tourism in the Kazanlak Valley.",
+      "verbatim_quote": "Decorated burial chambers and rich ﬁnds from tombs like these foster archaeological research and cultural tourism in the Kazanlak Valley.",
       "extraction_confidence": "high"
     },
     {
@@ -3640,7 +3657,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "and erosion of mounds is retarded by the use of \ufb01eldstones in their construction.",
+      "verbatim_quote": "and erosion of mounds is retarded by the use of ﬁeldstones in their construction.",
       "extraction_confidence": "high"
     },
     {
@@ -3701,7 +3718,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Researchers in the \ufb01eld (including the authors) believed that looting, agricultural activity, and peri-urban development were the principal factors contributing to the ubiquitous degradation of the mounds we saw during archaeological survey.",
+      "verbatim_quote": "Researchers in the ﬁeld (including the authors) believed that looting, agricultural activity, and peri-urban development were the principal factors contributing to the ubiquitous degradation of the mounds we saw during archaeological survey.",
       "extraction_confidence": "high"
     },
     {
@@ -3741,7 +3758,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "the ploughing, harrowing, and removal of obstacles from \ufb01elds associated with annual agriculture damage mounds",
+      "verbatim_quote": "the ploughing, harrowing, and removal of obstacles from ﬁelds associated with annual agriculture damage mounds",
       "extraction_confidence": "high"
     },
     {
@@ -3823,7 +3840,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "We conceded that small mounds are more susceptible to agricultural damage, but thought that damage to large mounds from looting would prove more signi\ufb01cant",
+      "verbatim_quote": "We conceded that small mounds are more susceptible to agricultural damage, but thought that damage to large mounds from looting would prove more signiﬁcant",
       "extraction_confidence": "high"
     },
     {
@@ -3911,7 +3928,7 @@
         "start_paragraph": 1,
         "end_paragraph": 2
       },
-      "verbatim_quote": "An ordered logit model provided the best theoretical and empirical \ufb01t for our observational data and desired outcome. We chose a logit response model over a simple linear regression for its superior ability to accommodate categorical response variables like mound condition.",
+      "verbatim_quote": "An ordered logit model provided the best theoretical and empirical ﬁt for our observational data and desired outcome. We chose a logit response model over a simple linear regression for its superior ability to accommodate categorical response variables like mound condition.",
       "extraction_confidence": "high",
       "consolidation_metadata": {
         "consolidated_from": [
@@ -3941,7 +3958,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "The 1\u20135 value in the Likert scale indicating mound condition is best seen as categorical, since it represents an estimate based on visual inspection, and even trained personnel can only gauge condition with limited precision and consistency.",
+      "verbatim_quote": "The 1–5 value in the Likert scale indicating mound condition is best seen as categorical, since it represents an estimate based on visual inspection, and even trained personnel can only gauge condition with limited precision and consistency.",
       "extraction_confidence": "high"
     },
     {
@@ -4126,7 +4143,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "Since the typical outputs of logit models (coef\ufb01cients and odds ratios) are dif\ufb01cult to explain and interpret, we chose to represent the changes graphically",
+      "verbatim_quote": "Since the typical outputs of logit models (coefﬁcients and odds ratios) are difﬁcult to explain and interpret, we chose to represent the changes graphically",
       "extraction_confidence": "high"
     },
     {
@@ -4191,7 +4208,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "As noted above (Section 2.2), simulating a change in proximity to Kazanlak indicated that no realistic increase or decrease in its size would have a signi\ufb01cant impact on mound condition, despite the fact that Kazanlak is the regional center and approximately 10 times the size of the next largest town.",
+      "verbatim_quote": "As noted above (Section 2.2), simulating a change in proximity to Kazanlak indicated that no realistic increase or decrease in its size would have a signiﬁcant impact on mound condition, despite the fact that Kazanlak is the regional center and approximately 10 times the size of the next largest town.",
       "extraction_confidence": "high"
     },
     {
@@ -4246,7 +4263,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Simulating the transformation of all pasture to annual agriculture predicts a signi\ufb01cant deterioration of mound condition",
+      "verbatim_quote": "Simulating the transformation of all pasture to annual agriculture predicts a signiﬁcant deterioration of mound condition",
       "extraction_confidence": "high"
     },
     {
@@ -4446,7 +4463,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Converting all the pasture of the Kazanlak Valley to annual agriculture would produce a 30% shift in mean probability from well-preserved (Condition 1\u20132) to more damaged (Condition 3\u20135) mounds.",
+      "verbatim_quote": "Converting all the pasture of the Kazanlak Valley to annual agriculture would produce a 30% shift in mean probability from well-preserved (Condition 1–2) to more damaged (Condition 3–5) mounds.",
       "extraction_confidence": "high"
     },
     {
@@ -4488,7 +4505,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "With an effect this large, even relatively small-scale reallocation of land from pasture to annual agriculture endangers many mounds \u2013 especially since mounds are concentrated in pasture.",
+      "verbatim_quote": "With an effect this large, even relatively small-scale reallocation of land from pasture to annual agriculture endangers many mounds – especially since mounds are concentrated in pasture.",
       "extraction_confidence": "high"
     },
     {
@@ -4509,7 +4526,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "This damage likely arises from aggressive ploughing, harrowing, and clearing of stones (mound mantles often contain \ufb01eld stones, which make stony piles once the sod is removed and erosion carries away exposed soil; these piles are sometimes then removed to the edges of \ufb01elds).",
+      "verbatim_quote": "This damage likely arises from aggressive ploughing, harrowing, and clearing of stones (mound mantles often contain ﬁeld stones, which make stony piles once the sod is removed and erosion carries away exposed soil; these piles are sometimes then removed to the edges of ﬁelds).",
       "extraction_confidence": "high"
     },
     {
@@ -4670,7 +4687,7 @@
         "start_paragraph": 5,
         "end_paragraph": 5
       },
-      "verbatim_quote": "Although a preliminary logit regression con\ufb01rms that taller mounds are more likely to have been robbed",
+      "verbatim_quote": "Although a preliminary logit regression conﬁrms that taller mounds are more likely to have been robbed",
       "extraction_confidence": "high"
     },
     {
@@ -4757,7 +4774,7 @@
         "start_paragraph": 7,
         "end_paragraph": 7
       },
-      "verbatim_quote": "heritage resources and personnel should be allocated preferentially, when possible, to monitoring plough damage to mounds surrounded by annual agriculture, especially if the mounds are small in size or are located in \ufb01elds that have been converted from pasture.",
+      "verbatim_quote": "heritage resources and personnel should be allocated preferentially, when possible, to monitoring plough damage to mounds surrounded by annual agriculture, especially if the mounds are small in size or are located in ﬁelds that have been converted from pasture.",
       "extraction_confidence": "high"
     },
     {
@@ -4795,7 +4812,7 @@
         "start_paragraph": 7,
         "end_paragraph": 7
       },
-      "verbatim_quote": "In future, we recommend collecting granular information about different types of damage to mounds (e.g., damage from looting, agriculture, etc., on Likert scales) in order to identify relationships between explanatory variables like remoteness or height and speci\ufb01c causes of mound deterioration like robbing or ploughing.",
+      "verbatim_quote": "In future, we recommend collecting granular information about different types of damage to mounds (e.g., damage from looting, agriculture, etc., on Likert scales) in order to identify relationships between explanatory variables like remoteness or height and speciﬁc causes of mound deterioration like robbing or ploughing.",
       "extraction_confidence": "high"
     },
     {
@@ -4913,7 +4930,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Logit regressions require larger datasets than linear regressions (the maximum likelihood estimation algorithms employed in the estimation of the coef\ufb01cients are more demanding than least squares estimation).",
+      "verbatim_quote": "Logit regressions require larger datasets than linear regressions (the maximum likelihood estimation algorithms employed in the estimation of the coefﬁcients are more demanding than least squares estimation).",
       "extraction_confidence": "high"
     },
     {
@@ -4953,7 +4970,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Note, however, that logit regressions are less demanding that probit; when we attempted to compare the results of an ordered probit model, the maximum likelihood algorithms were unable to successfully estimate coef\ufb01cients.",
+      "verbatim_quote": "Note, however, that logit regressions are less demanding that probit; when we attempted to compare the results of an ordered probit model, the maximum likelihood algorithms were unable to successfully estimate coefﬁcients.",
       "extraction_confidence": "high"
     },
     {
@@ -4974,7 +4991,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Successful computation of ordered logit coef\ufb01cient estimates is harder than linear regression, but easier than probit.",
+      "verbatim_quote": "Successful computation of ordered logit coefﬁcient estimates is harder than linear regression, but easier than probit.",
       "extraction_confidence": "high"
     },
     {
@@ -4992,7 +5009,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "Burial mounds and other exposed archaeological heritage deteriorate over time. The logit simulation employed here represents a snapshot of the current situation, and predicts what a similar snapshot at an unspeci\ufb01ed future date would look like should conditions change. The simulation, however, does not reveal the time interval between those snapshots.",
+      "verbatim_quote": "Burial mounds and other exposed archaeological heritage deteriorate over time. The logit simulation employed here represents a snapshot of the current situation, and predicts what a similar snapshot at an unspeciﬁed future date would look like should conditions change. The simulation, however, does not reveal the time interval between those snapshots.",
       "extraction_confidence": "high"
     },
     {
@@ -5118,7 +5135,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Our approach quanti\ufb01es the probabilities of mound condition deteriorating on account of these threats, providing guidance for the allocation of heritage resources and personnel. It can also be generalised to assess the likely impact of threats to sites and monuments quickly and continuously.",
+      "verbatim_quote": "Our approach quantiﬁes the probabilities of mound condition deteriorating on account of these threats, providing guidance for the allocation of heritage resources and personnel. It can also be generalised to assess the likely impact of threats to sites and monuments quickly and continuously.",
       "extraction_confidence": "high"
     },
     {
@@ -5139,7 +5156,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Since the model extrapolates from the current situation, it requires a large dataset, but does not rely upon predicting undiscovered site locations, prior knowledge of speci\ufb01c hazards, or forecasts of future development.",
+      "verbatim_quote": "Since the model extrapolates from the current situation, it requires a large dataset, but does not rely upon predicting undiscovered site locations, prior knowledge of speciﬁc hazards, or forecasts of future development.",
       "extraction_confidence": "high"
     }
   ],
@@ -5270,7 +5287,7 @@
           "end_paragraph": 2
         }
       ],
-      "inference_reasoning": "The phrase 'decreased scrutiny associated with remoteness' implies that remoteness \u2192 less scrutiny \u2192 more looting. The intermediate step (less scrutiny) is stated but the causal chain (remoteness causes less scrutiny which enables looting) is presented as self-evident rather than demonstrated.",
+      "inference_reasoning": "The phrase 'decreased scrutiny associated with remoteness' implies that remoteness → less scrutiny → more looting. The intermediate step (less scrutiny) is stated but the causal chain (remoteness causes less scrutiny which enables looting) is presented as self-evident rather than demonstrated.",
       "extraction_confidence": "high",
       "location": {
         "section": "Abstract",
@@ -5352,7 +5369,7 @@
       "reasoning": "The paper characterizes hypothesis selection based on researchers' field intuitions as 'perceptive' initial risk assessment, implying this is methodologically appropriate, but does not justify why researcher intuition is adequate basis",
       "verbatim_quote": null,
       "trigger_text": [
-        "Researchers in the \ufb01eld (including the authors) believed that looting, agricultural activity, and peri-urban development were the principal factors contributing to the ubiquitous degradation",
+        "Researchers in the ﬁeld (including the authors) believed that looting, agricultural activity, and peri-urban development were the principal factors contributing to the ubiquitous degradation",
         "Choosing these factors over others constituted a 'perceptive' initial risk assessment"
       ],
       "trigger_locations": [
@@ -5393,7 +5410,7 @@
           "end_paragraph": 1
         }
       ],
-      "inference_reasoning": "The causal chain (large mounds \u2192 richer burials \u2192 preferential looting) depends on the premise that large mounds contain richer burials. This is stated as 'typical' fact without empirical evidence or citation, suggesting it is assumed as disciplinary common knowledge rather than demonstrated for this dataset.",
+      "inference_reasoning": "The causal chain (large mounds → richer burials → preferential looting) depends on the premise that large mounds contain richer burials. This is stated as 'typical' fact without empirical evidence or citation, suggesting it is assumed as disciplinary common knowledge rather than demonstrated for this dataset.",
       "extraction_confidence": "high",
       "location": {
         "section": "2. Methodology",
@@ -5440,7 +5457,7 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Researchers in the \ufb01eld (including the authors) believed that looting, agricultural activity, and peri-urban development were the principal factors contributing to the ubiquitous degradation of the mounds we saw during archaeological survey. Choosing these factors over others constituted a 'perceptive' initial risk assessment",
+      "verbatim_quote": "Researchers in the ﬁeld (including the authors) believed that looting, agricultural activity, and peri-urban development were the principal factors contributing to the ubiquitous degradation of the mounds we saw during archaeological survey. Choosing these factors over others constituted a 'perceptive' initial risk assessment",
       "extraction_confidence": "high"
     }
   ],
@@ -5450,11 +5467,8 @@
       "method_name": "Hypothesis-driven factor selection",
       "method_description": "Propose three hypotheses about factors affecting mound vulnerability based on field observations: (1) annual agriculture damages mounds through ploughing, (2) proximity to urban areas contributes to damage from peri-urban activities, (3) looters target larger mounds",
       "method_type": "conceptual",
-      "design_context": [
-        "RD002",
-        "RD001"
-      ],
       "implements_designs": [
+        "RD001",
         "RD002"
       ],
       "used_in_protocols": [
@@ -5466,17 +5480,17 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "Based on this intuition, we proposed three hypotheses: the ploughing, harrowing, and removal of obstacles from \ufb01elds associated with annual agriculture damage mounds [...]; proximity to a city, town, or village would contribute to damage [...]; looters would preferentially target larger mounds",
-      "extraction_confidence": "high"
+      "verbatim_quote": "Based on this intuition, we proposed three hypotheses: the ploughing, harrowing, and removal of obstacles from ﬁelds associated with annual agriculture damage mounds [...]; proximity to a city, town, or village would contribute to damage [...]; looters would preferentially target larger mounds",
+      "extraction_confidence": "high",
+      "implemented_by_protocols": [
+        "P001"
+      ]
     },
     {
       "method_id": "M002",
       "method_name": "Large-scale systematic pedestrian survey",
       "method_description": "Compile burial mound dataset through regional, total-coverage, pedestrian survey campaigns using trained personnel with standardised record sheets to collect GPS location, dimensions, land-use, and condition data",
       "method_type": "observational",
-      "design_context": [
-        "RD001"
-      ],
       "implements_designs": [
         "RD001"
       ],
@@ -5489,17 +5503,20 @@
         "start_paragraph": 1,
         "end_paragraph": 1
       },
-      "verbatim_quote": "TRAP compiled the burial mound dataset during three archaeological surface survey campaigns in the Kazanlak Valley during 2009\u20132011 (Ross et al. forthcoming). GPS location, dimensions, surrounding land-use, and condition of 773 burial mounds were collected by trained personnel using standardised record sheets over the course of regional, total-coverage, pedestrian survey",
-      "extraction_confidence": "high"
+      "verbatim_quote": "TRAP compiled the burial mound dataset during three archaeological surface survey campaigns in the Kazanlak Valley during 2009–2011 (Ross et al. forthcoming). GPS location, dimensions, surrounding land-use, and condition of 773 burial mounds were collected by trained personnel using standardised record sheets over the course of regional, total-coverage, pedestrian survey",
+      "extraction_confidence": "high",
+      "implemented_by_protocols": [
+        "P002",
+        "IP001",
+        "IP002",
+        "IP003"
+      ]
     },
     {
       "method_id": "M003",
       "method_name": "GIS-based spatial variable derivation",
       "method_description": "Extract elevation data from digital elevation model and calculate distance metrics using GIS tools (Distance Matrix plugin in qGIS) applied to boundary polygons",
       "method_type": "computational",
-      "design_context": [
-        "RD001"
-      ],
       "implements_designs": [
         "RD001"
       ],
@@ -5514,16 +5531,17 @@
         "end_paragraph": 1
       },
       "verbatim_quote": "Elevations were extracted from an ASTER digital elevation model. The distance to the nearest urban boundary was calculated using the Distance Matrix plugin in qGIS on the boundary polygons generated by the Japanese International Cooperation Agency (JICA) in 1994.",
-      "extraction_confidence": "high"
+      "extraction_confidence": "high",
+      "implemented_by_protocols": [
+        "P003",
+        "P004"
+      ]
     },
     {
       "method_id": "M004",
       "method_name": "Ordered logit model estimation and simulation",
       "method_description": "Estimate ordered logit model coef ficients using maximum likelihood algorithms to model relationships between mound condition and explanatory variables, then run simulations extrapolating to probable condition under changed circumstances",
       "method_type": "quantitative",
-      "design_context": [
-        "RD001"
-      ],
       "implements_designs": [
         "RD001"
       ],
@@ -5538,8 +5556,13 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "An ordered logit model was estimated using the variables discussed in Section 2.2; coef\ufb01cients are reported in Table 1. This model established the relationship between the current condition and circumstances of the mounds. Then we ran the simulations described in Section 2, extrapolating from the existing relationships between condition and circumstances to probable mound condition under new circumstances.",
-      "extraction_confidence": "high"
+      "verbatim_quote": "An ordered logit model was estimated using the variables discussed in Section 2.2; coefﬁcients are reported in Table 1. This model established the relationship between the current condition and circumstances of the mounds. Then we ran the simulations described in Section 2, extrapolating from the existing relationships between condition and circumstances to probable mound condition under new circumstances.",
+      "extraction_confidence": "high",
+      "implemented_by_protocols": [
+        "P005",
+        "P006",
+        "P007"
+      ]
     }
   ],
   "protocols": [
@@ -5560,7 +5583,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "We use a large number of observations to model relationships between mound condition and elevation, mound size, surrounding land use (including annual agriculture, perennial agriculture, pasture, or forest), and distance to the nearest urban boundary. Four speci\ufb01c changes were then simulated: conversion of all forest to annual agriculture; conversion of all forest to pasture; conversion of all pasture to annual agriculture; an increase in distance of one standard deviation (673 m) from the nearest edge of a city, town, or village.",
+      "verbatim_quote": "We use a large number of observations to model relationships between mound condition and elevation, mound size, surrounding land use (including annual agriculture, perennial agriculture, pasture, or forest), and distance to the nearest urban boundary. Four speciﬁc changes were then simulated: conversion of all forest to annual agriculture; conversion of all forest to pasture; conversion of all pasture to annual agriculture; an increase in distance of one standard deviation (673 m) from the nearest edge of a city, town, or village.",
       "extraction_confidence": "high"
     },
     {
@@ -5665,7 +5688,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "Then we ran the simulations described in Section 2, extrapolating from the existing relationships between condition and circumstances to probable mound condition under new circumstances. For example, the (negative) relationship between mound condition and distance to the nearest urban boundary was \ufb01rst quanti\ufb01ed, and then new mound conditions were estimated as if the nearest boundary had retreated by 673 m (one standard deviation).",
+      "verbatim_quote": "Then we ran the simulations described in Section 2, extrapolating from the existing relationships between condition and circumstances to probable mound condition under new circumstances. For example, the (negative) relationship between mound condition and distance to the nearest urban boundary was ﬁrst quantiﬁed, and then new mound conditions were estimated as if the nearest boundary had retreated by 673 m (one standard deviation).",
       "extraction_confidence": "high"
     },
     {
@@ -5685,7 +5708,7 @@
         "start_paragraph": 2,
         "end_paragraph": 2
       },
-      "verbatim_quote": "Since the typical outputs of logit models (coef\ufb01cients and odds ratios) are dif\ufb01cult to explain and interpret, we chose to represent the changes graphically; for each simulation, visible shifts in the probability density functions indicate how changing circumstances affect mound vulnerability.",
+      "verbatim_quote": "Since the typical outputs of logit models (coefﬁcients and odds ratios) are difﬁcult to explain and interpret, we chose to represent the changes graphically; for each simulation, visible shifts in the probability density functions indicate how changing circumstances affect mound vulnerability.",
       "extraction_confidence": "high"
     },
     {
@@ -5781,7 +5804,7 @@
       "implicit_basis": "mentioned_undocumented",
       "trigger_text": [
         "Mound condition, our response variable, is based on subjective observation of burial mound condition at the time of survey. This variable was informed by Wildesen's (1982, 54) concept of 'effect', which denotes professional judgement about a measurable characteristic relating to the archaeological value of the site.",
-        "We recorded condition on Likert scale from 1 (intact) to 5 (extinct), producing a categorical variable. Category 1 mounds might have slight damage, but their archaeological value had not been compromised. Categories 2\u20134 represented increasingly signi\ufb01cant damage."
+        "We recorded condition on Likert scale from 1 (intact) to 5 (extinct), producing a categorical variable. Category 1 mounds might have slight damage, but their archaeological value had not been compromised. Categories 2–4 represented increasingly signiﬁcant damage."
       ],
       "trigger_locations": [
         {
