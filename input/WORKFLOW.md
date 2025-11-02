@@ -326,6 +326,65 @@ This document describes the 7-pass autonomous extraction workflow used to system
 
 **Duration:** 1-2 hours
 
+**Proceeds to:** Phase 2b (Bidirectional Mapping Reconciliation)
+
+---
+
+### Phase 2b: Bidirectional Mapping Reconciliation
+
+**Purpose:** Validate and auto-correct bidirectional mapping consistency after consolidation
+
+**Input:** extraction.json after Pass 2 consolidation
+
+**Output:** extraction.json with corrected bidirectional mappings
+
+**Script:** `extraction-system/scripts/validate_bidirectional.py`
+
+**When to run:**
+- MANDATORY after Pass 2 (claims/evidence consolidation)
+- MANDATORY after Pass 4 (RDMAP consolidation)
+- RECOMMENDED after any manual edits to mappings
+
+**What it validates:**
+- Claim↔Evidence mappings: claims.supported_by ↔ evidence.supports_claims
+- Method↔Design mappings: methods.implements_designs ↔ research_designs.implemented_by_methods
+- Protocol↔Method mappings: protocols.implements_methods ↔ methods.implemented_by_protocols
+
+**Auto-correction behaviour:**
+- Adds missing reverse mappings automatically (safe corrections)
+- Reports corrections made in terminal output
+- Flags conflicts for manual review (exit code 2)
+- Saves corrections directly to extraction.json
+
+**Command:**
+```bash
+python3 extraction-system/scripts/validate_bidirectional.py outputs/{paper-slug}/extraction.json
+```
+
+**Success criteria:**
+- Exit code 0: All consistent or auto-corrections successful
+- Exit code 2: Conflicts require manual resolution (review and fix before proceeding)
+- Exit code 1: Error (investigate and fix)
+
+**Manual conflict resolution:**
+If conflicts are reported (exit code 2):
+1. Review terminal output for conflict descriptions
+2. Inspect the specific mappings in extraction.json
+3. Manually resolve contradictions (usually consolidation reference not updated in both directions)
+4. Re-run script to verify resolution
+
+**Why critical:**
+Pass 2 consolidation often creates bidirectional inconsistencies when:
+- Consolidated items have their forward references updated but reverse references in other arrays are missed
+- Multiple items consolidated but not all reverse references merged
+- Items removed but references not cleaned up
+
+This phase catches 88+ errors across 5 papers according to cross-paper error analysis (2025-11-02).
+
+**Checkpoint:** "Phase 2b complete - bidirectional mappings validated: {corrections_made} auto-corrections, {conflicts_found} conflicts resolved."
+
+**Duration:** 5-10 minutes (mostly automated)
+
 **Proceeds to:** Pass 3
 
 ---
@@ -481,6 +540,53 @@ This document describes the 7-pass autonomous extraction workflow used to system
 **Checkpoint:** "Pass 5 complete - conservative RDMAP rationalization reduced from {before} to {after} items ({reduction_pct}% reduction). Final RDMAP: {designs} designs, {methods} methods, {protocols} protocols."
 
 **Duration:** 1-2 hours
+
+**Proceeds to:** Phase 5b (Bidirectional Mapping Reconciliation)
+
+---
+
+### Phase 5b: Bidirectional Mapping Reconciliation
+
+**Purpose:** Validate and auto-correct bidirectional RDMAP mapping consistency after consolidation
+
+**Input:** extraction.json after Pass 5 (RDMAP rationalization)
+
+**Output:** extraction.json with corrected bidirectional RDMAP mappings
+
+**Script:** `extraction-system/scripts/validate_bidirectional.py`
+
+**What it validates:**
+- Method↔Design mappings: methods.implements_designs ↔ research_designs.implemented_by_methods
+- Protocol↔Method mappings: protocols.implements_methods ↔ methods.implemented_by_protocols
+- Claim↔Evidence mappings (if both present): claims.supported_by ↔ evidence.supports_claims
+
+**Auto-correction behaviour:**
+- Adds missing reverse mappings automatically (safe corrections)
+- Reports corrections made in terminal output
+- Flags conflicts for manual review (exit code 2)
+- Saves corrections directly to extraction.json
+
+**Command:**
+```bash
+python3 extraction-system/scripts/validate_bidirectional.py outputs/{paper-slug}/extraction.json
+```
+
+**Success criteria:**
+- Exit code 0: All consistent or auto-corrections successful
+- Exit code 2: Conflicts require manual resolution (review and fix before proceeding)
+- Exit code 1: Error (investigate and fix)
+
+**Why critical:**
+Pass 5 RDMAP consolidation often creates bidirectional inconsistencies when:
+- Consolidated methods have their forward references to designs updated but reverse references in research_designs.implemented_by_methods are missed
+- Protocol→Method mappings not updated when methods are consolidated
+- Hierarchy chains broken (Protocol→Method→Design)
+
+This phase ensures RDMAP hierarchy integrity before validation.
+
+**Checkpoint:** "Phase 5b complete - RDMAP bidirectional mappings validated: {corrections_made} auto-corrections, {conflicts_found} conflicts resolved."
+
+**Duration:** 5-10 minutes (mostly automated)
 
 **Proceeds to:** Pass 6
 
