@@ -352,15 +352,42 @@ Pass 2 systematically reviews for implicit arguments missed in Pass 1 (see STEP 
 
 **Remember:** Pass 2 consolidates and refines, but maintains same sourcing discipline established in Pass 1.
 
-### STEP 3: Relationship Verification
-- Update `supports_claims` arrays after consolidation
-- Check `supported_by_evidence` links
-- Verify hierarchical claim structure (`supports_claims` within claims array)
-- Validate analytical view cross-references (`related_evidence`)
+### STEP 3: Relationship Verification & Bidirectional Consistency
+
+**🚨 CRITICAL: All mappings must be BIDIRECTIONAL**
+
+Every relationship between entities must be recorded in BOTH directions. This is mandatory for data integrity and analysis.
+
+**Bidirectional mapping pairs:**
+- Claim→Evidence: `claims.supported_by` ↔ `evidence.supports_claims`
+- Claim→Claim: `claims.supports_claims` (parent→child)
+- Evidence→Evidence: `evidence.related_evidence` (bidirectional peer relationship)
+
+**When creating or updating mappings:**
+1. **Forward reference created** → Immediately create reverse reference
+   - Example: Add E005 to C001.supported_by → Add C001 to E005.supports_claims
+2. **Consolidation performed** → Update BOTH directions
+   - Example: Consolidate E005+E006→E005 → Update all claims referencing E006 to E005 AND update E005.supports_claims to include all claims from both items
+3. **Reference removed** → Remove from BOTH directions
+   - Example: Remove E005 from C001.supported_by → Remove C001 from E005.supports_claims
+
+**Verification checklist:**
+- [ ] Every ID in `claims.supported_by` has corresponding entry in `evidence.supports_claims`
+- [ ] Every ID in `evidence.supports_claims` has corresponding entry in `claims.supported_by`
+- [ ] No orphaned references (referencing non-existent IDs)
+- [ ] No duplicate IDs within arrays
+- [ ] Hierarchical claim structures valid (no circular references)
+- [ ] Analytical view cross-references (`related_evidence`) symmetrical
 
 **🚨 CRITICAL: Cross-Reference Repair After Consolidation**
 
 When consolidating items, cross-references in OTHER arrays must be updated to point to the new consolidated IDs. This is MANDATORY to prevent broken references.
+
+**Consolidation algorithm:**
+1. Identify all arrays that reference the items being consolidated
+2. Replace old IDs with new consolidated ID in ALL locations
+3. Update reverse mappings in the consolidated item
+4. Verify bidirectional consistency after consolidation
 
 **For complete cross-reference repair procedure (including algorithm and validation):**
 → See `references/checklists/consolidation-patterns.md` (Cross-Reference Repair After Consolidation section, lines 411-520)

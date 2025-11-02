@@ -88,6 +88,85 @@ Use this checklist as your roadmap. Execute all applicable checks:
 
 ---
 
+## Automated Validation Scripts
+
+**🚨 CRITICAL: Run automated validators BEFORE manual validation**
+
+Two automated validation scripts provide first-pass structural validation and auto-correction:
+
+### Script 1: Bidirectional Mapping Validator (Auto-correcting)
+
+**Purpose:** Validates and auto-corrects bidirectional mapping consistency across all entity types.
+
+**Script:** `extraction-system/scripts/validate_bidirectional.py`
+
+**What it validates:**
+- Claim↔Evidence mappings (claims.supported_by ↔ evidence.supports_claims)
+- Method↔Design mappings (methods.implements_designs ↔ research_designs.implemented_by_methods)
+- Protocol↔Method mappings (protocols.implements_methods ↔ methods.implemented_by_protocols)
+
+**Auto-correction behaviour:**
+- Adds missing reverse mappings automatically (safe corrections)
+- Flags conflicts for human review (contradictory mappings)
+- Saves corrections directly to extraction.json
+
+**Run command:**
+```bash
+python3 extraction-system/scripts/validate_bidirectional.py outputs/paper-name/extraction.json
+```
+
+**Exit codes:**
+- 0: All consistent or corrections made successfully
+- 2: Conflicts require human review
+- 1: Error
+
+### Script 2: JSON Schema Validator (Detection only)
+
+**Purpose:** Validates extraction against JSON Schema and reference integrity rules.
+
+**Script:** `extraction-system/scripts/validate_extraction.py`
+
+**What it validates:**
+- JSON Schema compliance (uniqueItems, minimum values, required fields)
+- Reference integrity (all referenced IDs exist)
+- Duplicate ID detection
+- Page number validity (≥1 or null, not -1 placeholders)
+
+**Behaviour:** Detection only - does NOT modify extraction.json
+
+**Run command:**
+```bash
+python3 extraction-system/scripts/validate_extraction.py outputs/paper-name/extraction.json
+```
+
+**Exit codes:**
+- 0: All validation checks passed
+- 1: Validation failures detected
+
+### Validation Workflow Integration
+
+**Step 1: Run bidirectional validator (auto-correct)**
+```bash
+python3 extraction-system/scripts/validate_bidirectional.py outputs/paper-name/extraction.json
+```
+- Review corrections made
+- If conflicts reported (exit code 2), manually resolve before proceeding
+
+**Step 2: Run schema validator (detect)**
+```bash
+python3 extraction-system/scripts/validate_extraction.py outputs/paper-name/extraction.json
+```
+- Review any errors reported
+- Fix manually if needed
+
+**Step 3: Proceed with detailed manual validation (this prompt)**
+- Complete the manual validation checks below
+- Generate comprehensive validation report
+
+**Note:** The automated validators catch structural/syntactic issues. Manual validation (this prompt) focuses on semantic issues, source verification, completeness, and domain-specific quality checks that require human judgement.
+
+---
+
 ## Validation Philosophy
 
 **Purpose:** Ensure extraction is structurally sound, internally consistent, and schema-compliant.

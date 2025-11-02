@@ -212,24 +212,42 @@ Step 4: Document all consolidations with complete metadata
 
 ---
 
-### 2. Cross-Reference Validation
+### 2. Cross-Reference Validation & Bidirectional Consistency
 
-**Verify bidirectional consistency for all cross-references:**
+**🚨 CRITICAL: All RDMAP mappings must be BIDIRECTIONAL**
 
-**Design → Method:**
-- `research_designs[].enables_methods` ↔ `methods[].implements_designs`
-- Check: Every enabled method references back to design
+Every relationship between RDMAP entities must be recorded in BOTH directions. This is mandatory for data integrity, hierarchy validation, and analysis.
 
-**Method → Protocol:**
-- `methods[].realized_through_protocols` ↔ `protocols[].implements_methods`
-- Check: Every used protocol references back to method
-- Note: `implements_methods` is an array, e.g., `["M001"]` or `["M001", "M002"]`
+**Bidirectional mapping pairs:**
+- Design↔Method: `research_designs[].enables_methods` ↔ `methods[].implements_designs`
+- Method↔Protocol: `methods[].realized_through_protocols` ↔ `protocols[].implements_methods`
+- Method↔Claim: `methods[].supports_claims` ↔ `claims[].supported_by_evidence`
 
-**Method → Evidence/Claims:**
+**When creating or updating RDMAP mappings:**
+1. **Forward reference created** → Immediately create reverse reference
+   - Example: Add M001 to RD001.enables_methods → Add RD001 to M001.implements_designs
+2. **Consolidation performed** → Update BOTH directions
+   - Example: Consolidate M001+M002→M001 → Update all designs/protocols referencing M002 to M001 AND update M001 reverse references to include all from both items
+3. **Reference removed** → Remove from BOTH directions
+   - Example: Remove M001 from RD001.enables_methods → Remove RD001 from M001.implements_designs
+4. **Tier reassignment** → Update ALL affected cross-references
+   - Example: Move item from Method to Protocol → Update parent method's realized_through_protocols AND remove from design's enables_methods
+
+**Verification checklist:**
+- [ ] Every ID in `research_designs[].enables_methods` has corresponding entry in `methods[].implements_designs`
+- [ ] Every ID in `methods[].implements_designs` has corresponding entry in `research_designs[].enables_methods`
+- [ ] Every ID in `methods[].realized_through_protocols` has corresponding entry in `protocols[].implements_methods`
+- [ ] Every ID in `protocols[].implements_methods` has corresponding entry in `methods[].realized_through_protocols`
+- [ ] No orphaned references (referencing non-existent IDs)
+- [ ] No duplicate IDs within arrays
+- [ ] RDMAP hierarchy valid (every Method connects to ≥1 Design, every Protocol connects to ≥1 Method)
+
+**Method → Evidence/Claims cross-validation:**
 - `methods[].supports_claims` ↔ `claims[].supported_by_evidence`
 - Verify method descriptions not making claims (boundary accuracy)
+- If claims array not yet extracted, note for deferred validation
 
-**After consolidation:** Update all affected cross-references
+**After consolidation:** Update all affected cross-references in BOTH directions following the consolidation algorithm below
 
 ---
 
