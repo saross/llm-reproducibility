@@ -30,7 +30,8 @@
             "integer",
             "null"
           ],
-          "description": "Page number if available"
+          "minimum": 1,
+          "description": "Page number (must be ≥1 if provided, or null)"
         },
         "start_paragraph": {
           "type": [
@@ -224,6 +225,7 @@
         "items": {
           "type": "string"
         },
+        "uniqueItems": true,
         "description": "Claim IDs this evidence supports"
       },
       "related_evidence": {
@@ -436,6 +438,7 @@
         "items": {
           "type": "string"
         },
+        "uniqueItems": true,
         "description": "Evidence IDs supporting this claim"
       },
       "supports_claims": {
@@ -1598,6 +1601,7 @@
         "items": {
           "type": "string"
         },
+        "uniqueItems": true,
         "description": "Research design IDs this method implements"
       },
       "realized_through_protocols": {
@@ -2073,6 +2077,7 @@
         "items": {
           "type": "string"
         },
+        "uniqueItems": true,
         "description": "Method IDs this protocol implements"
       },
       "sub_protocols": {
