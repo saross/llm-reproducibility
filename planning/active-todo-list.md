@@ -350,6 +350,103 @@ Extraction prompts and skill may contain metrics, targets, or patterns calibrate
 
 ---
 
+## Section 5b: Infrastructure Assessment Enhancement (Phase 2)
+
+**Priority:** DEFERRED (Phase 2 - after testing)
+**Status:** Awaiting empirical grounding from Phase 1 testing on diverse papers
+**Effort:** TBD based on testing outcomes and identified gaps
+
+**Context:**
+Phase 1 infrastructure assessment capability deployed (2025-11-11):
+- Created 4 reference files: pid-systems-guide.md, fair-principles-guide.md, fieldwork-permits-guide.md, credit-taxonomy.md
+- Integrated FAIR4RS (software-specific FAIR principles) with 5-level computational reproducibility spectrum
+- Extended schema with computational_reproducibility object
+- Updated Pass 6 and Pass 7 prompts to reference skill files
+- Updated research-assessor SKILL.md to document infrastructure capability
+
+**Phase 1 Implementation Included:**
+- ✅ Software PIDs (Software Heritage, Zenodo, CodeMeta, swMath, ASCL)
+- ✅ Computational reproducibility spectrum (none → code_only → code_dependencies → containerised → fully_reproducible)
+- ✅ Environment specification assessment (requirements file, lock file, container, binder)
+- ✅ Analysis transparency tracking (random seeds, parameters, workflow, alternatives)
+- ✅ Metadata richness framework (DataCite schema, mandatory vs recommended fields)
+- ✅ Controlled vocabularies guidance (6 HASS examples: PeriodO, Pleiades, Getty AAT, Darwin Core, CIDOC-CRM, ChronOntology)
+- ✅ CARE principles expansion (Collective benefit, Authority to control, Responsibility, Ethics)
+- ✅ Machine-actionability definitions and examples
+- ✅ Ben Marwick's "built-in vs bolted-on" FAIR heuristic (documented with observable indicators)
+
+**Testing Phase (Immediate Next Step):**
+Test Phase 1 implementation on 3-5 diverse papers:
+- [ ] Recent (2023-2024) with PIDs/data availability statements
+- [ ] Mid-period (2016-2019) transition era papers
+- [ ] Pre-2016 minimal infrastructure papers
+- [ ] Fieldwork-heavy paper (permits, CARE principles relevant)
+- [ ] Computational paper (code/software PIDs, reproducibility relevant)
+
+**Document extraction struggles and identify:**
+- Which guidance is insufficient or unclear?
+- Which examples are needed but missing?
+- Which scoring criteria are ambiguous?
+- Which assessment dimensions are too simplistic or too complex?
+
+**Phase 2 Enhancements (Deferred Pending Testing Evidence):**
+
+### Potential Additions Based on Testing Outcomes:
+
+**5b.1 Worked Examples from Real Extractions**
+- Add concrete extraction examples to each infrastructure reference file based on actual challenges encountered
+- Document edge cases and ambiguous scenarios discovered during testing
+- Create before/after examples showing common mistakes and corrections
+
+**5b.2 Full FAIR4RS Research Report (If Needed)**
+- **Condition:** Deploy only if software assessment shows insufficient depth
+- **Scope:** Comprehensive research report on FAIR principles for Research Software (Chue Hong et al. 2022, Barker et al. 2022)
+- **Content:** Extended guidance on software citation, version control, testing, documentation, software registries, software management plans
+- **Effort:** ~6-8 hours research + documentation
+- **Alternative:** Current (~600 word) software FAIR section may be sufficient for HASS papers with modest computational components
+
+**5b.3 "Built-in vs Bolted-on" FAIR Operationalization**
+- **Current state:** Heuristic documented in pid-systems-guide.md with observable indicators
+- **Challenge:** Temporal integration difficult to assess from published papers alone
+- **Future opportunity:** RAiD (Research Activity Identifier) adoption could enable timeline tracking
+- **Potential approach:** Develop rubric for assessing integration depth from available signals (acknowledgements, methods narrative, data management plan references)
+
+**5b.4 Software-Specific Replicability Scoring Refinements**
+- **Condition:** Deploy if testing shows need for more granular assessment
+- **Current:** 5-level computational reproducibility spectrum (0-4)
+- **Potential enhancement:** Subscales for environment completeness, workflow documentation, dependency specification quality
+- **Risk:** Over-engineering assessment complexity for typical HASS papers
+- **Decision point:** Defer until testing corpus reveals genuine need
+
+**5b.5 Cross-Paper PID Adoption Trend Analysis**
+- **Requires:** Full corpus extraction complete (all 10+ papers)
+- **Analysis:** ORCID coverage over time, DOI adoption curves, software PID emergence, vocabulary PID usage patterns
+- **Output:** Empirical baseline for HASS archaeological research (2005-2024)
+- **Use case:** Contextualise individual paper scores against discipline norms
+- **Effort:** 4-6 hours after full corpus available
+
+**5b.6 Repository-Specific Assessment Guidelines**
+- **Condition:** Deploy only if testing corpus shows heavy reliance on specific platforms
+- **Candidates:** Zenodo, Figshare, Dryad, GitHub, Software Heritage, tDAR, ADS, Open Context
+- **Content:** Platform-specific PID formats, metadata standards, preservation policies, FAIR compliance levels
+- **Decision point:** Assess after testing whether general guidance is sufficient or platform-specific knowledge needed
+
+**5b.7 Indigenous Data Governance Case Studies**
+- **Condition:** Deploy if CARE principles extraction shows insufficient guidance
+- **Current:** General CARE framework in fieldwork-permits-guide.md
+- **Enhancement:** Worked examples of CARE-compliant vs non-compliant disclosure
+- **Sources:** AIATSIS Code of Ethics cases, OCAP principles examples, Tribal Historical Preservation Offices (THPOs) case studies
+- **Effort:** 3-4 hours research + documentation
+
+**When to Revisit:** After testing Phase 1 implementation on diverse papers and documenting empirical evidence of guidance gaps or assessment limitations.
+
+**Dependencies:**
+- Testing phase completion on 3-5 diverse papers
+- Documentation of extraction struggles and ambiguities
+- User decision on assessment scope and depth requirements
+
+---
+
 ## Deferred / Future Projects
 
 ### 6. Secondary Source Attribution and Role Classification

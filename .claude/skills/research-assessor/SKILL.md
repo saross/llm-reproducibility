@@ -1,20 +1,21 @@
 ---
 name: research-assessor
-description: Extracts and assesses research methodology, claims, and evidence from research papers in HASS disciplines. Evaluates transparency, replicability, and credibility through systematic extraction of research designs, methods, protocols, claims, and evidence using a five-pass iterative workflow.
+description: Extracts and assesses research methodology, claims, evidence, and infrastructure from research papers in HASS disciplines. Evaluates transparency, replicability, and credibility through systematic extraction of research designs, methods, protocols, claims, evidence, and reproducibility infrastructure (PIDs, FAIR compliance, permits, funding) using a seven-pass iterative workflow.
 license: Apache 2.0
 ---
 
 # Research Assessor
 
-Systematic extraction and assessment framework for research methodology, claims, and evidence in HASS disciplines (archaeology, biology, ethnography, ecology, literary studies, philology, etc.).
+Systematic extraction and assessment framework for research methodology, argumentation, and reproducibility infrastructure in HASS disciplines (archaeology, palaeoecology, ethnography, ecology, literary studies, philology, etc.).
 
 ## What This Skill Does
 
-This skill enables comprehensive extraction of research methodology and argumentation from academic papers through a structured multi-pass workflow:
+This skill enables comprehensive extraction of research content and infrastructure from academic papers through a structured multi-pass workflow:
 
-1. **Claims & Evidence Extraction** (Pass 1 & 2) - Extract observations, measurements, claims, and implicit arguments
-2. **RDMAP Extraction** (Pass 1 & 2) - Extract Research Designs, Methods, and Protocols  
-3. **Validation** (Pass 3) - Verify structural integrity and cross-reference consistency
+1. **Claims & Evidence Extraction** (Passes 1-2) - Extract observations, measurements, claims, and implicit arguments
+2. **RDMAP Extraction** (Passes 3-5) - Extract Research Designs, Methods, and Protocols
+3. **Infrastructure Extraction** (Pass 6) - Extract PIDs, FAIR compliance, funding, permits, author contributions
+4. **Validation** (Pass 7) - Verify structural integrity and cross-reference consistency
 
 The extracted data enables assessment of research transparency, replicability, and credibility.
 
@@ -35,20 +36,24 @@ The complete extraction follows this sequence:
 ```
 Blank JSON Template
     ↓
-Claims/Evidence Pass 1 (liberal extraction)
+Pass 1: Evidence extraction (liberal)
     ↓
-Claims/Evidence Pass 2 (rationalization)
+Pass 2: Claims + implicit arguments extraction + rationalization
     ↓
-RDMAP Pass 1 (liberal extraction)
+Pass 3: RDMAP extraction (liberal)
     ↓
-RDMAP Pass 2 (rationalization)
+Pass 4: RDMAP rationalization
     ↓
-Validation Pass 3 (integrity checks)
+Pass 5: Research designs extraction
+    ↓
+Pass 6: Infrastructure extraction (PIDs, FAIR, funding, permits)
+    ↓
+Pass 7: Validation (integrity checks)
     ↓
 Assessment-Ready Extraction
 ```
 
-**Key principle:** Single JSON document flows through all passes. Each pass populates or refines specific arrays, leaving others untouched.
+**Key principle:** Single JSON document flows through all passes. Each pass populates or refines specific sections, leaving others untouched.
 
 ## Using This Skill
 
@@ -97,9 +102,9 @@ The prompts contain detailed instructions, examples, and decision frameworks for
 If you encounter uncertainty during extraction, consult:
 
 **Core Extraction Principles:**
-- `references/extraction-fundamentals.md` - Universal sourcing requirements, explicit vs implicit extraction, systematic implicit RDMAP patterns, systematic implicit arguments patterns with 6 recognition patterns (ALWAYS read first for Pass 1 & 2)
+- `references/extraction-fundamentals.md` - Universal sourcing requirements, explicit vs implicit extraction, systematic implicit RDMAP patterns, systematic implicit arguments patterns with 6 recognition patterns (ALWAYS read first for Passes 1-5)
 - `references/verbatim-quote-requirements.md` - Strict verbatim quote requirements (prevents 40-50% validation failures)
-- `references/verification-procedures.md` - Source verification for Pass 3 validation
+- `references/verification-procedures.md` - Source verification for Pass 7 validation
 
 **Schema & Structure:**
 - `references/schema/schema-guide.md` - Complete object definitions with inline examples
@@ -107,8 +112,14 @@ If you encounter uncertainty during extraction, consult:
 **Decision Frameworks:**
 - `references/checklists/tier-assignment-guide.md` - Design vs Method vs Protocol decisions
 - `references/research-design-operational-guide.md` - Operational patterns for finding all Research Designs (4-6 expected)
-- `references/checklists/consolidation-patterns.md` - When to lump vs split items, cross-reference repair procedure (CRITICAL for Pass 2 & Pass 4)
+- `references/checklists/consolidation-patterns.md` - When to lump vs split items, cross-reference repair procedure (CRITICAL for Passes 2 & 4)
 - `references/checklists/expected-information.md` - Domain-specific completeness checklists
+
+**Infrastructure Assessment** (Pass 6):
+- `references/infrastructure/pid-systems-guide.md` - Persistent identifiers (DOI, ORCID, RAiD, IGSN, software PIDs), PID graph connectivity scoring, HASS adoption context
+- `references/infrastructure/fair-principles-guide.md` - FAIR principles framework, metadata richness, controlled vocabularies, software-specific FAIR (FAIR4RS), computational reproducibility spectrum, machine-actionability, context-dependent assessment
+- `references/infrastructure/fieldwork-permits-guide.md` - Permit types, CARE principles integration, ethical restrictions assessment
+- `references/infrastructure/credit-taxonomy.md` - CReDIT contributor roles taxonomy (14 roles), format variations
 
 **Examples:**
 - `references/examples/sobotkova-example.md` - Complete worked example
