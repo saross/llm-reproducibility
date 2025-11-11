@@ -1,0 +1,464 @@
+{
+  "assessment_metadata": {
+    "assessment_date": "2025-11-02",
+    "assessor": "Claude Sonnet 4.5",
+    "corpus_size": 10,
+    "total_items": 1693,
+    "total_mappings": 629,
+    "assessment_purpose": "Identify systematic failure patterns to improve extraction prompts, skill logic, and schema design"
+  },
+
+  "overall_results": {
+    "grade_distribution": {
+      "A": 5,
+      "B": 2,
+      "C": 0,
+      "D": 1,
+      "F": 2
+    },
+    "pass_rate_percent": 70.0,
+    "critical_failures": 3
+  },
+
+  "failure_patterns": [
+    {
+      "pattern_id": "FP1",
+      "pattern_name": "Missing Relationship Mappings",
+      "severity": "CRITICAL",
+      "prevalence": "30% of corpus (3/10 papers)",
+      "affected_papers": [
+        "ross-2005",
+        "ross-ballsun-stanton-2022",
+        "ross-et-al-2009"
+      ],
+      "description": "Complete absence of Pass 6 relationship mappings",
+      "root_causes": [
+        "Pass 6 workflow failure or incompletion",
+        "Possible author/domain-specific pattern (all Ross papers)",
+        "Correlation with high claims-to-evidence ratios"
+      ],
+      "impact": "SEVERE - Extractions unusable for transparency/replicability assessment without claim-evidence linkages",
+      "recommendations": [
+        {
+          "priority": 1,
+          "action": "Investigate Pass 6 workflow for affected papers",
+          "target": "skill_logic"
+        },
+        {
+          "priority": 1,
+          "action": "Add required field validation to prevent 0-mapping extractions",
+          "target": "schema"
+        },
+        {
+          "priority": 1,
+          "action": "Strengthen Pass 6 mapping criticality in prompts",
+          "target": "prompts"
+        },
+        {
+          "priority": 1,
+          "action": "Add automated retry logic if mappings == 0",
+          "target": "skill_logic"
+        }
+      ]
+    },
+    {
+      "pattern_id": "FP2",
+      "pattern_name": "Extreme Claims-to-Evidence Ratios",
+      "severity": "HIGH",
+      "prevalence": "40% of corpus have ratios >2.5",
+      "distribution": {
+        "optimal_0.8_to_1.5": 5,
+        "moderate_1.5_to_2.5": 1,
+        "high_2.5_to_4.0": 1,
+        "extreme_over_4.0": 3
+      },
+      "extreme_cases": [
+        {
+          "paper": "ross-ballsun-stanton-2022",
+          "ratio": 6.6,
+          "claims": 99,
+          "evidence": 15
+        },
+        {
+          "paper": "ross-2005",
+          "ratio": 4.59,
+          "claims": 78,
+          "evidence": 17
+        }
+      ],
+      "root_causes": [
+        "Domain-specific pattern (humanities/philology papers more interpretive)",
+        "Evidence under-extraction (measurements/observations not captured)",
+        "Claim over-extraction or poor Pass 2 consolidation"
+      ],
+      "impact": "MODERATE-HIGH - Suggests extraction methodology issues, difficult to assess claim credibility",
+      "recommendations": [
+        {
+          "priority": 2,
+          "action": "Add domain-specific extraction guidance (empirical vs interpretive)",
+          "target": "prompts"
+        },
+        {
+          "priority": 2,
+          "action": "Strengthen evidence extraction - capture ALL measurements/observations/citations",
+          "target": "prompts"
+        },
+        {
+          "priority": 2,
+          "action": "Improve Pass 2 claim consolidation",
+          "target": "prompts"
+        },
+        {
+          "priority": 2,
+          "action": "Flag C:E ratios >3.0 for manual review",
+          "target": "skill_logic"
+        }
+      ]
+    },
+    {
+      "pattern_id": "FP3",
+      "pattern_name": "Schema Field Naming Inconsistencies",
+      "severity": "MODERATE",
+      "prevalence": "Observed across extraction versions",
+      "examples": [
+        {
+          "relationship": "Claim → Evidence",
+          "old_field": "supported_by",
+          "new_field": "supported_by_evidence"
+        },
+        {
+          "relationship": "Method → Design",
+          "old_field": "implements_designs",
+          "new_field": "linked_designs"
+        },
+        {
+          "relationship": "Protocol → Method",
+          "old_field": "implements_methods",
+          "new_field": "linked_methods"
+        }
+      ],
+      "root_causes": [
+        "Schema evolution over time",
+        "Improved naming convention adopted mid-pilot"
+      ],
+      "impact": "LOW-MODERATE - Requires abstraction layer for cross-extraction analysis, user confusion",
+      "recommendations": [
+        {
+          "priority": 3,
+          "action": "Standardize on ONE naming convention (recommend 'linked_*' pattern)",
+          "target": "schema"
+        },
+        {
+          "priority": 3,
+          "action": "Migrate all extractions to unified schema",
+          "target": "data_migration"
+        },
+        {
+          "priority": 3,
+          "action": "Add schema_version field to track evolution",
+          "target": "schema"
+        }
+      ]
+    },
+    {
+      "pattern_id": "FP4",
+      "pattern_name": "Verbatim Quote Fidelity Issues",
+      "severity": "MODERATE",
+      "prevalence": "33% of quotes non-exact (sample: sobotkova-et-al-2024)",
+      "sample_evidence": {
+        "paper": "sobotkova-et-al-2024",
+        "total_quotes": 88,
+        "exact_matches": 59,
+        "accuracy_percent": 67.0
+      },
+      "discrepancy_types": [
+        "Formatting differences (spaces in number ranges)",
+        "Line break removal",
+        "Possible light paraphrasing or consolidation"
+      ],
+      "root_causes": [
+        "Quotes normalized/cleaned during extraction",
+        "PDF OCR/text extraction formatting variations",
+        "LLM paraphrasing rather than exact copying",
+        "'Verbatim' definition not strict enough in prompts"
+      ],
+      "impact": "MODERATE - Affects trust but semantic meaning preserved in most cases",
+      "recommendations": [
+        {
+          "priority": 4,
+          "action": "Define 'verbatim' strictly: character-for-character exact match",
+          "target": "prompts"
+        },
+        {
+          "priority": 4,
+          "action": "Add automated quote verification to quality checks",
+          "target": "skill_logic"
+        },
+        {
+          "priority": 4,
+          "action": "Consider separate normalized_quote field",
+          "target": "schema"
+        }
+      ]
+    },
+    {
+      "pattern_id": "FP5",
+      "pattern_name": "Bidirectional Mapping Inconsistency",
+      "severity": "LOW",
+      "prevalence": "Rare (1 paper observed)",
+      "sample_evidence": {
+        "paper": "sobotkova-et-al-2024",
+        "forward_mappings": 51,
+        "reverse_mappings": 50,
+        "discrepancy": 1
+      },
+      "root_causes": [
+        "Mappings stored in both directions",
+        "Inconsistent updating of bidirectional links"
+      ],
+      "impact": "LOW-MODERATE - Potential graph inconsistencies, unclear source of truth",
+      "recommendations": [
+        {
+          "priority": 5,
+          "action": "Choose ONE canonical direction for mappings (not both)",
+          "target": "schema"
+        },
+        {
+          "priority": 5,
+          "action": "Add consistency validation if bidirectional storage necessary",
+          "target": "skill_logic"
+        }
+      ]
+    }
+  ],
+
+  "corpus_metrics": {
+    "total_items": 1693,
+    "item_distribution": {
+      "evidence": {
+        "count": 565,
+        "percent": 33.4
+      },
+      "claims": {
+        "count": 860,
+        "percent": 50.8
+      },
+      "methods": {
+        "count": 119,
+        "percent": 7.0
+      },
+      "protocols": {
+        "count": 201,
+        "percent": 11.9
+      },
+      "research_designs": {
+        "count": 48,
+        "percent": 2.8
+      }
+    },
+    "mapping_metrics": {
+      "total_mappings": 629,
+      "papers_with_mappings": 7,
+      "papers_without_mappings": 3,
+      "average_per_paper_with_mappings": 90
+    },
+    "claims_to_evidence_ratios": {
+      "corpus_average": 1.52,
+      "optimal_range": [0.8, 1.5],
+      "papers_in_optimal_range": 5,
+      "papers_concerning_or_worse": 4
+    }
+  },
+
+  "paper_assessments": [
+    {
+      "paper_id": "sobotkova-et-al-2023",
+      "grade": "A",
+      "total_items": 154,
+      "claims_to_evidence_ratio": 1.28,
+      "total_mappings": 110,
+      "major_issues": []
+    },
+    {
+      "paper_id": "sobotkova-et-al-2024",
+      "grade": "A",
+      "total_items": 91,
+      "claims_to_evidence_ratio": 0.79,
+      "total_mappings": 75,
+      "major_issues": [
+        "33% verbatim quote fidelity issues (formatting)",
+        "Bidirectional mapping discrepancy (1 mapping)"
+      ]
+    },
+    {
+      "paper_id": "ross-2005",
+      "grade": "F",
+      "total_items": 120,
+      "claims_to_evidence_ratio": 4.59,
+      "total_mappings": 0,
+      "major_issues": [
+        "CRITICAL: Zero relationship mappings",
+        "Extreme claims-to-evidence ratio (4.59:1)"
+      ]
+    },
+    {
+      "paper_id": "eftimoski-et-al-2017",
+      "grade": "B",
+      "total_items": 145,
+      "claims_to_evidence_ratio": 3.03,
+      "total_mappings": 62,
+      "major_issues": [
+        "High claims-to-evidence ratio (3.03:1)"
+      ]
+    },
+    {
+      "paper_id": "ross-ballsun-stanton-2022",
+      "grade": "F",
+      "total_items": 150,
+      "claims_to_evidence_ratio": 6.6,
+      "total_mappings": 0,
+      "major_issues": [
+        "CRITICAL: Zero relationship mappings",
+        "EXTREME claims-to-evidence ratio (6.6:1)"
+      ]
+    },
+    {
+      "paper_id": "sobotkova-et-al-2021",
+      "grade": "A",
+      "total_items": 169,
+      "claims_to_evidence_ratio": 1.11,
+      "total_mappings": 129,
+      "major_issues": []
+    },
+    {
+      "paper_id": "sobotkova-et-al-2016",
+      "grade": "B",
+      "total_items": 198,
+      "claims_to_evidence_ratio": 2.65,
+      "total_mappings": 62,
+      "major_issues": [
+        "Moderate claims-to-evidence ratio (2.65:1)"
+      ]
+    },
+    {
+      "paper_id": "penske-et-al-2023",
+      "grade": "A",
+      "total_items": 231,
+      "claims_to_evidence_ratio": 0.99,
+      "total_mappings": 67,
+      "major_issues": []
+    },
+    {
+      "paper_id": "connor-et-al-2013",
+      "grade": "A",
+      "total_items": 247,
+      "claims_to_evidence_ratio": 0.77,
+      "total_mappings": 124,
+      "major_issues": []
+    },
+    {
+      "paper_id": "ross-et-al-2009",
+      "grade": "D",
+      "total_items": 288,
+      "claims_to_evidence_ratio": 1.21,
+      "total_mappings": 0,
+      "major_issues": [
+        "CRITICAL: Zero relationship mappings"
+      ]
+    }
+  ],
+
+  "priority_recommendations": [
+    {
+      "priority": 1,
+      "title": "Fix Missing Mappings Issue",
+      "severity": "CRITICAL",
+      "affected_papers": 3,
+      "actions": [
+        "Investigate Pass 6 workflow failures",
+        "Add validation to block 0-mapping extractions",
+        "Strengthen Pass 6 prompts",
+        "Add automated retry logic"
+      ],
+      "targets": ["skill_logic", "prompts", "schema"]
+    },
+    {
+      "priority": 2,
+      "title": "Address Extreme Claims-to-Evidence Ratios",
+      "severity": "HIGH",
+      "affected_papers": 4,
+      "actions": [
+        "Add domain-specific extraction guidance",
+        "Strengthen evidence extraction prompts",
+        "Improve claim consolidation",
+        "Flag ratios >3.0 for review"
+      ],
+      "targets": ["prompts", "skill_logic"]
+    },
+    {
+      "priority": 3,
+      "title": "Standardize Schema Field Names",
+      "severity": "MODERATE",
+      "affected_papers": 10,
+      "actions": [
+        "Choose canonical naming convention",
+        "Migrate all extractions",
+        "Add schema_version field"
+      ],
+      "targets": ["schema", "data_migration"]
+    },
+    {
+      "priority": 4,
+      "title": "Improve Verbatim Quote Fidelity",
+      "severity": "MODERATE",
+      "affected_papers": "Unknown (only 1 sampled)",
+      "actions": [
+        "Define 'verbatim' strictly in prompts",
+        "Add automated quote verification",
+        "Consider normalized_quote field"
+      ],
+      "targets": ["prompts", "skill_logic", "schema"]
+    },
+    {
+      "priority": 5,
+      "title": "Resolve Bidirectional Mapping Consistency",
+      "severity": "LOW",
+      "affected_papers": 1,
+      "actions": [
+        "Choose canonical storage direction",
+        "Remove redundant storage",
+        "Add validation if bidirectional needed"
+      ],
+      "targets": ["schema", "skill_logic"]
+    }
+  ],
+
+  "methodology": {
+    "approach": "Structural analysis via automated metrics with sample detailed verification",
+    "papers_with_verbatim_verification": 1,
+    "papers_with_structural_analysis": 10,
+    "time_invested_hours": 3,
+    "limitations": [
+      "Verbatim verification only on 1 paper (source text unavailable for others)",
+      "Content accuracy spot-checking limited",
+      "Focus on structural patterns vs exhaustive verification"
+    ]
+  },
+
+  "conclusion": {
+    "overall_quality": "Promising (70% pass rate) but with critical systematic failures",
+    "key_findings": [
+      "30% of papers missing ALL relationship mappings (Pass 6 failure)",
+      "40% of papers have concerning claims-to-evidence ratios",
+      "Schema inconsistencies across extractions",
+      "Verbatim quote fidelity concerns"
+    ],
+    "readiness_assessment": "Not production-ready - requires addressing Priority 1-2 issues",
+    "next_steps": [
+      "Fix Priority 1-2 issues immediately",
+      "Re-extract failing papers with improved prompts",
+      "Standardize schema across corpus",
+      "Expand assessment to additional papers"
+    ]
+  }
+}
