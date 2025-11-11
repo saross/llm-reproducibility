@@ -1,0 +1,473 @@
+{
+  "extraction_id": "connor-et-al-2013",
+  "assessment_date": "2025-11-02",
+  "assessment_type": "full_long",
+  "assessor": "Claude Sonnet 4.5",
+  "source_paper": "Connor et al. (2013) - Environmental conditions in the SE Balkans since the Last Glacial Maximum and their influence on the spread of agriculture into Europe",
+
+  "overall_summary": {
+    "total_items_assessed": 247,
+    "total_mappings_assessed": 145,
+    "assessment_scope": "Complete verification of all extracted items and relationships",
+
+    "pass_a_accuracy": {
+      "score_percent": 98.0,
+      "grade": "A",
+      "items_assessed": 247,
+      "correct_items": 242,
+      "items_with_errors": 5,
+      "total_errors": 5,
+      "penalty_points": -6.0
+    },
+
+    "pass_b_granularity": {
+      "score_percent": 99.6,
+      "grade": "A",
+      "items_assessed": 247,
+      "appropriate_granularity": 246,
+      "over_split": 0,
+      "under_split": 0,
+      "inconsistent": 1
+    },
+
+    "pass_c_mapping": {
+      "score_percent": 74.5,
+      "grade": "C",
+      "mappings_assessed": 145,
+      "strong_mappings": 137,
+      "weak_mappings": 3,
+      "incorrect_mappings": 0,
+      "missing_critical_mappings": 15
+    },
+
+    "overall_grade": "B+",
+    "overall_assessment": "Excellent item extraction quality with critical gap in RDMAP hierarchy"
+  },
+
+  "pass_a_accuracy_detailed": {
+    "summary": "Overall accuracy 98.0% - Excellent performance with minor issues concentrated in claims",
+
+    "by_type": {
+      "evidence": {
+        "total": 99,
+        "correct": 98,
+        "errors": 1,
+        "error_items": ["E063"],
+        "penalty_points": -1.0,
+        "accuracy_percent": 99.0
+      },
+      "claims": {
+        "total": 76,
+        "correct": 72,
+        "errors": 4,
+        "error_items": ["C001", "C013", "C063", "C096"],
+        "penalty_points": -5.0,
+        "accuracy_percent": 94.7
+      },
+      "methods": {
+        "total": 22,
+        "correct": 22,
+        "errors": 0,
+        "penalty_points": 0.0,
+        "accuracy_percent": 100.0
+      },
+      "protocols": {
+        "total": 41,
+        "correct": 41,
+        "errors": 0,
+        "penalty_points": 0.0,
+        "accuracy_percent": 100.0
+      },
+      "research_designs": {
+        "total": 9,
+        "correct": 9,
+        "errors": 0,
+        "penalty_points": 0.0,
+        "accuracy_percent": 100.0
+      }
+    },
+
+    "errors_identified": [
+      {
+        "item_id": "E063",
+        "error_type": "verbatim_quote_mismatch",
+        "severity": "minor",
+        "penalty": -1.0,
+        "description": "Content describes magnetic mineralogy composition but verbatim quote incorrectly refers to radiocarbon dates",
+        "verbatim_source_actual": "The magnetic mineralogy of the Straldzha sediments is dominated by varying proportions of: (1) authigenic and detrital ferrimagnetic material, principally magnetite, and (2) paramagnetic material that is mainly due to the presence of paramagnetic iron-bearing, but generally unoxidised, clay minerals",
+        "verbatim_quote_incorrect": "Thirteen AMS radiocarbon dates obtained from Rafter Radiocarbon Laboratory...",
+        "issue": "Rationalisation note states 'Consolidated from C062, E063 in Pass 2' but verbatim quote doesn't match content",
+        "corrective_action": "Update verbatim quote to match actual p.10 content about magnetic mineralogy"
+      },
+      {
+        "item_id": "C001",
+        "error_type": "under_extraction",
+        "severity": "minor",
+        "penalty": -0.5,
+        "description": "Claim doesn't capture temporal precision from verbatim quote",
+        "verbatim_source": "Our record indicates the persistence of cold steppe vegetation from ~37,500 to 17,900 cal. a BP, semidesert vegetation from ~17,900 to 10,300 cal. a BP, forest-steppe vegetation from ~10,300 to 8900 cal. a BP, mixed oak woods from ~8900 to 4000 cal. a BP, followed by widespread deforestation, burning and grazing",
+        "issue": "Claim summarises sequence without specific dates that make this empirical finding rather than generic statement. Dates preserved in supporting evidence items, so not critical.",
+        "corrective_action": "Consider whether claim should include date ranges or remain as summary"
+      },
+      {
+        "item_id": "C013",
+        "error_type": "missing_context",
+        "severity": "moderate",
+        "penalty": -2.0,
+        "description": "Claim states timing without comparative context that makes this finding significant",
+        "verbatim_source": "The first agricultural settlements in Bulgarian Thrace date to around 8000 cal. a BP (Boyadziev, 1995, 2009)",
+        "issue": "Date significant because represents ~3000-year delay after agriculture appeared in Anatolia (~11,000 cal BP). Paper's argument centres on explaining this delay. Claim appears as simple chronological statement rather than evidence for delayed agricultural expansion.",
+        "corrective_action": "Add claim_nature as 'comparative' or reference delay context"
+      },
+      {
+        "item_id": "C063",
+        "error_type": "duplicate_content",
+        "severity": "minor",
+        "penalty": -0.5,
+        "description": "Claim content duplicated with E056 content",
+        "issue": "C063: 'Age-depth model constructed using Markov chain Monte-Carlo analysis...' duplicates E056 which has same content. E056 rationalisation note states 'Consolidated from E056, E057, C063 in Pass 2' but C063 remains as separate claim.",
+        "corrective_action": "Remove C063 or transform into interpretive claim about methodological appropriateness"
+      },
+      {
+        "item_id": "C096",
+        "error_type": "misattribution",
+        "severity": "moderate",
+        "penalty": -2.0,
+        "description": "Claim presents methodological principle from literature as if it's finding from this paper",
+        "verbatim_source": "The second consideration is that the pollen source-area of large sites (>100 ha) is dominated by a regional pollen component (Jacobson and Bradshaw, 1981; Sugita, 2007)",
+        "issue": "Established theory being applied (Jacobson & Bradshaw 1981, Sugita 2007), not methodological finding from Connor et al. Should be theoretical/literature claim or incorporated into method description.",
+        "corrective_action": "Change claim_type from 'methodological' to 'theoretical' or remove as claim and add to relevant method"
+      }
+    ]
+  },
+
+  "pass_b_granularity_detailed": {
+    "summary": "Overall granularity 99.6% - Excellent editorial judgment with sophisticated consolidation",
+
+    "by_type": {
+      "evidence": {
+        "total": 99,
+        "appropriate": 99,
+        "over_split": 0,
+        "under_split": 0,
+        "inconsistent": 0,
+        "score_percent": 100.0,
+        "notable_consolidations": [
+          "E034: Charcoal analysis (microscopic + macroscopic) methods consolidated",
+          "E039: Magnetic susceptibility + mineral magnetic analysis consolidated",
+          "E056: Age-depth model construction (MCMC + Bayesian + OxCal + IntCal09) consolidated",
+          "E063: Magnetic mineralogy (authigenic/detrital + paramagnetic) consolidated",
+          "E067: Cluster analysis + visualisation software consolidated",
+          "E068: DCA variance explanation + agreement with cluster analysis consolidated"
+        ]
+      },
+      "claims": {
+        "total": 76,
+        "appropriate": 75,
+        "over_split": 0,
+        "under_split": 0,
+        "inconsistent": 1,
+        "score_percent": 98.7,
+        "notes": "C063 duplicate affects granularity scoring (should have been removed in Pass 2 consolidation)"
+      },
+      "methods": {
+        "total": 22,
+        "appropriate": 22,
+        "over_split": 0,
+        "under_split": 0,
+        "inconsistent": 0,
+        "score_percent": 100.0
+      },
+      "protocols": {
+        "total": 41,
+        "appropriate": 41,
+        "over_split": 0,
+        "under_split": 0,
+        "inconsistent": 0,
+        "score_percent": 100.0
+      },
+      "research_designs": {
+        "total": 9,
+        "appropriate": 9,
+        "over_split": 0,
+        "under_split": 0,
+        "inconsistent": 0,
+        "score_percent": 100.0
+      }
+    },
+
+    "issues_identified": [
+      {
+        "item_id": "C063",
+        "issue_type": "inconsistent_duplicate",
+        "description": "Duplicate content with E056 - should have been removed during Pass 2 consolidation",
+        "explanation": "E056 rationalisation note states 'Consolidated from E056, E057, C063 in Pass 2' but C063 remains as separate claim with identical content",
+        "impact": "Creates inconsistency in granularity - same content appears as both evidence and claim"
+      }
+    ],
+
+    "key_findings": [
+      "No over-splitting detected - strong editorial judgment on consolidation",
+      "Evidence extraction exemplary (100%) with 7 documented consolidations showing thoughtful aggregation",
+      "RDMAP hierarchy appropriately scoped at all levels - methods, protocols, designs distinct",
+      "Consistent detail levels within types (pollen percentages, magnetic values, chronological boundaries)",
+      "Functional appropriateness maintained - granularity supports transparency and replicability assessment",
+      "Sequential laboratory protocols appropriately separated (pollen prep steps, charcoal quantification steps)",
+      "Ecological groupings preserved (herbaceous vs arboreal taxa separated appropriately)"
+    ]
+  },
+
+  "pass_c_mapping_detailed": {
+    "summary": "Overall mapping quality 74.5% - Excellent evidence-claims and protocol-method mappings, but CRITICAL gap in design-method mappings",
+
+    "by_relationship_type": {
+      "evidence_to_claims": {
+        "total_mappings": 98,
+        "strong": 96,
+        "weak": 2,
+        "incorrect": 0,
+        "score_percent": 98.0,
+        "notes": "Weak mappings due to structural issues (C063 duplicate, C096 miscategorisation) identified in Pass A"
+      },
+      "protocol_to_method": {
+        "total_mappings": 40,
+        "strong": 39,
+        "weak": 1,
+        "incorrect": 0,
+        "score_percent": 97.5,
+        "notes": "One weak mapping (P001→M001 field sampling to pollen analysis is borderline)"
+      },
+      "design_to_method": {
+        "total_mappings": 7,
+        "expected_mappings": 22,
+        "strong": 2,
+        "weak": 0,
+        "incorrect": 0,
+        "missing": 15,
+        "score_percent": 28.6,
+        "notes": "CRITICAL FAILURE - Most research designs have empty supported_by_methods arrays"
+      }
+    },
+
+    "issues_identified": [
+      {
+        "mapping": "C063 → (no evidence)",
+        "issue_type": "weak_support",
+        "severity": "low",
+        "description": "C063 has no evidence support listed because it's duplicate of E056",
+        "impact": "Structural issue from duplicate claim (flagged in Pass A and B)",
+        "recommendation": "Remove C063 as claim"
+      },
+      {
+        "mapping": "C096 → E094, E095",
+        "issue_type": "weak_support_categorisation",
+        "severity": "low",
+        "description": "Evidence matches claim, but claim miscategorised as 'methodological' when should be 'theoretical'",
+        "impact": "Mapping structurally sound, categorisation issue only (flagged in Pass A)",
+        "recommendation": "Change C096 claim_type to 'theoretical'"
+      },
+      {
+        "mapping": "P001 → M001",
+        "issue_type": "weak_linkage",
+        "severity": "low",
+        "description": "Quarry trench excavation (P001) enables pollen analysis (M001) but doesn't directly implement it",
+        "impact": "Borderline weak - field sampling is prerequisite, not implementation",
+        "recommendation": "Consider whether field sampling protocols should link to research designs instead of methods"
+      },
+      {
+        "mapping": "RD001 → (no methods)",
+        "issue_type": "critical_missing_mappings",
+        "severity": "critical",
+        "description": "Multi-proxy palaeoenvironmental approach (RD001) has EMPTY supported_by_methods array",
+        "expected_methods": ["M001", "M002", "M003", "M005"],
+        "impact": "Core integration design disconnected from proxy methods - RDMAP hierarchy broken",
+        "recommendation": "URGENT: Add supported_by_methods: [M001, M002, M003, M005]"
+      },
+      {
+        "mapping": "RD002 → (no methods)",
+        "issue_type": "critical_missing_mappings",
+        "severity": "critical",
+        "description": "Regional comparative analysis (RD002) has EMPTY supported_by_methods array",
+        "expected_methods": ["M014", "M015", "M017"],
+        "impact": "Comparative design disconnected from statistical/comparative methods",
+        "recommendation": "URGENT: Add supported_by_methods: [M014, M015, M017]"
+      },
+      {
+        "mapping": "RD005 → (no methods)",
+        "issue_type": "critical_missing_mappings",
+        "severity": "critical",
+        "description": "Integration of archaeological and palaeoenvironmental data (RD005) has EMPTY supported_by_methods array",
+        "expected_methods": ["M001", "M003", "M018"],
+        "impact": "Integration design disconnected from integration methods",
+        "recommendation": "URGENT: Add supported_by_methods for archaeological-palaeo integration"
+      },
+      {
+        "mapping": "RD009 → (no methods)",
+        "issue_type": "critical_missing_mappings",
+        "severity": "critical",
+        "description": "Statistical validation framework (RD009) has EMPTY supported_by_methods array",
+        "expected_methods": ["M014", "M015", "M016"],
+        "impact": "Validation design disconnected from statistical methods",
+        "recommendation": "URGENT: Add supported_by_methods: [M014, M015, M016]"
+      }
+    ],
+
+    "key_findings": [
+      "Evidence-claims mapping excellent (98%) with robust multi-evidence support chains",
+      "Protocol-method mapping excellent (97.5%) with appropriate multi-step workflows",
+      "CRITICAL SYSTEMATIC FAILURE: Design-method mappings largely absent (28.6%)",
+      "No incorrect mappings detected - all existing relationships conceptually appropriate",
+      "7 out of 9 research designs have empty supported_by_methods arrays",
+      "Estimated 15 critical missing design-method relationships",
+      "RDMAP hierarchy broken at design-method level despite well-extracted methods",
+      "Quantitative claims consistently supported by measurement evidence",
+      "Multi-evidence support chains provide robust claim backing"
+    ]
+  },
+
+  "priority_corrections": [
+    {
+      "priority": 1,
+      "item_id": "Research Designs (RD001, RD002, RD005, RD009)",
+      "error_type": "critical_missing_mappings",
+      "action": "URGENT: Populate supported_by_methods arrays in all research designs to establish RDMAP hierarchy. Add approximately 15 method relationships.",
+      "specific_additions": {
+        "RD001": ["M001", "M002", "M003", "M005"],
+        "RD002": ["M014", "M015", "M017"],
+        "RD005": ["M001", "M003", "M018"],
+        "RD007": ["M005"],
+        "RD008": ["M007"],
+        "RD009": ["M014", "M015", "M016"]
+      },
+      "rationale": "RDMAP hierarchy fundamentally broken - cannot trace from design through method to protocol. Methods exist and are well-extracted; only linkages missing.",
+      "impact": "Critical - severely compromises utility of research design extraction for evaluating study design quality and coherence"
+    },
+    {
+      "priority": 2,
+      "item_id": "C063",
+      "error_type": "duplicate_content",
+      "action": "Remove C063 as claim (content duplicated in E056) OR transform into interpretive claim about methodological appropriateness",
+      "rationale": "Duplicate content creates inconsistency flagged in all three passes (accuracy, granularity, mapping)",
+      "impact": "Moderate - affects accuracy, granularity, and mapping scores; structural cleanup needed"
+    },
+    {
+      "priority": 3,
+      "item_id": "C096",
+      "error_type": "misattribution",
+      "action": "Change claim_type from 'methodological' to 'theoretical' OR remove as claim and incorporate into M001 method description",
+      "rationale": "Presents established theory (Jacobson & Bradshaw 1981, Sugita 2007) as if it's methodological finding from Connor et al.",
+      "impact": "Moderate - affects interpretation of evidence basis and claim role in argument"
+    },
+    {
+      "priority": 4,
+      "item_id": "E063",
+      "error_type": "verbatim_quote_mismatch",
+      "action": "Update verbatim quote to match p.10 content about magnetic mineralogy: 'The magnetic mineralogy of the Straldzha sediments is dominated by varying proportions of: (1) authigenic and detrital ferrimagnetic material...'",
+      "rationale": "Content-quote mismatch creates verification difficulty",
+      "impact": "Minor - verbatim quote accuracy issue"
+    },
+    {
+      "priority": 5,
+      "item_id": "C013",
+      "error_type": "missing_context",
+      "action": "Add claim_nature as 'comparative' or revise content to reference ~3000-year delay context",
+      "rationale": "Date significant because of delay after Anatolian agriculture - missing comparative context reduces claim informativeness",
+      "impact": "Moderate - affects claim interpretability and argument structure"
+    }
+  ],
+
+  "patterns_identified": [
+    {
+      "pattern": "RDMAP extraction quality bifurcation",
+      "description": "Methods and protocols show perfect accuracy (100%) and excellent protocol-method mappings (97.5%), but design-method mappings critically deficient (28.6%)",
+      "significance": "RDMAP framework successfully applied at operational level (methods ↔ protocols) but incompletely implemented at strategic level (designs ↔ methods)"
+    },
+    {
+      "pattern": "Evidence extraction excellence",
+      "description": "Evidence items show near-perfect accuracy (99%), perfect granularity (100%), and excellent mapping (98%)",
+      "significance": "Proxy observations, measurements, and statistical results extracted with high precision and appropriate consolidation"
+    },
+    {
+      "pattern": "Sophisticated consolidation judgment",
+      "description": "Seven documented evidence consolidations show thoughtful aggregation of complex multi-step procedures without over-atomisation",
+      "significance": "Strong editorial discretion in balancing atomic principle with functional usefulness (e.g., E034 charcoal, E039 magnetic, E056 chronology)"
+    },
+    {
+      "pattern": "Claims accuracy variability",
+      "description": "Claims show lower accuracy (94.7%) than RDMAP components (100%) and evidence (99%)",
+      "significance": "Claims extraction more challenging due to context preservation, categorisation subtleties, and duplicate management"
+    },
+    {
+      "pattern": "No hallucinations or confabulations",
+      "description": "All Pass A errors are quote mismatches, context losses, categorisation issues, or duplicates - no fabricated content",
+      "significance": "Extraction process maintained high fidelity to source paper without introducing false information"
+    },
+    {
+      "pattern": "Quantitative precision preservation",
+      "description": "Percentages, concentrations, coordinates, dates, and measurements accurately extracted with proper units",
+      "significance": "Supports quantitative reproducibility assessment and precise claim verification"
+    },
+    {
+      "pattern": "Multi-proxy complexity well-handled",
+      "description": "Pollen, charcoal, magnetic, chronological, and statistical methods distinctly extracted with appropriate relationships",
+      "significance": "Complex palaeoenvironmental study structure successfully decomposed into RDMAP framework"
+    }
+  ],
+
+  "overall_assessment": {
+    "grade": "B+",
+    "quality_tier": "Very Good with Critical Gap",
+
+    "strengths": [
+      "Perfect RDMAP operational extraction: methods (100%), protocols (100%), with excellent protocol-method mappings (97.5%)",
+      "Near-perfect evidence extraction: 99% accuracy, 100% granularity, 98% mapping",
+      "Excellent consolidation judgment with 7 documented sophisticated consolidations",
+      "No hallucinations or confabulations - high fidelity to source",
+      "Strong quantitative precision - measurements, dates, percentages accurately preserved",
+      "Multi-proxy complexity successfully handled across pollen, charcoal, magnetic, chronological analyses",
+      "Appropriate granularity throughout - no over-splitting detected",
+      "Evidence-claims chains robust with multi-evidence support patterns"
+    ],
+
+    "weaknesses": [
+      "CRITICAL: Design-method mappings largely absent (28.6%) - RDMAP hierarchy broken at strategic level",
+      "Claims accuracy lower (94.7%) than other components due to context/categorisation challenges",
+      "Duplicate content (C063) persists despite consolidation note in E056",
+      "One misattribution (C096) presents literature theory as methodological finding",
+      "Missing comparative context in chronological claims (C013)",
+      "One verbatim quote error (E063) requires correction"
+    ],
+
+    "recommendations": [
+      "URGENT PRIORITY 1: Populate supported_by_methods arrays in all 9 research designs (~15 relationships needed)",
+      "Remove C063 duplicate or transform to interpretive claim",
+      "Recategorise C096 from 'methodological' to 'theoretical' claim",
+      "Correct E063 verbatim quote to match magnetic mineralogy content",
+      "Add comparative context to C013 (agricultural delay significance)",
+      "Review field sampling protocol-method relationships (P001→M001 borderline)",
+      "With RDMAP mappings corrected, extraction would be production-ready for research design assessment"
+    ],
+
+    "fitness_for_use": "Suitable for evidence-claims transparency assessment (excellent quality). Methods and protocols support replicability evaluation (excellent quality). Research design assessment SEVERELY COMPROMISED by missing design-method mappings - requires urgent correction before use for design quality evaluation. With Priority 1 correction (populating design-method mappings), overall extraction would achieve Grade A and full production-readiness."
+  },
+
+  "comparison_to_sobotkova_assessment": {
+    "similarities": [
+      "Both show perfect RDMAP item accuracy (methods, protocols, designs: 100%)",
+      "Both show near-perfect evidence accuracy (Connor: 99%, Sobotkova: 100%)",
+      "Both show lower claims accuracy (Connor: 94.7%, Sobotkova: 88.4%)",
+      "Both demonstrate sophisticated consolidation judgment",
+      "Neither shows hallucinations or confabulations",
+      "Both maintain appropriate granularity (Connor: 99.6%, Sobotkova: 99.3%)"
+    ],
+    "differences": [
+      "Connor has CRITICAL design-method mapping gap (28.6%), Sobotkova excellent (100%)",
+      "Connor fewer total errors (5 vs 6), but includes systematic mapping failure",
+      "Connor overall mapping score much lower (74.5% vs 99.1%) due to RDMAP hierarchy gap",
+      "Sobotkova errors concentrated in claims accuracy; Connor errors span accuracy + mapping",
+      "Connor has duplicate content issue (C063); Sobotkova has context/attribution issues",
+      "Connor total items larger (247 vs 153), mappings comparable (145 vs 110)"
+    ],
+    "overall_comparison": "Connor extraction shows excellent operational work (methods, protocols, evidence) comparable to Sobotkova, but critical strategic gap (design-method mappings) drops overall grade from A to B+. With design-method mappings populated, Connor would match or exceed Sobotkova quality."
+  }
+}

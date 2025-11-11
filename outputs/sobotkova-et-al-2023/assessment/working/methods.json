@@ -1,0 +1,235 @@
+[
+  {
+    "method_id": "M001",
+    "method_name": "Mobile GIS customisation for volunteer-based map digitisation",
+    "method_type": "data_collection",
+    "method_status": "explicit",
+    "method_description": "Customisation of FAIMS Mobile platform to create simplified, streamlined GIS running offline on mobile devices for crowdsourced digitisation by novice volunteers with no GIS experience.",
+    "verbatim_quote": "For the 2017–2018 field seasons, TRAP staff created a simplified and streamlined data capture system built using the FAIMS Mobile platform. This system allowed any number of participants to digitise map features using mobile devices, regardless of network connectivity, and consolidated the resulting data when a network became available.",
+    "source_location": {
+      "section": "2. Approach",
+      "subsection": "Introduction",
+      "page": 3,
+      "paragraph_range": "1-2"
+    },
+    "implements_designs": [
+      "RD003",
+      "RD004"
+    ],
+    "realized_through_protocols": [
+      "P001",
+      "P002",
+      "P006"
+    ],
+    "rationale": "Chosen to reduce training burden on volunteers, eliminate need for continuous expert support, work offline in field conditions, and leverage mobile device familiarity",
+    "expected_information_missing": [
+      "Alternative mobile GIS platforms evaluated",
+      "Detailed comparison criteria for platform selection",
+      "Specific customisation requirements specification"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M002",
+    "method_name": "Offline multi-user collaborative data collection",
+    "method_type": "data_collection",
+    "method_status": "explicit",
+    "method_description": "Data collection approach using multiple mobile devices working offline, with opportunistic synchronisation when network available, supporting concurrent digitisation by multiple volunteers.",
+    "verbatim_quote": "Data collection works offline, and can employ as many devices as necessary. It is later synchronised opportunistically, when a network is available.",
+    "source_location": {
+      "section": "2. Approach",
+      "subsection": "2.3",
+      "page": 4,
+      "paragraph_range": "3"
+    },
+    "implements_designs": [
+      "RD003",
+      "RD004"
+    ],
+    "realized_through_protocols": [
+      "P004"
+    ],
+    "rationale": "Required for rural field conditions without reliable internet connectivity",
+    "expected_information_missing": [
+      "Conflict resolution strategy for concurrent edits",
+      "Synchronisation frequency",
+      "Network bandwidth requirements"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M003",
+    "method_name": "Historical map preprocessing and distribution",
+    "method_type": "data_preparation",
+    "method_status": "explicit",
+    "method_description": "Preprocessing of georeferenced Soviet topographic maps (GeoTIFFs) and distribution to mobile devices for digitisation.",
+    "verbatim_quote": "Since project staff set up the infrastructure and pre-processed and loaded the required maps, volunteers were insulated from the friction of setup, layer management, data aggregation, export, and backup.",
+    "source_location": {
+      "section": "2. Approach",
+      "subsection": "2.4",
+      "page": 6,
+      "paragraph_range": "4"
+    },
+    "implements_designs": [
+      "RD003"
+    ],
+    "realized_through_protocols": [
+      "P002"
+    ],
+    "rationale": "Simplifies volunteer workflow by delegating technical tasks to staff",
+    "expected_information_missing": [
+      "Map source and acquisition method",
+      "Quality criteria for georeferenced maps",
+      "File size constraints for mobile devices"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M004",
+    "method_name": "Quality assurance through targeted accuracy-checking",
+    "method_type": "validation",
+    "method_status": "explicit",
+    "method_description": "Post-digitisation quality assurance by project staff reviewing randomly selected maps to characterise error rates and types.",
+    "verbatim_quote": "Finally, project staff reviewed randomly selected digitisation work completed by volunteers to characterise errors.",
+    "source_location": {
+      "section": "2. Approach",
+      "subsection": "2.5",
+      "page": 6,
+      "paragraph_range": "3"
+    },
+    "implements_designs": [
+      "RD001"
+    ],
+    "realized_through_protocols": [
+      "P007"
+    ],
+    "rationale": "Assesses volunteer digitisation quality and identifies systematic error patterns",
+    "expected_information_missing": [
+      "Sampling strategy for map selection",
+      "Acceptance criteria for error rates",
+      "Corrective action procedures for high-error work"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M005",
+    "method_name": "Time-on-task measurement for comparative evaluation",
+    "method_type": "measurement",
+    "method_status": "explicit",
+    "method_description": "Systematic measurement of time invested by staff and volunteers to evaluate digitisation approach efficiency and determine payoff thresholds versus alternative approaches.",
+    "verbatim_quote": "To measure inputs, we collated the amount of time spent by various participants in the process, including the student programmer who instantiated the customisation, the student volunteers who undertook the digitisation, and project staff who configured the system, supported volunteers, exported data, and checked for errors.",
+    "source_location": {
+      "section": "2. Approach",
+      "subsection": "2.5",
+      "page": 6,
+      "paragraph_range": "2"
+    },
+    "implements_designs": [
+      "RD001"
+    ],
+    "realized_through_protocols": [
+      "P008"
+    ],
+    "rationale": "Enables quantitative comparison of digitisation approaches and identification of payoff thresholds",
+    "expected_information_missing": [
+      "Time tracking tool or method",
+      "Granularity of time recording",
+      "Treatment of interruptions or multi-tasking"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M-IMP-001",
+    "method_name": "Map tile assignment to volunteers",
+    "method_type": "task_allocation",
+    "method_status": "implicit",
+    "method_description": "Methodology for assigning specific map tiles to student volunteers for digitisation. Results mention participants assigned to maps and some maps left undigitised, implying assignment system, but assignment method not documented.",
+    "trigger_text": [
+      "First, participants failed to digitise some assigned maps, leaving noticeable gaps",
+      "In 2017, it was used for a total of 125.8 person-hours concentrated across five rainy days, during which time 8,343 features were digitised from 42 Soviet topographic maps",
+      "In 2018, use was more sporadic; participants who stayed at the base for any reason sometimes undertook digitisation."
+    ],
+    "trigger_locations": [
+      {
+        "section": "3. Results",
+        "subsection": "3.5.2",
+        "page": 7,
+        "paragraph_range": "2"
+      },
+      {
+        "section": "3. Results",
+        "subsection": "3.2",
+        "page": 7,
+        "paragraph_range": "1"
+      },
+      {
+        "section": "3. Results",
+        "subsection": "3.2",
+        "page": 7,
+        "paragraph_range": "2"
+      }
+    ],
+    "inference_reasoning": "Results explicitly state 'participants failed to digitise some assigned maps', directly indicating that maps were assigned to specific participants. Results also describe concentrated work on specific maps (42 maps in 2017, 16 in 2018), suggesting systematic allocation. However, Section 2 Approach never describes how maps were assigned - was it random? based on participant skill? geographical? first-come-first-served? The fact that some assigned maps were never completed (leaving gaps) suggests tracking system existed, but assignment methodology is undocumented.",
+    "implicit_metadata": {
+      "basis": "mentioned_undocumented",
+      "transparency_gap": "Map assignment methodology not described. Unknown criteria: random allocation, skill-based assignment, participant preference, geographic distribution, workload balancing. Unknown tracking method for monitoring completion.",
+      "assessability_impact": "Cannot assess whether assignment strategy introduced systematic bias (e.g., difficult maps to experienced users). Cannot determine if gaps resulted from poor assignment method or volunteer attrition. Cannot evaluate fairness or efficiency of allocation strategy.",
+      "reconstruction_confidence": "medium"
+    },
+    "implements_designs": [
+      "RD003"
+    ],
+    "rationale": "Necessary for coordinating multiple volunteers working on different maps to avoid duplication and ensure coverage",
+    "expected_information_missing": [
+      "Assignment criteria or algorithm",
+      "Tracking system for map completion",
+      "Re-assignment protocol for incomplete maps",
+      "Workload balancing approach"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M-IMP-002",
+    "method_name": "Device performance load monitoring methodology",
+    "method_type": "system_monitoring",
+    "method_status": "implicit",
+    "method_description": "Monitoring approach for detecting application performance degradation as database size increased. Results report specific threshold ranges (3,000-6,000 records) where performance degraded, implying systematic monitoring, but monitoring methodology not documented.",
+    "trigger_text": [
+      "Automated testing of other customisations suggested that performance would degrade once approximately 3,000–6,000 records had been created.",
+      "In use, automated extraction of coordinates from GPS into the Latitude/Longitude and Northing/Easting fields, which took three to 5 s with an empty database, took as long as 30 s once a device exceeded about 2,500 records."
+    ],
+    "trigger_locations": [
+      {
+        "section": "3. Results",
+        "subsection": "3.4",
+        "page": 7,
+        "paragraph_range": "1"
+      },
+      {
+        "section": "3. Results",
+        "subsection": "3.4",
+        "page": 7,
+        "paragraph_range": "2"
+      }
+    ],
+    "inference_reasoning": "Results report precise performance thresholds (3,000-6,000 records, 2,500 records) and timing measurements (3-5s vs 30s for coordinate extraction), indicating systematic monitoring occurred. The statement 'automated testing suggested' and 'in use' timing measurements imply both pre-deployment testing and operational monitoring. However, Section 2.3-2.4 describing FAIMS Mobile implementation never documents the monitoring methodology - how performance was measured, monitoring frequency, criteria for detecting degradation, or whether monitoring was automated or manual.",
+    "implicit_metadata": {
+      "basis": "inferred_from_results",
+      "transparency_gap": "Performance monitoring methodology not documented. Unknown: monitoring tool/method, measurement frequency, performance metrics tracked, threshold detection criteria, automated vs manual monitoring.",
+      "assessability_impact": "Cannot determine reliability of performance threshold claims. Cannot assess whether degradation was consistent across devices. Cannot evaluate whether monitoring was systematic or opportunistic. Impossible to reproduce performance testing.",
+      "reconstruction_confidence": "medium"
+    },
+    "implements_designs": [
+      "RD001"
+    ],
+    "rationale": "Required to identify performance degradation thresholds for comparative evaluation against alternative approaches",
+    "expected_information_missing": [
+      "Performance monitoring tool or method",
+      "Metrics tracked (response time, battery, CPU, memory)",
+      "Monitoring frequency and sampling",
+      "Threshold detection criteria",
+      "Number of devices tested"
+    ],
+    "extraction_confidence": "high"
+  }
+]

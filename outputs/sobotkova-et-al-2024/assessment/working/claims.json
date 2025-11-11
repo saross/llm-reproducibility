@@ -1,0 +1,751 @@
+[
+  {
+    "claim_id": "C001",
+    "claim_text": "Pre-trained CNNs have significant limitations when detecting varied features of different sizes within heterogeneous landscapes containing confounding natural and modern features",
+    "claim_type": "finding",
+    "claim_role": "core",
+    "claim_status": "explicit",
+    "verbatim_quote": "Our attempt to deploy a pre-trained CNN demonstrates the limitations of this approach when it is used to detect varied features of different sizes within a heterogeneous landscape that contains confounding natural and modern features, such as roads, forests and field boundaries.",
+    "location": {
+      "section": "Abstract",
+      "subsection": "Research limitations/implications",
+      "paragraph": 1
+    },
+    "supported_by_evidence": [
+      "E005",
+      "E007",
+      "E010",
+      "E013"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C002",
+    "claim_text": "The pre-trained CNN model failed to identify burial mounds in the Kazanlak Valley study area",
+    "claim_type": "finding",
+    "claim_role": "core",
+    "claim_status": "explicit",
+    "verbatim_quote": "Indeed, both models failed to identify burial mounds in our study area.",
+    "location": {
+      "section": "Introduction",
+      "subsection": null,
+      "paragraph": 4
+    },
+    "supported_by_evidence": [
+      "E001",
+      "E002",
+      "E003",
+      "E005"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": [
+      "C006"
+    ]
+  },
+  {
+    "claim_id": "C003",
+    "claim_text": "External validation with field data is an essential part of CNN workflows",
+    "claim_type": "methodological",
+    "claim_role": "core",
+    "claim_status": "explicit",
+    "verbatim_quote": "The model has detected incidental features rather than the mounds themselves, making external validation with field data an essential part of CNN workflows.",
+    "location": {
+      "section": "Abstract",
+      "subsection": "Research limitations/implications",
+      "paragraph": 1
+    },
+    "supported_by_evidence": [
+      "E001",
+      "E002"
+    ],
+    "supported_by_claims": [
+      "C002"
+    ],
+    "supports_claims": [],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C004",
+    "claim_text": "Manual inspection by experts or crowdsourcing may be more efficient than ML for identifying burial mounds",
+    "claim_type": "recommendation",
+    "claim_role": "core",
+    "claim_status": "explicit",
+    "verbatim_quote": "The degree of manual intervention required – particularly around the subsetting and annotation of training data – is so significant that it raises the question of whether it would be more efficient to identify all of the mounds manually, either through brute-force inspection by experts or by crowdsourcing the analysis to trained – or even untrained – volunteers.",
+    "location": {
+      "section": "Abstract",
+      "subsection": "Practical implications",
+      "paragraph": 1
+    },
+    "supported_by_evidence": [
+      "E001",
+      "E002",
+      "E004"
+    ],
+    "supported_by_claims": [
+      "C002"
+    ],
+    "supports_claims": [],
+    "alternatives_mentioned": true,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C005",
+    "claim_text": "ML-for-archaeology literature is overwhelmingly positive, reflecting publication bias and rhetoric of unconditional success",
+    "claim_type": "methodological_critique",
+    "claim_role": "core",
+    "claim_status": "explicit",
+    "verbatim_quote": "The literature itself, however, is overwhelmingly positive, reflecting some combination of publication bias and a rhetoric of unconditional success.",
+    "location": {
+      "section": "Abstract",
+      "subsection": "Social implications",
+      "paragraph": 1
+    },
+    "supported_by_evidence": [],
+    "supported_by_claims": [],
+    "supports_claims": [],
+    "alternatives_mentioned": false,
+    "qualifications": [
+      "reflecting some combination of"
+    ],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C006",
+    "claim_text": "CNNs have been promoted as effective for large-scale archaeological prospection",
+    "claim_type": "literature_synthesis",
+    "claim_role": "intermediate",
+    "claim_status": "explicit",
+    "verbatim_quote": "High success rates reported for detecting and monitoring burial mounds in Siberia have highlighted CNNs as an effective approach for large-scale prospection (Caspari and Crespo, 2019).",
+    "location": {
+      "section": "Introduction",
+      "subsection": null,
+      "paragraph": 1
+    },
+    "supported_by_evidence": [
+      "E006"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C007",
+    "claim_text": "ML applied to archaeological prospection can be labour-intensive",
+    "claim_type": "finding",
+    "claim_role": "intermediate",
+    "claim_status": "explicit",
+    "verbatim_quote": "Although few publications report the time, expertise, or costs associated with applying ML to archaeological prospection, examples from projects trying to extract symbols and text from historical maps indicate that it can be labour-intensive (Can et al., 2021; Ekim et al., 2021; Ma et al., 2021).",
+    "location": {
+      "section": "Introduction",
+      "subsection": null,
+      "paragraph": 2
+    },
+    "supported_by_evidence": [
+      "E008"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C004"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [
+      "can be"
+    ],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C008",
+    "claim_text": "Transfer learning with pre-trained models is proposed as solution to limited training data and small dataset size problems",
+    "claim_type": "literature_synthesis",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "Transfer learning based on pre-trained models is sometimes proposed as solution to the problem of limited training data, as well as related problems like small dataset size (Casini et al., 2021, 2022; Character et al., 2021; Gallwey et al., 2019; Sech et al., 2023; Xiong et al., 2020).",
+    "location": {
+      "section": "Introduction",
+      "subsection": null,
+      "paragraph": 3
+    },
+    "supported_by_evidence": [],
+    "supported_by_claims": [],
+    "supports_claims": [],
+    "alternatives_mentioned": false,
+    "qualifications": [
+      "sometimes proposed"
+    ],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C009",
+    "claim_text": "Burial mounds are endangered heritage in Bulgaria",
+    "claim_type": "contextual",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "Despite the large number of burial mounds, they are endangered.",
+    "location": {
+      "section": "Burial mounds as heritage under threat",
+      "subsection": null,
+      "paragraph": 3
+    },
+    "supported_by_evidence": [
+      "E009",
+      "E011"
+    ],
+    "supported_by_claims": [
+      "C011",
+      "C012"
+    ],
+    "supports_claims": [],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C010",
+    "claim_text": "Burial mound visibility in satellite imagery depends on size, terrain, and land cover",
+    "claim_type": "finding",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "While burial mounds are readily identifiable on the ground due to their distinctive appearance, their visibility in satellite imagery depends on their size, surrounding terrain, and local land cover (see Figure 1).",
+    "location": {
+      "section": "Detecting archaeological features in satellite imagery",
+      "subsection": null,
+      "paragraph": 1
+    },
+    "supported_by_evidence": [
+      "E010",
+      "E013"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C001"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C011",
+    "claim_text": "Development in Bulgaria destroys dozens of mounds annually",
+    "claim_type": "contextual",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "Development in Bulgaria destroys dozens of mounds annually (Loulanski and Loulanski, 2017).",
+    "location": {
+      "section": "Burial mounds as heritage under threat",
+      "subsection": null,
+      "paragraph": 3
+    },
+    "supported_by_evidence": [
+      "E011"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C009"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C012",
+    "claim_text": "Few examples of undamaged burial mounds exist despite extensive inventory work",
+    "claim_type": "finding",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "In the course of nearly 20 years of intermittent fieldwork in Bulgaria, the authors have seen few examples of mounds that had not been damaged either by development, looting, or agriculture, despite having inventoried over 2,000 of them across two Bulgarian provinces (Ross et al., 2010, 2018; Sobotkova and Weissova, 2020).",
+    "location": {
+      "section": "Burial mounds as heritage under threat",
+      "subsection": null,
+      "paragraph": 5
+    },
+    "supported_by_evidence": [
+      "E012"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C009"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C013",
+    "claim_text": "AI/ML approaches to archaeological remote sensing are on cusp of crossing the chasm from early adopters to early majority",
+    "claim_type": "finding",
+    "claim_role": "intermediate",
+    "claim_status": "explicit",
+    "verbatim_quote": "If publication counts are used a proxy for research, this 17% figure indicates that AI/ML is on the cusp of \\\"crossing the chasm\\\" separating \\\"innovators\\\" and \\\"early adopters\\\" (together 16% of the population) from the \\\"early majority\\\", according to Rogers' diffusion of innovations paradigm as modified by Moore",
+    "location": {
+      "section": "Automated approaches to remotely sensed data",
+      "subsection": null,
+      "paragraph": 3
+    },
+    "supported_by_evidence": [
+      "E014",
+      "E015"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C005"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C014",
+    "claim_text": "Critical assessment has been neglected in ML-for-archaeology literature",
+    "claim_type": "methodological_critique",
+    "claim_role": "intermediate",
+    "claim_status": "explicit",
+    "verbatim_quote": "As these approaches spread to a broader cohort of researchers, potential adopters need to recognise their challenges and limitations. Critical assessment has, however, been somewhat neglected in the literature.",
+    "location": {
+      "section": "Automated approaches to remotely sensed data",
+      "subsection": null,
+      "paragraph": 5
+    },
+    "supported_by_evidence": [
+      "E016",
+      "E017",
+      "E018"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C005"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [
+      "somewhat neglected"
+    ],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C015",
+    "claim_text": "Overwhelmingly positive tone of ML papers indicates publication bias and rhetorical shift toward less qualified presentation",
+    "claim_type": "methodological_critique",
+    "claim_role": "intermediate",
+    "claim_status": "explicit",
+    "verbatim_quote": "The overwhelmingly positive tone of these papers likely indicates a certain degree of \\\"publication bias\\\", where positive results are more likely to be published than negative (Brown et al., 2017; Dickersin et al., 1987; Harrison et al., 2017; Ioannidis, 2005; Kühberger et al., 2014; Møller and Jennions, 2001), or at the very least a reflection of the rhetorical shift in scientific research towards less qualified or uncertain presentation of outcomes",
+    "location": {
+      "section": "Automated approaches to remotely sensed data",
+      "subsection": null,
+      "paragraph": 5
+    },
+    "supported_by_evidence": [
+      "E016",
+      "E017",
+      "E018"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C005"
+    ],
+    "alternatives_mentioned": true,
+    "qualifications": [
+      "likely indicates"
+    ],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C016",
+    "claim_text": "Study used comprehensive field and satellite data from Kazanlak Valley for validation",
+    "claim_type": "methodological",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "In this study we used a dataset of 773 mounds, collected by TRAP during 2009 – 2011 field survey in the Kazanlak Valley, Bulgaria",
+    "location": {
+      "section": "Data",
+      "subsection": "Pedestrian survey",
+      "paragraph": 1
+    },
+    "supported_by_evidence": [
+      "E019",
+      "E020",
+      "E021",
+      "E022"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C003"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C017",
+    "claim_text": "Transfer learning with pre-trained ResNet-50 CNN was adopted to leverage large-scale pre-training",
+    "claim_type": "methodological",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "Rather than training our own model from scratch, we used a pre-trained CNN, a technique known as transfer learning",
+    "location": {
+      "section": "Methods",
+      "subsection": "Transfer learning",
+      "paragraph": 1
+    },
+    "supported_by_evidence": [
+      "E023",
+      "E024",
+      "E025",
+      "E027"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C001",
+      "C002"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C018",
+    "claim_text": "First model run (2021) had high false positive (87.1%) and false negative (95.3%) rates despite good F1 score (0.87), demonstrating that F1 improvement over previous model did not translate to real-world performance",
+    "claim_type": "finding",
+    "claim_role": "core",
+    "claim_status": "explicit",
+    "verbatim_quote": "After image augmentation, the model reported good learning and model fit (F1 5 0.87). This F1 score indicated that the use of a pre-trained model improved performance by 0.05 compared to a previous, manually trained model. Nevertheless, only 19 out of 148 tiles (12.8%) tagged by the model with at least a 60% chance of having a mound actually contained one",
+    "location": {
+      "section": "Results",
+      "subsection": "First run (2021)",
+      "paragraph": 1
+    },
+    "supported_by_evidence": [
+      "E028",
+      "E029",
+      "E030",
+      "E031",
+      "E032"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C002",
+      "C003"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": [],
+    "consolidation_metadata": {
+      "consolidated_from": [
+        "P1_C018",
+        "P1_C019"
+      ],
+      "consolidation_type": "compound_interpretation",
+      "information_preserved": "complete",
+      "rationale": "C019 (F1 improvement didn't translate) is supporting detail of C018's broader finding about model failure. Consolidated to eliminate redundancy while preserving both the performance metrics and the interpretation that internal metrics were misleading."
+    }
+  },
+  {
+    "claim_id": "C020",
+    "claim_text": "Second model run (2022, visible mounds only) performed worse with lower F1 (0.62) and higher false positive (94.8%) and false negative (96.2%) rates",
+    "claim_type": "finding",
+    "claim_role": "core",
+    "claim_status": "explicit",
+    "verbatim_quote": "The second model's performance declined to an F1 score of 0.62 (Kristensen-McLachlan and Mallon, 2022). Validation revealed that only 21 of 773 mounds (2.7%) were detected, while 752 mounds (97.3%) remained undetected.",
+    "location": {
+      "section": "Results",
+      "subsection": "Second run (2022)",
+      "paragraph": 1
+    },
+    "supported_by_evidence": [
+      "E033",
+      "E034",
+      "E035",
+      "E036",
+      "E037",
+      "E038"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C001",
+      "C002"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C021",
+    "claim_text": "Fixed 150x150m tile size was inappropriate for varied mound diameters (10-100m)",
+    "claim_type": "methodological_critique",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "In retrospect, a fixed 150 3 150 m tile size was probably inappropriate for training data, given that mound diameters ranged from 10 to 100 m",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Limitations and challenges of pre-trained CNNs",
+      "paragraph": 1
+    },
+    "supported_by_evidence": [
+      "E010"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C001",
+      "C002"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [
+      "probably"
+    ],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C022",
+    "claim_text": "Pre-trained weights introduce biases from ImageNet that don't transfer well to satellite imagery",
+    "claim_type": "methodological_critique",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "Pre-trained weights bring with them biases that depend on the content of the pre-training dataset – in our case ImageNet. These biases do not transfer particularly well to satellite imagery.",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Limitations and challenges of pre-trained CNNs",
+      "paragraph": 2
+    },
+    "supported_by_evidence": [],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C001",
+      "C002"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C023",
+    "claim_text": "Model was detecting modern features (field boundaries, roads, tree lines) rather than mounds",
+    "claim_type": "finding",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "Inspection of tiles tagged by the model indicated that it was detecting features other than mounds, such as field boundaries, roads, and tree lines",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Limitations and challenges of pre-trained CNNs",
+      "paragraph": 3
+    },
+    "supported_by_evidence": [],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C001",
+      "C003"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C024",
+    "claim_text": "Alternative tile sizes, higher resolution, different training data, and custom models might improve performance",
+    "claim_type": "recommendation",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "Better results might be achieved by using alternative tile sizes, higher resolution imagery, different training data, or custom models",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Building a better model",
+      "paragraph": 1
+    },
+    "supported_by_evidence": [],
+    "supported_by_claims": [
+      "C021",
+      "C022",
+      "C023"
+    ],
+    "supports_claims": [],
+    "alternatives_mentioned": true,
+    "qualifications": [
+      "might"
+    ],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C025",
+    "claim_text": "Training custom model would require substantially more time, expertise, and computational resources",
+    "claim_type": "methodological",
+    "claim_role": "intermediate",
+    "claim_status": "explicit",
+    "verbatim_quote": "Training a custom model would require substantially more time, expertise, and computational resources",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Building a better model",
+      "paragraph": 2
+    },
+    "supported_by_evidence": [],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C004"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C026",
+    "claim_text": "Determining correct tile size, bands, resolution, and augmentation strategy requires extensive experimentation",
+    "claim_type": "methodological",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "Determining the correct tile size, which image bands and resolution to use, and how to augment images would require a significant amount of experimentation",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Building a better model",
+      "paragraph": 2
+    },
+    "supported_by_evidence": [],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C025",
+      "C004"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C027",
+    "claim_text": "Cost-benefit analysis suggests ML approach not worthwhile for this application",
+    "claim_type": "recommendation",
+    "claim_role": "core",
+    "claim_status": "explicit",
+    "verbatim_quote": "This cost-benefit analysis suggests that deploying ML for our particular application was not worthwhile",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Is it worth it?",
+      "paragraph": 2
+    },
+    "supported_by_evidence": [
+      "E004"
+    ],
+    "supported_by_claims": [
+      "C025",
+      "C026"
+    ],
+    "supports_claims": [
+      "C004"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [
+      "for our particular application"
+    ],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C028",
+    "claim_text": "Manual processing of 5,000 tiles at 30 seconds each would take approximately 42 hours, less than model development time of 135 hours",
+    "claim_type": "comparative_analysis",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "With approximately 5,000 150 3 150 m tiles in our 600 sq km study area, and with an experienced operator able to make an assessment in ~30 s, manual processing would have taken approximately 42 h. Meanwhile, as reported above, simply developing the model required about 135 h",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Is it worth it?",
+      "paragraph": 2
+    },
+    "supported_by_evidence": [
+      "E004"
+    ],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C027",
+      "C004"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [
+      "approximately"
+    ],
+    "contradicts": [],
+    "consolidation_metadata": {
+      "consolidated_from": [
+        "P1_C028",
+        "P1_C029"
+      ],
+      "consolidation_type": "compound_interpretation",
+      "information_preserved": "complete",
+      "rationale": "C029 (comparison) depends entirely on C028 (manual time estimate). These form a single argumentative unit for cost-benefit analysis. Consolidated to eliminate redundancy while preserving both the time estimate and the comparison."
+    }
+  },
+  {
+    "claim_id": "C030",
+    "claim_text": "Manual validation work is required regardless of whether ML is used",
+    "claim_type": "methodological",
+    "claim_role": "supporting",
+    "claim_status": "explicit",
+    "verbatim_quote": "In either case, a trained operator would need to inspect and validate imagery to confirm or deny the presence of mounds",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Is it worth it?",
+      "paragraph": 2
+    },
+    "supported_by_evidence": [],
+    "supported_by_claims": [],
+    "supports_claims": [
+      "C027",
+      "C003"
+    ],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C031",
+    "claim_text": "Study demonstrates value of reporting negative results in ML research",
+    "claim_type": "meta-research",
+    "claim_role": "core",
+    "claim_status": "explicit",
+    "verbatim_quote": "We have shown that reporting negative results contributes to a more balanced and realistic understanding of the current capabilities and limitations of ML in archaeological research",
+    "location": {
+      "section": "Conclusion",
+      "subsection": null,
+      "paragraph": 2
+    },
+    "supported_by_evidence": [],
+    "supported_by_claims": [
+      "C005",
+      "C014",
+      "C015"
+    ],
+    "supports_claims": [],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  },
+  {
+    "claim_id": "C032",
+    "claim_text": "Transfer learning and pre-trained CNNs are not universally applicable solutions",
+    "claim_type": "finding",
+    "claim_role": "core",
+    "claim_status": "explicit",
+    "verbatim_quote": "Our experience demonstrates that transfer learning and pre-trained CNNs are not universally applicable solutions to the problem of limited training data in archaeological contexts",
+    "location": {
+      "section": "Conclusion",
+      "subsection": null,
+      "paragraph": 2
+    },
+    "supported_by_evidence": [],
+    "supported_by_claims": [
+      "C001",
+      "C002",
+      "C018",
+      "C020"
+    ],
+    "supports_claims": [],
+    "alternatives_mentioned": false,
+    "qualifications": [],
+    "contradicts": []
+  }
+]

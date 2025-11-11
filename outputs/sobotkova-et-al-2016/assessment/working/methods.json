@@ -1,0 +1,283 @@
+[
+  {
+    "method_id": "M001",
+    "method_name": "Module customisation via definition documents",
+    "verbatim_quote": "Such a \"deployment\" involves tailoring the core software by creating or modifying \"definition documents,\" primarily Extensible Markup Language (XML) files, which produce customised data collection \"modules\"",
+    "page": 25,
+    "source_location": "The FAIMS Mobile Platform section",
+    "method_tier": "primary",
+    "implements_design": "RD004",
+    "realized_through_protocols": [
+      "P001",
+      "P002",
+      "P003",
+      "P004"
+    ],
+    "method_status": "explicit",
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M002",
+    "method_name": "GitHub-based module reuse and improvement",
+    "verbatim_quote": "Software or other text documents stored on GitHub can be downloaded, edited, copied, and adapted at will. ... This module was duplicated (\"forked\") and modified to meet the needs of each project. ... It also allowed for the most useful changes to each of the derivative modules to be incorporated (\"pulled\") back into the original \"deluxe excavation\" module.",
+    "page": 25,
+    "source_location": "The FAIMS Mobile Platform section",
+    "method_tier": "primary",
+    "implements_design": "RD004",
+    "realized_through_protocols": [
+      "P005"
+    ],
+    "method_status": "explicit",
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M003",
+    "method_name": "Scoping-coding-QA software deployment workflow",
+    "verbatim_quote": "The FAIMS approach ... has us treat each deployment as an authentic, miniature software development project that requires proper \"scoping\" (requirements gathering, software design, and development planning), coding, and \"quality assurance\" (testing at each step of development to ensure that software works and is fit-to-purpose).",
+    "page": 29,
+    "source_location": "The Nature of Co-Development section",
+    "method_tier": "primary",
+    "implements_design": "RD002",
+    "realized_through_protocols": [],
+    "method_status": "explicit",
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M004",
+    "method_name": "Iterative requirements gathering through feedback loops",
+    "verbatim_quote": "Requirements gathering, planning, and development is a lengthy, iterative process that requires frequent communication, consultation, and feedback. ... Prior to the field season, the FAIMS leadership team met with several of its partners at UQ, including those involved in MEMSAP. ... Ultimately only three iterations of the excavation module and two iterations of the survey module were needed before a functional system could be deployed in the field.",
+    "page": 36,
+    "source_location": "Theme 1: Scoping and Development",
+    "method_tier": "primary",
+    "implements_design": "RD002",
+    "realized_through_protocols": [
+      "P009",
+      "P010"
+    ],
+    "method_status": "explicit",
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M005",
+    "method_name": "Paper-to-digital workflow conversion method",
+    "verbatim_quote": "Converting from paper to digital workflows is an involved and time-consuming process. It requires making the implicit knowledge embedded in paper forms explicit. Digital forms are also more formalised and restrictive than paper forms; relationships between entities, controlled vocabularies, and other aspects of the data model must be defined and encoded",
+    "page": 36,
+    "source_location": "Theme 1: Scoping and Development",
+    "method_tier": "primary",
+    "implements_design": "RD002",
+    "realized_through_protocols": [
+      "P011"
+    ],
+    "method_status": "explicit",
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M006",
+    "method_name": "Module reuse and rapid adaptation method",
+    "verbatim_quote": "The PAZC module also benefited from reusing the Boncuklu module with some modifications (emphasising the advantages of an open source, document-based customisation strategy: modules can be rapidly modified and redeployed, while each new module or modification improves the whole system). The FAIMS team translated the Boncuklu module into Spanish and customised it where required by editing the Boncuklu definition documents, a process that required less than one week after the requirements were fully specified.",
+    "page": 36,
+    "source_location": "Theme 1: Scoping and Development",
+    "method_tier": "primary",
+    "implements_design": "RD004",
+    "realized_through_protocols": [
+      "P012"
+    ],
+    "method_status": "explicit",
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M007",
+    "method_name": "Pre-fieldwork testing and training method",
+    "verbatim_quote": "Software development requires that scoping, programming, and testing be finite, limited, and in balance with one another. ... Testing the module prior to fieldwork ensured it was technically functional, and allowed for communication of changes that would be hard done remotely",
+    "page": 41,
+    "source_location": "Theme 1: Testing and Training",
+    "method_tier": "primary",
+    "implements_design": "RD002",
+    "realized_through_protocols": [
+      "P013",
+      "P014",
+      "P015"
+    ],
+    "method_status": "explicit",
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M008",
+    "method_name": "High-quality in-field support method",
+    "verbatim_quote": "Exceptional support is necessary when deploying new technology in the field, especially software that is purpose-built for the research community (Fisher et al. 2010). Only the availability of high-quality and timely support can provide the peace of mind necessary for archaeologists to risk moving from commercial software to new systems designed specifically for our domain.",
+    "page": 45,
+    "source_location": "The Importance of High-Quality Support",
+    "method_tier": "primary",
+    "implements_design": "RD002",
+    "realized_through_protocols": [
+      "P016"
+    ],
+    "method_status": "explicit",
+    "extraction_confidence": "high"
+  },
+  {
+    "method_id": "M-IMP-001",
+    "method_name": "Performance monitoring and degradation detection methodology",
+    "trigger_text": [
+      "Performance degradation was barely perceptible during testing, which involved only a few records, but it worsened exponentially as the database grew",
+      "More serious was the slowdown of the system halfway through its period of use. A record which initially took 20 minutes to input took over an hour due to slow syncing and updating",
+      "Performance would degrade once approximately 3,000-6,000 records had been created"
+    ],
+    "trigger_locations": [
+      {
+        "section": "Theme 2: Trade-Offs",
+        "subsection": "Legacy Features vs Performance",
+        "page": 48,
+        "context": "Discussion of context numbering performance"
+      },
+      {
+        "section": "Theme 2: Trade-Offs",
+        "subsection": "Legacy Features vs Performance",
+        "page": 48,
+        "context": "Fairbairn quote on slowdown"
+      },
+      {
+        "section": "Theme 2: Trade-Offs",
+        "subsection": "Legacy Features vs Performance",
+        "page": 48,
+        "context": "Discussion of record thresholds"
+      }
+    ],
+    "inference_reasoning": "Specific performance thresholds reported (3,000-6,000 records, 20 min → 60+ min input time, exponential degradation) imply systematic monitoring. However, monitoring methodology not documented: unknown how performance was measured, monitoring frequency, metrics used, or degradation detection criteria.",
+    "page": 48,
+    "source_location": "Theme 2: Legacy Features vs Performance",
+    "method_tier": "primary",
+    "implements_design": "RD-IMP-001",
+    "realized_through_protocols": [],
+    "method_status": "implicit",
+    "extraction_confidence": "high",
+    "implicit_metadata": {
+      "basis": "inferred_from_results",
+      "transparency_gap": "Performance monitoring methodology undocumented. Unknown: measurement tools, monitoring schedule, performance metrics, threshold detection criteria, data collection procedures.",
+      "assessability_impact": "Cannot assess reliability of performance claims. Unknown whether monitoring was systematic or anecdotal. Critical for evaluating trade-off arguments.",
+      "reconstruction_confidence": "medium"
+    }
+  },
+  {
+    "method_id": "M-IMP-002",
+    "method_name": "Time-on-task measurement methodology",
+    "trigger_text": [
+      "While we have yet to keep time-on-task records for either paper-based recording or FAIMS, project members universally reported that data entry using FAIMS took longer than using our previous analogue system"
+    ],
+    "trigger_locations": [
+      {
+        "section": "Theme 2: Trade-Offs",
+        "subsection": "Legacy Features vs Performance",
+        "page": 48,
+        "context": "VanValkenburgh discussion of data entry time"
+      }
+    ],
+    "inference_reasoning": "Explicitly mentions planned time-on-task measurement (\"we have yet to keep time-on-task records\") but method not documented. Paper presents time comparisons elsewhere (Fairbairn: \"2-3 hours vs several hundred hours\") suggesting measurement occurred, but methodology never specified.",
+    "page": 48,
+    "source_location": "Theme 2: Legacy Features vs Performance",
+    "method_tier": "primary",
+    "implements_design": "RD-IMP-001",
+    "realized_through_protocols": [],
+    "method_status": "implicit",
+    "extraction_confidence": "high",
+    "implicit_metadata": {
+      "basis": "mentioned_undocumented",
+      "transparency_gap": "Time-on-task measurement method not specified. Unknown: measurement protocol, data recording procedures, comparison baseline, participant selection.",
+      "assessability_impact": "Cannot assess validity of efficiency claims. Unknown whether time measurements were systematic, controlled, or anecdotal.",
+      "reconstruction_confidence": "low"
+    }
+  },
+  {
+    "method_id": "M-IMP-003",
+    "method_name": "Post-fieldwork assessment methodology combining questionnaires and impact evaluation",
+    "trigger_text": [
+      "They took the time to complete post-project questionnaires",
+      "The FAIMS team asked each of the project directors to reflect on the design, development, and deployment of their module",
+      "When asked to assess the direct impact of the digital recording on their research, project directors first emphasised improvements in the quantity, quality, and availability of data"
+    ],
+    "trigger_locations": [
+      {
+        "section": "Three Case Studies and Three Themes",
+        "page": 34,
+        "context": "Description of data sources"
+      },
+      {
+        "section": "Theme 1",
+        "subsection": "The Payoff",
+        "page": 41,
+        "context": "Introduction to project director reflections"
+      },
+      {
+        "section": "Theme 3: Digital Recording and Archaeological Interpretation",
+        "page": 52,
+        "context": "Introduction to impact assessment discussion"
+      }
+    ],
+    "inference_reasoning": "Post-project questionnaires explicitly mentioned as data source. Directors \"asked to assess the direct impact\" implies structured assessment methodology. These are unified: questionnaire IS the vehicle for collecting impact assessments. Both are post-fieldwork evaluation approaches that would be assessed together as comprehensive project evaluation methodology. Consolidated because assessment methodology and questionnaire methodology are aspects of the same evaluation approach.",
+    "page": 34,
+    "source_location": "Three Case Studies and Three Themes / Theme 3",
+    "method_tier": "primary",
+    "implements_design": "RD-IMP-002",
+    "realized_through_protocols": [],
+    "method_status": "implicit",
+    "extraction_confidence": "high",
+    "implicit_metadata": {
+      "basis": "mentioned_undocumented",
+      "transparency_gap": "Post-fieldwork assessment methodology undocumented. Unknown: questionnaire content/format (open/closed), impact assessment framework, evaluation criteria, question design, response validation, thematic analysis approach.",
+      "assessability_impact": "Cannot assess whether director responses represent systematic data collection or selective reporting. Unknown whether impact assessment was guided or open-ended, systematic or impressionistic. Affects credibility of theme construction and impact claims.",
+      "reconstruction_confidence": "low"
+    },
+    "consolidation_metadata": {
+      "consolidated_from": [
+        "P4_M-IMP-003",
+        "P4_M-IMP-004"
+      ],
+      "consolidation_type": "validation_chain",
+      "information_preserved": "complete",
+      "rationale": "Assessment compatibility test: Would assess TOGETHER. Questionnaire methodology and impact assessment methodology are aspects of the same post-fieldwork evaluation approach. Questionnaire is the instrument for collecting impact assessments. Both mentioned but undocumented as part of unified case study evaluation methodology."
+    }
+  },
+  {
+    "method_id": "M-IMP-005",
+    "method_name": "Cost-benefit quantification methodology",
+    "trigger_text": [
+      "The greatest gains in the FAIMS system were found after the excavation season was finished with post-processing of the data and checking taking 2–3 hours in comparison to several hundred hours for entry of the >300 context records generated in a typical season. This saving in paid RA time equates to c. AU$5,000–10,000 per annum",
+      "The benefits to the excavation project in financial/labour terms are hugely significant, equating to a total of 1–1.5 days of handling time using FAIMS against 25–30 days when not in use per annum, in other words a 95% labour saving",
+      "the tablets saved at least eight person-days of work"
+    ],
+    "trigger_locations": [
+      {
+        "section": "Theme 1",
+        "subsection": "The Payoff",
+        "page": 44,
+        "context": "Fairbairn cost-benefit calculation"
+      },
+      {
+        "section": "Theme 1",
+        "subsection": "The Payoff",
+        "page": 44,
+        "context": "Fairbairn labour saving calculation"
+      },
+      {
+        "section": "Theme 1",
+        "subsection": "The Payoff",
+        "page": 43,
+        "context": "Thompson person-days saved"
+      }
+    ],
+    "inference_reasoning": "Precise cost-benefit calculations presented (95% labour saving, $5k-10k savings, 8 person-days) imply systematic quantification methodology. However, calculation methods, baseline measurements, cost accounting approaches, and verification procedures not documented.",
+    "page": 44,
+    "source_location": "Theme 1: The Payoff",
+    "method_tier": "primary",
+    "implements_design": "RD-IMP-001",
+    "realized_through_protocols": [],
+    "method_status": "implicit",
+    "extraction_confidence": "high",
+    "implicit_metadata": {
+      "basis": "mentioned_undocumented",
+      "transparency_gap": "Cost-benefit quantification method not documented. Unknown: time measurement procedures, cost accounting methods, baseline calculation, person-hour valuation, comparison controls.",
+      "assessability_impact": "Cannot verify cost-benefit calculations. Unknown assumptions, measurement precision, or comparison validity. Critical for evaluating efficiency claims.",
+      "reconstruction_confidence": "medium"
+    }
+  }
+]
