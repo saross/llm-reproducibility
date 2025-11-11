@@ -2682,5 +2682,333 @@
       "changes_applied": 6,
       "canonical_schema_version": "2.5"
     }
+  },
+  "reproducibility_infrastructure": {
+    "persistent_identifiers": {
+      "paper_doi": {
+        "doi": "10.1108/JD-05-2022-0096",
+        "resolves": null,
+        "url": "https://doi.org/10.1108/JD-05-2022-0096",
+        "verified_date": null,
+        "location": "page header, line 59"
+      },
+      "author_orcids": [],
+      "orcid_coverage": {
+        "authors_with_orcid": 0,
+        "total_authors": 4,
+        "coverage_percentage": 0,
+        "coverage_category": "none",
+        "notes": "ORCIDs not visible in PDF text; may be present in online version at Emerald Insight"
+      },
+      "dataset_pids": [],
+      "software_pids": [
+        {
+          "software_name": "CNN testing - Training data preparation and validation",
+          "repository": "GitHub",
+          "doi": null,
+          "url": "https://github.com/adivea/cnn-testing",
+          "version": null,
+          "location": "Code statement, lines 53-55"
+        },
+        {
+          "software_name": "Burial mounds - 2021 CNN classifier",
+          "repository": "GitHub",
+          "doi": null,
+          "url": "https://github.com/centre-for-humanities-computing/burial-mounds",
+          "version": "2021",
+          "location": "Code statement, lines 55-56"
+        },
+        {
+          "software_name": "MoundDetection - 2022 CNN classifier",
+          "repository": "GitHub",
+          "doi": null,
+          "url": "https://github.com/centre-for-humanities-computing/MoundDetection",
+          "version": "2022",
+          "location": "Code statement, lines 57-59"
+        }
+      ],
+      "sample_pids": [],
+      "project_pid": null,
+      "vocabulary_pids": [],
+      "pid_graph_summary": {
+        "connectivity_score": 4,
+        "connectivity_rating": "good",
+        "rationale": "Paper DOI (1) + 3 software GitHub repositories (3) = 4. No author ORCIDs visible, no dataset PIDs (historical data from previous project), no sample/project PIDs."
+      }
+    },
+    "funding": [
+      {
+        "funder": "Aarhus University Digital Literacy Initiative",
+        "grant_number": null,
+        "grant_url": null,
+        "location": "Funding acknowledgement, line 44"
+      },
+      {
+        "funder": "Australian Research Council (ARC)",
+        "grant_number": "LP0989901",
+        "grant_type": "Linkage Projects",
+        "grant_url": null,
+        "location": "Data acquisition acknowledgement, lines 46-47",
+        "notes": "Historical funding for Tundzha Regional Archaeological Project (2009-2011) data acquisition"
+      },
+      {
+        "funder": "University of Michigan",
+        "grant_number": null,
+        "grant_type": "International Grant",
+        "grant_url": null,
+        "location": "Data acquisition acknowledgement, lines 47-48",
+        "notes": "Historical funding for TRAP data acquisition"
+      },
+      {
+        "funder": "GeoEye Foundation",
+        "grant_number": null,
+        "grant_type": "Grant",
+        "grant_url": null,
+        "location": "Data acquisition acknowledgement, line 48",
+        "notes": "Provided satellite imagery for TRAP"
+      }
+    ],
+    "data_availability": {
+      "statement_present": false,
+      "statement_type": "implicit",
+      "verbatim_text": null,
+      "location": null,
+      "repositories": [],
+      "machine_actionability": {
+        "rating": "low",
+        "rationale": "No explicit data availability statement. Historical field data from TRAP (2009-2011) mentioned but not deposited. Training data and CNN predictions presumably available via GitHub repositories but not explicitly stated."
+      },
+      "notes": "Paper uses historical field survey data from Tundzha Regional Archaeological Project (2009-2011) and satellite imagery from GeoEye Foundation. No explicit data availability statement. GitHub repositories contain code but unclear if training data/predictions are included."
+    },
+    "code_availability": {
+      "statement_present": true,
+      "statement_type": "available",
+      "verbatim_text": "Code: Data processing and analysis was performed using R and Python and the scripts are available in public repositories: (1) Training data preparation and CNN prediction validation can be found in https://github.com/adivea/cnn-testing (2) 2021 CNN classifier training and mound prediction is implemented in https://github.com/centre-for-humanities-computing/burial-mounds (3) 2022 CNN classifier training and mound prediction is implemented in https://github.com/centre-for-humanities-computing/MoundDetection",
+      "location": "Code statement, lines 53-59",
+      "repositories": [
+        {
+          "name": "GitHub",
+          "url": "https://github.com/adivea/cnn-testing",
+          "repository_type": "version_control",
+          "access_conditions": "open",
+          "licence": null,
+          "software": [
+            {
+              "description": "Training data preparation and CNN prediction validation",
+              "version": null,
+              "doi": null
+            }
+          ]
+        },
+        {
+          "name": "GitHub",
+          "url": "https://github.com/centre-for-humanities-computing/burial-mounds",
+          "repository_type": "version_control",
+          "access_conditions": "open",
+          "licence": null,
+          "software": [
+            {
+              "description": "2021 CNN classifier training and mound prediction",
+              "version": "2021",
+              "doi": null
+            }
+          ]
+        },
+        {
+          "name": "GitHub",
+          "url": "https://github.com/centre-for-humanities-computing/MoundDetection",
+          "repository_type": "version_control",
+          "access_conditions": "open",
+          "licence": null,
+          "software": [
+            {
+              "description": "2022 CNN classifier training and mound prediction",
+              "version": "2022",
+              "doi": null
+            }
+          ]
+        }
+      ],
+      "machine_actionability": {
+        "rating": "high",
+        "rationale": "Three GitHub repositories explicitly listed with clear descriptions of functionality. Code available in R and Python. Good transparency about computational workflow."
+      }
+    },
+    "author_contributions": {
+      "statement_present": false,
+      "format": null,
+      "verbatim_text": null,
+      "location": null,
+      "contributions": [
+        {
+          "author_name": "Adela Sobotkova",
+          "credit_roles": [],
+          "description": "First author (inferred lead researcher, field data from TRAP project)"
+        },
+        {
+          "author_name": "Ross Deans Kristensen-McLachlan",
+          "credit_roles": [],
+          "description": "Second author (Center for Humanities Computing - inferred ML implementation)"
+        },
+        {
+          "author_name": "Orla Mallon",
+          "credit_roles": [],
+          "description": "Third author (Center for Humanities Computing - inferred ML implementation)"
+        },
+        {
+          "author_name": "Shawn Adrian Ross",
+          "credit_roles": [],
+          "description": "Fourth author (inferred conceptualization, field data from TRAP project)"
+        }
+      ],
+      "notes": "No explicit author contributions statement. Affiliations suggest Sobotkova and Ross provided field data and archaeological expertise (TRAP project), while Kristensen-McLachlan and Mallon provided ML/computational expertise (Center for Humanities Computing)."
+    },
+    "conflicts_of_interest": {
+      "statement_present": false,
+      "conflicts_declared": null,
+      "verbatim_text": null,
+      "location": null,
+      "type": "not_stated",
+      "notes": "Emerald journal; competing interests statements not always included. No obvious conflicts apparent from author affiliations or acknowledgements."
+    },
+    "ethics_approval": {
+      "statement_present": false,
+      "approval_obtained": "not_applicable",
+      "verbatim_text": null,
+      "location": null,
+      "ethics_body": null,
+      "approval_number": null,
+      "jurisdiction": null,
+      "human_subjects_consent": null,
+      "animal_welfare": null,
+      "notes": "Computational archaeology paper using historical field survey data and satellite imagery. No human subjects research requiring ethics approval. Archaeological fieldwork from TRAP (2009-2011) would have had permits but not detailed in this ML methods paper."
+    },
+    "permits_and_authorizations": {
+      "statement_present": false,
+      "permits": [],
+      "notes": "Paper uses historical data from Tundzha Regional Archaeological Project (2009-2011) which would have required Bulgarian archaeological permits, but these are not detailed in this methods paper focused on ML validation."
+    },
+    "preregistration": {
+      "statement_present": false,
+      "preregistered": false,
+      "platform": null,
+      "registration_id": null,
+      "registration_url": null,
+      "registration_date": null,
+      "notes": "Not applicable for retrospective ML methods paper analyzing 2021-2022 CNN implementations against historical field data from 2009-2011"
+    },
+    "supplementary_materials": {
+      "statement_present": false,
+      "files": [],
+      "notes": "No supplementary materials mentioned. Code available via GitHub repositories instead."
+    },
+    "references_completeness": {
+      "doi_usage": "very_high",
+      "doi_percentage_estimate": 95,
+      "notes": "Extensive references section with very high DOI coverage for contemporary publications. Consistent DOI formatting throughout reference list.",
+      "rationale": "2024 Emerald journal article with exemplary reference DOI coverage"
+    },
+    "fair_assessment": {
+      "assessed": true,
+      "assessment_date": "2025-11-03",
+      "assessor": "claude-sonnet-4-5",
+      "publication_year": 2024,
+      "discipline": "computational_archaeology/digital_methods",
+      "findable": {
+        "score": 3,
+        "max_score": 4,
+        "rationale": "F1: Paper has DOI = 1. F2: Rich metadata = 1. F3: Code on GitHub with clear descriptions = 1. F4: No dataset PIDs (historical field data not deposited) = 0.",
+        "criteria_met": [
+          "F1-paper_doi",
+          "F2-rich_metadata",
+          "F3-code_repositories"
+        ],
+        "criteria_not_met": [
+          "F4-dataset_pid"
+        ]
+      },
+      "accessible": {
+        "score": 3,
+        "max_score": 4,
+        "rationale": "A1: Paper accessible via DOI with HTTPS = 1. A1.1: CC BY 4.0 open access = 1. A1.2: No authentication required = 1. A2: Dataset persistence unclear (historical data not deposited) = 0.",
+        "criteria_met": [
+          "A1-standard_protocol",
+          "A1.1-open_access_cc_by",
+          "A1.2-no_auth_required"
+        ],
+        "criteria_not_met": [
+          "A2-dataset_metadata_persistent"
+        ]
+      },
+      "interoperable": {
+        "score": 3,
+        "max_score": 4,
+        "rationale": "I1: Code uses structured formats (Python, R, GitHub) = 1. I2: No controlled vocabularies mentioned = 0. I3: References other work via DOIs extensively = 1. Standard ML/CNN frameworks and satellite imagery formats = 1.",
+        "criteria_met": [
+          "I1-structured_format",
+          "I3-qualified_references",
+          "Standard_ML_formats"
+        ],
+        "criteria_not_met": [
+          "I2-controlled_vocabularies"
+        ]
+      },
+      "reusable": {
+        "score": 3,
+        "max_score": 4,
+        "rationale": "R1: Rich metadata and detailed methods = 1. R1.1: CC BY 4.0 license for paper, code license not stated = 0.5 (rounded up to 1). R1.2: Good provenance (data from TRAP 2009-2011, computation on UCloud HPC) = 1. R1.3: Uses standard ML/remote sensing community practices = 1.",
+        "criteria_met": [
+          "R1-rich_metadata",
+          "R1.1-cc_by_paper",
+          "R1.2-provenance",
+          "R1.3-community_standards"
+        ],
+        "criteria_not_met": [
+          "R1.1-explicit_code_licence"
+        ]
+      },
+      "total_fair_score": 12,
+      "max_total_score": 16,
+      "fair_percentage": 75.0,
+      "fair_rating": "highly_fair",
+      "machine_actionability": {
+        "rating": "moderate",
+        "rationale": "Code on GitHub is machine-actionable. Paper metadata well-structured. Missing: dataset deposition, explicit data availability statement, code licences. Three distinct GitHub repositories provide good computational transparency."
+      },
+      "pid_graph_completeness": {
+        "connectivity_score": 4,
+        "connectivity_rating": "good",
+        "rationale": "Paper DOI + 3 code repositories. Missing: author ORCIDs, dataset PIDs, project PID. Good code sharing but incomplete PID graph."
+      },
+      "discipline_context": {
+        "publication_year_expectations": "2024: High expectations for FAIR data, open code, ORCIDs. Emerald supports open access.",
+        "discipline_baseline": "Computational archaeology/ML: Strong tradition of code sharing (GitHub), satellite imagery often proprietary or historical, field data sharing variable.",
+        "research_type": "ML methods paper with critical evaluation: Excellent code sharing (3 repositories). Historical field data not deposited (typical for legacy projects). Paper unusually transparent about ML failures and resource requirements.",
+        "contextual_notes": "Refreshingly honest methods paper documenting ML failures rather than just successes. Excellent code transparency with three distinct GitHub repositories. CC BY 4.0 open access exemplary. Missing dataset deposition reflects common pattern with historical field data. Unusual transparency about time investment (135 person-hours) and validation failures (95-96% false negatives)."
+      },
+      "recommendations": [
+        "Deposit TRAP field survey data in appropriate repository (tDAR, Open Context, Zenodo)",
+        "Add ORCIDs for all authors in journal metadata",
+        "Specify licences for GitHub code repositories (suggest MIT or CC0)",
+        "Add explicit data availability statement for field data and training datasets",
+        "Consider minting DOIs for stable code releases via Zenodo-GitHub integration",
+        "Document dataset schemas/formats in repositories"
+      ]
+    },
+    "extraction_metadata": {
+      "extraction_date": "2025-11-03",
+      "extractor": "claude-sonnet-4-5",
+      "sections_examined": [
+        "header",
+        "title_page",
+        "abstract",
+        "copyright_statement",
+        "funding_acknowledgement",
+        "code_statement",
+        "main_text",
+        "references"
+      ],
+      "notes": "Journal of Documentation (Emerald) article published 2024 (received Aug 2022, accepted Feb 2024). CC BY 4.0 open access. ML methods paper critically evaluating CNN for burial mound detection. Excellent code sharing (3 GitHub repos), detailed methods including time/resource requirements. Missing: author ORCIDs, data availability statement, code licences. Notable transparency about ML failures and validation against field data. Uses historical TRAP (2009-2011) field survey data. Computation on UCloud HPC (University of Southern Denmark). Very high reference DOI coverage."
+    }
   }
 }
