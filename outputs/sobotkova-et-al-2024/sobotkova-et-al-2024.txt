@@ -1,0 +1,1071 @@
+
+--- Page 1 ---
+ThecurrentissueandfulltextarchiveofthisjournalisavailableonEmeraldInsightat:
+https://www.emerald.com/insight/0022-0418.htm
+Validating predictions of burial Validating ML
+predictions of
+mounds with field data:
+burial mounds
+the promise and reality
+of machine learning
+Adela Sobotkova
+Received10August2022
+DepartmentofHistoryandClassicalStudies,AarhusUniversitet,Aarhus,Denmark Revised1November2023
+Accepted3February2024
+Ross Deans Kristensen-McLachlan and Orla Mallon
+CenterforHumanitiesComputing,AarhusUniversitet,Aarhus,Denmark,and
+Shawn Adrian Ross
+DepartmentofHistoryandArchaeology,MacquarieUniversity,Sydney,Australia
+Abstract
+Purpose–ThispaperprovidespracticaladviceforarchaeologistsandheritagespecialistswishingtouseML
+approachestoidentifyarchaeologicalfeaturesinhigh-resolutionsatelliteimagery(orotherremotelysensed
+datasources).WeseektobalancethedisproportionatelyoptimisticliteraturerelatedtotheapplicationofMLto
+archaeologicalprospectionthroughadiscussionoflimitations,challengesandotherdifficulties.Wefurther
+seektoraiseawarenessamongresearchersofthetime,effort,expertiseandresourcesnecessarytoimplement
+MLsuccessfully,sothattheycanmakeaninformedchoicebetweenMLandmanualinspectionapproaches.
+Design/methodology/approach–Automatedobjectdetectionhasbeentheholygrailofarchaeological
+remotesensingforthelasttwodecades.Machinelearning(ML)modelshaveprovenabletodetectuniform
+featuresacrossaconsistentbackground,butmorevariegatedimageryremainsachallenge.Wesetouttodetect
+burial mounds in satellite imagery from a diverse landscape in Central Bulgaria using a pre-trained
+ConvolutionalNeuralNetwork(CNN)plusadditionalbutlow-touchtrainingtoimproveperformance.Training
+wasaccomplishedusingMOUND/NOTMOUNDcutouts,andthemodelassessedarbitrarytilesofthesame
+sizefromtheimage.Resultswereassessedusingfielddata.
+Findings–Validationofresultsagainstfielddatashowedthatself-reportedsuccessratesweremisleadingly
+high, and that the model was misidentifying most features. Setting an identification threshold at 60%
+© Adela Sobotkova, Ross Deans Kristensen-McLachlan, Orla Mallon and Shawn Adrian Ross.
+Published by Emerald Publishing Limited. This article is published under the Creative Commons
+Attribution(CCBY4.0)licence.Anyonemayreproduce,distribute,translateandcreatederivativeworks
+of this article (for both commercial and non-commercial purposes), subject to full attribution to the
+originalpublicationandauthors.Thefulltermsofthislicencemaybeseenathttp://creativecommons.
+org/licences/by/4.0/legalcode
+ThisresearchwasfundedbytheAarhusUniversityDigitalLiteracyInitiative.WethankCormac
+PurcellforinitialelaborationofmanuallytrainedCNN,whichledustoourcurrentapproach.Datawere
+acquired by the participants of the Tundzha Regional Archaeological Project (2009–2011) with the
+supportoftheAustralianResearchCouncilLinkageProjectsFundingschemeLP0989901,Universityof
+MichiganInternationalGrant,GeoEyeFoundation,KazanlakHistoricalMuseum,SofiaUniversityofSt.
+KlimentOhridski,UniversityofNewSouthWales;MacquarieUniversity;AmericanResearchCenter,
+Sofia;andtheInstitutefortheStudyofAegeanPrehistory.Allofthemachine-learningcomputation
+doneforthisprojectwasperformedontheUCloudinteractiveHPCsystem,whichismanagedbythe
+eScienceCenterattheUniversityofSouthernDenmark.
+Code:DataprocessingandanalysiswasperformedusingRandPythonandthescriptsareavailable
+inpublicrepositories:(1)TrainingdatapreparationandCNNpredictionvalidationcanbefoundin
+https://github.com/adivea/cnn-testing (2) 2021 CNN classifier training and mound prediction is
+implemented in https://github.com/centre-for-humanities-computing/burial-mounds (3) 2022 CNN
+JournalofDocumentation
+classifiertrainingandmoundpredictionisimplementedinhttps://github.com/centre-for-humanities- EmeraldPublishingLimited
+0022-0418
+computing/MoundDetection DOI10.1108/JD-05-2022-0096
+
+--- Page 2 ---
+JD probability,andnotingthatweusedanapproachwheretheCNNassessedtilesofafixedsize,tile-basedfalse
+negativerateswere95–96%,falsepositiverateswere87–95%oftaggedtiles,whiletruepositiveswereonly5–
+13%.Counterintuitively,themodelprovidedwithtrainingdataselectedforhighlyvisiblemounds(ratherthan
+allmounds)performedworse.Developmentofthemodel,meanwhile,requiredapproximately135person-hours
+ofwork.
+Research limitations/implications – Our attempt to deploy a pre-trained CNN demonstrates the
+limitationsofthisapproachwhenitisusedtodetectvariedfeaturesofdifferentsizeswithinaheterogeneous
+landscapethatcontainsconfoundingnaturalandmodernfeatures,suchasroads,forestsandfieldboundaries.
+Themodelhasdetectedincidentalfeaturesratherthanthemoundsthemselves,makingexternalvalidation
+withfielddataanessentialpartofCNNworkflows.Correctingthemodelwouldrequirerefiningthetraining
+data as well as adopting different approaches to model choice and execution, raising the computational
+requirementsbeyondthelevelofmostculturalheritagepractitioners.
+Practicalimplications–Improvingthepre-trainedmodel’sperformancewouldrequireconsiderabletime
+andresources,ontopofthetimealreadyinvested.Thedegreeofmanualinterventionrequired–particularly
+aroundthesubsettingandannotationoftrainingdata–issosignificantthatitraisesthequestionofwhetherit
+wouldbemoreefficienttoidentifyallofthemoundsmanually,eitherthroughbrute-forceinspectionbyexperts
+or by crowdsourcing the analysis to trained – or even untrained – volunteers. Researchers and heritage
+specialistsseekingefficientmethodsforextractingfeaturesfromremotelysenseddatashouldweighthecosts
+andbenefitsofMLversusmanualapproachescarefully.
+Social implications – Our literature review indicates that use of artificial intelligence (AI) and ML
+approachestoarchaeologicalprospectionhavegrownexponentiallyinthepastdecade,approachingadoption
+levelsassociatedwith“crossingthechasm”frominnovatorsandearlyadopterstothemajorityofresearchers.
+Theliteratureitself,however,isoverwhelminglypositive,reflectingsomecombinationofpublicationbiasand
+arhetoricofunconditionalsuccess.Thispaperpresentsthefailureofagood-faithattempttoutilisethese
+approachesasacounterbalanceandcautionarytaletopotentialadoptersofthetechnology.Early-majority
+adoptersmayfindMLdifficulttoimplementeffectivelyinreal-lifescenarios.
+Originality/value –Unlikemanyhigh-profilereportsfromwell-fundedprojects,ourpaperrepresentsa
+seriousbutmodestlyresourcedattempttoapplyanMLapproachtoarchaeologicalremotesensing,using
+techniquesliketransferlearningthatarepromotedassolutionstotimeandcostproblemsassociatedwith,e.g.
+annotatingandmanipulatingtrainingdata.WhilethemajorityofarticlesuncriticallypromoteML,oronly
+discusshowchallengeswereovercome,ourpaperinvestigateshow–despitereasonableself-reportedscores–
+themodelfailedtolocatethetargetfeatureswhencomparedtofielddata.Wealsopresenttime,expertiseand
+resourcingrequirements,ararityinML-for-archaeologypublications.
+KeywordsMachinelearning,Remotesensing,CNN,Satelliteimagery,Archaeology
+PapertypeArticle
+Introduction
+Machinelearning(ML)hastakentheworldbyastorm,andarchaeologiststoohavetriedto
+harness the power of Convolutional Neural Networks (CNN) and other “deep learning”
+approachestoextractarchaeologicalfeaturesfromremotelysenseddata.Aseriesofrecent
+articleshavepromotedthesuccessofCNNsinculturalheritageapplications(Canetal.,2021;
+Caspari,2020;CaspariandCrespo,2019;Ekimetal.,2021;Maetal.,2021).Highsuccessrates
+reportedfordetectingandmonitoringburialmoundsinSiberiahavehighlightedCNNsasan
+effectiveapproachforlarge-scaleprospection(CaspariandCrespo,2019).Enthusiasmarising
+fromthisstudy,andsimilaroutcomesfromEgypt(Woolf,2018)must,however,betempered
+bythefactthattheauthorstargeteduniformfeaturessituatedinenvironmentswithlittle
+variation in terrain or vegetation – indeed, with relatively little vegetation or other
+confoundingfactorsatall.Fewerstudiesexplorethechallengespresentedbymoredifficult
+environments where cultural heritage lies in diverse or thick vegetation, surrounded by
+obtrusive natural and artificial features (Doyle et al., 2023; Fuentes-Carbajal et al., 2023;
+Verschoof-vanderVaartetal.,2020).
+Althoughfewpublicationsreportthetime,expertise,orcostsassociatedwithapplying
+MLtoarchaeologicalprospection,examplesfromprojectstryingtoextractsymbolsandtext
+fromhistoricalmapsindicatethatitcanbelabour-intensive(Canetal.,2021;Ekimetal.,2021;
+Maetal.,2021).Correctclassificationoflinearroadfeatureswithapre-trainedmodelrequired
+
+--- Page 3 ---
+1,250htodigitiseandannotatetrainingdatasets(Canetal.,2021,p.62,847).Withoutsuch Validating ML
+investment, one can expect to detect only the most consistent map features (Groom et al., predictions of
+2021),despitethefactthatmapsofferasimplifiedversionofrealityandusestandardised
+burial mounds
+symbols,whicharefarlesscomplexthantheearth’ssurfaceasreflectedinsatelliteimagery.
+ProjectsapplyingMLapproachestosatelliteimageryorLiDARdatalikewisereportalack
+ofhigh-quality,well-annotatedtrainingdata,oftenduetocostandtimeconstraints(Albrecht
+etal.,2019;ArgyrouandAgapiou,2022;Canedoetal.,2023;Casinietal.,2021;Gallweyetal.,
+2019;KadhimandAbed,2023;Karamitrouetal.,2022,2023;Lambersetal.,2019;Oflietal.,
+2016;Sechetal.,2023;Verschoof-vanderVaartandLandauer,2021).Transferlearningbased
+onpre-trainedmodelsissometimesproposedassolutiontotheproblemoflimitedtraining
+data,aswellasrelatedproblemslikesmalldatasetsize(Casinietal.,2021,2022;Character
+etal.,2021;Gallweyetal.,2019;Sechetal.,2023;Xiongetal.,2020).Useofapre-trainedCNN
+potentiallyobviatestheneedtohavelarge,high-quality,andrepresentativedatasetsforML
+training,andpromisestobringCNNapproacheswithinthereachofsmaller-scaleprojects,or
+projectsthathopetodetectormonitorvariedarchaeologicalphenomenainheterogeneous
+landscapes.Relativelyfewprojectsapplyingpre-trainedmodels,however,offerasustained
+discussionoffailures,limitations,orshortcomingsoftheapproach(forexceptionsseeCasini
+etal.,2023;Sechetal.,2023).
+Thispaperoffersacautionarytaleaboutthechallenges,limitations,anddemandsofML
+appliedtoarchaeologicalprospection.WesetouttodetectburialmoundsintheKazanlak
+Valley, Bulgaria, using IKONOS high-resolution satellite imagery. We developed a pre-
+trainedCNNthatwasfurthertrainedusingtwodatasets:(1)imagecutoutsofareaswhere
+moundswerediscoveredduringpedestrianfieldwork,regardlessofhowvisiblethemounds
+wereinthesatelliteimagery,and(2)imagecutoutswhereaburialmoundisclearlyvisiblein
+theimagerytoahumanobserver.EachoftheseCNNswasthenusedtopredictthelocations
+ofburialmoundsintheimageryfromthestudyarea.Wecomparethepredictionsfromthe
+two models and their reported success rates measured against ground-truthed data. The
+results show that even a sophisticated, pre-trained model that is subjected to additional
+trainingstruggleswhenconfrontedbyinconsistentandsometimesindistinctfeaturesina
+varied landscape. Indeed, both models failed to identify burial mounds in our study area.
+Expert researchers, or even novice volunteers, would have been more reliable (Sobotkova
+etal.,2023).Assuch,weoffercorrectiveinsightsregardingthedifficultieswefaceddeploying
+a pre-trained CNN, as well as suggestions about how archaeologists might improve ML
+approachestheychoosetoadopt.
+Burialmoundsasheritageunderthreat
+(cid:1)
+Burialmoundsareaubiquitousfeature oftheBulgarianlandscape (Oltean,2013;Skorpil,
+1925). Thousands of such mounds exist in the country; estimates range between 8,000 –
+19,000 surviving today, of perhaps 50,000 originally constructed (Kitov, 1993, pp. 41–43;
+Shkorpil and Shkorpil, 1989, p. 20). Such mounds were built from the Early Bronze Age
+throughtheMiddleAgesinthewesternextensionsoftheAsiansteppesandsurrounding
+areas. Overtime, burial mound agglomerations formed entire mounded landscapes. Often
+theydotelevatedridgestoenhancetheirprominence.Whereterrainisflat,moundsalignin
+linearpatternstohighlightsubtlemorphologyofthesurroundinglandscapesandsignaltheir
+presencetothepasser-bySobotkovaandWeissova(2019).
+Theserounded,conicalpilesofearthandstonesvaryindiameterfrom10mto100mand
+<1mto>20minheight(seePlates1and2).Theircontentsvaryfromnothing(cenotaphs),to
+simpleburialswithorwithoutanenclosure,toelaboratestoneorbricktombswithnotable
+architecturalandartisticrefinementandintrinsicallyvaluablegravegoods(Dimitrova,2006;
+Tsetskhladze,1998;Vasileva,2005).
+
+--- Page 4 ---
+JD
+Plate1.
+Medium-sizedburial
+moundintheKaznlak
+Valley(TRAP
+inventory#2082)
+Plate2.
+Submetermoundinthe
+KazanlakValley
+(TRAP
+inventory#3341)
+Despitethelargenumberofburialmounds,theyareendangered.DevelopmentinBulgaria
+destroys dozens of mounds annually (Loulanski and Loulanski, 2017). Most regulated
+destructionsresultfromformalrescueexcavationinanticipationofhousingorinfrastructure
+construction, establishment of quarries, or similar development. In 2008, the last year for
+which data is available, burial mounds comprised nearly a quarter (57 of 257) of all
+excavationsinBulgaria(CholakovandChukalev,2008,p.91,Figure2).
+Despiteadministrativeandlegalmeasurestocombatillicitartefacttrafficking,suchasa
+2013MemorandumofUnderstandingwiththeUnitedStates,lootingprobablydamagesmore
+moundsthandevelopment(Eftimoskietal.,2017;Lazar,2015,pp.107–124;Mateva,2011).
+The Kazanlak Valley has been especially targeted by looters as it features an unusual
+concentrationofconspicuousburialmounds(50–100mindiameter)thatincludedecorated
+ashlartombscontainingartwork,preciousmetals,high-qualityceramics,andothervaluable
+objects (Dimitrova, 2006; Kitov, 1999). Although the majority of mounds in the valley are
+smallinsizeandhavemodestcontents,thepotentialpayoffforlooters,andfailuresoflaw
+andorder,havefuelledlootingsince1989(Bailey,1998).
+Mounded landscapes alsosufferslowand continuouswearfrom agricultural activities
+(Eftimoskietal.,2017;SobotkovaandWeissova,2020).Farmersploughandharrowarable
+fields annually, affecting thousands of mounds across Bulgaria. Unlike looting and (to a
+lesser extent) development, which capture public attention, damage from agriculture
+
+--- Page 5 ---
+generally goes unremarked. In the course of nearly 20 years of intermittent fieldwork in Validating ML
+Bulgaria,theauthorshaveseenfewexamplesofmoundsthathadnotbeendamagedeither predictions of
+bydevelopment,looting,oragriculture,despitehavinginventoriedover2,000ofthemacross
+burial mounds
+twoBulgarianprovinces(Rossetal.,2010,2018;SobotkovaandWeissova,2020).
+Detectingarchaeologicalfeaturesinsatelliteimagery
+While burial mounds are readily identifiable on the ground due to their distinctive
+appearance, theirvisibilityinsatelliteimagerydependsontheirsize,surrounding terrain,
+andlocallandcover(seeFigure1).Largemoundsinflatlandscapeswhereamound’ssurface
+contrastswithsurroundinglandcover(Figure1a,b,e)aremorevisiblethansmallmoundsin
+hilly landscapes where their surfaces blend into the surroundings (Figure 1g-i). Human
+observersoftenlookforcrop,shadow,orsoilmarkstodetectthelessconspicuousmounds.
+Furthermore,moundsinforestscanbeobscuredbythetrees,whileploughed-overmounds
+blendintothesurroundingfields.Visibilityinsatelliteimageryisoftenmarginalforsmallor
+evenmedium-sizedmounds(SobotkovaandRoss,2010).Conversely,imagefeaturessuchas
+lozenge-shaped clusters of trees in ploughed fields can be mistaken for mounds. When
+participantsontheTundzhaRegionalArchaeologyProject(TRAP)previouslyattemptedto
+detect mounds via manual inspection of satellite imagery, we encountered many false
+negatives, classification errors, and false positives. Failures, however, tended to be
+predictable, and some problems with manual inspection could be overcome by training
+andpractice.Nevertheless,afieldvisitisusuallyrequiredtoconfirmidentificationofaburial
+mound. After using satellite imagery for manual mound prospection since 2008, we were
+Figure1.
+150by150mcutouts
+fromthesatellite
+imagerywithmounds
+inthecenterusedfor
+MLtraining;(a–c)
+showmedium-sized
+well-visiblemounds,
+(d–f)largemounds
+coveredinscruband
+surroundedbyvaried
+vegetation,(g–i)show
+smallmounds,poorly
+visibleinsatellite
+imagery
+
+--- Page 6 ---
+JD curious whether ML had, by 2022, reached the point where it could detect features as
+accuratelyandefficientlyasaperson.
+Automatedapproachestoremotelysenseddata
+Mapping cultural heritage at the scale of a country is a costly task whether it involves
+walking the landscape, digitising features from legacy sources like historical maps, or
+manually inspectingaerial or satellite images(Brophy andCowley, 2005; Contreras, 2010;
+Crawford,1929;DeLaetetal.,2007;DeLaetandLambers,2009).Manualinterpretationof
+remotely sensed imagery is not only tedious and time-consuming, but has limitations
+imposed by human bias and error (Bowen et al., 2017). Today, however, more and more
+remotely sensed datasets are becoming available, requiring scalable and reproducible
+approachestotheiranalysis.Manualinspectionisnotwithoutmerit,andexpertsupervision
+isessentialto–ormayevenoutperform–automation(Bennettetal.,2014;Casinietal.,2023;
+Quintus et al., 2017). Human observers, however, cannot manage the growing volume of
+remotelysenseddata,orharnessallthedatacontainedinmodern,global,high-resolution,
+multi- or hyperspectral imagery. Expertise in Geographic Information Systems (GIS),
+computationalskills,anddatamanagement,aswellasdomainexpertise,areallneededfor
+manualdigitisation,ashortageofwhichhamperscrowdsourcingandcitizenscienceprojects
+(Duckers, 2013; Jessop, 2007). Projects that have applied manual inspection at scale
+(“GlobalXplorer”,2016;Linetal.,2014),struggledwith:(1)therecruitmentandretentionof
+reliableparticipants(Waldetal.,2016;WestandPateman,2016),(2)thebiasesintroducedby
+observers, and (3) the variability of naked-eye observations – problems that have only
+increasedwiththescaleoftheresearch(Cowley,2012;Quintusetal.,2017;Sadr,2016).
+Inthelastdecade,anumberofsemi-andfullyautomatedclassificationapproacheshave
+emergedtocomplementmanualinspectionofimagery.Theyrangefromtemplate-matching
+(Kvamme,2013;Trieretal.,2009,2015)toknowledge-based(D’Orazioetal.,2012,2015;Riley,
+2009)andgeographicobject-basedimageanalysis(Cerrillo-Cuenca,2017;Davisetal.,2019),
+toML(Casparietal.,2014;Guyotetal.,2018;MenzeandUr,2012)anddeeplearning,abranch
+ofMLwhichinvolvesartificialneuralnetworkssuchasCNNs(Berganzo-Besgaetal.,2023;
+Trieretal.,2019;Verschoof-vanderVaartandLambers,2019).TenyearsafterParcak’sclaim
+that“Toolscannotmatchthehumaneye”(2009,p.110),artificialintelligence(AI)maybe
+catching up. With a relatively small amount of high-quality, annotated data (circa 250
+features), it is argued that archaeologists assisted by technologists may now extend their
+visionwithdigitaleyes(Casana,2020).
+As a result, ML and other artificial intelligence approaches to remote sensing in
+archaeologyarebecomingevermorepopular.Figure2displaystheannualpublicationcount
+ineachofthepast10years(n570;researcharticlesandconferencepapersplusonepreprint)
+in Web of Science for “topic” including “archaeology”, and “remote sensing or satellite
+image”,and“machinelearningorartificialintelligence”(andvariationsthereof),manually
+reviewedtoeliminateanypublicationsthatdidnotinfactdiscussarchaeologyorML/AI.
+Thissearchrevealsthattheannualcountofrelevantpublicationshasincreasedfromzeroin
+2014and2015to21in2023.These21publicationsrepresentabout17%ofthe2023total
+(n5125)forarchaeologicalremotesensing(generatedusingthesamequeryminus“machine
+learningorartificialintelligence”).PublicationcountsfromScopususingthesamequeryare
+similar (cf. Argyrou and Agapiou, 2022, who analyse publications related to AI in
+archaeologymorebroadlyandfindasteadierriseinadoptionbeginningearlier).
+Ifpublicationcountsareusedaproxyforresearch,this17%figureindicatesthatAI/MLis
+onthecuspof“crossingthechasm”separating“innovators”and“earlyadopters”(together
+16% of the population) from the “early majority”, according to Rogers’ diffusion of
+innovations paradigmas modifiedbyMoore(Moore,1991; Rogers,2003).Indeed, arecent
+
+--- Page 7 ---
+Validating ML
+predictions of
+burial mounds
+Figure2.
+Annualpublication
+countforAIorML
+applicationsrelatedto
+archaeologicalremote
+sensing
+Source(s): Figure by Shawn A Ross
+reviewarticlehasarguedthat“[i]tisnowoutdatedtofocusonwhetherarcheologyshould
+embraceautomateddetection...theaimshouldbetoanswerhowtoembraceAItoolsto
+overcome the challenges of data overload and rapid destruction of the archaeological site
+landscapes”(ArgyrouandAgapiou,2022,p.18).TheappearanceofMLcodelibraries,pre-
+trainedmodels,andothercommoditisedMLtools,combinedwiththeuseoflarge-language
+modelsasresearchandprogrammingassistants(e.g.ChatGPTorGitHubCopilot),makesit
+likelythatthetechnologywillcontinuetoproliferate.
+Astheseapproachesspreadtoabroadercohortofresearchers,potentialadoptersneedto
+recognisetheirchallengesandlimitations.Criticalassessmenthas,however,beensomewhat
+neglected in the literature. Considering the 70 papers from the Web of Science mentioned
+above,44abstracts(63%)failtomentionanynegativeaspectsofAI/MLapproachesatall.Of
+the26papers(37%)withabstractsthatmentionsomechallengeorlimitation,11statethat
+theywereovercomebytheresearchers,representingunqualifiedsuccesses.Only15papers
+include specific or sustained critiques of ML approaches. Of those 15, seven (10% of the
+corpus) present qualified successes, while four (6%) discuss attempts to deploy ML that
+endedinpartialorcompletefailures(Maxwelletal.,2020;Roccettietal.,2020;Sechetal.,2023;
+Verschoof-vanderVaartetal.,2020).Twoothers(3%)presentcriticalassessmentsofML
+withouttheauthorshavingundertakenitthemselves(Casinietal.,2021;Casana,2020).Two
+(offour)reviewarticlesincludedcritiques,oneofwhichrecognisedspecificchallengesbut
+generallyreflectedthepositivetoneoftheliterature(ArgyrouandAgapiou,2022),whilethe
+otherofferedamoresustaineddiscussionofchallengesandpossiblesolutions(Kadhimand
+Abed, 2023). The overwhelmingly positive tone of these papers likely indicates a certain
+degree of “publication bias”, where positive results are more likely to be published than
+negative (Brown et al., 2017; Dickersin et al., 1987; Harrison et al., 2017; Ioannidis, 2005;
+Ku€hberger et al., 2014; Møller and Jennions, 2001), or at the very least a reflection of the
+rhetorical shift in scientific research towards less qualified or uncertain presentation of
+outcomes(Vinkersetal.,2015;Wheeleretal.,2021;Yaoetal.,2023;YuanandYao,2022).In
+thiscontext,itisimportanttodocumentunsuccessfulattemptstoapplyMLtechniquesto
+archaeologicalremotesensing,oratleasttohighlightproblemsresearchersarelikelytoface
+astheyadoptthetechnology.
+
+--- Page 8 ---
+JD Data
+Pedestriansurvey
+Inthisstudyweusedadatasetof773mounds,collectedbyTRAPduring2009–2011field
+surveyintheKazanlakValley,Bulgaria(SobotkovaandRoss,2018).Thisfieldworkcovered
+some85sqkm,inspecteddirectlyviapedestriansurvey.TRAPsurveyidentifiedmany0.5–
+20mhigh(5–100mdiameter)conicalfeaturesinthelandscapeasburialmounds(Figure3).
+EachmoundwasrecordedwithaGPSpoint,height,diameter,andsurfaceandsurrounding
+landuse,aswellaspreservationstatususingLikertscaleandWildesen(1982)classification
+(SobotkovaandRoss,2018;ValchevandSobotkova,2019).Whiletheidentificationofstony,
+submeterfeatures(seePlate2)asmoundswasinitiallyquestioned,subsequentexcavations
+demonstratedthatthesefeaturesindeedcontainedstone-linedgraveswithhumanremains,
+partly buried by colluvium or diminished by post-depositional processes (Nekhrizov
+etal.,2013).
+Satelliteimagery
+ThesatelliteimageryusedinthisstudyconsistsoftwoIKONOSscenescovering600sqkm
+deliveredingeoTIFFformat,whichwereacquiredthroughaGeoEyeFoundationgrantin
+2009.Thescenesincludedapanchromaticbandat1mresolutionandamultispectralimage
+(RGBNIR)at4mresolution.Wefusedthepanchromaticandmultispectralbandsduring2009
+fieldwork,tocombinethehighresolutionofthepanchromaticwiththeadditionalinformation
+ofthemultispectralbandsinordertofacilitatevisualinspectionoftheimages.Oncefused,the
+twoscenesweremosaicedandtheiredgescroppedtoformarectangle.Althoughwehad600
+sqkmofimagery,alldataforCNNmodeltrainingandvalidationcamefromthe85sqkm
+TRAPstudyareawithinit.
+Methods
+Transferlearning
+Ratherthantrainingourownmodelfromscratch,weusedapre-trainedCNN,atechnique
+knownastransferlearning(Casinietal.,2022;Characteretal.,2021;Gallweyetal.,2019;see
+alsoKadhimandAbed,2023;PanandYang,2010;Sechetal.,2023;foranoverviewseeWeiss
+etal.,2016;Xiongetal.,2020).Transferlearningassumesthatlarge,complexmodelscanbe
+pre-trainedusingdatafromonedomain,thenfine-tunedforaspecifictaskinanotherdomain.
+TransferlearninghasbecomewidelyacceptedasastandardapproachtoMLproblemsin
+areaslikecomputervisionandnaturallanguageprocessing(Ruderetal.,2019).Inthecaseof
+transferlearningforimagedata,CNNsareoftenpre-trainedonasubsetofImageNet(Deng
+etal.,2009),learningcombinationsofweightsandparameterswhichbestextractinformation
+inordertomakepredictionsbetween1,000differentclassesofimage(Krizhevskyetal.,2012).
+It isimportant to note thatwhat is being transferred isnot the ability todirectly classify
+objectsormakepredictionsaboutthecontentsofimages.Instead,whatpre-trainedmodels
+appear to learn is the ability to perform a kind of feature extraction. The weights and
+parameters of the pre-trained CNN are used to extract dense, numerical vector
+representations of images – objects known as image embeddings. These image
+embeddings then act as the input to a classifier algorithm which learns to map between
+theseabstractfeaturevectorsandtheprovidedlabels(Akataetal.,2015).
+Weadoptedatransferlearningapproachforthisprojectforseveralreasons.First,pre-
+trainedCNNssuchasVGG16(SimonyanandZisserman,2015),ResNet-50(Heetal.,2016),
+andInception-V3(Szegedyetal.,2016)havebeenshowntoperformbetter(thanamanually-
+trainedmodel)onawiderangeofdownstreamtaskssuchasimageclassification.Second,pre-
+trained CNNs have been trained on much larger and more diverse datasets than those
+
+--- Page 9 ---
+availabletotheaverageresearcher,meaningthattheyshouldlearnmoresophisticatedways Validating ML
+to generate image representations. Finally, the use of pre-trained models allows for faster predictions of
+prototypingandtesting,anadvantagewhenassessingitsutilityforparticularfieldresearch.
+burial mounds
+Aftersomepreliminaryexperimentationwitharangeofdifferentpre-trainedmodels,we
+concluded that ResNet-50 seemed to perform best for our data. This model is one of the
+smaller pre-trained CNNs available, with only around 25.6m trainable parameters (for
+comparison,VGG16hassome138.4m).TheResNetarchitecturehas,however,beenshownto
+learnhighqualityimageembeddingsmoreeffectivelyduetotheuseofresiduallayers.The
+model was deployed using TensorFlow 2 in Python (see the GitHub repositories by
+Kristensen-McLachlanandMallon,2021,2022).
+Duringinitial experiments, the model wasfound to overfit thetraining data, reporting
+close to 100% accuracy after only a few training epochs. Overfitting in such an extreme
+mannerresultsinamodelthatdoesnotgeneralisewelltonewdata(KadhimandAbed,2023),
+meaningthatsuchaclassifierwouldnotbeuseful.Inordertocounterthisoverfitting,we
+used proven data augmentation techniques to constrain model performance (Wang et al.,
+2017).Dataaugmentationinvolvesmakingrandommodificationsandchangestothedata
+during training, introducing noise and variability. The training data thus becomes more
+difficulttolearnfrom,resultinginmodelsthatoverfitlessandproducingaclassifierthat
+shouldgeneralisebettertounseendata.
+AdditionalCNNtraining
+Trainingdatapreparation.EachMLtrainingdatasetrequirestwosetsofimages:positive
+datacontainingtargetfeatures(MOUND)andnegativedataexcludingthetargetfeatures
+(NOT MOUND). Mound points taken during fieldwork were used as centroids for the
+generationof1503150msquarepolygons(1503150pixelsat1mresolution),whichwere
+clippedfromtheIKONOSimagery.Thisprocessyielded773MOUNDcutouts,eachcentred
+onamound(Figure3).Cutoutsweremadefromthefour-bandfusedimages.TheNIRband
+wasmergedintotheRedbandfortheclassification.Themoundswerealwaysinthecentreof
+thecutouts.Noaccommodationwasmadeforthesizeofthemound;100mdiametermounds
+filled 34.9% of the cutout, while 10 m diameter mounds covered only 1.4%. Likewise, no
+accommodation was made for surrounding land cover, mound cover, or terrain. NOT
+MOUND data cutouts were generated in the same manner from areas excluding the 773
+ground-truthedmoundpoints,withnomanualreview.Boththesatelliteimageryandpoints
+were projected into the same EPSG: 32,635 coordinate reference system to be mutually
+compatible and to provide us with metric units of measurement. The ratio of positive to
+negativetrainingdatawasapproximately1:2(32%–68%).
+Inthe2021runofthemodel,weusedall773cutoutsfortrainingregardlessofwhatwas
+visibleinthesatelliteimage.Inthe2022run,weselected249cutoutswhereamoundwas
+discerniblewiththenakedeye.Allofthetrainingimageswereaugmentedusingverticaland
+horizontal flip and random rotation. After processing, cutouts were divided into training,
+validation,andtestsetsfollowinga70:20:10ratioforautomatedperformancevalidation.
+Trainingexecution.Wefirstguidedthepre-trainedCNNtolearntoidentifyburialmounds
+fromthepositive(MOUND)andnegative(NOTMOUND)trainingdata.Oncethisadditional
+trainingwascompleted(includingvalidationandtesting),themodelwassuppliedwiththe
+entiretyofthetwoIKONOSimages(inclusiveoftrainingdata),preprocessedinto1503150
+pixeltiles.ThemodelevaluatedeachtileandreturnedaMOUNDprobabilitypredictionona
+0–1scale,with1being100%.
+
+--- Page 10 ---
+JD
+Figure3.
+Mapof773mounds
+documentedduring
+pedestriansurveyin
+theKazanlakValley;
+circleradiusrepresents
+heightfrom0.5to20m
+Assessment
+Performance evaluation. The performance of the model was assessed using common
+evaluationcriteria:WecalculatedF1scores,precision,recall,andaccuracy.Theseevaluation
+metrics are the model’s own answers to the question “how well does the model predict
+MOUND/NOTMOUNDinthetestdata,basedonwhatithaslearnedfromthetrainingdata?”
+Modelvalidationagainstfielddata.Aftertheinitialperformanceevaluation,wemanually
+validatedmodelperformance.Todoso,weverifiedmoundpredictionsusingpointsmarking
+ground-truthed mounds in the 85 sq km section of the satellite image that had been
+systematicallysurveyedduringTRAPfieldwalking.
+The CNN’s predictions were first associated with the tile name and a pair of origin
+coordinatesmarkingthebottomleftcornerofthetile.Weselectedpredictionrecordswhose
+mound-probabilityexceeded0.599andusedthecoordinatestogeneratesquarepolygonsof
+150mside.Weintersectedthesepolygonswiththepointsmarkingground-truthedmounds.
+Mounds that fell inside the tiles were considered successfully detected (true positives).
+Moundsoutsidetheflaggedtilesweremissedbythemodel(falsenegatives).Tilesflaggedby
+themodelthatdidnotcontainmoundsconstitutedfalsepositives.
+Results
+Firstrun(2021):fulltrainingdataset
+Inthefirstrunofthemodel,itwastrainedusingall773knownmounds,whetherornota
+moundwasvisibleinthesatelliteimage.Afterimageaugmentation,themodelreportedgood
+learningandmodelfit(F150.87).ThisF1scoreindicatedthattheuseofapre-trainedmodel
+improvedperformanceby0.05comparedtoaprevious,manuallytrainedmodel(pers.comm
+CormacPurcell;Kristensen-McLachlanandMallon,2021).
+
+--- Page 11 ---
+Nevertheless,only19outof148tiles(12.8%)taggedbythemodelwithatleasta60% Validating ML
+chanceofhavingamoundactuallycontainedone(seeFigure4).Some129ofthetaggedtiles predictions of
+(87.1%)werefalsepositives.The19true-positivetilescontained38mounds(1–9moundsper
+burial mounds
+tile),outof773inthestudyarea(4.9%),whiletheremaining735moundswentundetected.
+Undetected mounds were located in 381 tiles (1–20 mounds per tile) out of 400 tiles that
+actuallycontainedmounds,afalsenegativerateof95.3%(Sobotkova,2022).
+Duringavisualexaminationofthemodelpredictions,wesawthatthemodelavoided
+the Koprinka reservoir in the middle of the valley. It correctly detected some mounds
+aroundthereservoiraswellasafewinthenortheasternnecropolisintheValley.Inthe
+north and northwest, however, it missed many, including both small mounds and large
+royalmoundsthatareclearlyvisibleduringmanualinspection(seeFigure1e,f).Itisalso
+puzzling that in the densely mounded landscape of the northeastern necropolis, the
+algorithmmanagedtoselectanareadevoidofmounds.Tothesouthofthereservoir,the
+algorithm incorrectly selected a lot of forest, beaches, and roads, all of which increased
+thefalsepositiverate.Overall,themodelseemedtoselectbrightlinesandedges(forest,
+roads),ratherthanroundshapesmorelikelytorepresentmounds.Thegreatestsurprise
+was that the model failed to detect the largest mounds in the valley. These round,
+symmetrical features stand out against surrounding agricultural fields, and are crystal
+cleartoanyhumanviewer(Figure5).
+Secondrun(2022):trainingdatafilteredforvisiblemoundsonly
+The second run was trained on 249 mounds that were clearly visible during manual
+inspectionofthesatelliteimagery.Therestofthemethodremainedthesame.
+Figure4.
+Resultsof2021CNN
+run,bluesquares
+representtileswith
+60%þprobabilityof
+containingmounds,
+circlesmarktrue
+positives(actual
+moundsdetected)
+
+--- Page 12 ---
+JD
+Figure5.
+Poordetectionoflarge
+moundsattheroyal
+necropolisofShipkain
+theKazanlakValley;
+bluedotsmarkthe
+actualmounds,blue
+squarerepresentstile
+with60%þprobability
+ofcontainingamound
+Thesecondmodel’sperformancedeclinedtoanF1scoreof0.62(Kristensen-McLachlanand
+Mallon,2022).Validationrevealedthatonly21of773mounds(2.7%)weredetected,while752
+mounds (97.3%) remained undetected. The number of tiles within the TRAP study area
+flaggedascontainingamound(ata>60%probability)increasedfrom148inthefirstrunto
+288here.Only15ofthese288tiles(5.2%),however,weretruepositives,containingthe21
+detectedmounds(1–4moundspertile;seeFigure6).Theremaining273of288tileswerefalse
+positives(94.8%).Theundetected752moundslayin384tiles(1–28moundspertile)outof
+399tilesthatactuallycontainedmounds,afalsenegativerateof96.2%(Sobotkova,2022).
+Small mounds were detected at a lower rate than in the 2021 model, demonstrated
+especiallyinthelackofpredictionsinthenorthwesternnecropolis,whichcontainedmany
+mounds<1mhigh.Inaddition,thelarge,archetypalmoundsaroundthevillageofShipka
+(north-centreofthestudyarea,Figure5)alsoremainedundetected(asinthefirstrunofthe
+model).Falsepositivetilesshowthatedgesofforest,beach,andsectionsofroadsareagain
+classifiedasmounds.Furthermore,themodelflaggedpartsofthereservoirasamoundwith
+>60%probability,despitethehomogeneouswatersurface,bringingthequestion“whatis
+theCNNactuallydetecting?”tothefore.Overall,despiteadditionalcurationofthetraining
+data, the second run was even less successful than the first; the false positives and false
+negativesincreasedandfewermoundsweredetected.
+Discussion
+Limitationsandchallengesofpre-trainedCNNs
+AnumberoffactorscontributetothepoorsuccessrateofourCNNmodelwhenattemptingto
+detectburialmoundsinsatelliteimagery.Thechallengecentresaroundthevariabilityofthe
+appearance of the mounds themselves, combined with the heterogeneous landscape
+surroundingthemandthenoiseofnon-moundfeatures.
+
+--- Page 13 ---
+Validating ML
+predictions of
+burial mounds
+Figure6.
+Resultsof2022CNN
+run;bluesquaresshow
+tileswith60%þ
+probabilityof
+containingmounds,
+circlesmarktrue
+positives(actual
+moundsdetected)
+IntermsofCNNmechanics,whendetectingmoundsthemodelsplitthe600sqkmgeoTIFFinto
+non-overlapping1503150pixeltilesratherthananalysethemosaicedimageviaamoving
+windowofvariablesize.Asaresult,moundscouldsitonatileboundaryandeludedetection.
+Many of the large undetected mounds, for example, fell on the edge of a tile. Second, an
+intersectionofourCNNprocessandthenatureofthetrainingdataproduceslowsensitivityto
+differentmoundsizes.Thetrainingdatawiththesmallestmoundsleavesalotofnon-target
+pixels in the tile (ca. 98%), while introducing other repeating and prominent features that
+confusetheclassifier,suchasthesharpedgesofdifferentland-usezones(e.g.standsoftrees
+versusannualagricultureorpasture)andreflectivelinearfeatureslikeroadsandshorelines.
+Models have been observed to predict class membership based on incidental background
+featuresintheperipheryofthetilesthathappentoaccompanythetargetphenomenoninthe
+centre. Peter Haas pointed to this problem in “The Real Reason to be Afraid of Artificial
+Intelligence”whenheexploredhowadeeplearningmodeldifferentiatedwolvesfromdogsin
+photographs.Wolveswererecognisedbythesnowinthebackgroundratherthananyintrinsic
+characteristic(TEDx,2017).Thiseffectarosefrombiasinthetrainingdata,wherewolveswere
+oftenonsnowybackground,whiledogsappearedinavarietyofotherbackgrounds.Inourcase,
+whenthefirstmodelusingtheentiretrainingdatasetunderperformedourexpectations,we
+soughttoaddresstheproblem byretrainingthe modelusingmore prominentmounds that
+hopefullystoodoutbetterfrombackgroundnoise.Thiscorrection,however,failedtoimprove
+performance–indeed,itdeterioratedfurther.
+Overall,trainingthemodelwithasetofhighlyvariablefeatureswithevenmorevaried
+and complex backgrounds may have misled it regarding the target of detection. This
+confusion likely arose from the variety of land cover on the surface of mounds and
+surroundingthemounds,whichmayormaynotprovideacontrast(ormayprovidedifferent
+kindsofcontrast).
+
+--- Page 14 ---
+JD Buildingabettermodel
+Focusthepositivetrainingdata.Tocounterthetendencyofthemodeltodetectextraneous
+background features, we could better focus the training data. Confronted with small and
+varied features in noisy environments, Verschoof-van der Vaart et al. (2020, pp. 7–8), for
+example,investedsomeeffortadjustingmodelparameterstoaccountfortargetfeaturesize.
+Inourcase,tosteertheCNNawayfrom“readingthebackground”,wewouldlikelyneedto
+resize each tile according to the recorded diameter of the mound. We could, for example,
+specifyaparticularratio(determinedthroughexperimentation)betweenmoundandtilesize,
+therebycontrollingthetargettobackgroundpixelratio.Thatwaywewouldendupwith
+stamps of variable size containing minimal background noise. While this could be time-
+consumingforfeaturesofvariableshapes,ourdatasetcontainsconsistentlycircularmounds
+whosediameterwasmeasuredon-site.Theonlycomplicationisthatthemeasureddiameter
+oftenvariesfromthediametervisibleintheimageduetoindistinctmoundboundaries.
+Segment the training data. To address the problem of land-cover variability, we could
+createdifferenttrainingdatasetforeachclassofsurroundinglandcover,eachclassofover-
+moundcover,orperhapsforvariouscombinationsofsurroundingandover-moundcover.
+Segmentationoftrainingdataintorunsofbaremoundsinploughedfields,scrub-covered
+moundsinploughedfields,baremoundsinmeadows,scrub-coveredmoundsinmeadows,
+etc., would offer more consistency and might improve success rates. With all these
+possibilities, however, we reduce the amount of training data for each run. We also risk
+returningtothetemplatingapproachesofKvamme(2013)andTrieretal.(2009),whichwould
+defeatthepurposeofdeepneuralnetworks,whicharesupposedtolearntheirwaytowards
+recognisingthetargetfeaturesmoreautonomously.
+Emphasisenegativetrainingdata.Itmaybecounterintuitive,butcareincreatingtheNOT
+MOUNDtilesisas–ifnotmore–importantthantheMOUNDtiles.Onelessonwelearntis
+thatCNNcannot“ignore”withoutextensivetrainingonnegativeexamples(Gaoetal.,2019;
+Tangetal.,2017).Wecantellapersontoignoreroadsandforests,andsheorhewillinstantly
+recogniseandignorethem.ForaCNNtoactionsucharequestweneedtoexposethemodelto
+themusingnegativetrainingdata.Especiallywhentargetfeaturesaresmalloroccurinnoisy
+backgrounds, care must be taken to provide a CNN with more negative examples (tiles
+without archaeological features) than positive. Our experience suggests that even a 1:2
+(positive:negative)ratiowasnotsufficient.Forcomparison,Verschoof-vanderVaartetal.
+(2020)suggestaratioof1:1.6intrainingdata.
+Employ alternative discovery strategies. During discovery, iterating the CNN over the
+imageusingoverlappingtilesofdifferentsizeswouldgiveeachmoundahigherlikelihoodof
+fallingcompletelyinsideatile.Usingamovingwindowwouldalsoavoidmissingmoundsat
+tileedges (Tangetal.,2017).EmployingaRegionalCNN, whichcandetectmultiple,even
+overlapping features in an image could also improve results, especially if combined with
+iteratingovervariationsoftiles(Maxwelletal.,2020;Verschoof-vanderVaartetal.,2020).
+Overlappingtilesormovingwindows,however,wouldimposeasubstantialcomputational
+overhead as they would exponentially increase the imagery needing analysis. While
+upscalingtheanalysisispossibleinavirtualenvironment,itwouldnotberunnableona
+typical personal computer, making such analysis infeasible for many cultural heritage
+specialistswithmodestresources.
+Isitworthit?
+OuroutcomescomparepoorlytotheotherapplicationsofMLtoarchaeologicalprospection
+citedabove(CaspariandCrespo,2019;Ekimetal.,2021).Basedonourexperienceandthe
+availableliterature,solutionsexistthatcanaddresstheproblemsweencountered.Butisthe
+extra effort worthwhile? Although time-on-task data regarding ML approaches in
+
+--- Page 15 ---
+archaeologyislimited(Sobotkovaetal.,2023),suchactivitiescanabsorbalotofresources. Validating ML
+Canetal.(2021),forexample,reportspending1,250hmanuallycreatingatrainingdatasetof predictions of
+roadfeaturesandafurthersevendaysontestingandtrainingaCNNmodeltodetectroadsin
+burial mounds
+Austro-Hungarian imperial maps. While their CNN outperformed other models, the
+magnitude of manual data preparation, expertise required, and the computational
+infrastructureneededfortrainingiswithinreachofonlyafewwell-fundedprojects.
+Developing our CNN model required approximately 135 person-hours from
+conceptualisationandexperimentstovalidationanddocumentation.Ourteamincludedtwo
+digitalarchaeologists,amachine-learningspecialistwithexperienceapplyingMLapproaches
+toculturalheritagedata,andajuniordeveloperwhowrotemuchofthecodeusedtoimplement
+thesemodels.Theapproachusedminimallyprocesseddatasetsfrompreviousfieldwork.Our
+approachtotrainingwasdrivenbyexpectationsthatthepre-trainedCNNcouldtolerateagreat
+deal of variation in training images, such as of mound size within a tile or the presence of
+confoundingfeatures,and that training data would notrequireextensive curation.We also
+brought with us from manual inspection of satellite imagery the preconception that burial
+moundswererelativelyeasytorecogniseinimagery,atleastcomparedtolatent,“flat”sites.Our
+outcomes,however,indicatethatevenanadvancedpre-trainedmodel(oursisthesameasthat
+usedbyCanandKabadayi,andperhapsalsoCrespoandCaspari)islikelytofailwhenaskedto
+detectsomewhatvariablefeaturesagainstveryheterogeneousbackgroundswithonlyalow-
+touchapproachtotraining.Improvingtheperformanceofourmodelistechnicallypossible,
+mostlythroughmorenuancedtrainingapproaches(seeabove).Forourproject,however,the
+returnonadditionaltimespentdevelopingtheMLapproachdiminishesrapidly,sinceweare
+alreadyapproachingathresholdwheretrainingstudentvolunteerstoidentifymoundswould
+bemoreefficient.
+Norissuccessguaranteed.Totakeonewell-explainedexample,Verschoof-vanderVaart
+etal.(2020)implementedasophisticatedapproachtoLiDARimageryusingaregion-based
+CNN.Thisapproachisdesignedtoclassifymultiple,adjacent,oroverlappingfeaturesina
+singleimage–potentiallyaddressingsomeoftheproblemspresentedhere.Theyalsotook
+caretoprovideadequatenegativetrainingdata.Nevertheless,toreducefalsepositives,the
+project had to introduce a manual location-based ranking step, where experts identified,
+ranked,andmappedlandscapecharacteristics(largelybasedonpost-depositionalprocesses)
+thatmightaffectthesurvivalorvisibilityofarchaeologicalremains(Verschoof-vanderVaart
+et al., 2020, pp. 9-10). Despite these manual interventions, and noting that performance
+evaluation involved realistic but artificial test data, the model still produced many false
+positivesfromnaturaloranthropogenicgeometricshapes(notunlikeourexperience).Inthe
+end,Verschoof-vanderVaartetal.reportthattheirmodelsneverreachedtheperformanceof
+crowdsourcing using volunteers (again,mostly due toitsfalse positives), and theauthors
+observethatthecostofgroundtruthingwouldbehigh.
+Maxwelletal.(2020)achievebetterresultsapplyinganR-CNNtoLiDARdataformore
+prominentfeatures(fill-valleyfacesproducedbycoalminingintheAppalachianMountains),
+buttheapproachdidnottransfertophotogrammetricdatasets.EvenmanysuccessfulML
+applicationsrequiresignificanthumaninterventioneitherintheformofcrowdsourcingor
+specialistwork(see,e.g.Casinietal.,2023;Doyleetal.,2023;Verschoof-vanderVaartand
+Lambers,2019).Asaresultofchallengeslikethese,Casana(2020),goessofarastorejectML
+approachesentirely,insteadfavouring“bruteforce”manualinspectionofsatelliteimagery
+byexperts.Twooftheauthorsonthispaperthemselveshavehadexcellentlarge-scale(ca.
+10,000features)resultsfromcrowdsourcing(Sobotkovaetal.,2023).Wereiteratethecallin
+that paper for researchers to publish the challenges, costs, and resourcing requirements
+alongsideresults–includingforseriousbutfailedattempts–sothatresearchers,especially
+potentialadoptersofML,canmakeinformeddecisionsaboutwhatapproachbestfitstheir
+circumstances.
+
+--- Page 16 ---
+JD Conclusion
+WesetouttotesttheefficacyofaMachineLearningapproachtodetectingburialmounds
+situatedinvariedterrainandvegetationintheKazanlakValleyofBulgaria.Wehadatour
+disposalhigh-resolution,multispectralsatelliteimageryandadatasetofsome773mounds
+registeredduringpedestriansurvey.Weemployedapre-trainedCNNmodelwithalow-touch
+approachtoadditionaltraining,runningthemodeltwiceusingdifferentcollectionsoftarget
+featuresfortraining.Wefirstusedanindiscriminatecollectionofburialmounds,regardless
+oftheirvisibilityinthesatelliteimagery.Wenextusedonlythosemoundsthatwedeemed
+easilydiscernibleinthesatelliteimagery.Unlikemanyprojects,wehadenoughtrainingdata,
+but we did not devote a lot of time to prepare the training cutouts, e.g. by resizing them
+accordingtomoundsizeorexcludingbackgroundfeatures.Webelievedthatthevolumeof
+trainingdatawouldoffsetothershortcomings.Afterthistraining,weappliedthemodelsto
+ourimageryandvalidatedresultsusingourfielddata.
+Although the first model reported a good fit (F1 5 0.87), validation with field data
+showedthemodelwasconfusingourtargetfeatureswithotherphenomena.Tileswhere
+themodelpredictedamoundwith>60%probabilitycontainedamoundonly12.8%ofthe
+time–yieldingahighrateoffalsepositives(87.1%).Atthesametime,themodelfoundonly
+38of773knownmounds(4.9%).Despiteincreasedeffortintheselectionoftrainingdata,
+the second run of the model reported a lower F1 score (0.62) and at >60% probability
+producedevenmorefalsepositives(94.8%)andfalsenegatives(96.2%).Thisrunfound
+only21mounds(2.7%).
+Thehighnumberofbothfalsenegativesandfalsepositivesdemonstratedthatouruseofa
+low-touchapproach–apre-trainedmodelplussufficientbutminimallycuratedtrainingdata
+–didnotwork.Toovercomethesechallengeswewouldneedtoinvestmuchmoretime,effort,
+andcomputingresourcesintoadditionalstepssuchas:resizeeachtrainingcutoutbasedon
+thesizeofthemoundtoeliminateclippingandreducenoisefromextraneousbackground
+features; segment the training data into different mound covers versus surrounding land
+covers;increasetheratioofnegativetrainingdata;andutiliseoverlappingtiles,amoving
+window,and/oraRegionalCNN.
+Acomputationallymanageable,low-touchmodelcapableofdiscoveringarchaeological
+featuresinwidelyavailablesatelliteimagerywithmodesttrainingdatawouldbeavaluable
+toolforculturalheritagemanagerswhoneedtoregistersuchfeaturesandmonitorthemfor
+change. Such managers often lack access to cloud computing infrastructure, or to
+technologists withthe necessary geospatial analysis, data-wrangling, or machine-learning
+skills.Itisnotclear,however,thatanMLapproachremainscosteffectiveiftheseadditional
+stepsaretaken.Ourworkconsumedabout135person-hoursandrequiredsignificantdomain
+andtechnicalexpertise,althoughitrequiredonlymodestcomputingresources.Theproposed
+modificationswouldcertainlyincreasethetimerequired,andpotentiallytheexpertiseand
+computationalresources.Meanwhile,ourfirstinterventiontoimprovetheresultsadded20h
+tothetotaltime,butledtoapooreroutcome.Inourcase,giventhesizeofourstudyareaand
+thenumberoffeaturesitlikelycontains,manualapproacheslikevisualinspectionbyexperts
+orcrowdsourcingtovolunteerswouldprobablybemoreefficient.
+Each project must make a decision regarding the trade-offs of different approaches to
+archaeological prospection using remotely sensed data, but the relevant literature
+underreports failures, challenges, and limitations of ML when used for this application.
+Very few projects, furthermore, report the time and resources invested in their approach,
+whethermanualorautomated.AsMLapproachesbecomemorepopular,researchersneed
+more negative examples, discussion of problems, and resourcing information to make
+informed decisions about how to approach feature extraction from large remote-sensing
+datasets.
+
+--- Page 17 ---
+References Validating ML
+Akata,Z.,Reed,S.,Walter,D.,Lee,H.andSchiele,B.(2015),“Evaluationofoutputembeddingsfor predictions of
+fine-grainedimageclassification”,PresentedattheProceedingsofthe2015IEEEConferenceon
+burial mounds
+Computer Vision and Pattern Recognition (CVPR), pp. 2927-2936, doi: 10.1109/cvpr.2015.
+7298911.
+Albrecht, C.M., Fisher, C., Freitag, M., Hamann, H.F., Pankanti, S., Pezzutti, F. and Rossi, F. (2019),
+“Learning and recognizing Archeological features from LiDAR data”, in Baru, C., Huan, J.,
+Khan, L., Hu, X.H., Ak, R., Tian, Y., Barga, R., et al. (Eds), pp. 5630-5636, doi: 10.1109/
+BigData47090.2019.9005548.
+Argyrou, A. and Agapiou, A. (2022), “A review of artificial intelligence and remote sensing for
+archaeologicalresearch”,RemoteSensing,Vol.14No.23,p.6000,doi:10.3390/rs14236000.
+Bailey, D.W. (1998), “Bulgarian archaeology; ideology, sociopolitics and the exotic”, in Meskell, L.
+(Ed.),ArchaeologyunderFire:Nationalism,PoliticsandHeritageintheEasternMediterranean
+andMiddleEast,Routledge,London,NewYork,pp.87-110.
+Bennett,R.,Cowley,D.andDeLaet,V.(2014),“Thedataexplosion:tacklingthetabooofautomatic
+feature recognition in airborne survey data”, Antiquity, Vol. 88 No. 341, pp. 896-905, doi: 10.
+1017/S0003598X00050766.
+Berganzo-Besga,I.,Orengo,H.A.,Lumbreras,F.,Alam,A.,Campbell,R.,Gerrits,P.J.,deSouza,J.G.,
+Khan, A., Su(cid:3)arez-Moreno, M., Tomaney, J., Roberts, R.C. and Petrie, C.A. (2023), “Curriculum
+learning-basedstrategyforlow-densityarchaeologicalmounddetectionfromhistoricalmapsin
+IndiaandPakistan”,ScientificReports,Vol.13No.1,p.11257,doi:10.1038/s41598-023-38190-x.
+Bowen, E.F.W., Tofel, B.B., Parcak, S. and Granger, R. (2017), “Algorithmic identification of looted
+archaeologicalsitesfromspace”,FrontiersinICT,Vol.4,doi:10.3389/fict.2017.00004.
+Brophy,K.andCowley,D.(2005),inBrophy,K.andCowley,D.(Eds),FromtheAir:Understanding
+AerialArchaeology,Tempus,Stroud,p.190,availableat:https://eprints.gla.ac.uk/64330/
+Brown, A.W., Mehta, T.S. and Allison, D.B. (2017), “Publication bias in science”, in Jamieson, K.H.,
+Kahan, D.M. and Scheufele, D.A. (Eds), Oxford Handbooks Online, Oxford University Press,
+Vol.1,doi:10.1093/oxfordhb/9780190497620.013.10.
+Can,Y.S.,Petrus,J.G.andKabadayi,M.E.(2021),“Automaticdetectionofroadtypesfromthethird
+military mapping survey of Austria-Hungary historical map series with deep convolutional
+neuralnetworks”,IEEEAccess,Vol.9,pp.62847-56,doi:10.1109/ACCESS.2021.3074897.
+Canedo,D.,Fonte,J.,Seco,L.G.,Vazquez,M.,Dias,R.,DoPereiro,T.,Hipolito,J.,Men(cid:3)endez-Marsh,F.,
+Georgieva,P.andNeves,A.J.R.(2023),“UncoveringarchaeologicalsitesinairborneLiDARdata
+with data-centric artificial intelligence”, IEEE Access, Vol. 11, pp. 65608-65619, doi: 10.1109/
+ACCESS.2023.3290305.
+Casana, J. (2020), “Global-scale archaeological prospection using CORONA satellite imagery:
+automated, crowd-sourced, and expert-led approaches”, Journal of Field Archaeology, Vol. 45
+Supp1,pp.S89-S100,doi:10.1080/00934690.2020.1713285.
+Casini,L.,Marchetti,N.,Montanucci,A.,Orru(cid:4),V.andRoccetti,M.(2023),“Ahuman–AIcollaboration
+workflowforarchaeologicalsitesdetection”,ScientificReports,Vol.13No.1,p.8699,doi:10.
+1038/s41598-023-36015-5.
+Casini, L., Orru, V., Roccetti, M. and Marchetti, N. (2022), “When machines find sites for the
+archaeologists:apreliminarystudywithsemanticsegmentationappliedonsatelliteimageryof
+the mesopotamian floodplain”, Proceedings of the 2022 ACM Conference on Information
+TechnologyforSocialGood,doi:10.1145/3524458.3547121.
+Casini, L., Roccetti, M., Delnevo, G., Marchetti, N. and Orru, V. (2021), “The Barrier of meaning in
+archaeologicaldatascience”,SciFi-It’2020:DesigningYourFutureWithScienceFiction,Ostend,
+Ghent,Belgium,pp.61-65,doi:10.48550/arXiv.2102.06022.
+Caspari,G.(2020),“Mappinganddamageassessmentof‘royal’burialmoundsintheSiberianValley
+ofthekings”,RemoteSensing,Vol.12No.5,p.773,doi:10.3390/rs12050773.
+
+--- Page 18 ---
+JD Caspari, G.andCrespo, P.(2019), “Convolutional neuralnetworks for archaeological sitedetection–
+Finding‘princely’tombs”,JournalofArchaeologicalScience,Vol.110,p.104998,doi:10.1016/j.
+jas.2019.104998.
+Caspari,G.,Balz,T.,Gang,L.,Wang,X.andLiao,M.(2014),“Application ofHoughforests forthe
+detection of grave mounds in high-resolution satellite imagery”, 2014 IEEE Geoscience and
+RemoteSensingSymposium,pp.906-909,doi:10.1109/IGARSS.2014.6946572.
+Cerrillo-Cuenca,E.(2017),“Anapproachtotheautomaticsurveyingofprehistoricbarrowsthrough
+LiDAR”, Quaternary International: The Journal of the International Union for Quaternary
+Research,Vol.435,pp.135-145,doi:10.1016/j.quaint.2015.12.099.
+Character,L.,Ortiz,A.Jr,Beach,T.andLuzzadder-Beach,S.(2021),“Archaeologicmachinelearning
+forshipwreckdetectionusinglidarandsonar”,RemoteSensing,Vol.13No.9,p.1759,doi:10.
+3390/rs13091759.
+Cholakov, I.D. and Chukalev, K. (2008), “Statistical data on the archaeological field activities in
+Bulgaria,season2007”,ArchaeologicaBulgarica,Vol.XIINo.3,pp.89-100.
+Contreras,D.A.(2010),“Huaquerosandremotesensingimagery:assessinglootingdamageintheviru
+valley,Peru”,Antiquity,Vol.84No.324,pp.544-555,doi:10.1017/s0003598x0006676x.
+Cowley, D.C. (2012), “In with the new, out with the old? Auto-extraction for remote sensing
+archaeology”,PresentedattheRemoteSensingoftheOcean,SeaIce,CoastalWaters,andLarge
+WaterRegions2012,InternationalSocietyforOpticsandPhotonics,Vol.8532,853206,doi:10.
+1117/12.981758.
+Crawford,O.G.S.(1929),AirPhotographyforArchaeologists,H.M.StationeryOffice,London.
+Davis,D.S.,Sanger,M.C.andLipo,C.P.(2019),“Automatedmounddetectionusinglidarandobject-
+basedimageanalysisinBeaufortCounty,SouthCarolina”,SoutheasternArchaeology,Vol.38
+No.1,pp.23-37,doi:10.1080/0734578X.2018.1482186.
+DeLaet,V.andLambers,K.(2009),“Archaeologicalprospectingusinghigh-resolutiondigitalsatellite
+imagery:recentadvancesandfutureprospects;asessionheldatthecomputerapplicationsand
+quantitative methods in archaeology (CAA) conference, Williamsburg, USA, March 2009”,
+AARGnews-TheNewsletteroftheAerialArchaeologyResearchGroup,Vol.39,pp.9-17.
+De Laet, V., Paulissen, E. and Waelkens, M. (2007), “Methods for the extraction of archaeological
+features from very high-resoltuion Ikonos-2 remote sensing imagery, Hisar (Southwest
+Turkey)”, Journal of Archaeological Science, Vol. 34 No. 5, pp. 830-841, doi: 10.1016/j.jas.2006.
+09.013.
+Deng, J., Dong, W., Socher, R., Li, L.J. and Li, K. (2009), “Imagenet: a large-scale hierarchical image
+database”, Conference on Computer Vision and Pattern Recognition., presented at the 2009
+IEEE Computer Society Conference on Computer Vision and Pattern Recognition Workshops
+(CVPRWorkshops),IEEE.
+Dickersin,K.,Chan,S.,Chalmersx,T.C.,Sacks,H.S.andSmith,H.(1987),“Publicationbiasandclinical
+trials”,ControlledClinicalTrials,Vol.8No.4,pp.343-353,doi:10.1016/0197-2456(87)90155-3.
+Dimitrova, D. (2006), “Ruler’s tumular burials from the kazanluk region in Bulgaria”, Pratiques
+FunerairesetManifestationsdeL’identite,academia.edu.
+Doyle, C., Luzzadder-Beach, S. and Beach, T. (2023), “Advances in remote sensing of the early
+Anthropoceneintropicalwetlands:frombiplanestolidarandmachinelearning”,Progressin
+Physical Geography-Earth and Environment, Vol. 47 No. 2, pp. 293-312, doi: 10.1177/
+03091333221134185.
+Duckers,G.L.(2013),“Bridgingthe‘geospatialdivide’inarchaeology:communitybasedinterpretation
+ofLIDARdata”,InternetArchaeology,Vol.35,doi:10.11141/ia.35.10.
+D’Orazio, T., Palumbo, F. and Guaragnella, C. (2012), “Archaeological trace extraction by a local
+directionalactivecontourapproach”,PatternRecognition,Vol.45No.9,pp.3427-3438,doi:10.
+1016/j.patcog.2012.03.003.
+
+--- Page 19 ---
+D’Orazio, T., Da Pelo, P., Marani, R. and Guaragnella, C. (2015), “Automated extraction of Validating ML
+archaeological traces by a modified variance analysis”, Remote Sensing, Vol. 7 No. 4, predictions of
+pp.3565-3587,doi:10.3390/rs70403565.
+burial mounds
+Eftimoski, M., Ross, S.A. and Sobotkova, A. (2017), “The impact of land use and depopulation on
+burialmoundsintheKazanlakValley,Bulgaria:anorderedlogitpredictivemodel”,Journalof
+CulturalHeritage,Vol.23,pp.1-10,doi:10.1016/j.culher.2016.10.002.
+Ekim,B.,Sertel,E.andKabadayı,M.E.(2021),“Automaticroadextractionfromhistoricalmapsusing
+deep learning techniques: a regional case study of Turkey in a German world war II map”,
+ISPRSInternationalJournalofGeo-Information,Vol.10No.8,p.492,doi:10.3390/ijgi10080492.
+Fuentes-Carbajal, J.A., Carrasco-Ochoa, J.A., Martinez-Trinidad, J.F. and Flores-Lopez, J.A. (2023),
+“Machine learning and image-processing-based method for the detection of archaeological
+structuresinareaswithlargeamountsofvegetationusingsatelliteimages”,AppliedSciences-
+Basel,Vol.13No.11,p.6663,doi:10.3390/app13116663.
+Gallwey,J.,Eyre,M.,Tonkins,M.andCoggan,J.(2019),“BringinglunarLiDARbackdowntoearth:
+mapping our industrial heritage through deep transfer learning”, Remote Sensing, Vol. 11
+No.17,p.1994,doi:10.3390/rs11171994.
+Gao,L.,He,Y.,Sun,X.,Jia,X.andZhang,B.(2019),“Incorporatingnegativesampletrainingforship
+detectionbasedondeeplearning”,Sensors,Vol.19No.3,p.684,doi:10.3390/s19030684.
+GlobalXplorer(2016),availableat:https://www.globalxplorer.org/ (accessed26April2022).
+Groom, G., Levin, G., Svenningsen, S.R. and Perner, M.L. (2021), “Dune Sand–Object based image
+analysis for vectorization of a dotted signature in Danish late 1800s maps”, E-Perimetron,
+Vol.16No.4,pp.156-165.
+Guyot, A., Hubert-Moy, L. and Lorho, T. (2018), “Detecting neolithic burial mounds from LiDAR-
+derivedelevationdatausingamulti-scaleapproachandmachinelearningtechniques”,Remote
+Sensing, Multidisciplinary Digital Publishing Institute, Vol. 10 No. 2, p. 225, doi: 10.3390/
+rs10020225.
+Harrison, J.S., Banks, G.C., Pollack, J.M., O’Boyle, E.H. and Short, J. (2017), “Publication bias in
+strategic management research”, Journal of Management, Vol. 43 No. 2, pp. 400-425, doi: 10.
+1177/0149206314535438.
+He, K., Zhang, X., Ren, S. and Sun, J. (2016), “Deep residual learning for image recognition”,
+ProceedingsoftheIEEEConferenceonComputerVisionandPatternRecognition,LasVegas,
+NV,USA,pp.770-778,doi:10.1109/cvpr.2016.90.
+Ioannidis,J.P.A.(2005),“Whymostpublishedresearchfindingsarefalse”,PLoSMedicine,Vol.2No.8,
+p.e124,doi:10.1371/journal.pmed.0020124.
+Jessop, M. (2007), “The inhibition of geographical information in digital humanities scholarship”,
+LiteraryandLinguisticComputing,Vol.23No.1,pp.39-50,doi:10.1093/llc/fqm041.
+Kadhim, I. and Abed, F.M.M. (2023), “A critical review of remote sensing approaches and deep
+learningtechniquesinarchaeology”,Sensors,Vol.23No.6,p.2918,doi:10.3390/s23062918.
+Karamitrou,A.,Sturt,F.andBogiatzis,P.(2023),“IdentificationofblackreefshipwrecksitesusingAI
+and satellite multispectral imagery”, Remote Sensing, Vol. 15 No. 8, p. 2030, doi: 10.3390/
+rs15082030.
+Karamitrou,A.,Sturt,F.,Bogiatzis,P.andBeresford-Jones, D.(2022),“Towardstheuseofartificial
+intelligencedeeplearningnetworksfordetectionofarchaeologicalsites”,SurfaceTopography-
+MetrologyandProperties,Vol.10No.4,p.044001,doi:10.1088/2051-672X/ac9492.
+Kitov,G.(1993),“Trakiyskitemogili”,Thracia,Vol.10,pp.39-80.
+Kitov,G.(1999),“Royalinsignia,tombsandtemplesinthevalleyofthethracianrules”,Archaeologia
+Bulgarica,Vol.3,pp.1-20.
+Kristensen-McLachlan, R. and Mallon, O. (2021), “Mound detection”, Github, available at: https://
+github.com/centre-for-humanities-computing/MoundDetection
+
+--- Page 20 ---
+JD Kristensen-McLachlan,R.andMallon,O.(2022),“Burialmounds”,Github,availableat:https://github.
+com/centre-for-humanities-computing/burial-mounds
+Krizhevsky,A.,Sutskever,I.andHinton,G.E.(2012),“ImageNetclassificationwithdeepconvolutional
+neuralnetworks”,inPereira,F.,Burges,C.J.,Bottou,L.andWeinberger,K.Q.(Eds),Advancesin
+NeuralInformationProcessingSystems,CurranAssociates,Vol.25.
+Ku€hberger,A.,Fritz,A.andScherndl,T.(2014),“Publicationbiasinpsychology:adiagnosisbasedon
+thecorrelationbetweeneffectsizeandsamplesize”,inFanelli,D.(Ed.),PloSOne,Vol.9No.9,p.
+e105825,doi:10.1371/journal.pone.0105825.
+Kvamme,K.L. (2013),“Anexaminationofautomatedarchaeological featurerecognition inremotely
+sensedimagery”,inBevan,A.andLake,M.(Eds),ComputationalApproachestoArchaeological
+Spaces,LeftCoastPress,pp.53-68.
+Lambers,K.,Verschoof-vanderVaart,W.B.andBourgeois,Q.P.J.(2019),“Integratingremotesensing,
+machine learning, and citizen science in Dutch archaeological prospection”, Remote Sensing,
+Vol.11No.7,p.794,doi:10.3390/rs11070794.
+Lazar,A.(2015),“IllicittraffickinginculturalgoodsinsoutheastEurope:FiatLux!”,inDesmarais,F.
+(Ed.),CounteringIllicitTrafficinCulturalGoodstheGlobalChallengeofProtectingtheWorld’s
+Heritage, ICOM International Observatory on Illicit Traffic in Cultural Goods, ICOM,
+pp.107-124.
+Lin, A.Y.M., Huynh, A., Lanckriet, G. and Barrington, L. (2014), “Crowdsourcing the unknown: the
+satellite search for Genghis Khan”, PloS One, Vol. 9 No. 12, p. e114046, doi: 10.1371/journal.
+pone.0114046.
+Loulanski,T.andLoulanski,V.(2017),“ThracianmoundsinBulgaria:heritageatrisk”,TheHistoric
+Environment:PolicyandPractice,Vol.8No.3,pp.246-277,doi:10.1080/17567505.2017.1359918.
+Ma,J., Sefer, A. andKabadayı,M.E. (2021), “Geolocating Ottoman settlements: the use ofhistorical
+maps for digital humanities”, Proceedings of the ICA, Vol. 3, pp. 1-8, doi: 10.5194/ica-proc-3-
+10-2021.
+Mateva,B.(2011),“Probleminaohranataiispolzvanetonapametnitsitenakulturatazaturisticheski
+celi”,BulgarianE-JournalofArchaeology,Vol.1,pp.123-126.
+Maxwell, A.E., Pourmohammadi, P. and Poyner, J.D. (2020), “Mapping the topographic features of
+mining-relatedvalleyfillsusingmaskR-CNNdeeplearninganddigitalelevationdata”,Remote
+Sensing,Vol.12No.3,p.547,doi:10.3390/rs12030547.
+Menze,B.H.andUr,J.A.(2012),“Mappingpatternsoflong-termsettlementinNorthernMesopotamia
+at a large scale”, Proceedings of the National Academy of Sciences of the United States of
+America,Vol.109No.14,pp.E778-E787,doi:10.1073/pnas.1115472109.
+Møller,A.P.andJennions,M.D.(2001),“Testingandadjustingforpublicationbias”,TrendsinEcology
+andEvolution,Vol.16No.10,pp.580-586,doi:10.1016/S0169-5347(01)02235-2.
+Moore, G.A. (1991), Crossing the Chasm: Marketing and Selling High-Tech Goods to Mainstream
+Customers,HarperBusiness,NewYork.
+Nekhrizov,G.,Parvin,M.andKecheva,N.(2013),“Prouchvanenanadgrobnimogiliotnekropolapri
+selataYasenovoiGolyamoDryanovo,obsht.Kazanlak”,ProblemiIIzsledvaniyaNaTrakiiskata
+Kultura,Vol.VI,pp.17-41.
+Ofli,F.,Meier,P.,Imran,M.,Castillo,C.,Tuia,D.,Rey,N.,Briant,J.,Millet,P.,Reinhard,F.,Parkan,M.
+andJoost,S.(2016),“Combininghumancomputingandmachinelearningtomakesenseofbig
+(aerial)datafordisasterresponse”,BigData,Vol.4No.1,pp.47-59,doi:10.1089/big.2014.0064.
+Oltean, I. (2013), “Burial mounds and settlement patterns: a quantitative approach to their
+identificationfromtheairandinterpretation”,Antiquity,Vol.87No.335,pp.202-219,doi:10.
+1017/s0003598x00048729.
+Pan,S.J.andYang,Q.(2010),“Asurveyontransferlearning”,IEEETransactionsonKnowledgeand
+DataEngineering,Vol.22No.10,pp.1345-1359,doi:10.1109/TKDE.2009.191.
+
+--- Page 21 ---
+Parcak,S.H.(2009),SatelliteRemoteSensingforArchaeology,Routledge,London,NewYork. Validating ML
+Quintus,S.,Day,S.S.andSmith,N.J.(2017),“Theefficacyandanalyticalimportanceofmanualfeature predictions of
+extractionusinglidardatasets”,AdvancesinArchaeologicalPractice,Vol.5No.4,pp.351-364,
+burial mounds
+doi:10.1017/aap.2017.13.
+Riley,A.M.(2009),“AutomateddetectionofprehistoricconicalburialmoundsfromLiDARbare-earth
+digital elevation models: a thesis presented to the department of geology and geography in
+candidacyforthedegreeofmasterofscience”,NorthwestMissouriStateUniversity.
+Roccetti, M., Casini, L., Delnevo, G., Orru(cid:4), V. and Marchetti, N. (2020), “Potential and limitations of
+designing a deep learning model for discovering new archaeological sites: a case with the
+mesopotamian floodplain”, Proceedings of the 6th EAI International Conference on Smart
+Objects and Technologies for Social Good, New York, NY, USA, Association for Computing
+Machinery,pp.216-221,doi:10.1145/3411170.3411254.
+Rogers,E.M.(2003),DiffusionofInnovations,5thed.,FreePress,NewYork.
+Ross, S.A., Sobotkova, A., Connor, S. and Iliev, I. (2010), “An interdisciplinary pilot project in the
+environsofKabyle,Bulgaria”,ArchaeologicaBulgarica,Vol.14No.2,pp.69-85.
+Ross,S.A.,Sobotkova,A.,Tzvetkova,J.,Nekhrizov,G.andConnor,S.(2018),TheTundzhaRegional
+Archaeology Project: Surface Survey, Palaeoecology, and Associated Studies in Central and
+SoutheastBulgaria,2009-2015FinalReport,OxbowBooks,Oxford.
+Ruder,S.,Peters,M.E.,Swayamdipta,S.andWolf,T.(2019),“Transferlearninginnaturallanguage
+processing”, Proceedings of the 2019 Conference of the North American Chapter of the
+Association for Computational Linguistics: Tutorials, Minneapolis, Minnesota, Association for
+ComputationalLinguistics,pp.15-18,doi:10.18653/v1/N19-5004.
+Sadr,K.(2016),“Theimpactofcoderreliabilityonreconstructingarchaeologicalsettlementpatterns
+from satellite imagery: a case study from South Africa”, Archaeological Prospection, Vol. 23
+No.1,pp.45-54,doi:10.1002/arp.1515.
+(cid:1)
+Sech,G.,Soleni,P.,Verschoof-van derVaart,W.B.,Kokalj,Z.,Traviglia,A.andFiorucci,M.(2023),
+“Transfer learning of semantic segmentation methods for identifying buried archaeological
+structuresonLiDARdata[arXiv]”,arXiv.doi:10.48550/arXiv.2307.03512.
+Shkorpil,H.andShkorpil,K.(1989),Mogili,Pchelapress,Plovdiv.
+Simonyan, K. and Zisserman, A. (2015), “Very deep convolutional networks for large-scale image
+recognition”,CoRRabs/1409.1556.
+(cid:1)
+Skorpil, K. (1925), Megalitni Pametnitsi I Mogilishta (Starini V Chernomorskata Oblast - Chast 1),
+DrzhavnaPechatnitsa,Sofia.
+Sobotkova,A.(2022),“CNNvalidationscripts(version9852d5b)”,Github,availableat:https://github.
+com/adivea/cnn-testing/releases/tag/v1.0.0
+Sobotkova,A.andRoss,S.A.(2010),“High-resolution,multi-spectralsatelliteimageryandextensive
+archaeologicalprospection:casestudiesfromApulia,Italy,andKazanluk,Bulgaria”,inForte,
+M., Campana, S. and Liuzza, C. (Eds), Space, Time, Place. Third International Conference on
+RemoteSensinginArchaeology,Tiruchirrappalli,India,Vol.S2118,Archaeopress,pp.25-28.
+Sobotkova, A. and Ross, S.A. (2018), “Kazanlak survey results”, in Ross, S.A., Sobotkova, A.,
+Tzvetkova, J., Georgi, N. and Simon, C. (Eds), The Tundzha Regional Archaeological Project:
+SurfaceSurvey,Palaeoecology,andAssociatedStudiesinCentralandSoutheastBulgaria,2009-
+2015FinalReport,OxbowBooks,Oxford,pp.66-81.
+Sobotkova,A.andWeissova,B.(2019),“LocationalanalysisofburialmoundsinthemiddleTundzha
+river watershed. Combining historical maps with field survey and satellite image analysis
+data”,VestiNaYambolskiyaMusei,Vol.6No.9,pp.161-175.
+Sobotkova,A.andWeissova,B.(2020),“SoviettopographicmapsandburialmoundsoftheYambol
+province: digital workflow for mortuary landscape verification”, Archaeological Prospection,
+Vol.33No.3,pp.233-262,doi:10.1002/arp.1769.
+
+--- Page 22 ---
+JD Sobotkova, A., Ross, S.A., Nassif-Haynes, C. and Ballsun-Stanton, B. (2023), “Creating large, high-
+qualitygeospatialdatasetsfromhistoricalmapsusingnovicevolunteers”,AppliedGeography,
+Vol.155,p.102967,doi:10.1016/j.apgeog.2023.102967.
+Szegedy, C., Vanhoucke, V., Ioffe, S., Shlens, J. and Wojna, Z. (2016), “Rethinking the inception
+architectureforcomputervision”,Presentedatthe2016ProceedingsoftheIEEEConferenceon
+ComputerVisionandPatternRecognition(CVPR),pp.2818-2826,doi:10.1109/CVPR.2016.308.
+Tang,T.,Zhou,S.,Deng,Z.,Zou,H.andLei,L.(2017),“Vehicledetectioninaerialimagesbasedon
+region convolutional neural networks and hard negative example mining”, Sensors, Vol. 17
+No.2,p.336,doi:10.3390/s17020336.
+TEDx (2017), “The real reason to be afraid of artificial intelligence j peter haas j TEDxDirigo”,
+Youtube, 15 December, available at: https://www.youtube.com/watch?v5TRzBk_KuIaM
+(accessed27April2022).
+Trier,Ø.D.,Larsen,S.Ø.andSolberg,R.(2009),“Automaticdetectionofcircularstructures inhigh-
+resolution satellite images of agricultural land”, Archaeological Prospection, Vol. 16 No. 1,
+pp.1-15,doi:10.1002/arp.339.
+Trier,Ø.D.,Zortea,M.andTonning,C.(2015),“Automaticdetectionofmoundstructuresinairborne
+laserscanningdata”,JournalofArchaeologicalScience:Reports,Vol.2,pp.69-79,doi:10.1016/j.
+jasrep.2015.01.005.
+Trier, Ø.D., Cowley, D.C. and Waldeland, A.U. (2019), “Using deep neural networks on airborne laser
+scanningdata:resultsfromacasestudyofsemi-automaticmappingofarchaeologicaltopography
+onArran,Scotland”,ArchaeologicalProspection,Vol.26No.2,pp.165-175,doi:10.1002/arp.1731.
+Tsetskhladze,G.(1998),“Whobuiltthescythianandthracianroyalandelitetombs?”,OxfordJournal
+ofArchaeology,Vol.17No.1,pp.55-92,doi:10.1111/1468-0092.00051.
+Valchev,T.andSobotkova,A.(2019),“MonitoringburialmoundsintheYambolprovince:deploying
+mobiletechnologytoimproveculturalheritageprotection”,inKyriakidis,P.,Agapiou,A.and
+Lysandrou, V. (Eds), Spreading Excellence in Computer Applications for Archaeology and
+CulturalHeritage.Proceedingsofthe3rdConferenceonComputerApplicationsandQuantitative
+MethodsinArchaeologyGreekChapter(CAA-GR)Limassol,Limassol-Cyprus,18-20June2018,
+CyprusUniversityofTechnology,pp.19-23.
+Vasileva, D. (2005), The Thracian Tombs - Architectural-Metrical Study, Vol. Suppl. III, Sofia
+UniversitySt.KlimentOhridski,Sofia.
+Verschoof-vanderVaart,W.B.andLambers,K.(2019),“LearningtolookatLiDAR:theuseofR-CNN
+in the automated detection of archaeological objects in LiDAR data from The Netherlands”,
+JournalofComputerApplicationsinArchaeology,Vol.2No.1,pp.31-40,doi:10.5334/jcaa.32.
+Verschoof-vanderVaart,W.B.andLandauer,J.(2021),“UsingCarcassonNettoautomaticallydetect
+and trace hollow roads in LiDAR data from The Netherlands”, Journal of Cultural Heritage,
+Vol.47,pp.143-154,doi:10.1016/j.culher.2020.10.009.
+Verschoof-vanderVaart,W.B.,Lambers,K.,Kowalczyk,W.andBourgeois,Q.P.J.(2020),“Combining
+deeplearningandlocation-basedrankingforlarge-scalearchaeologicalprospectionofLiDAR
+datafromTheNetherlands”,IsprsInternationalJournalofGeo-Information,Vol.9No.5,p.293,
+doi:10.3390/ijgi9050293.
+Vinkers, C.H., Tijdink, J.K. and Otte, W.M. (2015), “Use of positive and negative words in scientific
+PubMedabstractsbetween1974and2014:retrospectiveanalysis”,BMJ,Vol.351,p.h6467,doi:
+10.1136/bmj.h6467.
+Wald,D.M.,Longo,J.andDobell,A.R.(2016),“Designprinciplesforengagingandretainingvirtual
+citizen scientists”, Conservation Biology: The Journal of the Society for Conservation Biology,
+Vol.30No.3,pp.562-570,doi:10.1111/cobi.12627.
+Wang,J.andPerez,L.(2017),“Theeffectivenessofdataaugmentationinimageclassificationusing
+deeplearning”,ConvolutionalNeuralNetworksforVisualRecognition,Vol.11,pp.1-8,available
+at:http://vision.stanford.edu/teaching/cs231n/reports/2017/pdfs/300.pdf
+
+--- Page 23 ---
+Weiss,K.,Khoshgoftaar, T.M.andWang,D.(2016),“Asurveyoftransfer learning”,JournalofBig Validating ML
+Data,SpringerOpen,Vol.3No.1,pp.1-40,doi:10.1186/s40537-016-0043-6. predictions of
+West,S.andPateman,R.(2016),“Recruitingandretainingparticipantsincitizenscience:whatcanbe
+burial mounds
+learnedfromthevolunteeringliterature?”,CitizenScienceTheoryandPractice,Vol.1No.2,p.
+15,doi:10.5334/cstp.8.
+Wheeler, M.A., Vylomova, E., McGrath, M.J. and Haslam, N. (2021), “More confident, less formal:
+stylisticchangesinacademicpsychologywritingfrom1970to2016”,Scientometrics,Vol.126
+No.12,pp.9603-9612,doi:10.1007/s11192-021-04166-9.
+Wildesen, L.E. (1982), “The study of impacts on archaeological sites”, Advances in Archaeological
+MethodandTheory,Vol.5,pp.51-96,doi:10.1016/b978-0-12-003105-4.50007-8.
+Woolf,T.(2018),“Deepconvolutionalneuralnetworksforremotesensinginvestigationoflootingof
+thearcheologicalsiteofAl-Lisht,Egypt,Msc,UniversityofSouthernCalifornia,August.
+Xiong, Y., Chen, Q., Zhu, M., Zhang, Y. and Huang, K. and IEEE (2020), “Accurate detection of
+historicalbuildingsusingaerealphotographsanddeeptransferlearning”,IGARSS2020-2020
+IEEE International Geoscience and Remote Sensing Symposium, pp. 1592-1595, doi: 10.1109/
+IGARSS39084.2020.9323541.
+Yao, M., Wei, Y. and Wang, H. (2023), “Promoting research by reducing uncertainty in academic
+writing:alarge-scalediachroniccasestudyonhedginginScienceresearcharticlesacross25
+years”,Scientometrics,Vol.128No.8,pp.4541-4558,doi:10.1007/s11192-023-04759-6.
+Yuan, Z.-M. and Yao, M. (2022), “Is academic writing becoming more positive? A large-scale
+diachronic case study of Science research articles across 25 years”, Scientometrics, Vol. 127
+No.11,pp.6191-6207,doi:10.1007/s11192-022-04515-2.
+Correspondingauthor
+AdelaSobotkovacanbecontactedat:adela@cas.au.dk
+Forinstructionsonhowtoorderreprintsofthisarticle,pleasevisitourwebsite:
+www.emeraldgrouppublishing.com/licensing/reprints.htm
+Orcontactusforfurtherdetails:permissions@emeraldinsight.com

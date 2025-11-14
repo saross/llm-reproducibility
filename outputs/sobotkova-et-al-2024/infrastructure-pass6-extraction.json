@@ -1,0 +1,430 @@
+{
+  "paper_metadata": {
+    "title": "Validating predictions of burial mounds with field data: the promise and reality of machine learning",
+    "authors": [
+      {"name": "Sobotkova, Adela", "affiliation": "Department of History and Classical Studies, Aarhus University"},
+      {"name": "Kristensen-McLachlan, Ross Deans", "affiliation": "Center for Humanities Computing, Aarhus University"},
+      {"name": "Mallon, Orla", "affiliation": "Center for Humanities Computing, Aarhus University"},
+      {"name": "Ross, Shawn Adrian", "affiliation": "Department of History and Archaeology, Macquarie University"}
+    ],
+    "year": 2024,
+    "journal": "Journal of Documentation",
+    "doi": "10.1108/JD-05-2022-0096",
+    "paper_type": "research_article"
+  },
+
+  "reproducibility_infrastructure": {
+    "persistent_identifiers": {
+      "paper_doi": {
+        "doi": "10.1108/JD-05-2022-0096",
+        "resolves": null,
+        "url": "https://doi.org/10.1108/JD-05-2022-0096",
+        "verified_date": null,
+        "location": {
+          "section": "title_page_footer",
+          "page": 1,
+          "verbatim_quote": "DOI10.1108/JD-05-2022-0096"
+        }
+      },
+
+      "author_orcids": [],
+
+      "orcid_coverage": {
+        "authors_with_orcid": 0,
+        "total_authors": 4,
+        "coverage_percentage": 0,
+        "coverage_category": "none",
+        "notes": "No ORCIDs found in author affiliations or acknowledgements. Typical for 2024 HASS archaeology paper (17-24% baseline adoption in HASS)."
+      },
+
+      "dataset_pids": [],
+
+      "software_pids": [],
+
+      "sample_pids": [],
+
+      "project_pid": null,
+
+      "vocabulary_pids": [],
+
+      "pid_graph_summary": {
+        "paper_has_doi": true,
+        "authors_have_orcids": false,
+        "datasets_have_pids": false,
+        "software_has_pids": false,
+        "samples_have_pids": false,
+        "project_has_pid": false,
+        "vocabularies_have_pids": false,
+        "connectivity_score": 1,
+        "connectivity_rating": "minimal",
+        "notes": "Only paper DOI present. Code shared via GitHub URLs without archival DOIs. TRAP survey dataset (773 mounds) mentioned but no repository or PID provided. Low PID connectivity typical for 2024 HASS computational paper."
+      }
+    },
+
+    "funding": [
+      {
+        "funder_id": "FND001",
+        "funder_name": "Aarhus University Digital Literacy Initiative",
+        "grant_number": null,
+        "grant_type": "university_initiative",
+        "recipients": null,
+        "verbatim_text": "This research was funded by the Aarhus University Digital Literacy Initiative.",
+        "location": {
+          "section": "acknowledgements_footnote",
+          "page": 1,
+          "text_span": "Front matter footnote after licence statement"
+        },
+        "structured_metadata": {
+          "funder_ror": null,
+          "grant_doi": null,
+          "funder_jurisdiction": "Denmark"
+        },
+        "notes": "Primary funding for ML analysis work (2021-2022)"
+      },
+      {
+        "funder_id": "FND002",
+        "funder_name": "Australian Research Council Linkage Projects",
+        "grant_number": "LP0989901",
+        "grant_type": "linkage_project",
+        "recipients": null,
+        "verbatim_text": "Data were acquired by the participants of the Tundzha Regional Archaeological Project (2009–2011) with the support of the Australian Research Council Linkage Projects Funding scheme LP0989901",
+        "location": {
+          "section": "acknowledgements_footnote",
+          "page": 1,
+          "text_span": "Front matter footnote"
+        },
+        "structured_metadata": {
+          "funder_ror": "https://ror.org/05mmh0f86",
+          "grant_doi": null,
+          "funder_jurisdiction": "Australia"
+        },
+        "notes": "Funded historical TRAP fieldwork (2009-2011) that generated the 773 mounds dataset used for ML training"
+      },
+      {
+        "funder_id": "FND003",
+        "funder_name": "University of Michigan",
+        "grant_number": null,
+        "grant_type": "international_grant",
+        "recipients": null,
+        "verbatim_text": "University of Michigan International Grant",
+        "location": {
+          "section": "acknowledgements_footnote",
+          "page": 1
+        },
+        "structured_metadata": {
+          "funder_ror": "https://ror.org/00jmfr291",
+          "grant_doi": null,
+          "funder_jurisdiction": "USA"
+        },
+        "notes": "TRAP fieldwork funding (2009-2011)"
+      },
+      {
+        "funder_id": "FND004",
+        "funder_name": "GeoEye Foundation",
+        "grant_number": null,
+        "grant_type": "foundation_grant",
+        "recipients": null,
+        "verbatim_text": "GeoEye Foundation",
+        "location": {
+          "section": "acknowledgements_footnote",
+          "page": 1
+        },
+        "structured_metadata": {
+          "funder_ror": null,
+          "grant_doi": null,
+          "funder_jurisdiction": "USA"
+        },
+        "notes": "Provided IKONOS satellite imagery for TRAP project (2009)"
+      },
+      {
+        "funder_id": "FND005",
+        "funder_name": "University of Southern Denmark eScienceCenter",
+        "grant_number": null,
+        "grant_type": "computational_infrastructure",
+        "recipients": null,
+        "verbatim_text": "All of the machine-learning computation done for this project was performed on the UCloud interactive HPC system, which is managed by the eScienceCenter at the University of Southern Denmark.",
+        "location": {
+          "section": "acknowledgements_footnote",
+          "page": 1
+        },
+        "structured_metadata": {
+          "funder_ror": "https://ror.org/04aj4h379",
+          "grant_doi": null,
+          "funder_jurisdiction": "Denmark"
+        },
+        "notes": "In-kind computational infrastructure support (UCloud HPC)"
+      }
+    ],
+
+    "data_availability": {
+      "statement_present": false,
+      "statement_type": "not_stated",
+      "verbatim_statement": null,
+      "repositories": [],
+      "access_conditions": "unclear",
+      "embargo_date": null,
+      "licence": null,
+      "fair_assessment": {
+        "assessed": false,
+        "rationale": "No data availability statement or repository link provided for TRAP survey dataset (773 mounds). Raw field data mentioned as source for training cutouts but availability not stated. Satellite imagery proprietary (IKONOS via GeoEye Foundation grant) and not freely available."
+      },
+      "notes": "TRAP survey data (773 mound locations with attributes) is the foundational dataset but no repository or access information provided. Paper methods reference Ross et al. 2018 (TRAP final report) and Sobotkova & Ross 2018 for survey data, suggesting data may be in those publications or institutional repositories, but not stated explicitly here."
+    },
+
+    "code_availability": {
+      "statement_present": true,
+      "statement_type": "available",
+      "verbatim_statement": "Data processing and analysis was performed using R and Python and the scripts are available in public repositories: (1) Training data preparation and CNN prediction validation can be found in https://github.com/adivea/cnn-testing (2) 2021 CNN classifier training and mound prediction is implemented in https://github.com/centre-for-humanities-computing/burial-mounds (3) 2022 CNN classifier training and mound prediction is implemented in https://github.com/centre-for-humanities-computing/MoundDetection",
+      "repositories": [
+        {
+          "repository_id": "CODE001",
+          "repository_name": "GitHub",
+          "repository_type": "code_hosting",
+          "url": "https://github.com/adivea/cnn-testing",
+          "description": "Training data preparation and CNN prediction validation",
+          "version": null,
+          "commit_hash": null,
+          "archived_snapshot": false,
+          "access_conditions": "open",
+          "licence": null,
+          "location": {
+            "section": "acknowledgements_footnote",
+            "page": 1
+          }
+        },
+        {
+          "repository_id": "CODE002",
+          "repository_name": "GitHub",
+          "repository_type": "code_hosting",
+          "url": "https://github.com/centre-for-humanities-computing/burial-mounds",
+          "description": "2021 CNN classifier training and mound prediction",
+          "version": null,
+          "commit_hash": null,
+          "archived_snapshot": false,
+          "access_conditions": "open",
+          "licence": null,
+          "location": {
+            "section": "acknowledgements_footnote",
+            "page": 1
+          }
+        },
+        {
+          "repository_id": "CODE003",
+          "repository_name": "GitHub",
+          "repository_type": "code_hosting",
+          "url": "https://github.com/centre-for-humanities-computing/MoundDetection",
+          "description": "2022 CNN classifier training and mound prediction",
+          "version": null,
+          "commit_hash": null,
+          "archived_snapshot": false,
+          "access_conditions": "open",
+          "licence": null,
+          "location": {
+            "section": "acknowledgements_footnote",
+            "page": 1
+          }
+        }
+      ],
+      "computational_reproducibility": {
+        "level": "code_only",
+        "level_numeric": 1,
+        "rationale": "Code shared via GitHub URLs but no archival snapshots (Zenodo DOIs), no version numbers, no commit hashes, no container/environment specification, no dependency management files visible. Software dependencies mentioned in Methods (ResNet-50, TensorFlow 2, Python, R) but no version pinning or requirements files referenced. Reproducibility limited by: (1) live GitHub repos can change, (2) no dependency version specification, (3) no computational environment documentation, (4) IKONOS imagery proprietary and not freely available.",
+        "environment_specification": {
+          "requirements_file": false,
+          "lock_file": false,
+          "container": false,
+          "binder": false,
+          "notes": "Methods mention 'TensorFlow 2' and pre-trained 'ResNet-50' model but no requirements.txt, environment.yml, Dockerfile, or other reproducibility aids referenced."
+        },
+        "analysis_transparency": {
+          "random_seeds_set": false,
+          "parameters_documented": true,
+          "workflow_documented": true,
+          "alternative_approaches_discussed": true,
+          "notes": "Paper discusses methods extensively including data augmentation, train/validation/test split (70:20:10), probability threshold (60%), two training approaches (all mounds vs visible mounds), and alternative approaches for improvement. No mention of random seeds for reproducibility. Computational cost documented (135 person-hours)."
+        }
+      },
+      "fair_assessment": {
+        "assessed": true,
+        "F_findable": {
+          "F1_persistent_identifier": 0,
+          "F1_rationale": "GitHub URLs only, no archival DOIs. Live repositories can change URLs or be deleted. Does not satisfy persistent identifier requirement.",
+          "F2_rich_metadata": 0,
+          "F2_rationale": "No structured metadata (README visibility unknown from paper). Paper provides description but repositories themselves not assessed for metadata richness.",
+          "F3_metadata_includes_identifier": 0,
+          "F3_rationale": "No persistent identifier to include in metadata.",
+          "F4_indexed_searchable": 0,
+          "F4_rationale": "GitHub indexed by Google but not in formal research software registries (Software Heritage, Zenodo, CiteAs). Not discoverable via DOI-based infrastructure.",
+          "F_total_score": 0,
+          "F_max_score": 4
+        },
+        "A_accessible": {
+          "A1_standard_protocol": 1,
+          "A1_rationale": "HTTPS access via GitHub. Standard retrieval protocol.",
+          "A1_1_open_free_universal": 1,
+          "A1_1_rationale": "GitHub public repositories, no authentication required for read access.",
+          "A1_2_authentication_if_needed": 0,
+          "A1_2_rationale": "Not applicable - repositories are fully open.",
+          "A2_metadata_persistent": 0,
+          "A2_rationale": "GitHub metadata disappears if repository deleted. No archival commitment.",
+          "A_total_score": 2,
+          "A_max_score": 4
+        },
+        "I_interoperable": {
+          "I1_formal_shared_language": 1,
+          "I1_rationale": "Python and R scripts (structured programming languages). Likely includes comments and documentation.",
+          "I2_fair_vocabularies": 0,
+          "I2_rationale": "No evidence of controlled vocabulary usage for software metadata (no CodeMeta.json, CITATION.cff mentioned).",
+          "I3_qualified_references": 0,
+          "I3_rationale": "No qualified links to related resources via PIDs. Paper DOI not linked from repositories (based on paper description).",
+          "I_total_score": 1,
+          "I_max_score": 3
+        },
+        "R_reusable": {
+          "R1_rich_metadata": 0,
+          "R1_rationale": "No assessment of repository README or documentation quality possible from paper alone. Paper provides methods description but repository-level documentation unknown.",
+          "R1_1_clear_licence": 0,
+          "R1_1_rationale": "No licence mentioned in paper for code repositories. Licence information critical for reuse but absent.",
+          "R1_2_provenance": 1,
+          "R1_2_rationale": "Paper documents software provenance: pre-trained ResNet-50 base, TensorFlow 2 implementation, training data derivation from TRAP fieldwork, two model versions (2021 vs 2022). Repository descriptions indicate purpose.",
+          "R1_3_community_standards": 0,
+          "R1_3_rationale": "No evidence of FAIR4RS-compliant metadata standards (no CodeMeta.json, CITATION.cff, codemeta.json).",
+          "R_total_score": 1,
+          "R_max_score": 4
+        },
+        "total_score": 4,
+        "max_score": 15,
+        "fair_percentage": 26.7,
+        "fair_rating": "not_fair",
+        "machine_actionability": {
+          "rating": "low",
+          "rationale": "GitHub URLs enable human access via browser but lack persistent identifiers, structured metadata, or API-based discovery. No integration with research software infrastructure (Zenodo, Software Heritage, registries). Code findable via Google but not via DOI-based scholarly infrastructure."
+        },
+        "discipline_context": {
+          "publication_year": 2024,
+          "discipline": "archaeology_computational",
+          "research_type": "computational_methods",
+          "baseline_comparison": "Natural sciences computational papers (2024) typically achieve 9-12/15 FAIR score with Zenodo DOIs, environment specifications, and licences. This paper (4/15) reflects lower FAIR adoption in HASS computational work and 'bolted-on' rather than 'built-in' approach - code sharing added without archival infrastructure.",
+          "expectations_rationale": "By 2024, best practice for computational papers includes archival DOIs (Zenodo+GitHub integration), environment specification (requirements.txt, Docker), and clear licencing. Paper's GitHub-only approach reflects earlier practices or resource constraints."
+        },
+        "recommendations": [
+          "Archive code releases on Zenodo with DOIs (GitHub-Zenodo integration)",
+          "Add CITATION.cff files to repositories specifying how to cite software",
+          "Add clear open-source licences (MIT, Apache-2.0, GPL-3.0)",
+          "Include requirements.txt or environment.yml with dependency versions",
+          "Document random seeds and parameters in code for exact reproducibility",
+          "Consider containerization (Docker) for full computational environment capture"
+        ]
+      },
+      "notes": "Code availability statement is comprehensive and provides three distinct repositories for different workflow stages. However, lacks archival infrastructure (Zenodo DOIs), version control metadata (commit hashes, release versions), licencing information, and environment specification for computational reproducibility. Represents 'code sharing' rather than 'computational reproducibility infrastructure'. Paper documents 135 person-hours development time, providing transparency about resource requirements."
+    },
+
+    "author_contributions": {
+      "statement_present": false,
+      "format": "not_stated",
+      "contributions": [],
+      "notes": "No author contribution statement present. CReDIT taxonomy not used. Cannot determine individual author roles from paper content alone. Acknowledgements mention Cormac Purcell's initial CNN elaboration but not formal co-author."
+    },
+
+    "conflicts_of_interest": {
+      "statement_present": false,
+      "conflicts_declared": false,
+      "verbatim_text": null,
+      "conflict_type": "not_stated",
+      "notes": "No conflicts of interest or competing interests statement found in paper."
+    },
+
+    "ethics_approval": {
+      "statement_present": false,
+      "approval_obtained": "not_applicable",
+      "verbatim_text": null,
+      "ethics_body": null,
+      "approval_number": null,
+      "jurisdiction": null,
+      "human_subjects": false,
+      "animal_subjects": false,
+      "notes": "No human or animal subjects research. Archaeological fieldwork (TRAP 2009-2011) predates this ML analysis. Ethics approval not applicable for computational analysis of historical survey data."
+    },
+
+    "permits_and_authorizations": {
+      "permits_present": "implied_but_not_stated",
+      "permits": [],
+      "notes": "Archaeological survey fieldwork in Bulgaria (TRAP 2009-2011) would have required Bulgarian archaeological permits from Ministry of Culture and local authorities (standard for excavation/survey in Bulgaria). Institutional support from Kazanlak Historical Museum and Sofia University mentioned, suggesting proper authorization, but no explicit permit numbers or authorities stated. Fieldwork predates current ML analysis by 10+ years; focus of paper is ML methods not fieldwork ethics/permits."
+    },
+
+    "preregistration": {
+      "statement_present": false,
+      "preregistered": false,
+      "platform": null,
+      "registration_id": null,
+      "registration_url": null,
+      "registration_date": null,
+      "notes": "No preregistration mentioned. Not standard practice for methodological/computational archaeology papers in 2024."
+    },
+
+    "supplementary_materials": {
+      "supplementary_present": false,
+      "materials": [],
+      "notes": "No supplementary materials mentioned. All code directed to GitHub repositories. No supplementary figures, tables, or datasets listed."
+    },
+
+    "references_completeness": {
+      "total_references": null,
+      "references_with_dois": null,
+      "doi_usage_rate": null,
+      "doi_usage_category": "not_assessed",
+      "notes": "References section spans pages 17-23 (approximately 70 references based on length). DOI usage appears high based on sample (most references include doi: field). Formal assessment deferred to validation pass."
+    },
+
+    "fair_assessment": {
+      "data_fair_score": null,
+      "code_fair_score": 4,
+      "combined_fair_score": 4,
+      "max_fair_score": 15,
+      "fair_percentage": 26.7,
+      "fair_rating": "not_fair",
+      "primary_gaps": [
+        "No persistent identifiers (DOIs) for code",
+        "No archival snapshots (Zenodo)",
+        "No licencing information",
+        "No environment specification for computational reproducibility",
+        "No data repository or access information for TRAP survey dataset",
+        "No author ORCIDs",
+        "No structured software metadata (CodeMeta, CITATION.cff)"
+      ],
+      "strengths": [
+        "Paper DOI present",
+        "Code shared openly via GitHub (3 repositories)",
+        "Methods transparently documented including failures",
+        "Funding sources acknowledged",
+        "CC-BY 4.0 paper licence"
+      ],
+      "notes": "FAIR score dominated by code availability (4/15 points). Paper licence (CC-BY 4.0) is exemplary but does not extend to data or code. Overall FAIR profile reflects 'sharing' rather than 'infrastructure' approach - outputs made available but without persistent identifiers, archival preservation, or structured metadata. Typical for 2024 HASS computational paper but below emerging best practices."
+    },
+
+    "extraction_metadata": {
+      "extraction_date": "2025-11-11",
+      "extractor": "claude-sonnet-4-5",
+      "schema_version": "v2.5_infrastructure_v2.0",
+      "sections_examined": [
+        "title_page",
+        "author_affiliations",
+        "front_matter_footnotes",
+        "acknowledgements_embedded",
+        "methods",
+        "references"
+      ],
+      "extraction_notes": [
+        "Comprehensive funding information present in front matter footnotes, spanning 9 organizations and spanning 15+ years (TRAP fieldwork 2009-2011, ML analysis 2021-2022)",
+        "Code availability statement is unusually comprehensive with 3 distinct GitHub repositories for different workflow stages",
+        "No data availability statement despite TRAP survey dataset being foundational to analysis - data access unclear",
+        "No ORCIDs despite 2024 publication date - reflects low HASS adoption baseline (17-24%)",
+        "No author contributions or conflicts statement - standard omission in Journal of Documentation",
+        "Archaeological permits implied by institutional collaborations (Kazanlak Museum, Sofia University) but not explicitly documented",
+        "Paper focuses on methodological transparency (including failure analysis) but lacks reproducibility infrastructure (archival DOIs, environment specs, licencing)",
+        "PID connectivity score 1/6 (minimal) - only paper DOI present",
+        "Software documentation question emerges: paper describes 3 repositories with different purposes but no systematic assessment of repository documentation quality, README completeness, or usage instructions"
+      ]
+    }
+  }
+}
