@@ -1,7 +1,32 @@
 #!/usr/bin/env python3
 """
-Rapid batch assessment of all 10 extractions.
-Focuses on structural patterns, schema compliance, and distribution metrics.
+Batch Assessment Tool for Extraction Quality Analysis
+
+Performs rapid quality assessment across multiple extraction.json files,
+generating comparative metrics for structural patterns, schema compliance,
+and relationship mapping coverage.
+
+Usage:
+    python3 batch-assess.py
+
+Output:
+    - Console table with per-paper metrics
+    - outputs/batch-assessment-metrics.json (detailed JSON report)
+
+Metrics Analysed:
+    - Item counts (evidence, claims, methods, protocols, research designs)
+    - Claims-to-evidence ratio (expected: 0.4-0.8)
+    - Total RDMAP items (expected: 15-35)
+    - Relationship mapping counts (claim-evidence, method-design, protocol-method)
+
+Use Cases:
+    - Quality comparison across extractions
+    - Identifying outlier extractions (too sparse/dense)
+    - Schema migration verification
+    - Batch validation before releases
+
+Author: Claude Sonnet 4.5
+Date: 2025-11-13
 """
 import json
 from pathlib import Path
