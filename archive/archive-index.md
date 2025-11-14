@@ -1,6 +1,6 @@
 # Archive Index
 
-**Last Updated:** 2025-10-28
+**Last Updated:** 2025-11-13
 
 **Purpose:** This archive preserves completed work, historical assessments, and superseded documentation. Items are archived when they are no longer actively used but may have historical or reference value.
 
@@ -15,12 +15,41 @@ archive/
 │   ├── cc-sonnet45/         # CC autonomous extractions
 │   └── chatbot-sonnet45/    # Chatbot-assisted extractions
 ├── planning-completed/       # Completed planning documents
+├── documentation-archive/    # Historical development documentation
 └── docs-obsolete/           # Superseded documentation
 ```
 
 ---
 
 ## Planning Documents - Completed (planning-completed/)
+
+### Archived: 2025-11-13 (Pass 6 Implementation Complete)
+
+**Reason:** Infrastructure assessment capability complete, preliminary proposals superseded by implementation
+
+1. **migration-log.md** (5K)
+   - Schema v2.5 field name migration audit trail (2025-11-02)
+   - 376 field name changes across 7 papers
+   - Migration complete, serves as historical record only
+   - **Status:** Task complete, audit trail preserved
+
+2. **preliminary-work/** (folder with 2 files)
+   - **claims.md** (18K, dated 2025-10-14)
+     - Pre-project CLAIMS product plan
+     - Comprehensive system design for automated credibility assessment
+     - Superseded by actual fellowship implementation
+   - **cwts-proposal.md** (21K, dated 2025-10-14)
+     - Pre-project fellowship proposal (6-month research phase)
+     - Superseded by `planning/fellowship/cwts_implementation_plan.md`
+   - **Status:** Historical proposals, implementation underway
+
+3. **reproducibility-infrastructure-schema.md** (dated 2025-11-03, updated 2025-11-11)
+   - Planning document for Pass 6 infrastructure extraction
+   - Schema design, PID framework, FAIR assessment
+   - Implementation complete in skill reference files and prompts
+   - **Status:** Implemented in `.claude/skills/research-assessor/references/infrastructure/*`
+
+### Archived: 2025-10-28 (Phase 1 Milestone)
 
 **Archived:** 2025-10-28
 **Reason:** Phase 1 implementation complete, RUN-08 milestone achieved
@@ -69,6 +98,27 @@ archive/
    - Implicit argument extraction assessment
    - Prompt structure evaluation
    - **Status:** Workflow complete, RUN-08 validated (16 implicit arguments)
+
+---
+
+## Development Documentation - Historical (documentation-archive/)
+
+### Archived: 2025-11-13 (Skill Production-Ready)
+
+**Reason:** Research-assessor skill now production-ready, development documentation preserved for historical reference
+
+1. **skill-documentation/** (folder with 10 files, all dated 2025-10-23)
+   - **README.md** (5K) - Skill overview, quick links, installation
+   - **architecture.md** - System design, three-layer structure, philosophical foundations
+   - **usage-guide.md** - Detailed usage instructions, examples
+   - **installation-guide.md** - Setup procedures
+   - **quick-reference.md** - Command reference
+   - **testing.md** - Testing procedures and validation
+   - **delivery-summary.md** - Delivery milestone documentation
+   - **prompt-revision-summary.md** - Prompt development history
+   - **version.md** - Version history and changelog
+   - **CONTRIBUTING.md** - Contribution guidelines (skill-specific)
+   - **Status:** Skill fully integrated, v2.5 production-ready, development docs archived
 
 ---
 
