@@ -165,6 +165,26 @@ Infrastructure is NOT in Methods/Results/Discussion. Target these specific locat
    - Calculate ORCID coverage metrics
    - Construct ORCID URLs
 
+**ORCID Extraction Protocol:**
+
+**Primary source:** Author affiliations section, acknowledgements, author contribution statements in PDF text
+
+**Secondary source (optional):** CrossRef metadata API query (not required for standard extraction)
+
+**Status values:**
+- `present_in_pdf`: ORCIDs found in paper content (extract and record)
+- `none_found_in_extracted_text`: Checked affiliations/acknowledgements but no ORCIDs present
+- `not_checked_publisher_metadata`: Did not query external CrossRef/publisher APIs
+
+**Important note:** ORCIDs may exist in journal publisher systems (online version, CrossRef metadata) but absent from PDF. Record absence in PDF explicitly; do not infer "no ORCID" means author lacks one.
+
+**Do not:** Attempt external searches for ORCIDs beyond paper content (out of scope for paper-based extraction)
+
+**Example from test corpus:**
+- Sobotkova et al. 2024 (Journal of Documentation, 2024): `orcid_status: "none_found_in_extracted_text"`
+- Penske et al. 2023 (Nature, 2023): `orcid_status: "none_found_in_extracted_text"`
+- Note: Both recent papers from journals with ORCID policies, but PDFs lack ORCIDs in text
+
 3. **Update extraction_metadata.sections_examined** - "title_page", "author_affiliations"
 
 ---
@@ -227,13 +247,112 @@ Infrastructure is NOT in Methods/Results/Discussion. Target these specific locat
 - Extract verbatim_text
 - Type: financial, intellectual, none_declared, not_stated
 
-**2.6 Ethics Approval**
+**2.6 Ethics Approval and Permissions**
+
+Distinguish three types of research governance:
+
+**2.6a Ethics Committee Approval**
+
+**Scope:** Living human subjects, contemporary communities, identifiable personal data
+
+**Indicators:**
+- Institutional Review Board (IRB) approval (USA)
+- Human Research Ethics Committee (HREC) approval (Australia)
+- Ethics committee protocol numbers (e.g., "Approved by University Ethics Committee #2023-45")
+- Informed consent procedures described
+
+**Extract:**
 - Statement present? (yes/no)
-- Approval obtained? (yes/no/not_required)
-- Extract verbatim_text
-- Ethics body name, approval number, jurisdiction
-- Human subjects consent procedures
-- Animal welfare procedures (if applicable)
+- Ethics body name, protocol number, institution
+- Approval date, jurisdiction
+- Consent procedures described
+
+**2.6b Institutional Permissions**
+
+**Scope:** Archaeological materials, museum collections, archival research, ancient DNA
+
+**Indicators:**
+- Permission from excavators, curators, museum directors
+- Often granted via co-authorship (authorities as co-authors)
+- Government permits for archaeological work
+- Museum access agreements
+
+**Regional Variation in Ancient DNA Ethics:**
+
+**Critical**: Ancient DNA ethical frameworks vary substantially by region.
+
+| Region | Typical Requirement | Approval Type | Example |
+|--------|---------------------|---------------|---------|
+| **Europe** | Institutional permissions | Excavators/curators control materials | "Permission granted by museum directors" |
+| **Australia** | Formal ethics committee approval | HREC often required even for ancient remains | AIATSIS Code of Ethics applies |
+| **North America** | Varies by Indigenous affiliation | NAGPRA, tribal consultation, THPO involvement | Native American remains require tribal approval |
+
+**Europe:**
+- Typically requires institutional permissions (excavators/curators as co-authors)
+- Ethics committees less common unless involving contemporary descendant communities
+- Permission statements standard: "Permission granted by site directors and museum curators who are co-authors"
+
+**Australia:**
+- Often requires formal HREC approval even for ancient remains, especially if Indigenous affiliation
+- Australian Institute of Aboriginal and Torres Strait Islander Studies (AIATSIS) Code of Ethics applies
+- Community consultation expected for Indigenous materials
+
+**North America:**
+- Varies by Indigenous affiliation and federal land status
+- Native American Graves Protection and Repatriation Act (NAGPRA) applies to federally affiliated remains
+- Tribal consultation and Tribal Historical Preservation Office (THPO) involvement for Indigenous materials
+- State-level regulations vary
+
+**Extract:**
+- Permission statements present? (yes/no)
+- Type: archaeological_samples, museum_collections, archival_materials, ancient_DNA
+- Authority: excavators, curators, museum directors, government agency
+- Verbatim statement
+- Regional context noted
+
+**Example (Penske 2023):**
+```json
+{
+  "permission_statements": [{
+    "type": "archaeological_samples",
+    "authority": "excavators, archaeologists, curators, museum directors (as co-authors)",
+    "verbatim": "Permission to work on the archaeological samples was granted by the respective excavators, archaeologist and curators and museum directors of the sites, who are co-authoring the study.",
+    "regional_context": "Europe - standard institutional permissions"
+  }]
+}
+```
+
+**2.6c Cultural Protocols**
+
+**Scope:** Indigenous remains, descendant communities, sensitive cultural materials
+
+**Indicators:**
+- CARE principles compliance (Collective benefit, Authority to control, Responsibility, Ethics)
+- Indigenous data sovereignty statements
+- Community consultation documented
+- Traditional owner permissions
+- Restrictions on data use or publication
+
+**Cross-reference:** See `fieldwork-permits-guide.md` for detailed CARE principles guidance
+
+**Extract:**
+- Cultural protocols documented? (yes/no)
+- CARE principles addressed?
+- Indigenous consultation described?
+- Data sovereignty restrictions?
+- Community agreements mentioned?
+
+**Example structure:**
+```json
+{
+  "cultural_protocols": {
+    "care_compliant": true,
+    "indigenous_consultation": "Extensive consultation with X descendant community documented",
+    "data_sovereignty": "Data access restrictions per community agreements",
+    "notes": "CARE principle emphasis: Authority to control (community approves analyses)"
+  }
+}
+```
 
 **2.7 Preregistration**
 - Statement present? (yes/no)
@@ -245,10 +364,100 @@ Infrastructure is NOT in Methods/Results/Discussion. Target these specific locat
 **2.8 Supplementary Information**
 - Supplementary files listed? (yes/no)
 - For each file:
-  - Type: dataset, protocol, figure, table, code, other
+  - Type: dataset, protocol, figure, table, code, video, other
   - Description
-  - Location: publisher_site, repository, supplementary_pdf
+  - Location: publisher_site, repository, supplementary_pdf, author_website
   - DOI or URL (if provided)
+- Access status: publicly_accessible, available_on_request, publisher_website, unclear, mentioned_unavailable
+
+**Supplementary Materials Access Status Taxonomy:**
+
+| Status | When to Use | Example |
+|--------|-------------|---------|
+| `publicly_accessible` | URL provided, freely accessible without login | Figshare link in paper |
+| `available_on_request` | Explicit "available from authors on request" | Email contact provided |
+| `publisher_website` | Behind journal paywall with paper | Nature supplementary info tab |
+| `unclear` | Mentioned but no access information | "See supplementary videos" (no URL) |
+| `mentioned_unavailable` | Referenced but explicitly cannot be accessed | "Videos no longer available" |
+
+**Extraction Protocol:**
+1. Extract access information **exactly as stated in paper** (URL, "available from authors", "see publisher website")
+2. **Do not** attempt external searches (publisher websites, institutional repositories, author websites)
+3. Record only what paper explicitly provides
+4. Note ambiguity in `notes` field when access unclear
+
+**Example (unclear access):**
+```json
+{
+  "supplementary_materials": {
+    "present": true,
+    "description": "Supplementary videos mentioned in text demonstrating FAIMS interface",
+    "access_status": "unclear",
+    "repository_url": null,
+    "notes": "Videos referenced in discussion but no access information, URL, or repository provided"
+  }
+}
+```
+
+**2.9 Handling Missing or Informal Statements**
+
+Many papers lack formal "Data Availability" or "Code Availability" statements but reference datasets or software informally. Use this decision tree:
+
+**Decision Tree:**
+
+```
+Does paper have formal "Data/Code Availability" statement?
+├─ YES → Extract verbatim, use appropriate statement_type
+├─ NO → Check paper body for dataset/software references
+    ├─ Dataset/software referenced but no access info
+    │   └─ statement_type: "implicit_reference"
+    │   └─ Capture references in notes
+    │   └─ datasets: [] (empty - no structured info)
+    ├─ No dataset/software mentions at all
+    │   └─ statement_present: false
+    │   └─ statement_type: "not_applicable"
+    └─ Proprietary/unpublished data mentioned
+        └─ statement_type: "restricted_access"
+        └─ Note restrictions in rationale
+```
+
+**statement_type Taxonomy:**
+- `available_with_accession`: Formal statement with repository accession
+- `available_on_request`: Formal statement, contact authors
+- `available_in_supplementary`: Data/code in supplementary files
+- `implicit_reference`: Informal mentions, no access information
+- `restricted_access`: Access restrictions stated (ethics, commercial, privacy)
+- `not_applicable`: No relevant outputs to share
+
+**Examples:**
+
+**Formal statement (Penske 2023):**
+```json
+{
+  "statement_present": true,
+  "statement_type": "available_with_accession",
+  "verbatim_statement": "The DNA sequences reported in this paper have been deposited in the European Nucleotide Archive under the accession number PRJEB62503."
+}
+```
+
+**Implicit reference (Sobotkova 2024):**
+```json
+{
+  "statement_present": false,
+  "statement_type": "implicit_reference",
+  "verbatim_statement": "No formal data availability statement. References 'TRAP survey data from 2009-2015' and 'fieldwork data' but no repository or access information provided.",
+  "datasets": []
+}
+```
+
+**Not applicable (theory paper):**
+```json
+{
+  "statement_present": false,
+  "statement_type": "not_applicable",
+  "verbatim_statement": "No data availability statement. Theoretical paper with no empirical data collection."
+}
+```
 
 **3. Update extraction_metadata.sections_examined** - List all sections checked (even if "not found")
 

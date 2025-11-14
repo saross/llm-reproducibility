@@ -51,6 +51,69 @@
 
 ---
 
+### 1a. Book Chapters and ISBN Identifiers
+
+**Scope**: Book chapters, edited volumes, monographs without chapter-specific DOIs
+
+**Format**:
+- **ISBN-10**: 10 digits (e.g., `0-123-45678-9`)
+- **ISBN-13**: 13 digits starting with 978 or 979 (e.g., `978-90-8890-276-7`)
+
+**Context**: Many book chapters lack individual DOIs even when published in 2016+. ISBNs identify books but not individual chapters, creating granularity challenges for citation.
+
+**Publisher DOI vs Chapter DOI distinction:**
+- **Book-level DOI**: Identifies entire edited volume (e.g., JSTOR `10.2307/j.ctvqc6h0v`)
+- **Chapter-level DOI**: Identifies individual chapter (rare for archaeology books)
+- **ISBN**: Identifies book but not chapter (requires page ranges as locator)
+
+**Examples from test corpus:**
+
+**Sobotkova et al. 2016 (book chapter without chapter DOI):**
+- Book: "Mobilising the Past for a Digital Future" (Sidestone Press, 2016)
+- ISBN-13: `978-90-8890-276-7` (print), `978-90-8890-277-4` (PDF)
+- Publisher DOI: `10.2307/j.ctvqc6h0v` (JSTOR, entire book)
+- Chapter DOI: None
+- Page range: pp. 333-384 (52 pages)
+
+**Extraction approach:**
+```json
+{
+  "publication_identifiers": {
+    "paper_doi": null,
+    "paper_doi_status": "book_chapter_no_doi",
+    "alternative_identifiers": [
+      {
+        "type": "isbn",
+        "value": "978-90-8890-276-7",
+        "format": "isbn_13",
+        "note": "Book ISBN (print edition)"
+      },
+      {
+        "type": "isbn",
+        "value": "978-90-8890-277-4",
+        "format": "isbn_13",
+        "note": "Book ISBN (PDF edition)"
+      },
+      {
+        "type": "publisher_doi",
+        "value": "10.2307/j.ctvqc6h0v",
+        "note": "JSTOR book DOI (entire volume, not chapter-specific)"
+      }
+    ],
+    "page_range": "333-384",
+    "notes": "Book chapter without chapter DOI. Citation requires ISBN + page range."
+  }
+}
+```
+
+**FAIR compliance**: ⚠️ Partial — ISBNs satisfy F1 partially (persistent but not resolvable to specific chapter), A1 weak (requires book access + page navigation)
+
+**Assessment note**: Book chapters without DOIs receive lower FAIR F1 scores than journal articles with DOIs. Record book-level ISBNs and publisher DOIs as `alternative_identifiers`. Note that citations require page ranges for chapter-level granularity.
+
+**Historical context**: Chapter-level DOIs increasingly common for recent edited volumes (Springer, Taylor & Francis, Cambridge) but rare for open-access archaeology publishers (Sidestone, Ubiquity) and older volumes (pre-2015).
+
+---
+
 ### 2. ORCID (Open Researcher and Contributor ID)
 
 **Scope**: Researchers, authors, contributors
@@ -109,6 +172,199 @@
 **FAIR compliance**: ✅ Designed for F1, I3 (once widely adopted)
 
 **Assessment note**: Absence of RAiD is expected for papers published before 2025; presence indicates cutting-edge data management practice
+
+---
+
+### 3a. Grant Identifiers and Funding PIDs
+
+**Scope**: Research grants, funding awards, fellowships
+
+**Purpose**: Enable tracking of research funding → outputs → impact; support funder reporting requirements; enable cross-grant analysis
+
+**Format**: Varies widely by funding agency (no universal standard yet)
+
+**Common Agency Formats:**
+
+#### Australian Research Council (ARC)
+- **Format**: `LE140100151` (alphanumeric, 9-11 characters)
+- **Prefix usage**: Optional (may appear as `ARC LE140100151` or just `LE140100151`)
+- **Scheme codes**: DP (Discovery Projects), DE (Discovery Early Career), LE (Linkage Infrastructure), LP (Linkage Projects), FT (Future Fellowships)
+- **Example**: `LE140100151` (AUD $945,000, 2014-2016, FAIMS infrastructure grant)
+
+#### European Research Council (ERC)
+- **Format**: Multiple variants including `ERC-CoG-2019-GA-834616` or just `834616`
+- **Components**: Grant type (CoG, StG, AdG) + year + GA (Grant Agreement) + number
+- **Example**: `ERC-CoG-2019-GA-834616` (Consolidator Grant)
+- **Note**: Papers often cite only final number (`834616`) without full prefix
+
+#### National Science Foundation (USA)
+- **Format**: `NSF-1234567` or `1234567` (7-digit award ID)
+- **Directorate codes**: BCS (Behavioural and Cognitive Sciences), SBE (Social, Behavioural, and Economic Sciences)
+- **Example**: `NSF-BCS-1234567`
+
+#### National Institutes of Health (USA)
+- **Format**: `R01-GM123456` (mechanism + institute + number)
+- **Mechanisms**: R01 (research project), P01 (program project), T32 (training grant)
+- **Institutes**: GM (General Medical), AA (Alcohol Abuse), AG (Aging)
+
+#### Czech Science Foundation (GAČR)
+- **Format**: `P405/12/0926` (includes slashes)
+- **Components**: Programme code (P) + panel (405) + year (12) + sequence (0926)
+- **Example**: `P405/12/0926`
+
+#### NeCTAR (Australia)
+- **Format**: `RT043` (short alphanumeric codes)
+- **Context**: National eResearch Collaboration Tools and Resources project
+- **Example**: `RT043` (FAIMS mobile platform allocation 2012-2013)
+
+**Open Funder Registry (Future Enhancement):**
+- **Scope**: DOIs for funding organisations (not yet for individual grants)
+- **Format**: `10.13039/501100000923` (funder organisation DOI)
+- **Status**: Funder IDs exist, but grant-level PIDs not yet standardised
+- **Adoption**: Crossref integrates funder DOIs; Dimensions links publications to grants
+
+**Extraction Protocol:**
+
+**Record exactly as appears in paper:**
+- **Verbatim principle**: Do not normalise or add prefixes
+- **Example**: If paper states `LE140100151`, record as `LE140100151` (not `ARC-LE140100151`)
+- **Example**: If paper states `ERC-CoG-2019-GA-834616`, record full form
+
+**Structured extraction:**
+```json
+{
+  "funding": [
+    {
+      "agency": "Australian Research Council",
+      "grant_number": "LE140100151",
+      "scheme": "Linkage Infrastructure, Equipment and Facilities",
+      "amount": "AUD $945,000",
+      "period": "2014-2016",
+      "title": "Field Acquired Information Management Systems Infrastructure"
+    },
+    {
+      "agency": "European Research Council",
+      "grant_number": "ERC-CoG-2019-GA-834616",
+      "scheme": "Consolidator Grant",
+      "amount": null,
+      "period": "2020-2025",
+      "title": null
+    },
+    {
+      "agency": "Czech Science Foundation",
+      "grant_number": "P405/12/0926",
+      "amount": null,
+      "period": "2012-2015",
+      "title": null
+    }
+  ]
+}
+```
+
+**Examples from test corpus (12 grants across 4 papers):**
+- Ballsun-Stanton 2018: 3 ARC grants (LE130100148, LE140100151, LP130100020)
+- Sobotkova 2016: 2 grants (NeCTAR RT043, ARC LE140100151)
+- Penske 2023: 5 grants (3 ERC, 1 Max Planck, 1 Polish National Science Centre)
+- Sobotkova 2024: 5 grants spanning 2009-2022 (ARC, Czech Science Foundation)
+
+**FAIR compliance**: ⚠️ Partial — Grant numbers enable findability (F1) but lack universal resolver (A1 weak). Open Funder Registry provides funder-level PIDs but not grant-level persistence yet.
+
+**Assessment note**: Record all grant numbers as `alternative_identifiers` in PID graph. Count as weak PID (contributes to context but not to core PID connectivity score). Future: RAiD adoption will provide proper grant-level PIDs.
+
+#### Grant DOIs: Emerging Infrastructure (2024-2025+)
+
+**Status change**: Grant-level PIDs are now becoming available through both Crossref and DataCite, representing a significant advancement from the "future enhancement" stage noted above.
+
+**Two parallel systems:**
+
+##### Crossref Grant Linking System (GLS)
+
+**Launch**: Active since 2019, expanded significantly 2024-2025
+
+**Scope**: Funders register as Crossref members to assign DOIs to grants, awards, prizes, facility access, and other forms of research support
+
+**Format**: Standard DOI structure (e.g., `10.13039/501100000923/grant-12345`)
+- Prefix identifies funder organisation
+- Suffix often incorporates existing grant number
+- Fully resolvable via DOI infrastructure
+
+**Benefits**:
+- Unique persistent identifier for each awarded grant
+- Open metadata distributed globally
+- Enables tracking of grant → outputs linkages at scale
+- Integrates with ORCID researcher profiles
+
+**Adoption examples**:
+- Multiple funding agencies joining as members (2024-2025)
+- Five-year milestone celebrated mid-2024
+- Enhanced metadata matching between publications and registered grants
+
+##### DataCite Award DOIs
+
+**Launch**: Pilot programme 2023-2024, formal guidance published 2024
+
+**Scope**: Funders and institutions register DOIs for awards and grants using DataCite infrastructure
+
+**Format**: Standard DOI structure with award-specific metadata
+- University of California: 7,000+ grant DOIs registered via CDL (California Digital Library) pilot
+- Enables granular funding tracking at individual award level
+
+**Metadata schema**: DataCite Schema v4.0+ includes `FundingReference` property
+- `funderIdentifier`: ROR ID, Crossref Funder ID, GRID, ISNI, or other
+- `awardNumber`: Local grant identifier
+- `awardTitle`: Grant title
+
+**Benefits**:
+- Increased discoverability of awards
+- Traceability of outputs across systems
+- Richer open metadata for research impact assessment
+
+##### ORCID Integration
+
+**Critical integration point**: Grant DOIs from both Crossref and DataCite integrate with ORCID researcher profiles
+
+**Functionality**:
+- Researchers can add funded grants to ORCID records
+- Publications linked to grants automatically via ORCID auto-update
+- Creates persistent graph: Funder → Grant DOI → ORCID → Publication DOI → Data DOI
+
+**Impact on PID graph connectivity**: When grant DOIs present in papers:
+- PID connectivity score increases (adds persistent funding link)
+- Enables automated funder reporting
+- Improves FAIR F1, A1 scores (grants become persistently identifiable and accessible)
+
+##### Extraction Protocol for Grant DOIs
+
+**If grant DOI present in paper:**
+
+```json
+{
+  "funding": [
+    {
+      "agency": "European Research Council",
+      "grant_number": "834616",
+      "grant_doi": "10.13039/501100000781/ERC-2019-CoG-834616",
+      "grant_doi_type": "crossref_gls",
+      "scheme": "Consolidator Grant",
+      "amount": null,
+      "period": "2020-2025"
+    }
+  ]
+}
+```
+
+**Expected adoption timeline**:
+- **2024-2025**: Early adopters (UC system, select European funders)
+- **2026-2028**: Increasing adoption as funder mandates expand
+- **2029+**: Likely to become common practice, especially for major research funders
+
+**Assessment implications**:
+- **Pre-2024 papers**: Grant DOIs unlikely to be present (infrastructure nascent)
+- **2024-2025 papers**: Grant DOIs indicate cutting-edge funder compliance
+- **2026+ papers**: Grant DOIs may become expected for well-funded research
+- **FAIR scoring impact**: Grant DOIs strengthen F1 (unique identifier) and A1 (persistent access to grant metadata), improving overall PID connectivity
+
+**Current status (2025)**: Grant DOIs are **emerging but not yet widespread**. Absence should not be penalised; presence indicates exemplary practice.
 
 ---
 
@@ -251,6 +507,113 @@
 **FAIR compliance**: ✅ Satisfies I2 (FAIR vocabularies), I3 (qualified references)
 
 **Assessment note**: Rare in HASS papers but presence indicates exemplary interoperability practice
+
+---
+
+### 8. Licence Identifiers (SPDX)
+
+**Scope**: Software licences, data licences, content licences
+
+**Purpose**: Enable machine-readable licence identification, support FAIR R1.1 (clear usage licence) and legal interoperability
+
+**Format**: SPDX (Software Package Data Exchange) licence identifiers
+
+**SPDX Identifier Structure**: Short standardised codes (e.g., `MIT`, `CC-BY-4.0`, `GPL-3.0-or-later`)
+
+**Common Licences with SPDX Codes:**
+
+#### Open Content Licences
+- **CC-BY-4.0**: Creative Commons Attribution 4.0 International (most permissive CC licence)
+- **CC-BY-SA-4.0**: Creative Commons Attribution-ShareAlike 4.0 (copyleft for content)
+- **CC-BY-NC-4.0**: Creative Commons Attribution-NonCommercial 4.0
+- **CC0-1.0**: Creative Commons Zero (public domain dedication)
+
+#### Open Source Software Licences
+- **MIT**: MIT Licence (permissive, widely used)
+- **Apache-2.0**: Apache Licence 2.0 (permissive with patent grant)
+- **GPL-3.0-only**: GNU General Public Licence v3.0 only
+- **GPL-3.0-or-later**: GNU GPL v3.0 or any later version
+- **BSD-3-Clause**: Berkeley Software Distribution 3-Clause Licence
+- **AGPL-3.0**: Affero GPL (GPL for network services)
+
+#### Data Licences
+- **CDLA-Permissive-2.0**: Community Data Licence Agreement (permissive for data)
+- **ODbL-1.0**: Open Database Licence (copyleft for databases)
+
+**Extraction Protocol:**
+
+**Two-field structure:**
+```json
+{
+  "licence": {
+    "licence_name": "Creative Commons Attribution 4.0 International",
+    "spdx_identifier": "CC-BY-4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "notes": null
+  }
+}
+```
+
+**Custom Licences:**
+
+When papers use non-standard or custom licences:
+```json
+{
+  "licence": {
+    "licence_name": "Custom project licence",
+    "spdx_identifier": "LicenseRef-Custom",
+    "url": "https://project-website.org/licence.html",
+    "notes": "Custom licence restricting commercial use and requiring attribution. See project website for full terms."
+  }
+}
+```
+
+**Three-Way Distinction (Critical for Assessment):**
+
+| Status | Meaning | Assessment | Example |
+|--------|---------|------------|---------|
+| **No licence** | Explicitly unlicensed or licence waived | Ambiguous legal status, reuse unclear | "No licence specified" |
+| **Licence unclear** | Might exist but not stated in paper | Information gap, check repository | Paper silent on licensing |
+| **Proprietary** | Restrictions explicitly stated | Legal barriers to reuse | "Commercial licence required" |
+
+**Examples from test corpus:**
+
+**Explicit licence (Sobotkova 2016 book):**
+```json
+{
+  "licence_name": "Creative Commons Attribution 4.0 International",
+  "spdx_identifier": "CC-BY-4.0"
+}
+```
+
+**GitHub without explicit licence (Sobotkova 2024):**
+```json
+{
+  "licence_name": "Not specified",
+  "spdx_identifier": null,
+  "notes": "GitHub repositories lack LICENCE files; legal status unclear"
+}
+```
+
+**Handling Licence Variants:**
+
+Papers often use informal names. Map to SPDX:
+- "Creative Commons BY 4.0" → `CC-BY-4.0`
+- "MIT License" → `MIT`
+- "GNU GPL v3" → `GPL-3.0-only` or `GPL-3.0-or-later` (check wording)
+- "Apache License, Version 2.0" → `Apache-2.0`
+
+**SPDX Licence List Resource**: https://spdx.org/licenses/
+
+**FAIR Compliance**: ✅ Satisfies R1.1 (clear data usage licence) — critical for reusability assessment
+
+**Assessment Note**: Licence presence/absence significantly impacts FAIR R1.1 scoring:
+- **Clear licence with SPDX code**: Full R1.1 compliance (1 point)
+- **Licence stated but no SPDX**: Partial R1.1 compliance (0.5 points)
+- **Licence unclear**: R1.1 not met (0 points)
+- **Proprietary restrictions**: Note limitations, may reduce overall reusability score
+
+**Machine-Actionability**: SPDX identifiers enable automated licence compatibility checking, dependency scanning, and legal compliance verification — critical for computational reproducibility
 
 ---
 

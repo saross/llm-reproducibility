@@ -650,6 +650,140 @@ Beyond environment, **analytical transparency** requires documentation of:
 
 ---
 
+### GitHub-Only vs Archival: Scoring Impact
+
+**The persistence penalty for GitHub-only code sharing is severe.** Here's the quantitative impact:
+
+#### Side-by-Side Comparison
+
+| Scenario | F1 (Findable) | A1 (Accessible) | Total FAIR | Rating |
+|----------|---------------|-----------------|------------|--------|
+| GitHub URL only | 0 (not persistent) | 0 (can disappear) | ~4/15 | partially_fair |
+| GitHub + Zenodo DOI | 1 (persistent identifier) | 1 (guaranteed access) | ~10/15 | moderately_fair |
+| **Impact** | +1 point | +1 point | **+6 points** | **150% improvement** |
+
+#### Why the Penalty is Severe
+
+**GitHub URLs are not persistent identifiers:**
+- Repositories can become private with single click
+- Repositories can be deleted (intentionally or via account deletion)
+- Repository content can change (commits can be force-pushed, rewritten)
+- GitHub Inc. could change access policies, be acquired, or cease operation
+- URLs can change (username changes, repository renames)
+
+**FAIR F1 requires persistent, unique identifiers:**
+- DOIs managed by registries (DataCite, Crossref) with persistence guarantees
+- Software Heritage IDs cryptographic (content-addressed, immutable)
+- These meet "persistent" requirement; GitHub URLs do not
+
+**FAIR A1 requires retrievable metadata even if object unavailable:**
+- Zenodo: Even if CERN stops hosting files, DOI metadata persists via DataCite
+- Software Heritage: Distributed archive, multiple mirrors
+- GitHub: If repo deleted, metadata lost
+
+#### Scoring Breakdown: GitHub Only
+
+**Typical GitHub-only sharing (Sobotkova et al. 2024):**
+
+```
+F1: 0 points (no persistent identifier)
+F2: 0 points (no structured metadata like CodeMeta.json)
+F3: 0 points (not indexed in scholarly registries)
+F4: 0 points (not registered in searchable resource)
+
+A1: 0 points (retrievability not guaranteed)
+A2: 0 points (metadata won't persist if repo deleted)
+
+I1: 1 point (standard format - Python/R code)
+I2: 0 points (no vocabulary standards for software)
+I3: 0 points (no qualified references to dependencies)
+
+R1: 1 point (documentation present - README)
+R1.1: 0 points (no licence file)
+R1.2: 0 points (no provenance metadata)
+R1.3: 0 points (no community standards documentation)
+
+Total: 2/15 (13.3%, "partially_fair")
+```
+
+**Note**: Sobotkova 2024 scored 4/15 because multiple repositories with good READMEs added R1 points.
+
+#### Scoring Breakdown: GitHub + Zenodo DOI
+
+**Same code with Zenodo archival:**
+
+```
+F1: 1 point (DOI is persistent identifier) ✅
+F2: 1 point (Zenodo generates DataCite metadata automatically) ✅
+F3: 1 point (indexed in DataCite, Google Dataset Search) ✅
+F4: 0 points (not in discipline-specific registry)
+
+A1: 1 point (retrievable via DOI resolver) ✅
+A2: 1 point (DataCite metadata persistent even if CERN fails) ✅
+
+I1: 1 point (standard format)
+I2: 0 points (no vocabulary standards)
+I3: 0 points (no qualified dependency references)
+
+R1: 1 point (documentation)
+R1.1: 1 point (licence captured in Zenodo metadata) ✅
+R1.2: 0 points (no provenance beyond authorship)
+R1.3: 0 points (no community standards)
+
+Total: 9/15 (60%, "moderately_fair")
+```
+
+**Improvement: +7 points from single archival action** (2 → 9)
+
+#### Zero-Effort Archival Solutions
+
+**1. Software Heritage Auto-Archival**
+- **Effort**: Zero (automatic)
+- **How**: GitHub repos automatically archived at https://archive.softwareheritage.org
+- **Identifier**: `swh:1:dir:...` (cryptographic hash)
+- **Lookup**: Visit https://archive.softwareheritage.org, paste GitHub URL
+- **FAIR benefit**: +1 F1 (persistent ID), +1 A2 (distributed archive)
+
+**2. Zenodo-GitHub Integration**
+- **Effort**: 2 clicks (one-time setup)
+- **How**: Enable Zenodo integration, create GitHub release
+- **Identifier**: DOI (e.g., `10.5281/zenodo.1234567`)
+- **FAIR benefit**: +6 points (F1, F2, F3, A1, A2, R1.1)
+- **Tutorial**: https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content
+
+**3. figshare for Code**
+- **Effort**: 5 minutes (manual upload)
+- **How**: Upload code zip to figshare.com
+- **Identifier**: DOI (figshare-issued)
+- **FAIR benefit**: +5 points (similar to Zenodo)
+
+#### Real Example from Test Corpus
+
+**Sobotkova et al. 2024 actual results:**
+
+**As published (GitHub only, 3 repositories):**
+- `code_fair_score`: 4/15 (26.7%, "partially FAIR")
+- GitHub URLs: `github.com/adivea/LeafletGit`, `github.com/adivea/archaeology-grand-challenges`, `github.com/adivea/archaeology-object-data-collector-app`
+- No archival DOIs, no CITATION.cff, no licence files
+
+**Estimated if Zenodo DOIs added:**
+- `code_fair_score`: 10/15 (66.7%, "moderately FAIR")
+- **Improvement**: +6 points, categorical shift from "partially" to "moderately" FAIR
+- **Effort to achieve**: ~10 minutes total (Zenodo setup + 3 releases)
+
+#### Guidance for Assessors
+
+**When you encounter GitHub-only sharing:**
+
+1. **Award minimal FAIR points**: GitHub URLs earn I1 and R1 only (~2-4/15)
+2. **Note in rationale**: "GitHub repositories without archival snapshots fail FAIR F1 (persistent identifier requirement)"
+3. **Recommend Zenodo**: "Adding Zenodo DOIs would improve code FAIR from 4/15 to ~10/15"
+4. **Distinguish from transparency**: GitHub sharing demonstrates transparency (positive) but not FAIR compliance (requires persistence)
+
+**Critical principle**: **Transparency ≠ FAIR**. Open code on GitHub = transparent. Persistent archived code with PID = FAIR.
+
+---
+
 ## Machine-Actionability: The Critical Distinction
 
 **FAIR emphasises machine-actionability**, not just human accessibility.
@@ -745,23 +879,91 @@ Beyond environment, **analytical transparency** requires documentation of:
 
 ### Publication Year
 
-**Pre-2016** (before FAIR principles published):
+**Critical principle**: Historical FAIR scores must be interpreted with publication year context. A score of 0/15 in 2016 ≠ 0/15 in 2024.
+
+#### Pre-2016 (Pre-FAIR Era)
+
+**Milestone**: FAIR principles published March 2016 (Wilkinson et al., _Scientific Data_)
+
+**Infrastructure landscape:**
 - Data sharing rare; any repository deposit = positive signal
-- ORCIDs uncommon (launched 2012, adoption grew slowly)
+- ORCIDs uncommon (launched 2012, adoption grew slowly; ~10% of researchers)
 - Domain repositories emerging but not widespread
-- **Assessment**: Don't penalise lack of PIDs/FAIR practices
+- GitHub used for code but archival DOIs not yet standard practice
+- "Supplementary materials" primary data sharing mechanism (often behind paywalls)
 
-**2016-2019** (FAIR principles maturing):
-- Increasing expectations for data sharing
-- Repository use expected by progressive journals
+**Assessment approach**:
+- **Don't penalise absence of FAIR practices** — standards didn't exist yet
+- Scores of 0-4/15 reflect baseline, not non-compliance
+- **Contextual note required** for scores <5/15: "Reflects pre-FAIR era baseline (published before Wilkinson et al. 2016)"
+
+**Example contextual note (Sobotkova et al. 2016):**
+> "Zero FAIR score reflects 2016 book chapter baseline before widespread PID adoption and FAIR principles standardisation. Published pre-FAIR Guidelines (Wilkinson 2016) and pre-FAIR4RS (Chue Hong 2022). Represents transition era: open-access publishing adopted (CC-BY-4.0), code sharing emerging (project website), but persistent identifiers and structured metadata not yet standard."
+
+#### 2016-2019 (Early Adoption Period)
+
+**Milestones:**
+- 2016: FAIR principles published
+- 2018: Europe Plan S mandates open access
+- 2019: FAIR data maturity models emerge
+
+**Infrastructure landscape:**
+- Increasing expectations for data sharing, but discipline variation high
+- Repository use expected by progressive journals, encouraged by funders
 - ORCIDs requested (but not required) by publishers
-- **Assessment**: Moderate FAIR expectations; presence = good, absence ≠ bad
+- Zenodo+GitHub integration launched (2016), slow initial uptake
+- FAIR awareness growing but implementation inconsistent
 
-**2020+** (FAIR principles established):
-- Many funders require data management plans
+**Assessment approach**:
+- **Moderate FAIR expectations**: presence = good practice, absence ≠ poor practice
+- Scores of 5-8/15 typical for early adopters
+- Acknowledge discipline-specific adoption rates (natural sciences ahead of HASS)
+
+#### 2020-2024 (Maturation Period)
+
+**Milestones:**
+- 2020: US federal FAIR implementation begins
+- 2022: FAIR4RS (software-specific FAIR) published (Chue Hong et al.)
+- 2025: US federal ORCID mandate (end 2025)
+
+**Infrastructure landscape:**
+- Many funders require data management plans (DMPs)
 - Publishers increasingly require data availability statements
-- ORCIDs often required for corresponding authors
-- **Assessment**: Higher FAIR expectations reasonable
+- ORCIDs often required for corresponding authors (~90% compliance)
+- Software archival (Zenodo DOIs, Software Heritage) increasingly expected
+- FAIR maturity assessments integrated into research evaluation
+
+**Assessment approach**:
+- **Higher FAIR expectations reasonable** — standards well-established
+- Scores <5/15 indicate gaps relative to current practices (note context)
+- Distinguish intentional restrictions (CARE principles) from infrastructure gaps
+
+**Interpretation framework for scoring:**
+
+| Score | Pre-2016 | 2016-2019 | 2020-2024 |
+|-------|----------|-----------|-----------|
+| 0-4/15 | Baseline (typical) | Below emerging standards | Significant gaps |
+| 5-8/15 | Exemplary for era | Early adopter | Minimal compliance |
+| 9-12/15 | Rare, cutting-edge | Good practice | Moderate compliance |
+| 13-15/15 | Exceptional, rare | Exemplary | Good compliance |
+
+**Discipline-specific baselines:**
+
+Different fields adopted FAIR at different rates:
+
+- **Ancient DNA genomics**: Rapid FAIR data adoption (2018-2020), driven by large consortia and data journals
+- **Computational archaeology**: Code sharing emerging (2020-2024), but infrastructure still maturing
+- **Field archaeology**: Slow adoption due to site sensitivity, permit restrictions, museum curation traditions
+- **Software publications**: High expectations (SoftwareX, JOSS require code FAIR by policy)
+
+**Example cross-paper comparison:**
+
+| Paper | Year | Field | FAIR Score | Interpretation |
+|-------|------|-------|------------|----------------|
+| Sobotkova 2016 | 2016 | Archaeology | 0/15 | Pre-FAIR baseline (no penalty) |
+| Ballsun-Stanton 2018 | 2018 | Software | 13/15 | Exemplary for software publication venue |
+| Penske 2023 | 2023 | Ancient DNA | 14/15 | Exemplary for genomics field standards |
+| Sobotkova 2024 | 2024 | Comp. archaeology | 4/15 | Typical HASS computational (code shared, minimal infrastructure) |
 
 ---
 
@@ -831,6 +1033,256 @@ Beyond environment, **analytical transparency** requires documentation of:
 - ✅ Restricted access + ethical justification + community agreements = Exemplary FAIR+CARE
 - ❌ Fully open Indigenous data without community consultation = Ethical violation
 - Evaluate **whether restrictions are justified**, not just whether data is open
+
+---
+
+## Independent FAIR Assessment: Data and Code Dimensions
+
+### Why We Don't Combine Data and Code Scores
+
+**Framework precedent**: Existing transparency and reproducibility frameworks (ACM Reproducibility Badges, FAIR4RS, repliCATS seven signals, TOP Guidelines) **do not** combine divergent dimensions into single composite scores. Instead, they report dimensions independently with categorical interpretation.
+
+**Rationale:**
+1. **Research type diversity**: Data-centric research (ancient DNA sequencing) has different primary outputs than code-centric research (algorithm development)
+2. **Prevents artificial penalties**: Averaging would penalise data-centric work for lacking code and vice versa
+3. **Transparency**: Readers need to see both dimensions to understand FAIR profile
+4. **Aligns with established frameworks**: ACM badges, FAIR4RS vs FAIR-Data separation, repliCATS independent signals
+
+### Assessment Method
+
+**Step 1: Calculate dimension scores independently**
+- `data_fair_score`: 0-15 (sum of F, A, I, R data criteria)
+- `code_fair_score`: 0-15 (sum of F, A, I, R code criteria)
+
+**Step 2: Convert to categorical ratings**
+
+| Score | Rating | Description |
+|-------|--------|-------------|
+| 13-15 | highly_fair | Exemplary FAIR practices, minimal gaps |
+| 9-12 | moderately_fair | Good practices with some gaps |
+| 5-8 | minimally_fair | Basic practices, substantial gaps |
+| 1-4 | partially_fair | Very limited practices |
+| 0* | not_applicable | Output type not relevant to research |
+| 0 | not_fair | Should be present but absent |
+
+*Critical distinction: Score of 0 can mean "not applicable" (no penalty) OR "not fair" (penalty)
+
+**Step 3: Classify research type for interpretation**
+
+| Research Type | Primary Output | Secondary Output | Assessment Focus |
+|--------------|----------------|------------------|------------------|
+| Data-centric | Data | Code optional | Assess data FAIR; code may be N/A |
+| Code-centric | Code | Data optional | Assess code FAIR; data may be N/A |
+| Computational | Data AND code | Both required | Assess both; interdependency noted |
+| Mixed | Multiple | Context-dependent | Assess all applicable |
+
+**Classification heuristics:**
+- **Data-centric:** New empirical data collection (fieldwork, lab analysis, observation, surveys, genetic sequencing)
+- **Code-centric:** Method development, software validation, algorithm design, computational tools
+- **Computational:** Data analysis requiring both original data AND custom analytical code
+- **Mixed:** Multiple co-equal primary outputs (e.g., database + interface software)
+
+### Examples from Test Corpus
+
+#### Example 1: Penske et al. 2023 (Ancient DNA genomics)
+
+**Research type:** Data-centric
+
+**Assessment:**
+```json
+{
+  "research_type": "data_centric",
+  "data_fairness": {
+    "score": 14,
+    "rating": "highly_fair",
+    "applicability": "primary_output",
+    "rationale": "Complete data archiving in European Nucleotide Archive with persistent accession (PRJEB62503), machine-readable formats, rich metadata, open licence, community standards (INSDC)"
+  },
+  "code_fairness": {
+    "score": 0,
+    "rating": "not_applicable",
+    "applicability": "not_primary_output",
+    "rationale": "Commercial bioinformatics pipelines used (standard tools in field); custom code not part of contribution"
+  },
+  "fair_profile": "Data-centric research with highly FAIR data practices"
+}
+```
+
+**Interpretation:** Assess on data FAIR dimension (14/15 = highly FAIR). Code absence appropriate for genetic sequencing study using established commercial pipelines.
+
+#### Example 2: Sobotkova et al. 2024 (Computational methods)
+
+**Research type:** Code-centric
+
+**Assessment:**
+```json
+{
+  "research_type": "code_centric",
+  "data_fairness": {
+    "score": 0,
+    "rating": "not_applicable",
+    "applicability": "secondary_analysis",
+    "rationale": "Method validation using published TRAP dataset (cite-only, not redistributed). Secondary analysis paper."
+  },
+  "code_fairness": {
+    "score": 4,
+    "rating": "partially_fair",
+    "applicability": "primary_output",
+    "rationale": "GitHub repositories shared but no archival snapshots (Zenodo), no structured metadata (CITATION.cff), no licence files, no environment specification"
+  },
+  "fair_profile": "Code-centric research with partially FAIR code practices (GitHub sharing without infrastructure)"
+}
+```
+
+**Interpretation:** Assess on code FAIR dimension (4/15 = partially FAIR). Data absence appropriate for methods paper using existing published datasets.
+
+#### Example 3: Computational reproducibility study (hypothetical)
+
+**Research type:** Computational
+
+**Assessment:**
+```json
+{
+  "research_type": "computational",
+  "data_fairness": {
+    "score": 12,
+    "rating": "moderately_fair",
+    "applicability": "primary_output",
+    "rationale": "Data in Zenodo with DOI, structured metadata, open licence; missing community vocabulary standards"
+  },
+  "code_fairness": {
+    "score": 10,
+    "rating": "moderately_fair",
+    "applicability": "primary_output",
+    "rationale": "GitHub with Zenodo DOI, requirements.txt provided, CITATION.cff present; missing containerisation and random seed documentation"
+  },
+  "fair_profile": "Computational research with moderately FAIR practices for both data and code; interdependent outputs"
+}
+```
+
+**Interpretation:** Assess both dimensions. Both moderately FAIR (10-12/15). For computational reproducibility, interdependency critical — code without data insufficient, data without code insufficient.
+
+### "Not Applicable" vs "Not FAIR" Distinction
+
+**Critical for fair assessment:** Zero scores can mean two different things:
+
+#### Not Applicable (no penalty)
+
+**When to use:**
+- Data-centric paper doesn't share custom code (uses standard tools like Excel, SPSS, commercial sequencers)
+- Code-centric paper doesn't redistribute published datasets (cites existing data from others)
+- Secondary analysis papers (re-analyse data published by others in different study)
+- Theory papers without empirical outputs
+
+**Examples:**
+- Penske 2023: Code score = 0, rating = "not_applicable" (genetic study, commercial pipelines)
+- Methods paper using published datasets: Data score = 0, rating = "not_applicable"
+
+#### Not FAIR (penalty)
+
+**When to use:**
+- Data-centric paper generates new data but doesn't share it
+- Code-centric paper develops custom code but doesn't share it
+- Computational paper shares neither data nor code
+- Paper describes outputs in methods but no availability statement
+
+**Examples:**
+- Fieldwork paper: "We collected 5000 artefacts" but no data shared → Data score = 0, rating = "not_fair"
+- Simulation paper: "Custom Python model developed" but no code shared → Code score = 0, rating = "not_fair"
+
+#### How to Decide
+
+**Decision tree:**
+1. Does the paper generate/create this output type as part of its contribution?
+   - **YES** → Absence = "not_fair" (penalty)
+   - **NO** → Absence = "not_applicable" (no penalty)
+
+2. Does the paper use existing outputs created by others?
+   - **YES** → Absence = "not_applicable" (cite-only usage)
+   - **NO** → If should exist, absence = "not_fair"
+
+3. Does the methods section describe creating the output?
+   - **YES** → Absence = "not_fair" (claimed but not shared)
+   - **NO** → Absence = "not_applicable" (not part of research)
+
+### Summarising FAIR Profiles
+
+Instead of single overall scores, use **categorical profiles**:
+
+**High FAIR profiles:**
+- "Highly FAIR (data-centric)" — data highly FAIR (13-15), code N/A or minimal
+- "Highly FAIR (code-centric)" — code highly FAIR (13-15), data N/A or minimal
+- "Highly FAIR (computational)" — both data AND code highly FAIR (both 13-15)
+
+**Moderate FAIR profiles:**
+- "Moderately FAIR (data-centric)" — data moderately FAIR (9-12), code N/A or minimal
+- "Moderately FAIR (mixed)" — data highly FAIR (13-15), code minimally FAIR (5-8) or vice versa
+
+**Lower FAIR profiles:**
+- "Minimally FAIR (code-centric)" — code minimally FAIR (5-8), data N/A
+- "Partially FAIR" — primary output(s) score 1-4 when should be present
+- "Not FAIR" — primary outputs score 0 when should be present (not N/A)
+
+### Cross-Paper Comparison
+
+**Compare within research types**, not across types:
+
+**Data-centric comparisons:**
+- Penske 2023 (14/15 data) vs other ancient DNA papers
+- Fieldwork papers vs other fieldwork papers
+
+**Code-centric comparisons:**
+- Sobotkova 2024 (4/15 code) vs other HASS computational methods papers
+- Software publications vs other software publications
+
+**Avoid invalid comparisons:**
+- ❌ Don't compare Penske 2023 data score (14) to Sobotkova 2024 code score (4)
+- ❌ Don't rank data-centric and code-centric papers on single scale
+- ✅ Do compare papers within same research type and discipline
+
+### Schema Structure
+
+**Recommended JSON structure:**
+```json
+{
+  "fair_assessment": {
+    "data_fairness": {
+      "score": 14,
+      "max_score": 15,
+      "rating": "highly_fair",
+      "applicability": "primary_output",
+      "rationale": "Complete data archiving with PIDs, metadata, licence"
+    },
+    "code_fairness": {
+      "score": 0,
+      "max_score": 15,
+      "rating": "not_applicable",
+      "applicability": "not_primary_output",
+      "rationale": "Commercial pipelines used; custom code not part of contribution"
+    },
+    "research_type": "data_centric",
+    "fair_profile": "Highly FAIR (data-centric research with exemplary practices)",
+    "contextual_notes": "Ancient DNA study using established sequencing protocols and repositories. Exemplary compliance with field standards (INSDC, ENA). Code not applicable as standard commercial pipelines used."
+  }
+}
+```
+
+**Key fields:**
+- `data_fairness` and `code_fairness`: Separate dimension assessments
+- `rating`: Categorical (highly_fair, moderately_fair, minimally_fair, partially_fair, not_applicable, not_fair)
+- `applicability`: Whether output is primary, secondary, or not applicable
+- `research_type`: Classification for interpretation
+- `fair_profile`: Human-readable summary avoiding single numeric score
+
+### Legacy `combined_fair_score` Field
+
+**Note**: Earlier extractions may include `combined_fair_score` field (maximum of data/code scores). This field is deprecated:
+- ❌ **Do not use** for new extractions
+- ❌ **Do not emphasise** in reporting
+- ✅ **Leave in place** for backward compatibility
+- ✅ **Use independent ratings** going forward
+
+**Why deprecated**: Combined scores obscure important information (14/15 data + 0/15 code = 14 "combined" hides code absence).
 
 ---
 
