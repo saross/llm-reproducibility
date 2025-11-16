@@ -600,16 +600,32 @@ All consolidated items must include:
 
 ## Location Tracking
 
-All objects include location for traceability:
+All objects include location for traceability.
+
+### Location Requirements
+
+**Sectioned papers (most papers):**
+- `section` - REQUIRED (primary navigation)
+- `subsection` - When present
+- `page` - When available in PDF
+- `start_paragraph`, `end_paragraph` - Capture when feasible
+
+**Non-sectioned papers (e.g., Ross 2005):**
+- `start_paragraph`, `end_paragraph` - REQUIRED (fallback navigation)
+- `page` - When available in PDF
+
+**Completeness principle:** Capture all available location information. Redundancy helps validation and handles silent failures (PDF extraction issues, OCR errors, structural ambiguity).
+
+### Location Object Structure
 
 ```json
-// Single paragraph
+// Typical sectioned paper (complete location)
 "location": {
   "section": "Methods",
+  "subsection": "Survey Design",
   "page": 5,
   "start_paragraph": 2,
-  "end_paragraph": 2,
-  "sentence": 3  // optional
+  "end_paragraph": 2
 }
 
 // Paragraph range (content spans paragraphs 2-4)
@@ -619,9 +635,24 @@ All objects include location for traceability:
   "start_paragraph": 2,
   "end_paragraph": 4
 }
+
+// Non-sectioned paper (paragraph-based navigation)
+"location": {
+  "page": 3,
+  "start_paragraph": 12,
+  "end_paragraph": 14
+}
+
+// Minimal (sectioned paper, no page/paragraph available)
+"location": {
+  "section": "Discussion",
+  "subsection": "Limitations"
+}
 ```
 
 **Note:** For single paragraphs, `start_paragraph` equals `end_paragraph`. For ranges, `end_paragraph` > `start_paragraph` indicates content spanning multiple consecutive paragraphs.
+
+**Precision note:** Sentence-level precision comes from `verbatim_quote` itself (exact text is searchable), not from location metadata.
 
 ## For Complete Schema
 

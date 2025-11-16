@@ -1,0 +1,1087 @@
+
+ ▐▛███▜▌   Claude Code v2.0.37
+▝▜█████▛▘  Sonnet 4.5 · Claude Max
+  ▘▘ ▝▝    /home/shawn/Code/llm-reproducibility
+═════════════════════════════════════════ Conversation compacted · ctrl+o for history ═════════════════════════════════════════
+
+> /compact 
+  ⎿  Compacted (ctrl+o to see full summary)
+  ⎿  Read ../../../../tmp/compact-message.txt (191 lines)
+  ⎿  Read outputs/credibility-metrics-summary.md (212 lines)
+  ⎿  Referenced file assessment-system/scripts/analysis_toolkit.py
+  ⎿  Read assessment-system/scripts/batch_metrics.py (350 lines)
+  ⎿  Referenced file docs/background-research/quantitative-qualitative-metrics-critique.md
+
+> Hi CC, welcome back, can you please resume the work from last session? you were about to undertake 'session 3' work I 
+think 
+
+● Hi Shawn! Yes, I'm ready to continue with Phase 1, Session 3. Based on the compact message and the current state, I need
+  to create:
+
+  1. Metrics documentation - comprehensive guide to all 8 metrics
+  2. Scorecard template - standardised format for per-paper assessment
+  3. Per-paper scorecards - apply template to all 10 papers with corpus percentiles
+
+  This will help you interpret the metrics results before validation. Let me start by creating a todo list for this
+  session.
+
+● Now let me create the metrics documentation. I'll base this on the existing corpus data and the critical discussion from
+  the previous session.
+
+● Read(outputs/credibility-metrics-dashboard.json)
+  ⎿  Error: File content (25529 tokens) exceeds maximum allowed tokens (25000). Please use offset and limit parameters to read 
+     specific portions of the file, or use the GrepTool to search for specific content.
+
+● Let me read the summary instead, which has the key statistics I need:
+
+● Write(docs/assessment-guide/credibility-metrics.md)
+  ⎿  Wrote 1218 lines to docs/assessment-guide/credibility-metrics.md                                                     
+     # Credibility Metrics Reference Guide
+     **Version:** 1.0
+     **Date:** 2025-11-14
+     **Status:** Exploratory metrics for iterative refinement
+     ## Overview
+     This guide documents the eight quantitative credibility metrics used to assess research transparency, replicability,
+     and methodological rigour in the LLM Reproducibility Project. These metrics are **exploratory instruments** designed
+     for iterative refinement based on empirical validation, not validated psychometric tools.
+     … +1208 lines (ctrl+o to expand)
+
+● Excellent! The comprehensive metrics documentation is complete. Now let me mark that todo as complete and move to
+  creating the scorecard template.
+
+● Now I'll create the scorecard template:
+
+● Write(assessment-system/templates/metrics-scorecard.md)
+  ⎿  Wrote 330 lines to assessment-system/templates/metrics-scorecard.md
+     # Research Credibility Metrics Scorecard
+     **Paper ID:** {paper_id}
+     **Assessment Date:** {assessment_date}
+     **Corpus Size:** {corpus_size} papers
+     ---
+     ## Paper Metadata
+     … +320 lines (ctrl+o to expand)
+
+● Perfect! Now I need to create a script to generate scorecards for all 10 papers. Let me mark the template complete and
+  move to scorecard generation.
+
+● Now I'll create the scorecard generation script:
+
+● Write(assessment-system/scripts/generate_scorecards.py)
+  ⎿  Wrote 650 lines to assessment-system/scripts/generate_scorecards.py              
+     #!/usr/bin/env python3
+     """
+     Scorecard Generator
+     Generates individual credibility metrics scorecards for each paper in the corpus,
+     with corpus-relative percentile rankings and detailed interpretations.
+     Usage:
+         python3 generate_scorecards.py
+     … +640 lines (ctrl+o to expand)
+
+● Perfect! Now let me make the script executable and run it to generate all 10 scorecards:
+
+● Bash(chmod +x assessment-system/scripts/generate_scorecards.py)
+  ⎿  (No content)
+
+● Bash(python3 assessment-system/scripts/generate_scorecards.py)
+  ⎿  ============================================================
+     SCORECARD GENERATOR
+     ============================================================
+     … +121 lines (ctrl+o to expand)
+
+● I need to replace numpy with the statistics module for percentile calculation. Let me fix that:
+
+● Read(assessment-system/scripts/generate_scorecards.py)
+  ⎿  Read 20 lines
+
+● Update(assessment-system/scripts/generate_scorecards.py)
+  ⎿  Updated assessment-system/scripts/generate_scorecards.py with 16 additions and 4 removals   
+       462        replacements['mdd_interpretation'] = mdd_interp
+       463    
+       464        # Calculate corpus quartile distribution for appendix
+       465 -      import numpy as np
+       465 +      def percentile(values: List[float], p: float) -> float:
+       466 +          """Calculate percentile without numpy."""
+       467 +          if not values:
+       468 +              return 0.0
+       469 +          sorted_values = sorted(values)
+       470 +          k = (len(sorted_values) - 1) * (p / 100)
+       471 +          f = int(k)
+       472 +          c = k - f
+       473 +          if f + 1 < len(sorted_values):
+       474 +              return sorted_values[f] + c * (sorted_values[f + 1] - sorted_values[f])
+       475 +          else:
+       476 +              return sorted_values[f]
+       477 +  
+       478        for metric_key in all_metrics.keys():
+       479            values = all_metrics[metric_key]
+       480            if values:
+       481 -              replacements[f"{metric_key}_p25"] = f"{np.percentile(values, 25):.2f}"
+       482 -              replacements[f"{metric_key}_p50"] = f"{np.percentile(values, 50):.2f}"
+       483 -              replacements[f"{metric_key}_p75"] = f"{np.percentile(values, 75):.2f}"
+       481 +              replacements[f"{metric_key}_p25"] = f"{percentile(values, 25):.2f}"
+       482 +              replacements[f"{metric_key}_p50"] = f"{percentile(values, 50):.2f}"
+       483 +              replacements[f"{metric_key}_p75"] = f"{percentile(values, 75):.2f}"
+       484            else:
+       485                replacements[f"{metric_key}_p25"] = "N/A"
+       486                replacements[f"{metric_key}_p50"] = "N/A"
+
+● Good! Now let me run the script again:
+
+● Bash(python3 assessment-system/scripts/generate_scorecards.py)
+  ⎿  ============================================================
+     SCORECARD GENERATOR
+     ============================================================
+     … +51 lines (ctrl+o to expand)
+
+● Perfect! All 10 scorecards generated successfully. Let me mark the todo complete and verify one of the scorecards to make
+   sure it looks good:
+
+● Let me check one of the generated scorecards to verify the quality:
+
+● Bash(head -100 outputs/sobotkova-et-al-2021/metrics-scorecard.md)
+  ⎿  # Research Credibility Metrics Scorecard
+
+     **Paper ID:** sobotkova-et-al-2021
+     … +97 lines (ctrl+o to expand)
+
+● Excellent! The scorecards are generating correctly. Let me verify the count and check one more to ensure they all have
+  good data:
+
+● Bash(ls -1 outputs/*/metrics-scorecard.md | wc -l)
+  ⎿  10
+
+● Bash(ls -lh outputs/*/metrics-scorecard.md)
+  ⎿  -rw-rw-r-- 1 shawn shawn 9.3K Nov 14 22:52 outputs/connor-et-al-2013/metrics-scorecard.md   
+     -rw-rw-r-- 1 shawn shawn 8.8K Nov 14 22:52 outputs/eftimoski-et-al-2017/metrics-scorecard.md
+     -rw-rw-r-- 1 shawn shawn 9.0K Nov 14 22:52 outputs/penske-et-al-2023/metrics-scorecard.md
+     … +7 lines (ctrl+o to expand)
+
+● Perfect! All 10 scorecards generated successfully, each around 8-9 KB. Let me create a summary of what we accomplished in
+   this session:
+
+  Phase 1, Session 3: Complete! ✅
+
+  I've successfully completed all the tasks for Phase 1, Session 3:
+
+  1. Comprehensive Metrics Documentation ✅
+
+  File: docs/assessment-guide/credibility-metrics.md (extensive guide)
+
+  Contents:
+  - Overview of the 8-metric system and design philosophy
+  - Detailed documentation for each metric:
+    - What it measures, calculation method, interpretation
+    - Corpus statistics from the 10-paper corpus
+    - Example papers showing low/moderate/high scores
+    - Strengths and limitations
+    - When to use and when NOT to use
+    - Future refinement needed
+  - Guidance on using metrics together (not in isolation)
+  - Corpus-relative interpretation with percentiles
+  - Calibration status and validation plan
+  - Recommendations for appropriate use
+  - Quick reference table
+
+  Key sections:
+  - ESD, TCI, SCS, RTI, RIS, PGCS, FCS, MDD (all 8 metrics fully documented)
+  - "Using Metrics Together" - complementary patterns
+  - "Interpreting Corpus Statistics" - understanding the current corpus
+  - "Calibration and Validation" - honest assessment of uncalibrated status
+  - "Recommendations for Use" - dos and don'ts
+
+  2. Scorecard Template ✅
+
+  File: assessment-system/templates/metrics-scorecard.md
+
+  Features:
+  - Paper metadata section
+  - Metric scores overview table with percentiles and star ratings
+  - Detailed breakdown for each of 8 metrics with:
+    - Score, percentile, rating, visual indicators (●●●○○)
+    - Breakdown of components
+    - Interpretation text
+    - Corpus context (mean, median, range)
+  - Summary assessment with strengths, improvements, flags
+  - Recommendations for authors, reviewers, and replication attempts
+  - Appendix with corpus quartile comparison table
+
+  3. Per-Paper Scorecards ✅
+
+  Script: assessment-system/scripts/generate_scorecards.py (640 lines, executable)
+
+  Generated files: 10 scorecards in outputs/{paper-id}/metrics-scorecard.md
+  - connor-et-al-2013
+  - eftimoski-et-al-2017
+  - penske-et-al-2023
+  - ross-2005
+  - ross-ballsun-stanton-2022
+  - ross-et-al-2009
+  - sobotkova-et-al-2016
+  - sobotkova-et-al-2021 (exemplar: top quartile in 6/8 metrics)
+  - sobotkova-et-al-2023
+  - sobotkova-et-al-2024
+
+  Scorecard features:
+  - Corpus-relative percentile rankings for all metrics
+  - Star ratings (⭐-⭐⭐⭐⭐) based on quartiles
+  - Visual indicators (filled/empty circles) for scores
+  - Automated interpretation based on percentile position
+  - Strengths/improvements/flags automatically generated
+  - Recommendations tailored to each paper's profile
+
+  What This Gives You
+
+  You now have:
+
+  1. Documentation to understand the metrics - What each score means, how to interpret it, what its limitations are
+  2. Individual scorecards for validation - Review all 10 papers to see if metrics make sense in practice
+  3. Corpus context - See where each paper sits relative to the corpus (percentiles)
+  4. Actionable insights - Each scorecard identifies strengths, areas for improvement, and red flags
+
+  Next Steps (Your Validation Task)
+
+  As outlined in the plan, you should now:
+
+  1. Review the metrics documentation (docs/assessment-guide/credibility-metrics.md) to understand each metric
+  2. Review individual scorecards for all 10 papers (outputs/{paper-id}/metrics-scorecard.md)
+  3. Validate whether metrics are meaningful:
+    - Do high/low scores align with your domain expertise?
+    - Are there problematic metrics (especially SCS)?
+    - Are interpretations sensible?
+  4. Calibrate thresholds based on what you see in the corpus
+  5. Decide if metrics are ready for Phase 2 or need revision
+
+  The metrics are now fully documented and scored for your empirical validation!
+
+> thank you, most appreciated. Some feedback: it sounds like the metrics documentation at credibility-metrics.md is a mix 
+of general documentation and documentation specific to this corpus. Is that the case? I haven't read it yet (that's my next
+ task) and I could misunderstand. If so, might it be better to have the general docs separate so that you don't have to 
+regenerate the entire package with every corpus? Then the corpus specific outcomes could go into it's own 'corups profile' 
+(or similar, use a better name if you have one). What do you think? Don't code it yet, just let me know your thoughts. 
+  ⎿  Found 136 new diagnostic issues in 1 file (ctrl-o to expand)
+
+● You're absolutely right, and this is a great observation! The current credibility-metrics.md is indeed a mix, and
+  separating them would be much cleaner. Let me break down what's mixed:
+
+  Current Mix in credibility-metrics.md
+
+  General/reusable content (should be corpus-independent):
+  - Metric definitions and formulas
+  - Calculation methods (the code logic)
+  - Interpretation scales (e.g., "0.0-0.5 = strong support, 0.5-1.0 = good support")
+  - Theoretical strengths and limitations of each metric
+  - General guidance on when to use/not use
+  - Future refinement directions
+  - Design philosophy
+  - General recommendations (Dos/Don'ts)
+
+  Corpus-specific content (changes with each corpus):
+  - Corpus statistics table (Mean=0.91, Median=0.40, etc.)
+  - Example papers from corpus ("Low ESD (0.00) - Connor et al. 2013...")
+  - Distribution interpretations ("Median < Mean: right-skewed")
+  - Corpus homogeneity observations ("9/10 papers score TCI ≥ 0.94")
+  - "Current Corpus (10 Papers)" section
+  - All the "Corpus Statistics" subsections under each metric
+
+  Proposed Better Structure
+
+  1. docs/assessment-guide/credibility-metrics-reference.md (General, stable)
+
+  Contents:
+  - Design philosophy and overview
+  - Each metric's definition, formula, calculation method
+  - Theoretical interpretation scales
+  - Strengths and limitations (generic)
+  - When to use / when NOT to use
+  - Using metrics together (general patterns)
+  - Recommendations for use
+  - Future development roadmap
+
+  This file: Version-controlled, rarely changes, applies to any corpus
+
+  2. outputs/corpus-profile-{date-or-name}.md or outputs/corpus-assessment-summary.md
+
+  Contents:
+  - Corpus description (10 papers, 2005-2024, archaeology/DH focus)
+  - Corpus statistics table for all 8 metrics
+  - Distribution analysis (skewness, variance, outliers)
+  - Example papers at low/moderate/high levels for each metric
+  - Corpus-specific observations:
+    - Homogeneity/heterogeneity
+    - Temporal patterns
+    - Domain patterns
+    - Selection biases
+  - Calibration notes specific to this corpus
+  - What the corpus tells us about the metrics (validation findings)
+
+  This file: Generated per corpus, captures empirical findings
+
+  Alternative: Corpus Profile vs Corpus Report
+
+  You could even have two corpus-specific outputs:
+
+  A. outputs/corpus-profile.md (the data):
+  - Statistics tables
+  - Distribution summaries
+  - Paper lists with scores
+
+  B. outputs/corpus-assessment-report.md (the interpretation):
+  - What we learned from this corpus
+  - Validation findings
+  - Metric performance issues discovered
+  - Calibration adjustments recommended
+  - Comparison to previous corpora (if multiple runs)
+
+  Benefits of Separation
+
+  1. Maintainability: Update metric definitions once, apply to all corpora
+  2. Comparability: Run on different corpora, compare corpus profiles side-by-side
+  3. Documentation clarity: Users can learn metrics without corpus-specific noise
+  4. Reproducibility: Clear what's method (stable) vs. data (corpus-specific)
+  5. Iterative refinement: Corpus profiles accumulate evidence for metric validation
+
+  My Recommendation
+
+  Split into:
+  1. docs/assessment-guide/credibility-metrics-reference.md - General metric documentation
+  2. outputs/corpus-profile.md - Current corpus statistics and examples (generated by script)
+  3. Keep individual outputs/{paper-id}/metrics-scorecard.md - Per-paper scorecards
+
+  Then when you run on a different corpus (say, 50 repliCATS papers), you'd get:
+  - Same metrics-reference.md (unchanged)
+  - New corpus-profile.md for the 50-paper corpus
+  - 50 new scorecards
+
+  You could even have outputs/corpus-profile-10papers-archaeology-2025-11-14.md vs
+  outputs/corpus-profile-50papers-replicats-2025-12-01.md for comparison.
+
+  Sound reasonable? I think this would be much cleaner and more scalable. Want me to refactor the documentation this way?
+
+> Yes, please do - for now I'm happy keeping the corpus data and interpretation in a single file, in clearly delineated 
+sections, rather than splitting it into two files. Regarding output file names, include the date in ISO format in the name,
+ but you don't need anything like '10papers-archaeology', just outputs/corpus-profile-2025-11-14-a.md (where you can 
+increment the letter at the end if we run more than one in a day) - unless you have a better idea for distinguishing 
+multiple runs per day, noting they may be on the same corpus (at least during development), so adding more info about the 
+corpus isn't that helpful. 
+
+● Perfect plan! I'll refactor into:
+
+  1. docs/assessment-guide/credibility-metrics-reference.md - General, stable metric documentation
+  2. outputs/corpus-profile-2025-11-14.md - Corpus-specific statistics, examples, and interpretation
+
+  For the naming: I like your ISO date approach. For multiple runs per day, instead of letters (a, b, c), what about
+  timestamps?
+
+  - corpus-profile-2025-11-14-2252.md (HH:MM format)
+  - Or corpus-profile-2025-11-14T225243.md (full ISO 8601 with seconds)
+
+  Benefits:
+  - Natural chronological ordering
+  - No ambiguity about which run is which
+  - Matches the timestamp in the dashboard JSON
+  - If you run 3 times testing tweaks, you can see "oh, the 14:30 run vs the 16:45 run"
+
+  Alternative: Keep it simple with just the date, and if you run multiple times same day, overwrite. During development you
+   probably want the latest anyway?
+
+  Which do you prefer:
+  - A. Timestamp: corpus-profile-2025-11-14-2252.md
+  - B. Letter suffix: corpus-profile-2025-11-14-a.md
+  - C. Date only (overwrites): corpus-profile-2025-11-14.md
+
+  Let me know and I'll implement the refactoring!
+
+> ah, timestamp, of course! yes, please do that. go ahead and refactor now. One additional question: I don't see any new 
+prompts to produce these reports, only scripts and templates - does 'assessment-medium.md produce this output? 
+
+● Good catch! Let me clarify the current state:
+
+  Current Implementation (Session 3)
+
+  No LLM prompts involved - it's all deterministic Python scripts:
+
+  1. batch_metrics.py - Calculates metrics from extraction.json files, generates:
+    - credibility-metrics-dashboard.json (machine-readable)
+    - credibility-metrics-summary.md (human-readable, but basic)
+  2. generate_scorecards.py - Uses template + data to generate per-paper scorecards
+  3. metrics-scorecard.md - Template with placeholders like {esd_score}
+
+  Everything is formula-based and deterministic - no LLM assessment happening in Phase 1.
+
+  What Doesn't Exist Yet
+
+  No prompt for corpus profile generation - the current credibility-metrics-summary.md is just tables and basic formatting,
+   not the rich interpretation I described.
+
+  Two Options
+
+  Option A: Keep it deterministic (my recommendation for now)
+  - Refactor existing batch_metrics.py to generate two outputs:
+    - credibility-metrics-reference.md (one-time, manual creation)
+    - corpus-profile-2025-11-14-HHMM.md (generated by script, data + basic interpretation)
+  - Corpus profile would have statistics, examples, observations - but written by the script using conditional logic (like
+  scorecards do)
+
+  Option B: Add LLM assessment prompt (more sophisticated, later)
+  - Create assessment-system/prompts/corpus_profile_prompt.md
+  - LLM would analyze the dashboard JSON and write interpretive text
+  - More nuanced observations, but adds complexity and cost
+
+  My Recommendation
+
+  Option A for now - keep Phase 1 fully deterministic. The corpus profile can have:
+  - Statistics tables (formula-based)
+  - Example papers at percentiles (formula-based)
+  - Basic observations (conditional text: "if stdev > 2, write 'high variance'")
+
+  Then in Phase 2 (qualitative rubrics), if you want richer corpus interpretation, we could add an LLM prompt.
+
+  Does that sound right? Should I refactor with deterministic script generation, or do you want me to create an LLM prompt
+  for corpus profile interpretation?
+
+> agree, I'm happy with deferring the interpretive text, just make sure it's on the to-do list (my work on this project 
+occassionally gets interrupted for a day or two, and it's useful to have all decisions and to-dos recoreded for easy 
+resumption) 
+
+● Perfect! Let me create a todo list for the refactoring work and record the deferred task.
+
+● Now let me start the refactoring. First, I'll read the current metrics doc to identify what should stay in the reference
+  vs move to corpus profile:
+
+● Bash(wc -l docs/assessment-guide/credibility-metrics.md)
+  ⎿  1217 docs/assessment-guide/credibility-metrics.md
+
+● The document is quite long. Let me create the general reference version first, then build the corpus profile generator.
+  I'll extract the corpus-independent content:
+
+● Write(docs/assessment-guide/credibility-metrics-reference.md)
+  ⎿  Wrote 961 lines to docs/assessment-guide/credibility-metrics-reference.md
+     # Credibility Metrics Reference Guide
+     **Version:** 1.0
+     **Date:** 2025-11-14
+     **Status:** Exploratory metrics for iterative refinement
+     ---
+     ## Overview
+     … +951 lines (ctrl+o to expand)
+
+● Excellent! Now let me update the todo and create the corpus profile generator:
+
+● Now I'll create a dedicated corpus profile generator script and update batch_metrics.py to call it:
+
+● Write(assessment-system/scripts/generate_corpus_profile.py)
+  ⎿  Wrote 561 lines to assessment-system/scripts/generate_corpus_profile.py    
+     #!/usr/bin/env python3
+     """
+     Corpus Profile Generator
+     Generates a corpus-specific profile document with statistics, examples, and
+     observations for a given set of papers.
+     Usage:
+         python3 generate_corpus_profile.py
+     … +551 lines (ctrl+o to expand)
+
+● Now let me make it executable and test it:
+
+● Bash(chmod +x assessment-system/scripts/generate_corpus_profile.py && python3
+      assessment-system/scripts/generate_corpus_profile.py)
+  ⎿  ============================================================
+     CORPUS PROFILE GENERATOR
+     ============================================================
+     … +10 lines (ctrl+o to expand)
+
+● Perfect! Let me verify the output looks good:
+
+● Bash(head -80 outputs/corpus-profile-2025-11-15-0748.md)
+  ⎿  # Corpus Assessment Profile       
+
+     **Generated:** 2025-11-15 07:48:49
+     … +83 lines (ctrl+o to expand)
+
+● Excellent! The corpus profile is generating correctly. Now let me update the todos and integrate it with
+  batch_metrics.py:
+
+● Now let me update batch_metrics.py to call the corpus profile generator automatically:
+
+● Read(assessment-system/scripts/batch_metrics.py)
+  ⎿  Read 41 lines
+
+● Update(assessment-system/scripts/batch_metrics.py)
+  ⎿  Updated assessment-system/scripts/batch_metrics.py with 19 additions      
+       315    
+       316        print(f"  ✓ Saved: {summary_path}")
+       317    
+       318 +      # Generate corpus profile
+       319 +      print("Generating corpus profile...")
+       320 +      from generate_corpus_profile import generate_corpus_profile
+       321 +  
+       322 +      profile_md = generate_corpus_profile(dashboard)
+       323 +  
+       324 +      # Save with timestamp
+       325 +      timestamp = datetime.now().strftime("%Y-%m-%d-%H%M")
+       326 +      profile_path = Path(f"outputs/corpus-profile-{timestamp}.md")
+       327 +      with open(profile_path, 'w', encoding='utf-8') as f:
+       328 +          f.write(profile_md)
+       329 +  
+       330 +      print(f"  ✓ Saved: {profile_path}")
+       331 +  
+       332        print()
+       333        print("="*60)
+       334        print("CORPUS STATISTICS SUMMARY")
+     ...
+       343        print("="*60)
+       344        print("COMPLETE!")
+       345        print("="*60)
+       346 +      print()
+       347 +      print("Generated files:")
+       348 +      print(f"  - {dashboard_path}")
+       349 +      print(f"  - {summary_path}")
+       350 +      print(f"  - {profile_path}")
+       351    
+       352    
+       353    if __name__ == '__main__':
+
+● Good! Now let me test the integrated workflow and then clean up the old credibility-metrics.md file:
+
+● Let me test the integrated workflow by running batch_metrics.py:
+
+● Bash(cd assessment-system/scripts && python3 batch_metrics.py 2>&1 | tail -40)
+  ⎿  ============================================================
+     BATCH CREDIBILITY METRICS CALCULATOR
+     ============================================================
+     … +4 lines (ctrl+o to expand)
+
+● Ah, the working directory issue. Let me run it from the project root:
+
+● Bash(python3 assessment-system/scripts/batch_metrics.py 2>&1 | tail -50)
+  ⎿ python3: can't open file '/home/shawn/Code/llm-reproducibility/assessment-system/scripts/assessment-system/scripts/bat
+    ch_metrics.py': [Errno 2] No such file or directory
+
+
+● Bash(cd /home/shawn/Code/llm-reproducibility && python3 assessment-system/scripts/batch_metrics.py 2>&1 | tail -50)
+  ⎿  Processing: ross-ballsun-stanton-2022                              
+       ✓ Introducing Preregistration of Research Design to Archaeolog...
+         ESD=0.0, TCI=1.0, FCS=14/15
+     … +47 lines (ctrl+o to expand)
+
+● Perfect! The integrated workflow is working. Now let me remove the old credibility-metrics.md file and verify the file
+  structure:
+
+● Bash(rm docs/assessment-guide/credibility-metrics.md && ls -lh docs/assessment-guide/)
+  ⎿  total 36K                                                                 
+     -rw-rw-r-- 1 shawn shawn 36K Nov 15 07:47 credibility-metrics-reference.md
+
+● Excellent! Now let me verify the corpus profiles exist and complete the testing:
+
+● Bash(ls -lh outputs/corpus-profile-*.md)
+  ⎿  -rw-rw-r-- 1 shawn shawn 8.6K Nov 15 07:48 outputs/corpus-profile-2025-11-15-0748.md
+     -rw-rw-r-- 1 shawn shawn 8.6K Nov 15 07:49 outputs/corpus-profile-2025-11-15-0749.md
+
+● Bash(wc -l outputs/corpus-profile-2025-11-15-0749.md docs/assessment-guide/credibility-metrics-reference.md)
+  ⎿    229 outputs/corpus-profile-2025-11-15-0749.md             
+       960 docs/assessment-guide/credibility-metrics-reference.md
+      1189 total
+
+● Perfect! Let me complete the todos and provide you with a summary:
+
+● Perfect! The refactoring is complete and tested. Let me provide you with a comprehensive summary:
+
+  Documentation Refactoring Complete! ✅
+
+  I've successfully separated the general metrics documentation from corpus-specific data. Here's what's changed:
+
+  New Documentation Structure
+
+  1. General Reference (stable, corpus-independent):
+  - File: docs/assessment-guide/credibility-metrics-reference.md (960 lines, 36 KB)
+  - Contents:
+    - Design philosophy and overview
+    - All 8 metrics: definitions, formulas, calculation methods
+    - Interpretation scales (generic thresholds)
+    - Strengths and limitations
+    - When to use / when NOT to use
+    - Using metrics together
+    - Calibration status and validation approach
+    - Recommendations for use
+    - Future development roadmap
+    - Quick reference table
+
+  2. Corpus-Specific Profiles (generated per corpus):
+  - Files: outputs/corpus-profile-YYYY-MM-DD-HHMM.md (229 lines, 8.6 KB each)
+  - Contents:
+    - Corpus description (size, years, paper list)
+    - Corpus-wide statistics table
+    - Detailed analysis for each metric with:
+        - Statistics (mean, median, stdev, range)
+      - Distribution interpretation (skewness, variance)
+      - Example papers (low/moderate/high scores)
+      - Corpus-specific observations
+    - Homogeneity vs heterogeneity analysis
+    - Interpretation notes and limitations
+    - Usage guidance specific to this corpus
+
+  Integration with Workflow
+
+  Updated batch_metrics.py:
+  - Now automatically generates corpus profile with timestamp
+  - Outputs three files:
+    a. credibility-metrics-dashboard.json (machine-readable data)
+    b. credibility-metrics-summary.md (basic summary - kept for backward compatibility)
+    c. corpus-profile-YYYY-MM-DD-HHMM.md (rich corpus analysis)
+
+  New standalone script:
+  - File: assessment-system/scripts/generate_corpus_profile.py
+  - Can be run independently if needed
+  - Uses timestamp naming: corpus-profile-2025-11-15-0749.md
+
+  Timestamp Naming
+
+  As you requested, files use ISO 8601 format with time (YYYY-MM-DD-HHMM):
+  - Example: corpus-profile-2025-11-15-0749.md (generated at 07:49)
+  - Multiple runs per day get unique filenames
+  - Natural chronological ordering
+  - Easy to identify which run is which during development
+
+  Benefits
+
+  ✅ Maintainability: Update metric definitions once, apply to all corpora
+
+  ✅ Comparability: Run on different corpora, compare side-by-side
+
+  ✅ Documentation clarity: Learn metrics without corpus-specific noise
+
+  ✅ Reproducibility: Clear separation of method (stable) vs data (corpus-specific)
+
+  ✅ Iterative refinement: Corpus profiles accumulate validation evidence
+
+  What's Deferred
+
+  The LLM-generated interpretive text for corpus profiles is recorded in the todo list for Phase 2. Current profiles use
+  deterministic conditional logic (like scorecards), which is sufficient for now. Later you can add richer interpretation
+  via LLM prompts if desired.
+
+  ---
+  You're all set! You now have:
+  1. General metrics reference documentation (reusable)
+  2. Corpus-specific profiles (one per run, timestamped)
+  3. Individual paper scorecards (10 papers)
+
+  All ready for your validation review!
+
+> I'd like to review some of the metrics with you (I think we might have some extraction / analysis errors) but we're 
+almost out of context, please compose a /compact message. 
+  ⎿  Found 59 new diagnostic issues in 1 file (ctrl-o to expand)
+
+● I'll create a comprehensive compact message for the next session:
+
+● Write(/tmp/compact-message.txt)
+  ⎿  Updated ../../../../tmp/compact-message.txt with 182 additions and 144 removals                                    
+         1 -  # Session Summary: Assessment Phase 1, Session 2 Complete (2025-11-14)
+         1 +  # Session Summary: Phase 1 Session 3 Complete + Documentation Refactoring (2025-11-15)
+         2    
+         3    ## What We Accomplished
+         4    
+         5 -  ### 1. Fixed Schema Accessor Functions
+         6 -  **Files modified:** `assessment-system/scripts/analysis_toolkit.py`
+         5 +  ### Session 3 Core Deliverables (COMPLETE ✅)
+         6    
+         7 -  **Changes:**
+         8 -  - `get_infrastructure_items()`: Changed from `infrastructure` → `reproducibility_infrastructure`
+         9 -  - `get_paper_metadata()`: Changed from `metadata` → `project_metadata`, handles `paper_title` field
+        10 -  - Added defensive null checking for `paper_doi` (can be null, not just missing)
+         7 +  **1. Comprehensive Metrics Documentation**
+         8 +  - **File:** `docs/assessment-guide/credibility-metrics-reference.md` (960 lines, 36 KB)
+         9 +  - **Contents:** General, corpus-independent documentation:
+        10 +    - Design philosophy and overview
+        11 +    - All 8 metrics: ESD, TCI, SCS, RTI, RIS, PGCS, FCS, MDD
+        12 +    - Each metric: definition, formula, calculation, interpretation scale, strengths, limitations
+        13 +    - When to use / when NOT to use
+        14 +    - Using metrics together (complementary patterns)
+        15 +    - Calibration status (uncalibrated, needs validation)
+        16 +    - Recommendations for use (dos/don'ts)
+        17 +    - Future development roadmap
+        18 +    - Quick reference table
+        19    
+        20 -  **Why:** Schema uses `project_metadata` and `reproducibility_infrastructure`, not `metadata` and 
+           - `infrastructure`
+        20 +  **2. Scorecard Template**
+        21 +  - **File:** `assessment-system/templates/metrics-scorecard.md`
+        22 +  - **Features:** Paper metadata, all 8 metrics with percentiles, star ratings, visual indicators (●●●○○), 
+           + corpus context, summary assessment, recommendations
+        23    
+        24 -  ### 2. Implemented Remaining 4 Metrics
+        25 -  **File:** `assessment-system/scripts/analysis_toolkit.py` (now ~925 lines)
+        24 +  **3. Per-Paper Scorecards**
+        25 +  - **Script:** `assessment-system/scripts/generate_scorecards.py` (640 lines)
+        26 +  - **Generated:** 10 scorecards in `outputs/{paper-id}/metrics-scorecard.md`
+        27 +  - **Features:** Corpus-relative percentile rankings, automated interpretations, 
+           + strengths/improvements/flags, tailored recommendations
+        28    
+        29 -  **New metric functions:**
+        29 +  ### Documentation Refactoring (COMPLETE ✅)
+        30    
+        31 -  **RIS (Replicability Infrastructure Score)** - Lines 484-585
+        32 -  - 0-10 scale: Paper DOI (1) + Author ORCIDs (1) + Dataset PIDs (2) + Software PIDs (2) + Data statement 
+           - (1) + Code statement (1) + Supplementary materials (1) + Preregistration (1)
+        33 -  - Returns score, percentage, component breakdown
+        31 +  **Key Change:** Separated general metrics documentation from corpus-specific data
+        32    
+        33 -  **PGCS (PID Graph Connectivity Score)** - Lines 588-633
+        34 -  - Uses existing `pid_graph_summary.connectivity_score` from Pass 6
+        35 -  - Counts different PID types (paper_doi, author_orcids, dataset_pids, software_pids, sample_pids, 
+           - project_pid, vocabulary_pids)
+        36 -  - Returns score, rating, rationale, PID counts
+        33 +  **Before:** Single file mixing stable definitions with corpus-specific examples
+        34 +  **After:** Clean separation for reusability and comparability
+        35    
+        36 -  **FCS (FAIR Compliance Score)** - Lines 636-713
+        37 -  - Aggregates Pass 6 FAIR assessment: Findable (max 4) + Accessible (max 4) + Interoperable (max 3) + 
+           - Reusable (max 4) = 0-15 scale
+        38 -  - Returns score, max_score, percentage, breakdown with rationales for each FAIR dimension
+        39 -  - Handles case where FAIR assessment not conducted
+        36 +  **New Structure:**
+        37    
+        38 -  **MDD (Methods Documentation Density)** - Lines 716-783
+        39 -  - Mean character length of verbatim quotes for RDMAP items (research_designs, methods, protocols)
+        40 -  - Handles multiple possible text field names: verbatim_quote, text, description, research_design_text, 
+           - method_text, protocol_text
+        41 -  - Returns overall mean, breakdown by tier (RD/methods/protocols)
+        38 +  **1. General Reference (stable, reusable)**
+        39 +  - **File:** `docs/assessment-guide/credibility-metrics-reference.md`
+        40 +  - **Purpose:** Learn metrics without corpus-specific noise
+        41 +  - **Never changes** between corpus runs (except metric improvements)
+        42    
+        43 -  **Updated:** `calculate_all_metrics()` now returns all 8 metrics
+        43 +  **2. Corpus-Specific Profiles (generated per run)**
+        44 +  - **Files:** `outputs/corpus-profile-YYYY-MM-DD-HHMM.md` (229 lines, 8.6 KB)
+        45 +  - **Naming:** ISO 8601 with timestamp (e.g., `corpus-profile-2025-11-15-0749.md`)
+        46 +  - **Contents:**
+        47 +    - Corpus description (10 papers, 2005-2024, archaeology/DH)
+        48 +    - Corpus-wide statistics table (mean, median, stdev, range for all 8 metrics)
+        49 +    - Detailed analysis per metric:
+        50 +      - Distribution interpretation (right-skewed, left-skewed, symmetric)
+        51 +      - Variance interpretation (homogeneous, heterogeneous)
+        52 +      - Example papers at low/moderate/high levels
+        53 +      - Corpus-specific observations
+        54 +    - Homogeneity vs heterogeneity analysis
+        55 +    - Interpretation notes and limitations
+        56 +    - Usage guidance for this specific corpus
+        57    
+        58 -  ### 3. Created Batch Runner Script
+        59 -  **File:** `assessment-system/scripts/batch_metrics.py` (340 lines, executable)
+        58 +  **3. Individual Paper Scorecards** (unchanged)
+        59 +  - **Files:** `outputs/{paper-id}/metrics-scorecard.md` (10 papers)
+        60    
+        61 -  **Functions:**
+        62 -  - `find_extraction_files()`: Searches outputs/ for */extraction.json
+        63 -  - `calculate_corpus_statistics()`: Mean, median, stdev, min, max for each metric
+        64 -  - `generate_dashboard()`: JSON with all data
+        65 -  - `generate_summary_report()`: Markdown human-readable report
+        61 +  **New Script:**
+        62 +  - **File:** `assessment-system/scripts/generate_corpus_profile.py` (executable)
+        63 +  - **Purpose:** Generate corpus profile with timestamp naming
+        64 +  - **Can run standalone or via batch_metrics.py**
+        65    
+        66 -  **Outputs:**
+        67 -  - `outputs/credibility-metrics-dashboard.json`: Full metrics data for all papers
+        68 -  - `outputs/credibility-metrics-summary.md`: Human-readable report with corpus stats and per-paper scores
+        66 +  **Updated Workflow:**
+        67 +  - **File:** `assessment-system/scripts/batch_metrics.py`
+        68 +  - **Now generates 3 outputs:**
+        69 +    1. `credibility-metrics-dashboard.json` (machine-readable data)
+        70 +    2. `credibility-metrics-summary.md` (basic summary, kept for compatibility)
+        71 +    3. `corpus-profile-YYYY-MM-DD-HHMM.md` (rich corpus analysis)
+        72    
+        73 -  ### 4. Tested on Full Corpus
+        74 -  **Result:** 10 papers processed successfully (note: 11-paper corpus mentioned, but only 10 have 
+           - extraction.json)
+        73 +  **Old File Removed:**
+        74 +  - `docs/assessment-guide/credibility-metrics.md` (deleted - replaced by reference + profile split)
+        75    
+        76 -  **Papers processed:**
+        77 -  1. connor-et-al-2013 (palaeoenvironmental)
+        78 -  2. eftimoski-et-al-2017 (predictive modeling)
+        79 -  3. penske-et-al-2023 (archaeogenetics)
+        80 -  4. ross-2005 (ancient history/philology)
+        81 -  5. ross-ballsun-stanton-2022 (preregistration methodology)
+        82 -  6. ross-et-al-2009 (remote sensing)
+        83 -  7. sobotkova-et-al-2016 (FAIMS co-development)
+        84 -  8. sobotkova-et-al-2021 (mobile GIS deployment)
+        85 -  9. sobotkova-et-al-2023 (crowdsourced digitization)
+        86 -  10. sobotkova-et-al-2024 (predictive model validation)
+        76 +  ## Current Corpus Results (10 Papers)
+        77    
+        78 -  **Bug fixed during testing:** `paper_doi` can be `null` (not dictionary), causing AttributeError. Added 
+           - type checking before calling `.get()` on it.
+        78 +  **Papers:** connor-et-al-2013, eftimoski-et-al-2017, penske-et-al-2023, ross-2005, 
+           + ross-ballsun-stanton-2022, ross-et-al-2009, sobotkova-et-al-2016, sobotkova-et-al-2021, 
+           + sobotkova-et-al-2023, sobotkova-et-al-2024
+        79    
+        80 -  ## Corpus Results Summary
+        80 +  **Corpus Statistics:**
+        81    
+        82 -  | Metric | Mean | Median | StDev | Min | Max |
+        83 -  |--------|------|--------|-------|-----|-----|
+        84 -  | **ESD** | 0.91 | 0.40 | 1.18 | 0.00 | 3.03 |
+        85 -  | **TCI** | 0.99 | 1.00 | 0.02 | 0.94 | 1.00 |
+        86 -  | **SCS** | 3.90 | 0.50 | 5.76 | 0 | 17 |
+        87 -  | **RTI** | 2.26 | 2.53 | 1.24 | 0.22 | 3.81 |
+        88 -  | **RIS** | 2.80 | 3.00 | 1.87 | 0 | 6 |
+        89 -  | **PGCS** | 2.80 | 2.00 | 2.78 | 1 | 10 |
+        90 -  | **FCS** | 11.50 | 11.50 | 2.51 | 8 | 15 |
+        91 -  | **MDD** | 187.07 | 174.70 | 80.95 | 104.6 | 386.3 |
+        82 +  | Metric | Mean | Median | StDev | Min | Max | Range |
+        83 +  |--------|------|--------|-------|-----|-----|-------|
+        84 +  | **ESD** | 0.91 | 0.40 | 1.18 | 0.00 | 3.03 | 3.03 |
+        85 +  | **TCI** | 0.99 | 1.00 | 0.02 | 0.94 | 1.00 | 0.06 |
+        86 +  | **SCS** | 3.90 | 0.50 | 5.76 | 0.00 | 17.00 | 17.00 |
+        87 +  | **RTI** | 2.26 | 2.53 | 1.24 | 0.22 | 3.81 | 3.59 |
+        88 +  | **RIS** | 2.80 | 3.00 | 1.87 | 0.00 | 6.00 | 6.00 |
+        89 +  | **PGCS** | 2.80 | 2.00 | 2.78 | 1.00 | 10.00 | 9.00 |
+        90 +  | **FCS** | 11.50 | 11.50 | 2.51 | 8.00 | 15.00 | 7.00 |
+        91 +  | **MDD** | 187.07 | 174.70 | 80.95 | 104.60 | 386.30 | 281.70 |
+        92    
+        93 -  **Initial observations:**
+        94 -  - **TCI very high** (0.99): Strong RDMAP documentation across corpus
+        95 -  - **FCS high** (11.5/15): Good FAIR compliance
+        96 -  - **ESD varies widely** (0-3.03): Claims:Evidence ratio inconsistent
+        97 -  - **SCS high variance** (0-17): Some papers have no limitations, others many
+        98 -  - **RTI moderate-high** (2.26): Multiple evidence types common
+        93 +  **Key Observations:**
+        94 +  - **TCI very high and homogeneous** (mean=0.99, stdev=0.02): All papers score 0.94-1.0, indicating 
+           + excellent RDMAP coverage but limited discriminating power
+        95 +  - **FCS high** (mean=11.5/15 = 77%): Strong FAIR compliance across corpus
+        96 +  - **SCS extremely right-skewed** (median=0.5, mean=3.9): Most papers have 0-1 limitations, some have many 
+           + (max=17)
+        97 +  - **ESD, RTI, RIS, PGCS show good variance**: Better discriminating power
+        98    
+        99 -  ## Current Status
+        99 +  **Exemplar Paper:** sobotkova-et-al-2021 (top quartile in 6/8 metrics, perfect FAIR score)
+       100    
+       101 -  **Phase 1, Session 2:** ✅ COMPLETE
+       101 +  ## Key Files
+       102    
+       103 -  **All 8 metrics implemented and tested:**
+       104 -  1. ✅ ESD (Evidential Support Density)
+       105 -  2. ✅ TCI (Transparency Completeness Index)
+       106 -  3. ✅ SCS (Scope Constraint Score)
+       107 -  4. ✅ RTI (Robustness Triangulation Index)
+       108 -  5. ✅ RIS (Replicability Infrastructure Score)
+       109 -  6. ✅ PGCS (PID Graph Connectivity Score)
+       110 -  7. ✅ FCS (FAIR Compliance Score)
+       111 -  8. ✅ MDD (Methods Documentation Density)
+       103 +  **Documentation:**
+       104 +  - `docs/assessment-guide/credibility-metrics-reference.md` - General metrics reference (960 lines)
+       105 +  - `outputs/corpus-profile-2025-11-15-0749.md` - Current corpus profile (229 lines)
+       106 +  - `outputs/credibility-metrics-summary.md` - Basic summary (kept for compatibility)
+       107    
+       108 -  **Batch processing:** ✅ Working on 10-paper corpus
+       108 +  **Scripts:**
+       109 +  - `assessment-system/scripts/analysis_toolkit.py` - All 8 metric calculations (925 lines)
+       110 +  - `assessment-system/scripts/batch_metrics.py` - Batch processor (now generates corpus profile)
+       111 +  - `assessment-system/scripts/generate_scorecards.py` - Scorecard generator (640 lines)
+       112 +  - `assessment-system/scripts/generate_corpus_profile.py` - Corpus profile generator (new)
+       113    
+       114 -  **Outputs generated:**
+       115 -  - ✅ `outputs/credibility-metrics-dashboard.json`
+       116 -  - ✅ `outputs/credibility-metrics-summary.md`
+       114 +  **Templates:**
+       115 +  - `assessment-system/templates/metrics-scorecard.md` - Scorecard template
+       116    
+       117 -  ## Next Steps: Phase 1, Session 3
+       117 +  **Outputs:**
+       118 +  - `outputs/credibility-metrics-dashboard.json` - Machine-readable metrics data
+       119 +  - `outputs/corpus-profile-YYYY-MM-DD-HHMM.md` - Corpus profiles (timestamped)
+       120 +  - `outputs/{paper-id}/metrics-scorecard.md` - Per-paper scorecards (10 papers)
+       121    
+       122 -  **User request:** "I think that the results will make more sense if I have the metrics documentation and 
+           - scorecard for all 10 papers. I'm not yet sure how to interpret the results."
+       122 +  **Reference:**
+       123 +  - `docs/background-research/quantitative-qualitative-metrics-critique.md` - Critical discussion (13,000 
+           + words)
+       124 +  - `planning/assessment-implementation-plan.md` - 5-phase plan
+       125    
+       126 -  **Session 3 tasks (from planning/assessment-implementation-plan.md):**
+       126 +  ## User's Next Task: Metric Validation
+       127    
+       128 -  **1. Create metrics documentation (2-3 hours)**
+       129 -     - **File:** `docs/assessment-guide/credibility-metrics.md`
+       130 -     - **Content:**
+       131 -       - Each metric: calculation method, interpretation, strengths, limitations
+       132 -       - Examples from corpus showing good/poor scores
+       133 -       - Guidance on using metrics together (not in isolation)
+       134 -       - Corpus-relative interpretation (percentiles)
+       135 -       - Note on thresholds being preliminary (need calibration)
+       128 +  **User stated:** "I'd like to review some of the metrics with you (I think we might have some 
+           + extraction/analysis errors)"
+       129    
+       130 -  **2. Create scorecard template (1 hour)**
+       131 -     - **File:** `assessment-system/templates/metrics-scorecard.md`
+       132 -     - **Content:**
+       133 -       - Paper metadata (title, authors, year, DOI)
+       134 -       - All 8 metric scores with interpretations
+       135 -       - Corpus percentile rankings for each metric
+       136 -       - Visual indicators (e.g., ⬤⬤⬤○○ for scale)
+       137 -       - Summary assessment section
+       138 -       - Notes/flags section
+       130 +  **Validation approach:**
+       131 +  1. Review metrics documentation (`credibility-metrics-reference.md`)
+       132 +  2. Review individual scorecards for all 10 papers
+       133 +  3. Review corpus profile for corpus-level patterns
+       134 +  4. Identify potential issues:
+       135 +     - Extraction/analysis errors
+       136 +     - Metrics that don't make sense
+       137 +     - Problematic thresholds or formulas
+       138 +     - Genre/domain biases
+       139    
+       140 -  **3. Generate per-paper scorecards (1-2 hours)**
+       141 -     - **Directory:** `outputs/{paper-id}/metrics-scorecard.md` for each of 10 papers
+       142 -     - **Script:** May need `generate_scorecards.py` or extend `batch_metrics.py`
+       143 -     - **Content:** Apply template to each paper's metrics
+       140 +  **Known concerns from earlier sessions:**
+       141 +  - **SCS (Scope Constraint Score)**: Most problematic metric - counts limitations, not quality. User may 
+           + want to revise.
+       142 +  - **Fixed thresholds**: TCI uses arbitrary expected values (2 RD, 5 methods, 8 protocols)
+       143 +  - **ESD edge cases**: Many papers have ESD=0.0 (no claims extracted) - might indicate extraction issue
+       144 +  - **Extraction granularity dependency**: All count-based metrics affected by how we split items
+       145    
+       146 -  **4. User validation**
+       147 -     - User reviews all 10 scorecards
+       148 -     - Validates whether metrics are meaningful
+       149 -     - Identifies issues (e.g., SCS counting trivial limitations)
+       150 -     - Calibrates thresholds based on corpus distribution
+       151 -     - Decides if metrics ready for Phase 2 or need revision
+       152 -  
+       153 -  ## Key Files for Next Session
+       154 -  
+       155 -  **Created this session:**
+       156 -  - `assessment-system/scripts/analysis_toolkit.py` (925 lines, 8 metrics)
+       157 -  - `assessment-system/scripts/batch_metrics.py` (340 lines)
+       158 -  - `outputs/credibility-metrics-dashboard.json` (complete data)
+       159 -  - `outputs/credibility-metrics-summary.md` (human-readable report)
+       160 -  
+       161 -  **To create in Session 3:**
+       162 -  - `docs/assessment-guide/credibility-metrics.md` (documentation)
+       163 -  - `assessment-system/templates/metrics-scorecard.md` (template)
+       164 -  - `outputs/{paper-id}/metrics-scorecard.md` × 10 (per-paper scorecards)
+       165 -  
+       166 -  **Reference documents:**
+       167 -  - `planning/assessment-implementation-plan.md` (complete 5-phase plan)
+       168 -  - `docs/background-research/quantitative-qualitative-metrics-critique.md` (critical discussion from 
+           - earlier this session)
+       169 -  
+       146    ## Important Context
+       147    
+       148 -  **Metric design philosophy:**
+       148 +  **Metric Design Philosophy:**
+       149    - Exploratory, not validated instruments
+       150    - Designed for iterative refinement based on user feedback
+       151    - Quantitative metrics screen/triage, qualitative rubrics (Phase 2) provide depth
+       152    - Use corpus-relative percentiles, not just raw scores
+       153 -  - Fixed thresholds (e.g., "expected 2 RD, 5 methods, 8 protocols") are bootstrapping placeholders
+       153 +  - Fixed thresholds are bootstrapping placeholders needing calibration
+       154    
+       155 -  **Known limitations to document:**
+       156 -  - Extraction granularity dependency (how we split items affects counts)
+       157 -  - Genre/domain bias (theoretical papers score differently than empirical)
+       158 -  - "More is better" fallacy (SCS counts limitations, not quality)
+       159 -  - Small sample (10 papers insufficient for robust statistics)
+       155 +  **Known Limitations (documented):**
+       156 +  - Small sample (10 papers) → unstable statistics
+       157    - No ground truth validation yet
+       158 +  - Extraction granularity dependency
+       159 +  - Genre/domain bias
+       160 +  - Temporal bias (older papers penalised for pre-FAIR infrastructure)
+       161 +  - "More is better" fallacy (especially SCS)
+       162    
+       163 -  **User's validation approach:**
+       164 -  - User (Shawn, domain expert) validates on 10 papers first
+       165 -  - Then Aaron Willcox (repliCATS data scientist) validates on larger corpus
+       166 -  - Broader scope than repliCATS (HASS fieldwork, not just lab sciences)
+       163 +  **Deferred Task (in todo list):**
+       164 +  - **[DEFERRED] Add LLM prompt for rich corpus interpretation (Phase 2)** - Currently corpus profiles use 
+           + deterministic conditional logic. Later can add LLM-generated interpretive text if desired.
+       165    
+       166 +  ## Technical Details
+       167 +  
+       168 +  **Percentile Calculation (corpus-relative):**
+       169 +  ```python
+       170 +  # For ESD: lower is better, so reverse ranking
+       171 +  rank = sum(1 for v in all_values if v > value)  # Reversed
+       172 +  percentile = (rank / len(all_values)) * 100
+       173 +  
+       174 +  # For other metrics: higher is better
+       175 +  rank = sum(1 for v in all_values if v < value)
+       176 +  percentile = (rank / len(all_values)) * 100
+       177 +  ```
+       178 +  
+       179 +  **Timestamp Naming:**
+       180 +  - Format: `YYYY-MM-DD-HHMM` (ISO 8601 with time)
+       181 +  - Example: `corpus-profile-2025-11-15-0749.md`
+       182 +  - Allows multiple runs per day with unique filenames
+       183 +  - Natural chronological ordering
+       184 +  
+       185 +  **Scorecard Visual Indicators:**
+       186 +  ```python
+       187 +  # Filled/empty circles based on score
+       188 +  def get_visual_indicator(score, max_score, total_circles=5):
+       189 +      proportion = score / max_score
+       190 +      filled_count = round(proportion * total_circles)
+       191 +      return ("●" * filled_count) + ("○" * (total_circles - filled_count))
+       192 +  ```
+       193 +  
+       194 +  **Star Ratings (percentile-based):**
+       195 +  - ⭐ = Bottom 25%
+       196 +  - ⭐⭐ = 25-50%
+       197 +  - ⭐⭐⭐ = 50-75%
+       198 +  - ⭐⭐⭐⭐ = Top 25%
+       199 +  
+       200    ## Resume Command
+       201    
+       202 -  To continue: "Hi CC, let's continue Phase 1 Session 3. Please create the metrics documentation, scorecard 
+           - template, and generate scorecards for all 10 papers so I can interpret the results properly."
+       202 +  **To continue:** "Hi CC, I'd like to review the metrics with you. I think there may be some extraction or 
+           + analysis errors. Let's start with [specific metric or paper]."
+       203    
+       204 -  **User wants:** Documentation and scorecards to make sense of the metrics results before validation.
+       204 +  **User wants to:**
+       205 +  1. Identify extraction/analysis errors in metrics
+       206 +  2. Validate whether metrics make sense
+       207 +  3. Potentially revise problematic metrics (especially SCS)
+       208 +  4. Calibrate thresholds based on corpus observations
+       209 +  
+       210 +  **Next steps after validation:**
+       211 +  - Fix any extraction/analysis errors identified
+       212 +  - Revise metric formulas if needed
+       213 +  - Adjust thresholds based on corpus distribution
+       214 +  - Decide if metrics ready for Phase 2 or need more work
+       215 +  - Potentially run on larger corpus for better statistics
+       216 +  
+       217 +  ## Status Summary
+       218 +  
+       219 +  **Phase 1, Session 3:** ✅ COMPLETE
+       220 +  - Metrics documentation created
+       221 +  - Scorecard template created
+       222 +  - 10 scorecards generated
+       223 +  - Documentation refactored (general reference + corpus profiles)
+       224 +  - All scripts working and integrated
+       225 +  
+       226 +  **Current Activity:** User validation of metrics (reviewing scorecards and corpus profile to identify 
+           + issues)
+       227 +  
+       228 +  **Next Phase:** Depends on validation findings - either proceed to Phase 2 (qualitative rubrics) or 
+           + iterate on metrics
+
+● Perfect! Compact message is ready at /tmp/compact-message.txt.
+
+  Summary for you: Phase 1 Session 3 is complete! We've created comprehensive metrics documentation, generated scorecards
+  for all 10 papers, and refactored the documentation structure to separate general reference material from corpus-specific
+   profiles.
+
+  You now have:
+  - ✅ General metrics reference guide (stable, reusable)
+  - ✅ Corpus profile with timestamp (current run: 2025-11-15-0749)
+  - ✅ 10 individual paper scorecards with percentile rankings
+
+  Ready for your validation review to identify any extraction/analysis errors in the metrics!
+
+
+

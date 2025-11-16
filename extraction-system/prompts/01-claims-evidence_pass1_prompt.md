@@ -133,11 +133,11 @@ This enables prompt refinement and extraction performance analysis.
 **MANDATORY for all extractions:**
 **EVIDENCE & CLAIMS require:**
 - `verbatim_quote` - Exact text from paper stating this content
-- Precise location - Section, subsection, paragraph range
+- `location` - Section (REQUIRED), plus subsection/page/paragraph when available
 - If quote doesn't exist → DO NOT EXTRACT
 **IMPLICIT ARGUMENTS require:**
 - `trigger_text` array - Verbatim passages that imply (not state) the argument
-- `trigger_locations` - Location of each trigger passage
+- `trigger_locations` - Location of each trigger passage (section + subsection/page/paragraph)
 - `inference_reasoning` - Explanation connecting triggers to argument
 - If no trigger passages → DO NOT EXTRACT
 **Quick test before extracting:**
@@ -437,7 +437,8 @@ Use this checklist as your roadmap. Before finalizing:
 - [ ] Evidence-claim support relationships mapped?
 - [ ] Expected information gaps flagged?
 - [ ] Project metadata separated from evidence?
-- [ ] All items have location tracking?
+- [ ] **All items have location.section (or location.start_paragraph for non-sectioned papers)**
+- [ ] Captured subsection/page/paragraph when available for completeness?
 - [ ] Uncertain items marked in extraction_notes?
 - [ ] **No hallucinations - only extract what's sourced**
 - [ ] Other arrays (RDMAP) left unchanged?

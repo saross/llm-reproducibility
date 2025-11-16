@@ -355,19 +355,49 @@ With full-paper context, certain implicit arguments become visible that weren't 
 
 ---
 
+## Location Requirements
+
+**All extracted items must include location metadata for traceability and validation.**
+
+### Required Fields
+
+**Sectioned papers (most papers):**
+- `section` - REQUIRED for all items
+- Also capture: subsection, page, paragraph when available
+
+**Non-sectioned papers (e.g., Ross 2005):**
+- `start_paragraph`, `end_paragraph` - REQUIRED for all items
+- Also capture: page when available
+
+### Completeness Principle
+
+**Aim for maximum location completeness:** Capture section + subsection + page + paragraph when all available.
+
+**Why redundancy matters:**
+- Different failure modes affect different fields (PDF extraction, OCR errors, structural ambiguity)
+- More location data = easier validation and error recovery
+- Page numbers may be wrong, but section+paragraph combination provides backup
+- Section may be ambiguous, but page+paragraph provides clarification
+
+**Practical guidance:** Record all location information you can see. Don't limit yourself to minimum requirements.
+
+---
+
 ## Field Requirements Summary
 
 ### For ALL Explicit Items
 ```json
 {
   "*_id": "string",
-  "*_text": "string", 
+  "*_text": "string",
   "*_status": "explicit",
   "verbatim_quote": "Exact text from paper (REQUIRED)",
   "location": {
-    "section": "string (REQUIRED)",
-    "subsection": "string or null",
-    "paragraph": "integer or null"
+    "section": "string (REQUIRED for sectioned papers)",
+    "subsection": "string (optional)",
+    "page": "integer (optional)",
+    "start_paragraph": "integer (REQUIRED for non-sectioned papers)",
+    "end_paragraph": "integer (REQUIRED for non-sectioned papers)"
   }
 }
 ```
@@ -383,14 +413,16 @@ With full-paper context, certain implicit arguments become visible that weren't 
     "Verbatim passage 2 that implies content"
   ],
   "trigger_locations": [
-    {"section": "string", "subsection": "string", "paragraph": 1},
-    {"section": "string", "subsection": "string", "paragraph": 3}
+    {"section": "string", "subsection": "string", "page": 5, "start_paragraph": 1, "end_paragraph": 1},
+    {"section": "string", "page": 6, "start_paragraph": 3, "end_paragraph": 3}
   ],
   "inference_reasoning": "Explanation of how triggers support inference (REQUIRED)",
   "location": {
-    "section": "Primary location (REQUIRED)",
-    "subsection": "string or null", 
-    "paragraph": "integer or null"
+    "section": "string (REQUIRED for sectioned papers)",
+    "subsection": "string (optional)",
+    "page": "integer (optional)",
+    "start_paragraph": "integer (REQUIRED for non-sectioned papers)",
+    "end_paragraph": "integer (REQUIRED for non-sectioned papers)"
   }
 }
 ```
