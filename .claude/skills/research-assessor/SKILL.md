@@ -1,6 +1,6 @@
 ---
 name: research-assessor
-description: Extracts and assesses research methodology, claims, evidence, and infrastructure from research papers in HASS disciplines. Evaluates transparency, replicability, and credibility through systematic extraction of research designs, methods, protocols, claims, evidence, and reproducibility infrastructure (PIDs, FAIR compliance, permits, funding) using a seven-pass iterative workflow.
+description: Extracts and assesses research methodology, claims, evidence, and infrastructure from research papers in HASS disciplines. Evaluates transparency, replicability, and credibility through systematic extraction (seven-pass workflow) and credibility assessment (research approach classification, quality gating, and repliCATS Seven Signals evaluation adapted for HASS).
 license: Apache 2.0
 ---
 
@@ -10,14 +10,21 @@ Systematic extraction and assessment framework for research methodology, argumen
 
 ## What This Skill Does
 
-This skill enables comprehensive extraction of research content and infrastructure from academic papers through a structured multi-pass workflow:
+This skill enables comprehensive extraction of research content and infrastructure from academic papers, followed by credibility assessment, through a structured multi-pass workflow:
+
+**Extraction Phase (Passes 1-7):**
 
 1. **Claims & Evidence Extraction** (Passes 1-2) - Extract observations, measurements, claims, and implicit arguments
 2. **RDMAP Extraction** (Passes 3-5) - Extract Research Designs, Methods, and Protocols
 3. **Infrastructure Extraction** (Pass 6) - Extract PIDs, FAIR compliance, funding, permits, author contributions
 4. **Validation** (Pass 7) - Verify structural integrity and cross-reference consistency
 
-The extracted data enables assessment of research transparency, replicability, and credibility.
+**Assessment Phase (Passes 8-9):**
+
+5. **Research Approach Classification** (Pass 8) - Classify research approach (deductive/inductive/abductive) with expressed vs revealed methodology comparison and HARKing detection
+6. **Credibility Assessment** (Pass 9) - Quality-gated assessment using repliCATS Seven Signals adapted for HASS with approach-specific scoring anchors
+
+The extracted data enables systematic assessment of research transparency, replicability, and credibility.
 
 ## When to Use This Skill
 
@@ -31,7 +38,7 @@ Use when users request:
 
 ## Core Workflow
 
-The complete extraction follows this sequence:
+The complete workflow follows this sequence:
 
 ```
 Blank JSON Template
@@ -50,10 +57,22 @@ Pass 6: Infrastructure extraction (PIDs, FAIR, funding, permits)
     ↓
 Pass 7: Validation (integrity checks)
     ↓
-Assessment-Ready Extraction
+extraction.json (complete)
+    ↓
+Pass 8: Research approach classification
+    ↓
+classification.json (approach + HARKing detection)
+    ↓
+Pass 9: Credibility assessment (quality-gated)
+    ↓
+assessment/ (cluster files + credibility report + assessment.json)
 ```
 
-**Key principle:** Single JSON document flows through all passes. Each pass populates or refines specific sections, leaving others untouched.
+**Key principles:**
+
+- **Passes 1-7:** Single extraction.json document flows through all passes. Each pass populates or refines specific sections, leaving others untouched.
+- **Pass 8:** Classification reads extraction.json, outputs classification.json
+- **Pass 9:** Assessment reads extraction.json + classification.json + metrics.json, outputs assessment directory with cluster files, report, and canonical assessment.json
 
 ## Using This Skill
 
@@ -179,6 +198,117 @@ Evidence items with **identical claim support patterns** that are **never cited 
 
 **For complete algorithm, examples, and cross-reference repair:**
 → See `references/checklists/consolidation-patterns.md`
+
+## Pass 8: Research Approach Classification
+
+### Purpose
+
+Classify research approach (inductive/deductive/abductive) with expressed vs revealed methodology comparison and HARKing detection.
+
+### Inputs
+
+- extraction.json (complete from Pass 7)
+
+### Process
+
+1. **Detect expressed approach** - What paper explicitly states about its methodology
+2. **Infer revealed approach** - What paper actually does (independent of what it says)
+3. **Compare expressed vs revealed** - Detect HARKing (Hypothesising After Results are Known) or methodological confusion
+4. **Generate classification** with confidence and justification
+
+### Outputs
+
+- classification.json
+
+### References
+
+**Classification guidance:**
+
+- `references/credibility/approach-taxonomy.md` - Definitions of deductive/inductive/abductive approaches, mixed-method characterisation, "none_stated" handling
+- `references/credibility/harking-detection-guide.md` - Expressed vs revealed comparison, mismatch types, assessment integration
+- `references/schema/classification-schema.md` - Complete output structure specification
+
+---
+
+## Pass 9: Credibility Assessment (Quality-Gated)
+
+### Purpose
+
+Assess paper credibility using repliCATS Seven Signals adapted for HASS with approach-specific scoring anchors. Quality-gated workflow ensures assessment viability.
+
+### Inputs
+
+- extraction.json (from Pass 7)
+- classification.json (from Pass 8)
+- metrics.json (if available)
+
+### Process
+
+**Step 1: Track A quality gating** - Determines assessment pathway
+
+- Evaluate extraction quality, metric-signal alignment, classification confidence
+- Output quality_state: "high|moderate|low"
+- Route to appropriate pathway:
+  - **HIGH:** Full assessment with approach-specific anchors, precise scores
+  - **MODERATE:** Caveated assessment with 20-point score bands, warnings
+  - **LOW:** Abort assessment, generate Track A report only
+
+**Step 2: Signal cluster assessment** (if quality ≥ moderate)
+
+- **Cluster 1: Foundational Clarity** (Comprehensibility + Transparency)
+- **Cluster 2: Evidential Strength** (Plausibility + Validity + Robustness)
+- **Cluster 3: Reproducibility & Scope** (Replicability + Generalisability)
+- Apply approach-specific scoring anchors (0-100 scale varies by research approach)
+
+**Step 3: Report generation**
+
+- Synthesise seven signals
+- Apply quality caveats if moderate quality
+- Generate canonical assessment.json for corpus analysis
+
+### Outputs
+
+**If quality_state = "high" or "moderate":**
+
+- `track-a-quality.md` - Quality assessment
+- `cluster-1-foundational-clarity.md` - First cluster assessment
+- `cluster-2-evidential-strength.md` - Second cluster assessment
+- `cluster-3-reproducibility-scope.md` - Third cluster assessment
+- `credibility-report-v1.md` (or `-CAVEATED.md` if moderate)
+- `assessment.json` - Canonical consolidation
+
+**If quality_state = "low":**
+
+- `track-a-only.md` - Quality assessment
+- `assessment-not-viable.md` - Explanation of why assessment aborted
+
+### References
+
+**Credibility assessment guidance:**
+
+- `references/credibility/signal-definitions-hass.md` - Seven Signals with approach-specific scoring anchors (0-100 scale for deductive/inductive/abductive)
+- `references/credibility/assessment-frameworks.md` - Framework selection and signal emphasis by research approach
+- `references/credibility/track-a-quality-criteria.md` - Quality gating decision logic (HIGH/MODERATE/LOW states)
+- `references/schema/assessment-schema.md` - Cluster file and assessment.json structure specifications
+
+### Key Adaptations for HASS
+
+**Replicability = Analytic Reproducibility** (NOT field replication)
+
+- Can others reproduce analytical outputs given same inputs?
+- "Can you re-excavate the site?" (impossible) vs "Can you reproduce the analysis?" (expected)
+
+**Approach-Specific Anchors:**
+
+- Score of 75 on Transparency means different things:
+  - Deductive: Data + code sharing, pre-registration
+  - Inductive: Workflow transparency, sampling documentation
+  - Abductive: Framework clarity, reasoning traceability
+
+**CARE Principles Integration:**
+
+- Indigenous/community data: Appropriate restrictions do NOT penalise Replicability
+- CARE principles (Collective benefit, Authority to control, Responsibility, Ethics) alongside FAIR
 
 ## Important Notes
 
