@@ -1,0 +1,1930 @@
+
+ ▐▛███▜▌   Claude Code v2.0.42
+▝▜█████▛▘  Sonnet 4.5 · Claude Max
+  ▘▘ ▝▝    /home/shawn/Code/llm-reproducibility
+
+> Hi CC, we were just working on reviewing your plan for approaching the 
+interpretation of papers, now that we're happy (for the time being) with 
+extraction and generation of metrics. Unfortunately VS Code crashed in the 
+middle of our discussion, and we lost some work. Can you go back to the 
+latest point possible? We'll also need to start doing more of our planning 
+work in MD documents rather than in chat. 
+
+● I'll help recover our planning discussion. Let me first check what
+  planning documents exist and the recent git history to see what we were
+  working on.
+
+● Bash(git log --oneline --since="1 day ago" -20)
+  ⎿ 1df26c0 feat(assessment): add credibility metrics system and simplify l
+    ocation tracking
+
+
+● Search(pattern: "planning/*.md")
+  ⎿  Found 10 files (ctrl+o to expand)
+
+● Bash(ls -lht planning/ | head -20)
+  ⎿ total 308K                                                             
+    -rw-rw-r-- 1 shawn shawn  39K Nov 16 10:21 active-todo-list.md
+    -rw-rw-r-- 1 shawn shawn  39K Nov 14 18:10 assessment-implementation-pl
+    … +18 lines (ctrl+o to expand)
+
+
+● Now let me check the active todo list and git status to see what was
+  modified but not committed:
+
+● Read(planning/active-todo-list.md)
+  ⎿  Read 850 lines
+
+● Bash(git diff planning/active-todo-list.md)
+  ⎿ diff --git a/planning/active-todo-list.md b/planning/active-todo-list.m
+    d
+    index d280cea..ec2f66b 100644
+    … +122 lines (ctrl+o to expand)
+
+
+● Perfect! I can see we were discussing Task 10.2: Rich Corpus 
+  Interpretation Prompt. Let me check if there are any other recent planning
+   documents that might contain our discussion:
+
+● Search(pattern: "planning/*interpretation*.md")
+  ⎿  Found 0 files 
+
+● Search(pattern: "planning/*analysis*.md")
+  ⎿  Found 3 files (ctrl+o to expand)
+
+● Bash(find planning/ -name "*.md" -mtime -1 -type f)
+  ⎿  planning/active-todo-list.md
+
+● Let me check the extraction-to-analysis-transition document, which sounds
+  like it might be related to our discussion:
+
+● Read(planning/extraction-to-analysis-transition.md)
+  ⎿  Read 1304 lines
+
+● Perfect! I can see we were discussing the interpretation and assessment of
+   the extracted papers. Based on the active-todo-list.md and
+  extraction-to-analysis-transition.md, we were specifically working on Task
+   10.2: Rich Corpus Interpretation Prompt as the next step after completing
+   the credibility metrics system (Phase 6).
+
+  Let me create a planning document to continue our discussion. I'll capture
+   what we've accomplished and frame the next steps for interpretation work:
+
+● Write(planning/corpus-interpretation-framework.md)
+  ⎿  Wrote 554 lines to planning/corpus-interpretation-framework.md        
+     # Corpus Interpretation Framework
+     ## From Metrics to Insights: LLM-Powered Corpus Analysis
+     **Document Purpose:** Design framework for rich interpretation of
+     corpus profile and paper scorecards using LLM analysis
+     **Date Created:** 2025-11-16
+     **Status:** Planning phase - recovering from VS Code crash
+     **Context:** Phase 6 complete (8 credibility metrics implemented),
+     ready for interpretation layer
+     ---
+     … +544 lines (ctrl+o to expand)
+
+● Great! I've recovered our planning work and created a comprehensive
+  framework document for the corpus interpretation layer. Here's where we
+  are:
+
+  Recovery Summary
+
+  What we were working on: Designing the interpretation layer for your
+  credibility metrics system (Task 10.2 from active-todo-list.md)
+
+  Progress recovered:
+  - ✅ Created planning/corpus-interpretation-framework.md - comprehensive
+  planning document
+  - ✅ Captured all four design questions from the active todo list
+  - ✅ Analysed options for each question with recommendations
+  - ✅ Proposed hybrid approach (deterministic pattern detection + LLM
+  interpretation)
+  - ✅ Drafted implementation plan (3 phases, ~12-17 hours total)
+  - ✅ Created initial prompt template structure
+
+  Key design recommendations:
+
+  1. Interpretations: Focus on clustering, correlations, and actionable
+  recommendations
+  2. Architecture: Hybrid - standalone script + optional integration flag
+  3. Output format: Separate interpretation report (allows iteration)
+  4. Approach: Hybrid deterministic + LLM (grounded, reproducible, rich)
+
+  Next Steps
+
+  We have several open questions that need decisions before implementation
+  (Section "Open Questions for Discussion" in the planning doc):
+
+  Critical decisions:
+  - Clustering approach (hierarchical vs k-means)
+  - Number of clusters (fixed vs data-driven)
+  - Outlier threshold
+  - API budget tolerance
+  - Visualisation requirements
+
+  Would you like to:
+
+  1. Continue planning - Work through the open questions and refine the
+  design?
+  2. Start implementation - Begin with Phase 1 (deterministic pattern
+  detection)?
+  3. Review and adjust - Discuss the recommendations and modify the
+  framework?
+
+  Since we're doing more planning work in markdown documents now (as you
+  requested), this framework document provides a solid foundation for
+  continuing our discussion and tracking decisions.
+
+> we need to continue planning, we were in the middle of a conversaton where
+ you posed some very fundamental questions. Let me see what I can remember. 
+First was about the target of evaluation, and I suggested that we should 
+focus on the (extracted infromation) from individual papers not corpora. 
+Second, there was a question about manual prompting versus API use, and I 
+suggested that we continue working utilising your automation ability to the 
+maximuim (bypass permissions on; CLAUDE.md pushing towards autonomous work),
+ which also allows us to collaborate seemlessly on improving the pipeline. 
+Doing so requires us to take advantage of your capabilities to e.g. write 
+and read files, use checklists and plans (in context and written to file and
+ updated), skills, etc. You'd developed varied approaches to inductive, 
+deductive, and absudctive papers, and I'd said that we need to be flexible 
+and work these out over several iterations of extraction and analysis, then 
+we'd discussed who would decide whether a paper is inductive, deducive, or 
+abductive, and I'd said that ultimately you need to, but to be aware that a 
+lot of papers will be mixed method and we need to be flexible. We'd decided 
+to start with 3-5 page summary MD reports while we refine the analysis, 
+rather than full, in-depth 10+ page reports. You'd asked how close to stick 
+to repliCATS analysis approach, and I'd said that ideally we'd follow it 
+closely enough to reproduce their analysis on their corpus as a test of our 
+system (since we'd have an external referent to judge our success against). 
+Oh, a *crucial* decision was that we were going to separate out (a) analysis
+ of the extraction and metric quality / discriminatory power / utility, 
+versus (b) analysis of paper credibility itself, then we'd discussed how the
+ definition of 'credibility' needed to vary by approach (inductive, 
+deductive, abductive) and possibly domain, hense the discussion noted above 
+about determining approach. It was a great conversation and I'm sorry we 
+lost it before I could do an export! Can you start reconstructing where we 
+were at taking this response into consideration, and asking follow-up 
+questions as we develop our plan? 
+
+● Excellent! This is incredibly helpful context. Let me reconstruct our
+  conversation and create a proper planning document that captures these
+  fundamental decisions.
+
+● Write(planning/paper-credibility-analysis-framework.md)
+  ⎿  Wrote 509 lines to planning/paper-credibility-analysis-framework.md   
+     # Paper Credibility Analysis Framework
+     ## Individual Paper Assessment with Research Approach Flexibility
+     **Document Purpose:** Framework for assessing individual paper
+     credibility with approach-specific (inductive/deductive/abductive)
+     criteria
+     **Date Created:** 2025-11-16 (reconstructed after VS Code crash)
+     **Status:** Planning phase - fundamental design decisions
+     **Phase:** Post-metrics implementation, pre-interpretation deployment
+     ---
+     … +499 lines (ctrl+o to expand)
+
+● Perfect! I've reconstructed our discussion and created a comprehensive
+  planning framework that captures all the fundamental decisions we made.
+  Here's what I've documented:
+
+  Key Decisions Captured
+
+  1. ✅ Individual papers as assessment target (not corpus aggregates)
+  2. ✅ Maximum Claude automation (autonomous workflow, not API scripts)
+  3. ✅ Research approach flexibility
+  (inductive/deductive/abductive-specific criteria)
+  4. ✅ 3-5 page summary reports first (iterate before detailed 10+ page
+  reports)
+  5. ✅ RepliCATS alignment (close enough to reproduce their analysis as
+  validation)
+  6. ✅ TWO-TRACK analysis (extraction quality vs paper credibility -
+  CRITICAL separation)
+  7. ✅ Approach-specific credibility definitions (domain and approach
+  variation)
+
+  Critical Path Forward
+
+  I've identified 20 follow-up questions organized into 5 priority areas. To
+   move forward efficiently, I've pulled out the 7 most critical questions
+  that need your domain expertise:
+
+  Questions for You (Priority 1-2):
+
+  Research Approach Classification:
+
+  Q1: When should Claude classify the research approach?
+  - A) During extraction (Pass 0 planning)
+  - B) After extraction complete (based on extracted RDMAP)
+  - C) During credibility assessment (first analytical step)
+
+  Q2: Classification method - explicit rubric or contextual inference?
+  - Rubric: "If hypothesis stated + statistical tests → deductive"
+  - Contextual: Claude reads research designs, methods, claims and infers
+  approach
+
+  Q3: Mixed-method representation?
+  - "Primarily inductive with deductive validation"
+  - Percentage allocation (60% inductive, 40% deductive)
+  - Section-specific (Methods: deductive, Discussion: abductive)
+
+  Approach-Specific Frameworks:
+
+  Q5: Signal weighting approach?
+  - Explicit numeric weights (Validity=25%, Robustness=25% for deductive)
+  - Qualitative emphasis ("Validity is PRIMARY for deductive research")
+  - No explicit weighting (narrative determines importance)
+
+  Q6: Rubric granularity?
+  - 7 universal rubrics (one per signal, adapted in assessment)
+  - 21 specific rubrics (7 signals × 3 approaches)
+
+  Q7: Assessment comprehensiveness?
+  - Always assess all seven signals (some marked N/A or de-emphasised)
+  - Assess only relevant 4-5 signals per approach
+
+  Would you like to work through these questions, or would you prefer I
+  propose answers based on the broader archaeological research context and
+  we refine from there?
+
+> The research approach questions are important. (1) do you have a sense of 
+when extraction would be most efficient and accurate? I can see advantages 
+and disadvantages of each of your suggestions. Let me know what you think, 
+or if you're unsure let's articulate the trade-offs. (2) I think that 
+ultimately 'Contextual: Claude reads research designs, methods, claims and 
+infers approach' will be necessary - one exercise here that might be useful 
+would be to compare (a) what the paper states is the approach or what is 
+strongly implied by RD elements versus (b) what the paper is actually doing,
+ i.e., expressed approach versus revealed approach, which would help 
+identify HARKing (esp. unintentional). A rubric might be helpful, but 
+ultimately the revealed approach will need to be determined contextually 
+using your NLP ability. (Q3) regarding mixed-method papers, identify all 
+methods both expressed and revealed, and provide whatever qualifications / 
+specifications you can (e.g., 'overall, the paper is inductive in nature, 
+but the results include a reproducible statistical analysis') - we'll need 
+to work this out iteratively as we examine more papers. I'd avoid 
+inappropriate attempts at precision, e.g., percentage of each approach, I 
+don't think it will be that clear-cut. (Q5) let's focus on 'narrative 
+determines importance' but experimanet with percentage weightings. (Q6) I 
+think we'll have to develop this empirically / iteratively, let's work on 
+that across this corpus. (Q7) again, we'll see what's relevant, we should 
+attempt all sevel signals where possible to maintain repliCATS compatibility
+ - we will be attempting to replicate their results. Note that if necessary 
+we can fork our work for a 'repliCATS specific' implementation, but let's 
+see if we can build a system robust and flexible enough to handle the 
+repliCATS corpus / approach but also extend beyond it to other HASS papers. 
+What do you think? Are these reasonable starting points? Push back as 
+necessary. 
+
+● These are excellent starting points and your reasoning is sound. Let me
+  think through Q1 (timing of approach classification) since you asked for
+  my assessment, then respond to your other decisions.
+
+  Q1: Timing of Research Approach Classification
+
+  Let me articulate the trade-offs:
+
+  Option A: During Pass 0 (Planning Phase)
+  - Advantages:
+    - Could theoretically inform extraction strategy (extract different
+  elements based on approach)
+    - Early awareness of paper's nature
+  - Disadvantages:
+    - Pass 0 only sees abstract, introduction, section headings -
+  insufficient evidence
+    - Risks premature classification based on stated vs revealed approach
+    - Adds complexity to already-heavy Pass 0
+    - Would need to re-classify later anyway if stated ≠ revealed
+  - My assessment: Too early, insufficient evidence
+
+  Option B: After Extraction (Before Assessment)
+  - Advantages:
+    - Full RDMAP available (research designs, methods, protocols extracted)
+    - Claims and evidence patterns visible (hypothesis-testing vs
+  pattern-finding)
+    - Can compare stated approach (from intro) vs revealed approach (from
+  RDMAP)
+    - Doesn't add cognitive load to extraction passes
+    - Clean separation: extract → classify → assess
+  - Disadvantages:
+    - Requires separate classification pass/step
+    - Slightly more process overhead
+  - My assessment: This is optimal - best evidence, clean workflow
+  separation
+
+  Option C: During Assessment (First Analytical Step)
+  - Advantages:
+    - Classification and assessment tightly coupled
+    - Can adjust classification as assessment proceeds
+    - Maximum flexibility
+  - Disadvantages:
+    - Classification becomes implicit, not explicit/documented
+    - Harder to validate classification separately
+    - Mixes two analytical tasks (classify + assess)
+    - Harder to track classification decisions across corpus
+  - My assessment: Too coupled, loses explicit classification record
+
+  Recommendation: Option B - After extraction, before assessment. This gives
+   us:
+  - Full evidence from extraction (stated approach in intro + revealed
+  approach in RDMAP)
+  - Explicit classification step we can validate and refine
+  - Clean analytical separation
+  - Documented classification with justification
+
+  Implementation: Add "Pass 6.5" or integrate into Pass 7 validation as
+  first step: "Classify research approach based on extracted RDMAP, claims
+  structure, and explicit statements"
+
+  ---
+  Response to Your Decisions
+
+  Q2 (Contextual inference with HARKing detection):
+  Brilliant insight about expressed vs revealed approach! This is
+  methodologically sophisticated and would be genuinely valuable.
+
+  Proposed approach:
+  ## Research Approach Classification (Pass 6.5 or early Pass 7)
+
+  ### Step 1: Extract Expressed Approach
+  - What does the paper SAY it's doing?
+  - Keywords: "we hypothesised", "exploratory study", "to explain",
+  "grounded theory"
+  - Research design statements (from extracted RDMAP)
+
+  ### Step 2: Determine Revealed Approach
+  - What is the paper ACTUALLY doing?
+  - Evidence from:
+    - Claims structure (hypothesis-framed? pattern-descriptive?
+  explanatory?)
+    - Methods (statistical testing? qualitative coding? inference patterns?)
+    - Evidence-claim relationships (confirmatory? exploratory?)
+
+  ### Step 3: Compare and Flag Discrepancies
+  - Alignment: Expressed matches revealed (good!)
+  - Partial mismatch: Note mixed methods
+  - Clear mismatch: Flag potential HARKing or methodological confusion
+
+  ### Output:
+  - Primary approach (revealed)
+  - Expressed approach (if different)
+  - Mixed-method qualifications
+  - HARKing risk flag (if expressed ≠ revealed)
+
+  This addresses your point about unintentional HARKing beautifully - many
+  researchers describe their work using conventional framings (especially
+  for high-prestige journals) that don't match what they actually did.
+
+  ---
+  Q3 (Mixed-method flexibility):
+  Completely agree - avoid false precision. Your formulation "overall
+  inductive, but includes reproducible statistical analysis" is exactly
+  right.
+
+  Implementation thought: Use structured but qualitative format:
+  approach_classification:
+    primary_approach: "inductive"
+    qualifications:
+      - "Includes confirmatory statistical analysis of survey patterns"
+      - "Stratigraphic interpretation follows abductive reasoning"
+    expressed_approach: "hypothesis-testing" # if different
+    expressed_vs_revealed: "mismatch"
+    justification: "Paper frames research as testing hypotheses about 
+  settlement patterns, but actual research design is exploratory survey with
+   post-hoc statistical description of observed patterns. No a priori 
+  hypotheses stated in methods."
+
+  We'll refine this structure as we see what real papers need.
+
+  ---
+  Q5 (Narrative importance + experimental weights):
+  Smart hybrid. We can document experimental weightings in our
+  planning/notes to see if patterns emerge, but let narrative drive actual
+  assessment. This gives us:
+  - Flexibility for edge cases
+  - Data to evaluate whether explicit weights would help
+  - No premature precision
+
+  Implementation: In assessment prompts, include guidance like "For
+  deductive research, validity and robustness are particularly critical" but
+   don't enforce numeric weights. Track whether we naturally gravitate
+  toward certain weightings.
+
+  ---
+  Q6 (Empirical rubric development):
+  Agreed - let's discover what we need rather than over-engineer upfront.
+  Start with 7 universal rubrics, annotate where approach-specific
+  interpretation needed, fork into separate rubrics if distinctions become
+  systematic.
+
+  Tracking mechanism: Use TodoWrite or planning doc to note "Validity
+  assessment differed substantially for inductive vs deductive - consider
+  separate rubrics after 5 more papers"
+
+  ---
+  Q7 (Assess all seven signals for repliCATS compatibility):
+  This is the right call. Assessing all seven even if some are N/A or
+  de-emphasised:
+  - Maintains comparability across papers
+  - Enables repliCATS validation
+  - Allows us to discover which signals matter for which approaches
+  empirically
+  - Future flexibility (can fork to HASS-specific subset later if needed)
+
+  Your point about building a system "robust enough for repliCATS but
+  extensible beyond" is exactly the right architectural principle.
+
+  ---
+  Synthesis: Are These Reasonable Starting Points?
+
+  Yes, with one strong recommendation:
+
+  Your decisions create a flexible, empirically-driven, iterative framework
+  that:
+  - ✅ Avoids premature precision
+  - ✅ Builds in validation mechanisms (expressed vs revealed)
+  - ✅ Maintains repliCATS compatibility while allowing extension
+  - ✅ Learns from data rather than imposing rigid structure
+  - ✅ Acknowledges HASS research complexity (mixed methods,
+  context-dependence)
+
+  My one recommendation: Option B for Q1 (classify after extraction, before
+  assessment) for the reasons articulated above.
+
+  ---
+  Next Planning Questions
+
+  Given your answers, here are the next critical decisions we need:
+
+  Track A vs Track B Workflow (Questions 8-10)
+
+  Q8: For Track A (extraction quality assessment), what's the minimum viable
+   approach?
+  - Option A: Sample validation (manually review 2-3 extractions per batch,
+  check accuracy)
+  - Option B: Automated consistency checks (same paper extracted twice,
+  compare results)
+  - Option C: Metric-based quality indicators (relationship density,
+  completeness scores as proxy)
+  - Option D: Deferred until we have external ground truth (repliCATS
+  corpus)
+
+  My thought: Start with Option C (use existing metrics as quality proxies),
+   add Option A (manual spot-checking) for high-stakes papers, plan Option D
+   (repliCATS validation) for systematic evaluation.
+
+  Q9: When do we transition from Track A (validating extraction) to Track B 
+  (trusting extraction for credibility assessment)?
+  - After validating 3 papers? 5? 10?
+  - Or run both tracks in parallel (always assess extraction quality + paper
+   credibility)?
+
+  My thought: Run both tracks in parallel initially, but reduce Track A
+  overhead as confidence builds. First 3-5 papers: heavy Track A validation.
+   Papers 6-10: spot-checking. Beyond 10: Track A on new paper types only.
+
+  Q10: What extraction quality threshold is required before credibility
+  assessment is meaningful?
+  - Must-have: Claims, evidence, major RDMAP elements accurate
+  - Tolerable errors: Minor granularity differences, some relationship
+  mapping gaps
+  - Deal-breakers: Missing entire sections, misclassified items, fabricated
+  content
+
+  My thought: We probably already meet threshold for most extractions
+  (schema v2.5 is mature), but should explicitly validate 2-3 papers before
+  trusting the rest.
+
+  ---
+  RepliCATS Research and Alignment (Questions 11-13)
+
+  Q11: Do you know where to find detailed repliCATS methodology?
+  - Public dataset of assessed papers with scores?
+  - Published rubrics/training materials?
+  - IDEA protocol documentation?
+
+  Action needed: I can search for repliCATS publications and documentation.
+  Should I do this now or defer until we've built initial assessment
+  capability?
+
+  Q12: Do we want to identify repliCATS-assessed papers NOW (to inform our
+  development) or LATER (after our system is built, for validation)?
+
+  My thought: Later might be better - avoid inadvertent fitting to their
+  specific corpus. Build our system on archaeological papers, then test on
+  their corpus as true external validation.
+
+  ---
+  Proposed Immediate Next Steps
+
+  Based on your decisions, here's what I suggest:
+
+  Step 1: Document classification framework (30 min)
+  - Formalize expressed vs revealed approach detection
+  - Create classification output schema
+  - Draft classification guidance for Pass 6.5/7
+
+  Step 2: Draft universal signal rubrics (2-3 hours)
+  - Create 7 rubrics (one per repliCATS signal)
+  - Include approach-specific interpretation notes
+  - Flag where we expect differentiation to emerge
+
+  Step 3: Build research approach classifier (1-2 hours)
+  - Test on 2-3 diverse papers from current corpus
+  - Validate expressed vs revealed detection
+  - Refine classification schema
+
+  Step 4: Pilot single-paper credibility assessment (2-3 hours)
+  - Choose well-extracted paper (sobotkova-et-al-2024?)
+  - Run full seven-signal assessment
+  - Generate 3-5 page summary report
+  - Identify gaps and refinements needed
+
+  Step 5: Iterate (ongoing)
+  - Test on 2-3 more diverse papers
+  - Refine rubrics and prompts
+  - Build empirical understanding of approach-specific patterns
+
+  Total estimated effort for Steps 1-4: 6-9 hours
+  Timeline: Could complete Steps 1-3 this week, Step 4 early next week
+
+  ---
+  Questions for You
+
+  1. Does Option B (classify after extraction) work for you? Any concerns I
+  haven't considered?
+  2. Track A workflow: Thoughts on Q8-Q10? Should we do heavy validation
+  before any credibility assessment, or run both tracks in parallel?
+  3. RepliCATS research timing: Should I search for their methodology/corpus
+   now, or build our system first and validate later?
+  4. Immediate implementation: Does Steps 1-5 roadmap make sense? Would you
+  prefer different sequencing?
+  5. Test papers: Which papers should we use for initial testing?
+    - sobotkova-et-al-2024 (recent, well-extracted, archaeological survey)
+    - ballsun-stanton-et-al-2018 (software/methods paper, different genre)
+    - penske-et-al-2023 (genomics, high FAIR, different domain)
+
+  One of each approach type? Or start with best-extracted regardless of
+  approach?
+
+> Option B works for me. Note that when determining 'expressed method', if 
+*no* method is expressed, that's important too (demonstartes a certain 
+niaivete / unsophistication / weak research design), so keep that as an 
+options rather than straining to find  an expressed method where there isn't
+ one. (Q8) we need to ultimately build this self-assessment into our 
+workflow, so that we have a continuous improvement approach, noting that you
+ and I are the audience for this analysis - I'm flexible about how we do 
+that, I'd doi it alongside the evaluation of the paper credibility itself, 
+or as a preliminary step. (q9) run both in parallel, it's continual 
+improvement, and feedback between the two will be important. Agree we can 
+reduce self-assessment overhead over time, working towards only minimal, 
+routine quality monitoring. (Q10) I agree that we already meet minimum 
+quality thresholds, now we focus on improvement until we are satisfied. 
+(Q11) in 'background-research' you'll find a repliCATS report - please let 
+me know if that's insufficient. (Q12) we need to continue a little longer 
+before we get access to the corpus, I'd like a complete tool tested on the 
+10-11 papers we have first. I also agree that it's desirable that we not fit
+ to that corpus too soon. I agree with your overall approach, let's just be 
+sure to keep it well documented and organised. 
+
+● Excellent - these decisions create a clear path forward. Let me address
+  your points and then propose a concrete implementation plan.
+
+● Search(pattern: "docs/background-research/*repliCATS*")
+  ⎿  Found 2 files (ctrl+o to expand)
+
+● Search(pattern: "docs/background-research/*.md")
+  ⎿  Found 6 files (ctrl+o to expand)
+
+● Perfect! Let me review the repliCATS documentation:
+
+● Read(docs/background-research/replicats-report.md)
+  ⎿  Read 168 lines
+
+● Read(docs/background-research/replicats-seven-signals-hass-adaptation.md)
+  ⎿  Read 478 lines
+
+● Excellent! The repliCATS documentation is comprehensive and sufficient.
+  Let me update the todo and continue with implementation planning:
+
+● Perfect! The repliCATS documentation is comprehensive. Now let me create a
+   research approach classification framework that incorporates your key
+  point about "no expressed method" being significant:
+
+● Write(planning/research-approach-classification-framework.md)
+  ⎿  Wrote 485 lines to                                                    
+     planning/research-approach-classification-framework.md
+     # Research Approach Classification Framework
+     ## Expressed vs Revealed Methodology with HARKing Detection
+     **Document Purpose:** Framework for classifying research approach
+     (inductive/deductive/abductive) with awareness of stated vs actual
+     methodology
+     **Date Created:** 2025-11-16
+     **Status:** Implementation-ready framework
+     **Phase:** Pre-credibility assessment (Pass 6.5 or early Pass 7)
+     ---
+     … +475 lines (ctrl+o to expand)
+
+● Excellent! Now let me create a concise implementation roadmap document
+  that synthesises everything and proposes immediate next steps:
+
+● Write(planning/credibility-assessment-implementation-roadmap.md)
+  ⎿  Wrote 438 lines to                                                    
+     planning/credibility-assessment-implementation-roadmap.md
+     # Credibility Assessment Implementation Roadmap
+     ## From Metrics to Individual Paper Credibility Reports
+     **Document Purpose:** Concrete implementation plan for building
+     credibility assessment capability
+     **Date Created:** 2025-11-16
+     **Status:** Implementation-ready roadmap
+     **Estimated Total Effort:** 15-20 hours for initial capability
+     ---
+     … +428 lines (ctrl+o to expand)
+
+● Perfect! Now let me update the todo list and summarise where we are:
+
+● Excellent! We've successfully recovered from the VS Code crash and made
+  substantial progress. Here's where we are:
+
+  Planning Phase Complete ✅
+
+  Documents Created (All in Planning)
+
+  1. paper-credibility-analysis-framework.md (14KB)
+    - Fundamental design decisions captured
+    - 20 follow-up questions organised by priority
+    - Two-track analysis framework (Track A vs Track B)
+    - Approach-specific credibility definitions
+  2. research-approach-classification-framework.md (16KB)
+    - Complete classification methodology
+    - Expressed vs revealed approach comparison
+    - HARKing detection framework
+    - "None stated" significance (your critical point)
+    - Implementation-ready specifications
+  3. credibility-assessment-implementation-roadmap.md (13KB)
+    - 5-phase implementation plan (17-24 hours total)
+    - Immediate next steps (Priority 1-3 this week)
+    - Track A integration (continuous quality monitoring)
+    - Success criteria and future enhancements
+
+  Key Decisions Documented
+
+  All your decisions are now captured:
+  - ✅ Option B for classification timing (after extraction)
+  - ✅ "No expressed method" as significant indicator
+  - ✅ Contextual inference with NLP capabilities
+  - ✅ Qualitative mixed-method characterisation (no false precision)
+  - ✅ Narrative importance + experimental weights
+  - ✅ Empirical rubric development across corpus
+  - ✅ Assess all seven signals (repliCATS compatibility)
+  - ✅ Parallel Track A/B with reducing overhead
+  - ✅ Build complete tool before repliCATS corpus access
+
+  Ready for Implementation
+
+  Immediate Next Steps (3-4 Hours This Week)
+
+  Priority 1: Build research approach classifier
+  - Create classification prompt
+  - Test on 3 papers (sobotkova, ballsun-stanton, penske)
+  - Generate classification.json outputs
+
+  Priority 2: Draft transparency rubric
+  - First of seven signal rubrics
+  - Most critical for HASS research
+
+  Priority 3: End-to-end proof of concept
+  - Classify + assess one signal on one paper
+  - Validate workflow works
+
+  Questions for You
+
+  1. Implementation start: Should I proceed with Priority 1 (building the
+  research approach classifier) now, or do you want to review the planning
+  documents first?
+  2. Test papers: Confirm the 3 papers for testing classifier:
+    - sobotkova-et-al-2024 (inductive survey)
+    - ballsun-stanton-et-al-2018 (software/methods paper)
+    - penske-et-al-2023 (deductive genomics)
+
+  Are these good representatives?
+  3. Rubric approach: Should I draft the transparency rubric based on the
+  repliCATS guidance, or would you like to collaborate on that more
+  directly?
+
+  All planning is now well-documented and organised - we can reference these
+   documents as we build, and they'll serve as our persistent record even if
+   we have more VS Code crashes!
+
+> can you update paper-credibility-analysis-framework.md with the answers to
+ the questions that we've discussed? Also, if you want to ask the final 
+questions here, I'll answer them. 
+
+● Read(planning/paper-credibility-analysis-framework.md)
+  ⎿  Read 100 lines
+
+● Update(planning/paper-credibility-analysis-framework.md)
+  ⎿  Updated planning/paper-credibility-analysis-framework.md with 74      
+     additions and 27 removals
+       203    
+       204    ---
+       205    
+       206 -  ## Reconstructed Discussion Points: Follow-Up Questions
+       206 +  ## Area 1: Research Approach Classification ✅ DECIDED
+       207    
+       208 -  Based on your recollection, here are the key areas we need 
+           - to develop further:
+       209 -  
+       210 -  ### Area 1: Research Approach Classification
+       211 -  
+       208    **What we decided:**
+       209    - Claude determines approach during analysis
+       210    - Flexibility for mixed-method papers
+       211    - Iterate classification heuristics
+       212    
+       213 -  **Questions for development:**
+       213 +  **Decisions made:**
+       214    
+       215 -  1. **Classification trigger point:** When does Claude 
+           - classify approach?
+       216 -     - **Option A:** During Pass 0 (planning phase) - inform 
+           - extraction strategy
+       217 -     - **Option B:** After extraction complete - classify 
+           - based on extracted RDMAP
+       218 -     - **Option C:** During credibility assessment - classify
+           -  as first step
+       215 +  ### Q1: Classification Trigger Point ✅
+       216    
+       217 -     **Initial thought:** Option B or C? Pass 0 already 
+           - complex; approach classification uses extracted research 
+           - designs.
+       217 +  **Decision: Option B - After extraction complete (Pass 6.5 
+           + or early Pass 7)**
+       218    
+       219 -  2. **Classification evidence:** What signals indicate 
+           - approach?
+       220 -     - Research design keywords (exploratory, confirmatory, 
+           - hypothesis, survey, grounded theory, case study)
+       221 -     - Methods characteristics (statistical testing = 
+           - deductive? qualitative coding = inductive?)
+       222 -     - Explicit statements in paper (rare but gold standard)
+       223 -     - Claims structure (hypothesis-framed vs 
+           - pattern-discovery vs explanatory)
+       219 +  **Rationale:**
+       220 +  - Full evidence available from extraction (RDMAP, claims, 
+           + methods, evidence)
+       221 +  - Can compare stated approach (from introduction) vs 
+           + revealed approach (from actual research)
+       222 +  - Doesn't add cognitive load to extraction passes
+       223 +  - Clean separation: extract → classify → assess
+       224 +  - Optimal balance of evidence availability and workflow 
+           + clarity
+       225    
+       226 -     **Question:** Should we develop a classification rubric 
+           - or let Claude infer contextually?
+       226 +  **Implementation:** Add classification step between Pass 6 
+           + (infrastructure) and Pass 7 (validation), or integrate as 
+           + first step of credibility assessment in Pass 7.
+       227    
+       228 -  3. **Mixed-method handling:** How to represent mixed 
+           - approaches?
+       229 -     - **Option A:** Primary + secondary (e.g., "primarily 
+           - inductive with deductive validation")
+       230 -     - **Option B:** Percentage allocation (60% inductive, 
+           - 40% deductive)
+       231 -     - **Option C:** Section-by-section (intro: abductive, 
+           - methods: deductive, discussion: inductive)
+       228 +  ---
+       229    
+       230 -     **Question:** Which best reflects archaeological 
+           - research reality?
+       230 +  ### Q2: Classification Evidence and Method ✅
+       231    
+       232 -  4. **Approach classification validation:** How do we know 
+           - we got it right?
+       233 -     - Compare to authors' stated approach (when available)
+       234 -     - Expert review of classifications (archaeologist 
+           - validates sample)
+       235 -     - Cross-paper consistency (similar papers = similar 
+           - classifications?)
+       232 +  **Decision: Contextual inference using Claude's NLP 
+           + capabilities**
+       233    
+       234 -     **Question:** Validation strategy?
+       234 +  **Approach:**
+       235 +  - **Primary:** Claude reads research designs, methods, 
+           + claims and infers approach contextually
+       236 +  - **Supporting:** Use classification rubric as guidance, 
+           + not rigid rules
+       237 +  - **Critical addition:** Distinguish **expressed approach**
+           +  (what paper says) vs **revealed approach** (what paper 
+           + actually does)
+       238 +  - **HARKing detection:** Flag mismatches between expressed 
+           + and revealed approaches
+       239 +  - **"None stated" significance:** If no methodological 
+           + approach is stated, document this explicitly as indicator of
+           +  methodological naivete/weak research design
+       240    
+       241 +  **Evidence sources:**
+       242 +  - Explicit statements (research design declarations)
+       243 +  - Research designs extracted in RDMAP
+       244 +  - Methods characteristics and application
+       245 +  - Claims structure (hypothesis-framed, pattern-descriptive,
+           +  explanatory)
+       246 +  - Evidence-claim relationships
+       247 +  
+       248 +  **Special handling:** "No expressed method" is 
+           + **significant information**, not something to strain to 
+           + find. Document absence explicitly and note transparency 
+           + implications.
+       249 +  
+       250    ---
+       251    
+       252 +  ### Q3: Mixed-Method Handling ✅
+       253 +  
+       254 +  **Decision: Qualitative characterisation, avoid false 
+           + precision**
+       255 +  
+       256 +  **Approach:**
+       257 +  - Use "primary + secondary" labelling with qualitative 
+           + descriptions
+       258 +  - **Example:** "Primarily inductive exploratory survey with
+           +  confirmatory statistical analysis of observed patterns"
+       259 +  - Avoid percentage precision (e.g., "60% inductive") - 
+           + implies false precision
+       260 +  - Provide qualifications and specifications as needed
+       261 +  - Work out representation iteratively across corpus
+       262 +  
+       263 +  **Format:**
+       264 +  ```yaml
+       265 +  primary_approach: "inductive"
+       266 +  qualifications:
+       267 +    - "Overall inductive survey design"
+       268 +    - "Includes reproducible statistical analysis of observed
+           +  patterns"
+       269 +    - "Statistical tests are post-hoc validation, not a 
+           + priori hypotheses"
+       270 +  ```
+       271 +  
+       272 +  **Rationale:** Archaeological research often genuinely 
+           + mixed; rigid categorisation inappropriate; qualitative 
+           + description more accurate and honest.
+       273 +  
+       274 +  ---
+       275 +  
+       276 +  ### Q4: Approach Classification Validation ✅
+       277 +  
+       278 +  **Decision: Iterative empirical validation across corpus**
+       279 +  
+       280 +  **Approach:**
+       281 +  - Develop and refine classification heuristics iteratively 
+           + as we classify more papers
+       282 +  - Document classification patterns and edge cases
+       283 +  - Compare to authors' stated approach when available (but 
+           + don't assume author is correct)
+       284 +  - Expert review where feasible (but acknowledge we're 
+           + testing our system, not deferring to authority)
+       285 +  - Build empirical understanding through corpus application
+       286 +  
+       287 +  **Validation strategy:**
+       288 +  - Work it out iteratively across 10-11 paper corpus
+       289 +  - Document difficult cases and resolution logic
+       290 +  - Refine classification framework based on empirical 
+           + experience
+       291 +  - Accept that classification involves interpretation and 
+           + judgment
+       292 +  
+       293 +  **Note:** We'll see what's relevant and what works as we 
+           + apply the framework - empirical development preferred over 
+           + theoretical specification.
+       294 +  
+       295 +  ---
+       296 +  
+       297    ### Area 2: Approach-Specific Assessment Frameworks
+       298    
+       299    **What we decided:**
+
+● Update(planning/paper-credibility-analysis-framework.md)
+  ⎿  Updated planning/paper-credibility-analysis-framework.md with 57      
+     additions and 15 removals
+       294    
+       295    ---
+       296    
+       297 -  ### Area 2: Approach-Specific Assessment Frameworks
+       297 +  ## Area 2: Approach-Specific Assessment Frameworks
+           +   ✅ DECIDED
+       298    
+       299    **What we decided:**
+       300    - Different credibility criteria for different approaches
+       301    - Seven signals weighted differently by approach
+       302    - Flexible definitions of credibility
+       303    
+       304 -  **Questions for development:**
+       304 +  **Decisions made:**
+       305    
+       306 -  5. **Signal weighting by approach:** Should we use explicit
+           -  weights or qualitative emphasis?
+       307 -     - **Option A:** Numeric weights (Deductive: 
+           - Validity=25%, Robustness=25%, Replicability=20%, others=30%)
+       308 -     - **Option B:** Qualitative emphasis ("Validity and 
+           - Robustness are PRIMARY signals for deductive research")
+       309 -     - **Option C:** No explicit weighting, let assessment 
+           - narrative determine importance
+       306 +  ### Q5: Signal Weighting by Approach ✅
+       307    
+       308 -     **Question:** How prescriptive should we be?
+       308 +  **Decision: Narrative determines importance + experimental 
+           + percentage weights**
+       309    
+       310 -  6. **Approach-specific rubrics:** Do we need separate 
+           - rubrics for each signal × approach combination?
+       311 -     - Example: "Validity for deductive research" vs 
+           - "Validity for inductive research" vs "Validity for abductive
+           -  research"
+       312 -     - Or: Universal validity rubric with approach-specific 
+           - interpretation guidance?
+       310 +  **Approach:**
+       311 +  - **Primary:** Let narrative assessment determine signal 
+           + importance naturally
+       312 +  - **Guidance:** Include qualitative emphasis in prompts 
+           + (e.g., "For deductive research, validity and robustness are 
+           + particularly critical")
+       313 +  - **Experimental:** Track/document percentage weightings in
+           +  planning notes to see if patterns emerge
+       314 +  - **No enforcement:** Don't enforce numeric weights in 
+           + actual assessment
+       315 +  - **Flexibility:** Allows edge case handling and nuanced 
+           + judgment
+       316    
+       317 -     **Question:** 7 rubrics (one per signal) or 21 rubrics 
+           - (7 signals × 3 approaches)?
+       317 +  **Rationale:**
+       318 +  - Avoids premature precision
+       319 +  - Provides data to evaluate whether explicit weights would 
+           + help
+       320 +  - Maintains flexibility for complex cases
+       321 +  - Can discover natural weightings empirically
+       322    
+       323 -  7. **Assessment comprehensiveness:** Should all seven 
+           - signals be assessed regardless of approach?
+       324 -     - **Option A:** Assess all seven always (some marked N/A
+           -  or de-emphasised)
+       325 -     - **Option B:** Assess only relevant signals per 
+           - approach (4-5 signals per paper)
+       323 +  **Implementation:** Assessment prompts include emphasis 
+           + guidance, but scores determined by evidence, not formula.
+       324    
+       325 -     **Question:** Comprehensiveness vs focus trade-off?
+       325 +  ---
+       326    
+       327 +  ### Q6: Approach-Specific Rubrics ✅
+       328 +  
+       329 +  **Decision: Develop empirically - start with 7 universal 
+           + rubrics, fork if needed**
+       330 +  
+       331 +  **Approach:**
+       332 +  - **Initial:** Create 7 universal rubrics (one per signal)
+       333 +  - **Include:** Approach-specific interpretation notes 
+           + within each rubric
+       334 +  - **Monitor:** Track where approach-specific assessment 
+           + substantially differs
+       335 +  - **Fork if needed:** Create separate rubrics only if 
+           + distinctions become systematic and substantial
+       336 +  - **Iterate:** Work this out across corpus over multiple 
+           + papers
+       337 +  
+       338 +  **Rationale:**
+       339 +  - Avoid over-engineering upfront
+       340 +  - Discover genuine needs through application
+       341 +  - Start simple, add complexity only when empirically 
+           + justified
+       342 +  - 7 rubrics more maintainable than 21
+       343 +  
+       344 +  **Tracking mechanism:** Use planning docs to note "Validity
+           +  assessment differed substantially for inductive vs 
+           + deductive - consider separate rubrics after 5 more papers"
+       345 +  
+       346    ---
+       347    
+       348 +  ### Q7: Assessment Comprehensiveness ✅
+       349 +  
+       350 +  **Decision: Assess all seven signals for repliCATS 
+           + compatibility**
+       351 +  
+       352 +  **Approach:**
+       353 +  - **Always assess all seven signals** (maintaining 
+           + cross-paper comparability)
+       354 +  - **Mark N/A where appropriate** (e.g., replicability N/A 
+           + for purely theoretical papers)
+       355 +  - **De-emphasise** non-primary signals in narrative (but 
+           + still score them)
+       356 +  - **Maintain repliCATS structure** to enable future 
+           + validation against their corpus
+       357 +  
+       358 +  **Rationale:**
+       359 +  - Enables repliCATS validation (our key external benchmark)
+       360 +  - Maintains comparability across papers in corpus
+       361 +  - Allows empirical discovery of which signals matter for 
+           + which approaches
+       362 +  - Future flexibility - can fork to HASS-specific subset 
+           + later if needed
+       363 +  - Building system "robust enough for repliCATS but 
+           + extensible beyond" (architectural principle)
+       364 +  
+       365 +  **Note:** Goal is to replicate repliCATS analysis on their 
+           + corpus as test of our system, so need structural 
+           + compatibility.
+       366 +  
+       367 +  ---
+       368 +  
+       369    ### Area 3: Two-Track Analysis Workflow
+       370    
+       371    **What we decided:**
+
+● Update(planning/paper-credibility-analysis-framework.md)
+  ⎿  Updated planning/paper-credibility-analysis-framework.md with 64      
+     additions and 18 removals
+       366    
+       367    ---
+       368    
+       369 -  ### Area 3: Two-Track Analysis Workflow
+       369 +  ## Area 3: Two-Track Analysis Workflow ✅ DECIDED
+       370    
+       371    **What we decided:**
+       372    - Separate extraction quality assessment from paper 
+             credibility assessment
+       373    - Track A (system evaluation) informs Track B (paper 
+             evaluation)
+       374    
+       375 -  **Questions for development:**
+       375 +  **Decisions made:**
+       376    
+       377 -  8. **Track A workflow:** How do we assess extraction 
+           - quality?
+       378 -     - Manual review of sample extractions vs gold standard?
+       379 -     - Cross-paper consistency checks (same concepts = same 
+           - extractions)?
+       380 -     - Inter-rater reliability (multiple extractions of same 
+           - paper)?
+       381 -     - Metric correlation with expected patterns?
+       377 +  ### Q8: Track A Workflow ✅
+       378    
+       379 -     **Question:** What's the **minimum viable** Track A 
+           - assessment? (We can't do extensive validation on every 
+           - paper)
+       379 +  **Decision: Metric-based quality proxies + spot-checking, 
+           + built into workflow as self-assessment**
+       380    
+       381 -  9. **Track A → Track B handoff:** At what point do we trust
+           -  extractions enough to assess credibility?
+       382 -     - After 3 papers validated? 5? 10?
+       383 -     - Per-paper confidence assessment (flag uncertain 
+           - extractions)?
+       384 -     - Ongoing monitoring (quality checks continue during 
+           - credibility assessment)?
+       381 +  **Approach:**
+       382 +  - **Primary:** Use existing credibility metrics as quality 
+           + indicators (relationship density, completeness scores as 
+           + proxies)
+       383 +  - **Secondary:** Manual spot-checking for high-stakes 
+           + papers or when uncertainty flagged
+       384 +  - **Integration:** Build self-assessment into credibility 
+           + assessment workflow (not separate step)
+       385 +  - **Continuous improvement:** Track A runs alongside Track 
+           + B, providing ongoing quality monitoring
+       386 +  - **Audience:** Track A analysis is for us (system 
+           + developers), not external reporting
+       387    
+       388 -     **Question:** When do we transition from "testing 
+           - extraction" to "trusting extraction"?
+       388 +  **Implementation:**
+       389 +  - Include Track A quality notes in each credibility report
+       390 +  - Track extraction confidence, metric-assessment alignment,
+           +  areas of uncertainty
+       391 +  - Document improvement opportunities
+       392    
+       393 -  10. **Track B dependencies:** What extraction quality is 
+           - required for credible Track B assessment?
+       394 -      - Must-have: Accurate claims, evidence, RDMAP
+       395 -      - Nice-to-have: Complete infrastructure, perfect 
+           - relationship mappings
+       396 -      - Acceptable errors: Minor scope variations, 
+           - granularity differences
+       393 +  **Rationale:**
+       394 +  - Efficient - uses data we already have
+       395 +  - Integrated - doesn't require separate validation passes
+       396 +  - Practical - acknowledges we can't do extensive validation
+           +  on every paper
+       397 +  - Improvement-focused - identifies concrete refinement 
+           + opportunities
+       398    
+       399 -      **Question:** Quality threshold for Track B readiness?
+       399 +  ---
+       400    
+       401 +  ### Q9: Track A → Track B Transition ✅
+       402 +  
+       403 +  **Decision: Run both tracks in parallel with reducing 
+           + overhead over time**
+       404 +  
+       405 +  **Approach:**
+       406 +  - **No hard transition:** Both tracks run continuously, not
+           +  sequential phases
+       407 +  - **Variable intensity:**
+       408 +    - First 3-5 papers: Heavy Track A validation and 
+           + monitoring
+       409 +    - Papers 6-10: Reduced Track A (spot-checking, metric 
+           + monitoring)
+       410 +    - Beyond 10 papers: Minimal routine quality monitoring, 
+           + Track A on new paper types only
+       411 +  - **Feedback loop:** Track A findings inform extraction 
+           + improvements, which improve Track B quality
+       412 +  - **Continuous improvement:** Always monitoring, always 
+           + refining, intensity varies
+       413 +  
+       414 +  **Rationale:**
+       415 +  - Parallel tracks enable continuous feedback and 
+           + improvement
+       416 +  - Reducing overhead over time as confidence builds
+       417 +  - Never fully "trusting" - always monitoring quality
+       418 +  - Pragmatic balance between validation rigour and practical
+           +  efficiency
+       419 +  
+       420    ---
+       421    
+       422 +  ### Q10: Track B Quality Dependencies ✅
+       423 +  
+       424 +  **Decision: Already meet minimum threshold - focus on 
+           + continuous improvement**
+       425 +  
+       426 +  **Quality requirements:**
+       427 +  - **Must-have (for Track B):** Claims, evidence, major 
+           + RDMAP elements accurate
+       428 +  - **Tolerable errors:** Minor granularity differences, some
+           +  relationship mapping gaps
+       429 +  - **Deal-breakers:** Missing entire sections, misclassified
+           +  items, fabricated content
+       430 +  
+       431 +  **Current status assessment:**
+       432 +  - **Schema v2.5 is mature** - extractions generally high 
+           + quality
+       433 +  - **10-paper corpus complete** - demonstrated extraction 
+           + capability
+       434 +  - **Validation tools in place** - bidirectional mapping, 
+           + schema validation, completeness checks
+       435 +  - **Assessment:** We meet minimum threshold for credibility
+           +  assessment
+       436 +  
+       437 +  **Going forward:**
+       438 +  - Focus on **improvement**, not validation for permission 
+           + to proceed
+       439 +  - Track quality issues as they arise
+       440 +  - Refine extraction where Track B assessment reveals 
+           + weaknesses
+       441 +  - Work towards higher quality, not waiting for perfect 
+           + quality
+       442 +  
+       443 +  **Note:** Track B credibility assessment itself will reveal
+           +  extraction quality issues - we learn by doing, not by 
+           + extensive pre-validation.
+       444 +  
+       445 +  ---
+       446 +  
+       447    ### Area 4: RepliCATS Alignment and Validation
+       448    
+       449    **What we decided:**
+
+● Update(planning/paper-credibility-analysis-framework.md)
+  ⎿  Updated planning/paper-credibility-analysis-framework.md with 68      
+     additions and 19 removals
+       444    
+       445    ---
+       446    
+       447 -  ### Area 4: RepliCATS Alignment and Validation
+       447 +  ## Area 4: RepliCATS Alignment and Validation ✅ DECIDED
+       448    
+       449    **What we decided:**
+       450    - Follow repliCATS closely enough to reproduce their 
+             analysis
+       451    - Use their corpus as external validation benchmark
+       452    
+       453 -  **Questions for development:**
+       453 +  **Decisions made:**
+       454    
+       455 -  11. **RepliCATS methodology research:** What do we need to 
+           - learn?
+       456 -      - Their assessment rubrics (available publicly?)
+       457 -      - Training materials for assessors
+       458 -      - Scoring guidance and anchors
+       459 -      - Uncertainty quantification methods (IDEA protocol)
+       460 -      - Aggregation methods (how do they combine 
+           - multi-assessor scores?)
+       455 +  ### Q11: RepliCATS Methodology Research ✅
+       456    
+       457 -      **Question:** Where do we find repliCATS detailed 
+           - methodology? (Is it all in published papers or is there 
+           - training documentation?)
+       457 +  **Decision: Sufficient documentation available in 
+           + background-research/**
+       458    
+       459 -  12. **RepliCATS corpus identification:** Which papers can 
+           - we test on?
+       460 -      - Do they have public dataset of assessed papers?
+       461 -      - Can we access their scores for comparison?
+       462 -      - Are any HASS papers in their corpus (or mostly 
+           - experimental sciences)?
+       459 +  **Resources available:**
+       460 +  - **`docs/background-research/replicats-report.md`** - 
+           + Comprehensive overview of repliCATS IDEA protocol, process, 
+           + performance
+       461 +  - **`docs/background-research/replicats-seven-signals-hass-
+           + adaptation.md`** - Detailed signal definitions, HASS 
+           + adaptations, assessment guidance
+       462    
+       463 -      **Question:** Do we know what papers repliCATS 
+           - assessed?
+       463 +  **Methodology elements documented:**
+       464 +  - Seven-signal framework with definitions
+       465 +  - IDEA protocol (Investigate → Discuss → Estimate → 
+           + Aggregate)
+       466 +  - Multi-expert deliberation approach
+       467 +  - Uncertainty quantification (interval scores: 
+           + lower/best/upper)
+       468 +  - Performance benchmarks (73-84% accuracy, AUC > 0.75)
+       469 +  - HASS-specific adaptations (analytic reproducibility, CARE
+           +  principles, interpretive research handling)
+       470    
+       471 -  13. **Adaptation requirements:** Where might we need to 
+           - diverge from repliCATS?
+       472 -      - HASS-specific credibility norms (lower replicability,
+           -  higher context-dependence)
+       473 -      - Field research vs lab research differences
+       474 -      - Approach-specific assessment (if repliCATS didn't 
+           - distinguish inductive/deductive)
+       471 +  **Assessment:** Documentation is sufficient for 
+           + implementation. Additional detail may be available in 
+           + published papers if needed during refinement.
+       472    
+       473 -      **Question:** Document divergences explicitly or adapt 
+           - silently?
+       473 +  **Action:** Proceed with implementation using available 
+           + documentation; consult published papers if specific 
+           + methodological questions arise.
+       474    
+       475    ---
+       476    
+       477 +  ### Q12: RepliCATS Corpus Identification ✅
+       478 +  
+       479 +  **Decision: Build complete tool first, then validate on 
+           + repliCATS corpus**
+       480 +  
+       481 +  **Approach:**
+       482 +  - **Now:** Build and test credibility assessment on our 
+           + 10-11 paper archaeological corpus
+       483 +  - **Later:** After tool is complete and validated on our 
+           + corpus, seek access to repliCATS assessed papers for 
+           + external validation
+       484 +  - **Rationale:** Avoid inadvertent fitting to their 
+           + specific corpus; build genuinely independent system, then 
+           + test as true external validation
+       485 +  
+       486 +  **Timeline:**
+       487 +  - Complete credibility assessment capability on current 
+           + corpus (Phases 1-5)
+       488 +  - After 5-10 credibility reports generated and validated
+       489 +  - Then seek repliCATS corpus for comparison
+       490 +  
+       491 +  **Benefits of delayed access:**
+       492 +  - Tests whether our system generalises
+       493 +  - Provides genuine external validation (not circular 
+           + development)
+       494 +  - Avoids over-fitting to their corpus characteristics
+       495 +  
+       496 +  ---
+       497 +  
+       498 +  ### Q13: Adaptation Requirements ✅
+       499 +  
+       500 +  **Decision: Document divergences explicitly**
+       501 +  
+       502 +  **Approach:**
+       503 +  - **Transparency:** Explicitly document where we diverge 
+           + from repliCATS and why
+       504 +  - **HASS adaptations:**
+       505 +    - Replicability = analytic reproducibility (not field 
+           + replication)
+       506 +    - CARE principles alongside FAIR (Indigenous/community 
+           + data governance)
+       507 +    - Approach-specific assessment 
+           + (inductive/deductive/abductive if repliCATS didn't 
+           + distinguish)
+       508 +    - Lower replicability expectations, higher 
+           + context-dependence for field research
+       509 +  - **Documentation location:** In rubrics, assessment 
+           + reports, and methodology documentation
+       510 +  
+       511 +  **Format:**
+       512 +  ```markdown
+       513 +  ## Divergence from RepliCATS: [Signal Name]
+       514 +  
+       515 +  **RepliCATS approach:** [Original definition/scoring]
+       516 +  **Our adaptation:** [How we've modified it]
+       517 +  **Rationale:** [Why HASS research requires this adaptation]
+       518 +  **Compatibility:** [How to map our scores to repliCATS 
+           + scores for comparison]
+       519 +  ```
+       520 +  
+       521 +  **Rationale:**
+       522 +  - Explicit divergences aid interpretation and validation
+       523 +  - Enables mapping between our scores and repliCATS scores
+       524 +  - Documents methodological decisions for transparency
+       525 +  - Allows assessment of whether divergences were 
+           + necessary/beneficial
+       526 +  
+       527 +  ---
+       528 +  
+       529    ### Area 5: Report Structure and Output Format
+       530    
+       531    **What we decided:**
+
+● Update(planning/paper-credibility-analysis-framework.md)
+  ⎿  Updated planning/paper-credibility-analysis-framework.md with 45      
+     additions and 19 removals
+       526    
+       527    ---
+       528    
+       529 -  ### Area 5: Report Structure and Output Format
+       529 +  ## Area 5: Report Structure and Output Format
+           +   (PARTIAL - TO BE REFINED)
+       530    
+       531    **What we decided:**
+       532    - 3-5 page summary reports initially
+       533    - Expand to 10+ page detailed reports after validation
+       534    
+       535 -  **Questions for development:**
+       535 +  **Questions for further discussion:**
+       536    
+       537 -  14. **Summary report template:** What's the minimal 
+           - complete structure?
+       538 -      - Proposed in Executive Summary above - does this work?
+       539 -      - Any essential sections missing?
+       540 -      - Any sections that could be deferred to detailed 
+           - reports?
+       537 +  ### Q14: Summary Report Template
+       538    
+       539 -      **Question:** Validate proposed 6-section structure?
+       539 +  **Proposed 6-section structure** (from Decision 4):
+       540 +  1. Paper metadata and research approach classification (0.5
+           +  pages)
+       541 +  2. Metric scorecard with visualisation (0.5 pages)
+       542 +  3. Signal-by-signal brief assessment (1-2 pages, ~200 words
+           +  per signal)
+       543 +  4. Key strengths and weaknesses (0.5 pages)
+       544 +  5. Actionable recommendations (0.5 pages)
+       545 +  6. Overall credibility profile with uncertainty (0.5 pages)
+       546    
+       547 -  15. **Visualisation in reports:** What visual elements 
+           - enhance summary reports?
+       548 -      - Radar chart (seven signals)
+       549 -      - Metric scorecard table
+       550 -      - Strengths/weaknesses visual summary
+       551 -      - Uncertainty representation (error bars, confidence 
+           - intervals)
+       547 +  **Status:** To be validated during Phase 3 (pilot 
+           + assessment)
+       548    
+       549 -      **Question:** How much visualisation is useful vs 
+           - distracting in 3-5 pages?
+       549 +  **Likely refinements needed:**
+       550 +  - Track A quality notes integration (extraction confidence)
+       551 +  - Expressed vs revealed approach comparison (if mismatch)
+       552 +  - Approach-specific emphasis (which signals prioritised)
+       553    
+       554 -  16. **Report audience framing:** Who is the primary reader?
+       555 -      - Paper authors (formative feedback)
+       556 -      - Peer reviewers (decision support)
+       557 -      - Researchers evaluating literature (trust indicators)
+       558 -      - Us (system validation)
+       554 +  ---
+       555    
+       556 -      **Question:** Single report for all audiences or 
+           - audience-specific versions?
+       556 +  ### Q15: Visualisation in Reports
+       557    
+       558 +  **Status:** TO BE DETERMINED during implementation
+       559 +  
+       560 +  **Options under consideration:**
+       561 +  - Radar chart (seven signals) - classic repliCATS 
+           + visualisation
+       562 +  - Metric scorecard table - structured numeric summary
+       563 +  - Strengths/weaknesses visual summary
+       564 +  - Uncertainty representation (error bars, intervals)
+       565 +  
+       566 +  **Decision point:** Phase 3 (pilot report generation) - 
+           + test what's useful vs distracting
+       567 +  
+       568 +  **Principle:** Start text-heavy, add visualisation 
+           + incrementally if it aids comprehension
+       569 +  
+       570    ---
+       571    
+       572 +  ### Q16: Report Audience Framing
+       573 +  
+       574 +  **Status:** TO BE DETERMINED during implementation
+       575 +  
+       576 +  **Candidate audiences:**
+       577 +  - Paper authors (formative feedback on improving 
+           + credibility)
+       578 +  - Peer reviewers (decision support for 
+           + accept/revise/reject)
+       579 +  - Researchers evaluating literature (trust indicators for 
+           + citation decisions)
+       580 +  - Us (system validation and refinement)
+       581 +  
+       582 +  **Initial approach:** Reports primarily for us (Track A + 
+           + Track B combined), then adapt for external audiences after 
+           + validation
+       583 +  
+       584 +  **Future consideration:** Audience-specific versions if 
+           + needed (detailed for authors, summary for reviewers, etc.)
+       585 +  
+       586 +  ---
+       587 +  
+       588    ### Area 6: Implementation Strategy
+       589    
+       590    **What we decided:**
+
+● Update(planning/paper-credibility-analysis-framework.md)
+  ⎿  Updated planning/paper-credibility-analysis-framework.md with 73      
+     additions and 23 removals
+       585    
+       586    ---
+       587    
+       588 -  ### Area 6: Implementation Strategy
+       588 +  ## Area 6: Implementation Strategy
+           +   (QUESTIONS FOR DISCUSSION)
+       589    
+       590    **What we decided:**
+       591    - Use Claude's autonomous capabilities maximally
+       592    - Iterative development over multiple papers
+       593    - File-based planning and execution
+       594    
+       595 -  **Questions for development:**
+       595 +  **Questions remaining for your input:**
+       596    
+       597 -  17. **First implementation target:** Which capability to 
+           - build first?
+       598 -      - **Option A:** Research approach classifier 
+           - (foundational)
+       599 -      - **Option B:** Single-signal assessment (prove concept
+           -  end-to-end)
+       600 -      - **Option C:** Summary report generator (target output
+           -  format)
+       601 -      - **Option D:** Track A extraction quality assessment 
+           - (validation first)
+       597 +  ### Q17: First Implementation Target
+       598    
+       599 -      **Question:** What's the critical path?
+       599 +  **Question:** Which capability should we build first?
+       600 +  - **Option A:** Research approach classifier (foundational 
+           + - informs all assessments)
+       601 +  - **Option B:** Single-signal assessment (prove concept 
+           + end-to-end on one signal)
+       602 +  - **Option C:** Summary report generator (work backwards 
+           + from target output)
+       603 +  - **Option D:** Track A extraction quality assessment 
+           + (validate before assessing)
+       604    
+       605 -  18. **Iteration corpus:** Which papers to test on first?
+       606 -      - Start with well-extracted papers 
+           - (sobotkova-et-al-2024, ballsun-stanton-et-al-2018)?
+       607 -      - Start with diverse approaches (1 deductive, 1 
+           - inductive, 1 abductive)?
+       608 -      - Start with problematic papers (test robustness)?
+       605 +  **My recommendation:** Option A (classifier) - foundational
+           +  for all subsequent assessment
+       606    
+       607 -      **Question:** Selection strategy for initial 3-5 
+           - papers?
+       607 +  **Your input needed:** Confirm or suggest alternative 
+           + sequencing?
+       608    
+       609 -  19. **Prompt development strategy:** How to develop 
+           - assessment prompts?
+       610 -      - **Option A:** Single comprehensive prompt (all seven 
+           - signals)
+       611 -      - **Option B:** Seven separate prompts (one per signal)
+       612 -      - **Option C:** Iterative prompt (multi-turn dialogue 
+           - for each paper)
+       609 +  ---
+       610    
+       611 -      **Question:** Prompt architecture?
+       611 +  ### Q18: Iteration Corpus Selection
+       612    
+       613 -  20. **Skill integration:** How to leverage 
+           - research-assessor skill?
+       614 -      - Load skill at start of assessment
+       615 -      - Reference skill files in prompts
+       616 -      - Extend skill with assessment guidance
+       613 +  **Question:** Which papers should we test on first (3-5 
+           + papers)?
+       614    
+       615 -      **Question:** Skill enhancement needed or sufficient 
+           - as-is?
+       615 +  **Candidates from 10-paper corpus:**
+       616 +  - sobotkova-et-al-2024 (well-extracted, inductive survey, 
+           + 2024)
+       617 +  - ballsun-stanton-et-al-2018 (software/methods paper, mixed
+           +  approach, 2018)
+       618 +  - penske-et-al-2023 (genomics, deductive, high FAIR, 2023)
+       619 +  - ross-ballsun-stanton-2022 (field data collection, 2022)
+       620 +  - sobotkova-et-al-2016 (book chapter, pre-FAIR, 2016)
+       621    
+       622 +  **Selection criteria:**
+       623 +  - Diverse research approaches (inductive, deductive, 
+           + abductive, mixed)
+       624 +  - Well-extracted vs problematic extractions (test 
+           + robustness)
+       625 +  - Different quality levels (high, medium credibility 
+           + expected)
+       626 +  - Different domains/types (survey, methods, genomics, field
+           +  collection, book chapter)
+       627 +  
+       628 +  **My recommendation:** Start with sobotkova-et-al-2024 
+           + (well-extracted, inductive), ballsun-stanton-et-al-2018 
+           + (mixed methods), penske-et-al-2023 (deductive, high quality)
+       629 +  
+       630 +  **Your input needed:** Confirm selection or suggest 
+           + alternatives?
+       631 +  
+       632    ---
+       633    
+       634 +  ### Q19: Prompt Development Strategy
+       635 +  
+       636 +  **Question:** How should we architect assessment prompts?
+       637 +  
+       638 +  **Options:**
+       639 +  - **Option A:** Single comprehensive prompt (all seven 
+           + signals assessed in one pass)
+       640 +    - *Pros:* Holistic assessment, signals inform each other,
+           +  efficient
+       641 +    - *Cons:* Complex prompt, harder to refine individual 
+           + signals
+       642 +  - **Option B:** Seven separate prompts (one per signal, 
+           + sequential)
+       643 +    - *Pros:* Modular, easier to refine, focused attention 
+           + per signal
+       644 +    - *Cons:* More passes, potential redundancy, signals 
+           + assessed in isolation
+       645 +  - **Option C:** Iterative multi-turn dialogue 
+           + (conversational assessment)
+       646 +    - *Pros:* Natural, adaptive, can drill down where needed
+       647 +    - *Cons:* Less structured, harder to standardise, longer 
+           + execution
+       648 +  
+       649 +  **My recommendation:** Start with Option B (separate 
+           + prompts per signal) for development, potentially consolidate
+           +  to Option A once refined
+       650 +  
+       651 +  **Your input needed:** Confirm or suggest alternative 
+           + approach?
+       652 +  
+       653 +  ---
+       654 +  
+       655 +  ### Q20: Skill Integration
+       656 +  
+       657 +  **Question:** How should we leverage the research-assessor 
+           + skill during assessment?
+       658 +  
+       659 +  **Current skill capabilities:**
+       660 +  - CEM extraction guidance
+       661 +  - RDMAP framework
+       662 +  - Infrastructure assessment (Pass 6)
+       663 +  - Schema definitions
+       664 +  - Reference materials (evidence-vs-claims-guide, 
+           + checklists, etc.)
+       665 +  
+       666 +  **Integration options:**
+       667 +  - Load skill at assessment start (skill context available 
+           + throughout)
+       668 +  - Reference specific skill files in assessment prompts
+       669 +  - Extend skill with assessment rubrics and guidance (add to
+           +  .claude/skills/research-assessor/)
+       670 +  - Use skill as-is (sufficient for extraction, assessment 
+           + separate)
+       671 +  
+       672 +  **My recommendation:** Load skill at start, reference 
+           + relevant files (schema, guides), consider extending with 
+           + rubrics if they become complex
+       673 +  
+       674 +  **Your input needed:** Preferences for skill integration 
+           + approach?
+       675 +  
+       676 +  ---
+       677 +  
+       678    ## Immediate Planning Priorities
+       679    
+       680    Based on reconstructed discussion, here are the **critical 
+             path questions** we need to resolve:
+
+● Now let me update the document status and add a final summary section:
+
+● Update(planning/paper-credibility-analysis-framework.md)
+  ⎿  Updated planning/paper-credibility-analysis-framework.md with 73      
+     additions and 5 removals
+       760    
+       761    ---
+       762    
+       763 -  **Document Status:** Reconstructed planning framework v1.0 
+           - (post-crash)
+       764 -  **Next Update:** After answering Priority 1-2 questions
+       763 +  ---
+       764 +  
+       765 +  ## Decision Summary (Ready for Implementation)
+       766 +  
+       767 +  ### Decisions Finalised ✅ (13/20 questions answered)
+       768 +  
+       769 +  **Research Approach Classification (Q1-Q4):**
+       770 +  - ✅ Q1: After extraction (Pass 6.5 or early Pass 7)
+       771 +  - ✅ Q2: Contextual inference with expressed vs revealed 
+           + comparison
+       772 +  - ✅ Q3: Qualitative mixed-method characterisation
+       773 +  - ✅ Q4: Iterative empirical validation
+       774 +  
+       775 +  **Assessment Frameworks (Q5-Q7):**
+       776 +  - ✅ Q5: Narrative importance + experimental weights
+       777 +  - ✅ Q6: 7 universal rubrics, fork if needed
+       778 +  - ✅ Q7: Assess all seven signals (repliCATS compatibility)
+       779 +  
+       780 +  **Track A/B Workflow (Q8-Q10):**
+       781 +  - ✅ Q8: Metric-based + spot-checking, integrated 
+           + self-assessment
+       782 +  - ✅ Q9: Parallel tracks with reducing overhead
+       783 +  - ✅ Q10: Already meet threshold, focus on improvement
+       784 +  
+       785 +  **RepliCATS Alignment (Q11-Q13):**
+       786 +  - ✅ Q11: Sufficient documentation available
+       787 +  - ✅ Q12: Build tool first, validate later
+       788 +  - ✅ Q13: Document divergences explicitly
+       789 +  
+       790 +  ### Questions Awaiting Your Input (4/20 remaining)
+       791 +  
+       792 +  **Report Structure (Q14-Q16):** To be refined during 
+           + implementation
+       793 +  - Q14: Validate 6-section report structure
+       794 +  - Q15: Visualisation approach (text vs charts)
+       795 +  - Q16: Audience framing (internal vs external)
+       796 +  
+       797 +  **Implementation Strategy (Q17-Q20):** NEED ANSWERS
+       798 +  - **Q17:** First capability to build? (Classifier 
+           + recommended)
+       799 +  - **Q18:** Which 3-5 papers for testing? (sobotkova-2024, 
+           + ballsun-stanton-2018, penske-2023 recommended)
+       800 +  - **Q19:** Prompt architecture? (Separate prompts per 
+           + signal recommended)
+       801 +  - **Q20:** Skill integration approach? (Load at start, 
+           + reference files recommended)
+       802 +  
+       803 +  ---
+       804 +  
+       805 +  ## Next Actions
+       806 +  
+       807 +  ### Immediate (After Q17-Q20 Answered)
+       808 +  
+       809 +  1. **Update implementation roadmap** with your answers
+       810 +  2. **Begin Phase 1** (research approach classification)
+       811 +  3. **Test classifier** on 3 selected papers
+       812 +  4. **Draft first rubric** (transparency)
+       813 +  5. **Pilot end-to-end** (classify + assess one signal on 
+           + one paper)
+       814 +  
+       815 +  ### Documentation Status
+       816 +  
+       817 +  **Completed planning documents:**
+       818 +  - ✅ This framework (fundamental decisions)
+       819 +  - ✅ 
+           + `planning/research-approach-classification-framework.md` 
+           + (detailed classification spec)
+       820 +  - ✅ 
+           + `planning/credibility-assessment-implementation-roadmap.md` 
+           + (5-phase plan)
+       821 +  
+       822 +  **Ready for implementation:** Awaiting answers to Q17-Q20
+       823 +  
+       824 +  ---
+       825 +  
+       826 +  **Document Status:** v2.0 - Decisions documented (13/20 
+           + complete, 4 awaiting input, 3 deferred)
+       827 +  **Last Updated:** 2025-11-16
+       828 +  **Next Update:** After Q17-Q20 answered and Phase 1 begins
+       829 +  
+       830    **Related Documents:**
+       831 -  - `planning/extraction-to-analysis-transition.md` 
+           - (comprehensive background)
+       832 -  - `planning/corpus-interpretation-framework.md` (superseded
+           -  by individual-paper focus)
+       833 -  - `planning/active-todo-list.md` (Task 10.2)
+       831 +  - `planning/research-approach-classification-framework.md` 
+           + (classification detailed spec)
+       832 +  - 
+           + `planning/credibility-assessment-implementation-roadmap.md` 
+           + (5-phase implementation plan)
+       833 +  - `planning/extraction-to-analysis-transition.md` 
+           + (comprehensive background context)
+       834 +  - `planning/active-todo-list.md` (Task 10.2 implementation 
+           + tracking)
+       835 +  - `docs/background-research/replicats-report.md` (repliCATS
+           +  methodology)
+       836 +  - `docs/background-research/replicats-seven-signals-hass-ad
+           + aptation.md` (signal definitions)
+
+● Perfect! Now let me update the todo list to reflect our current status:
+
+● Excellent! The framework document is now updated with all our decisions.
+  Here are the 4 final implementation questions that need your input:
+
+  ---
+  Final Questions for Your Input
+
+  Q17: First Implementation Target 🎯
+
+  Which capability should we build first?
+
+  My recommendation: Option A - Research approach classifier
+
+  Rationale: It's foundational - every credibility assessment needs to know
+  the research approach to apply appropriate criteria. Building it first
+  means we test the classification logic before building assessment prompts
+  that depend on it.
+
+  Your decision: Confirm Option A, or prefer different sequencing?
+
+  ---
+  Q18: Test Papers Selection 📄
+
+  Which 3-5 papers should we test on first?
+
+  My recommendation:
+  1. sobotkova-et-al-2024 (well-extracted, inductive survey, recent)
+  2. ballsun-stanton-et-al-2018 (software/methods, mixed approach)
+  3. penske-et-al-2023 (genomics, deductive, high FAIR score)
+
+  Rationale: Covers inductive/deductive/mixed, well-extracted baseline,
+  diverse domains, different quality levels
+
+  Your decision: Confirm these 3, or add/substitute others from the 10-paper
+   corpus?
+
+  ---
+  Q19: Prompt Architecture 📝
+
+  How should we structure assessment prompts?
+
+  My recommendation: Option B - Seven separate prompts (one per signal)
+
+  Rationale:
+  - Easier to develop and refine incrementally
+  - Can test one signal at a time (transparency first)
+  - Modular = easier debugging
+  - Can consolidate later if separate prompts prove redundant
+
+  Your decision: Confirm Option B, or prefer comprehensive single prompt
+  (Option A)?
+
+  ---
+  Q20: Skill Integration 🔧
+
+  How should we leverage the research-assessor skill?
+
+  My recommendation: Load skill at start, reference relevant files
+
+  Approach:
+  - Invoke skill at beginning of assessment
+  - Reference schema-guide.md, evidence-vs-claims-guide.md, etc. in prompts
+  - Consider extending skill with rubrics if they become complex enough
+
+  Your decision: Confirm this approach, or different integration strategy?
+
+  ---
+  Once you answer these 4 questions, we're ready to start building! The
+  framework document now captures all 13 decisions we've made, with only
+  these 4 implementation details remaining.
+
+> Q17: agree, let's get the classifier working. Q18: Sure, these are fine, 
+we'll run it on all 10 as soon as its working reasonably well. Q19: 
+absolutely agree, we must keep promts focused, one prompt per signal is a 
+good starting point. Quality assessment also needs it's own prompt (at least
+ one), and if necessary we can make the classifier it's own prompt. Discrete
+ tasks should get their own prompt; tasks that interact with one another 
+should be in the same prompt (heuristic). Q20: yes, leverage the 
+research-assessor skill, I believe we planned to build it out as necessary 
+for classification and signal assessment, we can also do so for ongoing 
+quality assessment if helpful. Utilise the skill-creator skill to help with 
+boundaries between prompts and skills. We are low on context and I'd like to
+ see an overall plan before we begin implementation. Can you incorporate 
+this feedback into a /compact message that will set us up to do final 
+planning in the next session? 
+
+● Update(planning/paper-credibility-analysis-framework.md)
+  ⎿  Updated planning/paper-credibility-analysis-framework.md with 5       
+     additions and 5 removals
+       794    - Q15: Visualisation approach (text vs charts)
+       795    - Q16: Audience framing (internal vs external)
+       796    
+       797 -  **Implementation Strategy (Q17-Q20):** NEED ANSWERS
+       798 -  - **Q17:** First capability to build? (Classifier 
+           - recommended)
+       799 -  - **Q18:** Which 3-5 papers for testing? (
+           -  sobotkova-2024, ballsun-stanton-2018, penske-2023 
+           -  recommended)
+       800 -  - **Q19:** Prompt architecture? (Separate prompts per 
+           - signal recommended)
+       801 -  - **Q20:** Skill integration approach? (Load at start, 
+           - reference files recommended)
+       797 +  **Implementation Strategy (Q17-Q20):** ✅ DECIDED
+       798 +  - ✅ **Q17:** Build research approach classifier first 
+           + (foundational)
+       799 +  - ✅ **Q18:** Test on 
+           +  sobotkova-2024, ballsun-stanton-2018, penske-2023; 
+           +  expand to all 10 once working
+       800 +  - ✅ **Q19:** One prompt per signal (7 signal prompts) + 
+           + classifier prompt + quality assessment prompt(s). Heuristic:
+           +  discrete tasks = separate prompts; interacting tasks = same
+           +  prompt
+       801 +  - ✅ **Q20:** Leverage research-assessor skill, extend as 
+           + needed for classification/assessment. Use skill-creator 
+           + skill to help determine prompt/skill boundaries
+       802    
+       803    ---
+       804    
+
+● Write(planning/SESSION-SUMMARY-credibility-assessment-planning.md)
+  ⎿  Wrote 254 lines to                                                    
+     planning/SESSION-SUMMARY-credibility-assessment-planning.md
+     # Session Summary: Credibility Assessment Planning
+     ## Ready for Implementation (2025-11-16)
+     **Context:** Recovered from VS Code crash, completed comprehensive
+     planning for individual paper credibility assessment system.
+     ---
+     ## Planning Documents Created (3 documents, 43KB total)
+     ### 1. `paper-credibility-analysis-framework.md` (v2.0, 24KB)
+     … +244 lines (ctrl+o to expand)
+
+● Perfect! Here's your compact summary for next session:
+
+  ---
+  Session Recovery: Credibility Assessment Planning Complete ✅
+
+  What We Accomplished
+
+  Recovered from VS Code crash and completed comprehensive planning for
+  individual paper credibility assessment system.
+
+  3 planning documents created (43KB):
+  1. paper-credibility-analysis-framework.md (24KB) - All 17 design
+  questions answered
+  2. research-approach-classification-framework.md (16KB) - Complete
+  classification spec
+  3. credibility-assessment-implementation-roadmap.md (13KB) - 5-phase plan
+  (17-24 hours)
+
+  Key Design Decisions ✅
+
+  - Target: Individual papers (not corpus)
+  - Architecture: One prompt per discrete task (7 signals + classifier +
+  quality assessment = ~9-10 prompts)
+  - Classification: Expressed vs revealed approach with HARKing detection
+  (after extraction, Pass 6.5/7)
+  - Assessment: All 7 repliCATS signals, approach-specific emphasis,
+  narrative importance
+  - Quality: Track A (extraction) + Track B (credibility) parallel with
+  reducing overhead
+  - Skills: Extend research-assessor, use skill-creator for prompt/skill
+  boundaries
+  - Testing: Start with 3 papers (sobotkova-2024, ballsun-stanton-2018,
+  penske-2023), expand to all 10
+
+  Critical Architectural Principle
+
+  "Discrete tasks = separate prompts; interacting tasks = same prompt"
+
+  Next Session: Final Planning Before Implementation
+
+  MUST DO FIRST: Create overall implementation plan with:
+  - Prompt architecture diagram (which prompts, execution order, data flow)
+  - Skill extension design (what goes in research-assessor vs prompts)
+  - File structure for outputs (classification.json, assessments/, reports/)
+  - Validation checkpoints per component
+
+  THEN: Begin Phase 1 (build classifier, test on 3 papers)
+
+  Files to Review Next Session
+
+  - planning/SESSION-SUMMARY-credibility-assessment-planning.md (this
+  summary)
+  - planning/credibility-assessment-implementation-roadmap.md (5-phase plan)
+  - planning/paper-credibility-analysis-framework.md (all decisions)
+  - planning/research-approach-classification-framework.md (classification
+  spec)
+
+  Status: Planning complete, ready for implementation planning → execution
+
+
+

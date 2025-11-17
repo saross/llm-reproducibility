@@ -1,0 +1,935 @@
+
+ ▐▛███▜▌   Claude Code v2.0.42
+▝▜█████▛▘  Sonnet 4.5 · Claude Max
+  ▘▘ ▝▝    /home/shawn/Code/llm-reproducibility
+══════════════════ Conversation compacted · ctrl+o for history ═════════════════
+
+> /compact   Session Recovery: Credibility Assessment Planning Complete ✅
+
+  What We Accomplished
+
+  Recovered from VS Code crash and completed comprehensive planning for 
+individual paper credibility assessment system.
+
+  3 planning documents created (43KB):
+  1. paper-credibility-analysis-framework.md (24KB) - All 17 design questions 
+answered
+  2. research-approach-classification-framework.md (16KB) - Complete 
+classification spec
+  3. credibility-assessment-implementation-roadmap.md (13KB) - 5-phase plan 
+(17-24 hours)
+
+  Key Design Decisions ✅
+
+  - Target: Individual papers (not corpus)
+  - Architecture: One prompt per discrete task (7 signals + classifier + quality
+ assessment = ~9-10 prompts)
+  - Classification: Expressed vs revealed approach with HARKing detection (after
+ extraction, Pass 6.5/7)
+  - Assessment: All 7 repliCATS signals, approach-specific emphasis, narrative 
+importance
+  - Quality: Track A (extraction) + Track B (credibility) parallel with reducing
+ overhead
+  - Skills: Extend research-assessor, use skill-creator for prompt/skill 
+boundaries
+  - Testing: Start with 3 papers (sobotkova-2024, ballsun-stanton-2018, 
+penske-2023), expand to all 10
+
+  Critical Architectural Principle
+
+  "Discrete tasks = separate prompts; interacting tasks = same prompt"
+
+  Next Session: Final Planning Before Implementation
+
+  MUST DO FIRST: Create overall implementation plan with:
+  - Prompt architecture diagram (which prompts, execution order, data flow)
+  - Skill extension design (what goes in research-assessor vs prompts)
+  - File structure for outputs (classification.json, assessments/, reports/)
+  - Validation checkpoints per component
+
+  THEN: Begin Phase 1 (build classifier, test on 3 papers)
+
+  Files to Review Next Session
+
+  - planning/SESSION-SUMMARY-credibility-assessment-planning.md (this summary)
+  - planning/credibility-assessment-implementation-roadmap.md (5-phase plan)
+  - planning/paper-credibility-analysis-framework.md (all decisions)
+  - planning/research-approach-classification-framework.md (classification spec)
+
+  Status: Planning complete, ready for implementation planning → execution 
+  ⎿  Compacted (ctrl+o to see full summary)
+  ⎿ Read planning/SESSION-SUMMARY-credibility-assessment-planning.md (254 lines)
+
+  ⎿  Referenced file planning/paper-credibility-analysis-framework.md
+  ⎿  Read planning/credibility-assessment-implementation-roadmap.md (438 lines)
+  ⎿  Read planning/research-approach-classification-framework.md (485 lines)
+  ⎿  Read planning/corpus-interpretation-framework.md (554 lines)
+
+> I believe we are ready to Create overall implementation plan we discussed 
+last session; I think I've answered all of your questions, but please do ask
+ if I have not. Otherwise, if you have the guideance and information you 
+need, please create the plan. 
+
+● I'll create the comprehensive implementation plan we discussed. Let me
+  start by using the skill-creator skill to help determine the boundaries
+  between prompts and skills, then build the complete plan.
+
+> The "skill-creator" skill is running 
+
+● Now let me examine the current research-assessor skill to understand its
+  structure and determine the optimal boundaries for our credibility
+  assessment implementation.
+
+● Read(.claude/skills/research-assessor/SKILL.md)
+  ⎿  Read 224 lines
+
+● Now let me check the existing assessment-system directory structure to
+  understand what's already in place:
+
+● Bash(find assessment-system -type f -name "*.md" -o -name "*.py" | head -20)
+  ⎿  assessment-system/scripts/generate_scorecards.py
+     assessment-system/scripts/analysis_toolkit.py
+     assessment-system/scripts/batch_metrics.py
+     … +6 lines (ctrl+o to expand)
+
+● Bash(ls -la assessment-system/)
+  ⎿  total 36                                       
+     drwxrwxr-x  5 shawn shawn  4096 Nov  1 07:14 .
+     drwxrwxr-x 16 shawn shawn  4096 Nov 14 16:36 ..
+     … +4 lines (ctrl+o to expand)
+
+● Perfect. Now I have enough context to create the comprehensive
+  implementation plan. Let me create it:
+  ⎿  User rejected Claude's plan:
+     ╭─────────────────────────────────────────────────────────────────────────╮
+     │ I'll create a comprehensive implementation plan document                │
+     │ (planning/credibility-implementation-plan-detailed.md) that covers:     │
+     │                                                                         │
+     │ 1. Prompt vs Skill Boundary Analysis - Based on skill-creator guidance  │
+     │ and the research-assessor architecture, determine what goes in skills vs│
+     │  prompts                                                                │
+     │ 2. Prompt Architecture Diagram - Visual/textual representation of ~9-10 │
+     │ prompts with execution order and data flow                              │
+     │ 3. Skill Extension Design - How to extend research-assessor skill for   │
+     │ credibility assessment                                                  │
+     │ 4. File Structure Specification - Complete directory structure for      │
+     │ classification and assessment outputs                                   │
+     │ 5. Data Flow & Dependencies - How data flows from extraction →          │
+     │ classification → assessment → report                                    │
+     │ 6. Validation Checkpoints - How to verify each component works          │
+     │ 7. Implementation Sequence - Step-by-step build order for Phase 1       │
+     │                                                                         │
+     │ The plan will leverage the existing research-assessor architecture      │
+     │ (skill provides frameworks/schemas, runtime provides prompts) and create│
+     │  a parallel structure for credibility assessment.                       │
+     │                                                                         │
+     ╰─────────────────────────────────────────────────────────────────────────╯
+
+> as you deterime prompt vs skill boundary, do not forget to invoke the 
+skill-creator skill. otherwise, I approve this plan you may proceed. 
+
+● Write(planning/credibility-implementation-plan-detailed.md)
+  ⎿  Wrote 1223 lines to                                                   
+     planning/credibility-implementation-plan-detailed.md
+     # Credibility Assessment Implementation Plan (Detailed)
+     ## Complete Architecture, Prompts, Skills, and Data Flow
+     **Document Purpose:** Comprehensive implementation plan for individual
+     paper credibility assessment system
+     **Date Created:** 2025-11-16
+     **Status:** Implementation-ready detailed plan
+     **Prerequisites:** Extraction complete (Pass 0-6), metrics calculated
+     (Phase 6)
+     ---
+
+     … +1213 lines (ctrl+o to expand)
+
+● Perfect! I've created the comprehensive implementation plan. Let me
+  provide you with a concise summary of what's in this document:
+
+  Implementation Plan Complete ✅
+
+  I've created planning/credibility-implementation-plan-detailed.md (25KB)
+  covering all requested elements:
+
+  Key Components
+
+  1. Prompt vs Skill Boundary Analysis
+  - Following research-assessor architecture: skills = stable frameworks,
+  prompts = evolving instructions
+  - Recommendation: Extend research-assessor skill (not create new one)
+  - Add 7 reference files to
+  .claude/skills/research-assessor/references/credibility/
+  - Add 2 schema files for classification and assessment structures
+
+  2. Prompt Architecture (10 Prompts)
+  - PROMPT 1: classify-research-approach.md (sequential dependency)
+  - PROMPTS 2-9: track-a + 7 signals (parallel execution possible)
+  - PROMPT 10: generate-credibility-report.md (waits for all inputs)
+  - Clear ASCII diagram showing data flow and dependencies
+
+  3. Skill Extension Design
+  - Update SKILL.md description to include credibility assessment
+  - Add Pass 8 (Classification) and Pass 9 (Assessment) to workflow
+  - 7 new reference files specified with content structure
+  - 2 schema files for structured outputs
+
+  4. File Structure Specification
+  outputs/{paper-slug}/assessment/
+  ├── classification.json
+  ├── track-a-quality.md
+  ├── signals/
+  │   ├── 01-comprehensibility.md
+  │   ├── 02-transparency.md
+  │   └── ... (7 total)
+  └── credibility-report-v1.md
+
+  5. Data Flow & Dependencies
+  - Complete input requirements per prompt
+  - Skill reference usage mapped
+  - Sequential vs parallel execution clearly defined
+
+  6. Validation Checkpoints (6 Checkpoints)
+  - Checkpoint 1: Classifier working (3 papers)
+  - Checkpoint 2: First rubric working (transparency)
+  - Checkpoint 3: End-to-end proof of concept
+  - Checkpoint 4: All seven signals working
+  - Checkpoint 5: Complete report generated
+  - Checkpoint 6: Corpus testing (all 10 papers)
+
+  Each checkpoint includes validation criteria, commands, and manual review
+  guidance.
+
+  7. Phase 1 Implementation Sequence (6-7 hours)
+  - Step 1: Extend research-assessor skill (2h)
+  - Step 2: Create classification prompt (1h)
+  - Step 3: Test classifier on 3 papers (1h)
+  - Step 4: Create transparency rubric (1h)
+  - Step 5: End-to-end proof of concept (1-2h)
+
+  Architecture Highlights
+
+  Following skill-creator guidance:
+  - Skills store stable knowledge (taxonomies, frameworks, schemas)
+  - Prompts contain evolving task instructions
+  - Enables iteration without skill versioning conflicts
+
+  Critical design principle applied:
+  "Discrete tasks = separate prompts; interacting tasks = same prompt"
+
+  Ready to Proceed?
+
+  The plan is complete and implementation-ready. Would you like me to:
+  1. Begin Phase 1 Step 1 (extend research-assessor skill)?
+  2. Review any specific section of the plan first?
+  3. Make adjustments to the plan?
+
+  All design decisions from the previous session are incorporated, and the
+  plan follows the research-assessor architecture pattern you've
+  established.
+
+> To me, your plan looks good. If I asked you to take the roll of a critical
+ friend and review it with an eye towards weaknesses or opportunities for 
+improvement, what would you critique be? It's a complex plan and I'd like 
+you to put on a different hat and review it, then we will synthesise your 
+critique. If you think it would help, I could also ask another LLM (Gemini 
+Pro 2.5 or ChatGPT5), let me know if you'd like me to do that. 
+
+● Excellent idea. Let me put on my critical friend hat and examine this plan
+   rigorously. I'll look for gaps, risks, over-complexity,
+  under-specification, and missed opportunities.
+
+  ---
+  Critical Review of Implementation Plan
+
+  Major Concerns
+
+  1. Prompt Proliferation Risk (10 prompts)
+
+  Critique: 10 separate prompts may create maintenance burden and
+  coordination complexity.
+
+  Specific issues:
+  - Each prompt needs independent testing, versioning, refinement
+  - Changes to output format require updating multiple prompts
+  - Risk of inconsistency across 7 signal assessment prompts
+  - Cognitive load for understanding system: need to know which prompt does
+  what
+
+  Alternative not explored:
+  - Could we consolidate the 7 signal assessments into 1-3 prompts?
+  - Example: "assess-credibility-signals.md" that handles all 7 in one pass
+  with clear subsections
+  - Trade-off: Lose modularity, but gain consistency and maintainability
+
+  Question: Is the "discrete tasks = separate prompts" heuristic too
+  strictly applied here? The 7 signals all:
+  - Use same inputs (extraction.json, classification.json)
+  - Follow same structure (score, justification, evidence)
+  - Could inform each other (transparency relates to replicability)
+
+  Recommendation: Consider 2-3 consolidated prompts instead of 7:
+  - Prompt A: Core signals (Comprehensibility, Transparency, Validity) - 3
+  signals that apply universally
+  - Prompt B: Methodological signals (Plausibility, Robustness,
+  Replicability) - 3 signals more approach-specific
+  - Prompt C: Scope signal (Generalisability) - 1 signal that synthesises
+  others
+
+  Or even: Single "assess-seven-signals.md" prompt with clear instructions
+  to assess each independently but allow cross-referencing.
+
+  ---
+  2. Skill Extension vs New Skill Decision Under-Justified
+
+  Critique: Plan recommends extending research-assessor skill, but doesn't
+  rigorously compare to creating separate "credibility-assessor" skill.
+
+  Arguments for separation (not addressed):
+  - research-assessor is already complex (Pass 0-7)
+  - Adding Passes 8-9 increases cognitive load
+  - Credibility assessment is conceptually distinct from extraction
+  - Users might want extraction without assessment, or vice versa
+  - Separate skills = clearer boundaries, easier to version independently
+
+  Arguments for extension (stated but thin):
+  - "Builds directly on extraction" - but so would a separate skill
+  - "Shares infrastructure" - but references can be shared across skills
+  - "Maintains single coherent workflow" - but workflow could span 2 skills
+
+  Missing analysis:
+  - How often will users want extraction-only vs full assessment?
+  - Does bundling everything in one skill violate single responsibility
+  principle?
+  - Will skill description become unwieldy ("does extraction AND
+  assessment")?
+
+  Recommendation: Either:
+  1. Strengthen justification for single-skill approach with clearer
+  reasoning
+  2. Reconsider creating separate "credibility-assessor" skill that depends
+  on research-assessor
+
+  ---
+  3. Validation Strategy Lacks Quantitative Baselines
+
+  Critique: All 6 checkpoints rely on manual review with subjective criteria
+   like "makes sense" and "feels right".
+
+  Missing elements:
+  - Inter-rater reliability: No plan to compare Claude's assessments to
+  human expert judgments
+  - Test-retest reliability: No plan to run same assessment multiple times
+  to check consistency
+  - Convergent validity: No plan to correlate signal scores with existing
+  metrics (we have 8 metrics already!)
+  - Known-groups validity: No explicit selection of papers that should score
+   high vs low
+  - Quantitative thresholds: "Score discriminating appropriately" - what
+  does this mean numerically?
+
+  Specific gaps:
+  - Checkpoint 1: "Classifications make sense" - to whom? Based on what
+  standard?
+  - Checkpoint 2: "Score feels right" - compared to what baseline?
+  - Checkpoint 4: "Scores discriminate (not all 70-80)" - what's acceptable
+  variance? SD > 15?
+
+  Recommendation: Add quantitative validation:
+  - Run 3x on same paper (different Claude invocations) → measure score
+  variance
+  - Compare to existing metrics: Do high TCI papers also get high
+  Transparency signal scores? (Should correlate ~0.6-0.8)
+  - Expert validation sample: Get 1-2 expert assessments on pilot papers to
+  compare
+  - Define acceptable ranges: "Good discrimination = SD > 20 across corpus"
+
+  ---
+  4. No Error Handling or Failure Mode Planning
+
+  Critique: Plan assumes everything works. No consideration of:
+
+  What if scenarios:
+  - Classification yields "low confidence" - then what?
+  - Signal assessment can't find relevant evidence - how to handle?
+  - Expressed vs revealed comparison is ambiguous - flag for human review?
+  - Extraction quality is too low to assess credibility - abort workflow?
+  - LLM refuses to score or gives scores outside 0-100 range
+
+  Missing:
+  - Confidence thresholds: At what confidence level do we flag for human
+  review?
+  - Graceful degradation: Can we generate partial reports if some signals
+  fail?
+  - Quality gates: Should we check Track A quality BEFORE running Track B
+  assessments?
+  - Iterative refinement protocol: What's the process when a checkpoint
+  fails?
+
+  Example not addressed:
+  If sobotkova-et-al-2024 classification returns:
+  expressed_approach: "none_stated"
+  revealed_approach: "mixed"
+  revealed_confidence: "low"
+  Should we proceed with assessment? Or flag as "needs human review"?
+
+  Recommendation:
+  - Add confidence thresholds per checkpoint (e.g., "classification
+  confidence < medium → flag for review")
+  - Define fallback procedures (e.g., "if signal assessment finds no
+  evidence → score = N/A, note in report")
+  - Create error taxonomy and handling guide
+
+  ---
+  5. Track A Integration Underspecified
+
+  Critique: Track A (quality monitoring) is mentioned but integration is
+  vague.
+
+  Unclear:
+  - When does Track A run? Prompt 2 suggests after classification, but
+  shouldn't it inform whether to proceed?
+  - What happens if Track A identifies major quality issues? Do we abort
+  credibility assessment?
+  - Is Track A output used to qualify credibility report? E.g., "Note:
+  Extraction confidence = Medium, scores may be less reliable"
+  - How does Track A feed back to extraction improvement? Is this a manual
+  process or automated?
+
+  Current plan shows Track A as parallel to Track B, but they should 
+  interact:
+  Track A (Quality Check)
+          ↓
+     [Decision Gate]
+          ↓
+     High quality → Proceed to Track B
+     Medium quality → Proceed with caveat
+     Low quality → Flag for re-extraction
+
+  Recommendation:
+  - Make Track A a pre-assessment gate not just parallel documentation
+  - Define quality thresholds that trigger different pathways
+  - Integrate Track A findings into credibility report prominently
+  - Create feedback loop: Track A findings → extraction refinement queue
+
+  ---
+  6. Approach-Specific Assessment Mechanics Unclear
+
+  Critique: Plan states "apply approach-specific emphasis" but doesn't
+  specify HOW this works mechanically.
+
+  Questions:
+  - Do all 7 signals get assessed regardless of approach, with different
+  weighting in final report?
+  - Or do some signals get skipped based on approach? (Plan says "assess all
+   seven" but also "deemphasised signals")
+  - How is "emphasis" applied? In scoring? In report length? In
+  recommendation priority?
+
+  Example ambiguity:
+  For inductive paper:
+  - PRIMARY signals: Transparency, Comprehensibility, Generalisability
+  - SECONDARY signals: Validity, Robustness
+  - DEEMPHASISED signals: Replicability (?)
+
+  Does "deemphasised" mean:
+  - A) Assess but mention briefly in report?
+  - B) Assess but weight lower in overall judgment?
+  - C) Assess with different rubric (e.g., "analytic reproducibility" not
+  "field replication")?
+
+  Recommendation:
+  - Clarify assessment mechanics: all 7 assessed with same rigour, emphasis
+  is narrative/interpretive
+  - OR: Define approach-specific rubric variations (Replicability-Inductive
+  vs Replicability-Deductive)
+  - OR: Define signal subsets per approach (Inductive: assess 5/7 signals,
+  mark 2 as N/A)
+
+  Current plan doesn't make this decision explicit.
+
+  ---
+  7. Testing Sequence Too Linear
+
+  Critique: Phase 1 tests on 3 papers sequentially, but doesn't leverage
+  diversity efficiently.
+
+  Current sequence:
+  1. Build classifier
+  2. Test on sobotkova-2024, ballsun-stanton-2018, penske-2023
+  3. Build transparency rubric
+  4. Test transparency on sobotkova-2024 only
+  5. Build remaining rubrics
+
+  Problem: Transparency tested on only 1 paper before building other 6
+  rubrics.
+
+  Risk: Transparency rubric might be overfitted to sobotkova-2024
+  characteristics. When we test on other papers, rubric might fail,
+  requiring rework of ALL rubrics simultaneously.
+
+  Better sequence:
+  1. Build classifier
+  2. Test on 3 papers
+  3. Build transparency rubric
+  4. Test transparency on all 3 papers (not just sobotkova) ← CRITICAL
+  5. Refine transparency rubric based on 3-paper diversity
+  6. Build remaining 6 rubrics (learning from transparency refinement)
+
+  Recommendation:
+  - Test each component on multiple papers before proceeding
+  - Use 3-paper test set consistently throughout Phase 1
+  - "Fail fast" on diversity before committing to full rubric set
+
+  ---
+  8. RepliCATS Validation Deferred Too Long
+
+  Critique: Plan says "build complete tool on 10-11 papers first, then
+  validate on repliCATS corpus" (Phase 5+).
+
+  Risk: By Phase 5, we've built entire system. If repliCATS comparison
+  reveals fundamental incompatibility, massive rework required.
+
+  Better approach:
+  - Early repliCATS pilot: After Phase 1 (classifier + transparency
+  working), find 1-2 papers in repliCATS corpus that we can access
+  - Test classification and 1 signal assessment
+  - Compare our scores to repliCATS human panel scores
+  - Validate approach BEFORE building all 7 rubrics
+
+  Missing from plan:
+  - How accessible is repliCATS corpus? Do we have it now?
+  - Can we get 2-3 sample papers with expert scores for early validation?
+  - What's acceptable correlation for "validates our approach"? (r > 0.6?
+  0.7?)
+
+  Recommendation:
+  - Insert "Phase 1.5: Early repliCATS pilot" (1-2 hours)
+  - Test classifier + transparency on 1-2 repliCATS papers
+  - Check if our approach produces comparable results
+  - Refine before building remaining 6 rubrics
+
+  ---
+  9. File Format Decision Not Justified
+
+  Critique: Plan specifies "classification.json (YAML format in JSON file)"
+  but doesn't justify format choice.
+
+  Questions:
+  - Why YAML in .json file? Why not .yaml file?
+  - Why not pure JSON (consistent with extraction.json)?
+  - Signal assessments are .md files - why not .json for structured data?
+
+  Consistency issue:
+  - extraction.json = JSON
+  - classification.json = YAML in JSON wrapper (?)
+  - signals/*.md = Markdown
+  - credibility-report.md = Markdown
+
+  Missing trade-off analysis:
+  - Markdown signals: Human-readable, but harder to parse for corpus
+  analysis
+  - JSON signals: Machine-readable, but less browsable
+  - Mixed formats: Flexible, but inconsistent
+
+  Recommendation:
+  - Justify format choices explicitly (readability vs parseability
+  trade-offs)
+  - OR: Standardise on JSON for all structured data, generate Markdown
+  reports from JSON
+  - OR: Accept mixed formats but document reasoning (classification = JSON
+  for parsing, reports = MD for reading)
+
+  ---
+  10. Scope Creep Risk in Report Generation
+
+  Critique: Credibility report spec is ambitious (3-5 pages, 7 signals,
+  recommendations, synthesis) but no guidance on how to keep it bounded.
+
+  Risk: Report generation prompt might produce:
+  - 10-page reports (exceeds 3-5 page target)
+  - Overly detailed signal summaries (redundant with individual signal .md
+  files)
+  - Generic recommendations (not actionable)
+
+  Missing:
+  - Word count targets per section (e.g., "Each signal summary: 150-200
+  words MAX")
+  - Redundancy prevention: Report should synthesise, not duplicate signal
+  .md files
+  - Recommendation quality criteria: What makes a recommendation
+  "actionable"?
+
+  Recommendation:
+  - Add explicit constraints to generate-credibility-report.md prompt:
+    - "Total report: 1500-2500 words"
+    - "Each signal: 2-3 sentences synthesis (not full copy from signal
+  file)"
+    - "Recommendations: 5-7 items, each <50 words, specific to this paper"
+  - Include example report structure with word counts
+
+  ---
+  Medium Concerns
+
+  11. Prompt Template Provided, But Incomplete
+
+  Critique: Plan shows prompt structure examples but they're sketches, not
+  full templates.
+
+  Example: "assess-transparency.md" structure shown (lines 450-480), but
+  missing:
+  - How to cite extraction elements in justification
+  - How to handle missing evidence (no protocols extracted → impacts
+  transparency score how?)
+  - How to calibrate confidence (what makes confidence "high" vs "medium"?)
+  - Example output with specific paper content
+
+  Risk: When implementing, we'll need to flesh out these templates
+  significantly, adding 2-3 hours to Phase 1 estimates.
+
+  Recommendation:
+  - Either: Accept estimates might expand 20-30%
+  - Or: Create one COMPLETE prompt template (transparency) with all details,
+   use as model for others
+
+  ---
+  12. Parallel Execution Not Tested
+
+  Critique: Plan assumes Prompts 3-9 can run in parallel, but doesn't
+  consider:
+
+  - Context window limits: Can 7 signal assessment prompts + all inputs fit
+  in context simultaneously?
+  - API rate limits: If we invoke 7 prompts concurrently, do we hit rate
+  limits?
+  - Cognitive load: Is it better to assess signals sequentially, allowing
+  each to inform the next?
+
+  Current architecture assumes independence, but signals might interact:
+  - Transparency assessment findings might inform Replicability assessment
+  - Validity concerns might surface issues relevant to Robustness
+  - Comprehensibility problems might explain low scores on other signals
+
+  Recommendation:
+  - Test parallel vs sequential execution in Phase 1
+  - Consider "signal assessment batches":
+    - Batch 1: Comprehensibility, Transparency (foundational)
+    - Batch 2: Validity, Plausibility, Robustness (informed by Batch 1)
+    - Batch 3: Replicability, Generalisability (synthesise prior
+  assessments)
+
+  ---
+  13. No Plan for Prompt Versioning
+
+  Critique: Plan emphasizes "prompts evolve through testing" but no
+  versioning strategy.
+
+  Questions:
+  - Do we version prompts? (assess-transparency-v1.md, v2.md?)
+  - Do we track which prompt version generated which assessment?
+  - How do we handle corpus consistency when prompts change mid-corpus?
+
+  Example scenario:
+  - Assess papers 1-3 with transparency-v1.md
+  - Refine prompt based on results → transparency-v2.md
+  - Assess papers 4-10 with transparency-v2.md
+  - Now we have inconsistent assessments across corpus
+
+  Options not evaluated:
+  - A) Lock prompt versions until full corpus complete (prevents
+  improvement)
+  - B) Version prompts, re-assess earlier papers when prompt improves
+  (time-consuming)
+  - C) Document prompt evolution, accept inconsistency, note in corpus
+  analysis (pragmatic)
+
+  Recommendation:
+  - Choose versioning strategy explicitly
+  - For 10-paper corpus: Option C (document evolution, accept small
+  inconsistencies)
+  - For larger corpus: Option B (re-assess with refined prompts)
+
+  ---
+  Minor Concerns
+
+  14. Success Criteria Vague in Places
+
+  Examples:
+  - "Classifications make sense" - to whom? Expert? User? Claude?
+  - "Actionable recommendations" - actionable by whom? Paper authors? Future
+   researchers?
+  - "Cross-signal consistency" - no contradictions, or actively coherent?
+
+  15. No User Testing Consideration
+
+  - You (Shawn) will be primary user
+  - Plan doesn't include "user review" checkpoints
+  - Should Phase 1 end with "Shawn reviews classifier + transparency
+  outputs, provides feedback"?
+
+  16. Metrics Integration Underspecified
+
+  - We have 8 metrics from Phase 6
+  - Plan mentions using them in assessment but doesn't detail how
+  - Do metrics inform signal scores? Or just appear in scorecard table?
+  - Should high ESD correlate with high Evidence density signal?
+
+  ---
+  Summary of Critical Friend Feedback
+
+  Top 5 Recommendations
+
+  1. Reconsider 7 separate signal prompts → Consolidate to 2-3 or even 1
+  comprehensive prompt
+  2. Add quantitative validation → Test-retest reliability, metric
+  correlation, defined variance thresholds
+  3. Make Track A a pre-assessment gate → Don't assess credibility if
+  extraction quality is too low
+  4. Test transparency on 3 papers before proceeding → Prevent overfitting
+  to single paper
+  5. Insert early repliCATS validation → Validate approach after Phase 1,
+  before building all rubrics
+
+  Overall Assessment
+
+  Strengths:
+  - Comprehensive and well-structured
+  - Clear data flow and dependencies
+  - Validation checkpoints included
+  - Implementation sequence logical
+
+  Weaknesses:
+  - Over-reliance on manual validation (needs quantitative baselines)
+  - Prompt proliferation risk (10 prompts may be too many)
+  - Error handling and failure modes not addressed
+  - Testing sequence too linear (needs more diversity earlier)
+
+  Grade: B+ (Very good, but could be A with revisions addressing top 5
+  recommendations)
+
+  ---
+  On External Review
+
+  Do you want Gemini 2.5 or ChatGPT-4o review?
+
+  My recommendation: Yes, get 1 external review (Gemini 2.5 preferred if it
+  has large context window).
+
+  Why:
+  - I may have blindspots from creating the plan
+  - External LLM might catch architectural issues I'm missing
+  - Different training might surface HASS-domain considerations I'm not
+  aware of
+
+  What to ask external reviewer:
+  1. Review this implementation plan for credibility assessment
+  2. Focus on: architectural soundness, HASS research appropriateness,
+  repliCATS compatibility
+  3. Identify risks, gaps, over-complexity
+  4. Suggest 3-5 highest-priority improvements
+
+  Then we synthesise: Your review + my critique + external review → refined
+  plan.
+
+  What do you think? Should I wait for your synthesis of my critique, or
+  shall we get external input first?
+
+> Ok, I will ask another LLM for a critique - but I need to provide context 
+for the cridibility-implementation-plan-detailed.md document - could you 
+compose that context? You'll have a better idea than I do what background 
+information is crucial for an LLM 
+  ⎿ ⧉ Selected 1222 lines from 
+    planning/credibility-implementation-plan-detailed.md in Visual Studio Code
+
+● Excellent idea. Let me compose a comprehensive but concise context
+  document for the external reviewer.
+
+● Write(planning/CONTEXT-FOR-EXTERNAL-REVIEW.md)
+  ⎿  Wrote 323 lines to planning/CONTEXT-FOR-EXTERNAL-REVIEW.md            
+     # Context for External Review of Credibility Assessment Implementation
+     Plan
+     **Purpose:** Provide external LLM reviewer with essential background to
+      critique `credibility-implementation-plan-detailed.md`
+     **Date:** 2025-11-16
+     ---
+     ## What We're Asking You to Review
+
+     … +313 lines (ctrl+o to expand)
+
+● Perfect! I've created a comprehensive context document for the external
+  reviewer. Here's what I included:
+
+  Context Document Structure
+
+  1. Clear Task Definition
+  - What we're asking for (critique focus areas)
+  - Output format requested
+
+  2. Project Background
+  - What we've built (Phases 1-6 extraction + metrics)
+  - What we're building next (credibility assessment)
+
+  3. Domain Context (CRITICAL for external reviewer)
+  - HASS research characteristics (why it's different from experimental
+  science)
+  - RepliCATS framework explanation (external validation standard)
+  - Required HASS adaptations (analytic reproducibility, CARE principles,
+  etc.)
+
+  4. Our Design Decisions
+  - 7 fundamental choices we've made
+  - Key architectural principle ("discrete tasks = separate prompts")
+
+  5. Implementation Plan Overview
+  - 10-prompt architecture summary
+  - File structure
+  - Estimated effort
+
+  6. Critical Questions to Address
+  - 6 specific areas where we want external perspective:
+    a. Prompt architecture (10 prompts optimal?)
+    b. Skill extension decision (extend vs create new?)
+    c. Validation strategy (manual sufficient?)
+    d. Approach-specific mechanics (how does it work?)
+    e. Track A integration (gate vs parallel?)
+    f. Complexity vs value (right balance?)
+
+  7. What Good Critique Looks Like
+  - Specific examples of helpful vs unhelpful feedback
+  - Requested format with priorities
+
+  8. Key Terminology
+  - HASS, RepliCATS, RDMAP, FAIR, CARE, HARKing, Track A/B, etc.
+
+  What to Provide the External Reviewer
+
+  Minimum (sufficient for good review):
+  1. CONTEXT-FOR-EXTERNAL-REVIEW.md (just created)
+  2. credibility-implementation-plan-detailed.md (the plan under review)
+
+  Optional (for deeper context):
+  3. paper-credibility-analysis-framework.md (design decisions)
+  4. research-approach-classification-framework.md (classification spec)
+
+  The context document is designed to:
+  - ✅ Give enough background without overwhelming
+  - ✅ Highlight HASS-specific considerations (crucial for appropriate
+  critique)
+  - ✅ Point to specific areas of uncertainty/concern
+  - ✅ Request structured, actionable feedback
+
+  Ready to send to Gemini 2.5 Pro or GPT-4o? The context + implementation
+  plan should give them everything needed for substantive critique.
+
+> ok, I think we got some valuable feedback from ChatGPT5.1 (currently 
+rather better than Gemini 2.5). I dropped it into a new folder under 
+'planning', as I think we should probably do this more often: 
+gpt51-feedback/. Please review it carefully and see what you think. Do not 
+simply accept or reject suggestions, be critical but fair: where you see 
+genuine weaknesses, carefully formulate an improvement. Where you see good 
+advice or opportunities for imnprovement, integrate them. Where you see 
+areas that are underdeveloped and that need more research or further 
+guidance from me, ask (if more than 1-2 questions, place in document - we 
+could create a new planning forlder for interactive documents if you think 
+it would improve organisation). This was quite valuable, we should seek 
+these second opinions more often. 
+
+● Read(planning/gpt51-feedback/credibility-implementation-plan-detailed-feedback
+      .md)
+  ⎿  Read 300 lines
+
+● Excellent external review! This is genuinely valuable feedback. Let me
+  analyse it critically and fairly, distinguishing between:
+  1. Strong critiques requiring action (legitimate weaknesses)
+  2. Good opportunities to adopt (improvements we should take)
+  3. Valid concerns needing your input (design decisions requiring
+  discussion)
+  4. Critiques we should respectfully challenge (where our design is
+  actually sound)
+
+  Let me work through this systematically:
+
+● Write(planning/synthesis-external-feedback.md)
+  ⎿  Wrote 789 lines to planning/synthesis-external-feedback.md         
+     # Synthesis: External Feedback Analysis
+     ## Critical Response to GPT-5.1 Review
+     **Document Purpose:** Analyse GPT-5.1 feedback, identify genuine
+     improvements vs areas where our design is sound
+     **Date:** 2025-11-16
+     **Reviewers:** Claude (original plan author) + Shawn (project lead)
+     ---
+     … +779 lines (ctrl+o to expand)
+
+● Perfect! I've completed a comprehensive critical analysis of the GPT-5.1
+  feedback. Here's what I found:
+
+  Summary of My Analysis
+
+  GPT-5.1's review quality: A- (Genuinely valuable, domain-aware, identifies
+   real weaknesses)
+
+  Key Takeaways
+
+  Strong critiques I fully accept (10 items):
+  1. Track A is operationally toothless ← Best critique, completely right
+  2. Approach-specific assessment needs concrete anchors ← Valid, needs
+  operationalization
+  3. Validation under-powered ← Right, need test-retest reliability
+  4. Canonical assessment.json ← Excellent idea for corpus analysis
+  5. Plus 6 more specific improvements
+
+  Critiques I challenge or defer (4 items):
+  1. 7 prompts → fragmentation risk - Valid concern, but defer to empirical
+  test (Phase 1)
+  2. Reduce to 1-2 pages - Reject; our use case needs detail for refinement
+  3. Hard metric-signal rules - Reject; too rigid, defeats LLM flexibility
+  4. Cross-model ensembles - Interesting but premature; defer to later
+
+  Three questions I need your input on:
+
+  Q1: Skill Architecture (High Priority)
+
+  Should we:
+  - A) Extend research-assessor skill (original plan - single skill,
+  integrated)
+  - B) Create separate credibility-assessor skill (GPT-5.1 - separation of
+  concerns)
+  - C) Hybrid approach?
+
+  Q2: RepliCATS Access (Medium Priority)
+
+  Do we have access to repliCATS corpus papers + expert scores for early
+  validation pilot?
+
+  Q3: Gold Standard Micro-Corpus (Lower Priority)
+
+  Would you manually assess 3-5 papers (~6-15 hours) to create human
+  baseline for Phase 4?
+
+  What I Created
+
+  planning/synthesis-external-feedback.md - Detailed analysis including:
+  - Critique-by-critique evaluation
+  - Concrete improvements for each accepted recommendation
+  - Arguments for challenges/rejections
+  - Categorized action items (Adopt/Conditional/Defer/Decline)
+
+  Highlights of improvements to integrate:
+  - Track A quality gating with explicit state machine: {High → Full report}
+   {Moderate → Caveated} {Low → Abort}
+  - Approach-specific scoring anchors (concrete 0-100 scales per approach)
+  - Test-retest reliability checks (run 3x, measure SD)
+  - Canonical assessment.json for corpus analysis
+  - Metric-signal divergence monitoring in Track A
+
+  Your Thoughts?
+
+  What do you think of:
+  1. My critical analysis - did I fairly evaluate the feedback?
+  2. The three questions - ready to answer or need more context?
+  3. GPT-5.1's review overall - worth doing more of these external reviews?
+
+  Once you answer the 3 questions, I'll revise the implementation plan
+  (v2.0) incorporating all accepted improvements.
+
+
+
