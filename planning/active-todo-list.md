@@ -1,7 +1,7 @@
 # Active To-Do List
 
-**Last Updated:** 2025-11-14
-**Status:** All high-priority documentation complete (Phases 1-4) - Medium-priority tasks deferred
+**Last Updated:** 2025-11-17
+**Status:** Phase 7 (Credibility Assessment) Step 2/7 complete - Classification prompt created, ready for testing
 
 ---
 
@@ -29,6 +29,59 @@
 - batch-assess.py header enhanced
 - File naming compliance fixed (DOCUMENTATION_INDEX.md → documentation-index.md, FAIR4RS_COMPLIANCE.md → fair4rs-compliance.md)
 
+### Phase 6: Credibility Metrics Assessment System ✅ (2025-11-15 to 2025-11-16)
+- 8 credibility metrics implemented (ESD, TCI, SCS, RTI, RIS, PGCS, FCS, MDD)
+- Corpus profile generation with metric statistics and interpretations
+- Individual paper scorecards for all 10 papers
+- Bug fixes in ESD and SCS calculations
+- Location tracking simplified (sentence field removed, section/paragraph requirements clarified)
+- Schema v2.5 and skill documentation updated with location requirements
+- Comprehensive metrics reference guide (docs/assessment-guide/credibility-metrics-reference.md)
+
+### Phase 7: Credibility Assessment System - repliCATS Seven Signals (2025-11-16 to 2025-11-17) ⏳
+**Implementation Plan:** `planning/credibility-implementation-plan-v2.0.md`
+
+**Step 1: Create Skill Reference Files** ✅ (2025-11-16)
+- Created 5 credibility reference files in `.claude/skills/research-assessor/references/credibility/`
+  - approach-taxonomy.md (research approach definitions)
+  - harking-detection-guide.md (expressed vs revealed methodology comparison)
+  - signal-definitions-hass.md (Seven Signals adapted for HASS)
+  - assessment-frameworks.md (signal prioritisation by approach)
+  - track-a-quality-criteria.md (quality gating logic)
+- Created 2 schema files in `.claude/skills/research-assessor/references/schema/`
+  - classification-schema.md (Pass 8 output structure)
+  - assessment-schema.md (Pass 9 output structure)
+
+**Step 2: Create Classification Prompt (Pass 8)** ✅ (2025-11-17)
+- Created `assessment-system/prompts/classify-research-approach.md` (1,427 lines)
+- Two-stage classification: paper type → research approach/validation approach
+- Four paper types: empirical, methodological, theoretical, meta-research
+- Three research approaches: deductive, inductive, abductive
+- Taxonomy feedback mechanism for iterative refinement during testing
+- HARKing detection (expressed vs revealed methodology comparison)
+- Context-sensitive "none_stated" methodology handling
+- 11-step workflow with 21-item self-validation checklist
+- 5 complete examples including poor-fit taxonomy proposal
+- classifier_version = "v0.2-alpha"
+
+**Step 3: Test Classifier on 3 Papers** 🔲 (Next)
+- Test on sobotkova-et-al-2024 (expected: empirical/inductive)
+- Test on ballsun-stanton-et-al-2018 (expected: methodological/software_tool)
+  - ⚠️ WARNING: Only has infrastructure-pass6-extraction.json - may need full extraction first
+- Test on penske-et-al-2023 (expected: empirical/deductive)
+- Run each 3 times (9 total runs) for test-retest reliability
+- Measure reliability: SD < 10 threshold
+- Refine prompt based on results
+
+**Remaining Steps:**
+- Step 4: Create Track A quality gating prompt (1 hour)
+- Step 5: Create foundational clarity cluster prompt (1.5 hours)
+- Step 6: Test foundational clarity with reliability checks (1.5 hours)
+- Step 7: Complete remaining cluster prompts (3-4 hours)
+
+**Estimated total effort:** 10-12 hours across all 7 steps
+**Current progress:** Steps 1-2 complete (2.5 hours), Step 3 in progress
+
 ### Deferred Documentation Work
 See "Low Priority / Nice to Have" section (Section 9) for:
 - Quality metrics documentation
@@ -49,11 +102,68 @@ RUN-08 successfully achieved all extraction goals:
 - ✅ Implicit arguments extraction working (16 items)
 - ✅ High relationship mapping (81% evidence, 57% claims)
 
-**Current Focus:** Documentation complete - ready for next major milestone (DOI release, FAIR vocabularies, or corpus expansion)
+**Current Focus:** Credibility assessment implementation (Phase 7) - Step 2 complete (classification prompt), ready for Step 3 (classifier testing on 3 papers with test-retest reliability measurement)
 
 ---
 
-## High Priority
+## High Priority (Current)
+
+### 10. Post-Assessment Cleanup and Enhancement
+
+#### 10.1 Python Scripts Legacy Code Review
+**Priority:** HIGH (after next batch of extractions)
+**Status:** PENDING
+**Effort:** 2-3 hours
+
+**Task:**
+After next batch of extractions (using schema v2.5 with cleaned location requirements), review all Python assessment scripts to:
+- [ ] Remove legacy schema accommodation code (e.g., 'content' vs 'claim_text' fallbacks)
+- [ ] Remove sentence field handling code
+- [ ] Document required schema version in script headers
+- [ ] Update validation to reject non-compliant extractions
+- [ ] Test on new extractions to confirm clean operation
+
+**Scripts to review:**
+- `assessment-system/scripts/analysis_toolkit.py` (metric calculations)
+- `assessment-system/scripts/generate_scorecards.py`
+- `assessment-system/scripts/generate_corpus_profile.py`
+- `extraction-system/scripts/validate_extraction.py`
+- `extraction-system/scripts/validate_bidirectional.py`
+
+**Why deferred:** Current scripts handle both old and new schema gracefully. Clean-up should happen after confirming new extraction workflow produces consistent schema v2.5 outputs.
+
+**Dependencies:** At least 3-5 new extractions using improved pipeline (Nov 2025 workflow with bidirectional validation)
+
+---
+
+#### 10.2 Rich Corpus Interpretation Prompt (Phase 2)
+**Priority:** MEDIUM-HIGH (ready to implement)
+**Status:** DEFERRED pending discussion
+**Effort:** 3-4 hours design + 2-3 hours implementation
+
+**Context:**
+Current corpus profile (corpus-profile-2025-11-16-0724.md) provides metric statistics and paper examples, but interpretation requires manual analysis. An LLM-powered interpretation layer could provide richer insights.
+
+**Proposed enhancement:**
+Create prompt/script that takes corpus profile + individual scorecards and generates:
+- Corpus-level patterns and trends
+- Paper clustering by metric profiles
+- Outlier identification with explanations
+- Metric correlation analysis
+- Disciplinary or temporal patterns
+- Actionable recommendations for corpus improvement
+
+**Questions for discussion:**
+1. What specific interpretations would be most valuable?
+2. Should this be a standalone script or integrated into generate_corpus_profile.py?
+3. What format for output? (Extended markdown section? Separate report? Interactive tool?)
+4. Should interpretation be deterministic (rule-based) or use LLM for flexible analysis?
+
+**See also:** Section 9.1 (Extraction Quality Metrics Documentation) for related deferred work
+
+---
+
+## High Priority (Completed)
 
 ### 1. Repository Documentation
 
