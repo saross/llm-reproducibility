@@ -67,6 +67,34 @@ Write("outputs/paper-name/extraction.json", data)  # Loses data
 jq '{evidence: (.evidence|length), claims: (.claims|length)}' extraction.json
 ```
 
+## Filename Convention Enforcement
+
+**CRITICAL**: Pre-commit hook enforces lowercase-with-hyphens filenames
+
+A git pre-commit hook automatically blocks commits with ALL CAPS filenames.
+
+**Allowed:**
+- ✅ `my-document.md` (lowercase-with-hyphens)
+- ✅ `README.md` (standard exception)
+- ✅ `CONTRIBUTING.md` (standard exception)
+
+**Blocked:**
+- ❌ `MY_DOCUMENT.md` (ALL CAPS)
+- ❌ `My_Document.md` (mixed case/underscores)
+- ❌ `ANALYSIS_REPORT.md` (ALL CAPS)
+
+**Standard exceptions only:** README, CHANGELOG, CONTRIBUTING, CODE_OF_CONDUCT, CLAUDE, SKILL, LICENSE, CITATION
+
+**If hook blocks your commit:**
+1. Rename the file to lowercase-with-hyphens
+2. Re-stage and commit
+3. Never use `--no-verify` unless absolutely necessary
+
+**Installing hook in new clones:**
+```bash
+./scripts/install-git-hooks.sh
+```
+
 ## Project-Specific Acronyms
 
 Expand on first usage in each file:
