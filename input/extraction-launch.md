@@ -3,7 +3,7 @@
 Begin extraction for next paper in queue:
 
 1. **Check queue:** Read `input/queue.yaml` → identify next paper with `status: pending`
-2. **Read workflow:** Read `input/WORKFLOW.md` → understand 7-pass process and planning requirements
+2. **Read workflow:** Read `input/WORKFLOW.md` → understand 8-pass process and planning requirements
 3. **Review model plan:** Read `extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md` → see planning structure and adaptation guidelines
 4. **Invoke skill:** Launch `research-assessor` skill and keep invoked throughout
 5. **Create comprehensive plan:** Follow planning checklist in WORKFLOW.md
@@ -41,7 +41,7 @@ Begin extraction for next paper in queue:
 ## Files to Reference
 
 **Core workflow:**
-- `input/WORKFLOW.md` - Complete 7-pass workflow with planning requirements
+- `input/WORKFLOW.md` - Complete 8-pass workflow with planning requirements
 
 **Planning guidance:**
 - `extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md` - Flexible planning model with adaptation guidelines
@@ -51,6 +51,6 @@ Begin extraction for next paper in queue:
 
 ---
 
-**Version:** 1.0.0 | **Date:** 2025-10-31
+**Version:** 1.1.0 | **Date:** 2025-11-18
 **Purpose:** Brief primer for autonomous extraction planning
 **Principle:** Point to documentation, don't duplicate it; prime thinking, don't prescribe format

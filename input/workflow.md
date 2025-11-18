@@ -10,7 +10,7 @@ When creating extraction plans in planning mode, you MUST include ALL of the fol
 
 ### 1. Skill Invocation
 - [ ] **Invoke research-assessor skill at start of Pre-Flight**
-- [ ] **Keep skill invoked throughout ALL 7 passes**
+- [ ] **Keep skill invoked throughout ALL 8 passes**
 - [ ] **Never proceed without this skill active**
 
 **Why critical:** Skill provides extraction guidance, pattern recognition, and quality checks.
@@ -101,11 +101,11 @@ When creating extraction plans in planning mode, you MUST include ALL of the fol
 
 ## Overview
 
-This document describes the 7-pass autonomous extraction workflow used to systematically extract research designs, methods, protocols, evidence, claims, and implicit arguments from research papers.
+This document describes the 8-pass autonomous extraction workflow used to systematically extract research designs, methods, protocols, evidence, claims, implicit arguments, and reproducibility infrastructure from research papers.
 
-**Schema Version:** 2.5
+**Schema Version:** 2.6
 
-**Workflow Version:** 3.0.0 (adds Pass 0 metadata extraction)
+**Workflow Version:** 4.0.0 (adds Pass 6 infrastructure extraction)
 
 **Extraction Philosophy:**
 - Liberal over-extraction followed by conservative rationalization
@@ -133,7 +133,7 @@ This document describes the 7-pass autonomous extraction workflow used to system
 - Any intermediate step
 
 **ONLY stop if:**
-- All 7 passes complete (extraction fully done)
+- All 8 passes complete (extraction fully done)
 - Critical error requires user intervention
 - Structural problem with input files
 
@@ -159,7 +159,7 @@ This document describes the 7-pass autonomous extraction workflow used to system
 1. Check queue: Read `input/queue.yaml` to identify next paper with `status: pending`
 2. Verify paper exists: Confirm PDF exists at specified path
 3. Create output directory: `outputs/{paper-slug}/`
-4. Initialise schema: Create blank `extraction.json` with schema v2.5 structure
+4. Initialise schema: Create blank `extraction.json` with schema v2.6 structure
 5. Update queue: Set paper status to `in_progress` with initial checkpoint
 
 **Outputs:**
@@ -592,7 +592,60 @@ This phase ensures RDMAP hierarchy integrity before validation.
 
 ---
 
-### Pass 6: Validation & Repair
+### Pass 6: Infrastructure Extraction
+
+**Purpose:** Extract reproducibility infrastructure and assess FAIR compliance
+
+**Input:** Entire paper (focus on front matter, back matter, acknowledgements)
+
+**Output:** Populated `reproducibility_infrastructure` object in extraction.json
+
+**Prompt:** `extraction-system/prompts/06-infrastructure_pass6_prompt.md`
+
+**Script Pattern:** `pass6_infrastructure_extraction.py`
+
+**Approach:**
+- **Section targeting:** Front matter (title page, affiliations), Back matter (acknowledgements, data availability statements, references)
+- **Systematic infrastructure capture:** PIDs, funding, data/code sharing, ethics, permits
+- **FAIR assessment:** 40-point scoring rubric (10 each for Findable, Accessible, Interoperable, Reusable)
+
+**Infrastructure Sections (13 total):**
+
+1. **persistent_identifiers** - Paper DOI, author ORCIDs, data/code DOIs, software PIDs, funder IDs, project IDs
+2. **funding** - Sources, grant numbers, acknowledgement text
+3. **data_availability** - Repositories, DOIs, access conditions, statements
+4. **code_availability** - Repositories, DOIs, licences, documentation
+5. **author_contributions** - CReDIT taxonomy roles, contribution statements
+6. **conflicts_of_interest** - Declarations, relationships
+7. **ethics_approval** - IRB/ethics committee approvals, consent procedures
+8. **permits_and_authorizations** - Fieldwork permits, access permissions, CARE principles compliance
+9. **preregistration** - Protocol registration, OSF links, trial IDs
+10. **supplementary_materials** - Links, descriptions, DOIs
+11. **references_completeness** - Bibliography assessment
+12. **fair_assessment** - Findable (0-10), Accessible (0-10), Interoperable (0-10), Reusable (0-10), total score (0-40)
+13. **extraction_metadata** - Extractor, timestamp, notes
+
+**Critical Rules:**
+- MUST scan front matter for ORCIDs (often in title page footnotes/affiliations)
+- MUST check back matter for funding acknowledgements
+- MUST assess data/code availability statements
+- MUST score FAIR assessment using 40-point rubric
+- Document absence of infrastructure (null values indicate checked but absent)
+
+**Target Infrastructure:**
+- PIDs: 1-10 items (paper DOI always present, author ORCIDs variable, data/code DOIs if shared)
+- Funding: 0-10 sources (varies widely by discipline and project scale)
+- FAIR score: 15-40 (higher for empirical data papers, lower for theoretical papers)
+
+**Checkpoint:** "Pass 6 complete - infrastructure extracted. PIDs: {pid_count}, Funding: {funding_count}, FAIR: {fair_score}/40, Data availability: {data_status}, Code availability: {code_status}."
+
+**Duration:** 30 minutes - 1 hour
+
+**Proceeds to:** Pass 7
+
+---
+
+### Pass 7: Validation
 
 **Purpose:** Comprehensive quality checks and integrity validation
 
@@ -600,9 +653,9 @@ This phase ensures RDMAP hierarchy integrity before validation.
 
 **Output:** Validation report and repaired cross-references if needed
 
-**Prompt:** `extraction-system/prompts/06-validation_pass6_prompt.md`
+**Prompt:** `extraction-system/prompts/07-validation_prompt.md`
 
-**Script Pattern:** `pass6_validation.py` + `pass6_repair_references.py` (if needed)
+**Script Pattern:** `pass7_validation.py` + `pass7_repair_references.py` (if needed)
 
 **Validation Checks:**
 
@@ -617,8 +670,8 @@ This phase ensures RDMAP hierarchy integrity before validation.
 - ✓ No orphaned protocols (missing implements_method)
 - ✓ No orphaned methods (missing implements_design)
 
-**3. Metadata Completeness (NEW - Pass 0)**
-- ✓ All 7 required project_metadata fields non-empty
+**3. Metadata Completeness (Pass 0)**
+- ✓ All 8 required project_metadata fields non-empty
 - ✓ Authors in full name format (not initials)
 - ✓ DOI present or explicitly null
 - ✓ Journal includes volume/issue/pages
@@ -656,7 +709,13 @@ If critical issues found:
 - MUST document all repairs in extraction_notes
 - Warnings are acceptable (e.g., methods without protocols)
 
-**Checkpoint:** "Pass 6 complete - validation status: {status}. {issue_counts}. Total items validated: {total} ({explicit} explicit + {implicit} implicit)."
+**4. Infrastructure Completeness (Pass 6)**
+- ✓ reproducibility_infrastructure object populated
+- ✓ FAIR assessment scored (0-40)
+- ✓ PIDs extracted where present
+- ✓ Data/code availability documented
+
+**Checkpoint:** "Pass 7 complete - validation status: {status}. {issue_counts}. Total items validated: {total} ({explicit} explicit + {implicit} implicit)."
 
 **Duration:** 30 minutes - 1 hour
 
@@ -733,7 +792,7 @@ jq '{evidence: (.evidence | length), claims: (.claims | length), ...}' extractio
 
 **Definition:** All items have either verbatim_quote (explicit) or trigger_text (implicit)
 
-**Validation:** Pass 6 checks sourcing completeness
+**Validation:** Pass 7 checks sourcing completeness
 
 ### Implicit RDMAP Percentage
 
@@ -824,6 +883,14 @@ jq '{evidence: (.evidence | length), claims: (.claims | length), ...}' extractio
 
 ## Version History
 
+### v4.0.0 (2025-11-18)
+- Added Pass 6: Infrastructure Extraction (PIDs, FAIR assessment, funding, ethics, permits)
+- Updated schema from v2.5 to v2.6
+- Renumbered Pass 6 Validation to Pass 7
+- Added Phases 2b and 5b (bidirectional reconciliation scripts)
+- Updated from 7 passes to 8 passes (0-7)
+- Added infrastructure completeness validation checks
+
 ### v3.0.0 (2025-10-30)
 - Added Pass 0: Metadata Extraction
 - Added metadata completeness validation to Pass 6
@@ -845,6 +912,6 @@ jq '{evidence: (.evidence | length), claims: (.claims | length), ...}' extractio
 
 **Maintained by:** research-assessor skill
 
-**Schema Compatibility:** v2.5
+**Schema Compatibility:** v2.6
 
-**Last Updated:** 2025-10-30
+**Last Updated:** 2025-11-18

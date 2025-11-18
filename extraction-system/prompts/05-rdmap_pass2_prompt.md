@@ -517,7 +517,7 @@ When consolidating RDMAP items, cross-references in OTHER arrays must be updated
 
 ```json
 {
-  "schema_version": "2.5",
+  "schema_version": "2.6",
   "extraction_timestamp": "ISO 8601",
   "extractor": "Claude Sonnet 4.5",
   

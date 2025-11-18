@@ -7,10 +7,10 @@ Complete changelog documenting the evolution of the Research Assessor skill from
 
 ---
 
-## Version 2.6 (2025-11-11 to 2025-11-13)
+## Version 2.6 (2025-11-11 to 2025-11-18)
 
 **Status:** Current Release
-**Focus:** Infrastructure assessment capability, 7-pass workflow
+**Focus:** Infrastructure assessment capability, 8-pass workflow
 
 ### New Features
 
@@ -23,7 +23,7 @@ Complete changelog documenting the evolution of the Research Assessor skill from
 - PID connectivity score (0-6)
 - FAIR compliance score (0-15)
 
-**Seven-Pass Workflow:**
+**Eight-Pass Workflow:**
 - Pass 0: Metadata extraction (NEW)
 - Pass 1: Claims/Evidence liberal
 - Pass 2: Claims/Evidence consolidation
@@ -84,7 +84,7 @@ Complete changelog documenting the evolution of the Research Assessor skill from
 
 **Major Updates:**
 - Documentation reorganised to `docs/research-assessor-guide/` (from `docs/skill-documentation/`)
-- All 8 core guides updated for 7-pass workflow (README, quick-reference, usage-guide, architecture, installation-guide, CONTRIBUTING, version)
+- All 8 core guides updated for 8-pass workflow (README, quick-reference, usage-guide, architecture, installation-guide, CONTRIBUTING, version)
 - Infrastructure assessment workflow documented
 - Pass 6 testing findings published
 - User guides updated with Pass 0 and Pass 6 instructions
@@ -337,7 +337,7 @@ Complete changelog documenting the evolution of the Research Assessor skill from
 
 | Version | Date       | Changes |
 |---------|------------|---------|
-| 2.6     | 2025-11-13 | Infrastructure object, metadata, 7-pass workflow |
+| 2.6     | 2025-11-18 | Infrastructure object, metadata, 8-pass workflow |
 | 2.5     | 2025-11-02 | Canonical field names, bidirectional validation |
 | 2.4     | 2025-10-20 | RDMAP arrays, 5-pass workflow |
 | 2.3     | 2025-10-18 | Consolidation metadata, multi-dimensional evidence |

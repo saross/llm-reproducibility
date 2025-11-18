@@ -2,15 +2,15 @@
 
 JSON schema for research paper extraction output.
 
-**Current Version:** 2.5
-**Last Updated:** 2025-10-23
+**Current Version:** 2.6
+**Last Updated:** 2025-11-18
 **File:** [extraction_schema.json](extraction_schema.json)
 
 ---
 
 ## Overview
 
-The extraction schema defines the structure for all extracted content from research papers. It includes six main object types plus metadata and notes.
+The extraction schema defines the structure for all extracted content from research papers. It includes six main object types plus metadata, infrastructure, and notes.
 
 ### Object Types
 
@@ -25,23 +25,28 @@ The extraction schema defines the structure for all extracted content from resea
 
 ## Schema Versioning
 
-### Current Version (2.5)
+### Current Version (2.6)
 
 **Key Features:**
 - All six object types fully specified
+- Infrastructure extraction object with 13 sections
+- FAIR assessment scoring rubric (0-40 scale)
+- Persistent identifier (PID) graph analysis
 - Required verbatim_quote fields (hallucination prevention)
 - Consolidation metadata for traceability
 - Cross-reference system across all object types
 - Source verification fields for validation
 - Expected information checklists (TIDieR, CONSORT-Outcomes)
 
-**Breaking Changes from v2.4:**
-- Made verbatim_quote REQUIRED for evidence and claims
-- Added trigger_text/trigger_locations REQUIRED for implicit arguments
-- Added source_verification object to all three main types
+**Breaking Changes from v2.5:**
+- Added reproducibility_infrastructure REQUIRED object with 13 sections
+- Added FAIR assessment scoring (findable, accessible, interoperable, reusable)
+- Added PID graph connectivity scoring (0-20 scale)
+- Renamed paper_metadata to project_metadata (8 fields total)
 
 ### Version History
 
+- **v2.6** (Nov 18, 2025): Infrastructure extraction, FAIR assessment, PID graph analysis
 - **v2.5** (Oct 23, 2025): Hallucination prevention, repository rationalization
 - **v2.4** (Oct 19-20, 2025): RDMAP objects added (research_designs, methods, protocols)
 - **v2.3** (Oct 18, 2025): Consolidation metadata, multi-dimensional evidence
@@ -57,13 +62,13 @@ See [docs/skill-documentation/VERSION.md](../../docs/skill-documentation/VERSION
 ### For Extraction
 
 **Blank Template:**
-Use [../../examples/blank_template_v2.5.json](../../examples/blank_template_v2.5.json) to start new extractions.
+Use [../../examples/blank_template_v2.6.json](../../examples/blank_template_v2.6.json) to start new extractions.
 
 **Validation:**
 JSON must conform to this schema for:
-- Successful Pass 3 validation
+- Successful Pass 7 validation
 - Cross-reference integrity checks
-- Assessment framework input (future)
+- Assessment framework input
 
 ### For Development
 
@@ -82,15 +87,18 @@ JSON must conform to this schema for:
 
 ```json
 {
-  "schema_version": "2.5",
+  "schema_version": "2.6",
   "extraction_timestamp": "ISO 8601",
   "extractor": "string",
-  "paper_metadata": {
-    "title": "string",
+  "project_metadata": {
+    "paper_title": "string",
     "authors": ["string"],
-    "year": number,
+    "publication_year": number,
+    "journal": "string",
     "doi": "string",
-    ...
+    "paper_type": "string",
+    "discipline": "string",
+    "research_context": "string"
   },
   "evidence": [ {...} ],
   "claims": [ {...} ],
@@ -98,6 +106,21 @@ JSON must conform to this schema for:
   "research_designs": [ {...} ],
   "methods": [ {...} ],
   "protocols": [ {...} ],
+  "reproducibility_infrastructure": {
+    "persistent_identifiers": {...},
+    "funding": {...},
+    "data_availability": {...},
+    "code_availability": {...},
+    "author_contributions": {...},
+    "conflicts_of_interest": {...},
+    "ethics_approval": {...},
+    "permits_and_authorisations": {...},
+    "preregistration": {...},
+    "supplementary_materials": {...},
+    "references_completeness": {...},
+    "fair_assessment": {...},
+    "extraction_metadata": {...}
+  },
   "extraction_notes": {
     "general_notes": "string",
     "ambiguities": [...],
@@ -137,9 +160,45 @@ For objects created in Pass 2 rationalization:
 - `information_preserved`: enum (complete, lossy_granularity, lossy_redundancy)
 - `rationale`: explanation text
 
+### Infrastructure Object
+
+The `reproducibility_infrastructure` object (added in v2.6) contains 13 sections:
+
+1. **persistent_identifiers** - PIDs for paper, authors, data, software, funding
+2. **funding** - Grant information, funding bodies, award numbers
+3. **data_availability** - Data sharing statements, repository links
+4. **code_availability** - Software/script sharing, computational environments
+5. **author_contributions** - CReDIT taxonomy roles
+6. **conflicts_of_interest** - Competing interest declarations
+7. **ethics_approval** - IRB approvals, consent procedures
+8. **permits_and_authorisations** - Research permits, CARE principles compliance
+9. **preregistration** - Study preregistration information
+10. **supplementary_materials** - Additional resources, appendices
+11. **references_completeness** - Citation practices assessment
+12. **fair_assessment** - Findable, Accessible, Interoperable, Reusable scoring (0-40)
+13. **extraction_metadata** - Confidence levels, extraction notes
+
+**FAIR Assessment Scoring:**
+
+- **Findable (0-10):** PIDs, metadata richness, searchability
+- **Accessible (0-10):** Data/code sharing, access protocols, licence clarity
+- **Interoperable (0-10):** Standard formats, controlled vocabularies
+- **Reusable (0-10):** Licence clarity, provenance, domain standards
+
+**PID Graph Connectivity (0-20):** Measures how well PIDs are interconnected
+
 ---
 
 ## Backward Compatibility
+
+### v2.5 → v2.6
+**Breaking:** reproducibility_infrastructure object now REQUIRED
+**Breaking:** paper_metadata renamed to project_metadata (8 fields)
+**Migration:**
+- Add reproducibility_infrastructure object with 13 sections
+- Rename paper_metadata to project_metadata
+- Add infrastructure extraction (Pass 6) before validation (Pass 7)
+- Populate FAIR assessment scores and PID graph connectivity
 
 ### v2.4 → v2.5
 **Breaking:** verbatim_quote now REQUIRED (was optional)
@@ -177,13 +236,15 @@ Use JSON Schema validators to check conformance:
 ajv validate -s extraction_schema.json -d your_extraction.json
 ```
 
-### Pass 3 Validation
-The Pass 3 validation prompt performs:
+### Pass 7 Validation
+The Pass 7 validation prompt performs:
 - Schema conformance checking
 - Cross-reference integrity verification
 - Hierarchy validation (Design → Methods → Protocols)
 - Expected information assessment
 - Consolidation metadata verification
+- Infrastructure completeness checks
+- FAIR assessment validation
 
 See [../../docs/user-guide/extraction-workflow.md](../../docs/user-guide/extraction-workflow.md) for validation workflow.
 
@@ -211,7 +272,7 @@ The schema is designed for fieldwork-based research but can be extended:
 
 - [Schema Reference](../../docs/user-guide/schema-reference.md) - Complete field documentation
 - [Schema Evolution](../../docs/development/schema-evolution.md) - Version history and mappings
-- [Blank Template](../../examples/blank_template_v2.5.json) - Starting point for extraction
+- [Blank Template](../../examples/blank_template_v2.6.json) - Starting point for extraction
 - [Complete Example](../../examples/sobotkova_complete.json) - Real extraction example
 
 ---

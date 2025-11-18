@@ -1,10 +1,10 @@
 # Unified Extraction Plan Model
 
-**Version:** 1.0.0
-**Date:** 2025-10-31
-**Purpose:** Flexible planning template for 7-pass research extraction workflow across diverse paper types
+**Version:** 1.1.0
+**Date:** 2025-11-18
+**Purpose:** Flexible planning template for 8-pass research extraction workflow across diverse paper types
 **Disciplines:** HASS, environmental sciences, fieldwork-based research (archaeology, palaeoecology, ethnography, etc.)
-**Schema:** v2.5 | **Workflow:** v3.0.0 (7-pass with Pass 0 metadata)
+**Schema:** v2.6 | **Workflow:** v4.0.0 (8-pass: 0-7)
 
 ---
 
@@ -26,7 +26,7 @@ Before creating your extraction plan, complete this checklist:
 - [ ] **Paper assessed:** Examine PDF for length, structure, type, complexity
 - [ ] **Skill preparation:** Ready to invoke `research-assessor` at Pre-Flight start
 - [ ] **Model reviewed:** Read this unified model for guidance
-- [ ] **Workflow understood:** Familiarise with `input/WORKFLOW.md` 7-pass structure
+- [ ] **Workflow understood:** Familiarise with `input/WORKFLOW.md` 8-pass structure
 
 ## ✓ Mandatory Plan Components
 
@@ -34,7 +34,7 @@ Every extraction plan MUST include all of the following:
 
 ### 1. Skill Invocation
 - [ ] **Invoke research-assessor skill at start of Pre-Flight**
-- [ ] **Keep skill invoked throughout ALL 7 passes**
+- [ ] **Keep skill invoked throughout ALL 8 passes**
 - [ ] **Never proceed without this skill active**
 
 **Why critical:** Skill provides extraction guidance, pattern recognition, quality checks
@@ -84,6 +84,19 @@ Every extraction plan MUST include all of the following:
 ---
 
 # Part 2: Paper Analysis Framework
+
+## Critical Principle: Always Run All 8 Passes
+
+**All papers receive all 8 passes (0-7), regardless of paper type.**
+
+Paper type classification informs *how you adapt* each pass (item count expectations, section attention strategy, consolidation targets), NOT which passes to run.
+
+**Why:** Initial assumptions about pass utility have proven incorrect. For example, methodological papers were assumed to need minimal RDMAP extraction, but empirical testing showed:
+- Pass 2 consolidation achieved 28% reduction (meaningful rationalization)
+- RDMAP extraction captured the research contribution (software development, testing, evaluation procedures)
+- Implicit RDMAP items exposed methodological opacity (unstated tracking/comparison methods)
+
+**Approach:** Gather empirical evidence using the full pipeline before making workflow adjustments for any paper type.
 
 ## Step 1: Identify Paper Type
 
@@ -282,7 +295,7 @@ Split at conceptual/thematic boundaries:
 2. Check queue: Read `input/queue.yaml` → identify paper with `status: pending`
 3. Verify paper exists at specified path
 4. Create output directory: `outputs/{paper-slug}/`
-5. Initialise extraction.json with blank schema v2.5
+5. Initialise extraction.json with blank schema v2.6
 6. Update queue.yaml: Set status to `in_progress`, add checkpoint
 
 **Output:**
@@ -524,9 +537,82 @@ miss RDMAP items.
 
 ---
 
-## Pass 6: Validation & Repair (30-60 min)
+## Pass 6: Infrastructure Extraction (45-90 min)
 
 ### Planning Requirements for Pass 6
+
+**Objective:** Extract reproducibility infrastructure and assess FAIR compliance
+
+**Approach:** Systematic scan of entire paper with focus on front matter, back matter, and acknowledgements sections
+
+**13 Infrastructure Sections to Extract:**
+
+1. **Persistent Identifiers (PIDs)**
+   - Paper DOI (from metadata)
+   - Author ORCIDs (from title page, author list)
+   - Data PIDs (DOIs, IGSNs from data availability statements)
+   - Software PIDs (GitHub, Zenodo, CRAN from code availability)
+   - Funding PIDs (RAiDs, CrossRef Funder IDs)
+   - PID graph connectivity scoring (0-20 scale)
+
+2. **Funding** - Grants, funding bodies, award numbers
+
+3. **Data Availability** - Data sharing statements, repository URLs, access restrictions
+
+4. **Code Availability** - Software/scripts sharing, GitHub links, computational environments
+
+5. **Author Contributions** - CReDIT taxonomy roles (Conceptualization, Data curation, etc.)
+
+6. **Conflicts of Interest** - Declarations of competing interests
+
+7. **Ethics Approval** - IRB/ethics committee approvals, consent procedures
+
+8. **Permits and Authorisations** - Research permits, access permissions, CARE principles compliance
+
+9. **Preregistration** - Study preregistration (OSF, clinical trials registries)
+
+10. **Supplementary Materials** - Supplementary files, appendices, online resources
+
+11. **References Completeness** - Citation practices, data citations, software citations
+
+12. **FAIR Assessment** - Findable, Accessible, Interoperable, Reusable (scored 0-40)
+
+13. **Extraction Metadata** - Confidence levels, missing information flags
+
+**FAIR Scoring Rubric (0-40 total):**
+
+- **Findable (0-10):** PIDs, metadata richness, searchability
+- **Accessible (0-10):** Data/code sharing, access protocols, licence clarity
+- **Interoperable (0-10):** Standard formats, controlled vocabularies, integration potential
+- **Reusable (0-10):** Licence clarity, provenance documentation, domain standards
+
+**Critical Rules:**
+
+- Extract ALL PIDs found (not just DOI)
+- Assess PID graph connectivity (how PIDs link to each other)
+- Apply CARE principles for Indigenous/community data (appropriate restrictions do NOT penalise FAIR scores)
+- Document missing information explicitly (null vs not_mentioned vs not_applicable)
+- Score FAIR dimensions independently (0-10 each)
+
+**Where to Look:**
+
+- **Front matter:** Title page (ORCIDs), acknowledgements (funding, permits)
+- **Data availability section:** Data PIDs, sharing statements
+- **Code/software section:** GitHub links, computational environments
+- **Author contributions section:** CReDIT roles
+- **Ethics section:** IRB approvals, consent
+- **References:** Data citations, software citations
+- **Supplementary materials section:** Additional resources
+
+**Script pattern:** pass6_infrastructure.py
+
+**Checkpoint:** "Pass 6 complete - infrastructure extraction populated 13 sections. FAIR score: {fair_total}/40 ({findable}F + {accessible}A + {interoperable}I + {reusable}R). PIDs: {pid_count} total ({paper_doi} + {orcid_count} ORCIDs + {data_pids} data + {software_pids} software + {other_pids} other). PID graph connectivity: {connectivity}/20."
+
+---
+
+## Pass 7: Validation (30-60 min)
+
+### Planning Requirements for Pass 7
 
 **Objective:** Comprehensive quality checks and integrity validation
 
@@ -544,7 +630,7 @@ miss RDMAP items.
    - No orphaned methods (missing implements_design)
 
 3. **Metadata Completeness**
-   - All 7 required project_metadata fields non-empty
+   - All 8 required project_metadata fields non-empty
    - Authors in full name format (not initials)
    - DOI present or explicitly null
    - Journal includes volume/issue/pages
@@ -563,6 +649,12 @@ miss RDMAP items.
    - All page numbers are positive integers
    - Page numbers within reasonable range for paper length
 
+7. **Infrastructure Completeness**
+   - reproducibility_infrastructure object present
+   - FAIR assessment scores (0-40) calculated
+   - PID graph connectivity assessed
+   - All 13 infrastructure sections populated (null if not applicable)
+
 **Validation status:**
 - **PASS:** No critical or important issues
 - **PASS_WITH_WARNINGS:** Minor issues only (acceptable)
@@ -570,14 +662,14 @@ miss RDMAP items.
 - **FAIL:** Critical issues present (MUST repair before proceeding)
 
 **Repair process (if FAIL):**
-1. Create repair script: pass6_repair_references.py
+1. Create repair script: pass7_repair_references.py
 2. Document broken references and repairs
 3. Update cross-references to consolidated IDs
 4. Re-run validation to confirm PASS status
 
-**Script pattern:** pass6_validation.py + pass6_repair_references.py (if needed)
+**Script pattern:** pass7_validation.py + pass7_repair_references.py (if needed)
 
-**Checkpoint:** "Pass 6 complete - validation status: {status}. {issue_counts}. Total items validated: {total} ({explicit} explicit + {implicit} implicit)."
+**Checkpoint:** "Pass 7 complete - validation status: {status}. {issue_counts}. Total items validated: {total} ({explicit} explicit + {implicit} implicit). Infrastructure: {infrastructure_sections} sections populated, FAIR score: {fair_score}/40."
 
 ---
 
@@ -608,12 +700,12 @@ miss RDMAP items.
 
 **Changes:**
 - Status: `pending` → `completed`
-- Notes: "COMPLETED - 7-pass extraction with 100% sourcing completeness"
-- Checkpoint: Final item counts and validation status
+- Notes: "COMPLETED - 8-pass extraction with 100% sourcing completeness"
+- Checkpoint: Final item counts, validation status, and infrastructure metrics
 
 **Final checkpoint format:**
 ```yaml
-checkpoint: "EXTRACTION COMPLETE - {total} total items ({evidence} evidence, {claims} claims, {implicit_arguments} implicit_arguments, {designs} research_designs, {methods} methods, {protocols} protocols). Validation: {status}. Implicit RDMAP: {implicit_pct}%. Rationalization: {pass2_pct}% claims, {pass5_pct}% RDMAP. {paper_type} successfully extracted."
+checkpoint: "EXTRACTION COMPLETE - {total} total items ({evidence} evidence, {claims} claims, {implicit_arguments} implicit_arguments, {designs} research_designs, {methods} methods, {protocols} protocols). Validation: {status}. Infrastructure: {infrastructure_sections} sections, FAIR {fair_score}/40. Implicit RDMAP: {implicit_pct}%. Rationalization: {pass2_pct}% claims, {pass5_pct}% RDMAP."
 ```
 
 ---
@@ -787,9 +879,10 @@ checkpoint: "EXTRACTION COMPLETE - {total} total items ({evidence} evidence, {cl
 | Pass 3: RDMAP Liberal | 2-3 hours | 3-5 hours | 5-8 hours |
 | Pass 4: Implicit RDMAP | 1-1.5 hours | 1-2 hours | 1.5-2 hours |
 | Pass 5: Rationalize RDMAP | 1-1.5 hours | 1.5-2 hours | 2-3 hours |
-| Pass 6: Validation | 30-45 min | 45-60 min | 60-90 min |
+| Pass 6: Infrastructure | 45-60 min | 60-75 min | 75-90 min |
+| Pass 7: Validation | 30-45 min | 45-60 min | 60-90 min |
 | Summary generation | 15-20 min | 20-30 min | 30-45 min |
-| **Total** | **8-12 hours** | **12-18 hours** | **18-25 hours** |
+| **Total** | **9-13 hours** | **13-19 hours** | **19-27 hours** |
 
 ## Complexity Multipliers
 
@@ -809,7 +902,7 @@ Add time for:
 
 **Definition:** All items have either verbatim_quote (explicit) or trigger_text (implicit)
 
-**Validation:** Pass 6 checks sourcing completeness
+**Validation:** Pass 7 checks sourcing completeness
 
 **Failure condition:** Any item missing sourcing field
 
@@ -885,8 +978,10 @@ After completing extraction, verify:
 - [ ] **Pass 3:** Research designs extracted from ALL sections (not just Methods)
 - [ ] **Pass 4:** Implicit RDMAP percentage documented (10-30% range)
 - [ ] **Pass 5:** RDMAP hierarchy links updated after consolidation
-- [ ] **Pass 6:** Validation status PASS or PASS_WITH_WARNINGS
-- [ ] **Pass 6:** All critical issues repaired
+- [ ] **Pass 6:** Infrastructure extraction complete (13 sections populated)
+- [ ] **Pass 6:** FAIR assessment scored (0-40), PID graph connectivity assessed
+- [ ] **Pass 7:** Validation status PASS or PASS_WITH_WARNINGS
+- [ ] **Pass 7:** All critical issues repaired
 - [ ] **Summary:** summary.md generated with complete extraction report
 - [ ] **Queue:** queue.yaml updated to completed status
 
@@ -1022,7 +1117,7 @@ Before considering plan complete, verify:
 
 ---
 
-**Version:** 1.0.0 | **Date:** 2025-10-31
+**Version:** 1.1.0 | **Date:** 2025-11-18
 **Maintained by:** research-assessor skill
-**Schema compatibility:** v2.5 | **Workflow version:** 3.0.0 (7-pass)
+**Schema compatibility:** v2.6 | **Workflow version:** 4.0.0 (8-pass: 0-7)
 **For questions:** Refer to input/WORKFLOW.md for complete process documentation
