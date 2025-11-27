@@ -1,0 +1,132 @@
+# Project Manifest - Single Source of Truth for Versions
+# Last Updated: 2025-11-27
+#
+# This manifest tracks version information for all project components.
+# READMEs and documentation should reference this file for consistency.
+
+project:
+  name: LLM-Based Research Extraction and Assessment
+  version: "2.6"
+  status: Extraction system complete, assessment framework in development
+  last_updated: "2025-11-27"
+  repository: https://github.com/saross/llm-reproducibility
+
+# Core component versions
+components:
+  schema:
+    version: "2.6"
+    file: extraction-system/schema/extraction-schema-v2.6.json
+    last_updated: "2025-11-18"
+    description: JSON schema for extraction output with infrastructure object
+
+  workflow:
+    version: "4.0.0"
+    passes: 8  # Pass 0-7
+    file: input/workflow.md
+    last_updated: "2025-11-18"
+    description: Complete 8-pass extraction workflow (0-7)
+
+  extraction_plan:
+    version: "1.1.0"
+    file: extraction-system/extraction-plan-unified-model.md
+    last_updated: "2025-11-18"
+    description: Flexible planning model for diverse paper types
+
+  extraction_launch:
+    version: "1.1.0"
+    file: input/extraction-launch.md
+    last_updated: "2025-11-18"
+    description: Brief primer for starting autonomous extractions
+
+  skill:
+    name: research-assessor
+    version: "2.6"
+    path: .claude/skills/research-assessor/
+    last_updated: "2025-11-18"
+    description: Extraction and assessment skill for Claude Code
+
+# Assessment system (in development)
+assessment:
+  status: in_development
+  classification_prompt:
+    version: "0.2-alpha"
+    file: assessment-system/prompts/classify-research-approach.md
+    last_updated: "2025-11-17"
+    description: Pass 8 research approach classification
+
+# Workflow structure
+workflow_passes:
+  - pass: 0
+    name: Metadata Extraction
+    prompt: extraction-system/prompts/00-metadata_pass0_prompt.md
+  - pass: 1
+    name: Claims/Evidence Liberal
+    prompt: extraction-system/prompts/01-claims-evidence_pass1_prompt.md
+  - pass: 2
+    name: Claims/Evidence Consolidation
+    prompt: extraction-system/prompts/02-claims-evidence_pass2_prompt.md
+  - pass: 3
+    name: RDMAP Liberal
+    prompt: extraction-system/prompts/03-rdmap_pass1a_explicit_prompt.md
+  - pass: 4
+    name: RDMAP Implicit
+    prompt: extraction-system/prompts/04-rdmap_pass1b_implicit_prompt.md
+  - pass: 5
+    name: RDMAP Consolidation
+    prompt: extraction-system/prompts/05-rdmap_pass2_prompt.md
+  - pass: 6
+    name: Infrastructure Extraction
+    prompt: extraction-system/prompts/06-infrastructure_pass6_prompt.md
+  - pass: 7
+    name: Validation
+    prompt: extraction-system/prompts/07-validation_prompt.md
+
+# Key documentation files
+documentation:
+  main_readme: README.md
+  extraction_readme: extraction-system/README.md
+  skill_readme: .claude/skills/research-assessor/SKILL.md
+  workflow_guide: docs/user-guide/extraction-workflow.md
+  schema_reference: docs/user-guide/schema-reference.md
+  version_history: docs/research-assessor-guide/version.md
+
+# Corpus statistics
+corpus:
+  papers_extracted: 10
+  queue_file: input/queue.yaml
+  output_directory: outputs/
+
+# Version history summary
+version_history:
+  - version: "2.6"
+    date: "2025-11-18"
+    changes:
+      - Infrastructure extraction (Pass 6) with 13 sections
+      - FAIR assessment scoring (0-40)
+      - PID graph connectivity analysis
+      - 8-pass workflow (Pass 0-7)
+      - Schema v2.6 with reproducibility_infrastructure object
+
+  - version: "2.5"
+    date: "2025-10-23"
+    changes:
+      - Repository rationalisation and FAIR4RS preparation
+      - Hallucination prevention (required verbatim_quote)
+      - Canonical field names
+
+  - version: "2.4"
+    date: "2025-10-20"
+    changes:
+      - RDMAP extraction framework
+      - 5-pass workflow
+
+  - version: "2.3"
+    date: "2025-10-18"
+    changes:
+      - Consolidation metadata
+      - Multi-dimensional evidence
+
+# Licence information
+licences:
+  code: Apache-2.0
+  documentation: CC-BY-4.0
