@@ -1,6 +1,7 @@
 ---
 name: research-assessor
-description: Extracts and assesses research methodology, claims, evidence, and infrastructure from research papers in HASS disciplines. Evaluates transparency, replicability, and credibility through systematic extraction (seven-pass workflow) and credibility assessment (research approach classification, quality gating, and repliCATS Seven Signals evaluation adapted for HASS).
+description: Extracts and assesses research methodology, claims, evidence, and infrastructure from research papers in HASS disciplines. Evaluates transparency, replicability, and credibility through systematic extraction (eight-pass workflow, Pass 0-7) and credibility assessment (research approach classification, quality gating, and repliCATS Seven Signals evaluation adapted for HASS).
+version: "2.6"
 license: Apache 2.0
 ---
 

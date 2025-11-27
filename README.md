@@ -5,9 +5,10 @@
 
 Automated extraction of claims, evidence, and methodology from research papers using Large Language Models, enabling systematic assessment of research transparency, replicability, and credibility.
 
-**Version:** 2.6
+**Version:** 2.6 | **Schema:** v2.6 | **Workflow:** 8-pass (0-7)
 **Status:** Extraction system complete and tested, assessment framework in development
 **Target Domains:** Fieldwork-based research (archaeology, ecology, ethnography, field geology, etc.)
+**Manifest:** See [manifest.yaml](manifest.yaml) for component versions
 
 ---
 
@@ -46,14 +47,14 @@ See [docs/user-guide/pdf-extraction.md](docs/user-guide/pdf-extraction.md) for m
 
 ### 3. Run Extraction
 
-Use the seven-pass workflow (Pass 0-6):
+Use the eight-pass workflow (Pass 0-7):
 
 0. **Metadata Pass**: Extract publication metadata and paper structure
 1. **Claims/Evidence Pass 1**: Liberal extraction of evidence, claims, implicit arguments
-2. **Claims/Evidence Pass 2**: Rationalization and consolidation
+2. **Claims/Evidence Pass 2**: Rationalisation and consolidation
 3. **RDMAP Pass 1a**: Liberal extraction of research designs, methods, protocols
 4. **RDMAP Pass 1b**: Implicit RDMAP extraction
-5. **RDMAP Pass 2**: Rationalization and tier verification
+5. **RDMAP Pass 2**: Rationalisation and tier verification
 6. **Infrastructure Pass**: Extract PIDs, FAIR assessment, funding, permits
 7. **Validation Pass**: Structural integrity checks
 
@@ -65,13 +66,16 @@ See [docs/user-guide/extraction-workflow.md](docs/user-guide/extraction-workflow
 
 ```text
 llm-reproducibility/
+├── input/                 # Workflow entry points (queue, launch prompt, workflow)
 ├── extraction-system/     # All extraction tools (skill, prompts, schema, scripts)
+├── assessment-system/     # Assessment tools (in development)
 ├── docs/                  # Documentation (user guides, skill docs, development)
 ├── examples/              # Curated extraction examples
+├── outputs/               # Extraction outputs organised by paper
 ├── planning/              # Active project planning (assessment phase upcoming)
 ├── reports/               # Key testing and QA reports
-├── sources/               # Source papers (PDFs and processed markdown)
-├── archive/               # Development history organized by version
+├── archive/               # Development history organised by version
+├── manifest.yaml          # Component version manifest (source of truth)
 ├── LICENSE-CODE           # Apache 2.0 (code)
 ├── LICENSE-DOCS           # CC-BY-4.0 International (documentation)
 └── CITATION.cff           # Machine-readable citation
@@ -79,11 +83,16 @@ llm-reproducibility/
 
 ### Key Directories
 
+- **[input/](input/)** - Workflow entry points
+  - `workflow.md` - Authoritative 8-pass extraction workflow
+  - `extraction-launch.md` - Quick-start primer for new extractions
+  - `queue.yaml` - Paper processing queue with status tracking
+
 - **[extraction-system/](extraction-system/)** - Complete extraction toolkit
   - `prompts/` - Eight extraction prompts (Pass 0-7)
   - `schema/` - JSON schema for extraction output (v2.6)
   - `scripts/` - PDF text extraction and validation utilities
-  - `templates/` - Extraction templates
+  - `extraction-plan-unified-model.md` - Flexible planning guidance
 
 - **[docs/](docs/)** - All documentation
   - `user-guide/` - Getting started, workflow, schema reference
@@ -109,7 +118,7 @@ llm-reproducibility/
 
 ## Features
 
-### Extraction System (v2.5)
+### Extraction System (v2.6)
 
 **Six Object Types:**
 - Evidence - Observations, measurements, data points
@@ -119,10 +128,10 @@ llm-reproducibility/
 - Methods - Tactical approaches (WHAT was done)
 - Protocols - Operational procedures (HOW specifically)
 
-**Multi-Pass Workflow (7 passes):**
+**Multi-Pass Workflow (8 passes, 0-7):**
 - Pass 0: Metadata extraction
-- Passes 1-2: Claims/Evidence (liberal extraction → rationalization)
-- Passes 3-5: RDMAP (liberal → implicit → rationalization)
+- Passes 1-2: Claims/Evidence (liberal extraction → rationalisation)
+- Passes 3-5: RDMAP (liberal → implicit → rationalisation)
 - Pass 6: Infrastructure (PIDs, FAIR, funding, permits)
 - Pass 7: Validation ensuring structural integrity
 
@@ -157,7 +166,7 @@ See [planning/cwts_implementation_plan.md](planning/cwts_implementation_plan.md)
 
 ### User Guides
 - [Getting Started](docs/user-guide/getting-started.md) - Installation and first extraction
-- [Extraction Workflow](docs/user-guide/extraction-workflow.md) - Complete 7-pass workflow (Pass 0-6 plus validation)
+- [Extraction Workflow](docs/user-guide/extraction-workflow.md) - Complete 8-pass workflow (Pass 0-7)
 - [PDF Extraction](docs/user-guide/pdf-extraction.md) - Preparing papers for analysis
 - [Schema Reference](docs/user-guide/schema-reference.md) - Understanding the extraction schema
 

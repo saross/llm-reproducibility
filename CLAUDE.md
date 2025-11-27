@@ -1,5 +1,8 @@
 # LLM Reproducibility Project - Research Paper Extraction
 
+**Version:** 2.6 | **Schema:** v2.6 | **Workflow:** 8-pass (0-7)
+**Manifest:** See `manifest.yaml` for all component versions
+
 ## Project Purpose
 
 Systematic extraction and assessment of evidence, claims, methods, and research designs from academic papers using the `research-assessor` skill. Evaluates transparency, replicability, and credibility of fieldwork-based research.
@@ -14,9 +17,9 @@ You MUST work continuously without asking permission:
 
 - ✅ **Never ask "Would you like me to continue?"**
 - ✅ **Never ask "Should I proceed to the next section?"**
-- ✅ **Never stop between passes (0→1→2→3→4→5→6)**
+- ✅ **Never stop between passes (0→1→2→3→4→5→6→7)**
 - ✅ **Never stop between section groups**
-- ✅ **Work until all 7 passes complete**
+- ✅ **Work until all 8 passes complete**
 
 ### Continue Automatically After
 
@@ -29,7 +32,7 @@ You MUST work continuously without asking permission:
 
 ### Only Stop If
 
-- ✅ All 7 passes complete (extraction done)
+- ✅ All 8 passes complete (extraction done)
 - ✅ Error requires user intervention (document in queue.yaml)
 - ✅ Structural problem with input files
 
@@ -42,11 +45,13 @@ You MUST work continuously without asking permission:
 
 ## Workflow Reference
 
-**Core workflow:** `input/WORKFLOW.md` - Complete 7-pass extraction process (Pass 0-6) with planning requirements
+**Core workflow:** `input/workflow.md` - Complete 8-pass extraction process (Pass 0-7) with planning requirements
 
-**Planning guidance:** `extraction-system/EXTRACTION_PLAN_UNIFIED_MODEL.md` - Flexible planning model adapted for diverse paper types (empirical/methodological/short/long/multi-proxy)
+**Planning guidance:** `extraction-system/extraction-plan-unified-model.md` - Flexible planning model adapted for diverse paper types (empirical/methodological/short/long/multi-proxy)
 
-**Launch prompt:** `input/EXTRACTION_LAUNCH.md` - Brief primer for starting new extractions
+**Launch prompt:** `input/extraction-launch.md` - Brief primer for starting new extractions
+
+**Queue:** `input/queue.yaml` - Paper processing queue with checkpoint/resume support
 
 ## File Operations Safety
 
@@ -105,11 +110,14 @@ Expand on first usage in each file:
 - **HASS**: Humanities, Arts, and Social Sciences
 
 ## Key Files and Structure
-```
+
+```text
+manifest.yaml              # Component version manifest (source of truth)
+
 input/
-├── queue.yaml              # Paper processing queue (checkpoint/resume)
-├── WORKFLOW.md            # Complete 5-pass extraction workflow
-└── papers/                # PDF papers to process
+├── queue.yaml             # Paper processing queue (checkpoint/resume)
+├── workflow.md            # Complete 8-pass extraction workflow
+└── extraction-launch.md   # Quick-start primer for new extractions
 
 outputs/
 └── {paper-slug}/
@@ -117,8 +125,12 @@ outputs/
     └── {paper-slug}.txt   # Extracted plain text
 
 extraction-system/
-├── prompts/              # Pass-specific extraction prompts
-└── schema/              # JSON schema definitions
+├── prompts/               # Pass-specific extraction prompts (00-07)
+├── schema/                # JSON schema definitions (v2.6)
+└── extraction-plan-unified-model.md  # Flexible planning guidance
+
+assessment-system/
+└── prompts/               # Assessment prompts (Pass 8-9, in development)
 ```
 
 ## Skills Used

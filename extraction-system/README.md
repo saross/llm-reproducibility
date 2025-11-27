@@ -2,9 +2,8 @@
 
 Complete toolkit for extracting structured knowledge representations from research papers using the research-assessor skill and Claude Code.
 
-**Version:** 2.6
-**Workflow:** 7-pass extraction (Pass 0-6 plus validation)
-**Schema:** JSON v2.6
+**Version:** 2.6 | **Workflow:** 8-pass (0-7) | **Schema:** v2.6
+**Manifest:** See [../manifest.yaml](../manifest.yaml) for component versions
 
 ---
 
@@ -65,9 +64,9 @@ python scripts/pdf_processing/extract_pdf_text.py "paper.pdf"
 # Output: input/sources/processed-md/paper.md
 ```
 
-### 2. Seven-Pass Extraction
+### 2. Eight-Pass Extraction
 
-The extraction workflow processes each paper through seven sequential passes:
+The extraction workflow processes each paper through eight sequential passes (0-7):
 
 #### Pass 0: Metadata Extraction
 - Extract publication metadata
@@ -160,10 +159,10 @@ See [docs/user-guide/extraction-workflow.md](../docs/user-guide/extraction-workf
 **Current:** v2.6 (Nov 2025)
 
 Major features:
-- Complete 7-pass workflow support
-- Infrastructure assessment capability
+- Complete 8-pass workflow support (Pass 0-7)
+- Infrastructure assessment capability (13 sections)
+- FAIR assessment scoring (0-40)
 - Bidirectional relationship tracking
-- FAIR assessment framework
 - Canonical field names
 
 See schema/README.md for version history and migration guides.
@@ -229,10 +228,17 @@ See [../CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.
 
 ## Related Documentation
 
-- **User Guide**: [docs/user-guide/](../docs/user-guide/)
+- **Workflow Entry Points** (in `input/`):
+  - [input/workflow.md](../input/workflow.md) - Authoritative 8-pass workflow
+  - [input/extraction-launch.md](../input/extraction-launch.md) - Quick-start primer
+  - [input/queue.yaml](../input/queue.yaml) - Paper processing queue
+
+- **Planning Guidance**:
+  - [extraction-plan-unified-model.md](extraction-plan-unified-model.md) - Flexible planning for diverse paper types
+
+- **User Guides**: [docs/user-guide/](../docs/user-guide/)
 - **Skill Documentation**: [docs/research-assessor-guide/](../docs/research-assessor-guide/)
 - **Schema Reference**: [docs/user-guide/schema-reference.md](../docs/user-guide/schema-reference.md)
-- **Authoritative Workflow**: [input/workflow.md](../input/workflow.md)
 
 ---
 
