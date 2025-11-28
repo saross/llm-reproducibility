@@ -292,6 +292,30 @@ Assess paper credibility using repliCATS Seven Signals adapted for HASS with app
 - `references/credibility/track-a-quality-criteria.md` - Quality gating decision logic (HIGH/MODERATE/LOW states)
 - `references/schema/assessment-schema.md` - Cluster file and assessment.json structure specifications
 
+**🚨 CRITICAL: Where to Find Code/Data Availability**
+
+For Transparency signal assessment, code/data availability is in `reproducibility_infrastructure` (NOT in `evidence[]`):
+
+```
+extraction.json → reproducibility_infrastructure
+├── code_availability
+│   ├── statement_present: true|false
+│   ├── repositories: [{name, url, access_conditions}]
+│   └── machine_actionability: {rating, rationale}
+├── data_availability
+│   ├── statement_present: true|false
+│   ├── repositories: [{name, url, access_conditions}]
+│   └── machine_actionability: {rating, rationale}
+├── persistent_identifiers
+│   └── software_pids: [{software_name, repository, doi, url}]
+├── preregistration
+│   └── preregistered: true|false
+└── fair_assessment (if populated)
+    └── total_fair_score, fair_percentage
+```
+
+Always check these sections when assessing Transparency. Do NOT rely on `evidence[]` for code/data information.
+
 ### Key Adaptations for HASS
 
 **Replicability = Analytic Reproducibility** (NOT field replication)

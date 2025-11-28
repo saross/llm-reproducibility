@@ -159,8 +159,16 @@ comprehensibility:
 - `research_designs[]` - Explicit design statements
 - `methods[]` - Method descriptions
 - `protocols[]` - Documented procedures
-- `evidence[]` - Check for repository links, data access statements
 - `implicit_methods[]` - Undocumented procedures (transparency gaps)
+
+**🚨 CRITICAL - Also read from extraction.json:**
+- `reproducibility_infrastructure.code_availability` - Code repositories, GitHub links, software DOIs
+- `reproducibility_infrastructure.data_availability` - Data repositories, data DOIs, access statements
+- `reproducibility_infrastructure.preregistration` - Pre-registration status
+- `reproducibility_infrastructure.persistent_identifiers` - DOIs for code/data
+- `reproducibility_infrastructure.fair_assessment` - FAIR compliance scores (if populated)
+
+**DO NOT rely on `evidence[]` for code/data availability** - this information is in `reproducibility_infrastructure`
 
 **Assessment Dimensions:**
 
@@ -218,8 +226,10 @@ comprehensibility:
 Document specific evidence from extraction.json:
 - Quote 2-3 exemplary methods/protocols (well/poorly documented)
 - Note any implicit_methods flagged (transparency gaps)
-- Reference any data access statements in evidence[]
-- Note any limitations or scope statements
+- **Check `reproducibility_infrastructure.code_availability`** - statement_present, repositories[], machine_actionability
+- **Check `reproducibility_infrastructure.data_availability`** - statement_present, repositories[], machine_actionability
+- **Check `reproducibility_infrastructure.persistent_identifiers.software_pids`** - code DOIs
+- Note any limitations or scope statements in research_designs[]
 
 **Score Assignment:**
 
@@ -485,6 +495,18 @@ Before finalising cluster-1-foundational-clarity.md, verify:
 
 **✅ Justify by referencing specific anchor band criteria**
 - "Score: 75 (Good for inductive). Research goals clearly stated (60-79 criterion), data collection documented (60-79), but analysis workflow lacks detail (would need for 80-100)."
+
+---
+
+**❌ Missing code/data availability check**
+- "No code repository identified" (without checking `reproducibility_infrastructure.code_availability`)
+- Looking only at `evidence[]` for repository information
+
+**✅ Always check `reproducibility_infrastructure` for code/data**
+- Check `reproducibility_infrastructure.code_availability.statement_present` and `.repositories[]`
+- Check `reproducibility_infrastructure.data_availability.statement_present` and `.repositories[]`
+- Check `reproducibility_infrastructure.persistent_identifiers.software_pids[]` for code DOIs
+- This section is populated in Pass 6 and contains all code/data availability information
 
 ---
 
