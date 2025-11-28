@@ -1,0 +1,84 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-11-27",
+    "classifier_version": "v0.2-alpha",
+    "paper_slug": "sobotkova-et-al-2024"
+  },
+
+  "paper_type": "empirical",
+  "paper_type_justification": "This paper collects and analyses empirical data about ML model performance in archaeological prospection. The research question targets a phenomenon in the world (whether CNNs can effectively detect burial mounds). Claims describe and explain model performance outcomes. Methods (CNN training, validation) are tools used to investigate the research question, not the subject being investigated. Primary contribution is understanding ML effectiveness for archaeological prospection, not presenting the CNN methodology itself.",
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "deductive",
+    "evidence": [
+      "RD001: 'External validation design comparing ML model predictions against comprehensive field survey data' - explicit validation/testing framework",
+      "RD002: 'Comparative two-run design testing impact of training data curation on model performance' - hypothesis-testing design",
+      "Abstract: 'validate the performance of a pre-trained CNN' - validation language indicates testing predictions",
+      "Methods explicitly describe validation against 'ground truth' field data"
+    ],
+    "source_sections": ["abstract", "data", "methods"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "deductive",
+    "evidence": {
+      "claims_structure": "Claims report validation outcomes: 'First model run had high false positive (87.1%) and false negative (95.3%) rates', 'Second model run performed worse with higher false positive (94.8%)'. Claims test whether predictions match reality - hypothesis-testing results structure.",
+      "methods_application": "Methods used for prediction testing: ML model generates predictions → predictions tested against comprehensive field survey data → performance metrics calculated (precision, recall, false positive/negative rates). This is confirmatory validation workflow.",
+      "analytical_workflow": "Prediction → Test → Result sequence: (1) Train ML model to predict mound locations, (2) Apply model to generate predictions, (3) Compare predictions against field-verified ground truth, (4) Calculate performance metrics, (5) Interpret why predictions failed. Deductive validation workflow with secondary interpretive analysis of failure modes."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Paper explicitly frames as validation study and actually conducts validation. Both expressed and revealed approaches are deductive: testing ML predictions against empirical ground truth. Methodological transparency is high. No discrepancy between stated design (validation) and actual approach (validation)."
+  },
+
+  "primary_classification": {
+    "approach": "deductive",
+    "confidence": "high",
+    "justification": "This is clearly deductive validation research. The paper has explicit prediction-testing structure: (1) ML model makes predictions about mound locations (functioning as hypotheses), (2) Predictions tested against comprehensive field survey data (ground truth), (3) Results confirm/reject predictions (high error rates = predictions largely rejected). Research designs explicitly use validation language (RD001, RD002). Claims report hypothesis-testing outcomes (false positive/negative rates, precision/recall). While paper includes secondary interpretive analysis of why model failed (exploratory element), primary structure is deductive validation. Classification unambiguous."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": true,
+    "primary_approach": "deductive",
+    "secondary_approaches": ["inductive"],
+    "qualifications": [
+      "Primary approach is deductive validation: testing ML predictions against ground truth",
+      "Secondary inductive element: exploratory analysis of failure modes (why did model detect roads instead of mounds?)",
+      "Inductive documentation of patterns in model errors",
+      "Appropriate mixed design: validation results (deductive) inform exploratory failure analysis (inductive)",
+      "Deductive framework dominant; inductive elements serve interpretation of validation results"
+    ]
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Explicit research design statements present in Abstract and Methods. Validation approach clearly described. Research designs (RD001-RD004) explicitly articulate design rationale. High methodological transparency for validation study. Methods describe CNN architecture, training procedures, and validation protocol in detail."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "deductive_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["validity", "robustness", "replicability"],
+      "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
+      "deemphasised_signals": ["generalisability"],
+      "rationale": "Deductive validation study prioritises: (1) Validity - evidence adequacy for testing ML predictions (comprehensive ground truth data), (2) Robustness - sensitivity to analytical choices (two model runs, different training data), (3) Replicability - code/data availability for reproducing validation. Transparency high but secondary since design already explicit. Generalisability appropriately constrained to Kazanlak Valley context."
+    }
+  },
+
+  "classification_notes": "Straightforward deductive validation study. Paper tests ML predictions against field data with explicit validation design. Secondary inductive elements (failure mode analysis) do not change primary classification. Note: User expected 'inductive' classification - actual classification is 'deductive' based on validation study structure. This disagreement may inform classifier calibration if user expected different outcome."
+}
