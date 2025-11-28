@@ -1,0 +1,84 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-11-28",
+    "classifier_version": "v0.2-alpha",
+    "paper_slug": "sobotkova-et-al-2024",
+    "reliability_run": 3
+  },
+
+  "paper_type": "empirical",
+  "paper_type_justification": "Empirical investigation of ML model performance. Research question concerns effectiveness of CNNs for mound detection - a question about phenomena (model performance in heterogeneous landscapes). Methods are tools for investigation. Claims evaluate outcomes rather than present methodology.",
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "deductive",
+    "evidence": [
+      "Title: 'Validating predictions of burial mounds with field data' - explicit validation/testing language",
+      "RD001: External validation design comparing predictions against ground truth",
+      "RD002: Two-run comparative design testing training data curation hypothesis",
+      "RD004: Cost-benefit analysis comparing ML against manual alternative"
+    ],
+    "source_sections": ["title", "abstract", "methods", "discussion"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "deductive",
+    "evidence": {
+      "claims_structure": "Test outcome claims dominate: 'both models failed' (C002), 'demonstrates the limitations' (C001), 'model has detected incidental features' (C003). Claims report whether predictions matched reality - validation outcomes, not pattern discoveries.",
+      "methods_application": "Validation methodology: CNN generates predictions → predictions compared against 773 field-verified mounds → performance metrics calculated. Confirmatory testing workflow with pre-specified ground truth benchmark.",
+      "analytical_workflow": "Prediction → Test → Interpretation: (1) Models trained to predict mound locations, (2) Predictions tested against comprehensive field survey, (3) Performance quantified (false positive/negative rates), (4) Results interpreted. Secondary failure mode analysis explores why predictions failed, but primary workflow is validation."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Expressed validation design matches revealed validation practice. Paper explicitly states it will validate predictions and actually conducts that validation. No HARKing detected - design clear from outset."
+  },
+
+  "primary_classification": {
+    "approach": "deductive",
+    "confidence": "high",
+    "justification": "Validation study with clear deductive structure. ML model predictions function as implicit hypotheses tested against ground truth data. Evidence: (1) Title explicitly states 'validating predictions', (2) Four research designs all involve testing/validation/comparison (RD001-RD004), (3) Claims report test outcomes rather than emergent patterns, (4) Analytical workflow follows Prediction → Test → Result. The secondary inductive failure mode analysis ('why did models detect roads instead of mounds?') serves the primary validation goal - understanding why validation failed. Classification robust."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": true,
+    "primary_approach": "deductive",
+    "secondary_approaches": ["inductive"],
+    "qualifications": [
+      "Primary: Deductive validation testing ML predictions against field data",
+      "Secondary: Inductive exploration of failure modes (model confusing roads/forests with mounds)",
+      "RD003 explicitly frames negative results documentation - appropriate for validation study reporting failure",
+      "Mixed design serves validation goal: understanding both whether and why predictions fail"
+    ]
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Validation framework explicit from title through methods. Research designs clearly articulated with rationale. Model architecture, training, and validation protocols documented. High transparency for validation study."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "deductive_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["validity", "robustness", "replicability"],
+      "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
+      "deemphasised_signals": ["generalisability"],
+      "rationale": "Deductive validation framework: (1) Validity - adequacy of 773 field-verified mounds as ground truth, (2) Robustness - two model runs testing training data curation impact, (3) Replicability - code and data availability for reproduction. Generalisability constrained to study area context, which is appropriate for validation study."
+    }
+  },
+
+  "classification_notes": "Run 3 reliability test. Classification stable: empirical/deductive. The validation study structure is unambiguous - title, research designs, claims structure, and analytical workflow all indicate deductive approach. No reasonable alternative classification exists given the evidence."
+}
