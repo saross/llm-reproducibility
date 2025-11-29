@@ -135,7 +135,7 @@ assessment-system/prompts/
 ├── track-a-quality-gate.md                    # Quality gating (~300 lines)
 ├── assess-foundational-clarity.md             # Comprehensibility + Transparency (~500 lines)
 ├── assess-evidential-strength.md              # Plausibility + Validity + Robustness (~550 lines)
-├── assess-reproducibility-scope.md            # Replicability + Generalisability (~400 lines)
+├── assess-reproducibility-scope.md            # Reproducibility + Generalisability (~400 lines)
 └── generate-credibility-report.md             # Report synthesis (~400 lines)
 ```
 
@@ -265,9 +265,9 @@ cluster-1.md  cluster-2.md cluster-3.md
 - **Interaction:** Plausibility → Validity → Robustness is reasoning chain
 - **Size:** ~550 lines (slightly over threshold, but tightly related content)
 
-**Cluster 3: Reproducibility & Scope (Replicability + Generalisability)**
+**Cluster 3: Reproducibility & Scope (Reproducibility + Generalisability)**
 - **Conceptual link:** Both assess appropriate boundaries and reproduction
-- **Interaction:** Replicability infrastructure enables generalisability assessment
+- **Interaction:** Reproducibility infrastructure enables generalisability assessment
 - **Size:** ~400 lines (well under threshold)
 
 ### Execution Dependencies
@@ -296,7 +296,7 @@ cluster-1.md  cluster-2.md cluster-3.md
 
 **Updated description:**
 ```yaml
-description: Extracts and assesses research methodology, claims, evidence, and infrastructure from research papers in HASS disciplines. Evaluates transparency, replicability, and credibility through systematic extraction (seven-pass workflow) and credibility assessment (research approach classification, quality gating, and repliCATS Seven Signals evaluation adapted for HASS).
+description: Extracts and assesses research methodology, claims, evidence, and infrastructure from research papers in HASS disciplines. Evaluates transparency, reproducibility, and credibility through systematic extraction (seven-pass workflow) and credibility assessment (research approach classification, quality gating, and repliCATS Seven Signals evaluation adapted for HASS).
 ```
 
 #### SKILL.md Workflow Section Addition
@@ -326,7 +326,7 @@ description: Extracts and assesses research methodology, claims, evidence, and i
 2. **Signal cluster assessment** (if quality ≥ moderate):
    - Assess foundational clarity (Comprehensibility + Transparency)
    - Assess evidential strength (Plausibility + Validity + Robustness)
-   - Assess reproducibility & scope (Replicability + Generalisability)
+   - Assess reproducibility & scope (Reproducibility + Generalisability)
    - Apply approach-specific scoring anchors
 
 3. **Report generation:**
@@ -639,7 +639,7 @@ outputs/{paper-slug}/
 │   ├── clusters/                            # NEW: Signal cluster assessments
 │   │   ├── cluster-1-foundational-clarity.md    # Comprehensibility + Transparency
 │   │   ├── cluster-2-evidential-strength.md     # Plausibility + Validity + Robustness
-│   │   └── cluster-3-reproducibility-scope.md   # Replicability + Generalisability
+│   │   └── cluster-3-reproducibility-scope.md   # Reproducibility + Generalisability
 │   ├── credibility-report-v1.md             # 3-5 page report (or -CAVEATED.md)
 │   ├── assessment.json                      # NEW: Canonical consolidation
 │   └── assessment-not-viable.md             # Only if quality_state = "low"
@@ -1091,7 +1091,7 @@ This assessment is subject to the following limitations:
 | Plausibility        | 80    | 80-100| High       | Evidential Strength  |
 | Validity            | 72    | 60-79 | High       | Evidential Strength  |
 | Robustness          | 68    | 60-79 | Medium     | Evidential Strength  |
-| Replicability       | 65    | 60-79 | High       | Reproducibility/Scope|
+| Reproducibility       | 65    | 60-79 | High       | Reproducibility/Scope|
 | Generalisability    | 75    | 60-79 | High       | Reproducibility/Scope|
 
 **Mean Score:** 72 (Good credibility - approaching excellent in some signals)
@@ -1151,13 +1151,13 @@ This assessment is subject to the following limitations:
 
 ### Cluster 3: Reproducibility & Scope
 
-**Cluster Score:** 70 average (Replicability 65, Generalisability 75)
+**Cluster Score:** 70 average (Reproducibility 65, Generalisability 75)
 
-#### Signal 6: Replicability (65/100 - Good)
+#### Signal 6: Reproducibility (65/100 - Good)
 
 [~150-200 words]
 
-**Approach Context:** [Replicability for inductive research = analytic reproducibility, not field replication]
+**Approach Context:** [Reproducibility for inductive research = analytic reproducibility, not field replication]
 
 #### Signal 7: Generalisability (75/100 - Good)
 
@@ -1227,11 +1227,11 @@ Example:
 
 **Credibility Signature:** [Descriptive characterization - e.g., "Strong on communication and plausibility, good on validity, moderate on reproducibility"]
 
-**Comparison to Corpus:** [If available - e.g., "Above corpus mean (68) in comprehensibility and plausibility; at corpus mean for replicability"]
+**Comparison to Corpus:** [If available - e.g., "Above corpus mean (68) in comprehensibility and plausibility; at corpus mean for reproducibility"]
 
 **Trustworthiness Assessment:** [Overall judgment with caveats]
 
-**Replicability Outlook:** [What aspects could be replicated analytically? What could not?]
+**Reproducibility Outlook:** [What aspects could be replicated analytically? What could not?]
 
 ---
 
@@ -1267,7 +1267,7 @@ Example:
 
 - `assessment/clusters/cluster-1-foundational-clarity.md` (Comprehensibility + Transparency)
 - `assessment/clusters/cluster-2-evidential-strength.md` (Plausibility + Validity + Robustness)
-- `assessment/clusters/cluster-3-reproducibility-scope.md` (Replicability + Generalisability)
+- `assessment/clusters/cluster-3-reproducibility-scope.md` (Reproducibility + Generalisability)
 
 ### Canonical Assessment Data
 
@@ -1334,7 +1334,7 @@ Example:
 - **Outputs:**
   - clusters/cluster-1-foundational-clarity.md (Comprehensibility + Transparency)
   - clusters/cluster-2-evidential-strength.md (Plausibility + Validity + Robustness)
-  - clusters/cluster-3-reproducibility-scope.md (Replicability + Generalisability)
+  - clusters/cluster-3-reproducibility-scope.md (Reproducibility + Generalisability)
 
 **PROMPT 6: generate-credibility-report.md (~400 lines)**
 - **Inputs:**
@@ -1697,15 +1697,15 @@ test -f assessment-not-viable.md && echo "Correctly aborted"
 **Hypothesis:**
 - Transparency should be PRIMARY for inductive (sobotkova) → expect higher emphasis, detailed justification
 - Validity/Robustness should be PRIMARY for deductive (penske) → expect higher emphasis
-- Replicability interpretation should differ:
+- Reproducibility interpretation should differ:
   - Inductive: Analytic reproducibility (workflow documentation)
   - Deductive: Pre-registration + data/code sharing
 
 **Analysis:**
 ```bash
-# Extract Replicability scores and justifications from both papers
-grep -A 20 "Signal 6: Replicability" sobotkova-2024/cluster-3.md | grep "Scoring Justification"
-grep -A 20 "Signal 6: Replicability" penske-2023/cluster-3.md | grep "Scoring Justification"
+# Extract Reproducibility scores and justifications from both papers
+grep -A 20 "Signal 6: Reproducibility" sobotkova-2024/cluster-3.md | grep "Scoring Justification"
+grep -A 20 "Signal 6: Reproducibility" penske-2023/cluster-3.md | grep "Scoring Justification"
 
 # Compare:
 # sobotkova justification should reference "workflow documentation" (inductive anchor)
@@ -1728,7 +1728,7 @@ grep -A 20 "Signal 6: Replicability" penske-2023/cluster-3.md | grep "Scoring Ju
 **Analysis:**
 ```bash
 # Extract all scores from 3 runs
-for signal in comprehensibility transparency plausibility validity robustness replicability generalisability; do
+for signal in comprehensibility transparency plausibility validity robustness reproducibility generalisability; do
   echo "Signal: $signal"
   grep -i "$signal" cluster-*-run*.md | grep "Score:" | awk '{print $2}' | cut -d'/' -f1
   # Calculate SD manually or with script
@@ -1767,14 +1767,14 @@ grep -h "**Score:**" */assessment/clusters/*.md | awk '{print $2}' | cut -d'/' -
 **Process:**
 1. For each paper, identify pairs of signals that should correlate:
    - Comprehensibility ↔ Transparency (communication quality)
-   - Transparency ↔ Replicability (documentation quality)
+   - Transparency ↔ Reproducibility (documentation quality)
    - Plausibility ↔ Validity (evidence quality)
    - Validity ↔ Robustness (evidence strength)
 
 2. Check for unexplained divergences (>20 points difference)
 
 **Example checks:**
-- High Transparency (80) but Low Replicability (40) → Suspicious (methods documented but not reproducible? Needs explanation)
+- High Transparency (80) but Low Reproducibility (40) → Suspicious (methods documented but not reproducible? Needs explanation)
 - Low Comprehensibility (40) but High Plausibility (80) → Suspicious (poorly communicated but plausible? Unlikely, needs explanation)
 
 **Analysis:**
@@ -1784,9 +1784,9 @@ echo "Comprehensibility vs Transparency:"
 grep "comprehensibility" -A 1 cluster-1.md | grep "Score:"
 grep "transparency" -A 1 cluster-1.md | grep "Score:"
 
-echo "Transparency vs Replicability:"
+echo "Transparency vs Reproducibility:"
 grep "transparency" -A 1 cluster-1.md | grep "Score:"
-grep "replicability" -A 1 cluster-3.md | grep "Score:"
+grep "reproducibility" -A 1 cluster-3.md | grep "Score:"
 
 # If divergence > 20 points, check cluster files for explanation in justifications or cross-signal coherence sections
 ```
@@ -1832,7 +1832,7 @@ jq '.signals | length' assessment/assessment.json
 
 # Check signal names correct
 jq '.signals[].signal_name' assessment/assessment.json
-# Should list all 7: comprehensibility, transparency, plausibility, validity, robustness, replicability, generalisability
+# Should list all 7: comprehensibility, transparency, plausibility, validity, robustness, reproducibility, generalisability
 
 # Verify scores match cluster files
 # Example: Extract Comprehensibility score from assessment.json
@@ -1948,7 +1948,7 @@ grep -h "quality_state:" outputs/*/assessment/track-a-quality.md | sort | uniq -
 jq -s '.' outputs/*/assessment/assessment.json > corpus-assessments.json
 
 # Calculate mean scores per signal across corpus
-for signal in comprehensibility transparency plausibility validity robustness replicability generalisability; do
+for signal in comprehensibility transparency plausibility validity robustness reproducibility generalisability; do
   echo -n "$signal: "
   jq -r --arg sig "$signal" '.[] | .signals[] | select(.signal_name==$sig) | .score' corpus-assessments.json | \
     awk '{sum+=$1; n++} END {print sum/n}'
@@ -1958,12 +1958,12 @@ done
 jq -r '.[].classification.revealed_approach' corpus-assessments.json | sort | uniq -c
 
 # Approach-specific signal profiles
-# Example: Compare mean Replicability scores for inductive vs deductive papers
-echo "Inductive Replicability mean:"
-jq -r '.[] | select(.classification.revealed_approach=="inductive") | .signals[] | select(.signal_name=="replicability") | .score' corpus-assessments.json | awk '{sum+=$1; n++} END {print sum/n}'
+# Example: Compare mean Reproducibility scores for inductive vs deductive papers
+echo "Inductive Reproducibility mean:"
+jq -r '.[] | select(.classification.revealed_approach=="inductive") | .signals[] | select(.signal_name=="reproducibility") | .score' corpus-assessments.json | awk '{sum+=$1; n++} END {print sum/n}'
 
-echo "Deductive Replicability mean:"
-jq -r '.[] | select(.classification.revealed_approach=="deductive") | .signals[] | select(.signal_name=="replicability") | .score' corpus-assessments.json | awk '{sum+=$1; n++} END {print sum/n}'
+echo "Deductive Reproducibility mean:"
+jq -r '.[] | select(.classification.revealed_approach=="deductive") | .signals[] | select(.signal_name=="reproducibility") | .score' corpus-assessments.json | awk '{sum+=$1; n++} END {print sum/n}'
 
 # Expected: Deductive should score higher (stricter standards as per anchors)
 # If no difference → approach anchors not being applied properly
@@ -2023,12 +2023,12 @@ Create `planning/cross-paper-assessment-patterns.md`:
 **Inductive papers (n=6):**
 - Mean Transparency: 72 (PRIMARY signal, as expected)
 - Mean Comprehensibility: 68 (PRIMARY signal)
-- Mean Replicability: 58 (lower, as expected - workflow docs vary)
+- Mean Reproducibility: 58 (lower, as expected - workflow docs vary)
 
 **Deductive papers (n=3):**
 - Mean Validity: 75 (PRIMARY signal, as expected)
 - Mean Robustness: 70 (PRIMARY signal)
-- Mean Replicability: 68 (higher than inductive, as expected - better code sharing)
+- Mean Reproducibility: 68 (higher than inductive, as expected - better code sharing)
 
 **Pattern confirmation:** Approach-specific anchors ARE being applied (profiles differ as expected) ✓
 
@@ -2037,7 +2037,7 @@ Create `planning/cross-paper-assessment-patterns.md`:
 - Likely reflects improving data sharing norms
 
 ### Disciplinary Patterns
-- Archaeology papers: Lower Replicability (field constraints)
+- Archaeology papers: Lower Reproducibility (field constraints)
 - Digital humanities papers: Higher Transparency (computational methods)
 
 ### Outliers
@@ -2046,7 +2046,7 @@ Create `planning/cross-paper-assessment-patterns.md`:
   - Coherent, not error
 
 ### Rubric Refinements Identified
-1. Replicability anchors for inductive research need refinement (scores clustering 55-65, not discriminating)
+1. Reproducibility anchors for inductive research need refinement (scores clustering 55-65, not discriminating)
 2. Robustness assessment may be conflating sensitivity analysis with triangulation (clarify in prompt)
 3. [...]
 ```
@@ -2467,11 +2467,11 @@ Include:
    - Relevant metrics: ESD (for Validity), RTI (for Robustness)
 
 2. Create `assess-reproducibility-scope.md` (~400 lines)
-   - Replicability + Generalisability
+   - Reproducibility + Generalisability
    - Rationale: Boundaries and reproduction
-   - Approach-specific anchors (especially Replicability: analytic reproducibility for inductive vs pre-registration for deductive)
+   - Approach-specific anchors (especially Reproducibility: analytic reproducibility for inductive vs pre-registration for deductive)
    - Cross-signal coherence
-   - Relevant metrics: RIS, FCS (for Replicability), SCS (for Generalisability)
+   - Relevant metrics: RIS, FCS (for Reproducibility), SCS (for Generalisability)
 
 **Effort estimate:**
 - Evidential strength prompt: 1.5 hours (3 signals, tight interactions)

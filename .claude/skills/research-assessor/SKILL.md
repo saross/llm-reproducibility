@@ -1,6 +1,6 @@
 ---
 name: research-assessor
-description: Extracts and assesses research methodology, claims, evidence, and infrastructure from research papers in HASS disciplines. Evaluates transparency, replicability, and credibility through systematic extraction (eight-pass workflow, Pass 0-7) and credibility assessment (research approach classification, quality gating, and repliCATS Seven Signals evaluation adapted for HASS).
+description: Extracts and assesses research methodology, claims, evidence, and infrastructure from research papers in HASS disciplines. Evaluates transparency, reproducibility, and credibility through systematic extraction (eight-pass workflow, Pass 0-7) and credibility assessment (research approach classification, quality gating, and repliCATS Seven Signals evaluation adapted for HASS).
 version: "2.6"
 license: Apache 2.0
 ---
@@ -25,7 +25,7 @@ This skill enables comprehensive extraction of research content and infrastructu
 5. **Research Approach Classification** (Pass 8) - Classify research approach (deductive/inductive/abductive) with expressed vs revealed methodology comparison and HARKing detection
 6. **Credibility Assessment** (Pass 9) - Quality-gated assessment using repliCATS Seven Signals adapted for HASS with approach-specific scoring anchors
 
-The extracted data enables systematic assessment of research transparency, replicability, and credibility.
+The extracted data enables systematic assessment of research transparency, reproducibility, and credibility.
 
 ## When to Use This Skill
 
@@ -33,7 +33,7 @@ Use when users request:
 - "Extract methodology from this paper"
 - "Assess research transparency"
 - "Extract claims and evidence"
-- "Evaluate replicability"
+- "Evaluate reproducibility"
 - "Extract research designs and methods"
 - Any task involving systematic analysis of research papers for methodology, argumentation, or credibility assessment
 
@@ -256,9 +256,11 @@ Assess paper credibility using repliCATS Seven Signals adapted for HASS with app
 
 **Step 2: Signal cluster assessment** (if quality ≥ moderate)
 
-- **Cluster 1: Foundational Clarity** (Comprehensibility + Transparency)
-- **Cluster 2: Evidential Strength** (Plausibility + Validity + Robustness)
-- **Cluster 3: Reproducibility & Scope** (Replicability + Generalisability)
+Assessment is organised into **three pillars** (see `references/credibility/assessment-pillars.md`):
+
+- **Cluster 1: Foundational Clarity** (Transparency pillar: Comprehensibility + Transparency)
+- **Cluster 2: Evidential Strength** (Credibility pillar: Plausibility + Validity + Robustness + Generalisability)
+- **Cluster 3: Reproducibility** (Reproducibility pillar: Reproducibility signal only)
 - Apply approach-specific scoring anchors (0-100 scale varies by research approach)
 
 **Step 3: Report generation**
@@ -272,9 +274,9 @@ Assess paper credibility using repliCATS Seven Signals adapted for HASS with app
 **If quality_state = "high" or "moderate":**
 
 - `track-a-quality.md` - Quality assessment
-- `cluster-1-foundational-clarity.md` - First cluster assessment
-- `cluster-2-evidential-strength.md` - Second cluster assessment
-- `cluster-3-reproducibility-scope.md` - Third cluster assessment
+- `cluster-1-foundational-clarity.md` - Transparency pillar assessment
+- `cluster-2-evidential-strength.md` - Credibility pillar assessment
+- `cluster-3-reproducibility.md` - Reproducibility pillar assessment
 - `credibility-report-v1.md` (or `-CAVEATED.md` if moderate)
 - `assessment.json` - Canonical consolidation
 
@@ -287,6 +289,7 @@ Assess paper credibility using repliCATS Seven Signals adapted for HASS with app
 
 **Credibility assessment guidance:**
 
+- `references/credibility/assessment-pillars.md` - Three pillars framework (Transparency, Credibility, Reproducibility)
 - `references/credibility/signal-definitions-hass.md` - Seven Signals with approach-specific scoring anchors (0-100 scale for deductive/inductive/abductive)
 - `references/credibility/assessment-frameworks.md` - Framework selection and signal emphasis by research approach
 - `references/credibility/track-a-quality-criteria.md` - Quality gating decision logic (HIGH/MODERATE/LOW states)
@@ -318,10 +321,10 @@ Always check these sections when assessing Transparency. Do NOT rely on `evidenc
 
 ### Key Adaptations for HASS
 
-**Replicability = Analytic Reproducibility** (NOT field replication)
+**Reproducibility = Analytic or Computational Reproducibility** (NOT beginning-to-end reproducibility)
 
 - Can others reproduce analytical outputs given same inputs?
-- "Can you re-excavate the site?" (impossible) vs "Can you reproduce the analysis?" (expected)
+- "Can you replicate the entire study?" (often impossible in HASS) vs "Can you reproduce the analysis?" (expected)
 
 **Approach-Specific Anchors:**
 
@@ -332,7 +335,7 @@ Always check these sections when assessing Transparency. Do NOT rely on `evidenc
 
 **CARE Principles Integration:**
 
-- Indigenous/community data: Appropriate restrictions do NOT penalise Replicability
+- Indigenous/community data: Appropriate restrictions do NOT penalise Reproducibility
 - CARE principles (Collective benefit, Authority to control, Responsibility, Ethics) alongside FAIR
 
 ## Important Notes

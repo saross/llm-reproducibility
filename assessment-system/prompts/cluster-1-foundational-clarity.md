@@ -1,9 +1,24 @@
 # Cluster 1: Foundational Clarity Assessment
 
-**Version:** v1.0
-**Last Updated:** 2025-11-28
+**Version:** v1.1
+**Last Updated:** 2025-11-29
 **Workflow Stage:** Pass 9 - Cluster 1 of 3
+**Pillar:** Transparency
 **Signals Assessed:** Comprehensibility, Transparency
+
+---
+
+## Three Pillars Context
+
+This cluster assesses the **Transparency pillar** — the first of three assessment pillars:
+
+| Pillar | Core Question | Signals | This Cluster |
+|--------|---------------|---------|--------------|
+| **Transparency** | Is the work documented and artefacts published? | Comprehensibility, Transparency | ✅ |
+| Credibility | How much faith can we put in the results? | Plausibility, Validity, Robustness, Generalisability | Cluster 2 |
+| Reproducibility | Can computational aspects be re-executed? | Reproducibility | Cluster 3 |
+
+**See:** `references/credibility/assessment-pillars.md` for the full framework
 
 ---
 

@@ -902,22 +902,22 @@ Would results hold under different reasonable analytical approaches? Are conclus
 
 ---
 
-## Signal 6: Replicability (Analytic Reproducibility)
+## Signal 6: Reproducibility (Analytic/Computational Reproducibility)
 
 ### Definition
 
-Can others reproduce the **analytical outputs** given the same inputs? (Note: For HASS, this means analytic reproducibility, NOT field replication of non-repeatable phenomena)
+Can others reproduce the **analytical outputs** given the same inputs? (Note: For HASS, this means analytic or computational reproducibility, NOT beginning-to-end reproducibility or replication of fieldwork)
 
 ### HASS-Specific Considerations
 
-**Critical adaptation for HASS:** Replicability = Analytic Reproducibility, NOT field replication
+**Critical adaptation for HASS:** Reproducibility = Analytic or computational reproducibility, NOT beginning-to-end reproducibility or replication of the overall research
 
 - Can others reproduce the **analytical outputs** given the same inputs?
 - Are data and code available and complete?
 - Are computational workflows documented?
 - Can analytical steps be traced and rerun?
 
-**Important:** This does NOT mean "can you re-excavate the site" (impossible) — it means "given the excavation data, can you reproduce the analysis?"
+**Important:** This does NOT mean "can you replicate the entire study" (often impossible in HASS) — it means "given the data, can you reproduce the computational/analytical outputs?"
 
 ### Assessment Questions
 
@@ -954,7 +954,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 
 #### For Deductive Research (Hypothesis-Testing)
 
-**80-100: Excellent Replicability**
+**80-100: Excellent Reproducibility**
 
 - Complete raw data publicly available with persistent identifiers
 - All analysis code shared with documentation
@@ -963,7 +963,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - Outputs completely reproducible
 - FAIR principles met
 
-**60-79: Good Replicability**
+**60-79: Good Reproducibility**
 
 - Data available (may have minor gaps)
 - Code shared with basic documentation
@@ -971,7 +971,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - Most outputs reproducible
 - FAIR principles mostly met
 
-**40-59: Moderate Replicability**
+**40-59: Moderate Reproducibility**
 
 - Data partially available
 - Some code shared (may be incomplete)
@@ -979,7 +979,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - Some outputs reproducible
 - Partial FAIR compliance
 
-**20-39: Low Replicability**
+**20-39: Low Reproducibility**
 
 - Minimal data sharing
 - Fragmentary code or no code
@@ -987,7 +987,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - Outputs difficult to reproduce
 - Limited FAIR compliance
 
-**0-19: Minimal Replicability**
+**0-19: Minimal Reproducibility**
 
 - No data sharing
 - No code
@@ -997,7 +997,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 
 #### For Inductive Research (Exploratory, Pattern-Finding)
 
-**80-100: Excellent Replicability**
+**80-100: Excellent Reproducibility**
 
 - Data archived with comprehensive documentation
 - Analysis workflow documented (even if not fully automated)
@@ -1007,7 +1007,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - FAIR/CARE principles met (where appropriate)
 - *Note: Full code automation not required; workflow transparency is key*
 
-**60-79: Good Replicability**
+**60-79: Good Reproducibility**
 
 - Data archived with documentation
 - Workflow documented
@@ -1016,7 +1016,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - Metadata adequate
 - FAIR/CARE principles mostly met
 
-**40-59: Moderate Replicability**
+**40-59: Moderate Reproducibility**
 
 - Data partially archived
 - Workflow partially documented
@@ -1025,7 +1025,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - Metadata present
 - Partial FAIR/CARE compliance
 
-**20-39: Low Replicability**
+**20-39: Low Reproducibility**
 
 - Minimal data archiving
 - Workflow poorly documented
@@ -1034,7 +1034,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - Metadata minimal
 - Limited FAIR/CARE compliance
 
-**0-19: Minimal Replicability**
+**0-19: Minimal Reproducibility**
 
 - No data archiving
 - No workflow documentation
@@ -1045,7 +1045,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 
 #### For Abductive Research (Inference to Best Explanation)
 
-**80-100: Excellent Replicability**
+**80-100: Excellent Reproducibility**
 
 - Evidence sources fully documented and accessible
 - Reasoning process explicitly traceable
@@ -1053,9 +1053,9 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - Alternative interpretations documented
 - Interpretive decisions explained
 - Source materials archived
-- *Note: "Replication" means others can trace reasoning, not necessarily reach same conclusion*
+- *Note: For abductive research, "reproducibility" means others can trace the reasoning process, not necessarily reach the same conclusion*
 
-**60-79: Good Replicability**
+**60-79: Good Reproducibility**
 
 - Sources documented and mostly accessible
 - Reasoning process traceable
@@ -1064,7 +1064,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - Decisions explained
 - Materials mostly archived
 
-**40-59: Moderate Replicability**
+**40-59: Moderate Reproducibility**
 
 - Sources partially documented
 - Reasoning partially traceable
@@ -1073,7 +1073,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - Some decisions explained
 - Partial archiving
 
-**20-39: Low Replicability**
+**20-39: Low Reproducibility**
 
 - Minimal source documentation
 - Reasoning difficult to trace
@@ -1082,7 +1082,7 @@ Can others reproduce the **analytical outputs** given the same inputs? (Note: Fo
 - Decisions unexplained
 - Minimal archiving
 
-**0-19: Minimal Replicability**
+**0-19: Minimal Reproducibility**
 
 - No source documentation
 - Reasoning not traceable
@@ -1311,6 +1311,7 @@ Can findings transfer to other contexts? Are claims carefully constrained by pla
 
 ## Related References
 
+- `assessment-pillars.md` - Three pillars framework (Transparency, Credibility, Reproducibility)
 - `approach-taxonomy.md` - Research approach definitions (deductive/inductive/abductive)
 - `assessment-frameworks.md` - Signal emphasis by research approach
 - `track-a-quality-criteria.md` - Quality gating for credibility assessment

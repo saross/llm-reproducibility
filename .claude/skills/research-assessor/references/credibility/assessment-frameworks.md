@@ -12,6 +12,18 @@ Different research approaches require different credibility assessment prioritie
 
 **Key Principle:** Avoid category error — do not assess inductive research by deductive standards, or vice versa. Use approach-appropriate criteria.
 
+### Three Pillars Framework
+
+The seven signals are organised into three pillars (see `assessment-pillars.md`):
+
+| Pillar | Signals | Applies To |
+|--------|---------|------------|
+| **Transparency** | Comprehensibility, Transparency | All papers |
+| **Credibility** | Plausibility, Validity, Robustness, Generalisability | All papers |
+| **Reproducibility** | Reproducibility | Computational components only |
+
+Approach-specific emphasis varies signal priority within each pillar.
+
 ---
 
 ## Framework Selection Logic
@@ -24,7 +36,7 @@ Different research approaches require different credibility assessment prioritie
 
 - **Validity** - Evidence adequacy for hypothesis tests
 - **Robustness** - Sensitivity to analytical choices
-- **Replicability** - Code/data for reproduction
+- **Reproducibility** - Code/data for reproduction
 
 **Secondary Assessment Emphasis:**
 
@@ -38,7 +50,7 @@ Different research approaches require different credibility assessment prioritie
 
 **Rationale:**
 
-Deductive research makes explicit, testable predictions. The core credibility question is: "Are the hypothesis tests valid, robust, and reproducible?" Emphasis falls on evidential adequacy (Validity), analytical soundness (Robustness), and reproducibility of confirmatory tests (Replicability).
+Deductive research makes explicit, testable predictions. The core credibility question is: "Are the hypothesis tests valid, robust, and reproducible?" Emphasis falls on evidential adequacy (Validity), analytical soundness (Robustness), and reproducibility of confirmatory tests (Reproducibility).
 
 **Example Assessment Priority:**
 
@@ -46,7 +58,7 @@ For a deductive archaeological study testing the hypothesis that "settlements cl
 
 1. **Validity (Primary):** Is evidence sufficient to test the hypothesis? Are alternative hypotheses considered?
 2. **Robustness (Primary):** Would results hold with different clustering algorithms or distance thresholds?
-3. **Replicability (Primary):** Are settlement coordinates and analysis code available?
+3. **Reproducibility (Primary):** Are settlement coordinates and analysis code available?
 4. **Transparency (Secondary):** Was hypothesis pre-specified? Are methods documented?
 5. **Comprehensibility (Secondary):** Is hypothesis clearly bounded?
 6. **Plausibility (Secondary):** Is hypothesis grounded in theory?
@@ -67,7 +79,7 @@ For a deductive archaeological study testing the hypothesis that "settlements cl
 **Secondary Assessment Emphasis:**
 
 - **Validity** - Evidence sufficiency for pattern claims
-- **Replicability** - Data archiving and workflow documentation
+- **Reproducibility** - Data archiving and workflow documentation
 - **Plausibility** - Consistency with domain knowledge
 
 **De-emphasised (but still assessed):**
@@ -88,7 +100,7 @@ For an inductive regional survey documenting settlement patterns:
 2. **Comprehensibility (Primary):** Are pattern descriptions clear and bounded?
 3. **Generalisability (Primary):** Are spatial/temporal scope and sampling limitations explicit?
 4. **Validity (Secondary):** Is coverage adequate for pattern claims?
-5. **Replicability (Secondary):** Are survey data archived with metadata?
+5. **Reproducibility (Secondary):** Are survey data archived with metadata?
 6. **Plausibility (Secondary):** Do patterns align with regional chronologies?
 7. **Robustness (Assessed):** Is there convergent evidence (multiple indicators)?
 
@@ -112,13 +124,13 @@ For an inductive regional survey documenting settlement patterns:
 
 **De-emphasised (but still assessed):**
 
-- **Replicability** - Assessed as reasoning traceability, not code/data sharing
+- **Reproducibility** - Assessed as reasoning traceability, not code/data sharing
 
 **Rationale:**
 
 Abductive research infers explanatory frameworks from observed patterns. The core credibility question is: "Is the proposed explanation plausible, well-evidenced, and robust to alternatives?" Emphasis falls on explanatory coherence (Plausibility), evidential grounding (Validity), and consideration of alternative explanations (Robustness).
 
-**Key Adaptation:** Replicability means "can others trace the reasoning?" not "can others rerun the code?" Focus on interpretive transparency, not computational reproducibility.
+**Key Adaptation:** Reproducibility means "can others trace the reasoning?" not "can others rerun the code?" Focus on interpretive transparency, not computational reproducibility.
 
 **Example Assessment Priority:**
 
@@ -130,7 +142,7 @@ For an abductive study inferring social organisation from burial patterns:
 4. **Transparency (Secondary):** Is the theoretical framework explicit?
 5. **Comprehensibility (Secondary):** Is the explanatory claim clear?
 6. **Generalisability (Secondary):** Are scope limits of the inference stated?
-7. **Replicability (Assessed):** Can others trace the reasoning from evidence to inference?
+7. **Reproducibility (Assessed):** Can others trace the reasoning from evidence to inference?
 
 ---
 
@@ -153,7 +165,7 @@ For papers with mixed research approaches:
 **Assessment approach:**
 
 - **Classify as:** Mixed deductive-inductive, primarily deductive
-- **Primary framework:** Deductive (emphasis on Validity, Robustness, Replicability for experimental phase)
+- **Primary framework:** Deductive (emphasis on Validity, Robustness, Reproducibility for experimental phase)
 - **Secondary framework:** Inductive (emphasis on Transparency, Comprehensibility for pattern phase)
 - **Overall assessment:** Evaluate each phase by appropriate criteria, weight primary approach more heavily in overall credibility profile
 
@@ -170,12 +182,12 @@ For papers with mixed research approaches:
 | **Plausibility** | Secondary | Secondary | **PRIMARY** |
 | **Validity** | **PRIMARY** | Secondary | **PRIMARY** |
 | **Robustness** | **PRIMARY** | Assessed* | **PRIMARY** |
-| **Replicability** | **PRIMARY** | Secondary | Assessed** |
+| **Reproducibility** | **PRIMARY** | Secondary | Assessed** |
 | **Generalisability** | Assessed | **Primary** | Secondary |
 
 *Inductive robustness = triangulation, convergent evidence (not sensitivity analysis)
 
-**Abductive replicability = reasoning traceability (not code/data sharing)
+**Abductive reproducibility = reasoning traceability (not code/data sharing)
 
 ---
 
@@ -189,7 +201,7 @@ Report structure should emphasise:
 
 1. Evidence adequacy for hypothesis tests (Validity)
 2. Analytical robustness and sensitivity (Robustness)
-3. Reproducibility of confirmatory analyses (Replicability)
+3. Reproducibility of confirmatory analyses (Reproducibility)
 4. Methods transparency and pre-registration (Transparency)
 
 De-emphasise (but still mention):
@@ -203,7 +215,7 @@ Report structure should emphasise:
 1. Research design and workflow transparency (Transparency)
 2. Pattern description clarity and scope (Comprehensibility + Generalisability)
 3. Sampling strategy and coverage adequacy (Validity)
-4. Data archiving and accessibility (Replicability)
+4. Data archiving and accessibility (Reproducibility)
 
 De-emphasise (but still mention):
 
@@ -216,11 +228,11 @@ Report structure should emphasise:
 1. Explanatory coherence and theoretical fit (Plausibility)
 2. Evidence adequacy for inference (Validity)
 3. Alternative explanation consideration (Robustness)
-4. Framework clarity and reasoning traceability (Transparency + Replicability)
+4. Framework clarity and reasoning traceability (Transparency + Reproducibility)
 
 De-emphasise (but still mention):
 
-- Computational replicability (unless quantitative modelling involved)
+- Computational reproducibility (unless quantitative modelling involved)
 
 ---
 
@@ -232,7 +244,7 @@ De-emphasise (but still mention):
 
 - Validity: 25%
 - Robustness: 25%
-- Replicability: 20%
+- Reproducibility: 20%
 - Transparency: 15%
 - Comprehensibility: 10%
 - Plausibility: 5%
@@ -244,7 +256,7 @@ De-emphasise (but still mention):
 - Comprehensibility: 20%
 - Generalisability: 20%
 - Validity: 15%
-- Replicability: 15%
+- Reproducibility: 15%
 - Plausibility: 5%
 - Robustness: Not weighted (assessed qualitatively)
 
@@ -256,7 +268,7 @@ De-emphasise (but still mention):
 - Transparency: 15%
 - Comprehensibility: 10%
 - Generalisability: 5%
-- Replicability: Not weighted (assessed qualitatively)
+- Reproducibility: Not weighted (assessed qualitatively)
 
 **IMPORTANT:** These weights are EXPERIMENTAL and should NOT be used mechanically. They are provided for:
 
@@ -318,13 +330,13 @@ Assess contextually and note in report.
 **Assessment approach:**
 
 1. **Classify as:** "Methodological" or "Abductive" (method/software as proposed solution)
-2. **Emphasise:** Transparency (method documentation), Validity (empirical validation), Replicability (code/data for reproduction)
+2. **Emphasise:** Transparency (method documentation), Validity (empirical validation), Reproducibility (code/data for reproduction)
 3. **De-emphasise:** Generalisability (method scope should be clearly bounded, but transfer is goal)
 
 **Example:** FAIMS Mobile software paper (ballsun-stanton-et-al-2018):
 
 - **Classification:** Abductive (software as solution to field data collection problem)
-- **Primary signals:** Transparency (software documentation), Validity (empirical case studies), Replicability (code availability)
+- **Primary signals:** Transparency (software documentation), Validity (empirical case studies), Reproducibility (code availability)
 - **De-emphasised:** Standard hypothesis testing criteria (category error)
 
 ---
@@ -357,6 +369,7 @@ See `track-a-quality-criteria.md` for quality gating decision logic.
 
 ## Related References
 
+- `assessment-pillars.md` - Three pillars framework (Transparency, Credibility, Reproducibility)
 - `approach-taxonomy.md` - Research approach definitions
 - `signal-definitions-hass.md` - Signal definitions with approach-specific anchors
 - `harking-detection-guide.md` - Detecting expressed vs revealed mismatches

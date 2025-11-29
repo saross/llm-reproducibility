@@ -2,9 +2,9 @@
 
 **Purpose:** Define output structures for signal cluster assessments and canonical assessment consolidation
 
-**Date:** 2025-11-17
+**Date:** 2025-11-29
 
-**Version:** 2.0 (with quality-state awareness)
+**Version:** 2.1 (with three pillars framework and reproducibility readiness)
 
 ---
 
@@ -23,11 +23,23 @@ Three types of assessment outputs:
 ### File Locations
 
 ```
-assessment/clusters/
-├── cluster-1-foundational-clarity.md       # Comprehensibility + Transparency
-├── cluster-2-evidential-strength.md        # Plausibility + Validity + Robustness
-└── cluster-3-reproducibility-scope.md      # Replicability + Generalisability
+assessment/
+├── cluster-1-foundational-clarity.md       # Transparency pillar: Comprehensibility + Transparency
+├── cluster-2-evidential-strength.md        # Credibility pillar: Plausibility + Validity + Robustness + Generalisability
+└── cluster-3-reproducibility.md            # Reproducibility pillar: Reproducibility (single signal)
 ```
+
+### Three Pillars Framework
+
+Clusters are organised by assessment pillar:
+
+| Cluster | Pillar | Signals |
+|---------|--------|---------|
+| Cluster 1 | Transparency | Comprehensibility, Transparency |
+| Cluster 2 | Credibility | Plausibility, Validity, Robustness, Generalisability |
+| Cluster 3 | Reproducibility | Reproducibility |
+
+**See:** `references/credibility/assessment-pillars.md` for full framework
 
 ### Standard Cluster File Template
 
@@ -210,7 +222,7 @@ Machine-readable consolidation of all assessment data for:
     "credibility_framework_to_use": "inductive_emphasis|deductive_emphasis|abductive_emphasis|mixed_assessment",
     "signal_prioritisation": {
       "primary_signals": ["transparency", "comprehensibility", "generalisability"],
-      "secondary_signals": ["validity", "robustness", "replicability"],
+      "secondary_signals": ["validity", "robustness", "reproducibility"],
       "deemphasised_signals": []
     }
   },
@@ -320,9 +332,26 @@ Machine-readable consolidation of all assessment data for:
       "relevant_metrics": {}
     },
     {
-      "signal_name": "replicability",
+      "signal_name": "generalisability",
       "signal_number": 6,
-      "cluster": "reproducibility_scope",
+      "cluster": "evidential_strength",
+      "score": 78,
+      "score_band": "60-79",
+      "confidence": "high",
+      "summary": "...",
+      "strengths": [...],
+      "weaknesses": [...],
+      "justification": "...",
+      "approach_context": "...",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {
+        "SCS": 55
+      }
+    },
+    {
+      "signal_name": "reproducibility",
+      "signal_number": 7,
+      "cluster": "reproducibility",
       "score": 72,
       "score_band": "60-79",
       "confidence": "high",
@@ -337,25 +366,35 @@ Machine-readable consolidation of all assessment data for:
         "PGCS": 45,
         "FCS": 60
       }
-    },
-    {
-      "signal_name": "generalisability",
-      "signal_number": 7,
-      "cluster": "reproducibility_scope",
-      "score": 78,
-      "score_band": "60-79",
-      "confidence": "high",
-      "summary": "...",
-      "strengths": [...],
-      "weaknesses": [...],
-      "justification": "...",
-      "approach_context": "...",
-      "approach_anchors_applied": true,
-      "relevant_metrics": {
-        "SCS": 55
-      }
     }
   ],
+
+  "reproducibility_readiness": {
+    "applies": true,
+    "pathway": "standard|methodological_transparency_variant",
+    "if_not_applicable_reason": "",
+    "inputs_available": {
+      "status": "yes|partial|no",
+      "details": "Description of data/input availability"
+    },
+    "code_available": {
+      "status": "yes|partial|no|not_applicable",
+      "tool_type": "open_scriptable|proprietary_scriptable|gui_based|mixed|none",
+      "details": "Description of code/workflow availability"
+    },
+    "environment_specified": {
+      "status": "yes|partial|no|not_applicable",
+      "details": "Description of computational environment documentation"
+    },
+    "outputs_documented": {
+      "status": "yes|partial|no",
+      "details": "Description of expected outputs for verification"
+    },
+    "execution_feasibility": "ready|needs_work|not_feasible",
+    "feasibility_rationale": "Explanation of feasibility assessment",
+    "publication_year": 2024,
+    "adoption_context": "innovator|early_adopter|early_majority|mainstream"
+  },
 
   "metrics": {
     "ESD": 2.3,
@@ -435,6 +474,27 @@ All 8 quantitative metrics from metrics.json:
 
 - ESD, TCI, SCS, RTI, RIS, PGCS, FCS, MDD
 
+### reproducibility_readiness Object
+
+Gateway assessment for future reproduction attempts:
+
+- `applies`: Boolean - whether reproducibility assessment applies to this paper
+- `pathway`: "standard" or "methodological_transparency_variant" (for non-computational papers)
+- `if_not_applicable_reason`: Explanation if applies=false
+- `inputs_available`: Object with status (yes/partial/no) and details
+- `code_available`: Object with status, tool_type, and details
+  - `tool_type` values: open_scriptable (Python, R), proprietary_scriptable (SPSS syntax, Stata), gui_based (Excel), mixed, none
+- `environment_specified`: Object with status and details
+- `outputs_documented`: Object with status and details
+- `execution_feasibility`: "ready", "needs_work", or "not_feasible"
+- `feasibility_rationale`: Explanation of feasibility assessment
+- `publication_year`: Year of publication (metadata only)
+- `adoption_context`: Era context - "innovator" (pre-2015), "early_adopter" (2015-2020), "early_majority" (2020-2025), "mainstream" (post-2025)
+
+**Note:** Adoption context is metadata for interpretation only — scores are not adjusted for era.
+
+**See:** `references/credibility/assessment-pillars.md` for full reproducibility framework
+
 ### report_metadata Object
 
 - `report_path`: Relative path to Markdown report
@@ -482,6 +542,7 @@ All 8 quantitative metrics from metrics.json:
 - [ ] Score bands match quality state (narrow for HIGH, 20-point for MODERATE)
 - [ ] approach_anchors_applied = false if classification ambiguous + moderate quality
 - [ ] metrics object populated from metrics.json
+- [ ] **reproducibility_readiness object populated** (required for all papers)
 - [ ] report_metadata populated
 
 ---
@@ -508,6 +569,15 @@ jq '.[] | {tci: .metrics.TCI, transparency: (.signals[] | select(.signal_name=="
 
 ## Schema Version History
 
+**v2.1 (2025-11-29):**
+
+- Added Three Pillars Framework (Transparency, Credibility, Reproducibility)
+- Reorganised clusters: Generalisability moved from Cluster 3 to Cluster 2
+- Renamed Replicability → Reproducibility throughout
+- Added reproducibility_readiness object for future automation gateway
+- Updated signal numbering (Generalisability = 6, Reproducibility = 7)
+- Added pathway and tool_type fields for reproducibility assessment
+
 **v2.0 (2025-11-17):**
 
 - Added quality_state awareness throughout
@@ -524,6 +594,7 @@ jq '.[] | {tci: .metrics.TCI, transparency: (.signals[] | select(.signal_name=="
 
 ## Related References
 
+- `assessment-pillars.md` - **Three pillars framework** (Transparency, Credibility, Reproducibility)
 - `signal-definitions-hass.md` - Signal definitions and approach-specific anchors
 - `assessment-frameworks.md` - Framework selection and signal prioritisation
 - `track-a-quality-criteria.md` - Quality gating decision logic
