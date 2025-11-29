@@ -99,7 +99,7 @@
     "framework_to_use": "deductive_emphasis|inductive_emphasis|abductive_emphasis|mixed_assessment|methodological_paper",
     "signal_prioritisation": {
       "primary_signals": ["transparency", "validity", "generalisability"],
-      "secondary_signals": ["robustness", "replicability"],
+      "secondary_signals": ["robustness", "reproducibility"],
       "deemphasised_signals": [],
       "rationale": "Explanation of why these signals prioritised for this research approach and paper type"
     }
@@ -506,7 +506,7 @@
     "framework_to_use": "inductive_emphasis",
     "signal_prioritisation": {
       "primary_signals": ["transparency", "comprehensibility", "generalisability"],
-      "secondary_signals": ["validity", "replicability", "plausibility"],
+      "secondary_signals": ["validity", "reproducibility", "plausibility"],
       "deemphasised_signals": [],
       "rationale": "Inductive research emphasis: workflow transparency, pattern clarity, and appropriate scope constraint are most critical for exploratory survey research."
     }

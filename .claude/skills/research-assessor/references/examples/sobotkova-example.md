@@ -175,7 +175,7 @@ consolidation_metadata: {
 
 1. **Clear hierarchy:** Design → Methods → Protocols flows logically
 2. **Cross-references work:** Claims justify methods, evidence validates them
-3. **Assessment-ready:** Sufficient detail to evaluate transparency and replicability
+3. **Assessment-ready:** Sufficient detail to evaluate transparency and reproducibility
 4. **Traceable:** All items link to source paper locations
 5. **Complete metadata:** Consolidations fully documented
 

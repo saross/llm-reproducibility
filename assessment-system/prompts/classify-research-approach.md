@@ -70,7 +70,7 @@ Classify the research approach of the paper to inform credibility assessment fra
 
 **YES** → **Type 2: Methodological Paper**
 - Classify validation approach (how method is demonstrated/validated)
-- Emphasise Transparency, Replicability, Comprehensibility signals
+- Emphasise Transparency, Reproducibility, Comprehensibility signals
 - Deemphasise Generalisability, Robustness (of demonstration cases)
 
 **NO** → Continue to Question 1.3
@@ -638,11 +638,11 @@ Always populate `taxonomy_feedback` object, even if fit is excellent (use null v
 
 | Paper Type | Primary Approach | Framework | Primary Signals |
 |------------|------------------|-----------|-----------------|
-| Empirical | Deductive | deductive_emphasis | Validity, Robustness, Replicability |
+| Empirical | Deductive | deductive_emphasis | Validity, Robustness, Reproducibility |
 | Empirical | Inductive | inductive_emphasis | Transparency, Comprehensibility, Generalisability |
 | Empirical | Abductive | abductive_emphasis | Plausibility, Validity, Robustness |
 | Empirical | Mixed | mixed_assessment | Balanced (depends on primary approach) |
-| Methodological | Any | methodological_paper | Transparency, Replicability, Comprehensibility |
+| Methodological | Any | methodological_paper | Transparency, Reproducibility, Comprehensibility |
 | Theoretical | Any | theoretical_assessment | Comprehensibility, Plausibility, Transparency |
 | Meta-research | Varies | [Use empirical or methodological as appropriate] | |
 
@@ -653,10 +653,10 @@ Always populate `taxonomy_feedback` object, even if fit is excellent (use null v
 {
   "framework_to_use": "deductive_emphasis",
   "signal_prioritisation": {
-    "primary_signals": ["validity", "robustness", "replicability"],
+    "primary_signals": ["validity", "robustness", "reproducibility"],
     "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
     "deemphasised_signals": ["generalisability"],
-    "rationale": "Deductive research prioritises: (1) Validity - evidence adequacy for hypothesis tests, (2) Robustness - sensitivity to analytical choices, (3) Replicability - code/data sharing for reproduction. Generalisability assessed but not emphasised (single study rarely generalises alone)."
+    "rationale": "Deductive research prioritises: (1) Validity - evidence adequacy for hypothesis tests, (2) Robustness - sensitivity to analytical choices, (3) Reproducibility - code/data sharing for reproduction. Generalisability assessed but not emphasised (single study rarely generalises alone)."
   }
 }
 ```
@@ -667,7 +667,7 @@ Always populate `taxonomy_feedback` object, even if fit is excellent (use null v
   "framework_to_use": "inductive_emphasis",
   "signal_prioritisation": {
     "primary_signals": ["transparency", "comprehensibility", "generalisability"],
-    "secondary_signals": ["validity", "replicability", "plausibility"],
+    "secondary_signals": ["validity", "reproducibility", "plausibility"],
     "deemphasised_signals": [],
     "rationale": "Inductive research prioritises: (1) Transparency - research design clarity and workflow documentation, (2) Comprehensibility - pattern descriptions and interpretations, (3) Generalisability - appropriate scope and acknowledged limitations. All signals relevant but transparency is foundation for exploratory research assessment."
   }
@@ -681,8 +681,8 @@ Always populate `taxonomy_feedback` object, even if fit is excellent (use null v
   "signal_prioritisation": {
     "primary_signals": ["plausibility", "validity", "robustness"],
     "secondary_signals": ["comprehensibility", "transparency", "generalisability"],
-    "deemphasised_signals": ["replicability"],
-    "rationale": "Abductive research prioritises: (1) Plausibility - explanatory coherence and theoretical grounding, (2) Validity - evidence adequacy for inference, (3) Robustness - alternative explanations considered. Replicability deemphasised (interpretive inference has different reproducibility expectations than analytical reproduction)."
+    "deemphasised_signals": ["reproducibility"],
+    "rationale": "Abductive research prioritises: (1) Plausibility - explanatory coherence and theoretical grounding, (2) Validity - evidence adequacy for inference, (3) Robustness - alternative explanations considered. Reproducibility deemphasised (interpretive inference has different reproducibility expectations than analytical reproduction)."
   }
 }
 ```
@@ -692,10 +692,10 @@ Always populate `taxonomy_feedback` object, even if fit is excellent (use null v
 {
   "framework_to_use": "methodological_paper",
   "signal_prioritisation": {
-    "primary_signals": ["transparency", "replicability", "comprehensibility"],
+    "primary_signals": ["transparency", "reproducibility", "comprehensibility"],
     "secondary_signals": ["validity", "plausibility"],
     "deemphasised_signals": ["generalisability", "robustness"],
-    "rationale": "Methodological papers prioritise: (1) Transparency - design decisions documented, (2) Replicability - method reproducible, (3) Comprehensibility - clear technical specification. Validity and Plausibility apply to claims ABOUT the method. Generalisability and Robustness (of demonstration cases) deemphasised - demonstration cases are illustrative, not meant to generalise."
+    "rationale": "Methodological papers prioritise: (1) Transparency - design decisions documented, (2) Reproducibility - method reproducible, (3) Comprehensibility - clear technical specification. Validity and Plausibility apply to claims ABOUT the method. Generalisability and Robustness (of demonstration cases) deemphasised - demonstration cases are illustrative, not meant to generalise."
   }
 }
 ```
@@ -984,7 +984,7 @@ Create directory before running Pass 8:
     "framework_to_use": "inductive_emphasis",
     "signal_prioritisation": {
       "primary_signals": ["transparency", "comprehensibility", "generalisability"],
-      "secondary_signals": ["validity", "replicability", "plausibility"],
+      "secondary_signals": ["validity", "reproducibility", "plausibility"],
       "deemphasised_signals": [],
       "rationale": "Inductive research emphasis: workflow transparency, pattern clarity, and appropriate scope constraint are most critical for exploratory survey research."
     }
@@ -1066,7 +1066,7 @@ Create directory before running Pass 8:
     "framework_to_use": "inductive_emphasis",
     "signal_prioritisation": {
       "primary_signals": ["transparency", "comprehensibility", "generalisability"],
-      "secondary_signals": ["validity", "replicability", "plausibility"],
+      "secondary_signals": ["validity", "reproducibility", "plausibility"],
       "deemphasised_signals": [],
       "rationale": "Inductive framework selected based on revealed approach. Transparency signal particularly important given HARKing concern and lack of a priori design statement."
     }
@@ -1146,7 +1146,7 @@ Create directory before running Pass 8:
     "framework_to_use": "inductive_emphasis",
     "signal_prioritisation": {
       "primary_signals": ["transparency", "comprehensibility", "generalisability"],
-      "secondary_signals": ["validity", "replicability", "plausibility"],
+      "secondary_signals": ["validity", "reproducibility", "plausibility"],
       "deemphasised_signals": [],
       "rationale": "Inductive framework. Transparency signal will contextualise absence of explicit methodology relative to 1987 disciplinary norms."
     }
@@ -1230,10 +1230,10 @@ Create directory before running Pass 8:
   "credibility_framework": {
     "framework_to_use": "methodological_paper",
     "signal_prioritisation": {
-      "primary_signals": ["transparency", "replicability", "comprehensibility"],
+      "primary_signals": ["transparency", "reproducibility", "comprehensibility"],
       "secondary_signals": ["validity", "plausibility"],
       "deemphasised_signals": ["generalisability", "robustness"],
-      "rationale": "Methodological paper framework. Primary signals: (1) Transparency of design decisions and technical architecture (HIGH in this paper), (2) Replicability of software (open source, dependencies documented), (3) Comprehensibility of technical specification (clear documentation). Validity and Plausibility apply to claims ABOUT the software. Generalisability and Robustness of case studies deemphasised - demonstrations are illustrative, not meant to generalise beyond showing tool capabilities."
+      "rationale": "Methodological paper framework. Primary signals: (1) Transparency of design decisions and technical architecture (HIGH in this paper), (2) Reproducibility of software (open source, dependencies documented), (3) Comprehensibility of technical specification (clear documentation). Validity and Plausibility apply to claims ABOUT the software. Generalisability and Robustness of case studies deemphasised - demonstrations are illustrative, not meant to generalise beyond showing tool capabilities."
     }
   },
 
@@ -1323,9 +1323,9 @@ Create directory before running Pass 8:
     "framework_to_use": "methodological_paper",
     "signal_prioritisation": {
       "primary_signals": ["transparency", "validity", "robustness"],
-      "secondary_signals": ["comprehensibility", "replicability"],
+      "secondary_signals": ["comprehensibility", "reproducibility"],
       "deemphasised_signals": ["generalisability"],
-      "rationale": "Using methodological framework but with modified emphasis. For comparative methods papers, key signals are: (1) Transparency of evaluation criteria and comparison fairness, (2) Validity of performance metrics for stated purpose, (3) Robustness to evaluation choices (sensitivity of recommendations). Differs from typical methodological paper which emphasises replicability more strongly."
+      "rationale": "Using methodological framework but with modified emphasis. For comparative methods papers, key signals are: (1) Transparency of evaluation criteria and comparison fairness, (2) Validity of performance metrics for stated purpose, (3) Robustness to evaluation choices (sensitivity of recommendations). Differs from typical methodological paper which emphasises reproducibility more strongly."
     }
   },
 

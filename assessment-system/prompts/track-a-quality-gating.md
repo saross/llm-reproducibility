@@ -157,7 +157,7 @@ metric_notes: "Metrics not available for alignment checking. Assessment proceeds
 |--------|---------------------------|
 | TCI (Transparency & Completeness Index) | Transparency signal |
 | ESD (Evidence Sufficiency Density) | Validity signal |
-| RIS (Reproducibility Infrastructure Score) | Replicability signal |
+| RIS (Reproducibility Infrastructure Score) | Reproducibility signal |
 | MCS (Methodological Clarity Score) | Comprehensibility signal |
 
 **Alignment assessment:**
@@ -306,7 +306,7 @@ recommended_actions:
 **Metric observations:**
 - TCI: [value] → Expected Transparency: [assessment]
 - ESD: [value] → Expected Validity: [assessment]
-- RIS: [value] → Expected Replicability: [assessment]
+- RIS: [value] → Expected Reproducibility: [assessment]
 
 **Alignment assessment:** [Analysis of correlations and any divergences.]
 

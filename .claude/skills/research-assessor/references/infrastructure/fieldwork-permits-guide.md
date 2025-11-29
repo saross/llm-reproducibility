@@ -16,7 +16,7 @@ Fieldwork research in archaeology, palaeoecology, geography, anthropology, and h
 - **Transparency signal**: Proper permitting demonstrates procedural rigour and ethical practice
 - **Validity signal**: Jurisdictional compliance supports methodological legitimacy
 - **Ethics signal**: CARE principles integration increasingly expected (UNESCO 2021, US federal guidance 2022)
-- **Replicability context**: Understanding legal/ethical constraints explains data access restrictions
+- **Reproducibility context**: Understanding legal/ethical constraints explains data access restrictions
 
 **Assessment approach**: Presence and documentation of appropriate permits indicates responsible research practice
 
@@ -524,7 +524,7 @@ Detailed permit documentation demonstrates:
 - Accountability to multiple stakeholders
 - Confidence in research legitimacy
 
-### Replicability Context
+### Reproducibility Context
 
 Permit information explains:
 - Why certain data may be restricted (ethical/legal requirements)

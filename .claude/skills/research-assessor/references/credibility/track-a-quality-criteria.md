@@ -70,7 +70,7 @@ This framework provides:
 
 - **TCI vs Transparency:** Does Transparency & Completeness Index correlate with Transparency signal assessment?
 - **ESD vs Validity:** Does Evidence Sufficiency Density correlate with Validity signal assessment?
-- **RIS vs Replicability:** Does Reproducibility Infrastructure Score correlate with Replicability signal assessment?
+- **RIS vs Reproducibility:** Does Reproducibility Infrastructure Score correlate with Reproducibility signal assessment?
 - **Divergence flagging:** Are major metric-signal divergences noted and explained?
 
 **Alignment levels:**
@@ -137,7 +137,7 @@ This framework provides:
 
 **Assessment factors:**
 
-- **Cross-signal coherence:** Do signal scores cohere? (e.g., high Transparency + low Replicability should be explained)
+- **Cross-signal coherence:** Do signal scores cohere? (e.g., high Transparency + low Reproducibility should be explained)
 - **Evidence-score alignment:** Do scores match the evidence cited in justifications?
 - **Approach-anchor application:** Are approach-specific anchors correctly applied?
 - **Reasoning quality:** Are justifications clear, specific, and evidence-based?

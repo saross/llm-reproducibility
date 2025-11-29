@@ -256,7 +256,7 @@ Not all research papers investigate substantive empirical questions. Some papers
 
 **Credibility emphasis:**
 
-- **Primary signals:** Transparency (design decisions documented), Replicability (method reproducible), Comprehensibility (clear specification)
+- **Primary signals:** Transparency (design decisions documented), Reproducibility (method reproducible), Comprehensibility (clear specification)
 - **Secondary signals:** Validity (of claims about method properties), Plausibility (of method rationale)
 - **Deemphasised:** Generalisability (of demonstration cases), Robustness (of substantive findings - not applicable)
 
@@ -487,7 +487,7 @@ Different research approaches require different credibility assessment prioritie
 
 **For Deductive Research:**
 
-- **Emphasise:** Validity (evidence adequacy for hypothesis tests), Robustness (sensitivity to analytical choices), Replicability (code/data for reproduction)
+- **Emphasise:** Validity (evidence adequacy for hypothesis tests), Robustness (sensitivity to analytical choices), Reproducibility (code/data for reproduction)
 - **Key questions:** Were hypotheses specified a priori? Are tests appropriate? Are alternative hypotheses considered?
 
 **For Inductive Research:**
