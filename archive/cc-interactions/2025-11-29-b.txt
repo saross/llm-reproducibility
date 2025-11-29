@@ -3,401 +3,566 @@
 ▝▜█████▛▘  Opus 4.5 · Claude Max
   ▘▘ ▝▝    ~/Code/llm-reproducibility
 ══════════════════ Conversation compacted · ctrl+o for history ═════════════════
-  ⎿ Read .claude/skills/research-assessor/references/schema/assessment-schema.md
-     (543 lines)
+  ⎿  Referenced file assessment-system/prompts/classify-research-approach.md
+  ⎿  Read ../../.claude/plans/parallel-wiggling-narwhal.md (71 lines)
+  ⎿ Read 
+    outputs/ross-ballsun-stanton-2022/assessment/cluster-3-reproducibility.md
+    (213 lines)
+  ⎿ Read outputs/ross-ballsun-stanton-2022/assessment/cluster-2-evidential-stren
+    gth.md (269 lines)
+  ⎿ Read outputs/ross-ballsun-stanton-2022/assessment/cluster-1-foundational-cla
+    rity.md (168 lines)
+  ⎿  Todo list read (6 items)
 
-  ⎿  Read assessment-system/prompts/cluster-3-reproducibility.md (556 lines)
-  ⎿  Referenced file assessment-system/prompts/cluster-2-evidential-strength.md
-  ⎿  Referenced file assessment-system/prompts/cluster-1-foundational-clarity.md
-  ⎿  Referenced file planning/credibility-implementation-plan-v2.0.md
-  ⎿  Todo list read (10 items)
+● Continuing terminology update. Let me complete the lowercase replacement
+  in classify-research-approach.md and then proceed through the remaining
+  files.
 
-● Continuing with the assessment-schema.md update. Let me read the current
-  state and complete the remaining changes.
+● Read(assessment-system/prompts/classify-research-approach.md)
+  ⎿  Read 1428 lines
+
+● Read(references/credibility/approach-taxonomy.md)
+  ⎿  Error reading file
+
+● Read(references/credibility/track-a-quality-criteria.md)
+  ⎿  Error reading file
+
+● Read(references/schema/classification-schema.md)
+  ⎿  Error reading file
+
+● Some files don't exist at those paths. Let me find the correct locations:
+
+● Search(pattern: "**/*approach-taxonomy*")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Search(pattern: "**/*track-a-quality-criteria*")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Search(pattern: "**/*classification-schema*")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Found them in .claude/skills/research-assessor/. Let me get the remaining
+  file paths and read the files:
+
+● Search(pattern: "**/*track-a-quality-gating*")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Search(pattern: "**/*fieldwork-permits-guide*")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Search(pattern: "**/*assessment-schema*")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Search(pattern: "**/*sobotkova-example*")
+  ⎿  Found 2 files (ctrl+o to expand)
+
+● Now I have all paths. Let me check for remaining instances in
+  classify-research-approach.md and read the other files:
+
+● Search(pattern: "replicability|Replicability|replicable|Replicable", path:
+        "assessment-system/prompts/classify-research-approach.md", output_mode:
+        "content")
+  ⎿  Found 10 lines (ctrl+o to expand)
+
+● Read(.claude/skills/research-assessor/references/credibility/approach-taxonomy
+      .md)
+  ⎿  Read 510 lines
+
+● Read(.claude/skills/research-assessor/references/credibility/track-a-quality-c
+      riteria.md)
+  ⎿  Read 564 lines
+
+● Read(.claude/skills/research-assessor/references/schema/classification-schema.
+      md)
+  ⎿  Read 556 lines
+
+● Now let me read the remaining files:
+
+● Read(assessment-system/prompts/track-a-quality-gating.md)
+  ⎿  Read 506 lines
+
+● Read(.claude/skills/research-assessor/references/infrastructure/fieldwork-perm
+      its-guide.md)
+  ⎿  Read 549 lines
 
 ● Read(.claude/skills/research-assessor/references/schema/assessment-schema.md)
-  ⎿  Read 543 lines
+  ⎿  Read 602 lines
 
-● I need to make several updates to complete the schema:
-  1. Fix the cluster assignment for generalisability (should be
-  evidential_strength, not reproducibility_scope)
-  2. Add the reproducibility_readiness object to the JSON schema
-  3. Add the pillars reference to Related References
-  4. Update version history
+● Read(.claude/skills/research-assessor/references/examples/sobotkova-example.md
+      )
+  ⎿  Read 201 lines
 
-● Update(.claude/skills/research-assessor/references/schema/assessment-schema.md
-        )
-  ⎿  Updated                                                               
-     .claude/skills/research-assessor/references/schema/assessment-schema.md
-      with 10 additions and 10 removals
-       332          "relevant_metrics": {}
-       333        },
-       334        {
-       335 -        "signal_name": "reproducibility",
-       335 +        "signal_name": "generalisability",
-       336          "signal_number": 6,
-       337 -        "cluster": "reproducibility_scope",
-       338 -        "score": 72,
-       337 +        "cluster": "evidential_strength",
-       338 +        "score": 78,
-       339          "score_band": "60-79",
-       340          "confidence": "high",
-       341          "summary": "...",
+● Now I have all files read. Let me perform all the replacements. I'll do
+  them in parallel:
+
+● Update(assessment-system/prompts/classify-research-approach.md)
+  ⎿  Updated assessment-system/prompts/classify-research-approach.md with 1
+      additions and 10 removals
+       653    {
+       654      "framework_to_use": "deductive_emphasis",
+       655      "signal_prioritisation": {
+       656 -      "primary_signals": ["validity", "robustness", "
+           -  replicability"],
+       656 +      "primary_signals": ["validity", "robustness", "
+           +  reproducibility"],
+       657        "secondary_signals": ["transparency", 
+             "comprehensibility", "plausibility"],
+       658        "deemphasised_signals": ["generalisability"],
+       659        "rationale": "Deductive research prioritises: (1) 
+             Validity - evidence adequacy for hypothesis tests, (2) 
+             Robustness - sensitivity to analytical choices, (3) 
+             Reproducibility - code/data sharing for reproduction. 
+             Generalisability assessed but not emphasised (single study 
+             rarely generalises alone)."
      ...
-       345          "approach_context": "...",
-       346          "approach_anchors_applied": true,
-       347          "relevant_metrics": {
-       348 -          "RIS": 72,
-       349 -          "PGCS": 45,
-       350 -          "FCS": 60
-       348 +          "SCS": 55
-       349          }
-       350        },
-       351        {
-       352 -        "signal_name": "generalisability",
-       352 +        "signal_name": "reproducibility",
-       353          "signal_number": 7,
-       354 -        "cluster": "reproducibility_scope",
-       355 -        "score": 78,
-       354 +        "cluster": "reproducibility",
-       355 +        "score": 72,
-       356          "score_band": "60-79",
-       357          "confidence": "high",
-       358          "summary": "...",
+       667      "framework_to_use": "inductive_emphasis",
+       668      "signal_prioritisation": {
+       669        "primary_signals": ["transparency", 
+             "comprehensibility", "generalisability"],
+       670 -      "secondary_signals": ["validity", "replicability
+           -  ", "plausibility"],
+       670 +      "secondary_signals": ["validity", "reproducibility
+           +  ", "plausibility"],
+       671        "deemphasised_signals": [],
+       672        "rationale": "Inductive research prioritises: (1) 
+             Transparency - research design clarity and workflow 
+             documentation, (2) Comprehensibility - pattern descriptions 
+             and interpretations, (3) Generalisability - appropriate 
+             scope and acknowledged limitations. All signals relevant but
+              transparency is foundation for exploratory research 
+             assessment."
+       673      }
      ...
-       364          "approach_context": "...",
-       365          "approach_anchors_applied": true,
-       366          "relevant_metrics": {
-       367 -          "SCS": 55
-       367 +          "RIS": 72,
-       368 +          "PGCS": 45,
-       369 +          "FCS": 60
-       370          }
-       371        }
-       372      ],
+       681      "signal_prioritisation": {
+       682        "primary_signals": ["plausibility", "validity", 
+             "robustness"],
+       683        "secondary_signals": ["comprehensibility", 
+             "transparency", "generalisability"],
+       684 -      "deemphasised_signals": ["replicability"],
+       684 +      "deemphasised_signals": ["reproducibility"],
+       685        "rationale": "Abductive research prioritises: (1) 
+             Plausibility - explanatory coherence and theoretical 
+             grounding, (2) Validity - evidence adequacy for inference, 
+             (3) Robustness - alternative explanations considered. 
+             Reproducibility deemphasised (interpretive inference has 
+             different reproducibility expectations than analytical 
+             reproduction)."
+       686      }
+       687    }
+     ...
+       692    {
+       693      "framework_to_use": "methodological_paper",
+       694      "signal_prioritisation": {
+       695 -      "primary_signals": ["transparency", "replicability
+           -  ", "comprehensibility"],
+       695 +      "primary_signals": ["transparency", "reproducibility
+           +  ", "comprehensibility"],
+       696        "secondary_signals": ["validity", "plausibility"],
+       697        "deemphasised_signals": ["generalisability", 
+             "robustness"],
+       698        "rationale": "Methodological papers prioritise: (1) 
+             Transparency - design decisions documented, (2) 
+             Reproducibility - method reproducible, (3) Comprehensibility
+              - clear technical specification. Validity and Plausibility 
+             apply to claims ABOUT the method. Generalisability and 
+             Robustness (of demonstration cases) deemphasised - 
+             demonstration cases are illustrative, not meant to 
+             generalise."
+     ...
+       984        "framework_to_use": "inductive_emphasis",
+       985        "signal_prioritisation": {
+       986          "primary_signals": ["transparency", 
+             "comprehensibility", "generalisability"],
+       987 -        "secondary_signals": ["validity", "replicability
+           -  ", "plausibility"],
+       987 +        "secondary_signals": ["validity", "reproducibility
+           +  ", "plausibility"],
+       988          "deemphasised_signals": [],
+       989          "rationale": "Inductive research emphasis: workflow 
+             transparency, pattern clarity, and appropriate scope 
+             constraint are most critical for exploratory survey 
+             research."
+       990        }
+     ...
+       1066        "framework_to_use": "inductive_emphasis",
+       1067        "signal_prioritisation": {
+       1068          "primary_signals": ["transparency", 
+              "comprehensibility", "generalisability"],
+       1069 -        "secondary_signals": ["validity", "replicability
+            -  ", "plausibility"],
+       1069 +        "secondary_signals": ["validity", "reproducibility
+            +  ", "plausibility"],
+       1070          "deemphasised_signals": [],
+       1071          "rationale": "Inductive framework selected based on 
+              revealed approach. Transparency signal particularly 
+              important given HARKing concern and lack of a priori design
+               statement."
+       1072        }
+     ...
+       1146        "framework_to_use": "inductive_emphasis",
+       1147        "signal_prioritisation": {
+       1148          "primary_signals": ["transparency", 
+              "comprehensibility", "generalisability"],
+       1149 -        "secondary_signals": ["validity", "replicability
+            -  ", "plausibility"],
+       1149 +        "secondary_signals": ["validity", "reproducibility
+            +  ", "plausibility"],
+       1150          "deemphasised_signals": [],
+       1151          "rationale": "Inductive framework. Transparency 
+              signal will contextualise absence of explicit methodology 
+              relative to 1987 disciplinary norms."
+       1152        }
+     ...
+       1230      "credibility_framework": {
+       1231        "framework_to_use": "methodological_paper",
+       1232        "signal_prioritisation": {
+       1233 -        "primary_signals": ["transparency", "replicability
+            -  ", "comprehensibility"],
+       1233 +        "primary_signals": ["transparency", "reproducibility
+            +  ", "comprehensibility"],
+       1234          "secondary_signals": ["validity", "plausibility"],
+       1235          "deemphasised_signals": ["generalisability", 
+              "robustness"],
+       1236          "rationale": "Methodological paper framework. 
+              Primary signals: (1) Transparency of design decisions and 
+              technical architecture (HIGH in this paper), (2) 
+              Reproducibility of software (open source, dependencies 
+              documented), (3) Comprehensibility of technical 
+              specification (clear documentation). Validity and 
+              Plausibility apply to claims ABOUT the software. 
+              Generalisability and Robustness of case studies 
+              deemphasised - demonstrations are illustrative, not meant 
+              to generalise beyond showing tool capabilities."
+     ...
+       1323        "framework_to_use": "methodological_paper",
+       1324        "signal_prioritisation": {
+       1325          "primary_signals": ["transparency", "validity", 
+              "robustness"],
+       1326 -        "secondary_signals": ["comprehensibility", "
+            -  replicability"],
+       1326 +        "secondary_signals": ["comprehensibility", "
+            +  reproducibility"],
+       1327          "deemphasised_signals": ["generalisability"],
+       1328 -        "rationale": "Using methodological framework but 
+            -  with modified emphasis. For comparative methods papers, 
+            -  key signals are: (1) Transparency of evaluation criteria 
+            -  and comparison fairness, (2) Validity of performance 
+            -  metrics for stated purpose, (3) Robustness to evaluation 
+            -  choices (sensitivity of recommendations). Differs from 
+            -  typical methodological paper which emphasises 
+            -  replicability more strongly."
+       1328 +        "rationale": "Using methodological framework but 
+            +  with modified emphasis. For comparative methods papers, 
+            +  key signals are: (1) Transparency of evaluation criteria 
+            +  and comparison fairness, (2) Validity of performance 
+            +  metrics for stated purpose, (3) Robustness to evaluation 
+            +  choices (sensitivity of recommendations). Differs from 
+            +  typical methodological paper which emphasises 
+            +  reproducibility more strongly."
+       1329        }
+       1330      },
+       1331    
 
-● Now I'll add the reproducibility_readiness object to the schema:
+● Update(.claude/skills/research-assessor/references/credibility/approach-taxono
+        my.md)
+  ⎿  Updated .claude/skills/research-assessor/references/credibility/approa
+     h-taxonomy.md with 1 addition and 1 removal
+       256    
+       257    **Credibility emphasis:**
+       258    
+       259 -  - **Primary signals:** Transparency (design decisions 
+           -  documented), Replicability
+           -   (method reproducible), Comprehensibility (clear 
+           -  specification)
+       259 +  - **Primary signals:** Transparency (design decisions 
+           +  documented), Reproducibility
+           +   (method reproducible), Comprehensibility (clear 
+           +  specification)
+       260    - **Secondary signals:** Validity (of claims about method 
+             properties), Plausibility (of method rationale)
+       261    - **Deemphasised:** Generalisability (of demonstration 
+             cases), Robustness (of substantive findings - not 
+             applicable)
+       262    
 
-● Update(.claude/skills/research-assessor/references/schema/assessment-schema.md
-        )
-  ⎿  Updated                                                               
-     .claude/skills/research-assessor/references/schema/assessment-schema.md
-      with 27 additions
-       369        }
-       370      ],
-       371    
-       372 +    "reproducibility_readiness": {
-       373 +      "applies": true,
-       374 +      "pathway": 
-           + "standard|methodological_transparency_variant",
-       375 +      "if_not_applicable_reason": "",
-       376 +      "inputs_available": {
-       377 +        "status": "yes|partial|no",
-       378 +        "details": "Description of data/input availability"
-       379 +      },
-       380 +      "code_available": {
-       381 +        "status": "yes|partial|no|not_applicable",
-       382 +        "tool_type": "open_scriptable|proprietary_scriptable|
-           + gui_based|mixed|none",
-       383 +        "details": "Description of code/workflow 
-           + availability"
-       384 +      },
-       385 +      "environment_specified": {
-       386 +        "status": "yes|partial|no|not_applicable",
-       387 +        "details": "Description of computational environment 
-           + documentation"
-       388 +      },
-       389 +      "outputs_documented": {
-       390 +        "status": "yes|partial|no",
-       391 +        "details": "Description of expected outputs for 
-           + verification"
-       392 +      },
-       393 +      "execution_feasibility": 
-           + "ready|needs_work|not_feasible",
-       394 +      "feasibility_rationale": "Explanation of feasibility 
-           + assessment",
-       395 +      "publication_year": 2024,
-       396 +      "adoption_context": 
-           + "innovator|early_adopter|early_majority|mainstream"
-       397 +    },
-       398 +  
-       399      "metrics": {
-       400        "ESD": 2.3,
-       401        "TCI": 68,
+● Update(.claude/skills/research-assessor/references/credibility/approach-taxono
+        my.md)
+  ⎿  Updated .claude/skills/research-assessor/references/credibility/approa
+     h-taxonomy.md with 1 addition and 1 removal
+       487    
+       488    **For Deductive Research:**
+       489    
+       490 -  - **Emphasise:** Validity (evidence adequacy for hypothesis
+           -   tests), Robustness (sensitivity to analytical choices), 
+           -  Replicability (code/data for reproduction)
+       490 +  - **Emphasise:** Validity (evidence adequacy for hypothesis
+           +   tests), Robustness (sensitivity to analytical choices), 
+           +  Reproducibility (code/data for reproduction)
+       491    - **Key questions:** Were hypotheses specified a priori? 
+             Are tests appropriate? Are alternative hypotheses 
+             considered?
+       492    
+       493    **For Inductive Research:**
 
-● Now I'll add the field definitions for reproducibility_readiness and
-  update the Related References:
+● Update(.claude/skills/research-assessor/references/credibility/track-a-quality
+        -criteria.md)
+  ⎿  Updated .claude/skills/research-assessor/references/credibility/track-
+     -quality-criteria.md with 1 addition and 1 removal
+       70    
+       71    - **TCI vs Transparency:** Does Transparency & Completeness 
+            Index correlate with Transparency signal assessment?
+       72    - **ESD vs Validity:** Does Evidence Sufficiency Density 
+            correlate with Validity signal assessment?
+       73 -  - **RIS vs Replicability
+          -  :** Does Reproducibility Infrastructure Score correlate with
+          -   Replicability signal assessment?
+       73 +  - **RIS vs Reproducibility
+          +  :** Does Reproducibility Infrastructure Score correlate with
+          +   Reproducibility signal assessment?
+       74    - **Divergence flagging:** Are major metric-signal 
+            divergences noted and explained?
+       75    
+       76    **Alignment levels:**
 
-● Update(.claude/skills/research-assessor/references/schema/assessment-schema.md
-        )
-  ⎿  Updated                                                               
-     .claude/skills/research-assessor/references/schema/assessment-schema.md
-      with 21 additions
-       474    
-       475    - ESD, TCI, SCS, RTI, RIS, PGCS, FCS, MDD
-       476    
-       477 +  ### reproducibility_readiness Object
-       478 +  
-       479 +  Gateway assessment for future reproduction attempts:
-       480 +  
-       481 +  - `applies`: Boolean - whether reproducibility assessment 
-           + applies to this paper
-       482 +  - `pathway`: "standard" or 
-           + "methodological_transparency_variant" (for non-computational
-           +  papers)
-       483 +  - `if_not_applicable_reason`: Explanation if applies=false
-       484 +  - `inputs_available`: Object with status (yes/partial/no) 
-           + and details
-       485 +  - `code_available`: Object with status, tool_type, and 
-           + details
-       486 +    - `tool_type` values: open_scriptable (Python, R), 
-           + proprietary_scriptable (SPSS syntax, Stata), gui_based 
-           + (Excel), mixed, none
-       487 +  - `environment_specified`: Object with status and details
-       488 +  - `outputs_documented`: Object with status and details
-       489 +  - `execution_feasibility`: "ready", "needs_work", or 
-           + "not_feasible"
-       490 +  - `feasibility_rationale`: Explanation of feasibility 
-           + assessment
-       491 +  - `publication_year`: Year of publication (metadata only)
-       492 +  - `adoption_context`: Era context - "innovator" (pre-2015),
-           +  "early_adopter" (2015-2020), "early_majority" (2020-2025), 
-           + "mainstream" (post-2025)
-       493 +  
-       494 +  **Note:** Adoption context is metadata for interpretation 
-           + only — scores are not adjusted for era.
-       495 +  
-       496 +  **See:** `references/credibility/assessment-pillars.md` for
-           +  full reproducibility framework
-       497 +  
-       498    ### report_metadata Object
-       499    
-       500    - `report_path`: Relative path to Markdown report
+● Update(.claude/skills/research-assessor/references/credibility/track-a-quality
+        -criteria.md)
+  ⎿  Updated .claude/skills/research-assessor/references/credibility/track-
+     -quality-criteria.md with 1 addition and 1 removal
+       137    
+       138    **Assessment factors:**
+       139    
+       140 -  - **Cross-signal coherence:** Do signal scores cohere? 
+           -  (e.g., high Transparency + low Replicability
+           -   should be explained)
+       140 +  - **Cross-signal coherence:** Do signal scores cohere? 
+           +  (e.g., high Transparency + low Reproducibility
+           +   should be explained)
+       141    - **Evidence-score alignment:** Do scores match the 
+             evidence cited in justifications?
+       142    - **Approach-anchor application:** Are approach-specific 
+             anchors correctly applied?
+       143    - **Reasoning quality:** Are justifications clear, 
+             specific, and evidence-based?
 
-● Now I'll update the validation checklist to include
-  reproducibility_readiness:
+● Update(.claude/skills/research-assessor/references/schema/classification-schem
+        a.md)
+  ⎿  Updated .claude/skills/research-assessor/references/schema/classificat
+     on-schema.md with 1 addition and 1 removal
+        99        "framework_to_use": 
+             "deductive_emphasis|inductive_emphasis|abductive_emphasis|mi
+             xed_assessment|methodological_paper",
+       100        "signal_prioritisation": {
+       101          "primary_signals": ["transparency", "validity", 
+             "generalisability"],
+       102 -        "secondary_signals": ["robustness", "replicability"],
+       102 +        "secondary_signals": ["robustness", "reproducibility
+           +  "],
+       103          "deemphasised_signals": [],
+       104          "rationale": "Explanation of why these signals 
+             prioritised for this research approach and paper type"
+       105        }
 
-● Update(.claude/skills/research-assessor/references/schema/assessment-schema.md
-        )
-  ⎿  Updated                                                               
-     .claude/skills/research-assessor/references/schema/assessment-schema.md
-      with 1 addition
-       542    - [ ] Score bands match quality state (narrow for HIGH, 
-             20-point for MODERATE)
-       543    - [ ] approach_anchors_applied = false if classification 
-             ambiguous + moderate quality
-       544    - [ ] metrics object populated from metrics.json
-       545 +  - [ ] **reproducibility_readiness object populated** 
-           + (required for all papers)
-       546    - [ ] report_metadata populated
-       547    
-       548    ---
+● Update(.claude/skills/research-assessor/references/schema/classification-schem
+        a.md)
+  ⎿  Updated .claude/skills/research-assessor/references/schema/classificat
+     on-schema.md with 1 addition and 1 removal
+       506        "framework_to_use": "inductive_emphasis",
+       507        "signal_prioritisation": {
+       508          "primary_signals": ["transparency", 
+             "comprehensibility", "generalisability"],
+       509 -        "secondary_signals": ["validity", "replicability
+           -  ", "plausibility"],
+       509 +        "secondary_signals": ["validity", "reproducibility
+           +  ", "plausibility"],
+       510          "deemphasised_signals": [],
+       511          "rationale": "Inductive research emphasis: workflow 
+             transparency, pattern clarity, and appropriate scope 
+             constraint are most critical for exploratory survey 
+             research."
+       512        }
 
-● Now I'll update the version history:
+● Update(assessment-system/prompts/track-a-quality-gating.md)
+  ⎿  Updated assessment-system/prompts/track-a-quality-gating.md with 1    
+     addition and 1 removal
+       157    |--------|---------------------------|
+       158    | TCI (Transparency & Completeness Index) | Transparency 
+             signal |
+       159    | ESD (Evidence Sufficiency Density) | Validity signal |
+       160 -  | RIS (Reproducibility Infrastructure Score) | 
+           -  Replicability signal |
+       160 +  | RIS (Reproducibility Infrastructure Score) | 
+           +  Reproducibility signal |
+       161    | MCS (Methodological Clarity Score) | Comprehensibility 
+             signal |
+       162    
+       163    **Alignment assessment:**
 
-● Update(.claude/skills/research-assessor/references/schema/assessment-schema.md
-        )
-  ⎿  Updated                                                               
-     .claude/skills/research-assessor/references/schema/assessment-schema.md
-      with 9 additions
-       569    
-       570    ## Schema Version History
-       571    
-       572 +  **v2.1 (2025-11-29):**
-       573 +  
-       574 +  - Added Three Pillars Framework (Transparency, Credibility,
-           +  Reproducibility)
-       575 +  - Reorganised clusters: Generalisability moved from Cluster
-           +  3 to Cluster 2
-       576 +  - Renamed Replicability → Reproducibility throughout
-       577 +  - Added reproducibility_readiness object for future 
-           + automation gateway
-       578 +  - Updated signal numbering (Generalisability = 6, 
-           + Reproducibility = 7)
-       579 +  - Added pathway and tool_type fields for reproducibility 
-           + assessment
-       580 +  
-       581    **v2.0 (2025-11-17):**
-       582    
-       583    - Added quality_state awareness throughout
+● Update(assessment-system/prompts/track-a-quality-gating.md)
+  ⎿  Updated assessment-system/prompts/track-a-quality-gating.md with 1    
+     addition and 1 removal
+       306    **Metric observations:**
+       307    - TCI: [value] → Expected Transparency: [assessment]
+       308    - ESD: [value] → Expected Validity: [assessment]
+       309 -  - RIS: [value] → Expected Replicability: [assessment]
+       309 +  - RIS: [value] → Expected Reproducibility: [assessment]
+       310    
+       311    **Alignment assessment:** [Analysis of correlations and any
+              divergences.]
+       312    
 
-● Finally, I'll update the Related References to include the pillars
-  document:
+● Update(.claude/skills/research-assessor/references/infrastructure/fieldwork-pe
+        rmits-guide.md)
+  ⎿  Updated .claude/skills/research-assessor/references/infrastructure/fie
+     dwork-permits-guide.md with 1 addition and 1 removal
+       16    - **Transparency signal**: Proper permitting demonstrates 
+            procedural rigour and ethical practice
+       17    - **Validity signal**: Jurisdictional compliance supports 
+            methodological legitimacy
+       18    - **Ethics signal**: CARE principles integration 
+            increasingly expected (UNESCO 2021, US federal guidance 2022)
+       19 -  - **Replicability
+          -   context**: Understanding legal/ethical constraints explains
+          -   data access restrictions
+       19 +  - **Reproducibility
+          +   context**: Understanding legal/ethical constraints explains
+          +   data access restrictions
+       20    
+       21    **Assessment approach**: Presence and documentation of 
+            appropriate permits indicates responsible research practice
+       22    
 
-● Update(.claude/skills/research-assessor/references/schema/assessment-schema.md
-        )
-  ⎿  Updated                                                               
-     .claude/skills/research-assessor/references/schema/assessment-schema.md
-      with 1 addition
-       594    
-       595    ## Related References
-       596    
-       597 +  - `assessment-pillars.md` - **Three pillars framework** 
-           + (Transparency, Credibility, Reproducibility)
-       598    - `signal-definitions-hass.md` - Signal definitions and 
-             approach-specific anchors
-       599    - `assessment-frameworks.md` - Framework selection and 
-             signal prioritisation
-       600    - `track-a-quality-criteria.md` - Quality gating decision 
-             logic
+● Update(.claude/skills/research-assessor/references/infrastructure/fieldwork-pe
+        rmits-guide.md)
+  ⎿  Updated .claude/skills/research-assessor/references/infrastructure/fie
+     dwork-permits-guide.md with 1 addition and 1 removal
+       524    - Accountability to multiple stakeholders
+       525    - Confidence in research legitimacy
+       526    
+       527 -  ### Replicability Context
+       527 +  ### Reproducibility Context
+       528    
+       529    Permit information explains:
+       530    - Why certain data may be restricted (ethical/legal 
+             requirements)
 
-● Now reviewing all changes for consistency and preparing commit. Let me
-  check what files have been modified:
+● Update(.claude/skills/research-assessor/references/examples/sobotkova-example.
+        md)
+  ⎿  Updated .claude/skills/research-assessor/references/examples/sobotkova
+     example.md with 1 addition and 1 removal
+       175    
+       176    1. **Clear hierarchy:** Design → Methods → Protocols flows 
+             logically
+       177    2. **Cross-references work:** Claims justify methods, 
+             evidence validates them
+       178 -  3. **Assessment-ready:** Sufficient detail to evaluate 
+           -  transparency and replicability
+       178 +  3. **Assessment-ready:** Sufficient detail to evaluate 
+           +  transparency and reproducibility
+       179    4. **Traceable:** All items link to source paper locations
+       180    5. **Complete metadata:** Consolidations fully documented
+       181    
+
+● All replacements done. Let me verify no instances remain:
+
+● Search(pattern: "replicability|Replicability", path:
+        "~/Code/llm-reproducibility", glob: "*.md", output_mode: "content")
+  ⎿  Found 20 lines (ctrl+o to expand)
+
+● The remaining instances are in:
+  - CLAUDE.md, README.md - Project descriptions (separate concern)
+  - planning/ - Historical planning docs
+  - archive/ - Superseded prompts
+  - outputs/ - Generated outputs with legacy terminology
+
+  Let me verify the core assessment system is clean:
+
+● Search(pattern: "replicability|Replicability", path:
+        ".claude/skills/research-assessor")
+  ⎿  Found 2 files (ctrl+o to expand)
+
+● Search(pattern: "replicability|Replicability", path:
+        "assessment-system/prompts")
+  ⎿  Found 0 files 
+
+● Let me check the remaining instances in the skill:
+
+● Search(pattern: "replicability|Replicability", path: ".claude/skills/research-
+        assessor/references/credibility/approach-taxonomy.md", output_mode:
+        "content")
+  ⎿  Found 1 line (ctrl+o to expand)
+
+● Search(pattern: "replicability|Replicability", path: ".claude/skills/research-
+        assessor/references/schema/assessment-schema.md", output_mode:
+        "content")
+  ⎿  Found 1 line (ctrl+o to expand)
+
+● Those remaining instances are legitimate:
+  - Line 437: "assess replicability" in context of "Replication Studies" -
+  refers to the act of replicating, not our signal name
+  - Line 576: Version history noting "Renamed Replicability →
+  Reproducibility" - documenting the change itself
+
+  The assessment-system/prompts/ directory is clean. Now let me commit:
 
 ● Bash(git status)
-  ⎿  On branch main                               
-     Your branch is up to date with 'origin/main'.
-     … +24 lines (ctrl+o to expand)
+  ⎿  On branch main                                    
+     Your branch is ahead of 'origin/main' by 1 commit.
+       (use "git push" to publish your local commits)
+     … +33 lines (ctrl+o to expand)
 
-● Bash(git diff --stat HEAD)
-  ⎿   .claude/skills/research-assessor/SKILL.md          |  27 +++---    
-      .../credibility/assessment-frameworks.md           |  49 ++++++----
-      .../credibility/signal-definitions-hass.md         |  41 ++++----
-     … +6 lines (ctrl+o to expand)
-
-● Let me verify terminology consistency across the changed files:
-
-● Bash(grep -ri "replicability" .claude/skills/research-assessor/
-      assessment-system/prompts/ --include="*.md" | head -20)
-  ⎿ .claude/skills/research-assessor/references/credibility/approach-taxono
-    my.md:- **Primary signals:** Transparency (design decisions documented)
-    , Replicability (method reproducible), Comprehensibility (clear specifi
-    … +52 lines (ctrl+o to expand)
-
-
-
-
-● I see there are a few remaining instances. Let me check the files I
-  updated to ensure the main terminology is consistent, and note the
-  secondary files for follow-up:
-
-● Bash(grep -i "replicability" .claude/skills/research-assessor/references/credi
-      bility/assessment-frameworks.md)
-  ⎿ **Abductive replicability = reasoning traceability (not code/data shari
-    ng)
-    - Computational replicability (unless quantitative modelling involved)
-
-
-● Let me fix those two remaining instances in assessment-frameworks.md:
-
-● Read(.claude/skills/research-assessor/references/credibility/assessment-framew
-      orks.md)
-  ⎿  Read 100 lines
-
-● Search(pattern: "replicability", path: ".claude/skills/research-assessor/refer
-        ences/credibility/assessment-frameworks.md", output_mode: "content")
-  ⎿  Found 2 lines (ctrl+o to expand)
-
-● Read(.claude/skills/research-assessor/references/credibility/assessment-framew
-      orks.md)
-  ⎿  Read 60 lines
-
-● Update(.claude/skills/research-assessor/references/credibility/assessment-fram
-        eworks.md)
-  ⎿  Updated .claude/skills/research-assessor/references/credibility/assess
-     ent-frameworks.md with 1 addition and 1 removal
-       187    
-       188    *Inductive robustness = triangulation, convergent evidence 
-             (not sensitivity analysis)
-       189    
-       190 -  **Abductive replicability
-           -   = reasoning traceability (not code/data sharing)
-       190 +  **Abductive reproducibility
-           +   = reasoning traceability (not code/data sharing)
-       191    
-       192    ---
-       193    
-
-● Update(.claude/skills/research-assessor/references/credibility/assessment-fram
-        eworks.md)
-  ⎿  Updated .claude/skills/research-assessor/references/credibility/assess
-     ent-frameworks.md with 1 addition and 1 removal
-       232    
-       233    De-emphasise (but still mention):
-       234    
-       235 -  - Computational replicability
-           -   (unless quantitative modelling involved)
-       235 +  - Computational reproducibility
-           +   (unless quantitative modelling involved)
-       236    
-       237    ---
-       238    
-
-● Good. Now let me verify the core files are consistent and proceed with the
-   commit:
-
-● Bash(grep -i "replicability" .claude/skills/research-assessor/references/credi
-      bility/assessment-frameworks.md
-      .claude/skills/research-assessor/references/credibility…)
-  ⎿  No remaining instances in core files
-
-● Core files are consistent. Now staging and committing:
-
-● Bash(git add .claude/skills/research-assessor/SKILL.md .claude/skills/research
-      -assessor/references/credibility/assessment-frameworks.md
-      .claude/skills/research-asses…)
-  ⎿  (No content)
-
-● Bash(git diff --cached --stat)
-  ⎿   .claude/skills/research-assessor/SKILL.md          |  27 +-         
-      .../credibility/assessment-frameworks.md           |  53 +-
-      .../references/credibility/assessment-pillars.md   | 325 +++++++++++
-     … +9 lines (ctrl+o to expand)
-
-● Bash(git commit -m "feat(assessment): add Three Pillars framework and
-      reproducibility focus…)
-  ⎿ [main 05e9706] feat(assessment): add Three Pillars framework and reprod
-    ucibility focus
-     9 files changed, 1717 insertions(+), 108 deletions(-)
+● Bash(git log --oneline -5)
+  ⎿ 05e9706 feat(assessment): add Three Pillars framework and reproducibili
+    ty focus
+    146c309 fix(prompt+skill): correct code/data availability location in a
     … +6 lines (ctrl+o to expand)
 
 
-● All tasks complete. Commit 05e9706 includes:
 
-  New files created:
-  - assessment-pillars.md - Core Three Pillars framework document (325
-  lines)
-  - cluster-2-evidential-strength.md - Credibility pillar with 4 signals
-  (626 lines)
-  - cluster-3-reproducibility.md - Reproducibility pillar with readiness
-  checklist (555 lines)
+● Bash(git add .claude/skills/research-assessor/references/credibility/approach-
+      taxonomy.md .claude/skills/research-assessor/references/credibility/track-
+      a-quality-cri…)
+  ⎿ [main 7adb7fa] chore(terminology): complete replicability → reproducibi
+    lity standardisation
+     7 files changed, 28 insertions(+), 28 deletions(-)
+
+
+● Terminology update complete. Summary:
+
+  Completed: Updated 7 files with ~21 instances of
+  "replicability/Replicability" → "reproducibility/Reproducibility"
 
   Files updated:
-  - SKILL.md - Terminology + pillar references
-  - signal-definitions-hass.md - Replicability → Reproducibility
-  - assessment-frameworks.md - Pillar context added
-  - assessment-schema.md - v2.1 with reproducibility_readiness object
-  - cluster-1-foundational-clarity.md - Pillar context header
-  - credibility-implementation-plan-v2.0.md - Terminology updates
+  - classify-research-approach.md (10 instances)
+  - approach-taxonomy.md (2 instances)
+  - track-a-quality-criteria.md (2 instances)
+  - classification-schema.md (2 instances)
+  - track-a-quality-gating.md (2 instances)
+  - fieldwork-permits-guide.md (2 instances)
+  - sobotkova-example.md (1 instance)
 
-  New cluster structure:
-  | Cluster | Pillar          | Signals
-           |
-  |---------|-----------------|---------------------------------------------
-  ---------|
-  | 1       | Transparency    | Comprehensibility, Transparency
-           |
-  | 2       | Credibility     | Plausibility, Validity, Robustness,
-  Generalisability |
-  | 3       | Reproducibility | Reproducibility
-           |
+  Preserved (legitimate uses):
+  - "Replication Studies" discussion (about study replication, not our
+  signal)
+  - Version history noting the terminology change
 
-  Note: Some secondary files (approach-taxonomy.md,
-  track-a-quality-criteria.md, classify-research-approach.md) still have old
-   "replicability" terminology - these can be updated in a follow-up pass if
-   desired.
+  Remaining items in project-level files (CLAUDE.md, README.md, planning/,
+  archive/, outputs/) can be addressed separately if desired — these are
+  descriptions/historical docs, not active assessment prompts.
+
+  Commit: 7adb7fa - chore(terminology): complete replicability →
+  reproducibility standardisation
 
 > /context 
   ⎿  
       Context Usage
-     ⛁ ⛀ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   claude-opus-4-5-20251101 · 112k/200k tokens (56%)
+     ⛁ ⛀ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   claude-opus-4-5-20251101 · 161k/200k tokens (81%)
      ⛁ ⛀ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ 
      ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   ⛁ System prompt: 3.1k tokens (1.5%)
-     ⛁ ⛁ ⛁ ⛁ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ System tools: 18.2k tokens (9.1%)
-     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ MCP tools: 1.3k tokens (0.6%)
-     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ Memory files: 2.4k tokens (1.2%)
-     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ Messages: 42.3k tokens (21.2%)
-     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛝ ⛝ ⛝   ⛶ Free space: 88k (43.9%)
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   ⛁ System tools: 18.2k tokens (9.1%)
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   ⛁ MCP tools: 1.3k tokens (0.6%)
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛶   ⛁ Memory files: 2.4k tokens (1.2%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ Messages: 91.4k tokens (45.7%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛝ ⛝ ⛝   ⛶ Free space: 39k (19.3%)
      ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝   ⛝ Autocompact buffer: 45.0k tokens (22.5%)
      ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ 
 
@@ -414,801 +579,730 @@
 
      
 
-> Can you put a detailed pass to update terminology on our to-do list? Then,
- remind me where we were and what's next. 
+> can we please commit and push? 
 
-● Added to todo list.
+● Bash(git status && git log --oneline -3)
+  ⎿  On branch main                                     
+     Your branch is ahead of 'origin/main' by 2 commits.
+       (use "git push" to publish your local commits)
+     … +24 lines (ctrl+o to expand)
 
-  Files needing terminology update (Replicability → Reproducibility):
-  - approach-taxonomy.md (3 instances)
-  - track-a-quality-criteria.md (2 instances)
-  - classification-schema.md (2 instances)
-  - classify-research-approach.md (5 instances)
-  - track-a-quality-gating.md (2 instances)
-  - fieldwork-permits-guide.md (2 instances)
-  - sobotkova-example.md (1 instance)
+● Bash(git push)
+  ⎿  To github.com:saross/llm-reproducibility.git
+        146c309..7adb7fa  main -> main
+
+● Done. Pushed 2 commits:
+  - 05e9706 feat(assessment): add Three Pillars framework and
+  reproducibility focus
+  - 7adb7fa chore(terminology): complete replicability → reproducibility
+  standardisation
+
+  Note: There are untracked files remaining (pipeline test outputs for
+  ross-ballsun-stanton-2022). Would you like those committed as well, or
+  leave them for now?
+
+> please commit everything, including archive/ files, I'd like to keep a 
+complete record of the projct 
+
+● Bash(git add archive/cc-interactions/
+      outputs/ross-ballsun-stanton-2022/assessment/ && git commit -m
+      "feat(assessment): add pipeline test outputs for ross-ballsun-st…)
+  ⎿ [main 1d7a53c] feat(assessment): add pipeline test outputs for ross-bal
+    lsun-stanton-2022
+     9 files changed, 3971 insertions(+)
+    … +15 lines (ctrl+o to expand)
+
+
+● Bash(git push)
+  ⎿  To github.com:saross/llm-reproducibility.git
+        7adb7fa..1d7a53c  main -> main
+
+● Done. All committed and pushed:
+
+  1d7a53c feat(assessment): add pipeline test outputs for
+  ross-ballsun-stanton-2022
+
+  9 files added including:
+  - 3 session archives
+  - 6 assessment outputs (classification, track-a-quality, clusters 1-3)
+
+  Repository is now clean and up to date.
+
+> /export archive/cc-interactions/2025-11-29-b.txt 
+  ⎿  Conversation exported to: archive/cc-interactions/2025-11-29-b.txt
+
+> /context 
+  ⎿  
+      Context Usage
+     ⛁ ⛀ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   claude-opus-4-5-20251101 · 163k/200k tokens (81%)
+     ⛁ ⛀ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ 
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   ⛁ System prompt: 3.1k tokens (1.5%)
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   ⛁ System tools: 18.2k tokens (9.1%)
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   ⛁ MCP tools: 1.3k tokens (0.6%)
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛶   ⛁ Memory files: 2.4k tokens (1.2%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ Messages: 92.6k tokens (46.3%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛝ ⛝ ⛝   ⛶ Free space: 37k (18.7%)
+     ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝   ⛝ Autocompact buffer: 45.0k tokens (22.5%)
+     ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ 
+
+     MCP tools · /mcp
+     └ mcp__ide__getDiagnostics (ide): 611 tokens
+     └ mcp__ide__executeCode (ide): 682 tokens
+
+     Memory files · /memory
+     └ User (/home/shawn/.claude/CLAUDE.md): 904 tokens
+     └ Project (/home/shawn/Code/llm-reproducibility/CLAUDE.md): 1.5k tokens
+
+     SlashCommand Tool · 32 commands
+     └ Total: 4.4k tokens
+
+     
+
+> great, we're also going to pause now for some housekeeping - I'd like you 
+to do a detailed investigation of (a) what documentation (readmes, 
+manifests, other
+  docs) need to be updated, (b) what documents (planning, outputs, 
+single-use scripts, etc.) need to be moved to archive/ (nothing will be 
+deleted), and (c)
+  whether the organisation of both archived and active files and folders is 
+optimal (I'm finding myself getting a little lost sometimes). After you've 
+completed
+  this investigation, we'll compact and feed the results into planning in 
+the next session. 
+
+● I'll do a systematic investigation of the project structure. Let me
+  explore comprehensively.
+
+● Bash(find /home/shawn/Code/llm-reproducibility -type f -name "*.md" | grep -v
+      node_modules | grep -v .git | sort)
+  ⎿ /home/shawn/Code/llm-reproducibility/archive/archive-index.md          
+    /home/shawn/Code/llm-reproducibility/archive/docs-obsolete/repository-r
+    eorganization-v2.5.md
+    … +544 lines (ctrl+o to expand)
+
+
+● Bash(find /home/shawn/Code/llm-reproducibility -type f \( -name "*.yaml" -o
+      -name "*.yml" -o -name "*.json" \) | grep -v node_modules | grep -v .git |
+       head -50)
+  ⎿ /home/shawn/Code/llm-reproducibility/.claude/settings.local.json       
+    /home/shawn/Code/llm-reproducibility/.claude/settings.json
+    /home/shawn/Code/llm-reproducibility/outputs.backup-pre-migration/sobot
+    … +95 lines (ctrl+o to expand)
+
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/)
+  ⎿  total 172                                      
+     drwxrwxr-x 17 shawn shawn  4096 Nov 27 16:15 .
+     drwxrwxr-x 14 shawn shawn  4096 Oct 14 17:35 ..
+     … +31 lines (ctrl+o to expand)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/planning/)
+  ⎿  total 604                                       
+     drwxrwxr-x  4 shawn shawn   4096 Nov 29 13:15 .
+     drwxrwxr-x 17 shawn shawn   4096 Nov 27 16:15 ..
+     … +36 lines (ctrl+o to expand)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/docs/)
+  ⎿  total 100                                      
+     drwxrwxr-x  7 shawn shawn  4096 Nov 14 22:49 .
+     drwxrwxr-x 17 shawn shawn  4096 Nov 27 16:15 ..
+     … +8 lines (ctrl+o to expand)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/outputs/)
+  ⎿  total 280                                      
+     drwxrwxr-x 14 shawn shawn  4096 Nov 28 17:22 .
+     drwxrwxr-x 17 shawn shawn  4096 Nov 27 16:15 ..
+     … +37 lines (ctrl+o to expand)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/scripts/)
+  ⎿  total 12                                                        
+     drwx------  2 shawn shawn 4096 Nov 17 21:26 .
+     drwxrwxr-x 17 shawn shawn 4096 Nov 27 16:15 ..
+     -rwx--x--x  1 shawn shawn 2117 Nov 17 21:26 install-git-hooks.sh
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/archive/)
+  ⎿  total 72                                       
+     drwxrwxr-x 12 shawn shawn  4096 Nov 13 14:53 .
+     drwxrwxr-x 17 shawn shawn  4096 Nov 27 16:15 ..
+     … +13 lines (ctrl+o to expand)
+
+● Read(README.md)
+  ⎿  Read 326 lines
+
+● Read(manifest.yaml)
+  ⎿  Read 133 lines
+
+● Read(CHANGELOG.md)
+  ⎿  Read 155 lines
+
+● Read(planning/README.md)
+  ⎿  Read 130 lines
+
+● Read(docs/documentation-index.md)
+  ⎿  Read 100 lines
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/reports/)
+  ⎿  total 112                                      
+     drwxrwxr-x  5 shawn shawn  4096 Nov 11 15:38 .
+     drwxrwxr-x 17 shawn shawn  4096 Nov 27 16:15 ..
+     … +7 lines (ctrl+o to expand)
+
+● Now I have a comprehensive picture. Let me write up the housekeeping
+  investigation report:
 
   ---
-  Where we are:
+  Housekeeping Investigation Report
 
-  Just completed Phase 7 of the credibility implementation plan — the Three
-  Pillars framework is now documented and propagated across core files:
+  A. Documentation Needing Updates
 
-  | Phase | Status     | Description                                       |
-  |-------|------------|---------------------------------------------------|
-  | 1-6   | ✅ Complete | Extraction system, classification, quality gating
+  HIGH PRIORITY
+
+  1. README.md (root)
+  - Says "replicability" (line 6, 158, etc.) — should be "reproducibility"
+  - Project status section outdated (says v2.5 completed, doesn't mention
+  v2.6 or assessment)
+  - References "five-pass workflow" in testing section (should be 8-pass)
+  - Links to non-existent files: docs/development/schema-evolution.md,
+  docs/development/deployment-guide-v2.5.md,
+  docs/research-assessor-guide/overview.md,
+  docs/research-assessor-guide/troubleshooting.md
+  - "Planned for v2.6+" section outdated — v2.6 is released
+  - Assessment framework section references
+  planning/cwts_implementation_plan.md which doesn't exist
+
+  2. CHANGELOG.md
+  - Missing v2.6 entry entirely
+  - "Planned for v2.6+" section at bottom is now outdated
+  - Links to non-existent docs/skill-documentation/VERSION.md
+
+  3. manifest.yaml
+  - Line 70: References 03-rdmap_pass1a_explicit_prompt.md but file is named
+   03-rdmap_pass1a_prompt.md
+  - Missing assessment system components (cluster prompts, Three Pillars
+  framework)
+  - Skill version shows 2.6 but significant assessment additions have been
+  made
+
+  4. planning/README.md
+  - References non-existent files: cwts_implementation_plan.md,
+  implementation_plan_supplement.md, schema_improvement_plan.md,
+  preliminary-work/
+  - Phase status outdated — assessment framework is well underway, not
+  "upcoming"
+
+  5. docs/documentation-index.md
+  - Says "7-pass workflow" repeatedly — should be "8-pass (Passes 0-7)"
+  - File counts and last updated date (2025-11-13) outdated
+  - References old skill-documentation paths
+
+  MEDIUM PRIORITY
+
+  6. docs/ subdirectory READMEs
+  - docs/README.md — references outdated structure
+  - Various files may reference old pass counts
+
+  7. archive/README.md and archive-index.md
+  - May need updating to reflect new archive structure
+
+  ---
+  B. Documents to Move to Archive
+
+  planning/ folder (many files are superseded or completed):
+
+  | File                                             | Reason
+                                   | Destination                     |
+  |--------------------------------------------------|----------------------
+  ---------------------------------|---------------------------------|
+  | assessment-implementation-plan.md                | Superseded by
+  credibility-implementation-plan-v2.0.md | archive/planning-completed/
   |
-  | 7     | ✅ Complete | Cluster prompts + Three Pillars framework
-  |
-  | 8     | Pending    | Cluster testing on real papers                    |
-  | 9     | Pending    | Final report generation prompts                   |
+  | credibility-assessment-implementation-roadmap.md | Superseded
+                                   | archive/planning-completed/     |
+  | credibility-implementation-plan-detailed.md      | Superseded by v2.0
+                                   | archive/planning-completed/     |
+  | corpus-interpretation-framework.md               | Likely
+  completed/integrated                           |
+  archive/planning-completed/     |
+  | extraction-assessment-rubric-v1.md               | Likely superseded
+                                   | archive/planning-completed/     |
+  | extraction-metrics-guidance-analysis.md          | Old analysis
+                                   | archive/planning-completed/     |
+  | extraction-to-analysis-transition.md             | Historical transition
+   doc                             | archive/planning-completed/     |
+  | fair-vocabularies-development-plan.md            | May be active, needs
+  review                           | TBD                             |
+  | paper-credibility-analysis-framework.md          | Likely superseded
+                                   | archive/planning-completed/     |
+  | pass6-phase1-testing-findings.md                 | Completed testing
+                                   | archive/extraction-development/ |
+  | pass6-software-documentation-enhancement.md      | Completed
+                                   | archive/extraction-development/ |
+  | quick_infrastructure_scan.py                     | One-time script
+                                   | archive/ or scripts/            |
+  | research-approach-classification-framework.md    | Superseded by prompts
+                                   | archive/planning-completed/     |
+  | secondary-source-attribution-analysis.md         | Completed analysis
+                                   | archive/planning-completed/     |
+  | synthesis-external-feedback.md                   | Historical feedback
+                                   | archive/planning-completed/     |
+  | gpt51-feedback/                                  | Historical
+                                   | archive/planning-completed/     |
 
-  What's next:
+  Keep active:
+  - credibility-implementation-plan-v2.0.md (current master plan)
+  - active-todo-list.md (if still used)
 
-  1. Terminology cleanup (quick task on todo) — update secondary files
-  2. Phase 8: Cluster testing — run the three cluster prompts on a real
-  paper (e.g., ross-ballsun-stanton-2022) to validate they work end-to-end
-  3. Phase 9 — create the final credibility report generation prompt that
-  consolidates all three cluster assessments
+  outputs/ folder:
 
-  Would you like to do the terminology cleanup now, or move straight to
-  cluster testing?
+  | File                                      | Reason
+                        |
+  |-------------------------------------------|-----------------------------
+  ----------------------|
+  | corpus-profile-2025-11-15-*.md (5 files)  | Duplicate timestamped
+  profiles — keep latest only |
+  | corpus-profile-2025-11-16-*.md (2 files)  | Keep only latest
+                        |
+  | classifier-reliability-test-2025-11-28.md | Test output — archive or
+  dedicated test folder    |
+  | cluster-1-reliability-test-2025-11-28.md  | Test output — archive or
+  dedicated test folder    |
 
-> You know, while I'm thinking about it, could we add to the to-do list (a) 
-specific tests of common research failure modes / biases / errors; (b) 
-'sentiment analysis' type investigations of 'hype' and other rhetorical 
-issues, including 'slop' (AI or otherwise) - I have bibliography for both 
-(a) and (b), and I don't want to work on it now, but I've been thinking 
-about it a lot lately and wanted to note it down somewhere 
+  Root folder:
 
-● Added both as [FUTURE] items:
+  | File                          | Reason
+               |
+  |-------------------------------|-----------------------------------------
+  -------------|
+  | outputs.backup-pre-migration/ | Entire directory is a backup — should be
+   in archive/ |
+  | batch-assess.py               | One-time script — move to scripts/ or
+  archive        |
 
-  1. Research failure modes / biases / errors — things like p-hacking,
-  HARKing, cherry-picking, confirmation bias, survivorship bias, etc.
-  2. Rhetorical analysis — hype detection, overclaiming, "slop"
-  (AI-generated filler), hedging patterns, certainty inflation
+  ---
+  C. Organisation Assessment
 
-  These could potentially become additional signals or a separate assessment
-   layer. When you're ready to work on them, the bibliography will inform
-  what specific patterns to detect and how to operationalise them.
+  Issues Identified
 
-  Current todo list:
-  - [pending] Terminology cleanup (secondary files)
-  - [pending] [FUTURE] Failure mode tests
-  - [pending] [FUTURE] Rhetorical/sentiment analysis
+  1. Duplication/Confusion: Assessment References
+  - Assessment docs split between:
+    - assessment-system/prompts/ (active prompts)
+    - .claude/skills/research-assessor/references/credibility/ (reference
+  docs loaded by skill)
+  - Not clear which is authoritative for what
+
+  Recommendation: Document the division clearly OR consolidate. The skill
+  references are loaded at runtime; prompts are instructions. This is
+  intentional but confusing.
+
+  2. planning/ is Cluttered
+  - 22 files, many superseded or completed
+  - Hard to find the current master plan
+  - Some files are analyses, some are plans, some are test results
+
+  Recommendation:
+  - Archive everything except: credibility-implementation-plan-v2.0.md,
+  README.md, fellowship/ (if active)
+  - Update README.md to point to current plan
+
+  3. outputs/ Organisation
+  - Paper outputs organised well ({paper-slug}/)
+  - But also contains: corpus profiles (timestamped), test results, batch
+  metrics
+  - These should probably be separated
+
+  Recommendation: Create structure:
+  outputs/
+  ├── {paper-slug}/           # Paper-specific outputs
+  ├── corpus-analysis/        # Corpus-level profiles and metrics
+  └── testing/                # Reliability tests, comparisons
+
+  4. archive/ Is Complex but Reasonable
+  - Current structure makes sense (by version, by type)
+  - Could use better README/index
+  - archive/planning-completed/ exists but not fully used
+
+  Recommendation: Archive is OK, just needs additions from planning/
+
+  5. outputs.backup-pre-migration/ Should Be in archive/
+  - This is clearly historical backup data
+  - Currently at root level cluttering the project
+
+  Recommendation: Move to archive/outputs-backup-pre-migration/
+
+  6. scripts/ is Minimal
+  - Only contains install-git-hooks.sh
+  - batch-assess.py and planning/quick_infrastructure_scan.py could go here
+
+  Recommendation: Consolidate scripts
+
+  7. docs/ vs .claude/skills/
+  - docs/research-assessor-guide/ duplicates/complements skill references
+  - Not clear which is user-facing vs internal
+
+  Recommendation: Clarify in README or consolidate
+
+  ---
+  Summary of Priorities
+
+  Immediate (before next development):
+  1. Update README.md (terminology, versions, links)
+  2. Add v2.6 to CHANGELOG.md
+  3. Archive superseded planning docs
+  4. Move outputs.backup-pre-migration/ to archive/
+
+  Short-term:
+  5. Fix broken documentation links
+  6. Update manifest.yaml
+  7. Reorganise outputs/ (corpus-analysis/, testing/)
+  8. Update planning/README.md
+
+  Later:
+  9. Review docs/ structure
+  10. Consider consolidating assessment reference locations
+  11. Update archive/ index
+
+  ---
+  This report is ready for your review. In the next session we can create a
+  plan to execute these changes.
 
 > /export archive/cc-interactions/2025-11-29-b.txt 
   ⎿  Conversation exported to: archive/cc-interactions/2025-11-29-b.txt
 
-> Shall we test the cluster prompts next? Choose an appropriate paper (e.g.,
- ross-ballsun-stanton-2022 and see how it goes. We have enough context 
-remaining I
-  think. 
+> some feedback: (a) consolidate wherever it makes sense and improves the 
+situation, even if it is *somewhat* more work (rather than documenting 
+unconsolidated
+  situations), (b) while I want you to update language (e.g., replication 
+vs. reproduciton) in active documents, don't change it in stale / superceded
+ / archived
+  documents, we want to keep an accurate history of the project, (c) 
+fellowship/ and similar overview files should be kept active for now, (d) 
+overall your
+  archiving has been a little too aggressive; if it's reasonably clear do it
+ (it can always be reversed), if in doubt ask me. Overall I agree with your 
+suggestions
+  for improved organisation. With this in mind, I think we have the context 
+to make a plan. 
 
-● Let me check what we have available for ross-ballsun-stanton-2022:
-
-● Bash(ls -la
-      /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton-2022/)
-  ⎿  total 480                                       
-     drwxrwxr-x  3 shawn shawn   4096 Nov 14 22:52 .
-     drwxrwxr-x 14 shawn shawn   4096 Nov 28 17:22 ..
-     … +35 lines (ctrl+o to expand)
-
-● Bash(ls -la /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton-
-      2022/assessment/ 2>/dev/null || echo "No assessment directory yet")
-  ⎿  total 52                                      
-     drwxrwxr-x 3 shawn shawn  4096 Nov 11 15:38 .
-     drwxrwxr-x 3 shawn shawn  4096 Nov 14 22:52 ..
-     … +3 lines (ctrl+o to expand)
-
-● Good - there's an extraction.json and an older assessment. Let me check if
-   there's a classification.json:
-
-● Bash(ls /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton-2022
-      /assessment/working/)
-  ⎿  claim-evidence-mappings.json 
-     claims.json
-     evidence.json
-     … +6 lines (ctrl+o to expand)
-
-● Bash(find
-      /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton-2022/
-      -name "classification*.json" -o -name "track-a*.md" 2>/dev/null)
-  ⎿  (No content)
-
-● No classification.json yet — this paper predates the classification step.
-  To properly test the clusters, we need:
-
-  1. ✅ extraction.json — exists
-  2. ❌ classification.json — needs Pass 8
-  3. ❌ track-a-quality.md — needs quality gating
-
-  Options:
-
-  A. Run full pipeline — Run classification (Pass 8) → quality gating (Track
-   A) → then clusters
-  B. Quick manual classification — I can assess the research approach from
-  the extraction and create a minimal classification.json to proceed
-  directly to cluster testing
-
-  Let me quickly check what kind of paper this is:
-
-● Bash(jq '{title: .metadata.title, paper_type: .metadata.paper_type,
-      research_design_count: (.research_designs | length), methods_count:
-      (.methods | length)}' /home/s…)
-  ⎿  {                            
-       "title": null,
-       "paper_type": null,
-     … +3 lines (ctrl+o to expand)
-
-● Bash(jq '.extraction_notes // .research_designs[0] // .methods[0]'
-      /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton-2022/ext
-      raction.json | head -50)
-  ⎿ {                                                                      
-      "pass": 1,
-      "section_extracted": "ALL SECTIONS: Groups 1-5 complete, pages 2-13 (
-    … +57 lines (ctrl+o to expand)
-
-
-● This is the Ross & Ballsun-Stanton preregistration paper — a
-  methodological/argumentative paper, not empirical research.
-
-  Recommendation: Run the full pipeline to properly test the system:
-
-  1. Pass 8: Classification (~5 min) — classify research approach
-  2. Track A: Quality gating (~3 min) — assess extraction quality
-  3. Cluster 1-3 assessments (~15 min total)
-
-  This gives us a realistic end-to-end test. Shall I proceed with Pass 8
-  (classification) first?
-
-> /export archive/cc-interactions/2025-11-29-b.txt 
-  ⎿  Conversation exported to: archive/cc-interactions/2025-11-29-b.txt
-
-> Run the full pipeline - I've dropped us into planning mode so that I can 
-review what a full pass looks like not 
+● Let me read the existing plan file and then create a new plan for this
+  housekeeping task.
 
 ● Reading Plan(~/.claude/plans/parallel-wiggling-narwhal.md)
-  ⎿  Read 183 lines
+  ⎿  Read 71 lines
 
-● This is a different task - testing the full pipeline. I have sufficient
-  context from our conversation, so I'll create a new plan directly. Let me
-  overwrite the existing plan:
+● This is a different task (housekeeping) from the previous plan
+  (terminology update which is now complete). I already have extensive
+  context from my investigation in this conversation, so I can proceed
+  directly to creating the plan. Let me write a comprehensive housekeeping
+  plan incorporating your feedback.
 
 ● Updated plan
   ⎿  /plan to preview · ~/.claude/plans/parallel-wiggling-narwhal.md
 
-● Plan created. The pipeline test will run 5 steps sequentially:
+● Plan drafted. I have a few clarifying questions before finalising:
+                                                                           
+● User answered Claude's questions:
+  ⎿  · Should gpt51-feedback/ be kept active in planning/ or archived? → 
+     Archive
+     · Is fair-vocabularies-development-plan.md still active work or should 
+     it be archived? → Keep active
 
-  1. Pass 8: Classification → Determine research approach (expecting
-  abductive)
-  2. Track A: Quality Gating → Assess extraction quality (expecting HIGH)
-  3. Cluster 1 → Transparency pillar (Comprehensibility + Transparency)
-  4. Cluster 2 → Credibility pillar (4 signals)
-  5. Cluster 3 → Reproducibility pillar (likely using Methodological
-  Transparency variant since this is a non-computational paper)
+     · Is active-todo-list.md actively used? (I haven't seen it referenced 
+     in workflows) → Keep active
 
-  Key test aspects:
-  - Abductive approach anchors (new territory - this is our first abductive
-  paper)
-  - Methodological Transparency variant for Cluster 3 (experimental
-  alternate anchors)
-  - Full Reproducibility Readiness Checklist
+● Let me update the plan with your decisions:
 
-  Estimated time: ~25-30 minutes
+● Updated plan
+  ⎿  /plan to preview · ~/.claude/plans/parallel-wiggling-narwhal.md
 
-  Ready to proceed when you approve.
+● Updated plan
+  ⎿  /plan to preview · ~/.claude/plans/parallel-wiggling-narwhal.md
+
+● Updated plan
+  ⎿  /plan to preview · ~/.claude/plans/parallel-wiggling-narwhal.md
+
+● Plan is finalised with your decisions incorporated. Summary:
+
+  Phase 1 - Documentation Updates:
+  - README.md, CHANGELOG.md, manifest.yaml, planning/README.md,
+  docs/documentation-index.md
+
+  Phase 2 - Archive (14 files + 1 directory):
+  - 13 superseded planning docs + gpt51-feedback/ →
+  archive/planning-completed/
+
+  Keep Active:
+  - credibility-implementation-plan-v2.0.md, active-todo-list.md,
+  fair-vocabularies-development-plan.md, fellowship/
+
+  Phase 3 - Reorganise:
+  - outputs.backup-pre-migration/ → archive/
+  - Create outputs/corpus-analysis/ and outputs/testing/
+  - Consolidate scripts/
+
+  Ready for execution in next session.
                                                                            
 ● User approved Claude's plan
   ⎿  Plan saved to: ~/.claude/plans/parallel-wiggling-narwhal.md · /plan to 
      edit
 
-     Full Assessment Pipeline Test: ross-ballsun-stanton-2022
+     Project Housekeeping Plan
 
      Date: 2025-11-29
-     Purpose: End-to-end test of the complete assessment pipeline on a real 
-     paper
-     Test Paper: Ross & Ballsun-Stanton (2022) - Preregistration in 
-     archaeology
+     Purpose: Documentation updates, archiving, and reorganisation
+     Scope: Based on investigation completed in this session
 
      ---
-     Pipeline Overview
+     Guiding Principles (from user feedback)
 
-     extraction.json (exists)
-            ↓
-     Pass 8: Research Approach Classification
-            ↓
-     classification.json + assessment/classification.md
-            ↓
-     Track A: Quality Gating
-            ↓
-     assessment/track-a-quality.md
-            ↓
-     Cluster 1: Foundational Clarity (Transparency pillar)
-            ↓
-     assessment/cluster-1-foundational-clarity.md
-            ↓
-     Cluster 2: Evidential Strength (Credibility pillar)
-            ↓
-     assessment/cluster-2-evidential-strength.md
-            ↓
-     Cluster 3: Reproducibility (Reproducibility pillar)
-            ↓
-     assessment/cluster-3-reproducibility.md
+     1. Consolidate where it improves the situation, even if more work
+     2. Preserve history — don't change terminology in 
+     archived/stale/superseded docs
+     3. Keep active: fellowship/, overview files, and similar planning docs
+     4. Conservative archiving — if in doubt, ask
 
      ---
-     Pre-Execution Status
+     Phase 1: Critical Documentation Updates
 
-     Paper: ross-ballsun-stanton-2022
-     Paper type: Methodological/argumentative (preregistration advocacy)
+     1.1 README.md (root)
 
-     Existing files:
-     - ✅ extraction.json (164KB, comprehensive extraction)
-     - ✅ metrics-scorecard.md (existing metrics)
-     - ❌ classification.json (needs creation)
-     - ❌ track-a-quality.md (needs creation)
-     - ⚠️ assessment/ directory exists with OLD assessment format
+     Changes:
+     - Update terminology: "replicability" → "reproducibility" (lines 6, 
+     158, 288)
+     - Update project status section to reflect v2.6 and assessment progress
+     - Fix workflow references: "five-pass" → "8-pass (Pass 0-7)"
+     - Fix/remove broken links:
+       - docs/development/schema-evolution.md (doesn't exist)
+       - docs/development/deployment-guide-v2.5.md (doesn't exist)
+       - docs/research-assessor-guide/overview.md (doesn't exist)
+       - docs/research-assessor-guide/troubleshooting.md (doesn't exist)
+       - planning/cwts_implementation_plan.md (doesn't exist)
+     - Update "Planned for v2.6+" section (v2.6 is now released)
 
-     Expected research approach: Abductive (inference to best explanation 
-     for how preregistration should work in archaeology)
+     1.2 CHANGELOG.md
 
-     ---
-     Step 1: Pass 8 - Research Approach Classification
+     Changes:
+     - Add v2.6 entry with:
+       - Infrastructure extraction (Pass 6)
+       - 8-pass workflow (Pass 0-7)
+       - Schema v2.6
+       - Assessment framework development (Three Pillars, cluster prompts)
+     - Update "Planned for v2.6+" section at bottom
+     - Fix link to non-existent docs/skill-documentation/VERSION.md
 
-     Prompt: assessment-system/prompts/classify-research-approach.md
+     1.3 manifest.yaml
 
-     Inputs:
-     - outputs/ross-ballsun-stanton-2022/extraction.json
+     Changes:
+     - Fix line 70: 03-rdmap_pass1a_explicit_prompt.md → 
+     03-rdmap_pass1a_prompt.md
+     - Add assessment system components:
+       - Track A quality gating prompt
+       - Cluster prompts (1-3)
+       - Three Pillars framework reference
+     - Update last_updated dates
 
-     Outputs:
-     - outputs/ross-ballsun-stanton-2022/assessment/classification.json
-     - outputs/ross-ballsun-stanton-2022/assessment/classification.md
+     1.4 planning/README.md
 
-     Expected classification:
-     - expressed_approach: likely "none_stated" (methodological papers 
-     rarely state approach)
-     - revealed_approach: "abductive" (building argument for best 
-     explanation)
-     - primary_approach: "abductive"
-     - credibility_framework_to_use: "abductive_emphasis"
+     Changes:
+     - Update phase status (assessment is in progress, not "upcoming")
+     - Fix/update file references to match current structure
+     - Point to credibility-implementation-plan-v2.0.md as master plan
 
-     Key extraction elements to examine:
-     - claims[] - structure of arguments (deductive predictions vs inductive
-      patterns vs abductive inference)
-     - evidence[] - types of evidence used
-     - research_designs[] - stated vs implicit design
-     - methods[] - analytical approach
+     1.5 docs/documentation-index.md
 
-     ---
-     Step 2: Track A - Quality Gating
-
-     Prompt: assessment-system/prompts/track-a-quality-gating.md
-
-     Inputs:
-     - extraction.json
-     - classification.json (from Step 1)
-
-     Outputs:
-     - outputs/ross-ballsun-stanton-2022/assessment/track-a-quality.md
-
-     Assessment criteria:
-     1. Extraction confidence - Is extraction complete and accurate?
-     2. Classification confidence - Is approach classification reliable?
-     3. Metric-signal alignment - Do metrics support signal assessment?
-
-     Expected quality state: HIGH or MODERATE
-     - Extraction is comprehensive (164KB, multiple passes)
-     - Paper structure is clear
-     - Classification should be straightforward (methodological paper)
-
-     Quality state determines:
-     - HIGH → Precise scores (±5 points), narrow bands
-     - MODERATE → 20-point bands, caveats required
-     - LOW → No assessment (not expected for this paper)
+     Changes:
+     - Update "7-pass workflow" → "8-pass workflow (Passes 0-7)" throughout
+     - Update file counts and last updated date
+     - Fix any broken links
 
      ---
-     Step 3: Cluster 1 - Foundational Clarity
+     Phase 2: Archiving Superseded Planning Docs
 
-     Prompt: assessment-system/prompts/cluster-1-foundational-clarity.md
+     Move to archive/planning-completed/:
 
-     Pillar: Transparency
-     Signals: Comprehensibility (Signal 1), Transparency (Signal 2)
+     | File                                             | Reason            
+             |
+     |--------------------------------------------------|-------------------
+     --------|
+     | assessment-implementation-plan.md                | Superseded by v2.0
+             |
+     | credibility-assessment-implementation-roadmap.md | Superseded        
+             |
+     | credibility-implementation-plan-detailed.md      | Superseded by v2.0
+             |
+     | corpus-interpretation-framework.md               | Integrated into 
+     main plan |
+     | extraction-assessment-rubric-v1.md               | Superseded        
+             |
+     | extraction-metrics-guidance-analysis.md          | Historical 
+     analysis       |
+     | extraction-to-analysis-transition.md             | Historical 
+     transition doc |
+     | paper-credibility-analysis-framework.md          | Superseded        
+             |
+     | pass6-phase1-testing-findings.md                 | Completed testing 
+             |
+     | pass6-software-documentation-enhancement.md      | Completed         
+             |
+     | research-approach-classification-framework.md    | Superseded by 
+     prompts     |
+     | secondary-source-attribution-analysis.md         | Completed analysis
+             |
+     | synthesis-external-feedback.md                   | Historical 
+     feedback       |
 
-     Inputs:
-     - extraction.json
-     - classification.json
-     - track-a-quality.md
+     Keep active in planning/:
+     - credibility-implementation-plan-v2.0.md (current master plan)
+     - active-todo-list.md (confirmed active)
+     - fair-vocabularies-development-plan.md (confirmed active)
+     - fellowship/ directory (per user request)
+     - README.md (update, don't archive)
 
-     Outputs:
-     - outputs/ross-ballsun-stanton-2022/assessment/cluster-1-foundational-c
-     larity.md
+     Also archive:
+     - gpt51-feedback/ → move to archive/planning-completed/
 
-     Assessment focus:
-     - Comprehensibility: Are claims clear? Is argument structure traceable?
-     - Transparency: Are research design and methods documented?
-
-     Expected for methodological paper:
-     - Comprehensibility likely GOOD (well-structured argument paper)
-     - Transparency focus shifts to argumentation transparency rather than 
-     empirical methods
-
-     ---
-     Step 4: Cluster 2 - Evidential Strength
-
-     Prompt: assessment-system/prompts/cluster-2-evidential-strength.md
-
-     Pillar: Credibility
-     Signals: Plausibility (3), Validity (4), Robustness (5), 
-     Generalisability (6)
-
-     Inputs:
-     - extraction.json
-     - classification.json
-     - track-a-quality.md
-
-     Outputs:
-     - outputs/ross-ballsun-stanton-2022/assessment/cluster-2-evidential-str
-     ength.md
-
-     Assessment focus for abductive research:
-     - Plausibility: Does argument cohere with domain knowledge?
-     - Validity: Is evidence sufficient for inference to best explanation?
-     - Robustness: Are alternative explanations considered?
-     - Generalisability: Is scope appropriately constrained?
-
-     Abductive-specific considerations:
-     - Emphasis on explanatory coherence over statistical power
-     - Alternative explanation assessment is key
-     - Scope constraints important for argumentative claims
+     Scripts:
+     - Move quick_infrastructure_scan.py to scripts/ (consolidate scripts)
 
      ---
-     Step 5: Cluster 3 - Reproducibility
+     Phase 3: File Reorganisation
 
-     Prompt: assessment-system/prompts/cluster-3-reproducibility.md
+     3.1 Move outputs.backup-pre-migration/ to archive/
 
-     Pillar: Reproducibility
-     Signal: Reproducibility (7)
+     mv outputs.backup-pre-migration/ archive/outputs-backup-pre-migration/
 
-     Inputs:
-     - extraction.json
-     - classification.json
-     - track-a-quality.md
+     This is clearly historical backup data and shouldn't be at root level.
 
-     Outputs:
-     - outputs/ross-ballsun-stanton-2022/assessment/cluster-3-reproducibilit
-     y.md
+     3.2 Reorganise outputs/
 
-     Key determination: Does paper have computational component?
+     Create cleaner structure:
 
-     For this paper (methodological):
-     - Likely NO computational component → Use Methodological Transparency 
-     variant
-     - Alternative anchors apply (experimental)
-     - Focus on: procedure documentation, decision criteria, reasoning 
-     traceability
+     outputs/
+     ├── {paper-slug}/           # Paper-specific outputs (keep as-is)
+     ├── corpus-analysis/        # NEW: Move corpus profiles here
+     │   └── corpus-profile-2025-11-16-0724.md  # Keep only latest
+     └── testing/                # NEW: Move test results here
+         ├── classifier-reliability-test-2025-11-28.md
+         └── cluster-1-reliability-test-2025-11-28.md
 
-     Reproducibility Readiness Checklist:
-     reproducibility_readiness:
-       applies: false  # (or true if any computational examples)
-       pathway: "methodological_transparency_variant"
-       if_not_applicable_reason: "Methodological paper without computational
-      analysis"
-       ...
+     Archive duplicate corpus profiles:
+     - Keep: corpus-profile-2025-11-16-0724.md (latest)
+     - Archive: 6 older timestamped versions
 
-     Output flags:
-     - experimental: true (using alternate anchors)
-     - pathway: "methodological_transparency_variant"
+     3.3 Consolidate scripts/
+
+     Move to scripts/:
+     - batch-assess.py (from root)
+     - quick_infrastructure_scan.py (from planning/)
+
+     Result: All utility scripts in one place.
 
      ---
-     Post-Execution Validation
+     Phase 4: Update Archive Index
 
-     After all steps complete, verify:
+     After moving files, update:
+     - archive/README.md
+     - archive/archive-index.md
 
-     1. File structure:
-     outputs/ross-ballsun-stanton-2022/assessment/
-     ├── classification.json
-     ├── classification.md
-     ├── track-a-quality.md
-     ├── cluster-1-foundational-clarity.md
-     ├── cluster-2-evidential-strength.md
-     └── cluster-3-reproducibility.md
-     2. Consistency checks:
-       - Classification approach used consistently across clusters
-       - Quality state applied appropriately (caveats if MODERATE)
-       - Scores reference correct approach-specific anchors
-       - Reproducibility pathway correctly determined
-     3. Signal coverage:
-       - All 7 signals assessed
-       - Each signal has: score, confidence, strengths, weaknesses, 
-     justification
-       - Approach-specific context provided
+     To reflect new additions (planning-completed files, outputs backup).
 
      ---
-     Execution Approach
+     Execution Order
 
-     Recommended: Execute sequentially, reviewing outputs at each step
-
-     | Step                    | Duration | Review Point                    
-                 |
-     |-------------------------|----------|---------------------------------
-     ------------|
-     | Pass 8: Classification  | ~5 min   | Review classification before 
-     proceeding     |
-     | Track A: Quality Gating | ~3 min   | Confirm quality state           
-                 |
-     | Cluster 1               | ~5 min   | Check transparency pillar       
-                 |
-     | Cluster 2               | ~8 min   | Check credibility pillar (4 
-     signals)        |
-     | Cluster 3               | ~5 min   | Check reproducibility + 
-     readiness checklist |
-
-     Total estimated time: ~25-30 minutes
+     1. Documentation updates (Phase 1) — can be done in parallel
+       - README.md
+       - CHANGELOG.md
+       - manifest.yaml
+       - planning/README.md
+       - docs/documentation-index.md
+     2. Archive superseded planning docs (Phase 2)
+       - Move 13 files to archive/planning-completed/
+     3. File reorganisation (Phase 3)
+       - Move outputs.backup-pre-migration/ to archive/
+       - Create outputs/corpus-analysis/ and outputs/testing/
+       - Move relevant files
+       - Archive duplicate corpus profiles
+       - Consolidate scripts
+     4. Update archive indexes (Phase 4)
+     5. Verification and commit
+       - Verify no broken links
+       - Single commit with comprehensive message
 
      ---
-     Success Criteria
-
-     - Classification correctly identifies abductive/methodological approach
-     - Quality state determined and applied consistently
-     - All three cluster files generated with correct structure
-     - Approach-specific anchors applied (abductive emphasis)
-     - Reproducibility pathway correctly uses variant anchors
-     - Reproducibility Readiness Checklist completed
-     - No structural errors in outputs
-     - Cross-cluster coherence (scores don't contradict)
-
-
-
-
-
-
-
-● Starting Pass 8: Research Approach Classification. Let me read the prompt
-  and examine the extraction:
-
-● Read(assessment-system/prompts/classify-research-approach.md)
-  ⎿  Read 1428 lines
-
-● Bash(jq '{claims_count: (.claims | length), evidence_count: (.evidence |
-      length), research_designs: [.research_designs[].design_name],
-      methods_count: (.methods | len…)
-  ⎿  {                            
-       "claims_count": 99,
-       "evidence_count": 15,
-     … +9 lines (ctrl+o to expand)
-
-● Let me examine key extraction elements to classify this paper:
-
-● Bash(jq '.claims[:5] | .[] | {id: .id, claim: .claim_text[:150]}'
-      /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton-2022/ext
-      raction.json)
-  ⎿  {                             
-       "id": "C001",
-       "claim": null
-     … +17 lines (ctrl+o to expand)
-
-● Bash(jq '.research_designs[:3]' /home/shawn/Code/llm-reproducibility/outputs/r
-      oss-ballsun-stanton-2022/extraction.json)
-  ⎿  [                             
-       {
-         "id": "RD001",
-     … +60 lines (ctrl+o to expand)
-
-● Bash(jq '.methods[:3] | .[] | {id: .id, method: .method_text[:100]}'
-      /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton-2022/ext
-      raction.json)
-  ⎿  {                            
-       "id": "M001",
-       "method": null
-     … +9 lines (ctrl+o to expand)
-
-● Let me check the actual field names:
-
-● Bash(jq '.claims[0] | keys' /home/shawn/Code/llm-reproducibility/outputs/ross-
-      ballsun-stanton-2022/extraction.json)
-  ⎿  [                            
-       "certainty_qualifier",
-       "claim_type",
-     … +8 lines (ctrl+o to expand)
-
-● Bash(jq '.claims[:3] | .[] | {id: .id, claim: .content[:150]}' /home/shawn/Cod
-      e/llm-reproducibility/outputs/ross-ballsun-stanton-2022/extraction.json)
-  ⎿  {                                                                     
-       "id": "C001",
-       "claim": "Preregistration has been promoted as a technique to combat
-     … +14 lines (ctrl+o to expand)
-
-● Bash(jq '.claims[10:15] | .[] | {id: .id, claim: .content[:200], type:
-      .claim_type}' /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-st
-      anton-2022/extractio…)
-  ⎿  {                                                                     
-       "id": "C013",
-       "claim": "Postdictive research can generate surprising or unexpected
-     … +31 lines (ctrl+o to expand)
-
-● Bash(jq '.claims[90:95] | .[] | {id: .id, claim: .content[:200], type:
-      .claim_type}' /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-st
-      anton-2022/extractio…)
-  ⎿  {                                                                     
-       "id": "C104",
-       "claim": "Under-planned fieldwork might offer more freedom and delay
-     … +29 lines (ctrl+o to expand)
-
-● I have enough information to classify this paper. It's clearly a
-  methodological/theoretical paper advocating for preregistration, using
-  abductive reasoning (inference to best explanation) to argue why
-  preregistration should be adopted.
-
-  Let me create the classification:
-
-● Write(outputs/ross-ballsun-stanton-2022/assessment/classification.json)
-  ⎿  Wrote 83 lines to                                                     
-     outputs/ross-ballsun-stanton-2022/assessment/classification.json
-     {
-       "classification_metadata": {
-         "classified_after_pass": 7,
-         "classification_date": "2025-11-29",
-         "classifier_version": "v0.2-alpha"
-       },
-       "paper_type": "methodological",
-       "paper_type_justification": "This paper advocates for preregistration
-      as a methodological practice in archaeology. The primary contribution 
-     is a theoretical framework and practical recommendations for adopting 
-     preregistration, not empirical findings about archaeological phenomena.
-      Claims are about methodology (how research should be conducted), not 
-     about substantive archaeological questions. Research designs are 
-     explicitly 'argumentative_synthesis', 'comparative_analysis', and 
-     'historical_analysis' - all focused on building a case FOR a 
-     methodological practice. The paper does not present new software, 
-     analytical techniques, or field protocols; instead, it argues for the 
-     adoption of an existing practice (preregistration) from other 
-     disciplines.",
-     … +73 lines (ctrl+o to expand)
-
-● Now let me create the markdown summary and update the todo:
-
-● Write(outputs/ross-ballsun-stanton-2022/assessment/classification.md)
-  ⎿  Wrote 96 lines to                                             
-     outputs/ross-ballsun-stanton-2022/assessment/classification.md
-     # Research Approach Classification
-     **Paper:** ross-ballsun-stanton-2022
-     **Classification Date:** 2025-11-29
-     **Classifier Version:** v0.2-alpha
-     ---
-     ## Summary
-     … +86 lines (ctrl+o to expand)
-
-● Pass 8 Complete. Classification: Methodological paper with abductive 
-  validation approach.
-
-  Now proceeding to Track A: Quality Gating:
-
-● Read(assessment-system/prompts/track-a-quality-gating.md)
-  ⎿  Read 506 lines
-
-● Bash(jq '{evidence: (.evidence | length), claims: (.claims | length),
-      implicit_arguments: (.implicit_arguments | length), research_designs:
-      (.research_designs | leng…)
-  ⎿  {                            
-       "evidence": 15,
-       "claims": 99,
-     … +5 lines (ctrl+o to expand)
-
-● Bash(ls /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton-2022
-      /metrics*.json 2>/dev/null || echo "No metrics.json found")
-  ⎿  No metrics.json found
-
-● Write(outputs/ross-ballsun-stanton-2022/assessment/track-a-quality.md)
-  ⎿  Wrote 118 lines to                                             
-     outputs/ross-ballsun-stanton-2022/assessment/track-a-quality.md
-     # Track A Quality Assessment
-     ## Quality State: HIGH
-     **Paper:** ross-ballsun-stanton-2022
-     **Assessment Date:** 2025-11-29
-     **Assessor Version:** v1.0
-     **Decision:** Proceed with full credibility assessment
-     … +108 lines (ctrl+o to expand)
-
-● Track A Complete. Quality State: HIGH — proceed with full assessment.
-
-  Now proceeding to Cluster 1: Foundational Clarity:
-
-● Read(assessment-system/prompts/cluster-1-foundational-clarity.md)
-  ⎿  Read 538 lines
-
-● Let me gather evidence for Cluster 1 assessment:
-
-● Bash(jq '.claims[0:5] + .claims[50:55] + .claims[95:99] | .[] | {id: .id,
-      claim: .content[:150], type: .claim_type}'
-      /home/shawn/Code/llm-reproducibility/outputs/ros…)
-  ⎿  {                                                                     
-       "id": "C001",
-       "claim": "Preregistration has been promoted as a technique to combat
-     … +91 lines (ctrl+o to expand)
-
-● Bash(jq '.implicit_arguments[:5] | .[] | {id: .id, content: .content[:150]}'
-      /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton-2022/ext
-      raction.json)
-  ⎿  {                                                                     
-       "id": "IA001",
-       "content": "Research transparency and reproducibility are inherently
-     … +23 lines (ctrl+o to expand)
-
-● Bash(jq '.reproducibility_infrastructure' /home/shawn/Code/llm-reproducibility
-      /outputs/ross-ballsun-stanton-2022/extraction.json)
-  ⎿  {                              
-       "persistent_identifiers": {
-         "paper_doi": {
-     … +271 lines (ctrl+o to expand)
-
-● Bash(jq '.methods[:5] | .[] | {id: .id, method: .method_name, description:
-      (.method_description // .description)[:100]}'
-      /home/shawn/Code/llm-reproducibility/outputs…)
-  ⎿  {                             
-       "id": "M001",
-       "method": null,
-     … +22 lines (ctrl+o to expand)
-
-● Now I have enough information to write the Cluster 1 assessment. Let me
-  check the methods field structure:
-
-● Bash(jq '.methods[0] | keys' /home/shawn/Code/llm-reproducibility/outputs/ross
-      -ballsun-stanton-2022/extraction.json)
-  ⎿  [                            
-       "assumptions",
-       "content",
-     … +9 lines (ctrl+o to expand)
-
-● Bash(jq '.methods[:3]' /home/shawn/Code/llm-reproducibility/outputs/ross-balls
-      un-stanton-2022/extraction.json | head -60)
-  ⎿  [                             
-       {
-         "id": "M001",
-     … +56 lines (ctrl+o to expand)
-
-● Now I'll write the Cluster 1 assessment:
-
-● Write(outputs/ross-ballsun-stanton-2022/assessment/cluster-1-foundational-clar
-       ity.md)
-  ⎿  Wrote 168 lines to outputs/ross-ballsun-stanton-2022/assessment/cluste
-     -1-foundational-clarity.md
-     # Cluster 1: Foundational Clarity Assessment
-     **Paper:** ross-ballsun-stanton-2022
-     **Assessment Date:** 2025-11-29
-     **Assessor Version:** v1.0
-     **Quality State:** HIGH
-     **Research Approach:** Abductive (methodological paper)
-     **Paper Type:** Methodological (theoretical_framework)
-     … +158 lines (ctrl+o to expand)
-
-● Cluster 1 Complete. Strong foundational clarity (Comprehensibility: 78,
-  Transparency: 75).
-
-  Proceeding to Cluster 2: Evidential Strength:
-
-● Read(assessment-system/prompts/cluster-2-evidential-strength.md)
-  ⎿  Read 300 lines
-
-● Let me gather evidence for all four Cluster 2 signals:
-
-● Bash(jq '.evidence[:8] | .[] | {id: .id, content: (.content //
-      .description)[:150]}' /home/shawn/Code/llm-reproducibility/outputs/ross-ba
-      llsun-stanton-2022/extractio…)
-  ⎿ {                                                                      
-      "id": "E001",
-      "content": "The reproducibility crisis has been documented across mul
-    … +45 lines (ctrl+o to expand)
-
-
-● Bash(jq '.research_designs[] | {id: .id, content: .content[:150], scope:
-      .scope}' /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton
-      -2022/extraction.j…)
-  ⎿ {                                                                      
-      "id": "RD001",
-      "content": "Methodological argument design combining theoretical anal
-    … +32 lines (ctrl+o to expand)
-
-
-● Now I have the evidence. Let me write the Cluster 2 assessment:
-
-● Write(outputs/ross-ballsun-stanton-2022/assessment/cluster-2-evidential-streng
-       th.md)
-  ⎿  Wrote 269 lines to outputs/ross-ballsun-stanton-2022/assessment/cluste
-     -2-evidential-strength.md
-     # Cluster 2: Evidential Strength Assessment
-     **Paper:** ross-ballsun-stanton-2022
-     **Assessment Date:** 2025-11-29
-     **Assessor Version:** v1.0
-     **Quality State:** HIGH
-     **Research Approach:** Abductive (methodological paper)
-     **Paper Type:** Methodological (theoretical_framework)
-     … +259 lines (ctrl+o to expand)
-
-● Cluster 2 Complete. Adequate-to-Strong evidential strength (Plausibility:
-  80, Validity: 72, Robustness: 58, Generalisability: 76).
-
-  Now proceeding to Cluster 3: Reproducibility (final cluster):
-
-● Read(assessment-system/prompts/cluster-3-reproducibility.md)
-  ⎿  Read 200 lines
-
-● Now I'll write the final cluster assessment:
-
-● Write(outputs/ross-ballsun-stanton-2022/assessment/cluster-3-reproducibility.m
-       d)
-  ⎿  Wrote 213 lines to outputs/ross-ballsun-stanton-2022/assessment/cluste
-     -3-reproducibility.md
-     # Cluster 3: Reproducibility Assessment
-     **Paper:** ross-ballsun-stanton-2022
-     **Assessment Date:** 2025-11-29
-     **Assessor Version:** v1.0
-     **Quality State:** HIGH
-     **Research Approach:** Abductive (confidence: high)
-     **Paper Type:** Methodological (theoretical_framework)
-     **Assessment Pathway:** methodological_transparency_variant
-     … +203 lines (ctrl+o to expand)
-
-● Full Pipeline Test Complete!
-
-● Bash(ls -la /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton-
-      2022/assessment/*.md
-      /home/shawn/Code/llm-reproducibility/outputs/ross-ballsun-stanton-…)
-  ⎿ -rw------- 1 shawn shawn  8378 Nov 29 14:50 /home/shawn/Code/llm-reprod
-    ucibility/outputs/ross-ballsun-stanton-2022/assessment/classification.j
-    son
-    … +15 lines (ctrl+o to expand)
-
-
-
-● ---
-  Pipeline Test Summary: ross-ballsun-stanton-2022
-
-  All 5 pipeline steps completed successfully:
-
-  | Step                       | Output                            | Status
-  |
-  |----------------------------|-----------------------------------|--------
-  |
-  | Pass 8: Classification     | classification.json + .md         | ✅
-   |
-  | Track A: Quality Gating    | track-a-quality.md                | ✅
-   |
-  | Cluster 1: Transparency    | cluster-1-foundational-clarity.md | ✅
-   |
-  | Cluster 2: Credibility     | cluster-2-evidential-strength.md  | ✅
-   |
-  | Cluster 3: Reproducibility | cluster-3-reproducibility.md      | ✅
-   |
+     Commit Message
+
+     chore(housekeeping): documentation updates and project reorganisation
+
+     Documentation updates:
+     - Update README.md with v2.6 status and fix broken links
+     - Add v2.6 to CHANGELOG.md
+     - Update manifest.yaml with assessment components
+     - Fix pass count references (8-pass workflow)
+
+     Archiving:
+     - Move 14 superseded planning docs + gpt51-feedback/ to 
+     archive/planning-completed/
+     - Move outputs.backup-pre-migration/ to archive/
+
+     Reorganisation:
+     - Create outputs/corpus-analysis/ and outputs/testing/ structure
+     - Archive duplicate corpus profiles (keep latest)
+     - Consolidate scripts in scripts/
+
+
+
+
+
+
+
+
+● Plan approved and saved.
+
+  Given we're at 81% context, this plan is ready for execution in your next
+  session after compacting. The plan file at
+  /home/shawn/.claude/plans/parallel-wiggling-narwhal.md contains all the
+  details needed to execute the housekeeping.
+
+  Quick summary for next session:
+  - 5 documentation files to update (terminology, versions, broken links)
+  - 14 planning files + gpt51-feedback/ to archive
+  - File reorganisation (outputs structure, scripts consolidation)
+  - Single commit at the end
+
+> /export archive/cc-interactions/2025-11-29-b.txt 
+  ⎿  Conversation exported to: archive/cc-interactions/2025-11-29-b.txt
+
+> great - please compose a /compact message that will get us started 
+smoothly in the next session. 
+
+● Here's a compact message for the next session:
 
   ---
-  Signal Scores Summary
+  Session context: Project housekeeping - documentation updates, archiving,
+  and reorganisation.
 
-  | Pillar          | Signal            | Score | Band           |
-  |-----------------|-------------------|-------|----------------|
-  | Transparency    | Comprehensibility | 78    | Good           |
-  |                 | Transparency      | 75    | Good           |
-  | Credibility     | Plausibility      | 80    | Excellent      |
-  |                 | Validity          | 72    | Good           |
-  |                 | Robustness        | 58    | Moderate       |
-  |                 | Generalisability  | 76    | Good           |
-  | Reproducibility | Reproducibility   | 72    | Good (variant) |
+  Plan file: /home/shawn/.claude/plans/parallel-wiggling-narwhal.md contains
+   the complete approved plan.
 
-  Overall: Strong methodological advocacy paper with well-grounded argument
-  (Plausibility: 80), appropriate scope (Generalisability: 76), and clear
-  reasoning (Comprehensibility: 78). Robustness (58) reflects the advocacy
-  nature — alternatives not systematically compared.
+  Summary of work:
+  1. Phase 1 - Documentation updates: README.md, CHANGELOG.md,
+  manifest.yaml, planning/README.md, docs/documentation-index.md (fix
+  terminology, versions, broken links, pass counts)
+  2. Phase 2 - Archive planning docs: Move 13 superseded files +
+  gpt51-feedback/ to archive/planning-completed/
+  3. Phase 3 - Reorganise: Move outputs.backup-pre-migration/ to archive/,
+  create outputs/corpus-analysis/ and outputs/testing/, consolidate scripts
+  in scripts/
+  4. Phase 4 - Update archive indexes
+
+  Key rules: Don't change terminology in archived docs (preserve history).
+  Keep active: credibility-implementation-plan-v2.0.md, active-todo-list.md,
+   fair-vocabularies-development-plan.md, fellowship/.
+
+  Start by: Reading the plan file, then execute phases in order. Single
+  commit at end.
 
   ---
-  Key Test Outcomes
-
-  1. Abductive classification worked — first test of abductive approach
-  anchors
-  2. Methodological paper type handled — appropriate expectations applied
-  3. Methodological Transparency variant applied — experimental pathway for
-  non-computational paper
-  4. Reproducibility Readiness Checklist completed — all fields populated
-  5. Three Pillars framework validated — cluster structure worked as
-  designed
+  You can paste this after /compact to resume.
 
 
 

@@ -1,0 +1,86 @@
+[
+  {
+    "design_id": "RD001",
+    "design_text": "External validation design comparing ML model predictions against comprehensive field survey data",
+    "design_status": "explicit",
+    "verbatim_quote": "In this study we used a dataset of 773 mounds, collected by TRAP during 2009 – 2011 field survey in the Kazanlak Valley, Bulgaria, to validate the performance of a pre-trained CNN",
+    "location": {
+      "section": "Data",
+      "subsection": "Pedestrian survey",
+      "paragraph": 1
+    },
+    "design_rationale": "Field data serves as ground truth for assessing ML detection accuracy",
+    "alternative_designs_considered": [],
+    "linked_methods": [
+      "M001",
+      "M002",
+      "M003",
+      "M006"
+    ],
+    "expected_information_missing": [
+      "Why Kazanlak Valley chosen",
+      "Sample size justification"
+    ]
+  },
+  {
+    "design_id": "RD002",
+    "design_text": "Comparative two-run design testing impact of training data curation on model performance",
+    "design_status": "explicit",
+    "verbatim_quote": "In the 2021 run of the model, we used all 773 cutouts for training regardless of what was visible in the satellite image. In the 2022 run, we selected 249 cutouts where a mound was discernible with the naked eye.",
+    "location": {
+      "section": "Methods",
+      "subsection": "Additional CNN training",
+      "paragraph": 1
+    },
+    "design_rationale": "Test hypothesis that curated training data (visible mounds only) improves model performance",
+    "alternative_designs_considered": [],
+    "linked_methods": [
+      "M002"
+    ],
+    "expected_information_missing": [
+      "Hypothesis stated explicitly",
+      "Statistical test design"
+    ]
+  },
+  {
+    "design_id": "RD003",
+    "design_text": "Negative results documentation design to counterbalance publication bias in ML-for-archaeology literature",
+    "design_status": "explicit",
+    "verbatim_quote": "This paper presents the failure of a good-faith attempt to utilise these approaches as a counterbalance and cautionary tale to potential adopters of the technology.",
+    "location": {
+      "section": "Abstract",
+      "subsection": "Social implications",
+      "paragraph": 1
+    },
+    "design_rationale": "Address identified gap in literature where negative results underreported (63% of papers mention no challenges)",
+    "alternative_designs_considered": [],
+    "linked_methods": [],
+    "expected_information_missing": [
+      "Peer review process for negative results",
+      "Target audience specification"
+    ]
+  },
+  {
+    "design_id": "RD004",
+    "design_text": "Cost-benefit analysis design comparing ML development time against manual processing alternative",
+    "design_status": "explicit",
+    "verbatim_quote": "With approximately 5,000 150 3 150 m tiles in our 600 sq km study area, and with an experienced operator able to make an assessment in ~30 s, manual processing would have taken approximately 42 h. Meanwhile, as reported above, simply developing the model required about 135 h",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Is it worth it?",
+      "paragraph": 2
+    },
+    "design_rationale": "Assess whether ML approach justified given resource investment compared to manual alternative",
+    "alternative_designs_considered": [
+      "Crowdsourcing approach mentioned"
+    ],
+    "linked_methods": [
+      "M001",
+      "M002"
+    ],
+    "expected_information_missing": [
+      "Manual processing accuracy rates",
+      "Cost of false negatives not quantified"
+    ]
+  }
+]

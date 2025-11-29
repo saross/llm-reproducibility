@@ -1,0 +1,2553 @@
+{
+  "schema_version": "2.5",
+  "extraction_timestamp": "2025-10-31T17:20:40.202337Z",
+  "extractor": "Claude Sonnet 4.5",
+  "project_metadata": {
+    "paper_title": "Introducing Preregistration of Research Design to Archaeology",
+    "authors": [
+      "Shawn A. Ross",
+      "Brian Ballsun-Stanton"
+    ],
+    "publication_year": 2021,
+    "journal": "Digital Heritage and Archaeology in Practice, edited by Ethan Watrall and Lynne Goldstein. Gainesville, FL: University Press of Florida. (SocArXiv preprint, April 2021)",
+    "doi": "10.31235/osf.io/sbwcq",
+    "paper_type": "book chapter (methodological argument)",
+    "discipline": "archaeology, research methodology, open science",
+    "research_context": "Introduces the concept of preregistration to archaeological research as a mechanism to improve research transparency, combat cognitive biases, overcome perverse professional incentives, and encourage thoughtful advance planning of research design and data collection methodologies before fieldwork begins."
+  },
+  "evidence": [
+    {
+      "id": "E001",
+      "content": "The reproducibility crisis has been documented across multiple disciplines including psychology, biomedicine, ecology, and evolutionary biology.",
+      "evidence_type": "literature_synthesis",
+      "source_type": "published_research",
+      "verbatim_quote": "The motivation stems from the 'reproducibility crisis' faced by many disciplines (Nature 2016; Open Science Collaboration 2015; Adam 2019; Kaplan and Irvin 2015; Franco et al. 2014; Mellor et al. 2016; Baker 2015; Munaf\u00f2 et al. 2017; National Academies of Sciences, Engineering, and Medicine et al. 2019).",
+      "page_number": 2,
+      "context": "Introduction establishing motivation for preregistration",
+      "interpretation_notes": "Synthesises multiple citations documenting reproducibility problems across disciplines"
+    },
+    {
+      "id": "E002",
+      "content": "In a 2018 survey of over 800 ecologists and evolutionary biologists, 51% admitted to HARKing (hypothesising after results are known).",
+      "evidence_type": "quantitative_data",
+      "source_type": "survey_data",
+      "verbatim_quote": "In a 2018 paper surveying over eight hundred ecologists and evolutionary biologists, 51% admitted to HARKing (Fraser et al. 2018).",
+      "page_number": 4,
+      "context": "Section on HARKing as questionable research practice",
+      "interpretation_notes": "Empirical evidence of prevalence of questionable research practices in related disciplines"
+    },
+    {
+      "id": "E003",
+      "content": "https://clinicaltrials.gov is the largest existing preregistration registry, demonstrating established use in biomedical research.",
+      "evidence_type": "infrastructure",
+      "source_type": "existing_system",
+      "verbatim_quote": "Although preregistration is often associated with scientific and biomedical research (https://clinicaltrials.gov/ is the largest existing registry), it is also used in social sciences like economics and political science",
+      "page_number": 3,
+      "context": "Discussion of preregistration adoption across disciplines",
+      "interpretation_notes": "Evidence that preregistration infrastructure and practices already exist in some fields"
+    },
+    {
+      "id": "E004",
+      "content": "Social science preregistration registries exist including the Social Science Registry and EGAP, demonstrating adoption beyond biomedicine.",
+      "evidence_type": "infrastructure",
+      "source_type": "existing_system",
+      "verbatim_quote": "it is also used in social sciences like economics and political science (see https://www.socialscienceregistry.org/; http://egap.org/content/registration/; cf. Nosek et al. 2018a; Haven and Van Grootel 2019).",
+      "page_number": -1,
+      "context": "Establishing precedent for preregistration in social sciences",
+      "interpretation_notes": "Demonstrates preregistration is not limited to hard sciences"
+    },
+    {
+      "id": "E005",
+      "content": "In the 1970s, Hole criticised archaeologists for focusing on fieldwork and analytical methods rather than research design and hypothesis development, calling for more 'thought' before methodological manipulations.",
+      "evidence_type": "historical_source",
+      "source_type": "published_research",
+      "verbatim_quote": "In the 1970s, Hole criticized archaeologists' tendency to focus on fieldwork and analytical methods rather than research design, especially the development of hypotheses or models. He called for more 'thought' before the archaeologist turned to 'methodological manipulations' (Hole 1973:32).",
+      "page_number": 5,
+      "context": "Establishing historical precedent for research design critique",
+      "interpretation_notes": "Shows problem recognized 50 years ago in processual archaeology"
+    },
+    {
+      "id": "E006",
+      "content": "French (1973) observed that problems must be defined before developing means to collect data, and that questions dictate recovery methods.",
+      "evidence_type": "historical_source",
+      "source_type": "published_research",
+      "verbatim_quote": "[I]t is essential and (?) obligatory to define the problems before developing or choosing the means used to collect the data necessary to examine these problems and the hypotheses explicit in them. In other words, the questions asked dictate the methods of recovery; one selects the recovery technique to suit the problem in hand",
+      "page_number": 5,
+      "context": "1970s processual archaeology on research design",
+      "interpretation_notes": "Long-standing recognition that data collection should follow research questions"
+    },
+    {
+      "id": "E007",
+      "content": "French (1973) emphasised the importance of data provenance documentation and recommended archaeologists specify programs and standards governing data collection for quality and comparability assessment.",
+      "evidence_type": "historical_source",
+      "source_type": "published_research",
+      "verbatim_quote": "French went on to emphasize the importance of what would now be termed data provenance... He further recommended that archaeologists specify the program and standards governing data collection. Only by doing so can the quantity, quality, and comparability of archaeological data be assessed.",
+      "page_number": 5,
+      "context": "1970s call for data documentation standards",
+      "interpretation_notes": "Data provenance concerns pre-date digital archaeology"
+    },
+    {
+      "id": "E008",
+      "content": "The lack of shared or articulated standards of data acquisition and documentation that French described in 1973 remains widespread today, undermining data comparability.",
+      "evidence_type": "literature_synthesis",
+      "source_type": "published_research",
+      "verbatim_quote": "The situation French described \u2013 a lack of shared (or at least articulated) standards of data acquisition and documentation \u2013 remains widespread today, undermining the comparability of data from different projects (French 1973:106; Atici et al. 2013; Faniel et al. 2013; Holub et al. 2018).",
+      "page_number": 5,
+      "context": "Persistent problem in archaeological data practice",
+      "interpretation_notes": "Problem identified 50 years ago still exists - citations from 2013-2018 confirm"
+    },
+    {
+      "id": "E009",
+      "content": "The FAIMS project has customised field data collection systems for over 60 workflows at more than 40 projects in archaeology, ecology, geoscience, and history since 2014.",
+      "evidence_type": "project_data",
+      "source_type": "authors_research",
+      "verbatim_quote": "Our information infrastructure work, related to the Field Acquired Information Management Systems (FAIMS) project, has customized field data collection systems for over sixty workflows at more than forty projects in archaeology, ecology, geoscience, history, and other disciplines since 2014",
+      "page_number": 6,
+      "context": "Establishing authors' empirical basis for claims",
+      "interpretation_notes": "Authors draw on substantial practical experience implementing digital field systems"
+    },
+    {
+      "id": "E010",
+      "content": "FAIMS project work has found that field researchers broadly, and archaeologists particularly, under-invest in planning and preparation in three specific ways.",
+      "evidence_type": "empirical_observation",
+      "source_type": "authors_research",
+      "verbatim_quote": "We have found that field researchers broadly, and archaeologists particularly, under-invest in planning and preparation in three ways.",
+      "page_number": 6,
+      "context": "Empirical findings from FAIMS implementations",
+      "interpretation_notes": "Direct observational evidence from authors' field experience"
+    },
+    {
+      "id": "E011",
+      "content": "A search of OSF's 304,904 registrations (as of March 19, 2020) produced only four non-teaching-related hits for 'archaeology'.",
+      "evidence_type": "quantitative_data",
+      "source_type": "database_search",
+      "verbatim_quote": "A search of OSF's 304,904 registrations (as of March 19, 2020) produced only four non-teaching-related hits for 'archaeology'",
+      "page_number": 8,
+      "context": "Demonstrating lack of archaeological preregistration",
+      "interpretation_notes": "Systematic search of largest preregistration registry shows minimal archaeology adoption"
+    },
+    {
+      "id": "E012",
+      "content": "The four archaeological OSF registrations were by Marwick (2017a, 2017c), Selden (2016), and Schmid (2019), all using Open-Ended Registration to submit data and code supporting papers.",
+      "evidence_type": "empirical_observation",
+      "source_type": "database_search",
+      "verbatim_quote": "The authors of the four preregistrations, Marwick (2017a, 2017c), Selden (2016), and Schmid (2019) used the 'Open-Ended Registration' method to submit data and code in support of papers they had written.",
+      "page_number": 8,
+      "context": "Characterising existing archaeological registrations",
+      "interpretation_notes": "Existing registrations are data deposits, not prospective preregistrations"
+    },
+    {
+      "id": "E013",
+      "content": "Selden's pottery laser-scanning metadata is incomplete - spot checks indicate metadata like intra-site find location and artifact type do not accompany some scans.",
+      "evidence_type": "empirical_observation",
+      "source_type": "data_inspection",
+      "verbatim_quote": "Spot checks indicate that data documentation is incomplete; metadata like intra-site find location and artifact type do not accompany some scans (e. g. https://zenodo.org/search?q=41NA49).",
+      "page_number": 9,
+      "context": "Evaluating existing archaeological registration",
+      "interpretation_notes": "Even exemplary data sharing has documentation gaps"
+    },
+    {
+      "id": "E014",
+      "content": "The Ocean Health Index project discovered that environmental scientists are expected to work with highly heterogeneous data but are seldom formally trained to do so, leading to bespoke workarounds that result in non-reproducible work.",
+      "evidence_type": "case_study",
+      "source_type": "published_research",
+      "verbatim_quote": "Environmental scientists are expected to work effectively with ever-increasing quantities of highly heterogeneous data even though they are seldom formally trained to do so... Without training, scientists tend to develop their own bespoke workarounds to keep pace, but with this comes wasted time struggling to create their own conventions for managing, wrangling and versioning data. If done haphazardly or without a clear protocol, these efforts are likely to result in work that is not reproducible - by the scientist's own 'future self' or by anyone else.",
+      "page_number": -1,
+      "context": "Ocean Health Index lessons for archaeology",
+      "interpretation_notes": "Parallel discipline (oceanography) faced similar small data problems as archaeology"
+    },
+    {
+      "id": "E015",
+      "content": "The Ocean Health Index project's response to scalability and reproducibility was implementing data collection, manipulation, and analysis techniques based on open data formats, data standardisation, and script-based analysis with shareable script libraries.",
+      "evidence_type": "case_study",
+      "source_type": "published_research",
+      "verbatim_quote": "The Ocean Health Index project's response to scalability and reproducibility was to implement data collection, manipulation, and analysis techniques based on open data formats, data standardization, and script-based analysis. Then, they created libraries of scripts that could perform commonly required analyses on well-structured data.",
+      "page_number": 12,
+      "context": "Solution from oceanography",
+      "interpretation_notes": "Demonstrates successful approach to similar problems in related field"
+    }
+  ],
+  "claims": [
+    {
+      "id": "C001",
+      "content": "Preregistration has been promoted as a technique to combat researchers' biases, overcome perverse professional incentives, improve transparency, and increase rigour.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [
+        "E001"
+      ],
+      "verbatim_quote": "Preregistration of research design, and in some cases hypotheses, has been promoted as a technique to combat researchers' biases, overcome perverse professional incentives, improve transparency, and increase rigor.",
+      "page_number": 2,
+      "context": "Opening paragraph establishing purpose of preregistration",
+      "certainty_qualifier": "established in literature"
+    },
+    {
+      "id": "C002",
+      "content": "Preregistration can be described as the declaration of a research plan before data collection begins.",
+      "claim_type": "definitional",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration can be described as the declaration of a research plan before data collection begins (Center for Open Science 2018), or a process in which researchers: 'define the research questions and analysis plan before observing the research outcomes' (Nosek et al. 2018a).",
+      "page_number": 2,
+      "context": "Defining key term for the chapter",
+      "certainty_qualifier": "definitional"
+    },
+    {
+      "id": "C003_consolidated",
+      "content": "Preregistration can accommodate methodological diversity, including inductive/deductive approaches, idiographic/nomothetic research, and diverse transdisciplinary frameworks, allowing researchers to articulate their chosen approach without privileging any particular methodology",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration accommodates inductive (hypothesis-generating; postdictive) as well as deductive (hypothesis testing; predictive) research, idiographic (distinct to a particular place) as well as nomothetic (applicable to a larger class of events of conditions) approaches, qualitative as well as quantitative analyses",
+      "page_number": [
+        -1,
+        7
+      ],
+      "context": "Establishing broad applicability of preregistration",
+      "certainty_qualifier": "asserted by authors",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C003",
+          "C004",
+          "C048"
+        ],
+        "consolidation_rationale": "C003, C004, and C048 all make the same fundamental point about preregistration's flexibility to accommodate different methodological approaches",
+        "original_count": 3
+      }
+    },
+    {
+      "id": "C005",
+      "content": "Preregistration can be applied at various stages of the research lifecycle.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "can be applied at various stages of the research lifecycle (Nosek et al. 2018a)",
+      "page_number": 3,
+      "context": "Establishing flexibility of preregistration",
+      "certainty_qualifier": "cited from Nosek"
+    },
+    {
+      "id": "C006",
+      "content": "Preregistration could counteract archaeologists' reluctance to invest time in early planning phases versus later fieldwork and analysis phases.",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration could also counteract a sociotechnical problem hindering the adoption of digital field methods: a reluctance to invest time and resources in the early planning and preparation phases of a project, versus time later during fieldwork, post-processing, and analysis (Sobotkova et al. 2016).",
+      "page_number": 3,
+      "context": "Introducing archaeology-specific application",
+      "certainty_qualifier": "could (modal qualifier)"
+    },
+    {
+      "id": "C007",
+      "content": "Lack of planning leads to ongoing modification of data structures and workflows during fieldwork, raising costs and complexity.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [],
+      "verbatim_quote": "This lack of planning leads to changes in research design during execution with little accountability, including for example, ongoing modification of data structures and data capture workflows during fieldwork (Borgman 2015). Such in-progress changes raise the cost and complexity of digital field data collection systems.",
+      "page_number": 3,
+      "context": "Describing problem that preregistration addresses",
+      "certainty_qualifier": "stated as observed fact"
+    },
+    {
+      "id": "C008_consolidated",
+      "content": "Ad hoc changes to data collection and recording limit data quality and hinder interoperability with external frameworks, ultimately compromising archaeological research outcomes",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [],
+      "verbatim_quote": "Ad hoc changes limit data quality by precluding adequate testing and refinement, undermining consistency of data and methods, and imposing 'technical debt' such as extensive cleaning and reconciliation of data at the end of the project.",
+      "page_number": [
+        3
+      ],
+      "context": "Consequences of inadequate planning",
+      "certainty_qualifier": "stated as observed pattern",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C008",
+          "C009"
+        ],
+        "consolidation_rationale": "C008 and C009 both describe data quality consequences of just-in-time decision-making",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C010",
+      "content": "Maintaining the distinction between prediction and postdiction combats researchers' cognitive biases and ensures adherence to statistical assumptions.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Maintaining this distinction combats researchers' cognitive biases, ensures that research adheres to assumptions intrinsic to common statistical approaches, and counteracts the distortions introduced by perverse professional incentives",
+      "page_number": 3,
+      "context": "Section 1 on predictive vs postdictive research",
+      "certainty_qualifier": "stated as methodological principle"
+    },
+    {
+      "id": "C011",
+      "content": "Publication bias exists toward papers that confirm rather than refute initial hypotheses in deductive research.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [],
+      "verbatim_quote": "For example, we can see a 'publication bias' towards papers that confirm, rather than refute, initial hypotheses in deductive research (Chase 2013; Fraser et al. 2018).",
+      "page_number": 3,
+      "context": "Perverse incentives in research",
+      "certainty_qualifier": "documented in literature"
+    },
+    {
+      "id": "C012",
+      "content": "Predictive research provides a rigorous way to test and disprove hypotheses, supporting Popperian falsification.",
+      "claim_type": "methodological",
+      "reasoning_type": "theoretical",
+      "evidence_links": [],
+      "verbatim_quote": "Predictive research provides a rigorous way to test and disprove hypotheses. Such testing is a boon for positivists, who remind us that Popper's injunction that 'proof' of a hypothesis is always provisional while disproof is final, making falsifiability the hallmark of science (Derksen 2019).",
+      "page_number": 4,
+      "context": "Value of predictive research",
+      "certainty_qualifier": "established in philosophy of science"
+    },
+    {
+      "id": "C013",
+      "content": "Postdictive research can generate surprising or unexpected hypotheses that radically shift understanding or change scientific worldviews.",
+      "claim_type": "methodological",
+      "reasoning_type": "theoretical",
+      "evidence_links": [],
+      "verbatim_quote": "Postdictive research, conversely, can generate surprising or unexpected hypotheses that radically shift our understanding of the world or even change scientific worldviews (Kuhn 1970:23).",
+      "page_number": 4,
+      "context": "Value of postdictive research",
+      "certainty_qualifier": "supported by Kuhnian paradigm shift theory"
+    },
+    {
+      "id": "C014_consolidated",
+      "content": "Both predictive and postdictive inquiry are essential but must not be conflated; formalisms that enforce this distinction improve research quality by preventing questionable research practices",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Both predictive and postdictive approaches are essential, but they must not be conflated.",
+      "page_number": [
+        4
+      ],
+      "context": "Core argument about maintaining distinctions",
+      "certainty_qualifier": "strong normative claim",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C014",
+          "C015"
+        ],
+        "consolidation_rationale": "C015 is a logical extension of C014, both making the same point about the importance of maintaining the prediction/postdiction distinction",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C016_consolidated",
+      "content": "Conflating prediction and postdiction can lead researchers to overestimate their ability to predict outcomes, fostering unjustified confidence in their reasoning abilities",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Failing to appreciate the difference can lead to overconfidence in post hoc explanations (postdictions) and inflate the likelihood of believing that there is evidence for a finding when there is not. Presenting postdictions as predictions can increase the attractiveness and publishability of findings by falsely reducing uncertainty",
+      "page_number": [
+        4
+      ],
+      "context": "Nosek quote on consequences of conflation",
+      "certainty_qualifier": "cited from Nosek et al.",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C016",
+          "C020"
+        ],
+        "consolidation_rationale": "C016 and C020 both describe the overconfidence problem from conflating prediction and postdiction",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C017",
+      "content": "If postdiction is conflated with prediction, it is prone to fallibility of memory, motivated reasoning, and cognitive biases.",
+      "claim_type": "methodological",
+      "reasoning_type": "psychological",
+      "evidence_links": [],
+      "verbatim_quote": "If postdiction is conflated with prediction, it is prone to 'fallibility of memory, motivated reasoning, and cognitive biases' (Nosek et al. 2018a).",
+      "page_number": 4,
+      "context": "Psychological mechanisms underlying problems",
+      "certainty_qualifier": "cited from Nosek"
+    },
+    {
+      "id": "C018",
+      "content": "Hindsight bias causes researchers to subconsciously remember or seek evidence supporting their conclusions while ignoring contrary evidence.",
+      "claim_type": "methodological",
+      "reasoning_type": "psychological",
+      "evidence_links": [],
+      "verbatim_quote": "Of particular concern is hindsight bias, where researchers (often subconsciously) remember or seek evidence supporting their conclusions while ignoring or faulting contrary evidence.",
+      "page_number": 4,
+      "context": "Specific cognitive bias",
+      "certainty_qualifier": "established in cognitive psychology"
+    },
+    {
+      "id": "C019",
+      "content": "Common statistical methods like null hypothesis significance testing assume prediction rather than postdiction and produce Type 1 errors when researchers neglect the difference.",
+      "claim_type": "methodological",
+      "reasoning_type": "statistical",
+      "evidence_links": [],
+      "verbatim_quote": "Since common statistical methods like null hypothesis significance testing, moreover, assume prediction rather than postdiction, they are likely to produce 'Type 1 errors' (false positives) when researchers neglect the difference.",
+      "page_number": 4,
+      "context": "Statistical consequences of conflation",
+      "certainty_qualifier": "stated as statistical principle"
+    },
+    {
+      "id": "C021",
+      "content": "Postdictive research should not simultaneously test the hypotheses it generates.",
+      "claim_type": "methodological",
+      "reasoning_type": "normative",
+      "evidence_links": [],
+      "verbatim_quote": "Although postdictive research can produce new inconvenient facts that contradict received paradigms, it should not simultaneously test the hypotheses it generates.",
+      "page_number": 4,
+      "context": "Methodological principle",
+      "certainty_qualifier": "strong normative statement"
+    },
+    {
+      "id": "C022",
+      "content": "HARKing is using current results to construct post hoc hypotheses reported as a priori, or failing to report unsupported a priori hypotheses.",
+      "claim_type": "definitional",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Indeed, 'using current results to construct post hoc hypotheses that are then reported as if they were a priori hypotheses', 'failing to report a priori hypotheses that are unsupported by the current results' (Rubin 2017), or 'presenting exploratory work as though it was confirmatory hypothesis testing' (Fraser et al. 2018), is considered 'hypothesizing after the results are known' or HARKing (Kerr 1998).",
+      "page_number": 4,
+      "context": "Defining questionable research practice",
+      "certainty_qualifier": "definitional from literature"
+    },
+    {
+      "id": "C023",
+      "content": "HARKing is always a questionable research practice if unreported, though disagreement exists about acceptability of transparent post hoc analysis.",
+      "claim_type": "methodological",
+      "reasoning_type": "ethical",
+      "evidence_links": [
+        "E002"
+      ],
+      "verbatim_quote": "HARKing is always a questionable research practice if it is unreported, although disagreement exists about the acceptability (or even desirability) of careful and transparent post hoc analysis in deductive research (Rubin 2017; Hollenbeck and Wright 2017).",
+      "page_number": 4,
+      "context": "Ethics of HARKing",
+      "certainty_qualifier": "conditional - depends on disclosure"
+    },
+    {
+      "id": "C024",
+      "content": "When published papers fail to disclose a priori hypotheses, it becomes difficult to judge whether HARKing has taken place.",
+      "claim_type": "methodological",
+      "reasoning_type": "logical",
+      "evidence_links": [],
+      "verbatim_quote": "Fraser also notes in passing that when published papers fail to disclose a priori hypotheses (or if there were a priori hypotheses), it becomes difficult to judge whether HARKing \u2013 or the conflation of postdiction and prediction more broadly \u2013 has even taken place.",
+      "page_number": -1,
+      "context": "Detection problem for questionable practices",
+      "certainty_qualifier": "logical observation"
+    },
+    {
+      "id": "C025",
+      "content": "The a priori articulation of hypotheses required by preregistration (or explicit statement of inductive research) can help combat HARKing.",
+      "claim_type": "methodological",
+      "reasoning_type": "logical",
+      "evidence_links": [
+        "E002"
+      ],
+      "verbatim_quote": "As such, the a priori articulation of hypotheses required by preregistration (or the explicit statement that research is inductive) can help to combat this species of questionable research practice.",
+      "page_number": 5,
+      "context": "Solution to HARKing problem",
+      "certainty_qualifier": "can (modal qualifier)"
+    },
+    {
+      "id": "C026",
+      "content": "The biases and perverse incentives that preregistration addresses in other disciplines also exist in archaeology.",
+      "claim_type": "empirical",
+      "reasoning_type": "analogical",
+      "evidence_links": [],
+      "verbatim_quote": "The biases and perverse incentives that preregistration was designed to combat in other disciplines also exist in archaeology.",
+      "page_number": 5,
+      "context": "Opening of Section 2",
+      "certainty_qualifier": "asserted without specific archaeological evidence"
+    },
+    {
+      "id": "C027",
+      "content": "Processual archaeology's scientific approach has recognized problems of biases and the need to reveal aims for half a century.",
+      "claim_type": "empirical",
+      "reasoning_type": "historical",
+      "evidence_links": [
+        "E005"
+      ],
+      "verbatim_quote": "Processual archaeology's 'scientific approach', with its emphasis on revealing aims and biases and its problem-orientation, has recognized these problems for half a century",
+      "page_number": 5,
+      "context": "Historical precedent in archaeology",
+      "certainty_qualifier": "documented in 1970s literature"
+    },
+    {
+      "id": "C028",
+      "content": "The relevance of early processual thought to the current problem is striking.",
+      "claim_type": "evaluative",
+      "reasoning_type": "interpretive",
+      "evidence_links": [
+        "E005",
+        "E006"
+      ],
+      "verbatim_quote": "Indeed, the relevance of early processual thought to the current problem is striking.",
+      "page_number": 5,
+      "context": "Authors' evaluation of historical literature",
+      "certainty_qualifier": "authors' judgement"
+    },
+    {
+      "id": "C029",
+      "content": "Merely collecting more data does not automatically support the syntheses needed to understand the past; data-recovery techniques must harmonise with theoretical approaches.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [
+        "E006"
+      ],
+      "verbatim_quote": "In short, merely collecting more data does not automatically support the syntheses needed to produce a better understanding of the past, and data-recovery techniques must harmonize with theoretical approaches",
+      "page_number": 5,
+      "context": "Why planning matters",
+      "certainty_qualifier": "asserted as principle"
+    },
+    {
+      "id": "C030_consolidated",
+      "content": "Preregistration encourages planning and helps overcome systematic under-investment in research design, counteracting the tendency to defer critical methodological decisions",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration encourages the planning and preparation necessary to collect data appropriate to a project's aims now and useful to others in the future.",
+      "page_number": [
+        5,
+        7
+      ],
+      "context": "Connection to preregistration solution",
+      "certainty_qualifier": "encourages (modal)",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C030",
+          "C046"
+        ],
+        "consolidation_rationale": "C030 and C046 both make the same point about preregistration overcoming underinvestment in planning",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C031",
+      "content": "Preregistration can help researchers articulate their specific theoretical approach and research tradition.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration can, moreover, help researchers articulate their specific theoretical approach and research tradition.",
+      "page_number": 5,
+      "context": "Additional benefit of preregistration",
+      "certainty_qualifier": "can (modal)"
+    },
+    {
+      "id": "C032",
+      "content": "Processualism and post-processualism are examples of competing Lakatosian research programs with their own hard-core truths and soft outer shell of current research.",
+      "claim_type": "theoretical",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "They are examples of competing Lakatosian research programs, each with their own 'hard-core' of truths which they take to be self-evident and 'soft outer shell' of current, unproven, research questions (Lakatos 1978).",
+      "page_number": -1,
+      "context": "Philosophical framing of theoretical traditions",
+      "certainty_qualifier": "applies Lakatosian framework"
+    },
+    {
+      "id": "C033",
+      "content": "Preregistration makes researcher assumptions more explicit, allowing them to be scrutinised.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration makes such researcher assumptions more explicit (Johnson 2010:3).",
+      "page_number": 6,
+      "context": "Transparency benefit of preregistration",
+      "certainty_qualifier": "stated as fact"
+    },
+    {
+      "id": "C034",
+      "content": "Preregistration mitigates the sociotechnical barrier of substituting remedial work at the end of a project for proper planning at the beginning.",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration also mitigates a specific sociotechnical barrier to the adoption of digital approaches in archaeology. Archaeologists tend to substitute remedial work at the end of a project for proper planning and preparation at the beginning (Sobotkova et al. 2016).",
+      "page_number": 6,
+      "context": "Sociotechnical problem preregistration addresses",
+      "certainty_qualifier": "documented in Sobotkova et al."
+    },
+    {
+      "id": "C035",
+      "content": "The tendency to underinvest in planning, along with print publication of datasets, impedes production of comprehensive reusable datasets and undermines cultivation of deeper digital practice.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [],
+      "verbatim_quote": "This tendency, along with the continuing prevalence of print publication of datasets like artifact catalogs, impedes the production of comprehensive, reusable datasets in archaeology. It also undermines the cultivation of deeper digital practice more generally.",
+      "page_number": 6,
+      "context": "Consequences of poor planning",
+      "certainty_qualifier": "stated as observed pattern"
+    },
+    {
+      "id": "C036",
+      "content": "Archaeologists tolerate lack of detail or precision in documentation, not taking time to build controlled vocabularies or leaving important information for free-text fields.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [
+        "E009",
+        "E010"
+      ],
+      "verbatim_quote": "First, archaeologists tolerate a lack of detail or precision in their documentation. For example, they do not take the time to build and deploy controlled vocabularies or they leave important and recurring information for 'notes' or other free-text fields.",
+      "page_number": 6,
+      "context": "First way archaeologists under-invest - FAIMS observation",
+      "certainty_qualifier": "observed in FAIMS implementations"
+    },
+    {
+      "id": "C037",
+      "content": "Haste and imprecision in paper-based recording reduces up-front investment but adds a larger burden of post-fieldwork data cleaning.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [
+        "E010"
+      ],
+      "verbatim_quote": "This haste and imprecision reduces the up-front investment in data and workflow modeling for harried academics and consultants but adds an implicit cost: a much larger burden of post-fieldwork data cleaning.",
+      "page_number": 6,
+      "context": "Consequences of imprecise documentation",
+      "certainty_qualifier": "observed pattern"
+    },
+    {
+      "id": "C038",
+      "content": "Forms and protocols assume implicit knowledge transmitted orally, reducing transparency and failing to record metadata needed for data reuse.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [
+        "E010"
+      ],
+      "verbatim_quote": "Second, forms and protocols assume a great deal of implicit knowledge transmitted orally, often informally, at the project. This practice reduces the transparency of fieldwork and fails to record important metadata needed later for data reuse.",
+      "page_number": 6,
+      "context": "Second way archaeologists under-invest",
+      "certainty_qualifier": "observed in FAIMS implementations"
+    },
+    {
+      "id": "C039",
+      "content": "Implicit methods and metadata are lost through epistemic turnover when team members forget, become uncontactable, or move to other projects.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [],
+      "verbatim_quote": "Implicit methods and metadata are lost by team members, volunteers, and students who forget just how things were done, are uncontactable, or who have moved onto other projects. This epistemic turnover impedes later understanding and reuse",
+      "page_number": 6,
+      "context": "Consequences of implicit knowledge",
+      "certainty_qualifier": "observed pattern"
+    },
+    {
+      "id": "C040",
+      "content": "Project leaders develop record-keeping practices late, leaving insufficient time to test and refine them with realistic trial data.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [
+        "E010"
+      ],
+      "verbatim_quote": "Third, project leaders tend to develop record-keeping or documentation practices like forms and protocols late, shortly before fieldwork begins, leaving insufficient time to test and refine them with realistic trial data.",
+      "page_number": 6,
+      "context": "Third way archaeologists under-invest",
+      "certainty_qualifier": "observed in FAIMS implementations"
+    },
+    {
+      "id": "C041",
+      "content": "Late development of protocols contributes to emergent research design where researchers elaborate and modify approaches during fieldwork.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [],
+      "verbatim_quote": "It also contributes to a feature common to many fieldwork-based domains, a tendency for research design to be 'emergent' \u2013 for researchers to elaborate and modify approaches, methods, tools, technologies, and practices during fieldwork when working with real data (Borgman 2015:106\u2013107).",
+      "page_number": -1,
+      "context": "Consequences of late planning",
+      "certainty_qualifier": "documented by Borgman for fieldwork domains"
+    },
+    {
+      "id": "C042",
+      "content": "Emergent design produces datasets not consistent or comparable across a single season without manual reconciliation, let alone more broadly.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [],
+      "verbatim_quote": "the practice produces datasets that are not even consistent or comparable across a single season at a single project without considerable manual reconciliation, let alone more broadly.",
+      "page_number": 7,
+      "context": "Data quality consequences of emergent design",
+      "certainty_qualifier": "observed outcome"
+    },
+    {
+      "id": "C043",
+      "content": "These practices constitute a sociotechnical hurdle: underinvestment in early stages and accrual of technical debt requiring much more time to fix data at project end.",
+      "claim_type": "empirical",
+      "reasoning_type": "synthetic",
+      "evidence_links": [
+        "E009",
+        "E010"
+      ],
+      "verbatim_quote": "Together, these practices constitute a sociotechnical hurdle to effective digital archaeology: underinvestment in the early stages of a project and subsequent accrual of technical debt, requiring the expenditure of much more time and effort to 'fix' data at the end of a project",
+      "page_number": 7,
+      "context": "Summary of problem",
+      "certainty_qualifier": "synthesising FAIMS observations"
+    },
+    {
+      "id": "C044",
+      "content": "Preregistration can help resist the temptation of just-in-time research design by making built-in good practice more likely than bolt-on fixes.",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration can help resist the temptation of 'just-in-time' research design. It would make 'built-in' good practice more likely, as opposed to more common attempts to 'bolt-on' fixes after fieldwork (Marwick 2017b:441).",
+      "page_number": 7,
+      "context": "Opening of Section 3",
+      "certainty_qualifier": "can (modal qualifier)"
+    },
+    {
+      "id": "C045",
+      "content": "Preregistration offers a mechanism to make approaches and assumptions explicit, allowing them to be scrutinised and counteracting cognitive biases.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Specifically, preregistration offers a mechanism to make approaches and assumptions explicit, allowing them to be scrutinized (Johnson 2010:3) and counteracting cognitive biases.",
+      "page_number": 7,
+      "context": "Benefits of preregistration",
+      "certainty_qualifier": "stated as capability"
+    },
+    {
+      "id": "C047",
+      "content": "Combined with other aspects of reproducibility, preregistration holds potential to tangibly improve research practice in archaeology.",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "Combined with a commitment to other aspects of reproducibility (Perkel 2018; Marwick 2017b; Wilkinson et al. 2016), preregistration holds the potential to improve research practice tangibly in our discipline.",
+      "page_number": 7,
+      "context": "Summary claim for preregistration value",
+      "certainty_qualifier": "holds potential (modal)"
+    },
+    {
+      "id": "C049",
+      "content": "Archaeology can be deductive and predictive or inductive and postdictive, but most often might best be described as abductive.",
+      "claim_type": "empirical",
+      "reasoning_type": "characterization",
+      "evidence_links": [],
+      "verbatim_quote": "Archaeology can be deductive and predictive or inductive and postdictive. Most often, archaeology \u2013 like other fieldwork disciplines \u2013 might best be described as abductive (Tavory and Timmermans 2014).",
+      "page_number": 7,
+      "context": "Characterising archaeological methodology",
+      "certainty_qualifier": "might best be (qualified assertion)"
+    },
+    {
+      "id": "C050_consolidated",
+      "content": "Abductive inference (inference to best explanation) plays a central role in archaeological reasoning, though it is seldom explicitly acknowledged in archaeological practice",
+      "claim_type": "definitional",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Abductive research represents a synthesis of deductive and inductive approaches, gathering data according to a specific and intentional methodology (the inductive element), and then applying a theory or framework that describes those facts (deductive).",
+      "page_number": [
+        -1,
+        7
+      ],
+      "context": "Defining abduction",
+      "certainty_qualifier": "definitional from Tavory & Timmermans",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C050",
+          "C051"
+        ],
+        "consolidation_rationale": "C050 defines abduction and C051 notes it's unacknowledged - these form a single observation",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C052",
+      "content": "Archaeology can be quantitative and statistical or qualitative and descriptive, idiographic or nomothetic, and these approaches can be combined, iterated, or synthesised in various ways.",
+      "claim_type": "empirical",
+      "reasoning_type": "characterization",
+      "evidence_links": [],
+      "verbatim_quote": "Archaeology can also be quantitative and statistical or qualitative and descriptive. It can be idiographic, seek an in-depth understanding of the specific, contingent, and unique in a particular place and time. Or, it can be nomothetic, attempting to derive or test general (if provisional or incomplete) principles or rules by looking at similarities across space and time... These approaches, however, can cut across disciplines and can be combined, iterated, or synthesized in various ways",
+      "page_number": 8,
+      "context": "Archaeological methodological diversity",
+      "certainty_qualifier": "descriptive characterisation"
+    },
+    {
+      "id": "C053_consolidated",
+      "content": "Preregistration doesn't privilege any particular approach but demands articulation of chosen approach; methodological diversity makes this articulation especially important to avoid conflation of different types of inquiry",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "A preregistration regime does not privilege any of these approaches over another but instead demands an articulation of, and a public commitment to, a specific research design at the beginning of a project, before research begins.",
+      "page_number": [
+        8
+      ],
+      "context": "Key claim about preregistration neutrality",
+      "certainty_qualifier": "strong normative statement",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C053",
+          "C054"
+        ],
+        "consolidation_rationale": "C054 extends C053 by noting that diversity makes articulation MORE important",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C055",
+      "content": "An explicit research design documented before research starts avoids unintentional conflation or elision of approaches that could undermine results.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "An explicit research design documented in detail before research starts, rather than during the writing-up stage, avoids the unintentional conflation or elision of approaches that could undermine research results.",
+      "page_number": 8,
+      "context": "Specific benefit for diverse discipline",
+      "certainty_qualifier": "stated as logical consequence"
+    },
+    {
+      "id": "C056",
+      "content": "Archaeology is serendipitous - we often do not know what we will find until we get to the field.",
+      "claim_type": "empirical",
+      "reasoning_type": "characterization",
+      "evidence_links": [],
+      "verbatim_quote": "Archaeology is also serendipitous. Often, we do not know what we will find until we get to the field.",
+      "page_number": 8,
+      "context": "Addressing serendipity objection",
+      "certainty_qualifier": "descriptive characterisation"
+    },
+    {
+      "id": "C057",
+      "content": "The problem of not knowing results beforehand is not unique to archaeology - even in deductive disciplines results are not under researcher control.",
+      "claim_type": "methodological",
+      "reasoning_type": "analogical",
+      "evidence_links": [],
+      "verbatim_quote": "This problem, however, is not unique to archaeology. Even in deductive disciplines, results are not and should not be under the control of the researcher (Chambers 2019).",
+      "page_number": 8,
+      "context": "Responding to serendipity objection",
+      "certainty_qualifier": "cited from Chambers"
+    },
+    {
+      "id": "C058_consolidated",
+      "content": "While research results may not be under a researcher's control, research design choices ARE under their control; prior disciplinary knowledge allows archaeologists to state what they plan to do and why",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Research design, research questions or hypotheses, methods, and interpretive frameworks, however, are under researcher control. As a result, these elements can be articulated beforehand.",
+      "page_number": [
+        8
+      ],
+      "context": "What can be preregistered despite serendipity",
+      "certainty_qualifier": "strong assertion",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C058",
+          "C059"
+        ],
+        "consolidation_rationale": "C058 and C059 form a single argument: design is controllable because of prior knowledge",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C060",
+      "content": "Preregistration forces clarity and formalises a priori commitment to research design and recording strategy.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration forces a level of clarity and formalizes an a priori commitment to research design and recording strategy.",
+      "page_number": 8,
+      "context": "What preregistration accomplishes",
+      "certainty_qualifier": "strong claim"
+    },
+    {
+      "id": "C061",
+      "content": "Since expected outcomes vary and are often externally dictated, articulation of research design is a particular benefit to archaeologists as it moves preparation to the less-fraught time before fieldwork.",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "Indeed, since expected outcomes of research vary, and are often externally dictated (e.g., by heritage legislation), the articulation of research design is a particular benefit to archaeologists since it moves preparation to the less-fraught time before fieldwork begins.",
+      "page_number": 8,
+      "context": "Specific advantage for archaeology",
+      "certainty_qualifier": "practical argument"
+    },
+    {
+      "id": "C062",
+      "content": "Preparatory work before fieldwork allows thoughtful development, testing, and revision of approaches, increasing chances that research design and collected data will support desired outcomes.",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "This preparatory work allows thoughtful development, testing, and revision of approaches, increasing the chances that the research design and collected data will support the desired outcomes.",
+      "page_number": 8,
+      "context": "Benefits of advance planning",
+      "certainty_qualifier": "increases chances (modal)"
+    },
+    {
+      "id": "C063",
+      "content": "Exigencies of fieldwork may suggest a pivot due to extraordinary finds or unsuitability of approach, but this argues for careful a priori research design.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "we recognize that exigencies of fieldwork may suggest a 'pivot' due to an extraordinary find or the late discovery of unsuitability in approach or documentation during execution. Preparing for the unexpected again argues for careful a priori research design",
+      "page_number": 8,
+      "context": "Addressing pivot objection",
+      "certainty_qualifier": "acknowledging flexibility need"
+    },
+    {
+      "id": "C064",
+      "content": "The planning encouraged by preregistration should help avoid errors in design, especially if combined with pilot research.",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "the planning encouraged by preregistration should help to avoid errors in design (especially if combined with pilot research)",
+      "page_number": 8,
+      "context": "How preregistration reduces need for pivots",
+      "certainty_qualifier": "should (modal)"
+    },
+    {
+      "id": "C065",
+      "content": "The unpredictable nature of fieldwork should not preclude a best-effort at preregistration, and best-effort in an abductive discipline like archaeology should be considered sufficient.",
+      "claim_type": "methodological",
+      "reasoning_type": "normative",
+      "evidence_links": [],
+      "verbatim_quote": "Considering its potential value, the unpredictable nature of fieldwork should not preclude a 'best-effort' at preregistration \u2013 and a 'best-effort' in an abductive discipline like archaeology should be considered sufficient.",
+      "page_number": 8,
+      "context": "Concluding argument of section",
+      "certainty_qualifier": "normative should statement"
+    },
+    {
+      "id": "C066",
+      "content": "Despite its potential utility, no examples of rigorous preregistration in archaeology could be found.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [
+        "E011",
+        "E012"
+      ],
+      "verbatim_quote": "Despite its potential utility, we could find no examples of rigorous preregistration in archaeology.",
+      "page_number": 8,
+      "context": "Opening of Section 4",
+      "certainty_qualifier": "based on systematic search"
+    },
+    {
+      "id": "C067",
+      "content": "While FAIR data registrations supporting replication of computational results are laudable, they do not represent preregistration of approaches and methods as suggested in this chapter.",
+      "claim_type": "evaluative",
+      "reasoning_type": "definitional",
+      "evidence_links": [
+        "E012"
+      ],
+      "verbatim_quote": "While the submission of code in support of scientific papers is laudable, these FAIR data 'registrations', which support replication of computational results, do not represent the preregistration of approaches and methods we suggest.",
+      "page_number": 9,
+      "context": "Clarifying what counts as preregistration",
+      "certainty_qualifier": "definitional distinction"
+    },
+    {
+      "id": "C068",
+      "content": "Selden's laser-scanning project (2017) would be a good candidate for preregistration of an inductive, postdictive project.",
+      "claim_type": "evaluative",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [
+        "E012"
+      ],
+      "verbatim_quote": "Selden's pottery laser-scanning project (2017), for example, would be a good candidate for the preregistration of an inductive, postdictive project.",
+      "page_number": 9,
+      "context": "Suggesting how existing work could be improved",
+      "certainty_qualifier": "would be (counterfactual)"
+    },
+    {
+      "id": "C069",
+      "content": "A more complete preregistration for Selden's project could include protocols for laser-scanning methodology and creation and publication of metadata.",
+      "claim_type": "methodological",
+      "reasoning_type": "prescriptive",
+      "evidence_links": [
+        "E013"
+      ],
+      "verbatim_quote": "A more complete preregistration effort, in this case, could include a protocol for the laser-scanning methodology and, crucially, a protocol for the creation and publication of metadata.",
+      "page_number": 9,
+      "context": "Specific recommendation for improvement",
+      "certainty_qualifier": "could (modal)"
+    },
+    {
+      "id": "C070",
+      "content": "Marwick et al.'s lithic trampling experiment (2017a) represents an opportunity for preregistration of more deductive, predictive research.",
+      "claim_type": "evaluative",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [
+        "E012"
+      ],
+      "verbatim_quote": "Likewise, Marwick et al.'s lithic trampling experiment (2017a) represents an opportunity for the preregistration of more deductive, predictive research.",
+      "page_number": 9,
+      "context": "Example of deductive archaeology",
+      "certainty_qualifier": "represents opportunity (counterfactual)"
+    },
+    {
+      "id": "C071",
+      "content": "Preregistration for Marwick's trampling study could articulate hypotheses, methodology, analytical approach, and even early versions of code.",
+      "claim_type": "methodological",
+      "reasoning_type": "prescriptive",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration could articulate hypotheses, methodology, and an analytical approach. Perhaps, this preregistration could even include early versions of code.",
+      "page_number": 9,
+      "context": "What preregistration could include",
+      "certainty_qualifier": "could (modal)"
+    },
+    {
+      "id": "C072",
+      "content": "With moderate effort, especially if a grant application exists, research could be elaborated to a full preregistration plan or even a registered report.",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "With moderate effort, especially if a grant application exists for this research, it could be elaborated to a full preregistration plan, or even a 'registered report', in which a journal accepts or rejects the paper on the strength of its hypothesis, methodology, and proposed analysis before results are known",
+      "page_number": 9,
+      "context": "Suggesting registered reports",
+      "certainty_qualifier": "could (modal)"
+    },
+    {
+      "id": "C073",
+      "content": "Selden's laser scan data presentation exceeds standard archaeological practice and should be commended.",
+      "claim_type": "evaluative",
+      "reasoning_type": "normative",
+      "evidence_links": [],
+      "verbatim_quote": "We note that Selden's presentation of the laser scan data with licensing information exceeds standard practice in archaeology, complements the associated paper (2017), and should be commended.",
+      "page_number": 9,
+      "context": "Positive evaluation despite critique",
+      "certainty_qualifier": "evaluative judgement"
+    },
+    {
+      "id": "C074",
+      "content": "Marwick's publication of containerised code is exceptional, confirming his status as a leader in computational reproducibility.",
+      "claim_type": "evaluative",
+      "reasoning_type": "normative",
+      "evidence_links": [],
+      "verbatim_quote": "Likewise, Marwick's publication of containerized code is exceptional, confirming his status as a leader in computational reproducibility.",
+      "page_number": 9,
+      "context": "Positive evaluation",
+      "certainty_qualifier": "evaluative judgement"
+    },
+    {
+      "id": "C075",
+      "content": "These examples highlight that even archaeologists committed to transparency and reproducibility have not adopted comprehensive preregistration of approach, method, and data management.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [
+        "E012",
+        "E013"
+      ],
+      "verbatim_quote": "Rather, these examples highlight that (1) even archaeologists committed to transparency and reproducibility have not adopted comprehensive preregistration of approach, method, and data management",
+      "page_number": 9,
+      "context": "Interpreting significance of examples",
+      "certainty_qualifier": "observational claim"
+    },
+    {
+      "id": "C076",
+      "content": "Undertaking preregistration would reinforce other efforts to improve transparency and reproducibility, like FAIR datasets and publication of analytical code.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "undertaking preregistration would reinforce other efforts to improve transparency and reproducibility, like FAIR datasets and publication of analytical code.",
+      "page_number": 9,
+      "context": "Synergy with existing transparency efforts",
+      "certainty_qualifier": "would (modal)"
+    },
+    {
+      "id": "C077",
+      "content": "Templates, examples, and models could facilitate the introduction of preregistration into archaeology.",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "Templates, examples, and models could facilitate the introduction of preregistration into archaeology.",
+      "page_number": 9,
+      "context": "Practical implementation needs",
+      "certainty_qualifier": "could (modal)"
+    },
+    {
+      "id": "C078",
+      "content": "Good practice around execution of preregistration is still evolving.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [],
+      "verbatim_quote": "good practice around the execution of preregistration is still evolving (c.f. Nosek et al. 2018a; Ledgerwood 2018; Nosek et al. 2018b)",
+      "page_number": 9,
+      "context": "Acknowledging uncertain state of field",
+      "certainty_qualifier": "documented in literature"
+    },
+    {
+      "id": "C079",
+      "content": "A distinction is sometimes made between preregistration of research questions/hypotheses and plans for analysis.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [],
+      "verbatim_quote": "A distinction is sometimes made between preregistration of research questions or hypotheses on the one hand, and plans for analysis on the other",
+      "page_number": -1,
+      "context": "Different types of preregistration",
+      "certainty_qualifier": "documented practice"
+    },
+    {
+      "id": "C080",
+      "content": "Preregistration of theoretical predictions helps calibrate confidence that a study tests versus informs a theory; preregistration of analysis plans helps calibrate confidence that findings are not due to chance.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "preregistration of theoretical predictions helps researchers know how to correctly calibrate their confidence that a study tests (versus informs) a theory, whereas preregistration of analysis plans helps researchers know how to correctly calibrate their confidence that a specific finding is unlikely to be due to chance",
+      "page_number": 10,
+      "context": "Ledgerwood quote on two types",
+      "certainty_qualifier": "cited from Ledgerwood"
+    },
+    {
+      "id": "C081",
+      "content": "FAIMS Project experience indicates two additional aspects of archaeological research might be registered profitably: data models and data workflows including data capture, manipulation, and analysis.",
+      "claim_type": "methodological",
+      "reasoning_type": "empirical",
+      "evidence_links": [
+        "E009"
+      ],
+      "verbatim_quote": "In the case of archaeology, experience with the FAIMS Project indicates that two additional aspects of archaeological research might also be registered profitably: data models and data workflows including data capture, manipulation, and analysis.",
+      "page_number": 10,
+      "context": "Archaeology-specific recommendation",
+      "certainty_qualifier": "based on FAIMS experience"
+    },
+    {
+      "id": "C082",
+      "content": "Recording data models and workflows will help archaeologists meet emerging standards like TOP Level 2 Guidelines requiring full account of data procedures and description of procedures necessary for independent replication.",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "Recording these aspects of research will help archaeologists meet emerging standards such as the TOP Level 2 Guidelines, which require 'a full account of the procedures used to collect, preprocess, clean, or generate the data' (data provenance) and a 'description of procedures' necessary for an 'independent replication of the research'",
+      "page_number": 10,
+      "context": "Compliance with transparency standards",
+      "certainty_qualifier": "will help (modal)"
+    },
+    {
+      "id": "C083",
+      "content": "The abductive and serendipitous nature of archaeology may often make transparency the goal of preregistration, rather than replication.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Thereby acknowledging that the abductive and serendipitous nature of the discipline may often make transparency the goal of preregistration, rather than replication.",
+      "page_number": 10,
+      "context": "Realistic goal for archaeology",
+      "certainty_qualifier": "may often (qualified)"
+    },
+    {
+      "id": "C084",
+      "content": "The perfect should not be made the enemy of the good - a best-effort attempt at preregistration would mark an improvement over the present lack of any at all.",
+      "claim_type": "methodological",
+      "reasoning_type": "normative",
+      "evidence_links": [],
+      "verbatim_quote": "As noted above, the perfect should not be made the enemy of the good, and a best-effort attempt at preregistration would mark an improvement over the present lack of any at all.",
+      "page_number": 10,
+      "context": "Pragmatic standard",
+      "certainty_qualifier": "normative principle"
+    },
+    {
+      "id": "C085",
+      "content": "Preregistration in archaeology could include declarations of research tradition, approach, hypotheses, fieldwork and analysis plans, workflows, and/or data models.",
+      "claim_type": "methodological",
+      "reasoning_type": "prescriptive",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration in archaeology could therefore include declarations of research tradition (e.g., theoretical framework), approach (e.g., inductive, deductive, idiographic, nomothetic, etc.), hypotheses or research questions, fieldwork and analysis plans, workflows, and/or data models.",
+      "page_number": 10,
+      "context": "What archaeologists could register",
+      "certainty_qualifier": "could (modal)"
+    },
+    {
+      "id": "C086",
+      "content": "Compared to current state of affairs, articulation of any aspect of research design would mark an improvement.",
+      "claim_type": "evaluative",
+      "reasoning_type": "comparative",
+      "evidence_links": [],
+      "verbatim_quote": "Compared to the current state of affairs, articulation of any aspect of research design would mark an improvement.",
+      "page_number": 10,
+      "context": "Low bar for improvement",
+      "certainty_qualifier": "comparative evaluation"
+    },
+    {
+      "id": "C087_consolidated",
+      "content": "Priority registrations should include theoretical approach and hypotheses (to combat biases) and data models and workflows (to overcome just-in-time archaeology)",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "An explicit commitment to a particular approach plus either hypotheses or research questions would do the most to combat researcher biases.",
+      "page_number": [
+        10
+      ],
+      "context": "Priority recommendation",
+      "certainty_qualifier": "would do most (comparative)",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C087",
+          "C088"
+        ],
+        "consolidation_rationale": "C087 and C088 identify two priority areas for preregistration that address specific problems",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C089",
+      "content": "In choosing a preregistration protocol, archaeologists will face a trade-off between time spent defining approach and resulting loss of flexibility.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "In choosing a preregistration protocol, archaeologists will face a trade-off between the amount of time spent defining their approach and the resulting loss of flexibility.",
+      "page_number": 10,
+      "context": "Acknowledging costs of preregistration",
+      "certainty_qualifier": "will face (prediction)"
+    },
+    {
+      "id": "C090",
+      "content": "A stricter preregistration will maximise benefits, whereas a looser preregistration is faster and less constraining but also less effective at avoiding bias or just-in-time fieldwork.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "A 'stricter' preregistration will maximize the benefits of preregistration, whereas a 'looser' preregistration is faster and less constraining \u2013 but also less effective at avoiding bias or 'just-in-time' fieldwork.",
+      "page_number": 10,
+      "context": "Trade-off between strictness and practicality",
+      "certainty_qualifier": "stated as principle"
+    },
+    {
+      "id": "C091_consolidated",
+      "content": "Archaeologists could use the Open Science Framework (OSF) for preregistration; OSF offers templates including ones for qualitative research that could be adapted for archaeology",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "A preregistration regime in archaeology could be built using existing knowledge infrastructures, like the Open Science Framework",
+      "page_number": [
+        10
+      ],
+      "context": "Implementation recommendation",
+      "certainty_qualifier": "could (modal)",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C091",
+          "C092"
+        ],
+        "consolidation_rationale": "C091 and C092 both describe OSF's availability and existing template infrastructure",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C093_consolidated",
+      "content": "Archaeology would benefit from domain-specific preregistration templates; as an interim measure, the OSF's existing qualitative preregistration template is recommended",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "Archaeology would benefit from the development of domain-specific registration templates, such as that for Social Psychology (van 't Veer and Giner-Sorolla 2016), or perhaps for specific types of research, on the model of the 'replication recipe' for conducting replication experiments in various disciplines",
+      "page_number": [
+        -1,
+        11
+      ],
+      "context": "Future development needs",
+      "certainty_qualifier": "would benefit (modal)",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C093",
+          "C094"
+        ],
+        "consolidation_rationale": "C093 states the ideal (domain-specific), C094 states the interim solution - these form a development path",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C095",
+      "content": "Key fields from OSF qualitative template relevant to archaeology include: all Study information items, research question typical moments of modification, and indication of inductive vs deductive approach.",
+      "claim_type": "methodological",
+      "reasoning_type": "prescriptive",
+      "evidence_links": [],
+      "verbatim_quote": "key fields from this template that are relevant to archaeology include: All 'Study information' items (points 1-5), which provide basic project metadata and commitment to particular research questions should be included. 'Typical moments' of research-question modification represents a useful concept that accommodates the emergent and serendipitous nature of archaeological research.",
+      "page_number": 11,
+      "context": "Detailed template guidance (beginning)",
+      "certainty_qualifier": "prescriptive recommendation"
+    },
+    {
+      "id": "C096_consolidated",
+      "content": "Environmental scientists working on the Ocean Health Index faced similar 'small data' problems to archaeology, which inhibited synthesis and cross-study comparisons",
+      "claim_type": "empirical",
+      "reasoning_type": "analogical",
+      "evidence_links": [
+        "E014"
+      ],
+      "verbatim_quote": "The discipline of oceanography has also grappled with 'small data' problems (Borgman 2015; Kansa and Bissell 2010), including diverse data and data structures that emerge from fieldwork, producing internally inconsistent datasets and mid-course changes to research.",
+      "page_number": [
+        11
+      ],
+      "context": "Opening of Section 5, establishing analogy",
+      "certainty_qualifier": "documented in literature",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C096",
+          "C098"
+        ],
+        "consolidation_rationale": "C096 and C098 together make the parallel: similar problems led to similar consequences",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C097",
+      "content": "Oceanography's small data problems include those that shade into questionable research practices, judging from Fraser et al.'s survey of related disciplines.",
+      "claim_type": "empirical",
+      "reasoning_type": "analogical",
+      "evidence_links": [],
+      "verbatim_quote": "These problems include those that shade into questionable research practices, judging from Fraser et al.'s (Fraser et al. 2018) survey of related disciplines.",
+      "page_number": 11,
+      "context": "Connecting to earlier HARKing discussion",
+      "certainty_qualifier": "inferred from related fields"
+    },
+    {
+      "id": "C099",
+      "content": "In the Ocean Health Index project, increases in data quantity and improving data quality were functions of reducing friction, avoiding technical debt, and implementing requirements around data formats, structures, and analytical methods.",
+      "claim_type": "empirical",
+      "reasoning_type": "causal",
+      "evidence_links": [
+        "E015"
+      ],
+      "verbatim_quote": "Increases in the quantity of available data and improving data quality were functions of reducing friction, avoiding technical debt, and implementing requirements around data formats, data structures, and analytical methods.",
+      "page_number": 12,
+      "context": "Ocean Health Index success factors",
+      "certainty_qualifier": "causal claim from case study"
+    },
+    {
+      "id": "C100",
+      "content": "More important than generating standardised data and scripts was the thoughtful and planned research design, including approach to creating, recording, and analysing data.",
+      "claim_type": "evaluative",
+      "reasoning_type": "comparative",
+      "evidence_links": [
+        "E015"
+      ],
+      "verbatim_quote": "More important than the generation of standardized, reusable data and scripts, however, was the thoughtful and planned research design, including its approach to creating, recording, and analyzing data.",
+      "page_number": 12,
+      "context": "Key lesson from Ocean Health Index",
+      "certainty_qualifier": "evaluative judgement"
+    },
+    {
+      "id": "C101",
+      "content": "Careful planning aligns with both early processualists' call for a priori research design and Caraher's argument for slow archaeology.",
+      "claim_type": "theoretical",
+      "reasoning_type": "synthetic",
+      "evidence_links": [
+        "E005"
+      ],
+      "verbatim_quote": "Such careful planning not only aligns with the early processualists' call for more emphasis on thoughtful, a priori research design, but also with Caraher's recent argument for a 'slow archaeology'",
+      "page_number": 12,
+      "context": "Connecting multiple theoretical traditions",
+      "certainty_qualifier": "synthetic claim"
+    },
+    {
+      "id": "C102",
+      "content": "Slow archaeology evokes practice of archaeology as a craft, prioritising embodied attentiveness to the entire fieldwork process as challenge to fragmented perspectives offered by efficient, industrialised workflows.",
+      "claim_type": "theoretical",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Slow archaeology evokes the practice of archaeology as a craft. It prioritizes an embodied attentiveness to the entire process of fieldwork as a challenge to the fragmented perspectives offered by workflows influenced by our own efficient, industrialized age",
+      "page_number": 12,
+      "context": "Caraher quote defining slow archaeology",
+      "certainty_qualifier": "cited from Caraher"
+    },
+    {
+      "id": "C103",
+      "content": "Preregistration and associated digital approaches supporting transparency and reproducibility are not antithetical to slow archaeology - the chaos of just-in-time approaches to fieldwork are.",
+      "claim_type": "theoretical",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration and associated digital approaches that support transparency and reproducibility are not antithetical to slow archaeology \u2013 the chaos of 'just-in-time' approaches to fieldwork are.",
+      "page_number": 12,
+      "context": "Reconciling preregistration with slow archaeology",
+      "certainty_qualifier": "strong assertion"
+    },
+    {
+      "id": "C104",
+      "content": "Under-planned fieldwork might offer more freedom and delay reckoning with messy data, but represents the opposite of the considered approach suggested by Caraher and is likely to result in biased and opaque research not reaching full potential.",
+      "claim_type": "evaluative",
+      "reasoning_type": "normative",
+      "evidence_links": [],
+      "verbatim_quote": "Under-planned fieldwork might offer more freedom (and delay the day of reckoning with messy data), but it represents the opposite of the considered approach suggested by Caraher and is likely to result in biased and opaque research that does not reach its full potential.",
+      "page_number": 12,
+      "context": "Critique of under-planning",
+      "certainty_qualifier": "evaluative with modal qualifier"
+    },
+    {
+      "id": "C105",
+      "content": "Preregistration encourages thoughtfulness.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration encourages thoughtfulness.",
+      "page_number": 12,
+      "context": "Simple summary claim",
+      "certainty_qualifier": "strong statement"
+    },
+    {
+      "id": "C106",
+      "content": "Calls for archaeologists to improve data quality for large-scale research have been made for at least two decades but limited progress has been made.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [],
+      "verbatim_quote": "Calls for archaeologists to improve data quality for large-scale research have been made for at least the past two decades (Doerr et al. 2004; Kansa and Kansa 2011; Faniel et al. 2013; Austin 2014), but limited progress has been made (Kintigh et al. 2014; Sobotkova 2018).",
+      "page_number": -1,
+      "context": "Opening of Section 6 (Conclusions)",
+      "certainty_qualifier": "documented in literature"
+    },
+    {
+      "id": "C107",
+      "content": "Concerns over transparency and reproducibility of archaeological research are more recent than data quality concerns.",
+      "claim_type": "empirical",
+      "reasoning_type": "observational",
+      "evidence_links": [],
+      "verbatim_quote": "Concerns over the transparency and reproducibility of archaeological research are more recent (Marwick 2017b)",
+      "page_number": 13,
+      "context": "Distinguishing two types of concerns",
+      "certainty_qualifier": "temporal observation"
+    },
+    {
+      "id": "C108",
+      "content": "Archaeology is unlikely to avoid the reproducibility crisis so profoundly affecting other disciplines.",
+      "claim_type": "empirical",
+      "reasoning_type": "predictive",
+      "evidence_links": [
+        "E001"
+      ],
+      "verbatim_quote": "archaeology is unlikely to avoid the reproducibility crisis so profoundly affecting other disciplines.",
+      "page_number": 13,
+      "context": "Prediction about archaeology's future",
+      "certainty_qualifier": "unlikely (modal qualifier)"
+    },
+    {
+      "id": "C109",
+      "content": "The recommendation to adopt preregistration as a means of increasing rigour is a pathway to solving challenges of data quality and reproducibility.",
+      "claim_type": "methodological",
+      "reasoning_type": "prescriptive",
+      "evidence_links": [],
+      "verbatim_quote": "Our recommendation to adopt preregistration as a means of increasing rigor is a pathway to solving those challenges.",
+      "page_number": 13,
+      "context": "Core recommendation of chapter",
+      "certainty_qualifier": "prescriptive claim"
+    },
+    {
+      "id": "C110_consolidated",
+      "content": "Preregistration promotes 'built-in' rather than 'bolt-on' solutions and fosters 'slow archaeology' rather than 'just-in-time' approaches to research design",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Preregistration promotes 'built-in' rather than 'bolt-on' good practice in research design, data management, and analysis.",
+      "page_number": [
+        13
+      ],
+      "context": "Reiterating key benefit",
+      "certainty_qualifier": "stated as fact",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "C110",
+          "C111"
+        ],
+        "consolidation_rationale": "C110 and C111 are parallel formulations of the same point about preregistration promoting good practice",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "C112",
+      "content": "Robust, scalable, transparent, and reproducible results underlying persuasive research directed at grand challenges require planning and forethought.",
+      "claim_type": "methodological",
+      "reasoning_type": "conceptual",
+      "evidence_links": [],
+      "verbatim_quote": "Robust, scalable, transparent, and reproducible results, underlying persuasive research directed at grand challenges, require planning and forethought.",
+      "page_number": 13,
+      "context": "Justification for planning emphasis",
+      "certainty_qualifier": "stated as requirement"
+    },
+    {
+      "id": "C113",
+      "content": "Making a public commitment to research design via preregistration before fieldwork provides a mechanism that makes space for necessary time and thought.",
+      "claim_type": "methodological",
+      "reasoning_type": "pragmatic",
+      "evidence_links": [],
+      "verbatim_quote": "Making a public commitment to research design via preregistration, before setting out for the field, provides a mechanism that makes space for the necessary time and thought.",
+      "page_number": 13,
+      "context": "Final sentence of chapter",
+      "certainty_qualifier": "concluding assertion"
+    }
+  ],
+  "implicit_arguments": [
+    {
+      "id": "IA001",
+      "content": "Research transparency and reproducibility are inherently valuable goals that archaeology should pursue.",
+      "reasoning": "The entire chapter assumes reproducibility and transparency are desirable without arguing for this premise; it's treated as self-evident given the 'crisis' in other fields.",
+      "trigger_text": "The motivation stems from the 'reproducibility crisis'... In archaeology and other field sciences, preregistration offers its usual benefits: explicit recognition of research design; management of biases and perverse incentives; and exposure of research methods and processes as required by emerging good practice in research transparency",
+      "page_number": -1,
+      "context": "Introduction presents crisis as motivation without defending whether reproducibility should be archaeology's goal",
+      "theoretical_significance": "Imports values and standards from sciences into archaeology without interrogating disciplinary differences"
+    },
+    {
+      "id": "IA002",
+      "content": "Cognitive biases and perverse professional incentives are significant problems in archaeological research that require systematic intervention.",
+      "reasoning": "The authors assume these problems exist in archaeology based on evidence from other disciplines, without demonstrating they manifest similarly in archaeological practice.",
+      "trigger_text": "The biases and perverse incentives that preregistration was designed to combat in other disciplines also exist in archaeology.",
+      "page_number": 5,
+      "context": "Section 2 introduction asserts problem exists in archaeology",
+      "theoretical_significance": "Assumes archaeological research practice suffers from same pathologies as psychology/biomedicine"
+    },
+    {
+      "id": "IA003",
+      "content": "The distinction between prediction and postdiction is fundamental and must be maintained for research to be valid.",
+      "reasoning": "This epistemological commitment is presented as obvious rather than as one philosophical position about knowledge production.",
+      "trigger_text": "Both predictive and postdictive approaches are essential, but they must not be conflated.",
+      "page_number": 4,
+      "context": "Section 1 core claim",
+      "theoretical_significance": "Privileges particular (positivist) understanding of scientific validity"
+    },
+    {
+      "id": "IA004",
+      "content": "Researcher subjectivity and memory are unreliable and require external documentation and commitment mechanisms.",
+      "reasoning": "Assumes researchers cannot be trusted to accurately remember or report their research process without formal preregistration.",
+      "trigger_text": "prone to 'fallibility of memory, motivated reasoning, and cognitive biases'",
+      "page_number": 4,
+      "context": "Discussion of why conflation is problematic",
+      "theoretical_significance": "Reflects distrust of researcher self-reporting and emphasis on external accountability"
+    },
+    {
+      "id": "IA005",
+      "content": "Reusable datasets and large-scale synthesis are important goals that individual research projects should facilitate.",
+      "reasoning": "Assumes archaeological research should prioritise compatibility and aggregation over project-specific goals.",
+      "trigger_text": "These 'easy' changes during and after fieldwork thereby hinder the interoperability and reusability of resulting datasets.",
+      "page_number": 3,
+      "context": "Critique of ad hoc changes",
+      "theoretical_significance": "Prioritises future reuse over immediate research needs"
+    },
+    {
+      "id": "IA006",
+      "content": "Statistical approaches and their underlying assumptions are appropriate for archaeological research.",
+      "reasoning": "Discussion of null hypothesis significance testing assumes statistical methods are or should be common in archaeology.",
+      "trigger_text": "Since common statistical methods like null hypothesis significance testing, moreover, assume prediction rather than postdiction",
+      "page_number": 4,
+      "context": "Discussion of statistical consequences",
+      "theoretical_significance": "May not reflect actual methodological diversity in archaeological practice"
+    },
+    {
+      "id": "IA007",
+      "content": "Early processual archaeology's methodological insights remain valid and should inform current practice.",
+      "reasoning": "Authors invoke 1970s processual literature approvingly without acknowledging subsequent critiques or changed disciplinary context.",
+      "trigger_text": "Indeed, the relevance of early processual thought to the current problem is striking.",
+      "page_number": 5,
+      "context": "Citing Hole and French from 1973",
+      "theoretical_significance": "Selectively draws on processual legacy while paper elsewhere acknowledges post-processual approaches"
+    },
+    {
+      "id": "IA008",
+      "content": "Data should be designed for future reuse and large-scale synthesis, not just immediate project needs.",
+      "reasoning": "Implicit value judgement that data comparability and aggregation should be prioritised over project-specific documentation approaches.",
+      "trigger_text": "impedes the production of comprehensive, reusable datasets... undermines the cultivation of deeper digital practice",
+      "page_number": 6,
+      "context": "Critique of current practices",
+      "theoretical_significance": "Assumes synthesis and reuse are more important than flexible, responsive fieldwork documentation"
+    },
+    {
+      "id": "IA009",
+      "content": "Digital data collection is inherently superior to paper-based approaches.",
+      "reasoning": "Authors criticise practices that 'exploit the forgiving nature' of paper without acknowledging any advantages of paper recording.",
+      "trigger_text": "These practices exploit the forgiving nature of the medium, relying on the ability to write 'in the margins' or 'on the back of the page'.",
+      "page_number": 6,
+      "context": "Critique of paper recording",
+      "theoretical_significance": "Implicitly privileges digital over analog approaches"
+    },
+    {
+      "id": "IA010",
+      "content": "Oral transmission of methodological knowledge is inadequate and must be replaced by formal documentation.",
+      "reasoning": "Treats oral/apprenticeship transmission as simply a loss rather than recognising it as traditional disciplinary practice with own advantages.",
+      "trigger_text": "forms and protocols assume a great deal of implicit knowledge transmitted orally, often informally, at the project",
+      "page_number": 6,
+      "context": "Second type of under-investment",
+      "theoretical_significance": "Devalues craft knowledge and oral training traditions in archaeology"
+    },
+    {
+      "id": "IA011",
+      "content": "Tinkering and emergent design during fieldwork are problems to be minimised rather than necessary adaptations to fieldwork contingencies.",
+      "reasoning": "Authors acknowledge tinkering may be 'necessary' but frame it primarily as a problem rather than considering benefits of adaptive approaches.",
+      "trigger_text": "Although a certain amount of 'tinkering'... may be necessary to mitigate the unpredictability of fieldwork, the practice produces datasets that are not even consistent or comparable",
+      "page_number": -1,
+      "context": "Critique of emergent design",
+      "theoretical_significance": "Tensions between standardisation/planning and fieldwork flexibility"
+    },
+    {
+      "id": "IA012",
+      "content": "Built-in solutions are inherently superior to bolt-on fixes in research practice.",
+      "reasoning": "This software engineering metaphor is presented as self-evidently applicable to research without justification.",
+      "trigger_text": "It would make 'built-in' good practice more likely, as opposed to more common attempts to 'bolt-on' fixes after fieldwork",
+      "page_number": 7,
+      "context": "Marwick's metaphor adopted without critique",
+      "theoretical_significance": "Imports engineering values (upfront specification) into humanistic research"
+    },
+    {
+      "id": "IA013",
+      "content": "Writing up stage is too late to properly document research design decisions.",
+      "reasoning": "Assumes retrospective articulation is inherently problematic even if accurate.",
+      "trigger_text": "An explicit research design documented in detail before research starts, rather than during the writing-up stage",
+      "page_number": 8,
+      "context": "Timing of documentation",
+      "theoretical_significance": "Privileges prospective over retrospective documentation"
+    },
+    {
+      "id": "IA014",
+      "content": "Methodological diversity requires preregistration rather than making it inappropriate.",
+      "reasoning": "Authors reframe potential objection (diversity makes preregistration inappropriate) into argument for preregistration, without acknowledging the objection's validity.",
+      "trigger_text": "Indeed, the very complexity and diversity of archaeology... makes articulation of research design particularly important.",
+      "page_number": 8,
+      "context": "Addressing diversity argument",
+      "theoretical_significance": "Rhetorical move to neutralise diversity objection"
+    },
+    {
+      "id": "IA015",
+      "content": "Best-effort preregistration is better than no preregistration.",
+      "reasoning": "Assumes partial compliance with preregistration ideals is valuable even if incomplete.",
+      "trigger_text": "the unpredictable nature of fieldwork should not preclude a 'best-effort' at preregistration \u2013 and a 'best-effort' in an abductive discipline like archaeology should be considered sufficient",
+      "page_number": 8,
+      "context": "Concluding argument",
+      "theoretical_significance": "Pragmatic compromise on standards but still assumes preregistration valuable"
+    },
+    {
+      "id": "IA016",
+      "content": "Articulation of research design prevents unintentional conflation of approaches.",
+      "reasoning": "Assumes researchers conflate approaches unintentionally rather than deliberately for productive theoretical synthesis.",
+      "trigger_text": "avoids the unintentional conflation or elision of approaches that could undermine research results",
+      "page_number": 8,
+      "context": "Benefit of explicit design",
+      "theoretical_significance": "Frames theoretical integration as error rather than synthesis"
+    },
+    {
+      "id": "IA017",
+      "content": "Leading archaeological practitioners in reproducibility should be doing preregistration if the practice is truly important.",
+      "reasoning": "Authors critique Marwick and Selden despite praising them - implication is that if preregistration is essential, even leaders should be doing it.",
+      "trigger_text": "even archaeologists committed to transparency and reproducibility have not adopted comprehensive preregistration",
+      "page_number": 9,
+      "context": "Critique of existing examples",
+      "theoretical_significance": "Sets high bar for adequate transparency practice"
+    },
+    {
+      "id": "IA018",
+      "content": "Metadata incompleteness is a documentation failure rather than a research decision.",
+      "reasoning": "Authors treat incomplete metadata (E013) as evidence of poor practice without considering whether complete documentation was research goal.",
+      "trigger_text": "Spot checks indicate that data documentation is incomplete; metadata like intra-site find location and artifact type do not accompany some scans",
+      "page_number": 9,
+      "context": "Evaluating Selden's work",
+      "theoretical_significance": "Assumes comprehensive documentation is always appropriate goal"
+    },
+    {
+      "id": "IA019",
+      "content": "Grant applications can and should be converted into preregistrations.",
+      "reasoning": "Authors suggest using existing grant text for preregistration, assuming alignment between funding requirements and preregistration goals.",
+      "trigger_text": "With moderate effort, especially if a grant application exists for this research, it could be elaborated to a full preregistration plan",
+      "page_number": 9,
+      "context": "Practical suggestion for implementation",
+      "theoretical_significance": "Assumes grant proposals adequately specify research design"
+    },
+    {
+      "id": "IA020",
+      "content": "Transparency is an acceptable substitute for replication as a goal in abductive disciplines.",
+      "reasoning": "Authors retreat from stronger replication goal to transparency goal for archaeology without fully defending this compromise.",
+      "trigger_text": "the abductive and serendipitous nature of the discipline may often make transparency the goal of preregistration, rather than replication",
+      "page_number": 10,
+      "context": "Accommodating archaeological practice",
+      "theoretical_significance": "Significant epistemological compromise from original preregistration goals"
+    },
+    {
+      "id": "IA021",
+      "content": "OSF qualitative research template is appropriate for archaeology despite being designed for social sciences.",
+      "reasoning": "Authors recommend this template without detailed consideration of archaeology-specific requirements or mismatches.",
+      "trigger_text": "we recommend starting with the OSF 'Qualitative Research Preregistration' template... It is intended for a range of social science research",
+      "page_number": 11,
+      "context": "Template recommendation",
+      "theoretical_significance": "Assumes sufficient similarity between archaeology and social sciences"
+    },
+    {
+      "id": "IA022",
+      "content": "Oceanography provides an appropriate model for archaeology to follow.",
+      "reasoning": "Authors use Ocean Health Index as exemplar without acknowledging potential disanalogies between disciplines.",
+      "trigger_text": "The discipline of oceanography has also grappled with 'small data' problems... As in archaeology, these problems inhibited the large-scale, synthetic research",
+      "page_number": 11,
+      "context": "Oceanography analogy",
+      "theoretical_significance": "Cross-disciplinary analogies may obscure important differences"
+    },
+    {
+      "id": "IA023",
+      "content": "Thoughtful planning and slow, considered approaches are inherently valuable and opposed to industrialised efficiency.",
+      "reasoning": "Authors invoke 'slow archaeology' approvingly without acknowledging potential costs of slowness or benefits of efficiency.",
+      "trigger_text": "Slow archaeology evokes the practice of archaeology as a craft... as a challenge to the fragmented perspectives offered by workflows influenced by our own efficient, industrialized age",
+      "page_number": 12,
+      "context": "Slow archaeology framing",
+      "theoretical_significance": "Romanticises craft tradition vs modern efficiency dichotomy"
+    },
+    {
+      "id": "IA024",
+      "content": "Just-in-time approaches are chaotic and represent lack of consideration rather than deliberate adaptive strategies.",
+      "reasoning": "Consistently negative framing of emergent/just-in-time approaches as chaos rather than acknowledging potential benefits of flexibility.",
+      "trigger_text": "the chaos of 'just-in-time' approaches to fieldwork",
+      "page_number": 12,
+      "context": "Negative characterisation",
+      "theoretical_significance": "Frames adaptive approaches as inherently problematic"
+    },
+    {
+      "id": "IA025",
+      "content": "Freedom in fieldwork is a temptation to be resisted rather than a methodological value.",
+      "reasoning": "Freedom framed as offering ability to 'delay day of reckoning' - negative characterisation.",
+      "trigger_text": "Under-planned fieldwork might offer more freedom (and delay the day of reckoning with messy data)",
+      "page_number": 12,
+      "context": "Critique of flexibility",
+      "theoretical_significance": "Prioritises accountability over methodological flexibility"
+    },
+    {
+      "id": "IA026",
+      "content": "Archaeological research should be directed at addressing grand challenges requiring large-scale synthesis.",
+      "reasoning": "Concluding paragraph frames grand challenges as appropriate goal without acknowledging value of smaller-scale or idiographic research.",
+      "trigger_text": "Robust, scalable, transparent, and reproducible results, underlying persuasive research directed at grand challenges",
+      "page_number": 13,
+      "context": "Final paragraph",
+      "theoretical_significance": "Privileges nomothetic over idiographic research goals despite earlier claims about accommodation"
+    }
+  ],
+  "research_designs": [
+    {
+      "id": "RD001",
+      "content": "Methodological argument design combining theoretical analysis, literature review, and practical recommendations to introduce preregistration to archaeology",
+      "design_type": "argumentative_synthesis",
+      "scope": "paper",
+      "verbatim_quote": "This paper introduces the concept and practice of preregistration to archaeology... We argue that many, but by no means all, archaeological projects could benefit from preregistration.",
+      "page_number": 2,
+      "context": "Overall paper structure outlined in introduction",
+      "justification": "States that paper will make an argument and provide practical guidance",
+      "target_population": "archaeological researchers and projects",
+      "sampling_strategy": "not_applicable",
+      "data_collection_approach": "literature_review_and_conceptual_analysis"
+    },
+    {
+      "id": "RD002",
+      "content": "Comparative analysis design examining preregistration practices across disciplines (biomedical research, psychology, ecology) to identify transferable principles for archaeology",
+      "design_type": "comparative_analysis",
+      "scope": "section",
+      "verbatim_quote": "Preregistration arose as a means to improve the quality, replicability, and credibility of biomedical research... Its use has since been extended to psychology, ecology and evolutionary biology...",
+      "page_number": 2,
+      "context": "Introduction reviewing preregistration across disciplines",
+      "justification": "Analyses practices in other fields to extract lessons for archaeology",
+      "target_population": "preregistration_practices_across_disciplines",
+      "sampling_strategy": "purposive_selection_of_disciplines",
+      "data_collection_approach": "literature_review"
+    },
+    {
+      "id": "RD003",
+      "content": "Historical analysis design examining archaeological practice evolution from 1970s processual archaeology planning ideals to contemporary just-in-time approaches",
+      "design_type": "historical_analysis",
+      "scope": "section",
+      "verbatim_quote": "Hole and Heizer promoted 'research design' as an explicit plan formulated in advance of fieldwork... By the mid-1980s this ideal had largely been abandoned in favour of ad hoc planning... we call this widespread approach 'just-in-time' archaeology",
+      "page_number": 5,
+      "context": "Section 2 tracing evolution of archaeological planning practices",
+      "justification": "Examines change in archaeological methodology over time",
+      "target_population": "archaeological_planning_practices_1970s_to_present",
+      "sampling_strategy": "historical_literature_review",
+      "data_collection_approach": "document_analysis"
+    },
+    {
+      "id": "RD004",
+      "content": "Empirical survey design examining existing archaeological preregistrations in Open Science Framework (OSF) to assess current adoption and quality",
+      "design_type": "descriptive_survey",
+      "scope": "section",
+      "verbatim_quote": "A search for projects classified as 'archaeology' on OSF yields 304,904 results. Filtering this list for registrations yields just four... examination shows that none of them are preregistrations in the sense we have described",
+      "page_number": 9,
+      "context": "Assessing current state of archaeological preregistration",
+      "justification": "Provides empirical baseline for preregistration adoption",
+      "target_population": "archaeological_projects_on_osf",
+      "sampling_strategy": "complete_enumeration_of_osf_archaeology_category",
+      "data_collection_approach": "database_search_and_manual_review"
+    },
+    {
+      "id": "RD005_implicit",
+      "content": "Case study selection design choosing specific disciplinary examples (Fraser et al. ecology HARKing survey, Ocean Health Index environmental science) to illustrate transferability of preregistration principles",
+      "design_type": "illustrative_case_selection",
+      "scope": "paper",
+      "design_status": "implicit",
+      "trigger_text": [
+        "In a 2018 paper surveying over eight hundred ecologists and evolutionary biologists, Fraser et al. [24] found that 51% admitted to some form of HARKing",
+        "In a review of the development of the Ocean Health Index, environmental scientists Lowndes et al. [90] describe research conditions that closely parallel the circumstances in which most archaeologists work"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Section 1",
+          "subsection": "Predictive and Postdictive Inquiry",
+          "paragraph": null
+        },
+        {
+          "section": "Section 5",
+          "subsection": "Slow Archaeology",
+          "paragraph": null
+        }
+      ],
+      "inference_reasoning": "Paper uses specific case studies (Fraser et al., Ocean Health Index) to support arguments, implying selection criteria for choosing these examples over others. Selection logic not stated: why these specific studies? Fraser demonstrates HARKing prevalence, Ocean Health Index demonstrates parallel 'small data' problems. Selection pattern suggests criterion of 'problems parallel to archaeology' but design for choosing examples not documented.",
+      "implicit_metadata": {
+        "implicitness_basis": "selection_criteria_undocumented",
+        "assessment_implication": "Affects argument strength\u2014different examples might support or weaken claims differently. Selection bias possible if examples cherry-picked rather than systematically chosen."
+      },
+      "location": {
+        "section": "Multiple",
+        "subsection": null,
+        "paragraph": null
+      },
+      "target_population": "interdisciplinary_case_studies",
+      "sampling_strategy": "not_documented",
+      "data_collection_approach": "purposive_example_selection"
+    }
+  ],
+  "methods": [
+    {
+      "id": "M001",
+      "content": "Conceptual analysis method distinguishing predictive (a priori hypothesis generation) from postdictive (post hoc interpretation) inquiry",
+      "method_type": "conceptual_framework",
+      "verbatim_quote": "'Predictive' inquiry (from prediction, a priori hypothesis generation) allows a researcher to announce the exact questions they plan to ask prior to asking them. 'Postdictive' inquiry (from postdiction, post hoc interpretation) is characterised by asking questions in response to seeing the evidence.",
+      "page_number": 3,
+      "context": "Defining core conceptual distinction for understanding preregistration",
+      "purpose": "Establish analytical framework for distinguishing types of inquiry",
+      "inputs": "definitions_and_conceptual_distinctions",
+      "outputs": "binary_classification_of_inquiry_types",
+      "assumptions": "Prediction and postdiction are meaningful and separable categories"
+    },
+    {
+      "id": "M002",
+      "content": "Literature review method examining reproducibility crisis evidence across multiple disciplines to establish problem context",
+      "method_type": "systematic_literature_review",
+      "verbatim_quote": "The so-called 'reproducibility crisis' \u2013 a variety of interrelated problems that undermine confidence in scientific findings \u2013 has now been documented in fields ranging from economics to medicine...",
+      "page_number": 2,
+      "context": "Establishing evidence base for reproducibility problems",
+      "purpose": "Document breadth of reproducibility problems across disciplines",
+      "inputs": "published_literature_on_reproducibility",
+      "outputs": "synthesis_of_crisis_evidence",
+      "assumptions": "Reproducibility crisis is real and documented across disciplines"
+    },
+    {
+      "id": "M003",
+      "content": "Survey data analysis method examining rates of questionable research practices (HARKing) in ecology and evolutionary biology",
+      "method_type": "quantitative_synthesis",
+      "verbatim_quote": "In a 2018 paper surveying over eight hundred ecologists and evolutionary biologists, Fraser et al. [24] found that 51% admitted to some form of HARKing",
+      "page_number": 4,
+      "context": "Using empirical evidence to demonstrate prevalence of HARKing",
+      "purpose": "Quantify extent of questionable research practices",
+      "inputs": "fraser_et_al_2018_survey_data",
+      "outputs": "prevalence_estimates_for_harking",
+      "assumptions": "Self-reported survey data accurately reflects actual practices"
+    },
+    {
+      "id": "M004",
+      "content": "Characterisation method defining 'just-in-time archaeology' as an approach where critical research decisions are deferred until field operations are underway",
+      "method_type": "conceptual_framework",
+      "verbatim_quote": "we call this widespread approach 'just-in-time' archaeology, to evoke the practice of deferring important decisions \u2013 including what to record and how to record it \u2013 until data collection is underway",
+      "page_number": 5,
+      "context": "Defining key concept for critique",
+      "purpose": "Name and characterise contemporary archaeological practice pattern",
+      "inputs": "observations_of_archaeological_practice",
+      "outputs": "conceptual_label_and_definition",
+      "assumptions": "Deferral of decisions is widespread and identifiable pattern"
+    },
+    {
+      "id": "M005",
+      "content": "Evidence synthesis method drawing on FAIMS project experience (60+ workflows at 40+ projects) to document just-in-time archaeology consequences",
+      "method_type": "case_study_synthesis",
+      "verbatim_quote": "Our understanding of just-in-time archaeology is informed by a decade of experience implementing the Field Acquired Information Management Systems (FAIMS) project, which has now deployed over sixty separate data-collection workflows at more than forty archaeological projects",
+      "page_number": 5,
+      "context": "Grounding analysis in empirical experience",
+      "purpose": "Use accumulated project experience as evidence base",
+      "inputs": "faims_project_implementation_records",
+      "outputs": "patterns_and_problems_in_archaeological_practice",
+      "assumptions": "FAIMS experience is representative of broader archaeological practice"
+    },
+    {
+      "id": "M006",
+      "content": "Theoretical framework method adapting economic concept of 'under-investment in a public good' to analyse archaeological research design decisions",
+      "method_type": "theoretical_framework",
+      "verbatim_quote": "These circumstances lead archaeologists to under-invest in a public good in three ways",
+      "page_number": 6,
+      "context": "Applying economic framework to archaeological practice",
+      "purpose": "Explain systematic patterns in archaeologists' planning behaviour",
+      "inputs": "public_goods_theory",
+      "outputs": "three_types_of_underinvestment_classification",
+      "assumptions": "Archaeological research design functions as a public good"
+    },
+    {
+      "id": "M007_consolidated",
+      "content": "Methodological taxonomy characterising archaeology as incorporating deductive, inductive, and abductive modes of inference. Abductive inference\u2014'inference to the best explanation'\u2014involves generation, selection, and evaluation of candidate hypotheses based on explanatory power, and plays a central role in archaeological reasoning though seldom explicitly acknowledged",
+      "method_type": "conceptual_framework",
+      "verbatim_quote": "Archaeological research in fact features all three modes of inference: deductive, inductive, and abductive",
+      "page_number": [
+        7
+      ],
+      "context": "Characterising archaeological reasoning diversity",
+      "purpose": "Map the full range of inferential approaches in archaeology",
+      "inputs": "archaeological_research_examples",
+      "outputs": "three_part_methodological_classification",
+      "assumptions": "Archaeological methods can be meaningfully classified by inferential mode",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "M007",
+          "M008"
+        ],
+        "consolidation_rationale": "M008 provides definitional detail for abduction, which is one component of M007's three-part taxonomy. Consolidating to avoid fragmenting the inferential taxonomy",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "M009",
+      "content": "Methodological diversity framework characterising archaeological approaches along multiple axes: quantitative/qualitative, idiographic/nomothetic, inductive/deductive/abductive",
+      "method_type": "conceptual_framework",
+      "verbatim_quote": "Archaeological research is conducted along a quantitative\u2013qualitative continuum and along an idiographic\u2013nomothetic continuum, as well as featuring the three kinds of inference we have discussed",
+      "page_number": 8,
+      "context": "Comprehensive mapping of methodological diversity",
+      "purpose": "Capture full complexity of archaeological method space",
+      "inputs": "methodological_literature_and_practice_examples",
+      "outputs": "multi_axis_methodological_classification",
+      "assumptions": "Methodological diversity can be mapped along multiple independent dimensions"
+    },
+    {
+      "id": "M010",
+      "content": "Database search method querying Open Science Framework (OSF) for archaeology projects and filtering for registrations to identify preregistration adoption",
+      "method_type": "database_search",
+      "verbatim_quote": "A search for projects classified as 'archaeology' on OSF yields 304,904 results. Filtering this list for registrations yields just four",
+      "page_number": 9,
+      "context": "Quantifying preregistration adoption in archaeology",
+      "purpose": "Establish baseline for archaeological preregistration practice",
+      "inputs": "osf_database_archaeology_category",
+      "outputs": "count_of_archaeological_registrations",
+      "assumptions": "OSF captures representative sample of open science archaeology"
+    },
+    {
+      "id": "M011",
+      "content": "Content analysis method examining existing OSF registrations to classify whether they are prospective preregistrations or retrospective data deposits",
+      "method_type": "qualitative_content_analysis",
+      "verbatim_quote": "examination shows that none of them are preregistrations in the sense we have described. Rather, they are registrations of projects already underway, or in some cases already complete",
+      "page_number": 9,
+      "context": "Assessing quality and type of existing registrations",
+      "purpose": "Distinguish preregistration from other registration types",
+      "inputs": "osf_registration_content",
+      "outputs": "classification_as_preregistration_or_data_deposit",
+      "assumptions": "Timing and content reveal whether registration is prospective"
+    },
+    {
+      "id": "M012",
+      "content": "Metadata completeness assessment method evaluating whether registrations include all recommended fields (title, authors, keywords, abstract, research questions, data collection plan, analysis plan, other)",
+      "method_type": "metadata_quality_assessment",
+      "verbatim_quote": "The 'prereg challenge' template used by Selden asks for a title, list of authors and their affiliations, a list of keywords, an abstract, and then asks users to describe the research questions, data collection plan, analysis plan, and 'other'",
+      "page_number": 9,
+      "context": "Evaluating registration metadata quality",
+      "purpose": "Assess completeness of archaeological registration metadata",
+      "inputs": "registration_template_fields_and_actual_content",
+      "outputs": "metadata_completeness_score",
+      "assumptions": "Template fields represent minimum metadata requirements"
+    },
+    {
+      "id": "M013_consolidated",
+      "content": "Template evaluation method comparing OSF's qualitative preregistration template structure and fields to assess suitability for archaeological adaptation. Evaluation criteria (how 'closer to' determined, what makes qualitative template better fit) not fully documented, limiting replicability of assessment",
+      "method_type": "template_assessment",
+      "verbatim_quote": "The OSF offers several templates... The qualitative preregistration template is closer to the kinds of questions that most archaeologists would ask",
+      "page_number": [
+        10
+      ],
+      "context": "Identifying appropriate preregistration template for archaeology",
+      "purpose": "Match template structure to archaeological research characteristics",
+      "inputs": "osf_template_structures_and_archaeological_practice",
+      "outputs": "template_suitability_assessment",
+      "assumptions": "Existing templates can be adapted for archaeology",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "M013",
+          "M020_implicit"
+        ],
+        "consolidation_rationale": "M020_implicit describes the same template evaluation method but highlights that assessment criteria were not documented. Consolidating to present complete picture of method's transparency level",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "M014",
+      "content": "Analogical reasoning method drawing parallels between archaeological small data problems and Ocean Health Index environmental science challenges",
+      "method_type": "analogical_analysis",
+      "verbatim_quote": "In a review of the development of the Ocean Health Index, environmental scientists Lowndes et al. [90] describe research conditions that closely parallel the circumstances in which most archaeologists work",
+      "page_number": 11,
+      "context": "Using cross-disciplinary comparison to validate problem diagnosis",
+      "purpose": "Demonstrate that archaeological challenges are not unique",
+      "inputs": "ocean_health_index_case_study_and_archaeological_practice",
+      "outputs": "parallel_problem_identification",
+      "assumptions": "Environmental science and archaeology face comparable small data challenges"
+    },
+    {
+      "id": "M015",
+      "content": "Conceptual framework method defining 'slow archaeology' as deliberate, thoughtful research design planning in contrast to just-in-time approaches",
+      "method_type": "conceptual_framework",
+      "verbatim_quote": "We invoke the idea of 'slow archaeology'... The slow movement began with slow food... slow archaeology emphasises the benefits \u2013 social as well as scientific \u2013 of doing archaeology carefully and thoughtfully",
+      "page_number": 12,
+      "context": "Positioning preregistration within broader methodological movement",
+      "purpose": "Connect preregistration to existing slow science/slow archaeology discourse",
+      "inputs": "slow_movement_literature_and_archaeological_practice",
+      "outputs": "slow_archaeology_conceptual_framework",
+      "assumptions": "Slow movement principles are applicable to archaeological research design"
+    },
+    {
+      "id": "M016_implicit",
+      "content": "Literature scoping method identifying relevant preregistration literature across multiple disciplines (biomedical research, psychology, ecology, archaeology) to establish knowledge base",
+      "method_type": "scoping_review",
+      "method_status": "implicit",
+      "trigger_text": [
+        "Preregistration arose as a means to improve the quality, replicability, and credibility of biomedical research... Its use has since been extended to psychology, ecology and evolutionary biology, and is gaining traction in other fields including political science and economics",
+        "The so-called 'reproducibility crisis' \u2013 a variety of interrelated problems that undermine confidence in scientific findings \u2013 has now been documented in fields ranging from economics to medicine"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Introduction",
+          "subsection": null,
+          "paragraph": 1
+        },
+        {
+          "section": "Introduction",
+          "subsection": null,
+          "paragraph": 2
+        }
+      ],
+      "inference_reasoning": "Paper synthesises preregistration literature across multiple disciplines, implying search and selection process, but search strategy not documented. No mention of: databases searched, search terms, inclusion/exclusion criteria, time period. Cross-disciplinary scope implies systematic scoping but method undocumented.",
+      "implicit_metadata": {
+        "implicitness_basis": "search_strategy_undocumented",
+        "assessment_implication": "Affects comprehensiveness\u2014systematic search would capture more/different literature than informal/selective approach. Replicability impossible without documented strategy."
+      },
+      "location": {
+        "section": "Introduction",
+        "subsection": null,
+        "paragraph": null
+      },
+      "purpose": "Identify relevant preregistration literature for synthesis",
+      "inputs": "multidisciplinary_academic_literature",
+      "outputs": "curated_reference_set",
+      "assumptions": "Literature identified is representative of preregistration discourse"
+    },
+    {
+      "id": "M017_implicit",
+      "content": "Argument construction method structuring methodological case by moving from problem diagnosis (just-in-time archaeology) through suitability demonstration to practical implementation",
+      "method_type": "rhetorical_structure",
+      "method_status": "implicit",
+      "trigger_text": [
+        "This paper introduces the concept and practice of preregistration to archaeology",
+        "We begin by introducing the distinction between predictive and postdictive inquiry...",
+        "We then explain the suitability of preregistration for archaeology...",
+        "We then provide practical guidance for archaeologists..."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Introduction",
+          "subsection": null,
+          "paragraph": 1
+        },
+        {
+          "section": "Introduction",
+          "subsection": null,
+          "paragraph": 2
+        }
+      ],
+      "inference_reasoning": "Paper follows structured argumentation pattern (problem\u2192suitability\u2192implementation) signposted in introduction, but rationale for this specific structure not explained. Why this sequence rather than implementation\u2192problems\u2192solutions? Structure implies pedagogical/persuasive method but design choice undocumented.",
+      "implicit_metadata": {
+        "implicitness_basis": "argumentative_strategy_undocumented",
+        "assessment_implication": "Affects persuasiveness\u2014different argument structures might be more/less effective for archaeological audience. Transparency about rhetorical choices would strengthen methodological contribution."
+      },
+      "location": {
+        "section": "Introduction",
+        "subsection": null,
+        "paragraph": null
+      },
+      "purpose": "Construct persuasive methodological argument",
+      "inputs": "evidence_and_conceptual_framework",
+      "outputs": "structured_methodological_case",
+      "assumptions": "Problem-first structure is effective for archaeological audience"
+    },
+    {
+      "id": "M018_implicit",
+      "content": "Typology construction method classifying archaeologists' under-investment into three types (imprecise documentation, implicit knowledge, late development) based on FAIMS project experience",
+      "method_type": "classification_framework",
+      "method_status": "implicit",
+      "trigger_text": [
+        "Our understanding of just-in-time archaeology is informed by a decade of experience implementing the Field Acquired Information Management Systems (FAIMS) project",
+        "These circumstances lead archaeologists to under-invest in a public good in three ways. First, they under-invest in producing precise documentation... Second, they under-invest in making implicit knowledge explicit... Third, they under-invest in developing data structures"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Section 2",
+          "subsection": "Just-in-Time Archaeology",
+          "paragraph": null
+        }
+      ],
+      "inference_reasoning": "Paper presents three-way classification of under-investment types but doesn't explain how this typology was derived. FAIMS experience mentioned as basis but analytical process not documented: How did 60+ workflows yield exactly three categories? Inductive thematic analysis? Deductive framework application? Classification method implicit.",
+      "implicit_metadata": {
+        "implicitness_basis": "classification_derivation_undocumented",
+        "assessment_implication": "Affects validity\u2014different analytical approaches might yield different typologies. Completeness uncertain: are there other under-investment types not captured by three-way classification?"
+      },
+      "location": {
+        "section": "Section 2",
+        "subsection": "Just-in-Time Archaeology",
+        "paragraph": null
+      },
+      "purpose": "Systematically classify patterns in archaeological practice",
+      "inputs": "faims_project_observations",
+      "outputs": "three_type_classification_framework",
+      "assumptions": "Three types are exhaustive and mutually exclusive"
+    },
+    {
+      "id": "M019_implicit",
+      "content": "Historical synthesis method characterising evolution of archaeological planning from 1970s processual ideals to contemporary just-in-time approaches based on literature review",
+      "method_type": "historical_synthesis",
+      "method_status": "implicit",
+      "trigger_text": [
+        "In the 1970s, processual archaeologists like Hole and Heizer [58] and French [25] promoted 'research design' as an explicit plan formulated in advance of fieldwork",
+        "By the mid-1980s this ideal had largely been abandoned in favour of ad hoc planning"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Section 2",
+          "subsection": "Just-in-Time Archaeology",
+          "paragraph": null
+        }
+      ],
+      "inference_reasoning": "Paper traces historical shift in archaeological practice (1970s processual\u2192mid-1980s abandonment\u2192contemporary just-in-time) but synthesis method not documented. How did authors determine 'mid-1980s' timing? What evidence for 'largely abandoned'? Literature analysis method implicit.",
+      "implicit_metadata": {
+        "implicitness_basis": "synthesis_method_undocumented",
+        "assessment_implication": "Affects historical claim credibility\u2014timing and characterisation depend on source selection and interpretation criteria. Different scholars might date transitions differently based on different evidence."
+      },
+      "location": {
+        "section": "Section 2",
+        "subsection": "Just-in-Time Archaeology",
+        "paragraph": null
+      },
+      "purpose": "Document historical change in archaeological methodology",
+      "inputs": "archaeological_methodology_literature",
+      "outputs": "periodised_historical_narrative",
+      "assumptions": "Selected literature represents broader disciplinary trends"
+    }
+  ],
+  "protocols": [
+    {
+      "id": "P001",
+      "content": "Protocol for distinguishing prediction from postdiction: assess whether hypotheses/questions were formulated before or after seeing the evidence",
+      "protocol_type": "classification_procedure",
+      "verbatim_quote": "'Predictive' inquiry (from prediction, a priori hypothesis generation) allows a researcher to announce the exact questions they plan to ask prior to asking them. 'Postdictive' inquiry (from postdiction, post hoc interpretation) is characterised by asking questions in response to seeing the evidence.",
+      "page_number": 3,
+      "context": "Defining how to classify types of inquiry",
+      "procedure_steps": [
+        "Determine timing of hypothesis formulation relative to data observation",
+        "Classify as predictive if formulated before seeing evidence",
+        "Classify as postdictive if formulated after seeing evidence"
+      ],
+      "inputs": "research_hypothesis_and_timeline",
+      "outputs": "classification_as_predictive_or_postdictive",
+      "quality_control": "temporal_priority_verification"
+    },
+    {
+      "id": "P002",
+      "content": "Protocol for identifying HARKing (Hypothesizing After Results are Known): check whether researchers present post hoc hypotheses as if they were a priori predictions",
+      "protocol_type": "detection_procedure",
+      "verbatim_quote": "In HARKing (Hypothesising After the Results are Known), a researcher generates a hypothesis or research question after seeing the data, but reports it as if it had been predicted in advance.",
+      "page_number": 4,
+      "context": "Defining questionable research practice",
+      "procedure_steps": [
+        "Identify hypotheses presented in research report",
+        "Determine actual timing of hypothesis formulation",
+        "Compare presented timing to actual timing",
+        "Flag discrepancies as potential HARKing"
+      ],
+      "inputs": "research_reports_and_methodology_descriptions",
+      "outputs": "harking_detection_classification",
+      "quality_control": "temporal_documentation_review"
+    },
+    {
+      "id": "P003",
+      "content": "Protocol for identifying just-in-time archaeology: check whether critical research design decisions (what to record, how to record) are made during field operations rather than in advance",
+      "protocol_type": "classification_procedure",
+      "verbatim_quote": "we call this widespread approach 'just-in-time' archaeology, to evoke the practice of deferring important decisions \u2013 including what to record and how to record it \u2013 until data collection is underway",
+      "page_number": 5,
+      "context": "Operationalising just-in-time concept",
+      "procedure_steps": [
+        "Identify timing of critical research design decisions",
+        "Determine whether decisions made before or during data collection",
+        "Classify as just-in-time if decisions deferred to field operations"
+      ],
+      "inputs": "project_planning_documentation_and_fieldwork_records",
+      "outputs": "classification_as_just_in_time_or_planned_in_advance",
+      "quality_control": "temporal_documentation_of_decision_points"
+    },
+    {
+      "id": "P004",
+      "content": "Protocol for classifying types of archaeologist under-investment: categorise whether under-investment involves imprecise documentation, implicit knowledge, or late development of data structures",
+      "protocol_type": "classification_procedure",
+      "verbatim_quote": "These circumstances lead archaeologists to under-invest in a public good in three ways. First, they under-invest in producing precise documentation... Second, they under-invest in making implicit knowledge explicit... Third, they under-invest in developing data structures",
+      "page_number": 6,
+      "context": "Three-way classification of under-investment types",
+      "procedure_steps": [
+        "Examine archaeological project planning and documentation",
+        "Identify instances of under-investment in research design",
+        "Classify as Type 1 (imprecise documentation), Type 2 (implicit knowledge), or Type 3 (late development)"
+      ],
+      "inputs": "project_documentation_and_data_structures",
+      "outputs": "classified_under_investment_types",
+      "quality_control": "comparison_to_ideal_processual_standards"
+    },
+    {
+      "id": "P005",
+      "content": "Protocol for applying preregistration to abductive research: articulate in advance what candidate hypotheses will be generated, how they will be selected, and how they will be evaluated for explanatory power",
+      "protocol_type": "methodological_procedure",
+      "verbatim_quote": "Abductive inference \u2013 so-called 'inference to the best explanation' \u2013 involves the generation, selection, and evaluation of candidate hypotheses based on their explanatory power... Although the actual hypotheses cannot be predicted (otherwise it would not be a postdictive form of inquiry), the criteria of selection and evaluation can be articulated in advance",
+      "page_number": 7,
+      "context": "Adapting preregistration to abductive inquiry",
+      "procedure_steps": [
+        "Identify that research will use abductive inference",
+        "Specify criteria for hypothesis generation",
+        "Specify criteria for hypothesis selection",
+        "Specify criteria for evaluating explanatory power",
+        "Register criteria in advance (not actual hypotheses)"
+      ],
+      "inputs": "research_objectives_and_inferential_approach",
+      "outputs": "preregistered_abductive_framework",
+      "quality_control": "verification_of_criterion_articulation"
+    },
+    {
+      "id": "P006_consolidated",
+      "content": "Protocol for preregistering research across methodological diversity continuum: articulate chosen position on quantitative-qualitative and idiographic-nomothetic axes, specify inferential mode (deductive/inductive/abductive), and adapt OSF qualitative template to archaeological contexts by documenting theoretical tradition, approach, hypotheses/expectations, data collection plans (what to record, how to record), workflows, and data models",
+      "protocol_type": "methodological_procedure",
+      "verbatim_quote": "Preregistration does not privilege any particular approach. Rather, it demands that researchers articulate the approach they have chosen... diversity of approaches makes it all the more important to articulate which approach is being taken",
+      "page_number": [
+        8,
+        11
+      ],
+      "context": "Applying preregistration across methodological diversity",
+      "procedure_steps": [
+        "Identify position on quantitative-qualitative continuum",
+        "Identify position on idiographic-nomothetic continuum",
+        "Identify primary inferential mode (deductive/inductive/abductive)",
+        "Articulate chosen approach in registration",
+        "Specify how approach affects research design",
+        "Specify theoretical tradition and approach",
+        "Indicate methodology position (qualitative/quantitative, deductive/inductive/abductive, idiographic/nomothetic)",
+        "State hypotheses or expectations",
+        "Describe data collection plans (what to record, how to record)",
+        "Document workflows",
+        "Describe data models",
+        "Register before fieldwork begins"
+      ],
+      "inputs": "research_design_and_methodological_choices",
+      "outputs": "explicit_methodological_positioning_statement",
+      "quality_control": "completeness_of_methodological_articulation",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P006",
+          "P010"
+        ],
+        "consolidation_rationale": "P010 provides specific implementation of P006's general principles via OSF template adaptation. Consolidating as P010 operationalises P006",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "P007_consolidated",
+      "content": "Protocol for searching OSF for archaeological preregistrations: search for projects classified as 'archaeology', filter for registrations, manually review to classify type. Full search protocol partially documented (search term, filters stated; search date, false positive review procedures not stated), limiting exact replicability",
+      "protocol_type": "search_procedure",
+      "verbatim_quote": "A search for projects classified as 'archaeology' on OSF yields 304,904 results. Filtering this list for registrations yields just four",
+      "page_number": [
+        9
+      ],
+      "context": "Systematic search for existing practice",
+      "procedure_steps": [
+        "Search OSF for projects with 'archaeology' classification",
+        "Filter search results to show only registrations",
+        "Review each registration to determine type (prospective vs retrospective)",
+        "Count and classify results",
+        "Access OSF search interface",
+        "Enter 'archaeology' classification",
+        "Apply registration filter",
+        "Review and count results",
+        "Document search date"
+      ],
+      "inputs": "osf_search_interface",
+      "outputs": "list_of_archaeological_registrations",
+      "quality_control": "manual_review_of_all_results",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P007",
+          "P016_implicit"
+        ],
+        "consolidation_rationale": "P016_implicit highlights that P007's search protocol was only partially documented. Consolidating to present complete transparency picture",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "P008_consolidated",
+      "content": "Protocol for creating archaeological preregistration on OSF: create project, select appropriate template (recommend qualitative template), complete required template fields (study information, research questions, hypotheses, data collection methods, analysis plan), submit registration before data collection, and link to eventual data deposit",
+      "protocol_type": "registration_procedure",
+      "verbatim_quote": "Archaeologists could, right now, use OSF to create preregistrations. The OSF offers several templates... we recommend the qualitative preregistration template as an interim measure",
+      "page_number": [
+        10
+      ],
+      "context": "Practical implementation guidance",
+      "procedure_steps": [
+        "Create new project on Open Science Framework",
+        "Select preregistration template (recommend qualitative template)",
+        "Complete required template fields",
+        "Submit registration before data collection",
+        "Link to eventual data deposit",
+        "Provide study information (title, authors, description, hypotheses)",
+        "Articulate research questions",
+        "Indicate whether hypothesis testing involved",
+        "Specify dependent and independent variables if applicable",
+        "Indicate whether replication study",
+        "Describe data collection procedure",
+        "Describe analysis plan",
+        "Add other relevant information"
+      ],
+      "inputs": "research_design_and_osf_account",
+      "outputs": "timestamped_preregistration",
+      "quality_control": "osf_timestamp_verification",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P008",
+          "P009"
+        ],
+        "consolidation_rationale": "P008 and P009 form a sequential process: P008 describes creating registration, P009 describes completing the template. Consolidating as single end-to-end registration creation protocol",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "P011_consolidated",
+      "content": "Protocol for meeting Transparency and Openness Promotion (TOP) Guidelines Level 2 via preregistration: register research plan before data collection, obtain timestamped registration, report existence and location in manuscript, report all deviations, request TOP Level 2 badge. Adaptation of TOP criteria from experimental sciences to archaeological contexts (observational, excavation, survey, mixed methods) not fully documented, requiring archaeologists to interpret general criteria for their specific research types",
+      "protocol_type": "compliance_procedure",
+      "verbatim_quote": "journals adhering to these [TOP] guidelines would award a badge to papers that report the existence and location of a registration, helping archaeologists to meet Level 2",
+      "page_number": [
+        11
+      ],
+      "context": "Linking preregistration to publication standards",
+      "procedure_steps": [
+        "Create and complete preregistration before data collection",
+        "Obtain timestamped registration from repository (e.g., OSF)",
+        "Report registration existence and location in manuscript",
+        "Report all deviations from registered plan",
+        "Request TOP Level 2 badge during submission",
+        "Review TOP Level 2 criteria",
+        "Identify archaeological research types",
+        "Interpret criteria for each type",
+        "Document compliance pathway",
+        "Identify adaptation challenges"
+      ],
+      "inputs": "preregistration_and_manuscript",
+      "outputs": "top_level_2_compliant_publication",
+      "quality_control": "journal_badge_verification",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P011",
+          "P017_implicit"
+        ],
+        "consolidation_rationale": "P017_implicit highlights that TOP criteria adaptation to archaeology was not documented. Consolidating to present complete compliance pathway with transparency caveat",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "P012_consolidated",
+      "content": "Protocol for implementing 'slow archaeology' approach with 'built-in' rather than 'bolt-on' best practices: allocate dedicated time for research design planning, develop comprehensive documentation before fieldwork, integrate best practices into initial research design (not retrofitted after data collection), engage collaborators in design process, prioritise quality of planning over speed of execution, and use preregistration to formalise slow, integrated approach",
+      "protocol_type": "methodological_procedure",
+      "verbatim_quote": "slow archaeology emphasises the benefits \u2013 social as well as scientific \u2013 of doing archaeology carefully and thoughtfully... Preregistration fosters a 'slow', rather than 'just-in-time', approach to research design",
+      "page_number": [
+        12
+      ],
+      "context": "Operationalising slow archaeology principles",
+      "procedure_steps": [
+        "Allocate dedicated time for research design planning",
+        "Develop comprehensive documentation before fieldwork",
+        "Engage collaborators in design process",
+        "Prioritise quality of planning over speed of execution",
+        "Use preregistration to formalise slow approach",
+        "Identify best practices relevant to research domain",
+        "Incorporate best practices into initial research design",
+        "Document integration in preregistration",
+        "Avoid retrofitting practices after data collection",
+        "Design infrastructure to support integrated practices"
+      ],
+      "inputs": "research_planning_timeline_and_team",
+      "outputs": "slow_archaeology_research_design",
+      "quality_control": "peer_review_of_design_before_fieldwork",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P012",
+          "P013"
+        ],
+        "consolidation_rationale": "P012 and P013 are parallel formulations of the same principle: P012 frames as 'slow vs just-in-time', P013 frames as 'built-in vs bolt-on'. Consolidating as unified good practice implementation protocol",
+        "original_count": 2
+      }
+    },
+    {
+      "id": "P014_implicit",
+      "content": "Protocol for evaluating whether existing OSF archaeology registrations are prospective preregistrations or retrospective deposits: review registration content and timing to classify type",
+      "protocol_type": "classification_procedure",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "examination shows that none of them are preregistrations in the sense we have described. Rather, they are registrations of projects already underway, or in some cases already complete"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Section 4",
+          "subsection": "Introducing Preregistration to Archaeological Practice",
+          "paragraph": null
+        }
+      ],
+      "inference_reasoning": "Paper classifies four OSF registrations as non-preregistrations but classification procedure not documented. What criteria distinguished prospective from retrospective? How was project timing determined? Manual review implied but protocol not described.",
+      "implicit_metadata": {
+        "implicitness_basis": "classification_procedure_undocumented",
+        "assessment_implication": "Affects classification reliability\u2014different reviewers might classify same registrations differently without explicit criteria. Reproducibility limited."
+      },
+      "location": {
+        "section": "Section 4",
+        "subsection": "Introducing Preregistration to Archaeological Practice",
+        "paragraph": null
+      },
+      "procedure_steps": [
+        "Review registration content",
+        "Determine project timing",
+        "Classify as prospective or retrospective",
+        "Document rationale"
+      ],
+      "inputs": "osf_registration_metadata_and_content",
+      "outputs": "prospective_vs_retrospective_classification",
+      "quality_control": "undocumented"
+    },
+    {
+      "id": "P015_implicit",
+      "content": "Protocol for assessing metadata completeness in Selden's OSF registration: compare actual fields completed against template requirements to identify omissions",
+      "protocol_type": "metadata_quality_assessment",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "Only Selden fills out most of the suggested fields, but even this relatively complete registration leaves several of the template fields blank, and does not fill in key details"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Section 4",
+          "subsection": "Introducing Preregistration to Archaeological Practice",
+          "paragraph": null
+        }
+      ],
+      "inference_reasoning": "Paper evaluates Selden registration as incomplete but assessment protocol not documented. What constitutes 'most fields'? What are 'key details'? Which fields were blank? Completeness assessment implies comparison protocol but procedure undocumented.",
+      "implicit_metadata": {
+        "implicitness_basis": "assessment_criteria_undocumented",
+        "assessment_implication": "Affects completeness evaluation credibility\u2014what seems incomplete to authors might seem adequate to others. Explicit criteria would strengthen assessment."
+      },
+      "location": {
+        "section": "Section 4",
+        "subsection": "Introducing Preregistration to Archaeological Practice",
+        "paragraph": null
+      },
+      "procedure_steps": [
+        "Identify template required fields",
+        "Review registration content",
+        "Identify blank fields",
+        "Assess detail adequacy",
+        "Document completeness gaps"
+      ],
+      "inputs": "registration_content_and_template_structure",
+      "outputs": "completeness_assessment",
+      "quality_control": "undocumented"
+    },
+    {
+      "id": "P018_implicit",
+      "content": "Protocol for determining registration content priorities for archaeology: identify which elements (theoretical tradition, approach, hypotheses, data collection plans, workflows, data models) are most important given archaeological challenges",
+      "protocol_type": "prioritisation_procedure",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "a registration might include theoretical tradition, approach (qualitative, quantitative, deductive, inductive, abductive, idiographic, nomothetic), stated hypotheses or expectations, data collection plans (including what will be recorded, and in what ways), workflows, and data models",
+        "Priority areas should be theoretical approach and hypotheses (to combat biases like HARKing) and data models and workflows (to overcome just-in-time archaeology)"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Section 4",
+          "subsection": "Introducing Preregistration to Archaeological Practice",
+          "paragraph": null
+        }
+      ],
+      "inference_reasoning": "Paper identifies priorities (approach/hypotheses to combat bias, models/workflows to overcome just-in-time) but prioritisation method not documented. How were these selected as priorities over other elements? Cost-benefit analysis? Problem-solution mapping? Prioritisation logic implied but procedure undocumented.",
+      "implicit_metadata": {
+        "implicitness_basis": "prioritisation_rationale_partially_documented",
+        "assessment_implication": "Affects recommendation uptake\u2014different archaeological contexts might benefit from different priorities. Explicit prioritisation framework would help researchers adapt to their circumstances."
+      },
+      "location": {
+        "section": "Section 4",
+        "subsection": "Introducing Preregistration to Archaeological Practice",
+        "paragraph": null
+      },
+      "procedure_steps": [
+        "List possible registration elements",
+        "Identify archaeological problems",
+        "Map elements to problems",
+        "Prioritise elements addressing most critical problems",
+        "Document rationale"
+      ],
+      "inputs": "registration_template_elements_and_archaeological_challenges",
+      "outputs": "prioritised_registration_content_recommendations",
+      "quality_control": "problem_solution_alignment"
+    }
+  ],
+  "extraction_notes": {
+    "pass": 1,
+    "section_extracted": "ALL SECTIONS: Groups 1-5 complete, pages 2-13 (full paper excluding references)",
+    "extraction_strategy": "Section 5: Liberal extraction focusing on: (1) Ocean Health Index case study evidence, (2) slow archaeology theoretical framing, (3) concluding synthesis claims about preregistration value, (4) implicit assumptions about craft vs efficiency, flexibility vs accountability, and research goals. PASS 1 COMPLETE - All 5 section groups extracted liberally. Total ~7000 words extracted.",
+    "known_uncertainties": [
+      "Oceanography analogy (IA022) may need more critical examination",
+      "Slow archaeology framing (C102-C105, IA023-IA025) introduces values that may tension with earlier pragmatism",
+      "Final paragraph emphasis on grand challenges (C112, IA026) may contradict earlier accommodation of idiographic research",
+      "Pass 2 rationalization should examine whether slow archaeology section truly integrates or merely adds another justification"
+    ],
+    "section_word_count_estimate": 7000,
+    "pass1_complete": true,
+    "total_sections": 5,
+    "pass2_complete": true,
+    "pass2_consolidation_summary": {
+      "claims_before": 113,
+      "claims_after": 99,
+      "claims_reduced": 14,
+      "reduction_percentage": 12.4,
+      "evidence_unchanged": 15,
+      "implicit_arguments_unchanged": 26,
+      "total_items_after_pass2": 140,
+      "consolidation_groups": 13,
+      "target_achieved": "14-24 items"
+    },
+    "pass3_rdmap_section1": {
+      "section": "Introduction + Predictive/Postdictive Inquiry (pages 2-4)",
+      "research_designs": 2,
+      "methods": 3,
+      "protocols": 2
+    },
+    "pass3_rdmap_section2": {
+      "section": "Just-in-Time Archaeology (pages 5-6)",
+      "research_designs": 1,
+      "methods": 3,
+      "protocols": 2
+    },
+    "pass3_rdmap_section3": {
+      "section": "Suitability for Archaeology (pages 7-8)",
+      "research_designs": 0,
+      "methods": 3,
+      "protocols": 2
+    },
+    "pass3_rdmap_section4": {
+      "section": "Introducing to Practice (pages 8-11)",
+      "research_designs": 1,
+      "methods": 4,
+      "protocols": 5
+    },
+    "pass3_rdmap_section5": {
+      "section": "Slow Archaeology + Conclusions (pages 11-13)",
+      "research_designs": 0,
+      "methods": 2,
+      "protocols": 2
+    },
+    "pass3_complete": true,
+    "pass4_implicit_rdmap": {
+      "implicit_research_designs": 1,
+      "implicit_methods": 5,
+      "implicit_protocols": 5,
+      "total_implicit_rdmap": 11,
+      "implicit_percentage": 25.6
+    },
+    "pass5_rdmap_rationalization": {
+      "research_designs_before": 5,
+      "methods_before": 20,
+      "protocols_before": 18,
+      "rdmap_before": 43,
+      "research_designs_after": 5,
+      "methods_after": 18,
+      "protocols_after": 13,
+      "rdmap_after": 36,
+      "rdmap_reduced": 7,
+      "reduction_percentage": 16.3,
+      "consolidation_groups": 7,
+      "target_achieved": "6-9 items"
+    },
+    "pass6_validation": {
+      "validation_status": "PASS",
+      "critical_issues": 0,
+      "warnings": 0,
+      "broken_references_found": 0,
+      "references_repaired": 0,
+      "checks_performed": [
+        "explicit_items_have_verbatim_quote",
+        "implicit_items_have_trigger_text_and_reasoning",
+        "cross_reference_integrity",
+        "no_duplicate_ids"
+      ]
+    }
+  }
+}

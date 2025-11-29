@@ -3,116 +3,93 @@
 This folder contains **active planning documents** for the LLM-based research extraction and assessment project.
 
 **Project Status:**
-✅ **Phase 1 Complete**: Extraction system development (v2.0 → v2.5)
-📋 **Phase 2 Upcoming**: Assessment framework development
+✅ **Phase 1 Complete**: Extraction system development (v2.0 → v2.6)
+🚧 **Phase 2 In Progress**: Assessment framework development
 
 ---
 
 ## Active Planning Documents
 
-These documents guide ongoing and future work:
+### Master Plan
 
-### [CWTS Implementation Plan](cwts_implementation_plan.md)
-**Status:** Phase 1 complete, Phases 2-3 upcoming
-**Scope:** 6-month fellowship plan (Sept 2025 - Feb 2026)
-**Focus:** LLM-based credibility assessment for humanities and social sciences
+#### [credibility-implementation-plan-v2.0.md](credibility-implementation-plan-v2.0.md)
+**Status:** Active master plan
+**Focus:** Complete credibility assessment framework
 
-**Phases:**
-- ✅ **Phase 1** (Months 1-2): Extraction prototype → **COMPLETE**
-- 📋 **Phase 2** (Months 3-4): Assessment framework development → **UPCOMING**
-- 📋 **Phase 3** (Months 5-6): Validation and scaling → **UPCOMING**
+This is the current authoritative plan, covering:
+- Three Pillars Framework (Transparency → Credibility → Reproducibility)
+- repliCATS Seven Signals adaptation for HASS
+- Cluster-based assessment architecture
+- Quality gating approach
+- Implementation roadmap
 
-This is the master plan for the project, including:
-- Strategic assets (local compute, domain expertise, repliCATS data access)
-- Three-layer architecture (extraction, assessment, infrastructure)
-- Validation approach and timeline
+### Active Working Documents
 
-### [Implementation Plan Supplement](implementation_plan_supplement.md)
-**Status:** Active guidance
-**Focus:** Strategic decisions and constraints
+#### [active-todo-list.md](active-todo-list.md)
+**Status:** Active
+**Focus:** Current tasks and priorities
 
-Key topics:
-- Copyright and access strategy (co-authored + OA papers)
-- Multilingual development pathway (English first, then expansion)
-- Community engagement plan (CAA-Australasia)
+#### [fair-vocabularies-development-plan.md](fair-vocabularies-development-plan.md)
+**Status:** Active
+**Focus:** Controlled vocabulary development for extraction and assessment
 
-### [Schema Improvement Plan](schema_improvement_plan.md)
-**Status:** Future work roadmap
-**Focus:** Formalization and ontology alignment
+### Fellowship Materials
 
-Planned enhancements:
-- Pragmatic iteration now, formalization later
-- Crosswalk documentation to existing ontologies
-- Empirically-driven taxonomy development
-- Domain-specific vocabulary expansion
-
-### [Preliminary Work](preliminary-work/)
-Historical context documents:
-- CWTS proposal
-- Initial claims extraction concepts
+#### [fellowship/](fellowship/)
+Original fellowship proposal and supporting documents:
+- `cwts_implementation_plan.md` - Original 6-month fellowship plan
+- `implementation_plan_supplement.md` - Strategic decisions
+- `README.md` - Fellowship overview
 
 ---
 
-## Archived Planning Documents
+## Documents to be Archived
 
-Completed planning from the extraction development phase has been archived:
+The following documents are superseded by `credibility-implementation-plan-v2.0.md` and will be archived:
 
-### v2.0-v2.1 Planning (Archived)
-- `quick_start_extraction_guide.md` → [archive/extraction-development/v2.0-v2.1/planning/](../archive/extraction-development/v2.0-v2.1/planning/)
-- `claims_extraction_project_plan.md` → [archive/extraction-development/v2.0-v2.1/planning/](../archive/extraction-development/v2.0-v2.1/planning/)
+- `assessment-implementation-plan.md` - Superseded by v2.0
+- `credibility-assessment-implementation-roadmap.md` - Superseded
+- `credibility-implementation-plan-detailed.md` - Superseded by v2.0
+- `corpus-interpretation-framework.md` - Integrated into main plan
+- `paper-credibility-analysis-framework.md` - Superseded
+- `research-approach-classification-framework.md` - Now in prompts
+- `extraction-assessment-rubric-v1.md` - Superseded
+- `extraction-metrics-guidance-analysis.md` - Historical analysis
+- `extraction-to-analysis-transition.md` - Completed transition
+- `pass6-phase1-testing-findings.md` - Completed testing
+- `pass6-software-documentation-enhancement.md` - Completed
+- `secondary-source-attribution-analysis.md` - Completed analysis
+- `synthesis-external-feedback.md` - Historical feedback
+- `gpt51-feedback/` - Historical feedback from other models
 
-### v2.2-v2.3 Planning (Archived)
-- `extraction_decisions_synopsis.md` → [archive/extraction-development/v2.2-v2.3/planning/](../archive/extraction-development/v2.2-v2.3/planning/)
-- `decisions_doc_update.md` → [archive/extraction-development/v2.2-v2.3/planning/](../archive/extraction-development/v2.2-v2.3/planning/)
+---
 
-### v2.4 Planning (Archived)
-- `rdmap_implementation_doc.md` → [archive/extraction-development/v2.4/planning/](../archive/extraction-development/v2.4/planning/)
-- `RDMAP-Prompt-Correction-Plan.md` → [archive/extraction-development/v2.4/planning/](../archive/extraction-development/v2.4/planning/)
+## Previous Phase Archives
+
+Completed planning from the extraction development phase:
+
+### v2.0-v2.5 Planning (Archived)
+See [archive/extraction-development/](../archive/extraction-development/) for:
+- Claims extraction project plans
+- RDMAP implementation documents
+- Schema evolution documentation
+- Version-specific planning
 
 See [archive/README.md](../archive/README.md) for complete development history.
 
 ---
 
-## How to Use These Documents
-
-### For Current Work
-Refer to active planning documents to understand:
-- Project goals and timeline
-- Strategic decisions already made
-- Constraints and opportunities
-- Next phase requirements
-
-### For Collaborators
-These documents provide:
-- Context for the overall project scope
-- Rationale for design decisions
-- Roadmap for future development
-- Connection to broader research goals
-
-### For Development History
-For understanding how we got here:
-- See archived planning documents in `archive/extraction-development/`
-- Each version folder contains planning decisions for that phase
-- Chronological progression shows iterative refinement
-
----
-
 ## Next Steps
 
-**Immediate** (completing Phase 1):
-- Additional testing on varied papers
-- Domain-specific vocabulary expansion
-- Documentation refinement
+**Current** (Phase 2 - Assessment):
+- Complete cluster prompts (Clusters 1-3) ✅
+- Quality gating refinement
+- Reliability testing on additional papers
+- Batch assessment tooling
 
-**Near-term** (Phase 2 start):
-- Assessment framework design
-- repliCATS adaptation for interpretive scholarship
-- Multi-model consensus approach for scoring
-
-**Future** (Phase 3+):
-- Batch processing infrastructure
-- Archaeological repository integration
-- FAIR4RS full compliance
+**Upcoming**:
+- Multi-paper corpus analysis
+- FAIR vocabulary finalisation
 - Community validation
 
 ---
@@ -121,9 +98,9 @@ For understanding how we got here:
 
 - [Main README](../README.md) - Project overview
 - [User Guide](../docs/user-guide/getting-started.md) - Using the extraction system
-- [Skill Documentation](../docs/skill-documentation/) - Technical details
+- [Research Assessor Guide](../docs/research-assessor-guide/) - Skill documentation
 - [Archive README](../archive/README.md) - Development history
 
 ---
 
-**Questions about planning?** See the CWTS Implementation Plan for the most comprehensive overview.
+**Questions about planning?** See the [credibility-implementation-plan-v2.0.md](credibility-implementation-plan-v2.0.md) for the most comprehensive overview.

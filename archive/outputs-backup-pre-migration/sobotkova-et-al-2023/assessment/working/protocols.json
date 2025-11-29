@@ -1,0 +1,475 @@
+[
+  {
+    "protocol_id": "P001",
+    "protocol_name": "FAIMS Mobile customisation via definition files",
+    "protocol_type": "system_configuration",
+    "protocol_status": "explicit",
+    "protocol_description": "Customisation process using FAIMS Mobile definition files to generate specific data capture application tailored for map digitisation workflow.",
+    "verbatim_quote": "FAIMS Mobile is a server-client platform that generates customised Android applications for data collection during offline field research. Customisation is accomplished via definition files that can be shared, modified, and redeployed. FAIMS Mobile interprets the definition files to generate a specific data capture application.",
+    "source_location": {
+      "section": "2. Approach",
+      "subsection": "2.3",
+      "page": 4,
+      "paragraph_range": "2"
+    },
+    "implements_methods": [
+      "M001"
+    ],
+    "procedure_steps": [
+      "Create definition files specifying data model and workflow",
+      "Configure definition files for map digitisation tasks",
+      "Deploy definition files to FAIMS Mobile platform",
+      "Generate Android application from definition files"
+    ],
+    "tools_used": [
+      "FAIMS Mobile platform",
+      "Definition files (XML/JSON configuration)"
+    ],
+    "parameters": {
+      "customisation_time_2017": "35 hours (student programmer) + 4 hours (staff)",
+      "customisation_time_2018": "1 hour (adding validation)"
+    },
+    "expected_information_missing": [
+      "Definition file format specification",
+      "Programming languages or skills required",
+      "Validation rules implementation method"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "protocol_id": "P002",
+    "protocol_name": "Historical map preprocessing and distribution protocol",
+    "protocol_type": "data_preparation",
+    "protocol_status": "explicit",
+    "protocol_description": "Preprocessing of georeferenced GeoTIFF maps including tiling, pyramid generation, compression, and distribution to mobile devices to optimize for offline use and multi-device deployment.",
+    "verbatim_quote": "Map preparation (tiling, adding pyramids) required about 1.5 h. Monitoring file compression, upload to the server, and download to devices took an additional 2.5 h.",
+    "source_location": {
+      "section": "3. Results",
+      "subsection": "3.1",
+      "page": 7,
+      "paragraph_range": "1"
+    },
+    "implements_methods": [
+      "M003"
+    ],
+    "procedure_steps": [
+      "Acquire georeferenced GeoTIFF maps",
+      "Generate map tiles",
+      "Add pyramid levels for multi-scale rendering",
+      "Compress preprocessed map files",
+      "Upload compressed files to FAIMS server",
+      "Download files to mobile devices",
+      "Monitor transfer completion"
+    ],
+    "tools_used": [
+      "GIS software for tiling and pyramid generation",
+      "File compression utility",
+      "FAIMS Mobile server"
+    ],
+    "parameters": {
+      "preprocessing_time_2017": "1.5 hours (42 maps)",
+      "preprocessing_time_2018": "0.5 hours (16 maps)",
+      "distribution_time_2017": "2.5 hours (42 maps)",
+      "distribution_time_2018": "1.5 hours (16 maps)",
+      "map_scale": "1:50,000",
+      "map_coverage_per_tile": "~400 sq km"
+    },
+    "expected_information_missing": [
+      "Tiling algorithm or tile size",
+      "Pyramid level specification",
+      "Software tools used for preprocessing",
+      "Compression settings or format",
+      "Compression ratio achieved",
+      "Network bandwidth available for distribution",
+      "File transfer protocol",
+      "Storage capacity per device"
+    ],
+    "consolidation_metadata": {
+      "consolidated_from": [
+        "P1_P002",
+        "P1_P003"
+      ],
+      "consolidation_type": "workflow_integration",
+      "information_preserved": "complete",
+      "rationale": "Map preprocessing and distribution are sequential steps in unified map preparation workflow. Would be assessed together as part of data preparation protocol. Combined to improve coherence while preserving all timing data and procedural steps."
+    },
+    "extraction_confidence": "medium"
+  },
+  {
+    "protocol_id": "P004",
+    "protocol_name": "Data synchronisation and export protocol",
+    "protocol_type": "data_management",
+    "protocol_status": "explicit",
+    "protocol_description": "Opportunistic synchronisation of data from multiple devices when network available, with server-based data validation, history tracking, and export in multiple formats.",
+    "verbatim_quote": "Data can be validated on devices at the time of capture, or on the server after synchronisation. The server can also be used to edit data, view data history, selectively revert data to earlier states, and export data in a variety of formats.",
+    "source_location": {
+      "section": "2. Approach",
+      "subsection": "2.3",
+      "page": 4,
+      "paragraph_range": "3"
+    },
+    "implements_methods": [
+      "M002"
+    ],
+    "procedure_steps": [
+      "Wait for network connectivity",
+      "Synchronise device data to server",
+      "Validate data on server",
+      "Merge data from multiple devices",
+      "Export consolidated data"
+    ],
+    "tools_used": [
+      "FAIMS Mobile server",
+      "FAIMS Mobile client applications"
+    ],
+    "expected_information_missing": [
+      "Synchronisation conflict resolution algorithm",
+      "Export format options",
+      "Validation rule specification",
+      "Data versioning strategy"
+    ],
+    "extraction_confidence": "medium"
+  },
+  {
+    "protocol_id": "P005",
+    "protocol_name": "On-device validation protocol",
+    "protocol_type": "quality_control",
+    "protocol_status": "explicit",
+    "protocol_description": "Real-time validation during data capture to ensure record completeness and prevent data omissions, implemented through validation rules in FAIMS Mobile.",
+    "verbatim_quote": "Before the 2018 season, we added validation addressing this problem, resulting in only 13 spatial errors and one attribute omission (0.52%).",
+    "source_location": {
+      "section": "3. Results",
+      "subsection": "3.5.1",
+      "page": 7,
+      "paragraph_range": "1"
+    },
+    "implements_methods": [
+      "M001"
+    ],
+    "procedure_steps": [
+      "Define validation rules for required fields",
+      "Implement validation in FAIMS Mobile customisation",
+      "Apply validation at time of data entry",
+      "Prevent record saving until validation passes"
+    ],
+    "parameters": {
+      "validation_target": "Latitude/Longitude field population from GPS",
+      "error_reduction": "2.3% (2017) to 0.52% (2018) spatial omissions"
+    },
+    "expected_information_missing": [
+      "Specific validation rule syntax",
+      "User feedback mechanism when validation fails",
+      "Override capability for staff users"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "protocol_id": "P006",
+    "protocol_name": "Streamlined UI implementation protocol",
+    "protocol_type": "interface_design",
+    "protocol_status": "explicit",
+    "protocol_description": "Implementation of simplified user interface focusing on three essential tasks (layer selection, shape digitisation, annotation) with automation and validation to improve data quality.",
+    "verbatim_quote": "Our approach sought to help novice users begin digitising quickly and then work productively for the duration of each field season with minimal support or frustration. As such, it stripped GIS functionality to its essentials, focusing on three tasks: layer selection, shape digitisation, and annotation, with validation and automation to improve data quality.",
+    "source_location": {
+      "section": "2. Approach",
+      "subsection": "2.2",
+      "page": 4,
+      "paragraph_range": "3"
+    },
+    "implements_methods": [
+      "M001"
+    ],
+    "procedure_steps": [
+      "Identify essential GIS tasks for map digitisation",
+      "Hide or eliminate non-essential GIS features",
+      "Implement map view for geospatial interactions",
+      "Implement form view for attribute entry",
+      "Add controlled vocabularies for attribute terms",
+      "Automate metadata capture (creation time, author)",
+      "Apply Material Design guidelines for usability"
+    ],
+    "tools_used": [
+      "FAIMS Mobile UI framework",
+      "Google Material Design guidelines"
+    ],
+    "expected_information_missing": [
+      "Specific UI controls exposed to users",
+      "Controlled vocabulary implementation",
+      "Metadata automation mechanism"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "protocol_id": "P007",
+    "protocol_name": "Quality assurance error-checking protocol",
+    "protocol_type": "quality_control",
+    "protocol_status": "explicit",
+    "protocol_description": "Manual review of randomly selected map tiles by project staff using desktop GIS to identify and tabulate digitisation errors and error rates.",
+    "verbatim_quote": "Finally, re-examination of four randomly selected maps after fieldwork required 6 h of staff time, including desktop GIS setup, confirmation of feature digitisation, and tabulating errors and error rates.",
+    "source_location": {
+      "section": "3. Results",
+      "subsection": "3.1",
+      "page": 7,
+      "paragraph_range": "2"
+    },
+    "implements_methods": [
+      "M004"
+    ],
+    "procedure_steps": [
+      "Randomly select map tiles for review (7% sample)",
+      "Set up desktop GIS workspace",
+      "Load original maps and digitised features",
+      "Confirm feature digitisation completeness",
+      "Identify and classify errors (false positives, false negatives, double-marking, classification errors)",
+      "Tabulate error rates by student and overall"
+    ],
+    "parameters": {
+      "sample_size": "4 maps (7% of 58 total)",
+      "time_required": "6 hours",
+      "error_types_tracked": [
+        "false positive",
+        "false negative",
+        "double-marking",
+        "classification error"
+      ]
+    },
+    "expected_information_missing": [
+      "Random selection method",
+      "Desktop GIS software used",
+      "Error correction procedure",
+      "Feedback mechanism to volunteers"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "protocol_id": "P008",
+    "protocol_name": "Time-on-task recording protocol",
+    "protocol_type": "measurement",
+    "protocol_status": "explicit",
+    "protocol_description": "Systematic recording of time spent by different participants using project records, automated timestamps, and staff journals to enable evaluation of digitisation efficiency.",
+    "verbatim_quote": "Project records provided much of this data (timesheets from the programmer; record creation timestamps for students using the system), while project staff logged time-on-task for activities in journals.",
+    "source_location": {
+      "section": "2. Approach",
+      "subsection": "2.5",
+      "page": 6,
+      "paragraph_range": "2"
+    },
+    "implements_methods": [
+      "M005"
+    ],
+    "procedure_steps": [
+      "Collect programmer timesheets",
+      "Extract record creation timestamps from devices",
+      "Calculate time per feature from timestamps",
+      "Log staff time-on-task in field journals",
+      "Aggregate time data by participant and activity type"
+    ],
+    "tools_used": [
+      "Timesheets",
+      "FAIMS Mobile timestamp data",
+      "Field journals"
+    ],
+    "parameters": {
+      "time_calculation_method": "Based on start and end times of feature creation excluding pauses between records",
+      "participant_categories": [
+        "student programmer",
+        "student volunteers",
+        "project staff"
+      ]
+    },
+    "expected_information_missing": [
+      "Timestamp precision",
+      "Pause detection algorithm",
+      "Journal entry format or frequency"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "protocol_id": "P-IMP-001",
+    "protocol_name": "Recoverable data omission correction protocol",
+    "protocol_type": "data_correction",
+    "protocol_status": "implicit",
+    "protocol_description": "Procedure for correcting spatial data omissions (missing latitude/longitude) by re-extracting coordinates from preserved geodatabase geometries. Results mention corrections performed but procedure not documented.",
+    "trigger_text": [
+      "Since the geodatabase preserved geometries, spatial omissions were corrected by re-extracting latitude and longitude; only two data points could not be recovered."
+    ],
+    "trigger_locations": [
+      {
+        "section": "3. Results",
+        "subsection": "3.5.1",
+        "page": 7,
+        "paragraph_range": "2"
+      }
+    ],
+    "inference_reasoning": "Results explicitly state that spatial omissions 'were corrected by re-extracting latitude and longitude' from the geodatabase, directly indicating a correction procedure was performed. The statement that 'only two data points could not be recovered' suggests systematic correction attempt across all 192 omissions. However, Methods section never describes this correction protocol - the re-extraction tool, SQL queries or scripts used, validation of corrected coordinates, handling of unrecoverable records.",
+    "implicit_metadata": {
+      "basis": "mentioned_undocumented",
+      "transparency_gap": "Correction procedure not documented. Unknown: re-extraction tool/script, geodatabase query method, validation of corrected coordinates, handling of two unrecoverable records, who performed corrections.",
+      "assessability_impact": "Cannot assess reliability of corrections. Cannot determine if re-extraction introduced new errors. Cannot evaluate handling of unrecoverable records. Impossible to reproduce correction procedure.",
+      "reconstruction_confidence": "medium"
+    },
+    "implements_methods": [
+      "M001",
+      "M004"
+    ],
+    "procedure_steps": [
+      "Identify records with empty latitude/longitude fields",
+      "Query geodatabase for preserved geometries",
+      "Re-extract coordinates from geometries",
+      "Populate latitude/longitude fields with extracted values",
+      "Flag unrecoverable records (2 instances)"
+    ],
+    "expected_information_missing": [
+      "Re-extraction tool or script",
+      "Geodatabase query syntax",
+      "Coordinate validation after extraction",
+      "Handling procedure for unrecoverable records",
+      "Staff member responsible"
+    ],
+    "extraction_confidence": "high"
+  },
+  {
+    "protocol_id": "P-IMP-002",
+    "protocol_name": "Device performance management and data aggregation protocol",
+    "protocol_type": "system_maintenance",
+    "protocol_status": "implicit",
+    "protocol_description": "Operational procedure for mitigating performance degradation by exporting device data, instantiating new empty application, and aggregating multiple exports. Results mention mitigation and aggregation performed but procedures not specified.",
+    "trigger_text": [
+      "Deteriorating performance was mitigated by exporting all data and instantiating a new and empty version of the application.",
+      "Since data structures were identical, aggregation of multiple exports was trivial."
+    ],
+    "trigger_locations": [
+      {
+        "section": "3. Results",
+        "subsection": "3.4",
+        "page": 7,
+        "paragraph_range": "2"
+      },
+      {
+        "section": "3. Results",
+        "subsection": "3.4",
+        "page": 7,
+        "paragraph_range": "2"
+      }
+    ],
+    "inference_reasoning": "Results state that deteriorating performance 'was mitigated by' exporting data and instantiating new app, and that 'aggregation of multiple exports was trivial'. The device reset creates multiple temporal exports that require aggregation. These are causally linked procedures (reset → multiple exports → aggregation needed) that would be assessed together as unified performance management protocol. Methods section never describes either reset triggers, reset procedure, or aggregation methodology.",
+    "implicit_metadata": {
+      "basis": "mentioned_undocumented",
+      "transparency_gap": "Performance management protocol not documented. Unknown: reset triggering threshold, export procedure, app reinstantiation method, data integrity verification, aggregation tool/script, deduplication method, conflict resolution, volunteer notification about resets.",
+      "assessability_impact": "Cannot assess reliability of mitigation strategy or aggregation accuracy. Cannot determine reset frequency or impact on volunteer workflow. Cannot evaluate data continuity or potential for data loss during reset/aggregation. Difficult to replicate approach.",
+      "reconstruction_confidence": "low"
+    },
+    "implements_methods": [
+      "M001",
+      "M002"
+    ],
+    "procedure_steps": [
+      "Monitor device performance (trigger unknown)",
+      "Export all data from degraded device",
+      "Verify export completeness",
+      "Instantiate new empty application version",
+      "Resume digitisation on reset device",
+      "Collect multiple export files from resets and/or multiple devices",
+      "Verify data structure compatibility",
+      "Aggregate/merge datasets (method unknown)",
+      "Validate combined dataset"
+    ],
+    "tools_used": [
+      "FAIMS Mobile export function",
+      "FAIMS Mobile app instantiation",
+      "Aggregation tool or script (unspecified)"
+    ],
+    "expected_information_missing": [
+      "Performance threshold triggering reset",
+      "Export verification procedure",
+      "App reinstantiation steps",
+      "Data integrity checks after reset",
+      "Volunteer communication protocol about resets",
+      "Frequency of resets performed",
+      "Aggregation tool or script",
+      "Deduplication procedure",
+      "Identifier reconciliation method",
+      "Overlap/conflict resolution",
+      "Validation checks on aggregated data",
+      "Number of exports aggregated"
+    ],
+    "consolidation_metadata": {
+      "consolidated_from": [
+        "P1_P-IMP-002",
+        "P1_P-IMP-003"
+      ],
+      "consolidation_type": "workflow_integration",
+      "information_preserved": "complete",
+      "rationale": "Device reset and multi-export aggregation are causally linked procedures (reset creates multiple exports requiring aggregation). Would be assessed together as unified performance management and data integration protocol. Combined to reflect operational reality while preserving all trigger_text and procedural information."
+    },
+    "extraction_confidence": "low"
+  },
+  {
+    "protocol_id": "P-IMP-004",
+    "protocol_name": "Volunteer training protocol",
+    "protocol_type": "training",
+    "protocol_status": "implicit",
+    "protocol_description": "Procedure for training student volunteers to use map digitisation system. Results report training required minimal staff time but training content and method not documented.",
+    "trigger_text": [
+      "Training and supervision of students took no more than half an hour of staff time across the entire season.",
+      "Students capable of selecting files from a list, panning and zooming a map, dropping a point, and filling out a form were able to create data.",
+      "users required almost no training and could focus on the act of digitisation without being distracted by the technology"
+    ],
+    "trigger_locations": [
+      {
+        "section": "3. Results",
+        "subsection": "3.1",
+        "page": 7,
+        "paragraph_range": "1"
+      },
+      {
+        "section": "2. Approach",
+        "subsection": "2.4",
+        "page": 6,
+        "paragraph_range": "4"
+      },
+      {
+        "section": "2. Approach",
+        "subsection": "2.4",
+        "page": 6,
+        "paragraph_range": "4"
+      }
+    ],
+    "inference_reasoning": "Results report total training time (30 minutes across 2017 season) and describe skills students needed ('selecting files, panning, zooming, dropping point, filling form'), indicating training occurred. Section 2.4 states users 'required almost no training', emphasizing brevity but confirming training happened. However, Methods never documents training content, delivery method, duration per student, demonstration materials, practice exercises, competency assessment.",
+    "implicit_metadata": {
+      "basis": "mentioned_undocumented",
+      "transparency_gap": "Training protocol not documented. Unknown: training content, delivery method (group/individual), duration per student, demonstration materials, practice exercises, competency assessment, whether training was standardized.",
+      "assessability_impact": "Cannot assess training adequacy. Cannot determine if training consistency affected volunteer performance variation (Section 3.2 shows 44s to 115s per feature range). Cannot evaluate relationship between training and error rates (1.3% to 10.6% range). Impossible to reproduce training approach.",
+      "reconstruction_confidence": "low"
+    },
+    "implements_methods": [
+      "M001"
+    ],
+    "procedure_steps": [
+      "Demonstrate basic system functions (inferred from description)",
+      "Practice digitisation tasks (unknown)",
+      "Assess competency (unknown)",
+      "Begin independent digitisation"
+    ],
+    "parameters": {
+      "total_time_2017": "30 minutes (all students)",
+      "total_time_2018": "30 minutes (all students)",
+      "skills_required": [
+        "file selection",
+        "map pan/zoom",
+        "point placement",
+        "form completion"
+      ]
+    },
+    "expected_information_missing": [
+      "Training content outline",
+      "Delivery method (group vs individual)",
+      "Per-student duration",
+      "Demonstration materials",
+      "Practice exercises",
+      "Competency assessment criteria",
+      "Whether training was standardized across volunteers"
+    ],
+    "extraction_confidence": "high"
+  }
+]

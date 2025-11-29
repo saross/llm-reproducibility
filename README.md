@@ -3,7 +3,7 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-Automated extraction of claims, evidence, and methodology from research papers using Large Language Models, enabling systematic assessment of research transparency, replicability, and credibility.
+Automated extraction of claims, evidence, and methodology from research papers using Large Language Models, enabling systematic assessment of research transparency, reproducibility, and credibility.
 
 **Version:** 2.6 | **Schema:** v2.6 | **Workflow:** 8-pass (0-7)
 **Status:** Extraction system complete and tested, assessment framework in development
@@ -155,10 +155,10 @@ Planned assessment dimensions adapted from repliCATS:
 - Plausibility
 - Evidential Adequacy
 - Robustness
-- Replicability
-- Generalizability
+- Reproducibility
+- Generalisability
 
-See [planning/cwts_implementation_plan.md](planning/cwts_implementation_plan.md) for roadmap.
+See [planning/credibility-implementation-plan-v2.0.md](planning/credibility-implementation-plan-v2.0.md) for roadmap.
 
 ---
 
@@ -171,15 +171,15 @@ See [planning/cwts_implementation_plan.md](planning/cwts_implementation_plan.md)
 - [Schema Reference](docs/user-guide/schema-reference.md) - Understanding the extraction schema
 
 ### Research Assessor Skill Guide
-- [Overview](docs/research-assessor-guide/overview.md) - What the skill does and when to use it
-- [Installation](docs/research-assessor-guide/installation.md) - Installing and verifying the skill
-- [Reference](docs/research-assessor-guide/reference.md) - Complete reference guide
+- [Overview](docs/research-assessor-guide/README.md) - What the skill does and when to use it
+- [Installation](docs/research-assessor-guide/installation-guide.md) - Installing and verifying the skill
+- [Usage Guide](docs/research-assessor-guide/usage-guide.md) - Complete usage reference
 - [Architecture](docs/research-assessor-guide/architecture.md) - How the skill works
-- [Troubleshooting](docs/research-assessor-guide/troubleshooting.md) - Common issues and solutions
+- [Quick Reference](docs/research-assessor-guide/quick-reference.md) - Cheat sheet for common tasks
 
-### Development
-- [Schema Evolution](docs/development/schema-evolution.md) - Schema versioning and mappings
-- [Deployment Guide](docs/development/deployment-guide-v2.5.md) - Skill deployment details
+### Schema and Development
+- [Schema Reference](docs/user-guide/schema-reference.md) - Current schema documentation
+- [Version History](docs/research-assessor-guide/version.md) - Skill version information
 
 ---
 
@@ -219,20 +219,21 @@ pip install -r requirements.txt
 
 ## Project Status
 
-### ✅ Completed (v2.5)
-- Extraction system complete and validated
-- Five-pass workflow tested and refined
-- Schema v2.5 with complete object types
+### ✅ Completed (v2.6)
+- Extraction system complete and validated (8-pass workflow, Pass 0-7)
+- Infrastructure extraction (PIDs, FAIR assessment, funding, permits)
+- Schema v2.6 with complete object types
 - PDF processing pipeline working
 - Comprehensive documentation
-- Repository organization and FAIR4RS preparation
+- Repository organisation and FAIR4RS preparation
 
 ### 🚧 In Progress
+- Assessment framework development (Three Pillars: Transparency → Credibility → Reproducibility)
+- repliCATS Seven Signals adaptation for HASS disciplines
 - Testing on additional papers from varied domains
-- Expanding domain-specific vocabulary
 
 ### 📋 Planned (Next Phase)
-- Assessment framework development (credibility scoring)
+- Complete assessment framework (cluster prompts, quality gating)
 - Multi-paper batch processing
 - Integration with archaeological data repositories
 - Zenodo deposition and DOI assignment
@@ -285,7 +286,7 @@ See [CITATION.cff](CITATION.cff) for machine-readable citation.
 - Tested on archaeological research papers
 - Informed by TIDieR, CONSORT-Outcomes, and SPIRIT frameworks
 - Assessment framework adapted from repliCATS methodology
-- Inspired by research transparency and replication initiatives
+- Inspired by research transparency and reproducibility initiatives
 
 ---
 
@@ -305,7 +306,7 @@ This project has evolved through multiple versions:
 - **v2.2-2.3** (Oct 17-18, 2025): Two-pass workflow with consolidation
 - **v2.4** (Oct 19-20, 2025): RDMAP extraction framework added
 - **v2.5** (Oct 23, 2025): Repository rationalisation and FAIR4RS preparation
-- **v2.6** (Nov 2025): Infrastructure extraction (Pass 6), 7-pass workflow complete
+- **v2.6** (Nov 2025): Infrastructure extraction (Pass 6), 8-pass workflow complete (Pass 0-7), assessment framework development
 
 See [archive/README.md](archive/README.md) for complete development history.
 

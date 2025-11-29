@@ -1,5 +1,5 @@
 # Project Manifest - Single Source of Truth for Versions
-# Last Updated: 2025-11-27
+# Last Updated: 2025-11-29
 #
 # This manifest tracks version information for all project components.
 # READMEs and documentation should reference this file for consistency.
@@ -48,11 +48,39 @@ components:
 # Assessment system (in development)
 assessment:
   status: in_development
-  classification_prompt:
-    version: "0.2-alpha"
-    file: assessment-system/prompts/classify-research-approach.md
-    last_updated: "2025-11-17"
-    description: Pass 8 research approach classification
+  framework: Three Pillars (Transparency → Credibility → Reproducibility)
+  methodology: repliCATS Seven Signals adapted for HASS
+
+  prompts:
+    classify_research_approach:
+      version: "0.3"
+      file: assessment-system/prompts/classify-research-approach.md
+      last_updated: "2025-11-29"
+      description: Research approach classification (inductive, deductive, abductive)
+
+    track_a_quality_gating:
+      version: "0.2"
+      file: assessment-system/prompts/track-a-quality-gating.md
+      last_updated: "2025-11-28"
+      description: Track A quality gate criteria for assessment
+
+    cluster_1:
+      version: "0.2"
+      file: assessment-system/prompts/cluster-1-foundational-clarity.md
+      last_updated: "2025-11-28"
+      description: Signals 1-2 (Comprehensibility, Transparency)
+
+    cluster_2:
+      version: "0.2"
+      file: assessment-system/prompts/cluster-2-evidential-strength.md
+      last_updated: "2025-11-28"
+      description: Signals 3-6 (Plausibility, Validity, Robustness, Generalisability)
+
+    cluster_3:
+      version: "0.2"
+      file: assessment-system/prompts/cluster-3-reproducibility.md
+      last_updated: "2025-11-29"
+      description: Signal 7 (Reproducibility) with Methodological Transparency variant
 
 # Workflow structure
 workflow_passes:
@@ -67,7 +95,7 @@ workflow_passes:
     prompt: extraction-system/prompts/02-claims-evidence_pass2_prompt.md
   - pass: 3
     name: RDMAP Liberal
-    prompt: extraction-system/prompts/03-rdmap_pass1a_explicit_prompt.md
+    prompt: extraction-system/prompts/03-rdmap_pass1a_prompt.md
   - pass: 4
     name: RDMAP Implicit
     prompt: extraction-system/prompts/04-rdmap_pass1b_implicit_prompt.md

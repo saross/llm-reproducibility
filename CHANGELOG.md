@@ -5,9 +5,36 @@ All notable changes to the LLM-Based Research Extraction and Assessment project 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2025-11-29
+
+### Infrastructure Extraction and Assessment Framework
+
+#### Added
+- **Pass 6: Infrastructure Extraction** - PIDs, FAIR assessment, funding sources, permits
+- **8-pass workflow complete (Pass 0-7)** - Full extraction pipeline validated
+- **Assessment framework development** - Three Pillars (Transparency → Credibility → Reproducibility)
+- repliCATS Seven Signals adaptation for HASS disciplines
+- Research approach classification (inductive, deductive, abductive)
+- Track A quality gating prompts
+- Cluster-based assessment prompts (Clusters 1-3)
+- Methodological Transparency variant for non-computational papers
+
+#### Changed
+- Updated terminology: "replicability" → "reproducibility" throughout active documents
+- Schema v2.6 with reproducibility_infrastructure block
+- Expanded extraction_plan_unified_model.md for diverse paper types
+- Enhanced FAIR scoring with automatic calculation
+
+#### Fixed
+- Consolidated duplicate planning documents
+- Updated documentation links throughout
+- Improved queue.yaml checkpoint/resume support
+
+---
+
 ## [2.5.0] - 2025-10-23
 
-### Repository Rationalization Release
+### Repository Rationalisation Release
 
 #### Changed
 - Reorganized entire repository structure for clarity and usability
@@ -132,13 +159,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Future Releases
 
-### Planned for v2.6+
-- Assessment framework development (credibility scoring)
+### Planned for v2.7+
+- Complete assessment framework (all cluster prompts, quality gating finalised)
 - Multi-paper batch processing
 - Archaeological repository integration
+- FAIR vocabularies for controlled terms
 - Additional domain-specific adaptations
 
-See [planning/cwts_implementation_plan.md](planning/cwts_implementation_plan.md) for detailed roadmap.
+See [planning/credibility-implementation-plan-v2.0.md](planning/credibility-implementation-plan-v2.0.md) for detailed roadmap.
 
 ---
 
@@ -151,4 +179,4 @@ See [planning/cwts_implementation_plan.md](planning/cwts_implementation_plan.md)
 
 ---
 
-For detailed version information including prompt changes, schema specifics, and migration guides, see [docs/skill-documentation/VERSION.md](docs/skill-documentation/VERSION.md).
+For detailed version information including prompt changes, schema specifics, and migration guides, see [docs/research-assessor-guide/version.md](docs/research-assessor-guide/version.md).

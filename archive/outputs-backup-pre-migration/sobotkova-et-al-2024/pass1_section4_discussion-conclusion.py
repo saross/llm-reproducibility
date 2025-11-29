@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+"""
+Pass 1 Liberal Extraction - Section Group 4
+Section: Discussion + Conclusion (lines 562-764)
+Est words: ~2,500
+Dense with claims, limitations, recommendations, and implications.
+"""
+
+import json
+from pathlib import Path
+
+extraction_file = Path("/home/shawn/Code/llm-reproducibility/outputs/sobotkova-et-al-2024/extraction.json")
+with open(extraction_file, 'r') as f:
+    extraction = json.load(f)
+
+# Discussion and Conclusion are claims-dense
+evidence_items = []  # Minimal new evidence in Discussion/Conclusion
+
+claims_items = [
+    {"claim_id": "C021", "claim_text": "Fixed 150x150m tile size was inappropriate for varied mound diameters (10-100m)", "claim_type": "methodological_critique", "claim_role": "supporting", "claim_status": "explicit", "verbatim_quote": "In retrospect, a fixed 150 3 150 m tile size was probably inappropriate for training data, given that mound diameters ranged from 10 to 100 m", "location": {"section": "Discussion", "subsection": "Limitations and challenges of pre-trained CNNs", "paragraph": 1}, "supported_by_evidence": ["E010"], "supported_by_claims": [], "supports_claims": ["C001", "C002"], "alternatives_mentioned": False, "qualifications": ["probably"], "contradicts": []},
+    {"claim_id": "C022", "claim_text": "Pre-trained weights introduce biases from ImageNet that don't transfer well to satellite imagery", "claim_type": "methodological_critique", "claim_role": "supporting", "claim_status": "explicit", "verbatim_quote": "Pre-trained weights bring with them biases that depend on the content of the pre-training dataset – in our case ImageNet. These biases do not transfer particularly well to satellite imagery.", "location": {"section": "Discussion", "subsection": "Limitations and challenges of pre-trained CNNs", "paragraph": 2}, "supported_by_evidence": [], "supported_by_claims": [], "supports_claims": ["C001", "C002"], "alternatives_mentioned": False, "qualifications": [], "contradicts": []},
+    {"claim_id": "C023", "claim_text": "Model was detecting modern features (field boundaries, roads, tree lines) rather than mounds", "claim_type": "finding", "claim_role": "supporting", "claim_status": "explicit", "verbatim_quote": "Inspection of tiles tagged by the model indicated that it was detecting features other than mounds, such as field boundaries, roads, and tree lines", "location": {"section": "Discussion", "subsection": "Limitations and challenges of pre-trained CNNs", "paragraph": 3}, "supported_by_evidence": [], "supported_by_claims": [], "supports_claims": ["C001", "C003"], "alternatives_mentioned": False, "qualifications": [], "contradicts": []},
+    {"claim_id": "C024", "claim_text": "Alternative tile sizes, higher resolution, different training data, and custom models might improve performance", "claim_type": "recommendation", "claim_role": "supporting", "claim_status": "explicit", "verbatim_quote": "Better results might be achieved by using alternative tile sizes, higher resolution imagery, different training data, or custom models", "location": {"section": "Discussion", "subsection": "Building a better model", "paragraph": 1}, "supported_by_evidence": [], "supported_by_claims": ["C021", "C022", "C023"], "supports_claims": [], "alternatives_mentioned": True, "qualifications": ["might"], "contradicts": []},
+    {"claim_id": "C025", "claim_text": "Training custom model would require substantially more time, expertise, and computational resources", "claim_type": "methodological", "claim_role": "intermediate", "claim_status": "explicit", "verbatim_quote": "Training a custom model would require substantially more time, expertise, and computational resources", "location": {"section": "Discussion", "subsection": "Building a better model", "paragraph": 2}, "supported_by_evidence": [], "supported_by_claims": [], "supports_claims": ["C004"], "alternatives_mentioned": False, "qualifications": [], "contradicts": []},
+    {"claim_id": "C026", "claim_text": "Determining correct tile size, bands, resolution, and augmentation strategy requires extensive experimentation", "claim_type": "methodological", "claim_role": "supporting", "claim_status": "explicit", "verbatim_quote": "Determining the correct tile size, which image bands and resolution to use, and how to augment images would require a significant amount of experimentation", "location": {"section": "Discussion", "subsection": "Building a better model", "paragraph": 2}, "supported_by_evidence": [], "supported_by_claims": [], "supports_claims": ["C025", "C004"], "alternatives_mentioned": False, "qualifications": [], "contradicts": []},
+    {"claim_id": "C027", "claim_text": "Cost-benefit analysis suggests ML approach not worthwhile for this application", "claim_type": "recommendation", "claim_role": "core", "claim_status": "explicit", "verbatim_quote": "This cost-benefit analysis suggests that deploying ML for our particular application was not worthwhile", "location": {"section": "Discussion", "subsection": "Is it worth it?", "paragraph": 2}, "supported_by_evidence": ["E004"], "supported_by_claims": ["C025", "C026"], "supports_claims": ["C004"], "alternatives_mentioned": False, "qualifications": ["for our particular application"], "contradicts": []},
+    {"claim_id": "C028", "claim_text": "Manual processing of 5,000 tiles at 30 seconds each would take approximately 42 hours", "claim_type": "comparative_analysis", "claim_role": "supporting", "claim_status": "explicit", "verbatim_quote": "With approximately 5,000 150 3 150 m tiles in our 600 sq km study area, and with an experienced operator able to make an assessment in ~30 s, manual processing would have taken approximately 42 h", "location": {"section": "Discussion", "subsection": "Is it worth it?", "paragraph": 2}, "supported_by_evidence": [], "supported_by_claims": [], "supports_claims": ["C027", "C004"], "alternatives_mentioned": False, "qualifications": ["approximately"], "contradicts": []},
+    {"claim_id": "C029", "claim_text": "Manual processing time (42h) is less than model development time (135h)", "claim_type": "comparative_analysis", "claim_role": "supporting", "claim_status": "explicit", "verbatim_quote": "Meanwhile, as reported above, simply developing the model required about 135 h", "location": {"section": "Discussion", "subsection": "Is it worth it?", "paragraph": 2}, "supported_by_evidence": ["E004"], "supported_by_claims": ["C028"], "supports_claims": ["C027", "C004"], "alternatives_mentioned": False, "qualifications": [], "contradicts": []},
+    {"claim_id": "C030", "claim_text": "Manual validation work is required regardless of whether ML is used", "claim_type": "methodological", "claim_role": "supporting", "claim_status": "explicit", "verbatim_quote": "In either case, a trained operator would need to inspect and validate imagery to confirm or deny the presence of mounds", "location": {"section": "Discussion", "subsection": "Is it worth it?", "paragraph": 2}, "supported_by_evidence": [], "supported_by_claims": [], "supports_claims": ["C027", "C003"], "alternatives_mentioned": False, "qualifications": [], "contradicts": []},
+    {"claim_id": "C031", "claim_text": "Study demonstrates value of reporting negative results in ML research", "claim_type": "meta-research", "claim_role": "core", "claim_status": "explicit", "verbatim_quote": "We have shown that reporting negative results contributes to a more balanced and realistic understanding of the current capabilities and limitations of ML in archaeological research", "location": {"section": "Conclusion", "subsection": None, "paragraph": 2}, "supported_by_evidence": [], "supported_by_claims": ["C005", "C014", "C015"], "supports_claims": [], "alternatives_mentioned": False, "qualifications": [], "contradicts": []},
+    {"claim_id": "C032", "claim_text": "Transfer learning and pre-trained CNNs are not universally applicable solutions", "claim_type": "finding", "claim_role": "core", "claim_status": "explicit", "verbatim_quote": "Our experience demonstrates that transfer learning and pre-trained CNNs are not universally applicable solutions to the problem of limited training data in archaeological contexts", "location": {"section": "Conclusion", "subsection": None, "paragraph": 2}, "supported_by_evidence": [], "supported_by_claims": ["C001", "C002", "C018", "C020"], "supports_claims": [], "alternatives_mentioned": False, "qualifications": [], "contradicts": []}
+]
+
+implicit_arguments = [
+    {"implicit_argument_id": "IA008", "implicit_argument_text": "Manual inspection by trained operators is sufficiently reliable to serve as validation standard without documented quality control", "implicit_argument_type": "unstated_assumption", "trigger_text": ["In either case, a trained operator would need to inspect and validate imagery to confirm or deny the presence of mounds", "With approximately 5,000 150 3 150 m tiles in our 600 sq km study area, and with an experienced operator able to make an assessment in ~30 s"], "trigger_locations": [{"section": "Discussion", "subsection": "Is it worth it?", "paragraph": 2}, {"section": "Discussion", "subsection": "Is it worth it?", "paragraph": 2}], "inference_reasoning": "The paper positions manual inspection as both validation method (for assessing ML) and alternative approach, with specific time estimates (30s per tile). This assumes trained operators produce sufficiently reliable judgments without discussing inter-operator reliability, quality control protocols, or error rates. The cost-benefit comparison treats manual assessment as having known, stable performance, but this reliability is assumed rather than demonstrated. Without this assumption, the 42h estimate lacks validity (could vary significantly by operator or require QC overhead).", "location": {"section": "Discussion", "subsection": "Is it worth it?", "paragraph": 2}, "supports_claims": ["C027", "C028", "C030"], "assessment_implication": "Critical for assessing transparency. Cost-benefit comparison depends on unstated assumptions about manual method reliability. Affects credibility of efficiency claims if manual approach has undocumented variability or error rates."},
+    {"implicit_argument_id": "IA009", "implicit_argument_text": "Study area and application scope are representative enough that findings generalise to inform ML adoption decisions", "implicit_argument_type": "unstated_assumption", "trigger_text": ["This cost-benefit analysis suggests that deploying ML for our particular application was not worthwhile", "We have shown that reporting negative results contributes to a more balanced and realistic understanding of the current capabilities and limitations of ML in archaeological research"], "trigger_locations": [{"section": "Discussion", "subsection": "Is it worth it?", "paragraph": 2}, {"section": "Conclusion", "subsection": None, "paragraph": 2}], "inference_reasoning": "The paper qualifies cost-benefit finding as specific ('our particular application') but then positions results as contributing to 'understanding of ML capabilities and limitations' generally. This implicit argument bridges from single-case negative result to broader implications: the case must be representative or transferable enough to inform others' adoption decisions. Without this assumption, the study would be purely local—interesting but not actionable for other researchers. The assumption that this failure case has broader relevance is necessary for the study's positioning as 'cautionary tale' to potential adopters.", "location": {"section": "Conclusion", "subsection": None, "paragraph": 2}, "supports_claims": ["C027", "C031", "C032"], "assessment_implication": "Critical for assessing generalisability. If study context (Bulgaria burial mounds, IKONOS imagery, heterogeneous landscape) is too specific, findings may not transfer to other archaeological applications. Affects utility of negative results for informing adoption decisions."}
+]
+
+# Add items
+extraction["evidence"].extend(evidence_items)
+extraction["claims"].extend(claims_items)
+extraction["implicit_arguments"].extend(implicit_arguments)
+
+# Update extraction notes
+extraction["extraction_metadata"]["extraction_notes"].append({
+    "pass1_section4": {
+        "section_group": "Discussion + Conclusion",
+        "word_count_estimate": 2500,
+        "sections_combined": ["Discussion (Limitations and challenges, Building a better model, Is it worth it?)", "Conclusion"],
+        "extraction_date": "2025-10-30",
+        "items_extracted": {"evidence": len(evidence_items), "claims": len(claims_items), "implicit_arguments": len(implicit_arguments)},
+        "core_claims_identified": 3,
+        "implicit_argument_scan_completed": True,
+        "notes": "Liberal extraction applied to discussion and conclusion. Claims-dense section with limitations, recommendations, and cost-benefit analysis. 12 claims including 3 new core claims (C027, C031, C032). 2 implicit arguments identified supporting cost-benefit and generalisability claims."
+    }
+})
+
+# Save
+with open(extraction_file, 'w') as f:
+    json.dump(extraction, f, indent=2, ensure_ascii=False)
+
+print(f"✓ Pass 1 Section 4 extraction complete")
+print(f"  Evidence: {len(evidence_items)} items")
+print(f"  Claims: {len(claims_items)} items")
+print(f"  Implicit Arguments: {len(implicit_arguments)} items")
+print(f"  Total: {len(evidence_items) + len(claims_items) + len(implicit_arguments)} items")
+print(f"\\n✓✓✓ PASS 1 COMPLETE ✓✓✓")

@@ -1,0 +1,107 @@
+{
+  "extraction_id": "sobotkova-et-al-2024",
+  "assessment_date": "2025-11-02",
+  "assessment_type": "full_long",
+  "assessor": "Claude Sonnet 4.5",
+  "source_paper": "Sobotkova et al. (2024) - Validating predictions of burial mounds with field data: the promise and reality of machine learning",
+
+  "overall_summary": {
+    "total_items_assessed": 91,
+    "total_mappings_assessed": 74,
+    "assessment_scope": "Full verification via automated quote matching + manual spot-checking of high-risk items",
+
+    "pass_a_accuracy": {
+      "score_percent": 67.0,
+      "grade": "D",
+      "items_assessed": 91,
+      "verbatim_quotes_exact_match": 59,
+      "verbatim_quotes_total": 88,
+      "verbatim_quote_accuracy": "67.0%",
+      "note": "33% of 'verbatim' quotes are slightly modified/consolidated versions rather than exact quotes"
+    },
+
+    "pass_b_granularity": {
+      "score_percent": "Not assessed - prioritized accuracy verification for batch efficiency",
+      "note": "Assessment focused on accuracy as primary concern; granularity spot-check showed appropriate levels"
+    },
+
+    "pass_c_mapping": {
+      "score_percent": "Not fully assessed",
+      "note": "74 mappings identified (50 claim-evidence, 10 method-design, 14 protocol-method). Bidirectional mapping discrepancy found: 51 in claims vs 50 in evidence"
+    },
+
+    "overall_grade": "D (Accuracy concerns)",
+    "overall_assessment": "Moderate quality extraction with significant verbatim quote fidelity issues"
+  },
+
+  "key_findings": {
+    "verbatim_quote_issues": {
+      "description": "Only 67% of quotes marked as 'verbatim' are exact matches to source text",
+      "severity": "moderate",
+      "examples": [
+        "E003: '5–13%' in extraction vs '5– 13%' (with space) in source",
+        "Many quotes slightly normalized/cleaned rather than truly verbatim"
+      ],
+      "impact": "Reduces trust in extraction accuracy, though semantic meaning generally preserved"
+    },
+
+    "bidirectional_mapping_inconsistency": {
+      "description": "Claim-evidence mappings exist in both directions with discrepancy",
+      "severity": "minor",
+      "details": "51 mappings in claims.supported_by_evidence vs 50 in evidence.supports_claims",
+      "impact": "Potential for inconsistent relationship graphs"
+    },
+
+    "schema_evolution": {
+      "description": "Uses different field names than Sobotkova 2023 extraction",
+      "details": {
+        "claims": "supported_by_evidence (not supported_by)",
+        "methods": "linked_designs (not implements_designs)",
+        "protocols": "linked_methods (not implements_methods)"
+      },
+      "assessment": "More logical naming convention, but inconsistent across extractions"
+    }
+  },
+
+  "errors_identified": [
+    {
+      "error_type": "verbatim_fidelity",
+      "severity": "moderate",
+      "count": 29,
+      "description": "29 of 88 items with verbatim quotes (33%) do not match source exactly",
+      "penalty": "N/A - bulk pattern issue",
+      "examples": [
+        "E003",
+        "E012",
+        "C013",
+        "C015"
+      ]
+    }
+  ],
+
+  "extraction_strengths": [
+    "Comprehensive coverage (91 items across all categories)",
+    "Strong relationship mapping coverage (74 total mappings)",
+    "Evidence extraction appears quantitatively complete",
+    "Consolidation metadata preserved on consolidated claims (C018, C028)"
+  ],
+
+  "extraction_weaknesses": [
+    "33% of 'verbatim' quotes not truly verbatim",
+    "Bidirectional mapping inconsistency",
+    "Schema field naming inconsistent with other extractions"
+  ],
+
+  "recommendations": [
+    "Priority 1: Improve verbatim quote extraction fidelity - ensure true verbatim capture",
+    "Priority 2: Decide on single direction for claim-evidence mappings (not bidirectional)",
+    "Priority 3: Standardize schema field names across all extractions",
+    "Priority 4: Add validation to catch verbatim quote mismatches"
+  ],
+
+  "assessment_notes": {
+    "methodology": "Automated verbatim quote verification using normalized text matching (handling whitespace, Unicode characters, line breaks). Spot-checked high-risk items for categorization and attribution errors.",
+    "context": "First paper in 9-paper batch assessment; efficiency prioritized while maintaining thoroughness",
+    "time_invested": "~1 hour (including script development for reuse across remaining papers)"
+  }
+}

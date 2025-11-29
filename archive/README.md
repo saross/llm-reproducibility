@@ -2,20 +2,20 @@
 
 Complete development history of the LLM-based Research Extraction and Assessment project, organized chronologically by version.
 
-**Active System:** v2.5 (see [main README](../README.md))
+**Active System:** v2.6 (see [main README](../README.md))
 **Archive Purpose:** Preserve development transparency and enable understanding of design decisions
 
 ---
 
 ## Development Timeline
 
-### Phase 1: Extraction System Development (Oct 16-23, 2025)
+### Phase 1: Extraction System Development (Oct 16 - Nov 2025)
 
-```
-v2.0-v2.1 → v2.2-v2.3 → v2.4 → v2.5
-   ↓           ↓         ↓       ↓
- Claims/   Two-Pass   RDMAP   Repository
-Evidence  Workflow  Addition  Rationalization
+```text
+v2.0-v2.1 → v2.2-v2.3 → v2.4 → v2.5 → v2.6
+   ↓           ↓         ↓       ↓       ↓
+ Claims/   Two-Pass   RDMAP   Repository  Infrastructure
+Evidence  Workflow  Addition  Rationalisation + Assessment
 ```
 
 ---
@@ -146,18 +146,56 @@ Claims/evidence insufficient for assessing transparency. Need explicit extractio
 Extraction system complete and tested. Prepare for sharing with collaborators and broader community. FAIR4RS compliance preparation for near-term publication/archiving.
 
 **What We Learned:**
-- Clear organization essential for collaboration
+- Clear organisation essential for collaboration
 - Development transparency valuable but needs structure
 - Active planning vs. completed work separation important
 - Documentation at every level aids navigation
 
 ---
 
-## Archive Organization
+### v2.6 (Nov 2025)
 
-```
+**Focus:** Infrastructure extraction and assessment framework development
+
+**Key Developments:**
+- Pass 6: Infrastructure extraction (PIDs, FAIR assessment, funding, permits)
+- 8-pass workflow complete (Pass 0-7)
+- Assessment framework development (Three Pillars, Seven Signals)
+- Research approach classification (inductive, deductive, abductive)
+- Cluster-based assessment prompts (Clusters 1-3)
+- Terminology standardisation ("replicability" → "reproducibility")
+
+**Archived Materials:**
+- **Planning (planning-completed/):**
+  - `assessment-implementation-plan.md` - Initial assessment planning
+  - `credibility-implementation-plan-detailed.md` - Detailed credibility plan
+  - `research-approach-classification-framework.md` - Classification framework
+  - `synthesis-external-feedback.md` - GPT-4 and other model feedback
+  - `gpt51-feedback/` - GPT-5.1 feedback documents
+  - Plus 9 additional superseded planning documents
+
+- **Corpus Profiles (corpus-profiles/):**
+  - 6 timestamped corpus profile versions (keeping latest in outputs/)
+
+- **Outputs Backup (outputs-backup-pre-migration/):**
+  - Pre-migration backup of extraction outputs
+
+**Rationale:**
+Complete extraction pipeline with infrastructure assessment. Begin transition to assessment phase with Three Pillars framework (Transparency → Credibility → Reproducibility).
+
+**What We Learned:**
+- Infrastructure extraction critical for reproducibility assessment
+- Methodological papers need alternate assessment pathways
+- repliCATS Seven Signals adaptable to HASS disciplines
+- Quality gating prevents misleading assessments on low-quality extractions
+
+---
+
+## Archive Organisation
+
+```text
 archive/
-├── extraction-development/    # Version-organized development
+├── extraction-development/    # Version-organised development
 │   ├── v2.0-v2.1/
 │   │   └── planning/
 │   ├── v2.2-v2.3/
@@ -171,6 +209,13 @@ archive/
 │   └── v2.5/
 │       ├── documentation/
 │       └── reports/
+├── planning-completed/        # Superseded planning documents (v2.6)
+│   ├── assessment-implementation-plan.md
+│   ├── credibility-*.md files
+│   ├── gpt51-feedback/
+│   └── [13+ planning docs]
+├── corpus-profiles/           # Archived corpus profile versions
+├── outputs-backup-pre-migration/  # Pre-migration outputs backup
 ├── outputs/                   # Test extractions
 │   ├── before-skill/
 │   └── with-skill/
@@ -345,19 +390,20 @@ archive/
 ## Related Documentation
 
 - [Main README](../README.md) - Current system overview
-- [Skill VERSION.md](../docs/skill-documentation/VERSION.md) - Complete changelog
-- [Schema Evolution](../docs/development/schema-evolution.md) - Schema versioning
+- [Version History](../docs/research-assessor-guide/version.md) - Complete changelog
+- [CHANGELOG](../CHANGELOG.md) - Project changelog
 - [Planning](../planning/) - Active planning for future work
 
 ---
 
 ## Contributing to the Archive
 
-The archive is complete for extraction development (v2.0-v2.5). Future assessment framework development will be documented in new version folders.
+The archive is complete for extraction development (v2.0-v2.6). Future assessment framework development will be documented in new version folders.
 
-**Assessment Phase (upcoming):**
-- v2.6+: Assessment framework development
-- New archive structure as needed
+**Assessment Phase (in progress):**
+- v2.6: Infrastructure extraction and assessment framework development
+- v2.7+: Complete assessment system, batch processing
+- New archive structure as assessment phase completes
 
 ---
 

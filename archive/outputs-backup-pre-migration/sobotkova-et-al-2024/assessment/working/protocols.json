@@ -1,0 +1,354 @@
+[
+  {
+    "protocol_id": "P001",
+    "protocol_text": "ResNet-50 CNN model selection with ~25.6m trainable parameters",
+    "protocol_status": "explicit",
+    "verbatim_quote": "After some preliminary experimentation with a range of different pre-trained models, we concluded that ResNet-50 seemed to perform best for our data. This model is one of the smaller pre-trained CNNs available, with only around 25.6m trainable parameters",
+    "location": {
+      "section": "Methods",
+      "subsection": "Transfer learning",
+      "paragraph": 4
+    },
+    "linked_methods": [
+      "M001"
+    ],
+    "linked_evidence": [
+      "E023"
+    ],
+    "execution_context": {
+      "computational_requirements": "Lower than larger models",
+      "implementation": "Pre-trained model available"
+    },
+    "expected_information_missing": [
+      "Hardware specifications",
+      "Training time",
+      "Framework/library used (TensorFlow, PyTorch?)"
+    ]
+  },
+  {
+    "protocol_id": "P002",
+    "protocol_text": "Training cutout generation: 150x150m square polygons centred on mound points, clipped from IKONOS imagery",
+    "protocol_status": "explicit",
+    "verbatim_quote": "Mound points taken during fieldwork were used as centroids for the generation of 150 3 150 m square polygons (150 3 150 pixels at 1 m resolution), which were clipped from the IKONOS imagery.",
+    "location": {
+      "section": "Methods",
+      "subsection": "Additional CNN training",
+      "paragraph": 1
+    },
+    "linked_methods": [
+      "M001",
+      "M002"
+    ],
+    "linked_evidence": [
+      "E024"
+    ],
+    "execution_context": {
+      "tools": "GIS software (unspecified)",
+      "resolution": "1m IKONOS panchromatic"
+    },
+    "expected_information_missing": [
+      "Edge case handling",
+      "Tile overlap strategy",
+      "GIS software/tools used"
+    ]
+  },
+  {
+    "protocol_id": "P003",
+    "protocol_text": "NO MOUND training data generation by randomly sampling tiles without known mounds",
+    "protocol_status": "explicit",
+    "verbatim_quote": "NO MOUND cutouts were created by randomly sampling the landscape within the TRAP survey area, at places where there were no known mounds.",
+    "location": {
+      "section": "Methods",
+      "subsection": "Additional CNN training",
+      "paragraph": 1
+    },
+    "linked_methods": [
+      "M001",
+      "M002"
+    ],
+    "linked_evidence": [],
+    "execution_context": {
+      "sampling": "Random within survey area"
+    },
+    "expected_information_missing": [
+      "Minimum distance from mounds",
+      "Sampling density",
+      "Seed for reproducibility"
+    ]
+  },
+  {
+    "protocol_id": "P004",
+    "protocol_text": "Training data composition: 1:2 positive to negative ratio (32%-68%)",
+    "protocol_status": "explicit",
+    "verbatim_quote": "The ratio of positive to negative training data was approximately 1:2 (32%–68%).",
+    "location": {
+      "section": "Methods",
+      "subsection": "Additional CNN training",
+      "paragraph": 1
+    },
+    "linked_methods": [
+      "M002",
+      "M003"
+    ],
+    "linked_evidence": [
+      "E025"
+    ],
+    "execution_context": {
+      "class_balance": "Imbalanced toward negatives"
+    },
+    "expected_information_missing": [
+      "Rationale for 1:2 ratio",
+      "Class weighting or resampling",
+      "Impact on decision threshold"
+    ]
+  },
+  {
+    "protocol_id": "P005",
+    "protocol_text": "2022 run training data curation: Visual selection of 249 cutouts where mound discernible",
+    "protocol_status": "explicit",
+    "verbatim_quote": "In the 2022 run, we selected 249 cutouts where a mound was discernible with the naked eye.",
+    "location": {
+      "section": "Methods",
+      "subsection": "Additional CNN training",
+      "paragraph": 1
+    },
+    "linked_methods": [
+      "M002"
+    ],
+    "linked_evidence": [
+      "E026"
+    ],
+    "execution_context": {
+      "selection": "Manual visual inspection",
+      "operator": "Trained researcher (implied)"
+    },
+    "expected_information_missing": [
+      "Inter-rater reliability",
+      "Selection criteria documentation",
+      "Rejected cutout characteristics"
+    ]
+  },
+  {
+    "protocol_id": "P006",
+    "protocol_text": "Training/validation/test split: 70:20:10 ratio",
+    "protocol_status": "explicit",
+    "verbatim_quote": "After processing, cutouts were divided into training, validation, and test sets following a 70:20:10 ratio",
+    "location": {
+      "section": "Methods",
+      "subsection": "Additional CNN training",
+      "paragraph": 1
+    },
+    "linked_methods": [
+      "M005"
+    ],
+    "linked_evidence": [
+      "E027"
+    ],
+    "execution_context": {
+      "split_method": "Unspecified"
+    },
+    "expected_information_missing": [
+      "Stratification",
+      "Random seed",
+      "Spatial autocorrelation handling"
+    ]
+  },
+  {
+    "protocol_id": "P007",
+    "protocol_text": "Model application to 600 sq km study area covering ~5,000 tiles",
+    "protocol_status": "explicit",
+    "verbatim_quote": "With approximately 5,000 150 3 150 m tiles in our 600 sq km study area",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Is it worth it?",
+      "paragraph": 2
+    },
+    "linked_methods": [
+      "M001"
+    ],
+    "linked_evidence": [],
+    "execution_context": {
+      "scale": "Full valley coverage"
+    },
+    "expected_information_missing": [
+      "Processing time",
+      "Tile overlap handling",
+      "Edge tile treatment"
+    ]
+  },
+  {
+    "protocol_id": "P008",
+    "protocol_text": "F1 score calculation for model performance assessment",
+    "protocol_status": "explicit",
+    "verbatim_quote": "After image augmentation, the model reported good learning and model fit (F1 5 0.87).",
+    "location": {
+      "section": "Results",
+      "subsection": "First run (2021)",
+      "paragraph": 1
+    },
+    "linked_methods": [
+      "M005"
+    ],
+    "linked_evidence": [
+      "E028",
+      "E033"
+    ],
+    "execution_context": {
+      "metric": "F1 score (harmonic mean of precision and recall)"
+    },
+    "expected_information_missing": [
+      "Precision/recall individually",
+      "Confusion matrix",
+      "ROC curve"
+    ]
+  },
+  {
+    "protocol_id": "P009",
+    "protocol_text": "Field validation by manual inspection of model-tagged tiles against ground truth mound locations",
+    "protocol_status": "explicit",
+    "verbatim_quote": "Validation of results against field data showed that self-reported success rates were misleadingly high, and that the model was misidentifying most features.",
+    "location": {
+      "section": "Abstract",
+      "subsection": "Findings",
+      "paragraph": 1
+    },
+    "linked_methods": [
+      "M006"
+    ],
+    "linked_evidence": [
+      "E029",
+      "E030",
+      "E031",
+      "E032",
+      "E034",
+      "E035",
+      "E036",
+      "E037",
+      "E038"
+    ],
+    "execution_context": {
+      "ground_truth": "773 surveyed mounds",
+      "comparison": "Tile-by-tile"
+    },
+    "expected_information_missing": [
+      "Validation team size",
+      "Blind validation",
+      "Quality control procedures",
+      "Ambiguous case resolution"
+    ]
+  },
+  {
+    "protocol_id": "P010",
+    "protocol_text": "Preliminary experimentation procedure for comparing pre-trained model performance",
+    "protocol_status": "implicit",
+    "trigger_text": [
+      "After some preliminary experimentation with a range of different pre-trained models, we concluded that ResNet-50 seemed to perform best for our data."
+    ],
+    "trigger_locations": [
+      {
+        "section": "Methods",
+        "subsection": "Transfer learning",
+        "paragraph": 4
+      }
+    ],
+    "inference_reasoning": "Paper mentions 'preliminary experimentation' and 'range of different pre-trained models' but provides no procedural details about how models were compared, what performance metrics were used, how many models were tested, or what constituted 'best' performance. This experimentation clearly occurred but the selection methodology is undocumented.",
+    "location": {
+      "section": "Methods",
+      "subsection": "Transfer learning",
+      "paragraph": 4
+    },
+    "linked_methods": [
+      "M001"
+    ],
+    "linked_evidence": [],
+    "execution_context": {
+      "models_tested": "Multiple (unspecified)",
+      "comparison_basis": "Performance (unspecified metrics)"
+    },
+    "implicit_metadata": {
+      "basis_for_inference": "Procedure mentioned but not described",
+      "expected_information_missing": [
+        "Models tested",
+        "Performance metrics used",
+        "Test dataset",
+        "Comparison criteria"
+      ],
+      "assessment_implication": "Cannot assess appropriateness of model selection or reproduce selection process. Critical for reproducibility."
+    }
+  },
+  {
+    "protocol_id": "P011",
+    "protocol_text": "Image augmentation procedures applied to training data",
+    "protocol_status": "implicit",
+    "trigger_text": [
+      "After image augmentation, the model reported good learning and model fit (F1 5 0.87)."
+    ],
+    "trigger_locations": [
+      {
+        "section": "Results",
+        "subsection": "First run (2021)",
+        "paragraph": 1
+      }
+    ],
+    "inference_reasoning": "Results section confirms 'image augmentation' was performed before model training, but no description of augmentation techniques, parameters, or rationale appears in Methods. Common techniques include rotation, flipping, scaling, but paper doesn't specify which were used or why.",
+    "location": {
+      "section": "Results",
+      "subsection": "First run (2021)",
+      "paragraph": 1
+    },
+    "linked_methods": [
+      "M004"
+    ],
+    "linked_evidence": [],
+    "execution_context": {
+      "augmentation_applied": "Yes (techniques unspecified)"
+    },
+    "implicit_metadata": {
+      "basis_for_inference": "Procedure mentioned in Results but not described in Methods",
+      "expected_information_missing": [
+        "Augmentation techniques",
+        "Augmentation factor",
+        "Parameter ranges",
+        "Rationale"
+      ],
+      "assessment_implication": "Cannot assess whether augmentation appropriate for satellite imagery or evaluate potential artifacts. Critical for reproducibility and bias assessment."
+    }
+  },
+  {
+    "protocol_id": "P012",
+    "protocol_text": "Manual time estimation procedure for cost-benefit analysis",
+    "protocol_status": "implicit",
+    "trigger_text": [
+      "with an experienced operator able to make an assessment in ~30 s"
+    ],
+    "trigger_locations": [
+      {
+        "section": "Discussion",
+        "subsection": "Is it worth it?",
+        "paragraph": 2
+      }
+    ],
+    "inference_reasoning": "Paper provides specific time estimate (30 seconds per tile) for manual processing but doesn't describe how this estimate was derived. Was it measured empirically? Estimated from experience? Averaged across operators? The precision of cost-benefit comparison depends on validity of this estimate, but estimation methodology is undocumented.",
+    "location": {
+      "section": "Discussion",
+      "subsection": "Is it worth it?",
+      "paragraph": 2
+    },
+    "linked_methods": [],
+    "linked_evidence": [],
+    "execution_context": {
+      "operator_experience": "Experienced (unspecified criteria)",
+      "timing_basis": "Estimate (methodology undocumented)"
+    },
+    "implicit_metadata": {
+      "basis_for_inference": "Specific timing value provided without methodology",
+      "expected_information_missing": [
+        "Timing measurement protocol",
+        "Sample size",
+        "Operator variability",
+        "Empirical vs estimated"
+      ],
+      "assessment_implication": "Cost-benefit conclusion depends on accuracy of this estimate. Without methodology, cannot assess reliability or variability. Affects validity of efficiency claims."
+    }
+  }
+]

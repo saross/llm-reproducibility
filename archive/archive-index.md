@@ -1,6 +1,6 @@
 # Archive Index
 
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-11-29
 
 **Purpose:** This archive preserves completed work, historical assessments, and superseded documentation. Items are archived when they are no longer actively used but may have historical or reference value.
 
@@ -10,18 +10,84 @@
 
 ```text
 archive/
-├── cc-interactions/          # Claude Code conversation logs
-├── output/                   # Historical extraction runs (RUN-00 through RUN-07)
-│   ├── cc-sonnet45/         # CC autonomous extractions
-│   └── chatbot-sonnet45/    # Chatbot-assisted extractions
-├── planning-completed/       # Completed planning documents
-├── documentation-archive/    # Historical development documentation
-└── docs-obsolete/           # Superseded documentation
+├── cc-interactions/              # Claude Code conversation logs
+├── corpus-profiles/              # Historical corpus profile versions
+├── extraction-development/       # Version-organised development history
+├── output/                       # Historical extraction runs (RUN-00 through RUN-07)
+│   ├── cc-sonnet45/             # CC autonomous extractions
+│   └── chatbot-sonnet45/        # Chatbot-assisted extractions
+├── outputs-backup-pre-migration/ # Pre-migration outputs backup
+├── planning-completed/           # Completed planning documents (v2.6)
+├── documentation-archive/        # Historical development documentation
+├── superseded-prompts/           # Old prompt versions
+└── superseded-docs/              # Superseded documentation
 ```
 
 ---
 
 ## Planning Documents - Completed (planning-completed/)
+
+### Archived: 2025-11-29 (v2.6 Housekeeping)
+
+**Reason:** Superseded by `credibility-implementation-plan-v2.0.md`, assessment prompts now in production
+
+1. **assessment-implementation-plan.md** (40K)
+   - Initial assessment framework planning
+   - **Status:** Superseded by v2.0 plan
+
+2. **credibility-assessment-implementation-roadmap.md** (17K)
+   - Early credibility assessment roadmap
+   - **Status:** Superseded by v2.0 plan
+
+3. **credibility-implementation-plan-detailed.md** (45K)
+   - Detailed credibility implementation planning
+   - **Status:** Superseded by v2.0 plan
+
+4. **corpus-interpretation-framework.md** (18K)
+   - Corpus analysis framework
+   - **Status:** Integrated into main plan
+
+5. **paper-credibility-analysis-framework.md** (34K)
+   - Paper-level credibility analysis
+   - **Status:** Now in assessment prompts
+
+6. **research-approach-classification-framework.md** (19K)
+   - Research approach classification design
+   - **Status:** Implemented in `classify-research-approach.md` prompt
+
+7. **extraction-assessment-rubric-v1.md** (34K)
+   - Initial extraction assessment rubric
+   - **Status:** Superseded by cluster prompts
+
+8. **extraction-metrics-guidance-analysis.md** (12K)
+   - Historical metrics analysis
+   - **Status:** Completed analysis
+
+9. **extraction-to-analysis-transition.md** (49K)
+   - Transition planning from extraction to analysis
+   - **Status:** Transition complete
+
+10. **pass6-phase1-testing-findings.md** (31K)
+    - Pass 6 testing results
+    - **Status:** Testing complete, findings incorporated
+
+11. **pass6-software-documentation-enhancement.md** (12K)
+    - Pass 6 documentation improvements
+    - **Status:** Improvements complete
+
+12. **secondary-source-attribution-analysis.md** (28K)
+    - Secondary source analysis
+    - **Status:** Completed analysis
+
+13. **synthesis-external-feedback.md** (29K)
+    - External model feedback synthesis
+    - **Status:** Historical feedback
+
+14. **gpt51-feedback/** (folder)
+    - GPT-5.1 feedback on assessment framework
+    - **Status:** Historical feedback, incorporated into design
+
+---
 
 ### Archived: 2025-11-13 (Pass 6 Implementation Complete)
 
@@ -292,4 +358,4 @@ All archived items remain in git history. This archive structure provides:
 
 *Archive maintained by: Shawn & Claude Code*
 
-*Last major update: 2025-10-28 (Post-RUN-08 milestone)*
+*Last major update: 2025-11-29 (v2.6 housekeeping)*

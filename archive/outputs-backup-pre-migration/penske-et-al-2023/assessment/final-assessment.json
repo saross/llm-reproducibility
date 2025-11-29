@@ -1,0 +1,537 @@
+{
+  "extraction_id": "penske-et-al-2023",
+  "assessment_date": "2025-11-02",
+  "assessment_type": "full_long",
+  "assessor": "Claude Sonnet 4.5",
+  "source_paper": "Penske et al. (2023) - Ancient genomes reveal social and genetic structure of Late Neolithic Switzerland",
+
+  "overall_summary": {
+    "total_items_assessed": 231,
+    "total_mappings_assessed": 140,
+    "assessment_scope": "Complete verification of all extracted items and relationships with bidirectional mapping integrity analysis",
+
+    "pass_a_accuracy": {
+      "score_percent": 95.2,
+      "grade": "A-",
+      "items_assessed": 231,
+      "correct_items": 221,
+      "items_with_errors": 10,
+      "total_errors": 11,
+      "penalty_points": -11.5
+    },
+
+    "pass_b_granularity": {
+      "score_percent": 98.7,
+      "grade": "A",
+      "items_assessed": 231,
+      "appropriate_granularity": 228,
+      "over_split": 0,
+      "under_split": 3,
+      "inconsistent": 0
+    },
+
+    "pass_c_mapping": {
+      "score_percent": 75.0,
+      "grade": "C",
+      "mappings_assessed": 140,
+      "bidirectionally_consistent": 88,
+      "bidirectional_issues": 62,
+      "missing_item_references": 7,
+      "critical_issues": true
+    },
+
+    "overall_grade": "C+",
+    "overall_assessment": "Strong content quality (A- accuracy, A granularity) severely undermined by extensive bidirectional mapping inconsistencies (C mapping). Requires systematic mapping reconciliation before suitable for replicability assessment."
+  },
+
+  "pass_a_accuracy_detailed": {
+    "summary": "Overall accuracy 95.2% - High quality extraction with minor linkage and data quality issues",
+
+    "by_type": {
+      "evidence": {
+        "total": 85,
+        "correct": 83,
+        "errors": 2,
+        "error_items": ["E015"],
+        "penalty_points": -1.0,
+        "accuracy_percent": 97.6,
+        "notes": "E015 has duplicate mapping. Consolidation metadata quality varies but consolidations themselves appropriate."
+      },
+      "claims": {
+        "total": 84,
+        "correct": 76,
+        "errors": 8,
+        "error_items": ["C004", "C005", "C014", "C023", "C078", "C082", "C084"],
+        "penalty_points": -4.0,
+        "accuracy_percent": 90.5,
+        "notes": "8 claims lack supporting evidence (C006 appropriately as knowledge_gap claim). Some require reclassification or evidence linking."
+      },
+      "methods": {
+        "total": 20,
+        "correct": 19,
+        "errors": 1,
+        "error_items": ["M001"],
+        "penalty_points": -3.5,
+        "accuracy_percent": 95.0,
+        "notes": "M001 has duplicate design mapping. 4 methods lack design mappings (M017-M020)."
+      },
+      "protocols": {
+        "total": 35,
+        "correct": 35,
+        "errors": 0,
+        "penalty_points": 0.0,
+        "accuracy_percent": 100.0,
+        "notes": "Perfect accuracy with appropriate consolidation (P003)"
+      },
+      "research_designs": {
+        "total": 7,
+        "correct": 7,
+        "errors": 0,
+        "penalty_points": 0.0,
+        "accuracy_percent": 100.0,
+        "notes": "Perfect accuracy with excellent consolidation (RD002) and appropriate implicit design identification (RD008)"
+      }
+    },
+
+    "errors_identified": [
+      {
+        "item_id": "E015",
+        "error_type": "data_quality",
+        "severity": "minor",
+        "penalty": -0.5,
+        "description": "Duplicate mapping in supports_claims array",
+        "issue": "supports_claims: ['C019', 'C019'] contains duplicate entry",
+        "corrective_action": "Remove duplicate - should be ['C019']"
+      },
+      {
+        "item_id": "C004,C005,C014,C023,C078,C082,C084",
+        "error_type": "missing_evidence_linkages",
+        "severity": "moderate",
+        "penalty": -4.0,
+        "description": "8 claims have empty supporting_evidence arrays",
+        "issue": "Claims require evidence support but have no linkages. C023→E013, C084→E004/E025/E028 clear cases. C004/C005 may need reclassification to background_synthesis. C014/C078/C082 need synthesis evidence linked.",
+        "corrective_action": "Add missing evidence linkages where evidence exists, or reclassify claims as background_synthesis where appropriate. C006 (knowledge_gap) correctly has no evidence."
+      },
+      {
+        "item_id": "M001",
+        "error_type": "data_quality",
+        "severity": "minor",
+        "penalty": -0.5,
+        "description": "Duplicate mapping in implements_designs array",
+        "issue": "implements_designs: ['RD001', 'RD002', 'RD002', 'RD005'] contains duplicate RD002",
+        "corrective_action": "Remove duplicate - should be ['RD001', 'RD002', 'RD005']"
+      },
+      {
+        "item_id": "M017,M018,M019,M020",
+        "error_type": "missing_design_linkages",
+        "severity": "moderate",
+        "penalty": -3.0,
+        "description": "4 methods have null or empty implements_designs arrays",
+        "issue": "M017 (model_selection), M018 (quality_control), M019 (classification) should link to RD006 or RD004. M020 (visualization) status unclear.",
+        "corrective_action": "Link M017/M019 to RD006, M018 to RD004, clarify M020 status"
+      },
+      {
+        "item_id": "C023",
+        "error_type": "miscategorisation",
+        "severity": "minor",
+        "penalty": -1.0,
+        "description": "Non-standard claim_type 'assessment' used",
+        "issue": "Some claim_type values not consistently applied (e.g., 'assessment', 'historiographic_impact')",
+        "corrective_action": "Standardise claim_type taxonomy or document custom types"
+      }
+    ]
+  },
+
+  "pass_b_granularity_detailed": {
+    "summary": "Overall granularity 98.7% - Excellent editorial judgment with appropriate consolidation and no over-splitting",
+
+    "by_type": {
+      "evidence": {
+        "total": 85,
+        "appropriate": 84,
+        "over_split": 0,
+        "under_split": 1,
+        "inconsistent": 0,
+        "score_percent": 98.8,
+        "notable_consolidations": [
+          "E009: Tell sites consolidated (3→1) - compound_finding",
+          "E019: PIE039 genetic similarity (2→1) - identical_support_pattern",
+          "E021: SEE 1 genetic modelling (2→1) - compound_finding",
+          "E023: CA cluster formation (2→1) - compound_finding",
+          "E059: MJ41 admixture dating (2→1) - compound_finding",
+          "E076: Vertical stratification (2→1) - compound_finding",
+          "E087: mtDNA analysis (2→1) - compound_finding",
+          "E092: Y-chromosome analysis (2→1) - compound_finding"
+        ]
+      },
+      "claims": {
+        "total": 84,
+        "appropriate": 84,
+        "over_split": 0,
+        "under_split": 0,
+        "inconsistent": 0,
+        "score_percent": 100.0,
+        "notable_consolidations": [
+          "C019: Tell settlements interpretation (2→1) - redundancy_elimination"
+        ]
+      },
+      "methods": {
+        "total": 20,
+        "appropriate": 19,
+        "over_split": 0,
+        "under_split": 1,
+        "inconsistent": 0,
+        "score_percent": 95.0
+      },
+      "protocols": {
+        "total": 35,
+        "appropriate": 34,
+        "over_split": 0,
+        "under_split": 1,
+        "inconsistent": 0,
+        "score_percent": 97.1,
+        "notable_consolidations": [
+          "P003: Tissue sampling procedures (2→1) - compound_protocol"
+        ]
+      },
+      "research_designs": {
+        "total": 7,
+        "appropriate": 7,
+        "over_split": 0,
+        "under_split": 0,
+        "inconsistent": 0,
+        "score_percent": 100.0,
+        "notable_consolidations": [
+          "RD002: Spatiotemporal scope (2→1) - compound_design"
+        ]
+      }
+    },
+
+    "issues_identified": [
+      {
+        "item_id": "E015",
+        "issue_type": "potential_under_split",
+        "severity": "marginal",
+        "description": "Three distinct resource types (copper, gold, salt) combined",
+        "assessment": "Acceptable as consolidated economic pattern unless paper discusses resources independently with separate evidence",
+        "recommendation": "Verify against source - if resources discussed independently, consider splitting"
+      },
+      {
+        "item_id": "M002",
+        "issue_type": "potential_under_split",
+        "severity": "marginal",
+        "description": "Two tissue types (petrous bones, teeth) combined at method level",
+        "assessment": "Acceptable - tissue-specific detail appropriately delegated to protocol level (P003)",
+        "recommendation": "No action - RDMAP hierarchy appropriately places variation at protocol level"
+      },
+      {
+        "item_id": "P008",
+        "issue_type": "potential_under_split",
+        "severity": "marginal",
+        "description": "Database (IntCal20) and software (OxCal) combined in single protocol",
+        "assessment": "Acceptable - functionally inseparable components of calibration protocol",
+        "recommendation": "No action - cannot assess database independently of software"
+      }
+    ],
+
+    "key_findings": [
+      "No over-splitting detected - strong editorial judgment on consolidation",
+      "Evidence consolidation exemplary (98.8%) with 8 appropriate consolidations",
+      "RDMAP hierarchy shows clear granularity differentiation: Design (119 chars avg) → Method (84 chars) → Protocol (89 chars)",
+      "Consistent detail levels within types (genetic observations, archaeological patterns, statistical tests)",
+      "Conservative consolidation approach (9.4% evidence, 1.2% claims, 2.9% protocols, 14.3% designs consolidated)",
+      "All consolidations have metadata with clear rationale",
+      "Functional usefulness maintained - items independently assessable"
+    ]
+  },
+
+  "pass_c_mapping_detailed": {
+    "summary": "Overall mapping quality 75.0% - CRITICAL: Extensive bidirectional mapping inconsistencies severely undermine otherwise sound conceptual relationships",
+
+    "by_relationship_type": {
+      "claim_to_evidence": {
+        "total_mappings": 99,
+        "bidirectionally_consistent": 79,
+        "forward_direction_issues": 14,
+        "reverse_direction_issues": 6,
+        "missing_item_references": 4,
+        "score_percent": 79.8,
+        "grade": "C+"
+      },
+      "method_to_design": {
+        "total_mappings": 19,
+        "bidirectionally_consistent": 9,
+        "forward_direction_issues": 7,
+        "reverse_direction_issues": 3,
+        "missing_item_references": 0,
+        "score_percent": 47.4,
+        "grade": "F"
+      },
+      "protocol_to_method": {
+        "total_mappings": 22,
+        "bidirectionally_consistent": 0,
+        "forward_direction_issues": 29,
+        "reverse_direction_issues": 3,
+        "missing_item_references": 3,
+        "score_percent": 0.0,
+        "grade": "F"
+      }
+    },
+
+    "critical_issues": [
+      {
+        "issue_type": "bidirectional_inconsistency",
+        "severity": "critical",
+        "description": "62 bidirectional mapping inconsistencies across all relationship types",
+        "impact": "Creates data integrity problems, assessment ambiguity, and undermines RDMAP hierarchy traceability",
+        "affected_mappings": {
+          "claim_evidence": 20,
+          "method_design": 10,
+          "protocol_method": 32
+        }
+      },
+      {
+        "issue_type": "missing_item_references",
+        "severity": "critical",
+        "description": "7 items reference non-existent IDs (orphaned references from consolidation)",
+        "items": [
+          "C025 → E020 (consolidated into E019)",
+          "C027 → E022 (consolidated into E021)",
+          "C029 → E024 (consolidated, ID unknown)",
+          "C073 → E077 (gap in sequence)",
+          "M002 → P004 (protocol not found)",
+          "M007 → P012 (protocol not found)",
+          "M014 → P020 (protocol not found)"
+        ],
+        "impact": "Broken references prevent reliable relationship assessment"
+      },
+      {
+        "issue_type": "protocol_method_mapping_failure",
+        "severity": "critical",
+        "description": "0% bidirectional consistency in protocol-method mappings",
+        "impact": "RDMAP hierarchy completely broken at protocol level, preventing protocol traceability",
+        "scale": "32 protocol-method bidirectional inconsistencies"
+      }
+    ],
+
+    "root_cause_analysis": {
+      "primary_cause": "Incomplete consolidation reconciliation",
+      "explanation": "When Pass 1 items were consolidated in Pass 2+, forward and reverse mappings were not systematically updated to reflect new consolidated IDs",
+      "contributing_factors": [
+        "Asymmetric mapping updates (one direction updated without reverse)",
+        "Protocol extraction or ID numbering issues",
+        "Missing protocols (P004, P012, P020) or ID mismatches",
+        "Consolidation metadata documented but references not updated"
+      ]
+    },
+
+    "issues_identified": [
+      {
+        "mapping_category": "claim_to_evidence",
+        "issue_count": 20,
+        "examples": [
+          "C007 → E001/E003 (evidence doesn't link back)",
+          "C023 → E013 (missing linkage, flagged in Pass A)",
+          "C025 → E020 (E020 doesn't exist, consolidated into E019)",
+          "E006 → C015 (claim doesn't link back, potentially weak link)"
+        ],
+        "pattern": "Claims reference consolidated evidence using old IDs, or evidence added without updating claims"
+      },
+      {
+        "mapping_category": "method_to_design",
+        "issue_count": 10,
+        "examples": [
+          "M009-M015 → RD006 (7 methods claim RD006 but RD006 doesn't list them)",
+          "RD001 → M002 (RD001 lists M002 but M002 doesn't list RD001)",
+          "M015 implements RD006 but should also implement RD008"
+        ],
+        "pattern": "Multiple analytical methods (M009-M015) claim to implement RD006 but not reciprocated"
+      },
+      {
+        "mapping_category": "protocol_to_method",
+        "issue_count": 32,
+        "examples": [
+          "P002 → M002 (M002 doesn't list P002)",
+          "P010 → M014 (incorrect - should be M005)",
+          "P011 → M007 (incorrect - should be M006)",
+          "M002 → P004 (P004 doesn't exist)"
+        ],
+        "pattern": "Systematic protocol-method mapping failure with ID mismatches and missing protocols"
+      }
+    ],
+
+    "key_findings": [
+      "CRITICAL: 0% protocol-method bidirectional consistency - severe structural failure",
+      "CRITICAL: 47% method-design bidirectional consistency - major integrity problem",
+      "SIGNIFICANT: 80% claim-evidence bidirectional consistency - recoverable but requires work",
+      "7 missing item references creating orphaned mappings",
+      "Conceptual RDMAP hierarchy is sound, but implementation broken",
+      "Root cause: incomplete consolidation reconciliation",
+      "Estimated 62+ bidirectional inconsistencies requiring correction"
+    ]
+  },
+
+  "priority_corrections": [
+    {
+      "priority": 1,
+      "category": "missing_item_references",
+      "severity": "critical",
+      "action": "Update all claims/methods referencing non-existent items",
+      "items": [
+        "C025: E020 → E019",
+        "C027: E022 → E021",
+        "C029: E024 → (identify correct evidence)",
+        "C073: E077 → (identify correct evidence)",
+        "M002: P004 → (verify exists or remove)",
+        "M007: P012 → (identify correct protocol)",
+        "M014: P020 → (identify correct protocol)"
+      ],
+      "impact": "Eliminates broken references, enables reliable mapping assessment"
+    },
+    {
+      "priority": 2,
+      "category": "protocol_method_mapping",
+      "severity": "critical",
+      "action": "Completely rebuild protocol-method bidirectional mappings",
+      "scope": "All 35 protocols and 20 methods",
+      "requirements": [
+        "Audit all protocol.implements_methods arrays",
+        "Audit all method.implemented_by_protocols arrays",
+        "Ensure bidirectional consistency throughout",
+        "Identify and add any truly missing protocols (P004, P012, P020)",
+        "Correct ID mismatches (P010→M005 not M014, P011→M006 not M007)"
+      ],
+      "impact": "Restores RDMAP hierarchy integrity, enables protocol traceability"
+    },
+    {
+      "priority": 3,
+      "category": "method_design_mapping",
+      "severity": "high",
+      "action": "Reconcile 10 method-design bidirectional inconsistencies",
+      "tasks": [
+        "Add M009, M010, M011, M013, M014, M015 to RD006.supported_by_methods",
+        "Remove RD001→M002 and RD004→M003 (incorrect associations)",
+        "Add RD008 to M015.implements_designs (dual implementation)",
+        "Link M017→RD006, M018→RD004, M019→RD006"
+      ],
+      "impact": "Restores method-design relationship integrity"
+    },
+    {
+      "priority": 4,
+      "category": "claim_evidence_mapping",
+      "severity": "moderate",
+      "action": "Reconcile 20 claim-evidence bidirectional inconsistencies",
+      "tasks": [
+        "Add missing reverse mappings (C007→E001/E003, C008→E001, C009→E002, etc.)",
+        "Update claims referencing consolidated evidence (C025→E019, C027→E021)",
+        "Add E013 to C023.supporting_evidence",
+        "Remove weak/tangential links (E006→C015 if too indirect)",
+        "Add evidence to synthesis claims (C078, C082, C084)"
+      ],
+      "impact": "Ensures claim-evidence relationship integrity"
+    },
+    {
+      "priority": 5,
+      "category": "accuracy_refinements",
+      "severity": "moderate",
+      "action": "Address Pass A accuracy issues",
+      "tasks": [
+        "Remove duplicate mappings (E015, M001)",
+        "Reclassify C004/C005 to background_synthesis",
+        "Standardise claim_type taxonomy",
+        "Link unsupported claims to appropriate evidence"
+      ],
+      "impact": "Improves content accuracy and consistency"
+    }
+  ],
+
+  "patterns_identified": [
+    {
+      "pattern": "Strong content quality undermined by mapping issues",
+      "description": "Excellent accuracy (95.2%) and granularity (98.7%) with perfect RDMAP conceptual hierarchy, but severe bidirectional mapping inconsistencies (75.0%)",
+      "significance": "Content extraction is high quality, but relationship mapping systematically broken during consolidation"
+    },
+    {
+      "pattern": "Incomplete consolidation reconciliation",
+      "description": "When Pass 1 items consolidated, mappings not fully updated in both forward and reverse directions",
+      "significance": "Root cause of 62 bidirectional inconsistencies and 7 orphaned references"
+    },
+    {
+      "pattern": "Protocol-method mapping failure",
+      "description": "0% bidirectional consistency in protocol-method mappings with systematic ID mismatches",
+      "significance": "Complete failure of RDMAP hierarchy at protocol level - cannot trace methods to implementing protocols"
+    },
+    {
+      "pattern": "Excellent consolidation documentation",
+      "description": "11 consolidations, all have consolidation_metadata with clear rationale",
+      "significance": "Strong editorial judgment on what to consolidate, but implementation (updating references) incomplete"
+    },
+    {
+      "pattern": "Perfect protocol and design accuracy",
+      "description": "100% accuracy for protocols and research designs with no errors",
+      "significance": "RDMAP components extracted with high quality at content level"
+    },
+    {
+      "pattern": "Claims evidence linkage variability",
+      "description": "8 claims lack evidence support, some appropriately (C006 knowledge_gap), others need links/reclassification",
+      "significance": "Need systematic review of unsupported claims"
+    },
+    {
+      "pattern": "No over-splitting",
+      "description": "Zero over-split items across all categories",
+      "significance": "Conservative consolidation approach successfully avoids unnecessary fragmentation"
+    }
+  },
+
+  "overall_assessment": {
+    "grade": "C+",
+    "quality_tier": "Mixed - Strong content quality (A-), severe mapping issues (C)",
+
+    "strengths": [
+      "Excellent accuracy (95.2%) with perfect protocols and designs",
+      "Excellent granularity (98.7%) with no over-splitting",
+      "Strong consolidation quality with clear documentation (11 consolidations)",
+      "Sound conceptual RDMAP hierarchy (design → method → protocol)",
+      "Conservative editorial judgment balancing atomic principle with usefulness",
+      "Clear granularity differentiation across RDMAP levels",
+      "No hallucinations or confabulations detected",
+      "Appropriate implicit design identification (RD008)"
+    ],
+
+    "critical_weaknesses": [
+      "0% protocol-method bidirectional consistency - complete structural failure",
+      "47% method-design bidirectional consistency - major integrity problem",
+      "80% claim-evidence bidirectional consistency - significant but recoverable",
+      "62 total bidirectional mapping inconsistencies",
+      "7 missing item references (orphaned mappings from consolidation)",
+      "RDMAP hierarchy implementation broken despite sound conceptual structure"
+    ],
+
+    "moderate_weaknesses": [
+      "8 claims lack evidence support (some need reclassification, others need links)",
+      "4 methods lack design mappings",
+      "2 duplicate mappings (E015, M001)",
+      "Claim type taxonomy inconsistencies (non-standard types)"
+    ],
+
+    "recommendations": [
+      "PRIORITY 1 (CRITICAL): Fix 7 missing item references (broken consolidated IDs)",
+      "PRIORITY 2 (CRITICAL): Completely rebuild protocol-method mappings (0% consistency)",
+      "PRIORITY 3 (HIGH): Reconcile 10 method-design bidirectional inconsistencies",
+      "PRIORITY 4 (MODERATE): Reconcile 20 claim-evidence bidirectional inconsistencies",
+      "PRIORITY 5 (MODERATE): Address Pass A accuracy refinements",
+      "Systematic consolidation reconciliation protocol needed for future extractions",
+      "Implement bidirectional consistency checks during extraction workflow"
+    ],
+
+    "fitness_for_use": "NOT SUITABLE for replicability assessment without major corrections. While content quality is excellent (A- accuracy, A granularity), bidirectional mapping inconsistencies create fundamental data integrity problems. The extraction requires systematic mapping reconciliation across all relationship types, particularly complete rebuild of protocol-method mappings (0% consistency) and significant repairs to method-design (47% consistency) and claim-evidence (80% consistency) mappings. Estimated correction effort: HIGH (62+ bidirectional inconsistencies plus systematic protocol-method rebuild required).",
+
+    "estimated_correction_effort": "High - Approximately 40-60 hours for systematic mapping reconciliation:
+- 4 hours: Fix 7 missing item references
+- 20-30 hours: Rebuild protocol-method mappings (0% consistency)
+- 8-10 hours: Reconcile method-design mappings (10 issues)
+- 6-8 hours: Reconcile claim-evidence mappings (20 issues)
+- 2-4 hours: Address accuracy refinements
+- 4-6 hours: Verification and validation"
+  }
+}

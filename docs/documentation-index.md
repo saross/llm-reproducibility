@@ -2,8 +2,8 @@
 
 Complete map of all documentation in the LLM Reproducibility project, organised by audience and purpose.
 
-**Last Updated:** 2025-11-13
-**Documentation Files:** 18 files across 4 categories
+**Last Updated:** 2025-11-29
+**Documentation Files:** 20+ files across 4 categories
 
 ---
 
@@ -35,7 +35,7 @@ Start here if you're new to the Research Assessor skill or paper extraction:
    - **Time:** 15-20 minutes reading
 
 2. **[Extraction Workflow](user-guide/extraction-workflow.md)** (Complete workflow guide)
-   - 7-pass workflow detailed (Passes 0-6 + validation)
+   - 8-pass workflow detailed (Passes 0-7)
    - Section-by-section extraction approach
    - JSON file management
    - Quality metrics and verification
@@ -63,7 +63,7 @@ Start here if you're new to the Research Assessor skill or paper extraction:
 Quick-access guides for users actively extracting papers:
 
 1. **[Quick Reference](research-assessor-guide/quick-reference.md)** (Essential commands and checklist)
-   - 7-pass workflow checklist
+   - 8-pass workflow checklist (Passes 0-7)
    - Common commands
    - Troubleshooting quick fixes
    - Validation checks
@@ -77,7 +77,7 @@ Quick-access guides for users actively extracting papers:
    - **Use:** Reference when uncertain about field usage
 
 3. **[Usage Guide](research-assessor-guide/usage-guide.md)** (Comprehensive pass-by-pass instructions)
-   - Detailed instructions for each pass (0-6 + validation)
+   - Detailed instructions for each pass (0-7)
    - Conversation templates for Claude Code
    - Section extraction strategies
    - JSON validation procedures
@@ -91,7 +91,7 @@ Documentation for installing and configuring the Research Assessor skill:
 
 1. **[Research Assessor Overview](research-assessor-guide/README.md)** (What the skill does)
    - Skill capabilities and features
-   - 7-pass workflow overview
+   - 8-pass workflow overview (Passes 0-7)
    - Object types extracted
    - When to use this skill
    - **Time:** 10 minutes reading
@@ -183,7 +183,7 @@ Deep research reports informing the extraction framework:
 ### Extraction Process
 
 - [Getting Started](user-guide/getting-started.md) - First extraction
-- [Extraction Workflow](user-guide/extraction-workflow.md) - Complete 7-pass workflow
+- [Extraction Workflow](user-guide/extraction-workflow.md) - Complete 8-pass workflow (Passes 0-7)
 - [Quick Reference](research-assessor-guide/quick-reference.md) - Workflow checklist
 - [Usage Guide](research-assessor-guide/usage-guide.md) - Pass-by-pass detailed instructions
 
@@ -418,4 +418,4 @@ Under the following terms:
 
 **Navigation:** [Main README](../README.md) | [User Guide](user-guide/) | [Research Assessor Guide](research-assessor-guide/) | [Background Research](background-research/)
 
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-11-29

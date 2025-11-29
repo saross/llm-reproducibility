@@ -1,0 +1,166 @@
+[
+  {
+    "method_id": "M001",
+    "method_text": "Transfer learning using pre-trained ResNet-50 convolutional neural network",
+    "method_status": "explicit",
+    "verbatim_quote": "Rather than training our own model from scratch, we used a pre-trained CNN, a technique known as transfer learning. After some preliminary experimentation with a range of different pre-trained models, we concluded that ResNet-50 seemed to perform best for our data.",
+    "location": {
+      "section": "Methods",
+      "subsection": "Transfer learning",
+      "paragraph": 1
+    },
+    "method_category": "computational_analysis",
+    "linked_protocols": [
+      "P001",
+      "P002",
+      "P003"
+    ],
+    "linked_designs": [
+      "RD001",
+      "RD004"
+    ],
+    "expected_information_missing": [
+      "Criteria for 'best performance'",
+      "Other models tested",
+      "Pre-training dataset characteristics"
+    ]
+  },
+  {
+    "method_id": "M002",
+    "method_text": "Additional CNN training using domain-specific burial mound imagery",
+    "method_status": "explicit",
+    "verbatim_quote": "Although pre-trained models have already been exposed to millions of images and have developed weights that respond to low-level features, they still need to be trained with domain-specific data.",
+    "location": {
+      "section": "Methods",
+      "subsection": "Transfer learning",
+      "paragraph": 3
+    },
+    "method_category": "computational_analysis",
+    "linked_protocols": [
+      "P002",
+      "P003",
+      "P004"
+    ],
+    "linked_designs": [
+      "RD001",
+      "RD002",
+      "RD004"
+    ],
+    "expected_information_missing": [
+      "Training hyperparameters",
+      "Stopping criteria",
+      "Overfitting prevention strategy"
+    ]
+  },
+  {
+    "method_id": "M003",
+    "method_text": "Binary classification approach distinguishing tiles containing mounds from tiles without mounds",
+    "method_status": "explicit",
+    "verbatim_quote": "The CNN was trained to identify 150 3 150 m tiles that contained mounds (MOUND) and those that did not (NO MOUND).",
+    "location": {
+      "section": "Methods",
+      "subsection": "Additional CNN training",
+      "paragraph": 1
+    },
+    "method_category": "computational_analysis",
+    "linked_protocols": [
+      "P004",
+      "P005"
+    ],
+    "linked_designs": [
+      "RD001"
+    ],
+    "expected_information_missing": [
+      "Decision threshold selection",
+      "Multi-mound tile handling strategy"
+    ]
+  },
+  {
+    "method_id": "M004",
+    "method_text": "Image augmentation to expand training dataset",
+    "method_status": "explicit",
+    "verbatim_quote": "After image augmentation, the model reported good learning and model fit",
+    "location": {
+      "section": "Results",
+      "subsection": "First run (2021)",
+      "paragraph": 1
+    },
+    "method_category": "data_preparation",
+    "linked_protocols": [],
+    "linked_designs": [
+      "RD001"
+    ],
+    "expected_information_missing": [
+      "Augmentation techniques used",
+      "Augmentation factor",
+      "Rationale for augmentation strategy"
+    ]
+  },
+  {
+    "method_id": "M005",
+    "method_text": "Automated model performance evaluation using held-out test set",
+    "method_status": "explicit",
+    "verbatim_quote": "After processing, cutouts were divided into training, validation, and test sets following a 70:20:10 ratio for automated performance validation.",
+    "location": {
+      "section": "Methods",
+      "subsection": "Additional CNN training",
+      "paragraph": 1
+    },
+    "method_category": "validation",
+    "linked_protocols": [
+      "P008"
+    ],
+    "linked_designs": [
+      "RD001"
+    ],
+    "expected_information_missing": [
+      "Metrics used beyond F1",
+      "Stratification strategy",
+      "Cross-validation"
+    ]
+  },
+  {
+    "method_id": "M006",
+    "method_text": "Field-based external validation comparing model predictions against surveyed ground truth",
+    "method_status": "explicit",
+    "verbatim_quote": "Validation of results against field data showed that self-reported success rates were misleadingly high",
+    "location": {
+      "section": "Abstract",
+      "subsection": "Findings",
+      "paragraph": 1
+    },
+    "method_category": "validation",
+    "linked_protocols": [
+      "P009"
+    ],
+    "linked_designs": [
+      "RD001"
+    ],
+    "expected_information_missing": [
+      "Validation protocol details",
+      "False positive/negative classification criteria",
+      "Inter-rater reliability"
+    ]
+  },
+  {
+    "method_id": "M007",
+    "method_text": "Probability thresholding at >60% for positive mound detection",
+    "method_status": "explicit",
+    "verbatim_quote": "Nevertheless, only 19 out of 148 tiles (12.8%) tagged by the model with at least a 60% chance of having a mound actually contained one",
+    "location": {
+      "section": "Results",
+      "subsection": "First run (2021)",
+      "paragraph": 1
+    },
+    "method_category": "computational_analysis",
+    "linked_protocols": [],
+    "linked_designs": [
+      "RD001"
+    ],
+    "expected_information_missing": [
+      "Threshold selection rationale",
+      "Threshold sensitivity analysis",
+      "Alternative thresholds tested"
+    ]
+  }
+]
