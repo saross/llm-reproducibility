@@ -1,13 +1,12 @@
 {
   "classification_metadata": {
     "classified_after_pass": 7,
-    "classification_date": "2025-11-27",
-    "classifier_version": "v0.2-alpha",
-    "paper_slug": "penske-et-al-2023"
+    "classification_date": "2025-11-30",
+    "classifier_version": "v0.2-alpha"
   },
 
   "paper_type": "empirical",
-  "paper_type_justification": "This paper collects and analyses empirical data (genome-wide data from 135 ancient individuals) to investigate phenomena in the world (genetic and cultural contact between Copper Age farming groups and Eneolithic steppe-associated groups). Claims describe, explain, and test predictions about prehistoric population dynamics. Methods (ancient DNA extraction, PCA, f-statistics, qpAdm modelling) are tools used to investigate the research question, not the subject being investigated. Primary contribution is understanding population history during 5400-2400 BC, not presenting genetic analysis methodology.",
+  "paper_type_justification": "This is a high-profile archaeogenetics study analysing genome-wide data from 135 ancient individuals to investigate genetic and cultural contact between Copper Age farming groups and Eneolithic steppe-associated groups. The paper generates new empirical data (ancient DNA sequences), applies multiple analytical methods, and makes claims about prehistoric population dynamics based on genetic evidence. Primary contribution is empirical findings about genetic ancestry and contact patterns.",
 
   "taxonomy_feedback": {
     "category_fit_quality": "excellent",
@@ -20,67 +19,62 @@
   "expressed_approach": {
     "approach": "deductive",
     "evidence": [
-      "RD001: 'Address knowledge gap about events between Copper Age demise (4250 BC) and pastoralist expansion (3300 BC)' - framed as testing/explaining gap between two known events",
-      "RD007: 'Systematic pathogen screening to test disease hypotheses for CA abandonment' - explicitly hypothesis-testing design",
-      "Abstract states: 'To address this question, we analysed genome-wide data from 135 ancient individuals' - confirmatory framing",
-      "Multiple statistical tests (f4-symmetry statistics, qpAdm models) used to test ancestry hypotheses",
-      "Claims like 'earlier than anticipated' imply testing against prior predictions"
+      "RD001: 'Address knowledge gap about events between Copper Age demise and pastoralist expansion' - framed as addressing specific research question",
+      "RD007: 'Systematic pathogen screening to test disease hypotheses for CA abandonment' - explicit hypothesis testing",
+      "RD006: 'Use multiple complementary genetic analysis methods to characterize ancestries' - systematic triangulation design"
     ],
-    "source_sections": ["abstract", "introduction", "methods"],
-    "confidence": "high"
+    "source_sections": ["introduction", "methods", "results"],
+    "confidence": "medium"
   },
 
   "revealed_approach": {
-    "approach": "deductive",
+    "approach": "mixed_deductive_inductive",
     "evidence": {
-      "claims_structure": "Claims test predictions and report confirmatory/disconfirmatory outcomes: 'we observe genetic continuity between Neolithic and Copper Age groups' (confirms prediction), 'indicating genetic and cultural contact... earlier than anticipated' (revises prior expectation), 'we found no evidence for pathogens among the CA individuals' (rejects pathogen hypothesis). Statistical hypothesis testing throughout (f4-statistics, qpAdm model fit tests).",
-      "methods_application": "Methods used for hypothesis testing: (1) f4-symmetry statistics test for differential ancestry (statistical hypothesis tests), (2) qpAdm modelling tests admixture model fit with p-values, (3) Pathogen screening tests disease hypothesis, (4) Spearman correlation tests temporal-genetic relationship hypothesis. All methods generate testable predictions evaluated against data.",
-      "analytical_workflow": "Hypothesis → Test → Result sequence: (1) Frame research question about contact timing, (2) Generate predictions from existing models (two turnover events, expected timing), (3) Test predictions with new data, (4) Report confirmations/revisions (contact 1000 years earlier than anticipated). Explicit hypothesis rejection for pathogen hypothesis. Deductive validation workflow with model testing."
+      "claims_structure": "Claims are predominantly pattern descriptions: C001-C005 describe background synthesis and temporal associations. Later claims characterize genetic ancestries, contact patterns, and population dynamics. These are discoveries/characterizations rather than hypothesis confirmations. However, RD007 (pathogen screening) is a clear hypothesis test with null result.",
+      "methods_application": "Methods follow systematic analysis workflow: sampling (M001), data generation (M002-M004), chronological framework (M003), then multiple analytical approaches (M005-M016). The triangulation design (PCA, f-statistics, qpAdm) suggests exploratory characterization rather than confirmatory testing of pre-specified hypotheses.",
+      "analytical_workflow": "Workflow is exploratory within structured framework: characterize ancestries using cornerstone populations, detect genetic structure, model admixture events. The paper discovers that Cernavodă I individuals show steppe ancestry earlier than previously documented - this is a discovery, not a hypothesis confirmation."
     },
     "confidence": "high"
   },
 
   "expressed_vs_revealed": {
-    "alignment": "matched",
+    "alignment": "partial",
     "harking_flag": false,
-    "mismatch_explanation": "Paper explicitly frames as hypothesis-testing research and actually conducts hypothesis-testing. Both expressed and revealed approaches are deductive: testing predictions about ancestry, contact timing, and pathogen involvement against empirical data. Methodological transparency is high. Statistical hypothesis testing (f-statistics, model fit p-values) throughout confirms deductive approach."
+    "mismatch_explanation": "Paper expresses research as addressing a knowledge gap (deductive framing) but revealed approach is predominantly inductive/exploratory characterization of ancient DNA patterns. The pathogen screening (RD007) is genuinely deductive with null result. This is legitimately mixed-method research - the framing emphasizes hypothesis-driven aspects but actual analysis is largely exploratory. No HARKing detected - findings are presented as discoveries consistent with exploratory approach."
   },
 
   "primary_classification": {
-    "approach": "deductive",
-    "confidence": "high",
-    "justification": "This is clearly deductive hypothesis-testing research. Key evidence: (1) RD007 explicitly tests pathogen hypothesis for CA abandonment - hypothesis rejected based on systematic screening, (2) Statistical hypothesis testing throughout using f4-statistics and qpAdm model fit tests with p-values, (3) Research framed around testing/explaining gap between two known events, (4) Claims report confirmatory/disconfirmatory outcomes ('earlier than anticipated', 'no evidence for pathogens'), (5) Multiple complementary methods (RD006: methodological triangulation) used to confirm/disconfirm ancestry hypotheses. While paper documents previously unknown patterns (inductive element), primary structure is testing predictions against data. Classification unambiguous for Nature genetics paper with statistical hypothesis testing."
+    "approach": "inductive",
+    "confidence": "medium",
+    "justification": "While paper has deductive elements (RD007 pathogen hypothesis test), the dominant approach is inductive. The core contribution is characterizing genetic ancestries and discovering contact patterns - these are exploratory findings rather than hypothesis confirmations. Methods (PCA, ancestry modelling) are pattern-detection tools. The discovery that Cernavodă I individuals show steppe ancestry is a novel finding, not confirmation of pre-specified prediction. Classification as inductive with acknowledgement of mixed elements."
   },
 
   "mixed_method_characterisation": {
     "is_mixed": true,
-    "primary_approach": "deductive",
-    "secondary_approaches": ["inductive"],
-    "qualifications": [
-      "Primary approach is deductive hypothesis-testing: testing pathogen hypothesis, ancestry model fit, contact timing predictions",
-      "Secondary inductive element: exploratory characterisation of previously undocumented genetic diversity",
-      "Pattern discovery (inductive) informs hypothesis refinement (deductive cycle)",
-      "Statistical methods (f-statistics, qpAdm) are confirmatory/hypothesis-testing in character",
-      "Appropriate mixed design: exploratory characterisation within confirmatory framework",
-      "Deductive framework dominant; inductive elements serve hypothesis generation for future testing"
-    ]
+    "primary_approach": "inductive",
+    "secondary_approach": "deductive",
+    "phase_separation": {
+      "inductive_phases": "Core ancestry characterization, population structure analysis, contact pattern detection",
+      "deductive_phases": "RD007 pathogen screening (null hypothesis test)"
+    },
+    "balance_description": "Predominantly inductive (70-80%) with deductive element (RD007, 20-30%)"
   },
 
   "transparency_assessment": {
     "expressed_methodology_present": true,
     "transparency_quality": "high",
-    "transparency_notes": "Explicit research design statements present. Methods extensively documented (20 methods, 35+ protocols in extraction). Statistical procedures described with references to established pipelines. Supplementary Information provides detailed protocols. High methodological transparency expected for Nature publication. Some implicit methods identified (M017-M020: model selection, quality filtering, population grouping) but core analytical workflow transparent."
+    "transparency_notes": "Nature paper with extensive supplementary materials. Methods section highly detailed with 35 protocols documented. Research designs RD001-RD008 document strategic choices. Data deposited in ENA (PRJEB62503). Some gaps: no code repository, cornerstone population selection rationale implicit (RD008)."
   },
 
   "credibility_framework": {
-    "framework_to_use": "deductive_emphasis",
+    "framework_to_use": "inductive_emphasis",
     "signal_prioritisation": {
-      "primary_signals": ["validity", "robustness", "replicability"],
-      "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
-      "deemphasised_signals": ["generalisability"],
-      "rationale": "Deductive hypothesis-testing study prioritises: (1) Validity - evidence adequacy for hypothesis tests (comprehensive ancient DNA dataset, multiple statistical tests), (2) Robustness - sensitivity to analytical choices (multiple complementary methods, model selection), (3) Replicability - code/data sharing for reproduction (genomic data typically deposited in public repositories). Transparency high but secondary since methodology explicit. Generalisability appropriately constrained to southeastern Europe/Black Sea region context."
+      "primary_signals": ["transparency", "validity", "comprehensibility"],
+      "secondary_signals": ["plausibility", "reproducibility", "generalisability"],
+      "deemphasised_signals": ["robustness"],
+      "rationale": "Inductive archaeogenetics paper prioritises: (1) Transparency - workflow documentation, data archiving; (2) Validity - sampling coverage, analytical appropriateness; (3) Comprehensibility - pattern descriptions clear and bounded. Robustness deemphasised as exploratory studies may not exhaustively test alternatives. Note: deductive element (RD007) can be assessed with confirmatory criteria within overall inductive framework."
     }
   },
 
-  "classification_notes": "Straightforward deductive empirical research. Classification matches expected outcome (empirical/deductive). Paper demonstrates exemplary hypothesis-testing structure for archaeogenetics: explicit hypothesis rejection (pathogen hypothesis), statistical model testing (qpAdm with p-values), and revision of prior expectations (contact timing). Note: Paper is co-authored by user (Shawn Ross) - classification conducted without bias based on extraction evidence. Nature publication standards support high transparency assessment."
+  "classification_notes": "High-profile Nature archaeogenetics paper. Mixed approach with predominantly inductive ancestry characterization and secondary deductive element (pathogen hypothesis test with null result). Classification as inductive reflects the core contribution: discovering and characterizing genetic contact patterns. The systematic triangulation design (RD006) provides robustness to inductive findings. Excellent data sharing (ENA, AADR) but no code repository."
 }

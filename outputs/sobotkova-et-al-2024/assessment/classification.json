@@ -1,13 +1,12 @@
 {
   "classification_metadata": {
     "classified_after_pass": 7,
-    "classification_date": "2025-11-27",
-    "classifier_version": "v0.2-alpha",
-    "paper_slug": "sobotkova-et-al-2024"
+    "classification_date": "2025-11-30",
+    "classifier_version": "v0.2-alpha"
   },
 
   "paper_type": "empirical",
-  "paper_type_justification": "This paper collects and analyses empirical data about ML model performance in archaeological prospection. The research question targets a phenomenon in the world (whether CNNs can effectively detect burial mounds). Claims describe and explain model performance outcomes. Methods (CNN training, validation) are tools used to investigate the research question, not the subject being investigated. Primary contribution is understanding ML effectiveness for archaeological prospection, not presenting the CNN methodology itself.",
+  "paper_type_justification": "This paper uses field survey data to validate machine learning predictions about archaeological phenomena (burial mound detection). Claims describe and explain performance outcomes of the CNN model. Methods (transfer learning, CNN training, validation) are tools for investigating the substantive research question: can pre-trained CNNs effectively detect burial mounds? The primary contribution is empirical findings about model performance, not the method itself. The paper answers 'Does this approach work?' through systematic empirical testing.",
 
   "taxonomy_feedback": {
     "category_fit_quality": "excellent",
@@ -20,10 +19,9 @@
   "expressed_approach": {
     "approach": "deductive",
     "evidence": [
-      "RD001: 'External validation design comparing ML model predictions against comprehensive field survey data' - explicit validation/testing framework",
-      "RD002: 'Comparative two-run design testing impact of training data curation on model performance' - hypothesis-testing design",
-      "Abstract: 'validate the performance of a pre-trained CNN' - validation language indicates testing predictions",
-      "Methods explicitly describe validation against 'ground truth' field data"
+      "RD001: 'External validation design comparing ML model predictions against comprehensive field survey data' - clear hypothesis-testing structure",
+      "RD002: 'Comparative two-run design testing impact of training data curation on model performance' - explicit test of hypothesis that curated data improves performance",
+      "Abstract: 'we used a dataset of 773 mounds... to validate the performance of a pre-trained CNN' - validation implies prediction to test workflow"
     ],
     "source_sections": ["abstract", "data", "methods"],
     "confidence": "high"
@@ -32,9 +30,9 @@
   "revealed_approach": {
     "approach": "deductive",
     "evidence": {
-      "claims_structure": "Claims report validation outcomes: 'First model run had high false positive (87.1%) and false negative (95.3%) rates', 'Second model run performed worse with higher false positive (94.8%)'. Claims test whether predictions match reality - hypothesis-testing results structure.",
-      "methods_application": "Methods used for prediction testing: ML model generates predictions → predictions tested against comprehensive field survey data → performance metrics calculated (precision, recall, false positive/negative rates). This is confirmatory validation workflow.",
-      "analytical_workflow": "Prediction → Test → Result sequence: (1) Train ML model to predict mound locations, (2) Apply model to generate predictions, (3) Compare predictions against field-verified ground truth, (4) Calculate performance metrics, (5) Interpret why predictions failed. Deductive validation workflow with secondary interpretive analysis of failure modes."
+      "claims_structure": "Claims are performance assessments testing predictions: C001 'Pre-trained CNNs have significant limitations...', C002 'The pre-trained CNN model failed to identify burial mounds', C003 'External validation with field data is an essential part of CNN workflows'. These are hypothesis-rejection claims following systematic testing. Claims describe whether predictions were confirmed (mostly rejected).",
+      "methods_application": "Methods follow confirmatory testing workflow: M001 (transfer learning), M002 (CNN training), M005 (automated performance evaluation using held-out test set), M006 (field-based external validation comparing model predictions against surveyed ground truth). The 70:20:10 train/validation/test split and external field validation are classic deductive validation procedures.",
+      "analytical_workflow": "Prediction to systematic test to comparison against ground truth to conclusion. Two model runs (2021, 2022) tested specific hypothesis that curated training data improves performance. Quantitative metrics (precision 12.8%, recall rates) used to assess hypothesis confirmation. Workflow is classic deductive: predict model will work, test against known data, reject hypothesis based on poor performance."
     },
     "confidence": "high"
   },
@@ -42,43 +40,34 @@
   "expressed_vs_revealed": {
     "alignment": "matched",
     "harking_flag": false,
-    "mismatch_explanation": "Paper explicitly frames as validation study and actually conducts validation. Both expressed and revealed approaches are deductive: testing ML predictions against empirical ground truth. Methodological transparency is high. No discrepancy between stated design (validation) and actual approach (validation)."
+    "mismatch_explanation": "Paper explicitly frames research as validation study (deductive) and actually conducts systematic hypothesis testing. The research question 'Can pre-trained CNNs detect burial mounds?' is tested through systematic comparison of predictions against field survey ground truth. No discrepancy between stated design and actual methodology. Notably, the paper reports negative results (model failed) which demonstrates honest deductive practice - hypothesis was tested and rejected rather than reframed."
   },
 
   "primary_classification": {
     "approach": "deductive",
     "confidence": "high",
-    "justification": "This is clearly deductive validation research. The paper has explicit prediction-testing structure: (1) ML model makes predictions about mound locations (functioning as hypotheses), (2) Predictions tested against comprehensive field survey data (ground truth), (3) Results confirm/reject predictions (high error rates = predictions largely rejected). Research designs explicitly use validation language (RD001, RD002). Claims report hypothesis-testing outcomes (false positive/negative rates, precision/recall). While paper includes secondary interpretive analysis of why model failed (exploratory element), primary structure is deductive validation. Classification unambiguous."
+    "justification": "This is clearly deductive research. The paper: (1) has explicit research designs framed as validation/testing (RD001, RD002), (2) uses quantitative metrics to assess predictions against ground truth, (3) follows hypothesis to test to confirmation/rejection workflow, (4) reports negative results when hypothesis not supported (model failed to detect mounds effectively), (5) uses standard ML validation practices (train/validation/test splits, held-out test sets). The two-run comparative design (2021 vs 2022 with curated training data) explicitly tests hypothesis that training data quality affects performance. Classification is unambiguous."
   },
 
   "mixed_method_characterisation": {
-    "is_mixed": true,
-    "primary_approach": "deductive",
-    "secondary_approaches": ["inductive"],
-    "qualifications": [
-      "Primary approach is deductive validation: testing ML predictions against ground truth",
-      "Secondary inductive element: exploratory analysis of failure modes (why did model detect roads instead of mounds?)",
-      "Inductive documentation of patterns in model errors",
-      "Appropriate mixed design: validation results (deductive) inform exploratory failure analysis (inductive)",
-      "Deductive framework dominant; inductive elements serve interpretation of validation results"
-    ]
+    "is_mixed": false
   },
 
   "transparency_assessment": {
     "expressed_methodology_present": true,
     "transparency_quality": "high",
-    "transparency_notes": "Explicit research design statements present in Abstract and Methods. Validation approach clearly described. Research designs (RD001-RD004) explicitly articulate design rationale. High methodological transparency for validation study. Methods describe CNN architecture, training procedures, and validation protocol in detail."
+    "transparency_notes": "Explicit research design statements present. Methods section clearly describes transfer learning approach, training procedures, and validation workflow. Research designs RD001-RD004 document the study structure comprehensively. Some expected information missing (hyperparameters, threshold selection rationale) but overall transparency is high for an empirical ML validation study."
   },
 
   "credibility_framework": {
     "framework_to_use": "deductive_emphasis",
     "signal_prioritisation": {
-      "primary_signals": ["validity", "robustness", "replicability"],
+      "primary_signals": ["validity", "robustness", "reproducibility"],
       "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
       "deemphasised_signals": ["generalisability"],
-      "rationale": "Deductive validation study prioritises: (1) Validity - evidence adequacy for testing ML predictions (comprehensive ground truth data), (2) Robustness - sensitivity to analytical choices (two model runs, different training data), (3) Replicability - code/data availability for reproducing validation. Transparency high but secondary since design already explicit. Generalisability appropriately constrained to Kazanlak Valley context."
+      "rationale": "Deductive ML validation study prioritises: (1) Validity - are the validation metrics and ground truth comparison appropriate for assessing CNN performance? (2) Robustness - sensitivity of conclusions to analytical choices (threshold selection, training data curation)? (3) Reproducibility - can others reproduce the CNN training and validation? Code and data availability critical. Generalisability deemphasised as authors explicitly note results are context-specific (Kazanlak Valley, this landscape type)."
     }
   },
 
-  "classification_notes": "Straightforward deductive validation study. Paper tests ML predictions against field data with explicit validation design. Secondary inductive elements (failure mode analysis) do not change primary classification. Note: User expected 'inductive' classification - actual classification is 'deductive' based on validation study structure. This disagreement may inform classifier calibration if user expected different outcome."
+  "classification_notes": "Exemplary deductive empirical paper. Notable features: (1) Honest reporting of negative results - model failed, not reframed as success. (2) Clear validation design with external ground truth. (3) Two-run comparative design tests specific hypothesis about training data quality. (4) RD003 explicitly designed to counterbalance publication bias by documenting failure. This is a well-designed validation study that happens to find the approach doesn't work in this context."
 }

@@ -1,12 +1,12 @@
 # Cluster 1: Foundational Clarity Assessment
 
 **Paper:** sobotkova-et-al-2024
-**Assessment Date:** 2025-11-28
+**Assessment Date:** 2025-11-30
 **Assessor Version:** v1.0
 
 **Quality State:** HIGH
-**Research Approach:** deductive (confidence: high)
-**Paper Type:** empirical
+**Research Approach:** Deductive
+**Paper Type:** Empirical
 
 ---
 
@@ -14,8 +14,8 @@
 
 | Signal | Score | Band | Approach Anchors |
 |--------|-------|------|------------------|
-| Comprehensibility | 78 | Good | deductive |
-| Transparency | 78 | Good | deductive |
+| Comprehensibility | 82 | Excellent | Deductive |
+| Transparency | 74 | Good | Deductive |
 
 **Cluster Rating:** Strong
 
@@ -23,67 +23,71 @@
 
 ## Signal 1: Comprehensibility
 
-**Score:** 78/100 (Good)
+**Score:** 82/100 (Excellent)
 
-**Approach anchors applied:** deductive
+**Approach anchors applied:** Deductive
 
 ### Assessment
 
-This validation study demonstrates good comprehensibility for deductive research. The core validation framework is clearly articulated: ML model predictions (functioning as implicit hypotheses) are tested against comprehensive field survey data (ground truth), with results reported as quantified performance metrics. The logical structure of prediction → test → result is transparent throughout.
+This ML validation study demonstrates excellent comprehensibility for hypothesis-testing research. The central claims are explicitly stated and clearly bounded: the paper tests whether pre-trained CNNs can effectively detect burial mounds in heterogeneous landscapes. The research question is unambiguous, and findings are presented as direct tests of this prediction.
 
-Claims are specific and bounded. Rather than vague assertions about "model limitations," the paper reports precise outcomes: "high false positive (87.1%) and false negative (95.3%) rates" (C001-C002). The scope is explicitly constrained to the Kazanlak Valley context, avoiding over-generalisation. Technical terms (CNN, transfer learning, false positive/negative, F1 score) are defined or used consistently within established ML conventions.
+Claims are structured as performance assessments with quantitative precision. C002 states "The pre-trained CNN model failed to identify burial mounds in our study area" - a clear, testable claim directly addressing the research question. The logical structure follows classic deductive workflow: prediction (CNN will detect mounds) → systematic test (validation against field survey data) → conclusion (model failed with 95-96% false negative rate).
 
-The paper falls short of excellent comprehensibility primarily because the validation predictions are not framed as formal hypotheses. While RD001 and RD002 describe validation designs, neither states testable hypotheses in conventional form (e.g., "H1: The pre-trained CNN will detect >80% of known mounds"). The prediction-testing logic is clear, but the hypothesis structure remains implicit rather than operationally defined.
+Key terms are operationally defined throughout. The paper explains transfer learning, CNN architecture (ResNet-50), training data composition, and validation metrics (precision, recall, F1 scores). Methodological critiques are also clear: C005 identifies "publication bias and rhetoric of unconditional success" in ML-for-archaeology literature with explicit supporting evidence from their review.
 
 ### Evidence
 
 **Strengths:**
-- C001: "Our attempt to deploy a pre-trained CNN demonstrates the limitations of this approach when it is used to detect varied features of different sizes within a heterogeneous landscape" — Clear, bounded finding with specified conditions
-- RD001: "External validation design comparing ML model predictions against comprehensive field survey data" — Explicit validation framework with clear rationale
-- RD004: Cost-benefit analysis with quantified comparison (135 hours ML development vs 42 hours manual processing) — Claims evaluable against specific metrics
+- C001: "Pre-trained CNNs have significant limitations when detecting varied features of different sizes within heterogeneous landscapes" - explicit, bounded claim with specific conditions
+- C002: "The pre-trained CNN model failed to identify burial mounds" - unambiguous finding directly addressing research question
+- RD001: "External validation design comparing ML model predictions against comprehensive field survey data" - clear design statement with explicit validation logic
+- RD002: "Comparative two-run design testing impact of training data curation" - explicit hypothesis about curation effects
 
 **Weaknesses:**
-- RD002 notes "Hypothesis stated explicitly" as expected information missing — validation design clear, but formal hypothesis absent
-- Implicit arguments (IA001-IA005) reveal sophisticated reasoning, but some key assumptions unstated (e.g., "self-reported metrics insufficient without field validation")
+- Some technical parameters not fully operationalised (e.g., "best performance" in model selection not precisely defined)
+- Decision threshold (60%) selection rationale not explained
 
 ### Scoring Rationale
 
-Score of 78 falls in the Good band (60-79) for deductive research. The paper meets Good criteria: hypotheses/predictions stated (implicitly through validation design), most key terms defined, logical structure mostly clear, claims understandable and evaluable. Score does not reach Excellent (80-100) because validation predictions are not explicitly stated as testable hypotheses, and some key assumptions remain implicit (documented in IA001-IA005). Reasoning from test results to conclusions is clear, supporting upper range of Good band.
+Score of 82 (Excellent) reflects: hypotheses explicitly stated and bounded (80-100 criterion); key terms operationally defined; logical structure of hypothesis testing transparent; claims unambiguous and testable; reasoning from test results to conclusions clear. Minor deductions for some unexplained parameter choices, but overall exemplary for deductive ML validation research.
 
 ---
 
 ## Signal 2: Transparency
 
-**Score:** 78/100 (Good)
+**Score:** 74/100 (Good)
 
-**Approach anchors applied:** deductive
+**Approach anchors applied:** Deductive
 
 ### Assessment
 
-The paper demonstrates good transparency for a deductive validation study. Research designs are explicitly stated with rationale (RD001-RD004). Methods documentation is comprehensive, with 7 methods and 12 protocols extracted covering the ML workflow from model selection through validation. The validation approach is transparent: predictions tested against field-verified ground truth with performance metrics reported.
+The paper demonstrates good transparency for deductive research, with excellent code sharing but incomplete data availability. The research design is explicitly stated through RD001-RD004, providing clear documentation of the validation approach, comparative design, negative results documentation rationale, and cost-benefit analysis framework.
 
-Transparency is enhanced by the explicit documentation of methodological gaps. The extraction notes "expected_information_missing" fields throughout (e.g., training hyperparameters, hardware specifications, decision threshold selection criteria). While these represent transparency gaps, the paper's acknowledgement of limitations (RD003: "negative results documentation design") and detailed discussion of failure modes demonstrates commitment to methodological transparency.
+Code availability is exemplary: three distinct GitHub repositories document the complete analytical workflow (cnn-testing for validation, burial-mounds for 2021 classifier, MoundDetection for 2022 classifier). The code availability statement is explicit and machine-actionable with direct URLs. This represents best practice for computational transparency.
 
-The paper provides code availability through three GitHub repositories: (1) cnn-testing for training data preparation and validation, (2) burial-mounds for 2021 CNN classifier, and (3) MoundDetection for 2022 CNN classifier. This significantly supports analytical reproducibility. However, the paper falls short of excellent transparency because code repositories lack persistent identifiers (DOIs), no field survey data is shared (historical data from TRAP 2009-2011 not deposited), and some ML implementation details remain under-documented (augmentation techniques, cross-validation approach, computational environment). For deductive ML research, the 80-100 band requires "data and code publicly available with persistent identifiers."
+However, data availability is a weakness. The historical field survey data from TRAP (2009-2011) is not deposited in a public repository, and there is no explicit data availability statement. Training data and CNN predictions are presumably available via GitHub but this is not clearly stated. For deductive hypothesis-testing research in 2024, explicit data sharing or justified restrictions would be expected for the 80-100 band.
+
+Methods and protocols are well-documented: 7 methods and 12 protocols capture the CNN architecture, training procedures, and validation workflow. Some expected information is missing (hyperparameters, threshold selection rationale, augmentation specifics) but core methodology is clear.
 
 ### Evidence
 
 **Strengths:**
-- RD001-RD004: Four explicit research designs with stated rationale — comprehensive design documentation
-- M001-M007: Detailed method descriptions including transfer learning (M001), binary classification (M003), performance evaluation (M005)
-- P001-P005: Protocols document specific procedures (150x150m cutouts, 1:2 class ratio, 70:20:10 train/val/test split)
-- Three GitHub repositories provide code for training data preparation, CNN classifiers (2021, 2022 versions) — supports analytical reproducibility
-- Extensive limitations discussion (RD003 explicitly frames as "counterbalance" to publication bias)
+- Code availability: "Scripts are available in public repositories" with three GitHub URLs (machine-actionable, open access)
+- M001: "Transfer learning using pre-trained ResNet-50 convolutional neural network" - clear method specification
+- P002: "150x150m square polygons centred on mound points, clipped from IKONOS imagery" - detailed spatial protocol
+- Limitations explicitly acknowledged: "model failed", "good-faith attempt", "counterbalance and cautionary tale"
+- FAIR assessment: 75% (12/16) - highly FAIR for code, weaker for data
 
 **Weaknesses:**
-- P001 notes missing: "Hardware specifications, Training time, Framework/library used" — computational environment not fully specified
-- P003 notes missing: "Seed for reproducibility" — random sampling not reproducible
-- M004 notes missing: "Augmentation techniques used, Augmentation factor" — key ML details under-documented
-- Code repositories lack persistent identifiers (DOIs); field survey data not deposited
+- Data availability: "statement_present: false" - no explicit data availability statement
+- Historical TRAP field data (773 mounds) not deposited in public repository
+- Training data availability unclear despite GitHub repositories
+- No pre-registration (acceptable for retrospective study but noted)
+- Missing: hyperparameters, threshold selection rationale, augmentation strategy specifics
 
 ### Scoring Rationale
 
-Score of 78 falls in the upper Good band (60-79) for deductive research. The paper meets Good criteria with notable strengths: clear research design and hypothesis specification (implicit), detailed methods documentation, major limitations acknowledged, and code publicly available via three GitHub repositories. Score does not reach Excellent (80-100) because code lacks persistent identifiers (no DOIs), field survey data is not deposited, and computational environment is not fully specified. The combination of code availability, thorough methods documentation, and explicit limitations acknowledgement supports upper range of Good band.
+Score of 74 (Good) reflects: clear research design and methods (60-79 criterion); excellent code availability via GitHub; data availability not fully addressed (prevents 80-100); comprehensive methods description; major limitations acknowledged. The gap between exemplary code sharing and absent data sharing creates the ceiling at Good band.
 
 ---
 
@@ -91,17 +95,17 @@ Score of 78 falls in the upper Good band (60-79) for deductive research. The pap
 
 **Overall Foundational Clarity:** Strong
 
-Both signals score identically at 78 (Good band), with consistent patterns across dimensions. The paper demonstrates strong foundational clarity for a deductive validation study: the validation framework is transparent, claims are specific and bounded, methods are well-documented, code is publicly available, and limitations are extensively discussed.
+This paper demonstrates strong foundational clarity as a deductive ML validation study. Both signals score in the Good-to-Excellent range (Comprehensibility 82, Transparency 74), with no major gaps identified. The paper exemplifies good practice in hypothesis-testing research: clear claims, explicit design, honest reporting of negative results.
 
 ### Pattern Summary
 
-The paper excels at methodological transparency regarding what was done and why, with code available via three GitHub repositories supporting analytical reproducibility. Remaining gaps are in persistent identifiers for code (no DOIs), field data sharing (historical TRAP data not deposited), and some computational environment details. The validation logic is clear, but formal hypothesis specification is implicit rather than explicit — appropriate for the validation study genre, though not meeting the highest deductive standards.
+The paper exhibits a coherent pattern of methodological transparency with asymmetric data sharing. Code transparency is excellent (three repositories, explicit statement, machine-actionable URLs), while data transparency is incomplete (historical field data not deposited). This is a common pattern in computational archaeology where legacy field data precedes current open science norms. The strong comprehensibility score reflects the paper's unusual honesty about ML limitations - claims about model failure are as clear and well-supported as claims about model success would be.
 
 ### Implications for Subsequent Assessment
 
-- **For Cluster 2 (Evidential Strength):** High foundational clarity enables confident assessment of Validity and Robustness. The transparent validation design and specific performance metrics provide clear basis for evaluating evidential adequacy. The two-run comparative design (RD002) provides robustness evidence.
+- **For Cluster 2 (Evidential Strength):** Clear claims and methods enable confident validity and robustness assessment. The two-run comparative design (2021 vs 2022) provides internal robustness test. Evidence quality should be straightforward to assess given explicit performance metrics.
 
-- **For Cluster 3 (Reproducibility & Scope):** Replicability assessment is supported by code availability (three GitHub repos), though constrained by absence of field data sharing and lack of persistent identifiers. Transparency score (78) suggests good analytical reproducibility. Generalisability well-addressed — paper explicitly constrains scope to Kazanlak Valley and discusses environmental factors affecting transferability (IA005).
+- **For Cluster 3 (Reproducibility):** Excellent code availability suggests high reproducibility potential. Data gap (field survey data not deposited) may limit full computational reproduction. Machine actionability of code repositories should support reproducibility assessment.
 
 ---
 
@@ -110,42 +114,41 @@ The paper excels at methodological transparency regarding what was done and why,
 ```yaml
 cluster_1_foundational_clarity:
   paper_slug: "sobotkova-et-al-2024"
-  assessment_date: "2025-11-28"
+  assessment_date: "2025-11-30"
   quality_state: "high"
   research_approach: "deductive"
 
   comprehensibility:
-    score: 78
-    band: "good"
+    score: 82
+    band: "excellent"
     strengths:
-      - "Clear validation framework: prediction → test → result structure transparent"
-      - "Claims specific and bounded with quantified outcomes (87.1% false positive, 95.3% false negative)"
-      - "Explicit research designs with stated rationale (RD001-RD004)"
+      - "Hypotheses explicitly stated and clearly bounded"
+      - "Key terms operationally defined (CNN, transfer learning, validation metrics)"
+      - "Logical structure transparent: prediction → test → conclusion"
+      - "Claims unambiguous and testable with quantitative precision"
     weaknesses:
-      - "Validation predictions not stated as formal hypotheses"
-      - "Some key assumptions implicit (documented in IA001-IA005)"
-    rationale: "Good band (60-79) for deductive. Validation logic clear, claims evaluable, logical structure transparent. Falls short of Excellent due to implicit hypothesis structure."
+      - "Some technical parameters not fully explained (model selection criteria, threshold rationale)"
+    rationale: "Exemplary deductive comprehensibility. Clear hypotheses, operational definitions, transparent reasoning. Minor gaps in parameter justification prevent perfect score."
 
   transparency:
-    score: 78
+    score: 74
     band: "good"
     strengths:
-      - "Comprehensive methods documentation (7 methods, 12 protocols)"
-      - "Explicit research designs with rationale"
-      - "Three GitHub repositories for code (cnn-testing, burial-mounds, MoundDetection)"
-      - "Extensive limitations discussion and negative results framing"
+      - "Excellent code availability (3 GitHub repositories, explicit statement)"
+      - "Research design explicitly documented (RD001-RD004)"
+      - "Methods and protocols well-documented (7 methods, 12 protocols)"
+      - "Limitations explicitly acknowledged"
     weaknesses:
-      - "Code repositories lack persistent identifiers (DOIs)"
-      - "Field survey data not deposited"
-      - "Computational environment under-documented"
-      - "Some ML implementation details missing (augmentation, hyperparameters)"
-    rationale: "Good band (60-79) for deductive. Clear design, detailed methods, code available via GitHub, limitations acknowledged. Falls short of Excellent due to lack of persistent identifiers and no data sharing."
+      - "No explicit data availability statement"
+      - "Historical field data not deposited"
+      - "Training data availability unclear"
+    rationale: "Good deductive transparency with asymmetric sharing. Code exemplary, data incomplete. Gap between code and data sharing creates ceiling at Good band."
 
   cluster_synthesis:
     overall_rating: "strong"
-    pattern_summary: "Identical Good scores (78) across both signals. Strong methodological transparency, specific claims, clear validation logic, code available. Remaining gaps in persistent identifiers and data sharing."
+    pattern_summary: "Coherent methodological transparency with excellent code sharing but incomplete data sharing. Strong comprehensibility from honest reporting of negative results."
     consistency_check: "consistent"
     implications:
-      cluster_2: "High clarity enables confident Validity/Robustness assessment. Two-run design provides robustness evidence."
-      cluster_3: "Replicability supported by code availability. Generalisability well-addressed with explicit scope constraints."
+      cluster_2: "Clear claims and explicit validation design enable confident evidential strength assessment"
+      cluster_3: "Excellent code availability suggests high reproducibility; data gap may limit full reproduction"
 ```

@@ -3,7 +3,7 @@
 ## Quality State: HIGH
 
 **Paper:** sobotkova-et-al-2024
-**Assessment Date:** 2025-11-27
+**Assessment Date:** 2025-11-30
 **Assessor Version:** v1.0
 
 **Decision:** Proceed with full credibility assessment
@@ -15,18 +15,18 @@
 ### Extraction Confidence: HIGH
 
 **Item counts:**
-- Evidence: 38 items (threshold: 20+ ✓)
-- Claims: 30 items (threshold: 25+ ✓)
+- Evidence: 38 items (threshold: 20+ = HIGH)
+- Claims: 30 items (threshold: 25+ = HIGH)
 - Implicit arguments: 9 items
-- Research designs: 4 items (threshold: 3+ ✓)
-- Methods: 7 items (threshold: 5+ ✓)
-- Protocols: 12 items (threshold: 8+ ✓)
+- Research designs: 4 items (threshold: 3+ = HIGH)
+- Methods: 7 items (threshold: 5+ = HIGH)
+- Protocols: 12 items (threshold: 8+ = HIGH)
 
-**Assessment:** Comprehensive extraction across all object types. Evidence and claims well-represented with strong counts. RDMAP extraction (4 designs, 7 methods, 12 protocols = 23 items) captures the ML validation workflow thoroughly. All major paper sections processed during Pass 0-7 extraction.
+**Assessment:** Comprehensive extraction exceeds all HIGH thresholds. The 100 total items (38 evidence, 30 claims, 9 implicit arguments, 4 research designs, 7 methods, 12 protocols) represent thorough coverage of this ML validation study. Evidence items capture quantitative performance metrics, validation results, and literature review findings. Claims cover core findings, methodological recommendations, and critique of ML-for-archaeology literature. RDMAP items document the CNN architecture, training procedures, and validation workflow.
 
-**Cross-reference integrity:** Complete (verified during Pass 7 validation)
+**Cross-reference integrity:** Complete. Methods link to protocols, research designs link to implementing methods, claims reference supporting evidence.
 
-**Sourcing compliance:** 100% verbatim quotes (required for all extraction items)
+**Sourcing compliance:** 100% verbatim quotes with page/section locations.
 
 ---
 
@@ -38,15 +38,13 @@
 - Taxonomy fit: excellent
 - Paper type: empirical
 
-**Assessment:** Clear deductive validation study classification. Both expressed and revealed approaches align - paper explicitly frames as validation and actually conducts prediction testing against ground truth. Research approach unambiguous despite secondary inductive elements (failure mode analysis). Mixed method characterisation is coherent: "primarily deductive with secondary inductive". Classification confidence high.
+**Assessment:** Unambiguous classification. Paper clearly frames research as validation study (testing CNN performance against ground truth) and actually conducts systematic hypothesis testing. The two-run comparative design (2021 vs 2022) explicitly tests hypothesis about training data curation. Negative results reported honestly (model failed) demonstrates proper deductive practice. No classification ambiguities or edge cases.
 
 ---
 
 ### Metric-Signal Alignment: NOT ASSESSED
 
-Metrics not available (no metrics.json found). Assessment based on extraction and classification confidence only.
-
-**Note:** This does not affect quality state determination. Metric-signal alignment is an additional validation when metrics are available, not a requirement.
+Metrics not available. Assessment based on extraction and classification confidence only.
 
 ---
 
@@ -54,32 +52,32 @@ Metrics not available (no metrics.json found). Assessment based on extraction an
 
 **Quality State: HIGH**
 
-All trigger conditions for HIGH quality met:
-- ✓ Extraction confidence: HIGH (all item counts exceed thresholds)
-- ✓ Classification confidence: HIGH (clear approach, matched alignment, excellent taxonomy fit)
-- ✓ Metric-signal alignment: NOT ASSESSED (acceptable - metrics optional)
-- ✓ No major extraction errors identified (Pass 7 validation passed)
+All HIGH quality triggers satisfied:
+- extraction_confidence = HIGH (all item counts exceed thresholds)
+- classification_confidence = HIGH (unambiguous deductive classification)
+- metric_signal_alignment = not_assessed (acceptable for HIGH state)
+- No extraction errors or structural problems identified
 
-No conditions for MODERATE or LOW quality triggered.
+This is an exemplary extraction with clear classification. Full credibility assessment can proceed with confidence.
 
 ---
 
 ## Implications for Assessment
 
 Full credibility assessment will proceed with:
-- Approach-specific scoring anchors applied (deductive emphasis framework)
+- Deductive-emphasis scoring anchors applied (prioritising Validity, Robustness, Reproducibility)
 - Precise signal scores (0-100, ±5 point precision)
-- Standard report format (credibility-report-v1.md)
-- Primary signals: Validity, Robustness, Replicability
-- Secondary signals: Transparency, Comprehensibility, Plausibility
-- Deemphasised: Generalisability (appropriately constrained to study context)
+- Standard report format (credibility-report.md)
+- All seven repliCATS signals assessed
 
 ---
 
 ## Improvement Opportunities
 
-1. **Metrics calculation:** Running metrics calculation would enable metric-signal alignment checking as additional quality validation
-2. **Implicit RDMAP:** Consider whether additional implicit protocols exist for ML model parameter selection (threshold choices, augmentation strategies noted as under-documented in extraction)
+1. Some expected information gaps noted in extraction (hyperparameters, threshold selection rationale) - these reflect paper limitations, not extraction gaps
+2. Could expand implicit RDMAP to capture additional unstated analytical decisions (e.g., augmentation strategy specifics)
+
+These are minor opportunities; extraction quality is sufficient for confident assessment.
 
 ---
 
@@ -89,13 +87,13 @@ Full credibility assessment will proceed with:
 track_a_quality:
   quality_state: "high"
   extraction_confidence: "high"
-  extraction_notes: "Comprehensive extraction: 38 evidence, 30 claims, 9 implicit arguments, 23 RDMAP items (4 designs, 7 methods, 12 protocols). All thresholds exceeded. 100% sourcing compliance. Pass 7 validation passed."
+  extraction_notes: "Comprehensive extraction: 38 evidence, 30 claims, 9 implicit arguments, 23 RDMAP items (4 designs, 7 methods, 12 protocols). All counts exceed HIGH thresholds. Complete cross-references. 100% sourcing compliance."
   classification_confidence: "high"
-  classification_notes: "Clear deductive validation study. Primary approach confidence high, expressed/revealed matched, taxonomy fit excellent. Mixed method characterisation coherent (deductive primary, inductive secondary)."
+  classification_notes: "Clear deductive validation study. Expressed and revealed approaches matched. Excellent taxonomy fit. Unambiguous classification."
   metric_signal_alignment: "not_assessed"
-  metric_notes: "Metrics not available for alignment checking."
-  assessment_viability_summary: "High quality extraction and clear classification enable confident credibility assessment with precise scoring and approach-specific anchors."
+  metric_notes: "Metrics not available."
+  assessment_viability_summary: "High quality extraction and clear classification enable confident credibility assessment with precise scoring."
   improvement_opportunities:
-    - "Run metrics calculation for additional quality validation"
-    - "Review implicit RDMAP for ML parameter selection protocols"
+    - "Consider documenting implicit analytical decisions not stated in paper"
+    - "Minor: expected information gaps (hyperparameters) reflect paper limitations, not extraction issues"
 ```
