@@ -1,0 +1,58 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-11-30",
+    "classifier_version": "v0.2-alpha",
+    "run": "04"
+  },
+  "paper_type": "empirical",
+  "paper_type_justification": "Tests whether transfer learning CNN detects burial mounds, with primary contribution being evidence about ML performance limitations rather than new methodology.",
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null
+  },
+  "expressed_approach": {
+    "approach": "deductive",
+    "evidence": [
+      "Explicit aim: 'We set out to detect burial mounds in satellite imagery... Results were assessed using field data'",
+      "Two-run design tests prediction about training data selection effects",
+      "Clear hypothesis-testing structure throughout"
+    ],
+    "confidence": "high"
+  },
+  "revealed_approach": {
+    "approach": "deductive",
+    "evidence": {
+      "claims_structure": "Claims evaluate predictions: do self-reported metrics predict real-world performance? Does curated training help?",
+      "methods_application": "Systematic hypothesis test: implement CNN, generate predictions, validate against pre-existing field data",
+      "analytical_workflow": "Deductive: design → implement → predict → validate → interpret failure"
+    },
+    "confidence": "high"
+  },
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Paper frames and executes as hypothesis test. No post-hoc rationalisation detected."
+  },
+  "primary_classification": {
+    "approach": "deductive",
+    "confidence": "high",
+    "justification": "Clear deductive research testing transfer learning hypothesis against independent field data. Two-run design tests secondary hypothesis about training data."
+  },
+  "mixed_method_characterisation": {
+    "is_mixed": false
+  },
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Three public repositories, comprehensive methods, explicit validation protocol, time-on-task documentation."
+  },
+  "credibility_framework": {
+    "framework_to_use": "deductive_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["validity", "robustness", "reproducibility"],
+      "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
+      "deemphasised_signals": ["generalisability"]
+    }
+  }
+}
