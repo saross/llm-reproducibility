@@ -116,12 +116,55 @@ Classify the research approach of the paper to inform credibility assessment fra
 ```json
 {
   "methodological_characterisation": {
-    "subtype": "[software_tool|analytical_method|field_protocol|theoretical_framework]",
+    "subtype": "[software_tool|analytical_method|field_protocol|theoretical_framework|data_paper|infrastructure|resource|protocol]",
     "validation_approach": "[will determine in later steps]",
     "validation_notes": "[will populate after classifying validation approach]"
   }
 }
 ```
+
+---
+
+### Paper Subtypes and Context Flags
+
+**When assessing Robustness (Cluster 2) and generating the final report (Pass 10), these subtypes trigger context flags that explain genre-appropriate expectations:**
+
+#### 📦 Descriptive/Artefact Papers (Robustness context flag)
+
+These describe artefacts rather than test hypotheses. Moderate Robustness is expected, not a deficiency:
+
+| Subtype | Description | Expected Robustness |
+|---------|-------------|---------------------|
+| `software_tool` | Software papers (e.g., FAIMS, archaeological GIS tools) | Moderate (40-60) |
+| `data_paper` | Dataset descriptions | Moderate (40-60) |
+| `infrastructure` | Platform/system descriptions | Moderate (40-60) |
+| `protocol` | Method protocol descriptions | Moderate-Good (50-70) |
+| `resource` | Database/ontology/vocabulary papers | Moderate (40-60) |
+
+#### 📐 Synthesis/Framework Papers (Robustness context flag)
+
+These argue for positions rather than test hypotheses systematically:
+
+| Subtype | Description | Expected Robustness |
+|---------|-------------|---------------------|
+| `theoretical_framework` | Conceptual framework papers | Moderate-Good (50-70) |
+| `position_paper` | Papers arguing a viewpoint | Moderate (40-60) |
+| `commentary` | Response/commentary papers | Moderate (40-60) |
+| `narrative_review` | Non-systematic literature reviews | Moderate-Good (50-70) |
+
+**Note:** Systematic reviews are different — they DO require robustness checks and should NOT receive 📐 flag.
+
+#### 🔧 Methodological Transparency (Reproducibility context flag)
+
+For papers without computational workflows to reproduce:
+
+| Subtype | Reproducibility Question |
+|---------|-------------------------|
+| `software_tool` | Can users install, use, and extend the software? |
+| `interpretive` | Can readers access sources and follow reasoning? |
+| `theoretical_framework` | Can readers trace the argument? |
+
+**Capture the subtype in classification.json** so downstream passes can apply appropriate context flags.
 
 ---
 

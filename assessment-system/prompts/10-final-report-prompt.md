@@ -110,21 +110,65 @@ Round to nearest integer.
 
 For each signal, determine if a context flag applies:
 
-**Paper Type Context Flags:**
+---
 
-| Paper Type | Signal | Flag | Note |
-|------------|--------|------|------|
-| Methodological | Robustness | ⚠️ | "Expected to be Moderate — advocacy papers argue for position" |
-| Methodological | Reproducibility | 🔧 | "Methodological Transparency variant used" |
-| Theoretical | Robustness | ⚠️ | "Framework evaluation, not empirical replication" |
-| Theoretical | Reproducibility | 🔧 | "Methodological Transparency variant used" |
+#### 📦 Descriptive/Artefact Papers (Robustness Context)
 
-**Approach-Specific Flags:**
+**These paper types describe artefacts rather than test hypotheses. A Moderate Robustness score reflects genre expectations, not a deficiency.**
+
+| Paper Subtype | Signal | Flag | Note |
+|---------------|--------|------|------|
+| Software papers | Robustness | 📦 | "Describes software; comparative evaluation is a different paper type" |
+| Data papers | Robustness | 📦 | "Documents dataset; focus on Transparency and Reproducibility" |
+| Infrastructure papers | Robustness | 📦 | "Describes platform/system, not tests it against alternatives" |
+| Protocol papers | Robustness | 📦 | "Describes method; validation ≠ systematic comparison" |
+| Resource papers | Robustness | 📦 | "Documents database/ontology/vocabulary" |
+
+**Interpretation template for 📦 papers:**
+> **Why this score:** {Subtype} papers describe artefacts rather than testing hypotheses. They do not typically include systematic comparisons, sensitivity analyses, or robustness checks. A Moderate Robustness score reflects genre expectations — it is not a criticism.
+>
+> **What this means:** The paper describes {artefact} and its features. Comparative assessment is the reader's responsibility.
+>
+> **Generalisation:** Similar patterns expected for other software, data, infrastructure, protocol, and resource papers.
+
+---
+
+#### 📐 Synthesis/Framework Papers (Robustness Context)
+
+**These paper types argue for positions rather than test hypotheses systematically.**
+
+| Paper Subtype | Signal | Flag | Note |
+|---------------|--------|------|------|
+| Theoretical papers | Robustness | 📐 | "Proposes framework; exhaustive comparison not expected" |
+| Position papers | Robustness | 📐 | "Argues viewpoint; limited comparison expected" |
+| Commentary papers | Robustness | 📐 | "Responds to specific work; systematic comparison not expected" |
+| Narrative reviews | Robustness | 📐 | "Synthesises literature; less rigorous than systematic reviews" |
+
+**Note:** Systematic reviews are different — they DO require robustness checks and should not receive 📐 flag.
+
+---
+
+#### 🔧 Methodological Transparency (Reproducibility Context)
+
+**For papers without computational workflows to reproduce:**
+
+| Paper Subtype | Signal | Flag | Note |
+|---------------|--------|------|------|
+| Software papers | Reproducibility | 🔧 | "Can users install, use, and extend the software?" |
+| Interpretive papers | Reproducibility | 🔧 | "Can readers access sources and follow reasoning?" |
+| Theoretical papers | Reproducibility | 🔧 | "Can readers trace the argument?" |
+| Methodological papers | Reproducibility | 🔧 | "Can readers implement the method?" |
+
+---
+
+#### Approach-Specific Flags
 
 | Approach | Signal | Flag | Note |
 |----------|--------|------|------|
 | Abductive | Robustness | — | "Inference to best explanation — alternatives considered but not exhaustively tested" |
 | Inductive | Transparency | — | "Pre-registration not expected for exploratory research" |
+
+---
 
 **Apply flags** to signals that warrant contextual interpretation.
 

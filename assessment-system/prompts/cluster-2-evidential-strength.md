@@ -212,6 +212,49 @@ Assess the four credibility signals that address the core question: **How much f
 3. **Triangulation:** Are multiple methods/indicators used for convergence?
 4. **Documentation:** Are manual/subjective steps documented and justified?
 
+---
+
+#### 📦 Special Case: Descriptive/Artefact Papers
+
+**The following paper types have different Robustness expectations because they describe artefacts rather than test hypotheses:**
+
+| Paper Subtype | Expected Robustness | Rationale |
+|---------------|---------------------|-----------|
+| **Software papers** | Moderate (40-60) | Describe software, not test alternatives; comparative evaluation is a different paper type |
+| **Data papers** | Moderate (40-60) | Document datasets, not test hypotheses; focus on Transparency and Reproducibility |
+| **Infrastructure papers** | Moderate (40-60) | Describe platforms/systems, not compare them |
+| **Protocol papers** | Moderate-Good (50-70) | Describe methods; may include validation but not systematic comparison |
+| **Resource papers** | Moderate (40-60) | Document databases, ontologies, vocabularies |
+
+**For these paper types:**
+- A Moderate Robustness score (40-60) reflects **genre expectations**, not a deficiency
+- Apply the 📦 context flag to indicate this is a descriptive/artefact paper
+- Focus assessment on whether the paper documents what it claims to document
+- Readers should independently evaluate alternatives — that's not the paper's job
+
+**Example assessment language:**
+> "This software paper demonstrates moderate robustness, appropriate for its genre. Software papers describe artefacts rather than test alternatives. The paper honestly documents limitations and trade-offs, which is good practice for software description."
+
+---
+
+#### 📐 Special Case: Synthesis/Framework Papers
+
+**The following paper types argue for positions rather than test hypotheses:**
+
+| Paper Subtype | Expected Robustness | Rationale |
+|---------------|---------------------|-----------|
+| **Theoretical papers** | Moderate-Good (50-70) | Propose frameworks; test against alternatives is relevant but exhaustive comparison not expected |
+| **Position papers** | Moderate (40-60) | Argue for viewpoint; limited comparison to alternatives expected |
+| **Commentary papers** | Moderate (40-60) | Respond to specific work; systematic comparison not expected |
+| **Narrative reviews** | Moderate-Good (50-70) | Synthesise literature; less rigorous than systematic reviews |
+
+**For these paper types:**
+- A Moderate Robustness score reflects genre expectations
+- Apply the 📐 context flag to indicate this is a synthesis/framework paper
+- Systematic reviews are different — they DO require robustness checks
+
+---
+
 **Apply Approach-Specific Anchors:**
 
 #### For DEDUCTIVE Research (Hypothesis-Testing)
