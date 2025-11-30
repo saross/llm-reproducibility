@@ -22,7 +22,7 @@ Phase 1 tested the unified credibility assessment pipeline (Passes 8-10) on 4 pa
 |-------|------|----------|-----------|---------|---------|
 | sobotkova-et-al-2024 | Empirical | Deductive | 76 | Good | Standard |
 | penske-et-al-2023 | Empirical | Inductive | 79 | Good | Standard |
-| ballsun-stanton-et-al-2018 | Methodological | — | 72 | Good | ⚠️ Advocacy |
+| ballsun-stanton-et-al-2018 | Methodological | — | 72 | Good | 📦 Software paper |
 | ross-2005 | Empirical (interpretive) | Inductive | 71 | Good | 🔧 Methodological Transparency |
 
 **Aggregate Range:** 71-79 (all Good band)  
@@ -38,7 +38,7 @@ Phase 1 tested the unified credibility assessment pipeline (Passes 8-10) on 4 pa
 | Transparency | 74 | 78 | 85 | 72 |
 | Plausibility | 78 | 82 | 74 | 76 |
 | Validity | 80 | 84 | 62 | 74 |
-| Robustness | 72 | 76 | 55 ⚠️ | 68 |
+| Robustness | 72 | 76 | 55 📦 | 68 |
 | Generalisability | 76 | 74 | 70 | 65 |
 | Reproducibility | 71 | 72 | 82 🔧 | 70 🔧 |
 
@@ -71,18 +71,18 @@ Phase 1 tested the unified credibility assessment pipeline (Passes 8-10) on 4 pa
 
 ## Variant Detection Validation
 
-### Advocacy Flag (⚠️)
-**Paper:** ballsun-stanton-et-al-2018  
-**Detection:** Correctly applied to Robustness (55)  
-**Rationale:** Methodological software paper argues for FAIMS as solution without systematic comparison to alternatives. This is appropriate for paper type.
+### Software Paper Flag (📦)
+**Paper:** ballsun-stanton-et-al-2018
+**Detection:** Applied to Robustness (55)
+**Rationale:** Software papers describe artefacts rather than testing hypotheses. They do not typically include systematic comparisons or sensitivity analyses. Moderate Robustness reflects genre expectations, not a deficiency. Similar patterns expected for data papers and infrastructure descriptions.
 
 ### Methodological Transparency (🔧)
-**Paper 1:** ballsun-stanton-et-al-2018  
-**Detection:** Applied to Reproducibility (software paper variant)  
+**Paper 1:** ballsun-stanton-et-al-2018
+**Detection:** Applied to Reproducibility (software paper variant)
 **Rationale:** Software is the computational component; reproducibility = can install/use/extend
 
-**Paper 2:** ross-2005  
-**Detection:** Applied to Reproducibility (interpretive variant)  
+**Paper 2:** ross-2005
+**Detection:** Applied to Reproducibility (interpretive variant)
 **Rationale:** Non-computational humanistic research; reproducibility = interpretive replicability
 
 ---
@@ -108,7 +108,7 @@ Phase 1 tested the unified credibility assessment pipeline (Passes 8-10) on 4 pa
 ### Successes
 
 1. **Cross-type applicability:** Template worked for empirical, methodological, and interpretive papers
-2. **Variant detection:** Both ⚠️ (advocacy) and 🔧 (methodological transparency) correctly applied
+2. **Variant detection:** Both 📦 (software paper) and 🔧 (methodological transparency) correctly applied
 3. **Era calibration:** Historical context appropriately considered
 4. **Cluster structure:** Three Pillars framework accommodated all paper types
 5. **Signal scoring:** All 7 signals scorable for all 4 papers
@@ -122,8 +122,8 @@ Phase 1 tested the unified credibility assessment pipeline (Passes 8-10) on 4 pa
 ### Potential Refinements
 
 1. Consider whether aggregate score ranges are appropriately distributed
-2. Document expected score patterns by paper type
-3. Clarify Methodological Transparency sub-variants (software vs interpretive)
+2. Document expected score patterns by paper type (software/data papers expect moderate Robustness)
+3. Clarify context flag variants: 📦 (software/data papers), 🔧 (methodological transparency for reproducibility)
 
 ---
 
@@ -150,7 +150,7 @@ outputs/{paper-slug}/assessment/
 1. **Reliability testing:** Run full pipeline 10x on 2-3 papers to assess consistency
 2. **Score distribution:** Track aggregate and signal distributions across larger sample
 3. **Edge cases:** Test on low-quality or problematic papers
-4. **Variant coverage:** Ensure all variants (⚠️ 🔧) tested systematically
+4. **Variant coverage:** Ensure all variants (📦 🔧) tested systematically
 
 ---
 

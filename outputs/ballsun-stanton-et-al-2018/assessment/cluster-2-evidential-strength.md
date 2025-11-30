@@ -16,7 +16,7 @@
 |--------|-------|------|------------------|
 | Plausibility | 74 | Good | Methodological |
 | Validity | 62 | Good | Methodological |
-| Robustness | 55 | Moderate | Methodological ⚠️ |
+| Robustness | 55 | Moderate | Methodological 📦 |
 | Generalisability | 70 | Good | Methodological |
 
 **Cluster Rating:** Adequate
@@ -90,19 +90,19 @@ Score of 62 (Good) reflects: evidence supports main claims (60-79); methods appr
 
 ## Signal 5: Robustness
 
-**Score:** 55/100 (Moderate) ⚠️
+**Score:** 55/100 (Moderate) 📦
 
 **Approach anchors applied:** Methodological
 
-> ⚠️ **Context Flag:** Methodological advocacy papers argue for a position rather than testing multiple alternatives. A Moderate Robustness score is typical — and not a severe criticism — for this paper type.
+> 📦 **Context Flag:** Software and data papers describe artefacts rather than testing hypotheses. They do not typically include systematic comparisons, sensitivity analyses, or robustness checks. A Moderate Robustness score reflects genre expectations — it is not a criticism of the paper.
 
 ### Assessment
 
-The paper demonstrates moderate robustness, consistent with its advocacy nature. FAIMS is presented as the solution to field data collection problems, with limited comparison to alternatives. This is appropriate for a software paper promoting a particular approach but limits robustness assessment.
+The paper demonstrates moderate robustness, appropriate for a software description paper. FAIMS is described as a solution to field data collection problems; the paper documents what the software does rather than testing it against alternatives. This is exactly what software papers in venues like SoftwareX are meant to do.
 
-The paper acknowledges some limitations: development challenges (E006-E012) including testing infrastructure needs, GUI creation difficulties, and complexity costs. This honest acknowledgement strengthens robustness within the advocacy framing.
+The paper acknowledges some limitations: development challenges (E006-E012) including testing infrastructure needs, GUI creation difficulties, and complexity costs. This honest acknowledgement of trade-offs is good practice for software documentation.
 
-Alternative approaches are mentioned but not systematically compared. The paper notes that other tools exist (commercial software, ad-hoc solutions) but does not provide detailed comparison. Sensitivity to design choices (e.g., Android vs iOS, modular vs monolithic) is discussed qualitatively but not tested.
+Alternative approaches are mentioned but not systematically compared. The paper notes that other tools exist (commercial software, ad-hoc solutions) but does not provide detailed comparison. This is appropriate: comparative evaluation would be a different paper type (e.g., a review or benchmark study).
 
 ### Evidence
 
@@ -118,7 +118,7 @@ Alternative approaches are mentioned but not systematically compared. The paper 
 
 ### Scoring Rationale
 
-Score of 55 (Moderate) with ⚠️ flag reflects: methodological advocacy paper argues for position (expected for type); limitations acknowledged (positive); alternatives mentioned but not systematically compared; robustness assessment limited by paper type.
+Score of 55 (Moderate) with 📦 flag reflects: software paper describes artefact (genre expectation); limitations honestly acknowledged (positive); alternatives mentioned but not systematically compared (appropriate for type). Robustness is assessed against software paper expectations, not empirical study standards.
 
 ---
 
@@ -159,13 +159,13 @@ Score of 70 (Good) reflects: claims bounded to field research context; disciplin
 
 **Overall Evidential Strength:** Adequate
 
-This methodological software paper demonstrates adequate evidential strength with scores ranging from 55-74 (Moderate to Good). The pattern reflects the advocacy nature of software papers: clear design rationale with limited systematic comparison to alternatives.
+This methodological software paper demonstrates adequate evidential strength with scores ranging from 55-74 (Moderate to Good). The pattern reflects the descriptive nature of software papers: clear design rationale with documentation rather than systematic comparison to alternatives.
 
-The Robustness score (55, Moderate ⚠️) requires contextual interpretation. For a software paper promoting FAIMS as a solution, this score reflects appropriate expectations rather than a critical flaw. The paper honestly acknowledges limitations and discusses design trade-offs.
+The Robustness score (55, Moderate 📦) requires contextual interpretation. For a software description paper, this score reflects genre expectations rather than a deficiency. Software papers in venues like SoftwareX are meant to document software, not conduct comparative evaluations. The paper honestly acknowledges limitations and discusses design trade-offs — this is good practice for the genre.
 
 ### Pattern Summary
 
-The dominant pattern is software advocacy with honest limitation acknowledgement. Plausibility is good (design decisions sensible), Validity is adequate (case studies cited), Robustness is moderate (limited comparison, expected for type), Generalisability is good (cross-disciplinary design).
+The dominant pattern is software description with honest limitation acknowledgement. Plausibility is good (design decisions sensible), Validity is adequate (case studies cited), Robustness is moderate (limited comparison, expected for type), Generalisability is good (cross-disciplinary design). Similar patterns should be expected for other software papers and data papers.
 
 ### Implications for Cluster 3
 
@@ -208,14 +208,14 @@ cluster_2_evidential_strength:
   robustness:
     score: 55
     band: "moderate"
-    context_flag: "advocacy_paper"
+    context_flag: "software_paper"
     strengths:
       - "Limitations acknowledged"
       - "Design trade-offs discussed"
     weaknesses:
       - "Limited comparison to alternatives"
       - "No systematic sensitivity analysis"
-    rationale: "Moderate robustness with advocacy context flag. Expected for software paper promoting particular approach."
+    rationale: "Moderate robustness reflects software paper genre. Describes artefact rather than testing alternatives."
 
   generalisability:
     score: 70
@@ -230,7 +230,7 @@ cluster_2_evidential_strength:
 
   cluster_synthesis:
     overall_rating: "adequate"
-    pattern_summary: "Software advocacy with honest limitations. Moderate robustness expected for paper type."
+    pattern_summary: "Software description with honest limitations. Moderate robustness expected for genre."
     consistency_check: "consistent"
     implications:
       cluster_3: "Excellent code availability; Methodological Transparency variant applies"

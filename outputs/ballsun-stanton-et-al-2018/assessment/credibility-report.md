@@ -23,9 +23,9 @@
 > - Five years of iterative co-development with field researchers
 >
 > **Key Concerns:**
-> - Limited comparison to alternative software approaches (expected for advocacy paper)
+> - Limited comparison to alternative software approaches (typical for software papers)
 >
-> **Bottom Line:** An exemplary research software paper with excellent transparency and reproducibility, advocating for FAIMS as a solution for field data collection challenges.
+> **Bottom Line:** An exemplary research software paper with excellent transparency and reproducibility, describing FAIMS as a solution for field data collection challenges.
 
 ---
 
@@ -51,7 +51,7 @@
 | 2 | Transparency | 85 | Excellent | — |
 | 3 | Plausibility | 74 | Good | — |
 | 4 | Validity | 62 | Good | — |
-| 5 | Robustness | 55 | Moderate | ⚠️ Advocacy paper |
+| 5 | Robustness | 55 | Moderate | 📦 Software paper |
 | 6 | Generalisability | 70 | Good | — |
 | 7 | Reproducibility | 82 | Excellent | 🔧 Software paper |
 
@@ -87,13 +87,13 @@ The paper demonstrates strong foundational clarity with excellent software trans
 
 **Rating:** Adequate
 
-The paper demonstrates adequate evidential strength, consistent with its advocacy nature. Robustness is moderate (⚠️) as expected for a software paper promoting a particular approach.
+The paper demonstrates adequate evidential strength, appropriate for a software description paper. Robustness is moderate (📦) reflecting genre expectations — software papers describe what exists rather than systematically comparing alternatives.
 
 | Signal | Score | Band |
 |--------|-------|------|
 | Plausibility | 74 | Good |
 | Validity | 62 | Good |
-| Robustness | 55 | Moderate ⚠️ |
+| Robustness | 55 | Moderate 📦 |
 | Generalisability | 70 | Good |
 
 **Key Strengths:**
@@ -143,13 +143,15 @@ The software described is fully available for installation, use, and extension. 
 
 ## Context Flag Interpretation
 
-### Robustness (55, Moderate) ⚠️
+### Robustness (55, Moderate) 📦
 
-**Why this score:** Methodological advocacy papers argue for a position rather than systematically testing alternatives. A Moderate Robustness score is typical — and not a severe criticism — for this paper type.
+**Why this score:** Software and data papers describe artefacts rather than testing hypotheses. They do not typically include systematic comparisons to alternatives, sensitivity analyses, or robustness checks in the way empirical studies do. A Moderate Robustness score reflects these different genre expectations — it is not a criticism of the paper.
 
-**What this means:** The paper builds a coherent case for FAIMS as a solution to field data collection challenges but does not exhaustively compare alternative approaches.
+**What this means:** The paper describes FAIMS architecture, features, and use cases. It does not claim to have tested FAIMS against alternative approaches or demonstrated superiority through controlled comparison. This is appropriate: software papers in venues like SoftwareX are meant to document software, not conduct comparative evaluations.
 
-**What readers should consider:** Evaluate alternative field data collection software (commercial tools, other academic platforms, ad-hoc solutions) independently when assessing whether FAIMS is appropriate for their context.
+**What readers should consider:** When deciding whether to adopt FAIMS (or any research software), readers should independently evaluate alternatives appropriate to their context. The paper provides the information needed to understand FAIMS; comparative assessment is the reader's responsibility.
+
+**Generalisation:** Similar Robustness patterns should be expected for other software papers, data papers, and infrastructure descriptions. These genres prioritise Transparency and Reproducibility (can you access and use the artefact?) over Robustness (was it tested against alternatives?).
 
 ---
 
@@ -203,7 +205,7 @@ The software described is fully available for installation, use, and extension. 
       "transparency": { "score": 85, "band": "Excellent" },
       "plausibility": { "score": 74, "band": "Good" },
       "validity": { "score": 62, "band": "Good" },
-      "robustness": { "score": 55, "band": "Moderate", "context_flag": "advocacy_paper" },
+      "robustness": { "score": 55, "band": "Moderate", "context_flag": "software_paper" },
       "generalisability": { "score": 70, "band": "Good" },
       "reproducibility": { "score": 82, "band": "Excellent", "variant": "software_paper" }
     },
