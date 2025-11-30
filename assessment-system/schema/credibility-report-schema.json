@@ -1,0 +1,282 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/saross/llm-reproducibility/credibility-report-schema.json",
+  "title": "Credibility Assessment Report",
+  "description": "JSON schema for machine-readable credibility assessment output",
+  "type": "object",
+  "required": ["credibility_report"],
+  "properties": {
+    "credibility_report": {
+      "type": "object",
+      "required": ["version", "paper", "classification", "verdict", "signals", "aggregates", "infrastructure", "era_context", "assessment_metadata"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Schema version",
+          "enum": ["1.0"]
+        },
+        "paper": {
+          "type": "object",
+          "required": ["slug", "title", "publication_year"],
+          "properties": {
+            "slug": {
+              "type": "string",
+              "description": "Paper identifier slug (author-year format)"
+            },
+            "title": {
+              "type": "string",
+              "description": "Full paper title"
+            },
+            "doi": {
+              "type": ["string", "null"],
+              "description": "Paper DOI if available"
+            },
+            "publication_year": {
+              "type": "integer",
+              "description": "Year of publication",
+              "minimum": 1900,
+              "maximum": 2100
+            }
+          }
+        },
+        "classification": {
+          "type": "object",
+          "required": ["paper_type", "approach", "framework", "quality_state"],
+          "properties": {
+            "paper_type": {
+              "type": "string",
+              "enum": ["empirical", "methodological", "theoretical", "meta_research"],
+              "description": "Primary paper type"
+            },
+            "paper_subtype": {
+              "type": "string",
+              "description": "Paper subtype (e.g., theoretical_framework, case_study)"
+            },
+            "approach": {
+              "type": "string",
+              "enum": ["deductive", "inductive", "abductive", "mixed"],
+              "description": "Research approach classification"
+            },
+            "framework": {
+              "type": "string",
+              "description": "Assessment framework applied (e.g., abductive_emphasis)"
+            },
+            "quality_state": {
+              "type": "string",
+              "enum": ["high", "moderate", "low"],
+              "description": "Quality gating state from Track A"
+            },
+            "classification_confidence": {
+              "type": "string",
+              "enum": ["high", "medium", "low"],
+              "description": "Confidence in classification"
+            }
+          }
+        },
+        "verdict": {
+          "type": "object",
+          "required": ["band", "confidence"],
+          "properties": {
+            "band": {
+              "type": "string",
+              "enum": ["excellent", "good", "moderate", "low", "minimal"],
+              "description": "Overall credibility verdict band"
+            },
+            "confidence": {
+              "type": "string",
+              "enum": ["high", "medium", "low"],
+              "description": "Confidence in verdict"
+            },
+            "aggregate_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Aggregate credibility score (EXPERIMENTAL)"
+            },
+            "aggregate_experimental": {
+              "type": "boolean",
+              "default": true,
+              "description": "Flag indicating aggregate score is experimental"
+            }
+          }
+        },
+        "signals": {
+          "type": "object",
+          "required": ["comprehensibility", "transparency", "plausibility", "validity", "robustness", "generalisability", "reproducibility"],
+          "properties": {
+            "comprehensibility": {
+              "$ref": "#/definitions/signal"
+            },
+            "transparency": {
+              "$ref": "#/definitions/signal"
+            },
+            "plausibility": {
+              "$ref": "#/definitions/signal"
+            },
+            "validity": {
+              "$ref": "#/definitions/signal"
+            },
+            "robustness": {
+              "$ref": "#/definitions/signal"
+            },
+            "generalisability": {
+              "$ref": "#/definitions/signal"
+            },
+            "reproducibility": {
+              "$ref": "#/definitions/signal_with_variant"
+            }
+          }
+        },
+        "aggregates": {
+          "type": "object",
+          "required": ["cluster_1_rating", "cluster_2_rating", "cluster_3_rating"],
+          "properties": {
+            "cluster_1_rating": {
+              "type": "string",
+              "enum": ["strong", "adequate", "weak"],
+              "description": "Cluster 1 (Foundational Clarity) rating"
+            },
+            "cluster_2_rating": {
+              "type": "string",
+              "enum": ["excellent", "good", "adequate_to_strong", "adequate", "weak"],
+              "description": "Cluster 2 (Evidential Strength) rating"
+            },
+            "cluster_3_rating": {
+              "type": "string",
+              "enum": ["excellent", "good", "adequate", "weak"],
+              "description": "Cluster 3 (Reproducibility) rating"
+            }
+          }
+        },
+        "infrastructure": {
+          "type": "object",
+          "required": ["fair_score", "fair_rating", "fair_maximum"],
+          "properties": {
+            "fair_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 40,
+              "description": "FAIR compliance score"
+            },
+            "fair_rating": {
+              "type": "string",
+              "enum": ["exemplary_fair", "highly_fair", "moderately_fair", "minimally_fair", "not_fair"],
+              "description": "FAIR rating category"
+            },
+            "fair_maximum": {
+              "type": "integer",
+              "enum": [40],
+              "description": "Maximum possible FAIR score"
+            },
+            "code_availability": {
+              "type": "string",
+              "enum": ["available", "not_available", "not_applicable", "embargoed", "upon_request"],
+              "description": "Code availability status"
+            },
+            "data_availability": {
+              "type": "string",
+              "enum": ["available", "not_available", "not_applicable", "embargoed", "upon_request", "partially_available"],
+              "description": "Data availability status"
+            },
+            "preregistration": {
+              "type": "string",
+              "enum": ["preregistered", "not_preregistered", "not_applicable"],
+              "description": "Preregistration status"
+            }
+          }
+        },
+        "era_context": {
+          "type": "object",
+          "required": ["publication_year", "era", "era_label"],
+          "properties": {
+            "publication_year": {
+              "type": "integer",
+              "description": "Publication year (duplicate for convenience)"
+            },
+            "era": {
+              "type": "string",
+              "enum": ["pre_reproducibility", "early_adopter", "current"],
+              "description": "Era classification"
+            },
+            "era_label": {
+              "type": "string",
+              "description": "Human-readable era description"
+            },
+            "expectations_note": {
+              "type": "string",
+              "description": "What standards apply for this era"
+            }
+          }
+        },
+        "assessment_metadata": {
+          "type": "object",
+          "required": ["assessment_date", "assessor_version", "schema_version"],
+          "properties": {
+            "assessment_date": {
+              "type": "string",
+              "format": "date",
+              "description": "Date of assessment (YYYY-MM-DD)"
+            },
+            "assessor_version": {
+              "type": "string",
+              "description": "Version of the assessor"
+            },
+            "schema_version": {
+              "type": "string",
+              "description": "Version of this schema"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "signal": {
+      "type": "object",
+      "required": ["score", "band"],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Signal score (0-100)"
+        },
+        "band": {
+          "type": "string",
+          "enum": ["excellent", "good", "moderate", "low", "minimal"],
+          "description": "Score band"
+        },
+        "context_flag": {
+          "type": "string",
+          "description": "Contextual flag explaining score variation (e.g., expected_for_advocacy)"
+        }
+      }
+    },
+    "signal_with_variant": {
+      "type": "object",
+      "required": ["score", "band"],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Signal score (0-100)"
+        },
+        "band": {
+          "type": "string",
+          "enum": ["excellent", "good", "moderate", "low", "minimal"],
+          "description": "Score band"
+        },
+        "variant": {
+          "type": "string",
+          "enum": ["computational", "methodological_transparency"],
+          "description": "Assessment variant used for reproducibility"
+        },
+        "context_flag": {
+          "type": "string",
+          "description": "Contextual flag explaining score variation"
+        }
+      }
+    }
+  }
+}

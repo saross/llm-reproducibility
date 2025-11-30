@@ -1,0 +1,1719 @@
+
+ ▐▛███▜▌   Claude Code v2.0.55
+▝▜█████▛▘  Opus 4.5 · Claude Max
+  ▘▘ ▝▝    ~/Code/llm-reproducibility
+══════════════════ Conversation compacted · ctrl+o for history ═════════════════
+
+> /compact   Session context: Project housekeeping - documentation updates, 
+archiving, and reorganisation.
+
+  Plan file: /home/shawn/.claude/plans/parallel-wiggling-narwhal.md contains the
+ complete approved plan.
+
+  Summary of work:
+  1. Phase 1 - Documentation updates: README.md, CHANGELOG.md, manifest.yaml, 
+planning/README.md, docs/documentation-index.md (fix terminology, versions, 
+broken
+  links, pass counts)
+  2. Phase 2 - Archive planning docs: Move 13 superseded files + gpt51-feedback/
+ to archive/planning-completed/
+  3. Phase 3 - Reorganise: Move outputs.backup-pre-migration/ to archive/, 
+create outputs/corpus-analysis/ and outputs/testing/, consolidate scripts in 
+scripts/
+  4. Phase 4 - Update archive indexes
+
+  Key rules: Don't change terminology in archived docs (preserve history). Keep 
+active: credibility-implementation-plan-v2.0.md, active-todo-list.md,
+  fair-vocabularies-development-plan.md, fellowship/.
+
+  Start by: Reading the plan file, then execute phases in order. Single commit 
+at end.
+
+  ---
+  You can paste this after /compact to resume.
+
+  Todos
+  ☒ Update remaining files with Replicability → Reproducibility terminology
+  ☐ [REPORT DESIGN] Add contextual interpretation for scores - 'what this number
+ means for THIS paper'
+  ☐ [REPORT DESIGN] Include paper-type contextual notes for each signal score
+  ☐ [REPORT DESIGN] Flag where scores are expected to vary by paper type (e.g., 
+Robustness for advocacy papers)
+  ☐ [FUTURE] Add tests for common research failure modes / biases / errors 
+(bibliography available)
+  ☐ [FUTURE] Add sentiment/rhetorical analysis for hype, slop, and AI-generated 
+content (bibliography available) 
+  ⎿  Compacted (ctrl+o to see full summary)
+  ⎿  Read ../../.claude/plans/parallel-wiggling-narwhal.md (201 lines)
+  ⎿ Read 
+    .claude/skills/research-assessor/references/examples/sobotkova-example.md
+    (201 lines)
+  ⎿ Read 
+    outputs/ross-ballsun-stanton-2022/assessment/cluster-3-reproducibility.md
+    (213 lines)
+  ⎿ Read outputs/ross-ballsun-stanton-2022/assessment/cluster-2-evidential-stren
+    gth.md (269 lines)
+  ⎿ Read outputs/ross-ballsun-stanton-2022/assessment/cluster-1-foundational-cla
+    rity.md (168 lines)
+  ⎿  Todo list read (6 items)
+
+> Hi CC, welcome back, can you execute the plan described in the compact 
+message above? 
+
+● I'll execute the housekeeping plan. Let me update the todo list and start
+  working through the phases.
+
+● Read(README.md)
+  ⎿  Read 326 lines
+
+● Let me check which documentation files exist to understand what links are
+  broken:
+
+● Search(pattern: "docs/**/*.md")
+  ⎿  Found 20 files (ctrl+o to expand)
+
+● Search(pattern: "planning/*.md")
+  ⎿  Found 17 files (ctrl+o to expand)
+
+● Now I can see the broken links. Let me update README.md with all the
+  fixes:
+
+● Update(README.md)
+  ⎿  Updated README.md with 1 addition and 1 removal                     
+       3    [![License: 
+           Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-
+           blue.svg)](https://opensource.org/licenses/Apache-2.0)
+       4    [![License: CC BY 
+           4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightg
+           rey.svg)](https://creativecommons.org/licenses/by/4.0/)
+       5    
+       6 -  Automated extraction of claims, evidence, and methodology 
+         -  from research papers using Large Language Models, enabling 
+         -  systematic assessment of research transparency, replicability
+         -  , and credibility.
+       6 +  Automated extraction of claims, evidence, and methodology 
+         +  from research papers using Large Language Models, enabling 
+         +  systematic assessment of research transparency, 
+         +  reproducibility, and credibility.
+       7    
+       8    **Version:** 2.6 | **Schema:** v2.6 | **Workflow:** 8-pass 
+           (0-7)
+       9    **Status:** Extraction system complete and tested, assessment
+            framework in development
+
+● Update(README.md)
+  ⎿  Updated README.md with 2 additions and 2 removals                   
+       155    - Plausibility
+       156    - Evidential Adequacy
+       157    - Robustness
+       158 -  - Replicability
+       159 -  - Generalizability
+       158 +  - Reproducibility
+       159 +  - Generalisability
+       160    
+       161    See [planning/cwts_implementation_plan.md](planning/cwts_im
+             plementation_plan.md) for roadmap.
+       162    
+
+● Update(README.md)
+  ⎿  Updated README.md with 1 addition and 1 removal                     
+       158    - Reproducibility
+       159    - Generalisability
+       160    
+       161 -  See [planning/cwts_implementation_plan.md](planning/cwts_im
+           - plementation_plan.md) for roadmap.
+       161 +  See [planning/credibility-implementation-plan-v2.0.md](plan
+           + ning/credibility-implementation-plan-v2.0.md) for roadmap.
+       162    
+       163    ---
+       164    
+
+● Update(README.md)
+  ⎿  Updated README.md with 7 additions and 7 removals                   
+       171    - [Schema Reference](docs/user-guide/schema-reference.md) -
+              Understanding the extraction schema
+       172    
+       173    ### Research Assessor Skill Guide
+       174 -  - [Overview](docs/research-assessor-guide/overview
+           -  .md) - What the skill does and when to use it
+       175 -  - [Installation](docs/research-assessor-guide/installation
+           -  .md) - Installing and verifying the skill
+       176 -  - [Reference](docs/research-assessor-guide/reference
+           -  .md) - Complete reference guide
+       174 +  - [Overview](docs/research-assessor-guide/README
+           +  .md) - What the skill does and when to use it
+       175 +  - [Installation](docs/research-assessor-guide/installation
+           +  -guide.md) - Installing and verifying the skill
+       176 +  - [Usage Guide](docs/research-assessor-guide/usage-guide
+           +  .md) - Complete usage reference
+       177    - 
+             [Architecture](docs/research-assessor-guide/architecture.md)
+              - How the skill works
+       178 -  - [Troubleshooting](docs/research-assessor-guide/troublesho
+           - oting.md) - Common issues and solutions
+       178 +  - [Quick 
+           + Reference](docs/research-assessor-guide/quick-reference.md) 
+           + - Cheat sheet for common tasks
+       179    
+       180 -  ### Development
+       181 -  - [Schema Evolution](docs/development/schema-evolution.md) 
+           - - Schema versioning and mappings
+       182 -  - [Deployment 
+           - Guide](docs/development/deployment-guide-v2.5.md) - Skill 
+           - deployment details
+       180 +  ### Schema and Development
+       181 +  - [Schema Reference](docs/user-guide/schema-reference.md) -
+           +  Current schema documentation
+       182 +  - [Version 
+           + History](docs/research-assessor-guide/version.md) - Skill 
+           + version information
+       183    
+       184    ---
+       185    
+
+● Update(README.md)
+  ⎿  Updated README.md with 8 additions and 7 removals                  
+       219    
+       220    ## Project Status
+       221    
+       222 -  ### ✅ Completed (v2.5)
+       223 -  - Extraction system complete and validated
+       224 -  - Five-pass workflow tested and refined
+       225 -  - Schema v2.5 with complete object types
+       222 +  ### ✅ Completed (v2.6)
+       223 +  - Extraction system complete and validated
+           +   (8-pass workflow, Pass 0-7)
+       224 +  - Infrastructure extraction (PIDs, FAIR assessment, 
+           + funding, permits)
+       225 +  - Schema v2.6 with complete object types
+       226    - PDF processing pipeline working
+       227    - Comprehensive documentation
+       228 -  - Repository organization and FAIR4RS preparation
+       228 +  - Repository organisation and FAIR4RS preparation
+       229    
+       230    ### 🚧 In Progress
+       231 +  - Assessment framework development (Three Pillars: 
+           + Transparency → Credibility → Reproducibility)
+       232 +  - repliCATS Seven Signals adaptation for HASS disciplines
+       233    - Testing on additional papers from varied domains
+       234 -  - Expanding domain-specific vocabulary
+       234    
+       235    ### 📋 Planned (Next Phase)
+       236 -  - Assessment framework development (credibility scoring)
+       236 +  - Complete assessment framework (cluster prompts, quality 
+           + gating)
+       237    - Multi-paper batch processing
+       238    - Integration with archaeological data repositories
+       239    - Zenodo deposition and DOI assignment
+
+● Update(README.md)
+  ⎿  Updated README.md with 1 addition and 1 removal                   
+       286    - Tested on archaeological research papers
+       287    - Informed by TIDieR, CONSORT-Outcomes, and SPIRIT 
+             frameworks
+       288    - Assessment framework adapted from repliCATS methodology
+       289 -  - Inspired by research transparency and replication
+           -   initiatives
+       289 +  - Inspired by research transparency and reproducibility
+           +   initiatives
+       290    
+       291    ---
+       292    
+
+● Update(README.md)
+  ⎿  Updated README.md with 1 addition and 1 removal                     
+       306    - **v2.2-2.3** (Oct 17-18, 2025): Two-pass workflow with 
+             consolidation
+       307    - **v2.4** (Oct 19-20, 2025): RDMAP extraction framework 
+             added
+       308    - **v2.5** (Oct 23, 2025): Repository rationalisation and 
+             FAIR4RS preparation
+       309 -  - **v2.6** (Nov 2025): Infrastructure extraction (Pass 6), 
+           -  7-pass workflow complete
+       309 +  - **v2.6** (Nov 2025): Infrastructure extraction (Pass 6), 
+           +  8-pass workflow complete
+           +   (Pass 0-7), assessment framework development
+       310    
+       311    See [archive/README.md](archive/README.md) for complete 
+             development history.
+       312    
+
+● Read(CHANGELOG.md)
+  ⎿  Read 155 lines
+
+● Update(CHANGELOG.md)
+  ⎿  Updated CHANGELOG.md with 28 additions and 1 removal                
+        5    The format is based on [Keep a 
+            Changelog](https://keepachangelog.com/en/1.0.0/),
+        6    and this project adheres to [Semantic 
+            Versioning](https://semver.org/spec/v2.0.0.html).
+        7    
+        8 +  ## [2.6.0] - 2025-11-29
+        9 +  
+       10 +  ### Infrastructure Extraction and Assessment Framework
+       11 +  
+       12 +  #### Added
+       13 +  - **Pass 6: Infrastructure Extraction** - PIDs, FAIR 
+          + assessment, funding sources, permits
+       14 +  - **8-pass workflow complete (Pass 0-7)** - Full extraction 
+          + pipeline validated
+       15 +  - **Assessment framework development** - Three Pillars 
+          + (Transparency → Credibility → Reproducibility)
+       16 +  - repliCATS Seven Signals adaptation for HASS disciplines
+       17 +  - Research approach classification (inductive, deductive, 
+          + abductive)
+       18 +  - Track A quality gating prompts
+       19 +  - Cluster-based assessment prompts (Clusters 1-3)
+       20 +  - Methodological Transparency variant for non-computational 
+          + papers
+       21 +  
+       22 +  #### Changed
+       23 +  - Updated terminology: "replicability" → "reproducibility" 
+          + throughout active documents
+       24 +  - Schema v2.6 with reproducibility_infrastructure block
+       25 +  - Expanded extraction_plan_unified_model.md for diverse 
+          + paper types
+       26 +  - Enhanced FAIR scoring with automatic calculation
+       27 +  
+       28 +  #### Fixed
+       29 +  - Consolidated duplicate planning documents
+       30 +  - Updated documentation links throughout
+       31 +  - Improved queue.yaml checkpoint/resume support
+       32 +  
+       33 +  ---
+       34 +  
+       35    ## [2.5.0] - 2025-10-23
+       36    
+       37 -  ### Repository Rationalization Release
+       37 +  ### Repository Rationalisation Release
+       38    
+       39    #### Changed
+       40    - Reorganized entire repository structure for clarity and 
+            usability
+
+● Update(CHANGELOG.md)
+  ⎿  Updated CHANGELOG.md with 4 additions and 3 removals                
+       159    
+       160    ## Future Releases
+       161    
+       162 -  ### Planned for v2.6+
+       163 -  - Assessment framework development (credibility scoring)
+       162 +  ### Planned for v2.7+
+       163 +  - Complete assessment framework (all cluster prompts, 
+           + quality gating finalised)
+       164    - Multi-paper batch processing
+       165    - Archaeological repository integration
+       166 +  - FAIR vocabularies for controlled terms
+       167    - Additional domain-specific adaptations
+       168    
+       169 -  See [planning/cwts_implementation_plan.md](planning/cwts_im
+           - plementation_plan.md) for detailed roadmap.
+       169 +  See [planning/credibility-implementation-plan-v2.0.md](plan
+           + ning/credibility-implementation-plan-v2.0.md) for detailed 
+           + roadmap.
+       170    
+       171    ---
+       172    
+
+● Update(CHANGELOG.md)
+  ⎿  Updated CHANGELOG.md with 1 addition and 1 removal                  
+       179    
+       180    ---
+       181    
+       182 -  For detailed version information including prompt changes, 
+           -  schema specifics, and migration guides, see [docs/skill-
+           -  documentation/VERSION.md](docs/skill-documentation/VERSION
+           -  .md).
+       182 +  For detailed version information including prompt changes, 
+           +  schema specifics, and migration guides, see [docs/research-
+           +  assessor-guide/version.md](docs/research-assessor-guide/
+           +  version.md).
+
+● Read(manifest.yaml)
+  ⎿  Read 133 lines
+
+● Search(pattern: "extraction-system/prompts/*.md")
+  ⎿  Found 10 files (ctrl+o to expand)
+
+● Search(pattern: "assessment-system/prompts/*.md")
+  ⎿  Found 6 files (ctrl+o to expand)
+
+● Update(manifest.yaml)
+  ⎿  Updated manifest.yaml with 1 addition and 1 removal               
+       1    # Project Manifest - Single Source of Truth for Versions
+       2 -  # Last Updated: 2025-11-27
+       2 +  # Last Updated: 2025-11-29
+       3    #
+       4    # This manifest tracks version information for all project 
+           components.
+       5    # READMEs and documentation should reference this file for 
+           consistency.
+
+● Update(manifest.yaml)
+  ⎿  Updated manifest.yaml with 1 addition and 1 removal                 
+       67        prompt: 
+            extraction-system/prompts/02-claims-evidence_pass2_prompt.md
+       68      - pass: 3
+       69        name: RDMAP Liberal
+       70 -      prompt: extraction-system/prompts/03-
+          -  rdmap_pass1a_explicit_prompt.md
+       70 +      prompt: extraction-system/prompts/03-rdmap_pass1a_prompt
+          +  .md
+       71      - pass: 4
+       72        name: RDMAP Implicit
+       73        prompt: 
+            extraction-system/prompts/04-rdmap_pass1b_implicit_prompt.md
+
+● Update(manifest.yaml)
+  ⎿  Updated manifest.yaml with 33 additions and 5 removals            
+       48    # Assessment system (in development)
+       49    assessment:
+       50      status: in_development
+       51 -    classification_prompt:
+       52 -      version: "0.2-alpha"
+       53 -      file: 
+          - assessment-system/prompts/classify-research-approach.md
+       54 -      last_updated: "2025-11-17"
+       55 -      description: Pass 8 research approach classification
+       51 +    framework: Three Pillars (Transparency → Credibility → 
+          + Reproducibility)
+       52 +    methodology: repliCATS Seven Signals adapted for HASS
+       53    
+       54 +    prompts:
+       55 +      classify_research_approach:
+       56 +        version: "0.3"
+       57 +        file: 
+          + assessment-system/prompts/classify-research-approach.md
+       58 +        last_updated: "2025-11-29"
+       59 +        description: Research approach classification 
+          + (inductive, deductive, abductive)
+       60 +  
+       61 +      track_a_quality_gating:
+       62 +        version: "0.2"
+       63 +        file: 
+          + assessment-system/prompts/track-a-quality-gating.md
+       64 +        last_updated: "2025-11-28"
+       65 +        description: Track A quality gate criteria for 
+          + assessment
+       66 +  
+       67 +      cluster_1:
+       68 +        version: "0.2"
+       69 +        file: 
+          + assessment-system/prompts/cluster-1-foundational-clarity.md
+       70 +        last_updated: "2025-11-28"
+       71 +        description: Signals 1-2 (Comprehensibility, 
+          + Transparency)
+       72 +  
+       73 +      cluster_2:
+       74 +        version: "0.2"
+       75 +        file: 
+          + assessment-system/prompts/cluster-2-evidential-strength.md
+       76 +        last_updated: "2025-11-28"
+       77 +        description: Signals 3-6 (Plausibility, Validity, 
+          + Robustness, Generalisability)
+       78 +  
+       79 +      cluster_3:
+       80 +        version: "0.2"
+       81 +        file: 
+          + assessment-system/prompts/cluster-3-reproducibility.md
+       82 +        last_updated: "2025-11-29"
+       83 +        description: Signal 7 (Reproducibility) with 
+          + Methodological Transparency variant
+       84 +  
+       85    # Workflow structure
+       86    workflow_passes:
+       87      - pass: 0
+
+● Read(planning/README.md)
+  ⎿  Read 130 lines
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/planning/)
+  ⎿  total 604                                       
+     drwxrwxr-x  4 shawn shawn   4096 Nov 29 13:15 .
+     drwxrwxr-x 17 shawn shawn   4096 Nov 29 22:53 ..
+     … +36 lines (ctrl+o to expand)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/planning/fellowship/)
+  ⎿  total 56                                      
+     drwxrwxr-x 2 shawn shawn  4096 Oct 28 22:47 .
+     drwxrwxr-x 4 shawn shawn  4096 Nov 29 13:15 ..
+     … +4 lines (ctrl+o to expand)
+
+● Write(planning/README.md)
+  ⎿  Updated planning/README.md with 60 additions and 83 removals        
+        3    This folder contains **active planning documents** for the 
+            LLM-based research extraction and assessment project.
+        4    
+        5    **Project Status:**
+        6 -  ✅ **Phase 1 Complete**: Extraction system development (v2.0
+          -   → v2.5)
+        7 -  📋 **Phase 2 Upcoming**: Assessment framework development
+        6 +  ✅ **Phase 1 Complete**: Extraction system development (v2.0
+          +   → v2.6)
+        7 +  🚧 **Phase 2 In Progress**: Assessment framework development
+        8    
+        9    ---
+       10    
+       11    ## Active Planning Documents
+       12    
+       13 -  These documents guide ongoing and future work:
+       13 +  ### Master Plan
+       14    
+       15 -  ### [CWTS Implementation Plan](cwts_implementation_plan.md)
+       16 -  **Status:** Phase 1 complete, Phases 2-3 upcoming
+       17 -  **Scope:** 6-month fellowship plan (Sept 2025 - Feb 2026)
+       18 -  **Focus:** LLM-based credibility assessment for humanities 
+          - and social sciences
+       15 +  #### [credibility-implementation-plan-v2.0.md](credibility-i
+          + mplementation-plan-v2.0.md)
+       16 +  **Status:** Active master plan
+       17 +  **Focus:** Complete credibility assessment framework
+       18    
+       19 -  **Phases:**
+       20 -  - ✅ **Phase 1** (Months 1-2): Extraction prototype → 
+          - **COMPLETE**
+       21 -  - 📋 **Phase 2** (Months 3-4): Assessment framework 
+          - development → **UPCOMING**
+       22 -  - 📋 **Phase 3** (Months 5-6): Validation and scaling → 
+          - **UPCOMING**
+       19 +  This is the current authoritative plan, covering:
+       20 +  - Three Pillars Framework (Transparency → Credibility → 
+          + Reproducibility)
+       21 +  - repliCATS Seven Signals adaptation for HASS
+       22 +  - Cluster-based assessment architecture
+       23 +  - Quality gating approach
+       24 +  - Implementation roadmap
+       25    
+       26 -  This is the master plan for the project, including:
+       27 -  - Strategic assets (local compute, domain expertise, 
+          - repliCATS data access)
+       28 -  - Three-layer architecture (extraction, assessment, 
+          - infrastructure)
+       29 -  - Validation approach and timeline
+       26 +  ### Active Working Documents
+       27    
+       28 -  ### [Implementation Plan 
+          - Supplement](implementation_plan_supplement.md)
+       29 -  **Status:** Active guidance
+       30 -  **Focus:** Strategic decisions and constraints
+       28 +  #### [active-todo-list.md](active-todo-list.md)
+       29 +  **Status:** Active
+       30 +  **Focus:** Current tasks and priorities
+       31    
+       32 -  Key topics:
+       33 -  - Copyright and access strategy (co-authored + OA papers)
+       34 -  - Multilingual development pathway (English first, then 
+          - expansion)
+       35 -  - Community engagement plan (CAA-Australasia)
+       32 +  #### [fair-vocabularies-development-plan.md](fair-vocabulari
+          + es-development-plan.md)
+       33 +  **Status:** Active
+       34 +  **Focus:** Controlled vocabulary development for extraction 
+          + and assessment
+       35    
+       36 -  ### [Schema Improvement Plan](schema_improvement_plan.md)
+       37 -  **Status:** Future work roadmap
+       38 -  **Focus:** Formalization and ontology alignment
+       36 +  ### Fellowship Materials
+       37    
+       38 -  Planned enhancements:
+       39 -  - Pragmatic iteration now, formalization later
+       40 -  - Crosswalk documentation to existing ontologies
+       41 -  - Empirically-driven taxonomy development
+       42 -  - Domain-specific vocabulary expansion
+       38 +  #### [fellowship/](fellowship/)
+       39 +  Original fellowship proposal and supporting documents:
+       40 +  - `cwts_implementation_plan.md` - Original 6-month 
+          + fellowship plan
+       41 +  - `implementation_plan_supplement.md` - Strategic decisions
+       42 +  - `README.md` - Fellowship overview
+       43    
+       44 -  ### [Preliminary Work](preliminary-work/)
+       45 -  Historical context documents:
+       46 -  - CWTS proposal
+       47 -  - Initial claims extraction concepts
+       48 -  
+       44    ---
+       45    
+       46 -  ## Archived Planning Documents
+       46 +  ## Documents to be Archived
+       47    
+       48 -  Completed planning from the extraction development phase has
+          -  been archived:
+       48 +  The following documents are superseded by 
+          + `credibility-implementation-plan-v2.0.md` and will be 
+          + archived:
+       49    
+       50 -  ### v2.0-v2.1 Planning (Archived)
+       51 -  - `quick_start_extraction_guide.md` → 
+          - [archive/extraction-development/v2.0-v2.1/planning/](../archi
+          - ve/extraction-development/v2.0-v2.1/planning/)
+       52 -  - `claims_extraction_project_plan.md` → 
+          - [archive/extraction-development/v2.0-v2.1/planning/](../archi
+          - ve/extraction-development/v2.0-v2.1/planning/)
+       50 +  - `assessment-implementation-plan.md` - Superseded by v2.0
+       51 +  - `credibility-assessment-implementation-roadmap.md` - 
+          + Superseded
+       52 +  - `credibility-implementation-plan-detailed.md` - Superseded
+          +  by v2.0
+       53 +  - `corpus-interpretation-framework.md` - Integrated into 
+          + main plan
+       54 +  - `paper-credibility-analysis-framework.md` - Superseded
+       55 +  - `research-approach-classification-framework.md` - Now in 
+          + prompts
+       56 +  - `extraction-assessment-rubric-v1.md` - Superseded
+       57 +  - `extraction-metrics-guidance-analysis.md` - Historical 
+          + analysis
+       58 +  - `extraction-to-analysis-transition.md` - Completed 
+          + transition
+       59 +  - `pass6-phase1-testing-findings.md` - Completed testing
+       60 +  - `pass6-software-documentation-enhancement.md` - Completed
+       61 +  - `secondary-source-attribution-analysis.md` - Completed 
+          + analysis
+       62 +  - `synthesis-external-feedback.md` - Historical feedback
+       63 +  - `gpt51-feedback/` - Historical feedback from other models
+       64    
+       65 -  ### v2.2-v2.3 Planning (Archived)
+       66 -  - `extraction_decisions_synopsis.md` → 
+          - [archive/extraction-development/v2.2-v2.3/planning/](../archi
+          - ve/extraction-development/v2.2-v2.3/planning/)
+       67 -  - `decisions_doc_update.md` → 
+          - [archive/extraction-development/v2.2-v2.3/planning/](../archi
+          - ve/extraction-development/v2.2-v2.3/planning/)
+       68 -  
+       69 -  ### v2.4 Planning (Archived)
+       70 -  - `rdmap_implementation_doc.md` → 
+          - [archive/extraction-development/v2.4/planning/](../archive/ex
+          - traction-development/v2.4/planning/)
+       71 -  - `RDMAP-Prompt-Correction-Plan.md` → 
+          - [archive/extraction-development/v2.4/planning/](../archive/ex
+          - traction-development/v2.4/planning/)
+       72 -  
+       73 -  See [archive/README.md](../archive/README.md) for complete 
+          - development history.
+       74 -  
+       65    ---
+       66    
+       67 -  ## How to Use These Documents
+       67 +  ## Previous Phase Archives
+       68    
+       69 -  ### For Current Work
+       70 -  Refer to active planning documents to understand:
+       71 -  - Project goals and timeline
+       72 -  - Strategic decisions already made
+       73 -  - Constraints and opportunities
+       74 -  - Next phase requirements
+       69 +  Completed planning from the extraction development phase:
+       70    
+       71 -  ### For Collaborators
+       72 -  These documents provide:
+       73 -  - Context for the overall project scope
+       74 -  - Rationale for design decisions
+       75 -  - Roadmap for future development
+       76 -  - Connection to broader research goals
+       71 +  ### v2.0-v2.5 Planning (Archived)
+       72 +  See [archive/extraction-development/](../archive/extraction-
+          + development/) for:
+       73 +  - Claims extraction project plans
+       74 +  - RDMAP implementation documents
+       75 +  - Schema evolution documentation
+       76 +  - Version-specific planning
+       77    
+       78 -  ### For Development History
+       79 -  For understanding how we got here:
+       80 -  - See archived planning documents in 
+          - `archive/extraction-development/`
+       81 -  - Each version folder contains planning decisions for that 
+          - phase
+       82 -  - Chronological progression shows iterative refinement
+       78 +  See [archive/README.md](../archive/README.md) for complete 
+          + development history.
+       79    
+       80    ---
+       81    
+       82    ## Next Steps
+       83    
+       84 -  **Immediate** (completing Phase 1):
+       85 -  - Additional testing on varied papers
+       86 -  - Domain-specific vocabulary expansion
+       87 -  - Documentation refinement
+       84 +  **Current** (Phase 2 - Assessment):
+       85 +  - Complete cluster prompts (Clusters 1-3) ✅
+       86 +  - Quality gating refinement
+       87 +  - Reliability testing on additional papers
+       88 +  - Batch assessment tooling
+       89    
+       90 -  **Near-term** (Phase 2 start):
+       91 -  - Assessment framework design
+       92 -  - repliCATS adaptation for interpretive scholarship
+       93 -  - Multi-model consensus approach for scoring
+       94 -  
+       95 -  **Future** (Phase 3+):
+       96 -  - Batch processing infrastructure
+       97 -  - Archaeological repository integration
+       98 -  - FAIR4RS full compliance
+       90 +  **Upcoming**:
+       91 +  - Multi-paper corpus analysis
+       92 +  - FAIR vocabulary finalisation
+       93    - Community validation
+       94    
+       95    ---
+     ...
+       121    
+       122    - [Main README](../README.md) - Project overview
+       123    - [User Guide](../docs/user-guide/getting-started.md) - 
+             Using the extraction system
+       124 -  - [Skill Documentation](../docs/skill-documentation/) - 
+           - Technical details
+       124 +  - [Research Assessor 
+           + Guide](../docs/research-assessor-guide/) - Skill 
+           + documentation
+       125    - [Archive README](../archive/README.md) - Development 
+             history
+       126    
+       127    ---
+       128    
+       129 -  **Questions about planning?** See the CWTS Implementation 
+           - Plan for the most comprehensive overview.
+       129 +  **Questions about planning?** See the 
+           + [credibility-implementation-plan-v2.0.md](credibility-implem
+           + entation-plan-v2.0.md) for the most comprehensive overview.
+
+● Read(docs/documentation-index.md)
+  ⎿  Read 422 lines
+
+● Update(docs/documentation-index.md)
+  ⎿  Updated docs/documentation-index.md with 2 additions and 2 removals 
+       2    
+       3    Complete map of all documentation in the LLM Reproducibility 
+           project, organised by audience and purpose.
+       4    
+       5 -  **Last Updated:** 2025-11-13
+       6 -  **Documentation Files:** 18 files across 4 categories
+       5 +  **Last Updated:** 2025-11-29
+       6 +  **Documentation Files:** 20+ files across 4 categories
+       7    
+       8    ---
+       9    
+
+● Update(docs/documentation-index.md)
+  ⎿  Updated docs/documentation-index.md with 1 addition and 1 removal
+       35       - **Time:** 15-20 minutes reading
+       36    
+       37    2. **[Extraction 
+            Workflow](user-guide/extraction-workflow.md)** (Complete 
+            workflow guide)
+       38 -     - 7-pass workflow detailed (Passes 0-6 + validation)
+       38 +     - 8-pass workflow detailed (Passes 0-7)
+       39       - Section-by-section extraction approach
+       40       - JSON file management
+       41       - Quality metrics and verification
+
+● Update(docs/documentation-index.md)
+  ⎿  Updated docs/documentation-index.md with 1 addition and 1 removal
+       63    Quick-access guides for users actively extracting papers:
+       64    
+       65    1. **[Quick 
+            Reference](research-assessor-guide/quick-reference.md)** 
+            (Essential commands and checklist)
+       66 -     - 7-pass workflow checklist
+       66 +     - 8-pass workflow checklist (Passes 0-7)
+       67       - Common commands
+       68       - Troubleshooting quick fixes
+       69       - Validation checks
+
+● Update(docs/documentation-index.md)
+  ⎿  Updated docs/documentation-index.md with 1 addition and 1 removal   
+       77       - **Use:** Reference when uncertain about field usage
+       78    
+       79    3. **[Usage Guide](research-assessor-guide/usage-guide.md)**
+             (Comprehensive pass-by-pass instructions)
+       80 -     - Detailed instructions for each pass (0-6 + validation)
+       80 +     - Detailed instructions for each pass (0-7)
+       81       - Conversation templates for Claude Code
+       82       - Section extraction strategies
+       83       - JSON validation procedures
+
+● Update(docs/documentation-index.md)
+  ⎿  Updated docs/documentation-index.md with 1 addition and 1 removal
+       91    
+       92    1. **[Research Assessor 
+            Overview](research-assessor-guide/README.md)** (What the 
+            skill does)
+       93       - Skill capabilities and features
+       94 -     - 7-pass workflow overview
+       94 +     - 8-pass workflow overview (Passes 0-7)
+       95       - Object types extracted
+       96       - When to use this skill
+       97       - **Time:** 10 minutes reading
+
+● Update(docs/documentation-index.md)
+  ⎿  Updated docs/documentation-index.md with 1 addition and 1 removal   
+       183    ### Extraction Process
+       184    
+       185    - [Getting Started](user-guide/getting-started.md) - First 
+             extraction
+       186 -  - [Extraction Workflow](user-guide/extraction-workflow.md) 
+           -  - Complete 7-pass workflow
+       186 +  - [Extraction Workflow](user-guide/extraction-workflow.md) 
+           +  - Complete 8-pass workflow (Passes 0-7)
+       187    - [Quick 
+             Reference](research-assessor-guide/quick-reference.md) - 
+             Workflow checklist
+       188    - [Usage Guide](research-assessor-guide/usage-guide.md) - 
+             Pass-by-pass detailed instructions
+       189    
+
+● Update(docs/documentation-index.md)
+  ⎿  Updated docs/documentation-index.md with 1 addition and 1 removal
+       418    
+       419    **Navigation:** [Main README](../README.md) | [User 
+             Guide](user-guide/) | [Research Assessor 
+             Guide](research-assessor-guide/) | [Background 
+             Research](background-research/)
+       420    
+       421 -  **Last Updated:** 2025-11-13
+       421 +  **Last Updated:** 2025-11-29
+
+● Bash(mkdir -p /home/shawn/Code/llm-reproducibility/archive/planning-completed)
+  ⎿  (No content)
+
+● Bash(mv planning/assessment-implementation-plan.md archive/planning-completed/
+       && mv planning/credibility-assessment-implementation-roadmap.md
+      archive/planning-compl…)
+  ⎿  (No content)
+
+● Bash(mv planning/extraction-assessment-rubric-v1.md
+      archive/planning-completed/ && mv
+      planning/extraction-metrics-guidance-analysis.md
+      archive/planning-completed/ &&…)
+  ⎿  (No content)
+
+● Bash(mv planning/pass6-phase1-testing-findings.md archive/planning-completed/
+      && mv planning/pass6-software-documentation-enhancement.md
+      archive/planning-completed/…)
+  ⎿  (No content)
+
+● Bash(mv planning/gpt51-feedback archive/planning-completed/)
+  ⎿  (No content)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/archive/planning-completed/)
+  ⎿  total 688                                      
+     drwxrwxr-x  4 shawn shawn  4096 Nov 29 22:56 .
+     drwxrwxr-x 12 shawn shawn  4096 Nov 13 14:53 ..
+     … +57 lines (ctrl+o to expand)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/planning/)
+  ⎿  total 212                                       
+     drwxrwxr-x  3 shawn shawn   4096 Nov 29 22:56 .
+     drwxrwxr-x 17 shawn shawn   4096 Nov 29 22:53 ..
+     … +9 lines (ctrl+o to expand)
+
+● Bash(mv /home/shawn/Code/llm-reproducibility/outputs.backup-pre-migration
+      /home/shawn/Code/llm-reproducibility/archive/outputs-backup-pre-migration)
+  ⎿  (No content)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/outputs/)
+  ⎿  total 280                                      
+     drwxrwxr-x 14 shawn shawn  4096 Nov 28 17:22 .
+     drwxrwxr-x 16 shawn shawn  4096 Nov 29 22:56 ..
+     … +37 lines (ctrl+o to expand)
+
+● Bash(mkdir -p /home/shawn/Code/llm-reproducibility/outputs/corpus-analysis
+      /home/shawn/Code/llm-reproducibility/outputs/testing)
+  ⎿  (No content)
+
+● Bash(mv /home/shawn/Code/llm-reproducibility/outputs/corpus-profile-2025-11-16
+      -0724.md /home/shawn/Code/llm-reproducibility/outputs/corpus-analysis/ &&
+      mv /home/shaw…)
+  ⎿  (No content)
+
+● Bash(mkdir -p /home/shawn/Code/llm-reproducibility/archive/corpus-profiles &&
+      mv /home/shawn/Code/llm-reproducibility/outputs/corpus-profile-2025-11-*
+      /home/shawn/Co…)
+  ⎿  (No content)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/*.py 2>/dev/null || echo "No
+      Python files at root")
+  ⎿ -rw-rw-r-- 1 shawn shawn 5001 Nov 14 16:17 /home/shawn/Code/llm-reprodu
+    cibility/batch-assess.py
+
+
+● Bash(mv /home/shawn/Code/llm-reproducibility/batch-assess.py
+      /home/shawn/Code/llm-reproducibility/scripts/ && mv
+      /home/shawn/Code/llm-reproducibility/planning/quick_…)
+  ⎿  (No content)
+
+● Bash(ls -la /home/shawn/Code/llm-reproducibility/outputs/)
+  ⎿  total 180                                      
+     drwxrwxr-x 16 shawn shawn  4096 Nov 29 22:57 .
+     drwxrwxr-x 16 shawn shawn  4096 Nov 29 22:57 ..
+     … +21 lines (ctrl+o to expand)
+
+● Read(archive/README.md)
+  ⎿  Read 365 lines
+
+● Update(archive/README.md)
+  ⎿  Updated archive/README.md with 1 addition and 1 removal            
+       2    
+       3    Complete development history of the LLM-based Research 
+           Extraction and Assessment project, organized chronologically 
+           by version.
+       4    
+       5 -  **Active System:** v2.5 (see [main README](../README.md))
+       5 +  **Active System:** v2.6 (see [main README](../README.md))
+       6    **Archive Purpose:** Preserve development transparency and 
+           enable understanding of design decisions
+       7    
+       8    ---
+
+● Update(archive/README.md)
+  ⎿  Updated archive/README.md with 6 additions and 6 removals           
+        9    
+       10    ## Development Timeline
+       11    
+       12 -  ### Phase 1: Extraction System Development (Oct 16-23, 2025)
+       12 +  ### Phase 1: Extraction System Development (Oct 16 - Nov 
+          +  2025)
+       13    
+       14 +  ```text
+       15 +  v2.0-v2.1 → v2.2-v2.3 → v2.4 → v2.5 → v2.6
+       16 +     ↓           ↓         ↓       ↓       ↓
+       17 +   Claims/   Two-Pass   RDMAP   Repository  Infrastructure
+       18 +  Evidence  Workflow  Addition  Rationalisation + Assessment
+       19    ```
+       20 -  v2.0-v2.1 → v2.2-v2.3 → v2.4 → v2.5
+       21 -     ↓           ↓         ↓       ↓
+       22 -   Claims/   Two-Pass   RDMAP   Repository
+       23 -  Evidence  Workflow  Addition  Rationalization
+       24 -  ```
+       20    
+       21    ---
+       22    
+
+● Update(archive/README.md)
+  ⎿  Updated archive/README.md with 40 additions and 2 removals          
+       146    Extraction system complete and tested. Prepare for sharing 
+             with collaborators and broader community. FAIR4RS compliance
+              preparation for near-term publication/archiving.
+       147    
+       148    **What We Learned:**
+       149 -  - Clear organization essential for collaboration
+       149 +  - Clear organisation essential for collaboration
+       150    - Development transparency valuable but needs structure
+       151    - Active planning vs. completed work separation important
+       152    - Documentation at every level aids navigation
+       153    
+       154    ---
+       155    
+       156 -  ## Archive Organization
+       156 +  ### v2.6 (Nov 2025)
+       157    
+       158 +  **Focus:** Infrastructure extraction and assessment 
+           + framework development
+       159 +  
+       160 +  **Key Developments:**
+       161 +  - Pass 6: Infrastructure extraction (PIDs, FAIR assessment,
+           +  funding, permits)
+       162 +  - 8-pass workflow complete (Pass 0-7)
+       163 +  - Assessment framework development (Three Pillars, Seven 
+           + Signals)
+       164 +  - Research approach classification (inductive, deductive, 
+           + abductive)
+       165 +  - Cluster-based assessment prompts (Clusters 1-3)
+       166 +  - Terminology standardisation ("replicability" → 
+           + "reproducibility")
+       167 +  
+       168 +  **Archived Materials:**
+       169 +  - **Planning (planning-completed/):**
+       170 +    - `assessment-implementation-plan.md` - Initial 
+           + assessment planning
+       171 +    - `credibility-implementation-plan-detailed.md` - 
+           + Detailed credibility plan
+       172 +    - `research-approach-classification-framework.md` - 
+           + Classification framework
+       173 +    - `synthesis-external-feedback.md` - GPT-4 and other 
+           + model feedback
+       174 +    - `gpt51-feedback/` - GPT-5.1 feedback documents
+       175 +    - Plus 9 additional superseded planning documents
+       176 +  
+       177 +  - **Corpus Profiles (corpus-profiles/):**
+       178 +    - 6 timestamped corpus profile versions (keeping latest 
+           + in outputs/)
+       179 +  
+       180 +  - **Outputs Backup (outputs-backup-pre-migration/):**
+       181 +    - Pre-migration backup of extraction outputs
+       182 +  
+       183 +  **Rationale:**
+       184 +  Complete extraction pipeline with infrastructure 
+           + assessment. Begin transition to assessment phase with Three 
+           + Pillars framework (Transparency → Credibility → 
+           + Reproducibility).
+       185 +  
+       186 +  **What We Learned:**
+       187 +  - Infrastructure extraction critical for reproducibility 
+           + assessment
+       188 +  - Methodological papers need alternate assessment pathways
+       189 +  - repliCATS Seven Signals adaptable to HASS disciplines
+       190 +  - Quality gating prevents misleading assessments on 
+           + low-quality extractions
+       191 +  
+       192 +  ---
+       193 +  
+       194 +  ## Archive Organisation
+       195 +  
+       196    ```
+       197    archive/
+       198    ├── extraction-development/    # Version-organized 
+             development
+
+● Update(archive/README.md)
+  ⎿  Updated archive/README.md with 9 additions and 2 removals           
+       193    
+       194    ## Archive Organisation
+       195    
+       196 -  ```
+       196 +  ```text
+       197    archive/
+       198 -  ├── extraction-development/    # Version-organized
+           -   development
+       198 +  ├── extraction-development/    # Version-organised
+           +   development
+       199    │   ├── v2.0-v2.1/
+       200    │   │   └── planning/
+       201    │   ├── v2.2-v2.3/
+     ...
+       209    │   └── v2.5/
+       210    │       ├── documentation/
+       211    │       └── reports/
+       212 +  ├── planning-completed/        # Superseded planning 
+           + documents (v2.6)
+       213 +  │   ├── assessment-implementation-plan.md
+       214 +  │   ├── credibility-*.md files
+       215 +  │   ├── gpt51-feedback/
+       216 +  │   └── [13+ planning docs]
+       217 +  ├── corpus-profiles/           # Archived corpus profile 
+           + versions
+       218 +  ├── outputs-backup-pre-migration/  # Pre-migration outputs 
+           + backup
+       219    ├── outputs/                   # Test extractions
+       220    │   ├── before-skill/
+       221    │   └── with-skill/
+
+● Update(archive/README.md)
+  ⎿  Updated archive/README.md with 2 additions and 2 removals           
+       390    ## Related Documentation
+       391    
+       392    - [Main README](../README.md) - Current system overview
+       393 -  - [Skill 
+           - VERSION.md](../docs/skill-documentation/VERSION.md) - 
+           - Complete changelog
+       394 -  - [Schema 
+           - Evolution](../docs/development/schema-evolution.md) - Schema
+           -  versioning
+       393 +  - [Version 
+           + History](../docs/research-assessor-guide/version.md) - 
+           + Complete changelog
+       394 +  - [CHANGELOG](../CHANGELOG.md) - Project changelog
+       395    - [Planning](../planning/) - Active planning for future 
+             work
+       396    
+       397    ---
+
+● Update(archive/README.md)
+  ⎿  Updated archive/README.md with 5 additions and 4 removals           
+       398    
+       399    ## Contributing to the Archive
+       400    
+       401 -  The archive is complete for extraction development 
+           -  (v2.0-v2.5
+           -  ). Future assessment framework development will be 
+           -  documented in new version folders.
+       401 +  The archive is complete for extraction development 
+           +  (v2.0-v2.6
+           +  ). Future assessment framework development will be 
+           +  documented in new version folders.
+       402    
+       403 -  **Assessment Phase (upcoming):**
+       404 -  - v2.6+: Assessment framework development
+       405 -  - New archive structure as needed
+       403 +  **Assessment Phase (in progress):**
+       404 +  - v2.6: Infrastructure extraction and assessment framework 
+           + development
+       405 +  - v2.7+: Complete assessment system, batch processing
+       406 +  - New archive structure as assessment phase completes
+       407    
+       408    ---
+       409    
+
+● Search(pattern: "archive/*index*.md")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Read(archive/archive-index.md)
+  ⎿  Read 296 lines
+
+● Update(archive/archive-index.md)
+  ⎿  Updated archive/archive-index.md with 12 additions and 8 removals   
+       1    # Archive Index
+       2    
+       3 -  **Last Updated:** 2025-11-13
+       3 +  **Last Updated:** 2025-11-29
+       4    
+       5    **Purpose:** This archive preserves completed work, 
+           historical assessments, and superseded documentation. Items 
+           are archived when they are no longer actively used but may 
+           have historical or reference value.
+       6    
+     ...
+       10    
+       11    ```text
+       12    archive/
+       13 -  ├── cc-interactions/          
+          -  # Claude Code conversation logs
+       14 -  ├── output/                   # Historical extraction runs 
+          - (RUN-00 through RUN-07)
+       15 -  │   ├── cc-sonnet45/         # CC autonomous extractions
+       16 -  │   └── chatbot-sonnet45/    # Chatbot-assisted extractions
+       17 -  ├── planning-completed/       # Completed planning documents
+       18 -  ├── documentation-archive/    # Historical development 
+          - documentation
+       19 -  └── docs-obsolete/           # Superseded documentation
+       13 +  ├── cc-interactions/              
+          +  # Claude Code conversation logs
+       14 +  ├── corpus-profiles/              # Historical corpus 
+          + profile versions
+       15 +  ├── extraction-development/       # Version-organised 
+          + development history
+       16 +  ├── output/                       # Historical extraction 
+          + runs (RUN-00 through RUN-07)
+       17 +  │   ├── cc-sonnet45/             # CC autonomous extractions
+       18 +  │   └── chatbot-sonnet45/        # Chatbot-assisted 
+          + extractions
+       19 +  ├── outputs-backup-pre-migration/ # Pre-migration outputs 
+          + backup
+       20 +  ├── planning-completed/           # Completed planning 
+          + documents (v2.6)
+       21 +  ├── documentation-archive/        # Historical development 
+          + documentation
+       22 +  ├── superseded-prompts/           # Old prompt versions
+       23 +  └── superseded-docs/              # Superseded documentation
+       24    ```
+       25    
+       26    ---
+
+● Update(archive/archive-index.md)
+  ⎿  Updated archive/archive-index.md with 62 additions                  
+       27    
+       28    ## Planning Documents - Completed (planning-completed/)
+       29    
+       30 +  ### Archived: 2025-11-29 (v2.6 Housekeeping)
+       31 +  
+       32 +  **Reason:** Superseded by 
+          + `credibility-implementation-plan-v2.0.md`, assessment prompts
+          +  now in production
+       33 +  
+       34 +  1. **assessment-implementation-plan.md** (40K)
+       35 +     - Initial assessment framework planning
+       36 +     - **Status:** Superseded by v2.0 plan
+       37 +  
+       38 +  2. **credibility-assessment-implementation-roadmap.md** 
+          + (17K)
+       39 +     - Early credibility assessment roadmap
+       40 +     - **Status:** Superseded by v2.0 plan
+       41 +  
+       42 +  3. **credibility-implementation-plan-detailed.md** (45K)
+       43 +     - Detailed credibility implementation planning
+       44 +     - **Status:** Superseded by v2.0 plan
+       45 +  
+       46 +  4. **corpus-interpretation-framework.md** (18K)
+       47 +     - Corpus analysis framework
+       48 +     - **Status:** Integrated into main plan
+       49 +  
+       50 +  5. **paper-credibility-analysis-framework.md** (34K)
+       51 +     - Paper-level credibility analysis
+       52 +     - **Status:** Now in assessment prompts
+       53 +  
+       54 +  6. **research-approach-classification-framework.md** (19K)
+       55 +     - Research approach classification design
+       56 +     - **Status:** Implemented in 
+          + `classify-research-approach.md` prompt
+       57 +  
+       58 +  7. **extraction-assessment-rubric-v1.md** (34K)
+       59 +     - Initial extraction assessment rubric
+       60 +     - **Status:** Superseded by cluster prompts
+       61 +  
+       62 +  8. **extraction-metrics-guidance-analysis.md** (12K)
+       63 +     - Historical metrics analysis
+       64 +     - **Status:** Completed analysis
+       65 +  
+       66 +  9. **extraction-to-analysis-transition.md** (49K)
+       67 +     - Transition planning from extraction to analysis
+       68 +     - **Status:** Transition complete
+       69 +  
+       70 +  10. **pass6-phase1-testing-findings.md** (31K)
+       71 +      - Pass 6 testing results
+       72 +      - **Status:** Testing complete, findings incorporated
+       73 +  
+       74 +  11. **pass6-software-documentation-enhancement.md** (12K)
+       75 +      - Pass 6 documentation improvements
+       76 +      - **Status:** Improvements complete
+       77 +  
+       78 +  12. **secondary-source-attribution-analysis.md** (28K)
+       79 +      - Secondary source analysis
+       80 +      - **Status:** Completed analysis
+       81 +  
+       82 +  13. **synthesis-external-feedback.md** (29K)
+       83 +      - External model feedback synthesis
+       84 +      - **Status:** Historical feedback
+       85 +  
+       86 +  14. **gpt51-feedback/** (folder)
+       87 +      - GPT-5.1 feedback on assessment framework
+       88 +      - **Status:** Historical feedback, incorporated into 
+          + design
+       89 +  
+       90 +  ---
+       91 +  
+       92    ### Archived: 2025-11-13 (Pass 6 Implementation Complete)
+       93    
+       94    **Reason:** Infrastructure assessment capability complete, 
+            preliminary proposals superseded by implementation
+
+● Update(archive/archive-index.md)
+  ⎿  Updated archive/archive-index.md with 1 addition and 1 removal  
+       358    
+       359    *Archive maintained by: Shawn & Claude Code*
+       360    
+       361 -  *Last major update: 2025-10-28 (Post-RUN-08 milestone)*
+       361 +  *Last major update: 2025-11-29 (v2.6 housekeeping)*
+
+● Bash(git status)
+  ⎿  On branch main                               
+     Your branch is up to date with 'origin/main'.
+     … +64 lines (ctrl+o to expand)
+
+● Bash(git add -A && git commit -m "chore(housekeeping): documentation updates
+      and project reorganisation…)
+  ⎿  Error: Exit code 1
+
+     ❌ ERROR: ALL CAPS filenames detected (violates CLAUDE.md file naming 
+     convention)
+
+     Files with violations:
+       archive/outputs-backup-pre-migration/batch-analysis/STRUCTURAL_SUMMARY.md
+       archive/outputs-backup-pre-migration/connor-et-al-2013/assessment/ASSESSME
+     NT_REPORT.md
+       archive/outputs-backup-pre-migration/eftimoski-et-al-2017/assessment/ASSES
+     SMENT_REPORT.md
+       archive/outputs-backup-pre-migration/eftimoski-et-al-2017/assessment/SUMMA
+     RY.txt
+       archive/outputs-backup-pre-migration/penske-et-al-2023/assessment/ASSESSME
+     NT_REPORT.md
+     … +17 lines (ctrl+o to see all)
+
+● Bash(find archive/outputs-backup-pre-migration -name "*.md" -o -name "*.txt" |
+       while read f; do
+        dir=$(dirname "$f")…)
+  ⎿  Error: Exit code 2
+     /bin/bash: eval: line 1: syntax error near unexpected token `dirname'
+     /bin/bash: eval: line 1: `find archive/outputs-backup-pre-migration -name 
+     \*.md -o -name \*.txt < /dev/null | while read f ; do dir\=\$ ( dirname '' )
+      base\=\$ ( basename '' )'
+
+● Bash(cd archive/outputs-backup-pre-migration && for f in $(find . -name
+      "STRUCTURAL_SUMMARY.md"); do mv "$f" "$(dirname
+      $f)/structural-summary.md"; done)
+  ⎿  (No content)
+
+● Bash(find . -name "ASSESSMENT_REPORT.md" -exec bash -c 'mv "$1" "$(dirname
+      "$1")/assessment-report.md"' _ {} \;)
+  ⎿  (No content)
+
+● Bash(find . -name "SUMMARY.txt" -exec bash -c 'mv "$1" "$(dirname
+      "$1")/summary.txt"' _ {} \; 2>/dev/null; find . -name "SUMMARY.md" -exec
+      bash -c 'mv "$1" "$(dirnam…)
+  ⎿  (No content)
+
+● Bash(git add -A && git commit -m "chore(housekeeping): documentation updates
+      and project reorganisation…)
+  ⎿ [main 1d750bb] chore(housekeeping): documentation updates and project r
+    eorganisation
+     300 files changed, 146689 insertions(+), 1199 deletions(-)
+    … +567 lines (ctrl+o to expand)
+
+
+● Bash(git status && git log -1 --oneline)
+  ⎿  On branch main                                    
+     Your branch is ahead of 'origin/main' by 1 commit.
+       (use "git push" to publish your local commits)
+     … +4 lines (ctrl+o to expand)
+
+● Housekeeping plan executed successfully. Commit 1d750bb created.
+
+  Summary of Changes
+
+  Phase 1: Documentation Updates
+
+  - README.md - Updated to v2.6, fixed 5 broken links, corrected pass counts
+   (8-pass), updated terminology
+  - CHANGELOG.md - Added v2.6 entry with assessment framework changes
+  - manifest.yaml - Fixed prompt filename, added all assessment prompts
+  - planning/README.md - Complete rewrite to reflect current active
+  documents
+  - docs/documentation-index.md - Updated all 7-pass → 8-pass references
+
+  Phase 2: Archiving
+
+  - 14 superseded planning docs + gpt51-feedback/ →
+  archive/planning-completed/
+  - 6 older corpus profiles → archive/corpus-profiles/
+  - outputs.backup-pre-migration/ → archive/outputs-backup-pre-migration/
+
+  Phase 3: Reorganisation
+
+  - Created outputs/corpus-analysis/ (latest corpus profile)
+  - Created outputs/testing/ (reliability test results)
+  - Moved batch-assess.py and quick_infrastructure_scan.py to scripts/
+  - Renamed 15 ALL CAPS files in archive to lowercase-with-hyphens
+
+  Phase 4: Archive Indexes
+
+  - Updated archive/README.md with v2.6 section
+  - Updated archive/archive-index.md with new archived items
+
+  Your branch is 1 commit ahead of origin. Push when ready: git push
+
+> please push 
+
+● Bash(git push)
+  ⎿  To github.com:saross/llm-reproducibility.git
+        1d7a53c..1d750bb  main -> main
+
+● Pushed successfully. Commit 1d750bb is now on origin/main.
+
+> /context 
+  ⎿  
+      Context Usage
+     ⛁ ⛀ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   claude-opus-4-5-20251101 · 166k/200k tokens (83%)
+     ⛁ ⛀ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ 
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   ⛁ System prompt: 3.1k tokens (1.5%)
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   ⛁ System tools: 18.2k tokens (9.1%)
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   ⛁ MCP tools: 1.3k tokens (0.6%)
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   ⛁ Memory files: 2.4k tokens (1.2%)
+     ⛁ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ Messages: 96.1k tokens (48.0%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛝ ⛝ ⛝   ⛶ Free space: 34k (17.0%)
+     ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝   ⛝ Autocompact buffer: 45.0k tokens (22.5%)
+     ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ 
+
+     MCP tools · /mcp
+     └ mcp__ide__getDiagnostics (ide): 611 tokens
+     └ mcp__ide__executeCode (ide): 682 tokens
+
+     Memory files · /memory
+     └ User (/home/shawn/.claude/CLAUDE.md): 904 tokens
+     └ Project (/home/shawn/Code/llm-reproducibility/CLAUDE.md): 1.5k tokens
+
+     SlashCommand Tool · 32 commands
+     └ Total: 4.4k tokens
+
+     
+
+> /export archive/cc-interactions/2025-11-30-a.txt 
+  ⎿ Failed to export conversation: ENOENT: no such file or directory, open 
+    '/home/shawn/Code/llm-reproducibility/archive/outputs-backup-pre-migration/a
+    rchive/cc-interactions/2025-11-30-a.txt'
+
+> could you please change the working directory to llm-reproducibility? 
+
+● Bash(cd /home/shawn/Code/llm-reproducibility && pwd)
+  ⎿  /home/shawn/Code/llm-reproducibility
+
+● Done. Note that bash directory changes don't persist across commands in
+  Claude Code, but you should be able to run /export again now - the error
+  may have been from a previous working directory state.
+
+> /export archive/cc-interactions/2025-11-30-a.txt 
+  ⎿  Conversation exported to: archive/cc-interactions/2025-11-30-a.txt
+
+> Thanks, all fine. Can you review briefly with me where we are / what our 
+system does now, and what is next on our list of tasks? 
+
+● Current State (v2.6)
+
+  What the System Does
+
+  Extraction (Complete):
+  - 8-pass workflow (Pass 0-7) extracts structured data from research papers
+  - Six object types: Evidence, Claims, Implicit Arguments, Research
+  Designs, Methods, Protocols
+  - Pass 6 adds infrastructure extraction (PIDs, FAIR assessment, funding,
+  permits)
+  - Pass 7 validates structural integrity
+  - Outputs JSON with full provenance tracking (verbatim quotes, locations,
+  cross-references)
+
+  Assessment (In Progress):
+  - Three Pillars Framework: Transparency → Credibility → Reproducibility
+  - repliCATS Seven Signals adapted for HASS disciplines
+  - Research approach classification (inductive, deductive, abductive)
+  - Track A quality gating (ensures extraction quality before assessment)
+  - Cluster prompts 1-3 operational:
+    - Cluster 1: Comprehensibility, Transparency
+    - Cluster 2: Plausibility, Validity, Robustness, Generalisability
+    - Cluster 3: Reproducibility (with Methodological Transparency variant)
+
+  What's Next (from your todo list)
+
+  Report Design (pending):
+  - Add contextual interpretation for scores - "what this number means for
+  THIS paper"
+  - Include paper-type contextual notes for each signal score
+  - Flag where scores are expected to vary by paper type (e.g., Robustness
+  for advocacy papers)
+
+  Future Work:
+  - Add tests for common research failure modes / biases / errors
+  - Add sentiment/rhetorical analysis for hype, slop, AI-generated content
+
+  Also outstanding:
+  - Reliability testing on more papers
+  - FAIR vocabularies finalisation
+  - Batch assessment tooling
+
+  Would you like to focus on any of these?
+
+> why don't we do the report design first, then I think we'll be at a good 
+place to pause, do some additional testing, share with a few 'insiders' for 
+feedback, etc. I see others have begun working on similar systems (mostly 
+aimed at 'replace or augment human peer reviewers' and with a somewhat 
+different emphasis), but I think it would be a good idea to get some early 
+runs on the board, so I'm thinking about leaning into the FAIR assessment, 
+refining that, and running that on a large corpus to underpin an initial 
+publication / output. How does that sound? With a pathway something like 
+that, do you have any suggestions? 
+
+● That sounds like a well-considered pathway. A few thoughts:
+
+  Why FAIR-First Makes Sense
+
+  1. Differentiated positioning - Others are chasing "AI peer reviewer";
+  you're offering infrastructure transparency audit
+  2. More tractable - FAIR compliance is relatively objective vs.
+  credibility scoring
+  3. Less controversial - "Does this paper meet FAIR standards?" is less
+  fraught than "Is this paper credible?"
+  4. Funder relevance - FAIR compliance increasingly mandated; you're
+  providing evidence of the gap
+  5. Pass 6 already delivers - Infrastructure extraction captures exactly
+  what's needed
+
+  Suggestions
+
+  For the corpus:
+  - Consider targeting a coherent domain (archaeological methods papers?
+  Open science/reproducibility papers? A specific journal's output?)
+  - ~50-100 papers would give meaningful statistics without overwhelming
+  effort
+  - Include temporal spread (2010-2024) to show adoption trends
+
+  For the output:
+  - "FAIR transparency audit of [domain] literature" positions well
+  - Can report aggregate stats (% with ORCIDs, % with data DOIs, % with code
+   availability) plus individual paper profiles
+  - The chronological context you already built in
+  (pioneer/early_adopter/mainstream/expected) tells a story about field
+  maturation
+
+  What to defer:
+  - Full Seven Signals credibility assessment → Phase 2 after feedback
+  - Cluster 2/3 refinements → defer until you have real-world usage data
+
+  For report design today:
+  - Focus contextual interpretation on FAIR/infrastructure (since that's
+  publication-bound)
+  - Signal scores context can be lighter-touch for now
+
+  Shall I proceed with report design with this FAIR-publication pathway in
+  mind?
+
+> Yeah, that aligns with my thinking, I'm considering focusing on a single 
+journal's output, or at least open-access papers from a single journal, with
+ a corpus of the size your recommend. First, though, let's get the report 
+hashed out. Don't focus on FAIR too soon, let's get the basic features of 
+the report in place so we have a well-rounded package I can share with 
+collaborators. After we've done that, and done some more general testing 
+(e.g., I'd like to run it on the papers we have, then run the system on, 
+say, 3-5 papers 10 times to get a sense of variability, then run it on a few
+ new papers that have nothing to do with me), then we can harden / elaborate
+ the FAIR part and run that on an appropriate corpus. So, to begin, what 
+does our report look like now? Do we have a template? Should we build a 
+template? 
+
+● Let me check what report outputs we currently have:
+
+● Search(pattern: "outputs/*/assessment/*.md")
+  ⎿  Found 20 files (ctrl+o to expand)
+
+● Search(pattern: "**/*report*template*.md")
+  ⎿  Found 0 files 
+
+● Bash(ls -la outputs/ross-ballsun-stanton-2022/assessment/)
+  ⎿  total 120                                     
+     drwxrwxr-x 3 shawn shawn  4096 Nov 29 14:56 .
+     drwxrwxr-x 3 shawn shawn  4096 Nov 14 22:52 ..
+     … +12 lines (ctrl+o to expand)
+
+● Read(outputs/ross-ballsun-stanton-2022/assessment/assessment-report.md)
+  ⎿  Read 377 lines
+
+● I see we have two different report types:
+
+  Old System (extraction quality assessment):
+  - assessment-report.md - Pass A/B/C assessing extraction accuracy,
+  granularity, mapping
+  - Focuses on: "Did we extract correctly?"
+
+  New System (research credibility assessment):
+  - classification.md - Research approach classification
+  - track-a-quality.md - Quality gating
+  - cluster-1/2/3-*.md - Seven Signals assessment
+  - Focuses on: "Is the research transparent, credible, reproducible?"
+
+  What's missing:
+  - No unified final report combining everything
+  - No template
+
+  Let me check what a complete picture would look like by reading the newer
+  outputs:
+
+● Read(outputs/ross-ballsun-stanton-2022/assessment/classification.md)
+  ⎿  Read 96 lines
+
+● Read(outputs/ross-ballsun-stanton-2022/assessment/track-a-quality.md)
+  ⎿  Read 118 lines
+
+● Now I have the full picture. Here's what we have:
+
+  Current Report Structure
+
+  Individual component files (no unified report):
+  assessment/
+  ├── classification.md          # Paper type, approach
+  (abductive/deductive/inductive)
+  ├── track-a-quality.md         # Quality gating (HIGH/MEDIUM/LOW)
+  ├── cluster-1-foundational-clarity.md   # Signals 1-2
+  ├── cluster-2-evidential-strength.md    # Signals 3-6
+  ├── cluster-3-reproducibility.md        # Signal 7
+  ├── assessment-report.md       # OLD: Extraction quality (Pass A/B/C) -
+  separate concern
+  └── final-assessment.json      # OLD: Structured output from old system
+
+  What's Missing
+
+  1. No unified final report - The cluster outputs are separate files, not
+  combined
+  2. No executive summary - No single-page "here's what you need to know"
+  3. No contextual interpretation - Scores lack "what this means for THIS
+  paper"
+  4. No template - Each output is generated ad-hoc
+
+  Proposal: Build a Final Report Template
+
+  I suggest we create a template that:
+
+  1. Executive Summary - Paper info, overall assessment, key findings (1
+  page)
+  2. Classification Summary - Paper type, approach, quality state
+  3. Signal Scores Dashboard - All 7 signals with scores, bands, and
+  contextual notes
+  4. Detailed Findings - Per-cluster summaries (condensed from individual
+  cluster reports)
+  5. Infrastructure/FAIR Summary - From extraction's
+  reproducibility_infrastructure
+  6. Contextual Interpretation - What scores mean for this paper type/era
+  7. Structured Output - Machine-readable YAML block
+
+  Shall I draft this template?
+
+> This looks like a good start. What are your thoughts YAML vs. JSON for the
+ structured / machine readable output? 
+
+● Good question. Here's my thinking:
+
+  YAML
+
+  Pros:
+  - More human-readable (no quote noise, indentation-based)
+  - Supports comments (useful for self-documenting output)
+  - Embeds cleanly in markdown code blocks
+  - Already used throughout project (queue.yaml, manifest.yaml)
+  - Current cluster reports already use YAML for structured output
+  - Better for config/documentation contexts
+
+  Cons:
+  - Whitespace-sensitive (subtle errors possible)
+  - Multiple ways to represent same data
+  - Less strict parsing
+
+  JSON
+
+  Pros:
+  - Stricter/unambiguous parsing
+  - Universal API standard
+  - Better tooling for validation (JSON Schema)
+  - Direct use in web contexts
+
+  Cons:
+  - Verbose (quotes, braces everywhere)
+  - No comments
+  - Harder to read inline in documentation
+
+  My Recommendation: YAML
+
+  For this project, YAML fits better because:
+
+  1. Consistency - Already your convention (manifest.yaml, queue.yaml,
+  existing cluster outputs)
+  2. Primary audience - Researchers reading reports, not machines consuming
+  APIs
+  3. Embedded in markdown - YAML looks cleaner in report code blocks
+  4. Comments - Can annotate structure for clarity
+  5. Downstream processing - Python handles both equally well; if you ever
+  need JSON, yaml.safe_load() → json.dumps() is trivial
+
+  The machine-readable output is secondary to human readability for these
+  reports. If you later build an API or database pipeline, you could
+  generate JSON alongside, but YAML as the canonical embedded format makes
+  sense.
+
+  Does that align with your thinking?
+
+> It does, mostly, except that I considered the prose MD part of the report 
+the human-readable part, and figured the structured part would be 
+machine-focused. Here's a question - if *you* were tasked with analysing / 
+interpreting a dump of several hundred of these outputs, and asked to 
+process them using whatever combination of NLP capabilities and scripts you 
+desired, which output would you prefer, human readable MD + yaml or markdown
+ + json? 
+
+● That's a good reframe, and honestly changes my answer.
+
+  If I'm batch processing hundreds of reports:
+
+  For the prose/markdown: I'd use NLP to extract nuance, rationale, edge
+  cases, qualitative judgments - this is where human-readable matters.
+
+  For the structured block: I'd extract programmatically first, then
+  aggregate. And for that:
+
+  JSON wins. Here's why:
+
+  1. jq - Incredibly powerful for command-line extraction. jq 
+  '.signal_scores.reproducibility' *.json across 300 files is trivial
+  2. Strict parsing - No surprises at file 247 because of a whitespace issue
+  3. No ambiguity - YAML has multiple representations for the same data;
+  JSON doesn't
+  4. Schema validation - JSON Schema is mature; can validate structure
+  before processing
+  5. Direct to pandas - pd.read_json() just works
+  6. Security - No need to worry about YAML's historical yaml.load() issues
+
+  YAML's advantages (comments, readability) don't matter if the prose
+  markdown is the human-readable part. The structured block's job is to be
+  reliably machine-parseable.
+
+  Revised recommendation: JSON for structured output
+
+  The report would be:
+  - Prose markdown (human-readable, contextual, interpretive)
+  - JSON code block at the end (machine-readable, strict, aggregatable)
+
+  You could still keep YAML for config files (manifest.yaml, queue.yaml)
+  where humans edit directly. But for generated output meant for batch
+  processing, JSON.
+
+> here's one more question to help us decide. If the machine-readable output
+ were in json vs yaml, which would be better (e.g,. less lossy, higher 
+fidelity) as the original if you wanted to convert to the other (e.g., json 
+> yaml or yaml > json) - would either have an advantage, or are both ways 
+fine? 
+
+● Clear technical answer:
+
+  JSON → YAML: Always lossless
+  - JSON is a strict subset of YAML
+  - Every valid JSON document is valid YAML by definition
+  - All data types map perfectly
+
+  YAML → JSON: Potentially lossy
+  - Comments - Lost (JSON doesn't support them)
+  - Anchors/aliases (&ref, *ref) - Must be expanded/duplicated
+  - Complex keys - YAML allows objects as keys; JSON requires strings
+  - Tags (!!type) - No JSON equivalent
+  - Multi-document (---) - No JSON equivalent
+  - Special values - .inf, .nan need careful handling
+
+  Bottom line: JSON is the safer canonical format. You can always generate
+  YAML from JSON losslessly if needed. The reverse isn't guaranteed.
+
+  For this project, we probably wouldn't use the lossy YAML features anyway,
+   but the principle is clean: start with the stricter format, convert to 
+  the looser one as needed.
+
+  JSON it is?
+
+> that confirms my understanding. Let's go with JSON. Do we have any other 
+major decisions before we start? If not, we're running low on context; could
+ you prepare a /compact message and we'll formally plan the report process /
+ template in the next session. 
+
+● I think we've covered the major decisions:
+
+  - ✅ Structured output format: JSON
+  - ✅ Report structure: Executive summary → Classification → Signals
+  dashboard → Detailed findings → Infrastructure/FAIR → Contextual
+  interpretation → JSON block
+  - ✅ Purpose: Human-readable prose + machine-parseable structured data
+
+  Minor decisions we can make during implementation:
+  - Template location (likely assessment-system/templates/)
+  - Exact naming convention
+  - Whether to auto-generate or manual trigger
+
+  Ready for compact. Here's the message:
+
+  ---
+  Session context: Report template design for credibility assessment system.
+
+  Decisions made:
+  1. Structured output format: JSON (not YAML) - stricter parsing, jq
+  friendly, JSON→YAML lossless conversion
+  2. Report is prose markdown (human-readable) + JSON block
+  (machine-parseable)
+  3. Report sections: Executive summary, Classification summary, Signal
+  scores dashboard, Detailed findings (per-cluster), Infrastructure/FAIR
+  summary, Contextual interpretation, JSON structured output
+
+  Current state:
+  - Individual cluster outputs exist (classification.md, track-a-quality.md,
+   cluster-1/2/3-*.md)
+  - No unified final report template
+  - No contextual interpretation layer yet
+
+  Next session task: Create final report template
+  (credibility-assessment-report-template.md) that consolidates cluster
+  outputs into single report with contextual interpretation.
+
+  Reference files:
+  - Existing outputs: outputs/ross-ballsun-stanton-2022/assessment/
+  - Cluster prompts: assessment-system/prompts/cluster-*.md
+
+  Pending todos:
+  - [REPORT DESIGN] Add contextual interpretation for scores
+  - [REPORT DESIGN] Include paper-type contextual notes
+  - [REPORT DESIGN] Flag paper-type score variations
+
+  ---
+  You can paste this after /compact to resume.
+
+
+
