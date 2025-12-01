@@ -1,0 +1,1587 @@
+
+ ▐▛███▜▌   Claude Code v2.0.55
+▝▜█████▛▘  Opus 4.5 · Claude Max
+  ▘▘ ▝▝    ~/Code/llm-reproducibility
+══════════════════ Conversation compacted · ctrl+o for history ═════════════════
+  ⎿ Read outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md
+    (241 lines)
+  ⎿ Read 
+    outputs/ballsun-stanton-et-al-2018/assessment/cluster-3-reproducibility.md
+    (201 lines)
+  ⎿ Read outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-evidential-stre
+    ngth.md (238 lines)
+  ⎿ Read outputs/ballsun-stanton-et-al-2018/assessment/cluster-1-foundational-cl
+    arity.md (145 lines)
+  ⎿ Read outputs/ballsun-stanton-et-al-2018/assessment/track-a-quality.md (84 
+    lines)
+  ⎿  Todo list read (6 items)
+
+● I'll continue with Paper 4 (ross-2005) - the interpretive/philological
+  paper. Let me first update the todo and read the extraction data.
+
+● Read(outputs/ross-2005/extraction.json)
+  ⎿  Error: File content (28043 tokens) exceeds maximum allowed tokens (25000). 
+     Please use offset and limit parameters to read specific portions of the 
+     file, or use the GrepTool to search for specific content.
+
+● Bash(mkdir -p
+      /home/shawn/Code/llm-reproducibility/outputs/ross-2005/assessment)
+  ⎿  (No content)
+
+● Read(outputs/ross-2005/extraction.json)
+  ⎿  Read 200 lines
+
+● Bash(jq '{evidence: (.evidence|length), claims: (.claims|length),
+      implicit_arguments: (.implicit_arguments|length), research_designs:
+      (.research_designs|length), met…)
+  ⎿  {                            
+       "evidence": 17,
+       "claims": 78,
+     … +5 lines (ctrl+o to expand)
+
+● Now I understand ross-2005 - a classical philology paper on linguistic
+  patterns in Homeric epic. This is interpretive/hermeneutic research (no
+  computational methods), which will test the Methodological Transparency
+  variant.
+
+  Let me create the assessment files:
+
+● Bash(cat > /home/shawn/Code/llm-reproducibility/outputs/ross-2005/assessment/c
+      lassification.json << 'EOF'
+      {…)
+  ⎿  (No content)
+
+● Bash(cat > /home/shawn/Code/llm-reproducibility/outputs/ross-2005/assessment/t
+      rack-a-quality.md << 'EOF'
+      # Track A Quality Assessment…)
+  ⎿  (No content)
+
+● Bash(cat > /home/shawn/Code/llm-reproducibility/outputs/ross-2005/assessment/c
+      luster-1-foundational-clarity.md << 'EOF'
+      # Cluster 1: Foundational Clarity Assessment…)
+  ⎿  (No content)
+
+● Bash(cat > /home/shawn/Code/llm-reproducibility/outputs/ross-2005/assessment/c
+      luster-2-evidential-strength.md << 'EOF'
+      # Cluster 2: Evidential Strength Assessment…)
+  ⎿  (No content)
+
+● Bash(cat > /home/shawn/Code/llm-reproducibility/outputs/ross-2005/assessment/c
+      luster-3-reproducibility.md << 'EOF'
+      # Cluster 3: Reproducibility Assessment…)
+  ⎿  (No content)
+
+● Bash(cat > /home/shawn/Code/llm-reproducibility/outputs/ross-2005/assessment/c
+      redibility-report.md << 'EOF'
+      # Credibility Assessment Report…)
+  ⎿  (No content)
+
+● Paper 4 (ross-2005) complete. Now let me update the todo and create the
+  validation summary:
+
+● Bash(cat >
+      /home/shawn/Code/llm-reproducibility/outputs/phase-1-validation-summary.md
+       << 'EOF'
+      # Phase 1 Template Validation Summary…)
+  ⎿  (No content)
+
+● Bash(git status --short)
+  ⎿   M outputs/ballsun-stanton-et-al-2018/assessment/classification.json
+      M outputs/penske-et-al-2023/assessment/classification.json
+      M outputs/sobotkova-et-al-2024/assessment/classification.json
+     … +30 lines (ctrl+o to expand)
+
+● Bash(git log --oneline -3)
+  ⎿ 93f8a3c feat(assessment): add unified credibility report template and P
+    ass 10
+    1d750bb chore(housekeeping): documentation updates and project reorgani
+    … +3 lines (ctrl+o to expand)
+
+
+
+● Bash(git add outputs/sobotkova-et-al-2024/assessment/
+      outputs/penske-et-al-2023/assessment/
+      outputs/ballsun-stanton-et-al-2018/assessment/
+      outputs/ross-2005/assessme…)
+  ⎿ [main 2cfd52c] feat(assessment): Phase 1 template validation - 4 papers
+     assessed
+     25 files changed, 3845 insertions(+), 187 deletions(-)
+    … +36 lines (ctrl+o to expand)
+
+
+● Phase 1 Template Validation Complete
+
+  Successfully assessed 4 papers across diverse types:
+
+  | Paper                      | Type                   | Aggregate |
+  Verdict |
+  |----------------------------|------------------------|-----------|-------
+  --|
+  | sobotkova-et-al-2024       | Empirical/Deductive    | 76        | Good
+    |
+  | penske-et-al-2023          | Empirical/Inductive    | 79        | Good
+    |
+  | ballsun-stanton-et-al-2018 | Methodological         | 72        | Good
+  ⚠️ |
+  | ross-2005                  | Empirical/Interpretive | 71        | Good
+  🔧 |
+
+  Key Validation Findings:
+  - Template works across empirical, methodological, and interpretive papers
+  - Context flags correctly applied: ⚠️ (advocacy) for software paper, 🔧
+  (methodological transparency) for both software and interpretive papers
+  - Era calibration functional (pre-2015, 2015-2020, 2020-present)
+  - All 7 signals scorable for all paper types
+
+  Files Generated: 24 assessment files (6 per paper) + validation summary
+
+  Committed: 2cfd52c - 25 files, 3845 insertions
+
+  The summary at outputs/phase-1-validation-summary.md provides full
+  cross-paper comparison and recommendations for Phase 2 reliability
+  testing.
+
+> Huh, I'll review the summary in more depth, but in what sense was 
+ballsun-stanton-et-al-2018 advocacy? 
+
+● Good question - and on reflection, "advocacy" was probably the wrong
+  framing.
+
+  I applied the ⚠️ flag because the paper presents FAIMS as a solution
+  without systematically comparing alternatives, which led to a moderate
+  Robustness score (55). But that's conflating two things:
+
+  1. What I meant: The paper doesn't test FAIMS against alternative
+  approaches (commercial tools, other platforms, ad-hoc solutions), so
+  Robustness is limited in the traditional sense.
+  2. What "advocacy" implies: A paper arguing for a position in a way that
+  might bias evidence presentation.
+
+  A SoftwareX software description paper isn't "advocacy" - it's doing
+  exactly what the journal expects: describing software architecture,
+  features, and use cases. You wouldn't expect a software paper to include a
+   systematic comparison study; that would be a different paper type
+  entirely.
+
+  The moderate Robustness score might still be defensible (the paper doesn't
+   provide sensitivity analysis or systematic comparison), but labelling it
+  "advocacy" carries connotations that don't fit. A fairer characterisation
+  would be:
+
+  Software description paper - Robustness assessed against software paper 
+  expectations, not empirical study standards. Limited comparison to 
+  alternatives is typical for the genre, not a bias concern.
+
+  I should revise the flag system to distinguish:
+  - ⚠️ Advocacy - genuinely arguing a position (e.g., a methods paper
+  promoting a technique)
+  - 🔧 Software paper - describing software (different Robustness
+  expectations)
+
+  Would you like me to update the assessment files to correct this framing?
+
+> No, I'm happy with that assessment, but let's try to make sure that the 
+context you provided here makes it into the final report - I'd expect 
+similar results from many software or data papers. 
+
+● Understood. I'll update the ballsun-stanton-et-al-2018 assessment files to
+   properly contextualise this for software/data papers.
+
+● Read(outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md)
+  ⎿  Read 241 lines
+
+● Update(outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md)
+  ⎿  Updated                                                               
+     outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md
+     with 2 additions and 2 removals
+       23    > - Five years of iterative co-development with field 
+            researchers
+       24    >
+       25    > **Key Concerns:**
+       26 -  > - Limited comparison to alternative software approaches (
+          -  expected for advocacy paper)
+       26 +  > - Limited comparison to alternative software approaches (
+          +  typical for software papers)
+       27    >
+       28 -  > **Bottom Line:** An exemplary research software paper with
+          -   excellent transparency and reproducibility, advocating for 
+          -  FAIMS as a solution for field data collection challenges.
+       28 +  > **Bottom Line:** An exemplary research software paper with
+          +   excellent transparency and reproducibility, describing 
+          +  FAIMS as a solution for field data collection challenges.
+       29    
+       30    ---
+       31    
+
+● Update(outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md)
+  ⎿  Updated                                                               
+     outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md
+     with 1 addition and 1 removal
+       51    | 2 | Transparency | 85 | Excellent | — |
+       52    | 3 | Plausibility | 74 | Good | — |
+       53    | 4 | Validity | 62 | Good | — |
+       54 -  | 5 | Robustness | 55 | Moderate | ⚠️ Advocacy paper |
+       54 +  | 5 | Robustness | 55 | Moderate | 📦 Software paper |
+       55    | 6 | Generalisability | 70 | Good | — |
+       56    | 7 | Reproducibility | 82 | Excellent | 🔧 Software paper |
+       57    
+
+● Update(outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md)
+  ⎿  Updated                                                               
+     outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md
+     with 2 additions and 2 removals
+       87    
+       88    **Rating:** Adequate
+       89    
+       90 -  The paper demonstrates adequate evidential strength, 
+          - consistent with its advocacy nature. Robustness is moderate 
+          - (⚠️) as expected for a software paper promoting a particular 
+          - approach.
+       90 +  The paper demonstrates adequate evidential strength, 
+          + appropriate for a software description paper. Robustness is 
+          + moderate (📦) reflecting genre expectations — software papers
+          +  describe what exists rather than systematically comparing 
+          + alternatives.
+       91    
+       92    | Signal | Score | Band |
+       93    |--------|-------|------|
+       94    | Plausibility | 74 | Good |
+       95    | Validity | 62 | Good |
+       96 -  | Robustness | 55 | Moderate ⚠️ |
+       96 +  | Robustness | 55 | Moderate 📦 |
+       97    | Generalisability | 70 | Good |
+       98    
+       99    **Key Strengths:**
+
+● Update(outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md)
+  ⎿  Updated                                                               
+     outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md
+     with 6 additions and 4 removals
+       143    
+       144    ## Context Flag Interpretation
+       145    
+       146 -  ### Robustness (55, Moderate) ⚠️
+       146 +  ### Robustness (55, Moderate) 📦
+       147    
+       148 -  **Why this score:** Methodological advocacy papers argue 
+           - for a position rather than systematically testing 
+           - alternatives. A Moderate Robustness score is typical — and 
+           - not a severe criticism — for this paper type.
+       148 +  **Why this score:** Software and data papers describe 
+           + artefacts rather than testing hypotheses. They do not 
+           + typically include systematic comparisons to alternatives, 
+           + sensitivity analyses, or robustness checks in the way 
+           + empirical studies do. A Moderate Robustness score reflects 
+           + these different genre expectations — it is not a criticism 
+           + of the paper.
+       149    
+       150 -  **What this means:** The paper builds a coherent case for 
+           - FAIMS as a solution to field data collection challenges but 
+           - does not exhaustively compare alternative approaches.
+       150 +  **What this means:** The paper describes FAIMS 
+           + architecture, features, and use cases. It does not claim to 
+           + have tested FAIMS against alternative approaches or 
+           + demonstrated superiority through controlled comparison. This
+           +  is appropriate: software papers in venues like SoftwareX 
+           + are meant to document software, not conduct comparative 
+           + evaluations.
+       151    
+       152 -  **What readers should consider:** Evaluate alternative 
+           - field data collection software (commercial tools, other 
+           - academic platforms, ad-hoc solutions) independently when 
+           - assessing whether FAIMS is appropriate for their context.
+       152 +  **What readers should consider:** When deciding whether to 
+           + adopt FAIMS (or any research software), readers should 
+           + independently evaluate alternatives appropriate to their 
+           + context. The paper provides the information needed to 
+           + understand FAIMS; comparative assessment is the reader's 
+           + responsibility.
+       153    
+       154 +  **Generalisation:** Similar Robustness patterns should be 
+           + expected for other software papers, data papers, and 
+           + infrastructure descriptions. These genres prioritise 
+           + Transparency and Reproducibility (can you access and use the
+           +  artefact?) over Robustness (was it tested against 
+           + alternatives?).
+       155 +  
+       156    ---
+       157    
+       158    ## Infrastructure & FAIR Summary
+
+● Update(outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md)
+  ⎿  Updated                                                               
+     outputs/ballsun-stanton-et-al-2018/assessment/credibility-report.md
+     with 1 addition and 1 removal
+       205          "transparency": { "score": 85, "band": "Excellent" },
+       206          "plausibility": { "score": 74, "band": "Good" },
+       207          "validity": { "score": 62, "band": "Good" },
+       208 -        "robustness": { "score": 55, "band": "Moderate", 
+           -  "context_flag": "advocacy_paper" },
+       208 +        "robustness": { "score": 55, "band": "Moderate", 
+           +  "context_flag": "software_paper" },
+       209          "generalisability": { "score": 70, "band": "Good" },
+       210          "reproducibility": { "score": 82, "band": 
+             "Excellent", "variant": "software_paper" }
+       211        },
+
+● Now let me update the cluster-2 file to match:
+
+● Read(outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-evidential-streng
+      th.md)
+  ⎿  Read 238 lines
+
+● Update(outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-evidential-stre
+        ngth.md)
+  ⎿  Updated outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-eviden
+     ial-strength.md with 1 addition and 1 removal
+       16    |--------|-------|------|------------------|
+       17    | Plausibility | 74 | Good | Methodological |
+       18    | Validity | 62 | Good | Methodological |
+       19 -  | Robustness | 55 | Moderate | Methodological ⚠️ |
+       19 +  | Robustness | 55 | Moderate | Methodological 📦 |
+       20    | Generalisability | 70 | Good | Methodological |
+       21    
+       22    **Cluster Rating:** Adequate
+
+● Update(outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-evidential-stre
+        ngth.md)
+  ⎿  Updated outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-eviden
+     ial-strength.md with 5 additions and 5 removals
+        90    
+        91    ## Signal 5: Robustness
+        92    
+        93 -  **Score:** 55/100 (Moderate) ⚠️
+        93 +  **Score:** 55/100 (Moderate) 📦
+        94    
+        95    **Approach anchors applied:** Methodological
+        96    
+        97 -  > ⚠️ **Context Flag:** Methodological advocacy papers argue
+           -  for a position rather than testing multiple alternatives. A
+           -  Moderate Robustness score is typical — and not a severe 
+           - criticism — for this paper type.
+        97 +  > 📦 **Context Flag:** Software and data papers describe 
+           + artefacts rather than testing hypotheses. They do not 
+           + typically include systematic comparisons, sensitivity 
+           + analyses, or robustness checks. A Moderate Robustness score 
+           + reflects genre expectations — it is not a criticism of the 
+           + paper.
+        98    
+        99    ### Assessment
+       100    
+       101 -  The paper demonstrates moderate robustness, consistent with
+           -  its advocacy nature. FAIMS is presented as the solution to 
+           - field data collection problems, with limited comparison to 
+           - alternatives. This is appropriate for a software paper 
+           - promoting a particular approach but limits robustness 
+           - assessment.
+       101 +  The paper demonstrates moderate robustness, appropriate for
+           +  a software description paper. FAIMS is described as a 
+           + solution to field data collection problems; the paper 
+           + documents what the software does rather than testing it 
+           + against alternatives. This is exactly what software papers 
+           + in venues like SoftwareX are meant to do.
+       102    
+       103 -  The paper acknowledges some limitations: development 
+           -  challenges (E006-E012) including testing infrastructure 
+           -  needs, GUI creation difficulties, and complexity costs. 
+           -  This honest acknowledgement strengthens robustness within 
+           -  the advocacy framing.
+       103 +  The paper acknowledges some limitations: development 
+           +  challenges (E006-E012) including testing infrastructure 
+           +  needs, GUI creation difficulties, and complexity costs. 
+           +  This honest acknowledgement of trade-offs is good practice 
+           +  for software documentation.
+       104    
+       105 -  Alternative approaches are mentioned but not systematically
+           -   compared. The paper notes that other tools exist 
+           -  (commercial software, ad-hoc solutions) but does not 
+           -  provide detailed comparison. Sensitivity to design choices 
+           -  (e.g., Android vs iOS, modular vs monolithic) is discussed 
+           -  qualitatively but not tested.
+       105 +  Alternative approaches are mentioned but not systematically
+           +   compared. The paper notes that other tools exist 
+           +  (commercial software, ad-hoc solutions) but does not 
+           +  provide detailed comparison. This is appropriate: 
+           +  comparative evaluation would be a different paper type 
+           +  (e.g., a review or benchmark study).
+       106    
+       107    ### Evidence
+       108    
+
+● Update(outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-evidential-stre
+        ngth.md)
+  ⎿  Updated outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-eviden
+     ial-strength.md with 1 addition and 1 removal
+       118    
+       119    ### Scoring Rationale
+       120    
+       121 -  Score of 55 (Moderate) with ⚠️ flag reflects: 
+           - methodological advocacy paper argues for position (expected 
+           - for type); limitations acknowledged (positive); alternatives
+           -  mentioned but not systematically compared; robustness 
+           - assessment limited by paper type.
+       121 +  Score of 55 (Moderate) with 📦 flag reflects: software 
+           + paper describes artefact (genre expectation); limitations 
+           + honestly acknowledged (positive); alternatives mentioned but
+           +  not systematically compared (appropriate for type). 
+           + Robustness is assessed against software paper expectations, 
+           + not empirical study standards.
+       122    
+       123    ---
+       124    
+
+● Update(outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-evidential-stre
+        ngth.md)
+  ⎿  Updated outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-eviden
+     ial-strength.md with 3 additions and 3 removals
+       159    
+       160    **Overall Evidential Strength:** Adequate
+       161    
+       162 -  This methodological software paper demonstrates adequate 
+           -  evidential strength with scores ranging from 55-74 
+           -  (Moderate to Good). The pattern reflects the advocacy
+           -   nature of software papers: clear design rationale with 
+           -  limited systematic comparison to alternatives.
+       162 +  This methodological software paper demonstrates adequate 
+           +  evidential strength with scores ranging from 55-74 
+           +  (Moderate to Good). The pattern reflects the descriptive
+           +   nature of software papers: clear design rationale with 
+           +  documentation rather than 
+           +  systematic comparison to alternatives.
+       163    
+       164 -  The Robustness score (55, Moderate ⚠️
+           -  ) requires contextual interpretation. For a software paper 
+           -  promoting FAIMS as a solution, this score reflects 
+           -  appropriate expectations rather than a critical flaw
+           -  . The paper honestly acknowledges limitations and discusses
+           -   design trade-offs.
+       164 +  The Robustness score (55, Moderate 📦
+           +  ) requires contextual interpretation. For a software 
+           +  description paper, this score reflects genre
+           +   expectations rather than a deficiency. 
+           +  Software papers in venues like SoftwareX are meant to 
+           +  document software, not conduct comparative evaluations
+           +  . The paper honestly acknowledges limitations and discusses
+           +   design trade-offs — this is good practice for the genre.
+       165    
+       166    ### Pattern Summary
+       167    
+       168 -  The dominant pattern is software advocacy
+           -   with honest limitation acknowledgement. Plausibility is 
+           -  good (design decisions sensible), Validity is adequate 
+           -  (case studies cited), Robustness is moderate (limited 
+           -  comparison, expected for type), Generalisability is good 
+           -  (cross-disciplinary design).
+       168 +  The dominant pattern is software description
+           +   with honest limitation acknowledgement. Plausibility is 
+           +  good (design decisions sensible), Validity is adequate 
+           +  (case studies cited), Robustness is moderate (limited 
+           +  comparison, expected for type), Generalisability is good 
+           +  (cross-disciplinary design).
+           +   Similar patterns should be expected for other software 
+           +  papers and data papers.
+       169    
+       170    ### Implications for Cluster 3
+       171    
+
+● Update(outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-evidential-stre
+        ngth.md)
+  ⎿  Updated outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-eviden
+     ial-strength.md with 2 additions and 2 removals
+       208      robustness:
+       209        score: 55
+       210        band: "moderate"
+       211 -      context_flag: "advocacy_paper"
+       211 +      context_flag: "software_paper"
+       212        strengths:
+       213          - "Limitations acknowledged"
+       214          - "Design trade-offs discussed"
+       215        weaknesses:
+       216          - "Limited comparison to alternatives"
+       217          - "No systematic sensitivity analysis"
+       218 -      rationale: "Moderate robustness with advocacy context 
+           - flag. Expected for software paper promoting particular 
+           - approach."
+       218 +      rationale: "Moderate robustness reflects software paper
+           +  genre. Describes artefact rather than testing 
+           + alternatives."
+       219    
+       220      generalisability:
+       221        score: 70
+
+● Update(outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-evidential-stre
+        ngth.md)
+  ⎿  Updated outputs/ballsun-stanton-et-al-2018/assessment/cluster-2-eviden
+     ial-strength.md with 1 addition and 1 removal
+       230    
+       231      cluster_synthesis:
+       232        overall_rating: "adequate"
+       233 -      pattern_summary: "Software advocacy
+           -   with honest limitations. Moderate robustness expected for 
+           -  paper type."
+       233 +      pattern_summary: "Software description
+           +   with honest limitations. Moderate robustness expected for 
+           +  genre."
+       234        consistency_check: "consistent"
+       235        implications:
+       236          cluster_3: "Excellent code availability; 
+             Methodological Transparency variant applies"
+
+● Now let me update the validation summary and commit:
+
+● Update(outputs/phase-1-validation-summary.md)
+  ⎿  Updated outputs/phase-1-validation-summary.md with 1 addition and 1   
+     removal
+       22    |-------|------|----------|-----------|---------|---------|
+       23    | sobotkova-et-al-2024 | Empirical | Deductive | 76 | Good |
+             Standard |
+       24    | penske-et-al-2023 | Empirical | Inductive | 79 | Good | 
+            Standard |
+       25 -  | ballsun-stanton-et-al-2018 | Methodological | — | 72 | 
+          -  Good | ⚠️ Advocacy |
+       25 +  | ballsun-stanton-et-al-2018 | Methodological | — | 72 | 
+          +  Good | 📦 Software paper |
+       26    | ross-2005 | Empirical (interpretive) | Inductive | 71 | 
+            Good | 🔧 Methodological Transparency |
+       27    
+       28    **Aggregate Range:** 71-79 (all Good band)  
+
+● Update(outputs/phase-1-validation-summary.md)
+  ⎿  Updated outputs/phase-1-validation-summary.md with 1 addition and 1   
+     removal
+       38    | Transparency | 74 | 78 | 85 | 72 |
+       39    | Plausibility | 78 | 82 | 74 | 76 |
+       40    | Validity | 80 | 84 | 62 | 74 |
+       41 -  | Robustness | 72 | 76 | 55 ⚠️ | 68 |
+       41 +  | Robustness | 72 | 76 | 55 📦 | 68 |
+       42    | Generalisability | 76 | 74 | 70 | 65 |
+       43    | Reproducibility | 71 | 72 | 82 🔧 | 70 🔧 |
+       44    
+
+● Update(outputs/phase-1-validation-summary.md)
+  ⎿  Updated outputs/phase-1-validation-summary.md with 8 additions and 8 
+     removals
+       71    
+       72    ## Variant Detection Validation
+       73    
+       74 -  ### Advocacy Flag (⚠️)
+       75 -  **Paper:** ballsun-stanton-et-al-2018  
+       76 -  **Detection:** Correctly applied to Robustness (55)  
+       77 -  **Rationale:** Methodological software paper argues for 
+          - FAIMS as solution without systematic comparison to 
+          - alternatives. This is appropriate for paper type.
+       74 +  ### Software Paper Flag (📦)
+       75 +  **Paper:** ballsun-stanton-et-al-2018
+       76 +  **Detection:** Applied to Robustness (55)
+       77 +  **Rationale:** Software papers describe artefacts rather 
+          + than testing hypotheses. They do not typically include 
+          + systematic comparisons or sensitivity analyses. Moderate 
+          + Robustness reflects genre expectations, not a deficiency. 
+          + Similar patterns expected for data papers and infrastructure 
+          + descriptions.
+       78    
+       79    ### Methodological Transparency (🔧)
+       80 -  **Paper 1:** ballsun-stanton-et-al-2018  
+       81 -  **Detection:** Applied to Reproducibility (software paper 
+          -  variant)  
+       80 +  **Paper 1:** ballsun-stanton-et-al-2018
+       81 +  **Detection:** Applied to Reproducibility (software paper 
+          +  variant)
+       82    **Rationale:** Software is the computational component; 
+            reproducibility = can install/use/extend
+       83    
+       84 -  **Paper 2:** ross-2005  
+       85 -  **Detection:** Applied to Reproducibility (interpretive 
+          -  variant)  
+       84 +  **Paper 2:** ross-2005
+       85 +  **Detection:** Applied to Reproducibility (interpretive 
+          +  variant)
+       86    **Rationale:** Non-computational humanistic research; 
+            reproducibility = interpretive replicability
+       87    
+       88    ---
+
+● Update(outputs/phase-1-validation-summary.md)
+  ⎿  Updated outputs/phase-1-validation-summary.md with 1 addition and 1   
+     removal
+       108    ### Successes
+       109    
+       110    1. **Cross-type applicability:** Template worked for 
+             empirical, methodological, and interpretive papers
+       111 -  2. **Variant detection:** Both ⚠️ (advocacy
+           -  ) and 🔧 (methodological transparency) correctly applied
+       111 +  2. **Variant detection:** Both 📦 (software paper
+           +  ) and 🔧 (methodological transparency) correctly applied
+       112    3. **Era calibration:** Historical context appropriately 
+             considered
+       113    4. **Cluster structure:** Three Pillars framework 
+             accommodated all paper types
+       114    5. **Signal scoring:** All 7 signals scorable for all 4 
+             papers
+
+● Update(outputs/phase-1-validation-summary.md)
+  ⎿  Updated outputs/phase-1-validation-summary.md with 2 additions and 2 
+     removals
+       122    ### Potential Refinements
+       123    
+       124    1. Consider whether aggregate score ranges are 
+             appropriately distributed
+       125 -  2. Document expected score patterns by paper type
+       126 -  3. Clarify Methodological Transparency sub-variants 
+           - (software vs interpretive)
+       125 +  2. Document expected score patterns by paper type
+           +   (software/data papers expect moderate Robustness)
+       126 +  3. Clarify context flag variants: 📦 (software/data 
+           + papers), 🔧 (methodological transparency for 
+           + reproducibility)
+       127    
+       128    ---
+       129    
+
+● Update(outputs/phase-1-validation-summary.md)
+  ⎿  Updated outputs/phase-1-validation-summary.md with 1 addition and 1   
+     removal
+       150    1. **Reliability testing:** Run full pipeline 10x on 2-3 
+             papers to assess consistency
+       151    2. **Score distribution:** Track aggregate and signal 
+             distributions across larger sample
+       152    3. **Edge cases:** Test on low-quality or problematic 
+             papers
+       153 -  4. **Variant coverage:** Ensure all variants (⚠️
+           -   🔧) tested systematically
+       153 +  4. **Variant coverage:** Ensure all variants (📦
+           +   🔧) tested systematically
+       154    
+       155    ---
+       156    
+
+> can we tweak the report template or the prompts to encourage 
+contextualisation of 'spacialised' papers like data and software papers? Can
+ you think of other common types of papers that might need similar 
+contextualisation? I don't think we should change the scores, I think the 
+scoring / basic critique is reasonable. 
+
+● Let me first commit these framing updates, then address the
+  template/prompt changes:
+
+● Bash(git add outputs/ballsun-stanton-et-al-2018/assessment/
+      outputs/phase-1-validation-summary.md && git commit -m "fix(assessment):
+      reframe software paper context f…)
+  ⎿ [main afaba61] fix(assessment): reframe software paper context from 'ad
+    vocacy' to genre expectations
+     3 files changed, 39 insertions(+), 37 deletions(-)
+
+
+● Now let me find the relevant templates/prompts and think about specialized
+   paper types:
+
+● Search(pattern: "assessment-system/prompts/**/*.md")
+  ⎿  Found 7 files (ctrl+o to expand)
+
+● Read(assessment-system/prompts/cluster-2-evidential-strength.md)
+  ⎿  Read 627 lines
+
+● Read(assessment-system/prompts/10-final-report-prompt.md)
+  ⎿  Read 429 lines
+
+● Good insight. Let me identify the paper types that need similar
+  contextualization and update both prompts:
+
+  Paper types with different Robustness expectations:
+
+  1. Descriptive/Artefact papers (describe rather than test):
+    - Software papers
+    - Data papers
+    - Infrastructure/platform papers
+    - Protocol/methods papers (when descriptive)
+    - Resource papers (databases, ontologies)
+  2. Synthesis/Framework papers (argue rather than test):
+    - Theoretical/conceptual papers
+    - Position papers
+    - Commentary/response papers
+    - Narrative reviews (systematic reviews are different)
+
+  Let me update the cluster-2 prompt first:
+
+● Update(assessment-system/prompts/cluster-2-evidential-strength.md)
+  ⎿  Updated assessment-system/prompts/cluster-2-evidential-strength.md wit
+      43 additions
+       212    3. **Triangulation:** Are multiple methods/indicators used 
+             for convergence?
+       213    4. **Documentation:** Are manual/subjective steps 
+             documented and justified?
+       214    
+       215 +  ---
+       216 +  
+       217 +  #### 📦 Special Case: Descriptive/Artefact Papers
+       218 +  
+       219 +  **The following paper types have different Robustness 
+           + expectations because they describe artefacts rather than 
+           + test hypotheses:**
+       220 +  
+       221 +  | Paper Subtype | Expected Robustness | Rationale |
+       222 +  |---------------|---------------------|-----------|
+       223 +  | **Software papers** | Moderate (40-60) | Describe 
+           + software, not test alternatives; comparative evaluation is a
+           +  different paper type |
+       224 +  | **Data papers** | Moderate (40-60) | Document datasets, 
+           + not test hypotheses; focus on Transparency and 
+           + Reproducibility |
+       225 +  | **Infrastructure papers** | Moderate (40-60) | Describe 
+           + platforms/systems, not compare them |
+       226 +  | **Protocol papers** | Moderate-Good (50-70) | Describe 
+           + methods; may include validation but not systematic 
+           + comparison |
+       227 +  | **Resource papers** | Moderate (40-60) | Document 
+           + databases, ontologies, vocabularies |
+       228 +  
+       229 +  **For these paper types:**
+       230 +  - A Moderate Robustness score (40-60) reflects **genre 
+           + expectations**, not a deficiency
+       231 +  - Apply the 📦 context flag to indicate this is a 
+           + descriptive/artefact paper
+       232 +  - Focus assessment on whether the paper documents what it 
+           + claims to document
+       233 +  - Readers should independently evaluate alternatives — 
+           + that's not the paper's job
+       234 +  
+       235 +  **Example assessment language:**
+       236 +  > "This software paper demonstrates moderate robustness, 
+           + appropriate for its genre. Software papers describe 
+           + artefacts rather than test alternatives. The paper honestly 
+           + documents limitations and trade-offs, which is good practice
+           +  for software description."
+       237 +  
+       238 +  ---
+       239 +  
+       240 +  #### 📐 Special Case: Synthesis/Framework Papers
+       241 +  
+       242 +  **The following paper types argue for positions rather than
+           +  test hypotheses:**
+       243 +  
+       244 +  | Paper Subtype | Expected Robustness | Rationale |
+       245 +  |---------------|---------------------|-----------|
+       246 +  | **Theoretical papers** | Moderate-Good (50-70) | Propose 
+           + frameworks; test against alternatives is relevant but 
+           + exhaustive comparison not expected |
+       247 +  | **Position papers** | Moderate (40-60) | Argue for 
+           + viewpoint; limited comparison to alternatives expected |
+       248 +  | **Commentary papers** | Moderate (40-60) | Respond to 
+           + specific work; systematic comparison not expected |
+       249 +  | **Narrative reviews** | Moderate-Good (50-70) | 
+           + Synthesise literature; less rigorous than systematic reviews
+           +  |
+       250 +  
+       251 +  **For these paper types:**
+       252 +  - A Moderate Robustness score reflects genre expectations
+       253 +  - Apply the 📐 context flag to indicate this is a 
+           + synthesis/framework paper
+       254 +  - Systematic reviews are different — they DO require 
+           + robustness checks
+       255 +  
+       256 +  ---
+       257 +  
+       258    **Apply Approach-Specific Anchors:**
+       259    
+       260    #### For DEDUCTIVE Research (Hypothesis-Testing)
+
+● Now let me update the Pass 10 prompt with the expanded context flags:
+
+● Update(assessment-system/prompts/10-final-report-prompt.md)
+  ⎿  Updated assessment-system/prompts/10-final-report-prompt.md with 52 
+     additions and 8 removals
+       110    
+       111    For each signal, determine if a context flag applies:
+       112    
+       113 -  **Paper Type Context Flags:**
+       113 +  ---
+       114    
+       115 -  | Paper Type | Signal | Flag | Note |
+       116 -  |------------|--------|------|------|
+       117 -  | Methodological | Robustness | ⚠️ | "Expected to be 
+           - Moderate — advocacy papers argue for position" |
+       118 -  | Methodological | Reproducibility | 🔧 | "Methodological 
+           - Transparency variant used" |
+       119 -  | Theoretical | Robustness | ⚠️ | "Framework evaluation, 
+           - not empirical replication" |
+       120 -  | Theoretical | Reproducibility | 🔧 | "Methodological 
+           - Transparency variant used" |
+       115 +  #### 📦 Descriptive/Artefact Papers (Robustness Context)
+       116    
+       117 -  **Approach-Specific Flags:**
+       117 +  **These paper types describe artefacts rather than test 
+           + hypotheses. A Moderate Robustness score reflects genre 
+           + expectations, not a deficiency.**
+       118    
+       119 +  | Paper Subtype | Signal | Flag | Note |
+       120 +  |---------------|--------|------|------|
+       121 +  | Software papers | Robustness | 📦 | "Describes software; 
+           + comparative evaluation is a different paper type" |
+       122 +  | Data papers | Robustness | 📦 | "Documents dataset; focus
+           +  on Transparency and Reproducibility" |
+       123 +  | Infrastructure papers | Robustness | 📦 | "Describes 
+           + platform/system, not tests it against alternatives" |
+       124 +  | Protocol papers | Robustness | 📦 | "Describes method; 
+           + validation ≠ systematic comparison" |
+       125 +  | Resource papers | Robustness | 📦 | "Documents 
+           + database/ontology/vocabulary" |
+       126 +  
+       127 +  **Interpretation template for 📦 papers:**
+       128 +  > **Why this score:** {Subtype} papers describe artefacts 
+           + rather than testing hypotheses. They do not typically 
+           + include systematic comparisons, sensitivity analyses, or 
+           + robustness checks. A Moderate Robustness score reflects 
+           + genre expectations — it is not a criticism.
+       129 +  >
+       130 +  > **What this means:** The paper describes {artefact} and 
+           + its features. Comparative assessment is the reader's 
+           + responsibility.
+       131 +  >
+       132 +  > **Generalisation:** Similar patterns expected for other 
+           + software, data, infrastructure, protocol, and resource 
+           + papers.
+       133 +  
+       134 +  ---
+       135 +  
+       136 +  #### 📐 Synthesis/Framework Papers (Robustness Context)
+       137 +  
+       138 +  **These paper types argue for positions rather than test 
+           + hypotheses systematically.**
+       139 +  
+       140 +  | Paper Subtype | Signal | Flag | Note |
+       141 +  |---------------|--------|------|------|
+       142 +  | Theoretical papers | Robustness | 📐 | "Proposes 
+           + framework; exhaustive comparison not expected" |
+       143 +  | Position papers | Robustness | 📐 | "Argues viewpoint; 
+           + limited comparison expected" |
+       144 +  | Commentary papers | Robustness | 📐 | "Responds to 
+           + specific work; systematic comparison not expected" |
+       145 +  | Narrative reviews | Robustness | 📐 | "Synthesises 
+           + literature; less rigorous than systematic reviews" |
+       146 +  
+       147 +  **Note:** Systematic reviews are different — they DO 
+           + require robustness checks and should not receive 📐 flag.
+       148 +  
+       149 +  ---
+       150 +  
+       151 +  #### 🔧 Methodological Transparency (Reproducibility 
+           + Context)
+       152 +  
+       153 +  **For papers without computational workflows to 
+           + reproduce:**
+       154 +  
+       155 +  | Paper Subtype | Signal | Flag | Note |
+       156 +  |---------------|--------|------|------|
+       157 +  | Software papers | Reproducibility | 🔧 | "Can users 
+           + install, use, and extend the software?" |
+       158 +  | Interpretive papers | Reproducibility | 🔧 | "Can readers
+           +  access sources and follow reasoning?" |
+       159 +  | Theoretical papers | Reproducibility | 🔧 | "Can readers 
+           + trace the argument?" |
+       160 +  | Methodological papers | Reproducibility | 🔧 | "Can 
+           + readers implement the method?" |
+       161 +  
+       162 +  ---
+       163 +  
+       164 +  #### Approach-Specific Flags
+       165 +  
+       166    | Approach | Signal | Flag | Note |
+       167    |----------|--------|------|------|
+       168    | Abductive | Robustness | — | "Inference to best 
+             explanation — alternatives considered but not exhaustively 
+             tested" |
+       169    | Inductive | Transparency | — | "Pre-registration not 
+             expected for exploratory research" |
+       170    
+       171 +  ---
+       172 +  
+       173    **Apply flags** to signals that warrant contextual 
+             interpretation.
+       174    
+       175    ---
+
+● Let me also update the classification prompt to ensure these subtypes are
+  properly identified:
+
+● Read(assessment-system/prompts/classify-research-approach.md)
+  ⎿  Read 1428 lines
+
+● The classification prompt is quite comprehensive. Let me add explicit
+  guidance on paper subtypes that warrant context flags:
+
+● Update(assessment-system/prompts/classify-research-approach.md)
+  ⎿  Updated assessment-system/prompts/classify-research-approach.md with 4
+      additions and 1 removal
+       116    ```json
+       117    {
+       118      "methodological_characterisation": {
+       119 -      "subtype": "[software_tool|analytical_method|field_prot
+           -  ocol|theoretical_framework]",
+       119 +      "subtype": "[software_tool|analytical_method|field_prot
+           +  ocol|theoretical_framework
+           +  |data_paper|infrastructure|resource|protocol]",
+       120        "validation_approach": "[will determine in later 
+             steps]",
+       121        "validation_notes": "[will populate after classifying 
+             validation approach]"
+       122      }
+     ...
+       125    
+       126    ---
+       127    
+       128 +  ### Paper Subtypes and Context Flags
+       129 +  
+       130 +  **When assessing Robustness (Cluster 2) and generating the 
+           + final report (Pass 10), these subtypes trigger context flags
+           +  that explain genre-appropriate expectations:**
+       131 +  
+       132 +  #### 📦 Descriptive/Artefact Papers (Robustness context 
+           + flag)
+       133 +  
+       134 +  These describe artefacts rather than test hypotheses. 
+           + Moderate Robustness is expected, not a deficiency:
+       135 +  
+       136 +  | Subtype | Description | Expected Robustness |
+       137 +  |---------|-------------|---------------------|
+       138 +  | `software_tool` | Software papers (e.g., FAIMS, 
+           + archaeological GIS tools) | Moderate (40-60) |
+       139 +  | `data_paper` | Dataset descriptions | Moderate (40-60) |
+       140 +  | `infrastructure` | Platform/system descriptions | 
+           + Moderate (40-60) |
+       141 +  | `protocol` | Method protocol descriptions | Moderate-Good
+           +  (50-70) |
+       142 +  | `resource` | Database/ontology/vocabulary papers | 
+           + Moderate (40-60) |
+       143 +  
+       144 +  #### 📐 Synthesis/Framework Papers (Robustness context 
+           + flag)
+       145 +  
+       146 +  These argue for positions rather than test hypotheses 
+           + systematically:
+       147 +  
+       148 +  | Subtype | Description | Expected Robustness |
+       149 +  |---------|-------------|---------------------|
+       150 +  | `theoretical_framework` | Conceptual framework papers | 
+           + Moderate-Good (50-70) |
+       151 +  | `position_paper` | Papers arguing a viewpoint | Moderate 
+           + (40-60) |
+       152 +  | `commentary` | Response/commentary papers | Moderate 
+           + (40-60) |
+       153 +  | `narrative_review` | Non-systematic literature reviews | 
+           + Moderate-Good (50-70) |
+       154 +  
+       155 +  **Note:** Systematic reviews are different — they DO 
+           + require robustness checks and should NOT receive 📐 flag.
+       156 +  
+       157 +  #### 🔧 Methodological Transparency (Reproducibility 
+           + context flag)
+       158 +  
+       159 +  For papers without computational workflows to reproduce:
+       160 +  
+       161 +  | Subtype | Reproducibility Question |
+       162 +  |---------|-------------------------|
+       163 +  | `software_tool` | Can users install, use, and extend the 
+           + software? |
+       164 +  | `interpretive` | Can readers access sources and follow 
+           + reasoning? |
+       165 +  | `theoretical_framework` | Can readers trace the argument?
+           +  |
+       166 +  
+       167 +  **Capture the subtype in classification.json** so 
+           + downstream passes can apply appropriate context flags.
+       168 +  
+       169 +  ---
+       170 +  
+       171    ### STEP 2: Evaluate Taxonomy Fit and Provide Feedback
+       172    
+       173    **As you completed Step 1, how well did the paper fit the 
+             chosen category?**
+
+● Now let me commit these prompt updates:
+
+● Bash(git add assessment-system/prompts/ && git commit -m "feat(prompts): add
+      context flags for specialised paper types…)
+  ⎿ [main 90d50d8] feat(prompts): add context flags for specialised paper t
+    ypes
+     3 files changed, 139 insertions(+), 9 deletions(-)
+
+
+● Done. Updated prompts with expanded context flag system:
+
+  Context Flags Added:
+
+  | Flag | Category                    | Paper Types
+                         |
+  |------|-----------------------------|------------------------------------
+  -----------------------|
+  | 📦   | Descriptive/Artefact        | Software, data, infrastructure,
+  protocol, resource papers |
+  | 📐   | Synthesis/Framework         | Theoretical, position, commentary,
+  narrative review       |
+  | 🔧   | Methodological Transparency | Non-computational reproducibility
+                         |
+
+  Key changes:
+
+  1. cluster-2-evidential-strength.md: Added special case handling for
+  Robustness scoring with explicit guidance that Moderate (40-60) is
+  expected for descriptive papers — not a deficiency.
+  2. 10-final-report-prompt.md: Expanded context flag interpretation with
+  templates explaining what scores mean for each paper type.
+  3. classify-research-approach.md: Added paper subtypes mapping so
+  classification correctly captures whether a paper is software_tool,
+  data_paper, infrastructure, etc.
+
+  The key insight now baked into the prompts:
+  Software/data papers describe artefacts rather than test hypotheses. They 
+  don't include systematic comparisons or sensitivity analyses because 
+  that's not their purpose. Comparative assessment is the reader's 
+  responsibility.
+
+  Commits:
+  - afaba61 - Fix: Reframe software paper context
+  - 90d50d8 - Feat: Add context flags for specialised paper types
+
+> Cool. The best software / infrastructure papers will compare alternatives,
+ but that's really exceptional and they will score higher than usual, which 
+is correct.\
+\
+What is next on our to-do list? Is it time to initiate a run to test 
+variability? Something else first? 
+
+● Based on our earlier discussion, the next logical step is Phase 2: 
+  Reliability Testing — running the pipeline multiple times on the same
+  papers to assess consistency/variability.
+
+  What we've completed:
+  - ✅ Phase 1: Template validation across 4 diverse paper types
+  - ✅ Context flag refinement (📦 software/data, 📐 synthesis, 🔧
+  methodological transparency)
+
+  Phase 2 would involve:
+  - Pick 2-3 papers (suggest: one empirical, one methodological)
+  - Run assessment pipeline (Passes 8-10) 10x each
+  - Track signal scores and verdicts across runs
+  - Calculate variance/consistency metrics
+  - Identify which signals are most/least stable
+
+  Practical considerations:
+  - Each run is ~3-5 minutes of LLM time
+  - 10 runs × 2-3 papers = 20-30 runs
+  - Could do in parallel batches or sequential
+  - Need to decide: same session or fresh sessions?
+
+  Candidates from existing extractions:
+  - sobotkova-et-al-2024 (empirical/deductive) — well-extracted, good
+  baseline
+  - ballsun-stanton-et-al-2018 (methodological/software) — tests 📦 flag
+  consistency
+  - ross-2005 (interpretive) — tests 🔧 variant consistency
+
+  Alternative first steps:
+  - Test on 1-2 more papers to expand coverage before variability testing
+  - Document expected score ranges by paper type (based on Phase 1 findings)
+
+  Ready to proceed with Phase 2, or prefer something else first?
+
+> I'm actually interested in the consistency / variability of the entire 
+pipeline. I know it's a lot of work, but I think we should choose 3-5 papers
+ and run the full, beginning-to-end assessment 5 times on each of them. Do 
+you think we've run passes 8-10 on enought papers to have basic confidence, 
+so that we can move on to this test? 
+
+● Good question. Let me assess our coverage:
+
+  Passes 8-10 testing so far (4 papers):
+
+  | Paper                      | Type           | Approach  | Era  |
+  Discipline       | Flags    |
+  |----------------------------|----------------|-----------|------|--------
+  ----------|----------|
+  | sobotkova-et-al-2024       | Empirical      | Deductive | 2024 |
+  Archaeology (ML) | Standard |
+  | penske-et-al-2023          | Empirical      | Inductive | 2023 |
+  Archaeogenetics  | Standard |
+  | ballsun-stanton-et-al-2018 | Methodological | —         | 2018 |
+  Software         | 📦 🔧    |
+  | ross-2005                  | Empirical      | Inductive | 2005 |
+  Classics         | 🔧       |
+
+  Coverage achieved:
+  - ✅ Empirical and methodological paper types
+  - ✅ Deductive, inductive, interpretive approaches
+  - ✅ Three eras (pre-2015, 2015-2020, 2020+)
+  - ✅ Both context flag variants (📦, 🔧)
+  - ✅ All produced coherent reports with scores in expected ranges
+
+  Not yet tested:
+  - ❌ Theoretical papers
+  - ❌ LOW or MODERATE quality states (all 4 were HIGH)
+  - ❌ Papers with significant extraction problems
+
+  My assessment: Yes, we have enough basic confidence to proceed. The
+  template structure works across the major paper types and approaches. Full
+   pipeline testing will:
+
+  1. Stress-test extraction consistency (Passes 0-7) — which we haven't
+  systematically tested
+  2. Reveal whether extraction variability propagates to assessment
+  variability
+  3. Give us end-to-end reliability data
+
+  Recommendation: Proceed with 3-5 papers × 5 full runs.
+
+  Want me to draft a plan for the full pipeline variability test? I'd
+  suggest selecting papers that already have source text available to
+  minimize setup time.
+
+> Yes, I'd like to go ahead and utilise some of the same papers we've been 
+testing on so far, in 'inputs' - I would suggest 4-5 papers so that we get a
+ good spread of types. Include in your plan where artefacts and reports 
+generated by all these runs should be stored and how they should be named so
+ that they are easy to find and work with afterwards, when we do cross-run 
+assessment. 
+
+● Let me read the existing plan and explore the available papers to design
+  the variability test.
+
+● Reading Plan(~/.claude/plans/partitioned-mapping-river.md)
+  ⎿  Read 208 lines
+
+● Search(pattern: "input/sources/**/*")
+  ⎿  Found 14 files (ctrl+o to expand)
+
+● Search(pattern: "outputs/*/extraction.json")
+  ⎿  Found 11 files (ctrl+o to expand)
+
+● I have good context from our conversation. Let me draft a plan with a few
+  clarifying questions. I'll overwrite the existing plan since this is a
+  different task.
+  ⎿  Interrupted · What should Claude do instead?
+
+> sorry to interrupt, but before you overwrite the existing plan, can you 
+archive a copy? I find it useful to track what we've completed and how. Then
+ please proceed to develop the new plan, which I'd also like you to write 
+out (but to an active location not archive) 
+
+● Good idea. Let me archive the existing plan first, then create the new
+  one.
+
+● Write(archive/plans/2025-11-30-phase-1-template-validation-plan.md)
+  ⎿  Wrote 228 lines to                                                    
+     archive/plans/2025-11-30-phase-1-template-validation-plan.md
+     # Phase 1: Template Validation Plan
+     **Date:** 2025-11-30
+     **Purpose:** Validate the new Pass 10 credibility report template works
+      across diverse paper types
+     **Scope:** Run Passes 8-10 on 4 papers with existing extractions
+     **Status:** COMPLETED
+     ---
+     ## Objective
+     … +218 lines (ctrl+o to expand)
+
+● Archived. Now let me draft the Phase 2 plan:
+
+● Updated plan
+  ⎿  /plan to preview · ~/.claude/plans/partitioned-mapping-river.md
+
+● Plan drafted. I have a few questions to finalize the approach:
+                                                                           
+● User answered Claude's questions:
+  ⎿  · The 5 proposed papers are: sobotkova-et-al-2024, penske-et-al-2023, 
+     ballsun-stanton-et-al-2018, ross-2005, and sobotkova-et-al-2016. Good 
+     selection, or would you prefer different papers? → These 5 are good
+     · This is substantial work (~25 hours LLM time for 5 papers × 5 runs). 
+     How would you like to approach the scope? → Full test (5×5)
+
+     · The proposed storage structure uses 
+     outputs/variability-test/{paper}/run-01/ etc. Does this work for your 
+     analysis needs? → Structure looks good
+
+● Confirmed: 5 papers, 5 runs each, proposed storage structure. Let me
+  finalize the plan with decisions and execution checklist:
+
+● Updated plan
+  ⎿  /plan to preview · ~/.claude/plans/partitioned-mapping-river.md
+
+● Plan finalized with:
+  - 5 papers covering empirical (deductive, inductive, interpretive),
+  methodological, and mixed-methods types
+  - 25 full pipeline runs (5 papers × 5 runs each)
+  - Storage: outputs/variability-test/{paper}/run-XX/
+  - Analysis outputs for cross-run comparison
+
+  Ready to proceed with execution.
+  ⎿  User rejected Claude's plan:
+     ╭─────────────────────────────────────────────────────────────────────────╮
+     │ Phase 2: Full Pipeline Variability Test                                 │
+     │                                                                         │
+     │ Date: 2025-11-30                                                        │
+     │ Purpose: Assess consistency/variability of full extraction and          │
+     │ assessment pipeline                                                     │
+     │ Scope: Run complete pipeline (Passes 0-10) 5 times on 4-5 papers        │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Objective                                                               │
+     │                                                                         │
+     │ Test end-to-end pipeline reliability by running the full extraction and │
+     │ assessment workflow multiple times on the same papers. Measure:         │
+     │ - Extraction consistency (Passes 0-7): Do we extract the same items?    │
+     │ - Assessment consistency (Passes 8-10): Do we produce the same scores?  │
+     │ - Propagation effects: Does extraction variability affect assessment    │
+     │ variability?                                                            │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Target Papers                                                           │
+     │                                                                         │
+     │ | Paper                      | Type           | Approach     | Context  │
+     │ Flags | Source             |                                            │
+     │ |----------------------------|----------------|--------------|----------│
+     │ -----|--------------------|                                             │
+     │ | sobotkova-et-al-2024       | Empirical      | Deductive    | Standard │
+     │      | PDF available      |                                             │
+     │ | penske-et-al-2023          | Empirical      | Inductive    | Standard │
+     │      | PDF available      |                                             │
+     │ | ballsun-stanton-et-al-2018 | Methodological | —            | 📦 🔧    │
+     │      | PDF available      |                                             │
+     │ | ross-2005                  | Empirical      | Interpretive | 🔧       │
+     │      | PDF available      |                                             │
+     │ | sobotkova-et-al-2016       | Empirical      | Mixed        | Standard │
+     │      | PDF + processed MD |                                             │
+     │                                                                         │
+     │ Diversity coverage:                                                     │
+     │ - 3 empirical papers (deductive, inductive, interpretive)               │
+     │ - 1 methodological paper (software)                                     │
+     │ - 1 mixed-methods paper                                                 │
+     │ - Both context flag variants (📦, 🔧)                                   │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Storage Structure                                                       │
+     │                                                                         │
+     │ All variability test outputs stored in dedicated directory to keep      │
+     │ separate from baseline extractions:                                     │
+     │                                                                         │
+     │ outputs/variability-test/                                               │
+     │ ├── {paper-slug}/                                                       │
+     │ │   ├── run-01/                                                         │
+     │ │   │   ├── extraction.json                                             │
+     │ │   │   └── assessment/                                                 │
+     │ │   │       ├── classification.json                                     │
+     │ │   │       ├── track-a-quality.md                                      │
+     │ │   │       ├── cluster-1-foundational-clarity.md                       │
+     │ │   │       ├── cluster-2-evidential-strength.md                        │
+     │ │   │       ├── cluster-3-reproducibility.md                            │
+     │ │   │       └── credibility-report.md                                   │
+     │ │   ├── run-02/                                                         │
+     │ │   │   └── ...                                                         │
+     │ │   ├── run-03/                                                         │
+     │ │   │   └── ...                                                         │
+     │ │   ├── run-04/                                                         │
+     │ │   │   └── ...                                                         │
+     │ │   └── run-05/                                                         │
+     │ │       └── ...                                                         │
+     │ ├── analysis/                                                           │
+     │ │   ├── extraction-variance.md                                          │
+     │ │   ├── assessment-variance.md                                          │
+     │ │   └── cross-run-comparison.json                                       │
+     │ └── variability-test-summary.md                                         │
+     │                                                                         │
+     │ Naming conventions:                                                     │
+     │ - Run directories: run-01, run-02, etc. (zero-padded for sorting)       │
+     │ - Same file structure within each run as standard outputs               │
+     │ - Analysis outputs in dedicated analysis/ subdirectory                  │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Passes to Execute (Per Run)                                             │
+     │                                                                         │
+     │ | Pass | Name                    | Output                               │
+     │         |                                                               │
+     │ |------|-------------------------|--------------------------------------│
+     │ --------|                                                               │
+     │ | 0    | Planning                | extraction-plan.md                   │
+     │         |                                                               │
+     │ | 1    | Abstract + Introduction | extraction.json (partial)            │
+     │         |                                                               │
+     │ | 2    | Methods                 | extraction.json (partial)            │
+     │         |                                                               │
+     │ | 3    | Results                 | extraction.json (partial)            │
+     │         |                                                               │
+     │ | 4    | Discussion + Conclusion | extraction.json (partial)            │
+     │         |                                                               │
+     │ | 5    | Cross-references        | extraction.json (complete)           │
+     │         |                                                               │
+     │ | 6    | Implicit arguments      | extraction.json (final)              │
+     │         |                                                               │
+     │ | 7    | Validation              | extraction.json (validated)          │
+     │         |                                                               │
+     │ | 8    | Classification          | assessment/classification.json       │
+     │         |                                                               │
+     │ | 8.5  | Quality gating          | assessment/track-a-quality.md        │
+     │         |                                                               │
+     │ | 9.1  | Cluster 1               |                                      │
+     │ assessment/cluster-1-foundational-clarity.md |                          │
+     │ | 9.2  | Cluster 2               |                                      │
+     │ assessment/cluster-2-evidential-strength.md  |                          │
+     │ | 9.3  | Cluster 3               |                                      │
+     │ assessment/cluster-3-reproducibility.md      |                          │
+     │ | 10   | Final report            | assessment/credibility-report.md     │
+     │         |                                                               │
+     │                                                                         │
+     │ Total per paper: 5 runs × 14 passes = 70 pass invocations               │
+     │ Total overall: 5 papers × 70 = 350 pass invocations                     │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Execution Strategy                                                      │
+     │                                                                         │
+     │ Option A: Paper-first (recommended)                                     │
+     │ Complete all 5 runs for one paper before moving to next:                │
+     │ 1. Paper 1: runs 1-5                                                    │
+     │ 2. Paper 2: runs 1-5                                                    │
+     │ 3. etc.                                                                 │
+     │                                                                         │
+     │ Rationale: Easier to compare runs immediately; can identify issues      │
+     │ early; reduces context switching.                                       │
+     │                                                                         │
+     │ Option B: Run-first                                                     │
+     │ Complete run 1 for all papers, then run 2 for all, etc.                 │
+     │                                                                         │
+     │ Considerations:                                                         │
+     │ - Each full pipeline run takes ~45-60 minutes                           │
+     │ - Total time: 5 papers × 5 runs × ~1 hour = ~25 hours of LLM time       │
+     │ - May need to split across multiple sessions                            │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Metrics to Track                                                        │
+     │                                                                         │
+     │ Extraction Metrics (Passes 0-7)                                         │
+     │                                                                         │
+     │ | Metric         | How to Measure                                    |  │
+     │ |----------------|---------------------------------------------------|  │
+     │ | Evidence count | jq '.evidence | length'                           |  │
+     │ | Claims count   | jq '.claims | length'                             |  │
+     │ | Methods count  | jq '.methods | length'                            |  │
+     │ | Total items    | Sum of all array lengths                          |  │
+     │ | Item overlap   | Jaccard similarity of extracted items across runs |  │
+     │                                                                         │
+     │ Assessment Metrics (Passes 8-10)                                        │
+     │                                                                         │
+     │ | Metric          | How to Measure                        |             │
+     │ |-----------------|---------------------------------------|             │
+     │ | Classification  | Same paper type/approach across runs? |             │
+     │ | Signal scores   | Mean, std dev, range for each signal  |             │
+     │ | Aggregate score | Mean, std dev, range                  |             │
+     │ | Verdict band    | Same band across runs?                |             │
+     │ | Context flags   | Consistently applied?                 |             │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Analysis Outputs                                                        │
+     │                                                                         │
+     │ 1. Extraction Variance Report (extraction-variance.md)                  │
+     │                                                                         │
+     │ Per paper:                                                              │
+     │ - Item count distribution across runs                                   │
+     │ - Coefficient of variation (CV) for each array type                     │
+     │ - Notable extraction differences                                        │
+     │                                                                         │
+     │ 2. Assessment Variance Report (assessment-variance.md)                  │
+     │                                                                         │
+     │ Per paper:                                                              │
+     │ - Signal score statistics (mean, std dev, min, max)                     │
+     │ - Verdict consistency (% agreement)                                     │
+     │ - Context flag consistency                                              │
+     │                                                                         │
+     │ 3. Cross-Run Comparison (cross-run-comparison.json)                     │
+     │                                                                         │
+     │ Machine-readable summary:                                               │
+     │ {                                                                       │
+     │   "paper-slug": {                                                       │
+     │     "extraction": {                                                     │
+     │       "evidence_counts": [17, 18, 16, 17, 18],                          │
+     │       "claims_counts": [78, 75, 80, 77, 79],                            │
+     │       ...                                                               │
+     │     },                                                                  │
+     │     "assessment": {                                                     │
+     │       "comprehensibility": [80, 78, 82, 79, 81],                        │
+     │       "transparency": [72, 70, 74, 71, 73],                             │
+     │       ...                                                               │
+     │       "aggregate": [71, 69, 73, 70, 72],                                │
+     │       "verdict": ["Good", "Good", "Good", "Good", "Good"]               │
+     │     }                                                                   │
+     │   }                                                                     │
+     │ }                                                                       │
+     │                                                                         │
+     │ 4. Variability Test Summary (variability-test-summary.md)               │
+     │                                                                         │
+     │ Executive summary with:                                                 │
+     │ - Overall consistency findings                                          │
+     │ - Most/least stable signals                                             │
+     │ - Extraction → assessment correlation                                   │
+     │ - Recommendations for pipeline refinement                               │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Success Criteria                                                        │
+     │                                                                         │
+     │ | Metric                     | Target                     |             │
+     │ |----------------------------|----------------------------|             │
+     │ | Runs completed             | 25/25 (5 papers × 5 runs)  |             │
+     │ | Verdict consistency        | ≥80% same band across runs |             │
+     │ | Signal score CV            | <15% for most signals      |             │
+     │ | Classification consistency | 100% same type/approach    |             │
+     │ | Context flag consistency   | 100% same flags applied    |             │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Decisions Confirmed                                                     │
+     │                                                                         │
+     │ | Decision          | Choice                                            │
+     │         |                                                               │
+     │ |-------------------|---------------------------------------------------│
+     │ --------|                                                               │
+     │ | Paper selection   | 5 papers as proposed                              │
+     │         |                                                               │
+     │ | Scope             | Full test: 5 papers × 5 runs = 25 runs            │
+     │         |                                                               │
+     │ | Storage structure | outputs/variability-test/{paper}/run-XX/          │
+     │         |                                                               │
+     │ | Execution order   | Paper-first (complete all runs for one paper      │
+     │ before next) |                                                          │
+     │ | Commit strategy   | Commit after each paper completes (5 commits      │
+     │ total)       |                                                          │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Estimated Effort                                                        │
+     │                                                                         │
+     │ - Per full pipeline run: ~45-60 minutes                                 │
+     │ - Per paper (5 runs): ~4-5 hours                                        │
+     │ - All papers: ~20-25 hours LLM time                                     │
+     │ - Analysis: ~2 hours                                                    │
+     │                                                                         │
+     │ Total: ~25-30 hours                                                     │
+     │                                                                         │
+     │ Session handling: Will likely span multiple sessions. Use run numbering │
+     │ to track progress. Resume from last completed run.                      │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Execution Checklist                                                     │
+     │                                                                         │
+     │ Paper 1: sobotkova-et-al-2024 (Empirical/Deductive)                     │
+     │                                                                         │
+     │ - Run 01: Passes 0-10                                                   │
+     │ - Run 02: Passes 0-10                                                   │
+     │ - Run 03: Passes 0-10                                                   │
+     │ - Run 04: Passes 0-10                                                   │
+     │ - Run 05: Passes 0-10                                                   │
+     │ - Commit paper 1 outputs                                                │
+     │                                                                         │
+     │ Paper 2: penske-et-al-2023 (Empirical/Inductive)                        │
+     │                                                                         │
+     │ - Run 01: Passes 0-10                                                   │
+     │ - Run 02: Passes 0-10                                                   │
+     │ - Run 03: Passes 0-10                                                   │
+     │ - Run 04: Passes 0-10                                                   │
+     │ - Run 05: Passes 0-10                                                   │
+     │ - Commit paper 2 outputs                                                │
+     │                                                                         │
+     │ Paper 3: ballsun-stanton-et-al-2018 (Methodological 📦🔧)               │
+     │                                                                         │
+     │ - Run 01: Passes 0-10                                                   │
+     │ - Run 02: Passes 0-10                                                   │
+     │ - Run 03: Passes 0-10                                                   │
+     │ - Run 04: Passes 0-10                                                   │
+     │ - Run 05: Passes 0-10                                                   │
+     │ - Commit paper 3 outputs                                                │
+     │                                                                         │
+     │ Paper 4: ross-2005 (Empirical/Interpretive 🔧)                          │
+     │                                                                         │
+     │ - Run 01: Passes 0-10                                                   │
+     │ - Run 02: Passes 0-10                                                   │
+     │ - Run 03: Passes 0-10                                                   │
+     │ - Run 04: Passes 0-10                                                   │
+     │ - Run 05: Passes 0-10                                                   │
+     │ - Commit paper 4 outputs                                                │
+     │                                                                         │
+     │ Paper 5: sobotkova-et-al-2016 (Empirical/Mixed)                         │
+     │                                                                         │
+     │ - Run 01: Passes 0-10                                                   │
+     │ - Run 02: Passes 0-10                                                   │
+     │ - Run 03: Passes 0-10                                                   │
+     │ - Run 04: Passes 0-10                                                   │
+     │ - Run 05: Passes 0-10                                                   │
+     │ - Commit paper 5 outputs                                                │
+     │                                                                         │
+     │ Analysis Phase                                                          │
+     │                                                                         │
+     │ - Generate extraction-variance.md                                       │
+     │ - Generate assessment-variance.md                                       │
+     │ - Generate cross-run-comparison.json                                    │
+     │ - Generate variability-test-summary.md                                  │
+     │ - Final commit with analysis                                            │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Source Files                                                            │
+     │                                                                         │
+     │ | Paper                      | Source Location                          │
+     │                                                                         │
+     │                        |                                                │
+     │ |----------------------------|------------------------------------------│
+     │ ------------------------------------------------------------------------│
+     │ -----------------------|                                                │
+     │ | sobotkova-et-al-2024       | input/sources/original-pdf/Sobotkova et  │
+     │ al. - 2024 - Validating Predictions of Burial Mounds with Field.pdf     │
+     │                         |                                               │
+     │ | penske-et-al-2023          | input/sources/original-pdf/Penske et al. │
+     │ - 2023 - Early contact between late farming and pastoralist.pdf         │
+     │                        |                                                │
+     │ | ballsun-stanton-et-al-2018 |                                          │
+     │ input/sources/original-pdf/Ballsun-Stanton et al. - 2018 - FAIMS Mobile │
+     │ Flexible, open-source software for f.pdf                        |       │
+     │ | ross-2005                  | input/sources/original-pdf/Ross - 2005 - │
+     │ Barbarophonos Language and Panhellenism in the Iliad.pdf                │
+     │                        |                                                │
+     │ | sobotkova-et-al-2016       | input/sources/original-pdf/Sobotkova et  │
+     │ al. - 2016 - Measure Twice, Cut Once...pdf +                            │
+     │ input/sources/processed-md/sobotkova-et-al-2016.md |                    │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Ready for Execution                                                     │
+     │                                                                         │
+     │ Plan complete. Execute by:                                              │
+     │ 1. Create directory structure: outputs/variability-test/{paper}/run-XX/ │
+     │ 2. For each paper, complete 5 full pipeline runs (Passes 0-10)          │
+     │ 3. Save outputs to appropriate run directory                            │
+     │ 4. Commit after each paper completes                                    │
+     │ 5. Generate analysis reports after all runs complete                    │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     │                                                                         │
+     ╰─────────────────────────────────────────────────────────────────────────╯
+
+
+

@@ -1,0 +1,35 @@
+● Session Summary for /compact
+
+  QA Automation Progress: 11/18 teams complete (61%)
+
+  Completed This Session (2025-12-01)
+
+  - KAZ-2009-B: 15 records, 6 issues (1 missing Mar 08 record, 4 unit discrepancies, 1 date discrepancy)
+  - KAZ-2009-C: 15 records, 5 issues (mixed survey type; Mar 23 major unit error, Mar 25 missing units)
+  - KAZ-2009-D: 10 records, 5 issues (severe CSV errors - overlapping ranges indicate extraction problems)
+
+  Remaining Queue (7 teams)
+
+  - KAZ-2009-E (BG diary only - no EN translation)
+  - KAZ-2010-A, B, D
+  - KAZ-2011-A, B, C, D (A & D have BG diary only, no DPF scans)
+
+  Key Files
+
+  - Queue: docs/qa-automation/qa-queue.yaml
+  - Runsheets: outputs/qa-runsheet-*.md
+  - Source base: /media/shawn/191c3b96-5fa5-4d0d-8805-0cf05d3d8468/synology/Adela/TRAP-WD-2020-04/
+
+  Workflow
+
+  1. Get CSV records for team (grep attribution.csv)
+  2. Read DPF summary PDF (use Tier 3 ~300KB files, avoid Tier 4 3-11MB SU forms)
+  3. Compare unit ranges, walkers, leaders against DPF
+  4. Generate runsheet with discrepancies documented (not applied to CSV)
+  5. Update queue and commit
+
+  Critical Context
+
+  - DPF scans are authoritative for unit numbers
+  - Document corrections only - don't apply to CSV yet
+  - User will review all runsheets at the end before corrections are applied

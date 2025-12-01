@@ -1,0 +1,682 @@
+
+ ▐▛███▜▌   Claude Code v2.0.55
+▝▜█████▛▘  Opus 4.5 · Claude Max
+  ▘▘ ▝▝    ~/Code/llm-reproducibility
+════════════════════════════════════════════════════════════ Conversation compacted · ctrl+o for history ════════════════════════════════════════════════════════════
+  ⎿  Read ../../.claude/plans/partitioned-mapping-river.md (298 lines)
+  ⎿  Read archive/plans/2025-11-30-phase-1-template-validation-plan.md (228 lines)
+  ⎿  Referenced file assessment-system/prompts/classify-research-approach.md
+  ⎿  Read assessment-system/prompts/10-final-report-prompt.md (473 lines)
+  ⎿  Referenced file assessment-system/prompts/cluster-2-evidential-strength.md
+
+● The Phase 2 variability test plan is complete. Let me exit plan mode and begin execution.
+  ⎿  User rejected Claude's plan:
+     ╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+     │ Phase 2: Full Pipeline Variability Test                                                                                                                      │
+     │                                                                                                                                                              │
+     │ Date: 2025-11-30                                                                                                                                             │
+     │ Purpose: Assess consistency/variability of full extraction and assessment pipeline                                                                           │
+     │ Scope: Run complete pipeline (Passes 0-10) 5 times on 4-5 papers                                                                                             │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Objective                                                                                                                                                    │
+     │                                                                                                                                                              │
+     │ Test end-to-end pipeline reliability by running the full extraction and assessment workflow multiple times on the same papers. Measure:                      │
+     │ - Extraction consistency (Passes 0-7): Do we extract the same items?                                                                                         │
+     │ - Assessment consistency (Passes 8-10): Do we produce the same scores?                                                                                       │
+     │ - Propagation effects: Does extraction variability affect assessment variability?                                                                            │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Target Papers                                                                                                                                                │
+     │                                                                                                                                                              │
+     │ | Paper                      | Type           | Approach     | Context Flags | Source             |                                                          │
+     │ |----------------------------|----------------|--------------|---------------|--------------------|                                                          │
+     │ | sobotkova-et-al-2024       | Empirical      | Deductive    | Standard      | PDF available      |                                                          │
+     │ | penske-et-al-2023          | Empirical      | Inductive    | Standard      | PDF available      |                                                          │
+     │ | ballsun-stanton-et-al-2018 | Methodological | —            | 📦 🔧         | PDF available      |                                                          │
+     │ | ross-2005                  | Empirical      | Interpretive | 🔧            | PDF available      |                                                          │
+     │ | sobotkova-et-al-2016       | Empirical      | Mixed        | Standard      | PDF + processed MD |                                                          │
+     │                                                                                                                                                              │
+     │ Diversity coverage:                                                                                                                                          │
+     │ - 3 empirical papers (deductive, inductive, interpretive)                                                                                                    │
+     │ - 1 methodological paper (software)                                                                                                                          │
+     │ - 1 mixed-methods paper                                                                                                                                      │
+     │ - Both context flag variants (📦, 🔧)                                                                                                                        │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Storage Structure                                                                                                                                            │
+     │                                                                                                                                                              │
+     │ All variability test outputs stored in dedicated directory to keep separate from baseline extractions:                                                       │
+     │                                                                                                                                                              │
+     │ outputs/variability-test/                                                                                                                                    │
+     │ ├── {paper-slug}/                                                                                                                                            │
+     │ │   ├── run-01/                                                                                                                                              │
+     │ │   │   ├── extraction.json                                                                                                                                  │
+     │ │   │   └── assessment/                                                                                                                                      │
+     │ │   │       ├── classification.json                                                                                                                          │
+     │ │   │       ├── track-a-quality.md                                                                                                                           │
+     │ │   │       ├── cluster-1-foundational-clarity.md                                                                                                            │
+     │ │   │       ├── cluster-2-evidential-strength.md                                                                                                             │
+     │ │   │       ├── cluster-3-reproducibility.md                                                                                                                 │
+     │ │   │       └── credibility-report.md                                                                                                                        │
+     │ │   ├── run-02/                                                                                                                                              │
+     │ │   │   └── ...                                                                                                                                              │
+     │ │   ├── run-03/                                                                                                                                              │
+     │ │   │   └── ...                                                                                                                                              │
+     │ │   ├── run-04/                                                                                                                                              │
+     │ │   │   └── ...                                                                                                                                              │
+     │ │   └── run-05/                                                                                                                                              │
+     │ │       └── ...                                                                                                                                              │
+     │ ├── analysis/                                                                                                                                                │
+     │ │   ├── extraction-variance.md                                                                                                                               │
+     │ │   ├── assessment-variance.md                                                                                                                               │
+     │ │   └── cross-run-comparison.json                                                                                                                            │
+     │ └── variability-test-summary.md                                                                                                                              │
+     │                                                                                                                                                              │
+     │ Naming conventions:                                                                                                                                          │
+     │ - Run directories: run-01, run-02, etc. (zero-padded for sorting)                                                                                            │
+     │ - Same file structure within each run as standard outputs                                                                                                    │
+     │ - Analysis outputs in dedicated analysis/ subdirectory                                                                                                       │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Passes to Execute (Per Run)                                                                                                                                  │
+     │                                                                                                                                                              │
+     │ | Pass | Name                    | Output                                       |                                                                            │
+     │ |------|-------------------------|----------------------------------------------|                                                                            │
+     │ | 0    | Planning                | extraction-plan.md                           |                                                                            │
+     │ | 1    | Abstract + Introduction | extraction.json (partial)                    |                                                                            │
+     │ | 2    | Methods                 | extraction.json (partial)                    |                                                                            │
+     │ | 3    | Results                 | extraction.json (partial)                    |                                                                            │
+     │ | 4    | Discussion + Conclusion | extraction.json (partial)                    |                                                                            │
+     │ | 5    | Cross-references        | extraction.json (complete)                   |                                                                            │
+     │ | 6    | Implicit arguments      | extraction.json (final)                      |                                                                            │
+     │ | 7    | Validation              | extraction.json (validated)                  |                                                                            │
+     │ | 8    | Classification          | assessment/classification.json               |                                                                            │
+     │ | 8.5  | Quality gating          | assessment/track-a-quality.md                |                                                                            │
+     │ | 9.1  | Cluster 1               | assessment/cluster-1-foundational-clarity.md |                                                                            │
+     │ | 9.2  | Cluster 2               | assessment/cluster-2-evidential-strength.md  |                                                                            │
+     │ | 9.3  | Cluster 3               | assessment/cluster-3-reproducibility.md      |                                                                            │
+     │ | 10   | Final report            | assessment/credibility-report.md             |                                                                            │
+     │                                                                                                                                                              │
+     │ Total per paper: 5 runs × 14 passes = 70 pass invocations                                                                                                    │
+     │ Total overall: 5 papers × 70 = 350 pass invocations                                                                                                          │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Execution Strategy                                                                                                                                           │
+     │                                                                                                                                                              │
+     │ Option A: Paper-first (recommended)                                                                                                                          │
+     │ Complete all 5 runs for one paper before moving to next:                                                                                                     │
+     │ 1. Paper 1: runs 1-5                                                                                                                                         │
+     │ 2. Paper 2: runs 1-5                                                                                                                                         │
+     │ 3. etc.                                                                                                                                                      │
+     │                                                                                                                                                              │
+     │ Rationale: Easier to compare runs immediately; can identify issues early; reduces context switching.                                                         │
+     │                                                                                                                                                              │
+     │ Option B: Run-first                                                                                                                                          │
+     │ Complete run 1 for all papers, then run 2 for all, etc.                                                                                                      │
+     │                                                                                                                                                              │
+     │ Considerations:                                                                                                                                              │
+     │ - Each full pipeline run takes ~45-60 minutes                                                                                                                │
+     │ - Total time: 5 papers × 5 runs × ~1 hour = ~25 hours of LLM time                                                                                            │
+     │ - May need to split across multiple sessions                                                                                                                 │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Metrics to Track                                                                                                                                             │
+     │                                                                                                                                                              │
+     │ Extraction Metrics (Passes 0-7)                                                                                                                              │
+     │                                                                                                                                                              │
+     │ | Metric         | How to Measure                                    |                                                                                       │
+     │ |----------------|---------------------------------------------------|                                                                                       │
+     │ | Evidence count | jq '.evidence | length'                           |                                                                                       │
+     │ | Claims count   | jq '.claims | length'                             |                                                                                       │
+     │ | Methods count  | jq '.methods | length'                            |                                                                                       │
+     │ | Total items    | Sum of all array lengths                          |                                                                                       │
+     │ | Item overlap   | Jaccard similarity of extracted items across runs |                                                                                       │
+     │                                                                                                                                                              │
+     │ Assessment Metrics (Passes 8-10)                                                                                                                             │
+     │                                                                                                                                                              │
+     │ | Metric          | How to Measure                        |                                                                                                  │
+     │ |-----------------|---------------------------------------|                                                                                                  │
+     │ | Classification  | Same paper type/approach across runs? |                                                                                                  │
+     │ | Signal scores   | Mean, std dev, range for each signal  |                                                                                                  │
+     │ | Aggregate score | Mean, std dev, range                  |                                                                                                  │
+     │ | Verdict band    | Same band across runs?                |                                                                                                  │
+     │ | Context flags   | Consistently applied?                 |                                                                                                  │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Analysis Outputs                                                                                                                                             │
+     │                                                                                                                                                              │
+     │ 1. Extraction Variance Report (extraction-variance.md)                                                                                                       │
+     │                                                                                                                                                              │
+     │ Per paper:                                                                                                                                                   │
+     │ - Item count distribution across runs                                                                                                                        │
+     │ - Coefficient of variation (CV) for each array type                                                                                                          │
+     │ - Notable extraction differences                                                                                                                             │
+     │                                                                                                                                                              │
+     │ 2. Assessment Variance Report (assessment-variance.md)                                                                                                       │
+     │                                                                                                                                                              │
+     │ Per paper:                                                                                                                                                   │
+     │ - Signal score statistics (mean, std dev, min, max)                                                                                                          │
+     │ - Verdict consistency (% agreement)                                                                                                                          │
+     │ - Context flag consistency                                                                                                                                   │
+     │                                                                                                                                                              │
+     │ 3. Cross-Run Comparison (cross-run-comparison.json)                                                                                                          │
+     │                                                                                                                                                              │
+     │ Machine-readable summary:                                                                                                                                    │
+     │ {                                                                                                                                                            │
+     │   "paper-slug": {                                                                                                                                            │
+     │     "extraction": {                                                                                                                                          │
+     │       "evidence_counts": [17, 18, 16, 17, 18],                                                                                                               │
+     │       "claims_counts": [78, 75, 80, 77, 79],                                                                                                                 │
+     │       ...                                                                                                                                                    │
+     │     },                                                                                                                                                       │
+     │     "assessment": {                                                                                                                                          │
+     │       "comprehensibility": [80, 78, 82, 79, 81],                                                                                                             │
+     │       "transparency": [72, 70, 74, 71, 73],                                                                                                                  │
+     │       ...                                                                                                                                                    │
+     │       "aggregate": [71, 69, 73, 70, 72],                                                                                                                     │
+     │       "verdict": ["Good", "Good", "Good", "Good", "Good"]                                                                                                    │
+     │     }                                                                                                                                                        │
+     │   }                                                                                                                                                          │
+     │ }                                                                                                                                                            │
+     │                                                                                                                                                              │
+     │ 4. Variability Test Summary (variability-test-summary.md)                                                                                                    │
+     │                                                                                                                                                              │
+     │ Executive summary with:                                                                                                                                      │
+     │ - Overall consistency findings                                                                                                                               │
+     │ - Most/least stable signals                                                                                                                                  │
+     │ - Extraction → assessment correlation                                                                                                                        │
+     │ - Recommendations for pipeline refinement                                                                                                                    │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Success Criteria                                                                                                                                             │
+     │                                                                                                                                                              │
+     │ | Metric                     | Target                     |                                                                                                  │
+     │ |----------------------------|----------------------------|                                                                                                  │
+     │ | Runs completed             | 25/25 (5 papers × 5 runs)  |                                                                                                  │
+     │ | Verdict consistency        | ≥80% same band across runs |                                                                                                  │
+     │ | Signal score CV            | <15% for most signals      |                                                                                                  │
+     │ | Classification consistency | 100% same type/approach    |                                                                                                  │
+     │ | Context flag consistency   | 100% same flags applied    |                                                                                                  │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Decisions Confirmed                                                                                                                                          │
+     │                                                                                                                                                              │
+     │ | Decision          | Choice                                                    |                                                                            │
+     │ |-------------------|-----------------------------------------------------------|                                                                            │
+     │ | Paper selection   | 5 papers as proposed                                      |                                                                            │
+     │ | Scope             | Full test: 5 papers × 5 runs = 25 runs                    |                                                                            │
+     │ | Storage structure | outputs/variability-test/{paper}/run-XX/                  |                                                                            │
+     │ | Execution order   | Paper-first (complete all runs for one paper before next) |                                                                            │
+     │ | Commit strategy   | Commit after each paper completes (5 commits total)       |                                                                            │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Estimated Effort                                                                                                                                             │
+     │                                                                                                                                                              │
+     │ - Per full pipeline run: ~45-60 minutes                                                                                                                      │
+     │ - Per paper (5 runs): ~4-5 hours                                                                                                                             │
+     │ - All papers: ~20-25 hours LLM time                                                                                                                          │
+     │ - Analysis: ~2 hours                                                                                                                                         │
+     │                                                                                                                                                              │
+     │ Total: ~25-30 hours                                                                                                                                          │
+     │                                                                                                                                                              │
+     │ Session handling: Will likely span multiple sessions. Use run numbering to track progress. Resume from last completed run.                                   │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Execution Checklist                                                                                                                                          │
+     │                                                                                                                                                              │
+     │ Paper 1: sobotkova-et-al-2024 (Empirical/Deductive)                                                                                                          │
+     │                                                                                                                                                              │
+     │ - Run 01: Passes 0-10                                                                                                                                        │
+     │ - Run 02: Passes 0-10                                                                                                                                        │
+     │ - Run 03: Passes 0-10                                                                                                                                        │
+     │ - Run 04: Passes 0-10                                                                                                                                        │
+     │ - Run 05: Passes 0-10                                                                                                                                        │
+     │ - Commit paper 1 outputs                                                                                                                                     │
+     │                                                                                                                                                              │
+     │ Paper 2: penske-et-al-2023 (Empirical/Inductive)                                                                                                             │
+     │                                                                                                                                                              │
+     │ - Run 01: Passes 0-10                                                                                                                                        │
+     │ - Run 02: Passes 0-10                                                                                                                                        │
+     │ - Run 03: Passes 0-10                                                                                                                                        │
+     │ - Run 04: Passes 0-10                                                                                                                                        │
+     │ - Run 05: Passes 0-10                                                                                                                                        │
+     │ - Commit paper 2 outputs                                                                                                                                     │
+     │                                                                                                                                                              │
+     │ Paper 3: ballsun-stanton-et-al-2018 (Methodological 📦🔧)                                                                                                    │
+     │                                                                                                                                                              │
+     │ - Run 01: Passes 0-10                                                                                                                                        │
+     │ - Run 02: Passes 0-10                                                                                                                                        │
+     │ - Run 03: Passes 0-10                                                                                                                                        │
+     │ - Run 04: Passes 0-10                                                                                                                                        │
+     │ - Run 05: Passes 0-10                                                                                                                                        │
+     │ - Commit paper 3 outputs                                                                                                                                     │
+     │                                                                                                                                                              │
+     │ Paper 4: ross-2005 (Empirical/Interpretive 🔧)                                                                                                               │
+     │                                                                                                                                                              │
+     │ - Run 01: Passes 0-10                                                                                                                                        │
+     │ - Run 02: Passes 0-10                                                                                                                                        │
+     │ - Run 03: Passes 0-10                                                                                                                                        │
+     │ - Run 04: Passes 0-10                                                                                                                                        │
+     │ - Run 05: Passes 0-10                                                                                                                                        │
+     │ - Commit paper 4 outputs                                                                                                                                     │
+     │                                                                                                                                                              │
+     │ Paper 5: sobotkova-et-al-2016 (Empirical/Mixed)                                                                                                              │
+     │                                                                                                                                                              │
+     │ - Run 01: Passes 0-10                                                                                                                                        │
+     │ - Run 02: Passes 0-10                                                                                                                                        │
+     │ - Run 03: Passes 0-10                                                                                                                                        │
+     │ - Run 04: Passes 0-10                                                                                                                                        │
+     │ - Run 05: Passes 0-10                                                                                                                                        │
+     │ - Commit paper 5 outputs                                                                                                                                     │
+     │                                                                                                                                                              │
+     │ Analysis Phase                                                                                                                                               │
+     │                                                                                                                                                              │
+     │ - Generate extraction-variance.md                                                                                                                            │
+     │ - Generate assessment-variance.md                                                                                                                            │
+     │ - Generate cross-run-comparison.json                                                                                                                         │
+     │ - Generate variability-test-summary.md                                                                                                                       │
+     │ - Final commit with analysis                                                                                                                                 │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Source Files                                                                                                                                                 │
+     │                                                                                                                                                              │
+     │ | Paper                      | Source Location                                                                                                               │
+     │           |                                                                                                                                                  │
+     │ |----------------------------|-------------------------------------------------------------------------------------------------------------------------------│
+     │ ----------|                                                                                                                                                  │
+     │ | sobotkova-et-al-2024       | input/sources/original-pdf/Sobotkova et al. - 2024 - Validating Predictions of Burial Mounds with Field.pdf                   │
+     │           |                                                                                                                                                  │
+     │ | penske-et-al-2023          | input/sources/original-pdf/Penske et al. - 2023 - Early contact between late farming and pastoralist.pdf                      │
+     │           |                                                                                                                                                  │
+     │ | ballsun-stanton-et-al-2018 | input/sources/original-pdf/Ballsun-Stanton et al. - 2018 - FAIMS Mobile Flexible, open-source software for f.pdf              │
+     │           |                                                                                                                                                  │
+     │ | ross-2005                  | input/sources/original-pdf/Ross - 2005 - Barbarophonos Language and Panhellenism in the Iliad.pdf                             │
+     │           |                                                                                                                                                  │
+     │ | sobotkova-et-al-2016       | input/sources/original-pdf/Sobotkova et al. - 2016 - Measure Twice, Cut Once...pdf +                                          │
+     │ input/sources/processed-md/sobotkova-et-al-2016.md |                                                                                                         │
+     │                                                                                                                                                              │
+     │ ---                                                                                                                                                          │
+     │ Ready for Execution                                                                                                                                          │
+     │                                                                                                                                                              │
+     │ Plan complete. Execute by:                                                                                                                                   │
+     │ 1. Create directory structure: outputs/variability-test/{paper}/run-XX/                                                                                      │
+     │ 2. For each paper, complete 5 full pipeline runs (Passes 0-10)                                                                                               │
+     │ 3. Save outputs to appropriate run directory                                                                                                                 │
+     │ 4. Commit after each paper completes                                                                                                                         │
+     │ 5. Generate analysis reports after all runs complete                                                                                                         │
+     │                                                                                                                                                              │
+     │                                                                                                                                                              │
+     │                                                                                                                                                              │
+     │                                                                                                                                                              │
+     │                                                                                                                                                              │
+     ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+> One question for you - do you think you'll be able to undertake all five runs consecutivelyl, or should we run one paper at a time? I'm happy to *attempt* 
+multiple papers, but I'm concerned about 'silent failures' where your attention wanes or quality declines for other reasons - you are the best judge of your 
+abilities, please advise and we'll go from there. 
+
+● Excellent question, and I appreciate you asking me to self-assess honestly.
+
+  My recommendation: One paper at a time, with explicit quality checkpoints.
+
+  Here's my reasoning:
+
+  1. Context pressure is real: A full pipeline run (Passes 0-10) generates substantial content. Five runs per paper means ~70 pass invocations per paper. Context
+   will likely exhaust mid-paper on most papers, requiring session resumption.
+  2. Silent failures are the real risk: The danger isn't that I'll stop working - it's that I'll continue with degraded attention (less careful validation,
+  subtle shortcuts, inconsistent application of prompts). For a variability test, that would contaminate the results by introducing artificial variance from
+  quality drift rather than measuring true pipeline variance.
+  3. Natural breakpoints help: Completing one paper, committing, and letting you (or a fresh session) review before continuing gives you:
+    - A checkpoint to verify quality
+    - Clean separation between papers
+    - Ability to catch systematic issues early
+
+  Proposed approach:
+  - Start with Paper 1 (sobotkova-et-al-2024)
+  - Complete all 5 runs for that paper
+  - Commit and review
+  - If session survives and quality looks good, continue to Paper 2
+  - Otherwise, resume fresh next session
+
+  This is conservative, but for a test whose whole purpose is measuring consistency, conservative is correct.
+
+  Shall I proceed with this approach?
+
+> are you happy undertaking five runs on the same paper, or would you prefer one-paper-one-run? On the other hand, we might learn something useful about long 
+duration tasks if you attempt the same paper five times - if we see a lot of variability, we could redo the test one run at a time. What are your thoughts on 
+this? 
+
+● You make an excellent point. Let me reconsider:
+
+  Attempting five consecutive runs on one paper is actually valuable data:
+
+  1. If variance is low across all 5 runs: Great - the pipeline is consistent even over long sessions
+  2. If runs 4-5 show higher variance than 1-2: We've learned something important about session-length effects on LLM quality
+  3. If variance is uniformly high: That's signal about pipeline reliability regardless of session length
+
+  Either outcome teaches us something. And if the first paper shows problematic drift patterns, we can adjust the approach for subsequent papers.
+
+  My honest assessment:
+  - I'm comfortable attempting 5 consecutive runs on one paper
+  - I'll aim for consistent quality, but the whole point is to measure variance, not pretend it doesn't exist
+  - The user reviewing results between papers is the real safeguard
+
+  Let me update the plan to reflect this approach and then we can begin.
+
+● Updated plan
+  ⎿  /plan to preview · ~/.claude/plans/partitioned-mapping-river.md
+
+● Plan updated. The approach is now:
+  - Attempt 5 consecutive runs per paper (tests session-length effects)
+  - Review results between papers (quality checkpoint)
+  - Adjust if needed (if first paper shows drift, modify approach)
+
+  The plan is complete and addresses your questions. Ready to begin execution?
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ Ready to code?
+
+ Here is Claude's plan:
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+ Phase 2: Full Pipeline Variability Test
+
+ Date: 2025-11-30
+ Purpose: Assess consistency/variability of full extraction and assessment pipeline
+ Scope: Run complete pipeline (Passes 0-10) 5 times on 4-5 papers
+
+ ---
+ Objective
+
+ Test end-to-end pipeline reliability by running the full extraction and assessment workflow multiple times on the same papers. Measure:
+ - Extraction consistency (Passes 0-7): Do we extract the same items?
+ - Assessment consistency (Passes 8-10): Do we produce the same scores?
+ - Propagation effects: Does extraction variability affect assessment variability?
+
+ ---
+ Target Papers
+
+ | Paper                      | Type           | Approach     | Context Flags | Source             |
+ |----------------------------|----------------|--------------|---------------|--------------------|
+ | sobotkova-et-al-2024       | Empirical      | Deductive    | Standard      | PDF available      |
+ | penske-et-al-2023          | Empirical      | Inductive    | Standard      | PDF available      |
+ | ballsun-stanton-et-al-2018 | Methodological | —            | 📦 🔧         | PDF available      |
+ | ross-2005                  | Empirical      | Interpretive | 🔧            | PDF available      |
+ | sobotkova-et-al-2016       | Empirical      | Mixed        | Standard      | PDF + processed MD |
+
+ Diversity coverage:
+ - 3 empirical papers (deductive, inductive, interpretive)
+ - 1 methodological paper (software)
+ - 1 mixed-methods paper
+ - Both context flag variants (📦, 🔧)
+
+ ---
+ Storage Structure
+
+ All variability test outputs stored in dedicated directory to keep separate from baseline extractions:
+
+ outputs/variability-test/
+ ├── {paper-slug}/
+ │   ├── run-01/
+ │   │   ├── extraction.json
+ │   │   └── assessment/
+ │   │       ├── classification.json
+ │   │       ├── track-a-quality.md
+ │   │       ├── cluster-1-foundational-clarity.md
+ │   │       ├── cluster-2-evidential-strength.md
+ │   │       ├── cluster-3-reproducibility.md
+ │   │       └── credibility-report.md
+ │   ├── run-02/
+ │   │   └── ...
+ │   ├── run-03/
+ │   │   └── ...
+ │   ├── run-04/
+ │   │   └── ...
+ │   └── run-05/
+ │       └── ...
+ ├── analysis/
+ │   ├── extraction-variance.md
+ │   ├── assessment-variance.md
+ │   └── cross-run-comparison.json
+ └── variability-test-summary.md
+
+ Naming conventions:
+ - Run directories: run-01, run-02, etc. (zero-padded for sorting)
+ - Same file structure within each run as standard outputs
+ - Analysis outputs in dedicated analysis/ subdirectory
+
+ ---
+ Passes to Execute (Per Run)
+
+ | Pass | Name                    | Output                                       |
+ |------|-------------------------|----------------------------------------------|
+ | 0    | Planning                | extraction-plan.md                           |
+ | 1    | Abstract + Introduction | extraction.json (partial)                    |
+ | 2    | Methods                 | extraction.json (partial)                    |
+ | 3    | Results                 | extraction.json (partial)                    |
+ | 4    | Discussion + Conclusion | extraction.json (partial)                    |
+ | 5    | Cross-references        | extraction.json (complete)                   |
+ | 6    | Implicit arguments      | extraction.json (final)                      |
+ | 7    | Validation              | extraction.json (validated)                  |
+ | 8    | Classification          | assessment/classification.json               |
+ | 8.5  | Quality gating          | assessment/track-a-quality.md                |
+ | 9.1  | Cluster 1               | assessment/cluster-1-foundational-clarity.md |
+ | 9.2  | Cluster 2               | assessment/cluster-2-evidential-strength.md  |
+ | 9.3  | Cluster 3               | assessment/cluster-3-reproducibility.md      |
+ | 10   | Final report            | assessment/credibility-report.md             |
+
+ Total per paper: 5 runs × 14 passes = 70 pass invocations
+ Total overall: 5 papers × 70 = 350 pass invocations
+
+ ---
+ Execution Strategy
+
+ Approach: Paper-first with consecutive runs
+ Complete all 5 runs for one paper before moving to next:
+ 1. Paper 1: runs 1-5 (consecutive, same session if possible)
+ 2. Review results, commit
+ 3. Paper 2: runs 1-5
+ 4. etc.
+
+ Rationale:
+ - Easier to compare runs immediately
+ - Tests session-length effects on LLM consistency
+ - If runs 4-5 show higher variance than 1-2, that's useful data about long-duration tasks
+ - User reviews results between papers as quality checkpoint
+
+ Session handling:
+ - Attempt all 5 runs consecutively per paper
+ - If context exhausts mid-paper, resume from checkpoint
+ - If systematic drift detected in first paper, adjust approach for subsequent papers
+
+ Considerations:
+ - Each full pipeline run takes ~45-60 minutes
+ - Per paper: ~4-5 hours for 5 runs
+ - Total: ~25 hours of LLM time across all papers
+ - Will span multiple sessions; use run numbering to track progress
+
+ ---
+ Metrics to Track
+
+ Extraction Metrics (Passes 0-7)
+
+ | Metric         | How to Measure                                    |
+ |----------------|---------------------------------------------------|
+ | Evidence count | jq '.evidence | length'                           |
+ | Claims count   | jq '.claims | length'                             |
+ | Methods count  | jq '.methods | length'                            |
+ | Total items    | Sum of all array lengths                          |
+ | Item overlap   | Jaccard similarity of extracted items across runs |
+
+ Assessment Metrics (Passes 8-10)
+
+ | Metric          | How to Measure                        |
+ |-----------------|---------------------------------------|
+ | Classification  | Same paper type/approach across runs? |
+ | Signal scores   | Mean, std dev, range for each signal  |
+ | Aggregate score | Mean, std dev, range                  |
+ | Verdict band    | Same band across runs?                |
+ | Context flags   | Consistently applied?                 |
+
+ ---
+ Analysis Outputs
+
+ 1. Extraction Variance Report (extraction-variance.md)
+
+ Per paper:
+ - Item count distribution across runs
+ - Coefficient of variation (CV) for each array type
+ - Notable extraction differences
+
+ 2. Assessment Variance Report (assessment-variance.md)
+
+ Per paper:
+ - Signal score statistics (mean, std dev, min, max)
+ - Verdict consistency (% agreement)
+ - Context flag consistency
+
+ 3. Cross-Run Comparison (cross-run-comparison.json)
+
+ Machine-readable summary:
+ {
+   "paper-slug": {
+     "extraction": {
+       "evidence_counts": [17, 18, 16, 17, 18],
+       "claims_counts": [78, 75, 80, 77, 79],
+       ...
+     },
+     "assessment": {
+       "comprehensibility": [80, 78, 82, 79, 81],
+       "transparency": [72, 70, 74, 71, 73],
+       ...
+       "aggregate": [71, 69, 73, 70, 72],
+       "verdict": ["Good", "Good", "Good", "Good", "Good"]
+     }
+   }
+ }
+
+ 4. Variability Test Summary (variability-test-summary.md)
+
+ Executive summary with:
+ - Overall consistency findings
+ - Most/least stable signals
+ - Extraction → assessment correlation
+ - Recommendations for pipeline refinement
+
+ ---
+ Success Criteria
+
+ | Metric                     | Target                     |
+ |----------------------------|----------------------------|
+ | Runs completed             | 25/25 (5 papers × 5 runs)  |
+ | Verdict consistency        | ≥80% same band across runs |
+ | Signal score CV            | <15% for most signals      |
+ | Classification consistency | 100% same type/approach    |
+ | Context flag consistency   | 100% same flags applied    |
+
+ ---
+ Decisions Confirmed
+
+ | Decision          | Choice                                                    |
+ |-------------------|-----------------------------------------------------------|
+ | Paper selection   | 5 papers as proposed                                      |
+ | Scope             | Full test: 5 papers × 5 runs = 25 runs                    |
+ | Storage structure | outputs/variability-test/{paper}/run-XX/                  |
+ | Execution order   | Paper-first (complete all runs for one paper before next) |
+ | Commit strategy   | Commit after each paper completes (5 commits total)       |
+
+ ---
+ Estimated Effort
+
+ - Per full pipeline run: ~45-60 minutes
+ - Per paper (5 runs): ~4-5 hours
+ - All papers: ~20-25 hours LLM time
+ - Analysis: ~2 hours
+
+ Total: ~25-30 hours
+
+ Session handling: Will likely span multiple sessions. Use run numbering to track progress. Resume from last completed run.
+
+ ---
+ Execution Checklist
+
+ Paper 1: sobotkova-et-al-2024 (Empirical/Deductive)
+
+ - Run 01: Passes 0-10
+ - Run 02: Passes 0-10
+ - Run 03: Passes 0-10
+ - Run 04: Passes 0-10
+ - Run 05: Passes 0-10
+ - Commit paper 1 outputs
+
+ Paper 2: penske-et-al-2023 (Empirical/Inductive)
+
+ - Run 01: Passes 0-10
+ - Run 02: Passes 0-10
+ - Run 03: Passes 0-10
+ - Run 04: Passes 0-10
+ - Run 05: Passes 0-10
+ - Commit paper 2 outputs
+
+ Paper 3: ballsun-stanton-et-al-2018 (Methodological 📦🔧)
+
+ - Run 01: Passes 0-10
+ - Run 02: Passes 0-10
+ - Run 03: Passes 0-10
+ - Run 04: Passes 0-10
+ - Run 05: Passes 0-10
+ - Commit paper 3 outputs
+
+ Paper 4: ross-2005 (Empirical/Interpretive 🔧)
+
+ - Run 01: Passes 0-10
+ - Run 02: Passes 0-10
+ - Run 03: Passes 0-10
+ - Run 04: Passes 0-10
+ - Run 05: Passes 0-10
+ - Commit paper 4 outputs
+
+ Paper 5: sobotkova-et-al-2016 (Empirical/Mixed)
+
+ - Run 01: Passes 0-10
+ - Run 02: Passes 0-10
+ - Run 03: Passes 0-10
+ - Run 04: Passes 0-10
+ - Run 05: Passes 0-10
+ - Commit paper 5 outputs
+
+ Analysis Phase
+
+ - Generate extraction-variance.md
+ - Generate assessment-variance.md
+ - Generate cross-run-comparison.json
+ - Generate variability-test-summary.md
+ - Final commit with analysis
+
+ ---
+ Source Files
+
+ | Paper                      | Source Location
+     |
+ |----------------------------|-------------------------------------------------------------------------------------------------------------------------------------
+ ----|
+ | sobotkova-et-al-2024       | input/sources/original-pdf/Sobotkova et al. - 2024 - Validating Predictions of Burial Mounds with Field.pdf
+     |
+ | penske-et-al-2023          | input/sources/original-pdf/Penske et al. - 2023 - Early contact between late farming and pastoralist.pdf
+     |
+ | ballsun-stanton-et-al-2018 | input/sources/original-pdf/Ballsun-Stanton et al. - 2018 - FAIMS Mobile Flexible, open-source software for f.pdf
+     |
+ | ross-2005                  | input/sources/original-pdf/Ross - 2005 - Barbarophonos Language and Panhellenism in the Iliad.pdf
+     |
+ | sobotkova-et-al-2016       | input/sources/original-pdf/Sobotkova et al. - 2016 - Measure Twice, Cut Once...pdf +
+ input/sources/processed-md/sobotkova-et-al-2016.md |
+
+ ---
+ Ready for Execution
+
+ Plan complete. Execute by:
+ 1. Create directory structure: outputs/variability-test/{paper}/run-XX/
+ 2. For each paper, complete 5 full pipeline runs (Passes 0-10)
+ 3. Save outputs to appropriate run directory
+ 4. Commit after each paper completes
+ 5. Generate analysis reports after all runs complete
