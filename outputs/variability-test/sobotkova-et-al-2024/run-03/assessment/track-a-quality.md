@@ -1,59 +1,20 @@
-# Track A Quality Assessment
+# Track A: Quality Gating Assessment
 
-## Quality State: HIGH
-
-**Paper:** sobotkova-et-al-2024
-**Assessment Date:** 2025-11-30
-**Run:** 03
-
-**Decision:** Proceed with full credibility assessment
+**Paper:** sobotkova-et-al-2024 | **Run:** 03 | **Date:** 2025-12-01
 
 ---
 
 ## Quality Dimensions
 
-### Extraction Confidence: HIGH
-
-**Item counts:**
-- Evidence: 15 items
-- Claims: 14 items
-- Implicit arguments: 5 items
-- Research designs: 4 items
-- Methods: 5 items
-- Protocols: 5 items
-
-**Assessment:** Comprehensive extraction for focused empirical paper. Item counts appropriate for paper length and complexity.
-
-**Cross-reference integrity:** Complete
-**Sourcing compliance:** 100% verbatim quotes
+| Dimension | Rating | Notes |
+|-----------|--------|-------|
+| Extraction Quality | HIGH | 15E, 12C, 5IA, complete RDMAP |
+| Classification Confidence | HIGH | Deductive (revealed), no HARKing |
+| Metric-Signal Alignment | HIGH | Quantitative metrics throughout |
 
 ---
 
-### Classification Confidence: HIGH
+## Quality Gating Decision
 
-**From classification.json:**
-- Primary approach: Deductive (confidence: high)
-- Expressed vs revealed: Matched
-- Taxonomy fit: Excellent
-- Paper type: Empirical
-
-**Assessment:** Unambiguous classification. Clear deductive hypothesis-testing structure.
-
----
-
-### Metric-Signal Alignment: NOT ASSESSED
-
-Metrics not available.
-
----
-
-## Structured Output
-
-```yaml
-track_a_quality:
-  quality_state: "high"
-  extraction_confidence: "high"
-  classification_confidence: "high"
-  metric_signal_alignment: "not_assessed"
-  assessment_viability_summary: "High quality extraction and unambiguous classification enable full assessment."
-```
+**Quality State:** HIGH
+**Assessment Pathway:** Standard (full assessment)

@@ -338,6 +338,67 @@ Always check these sections when assessing Transparency. Do NOT rely on `evidenc
 - Indigenous/community data: Appropriate restrictions do NOT penalise Reproducibility
 - CARE principles (Collective benefit, Authority to control, Responsibility, Ethics) alongside FAIR
 
+---
+
+## Schema Field Names Quick Reference (v2.6)
+
+**Use these exact field names. Do not improvise variants.**
+
+### Evidence Object
+
+- `evidence_id` (pattern: E###)
+- `evidence_text`
+- `evidence_type`
+- `verbatim_quote` ← REQUIRED
+- `location`, `supports_claims`, `source_verification`
+
+### Claim Object
+
+- `claim_id` (pattern: C###)
+- `claim_text`
+- `claim_type`: empirical | interpretation | methodological_argument | theoretical
+- `claim_role`: core | intermediate | supporting
+- `verbatim_quote` ← REQUIRED
+- `location`, `supported_by`, `supports_claims`, `source_verification`
+
+### Implicit Argument Object
+
+- `implicit_argument_id` (pattern: IA###)
+- `argument_text`
+- `type`: logical_implication | unstated_assumption | bridging_claim | design_assumption | methodological_assumption
+- `trigger_text` ← REQUIRED (array of verbatim passages)
+- `trigger_locations` ← REQUIRED (parallel array)
+- `inference_reasoning` ← REQUIRED
+- `supports_claims`, `source_verification`
+
+### Research Design Object
+
+- `design_id` (pattern: RD###)
+- `design_text`
+- `design_type`
+- `design_status`: explicit | implicit
+- `verbatim_quote` (if explicit) OR `trigger_text` + `inference_reasoning` (if implicit)
+
+### Method Object
+
+- `method_id` (pattern: M###)
+- `method_text`
+- `method_type`
+- `method_status`: explicit | implicit
+- `implements_designs`, `realized_through_protocols`
+
+### Protocol Object
+
+- `protocol_id` (pattern: P###)
+- `protocol_text`
+- `protocol_type`
+- `protocol_status`: explicit | implicit
+- `implements_methods`, `produces_evidence`
+
+**For complete field definitions:** See `references/schema/schema-guide.md`
+
+---
+
 ## Important Notes
 
 **For testing/debugging:**

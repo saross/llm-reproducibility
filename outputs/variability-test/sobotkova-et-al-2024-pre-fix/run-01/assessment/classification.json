@@ -1,0 +1,74 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-11-30",
+    "classifier_version": "v0.2-alpha"
+  },
+
+  "paper_type": "empirical",
+  "paper_type_justification": "This paper conducts empirical research testing machine learning (CNN) approaches against ground-truth field data. Claims are about phenomena (ML performance, model accuracy, detection rates) rather than presenting a new method. The paper TESTS whether transfer learning with pre-trained CNN works for archaeological feature detection - this is an empirical question requiring data collection and analysis. Methods (CNN, field survey) are tools for investigation, not subjects of investigation. Primary contribution is understanding ML limitations in heterogeneous archaeological landscapes, demonstrated through comparative evaluation against field-verified data.",
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "deductive",
+    "evidence": [
+      "Abstract states: 'We set out to detect burial mounds in satellite imagery from a diverse landscape in Central Bulgaria using a pre-trained Convolutional Neural Network (CNN)'",
+      "Introduction: 'We developed a pre-trained CNN that was further trained using two datasets... We compare the predictions from the two models and their reported success rates measured against ground-truthed data'",
+      "Research design RD001: Comparative evaluation of CNN model predictions against field-verified ground truth data",
+      "Research design RD003: Two-run experimental design comparing different training data selection strategies"
+    ],
+    "source_sections": ["abstract", "introduction", "methods"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "deductive",
+    "evidence": {
+      "claims_structure": "Claims test predictions about ML performance: C001 'Self-reported ML success rates were misleadingly high; external validation revealed model failure' - this tests whether reported metrics accurately predict real-world performance. C008 'Counterintuitively, more selective training data led to worse model performance' - tests prediction that curated training data would improve results. Core claims evaluate predictions against evidence.",
+      "methods_application": "Methods M002-M005 implement systematic hypothesis-testing design: pre-trained CNN applied to study area, predictions compared to field-verified mound locations using pre-specified evaluation criteria (false positive rate, false negative rate, true positive rate at 60% threshold). Validation method (M004) explicitly compares predictions to ground truth.",
+      "analytical_workflow": "Workflow follows deductive sequence: Design CNN approach → Apply to imagery → Generate predictions → Compare to field data → Evaluate performance against criteria. The two-run design (first run: all mounds; second run: visible mounds only) tests whether training data curation improves performance. This is comparative hypothesis evaluation."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Paper explicitly states comparative evaluation design and actually conducts comparative evaluation. Methods test whether pre-trained CNN can detect burial mounds (implicit hypothesis: transfer learning works for this task). Two-run design tests whether training data selection affects performance. Both expressed framing and actual methodology follow deductive pattern. Methodological transparency is high."
+  },
+
+  "primary_classification": {
+    "approach": "deductive",
+    "confidence": "high",
+    "justification": "This is clearly deductive research. The paper tests whether a pre-trained CNN can effectively detect burial mounds by comparing model predictions to field-verified ground truth. The implicit hypothesis (transfer learning with low-touch training will work) is tested through systematic evaluation. The two-run experimental design tests a secondary hypothesis (curated training data will improve performance). Claims evaluate predictions against evidence: F1 scores vs actual detection rates, self-reported metrics vs field validation. The analytical workflow follows hypothesis-testing sequence: design approach → apply model → generate predictions → validate against ground truth → evaluate success/failure. No ambiguity in classification - this is empirical hypothesis-testing research."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": false
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Explicit research design stated in Abstract and Introduction. Methodology clearly described: CNN architecture (ResNet-18), transfer learning approach, training data selection, tile-based detection, validation against field survey data. Two-run experimental design explicitly stated. Performance metrics and evaluation criteria clear. Code repositories provided for reproducibility. High methodological transparency."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "deductive_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["validity", "robustness", "reproducibility"],
+      "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
+      "deemphasised_signals": ["generalisability"],
+      "rationale": "Deductive research emphasis: (1) Validity - Does the evidence (model predictions vs field data) adequately support the claims about ML performance? This paper provides strong validity through external validation with ground truth. (2) Robustness - How sensitive are conclusions to analytical choices (threshold settings, training data selection)? Paper addresses this through two-run design. (3) Reproducibility - Can the analysis be reproduced? Code repositories provided. Generalisability appropriately constrained to this case study context."
+    }
+  },
+
+  "classification_notes": "Straightforward deductive empirical research. Paper tests ML approach against ground truth data, finding that self-reported metrics overstate actual performance. Clear methodological transparency with code sharing. No HARKing concerns - evaluation criteria and experimental design clearly stated a priori. Classification confidence is high."
+}

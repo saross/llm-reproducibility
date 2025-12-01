@@ -1,58 +1,14 @@
 {
-  "classification_metadata": {
-    "classified_after_pass": 7,
-    "classification_date": "2025-11-30",
-    "classifier_version": "v0.2-alpha",
-    "run": "03"
-  },
+  "paper_id": "sobotkova-et-al-2024",
+  "classification_date": "2025-12-01",
+  "run_id": "run-03",
   "paper_type": "empirical",
-  "paper_type_justification": "Paper tests transfer learning hypothesis against field-verified ground truth. Core contribution is evidence about ML performance limitations in archaeological prospection, not a new methodology.",
-  "taxonomy_feedback": {
-    "category_fit_quality": "excellent",
-    "proposed_new_category": null
+  "research_approach": {
+    "expressed": {"approach": "none_stated", "confidence": "high"},
+    "revealed": {"approach": "deductive", "confidence": "high", "evidence": "Hypothesis-testing with external validation"},
+    "comparison": {"match": false, "mismatch_type": "none_stated_vs_deductive", "harking_risk": "low"}
   },
-  "expressed_approach": {
-    "approach": "deductive",
-    "evidence": [
-      "Abstract explicitly states: 'We set out to detect burial mounds in satellite imagery... Results were assessed using field data'",
-      "Two-run design tests prediction about training data selection (all vs visible mounds)",
-      "Research question posed as testable hypothesis: can transfer learning detect burial mounds?"
-    ],
-    "confidence": "high"
-  },
-  "revealed_approach": {
-    "approach": "deductive",
-    "evidence": {
-      "claims_structure": "Claims follow hypothesis-testing logic: tests whether self-reported metrics predict real-world performance, whether curated training helps",
-      "methods_application": "Systematic experiment: apply CNN, generate predictions, compare to pre-existing ground truth using pre-specified criteria",
-      "analytical_workflow": "Deductive workflow: design → implement → predict → validate against independent ground truth → report results"
-    },
-    "confidence": "high"
-  },
-  "expressed_vs_revealed": {
-    "alignment": "matched",
-    "harking_flag": false,
-    "mismatch_explanation": "Paper frames as hypothesis test and executes as hypothesis test. No HARKing detected."
-  },
-  "primary_classification": {
-    "approach": "deductive",
-    "confidence": "high",
-    "justification": "Clear hypothesis-testing research: tests whether pre-trained CNN can detect burial mounds, validated against field-verified ground truth. Two-run comparison tests secondary hypothesis about training data selection."
-  },
-  "mixed_method_characterisation": {
-    "is_mixed": false
-  },
-  "transparency_assessment": {
-    "expressed_methodology_present": true,
-    "transparency_quality": "high",
-    "transparency_notes": "Comprehensive methods documentation, three public code repositories, explicit validation protocol, time-on-task reporting."
-  },
-  "credibility_framework": {
-    "framework_to_use": "deductive_emphasis",
-    "signal_prioritisation": {
-      "primary_signals": ["validity", "robustness", "reproducibility"],
-      "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
-      "deemphasised_signals": ["generalisability"]
-    }
-  }
+  "mixed_methods": {"is_mixed": false},
+  "domain_classification": {"primary_domain": "digital_archaeology", "secondary_domains": ["remote_sensing", "machine_learning"]},
+  "context_flags": {"software_tool_paper": false, "negative_results": true, "replication_study": false, "methodological_paper": false}
 }

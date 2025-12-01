@@ -1,7 +1,7 @@
 # Cluster 1: Foundational Clarity Assessment
 
 **Paper:** sobotkova-et-al-2024
-**Assessment Date:** 2025-11-30
+**Assessment Date:** 2025-12-01
 **Run:** 02
 
 **Quality State:** HIGH
@@ -14,8 +14,8 @@
 
 | Signal | Score | Band | Approach Anchors |
 |--------|-------|------|------------------|
-| Comprehensibility | 76 | Good | Deductive |
-| Transparency | 80 | Excellent | Deductive |
+| Comprehensibility | 78 | Good | Deductive |
+| Transparency | 83 | Excellent | Deductive |
 
 **Cluster Rating:** Strong
 
@@ -23,46 +23,53 @@
 
 ## Signal 1: Comprehensibility
 
-**Score:** 76/100 (Good)
+**Score:** 78/100 (Good)
 
 ### Assessment
 
-The paper demonstrates good comprehensibility for deductive research. Core claims are explicit and quantified. The logical structure from design through validation is clear. Key domain terms (CNN, transfer learning, false positive/negative rates) are defined. The hypothesis (transfer learning can detect burial mounds) is implicit but testable.
+Good comprehensibility with quantified claims and clear logical flow. Purpose explicitly stated as "cautionary tale." Technical concepts explained. Research question testable through comparative design.
 
 ### Strengths
-- Claims explicit and quantified with specific percentages
-- Clear logical structure from hypothesis through validation
-- Key terms well-defined
+
+- Explicit quantified performance metrics
+- Clear experimental structure
+- Technical terms defined
 
 ### Weaknesses
-- Hypothesis implicit rather than formally stated
+
+- Implicit hypothesis formulation
+- Some ML detail assumes background
 
 ### Scoring Rationale
 
-Score of 76 (Good) reflects clear claims, defined terms, traceable structure. Falls short of Excellent because hypothesis is implicit.
+Score of 78 (Good) reflects clear argumentation with traceable logic. Approaches but does not reach Excellent due to implicit hypothesis.
 
 ---
 
 ## Signal 2: Transparency
 
-**Score:** 80/100 (Excellent)
+**Score:** 83/100 (Excellent)
 
 ### Assessment
 
-Excellent transparency with three public GitHub repositories covering complete analytical pipeline. Methods comprehensively documented. Limitations extensively discussed. Data availability limited by commercial imagery constraints.
+Excellent transparency via three public GitHub repositories. Comprehensive method documentation. Rare 135 person-hour time reporting. Extensive limitation acknowledgement.
 
 ### Strengths
-- Three public code repositories
-- Comprehensive methods documentation
-- Extensive limitation acknowledgement
+
+- Three complete code repositories
+- 135 hours documented
+- Honest failure reporting
+- Thorough limitations
 
 ### Weaknesses
+
+- Commercial imagery restricted
+- No environment specification
 - No pre-registration
-- Commercial imagery not shareable
 
 ### Scoring Rationale
 
-Score of 80 (Excellent) reflects exceptional code sharing and thorough methods documentation. Meets Excellent threshold despite data access limitations.
+Score of 83 (Excellent) for exceptional code transparency and resource documentation.
 
 ---
 
@@ -70,11 +77,9 @@ Score of 80 (Excellent) reflects exceptional code sharing and thorough methods d
 
 **Overall Foundational Clarity:** Strong
 
-Both signals consistently indicate strong foundational clarity. The paper achieves Good to Excellent scores through clear argumentation and exceptional code transparency.
-
 ```yaml
 cluster_1_foundational_clarity:
-  comprehensibility: {score: 76, band: "good"}
-  transparency: {score: 80, band: "excellent"}
+  comprehensibility: {score: 78, band: "good"}
+  transparency: {score: 83, band: "excellent"}
   overall_rating: "strong"
 ```

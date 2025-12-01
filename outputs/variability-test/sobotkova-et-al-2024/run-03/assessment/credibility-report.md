@@ -2,36 +2,28 @@
 
 **Paper:** sobotkova-et-al-2024
 **Title:** Validating Predictions of Burial Mounds with Field Data
-**Assessment Date:** 2025-11-30
+**Assessment Date:** 2025-12-01
 **Run:** 03
 
 ---
 
 ## Executive Summary
 
-This paper tests whether a pre-trained Convolutional Neural Network (CNN) can detect burial mounds in high-resolution satellite imagery, comparing model predictions against 773 field-verified mounds in the Kazanlak Valley, Bulgaria. The study demonstrates that transfer learning approaches fail to achieve acceptable detection rates despite promising self-reported metrics, providing valuable cautionary evidence about ML limitations in archaeological prospection.
+This paper tests CNN transfer learning for burial mound detection against 773 field-verified mounds, demonstrating that pre-trained models with minimal curation fail despite good self-reported metrics.
 
-**Overall Credibility:** Good (75/100)
+**Overall Credibility:** Good (77/100)
 
 ---
 
 ## Quality Gating Result
 
-**Quality State:** HIGH
-
-- Extraction Confidence: HIGH
-- Classification Confidence: HIGH
-- Assessment Pathway: Standard (full assessment)
+**Quality State:** HIGH | **Assessment Pathway:** Standard
 
 ---
 
 ## Research Classification
 
-**Paper Type:** Empirical
-**Primary Approach:** Deductive (high confidence)
-**Mixed Methods:** No
-
-Clear hypothesis-testing research with two-run experimental design validated against independent field data.
+**Paper Type:** Empirical | **Approach:** Deductive | **Mixed Methods:** No
 
 ---
 
@@ -39,60 +31,31 @@ Clear hypothesis-testing research with two-run experimental design validated aga
 
 | Cluster | Signal | Score | Band |
 |---------|--------|-------|------|
-| Foundational Clarity | Comprehensibility | 77 | Good |
-| Foundational Clarity | Transparency | 81 | Excellent |
-| Evidential Strength | Plausibility | 74 | Good |
-| Evidential Strength | Validity | 79 | Good |
-| Evidential Strength | Robustness | 66 | Good |
-| Evidential Strength | Generalisability | 75 | Good |
-| Reproducibility | Reproducibility | 71 | Good |
+| Foundational Clarity | Comprehensibility | 79 | Good |
+| Foundational Clarity | Transparency | 84 | Excellent |
+| Evidential Strength | Plausibility | 76 | Good |
+| Evidential Strength | Validity | 81 | Excellent |
+| Evidential Strength | Robustness | 69 | Good |
+| Evidential Strength | Generalisability | 77 | Good |
+| Reproducibility | Reproducibility | 73 | Good |
 
-**Aggregate Score:** 75/100 (Good)
-
----
-
-## Cluster Summaries
-
-### Cluster 1: Foundational Clarity (Strong)
-
-Excellent transparency through three public repositories and rare time-on-task documentation. Good comprehensibility with explicit claims and clear logical structure.
-
-### Cluster 2: Evidential Strength (Strong)
-
-All signals in Good band. Validity strongest through external validation against 773 field-verified mounds. Robustness adequate through two-run comparison design.
-
-### Cluster 3: Reproducibility (Adequate)
-
-Strong code infrastructure enables analytical reproduction. Data access constrained by commercial imagery and reference-only field data.
+**Aggregate Score:** 77/100 (Good)
 
 ---
 
 ## Key Strengths
 
-1. **Exceptional code transparency** - Three public GitHub repositories with complete analytical pipeline
-2. **Rigorous external validation** - 773 field-verified mounds as independent ground truth
-3. **Honest failure reporting** - Detailed analysis of why model failed
-4. **Resource transparency** - 135 person-hours investment documented (rare in literature)
+1. 773 independent field-verified mounds as ground truth
+2. Three complete public GitHub repositories
+3. Honest failure reporting with 135 person-hours documented
+4. Rigorous external validation design
 
 ## Key Limitations
 
-1. **Data access constraints** - Commercial IKONOS imagery not shareable
-2. **Single study region** - Results specific to Kazanlak Valley
-3. **Limited parameter sensitivity** - Only >60% threshold tested
-4. **No environment specification** - Missing requirements.txt or Docker
-
----
-
-## Reproducibility Readiness
-
-```yaml
-reproducibility_readiness:
-  inputs_available: "partial"
-  code_available: "yes"
-  environment_specified: "partial"
-  execution_feasibility: "needs_work"
-  publication_year: 2024
-```
+1. Commercial imagery not shareable
+2. Single study area
+3. Limited parameter exploration
+4. No environment specification
 
 ---
 
@@ -100,7 +63,7 @@ reproducibility_readiness:
 
 **Verdict:** Good
 
-This paper demonstrates strong foundational clarity and evidential strength through rigorous external validation and exceptional transparency. The honest reporting of negative results and resource requirements significantly enhance scientific value. Main limitations relate to data access constraints inherent to commercial imagery.
+Strong credibility through rigorous validation, exceptional transparency, and honest negative results reporting.
 
 ---
 
@@ -109,21 +72,21 @@ This paper demonstrates strong foundational clarity and evidential strength thro
 ```json
 {
   "paper_id": "sobotkova-et-al-2024",
-  "assessment_date": "2025-11-30",
+  "assessment_date": "2025-12-01",
   "run": "03",
   "quality_state": "high",
   "research_approach": "deductive",
   "paper_type": "empirical",
   "signals": {
-    "comprehensibility": {"score": 77, "band": "good"},
-    "transparency": {"score": 81, "band": "excellent"},
-    "plausibility": {"score": 74, "band": "good"},
-    "validity": {"score": 79, "band": "good"},
-    "robustness": {"score": 66, "band": "good"},
-    "generalisability": {"score": 75, "band": "good"},
-    "reproducibility": {"score": 71, "band": "good"}
+    "comprehensibility": {"score": 79, "band": "good"},
+    "transparency": {"score": 84, "band": "excellent"},
+    "plausibility": {"score": 76, "band": "good"},
+    "validity": {"score": 81, "band": "excellent"},
+    "robustness": {"score": 69, "band": "good"},
+    "generalisability": {"score": 77, "band": "good"},
+    "reproducibility": {"score": 73, "band": "good"}
   },
-  "aggregate_score": 75,
+  "aggregate_score": 77,
   "aggregate_band": "good",
   "verdict": "good"
 }

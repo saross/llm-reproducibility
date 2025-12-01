@@ -1,52 +1,23 @@
 # Cluster 3: Reproducibility Assessment
 
-**Paper:** sobotkova-et-al-2024
-**Assessment Date:** 2025-11-30
-**Run:** 05
-
-**Quality State:** HIGH
-**Research Approach:** Deductive
-**Assessment Pathway:** Standard (computational components)
+**Paper:** sobotkova-et-al-2024 | **Run:** 05 | **Date:** 2025-12-01
+**Quality State:** HIGH | **Research Approach:** Deductive
 
 ---
 
-## Signal Score Summary
+## Signal Score
 
-| Signal | Score | Band | Pathway |
-|--------|-------|------|---------|
-| Reproducibility | 73 | Good | Standard |
+| Signal | Score | Band |
+|--------|-------|------|
+| Reproducibility | 73 | Good |
 
 **Cluster Rating:** Adequate
 
 ---
 
-## Signal 7: Reproducibility
+## Signal 7: Reproducibility (73 - Good)
 
-**Score:** 73/100 (Good)
-
-### Assessment
-
-Good computational reproducibility via three GitHub repositories with complete pipeline. Open-source stack (R, Python, TensorFlow). Clear code organisation. Primary constraint is commercial imagery and reference-only field data. No formal environment specification.
-
-### Strengths
-- Three complete public repositories
-- Open-source technology
-- Clear documentation
-- Validation scripts included
-
-### Weaknesses
-- Commercial imagery not shareable
-- Field data reference-only
-- No requirements.txt/Docker
-- No explicit dependency versions
-
-### Scoring Rationale
-
-Score of 73 (Good) reflects excellent code availability with data access constraints and partial environment specification.
-
----
-
-## Reproducibility Readiness
+Good computational reproducibility via three GitHub repositories. Open-source technology stack (R, Python, TensorFlow). Clear code organisation. Primary constraint is commercial imagery. No formal environment specification.
 
 ```yaml
 reproducibility_readiness:
@@ -58,12 +29,6 @@ reproducibility_readiness:
 ```
 
 ---
-
-## Cluster Synthesis
-
-**Overall Reproducibility:** Adequate
-
-Code infrastructure enables analytical reproducibility; data access is primary limitation.
 
 ```yaml
 cluster_3_reproducibility:

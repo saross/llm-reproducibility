@@ -1,17 +1,17 @@
 # Credibility Assessment Report
 
 **Paper:** sobotkova-et-al-2024
-**Title:** Detecting Burial Mounds Using Transfer Learning
-**Assessment Date:** 2025-11-30
+**Title:** Validating Predictions of Burial Mounds with Field Data
+**Assessment Date:** 2025-12-01
 **Run:** 02
 
 ---
 
 ## Executive Summary
 
-This paper tests whether a pre-trained CNN can detect burial mounds in satellite imagery, comparing model predictions against field-verified ground truth. The study finds that transfer learning approaches fail to achieve acceptable detection rates despite good self-reported metrics, providing valuable evidence about ML limitations in archaeological prospection.
+This paper evaluates transfer learning CNN approaches for burial mound detection in satellite imagery, validating against 773 field-verified mounds. The study demonstrates that pre-trained models with minimal training curation fail to achieve acceptable detection despite good self-reported metrics, providing essential cautionary evidence about ML limitations.
 
-**Overall Credibility:** Good (74/100)
+**Overall Credibility:** Good (75/100)
 
 ---
 
@@ -21,7 +21,7 @@ This paper tests whether a pre-trained CNN can detect burial mounds in satellite
 
 - Extraction Confidence: HIGH
 - Classification Confidence: HIGH
-- Assessment Pathway: Standard (full assessment)
+- Assessment Pathway: Standard
 
 ---
 
@@ -31,23 +31,21 @@ This paper tests whether a pre-trained CNN can detect burial mounds in satellite
 **Primary Approach:** Deductive (high confidence)
 **Mixed Methods:** No
 
-The paper follows clear deductive hypothesis-testing research, testing whether transfer learning approaches work for archaeological feature detection against field-verified ground truth.
-
 ---
 
 ## Signal Scores
 
 | Cluster | Signal | Score | Band |
 |---------|--------|-------|------|
-| Foundational Clarity | Comprehensibility | 76 | Good |
-| Foundational Clarity | Transparency | 80 | Excellent |
-| Evidential Strength | Plausibility | 73 | Good |
-| Evidential Strength | Validity | 78 | Good |
-| Evidential Strength | Robustness | 65 | Good |
-| Evidential Strength | Generalisability | 76 | Good |
-| Reproducibility | Reproducibility | 70 | Good |
+| Foundational Clarity | Comprehensibility | 78 | Good |
+| Foundational Clarity | Transparency | 83 | Excellent |
+| Evidential Strength | Plausibility | 74 | Good |
+| Evidential Strength | Validity | 80 | Excellent |
+| Evidential Strength | Robustness | 68 | Good |
+| Evidential Strength | Generalisability | 75 | Good |
+| Reproducibility | Reproducibility | 71 | Good |
 
-**Aggregate Score:** 74/100 (Good)
+**Aggregate Score:** 75/100 (Good)
 
 ---
 
@@ -55,31 +53,31 @@ The paper follows clear deductive hypothesis-testing research, testing whether t
 
 ### Cluster 1: Foundational Clarity (Strong)
 
-The paper demonstrates good comprehensibility with explicit, quantified claims and clear logical structure. Transparency is excellent with three public GitHub repositories and comprehensive methods documentation.
+Transparency reaches Excellent through complete code sharing and rare resource reporting. Comprehensibility Good with explicit quantified claims.
 
 ### Cluster 2: Evidential Strength (Strong)
 
-All four signals in the Good band. Validity is strongest through external validation against 773 field-verified mounds. Robustness adequate through two-run design but limited sensitivity analyses.
+Validity Excellent through independent ground truth validation. Other signals consistently Good.
 
 ### Cluster 3: Reproducibility (Adequate)
 
-Code infrastructure strong with three public repositories. Main limitation is data access: commercial satellite imagery and reference-only field data create barriers.
+Good code infrastructure with data access constraints.
 
 ---
 
 ## Key Strengths
 
-1. **Exceptional code transparency** - Three public GitHub repositories with complete analytical pipeline
-2. **Strong external validation** - 773 field-verified mounds as ground truth
-3. **Honest negative results** - Thorough acknowledgement of model failure
-4. **Clear methodology** - Well-documented two-run design testing alternative hypotheses
+1. Rigorous external validation (773 field-verified mounds)
+2. Three complete public repositories
+3. Honest failure reporting
+4. 135 person-hours documented
 
 ## Key Limitations
 
-1. **Data access barriers** - Commercial IKONOS imagery cannot be shared
-2. **Single study area** - Results limited to Kazanlak Valley context
-3. **Limited sensitivity testing** - Threshold and tile size variations not fully explored
-4. **No environment specification** - Missing requirements.txt or Docker configuration
+1. Commercial imagery not shareable
+2. Single study area
+3. Limited parameter exploration
+4. No environment specification
 
 ---
 
@@ -100,7 +98,7 @@ reproducibility_readiness:
 
 **Verdict:** Good
 
-This paper demonstrates strong foundational clarity and evidential strength. The exceptional code transparency and honest reporting of negative results enhance credibility. Main limitations relate to data access constraints inherent to commercial satellite imagery.
+Strong credibility through rigorous validation, exceptional transparency, and honest negative results reporting.
 
 ---
 
@@ -109,21 +107,21 @@ This paper demonstrates strong foundational clarity and evidential strength. The
 ```json
 {
   "paper_id": "sobotkova-et-al-2024",
-  "assessment_date": "2025-11-30",
+  "assessment_date": "2025-12-01",
   "run": "02",
   "quality_state": "high",
   "research_approach": "deductive",
   "paper_type": "empirical",
   "signals": {
-    "comprehensibility": {"score": 76, "band": "good"},
-    "transparency": {"score": 80, "band": "excellent"},
-    "plausibility": {"score": 73, "band": "good"},
-    "validity": {"score": 78, "band": "good"},
-    "robustness": {"score": 65, "band": "good"},
-    "generalisability": {"score": 76, "band": "good"},
-    "reproducibility": {"score": 70, "band": "good"}
+    "comprehensibility": {"score": 78, "band": "good"},
+    "transparency": {"score": 83, "band": "excellent"},
+    "plausibility": {"score": 74, "band": "good"},
+    "validity": {"score": 80, "band": "excellent"},
+    "robustness": {"score": 68, "band": "good"},
+    "generalisability": {"score": 75, "band": "good"},
+    "reproducibility": {"score": 71, "band": "good"}
   },
-  "aggregate_score": 74,
+  "aggregate_score": 75,
   "aggregate_band": "good",
   "verdict": "good"
 }

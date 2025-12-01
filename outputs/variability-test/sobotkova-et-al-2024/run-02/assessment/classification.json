@@ -1,57 +1,39 @@
 {
-  "classification_metadata": {
-    "classified_after_pass": 7,
-    "classification_date": "2025-11-30",
-    "classifier_version": "v0.2-alpha"
-  },
+  "paper_id": "sobotkova-et-al-2024",
+  "classification_date": "2025-12-01",
+  "run_id": "run-02",
   "paper_type": "empirical",
-  "paper_type_justification": "This paper tests whether a pre-trained CNN can detect burial mounds by comparing model predictions to field-verified ground truth data. Claims are about empirical phenomena (model performance, detection rates) rather than presenting a new methodology. The primary contribution is evidence about ML limitations in archaeological prospection.",
-  "taxonomy_feedback": {
-    "category_fit_quality": "excellent",
-    "proposed_new_category": null
-  },
-  "expressed_approach": {
-    "approach": "deductive",
-    "evidence": [
-      "Abstract: 'We set out to detect burial mounds in satellite imagery... Results were assessed using field data'",
-      "Research design tests whether transfer learning approach works for archaeological feature detection",
-      "Two-run design tests prediction about training data selection effects"
-    ],
-    "confidence": "high"
-  },
-  "revealed_approach": {
-    "approach": "deductive",
-    "evidence": {
-      "claims_structure": "Claims test predictions about ML performance. Core claims evaluate whether self-reported metrics predict real-world performance, whether curated training helps, whether transfer learning works.",
-      "methods_application": "Systematic hypothesis-testing: apply pre-trained CNN, generate predictions, compare to field-verified ground truth using pre-specified evaluation criteria.",
-      "analytical_workflow": "Deductive sequence: design → implement → predict → validate against ground truth → evaluate success/failure"
+  "research_approach": {
+    "expressed": {
+      "approach": "none_stated",
+      "confidence": "high",
+      "evidence": "No explicit deductive/inductive methodological framing"
     },
-    "confidence": "high"
-  },
-  "expressed_vs_revealed": {
-    "alignment": "matched",
-    "harking_flag": false,
-    "mismatch_explanation": "Paper explicitly frames comparative evaluation and actually conducts it. No evidence of HARKing."
-  },
-  "primary_classification": {
-    "approach": "deductive",
-    "confidence": "high",
-    "justification": "Clear deductive research testing whether pre-trained CNN approach works for burial mound detection. Hypothesis (transfer learning will work) tested against field-verified ground truth. Two-run design tests secondary hypothesis about training data selection."
-  },
-  "mixed_method_characterisation": {
-    "is_mixed": false
-  },
-  "transparency_assessment": {
-    "expressed_methodology_present": true,
-    "transparency_quality": "high",
-    "transparency_notes": "Clear methodology description, code repositories provided, validation approach explicit."
-  },
-  "credibility_framework": {
-    "framework_to_use": "deductive_emphasis",
-    "signal_prioritisation": {
-      "primary_signals": ["validity", "robustness", "reproducibility"],
-      "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
-      "deemphasised_signals": ["generalisability"]
+    "revealed": {
+      "approach": "deductive",
+      "confidence": "high",
+      "evidence": "Hypothesis-testing structure with external validation; applies established approach to test predictions"
+    },
+    "comparison": {
+      "match": false,
+      "mismatch_type": "none_stated_vs_deductive",
+      "harking_risk": "low",
+      "notes": "Clear deductive practice without explicit labelling"
     }
+  },
+  "mixed_methods": {
+    "is_mixed": false,
+    "components": []
+  },
+  "domain_classification": {
+    "primary_domain": "digital_archaeology",
+    "secondary_domains": ["remote_sensing", "machine_learning"],
+    "methodological_tradition": "quantitative_empirical"
+  },
+  "context_flags": {
+    "software_tool_paper": false,
+    "negative_results": true,
+    "replication_study": false,
+    "methodological_paper": false
   }
 }

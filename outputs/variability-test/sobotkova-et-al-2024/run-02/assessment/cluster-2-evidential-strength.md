@@ -1,7 +1,7 @@
 # Cluster 2: Evidential Strength Assessment
 
 **Paper:** sobotkova-et-al-2024
-**Assessment Date:** 2025-11-30
+**Assessment Date:** 2025-12-01
 **Run:** 02
 
 **Quality State:** HIGH
@@ -14,10 +14,10 @@
 
 | Signal | Score | Band | Approach Anchors |
 |--------|-------|------|------------------|
-| Plausibility | 73 | Good | Deductive |
-| Validity | 78 | Good | Deductive |
-| Robustness | 65 | Good | Deductive |
-| Generalisability | 76 | Good | Deductive |
+| Plausibility | 74 | Good | Deductive |
+| Validity | 80 | Excellent | Deductive |
+| Robustness | 68 | Good | Deductive |
+| Generalisability | 75 | Good | Deductive |
 
 **Cluster Rating:** Strong
 
@@ -25,57 +25,57 @@
 
 ## Signal 3: Plausibility
 
-**Score:** 73/100 (Good)
+**Score:** 74/100 (Good)
 
 ### Assessment
 
-Good theoretical grounding in ML transfer learning literature. Anomalous results (model failure) thoroughly explained. Framework coherent.
+Well-grounded in transfer learning literature. Research question motivated by gap between optimistic literature and challenges. Counterintuitive findings explained through mechanism.
 
 ### Scoring Rationale
 
-Score of 73 (Good) reflects theoretical motivation and thorough anomaly handling. Not Excellent because hypothesis is implied rather than formally derived.
+Score of 74 (Good) for strong theoretical grounding with implicit hypothesis.
 
 ---
 
 ## Signal 4: Validity
 
-**Score:** 78/100 (Good)
+**Score:** 80/100 (Excellent)
 
 ### Assessment
 
-Strong evidence through external validation against 773 field-verified mounds. Two-run design tests alternative hypothesis. Methods appropriate for research question. Strong limitation acknowledgement.
+Rigorous validation against 773 independent field-verified mounds. Two-run comparison tests alternative hypothesis. Appropriate methods. Extensive limitation acknowledgement.
 
 ### Scoring Rationale
 
-Score of 78 (Good) reflects strong external validation evidence. Approaches Excellent but single study area and no direct method comparison limit score.
+Score of 80 (Excellent) for rigorous independent validation.
 
 ---
 
 ## Signal 5: Robustness
 
-**Score:** 65/100 (Good)
+**Score:** 68/100 (Good)
 
 ### Assessment
 
-Two-run design provides some sensitivity analysis. Consistent failure across both approaches strengthens conclusions. However, limited threshold and tile size sensitivity testing.
+Two-run comparison provides meaningful robustness test. Consistent failure strengthens conclusions. Limited parameter exploration.
 
 ### Scoring Rationale
 
-Score of 65 (Good) reflects meaningful two-run comparison but limited scope of sensitivity analyses.
+Score of 68 (Good) for meaningful comparison but limited sensitivity testing.
 
 ---
 
 ## Signal 6: Generalisability
 
-**Score:** 76/100 (Good)
+**Score:** 75/100 (Good)
 
 ### Assessment
 
-Claims carefully bounded to Kazanlak Valley context. Extensive limitation discussion. Transfer conditions specified. Appropriate scope constraint.
+Claims bounded to Kazanlak Valley. Landscape heterogeneity identified as key factor. Transfer conditions specified. Authors avoid overgeneralisation.
 
 ### Scoring Rationale
 
-Score of 76 (Good) reflects strong scope constraint and limitation acknowledgement. Single study area prevents Excellent.
+Score of 75 (Good) for appropriate scope constraint. Single site limits scope.
 
 ---
 
@@ -83,13 +83,11 @@ Score of 76 (Good) reflects strong scope constraint and limitation acknowledgeme
 
 **Overall Evidential Strength:** Strong
 
-All four signals in Good band (65-78). Validity strongest through external validation. Robustness weakest but still adequate.
-
 ```yaml
 cluster_2_evidential_strength:
-  plausibility: {score: 73, band: "good"}
-  validity: {score: 78, band: "good"}
-  robustness: {score: 65, band: "good"}
-  generalisability: {score: 76, band: "good"}
+  plausibility: {score: 74, band: "good"}
+  validity: {score: 80, band: "excellent"}
+  robustness: {score: 68, band: "good"}
+  generalisability: {score: 75, band: "good"}
   overall_rating: "strong"
 ```
