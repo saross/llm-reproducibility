@@ -1,0 +1,127 @@
+# Variability Test Queue
+# Tracks paper/run combinations for the full pipeline variability test
+#
+# Protocol:
+# 1. User starts fresh session
+# 2. User runs /variability-run
+# 3. Claude finds next pending run, executes full pipeline, updates queue
+# 4. User runs /clear to reset context
+# 5. Repeat until all runs complete
+#
+# Status values: pending | in_progress | completed | error
+
+current_paper: penske-et-al-2023
+current_run: run-01
+
+papers:
+  # Paper 1: sobotkova-et-al-2024 (Empirical/Deductive) - COMPLETED
+  - slug: sobotkova-et-al-2024
+    title: "Validating Predictions of Burial Mounds with Field Data"
+    source: input/sources/original-pdf/Sobotkova et al. - 2024 - Validating Predictions of Burial Mounds with Field.pdf
+    paper_type: empirical
+    research_approach: deductive
+    status: completed
+    runs:
+      - id: run-01
+        status: completed
+        counts: {evidence: 17, claims: 16, implicit_arguments: 5}
+        aggregate_score: 77
+      - id: run-02
+        status: completed
+        counts: {evidence: 16, claims: 13, implicit_arguments: 4}
+        aggregate_score: 75
+      - id: run-03
+        status: completed
+        counts: {evidence: 15, claims: 12, implicit_arguments: 5}
+        aggregate_score: 77
+      - id: run-04
+        status: completed
+        counts: {evidence: 14, claims: 13, implicit_arguments: 4}
+        aggregate_score: 76
+      - id: run-05
+        status: completed
+        counts: {evidence: 15, claims: 13, implicit_arguments: 5}
+        aggregate_score: 77
+
+  # Paper 2: penske-et-al-2023 (Empirical/Inductive) - PENDING
+  - slug: penske-et-al-2023
+    title: "Early contact between late farming and pastoralist societies in southeastern Europe"
+    source: input/sources/original-pdf/Penske et al. - 2023 - Early contact between late farming and pastoralist.pdf
+    paper_type: empirical
+    research_approach: inductive
+    status: in_progress
+    runs:
+      - id: run-01
+        status: pending
+      - id: run-02
+        status: pending
+      - id: run-03
+        status: pending
+      - id: run-04
+        status: pending
+      - id: run-05
+        status: pending
+
+  # Paper 3: ballsun-stanton-et-al-2018 (Methodological/Software) - PENDING
+  - slug: ballsun-stanton-et-al-2018
+    title: "FAIMS Mobile: Flexible, open-source software for field research"
+    source: input/sources/original-pdf/Ballsun-Stanton et al. - 2018 - FAIMS Mobile Flexible, open-source software for f.pdf
+    paper_type: methodological
+    research_approach: null  # N/A for methodological
+    context_flags: ["📦", "🔧"]
+    status: pending
+    runs:
+      - id: run-01
+        status: pending
+      - id: run-02
+        status: pending
+      - id: run-03
+        status: pending
+      - id: run-04
+        status: pending
+      - id: run-05
+        status: pending
+
+  # Paper 4: ross-2005 (Empirical/Interpretive) - PENDING
+  - slug: ross-2005
+    title: "Barbarophonos: Language and Panhellenism in the Iliad"
+    source: input/sources/original-pdf/Ross - 2005 - Barbarophonos Language and Panhellenism in the Iliad.pdf
+    paper_type: empirical
+    research_approach: interpretive
+    context_flags: ["🔧"]
+    status: pending
+    runs:
+      - id: run-01
+        status: pending
+      - id: run-02
+        status: pending
+      - id: run-03
+        status: pending
+      - id: run-04
+        status: pending
+      - id: run-05
+        status: pending
+
+  # Paper 5: sobotkova-et-al-2016 (Empirical/Mixed) - PENDING
+  - slug: sobotkova-et-al-2016
+    title: "Measure Twice, Cut Once: Cooperative Deployment of a Generalized, Archaeology-Specific Field Data Collection System"
+    source: input/sources/original-pdf/Sobotkova et al. - 2016 - Measure Twice, Cut Once Cooperative Deployment of a Generalized, Archaeology-Specific Field Data Collection System.pdf
+    paper_type: empirical
+    research_approach: mixed
+    status: pending
+    runs:
+      - id: run-01
+        status: pending
+      - id: run-02
+        status: pending
+      - id: run-03
+        status: pending
+      - id: run-04
+        status: pending
+      - id: run-05
+        status: pending
+
+# Progress summary
+# Total runs: 25 (5 papers × 5 runs)
+# Completed: 5 (Paper 1)
+# Pending: 20 (Papers 2-5)
