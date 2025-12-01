@@ -9,15 +9,15 @@
 
 | Signal | Score | Band |
 |--------|-------|------|
-| Reproducibility | 75 | Good |
+| Reproducibility | 72 | Good |
 
 **Cluster Rating:** Adequate
 
 ---
 
-## Signal 7: Reproducibility (75 - Good)
+## Signal 7: Reproducibility (72 - Good)
 
-Data available via ENA (PRJEB62503). Standard software tools documented with versions. Reference datasets specified. Code not shared. Some analytical procedures implicit.
+Data deposited in ENA (PRJEB62503). Standard software tools documented with versions. Reference datasets specified. No code repository provided. Some analytical decisions implicit.
 
 ```yaml
 reproducibility_readiness:
@@ -32,6 +32,6 @@ reproducibility_readiness:
 
 ```yaml
 cluster_3_reproducibility:
-  reproducibility: {score: 75, band: "good"}
+  reproducibility: {score: 72, band: "good"}
   overall_rating: "adequate"
 ```

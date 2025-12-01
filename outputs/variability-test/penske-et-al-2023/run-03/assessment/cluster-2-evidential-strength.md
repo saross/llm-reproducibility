@@ -9,38 +9,38 @@
 
 | Signal | Score | Band |
 |--------|-------|------|
-| Plausibility | 81 | Excellent |
-| Validity | 84 | Excellent |
-| Robustness | 76 | Good |
-| Generalisability | 73 | Good |
+| Plausibility | 78 | Good |
+| Validity | 80 | Excellent |
+| Robustness | 73 | Good |
+| Generalisability | 70 | Good |
 
 **Cluster Rating:** Strong
 
 ---
 
-## Signal 3: Plausibility (81 - Excellent)
+## Signal 3: Plausibility (78 - Good)
 
-Well-grounded in archaeogenetic literature. Research addresses clear gap in understanding. Conclusions consistent with archaeological evidence.
+Well-grounded in established archaeogenetic literature. Research question addresses significant historical gap in knowledge.
 
-## Signal 4: Validity (84 - Excellent)
+## Signal 4: Validity (80 - Excellent)
 
-Large dataset with robust sampling. Multiple complementary methods. 113 new radiocarbon dates strengthen chronology. Rigorous contamination controls.
+Large sample size (135 individuals). Multiple complementary statistical methods. Rigorous contamination controls and quality filtering.
 
-## Signal 5: Robustness (76 - Good)
+## Signal 5: Robustness (73 - Good)
 
-Multiple statistical approaches yield consistent results. Sensitivity testing through distal/proximal modelling. Some sensitivity to model assumptions.
+Multiple analytical approaches produce consistent findings. Distal and proximal qpAdm modelling tested. Some dependence on model assumptions.
 
-## Signal 6: Generalisability (73 - Good)
+## Signal 6: Generalisability (70 - Good)
 
-Results specific to Black Sea contact zone. Broader implications discussed with appropriate caveats. Single region limits generalisability.
+Results geographically specific to Black Sea contact zone. Broader implications discussed with appropriate caveats.
 
 ---
 
 ```yaml
 cluster_2_evidential_strength:
-  plausibility: {score: 81, band: "excellent"}
-  validity: {score: 84, band: "excellent"}
-  robustness: {score: 76, band: "good"}
-  generalisability: {score: 73, band: "good"}
+  plausibility: {score: 78, band: "good"}
+  validity: {score: 80, band: "excellent"}
+  robustness: {score: 73, band: "good"}
+  generalisability: {score: 70, band: "good"}
   overall_rating: "strong"
 ```

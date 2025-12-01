@@ -9,38 +9,38 @@
 
 | Signal | Score | Band |
 |--------|-------|------|
-| Plausibility | 78 | Good |
+| Plausibility | 79 | Good |
 | Validity | 81 | Excellent |
-| Robustness | 73 | Good |
-| Generalisability | 70 | Good |
+| Robustness | 74 | Good |
+| Generalisability | 71 | Good |
 
 **Cluster Rating:** Strong
 
 ---
 
-## Signal 3: Plausibility (78 - Good)
+## Signal 3: Plausibility (79 - Good)
 
-Well-grounded in literature. Research question addresses important gap. Conclusions consistent with archaeological context.
+Research question addresses significant gap in understanding farmer-pastoralist interactions. Well-grounded in archaeogenetic literature.
 
 ## Signal 4: Validity (81 - Excellent)
 
-Large dataset. Multiple methods provide triangulation. Rigorous contamination controls.
+Large sample (135 individuals, 113 dates). Multiple complementary statistical methods. Rigorous quality control procedures.
 
-## Signal 5: Robustness (73 - Good)
+## Signal 5: Robustness (74 - Good)
 
-Multiple analytical approaches with consistent results. Some model sensitivity.
+Consistent findings across analytical approaches. Distal and proximal modelling both tested. Some model-dependence in ancestry estimates.
 
-## Signal 6: Generalisability (70 - Good)
+## Signal 6: Generalisability (71 - Good)
 
-Results specific to study region. Appropriate scope limitations acknowledged.
+Results specific to Black Sea contact zone. Implications for broader steppe expansion discussed with appropriate caution.
 
 ---
 
 ```yaml
 cluster_2_evidential_strength:
-  plausibility: {score: 78, band: "good"}
+  plausibility: {score: 79, band: "good"}
   validity: {score: 81, band: "excellent"}
-  robustness: {score: 73, band: "good"}
-  generalisability: {score: 70, band: "good"}
+  robustness: {score: 74, band: "good"}
+  generalisability: {score: 71, band: "good"}
   overall_rating: "strong"
 ```

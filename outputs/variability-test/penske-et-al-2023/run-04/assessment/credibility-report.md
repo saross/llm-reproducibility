@@ -9,15 +9,19 @@
 
 ## Executive Summary
 
-Archaeogenetics study of 135 ancient individuals demonstrating early genetic contact between farming and pastoralist groups in the Black Sea region.
+This archaeogenetics study analyses genome-wide ancient DNA from 135 individuals (5400-2400 BC) demonstrating genetic contact between Copper Age farmers and Eneolithic steppe populations in the northwestern Black Sea zone approximately 1,000 years earlier than previously recognised.
 
-**Overall Credibility:** Good (76/100)
+**Overall Credibility:** Good (77/100)
 
 ---
 
 ## Quality Gating Result
 
 **Quality State:** HIGH
+
+- Extraction Confidence: HIGH
+- Classification Confidence: HIGH
+- Assessment Pathway: Standard (full assessment)
 
 ---
 
@@ -27,47 +31,75 @@ Archaeogenetics study of 135 ancient individuals demonstrating early genetic con
 **Primary Approach:** Inductive (high confidence)
 **Mixed Methods:** No
 
+Data-driven archaeogenetic investigation with pattern discovery from genetic data.
+
 ---
 
 ## Signal Scores
 
 | Cluster | Signal | Score | Band |
 |---------|--------|-------|------|
-| Foundational Clarity | Comprehensibility | 80 | Excellent |
-| Foundational Clarity | Transparency | 77 | Good |
-| Evidential Strength | Plausibility | 78 | Good |
+| Foundational Clarity | Comprehensibility | 81 | Excellent |
+| Foundational Clarity | Transparency | 79 | Good |
+| Evidential Strength | Plausibility | 79 | Good |
 | Evidential Strength | Validity | 81 | Excellent |
-| Evidential Strength | Robustness | 73 | Good |
-| Evidential Strength | Generalisability | 70 | Good |
-| Reproducibility | Reproducibility | 72 | Good |
+| Evidential Strength | Robustness | 74 | Good |
+| Evidential Strength | Generalisability | 71 | Good |
+| Reproducibility | Reproducibility | 73 | Good |
 
-**Aggregate Score:** 76/100 (Good)
+**Aggregate Score:** 77/100 (Good)
 
 ---
 
 ## Cluster Summaries
 
 ### Cluster 1: Foundational Clarity (Strong)
-Excellent comprehensibility with good transparency.
+
+Clear presentation reaching Excellent band. Good transparency with detailed methodology.
 
 ### Cluster 2: Evidential Strength (Strong)
-Excellent validity through multiple methods. Good plausibility and robustness.
+
+Strong validity and plausibility. Multiple complementary methods support conclusions.
 
 ### Cluster 3: Reproducibility (Adequate)
-Good reproducibility with data sharing. Code not available.
+
+Good reproducibility through data sharing. Missing code repository.
 
 ---
 
 ## Key Strengths
-1. Large dataset with radiocarbon dating
-2. Multiple complementary methods
-3. Data availability via ENA
-4. Rigorous quality control
+
+1. **Large sample size** - 135 individuals with extensive chronological coverage
+2. **Multi-method analysis** - PCA, f-statistics, qpAdm, IBD, ROH
+3. **Public data** - ENA repository (PRJEB62503)
+4. **Quality control** - Rigorous contamination assessment
 
 ## Key Limitations
-1. No code sharing
-2. Regional scope
-3. Some implicit procedures
+
+1. **No code sharing** - Analysis scripts unavailable
+2. **Geographic specificity** - Results limited to study region
+3. **Implicit procedures** - Some analytical choices undocumented
+
+---
+
+## Reproducibility Readiness
+
+```yaml
+reproducibility_readiness:
+  inputs_available: "yes"
+  code_available: "no"
+  environment_specified: "partial"
+  execution_feasibility: "needs_work"
+  publication_year: 2023
+```
+
+---
+
+## Assessment Verdict
+
+**Verdict:** Good
+
+Strong overall credibility through rigorous data collection and complementary analytical methods. Main limitations in analytical reproducibility.
 
 ---
 
@@ -82,15 +114,15 @@ Good reproducibility with data sharing. Code not available.
   "research_approach": "inductive",
   "paper_type": "empirical",
   "signals": {
-    "comprehensibility": {"score": 80, "band": "excellent"},
-    "transparency": {"score": 77, "band": "good"},
-    "plausibility": {"score": 78, "band": "good"},
+    "comprehensibility": {"score": 81, "band": "excellent"},
+    "transparency": {"score": 79, "band": "good"},
+    "plausibility": {"score": 79, "band": "good"},
     "validity": {"score": 81, "band": "excellent"},
-    "robustness": {"score": 73, "band": "good"},
-    "generalisability": {"score": 70, "band": "good"},
-    "reproducibility": {"score": 72, "band": "good"}
+    "robustness": {"score": 74, "band": "good"},
+    "generalisability": {"score": 71, "band": "good"},
+    "reproducibility": {"score": 73, "band": "good"}
   },
-  "aggregate_score": 76,
+  "aggregate_score": 77,
   "aggregate_band": "good",
   "verdict": "good"
 }

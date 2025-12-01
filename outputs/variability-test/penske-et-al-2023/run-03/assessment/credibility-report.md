@@ -9,9 +9,9 @@
 
 ## Executive Summary
 
-This study analyses genome-wide ancient DNA from 135 individuals (5400-2400 BC) from the Black Sea contact zone, demonstrating genetic and cultural contact between farming and pastoralist groups approximately 1,000 years earlier than previously documented.
+This archaeogenetics paper analyses genome-wide ancient DNA from 135 individuals spanning 5400-2400 BC to demonstrate genetic contact between Copper Age farming groups and Eneolithic steppe populations approximately 1,000 years earlier than previously documented in the Black Sea contact zone.
 
-**Overall Credibility:** Good (79/100)
+**Overall Credibility:** Good (76/100)
 
 ---
 
@@ -31,21 +31,23 @@ This study analyses genome-wide ancient DNA from 135 individuals (5400-2400 BC) 
 **Primary Approach:** Inductive (high confidence)
 **Mixed Methods:** No
 
+Data-driven archaeogenetic research with conclusions emerging from observed genetic patterns.
+
 ---
 
 ## Signal Scores
 
 | Cluster | Signal | Score | Band |
 |---------|--------|-------|------|
-| Foundational Clarity | Comprehensibility | 83 | Excellent |
-| Foundational Clarity | Transparency | 79 | Good |
-| Evidential Strength | Plausibility | 81 | Excellent |
-| Evidential Strength | Validity | 84 | Excellent |
-| Evidential Strength | Robustness | 76 | Good |
-| Evidential Strength | Generalisability | 73 | Good |
-| Reproducibility | Reproducibility | 75 | Good |
+| Foundational Clarity | Comprehensibility | 80 | Excellent |
+| Foundational Clarity | Transparency | 78 | Good |
+| Evidential Strength | Plausibility | 78 | Good |
+| Evidential Strength | Validity | 80 | Excellent |
+| Evidential Strength | Robustness | 73 | Good |
+| Evidential Strength | Generalisability | 70 | Good |
+| Reproducibility | Reproducibility | 72 | Good |
 
-**Aggregate Score:** 79/100 (Good)
+**Aggregate Score:** 76/100 (Good)
 
 ---
 
@@ -53,30 +55,51 @@ This study analyses genome-wide ancient DNA from 135 individuals (5400-2400 BC) 
 
 ### Cluster 1: Foundational Clarity (Strong)
 
-Excellent comprehensibility and good transparency through detailed documentation and data sharing.
+Both signals reach Good-Excellent band. Clear presentation with detailed documentation.
 
 ### Cluster 2: Evidential Strength (Strong)
 
-Excellent validity and plausibility. Good robustness through multiple methods.
+Excellent validity, good plausibility and robustness. Regional generalisability limitations acknowledged.
 
 ### Cluster 3: Reproducibility (Adequate)
 
-Good reproducibility with data availability. Code not shared.
+Good reproducibility with data availability. Analytical code not shared.
 
 ---
 
 ## Key Strengths
 
-1. **Large dataset** - 135 individuals, 113 radiocarbon dates
-2. **Multiple methods** - Triangulation across analytical approaches
-3. **Data availability** - ENA repository
-4. **Quality control** - Rigorous contamination assessment
+1. **Large, well-dated dataset** - 135 individuals with 113 radiocarbon dates
+2. **Multiple complementary methods** - PCA, f-statistics, qpAdm, IBD, ROH
+3. **Strong data availability** - ENA repository (PRJEB62503)
+4. **Rigorous quality control** - Contamination assessment and exclusion criteria
 
 ## Key Limitations
 
-1. **No code repository**
-2. **Regional scope**
-3. **Some implicit analytical decisions**
+1. **Code not shared** - Analysis scripts unavailable
+2. **Regional scope** - Results specific to study area
+3. **Implicit model selection** - Some criteria undocumented
+
+---
+
+## Reproducibility Readiness
+
+```yaml
+reproducibility_readiness:
+  inputs_available: "yes"
+  code_available: "no"
+  environment_specified: "partial"
+  execution_feasibility: "needs_work"
+  publication_year: 2023
+```
+
+---
+
+## Assessment Verdict
+
+**Verdict:** Good
+
+Strong credibility through rigorous data collection and multi-method analysis. Primary limitations relate to analytical reproducibility due to missing code.
 
 ---
 
@@ -91,15 +114,15 @@ Good reproducibility with data availability. Code not shared.
   "research_approach": "inductive",
   "paper_type": "empirical",
   "signals": {
-    "comprehensibility": {"score": 83, "band": "excellent"},
-    "transparency": {"score": 79, "band": "good"},
-    "plausibility": {"score": 81, "band": "excellent"},
-    "validity": {"score": 84, "band": "excellent"},
-    "robustness": {"score": 76, "band": "good"},
-    "generalisability": {"score": 73, "band": "good"},
-    "reproducibility": {"score": 75, "band": "good"}
+    "comprehensibility": {"score": 80, "band": "excellent"},
+    "transparency": {"score": 78, "band": "good"},
+    "plausibility": {"score": 78, "band": "good"},
+    "validity": {"score": 80, "band": "excellent"},
+    "robustness": {"score": 73, "band": "good"},
+    "generalisability": {"score": 70, "band": "good"},
+    "reproducibility": {"score": 72, "band": "good"}
   },
-  "aggregate_score": 79,
+  "aggregate_score": 76,
   "aggregate_band": "good",
   "verdict": "good"
 }

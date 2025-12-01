@@ -9,26 +9,26 @@
 
 | Signal | Score | Band |
 |--------|-------|------|
-| Comprehensibility | 80 | Excellent |
-| Transparency | 77 | Good |
+| Comprehensibility | 81 | Excellent |
+| Transparency | 79 | Good |
 
 **Cluster Rating:** Strong
 
 ---
 
-## Signal 1: Comprehensibility (80 - Excellent)
+## Signal 1: Comprehensibility (81 - Excellent)
 
-Clear logical structure from data through analysis to conclusions. Technical terminology explained. Main findings stated explicitly.
+Clear logical flow from data presentation through analysis to interpretation. Complex genetic analyses explained with appropriate technical context.
 
-## Signal 2: Transparency (77 - Good)
+## Signal 2: Transparency (79 - Good)
 
-Detailed Methods with software versions. Data in ENA repository. Some analytical choices implicitly documented.
+Comprehensive Methods section with software versions. Data deposited publicly. Minor gaps in documenting some analytical decisions.
 
 ---
 
 ```yaml
 cluster_1_foundational_clarity:
-  comprehensibility: {score: 80, band: "excellent"}
-  transparency: {score: 77, band: "good"}
+  comprehensibility: {score: 81, band: "excellent"}
+  transparency: {score: 79, band: "good"}
   overall_rating: "strong"
 ```

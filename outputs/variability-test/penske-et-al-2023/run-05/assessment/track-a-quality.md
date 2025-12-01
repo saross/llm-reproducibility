@@ -6,7 +6,7 @@
 
 | Dimension | Rating | Notes |
 |-----------|--------|-------|
-| Extraction Quality | HIGH | 34E, 33C, 4IA, complete RDMAP |
+| Extraction Quality | HIGH | 34E, 35C, 5IA, complete RDMAP |
 | Classification Confidence | HIGH | Inductive revealed |
 | Metric-Signal Alignment | HIGH | Rich quantitative data |
 

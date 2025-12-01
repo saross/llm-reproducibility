@@ -395,6 +395,19 @@ Always check these sections when assessing Transparency. Do NOT rely on `evidenc
 - `protocol_status`: explicit | implicit
 - `implements_methods`, `produces_evidence`
 
+### Classification Object (assessment/classification.json)
+
+- `paper_id` - paper identifier (e.g., "penske-et-al-2023")
+- `run_id` - run identifier (pattern: run-XX)
+- `classification_date` - ISO date (YYYY-MM-DD)
+- `paper_type`: empirical | methodological | theoretical | review
+- `paper_type_confidence`: high | medium | low
+- `research_approach`: deductive | inductive | abductive | interpretive
+- `research_approach_confidence`: high | medium | low
+- `mixed_methods`: boolean
+- `context_flags`: array (e.g., ["📦", "🔧"])
+- `classification_justification` - brief rationale for classification
+
 **For complete field definitions:** See `references/schema/schema-guide.md`
 
 ---
