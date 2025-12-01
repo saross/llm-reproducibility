@@ -1,15 +1,35 @@
 #!/bin/bash
+# -----------------------------------------------------------------------------
 # validate-run-uniqueness.sh
-# Validates that all variability test runs have unique content (not copies)
+# -----------------------------------------------------------------------------
+# Validates that all variability test runs have unique content (not copies).
 #
-# Usage: ./scripts/validate-run-uniqueness.sh <paper-directory>
-# Example: ./scripts/validate-run-uniqueness.sh outputs/variability-test/penske-et-al-2023
+# This script addresses a specific failure mode observed during variability
+# testing: runs being accidentally created as copies of previous runs rather
+# than independent extractions. This can happen due to context contamination
+# when multiple runs are performed in the same session.
+#
+# The script computes MD5 hashes of the serialised JSON arrays (evidence,
+# claims, implicit_arguments) and verifies that all hashes are unique across
+# runs. Identical hashes indicate duplicate content.
+#
+# Usage:
+#   ./scripts/validate-run-uniqueness.sh <paper-directory>
+#
+# Example:
+#   ./scripts/validate-run-uniqueness.sh outputs/variability-test/penske-et-al-2023
 #
 # Exit codes:
 #   0 - All runs have unique content
-#   1 - Duplicate content detected
+#   1 - Duplicate content detected (investigate and re-extract)
+#
+# Dependencies: bash, jq, md5sum
+#
+# Author: Claude Code
+# Date: 2025-12-01
+# -----------------------------------------------------------------------------
 
-set -e
+set -e  # Exit on error
 
 PAPER_DIR="${1:-.}"
 
@@ -30,18 +50,37 @@ echo "Checking content uniqueness for: $PAPER_DIR"
 echo "Found $RUN_COUNT extraction files"
 echo ""
 
-# Function to check uniqueness for an array field
+# -----------------------------------------------------------------------------
+# check_field_uniqueness - Validate uniqueness for a specific JSON array field
+# -----------------------------------------------------------------------------
+# Args:
+#   $1 - Field name (e.g., "evidence", "claims", "implicit_arguments")
+#
+# Returns:
+#   0 if all runs have unique content for this field
+#   1 if duplicates detected
+#
+# Method:
+#   1. For each extraction.json, serialise the specified array with jq -c
+#   2. Compute MD5 hash of serialised JSON
+#   3. Compare hashes across all runs
+#   4. Report duplicates if found
+# -----------------------------------------------------------------------------
 check_field_uniqueness() {
     local field=$1
     local hashes=""
 
+    # Iterate through all extraction.json files in run directories
     for run in "$PAPER_DIR"/run-*/extraction.json; do
         run_name=$(basename "$(dirname "$run")")
+        # Serialise array to compact JSON and compute MD5 hash
+        # The "// []" provides empty array fallback if field missing
         hash=$(jq -c ".$field // []" "$run" 2>/dev/null | md5sum | cut -d' ' -f1)
         hashes="$hashes$hash\n"
         echo "  $run_name: $hash"
     done
 
+    # Count unique vs total hashes to detect duplicates
     unique_count=$(echo -e "$hashes" | sort | uniq | grep -c . || true)
     total_count=$(echo -e "$hashes" | grep -c . || true)
 
@@ -50,6 +89,7 @@ check_field_uniqueness() {
         return 0
     else
         echo "  ⚠️ Only $unique_count/$total_count runs have unique $field content"
+        # Show which hashes are duplicated (appear more than once)
         echo "  Duplicate hashes:"
         echo -e "$hashes" | sort | uniq -d | while read -r dup; do
             echo "    $dup"
@@ -58,7 +98,15 @@ check_field_uniqueness() {
     fi
 }
 
-# Track overall result
+# -----------------------------------------------------------------------------
+# Main validation logic
+# -----------------------------------------------------------------------------
+# Check the three key arrays that should show variability across runs.
+# RDMAP arrays (methods, protocols, research_designs) are expected to be
+# more stable, so we focus on evidence, claims, and implicit_arguments.
+# -----------------------------------------------------------------------------
+
+# Track overall result across all field checks
 all_passed=true
 
 echo "=== Evidence Array ==="

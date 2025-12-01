@@ -28,11 +28,15 @@ from pathlib import Path
 from statistics import mean, stdev
 from typing import Any
 
+
 # -----------------------------------------------------------------------------
 # Configuration
 # -----------------------------------------------------------------------------
 
 # Arrays to analyse from extraction.json
+# These correspond to the main extraction output arrays defined in schema v2.6
+# RDMAP arrays (methods, protocols, research_designs) typically show low variability
+# while evidence/claims/implicit_arguments show moderate variability
 EXTRACTION_ARRAYS = [
     'evidence',
     'claims',
@@ -43,6 +47,8 @@ EXTRACTION_ARRAYS = [
 ]
 
 # Text fields to use for semantic comparison (in order of preference)
+# Schema field names vary slightly across versions, so we try multiple names
+# First matching field is used for text extraction
 TEXT_FIELDS = {
     'evidence': ['evidence_text', 'text', 'content'],
     'claims': ['claim_text', 'text', 'content'],
@@ -91,12 +97,24 @@ def compute_count_statistics(extractions: dict[str, dict]) -> dict[str, dict]:
     """
     Compute count statistics for each array type across runs.
 
+    Calculates mean, standard deviation, coefficient of variation (CV%), and range
+    for the number of items extracted in each array type across all runs.
+
+    CV% is the primary variability metric:
+    - 0-5%: Very stable (typical for RDMAP elements)
+    - 5-15%: Acceptable variability (typical for evidence/claims)
+    - >15%: High variability (investigate cause)
+
+    Args:
+        extractions: Dictionary mapping run_id to extraction data
+
     Returns:
         Dictionary with statistics for each array type
     """
     stats = {}
 
     for array_type in EXTRACTION_ARRAYS:
+        # Collect item counts from each run
         counts = []
         for run_id, data in extractions.items():
             array = data.get(array_type, [])
@@ -105,7 +123,10 @@ def compute_count_statistics(extractions: dict[str, dict]) -> dict[str, dict]:
         if counts:
             n = len(counts)
             avg = mean(counts)
+            # Standard deviation requires at least 2 data points
             std = stdev(counts) if n > 1 else 0
+            # Coefficient of variation: relative measure of dispersion
+            # Expressed as percentage for easier interpretation
             cv = (std / avg * 100) if avg > 0 else 0
 
             stats[array_type] = {
@@ -132,9 +153,19 @@ def tokenise(text: str) -> set[str]:
 
 
 def jaccard_similarity(set_a: set, set_b: set) -> float:
-    """Compute Jaccard similarity between two sets."""
+    """
+    Compute Jaccard similarity coefficient between two sets.
+
+    Jaccard index = |A ∩ B| / |A ∪ B|
+    Range: 0.0 (no overlap) to 1.0 (identical sets)
+
+    This is a simple but effective measure for comparing token sets.
+    For more sophisticated semantic comparison, consider sentence embeddings.
+    """
+    # Edge case: both empty sets are considered identical
     if not set_a and not set_b:
         return 1.0
+    # Edge case: one empty, one non-empty = no similarity
     if not set_a or not set_b:
         return 0.0
     intersection = len(set_a & set_b)
