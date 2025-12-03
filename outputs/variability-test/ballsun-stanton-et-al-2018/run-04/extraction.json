@@ -1,0 +1,1445 @@
+{
+  "schema_version": "2.6",
+  "extraction_timestamp": "2025-12-03T10:30:00Z",
+  "extractor": "Claude Opus 4.5",
+  "paper_id": "ballsun-stanton-et-al-2018",
+  "run_id": "run-04",
+
+  "evidence": [
+    {
+      "evidence_id": "E001",
+      "evidence_text": "FAIMS Mobile is mature software that has been under development since 2012",
+      "evidence_type": "chronological_observation",
+      "verbatim_quote": "It is mature software that has been under development since 2012",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 4, "end_paragraph": 4},
+      "supports_claims": ["C001", "C002"]
+    },
+    {
+      "evidence_id": "E002",
+      "evidence_text": "FAIMS Mobile current code version is 2.5, software version 2.5.20",
+      "evidence_type": "quantitative_observation",
+      "verbatim_quote": "Current code version 2.5",
+      "location": {"section": "Code metadata", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "supports_claims": ["C001"]
+    },
+    {
+      "evidence_id": "E003",
+      "evidence_text": "Software is licensed under GPLv3",
+      "evidence_type": "factual_observation",
+      "verbatim_quote": "Legal Code License GPLv3",
+      "location": {"section": "Code metadata", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "supports_claims": ["C003", "C004"]
+    },
+    {
+      "evidence_id": "E004",
+      "evidence_text": "Code repository is hosted on GitHub at ElsevierSoftwareX repository",
+      "evidence_type": "factual_observation",
+      "verbatim_quote": "Permanent link to repository used for this code version https://github.com/ElsevierSoftwareX/SOFTX-D-17-00021",
+      "location": {"section": "Code metadata", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "supports_claims": ["C003", "C019"]
+    },
+    {
+      "evidence_id": "E005",
+      "evidence_text": "Software uses Java, Ruby, XML, SQLite, Spatialite, Javarosa, Antlr, Puppet, Apache, Imagemagick, God, Beanshell, gson, guice, Nutiteq, NativeCSS, Protobuf, Robotium",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "Software code languages, tools, and services used Java, Ruby, XML, SQLite, Spatialite, Javarosa, Antlr, Puppet, Apache, Imagemagick, God, Beanshell, gson, guice, Nutiteq (non-free), NativeCSS, Protobuf, Robotium",
+      "location": {"section": "Code metadata", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "supports_claims": ["C005"]
+    },
+    {
+      "evidence_id": "E006",
+      "evidence_text": "FAIMS Mobile requires Android 6+ and Ubuntu 16.04 for server",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "Installation requirements & dependencies Android 6+, Ubuntu 16.04",
+      "location": {"section": "Software metadata", "page": 47, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C006"]
+    },
+    {
+      "evidence_id": "E007",
+      "evidence_text": "Three deployment case studies were published in Sobotkova et al., 2016",
+      "evidence_type": "documentary_evidence",
+      "verbatim_quote": "Three deployment case studies have been published in Sobotkova et al., 2016",
+      "location": {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 3, "end_paragraph": 3},
+      "supports_claims": ["C007", "C008"]
+    },
+    {
+      "evidence_id": "E008",
+      "evidence_text": "Projects have independently customised FAIMS Mobile using both detailed definition packet approach and simplified DSL-based method",
+      "evidence_type": "documented_outcome",
+      "verbatim_quote": "In addition to deployments conducted by the FAIMS team, projects have independently customised FAIMS Mobile themselves using both the detailed approach of producing an entire definition packet and the simplified DSL-based method",
+      "location": {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supports_claims": ["C009", "C010"]
+    },
+    {
+      "evidence_id": "E009",
+      "evidence_text": "Five years of deployment experience revealed importance of quality assurance in academic software",
+      "evidence_type": "experiential_observation",
+      "verbatim_quote": "Five years of deployment experience revealed the importance of quality assurance, something too often neglected in academic software",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 4, "end_paragraph": 4},
+      "supports_claims": ["C011", "C012"]
+    },
+    {
+      "evidence_id": "E010",
+      "evidence_text": "FAIMS Mobile 2.5+ supports Robotium for unit and integration tests",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "FAIMS Mobile 2.5+ supports Robotium for unit and integration tests on customised data collection modules, such that large amounts of test data can be automatically added via the normal user interface",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 4, "end_paragraph": 4},
+      "supports_claims": ["C011", "C013"]
+    },
+    {
+      "evidence_id": "E011",
+      "evidence_text": "FAIMS uses Javarosa to render native Android UI elements at runtime",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "Javarosa to render native Android UI elements at runtime",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C005", "C014"]
+    },
+    {
+      "evidence_id": "E012",
+      "evidence_text": "FAIMS uses Sqlite3 for attribute-key-value datastore with runtime-definable data schemas",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "Sqlite3 to store an attribute-key-value datastore (with data schemas definable at runtime)",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C014", "C015"]
+    },
+    {
+      "evidence_id": "E013",
+      "evidence_text": "FAIMS uses an append-only data model inspired by Google's Protobufs",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "An append-only data model inspired by Google's Protobufs",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C016"]
+    },
+    {
+      "evidence_id": "E014",
+      "evidence_text": "FAIMS uses Spatialite to encode geospatial data and Nutiteq to render it",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "Spatialite to encode geospatial data in the datastore; Nutiteq to render geospatial data",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C017"]
+    },
+    {
+      "evidence_id": "E015",
+      "evidence_text": "Server uses Ruby on Rails/Apache stack that can be hosted online or on modest hardware in the field",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "A Ruby on Rails/Apache stack to provide a server for synchronisation, version review, user management, and similar tasks, which can be hosted online or on modest hardware in the field",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C018"]
+    },
+    {
+      "evidence_id": "E016",
+      "evidence_text": "Since 2014 public release, FAIMS Mobile has been customised at least 40 times with 29 confirmed field deployments, nine including multiple field seasons",
+      "evidence_type": "quantitative_observation",
+      "verbatim_quote": "Since our first public release in 2014, FAIMS Mobile has been customised at least 40 times (by our team or independently), with 29 confirmed field deployments, nine of which included multiple field seasons",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+      "supports_claims": ["C020", "C021"]
+    },
+    {
+      "evidence_id": "E017",
+      "evidence_text": "Approximately 300 users have logged over 20,000 hours using FAIMS for archaeology, ecology, geoscience, and history research",
+      "evidence_type": "quantitative_observation",
+      "verbatim_quote": "Considering only FAIMS-led development, approximately 300 users have logged over 20,000 h employing the software for archaeology, ecology, geoscience, and history research",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+      "supports_claims": ["C020", "C022"]
+    },
+    {
+      "evidence_id": "E018",
+      "evidence_text": "An experienced developer can rapidly prototype a recording system in one to two developer-days for well-scoped systems of moderate complexity",
+      "evidence_type": "experiential_observation",
+      "verbatim_quote": "An experienced developer can rapidly prototype a recording system if data and workflow models are available (well-scoped systems of moderate complexity can be prototyped in one to two developer-days)",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 3, "end_paragraph": 3},
+      "supports_claims": ["C023", "C024"]
+    },
+    {
+      "evidence_id": "E019",
+      "evidence_text": "Case studies showed users benefited from increased efficiency of fieldwork with time saved by avoiding digitisation and data cleaning more than offsetting implementation time",
+      "evidence_type": "reported_outcome",
+      "verbatim_quote": "Three case studies involving archaeological deployments showed that users benefited from the increased efficiency of fieldwork. The time saved by avoiding digitisation and data cleaning more than offset the time required to implement FAIMS, resulting in more data collected during fieldwork of a given duration",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+      "supports_claims": ["C025", "C026"]
+    },
+    {
+      "evidence_id": "E020",
+      "evidence_text": "Researchers reported more complete, consistent, and granular data",
+      "evidence_type": "reported_outcome",
+      "verbatim_quote": "Researchers reported more complete, consistent, and granular data",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+      "supports_claims": ["C027"]
+    },
+    {
+      "evidence_id": "E021",
+      "evidence_text": "Information exchange between excavators and specialists was faster, improving post-excavation reconstruction in one case and facilitating pattern evaluation in another",
+      "evidence_type": "reported_outcome",
+      "verbatim_quote": "They noted that information could be exchanged more quickly between excavators and specialists, which in one case improved 'post-excavation reconstruction of the site' and facilitated the evaluation of patterns for meaning in another",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+      "supports_claims": ["C028"]
+    },
+    {
+      "evidence_id": "E022",
+      "evidence_text": "Process of moving from paper to digital required comprehensive reviews of field practice making implicit knowledge explicit",
+      "evidence_type": "reported_outcome",
+      "verbatim_quote": "They also observed that the process of moving from paper to digital required comprehensive reviews of field practice, during which knowledge implicit in existing systems became explicit, and data was modelled more carefully",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+      "supports_claims": ["C029"]
+    },
+    {
+      "evidence_id": "E023",
+      "evidence_text": "Greatest challenge was reallocation of time from end of project (digitisation) to beginning (data modelling, development, testing)",
+      "evidence_type": "reported_outcome",
+      "verbatim_quote": "The greatest challenge posed by the transition from paper has been the reallocation of time from the end of a project (digitisation) to the beginning (data modelling, development, and testing), even if an overall time-savings is realised",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+      "supports_claims": ["C030"]
+    },
+    {
+      "evidence_id": "E024",
+      "evidence_text": "A 2016-2018 NSW Research Attraction and Acceleration Program award is funding deployments at additional projects including community heritage and citizen science applications",
+      "evidence_type": "documentary_evidence",
+      "verbatim_quote": "A 2016–2018 New South Wales Research Attraction and Acceleration Program award is funding deployments at additional projects, including community heritage and citizen science applications, where members of the public can download preconfigured versions of FAIMS Mobile from Google Play",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+      "supports_claims": ["C031"]
+    },
+    {
+      "evidence_id": "E025",
+      "evidence_text": "Multiple funding sources supported the work including NeCTAR, ARC, NSW Government, and multiple universities",
+      "evidence_type": "documentary_evidence",
+      "verbatim_quote": "This work was supported by the National eResearch Collaboration Tools and Resources programme (RT043; V005), the Australian Research Council (LE140100151), the New South Wales Government Research Attraction and Acceleration Program, Macquarie University, Flinders University, La Trobe University, Southern Cross University, the University of Queensland, the University of Sydney, UNSW Australia, the Commonwealth Scientific and Industrial Research Organisation ON Prime programme, and fees paid by our users for consultation, customisation, deployment, and support services",
+      "location": {"section": "Funding", "page": 52, "start_paragraph": 1, "end_paragraph": 1},
+      "supports_claims": ["C032"]
+    },
+    {
+      "evidence_id": "E026",
+      "evidence_text": "FAIMS uses Beanshell to provide runtime scripting via calls to underlying Java API",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "Beanshell to provide runtime scripting via calls to an underlying Java API",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C014"]
+    },
+    {
+      "evidence_id": "E027",
+      "evidence_text": "FAIMS uses NativeCSS to style android-native elements",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "NativeCSS to style android-native elements",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C014"]
+    },
+    {
+      "evidence_id": "E028",
+      "evidence_text": "FAIMS uses Antlr3 as a grammar parser for identifiers",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "Antlr3 as a grammar parser for identifiers",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C014"]
+    },
+    {
+      "evidence_id": "E029",
+      "evidence_text": "User to Developer documentation and FAIMS Cookbook are available for module creation",
+      "evidence_type": "documentary_evidence",
+      "verbatim_quote": "'FAIMS User to Developer Documentation' is designed to walk users through the creation of a module from first principles. The 'FAIMS Cookbook' is a tutorial covering data structures and API",
+      "location": {"section": "2.3. Sample code snippets analysis", "page": 50, "start_paragraph": 1, "end_paragraph": 1},
+      "supports_claims": ["C009", "C033"]
+    },
+    {
+      "evidence_id": "E030",
+      "evidence_text": "Definition packets consist of XML documents for data schema and UI, plus Beanshell scripts for automation",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "which can be deeply customised using 'definition packets' consisting of XML documents (data schema and UI) and Beanshell scripts (automation)",
+      "location": {"section": "Abstract", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "supports_claims": ["C014", "C034"]
+    },
+    {
+      "evidence_id": "E031",
+      "evidence_text": "Definition packets can be generated using XML-based domain-specific language for easier customisation",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "Definition packets can also be generated using an XML-based domain-specific language, making customisation easier",
+      "location": {"section": "Abstract", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "supports_claims": ["C034", "C035"]
+    },
+    {
+      "evidence_id": "E032",
+      "evidence_text": "Multiple modules available in GitHub library for reuse or modification",
+      "evidence_type": "documentary_evidence",
+      "verbatim_quote": "Users who are satisfied with one of the many modules in our GitHub library can also simply instantiate an existing customisation",
+      "location": {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supports_claims": ["C036"]
+    },
+    {
+      "evidence_id": "E033",
+      "evidence_text": "FAIMS originated in archaeology where investigator records observations about things in material world and relationships between those observations",
+      "evidence_type": "historical_observation",
+      "verbatim_quote": "FAIMS originated in archaeology, where an investigator records observations about things in the material world, relationships between those observations, and metadata contextualising the collection of those observations",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supports_claims": ["C037"]
+    },
+    {
+      "evidence_id": "E034",
+      "evidence_text": "ODK was designed for social surveys where investigator asks questions of an interviewee",
+      "evidence_type": "factual_observation",
+      "verbatim_quote": "ODK was designed for social surveys, where an investigator asks questions of a interviewee",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supports_claims": ["C038"]
+    },
+    {
+      "evidence_id": "E035",
+      "evidence_text": "FAIMS has features not in ODK: nuanced relationships between entities, bi-directional synchronisation, append-only datastore with version history, wider sensor/peripheral support, more sophisticated export, and advanced geospatial operations",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "It also includes features not found in ODK: more nuanced relationships between entities, bi-directional synchronisation across all devices (a feature in ODK 2.0 Tool Suite, which is in alpha release), use of an append-only datastore that provides a version history for all records, support for a wider range of external sensors and peripherals like label printers ('ODK Sensors' is in alpha release), a more sophisticated data export framework, and more advanced geospatial data operations",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supports_claims": ["C039", "C040"]
+    },
+    {
+      "evidence_id": "E036",
+      "evidence_text": "FAIMS has richer and more granular help and metadata capture than ODK",
+      "evidence_type": "technical_specification",
+      "verbatim_quote": "FAIMS also has richer and more granular help and metadata capture",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supports_claims": ["C040"]
+    },
+    {
+      "evidence_id": "E037",
+      "evidence_text": "Support email available at support@fedarch.org",
+      "evidence_type": "factual_observation",
+      "verbatim_quote": "Support email for questions support@fedarch.org",
+      "location": {"section": "Code metadata", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "supports_claims": ["C041"]
+    },
+    {
+      "evidence_id": "E038",
+      "evidence_text": "FAIMS Mobile executables available from fedarch.org and Google Play",
+      "evidence_type": "factual_observation",
+      "verbatim_quote": "Permanent link to executables of this version FAIMS Mobile https://www.fedarch.org/apk Google Play https://play.google.com/store/apps/details?id=au.edu.faims.mq.fieldresearch2&hl=en",
+      "location": {"section": "Software metadata", "page": 47, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C019", "C042"]
+    },
+    {
+      "evidence_id": "E039",
+      "evidence_text": "Server installer available via wget and pipe to bash from GitHub",
+      "evidence_type": "factual_observation",
+      "verbatim_quote": "Server Installer (wget and pipe to bash) https://raw.githubusercontent.com/FAIMS/faims-web/master/installer/puppetInstall.sh",
+      "location": {"section": "Software metadata", "page": 47, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C042"]
+    },
+    {
+      "evidence_id": "E040",
+      "evidence_text": "User documentation available at Atlassian wiki for Getting Started guide",
+      "evidence_type": "documentary_evidence",
+      "verbatim_quote": "Link to user manual 'Getting started' guide and user documentation: https://faimsproject.atlassian.net/wiki/spaces/MobileUser/overview",
+      "location": {"section": "Software metadata", "page": 47, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C033"]
+    },
+    {
+      "evidence_id": "E041",
+      "evidence_text": "Developer documentation available including Module Cookbook and Beanshell API",
+      "evidence_type": "documentary_evidence",
+      "verbatim_quote": "Link to developer documentation/manual Module Cookbook https://faimsproject.atlassian.net/wiki/x/RgAu Module Beanshell API https://faimsproject.atlassian.net/wiki/x/RwAu Developer documentation home https://faimsproject.atlassian.net/wiki/spaces/FAIMS/overview",
+      "location": {"section": "Code metadata", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "supports_claims": ["C033"]
+    },
+    {
+      "evidence_id": "E042",
+      "evidence_text": "FAIMS Project provides customisation services under typical open-source revenue model",
+      "evidence_type": "factual_observation",
+      "verbatim_quote": "The FAIMS Project provides customisation services under a typical open-source revenue model",
+      "location": {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 2, "end_paragraph": 2},
+      "supports_claims": ["C043"]
+    },
+    {
+      "evidence_id": "E043",
+      "evidence_text": "FAIMS Project is based at Macquarie University, Sydney, Australia",
+      "evidence_type": "factual_observation",
+      "verbatim_quote": "FAIMS Mobile is open-source software developed by the Field Acquired Information Management Systems Project, an e-research infrastructure project based at Macquarie University, Sydney, Australia",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 4, "end_paragraph": 4},
+      "supports_claims": ["C044"]
+    }
+  ],
+
+  "claims": [
+    {
+      "claim_id": "C001",
+      "claim_text": "FAIMS Mobile is mature software suitable for field research",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "It is mature software that has been under development since 2012",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 4, "end_paragraph": 4},
+      "supported_by": ["E001", "E002"],
+      "supports_claims": ["C045"]
+    },
+    {
+      "claim_id": "C002",
+      "claim_text": "FAIMS Mobile has undergone iterative co-development with field researchers for five years",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "It is purpose-built for field research with extensive community input, including five years of iterative co-development with field researchers first in archaeology, and more recently in geoscience, history, and ecology",
+      "location": {"section": "5. Conclusions", "page": 52, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E001", "E009"],
+      "supports_claims": ["C001", "C045"]
+    },
+    {
+      "claim_id": "C003",
+      "claim_text": "FAIMS Mobile is free and open-source software",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "verbatim_quote": "The software is free (as in speech), customisable, and extensible, accommodating arbitrary research designs",
+      "location": {"section": "4. Impact", "page": 50, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E003", "E004"],
+      "supports_claims": ["C045", "C046"]
+    },
+    {
+      "claim_id": "C004",
+      "claim_text": "Open-source licensing allows researchers to build and share customisations",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Researchers can also build and share their own customisations",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E003"],
+      "supports_claims": ["C046"]
+    },
+    {
+      "claim_id": "C005",
+      "claim_text": "FAIMS Mobile uses robust technology stack of Java and Ruby with multiple supporting libraries",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "FAIMS Mobile consists of 'core' software written in Java and Ruby, customised to particular field deployments using reusable definition packets consisting of XML, Beanshell, and CSS files",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E005", "E011"],
+      "supports_claims": ["C001"]
+    },
+    {
+      "claim_id": "C006",
+      "claim_text": "FAIMS Mobile operates on standard Android devices and Ubuntu servers",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Computing platforms/Operating Systems Android, Ubuntu",
+      "location": {"section": "Software metadata", "page": 47, "start_paragraph": 2, "end_paragraph": 2},
+      "supported_by": ["E006"],
+      "supports_claims": ["C042"]
+    },
+    {
+      "claim_id": "C007",
+      "claim_text": "FAIMS Mobile has been validated through published deployment case studies",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Three deployment case studies have been published in Sobotkova et al., 2016",
+      "location": {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 3, "end_paragraph": 3},
+      "supported_by": ["E007"],
+      "supports_claims": ["C001", "C045"]
+    },
+    {
+      "claim_id": "C008",
+      "claim_text": "Deployment case studies provide evidence of software effectiveness",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "Three deployment case studies have been published in Sobotkova et al., 2016",
+      "location": {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 3, "end_paragraph": 3},
+      "supported_by": ["E007"],
+      "supports_claims": ["C007"]
+    },
+    {
+      "claim_id": "C009",
+      "claim_text": "FAIMS Mobile can be customised independently by users without FAIMS team involvement",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "In addition to deployments conducted by the FAIMS team, projects have independently customised FAIMS Mobile themselves using both the detailed approach of producing an entire definition packet and the simplified DSL-based method",
+      "location": {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E008", "E029"],
+      "supports_claims": ["C046"]
+    },
+    {
+      "claim_id": "C010",
+      "claim_text": "Independent customisation demonstrates software accessibility to broader user community",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "In addition to deployments conducted by the FAIMS team, projects have independently customised FAIMS Mobile themselves",
+      "location": {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E008"],
+      "supports_claims": ["C009"]
+    },
+    {
+      "claim_id": "C011",
+      "claim_text": "Quality assurance is critically important for academic software deployments",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Five years of deployment experience revealed the importance of quality assurance, something too often neglected in academic software",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 4, "end_paragraph": 4},
+      "supported_by": ["E009", "E010"],
+      "supports_claims": ["C047"]
+    },
+    {
+      "claim_id": "C012",
+      "claim_text": "Each customisation and deployment is a miniature software development project",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "Each customisation and deployment is, indeed, a miniature software development project",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 4, "end_paragraph": 4},
+      "supported_by": ["E009"],
+      "supports_claims": ["C011"]
+    },
+    {
+      "claim_id": "C013",
+      "claim_text": "Robotium support allows load-testing modules under simulated field conditions",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "This allows users to load-test their modules under simulated field conditions",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 4, "end_paragraph": 4},
+      "supported_by": ["E010"],
+      "supports_claims": ["C011"]
+    },
+    {
+      "claim_id": "C014",
+      "claim_text": "FAIMS architecture separates core client from definition packets similar to browser-website distinction",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "This distinction between the 'core' client and the definition packet resembles the one between a web browser and a website",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 3, "end_paragraph": 3},
+      "supported_by": ["E011", "E012", "E026", "E027", "E028", "E030"],
+      "supports_claims": ["C034"]
+    },
+    {
+      "claim_id": "C015",
+      "claim_text": "Runtime-definable data schemas accommodate wide range of research designs",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Sqlite3 to store an attribute-key-value datastore (with data schemas definable at runtime)",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 2, "end_paragraph": 2},
+      "supported_by": ["E012"],
+      "supports_claims": ["C034"]
+    },
+    {
+      "claim_id": "C016",
+      "claim_text": "Append-only datastore provides complete version history for all records",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "An append-only datastore providing a full revision history, including the ability to review and reverse changes to records selectively",
+      "location": {"section": "2.2. Software functionalities", "page": 49, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E013"],
+      "supports_claims": ["C048"]
+    },
+    {
+      "claim_id": "C017",
+      "claim_text": "FAIMS Mobile includes mobile GIS capabilities for geospatial data",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Mobile GIS supporting raster and vector data, layer management, legacy data visualisation, and point, line, and polygon creation and editing",
+      "location": {"section": "2.2. Software functionalities", "page": 49, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E014"],
+      "supports_claims": ["C048"]
+    },
+    {
+      "claim_id": "C018",
+      "claim_text": "Server can be deployed on modest hardware in field locations",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "which can be hosted online or on modest hardware in the field",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 2, "end_paragraph": 2},
+      "supported_by": ["E015"],
+      "supports_claims": ["C049"]
+    },
+    {
+      "claim_id": "C019",
+      "claim_text": "FAIMS Mobile software is publicly accessible through multiple distribution channels",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Permanent link to repository used for this code version https://github.com/ElsevierSoftwareX/SOFTX-D-17-00021",
+      "location": {"section": "Code metadata", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E004", "E038"],
+      "supports_claims": ["C003"]
+    },
+    {
+      "claim_id": "C020",
+      "claim_text": "FAIMS Mobile has achieved significant uptake in field research community",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "verbatim_quote": "Although the transition to digital recording during fieldwork represents a significant socio-technical change, FAIMS Mobile has seen good uptake",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E016", "E017"],
+      "supports_claims": ["C045"]
+    },
+    {
+      "claim_id": "C021",
+      "claim_text": "Multiple field seasons by nine projects demonstrates sustained real-world use",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "with 29 confirmed field deployments, nine of which included multiple field seasons",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E016"],
+      "supports_claims": ["C020"]
+    },
+    {
+      "claim_id": "C022",
+      "claim_text": "FAIMS Mobile is used across multiple disciplines beyond archaeology",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "employing the software for archaeology, ecology, geoscience, and history research",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E017"],
+      "supports_claims": ["C045", "C050"]
+    },
+    {
+      "claim_id": "C023",
+      "claim_text": "FAIMS Mobile enables rapid prototyping of data collection systems",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "An experienced developer can rapidly prototype a recording system if data and workflow models are available",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 3, "end_paragraph": 3},
+      "supported_by": ["E018"],
+      "supports_claims": ["C046"]
+    },
+    {
+      "claim_id": "C024",
+      "claim_text": "One to two developer-days is sufficient for moderate complexity customisations",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "well-scoped systems of moderate complexity can be prototyped in one to two developer-days",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 3, "end_paragraph": 3},
+      "supported_by": ["E018"],
+      "supports_claims": ["C023"]
+    },
+    {
+      "claim_id": "C025",
+      "claim_text": "Digital data collection using FAIMS increases fieldwork efficiency",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "verbatim_quote": "FAIMS allows the efficient collection of field data, dramatically reducing or eliminating manual digitisation",
+      "location": {"section": "4. Impact", "page": 50, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E019"],
+      "supports_claims": ["C045"]
+    },
+    {
+      "claim_id": "C026",
+      "claim_text": "Time savings from avoiding digitisation offset implementation time investment",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The time saved by avoiding digitisation and data cleaning more than offset the time required to implement FAIMS, resulting in more data collected during fieldwork of a given duration",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+      "supported_by": ["E019"],
+      "supports_claims": ["C025"]
+    },
+    {
+      "claim_id": "C027",
+      "claim_text": "FAIMS improves data quality through more complete, consistent and granular recording",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Researchers reported more complete, consistent, and granular data",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+      "supported_by": ["E020"],
+      "supports_claims": ["C045"]
+    },
+    {
+      "claim_id": "C028",
+      "claim_text": "Near-real-time data availability improves collaboration and analysis during fieldwork",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "They noted that information could be exchanged more quickly between excavators and specialists",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+      "supported_by": ["E021"],
+      "supports_claims": ["C045"]
+    },
+    {
+      "claim_id": "C029",
+      "claim_text": "Transition to digital recording makes implicit field knowledge explicit through data modelling process",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "knowledge implicit in existing systems became explicit, and data was modelled more carefully",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+      "supported_by": ["E022"],
+      "supports_claims": ["C047"]
+    },
+    {
+      "claim_id": "C030",
+      "claim_text": "Transition from paper requires reallocation of effort from end to beginning of projects",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The greatest challenge posed by the transition from paper has been the reallocation of time from the end of a project (digitisation) to the beginning (data modelling, development, and testing)",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+      "supported_by": ["E023"],
+      "supports_claims": ["C047"]
+    },
+    {
+      "claim_id": "C031",
+      "claim_text": "FAIMS Mobile is expanding into community heritage and citizen science applications",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "funding deployments at additional projects, including community heritage and citizen science applications",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E024"],
+      "supports_claims": ["C050"]
+    },
+    {
+      "claim_id": "C032",
+      "claim_text": "FAIMS development has been supported by diverse funding sources demonstrating institutional recognition",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "This work was supported by the National eResearch Collaboration Tools and Resources programme (RT043; V005), the Australian Research Council (LE140100151), the New South Wales Government Research Attraction and Acceleration Program",
+      "location": {"section": "Funding", "page": 52, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E025"],
+      "supports_claims": ["C001"]
+    },
+    {
+      "claim_id": "C033",
+      "claim_text": "Comprehensive documentation supports both users and developers",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "'FAIMS User to Developer Documentation' is designed to walk users through the creation of a module from first principles",
+      "location": {"section": "2.3. Sample code snippets analysis", "page": 50, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E029", "E040", "E041"],
+      "supports_claims": ["C046"]
+    },
+    {
+      "claim_id": "C034",
+      "claim_text": "FAIMS architecture enables deep customisation without modifying core software",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "FAIMS, conversely, supports more profound customisation without modification of core software",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E030", "E031"],
+      "supports_claims": ["C046"]
+    },
+    {
+      "claim_id": "C035",
+      "claim_text": "Domain-specific language simplifies customisation at expense of some independent control",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "Using this DSL, a single file is used to generate a complete definition packet, at the expense of some loss of independent control over each element of a customisation",
+      "location": {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 4, "end_paragraph": 4},
+      "supported_by": ["E031"],
+      "supports_claims": ["C034"]
+    },
+    {
+      "claim_id": "C036",
+      "claim_text": "Existing module library on GitHub reduces deployment costs through reuse",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Reuse and modification of existing customisations from a growing, openly-licensed online library (available on GitHub) also helps to reduce deployment costs",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 3, "end_paragraph": 3},
+      "supported_by": ["E032"],
+      "supports_claims": ["C046"]
+    },
+    {
+      "claim_id": "C037",
+      "claim_text": "FAIMS design reflects archaeology's need to record complex relationships between observations",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "FAIMS originated in archaeology, where an investigator records observations about things in the material world, relationships between those observations, and metadata contextualising the collection of those observations",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E033"],
+      "supports_claims": ["C039"]
+    },
+    {
+      "claim_id": "C038",
+      "claim_text": "ODK's survey-focused design differs from FAIMS's observation-focused design",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "ODK was designed for social surveys, where an investigator asks questions of a interviewee. FAIMS originated in archaeology, where an investigator records observations about things in the material world",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E034"],
+      "supports_claims": ["C039"]
+    },
+    {
+      "claim_id": "C039",
+      "claim_text": "FAIMS is differentiated from ODK by its lineage and features",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "FAIMS Mobile is most comparable to Open Data Kit (ODK) and its variants, but is differentiated by its lineage",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E035"],
+      "supports_claims": ["C040"]
+    },
+    {
+      "claim_id": "C040",
+      "claim_text": "FAIMS is more customisable with more fieldwork-specific features than ODK but customisation is more entailed",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "In short, FAIMS is more customisable and has more fieldwork-specific features than ODK, but as a result customisation is more entailed",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E035", "E036"],
+      "supports_claims": ["C050"]
+    },
+    {
+      "claim_id": "C041",
+      "claim_text": "Support infrastructure exists for user questions",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Support email for questions support@fedarch.org",
+      "location": {"section": "Code metadata", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E037"],
+      "supports_claims": ["C046"]
+    },
+    {
+      "claim_id": "C042",
+      "claim_text": "Software distribution through multiple channels increases accessibility",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "FAIMS Mobile https://www.fedarch.org/apk Google Play https://play.google.com/store/apps/details?id=au.edu.faims.mq.fieldresearch2&hl=en",
+      "location": {"section": "Software metadata", "page": 47, "start_paragraph": 2, "end_paragraph": 2},
+      "supported_by": ["E038", "E039", "E006"],
+      "supports_claims": ["C046"]
+    },
+    {
+      "claim_id": "C043",
+      "claim_text": "FAIMS Project offers professional customisation services",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "The FAIMS Project provides customisation services under a typical open-source revenue model",
+      "location": {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 2, "end_paragraph": 2},
+      "supported_by": ["E042"],
+      "supports_claims": ["C046"]
+    },
+    {
+      "claim_id": "C044",
+      "claim_text": "FAIMS Project is an e-research infrastructure project at Macquarie University",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "an e-research infrastructure project based at Macquarie University, Sydney, Australia",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 4, "end_paragraph": 4},
+      "supported_by": ["E043"],
+      "supports_claims": ["C001"]
+    },
+    {
+      "claim_id": "C045",
+      "claim_text": "FAIMS Mobile represents a viable solution for field research data collection challenges",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "verbatim_quote": "FAIMS Mobile offers an alternative. It is purpose-built for field research with extensive community input",
+      "location": {"section": "5. Conclusions", "page": 52, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E001", "E016", "E017", "E019", "E020"],
+      "supports_claims": []
+    },
+    {
+      "claim_id": "C046",
+      "claim_text": "FAIMS Mobile is designed for rapid prototyping and easy redeployability to reduce implementation costs",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "Finally, it is designed for rapid prototyping using and easy redeployability to reduce the costs of implementation",
+      "location": {"section": "2. Software description", "page": 49, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E018", "E032"],
+      "supports_claims": ["C045"]
+    },
+    {
+      "claim_id": "C047",
+      "claim_text": "Transition from paper to digital recording represents significant socio-technical change",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Although the transition to digital recording during fieldwork represents a significant socio-technical change",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+      "supported_by": ["E022", "E023"],
+      "supports_claims": []
+    },
+    {
+      "claim_id": "C048",
+      "claim_text": "FAIMS Mobile offers unparalleled range of features to support fieldwork",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "verbatim_quote": "FAIMS Mobile offers an unparallelled range of features to support fieldwork",
+      "location": {"section": "5. Conclusions", "page": 52, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E013", "E014"],
+      "supports_claims": ["C045"]
+    },
+    {
+      "claim_id": "C049",
+      "claim_text": "FAIMS Mobile supports offline capability with opportunistic synchronisation",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "offline capability with opportunistic synchronisation using either an online or local server",
+      "location": {"section": "5. Conclusions", "page": 52, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E015"],
+      "supports_claims": ["C048"]
+    },
+    {
+      "claim_id": "C050",
+      "claim_text": "FAIMS Mobile is generalised software that can support transition from paper to digital across field disciplines",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "verbatim_quote": "FAIMS Mobile is community-driven, customisable, extensible software that can support the socio-technical transition from paper to digital in field research disciplines",
+      "location": {"section": "5. Conclusions", "page": 52, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": ["E017", "E024"],
+      "supports_claims": ["C045"]
+    },
+    {
+      "claim_id": "C051",
+      "claim_text": "Field research disciplines often lack transparency and reproducibility",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Field research disciplines, however, often lack transparency and reproducibility, compromising the integrity of research results",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": [],
+      "supports_claims": ["C052"]
+    },
+    {
+      "claim_id": "C052",
+      "claim_text": "FAIMS Mobile promotes synthetic research and improves transparency and reproducibility",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "It also promotes synthetic research and improves transparency and reproducibility through the production of comprehensive datasets that can be mapped to vocabularies or ontologies as they are created",
+      "location": {"section": "Abstract", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": [],
+      "supports_claims": ["C045"]
+    },
+    {
+      "claim_id": "C053",
+      "claim_text": "Field data is often collected using ad-hoc mix of hard copy, data fragments and bespoke databases",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Field data is often collected using an ad-hoc mix of hard copy, data fragments in various formats, and bespoke databases",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": [],
+      "supports_claims": ["C051"]
+    },
+    {
+      "claim_id": "C054",
+      "claim_text": "Digital datasets are often highly variable, of poor quality, and incompatible",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Digital datasets are often highly variable, of poor quality, and incompatible",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 1, "end_paragraph": 1},
+      "supported_by": [],
+      "supports_claims": ["C051"]
+    },
+    {
+      "claim_id": "C055",
+      "claim_text": "Bespoke software is expensive placing it beyond reach of all but best-funded projects",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Bespoke software is expensive to build and maintain, placing it beyond the reach of all but the best-funded projects and organisations",
+      "location": {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 2, "end_paragraph": 2},
+      "supported_by": [],
+      "supports_claims": ["C056"]
+    },
+    {
+      "claim_id": "C056",
+      "claim_text": "FAIMS customisation is less expensive than bespoke mobile application production",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Customisation of FAIMS Mobile is therefore less expensive than production of bespoke mobile applications",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 3, "end_paragraph": 3},
+      "supported_by": [],
+      "supports_claims": ["C046"]
+    },
+    {
+      "claim_id": "C057",
+      "claim_text": "FAIMS supports embedding URIs in controlled vocabularies connecting to linked open data sources",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "URIs can be embedded in controlled vocabularies and other elements, connecting them to linked open data sources",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 2, "end_paragraph": 2},
+      "supported_claims": ["C052"]
+    },
+    {
+      "claim_id": "C058",
+      "claim_text": "Comprehensive datasets can be created and exported for publication improving transparency and reproducibility",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Perhaps most importantly, comprehensive, rather than selective, datasets can be created and exported for publication, improving transparency and reproducibility",
+      "location": {"section": "4. Impact", "page": 51, "start_paragraph": 2, "end_paragraph": 2},
+      "supported_by": [],
+      "supports_claims": ["C052"]
+    }
+  ],
+
+  "implicit_arguments": [
+    {
+      "implicit_argument_id": "IA001",
+      "argument_text": "Field researchers have sufficient technical capability to adopt digital data collection tools",
+      "type": "unstated_assumption",
+      "trigger_text": [
+        "projects have independently customised FAIMS Mobile themselves",
+        "An experienced developer can rapidly prototype a recording system"
+      ],
+      "trigger_locations": [
+        {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+        {"section": "4. Impact", "page": 51, "start_paragraph": 3, "end_paragraph": 3}
+      ],
+      "inference_reasoning": "Paper assumes field research teams either have or can access technical expertise for customisation. Independent customisation and 'experienced developer' references imply assumption that technical capacity exists in or is available to research teams.",
+      "supports_claims": ["C009", "C023"]
+    },
+    {
+      "implicit_argument_id": "IA002",
+      "argument_text": "Android devices are suitable and available platforms for field research data collection",
+      "type": "design_assumption",
+      "trigger_text": [
+        "native Android application",
+        "Android 6+",
+        "as many Android devices as needed"
+      ],
+      "trigger_locations": [
+        {"section": "Abstract", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+        {"section": "Software metadata", "page": 47, "start_paragraph": 2, "end_paragraph": 2},
+        {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 2, "end_paragraph": 2}
+      ],
+      "inference_reasoning": "Paper assumes Android platform is appropriate for field research without justifying platform choice. This assumes Android devices are sufficiently robust, affordable, and available for field conditions across diverse research contexts.",
+      "supports_claims": ["C006", "C042"]
+    },
+    {
+      "implicit_argument_id": "IA003",
+      "argument_text": "Digital data collection provides advantages that justify transition costs from paper-based systems",
+      "type": "bridging_claim",
+      "trigger_text": [
+        "The time saved by avoiding digitisation and data cleaning more than offset the time required to implement FAIMS",
+        "The greatest challenge posed by the transition from paper has been the reallocation of time"
+      ],
+      "trigger_locations": [
+        {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+        {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4}
+      ],
+      "inference_reasoning": "Paper acknowledges transition challenges but assumes benefits outweigh costs. This bridges from evidence of time reallocation to conclusion that digital is preferable, without explicit cost-benefit analysis for all project types.",
+      "supports_claims": ["C026", "C030"]
+    },
+    {
+      "implicit_argument_id": "IA004",
+      "argument_text": "Case studies from archaeology are generalisable to other field research disciplines",
+      "type": "methodological_assumption",
+      "trigger_text": [
+        "Three deployment case studies have been published in Sobotkova et al., 2016",
+        "employing the software for archaeology, ecology, geoscience, and history research"
+      ],
+      "trigger_locations": [
+        {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 3, "end_paragraph": 3},
+        {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5}
+      ],
+      "inference_reasoning": "The detailed case studies cited are from archaeology, yet claims are made about suitability for ecology, geoscience, and history. This assumes archaeological deployment experiences transfer to other disciplinary contexts.",
+      "supports_claims": ["C007", "C022"]
+    },
+    {
+      "implicit_argument_id": "IA005",
+      "argument_text": "User-reported outcomes accurately reflect software effectiveness",
+      "type": "methodological_assumption",
+      "trigger_text": [
+        "Researchers reported more complete, consistent, and granular data",
+        "users benefited from the increased efficiency of fieldwork"
+      ],
+      "trigger_locations": [
+        {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4},
+        {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4}
+      ],
+      "inference_reasoning": "Evidence for software effectiveness relies primarily on user self-reports. Paper assumes these subjective assessments accurately capture objective improvements in data quality and efficiency.",
+      "supports_claims": ["C020", "C025", "C027"]
+    },
+    {
+      "implicit_argument_id": "IA006",
+      "argument_text": "Five years of development constitutes sufficient maturity for field research software",
+      "type": "unstated_assumption",
+      "trigger_text": [
+        "It is mature software that has been under development since 2012",
+        "Five years of deployment experience"
+      ],
+      "trigger_locations": [
+        {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 4, "end_paragraph": 4},
+        {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 4, "end_paragraph": 4}
+      ],
+      "inference_reasoning": "Paper equates development duration with maturity. This assumes time-based development correlates with software quality and field-readiness, without defining maturity criteria.",
+      "supports_claims": ["C001", "C002"]
+    },
+    {
+      "implicit_argument_id": "IA007",
+      "argument_text": "Open-source development model is sustainable for specialised research software",
+      "type": "design_assumption",
+      "trigger_text": [
+        "The FAIMS Project provides customisation services under a typical open-source revenue model",
+        "fees paid by our users for consultation, customisation, deployment, and support services"
+      ],
+      "trigger_locations": [
+        {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 2, "end_paragraph": 2},
+        {"section": "Funding", "page": 52, "start_paragraph": 1, "end_paragraph": 1}
+      ],
+      "inference_reasoning": "Paper presents open-source model as viable without demonstrating long-term sustainability. Funding sources listed include grants and user fees, implying assumption that this mixed model can sustain development.",
+      "supports_claims": ["C003", "C043"]
+    },
+    {
+      "implicit_argument_id": "IA008",
+      "argument_text": "Comparison with ODK is the most relevant benchmark for FAIMS evaluation",
+      "type": "design_assumption",
+      "trigger_text": [
+        "FAIMS Mobile is most comparable to Open Data Kit (ODK) and its variants",
+        "Field research projects, especially in liminal disciplines such as linguistics or oral history, would be wise to evaluate both platforms"
+      ],
+      "trigger_locations": [
+        {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+        {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5}
+      ],
+      "inference_reasoning": "Paper positions ODK as primary comparison point, assuming this is the most relevant benchmark. Other potential comparators (e.g., proprietary solutions, discipline-specific tools) receive less attention.",
+      "supports_claims": ["C039", "C040"]
+    }
+  ],
+
+  "research_designs": [
+    {
+      "design_id": "RD001",
+      "design_text": "Software publication describing field data collection platform with feature documentation and impact assessment",
+      "design_type": "study_design",
+      "design_status": "explicit",
+      "verbatim_quote": "Original software publication",
+      "location": {"section": "Header", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "implemented_by_methods": ["M001", "M002", "M003"]
+    },
+    {
+      "design_id": "RD002",
+      "design_text": "Comparative positioning against existing tools (particularly ODK) to demonstrate unique value proposition",
+      "design_type": "theoretical_framework",
+      "design_status": "implicit",
+      "trigger_text": [
+        "FAIMS Mobile is most comparable to Open Data Kit (ODK)",
+        "FAIMS is more customisable and has more fieldwork-specific features than ODK"
+      ],
+      "trigger_locations": [
+        {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+        {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5}
+      ],
+      "inference_reasoning": "Paper systematically compares FAIMS to ODK throughout, positioning FAIMS relative to the market. This comparative framing is not stated as explicit design choice but structures the argument.",
+      "implemented_by_methods": ["M003"]
+    },
+    {
+      "design_id": "RD003",
+      "design_text": "Evidence-based impact assessment using deployment metrics and user feedback",
+      "design_type": "study_design",
+      "design_status": "implicit",
+      "trigger_text": [
+        "Since our first public release in 2014, FAIMS Mobile has been customised at least 40 times",
+        "Three case studies involving archaeological deployments showed that users benefited"
+      ],
+      "trigger_locations": [
+        {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+        {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4}
+      ],
+      "inference_reasoning": "Impact section presents quantitative metrics and qualitative user feedback as evidence of software value. This systematic evidence gathering approach is not explicitly framed as a research design.",
+      "implemented_by_methods": ["M002"]
+    },
+    {
+      "design_id": "RD004",
+      "design_text": "Architecture documentation demonstrating technical design decisions and rationale",
+      "design_type": "scope_definition",
+      "design_status": "explicit",
+      "verbatim_quote": "We developed this architecture to meet two fundamental requirements: (1) the software had to accommodate a wide range of research designs, data schemas, and workflows, and (2) the software had to accommodate extremely variable structured, free text, multimedia, and geospatial data",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 3, "end_paragraph": 3},
+      "implemented_by_methods": ["M001"]
+    }
+  ],
+
+  "methods": [
+    {
+      "method_id": "M001",
+      "method_text": "Technical documentation of software architecture including component descriptions and technology stack",
+      "method_type": "documentation",
+      "method_status": "explicit",
+      "verbatim_quote": "FAIMS Mobile consists of 'core' software written in Java and Ruby, customised to particular field deployments using reusable definition packets consisting of XML, Beanshell, and CSS files",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 1, "end_paragraph": 1},
+      "implements_designs": ["RD001", "RD004"],
+      "realized_through_protocols": ["P001", "P002"]
+    },
+    {
+      "method_id": "M002",
+      "method_text": "Impact assessment through compilation of deployment metrics, user counts, and qualitative feedback from case studies",
+      "method_type": "analysis",
+      "method_status": "implicit",
+      "trigger_text": [
+        "FAIMS Mobile has been customised at least 40 times",
+        "approximately 300 users have logged over 20,000 h",
+        "Three case studies involving archaeological deployments showed"
+      ],
+      "trigger_locations": [
+        {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+        {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+        {"section": "4. Impact", "page": 51, "start_paragraph": 4, "end_paragraph": 4}
+      ],
+      "inference_reasoning": "Paper presents deployment statistics and case study findings but does not explicitly describe how this data was collected or compiled. The method of gathering impact evidence is implied rather than documented.",
+      "implements_designs": ["RD001", "RD003"],
+      "realized_through_protocols": ["P003", "P004"]
+    },
+    {
+      "method_id": "M003",
+      "method_text": "Feature comparison with alternative platforms particularly ODK",
+      "method_type": "analysis",
+      "method_status": "implicit",
+      "trigger_text": [
+        "FAIMS Mobile is most comparable to Open Data Kit (ODK)",
+        "It also includes features not found in ODK"
+      ],
+      "trigger_locations": [
+        {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+        {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5}
+      ],
+      "inference_reasoning": "Paper compares FAIMS features to ODK but doesn't describe comparison methodology. Selection of comparison points and evaluation criteria are not explicitly documented.",
+      "implements_designs": ["RD001", "RD002"],
+      "realized_through_protocols": ["P005"]
+    },
+    {
+      "method_id": "M004",
+      "method_text": "Software functionality documentation with illustrative examples",
+      "method_type": "documentation",
+      "method_status": "explicit",
+      "verbatim_quote": "FAIMS Mobile improves field research by providing a wide range of features that specifically address the needs of field research across disciplines",
+      "location": {"section": "2.2. Software functionalities", "page": 49, "start_paragraph": 1, "end_paragraph": 1},
+      "implements_designs": ["RD001"],
+      "realized_through_protocols": ["P006", "P007"]
+    }
+  ],
+
+  "protocols": [
+    {
+      "protocol_id": "P001",
+      "protocol_text": "Component-by-component description of technology stack (Javarosa, Sqlite3, Protobuf-inspired model, Beanshell, Spatialite, Nutiteq, NativeCSS, Antlr3, Ruby on Rails/Apache)",
+      "protocol_type": "documentation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "More specifically, FAIMS uses the following technologies: Javarosa to render native Android UI elements at runtime; Sqlite3 to store an attribute-key-value datastore",
+      "location": {"section": "2.1. Software architecture", "page": 49, "start_paragraph": 2, "end_paragraph": 2},
+      "implements_methods": ["M001"],
+      "produces_evidence": ["E011", "E012", "E013", "E014", "E015", "E026", "E027", "E028"]
+    },
+    {
+      "protocol_id": "P002",
+      "protocol_text": "Provision of code and software metadata tables with version numbers, repository links, licenses, and dependencies",
+      "protocol_type": "documentation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Current code version 2.5",
+      "location": {"section": "Code metadata", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "implements_methods": ["M001"],
+      "produces_evidence": ["E002", "E003", "E004", "E005", "E006"]
+    },
+    {
+      "protocol_id": "P003",
+      "protocol_text": "Tracking of deployment counts and user statistics through FAIMS-led development activities",
+      "protocol_type": "data_collection",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "Considering only FAIMS-led development, approximately 300 users have logged over 20,000 h",
+        "FAIMS Mobile has been customised at least 40 times (by our team or independently)"
+      ],
+      "trigger_locations": [
+        {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5},
+        {"section": "4. Impact", "page": 51, "start_paragraph": 5, "end_paragraph": 5}
+      ],
+      "inference_reasoning": "Paper presents precise user and deployment statistics but does not describe how these metrics were collected, tracked, or verified. The tracking mechanism is implied but undocumented.",
+      "implements_methods": ["M002"],
+      "produces_evidence": ["E016", "E017"]
+    },
+    {
+      "protocol_id": "P004",
+      "protocol_text": "Reference to published case studies for detailed deployment evidence",
+      "protocol_type": "documentation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Three deployment case studies have been published in Sobotkova et al., 2016",
+      "location": {"section": "1.1. Experimental setting", "page": 48, "start_paragraph": 3, "end_paragraph": 3},
+      "implements_methods": ["M002"],
+      "produces_evidence": ["E007", "E019", "E020", "E021", "E022", "E023"]
+    },
+    {
+      "protocol_id": "P005",
+      "protocol_text": "Feature-by-feature comparison narrative between FAIMS and ODK",
+      "protocol_type": "analysis",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "It also includes features not found in ODK: more nuanced relationships between entities, bi-directional synchronisation",
+        "ODK also offers simpler but more restrictive customisation"
+      ],
+      "trigger_locations": [
+        {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5},
+        {"section": "1. Motivation and significance", "page": 48, "start_paragraph": 5, "end_paragraph": 5}
+      ],
+      "inference_reasoning": "Paper describes FAIMS features relative to ODK but doesn't document how features were selected for comparison or how equivalence was assessed.",
+      "implements_methods": ["M003"],
+      "produces_evidence": ["E034", "E035", "E036"]
+    },
+    {
+      "protocol_id": "P006",
+      "protocol_text": "Bulleted list format for software functionality documentation",
+      "protocol_type": "documentation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "These features include: Deep customisation of data schema, user interface, and automation",
+      "location": {"section": "2.2. Software functionalities", "page": 49, "start_paragraph": 1, "end_paragraph": 1},
+      "implements_methods": ["M004"],
+      "produces_evidence": []
+    },
+    {
+      "protocol_id": "P007",
+      "protocol_text": "Screenshot figures illustrating software interface and functionality",
+      "protocol_type": "documentation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "FAIMS offers a variety of ways to record data (Fig. 1), all of which can be arranged hierarchically",
+      "location": {"section": "3. Illustrative examples", "page": 50, "start_paragraph": 1, "end_paragraph": 1},
+      "implements_methods": ["M004"],
+      "produces_evidence": []
+    },
+    {
+      "protocol_id": "P008",
+      "protocol_text": "Provision of multiple URLs for documentation, code, and executables",
+      "protocol_type": "documentation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "'User to Developer' documentation https://github.com/FAIMS/UserToDev; https://perma.cc/M4B3-JJEA",
+      "location": {"section": "Code metadata", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "implements_methods": ["M001"],
+      "produces_evidence": ["E029", "E040", "E041"]
+    },
+    {
+      "protocol_id": "P009",
+      "protocol_text": "Perma.cc archival links provided alongside primary URLs for long-term accessibility",
+      "protocol_type": "documentation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "https://perma.cc/M4B3-JJEA",
+      "location": {"section": "Code metadata", "page": 47, "start_paragraph": 1, "end_paragraph": 1},
+      "implements_methods": ["M001"],
+      "produces_evidence": []
+    }
+  ],
+
+  "reproducibility_infrastructure": {
+    "persistent_identifiers": {
+      "doi": "10.1016/j.softx.2017.12.006",
+      "orcid_authors": [],
+      "software_pids": [
+        {
+          "software_name": "FAIMS Mobile",
+          "repository": "GitHub",
+          "doi": null,
+          "url": "https://github.com/ElsevierSoftwareX/SOFTX-D-17-00021"
+        }
+      ]
+    },
+    "code_availability": {
+      "statement_present": true,
+      "repositories": [
+        {
+          "name": "ElsevierSoftwareX GitHub",
+          "url": "https://github.com/ElsevierSoftwareX/SOFTX-D-17-00021",
+          "access_conditions": "Open access, GPLv3"
+        },
+        {
+          "name": "FAIMS GitHub Organisation",
+          "url": "https://github.com/FAIMS",
+          "access_conditions": "Open access, GPLv3"
+        },
+        {
+          "name": "FAIMS UserToDev Documentation",
+          "url": "https://github.com/FAIMS/UserToDev",
+          "access_conditions": "Open access"
+        }
+      ],
+      "machine_actionability": {
+        "rating": "high",
+        "rationale": "Multiple GitHub repositories with clear version information (2.5/2.5.20), installation scripts, and documented dependencies. Permanent archive links via perma.cc provided."
+      }
+    },
+    "data_availability": {
+      "statement_present": false,
+      "repositories": [],
+      "machine_actionability": {
+        "rating": "not_applicable",
+        "rationale": "Software publication - no research data to share. Deployment statistics mentioned but not published as dataset."
+      }
+    },
+    "preregistration": {
+      "preregistered": false,
+      "notes": "Software development paper - preregistration not applicable to this study type"
+    },
+    "fair_assessment": {
+      "findable": {
+        "score": 9,
+        "rationale": "DOI assigned, multiple repository URLs, version numbers clearly stated, metadata table included"
+      },
+      "accessible": {
+        "score": 9,
+        "rationale": "GPLv3 open source, multiple distribution channels (GitHub, Google Play, direct download), permanent archival links"
+      },
+      "interoperable": {
+        "score": 7,
+        "rationale": "Standard formats (XML, JSON, SQLite), export capabilities documented, but proprietary Nutiteq component noted"
+      },
+      "reusable": {
+        "score": 8,
+        "rationale": "Comprehensive documentation, module library for reuse, clear licensing, but requires Nutiteq license for non-watermarked GIS"
+      },
+      "total_fair_score": 33,
+      "fair_percentage": 82.5
+    },
+    "funding": [
+      {
+        "funder": "National eResearch Collaboration Tools and Resources (NeCTAR)",
+        "grant_id": "RT043; V005",
+        "role": "Infrastructure development"
+      },
+      {
+        "funder": "Australian Research Council",
+        "grant_id": "LE140100151",
+        "role": "Infrastructure equipment"
+      },
+      {
+        "funder": "New South Wales Government Research Attraction and Acceleration Program",
+        "grant_id": null,
+        "role": "Deployment expansion"
+      },
+      {
+        "funder": "Macquarie University",
+        "grant_id": null,
+        "role": "Institutional support"
+      },
+      {
+        "funder": "Flinders University",
+        "grant_id": null,
+        "role": "Institutional support"
+      },
+      {
+        "funder": "La Trobe University",
+        "grant_id": null,
+        "role": "Institutional support"
+      },
+      {
+        "funder": "Southern Cross University",
+        "grant_id": null,
+        "role": "Institutional support"
+      },
+      {
+        "funder": "University of Queensland",
+        "grant_id": null,
+        "role": "Institutional support"
+      },
+      {
+        "funder": "University of Sydney",
+        "grant_id": null,
+        "role": "Institutional support"
+      },
+      {
+        "funder": "UNSW Australia",
+        "grant_id": null,
+        "role": "Institutional support"
+      },
+      {
+        "funder": "CSIRO ON Prime programme",
+        "grant_id": null,
+        "role": "Commercialisation support"
+      }
+    ],
+    "permits_ethics": [],
+    "author_contributions": []
+  },
+
+  "project_metadata": {
+    "timeline": {
+      "development_start": "2012",
+      "first_public_release": "2014",
+      "current_version_date": "2017"
+    },
+    "location": {
+      "primary_institution": "Macquarie University, Sydney, Australia",
+      "affiliated_institutions": ["La Trobe University, Melbourne, Australia"]
+    },
+    "resources": {
+      "software_version": "2.5.20",
+      "code_version": "2.5"
+    },
+    "track_record": {
+      "customisations": "40+",
+      "field_deployments": "29",
+      "multi_season_deployments": "9",
+      "total_users": "~300",
+      "total_hours_logged": "20000+"
+    }
+  },
+
+  "extraction_notes": {
+    "pass": 7,
+    "section_extracted": "complete_paper",
+    "known_uncertainties": [
+      "Deployment tracking methodology not documented - unclear how 40 customisations and 300 users were counted",
+      "Case study findings referenced but details in external publication (Sobotkova et al. 2016)",
+      "User-reported outcomes lack methodological detail on how feedback was collected",
+      "Some features listed without usage evidence (e.g., Robotium testing support)"
+    ],
+    "extraction_approach": "This is a methodological/software paper. Extracted software capabilities as evidence, software value propositions as claims, and implicit assumptions about technology adoption and generalisability. RDMAP focuses on documentation and impact assessment approaches rather than empirical research methodology."
+  }
+}

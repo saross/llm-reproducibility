@@ -1,0 +1,78 @@
+
+ ▐▛███▜▌   Claude Code v2.0.56
+▝▜█████▛▘  Opus 4.5 · Claude Max
+  ▘▘ ▝▝    ~/Code/llm-reproducibility
+══════════════════ Conversation compacted · ctrl+o for history ═════════════════
+  ⎿  Read input/variability-queue.yaml (148 lines)
+  ⎿ Read outputs/variability-test/penske-et-al-2023/run-05/assessment/credibilit
+    y-report.md (233 lines)
+  ⎿ Read outputs/variability-test/penske-et-al-2023/run-05/assessment/cluster-3-
+    reproducibility.md (206 lines)
+  ⎿ Read outputs/variability-test/penske-et-al-2023/run-05/assessment/cluster-2-
+    evidential-strength.md (246 lines)
+  ⎿ Read outputs/variability-test/penske-et-al-2023/run-05/assessment/cluster-1-
+    foundational-clarity.md (150 lines)
+
+● I'll create the pipeline improvement planning document now, analysing the
+  outcomes from both completed papers.
+
+● Write(outputs/variability-test/pipeline-improvement-notes.md)
+  ⎿  Wrote 250 lines to                                                    
+     outputs/variability-test/pipeline-improvement-notes.md
+     # Pipeline Improvement Notes
+     **Purpose:** Track observations, problems, and successes from
+     variability testing to inform potential pipeline refinements.
+     **Protocol:** Update after each paper completes 5 runs. Make decisions
+     about improvements only after sufficient data (all 5 papers).
+     **Last Updated:** 2025-12-02
+     ---
+
+     … +240 lines (ctrl+o to expand)
+
+● Created the pipeline improvement planning document at
+  outputs/variability-test/pipeline-improvement-notes.md.
+
+  Document Structure:
+
+  - Summary Statistics: Table tracking variability metrics across all papers
+  - Paper 1 (Sobotkova): Problems (claims/evidence granularity), successes
+  (RDMAP stability, assessment consistency), mitigations
+  - Paper 2 (Penske): Problems (protocol variability CV 27.2%,
+  reproducibility signal range), successes (implicit args stability, verdict
+   consistency), mitigations
+  - Cross-Paper Observations: Patterns that hold across both papers
+  - Proposed Mitigation Strategies:
+    - Strategy A: Prompt refinement (low risk)
+    - Strategy B: Multi-run voting 2-of-3 (medium risk)
+    - Strategy C: Staged pipeline with quality gates (medium risk)
+    - Strategy D: Accept current variability (no risk)
+  - Decision Log: Track decisions as testing progresses
+  - Next Steps: Continue with Papers 3-5 before implementing changes
+
+  Key Insight: Assessment stability (1-2% CV) far exceeds extraction
+  variability (7-27% CV). The pipeline produces consistent verdicts despite
+  extraction differences—this is a strength worth preserving.
+
+> that is a good observation, leading me to favour only low risk changes at 
+most. First, though, let's evaluate the other papers. If you're ready and
+clear context after this message and we'll start fresh.
+
+● Ready. The queue is set to ballsun-stanton-et-al-2018 run-01
+  (methodological paper about FAIMS Mobile). After context clear, run
+  /variability-run to continue.
+
+> /export archive/cc-interactions/2025-12-01-f.txt 
+  ⎿ Failed to export conversation: ENOENT: no such file or directory, open 
+    '/home/shawn/Code/llm-reproducibility/outputs/variability-test/sobotkova-et-
+    al-2024/archive/cc-interactions/2025-12-01-f.txt'
+
+> can you change the working directory to llm-reporducibility? 
+
+● Bash(cd /home/shawn/Code/llm-reproducibility && pwd)
+  ⎿  /home/shawn/Code/llm-reproducibility
+
+● Done. Now at /home/shawn/Code/llm-reproducibility. You can retry the
+  export.
+
+
+

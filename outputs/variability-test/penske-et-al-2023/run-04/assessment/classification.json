@@ -1,0 +1,74 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-12-02",
+    "classifier_version": "v0.2-alpha"
+  },
+
+  "paper_type": "empirical",
+  "paper_type_justification": "This paper uses archaeogenomic methods to investigate substantive research questions about population dynamics and genetic contact between late farming and pastoralist societies in southeastern Europe (~5400-2400 BC). Claims describe phenomena (genetic continuity, ancestry patterns, admixture timing). Methods (ancient DNA extraction, PCA, qpAdm, f-statistics, IBD, ROH) are analytical tools for investigating archaeological/anthropological questions, not the subject of investigation. Primary contribution is understanding population history and cultural contact in the Carpathian Basin and Lower Danube, not presenting methods.",
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "inductive",
+    "evidence": [
+      "RD01 frames study as 'Multi-site, multi-period archaeogenomic study to address spatial and temporal sampling gap' - exploratory filling of knowledge gap",
+      "Introduction states paper addresses a 'critical time period with regards to the transformation of prehistoric societies in Europe' - exploratory investigation without pre-specified hypotheses",
+      "No hypothesis statements in introduction or methods sections; research framed as documenting and characterising patterns",
+      "Paper describes aim to 'investigate contact' and 'reconstruct population dynamics' - exploratory language"
+    ],
+    "source_sections": ["abstract", "introduction", "methods"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "inductive",
+    "evidence": {
+      "claims_structure": "Claims describe emergent patterns from data analysis. C01: 'Early contact between farming and pastoralist societies occurred approximately 1000 years earlier than indicated by archaeological evidence' - pattern discovery, not hypothesis test. C03-C62: Describe ancestry proportions, population clusters, genetic continuity, admixture events, and relatedness patterns discovered through analysis. No claims test pre-specified predictions. Major finding emerged from analysis: contact was earlier than expected.",
+      "methods_application": "Methods applied for pattern discovery and population characterisation. M03: PCA 'projection of ancient individuals onto modern West Eurasian genetic variation' - exploratory assessment. M04-M05: f-statistics and qpAdm for characterising ancestry sources, not testing predicted proportions. M08-M10: READ, ancIBD, and hapROH for detecting relatedness patterns, not testing kinship hypotheses. M06 DATES estimates admixture timing from patterns, not tests timing predictions.",
+      "analytical_workflow": "Data collection → genetic characterisation → pattern identification → interpretation. Sequence: strategic sampling (RD02) → DNA extraction/enrichment (M01) → SNP capture → population genetics analyses (M03-M17) → pattern description → archaeological-historical interpretation. Classic inductive workflow: observe → identify patterns → explain patterns in cultural-historical context."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Paper explicitly frames research as exploratory archaeogenomic investigation and actually conducts inductive pattern-discovery research. Research design frames study as addressing a 'sampling gap' without pre-specified hypotheses. Methods are applied for exploration (PCA projection, ancestry modelling, relatedness detection) rather than hypothesis testing. Claims describe discovered patterns (ancestry proportions, admixture timing, genetic continuity) rather than testing predictions. The major finding - contact occurred ~1000 years earlier than archaeological evidence suggested - clearly emerged from analysis rather than confirming a pre-specified prediction. Methodological transparency is high."
+  },
+
+  "primary_classification": {
+    "approach": "inductive",
+    "confidence": "high",
+    "justification": "This is clearly inductive empirical research. The paper explicitly adopts an exploratory framework to address a temporal-spatial 'sampling gap' in archaeogenomics of southeastern Europe. No hypotheses are pre-specified; instead, the study characterises genetic variation across 135 individuals from 8 sites spanning ~3000 years, identifies ancestry patterns, and reconstructs population history from genomic data. Claims are pattern descriptions (ancestry proportions, genetic clusters, admixture timing, relatedness networks) emerging from multi-proxy statistical analyses (PCA, qpAdm, f-statistics, IBD, ROH, DATES). The major finding - that genetic contact between farming and pastoralist groups occurred ~1000 years earlier than archaeological evidence indicated - emerged from analysis as a discovery rather than confirming a pre-specified prediction. Revealed approach matches expressed approach. Classification is unambiguous."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": false
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Explicit research design present. Methods section thoroughly documents laboratory protocols (DNA extraction, library prep, capture), software versions (ADMIXTOOLS, EIGENSTRAT, GLIMPSE, hapROH, ancIBD), and analysis parameters. 17 explicit methods and 25 protocols extracted with specific parameters. Supplementary materials provide detailed data tables (A-Y) and Extended Data Figures. DNA sequences deposited to ENA (PRJEB62503). Research framework clearly described as archaeogenomic reconstruction of population dynamics. Transparency is excellent for Nature article."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "inductive_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["transparency", "comprehensibility", "generalisability"],
+      "secondary_signals": ["validity", "reproducibility", "plausibility"],
+      "deemphasised_signals": [],
+      "rationale": "Inductive research emphasis: (1) Transparency - research design clarity, workflow documentation, and parameter specification are critical for exploratory archaeogenomics with complex multi-proxy analyses; (2) Comprehensibility - pattern descriptions and interpretations must be clear given complexity of f-statistics, qpAdm, and IBD analyses; (3) Generalisability - appropriate scope constraint and acknowledged regional/temporal limitations (southeastern Europe, ~5400-2400 BC). Validity and Reproducibility important secondary signals given reliance on established computational methods and publicly archived sequence data (ENA PRJEB62503, FAIR score 14/15)."
+    }
+  },
+
+  "classification_notes": "Straightforward empirical-inductive archaeogenomics study with excellent taxonomy fit. High transparency through Nature publication standards and comprehensive supplementary materials. FAIR score 14/15 (93.3%) indicates excellent reproducibility infrastructure with ENA data deposition. Only gaps: no explicit data licence and no custom code repository (relies on published software packages). The 4 research designs, 19 methods, and 24 protocols provide comprehensive methodological documentation rare outside genomics fields."
+}

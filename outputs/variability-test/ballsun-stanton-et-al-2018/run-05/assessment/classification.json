@@ -1,0 +1,76 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-12-03",
+    "classifier_version": "v0.2-alpha"
+  },
+
+  "paper_type": "methodological",
+  "paper_type_justification": "Primary contribution is FAIMS Mobile software platform for field data collection across disciplines. Paper presents tool capabilities, technical architecture (Section 2.1), software functionalities (Section 2.2), and design decisions. Results/Impact section (Section 4) describes software adoption and user benefits, not substantive research findings about phenomena. Three archaeological case studies (Sobotkova et al. 2016) are referenced but serve demonstrative function for the software, not as the primary contribution. This is a paper ABOUT a method (software tool), not a paper USING a method to study archaeological phenomena. Claims are about software capabilities (C009: 'generalised software combining features for field research', C015: 'designed for offline use', C025: 'append-only datastore provides version history') rather than claims about phenomena in the world.",
+
+  "methodological_characterisation": {
+    "subtype": "software_tool",
+    "validation_approach": "inductive",
+    "validation_notes": "FAIMS capabilities validated through inductive/descriptive approach: (1) Three archaeological case study deployments published separately (Sobotkova et al. 2016), (2) Adoption metrics cited (40+ customisations, 29 deployments, ~300 users, 20,000+ hours logged - E036-E039), (3) User benefits described qualitatively from case studies (efficiency gains, data quality improvements, more complete/consistent/granular data). No formal hypothesis-testing of software performance. No systematic benchmark comparison with alternative tools (ODK, ARK, Heurist, Kora mentioned qualitatively but not systematically evaluated). Validation is descriptive demonstration through case studies and adoption evidence."
+  },
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "none_stated",
+    "evidence": ["No explicit research methodology stated - this is a software publication describing a tool, not empirical research using a methodology"],
+    "source_sections": [],
+    "confidence": "high",
+    "significance": "Not applicable for methodological paper presenting software tool. Paper does not conduct research using FAIMS; paper presents FAIMS itself. SoftwareX journal format is specifically for software publication, not empirical research papers."
+  },
+
+  "revealed_approach": {
+    "approach": "inductive",
+    "evidence": {
+      "claims_structure": "Claims describe software capabilities and features: C003 'consists of core Java and Ruby software providing platform for data capture', C009 'generalised software combining features for field research with customisability', C025 'append-only datastore provides version history'. Claims are descriptive of what the software does, not tests of hypotheses about performance.",
+      "methods_application": "Not applicable - paper describes software architecture (M001-M008) and deployment protocols (P001-P006), not methods applied to research questions about phenomena. RDMAP elements describe HOW software works and HOW it is deployed, not HOW research is conducted using the software.",
+      "analytical_workflow": "Software development → case study deployment → feature demonstration → adoption metrics → impact description. This is an inductive descriptive workflow: observe software in use → document capabilities → describe benefits. No hypothesis → test → result sequence."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Not applicable for methodological software paper. No empirical research approach to compare. Validation approach (inductive demonstration through case studies and adoption metrics) is appropriate and transparent for software tool presentation in SoftwareX venue."
+  },
+
+  "primary_classification": {
+    "approach": "inductive",
+    "confidence": "high",
+    "justification": "Classification based on validation approach, not empirical research approach (this is a methodological paper). FAIMS validation is inductive/descriptive: software capabilities demonstrated through illustrative case studies and supported by adoption metrics. No deductive hypothesis-testing of tool performance against benchmarks. No abductive inference about design alternatives. Primary contribution is technical specification and descriptive demonstration of features and impact. Confidence is high because: (1) paper type classification is unambiguous (software publication in SoftwareX), (2) validation approach is clearly inductive (case studies, adoption metrics, qualitative user feedback), (3) no mixed elements requiring qualification."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": false
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Software architecture (Section 2.1), technical specifications, and design decisions clearly documented. Technology stack explicitly listed (Javarosa, SQLite3, Spatialite, Beanshell, etc.). Definition packet structure and customisation approaches (XML/Beanshell/CSS vs DSL) thoroughly explained. Deployment workflow (P001) and independent customisation paths (P006) documented. Open source licence (GPLv3) and multiple repository links provided. Very high transparency for a methodological software paper - exceeds typical software publication standards."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "methodological_paper",
+    "signal_prioritisation": {
+      "primary_signals": ["transparency", "reproducibility", "comprehensibility"],
+      "secondary_signals": ["validity", "plausibility"],
+      "deemphasised_signals": ["generalisability", "robustness"],
+      "rationale": "Methodological paper framework for software tool. Primary signals: (1) Transparency of design decisions, technical architecture, and customisation approach - STRONG in this paper with detailed Section 2 documentation; (2) Reproducibility - excellent: GPLv3 open source, GitHub repositories, Google Play distribution, installation scripts, comprehensive documentation; (3) Comprehensibility of technical specification and feature descriptions - clear and well-organised. Secondary: Validity and Plausibility apply to claims ABOUT the software's capabilities (e.g., claims about efficiency gains, adoption benefits). Deemphasised: Generalisability and Robustness of case studies - the three referenced archaeological case studies are illustrative demonstrations, not meant to prove software works in all contexts. Expected moderate robustness (40-60) is appropriate for software_tool subtype per context flag guidance."
+    }
+  },
+
+  "classification_notes": "Straightforward software tool methodological paper. SoftwareX journal specialises in this genre. FAIMS Mobile is well-documented open-source software with clear validation through case studies and adoption metrics. No ambiguities or edge cases in classification. Paper represents exemplary methodological transparency for software publication genre. Context flag 📦 (Descriptive/Artefact Paper) applies - moderate Robustness is expected and not a deficiency."
+}

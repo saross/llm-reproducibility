@@ -1,0 +1,96 @@
+
+ ▐▛███▜▌   Claude Code v2.0.56
+▝▜█████▛▘  Opus 4.5 · Claude Max
+  ▘▘ ▝▝    ~/Code/llm-reproducibility
+══════════════════ Conversation compacted · ctrl+o for history ═════════════════
+  ⎿  Read input/variability-queue.yaml (168 lines)
+  ⎿  Referenced file 
+     outputs/variability-test/ballsun-stanton-et-al-2018/run-05/extraction.json
+  ⎿ Read outputs/variability-test/ballsun-stanton-et-al-2018/run-05/assessment/c
+    redibility-report.md (244 lines)
+  ⎿ Read outputs/variability-test/ballsun-stanton-et-al-2018/run-05/assessment/c
+    luster-3-reproducibility.md (225 lines)
+  ⎿ Read outputs/variability-test/ballsun-stanton-et-al-2018/run-05/assessment/c
+    luster-2-evidential-strength.md (259 lines)
+
+● Variability Report: ballsun-stanton-et-al-2018 (5 Runs)
+
+  Aggregate Scores
+
+  | Run    | Score | Verdict |
+  |--------|-------|---------|
+  | run-01 | 75    | Good    |
+  | run-02 | 77    | Good    |
+  | run-03 | 77    | Good    |
+  | run-04 | 78    | Good    |
+  | run-05 | 79    | Good    |
+
+  Summary: Range = 4 points (75-79), Mean = 77.2, SD ≈ 1.5
+
+  All 5 runs produced the same verdict band (Good) — high consistency for
+  the key output.
+
+  ---
+  Extraction Counts
+
+  | Metric           | Run-01 | Run-02 | Run-03 | Run-04 | Run-05 | Range |
+  CV% |
+  |------------------|--------|--------|--------|--------|--------|-------|-
+  ----|
+  | Evidence         | 43     | 43     | 26     | 43     | 47     | 21    |
+  19% |
+  | Claims           | 59     | 59     | 42     | 58     | 61     | 19    |
+  12% |
+  | Implicit Args    | 8      | 8      | 8      | 8      | 8      | 0     |
+  0%  |
+  | Research Designs | 3      | 3      | 4      | 4      | 4      | 1     |
+  14% |
+  | Methods          | 8      | 8      | 4      | 4      | 8      | 4     |
+  33% |
+  | Protocols        | 6      | 9      | 3      | 9      | 6      | 6     |
+  38% |
+
+  ---
+  Key Findings
+
+  High Consistency:
+  - Implicit arguments: Perfect consistency (8/8 across all runs)
+  - Aggregate scores: Tight clustering (±2 from mean)
+  - Verdict band: 100% agreement (all Good)
+  - Cluster ratings: All runs show Strong/Adequate-to-Strong/Strong pattern
+
+  Moderate Variability:
+  - Evidence/Claims: Run-03 is a clear outlier (26 evidence vs 43-47 for
+  others)
+  - Methods/Protocols: Higher variability suggests granularity differences
+  in how these are bounded
+
+  Outlier Analysis:
+  - Run-03 extracted significantly fewer items but achieved the same
+  aggregate score (77) — suggests the assessment framework is robust to
+  extraction volume differences
+
+  ---
+  Interpretation
+
+  The variability test demonstrates:
+
+  1. Assessment stability: Despite 20-30% variation in extraction counts,
+  aggregate scores remain within a 4-point range. The credibility assessment
+   is robust to extraction granularity differences.
+  2. Run-03 anomaly: Lower counts but identical verdict suggests either (a)
+  more conservative item bounding or (b) different operator interpretation —
+   but the assessment outcome converges.
+  3. Implicit arguments stable: The 8 implicit assumptions identified are
+  consistent across all runs, suggesting these represent true structural
+  features of the paper.
+  4. RDMAP variability expected: Methods/protocols show highest variability
+  (33-38% CV), consistent with different granularity choices in how
+  procedural steps are bounded.
+
+  Bottom line: The pipeline produces reliable verdicts despite moderate
+  extraction variability. This is the desired behaviour — robust assessment
+  that doesn't depend on precise item counts.
+
+
+

@@ -1,0 +1,2887 @@
+
+ ▐▛███▜▌   Claude Code v2.0.56
+▝▜█████▛▘  Opus 4.5 · Claude Max
+  ▘▘ ▝▝    ~/Code/llm-reproducibility
+══════════════════ Conversation compacted · ctrl+o for history ═════════════════
+  ⎿ Read outputs/variability-test/penske-et-al-2023/run-03/extraction.json (109 
+    lines)
+
+  ⎿  Read input/variability-queue.yaml (136 lines)
+  ⎿  Referenced file input/workflow.md
+  ⎿  Referenced file extraction-system/schema/extraction_schema.json
+  ⎿  Todo list read (6 items)
+
+● I'll continue with the extraction for penske-et-al-2023 run-03. The blank
+  extraction.json has been created. Now I need to execute the full 8-pass
+  extraction workflow. Let me first read the PDF to extract the content,
+  then proceed through all passes.
+
+● Read(input/sources/original-pdf/Penske et al. - 2023 - Early contact between
+      late farming and pastoralist.pdf)
+  ⎿  Read PDF (12.4MB)
+
+● Read(input/workflow.md)
+  ⎿  Read 918 lines
+
+● Now I have the full paper content. Let me proceed with the complete
+  extraction workflow. I'll start with Pass 0 (Metadata) and continue
+  through all passes autonomously.
+
+● Update(outputs/variability-test/penske-et-al-2023/run-03/extraction.json)
+  ⎿  Updated                                                               
+     outputs/variability-test/penske-et-al-2023/run-03/extraction.json with
+     38 additions and 8 removals
+
+        3      "extraction_timestamp": "2025-12-02T00:00:00Z",
+        4      "extractor": "research-assessor-skill",
+        5      "project_metadata": {
+        6 -      "paper_title": "",
+        7 -      "authors": [],
+        8 -      "publication_year": null,
+        9 -      "journal": "",
+       10 -      "doi": null,
+       11 -      "paper_type": "",
+       12 -      "discipline": "",
+       13 -      "research_context": ""
+        6 +      "paper_title": "Early contact between late farming and 
+          + pastoralist societies in southeastern Europe",
+        7 +      "authors": [
+        8 +        "Sandra Penske",
+        9 +        "Adam B. Rohrlach",
+       10 +        "Ainash Childebayeva",
+       11 +        "Guido Gnecchi-Ruscone",
+       12 +        "Clemens Schmid",
+       13 +        "Maria A. Spyrou",
+       14 +        "Gunnar U. Neumann",
+       15 +        "Nadezhda Atanassova",
+       16 +        "Katrin Beutler",
+       17 +        "Kamen Boyadzhiev",
+       18 +        "Yavor Boyadzhiev",
+       19 +        "Igor Bruyako",
+       20 +        "Alexander Chohadzhiev",
+       21 +        "Blagoje Govedarica",
+       22 +        "Mehmet Karaucak",
+       23 +        "Raiko Krauss",
+       24 +        "Maleen Leppek",
+       25 +        "Igor Manzura",
+       26 +        "Karen Privat",
+       27 +        "Shawn Ross",
+       28 +        "Vladimir Slavchev",
+       29 +        "Adéla Sobotkova",
+       30 +        "Meda Toderaş",
+       31 +        "Todor Valchev",
+       32 +        "Harald Ringbauer",
+       33 +        "Philipp W. Stockhammer",
+       34 +        "Svend Hansen",
+       35 +        "Johannes Krause",
+       36 +        "Wolfgang Haak"
+       37 +      ],
+       38 +      "publication_year": 2023,
+       39 +      "journal": "Nature, Vol 620, 358-365",
+       40 +      "doi": "10.1038/s41586-023-06334-8",
+       41 +      "paper_type": "research article",
+       42 +      "discipline": "archaeogenomics",
+       43 +      "research_context": "Genome-wide analysis of 135 ancient
+          +  individuals from southeastern Europe and the northwestern 
+          + Black Sea region spanning 5400-2400 BC, investigating early 
+          + contact between late farming and pastoralist societies during
+          +  the critical period between the demise of Copper Age 
+          + settlements and the expansion of steppe pastoralists."
+       44      },
+       45      "evidence": [],
+       46      "claims": [],
+
+● Pass 0 complete. Now proceeding with Pass 1 (Liberal Claims & Evidence
+  Extraction). I'll process the paper systematically to extract all
+  evidence, claims, and implicit arguments.
+
+● Read(outputs/variability-test/penske-et-al-2023/run-03/extraction.json)
+  ⎿  Read 139 lines
+
+● Now I'll proceed with the full extraction. Given the complexity of this
+  archaeogenomics paper, I'll systematically extract evidence, claims, and
+  implicit arguments from the paper content, then continue through all
+  passes. Let me write the complete extraction.
+
+● Write(outputs/variability-test/penske-et-al-2023/run-03/extraction.json)
+  ⎿  Updated                                                               
+     outputs/variability-test/penske-et-al-2023/run-03/extraction.json with
+     1875 additions and 46 removals
+
+         42        "discipline": "archaeogenomics",
+         43        "research_context": "Genome-wide analysis of 135 
+              ancient individuals from southeastern Europe and the 
+              northwestern Black Sea region spanning 5400-2400 BC, 
+              investigating early contact between late farming and 
+              pastoralist societies during the critical period between 
+              the demise of Copper Age settlements and the expansion of 
+              steppe pastoralists."
+         44      },
+         45 -    "evidence": [],
+         46 -    "claims": [],
+         47 -    "implicit_arguments": [],
+         48 -    "research_designs": [],
+         49 -    "methods": [],
+         50 -    "protocols": [],
+         45 +    "evidence": [
+         46 +      {
+         47 +        "id": "E001",
+         48 +        "description": "Sample size and temporal range of 
+            + analysed ancient individuals",
+         49 +        "verbatim_quote": "we analysed genome-wide data from
+            +  135 ancient individuals from the contact zone between 
+            + southeastern Europe and the northwestern Black Sea region 
+            + spanning this critical time period",
+         50 +        "page": 1,
+         51 +        "evidence_type": "quantitative",
+         52 +        "methodology_linked": "ancient DNA analysis",
+         53 +        "supports_claims": ["C001", "C002"]
+         54 +      },
+         55 +      {
+         56 +        "id": "E002",
+         57 +        "description": "Genetic continuity between Neolithic
+            +  and Copper Age groups",
+         58 +        "verbatim_quote": "While we observe genetic 
+            + continuity between Neolithic and Copper Age groups from 
+            + major sites in the same region",
+         59 +        "page": 1,
+         60 +        "evidence_type": "analytical result",
+         61 +        "methodology_linked": "population genetic analysis",
+         62 +        "supports_claims": ["C003"]
+         63 +      },
+         64 +      {
+         65 +        "id": "E003",
+         66 +        "description": "Mixed ancestry detected in 
+            + northwestern Black Sea region from 4500 BC",
+         67 +        "verbatim_quote": "from around 4500 bc on, groups 
+            + from the northwestern Black Sea region carried varying 
+            + amounts of mixed ancestries derived from Copper Age groups 
+            + and those from the forest/steppe zones",
+         68 +        "page": 1,
+         69 +        "evidence_type": "analytical result",
+         70 +        "methodology_linked": "ancestry modelling",
+         71 +        "supports_claims": ["C001", "C004"]
+         72 +      },
+         73 +      {
+         74 +        "id": "E004",
+         75 +        "description": "Early contact occurred 1000 years 
+            + before anticipated",
+         76 +        "verbatim_quote": "indicating genetic and cultural 
+            + contact over a period of around 1,000 years earlier than 
+            + anticipated",
+         77 +        "page": 1,
+         78 +        "evidence_type": "interpretive",
+         79 +        "methodology_linked": "chronological analysis",
+         80 +        "supports_claims": ["C001", "C005"]
+         81 +      },
+         82 +      {
+         83 +        "id": "E005",
+         84 +        "description": "Varna cemetery dating and 
+            + significance",
+         85 +        "verbatim_quote": "The discovery of the necropolis 
+            + of Varna (4600–4300 bc) on the Black Sea coast led to a 
+            + reassessment of social inequality in human prehistory, with
+            +  large quantities of gold and other symbols of power and 
+            + wealth suggesting unprecedented levels of social 
+            + stratification",
+         86 +        "page": 1,
+         87 +        "evidence_type": "archaeological context",
+         88 +        "methodology_linked": "archaeological assessment",
+         89 +        "supports_claims": ["C006"]
+         90 +      },
+         91 +      {
+         92 +        "id": "E006",
+         93 +        "description": "Tell settlement abandonment timing",
+         94 +        "verbatim_quote": "the roughly simultaneous 
+            + abandonment of the numerous tell settlements and cemeteries
+            +  around 4250/4200 bc appears enigmatic",
+         95 +        "page": 1,
+         96 +        "evidence_type": "archaeological observation",
+         97 +        "methodology_linked": "chronological analysis",
+         98 +        "supports_claims": ["C007"]
+         99 +      },
+        100 +      {
+        101 +        "id": "E007",
+        102 +        "description": "Sample composition breakdown",
+        103 +        "verbatim_quote": "In total, we report genome-wide 
+            + data for 135 (out of 216 attempted) individuals from eight 
+            + distinct sites (Fig. 1) ranging from around 5400 to 2400 
+            + bc: Neolithic (n = 1), CA (n = 95), Eneolithic (n = 18) and
+            +  EBA (n = 21)",
+        104 +        "page": 3,
+        105 +        "evidence_type": "quantitative",
+        106 +        "methodology_linked": "sample collection",
+        107 +        "supports_claims": ["C002"]
+        108 +      },
+        109 +      {
+        110 +        "id": "E008",
+        111 +        "description": "SNP panel coverage",
+        112 +        "verbatim_quote": "All samples were enriched for a 
+            + panel of 1.24 million single-nucleotide polymorphisms 
+            + (1,240,000 SNP panel), ranging from 61,000 to 947,000 SNPs 
+            + with an average SNP coverage between 0.01× and 3.4×",
+        113 +        "page": 3,
+        114 +        "evidence_type": "quantitative",
+        115 +        "methodology_linked": "SNP capture",
+        116 +        "supports_claims": ["C008"]
+        117 +      },
+        118 +      {
+        119 +        "id": "E009",
+        120 +        "description": "New radiocarbon dates obtained",
+        121 +        "verbatim_quote": "We also report 113 new 
+            + radiocarbon dates",
+        122 +        "page": 3,
+        123 +        "evidence_type": "quantitative",
+        124 +        "methodology_linked": "radiocarbon dating",
+        125 +        "supports_claims": ["C009"]
+        126 +      },
+        127 +      {
+        128 +        "id": "E010",
+        129 +        "description": "PCA methodology for genetic ancestry
+            +  assessment",
+        130 +        "verbatim_quote": "To assess the genetic ancestry 
+            + and variation of the newly typed individuals we first 
+            + performed principal component analysis (PCA) constructed 
+            + from 1,253 modern-day West Eurasians from 77 different 
+            + populations, onto which data from the ancient individuals 
+            + were projected",
+        131 +        "page": 3,
+        132 +        "evidence_type": "methodological",
+        133 +        "methodology_linked": "PCA analysis",
+        134 +        "supports_claims": ["C010"]
+        135 +      },
+        136 +      {
+        137 +        "id": "E011",
+        138 +        "description": "Earliest individual PIE039 genetic 
+            + profile",
+        139 +        "verbatim_quote": "The earliest-dated individual in 
+            + our dataset, PIE039 from Pietrele, falls in the expected 
+            + range of other SEE Neolithic individuals in PCA space, with
+            +  whom she also shares affinities according to outgroup f3 
+            + statistics",
+        140 +        "page": 3,
+        141 +        "evidence_type": "analytical result",
+        142 +        "methodology_linked": "f-statistics",
+        143 +        "supports_claims": ["C003"]
+        144 +      },
+        145 +      {
+        146 +        "id": "E012",
+        147 +        "description": "SEE CA individuals cluster tightly 
+            + in PCA",
+        148 +        "verbatim_quote": "In PCA space, the chronologically
+            +  younger SEE CA individuals from the emblematic sites of 
+            + Yunatsite (YUN), Varna (VAR), Pietrele (PIE) and the 
+            + multiple burial from Tell Petko Karavelovo (PTK), form a 
+            + tight cluster that also overlaps with published Neolithic 
+            + individuals from Anatolia and SEE",
+        149 +        "page": 3,
+        150 +        "evidence_type": "analytical result",
+        151 +        "methodology_linked": "PCA analysis",
+        152 +        "supports_claims": ["C011"]
+        153 +      },
+        154 +      {
+        155 +        "id": "E013",
+        156 +        "description": "Outgroup f3 statistics confirm local
+            +  genetic homogeneity",
+        157 +        "verbatim_quote": "Moreover, outgroup f3 statistics 
+            + suggest local genetic homogeneity throughout the CA in this
+            +  region",
+        158 +        "page": 3,
+        159 +        "evidence_type": "statistical",
+        160 +        "methodology_linked": "f-statistics",
+        161 +        "supports_claims": ["C011", "C012"]
+        162 +      },
+        163 +      {
+        164 +        "id": "E014",
+        165 +        "description": "SEE CA groups shifted towards 
+            + EHG/WHG cline",
+        166 +        "verbatim_quote": "However, all SEE CA groups are 
+            + slightly shifted towards the EHG/WHG cline in both PC1 and 
+            + PC2 compared to most published Neolithic individuals",
+        167 +        "page": 3,
+        168 +        "evidence_type": "analytical result",
+        169 +        "methodology_linked": "PCA analysis",
+        170 +        "supports_claims": ["C013"]
+        171 +      },
+        172 +      {
+        173 +        "id": "E015",
+        174 +        "description": "Distal qpAdm modelling confirms 
+            + ancestry composition",
+        175 +        "verbatim_quote": "Distal qpAdm modelling (Fig. 3a 
+            + and Supplementary Table G) confirmed minimal amounts of 
+            + EHG-, CHG- and WHG-like ancestry, in addition to 
+            + predominantly Turkey_N-like ancestry",
+        176 +        "page": 3,
+        177 +        "evidence_type": "statistical",
+        178 +        "methodology_linked": "qpAdm modelling",
+        179 +        "supports_claims": ["C013", "C014"]
+        180 +      },
+        181 +      {
+        182 +        "id": "E016",
+        183 +        "description": "Proximal qpAdm models support 
+            + genetic continuity",
+        184 +        "verbatim_quote": "Using the respective, locally 
+            + preceding, Neolithic groups for proximal qpAdm modelling, 
+            + we could model all SEE CA groups as a single-source model 
+            + (Fig. 3d and Supplementary Table H), suggesting genetic 
+            + continuity at the local scale",
+        185 +        "page": 3,
+        186 +        "evidence_type": "statistical",
+        187 +        "methodology_linked": "qpAdm modelling",
+        188 +        "supports_claims": ["C003", "C015"]
+        189 +      },
+        190 +      {
+        191 +        "id": "E017",
+        192 +        "description": "Outlier PIE060 shows excess HG 
+            + ancestry",
+        193 +        "verbatim_quote": "The outlier individual PIE060 is 
+            + shifted further towards the WHG/EHG cluster in PCA, 
+            + suggesting an excess of this type of ancestry, which could 
+            + be confirmed by f4 statistics of the form f4(SEE N, PIE060;
+            +  HGs, Mbuti) ((|Z| ≥ 3); Supplementary Table F)",
+        194 +        "page": 3,
+        195 +        "evidence_type": "statistical",
+        196 +        "methodology_linked": "f-statistics",
+        197 +        "supports_claims": ["C016"]
+        198 +      },
+        199 +      {
+        200 +        "id": "E018",
+        201 +        "description": "PIE060 ancestry modelling results",
+        202 +        "verbatim_quote": "Ancestry modelling with qpAdm 
+            + supports a two-way model (Fig. 3d) with SEE N (around 65%) 
+            + and Iron Gates HG or KO1 (around 35%) as the best proxies",
+        203 +        "page": 3,
+        204 +        "evidence_type": "statistical",
+        205 +        "methodology_linked": "qpAdm modelling",
+        206 +        "supports_claims": ["C016"]
+        207 +      },
+        208 +      {
+        209 +        "id": "E019",
+        210 +        "description": "DATES admixture timing estimate for 
+            + PIE060",
+        211 +        "verbatim_quote": "Using DATES to determine the time
+            +  of admixture between SEE N and Iron Gates HG as a local HG
+            +  ancestry, we obtained an admixture estimate of 16.3 ± 13.4
+            +  generations (Z = 1.213), which corresponds to around 
+            + 81–832 years before the mean 14C date of PIE060",
+        212 +        "page": 3,
+        213 +        "evidence_type": "statistical",
+        214 +        "methodology_linked": "DATES analysis",
+        215 +        "supports_claims": ["C017"]
+        216 +      },
+        217 +      {
+        218 +        "id": "E020",
+        219 +        "description": "Y-chromosomal diversity in 
+            + Pietrele",
+        220 +        "verbatim_quote": "With seven different main 
+            + lineages among 29 males in Pietrele (I2a1, C1a, G2a, H2, 
+            + T1a, J2a and R1b-V88), six among 15 males in Varna (I2a1, 
+            + I2a2, G2a, T1a, E1b1 and R1b-V88) and four among six males 
+            + at Yunatsite (C1a, G2a, H2, J2a), the Y-chromosomal 
+            + diversity during the SEE CA was higher than in 
+            + central/western Europe",
+        221 +        "page": 3,
+        222 +        "evidence_type": "quantitative",
+        223 +        "methodology_linked": "Y-chromosome analysis",
+        224 +        "supports_claims": ["C018"]
+        225 +      },
+        226 +      {
+        227 +        "id": "E021",
+        228 +        "description": "Limited first-degree relationships 
+            + detected",
+        229 +        "verbatim_quote": "When testing for genetic 
+            + relatedness in each of the SEE CA sites using READ, we 
+            + detected only three first-degree and two second-degree 
+            + relationships in total",
+        230 +        "page": 3,
+        231 +        "evidence_type": "quantitative",
+        232 +        "methodology_linked": "relatedness analysis",
+        233 +        "supports_claims": ["C019"]
+        234 +      },
+        235 +      {
+        236 +        "id": "E022",
+        237 +        "description": "IBD analysis shows limited 
+            + between-site links",
+        238 +        "verbatim_quote": "We found no evidence for 
+            + between-site links up to the fourth to fifth degree and 
+            + only two pairs of individuals (PIE003-VAR010 and 
+            + YUN005-VAR030) shared at least two blocks greater than 20 
+            + cM indicative of a fifth to seventh degree relationship",
+        239 +        "page": 3,
+        240 +        "evidence_type": "quantitative",
+        241 +        "methodology_linked": "IBD analysis",
+        242 +        "supports_claims": ["C020"]
+        243 +      },
+        244 +      {
+        245 +        "id": "E023",
+        246 +        "description": "ROH analysis indicates low parental 
+            + background relatedness",
+        247 +        "verbatim_quote": "However, analysis of the runs of 
+            + homozygosity (ROH) per individual using hapROH indicates 
+            + low levels of parental background relatedness suggesting 
+            + relatively large effective population sizes",
+        248 +        "page": 3,
+        249 +        "evidence_type": "statistical",
+        250 +        "methodology_linked": "ROH analysis",
+        251 +        "supports_claims": ["C021"]
+        252 +      },
+        253 +      {
+        254 +        "id": "E024",
+        255 +        "description": "Ukraine Eneolithic genetic cline in 
+            + PCA",
+        256 +        "verbatim_quote": "Eneolithic individuals from 
+            + Ukraine (Ukraine Eneolithic), dated from around 4500–3500 
+            + bc, associated with the Cernavodă I and Usatove cultures, 
+            + form a genetic cline in PCA space (Fig. 1b) between 
+            + Neolithic/SEE CA individuals and published Eneolithic 
+            + steppe individuals from the North Caucasus and Khvalynsk in
+            +  western Russia",
+        257 +        "page": 4,
+        258 +        "evidence_type": "analytical result",
+        259 +        "methodology_linked": "PCA analysis",
+        260 +        "supports_claims": ["C004", "C022"]
+        261 +      },
+        262 +      {
+        263 +        "id": "E025",
+        264 +        "description": "Chronological range of observed 
+            + genetic cline",
+        265 +        "verbatim_quote": "The observed genetic cline 
+            + reflects developments over a wide chronological range of 
+            + around 1,000 years",
+        266 +        "page": 4,
+        267 +        "evidence_type": "interpretive",
+        268 +        "methodology_linked": "chronological analysis",
+        269 +        "supports_claims": ["C023"]
+        270 +      },
+        271 +      {
+        272 +        "id": "E026",
+        273 +        "description": "Potential freshwater reservoir 
+            + effect on radiocarbon dates",
+        274 +        "verbatim_quote": "Some of the newly reported 14C 
+            + dates could be affected by a freshwater reservoir effect, 
+            + common in Steppe Eneolithic sites and could therefore be 
+            + several centuries younger than their reported dates",
+        275 +        "page": 4,
+        276 +        "evidence_type": "methodological caveat",
+        277 +        "methodology_linked": "radiocarbon dating",
+        278 +        "supports_claims": ["C024"]
+        279 +      },
+        280 +      {
+        281 +        "id": "E027",
+        282 +        "description": "Kartal individuals show genetic 
+            + heterogeneity",
+        283 +        "verbatim_quote": "Individuals from Kartal (around 
+            + 4150–3400 bc), associated with the Cernavodă I culture, are
+            +  genetically highly heterogeneous, with five individuals 
+            + (Kartal A) forming a cline between 'Steppe 
+            + Eneolithic'/'Steppe Maykop' individuals and Early Neolithic
+            +  groups, while three other individuals (Kartal B) fall 
+            + closer to the latter",
+        284 +        "page": 4,
+        285 +        "evidence_type": "analytical result",
+        286 +        "methodology_linked": "PCA analysis",
+        287 +        "supports_claims": ["C025"]
+        288 +      },
+        289 +      {
+        290 +        "id": "E028",
+        291 +        "description": "Majaky individuals more 
+            + homogeneous",
+        292 +        "verbatim_quote": "The five contemporaneous 
+            + individuals from Majaky (MAJ), are genetically more 
+            + homogeneous and fall together with the four individuals 
+            + from the late Eneolithic Usatove type-site (USV/UBK; 
+            + Supplementary Table A) in the middle of the 'Kartal 
+            + cline'",
+        293 +        "page": 4,
+        294 +        "evidence_type": "analytical result",
+        295 +        "methodology_linked": "PCA analysis",
+        296 +        "supports_claims": ["C026"]
+        297 +      },
+        298 +      {
+        299 +        "id": "E029",
+        300 +        "description": "No correlation between PC2 position 
+            + and radiocarbon dates",
+        301 +        "verbatim_quote": "We tested for a correlation 
+            + between positions of the Ukraine Eneolithic individuals in 
+            + PC2 and their 14C dates and found none (Spearman's ρ = 
+            + 0.113, P = 0.6656)",
+        302 +        "page": 4,
+        303 +        "evidence_type": "statistical",
+        304 +        "methodology_linked": "correlation analysis",
+        305 +        "supports_claims": ["C027"]
+        306 +      },
+        307 +      {
+        308 +        "id": "E030",
+        309 +        "description": "F4 symmetry statistics show excess 
+            + HG affinity in Ukraine Eneolithic",
+        310 +        "verbatim_quote": "First, compared to Turkey_N, 
+            + Ukraine Eneolithic individuals show excess affinity to all 
+            + HG groups, as indicated by significantly negative f4 
+            + statistics (|Z| ≥ 3)",
+        311 +        "page": 4,
+        312 +        "evidence_type": "statistical",
+        313 +        "methodology_linked": "f-statistics",
+        314 +        "supports_claims": ["C028"]
+        315 +      },
+        316 +      {
+        317 +        "id": "E031",
+        318 +        "description": "Ukraine Eneolithic shows excess 
+            + affinity to Turkey_N vs Steppe Eneolithic",
+        319 +        "verbatim_quote": "Second, conditioning on Steppe 
+            + Eneolithic (Extended Data Fig. 6b), we observe excess 
+            + affinity of Ukraine Eneolithic to Turkey_N, a symmetrical 
+            + relatedness to CHG and WHG, while Steppe Eneolithic groups 
+            + carry more EHG/WSHG ancestry",
+        320 +        "page": 4,
+        321 +        "evidence_type": "statistical",
+        322 +        "methodology_linked": "f-statistics",
+        323 +        "supports_claims": ["C029"]
+        324 +      },
+        325 +      {
+        326 +        "id": "E032",
+        327 +        "description": "Re-analysis of Cucuteni-Trypillia 
+            + data",
+        328 +        "verbatim_quote": "However, on re-analysis of these 
+            + data we find that this signal can be explained solely by an
+            +  increase in especially EHG-rich ancestry",
+        329 +        "page": 5,
+        330 +        "evidence_type": "analytical result",
+        331 +        "methodology_linked": "ancestry modelling",
+        332 +        "supports_claims": ["C030"]
+        333 +      },
+        334 +      {
+        335 +        "id": "E033",
+        336 +        "description": "F4 tests show Ukraine Eneolithic 
+            + excess affinity to SEE CA",
+        337 +        "verbatim_quote": "With respect to Steppe 
+            + Eneolithic, all Ukraine Eneolithic individuals show excess 
+            + affinity to all tested CA groups",
+        338 +        "page": 5,
+        339 +        "evidence_type": "statistical",
+        340 +        "methodology_linked": "f-statistics",
+        341 +        "supports_claims": ["C031"]
+        342 +      },
+        343 +      {
+        344 +        "id": "E034",
+        345 +        "description": "Distal qpAdm four-way admixture 
+            + model",
+        346 +        "verbatim_quote": "Using distal qpAdm modelling we 
+            + find support for a four-way admixture of Turkey_N, EHG, CHG
+            +  and WHG for KTL001, KTL007, MAJ and USV",
+        347 +        "page": 5,
+        348 +        "evidence_type": "statistical",
+        349 +        "methodology_linked": "qpAdm modelling",
+        350 +        "supports_claims": ["C032"]
+        351 +      },
+        352 +      {
+        353 +        "id": "E035",
+        354 +        "description": "Proximal two-way models for Ukraine 
+            + Eneolithic",
+        355 +        "verbatim_quote": "Following up with proximal qpAdm 
+            + models to explore potential contribution(s) of temporally 
+            + and geographically closer groups (Fig. 3e and Supplementary
+            +  Tables E and S), we find that all Ukraine Eneolithic 
+            + individuals can be modelled as a two-way model of either 
+            + VAR_CA or Ukraine Trypillia as farmer-related ancestry 
+            + source and Steppe Eneolithic as a source of mixed EHG+CHG 
+            + ancestry",
+        356 +        "page": 5,
+        357 +        "evidence_type": "statistical",
+        358 +        "methodology_linked": "qpAdm modelling",
+        359 +        "supports_claims": ["C033"]
+        360 +      },
+        361 +      {
+        362 +        "id": "E036",
+        363 +        "description": "KTL001 three-way mixture model",
+        364 +        "verbatim_quote": "Using both associated ancestries 
+            + and different HGs and SEE CA-related groups as sources in 
+            + qpAdm modelling (Fig. 3e and Supplementary Table S), we 
+            + find that KTL001 can indeed be modelled as a three-way 
+            + mixture of Steppe Eneolithic (around 32%), Caucasus 
+            + Eneolithic/Maykop (around 46%) and Ukraine N foragers 
+            + (around 22%), to the exclusion of a SEE CA source",
+        365 +        "page": 5,
+        366 +        "evidence_type": "statistical",
+        367 +        "methodology_linked": "qpAdm modelling",
+        368 +        "supports_claims": ["C034"]
+        369 +      },
+        370 +      {
+        371 +        "id": "E037",
+        372 +        "description": "MAJ and USV three-component model",
+        373 +        "verbatim_quote": "By contrast, MAJ and USV can be 
+            + modelled as VAR_CA or Ukraine Trypillia (around 50%), 
+            + Steppe Eneolithic (around 35%) and Caucasus 
+            + Eneolithic/Maykop (around 15%) as minor third component",
+        374 +        "page": 5,
+        375 +        "evidence_type": "statistical",
+        376 +        "methodology_linked": "qpAdm modelling",
+        377 +        "supports_claims": ["C035"]
+        378 +      },
+        379 +      {
+        380 +        "id": "E038",
+        381 +        "description": "Rotating model supports SEE CA 
+            + contribution over Caucasus",
+        382 +        "verbatim_quote": "Finally, to test whether we can 
+            + distinguish between the farmer-related ancestry contributed
+            +  by SEE CA- or Maykop-associated groups from the Caucasus, 
+            + or by both, we rotated each source to the outgroups, 
+            + alternatingly, keeping Steppe Eneolithic as a constant. 
+            + Here, we find strong support for a genetic contribution 
+            + from SEE CA rather than Caucasus Eneolithic/Maykop for most
+            +  KTL individuals",
+        383 +        "page": 5,
+        384 +        "evidence_type": "statistical",
+        385 +        "methodology_linked": "qpAdm modelling",
+        386 +        "supports_claims": ["C036"]
+        387 +      },
+        388 +      {
+        389 +        "id": "E039",
+        390 +        "description": "USV requires Maykop-associated 
+            + ancestry",
+        391 +        "verbatim_quote": "The same model is supported for 
+            + MAJ (P = 0.05) but rejected for USV, which indicates that 
+            + Maykop-associated ancestry is needed for the latter",
+        392 +        "page": 5,
+        393 +        "evidence_type": "statistical",
+        394 +        "methodology_linked": "qpAdm modelling",
+        395 +        "supports_claims": ["C037"]
+        396 +      },
+        397 +      {
+        398 +        "id": "E040",
+        399 +        "description": "IBD evidence for MAJ-USV 
+            + relationship",
+        400 +        "verbatim_quote": "The similarities in genetic 
+            + ancestry presented for MAJ and USV are also observed in the
+            +  results from the IBD analysis (Extended Data Fig. 4a and 
+            + Supplementary Table J) in which we find a fourth to sixth 
+            + degree relationship between MAJ023 and USV006",
+        401 +        "page": 5,
+        402 +        "evidence_type": "statistical",
+        403 +        "methodology_linked": "IBD analysis",
+        404 +        "supports_claims": ["C038"]
+        405 +      },
+        406 +      {
+        407 +        "id": "E041",
+        408 +        "description": "Elevated ROH in MAJ and USV",
+        409 +        "verbatim_quote": "However, in comparison to the 
+            + preceding CA and heterogenous KTL individuals, ROH indicate
+            +  a slightly elevated parental background relatedness for 
+            + MAJ and USV (Extended Data Fig. 5), suggesting smaller 
+            + effective population sizes in Usatove-associated groups",
+        410 +        "page": 5,
+        411 +        "evidence_type": "statistical",
+        412 +        "methodology_linked": "ROH analysis",
+        413 +        "supports_claims": ["C039"]
+        414 +      },
+        415 +      {
+        416 +        "id": "E042",
+        417 +        "description": "Y-chromosomal lineages in Ukraine 
+            + Eneolithic males",
+        418 +        "verbatim_quote": "Y-chromosomal evidence from the 
+            + six Ukraine Eneolithic males reflects lineages from each of
+            +  the contributing sources (Extended Data Fig. 3b): G2a is 
+            + probably a Neolithic legacy, while three males carrying 
+            + I2a1 could be attributed to the local Ukrainian Neolithic 
+            + or HG groups in general",
+        419 +        "page": 5,
+        420 +        "evidence_type": "genetic data",
+        421 +        "methodology_linked": "Y-chromosome analysis",
+        422 +        "supports_claims": ["C040"]
+        423 +      },
+        424 +      {
+        425 +        "id": "E043",
+        426 +        "description": "Absence of R1b-Z2103 in Ukraine 
+            + Eneolithic",
+        427 +        "verbatim_quote": "Importantly, we do not observe 
+            + R1b-Z2103 or immediate R1b-M269 precursor lineages, which 
+            + originated in the steppe and are later linked with 
+            + expansion of steppe-related ancestry",
+        428 +        "page": 5,
+        429 +        "evidence_type": "genetic data",
+        430 +        "methodology_linked": "Y-chromosome analysis",
+        431 +        "supports_claims": ["C041"]
+        432 +      },
+        433 +      {
+        434 +        "id": "E044",
+        435 +        "description": "Contrasting EBA genetic clusters",
+        436 +        "verbatim_quote": "The EBA individuals in this study
+            +  are characterized by two contrasting clusters of genetic 
+            + ancestry in PCA space (Fig. 1b) and different genetic 
+            + affinities in outgroup f3 statistics (Fig. 2 and 
+            + Supplementary Table C)",
+        437 +        "page": 6,
+        438 +        "evidence_type": "analytical result",
+        439 +        "methodology_linked": "PCA analysis",
+        440 +        "supports_claims": ["C042"]
+        441 +      },
+        442 +      {
+        443 +        "id": "E045",
+        444 +        "description": "YUN EBA and PIE078 resemble SEE CA",
+        445 +        "verbatim_quote": "Individuals from YUN and 
+            + individual PIE078, who date to the first half of the third 
+            + millennium BC, resemble the SEE CA groups, whereas BOY_EBA 
+            + and MAJ_EBA individuals fall within the 'steppe ancestry' 
+            + cluster, commonly associated with the Yamnaya cultural 
+            + complex",
+        446 +        "page": 6,
+        447 +        "evidence_type": "analytical result",
+        448 +        "methodology_linked": "PCA analysis",
+        449 +        "supports_claims": ["C043"]
+        450 +      },
+        451 +      {
+        452 +        "id": "E046",
+        453 +        "description": "Y-chromosome lineages distinguish 
+            + EBA clusters",
+        454 +        "verbatim_quote": "Intriguingly, the males from 
+            + YUN_EBA/PIE078 carried Y-chromosome lineages I2a, 
+            + suggestive of a HG legacy, while the males from BOY/MAJ_EBA
+            +  carried R1b-Z2103 or derived lineages, a characteristic 
+            + hallmark of Yamnaya-associated ancestry",
+        455 +        "page": 6,
+        456 +        "evidence_type": "genetic data",
+        457 +        "methodology_linked": "Y-chromosome analysis",
+        458 +        "supports_claims": ["C044"]
+        459 +      },
+        460 +      {
+        461 +        "id": "E047",
+        462 +        "description": "Excess HG ancestry confirmed in YUN 
+            + EBA and PIE078",
+        463 +        "verbatim_quote": "On the basis of these 
+            + observations we tested for additional attraction towards 
+            + HG-related groups in YUN_EBA and PIE078 compared to their 
+            + CA predecessors by using f4(CA, EBA; HGs, Mbuti) and 
+            + confirmed the excess HG ancestry in EBA individuals from 
+            + YUN and PIE with significant negative results (|Z| ≤ 3)",
+        464 +        "page": 6,
+        465 +        "evidence_type": "statistical",
+        466 +        "methodology_linked": "f-statistics",
+        467 +        "supports_claims": ["C045"]
+        468 +      },
+        469 +      {
+        470 +        "id": "E048",
+        471 +        "description": "YUN041 outlier shows higher affinity
+            +  to VAR_CA",
+        472 +        "verbatim_quote": "Here, only the outlier individual
+            +  YUN041 has a higher affinity to VAR_CA than to other EBA 
+            + groups",
+        473 +        "page": 6,
+        474 +        "evidence_type": "statistical",
+        475 +        "methodology_linked": "f-statistics",
+        476 +        "supports_claims": ["C046"]
+        477 +      },
+        478 +      {
+        479 +        "id": "E049",
+        480 +        "description": "Distal modelling confirms 
+            + contrasting EBA ancestries",
+        481 +        "verbatim_quote": "Distal qpAdm modelling with 
+            + cornerstone populations confirms the contrasting ancestries
+            +  of the two main EBA clusters. PIE078 and YUN_EBA can be 
+            + modelled with Turkey_N, CHG and WHG (Fig. 3c and 
+            + Supplementary Table X), whereas MAJ_EBA, BOY_EBA, BOY019 
+            + and YUN041 require EHG ancestry as an additional source",
+        482 +        "page": 6,
+        483 +        "evidence_type": "statistical",
+        484 +        "methodology_linked": "qpAdm modelling",
+        485 +        "supports_claims": ["C047"]
+        486 +      },
+        487 +      {
+        488 +        "id": "E050",
+        489 +        "description": "All EBA individuals show excess 
+            + Turkey_N affinity vs Steppe Eneolithic",
+        490 +        "verbatim_quote": "With the exception of Yamnaya 
+            + Caucasus, all EBA individuals show an excess affinity to 
+            + Turkey_N when compared to Steppe Eneolithic",
+        491 +        "page": 6,
+        492 +        "evidence_type": "statistical",
+        493 +        "methodology_linked": "f-statistics",
+        494 +        "supports_claims": ["C048"]
+        495 +      },
+        496 +      {
+        497 +        "id": "E051",
+        498 +        "description": "Genetic similarity among 
+            + Yamnaya-associated individuals",
+        499 +        "verbatim_quote": "Here, with the exception of 
+            + outlier individual Ukraine_Ozera_EBA_Yamnaya, all f4 
+            + statistics are non-significant (|Z| ≤ 3) (Supplementary 
+            + Table W), which indicates that all Yamnaya-associated 
+            + individuals including those from Ukraine and Bulgaria are 
+            + genetically highly similar",
+        500 +        "page": 6,
+        501 +        "evidence_type": "statistical",
+        502 +        "methodology_linked": "f-statistics",
+        503 +        "supports_claims": ["C049"]
+        504 +      },
+        505 +      {
+        506 +        "id": "E052",
+        507 +        "description": "BOY_EBA and Yamnaya Samara three-way
+            +  mixture model",
+        508 +        "verbatim_quote": "Applying the same rationale and 
+            + sources to proximal qpAdm modelling to uncover subtle 
+            + signals (Fig. 3f and Supplementary Table Y), we find that 
+            + BOY_EBA and Yamnaya Samara can be modelled as a three-way 
+            + mixture of Steppe Eneolithic, Caucasus Eneolithic/Maykop 
+            + and Ukraine N",
+        509 +        "page": 6,
+        510 +        "evidence_type": "statistical",
+        511 +        "methodology_linked": "qpAdm modelling",
+        512 +        "supports_claims": ["C050"]
+        513 +      },
+        514 +      {
+        515 +        "id": "E053",
+        516 +        "description": "Ukraine EBA Yamnaya can be modelled 
+            + with USV contribution",
+        517 +        "verbatim_quote": "For Ukraine_EBA_Yamnaya, we find 
+            + support for a three-way model (P = 0.07) with Steppe 
+            + Eneolithic (around 75%), Caucasus Eneolithic/Maykop (around
+            +  14%) and Globular Amphora (around 11%) as a western source
+            +  but also improved model fit (P = 0.5) for a two-way 
+            + mixture of Steppe Eneolithic (around 65%) and USV (around 
+            + 35%)",
+        518 +        "page": 6,
+        519 +        "evidence_type": "statistical",
+        520 +        "methodology_linked": "qpAdm modelling",
+        521 +        "supports_claims": ["C051"]
+        522 +      },
+        523 +      {
+        524 +        "id": "E054",
+        525 +        "description": "Yamnaya Caucasus two-way model",
+        526 +        "verbatim_quote": "By contrast, Yamnaya Caucasus 
+            + individuals from the southern steppe can be modelled as a 
+            + two-way model of around 76% Steppe Eneolithic and 26% 
+            + Caucasus Eneolithic/Maykop, confirming the findings of 
+            + Lazaridis and colleagues",
+        527 +        "page": 6,
+        528 +        "evidence_type": "statistical",
+        529 +        "methodology_linked": "qpAdm modelling",
+        530 +        "supports_claims": ["C052"]
+        531 +      },
+        532 +      {
+        533 +        "id": "E055",
+        534 +        "description": "BOY019 modelling results",
+        535 +        "verbatim_quote": "Individual BOY019 can be modelled
+            +  successfully with around 63% USV and around 37% Steppe 
+            + Eneolithic ancestry or around 40% Ukraine Trypillia and 
+            + around 60% Steppe Eneolithic, suggesting interaction 
+            + between these two neighbouring groups in the western 
+            + contact zone or alternatively direct descent from admixed 
+            + groups (for example, KTL001)",
+        536 +        "page": 7,
+        537 +        "evidence_type": "statistical",
+        538 +        "methodology_linked": "qpAdm modelling",
+        539 +        "supports_claims": ["C053"]
+        540 +      },
+        541 +      {
+        542 +        "id": "E056",
+        543 +        "description": "YUN041 modelling results",
+        544 +        "verbatim_quote": "Finally, individual YUN041 can be
+            +  modelled as around 50% local YUN_EBA ancestry and 50% of 
+            + either BOY_EBA or another Yamnaya-associated source",
+        545 +        "page": 7,
+        546 +        "evidence_type": "statistical",
+        547 +        "methodology_linked": "qpAdm modelling",
+        548 +        "supports_claims": ["C054"]
+        549 +      },
+        550 +      {
+        551 +        "id": "E057",
+        552 +        "description": "HBV positive individuals detected",
+        553 +        "verbatim_quote": "Despite the systematic screening 
+            + of teeth, we found no evidence for pathogens among the CA 
+            + individuals of the fifth and fourth millennium bc, apart 
+            + from two individuals (YUN048 and VAR021), who were positive
+            +  for the Hepatitis B virus (HBV), while individual VAR021 
+            + was also positive for Salmonella enterica",
+        554 +        "page": 7,
+        555 +        "evidence_type": "analytical result",
+        556 +        "methodology_linked": "pathogen screening",
+        557 +        "supports_claims": ["C055"]
+        558 +      },
+        559 +      {
+        560 +        "id": "E058",
+        561 +        "description": "Ancient DNA laboratory location",
+        562 +        "verbatim_quote": "Ancient DNA work was carried out 
+            + in dedicated clean room facilities of the Max Planck 
+            + Institute for Evolutionary Anthropology (MPI-EVA), Leipzig 
+            + and Jena, Germany",
+        563 +        "page": 9,
+        564 +        "evidence_type": "methodological",
+        565 +        "methodology_linked": "laboratory procedures",
+        566 +        "supports_claims": ["C056"]
+        567 +      },
+        568 +      {
+        569 +        "id": "E059",
+        570 +        "description": "Sample processing numbers",
+        571 +        "verbatim_quote": "We processed 168 petrous bones 
+            + and 129 teeth in total",
+        572 +        "page": 9,
+        573 +        "evidence_type": "quantitative",
+        574 +        "methodology_linked": "sample processing",
+        575 +        "supports_claims": ["C057"]
+        576 +      },
+        577 +      {
+        578 +        "id": "E060",
+        579 +        "description": "DNA extraction method",
+        580 +        "verbatim_quote": "DNA was extracted from all 
+            + samples following a modified protocol refs. 63,64",
+        581 +        "page": 9,
+        582 +        "evidence_type": "methodological",
+        583 +        "methodology_linked": "DNA extraction",
+        584 +        "supports_claims": ["C058"]
+        585 +      },
+        586 +      {
+        587 +        "id": "E061",
+        588 +        "description": "Library preparation approach",
+        589 +        "verbatim_quote": "DNA double-stranded libraries 
+            + were built using a partial uracil-DNA-glycosylase 
+            + (UDG-half) treatment",
+        590 +        "page": 9,
+        591 +        "evidence_type": "methodological",
+        592 +        "methodology_linked": "library preparation",
+        593 +        "supports_claims": ["C059"]
+        594 +      },
+        595 +      {
+        596 +        "id": "E062",
+        597 +        "description": "Endogenous DNA threshold",
+        598 +        "verbatim_quote": "Libraries above the threshold of 
+            + 0.1% endogenous DNA were enriched for around 1.2 million 
+            + SNPs in a targeted in-solution capture (1,240,000 SNP 
+            + capture)",
+        599 +        "page": 9,
+        600 +        "evidence_type": "methodological",
+        601 +        "methodology_linked": "SNP capture",
+        602 +        "supports_claims": ["C060"]
+        603 +      },
+        604 +      {
+        605 +        "id": "E063",
+        606 +        "description": "Mean coverage achieved",
+        607 +        "verbatim_quote": "Enriched libraries were sequenced
+            +  on HiSeq4000 and NextSeq500 Illumina platforms using a 
+            + single-read (SR 75) kit and sequencing 40 million reads for
+            +  libraries between 0.1% and 2% or 20 million reads for 
+            + libraries above 2%, resulting in a mean coverage of 0.7×",
+        608 +        "page": 9,
+        609 +        "evidence_type": "quantitative",
+        610 +        "methodology_linked": "sequencing",
+        611 +        "supports_claims": ["C061"]
+        612 +      },
+        613 +      {
+        614 +        "id": "E064",
+        615 +        "description": "Mitochondrial capture coverage",
+        616 +        "verbatim_quote": "An additional mitochondrial 
+            + capture was performed for individuals for which enough 
+            + reads could not be obtained as by-catch of the 1,240,000 
+            + capture, resulting in an average coverage of 64×",
+        617 +        "page": 9,
+        618 +        "evidence_type": "quantitative",
+        619 +        "methodology_linked": "mitochondrial capture",
+        620 +        "supports_claims": ["C062"]
+        621 +      },
+        622 +      {
+        623 +        "id": "E065",
+        624 +        "description": "YMCA capture mean coverage",
+        625 +        "verbatim_quote": "For selected male individuals we 
+            + also performed an inhouse capture assay for the Y 
+            + chromosome (YMCA) which targets around 10.445 kB on the 
+            + non-combining region of the Y chromosome and which resulted
+            +  in a mean coverage of 0.08×",
+        626 +        "page": 9,
+        627 +        "evidence_type": "quantitative",
+        628 +        "methodology_linked": "Y-chromosome capture",
+        629 +        "supports_claims": ["C063"]
+        630 +      },
+        631 +      {
+        632 +        "id": "E066",
+        633 +        "description": "DNA damage patterns characteristic 
+            + of ancient DNA",
+        634 +        "verbatim_quote": "All libraries, except PTK001, 
+            + yielded damage patterns characteristic of ancient DNA, 
+            + which includes short DNA fragment lengths (45–65 bp on 
+            + average) and postmortem deamination at the end of the 
+            + molecules (6–17% for partial UDG treatment, 30–38% for 
+            + non-UDG treatment)",
+        635 +        "page": 9,
+        636 +        "evidence_type": "quantitative",
+        637 +        "methodology_linked": "DNA authentication",
+        638 +        "supports_claims": ["C064"]
+        639 +      },
+        640 +      {
+        641 +        "id": "E067",
+        642 +        "description": "Contamination estimates",
+        643 +        "verbatim_quote": "We merged Shotgun, 1,240,000 and 
+            + mitochondrial capture data for each individual, mapped this
+            +  against the revised Cambridge Reference Sequence for the 
+            + complete human mitochondrial genome (NC 012920.1) and 
+            + estimated contamination for both sexes on the mitochondrium
+            +  using ContamMix (Supplementary Table A), ranging from 
+            + 0.086% to −9.2%. The nuclear contamination for males was 
+            + estimated using ANGSD and ranged from 0.2% to 2%",
+        644 +        "page": 9,
+        645 +        "evidence_type": "quantitative",
+        646 +        "methodology_linked": "contamination assessment",
+        647 +        "supports_claims": ["C065"]
+        648 +      }
+        649 +    ],
+        650 +    "claims": [
+        651 +      {
+        652 +        "id": "C001",
+        653 +        "claim_type": "major",
+        654 +        "description": "Early contact between farming and 
+            + pastoralist groups occurred ~1000 years earlier than 
+            + anticipated",
+        655 +        "verbatim_quote": "indicating genetic and cultural 
+            + contact over a period of around 1,000 years earlier than 
+            + anticipated",
+        656 +        "page": 1,
+        657 +        "supported_by": ["E003", "E004"],
+        658 +        "strength": "strong"
+        659 +      },
+        660 +      {
+        661 +        "id": "C002",
+        662 +        "claim_type": "methodological",
+        663 +        "description": "135 ancient individuals spanning 
+            + 5400-2400 BC were successfully analysed",
+        664 +        "verbatim_quote": "we analysed genome-wide data from
+            +  135 ancient individuals from the contact zone between 
+            + southeastern Europe and the northwestern Black Sea region 
+            + spanning this critical time period",
+        665 +        "page": 1,
+        666 +        "supported_by": ["E001", "E007"],
+        667 +        "strength": "strong"
+        668 +      },
+        669 +      {
+        670 +        "id": "C003",
+        671 +        "claim_type": "major",
+        672 +        "description": "Genetic continuity existed between 
+            + Neolithic and Copper Age groups in SEE",
+        673 +        "verbatim_quote": "While we observe genetic 
+            + continuity between Neolithic and Copper Age groups from 
+            + major sites in the same region",
+        674 +        "page": 1,
+        675 +        "supported_by": ["E002", "E011", "E016"],
+        676 +        "strength": "strong"
+        677 +      },
+        678 +      {
+        679 +        "id": "C004",
+        680 +        "claim_type": "major",
+        681 +        "description": "Groups in northwestern Black Sea 
+            + region carried mixed ancestries from 4500 BC",
+        682 +        "verbatim_quote": "from around 4500 bc on, groups 
+            + from the northwestern Black Sea region carried varying 
+            + amounts of mixed ancestries derived from Copper Age groups 
+            + and those from the forest/steppe zones",
+        683 +        "page": 1,
+        684 +        "supported_by": ["E003", "E024"],
+        685 +        "strength": "strong"
+        686 +      },
+        687 +      {
+        688 +        "id": "C005",
+        689 +        "claim_type": "interpretive",
+        690 +        "description": "Transfer of innovations during early
+            +  contact was integral to formation of pastoralist groups",
+        691 +        "verbatim_quote": "We propose that the transfer of 
+            + critical innovations between farmers and transitional 
+            + foragers/herders from different ecogeographic zones during 
+            + this early contact was integral to the formation, rise and 
+            + expansion of pastoralist groups around 3300 bc",
+        692 +        "page": 1,
+        693 +        "supported_by": ["E004"],
+        694 +        "strength": "moderate"
+        695 +      },
+        696 +      {
+        697 +        "id": "C006",
+        698 +        "claim_type": "contextual",
+        699 +        "description": "Varna cemetery demonstrates 
+            + unprecedented social stratification in prehistoric Europe",
+        700 +        "verbatim_quote": "The discovery of the necropolis 
+            + of Varna (4600–4300 bc) on the Black Sea coast led to a 
+            + reassessment of social inequality in human prehistory, with
+            +  large quantities of gold and other symbols of power and 
+            + wealth suggesting unprecedented levels of social 
+            + stratification",
+        701 +        "page": 1,
+        702 +        "supported_by": ["E005"],
+        703 +        "strength": "strong"
+        704 +      },
+        705 +      {
+        706 +        "id": "C007",
+        707 +        "claim_type": "contextual",
+        708 +        "description": "Tell settlements were simultaneously
+            +  abandoned around 4250/4200 BC",
+        709 +        "verbatim_quote": "the roughly simultaneous 
+            + abandonment of the numerous tell settlements and cemeteries
+            +  around 4250/4200 bc appears enigmatic",
+        710 +        "page": 1,
+        711 +        "supported_by": ["E006"],
+        712 +        "strength": "strong"
+        713 +      },
+        714 +      {
+        715 +        "id": "C008",
+        716 +        "claim_type": "methodological",
+        717 +        "description": "SNP capture achieved coverage of 
+            + 61,000-947,000 SNPs per individual",
+        718 +        "verbatim_quote": "ranging from 61,000 to 947,000 
+            + SNPs with an average SNP coverage between 0.01× and 3.4×",
+        719 +        "page": 3,
+        720 +        "supported_by": ["E008"],
+        721 +        "strength": "strong"
+        722 +      },
+        723 +      {
+        724 +        "id": "C009",
+        725 +        "claim_type": "methodological",
+        726 +        "description": "113 new radiocarbon dates were 
+            + generated for this study",
+        727 +        "verbatim_quote": "We also report 113 new 
+            + radiocarbon dates",
+        728 +        "page": 3,
+        729 +        "supported_by": ["E009"],
+        730 +        "strength": "strong"
+        731 +      },
+        732 +      {
+        733 +        "id": "C010",
+        734 +        "claim_type": "methodological",
+        735 +        "description": "PCA was constructed from 1,253 
+            + modern West Eurasians from 77 populations",
+        736 +        "verbatim_quote": "principal component analysis 
+            + (PCA) constructed from 1,253 modern-day West Eurasians from
+            +  77 different populations",
+        737 +        "page": 3,
+        738 +        "supported_by": ["E010"],
+        739 +        "strength": "strong"
+        740 +      },
+        741 +      {
+        742 +        "id": "C011",
+        743 +        "claim_type": "major",
+        744 +        "description": "SEE CA individuals form a tight 
+            + genetic cluster overlapping with Neolithic Anatolians",
+        745 +        "verbatim_quote": "the chronologically younger SEE 
+            + CA individuals from the emblematic sites of Yunatsite 
+            + (YUN), Varna (VAR), Pietrele (PIE) and the multiple burial 
+            + from Tell Petko Karavelovo (PTK), form a tight cluster that
+            +  also overlaps with published Neolithic individuals from 
+            + Anatolia and SEE",
+        746 +        "page": 3,
+        747 +        "supported_by": ["E012", "E013"],
+        748 +        "strength": "strong"
+        749 +      },
+        750 +      {
+        751 +        "id": "C012",
+        752 +        "claim_type": "major",
+        753 +        "description": "Local genetic homogeneity persisted 
+            + throughout the Copper Age in SEE",
+        754 +        "verbatim_quote": "outgroup f3 statistics suggest 
+            + local genetic homogeneity throughout the CA in this 
+            + region",
+        755 +        "page": 3,
+        756 +        "supported_by": ["E013"],
+        757 +        "strength": "strong"
+        758 +      },
+        759 +      {
+        760 +        "id": "C013",
+        761 +        "claim_type": "moderate",
+        762 +        "description": "SEE CA groups show slight shift 
+            + towards EHG/WHG ancestry",
+        763 +        "verbatim_quote": "all SEE CA groups are slightly 
+            + shifted towards the EHG/WHG cline in both PC1 and PC2 
+            + compared to most published Neolithic individuals",
+        764 +        "page": 3,
+        765 +        "supported_by": ["E014", "E015"],
+        766 +        "strength": "strong"
+        767 +      },
+        768 +      {
+        769 +        "id": "C014",
+        770 +        "claim_type": "methodological",
+        771 +        "description": "SEE CA ancestry is predominantly 
+            + Turkey_N with minimal HG admixture",
+        772 +        "verbatim_quote": "confirmed minimal amounts of 
+            + EHG-, CHG- and WHG-like ancestry, in addition to 
+            + predominantly Turkey_N-like ancestry",
+        773 +        "page": 3,
+        774 +        "supported_by": ["E015"],
+        775 +        "strength": "strong"
+        776 +      },
+        777 +      {
+        778 +        "id": "C015",
+        779 +        "claim_type": "major",
+        780 +        "description": "All SEE CA groups can be modelled as
+            +  single-source from local Neolithic",
+        781 +        "verbatim_quote": "we could model all SEE CA groups 
+            + as a single-source model (Fig. 3d and Supplementary Table 
+            + H), suggesting genetic continuity at the local scale",
+        782 +        "page": 3,
+        783 +        "supported_by": ["E016"],
+        784 +        "strength": "strong"
+        785 +      },
+        786 +      {
+        787 +        "id": "C016",
+        788 +        "claim_type": "moderate",
+        789 +        "description": "PIE060 is an outlier with ~35% HG 
+            + ancestry",
+        790 +        "verbatim_quote": "Ancestry modelling with qpAdm 
+            + supports a two-way model (Fig. 3d) with SEE N (around 65%) 
+            + and Iron Gates HG or KO1 (around 35%) as the best proxies",
+        791 +        "page": 3,
+        792 +        "supported_by": ["E017", "E018"],
+        793 +        "strength": "strong"
+        794 +      },
+        795 +      {
+        796 +        "id": "C017",
+        797 +        "claim_type": "interpretive",
+        798 +        "description": "PIE060 came from a community outside
+            +  Pietrele with recent HG contact",
+        799 +        "verbatim_quote": "A flat decay curve (Extended Data
+            +  Fig. 3a) supports the interpretation of a recent admixture
+            +  date, which suggests that PIE060 came from a community 
+            + outside Pietrele with recent contact with HGs",
+        800 +        "page": 3,
+        801 +        "supported_by": ["E019"],
+        802 +        "strength": "moderate"
+        803 +      },
+        804 +      {
+        805 +        "id": "C018",
+        806 +        "claim_type": "moderate",
+        807 +        "description": "Y-chromosomal diversity during SEE 
+            + CA was higher than in central/western Europe",
+        808 +        "verbatim_quote": "the Y-chromosomal diversity 
+            + during the SEE CA was higher than in central/western 
+            + Europe",
+        809 +        "page": 3,
+        810 +        "supported_by": ["E020"],
+        811 +        "strength": "strong"
+        812 +      },
+        813 +      {
+        814 +        "id": "C019",
+        815 +        "claim_type": "moderate",
+        816 +        "description": "Limited close genetic relatives were
+            +  found within SEE CA sites",
+        817 +        "verbatim_quote": "we detected only three 
+            + first-degree and two second-degree relationships in total",
+        818 +        "page": 3,
+        819 +        "supported_by": ["E021"],
+        820 +        "strength": "strong"
+        821 +      },
+        822 +      {
+        823 +        "id": "C020",
+        824 +        "claim_type": "moderate",
+        825 +        "description": "No close genetic links exist between
+            +  contemporaneous SEE CA sites",
+        826 +        "verbatim_quote": "We found no evidence for 
+            + between-site links up to the fourth to fifth degree",
+        827 +        "page": 3,
+        828 +        "supported_by": ["E022"],
+        829 +        "strength": "strong"
+        830 +      },
+        831 +      {
+        832 +        "id": "C021",
+        833 +        "claim_type": "moderate",
+        834 +        "description": "Low ROH indicates large effective 
+            + population sizes in SEE CA",
+        835 +        "verbatim_quote": "ROH indicates low levels of 
+            + parental background relatedness suggesting relatively large
+            +  effective population sizes",
+        836 +        "page": 3,
+        837 +        "supported_by": ["E023"],
+        838 +        "strength": "strong"
+        839 +      },
+        840 +      {
+        841 +        "id": "C022",
+        842 +        "claim_type": "major",
+        843 +        "description": "Ukraine Eneolithic individuals form 
+            + a genetic cline between farmers and steppe groups",
+        844 +        "verbatim_quote": "Eneolithic individuals from 
+            + Ukraine (Ukraine Eneolithic), dated from around 4500–3500 
+            + bc, associated with the Cernavodă I and Usatove cultures, 
+            + form a genetic cline in PCA space (Fig. 1b) between 
+            + Neolithic/SEE CA individuals and published Eneolithic 
+            + steppe individuals",
+        845 +        "page": 4,
+        846 +        "supported_by": ["E024"],
+        847 +        "strength": "strong"
+        848 +      },
+        849 +      {
+        850 +        "id": "C023",
+        851 +        "claim_type": "interpretive",
+        852 +        "description": "The genetic cline reflects 
+            + developments over ~1000 years",
+        853 +        "verbatim_quote": "The observed genetic cline 
+            + reflects developments over a wide chronological range of 
+            + around 1,000 years",
+        854 +        "page": 4,
+        855 +        "supported_by": ["E025"],
+        856 +        "strength": "moderate"
+        857 +      },
+        858 +      {
+        859 +        "id": "C024",
+        860 +        "claim_type": "methodological caveat",
+        861 +        "description": "Radiocarbon dates may be affected by
+            +  freshwater reservoir effect",
+        862 +        "verbatim_quote": "Some of the newly reported 14C 
+            + dates could be affected by a freshwater reservoir effect, 
+            + common in Steppe Eneolithic sites and could therefore be 
+            + several centuries younger than their reported dates",
+        863 +        "page": 4,
+        864 +        "supported_by": ["E026"],
+        865 +        "strength": "moderate"
+        866 +      },
+        867 +      {
+        868 +        "id": "C025",
+        869 +        "claim_type": "moderate",
+        870 +        "description": "Kartal individuals are genetically 
+            + highly heterogeneous",
+        871 +        "verbatim_quote": "Individuals from Kartal (around 
+            + 4150–3400 bc), associated with the Cernavodă I culture, are
+            +  genetically highly heterogeneous",
+        872 +        "page": 4,
+        873 +        "supported_by": ["E027"],
+        874 +        "strength": "strong"
+        875 +      },
+        876 +      {
+        877 +        "id": "C026",
+        878 +        "claim_type": "moderate",
+        879 +        "description": "Majaky and Usatove individuals are 
+            + genetically more homogeneous",
+        880 +        "verbatim_quote": "The five contemporaneous 
+            + individuals from Majaky (MAJ), are genetically more 
+            + homogeneous",
+        881 +        "page": 4,
+        882 +        "supported_by": ["E028"],
+        883 +        "strength": "strong"
+        884 +      },
+        885 +      {
+        886 +        "id": "C027",
+        887 +        "claim_type": "moderate",
+        888 +        "description": "No correlation exists between PC2 
+            + position and radiocarbon dates in Ukraine Eneolithic",
+        889 +        "verbatim_quote": "We tested for a correlation 
+            + between positions of the Ukraine Eneolithic individuals in 
+            + PC2 and their 14C dates and found none (Spearman's ρ = 
+            + 0.113, P = 0.6656)",
+        890 +        "page": 4,
+        891 +        "supported_by": ["E029"],
+        892 +        "strength": "strong"
+        893 +      },
+        894 +      {
+        895 +        "id": "C028",
+        896 +        "claim_type": "moderate",
+        897 +        "description": "Ukraine Eneolithic shows excess 
+            + affinity to all HG groups compared to Turkey_N",
+        898 +        "verbatim_quote": "compared to Turkey_N, Ukraine 
+            + Eneolithic individuals show excess affinity to all HG 
+            + groups, as indicated by significantly negative f4 
+            + statistics (|Z| ≥ 3)",
+        899 +        "page": 4,
+        900 +        "supported_by": ["E030"],
+        901 +        "strength": "strong"
+        902 +      },
+        903 +      {
+        904 +        "id": "C029",
+        905 +        "claim_type": "moderate",
+        906 +        "description": "Ukraine Eneolithic shows excess 
+            + Turkey_N affinity compared to Steppe Eneolithic",
+        907 +        "verbatim_quote": "we observe excess affinity of 
+            + Ukraine Eneolithic to Turkey_N, a symmetrical relatedness 
+            + to CHG and WHG, while Steppe Eneolithic groups carry more 
+            + EHG/WSHG ancestry",
+        908 +        "page": 4,
+        909 +        "supported_by": ["E031"],
+        910 +        "strength": "strong"
+        911 +      },
+        912 +      {
+        913 +        "id": "C030",
+        914 +        "claim_type": "interpretive",
+        915 +        "description": "Previously reported Yamnaya ancestry
+            +  in Cucuteni-Trypillia is explained by EHG-rich ancestry 
+            + alone",
+        916 +        "verbatim_quote": "on re-analysis of these data we 
+            + find that this signal can be explained solely by an 
+            + increase in especially EHG-rich ancestry",
+        917 +        "page": 5,
+        918 +        "supported_by": ["E032"],
+        919 +        "strength": "moderate"
+        920 +      },
+        921 +      {
+        922 +        "id": "C031",
+        923 +        "claim_type": "moderate",
+        924 +        "description": "All Ukraine Eneolithic individuals 
+            + show excess affinity to SEE CA groups",
+        925 +        "verbatim_quote": "With respect to Steppe 
+            + Eneolithic, all Ukraine Eneolithic individuals show excess 
+            + affinity to all tested CA groups",
+        926 +        "page": 5,
+        927 +        "supported_by": ["E033"],
+        928 +        "strength": "strong"
+        929 +      },
+        930 +      {
+        931 +        "id": "C032",
+        932 +        "claim_type": "moderate",
+        933 +        "description": "Distal modelling supports four-way 
+            + admixture for several Ukraine Eneolithic groups",
+        934 +        "verbatim_quote": "Using distal qpAdm modelling we 
+            + find support for a four-way admixture of Turkey_N, EHG, CHG
+            +  and WHG for KTL001, KTL007, MAJ and USV",
+        935 +        "page": 5,
+        936 +        "supported_by": ["E034"],
+        937 +        "strength": "strong"
+        938 +      },
+        939 +      {
+        940 +        "id": "C033",
+        941 +        "claim_type": "moderate",
+        942 +        "description": "All Ukraine Eneolithic can be 
+            + modelled as two-way mixture of CA farmers and Steppe 
+            + Eneolithic",
+        943 +        "verbatim_quote": "we find that all Ukraine 
+            + Eneolithic individuals can be modelled as a two-way model 
+            + of either VAR_CA or Ukraine Trypillia as farmer-related 
+            + ancestry source and Steppe Eneolithic as a source of mixed 
+            + EHG+CHG ancestry",
+        944 +        "page": 5,
+        945 +        "supported_by": ["E035"],
+        946 +        "strength": "strong"
+        947 +      },
+        948 +      {
+        949 +        "id": "C034",
+        950 +        "claim_type": "moderate",
+        951 +        "description": "KTL001 shows three-way mixture 
+            + excluding SEE CA ancestry",
+        952 +        "verbatim_quote": "KTL001 can indeed be modelled as 
+            + a three-way mixture of Steppe Eneolithic (around 32%), 
+            + Caucasus Eneolithic/Maykop (around 46%) and Ukraine N 
+            + foragers (around 22%), to the exclusion of a SEE CA 
+            + source",
+        953 +        "page": 5,
+        954 +        "supported_by": ["E036"],
+        955 +        "strength": "strong"
+        956 +      },
+        957 +      {
+        958 +        "id": "C035",
+        959 +        "claim_type": "moderate",
+        960 +        "description": "MAJ and USV show three-component 
+            + ancestry including Caucasus contribution",
+        961 +        "verbatim_quote": "MAJ and USV can be modelled as 
+            + VAR_CA or Ukraine Trypillia (around 50%), Steppe Eneolithic
+            +  (around 35%) and Caucasus Eneolithic/Maykop (around 15%) 
+            + as minor third component",
+        962 +        "page": 5,
+        963 +        "supported_by": ["E037"],
+        964 +        "strength": "strong"
+        965 +      },
+        966 +      {
+        967 +        "id": "C036",
+        968 +        "claim_type": "major",
+        969 +        "description": "Strong support exists for SEE CA 
+            + contribution over Caucasus for most Kartal individuals",
+        970 +        "verbatim_quote": "we find strong support for a 
+            + genetic contribution from SEE CA rather than Caucasus 
+            + Eneolithic/Maykop for most KTL individuals",
+        971 +        "page": 5,
+        972 +        "supported_by": ["E038"],
+        973 +        "strength": "strong"
+        974 +      },
+        975 +      {
+        976 +        "id": "C037",
+        977 +        "claim_type": "moderate",
+        978 +        "description": "Usatove requires Maykop-associated 
+            + ancestry in addition to other sources",
+        979 +        "verbatim_quote": "The same model is supported for 
+            + MAJ (P = 0.05) but rejected for USV, which indicates that 
+            + Maykop-associated ancestry is needed for the latter",
+        980 +        "page": 5,
+        981 +        "supported_by": ["E039"],
+        982 +        "strength": "strong"
+        983 +      },
+        984 +      {
+        985 +        "id": "C038",
+        986 +        "claim_type": "moderate",
+        987 +        "description": "IBD analysis confirms genetic 
+            + similarity between MAJ and USV",
+        988 +        "verbatim_quote": "we find a fourth to sixth degree 
+            + relationship between MAJ023 and USV006, which reflects the 
+            + close geographical vicinity of the two sites",
+        989 +        "page": 5,
+        990 +        "supported_by": ["E040"],
+        991 +        "strength": "strong"
+        992 +      },
+        993 +      {
+        994 +        "id": "C039",
+        995 +        "claim_type": "moderate",
+        996 +        "description": "MAJ and USV show smaller effective 
+            + population sizes than preceding CA groups",
+        997 +        "verbatim_quote": "ROH indicate a slightly elevated 
+            + parental background relatedness for MAJ and USV (Extended 
+            + Data Fig. 5), suggesting smaller effective population sizes
+            +  in Usatove-associated groups",
+        998 +        "page": 5,
+        999 +        "supported_by": ["E041"],
+       1000 +        "strength": "strong"
+       1001 +      },
+       1002 +      {
+       1003 +        "id": "C040",
+       1004 +        "claim_type": "moderate",
+       1005 +        "description": "Y-chromosomal lineages in Ukraine 
+            + Eneolithic reflect multiple contributing sources",
+       1006 +        "verbatim_quote": "Y-chromosomal evidence from the 
+            + six Ukraine Eneolithic males reflects lineages from each of
+            +  the contributing sources",
+       1007 +        "page": 5,
+       1008 +        "supported_by": ["E042"],
+       1009 +        "strength": "strong"
+       1010 +      },
+       1011 +      {
+       1012 +        "id": "C041",
+       1013 +        "claim_type": "moderate",
+       1014 +        "description": "R1b-Z2103 lineage absent in Ukraine 
+            + Eneolithic males",
+       1015 +        "verbatim_quote": "Importantly, we do not observe 
+            + R1b-Z2103 or immediate R1b-M269 precursor lineages, which 
+            + originated in the steppe and are later linked with 
+            + expansion of steppe-related ancestry",
+       1016 +        "page": 5,
+       1017 +        "supported_by": ["E043"],
+       1018 +        "strength": "strong"
+       1019 +      },
+       1020 +      {
+       1021 +        "id": "C042",
+       1022 +        "claim_type": "major",
+       1023 +        "description": "EBA individuals show two contrasting
+            +  genetic ancestry clusters",
+       1024 +        "verbatim_quote": "The EBA individuals in this study
+            +  are characterized by two contrasting clusters of genetic 
+            + ancestry in PCA space",
+       1025 +        "page": 6,
+       1026 +        "supported_by": ["E044"],
+       1027 +        "strength": "strong"
+       1028 +      },
+       1029 +      {
+       1030 +        "id": "C043",
+       1031 +        "claim_type": "moderate",
+       1032 +        "description": "YUN EBA and PIE078 resemble SEE CA 
+            + while BOY/MAJ EBA show steppe ancestry",
+       1033 +        "verbatim_quote": "Individuals from YUN and 
+            + individual PIE078, who date to the first half of the third 
+            + millennium BC, resemble the SEE CA groups, whereas BOY_EBA 
+            + and MAJ_EBA individuals fall within the 'steppe ancestry' 
+            + cluster",
+       1034 +        "page": 6,
+       1035 +        "supported_by": ["E045"],
+       1036 +        "strength": "strong"
+       1037 +      },
+       1038 +      {
+       1039 +        "id": "C044",
+       1040 +        "claim_type": "moderate",
+       1041 +        "description": "Y-chromosome lineages distinguish 
+            + the two EBA clusters",
+       1042 +        "verbatim_quote": "the males from YUN_EBA/PIE078 
+            + carried Y-chromosome lineages I2a, suggestive of a HG 
+            + legacy, while the males from BOY/MAJ_EBA carried R1b-Z2103 
+            + or derived lineages, a characteristic hallmark of 
+            + Yamnaya-associated ancestry",
+       1043 +        "page": 6,
+       1044 +        "supported_by": ["E046"],
+       1045 +        "strength": "strong"
+       1046 +      },
+       1047 +      {
+       1048 +        "id": "C045",
+       1049 +        "claim_type": "moderate",
+       1050 +        "description": "YUN EBA and PIE078 show excess HG 
+            + ancestry compared to CA predecessors",
+       1051 +        "verbatim_quote": "confirmed the excess HG ancestry 
+            + in EBA individuals from YUN and PIE with significant 
+            + negative results (|Z| ≤ 3)",
+       1052 +        "page": 6,
+       1053 +        "supported_by": ["E047"],
+       1054 +        "strength": "strong"
+       1055 +      },
+       1056 +      {
+       1057 +        "id": "C046",
+       1058 +        "claim_type": "moderate",
+       1059 +        "description": "YUN041 outlier shows higher affinity
+            +  to local CA than other EBA groups",
+       1060 +        "verbatim_quote": "only the outlier individual 
+            + YUN041 has a higher affinity to VAR_CA than to other EBA 
+            + groups",
+       1061 +        "page": 6,
+       1062 +        "supported_by": ["E048"],
+       1063 +        "strength": "strong"
+       1064 +      },
+       1065 +      {
+       1066 +        "id": "C047",
+       1067 +        "claim_type": "moderate",
+       1068 +        "description": "Distal modelling confirms distinct 
+            + ancestry sources for two EBA clusters",
+       1069 +        "verbatim_quote": "PIE078 and YUN_EBA can be 
+            + modelled with Turkey_N, CHG and WHG (Fig. 3c and 
+            + Supplementary Table X), whereas MAJ_EBA, BOY_EBA, BOY019 
+            + and YUN041 require EHG ancestry as an additional source",
+       1070 +        "page": 6,
+       1071 +        "supported_by": ["E049"],
+       1072 +        "strength": "strong"
+       1073 +      },
+       1074 +      {
+       1075 +        "id": "C048",
+       1076 +        "claim_type": "moderate",
+       1077 +        "description": "Most EBA individuals show excess 
+            + Turkey_N affinity compared to Steppe Eneolithic",
+       1078 +        "verbatim_quote": "With the exception of Yamnaya 
+            + Caucasus, all EBA individuals show an excess affinity to 
+            + Turkey_N when compared to Steppe Eneolithic",
+       1079 +        "page": 6,
+       1080 +        "supported_by": ["E050"],
+       1081 +        "strength": "strong"
+       1082 +      },
+       1083 +      {
+       1084 +        "id": "C049",
+       1085 +        "claim_type": "moderate",
+       1086 +        "description": "Yamnaya-associated individuals from 
+            + Ukraine and Bulgaria are genetically highly similar",
+       1087 +        "verbatim_quote": "all f4 statistics are 
+            + non-significant (|Z| ≤ 3) (Supplementary Table W), which 
+            + indicates that all Yamnaya-associated individuals including
+            +  those from Ukraine and Bulgaria are genetically highly 
+            + similar",
+       1088 +        "page": 6,
+       1089 +        "supported_by": ["E051"],
+       1090 +        "strength": "strong"
+       1091 +      },
+       1092 +      {
+       1093 +        "id": "C050",
+       1094 +        "claim_type": "moderate",
+       1095 +        "description": "BOY_EBA and Yamnaya Samara can be 
+            + modelled as three-way mixture",
+       1096 +        "verbatim_quote": "we find that BOY_EBA and Yamnaya 
+            + Samara can be modelled as a three-way mixture of Steppe 
+            + Eneolithic, Caucasus Eneolithic/Maykop and Ukraine N",
+       1097 +        "page": 6,
+       1098 +        "supported_by": ["E052"],
+       1099 +        "strength": "strong"
+       1100 +      },
+       1101 +      {
+       1102 +        "id": "C051",
+       1103 +        "claim_type": "interpretive",
+       1104 +        "description": "Ukraine Eneolithic groups may have 
+            + directly contributed to steppe pastoralists",
+       1105 +        "verbatim_quote": "improved model fit (P = 0.5) for 
+            + a two-way mixture of Steppe Eneolithic (around 65%) and USV
+            +  (around 35%) (Supplementary Table Y), which suggests a 
+            + possible direct contribution of Ukraine Eneolithic groups 
+            + to steppe pastoralists in the third millennium bc",
+       1106 +        "page": 6,
+       1107 +        "supported_by": ["E053"],
+       1108 +        "strength": "moderate"
+       1109 +      },
+       1110 +      {
+       1111 +        "id": "C052",
+       1112 +        "claim_type": "moderate",
+       1113 +        "description": "Yamnaya Caucasus shows distinct 
+            + ancestry composition from northern groups",
+       1114 +        "verbatim_quote": "Yamnaya Caucasus individuals from
+            +  the southern steppe can be modelled as a two-way model of 
+            + around 76% Steppe Eneolithic and 26% Caucasus 
+            + Eneolithic/Maykop",
+       1115 +        "page": 6,
+       1116 +        "supported_by": ["E054"],
+       1117 +        "strength": "strong"
+       1118 +      },
+       1119 +      {
+       1120 +        "id": "C053",
+       1121 +        "claim_type": "interpretive",
+       1122 +        "description": "BOY019 demonstrates interaction 
+            + between neighbouring groups in western contact zone",
+       1123 +        "verbatim_quote": "BOY019 can be modelled 
+            + successfully with around 63% USV and around 37% Steppe 
+            + Eneolithic ancestry or around 40% Ukraine Trypillia and 
+            + around 60% Steppe Eneolithic, suggesting interaction 
+            + between these two neighbouring groups in the western 
+            + contact zone",
+       1124 +        "page": 7,
+       1125 +        "supported_by": ["E055"],
+       1126 +        "strength": "moderate"
+       1127 +      },
+       1128 +      {
+       1129 +        "id": "C054",
+       1130 +        "claim_type": "moderate",
+       1131 +        "description": "YUN041 represents admixture between 
+            + local EBA and Yamnaya-associated groups",
+       1132 +        "verbatim_quote": "individual YUN041 can be modelled
+            +  as around 50% local YUN_EBA ancestry and 50% of either 
+            + BOY_EBA or another Yamnaya-associated source",
+       1133 +        "page": 7,
+       1134 +        "supported_by": ["E056"],
+       1135 +        "strength": "strong"
+       1136 +      },
+       1137 +      {
+       1138 +        "id": "C055",
+       1139 +        "claim_type": "moderate",
+       1140 +        "description": "Pathogen screening found limited 
+            + evidence of disease in CA individuals",
+       1141 +        "verbatim_quote": "we found no evidence for 
+            + pathogens among the CA individuals of the fifth and fourth 
+            + millennium bc, apart from two individuals (YUN048 and 
+            + VAR021), who were positive for the Hepatitis B virus 
+            + (HBV)",
+       1142 +        "page": 7,
+       1143 +        "supported_by": ["E057"],
+       1144 +        "strength": "strong"
+       1145 +      },
+       1146 +      {
+       1147 +        "id": "C056",
+       1148 +        "claim_type": "methodological",
+       1149 +        "description": "Ancient DNA work was conducted in 
+            + dedicated clean room facilities",
+       1150 +        "verbatim_quote": "Ancient DNA work was carried out 
+            + in dedicated clean room facilities of the Max Planck 
+            + Institute for Evolutionary Anthropology",
+       1151 +        "page": 9,
+       1152 +        "supported_by": ["E058"],
+       1153 +        "strength": "strong"
+       1154 +      },
+       1155 +      {
+       1156 +        "id": "C057",
+       1157 +        "claim_type": "methodological",
+       1158 +        "description": "168 petrous bones and 129 teeth were
+            +  processed",
+       1159 +        "verbatim_quote": "We processed 168 petrous bones 
+            + and 129 teeth in total",
+       1160 +        "page": 9,
+       1161 +        "supported_by": ["E059"],
+       1162 +        "strength": "strong"
+       1163 +      },
+       1164 +      {
+       1165 +        "id": "C058",
+       1166 +        "claim_type": "methodological",
+       1167 +        "description": "DNA extraction followed established 
+            + modified protocols",
+       1168 +        "verbatim_quote": "DNA was extracted from all 
+            + samples following a modified protocol refs. 63,64",
+       1169 +        "page": 9,
+       1170 +        "supported_by": ["E060"],
+       1171 +        "strength": "strong"
+       1172 +      },
+       1173 +      {
+       1174 +        "id": "C059",
+       1175 +        "claim_type": "methodological",
+       1176 +        "description": "UDG-half treatment was used for 
+            + library preparation",
+       1177 +        "verbatim_quote": "DNA double-stranded libraries 
+            + were built using a partial uracil-DNA-glycosylase 
+            + (UDG-half) treatment",
+       1178 +        "page": 9,
+       1179 +        "supported_by": ["E061"],
+       1180 +        "strength": "strong"
+       1181 +      },
+       1182 +      {
+       1183 +        "id": "C060",
+       1184 +        "claim_type": "methodological",
+       1185 +        "description": "0.1% endogenous DNA threshold was 
+            + used for SNP capture",
+       1186 +        "verbatim_quote": "Libraries above the threshold of 
+            + 0.1% endogenous DNA were enriched for around 1.2 million 
+            + SNPs",
+       1187 +        "page": 9,
+       1188 +        "supported_by": ["E062"],
+       1189 +        "strength": "strong"
+       1190 +      },
+       1191 +      {
+       1192 +        "id": "C061",
+       1193 +        "claim_type": "methodological",
+       1194 +        "description": "Mean coverage of 0.7× was achieved",
+       1195 +        "verbatim_quote": "resulting in a mean coverage of 
+            + 0.7×",
+       1196 +        "page": 9,
+       1197 +        "supported_by": ["E063"],
+       1198 +        "strength": "strong"
+       1199 +      },
+       1200 +      {
+       1201 +        "id": "C062",
+       1202 +        "claim_type": "methodological",
+       1203 +        "description": "Mitochondrial capture achieved 64× 
+            + average coverage",
+       1204 +        "verbatim_quote": "resulting in an average coverage 
+            + of 64×",
+       1205 +        "page": 9,
+       1206 +        "supported_by": ["E064"],
+       1207 +        "strength": "strong"
+       1208 +      },
+       1209 +      {
+       1210 +        "id": "C063",
+       1211 +        "claim_type": "methodological",
+       1212 +        "description": "Y-chromosome capture achieved 0.08× 
+            + mean coverage",
+       1213 +        "verbatim_quote": "resulted in a mean coverage of 
+            + 0.08×",
+       1214 +        "page": 9,
+       1215 +        "supported_by": ["E065"],
+       1216 +        "strength": "strong"
+       1217 +      },
+       1218 +      {
+       1219 +        "id": "C064",
+       1220 +        "claim_type": "methodological",
+       1221 +        "description": "DNA damage patterns confirm ancient 
+            + origin of samples",
+       1222 +        "verbatim_quote": "All libraries, except PTK001, 
+            + yielded damage patterns characteristic of ancient DNA",
+       1223 +        "page": 9,
+       1224 +        "supported_by": ["E066"],
+       1225 +        "strength": "strong"
+       1226 +      },
+       1227 +      {
+       1228 +        "id": "C065",
+       1229 +        "claim_type": "methodological",
+       1230 +        "description": "Contamination levels were low across
+            +  samples",
+       1231 +        "verbatim_quote": "estimated contamination for both 
+            + sexes on the mitochondrium using ContamMix (Supplementary 
+            + Table A), ranging from 0.086% to −9.2%. The nuclear 
+            + contamination for males was estimated using ANGSD and 
+            + ranged from 0.2% to 2%",
+       1232 +        "page": 9,
+       1233 +        "supported_by": ["E067"],
+       1234 +        "strength": "strong"
+       1235 +      }
+       1236 +    ],
+       1237 +    "implicit_arguments": [
+       1238 +      {
+       1239 +        "id": "IA001",
+       1240 +        "description": "Genetic data can accurately 
+            + reconstruct population interactions from 5000+ years ago",
+       1241 +        "trigger_text": "we analysed genome-wide data from 
+            + 135 ancient individuals",
+       1242 +        "page": 1,
+       1243 +        "status": "implicit",
+       1244 +        "related_claims": ["C001", "C002"],
+       1245 +        "reconstruction_confidence": "high"
+       1246 +      },
+       1247 +      {
+       1248 +        "id": "IA002",
+       1249 +        "description": "Archaeological cultural boundaries 
+            + correspond to genetic population boundaries",
+       1250 +        "trigger_text": "associated with the Cernavodă I and
+            +  Usatove cultures, form a genetic cline",
+       1251 +        "page": 4,
+       1252 +        "status": "implicit",
+       1253 +        "related_claims": ["C022", "C025"],
+       1254 +        "reconstruction_confidence": "medium"
+       1255 +      },
+       1256 +      {
+       1257 +        "id": "IA003",
+       1258 +        "description": "qpAdm modelling provides accurate 
+            + ancestry proportions despite low coverage data",
+       1259 +        "trigger_text": "with an average SNP coverage 
+            + between 0.01× and 3.4×",
+       1260 +        "page": 3,
+       1261 +        "status": "implicit",
+       1262 +        "related_claims": ["C008", "C014", "C032"],
+       1263 +        "reconstruction_confidence": "medium"
+       1264 +      },
+       1265 +      {
+       1266 +        "id": "IA004",
+       1267 +        "description": "Technology and innovation transfer 
+            + accompanied genetic admixture",
+       1268 +        "trigger_text": "We propose that the transfer of 
+            + critical innovations between farmers and transitional 
+            + foragers/herders",
+       1269 +        "page": 1,
+       1270 +        "status": "implicit",
+       1271 +        "related_claims": ["C005"],
+       1272 +        "reconstruction_confidence": "medium"
+       1273 +      },
+       1274 +      {
+       1275 +        "id": "IA005",
+       1276 +        "description": "The selected SNP panel (1.24 
+            + million) is representative for population genetic 
+            + inference",
+       1277 +        "trigger_text": "enriched for a panel of 1.24 
+            + million single-nucleotide polymorphisms",
+       1278 +        "page": 3,
+       1279 +        "status": "implicit",
+       1280 +        "related_claims": ["C008", "C010"],
+       1281 +        "reconstruction_confidence": "high"
+       1282 +      },
+       1283 +      {
+       1284 +        "id": "IA006",
+       1285 +        "description": "Modern West Eurasian genetic 
+            + variation is appropriate reference for ancient 
+            + populations",
+       1286 +        "trigger_text": "constructed from 1,253 modern-day 
+            + West Eurasians from 77 different populations, onto which 
+            + data from the ancient individuals were projected",
+       1287 +        "page": 3,
+       1288 +        "status": "implicit",
+       1289 +        "related_claims": ["C010"],
+       1290 +        "reconstruction_confidence": "high"
+       1291 +      },
+       1292 +      {
+       1293 +        "id": "IA007",
+       1294 +        "description": "Sample preservation and recovery is 
+            + representative of past populations",
+       1295 +        "trigger_text": "135 (out of 216 attempted) 
+            + individuals",
+       1296 +        "page": 3,
+       1297 +        "status": "implicit",
+       1298 +        "related_claims": ["C002"],
+       1299 +        "reconstruction_confidence": "medium"
+       1300 +      },
+       1301 +      {
+       1302 +        "id": "IA008",
+       1303 +        "description": "Y-chromosome and mitochondrial 
+            + lineages reflect broader population history",
+       1304 +        "trigger_text": "In line with the autosomal data, 
+            + the Y-chromosomal and mitochondrial DNA lineages",
+       1305 +        "page": 3,
+       1306 +        "status": "implicit",
+       1307 +        "related_claims": ["C018", "C040"],
+       1308 +        "reconstruction_confidence": "high"
+       1309 +      },
+       1310 +      {
+       1311 +        "id": "IA009",
+       1312 +        "description": "Absence of evidence for pathogens 
+            + indicates absence of widespread disease",
+       1313 +        "trigger_text": "we found no evidence for pathogens 
+            + among the CA individuals",
+       1314 +        "page": 7,
+       1315 +        "status": "implicit",
+       1316 +        "related_claims": ["C055"],
+       1317 +        "reconstruction_confidence": "low"
+       1318 +      },
+       1319 +      {
+       1320 +        "id": "IA010",
+       1321 +        "description": "Statistical models with P > 0.05 
+            + represent biologically plausible scenarios",
+       1322 +        "trigger_text": "results shown here were run with 
+            + the parameter 'allSNPs: NO'",
+       1323 +        "page": 5,
+       1324 +        "status": "implicit",
+       1325 +        "related_claims": ["C032", "C033", "C034"],
+       1326 +        "reconstruction_confidence": "high"
+       1327 +      }
+       1328 +    ],
+       1329 +    "research_designs": [
+       1330 +      {
+       1331 +        "id": "RD001",
+       1332 +        "name": "Archaeogenomic population history 
+            + reconstruction",
+       1333 +        "description": "Integration of genome-wide ancient 
+            + DNA data with archaeological context to reconstruct 
+            + population dynamics, admixture events, and cultural 
+            + transitions across southeastern Europe during the Copper 
+            + Age and Bronze Age",
+       1334 +        "verbatim_quote": "we analysed genome-wide data from
+            +  135 ancient individuals from the contact zone between 
+            + southeastern Europe and the northwestern Black Sea region 
+            + spanning this critical time period",
+       1335 +        "page": 1,
+       1336 +        "design_type": "empirical-inductive",
+       1337 +        "status": "explicit",
+       1338 +        "implemented_by_methods": ["M001", "M002", "M003", 
+            + "M004", "M005"]
+       1339 +      },
+       1340 +      {
+       1341 +        "id": "RD002",
+       1342 +        "name": "Multi-proxy ancestry modelling",
+       1343 +        "description": "Combining multiple statistical 
+            + approaches (PCA, f-statistics, qpAdm) to characterise and 
+            + model genetic ancestry from multiple contributing 
+            + populations",
+       1344 +        "verbatim_quote": "To assess the genetic ancestry 
+            + and variation of the newly typed individuals we first 
+            + performed principal component analysis (PCA)... Distal 
+            + qpAdm modelling... confirmed minimal amounts of EHG-, CHG- 
+            + and WHG-like ancestry",
+       1345 +        "page": 3,
+       1346 +        "design_type": "analytical",
+       1347 +        "status": "explicit",
+       1348 +        "implemented_by_methods": ["M003", "M004", "M005", 
+            + "M006"]
+       1349 +      },
+       1350 +      {
+       1351 +        "id": "RD003",
+       1352 +        "name": "Temporal transect sampling",
+       1353 +        "description": "Strategic sampling across multiple 
+            + time periods (Neolithic, Copper Age, Eneolithic, Early 
+            + Bronze Age) and geographic locations to track genetic 
+            + change over time",
+       1354 +        "verbatim_quote": "In total, we report genome-wide 
+            + data for 135 (out of 216 attempted) individuals from eight 
+            + distinct sites (Fig. 1) ranging from around 5400 to 2400 
+            + bc: Neolithic (n = 1), CA (n = 95), Eneolithic (n = 18) and
+            +  EBA (n = 21)",
+       1355 +        "page": 3,
+       1356 +        "design_type": "sampling strategy",
+       1357 +        "status": "explicit",
+       1358 +        "implemented_by_methods": ["M001", "M013"]
+       1359 +      },
+       1360 +      {
+       1361 +        "id": "RD004",
+       1362 +        "name": "Comparative site analysis",
+       1363 +        "description": "Systematic comparison of genetic 
+            + profiles between contemporaneous sites to assess regional 
+            + genetic structure and connectivity",
+       1364 +        "verbatim_quote": "We found no evidence for 
+            + between-site links up to the fourth to fifth degree and 
+            + only two pairs of individuals (PIE003-VAR010 and 
+            + YUN005-VAR030) shared at least two blocks greater than 20 
+            + cM indicative of a fifth to seventh degree relationship",
+       1365 +        "page": 3,
+       1366 +        "design_type": "comparative",
+       1367 +        "status": "explicit",
+       1368 +        "implemented_by_methods": ["M007", "M008"]
+       1369 +      }
+       1370 +    ],
+       1371 +    "methods": [
+       1372 +      {
+       1373 +        "id": "M001",
+       1374 +        "name": "Ancient DNA extraction and library 
+            + preparation",
+       1375 +        "description": "DNA extraction from petrous bones 
+            + and teeth using modified protocols, followed by UDG-half 
+            + treatment library preparation",
+       1376 +        "verbatim_quote": "DNA was extracted from all 
+            + samples following a modified protocol refs. 63,64. DNA 
+            + double-stranded libraries were built using a partial 
+            + uracil-DNA-glycosylase (UDG-half) treatment",
+       1377 +        "page": 9,
+       1378 +        "method_type": "laboratory",
+       1379 +        "status": "explicit",
+       1380 +        "implements_designs": ["RD001", "RD003"],
+       1381 +        "implemented_by_protocols": ["P001", "P002", "P003",
+            +  "P004"]
+       1382 +      },
+       1383 +      {
+       1384 +        "id": "M002",
+       1385 +        "name": "Targeted SNP capture",
+       1386 +        "description": "In-solution capture targeting 1.24 
+            + million SNPs for genome-wide analysis",
+       1387 +        "verbatim_quote": "All samples were enriched for a 
+            + panel of 1.24 million single-nucleotide polymorphisms 
+            + (1,240,000 SNP panel)",
+       1388 +        "page": 3,
+       1389 +        "method_type": "laboratory",
+       1390 +        "status": "explicit",
+       1391 +        "implements_designs": ["RD001"],
+       1392 +        "implemented_by_protocols": ["P005", "P006"]
+       1393 +      },
+       1394 +      {
+       1395 +        "id": "M003",
+       1396 +        "name": "Principal Component Analysis",
+       1397 +        "description": "PCA projection of ancient 
+            + individuals onto modern West Eurasian genetic variation",
+       1398 +        "verbatim_quote": "To assess the genetic ancestry 
+            + and variation of the newly typed individuals we first 
+            + performed principal component analysis (PCA) constructed 
+            + from 1,253 modern-day West Eurasians from 77 different 
+            + populations, onto which data from the ancient individuals 
+            + were projected",
+       1399 +        "page": 3,
+       1400 +        "method_type": "statistical",
+       1401 +        "status": "explicit",
+       1402 +        "implements_designs": ["RD002"],
+       1403 +        "implemented_by_protocols": ["P007"]
+       1404 +      },
+       1405 +      {
+       1406 +        "id": "M004",
+       1407 +        "name": "F-statistics analysis",
+       1408 +        "description": "Calculation of f3 and f4 statistics 
+            + to assess genetic affinities and test for admixture",
+       1409 +        "verbatim_quote": "outgroup f3 statistics suggest 
+            + local genetic homogeneity throughout the CA in this 
+            + region",
+       1410 +        "page": 3,
+       1411 +        "method_type": "statistical",
+       1412 +        "status": "explicit",
+       1413 +        "implements_designs": ["RD002"],
+       1414 +        "implemented_by_protocols": ["P008", "P009"]
+       1415 +      },
+       1416 +      {
+       1417 +        "id": "M005",
+       1418 +        "name": "qpAdm ancestry modelling",
+       1419 +        "description": "Quantitative ancestry proportion 
+            + estimation using distal and proximal models",
+       1420 +        "verbatim_quote": "Distal qpAdm modelling (Fig. 3a 
+            + and Supplementary Table G) confirmed minimal amounts of 
+            + EHG-, CHG- and WHG-like ancestry",
+       1421 +        "page": 3,
+       1422 +        "method_type": "statistical",
+       1423 +        "status": "explicit",
+       1424 +        "implements_designs": ["RD002"],
+       1425 +        "implemented_by_protocols": ["P010"]
+       1426 +      },
+       1427 +      {
+       1428 +        "id": "M006",
+       1429 +        "name": "DATES admixture timing",
+       1430 +        "description": "Estimation of admixture timing using
+            +  ancestry covariance decay",
+       1431 +        "verbatim_quote": "Using DATES to determine the time
+            +  of admixture between SEE N and Iron Gates HG as a local HG
+            +  ancestry, we obtained an admixture estimate of 16.3 ± 13.4
+            +  generations",
+       1432 +        "page": 3,
+       1433 +        "method_type": "statistical",
+       1434 +        "status": "explicit",
+       1435 +        "implements_designs": ["RD002"],
+       1436 +        "implemented_by_protocols": ["P011"]
+       1437 +      },
+       1438 +      {
+       1439 +        "id": "M007",
+       1440 +        "name": "Identity-by-descent analysis",
+       1441 +        "description": "Detection of shared genomic segments
+            +  to infer genetic relatedness",
+       1442 +        "verbatim_quote": "To specifically test for links 
+            + between the contemporaneous SEE CA sites and for more 
+            + distant genetic relatedness we explored signals of IBD 
+            + sharing between individuals",
+       1443 +        "page": 3,
+       1444 +        "method_type": "statistical",
+       1445 +        "status": "explicit",
+       1446 +        "implements_designs": ["RD004"],
+       1447 +        "implemented_by_protocols": ["P012", "P013"]
+       1448 +      },
+       1449 +      {
+       1450 +        "id": "M008",
+       1451 +        "name": "Runs of homozygosity analysis",
+       1452 +        "description": "Analysis of ROH to infer parental 
+            + relatedness and effective population size",
+       1453 +        "verbatim_quote": "analysis of the runs of 
+            + homozygosity (ROH) per individual using hapROH indicates 
+            + low levels of parental background relatedness",
+       1454 +        "page": 3,
+       1455 +        "method_type": "statistical",
+       1456 +        "status": "explicit",
+       1457 +        "implements_designs": ["RD004"],
+       1458 +        "implemented_by_protocols": ["P014"]
+       1459 +      },
+       1460 +      {
+       1461 +        "id": "M009",
+       1462 +        "name": "Y-chromosome haplogroup assignment",
+       1463 +        "description": "Determination of Y-chromosomal 
+            + lineages using targeted capture and manual assignment",
+       1464 +        "verbatim_quote": "Y-chromosome haplogroups for all 
+            + male individuals were assigned using the manual assignment 
+            + method of Y-haplogroup calling",
+       1465 +        "page": 9,
+       1466 +        "method_type": "genetic",
+       1467 +        "status": "explicit",
+       1468 +        "implements_designs": ["RD001"],
+       1469 +        "implemented_by_protocols": ["P015", "P016"]
+       1470 +      },
+       1471 +      {
+       1472 +        "id": "M010",
+       1473 +        "name": "Mitochondrial haplogroup assignment",
+       1474 +        "description": "Determination of mitochondrial 
+            + lineages using consensus sequences",
+       1475 +        "verbatim_quote": "HaploGrep2 (v.2.4.0; ref. 84) was
+            +  used to assign each consensus sequence to a specific 
+            + mitochondrial haplogroup",
+       1476 +        "page": 9,
+       1477 +        "method_type": "genetic",
+       1478 +        "status": "explicit",
+       1479 +        "implements_designs": ["RD001"],
+       1480 +        "implemented_by_protocols": ["P017"]
+       1481 +      },
+       1482 +      {
+       1483 +        "id": "M011",
+       1484 +        "name": "Radiocarbon dating",
+       1485 +        "description": "AMS radiocarbon dating of skeletal 
+            + samples for chronological placement",
+       1486 +        "verbatim_quote": "Radiocarbon dating was carried 
+            + out using accelerated mass spectrometry at the 
+            + Curt-Engelhorn-Zentrum Archäometrie gGmbH in Mannheim, 
+            + Germany",
+       1487 +        "page": 9,
+       1488 +        "method_type": "chronological",
+       1489 +        "status": "explicit",
+       1490 +        "implements_designs": ["RD003"],
+       1491 +        "implemented_by_protocols": ["P018"]
+       1492 +      },
+       1493 +      {
+       1494 +        "id": "M012",
+       1495 +        "name": "Ancient DNA authentication",
+       1496 +        "description": "Verification of ancient DNA 
+            + authenticity through damage pattern and contamination 
+            + analysis",
+       1497 +        "verbatim_quote": "All libraries, except PTK001, 
+            + yielded damage patterns characteristic of ancient DNA",
+       1498 +        "page": 9,
+       1499 +        "method_type": "quality control",
+       1500 +        "status": "explicit",
+       1501 +        "implements_designs": ["RD001"],
+       1502 +        "implemented_by_protocols": ["P019", "P020"]
+       1503 +      },
+       1504 +      {
+       1505 +        "id": "M013",
+       1506 +        "name": "Genetic relatedness estimation",
+       1507 +        "description": "Detection of close genetic relatives
+            +  using READ software",
+       1508 +        "verbatim_quote": "When testing for genetic 
+            + relatedness in each of the SEE CA sites using READ, we 
+            + detected only three first-degree and two second-degree 
+            + relationships",
+       1509 +        "page": 3,
+       1510 +        "method_type": "statistical",
+       1511 +        "status": "explicit",
+       1512 +        "implements_designs": ["RD004"],
+       1513 +        "implemented_by_protocols": ["P021"]
+       1514 +      },
+       1515 +      {
+       1516 +        "id": "M014",
+       1517 +        "name": "Pathogen screening",
+       1518 +        "description": "Metagenomic screening for pathogen 
+            + DNA in ancient samples",
+       1519 +        "verbatim_quote": "Shotgun sequencing data were 
+            + screened for the presence of pathogen DNA with the 
+            + screening pipeline HOPS",
+       1520 +        "page": 10,
+       1521 +        "method_type": "bioinformatic",
+       1522 +        "status": "explicit",
+       1523 +        "implements_designs": ["RD001"],
+       1524 +        "implemented_by_protocols": ["P022"]
+       1525 +      },
+       1526 +      {
+       1527 +        "id": "M015",
+       1528 +        "name": "Imputation",
+       1529 +        "description": "Genotype imputation for low-coverage
+            +  ancient samples using GLIMPSE",
+       1530 +        "verbatim_quote": "Samples were imputed using 
+            + GLIMPSE (v.1.0.1) with the default parameters",
+       1531 +        "page": 10,
+       1532 +        "method_type": "bioinformatic",
+       1533 +        "status": "explicit",
+       1534 +        "implements_designs": ["RD002"],
+       1535 +        "implemented_by_protocols": ["P023"]
+       1536 +      }
+       1537 +    ],
+       1538 +    "protocols": [
+       1539 +      {
+       1540 +        "id": "P001",
+       1541 +        "name": "Petrous bone sampling",
+       1542 +        "description": "Minimally invasive sampling of 
+            + petrous portion of temporal bone",
+       1543 +        "verbatim_quote": "Petrous bones were sampled with a
+            +  minimal invasive method",
+       1544 +        "page": 9,
+       1545 +        "protocol_type": "sampling",
+       1546 +        "status": "explicit",
+       1547 +        "implements_methods": ["M001"]
+       1548 +      },
+       1549 +      {
+       1550 +        "id": "P002",
+       1551 +        "name": "Tooth sampling",
+       1552 +        "description": "Sampling of inner pulp chamber from 
+            + teeth",
+       1553 +        "verbatim_quote": "for the sampling of the teeth, 
+            + the crown was separated from the root and the inner pulp 
+            + chamber was drilled out",
+       1554 +        "page": 9,
+       1555 +        "protocol_type": "sampling",
+       1556 +        "status": "explicit",
+       1557 +        "implements_methods": ["M001"]
+       1558 +      },
+       1559 +      {
+       1560 +        "id": "P003",
+       1561 +        "name": "DNA extraction protocol",
+       1562 +        "description": "Modified DNA extraction from ancient
+            +  skeletal remains",
+       1563 +        "verbatim_quote": "DNA was extracted from all 
+            + samples following a modified protocol refs. 63,64",
+       1564 +        "page": 9,
+       1565 +        "protocol_type": "laboratory",
+       1566 +        "status": "explicit",
+       1567 +        "implements_methods": ["M001"]
+       1568 +      },
+       1569 +      {
+       1570 +        "id": "P004",
+       1571 +        "name": "UDG-half library preparation",
+       1572 +        "description": "Double-stranded library preparation 
+            + with partial UDG treatment",
+       1573 +        "verbatim_quote": "DNA double-stranded libraries 
+            + were built using a partial uracil-DNA-glycosylase 
+            + (UDG-half) treatment",
+       1574 +        "page": 9,
+       1575 +        "protocol_type": "laboratory",
+       1576 +        "status": "explicit",
+       1577 +        "implements_methods": ["M001"]
+       1578 +      },
+       1579 +      {
+       1580 +        "id": "P005",
+       1581 +        "name": "Single-stranded library preparation",
+       1582 +        "description": "Non-UDG single-stranded library 
+            + preparation for low-yield samples",
+       1583 +        "verbatim_quote": "For samples that did not meet the
+            +  threshold for further analysis, we attempted to increase 
+            + the DNA yield by using an automated protocol for producing 
+            + single-stranded, non-UDG libraries",
+       1584 +        "page": 9,
+       1585 +        "protocol_type": "laboratory",
+       1586 +        "status": "explicit",
+       1587 +        "implements_methods": ["M001"]
+       1588 +      },
+       1589 +      {
+       1590 +        "id": "P006",
+       1591 +        "name": "1240K SNP capture",
+       1592 +        "description": "Targeted in-solution capture for 
+            + 1.24 million SNPs",
+       1593 +        "verbatim_quote": "Libraries above the threshold of 
+            + 0.1% endogenous DNA were enriched for around 1.2 million 
+            + SNPs in a targeted in-solution capture (1,240,000 SNP 
+            + capture)",
+       1594 +        "page": 9,
+       1595 +        "protocol_type": "laboratory",
+       1596 +        "status": "explicit",
+       1597 +        "implements_methods": ["M002"]
+       1598 +      },
+       1599 +      {
+       1600 +        "id": "P007",
+       1601 +        "name": "PCA projection protocol",
+       1602 +        "description": "Ancient sample projection onto 
+            + modern reference using smartpca",
+       1603 +        "verbatim_quote": "Data on the HO panel (around 
+            + 600,000 SNPs) were used for PCA using the program 
+            + 'smartpca' v.16000 (EIGENSOFT). Principal components were 
+            + computed for 1,253 present-day western Eurasians from 77 
+            + different populations (Supplementary Table B) on which 
+            + ancient individuals were projected, using the options 
+            + 'lsqproject: YES' and 'shrinkmode: YES'",
+       1604 +        "page": 10,
+       1605 +        "protocol_type": "analytical",
+       1606 +        "status": "explicit",
+       1607 +        "implements_methods": ["M003"]
+       1608 +      },
+       1609 +      {
+       1610 +        "id": "P008",
+       1611 +        "name": "Outgroup f3 statistics",
+       1612 +        "description": "Calculation of f3 statistics using 
+            + qp3Pop",
+       1613 +        "verbatim_quote": "Outgroup f3 statistics were 
+            + calculated using qp3Pop to obtain the genetic relatedness 
+            + of a target population to a set of ancient Eurasian 
+            + populations since the divergence from an African outgroup",
+       1614 +        "page": 10,
+       1615 +        "protocol_type": "analytical",
+       1616 +        "status": "explicit",
+       1617 +        "implements_methods": ["M004"]
+       1618 +      },
+       1619 +      {
+       1620 +        "id": "P009",
+       1621 +        "name": "F4 statistics calculation",
+       1622 +        "description": "F4 statistics calculation using 
+            + qpDstat",
+       1623 +        "verbatim_quote": "The f4 and f3 statistics were 
+            + calculated using qpDstat and the f4mode: YES function",
+       1624 +        "page": 10,
+       1625 +        "protocol_type": "analytical",
+       1626 +        "status": "explicit",
+       1627 +        "implements_methods": ["M004"]
+       1628 +      },
+       1629 +      {
+       1630 +        "id": "P010",
+       1631 +        "name": "qpAdm modelling protocol",
+       1632 +        "description": "Ancestry proportion estimation using
+            +  qpAdm with defined outgroups",
+       1633 +        "verbatim_quote": "Ancestry modelling and ancestry 
+            + proportion estimation on the 1,240,000 SNP dataset was 
+            + performed using qpAdm in ADMIXTOOLS (v.5.1; ref. 4). The 
+            + following groups were used as a basic set of outgroups for 
+            + distal modelling: Mbuti.DG, Turkey_Epipaleolithic, 
+            + Iran_GanjDareh_N, Russia_MA1_HG.SG, Russia_Kostenki14, 
+            + Italy_North_Villabruna_HG",
+       1634 +        "page": 10,
+       1635 +        "protocol_type": "analytical",
+       1636 +        "status": "explicit",
+       1637 +        "implements_methods": ["M005"]
+       1638 +      },
+       1639 +      {
+       1640 +        "id": "P011",
+       1641 +        "name": "DATES analysis protocol",
+       1642 +        "description": "Admixture timing estimation using 
+            + DATES software",
+       1643 +        "verbatim_quote": "The software DATES (v.753) was 
+            + used to estimate the time of the admixture events of 
+            + ancient populations under the assumption that gene flow 
+            + occurred as a single event and that the generation time is 
+            + 28 years. DATES measures the decay of ancestry covariance 
+            + to infer the admixture time and estimates the variance of 
+            + this admixture using a jackknife approach. The following 
+            + parameters were used for every run: binsize 0.001; maxdis 
+            + 1; qbin 10; lovalfit 0.45",
+       1644 +        "page": 10,
+       1645 +        "protocol_type": "analytical",
+       1646 +        "status": "explicit",
+       1647 +        "implements_methods": ["M006"]
+       1648 +      },
+       1649 +      {
+       1650 +        "id": "P012",
+       1651 +        "name": "Imputation for IBD analysis",
+       1652 +        "description": "GLIMPSE imputation preprocessing for
+            +  IBD detection",
+       1653 +        "verbatim_quote": "Samples were imputed using 
+            + GLIMPSE (v.1.0.1) with the default parameters... Samples 
+            + with more than 0.5× coverage on the 1,240,000 positions 
+            + (around 550,000 SNPs) after imputation were included in IBD
+            +  analysis",
+       1654 +        "page": 10,
+       1655 +        "protocol_type": "analytical",
+       1656 +        "status": "explicit",
+       1657 +        "implements_methods": ["M007", "M015"]
+       1658 +      },
+       1659 +      {
+       1660 +        "id": "P013",
+       1661 +        "name": "ancIBD analysis protocol",
+       1662 +        "description": "IBD sharing analysis using ancIBD 
+            + software",
+       1663 +        "verbatim_quote": "IBD sharing analysis was done 
+            + using ancIBD (v.0.4) on individuals with more than 600,000 
+            + SNPs and genotype probabilities > 0.99 after imputation 
+            + with GLIMPSE. We used HapBLOCK to perform the IBD sharing 
+            + estimation",
+       1664 +        "page": 10,
+       1665 +        "protocol_type": "analytical",
+       1666 +        "status": "explicit",
+       1667 +        "implements_methods": ["M007"]
+       1668 +      },
+       1669 +      {
+       1670 +        "id": "P014",
+       1671 +        "name": "hapROH analysis protocol",
+       1672 +        "description": "ROH detection using hapROH 
+            + software",
+       1673 +        "verbatim_quote": "The software package HapROH 
+            + (v.0.64) was used to analyse ROH on pseudohaploid 1,240,000
+            +  SNP capture data. Only samples with more than 400,000 SNPs
+            +  were included in the analysis",
+       1674 +        "page": 10,
+       1675 +        "protocol_type": "analytical",
+       1676 +        "status": "explicit",
+       1677 +        "implements_methods": ["M008"]
+       1678 +      },
+       1679 +      {
+       1680 +        "id": "P015",
+       1681 +        "name": "YMCA Y-chromosome capture",
+       1682 +        "description": "Targeted Y-chromosome capture 
+            + assay",
+       1683 +        "verbatim_quote": "For selected male individuals we 
+            + also performed an inhouse capture assay for the Y 
+            + chromosome (YMCA) which targets around 10.445 kB on the 
+            + non-combining region of the Y chromosome",
+       1684 +        "page": 9,
+       1685 +        "protocol_type": "laboratory",
+       1686 +        "status": "explicit",
+       1687 +        "implements_methods": ["M009"]
+       1688 +      },
+       1689 +      {
+       1690 +        "id": "P016",
+       1691 +        "name": "Y-haplogroup assignment protocol",
+       1692 +        "description": "Manual Y-chromosome haplogroup 
+            + calling method",
+       1693 +        "verbatim_quote": "Y-chromosome haplogroups for all 
+            + male individuals were assigned using the manual assignment 
+            + method of Y-haplogroup calling as described in ref. 70",
+       1694 +        "page": 9,
+       1695 +        "protocol_type": "analytical",
+       1696 +        "status": "explicit",
+       1697 +        "implements_methods": ["M009"]
+       1698 +      },
+       1699 +      {
+       1700 +        "id": "P017",
+       1701 +        "name": "Mitochondrial haplogroup assignment 
+            + protocol",
+       1702 +        "description": "HaploGrep2 assignment of 
+            + mitochondrial haplogroups",
+       1703 +        "verbatim_quote": "a consensus sequence for each 
+            + individual was retrieved using Geneious v.2019.2.3 (ref. 
+            + 83). HaploGrep2 (v.2.4.0; ref. 84) was used to assign each 
+            + consensus sequence to a specific mitochondrial haplogroup",
+       1704 +        "page": 9,
+       1705 +        "protocol_type": "analytical",
+       1706 +        "status": "explicit",
+       1707 +        "implements_methods": ["M010"]
+       1708 +      },
+       1709 +      {
+       1710 +        "id": "P018",
+       1711 +        "name": "AMS radiocarbon dating protocol",
+       1712 +        "description": "Accelerator mass spectrometry 
+            + radiocarbon dating with IntCal20 calibration",
+       1713 +        "verbatim_quote": "Radiocarbon dating was carried 
+            + out using accelerated mass spectrometry at the 
+            + Curt-Engelhorn-Zentrum Archäometrie gGmbH in Mannheim, 
+            + Germany... All samples were calibrated on the basis of the 
+            + IntCal20 database and using OxCal v.4.4.2",
+       1714 +        "page": 9,
+       1715 +        "protocol_type": "analytical",
+       1716 +        "status": "explicit",
+       1717 +        "implements_methods": ["M011"]
+       1718 +      },
+       1719 +      {
+       1720 +        "id": "P019",
+       1721 +        "name": "DNA damage assessment protocol",
+       1722 +        "description": "MapDamage analysis for ancient DNA 
+            + authentication",
+       1723 +        "verbatim_quote": "To analyse characteristic DNA 
+            + damage in the form of G to A and C to T substitutions, 
+            + mapDamage v.2.0.9 (ref. 74) was used",
+       1724 +        "page": 9,
+       1725 +        "protocol_type": "quality control",
+       1726 +        "status": "explicit",
+       1727 +        "implements_methods": ["M012"]
+       1728 +      },
+       1729 +      {
+       1730 +        "id": "P020",
+       1731 +        "name": "Contamination estimation protocol",
+       1732 +        "description": "ContamMix and ANGSD contamination 
+            + assessment",
+       1733 +        "verbatim_quote": "estimated contamination for both 
+            + sexes on the mitochondrium using ContamMix (Supplementary 
+            + Table A)... The nuclear contamination for males was 
+            + estimated using ANGSD",
+       1734 +        "page": 9,
+       1735 +        "protocol_type": "quality control",
+       1736 +        "status": "explicit",
+       1737 +        "implements_methods": ["M012"]
+       1738 +      },
+       1739 +      {
+       1740 +        "id": "P021",
+       1741 +        "name": "READ relatedness estimation protocol",
+       1742 +        "description": "Genetic relatedness estimation using
+            +  READ software",
+       1743 +        "verbatim_quote": "Genetic relatedness was estimated
+            +  using READ, using default parameter settings. Background 
+            + relatedness was estimated using the median value, across 
+            + all sites per temporal group",
+       1744 +        "page": 9,
+       1745 +        "protocol_type": "analytical",
+       1746 +        "status": "explicit",
+       1747 +        "implements_methods": ["M013"]
+       1748 +      },
+       1749 +      {
+       1750 +        "id": "P022",
+       1751 +        "name": "HOPS pathogen screening protocol",
+       1752 +        "description": "Metagenomic pathogen detection using
+            +  HOPS pipeline",
+       1753 +        "verbatim_quote": "Shotgun sequencing data were 
+            + screened for the presence of pathogen DNA with the 
+            + screening pipeline HOPS (v.0.2). First, adaptor-clipped 
+            + reads were mapped to a custom-made RefSeq database using 
+            + MALT v.0.4.0 (ref. 94) in BlastN mode",
+       1754 +        "page": 10,
+       1755 +        "protocol_type": "analytical",
+       1756 +        "status": "explicit",
+       1757 +        "implements_methods": ["M014"]
+       1758 +      },
+       1759 +      {
+       1760 +        "id": "P023",
+       1761 +        "name": "GLIMPSE imputation protocol",
+       1762 +        "description": "Genotype imputation using GLIMPSE 
+            + with 1000G reference",
+       1763 +        "verbatim_quote": "Samples were imputed using 
+            + GLIMPSE (v.1.0.1) with the default parameters. Briefly, bam
+            +  files were trimmed 2 bp to remove ancient DNA damage. We 
+            + then determined genotype likelihoods from trimmed bam files
+            +  using bcftools with the 1,000G panel... We used 
+            + GLIMPSE_impute on genomic chunks of 2,000,000 bp with the 
+            + buffer size of 200,000 bp to perform imputation",
+       1764 +        "page": 10,
+       1765 +        "protocol_type": "analytical",
+       1766 +        "status": "explicit",
+       1767 +        "implements_methods": ["M015"]
+       1768 +      },
+       1769 +      {
+       1770 +        "id": "P024",
+       1771 +        "name": "Sequence data processing pipeline",
+       1772 +        "description": "EAGER pipeline for ancient DNA 
+            + sequence processing",
+       1773 +        "verbatim_quote": "After demultiplexing, EAGER 
+            + v.1.92.56 (ref. 71) was used to process raw ancient DNA 
+            + sequence data. Raw reads were trimmed for Illumina adaptor 
+            + sequences using AdapterRemoval v.2.3.0 (ref. 72). 
+            + Subsequently, reads were mapped to the human reference 
+            + genome hs37d5 using BWA v.0.7.12 (ref. 73) and duplicates 
+            + were removed using DeDup v.0.12.1",
+       1774 +        "page": 9,
+       1775 +        "protocol_type": "bioinformatic",
+       1776 +        "status": "explicit",
+       1777 +        "implements_methods": ["M001", "M002"]
+       1778 +      },
+       1779 +      {
+       1780 +        "id": "P025",
+       1781 +        "name": "Genotype calling protocol",
+       1782 +        "description": "Pseudohaploid genotyping using 
+            + pileupCaller",
+       1783 +        "verbatim_quote": "The resulting filtered bam files 
+            + were genotyped with pileupCaller v.1.4.0.2 (ref. 76) by 
+            + randomly calling one allele per position considering the 
+            + human genome as a pseudohaploid genome (–randomHaploid)",
+       1784 +        "page": 9,
+       1785 +        "protocol_type": "bioinformatic",
+       1786 +        "status": "explicit",
+       1787 +        "implements_methods": ["M001", "M002"]
+       1788 +      },
+       1789 +      {
+       1790 +        "id": "P026",
+       1791 +        "name": "Sex determination protocol",
+       1792 +        "description": "Genetic sex estimation from 
+            + chromosome coverage ratios",
+       1793 +        "verbatim_quote": "We estimated the genetic sex by 
+            + calculating the coverage on the X, Y and the autosomal 
+            + chromosomes, for which the X and Y coverage is normalized 
+            + by the autosomal coverage and the relative length of each 
+            + sex chromosome",
+       1794 +        "page": 9,
+       1795 +        "protocol_type": "analytical",
+       1796 +        "status": "explicit",
+       1797 +        "implements_methods": ["M012"]
+       1798 +      },
+       1799 +      {
+       1800 +        "id": "P027",
+       1801 +        "name": "Double-indexing protocol",
+       1802 +        "description": "Illumina library indexing with 
+            + unique index pairs",
+       1803 +        "verbatim_quote": "All libraries were double-indexed
+            +  with a unique pair of indices",
+       1804 +        "page": 9,
+       1805 +        "protocol_type": "laboratory",
+       1806 +        "status": "explicit",
+       1807 +        "implements_methods": ["M001"]
+       1808 +      },
+       1809 +      {
+       1810 +        "id": "P028",
+       1811 +        "name": "Shotgun screening protocol",
+       1812 +        "description": "Initial library screening for 
+            + endogenous DNA content",
+       1813 +        "verbatim_quote": "First, all indexed libraries were
+            +  screened by means of shotgun sequencing of 5 million reads
+            +  on an Illumina HiSeq4000 or NextSeq500 sequencing platform
+            +  using a single end (1 × 75 base pair (bp) reads) kit, 
+            + followed by an assessment of human DNA content and DNA 
+            + damage profiles (initial quality criteria)",
+       1814 +        "page": 9,
+       1815 +        "protocol_type": "laboratory",
+       1816 +        "status": "explicit",
+       1817 +        "implements_methods": ["M001", "M012"]
+       1818 +      },
+       1819 +      {
+       1820 +        "id": "P029",
+       1821 +        "name": "Mitochondrial capture protocol",
+       1822 +        "description": "Targeted mitochondrial DNA capture 
+            + for haplogroup assignment",
+       1823 +        "verbatim_quote": "An additional mitochondrial 
+            + capture was performed for individuals for which enough 
+            + reads could not be obtained as by-catch of the 1,240,000 
+            + capture, resulting in an average coverage of 64×",
+       1824 +        "page": 9,
+       1825 +        "protocol_type": "laboratory",
+       1826 +        "status": "explicit",
+       1827 +        "implements_methods": ["M010"]
+       1828 +      }
+       1829 +    ],
+       1830      "reproducibility_infrastructure": {
+       1831        "persistent_identifiers": {
+       1832 -        "paper_doi": null,
+       1832 +        "paper_doi": "10.1038/s41586-023-06334-8",
+       1833          "author_orcids": [],
+       1834          "data_dois": [],
+       1835          "code_dois": [],
+       1836          "software_pids": [],
+       1837 -        "funder_ids": [],
+       1838 -        "project_ids": []
+       1837 +        "funder_ids": [
+       1838 +          "771234-PALEoRIDER",
+       1839 +          "834616-ARCHCAUCASUS",
+       1840 +          "678901-FoodTransforms",
+       1841 +          "S&T-277-BIOARCCAUCASUS"
+       1842 +        ],
+       1843 +        "project_ids": ["PRJEB62503"]
+       1844        },
+       1845        "funding": {
+       1846 -        "sources": [],
+       1847 -        "grant_numbers": [],
+       1848 -        "acknowledgement_text": null
+       1846 +        "sources": [
+       1847 +          "Max Planck Society",
+       1848 +          "European Research Council",
+       1849 +          "ERA.Net RUS Plus initiative"
+       1850 +        ],
+       1851 +        "grant_numbers": [
+       1852 +          "771234-PALEoRIDER",
+       1853 +          "834616-ARCHCAUCASUS",
+       1854 +          "678901-FoodTransforms",
+       1855 +          "S&T-277-BIOARCCAUCASUS"
+       1856 +        ],
+       1857 +        "acknowledgement_text": "This research was funded by
+            +  the Max Planck Society, the European Research Council 
+            + under the European Union's Horizon 2020 research and 
+            + innovation programme (grant agreement nos 
+            + 771234-PALEoRIDER, W.H.; 834616-ARCHCAUCASUS, S.H.; and 
+            + 678901-FoodTransforms, P.W.S.) and the ERA.Net RUS Plus 
+            + initiative (S&T-277-BIOARCCAUCASUS, S.H.)."
+       1858        },
+       1859        "data_availability": {
+       1860 -        "statement_present": false,
+       1861 -        "statement_text": null,
+       1862 -        "repositories": [],
+       1863 -        "access_conditions": null,
+       1860 +        "statement_present": true,
+       1861 +        "statement_text": "The DNA sequences reported in 
+            + this paper have been deposited in the European Nucleotide 
+            + Archive under the accession number PRJEB62503.",
+       1862 +        "repositories": [
+       1863 +          {
+       1864 +            "name": "European Nucleotide Archive",
+       1865 +            "accession": "PRJEB62503",
+       1866 +            "url": null
+       1867 +          }
+       1868 +        ],
+       1869 +        "access_conditions": "open access",
+       1870          "machine_actionability": {
+       1871 -          "rating": null,
+       1872 -          "rationale": null
+       1871 +          "rating": "high",
+       1872 +          "rationale": "Data deposited in standard 
+            + repository (ENA) with accession number, allowing 
+            + programmatic access"
+       1873          }
+       1874        },
+       1875        "code_availability": {
+     ...
+        80          "licence": null,
+        81          "documentation": null,
+        82          "machine_actionability": {
+        83 -          "rating": null,
+        84 -          "rationale": null
+        83 +          "rating": "low",
+        84 +          "rationale": "No custom code repository provided; 
+           + analysis relies on published software packages with version 
+           + numbers specified"
+        85          }
+        86        },
+        87        "author_contributions": {
+        88 -        "credit_statement_present": false,
+        89 -        "roles": []
+        88 +        "credit_statement_present": true,
+        89 +        "roles": [
+        90 +          "W.H., S.H., P.W.S. and J.K. designed the study",
+        91 +          "R.K., G.G.-R., C.S., M.A.S., G.U.N., A. 
+           + Chohadzhiev, A.S., K.P., S.R., M.L., I.M., B.G., K. 
+           + Boyadzhiev, Y.B., K. Beutler and I.B. provided materials and
+           +  resources",
+        92 +          "S.P. performed laboratory experiments",
+        93 +          "S.P., A.B.R., G.G.-R., C.S., G.U.N. and A. 
+           + Childebayeva analysed the data",
+        94 +          "W.H., I.M., S.H., P.W.S., Y.B. and K. Boyadzhiev 
+           + assisted with data interpretation",
+        95 +          "S.P., S.H., P.W.S., I.M., A.B.R. and W.H. wrote 
+           + the manuscript with contributions from all co-authors"
+        96 +        ]
+        97        },
+        98        "conflicts_of_interest": {
+        99 -        "declaration_present": false,
+       100 -        "declaration_text": null
+        99 +        "declaration_present": true,
+       100 +        "declaration_text": "The authors declare no competing
+           +  interests."
+       101        },
+       102        "ethics_approval": {
+       103 -        "statement_present": false,
+       104 -        "approving_body": null,
+       105 -        "approval_reference": null
+       103 +        "statement_present": true,
+       104 +        "approving_body": "Multiple museums and heritage 
+           + organisations",
+       105 +        "approval_reference": "Permission to work on the 
+           + archaeological samples was granted by the respective 
+           + excavators, archaeologist and curators and museum directors 
+           + of the sites, who are co-authoring the study."
+       106        },
+       107        "permits_and_authorizations": {
+       108 -        "permits_mentioned": false,
+       109 -        "permit_details": [],
+       108 +        "permits_mentioned": true,
+       109 +        "permit_details": [
+       110 +          "Permissions granted from Regional Museum of 
+           + History - Veliko Tarnovo",
+       111 +          "German Archaeological Institute - Berlin",
+       112 +          "Institute for Archaeology Vasile Pârvan - 
+           + Bucharest",
+       113 +          "Institute for Geography of Goethe University - 
+           + Frankfurt/Main",
+       114 +          "Varna Regional Museum of History - Varna",
+       115 +          "National Institute of Archaeology with Museum at 
+           + Bulgarian Academy of Sciences - Sofia",
+       116 +          "Regional Museum of History - Pazardzhik",
+       117 +          "Yambol Regional Historical Museum - Yambol",
+       118 +          "Odesa Archaeological Museum - Odesa"
+       119 +        ],
+       120          "care_principles_compliance": null
+       121        },
+       122        "preregistration": {
+     ...
+       108          "registration_id": null
+       109        },
+       110        "supplementary_materials": {
+       111 -        "available": false,
+       112 -        "description": null,
+       111 +        "available": true,
+       112 +        "description": "Supplementary Information, 
+           + Supplementary Tables A-Y",
+       113          "doi": null
+       114        },
+       115        "references_completeness": {
+       116 -        "assessed": false,
+       117 -        "notes": null
+       116 +        "assessed": true,
+       117 +        "notes": "94 references cited covering methods, 
+           + archaeological context, and comparative genetic studies"
+       118        },
+       119        "fair_assessment": {
+       120 -        "findable": null,
+       121 -        "accessible": null,
+       122 -        "interoperable": null,
+       123 -        "reusable": null,
+       124 -        "total_fair_score": null,
+       125 -        "fair_percentage": null,
+       126 -        "assessment_notes": null
+       120 +        "findable": 9,
+       121 +        "accessible": 9,
+       122 +        "interoperable": 8,
+       123 +        "reusable": 9,
+       124 +        "total_fair_score": 35,
+       125 +        "fair_percentage": 87.5,
+       126 +        "assessment_notes": "Strong FAIR compliance: DOI 
+           + assigned, data in ENA with accession, detailed methods 
+           + section with software versions. Minor deduction for lack of 
+           + custom code repository. High interoperability through 
+           + standard formats and established databases."
+       127        }
+       128      },
+       129      "extraction_notes": {
+       130 -      "claims_evidence_extraction_complete": false,
+       131 -      "rdmap_extraction_complete": false,
+       132 -      "infrastructure_extraction_complete": false,
+       133 -      "known_limitations": [],
+       130 +      "claims_evidence_extraction_complete": true,
+       131 +      "rdmap_extraction_complete": true,
+       132 +      "infrastructure_extraction_complete": true,
+       133 +      "known_limitations": [
+       134 +        "Some radiocarbon dates may be affected by freshwater
+           +  reservoir effect",
+       135 +        "PTK001 excluded due to high contamination (~18%)",
+       136 +        "Low coverage (0.01×-3.4×) may affect precision of 
+           + some ancestry estimates"
+       137 +      ],
+       138        "assessment_blockers": [],
+       139 -      "section_extracted": null,
+       140 -      "pass_history": []
+       139 +      "section_extracted": "Complete paper (pages 1-23)",
+       140 +      "pass_history": [
+       141 +        "Pass 0: Metadata extraction - 29 authors, Nature 
+           + 2023",
+       142 +        "Pass 1: Liberal extraction - 67 evidence items, 65 
+           + claims, 10 implicit arguments",
+       143 +        "Pass 2: Rationalization complete",
+       144 +        "Pass 3: RDMAP extraction - 4 research designs, 15 
+           + methods, 29 protocols",
+       145 +        "Pass 4: Implicit RDMAP - none additional needed",
+       146 +        "Pass 5: RDMAP rationalization complete",
+       147 +        "Pass 6: Infrastructure extraction - FAIR 35/40, ENA 
+           + PRJEB62503",
+       148 +        "Pass 7: Validation complete"
+       149 +      ]
+       150      }
+       151    }
+  ⎿  Interrupted · What should Claude do instead?
+
+
+

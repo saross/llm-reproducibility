@@ -1,0 +1,81 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-12-02",
+    "classifier_version": "v0.2-alpha"
+  },
+
+  "paper_type": "methodological",
+  "paper_type_justification": "Primary contribution is FAIMS Mobile software platform for cross-disciplinary field data collection. Paper presents tool capabilities, technical architecture, design decisions, and deployment workflow. The 'Impact' section describes user experiences and software adoption statistics, not substantive research findings. Three archaeological case studies are referenced (Sobotkova et al. 2016) but serve demonstrative/illustrative function to show software capabilities, not as primary contribution. This is a paper ABOUT a method (software tool), not a paper USING a method to study archaeological phenomena. Claims are about software properties (offline capability, customisability, sync features), not about archaeological patterns or processes.",
+
+  "methodological_characterisation": {
+    "subtype": "software_tool",
+    "context_flags": ["📦", "🔧"],
+    "validation_approach": "inductive",
+    "validation_notes": "FAIMS Mobile capabilities demonstrated through descriptive case studies and user feedback from 29 confirmed field deployments across archaeology, ecology, geoscience, and history. No formal hypothesis-testing of software performance, no systematic comparison with alternative tools using benchmark metrics, no controlled evaluation. Validation is purely descriptive/demonstrative - shows what the tool can do through deployment experience and user reports. Three deployment case studies published separately (Sobotkova et al. 2016) provide illustrative validation. Impact claims based on self-reported user feedback (~300 users, 20,000+ hours logged) without independent verification."
+  },
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "none_stated",
+    "evidence": [
+      "No research approach stated - paper is methodological software publication, not empirical research",
+      "Paper structure follows software publication genre: Motivation, Software description, Architecture, Functionalities, Impact, Conclusions",
+      "No research questions, hypotheses, or empirical investigation framework stated"
+    ],
+    "source_sections": [],
+    "confidence": "high",
+    "significance": "Not applicable for methodological software publication. Paper does not conduct research using FAIMS; paper presents FAIMS itself as the contribution. SoftwareX journal format is designed for software publications describing tool capabilities rather than empirical research studies."
+  },
+
+  "revealed_approach": {
+    "approach": "inductive",
+    "evidence": {
+      "claims_structure": "Claims are about software capabilities and impact: C010 'Android client can render definition packets at runtime', C012 'Opportunistic synchronisation available', C024-C028 describe user-reported benefits (efficiency, data quality). Not research claims about phenomena. Pattern: capability assertion → deployment evidence → impact claim.",
+      "methods_application": "Not applicable in traditional sense - software features demonstrated through description of architecture (M004, M005) and deployment protocols (P001-P004). No methods applied to research question. RD001 (co-development) and RD003 (case study evaluation) describe development methodology, not empirical research design.",
+      "analytical_workflow": "Software development → deployment experience → user feedback collection → feature/impact description. Inductive demonstration sequence: implement tool → observe deployment outcomes → describe capabilities and benefits. No hypothesis → test → result sequence."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Not applicable for methodological software publication. No empirical research approach to compare. Validation approach (inductive demonstration through case studies and user feedback) is transparent and appropriate for software tool presentation. Paper makes no claims to conduct hypothesis-testing or confirmatory research."
+  },
+
+  "primary_classification": {
+    "approach": "inductive",
+    "confidence": "high",
+    "justification": "Classification based on validation approach, not empirical research approach. FAIMS Mobile validation is inductive/descriptive: software capabilities demonstrated through deployment case studies and aggregated user feedback. Evidence types include software specifications (E001-E004), deployment statistics (E020-E021), user feedback quotes (E029-E033), and comparative observations with alternatives like ODK (E007-E012). No deductive hypothesis-testing of tool performance against pre-specified criteria. No abductive inference about design solutions. Primary contribution is technical specification and descriptive demonstration of what the platform can do. Confidence is high because validation strategy is clear, consistent with software publication genre, and appropriate for the contribution type."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": false
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Software architecture (Section 2.1), design decisions, and technical specifications clearly documented. Technology stack explicitly listed (Javarosa, SQLite3, Spatialite, Beanshell, etc.). Development rationale provided ('two fundamental requirements'). Validation approach (case study demonstration, user feedback) is implicit but clear from paper structure. Open source licensing (GPLv3), repository locations (GitHub), and documentation links provided. High transparency for methodological software paper - readers can inspect code, replicate deployments, and verify claims about software functionality."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "methodological_paper",
+    "signal_prioritisation": {
+      "primary_signals": ["transparency", "reproducibility", "comprehensibility"],
+      "secondary_signals": ["validity", "plausibility"],
+      "deemphasised_signals": ["generalisability", "robustness"],
+      "rationale": "Methodological software paper framework. Primary signals: (1) Transparency of design decisions and technical architecture - HIGH in this paper with explicit technology choices and rationale, (2) Reproducibility of software - open source GPL v3 licence, GitHub repositories, extensive documentation (Module Cookbook, Beanshell API, User-to-Developer guide), (3) Comprehensibility of technical specification - clear architecture description and feature documentation. Validity and Plausibility apply to claims ABOUT the software (do features work as described? is co-development approach plausible?). Generalisability and Robustness of case studies explicitly deemphasised - deployment demonstrations are illustrative examples of what the tool CAN do, not claims that all deployments WILL succeed or that findings generalise beyond demonstrated contexts."
+    }
+  },
+
+  "classification_notes": "Software tool publication following SoftwareX journal format. Classification based on validation approach (inductive demonstration), not substantive research approach. Context flags: 📦 (infrastructure/artefact paper - describes software artefact rather than testing hypotheses), 🔧 (methodological transparency - assess whether users can install, use, and extend the software). Different signal priorities apply compared to empirical research papers. Robustness expectations are moderate (40-60) per genre conventions - software papers describe artefacts, not test hypotheses. Key strength is transparency (open source, documented). Key limitation is validation relying on self-reported user feedback without independent verification."
+}

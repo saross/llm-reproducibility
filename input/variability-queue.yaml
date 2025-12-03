@@ -10,8 +10,8 @@
 #
 # Status values: pending | in_progress | completed | error
 
-current_paper: penske-et-al-2023
-current_run: run-01
+current_paper: ballsun-stanton-et-al-2018
+current_run: run-05
 
 papers:
   # Paper 1: sobotkova-et-al-2024 (Empirical/Deductive) - COMPLETED
@@ -43,44 +43,84 @@ papers:
         counts: {evidence: 15, claims: 13, implicit_arguments: 5}
         aggregate_score: 77
 
-  # Paper 2: penske-et-al-2023 (Empirical/Inductive) - PENDING
+  # Paper 2: penske-et-al-2023 (Empirical/Inductive) - COMPLETED
   - slug: penske-et-al-2023
     title: "Early contact between late farming and pastoralist societies in southeastern Europe"
     source: input/sources/original-pdf/Penske et al. - 2023 - Early contact between late farming and pastoralist.pdf
     paper_type: empirical
     research_approach: inductive
-    status: in_progress
+    status: completed
     runs:
       - id: run-01
-        status: pending
+        status: completed
+        counts: {evidence: 67, claims: 60, implicit_arguments: 10, research_designs: 4, methods: 19, protocols: 39}
+        aggregate_score: 77
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 35/40. Data: ENA PRJEB62503. No code repository."
       - id: run-02
-        status: pending
+        status: completed
+        counts: {evidence: 56, claims: 64, implicit_arguments: 10, research_designs: 5, methods: 15, protocols: 20}
+        aggregate_score: 74
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 12/16. Data: ENA PRJEB62503. No code repository."
       - id: run-03
-        status: pending
+        status: completed
+        counts: {evidence: 67, claims: 65, implicit_arguments: 10, research_designs: 4, methods: 15, protocols: 29}
+        aggregate_score: 77
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 35/40. Data: ENA PRJEB62503. No code repository."
       - id: run-04
-        status: pending
+        status: completed
+        counts: {evidence: 64, claims: 63, implicit_arguments: 10, research_designs: 4, methods: 19, protocols: 24}
+        aggregate_score: 78
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: STRONG. FAIR: 14/15. Data: ENA PRJEB62503. No code repository."
       - id: run-05
-        status: pending
+        status: completed
+        counts: {evidence: 67, claims: 63, implicit_arguments: 10, research_designs: 4, methods: 16, protocols: 24}
+        aggregate_score: 77
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 14/16. Data: ENA PRJEB62503. No code repository."
 
-  # Paper 3: ballsun-stanton-et-al-2018 (Methodological/Software) - PENDING
+  # Paper 3: ballsun-stanton-et-al-2018 (Methodological/Software) - COMPLETED
   - slug: ballsun-stanton-et-al-2018
     title: "FAIMS Mobile: Flexible, open-source software for field research"
     source: input/sources/original-pdf/Ballsun-Stanton et al. - 2018 - FAIMS Mobile Flexible, open-source software for f.pdf
     paper_type: methodological
-    research_approach: null  # N/A for methodological
+    research_approach: inductive  # Validation approach for methodological paper
     context_flags: ["📦", "🔧"]
-    status: pending
+    status: completed
     runs:
       - id: run-01
-        status: pending
+        status: completed
+        counts: {evidence: 43, claims: 59, implicit_arguments: 8, research_designs: 3, methods: 8, protocols: 6}
+        aggregate_score: 75
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: adequate, c3_reproducibility: strong}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: high all dimensions. GPLv3, multiple repos, comprehensive docs."
       - id: run-02
-        status: pending
+        status: completed
+        counts: {evidence: 43, claims: 59, implicit_arguments: 8, research_designs: 3, methods: 8, protocols: 9}
+        aggregate_score: 77
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: moderate-strong, c3_reproducibility: strong}
+        notes: "Full 10-pass extraction + assessment. Verdict: STRONG. FAIR: 37/40 (92.5%). GPLv3, Docker deployment, 24 public module definitions."
       - id: run-03
-        status: pending
+        status: completed
+        counts: {evidence: 26, claims: 42, implicit_arguments: 8, research_designs: 4, methods: 4, protocols: 3}
+        aggregate_score: 77
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: adequate-to-strong, c3_reproducibility: strong}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. GPLv3, GitHub repository, comprehensive documentation."
       - id: run-04
-        status: pending
+        status: completed
+        counts: {evidence: 43, claims: 58, implicit_arguments: 8, research_designs: 4, methods: 4, protocols: 9}
+        aggregate_score: 78
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: adequate, c3_reproducibility: strong}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 35/40 (87.5%). GPLv3, comprehensive docs, strong transparency."
       - id: run-05
-        status: pending
+        status: completed
+        counts: {evidence: 47, claims: 61, implicit_arguments: 8, research_designs: 4, methods: 8, protocols: 6}
+        aggregate_score: 79
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: adequate-to-strong, c3_reproducibility: strong}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 15/16 (93.75%). GPLv3, multiple distribution channels, comprehensive docs."
 
   # Paper 4: ross-2005 (Empirical/Interpretive) - PENDING
   - slug: ross-2005
@@ -123,5 +163,5 @@ papers:
 
 # Progress summary
 # Total runs: 25 (5 papers × 5 runs)
-# Completed: 5 (Paper 1)
-# Pending: 20 (Papers 2-5)
+# Completed: 15 (Paper 1: 5, Paper 2: 5, Paper 3: 5)
+# Pending: 10 (Papers 4-5: 10 total)

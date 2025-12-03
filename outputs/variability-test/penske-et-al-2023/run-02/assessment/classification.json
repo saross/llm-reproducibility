@@ -1,0 +1,82 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-12-02",
+    "classifier_version": "v0.2-alpha"
+  },
+
+  "paper_type": "empirical",
+  "paper_type_justification": "This paper collects and analyses new empirical data (genome-wide ancient DNA from 135 individuals) to investigate phenomena in the world (genetic contact between farming and pastoralist populations in southeastern Europe during the 4th-3rd millennium BC). Claims describe and explain genetic patterns and population history. Methods (aDNA extraction, PCA, f-statistics, qpAdm, IBD) are tools used to investigate population dynamics, not the subjects being investigated. Primary contribution is understanding the origins and formation of Yamnaya pastoralists through genetic evidence.",
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "inductive",
+    "evidence": [
+      "RD01: 'To address this question, we analysed genome-wide data from 135 ancient individuals from the contact zone' - exploratory data collection to characterise a phenomenon",
+      "RD03: Temporal transect design sampling individuals across time periods (~5400-2400 BC) to document change",
+      "Methods section describes systematic documentation: PCA projection to characterise genetic variation, f-statistics to measure relatedness, qpAdm to model ancestry proportions",
+      "No a priori hypotheses specified - study explores genetic patterns in an under-documented region/period"
+    ],
+    "source_sections": ["abstract", "introduction", "methods"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "inductive",
+    "evidence": {
+      "claims_structure": "Claims are predominantly pattern descriptions and interpretive explanations. C01: 'transfer of critical innovations between farmers and transitional foragers/herders'. C02: 'groups from the northwestern Black Sea region carried varying amounts of mixed ancestries'. Claims describe observed genetic patterns and propose explanatory narratives - not hypothesis tests with confirmatory/rejection outcomes.",
+      "methods_application": "Methods are applied for pattern documentation: PCA for dimensionality reduction and visualisation of genetic structure, f-statistics for pairwise genetic comparisons, qpAdm for ancestry modelling. Methods explore data systematically rather than testing pre-specified predictions. Multiple competing models are fitted to find best-fitting explanations.",
+      "analytical_workflow": "Survey-like workflow: sample collection across sites/periods → DNA extraction and quality filtering → genetic analysis (PCA, f-statistics, qpAdm, IBD, ROH) → pattern identification → interpretive narrative connecting genetic patterns to archaeological/historical processes. Inductive sequence: data collection → pattern discovery → explanation. Some abductive elements in the interpretation phase where alternative ancestry models are compared."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Paper explicitly frames itself as an investigation to 'address this question' about early contact between farming and pastoralist groups. The revealed methodology matches: systematic genetic documentation followed by pattern-based interpretation. No post-hoc hypothesis framing detected. The interpretive claims in the Discussion flow naturally from the documented patterns."
+  },
+
+  "primary_classification": {
+    "approach": "inductive",
+    "confidence": "high",
+    "justification": "This is clearly inductive archaeogenomics research. The study systematically collects genome-wide data from 135 ancient individuals across multiple sites and time periods to document genetic patterns and population dynamics. No a priori hypotheses are stated; instead, the research explores genetic variation, identifies ancestry patterns through PCA and admixture modelling, and develops interpretive narratives connecting genetic evidence to archaeological processes. The workflow follows an inductive sequence: data collection → pattern identification → interpretation. While the Discussion includes abductive reasoning (inferring best explanations for observed patterns, particularly regarding Yamnaya formation), the primary research design is inductive pattern documentation. Classification confidence is high because the design, methods, and claims all consistently indicate exploratory/descriptive research."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": true,
+    "primary_approach": "inductive",
+    "secondary_approaches": ["abductive"],
+    "qualifications": [
+      "Primary design is inductive: systematic documentation of genetic variation across temporal transect",
+      "Abductive elements in interpretation: multiple ancestry models compared (e.g., three-way vs four-way models for Ukraine_EBA_Yamnaya) with inference to best-fitting explanation",
+      "No deductive hypothesis-testing: no pre-specified predictions about specific genetic outcomes",
+      "Mixed character is appropriate for archaeogenomics: inductive data generation followed by model-based inference is standard practice"
+    ]
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Explicit research design statements in Introduction and comprehensive Methods section. Analytical pipeline clearly documented with software versions, parameters, and quality thresholds. High transparency typical of Nature publications with detailed Methods and extensive Supplementary Information."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "inductive_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["transparency", "comprehensibility", "validity"],
+      "secondary_signals": ["reproducibility", "generalisability", "plausibility"],
+      "deemphasised_signals": ["robustness"],
+      "rationale": "Inductive archaeogenomics research prioritises: (1) Transparency - research design clarity, analytical pipeline documentation, quality control procedures, (2) Comprehensibility - pattern descriptions and interpretive explanations clearly communicated, (3) Validity - evidence adequacy for genetic inferences (sample quality, coverage, authentication). Reproducibility supported by data deposition (ENA PRJEB62503) but code not shared. Robustness somewhat deemphasised as exploratory research - though multiple analytical approaches (PCA, f-statistics, qpAdm, IBD) provide methodological triangulation."
+    }
+  },
+
+  "classification_notes": "Nature archaeogenomics paper with standard inductive design: systematic genetic documentation followed by interpretive reconstruction. Paper fits inductive category excellently. Some abductive reasoning in interpretation phase (comparing alternative ancestry models) but primary approach is clearly inductive pattern documentation. Research approach classification from queue.yaml ('inductive') confirmed."
+}

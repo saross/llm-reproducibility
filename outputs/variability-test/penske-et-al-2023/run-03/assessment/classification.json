@@ -1,0 +1,74 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-12-02",
+    "classifier_version": "v0.2-alpha"
+  },
+
+  "paper_type": "empirical",
+  "paper_type_justification": "This paper uses archaeogenomic methods to investigate substantive research questions about population dynamics and genetic contact between farming and pastoralist societies in southeastern Europe. Claims describe phenomena (genetic continuity, ancestry patterns, admixture events). Methods (aDNA extraction, PCA, qpAdm, f-statistics) are tools for investigating archaeological/anthropological questions, not the subject of investigation. Primary contribution is understanding population history, not presenting methods. Research designs explicitly labelled 'empirical-inductive' in extraction.",
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "inductive",
+    "evidence": [
+      "RD001 design_type: 'empirical-inductive' - explicit classification of research design",
+      "Introduction frames study as exploratory: 'we analysed genome-wide data from 135 ancient individuals' without pre-specified hypotheses",
+      "No hypothesis statements in introduction or methods sections",
+      "Research framed as documenting patterns: investigating 'critical time period' and 'contact zone' without predictive hypotheses"
+    ],
+    "source_sections": ["abstract", "introduction", "methods"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "inductive",
+    "evidence": {
+      "claims_structure": "Claims describe emergent patterns from data analysis. C001: 'Early contact occurred ~1000 years earlier than anticipated' - pattern discovery, not hypothesis test. C003: 'Genetic continuity existed between Neolithic and Copper Age groups' - descriptive finding. C010-C065: Describe ancestry proportions, population clusters, and admixture patterns discovered through analysis. No claims test pre-specified predictions.",
+      "methods_application": "Methods (PCA, qpAdm, f-statistics, IBD, ROH) applied for pattern discovery and population characterisation. M003: PCA 'to assess genetic ancestry and variation' - exploratory assessment. M005-M006: qpAdm modelling to characterise ancestry sources, not test predicted ancestry proportions. M007-M008: IBD and ROH for detecting relatedness patterns, not testing kinship hypotheses.",
+      "analytical_workflow": "Data collection → genetic characterisation → pattern identification → interpretation. Sequence: sampling (RD003) → DNA extraction (M001-M002) → SNP capture → population genetics analyses (M003-M010) → pattern description → archaeological interpretation. Inductive workflow: observe → identify patterns → explain patterns in cultural-historical context."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Paper explicitly frames research as exploratory archaeogenomic investigation and actually conducts inductive pattern-discovery research. Research design labelled 'empirical-inductive' in extraction. Methods are applied for exploration (PCA, ancestry modelling) rather than hypothesis testing. Claims describe discovered patterns rather than testing predictions. No post-hoc hypothesis framing detected. Methodological transparency is high."
+  },
+
+  "primary_classification": {
+    "approach": "inductive",
+    "confidence": "high",
+    "justification": "This is clearly inductive research. The paper explicitly adopts an exploratory framework, documented in RD001 as 'empirical-inductive'. No hypotheses are pre-specified; instead, the study characterises genetic variation, identifies ancestry patterns, and reconstructs population history from the genomic data. Claims are pattern descriptions (ancestry proportions, genetic clusters, admixture timing) emerging from multi-proxy statistical analyses (PCA, qpAdm, f-statistics, IBD). The major finding - that contact occurred ~1000 years earlier than anticipated - emerged from analysis rather than confirming a pre-specified prediction. Revealed approach matches expressed approach. Classification is unambiguous."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": false
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Explicit research design present. Methods section thoroughly documents laboratory protocols, software versions, analysis parameters. Supplementary materials provide detailed protocols and data tables. Research framework clearly described as archaeogenomic reconstruction of population dynamics. Transparency is excellent for Nature article."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "inductive_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["transparency", "comprehensibility", "generalisability"],
+      "secondary_signals": ["validity", "reproducibility", "plausibility"],
+      "deemphasised_signals": [],
+      "rationale": "Inductive research emphasis: (1) Transparency - research design clarity, workflow documentation, and parameter specification are critical for exploratory archaeogenomics; (2) Comprehensibility - pattern descriptions and interpretations must be clear given complexity of multi-proxy genetic analyses; (3) Generalisability - appropriate scope and acknowledged regional/temporal limitations. Validity and Reproducibility important secondary signals given reliance on computational methods and publicly archived data (ENA PRJEB62503)."
+    }
+  },
+
+  "classification_notes": "Straightforward empirical-inductive archaeogenomics study. Excellent taxonomy fit. High transparency through Nature publication standards and detailed supplementary materials. FAIR score 35/40 indicates strong reproducibility infrastructure despite absence of custom code repository."
+}
