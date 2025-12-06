@@ -1,39 +1,95 @@
 {
-  "paper_id": "sobotkova-et-al-2024",
-  "classification_date": "2025-12-01",
-  "run_id": "run-02",
+  "schema_version": "classification-v2.1",
+  "assessment_timestamp": "2025-12-05T14:00:00Z",
+  "assessor": "research-assessor-skill-opus4.5",
+
   "paper_type": "empirical",
-  "research_approach": {
-    "expressed": {
-      "approach": "none_stated",
-      "confidence": "high",
-      "evidence": "No explicit deductive/inductive methodological framing"
-    },
-    "revealed": {
-      "approach": "deductive",
-      "confidence": "high",
-      "evidence": "Hypothesis-testing structure with external validation; applies established approach to test predictions"
-    },
-    "comparison": {
-      "match": false,
-      "mismatch_type": "none_stated_vs_deductive",
-      "harking_risk": "low",
-      "notes": "Clear deductive practice without explicit labelling"
-    }
+  "paper_type_justification": "The paper collects and analyses new empirical data about CNN model performance for archaeological feature detection. The research question targets phenomena in the world (mound detection accuracy), claims describe and explain model failure patterns, and methods (CNN training, field validation) are tools used to investigate model performance, not the subject being investigated. While the paper evaluates a computational method, the primary contribution is empirical evidence about transfer learning performance in archaeological contexts, not the method itself.",
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "good",
+    "fit_notes": "Paper is clearly empirical - tests a hypothesis about transfer learning performance against field data. Minor edge case consideration: paper could be seen as methodological (testing a technique), but the primary contribution is empirical findings about when/why CNN approaches fail, not the method development itself.",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": null
   },
-  "mixed_methods": {
+
+  "expressed_approach": {
+    "approach": "deductive",
+    "evidence": [
+      "RD001: Transfer learning approach using pre-trained CNN - implies hypothesis that transfer learning will work for archaeological features",
+      "RD002: Comparative evaluation of two CNN model runs - tests whether curated vs uncurated training data affects performance",
+      "RD003: Field validation design comparing model predictions against ground-truthed mound locations - systematic hypothesis testing",
+      "Title: 'Validating predictions' explicitly frames as testing/validation",
+      "Abstract: 'Tests a pre-trained CNN with transfer learning against field-validated mound data' - clear hypothesis-testing framing"
+    ],
+    "source_sections": ["title", "abstract", "methods"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "deductive",
+    "evidence": {
+      "claims_structure": "Core claims (C001-C003) report hypothesis test outcomes: 'The CNN model failed to accurately detect burial mounds when validated against field data, with 95-96% false negative rates' - this is reporting test results, not discovering patterns. Claims describe whether predictions matched reality.",
+      "methods_application": "Methods used for systematic hypothesis testing: two CNN runs (different training data curation), both validated against same field-verified mound dataset. Pre-specified predictions (model will detect mounds) tested against ground truth. Not exploratory pattern discovery.",
+      "analytical_workflow": "Clear deductive workflow: Hypothesis (transfer learning CNN can detect mounds) → Test (run model, validate predictions against field data) → Rejection (95-96% false negative rate demonstrates hypothesis failure). Two-run comparison adds robustness (testing whether data curation affects outcome). Workflow moves from prediction to validation to conclusion."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Paper explicitly frames as hypothesis-testing ('validating predictions') and actually conducts deductive research. Both CNN runs test specific predictions (mounds will be detected) against pre-existing ground truth data. No post-hoc framing of exploratory findings. Research design clearly specified before results presented. Methodological transparency is high."
+  },
+
+  "mixed_method_characterisation": {
     "is_mixed": false,
-    "components": []
+    "primary_approach": "deductive",
+    "secondary_approaches": [],
+    "qualifications": [
+      "Pure deductive design: tests transfer learning hypothesis against field data",
+      "Secondary literature review (RD006) is contextual, not mixed-method research design",
+      "Two-run comparison is robustness check, not mixed methodology"
+    ]
   },
-  "domain_classification": {
-    "primary_domain": "digital_archaeology",
-    "secondary_domains": ["remote_sensing", "machine_learning"],
-    "methodological_tradition": "quantitative_empirical"
+
+  "final_classification": {
+    "paper_type": "empirical",
+    "research_approach": "deductive",
+    "confidence": "high",
+    "classification_rationale": "Paper tests hypothesis that pre-trained CNN with transfer learning can detect burial mounds. Uses field-validated ground truth data as test criterion. Reports clear hypothesis rejection (95-96% false negative rate). Comparative two-run design strengthens deductive framework. No HARKing detected - predictions explicit, tests systematic, conclusions follow from test outcomes."
   },
-  "context_flags": {
-    "software_tool_paper": false,
-    "negative_results": true,
-    "replication_study": false,
-    "methodological_paper": false
+
+  "credibility_framework_selection": {
+    "framework": "standard_empirical_deductive",
+    "signal_weights": {
+      "transparency": "standard",
+      "reproducibility": "standard",
+      "robustness": "standard",
+      "plausibility": "standard",
+      "comprehensibility": "standard",
+      "generalisability": "standard",
+      "congruence": "standard"
+    },
+    "framework_notes": "All seven repliCATS signals apply with standard weights. Deductive empirical design allows full credibility assessment. Strong infrastructure (3 GitHub repos) supports reproducibility assessment."
+  },
+
+  "context_flags": [],
+
+  "assessment_notes": {
+    "key_characteristics": [
+      "Clear hypothesis-testing framework with explicit predictions",
+      "Two-run comparative design provides internal replication",
+      "Field validation against independently collected ground truth",
+      "Negative findings (hypothesis rejection) transparently reported",
+      "Publication bias analysis adds meta-scientific context"
+    ],
+    "assessment_considerations": [
+      "Code available (3 repos) but no data deposit - asymmetric reproducibility",
+      "No trained model weights shared - limits replication without retraining",
+      "Ground truth data from previous TRAP project - dependency on prior work"
+    ]
   }
 }

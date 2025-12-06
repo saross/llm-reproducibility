@@ -1,0 +1,139 @@
+{
+  "schema_version": "2.6",
+  "assessment_timestamp": "2025-12-04T10:50:00Z",
+  "assessor": "claude-opus-4-5-20251101",
+  "paper_id": "sobotkova-et-al-2016",
+  "run_id": "run-02",
+  "framework": "repliCATS Seven Signals (HASS Adaptation)",
+
+  "quality_gate": {
+    "status": "MODERATE",
+    "extraction_quality": 7,
+    "metric_signal_alignment": 6,
+    "classification_confidence": 8,
+    "assessment_pathway": "caveated_full_assessment"
+  },
+
+  "classification": {
+    "paper_type": "methodological",
+    "paper_type_confidence": "high",
+    "research_approach": "inductive",
+    "research_approach_confidence": "high",
+    "harking_detected": false,
+    "mixed_methods": true,
+    "context_flags": ["📦", "🔧"]
+  },
+
+  "signals": {
+    "comprehensibility": {
+      "score": 75,
+      "confidence": "high",
+      "notes": "Clear presentation of software co-development framework; minor terminology gaps for non-technical readers"
+    },
+    "transparency": {
+      "score": 70,
+      "confidence": "moderate",
+      "notes": "Strong code availability (GitHub, GPLv3); supplementary materials lack DOIs; conflict of interest undisclosed"
+    },
+    "plausibility": {
+      "score": 78,
+      "confidence": "high",
+      "notes": "Claims consistent with domain knowledge and established software engineering principles"
+    },
+    "validity": {
+      "score": 65,
+      "confidence": "moderate",
+      "notes": "Appropriate qualitative design; quantitative claims based on informal self-reported metrics"
+    },
+    "robustness": {
+      "score": 58,
+      "confidence": "moderate",
+      "notes": "Limited by three case studies, positive selection bias, and absence of failure cases"
+    },
+    "generalisability": {
+      "score": 55,
+      "confidence": "low",
+      "notes": "Diverse contexts but resource-intensive model limits applicability to well-funded projects"
+    },
+    "reproducibility": {
+      "score": 72,
+      "confidence": "moderate",
+      "notes": "Excellent software availability; process documentation good but support-dependent; analytical methods informal"
+    }
+  },
+
+  "clusters": {
+    "foundational_clarity": {
+      "score": 72,
+      "signals": ["comprehensibility", "transparency"]
+    },
+    "evidential_strength": {
+      "score": 64,
+      "signals": ["plausibility", "validity", "robustness", "generalisability"]
+    },
+    "reproducibility": {
+      "score": 72,
+      "signals": ["reproducibility"]
+    }
+  },
+
+  "pillars": {
+    "transparency": {
+      "score": 72,
+      "weight": 0.30
+    },
+    "credibility": {
+      "score": 64,
+      "weight": 0.40
+    },
+    "reproducibility": {
+      "score": 72,
+      "weight": 0.30
+    }
+  },
+
+  "aggregate_score": 68,
+  "aggregate_calculation": "(72 × 0.30) + (64 × 0.40) + (72 × 0.30) = 21.6 + 25.6 + 21.6 = 68.8 → 68",
+
+  "caveats": [
+    {
+      "caveat_id": "CAV001",
+      "type": "conflict_of_interest",
+      "description": "Authors include FAIMS development team with financial/professional stake in FAIMS success",
+      "impact": "May affect objectivity of cost-benefit assessments",
+      "signals_affected": ["transparency", "validity"]
+    },
+    {
+      "caveat_id": "CAV002",
+      "type": "measurement_methodology",
+      "description": "Quantitative claims (time savings, costs) are self-reported estimates without documented methodology",
+      "impact": "Specific numbers should be interpreted as indicative rather than precise",
+      "signals_affected": ["validity", "robustness"]
+    },
+    {
+      "caveat_id": "CAV003",
+      "type": "selection_bias",
+      "description": "Case studies represent volunteer early adopters; failed or rejected deployments not represented",
+      "impact": "Generalisation to reluctant adopters or resource-constrained projects limited",
+      "signals_affected": ["generalisability", "robustness"]
+    }
+  ],
+
+  "extraction_counts": {
+    "evidence": 35,
+    "claims": 50,
+    "implicit_arguments": 8,
+    "research_designs": 5,
+    "methods": 5,
+    "protocols": 10
+  },
+
+  "infrastructure_summary": {
+    "fair_score": 29,
+    "fair_percentage": 72.5,
+    "code_available": true,
+    "data_available": true,
+    "preregistered": false,
+    "doi_present": false
+  }
+}

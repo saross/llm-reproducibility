@@ -1,623 +1,2410 @@
 {
-  "paper_id": "sobotkova-et-al-2024",
-  "extraction_metadata": {
-    "schema_version": "2.6",
-    "extraction_timestamp": "2025-12-01T10:00:00Z",
-    "run_id": "run-01",
-    "variability_test": true
+  "schema_version": "2.6",
+  "extraction_timestamp": "2025-12-04T11:00:00Z",
+  "extractor": "research-assessor-skill",
+  "project_metadata": {
+    "paper_title": "Validating predictions of burial mounds with field data: the promise and reality of machine learning",
+    "authors": [
+      "Adela Sobotkova",
+      "Ross Deans Kristensen-McLachlan",
+      "Orla Mallon",
+      "Shawn Adrian Ross"
+    ],
+    "publication_year": 2024,
+    "journal": "Journal of Documentation, Emerald Publishing Limited, DOI 10.1108/JD-05-2022-0096",
+    "doi": "10.1108/JD-05-2022-0096",
+    "paper_type": "research article",
+    "discipline": "archaeology",
+    "research_context": "Evaluation of machine learning (ML) approaches using a pre-trained Convolutional Neural Network (CNN) to detect burial mounds in high-resolution satellite imagery from the Kazanlak Valley, Bulgaria. The study validates CNN predictions against field data from 773 mounds documented during pedestrian survey to assess the practical efficacy of ML for archaeological prospection in heterogeneous landscapes.",
+    "study_location": "Kazanlak Valley, Bulgaria",
+    "study_period": "2009-2011 (fieldwork), 2021-2022 (ML model runs)",
+    "funding_sources": [
+      "Aarhus University Digital Literacy Initiative",
+      "Australian Research Council Linkage Projects Funding scheme LP0989901",
+      "University of Michigan International Grant",
+      "GeoEye Foundation"
+    ],
+    "computational_infrastructure": "UCloud interactive HPC system, University of Southern Denmark",
+    "heritage_context": "Bulgarian burial mounds are endangered heritage. 8,000-19,000 surviving of 50,000 originally constructed. Development destroys dozens annually. Authors documented >2,000 mounds across 20 years of fieldwork; nearly all showed damage from development, looting, or agriculture."
   },
   "evidence": [
     {
-      "evidence_id": "E001",
-      "evidence_text": "773 burial mounds documented during pedestrian survey in the Kazanlak Valley, Bulgaria (2009-2011)",
+      "id": "E001",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "In this study we used a dataset of 773 mounds, collected by TRAP during 2009–2011 field survey in the Kazanlak Valley, Bulgaria",
-      "location": "Page 8, Data section",
-      "supports_claims": ["C001", "C002", "C003"],
-      "source_verification": "explicit"
+      "verbatim_quote": "Setting an identification threshold at 60% probability, and noting that we used an approach where the CNN assessed tiles of a fixed size, tile-based false negative rates were 95–96%, false positive rates were 87–95% of tagged tiles, while true positives were only 5–13%.",
+      "location": {
+        "section": "Abstract"
+      },
+      "source": "CNN validation against field data",
+      "uncertainty": {
+        "explicitly_stated": true,
+        "type": "measurement_range",
+        "description": "Ranges provided for false negative (95-96%), false positive (87-95%), and true positive (5-13%) rates across both model runs"
+      },
+      "supports_claims": [
+        "C001",
+        "C002"
+      ]
     },
     {
-      "evidence_id": "E002",
-      "evidence_text": "First CNN run: F1 score of 0.87 reported by the model",
+      "id": "E002",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "After image augmentation, the model reported good learning and model fit (F1 5 0.87)",
-      "location": "Page 10, Results section",
-      "supports_claims": ["C004", "C005"],
-      "source_verification": "explicit"
+      "verbatim_quote": "Counterintuitively, the model provided with training data selected for highly visible mounds (rather than all mounds) performed worse.",
+      "location": {
+        "section": "Abstract"
+      },
+      "source": "Comparison of 2021 vs 2022 model runs",
+      "supports_claims": [
+        "C003"
+      ]
     },
     {
-      "evidence_id": "E003",
-      "evidence_text": "First run validation: 19 of 148 tagged tiles (12.8%) contained actual mounds",
+      "id": "E003",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "Nevertheless, only 19 out of 148 tiles (12.8%) tagged by the model with at least a 60% chance of having a mound actually contained one",
-      "location": "Page 10-11, Results section",
-      "supports_claims": ["C005", "C006"],
-      "source_verification": "explicit"
+      "verbatim_quote": "Development of the model, meanwhile, required approximately 135 person-hours of work. Developing our CNN model required approximately 135 person-hours from conceptualisation and experiments to validation and documentation.",
+      "location": {
+        "section": "Abstract",
+        "additional_location": "Discussion - Is it worth it?"
+      },
+      "source": "Project time tracking",
+      "supports_claims": [
+        "C004",
+        "C024"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E003",
+          "P1_E048"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "Same measurement reported in two locations - abstract summary and discussion elaboration"
+      }
     },
     {
-      "evidence_id": "E004",
-      "evidence_text": "First run: 129 of 148 tiles (87.1%) were false positives",
+      "id": "E004",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "Some 129 of the tagged tiles (87.1%) were false positives",
-      "location": "Page 11, Results section",
-      "supports_claims": ["C005", "C006"],
-      "source_verification": "explicit"
+      "verbatim_quote": "In this study we used a dataset of 773 mounds, collected by TRAP during 2009 – 2011 field survey in the Kazanlak Valley, Bulgaria (Sobotkova and Ross, 2018). This fieldwork covered some 85 sq km, inspected directly via pedestrian survey. Each mound was recorded with a GPS point, height, diameter, and surface and surrounding land use, as well as preservation status using Likert scale and Wildesen (1982) classification.",
+      "location": {
+        "section": "Data",
+        "subsection": "Pedestrian survey"
+      },
+      "source": "TRAP fieldwork records",
+      "supports_claims": [
+        "C005"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E007",
+          "P1_E008",
+          "P1_E010"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "All relate to field survey data quality and coverage - consolidated to single comprehensive description"
+      }
     },
     {
-      "evidence_id": "E005",
-      "evidence_text": "First run: 38 of 773 mounds (4.9%) detected; 735 undetected; false negative rate 95.3%",
+      "id": "E005",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "The 19 true-positive tiles contained 38 mounds (1–9 mounds per tile), out of 773 in the study area (4.9%), while the remaining 735 mounds went undetected... a false negative rate of 95.3%",
-      "location": "Page 11, Results section",
-      "supports_claims": ["C005", "C006"],
-      "source_verification": "explicit"
+      "verbatim_quote": "TRAP survey identified many 0.5–20 m high (5–100 m diameter) conical features in the landscape as burial mounds. These rounded, conical piles of earth and stones vary in diameter from 10 m to 100 m and <1 m to >20 m in height.",
+      "location": {
+        "section": "Data",
+        "subsection": "Pedestrian survey",
+        "additional_location": "Burial mounds as heritage under threat"
+      },
+      "source": "TRAP field documentation",
+      "supports_claims": [
+        "C002",
+        "C006"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E009",
+          "P1_E035"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "Both describe mound size variability supporting heterogeneity claims"
+      }
     },
     {
-      "evidence_id": "E006",
-      "evidence_text": "Second CNN run: F1 score of 0.62 reported by the model",
+      "id": "E006",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "The second model's performance declined to an F1 score of 0.62",
-      "location": "Page 12, Results section",
-      "supports_claims": ["C007", "C008"],
-      "source_verification": "explicit"
+      "verbatim_quote": "The satellite imagery used in this study consists of two IKONOS scenes covering 600 sq km delivered in geoTIFF format, which were acquired through a GeoEye Foundation grant in 2009. The scenes included a panchromatic band at 1 m resolution and a multispectral image (RGBNIR) at 4 m resolution.",
+      "location": {
+        "section": "Data",
+        "subsection": "Satellite imagery"
+      },
+      "source": "Project data inventory",
+      "supports_claims": [
+        "C007"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E011",
+          "P1_E012"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "Satellite imagery specifications consolidated into single evidence item"
+      }
     },
     {
-      "evidence_id": "E007",
-      "evidence_text": "Second run validation: 21 of 773 mounds (2.7%) detected; 752 (97.3%) undetected",
+      "id": "E007",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "Validation revealed that only 21 of 773 mounds (2.7%) were detected, while 752 mounds (97.3%) remained undetected",
-      "location": "Page 12, Results section",
-      "supports_claims": ["C007", "C008"],
-      "source_verification": "explicit"
+      "verbatim_quote": "Mound points taken during fieldwork were used as centroids for the generation of 150 × 150 m square polygons (150 × 150 pixels at 1 m resolution), which were clipped from the IKONOS imagery. This process yielded 773 MOUND cutouts, each centred on a mound. The ratio of positive to negative training data was approximately 1:2 (32%–68%).",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training"
+      },
+      "source": "Training data preparation",
+      "supports_claims": [
+        "C008"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E013",
+          "P1_E014",
+          "P1_E045"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "All describe training data preparation methodology"
+      }
     },
     {
-      "evidence_id": "E008",
-      "evidence_text": "Second run: 15 of 288 tiles (5.2%) were true positives; 273 (94.8%) were false positives",
+      "id": "E008",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "Only 15 of these 288 tiles (5.2%), however, were true positives, containing the 21 detected mounds... The remaining 273 of 288 tiles were false positives (94.8%)",
-      "location": "Page 12, Results section",
-      "supports_claims": ["C007", "C008"],
-      "source_verification": "explicit"
+      "verbatim_quote": "In the 2021 run of the model, we used all 773 cutouts for training regardless of what was visible in the satellite image. In the 2022 run, we selected 249 cutouts where a mound was discernible with the naked eye.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training"
+      },
+      "source": "Training data configuration",
+      "supports_claims": [
+        "C003",
+        "C009"
+      ]
     },
     {
-      "evidence_id": "E009",
-      "evidence_text": "Development of CNN model required approximately 135 person-hours",
+      "id": "E009",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "Developing our CNN model required approximately 135 person-hours from conceptualisation and experiments to validation and documentation",
-      "location": "Page 15, Discussion section",
-      "supports_claims": ["C009", "C010"],
-      "source_verification": "explicit"
+      "verbatim_quote": "After image augmentation, the model reported good learning and model fit (F1 = 0.87). This F1 score indicated that the use of a pre-trained model improved performance by 0.05 compared to a previous, manually trained model.",
+      "location": {
+        "section": "Results",
+        "subsection": "First run (2021)"
+      },
+      "source": "Model performance metrics",
+      "supports_claims": [
+        "C010",
+        "C001"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E016",
+          "P1_E033"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "Both relate to F1 score and model fit claims"
+      }
     },
     {
-      "evidence_id": "E010",
-      "evidence_text": "Model trained using ResNet-50 pre-trained CNN with TensorFlow 2 in Python",
-      "evidence_type": "technical_specification",
-      "verbatim_quote": "After some preliminary experimentation with a range of different pre-trained models, we concluded that ResNet-50 seemed to perform best for our data... The model was deployed using TensorFlow 2 in Python",
-      "location": "Page 8-9, Methods section",
-      "supports_claims": ["C004"],
-      "source_verification": "explicit"
-    },
-    {
-      "evidence_id": "E011",
-      "evidence_text": "Training data ratio was approximately 1:2 (positive:negative)",
-      "evidence_type": "technical_specification",
-      "verbatim_quote": "The ratio of positive to negative training data was approximately 1:2 (32%–68%)",
-      "location": "Page 9, Methods section",
-      "supports_claims": ["C011"],
-      "source_verification": "explicit"
-    },
-    {
-      "evidence_id": "E012",
-      "evidence_text": "First run used all 773 mounds for training; second run used 249 clearly visible mounds",
-      "evidence_type": "technical_specification",
-      "verbatim_quote": "In the 2021 run of the model, we used all 773 cutouts for training regardless of what was visible in the satellite image. In the 2022 run, we selected 249 cutouts where a mound was discernible with the naked eye",
-      "location": "Page 9, Methods section",
-      "supports_claims": ["C007", "C012"],
-      "source_verification": "explicit"
-    },
-    {
-      "evidence_id": "E013",
-      "evidence_text": "Literature review: 44 of 70 papers (63%) fail to mention negative aspects of AI/ML approaches",
+      "id": "E010",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "Considering the 70 papers from the Web of Science mentioned above, 44 abstracts (63%) fail to mention any negative aspects of AI/ML approaches at all",
-      "location": "Page 7, Introduction section",
-      "supports_claims": ["C013"],
-      "source_verification": "explicit"
+      "verbatim_quote": "Nevertheless, only 19 out of 148 tiles (12.8%) tagged by the model with at least a 60% chance of having a mound actually contained one. Some 129 of the tagged tiles (87.1%) were false positives. The 19 true-positive tiles contained 38 mounds (1–9 mounds per tile), out of 773 in the study area (4.9%), while the remaining 735 mounds went undetected. Undetected mounds were located in 381 tiles (1–20 mounds per tile) out of 400 tiles that actually contained mounds, a false negative rate of 95.3%.",
+      "location": {
+        "section": "Results",
+        "subsection": "First run (2021)"
+      },
+      "source": "Field validation of 2021 predictions",
+      "supports_claims": [
+        "C001",
+        "C011"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E017",
+          "P1_E018",
+          "P1_E019",
+          "P1_E020"
+        ],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "All validation metrics for 2021 run - consolidated as single comprehensive finding"
+      }
     },
     {
-      "evidence_id": "E014",
-      "evidence_text": "Only 4 papers (6%) discuss attempts that ended in partial or complete failure",
+      "id": "E011",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "Only 15 papers include specific or sustained critiques of ML approaches. Of those 15, seven (10% of the corpus) present qualified successes, while four (6%) discuss attempts to deploy ML that ended in partial or complete failures",
-      "location": "Page 7, Introduction section",
-      "supports_claims": ["C013", "C014"],
-      "source_verification": "explicit"
+      "verbatim_quote": "The second model's performance declined to an F1 score of 0.62. Validation revealed that only 21 of 773 mounds (2.7%) were detected, while 752 mounds (97.3%) remained undetected. The number of tiles within the TRAP study area flagged as containing a mound (at a >60% probability) increased from 148 in the first run to 288 here. Only 15 of these 288 tiles (5.2%), however, were true positives, containing the 21 detected mounds. The remaining 273 of 288 tiles were false positives (94.8%). The undetected 752 mounds lay in 384 tiles out of 399 tiles that actually contained mounds, a false negative rate of 96.2%.",
+      "location": {
+        "section": "Results",
+        "subsection": "Second run (2022)"
+      },
+      "source": "Field validation of 2022 predictions",
+      "supports_claims": [
+        "C003",
+        "C012"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E021",
+          "P1_E022",
+          "P1_E023",
+          "P1_E024",
+          "P1_E025",
+          "P1_E026"
+        ],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "All validation metrics for 2022 run - consolidated as single comprehensive finding"
+      }
     },
     {
-      "evidence_id": "E015",
-      "evidence_text": "Three public GitHub repositories contain all code for data processing and analysis",
-      "evidence_type": "documentary_evidence",
-      "verbatim_quote": "Data processing and analysis was performed using R and Python and the scripts are available in public repositories: (1) Training data preparation and CNN prediction validation can be found in https://github.com/adivea/cnn-testing (2) 2021 CNN classifier training and mound prediction is implemented in https://github.com/centre-for-humanities-computing/burial-mounds (3) 2022 CNN classifier training and mound prediction is implemented in https://github.com/centre-for-humanities-computing/MoundDetection",
-      "location": "Page 1, Abstract section",
-      "supports_claims": ["C015"],
-      "source_verification": "explicit"
+      "id": "E012",
+      "evidence_type": "qualitative_observation",
+      "verbatim_quote": "During a visual examination of the model predictions, we saw that the model avoided the Koprinka reservoir in the middle of the valley. It correctly detected some mounds around the reservoir as well as a few in the northeastern necropolis in the Valley. In the north and northwest, however, it missed many, including both small mounds and large royal mounds that are crystal clear to any human viewer.",
+      "location": {
+        "section": "Results",
+        "subsection": "First run (2021)"
+      },
+      "source": "Visual inspection of model output",
+      "supports_claims": [
+        "C013",
+        "C014"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E027",
+          "P1_E028",
+          "P1_E031"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Visual inspection observations consolidated - partial success and notable failures"
+      }
     },
     {
-      "evidence_id": "E016",
-      "evidence_text": "IKONOS satellite imagery at 1m panchromatic and 4m multispectral resolution covering 600 sq km",
-      "evidence_type": "technical_specification",
-      "verbatim_quote": "The satellite imagery used in this study consists of two IKONOS scenes covering 600 sq km delivered in geoTIFF format... The scenes included a panchromatic band at 1 m resolution and a multispectral image (RGBNIR) at 4 m resolution",
-      "location": "Page 8, Data section",
-      "supports_claims": ["C001"],
-      "source_verification": "explicit"
+      "id": "E013",
+      "evidence_type": "qualitative_observation",
+      "verbatim_quote": "To the south of the reservoir, the algorithm incorrectly selected a lot of forest, beaches, and roads, all of which increased the false positive rate. Overall, the model seemed to select bright lines and edges (forest, roads), rather than round shapes more likely to represent mounds. Furthermore, the model flagged parts of the reservoir as a mound with >60% probability, despite the homogeneous water surface. False positive tiles show that edges of forest, beach, and sections of roads are again classified as mounds.",
+      "location": {
+        "section": "Results",
+        "subsection": "First run (2021)",
+        "additional_location": "Results - Second run (2022)"
+      },
+      "source": "Visual inspection of model output",
+      "supports_claims": [
+        "C015",
+        "C002"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E029",
+          "P1_E030",
+          "P1_E032",
+          "P1_E052"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "All describe what model incorrectly detects - edges, lines, forest rather than mounds"
+      }
     },
     {
-      "evidence_id": "E017",
-      "evidence_text": "AI/ML publications for archaeological remote sensing reached 17% of total in 2023, indicating adoption approaching 'crossing the chasm'",
+      "id": "E014",
       "evidence_type": "quantitative_measurement",
-      "verbatim_quote": "These 21 publications represent about 17% of the 2023 total (n=125) for archaeological remote sensing... If publication counts are used a proxy for research, this 17% figure indicates that AI/ML is on the cusp of 'crossing the chasm'",
-      "location": "Page 6-7, Introduction section",
-      "supports_claims": ["C016"],
-      "source_verification": "explicit"
+      "verbatim_quote": "Figure 2 displays the annual publication count in each of the past 10 years (n = 70; research articles and conference papers plus one preprint) in Web of Science. This search reveals that the annual count of relevant publications has increased from zero in 2014 and 2015 to 21 in 2023. These 21 publications represent about 17% of the 2023 total (n = 125) for archaeological remote sensing.",
+      "location": {
+        "section": "Automated approaches to remotely sensed data"
+      },
+      "source": "Literature review - Web of Science search",
+      "supports_claims": [
+        "C016",
+        "C017"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E038",
+          "P1_E039"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "Publication count statistics consolidated"
+      }
+    },
+    {
+      "id": "E015",
+      "evidence_type": "quantitative_measurement",
+      "verbatim_quote": "Considering the 70 papers from the Web of Science mentioned above, 44 abstracts (63%) fail to mention any negative aspects of AI/ML approaches at all. Of the 26 papers (37%) with abstracts that mention some challenge or limitation, 11 state that they were overcome by the researchers, representing unqualified successes. Only 15 papers include specific or sustained critiques of ML approaches. Of those 15, seven (10% of the corpus) present qualified successes, while four (6%) discuss attempts to deploy ML that ended in partial or complete failures.",
+      "location": {
+        "section": "Automated approaches to remotely sensed data"
+      },
+      "source": "Literature review - content analysis",
+      "supports_claims": [
+        "C018",
+        "C019",
+        "C027"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E040",
+          "P1_E041",
+          "P1_E042"
+        ],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "Publication bias analysis consolidated as single finding"
+      }
+    },
+    {
+      "id": "E016",
+      "evidence_type": "qualitative_observation",
+      "verbatim_quote": "Enthusiasm arising from this study, and similar outcomes from Egypt (Woolf, 2018) must, however, be tempered by the fact that the authors targeted uniform features situated in environments with little variation in terrain or vegetation – indeed, with relatively little vegetation or other confounding factors at all.",
+      "location": {
+        "section": "Introduction"
+      },
+      "source": "Literature review critical analysis",
+      "supports_claims": [
+        "C002",
+        "C020"
+      ]
+    },
+    {
+      "id": "E017",
+      "evidence_type": "quantitative_measurement",
+      "verbatim_quote": "Correct classification of linear road features with a pre-trained model required 1,250 h to digitise and annotate training datasets (Can et al., 2021, p. 62,847).",
+      "location": {
+        "section": "Introduction",
+        "page": 3
+      },
+      "source": "Literature review - Can et al. 2021",
+      "supports_claims": [
+        "C004"
+      ]
+    },
+    {
+      "id": "E018",
+      "evidence_type": "quantitative_measurement",
+      "verbatim_quote": "No accommodation was made for the size of the mound; 100 m diameter mounds filled 34.9% of the cutout, while 10 m diameter mounds covered only 1.4%. Likewise, no accommodation was made for surrounding land cover, mound cover, or terrain.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training"
+      },
+      "source": "Training data specifications",
+      "supports_claims": [
+        "C021"
+      ]
+    },
+    {
+      "id": "E019",
+      "evidence_type": "qualitative_observation",
+      "verbatim_quote": "NOT MOUND data cutouts were generated in the same manner from areas excluding the 773 ground-truthed mound points, with no manual review.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training"
+      },
+      "source": "Training data preparation protocol",
+      "supports_claims": [
+        "C022"
+      ]
+    },
+    {
+      "id": "E020",
+      "evidence_type": "quantitative_measurement",
+      "verbatim_quote": "ResNet-50 seemed to perform best for our data. This model is one of the smaller pre-trained CNNs available, with only around 25.6m trainable parameters (for comparison, VGG16 has some 138.4m).",
+      "location": {
+        "section": "Methods",
+        "subsection": "Transfer learning"
+      },
+      "source": "Model architecture specifications",
+      "supports_claims": [
+        "C023"
+      ]
+    },
+    {
+      "id": "E021",
+      "evidence_type": "qualitative_observation",
+      "verbatim_quote": "During initial experiments, the model was found to overfit the training data, reporting close to 100% accuracy after only a few training epochs.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Transfer learning"
+      },
+      "source": "Model training observations",
+      "supports_claims": [
+        "C021"
+      ]
+    },
+    {
+      "id": "E022",
+      "evidence_type": "qualitative_observation",
+      "verbatim_quote": "Our team included two digital archaeologists, a machine-learning specialist with experience applying ML approaches to cultural heritage data, and a junior developer who wrote much of the code used to implement these models.",
+      "location": {
+        "section": "Discussion",
+        "subsection": "Is it worth it?"
+      },
+      "source": "Team composition description",
+      "supports_claims": [
+        "C024"
+      ]
+    },
+    {
+      "id": "E023",
+      "evidence_type": "qualitative_observation",
+      "verbatim_quote": "Small mounds were detected at a lower rate than in the 2021 model, demonstrated especially in the lack of predictions in the northwestern necropolis, which contained many mounds <1 m high.",
+      "location": {
+        "section": "Results",
+        "subsection": "Second run (2022)"
+      },
+      "source": "Visual inspection of model output",
+      "supports_claims": [
+        "C003",
+        "C014"
+      ]
     }
   ],
   "claims": [
     {
-      "claim_id": "C001",
-      "claim_text": "The study tests transfer learning CNN approaches for detecting burial mounds in high-resolution satellite imagery against a ground-truthed dataset of 773 field-verified mounds",
-      "claim_type": "methodological_argument",
-      "claim_role": "core",
-      "verbatim_quote": "We set out to detect burial mounds in the Kazanlak Valley, Bulgaria, using IKONOS high-resolution satellite imagery... we used a dataset of 773 mounds, collected by TRAP during 2009–2011 field survey",
-      "location": "Page 3, Introduction; Page 8, Data section",
-      "supported_by": ["E001", "E016"],
+      "id": "C001",
+      "claim_type": "core",
+      "verbatim_quote": "Validation of results against field data showed that self-reported success rates were misleadingly high, and that the model was misidentifying most features. Although the first model reported a good fit (F1 = 0.87), validation with field data showed the model was confusing our target features with other phenomena.",
+      "location": {
+        "section": "Abstract",
+        "additional_location": "Conclusion"
+      },
+      "supported_by_evidence": [
+        "E001",
+        "E009",
+        "E010"
+      ],
       "supports_claims": [],
-      "source_verification": "explicit"
+      "role_in_argument": "Primary finding - discrepancy between self-reported and field-validated performance",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C001",
+          "P1_C046"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Both express same core finding in different parts of paper"
+      }
     },
     {
-      "claim_id": "C002",
-      "claim_text": "External validation against independent field data is essential for evaluating CNN model performance in archaeological prospection",
-      "claim_type": "methodological_argument",
-      "claim_role": "core",
-      "verbatim_quote": "The model has detected incidental features rather than the mounds themselves, making external validation with field data an essential part of CNN workflows",
-      "location": "Page 2, Abstract",
-      "supported_by": ["E001", "E003", "E004", "E005"],
-      "supports_claims": ["C006"],
-      "source_verification": "explicit"
-    },
-    {
-      "claim_id": "C003",
-      "claim_text": "The dataset of 773 field-verified burial mounds provides robust ground truth for validating ML predictions",
-      "claim_type": "methodological_argument",
-      "claim_role": "supporting",
-      "verbatim_quote": "In this study we used a dataset of 773 mounds, collected by TRAP during 2009–2011 field survey in the Kazanlak Valley, Bulgaria... This fieldwork covered some 85 sq km, inspected directly via pedestrian survey",
-      "location": "Page 8, Data section",
-      "supported_by": ["E001"],
-      "supports_claims": ["C001", "C002"],
-      "source_verification": "explicit"
-    },
-    {
-      "claim_id": "C004",
-      "claim_text": "The pre-trained ResNet-50 CNN with transfer learning approach was selected based on preliminary experimentation showing it performed best for this data",
-      "claim_type": "methodological_argument",
-      "claim_role": "intermediate",
-      "verbatim_quote": "After some preliminary experimentation with a range of different pre-trained models, we concluded that ResNet-50 seemed to perform best for our data",
-      "location": "Page 9, Methods section",
-      "supported_by": ["E010"],
-      "supports_claims": ["C001"],
-      "source_verification": "explicit"
-    },
-    {
-      "claim_id": "C005",
-      "claim_text": "Despite reporting a good F1 score (0.87), the first CNN model failed to accurately detect burial mounds when validated against field data",
-      "claim_type": "empirical",
-      "claim_role": "core",
-      "verbatim_quote": "Although the first model reported a good fit (F1 = 0.87), validation with field data showed the model was confusing our target features with other phenomena",
-      "location": "Page 16, Conclusion",
-      "supported_by": ["E002", "E003", "E004", "E005"],
-      "supports_claims": ["C006"],
-      "source_verification": "explicit"
-    },
-    {
-      "claim_id": "C006",
-      "claim_text": "Self-reported ML metrics (F1 scores) are misleadingly high and do not reflect actual model performance in detecting archaeological features",
-      "claim_type": "interpretation",
-      "claim_role": "core",
-      "verbatim_quote": "Validation of results against field data showed that self-reported success rates were misleadingly high, and that the model was misidentifying most features",
-      "location": "Page 1-2, Abstract",
-      "supported_by": ["E002", "E003", "E004", "E005", "E006", "E007", "E008"],
-      "supports_claims": ["C014"],
-      "source_verification": "explicit"
-    },
-    {
-      "claim_id": "C007",
-      "claim_text": "The second model (trained on curated, highly visible mounds) performed worse than the first model (trained on all mounds)",
-      "claim_type": "empirical",
-      "claim_role": "core",
-      "verbatim_quote": "Counterintuitively, the model provided with training data selected for highly visible mounds (rather than all mounds) performed worse",
-      "location": "Page 1, Abstract",
-      "supported_by": ["E006", "E007", "E008", "E012"],
-      "supports_claims": ["C008"],
-      "source_verification": "explicit"
-    },
-    {
-      "claim_id": "C008",
-      "claim_text": "Additional curation of training data did not improve and actually worsened model performance",
-      "claim_type": "interpretation",
-      "claim_role": "intermediate",
-      "verbatim_quote": "Overall, despite additional curation of the training data, the second run was even less successful than the first; the false positives and false negatives increased and fewer mounds were detected",
-      "location": "Page 12, Results section",
-      "supported_by": ["E006", "E007", "E008"],
-      "supports_claims": ["C006"],
-      "source_verification": "explicit"
-    },
-    {
-      "claim_id": "C009",
-      "claim_text": "The CNN model development required approximately 135 person-hours of work, representing significant resource investment",
-      "claim_type": "empirical",
-      "claim_role": "intermediate",
-      "verbatim_quote": "Development of the model, meanwhile, required approximately 135 person-hours of work",
-      "location": "Page 2, Abstract",
-      "supported_by": ["E009"],
-      "supports_claims": ["C010"],
-      "source_verification": "explicit"
-    },
-    {
-      "claim_id": "C010",
-      "claim_text": "Given the results and resource investment, manual approaches (expert inspection or crowdsourcing) would likely be more efficient for this application",
-      "claim_type": "interpretation",
-      "claim_role": "core",
-      "verbatim_quote": "In our case, given the size of our study area and the number of features it likely contains, manual approaches like visual inspection by experts or crowdsourcing to volunteers would probably be more efficient",
-      "location": "Page 16, Conclusion",
-      "supported_by": ["E009", "E003", "E004", "E005", "E007", "E008"],
+      "id": "C002",
+      "claim_type": "core",
+      "verbatim_quote": "Our attempt to deploy a pre-trained CNN demonstrates the limitations of this approach when it is used to detect varied features of different sizes within a heterogeneous landscape that contains confounding natural and modern features, such as roads, forests and field boundaries. The challenge centres around the variability of the appearance of the mounds themselves, combined with the heterogeneous landscape surrounding them and the noise of non-mound features.",
+      "location": {
+        "section": "Abstract",
+        "additional_location": "Discussion - Limitations and challenges"
+      },
+      "supported_by_evidence": [
+        "E001",
+        "E005",
+        "E013",
+        "E016"
+      ],
       "supports_claims": [],
-      "source_verification": "explicit"
+      "role_in_argument": "Core methodological limitation claim - heterogeneous landscape problem",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C002",
+          "P1_C039"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Abstract statement and discussion elaboration consolidated"
+      }
     },
     {
-      "claim_id": "C011",
-      "claim_text": "The CNN detected incidental background features (edges of forests, roads, shorelines) rather than the target mound features",
-      "claim_type": "interpretation",
-      "claim_role": "intermediate",
-      "verbatim_quote": "Overall, the model seemed to select bright lines and edges (forest, roads), rather than round shapes more likely to represent mounds",
-      "location": "Page 11, Results section",
-      "supported_by": ["E003", "E004", "E011"],
-      "supports_claims": ["C006"],
-      "source_verification": "explicit"
+      "id": "C003",
+      "claim_type": "core",
+      "verbatim_quote": "Overall, despite additional curation of the training data, the second run was even less successful than the first; the false positives and false negatives increased and fewer mounds were detected.",
+      "location": {
+        "section": "Results",
+        "subsection": "Second run (2022)"
+      },
+      "supported_by_evidence": [
+        "E002",
+        "E008",
+        "E011",
+        "E023"
+      ],
+      "supports_claims": [
+        "C001"
+      ],
+      "role_in_argument": "Counterintuitive finding - more curation led to worse performance"
     },
     {
-      "claim_id": "C012",
-      "claim_text": "Pre-trained CNN models with low-touch training struggle when detecting varied features in heterogeneous landscapes with confounding natural and modern features",
-      "claim_type": "interpretation",
-      "claim_role": "core",
-      "verbatim_quote": "Our attempt to deploy a pre-trained CNN demonstrates the limitations of this approach when it is used to detect varied features of different sizes within a heterogeneous landscape that contains confounding natural and modern features",
-      "location": "Page 2, Abstract",
-      "supported_by": ["E003", "E004", "E005", "E007", "E008", "E012"],
-      "supports_claims": ["C014"],
-      "source_verification": "explicit"
+      "id": "C004",
+      "claim_type": "intermediate",
+      "verbatim_quote": "Improving the pre-trained model's performance would require considerable time and resources, on top of the time already invested. Although few publications report the time, expertise, or costs associated with applying ML to archaeological prospection, examples from projects trying to extract symbols and text from historical maps indicate that it can be labour-intensive.",
+      "location": {
+        "section": "Abstract",
+        "additional_location": "Introduction"
+      },
+      "supported_by_evidence": [
+        "E003",
+        "E017"
+      ],
+      "supports_claims": [
+        "C025"
+      ],
+      "role_in_argument": "Resource requirement claim supporting cost-benefit analysis",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C004",
+          "P1_C007"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Both relate to resource requirements for ML approaches"
+      }
     },
     {
-      "claim_id": "C013",
-      "claim_text": "The ML-for-archaeology literature exhibits publication bias, with overwhelmingly positive reporting and few discussions of failures or challenges",
-      "claim_type": "empirical",
-      "claim_role": "intermediate",
-      "verbatim_quote": "The literature itself, however, is overwhelmingly positive, reflecting some combination of publication bias and a rhetoric of unconditional success",
-      "location": "Page 2, Abstract",
-      "supported_by": ["E013", "E014"],
-      "supports_claims": ["C014"],
-      "source_verification": "explicit"
-    },
-    {
-      "claim_id": "C014",
-      "claim_text": "This paper serves as a necessary counterbalance and cautionary tale for potential adopters of ML technology in archaeology",
-      "claim_type": "interpretation",
-      "claim_role": "core",
-      "verbatim_quote": "This paper presents the failure of a good-faith attempt to utilise these approaches as a counterbalance and cautionary tale to potential adopters of the technology",
-      "location": "Page 2, Abstract",
-      "supported_by": ["E005", "E008", "E013", "E014"],
+      "id": "C005",
+      "claim_type": "supporting",
+      "verbatim_quote": "In this study we used a dataset of 773 mounds, collected by TRAP during 2009 – 2011 field survey in the Kazanlak Valley, Bulgaria. This fieldwork covered some 85 sq km, inspected directly via pedestrian survey.",
+      "location": {
+        "section": "Data",
+        "subsection": "Pedestrian survey"
+      },
+      "supported_by_evidence": [
+        "E004"
+      ],
       "supports_claims": [],
-      "source_verification": "explicit"
+      "role_in_argument": "Data foundation for validation - establishes ground truth dataset",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C008",
+          "P1_C010"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Field data description and quality claims consolidated"
+      }
     },
     {
-      "claim_id": "C015",
-      "claim_text": "Complete code transparency is provided through three public GitHub repositories covering all data processing and analysis",
-      "claim_type": "methodological_argument",
-      "claim_role": "supporting",
-      "verbatim_quote": "Data processing and analysis was performed using R and Python and the scripts are available in public repositories",
-      "location": "Page 1, Abstract",
-      "supported_by": ["E015"],
+      "id": "C006",
+      "claim_type": "supporting",
+      "verbatim_quote": "These rounded, conical piles of earth and stones vary in diameter from 10 m to 100 m and <1 m to >20 m in height.",
+      "location": {
+        "section": "Burial mounds as heritage under threat"
+      },
+      "supported_by_evidence": [
+        "E005"
+      ],
+      "supports_claims": [
+        "C002"
+      ],
+      "role_in_argument": "Establishes variability of target features supporting heterogeneity claim"
+    },
+    {
+      "id": "C007",
+      "claim_type": "supporting",
+      "verbatim_quote": "The satellite imagery used in this study consists of two IKONOS scenes covering 600 sq km delivered in geoTIFF format. The scenes included a panchromatic band at 1 m resolution and a multispectral image (RGBNIR) at 4 m resolution.",
+      "location": {
+        "section": "Data",
+        "subsection": "Satellite imagery"
+      },
+      "supported_by_evidence": [
+        "E006"
+      ],
       "supports_claims": [],
-      "source_verification": "explicit"
+      "role_in_argument": "Data specification for reproducibility"
     },
     {
-      "claim_id": "C016",
-      "claim_text": "AI/ML approaches to archaeological remote sensing are approaching mainstream adoption ('crossing the chasm'), making critical assessment increasingly important",
-      "claim_type": "interpretation",
-      "claim_role": "intermediate",
-      "verbatim_quote": "If publication counts are used a proxy for research, this 17% figure indicates that AI/ML is on the cusp of 'crossing the chasm' separating 'innovators' and 'early adopters' (together 16% of the population) from the 'early majority'",
-      "location": "Page 6-7, Introduction section",
-      "supported_by": ["E017"],
-      "supports_claims": ["C014"],
-      "source_verification": "explicit"
+      "id": "C008",
+      "claim_type": "supporting",
+      "verbatim_quote": "Mound points taken during fieldwork were used as centroids for the generation of 150 × 150 m square polygons (150 × 150 pixels at 1 m resolution), which were clipped from the IKONOS imagery. This process yielded 773 MOUND cutouts, each centred on a mound.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training"
+      },
+      "supported_by_evidence": [
+        "E007"
+      ],
+      "supports_claims": [
+        "C009"
+      ],
+      "role_in_argument": "Training data preparation methodology"
+    },
+    {
+      "id": "C009",
+      "claim_type": "intermediate",
+      "verbatim_quote": "In the 2021 run of the model, we used all 773 cutouts for training regardless of what was visible in the satellite image. In the 2022 run, we selected 249 cutouts where a mound was discernible with the naked eye.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training"
+      },
+      "supported_by_evidence": [
+        "E008"
+      ],
+      "supports_claims": [
+        "C003"
+      ],
+      "role_in_argument": "Experimental design - two training approaches compared"
+    },
+    {
+      "id": "C010",
+      "claim_type": "intermediate",
+      "verbatim_quote": "After image augmentation, the model reported good learning and model fit (F1 = 0.87). This F1 score indicated that the use of a pre-trained model improved performance by 0.05 compared to a previous, manually trained model.",
+      "location": {
+        "section": "Results",
+        "subsection": "First run (2021)"
+      },
+      "supported_by_evidence": [
+        "E009"
+      ],
+      "supports_claims": [
+        "C001"
+      ],
+      "role_in_argument": "Self-reported metrics that proved misleading upon validation"
+    },
+    {
+      "id": "C011",
+      "claim_type": "core",
+      "verbatim_quote": "Nevertheless, only 19 out of 148 tiles (12.8%) tagged by the model with at least a 60% chance of having a mound actually contained one. The high number of both false negatives and false positives demonstrated that our use of a low-touch approach – a pre-trained model plus sufficient but minimally curated training data – did not work.",
+      "location": {
+        "section": "Results",
+        "subsection": "First run (2021)",
+        "additional_location": "Conclusion"
+      },
+      "supported_by_evidence": [
+        "E010"
+      ],
+      "supports_claims": [
+        "C001"
+      ],
+      "role_in_argument": "Key validation finding - low true positive rate demonstrating approach failure",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C015",
+          "P1_C047"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Specific finding and its conclusion interpretation consolidated"
+      }
+    },
+    {
+      "id": "C012",
+      "claim_type": "supporting",
+      "verbatim_quote": "Validation revealed that only 21 of 773 mounds (2.7%) were detected, while 752 mounds (97.3%) remained undetected. The second model's performance declined to an F1 score of 0.62.",
+      "location": {
+        "section": "Results",
+        "subsection": "Second run (2022)"
+      },
+      "supported_by_evidence": [
+        "E011"
+      ],
+      "supports_claims": [
+        "C003"
+      ],
+      "role_in_argument": "Validation finding for second run showing performance decline",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C017",
+          "P1_C018"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Metrics for second run consolidated"
+      }
+    },
+    {
+      "id": "C013",
+      "claim_type": "supporting",
+      "verbatim_quote": "During a visual examination of the model predictions, we saw that the model avoided the Koprinka reservoir in the middle of the valley. It correctly detected some mounds around the reservoir as well as a few in the northeastern necropolis in the Valley.",
+      "location": {
+        "section": "Results",
+        "subsection": "First run (2021)"
+      },
+      "supported_by_evidence": [
+        "E012"
+      ],
+      "supports_claims": [],
+      "role_in_argument": "Partial success observation - limited correct detections"
+    },
+    {
+      "id": "C014",
+      "claim_type": "intermediate",
+      "verbatim_quote": "The greatest surprise was that the model failed to detect the largest mounds in the valley. These round, symmetrical features stand out against surrounding agricultural fields, and are crystal clear to any human viewer.",
+      "location": {
+        "section": "Results",
+        "subsection": "First run (2021)"
+      },
+      "supported_by_evidence": [
+        "E012",
+        "E023"
+      ],
+      "supports_claims": [
+        "C001",
+        "C002"
+      ],
+      "role_in_argument": "Counterintuitive finding - large obvious features missed",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C016",
+          "P1_C021"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Large mound failure and anomalous behaviour observations consolidated"
+      }
+    },
+    {
+      "id": "C015",
+      "claim_type": "intermediate",
+      "verbatim_quote": "Overall, the model seemed to select bright lines and edges (forest, roads), rather than round shapes more likely to represent mounds. Furthermore, the model flagged parts of the reservoir as a mound with >60% probability, despite the homogeneous water surface, bringing the question \"what is the CNN actually detecting?\" to the fore. Models have been observed to predict class membership based on incidental background features in the periphery of the tiles that happen to accompany the target phenomenon in the centre.",
+      "location": {
+        "section": "Results",
+        "subsection": "First run (2021)",
+        "additional_location": "Discussion - Limitations and challenges"
+      },
+      "supported_by_evidence": [
+        "E013"
+      ],
+      "supports_claims": [
+        "C002"
+      ],
+      "role_in_argument": "Diagnostic finding - model detects incidental features rather than target phenomenon",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C020",
+          "P1_C022",
+          "P1_C040"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "All relate to what model actually detects vs intended target"
+      }
+    },
+    {
+      "id": "C016",
+      "claim_type": "intermediate",
+      "verbatim_quote": "As a result, ML and other artificial intelligence approaches to remote sensing in archaeology are becoming ever more popular. If publication counts are used a proxy for research, this 17% figure indicates that AI/ML is on the cusp of \"crossing the chasm\" separating \"innovators\" and \"early adopters\" from the \"early majority\".",
+      "location": {
+        "section": "Automated approaches to remotely sensed data"
+      },
+      "supported_by_evidence": [
+        "E014"
+      ],
+      "supports_claims": [
+        "C017"
+      ],
+      "role_in_argument": "Technology adoption context - ML approaches at adoption inflection point",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C026",
+          "P1_C027"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Trend observation and adoption stage assessment consolidated"
+      }
+    },
+    {
+      "id": "C017",
+      "claim_type": "supporting",
+      "verbatim_quote": "A series of recent articles have promoted the success of CNNs in cultural heritage applications.",
+      "location": {
+        "section": "Introduction"
+      },
+      "supported_by_evidence": [
+        "E014"
+      ],
+      "supports_claims": [
+        "C018"
+      ],
+      "role_in_argument": "Literature context - prior positive reports"
+    },
+    {
+      "id": "C018",
+      "claim_type": "core",
+      "verbatim_quote": "The overwhelmingly positive tone of these papers likely indicates a certain degree of \"publication bias\", where positive results are more likely to be published than negative, or at the very least a reflection of the rhetorical shift in scientific research towards less qualified or uncertain presentation of outcomes.",
+      "location": {
+        "section": "Automated approaches to remotely sensed data"
+      },
+      "supported_by_evidence": [
+        "E015"
+      ],
+      "supports_claims": [],
+      "role_in_argument": "Core methodological claim about literature bias"
+    },
+    {
+      "id": "C019",
+      "claim_type": "supporting",
+      "verbatim_quote": "In this context, it is important to document unsuccessful attempts to apply ML techniques to archaeological remote sensing, or at least to highlight problems researchers are likely to face as they adopt the technology.",
+      "location": {
+        "section": "Automated approaches to remotely sensed data"
+      },
+      "supported_by_evidence": [
+        "E015"
+      ],
+      "supports_claims": [
+        "C018"
+      ],
+      "role_in_argument": "Paper's contribution framing - addressing publication bias gap"
+    },
+    {
+      "id": "C020",
+      "claim_type": "intermediate",
+      "verbatim_quote": "Enthusiasm arising from this study, and similar outcomes from Egypt must, however, be tempered by the fact that the authors targeted uniform features situated in environments with little variation in terrain or vegetation – indeed, with relatively little vegetation or other confounding factors at all.",
+      "location": {
+        "section": "Introduction"
+      },
+      "supported_by_evidence": [
+        "E016"
+      ],
+      "supports_claims": [
+        "C002"
+      ],
+      "role_in_argument": "Critical assessment of conditions enabling prior success"
+    },
+    {
+      "id": "C021",
+      "claim_type": "intermediate",
+      "verbatim_quote": "No accommodation was made for the size of the mound; 100 m diameter mounds filled 34.9% of the cutout, while 10 m diameter mounds covered only 1.4%. Likewise, no accommodation was made for surrounding land cover, mound cover, or terrain. Overall, training the model with a set of highly variable features with even more varied and complex backgrounds may have misled it regarding the target of detection.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training",
+        "additional_location": "Discussion - Limitations and challenges"
+      },
+      "supported_by_evidence": [
+        "E018",
+        "E021"
+      ],
+      "supports_claims": [
+        "C002",
+        "C015"
+      ],
+      "role_in_argument": "Methodological limitation - variable feature sizes in fixed tile approach",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C031",
+          "P1_C032",
+          "P1_C041"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Training data limitations and their consequences consolidated"
+      }
+    },
+    {
+      "id": "C022",
+      "claim_type": "intermediate",
+      "verbatim_quote": "NOT MOUND data cutouts were generated in the same manner from areas excluding the 773 ground-truthed mound points, with no manual review. It may be counterintuitive, but care in creating the NOT MOUND tiles is as – if not more – important than the MOUND tiles. One lesson we learnt is that CNN cannot \"ignore\" without extensive training on negative examples. Our experience suggests that even a 1:2 (positive:negative) ratio was not sufficient.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training",
+        "additional_location": "Discussion - Building a better model"
+      },
+      "supported_by_evidence": [
+        "E019"
+      ],
+      "supports_claims": [],
+      "role_in_argument": "Lesson learned about negative training data importance",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C033",
+          "P1_C043",
+          "P1_C044"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Negative training data observations and lessons consolidated"
+      }
+    },
+    {
+      "id": "C023",
+      "claim_type": "supporting",
+      "verbatim_quote": "After some preliminary experimentation with a range of different pre-trained models, we concluded that ResNet-50 seemed to perform best for our data. This model is one of the smaller pre-trained CNNs available, with only around 25.6m trainable parameters.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Transfer learning"
+      },
+      "supported_by_evidence": [
+        "E020"
+      ],
+      "supports_claims": [],
+      "role_in_argument": "Model selection justification"
+    },
+    {
+      "id": "C024",
+      "claim_type": "intermediate",
+      "verbatim_quote": "Developing our CNN model required approximately 135 person-hours from conceptualisation and experiments to validation and documentation. Our team included two digital archaeologists, a machine-learning specialist with experience applying ML approaches to cultural heritage data, and a junior developer who wrote much of the code used to implement these models.",
+      "location": {
+        "section": "Discussion",
+        "subsection": "Is it worth it?"
+      },
+      "supported_by_evidence": [
+        "E003",
+        "E022"
+      ],
+      "supports_claims": [
+        "C004"
+      ],
+      "role_in_argument": "Resource requirements documentation",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C034"
+        ],
+        "consolidation_type": "granularity_reduction",
+        "information_preserved": "complete",
+        "rationale": "Time and team composition into single resource claim"
+      }
+    },
+    {
+      "id": "C025",
+      "claim_type": "core",
+      "verbatim_quote": "The degree of manual intervention required – particularly around the subsetting and annotation of training data – is so significant that it raises the question of whether it would be more efficient to identify all of the mounds manually, either through brute-force inspection by experts or by crowdsourcing the analysis to trained – or even untrained – volunteers. Indeed, both models failed to identify burial mounds in our study area. Expert researchers, or even novice volunteers, would have been more reliable. In our case, given the size of our study area and the number of features it likely contains, manual approaches like visual inspection by experts or crowdsourcing to volunteers would probably be more efficient.",
+      "location": {
+        "section": "Abstract",
+        "additional_location": "Introduction",
+        "additional_location_2": "Conclusion"
+      },
+      "supported_by_evidence": [],
+      "supports_claims": [],
+      "role_in_argument": "Core practical implication - manual approaches likely more efficient",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C035",
+          "P1_C037",
+          "P1_C048"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Efficiency question and manual alternative recommendations consolidated"
+      }
+    },
+    {
+      "id": "C026",
+      "claim_type": "core",
+      "verbatim_quote": "This paper offers a cautionary tale about the challenges, limitations, and demands of ML applied to archaeological prospection. We set out to test the efficacy of a Machine Learning approach to detecting burial mounds situated in varied terrain and vegetation in the Kazanlak Valley of Bulgaria.",
+      "location": {
+        "section": "Introduction",
+        "additional_location": "Conclusion"
+      },
+      "supported_by_evidence": [],
+      "supports_claims": [],
+      "role_in_argument": "Paper framing - cautionary contribution and research objective",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C038",
+          "P1_C045"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Introduction framing and conclusion objective statement consolidated"
+      }
+    },
+    {
+      "id": "C027",
+      "claim_type": "core",
+      "verbatim_quote": "Each project must make a decision regarding the trade-offs of different approaches to archaeological prospection using remotely sensed data, but the relevant literature underreports failures, challenges, and limitations of ML when used for this application. Very few projects, furthermore, report the time and resources invested in their approach, whether manual or automated. As ML approaches become more popular, researchers need more negative examples, discussion of problems, and resourcing information to make informed decisions about how to approach feature extraction from large remote-sensing datasets.",
+      "location": {
+        "section": "Conclusion"
+      },
+      "supported_by_evidence": [
+        "E015"
+      ],
+      "supports_claims": [
+        "C018"
+      ],
+      "role_in_argument": "Core conclusion - call for better reporting of failures and resources",
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C049",
+          "P1_C050"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Literature gap and call for better reporting consolidated"
+      }
     }
   ],
   "implicit_arguments": [
     {
-      "implicit_argument_id": "IA001",
-      "argument_text": "External field validation is more reliable than self-reported ML metrics for assessing actual model performance",
-      "type": "logical_implication",
+      "id": "IA001",
+      "implicit_type": "unstated_assumption",
+      "argument": "Field-validated ground truth data from pedestrian survey is sufficiently accurate and complete to serve as the gold standard for evaluating CNN predictions.",
       "trigger_text": [
-        "Validation of results against field data showed that self-reported success rates were misleadingly high",
-        "Although the first model reported a good fit (F1 = 0.87), validation with field data showed the model was confusing our target features with other phenomena"
+        "In this study we used a dataset of 773 mounds, collected by TRAP during 2009 – 2011 field survey in the Kazanlak Valley, Bulgaria",
+        "After the initial performance evaluation, we manually validated model performance. To do so, we verified mound predictions using points marking ground-truthed mounds"
       ],
-      "trigger_locations": ["Page 1-2, Abstract", "Page 16, Conclusion"],
-      "inference_reasoning": "The stark contrast between reported F1 scores (0.87, 0.62) and actual detection rates (4.9%, 2.7%) implies that field validation reveals ground truth that self-reported metrics cannot capture.",
-      "supports_claims": ["C002", "C006"],
-      "source_verification": "inferred"
+      "trigger_locations": [
+        {
+          "section": "Data",
+          "subsection": "Pedestrian survey"
+        },
+        {
+          "section": "Assessment",
+          "subsection": "Model validation against field data"
+        }
+      ],
+      "inference_reasoning": "The entire validation methodology depends on the assumption that the 773 mounds documented during fieldwork represent the actual distribution of mounds. If field survey missed mounds or misidentified features, the validation metrics would be unreliable. The paper assumes GPS accuracy, surveyor competence, and comprehensive coverage without explicitly justifying these.",
+      "supports_claims": [
+        "C001",
+        "C011"
+      ]
     },
     {
-      "implicit_argument_id": "IA002",
-      "argument_text": "Transfer learning assumptions about generalisation from pre-trained models may not hold for archaeological applications with heterogeneous targets",
-      "type": "unstated_assumption",
+      "id": "IA002",
+      "implicit_type": "bridging_claim",
+      "argument": "Self-reported F1 scores derived from training/validation/test splits are meaningful proxies for real-world detection performance.",
+      "trigger_text": [
+        "After image augmentation, the model reported good learning and model fit (F1 = 0.87)",
+        "These evaluation metrics are the model's own answers to the question \"how well does the model predict MOUND/NOT MOUND in the test data, based on what it has learned from the training data?\""
+      ],
+      "trigger_locations": [
+        {
+          "section": "Results",
+          "subsection": "First run (2021)"
+        },
+        {
+          "section": "Assessment",
+          "subsection": "Performance evaluation"
+        }
+      ],
+      "inference_reasoning": "The paper demonstrates that high F1 scores (0.87) did not translate to field performance (4.9% detection rate). This implies that standard ML evaluation metrics may be fundamentally inadequate for archaeological applications where the test data comes from the same distribution as training data but real-world deployment encounters novel conditions.",
+      "supports_claims": [
+        "C001",
+        "C010"
+      ]
+    },
+    {
+      "id": "IA003",
+      "implicit_type": "disciplinary_assumption",
+      "argument": "Transfer learning from ImageNet (general object recognition) should transfer meaningfully to archaeological feature detection in satellite imagery.",
       "trigger_text": [
         "Transfer learning assumes that large, complex models can be pre-trained using data from one domain, then fine-tuned for a specific task in another domain",
-        "Our outcomes indicate that even an advanced pre-trained model... is likely to fail when asked to detect somewhat variable features against very heterogeneous backgrounds with only a low-touch approach to training"
+        "CNNs are often pre-trained on a subset of ImageNet (Deng et al., 2009), learning combinations of weights and parameters which best extract information in order to make predictions between 1,000 different classes of image"
       ],
-      "trigger_locations": ["Page 8, Methods section", "Page 15, Discussion section"],
-      "inference_reasoning": "The paper tests the transfer learning assumption and demonstrates its limitations for varied archaeological features, implying that standard ML assumptions may not transfer to HASS domains with complex, variable targets.",
-      "supports_claims": ["C012"],
-      "source_verification": "inferred"
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "Transfer learning"
+        }
+      ],
+      "inference_reasoning": "The approach assumes that features learned from everyday photographs (cats, dogs, cars, etc.) will transfer to archaeological features in satellite imagery. This is a significant domain gap - the visual characteristics of burial mounds in multispectral satellite data may have little in common with ImageNet categories. The paper does not explicitly question this assumption.",
+      "supports_claims": [
+        "C002",
+        "C023"
+      ]
     },
     {
-      "implicit_argument_id": "IA003",
-      "argument_text": "Publication bias in ML-for-archaeology literature creates unrealistic expectations for practitioners",
-      "type": "bridging_claim",
+      "id": "IA004",
+      "implicit_type": "logical_implication",
+      "argument": "If the model detects incidental background features rather than mounds, then the training process has learned spurious correlations rather than the essential characteristics of burial mounds.",
       "trigger_text": [
-        "The overwhelmingly positive tone of these papers likely indicates a certain degree of 'publication bias'",
-        "Early-majority adopters may find ML difficult to implement effectively in real-life scenarios"
+        "Overall, the model seemed to select bright lines and edges (forest, roads), rather than round shapes more likely to represent mounds",
+        "Models have been observed to predict class membership based on incidental background features in the periphery of the tiles that happen to accompany the target phenomenon in the centre"
       ],
-      "trigger_locations": ["Page 7, Introduction section", "Page 2, Abstract"],
-      "inference_reasoning": "By connecting publication bias to adoption challenges, the paper implies that the biased literature creates a gap between expected and actual outcomes for new adopters.",
-      "supports_claims": ["C013", "C014"],
-      "source_verification": "inferred"
+      "trigger_locations": [
+        {
+          "section": "Results",
+          "subsection": "First run (2021)"
+        },
+        {
+          "section": "Discussion",
+          "subsection": "Limitations and challenges of pre-trained CNNs"
+        }
+      ],
+      "inference_reasoning": "The observation that the model detects edges and lines rather than circular mound shapes implies that the CNN has failed to learn the essential visual signature of burial mounds. Instead, it has learned correlations between mound presence and contextual features that happen to co-occur in the training data.",
+      "supports_claims": [
+        "C015",
+        "C021"
+      ]
     },
     {
-      "implicit_argument_id": "IA004",
-      "argument_text": "Reporting time-on-task and resource requirements is essential for enabling informed decisions about ML approaches",
-      "type": "methodological_assumption",
+      "id": "IA005",
+      "implicit_type": "unstated_assumption",
+      "argument": "The 135 person-hours invested represents the minimum viable effort for this approach, and additional investment would scale roughly linearly with potential improvements.",
       "trigger_text": [
-        "We also present time, expertise and resourcing requirements, a rarity in ML-for-archaeology publications",
-        "Very few projects, furthermore, report the time and resources invested in their approach"
+        "Developing our CNN model required approximately 135 person-hours from conceptualisation and experiments to validation and documentation",
+        "our first intervention to improve the results added 20 h to the total time, but led to a poorer outcome"
       ],
-      "trigger_locations": ["Page 2, Abstract", "Page 16, Conclusion"],
-      "inference_reasoning": "By emphasising the rarity of resource reporting and explicitly providing it, the authors imply this information is necessary for practitioners to make cost-benefit decisions.",
-      "supports_claims": ["C009", "C010"],
-      "source_verification": "inferred"
-    },
-    {
-      "implicit_argument_id": "IA005",
-      "argument_text": "Negative results have scientific value equal to or greater than positive results in advancing methodological understanding",
-      "type": "unstated_assumption",
-      "trigger_text": [
-        "This paper offers a cautionary tale about the challenges, limitations, and demands of ML applied to archaeological prospection",
-        "it is important to document unsuccessful attempts to apply ML techniques to archaeological remote sensing"
+      "trigger_locations": [
+        {
+          "section": "Discussion",
+          "subsection": "Is it worth it?"
+        }
       ],
-      "trigger_locations": ["Page 3, Introduction section", "Page 7, Introduction section"],
-      "inference_reasoning": "The explicit framing of failure as valuable contribution implies an assumption that negative results advance knowledge by helping others avoid similar pitfalls.",
-      "supports_claims": ["C014"],
-      "source_verification": "inferred"
+      "inference_reasoning": "The paper uses the 135 hours as a basis for cost-benefit analysis but does not establish whether this represents efficient use of time or whether a different allocation of effort might have produced better results. The fact that additional 20 hours led to worse outcomes suggests diminishing or negative returns.",
+      "supports_claims": [
+        "C004",
+        "C024"
+      ]
     }
   ],
   "research_designs": [
     {
-      "design_id": "RD001",
-      "design_text": "Hypothesis-testing design to evaluate whether pre-trained CNN with transfer learning can effectively detect burial mounds in satellite imagery",
-      "design_type": "hypothesis_testing",
+      "id": "RD001",
+      "design_type": "methodological_framework",
       "design_status": "explicit",
-      "verbatim_quote": "We set out to detect burial mounds in the Kazanlak Valley, Bulgaria, using IKONOS high-resolution satellite imagery. We developed a pre-trained CNN that was further trained using two datasets",
-      "location": "Page 3, Introduction section",
-      "implements_claims": ["C001"],
-      "source_verification": "explicit"
+      "verbatim_quote": "Transfer learning assumes that large, complex models can be pre-trained using data from one domain, then fine-tuned for a specific task in another domain. CNNs are often pre-trained on a subset of ImageNet (Deng et al., 2009), learning combinations of weights and parameters which best extract information in order to make predictions between 1,000 different classes of image. It is possible to leverage the existing weights and parameters – and the learning that took place to produce them – by fine-tuning them for a new, domain-specific task.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Transfer learning"
+      },
+      "reasoning_approach": "deductive",
+      "description": "Transfer learning design using pre-trained CNN (ImageNet) for archaeological feature detection",
+      "rationale": "Leverages existing model weights trained on large general dataset to reduce training requirements for domain-specific archaeological task",
+      "implemented_by_methods": [
+        "M001",
+        "M-IMP-001"
+      ],
+      "expected_information_missing": [
+        "Explicit justification for why transfer learning expected to work for archaeological imagery",
+        "Discussion of domain gap between ImageNet and satellite imagery"
+      ],
+      "extraction_confidence": "high"
     },
     {
-      "design_id": "RD002",
-      "design_text": "Comparative design testing two training data strategies: all mounds vs. visually discernible mounds only",
-      "design_type": "comparative",
+      "id": "RD002",
+      "design_type": "comparative_evaluation",
       "design_status": "explicit",
-      "verbatim_quote": "We first used an indiscriminate collection of burial mounds, regardless of their visibility in the satellite imagery. We next used only those mounds that we deemed easily discernible in the satellite imagery",
-      "location": "Page 16, Conclusion",
-      "implements_claims": ["C007", "C008"],
-      "source_verification": "explicit"
+      "verbatim_quote": "In the 2021 run of the model, we used all 773 cutouts for training regardless of what was visible in the satellite image. In the 2022 run, we selected 249 cutouts where a mound was discernible with the naked eye. Our hypothesis was that training the model with cleaner inputs might improve the quality of its predictions.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training"
+      },
+      "reasoning_approach": "deductive",
+      "description": "Comparative design testing whether curated (visible mounds only) vs comprehensive (all mounds) training data improves model performance",
+      "rationale": "Hypothesis that cleaner training inputs would improve prediction quality",
+      "hypothesis_statement": "Training with curated visible mounds improves prediction quality compared to using all mounds",
+      "implemented_by_methods": [
+        "M002"
+      ],
+      "expected_information_missing": [
+        "Prior basis for hypothesis",
+        "Power analysis for detecting meaningful differences"
+      ],
+      "extraction_confidence": "high"
     },
     {
-      "design_id": "RD003",
-      "design_text": "External validation design using independent field-collected ground truth data to assess model predictions",
-      "design_type": "validation",
+      "id": "RD003",
+      "design_type": "validation_design",
       "design_status": "explicit",
-      "verbatim_quote": "After this training, we applied the models to our imagery and validated results using our field data",
-      "location": "Page 16, Conclusion",
-      "implements_claims": ["C002", "C006"],
-      "source_verification": "explicit"
+      "verbatim_quote": "After the initial performance evaluation, we manually validated model performance. To do so, we verified mound predictions using points marking ground-truthed mounds, and calculated the true and false positives and negatives.",
+      "location": {
+        "section": "Assessment",
+        "subsection": "Model validation against field data"
+      },
+      "reasoning_approach": "deductive",
+      "description": "Two-stage validation design: automated performance metrics followed by manual field-data validation",
+      "rationale": "Tests whether self-reported model metrics align with real-world detection performance against known ground truth",
+      "implemented_by_methods": [
+        "M003",
+        "M004",
+        "M005"
+      ],
+      "expected_information_missing": [
+        "Blinding procedures for manual validation",
+        "Inter-rater reliability if multiple validators"
+      ],
+      "extraction_confidence": "high"
+    },
+    {
+      "id": "RD004",
+      "design_type": "case_study",
+      "design_status": "explicit",
+      "verbatim_quote": "We set out to test the efficacy of a Machine Learning approach to detecting burial mounds situated in varied terrain and vegetation in the Kazanlak Valley of Bulgaria.",
+      "location": {
+        "section": "Introduction"
+      },
+      "reasoning_approach": "inductive",
+      "description": "Single case study design evaluating ML efficacy in a heterogeneous archaeological landscape",
+      "rationale": "Tests ML approach in challenging real-world conditions with varied features and complex backgrounds",
+      "implemented_by_methods": [
+        "M001",
+        "M002"
+      ],
+      "expected_information_missing": [
+        "Justification for case selection",
+        "Discussion of generalisability to other landscapes"
+      ],
+      "extraction_confidence": "high"
+    },
+    {
+      "id": "RD-IMP-001",
+      "design_type": "literature_review_design",
+      "design_status": "implicit",
+      "trigger_text": [
+        "Figure 2 displays the annual publication count in each of the past 10 years (n = 70; research articles and conference papers plus one preprint) in Web of Science.",
+        "This search reveals that the annual count of relevant publications has increased from zero in 2014 and 2015 to 21 in 2023.",
+        "Considering the 70 papers from the Web of Science mentioned above, 44 abstracts (63%) fail to mention any negative aspects of AI/ML approaches at all."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Automated approaches to remotely sensed data"
+        },
+        {
+          "section": "Automated approaches to remotely sensed data"
+        },
+        {
+          "section": "Automated approaches to remotely sensed data"
+        }
+      ],
+      "inference_reasoning": "The paper presents a systematic literature analysis with quantitative results (n=70 papers, publication trends, content analysis of abstracts) but the methodology for this literature review is never documented. The search terms, databases, inclusion/exclusion criteria, and coding methodology are not specified. This represents a secondary research design within the paper that is mentioned and results reported but methodology undocumented.",
+      "description": "Systematic literature review methodology for analysing ML publication trends and bias in archaeological remote sensing",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Literature review search strategy, inclusion criteria, and content analysis methodology not documented. Unknown: exact search terms, date ranges, screening process, coding categories for abstract analysis.",
+        "assessability_impact": "Cannot assess representativeness of literature corpus, reliability of trend analysis, or reproducibility of publication bias findings.",
+        "reconstruction_confidence": "low"
+      },
+      "implemented_by_methods": [
+        "M-IMP-002"
+      ],
+      "expected_information_missing": [
+        "Search strategy",
+        "Database selection criteria",
+        "Inclusion/exclusion criteria",
+        "Content analysis coding scheme",
+        "Inter-rater reliability for abstract coding"
+      ],
+      "extraction_confidence": "high"
+    },
+    {
+      "id": "RD-IMP-002",
+      "design_type": "methodological_philosophy",
+      "design_status": "implicit",
+      "trigger_text": [
+        "Using transfer learning with a pre-trained model can be considered a starting point for machine learning – the simplest, most common, and lowest-cost approach to developing a working solution.",
+        "The high number of both false negatives and false positives demonstrated that our use of a low-touch approach – a pre-trained model plus sufficient but minimally curated training data – did not work."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "Transfer learning"
+        },
+        {
+          "section": "Conclusion"
+        }
+      ],
+      "inference_reasoning": "The 'low-touch approach' is described retrospectively as the paper's methodological philosophy but is never stated as an explicit design goal in the Introduction or Methods framing. The strategic decision to test the simplest, lowest-cost approach first is framed in the Conclusion as the experimental philosophy but wasn't explicitly stated as a research design objective.",
+      "description": "Low-touch methodological approach testing minimal intervention ML workflow before resource-intensive refinement",
+      "implicit_metadata": {
+        "basis": "inferred_from_results",
+        "transparency_gap": "The strategic decision to test a minimal-effort approach before investing in more complex solutions was not stated as a design objective. Unknown whether this was a deliberate experimental strategy or post-hoc framing.",
+        "assessability_impact": "Affects interpretation of results - unclear if failure represents approach limitation or strategic choice to test baseline first.",
+        "reconstruction_confidence": "medium"
+      },
+      "implemented_by_methods": [
+        "M001"
+      ],
+      "expected_information_missing": [
+        "Explicit statement of low-touch philosophy as design goal",
+        "Decision criteria for when to abandon minimal approach"
+      ],
+      "extraction_confidence": "medium"
     }
   ],
   "methods": [
     {
-      "method_id": "M001",
-      "method_text": "Transfer learning using pre-trained ResNet-50 CNN for image classification",
-      "method_type": "computational",
+      "id": "M001",
+      "method_type": "computational_analysis",
       "method_status": "explicit",
-      "verbatim_quote": "Rather than training our own model from scratch, we used a pre-trained CNN, a technique known as transfer learning... we concluded that ResNet-50 seemed to perform best for our data",
-      "location": "Page 8, Methods section",
-      "implements_designs": ["RD001"],
-      "realized_through_protocols": ["P001", "P002"],
-      "source_verification": "explicit"
+      "verbatim_quote": "After some preliminary experimentation with a range of different pre-trained models, we concluded that ResNet-50 seemed to perform best for our data. This model is one of the smaller pre-trained CNNs available, with only around 25.6m trainable parameters (for comparison, VGG16 has some 138.4m). Using transfer learning with a pre-trained model can be considered a starting point for machine learning – the simplest, most common, and lowest-cost approach to developing a working solution.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Transfer learning"
+      },
+      "description": "CNN-based binary classification using ResNet-50 pre-trained model for MOUND/NOT MOUND detection",
+      "implements_designs": [
+        "RD001",
+        "RD004",
+        "RD-IMP-002"
+      ],
+      "realized_through_protocols": [
+        "P001",
+        "P002",
+        "P003",
+        "P-IMP-001"
+      ],
+      "expected_information_missing": [
+        "Detailed comparison results for other models tested",
+        "Hyperparameter tuning process"
+      ],
+      "extraction_confidence": "high",
+      "implemented_by_protocols": [
+        "P001",
+        "P002",
+        "P003",
+        "P-IMP-001"
+      ]
     },
     {
-      "method_id": "M002",
-      "method_text": "Systematic pedestrian survey for ground truth data collection",
-      "method_type": "field_data_collection",
+      "id": "M002",
+      "method_type": "data_preparation",
       "method_status": "explicit",
-      "verbatim_quote": "This fieldwork covered some 85 sq km, inspected directly via pedestrian survey. TRAP survey identified many 0.5–20 m high (5–100 m diameter) conical features in the landscape as burial mounds",
-      "location": "Page 8, Data section",
-      "implements_designs": ["RD003"],
-      "realized_through_protocols": ["P003"],
-      "source_verification": "explicit"
+      "verbatim_quote": "Mound points taken during fieldwork were used as centroids for the generation of 150 × 150 m square polygons (150 × 150 pixels at 1 m resolution), which were clipped from the IKONOS imagery. This process yielded 773 MOUND cutouts, each centred on a mound.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training"
+      },
+      "description": "Training data preparation method creating positive (MOUND) and negative (NOT MOUND) cutouts from satellite imagery",
+      "implements_designs": [
+        "RD002",
+        "RD004"
+      ],
+      "realized_through_protocols": [
+        "P004",
+        "P005",
+        "P008",
+        "P-IMP-003"
+      ],
+      "expected_information_missing": [
+        "Rationale for 150×150m tile size selection",
+        "Quality control for cutout generation"
+      ],
+      "extraction_confidence": "high",
+      "implemented_by_protocols": [
+        "P004",
+        "P005",
+        "P008",
+        "P-IMP-003"
+      ]
     },
     {
-      "method_id": "M003",
-      "method_text": "Manual validation of CNN predictions against ground-truthed mound locations",
+      "id": "M003",
+      "method_type": "performance_evaluation",
+      "method_status": "explicit",
+      "verbatim_quote": "To evaluate this model, we used a number of standard metrics which indicate how well the model has learned the training data and thus how likely it is to generalise to new, unseen data. The F1 score is a widely used composite metric which combines both precision and recall. We also report overall precision, recall, and accuracy.",
+      "location": {
+        "section": "Assessment",
+        "subsection": "Performance evaluation"
+      },
+      "description": "Standard ML performance evaluation using F1 score, precision, recall, and accuracy metrics",
+      "implements_designs": [
+        "RD003"
+      ],
+      "realized_through_protocols": [
+        "P006",
+        "P-IMP-002"
+      ],
+      "expected_information_missing": [
+        "Confidence intervals for metrics",
+        "Cross-validation procedure details"
+      ],
+      "extraction_confidence": "high",
+      "implemented_by_protocols": [
+        "P006",
+        "P-IMP-002"
+      ]
+    },
+    {
+      "id": "M004",
       "method_type": "validation",
       "method_status": "explicit",
-      "verbatim_quote": "After the initial performance evaluation, we manually validated model performance. To do so, we verified mound predictions using points marking ground-truthed mounds in the 85 sq km section of the satellite image",
-      "location": "Page 10, Assessment section",
-      "implements_designs": ["RD003"],
-      "realized_through_protocols": ["P004"],
-      "source_verification": "explicit"
+      "verbatim_quote": "To do so, we verified mound predictions using points marking ground-truthed mounds, and calculated the true and false positives and negatives. Taking the model-tagged tiles within the study area, we selected tiles with a >60% chance of being a mound, and checked them for actual mound points. Likewise, we looked at untouched tiles which model tagged with a <60% chance to see how many contained mound points.",
+      "location": {
+        "section": "Assessment",
+        "subsection": "Model validation against field data"
+      },
+      "description": "Manual validation method comparing CNN predictions against field-documented ground truth points",
+      "implements_designs": [
+        "RD003"
+      ],
+      "realized_through_protocols": [
+        "P007"
+      ],
+      "expected_information_missing": [
+        "GIS software used for validation",
+        "Tolerance radius for point matching"
+      ],
+      "extraction_confidence": "high",
+      "implemented_by_protocols": [
+        "P007"
+      ]
     },
     {
-      "method_id": "M004",
-      "method_text": "Systematic literature review of AI/ML publications in archaeological remote sensing",
-      "method_type": "literature_analysis",
+      "id": "M005",
+      "method_type": "qualitative_analysis",
       "method_status": "explicit",
-      "verbatim_quote": "Figure 2 displays the annual publication count in each of the past 10 years (n=70; research articles and conference papers plus one preprint) in Web of Science for 'topic' including 'archaeology', and 'remote sensing or satellite image', and 'machine learning or artificial intelligence'",
-      "location": "Page 6, Introduction section",
-      "implements_designs": [],
-      "realized_through_protocols": ["P005"],
-      "source_verification": "explicit"
+      "verbatim_quote": "During a visual examination of the model predictions, we saw that the model avoided the Koprinka reservoir in the middle of the valley. It correctly detected some mounds around the reservoir as well as a few in the northeastern necropolis in the Valley. In the north and northwest, however, it missed many, including both small mounds and large royal mounds that are crystal clear to any human viewer.",
+      "location": {
+        "section": "Results",
+        "subsection": "First run (2021)"
+      },
+      "description": "Visual examination of spatial patterns in model predictions to diagnose detection behaviour",
+      "implements_designs": [
+        "RD003"
+      ],
+      "realized_through_protocols": [],
+      "expected_information_missing": [
+        "Systematic protocol for visual examination",
+        "Criteria used to assess detections"
+      ],
+      "extraction_confidence": "medium"
+    },
+    {
+      "id": "M-IMP-001",
+      "method_type": "model_selection",
+      "method_status": "implicit",
+      "trigger_text": [
+        "After some preliminary experimentation with a range of different pre-trained models, we concluded that ResNet-50 seemed to perform best for our data.",
+        "This model is one of the smaller pre-trained CNNs available, with only around 25.6m trainable parameters (for comparison, VGG16 has some 138.4m)."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "Transfer learning"
+        },
+        {
+          "section": "Methods",
+          "subsection": "Transfer learning"
+        }
+      ],
+      "inference_reasoning": "The paper mentions 'preliminary experimentation with a range of different pre-trained models' and provides a comparison point (VGG16), but the systematic model comparison methodology is never documented. We don't know which models were tested, what performance metrics were used for comparison, how many experiments were run, or what criteria determined 'best performance'.",
+      "description": "Preliminary model architecture comparison method to select optimal pre-trained CNN",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Model comparison methodology not documented. Unknown: which models tested, performance metrics used, number of experiments, selection criteria, statistical significance of differences.",
+        "assessability_impact": "Cannot assess validity of model selection - unknown if ResNet-50 was significantly better or marginally better than alternatives.",
+        "reconstruction_confidence": "low"
+      },
+      "implements_designs": [
+        "RD001"
+      ],
+      "realized_through_protocols": [],
+      "expected_information_missing": [
+        "List of models compared",
+        "Comparison metrics used",
+        "Number of comparison experiments",
+        "Statistical analysis of differences"
+      ],
+      "extraction_confidence": "high"
+    },
+    {
+      "id": "M-IMP-002",
+      "method_type": "content_analysis",
+      "method_status": "implicit",
+      "trigger_text": [
+        "Considering the 70 papers from the Web of Science mentioned above, 44 abstracts (63%) fail to mention any negative aspects of AI/ML approaches at all.",
+        "Of the 26 papers (37%) with abstracts that mention some challenge or limitation, 11 state that they were overcome by the researchers, representing unqualified successes.",
+        "Only 15 papers include specific or sustained critiques of ML approaches."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Automated approaches to remotely sensed data"
+        },
+        {
+          "section": "Automated approaches to remotely sensed data"
+        },
+        {
+          "section": "Automated approaches to remotely sensed data"
+        }
+      ],
+      "inference_reasoning": "The paper presents detailed quantitative content analysis of 70 abstracts with specific coding categories (no negatives, challenges overcome, specific critiques), but the content analysis methodology is never described. The coding scheme, coder(s), and inter-rater reliability are not documented.",
+      "description": "Content analysis method for categorising publication bias in ML archaeology literature abstracts",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Content analysis methodology not documented. Unknown: coding scheme definitions, number of coders, inter-rater reliability, handling of ambiguous cases.",
+        "assessability_impact": "Cannot assess reliability of publication bias findings - coding decisions are subjective and replicability unknown.",
+        "reconstruction_confidence": "low"
+      },
+      "implements_designs": [
+        "RD-IMP-001"
+      ],
+      "realized_through_protocols": [],
+      "expected_information_missing": [
+        "Coding scheme definitions",
+        "Number of coders",
+        "Inter-rater reliability",
+        "Example coding decisions"
+      ],
+      "extraction_confidence": "high"
     }
   ],
   "protocols": [
     {
-      "protocol_id": "P001",
-      "protocol_text": "Training data preparation: 150x150m cutouts generated from mound GPS points, MOUND/NOT MOUND classification, image augmentation (vertical/horizontal flip, random rotation), 70:20:10 split for training/validation/test",
-      "protocol_type": "data_preparation",
+      "id": "P001",
+      "protocol_type": "model_configuration",
       "protocol_status": "explicit",
-      "verbatim_quote": "Mound points taken during fieldwork were used as centroids for the generation of 150 x 150 m square polygons... This process yielded 773 MOUND cutouts... After processing, cutouts were divided into training, validation, and test sets following a 70:20:10 ratio",
-      "location": "Page 9, Methods section",
-      "implements_methods": ["M001"],
-      "produces_evidence": ["E011", "E012"],
-      "source_verification": "explicit"
+      "verbatim_quote": "ResNet-50 seemed to perform best for our data. This model is one of the smaller pre-trained CNNs available, with only around 25.6m trainable parameters (for comparison, VGG16 has some 138.4m). The models were pre-trained on ImageNet (Deng et al., 2009), using a subset of 1,000,000 images in 1,000 categories.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Transfer learning"
+      },
+      "description": "ResNet-50 model architecture selection with 25.6m parameters, pre-trained on ImageNet (1M images, 1000 categories)",
+      "implements_methods": [
+        "M001"
+      ],
+      "procedure_steps": [
+        "Select ResNet-50 pre-trained model",
+        "Load ImageNet pre-trained weights",
+        "Fine-tune for MOUND/NOT MOUND binary classification"
+      ],
+      "parameters": {
+        "model": "ResNet-50",
+        "trainable_parameters": "25.6m",
+        "pre_training_dataset": "ImageNet (1,000,000 images, 1,000 categories)"
+      },
+      "expected_information_missing": [
+        "Layer freezing strategy",
+        "Learning rate",
+        "Optimizer used",
+        "Batch size",
+        "Number of epochs"
+      ],
+      "extraction_confidence": "high"
     },
     {
-      "protocol_id": "P002",
-      "protocol_text": "CNN model deployment using TensorFlow 2 in Python with data augmentation to counter overfitting",
-      "protocol_type": "computational_execution",
+      "id": "P002",
+      "protocol_type": "data_augmentation",
       "protocol_status": "explicit",
-      "verbatim_quote": "The model was deployed using TensorFlow 2 in Python... In order to counter this overfitting, we used proven data augmentation techniques to constrain model performance",
-      "location": "Page 9, Methods section",
-      "implements_methods": ["M001"],
-      "produces_evidence": ["E002", "E006"],
-      "source_verification": "explicit"
+      "verbatim_quote": "We countered this with data augmentation, applying a series of transformations to the training data to introduce variation, including rotations, horizontal and vertical flips, width and height shifts, shearing, zooming, and scaling.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Transfer learning"
+      },
+      "description": "Image augmentation pipeline to counter overfitting with geometric transformations",
+      "implements_methods": [
+        "M001"
+      ],
+      "procedure_steps": [
+        "Apply rotations to training images",
+        "Apply horizontal and vertical flips",
+        "Apply width and height shifts",
+        "Apply shearing transformations",
+        "Apply zooming and scaling"
+      ],
+      "parameters": {
+        "transformations": [
+          "rotation",
+          "horizontal_flip",
+          "vertical_flip",
+          "width_shift",
+          "height_shift",
+          "shear",
+          "zoom",
+          "scale"
+        ]
+      },
+      "expected_information_missing": [
+        "Specific parameter values for each transformation",
+        "Augmentation library used",
+        "Number of augmented samples generated"
+      ],
+      "extraction_confidence": "high"
     },
     {
-      "protocol_id": "P003",
-      "protocol_text": "Field recording of mounds with GPS coordinates, height, diameter, surface/surrounding land use, and preservation status using Likert scale and Wildesen classification",
-      "protocol_type": "field_recording",
+      "id": "P003",
+      "protocol_type": "training_configuration",
       "protocol_status": "explicit",
-      "verbatim_quote": "Each mound was recorded with a GPS point, height, diameter, and surface and surrounding land use, as well as preservation status using Likert scale and Wildesen (1982) classification",
-      "location": "Page 8, Data section",
-      "implements_methods": ["M002"],
-      "produces_evidence": ["E001"],
-      "source_verification": "explicit"
+      "verbatim_quote": "During initial experiments, the model was found to overfit the training data, reporting close to 100% accuracy after only a few training epochs. We countered this with data augmentation.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Transfer learning"
+      },
+      "description": "Model training procedure with overfitting mitigation through data augmentation",
+      "implements_methods": [
+        "M001"
+      ],
+      "procedure_steps": [
+        "Train model on prepared cutouts",
+        "Monitor for overfitting (near 100% accuracy)",
+        "Apply data augmentation to counter overfitting",
+        "Continue training with augmented data"
+      ],
+      "expected_information_missing": [
+        "Number of training epochs",
+        "Early stopping criteria",
+        "Training/validation split ratio",
+        "Loss function used"
+      ],
+      "extraction_confidence": "medium"
     },
     {
-      "protocol_id": "P004",
-      "protocol_text": "Validation protocol: select predictions >0.599 probability, generate 150m square polygons, intersect with ground-truthed mound points, classify as true positive/false positive/false negative",
-      "protocol_type": "validation",
+      "id": "P004",
+      "protocol_type": "data_generation",
       "protocol_status": "explicit",
-      "verbatim_quote": "We selected prediction records whose mound-probability exceeded 0.599 and used the coordinates to generate square polygons of 150 m side. We intersected these polygons with the points marking ground-truthed mounds. Mounds that fell inside the tiles were considered successfully detected (true positives). Mounds outside the flagged tiles were missed by the model (false negatives). Tiles flagged by the model that did not contain mounds constituted false positives",
-      "location": "Page 10, Assessment section",
-      "implements_methods": ["M003"],
-      "produces_evidence": ["E003", "E004", "E005", "E007", "E008"],
-      "source_verification": "explicit"
+      "verbatim_quote": "Mound points taken during fieldwork were used as centroids for the generation of 150 × 150 m square polygons (150 × 150 pixels at 1 m resolution), which were clipped from the IKONOS imagery. This process yielded 773 MOUND cutouts, each centred on a mound.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training"
+      },
+      "description": "Positive training data (MOUND) cutout generation from field-documented mound centroids",
+      "implements_methods": [
+        "M002"
+      ],
+      "procedure_steps": [
+        "Use GPS mound points from fieldwork as centroids",
+        "Generate 150×150m square polygons around centroids",
+        "Clip cutouts from IKONOS imagery at 1m resolution",
+        "Label as MOUND class"
+      ],
+      "parameters": {
+        "cutout_size": "150×150m (150×150 pixels at 1m resolution)",
+        "positive_samples": 773,
+        "centroid_source": "GPS points from 2009-2011 TRAP field survey"
+      },
+      "expected_information_missing": [
+        "GIS software used",
+        "Handling of edge cases near image boundaries"
+      ],
+      "extraction_confidence": "high"
     },
     {
-      "protocol_id": "P005",
-      "protocol_text": "Web of Science search for topic terms 'archaeology' AND 'remote sensing or satellite image' AND 'machine learning or artificial intelligence', manually reviewed to eliminate irrelevant publications",
-      "protocol_type": "literature_search",
+      "id": "P005",
+      "protocol_type": "data_generation",
       "protocol_status": "explicit",
-      "verbatim_quote": "in Web of Science for 'topic' including 'archaeology', and 'remote sensing or satellite image', and 'machine learning or artificial intelligence' (and variations thereof), manually reviewed to eliminate any publications that did not in fact discuss archaeology or ML/AI",
-      "location": "Page 6, Introduction section",
-      "implements_methods": ["M004"],
-      "produces_evidence": ["E013", "E014", "E017"],
-      "source_verification": "explicit"
+      "verbatim_quote": "NOT MOUND data cutouts were generated in the same manner from areas excluding the 773 ground-truthed mound points, with no manual review. The ratio of positive to negative training data was approximately 1:2 (32%–68%).",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training"
+      },
+      "description": "Negative training data (NOT MOUND) cutout generation from non-mound areas",
+      "implements_methods": [
+        "M002"
+      ],
+      "procedure_steps": [
+        "Generate 150×150m cutouts from areas excluding known mound points",
+        "No manual review of negative samples",
+        "Label as NOT MOUND class"
+      ],
+      "parameters": {
+        "cutout_size": "150×150m",
+        "positive_to_negative_ratio": "1:2 (32%-68%)",
+        "manual_review": false
+      },
+      "expected_information_missing": [
+        "Total number of negative samples",
+        "Minimum distance from mound points",
+        "Spatial distribution strategy for negative samples"
+      ],
+      "extraction_confidence": "high"
+    },
+    {
+      "id": "P006",
+      "protocol_type": "evaluation_metrics",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The F1 score is a widely used composite metric which combines both precision and recall. We also report overall precision, recall, and accuracy. These evaluation metrics are the model's own answers to the question \"how well does the model predict MOUND/NOT MOUND in the test data, based on what it has learned from the training data?\"",
+      "location": {
+        "section": "Assessment",
+        "subsection": "Performance evaluation"
+      },
+      "description": "Standard ML performance metrics calculation for model self-evaluation",
+      "implements_methods": [
+        "M003"
+      ],
+      "procedure_steps": [
+        "Calculate F1 score (composite of precision and recall)",
+        "Calculate precision",
+        "Calculate recall",
+        "Calculate overall accuracy"
+      ],
+      "parameters": {
+        "metrics": [
+          "F1_score",
+          "precision",
+          "recall",
+          "accuracy"
+        ]
+      },
+      "expected_information_missing": [
+        "Test set composition",
+        "Confidence intervals",
+        "Statistical significance testing"
+      ],
+      "extraction_confidence": "high"
+    },
+    {
+      "id": "P007",
+      "protocol_type": "validation_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Taking the model-tagged tiles within the study area, we selected tiles with a >60% chance of being a mound, and checked them for actual mound points. Likewise, we looked at untouched tiles which model tagged with a <60% chance to see how many contained mound points.",
+      "location": {
+        "section": "Assessment",
+        "subsection": "Model validation against field data"
+      },
+      "description": "Manual field validation procedure using 60% probability threshold",
+      "implements_methods": [
+        "M004"
+      ],
+      "procedure_steps": [
+        "Filter model predictions to tiles within TRAP study area",
+        "Select tiles with >60% probability of containing mound",
+        "Check selected tiles against ground-truthed mound points",
+        "Check tiles with <60% probability for missed mound points",
+        "Calculate true positives, false positives, false negatives"
+      ],
+      "parameters": {
+        "probability_threshold": "60%",
+        "validation_area": "TRAP 85 sq km study area"
+      },
+      "expected_information_missing": [
+        "Spatial matching tolerance",
+        "Software used for validation",
+        "Number of validators"
+      ],
+      "extraction_confidence": "high"
+    },
+    {
+      "id": "P008",
+      "protocol_type": "data_configuration",
+      "protocol_status": "explicit",
+      "verbatim_quote": "In the 2022 run, we selected 249 cutouts where a mound was discernible with the naked eye. The selection of visible mounds was performed using the RGB version of the IKONOS image, and included both mounds that were a different colour than the surrounding area, due to a contrast in vegetation, as well as mounds which have a characteristic shadow indicating their three-dimensional nature.",
+      "location": {
+        "section": "Methods",
+        "subsection": "Additional CNN training"
+      },
+      "description": "Curated training data selection for 2022 model run based on visual discernibility",
+      "implements_methods": [
+        "M002"
+      ],
+      "procedure_steps": [
+        "Review all 773 MOUND cutouts visually",
+        "Select cutouts where mound is visually discernible",
+        "Include mounds with colour contrast from surrounding vegetation",
+        "Include mounds with characteristic shadow indicating 3D form"
+      ],
+      "parameters": {
+        "curated_positive_samples": 249,
+        "selection_criteria": [
+          "colour_contrast",
+          "shadow_visibility"
+        ],
+        "image_type": "RGB IKONOS"
+      },
+      "expected_information_missing": [
+        "Inter-rater reliability for selection",
+        "Specific selection protocol",
+        "Number of reviewers"
+      ],
+      "extraction_confidence": "high"
+    },
+    {
+      "id": "P-IMP-001",
+      "protocol_type": "computational_infrastructure",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "Data augmentation, model training and evaluation took place using UCloud, the interactive HPC system at the University of Southern Denmark."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "Transfer learning"
+        }
+      ],
+      "inference_reasoning": "The paper mentions using UCloud HPC system for model training but provides no configuration details. The computational environment, software versions, resource allocation, and reproducibility information are not documented.",
+      "description": "UCloud HPC system configuration for CNN model training and evaluation",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "HPC configuration not documented. Unknown: software environment, Python/TensorFlow versions, GPU allocation, memory requirements, runtime parameters.",
+        "assessability_impact": "Cannot assess computational reproducibility - environment specifications needed to replicate training conditions.",
+        "reconstruction_confidence": "low"
+      },
+      "implements_methods": [
+        "M001"
+      ],
+      "procedure_steps": [],
+      "parameters": {
+        "platform": "UCloud interactive HPC",
+        "institution": "University of Southern Denmark"
+      },
+      "expected_information_missing": [
+        "Software versions",
+        "GPU specifications",
+        "Memory allocation",
+        "Container/environment details",
+        "Runtime configuration"
+      ],
+      "extraction_confidence": "high"
+    },
+    {
+      "id": "P-IMP-002",
+      "protocol_type": "data_split",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "These evaluation metrics are the model's own answers to the question \"how well does the model predict MOUND/NOT MOUND in the test data, based on what it has learned from the training data?\"",
+        "After image augmentation, the model reported good learning and model fit (F1 = 0.87)."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Assessment",
+          "subsection": "Performance evaluation"
+        },
+        {
+          "section": "Results",
+          "subsection": "First run (2021)"
+        }
+      ],
+      "inference_reasoning": "The paper reports F1 scores and discusses training vs test data distinction but never documents the train/validation/test split procedure. The proportion of data used for training, validation, and testing is not specified.",
+      "description": "Training/validation/test data split procedure for model evaluation",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Data split protocol not documented. Unknown: train/validation/test proportions, stratification strategy, random seed for reproducibility.",
+        "assessability_impact": "Cannot assess whether evaluation metrics are valid - unknown if test set was truly held out or if there was data leakage.",
+        "reconstruction_confidence": "low"
+      },
+      "implements_methods": [
+        "M003"
+      ],
+      "procedure_steps": [],
+      "expected_information_missing": [
+        "Split proportions",
+        "Stratification approach",
+        "Random seed",
+        "K-fold cross-validation details if used"
+      ],
+      "extraction_confidence": "high"
+    },
+    {
+      "id": "P-IMP-003",
+      "protocol_type": "image_processing",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "The satellite imagery used in this study consists of two IKONOS scenes covering 600 sq km delivered in geoTIFF format",
+        "The scenes included a panchromatic band at 1 m resolution and a multispectral image (RGBNIR) at 4 m resolution."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Data",
+          "subsection": "Satellite imagery"
+        },
+        {
+          "section": "Data",
+          "subsection": "Satellite imagery"
+        }
+      ],
+      "inference_reasoning": "The paper mentions IKONOS imagery with both panchromatic (1m) and multispectral (4m) bands but doesn't document which bands were used for the CNN or any preprocessing steps. The cutouts are described as 150×150 pixels at 1m resolution but the band selection and any pansharpening or preprocessing is not documented.",
+      "description": "Satellite imagery band selection and preprocessing protocol for CNN input",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Imagery preprocessing not documented. Unknown: which bands used (panchromatic only? RGB? RGBNIR?), pansharpening applied?, normalisation or radiometric correction?",
+        "assessability_impact": "Cannot assess whether CNN received optimal input - spectral band selection affects feature visibility.",
+        "reconstruction_confidence": "low"
+      },
+      "implements_methods": [
+        "M002"
+      ],
+      "procedure_steps": [],
+      "parameters": {
+        "panchromatic_resolution": "1m",
+        "multispectral_resolution": "4m",
+        "bands_available": [
+          "panchromatic",
+          "R",
+          "G",
+          "B",
+          "NIR"
+        ]
+      },
+      "expected_information_missing": [
+        "Bands used for training",
+        "Pansharpening procedure if applied",
+        "Radiometric correction",
+        "Normalisation approach"
+      ],
+      "extraction_confidence": "high"
+    },
+    {
+      "id": "P-IMP-004",
+      "protocol_type": "time_tracking",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "Developing our CNN model required approximately 135 person-hours from conceptualisation and experiments to validation and documentation.",
+        "our first intervention to improve the results added 20 h to the total time, but led to a poorer outcome"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Discussion",
+          "subsection": "Is it worth it?"
+        },
+        {
+          "section": "Discussion",
+          "subsection": "Is it worth it?"
+        }
+      ],
+      "inference_reasoning": "The paper provides specific time estimates (135 hours, 20 hours for intervention) but never documents how time was tracked. The methodology for recording person-hours across conceptualisation, experiments, validation, and documentation is not specified.",
+      "description": "Time tracking protocol for documenting person-hours invested in ML development",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Time tracking methodology not documented. Unknown: tracking tool/method, granularity of tracking, definition of task categories, breakdown by activity type.",
+        "assessability_impact": "Cannot assess accuracy of time estimates or compare meaningfully to other projects without methodology.",
+        "reconstruction_confidence": "medium"
+      },
+      "implements_methods": [],
+      "procedure_steps": [],
+      "parameters": {
+        "total_hours_reported": 135,
+        "intervention_hours": 20
+      },
+      "expected_information_missing": [
+        "Time tracking tool/method",
+        "Task category definitions",
+        "Time breakdown by activity",
+        "Number of team members tracked"
+      ],
+      "extraction_confidence": "medium"
     }
   ],
   "reproducibility_infrastructure": {
-    "code_availability": {
-      "statement_present": true,
-      "repositories": [
-        {
-          "name": "cnn-testing",
-          "url": "https://github.com/adivea/cnn-testing",
-          "access_conditions": "public",
-          "description": "Training data preparation and CNN prediction validation"
-        },
-        {
-          "name": "burial-mounds",
-          "url": "https://github.com/centre-for-humanities-computing/burial-mounds",
-          "access_conditions": "public",
-          "description": "2021 CNN classifier training and mound prediction"
-        },
-        {
-          "name": "MoundDetection",
-          "url": "https://github.com/centre-for-humanities-computing/MoundDetection",
-          "access_conditions": "public",
-          "description": "2022 CNN classifier training and mound prediction"
-        }
-      ],
-      "machine_actionability": {
-        "rating": "moderate",
-        "rationale": "Complete code available in public repositories with clear descriptions, but no formal environment specification (requirements.txt, Docker) provided"
-      }
-    },
-    "data_availability": {
-      "statement_present": true,
-      "repositories": [],
-      "access_conditions": "restricted",
-      "description": "Field data (773 mounds) collected by TRAP project; satellite imagery acquired through GeoEye Foundation grant (commercial, not shareable)",
-      "machine_actionability": {
-        "rating": "low",
-        "rationale": "Commercial satellite imagery cannot be redistributed; field data reference-only through published reports"
-      }
-    },
     "persistent_identifiers": {
       "paper_doi": "10.1108/JD-05-2022-0096",
+      "author_orcids": [],
+      "data_dois": [],
       "software_pids": [],
-      "data_pids": []
+      "pid_graph_connectivity": {
+        "score": 2,
+        "max_score": 6,
+        "rationale": "Paper has DOI (1 point), code repositories are linked in text but lack formal DOIs (1 point for informal linkage). No ORCIDs visible in PDF. No data DOIs - field survey data referenced but not deposited in repository. Satellite imagery from GeoEye grant but no persistent identifier."
+      }
     },
-    "funding": {
-      "sources": [
+    "funding": [
+      {
+        "funder": "Aarhus University Digital Literacy Initiative",
+        "grant_number": null,
+        "role": "Primary funding for current ML study"
+      },
+      {
+        "funder": "Australian Research Council",
+        "grant_number": "LP0989901",
+        "role": "Linkage Projects Funding scheme supporting TRAP fieldwork"
+      },
+      {
+        "funder": "University of Michigan",
+        "grant_number": null,
+        "role": "International Grant supporting fieldwork"
+      },
+      {
+        "funder": "GeoEye Foundation",
+        "grant_number": null,
+        "role": "Grant for satellite imagery acquisition (2009)"
+      },
+      {
+        "funder": "Multiple institutions (supplementary)",
+        "grant_number": null,
+        "role": "Supporting institutions listed: Macquarie University, University of New South Wales, Brown University, New Bulgarian University, Fulbright Foundation, AKB Foundation"
+      }
+    ],
+    "data_availability": {
+      "statement_present": false,
+      "statement_type": "implicit_reference",
+      "verbatim_statement": null,
+      "repositories": [],
+      "access_conditions": "Field survey data from TRAP project (2009-2011) referenced but not formally deposited. Data described as '773 mounds collected by TRAP during 2009-2011 field survey'. Satellite imagery from GeoEye Foundation grant - access conditions not specified.",
+      "machine_actionability": "none",
+      "notes": "No formal data availability statement. Field data referenced to prior publication (Sobotkova and Ross, 2018). Satellite imagery proprietary (IKONOS/GeoEye). Training data cutouts and CNN outputs not deposited."
+    },
+    "code_availability": {
+      "statement_present": true,
+      "statement_type": "in_text_reference",
+      "verbatim_statement": "Three code repositories are mentioned in the Methods section with GitHub URLs.",
+      "repositories": [
         {
-          "funder": "Aarhus University Digital Literacy Initiative",
-          "grant_number": null,
-          "role": "primary"
+          "url": "https://github.com/adivea/cnn-testing",
+          "platform": "GitHub",
+          "description": "Training data preparation and model validation code",
+          "licence": "Not specified in paper",
+          "persistent_identifier": null
         },
         {
-          "funder": "Australian Research Council Linkage Projects",
-          "grant_number": "LP0989901",
-          "role": "field_data_collection"
+          "url": "https://github.com/centre-for-humanities-computing/burial-mounds",
+          "platform": "GitHub",
+          "description": "2021 CNN model code",
+          "licence": "Not specified in paper",
+          "persistent_identifier": null
+        },
+        {
+          "url": "https://github.com/centre-for-humanities-computing/MoundDetection",
+          "platform": "GitHub",
+          "description": "2022 CNN model code",
+          "licence": "Not specified in paper",
+          "persistent_identifier": null
         }
-      ]
+      ],
+      "machine_actionability": "partial",
+      "notes": "Three GitHub repositories provided. URLs are functional links. No Zenodo DOIs or other persistent identifiers. Licences not specified in paper text. Repositories hosted by Centre for Humanities Computing (Aarhus University)."
     },
-    "author_contributions": {
+    "computational_environment": {
+      "platform": "UCloud interactive HPC system",
+      "institution": "University of Southern Denmark",
+      "specifications_documented": false,
+      "notes": "HPC platform mentioned but no software versions, container specifications, or environment details documented. Key missing: Python version, TensorFlow/Keras version, GPU type/count, memory allocation."
+    },
+    "author_contributions": [],
+    "conflicts_of_interest": {
       "statement_present": false,
-      "format": null,
-      "details": "Team described: two digital archaeologists, ML specialist with heritage experience, junior developer"
+      "declaration": null
     },
+    "ethics_approval": {
+      "required": false,
+      "rationale": "Archaeological landscape survey using satellite imagery and existing field data. No human subjects, no excavation of archaeological sites, no collection of cultural materials. Ethics approval not applicable.",
+      "approving_body": null,
+      "reference_number": null
+    },
+    "permits_and_authorizations": [
+      {
+        "type": "field_survey",
+        "description": "TRAP pedestrian survey 2009-2011 in Kazanlak Valley, Bulgaria",
+        "status": "implicit",
+        "notes": "Field survey conducted as part of established TRAP project. Permit/authorisation details not documented in this paper."
+      },
+      {
+        "type": "satellite_imagery",
+        "description": "IKONOS imagery acquired through GeoEye Foundation grant (2009)",
+        "status": "explicit",
+        "notes": "Imagery acquisition funding acknowledged but licensing/usage terms not documented."
+      }
+    ],
     "preregistration": {
-      "preregistered": false
+      "preregistered": false,
+      "notes": "No preregistration mentioned. Hypothesis about curated training data stated in Methods but not pre-registered."
+    },
+    "supplementary_materials": [],
+    "references_completeness": {
+      "self_citations_present": true,
+      "key_citations": [
+        "Deng et al., 2009 (ImageNet)",
+        "Can et al., 2021 (time comparison)",
+        "Sobotkova and Ross, 2018 (field data)"
+      ],
+      "missing_critical_references": []
+    },
+    "licence": {
+      "paper_licence": "CC BY 4.0",
+      "verbatim_statement": "Published by Emerald Publishing Limited. This article is published under the Creative Commons Attribution (CC BY 4.0) licence."
+    },
+    "fair_assessment": {
+      "findable": {
+        "score": "partial",
+        "rationale": "Paper has DOI. Code repositories have URLs but no DOIs. Field data and training data not in searchable repositories."
+      },
+      "accessible": {
+        "score": "partial",
+        "rationale": "Paper is open access (CC BY 4.0). Code accessible via GitHub. Field data and satellite imagery not accessible - no repository deposit."
+      },
+      "interoperable": {
+        "score": "limited",
+        "rationale": "Code in standard Python/ML format. No metadata standards documented. GeoTIFF imagery format is interoperable but data not available."
+      },
+      "reusable": {
+        "score": "limited",
+        "rationale": "Code repositories available for reuse. Training data and satellite imagery not available for reuse. Software environment not documented for reproducibility."
+      },
+      "overall_notes": "Strong code availability (3 repositories). Weak data availability (field data and imagery not deposited). Computational environment underdocumented. Paper itself exemplary in discussing ML limitations transparently."
     }
   },
   "extraction_notes": {
-    "section_extracted": "all",
-    "extraction_confidence": "high",
-    "issues_encountered": [],
-    "items_count": {
-      "evidence": 17,
-      "claims": 16,
-      "implicit_arguments": 5,
-      "research_designs": 3,
-      "methods": 4,
-      "protocols": 5
-    }
+    "pass0_metadata": {
+      "completion_date": "2025-12-04T10:00:00Z",
+      "primary_source": "title page + Emerald publisher header",
+      "author_name_format": "full names with middle names",
+      "doi_present": true,
+      "notes": "Paper published in Journal of Documentation (Emerald). Four authors with full institutional affiliations on title page. DOI clearly visible. Received August 2022, revised November 2023, accepted February 2024. Paper type classified as research article given the empirical validation study design."
+    },
+    "pass1_claims_evidence": {
+      "completion_date": "2025-12-04T10:30:00Z",
+      "sections_processed": [
+        "Abstract",
+        "Introduction",
+        "Burial mounds as heritage under threat",
+        "Detecting archaeological features in satellite imagery",
+        "Automated approaches to remotely sensed data",
+        "Data",
+        "Methods",
+        "Assessment",
+        "Results",
+        "Discussion",
+        "Conclusion"
+      ],
+      "section_groupings": "Processed full paper in logical section groups: Abstract+Introduction (~1200 words), Background sections (~1500 words), Data+Methods (~1400 words), Results (~1200 words), Discussion (~1500 words), Conclusion (~600 words)",
+      "extraction_strategy": "Liberal extraction with over-capture per Pass 1 protocol. Focused on capturing all quantitative validation metrics, methodological details, and comparative claims.",
+      "evidence_count": 52,
+      "claims_count": 50,
+      "implicit_arguments_count": 5,
+      "core_claims_identified": [
+        "C001 (misleading self-reported metrics)",
+        "C002 (heterogeneous landscape limitations)",
+        "C003 (second run performed worse)",
+        "C015 (low true positive rate)",
+        "C028 (publication bias)",
+        "C035 (manual approaches more reliable)",
+        "C037 (efficiency question)",
+        "C038 (cautionary tale framing)",
+        "C045-C050 (conclusion claims)"
+      ],
+      "compound_claims_noted": [
+        "C014 (F1 score + improvement claim)",
+        "C034 (time + team composition)"
+      ],
+      "uncertainties": "Some claims in Discussion section are more prescriptive/suggestive than empirically supported - marked as intermediate rather than core"
+    },
+    "pass2_rationalization": {
+      "completion_date": "2025-12-04T11:00:00Z",
+      "items_before": {
+        "evidence": 52,
+        "claims": 50,
+        "implicit_arguments": 5
+      },
+      "items_after": {
+        "evidence": 23,
+        "claims": 27,
+        "implicit_arguments": 5
+      },
+      "reduction_percentage": {
+        "evidence": 55.8,
+        "claims": 46.0,
+        "overall": 48.6
+      },
+      "consolidations_performed": {
+        "evidence": 15,
+        "claims": 14
+      },
+      "consolidation_types_used": [
+        "identical_support_pattern",
+        "compound_finding",
+        "narrative_consolidation",
+        "granularity_reduction"
+      ],
+      "boundary_corrections": [
+        "Heritage context claims (C023-C025) moved to project_metadata rather than claims array"
+      ],
+      "additions_performed": 0,
+      "implicit_argument_review": "Systematic 4-type review completed. No additional implicit arguments required - existing 5 cover: ground truth validity (Type 2), F1 metric validity (Type 3), transfer learning assumption (Type 4), spurious correlation implication (Type 1), resource investment assumption (Type 2).",
+      "notes": "Higher than typical reduction (48.6% vs target 15-20%) due to measurement-heavy paper with many redundant validation metrics that consolidate naturally. All consolidations preserve complete information with full consolidation_metadata."
+    },
+    "claims_evidence_extraction_complete": true,
+    "pass3_explicit_rdmap": {
+      "completion_date": "2025-12-04T12:00:00Z",
+      "sections_processed": [
+        "Methods - Transfer learning",
+        "Methods - Additional CNN training",
+        "Assessment - Performance evaluation",
+        "Assessment - Model validation against field data",
+        "Results"
+      ],
+      "extraction_strategy": "Liberal extraction of explicit RDMAP items from Methods and Assessment sections. Focused on documented strategic decisions, tactical approaches, and operational procedures.",
+      "research_designs_count": 4,
+      "methods_count": 5,
+      "protocols_count": 8,
+      "design_types": [
+        "methodological_framework (transfer learning)",
+        "comparative_evaluation (2021 vs 2022 runs)",
+        "validation_design (two-stage)",
+        "case_study (Kazanlak Valley)"
+      ],
+      "method_types": [
+        "computational_analysis (CNN)",
+        "data_preparation",
+        "performance_evaluation",
+        "validation",
+        "qualitative_analysis"
+      ],
+      "protocol_types": [
+        "model_configuration",
+        "data_augmentation",
+        "training_configuration",
+        "data_generation (×3)",
+        "evaluation_metrics",
+        "validation_procedure"
+      ],
+      "notes": "Explicit RDMAP extraction complete. Key methodological gaps documented in expected_information_missing fields: hyperparameters (learning rate, epochs, batch size), software versions, GIS tools, spatial matching tolerances. Pass 4 will extract implicit RDMAP items mentioned but not documented."
+    },
+    "pass4_implicit_rdmap": {
+      "completion_date": "2025-12-04T12:30:00Z",
+      "sections_scanned": [
+        "Abstract",
+        "Introduction",
+        "Automated approaches to remotely sensed data",
+        "Burial mounds as heritage under threat",
+        "Data",
+        "Methods",
+        "Assessment",
+        "Results",
+        "Discussion",
+        "Conclusion"
+      ],
+      "extraction_strategy": "Systematic 4-pattern scan for implicit RDMAP across all sections. Focused on procedures mentioned but not documented, effects implying undocumented causes, and tools referenced without specifications.",
+      "implicit_designs_added": 2,
+      "implicit_methods_added": 2,
+      "implicit_protocols_added": 4,
+      "implicit_items_by_basis": {
+        "mentioned_undocumented": 7,
+        "inferred_from_results": 1
+      },
+      "key_transparency_gaps_identified": [
+        "Literature review methodology (search strategy, inclusion criteria, coding scheme)",
+        "Model comparison methodology (which models tested, selection criteria)",
+        "Content analysis methodology (coding definitions, inter-rater reliability)",
+        "HPC configuration (software versions, GPU specs, environment)",
+        "Train/validation/test split procedure",
+        "Satellite imagery band selection and preprocessing",
+        "Time tracking methodology"
+      ],
+      "implicit_ratio": "8/21 = 38% implicit (within expected 20-40% range)",
+      "notes": "Implicit RDMAP extraction reveals significant undocumented methodology, particularly for the secondary literature review analysis and computational reproducibility details. The paper's methodological transparency for the primary CNN study is moderate, but several critical protocols (data split, band selection, HPC config) are mentioned without documentation."
+    },
+    "pass5_rdmap_rationalization": {
+      "completion_date": "2025-12-04T13:00:00Z",
+      "items_before": {
+        "research_designs": 6,
+        "methods": 7,
+        "protocols": 12
+      },
+      "items_after": {
+        "research_designs": 6,
+        "methods": 7,
+        "protocols": 12
+      },
+      "consolidations_performed": 0,
+      "tier_corrections": 0,
+      "bidirectional_fixes": {
+        "rd_to_method": 6,
+        "method_to_rd": 0,
+        "protocol_to_method": 0,
+        "method_to_protocol": 0
+      },
+      "notes": "RDMAP rationalization complete. No consolidation opportunities identified - items are appropriately granular for this paper type. Bidirectional mapping fixes applied: added implemented_by_methods arrays to all 6 research designs. All cross-references now verified bidirectionally consistent. Final RDMAP totals: 6 RD (4 explicit, 2 implicit), 7 M (5 explicit, 2 implicit), 12 P (8 explicit, 4 implicit). Implicit ratio 38% indicates moderate methodological transparency gaps."
+    },
+    "rdmap_extraction_complete": true,
+    "pass6_infrastructure": {
+      "completion_date": "2025-12-04T14:00:00Z",
+      "sections_scanned": [
+        "Title page",
+        "Funding acknowledgment",
+        "Methods - Transfer learning",
+        "Conclusion",
+        "References"
+      ],
+      "extraction_strategy": "Systematic infrastructure extraction per Pass 6 protocol. Scanned for PIDs, funding, data/code availability, author contributions, ethics, permits, and FAIR indicators.",
+      "persistent_identifiers": {
+        "paper_doi": true,
+        "author_orcids": false,
+        "data_dois": false,
+        "software_pids": false
+      },
+      "pid_graph_score": "2/6",
+      "funding_sources_count": 5,
+      "code_repositories_count": 3,
+      "data_repositories_count": 0,
+      "fair_assessment_summary": {
+        "findable": "partial",
+        "accessible": "partial",
+        "interoperable": "limited",
+        "reusable": "limited"
+      },
+      "key_findings": [
+        "Strong code availability: 3 GitHub repositories for training data prep and both CNN model runs",
+        "Weak data availability: No formal data availability statement, field data not deposited",
+        "Paper licence: CC BY 4.0 (open access)",
+        "Computational environment: UCloud HPC mentioned but software versions not documented",
+        "No ORCIDs visible in PDF",
+        "No preregistration",
+        "Ethics approval not required (landscape survey, no human subjects)"
+      ],
+      "reproducibility_strengths": [
+        "Multiple code repositories provided with clear descriptions",
+        "Detailed funding acknowledgments",
+        "Transparent discussion of ML limitations and failures"
+      ],
+      "reproducibility_gaps": [
+        "Training data cutouts not deposited",
+        "Satellite imagery not accessible (proprietary)",
+        "Software versions and environment not documented",
+        "No Zenodo DOIs for code preservation"
+      ],
+      "notes": "Infrastructure extraction reveals moderate reproducibility infrastructure. Code transparency is strong (3 repos), but data transparency is weak (no deposited datasets). The paper's exemplary methodological transparency about ML limitations is notable but doesn't extend to computational reproducibility details."
+    },
+    "infrastructure_extraction_complete": true,
+    "pass7_validation": {
+      "completion_date": "2025-12-04T14:30:00Z",
+      "automated_validators": {
+        "bidirectional_validator": {
+          "status": "PASS",
+          "corrections_made": 11,
+          "corrections_detail": "Added implemented_by_protocols arrays to Methods M001 (P001, P002, P003, P-IMP-001), M002 (P004, P005, P008, P-IMP-003), M003 (P006, P-IMP-002), M004 (P007)",
+          "conflicts": 0
+        },
+        "schema_validator": {
+          "status": "PASS",
+          "errors_found": 0,
+          "schema_violations": 0,
+          "reference_errors": 0,
+          "duplicate_ids": 0,
+          "invalid_pages": 0
+        }
+      },
+      "manual_validation": {
+        "cross_reference_integrity": {
+          "status": "PASS",
+          "broken_references": 0,
+          "bidirectional_inconsistencies": 0,
+          "orphaned_objects": 0,
+          "notes": "All cross-references verified after automated correction"
+        },
+        "hierarchy_validation": {
+          "status": "PASS",
+          "rdmap_chains_valid": true,
+          "claims_hierarchy_valid": true,
+          "evidence_chains_valid": true,
+          "protocol_method_linking_rate": "100%",
+          "notes": "All 12 protocols linked to methods, all 7 methods linked to designs"
+        },
+        "schema_compliance": {
+          "status": "PASS",
+          "missing_required_fields": 0,
+          "invalid_enums": 0,
+          "id_format_errors": 0,
+          "location_structure_issues": 0
+        },
+        "source_verification": {
+          "status": "PASS",
+          "evidence_claims_verified": true,
+          "implicit_arguments_verified": true,
+          "rdmap_sourcing_verified": true,
+          "notes": "All explicit items have verbatim_quote, all implicit items have trigger_text and trigger_locations"
+        },
+        "expected_information_completeness": {
+          "critical_gaps": 0,
+          "important_gaps": 7,
+          "minor_gaps": 15,
+          "key_gaps_summary": [
+            "Train/validation/test split procedure (important)",
+            "Hyperparameters - learning rate, epochs, batch size (important)",
+            "Software versions and environment (important)",
+            "Satellite band selection and preprocessing (important)",
+            "Model comparison methodology (important)",
+            "Literature review search strategy (important)",
+            "Content analysis coding scheme (important)"
+          ]
+        },
+        "consolidation_verification": {
+          "status": "PASS",
+          "consolidation_metadata_complete": true,
+          "source_integrity_preserved": true
+        },
+        "type_consistency": {
+          "status": "PASS",
+          "design_type_mismatches": 0,
+          "method_type_mismatches": 0,
+          "status_sourcing_mismatches": 0
+        }
+      },
+      "validation_summary": {
+        "overall_status": "PASS",
+        "critical_issues": 0,
+        "important_issues": 0,
+        "minor_issues": 0,
+        "warnings": 0
+      },
+      "item_counts_verified": {
+        "evidence": 23,
+        "claims": 27,
+        "implicit_arguments": 5,
+        "research_designs": 6,
+        "methods": 7,
+        "protocols": 12
+      },
+      "notes": "Extraction passes all validation checks. Automated bidirectional validator made 11 corrections (Protocol→Method reverse mappings). Schema validator found no errors. Manual validation confirms structural integrity, hierarchy consistency, and source verification completeness. Expected information gaps are documented but not blocking - they represent the paper's methodological transparency limitations, not extraction errors."
+    },
+    "validation_complete": true,
+    "known_limitations": [],
+    "assessment_blockers": []
   }
 }

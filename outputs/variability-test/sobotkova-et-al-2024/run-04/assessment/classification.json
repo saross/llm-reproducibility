@@ -1,14 +1,82 @@
 {
-  "paper_id": "sobotkova-et-al-2024",
-  "classification_date": "2025-12-01",
-  "run_id": "run-04",
-  "paper_type": "empirical",
-  "research_approach": {
-    "expressed": {"approach": "none_stated", "confidence": "high"},
-    "revealed": {"approach": "deductive", "confidence": "high"},
-    "comparison": {"match": false, "mismatch_type": "none_stated_vs_deductive", "harking_risk": "low"}
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-12-05",
+    "classifier_version": "v0.2-alpha"
   },
-  "mixed_methods": {"is_mixed": false},
-  "domain_classification": {"primary_domain": "digital_archaeology"},
-  "context_flags": {"negative_results": true}
+
+  "paper_type": "empirical",
+  "paper_type_justification": "This paper investigates substantive research questions about the application of machine learning to archaeological feature detection. It collects and analyses new empirical data (CNN model predictions validated against ground-truthed field survey data). Claims describe and explain phenomena in the world (model performance, detection rates, landscape factors affecting ML). Methods (CNN classification, field validation) are tools used to investigate research questions, not the subject being investigated. Although the paper has methodological implications, its primary contribution is empirical findings about ML performance limitations in heterogeneous archaeological landscapes, not presenting a new method.",
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "deductive",
+    "evidence": [
+      "Clear prediction framing: 'We set out to detect burial mounds in the Kazanlak Valley, Bulgaria, using a pre-trained Convolutional Neural Network'",
+      "Hypothesis-like framework: 'Use of a pre-trained CNN potentially obviates the need to have large, high-quality, and representative datasets'",
+      "Comparative test design: 'We compare the predictions from the two models and their reported success rates measured against ground-truthed data'",
+      "Research design RD002: 'Experimental design with two treatment conditions: full training dataset (773 mounds) vs. filtered training dataset (249 visible mounds)'"
+    ],
+    "source_sections": ["abstract", "introduction", "methods"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "deductive",
+    "evidence": {
+      "claims_structure": "Claims are predominantly empirical test results: C001 'The CNN model failed to reliably detect burial mounds when validated against field data', C002 'Self-reported CNN performance metrics (F1 scores) were misleadingly high', C006 'Filtering training data to include only highly visible mounds paradoxically worsened model performance'. These frame the research as testing implicit hypotheses about CNN performance.",
+      "methods_application": "Methods M001-M003 implement systematic hypothesis testing: CNN classification (M001), field validation against ground truth (M002), and performance metric calculation (M003). The design explicitly compares two model configurations (2021 all mounds vs 2022 visible mounds only) to test whether training data curation improves performance.",
+      "analytical_workflow": "Deductive sequence: Prior expectation (pre-trained CNN should detect mounds) → Two experimental configurations tested → Validation against independent field data → Quantified performance metrics → Conclusions about hypothesis failure. The workflow follows hypothesis → test → result structure, though hypotheses are implicit rather than formally stated."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Paper implicitly adopts deductive framework (testing whether CNN can detect mounds, whether training data curation improves performance) and actually conducts deductive research. The research design includes two treatment conditions compared against ground truth. Methodological transparency is high - the authors explicitly document their expectations ('We believed that the volume of training data would offset other shortcomings') and how reality differed from predictions. No HARKing detected; the paper honestly documents a failed hypothesis rather than post-hoc rationalisation."
+  },
+
+  "primary_classification": {
+    "approach": "deductive",
+    "confidence": "high",
+    "justification": "This is clearly deductive research. The paper tests implicit hypotheses: (1) that a pre-trained CNN can reliably detect burial mounds in satellite imagery, and (2) that curating training data to include only visually distinct mounds would improve performance. Both hypotheses were falsified by the field validation. Evidence includes: the two-condition experimental design (RD002), the explicit comparison against ground-truth data (M002), quantified performance metrics showing hypothesis failure (E001: 95-96% false negative rates), and the authors' explicit framing of their expectations versus outcomes. The revealed approach perfectly matches the expressed approach. Classification confidence is high because the deductive structure is unambiguous."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": true,
+    "primary_approach": "deductive",
+    "secondary_approaches": ["inductive"],
+    "qualifications": [
+      "Primarily deductive: testing CNN performance predictions against ground truth",
+      "Secondary inductive element: systematic literature review (M006) to characterise publication patterns and identify publication bias in ML-archaeology literature",
+      "The inductive literature survey provides context for the deductive experimental work but is not the primary research contribution",
+      "Overall design clearly hypothesis-testing with exploratory literature analysis as supporting context"
+    ]
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Excellent methodological transparency. Methods section clearly describes: training data preparation (P008-P010), model architecture selection (ResNet-50), data augmentation procedures (P011), validation approach (spatial intersection with ground-truth points), and performance metric calculation. The authors explicitly document their design assumptions, acknowledge where those assumptions proved wrong, and provide public GitHub repositories with all code. Transparency is exemplary for ML research in archaeology."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "deductive_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["validity", "robustness", "reproducibility"],
+      "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
+      "deemphasised_signals": ["generalisability"],
+      "rationale": "Deductive research emphasis: (1) Validity - adequacy of evidence for testing CNN performance claims; field validation against 773 ground-truthed mounds provides strong validity. (2) Robustness - sensitivity to analytical choices; two model configurations tested, but limited exploration of alternative architectures or parameters. (3) Reproducibility - code sharing and computational reproducibility; excellent with three public GitHub repositories. Generalisability appropriately constrained - single landscape case study, findings explicitly presented as cautionary rather than generalisable."
+    }
+  },
+
+  "classification_notes": "Interesting empirical paper documenting a 'failed' hypothesis (CNN detection of burial mounds). The paper's scientific value lies precisely in its honest documentation of negative results, countering publication bias in ML-archaeology literature. The deductive classification captures the hypothesis-testing structure, though the paper is unusual in that the main finding is hypothesis rejection rather than confirmation. This makes the paper valuable for its methodological honesty and cautionary lessons."
 }

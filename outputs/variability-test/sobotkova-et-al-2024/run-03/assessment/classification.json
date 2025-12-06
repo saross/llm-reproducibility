@@ -1,14 +1,82 @@
 {
-  "paper_id": "sobotkova-et-al-2024",
-  "classification_date": "2025-12-01",
-  "run_id": "run-03",
-  "paper_type": "empirical",
-  "research_approach": {
-    "expressed": {"approach": "none_stated", "confidence": "high"},
-    "revealed": {"approach": "deductive", "confidence": "high", "evidence": "Hypothesis-testing with external validation"},
-    "comparison": {"match": false, "mismatch_type": "none_stated_vs_deductive", "harking_risk": "low"}
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-12-05",
+    "classifier_version": "v0.2-alpha"
   },
-  "mixed_methods": {"is_mixed": false},
-  "domain_classification": {"primary_domain": "digital_archaeology", "secondary_domains": ["remote_sensing", "machine_learning"]},
-  "context_flags": {"software_tool_paper": false, "negative_results": true, "replication_study": false, "methodological_paper": false}
+
+  "paper_type": "empirical",
+  "paper_type_justification": "This paper conducts primary empirical research testing CNN-based machine learning for archaeological feature detection. The research question targets phenomena in the world (burial mound visibility in satellite imagery, ML model performance on archaeological features). Claims describe, explain, and predict phenomena (e.g., false positive/negative rates, model behaviour patterns). The CNN methodology is a tool used to investigate the research question, not the subject being investigated - the paper tests whether transfer learning approaches work for archaeological prospection, not whether CNNs are a valid technology in general. The comparison of model performance against field-validated ground truth is hypothesis-testing empirical research.",
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "good",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "deductive",
+    "evidence": [
+      "Abstract states explicit hypothesis: 'Transfer learning based on pre-trained models is sometimes proposed as solution to the problem of limited training data'",
+      "Research design explicitly tests this proposition: 'We employed a pre-trained CNN model with a low-touch approach to additional training'",
+      "Comparative two-run design tests specific hypothesis about training data curation: 'Counterintuitively, the model provided with training data selected for highly visible mounds (rather than all mounds) performed worse'",
+      "Paper positions itself as hypothesis-testing: 'This paper offers a cautionary tale' - testing whether low-touch transfer learning works"
+    ],
+    "source_sections": ["abstract", "introduction", "methods"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "deductive",
+    "evidence": {
+      "claims_structure": "Claims test predictions about model performance. C01: 'self-reported success rates were misleadingly high' - tests hypothesis that F1 scores predict real performance. C16: 'model provided with training data selected for highly visible mounds performed worse' - tests hypothesis about training data quality. C20: 'low-touch approach did not work' - tests core hypothesis. Claims are structured as hypothesis tests, not pattern descriptions.",
+      "methods_application": "Methods are confirmatory: (1) Two-run comparative design tests specific hypothesis about training data curation effects; (2) Field data validation tests hypothesis that model predictions reflect actual feature locations; (3) Resource accounting tests hypothesis about cost-effectiveness. Methods designed to test pre-specified questions, not discover patterns.",
+      "analytical_workflow": "Hypothesis (transfer learning works for burial mounds with minimal training) → Operationalisation (two CNN runs with different training data) → Testing (validate against 773 ground-truthed mounds) → Result (hypothesis rejected: 95-96% false negative rates). Clear deductive sequence with a priori research questions."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Paper explicitly frames research as testing transfer learning hypothesis and actually conducts confirmatory testing. Research question ('Does low-touch transfer learning work for burial mound detection?') is stated upfront and tested systematically. Two-run experimental design with field data validation constitutes proper hypothesis testing. No post-hoc reframing of exploratory findings. Methodological transparency is high."
+  },
+
+  "primary_classification": {
+    "approach": "deductive",
+    "confidence": "high",
+    "justification": "This is clearly deductive hypothesis-testing research. The paper tests the proposition that pre-trained CNNs with minimal additional training ('low-touch approach') can effectively detect archaeological features. The research design is explicitly comparative (two runs with different training data), with pre-specified predictions tested against ground-truth field data. The expressed and revealed approaches align: the paper claims to test a hypothesis and actually does so through systematic experimental comparison. The conclusion ('low-touch approach did not work', 95-96% false negatives) directly addresses the a priori research question. Classification confidence is high because the deductive structure is unambiguous throughout the paper."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": true,
+    "primary_approach": "deductive",
+    "secondary_approaches": ["inductive"],
+    "qualifications": [
+      "Primary approach is deductive hypothesis testing of transfer learning effectiveness",
+      "Secondary inductive element: bibliometric literature review (M08) discovers patterns in ML archaeology publication bias",
+      "The literature review supports the rationale for the deductive study but doesn't constitute the main analytical approach",
+      "Mixed design is appropriate and well-integrated"
+    ]
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Explicit research design statement present. Paper clearly articulates the hypothesis being tested (transfer learning with low-touch training), the comparative experimental design (two CNN runs), and the validation methodology (field data ground truth). Methods section provides comprehensive technical detail including model architecture, training protocols, and validation procedures. High transparency throughout."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "deductive_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["validity", "robustness", "reproducibility"],
+      "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
+      "deemphasised_signals": ["generalisability"],
+      "rationale": "Deductive hypothesis-testing research prioritises: (1) Validity - evidence adequacy for testing hypothesis (field data ground truth is strong validation); (2) Robustness - sensitivity to analytical choices (two-run comparison addresses this); (3) Reproducibility - code and data sharing for reproduction (three GitHub repositories provided, but field data not deposited). Generalisability appropriately constrained to Bulgarian burial mounds and specific imagery type."
+    }
+  },
+
+  "classification_notes": "Strong deductive empirical paper. The 'cautionary tale' framing is explicitly positioned as testing the proposition that low-touch transfer learning works for archaeological prospection. The comparative two-run design with field validation constitutes rigorous hypothesis testing. Notable transparency in reporting negative results and resource requirements. Classification straightforward; no edge cases or ambiguities."
 }

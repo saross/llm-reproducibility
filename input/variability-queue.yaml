@@ -10,11 +10,13 @@
 #
 # Status values: pending | in_progress | completed | error
 
-current_paper: ballsun-stanton-et-al-2018
-current_run: run-05
+current_paper: null
+current_run: null
 
 papers:
-  # Paper 1: sobotkova-et-al-2024 (Empirical/Deductive) - COMPLETED
+  # Paper 1: sobotkova-et-al-2024 (Empirical/Deductive) - RESET FOR RE-RUN
+  # Original runs did not follow context-clearing protocol established for Paper 2+
+  # Re-running with fresh context per run to ensure methodological consistency
   - slug: sobotkova-et-al-2024
     title: "Validating Predictions of Burial Mounds with Field Data"
     source: input/sources/original-pdf/Sobotkova et al. - 2024 - Validating Predictions of Burial Mounds with Field.pdf
@@ -24,24 +26,44 @@ papers:
     runs:
       - id: run-01
         status: completed
-        counts: {evidence: 17, claims: 16, implicit_arguments: 5}
-        aggregate_score: 77
+        counts: {evidence: 23, claims: 27, implicit_arguments: 5, research_designs: 6, methods: 7, protocols: 12}
+        aggregate_score: 71
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        previous_counts: {evidence: 17, claims: 16, implicit_arguments: 5, research_designs: 3, methods: 4, protocols: 5}
+        previous_aggregate_score: 77
+        notes: "Full 10-pass extraction + assessment with context-clearing protocol. Verdict: GOOD. 3 GitHub repos. No data deposit. Asymmetric reproducibility profile."
       - id: run-02
         status: completed
-        counts: {evidence: 16, claims: 13, implicit_arguments: 4}
-        aggregate_score: 75
+        counts: {evidence: 25, claims: 47, implicit_arguments: 5, research_designs: 6, methods: 9, protocols: 14}
+        aggregate_score: 71
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        previous_counts: {evidence: 16, claims: 13, implicit_arguments: 4, research_designs: 3, methods: 4, protocols: 5}
+        previous_aggregate_score: 75
+        notes: "Full 10-pass extraction + assessment with context-clearing protocol. Verdict: GOOD. 3 GitHub repos. No data deposit. Asymmetric reproducibility profile."
       - id: run-03
         status: completed
-        counts: {evidence: 15, claims: 12, implicit_arguments: 5}
-        aggregate_score: 77
+        counts: {evidence: 45, claims: 40, implicit_arguments: 5, research_designs: 5, methods: 9, protocols: 7}
+        aggregate_score: 76
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        previous_counts: {evidence: 15, claims: 12, implicit_arguments: 5, research_designs: 3, methods: 4, protocols: 5}
+        previous_aggregate_score: 77
+        notes: "Full 10-pass extraction + assessment with context-clearing protocol. Verdict: GOOD. 3 GitHub repos. No data deposit. Asymmetric reproducibility profile."
       - id: run-04
         status: completed
-        counts: {evidence: 14, claims: 13, implicit_arguments: 4}
-        aggregate_score: 76
+        counts: {evidence: 45, claims: 62, implicit_arguments: 5, research_designs: 6, methods: 9, protocols: 15}
+        aggregate_score: 73
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        previous_counts: {evidence: 14, claims: 13, implicit_arguments: 4, research_designs: 3, methods: 4, protocols: 5}
+        previous_aggregate_score: 76
+        notes: "Full 10-pass extraction + assessment with context-clearing protocol. Verdict: GOOD. 3 GitHub repos. No data deposit. FAIR: 24/40 (60%). Asymmetric reproducibility profile."
       - id: run-05
         status: completed
-        counts: {evidence: 15, claims: 13, implicit_arguments: 5}
-        aggregate_score: 77
+        counts: {evidence: 45, claims: 45, implicit_arguments: 5, research_designs: 6, methods: 7, protocols: 12}
+        aggregate_score: 74
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        previous_counts: {evidence: 15, claims: 13, implicit_arguments: 5, research_designs: 3, methods: 4, protocols: 5}
+        previous_aggregate_score: 77
+        notes: "Full 10-pass extraction + assessment with context-clearing protocol. Verdict: GOOD. GitHub repos for TRAP project. No formal data deposit. Asymmetric reproducibility profile."
 
   # Paper 2: penske-et-al-2023 (Empirical/Inductive) - COMPLETED
   - slug: penske-et-al-2023
@@ -122,46 +144,92 @@ papers:
         cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: adequate-to-strong, c3_reproducibility: strong}
         notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 15/16 (93.75%). GPLv3, multiple distribution channels, comprehensive docs."
 
-  # Paper 4: ross-2005 (Empirical/Interpretive) - PENDING
+  # Paper 4: ross-2005 (Empirical/Interpretive) - COMPLETED
   - slug: ross-2005
     title: "Barbarophonos: Language and Panhellenism in the Iliad"
     source: input/sources/original-pdf/Ross - 2005 - Barbarophonos Language and Panhellenism in the Iliad.pdf
     paper_type: empirical
-    research_approach: interpretive
+    research_approach: abductive
     context_flags: ["🔧"]
-    status: pending
+    status: completed
     runs:
       - id: run-01
-        status: pending
+        status: completed
+        counts: {evidence: 21, claims: 31, implicit_arguments: 8, research_designs: 2, methods: 2, protocols: 2}
+        aggregate_score: 69
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 8/40 (20%). Interpretive philology, no computational component. 🔧 methodological transparency variant applied."
       - id: run-02
-        status: pending
+        status: completed
+        counts: {evidence: 16, claims: 29, implicit_arguments: 8, research_designs: 2, methods: 3, protocols: 0}
+        aggregate_score: 67
+        cluster_ratings: {c1_foundational_clarity: adequate, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 7/16 (43.75%). Interpretive philology, no computational component. 🔧 methodological transparency variant applied."
       - id: run-03
-        status: pending
+        status: completed
+        counts: {evidence: 21, claims: 30, implicit_arguments: 8, research_designs: 2, methods: 3, protocols: 0}
+        aggregate_score: 65
+        cluster_ratings: {c1_foundational_clarity: adequate, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 11/40 (27.5%). Interpretive philology, no computational component. 🔧 methodological transparency variant applied."
       - id: run-04
-        status: pending
+        status: completed
+        counts: {evidence: 17, claims: 23, implicit_arguments: 8, research_designs: 2, methods: 3, protocols: 2}
+        aggregate_score: 70
+        cluster_ratings: {c1_foundational_clarity: adequate-to-strong, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 11/40 (27.5%). Interpretive philology, no computational component. 🔧 methodological transparency variant applied."
       - id: run-05
-        status: pending
+        status: completed
+        counts: {evidence: 21, claims: 26, implicit_arguments: 8, research_designs: 2, methods: 3, protocols: 0}
+        aggregate_score: 65
+        cluster_ratings: {c1_foundational_clarity: adequate, c2_evidential_strength: strong, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: moderate. Interpretive philology, no computational component. 🔧 methodological transparency variant applied."
 
-  # Paper 5: sobotkova-et-al-2016 (Empirical/Mixed) - PENDING
+  # Paper 5: sobotkova-et-al-2016 (Methodological/Inductive) - COMPLETED
   - slug: sobotkova-et-al-2016
     title: "Measure Twice, Cut Once: Cooperative Deployment of a Generalized, Archaeology-Specific Field Data Collection System"
     source: input/sources/original-pdf/Sobotkova et al. - 2016 - Measure Twice, Cut Once Cooperative Deployment of a Generalized, Archaeology-Specific Field Data Collection System.pdf
-    paper_type: empirical
-    research_approach: mixed
-    status: pending
+    paper_type: methodological
+    research_approach: inductive
+    context_flags: ["📦"]
+    status: completed
     runs:
       - id: run-01
-        status: pending
+        status: completed
+        counts: {evidence: 35, claims: 50, implicit_arguments: 8, research_designs: 5, methods: 4, protocols: 5}
+        aggregate_score: 68
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: adequate, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 8/16 (50%). GPLv3 GitHub. Methodological case study with exemplary software transparency."
       - id: run-02
-        status: pending
+        status: completed
+        counts: {evidence: 35, claims: 50, implicit_arguments: 8, research_designs: 5, methods: 5, protocols: 10}
+        aggregate_score: 68
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: adequate, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 29/40 (72.5%). GPLv3 GitHub. Three case studies on FAIMS co-development."
       - id: run-03
-        status: pending
+        status: completed
+        counts: {evidence: 28, claims: 22, implicit_arguments: 6, research_designs: 6, methods: 9, protocols: 14}
+        aggregate_score: 66
+        cluster_ratings: {c1_foundational_clarity: adequate, c2_evidential_strength: adequate, c3_reproducibility: adequate}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: 9/16 (56.25%). GPLv3 GitHub. Software tool paper with undocumented qualitative methodology."
       - id: run-04
-        status: pending
+        status: completed
+        counts: {evidence: 35, claims: 50, implicit_arguments: 10, research_designs: 5, methods: 8, protocols: 14}
+        aggregate_score: 65
+        cluster_ratings: {c1_foundational_clarity: moderate-high, c2_evidential_strength: moderate, c3_reproducibility: moderate}
+        notes: "Full 10-pass extraction + assessment. Verdict: MODERATE. FAIR: 22/40 (55%). GPLv3 GitHub. Software tool paper with undocumented thematic analysis procedure."
       - id: run-05
-        status: pending
+        status: completed
+        counts: {evidence: 34, claims: 49, implicit_arguments: 8, research_designs: 1, methods: 5, protocols: 5}
+        aggregate_score: 71
+        cluster_ratings: {c1_foundational_clarity: strong, c2_evidential_strength: moderate, c3_reproducibility: strong}
+        notes: "Full 10-pass extraction + assessment. Verdict: GOOD. FAIR: good overall. GPLv3 GitHub. Three case studies on FAIMS co-development with exemplary code transparency."
 
 # Progress summary
 # Total runs: 25 (5 papers × 5 runs)
-# Completed: 15 (Paper 1: 5, Paper 2: 5, Paper 3: 5)
-# Pending: 10 (Papers 4-5: 10 total)
+# Completed: 25 (Paper 1: 5, Paper 2: 5, Paper 3: 5, Paper 4: 5, Paper 5: 5)
+# Pending: 0
+#
+# VARIABILITY TEST COMPLETE - 2025-12-06
+#
+# Note: Paper 1 original runs preserved as previous_counts/previous_aggregate_score
+# for comparison with new context-cleared runs

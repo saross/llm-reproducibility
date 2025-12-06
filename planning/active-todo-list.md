@@ -1,7 +1,7 @@
 # Active To-Do List
 
-**Last Updated:** 2025-11-17
-**Status:** Phase 7 (Credibility Assessment) Step 2/7 complete - Classification prompt created, ready for testing
+**Last Updated:** 2025-12-04
+**Status:** Phase 7 (Credibility Assessment) - Variability test: 20/25 complete, Paper 1 reset for re-run with context-clearing protocol
 
 ---
 
@@ -713,6 +713,103 @@ Quantify extraction variability and assess completeness through repeated extract
 - Potential workflow adaptation for cross-model testing
 
 **Subtask:** Adapt extraction workflow for alternative model (skill transfer challenge)
+
+---
+
+### 8a. Variability Test Findings and Follow-Up
+
+**Priority:** MEDIUM
+**Status:** IN PROGRESS - 20/25 runs complete (Paper 1 reset for re-run)
+**Last Updated:** 2025-12-04
+
+**Overall Test Status:**
+- Paper 1 (sobotkova-et-al-2024): 0/5 - RESET for re-run with context-clearing protocol
+- Paper 2 (penske-et-al-2023): 5/5 complete
+- Paper 3 (ballsun-stanton-et-al-2018): 5/5 complete
+- Paper 4 (ross-2005): 5/5 complete
+- Paper 5 (sobotkova-et-al-2016): 5/5 complete
+
+**Paper 1 Reset Rationale:**
+Original runs did not follow context-clearing protocol established for Paper 2+. Re-running to ensure methodological consistency across all papers. Original runs archived to `archive/variability-test-crashed/sobotkova-et-al-2024-pre-protocol-*` with counts preserved in queue as `previous_counts`.
+
+**Preliminary Findings from ross-2005 (interpretive philology):**
+
+This paper showed the only instance of varying cluster categorisation (C1: Foundational Clarity) across 5 runs:
+- C1 ranged from "adequate" to "strong" (runs 2,3,5 = adequate; runs 1,4 = strong/adequate-to-strong)
+- C2 (Evidential Strength) was consistently "strong" across all runs
+- C3 (Reproducibility) was consistently "adequate" across all runs
+
+Item count variability:
+| Item | Range | Notes |
+|------|-------|-------|
+| Evidence | 16-21 | ~25% variation |
+| Claims | 23-31 | ~35% variation |
+| Implicit Args | 8 | **Stable** |
+| Research Designs | 2 | **Stable** |
+| Methods | 2-3 | Minor variation |
+| Protocols | 0-2 | High relative variation |
+
+Aggregate scores: 65-70 (5-point spread)
+
+**Action Items:**
+
+- [ ] **Mark pipeline "experimental" for literature-based/interpretive studies** like ross-2005
+  - These papers lack computational components and have inherently more interpretive extraction
+  - C1 categorisation instability suggests assessment anchors may need refinement for this paper type
+  - Consider whether methodological transparency variant (used for C3) should also apply to C1/C2
+
+- [ ] **Revisit ross-2005 after completing sobotkova-et-al-2016 variability runs**
+  - Compare variability patterns between methodological and interpretive papers
+  - Assess whether instability is genre-specific or a broader issue
+
+- [ ] **Document "experimental" flag in assessment outputs for literature-based studies**
+  - Flag should appear in classification.json and credibility-report.md
+  - Note that scores may have higher variance than empirical/methodological papers
+
+**Context:** ross-2005 is the only paper in the variability corpus that is purely interpretive (Homeric philology). Other papers have computational or empirical components with clearer reproducibility expectations.
+
+---
+
+### 8b. Protocol Extraction: Explicit vs Implicit Standardisation
+
+**Priority:** MEDIUM
+**Status:** PENDING - Identified from variability test analysis
+**Added:** 2025-12-04
+
+**Issue:**
+Variability analysis revealed that protocol extraction varies significantly between runs (CV up to 122% for ross-2005, 46% for sobotkova-et-al-2016). A key source of this variability is inconsistent handling of explicit vs implicit protocols:
+
+- **Some runs extract only explicitly described protocols** - procedures stated directly in the paper
+- **Other runs infer protocols from methods descriptions** - procedures implied by methodology but not spelled out
+
+This is a source of extraction inconsistency that should be standardised.
+
+**Decision Needed:**
+1. **Explicit-only approach**: Extract only protocols explicitly described in the paper text
+   - Pro: Higher consistency, lower false positives
+   - Con: May miss important procedural details implied but not stated
+
+2. **Explicit + implicit approach**: Extract both stated and inferred protocols
+   - Pro: More complete procedural capture
+   - Con: Higher variability, requires clear inference rules
+
+3. **Tiered approach**: Extract explicit protocols, flag implicit protocols separately
+   - Pro: Captures both while maintaining transparency
+   - Con: More complex schema/workflow
+
+**Action Required:**
+- [ ] Review protocol extraction guidance in Pass 3-5 prompts
+- [ ] Decide on standardised approach (explicit-only, explicit+implicit, or tiered)
+- [ ] Update prompts/skill to enforce consistent approach
+- [ ] Add examples distinguishing explicit from implicit protocols
+- [ ] Test on 2-3 papers to verify reduced variability
+
+**Files to Update:**
+- `extraction-system/prompts/03-rdmap_pass1a_explicit_prompt.md`
+- `extraction-system/prompts/04-rdmap_pass1b_implicit_prompt.md`
+- `.claude/skills/research-assessor/references/checklists/` (add protocol guidance)
+
+**When:** After Paper 1 re-run complete (to establish baseline variability with current approach)
 
 ---
 

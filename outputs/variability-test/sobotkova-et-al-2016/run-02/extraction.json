@@ -1,0 +1,1255 @@
+{
+  "schema_version": "2.6",
+  "extraction_timestamp": "2025-12-04T10:35:00Z",
+  "extractor": "claude-opus-4-5-20251101",
+  "run_id": "run-02",
+  "project_metadata": {
+    "paper_title": "Measure Twice, Cut Once: Cooperative Deployment of a Generalized, Archaeology-Specific Field Data Collection System",
+    "authors": [
+      "Adela Sobotkova",
+      "Shawn A. Ross",
+      "Brian Ballsun-Stanton",
+      "Andrew Fairbairn",
+      "Jessica Thompson",
+      "Parker VanValkenburgh"
+    ],
+    "publication_year": 2016,
+    "journal": "In: Mobilizing the Past for a Digital Future: The Potential of Digital Archaeology, edited by Erin Walcek Averett, Jody Michael Gordon, and Derek B. Counts, pp. 337-371. Grand Forks, ND: The Digital Press at the University of North Dakota",
+    "doi": null,
+    "paper_type": "methods paper",
+    "discipline": "archaeology",
+    "research_context": "Case study examining co-development experiences deploying the FAIMS (Federated Archaeological Information Management Systems) generalised mobile platform for archaeological field recording. Three project directors report on customising and deploying FAIMS across excavations in Turkey (Boncuklu Höyük), Malawi (MEMSAP), and Peru (PAZC), illuminating the benefits and challenges of co-developing domain-specific software between archaeologists and technologists."
+  },
+  "evidence": [
+    {
+      "evidence_id": "E001",
+      "evidence_text": "FAIMS project launched in 2012 with initial funding of AUD $949,500 from NeCTAR eResearch Tools program",
+      "evidence_type": "funding_record",
+      "evidence_basis": "archival_document",
+      "verbatim_quote": "It was initially based at the University of New South Wales, Sydney, and funded by a grant from the Australian National eResearch Collaboration Tools and Resources (NeCTAR) eResearch Tools program (RT043; AUD $949,500).",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "supports_claims": ["C001", "C002"]
+    },
+    {
+      "evidence_id": "E002",
+      "evidence_text": "FAIMS mobile platform entered public beta release in November 2013",
+      "evidence_type": "project_milestone",
+      "evidence_basis": "archival_document",
+      "verbatim_quote": "the FAIMS project developed a generalised, mobile, offline, multi-user collection platform for structured, free-text, geospatial, and multimedia data (the 'FAIMS mobile platform,' discussed below), which entered public beta release in November 2013.",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "supports_claims": ["C002"]
+    },
+    {
+      "evidence_id": "E003",
+      "evidence_text": "ARC LIEF award of AUD $945,000 received in 2014 for second phase of development",
+      "evidence_type": "funding_record",
+      "evidence_basis": "archival_document",
+      "verbatim_quote": "In 2014, the FAIMS project received an Australian Research Council (ARC) Linkage Infrastructure Equipment and Facilities (LIEF) award (LE140100151; AUD $945,000 total ARC funding and university co-investment)",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "supports_claims": ["C001", "C003"]
+    },
+    {
+      "evidence_id": "E004",
+      "evidence_text": "FAIMS 2.0 production version released in November 2014",
+      "evidence_type": "project_milestone",
+      "evidence_basis": "archival_document",
+      "verbatim_quote": "Experience from these deployments informed ongoing development of FAIMS software, resulting in the release of FAIMS 2.0, the current production version, in November 2014",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "supports_claims": ["C005"]
+    },
+    {
+      "evidence_id": "E005",
+      "evidence_text": "Service fees account for approximately 5% of FAIMS budget, with infrastructure grants constituting 95%",
+      "evidence_type": "financial_observation",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "To date, fees have accounted for about 5% of the FAIMS budget, with infrastructure grants constituting the other 95%",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "supports_claims": ["C004"]
+    },
+    {
+      "evidence_id": "E006",
+      "evidence_text": "In-kind contributions at Macquarie University total approximately $100,000 per year",
+      "evidence_type": "financial_observation",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "although these figures exclude in-kind contributions of time by academic staff and other participants, which, for example, total approximately $100,000 per year at Macquarie University alone",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "supports_claims": ["C004"]
+    },
+    {
+      "evidence_id": "E007",
+      "evidence_text": "19 workflows created for 17 projects with 11 supported in field since November 2013 public release",
+      "evidence_type": "deployment_count",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "to date, we have created 19 workflows for 17 projects and supported 11 of them in the field since the public release of our software in November 2013",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supports_claims": ["C006"]
+    },
+    {
+      "evidence_id": "E008",
+      "evidence_text": "Pre-configured local server costs AUD $1,700-$3,500 excluding tablets",
+      "evidence_type": "cost_data",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "Purchasing a pre-configured local server with all necessary hardware costs AUD $1,700–$3,500 from one of these vendors (excluding tablets).",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supports_claims": ["C007"]
+    },
+    {
+      "evidence_id": "E009",
+      "evidence_text": "Online or local server can be leased for AUD $150-$200 per month",
+      "evidence_type": "cost_data",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "Alternatively, an online or local server can be leased for approximately AUD $150–$200 per month.",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supports_claims": ["C007"]
+    },
+    {
+      "evidence_id": "E010",
+      "evidence_text": "Customisation services generally cost AUD $1,500-$15,000 per season for mobile platform",
+      "evidence_type": "cost_data",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "When a project hires the FAIMS team to adapt an existing module or develop a new one, this service generally costs approximately AUD $1,500–$15,000 per season for the mobile platform, depending on the complexity and novelty of the recording system required.",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supports_claims": ["C007", "C008"]
+    },
+    {
+      "evidence_id": "E011",
+      "evidence_text": "Boncuklu and MEMSAP customisation valued at about $15,000 each for first year",
+      "evidence_type": "cost_data",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "Customisation and support work for the Boncuklu and MEMSAP projects presented here, for example, was valued about $15,000 each for their first year of deployment (but only $3,250 for a subsequent deployment for Boncuklu).",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supports_claims": ["C008", "C009"]
+    },
+    {
+      "evidence_id": "E012",
+      "evidence_text": "PAZC first year customisation cost only $900 by reusing existing module",
+      "evidence_type": "cost_data",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "Because the PAZC project was willing to reuse an existing module, their first year cost only $900 (a subsequent deployment cost $2,400, after they identified some additional modifications)",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supports_claims": ["C009", "C010"]
+    },
+    {
+      "evidence_id": "E013",
+      "evidence_text": "Two small doctoral student projects successfully customised and deployed their own FAIMS systems",
+      "evidence_type": "deployment_observation",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "Two small projects, both undertaken by doctoral students, have successfully customised and deployed their own systems.",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supports_claims": ["C011"]
+    },
+    {
+      "evidence_id": "E014",
+      "evidence_text": "Boncuklu Höyük involves extremely fine layering and complex intercutting features requiring single context recording",
+      "evidence_type": "site_description",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "One peculiarity of the site is its extremely fine layering and the complex intercutting of archaeological features, caused by rebuilding of houses on the same site time and time again. . . . [a single context in] Boncuklu may be resolved within <5 cm of deposit.",
+      "location": {"section": "Three Case Studies", "page": null},
+      "supports_claims": ["C012"]
+    },
+    {
+      "evidence_id": "E015",
+      "evidence_text": "MEMSAP excavation recording system based on single-context form modified from Marean et al. (2010)",
+      "evidence_type": "methodological_precedent",
+      "evidence_basis": "archival_document",
+      "verbatim_quote": "MEMSAP based its excavation recording system on a single-context form-based system modified from Marean et al. (2010).",
+      "location": {"section": "Three Case Studies", "page": null},
+      "supports_claims": ["C013"]
+    },
+    {
+      "evidence_id": "E016",
+      "evidence_text": "PAZC used single-context recording on paper forms in 2012 field season",
+      "evidence_type": "methodological_baseline",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "In our 2012 field season at Carrizales, PAZC team members recorded data using a single-context recording system on paper forms.",
+      "location": {"section": "Three Case Studies", "page": null},
+      "supports_claims": ["C014"]
+    },
+    {
+      "evidence_id": "E017",
+      "evidence_text": "MEMSAP required only three excavation module iterations and two survey module iterations before functional deployment",
+      "evidence_type": "development_observation",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "Ultimately only three iterations of the excavation module and two iterations of the survey module were needed before a functional system could be deployed in the field.",
+      "location": {"section": "Theme 1: Upfront Costs, Backend Payouts", "page": null},
+      "supports_claims": ["C015"]
+    },
+    {
+      "evidence_id": "E018",
+      "evidence_text": "PAZC module development took approximately three and a half weeks from first contact to deployment",
+      "evidence_type": "timeline_observation",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "The total time that elapsed between first contact with FAIMS leadership and deployment of the finished PAZC module was approximately three and a half weeks.",
+      "location": {"section": "Theme 1: Upfront Costs, Backend Payouts", "page": null},
+      "supports_claims": ["C016", "C010"]
+    },
+    {
+      "evidence_id": "E019",
+      "evidence_text": "PAZC module required less than one week after requirements fully specified",
+      "evidence_type": "timeline_observation",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "The FAIMS team translated the Boncuklu module into Spanish and customised it where required by editing the Boncuklu definition documents, a process that required less than one week after the requirements were fully specified.",
+      "location": {"section": "Theme 1: Upfront Costs, Backend Payouts", "page": null},
+      "supports_claims": ["C016"]
+    },
+    {
+      "evidence_id": "E020",
+      "evidence_text": "Fairbairn received CSV data and created Access database before paper forms arrived in Australia",
+      "evidence_type": "outcome_observation",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "[I have received the CSV file and] the data are present and useable. I am now waiting for [the other project director] to send me the forms . . .",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supports_claims": ["C017", "C018"]
+    },
+    {
+      "evidence_id": "E021",
+      "evidence_text": "Survey data integration without tablets previously cost at least six person-hours to investigate and rectify transcription errors",
+      "evidence_type": "time_measurement",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "nor did they suffer from the inevitable transcription error that in this case cost at least six person-hours to investigate and rectify",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supports_claims": ["C019"]
+    },
+    {
+      "evidence_id": "E022",
+      "evidence_text": "Tablets saved MEMSAP at least eight person-days of work for data entry, cleaning, analysis, and archiving",
+      "evidence_type": "time_measurement",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "When the scope of data entry, cleaning, analysis, and archiving is considered, the tablets saved at least eight person-days of work",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supports_claims": ["C019", "C020"]
+    },
+    {
+      "evidence_id": "E023",
+      "evidence_text": "Boncuklu post-processing required 2-3 hours with FAIMS vs several hundred hours for 300+ context records typical of paper-based entry",
+      "evidence_type": "time_measurement",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "The greatest gains in the FAIMS system were found after the excavation season was finished with post-processing of the data and checking taking 2–3 hours in comparison to several hundred hours for entry of the >300 context records generated in a typical season.",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supports_claims": ["C020", "C021"]
+    },
+    {
+      "evidence_id": "E024",
+      "evidence_text": "Labour savings equate to AU$5,000-10,000 per annum in paid RA time",
+      "evidence_type": "cost_savings",
+      "evidence_basis": "derived_calculation",
+      "verbatim_quote": "This saving in paid RA time equates to c. AU$5,000–10,000 per annum.",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supports_claims": ["C021"]
+    },
+    {
+      "evidence_id": "E025",
+      "evidence_text": "95% labour saving achieved: 1-1.5 days handling time using FAIMS versus 25-30 days without",
+      "evidence_type": "efficiency_metric",
+      "evidence_basis": "derived_calculation",
+      "verbatim_quote": "The benefits to the excavation project in financial/labour terms are hugely significant, equating to a total of 1–1.5 days of handling time using FAIMS against 25–30 days when not in use per annum, in other words a 95% labour saving.",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supports_claims": ["C020", "C021"]
+    },
+    {
+      "evidence_id": "E026",
+      "evidence_text": "Complex context number generation slowed record input from 20 minutes to over an hour as database grew",
+      "evidence_type": "performance_observation",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "More serious was the slowdown of the system halfway through its period of use. A record which initially took 20 minutes to input took over an hour due to slow syncing and updating.",
+      "location": {"section": "Theme 2: Legacy Features vs Performance", "page": null},
+      "supports_claims": ["C022", "C023"]
+    },
+    {
+      "evidence_id": "E027",
+      "evidence_text": "PAZC upload speeds consistently averaged 25 Kbps on online server - too slow for syncing",
+      "evidence_type": "performance_measurement",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "Using this system, our upload speeds consistently averaged 25 Kbps—too slow for syncing, even when tablets were left to do so overnight.",
+      "location": {"section": "Theme 2: Local vs Online Servers", "page": null},
+      "supports_claims": ["C024"]
+    },
+    {
+      "evidence_id": "E028",
+      "evidence_text": "FAIMS-in-a-box hardware worked very well despite dusty conditions and unreliable electricity",
+      "evidence_type": "hardware_performance",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "Also, it is worth noting that the equipment—FAIMS-in-a-box—worked very well and with the exception of 1 tablet screen—cracked when an item fell on it from the edge of the trench—came through the season in great condition. This was in spite of very dusty conditions and a somewhat unreliable electricity supply.",
+      "location": {"section": "Theme 2: Local vs Online Servers", "page": null},
+      "supports_claims": ["C025"]
+    },
+    {
+      "evidence_id": "E029",
+      "evidence_text": "WiFi provided excellent coverage at 75-80% signal strength at 80m distance",
+      "evidence_type": "performance_measurement",
+      "evidence_basis": "direct_measurement",
+      "verbatim_quote": "The server worked throughout and the [wifi] provided excellent coverage (75–80% signal strength at 80m, the furthest excavation trench.",
+      "location": {"section": "Theme 2: Local vs Online Servers", "page": null},
+      "supports_claims": ["C025"]
+    },
+    {
+      "evidence_id": "E030",
+      "evidence_text": "Server hung only once when UPS plug was knocked out during power outage",
+      "evidence_type": "reliability_observation",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "The server hung only once, when the UPS plug was knocked out during a power outage, but was simply re-booted using an external keyboard.",
+      "location": {"section": "Theme 2: Local vs Online Servers", "page": null},
+      "supports_claims": ["C025"]
+    },
+    {
+      "evidence_id": "E031",
+      "evidence_text": "FAIMS enabled collection of more data in same duration field season",
+      "evidence_type": "productivity_observation",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "Because FAIMS enabled data to be collected and processed so efficiently, we were able to collect more data, and this expanded the interpretations we could make from a field season of the same duration as when we used paper forms.",
+      "location": {"section": "Theme 3: Digital Recording and Archaeological Interpretation", "page": null},
+      "supports_claims": ["C026"]
+    },
+    {
+      "evidence_id": "E032",
+      "evidence_text": "PAZC context descriptions more detailed with FAIMS and new data types recorded consistently",
+      "evidence_type": "quality_observation",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "our final review of data collected by the PAZC in 2014 suggests that using FAIMS improved both the richness and integrity of our data. Context descriptions are generally more detailed, and the range of fields in the FAIMS default module meant that project members recorded types of data (such as parameters of soil matrices and inclusions) that we had formerly treated in an inconsistent fashion.",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supports_claims": ["C027", "C028"]
+    },
+    {
+      "evidence_id": "E033",
+      "evidence_text": "PAZC project members universally reported data entry using FAIMS took longer than analogue system",
+      "evidence_type": "user_feedback",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "While we have yet to keep time-on-task records for either paper-based recording or FAIMS, project members universally reported that data entry using FAIMS took longer than using our previous analogue system.",
+      "location": {"section": "Theme 2: Legacy Features vs Performance", "page": null},
+      "supports_claims": ["C029"]
+    },
+    {
+      "evidence_id": "E034",
+      "evidence_text": "Conversion to digital recording has not changed substantive research goals at Boncuklu",
+      "evidence_type": "research_impact",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "so far conversion [to digital recording] has not changed our substantive research goals",
+      "location": {"section": "Theme 3: Digital Recording and Archaeological Interpretation", "page": null},
+      "supports_claims": ["C030"]
+    },
+    {
+      "evidence_id": "E035",
+      "evidence_text": "Digital recording preserved undocumented interim fieldwork steps including in-progress excavation images",
+      "evidence_type": "documentation_observation",
+      "evidence_basis": "observational_record",
+      "verbatim_quote": "[W]e have had a very archaic use of 'official site photos' which are of the cleaned up contexts. Well, now everyone can take images as they go, including as contexts are under excavation (rather than tidy-for-archive shots) and this improves the chances of understanding the features and contexts we see.",
+      "location": {"section": "Theme 3: Digital Recording and Archaeological Interpretation", "page": null},
+      "supports_claims": ["C031"]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C001",
+      "claim_text": "FAIMS project represents substantial investment in research infrastructure for archaeology",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "The FAIMS project is a university-based, e-research initiative that was launched in 2012 to develop national, domain-wide information management infrastructure for archaeology and related disciplines",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "supported_by": ["E001", "E003"]
+    },
+    {
+      "claim_id": "C002",
+      "claim_text": "FAIMS developed through consultation with Australian and international archaeological communities",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "In consultation with Australian and international archaeological communities, the FAIMS project developed a generalised, mobile, offline, multi-user collection platform for structured, free-text, geospatial, and multimedia data",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "supported_by": ["E001", "E002"]
+    },
+    {
+      "claim_id": "C003",
+      "claim_text": "Field deployments at partner universities informed ongoing FAIMS software development",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "a second phase of development that emphasised field deployments of the mobile platform at partner universities, three of which are presented in this paper. Experience from these deployments informed ongoing development of FAIMS software",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "supported_by": ["E003", "E004"]
+    },
+    {
+      "claim_id": "C004",
+      "claim_text": "FAIMS sustainability depends primarily on infrastructure grants with service fees supplementing",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "This infrastructure grant income is supplemented by fees charged for customisation, field support, server hosting, and other services (a typical open-source business model; cf. Raymond 2001: 136; Popp 2015)",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "supported_by": ["E005", "E006"]
+    },
+    {
+      "claim_id": "C005",
+      "claim_text": "Professional software engineering team ensures FAIMS software meets high standards",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "This funding allows the FAIMS project to employ a professional software engineering team (as well as student programmers) to ensure that our software meets high standards and avoids some of the shortcomings often associated with academic software",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "supported_by": ["E004"]
+    },
+    {
+      "claim_id": "C006",
+      "claim_text": "FAIMS has achieved significant adoption with deployments likely to double by end of 2017",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "That number is likely to double by the end of 2017.",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supported_by": ["E007"]
+    },
+    {
+      "claim_id": "C007",
+      "claim_text": "FAIMS offers multiple deployment options at various price points",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "For those new to the system, the FAIMS project offers temporary, pre-configured, online servers for trials at no cost.",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supported_by": ["E008", "E009", "E010"]
+    },
+    {
+      "claim_id": "C008",
+      "claim_text": "Subsequent deployments are less expensive because users only pay for changes and support",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Deployments of a module for subsequent seasons are usually less expensive because users only pay for changes and support.",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supported_by": ["E010", "E011"]
+    },
+    {
+      "claim_id": "C009",
+      "claim_text": "Module reuse offers significant cost savings compared to new development",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "illustrating the savings that redeployment can offer",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supported_by": ["E011", "E012"]
+    },
+    {
+      "claim_id": "C010",
+      "claim_text": "A generalised system with a core can spawn new deployments rapidly in ways neither bespoke nor general-purpose systems can",
+      "claim_type": "theoretical",
+      "claim_role": "core",
+      "verbatim_quote": "As this example illustrates, a system with a generalised core can spawn new deployments rapidly in a way that neither bespoke nor general-purpose systems can.",
+      "location": {"section": "Theme 1: Scoping and Development", "page": null},
+      "supported_by": ["E012", "E018", "E019"]
+    },
+    {
+      "claim_id": "C011",
+      "claim_text": "Users with time and expertise can implement FAIMS themselves without purchasing services",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Users with the time and expertise can implement FAIMS themselves, or they can purchase that service from the FAIMS team.",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supported_by": ["E013"]
+    },
+    {
+      "claim_id": "C012",
+      "claim_text": "Complex site stratigraphy necessitates fine-grained single context recording method",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "As a result, excavation has necessarily been fine-grained, utilising a single context recording method better to understand the subtle interrelationships of the site's building sequences and extra-mural areas.",
+      "location": {"section": "Three Case Studies", "page": null},
+      "supported_by": ["E014"]
+    },
+    {
+      "claim_id": "C013",
+      "claim_text": "Recording protocols with checks and constraints are desirable given diverse team backgrounds",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "Given the range of backgrounds represented on the project, it was desirable that the recording protocols contain as many checks and constraints as possible, but also that there was ample opportunity to freehand any observations that may not fit into one of the pre-designated categories.",
+      "location": {"section": "Three Case Studies", "page": null},
+      "supported_by": ["E015"]
+    },
+    {
+      "claim_id": "C014",
+      "claim_text": "Projects with established paper-based recording systems can transition to digital",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "In our 2012 field season at Carrizales, PAZC team members recorded data using a single-context recording system on paper forms.",
+      "location": {"section": "Three Case Studies", "page": null},
+      "supported_by": ["E016"]
+    },
+    {
+      "claim_id": "C015",
+      "claim_text": "Established projects with stable procedures have an advantage during software customisation",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Established projects with stable procedures have an advantage during software customisation, since they can articulate requirements and priorities quickly and coherently.",
+      "location": {"section": "Theme 1: Scoping and Development", "page": null},
+      "supported_by": ["E017"]
+    },
+    {
+      "claim_id": "C016",
+      "claim_text": "VanValkenburgh's pragmatism and willingness to adapt existing module enabled rapid production",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "The speed of production was possible because of VanValkenburgh's pragmatism and willingness to adapt an existing module.",
+      "location": {"section": "Theme 1: Scoping and Development", "page": null},
+      "supported_by": ["E018", "E019"]
+    },
+    {
+      "claim_id": "C017",
+      "claim_text": "Digital data available immediately at end of fieldwork without tedious digitisation",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "verbatim_quote": "an entire season's data could be retrieved immediately, without tedious digitisation and the errors it inevitably introduces",
+      "location": {"section": "Theme 1: Upfront Costs, Backend Payouts", "page": null},
+      "supported_by": ["E020"]
+    },
+    {
+      "claim_id": "C018",
+      "claim_text": "FAIMS export into desktop software (MS Access) enables immediate post-fieldwork analysis",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "He received his comma separated value (CSV; a standard spreadsheet-type format) data files and created an Access database from them, all in the time before the paper forms (used as a backup to FAIMS as part of the transition to digital recording) arrived at Australia",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supported_by": ["E020"]
+    },
+    {
+      "claim_id": "C019",
+      "claim_text": "Digital recording eliminates transcription errors that plague paper-based workflows",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "During post-processing all the data were tied together already and did not require the manual integration of paper forms with separate photo logs and GPS records—nor did they suffer from the inevitable transcription error",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supported_by": ["E021", "E022"]
+    },
+    {
+      "claim_id": "C020",
+      "claim_text": "Digital recording provides substantial time savings in post-fieldwork data processing",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "verbatim_quote": "The greatest gains in the FAIMS system were found after the excavation season was finished with post-processing of the data and checking taking 2–3 hours in comparison to several hundred hours",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supported_by": ["E022", "E023", "E025"]
+    },
+    {
+      "claim_id": "C021",
+      "claim_text": "Cost-benefit analysis shows customisation costs can be recouped from data digitisation savings",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "verbatim_quote": "These costs include support for the duration of fieldwork and assistance with data export. . . . customisation and support costs of this magnitude can be largely recouped from later savings in data digitisation and reconciliation, aside from any other benefits of digital recording",
+      "location": {"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null},
+      "supported_by": ["E023", "E024", "E025"]
+    },
+    {
+      "claim_id": "C022",
+      "claim_text": "Complex auto-generated context identifiers cause exponential performance degradation",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Performance degradation was barely perceptible during testing, which involved only a few records, but it worsened exponentially as the database grew (more precisely, as a square function of the number of records).",
+      "location": {"section": "Theme 2: Legacy Features vs Performance", "page": null},
+      "supported_by": ["E026"]
+    },
+    {
+      "claim_id": "C023",
+      "claim_text": "Feature requests must be balanced against performance and testing resources",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The critical resource during software development is time, which may be allocated to scoping, to developing new features, to improving performance, or to testing, bug fixing, and ensuring fitness for purpose. Since time is a finite resource, these activities must be balanced against one another.",
+      "location": {"section": "Theme 1: Scoping and Development", "page": null},
+      "supported_by": ["E026"]
+    },
+    {
+      "claim_id": "C024",
+      "claim_text": "Online servers are unreliable for archaeological fieldwork in remote locations",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "His subsequent problems demonstrate the unreliability of the Internet in fieldwork settings",
+      "location": {"section": "Theme 2: Local vs Online Servers", "page": null},
+      "supported_by": ["E027"]
+    },
+    {
+      "claim_id": "C025",
+      "claim_text": "Local dedicated hardware servers are faster and more robust than online servers for fieldwork",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Local, dedicated hardware servers are more expensive than online servers, and they require that users test and maintain them, but they are faster and more robust than online servers.",
+      "location": {"section": "Theme 2: Local vs Online Servers", "page": null},
+      "supported_by": ["E028", "E029", "E030"]
+    },
+    {
+      "claim_id": "C026",
+      "claim_text": "Digital recording enables collection of more data in same duration field season",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Because FAIMS enabled data to be collected and processed so efficiently, we were able to collect more data, and this expanded the interpretations we could make from a field season of the same duration",
+      "location": {"section": "Theme 3: Digital Recording and Archaeological Interpretation", "page": null},
+      "supported_by": ["E031"]
+    },
+    {
+      "claim_id": "C027",
+      "claim_text": "FAIMS improved both richness and integrity of field data",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "verbatim_quote": "our final review of data collected by the PAZC in 2014 suggests that using FAIMS improved both the richness and integrity of our data",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supported_by": ["E032"]
+    },
+    {
+      "claim_id": "C028",
+      "claim_text": "FAIMS default module prompts recording of data types formerly treated inconsistently",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "the range of fields in the FAIMS default module meant that project members recorded types of data (such as parameters of soil matrices and inclusions) that we had formerly treated in an inconsistent fashion",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supported_by": ["E032"]
+    },
+    {
+      "claim_id": "C029",
+      "claim_text": "Digital data entry in the field takes longer than paper-based recording",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "These improvements (digital data) have come at a cost—namely, less efficient data collection in the field.",
+      "location": {"section": "Theme 2: Legacy Features vs Performance", "page": null},
+      "supported_by": ["E033"]
+    },
+    {
+      "claim_id": "C030",
+      "claim_text": "Digital recording does not immediately alter researchers' aims or interpretive agendas",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Digital data collection may not immediately alter researchers' aims or interpretive agendas.",
+      "location": {"section": "Theme 3: Digital Recording and Archaeological Interpretation", "page": null},
+      "supported_by": ["E034"]
+    },
+    {
+      "claim_id": "C031",
+      "claim_text": "Digital recording improves workflow transparency and exposes research process",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "More continuous recordkeeping, including of 'messy' work-in-progress, not only helps researchers at a later time better understand what they have excavated, but may contribute toward both making workflows more transparent and 'openly exposing the process of research'",
+      "location": {"section": "Theme 3: Digital Recording and Archaeological Interpretation", "page": null},
+      "supported_by": ["E035"]
+    },
+    {
+      "claim_id": "C032",
+      "claim_text": "Generalised tools allow archaeologists to participate in software development rather than merely consume software",
+      "claim_type": "theoretical",
+      "claim_role": "core",
+      "verbatim_quote": "Perhaps more importantly, generalised tools also allow archaeologists to participate in software development, not merely consume software.",
+      "location": {"section": "Introduction", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C033",
+      "claim_text": "Co-development involves partnership between field archaeologists and software development team",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "Such co-development involves a partnership between field archaeologists and a software development team. This partnership can ease the transitions from paper to digital fieldwork, illuminate the advantages digital approaches offer, and ensure that software is fit-to-purpose.",
+      "location": {"section": "Introduction", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C034",
+      "claim_text": "FAIMS lies between general-purpose DBMS and bespoke software on the development spectrum",
+      "claim_type": "theoretical",
+      "claim_role": "core",
+      "verbatim_quote": "FAIMS lies near the middle of this spectrum. Compared to a general-purpose DBMS, FAIMS is 'generalised' in the sense it has no predetermined data schemas or user interface, instead offering a degree of control over data structures and forms similar to DBMSes like Microsoft Access or FileMaker Pro.",
+      "location": {"section": "Between Off-the-Shelf and Bespoke Software", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C035",
+      "claim_text": "FAIMS was purpose built to perform well under difficult field conditions with archaeology-specific functionality",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "It is not general-purpose, however, in that it has been purpose built to perform well under difficult field conditions and includes functionality specifically requested by archaeologists",
+      "location": {"section": "Between Off-the-Shelf and Bespoke Software", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C036",
+      "claim_text": "Bespoke software development and maintenance costs exceed resources of most archaeological projects",
+      "claim_type": "theoretical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The requirements gathering, planning, development, and testing required to produce software reliable enough for field archaeology are expensive and demanding. Even after development is 'complete,' software has significant maintenance costs such as bug-fixing and keeping up with the biennial mobile OS update cycle",
+      "location": {"section": "Between Off-the-Shelf and Bespoke Software", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C037",
+      "claim_text": "Shared FAIMS core allows fixed development and maintenance costs to be distributed across many users",
+      "claim_type": "theoretical",
+      "claim_role": "core",
+      "verbatim_quote": "Because the core FAIMS software is common to all deployments, however, the fixed costs of development and maintenance can be shared across many users, projects, and institutions.",
+      "location": {"section": "Between Off-the-Shelf and Bespoke Software", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C038",
+      "claim_text": "Converting from paper to digital requires making implicit knowledge explicit",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Converting from paper to digital workflows is an involved and time-consuming process. It requires making the implicit knowledge embedded in paper forms explicit.",
+      "location": {"section": "Theme 1: Scoping and Development", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C039",
+      "claim_text": "Digital forms must be more precise and complete than paper forms or primary advantage is lost",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "digital forms must be more precise and complete, or their primary advantage—the production of clean, consistent data—is lost",
+      "location": {"section": "Theme 1: Scoping and Development", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C040",
+      "claim_text": "Paper-to-digital conversion instigates thorough review and revision of existing recording procedures",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The conversion from fuzzy paper forms to sharp digital recording often instigates a thorough review and revision of existing recording procedures and workflows.",
+      "location": {"section": "Theme 1: Scoping and Development", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C041",
+      "claim_text": "Testing is essential but archaeologists tend to prioritise feature development at its expense",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "In the FAIMS experience, archaeologists tended to prioritise the development of new features at the expense of testing.",
+      "location": {"section": "Theme 1: Testing and Training", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C042",
+      "claim_text": "All project directors regretted not testing more thoroughly with more participants in authentic situations",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "All project directors tested their modules ahead of fieldwork, but eventually they all regretted not doing so more thoroughly, with more participants, and in more authentic situations.",
+      "location": {"section": "Theme 1: Testing and Training", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C043",
+      "claim_text": "High-quality support is crucial to success of field deployments of new technology",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "verbatim_quote": "Exceptional support is necessary when deploying new technology in the field, especially software that is purpose-built for the research community",
+      "location": {"section": "The Importance of High-Quality Support", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C044",
+      "claim_text": "Full interpretive impact of digital recording may be at comparative or synthetic level beyond individual projects",
+      "claim_type": "theoretical",
+      "claim_role": "core",
+      "verbatim_quote": "It is perhaps at the comparative or synthetic level, beyond individual projects, that we should seek the greatest interpretive impact. Only after digital datasets are published and researchers start reusing and combining them will the full potential and impact of digital methods be realised.",
+      "location": {"section": "Theme 3: Digital Recording and Archaeological Interpretation", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C045",
+      "claim_text": "FAIMS strikes good balance between re-deployability and domain-specific capability",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "verbatim_quote": "The authors of this paper believe that FAIMS strikes a good balance between the re-deployability of general-purpose database software and the domain- and project-specific capability of bespoke applications.",
+      "location": {"section": "Conclusions", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C046",
+      "claim_text": "Software co-development involving genuine partnership between archaeologists and technologists yields effective fit-to-purpose systems",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "verbatim_quote": "Software co-development in a generalised framework like FAIMS, involving a genuine partnership between archaeologists and technologists, is a difficult but productive process that can yield systems that are effective and fit-to-purpose.",
+      "location": {"section": "Conclusions", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C047",
+      "claim_text": "FAIMS 2.0 itself exemplifies co-development as it benefited from the three case study projects",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "FAIMS 2.0, released in November 2014 is itself an example of co-development as it benefited enormously from the three projects discussed in this paper.",
+      "location": {"section": "Conclusions", "page": null},
+      "supported_by": ["E004"]
+    },
+    {
+      "claim_id": "C048",
+      "claim_text": "Immediate discovery of errors is unexpected benefit of having digital data available immediately",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Finally, Fairbairn discovered an unexpected benefit of having his digital data available immediately: the timely discovery of errors. 'I also can see all the inconsistent entries that were made by people who should know better.'",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C049",
+      "claim_text": "Open-source document-based customisation strategy enables rapid module modification and redeployment",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "(emphasising the advantages of an open source, document-based customisation strategy: modules can be rapidly modified and redeployed, while each new module or modification improves the whole system)",
+      "location": {"section": "Theme 1: Scoping and Development", "page": null},
+      "supported_by": []
+    },
+    {
+      "claim_id": "C050",
+      "claim_text": "Legacy paper form numbering schemes should be reconsidered rather than faithfully replicated in digital systems",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The question of 'how closely do we duplicate our paper forms' is common to archaeological projects that are going digital. It is worthwhile to step back and consider the purpose behind legacy recording approaches, and weigh the problems and benefits of replicating them.",
+      "location": {"section": "Theme 2: Legacy Features vs Performance", "page": null},
+      "supported_by": []
+    }
+  ],
+  "implicit_arguments": [
+    {
+      "implicit_id": "IA001",
+      "implicit_text": "Archaeological recording systems require domain-specific features that general-purpose software cannot adequately provide",
+      "type": "disciplinary_assumption",
+      "verbatim_quote": null,
+      "trigger_text": ["Most DBMSes store data on a single server that can be accessed by many clients. Mobile applications also typically use this architecture, which is simpler and has performance advantages. These applications, however, expect a regular—if not continuous—connection to a server. Archaeological fieldwork frequently suffers from intermittent or disrupted network communications."],
+      "trigger_locations": [{"section": "Between Off-the-Shelf and Bespoke Software", "page": null}],
+      "inference_reasoning": "The paper assumes that general-purpose software designed for typical deployment scenarios is inadequate for archaeological fieldwork, necessitating purpose-built solutions. This disciplinary assumption underlies the entire rationale for FAIMS.",
+      "enables_claim": ["C034", "C035"]
+    },
+    {
+      "implicit_id": "IA002",
+      "implicit_text": "Archaeological projects can afford the upfront investment required for digital recording transition if long-term cost savings are demonstrated",
+      "type": "unstated_assumption",
+      "verbatim_quote": null,
+      "trigger_text": ["even considering the up-front time requirement, however, time savings at the end of the project were substantial—even revolutionary", "customisation and support costs of this magnitude can be largely recouped from later savings in data digitisation and reconciliation"],
+      "trigger_locations": [{"section": "Theme 1: Upfront Costs, Backend Payouts", "page": null}],
+      "inference_reasoning": "The paper assumes that archaeological projects have sufficient budget flexibility to invest upfront in software customisation based on expected future savings, though many projects operate on tight, inflexible budgets.",
+      "enables_claim": ["C021", "C008"]
+    },
+    {
+      "implicit_id": "IA003",
+      "implicit_text": "Archaeologists have sufficient technical competence to participate meaningfully in software co-development",
+      "type": "methodological_assumption",
+      "verbatim_quote": null,
+      "trigger_text": ["Participating in open-source development is different from buying software from a vendor. There are responsibilities, trade-offs, and significant benefits.", "This co-development increases the likelihood that individual projects will achieve their goals, but it also requires archaeologists' active participation"],
+      "trigger_locations": [{"section": "The Nature of Co-Development", "page": null}],
+      "inference_reasoning": "Co-development model assumes archaeologists can articulate technical requirements, understand trade-offs, and engage in iterative development - skills not universally present in the discipline.",
+      "enables_claim": ["C033", "C046"]
+    },
+    {
+      "implicit_id": "IA004",
+      "implicit_text": "Single-context recording is the standard best practice for complex stratified archaeological sites",
+      "type": "disciplinary_assumption",
+      "verbatim_quote": null,
+      "trigger_text": ["excavation has necessarily been fine-grained, utilising a single context recording method better to understand the subtle interrelationships", "MEMSAP based its excavation recording system on a single-context form-based system", "PAZC team members recorded data using a single-context recording system on paper forms"],
+      "trigger_locations": [{"section": "Three Case Studies", "page": null}],
+      "inference_reasoning": "All three case studies use single-context recording without justification of why this approach rather than alternatives, assuming reader agreement with this methodological standard.",
+      "enables_claim": ["C012", "C013", "C014"]
+    },
+    {
+      "implicit_id": "IA005",
+      "implicit_text": "Data quality and consistency are more valuable than recording speed in archaeological fieldwork",
+      "type": "design_assumption",
+      "verbatim_quote": null,
+      "trigger_text": ["These improvements (digital data) have come at a cost—namely, less efficient data collection in the field", "our final review of data collected by the PAZC in 2014 suggests that using FAIMS improved both the richness and integrity of our data"],
+      "trigger_locations": [{"section": "Theme 2: Legacy Features vs Performance", "page": null}],
+      "inference_reasoning": "The paper frames slower in-field recording as acceptable trade-off for data quality, assuming this value hierarchy without explicitly justifying it or considering contexts where speed might be paramount.",
+      "enables_claim": ["C027", "C029"]
+    },
+    {
+      "implicit_id": "IA006",
+      "implicit_text": "Software should be tested on the specific hardware that will be used in deployment",
+      "type": "methodological_assumption",
+      "verbatim_quote": null,
+      "trigger_text": ["Software that worked during internal testing by the FAIMS team (or even by archaeologists prior to fieldwork) did not always work on different tablets, even if they were made by the same manufacturer. These compatibility problems are the price paid for the wide range of devices offered within the Android ecosystem."],
+      "trigger_locations": [{"section": "Theme 1: Testing and Training", "page": null}],
+      "inference_reasoning": "The paper assumes device-specific testing is necessary but does not question whether Android's device fragmentation makes it an appropriate platform choice for mission-critical fieldwork.",
+      "enables_claim": ["C041", "C042"]
+    },
+    {
+      "implicit_id": "IA007",
+      "implicit_text": "Open source software with community development is more sustainable than proprietary alternatives for academic domains",
+      "type": "design_assumption",
+      "verbatim_quote": null,
+      "trigger_text": ["All FAIMS project software is free and open source (GPLv.3 licence)", "The FAIMS project uses GitHub, an online version control tool for collaborative software development, to publish and manage individual modules"],
+      "trigger_locations": [{"section": "The FAIMS Mobile Platform", "page": null}],
+      "inference_reasoning": "The paper assumes open source is preferable without directly comparing sustainability of open source vs proprietary models in academic contexts, or addressing concerns about long-term maintenance.",
+      "enables_claim": ["C037", "C049"]
+    },
+    {
+      "implicit_id": "IA008",
+      "implicit_text": "Post-fieldwork data processing and analysis time is more constrained/valuable than in-field recording time",
+      "type": "unstated_assumption",
+      "verbatim_quote": null,
+      "trigger_text": ["The greatest gains in the FAIMS system were found after the excavation season was finished", "even projects like ours where we have no electricity on site can use the setup as long as there is power back at the home base"],
+      "trigger_locations": [{"section": "Theme 1: The Payoff", "page": null}],
+      "inference_reasoning": "The cost-benefit framing prioritises post-fieldwork time savings without explicitly justifying why this time is more valuable than in-field time, which may involve significant costs (travel, accommodation, permits).",
+      "enables_claim": ["C020", "C021"]
+    }
+  ],
+  "research_designs": [
+    {
+      "design_id": "RD001",
+      "design_text": "Multi-case study design examining three FAIMS deployments across different archaeological contexts",
+      "design_type": "multi_case_study",
+      "design_status": "explicit",
+      "verbatim_quote": "We report our experience with three projects that have deployed FAIMS: the Central Anatolian Boncuklu Project (Turkey), the Malawi Earlier-Middle Stone Age Project (MEMSAP; Malawi), and the Proyecto Arqueológico Zaña Colonial (PAZC; Peru).",
+      "location": {"section": "Introduction", "page": null},
+      "addresses_questions": ["How does co-development work in practice across different archaeological projects?", "What are common themes and trade-offs in FAIMS deployments?"],
+      "realized_through_methods": ["M001", "M002", "M003", "M004"]
+    },
+    {
+      "design_id": "RD002",
+      "design_text": "Reflective practitioner research combining FAIMS development team and archaeological user perspectives",
+      "design_type": "reflexive_practitioner_study",
+      "design_status": "implicit",
+      "trigger_text": ["The authors of this paper represent both groups in this partnership, so we can comment on co-development from two vantages."],
+      "trigger_locations": [{"section": "Introduction", "page": null}],
+      "inference_reasoning": "The paper explicitly positions authors as both software developers and archaeological users, enabling dual-perspective reflexive analysis of the co-development process.",
+      "addresses_questions": ["How do archaeologists and software developers perceive co-development differently?"],
+      "realized_through_methods": ["M001", "M003"]
+    },
+    {
+      "design_id": "RD003",
+      "design_text": "Comparative cost-benefit analysis of digital vs paper-based recording workflows",
+      "design_type": "comparative_evaluation",
+      "design_status": "implicit",
+      "trigger_text": ["The benefits to the excavation project in financial/labour terms are hugely significant, equating to a total of 1–1.5 days of handling time using FAIMS against 25–30 days when not in use per annum"],
+      "trigger_locations": [{"section": "Theme 1: The Payoff", "page": null}],
+      "inference_reasoning": "Multiple case studies include before/after comparisons of paper vs digital workflows, with cost and time metrics enabling systematic comparison.",
+      "addresses_questions": ["Is digital recording cost-effective compared to paper-based systems?"],
+      "realized_through_methods": ["M002", "M005"]
+    },
+    {
+      "design_id": "RD004",
+      "design_text": "Thematic analysis of deployment experiences organised around recurring challenges and benefits",
+      "design_type": "thematic_analysis",
+      "design_status": "explicit",
+      "verbatim_quote": "Three themes emerge from the descriptions of the case studies and communications with FAIMS: (1) upfront costs, backend payouts, (2) trade-offs and shared lessons, (3) and digital recording and archaeological interpretation.",
+      "location": {"section": "Three Case Studies", "page": null},
+      "addresses_questions": ["What are the key themes in FAIMS deployment experiences?"],
+      "realized_through_methods": ["M001", "M003"]
+    },
+    {
+      "design_id": "RD005",
+      "design_text": "Software evaluation framework assessing fitness-for-purpose of generalised archaeology platform",
+      "design_type": "software_evaluation",
+      "design_status": "implicit",
+      "trigger_text": ["The authors of this paper believe that FAIMS strikes a good balance between the re-deployability of general-purpose database software and the domain- and project-specific capability of bespoke applications."],
+      "trigger_locations": [{"section": "Conclusions", "page": null}],
+      "inference_reasoning": "The paper implicitly applies an evaluation framework positioning FAIMS on a spectrum from general-purpose to bespoke software, assessing trade-offs.",
+      "addresses_questions": ["How well does FAIMS balance generalisability with domain-specificity?"],
+      "realized_through_methods": ["M001", "M004", "M005"]
+    }
+  ],
+  "methods": [
+    {
+      "method_id": "M001",
+      "method_text": "Structured case study documentation through solicited written accounts from project directors",
+      "method_type": "qualitative_data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "These discussions will be presented alongside a set of 'contributed' case studies (set in italics) authored by the archaeologists who directed the three projects, offering direct insight from co-developers.",
+      "location": {"section": "Introduction", "page": null},
+      "implements_designs": ["RD001", "RD002", "RD004"],
+      "realized_through_protocols": ["P001", "P002"]
+    },
+    {
+      "method_id": "M002",
+      "method_text": "Quantitative metrics collection for deployment costs, time savings, and performance",
+      "method_type": "quantitative_observation",
+      "method_status": "implicit",
+      "trigger_text": ["Customisation and support work for the Boncuklu and MEMSAP projects presented here, for example, was valued about $15,000 each", "The greatest gains in the FAIMS system were found after the excavation season was finished with post-processing of the data and checking taking 2–3 hours in comparison to several hundred hours"],
+      "trigger_locations": [{"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null}, {"section": "Theme 1: The Payoff", "page": null}],
+      "inference_reasoning": "The paper reports specific cost figures, time measurements, and performance metrics that required systematic tracking during deployments.",
+      "implements_designs": ["RD001", "RD003"],
+      "realized_through_protocols": ["P003"]
+    },
+    {
+      "method_id": "M003",
+      "method_text": "Communication log analysis using archived project correspondence",
+      "method_type": "document_analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "Complete, unedited communications with the FAIMS project are available via the digital supplement to this volume",
+      "location": {"section": "Introduction", "page": null},
+      "implements_designs": ["RD001", "RD002", "RD004"],
+      "realized_through_protocols": ["P004"]
+    },
+    {
+      "method_id": "M004",
+      "method_text": "Iterative software development with user feedback integration",
+      "method_type": "action_research",
+      "method_status": "explicit",
+      "verbatim_quote": "Experience from these deployments informed ongoing development of FAIMS software, resulting in the release of FAIMS 2.0, the current production version, in November 2014",
+      "location": {"section": "The FAIMS Project", "page": null},
+      "implements_designs": ["RD001", "RD005"],
+      "realized_through_protocols": ["P005", "P006"]
+    },
+    {
+      "method_id": "M005",
+      "method_text": "User experience assessment through informal feedback and observation",
+      "method_type": "user_evaluation",
+      "method_status": "implicit",
+      "trigger_text": ["project members universally reported that data entry using FAIMS took longer than using our previous analogue system", "All project directors tested their modules ahead of fieldwork, but eventually they all regretted not doing so more thoroughly"],
+      "trigger_locations": [{"section": "Theme 2: Legacy Features vs Performance", "page": null}, {"section": "Theme 1: Testing and Training", "page": null}],
+      "inference_reasoning": "User feedback on system performance and usability is reported without formal survey methodology, suggesting informal observation and feedback collection.",
+      "implements_designs": ["RD003", "RD005"],
+      "realized_through_protocols": ["P007"]
+    }
+  ],
+  "protocols": [
+    {
+      "protocol_id": "P001",
+      "protocol_text": "Case study contribution protocol: Project directors authored italicised sections providing first-person deployment narratives",
+      "protocol_type": "data_collection_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "a set of 'contributed' case studies (set in italics) authored by the archaeologists who directed the three projects",
+      "location": {"section": "Introduction", "page": null},
+      "implements_methods": ["M001"],
+      "produces_evidence": ["E014", "E015", "E016", "E020", "E028", "E032", "E033", "E034", "E035"]
+    },
+    {
+      "protocol_id": "P002",
+      "protocol_text": "Supplementary material protocol: Full case study documents and chat logs preserved as digital appendices",
+      "protocol_type": "data_archiving_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Supplementary Material 1 containing case study files: Fairbairn: Boncuklu Case Study, Fairbairn: Chat Log.pdf, Thompson: Malawi Case Study, VanValkenburgh: PAZC Case Study",
+      "location": {"section": "Acknowledgments", "page": null},
+      "implements_methods": ["M001", "M003"],
+      "produces_evidence": []
+    },
+    {
+      "protocol_id": "P003",
+      "protocol_text": "Cost tracking protocol: Recording customisation costs, hardware costs, and time savings for each deployment",
+      "protocol_type": "measurement_procedure",
+      "protocol_status": "implicit",
+      "trigger_text": ["Customisation and support work for the Boncuklu and MEMSAP projects presented here, for example, was valued about $15,000 each", "Because the PAZC project was willing to reuse an existing module, their first year cost only $900"],
+      "trigger_locations": [{"section": "Customising and Deploying the FAIMS Mobile Platform", "page": null}],
+      "inference_reasoning": "Specific cost figures reported across multiple projects indicate systematic tracking of customisation and deployment costs.",
+      "implements_methods": ["M002"],
+      "produces_evidence": ["E008", "E009", "E010", "E011", "E012", "E021", "E022", "E023", "E024", "E025"]
+    },
+    {
+      "protocol_id": "P004",
+      "protocol_text": "Communication archiving protocol: Preserving email and chat logs between FAIMS team and project directors",
+      "protocol_type": "document_preservation_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Complete, unedited communications with the FAIMS project are available via the digital supplement",
+      "location": {"section": "Introduction", "page": null},
+      "implements_methods": ["M003"],
+      "produces_evidence": ["E017", "E018", "E019", "E020"]
+    },
+    {
+      "protocol_id": "P005",
+      "protocol_text": "Module customisation protocol: XML definition document editing for project-specific recording systems",
+      "protocol_type": "software_customisation_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The FAIMS team translated the Boncuklu module into Spanish and customised it where required by editing the Boncuklu definition documents, a process that required less than one week after the requirements were fully specified.",
+      "location": {"section": "Theme 1: Scoping and Development", "page": null},
+      "implements_methods": ["M004"],
+      "produces_evidence": ["E019"]
+    },
+    {
+      "protocol_id": "P006",
+      "protocol_text": "Iterative development protocol: Requirements gathering, module development, field testing, and refinement cycles",
+      "protocol_type": "software_development_procedure",
+      "protocol_status": "implicit",
+      "trigger_text": ["Ultimately only three iterations of the excavation module and two iterations of the survey module were needed before a functional system could be deployed in the field."],
+      "trigger_locations": [{"section": "Theme 1: Upfront Costs, Backend Payouts", "page": null}],
+      "inference_reasoning": "Multiple iteration cycles described indicate structured iterative development approach with defined refinement stages.",
+      "implements_methods": ["M004"],
+      "produces_evidence": ["E017"]
+    },
+    {
+      "protocol_id": "P007",
+      "protocol_text": "Field deployment support protocol: Remote troubleshooting and on-site technical assistance during excavation seasons",
+      "protocol_type": "user_support_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Exceptional support is necessary when deploying new technology in the field, especially software that is purpose-built for the research community",
+      "location": {"section": "The Importance of High-Quality Support", "page": null},
+      "implements_methods": ["M005"],
+      "produces_evidence": ["E026", "E027", "E028", "E029", "E030"]
+    },
+    {
+      "protocol_id": "P008",
+      "protocol_text": "Data export protocol: CSV export from FAIMS to desktop database software",
+      "protocol_type": "data_processing_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "He received his comma separated value (CSV; a standard spreadsheet-type format) data files and created an Access database from them",
+      "location": {"section": "Theme 1: The Payoff", "page": null},
+      "implements_methods": ["M002"],
+      "produces_evidence": ["E020"]
+    },
+    {
+      "protocol_id": "P009",
+      "protocol_text": "Single-context recording protocol: Standardised archaeological recording using individualised context forms",
+      "protocol_type": "field_recording_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "MEMSAP based its excavation recording system on a single-context form-based system modified from Marean et al. (2010)",
+      "location": {"section": "Three Case Studies", "page": null},
+      "implements_methods": ["M001"],
+      "produces_evidence": ["E014", "E015", "E016"]
+    },
+    {
+      "protocol_id": "P010",
+      "protocol_text": "FAIMS-in-a-box hardware deployment protocol: Local server with WiFi access point for offline field operation",
+      "protocol_type": "hardware_deployment_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Also, it is worth noting that the equipment—FAIMS-in-a-box—worked very well",
+      "location": {"section": "Theme 2: Local vs Online Servers", "page": null},
+      "implements_methods": ["M004"],
+      "produces_evidence": ["E028", "E029", "E030"]
+    }
+  ],
+  "reproducibility_infrastructure": {
+    "persistent_identifiers": {
+      "paper_doi": null,
+      "author_orcids": [],
+      "data_dois": [],
+      "software_pids": [
+        {
+          "software_name": "FAIMS Mobile Platform",
+          "repository": "GitHub",
+          "doi": null,
+          "url": "https://github.com/FAIMS"
+        }
+      ],
+      "funder_ids": [],
+      "project_ids": []
+    },
+    "funding": {
+      "sources": [
+        {
+          "funder": "NeCTAR eResearch Tools program",
+          "grant_number": "RT043",
+          "amount": "AUD $949,500",
+          "role": "Initial FAIMS development (2012-2013)"
+        },
+        {
+          "funder": "Australian Research Council (ARC) LIEF program",
+          "grant_number": "LE140100151",
+          "amount": "AUD $945,000",
+          "role": "Phase 2 development including field deployments (2014-2016)"
+        },
+        {
+          "funder": "NeCTAR",
+          "grant_number": null,
+          "amount": null,
+          "role": "2015 grant for user support documentation"
+        }
+      ],
+      "acknowledgement_text": "The FAIMS project was funded during 2012–2013 by the National eResearch Collaboration Tools and Resources (NeCTAR) eResearch Tools program (RT043), and from 2014 to 2016 by the Australian Research Council (ARC) Linkage Equipment, Infrastructure, and Facilities (LIEF) program (LE140100151)."
+    },
+    "data_availability": {
+      "statement_present": true,
+      "statement_text": "Complete, unedited communications with the FAIMS project are available via the digital supplement to this volume",
+      "repositories": [
+        {
+          "name": "Digital supplement to volume",
+          "url": null,
+          "access_conditions": "Open access (volume supplement)"
+        }
+      ],
+      "restrictions": null,
+      "machine_actionability": {
+        "rating": "low",
+        "rationale": "Supplementary materials referenced but no persistent identifiers or standard repository"
+      }
+    },
+    "code_availability": {
+      "statement_present": true,
+      "statement_text": "All FAIMS project software is free and open source (GPLv.3 licence)",
+      "repositories": [
+        {
+          "name": "GitHub - FAIMS",
+          "url": "https://github.com/FAIMS",
+          "licence": "GPLv3",
+          "access_conditions": "Open source"
+        },
+        {
+          "name": "Google Play",
+          "url": null,
+          "licence": "GPLv3",
+          "access_conditions": "Free download"
+        }
+      ],
+      "documentation": {
+        "present": true,
+        "url": "https://www.fedarch.org/support/#2",
+        "quality": "Extensive documentation mentioned"
+      },
+      "machine_actionability": {
+        "rating": "high",
+        "rationale": "GitHub repository with version control, GPLv3 licence, Google Play distribution"
+      }
+    },
+    "author_contributions": {
+      "statement_present": false,
+      "roles": null,
+      "format": null
+    },
+    "conflicts_of_interest": {
+      "statement_present": false,
+      "declarations": null
+    },
+    "ethics_approval": {
+      "required": false,
+      "committees": null,
+      "consent_procedures": null
+    },
+    "permits_and_authorisations": {
+      "fieldwork_permits": null,
+      "access_permissions": null,
+      "care_principles": null
+    },
+    "preregistration": {
+      "preregistered": false,
+      "protocol_url": null,
+      "registry": null
+    },
+    "supplementary_materials": {
+      "available": true,
+      "description": "Supplementary Material 1 containing case study files: Fairbairn: Boncuklu Case Study, Fairbairn: Chat Log.pdf, Thompson: Malawi Case Study, VanValkenburgh: PAZC Case Study. Also includes three customised FAIMS modules.",
+      "doi": null,
+      "formats": ["PDF", "XML module files"]
+    },
+    "fair_assessment": {
+      "findable": {
+        "score": 6,
+        "notes": "Book chapter with clear citation, GitHub URL provided, but no DOI for paper itself"
+      },
+      "accessible": {
+        "score": 8,
+        "notes": "Open access book, open source software on GitHub, Google Play distribution"
+      },
+      "interoperable": {
+        "score": 7,
+        "notes": "XML-based module definition documents, standard data export formats (CSV), GitHub version control"
+      },
+      "reusable": {
+        "score": 8,
+        "notes": "GPLv3 licence explicitly stated, documentation provided, modular design for reuse"
+      },
+      "total_fair_score": 29,
+      "fair_percentage": 72.5
+    }
+  },
+  "extraction_notes": {
+    "pass0_metadata": {
+      "completion_date": "2025-12-04T10:00:00Z",
+      "primary_source": "title page + citation header",
+      "author_name_format": "full names with middle initials",
+      "doi_present": false,
+      "notes": "Book chapter in edited volume. Six authors listed with full names. Publisher and editors clearly identified in citation."
+    },
+    "pass1_claims_evidence": {
+      "completion_date": "2025-12-04T10:15:00Z",
+      "evidence_count": 35,
+      "claims_count": 50,
+      "implicit_arguments_count": 8,
+      "section_groups": ["Introduction", "FAIMS Project", "FAIMS Mobile Platform", "Customising and Deploying", "Between Off-the-Shelf and Bespoke", "Nature of Co-Development", "Three Case Studies", "Theme 1", "Theme 2", "Theme 3", "Conclusions"],
+      "notes": "Methodological paper with case study structure. Evidence primarily consists of deployment metrics, cost data, and user observations. Claims focus on software development trade-offs, co-development benefits, and digital recording impacts."
+    },
+    "pass3_rdmap": {
+      "completion_date": "2025-12-04T10:30:00Z",
+      "research_designs_count": 5,
+      "methods_count": 5,
+      "protocols_count": 10,
+      "notes": "Multi-case study design with thematic analysis. Methods primarily qualitative (case studies, document analysis) with quantitative cost-benefit metrics. Protocols include software customisation, data archiving, and field deployment procedures."
+    },
+    "pass7_validation": {
+      "completion_date": "2025-12-04T10:35:00Z",
+      "validation_status": "passed",
+      "cross_reference_check": "All claim-evidence links verified; all RDMAP cross-references consistent",
+      "notes": "Extraction structurally complete. Methodological paper with emphasis on reflective practice and deployment evaluation."
+    },
+    "section_extracted": "Full paper - all sections",
+    "claims_evidence_extraction_complete": true,
+    "rdmap_extraction_complete": true,
+    "known_limitations": ["No page numbers available in markdown source", "Cost metrics are reported values not independently verified", "User feedback informal rather than systematically collected"],
+    "assessment_blockers": []
+  }
+}

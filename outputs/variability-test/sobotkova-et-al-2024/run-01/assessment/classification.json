@@ -1,39 +1,73 @@
 {
-  "paper_id": "sobotkova-et-al-2024",
-  "classification_date": "2025-12-01",
-  "run_id": "run-01",
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-12-04",
+    "classifier_version": "v0.2-alpha"
+  },
+
   "paper_type": "empirical",
-  "research_approach": {
-    "expressed": {
-      "approach": "none_stated",
-      "confidence": "high",
-      "evidence": "No explicit methodological framing (deductive/inductive) stated"
+  "paper_type_justification": "This paper collects and analyses empirical data about CNN model performance against field-verified archaeological features (burial mounds). The research question targets phenomena in the world (predicting mound locations from satellite imagery). Claims describe and explain model performance outcomes. Methods (CNN training, field validation) are tools used to investigate effectiveness of machine learning for archaeological site detection, not the subject being investigated. Primary contribution is understanding whether transfer learning CNN models can reliably detect burial mounds, with actionable conclusions about ML viability for archaeological survey.",
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "deductive",
+    "evidence": [
+      "Methods section states: 'We focus here on exploring improvements to our CNN's performance. We hypothesised that if we curate the input training data, we can improve the results.'",
+      "Introduction frames study as testing predictions: 'we present the validation of our 2021 model predictions against the archaeological record to determine what we actually found: mounds, non-mounds or something else'",
+      "Research design RD003: 'Field validation design - Compare model predictions to ground-truthed archaeological data'"
+    ],
+    "source_sections": ["introduction", "methods"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "deductive",
+    "evidence": {
+      "claims_structure": "Claims test predictions and evaluate hypotheses: C001 'Transfer learning CNN models achieve high self-reported F1 scores but fail catastrophically when predictions are validated against field data', C003 'The first CNN run produced F1=0.87 but only 10 out of 174 high-probability predictions were actual mounds (5.7% true positive rate)', C011 'Curated training data (2022 run) increased mound capture rate from 14% to 25%'. These are hypothesis tests comparing predicted vs observed outcomes.",
+      "methods_application": "Methods M003 'Performance evaluation' and M004 'Field validation' implement systematic hypothesis testing: CNN predictions compared against pre-existing field data to test whether models can detect mounds. M002 'Training data preparation' explicitly tests hypothesis about curated vs uncurated data affecting performance.",
+      "analytical_workflow": "Hypothesis (transfer learning can detect mounds, curation improves performance) → Model training → Prediction generation → Field validation against ground truth → Confirmation/rejection of hypothesis. Deductive workflow: predictions from theory tested against empirical data. Two CNN runs (2021 uncurated, 2022 curated) constitute quasi-experimental comparison testing curation hypothesis."
     },
-    "revealed": {
-      "approach": "deductive",
-      "confidence": "high",
-      "evidence": "Tests pre-existing hypothesis about CNN effectiveness; applies established transfer learning approach to new domain; validates predictions against independent ground truth"
-    },
-    "comparison": {
-      "match": false,
-      "mismatch_type": "none_stated_vs_deductive",
-      "harking_risk": "low",
-      "notes": "Paper demonstrates clear deductive structure (hypothesis testing with external validation) without explicitly labelling it as such"
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Paper explicitly states hypothesis about curated training data improving CNN performance in Methods section. Actual analysis tests this hypothesis systematically across two model runs (2021 uncurated baseline, 2022 curated intervention). Results are interpreted in terms of hypothesis confirmation (partial: curation helped but not enough to make method viable). Methodological transparency is high - hypotheses stated before results presented."
+  },
+
+  "primary_classification": {
+    "approach": "deductive",
+    "confidence": "high",
+    "justification": "This is deductive hypothesis-testing research. The paper states an explicit hypothesis ('if we curate the input training data, we can improve the results') in the Methods section before presenting results. The analytical workflow follows deductive sequence: theoretical prediction (transfer learning should work) → operationalised hypothesis (curation improves performance) → systematic test (two CNN runs with field validation) → confirmation/rejection. Claims evaluate predicted outcomes against observed outcomes. The 2021 vs 2022 comparison constitutes quasi-experimental design testing curation intervention. Classification confidence is high because both expressed and revealed approaches are clearly deductive with no discrepancy."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": false
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Explicit hypothesis stated in Methods section. Research design clearly framed as testing whether transfer learning CNN models can detect archaeological features. Field validation methodology documented. The paper is notably transparent about methodological limitations and model failures. Transparency reduced only by undocumented computational details (software versions, hyperparameters, data splits) - methodological framing itself is highly transparent."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "deductive_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["validity", "robustness", "reproducibility"],
+      "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
+      "deemphasised_signals": ["generalisability"],
+      "rationale": "Deductive research framework. Primary signals: (1) Validity - evidence adequacy for testing CNN performance hypothesis (field validation against ground truth), (2) Robustness - sensitivity to model parameters and training data choices (tested via 2021 vs 2022 comparison), (3) Reproducibility - code repositories provided but computational environment underdocumented. Generalisability appropriately constrained - single case study in Kazanlak Valley, authors explicitly note findings may not generalise to other landscapes or feature types."
     }
   },
-  "mixed_methods": {
-    "is_mixed": false,
-    "components": []
-  },
-  "domain_classification": {
-    "primary_domain": "digital_archaeology",
-    "secondary_domains": ["remote_sensing", "machine_learning"],
-    "methodological_tradition": "quantitative_empirical"
-  },
-  "context_flags": {
-    "software_tool_paper": false,
-    "negative_results": true,
-    "replication_study": false,
-    "methodological_paper": false
-  }
+
+  "classification_notes": "Exemplary methodological transparency for ML validation study. Paper is unusually honest about model failures and limitations. The quasi-experimental design (comparing uncurated 2021 baseline to curated 2022 intervention) provides robust test of curation hypothesis. Key strength: field validation against independently collected ground truth data. Key limitation: single geographic case study limits generalisability claims."
 }

@@ -1,0 +1,631 @@
+
+ ▐▛███▜▌   Claude Code v2.0.58
+▝▜█████▛▘  Opus 4.5 · Claude Max
+  ▘▘ ▝▝    ~/Code/llm-reproducibility
+══════════════════ Conversation compacted · ctrl+o for history ═════════════════
+  ⎿  Referenced file 
+     outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json
+  ⎿  Referenced file extraction-system/prompts/06-infrastructure_pass6_prompt.md
+  ⎿  Referenced file extraction-system/prompts/07-validation_prompt.md
+  ⎿  Referenced file input/sources/processed-md/sobotkova-et-al-2016.md
+  ⎿ Read .claude/skills/research-assessor/references/checklists/tier-assignment-
+    guide.md (255 lines)
+  ⎿  Todo list read (4 items)
+
+● I'll continue resolving the 4 bidirectional mapping conflicts and then
+  complete the extraction and assessment pipeline.
+
+  Let me read the current state of the extraction.json and fix the
+  conflicts:
+
+● Read(outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json)
+  ⎿  Read 2003 lines
+
+● Now I'll fix the 4 bidirectional mapping conflicts:
+
+  1. E013 → C012: E013.supports_claims includes C012, but C012.supported_by
+  = ["E014", "E015"] - needs E013 added
+  2. RD002 → M001: RD002.implemented_by_methods includes M001, but
+  M001.implements_designs = ["RD001", "RD003"] - needs RD002 added
+  3. RD005 → M001: RD005.implemented_by_methods includes M001, but
+  M001.implements_designs = ["RD001", "RD003"] - needs RD005 added
+  4. RD005 → M002: RD005.implemented_by_methods includes M002, but
+  M002.implements_designs = ["RD001", "RD003"] - needs RD005 added
+
+● Update(outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json)
+  ⎿  Updated                                                               
+     outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json
+     with 1 addition
+       650            "section": "Customising and Deploying the FAIMS 
+             Mobile Platform"
+       651          },
+       652          "supported_by": [
+       653 +          "E013",
+       654            "E014",
+       655            "E015"
+       656          ],
+
+● Update(outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json)
+  ⎿  Updated                                                               
+     outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json
+     with 3 additions and 1 removal
+       1517          },
+       1518          "implements_designs": [
+       1519            "RD001",
+       1520 -          "RD003"
+       1520 +          "RD002",
+       1521 +          "RD003",
+       1522 +          "RD005"
+       1523          ],
+       1524          "realized_through_protocols": [
+       1525            "P001",
+
+● Update(outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json)
+  ⎿  Updated                                                               
+     outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json
+     with 2 additions and 1 removal
+       1541          },
+       1542          "implements_designs": [
+       1543            "RD001",
+       1544 -          "RD003"
+       1544 +          "RD003",
+       1545 +          "RD005"
+       1546          ],
+       1547          "realized_through_protocols": [
+       1548            "P001",
+
+● All conflicts resolved. Now let me re-run the bidirectional validator to
+  confirm:
+
+● Bash(python3 extraction-system/scripts/validate_bidirectional.py
+      outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json)
+  ⎿ Validating bidirectional mappings in: outputs/variability-test/sobotkov
+    a-et-al-2016/run-01/extraction.json
+    =======================================================================
+    … +20 lines (ctrl+o to expand)
+
+
+
+● All bidirectional mappings now consistent. Let me also run the schema
+  validator to confirm, then add Pass 7 validation notes to extraction_notes
+   and complete Pass 7:
+
+● Bash(python3 extraction-system/scripts/validate_extraction.py
+      outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json)
+  ⎿ Validating extraction against schema: outputs/variability-test/sobotkov
+    a-et-al-2016/run-01/extraction.json
+    =======================================================================
+    … +26 lines (ctrl+o to expand)
+
+
+
+● Both validations pass. Now I'll add Pass 7 validation notes to the
+  extraction_notes:
+
+● Update(outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json)
+  ⎿  Updated                                                               
+     outputs/variability-test/sobotkova-et-al-2016/run-01/extraction.json
+     with 15 additions
+       2002          "fair_percentage": 50.0,
+       2003          "extraction_approach": "Full infrastructure 
+              extraction with FAIR assessment",
+       2004          "notes": "2016 book chapter with minimal PID 
+              infrastructure but good software availability via GitHub. 
+              No formal data/code availability statements. Supplementary 
+              materials include module definitions and project director 
+              communications."
+       2005 +      },
+       2006 +      "pass7_validation": {
+       2007 +        "completion_date": "2025-12-04T00:00:00Z",
+       2008 +        "validation_checks": {
+       2009 +          "schema_validation": "PASSED",
+       2010 +          "bidirectional_mapping": "PASSED",
+       2011 +          "duplicate_ids": "PASSED",
+       2012 +          "reference_integrity": "PASSED"
+       2013 +        },
+       2014 +        "corrections_applied": [
+       2015 +          "Added E013 to C012.supported_by",
+       2016 +          "Added RD002, RD005 to M001.implements_designs",
+       2017 +          "Added RD005 to M002.implements_designs"
+       2018 +        ],
+       2019 +        "notes": "Initial bidirectional validation found 4 
+            + conflicts requiring manual resolution. All resolved by 
+            + adding missing reverse references. Final validation: 0 
+            + errors."
+       2020        }
+       2021      }
+       2022    }
+       2023   \ No newline at end of file
+
+● Pass 0-7 extraction complete. Now I need to update the todo list and
+  proceed to Pass 8-10 assessment pipeline. Let me first check what the
+  assessment prompts require:
+
+● Search(pattern: "**/assessment*/**/*.md")
+  ⎿  Found 100 files (ctrl+o to expand)
+
+● Search(pattern: "**/*pass8*.md")
+  ⎿  Found 0 files 
+
+● Let me check the assessment system README and the main assessment prompt
+  to understand what Pass 8-10 requires:
+
+● Read(assessment-system/README.md)
+  ⎿  Read 484 lines
+
+● Read(input/variability-queue.yaml)
+  ⎿  Read 188 lines
+
+● I can see that the assessment system is different from Passes 8-10.
+  Looking at previous completed runs, they have fields like aggregate_score
+  and cluster_ratings. Let me check the assessment prompts to understand the
+   credibility assessment:
+
+● Read(assessment-system/prompts/track-a-quality-gating.md)
+  ⎿  Read 506 lines
+
+● Search(pattern: "**/cluster-*.md", path: "assessment-system/prompts")
+  ⎿  Found 3 files (ctrl+o to expand)
+
+● I see the assessment pipeline. For Pass 8-10, I need to:
+  1. Pass 8: Create classification.json (research approach classification)
+  2. Track A: Quality gating - track-a-quality.md
+  3. Pass 9: Cluster assessments (Clusters 1-3)
+  4. Pass 10: Final credibility report
+
+  Let me check an example of a completed run's assessment outputs to
+  understand the format:
+
+● Bash(ls -la outputs/variability-test/penske-et-al-2023/run-01/)
+  ⎿  total 168                                      
+     drwxrwxr-x 3 shawn shawn   4096 Dec  1 17:30 .
+     drwxrwxr-x 7 shawn shawn   4096 Dec  2 18:07 ..
+     … +2 lines (ctrl+o to expand)
+
+● Search(pattern: "**/classification.json", path: "outputs/variability-test")
+  ⎿  Found 22 files (ctrl+o to expand)
+
+● Read(outputs/variability-test/penske-et-al-2023/run-02/assessment/classificati
+      on.json)
+  ⎿  Read 83 lines
+
+● Bash(ls -la outputs/variability-test/penske-et-al-2023/run-02/assessment/)
+  ⎿  total 76                                      
+     drwxrwxr-x 2 shawn shawn  4096 Dec  2 15:01 .
+     drwxrwxr-x 3 shawn shawn  4096 Dec  2 14:42 ..
+     … +9 lines (ctrl+o to expand)
+
+● Now I understand the full assessment pipeline structure. Let me create the
+   assessment folder and produce all the required files for Pass 8-10. I'll
+  start with Pass 8 (classification.json):
+
+● Bash(mkdir -p outputs/variability-test/sobotkova-et-al-2016/run-01/assessment)
+  ⎿  (No content)
+
+● Write(outputs/variability-test/sobotkova-et-al-2016/run-01/assessment/classifi
+       cation.json)
+  ⎿  Wrote 83 lines to outputs/variability-test/sobotkova-et-al-2016/run-01
+     assessment/classification.json
+     {
+       "classification_metadata": {
+         "classified_after_pass": 7,
+         "classification_date": "2025-12-04",
+         "classifier_version": "v0.2-alpha"
+       },
+       "paper_type": "methodological",
+       "paper_type_justification": "This paper presents case studies of 
+     software deployment (FAIMS mobile platform) rather than investigating 
+     archaeological phenomena directly. The primary contribution is 
+     methodological guidance about co-development processes, cost-benefit 
+     analysis, and lessons learned from deploying generalised field 
+     recording software. Claims focus on software effectiveness, deployment 
+     practices, and co-development principles rather than archaeological 
+     discoveries. The three case studies (Boncuklu, MEMSAP, PAZC) serve as 
+     vehicles for demonstrating the platform's capabilities and extracting 
+     generalisable lessons about digital recording in archaeology.",
+
+     … +73 lines (ctrl+o to expand)
+
+● Now Track A Quality Gating:
+
+● Write(outputs/variability-test/sobotkova-et-al-2016/run-01/assessment/track-a-
+       quality.md)
+  ⎿  Wrote 99 lines to outputs/variability-test/sobotkova-et-al-2016/run-01
+     assessment/track-a-quality.md
+     # Track A Quality Assessment
+     ## Quality State: HIGH
+     **Paper:** sobotkova-et-al-2016
+     **Assessment Date:** 2025-12-04
+     **Assessor Version:** v1.0
+     **Decision:** Proceed with full credibility assessment
+     … +89 lines (ctrl+o to expand)
+
+● Now Cluster 1 (Foundational Clarity) assessment:
+
+● Read(assessment-system/prompts/cluster-1-foundational-clarity.md)
+  ⎿  Read 538 lines
+
+● Write(outputs/variability-test/sobotkova-et-al-2016/run-01/assessment/cluster-
+       1-foundational-clarity.md)
+  ⎿  Wrote 147 lines to outputs/variability-test/sobotkova-et-al-2016/run-0
+     /assessment/cluster-1-foundational-clarity.md
+     # Cluster 1: Foundational Clarity Assessment
+     **Paper:** sobotkova-et-al-2016
+     **Assessment Date:** 2025-12-04
+     **Assessor Version:** v1.0
+     **Quality State:** HIGH
+     **Research Approach:** inductive
+     **Paper Type:** methodological
+     … +137 lines (ctrl+o to expand)
+
+● Now Cluster 2 (Evidential Strength):
+
+● Read(assessment-system/prompts/cluster-2-evidential-strength.md)
+  ⎿  Read 670 lines
+
+● Write(outputs/variability-test/sobotkova-et-al-2016/run-01/assessment/cluster-
+       2-evidential-strength.md)
+  ⎿  Wrote 245 lines to outputs/variability-test/sobotkova-et-al-2016/run-0
+     /assessment/cluster-2-evidential-strength.md
+     # Cluster 2: Evidential Strength Assessment
+     **Paper:** sobotkova-et-al-2016
+     **Assessment Date:** 2025-12-04
+     **Assessor Version:** v1.0
+     **Quality State:** HIGH
+     **Research Approach:** inductive (confidence: high)
+     **Paper Type:** methodological
+     **Context Flag:** 📦 Software/Methodological paper
+     (descriptive/artefact genre)
+     … +235 lines (ctrl+o to expand)
+
+● Now Cluster 3 (Reproducibility):
+
+● Read(assessment-system/prompts/cluster-3-reproducibility.md)
+  ⎿  Read 556 lines
+
+● Write(outputs/variability-test/sobotkova-et-al-2016/run-01/assessment/cluster-
+       3-reproducibility.md)
+  ⎿  Wrote 198 lines to outputs/variability-test/sobotkova-et-al-2016/run-0
+     /assessment/cluster-3-reproducibility.md
+     # Cluster 3: Reproducibility Assessment
+     **Paper:** sobotkova-et-al-2016
+     **Assessment Date:** 2025-12-04
+     **Assessor Version:** v1.0
+     **Quality State:** HIGH
+     **Research Approach:** inductive (confidence: high)
+     **Paper Type:** methodological
+     **Assessment Pathway:** methodological_transparency_variant
+     … +188 lines (ctrl+o to expand)
+
+● Now the final credibility report (Pass 10):
+
+● Write(outputs/variability-test/sobotkova-et-al-2016/run-01/assessment/credibil
+       ity-report.md)
+  ⎿  Wrote 205 lines to outputs/variability-test/sobotkova-et-al-2016/run-0
+     /assessment/credibility-report.md
+     # Credibility Assessment Report
+     **Paper:** Sobotkova et al. 2016 — "Measure Twice, Cut Once:
+     Cooperative Deployment of a Generalized, Archaeology-Specific Field
+     Data Collection System"
+     **Assessment Date:** 2025-12-04
+     **Assessor Version:** v1.0 (Opus 4.5)
+     **Run:** run-01 (variability test)
+     ---
+     ## Executive Summary
+     … +195 lines (ctrl+o to expand)
+
+● Pass 8-10 assessment pipeline complete. Now update the variability queue
+  and run validation:
+
+● Update(input/variability-queue.yaml)
+  ⎿  Updated input/variability-queue.yaml with 10 additions and 5 removals
+       162            cluster_ratings: {c1_foundational_clarity: 
+             adequate, c2_evidential_strength: strong, 
+             c3_reproducibility: adequate}
+       163            notes: "Full 10-pass extraction + assessment. 
+             Verdict: GOOD. FAIR: moderate. Interpretive philology, no 
+             computational component. 🔧 methodological transparency 
+             variant applied."
+       164    
+       165 -    # Paper 5: sobotkova-et-al-2016 (Empirical/Mixed) - 
+           - PENDING
+       165 +    # Paper 5: sobotkova-et-al-2016 
+           + (Methodological/Inductive) - IN PROGRESS
+       166      - slug: sobotkova-et-al-2016
+       167        title: "Measure Twice, Cut Once: Cooperative Deployment
+              of a Generalized, Archaeology-Specific Field Data 
+             Collection System"
+       168        source: input/sources/original-pdf/Sobotkova et al. - 
+             2016 - Measure Twice, Cut Once Cooperative Deployment of a 
+             Generalized, Archaeology-Specific Field Data Collection 
+             System.pdf
+       169 -      paper_type: empirical
+       170 -      research_approach: mixed
+       171 -      status: pending
+       169 +      paper_type: methodological
+       170 +      research_approach: inductive
+       171 +      context_flags: ["📦"]
+       172 +      status: in_progress
+       173        runs:
+       174          - id: run-01
+       175 -          status: pending
+       175 +          status: completed
+       176 +          counts: {evidence: 35, claims: 50, 
+           + implicit_arguments: 8, research_designs: 5, methods: 4, 
+           + protocols: 5}
+       177 +          aggregate_score: 68
+       178 +          cluster_ratings: {c1_foundational_clarity: strong, 
+           + c2_evidential_strength: adequate, c3_reproducibility: 
+           + adequate}
+       179 +          notes: "Full 10-pass extraction + assessment. 
+           + Verdict: GOOD. FAIR: 8/16 (50%). GPLv3 GitHub. 
+           + Methodological case study with exemplary software 
+           + transparency."
+       180          - id: run-02
+       181            status: pending
+       182          - id: run-03
+
+● Also need to update the progress summary and current paper/run:
+
+● Update(input/variability-queue.yaml)
+  ⎿  Updated input/variability-queue.yaml with 1 addition and 1 removal
+       11    # Status values: pending | in_progress | completed | error
+       12    
+       13    current_paper: sobotkova-et-al-2016
+       14 -  current_run: run-01
+       14 +  current_run: run-02
+       15    
+       16    papers:
+       17      # Paper 1: sobotkova-et-al-2024 (Empirical/Deductive) - 
+            COMPLETED
+
+● Update(input/variability-queue.yaml)
+  ⎿  Updated input/variability-queue.yaml with 2 additions and 2 removals
+       188    
+       189    # Progress summary
+       190    # Total runs: 25 (5 papers × 5 runs)
+       191 -  # Completed: 20
+           -   (Paper 1: 5, Paper 2: 5, Paper 3: 5, Paper 4: 5)
+       192 -  # Pending: 5 (Paper 5: 5)
+       191 +  # Completed: 21
+           +   (Paper 1: 5, Paper 2: 5, Paper 3: 5, Paper 4: 5
+           +  , Paper 5: 1)
+       192 +  # Pending: 4 (Paper 5: 4)
+
+● Now run the validation script:
+
+● Bash(ls -la scripts/validate-run-uniqueness.sh 2>/dev/null || ls -la
+      scripts/*.sh 2>/dev/null | head -20)
+  ⎿ -rwx--x--x 1 shawn shawn 4739 Dec  1 17:02 scripts/validate-run-uniquen
+    ess.sh
+
+
+● Bash(./scripts/validate-run-uniqueness.sh
+      outputs/variability-test/sobotkova-et-al-2016/)
+  ⎿ Checking content uniqueness for: outputs/variability-test/sobotkova-et-
+    al-2016/
+    Found 1 extraction files
+    … +15 lines (ctrl+o to expand)
+
+
+● Validation complete. Let me update the todo list and provide a summary:
+
+● Run Complete: sobotkova-et-al-2016 run-01
+
+  Full pipeline executed successfully.
+
+  Extraction Summary (Pass 0-7)
+
+  | Item Type          | Count |
+  |--------------------|-------|
+  | Evidence           | 35    |
+  | Claims             | 50    |
+  | Implicit Arguments | 8     |
+  | Research Designs   | 5     |
+  | Methods            | 4     |
+  | Protocols          | 5     |
+
+  Assessment Summary (Pass 8-10)
+
+  | Cluster                  | Rating   | Signals
+                                          |
+  |--------------------------|----------|-----------------------------------
+  ----------------------------------------|
+  | C1: Foundational Clarity | Strong   | Comprehensibility: 78,
+  Transparency: 72                                   |
+  | C2: Evidential Strength  | Adequate | Plausibility: 75, Validity: 68,
+  Robustness: 52 (📦), Generalisability: 70 |
+  | C3: Reproducibility      | Adequate | Reproducibility: 62
+  (methodological transparency variant)                 |
+
+  Aggregate Score: 68
+  Verdict: GOOD
+  FAIR Score: 8/16 (50%, minimally fair)
+
+  Files Created
+
+  outputs/variability-test/sobotkova-et-al-2016/run-01/
+  ├── extraction.json
+  └── assessment/
+      ├── classification.json
+      ├── track-a-quality.md
+      ├── cluster-1-foundational-clarity.md
+      ├── cluster-2-evidential-strength.md
+      ├── cluster-3-reproducibility.md
+      └── credibility-report.md
+
+  Validation
+
+  ✅ All content arrays have unique values (run-01 is the only run so far)
+
+  Next Pending Run
+
+  Paper: sobotkova-et-al-2016
+  Run: run-02
+  Remaining: 4 runs for Paper 5
+
+> ah, apologies, I meant to ask, can you give me a brief, high-level 
+overview of consistency / variability of the *ross 2005* extractions? 
+
+● Looking at the ross-2005 runs from the variability queue:
+
+  Ross 2005 Variability Overview
+
+  Item Counts Across 5 Runs
+
+  | Item Type        | Run 1 | Run 2 | Run 3 | Run 4 | Run 5 | Range      |
+  |------------------|-------|-------|-------|-------|-------|------------|
+  | Evidence         | 21    | 16    | 21    | 17    | 21    | 16-21      |
+  | Claims           | 31    | 29    | 30    | 23    | 26    | 23-31      |
+  | Implicit Args    | 8     | 8     | 8     | 8     | 8     | 8 (stable) |
+  | Research Designs | 2     | 2     | 2     | 2     | 2     | 2 (stable) |
+  | Methods          | 2     | 3     | 3     | 3     | 3     | 2-3        |
+  | Protocols        | 2     | 0     | 0     | 2     | 0     | 0-2        |
+
+  Assessment Scores
+
+  | Run | Aggregate | C1                 | C2     | C3       |
+  |-----|-----------|--------------------|--------|----------|
+  | 1   | 69        | strong             | strong | adequate |
+  | 2   | 67        | adequate           | strong | adequate |
+  | 3   | 65        | adequate           | strong | adequate |
+  | 4   | 70        | adequate-to-strong | strong | adequate |
+  | 5   | 65        | adequate           | strong | adequate |
+
+  Score range: 65-70 (5-point spread)
+
+  Key Observations
+
+  1. Most stable: Implicit arguments (8) and research designs (2) were
+  identical across all runs
+  2. Most variable: Protocols (0-2) and claims (23-31) showed the widest
+  relative variation
+  3. Assessment consistency: C2 (Evidential Strength) was consistently
+  "strong" across all runs; C3 consistently "adequate"
+  4. C1 variation: Foundational Clarity ranged from "adequate" to "strong"
+
+  This is an interpretive philology paper with no computational component,
+  which likely contributes to some extraction variability in how qualitative
+   claims are segmented.
+
+> thank you - I think we need to mark the pipeline 'experimental' for 
+literature-based studies like this one and come back to it later, since this
+ appears to be the only paper that had varying categorisation (at least for 
+C1). Can you put those things on the current working notes / to-do list? 
+
+● Let me find the current working notes/to-do list:
+
+● Search(pattern: "**/active-todo*.md")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Search(pattern: "**/working-notes*.md")
+  ⎿  Found 0 files 
+
+● Search(pattern: "planning/*.md")
+  ⎿  Found 4 files (ctrl+o to expand)
+
+● Read(planning/active-todo-list.md)
+  ⎿  Read 894 lines
+
+● Update(planning/active-todo-list.md)
+  ⎿  Updated planning/active-todo-list.md with 44 additions              
+       716    
+       717    ---
+       718    
+       719 +  ### 8a. Variability Test Findings and Follow-Up
+       720 +  
+       721 +  **Priority:** MEDIUM
+       722 +  **Status:** IN PROGRESS - 21/25 runs complete
+       723 +  **Last Updated:** 2025-12-04
+       724 +  
+       725 +  **Preliminary Findings from ross-2005 (interpretive 
+           + philology):**
+       726 +  
+       727 +  This paper showed the only instance of varying cluster 
+           + categorisation (C1: Foundational Clarity) across 5 runs:
+       728 +  - C1 ranged from "adequate" to "strong" (runs 2,3,5 = 
+           + adequate; runs 1,4 = strong/adequate-to-strong)
+       729 +  - C2 (Evidential Strength) was consistently "strong" across
+           +  all runs
+       730 +  - C3 (Reproducibility) was consistently "adequate" across 
+           + all runs
+       731 +  
+       732 +  Item count variability:
+       733 +  | Item | Range | Notes |
+       734 +  |------|-------|-------|
+       735 +  | Evidence | 16-21 | ~25% variation |
+       736 +  | Claims | 23-31 | ~35% variation |
+       737 +  | Implicit Args | 8 | **Stable** |
+       738 +  | Research Designs | 2 | **Stable** |
+       739 +  | Methods | 2-3 | Minor variation |
+       740 +  | Protocols | 0-2 | High relative variation |
+       741 +  
+       742 +  Aggregate scores: 65-70 (5-point spread)
+       743 +  
+       744 +  **Action Items:**
+       745 +  
+       746 +  - [ ] **Mark pipeline "experimental" for 
+           + literature-based/interpretive studies** like ross-2005
+       747 +    - These papers lack computational components and have 
+           + inherently more interpretive extraction
+       748 +    - C1 categorisation instability suggests assessment 
+           + anchors may need refinement for this paper type
+       749 +    - Consider whether methodological transparency variant 
+           + (used for C3) should also apply to C1/C2
+       750 +  
+       751 +  - [ ] **Revisit ross-2005 after completing 
+           + sobotkova-et-al-2016 variability runs**
+       752 +    - Compare variability patterns between methodological and
+           +  interpretive papers
+       753 +    - Assess whether instability is genre-specific or a 
+           + broader issue
+       754 +  
+       755 +  - [ ] **Document "experimental" flag in assessment outputs 
+           + for literature-based studies**
+       756 +    - Flag should appear in classification.json and 
+           + credibility-report.md
+       757 +    - Note that scores may have higher variance than 
+           + empirical/methodological papers
+       758 +  
+       759 +  **Context:** ross-2005 is the only paper in the variability
+           +  corpus that is purely interpretive (Homeric philology). 
+           + Other papers have computational or empirical components with
+           +  clearer reproducibility expectations.
+       760 +  
+       761 +  ---
+       762 +  
+       763    ## Low Priority / Nice to Have
+       764    
+       765    ### 9. Additional Documentation (DEFERRED)
+
+● Update(planning/active-todo-list.md)
+  ⎿  Updated planning/active-todo-list.md with 2 additions and 2 removals
+       1    # Active To-Do List
+       2    
+       3 -  **Last Updated:** 2025-11-17
+       4 -  **Status:** Phase 7 (Credibility Assessment) Step 2/7 
+         - complete - Classification prompt created, ready for testing
+       3 +  **Last Updated:** 2025-12-04
+       4 +  **Status:** Phase 7 (Credibility Assessment) - Variability 
+         + test in progress (21/25 runs complete)
+       5    
+       6    ---
+       7    
+
+● Done. I've added Section 8a "Variability Test Findings and Follow-Up" to
+  the active to-do list with:
+
+  Findings documented:
+  - ross-2005 C1 categorisation variation (only paper showing this)
+  - Item count ranges and stability patterns
+  - Context that it's the only purely interpretive paper in the corpus
+
+  Action items added:
+  - Mark pipeline "experimental" for literature-based/interpretive studies
+  - Revisit ross-2005 after completing sobotkova-et-al-2016 runs
+  - Document "experimental" flag in assessment outputs
+
+  Also updated the header to reflect current status (21/25 runs complete).
+
+
+

@@ -1,14 +1,82 @@
 {
-  "paper_id": "sobotkova-et-al-2024",
-  "classification_date": "2025-12-01",
-  "run_id": "run-05",
-  "paper_type": "empirical",
-  "research_approach": {
-    "expressed": {"approach": "none_stated", "confidence": "high", "evidence": "No explicit methodological framing"},
-    "revealed": {"approach": "deductive", "confidence": "high", "evidence": "Hypothesis-testing with external validation"},
-    "comparison": {"match": false, "mismatch_type": "none_stated_vs_deductive", "harking_risk": "low", "notes": "Clear deductive practice without explicit labelling"}
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2025-12-06",
+    "classifier_version": "v0.2-alpha"
   },
-  "mixed_methods": {"is_mixed": false, "components": []},
-  "domain_classification": {"primary_domain": "digital_archaeology", "secondary_domains": ["remote_sensing", "machine_learning"], "methodological_tradition": "quantitative_empirical"},
-  "context_flags": {"software_tool_paper": false, "negative_results": true, "replication_study": false, "methodological_paper": false}
+
+  "paper_type": "empirical",
+  "paper_type_justification": "This paper collects and analyses empirical data about phenomena (burial mound detection using CNN). The research question targets archaeological feature detection in the real world, not the development of a new method. Claims describe and explain empirical findings (detection rates, false positive/negative rates). While machine learning methods are central, they are tools used to investigate archaeological prospection—not the subject being investigated. The primary contribution is understanding whether CNN-based detection works for burial mounds, supported by field validation against ground-truth survey data.",
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "deductive",
+    "evidence": [
+      "Introduction: 'The purpose of this study is to explore how ML, specifically a CNN, could be trained to detect ancient burial mounds in satellite imagery and then tested using existing field data'",
+      "Abstract: 'tests the practicality of transfer learning to extend a state-of-the-art, pretrained CNN model'",
+      "Methods: Two model runs with specific configurations tested against pre-existing field data",
+      "Assessment section explicitly designed to validate model predictions against ground-truth"
+    ],
+    "source_sections": ["abstract", "introduction", "methods", "assessment"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "deductive",
+    "evidence": {
+      "claims_structure": "Claims are empirical findings testing model performance: C01 'Validation of results against field data showed that self-reported success rates were misleadingly high', C10 'Although the first model reported a good fit (F1 = 0.87), validation with field data showed the model was confusing our target features'. These are hypothesis-test style claims comparing predicted vs actual performance.",
+      "methods_application": "M02 (CNN transfer learning) and M03 (spatial validation against ground-truth) form a deductive testing workflow. Model predictions were systematically compared against independently collected field survey data (773 mounds). The 60% probability threshold was set a priori for validation.",
+      "analytical_workflow": "Train model → Generate predictions → Validate against ground-truth → Calculate performance metrics (true positive, false positive, false negative rates). This is a classic hypothesis-testing workflow: the implicit hypothesis is that the CNN will reliably detect burial mounds, and validation data tests this prediction."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Paper explicitly frames the study as testing whether CNN can detect burial mounds, and actually conducts systematic validation against field data. The approach is consistent: train model, generate predictions, validate against independent ground-truth. No post-hoc hypothesis formation; the validation framework was established before results were known. Methodological transparency is high."
+  },
+
+  "primary_classification": {
+    "approach": "deductive",
+    "confidence": "high",
+    "justification": "This is clearly deductive research. The paper tests a specific prediction: that a CNN trained on mound imagery will reliably detect burial mounds in the study area. This prediction is tested against pre-existing field survey data (773 mounds from TRAP 2009-2011). The analytical workflow follows hypothesis-testing logic: model training → prediction generation → validation against independent data → performance assessment. Results (95-96% false negative rates, 87-95% false positive rates) definitively reject the hypothesis. The revealed approach matches the expressed approach. Both model runs (2021 with all mounds, 2022 with visible mounds only) follow the same deductive validation framework."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": true,
+    "primary_approach": "deductive",
+    "secondary_approaches": ["inductive"],
+    "qualifications": [
+      "Primary: Deductive hypothesis testing through CNN validation against field data",
+      "Secondary: Inductive literature review component analysing 70 papers from Web of Science to contextualise ML adoption in archaeological remote sensing",
+      "The literature review (inductive) serves contextual framing; the core contribution is the deductive validation study",
+      "Mixed design is appropriate and well-executed with clear phase separation"
+    ]
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Explicit research design with clear validation framework. Methods section describes CNN training approach (transfer learning with ResNet-50), training data preparation (773 cutouts, 1:2 positive:negative ratio, 70:20:10 split), and validation methodology (60% probability threshold, spatial overlap detection). Ground-truth data source (TRAP survey 2009-2011) clearly documented. Two-run comparative design explicitly described. High methodological transparency throughout."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "deductive_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["validity", "robustness", "reproducibility"],
+      "secondary_signals": ["transparency", "comprehensibility", "plausibility"],
+      "deemphasised_signals": ["generalisability"],
+      "rationale": "Deductive research emphasis: (1) Validity - evidence adequacy for testing CNN detection hypothesis (strong: independent ground-truth data from prior survey), (2) Robustness - sensitivity to analytical choices (addressed through two-run comparison with different training data), (3) Reproducibility - code/data sharing for reproduction (GitHub repositories mentioned). Transparency already high. Generalisability appropriately constrained to Kazanlak Valley context."
+    }
+  },
+
+  "classification_notes": "Strong deductive validation study with clear hypothesis-testing framework. The paper's strength is its systematic validation against independent field data, which exposes the gap between model self-reported performance (F1=0.87) and real-world utility (95-96% false negative rates). Literature review component is secondary but adds valuable context about publication bias in archaeological ML research. No classification ambiguities."
 }

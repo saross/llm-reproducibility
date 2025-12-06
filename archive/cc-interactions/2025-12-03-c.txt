@@ -92,5 +92,62 @@
   extraction variability. This is the desired behaviour — robust assessment
   that doesn't depend on precise item counts.
 
+> /export archive/cc-interactions/2025-12-03-c.txt 
+  ⎿  Conversation exported to: archive/cc-interactions/2025-12-03-c.txt
+
+> great - can you please commit and push everything before we continue with 
+the next run?
+
+● Bash(git status)
+  ⎿  On branch main                               
+     Your branch is up to date with 'origin/main'.
+     … +25 lines (ctrl+o to expand)
+
+● Bash(git log --oneline -5)
+  ⎿ fe8ae11 docs: add comprehensive variability test protocol documentation
+    7d4ee4b feat(variability-test): add queue-driven automation and reset P
+    aper 2
+    … +5 lines (ctrl+o to expand)
+
+
+
+● Bash(git add input/variability-queue.yaml
+      outputs/variability-test/ballsun-stanton-et-al-2018/
+      outputs/variability-test/penske-et-al-2023/ outputs/variability-test/p…)
+  ⎿  (No content)
+
+● Bash(git diff --cached --stat | head -30)
+  ⎿   archive/cc-interactions/2025-12-01-d.txt           | 1767 ++++++++
+      archive/cc-interactions/2025-12-01-e.txt           |  290 ++
+      archive/cc-interactions/2025-12-01-f.txt           |   78 +
+     … +28 lines (ctrl+o to expand)
+
+● Bash(git commit -m "feat(variability-test): complete Papers 2-3 with full
+      5-run extractions…)
+  ⎿ [main 56388a8] feat(variability-test): complete Papers 2-3 with full 5-
+    run extractions
+     85 files changed, 40593 insertions(+), 19 deletions(-)
+    … +155 lines (ctrl+o to expand)
+
+
+● Bash(git push)
+  ⎿  To github.com:saross/llm-reproducibility.git
+        fe8ae11..56388a8  main -> main
+
+● Bash(git status && git log --oneline -1)
+  ⎿  On branch main                               
+     Your branch is up to date with 'origin/main'.
+     … +3 lines (ctrl+o to expand)
+
+● Done. Committed and pushed:
+
+  56388a8 feat(variability-test): complete Papers 2-3 with full 5-run
+  extractions
+
+  85 files changed, 40,593 insertions. Working tree clean.
+
+  Progress: 15/25 runs completed (60%)
+  Next up: Paper 4 (ross-2005) — run-01 through run-05
+
 
 
