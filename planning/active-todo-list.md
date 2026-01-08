@@ -1,7 +1,7 @@
 # Active To-Do List
 
-**Last Updated:** 2025-12-04
-**Status:** Phase 7 (Credibility Assessment) - Variability test: 20/25 complete, Paper 1 reset for re-run with context-clearing protocol
+**Last Updated:** 2026-01-08
+**Status:** Phase 7 (Credibility Assessment) - Variability test COMPLETE (25/25 runs), ready for classifier testing (Step 3)
 
 ---
 
@@ -65,6 +65,7 @@
 - classifier_version = "v0.2-alpha"
 
 **Step 3: Test Classifier on 3 Papers** 🔲 (Next)
+- ✅ Variability test complete (25/25 runs) — proceed with classifier testing
 - Test on sobotkova-et-al-2024 (expected: empirical/inductive)
 - Test on ballsun-stanton-et-al-2018 (expected: methodological/software_tool)
   - ⚠️ WARNING: Only has infrastructure-pass6-extraction.json - may need full extraction first
@@ -102,7 +103,7 @@ RUN-08 successfully achieved all extraction goals:
 - ✅ Implicit arguments extraction working (16 items)
 - ✅ High relationship mapping (81% evidence, 57% claims)
 
-**Current Focus:** Credibility assessment implementation (Phase 7) - Step 2 complete (classification prompt), ready for Step 3 (classifier testing on 3 papers with test-retest reliability measurement)
+**Current Focus:** Classifier testing (Step 3) — variability test complete (25/25 runs), ready to test classification prompt on 3 diverse papers with test-retest reliability
 
 ---
 
@@ -719,18 +720,18 @@ Quantify extraction variability and assess completeness through repeated extract
 ### 8a. Variability Test Findings and Follow-Up
 
 **Priority:** MEDIUM
-**Status:** IN PROGRESS - 20/25 runs complete (Paper 1 reset for re-run)
-**Last Updated:** 2025-12-04
+**Status:** ✅ COMPLETE - 25/25 runs (2025-12-06)
+**Last Updated:** 2026-01-08
 
 **Overall Test Status:**
-- Paper 1 (sobotkova-et-al-2024): 0/5 - RESET for re-run with context-clearing protocol
+- Paper 1 (sobotkova-et-al-2024): 5/5 complete (re-run with context-clearing protocol)
 - Paper 2 (penske-et-al-2023): 5/5 complete
 - Paper 3 (ballsun-stanton-et-al-2018): 5/5 complete
 - Paper 4 (ross-2005): 5/5 complete
 - Paper 5 (sobotkova-et-al-2016): 5/5 complete
 
-**Paper 1 Reset Rationale:**
-Original runs did not follow context-clearing protocol established for Paper 2+. Re-running to ensure methodological consistency across all papers. Original runs archived to `archive/variability-test-crashed/sobotkova-et-al-2024-pre-protocol-*` with counts preserved in queue as `previous_counts`.
+**Paper 1 Re-Run Complete:**
+Original runs did not follow context-clearing protocol established for Paper 2+. Re-runs completed 2025-12-06 with fresh context per run. Original runs archived to `outputs/variability-test/sobotkova-et-al-2024-pre-fix/` with counts preserved in queue as `previous_counts`. See `outputs/variability-test/variability-analysis-report.md` for full analysis.
 
 **Preliminary Findings from ross-2005 (interpretive philology):**
 
