@@ -1,7 +1,7 @@
 # Active To-Do List
 
 **Last Updated:** 2026-01-08
-**Status:** Phase 7 (Credibility Assessment) - Variability test COMPLETE (25/25 runs), ready for classifier testing (Step 3)
+**Status:** Phase 7 (Credibility Assessment) - Steps 1-3 complete, ready for Step 4 (Track A quality gating prompt)
 
 ---
 
@@ -64,24 +64,27 @@
 - 5 complete examples including poor-fit taxonomy proposal
 - classifier_version = "v0.2-alpha"
 
-**Step 3: Test Classifier on 3 Papers** 🔲 (Next)
-- ✅ Variability test complete (25/25 runs) — proceed with classifier testing
-- Test on sobotkova-et-al-2024 (expected: empirical/inductive)
-- Test on ballsun-stanton-et-al-2018 (expected: methodological/software_tool)
-  - ⚠️ WARNING: Only has infrastructure-pass6-extraction.json - may need full extraction first
-- Test on penske-et-al-2023 (expected: empirical/deductive)
-- Run each 3 times (9 total runs) for test-retest reliability
-- Measure reliability: SD < 10 threshold
-- Refine prompt based on results
+**Step 3: Test Classifier on 3 Papers** ✅ (2025-12-06 — absorbed into variability test)
+- ✅ Originally planned: 9 runs (3 papers × 3 runs) for classifier reliability
+- ✅ Actually completed: 25 runs (5 papers × 5 runs) via comprehensive variability test
+- ✅ Classification stability: 100% paper_type consistency across all runs
+- ✅ Tested papers (all classified correctly):
+  - [x] sobotkova-et-al-2024 → empirical (5/5 runs)
+  - [x] ballsun-stanton-et-al-2018 → methodological (5/5 runs)
+  - [x] penske-et-al-2023 → empirical (5/5 runs)
+  - [x] ross-2005 → empirical (5/5 runs)
+  - [x] sobotkova-et-al-2016 → methodological (5/5 runs)
+- ✅ Reliability threshold met: aggregate score CV 1.9-3.4% (well under SD < 10)
+- ✅ Results documented in `outputs/variability-test/variability-analysis-report.md`
 
 **Remaining Steps:**
-- Step 4: Create Track A quality gating prompt (1 hour)
+- Step 4: Create Track A quality gating prompt (1 hour) 🔲 (Next)
 - Step 5: Create foundational clarity cluster prompt (1.5 hours)
 - Step 6: Test foundational clarity with reliability checks (1.5 hours)
 - Step 7: Complete remaining cluster prompts (3-4 hours)
 
 **Estimated total effort:** 10-12 hours across all 7 steps
-**Current progress:** Steps 1-2 complete (2.5 hours), Step 3 in progress
+**Current progress:** Steps 1-3 complete, Step 4 next
 
 ### Deferred Documentation Work
 See "Low Priority / Nice to Have" section (Section 9) for:
@@ -103,7 +106,7 @@ RUN-08 successfully achieved all extraction goals:
 - ✅ Implicit arguments extraction working (16 items)
 - ✅ High relationship mapping (81% evidence, 57% claims)
 
-**Current Focus:** Classifier testing (Step 3) — variability test complete (25/25 runs), ready to test classification prompt on 3 diverse papers with test-retest reliability
+**Current Focus:** Step 4 (Track A quality gating prompt) — Steps 1-3 complete, classifier testing absorbed into variability test with 100% paper_type stability
 
 ---
 
