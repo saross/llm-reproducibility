@@ -1,0 +1,117 @@
+# Open Science Compliance Study - Phase 1 Queue
+# Tracks paper processing for the pilot study
+#
+# Workflow per paper:
+# 1. Obtain PDF and extract text
+# 2. Run full extraction pipeline (Pass 0-7)
+# 3. Run classification (Pass 8)
+# 4. Run credibility assessment (Clusters 1-3)
+# 5. Assess FAIR compliance (infrastructure fields)
+# 6. Attempt reproduction (if code+data available)
+# 7. Document findings
+#
+# Status values: pending | in_progress | completed | error | blocked
+
+study_metadata:
+  study_name: "Open Science Compliance Study"
+  phase: 1
+  phase_name: "Exploratory Pilot"
+  target_journal: "Journal of Archaeological Science"
+  selection_date: "2025-01-09"
+  total_papers: 5
+
+papers:
+  - slug: crema-et-al-2024
+    title: "Modelling diffusion of innovation curves using radiocarbon data"
+    authors: "Crema, E.R., Bloxam, A., Stevens, C.J., Vander Linden, M."
+    year: 2024
+    doi: "10.1016/j.jas.2024.105962"
+    code_repository: "https://github.com/ercrema/diffusionCurve"
+    code_verified: true
+    status: pending
+    steps:
+      pdf_obtained: false
+      text_extracted: false
+      extraction_complete: false
+      classification_complete: false
+      assessment_complete: false
+      fair_assessed: false
+      reproduction_attempted: false
+    notes: "Exemplary compendium. Priority 1 for reproduction attempt."
+
+  - slug: marwick-2025
+    title: "Is archaeology a science? Insights and imperatives from 10,000 articles and a year of reproducibility reviews"
+    authors: "Marwick, B."
+    year: 2025
+    doi: null  # TBC
+    code_repository: "https://doi.org/10.5281/zenodo.14897252"
+    code_verified: true
+    status: pending
+    steps:
+      pdf_obtained: false
+      text_extracted: false
+      extraction_complete: false
+      classification_complete: false
+      assessment_complete: false
+      fair_assessed: false
+      reproduction_attempted: false
+    notes: "Meta-analysis by JAS Reproducibility Specialist. High relevance to study goals."
+
+  - slug: key-et-al-2024
+    title: "Identifying accurate artefact morphological ranges using optimal linear estimation: Method validation, case studies, and code"
+    authors: "Key, A., Eren, M.I., Bebber, M.R., et al."
+    year: 2024
+    doi: "10.1016/j.jas.2024.105921"
+    code_repository: null  # To verify
+    code_verified: false
+    status: pending
+    steps:
+      pdf_obtained: false
+      text_extracted: false
+      extraction_complete: false
+      classification_complete: false
+      assessment_complete: false
+      fair_assessed: false
+      reproduction_attempted: false
+    notes: "Code mentioned in title. Verify repository location from paper."
+
+  - slug: herskind-riede-2024
+    title: "A computational linguistic methodology for assessing semiotic structure in prehistoric art and the meaning of southern Scandinavian Mesolithic ornamentation"
+    authors: "Herskind, L.L.P., Riede, F."
+    year: 2024
+    doi: "10.1016/j.jas.2024.105969"
+    code_repository: null  # To verify
+    code_verified: false
+    status: pending
+    steps:
+      pdf_obtained: false
+      text_extracted: false
+      extraction_complete: false
+      classification_complete: false
+      assessment_complete: false
+      fair_assessed: false
+      reproduction_attempted: false
+    notes: "JAS-SAS Emerging Investigator Award 2024. Verify code availability."
+
+  - slug: dye-et-al-2023
+    title: "Bayesian Chronology Construction and Substance Time"
+    authors: "Dye, T.S., Buck, C.E., DiNapoli, R.J., Philippe, A."
+    year: 2023
+    doi: "10.1016/j.jas.2023.105765"
+    code_repository: "https://cran.r-project.org/package=ArchaeoPhases"
+    code_verified: true
+    status: pending
+    steps:
+      pdf_obtained: false
+      text_extracted: false
+      extraction_complete: false
+      classification_complete: false
+      assessment_complete: false
+      fair_assessed: false
+      reproduction_attempted: false
+    notes: "Associated with CRAN package ArchaeoPhases."
+
+# Progress summary
+# Completed: 0/5
+# In progress: 0/5
+# Pending: 5/5
