@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.1",
+  "session": {
+    "id": "a2b4b0d8-a20f-4e9d-8f52-e12421b5e32c",
+    "started_at": "2025-12-02T13:24:59.826Z",
+    "ended_at": "2025-12-02T13:31:15.342Z",
+    "duration_minutes": 6
+  },
+  "project": {
+    "name": "llm-reproducibility",
+    "directory": "/home/shawn/Code/llm-reproducibility"
+  },
+  "model": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-4-5-20251101",
+    "access_method": "claude-code-cli"
+  },
+  "thinking_blocks": {
+    "included": true,
+    "count": 6,
+    "total_tokens": 518,
+    "token_count_method": "estimated",
+    "sharing_preference": "research-only",
+    "use_constraints": [
+      "analysis-for-improvement",
+      "research-publication-aggregated"
+    ],
+    "excluded_uses": [
+      "training-data",
+      "public-display-individual"
+    ],
+    "nature_note": "Work-in-progress reasoning traces, not polished output. May contain abandoned paths and self-corrections."
+  },
+  "relationships": {
+    "continues": null,
+    "continuedBy": null,
+    "isPartOf": [
+      "llm-reproducibility"
+    ],
+    "isParallelTo": [],
+    "supersedes": null,
+    "references": [],
+    "branchesFrom": null
+  },
+  "artifacts": {
+    "created": [],
+    "modified": [],
+    "referenced": [
+      {
+        "path": ".claude/commands/variability-run.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "archive/cc-interactions/2025-12-01-e.txt",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "input/variability-queue.yaml",
+        "type": "config",
+        "description": ""
+      }
+    ]
+  },
+  "statistics": {
+    "turns": 9,
+    "human_messages": 9,
+    "assistant_messages": 15,
+    "thinking_blocks": 6,
+    "tool_calls": {
+      "total": 4,
+      "by_type": {
+        "Read": 3,
+        "Glob": 1
+      }
+    },
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "cache_read": 0
+    },
+    "estimated_cost_usd": 0.0,
+    "tool_outputs": {
+      "total_bytes": 23187,
+      "by_type": {
+        "Read": {
+          "count": 3,
+          "bytes": 23115
+        },
+        "Glob": {
+          "count": 1,
+          "bytes": 72
+        }
+      },
+      "largest_single_output_bytes": 14131
+    }
+  },
+  "auto_generated": {
+    "title": "Context Retrieval for Variability Testing",
+    "purpose": "Brief session to retrieve context from archived transcript and confirm next steps for variability test execution.",
+    "tags": [
+      "context-retrieval",
+      "variability-test",
+      "session-resumption"
+    ]
+  },
+  "three_ps": {
+    "prompt_summary": "Review archived transcript to recall where variability testing work left off.",
+    "process_summary": "Read archived interaction file to restore context about variability checking extraction runs.",
+    "provenance_summary": "Context restoration session between variability test runs."
+  },
+  "archive": {
+    "jsonl_path": "session.jsonl",
+    "jsonl_sha256": "8ec72319594c8ee28896f1d43632c87e3e5ed3194d35d22d98f3d4bde1815856",
+    "jsonl_bytes": 71011,
+    "archived_at": "2026-01-13T17:03:07.464012"
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "schema_version": "1.1",
+  "session": {
+    "id": "e4ef9efe-a74c-45fa-81a2-907f5589f48c",
+    "started_at": "2025-12-03T15:03:31.146Z",
+    "ended_at": "2025-12-03T15:38:07.961Z",
+    "duration_minutes": 34
+  },
+  "project": {
+    "name": "llm-reproducibility",
+    "directory": "/home/shawn/Code/llm-reproducibility"
+  },
+  "model": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-4-5-20251101",
+    "access_method": "claude-code-cli"
+  },
+  "thinking_blocks": {
+    "included": true,
+    "count": 0,
+    "total_tokens": 0,
+    "token_count_method": "estimated",
+    "sharing_preference": "research-only",
+    "use_constraints": [
+      "analysis-for-improvement",
+      "research-publication-aggregated"
+    ],
+    "excluded_uses": [
+      "training-data",
+      "public-display-individual"
+    ],
+    "nature_note": "Work-in-progress reasoning traces, not polished output. May contain abandoned paths and self-corrections."
+  },
+  "relationships": {
+    "continues": null,
+    "continuedBy": null,
+    "isPartOf": [
+      "llm-reproducibility"
+    ],
+    "isParallelTo": [],
+    "supersedes": null,
+    "references": [],
+    "branchesFrom": null
+  },
+  "artifacts": {
+    "created": [
+      {
+        "path": "outputs/variability-test/ballsun-stanton-et-al-2018/run-04/assessment/assessment.json",
+        "type": "data",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/ballsun-stanton-et-al-2018/run-04/assessment/classification.json",
+        "type": "data",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/ballsun-stanton-et-al-2018/run-04/assessment/cluster-1-foundational-clarity.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/ballsun-stanton-et-al-2018/run-04/assessment/cluster-2-evidential-strength.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/ballsun-stanton-et-al-2018/run-04/assessment/cluster-3-reproducibility.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/ballsun-stanton-et-al-2018/run-04/assessment/credibility-report.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/ballsun-stanton-et-al-2018/run-04/assessment/track-a-quality.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/ballsun-stanton-et-al-2018/run-04/extraction.json",
+        "type": "data",
+        "description": ""
+      }
+    ],
+    "modified": [
+      {
+        "path": "input/variability-queue.yaml",
+        "type": "config",
+        "description": ""
+      }
+    ],
+    "referenced": [
+      {
+        "path": ".claude/skills/research-assessor/references/extraction-fundamentals.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": ".claude/skills/research-assessor/references/schema/schema-guide.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "extraction-system/schema/extraction-schema-v2.6.json",
+        "type": "data",
+        "description": ""
+      },
+      {
+        "path": "input/sources/original-pdf/Ballsun-Stanton et al. - 2018 - FAIMS Mobile Flexible, open-source software for f.pdf",
+        "type": "other",
+        "description": ""
+      }
+    ]
+  },
+  "statistics": {
+    "turns": 41,
+    "human_messages": 41,
+    "assistant_messages": 39,
+    "thinking_blocks": 0,
+    "tool_calls": {
+      "total": 29,
+      "by_type": {
+        "Read": 7,
+        "TodoWrite": 5,
+        "Skill": 1,
+        "Bash": 3,
+        "Glob": 1,
+        "Write": 9,
+        "Edit": 3
+      }
+    },
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "cache_read": 0
+    },
+    "estimated_cost_usd": 0.0,
+    "tool_outputs": {
+      "total_bytes": 176995,
+      "by_type": {
+        "Read": {
+          "count": 7,
+          "bytes": 77980
+        },
+        "TodoWrite": {
+          "count": 5,
+          "bytes": 800
+        },
+        "Skill": {
+          "count": 1,
+          "bytes": 34
+        },
+        "Bash": {
+          "count": 3,
+          "bytes": 1049
+        },
+        "Glob": {
+          "count": 1,
+          "bytes": 84
+        },
+        "Write": {
+          "count": 9,
+          "bytes": 94562
+        },
+        "Edit": {
+          "count": 3,
+          "bytes": 2486
+        }
+      },
+      "largest_single_output_bytes": 93296
+    }
+  },
+  "auto_generated": {
+    "title": "Variability Test Run 04 - Ballsun-Stanton Paper",
+    "purpose": "Fourth run of variability test on Ballsun-Stanton et al. 2018, with assessment.json canonical output.",
+    "tags": [
+      "variability-test",
+      "run-04",
+      "ballsun-stanton-et-al-2018",
+      "credibility-assessment",
+      "extraction"
+    ]
+  },
+  "three_ps": {
+    "prompt_summary": "Execute variability test run 04 on Ballsun-Stanton et al. 2018 paper.",
+    "process_summary": "Completed full extraction and credibility assessment pipeline, generated assessment.json.",
+    "provenance_summary": "Fourth data point for Ballsun-Stanton paper in 25-run variability test series."
+  },
+  "archive": {
+    "jsonl_path": "session.jsonl",
+    "jsonl_sha256": "d3d21b620cbe11aafe8812c7c09ded546f45cc271d4f5235fb1e838b5df23785",
+    "jsonl_bytes": 3931210,
+    "archived_at": "2026-01-13T17:03:18.937177"
+  },
+  "_relationship_hints": {
+    "continues_hint": null,
+    "references_hints": [],
+    "detection_notes": [
+      "Found continuation language: 'continu(?:e|ing|ed)\\s+from'"
+    ]
+  }
+}

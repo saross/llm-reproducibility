@@ -1,0 +1,164 @@
+{
+  "schema_version": "1.1",
+  "session": {
+    "id": "72e8b353-1cc6-4420-a8a0-2a502c4b71c5",
+    "started_at": "2025-12-03T21:16:17.443Z",
+    "ended_at": "2025-12-03T21:33:16.219Z",
+    "duration_minutes": 16
+  },
+  "project": {
+    "name": "llm-reproducibility",
+    "directory": "/home/shawn/Code/llm-reproducibility"
+  },
+  "model": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-4-5-20251101",
+    "access_method": "claude-code-cli"
+  },
+  "thinking_blocks": {
+    "included": true,
+    "count": 0,
+    "total_tokens": 0,
+    "token_count_method": "estimated",
+    "sharing_preference": "research-only",
+    "use_constraints": [
+      "analysis-for-improvement",
+      "research-publication-aggregated"
+    ],
+    "excluded_uses": [
+      "training-data",
+      "public-display-individual"
+    ],
+    "nature_note": "Work-in-progress reasoning traces, not polished output. May contain abandoned paths and self-corrections."
+  },
+  "relationships": {
+    "continues": null,
+    "continuedBy": null,
+    "isPartOf": [
+      "llm-reproducibility"
+    ],
+    "isParallelTo": [],
+    "supersedes": null,
+    "references": [],
+    "branchesFrom": null
+  },
+  "artifacts": {
+    "created": [
+      {
+        "path": "outputs/variability-test/ross-2005/run-04/extraction.json",
+        "type": "data",
+        "description": ""
+      }
+    ],
+    "modified": [
+      {
+        "path": "input/variability-queue.yaml",
+        "type": "config",
+        "description": ""
+      }
+    ],
+    "referenced": [
+      {
+        "path": ".claude/skills/research-assessor/references/schema/schema-guide.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "extraction-system/schema/extraction-schema-v2.6.json",
+        "type": "data",
+        "description": ""
+      },
+      {
+        "path": "input/sources/original-pdf/Ross - 2005 - Barbarophonos Language and Panhellenism in the Iliad.pdf",
+        "type": "other",
+        "description": ""
+      },
+      {
+        "path": "input/workflow.md",
+        "type": "document",
+        "description": ""
+      }
+    ]
+  },
+  "statistics": {
+    "turns": 54,
+    "human_messages": 54,
+    "assistant_messages": 66,
+    "thinking_blocks": 0,
+    "tool_calls": {
+      "total": 42,
+      "by_type": {
+        "Read": 10,
+        "Skill": 1,
+        "Bash": 6,
+        "TodoWrite": 10,
+        "Write": 2,
+        "Edit": 13
+      }
+    },
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "cache_read": 0
+    },
+    "estimated_cost_usd": 0.0,
+    "tool_outputs": {
+      "total_bytes": 287349,
+      "by_type": {
+        "Read": {
+          "count": 10,
+          "bytes": 163830
+        },
+        "Skill": {
+          "count": 1,
+          "bytes": 34
+        },
+        "Bash": {
+          "count": 6,
+          "bytes": 1147
+        },
+        "TodoWrite": {
+          "count": 10,
+          "bytes": 1600
+        },
+        "Write": {
+          "count": 2,
+          "bytes": 59590
+        },
+        "Edit": {
+          "count": 13,
+          "bytes": 61148
+        }
+      },
+      "largest_single_output_bytes": 59613
+    }
+  },
+  "auto_generated": {
+    "title": "Variability Test Run 04 - Ross 2005 Paper (Extraction Phase)",
+    "purpose": "Fourth run of variability test on Ross 2005, extraction phase completed before session ended.",
+    "tags": [
+      "variability-test",
+      "run-04",
+      "ross-2005",
+      "extraction"
+    ]
+  },
+  "three_ps": {
+    "prompt_summary": "Execute variability test run 04 on Ross 2005 paper.",
+    "process_summary": "Completed extraction phase (extraction.json) for run 04.",
+    "provenance_summary": "Fourth data point for Ross 2005 paper in 25-run variability test series, extraction phase."
+  },
+  "archive": {
+    "jsonl_path": "session.jsonl",
+    "jsonl_sha256": "f8dc7963c091fdef8722e1691d14897f7bddd7bdac9ba15a3bfcae0a3d626020",
+    "jsonl_bytes": 2064060,
+    "archived_at": "2026-01-13T17:03:26.749046"
+  },
+  "_relationship_hints": {
+    "continues_hint": null,
+    "references_hints": [],
+    "detection_notes": [
+      "Found continuation language: 'continu(?:e|ing|ed)\\s+from'"
+    ]
+  }
+}

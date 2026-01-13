@@ -1,0 +1,232 @@
+{
+  "schema_version": "1.1",
+  "session": {
+    "id": "a8edc85a-6b49-43b5-9c47-002fe6ed9169",
+    "started_at": "2025-12-01T16:21:14.147Z",
+    "ended_at": "2025-12-01T20:09:56.444Z",
+    "duration_minutes": 228
+  },
+  "project": {
+    "name": "llm-reproducibility",
+    "directory": "/home/shawn/Code/llm-reproducibility"
+  },
+  "model": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-4-5-20251101",
+    "access_method": "claude-code-cli"
+  },
+  "thinking_blocks": {
+    "included": true,
+    "count": 71,
+    "total_tokens": 7042,
+    "token_count_method": "estimated",
+    "sharing_preference": "research-only",
+    "use_constraints": [
+      "analysis-for-improvement",
+      "research-publication-aggregated"
+    ],
+    "excluded_uses": [
+      "training-data",
+      "public-display-individual"
+    ],
+    "nature_note": "Work-in-progress reasoning traces, not polished output. May contain abandoned paths and self-corrections."
+  },
+  "relationships": {
+    "continues": null,
+    "continuedBy": null,
+    "isPartOf": [
+      "llm-reproducibility"
+    ],
+    "isParallelTo": [],
+    "supersedes": null,
+    "references": [],
+    "branchesFrom": null
+  },
+  "artifacts": {
+    "created": [
+      {
+        "path": "outputs/variability-test/penske-et-al-2023/run-01/assessment/cluster-1-foundational-clarity.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/penske-et-al-2023/run-01/assessment/cluster-2-evidential-strength.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/penske-et-al-2023/run-01/assessment/cluster-3-reproducibility.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/penske-et-al-2023/run-01/assessment/credibility-report.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/penske-et-al-2023/run-01/extraction.json",
+        "type": "data",
+        "description": ""
+      }
+    ],
+    "modified": [
+      {
+        "path": "input/variability-queue.yaml",
+        "type": "config",
+        "description": ""
+      }
+    ],
+    "referenced": [
+      {
+        "path": ".claude/commands/variability-run.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "assessment-system/prompts/10-final-report-prompt.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "assessment-system/prompts/cluster-1-foundational-clarity.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "assessment-system/prompts/cluster-2-evidential-strength.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "assessment-system/prompts/cluster-3-reproducibility.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "extraction-system/schema/extraction-schema-v2.6.json",
+        "type": "data",
+        "description": ""
+      },
+      {
+        "path": "extraction-system/schema/extraction_schema.json",
+        "type": "data",
+        "description": ""
+      },
+      {
+        "path": "input/queue.yaml",
+        "type": "config",
+        "description": ""
+      },
+      {
+        "path": "input/sources/original-pdf/Penske et al. - 2023 - Early contact between late farming and pastoralist.pdf",
+        "type": "other",
+        "description": ""
+      },
+      {
+        "path": "input/variability-test-queue.yaml",
+        "type": "config",
+        "description": ""
+      },
+      {
+        "path": "input/workflow.md",
+        "type": "document",
+        "description": ""
+      }
+    ]
+  },
+  "statistics": {
+    "turns": 93,
+    "human_messages": 93,
+    "assistant_messages": 174,
+    "thinking_blocks": 71,
+    "tool_calls": {
+      "total": 79,
+      "by_type": {
+        "Read": 18,
+        "Skill": 1,
+        "Bash": 32,
+        "Glob": 3,
+        "TodoWrite": 15,
+        "Write": 6,
+        "Grep": 1,
+        "Edit": 3
+      }
+    },
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "cache_read": 0
+    },
+    "estimated_cost_usd": 0.0,
+    "tool_outputs": {
+      "total_bytes": 489296,
+      "by_type": {
+        "Read": {
+          "count": 18,
+          "bytes": 322328
+        },
+        "Skill": {
+          "count": 1,
+          "bytes": 34
+        },
+        "Bash": {
+          "count": 32,
+          "bytes": 57810
+        },
+        "Glob": {
+          "count": 3,
+          "bytes": 788
+        },
+        "TodoWrite": {
+          "count": 15,
+          "bytes": 2400
+        },
+        "Write": {
+          "count": 6,
+          "bytes": 102919
+        },
+        "Grep": {
+          "count": 1,
+          "bytes": 570
+        },
+        "Edit": {
+          "count": 3,
+          "bytes": 2447
+        }
+      },
+      "largest_single_output_bytes": 102161
+    }
+  },
+  "auto_generated": {
+    "title": "Variability Test Run 01 Execution",
+    "purpose": "First run of the variability test framework on Penske et al. 2023, producing extraction and credibility assessment outputs for inter-run comparison.",
+    "tags": [
+      "variability-test",
+      "run-01",
+      "penske-et-al-2023",
+      "credibility-assessment",
+      "extraction"
+    ]
+  },
+  "three_ps": {
+    "prompt_summary": "Execute variability test run 01 on Penske paper including full extraction and credibility assessment pipeline.",
+    "process_summary": "Ran complete 8-pass extraction followed by credibility assessment clusters, generating foundational clarity, evidential strength, and reproducibility reports.",
+    "provenance_summary": "First baseline run in 25-run variability test series to measure LLM output consistency."
+  },
+  "archive": {
+    "jsonl_path": "session.jsonl",
+    "jsonl_sha256": "dc94dde9ef687e94577f59b8391898cf9807004e5bdbde8fde4b79d90c272e73",
+    "jsonl_bytes": 70885767,
+    "archived_at": "2026-01-13T17:03:07.397325"
+  },
+  "_relationship_hints": {
+    "continues_hint": null,
+    "references_hints": [],
+    "detection_notes": [
+      "Found continuation language: 'continu(?:e|ing|ed)\\s+from'",
+      "Found continuation language: 'continu(?:e|ing|ed)\\s+from'",
+      "Found continuation language: 'previous\\s+session'"
+    ]
+  }
+}
