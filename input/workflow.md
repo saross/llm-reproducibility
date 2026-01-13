@@ -105,7 +105,7 @@ This document describes the 8-pass autonomous extraction workflow used to system
 
 **Schema Version:** 2.6
 
-**Workflow Version:** 4.0.0 (adds Pass 6 infrastructure extraction)
+**Workflow Version:** 5.0.0 (session-per-pass execution mode)
 
 **Extraction Philosophy:**
 - Liberal over-extraction followed by conservative rationalization
@@ -115,41 +115,70 @@ This document describes the 8-pass autonomous extraction workflow used to system
 
 ---
 
-## Autonomous Execution Mode
+## Session-per-Pass Execution Mode
 
-### Critical Rules
+### Why Session-per-Pass?
 
-**NEVER ask:**
-- "Would you like me to continue?"
-- "Should I proceed to the next section?"
-- "Shall I move to Pass X?"
+Run comparison (crema-et-al-2024) demonstrated session-per-pass yields significantly better extractions:
+- +75% claims captured
+- +100% research designs captured
+- Better methodological reasoning and cross-references
 
-**Continue automatically after:**
-- Completing a section group
-- Completing a pass
-- Saving to extraction.json
-- Updating queue.yaml
-- Validation checks
-- Any intermediate step
+### Session Structure
+
+| Session | Passes | Focus | Stop After |
+|---------|--------|-------|------------|
+| **A** | Pre-Flight + Pass 0 + Pass 6 | Metadata + Infrastructure | ✅ Session A complete |
+| **B** | Pass 1 + Phase 2b + Pass 2 | Claims/Evidence | ✅ Session B complete |
+| **C** | Pass 3 + Pass 4 + Phase 5b + Pass 5 | RDMAP | ✅ Session C complete |
+| **D** | Pass 7 + FAIR Assessment | Validation | ✅ Extraction complete |
+
+### Within-Session Rules
+
+**Within each session**, work autonomously:
+
+- ✅ Complete all passes in the session without stopping
+- ✅ Save to extraction.json after each pass
+- ✅ Do not ask "Should I continue?" within a session
+- ✅ Do not stop between section groups within a pass
+
+**At session end**, provide handoff summary:
+
+```text
+Session [A/B/C/D] complete for {paper-slug}
+
+Completed:
+- Pass X: {summary}
+- Pass Y: {summary}
+
+Counts: {evidence}, {claims}, {research_designs}, {methods}, {protocols}
+
+Next session: [B/C/D/Complete]
+```
+
+### Session Resumption
+
+When starting a new session:
+
+1. Read extraction.json → check `extraction_notes.passes_completed`
+2. Read queue.yaml → verify paper status
+3. Read paper text if needed for extraction passes
+4. Continue from next incomplete session
 
 **ONLY stop if:**
-- All 8 passes complete (extraction fully done)
+- Session complete (natural checkpoint)
 - Critical error requires user intervention
 - Structural problem with input files
-
-### Session Behaviour
-
-**Auto-compact handling:**
-- Auto-compact will occur naturally during long extractions
-- When resuming: Check queue.yaml checkpoint
-- Resume from last checkpoint automatically
-- Do not ask before resuming
-- Do not summarise progress unnecessarily
-- Treat entire workflow as single continuous job
 
 ---
 
 ## Workflow Stages
+
+---
+
+## 🅰️ SESSION A: Metadata + Infrastructure
+
+---
 
 ### Pre-Flight: Initialisation
 
@@ -224,7 +253,19 @@ This document describes the 8-pass autonomous extraction workflow used to system
 
 **Duration:** 2-3 minutes
 
-**Proceeds to:** Pass 1 (no user confirmation)
+**Proceeds to:** Pass 6 (infrastructure) within Session A
+
+---
+
+### Pass 6: Infrastructure Extraction
+
+**Note:** Pass 6 is done in Session A alongside metadata for efficiency. See full Pass 6 documentation below.
+
+**Proceeds to:** Session A handoff (stop after Pass 6)
+
+---
+
+## 🅱️ SESSION B: Claims & Evidence
 
 ---
 
@@ -385,7 +426,11 @@ This phase catches 88+ errors across 5 papers according to cross-paper error ana
 
 **Duration:** 5-10 minutes (mostly automated)
 
-**Proceeds to:** Pass 3
+**Session B ends here.** Provide handoff summary, then stop.
+
+---
+
+## 🅲 SESSION C: RDMAP (Research Designs, Methods, Protocols)
 
 ---
 
@@ -588,11 +633,13 @@ This phase ensures RDMAP hierarchy integrity before validation.
 
 **Duration:** 5-10 minutes (mostly automated)
 
-**Proceeds to:** Pass 6
+**Session C ends here.** Provide handoff summary, then stop.
 
 ---
 
-### Pass 6: Infrastructure Extraction
+### Pass 6: Infrastructure Extraction (Full Documentation)
+
+**Note:** Pass 6 is executed in Session A alongside Pass 0. This section provides full documentation.
 
 **Purpose:** Extract reproducibility infrastructure and assess FAIR compliance
 
@@ -641,7 +688,11 @@ This phase ensures RDMAP hierarchy integrity before validation.
 
 **Duration:** 30 minutes - 1 hour
 
-**Proceeds to:** Pass 7
+**Session A ends here.** Provide handoff summary, then stop.
+
+---
+
+## 🅳 SESSION D: Validation + FAIR Assessment
 
 ---
 
@@ -882,6 +933,14 @@ jq '{evidence: (.evidence | length), claims: (.claims | length), ...}' extractio
 ---
 
 ## Version History
+
+### v5.0.0 (2026-01-13)
+- **Replaced autonomous mode with session-per-pass execution**
+- Run comparison (crema-et-al-2024) showed +75% claims, +100% research designs with session-per-pass
+- Defined 4 focused sessions: A (metadata+infra), B (claims), C (RDMAP), D (validation)
+- Added session boundary markers throughout workflow
+- Reordered Pass 6 to Session A (alongside Pass 0) for efficiency
+- Updated extraction-launch.md to v2.0.0
 
 ### v4.0.0 (2025-11-18)
 - Added Pass 6: Infrastructure Extraction (PIDs, FAIR assessment, funding, ethics, permits)

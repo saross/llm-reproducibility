@@ -1,47 +1,73 @@
 # LLM Reproducibility Project - Research Paper Extraction
 
-**Version:** 2.6 | **Schema:** v2.6 | **Workflow:** 8-pass (0-7)
+**Version:** 2.7 | **Schema:** v2.6 | **Workflow:** 8-pass session-per-pass (v5.0.0)
 **Manifest:** See `manifest.yaml` for all component versions
 
 ## Project Purpose
 
 Systematic extraction and assessment of evidence, claims, methods, and research designs from academic papers using the `research-assessor` skill. Evaluates transparency, replicability, and credibility of fieldwork-based research.
 
-## CRITICAL: Autonomous Execution Mode
+## CRITICAL: Session-per-Pass Execution Mode
 
-**This project uses fully autonomous multi-pass workflows triggered by WORKFLOW.md.**
+**This project uses a session-per-pass workflow that produces higher quality extractions.**
 
-### Execution Rules - Never Stop Between Steps
+Run comparison (crema-et-al-2024) demonstrated session-per-pass yields:
+- +75% claims captured
+- +100% research designs captured
+- Better cross-references and methodological reasoning
 
-You MUST work continuously without asking permission:
+### Session Structure
 
-- ✅ **Never ask "Would you like me to continue?"**
-- ✅ **Never ask "Should I proceed to the next section?"**
-- ✅ **Never stop between passes (0→1→2→3→4→5→6→7)**
-- ✅ **Never stop between section groups**
-- ✅ **Work until all 8 passes complete**
+Extraction is organised into 4 focused sessions:
 
-### Continue Automatically After
+| Session | Passes | Focus | Typical Duration |
+|---------|--------|-------|------------------|
+| **A** | Pass 0 + Pass 6 | Metadata + Infrastructure | 30-60 min |
+| **B** | Pass 1-2 | Claims/Evidence extraction + rationalisation | 3-6 hours |
+| **C** | Pass 3-5 | RDMAP extraction + implicit + rationalisation | 3-5 hours |
+| **D** | Pass 7 + FAIR | Validation + FAIR assessment | 1-2 hours |
 
-- Completing a section group (Abstract+Intro, Methods, Results, Discussion)
-- Completing any pass
-- Saving to extraction.json
-- Updating queue.yaml
-- Validation checks
-- Any intermediate workflow step
+### Within-Session Execution Rules
 
-### Only Stop If
+**Within each session**, work autonomously without stopping:
 
-- ✅ All 8 passes complete (extraction done)
-- ✅ Error requires user intervention (document in queue.yaml)
-- ✅ Structural problem with input files
+- ✅ **Never ask "Would you like me to continue?"** within a session
+- ✅ **Never stop between section groups** within a pass
+- ✅ **Complete all passes in the session** before stopping
+- ✅ **Save to extraction.json** after each pass
+
+### Between-Session Checkpoints
+
+**At session end**, provide a handoff summary:
+
+```text
+Session [A/B/C/D] complete for {paper-slug}
+
+Completed:
+- Pass X: {summary}
+- Pass Y: {summary}
+
+Counts: {evidence}, {claims}, {research_designs}, {methods}, {protocols}
+
+Next session: [B/C/D/Complete]
+Ready to continue when you are.
+```
 
 ### Session Resumption
 
-- **Auto-compact happens naturally** - resume from queue.yaml checkpoint when it does
-- **Don't ask before resuming** - check queue.yaml and continue
-- **Don't summarise progress between steps** - just do the work
-- **Treat workflow as single continuous job**
+When starting a new session or resuming after context compaction:
+
+1. **Read extraction.json** - understand current state
+2. **Check queue.yaml** - verify paper status and checkpoint
+3. **Read paper text if needed** - for extraction passes
+4. **Continue from checkpoint** - don't re-extract completed passes
+
+### Why Session-per-Pass Works Better
+
+1. **Focused attention**: Each session has a clear objective
+2. **Fresh context**: New session = fresh context window for extraction
+3. **Natural breaks**: Allows review between major phases
+4. **Better quality**: Deeper extraction of methodological reasoning and cross-references
 
 ## Workflow Reference
 
@@ -153,14 +179,17 @@ jq '.extraction_timestamp' extraction.json
 
 ## Common Issues and Solutions
 
-**Issue**: Claude stops between passes  
-**Solution**: Check this CLAUDE.md - autonomous mode enabled
+**Issue**: Lower extraction counts than expected
+**Solution**: Use session-per-pass approach (4 sessions, not single autonomous run)
 
-**Issue**: Extraction counts don't match  
+**Issue**: Extraction counts don't match after write
 **Solution**: Always Read() full file without limit parameter
 
-**Issue**: Session auto-compacts mid-extraction  
-**Solution**: Check queue.yaml, resume from checkpoint automatically
+**Issue**: Session auto-compacts mid-session
+**Solution**: Check queue.yaml checkpoint, resume from last completed pass
 
-**Issue**: Can't find paper text  
+**Issue**: Can't find paper text
 **Solution**: Check `outputs/{paper-slug}/{paper-slug}.txt` exists
+
+**Issue**: Unclear which session to run next
+**Solution**: Check `extraction_notes.passes_completed` in extraction.json

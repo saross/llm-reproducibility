@@ -1,14 +1,14 @@
 # Project Manifest - Single Source of Truth for Versions
-# Last Updated: 2025-11-30
+# Last Updated: 2026-01-13
 #
 # This manifest tracks version information for all project components.
 # READMEs and documentation should reference this file for consistency.
 
 project:
   name: LLM-Based Research Extraction and Assessment
-  version: "2.6"
+  version: "2.7"
   status: Extraction system complete, assessment framework in development
-  last_updated: "2025-11-27"
+  last_updated: "2026-01-13"
   repository: https://github.com/saross/llm-reproducibility
 
 # Core component versions
@@ -20,11 +20,12 @@ components:
     description: JSON schema for extraction output with infrastructure object
 
   workflow:
-    version: "4.0.0"
+    version: "5.0.0"
     passes: 8  # Pass 0-7
+    execution_mode: session-per-pass  # 4 sessions: A/B/C/D
     file: input/workflow.md
-    last_updated: "2025-11-18"
-    description: Complete 8-pass extraction workflow (0-7)
+    last_updated: "2026-01-13"
+    description: Complete 8-pass extraction workflow with session-per-pass execution
 
   extraction_plan:
     version: "1.1.0"
@@ -33,10 +34,10 @@ components:
     description: Flexible planning model for diverse paper types
 
   extraction_launch:
-    version: "1.1.0"
+    version: "2.0.0"
     file: input/extraction-launch.md
-    last_updated: "2025-11-18"
-    description: Brief primer for starting autonomous extractions
+    last_updated: "2026-01-13"
+    description: Brief primer for session-per-pass extractions
 
   skill:
     name: research-assessor
@@ -146,6 +147,14 @@ corpus:
 
 # Version history summary
 version_history:
+  - version: "2.7"
+    date: "2026-01-13"
+    changes:
+      - Session-per-pass execution mode (4 sessions: A/B/C/D)
+      - Run comparison showed +75% claims, +100% research designs vs autonomous
+      - Workflow v5.0.0, extraction-launch v2.0.0
+      - Pass 6 moved to Session A (alongside Pass 0) for efficiency
+
   - version: "2.6"
     date: "2025-11-18"
     changes:
