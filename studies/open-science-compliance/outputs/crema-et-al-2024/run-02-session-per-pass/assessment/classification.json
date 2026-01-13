@@ -1,0 +1,93 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2026-01-13",
+    "classifier_version": "v0.2-alpha",
+    "extraction_run": "run-02-session-per-pass"
+  },
+
+  "paper_type": "methodological",
+  "paper_type_justification": "Primary contribution is a novel Bayesian framework for inferring diffusion curves from radiocarbon data, not substantive archaeological findings. Core claims (C001, C002, C010-C014) are methodological arguments about method properties: 'Novel Bayesian framework' (C001), 'Method overcomes SPD limitations' (C002), 'Parametric model provides numerical estimates; non-parametric ICAR provides visual exploration' (C011). Research design RD001 explicitly frames the goal as 'Develop Bayesian inferential tools for modelling diffusion of innovation curves'. The three empirical case studies (Japan rice, British farming, British burials) serve a demonstrative function - showing the method works and what it can reveal - rather than constituting the primary contribution. The 'Results' section reports model parameter estimates and validation diagnostics, not primarily substantive archaeological findings.",
+
+  "methodological_characterisation": {
+    "subtype": "analytical_method",
+    "validation_approach": "deductive",
+    "validation_notes": "Method validated through explicit deductive/hypothesis-testing approach. (1) Simulation-based validation: three datasets generated with known parameters (r, m, mu, phi values specified in P010) to test whether models can accurately recover data-generating parameters. RD003 explicitly states 'Simulation-based validation to establish method robustness before empirical application'. (2) Pre-specified performance criteria: parameter recovery accuracy within 95% posterior range. (3) Systematic testing before empirical application: 'The robustness of the two approaches was first tested against simulated datasets and then applied to investigate three case studies' (Abstract). (4) Posterior predictive checking with pre-specified diagnostic approach (1000 posterior samples, comparison to observed SPD). This is paradigmatic deductive validation: hypothesise method will work → test against known-truth data → apply to empirical cases."
+  },
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "good",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": [],
+    "fit_notes": "Slight edge case because paper has substantial empirical content (three archaeological case studies with genuine findings). However, primary contribution is clearly the method, and empirical applications serve demonstrative purpose. The methodological-with-empirical-applications pattern is common in computational archaeology and fits the 'methodological' category well."
+  },
+
+  "expressed_approach": {
+    "approach": "deductive",
+    "evidence": [
+      "Abstract: 'The robustness of the two approaches was first tested against simulated datasets and then applied to investigate three case studies'",
+      "RD003: 'Simulation-based validation to establish method robustness before empirical application'",
+      "Methods 4.1.1: 'We first examined the robustness of the two statistical approaches we developed by examining whether they can accurately recover parameter values'",
+      "Methods 4.2: Explicit MCMC settings, prior specifications, and convergence diagnostics specified before results"
+    ],
+    "source_sections": ["abstract", "materials_and_methods"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "deductive",
+    "evidence": {
+      "claims_structure": "Claims are predominantly methodological arguments about method performance: C003 'Hierarchical model accurately recovered diffusion curve shape in simulated datasets', C004 'ICAR model successfully recovered true time-sequence in simulation', C013 'Method can accurately recover temporal dynamics and identify deviations from s-shaped curves'. These test pre-specified predictions about method behaviour. Empirical claims (C005-C009) interpret case study findings but serve to demonstrate method capabilities.",
+      "methods_application": "Methods M001 (hierarchical Bayesian sigmoid) and M002 (ICAR non-parametric) are first tested on simulated data (M004 simulation-based validation), then applied to empirical cases. M003 (posterior predictive checking) provides systematic model assessment. The sequence follows deductive logic: develop method → test on known-truth data → apply to empirical cases.",
+      "analytical_workflow": "Workflow follows hypothesis-testing structure: (1) Method development with explicit statistical framework, (2) Simulation studies with known parameters (P010 specifies exact values: r=0.01, m=2900 BP, etc.), (3) Recovery accuracy assessment (C003, C004 confirm recovery), (4) Empirical application (Japan, Britain), (5) Posterior predictive checking to detect model-data mismatch. This is deductive: predict method will work → test → confirm → apply."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "Expressed and revealed approaches are fully aligned. Paper explicitly states it will use simulation-based validation before empirical application, and this is exactly what it does. Simulation parameters are pre-specified (P010), recovery criteria are explicit (95% posterior range), and empirical applications follow validation. No post-hoc framing detected. Methodological transparency is exemplary."
+  },
+
+  "primary_classification": {
+    "approach": "deductive",
+    "confidence": "high",
+    "justification": "Classification based on validation approach (appropriate for methodological papers). The validation strategy is paradigmatically deductive: (1) Pre-specified hypotheses about method performance (can models recover known parameters?), (2) Systematic testing with known-truth simulated data before empirical application, (3) Explicit performance criteria (parameter recovery accuracy), (4) Clear test → confirm → apply sequence. Claims C003 and C004 explicitly test predictions about model behaviour. Confidence is high because the validation strategy is explicit, consistent, and well-documented. The paper represents best practice for methodological paper validation - simulation-based testing establishes internal validity before empirical application."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": true,
+    "primary_approach": "deductive",
+    "secondary_approaches": ["inductive"],
+    "qualifications": [
+      "Primary validation approach is deductive: simulation testing with known parameters to establish method robustness",
+      "Secondary inductive element: empirical case studies reveal unexpected patterns (double s-shape in Japan, non-sigmoid diffusion in Britain, two cremation cycles)",
+      "These empirical findings emerge from applying the validated method rather than from a priori hypotheses about diffusion patterns",
+      "Mixed design is appropriate and well-structured: deductive validation → inductive discovery",
+      "Phase separation is clear: validation (deductive) precedes empirical application (inductive pattern discovery)"
+    ]
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Exemplary methodological transparency. (1) Statistical framework: full mathematical specification of both models (equations 2-8), (2) Prior specifications: explicit priors for all parameters (P002), (3) MCMC settings: chains, iterations, burn-in, thinning (P001, P004), (4) Calibration: IntCal20 specified (P003), (5) Data filtering: explicit probability thresholds for each case study (P007-P009), (6) Simulation parameters: exact data-generating values specified (P010), (7) Convergence diagnostics: Gelman-Rubin statistic, agreement indices (P006). This is among the most transparent methodological papers in the corpus."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "methodological_paper",
+    "signal_prioritisation": {
+      "primary_signals": ["transparency", "reproducibility", "comprehensibility"],
+      "secondary_signals": ["validity", "plausibility"],
+      "deemphasised_signals": ["generalisability", "robustness"],
+      "rationale": "Methodological paper framework. Primary signals: (1) Transparency - design decisions, statistical framework, and validation approach are central to methodological papers; this paper excels here with full equation specification, prior documentation, and MCMC settings. (2) Reproducibility - code available on GitHub with Zenodo archive, Ben Marwick code review, R implementation documented; critical for computational methods. (3) Comprehensibility - technical specification must be clear for method to be usable; paper provides worked examples and parameter interpretation guidance. Secondary signals: Validity and Plausibility apply to claims ABOUT the method (does it do what authors claim?). Deemphasised: Generalisability and Robustness of case study FINDINGS are less important - case studies are demonstrations, not meant to generalise beyond showing method capabilities. The archaeological interpretations (C005-C009) are interesting but secondary to method contribution."
+    },
+    "context_flags": ["🔧"],
+    "context_flag_notes": "🔧 Methodological Transparency flag: Paper has computational workflow to reproduce. Reproducibility assessed on: Can users install, run, and apply the method? GitHub+Zenodo archival, code review by Ben Marwick, and full R implementation documentation indicate high reproducibility potential."
+  },
+
+  "classification_notes": "Exemplary methodological paper with deductive validation strategy. Notable features: (1) Pre-registration equivalent: simulation parameters and validation criteria specified before testing (functionally equivalent to pre-registration for method validation). (2) Dual model approach: parametric for hypothesis testing, non-parametric for exploration - explicitly stated and appropriate. (3) Posterior predictive checking: conservative approach to model assessment documented. (4) Code review: Ben Marwick reviewed computational code (acknowledged in paper), adding independent verification of reproducibility. (5) Case studies demonstrate genuine archaeological value beyond method demonstration, but method is clearly the primary contribution. This paper could serve as a template for methodological paper best practices in computational archaeology."
+}

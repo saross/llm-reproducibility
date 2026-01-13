@@ -1,0 +1,138 @@
+{
+  "assessment_metadata": {
+    "schema_version": "1.0",
+    "assessment_date": "2026-01-13",
+    "assessor_version": "v1.0",
+    "extraction_run": "run-02-session-per-pass",
+    "quality_state": "high"
+  },
+
+  "paper": {
+    "slug": "crema-et-al-2024",
+    "title": "Modelling diffusion of innovation curves using radiocarbon data",
+    "authors": "Crema, E.R., Bloxam, A., Stevens, C.J., Vander Linden, M.",
+    "journal": "Journal of Archaeological Science",
+    "year": 2024,
+    "doi": "10.1016/j.jas.2024.105962"
+  },
+
+  "classification": {
+    "paper_type": "methodological",
+    "paper_subtype": "analytical_method",
+    "research_approach": "deductive",
+    "validation_approach": "deductive",
+    "expressed_vs_revealed": "matched",
+    "harking_flag": false,
+    "classification_confidence": "high",
+    "taxonomy_fit": "good",
+    "context_flags": ["🔧"]
+  },
+
+  "verdict": {
+    "band": "excellent",
+    "confidence": "high",
+    "aggregate_score": 84,
+    "aggregate_experimental": true
+  },
+
+  "signals": {
+    "comprehensibility": {
+      "score": 88,
+      "band": "excellent",
+      "approach_anchors": "methodological",
+      "rationale": "All methodological claims explicit and bounded. Technical terms operationally defined with mathematical precision. Clear argument structure."
+    },
+    "transparency": {
+      "score": 92,
+      "band": "excellent",
+      "approach_anchors": "methodological",
+      "rationale": "Full mathematical specification. Complete priors, MCMC settings, simulation parameters. Code available with independent review."
+    },
+    "plausibility": {
+      "score": 82,
+      "band": "excellent",
+      "approach_anchors": "deductive",
+      "rationale": "Grounded in established diffusion theory. Case studies from well-researched contexts. Anomalies acknowledged and contextualised."
+    },
+    "validity": {
+      "score": 85,
+      "band": "excellent",
+      "approach_anchors": "deductive",
+      "rationale": "Pre-specified simulation validation with known parameters. Evidence directly addresses methodological hypotheses."
+    },
+    "robustness": {
+      "score": 75,
+      "band": "good",
+      "approach_anchors": "deductive",
+      "context_flag": "🔧",
+      "rationale": "Dual-model triangulation provides robustness evidence. Comprehensive sensitivity analysis not systematically documented."
+    },
+    "generalisability": {
+      "score": 78,
+      "band": "good",
+      "approach_anchors": "deductive",
+      "rationale": "Method scope clearly bounded. Case study boundaries explicit. Transfer conditions specified through code documentation."
+    },
+    "reproducibility": {
+      "score": 90,
+      "band": "excellent",
+      "pathway": "standard",
+      "approach_anchors": "deductive",
+      "rationale": "Complete data and code with DOIs. Independent code review. Workflow fully documented. Priority 1 for reproduction attempt."
+    }
+  },
+
+  "cluster_ratings": {
+    "cluster_1_foundational_clarity": "strong",
+    "cluster_2_evidential_strength": "strong",
+    "cluster_3_reproducibility": "strong"
+  },
+
+  "infrastructure": {
+    "code_availability": "available",
+    "code_repository": "https://github.com/ercrema/diffusionCurve",
+    "code_doi": "10.5281/zenodo.10782942",
+    "code_reviewed": true,
+    "code_reviewer": "Ben Marwick",
+    "data_availability": "available",
+    "data_repository": "https://github.com/ercrema/diffusionCurve",
+    "data_doi": "10.5281/zenodo.10782942",
+    "preregistration": "not_applicable",
+    "pid_graph_connectivity": 3,
+    "pid_graph_maximum": 6,
+    "fair_rating": "highly_fair"
+  },
+
+  "reproducibility_readiness": {
+    "applies": true,
+    "pathway": "standard",
+    "inputs_available": "yes",
+    "code_available": "yes",
+    "tool_type": "open_scriptable",
+    "environment_specified": "partial",
+    "outputs_documented": "yes",
+    "execution_feasibility": "ready",
+    "reproduction_priority": 1
+  },
+
+  "era_context": {
+    "publication_year": 2024,
+    "era": "early_majority",
+    "era_label": "Current era — FAIR and open science expectations established",
+    "expectations_note": "Paper exceeds era expectations with independent code review and dual archival"
+  },
+
+  "key_findings": {
+    "strengths": [
+      "Exemplary transparency with full mathematical specification",
+      "Dual archival (GitHub + Zenodo DOI) with independent code review",
+      "Pre-specified simulation validation before empirical application",
+      "Clear verification targets for reproduction (Table 1 parameter estimates)"
+    ],
+    "limitations": [
+      "Package dependencies not explicitly listed in paper text",
+      "Comprehensive sensitivity analysis not systematically documented",
+      "Proxy assumption (seed dates as farming practice indicator) acknowledged but not quantified"
+    ]
+  }
+}
