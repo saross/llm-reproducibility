@@ -1,0 +1,593 @@
+{
+  "schema_version": "2.5",
+  "extraction_timestamp": "2025-01-12T11:00:00Z",
+  "extractor": "Claude (research-assessor skill)",
+  "project_metadata": {
+    "paper_title": "Modelling diffusion of innovation curves using radiocarbon data",
+    "authors": [
+      "Enrico R. Crema",
+      "Amy Bloxam",
+      "Chris J. Stevens",
+      "Marc Vander Linden"
+    ],
+    "publication_year": 2024,
+    "journal": "Journal of Archaeological Science, Vol. 165, Article 105962",
+    "doi": "10.1016/j.jas.2024.105962",
+    "paper_type": "methods paper",
+    "discipline": "archaeology",
+    "research_context": "Novel Bayesian framework for inferring diffusion curves using radiocarbon data. Develops hierarchical and non-parametric models to estimate changing proportions of innovations over time while accounting for chronological uncertainty, inter-site variation, and small sample sizes. Applied to three case studies: diffusion of rice farming in Japan, wheat/barley farming in Britain, and burial practice changes in later prehistoric Britain."
+  },
+  "evidence": [
+    {
+      "evidence_id": "E001",
+      "evidence_text": "Japanese radiocarbon dataset: 551 dates from 215 sites, including rice (n=203) and wild nuts (n=348)",
+      "evidence_type": "quantitative_data",
+      "verbatim_quote": "We examined a total of 1479 14C dates on seed remains from Japan (n = 551, from 215 sites, Fig. 1a)",
+      "location": "Section 4.1.2",
+      "supports_claims": ["C001", "C005"],
+      "source_verification": {
+        "verified": true,
+        "source": "Kudo et al. 2023; Crema et al. 2022"
+      }
+    },
+    {
+      "evidence_id": "E002",
+      "evidence_text": "British radiocarbon dataset: 928 dates from 314 sites, including wheat (n=261), barley (n=130), and hazelnut (n=537)",
+      "evidence_type": "quantitative_data",
+      "verbatim_quote": "Britain (n = 928, from 314 sites, Fig. 1b)",
+      "location": "Section 4.1.2",
+      "supports_claims": ["C001", "C006"],
+      "source_verification": {
+        "verified": true,
+        "source": "Bevan et al. 2017"
+      }
+    },
+    {
+      "evidence_id": "E003",
+      "evidence_text": "British burial dataset: 2536 dates (cremation n=1417, inhumation n=1119)",
+      "evidence_type": "quantitative_data",
+      "verbatim_quote": "We examined the source material to distinguish dates associated with cremation (n = 1417) and inhumation (n = 1119)",
+      "location": "Section 4.1.3",
+      "supports_claims": ["C001", "C007"],
+      "source_verification": {
+        "verified": true,
+        "source": "Multiple sources cited"
+      }
+    },
+    {
+      "evidence_id": "E004",
+      "evidence_text": "Hierarchical model successfully recovered simulated diffusion curve parameters within 95% posterior range",
+      "evidence_type": "simulation_result",
+      "verbatim_quote": "Our hierarchical approach was able to accurately recover the shape of the diffusion curve in both simulated datasets, with the 'true' curve within the 95% posterior fitted range",
+      "location": "Section 5.1",
+      "supports_claims": ["C002", "C003"],
+      "source_verification": {
+        "verified": true,
+        "source": "Simulation analysis"
+      }
+    },
+    {
+      "evidence_id": "E005",
+      "evidence_text": "ICAR model successfully recovered simulated time-sequence patterns",
+      "evidence_type": "simulation_result",
+      "verbatim_quote": "The non-parametric ICAR approach successfully recovered the 'true' time-sequence of p used to generate the simulated dataset 2",
+      "location": "Section 5.2",
+      "supports_claims": ["C002", "C004"],
+      "source_verification": {
+        "verified": true,
+        "source": "Simulation analysis"
+      }
+    },
+    {
+      "evidence_id": "E006",
+      "evidence_text": "Japanese case study: posterior predictive check shows poor fit between sigmoid model and observed data",
+      "evidence_type": "model_diagnostic",
+      "verbatim_quote": "Results of the posterior predictive checks of the Japanese and British datasets (Figs. 3 and 4) have, instead, revealed a poor fit between the model and the empirically observed proportion SPDs, suggesting in both cases that the diffusion processes cannot be described by a sigmoid curve",
+      "location": "Section 5.1",
+      "supports_claims": ["C005"],
+      "source_verification": {
+        "verified": true,
+        "source": "Posterior predictive checks"
+      }
+    },
+    {
+      "evidence_id": "E007",
+      "evidence_text": "Japanese diffusion parameters: r=0.1023, m=844 BCE, μ=0.703, φ=0.75",
+      "evidence_type": "quantitative_result",
+      "verbatim_quote": "Table 1 Posterior estimates... Japan: r 0.1023 (90% HPD 0.0131–0.3378), m 844 BCE (893–809 BCE), μ 0.703 (0.476–0.937)",
+      "location": "Table 1",
+      "supports_claims": ["C005"],
+      "source_verification": {
+        "verified": true,
+        "source": "MCMC analysis"
+      }
+    },
+    {
+      "evidence_id": "E008",
+      "evidence_text": "British diffusion parameters: r=0.0136, m=4053 BCE, μ=0.182, φ=0.31",
+      "evidence_type": "quantitative_result",
+      "verbatim_quote": "Britain: r 0.0136 (90% HPD 0.0015–0.0382), m 4053 BCE (4361–3857 BCE), μ 0.182 (0.01–0.42)",
+      "location": "Table 1",
+      "supports_claims": ["C006"],
+      "source_verification": {
+        "verified": true,
+        "source": "MCMC analysis"
+      }
+    },
+    {
+      "evidence_id": "E009",
+      "evidence_text": "Two major cremation cycles identified: Late Neolithic peak ~2900 BCE, Early-Middle Bronze Age ~1900-1200 BCE",
+      "evidence_type": "quantitative_result",
+      "verbatim_quote": "Our empirical case study revealed the existence of two major cycles of diffusion and abandonment of cremation; one peaking in the Late Neolithic at around 2900 BCE and the other in the Early to Middle Bronze Age around 1900-1200 BCE",
+      "location": "Section 5.2",
+      "supports_claims": ["C007"],
+      "source_verification": {
+        "verified": true,
+        "source": "ICAR model analysis"
+      }
+    },
+    {
+      "evidence_id": "E010",
+      "evidence_text": "Rapid cremation transition 2050-1950 BCE: ~10% to ~80% prevalence",
+      "evidence_type": "quantitative_result",
+      "verbatim_quote": "A key finding for this cycle is the speed at which a transition from ~10% to ~80% prevalence occurs, the century 2050–1950 BCE seeing a particularly rapid shift in practices",
+      "location": "Section 6",
+      "supports_claims": ["C007"],
+      "source_verification": {
+        "verified": true,
+        "source": "ICAR model analysis"
+      }
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C001",
+      "claim_text": "The new Bayesian framework can infer diffusion of innovation curves from radiocarbon data while accounting for chronological uncertainty, inter-site variation, and small sample sizes",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "This paper introduces a novel Bayesian framework for inferring the shape of diffusion curves using radiocarbon data associated with the presence/absence of a particular innovation",
+      "location": "Abstract",
+      "supported_by": ["E001", "E002", "E003", "E004", "E005"],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "source": "Abstract"
+      }
+    },
+    {
+      "claim_id": "C002",
+      "claim_text": "Both hierarchical and ICAR models can accurately recover diffusion curve parameters from simulated data",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "verbatim_quote": "Our hierarchical approach was able to accurately recover the shape of the diffusion curve in both simulated datasets... The non-parametric ICAR approach successfully recovered the 'true' time-sequence",
+      "location": "Sections 5.1-5.2",
+      "supported_by": ["E004", "E005"],
+      "supports_claims": ["C001"],
+      "source_verification": {
+        "verified": true,
+        "source": "Results section"
+      }
+    },
+    {
+      "claim_id": "C003",
+      "claim_text": "The hierarchical model accounts for inter-site variation in sampling probability while simultaneously modelling the general rate of diffusion",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The hierarchical model described above effectively accounts for any inter-site variation in the probability of dating a domesticate rather than a non-domesticate, while simultaneously modelling the general rate of diffusion of agriculture",
+      "location": "Section 2.1",
+      "supported_by": ["E004"],
+      "supports_claims": ["C001"],
+      "source_verification": {
+        "verified": true,
+        "source": "Methods section"
+      }
+    },
+    {
+      "claim_id": "C004",
+      "claim_text": "The ICAR model provides a non-parametric solution for cases where diffusion does not follow s-shaped curves",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The flexibility of the non-parametric model provides a clear advantage under these conditions and, more generally, in cases where we do not expect an s-shaped diffusion curve to begin with",
+      "location": "Section 6",
+      "supported_by": ["E005", "E009"],
+      "supports_claims": ["C001"],
+      "source_verification": {
+        "verified": true,
+        "source": "Discussion section"
+      }
+    },
+    {
+      "claim_id": "C005",
+      "claim_text": "Rice agriculture diffusion in Japan shows a double s-shape pattern with intervals of slowdown between metapopulations",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "verbatim_quote": "In the case of Japan, the dispersal of rice agriculture is known to have been characterised by episodes of significant regional accelerations and slowdowns (Crema et al., 2022), which might explain why the observed diffusion curve (Fig. 3) can be described as a double s-shape",
+      "location": "Section 6",
+      "supported_by": ["E001", "E006", "E007"],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "source": "Discussion section"
+      }
+    },
+    {
+      "claim_id": "C006",
+      "claim_text": "British farming diffusion shows temporary abandonment of crops in favour of pastoralism and wild resources before reintroduction in Beaker period",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "verbatim_quote": "Previous studies (Bevan et al., 2017; Stevens et al., 2022; Stevens and Fuller, 2012, 2015) have already revealed a shift in subsistence towards total reliance on pastoralism and wild food resources, accompanied in many regions of mainland Britain by the abandonment of crops and cultivation",
+      "location": "Section 6",
+      "supported_by": ["E002", "E008"],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "source": "Discussion section"
+      }
+    },
+    {
+      "claim_id": "C007",
+      "claim_text": "British burial practices show two major cycles of cremation adoption/abandonment, with decline pre-dating Beaker phenomenon by several centuries",
+      "claim_type": "interpretation",
+      "claim_role": "core",
+      "verbatim_quote": "However, the decline in cremation is marked from 2800 BCE onwards and thus pre-dates Beaker inhumation practices in Britain by several centuries, suggesting that this decline may reflect endogenous factors rather than external influences",
+      "location": "Section 6",
+      "supported_by": ["E003", "E009", "E010"],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "source": "Discussion section"
+      }
+    },
+    {
+      "claim_id": "C008",
+      "claim_text": "Posterior predictive checks allow identification of deviations from expected diffusion patterns, providing more robust assessment than traditional SPD approaches",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Our solution overcomes several problems that affect current approaches based on SPDs, including sampling error, calibration-based artefacts, and overdispersion arising from inter-site variation",
+      "location": "Section 6",
+      "supported_by": ["E004", "E005", "E006"],
+      "supports_claims": ["C001"],
+      "source_verification": {
+        "verified": true,
+        "source": "Discussion section"
+      }
+    }
+  ],
+  "implicit_arguments": [
+    {
+      "implicit_argument_id": "IA001",
+      "argument_text": "Direct radiocarbon dates on seeds provide more reliable chronological control than dates on associated materials, despite reducing sample sizes",
+      "type": "methodological_assumption",
+      "trigger_text": ["Statistical analyses of diffusion rates of farming in Japan and Britain (and most likely in other regions of the world) have a number of shared challenges. For example, the direct dating of seeds can overcome some of the problems associated with chronological and contextual uncertainty but also drastically reduces sample sizes"],
+      "trigger_locations": ["Section 3.1"],
+      "inference_reasoning": "The authors justify using direct dates despite smaller sample sizes, implying this trade-off is worthwhile for improved accuracy",
+      "supports_claims": ["C001"],
+      "source_verification": {
+        "verified": true,
+        "source": "Section 3.1"
+      }
+    },
+    {
+      "implicit_argument_id": "IA002",
+      "argument_text": "Model misfit (poor posterior predictive checks) is informative rather than simply indicating failure, as it reveals deviations from expected patterns",
+      "type": "bridging_claim",
+      "trigger_text": ["While this might be interpreted as a negative result, we highlight that our posterior predictive check provided means to identify whether and, more importantly, how the empirical data deviates from the expectation"],
+      "trigger_locations": ["Section 6"],
+      "inference_reasoning": "Authors reframe poor model fit as a useful diagnostic outcome rather than a limitation",
+      "supports_claims": ["C008"],
+      "source_verification": {
+        "verified": true,
+        "source": "Section 6"
+      }
+    }
+  ],
+  "research_designs": [
+    {
+      "design_id": "RD001",
+      "design_text": "Methods development and validation study: develop Bayesian hierarchical and non-parametric models, validate on simulated data, apply to three archaeological case studies",
+      "design_type": "methods_development",
+      "design_status": "explicit",
+      "verbatim_quote": "We test the robustness of our approach via simulated datasets and two sets of case studies",
+      "location": "Abstract/Introduction",
+      "implements_through_methods": ["M001", "M002", "M003"]
+    },
+    {
+      "design_id": "RD002",
+      "design_text": "Simulation study: generate synthetic datasets with known parameters to validate model recovery",
+      "design_type": "validation",
+      "design_status": "explicit",
+      "verbatim_quote": "We first examined the robustness of the two statistical approaches we developed by examining whether they can accurately recover parameter values when dealing with sample sizes comparable to those observed in the case studies",
+      "location": "Section 4.1.1",
+      "implements_through_methods": ["M003"]
+    },
+    {
+      "design_id": "RD003",
+      "design_text": "Case study application: apply developed methods to empirical archaeological radiocarbon datasets",
+      "design_type": "comparative_case_study",
+      "design_status": "explicit",
+      "verbatim_quote": "then applied to investigate three case studies",
+      "location": "Abstract",
+      "implements_through_methods": ["M001", "M002"]
+    }
+  ],
+  "methods": [
+    {
+      "method_id": "M001",
+      "method_text": "Hierarchical Bayesian model for sigmoid diffusion curves with site-level random effects",
+      "method_type": "statistical_model",
+      "method_status": "explicit",
+      "verbatim_quote": "a hierarchical model that enables the fitting of an s-shaped diffusion curve whilst accounting for inter-site variations in the probability of sampling the innovation itself",
+      "location": "Section 2.1",
+      "implements_designs": ["RD001", "RD003"],
+      "realized_through_protocols": ["P001", "P002"]
+    },
+    {
+      "method_id": "M002",
+      "method_text": "Intrinsic Gaussian Conditional Autoregressive (ICAR) model for non-parametric diffusion estimation",
+      "method_type": "statistical_model",
+      "method_status": "explicit",
+      "verbatim_quote": "a non-parametric model that can estimate the changing proportion of the innovation across user-defined time-blocks",
+      "location": "Section 2.2",
+      "implements_designs": ["RD001", "RD003"],
+      "realized_through_protocols": ["P003"]
+    },
+    {
+      "method_id": "M003",
+      "method_text": "Simulation-based validation with known generating parameters",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "We simulated three datasets with sample sizes and time-windows equivalent to each observed dataset",
+      "location": "Section 4.1.1",
+      "implements_designs": ["RD002"],
+      "realized_through_protocols": ["P004"]
+    },
+    {
+      "method_id": "M004",
+      "method_text": "Posterior predictive checks for model adequacy assessment",
+      "method_type": "diagnostic",
+      "method_status": "explicit",
+      "verbatim_quote": "We also carried out posterior predictive checks for the two empirical case studies by visually comparing observed SPDs of the proportion of domesticated crops to an envelope of predictions",
+      "location": "Section 4.2",
+      "implements_designs": ["RD001"],
+      "realized_through_protocols": ["P005"]
+    }
+  ],
+  "protocols": [
+    {
+      "protocol_id": "P001",
+      "protocol_text": "MCMC fitting for hierarchical model: 4 chains, 1 million iterations, 50% burn-in, thinning=50",
+      "protocol_type": "computational",
+      "protocol_status": "explicit",
+      "verbatim_quote": "We fitted all four models with the same MCMC settings, using four chains, each with 1 million iterations (half discarded as burn-in) and with thinning set to 50",
+      "location": "Section 4.2",
+      "implements_methods": ["M001"],
+      "produces_evidence": ["E004", "E007", "E008"]
+    },
+    {
+      "protocol_id": "P002",
+      "protocol_text": "Prior specification: r~Exponential(100), μ~Beta(2,2), φ~Gamma(5,0.1), m~Normal truncated to analysis window",
+      "protocol_type": "computational",
+      "protocol_status": "explicit",
+      "verbatim_quote": "r ∼ Exponential(100), μ ∼ Beta(2, 2), φ ∼ Gamma(5, 0.1)",
+      "location": "Section 4.2",
+      "implements_methods": ["M001"],
+      "produces_evidence": ["E007", "E008"]
+    },
+    {
+      "protocol_id": "P003",
+      "protocol_text": "ICAR model fitting: 36 time-blocks of 100 years, 4 chains, 100,000 iterations, 20% burn-in, thinning=4",
+      "protocol_type": "computational",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The ICAR model for case study 2 and the simulation dataset 2 was fitted using 36 time-blocks of 100 years... we used four chains, each with 100,000 iterations (20,000 of which were discarded for burn-in), with parameters collected every four steps",
+      "location": "Section 4.2",
+      "implements_methods": ["M002"],
+      "produces_evidence": ["E005", "E009", "E010"]
+    },
+    {
+      "protocol_id": "P004",
+      "protocol_text": "Data simulation: uniform calendar dates within time window, back-calibration, 20-year error, random site clustering",
+      "protocol_type": "computational",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Calendar dates were uniformly generated within the time window of analyses, back-calibrated in 14C age, and associated with an arbitrary error of 20 years",
+      "location": "Section 4.1.1",
+      "implements_methods": ["M003"],
+      "produces_evidence": ["E004", "E005"]
+    },
+    {
+      "protocol_id": "P005",
+      "protocol_text": "Posterior predictive check: compare observed proportion SPD to simulation envelope from 1000 posterior samples",
+      "protocol_type": "diagnostic",
+      "protocol_status": "explicit",
+      "verbatim_quote": "by visually comparing observed SPDs of the proportion of domesticated crops to an envelope of predictions generated using 1000 randomly selected parameters from the joint posterior distributions",
+      "location": "Section 4.2",
+      "implements_methods": ["M004"],
+      "produces_evidence": ["E006"]
+    },
+    {
+      "protocol_id": "P006",
+      "protocol_text": "Convergence diagnostics: Gelman-Rubin statistic for parameters, agreement indices for calendar dates",
+      "protocol_type": "diagnostic",
+      "protocol_status": "explicit",
+      "verbatim_quote": "We evaluated the mixing of our model using the Gelman-Rubin statistic (Gelman and Rubin, 1992), except for the posterior of the individual dates (θ), which were examined using agreement indices",
+      "location": "Section 4.2",
+      "implements_methods": ["M001", "M002"],
+      "produces_evidence": ["E007", "E008"]
+    },
+    {
+      "protocol_id": "P007",
+      "protocol_text": "Radiocarbon calibration using IntCal20 curve",
+      "protocol_type": "computational",
+      "protocol_status": "explicit",
+      "verbatim_quote": "We used the IntCal20 curve for all models (Reimer et al., 2020)",
+      "location": "Section 4.2",
+      "implements_methods": ["M001", "M002"],
+      "produces_evidence": ["E007", "E008", "E009"]
+    }
+  ],
+  "reproducibility_infrastructure": {
+    "data_availability": {
+      "statement_present": true,
+      "statement_type": "available",
+      "statement_text": "All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942.",
+      "repositories": [
+        {
+          "name": "GitHub - diffusionCurve",
+          "url": "https://github.com/ercrema/diffusionCurve",
+          "access_conditions": "open"
+        },
+        {
+          "name": "Zenodo archive",
+          "url": "https://doi.org/10.5281/zenodo.10782942",
+          "access_conditions": "open"
+        }
+      ],
+      "pid": "10.5281/zenodo.10782942",
+      "licence": "CC BY"
+    },
+    "code_availability": {
+      "statement_present": true,
+      "statement_text": "All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942.",
+      "repository": "https://github.com/ercrema/diffusionCurve",
+      "pid": "10.5281/zenodo.10782942",
+      "licence": "CC BY",
+      "language": "R",
+      "dependencies_documented": true,
+      "machine_actionability": {
+        "rating": "high",
+        "rationale": "GitHub repository with Zenodo DOI archival. R code with reproducible workflow. Uses NIMBLE and nimbleCarbon packages. Dependencies managed through R package ecosystem."
+      }
+    },
+    "materials_availability": {
+      "statement_present": false,
+      "description": "Computational methods paper - no physical materials"
+    },
+    "persistent_identifiers": {
+      "paper_doi": "10.1016/j.jas.2024.105962",
+      "data_doi": "10.5281/zenodo.10782942",
+      "code_doi": "10.5281/zenodo.10782942",
+      "orcids": [],
+      "software_pids": [
+        {
+          "software_name": "diffusionCurve",
+          "repository": "https://github.com/ercrema/diffusionCurve",
+          "doi": "10.5281/zenodo.10782942",
+          "url": "https://doi.org/10.5281/zenodo.10782942"
+        },
+        {
+          "software_name": "nimbleCarbon",
+          "repository": "CRAN",
+          "doi": null,
+          "url": "https://cran.r-project.org/package=nimbleCarbon"
+        },
+        {
+          "software_name": "NIMBLE",
+          "repository": "CRAN/GitHub",
+          "doi": "10.5281/zenodo.1211190",
+          "url": "https://doi.org/10.5281/zenodo.1211190"
+        }
+      ]
+    },
+    "funding": {
+      "statements": [
+        "This work was supported by the European Research Council Starting Grant (ENCOUNTER; no. 801953; ERC & CJS; PI: ERC) a Philip Leverhulme Prize (#PLP-2019–304; PI: ERC), NERC radiocarbon grant (NF/2017/2/12; AB; PI: Mike Parker Pearson), and LAHP AHRC studentship (AB)."
+      ],
+      "funders": [
+        {
+          "name": "European Research Council",
+          "grant_id": "801953",
+          "grant_name": "ENCOUNTER",
+          "recipients": ["E.R. Crema", "C.J. Stevens"]
+        },
+        {
+          "name": "Leverhulme Trust",
+          "grant_id": "PLP-2019-304",
+          "grant_name": "Philip Leverhulme Prize",
+          "recipients": ["E.R. Crema"]
+        },
+        {
+          "name": "Natural Environment Research Council (NERC)",
+          "grant_id": "NF/2017/2/12",
+          "grant_name": "Radiocarbon grant",
+          "recipients": ["A. Bloxam"]
+        },
+        {
+          "name": "Arts and Humanities Research Council (AHRC)",
+          "grant_id": null,
+          "grant_name": "LAHP studentship",
+          "recipients": ["A. Bloxam"]
+        }
+      ]
+    },
+    "author_contributions": {
+      "statement_present": true,
+      "credit_taxonomy_used": true,
+      "contributions": [
+        {
+          "author": "E.R. Crema",
+          "roles": ["Conceptualization", "Data curation", "Formal analysis", "Funding acquisition", "Methodology", "Software", "Writing – original draft", "Writing – review & editing", "Visualization"]
+        },
+        {
+          "author": "A. Bloxam",
+          "roles": ["Data curation", "Funding acquisition", "Writing – original draft", "Writing – review & editing"]
+        },
+        {
+          "author": "C.J. Stevens",
+          "roles": ["Data curation", "Writing – review & editing", "Writing – original draft"]
+        },
+        {
+          "author": "M. Vander Linden",
+          "roles": ["Data curation", "Writing – original draft", "Writing – review & editing"]
+        }
+      ]
+    },
+    "preregistration": {
+      "preregistered": false,
+      "registry": null,
+      "url": null
+    },
+    "ethics": {
+      "statement_present": true,
+      "statement_text": "The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.",
+      "irb_approval": null,
+      "permits": null
+    },
+    "reproducibility_review": {
+      "reviewer_mentioned": true,
+      "reviewer_name": "Ben Marwick",
+      "review_scope": "computational code",
+      "notes": "Ben Marwick (JAS Reproducibility Specialist) reviewed the computational code and provided suggestions to improve its reproducibility."
+    }
+  },
+  "extraction_notes": {
+    "pass0_metadata": {
+      "completion_date": "2025-01-12T10:00:00Z",
+      "primary_source": "title page + ScienceDirect header",
+      "author_name_format": "initials expanded from community knowledge",
+      "doi_present": true,
+      "notes": "Paper is open access under CC BY licence. Authors listed with initials only on title page; full names inferred from established research community knowledge. Methods paper developing novel Bayesian framework."
+    },
+    "pass1_2_claims_evidence": {
+      "completion_date": "2025-01-12T11:00:00Z",
+      "evidence_count": 10,
+      "claims_count": 8,
+      "implicit_arguments_count": 2,
+      "notes": "Methods paper with strong quantitative evidence base. Core claims are methodological (model development and validation) and empirical (case study findings). Evidence includes simulation results, parameter estimates, and posterior predictive diagnostics."
+    },
+    "pass3_5_rdmap": {
+      "completion_date": "2025-01-12T11:00:00Z",
+      "research_designs_count": 3,
+      "methods_count": 4,
+      "protocols_count": 7,
+      "notes": "Clear three-tier hierarchy: methods development design validated through simulation then applied to case studies. Detailed MCMC protocols fully specified."
+    },
+    "pass6_infrastructure": {
+      "completion_date": "2025-01-12T10:30:00Z",
+      "notes": "Excellent reproducibility infrastructure. Code and data archived on Zenodo with DOI. CRediT author contributions statement present. Four funding sources documented. Reproducibility review by Ben Marwick noted in acknowledgements. CC BY licence for open access."
+    },
+    "claims_evidence_extraction_complete": true,
+    "rdmap_extraction_complete": true,
+    "infrastructure_extraction_complete": true,
+    "known_limitations": [],
+    "assessment_blockers": []
+  }
+}

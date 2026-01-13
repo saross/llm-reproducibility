@@ -1,7 +1,7 @@
 # Active To-Do List
 
 **Last Updated:** 2026-01-08
-**Status:** Phase 7 (Credibility Assessment) - Steps 1-3 complete, ready for Step 4 (Track A quality gating prompt)
+**Status:** Phase 7 (Credibility Assessment) - Steps 1-4 complete, ready for Step 5 (foundational clarity cluster prompt)
 
 ---
 
@@ -77,14 +77,20 @@
 - ✅ Reliability threshold met: aggregate score CV 1.9-3.4% (well under SD < 10)
 - ✅ Results documented in `outputs/variability-test/variability-analysis-report.md`
 
+**Step 4: Create Track A Quality Gating Prompt** ✅ (2026-01-08 — discovered prompt already exists)
+- ✅ Prompt exists: `assessment-system/prompts/track-a-quality-gating.md` (505 lines, v1.0)
+- ✅ Reference exists: `.claude/skills/research-assessor/references/credibility/track-a-quality-criteria.md` (v2.0)
+- ✅ Tested: All 25 variability test runs produced valid Track A outputs
+- ✅ Gap analysis: 6 potential gaps reviewed, all found intentional or documentation-only
+- ✅ Plan documented: `planning/step-4-track-a-review-plan.md`
+
 **Remaining Steps:**
-- Step 4: Create Track A quality gating prompt (1 hour) 🔲 (Next)
-- Step 5: Create foundational clarity cluster prompt (1.5 hours)
+- Step 5: Create foundational clarity cluster prompt (1.5 hours) 🔲 (Next)
 - Step 6: Test foundational clarity with reliability checks (1.5 hours)
 - Step 7: Complete remaining cluster prompts (3-4 hours)
 
 **Estimated total effort:** 10-12 hours across all 7 steps
-**Current progress:** Steps 1-3 complete, Step 4 next
+**Current progress:** Steps 1-4 complete, Step 5 next
 
 ### Deferred Documentation Work
 See "Low Priority / Nice to Have" section (Section 9) for:
@@ -106,7 +112,7 @@ RUN-08 successfully achieved all extraction goals:
 - ✅ Implicit arguments extraction working (16 items)
 - ✅ High relationship mapping (81% evidence, 57% claims)
 
-**Current Focus:** Step 4 (Track A quality gating prompt) — Steps 1-3 complete, classifier testing absorbed into variability test with 100% paper_type stability
+**Current Focus:** Step 5 (foundational clarity cluster prompt) — Steps 1-4 complete, Track A prompt discovered already exists and tested
 
 ---
 
@@ -589,6 +595,128 @@ Phase 1 infrastructure assessment capability deployed (2025-11-11):
 
 ---
 
+## Open Science Compliance Study - FAIR Assessment Improvements
+
+### 11. Enhanced FAIR Assessment Framework
+
+**Priority:** HIGH (active development)
+**Status:** IN PROGRESS - Framework design
+**Added:** 2026-01-13
+**Context:** Identified during crema-et-al-2024 session-per-pass extraction
+
+**Problem Statement:**
+Current FAIR assessment approach has several limitations:
+1. **Scoring scale confusion**: Using 0-16 per dimension when rubric specifies 0-4 per dimension (total ~16)
+2. **Licence duplication**: Incorrectly assessed under both A (Accessible) and R (Reusable)
+3. **Metadata gaps**: Cannot fully assess F2, F3, R1, R1.2, R1.3 from paper text alone
+4. **No human vs machine-readable distinction**: Original 2016 FAIR emphasises machine-actionability; WorldFAIR and FAIR Island projects now give this increased emphasis
+
+**Proposed Two-Phase Assessment:**
+
+#### Phase 1: Enhanced Paper-Based FAIR Assessment
+
+**What can be assessed from paper:**
+- PID existence (DOI, ORCID, ROR stated)
+- Repository type and archival status
+- Licence (stated in text or data availability statement)
+- Access model (open vs restricted)
+- Code language/framework
+
+**Enhancement: Paper Content as Metadata/Paradata**
+
+The paper itself contains metadata about data/code that should be assessed:
+
+| Paper Section | Metadata Value | Human-Readable | Machine-Readable |
+|---------------|----------------|----------------|------------------|
+| Methods | Dataset description, sampling, processing | ✅ | ❌ (unless structured) |
+| Data Availability Statement | Repository, licence, access | ✅ | ❌ |
+| Acknowledgements | Funding, contributions, code review | ✅ | ❌ |
+| Supplementary Materials | Extended methods, data dictionaries | ✅ | ❌ (usually) |
+| Tables/Figures | Parameter values, sample sizes | ✅ | ❌ (if PDF) |
+
+**Enhancement: Supplemental Materials for Infrastructure Assessment**
+
+Decision: Examine appendices/supplemental materials for FAIR/infrastructure assessment:
+- ✅ **YES for**: Data availability, code documentation, extended methods, data dictionaries, parameter tables
+- ❌ **NO for**: Claims/evidence extraction, RDMAP extraction (keep to main text)
+
+**Enhancement: Human-Readable vs Machine-Readable Scoring**
+
+For each FAIR element, assess both dimensions:
+
+| Principle | Human-Readable (0-1) | Machine-Readable (0-1) | Total |
+|-----------|---------------------|------------------------|-------|
+| F2 (Rich metadata) | Methods section describes data | Repository has DataCite JSON | 0-2 |
+| R1.2 (Provenance) | Paper describes data origin | Metadata has provenance fields | 0-2 |
+| I2 (FAIR vocabularies) | Paper uses standard terms | Metadata uses ontology URIs | 0-2 |
+
+This aligns with:
+- **Wilkinson et al. 2016**: Original FAIR paper emphasised machine-actionability
+- **WorldFAIR**: Cross-domain FAIR implementation guidance
+- **FAIR Island**: Emphasis on machine-actionable metadata over human-readable documentation
+
+**Action Items - Phase 1:**
+- [ ] Update fair-principles-guide.md rubric to distinguish paper-assessable vs API-assessable criteria
+- [ ] Add "paper content as metadata" assessment (methods, DAS, acknowledgements as metadata sources)
+- [ ] Add explicit handling for "unknown/cannot assess from paper" vs "not present"
+- [ ] Add human-readable vs machine-readable scoring per FAIR element
+- [ ] Document supplemental materials policy (yes for infrastructure, no for claims/RDMAP)
+- [ ] Update Phase 1 assessment template with new scoring approach
+
+#### Phase 2: Repository API-Based FAIR Verification
+
+**APIs to query:**
+
+**Zenodo API** (`GET https://zenodo.org/api/records/{record_id}`):
+- Assess DataCite metadata completeness (F2, R1)
+- Check for qualified references (I3)
+- Verify licence is machine-readable (R1.1)
+- Check community standards compliance (R1.3)
+- Assess provenance fields (R1.2)
+
+**GitHub API** (`GET https://api.github.com/repos/{owner}/{repo}`):
+- Check for CITATION.cff (F2, machine-readable citation)
+- Check for LICENSE file (R1.1)
+- Check for README presence (R1)
+- Check for environment specification (requirements.txt, renv.lock, Dockerfile)
+- Check for releases with Zenodo integration
+
+**Software Heritage API**:
+- Verify archival status (A2)
+- Get SWHID for persistent identification (F1)
+
+**DataCite API** (`GET https://api.datacite.org/dois/{doi}`):
+- Verify metadata registration (F4)
+- Check related identifiers (I3)
+- Assess metadata richness across fields
+
+**Action Items - Phase 2:**
+- [ ] Design API query protocol for each repository type
+- [ ] Create script to fetch and parse Zenodo metadata
+- [ ] Create script to assess GitHub repository FAIR compliance
+- [ ] Define scoring rules for API-derived metadata completeness
+- [ ] Integrate Phase 1 (paper) and Phase 2 (API) scores
+- [ ] Document limitations (rate limits, access restrictions, API changes)
+
+**Estimated Effort:**
+- Phase 1 (rubric update): 4-6 hours
+- Phase 2 (API scripts + testing): 8-12 hours
+- Total: 12-18 hours
+
+**Dependencies:**
+- Crema-et-al-2024 extraction complete (provides test case)
+- Understanding of WorldFAIR and FAIR Island approaches
+- Access to repository APIs (no authentication needed for public repos)
+
+**References:**
+- Wilkinson et al. 2016 (original FAIR): https://doi.org/10.1038/sdata.2016.18
+- FAIR4RS (software): https://doi.org/10.1038/s41597-022-01710-x (Zenodo: 10.5281/zenodo.6623556)
+- WorldFAIR: https://worldfair-project.eu/
+- FAIR Island: https://fair-island.org/
+- go-fair.org: https://www.go-fair.org/fair-principles/
+
+---
+
 ## Deferred / Future Projects
 
 ### 6. FAIR Vocabularies Development (I2 Compliance)
@@ -987,7 +1115,7 @@ After documentation improvements, next steps:
 
 ---
 
-*Last updated: 2025-11-14*
+*Last updated: 2026-01-08*
 
 *Status: Active - Post-RUN-08 milestone*
 
