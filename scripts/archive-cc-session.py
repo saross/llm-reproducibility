@@ -1164,8 +1164,8 @@ def update_catalog(new_sessions: list[dict[str, Any]]) -> None:
     catalog["project"] = get_project_name()
     catalog["total_sessions"] = len(catalog["sessions"])
 
-    # Sort by date
-    catalog["sessions"].sort(key=lambda s: s.get("started_at", ""), reverse=True)
+    # Sort by date (handle None values by putting them last)
+    catalog["sessions"].sort(key=lambda s: s.get("started_at") or "", reverse=True)
 
     # Save
     CATALOG_FILE.parent.mkdir(parents=True, exist_ok=True)
