@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.1",
+  "session": {
+    "id": "agent-b56a861f",
+    "started_at": "2025-12-06T08:44:16.070Z",
+    "ended_at": "2025-12-06T08:54:02.690Z",
+    "duration_minutes": 9
+  },
+  "project": {
+    "name": "llm-reproducibility",
+    "directory": "/home/shawn/Code/llm-reproducibility"
+  },
+  "model": {
+    "provider": "anthropic",
+    "model_id": "claude-sonnet-4-5-20250929",
+    "access_method": "claude-code-cli"
+  },
+  "thinking_blocks": {
+    "included": true,
+    "count": 0,
+    "total_tokens": 0,
+    "token_count_method": "estimated",
+    "sharing_preference": "research-only",
+    "use_constraints": [
+      "analysis-for-improvement",
+      "research-publication-aggregated"
+    ],
+    "excluded_uses": [
+      "training-data",
+      "public-display-individual"
+    ],
+    "nature_note": "Work-in-progress reasoning traces, not polished output. May contain abandoned paths and self-corrections."
+  },
+  "relationships": {
+    "continues": null,
+    "continuedBy": null,
+    "isPartOf": [
+      "llm-reproducibility"
+    ],
+    "isParallelTo": [],
+    "supersedes": null,
+    "references": [],
+    "branchesFrom": null
+  },
+  "artifacts": {
+    "created": [],
+    "modified": [],
+    "referenced": [
+      {
+        "path": "docs/variability-test-protocol.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "input/variability-queue.yaml",
+        "type": "config",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/ballsun-stanton-et-al-2018/run-02/assessment/assessment.json",
+        "type": "data",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/sobotkova-et-al-2024/run-01/assessment/classification.json",
+        "type": "data",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/sobotkova-et-al-2024/run-01/assessment/credibility-report.md",
+        "type": "document",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/sobotkova-et-al-2024/run-01/extraction.json",
+        "type": "data",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/sobotkova-et-al-2024/run-02/extraction.json",
+        "type": "data",
+        "description": ""
+      },
+      {
+        "path": "outputs/variability-test/sobotkova-et-al-2024/variability-analysis.json",
+        "type": "data",
+        "description": ""
+      },
+      {
+        "path": "scripts/analyse-extraction-variability.py",
+        "type": "code",
+        "description": ""
+      }
+    ]
+  },
+  "statistics": {
+    "turns": 21,
+    "human_messages": 21,
+    "assistant_messages": 30,
+    "thinking_blocks": 0,
+    "tool_calls": {
+      "total": 21,
+      "by_type": {
+        "Read": 10,
+        "Bash": 8,
+        "Glob": 2,
+        "Write": 1
+      }
+    },
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "cache_read": 0
+    },
+    "estimated_cost_usd": 0.0,
+    "tool_outputs": {
+      "total_bytes": 122638,
+      "by_type": {
+        "Read": {
+          "count": 10,
+          "bytes": 99938
+        },
+        "Bash": {
+          "count": 8,
+          "bytes": 15614
+        },
+        "Glob": {
+          "count": 2,
+          "bytes": 7017
+        },
+        "Write": {
+          "count": 1,
+          "bytes": 69
+        }
+      },
+      "largest_single_output_bytes": 21107
+    }
+  },
+  "auto_generated": {
+    "title": "Agent Sub-Task (Planning/Analysis)",
+    "purpose": "Background agent spawned during variability test completion and planning phase.",
+    "tags": [
+      "agent-session",
+      "planning",
+      "variability-analysis",
+      "sub-task"
+    ]
+  },
+  "three_ps": {
+    "prompt_summary": "Automated sub-task during planning or analysis work.",
+    "process_summary": "Background agent for planning/analysis support.",
+    "provenance_summary": "Supporting agent for variability test completion and planning sessions."
+  },
+  "archive": {
+    "jsonl_path": "session.jsonl",
+    "jsonl_sha256": "af0fad9e38c8d694876a072ad088491e491ed3908225d8e1d0283b77ff077cbf",
+    "jsonl_bytes": 347930,
+    "archived_at": "2026-01-13T17:04:34.919832"
+  }
+}

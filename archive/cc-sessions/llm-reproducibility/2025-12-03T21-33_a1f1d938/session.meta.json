@@ -1,0 +1,154 @@
+{
+  "schema_version": "1.1",
+  "session": {
+    "id": "a1f1d938-7a55-4280-87f0-a45a32585670",
+    "started_at": "2025-12-03T21:33:19.819Z",
+    "ended_at": "2025-12-03T21:41:17.599Z",
+    "duration_minutes": 7
+  },
+  "project": {
+    "name": "llm-reproducibility",
+    "directory": "/home/shawn/Code/llm-reproducibility"
+  },
+  "model": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-4-5-20251101",
+    "access_method": "claude-code-cli"
+  },
+  "thinking_blocks": {
+    "included": true,
+    "count": 0,
+    "total_tokens": 0,
+    "token_count_method": "estimated",
+    "sharing_preference": "research-only",
+    "use_constraints": [
+      "analysis-for-improvement",
+      "research-publication-aggregated"
+    ],
+    "excluded_uses": [
+      "training-data",
+      "public-display-individual"
+    ],
+    "nature_note": "Work-in-progress reasoning traces, not polished output. May contain abandoned paths and self-corrections."
+  },
+  "relationships": {
+    "continues": null,
+    "continuedBy": null,
+    "isPartOf": [
+      "llm-reproducibility"
+    ],
+    "isParallelTo": [],
+    "supersedes": null,
+    "references": [],
+    "branchesFrom": null
+  },
+  "artifacts": {
+    "created": [
+      {
+        "path": "outputs/variability-test/ross-2005/run-05/extraction.json",
+        "type": "data",
+        "description": ""
+      }
+    ],
+    "modified": [],
+    "referenced": [
+      {
+        "path": "input/sources/original-pdf/Ross - 2005 - Barbarophonos Language and Panhellenism in the Iliad.pdf",
+        "type": "other",
+        "description": ""
+      },
+      {
+        "path": "input/variability-queue.yaml",
+        "type": "config",
+        "description": ""
+      },
+      {
+        "path": "input/workflow.md",
+        "type": "document",
+        "description": ""
+      }
+    ]
+  },
+  "statistics": {
+    "turns": 27,
+    "human_messages": 27,
+    "assistant_messages": 31,
+    "thinking_blocks": 0,
+    "tool_calls": {
+      "total": 19,
+      "by_type": {
+        "Read": 5,
+        "Skill": 1,
+        "Bash": 1,
+        "TodoWrite": 3,
+        "Write": 2,
+        "Edit": 7
+      }
+    },
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "cache_read": 0
+    },
+    "estimated_cost_usd": 0.0,
+    "tool_outputs": {
+      "total_bytes": 165914,
+      "by_type": {
+        "Read": {
+          "count": 5,
+          "bytes": 107840
+        },
+        "Skill": {
+          "count": 1,
+          "bytes": 34
+        },
+        "Bash": {
+          "count": 1,
+          "bytes": 0
+        },
+        "TodoWrite": {
+          "count": 3,
+          "bytes": 480
+        },
+        "Write": {
+          "count": 2,
+          "bytes": 49135
+        },
+        "Edit": {
+          "count": 6,
+          "bytes": 8425
+        }
+      },
+      "largest_single_output_bytes": 49158
+    }
+  },
+  "auto_generated": {
+    "title": "Variability Test Run 05 - Ross 2005 Paper (Context Continuation)",
+    "purpose": "Continuation session for Ross 2005 run 05, extraction phase following context compaction.",
+    "tags": [
+      "variability-test",
+      "run-05",
+      "ross-2005",
+      "extraction",
+      "context-continuation"
+    ]
+  },
+  "three_ps": {
+    "prompt_summary": "Continue variability test run 05 on Ross 2005 after context compaction.",
+    "process_summary": "Continued extraction phase from compacted context.",
+    "provenance_summary": "Continuation fragment for Ross 2005 run 05 in variability test series."
+  },
+  "archive": {
+    "jsonl_path": "session.jsonl",
+    "jsonl_sha256": "536cec400adf17fdca893d80f96099b0e92274af5444b62186f99e3d7e233408",
+    "jsonl_bytes": 1263876,
+    "archived_at": "2026-01-13T17:03:26.825300"
+  },
+  "_relationship_hints": {
+    "continues_hint": null,
+    "references_hints": [],
+    "detection_notes": [
+      "Found continuation language: 'continu(?:e|ing|ed)\\s+from'"
+    ]
+  }
+}
