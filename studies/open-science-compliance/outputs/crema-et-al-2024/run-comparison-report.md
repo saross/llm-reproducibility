@@ -96,6 +96,6 @@ For a methodological paper like this, the session-per-pass approach produced not
 
 ## Files
 
-- Run-01: `run-01-autonomous/extraction.json`
-- Run-02: `run-02-session-per-pass/extraction.json`
+- Run-01: `archive/extraction-runs/crema-et-al-2024-run-01-autonomous/extraction.json` (archived)
+- Run-02: `run-02-session-per-pass/extraction.json` (preferred)
 - Paper text: `crema-et-al-2024.txt`
