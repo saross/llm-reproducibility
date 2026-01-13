@@ -7,18 +7,29 @@ archive/cc-sessions/ directory, with structured metadata for FAIR-aligned
 research documentation.
 
 Usage:
-    python scripts/archive_cc_session.py                    # Archive latest session
-    python scripts/archive_cc_session.py --session-id UUID  # Archive specific session
-    python scripts/archive_cc_session.py --all              # Archive all unarchived
-    python scripts/archive_cc_session.py --list             # List sessions and status
-    python scripts/archive_cc_session.py --dry-run          # Preview without archiving
+    # Archiving
+    python scripts/archive-cc-session.py                    # Archive latest session
+    python scripts/archive-cc-session.py --session-id UUID  # Archive specific session
+    python scripts/archive-cc-session.py --all              # Archive all unarchived
+    python scripts/archive-cc-session.py --list             # List sessions and status
+
+    # Metadata management
+    python scripts/archive-cc-session.py --list-archives    # Show metadata completion
+    python scripts/archive-cc-session.py --summarize ID     # Analyse session for metadata
+    python scripts/archive-cc-session.py --update-metadata ID -m meta.json  # Update metadata
 
 The script is designed to run within a CC session so that CC can generate
 rich metadata (title, purpose, tags, three_ps summaries) interactively.
 
 Created: 2026-01-08
-Updated: 2026-01-09 (v1.1)
+Updated: 2026-01-13 (v1.2)
 Schema version: 1.1
+
+v1.2 additions:
+- --list-archives: Show metadata completion status
+- --summarize: Analyse session to help generate metadata
+- --update-metadata: Update metadata for existing archives
+- Fixed null timestamp handling in catalog sort
 
 v1.1 additions:
 - thinking_blocks section with ethics metadata (sharing_preference, use_constraints)
@@ -1260,6 +1271,258 @@ def cmd_archive(args: argparse.Namespace) -> None:
     print("\nDone!")
 
 
+def find_archive_by_id(session_id: str) -> Path | None:
+    """Find an archive directory by session ID (full or partial match)."""
+    if not ARCHIVE_DIR.exists():
+        return None
+
+    project_dir = ARCHIVE_DIR / get_project_name()
+    if not project_dir.exists():
+        return None
+
+    # Look for directories containing the session ID
+    for archive_dir in project_dir.iterdir():
+        if archive_dir.is_dir() and session_id in archive_dir.name:
+            return archive_dir
+
+    return None
+
+
+def cmd_update_metadata(args: argparse.Namespace) -> None:
+    """Update metadata for an archived session."""
+    session_id = args.update_metadata
+
+    # Find the archive
+    archive_dir = find_archive_by_id(session_id)
+    if not archive_dir:
+        print(f"Archive not found for session: {session_id}")
+        print("Use --list to see archived sessions.")
+        return
+
+    meta_file = archive_dir / "session.meta.json"
+    if not meta_file.exists():
+        print(f"Metadata file not found: {meta_file}")
+        return
+
+    # Load existing metadata
+    meta = json.loads(meta_file.read_text())
+    print(f"Updating metadata for: {archive_dir.name}")
+    print(f"Current title: {meta.get('auto_generated', {}).get('title', 'None')}")
+
+    # Read new metadata from stdin or file
+    if args.metadata_file:
+        new_meta = json.loads(Path(args.metadata_file).read_text())
+    else:
+        print("\nEnter metadata JSON (Ctrl+D when done):")
+        import sys
+        try:
+            new_meta = json.loads(sys.stdin.read())
+        except json.JSONDecodeError as e:
+            print(f"Invalid JSON: {e}")
+            return
+
+    # Update fields
+    if "title" in new_meta:
+        meta["auto_generated"]["title"] = new_meta["title"]
+    if "purpose" in new_meta:
+        meta["auto_generated"]["purpose"] = new_meta["purpose"]
+    if "tags" in new_meta:
+        meta["auto_generated"]["tags"] = new_meta["tags"]
+    if "three_ps" in new_meta:
+        meta["three_ps"] = new_meta["three_ps"]
+
+    # Save updated metadata
+    if not args.dry_run:
+        meta_file.write_text(json.dumps(meta, indent=2))
+        print(f"\nUpdated: {meta_file}")
+
+        # Update catalog
+        update_catalog_entry(session_id, meta)
+        print("Catalog updated.")
+    else:
+        print("\n[DRY RUN] Would update metadata to:")
+        print(json.dumps(meta["auto_generated"], indent=2))
+
+
+def update_catalog_entry(session_id: str, meta: dict[str, Any]) -> None:
+    """Update a single session's entry in the catalog."""
+    if not CATALOG_FILE.exists():
+        return
+
+    catalog = json.loads(CATALOG_FILE.read_text())
+
+    for session in catalog.get("sessions", []):
+        if session_id in session.get("id", ""):
+            session["title"] = meta.get("auto_generated", {}).get("title", "Untitled")
+            session["purpose"] = meta.get("auto_generated", {}).get("purpose", "")
+            session["tags"] = meta.get("auto_generated", {}).get("tags", [])
+            break
+
+    catalog["generated_at"] = datetime.now().isoformat()
+    CATALOG_FILE.write_text(json.dumps(catalog, indent=2))
+
+
+def cmd_summarize(args: argparse.Namespace) -> None:
+    """Extract summary information from a session to help generate metadata."""
+    session_id = args.summarize
+
+    # Find the archive
+    archive_dir = find_archive_by_id(session_id)
+    if not archive_dir:
+        print(f"Archive not found for session: {session_id}")
+        return
+
+    # Find the session file (jsonl or jsonl.gz)
+    session_file = archive_dir / "session.jsonl"
+    if not session_file.exists():
+        session_file = archive_dir / "session.jsonl.gz"
+        if not session_file.exists():
+            print(f"Session file not found in: {archive_dir}")
+            return
+
+    # Load and parse
+    print(f"Analysing: {archive_dir.name}")
+    print("=" * 60)
+
+    if session_file.suffix == ".gz":
+        with gzip.open(session_file, "rt", encoding="utf-8") as f:
+            lines = f.readlines()
+    else:
+        lines = session_file.read_text().splitlines()
+
+    # Extract key information
+    first_human_msg = None
+    last_human_msg = None
+    human_messages = []
+    tool_types = set()
+    files_modified = set()
+
+    for line in lines:
+        if not line.strip():
+            continue
+        try:
+            entry = json.loads(line)
+            msg_type = entry.get("type")
+
+            # Handle user messages (type: "user" with userType: "external")
+            if msg_type == "user" and entry.get("userType") == "external":
+                message = entry.get("message", {})
+                content = message.get("content", "") if isinstance(message, dict) else ""
+                if isinstance(content, str) and content.strip():
+                    if first_human_msg is None:
+                        first_human_msg = content[:500]
+                    last_human_msg = content[:500]
+                    human_messages.append(content[:200])
+                # Also handle list content (multimodal messages)
+                elif isinstance(content, list):
+                    for block in content:
+                        if isinstance(block, dict) and block.get("type") == "text":
+                            text = block.get("text", "")
+                            if text.strip():
+                                if first_human_msg is None:
+                                    first_human_msg = text[:500]
+                                last_human_msg = text[:500]
+                                human_messages.append(text[:200])
+                                break
+
+            elif msg_type == "assistant":
+                message = entry.get("message", {})
+                for content_block in message.get("content", []):
+                    if content_block.get("type") == "tool_use":
+                        tool_name = content_block.get("name", "")
+                        tool_types.add(tool_name)
+                        # Track file modifications
+                        if tool_name in ("Edit", "Write"):
+                            inp = content_block.get("input", {})
+                            if "file_path" in inp:
+                                files_modified.add(inp["file_path"])
+
+        except json.JSONDecodeError:
+            continue
+
+    # Print summary
+    print(f"\n**First user message:**\n{first_human_msg}\n")
+    print(f"**Last user message:**\n{last_human_msg}\n")
+    print(f"**Tools used:** {', '.join(sorted(tool_types)) or 'None'}")
+    print(f"**Files modified:** {len(files_modified)}")
+    if files_modified and len(files_modified) <= 20:
+        for f in sorted(files_modified)[:20]:
+            print(f"  - {f}")
+
+    # Load existing metadata for context
+    meta_file = archive_dir / "session.meta.json"
+    if meta_file.exists():
+        meta = json.loads(meta_file.read_text())
+        stats = meta.get("statistics", {})
+        print(f"\n**Statistics:**")
+        print(f"  Turns: {stats.get('turns', 'N/A')}")
+        print(f"  Duration: {meta.get('session', {}).get('duration_minutes', 'N/A')} minutes")
+        print(f"  Tool calls: {stats.get('tool_calls', {}).get('total', 'N/A')}")
+
+    # Suggest metadata template
+    print("\n" + "=" * 60)
+    print("**Suggested metadata template:**")
+    print("=" * 60)
+    print("""
+{
+  "title": "[TODO: Brief title based on above]",
+  "purpose": "[TODO: 1-2 sentence purpose]",
+  "tags": ["llm-reproducibility", "TODO"],
+  "three_ps": {
+    "prompt_summary": "[TODO: What was asked]",
+    "process_summary": "[TODO: How the tool was used]",
+    "provenance_summary": "[TODO: Role in research workflow]"
+  }
+}
+""")
+
+
+def cmd_list_archives(args: argparse.Namespace) -> None:
+    """List archived sessions with their metadata status."""
+    project_dir = ARCHIVE_DIR / get_project_name()
+    if not project_dir.exists():
+        print("No archives found.")
+        return
+
+    print(f"Archived sessions for: {get_project_name()}")
+    print(f"Location: {project_dir}")
+    print()
+
+    # Header
+    print(f"{'Directory':<50} {'Title':<30} {'Complete':<10}")
+    print("-" * 90)
+
+    incomplete_count = 0
+    for archive_dir in sorted(project_dir.iterdir()):
+        if not archive_dir.is_dir():
+            continue
+
+        meta_file = archive_dir / "session.meta.json"
+        title = "N/A"
+        complete = "No"
+
+        if meta_file.exists():
+            meta = json.loads(meta_file.read_text())
+            title = meta.get("auto_generated", {}).get("title", "Untitled")
+            # Check if metadata is complete
+            three_ps = meta.get("three_ps", {})
+            if (title != "Untitled Session" and
+                three_ps.get("prompt_summary") and
+                three_ps.get("process_summary")):
+                complete = "Yes"
+            else:
+                incomplete_count += 1
+
+        # Truncate for display
+        dir_name = archive_dir.name[:48]
+        title_display = title[:28] if title else "N/A"
+
+        print(f"{dir_name:<50} {title_display:<30} {complete:<10}")
+
+    print()
+    print(f"Total: {len(list(project_dir.iterdir()))} archives, {incomplete_count} need metadata")
+
+
 # =============================================================================
 # Main
 # =============================================================================
@@ -1317,6 +1580,28 @@ The current/active session cannot be archived until it ends.
         help="Compress JSONL files with gzip"
     )
 
+    # Metadata management commands
+    parser.add_argument(
+        "--update-metadata", "-u",
+        metavar="SESSION_ID",
+        help="Update metadata for an archived session"
+    )
+    parser.add_argument(
+        "--metadata-file", "-m",
+        metavar="FILE",
+        help="JSON file containing metadata (use with --update-metadata)"
+    )
+    parser.add_argument(
+        "--summarize",
+        metavar="SESSION_ID",
+        help="Analyse a session and suggest metadata"
+    )
+    parser.add_argument(
+        "--list-archives",
+        action="store_true",
+        help="List archived sessions with metadata completion status"
+    )
+
     args = parser.parse_args()
 
     print("=" * 60)
@@ -1327,6 +1612,12 @@ The current/active session cannot be archived until it ends.
 
     if args.list:
         cmd_list(args)
+    elif args.list_archives:
+        cmd_list_archives(args)
+    elif args.update_metadata:
+        cmd_update_metadata(args)
+    elif args.summarize:
+        cmd_summarize(args)
     else:
         cmd_archive(args)
 
