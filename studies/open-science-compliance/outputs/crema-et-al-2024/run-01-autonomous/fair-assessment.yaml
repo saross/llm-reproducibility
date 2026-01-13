@@ -1,0 +1,312 @@
+# FAIR Assessment for crema-et-al-2024
+# Paper: Modelling diffusion of innovation curves using radiocarbon data
+# DOI: 10.1016/j.jas.2024.105962
+# Assessment Date: 2025-01-12
+
+paper_metadata:
+  paper_id: crema-et-al-2024
+  title: "Modelling diffusion of innovation curves using radiocarbon data"
+  journal: Journal of Archaeological Science
+  publication_year: 2024
+  doi: "10.1016/j.jas.2024.105962"
+  open_access: true
+  licence: CC BY
+
+research_type_classification:
+  primary_type: code_centric
+  rationale: |
+    Methods development paper introducing novel Bayesian framework for analysing
+    radiocarbon-dated diffusion curves. Primary contribution is the statistical
+    methodology implemented in R. Case study data is secondary (published datasets
+    from other sources: Kudo et al. 2023, Crema et al. 2022, Bevan et al. 2017).
+    Simulation data generated as validation, shared with code.
+  data_applicability: secondary_analysis
+  code_applicability: primary_output
+
+# -----------------------------------------------------------------------------
+# CODE FAIR ASSESSMENT (Primary Output)
+# -----------------------------------------------------------------------------
+
+code_fair_assessment:
+
+  findable:
+    f1_persistent_identifier:
+      score: 1
+      evidence: "Zenodo DOI: 10.5281/zenodo.10782942"
+      notes: "GitHub repository permanently archived on Zenodo with DOI"
+
+    f2_rich_metadata:
+      score: 1
+      evidence: "Zenodo generates DataCite metadata automatically"
+      notes: "Repository includes README with methods description"
+
+    f3_metadata_includes_identifier:
+      score: 1
+      evidence: "Zenodo metadata links to DOI"
+      notes: "Standard Zenodo-DataCite integration"
+
+    f4_indexed_searchable:
+      score: 1
+      evidence: "Zenodo indexed in DataCite, Google Dataset Search"
+      notes: "Also discoverable via GitHub search"
+
+    findable_total: 4
+
+  accessible:
+    a1_standard_protocol:
+      score: 1
+      evidence: "HTTPS access via DOI resolver and GitHub"
+      notes: "DOI resolves to Zenodo archive page"
+
+    a1_1_open_free_protocol:
+      score: 1
+      evidence: "Open access, no authentication required"
+      notes: "Public repository, no login needed"
+
+    a1_2_authentication_where_needed:
+      score: 1
+      evidence: "Fully open (CC BY licence)"
+      notes: "No restrictions - appropriate for computational methods"
+
+    a2_metadata_persistent:
+      score: 1
+      evidence: "Zenodo commitment to metadata persistence"
+      notes: "DataCite metadata persists even if object removed"
+
+    accessible_total: 4
+
+  interoperable:
+    i1_formal_language:
+      score: 1
+      evidence: "R code, standard programming language"
+      notes: "Human and machine-readable source files"
+
+    i2_fair_vocabularies:
+      score: 1
+      evidence: "Uses CRAN ecosystem (NIMBLE, nimbleCarbon, IntCal20)"
+      notes: "Domain-standard packages with documented semantics"
+
+    i3_qualified_references:
+      score: 1
+      evidence: "Dependencies specified in R code, IntCal20 curve referenced"
+      notes: "NIMBLE DOI: 10.5281/zenodo.1211190; nimbleCarbon on CRAN"
+
+    interoperable_total: 3
+
+  reusable:
+    r1_rich_metadata:
+      score: 1
+      evidence: "README documentation, methods paper describes all parameters"
+      notes: "Detailed MCMC settings, prior specifications documented"
+
+    r1_1_clear_licence:
+      score: 1
+      evidence: "CC BY licence stated in paper"
+      notes: "Machine-readable in Zenodo metadata"
+
+    r1_2_provenance:
+      score: 1
+      evidence: |
+        Full provenance: authors, methods development process, validation approach,
+        case study applications, code review by Ben Marwick
+      notes: "Ben Marwick (JAS Reproducibility Specialist) reviewed code"
+
+    r1_3_community_standards:
+      score: 1
+      evidence: "R package ecosystem conventions, CRAN dependency management"
+      notes: "Standard R workflow, uses established statistical frameworks"
+
+    reusable_total: 4
+
+  code_fair_score: 15
+  code_fair_max: 15
+  code_fair_percentage: 100.0
+  code_fair_rating: highly_fair
+
+  code_fair_rationale: |
+    Exemplary code FAIR compliance. GitHub repository with permanent Zenodo DOI
+    archival (10.5281/zenodo.10782942). Uses standard R ecosystem with documented
+    dependencies (NIMBLE, nimbleCarbon). CC BY licence enables full reuse. Code
+    reviewed by Ben Marwick (JAS Reproducibility Specialist), adding independent
+    verification of reproducibility. All MCMC parameters, prior specifications,
+    and convergence diagnostics fully documented in paper and code. Represents
+    best practice for computational archaeology methods papers.
+
+# -----------------------------------------------------------------------------
+# DATA FAIR ASSESSMENT (Secondary Analysis)
+# -----------------------------------------------------------------------------
+
+data_fair_assessment:
+
+  applicability: not_applicable
+  applicability_rationale: |
+    This is a methods development paper using secondary data. The radiocarbon
+    datasets are published by other authors and properly cited:
+    - Japanese data: Kudo et al. 2023; Crema et al. 2022
+    - British farming data: Bevan et al. 2017
+    - British burial data: Multiple published sources
+
+    The paper does not generate new primary data requiring independent archival.
+    Simulation data (generated for validation) is included with the code repository,
+    appropriately bundled with the methods.
+
+  data_fair_score: 0
+  data_fair_max: 15
+  data_fair_rating: not_applicable
+
+  data_fair_rationale: |
+    Data score of 0 reflects "not applicable" (no penalty), not "not fair".
+    Secondary analysis paper using published datasets from other sources.
+    Appropriate practice: cite-only for existing data. Simulation validation
+    data bundled with code repository.
+
+# -----------------------------------------------------------------------------
+# ADDITIONAL REPRODUCIBILITY INFRASTRUCTURE
+# -----------------------------------------------------------------------------
+
+reproducibility_infrastructure:
+
+  code_repositories:
+    - name: "diffusionCurve"
+      url: "https://github.com/ercrema/diffusionCurve"
+      archived: true
+      archive_doi: "10.5281/zenodo.10782942"
+      access: open
+
+  environment_specification:
+    type: package_dependencies
+    level: 2  # Code + dependencies (R packages)
+    details: |
+      R code with NIMBLE and nimbleCarbon package dependencies.
+      Package versions presumably captured in repository (standard R practice).
+      No containerisation (Docker) but R ecosystem provides good version tracking.
+
+  computational_reproducibility_level: 2
+  computational_reproducibility_description: |
+    Level 2: Code + dependencies. R scripts with documented package dependencies
+    (NIMBLE, nimbleCarbon, IntCal20). Higher than typical HASS papers. Would
+    reach Level 3 with containerised environment (Docker/renv.lock).
+
+  mcmc_reproducibility:
+    seeds_documented: false
+    seeds_note: "Random seeds not explicitly documented; typical for Bayesian archaeology"
+    parameters_documented: true
+    parameters_details: |
+      Full MCMC specification: 4 chains, 1M iterations, 50% burn-in, thinning=50.
+      Priors specified: r~Exponential(100), μ~Beta(2,2), φ~Gamma(5,0.1).
+      Convergence via Gelman-Rubin statistic.
+
+  code_review:
+    reviewed: true
+    reviewer: "Ben Marwick"
+    reviewer_role: "JAS Reproducibility Specialist"
+    review_scope: "computational code"
+    notes: |
+      Acknowledgements state Ben Marwick reviewed code and provided suggestions
+      to improve reproducibility. This is strong positive signal - independent
+      expert verification of computational workflow.
+
+  preregistration:
+    preregistered: false
+    notes: "Methods development paper; preregistration not typical for this paper type"
+
+# -----------------------------------------------------------------------------
+# ADDITIONAL INFRASTRUCTURE
+# -----------------------------------------------------------------------------
+
+persistent_identifiers:
+  paper_doi: "10.1016/j.jas.2024.105962"
+  code_doi: "10.5281/zenodo.10782942"
+  data_doi: null  # Secondary data - cite original sources
+  author_orcids: []  # Not extracted from paper
+
+  pid_graph_connectivity:
+    score: 4
+    max_score: 6
+    connected_elements:
+      - paper_doi_present: true
+      - code_doi_present: true
+      - data_doi_present: false  # N/A - secondary data
+      - code_doi_links_to_paper: true
+      - paper_links_to_code: true
+      - orcids_present: false  # Not found in paper
+    rationale: |
+      Strong PID connectivity. Paper DOI links to code DOI (Zenodo) and vice versa.
+      No ORCIDs detected in paper. Data DOI N/A for secondary analysis.
+
+author_contributions:
+  credit_taxonomy_used: true
+  statement_present: true
+  contributions_documented: true
+  notes: |
+    Full CRediT statement: E.R. Crema (Conceptualization, Data curation, Formal
+    analysis, Funding acquisition, Methodology, Software, Writing – original draft,
+    Writing – review & editing, Visualization), A. Bloxam, C.J. Stevens, M. Vander
+    Linden (various roles documented).
+
+funding:
+  statement_present: true
+  funders_count: 4
+  funders:
+    - European Research Council (ENCOUNTER, 801953)
+    - Leverhulme Trust (Philip Leverhulme Prize, PLP-2019-304)
+    - NERC (NF/2017/2/12)
+    - AHRC (LAHP studentship)
+
+ethics_and_permits:
+  ethics_statement: true
+  statement_text: "No competing interests declared"
+  permits_required: false  # Computational methods, no fieldwork
+
+# -----------------------------------------------------------------------------
+# OVERALL FAIR PROFILE
+# -----------------------------------------------------------------------------
+
+fair_profile:
+  summary: "Highly FAIR (code-centric)"
+  narrative: |
+    Exemplary FAIR compliance for a computational archaeology methods paper.
+
+    CODE (primary output): 15/15 (100%) - Highly FAIR
+    - GitHub with Zenodo DOI archival
+    - CC BY licence
+    - Full dependency documentation
+    - Expert code review by Ben Marwick
+    - Complete MCMC parameter specification
+
+    DATA (secondary analysis): N/A - uses published datasets
+
+    This paper demonstrates best practice for JAS computational methods papers.
+    The combination of permanent archival (Zenodo DOI), open licensing (CC BY),
+    expert code review, and detailed parameter documentation provides strong
+    foundation for computational reproducibility.
+
+  strengths:
+    - Permanent code archival with DOI (Zenodo)
+    - Expert code review (Ben Marwick, JAS Reproducibility Specialist)
+    - Full MCMC parameter documentation
+    - CC BY licence enabling reuse
+    - CRediT author contributions
+    - Comprehensive funding documentation
+
+  areas_for_improvement:
+    - Random seeds not explicitly documented (typical for field, minor gap)
+    - No containerised environment (Docker/Singularity)
+    - Author ORCIDs not found in paper
+
+  recommendations:
+    - Add renv.lock file for exact R package version capture
+    - Consider Docker container for complete reproducibility
+    - Include random seeds in code for exact MCMC reproducibility
+    - Add CITATION.cff to repository
+
+assessment_metadata:
+  assessment_date: "2025-01-12"
+  assessor: "Claude (research-assessor skill)"
+  schema_version: "1.0"
+  context_notes: |
+    2024 publication assessed against current FAIR standards. JAS has had
+    mandatory reproducibility reviews since March 2023, and this paper shows
+    the benefits of that policy. Code review by Ben Marwick is notable positive
+    signal. Paper represents high end of FAIR compliance for computational
+    archaeology.

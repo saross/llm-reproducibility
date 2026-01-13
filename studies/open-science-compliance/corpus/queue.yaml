@@ -28,16 +28,33 @@ papers:
     doi: "10.1016/j.jas.2024.105962"
     code_repository: "https://github.com/ercrema/diffusionCurve"
     code_verified: true
-    status: pending
+    status: in_progress
     steps:
-      pdf_obtained: false
-      text_extracted: false
-      extraction_complete: false
+      pdf_obtained: true
+      text_extracted: true
+      extraction_complete: true
       classification_complete: false
       assessment_complete: false
-      fair_assessed: false
+      fair_assessed: true  # Paper-based; API-based assessment pending
       reproduction_attempted: false
-    notes: "Exemplary compendium. Priority 1 for reproduction attempt."
+    extraction_summary:
+      # Run-02 (session-per-pass) counts - see run-comparison-report.md
+      evidence_count: 12
+      claims_count: 14
+      implicit_arguments_count: 3
+      research_designs_count: 6
+      methods_count: 6
+      protocols_count: 10
+      code_fair_score: "TBD - enhanced framework pending"
+      code_fair_rating: highly_fair
+      data_fair_rating: not_applicable
+      fair_profile: "Highly FAIR (code-centric)"
+    run_comparison:
+      date: "2026-01-13"
+      runs: ["run-01-autonomous", "run-02-session-per-pass"]
+      preferred_run: "run-02-session-per-pass"
+      finding: "Session-per-pass yielded +75% claims, +100% research designs. Recommended for methodological papers."
+    notes: "Exemplary compendium. Code reviewed by Ben Marwick. Run comparison complete - session-per-pass preferred. Priority 1 for reproduction attempt."
 
   - slug: marwick-2025
     title: "Is archaeology a science? Insights and imperatives from 10,000 articles and a year of reproducibility reviews"
@@ -48,7 +65,7 @@ papers:
     code_verified: true
     status: pending
     steps:
-      pdf_obtained: false
+      pdf_obtained: true
       text_extracted: false
       extraction_complete: false
       classification_complete: false
@@ -62,11 +79,11 @@ papers:
     authors: "Key, A., Eren, M.I., Bebber, M.R., et al."
     year: 2024
     doi: "10.1016/j.jas.2024.105921"
-    code_repository: null  # To verify
+    code_repository: null  # To verify from paper
     code_verified: false
     status: pending
     steps:
-      pdf_obtained: false
+      pdf_obtained: true
       text_extracted: false
       extraction_complete: false
       classification_complete: false
@@ -80,11 +97,11 @@ papers:
     authors: "Herskind, L.L.P., Riede, F."
     year: 2024
     doi: "10.1016/j.jas.2024.105969"
-    code_repository: null  # To verify
+    code_repository: null  # To verify from paper
     code_verified: false
     status: pending
     steps:
-      pdf_obtained: false
+      pdf_obtained: true
       text_extracted: false
       extraction_complete: false
       classification_complete: false
@@ -102,7 +119,7 @@ papers:
     code_verified: true
     status: pending
     steps:
-      pdf_obtained: false
+      pdf_obtained: true
       text_extracted: false
       extraction_complete: false
       classification_complete: false
@@ -111,7 +128,12 @@ papers:
       reproduction_attempted: false
     notes: "Associated with CRAN package ArchaeoPhases."
 
-# Progress summary
-# Completed: 0/5
-# In progress: 0/5
-# Pending: 5/5
+# Progress summary (updated 2026-01-13)
+# Extraction completed: 1/5 (crema-et-al-2024 - run comparison complete, session-per-pass preferred)
+# FAIR assessed: 1/5 (crema-et-al-2024 - paper-based; API-based pending enhanced framework)
+# Classification pending: 1/5 (crema-et-al-2024 - Pass 8-9)
+# In progress: 1/5 (crema-et-al-2024 - awaiting classification + assessment)
+# Pending: 4/5
+#
+# Methodology finding: Session-per-pass extraction yielded +75% claims, +100% research designs
+# vs autonomous for complex methodological papers. Recommended for remaining pilot papers.

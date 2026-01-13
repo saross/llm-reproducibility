@@ -1,0 +1,875 @@
+                                                              Journal of Archaeological Science 165 (2024) 105962
+
+
+                                                                    Contents lists available at ScienceDirect
+
+
+                                                       Journal of Archaeological Science
+                                                             journal homepage: www.elsevier.com/locate/jas
+
+
+
+
+Modelling diffusion of innovation curves using radiocarbon data
+E.R. Crema a, b, *, A. Bloxam c, C.J. Stevens b, M. Vander Linden b, d
+a
+  Department of Archaeology, University of Cambridge, CB2 3DZ, UK
+b
+  McDonald Institute for Archaeological Research, University of Cambridge, CB2 3ER, UK
+c
+  Department of Classics and Archaeology, University of Nottingham, NG7 2RD, UK
+d
+  Institute for the Modelling of Socio-Environmental Transitions, Bournemouth University, BH12 5BB, UK
+
+
+
+
+A R T I C L E I N F O                                      A B S T R A C T
+
+Keywords:                                                  Archaeological data provide a potential to investigate the diffusion of technological and cultural traits. However,
+Bayesian inference                                         much of this research agenda currently needs more formal quantitative methods to address small sample sizes
+Radiocarbon dating                                         and chronological uncertainty. This paper introduces a novel Bayesian framework for inferring the shape of
+Diffusion of innovation
+                                                           diffusion curves using radiocarbon data associated with the presence/absence of a particular innovation. We
+Origins of farming
+Burial customs
+                                                           developed two distinct approaches: 1) a hierarchical model that enables the fitting of an s-shaped diffusion curve
+Japan                                                      whilst accounting for inter-site variations in the probability of sampling the innovation itself, and 2) a non-
+Great Britain                                              parametric model that can estimate the changing proportion of the innovation across user-defined time-
+                                                           blocks. The robustness of the two approaches was first tested against simulated datasets and then applied to
+                                                           investigate three case studies, the first pair on the diffusion of farming in prehistoric Japan and Britain and the
+                                                           third on cycles of changes in the burial practices of later prehistoric Britain.
+
+
+
+
+1. Introduction                                                                                 spread of the innovation is the result of independent individual learning
+                                                                                                processes, diffusion curves can take an r-shape, without a slow growth
+    The investigation of how and why a particular idea or technology                            stage during the early stages of a spread (Henrich, 2001; Hoppitt et al.,
+spreads among a population is undoubtedly one of the most interdisci­                           2010; Reader, 2004). More sophisticated cultural transmission models
+plinary research themes within the social sciences, with methodological                         have also incorporated the impact of different modes of cultural trans­
+and theoretical contributions spanning fields such as economics, ecol­                          mission (Henrich, 2001), task structure (Hoppitt et al., 2010), outgroup
+ogy, sociology, and cultural evolutionary science (Bass, 1969; Henrich,                         aversion (Smaldino et al., 2017), and geography (Lengyel et al., 2020).
+2001; Hoppitt et al., 2010; Lengyel et al., 2020; Manzo et al., 2018;                               Empirical studies of diffusion curves have often benefited from large
+Reader, 2004; Rogers, 2003; Steele, 2009). Much of the theoretical basis                        datasets, in some cases sufficiently large to let scholars fit mathematical
+of the diffusion of innovation (DOI) literature shares some common                              models to proportions or abundance data over time bins (e.g. Grasman
+ideas and concepts, most notably how the rate of diffusion of a particular                      and Kornelis, 2019), rather than directly to individual binary observa­
+product is the cumulative consequence of individual attitudes and pro­                          tions (i.e. whether a particular individual has or does not have the
+pensity towards the innovation itself.                                                          innovation). The range of mathematical models fitted to these empirical
+    The seminal work by Rogers (1962;2003), has highlighted how time-                           datasets has grown considerably since Rogers’ work, especially in eco­
+series graphs portraying the proportion of adopters over time (known as                         nomics where these models are routinely used for forecasting or to
+diffusion curves) show surprising regularity, forming a characteristic s-                       evaluate the success of particular marketing strategies (Meade and
+shaped curve indicative of similar underlying processes across a wide                           Islam, 2006).
+range of technological adoption. Features of diffusion curves have sub­                             Archaeological contribution to this rich literature is somewhat more
+sequently been investigated through formal models and empirical                                 limited despite the opportunity to investigate a wider range of dynamics,
+studies to infer individual-level processes of cultural transmission from                       such as slow adoption occurring over multiple generations or diffusion
+population-level data. For example, several studies have theorised and                          events driven primarily by a higher growth rate of migrant populations
+observed that s-shaped curves result from social learning, but when the                         carrying the novel trait rather than its adoption by an incumbent
+
+
+
+    * Corresponding author. Department of Archaeology, University of Cambridge, UK.
+      E-mail address: erc62@cam.ac.uk (E.R. Crema).
+
+https://doi.org/10.1016/j.jas.2024.105962
+Received 17 October 2023; Received in revised form 27 February 2024; Accepted 29 February 2024
+Available online 16 March 2024
+0305-4403/© 2024 The Authors. Published by Elsevier Ltd. This is an open access article under the CC BY license (http://creativecommons.org/licenses/by/4.0/).
+E.R. Crema et al.                                                                                                 Journal of Archaeological Science 165 (2024) 105962
+
+
+population. More generally, the archaeological record offers a wider               through the so-called dates as data approach (Crema, 2022a; Rick,
+range of case studies involving different products and populations. One            1987). In their simplest form, DOI curves have been approached by
+can speculate that this lack of interest is at least partly derived from the       visualising abundance or proportion data via summed probability dis­
+limitations of the archaeological record itself, which hinders the direct          tribution of radiocarbon dates (de Groot and Bloxam, 2022; Stevens and
+application and borrowing of specific techniques from sister disciplines.          Fuller, 2012) and OxCal’s Kernel Density Estimate Models (Capuzzo
+While in most social sciences reliable time series of the proportion of            et al., 2020). Neither approach is ideal.
+adopters are readily available, most archaeological data are represented               SPDs are easy to generate and can visually represent changes in both
+by indirect proxy variables in small samples, and often characterised by           abundance and proportion. However, in its most common form, the
+a substantial degree of chronological uncertainty. Indeed, in rare in­             visual interpretation of SPDs can be problematic, as observed changes
+stances where these issues are less prominent and historical data are              can be simply the result of sampling error and in the case of abundance
+available, archaeological research does provide relevant contributions             data, the result of the calibration process (Carleton and Groucutt, 2020;
+to the DOI literature (e.g. Amati et al., 2019; Scholnick, 2012).                  Crema, 2022a). More sophisticated techniques have been proposed in
+    The primary objective of DOI research is to estimate how changes in            order to attempt to address some of these issues, for example by
+the proportion or abundance of a particular cultural innovation changes            generating a confidence interval using bootstrapping or examining
+as a function of time, and possibly other factors. More formally we have           whether and when the relative proportion of an innovation changed via
+                                                                                   permutations tests (Bevan et al., 2017; Bloxam and Parker Pearson,
+pθ = f (θ)                                                              [1]
+                                                                                   2022; Stevens et al., 2022). In the case of abundance data, OxCal’s KDE
+where the pθ is the observed proportion of the innovation at time θ, and f         (Bronk Ramsey, 2017) offers substantial improvement over visual in­
+(θ) is some function of time defining the shape of the diffusion curve.            spections of SPDs, providing more robust solutions for visualising the
+When dealing with small sample sizes, empirically observed values of pθ            uncertainty of sampling error and calibration effects. Nevertheless, its
+are however going to fluctuate randomly due to sampling error. Thus, a             application is limited to smaller datasets due to its heavy computational
+better approach would be to estimate the probability that a given                  requirements, and it currently does not allow for the visualisation of
+observation of a particular calendar age is associated with the old or new         proportion data.
+cultural variant. Thus, a more appropriate objective is to calculate the               This paper introduces a new set of Bayesian inferential tools which
+probability P(x = 1|θ = t), where x is the state of the observation (x =           are designed to analyse DOI using radiocarbon data, but which are not
+0 old variant, x = 1 new variant) and θ is its calendar date. Using a              based on SPDs The approach we propose can be broadly applied and
+probabilistic annotation, we have now:                                             extended to any proportion data based on 14C dates, but here we focus
+                                                                                   on two challenges: 1) heterogeneity in sampling practices across
+xi ∼ Bernoulli(pi )                                                     [2]        archaeological sites; and 2) diffusion dynamics that do not follow s-
+                                                                                   shaped curves. We test the robustness of our approach via simulated
+pi = f (θi )                                                            [3]        datasets and two sets of case studies: 1) the diffusion of agriculture in
+                                                                                   Britain and Japan (case studies 1a and 1b) and 2) cyclical changes in
+where the probability pi of the sample i being in state 1 is given by some         burial practices in later prehistoric Britain (case study 2). Section 2 will
+function of time f(θi). While DOI research has predominantly dealt with            introduce the statistical framework we propose; section 3 will summa­
+equation [1], we argue that equations [2] and [3] are better suited to             rise contextual details of the three case studies; section 4 will provide
+account for the small sample sizes that characterise most archaeological           details of material and the implementation of the methods; section 5 will
+datasets.                                                                          briefly summarise the results; and section 6 will provide a discussion on
+    At its worst, archaeological data provides information about only the          the methodological and contextual relevance of our analyses.
+abundance of a given technology. In other words all samples have state
+x = 1, and hence changes in the frequencies can be assumed to be                   2. Modelling diffusion curves from radiocarbon dates
+proportional to p only under a constant denominator i.e. stable popu­
+lation sizes and rates of production (e.g. Eerkens and Lipo, 2014). In                 As noted in the previous section, our key inferential goal is to model
+some cases, it is possible to obtain sample proportions (e.g. ,the relative        changes in the probability p of a sample i being associated with an
+proportion of hand-built vs wheel-made ceramic; de Groot and Bloxam,               innovation as a function of calendar time θi (see equation [3]). In the
+2022) which are more direct proxies of p. However, proportion estimates            case that our sample is a radiocarbon date, we need to account for the
+will inevitably be affected by sampling error unless a large number of             fact that θi is associated with some random and systematic measurement
+observations are available. Both abundance and proportion data are also            error, and as such, can be modelled as follows:
+subject to the inevitable restrictions imposed by chronology. Archaeo­
+logical assemblages could be time-averaged, and individual artefacts are           yi ∼ Normal(c(θi ), σi )                                                     [4]
+rarely associated with precise and accurate time stamps. The conse­
+quence of these limitations is that modelling or even graphically dis­             Where yi is the radiocarbon age of the sample i, c(θi) is the radiocarbon
+playing diffusion curves from archaeological data represents a                     age of the θi, and σi is the square root of the sum of the squares of the
+considerable challenge.                                                            sample 14C age error and the corresponding error in the calibration
+    While issues pertaining to the type of data (abundance vs. propor­             curve.
+tion) or the representativeness of the proxy variable is contingent on the            The combination of equations [2] to [4] provides the basic frame­
+specific context being investigated, the limitations dictated by chro­             work of the method proposed here. While a number of diffusion curve
+nology are universal for the majority of the archaeological record.                models have been suggested in the literature, here we take f(θi) to be
+However, recent interest in the collation of large datasets of radiocarbon         simple sigmoid function:
+dates (e.g. ,Bird et al., 2022), often with sample sizes over four and five                     1
+digits, provides a possible avenue for pursuing DOI research in archae­            pi =                                                                         [5]
+                                                                                          1 + e− (β0 +β1 θ)
+ology, with a comparatively reliable chronology (e.g. ,Bevan et al.,
+2017; Bloxam and Parker Pearson, 2022; Buchanan et al., 2022; de                   In this case, equation [5] is effectively just a logistic regression with an
+Groot and Bloxam, 2022; Schmid, 2020; Stevens and Fuller, 2012).                   independent variable θi and coefficients β0 and β1.
+    Initial exploration of this area of research has benefited from meth­
+odological developments designed to analyse large collections of
+radiocarbon dates, most typically to infer past population changes
+
+
+                                                                               2
+E.R. Crema et al.                                                                                                   Journal of Archaeological Science 165 (2024) 105962
+
+
+2.1. Hierarchical model                                                             source variation is related to taphonomy, sampling practices, or genuine
+                                                                                    differences in the proportion of domesticates across sites. It is worth
+    Equation [5] describes the change over time of the probability p as a           noting, however, that putative covariates that might explain this vari­
+sigmoid function, with the steepness of the diffusion captured by the               ation can be included in equation [6] with their own set of parameters.
+parameter β1. More importantly, the model assumes that the rate of
+change of p increases as it approaches p = 0.5, and decreases as p gets             2.2. Accounting for fluctuations in the diffusion curve
+closer to 1, capturing the frequency dependence characteristic of diffu­
+sion curves (Rogers, 2003). While this is a desirable feature in many                   Equations [5] and [6] describe an s-shaped monotonic diffusion
+situations, the two examples from our first case study will illustrate a            process. The spread of a particular cultural or technological trait might,
+typical situation where equation [5] might not be appropriate.                      however, be characterised by temporary episodes of reversion, or even
+    In the case of the diffusion of farming (see section 3.1 below), x =            repeated cycles where the relationship between p and θ can take a wide
+0 implies that the sample is not associated with the cultivation of a               range of shapes (see section 3.2 below).
+particular crop, whilst x = 1 indicates the opposite. Establishing the                  There are two possible ways to approach any deviations from an s-
+clear presence (or absence) of farming is, however, not always trivial,             shape diffusion curve. The first consists of fitting equation [6] to the
+particularly during its early stages of diffusion. The problem is further           empirical data, and then to evaluate the goodness of fit to the observed
+exacerbated by the fact that, ideally, we would like to have a direct link          data through posterior predictive checks. In the case of radiocarbon
+between our dated sample and the new subsistence practice rather than               data, this effectively
+an indirect link based on stratigraphic association. A practical solution               Consists of first creating an empirical proportion SPD. This can be
+to this is to consider only direct dates from seeds, where x = 1 indicates          generated by calculating, for each calendar year, the ratio between the
+that the sample is the domesticate (i.e. rice for Japan and wheat or                summed probability of samples with x = 1 and the summed probability
+barley for Britain, see below), and x = 0 indicates that the sample is not          of all samples. The same calculation can then be carried out for the fitted
+the domesticate of interest (e.g. wild nuts). In other words, p becomes             model. In this case we first randomly re-assign a new value to xi,j for each
+the relative proportion of the domesticates to the combination of do­               radiocarbon date i at site j with probabilities 1-pi,j (for xi,j = 0) and pi,j
+mesticates and non-domesticates.                                                    (for xi,j = 1) derived from the posterior samples of the fitted model, and
+    This solution, however, raises two issues. Firstly, there is no reason to       then generate a fitted proportion SPD. This step is executed multiple
+believe that crops fully replace wild plants. Indeed, most typically, we            times using different values of pi,j obtained from the posterior. The
+should expect to observe wild plants even after the introduction of                 resulting distribution of fitted proportion SPD is then summarised for
+farming, particularly during its early stages (Stevens et al., 2022). Sec­          each calendar year by taking, for example, a 90% quantile range, to
+ondly, a number of factors associated with different combinations of                generate a simulation envelope. Finally, the observed empirical pro­
+taphonomy and sampling design might lead to a situation where the                   portion SPD can be visually compared to the simulated envelope to
+radiocarbon date from a farming context might be from a wild plant.                 detect any abnormally high or low proportion values. Because the un­
+There are numerical consequences arising from these potential issues.               derlying radiocarbon dates remain the same, the empirical proportion
+Even if genuinely random samples are available, the proportion p of                 SPD and the simulation envelope will be both equally affected by sam­
+domesticates might plateau to values lower than 1 after the full diffusion          pling error and calibration effects, effectively bypassing the problems
+of agriculture. For convenience, we will refer to the equilibrium value             encountered with SPDs. The simulation envelope will effectively ac­
+reached by p as k, with 0 < k <1. Furthermore, the probability of dating            count for small sample sizes and minor fluctuations, and because
+a sample from a domesticate when this is present in an archaeological               equation [6] accounts for overdispersion, a marked deviation from the
+assemblage is likely to be lower than 1 and different between archaeo­              fitted model would occur only when the observed proportion at a
+logical sites. The net implication is that for given calendar time θ, we are        particular time interval is greater or lesser than the overall variability we
+likely going to have greater variability in the character state of x due to         expect to observe across the archaeological sites. This approach makes
+overdispersion.                                                                     the posterior predictive check a reasonably robust, if not conservative,
+    A possible resolution to both these problems can be achieved by                 solution in detecting deviations from an s-shaped diffusion curve.
+using the following hierarchical model:                                                 In some circumstances, however, the expected deviation from an s-
+                                                                                    shape curve is so significant that the entire premise of trying to estimate
+               kj
+pi,j =                                                                   [6]        its parameters can be regarded as flawed. Our third case study represents
+         1 + er(θi,j − m)                                                           a typical instance where an innovation (cremation in this case) is not
+                                                                                    necessarily expected to reach a stable equilibrium in the population.
+kj ∼ Beta(γ1 , γ2 )                                                      [7]
+                                                                                    While one could attempt to develop a complex model that accounts for
+γ 1 = μφ + 1                                                             [8]        possible cyclicity (e.g. using a sinusoidal model), a simpler solution is to
+                                                                                    model the diffusion as a random walk process using a intrinsic Gaussian
+γ2 = (1 − μ)φ + 1                                                        [9]        conditional autoregressive (ICAR) model (Besag, 1974; Rue and Held,
+                                                                                    2004). This approach consists of dividing our chronological window of
+Equation [6] is also a sigmoid function, but with a range between 0 and             analyses into a series of n time-blocks and estimating the associated
+kj instead of 0 and 1. Furthermore, each site j has its own upper bound kj,         vector of probabilities pt = 1, pt = 2, …, pt = n. The ICAR model effectively
+with the intersite variability of this parameter modelled using a Beta              defines the conditional distribution of pt as a Gaussian, with a mean
+distribution with shape parameters γ1 and γ2. These are, in turn, defined           equal to the average of adjacent time-blocks, and a variance τ that de­
+by a mode μ and a concentration parameter φ. In particular, equations               creases as the number of neighbouring blocks increases. In practice, this
+[8] and [9] ensure that when φ = 0, kj is uniformly distributed between             means that when estimating pt, we are partially informed by the esti­
+0 and 1. The parameters r and m are just a reparameterisation of β0 and             mates of pt+1 and pt-1.
+β1 from equation [5], and indicate respectively the rate of diffusion and
+the time (in years BP) at which pi,j is equal to kj/2.                              3. Case studies
+    The hierarchical model described above effectively accounts for any
+inter-site variation in the probability of dating a domesticate rather than         3.1. Case study 1a and 1b: diffusion of agriculture in Japan and Britain
+a non-domesticate, while simultaneously modelling the general rate of
+diffusion of agriculture. The model does not distinguish whether this                  The diffusion of agriculture in Japan (case study 1a) and Britain (case
+                                                                                    study 1b) shares a number of similarities. The two regions are islands
+
+                                                                                3
+E.R. Crema et al.                                                                                                 Journal of Archaeological Science 165 (2024) 105962
+
+
+located at opposite edges of the Eurasian continent and effectively               conditioned by the extent of the persistence of wild plant resources and
+represent the final phase of two separate major episodes of demic and             the baseline probability of dating each taxon. The latter is a complex
+cultural diffusion. While the specific crops introduced in the two islands        issue, as it is dictated by how likely a particular taxon will be preserved
+are different (primarily wheat and barley for Britain, de Vareilles et al.,       and recovered from any given archaeological context, how easily the
+2023; rice, broomcorn millet and foxtail millet for Japan, Fujio, 2021)           taxon can be identified, and what is the rationale of the excavator for
+both islands were occupied by an incumbent population of                          choosing to date a specimen of this taxon rather than that of another
+hunter-gatherers whose subsistence practices relied on the consumption            species. These factors all contribute to the relative proportion of radio­
+of a significant proportion of nuts (hazelnut in Britain; chestnut,               carbon dates on domesticated crops, and there is no reason to believe
+buckeye, and acorns for Japan, Bishop et al., 2014; Sakaguchi, 2009).             that these would be identical or consistent across different sites. Simply
+The large latitudinal span of the two islands entailed different envi­            put, two contemporary contexts associated with a full adoption of
+ronments and suitability for the diffusion of the new agricultural prac­          farming can have different probabilities of dating a seed of a domesti­
+tices, and archaeobotanical evidence suggests in both islands episodes of         cated crop.
+reversion as well as a prolonged coexistence of wild resources during the
+early stages of transition to farming (Stevens et al., 2022). The two re­         3.2. Case study 2: burial practices in prehistoric Britain
+gions also benefit from the presence of large radiocarbon datasets, which
+include reasonably large samples of direct dates on seeds, that has                   Funerary practices vary substantially across the later prehistory of
+already enabled statistical analyses on the fluctuations in the relative          Britain and Europe. Some rites may emerge de novo in a region and
+frequencies of different crops and wild foods (Bevan et al., 2017; Stevens        remain geographically and chronologically restricted; other practices
+and Fuller, 2012) as well as inferences on dispersal rates and regional           diffuse rapidly across long distances, creating the superficial appearance
+arrival times of farming practices (Crema et al., 2022; Whittle et al.,           of supra-regional groups with shared cultural traits (Vander Linden,
+2011).                                                                            2016). Even in cases where one set of cultural traits and practices is
+    For the British Isles the initial diffusion of agriculture (emmer wheat       predominant, local variability in burial practices is common throughout
+and barley, with cattle, goats, sheep and pig, with limited evidence for          prehistory (Bloxam and Parker Pearson, 2022; Caswell and Roberts,
+tetraploid free-threshing wheat and flax), has largely been dated to the          2018; Furholt, 2014). A coexistence of multiple burial practices may
+last century of the 5th and the first three centuries of the 4th millennium       point to diverse cultural origins and influences, but conversely can
+BCE. These farming populations, associated with the Chasséen, Castellic,         reflect within-group differential treatment on the basis of age, sex, or
+and Michelsberg cultures (Ray and Thomas, 2018; Sheridan, 2010),                  other personal characteristics (e.g. Fernández-Crespo et al., 2020;
+were present in regions of Belgium, northern France and Western Ger­              Haughton, 2021; Mittnik et al., 2019). As such, and contrary to the case
+many some 500–1000 years before agriculture dispersed north across                of the diffusion of agriculture, there is no expectation that the balance
+the channel. Studies of ancient genomes supports that these agricul­              between contemporaneous funerary practices should ever reach an
+turalists largely descended from peoples originating within Anatolia/the          equilibrium, or that any particular rite should become dominant over
+Aegean, with low inputs from Western hunter-gatherers (Brace et al.,              others.
+2019; Patterson et al., 2022). This, along with other lines of evidence,              Here, we focus on the changing importance of cremation in com­
+can be used to reject the hypothesis that once favoured adoption of               parison to other modes of disposal of the dead (e.g. collective or indi­
+agriculture by indigenous hunter-gatherer groups (Stevens et al., 2022).          vidual inhumation burial) as a means of isolating the trajectory of one
+Rather, the input of hunter-gatherer lineages likely accumulated as these         readily-identifiable and distinct set of funerary practices over time.
+first agriculturalists dispersed across Europe through the introgression          Cremation can largely be considered as a binary — incomplete crema­
+of pre-existing hunter-gatherer peoples into farming societies.                   tion is rare (Rebay-Salisbury, 2015) — but this does not mean it is a
+    While some evidence of small-scale cultivation (e.g. barnyard millet,         uniform practice wherever it appears. In Britain, cremation is sporadi­
+azuki, and soybeans) in Japan exists for the latter half of the Late and          cally recorded for the Mesolithic and earlier parts of the Neolithic,
+Final Jomon periods (mid-3rd millennium BCE ~ end of 2nd millennium               although inhumation burial practices appear to be by far the more
+BCE; Crawford, 2011), a more prominent transition of the subsistence              prevalent in each period (Jay and Scarre, 2017). Although burial evi­
+economy occurred during the 1st millennium BCE, when migrant                      dence is relatively sparse overall in the later part of the Neolithic,
+farmers from the Korean peninsula brought a cultural package which                cremation seems to become the dominant rite for several centuries in the
+included rice and millet (broomcorn and foxtail) agriculture (Fujio,              first half of the 3rd millennium BCE; here it is frequently unaccompanied
+2021). Unfortunately, a systematic analysis of the dispersal of millet            by grave goods but is often associated with highly-visible circular
+farming is currently not possible due to the comparatively small number           monument forms (Willis, 2021). This is followed, from c.2450 BCE, by
+of direct dates from seeds (see Endo and Leipe, 2022 for indirect evi­            an episode dominated by inhumation associated with the arrival of the
+dence from seed impression on pottery; see also Obata and Kunikita,               Beaker phenomenon from continental Europe (Parker Pearson et al.,
+2022). In contrast, the relatively large number of dates on charred rice          2016). Cremation gradually increases in prevalence once again across
+has recently allowed for the application of Bayesian analyses to estimate         Britain during the 2nd millennium BCE (e.g. (Bloxam and Parker Pear­
+regional variations in its rates of dispersal (Crema et al., 2022; Leipe          son, 2022; Caswell and Roberts, 2018). Within this later resurgence
+et al., 2020). The results of these analyses revealed multiple episodes of        there is an initial period where inhumation and cremation practices can
+slow-down, and in some cases a hiatus in dispersal spanning several               be found in correspondingly large numbers, are located at the same
+centuries before agriculturalists moved into the next region.                     monument types, particularly round barrows, and are accompanied by
+    Statistical analyses of diffusion rates of farming in Japan and Britain       similar Early Bronze Age artefact types including funerary ceramic urns
+(and most likely in other regions of the world) have a number of shared           (Garrow et al., 2014). This practice gradually gives way to a preference
+challenges. For example, the direct dating of seeds can overcome some             for a more homogenous form of unaccompanied cremation burial,
+of the problems associated with chronological and contextual uncer­               located in large open cemetery sites, as it becomes the dominant rite by
+tainty but also drastically reduces sample sizes, even in comparatively           the Middle Bronze Age (Bloxam and Parker Pearson, 2022; Caswell and
+14
+   C data rich regions such as Japan and Britain. Furthermore, although           Roberts, 2018).
+we would expect the relative proportion of 14C dates associated with                  Because cremation destroys the organic component of bone,
+domesticated crops to increase over time, we have no reason to believe            cremated remains have largely been excluded from recent studies
+that this would reach 100% even when we observe a complete diffusion              investigating or critiquing the genetic evidence for the role of demic
+of farming practices (i.e. k ∕
+                             = 1). Instead, we expect that diffusion curves       diffusion in the transmission of later prehistoric burial rites across
+would reach a plateau with a stable proportion, whose values would be             Europe (Furholt, 2019; Olalde et al., 2018). In the absence of genetic
+
+                                                                              4
+E.R. Crema et al.                                                                                                      Journal of Archaeological Science 165 (2024) 105962
+
+
+data, and with stable isotope analysis being a very recent development                order polynomial curve spanning the time window of analyses and
+for this material (Snoeck et al., 2015), the diffusion and regional onset of          normalised it to 0–1 via logistic transformation. This enabled the crea­
+cremation has to date been estimated either through qualitative                       tion of a vector of probabilities p for each calendar year, which was then
+assessment burial evidence, or through more formal (e.g. Bayesian)                    used to randomly generate a binary value for each simulated sample.
+approaches to local site series (Garrow et al., 2014).
+    Statistical assessment of the fluctuating relationship between                    4.1.2. Case study 1a and 1b
+cremation and inhumation presents different kinds of challenges                           We examined a total of 1479 14C dates on seed remains from Japan
+compared to the adoption of farming. On the one hand, radiocarbon                     (n = 551, from 215 sites, Fig. 1a) and Britain (n = 928, from 314 sites,
+dates provide in this case direct evidence of a particular innovation (at             Fig. 1b). Japanese dates were collated from the radiocarbon database of
+least compared to seeds, which remains a proxy variable), and as such,                Japan (Kudo et al., 2023) and the rice radiocarbon database used in
+they provide a less-biased estimator of the proportion of individuals                 (Crema et al., 2022). We considered dates with a cumulative calibrated
+adopting different burial practices. On the other hand, we have no                    probability mass equal to or larger than 0.5 for the interval 4000–1700
+reason to expect a typical s-shaped diffusion curve; rates of diffusion are           cal BP (approximately corresponding to Final Jomon and Yayoi periods)
+expected to vary over time and eventually even produce long-term                      and excluded the island of Hokkaido and the Ryukyuan islands from our
+fashion cycles (Manning et al., 2014). It follows that, in contrast to the            analyses due to their late historical adoption of rice agriculture. The
+diffusion of agriculture, fitting a sigmoidal function to the empirical data          resulting sample consisted of 14C dates on rice (n = 203) and on various
+would be inappropriate, and the goal should instead be a reliable,                    edible wild nuts consumed from the Jomon period onwards (n = 348),
+“non-parametric” estimator of changes in the relative frequency of                    including chestnut, horse chestnut, walnut, and acorns.
+different burial customs over time.                                                       Radiocarbon dates from Britain were obtained from Bevan et al.
+                                                                                      (2017). We filtered the initial dataset considering dates with a cumu­
+4. Materials and methods                                                              lative calibrated probability mass equal to or larger than 0.5 for the
+                                                                                      interval 7000–3000 cal BP (corresponding approximately to Late
+4.1. Materials                                                                        Mesolithic to Late Bronze Age). We used dates on wheat (n = 261) and
+                                                                                      barley (n = 130) as proxies of agriculture and dates on hazelnut (n =
+4.1.1. Simulated data                                                                 537) as representative of wild plant consumption.
+    We first examined the robustness of the two statistical approaches we
+developed by examining whether they can accurately recover parameter                  4.1.3. Case study 2
+values when dealing with sample sizes comparable to those observed in                     Radiocarbon dates associated with burial from the British Isles
+the case studies. While these simulated datasets represent ideal condi­               (Fig. 1c) were collated from different published sources and databases
+tions where the data-generating process is equivalent to the statistical              (Bevan et al., 2017; Bloxam, 2020; Bloxam and Parker Pearson, 2022;
+model, they nonetheless provide an experimental basis to establish a                  Healy, 2012; Mallick and Reich, 2023; Olalde et al., 2018; Wilkin, 2013;
+baseline on the level of precision and accuracy that our approach could               Willis et al., 2016). We chronologically filtered dates with a cumulative
+achieve in recovering model parameters.                                               calibrated probability mass equal to or larger than 0.99 for the interval
+    We simulated three datasets with sample sizes and time-windows                    5500–2000 cal BP. We used a higher probability threshold (0.99 instead
+equivalent to each observed dataset (see sections 4.1.2 and 4.1.3                     of 0.5) to avoid any edge effects caused by the ICAR model. We exam­
+below). Calendar dates were uniformly generated within the time win­                  ined the source material to distinguish dates associated with cremation
+dow of analyses, back-calibrated in 14C age, and associated with an                   (n = 1417) and inhumation (n = 1119).
+arbitrary error of 20 years. For simulations 1a and 1b we randomly
+clustered the dates into groups (corresponding to the archaeological
+sites in the observed data) and randomly assigned to each a binary value              4.2. Methods
+using equations (5)–(8) with the following settings: r = 0.01, m = 2900
+BP, μ = 0.65, φ = 50 (simulation 1a); and r = 0.008, m = 4500 BP, μ =                    Both the hierarchical model described in equations [5–6] and the
+0.8, φ = 40 (simulation 1b). For simulation 2, we first created a 7th-                random walk ICAR model were implemented using the NIMBLE (de
+                                                                                      Valpine et al., 2017, 2020) probabilistic programming language in R (R
+
+
+
+
+Fig. 1. Distribution of sampling sites for the radiocarbon dates in case studies 1a (panel a; rice agriculture in Japan), 1b (panel b; wheat and barley agriculture in
+Britain) and 2 (panel c; burial customs in Britain).
+
+                                                                                  5
+E.R. Crema et al.                                                                                                           Journal of Archaeological Science 165 (2024) 105962
+
+
+Core Team, 2020) and the nimbleCarbon R package (Crema, 2022b;                                evaluated the mixing of our model using the Gelman-Rubin statistic
+Crema and Shoda, 2021).                                                                       (Gelman and Rubin, 1992), except for the posterior of the individual
+    For the simulated datasets 1a & 1b and case studies 1a & 1b we fitted                     dates (θ), which were examined using agreement indices (Bronk Ramsey
+our hierarchical models using equations [6–9] and the following weakly                        1995) given the target distribution does not necessarily follow a normal
+informative priors:                                                                           distribution. We also carried out posterior predictive checks for the two
+                                                                                              empirical case studies by visually comparing observed SPDs of the
+r ∼ Exponential(100)                                                             [10]
+                                                                                              proportion of domesticated crops to an envelope of predictions gener­
+                                                                                              ated using 1000 randomly selected parameters from the joint posterior
+μ ∼ Beta(2, 2)                                                                   [11]
+                                                                                              distributions.
+φ ∼ Gamma(5, 0.1)                                                                [12]             The ICAR model for case study 2 and the simulation dataset 2 was
+                                                                                              fitted using 36 time-blocks of 100 years (with mid-points at 5500, 5400,
+    Priors for the parameter m were modelled using a normal distribu­                         5300 … 2000 cal BP), with the variance modelled as the reciprocal of the
+tion truncated within with the time-window of analyses and a mean of                          square of an exponential distribution with a rate of 1. To obtain our
+2500 and standard deviation of 500 years for simulation #1 and the                            vector of posterior estimates, we used four chains, each with 100,000
+Japanese dataset, and a mean of 5500 and standard deviation of 1000                           iterations (20,000 of which were discarded for burn-in), with parame­
+years for simulation #2 and the British dataset. We fitted all four models                    ters collected every four steps. As for the hierarchical model, we eval­
+with the same MCMC settings, using four chains, each with 1 million                           uated the mixing of our model using the Gelman-Rubin statistic and the
+iterations (half discarded as burn-in) and with thinning set to 50. We                        reliability of the estimated values of θ using agreement indices.
+                             0.0 0.2 0.4 0.6 0.8 1.0
+
+
+
+
+                                                                                                                                           a
+                                     Proportion
+
+
+
+
+                                                        2000          1500              1000                500                1
+                                                                                         BCE/CE
+                             0.0 0.2 0.4 0.6 0.8 1.0
+
+
+
+
+                                                               Model                                                                       b
+                                                               Posterior Mean
+                                                               95% HPD
+                                     Proportion
+
+
+
+
+                                                       5000             4000                   3000                2000                  1000
+                                                                                              BCE
+                             0.0 0.2 0.4 0.6 0.8 1.0
+
+
+
+
+                                                                         Model                                                             c
+                                                                         Posterior Mean
+                                                                         95% HPD
+                                                                         50% HPD
+                                     Proportion
+
+
+
+
+                                                       5500    5000       4500      4000            3500       3000       2500          2000
+                                                                                              BCE
+
+
+Fig. 2. Performance of the hierarchical (a and b, simulations 1a and 1b) and the ICAR model (c, simulation 2) on recovering changes in p as a function of time on
+simulated datasets. Model values (red dotted lines) are based on average values of p across all sites (i.e. kj = μ). Data structure (e.g. number of dates and sites)
+equivalent to the case studies (a: rice vs wild nut dates in Japan; b: wheat & barley vs hazelnut in Britain; c: cremation vs inhumation in Britain). (For interpretation
+of the references to colour in this figure legend, the reader is referred to the Web version of this article.)
+
+                                                                                          6
+E.R. Crema et al.                                                                                                      Journal of Archaeological Science 165 (2024) 105962
+
+
+   We used the IntCal20 curve for all models (Reimer et al., 2020) using
+the calibration process defined in equation [3]. All data and R scripts are
+available on https://github.com/ercrema/diffusionCurve and perma­
+nently archived on https://doi.org/10.5281/zenodo.10782942.
+
+5. Results
+
+5.1. Case study 1a & 1b and simulated datasets 1a & 1b (hierarchical
+model)
+
+    Our hierarchical approach was able to accurately recover the shape
+of the diffusion curve in both simulated datasets, with the ‘true’ curve
+within the 95% posterior fitted range (Fig. 2a and b). Posteriors of all
+parameters were also recovered accurately with fairly narrow highest
+posterior density intervals (HPDI), suggesting that good precision can
+potentially be achieved for all parameter estimates with the sample sizes
+available (Fig. S1 - Fig. S2).
+    Results of the posterior predictive checks of the Japanese and British
+datasets (Figs. 3 and 4) have, instead, revealed a poor fit between the               Fig. 4. Posterior predictive check of the fitted hierarchical Model on observed
+model and the empirically observed proportion SPDs, suggesting in both                proportion SPD of 14C dates on wheat and barley over dates on wheat, barley,
+cases that the diffusion processes cannot be described by a sigmoid                   and hazelnut in Britain (case study 1b).
+curve. In the case of Japan, the fitted model suggests that a stable and
+relatively high but extremely variable proportion of rice radiocarbon
+dates is reached quickly after a few centuries from the introduction of               Table 1
+                                                                                      Posterior estimates and convergence diagnostics on key parameters for case
+the crop (see Table 1). Posterior predictive checks show (Fig. 3), how­
+                                                                                      studies 1a and 1b (r: diffusion rate, m: inflection point; μ: modal equilibrium
+ever, that the model overestimated the proportion of rice dates between
+                                                                                      value of probability cap k; φ: concentration parameter for k).
+c. 800 and 500 BCE and the observed proportion SPD was higher than
+the model prediction from 200 BCE onwards.                                             Region                    Parameter    Median        90% HPD             Rhat
+
+    The fit between the model and empirical SPD was worse in the case                  Japan (Case study 1a)     r            0.1023        0.0131–0.3378       1.0003
+of the British dataset. Model posteriors for the British Isles show low                                          m            844 BCE       893–809 BCE         0.9999
+                                                                                                                              0.703         0.476–0.937         0.9999
+values for μ, a high inter-site variation in kj (i.e. low φ) and a diffusion                                     μ
+                                                                                                                 φ            0.75          0.17–1.67           1.0004
+rate that was an order of magnitude smaller than Japan. The posterior                  Britain (Case study 1b)   r            0.0136        0.0015–0.0382       1.0005
+predictive checks (Fig. 4) show both negative and positive deviations;                                           m            4053 BCE      4361–3857 BCE       1.0003
+the former primarily between ca. 3700 to 2300 BCE and the latter                                                 μ            0.182         0.01–0.42           1.0001
+observed from 1600 BCE onwards.                                                                                  φ            0.31          0.1–0.57            1
+
+
+
+5.2. Case study 2 & simulated dataset 2 (ICAR model)                                     Our empirical case study revealed the existence of two major cycles
+                                                                                      of diffusion and abandonment of cremation; one peaking in the Late
+    The non-parametric ICAR approach successfully recovered the ‘true’                Neolithic at around 2900 BCE and the other in the Early to Middle
+time-sequence of p used to generate the simulated dataset 2 (Fig. 2c),                Bronze Age around 1900-1200 BCE (Fig. 5). The ICAR model also
+indicating that available sample size should be able to recover accu­                 identified key shifts in the probability of a date being associated with
+rately and fairly precisely at least a couple of cycles of diffusion at               cremation, with the most notable case identified at the turn of the 2nd
+millennium scale.
+
+
+
+
+Fig. 3. Posterior predictive check of the fitted hierarchical Model on observed
+proportion SPD of 14C dates on rice over dates on rice and nuts in Japan (case
+study 1a).                                                                              Fig. 5. Estimated proportion of cremation dates in Britain (case study 2).
+
+                                                                                  7
+E.R. Crema et al.                                                                                               Journal of Archaeological Science 165 (2024) 105962
+
+
+millennium BCE when the cremation proportion increases sharply                   et al., 2022).
+following a period of low prevalence that corresponds with the                       As with the Japanese case, the diffusion curve for farming in Britain
+appearance of Beaker phenomenon inhumation rites across Britain.                 and its deviations from the sigmoid curve are not unexpected. Previous
+                                                                                 studies (Bevan et al., 2017; Stevens et al., 2022; Stevens and Fuller,
+6. Discussion                                                                    2012, 2015) have already revealed a shift in subsistence towards total
+                                                                                 reliance on pastoralism and wild food resources, accompanied in many
+    The new suite of Bayesian inferential tools we introduced has suc­           regions of mainland Britain by the abandonment of crops and cultiva­
+cessfully managed to infer DOI curves based on the time-frequency of             tion. Agricultural crops reappear in the Beaker period/Early Bronze Age
+radiocarbon dates from both simulated and empirical datasets. Our so­            accompanied by genetic evidence for the appearance of peoples whose
+lution overcomes several problems that affect current approaches based           ancestors originated in the Eastern Steppe (Patterson et al., 2022), with
+on SPDs, including sampling error, calibration-based artefacts, and              declining evidence for wild foods in the 2nd millennium BCE along with
+overdispersion arising from inter-site variation in both sampling prac­          many cultural elements associated with fully agricultural societies
+tices and past behaviour.                                                        (Stevens and Fuller 2012; Stevens et al., 2022).
+    Albeit applicable in most contexts, the two approaches we present —              Although based on a different methodology, our approach still
+the parametric hierarchical model and the non-parametric ICAR model              highlights this pattern, providing a more accurate estimate of when we
+— were developed with different purposes in mind. The parametric                 observe a lower-than-expected proportion of dates associated with
+model can provide numerical estimates such as diffusion rate (r) or              farming. The British agricultural diffusion case study also demonstrates
+average diffusion cap (μ), which can potentially be associated with in­          how the model is sensitive to the exact distribution of available dates in
+dependent explanatory variables to evaluate specific hypotheses con­             determining its parameters. For example, the relative lack of 14C dates
+cerning diffusion drivers. In contrast, the non-parametric ICAR solution         around the crucial centuries before and after 4000 BCE (Fig. 4), which
+provides a visual descriptive tool that may be used to characterise more         corresponds to the earliest occurrence of domesticates in Britain, had
+complex diffusion dynamics. This flexibility inevitably comes with a             most likely limited the estimates of r and m as there was virtually no
+cost, as specific hypotheses cannot be assessed, and key summary sta­            information available on the proportion of dates associated with wheat
+tistics are not inferred from the empirical data.                                and barley. Finally, it is worth noting that the interpretation of the
+    Our case studies on the diffusion of agriculture in prehistoric Japan        model parameters should always account for the model’s goodness of fit.
+and Britain showcase the many challenges in fitting a s-shaped diffusion         For example, the midpoint parameter m in Japan is a biased estimator of
+curve on empirical datasets. Despite the added flexibility of our hier­          when half the population adopted rice agriculture, given that we
+archical approach, neither of the two studies showed a good fit between          observe positive deviations of the empirical curve around proportions
+the data and the model, and instead highlighted significant deviations           above the estimated average cap μ right at the end of our window of
+between the observed and expected proportion SPDs. While this might              analysis. Similarly, the overall low diffusion rate r in Britain is largely
+be interpreted as a negative result, we highlight that our posterior pre­        impacted by the presence of a temporary abandonment of farming, and
+dictive check provided means to identify whether and, more impor­                as such, it reflects just the average long-term rate of diffusion.
+tantly, how the empirical data deviates from the expectation. It is                  The flexibility of the non-parametric model provides a clear advan­
+important to note that predictive intervals are conditioned by the extent        tage under these conditions and, more generally, in cases where we do
+of uncertainty and variability in the data. Smaller sample sizes and high        not expect an s-shaped diffusion curve to begin with. The case of burial
+overdispersion (i.e. high inter-site variability in k) typically generate        customs in Britain is a typical example where our primary goal is
+wider posterior intervals, decreasing the chance of observing significant        exploratory and our objective is to determine the timing of the repeated
+departures of the observed SPD from the prediction envelope. As noted            adoption and abandonment of one cultural trait across several millennia.
+above, our simulation datasets demonstrated that an accurate and pre­            Our model has confirmed the existence of two such major cycles, one in
+cise recovery of the data-generating parameters is possible with the             the Neolithic between 3200 and 2300 BCE and one in the Bronze Age
+available sample sizes. It follows that the bulk of the variability of the       from 2200 to 500 BCE.
+posterior envelope in Figs. 3 and 4 are dictated primarily by the low                The first of these cycles reflects the adoption and abandonment of
+concentration parameters. While we cannot determine the extent by                Later Neolithic cremation practices across Britain. The radiocarbon ev­
+which such estimated variability in k was due to variation in sampling           idence for this period is relatively sparse, indicated by the larger error
+practices or genuine variations in the role of farming across different          bars in this portion of the plot; some Late Neolithic cemetery sites such
+sites, the added flexibility was not sufficient to explain the range of          as Stonehenge in Wiltshire (Willis et al., 2016) and Forteviot in Perth
+fluctuations in observed SPDs, suggesting that we have robust signals of         and Kinross (Noble et al., 2017) have produced many cremation dates,
+deviations from sigmoid diffusion curves.                                        but cremated remains from this period have been historically
+    In both Japan and Britain, archaeological evidence provides some             under-valued and under-studied (Mckinley, 1994). The abandonment of
+clues on why a sigmoid diffusion curve did not fit the observed data. In         this phase of cremation, following its peak in around 3000-2900 BCE, is
+the case of Japan, the dispersal of rice agriculture is known to have been       often presumed to be associated with the advent of the Beaker period.
+characterised by episodes of significant regional accelerations and              However, the decline in cremation is marked from 2800 BCE onwards
+slowdowns (Crema et al., 2022), which might explain why the observed             and thus pre-dates Beaker inhumation practices in Britain by several
+diffusion curve (Fig. 3) can be described as a double s-shape. These             centuries, suggesting that this decline may reflect endogenous factors
+shapes imply an initial stage with a fast diffusion rate followed by a           rather than external influences.
+drastic slowdown (a saddle point in the curve), followed again by an                 The second major cycle of cremation customs reflects a well-attested
+accelerated diffusion rate. Several explanations have been proposed in           series of Early Bronze Age traditions that arose after the inhumation-
+the literature (Cadavid and Cardona, 2014; Lefebvre, 1995; Reader,               focused Beaker period. Although some cremation activity persists
+2004), with the most common interpretation centred on the idea that              across the Beaker period (Bloxam and Parker Pearson, 2022) the rites
+these shapes signal the existence of community structure, with the               that proliferate during the second cycle are associated with new material
+saddle point being the consequence of intervals when the innovation is           culture and monument forms, and indicate the development of a new
+transmitted across different metapopulations. Indeed, the interval be­           cremation practice rather than a return of rites from the previous cycle.
+tween 500 and 200 BCE, when the empirical diffusion curve is fairly flat             From 2200 BCE onwards cremation sees a rapid increase in preva­
+and does not show positive or negative deviations, corresponds exactly           lence with a longer-lasting period of predominance than in the first
+to the timing of the most prominent slowdown in the dispersal of                 cycle: cremation rites remain the most common practice for the subse­
+farming in Japan (cf. transition from region V to VI on Fig. 3 in Crema          quent millennium. A key finding for this cycle is the speed at which a
+
+                                                                             8
+E.R. Crema et al.                                                                                                  Journal of Archaeological Science 165 (2024) 105962
+
+
+transition from ~10% to ~80% prevalence occurs, the century                          inform the model in estimating sensible values of kj.
+2050–1950 BCE seeing a particularly rapid shift in practices; this is in
+marked contrast to the slow decline in prevalence seen at the end of each            7. Conclusions
+cycle, which is drawn out over several centuries. The variable speed of
+these processes in each cycle provides evidence to support future study                  The last decade saw an increasing effort in synthesising large col­
+of how different drivers of change, including the role of cultural versus            lections of radiocarbon dates to provide new insights into the human
+demic diffusion, might influence the rate of adoption of novel funerary              past. While much of the focus has been centred on paleo-demographic
+practices. Further, it can be used to support further investigations of the          inferences, there are increasing opportunities to investigate other phe­
+variable timing of post-depositional re-engagement with burials                      nomena, each with its own methodological and theoretical challenges.
+observed across later prehistory (Appleby, 2013; Booth and Brück, 2020;              Here we introduced and explored the application of a Bayesian pipeline
+Brück and Booth, 2022).                                                              for modelling DOI curves. Results on both simulated and empirical
+    As noted above, the inferential framework introduced in section 3                datasets have revealed that our method can accurately recover the
+can theoretically be extended to incorporate other elements. Equation                temporal dynamics of the diffusion process and identify instances where
+[5] can include covariates allowing users, for example, to account for the           observed patterns deviate from a typical s-shaped curve. Both empirical
+time of dispersal (m) to be conditioned by the distance from the point of            case studies on the diffusion of farming did indeed show such deviations.
+origin of an innovation, or to determine the extent to which environ­                In Japan, this was most likely the consequence of a slow-down in the
+mental settings promote or inhibit the diffusion of farming practices (e.            dispersal of rice agriculture in the northern regions of the archipelago,
+g. by associating covariates to the diffusion rate r). The relationship              whilst, in Britain, this was the result of a temporary increase in pasto­
+between time and p does not need to follow a sigmoid curve. One could                ralism and consumption of wild plants. Whilst both phenomena were
+potentially model the different curves to estimate cycles of adoption (e.            known from previous studies, our analyses provided an independent
+g. using a sine wave function) or account for population structure (e.g.             assessment of these events and a more accurate estimate of their timing.
+using a double-stage sigmoid curve), and even different transmission                 Our third case study on the temporal changes in the burial customs in
+biases (Henrich, 2001), although a non-parametric model might be more                Britain showcased how our non-parametric model can be used in in­
+useful during early stages of data exploration.                                      stances where we should not expect a sigmoid curve to begin with but
+    It is worth noting that the inferential power of the two methods is              are interested in simply recovering the shape of fashion cycles. Although
+inevitably conditioned by the underlying shape of the diffusion curve,               exploratory by nature, this approach can still provide numerical esti­
+the sample size, and the specific idiosyncrasies of the calibration curve.           mates of the magnitude of diffusion events and the timing of when
+Our two examples on the diffusion of farming provide instances of                    abrupt changes might have occurred.
+longer (Britain) and shorter (Japan) term dynamics, with the latter at
+least in part conditioned by the calibration plateau around 800-400 BCE.             CRediT authorship contribution statement
+Similarly, case study 2 (British burials) encompasses several intervals
+with calibration plateaus. Yet a comprehensive assessment of all factors                 E.R. Crema: Conceptualization, Data curation, Formal analysis,
+conditioning the inferential power of the approach we propose is not                 Funding acquisition, Methodology, Software, Writing – original draft,
+possible. Simulation studies like those presented here where artificial              Writing – review & editing, Visualization. A. Bloxam: Data curation,
+datasets with the same sample size, sample structure, and temporal                   Funding acquisition, Writing – original draft, Writing – review & editing.
+window of analyses as the observed data are examined in detail can                   C.J. Stevens: Data curation, Writing – review & editing, Writing –
+reveal the extent to which the inferential engine can or cannot recover              original draft. M. Vander Linden: Data curation, Writing – original
+hypothetical patterns. Such what-if experiments (Buck and Meson, 2015)               draft, Writing – review & editing.
+are paramount for properly determining whether the available samples
+are appropriate for the specific question posed.                                     Declaration of competing interest
+    Lastly, all empirical case studies presented here covered a compar­
+atively wide geographic and chronological window where the assump­                       The authors declare that they have no known competing financial
+tion of a stationary diffusion process can be difficult to justify. As               interests or personal relationships that could have appeared to influence
+evidenced in both case studies on the diffusion of farming, one should               the work reported in this paper.
+expect variations in diffusion dynamics within larger spatial and tem­
+poral windows where the assumption of a sigmoid curve might hold only                Acknowledgements
+for particular intervals and locations. Curves fitted over these datasets
+should be examined with care, as they capture averaged trends and                        We thank the two reviewers for their detailed and insightful com­
+obscure potential variations. There is inevitably a trade-off; smaller               ments that helped improve the manuscript, and Ben Marwick for
+spatial and temporal windows are more likely to follow a sigmoid curve               reviewing the computational code and providing suggestions to improve
+but are also limited by smaller sample sizes and lower inferential power.            its reproducibility. This work was supported by the European Research
+Furthermore, defining a meaningful geographic subdivision is a chal­                 Council Starting Grant (ENCOUNTER; no. 801953; ERC & CJS; PI: ERC)
+lenge itself, given potential issues such as the modifiable areal unit               a Philip Leverhulme Prize (#PLP-2019–304; PI: ERC), NERC radio­
+problem (Openshaw, 1984). A possible solution to this is to employ                   carbon grant (NF/2017/2/12; AB; PI: Mike Parker Pearson), and LAHP
+models that formally account for the spatial structure of the data, such as          AHRC studentship (AB). For the purpose of open access, the author has
+Gaussian Process regression (Rasmussen and Williams, 2006). These                    applied a Creative Commons Attribution (CC BY) licence to any Author
+potential directions would still require sufficient sample sizes to be               Accepted Manuscript version arising from this submission.
+viable, but the growing number of large databases of radiocarbon dates
+might give hope that such opportunities are not that far away. It is                 Appendix A. Supplementary data
+further worth noting that the assumption of stationarity was made also
+for the site level random effect kj. In the British dataset for case study 1b,          Supplementary data to this article can be found online at https://doi.
+11% (36 out of 314) of the sites have calibrated dates spanning an in­               org/10.1016/j.jas.2024.105962.
+terval of over 1000 years, making the assumption of the same value for kj
+potentially problematic. Employing different aggregation units, possibly
+adding multiple levels (e.g. context or phase and site) may address this
+issue, particularly when additional covariates at such a level might help
+
+                                                                                 9
+E.R. Crema et al.                                                                                                                           Journal of Archaeological Science 165 (2024) 105962
+
+
+References                                                                                               cultivation in the south-east of England and its relationship with vegetation cover: a
+                                                                                                         honeymoon period for biodiversity? Holocene, 09596836231185836.
+                                                                                                     Eerkens, J.W., Lipo, C.P., 2014. A tale of two technologies: prehistoric diffusion of
+Amati, V., Munson, J., Scholnick, J., Habiba, 2019. Applying event history analysis to
+                                                                                                         pottery innovations among hunter-gatherers. J. Anthropol. Archaeol. 35, 23–31.
+    explain the diffusion of innovations in archaeological networks. J. Archaeol. Sci.
+                                                                                                     Endo, E., Leipe, C., 2022. The onset, dispersal and crop preferences of early agriculture in
+    104, 1–9.
+                                                                                                         the Japanese archipelago as derived from seed impressions in pottery. Quat. Int. 623,
+Appleby, J., 2013. Temporality and the transition to cremation in the late third
+                                                                                                         35–49.
+    millennium to mid second millennium bc in Britain. Camb. Archaeol. J. 23, 83–97.
+                                                                                                     Fernández-Crespo, T., Snoeck, C., Ordoño, J., de Winter, N.J., Czermak, A., Mattielli, N.,
+Bass, F.M., 1969. A new product growth for model consumer durables. Manag. Sci. 15,
+                                                                                                         Lee-Thorp, J.A., Schulting, R.J., 2020. Multi-isotope evidence for the emergence of
+    215–227.
+                                                                                                         cultural alterity in Late Neolithic Europe. Sci. Adv. 6, eaay2169.
+Besag, J., 1974. Spatial interaction and the statistical analysis of lattice systems. J. Roy.
+                                                                                                     Fujio, S., 2021. Early grain cultivation and starting processes in the Japanese
+    Stat. Soc. 36, 192–225.
+                                                                                                         archipelago. Quaternary 4, 3.
+Bevan, A., Colledge, S., Fuller, D., Fyfe, R., Shennan, S., Stevens, C., 2017. Holocene
+                                                                                                     Furholt, M., 2019. Re-Integrating archaeology: a contribution to aDNA studies and the
+    fluctuations in human population demonstrate repeated links to food production and
+                                                                                                         migration discourse on the 3rd millennium BC in Europe. Proc. Prehist. Soc. 85,
+    climate. Proc. Natl. Acad. Sci. U.S.A. 114, E10524–E10531.
+                                                                                                         115–129.
+Bird, D., Miranda, L., Vander Linden, M., Robinson, E., Bocinsky, R.K., Nicholson, C.,
+                                                                                                     Furholt, M., 2014. Upending a “totality”: Re-evaluating corded ware variability in late
+    Capriles, J.M., Finley, J.B., Gayo, E.M., Gil, A., d’Alpoim Guedes, J., Hoggarth, J.A.,
+                                                                                                         neolithic Europe. Proc. Prehist. Soc. 80, 67–86.
+    Kay, A., Loftus, E., Lombardo, U., Mackie, M., Palmisano, A., Solheim, S., Kelly, R.L.,
+                                                                                                     Garrow, D., Meadows, J., Evans, C., Tabor, J., 2014. Dating the dead: a high-resolution
+    Freeman, J., 2022. p3k14c, a synthetic global database of archaeological
+                                                                                                         radiocarbon chronology of burial within an early Bronze age barrow cemetery at
+    radiocarbon dates. Sci. Data 9, 27.
+                                                                                                         over, Cambridgeshire. Proc. Prehist. Soc. 80, 207–236.
+Bishop, R.R., Church, M.J., Rowley-Conwy, P.A., 2014. Seeds, fruits and nuts in the
+                                                                                                     Gelman, A., Rubin, D.B., 1992. Inference from iterative simulation using multiple
+    Scottish Mesolithic. Proc. Soc. Antiq. Scotl. 143, 9–71.
+                                                                                                         sequences. Stat. Sci. 7, 457–472.
+Bloxam, A., 2020. The Other Beaker People: Funerary Diversity in Britain c.2450-1950
+                                                                                                     Grasman, J., Kornelis, M., 2019. Forecasting product sales with a stochastic Bass model.
+    BC (Doctoral). UCL (University College London.
+                                                                                                         J. Math. Ind. 9, 1–10.
+Bloxam, A., Parker Pearson, M., 2022. Funerary diversity and cultural continuity: the
+                                                                                                     Haughton, M., 2021. Seeing children in prehistory: a view from Bronze age Ireland.
+    British beaker phenomenon beyond the stereotype. Proc. Prehist. Soc. 88, 261–284.
+                                                                                                         Camb. Archaeol. J. 31, 363–378.
+Booth, T.J., Brück, J., 2020. Death is not the end: radiocarbon and histo-taphonomic
+                                                                                                     Healy, F., 2012. Chronology, corpses, ceramics, copper, and lithics. In: Allen, M.M.J.,
+    evidence for the curation and excarnation of human remains in Bronze Age Britain.
+                                                                                                         Gardiner, J., Sheridan, J.A. (Eds.), Is There a British Chalcolithic? People, Place and
+    Antiquity 94, 1186–1203.
+                                                                                                         Polity in the Later 3rd Millennium, Prehistoric Society Research Paper. Oxbow
+Brace, S., Diekmann, Y., Booth, T.J., van Dorp, L., Faltyskova, Z., Rohland, N.,
+                                                                                                         Books, Oxford, pp. 144–163.
+    Mallick, S., Olalde, I., Ferry, M., Michel, M., Oppenheimer, J.,
+                                                                                                     Henrich, J., 2001. Cultural transmission and the diffusion of innovations: adoption
+    Broomandkhoshbacht, N., Stewardson, K., Martiniano, R., Walsh, S., Kayser, M.,
+                                                                                                         dynamics indicate that biased cultural transmission is the predominate force in
+    Charlton, S., Hellenthal, G., Armit, I., Schulting, R., Craig, O.E., Sheridan, A., Parker
+                                                                                                         behavioral change. Am. Anthropol. 103, 992–1013.
+    Pearson, M., Stringer, C., Reich, D., Thomas, M.G., Barnes, I., 2019. Ancient genomes
+                                                                                                     Hoppitt, W., Kandler, A., Kendal, J.R., Laland, K.N., 2010. The effect of task structure on
+    indicate population replacement in Early Neolithic Britain. Nat Ecol Evol 3,
+                                                                                                         diffusion dynamics: implications for diffusion curve and network-based analyses.
+    765–771.
+                                                                                                         Learn. Behav. 38, 243–251.
+Bronk Ramsey, C., 1995. Radiocarbon calibration and analysis of stratigraphy: the OxCal
+                                                                                                     Jay, M., Scarre, C., 2017. Tracking the dead in the Neolithic: the “invisible dead” in
+    program. Radiocarbon 37, 425–430.
+                                                                                                         Britain. In: Bradbury, J., Scarre, C. (Eds.), Engaging with the Dead: Exploring
+Bronk Ramsey, C., 2017. Methods for summarizing radiocarbon datasets. Radiocarbon
+                                                                                                         Changing Human Beliefs about Death, Mortality and the Human Body. Oxbow
+    59, 1809–1833.
+                                                                                                         Books, Oxford, pp. 7–23.
+Brück, J., Booth, T.J., 2022. The ambivalent dead: curation, excarnation and complex
+                                                                                                     Kudo, Y., Sakamoto, M., Hakozaki, M., Stevens, C.J., Crema, E.R., 2023. An
+    post-mortem trajectories in Middle and late Bronze age Britain. Proc. Prehist. Soc.
+                                                                                                         archaeological radiocarbon database of Japan. J. Open Archaeol. Data.
+    88, 193–220.
+                                                                                                     Lefebvre, L., 1995. Culturally-transmitted feeding behaviour in primates: evidence for
+Buchanan, B., David Kilby, J., LaBelle, J.M., Surovell, T.A., Holland-Lulewicz, J.,
+                                                                                                         accelerating learning rates. Primates 36, 227–239.
+    Hamilton, M.J., 2022. Bayesian modeling of the clovis and folsom radiocarbon
+                                                                                                     Leipe, C., Long, T., Wagner, M., Goslar, T., Tarasov, P.E., 2020. The spread of rice to
+    records indicates a 200-year multigenerational transition. Am. Antiq. 87, 567–580.
+                                                                                                         Japan: insights from Bayesian analysis of direct radiocarbon dates and population
+Buck, C.E., Meson, B., 2015. On being a good Bayesian. World Archaeol. 47, 567–584.
+                                                                                                         dynamics in East Asia. Quat. Sci. Rev. 244, 106507.
+Cadavid, L., Cardona, C.J.F., 2014. Saddle points in innovation diffusion curves: an
+                                                                                                     Lengyel, B., Bokányi, E., Di Clemente, R., Kertész, J., González, M.C., 2020. The role of
+    explanation from bounded rationality. In: Advances in Social Simulation. Springer
+                                                                                                         geography in the complex diffusion of innovations. Sci. Rep. 10, 15065.
+    Berlin Heidelberg, pp. 73–82.
+                                                                                                     Mallick, S., Reich, D., 2023. The Allen Ancient DNA Resource (AADR): A Curated
+Capuzzo, G., Snoeck, C., Boudin, M., Dalle, S., Annaert, R., Hlad, M., Kontopoulos, I.,
+                                                                                                         Compendium of Ancient Human Genomes. https://doi.org/10.7910/DVN/FFIDCW.
+    Sabaux, C., Salesse, K., Sengeløv, A., Stamataki, E., Veselka, B., Warmenbol, E., De
+                                                                                                     Manning, K., Timpson, A., Colledge, S., Crema, E., Edinborough, K., Kerig, T.,
+    Mulder, G., Tys, D., Vercauteren, M., 2020. Cremation vs. Inhumation: modeling
+                                                                                                         Shennan, S., 2014. The chronology of culture: a comparative assessment of European
+    cultural changes in funerary practices from the mesolithic to the Middle ages in
+                                                                                                         Neolithic dating approaches. Antiquity 88, 1065–1080.
+    Belgium using Kernel density analysis on 14C data. Radiocarbon 62, 1809–1832.
+                                                                                                     Manzo, G., Gabbriellini, S., Roux, V., M’Mbogori, F.N., 2018. Complex contagions and
+Carleton, W.C., Groucutt, H.S., 2020. Sum things are not what they seem: problems with
+                                                                                                         the diffusion of innovations: evidence from a small-N study. J. Archaeol. Method
+    point-wise interpretations and quantitative analyses of proxies based on aggregated
+                                                                                                         Theor 25, 1109–1154.
+    radiocarbon dates. Holocene. 31(4), 630–643.
+                                                                                                     Mckinley, J.I., 1994. A pyre and grave goods in British cremation burials; have we missed
+Caswell, E., Roberts, B.W., 2018. Reassessing community cemeteries: cremation burials
+                                                                                                         something? Antiquity 68, 132–134.
+    in Britain during the Middle Bronze age (c. 1600–1150 cal bc). Proc. Prehist. Soc. 84,
+                                                                                                     Meade, N., Islam, T., 2006. Modelling and forecasting the diffusion of innovation – A 25-
+    329–357.
+                                                                                                         year review. Int. J. Forecast. 22, 519–545.
+Crawford, G.W., 2011. Advances in understanding early agriculture in Japan. Curr.
+                                                                                                     Mittnik, A., Massy, K., Knipper, C., Wittenborn, F., Friedrich, R., Pfrengle, S., Burri, M.,
+    Anthropol. 52, S331–S345.
+                                                                                                         Carlichi-Witjes, N., Deeg, H., Furtwängler, A., Harbeck, M., von Heyking, K.,
+Crema, E.R., 2022a. Statistical inference of prehistoric demography from frequency
+                                                                                                         Kociumaka, C., Kucukkalipci, I., Lindauer, S., Metz, S., Staskiewicz, A., Thiel, A.,
+    distributions of radiocarbon dates: a review and a guide for the perplexed.
+                                                                                                         Wahl, J., Haak, W., Pernicka, E., Schiffels, S., Stockhammer, P.W., Krause, J., 2019.
+    J. Archaeol. Method Theor. https://doi.org/10.1007/s10816-022-09559-5.
+                                                                                                         Kinship-based social inequality in Bronze age Europe. Science 366, 731–734.
+Crema, E.R., 2022b. nimbleCarbon: Models and Utility Functions for Bayesian Analyses
+                                                                                                     Noble, G., Brophy, K., Hamilton, D., Leach, S., Sheridan, A., 2017. Cremation practices
+    of Radiocarbon Dates with NIMBLE, 0.2.0.
+                                                                                                         and the creation of monument complexes: the neolithic cremation cemetery at
+Crema, E.R., Shoda, S., 2021. A Bayesian approach for fitting and comparing
+                                                                                                         Forteviot, strathearn, Perth & Kinross, Scotland, and its comparanda. Proc. Prehist.
+    demographic growth models of radiocarbon dates: a case study on the Jomon-Yayoi
+                                                                                                         Soc. 83, 213–245.
+    transition in Kyushu (Japan). PLoS One 16, e0251695.
+                                                                                                     Obata, H., Kunikita, D., 2022. A new archaeological method to reveal the arrival of cereal
+Crema, E.R., Stevens, C.J., Shoda, S., 2022. Bayesian analyses of direct radiocarbon dates
+                                                                                                         farming: development of a new method to extract and date of carbonised material in
+    reveal geographic variations in the rate of rice farming dispersal in prehistoric
+                                                                                                         pottery and its application to the Japanese archaeological context. J. Archaeol. Sci.
+    Japan. Sci. Adv. 8, eadc9171.
+                                                                                                         143, 105594.
+de Groot, B., Bloxam, A., 2022. Radiocarbon approaches for mapping technological
+                                                                                                     Olalde, I., Brace, S., Allentoft, M.E., Armit, I., Kristiansen, K., Booth, T., Rohland, N.,
+    change: the spread of the potter’s wheel in the Iberian Peninsula, 1000–0 BCE.
+                                                                                                         Mallick, S., Szécsényi-Nagy, A., Mittnik, A., Altena, E., Lipson, M., Lazaridis, I.,
+    J. Archaeol. Sci.: Report 41, 103288.
+                                                                                                         Harper, T.K., Patterson, N., Broomandkhoshbacht, N., Diekmann, Y., Faltyskova, Z.,
+de Valpine, P., Adler, C., Turek, D., Michaud, N., Anderson-Bergman, C., Obermeyer, F.,
+                                                                                                         Fernandes, D., Ferry, M., Harney, E., de Knijff, P., Michel, M., Oppenheimer, J.,
+    Wehrhahn Cortes, C., Rodrìguez, A., Temple Lang, D., Paganin, S., 2020. NIMBLE:
+                                                                                                         Stewardson, K., Barclay, A., Alt, K.W., Liesau, C., Ríos, P., Blasco, C., Miguel, J.V.,
+    MCMC, Particle Filtering, and Programmable Hierarchical Modeling. https://doi.
+                                                                                                         García, R.M., Fernández, A.A., Bánffy, E., Bernabò-Brea, M., Billoin, D., Bonsall, C.,
+    org/10.5281/zenodo.1211190.
+                                                                                                         Bonsall, L., Allen, T., Büster, L., Carver, S., Navarro, L.C., Craig, O.E., Cook, G.T.,
+de Valpine, P., Turek, D., Paciorek, C.J., Anderson-Bergman, C., Lang, D.T., Bodik, R.,
+                                                                                                         Cunliffe, B., Denaire, A., Dinwiddy, K.E., Dodwell, N., Ernée, M., Evans, C.,
+    2017. Programming with models: writing statistical algorithms for general model
+                                                                                                         Kuchařík, M., Farré, J.F., Fowler, C., Gazenbeek, M., Pena, R.G., Haber-Uriarte, M.,
+    structures with NIMBLE. J. Comput. Graph Stat. 26, 403–413.
+                                                                                                         Haduch, E., Hey, G., Jowett, N., Knowles, T., Massy, K., Pfrengle, S., Lefranc, P.,
+de Vareilles, A., Woodbridge, J., Pelling, R., Fyfe, R., Smith, D., Campbell, G., Smith, W.,
+                                                                                                         Lemercier, O., Lefebvre, A., Martínez, C.H., Olmo, V.G., Ramírez, A.B., Maurandi, J.
+    Carruthers, W., Adams, S., le Hégarat, K., Allot, L., 2023. The development of arable
+                                                                                                         L., Majó, T., McKinley, J.I., McSweeney, K., Mende, B.G., Modi, A., Kulcsár, G.,
+
+
+                                                                                                10
+E.R. Crema et al.                                                                                                                              Journal of Archaeological Science 165 (2024) 105962
+
+    Kiss, V., Czene, A., Patay, R., Endrődi, A., Köhler, K., Hajdu, T., Szeniczey, T.,                 R Core Team, 2020. R: A Language and Environment for Statistical Computing. R
+    Dani, J., Bernert, Z., Hoole, M., Cheronet, O., Keating, D., Velemínský, P., Dobeš, M.,                 Foundation for Statistical Computing, Vienna, Austria.
+    Candilio, F., Brown, F., Fernández, R.F., Herrero-Corral, A.-M., Tusa, S., Carnieri, E.,            Reader, S.M., 2004. Distinguishing social and asocial learning using diffusion dynamics.
+    Lentini, L., Valenti, A., Zanini, A., Waddington, C., Delibes, G., Guerra-Doce, E.,                      Anim. Learn. Behav. 32, 90–104.
+    Neil, B., Brittain, M., Luke, M., Mortimer, R., Desideri, J., Besse, M., Brücken, G.,                Rebay-Salisbury, K.C., 2015. Neither fish nor fowl: burial practices between inhumation
+    Furmanek, M., Hałuszko, A., Mackiewicz, M., Rapiński, A., Leach, S., Soriano, I.,                       and cremation in later European Prehistory. In: Devlin, Z.L., Graham, E.-J. (Eds.),
+    Lillios, K.T., Cardoso, J.L., Pearson, M.P., Włodarczak, P., Price, T.D., Prieto, P.,                    Death Embodied: Archaeological Approaches to the Treatment of the Corpse. Oxbow
+    Rey, P.-J., Risch, R., Rojo Guerra, M.A., Schmitt, A., Serralongue, J., Silva, A.M.,                     Books, Oxford, pp. 18–40.
+    Smrčka, V., Vergnaud, L., Zilhão, J., Caramelli, D., Higham, T., Thomas, M.G.,                     Reimer, P.J., Austin, W.E.N., Bard, E., Bayliss, A., Blackwell, P.G., Ramsey, C.B.,
+    Kennett, D.J., Fokkens, H., Heyd, V., Sheridan, A., Sjögren, K.-G., Stockhammer, P.                     Butzin, M., Cheng, H., Edwards, R.L., Friedrich, M., Grootes, P.M., Guilderson, T.P.,
+    W., Krause, J., Pinhasi, R., Haak, W., Barnes, I., Lalueza-Fox, C., Reich, D., 2018. The                 Hajdas, I., Heaton, T.J., Hogg, A.G., Hughen, K.A., Kromer, B., Manning, S.W.,
+    Beaker phenomenon and the genomic transformation of northwest Europe. Nature                             Muscheler, R., Palmer, J.G., Pearson, C., Plicht, J. van der, Reimer, R.W.,
+    555, 190–196.                                                                                            Richards, D.A., Scott, E.M., Southon, J.R., Turney, C.S.M., Wacker, L., Adolphi, F.,
+Openshaw, S., 1984. The Modifiable Areal Unit Problem. Geobooks, Norwich.                                    Büntgen, U., Capano, M., Fahrni, S.M., Fogtmann-Schulz, A., Friedrich, R.,
+Parker Pearson, M., Chamberlain, A., Jay, M., Richards, M., Sheridan, A., Curtis, N.,                        Köhler, P., Kudsk, S., Miyake, F., Olsen, J., Reinig, F., Sakamoto, M., Sookdeo, A.,
+    Evans, J., Gibson, A., Hutchison, M., Mahoney, P., Marshall, P., Montgomery, J.,                         Talamo, S., 2020. The IntCal20 northern hemisphere radiocarbon age calibration
+    Needham, S., O’Mahoney, S., Pellegrini, M., Wilkin, N., 2016. Beaker people in                           curve (0–55 cal kBP). Radiocarbon 62, 725–757.
+    Britain: migration, mobility and diet. Antiquity 90, 620–637.                                        Rick, J.W., 1987. Dates as data: an examination of the Peruvian radiocarbon record.
+Patterson, N., Isakov, M., Booth, T., Büster, L., Fischer, C.-E., Olalde, I., Ringbauer, H.,                 American Anitquity 52, 55–73.
+    Akbari, A., Cheronet, O., Bleasdale, M., Adamski, N., Altena, E., Bernardos, R.,                     Rogers, E.M., 2003. Diffusion of Innovations, fifth ed. Free Press, London.
+    Brace, S., Broomandkhoshbacht, N., Callan, K., Candilio, F., Culleton, B., Curtis, E.,               Rue, H., Held, L., 2004. Gaussian Markov Random Fields: Theory and Applications.
+    Demetz, L., Carlson, K.S.D., Edwards, C.J., Fernandes, D.M., Foody, M.G.B.,                              Chapman & Hall/CRC Monographs on Statistics and Applied Probability. Chapman
+    Freilich, S., Goodchild, H., Kearns, A., Lawson, A.M., Lazaridis, I., Mah, M.,                           and Hall, London, England. https://doi.org/10.1201/9780203492024.
+    Mallick, S., Mandl, K., Micco, A., Michel, M., Morante, G.B., Oppenheimer, J.,                       Sakaguchi, T., 2009. Storage adaptations among hunter–gatherers: a quantitative
+    Özdoğan, K.T., Qiu, L., Schattke, C., Stewardson, K., Workman, J.N., Zalzala, F.,                      approach to the Jomon period. Journal of Anthroplogical Archaeology 26, 290–303.
+    Zhang, Z., Agustí, B., Allen, T., Almássy, K., Amkreutz, L., Ash, A., Baillif-Ducros, C.,           Schmid, C., 2020. Evaluating cultural transmission in Bronze age burial rites of central,
+    Barclay, A., Bartosiewicz, L., Baxter, K., Bernert, Z., Blažek, J., Bodružić, M.,                     northern and Northwestern Europe using radiocarbon data. Adapt. Behav. 28,
+    Boissinot, P., Bonsall, C., Bradley, P., Brittain, M., Brookes, A., Brown, F., Brown, L.,                359–376.
+    Brunning, R., Budd, C., Burmaz, J., Canet, S., Carnicero-Cáceres, S., Čaušević-                  Scholnick, J.B., 2012. The spatial and temporal diffusion of stylistic innovations in
+    Bully, M., Chamberlain, A., Chauvin, S., Clough, S., Čondić, N., Coppa, A., Craig, O.,                 material culture. Adv. Complex Syst. 15, 1150010.
+    Črešnar, M., Cummings, V., Czifra, S., Danielisová, A., Daniels, R., Davies, A., de               Sheridan, A., 2010. The Neolithization of Britain and Ireland: the “big picture.”.
+    Jersey, P., Deacon, J., Deminger, C., Ditchfield, P.W., Dizdar, M., Dobeš, M.,                          Landscapes in transition 89–105.
+    Dobisíková, M., Domboróczki, L., Drinkall, G., Đukić, A., Ernée, M., Evans, C.,                  Smaldino, P.E., Janssen, M.A., Hillis, V., Bednar, J., 2017. Adoption as a social marker:
+    Evans, J., Fernández-Götz, M., Filipović, S., Fitzpatrick, A., Fokkens, H., Fowler, C.,               innovation diffusion with outgroup aversion. J. Math. Sociol. 41, 26–45.
+    Fox, A., Gallina, Z., Gamble, M., González Morales, M.R., González-Rabanal, B.,                    Snoeck, C., Lee-Thorp, J., Schulting, R., de Jong, J., Debouge, W., Mattielli, N., 2015.
+    Green, A., Gyenesei, K., Habermehl, D., Hajdu, T., Hamilton, D., Harris, J.,                             Calcined bone provides a reliable substrate for strontium isotope ratios as shown by
+    Hayden, C., Hendriks, J., Hernu, B., Hey, G., Horňák, M., Ilon, G., Istvánovits, E.,                  an enrichment experimen. Rapid Commun. Mass Spectrom. 29, 107–114.
+    Jones, A.M., Kavur, M.B., Kazek, K., Kenyon, R.A., Khreisheh, A., Kiss, V., Kleijne, J.,             Steele, J., 2009. Innovation diffusion and traveling waves. In: Shennan, S. (Ed.), Pattern
+    Knight, M., Kootker, L.M., Kovács, P.F., Kozubová, A., Kulcsár, G., Kulcsár, V., Le                  and Process in Cultural Evolution. University of California Press, pp. 163–174.
+    Pennec, C., Legge, M., Leivers, M., Loe, L., López-Costas, O., Lord, T., Los, D.,                   Stevens, C.J., Crema, E.R., Shoda, S., 2022. The importance of wild resources as a
+    Lyall, J., Marín-Arroyo, A.B., Mason, P., Matošević, D., Maxted, A., McIntyre, L.,                     reflection of the resilience and changing nature of early agricultural systems in East
+    McKinley, J., McSweeney, K., Meijlink, B., Mende, B.G., Menđušić, M., Metlička, M.,                   Asia and Europe. Frontiers in Ecology and Evolution 10. https://doi.org/10.3389/
+    Meyer, S., Mihovilić, K., Milasinovic, L., Minnitt, S., Moore, J., Morley, G.,                          fevo.2022.1017909.
+    Mullan, G., Musilová, M., Neil, B., Nicholls, R., Novak, M., Pala, M., Papworth, M.,                Stevens, C.J., Fuller, D.Q., 2015. Alternative strategies to agriculture: the evidence for
+    Paresys, C., Patten, R., Perkić, D., Pesti, K., Petit, A., Petriščáková, K., Pichon, C.,            climatic shocks and cereal declines during the British Neolithic and Bronze Age (a
+    Pickard, C., Pilling, Z., Price, T.D., Radović, S., Redfern, R., Resutík, B., Rhodes, D.T.,             reply to Bishop). World Archaeol. 47, 856–875.
+    Richards, M.B., Roberts, A., Roefstra, J., Sankot, P., Šefčáková, A., Sheridan, A.,              Stevens, C.J., Fuller, D.Q., 2012. Did Neolithic farming fail? The case for a Bronze Age
+    Skae, S., Šmolíková, M., Somogyi, K., Somogyvári, Á., Stephens, M., Szabó, G.,                      agricultural revolution in the British Isles. Antiquity 86, 707–722.
+    Szécsényi-Nagy, A., Szeniczey, T., Tabor, J., Tankó, K., Maria, C.T., Terry, R.,                  Vander Linden, M., 2016. Population history in third-millennium-BC Europe: assessing
+    Teržan, B., Teschler-Nicola, M., Torres-Martínez, J.F., Trapp, J., Turle, R., Ujvári, F.,              the contribution of genetics. World Archaeol. 48, 714–728.
+    van der Heiden, M., Veleminsky, P., Veselka, B., Vytlačil, Z., Waddington, C.,                      Whittle, A., Healy, F., Bayliss, A., 2011. Gathering Time: Dating the Early Neolithic
+    Ware, P., Wilkinson, P., Wilson, L., Wiseman, R., Young, E., Zaninović, J., Žitňan, A.,               Enclosures of Southern Britain and Ireland. Oxbow Books, Oxford.
+    Lalueza-Fox, C., de Knijff, P., Barnes, I., Halkon, P., Thomas, M.G., Kennett, D.J.,                 Wilkin, N., 2013. Food Vessel Pottery from Early Bronze Age Funerary Contexts in
+    Cunliffe, B., Lillie, M., Rohland, N., Pinhasi, R., Armit, I., Reich, D., 2022. Large-scale              Northern England: a Typological and Contextual Study. University of Birmingham,
+    migration into Britain during the Middle to late Bronze age. Nature 601, 588–594.                        Birmingham.
+Rasmussen, C.E., Williams, C.K.I., 2006. Gaussian Processes for Machine Learning. MIT                    Willis, C., 2021. Stonehenge and Middle to Late Neolithic Cremation Rites in Mainland
+    Press.                                                                                                   Britain, British Series. British Archaeological Reports, Oxford.
+Ray, K., Thomas, J., 2018. Neolithic Britain: the Transformation of Social Worlds. Oxford                Willis, C., Marshall, P., McKinley, J., Pitts, M., Pollard, J., Richards, C., Richards, J.,
+    University Press.                                                                                        Thomas, J., Waldron, T., Welham, K., Pearson, M.P., 2016. The dead of Stonehenge.
+                                                                                                             Antiquity 90, 337–356.
+
+
+
+
+                                                                                                    11
+

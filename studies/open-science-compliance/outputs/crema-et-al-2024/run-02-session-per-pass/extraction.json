@@ -1,0 +1,691 @@
+{
+  "schema_version": "2.6",
+  "extraction_timestamp": "2025-01-13T09:30:00Z",
+  "paper_id": "crema-et-al-2024",
+  "extraction_mode": "session-per-pass",
+  "current_pass": "pass_1_2",
+  "passes_completed": ["pass_0", "pass_6", "pass_1", "pass_2"],
+
+  "metadata": {
+    "title": "Modelling diffusion of innovation curves using radiocarbon data",
+    "authors": [
+      {
+        "name": "E.R. Crema",
+        "affiliations": [
+          "Department of Archaeology, University of Cambridge",
+          "McDonald Institute for Archaeological Research, University of Cambridge"
+        ],
+        "orcid": null,
+        "corresponding": true
+      },
+      {
+        "name": "A. Bloxam",
+        "affiliations": [
+          "Department of Classics and Archaeology, University of Nottingham"
+        ],
+        "orcid": null,
+        "corresponding": false
+      },
+      {
+        "name": "C.J. Stevens",
+        "affiliations": [
+          "McDonald Institute for Archaeological Research, University of Cambridge"
+        ],
+        "orcid": null,
+        "corresponding": false
+      },
+      {
+        "name": "M. Vander Linden",
+        "affiliations": [
+          "McDonald Institute for Archaeological Research, University of Cambridge",
+          "Institute for the Modelling of Socio-Environmental Transitions, Bournemouth University"
+        ],
+        "orcid": null,
+        "corresponding": false
+      }
+    ],
+    "journal": "Journal of Archaeological Science",
+    "volume": "165",
+    "article_number": "105962",
+    "year": 2024,
+    "doi": "10.1016/j.jas.2024.105962",
+    "open_access": true,
+    "licence": "CC BY",
+    "paper_type": "methodological_with_empirical_applications",
+    "keywords": [
+      "Bayesian inference",
+      "Radiocarbon dating",
+      "Diffusion of innovation",
+      "Origins of farming",
+      "Burial customs",
+      "Japan",
+      "Great Britain"
+    ]
+  },
+
+  "infrastructure": {
+    "data_availability": {
+      "statement": "All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942",
+      "data_accessible": true,
+      "repository_url": "https://github.com/ercrema/diffusionCurve",
+      "persistent_archive": "https://doi.org/10.5281/zenodo.10782942",
+      "archive_type": "zenodo",
+      "data_doi": "10.5281/zenodo.10782942"
+    },
+    "code_availability": {
+      "code_accessible": true,
+      "repository_url": "https://github.com/ercrema/diffusionCurve",
+      "persistent_archive": "https://doi.org/10.5281/zenodo.10782942",
+      "language": "R",
+      "code_doi": "10.5281/zenodo.10782942",
+      "code_reviewed": true,
+      "code_reviewer": "Ben Marwick"
+    },
+    "supplementary_materials": {
+      "available": true,
+      "location": "https://doi.org/10.1016/j.jas.2024.105962"
+    },
+    "credit_statement": {
+      "present": true,
+      "contributions": [
+        {
+          "author": "E.R. Crema",
+          "roles": ["Conceptualisation", "Data curation", "Formal analysis", "Funding acquisition", "Methodology", "Software", "Writing - original draft", "Writing - review & editing", "Visualisation"]
+        },
+        {
+          "author": "A. Bloxam",
+          "roles": ["Data curation", "Funding acquisition", "Writing - original draft", "Writing - review & editing"]
+        },
+        {
+          "author": "C.J. Stevens",
+          "roles": ["Data curation", "Writing - review & editing", "Writing - original draft"]
+        },
+        {
+          "author": "M. Vander Linden",
+          "roles": ["Data curation", "Writing - original draft", "Writing - review & editing"]
+        }
+      ]
+    },
+    "funding": {
+      "sources": [
+        {
+          "funder": "European Research Council",
+          "grant_type": "Starting Grant",
+          "grant_name": "ENCOUNTER",
+          "grant_number": "801953",
+          "pi": "E.R. Crema",
+          "recipients": ["E.R. Crema", "C.J. Stevens"],
+          "ror_id": null
+        },
+        {
+          "funder": "Leverhulme Trust",
+          "grant_type": "Philip Leverhulme Prize",
+          "grant_number": "PLP-2019-304",
+          "pi": "E.R. Crema",
+          "recipients": ["E.R. Crema"],
+          "ror_id": null
+        },
+        {
+          "funder": "Natural Environment Research Council (NERC)",
+          "grant_type": "Radiocarbon grant",
+          "grant_number": "NF/2017/2/12",
+          "pi": "Mike Parker Pearson",
+          "recipients": ["A. Bloxam"],
+          "ror_id": null
+        },
+        {
+          "funder": "Arts and Humanities Research Council (AHRC)",
+          "grant_type": "LAHP studentship",
+          "grant_number": null,
+          "pi": null,
+          "recipients": ["A. Bloxam"],
+          "ror_id": null
+        }
+      ]
+    },
+    "competing_interests": {
+      "declared": true,
+      "statement": "The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper."
+    },
+    "acknowledgements": {
+      "present": true,
+      "reviewers_thanked": true,
+      "code_review_mentioned": true,
+      "code_reviewer": "Ben Marwick",
+      "text": "We thank the two reviewers for their detailed and insightful comments that helped improve the manuscript, and Ben Marwick for reviewing the computational code and providing suggestions to improve its reproducibility."
+    },
+    "pid_graph": {
+      "paper_doi": true,
+      "author_orcids": false,
+      "funder_rors": false,
+      "data_doi": true,
+      "code_doi": true,
+      "institution_rors": false,
+      "connectivity_score": 3,
+      "max_score": 6,
+      "notes": "JAS does not display author ORCIDs. Grant numbers provided but no ROR IDs for funders or institutions."
+    }
+  },
+
+  "evidence": [
+    {
+      "evidence_id": "E001",
+      "evidence_text": "Japanese seed dataset: 551 14C dates from 215 sites",
+      "evidence_type": "quantitative",
+      "verbatim_quote": "We examined a total of 1479 14C dates on seed remains from Japan (n = 551, from 215 sites, Fig. 1a)",
+      "location": {"section": "Materials and methods", "subsection": "4.1.2", "page": 5},
+      "supports_claims": ["C003"]
+    },
+    {
+      "evidence_id": "E002",
+      "evidence_text": "British seed dataset: 928 14C dates from 314 sites",
+      "evidence_type": "quantitative",
+      "verbatim_quote": "Britain (n = 928, from 314 sites, Fig. 1b)",
+      "location": {"section": "Materials and methods", "subsection": "4.1.2", "page": 5},
+      "supports_claims": ["C003"]
+    },
+    {
+      "evidence_id": "E003",
+      "evidence_text": "Japanese dataset composition: 203 rice dates, 348 wild nut dates",
+      "evidence_type": "quantitative",
+      "verbatim_quote": "The resulting sample consisted of 14C dates on rice (n = 203) and on various edible wild nuts consumed from the Jomon period onwards (n = 348), including chestnut, horse chestnut, walnut, and acorns.",
+      "location": {"section": "Materials and methods", "subsection": "4.1.2", "page": 5},
+      "supports_claims": ["C005", "C006"]
+    },
+    {
+      "evidence_id": "E004",
+      "evidence_text": "British dataset composition: 261 wheat, 130 barley, 537 hazelnut dates",
+      "evidence_type": "quantitative",
+      "verbatim_quote": "We used dates on wheat (n = 261) and barley (n = 130) as proxies of agriculture and dates on hazelnut (n = 537) as representative of wild plant consumption.",
+      "location": {"section": "Materials and methods", "subsection": "4.1.2", "page": 5},
+      "supports_claims": ["C005", "C007"]
+    },
+    {
+      "evidence_id": "E005",
+      "evidence_text": "British burial dataset: 1417 cremation dates, 1119 inhumation dates",
+      "evidence_type": "quantitative",
+      "verbatim_quote": "We examined the source material to distinguish dates associated with cremation (n = 1417) and inhumation (n = 1119).",
+      "location": {"section": "Materials and methods", "subsection": "4.1.3", "page": 5},
+      "supports_claims": ["C004", "C008", "C009"]
+    },
+    {
+      "evidence_id": "E006",
+      "evidence_text": "Japan model parameters: r=0.1023, m=844 BCE, mu=0.703, phi=0.75",
+      "evidence_type": "quantitative",
+      "verbatim_quote": "Japan (Case study 1a): r = 0.1023 (90% HPD: 0.0131-0.3378), m = 844 BCE (90% HPD: 893-809 BCE), mu = 0.703 (90% HPD: 0.476-0.937), phi = 0.75 (90% HPD: 0.17-1.67)",
+      "location": {"section": "Results", "subsection": "Table 1", "page": 7},
+      "supports_claims": ["C002", "C005", "C006"]
+    },
+    {
+      "evidence_id": "E007",
+      "evidence_text": "Britain agriculture model parameters: r=0.0136, m=4053 BCE, mu=0.182, phi=0.31",
+      "evidence_type": "quantitative",
+      "verbatim_quote": "Britain (Case study 1b): r = 0.0136 (90% HPD: 0.0015-0.0382), m = 4053 BCE (90% HPD: 4361-3857 BCE), mu = 0.182 (90% HPD: 0.01-0.42), phi = 0.31 (90% HPD: 0.1-0.57)",
+      "location": {"section": "Results", "subsection": "Table 1", "page": 7},
+      "supports_claims": ["C002", "C005", "C007"]
+    },
+    {
+      "evidence_id": "E008",
+      "evidence_text": "Two cremation cycles identified: Late Neolithic peak ~2900 BCE, Bronze Age ~1900-1200 BCE",
+      "evidence_type": "quantitative",
+      "verbatim_quote": "Our empirical case study revealed the existence of two major cycles of diffusion and abandonment of cremation; one peaking in the Late Neolithic at around 2900 BCE and the other in the Early to Middle Bronze Age around 1900-1200 BCE",
+      "location": {"section": "Results", "subsection": "5.2", "page": 7},
+      "supports_claims": ["C004", "C008", "C009"]
+    },
+    {
+      "evidence_id": "E009",
+      "evidence_text": "Rapid cremation transition in century 2050-1950 BCE",
+      "evidence_type": "quantitative",
+      "verbatim_quote": "the century 2050-1950 BCE seeing a particularly rapid shift in practices",
+      "location": {"section": "Discussion", "page": 8},
+      "supports_claims": ["C009"]
+    },
+    {
+      "evidence_id": "E010",
+      "evidence_text": "Cremation prevalence shifted from ~10% to ~80%",
+      "evidence_type": "quantitative",
+      "verbatim_quote": "A key finding for this cycle is the speed at which a transition from ~10% to ~80% prevalence occurs",
+      "location": {"section": "Discussion", "page": 8},
+      "supports_claims": ["C009"]
+    },
+    {
+      "evidence_id": "E011",
+      "evidence_text": "Japanese model deviations: overestimated 800-500 BCE, underestimated post-200 BCE",
+      "evidence_type": "qualitative",
+      "verbatim_quote": "Posterior predictive checks show (Fig. 3), however, that the model overestimated the proportion of rice dates between c. 800 and 500 BCE and the observed proportion SPD was higher than the model prediction from 200 BCE onwards.",
+      "location": {"section": "Results", "subsection": "5.1", "page": 7},
+      "supports_claims": ["C005", "C006"]
+    },
+    {
+      "evidence_id": "E012",
+      "evidence_text": "British model deviations: negative 3700-2300 BCE, positive post-1600 BCE",
+      "evidence_type": "qualitative",
+      "verbatim_quote": "The posterior predictive checks (Fig. 4) show both negative and positive deviations; the former primarily between ca. 3700 to 2300 BCE and the latter observed from 1600 BCE onwards.",
+      "location": {"section": "Results", "subsection": "5.1", "page": 7},
+      "supports_claims": ["C005", "C007"]
+    }
+  ],
+
+  "claims": [
+    {
+      "claim_id": "C001",
+      "claim_text": "Novel Bayesian framework for inferring diffusion curves from radiocarbon data",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "This paper introduces a novel Bayesian framework for inferring the shape of diffusion curves using radiocarbon data associated with the presence/absence of a particular innovation.",
+      "location": {"section": "Abstract", "page": 1},
+      "supported_by": ["C003", "C004"],
+      "supports_claims": []
+    },
+    {
+      "claim_id": "C002",
+      "claim_text": "Method overcomes SPD limitations including sampling error, calibration artefacts, and overdispersion",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "Our solution overcomes several problems that affect current approaches based on SPDs, including sampling error, calibration-based artefacts, and overdispersion arising from inter-site variation in both sampling practices and past behaviour.",
+      "location": {"section": "Discussion", "page": 8},
+      "supported_by": ["E006", "E007", "E008"],
+      "supports_claims": ["C001"]
+    },
+    {
+      "claim_id": "C003",
+      "claim_text": "Hierarchical model accurately recovered diffusion curve shape in simulated datasets",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "verbatim_quote": "Our hierarchical approach was able to accurately recover the shape of the diffusion curve in both simulated datasets, with the 'true' curve within the 95% posterior fitted range",
+      "location": {"section": "Results", "subsection": "5.1", "page": 6},
+      "supported_by": ["E001", "E002"],
+      "supports_claims": ["C001", "C002"]
+    },
+    {
+      "claim_id": "C004",
+      "claim_text": "ICAR model successfully recovered true time-sequence in simulation",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The non-parametric ICAR approach successfully recovered the 'true' time-sequence of p used to generate the simulated dataset 2",
+      "location": {"section": "Results", "subsection": "5.2", "page": 7},
+      "supported_by": ["E005", "E008"],
+      "supports_claims": ["C001", "C002"]
+    },
+    {
+      "claim_id": "C005",
+      "claim_text": "Poor model fit indicates non-sigmoid diffusion in both Japan and Britain",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Results of the posterior predictive checks of the Japanese and British datasets (Figs. 3 and 4) have, instead, revealed a poor fit between the model and the empirically observed proportion SPDs, suggesting in both cases that the diffusion processes cannot be described by a sigmoid curve.",
+      "location": {"section": "Results", "subsection": "5.1", "page": 7},
+      "supported_by": ["E011", "E012", "E003", "E004", "E006", "E007"],
+      "supports_claims": ["C006", "C007"]
+    },
+    {
+      "claim_id": "C006",
+      "claim_text": "Japanese double s-shape explained by regional accelerations and slowdowns in rice dispersal",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "In the case of Japan, the dispersal of rice agriculture is known to have been characterised by episodes of significant regional accelerations and slowdowns (Crema et al., 2022), which might explain why the observed diffusion curve (Fig. 3) can be described as a double s-shape.",
+      "location": {"section": "Discussion", "page": 8},
+      "supported_by": ["E011", "E003", "E006"],
+      "supports_claims": ["C005"]
+    },
+    {
+      "claim_id": "C007",
+      "claim_text": "British deviations reflect temporary shift to pastoralism and wild food consumption",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "Previous studies (Bevan et al., 2017; Stevens et al., 2022; Stevens and Fuller, 2012, 2015) have already revealed a shift in subsistence towards total reliance on pastoralism and wild food resources, accompanied in many regions of mainland Britain by the abandonment of crops and cultivation.",
+      "location": {"section": "Discussion", "page": 8},
+      "supported_by": ["E012", "E004", "E007"],
+      "supports_claims": ["C005"]
+    },
+    {
+      "claim_id": "C008",
+      "claim_text": "Late Neolithic cremation decline pre-dates Beaker period, suggesting endogenous factors",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "However, the decline in cremation is marked from 2800 BCE onwards and thus pre-dates Beaker inhumation practices in Britain by several centuries, suggesting that this decline may reflect endogenous factors rather than external influences.",
+      "location": {"section": "Discussion", "page": 8},
+      "supported_by": ["E008", "E005"],
+      "supports_claims": []
+    },
+    {
+      "claim_id": "C009",
+      "claim_text": "Asymmetric rates: rapid adoption (~10% to ~80% in one century) vs slow decline over centuries",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "the speed at which a transition from ~10% to ~80% prevalence occurs, the century 2050-1950 BCE seeing a particularly rapid shift in practices; this is in marked contrast to the slow decline in prevalence seen at the end of each cycle, which is drawn out over several centuries.",
+      "location": {"section": "Discussion", "page": 8},
+      "supported_by": ["E009", "E010", "E008"],
+      "supports_claims": []
+    },
+    {
+      "claim_id": "C010",
+      "claim_text": "Probabilistic equations 2-3 better suited to archaeological small samples than equation 1",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "we argue that equations [2] and [3] are better suited to account for the small sample sizes that characterise most archaeological datasets.",
+      "location": {"section": "Introduction", "page": 2},
+      "supported_by": [],
+      "supports_claims": ["C001"]
+    },
+    {
+      "claim_id": "C011",
+      "claim_text": "Parametric model provides numerical estimates for hypothesis testing; non-parametric ICAR provides visual exploration",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "The parametric model can provide numerical estimates such as diffusion rate (r) or average diffusion cap (mu), which can potentially be associated with independent explanatory variables to evaluate specific hypotheses concerning diffusion drivers. In contrast, the non-parametric ICAR solution provides a visual descriptive tool that may be used to characterise more complex diffusion dynamics.",
+      "location": {"section": "Discussion", "page": 8},
+      "supported_by": [],
+      "supports_claims": ["C001", "C002"]
+    },
+    {
+      "claim_id": "C012",
+      "claim_text": "Posterior predictive check is robust and conservative for detecting sigmoid deviations",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "This approach makes the posterior predictive check a reasonably robust, if not conservative, solution in detecting deviations from an s-shaped diffusion curve.",
+      "location": {"section": "Modelling diffusion curves", "subsection": "2.2", "page": 3},
+      "supported_by": [],
+      "supports_claims": ["C002", "C005"]
+    },
+    {
+      "claim_id": "C013",
+      "claim_text": "Method can accurately recover temporal dynamics and identify deviations from s-shaped curves",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "verbatim_quote": "Results on both simulated and empirical datasets have revealed that our method can accurately recover the temporal dynamics of the diffusion process and identify instances where observed patterns deviate from a typical s-shaped curve.",
+      "location": {"section": "Conclusions", "page": 9},
+      "supported_by": ["C003", "C004", "C005"],
+      "supports_claims": ["C001"]
+    },
+    {
+      "claim_id": "C014",
+      "claim_text": "Non-parametric model provides independent assessment and more accurate timing estimates",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "Although based on a different methodology, our approach still highlights this pattern, providing a more accurate estimate of when we observe a lower-than-expected proportion of dates associated with farming.",
+      "location": {"section": "Discussion", "page": 8},
+      "supported_by": ["E012"],
+      "supports_claims": ["C002"]
+    }
+  ],
+
+  "implicit_arguments": [
+    {
+      "implicit_argument_id": "IA001",
+      "argument_text": "Sample sizes validated in simulation are adequate for empirical inference despite real-world complexities",
+      "type": "methodological_assumption",
+      "trigger_text": [
+        "We simulated three datasets with sample sizes and time-windows equivalent to each observed dataset",
+        "Our simulation datasets demonstrated that an accurate and precise recovery of the data-generating parameters is possible with the available sample sizes"
+      ],
+      "trigger_locations": [
+        {"section": "Materials and methods", "subsection": "4.1.1", "page": 5},
+        {"section": "Discussion", "page": 8}
+      ],
+      "inference_reasoning": "The authors assume simulation-tested sample sizes are adequate for empirical inference without formally assessing real-world complexities (taphonomy, sampling bias) that simulations by design cannot capture.",
+      "supports_claims": ["C003", "C004"],
+      "assessment_implication": "Simulation validation demonstrates internal model consistency but does not validate against archaeological reality with its additional sources of uncertainty."
+    },
+    {
+      "implicit_argument_id": "IA002",
+      "argument_text": "Direct dating of domesticates is an adequate proxy for farming practice adoption",
+      "type": "design_assumption",
+      "trigger_text": [
+        "a direct link between our dated sample and the new subsistence practice rather than an indirect link based on stratigraphic association",
+        "x = 1 indicates that the sample is the domesticate (i.e. rice for Japan and wheat or barley for Britain)"
+      ],
+      "trigger_locations": [
+        {"section": "Modelling diffusion curves", "subsection": "2.1", "page": 3},
+        {"section": "Modelling diffusion curves", "subsection": "2.1", "page": 3}
+      ],
+      "inference_reasoning": "Using direct dates on seeds assumes seed presence equals farming practice adoption, but seed preservation and recovery probability are unequal across taxa and contexts.",
+      "supports_claims": ["C005", "C006", "C007"],
+      "assessment_implication": "The proxy relationship between dated seeds and actual farming adoption is acknowledged as imperfect but not formally quantified."
+    },
+    {
+      "implicit_argument_id": "IA003",
+      "argument_text": "The k parameter absorbs multiple sources of variation without distinguishing their relative contributions",
+      "type": "bridging_claim",
+      "trigger_text": [
+        "The model does not distinguish whether this source variation is related to taphonomy, sampling practices, or genuine differences in the proportion of domesticates across sites."
+      ],
+      "trigger_locations": [
+        {"section": "Modelling diffusion curves", "subsection": "2.1", "page": 3}
+      ],
+      "inference_reasoning": "The hierarchical model's k parameter captures inter-site variation but cannot distinguish taphonomic, sampling, or behavioural sources, limiting interpretive precision about what drives overdispersion.",
+      "supports_claims": ["C002"],
+      "assessment_implication": "The model is transparent about this limitation but the ambiguity affects how confidently specific archaeological interpretations can be made."
+    }
+  ],
+
+  "research_designs": [
+    {
+      "design_id": "RD001",
+      "design_type": "research_framing",
+      "design_text": "Develop Bayesian inferential tools for modelling diffusion of innovation curves from radiocarbon data, addressing limitations of SPD-based approaches",
+      "design_status": "explicit",
+      "verbatim_quote": "This paper introduces a novel Bayesian framework for inferring the shape of diffusion curves using radiocarbon data associated with the presence/absence of a particular innovation.",
+      "location": {"section": "Abstract", "page": 1},
+      "reasoning_approach": {"inferred_approach": "deductive", "confidence": "high", "timing_basis": "Method development with simulation validation before empirical application"}
+    },
+    {
+      "design_id": "RD002",
+      "design_type": "study_design",
+      "design_text": "Two complementary models developed for different purposes: parametric hierarchical for hypothesis testing, non-parametric ICAR for exploratory analysis",
+      "design_status": "explicit",
+      "verbatim_quote": "We developed two distinct approaches: 1) a hierarchical model that enables the fitting of an s-shaped diffusion curve whilst accounting for inter-site variations in the probability of sampling the innovation itself, and 2) a non-parametric model that can estimate the changing proportion of the innovation across user-defined time-blocks.",
+      "location": {"section": "Abstract", "page": 1},
+      "reasoning_approach": {"inferred_approach": "deductive", "confidence": "high", "timing_basis": "Explicit rationale for complementary approaches"}
+    },
+    {
+      "design_id": "RD003",
+      "design_type": "study_design",
+      "design_text": "Simulation-based validation to establish method robustness before empirical application",
+      "design_status": "explicit",
+      "verbatim_quote": "The robustness of the two approaches was first tested against simulated datasets and then applied to investigate three case studies",
+      "location": {"section": "Abstract", "page": 1},
+      "reasoning_approach": {"inferred_approach": "deductive", "confidence": "high", "timing_basis": "Test model under known conditions before empirical use"}
+    },
+    {
+      "design_id": "RD004",
+      "design_type": "theoretical_framework",
+      "design_text": "Shift from proportion-based (Equation 1) to probability-based (Equations 2-3) framework to handle small archaeological samples",
+      "design_status": "explicit",
+      "verbatim_quote": "we argue that equations [2] and [3] are better suited to account for the small sample sizes that characterise most archaeological datasets.",
+      "location": {"section": "Introduction", "page": 2},
+      "reasoning_approach": {"inferred_approach": "deductive", "confidence": "high", "timing_basis": "Statistical theory grounding methodological choice"}
+    },
+    {
+      "design_id": "RD005",
+      "design_type": "scope_definition",
+      "design_text": "Japan and Britain selected as case studies due to comparable contexts (island endpoints of agricultural diffusion) with large radiocarbon datasets",
+      "design_status": "explicit",
+      "verbatim_quote": "The two regions are islands located at opposite edges of the Eurasian continent and effectively represent the final phase of two separate major episodes of demic and cultural diffusion.",
+      "location": {"section": "Case studies", "subsection": "3.1", "page": 3},
+      "reasoning_approach": {"inferred_approach": "deductive", "confidence": "medium", "timing_basis": "Comparative case study design with selection criteria"}
+    },
+    {
+      "design_id": "RD006",
+      "design_type": "study_design",
+      "design_text": "Use direct dates on seeds rather than stratigraphic association to establish reliable chronological link to agricultural practices",
+      "design_status": "explicit",
+      "verbatim_quote": "A practical solution to this is to consider only direct dates from seeds, where x = 1 indicates that the sample is the domesticate",
+      "location": {"section": "Modelling diffusion curves", "subsection": "2.1", "page": 3},
+      "reasoning_approach": {"inferred_approach": "deductive", "confidence": "high", "timing_basis": "Methodological choice to address proxy variable reliability"}
+    }
+  ],
+
+  "methods": [
+    {
+      "method_id": "M001",
+      "method_text": "Hierarchical Bayesian sigmoid model fitting s-shaped diffusion curve with site-specific probability caps (k) and beta-distributed inter-site variation",
+      "method_type": "statistical_modelling",
+      "method_status": "explicit",
+      "verbatim_quote": "Equation [6] is also a sigmoid function, but with a range between 0 and kj instead of 0 and 1. Furthermore, each site j has its own upper bound kj, with the intersite variability of this parameter modelled using a Beta distribution",
+      "location": {"section": "Modelling diffusion curves", "subsection": "2.1", "page": 3},
+      "implements_designs": ["RD001", "RD002", "RD004"],
+      "realised_through_protocols": ["P001", "P002", "P003"]
+    },
+    {
+      "method_id": "M002",
+      "method_text": "ICAR (Intrinsic Conditional Autoregressive) non-parametric random walk model estimating probability vector across time-blocks without assuming sigmoid shape",
+      "method_type": "statistical_modelling",
+      "method_status": "explicit",
+      "verbatim_quote": "a simpler solution is to model the diffusion as a random walk process using a intrinsic Gaussian conditional autoregressive (ICAR) model",
+      "location": {"section": "Modelling diffusion curves", "subsection": "2.2", "page": 3},
+      "implements_designs": ["RD001", "RD002"],
+      "realised_through_protocols": ["P004"]
+    },
+    {
+      "method_id": "M003",
+      "method_text": "Posterior predictive checking comparing observed proportion SPD to simulation envelope generated from posterior samples",
+      "method_type": "model_validation",
+      "method_status": "explicit",
+      "verbatim_quote": "The observed empirical proportion SPD can be visually compared to the simulated envelope to detect any abnormally high or low proportion values.",
+      "location": {"section": "Modelling diffusion curves", "subsection": "2.2", "page": 3},
+      "implements_designs": ["RD003"],
+      "realised_through_protocols": ["P005"]
+    },
+    {
+      "method_id": "M004",
+      "method_text": "Simulation-based validation generating datasets with known parameters to assess model recovery accuracy",
+      "method_type": "model_validation",
+      "method_status": "explicit",
+      "verbatim_quote": "We first examined the robustness of the two statistical approaches we developed by examining whether they can accurately recover parameter values when dealing with sample sizes comparable to those observed in the case studies.",
+      "location": {"section": "Materials and methods", "subsection": "4.1.1", "page": 5},
+      "implements_designs": ["RD003"],
+      "realised_through_protocols": ["P010"]
+    },
+    {
+      "method_id": "M005",
+      "method_text": "Radiocarbon date filtering by cumulative calibrated probability within study time windows",
+      "method_type": "data_selection",
+      "method_status": "explicit",
+      "verbatim_quote": "We considered dates with a cumulative calibrated probability mass equal to or larger than 0.5 for the interval 4000-1700 cal BP",
+      "location": {"section": "Materials and methods", "subsection": "4.1.2", "page": 5},
+      "implements_designs": ["RD005"],
+      "realised_through_protocols": ["P007", "P008", "P009"]
+    },
+    {
+      "method_id": "M006",
+      "method_text": "Binary classification of radiocarbon dates as domesticate (x=1) vs non-domesticate (x=0) for proportion modelling",
+      "method_type": "data_classification",
+      "method_status": "explicit",
+      "verbatim_quote": "x = 1 indicates that the sample is the domesticate (i.e. rice for Japan and wheat or barley for Britain, see below), and x = 0 indicates that the sample is not the domesticate of interest",
+      "location": {"section": "Modelling diffusion curves", "subsection": "2.1", "page": 3},
+      "implements_designs": ["RD006"],
+      "realised_through_protocols": []
+    }
+  ],
+
+  "protocols": [
+    {
+      "protocol_id": "P001",
+      "protocol_text": "MCMC settings for hierarchical model: four chains, 1 million iterations each (500,000 burn-in), thinning=50",
+      "protocol_type": "computational_settings",
+      "protocol_status": "explicit",
+      "verbatim_quote": "We fitted all four models with the same MCMC settings, using four chains, each with 1 million iterations (half discarded as burn-in) and with thinning set to 50.",
+      "location": {"section": "Materials and methods", "subsection": "4.2", "page": 5},
+      "implements_methods": ["M001"],
+      "produces_evidence": ["E006", "E007"]
+    },
+    {
+      "protocol_id": "P002",
+      "protocol_text": "Prior specifications: r ~ Exponential(100); mu ~ Beta(2,2); phi ~ Gamma(5,0.1); m ~ Normal (truncated to time window)",
+      "protocol_type": "statistical_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "r ~ Exponential(100) ... mu ~ Beta(2, 2) ... phi ~ Gamma(5, 0.1) ... Priors for the parameter m were modelled using a normal distribution truncated within with the time-window of analyses",
+      "location": {"section": "Materials and methods", "subsection": "4.2", "page": 5},
+      "implements_methods": ["M001"],
+      "produces_evidence": []
+    },
+    {
+      "protocol_id": "P003",
+      "protocol_text": "IntCal20 calibration curve used for all models",
+      "protocol_type": "calibration",
+      "protocol_status": "explicit",
+      "verbatim_quote": "We used the IntCal20 curve for all models (Reimer et al., 2020)",
+      "location": {"section": "Materials and methods", "subsection": "4.2", "page": 6},
+      "implements_methods": ["M001", "M002"],
+      "produces_evidence": []
+    },
+    {
+      "protocol_id": "P004",
+      "protocol_text": "ICAR model: 36 time-blocks of 100 years (5500-2000 cal BP midpoints), 4 chains x 100,000 iterations (20,000 burn-in), thinning=4",
+      "protocol_type": "computational_settings",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The ICAR model for case study 2 and the simulation dataset 2 was fitted using 36 time-blocks of 100 years (with mid-points at 5500, 5400, 5300 ... 2000 cal BP)",
+      "location": {"section": "Materials and methods", "subsection": "4.2", "page": 6},
+      "implements_methods": ["M002"],
+      "produces_evidence": ["E008"]
+    },
+    {
+      "protocol_id": "P005",
+      "protocol_text": "Posterior predictive check: 1000 random posterior samples used to generate simulation envelope",
+      "protocol_type": "model_validation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "visually comparing observed SPDs of the proportion of domesticated crops to an envelope of predictions generated using 1000 randomly selected parameters from the joint posterior distributions.",
+      "location": {"section": "Materials and methods", "subsection": "4.2", "page": 6},
+      "implements_methods": ["M003"],
+      "produces_evidence": ["E011", "E012"]
+    },
+    {
+      "protocol_id": "P006",
+      "protocol_text": "Convergence diagnostics: Gelman-Rubin statistic for parameter mixing, agreement indices for individual dates",
+      "protocol_type": "model_validation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "We evaluated the mixing of our model using the Gelman-Rubin statistic (Gelman and Rubin, 1992), except for the posterior of the individual dates (theta), which were examined using agreement indices",
+      "location": {"section": "Materials and methods", "subsection": "4.2", "page": 6},
+      "implements_methods": ["M001", "M002"],
+      "produces_evidence": []
+    },
+    {
+      "protocol_id": "P007",
+      "protocol_text": "Japan filtering: cumulative probability >= 0.5 for 4000-1700 cal BP; exclude Hokkaido and Ryukyu islands",
+      "protocol_type": "data_selection",
+      "protocol_status": "explicit",
+      "verbatim_quote": "We considered dates with a cumulative calibrated probability mass equal to or larger than 0.5 for the interval 4000-1700 cal BP ... and excluded the island of Hokkaido and the Ryukyuan islands",
+      "location": {"section": "Materials and methods", "subsection": "4.1.2", "page": 5},
+      "implements_methods": ["M005"],
+      "produces_evidence": ["E001", "E003"]
+    },
+    {
+      "protocol_id": "P008",
+      "protocol_text": "Britain seed filtering: cumulative probability >= 0.5 for 7000-3000 cal BP",
+      "protocol_type": "data_selection",
+      "protocol_status": "explicit",
+      "verbatim_quote": "We filtered the initial dataset considering dates with a cumulative calibrated probability mass equal to or larger than 0.5 for the interval 7000-3000 cal BP",
+      "location": {"section": "Materials and methods", "subsection": "4.1.2", "page": 5},
+      "implements_methods": ["M005"],
+      "produces_evidence": ["E002", "E004"]
+    },
+    {
+      "protocol_id": "P009",
+      "protocol_text": "Britain burial filtering: cumulative probability >= 0.99 for 5500-2000 cal BP (higher threshold for ICAR edge effects)",
+      "protocol_type": "data_selection",
+      "protocol_status": "explicit",
+      "verbatim_quote": "We chronologically filtered dates with a cumulative calibrated probability mass equal to or larger than 0.99 for the interval 5500-2000 cal BP. We used a higher probability threshold (0.99 instead of 0.5) to avoid any edge effects caused by the ICAR model.",
+      "location": {"section": "Materials and methods", "subsection": "4.1.3", "page": 5},
+      "implements_methods": ["M002", "M005"],
+      "produces_evidence": ["E005"]
+    },
+    {
+      "protocol_id": "P010",
+      "protocol_text": "Simulation parameters: 1a (r=0.01, m=2900 BP, mu=0.65, phi=50); 1b (r=0.008, m=4500 BP, mu=0.8, phi=40)",
+      "protocol_type": "simulation_settings",
+      "protocol_status": "explicit",
+      "verbatim_quote": "we randomly assigned to each a binary value using equations (5)-(8) with the following settings: r = 0.01, m = 2900 BP, mu = 0.65, phi = 50 (simulation 1a); and r = 0.008, m = 4500 BP, mu = 0.8, phi = 40 (simulation 1b)",
+      "location": {"section": "Materials and methods", "subsection": "4.1.1", "page": 5},
+      "implements_methods": ["M004"],
+      "produces_evidence": []
+    }
+  ],
+
+  "extraction_notes": {
+    "passes_completed": ["pass_0", "pass_6", "pass_1", "pass_2", "pass_3", "pass_4", "pass_5"],
+    "next_pass": "pass_7",
+    "quality_notes": "Strong infrastructure: GitHub+Zenodo dual archival, Ben Marwick code review, full CRediT statement, transparent 4-source funding. Notable omission: no ORCIDs (journal-level issue, not author choice).",
+    "pass_1_2_notes": "Extracted 12 evidence items, 14 claims (4 core, 2 intermediate, 8 supporting), 3 implicit arguments. Claims categorised by type (methodological_argument, empirical, interpretation) and role. Evidence-claim linkages established.",
+    "pass_3_5_notes": "Extracted 6 research designs, 6 methods, 10 protocols. RDMAP hierarchy established with cross-references. Methodological paper with strong explicit documentation of statistical approaches."
+  }
+}
