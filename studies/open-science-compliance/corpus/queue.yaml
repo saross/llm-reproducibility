@@ -33,10 +33,16 @@ papers:
       pdf_obtained: true
       text_extracted: true
       extraction_complete: true
-      classification_complete: false
-      assessment_complete: false
+      classification_complete: true  # Pass 8 completed 2026-01-13
+      assessment_complete: true  # Pass 9 completed 2026-01-13
       fair_assessed: true  # Paper-based; API-based assessment pending
       reproduction_attempted: false
+    classification_summary:
+      paper_type: methodological
+      validation_approach: deductive
+      category_fit: good
+      transparency_quality: high
+      confidence: high
     extraction_summary:
       # Run-02 (session-per-pass) counts - see run-comparison-report.md
       evidence_count: 12
@@ -54,7 +60,19 @@ papers:
       runs: ["run-01-autonomous", "run-02-session-per-pass"]
       preferred_run: "run-02-session-per-pass"
       finding: "Session-per-pass yielded +75% claims, +100% research designs. Recommended for methodological papers."
-    notes: "Exemplary compendium. Code reviewed by Ben Marwick. Run comparison complete - session-per-pass preferred. Priority 1 for reproduction attempt."
+    assessment_summary:
+      verdict: excellent
+      aggregate_score: 84
+      comprehensibility: 88
+      transparency: 92
+      plausibility: 82
+      validity: 85
+      robustness: 75
+      generalisability: 78
+      reproducibility: 90
+      reproduction_priority: 1
+      execution_feasibility: ready
+    notes: "Exemplary compendium. Code reviewed by Ben Marwick. Run comparison complete - session-per-pass preferred. Pass 9 assessment complete (2026-01-13): Excellent verdict, 84 aggregate. Priority 1 for reproduction attempt."
 
   - slug: marwick-2025
     title: "Is archaeology a science? Insights and imperatives from 10,000 articles and a year of reproducibility reviews"
@@ -130,10 +148,15 @@ papers:
 
 # Progress summary (updated 2026-01-13)
 # Extraction completed: 1/5 (crema-et-al-2024 - run comparison complete, session-per-pass preferred)
+# Classification completed: 1/5 (crema-et-al-2024 - Pass 8: methodological paper, deductive validation)
 # FAIR assessed: 1/5 (crema-et-al-2024 - paper-based; API-based pending enhanced framework)
-# Classification pending: 1/5 (crema-et-al-2024 - Pass 8-9)
-# In progress: 1/5 (crema-et-al-2024 - awaiting classification + assessment)
+# Assessment completed: 1/5 (crema-et-al-2024 - Pass 9: Excellent verdict, 84 aggregate, Priority 1 for reproduction)
+# Reproduction attempted: 0/5
+# In progress: 1/5 (crema-et-al-2024 - awaiting reproduction attempt)
 # Pending: 4/5
 #
 # Methodology finding: Session-per-pass extraction yielded +75% claims, +100% research designs
 # vs autonomous for complex methodological papers. Recommended for remaining pilot papers.
+#
+# Assessment finding (crema-et-al-2024): Exemplary reproducibility (90/100). Dual archival
+# with independent code review. Priority 1 for reproduction attempt in Phase 1 pilot.
