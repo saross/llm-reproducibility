@@ -16,7 +16,7 @@ Claude Code sessions are stored as JSONL (JSON Lines) files in `~/.claude/projec
 ```text
 archive/cc-sessions/
 ├── README.md                           # This file
-├── CATALOG.json                        # Machine-readable session index
+├── catalog.json                        # Machine-readable session index
 ├── queries/                            # LLM query prompts
 │   ├── README.md
 │   ├── summarise-session.md
