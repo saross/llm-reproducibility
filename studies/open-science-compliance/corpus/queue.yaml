@@ -28,7 +28,7 @@ papers:
     doi: "10.1016/j.jas.2024.105962"
     code_repository: "https://github.com/ercrema/diffusionCurve"
     code_verified: true
-    status: in_progress
+    status: completed
     steps:
       pdf_obtained: true
       text_extracted: true
@@ -78,37 +78,90 @@ papers:
     title: "Is archaeology a science? Insights and imperatives from 10,000 articles and a year of reproducibility reviews"
     authors: "Marwick, B."
     year: 2025
-    doi: null  # TBC
+    doi: "10.1016/j.jas.2025.106281"
     code_repository: "https://doi.org/10.5281/zenodo.14897252"
     code_verified: true
-    status: pending
+    status: completed
     steps:
       pdf_obtained: true
-      text_extracted: false
-      extraction_complete: false
-      classification_complete: false
-      assessment_complete: false
-      fair_assessed: false
+      text_extracted: true
+      extraction_complete: true  # Pass 0-7 complete 2026-01-14
+      classification_complete: true  # Pass 8 complete 2026-01-14
+      assessment_complete: true  # Pass 9 complete 2026-01-14
+      fair_assessed: true  # Pass 6 complete: FAIR 30/32 (93.75%)
       reproduction_attempted: false
-    notes: "Meta-analysis by JAS Reproducibility Specialist. High relevance to study goals."
+    classification_summary:
+      paper_type: meta_research
+      validation_approach: inductive
+      category_fit: good
+      transparency_quality: high
+      confidence: high
+    extraction_summary:
+      evidence_count: 48
+      claims_count: 74
+      implicit_arguments_count: 5
+      research_designs_count: 7
+      methods_count: 10
+      protocols_count: 9
+      fair_score: "30/32 (93.75%)"
+    assessment_summary:
+      verdict: excellent
+      aggregate_score: 81
+      comprehensibility: 85
+      transparency: 90
+      plausibility: 80
+      validity: 78
+      robustness: 68
+      generalisability: 75
+      reproducibility: 90
+      reproduction_priority: 2
+      execution_feasibility: ready
+    notes: "Meta-analysis by JAS Reproducibility Specialist. Exemplary reproducibility (90/100) and FAIR compliance (93.75%). Pass 9 complete (2026-01-14): Excellent verdict, 81 aggregate. Paper exemplifies practices it advocates. Priority 2 for reproduction attempt."
 
   - slug: key-et-al-2024
     title: "Identifying accurate artefact morphological ranges using optimal linear estimation: Method validation, case studies, and code"
     authors: "Key, A., Eren, M.I., Bebber, M.R., et al."
     year: 2024
     doi: "10.1016/j.jas.2024.105921"
-    code_repository: null  # To verify from paper
-    code_verified: false
-    status: pending
+    code_repository: "Supplementary materials (R scripts)"  # No dedicated repository
+    code_verified: true
+    status: completed
     steps:
       pdf_obtained: true
       text_extracted: false
-      extraction_complete: false
-      classification_complete: false
-      assessment_complete: false
-      fair_assessed: false
+      extraction_complete: true
+      classification_complete: true  # Pass 8 completed 2026-01-14
+      assessment_complete: true  # Pass 9 completed 2026-01-14
+      fair_assessed: true
       reproduction_attempted: false
-    notes: "Code mentioned in title. Verify repository location from paper."
+    classification_summary:
+      paper_type: methodological
+      validation_approach: deductive
+      category_fit: excellent
+      transparency_quality: high
+      confidence: high
+    extraction_summary:
+      evidence_count: 27
+      claims_count: 24
+      implicit_arguments_count: 7
+      research_designs_count: 6
+      methods_count: 6
+      protocols_count: 12
+      fair_score: "9/15 (60%)"
+      fair_rating: moderately_fair
+    assessment_summary:
+      verdict: strong
+      aggregate_score: 81
+      comprehensibility: 88
+      transparency: 78
+      plausibility: 85
+      validity: 87
+      robustness: 82
+      generalisability: 76
+      reproducibility: 68
+      reproduction_priority: 3
+      execution_feasibility: needs_work
+    notes: "Complete (2026-01-14). Methods paper on OLE morphometric range estimation. 12 authors. Excellent validation design (ground truth testing). Strong overall credibility (81 mean). Reproducibility limited by supplementary-only code/data (no DOIs). Priority 3 for reproduction (needs dependency inference)."
 
   - slug: herskind-riede-2024
     title: "A computational linguistic methodology for assessing semiotic structure in prehistoric art and the meaning of southern Scandinavian Mesolithic ornamentation"
@@ -146,17 +199,24 @@ papers:
       reproduction_attempted: false
     notes: "Associated with CRAN package ArchaeoPhases."
 
-# Progress summary (updated 2026-01-13)
-# Extraction completed: 1/5 (crema-et-al-2024 - run comparison complete, session-per-pass preferred)
-# Classification completed: 1/5 (crema-et-al-2024 - Pass 8: methodological paper, deductive validation)
-# FAIR assessed: 1/5 (crema-et-al-2024 - paper-based; API-based pending enhanced framework)
-# Assessment completed: 1/5 (crema-et-al-2024 - Pass 9: Excellent verdict, 84 aggregate, Priority 1 for reproduction)
+# Progress summary (updated 2026-01-14)
+# Extraction completed: 3/5 (crema-et-al-2024, marwick-2025, key-et-al-2024)
+# Classification completed: 3/5 (crema-et-al-2024: methodological/deductive; marwick-2025: meta_research/inductive; key-et-al-2024: methodological/deductive)
+# FAIR assessed: 3/5 (crema-et-al-2024: highly_fair; marwick-2025: 93.75%; key-et-al-2024: 60%)
+# Assessment completed: 3/5 (crema-et-al-2024: 84, marwick-2025: 81, key-et-al-2024: 81)
 # Reproduction attempted: 0/5
-# In progress: 1/5 (crema-et-al-2024 - awaiting reproduction attempt)
-# Pending: 4/5
+# Completed: 3/5 (crema-et-al-2024, marwick-2025, key-et-al-2024)
+# Pending: 2/5 (herskind-riede-2024, dye-et-al-2023)
+#
+# Reproduction priority queue:
+#   1. crema-et-al-2024 (90/100 reproducibility, execution_feasibility: ready)
+#   2. marwick-2025 (90/100 reproducibility, execution_feasibility: ready)
+#   3. key-et-al-2024 (68/100 reproducibility, execution_feasibility: needs_work)
 #
 # Methodology finding: Session-per-pass extraction yielded +75% claims, +100% research designs
 # vs autonomous for complex methodological papers. Recommended for remaining pilot papers.
 #
-# Assessment finding (crema-et-al-2024): Exemplary reproducibility (90/100). Dual archival
-# with independent code review. Priority 1 for reproduction attempt in Phase 1 pilot.
+# Text vs PDF finding: Text extraction achieves 91.5% of PDF counts. PDF preferred for
+# page number preservation. See archive/extraction-runs/key-et-al-2024-text-vs-pdf-comparison/
+#
+# Next paper: herskind-riede-2024 (JAS-SAS Emerging Investigator Award 2024)
