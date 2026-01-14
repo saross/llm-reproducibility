@@ -38,7 +38,10 @@ Extraction is organised into 4 focused sessions:
 
 ### Between-Session Checkpoints
 
-**At session end**, provide a handoff summary:
+**At session end**, provide a handoff summary **and STOP**:
+
+- ⛔ **Do NOT proceed to the next session without explicit user confirmation**
+- The handoff summary signals completion; wait for the user to approve continuation
 
 ```text
 Session [A/B/C/D] complete for {paper-slug}
@@ -97,6 +100,34 @@ Write("outputs/paper-name/extraction.json", data)  # Loses data
 ```bash
 jq '{evidence: (.evidence|length), claims: (.claims|length)}' extraction.json
 ```
+
+## PDF Handling
+
+**CRITICAL**: Always prefer reading PDFs directly using the Read tool.
+
+**Tested finding** (Key et al. 2024 comparison): Text extraction achieves 91.5% of PDF extraction counts. PDF is preferred because it performs equally well while preserving additional context.
+
+- ✅ **Read PDFs directly** - Extraction quality is equivalent or slightly better
+- ✅ **Preserve visual context** - Page numbers, tables, figures, and formatting are captured
+- ⚠️ **Only extract text as last resort** - When PDF genuinely exceeds context limits
+
+```python
+# ✅ PREFERRED - Read PDF directly
+paper = Read("corpus/pdfs/paper-slug.pdf")
+
+# ⚠️ FALLBACK ONLY - When PDF doesn't fit in context
+# Text extraction is viable (91.5% capture rate) but loses:
+# - Page numbers for location references
+# - Table structure and figure captions
+# - Section formatting that aids extraction
+```
+
+**Why PDF is preferred despite context compactions:**
+- Context compaction maintains continuity well across sessions
+- PDF preserves page numbers essential for `location` fields
+- Maintains table structure and figure captions
+- No text extraction artefacts or errors
+- RDMAP extraction quality is equivalent between formats
 
 ## Filename Convention Enforcement
 
