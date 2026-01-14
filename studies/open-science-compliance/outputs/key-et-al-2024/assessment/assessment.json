@@ -1,0 +1,276 @@
+{
+  "paper_id": "key-et-al-2024",
+  "assessment_date": "2026-01-14",
+  "system_version": "v0.2-alpha",
+
+  "classification": {
+    "expressed_approach": "deductive",
+    "revealed_approach": "mixed",
+    "expressed_vs_revealed": "matched",
+    "primary_approach": "deductive",
+    "revealed_confidence": "high",
+    "harking_flag": false,
+    "credibility_framework_to_use": "methodological_paper",
+    "signal_prioritisation": {
+      "primary_signals": ["transparency", "reproducibility", "comprehensibility"],
+      "secondary_signals": ["validity", "plausibility"],
+      "deemphasised_signals": ["generalisability", "robustness"]
+    }
+  },
+
+  "track_a": {
+    "quality_state": "high",
+    "extraction_confidence": "high",
+    "metric_signal_alignment": "yes",
+    "classification_confidence": "high",
+    "assessment_viability_summary": "High quality extraction and classification enable confident credibility assessment. Comprehensive extraction (27 evidence, 24 claims, 6 research designs, 6 methods, 12 protocols) with 100% source verification. Classification unambiguous (methodological paper with deductive validation approach).",
+    "improvement_opportunities": [
+      "Compute formal metrics.json for quantitative metric-signal alignment validation",
+      "Verify author ORCIDs via publisher metadata",
+      "Direct inspection of supplementary R code for dependency verification"
+    ]
+  },
+
+  "signals": [
+    {
+      "signal_name": "comprehensibility",
+      "signal_number": 1,
+      "cluster": "foundational_clarity",
+      "score": 88,
+      "score_band": "85-90",
+      "confidence": "high",
+      "summary": "Excellent comprehensibility with explicit, bounded claims, defined terminology, and transparent logical structure from validation to case studies.",
+      "strengths": [
+        "Core claims explicitly stated with clear scope boundaries (C001, C002, C010)",
+        "All key terms operationally defined (OLE, CI coverage, k-values, Weibull)",
+        "Validation hypotheses explicitly testable (C004-C009)",
+        "Logical argument structure traceable from evidence to claims",
+        "Limitations explicitly acknowledged (C020)"
+      ],
+      "weaknesses": [
+        "Dense statistical terminology may limit accessibility to non-specialists",
+        "Some domain-specific archaeological terms assumed familiar",
+        "Theoretical rationale for extinction-to-morphometrics transfer could be more explicit"
+      ],
+      "justification": "Scored 88 (Excellent Comprehensibility for deductive research). Meets all 80-100 anchor criteria: hypotheses explicitly stated and bounded, key terms operationally defined, logical structure transparent, claims unambiguous and testable, reasoning from tests to conclusions clear. Minor reduction from 90-100 due to dense statistical terminology.",
+      "approach_context": "For deductive methodological research, comprehensibility emphasises hypothesis clarity and logical structure. This paper exemplifies deductive clarity by explicitly stating validation measures and success criteria.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {}
+    },
+    {
+      "signal_name": "transparency",
+      "signal_number": 2,
+      "cluster": "foundational_clarity",
+      "score": 78,
+      "score_band": "75-80",
+      "confidence": "high",
+      "summary": "Good-to-excellent transparency with comprehensive methods documentation (12 protocols) but suboptimal code/data infrastructure (supplementary-only, no dedicated DOIs).",
+      "strengths": [
+        "Explicit research design statement separating validation (RD002) from case studies (RD003)",
+        "Comprehensive protocol documentation (12 protocols covering all analytical steps)",
+        "Model assumptions explicitly stated and justified (RD004-RD006)",
+        "Software environment specified (R 4.3.0)",
+        "Code and data available in supplementary with CC BY licence"
+      ],
+      "weaknesses": [
+        "Code and data in publisher supplementary only, not dedicated repositories",
+        "No separate DOIs for code or data beyond paper DOI",
+        "R packages required for analyses not documented",
+        "Low machine-actionability (FAIR score 60%)",
+        "One implicit protocol identified (kernel density parameters)"
+      ],
+      "justification": "Scored 78 (Good Transparency for deductive research). Meets 60-79 anchor criteria: clear research design, detailed methods documentation, data availability stated, code documented. Does not reach 80-100 because code/data lack persistent identifiers and no pre-registration (though latter not expected for methods papers).",
+      "approach_context": "For deductive methodological research, transparency emphasises pre-specification and data/code sharing. This paper compensates for absent pre-registration with exceptionally detailed methods documentation but falls short on repository infrastructure.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {
+        "fair_score": 60,
+        "protocol_count": 12,
+        "rdmap_explicit_pct": 96
+      }
+    },
+    {
+      "signal_name": "plausibility",
+      "signal_number": 3,
+      "cluster": "evidential_strength",
+      "score": 85,
+      "score_band": "82-88",
+      "confidence": "high",
+      "summary": "Excellent plausibility with strong theoretical grounding in established extinction estimation methods and results aligning with theoretical expectations.",
+      "strengths": [
+        "OLE grounded in established peer-reviewed extinction estimation literature",
+        "Application to morphometrics explicitly justified through analogy to temporal estimation",
+        "Results align with theoretical expectations (accuracy improves with sample size)",
+        "Weibull distribution assumption justified for cultural artefacts (C022)",
+        "Authors appropriately qualify findings (C020)"
+      ],
+      "weaknesses": [
+        "Application domain (morphometrics) is novel despite theoretical justification",
+        "Model assumptions (Weibull, independence, equal discovery) not directly testable for archaeological data",
+        "Some theoretical uncertainty about transfer from temporal to morphometric domains"
+      ],
+      "justification": "Scored 85 (Excellent Plausibility for deductive research). Meets 80-100 anchor criteria: hypotheses grounded in established theory, predictions consistent with domain knowledge, anomalous results acknowledged, theoretical framework coherent, no implausible assumptions required. Slight reduction from 90-100 due to novel application domain.",
+      "approach_context": "For deductive methodological research, plausibility emphasises theoretical grounding of hypotheses. Building on established extinction estimation methods rather than inventing novel statistics provides strong theoretical foundation.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {}
+    },
+    {
+      "signal_name": "validity",
+      "signal_number": 4,
+      "cluster": "evidential_strength",
+      "score": 87,
+      "score_band": "85-90",
+      "confidence": "high",
+      "summary": "Excellent validity through rigorous ground truth validation design testing OLE accuracy against replica assemblages with known complete distributions.",
+      "strengths": [
+        "Ground truth validation using replica assemblages with known distributions (n=500, n=45)",
+        "64 parameter combinations systematically tested",
+        "1000 iterations per combination ensures statistical stability",
+        "Alternative hypotheses explicitly tested (k-values, sample sizes, distribution shapes)",
+        "Confounds addressed (duplicate handling tested with little impact)",
+        "Sample sizes bracket realistic archaeological ranges"
+      ],
+      "weaknesses": [
+        "Validation based on replica assemblages; transfer to archaeological data not directly testable",
+        "Only two assemblage types in validation (handaxes, archaic points)",
+        "CI coverage threshold of 0.8 accepted as 'broadly acceptable' though below theoretical 0.95"
+      ],
+      "justification": "Scored 87 (Excellent Validity for deductive research). Meets 80-100 anchor criteria: evidence directly addresses hypothesis, sample size adequate, methods appropriate for testing, alternative hypotheses tested, confounds controlled, limitations stated. Slight reduction because validation assemblages limited to two types.",
+      "approach_context": "For deductive methodological validation, validity emphasises evidence-hypothesis alignment and alternative testing. Ground truth testing against known distributions represents the strongest possible validation design.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {
+        "evidence_count": 27,
+        "claims_count": 24,
+        "evidence_claim_ratio": 1.125
+      }
+    },
+    {
+      "signal_name": "robustness",
+      "signal_number": 5,
+      "cluster": "evidential_strength",
+      "score": 82,
+      "score_band": "80-85",
+      "confidence": "high",
+      "summary": "Excellent robustness through systematic sensitivity analysis across k-values and sample percentages with consistent core findings.",
+      "strengths": [
+        "Systematic k-value testing (5, 10, 20, 30) with consistent results",
+        "Systematic sample percentage testing (5%, 10%, 20%, 50%)",
+        "Two different validation assemblages tested",
+        "Core findings consistent across parameter variations",
+        "10 diverse case studies provide triangulation"
+      ],
+      "weaknesses": [
+        "OLE tested in isolation; no comparison to alternative range estimation methods",
+        "No formal bootstrap or cross-validation",
+        "Single implementation (R only)",
+        "Distribution sensitivity noted but not systematically tested across distribution types"
+      ],
+      "justification": "Scored 82 (Excellent Robustness for deductive research). Meets 80-100 anchor criteria: sensitivity analyses performed, results robust across reasonable choices, assumptions tested, dependencies documented. Reduction from 90-100 because no alternative statistical approaches tested for comparison.",
+      "approach_context": "For methodological papers, robustness is typically deemphasised (focus on 'does it work?' not 'is it robust to alternatives?'). This paper actually demonstrates strong robustness through systematic parameter exploration.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {}
+    },
+    {
+      "signal_name": "generalisability",
+      "signal_number": 6,
+      "cluster": "evidential_strength",
+      "score": 76,
+      "score_band": "73-78",
+      "confidence": "high",
+      "summary": "Good generalisability with appropriate scope constraints bounded by model assumptions and diverse case study demonstration without overclaiming.",
+      "strengths": [
+        "Scope explicitly bounded by model assumptions (Weibull, independence, equal discovery)",
+        "10 case studies demonstrate breadth across materials, time periods, and producers",
+        "C020 explicitly limits interpretation scope",
+        "Transfer conditions specified (distribution shape effects)",
+        "No overclaiming of universal applicability"
+      ],
+      "weaknesses": [
+        "Validation scope (lithic replicas) narrower than application scope (lithic + ceramic + metal)",
+        "Cultural-evolutionary assumption (C022) may not hold for all artefact types",
+        "Case study geographic scope limited to Western/African published datasets"
+      ],
+      "justification": "Scored 76 (Good Generalisability for deductive research). Meets 60-79 anchor criteria: hypothesis scope stated, main limitations acknowledged, bounds mostly clear, extrapolations qualified. Does not reach 80-100 because validation scope narrower than application scope.",
+      "approach_context": "For methodological papers, generalisability assessment focuses on appropriate scope constraint rather than broad transferability. This paper appropriately bounds claims while demonstrating breadth through diverse case studies.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {
+        "case_study_count": 10,
+        "temporal_range_ma": 1.8
+      }
+    },
+    {
+      "signal_name": "reproducibility",
+      "signal_number": 7,
+      "cluster": "reproducibility",
+      "score": 68,
+      "score_band": "65-70",
+      "confidence": "high",
+      "summary": "Moderate-to-good reproducibility with R code available in supplementary but lacking dedicated repository, DOIs, and package dependency documentation.",
+      "strengths": [
+        "R scripts for validation and case study analyses provided",
+        "Software version specified (R 4.3.0)",
+        "Open source tool (R) enables verification",
+        "Detailed parameter documentation in 12 protocols",
+        "CC BY licence enables reuse"
+      ],
+      "weaknesses": [
+        "Code and data in publisher supplementary only, not dedicated repositories",
+        "No persistent identifiers (DOIs) for code or data",
+        "R package dependencies not documented",
+        "No environment specification (lockfile, container)",
+        "Low machine-actionability (FAIR 60%)"
+      ],
+      "justification": "Scored 68 (Good Reproducibility for deductive research). Meets 60-79 anchor criteria: data available, code shared with basic documentation, workflow documented, most outputs reproducible. Does not reach 80-100 because no persistent identifiers, environment not specified, FAIR principles only partially met.",
+      "approach_context": "For deductive methodological research with computational analyses, reproducibility is essential for method verification. Code availability enables reproduction but infrastructure falls short of current (2024) methods paper standards.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {
+        "fair_score": 60,
+        "machine_actionability": "low"
+      }
+    }
+  ],
+
+  "reproducibility_readiness": {
+    "applies": true,
+    "pathway": "standard",
+    "if_not_applicable_reason": "",
+    "inputs_available": {
+      "status": "partial",
+      "details": "Validation replica assemblage data and case study morphometric data available in supplementary. Some case study data sourced from published literature with varying accessibility."
+    },
+    "code_available": {
+      "status": "yes",
+      "tool_type": "open_scriptable",
+      "details": "R scripts for validation and case study analyses in supplementary materials. Language: R 4.3.0. No dedicated repository. CC BY licence."
+    },
+    "environment_specified": {
+      "status": "partial",
+      "details": "R version 4.3.0 specified. Required packages not listed. No lockfile, Docker container, or dependency management."
+    },
+    "outputs_documented": {
+      "status": "yes",
+      "details": "Validation results (accuracy matrices, CI coverage) and case study results (range extensions) documented in Results section and supplementary tables."
+    },
+    "execution_feasibility": "needs_work",
+    "feasibility_rationale": "Code is available and analyses should be reproducible with effort. Package dependencies would need to be inferred from code inspection. Some case study input data may require sourcing from original publications. Not ready for automated reproduction without additional preparation.",
+    "publication_year": 2024,
+    "adoption_context": "early_majority"
+  },
+
+  "metrics": {
+    "fair_score": 60,
+    "evidence_count": 27,
+    "claims_count": 24,
+    "implicit_arguments_count": 7,
+    "research_designs_count": 6,
+    "methods_count": 6,
+    "protocols_count": 12,
+    "rdmap_explicit_pct": 96
+  },
+
+  "report_metadata": {
+    "report_path": "assessment/credibility-report-v1.md",
+    "report_type": "standard",
+    "word_count": 2850,
+    "quality_caveats": false
+  }
+}

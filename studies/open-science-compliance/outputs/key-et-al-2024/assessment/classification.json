@@ -1,0 +1,101 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2026-01-14",
+    "classifier_version": "v2.1-alpha"
+  },
+
+  "paper_type": "methodological",
+  "paper_type_justification": "Primary contribution is the Optimal Linear Estimation (OLE) method for archaeological morphometric range estimation. Paper structure is: (1) method presentation, (2) validation using replica assemblages with known distributions, (3) demonstrative case studies across 10 archaeological/primatological contexts. The archaeological findings from case studies are illustrative applications, not the main contribution. Paper explicitly frames itself as 'method validation' with 'case studies' as demonstrations.",
+
+  "methodological_characterisation": {
+    "subtype": "analytical_method",
+    "validation_approach": "mixed",
+    "validation_notes": "Mixed validation combining deductive hypothesis-testing and inductive demonstration. Deductive component: OLE accuracy tested against known 'ground truth' distributions from replica assemblages (n=500 handaxes, n=45 archaic points) with systematic k-value and subsampling percentage testing across 1000 iterations. Results compared against true morphological range limits. Inductive component: Ten diverse case studies demonstrating method applicability across lithic (handaxes, cleavers, flakes, microliths, Paleoindian points), ceramic (cookpots), and metal (copper points) artefacts spanning 1.8 million years. Case studies show patterns of range extension rather than testing pre-specified predictions."
+  },
+
+  "expressed_approach": {
+    "approach": "deductive",
+    "evidence": [
+      "RD001: 'we repurpose optimal linear estimation (OLE) modelling... to investigate how accurately it is able to identify the upper and lower limits of artefact morphological ranges'",
+      "RD002: 'we use modern assemblages of replica artefacts as this allows random subsamples from a much larger, known distribution of artefacts to be created. These subsamples are then used in an analogous way to the fragmentary portions of artefact records discovered by archaeologists, while the complete replica assemblage provides the 'truth' from which to assess the accuracy of the OLE model'",
+      "M002: 'CI coverage is defined as the proportion of all generated OLE confidence intervals that include the true value'",
+      "Research design explicitly labelled as 'Method validation and code' (Section 2.3)",
+      "Paper title includes 'Method validation' as explicit descriptor"
+    ],
+    "source_sections": ["title", "abstract", "introduction", "methods_section_2.3"],
+    "confidence": "high"
+  },
+
+  "revealed_approach": {
+    "approach": "mixed",
+    "evidence": {
+      "claims_structure": "Validation claims (C001, C004-C009) are framed as hypothesis tests comparing OLE estimates to known truth: 'OLE provides accurate estimates' (C001), 'accuracy increases with sample percentage' (C004), 'CI coverage appropriate at high percentages' (C005-C009). Case study claims (C010-C019) are pattern descriptions: 'all case studies show range extension' (C010), specific findings like 'Gona cleavers 16.7% larger than observed' (C015).",
+      "methods_application": "Validation methods (M001-M004) are applied systematically with pre-specified parameter combinations (k=5,10,20,30; subsampling=5%,10%,20%,50%; 1000 iterations). Results are compared against known true values. Case studies apply OLE to archaeological datasets without pre-specified predictions about range extension magnitude.",
+      "analytical_workflow": "Validation: Subsample replica assemblage → Apply OLE → Compare to known true range → Report accuracy metrics (deductive sequence). Case studies: Apply OLE to archaeological data → Report estimated range extension → Interpret implications (inductive sequence)."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_type": null,
+    "mismatch_explanation": "Paper is methodologically transparent. Validation component is explicitly framed as accuracy testing against ground truth and is conducted exactly as described. Case studies are explicitly framed as 'demonstrations' and 'illustrative applications' rather than hypothesis tests. The mixed nature of validation (deductive) + case studies (inductive) is clearly communicated. No post-hoc reframing of exploratory findings as confirmatory. Paper accurately represents its methodological structure."
+  },
+
+  "primary_classification": {
+    "approach": "deductive",
+    "confidence": "high",
+    "justification": "For methodological papers, the primary classification reflects the validation approach. This paper's core methodological contribution—validating OLE for morphometric range estimation—is primarily deductive. The validation tests use replica assemblages with known distributions as 'ground truth' and systematically test OLE accuracy through 64 parameter combinations (4 subsampling rates × 4 k-values × upper/lower bounds) across 1000 iterations each. Claims about OLE accuracy (C001-C009) are tested against known values, not discovered from data. The secondary inductive component (case studies) demonstrates applicability but does not constitute the primary methodological contribution. Classification is unambiguous given the explicit validation framework."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": true,
+    "primary_approach": "deductive",
+    "secondary_approaches": ["inductive"],
+    "qualifications": [
+      "Primary validation component is deductive (hypothesis-testing against known ground truth)",
+      "Case study component is inductive (demonstrative pattern-finding without pre-specified predictions)",
+      "Clear phase separation between validation (Results 3.1) and case studies (Results 3.2)",
+      "Methodological paper structure: validation establishes method credibility, case studies establish applicability",
+      "Appropriate mixed design for methods paper—not methodological confusion"
+    ],
+    "section_breakdown": [
+      {
+        "section": "2.3 Method validation / 3.1 Validation test results",
+        "approach": "deductive"
+      },
+      {
+        "section": "2.4 Case studies / 3.2 Artefact case study results",
+        "approach": "inductive"
+      }
+    ]
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Exceptionally transparent methods paper. Research design clearly articulated: 'validation' using replica assemblages as ground truth, followed by 'case study' demonstrations. All methodological assumptions explicitly stated (Weibull distribution, independence, equal discovery probability). Detailed protocol specifications for subsampling (P002), k-value testing (P003), iterations (P004), and CI coverage (P006). R code provided in supplementary materials. Only minor gap: kernel density visualisation parameters (P-IMP-001). FAIR assessment: 60% (moderately FAIR). Code available but in supplementary materials without dedicated repository/DOI."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "methodological_paper",
+    "signal_prioritisation": {
+      "primary_signals": ["transparency", "reproducibility", "comprehensibility"],
+      "secondary_signals": ["validity", "plausibility"],
+      "deemphasised_signals": ["generalisability", "robustness"],
+      "rationale": "Methodological paper assessment emphasises: (1) Transparency of method specification and assumptions; (2) Reproducibility of analytical procedures (code provided, detailed parameters); (3) Comprehensibility of method for potential adopters. Validity addresses claims about method performance. Plausibility addresses theoretical justification for OLE application to artefact morphometrics. Generalisability is deemphasised because case studies are demonstrative—the claim is method applicability, not pattern generalisation. Robustness is deemphasised because validation tests systematically explored parameter space."
+    }
+  },
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "excellent",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "classification_notes": "Clear methodological paper with mixed validation approach. Paper exemplifies best practices for archaeological method validation: (1) explicit theoretical justification for method application (OLE from extinction studies to morphometrics), (2) validation against known ground truth using replica assemblages, (3) systematic parameter exploration, (4) diverse case studies demonstrating applicability. No classification ambiguity. The deductive/inductive split corresponds exactly to validation/demonstration structure. Paper would serve as positive example of methodological transparency in credibility training."
+}
