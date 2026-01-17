@@ -717,6 +717,37 @@ This aligns with:
 
 ---
 
+### 12. Document Verdict Criteria in User-Facing Documentation
+
+**Priority:** MEDIUM
+**Status:** PENDING
+**Added:** 2026-01-17
+**Context:** Identified during Phase 1 pilot completion (dye-et-al-2023 assessment)
+
+**Problem Statement:**
+Verdict assignment criteria are now documented in the skill's internal references (`.claude/skills/research-assessor/references/credibility/verdict-criteria.md`) but not in any user-facing documentation. Users of assessment outputs need to understand what verdict represents.
+
+**Key Points to Document:**
+- Verdict reflects **primary signal mean**, not aggregate score
+- Primary signals vary by paper type (methodological: Comprehensibility, Transparency, Reproducibility)
+- Thresholds: ≥85 Excellent | 70-84 Good | 55-69 Acceptable | 40-54 Weak | <40 Very Weak
+- Rationale for primary-signal-based verdict over aggregate-based
+
+**Action Items:**
+- [ ] Add verdict criteria section to user-facing assessment documentation
+- [ ] Update any existing assessment output documentation to clarify verdict meaning
+- [ ] Consider adding verdict_basis field explanation to output schema documentation
+
+**Files to Create/Update:**
+- `docs/assessment-guide/` or equivalent user-facing location
+- Assessment output schema documentation (if exists)
+
+**Estimated Effort:** 1-2 hours
+
+**Reference:** `.claude/skills/research-assessor/references/credibility/verdict-criteria.md`
+
+---
+
 ## Deferred / Future Projects
 
 ### 6. FAIR Vocabularies Development (I2 Compliance)

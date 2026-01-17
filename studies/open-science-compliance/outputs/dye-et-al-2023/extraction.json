@@ -1,0 +1,3211 @@
+{
+  "schema_version": "2.6",
+  "paper_slug": "dye-et-al-2023",
+  "extraction_timestamp": "2026-01-17T18:33:20Z",
+  "extractor": "Claude Opus 4.5",
+  "project_metadata": {
+    "paper_title": "Bayesian Chronology Construction and Substance Time",
+    "authors": [
+      "Thomas S. Dye",
+      "Caitlin E. Buck",
+      "Robert J. DiNapoli",
+      "Anne Philippe"
+    ],
+    "publication_year": 2023,
+    "journal": "Journal of Archaeological Science, Vol. 153, Article 105765",
+    "doi": "10.1016/j.jas.2023.105765",
+    "paper_type": "methodological paper",
+    "discipline": "archaeology / chronological modelling",
+    "research_context": "Methodological paper distinguishing two views of archaeological time (event time and substance time) and demonstrating how Allen's interval algebra can be used with Bayesian chronological modelling to identify modes of genealogical change (branching, transformation, reticulation) in artifact phylogenies. Illustrated with a worked example constructing a phyletic seriation of beads from Anglo-Saxon female graves.",
+    "methodological_notes": {
+      "combined_age_determination_note": "Combined age determination for burials MaDE1 and MaDE2 fails chi-squared test at 5% level, apparently due to an outlier in MaDE1. This constraint was removed from the revised model.",
+      "source": "Page 11"
+    }
+  },
+  "reproducibility_infrastructure": {
+    "persistent_identifiers": {
+      "paper_doi": "10.1016/j.jas.2023.105765",
+      "author_orcids": [
+        {
+          "author": "Thomas S. Dye",
+          "orcid": "0000-0001-8116-782X"
+        },
+        {
+          "author": "Caitlin E. Buck",
+          "orcid": "0000-0002-0872-9504"
+        },
+        {
+          "author": "Robert J. DiNapoli",
+          "orcid": "0000-0003-2180-2195"
+        },
+        {
+          "author": "Anne Philippe",
+          "orcid": "0000-0002-5331-5087"
+        }
+      ],
+      "data_pids": [],
+      "software_pids": [
+        {
+          "software_name": "ArchaeoPhases",
+          "repository": "CRAN",
+          "url": "https://cran.r-project.org/package=ArchaeoPhases",
+          "pid_type": "CRAN_package"
+        }
+      ],
+      "related_resource_pids": [
+        {
+          "resource_name": "Anglo-Saxon Graves and Grave Goods Dataset",
+          "pid": "10.5284/1018290",
+          "pid_type": "DOI",
+          "repository": "Archaeological Data Service"
+        }
+      ]
+    },
+    "funding": {
+      "sources": [],
+      "acknowledgement_text": null,
+      "notes": "No funding statement present in paper. Authors thank multiple individuals for advice and discussions."
+    },
+    "data_availability": {
+      "statement_present": true,
+      "statement_text": "Data and materials are available in the Supplement.",
+      "repositories": [
+        {
+          "name": "Supplementary Materials",
+          "url": null,
+          "access_conditions": "Journal supplementary materials"
+        }
+      ],
+      "data_types": [
+        "OxCal chronological model",
+        "ArchaeoPhases R code for tempo and occurrence plots",
+        "Probability calculations for mode inference"
+      ],
+      "restrictions": null,
+      "machine_actionability": {
+        "rating": "moderate",
+        "rationale": "Code in supplement but no standalone DOI for data/code repository"
+      }
+    },
+    "code_availability": {
+      "statement_present": true,
+      "repositories": [
+        {
+          "name": "CRAN - ArchaeoPhases",
+          "url": "https://cran.r-project.org/package=ArchaeoPhases",
+          "access_conditions": "Open source R package"
+        },
+        {
+          "name": "Journal Supplement",
+          "url": null,
+          "access_conditions": "OxCal model and R scripts included"
+        }
+      ],
+      "languages": [
+        "R",
+        "OxCal"
+      ],
+      "licence": null,
+      "documentation_level": "moderate",
+      "machine_actionability": {
+        "rating": "moderate",
+        "rationale": "ArchaeoPhases on CRAN with DOI via JSS publication. Supplement code not independently archived with DOI."
+      }
+    },
+    "author_contributions": {
+      "statement_present": true,
+      "statement_text": "TSD conceived the idea of the paper and then discussed the concepts with the other authors, focusing on their individual areas of expertise. CEB contributed insights on the Bayesian modeling of event and substance time and the handling of substance and event time in the BCal software; she also helped to hone arguments for the more philosophical and model-related parts of the paper. RJD contributed key bibliographic references to the evolutionary archaeology literature and augmented the argument that distinguishes the effects of the phase deposition model. AP maintains the ArchaeoPhases software, improved the R code for tempo and occurrence plots, and augmented their description in the text. TSD drafted the main manuscript text, the supplementary material and prepared the figures. All authors offered comments on multiple iterations of the draft text and figures and together produced the final manuscript.",
+      "credit_roles": [
+        {
+          "author": "Thomas S. Dye",
+          "roles": [
+            "Conceptualization",
+            "Writing \u2013 original draft",
+            "Visualization",
+            "Software"
+          ]
+        },
+        {
+          "author": "Caitlin E. Buck",
+          "roles": [
+            "Methodology",
+            "Writing \u2013 review & editing"
+          ]
+        },
+        {
+          "author": "Robert J. DiNapoli",
+          "roles": [
+            "Investigation",
+            "Writing \u2013 review & editing"
+          ]
+        },
+        {
+          "author": "Anne Philippe",
+          "roles": [
+            "Software",
+            "Writing \u2013 review & editing"
+          ]
+        }
+      ]
+    },
+    "conflicts_of_interest": {
+      "statement_present": false,
+      "declaration": null
+    },
+    "ethics_approval": {
+      "required": false,
+      "statement_present": false,
+      "notes": "Secondary analysis of previously published archaeological data - no new human subjects research"
+    },
+    "permits_and_authorizations": {
+      "required": false,
+      "statement_present": false,
+      "notes": "Methodological paper using published archaeological data"
+    },
+    "preregistration": {
+      "preregistered": false,
+      "registry": null,
+      "notes": "Methodological/theoretical paper - preregistration not applicable"
+    },
+    "supplementary_materials": {
+      "available": true,
+      "description": "Supplement contains OxCal model code, ArchaeoPhases R code for figures, probability calculations for mode inference",
+      "doi": null
+    },
+    "licence": {
+      "paper_licence": "CC-BY-NC-ND",
+      "data_licence": null,
+      "code_licence": null
+    },
+    "fair_assessment": {
+      "findable": {
+        "score": 7,
+        "max": 10,
+        "notes": "Paper DOI present, all author ORCIDs present, ArchaeoPhases on CRAN. Supplement lacks independent DOI."
+      },
+      "accessible": {
+        "score": 7,
+        "max": 10,
+        "notes": "Open access via White Rose repository. ArchaeoPhases openly available on CRAN. Supplement accessible via journal."
+      },
+      "interoperable": {
+        "score": 6,
+        "max": 10,
+        "notes": "Standard formats (R, OxCal). Uses published Archaeological Data Service dataset. No formal data schema."
+      },
+      "reusable": {
+        "score": 6,
+        "max": 10,
+        "notes": "CC-BY-NC-ND licence for paper. ArchaeoPhases is reusable. OxCal model in supplement lacks explicit licence."
+      },
+      "total_score": 26,
+      "max_score": 40,
+      "fair_percentage": 65.0
+    }
+  },
+  "evidence": [
+    {
+      "evidence_id": "E001",
+      "evidence_text": "Archaeologists have historically used two approaches to reckon time: stratigraphically through superposition observations and genealogically through artifact similarity correlations.",
+      "evidence_type": "historical_observation",
+      "verbatim_quote": "Archaeologists have long reckoned time in two ways; stratigraphically through observations of superposition (Harris, 1989) and genealogically through artifact correlations based on estimates of similarity (Lyman et al., 1997; Lyman & O'Brien, 2006a).",
+      "location": {
+        "section": "Introduction",
+        "page": 4
+      },
+      "supports_claims": [
+        "C001"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E002",
+      "evidence_text": "Event time is characterised by exclusively transformative change where one event ends at the stratigraphic boundary where the next begins.",
+      "evidence_type": "definitional_observation",
+      "verbatim_quote": "Event time is simpler than substance time. Change in event time is always transformative; one event ends at the stratigraphic boundary where the adjacent event begins.",
+      "location": {
+        "section": "Introduction",
+        "page": 4
+      },
+      "supports_claims": [
+        "C002",
+        "C001"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E003",
+      "evidence_text": "Substance time change is genealogical and includes three modes: branching, transformation, and reticulation.",
+      "evidence_type": "definitional_observation",
+      "verbatim_quote": "In contrast, change in substance time is genealogical and includes branching and reticulation modes in addition to transformation (Lyman & O'Brien, 2006b).",
+      "location": {
+        "section": "Introduction",
+        "page": 4,
+        "page_end": 5
+      },
+      "supports_claims": [
+        "C002",
+        "C001"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E004",
+      "evidence_text": "Bayesian chronology construction has been actively developed since the late 1980s, and major applications (OxCal, BCal, ChronoModel) can model transformation in both event time and substance time.",
+      "evidence_type": "historical_and_software_observation",
+      "verbatim_quote": "Bayesian chronology construction, a set of practices and software applications actively developed since the late 1980's (e.g., Naylor & Smith, 1988; Buck et al., 1992; Buck et al., 1994; Christen, 1994; Buck et al., 1996; Buck & Millard, 2004; Bronk Ramsey, 2009; Lanos & Philippe, 2018)... Each of the Bayesian chronological modeling software applications typically used by archaeologists (e.g. OxCal, BCal, and ChronoModel) is capable of modeling transformation in event time or substance time.",
+      "location": {
+        "section": "Introduction",
+        "page": 5
+      },
+      "supports_claims": [
+        "C003",
+        "C004"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E004",
+          "P1_E005"
+        ],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "Historical development and software capability are complementary aspects of same finding about Bayesian chronology software state"
+      }
+    },
+    {
+      "evidence_id": "E006",
+      "evidence_text": "All major Bayesian chronological modelling applications allow export of MCMC samples for post-processing.",
+      "evidence_type": "software_capability",
+      "verbatim_quote": "They all also allow the export of the Markov Chain Monte Carlo (MCMC) samples used to approximate the posterior distributions of the models, thus facilitating post-processing and close scrutiny of the results produced (Buck et al., 1999; Bronk Ramsey, 2001; Lanos et al., 2015).",
+      "location": {
+        "section": "Introduction",
+        "page": 5
+      },
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E007",
+      "evidence_text": "Despite Bayesian calibration being introduced with a substance time analysis, archaeologists today rarely use substance time for chronology construction.",
+      "evidence_type": "practice_observation",
+      "verbatim_quote": "Although the invention of Bayesian calibration was announced with a worked substance time analysis of pottery from the Danebury iron-age hillfort (Naylor & Smith, 1988), archaeologists today rarely carry out chronology construction in substance time.",
+      "location": {
+        "section": "Introduction",
+        "page": 5
+      },
+      "supports_claims": [
+        "C005",
+        "C006"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E008",
+      "evidence_text": "Allen's interval algebra comprises 13 basic relations that are distinct, exhaustive, and qualitative, defined for definite time intervals with single-value endpoints.",
+      "evidence_type": "mathematical_definition",
+      "verbatim_quote": "The chronological relations of two artifact classes related genealogically can be described with Allen's interval algebra, which identifies 13 basic relations that are distinct, exhaustive, and qualitative (Allen, 1983; Alspaugh, 2019). The interval algebra is defined for the relations between definite time intervals whose endpoints are single values. The thirteen basic relations include every combination of endpoint relations for two such intervals (fig. 1).",
+      "location": {
+        "section": "Allen's Interval Algebra",
+        "page": 6
+      },
+      "supports_claims": [
+        "C007",
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E008",
+          "P1_E009"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "Both items define properties of Allen's interval algebra with identical claim support"
+      }
+    },
+    {
+      "evidence_id": "E010",
+      "evidence_text": "Bayesian chronological modelling typically produces indefinite intervals with endpoints expressed as ranges of plausible values.",
+      "evidence_type": "methodological_observation",
+      "verbatim_quote": "Due to the probabilistic nature of the approach, Bayesian chronological modeling rarely yields definite (i.e., precisely known) time intervals. Instead, it typically yields indefinite intervals, whose endpoints are expressed as a range of plausible values, often with a multimodal probability distribution in between.",
+      "location": {
+        "section": "Allen's Interval Algebra",
+        "page": 7
+      },
+      "supports_claims": [
+        "C007"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E011",
+      "evidence_text": "Allen sets related as subset/superset have strength relationships: subsets denote stronger relations, supersets denote weaker relations.",
+      "evidence_type": "mathematical_property",
+      "verbatim_quote": "In this circumstance, when two Allen sets are related to one another as subset/superset, the relation denoted by the subset is stronger and the relation denoted by the superset is weaker.",
+      "location": {
+        "section": "Allen's Interval Algebra",
+        "page": 7
+      },
+      "supports_claims": [
+        "C007"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E012",
+      "evidence_text": "In branching mode, ancestor A relates to descendant B as A(oFD)B, and the composition operation for two descendants of the same ancestor yields a full relation.",
+      "evidence_type": "analytical_derivation",
+      "verbatim_quote": "In branching mode, ancestor A is directly related to descendant B as A(oFD)B; the ancestor starts earlier than the descendant and it persists after the branching event (fig. 2, top row). The composition operation yields a full relation for two descendants of the same ancestor, which indicates that nothing is known about their chronological relation.",
+      "location": {
+        "section": "Chronological Relations of Modes of Change",
+        "subsection": "Branching",
+        "page": 8
+      },
+      "supports_claims": [
+        "C010",
+        "C011"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E012",
+          "P1_E013"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "Direct relation and composition operation are complementary aspects of branching mode with same claim support"
+      }
+    },
+    {
+      "evidence_id": "E014",
+      "evidence_text": "In transformation mode, ancestor B relates to descendant A as B(m)A, meeting at the point of transformation, and the composition operation yields the precedes relation.",
+      "evidence_type": "analytical_derivation",
+      "verbatim_quote": "The direct relation of a transformative change from ancestor B to descendant A is B(m)A; the ancestor meets the descendant at the point of transformation (see fig. 2, middle row). The composition operation yields the precedes relation for two intervals, B and C, related by transformation through a third interval, A.",
+      "location": {
+        "section": "Chronological Relations of Modes of Change",
+        "subsection": "Transformation",
+        "page": 9
+      },
+      "supports_claims": [
+        "C010",
+        "C012"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E014",
+          "P1_E015"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "Direct relation and composition operation are complementary aspects of transformation mode with same claim support"
+      }
+    },
+    {
+      "evidence_id": "E016",
+      "evidence_text": "In reticulation, ancestor B relates to descendant A as B(moFD)A, and two ancestors have the Allen set B(oFDseSdfO)C comprising nine concurrent relations.",
+      "evidence_type": "analytical_derivation",
+      "verbatim_quote": "The direct relation between ancestor B and descendant A in an instance of reticulation is B(moFD)A; the ancestor starts before the descendant does and it either ends when the descendant starts or persists (see fig. 2, bottom row). The composition operation indicates the relation of two ancestors in a reticulation is the Allen set B(oFDseSdfO)C, which comprises the nine concurrent relations that make up the central diamond of the N\u00f6kel lattice.",
+      "location": {
+        "section": "Chronological Relations of Modes of Change",
+        "subsection": "Reticulation",
+        "page": 9
+      },
+      "supports_claims": [
+        "C010",
+        "C013"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E016",
+          "P1_E017"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "Direct relation and composition operation are complementary aspects of reticulation mode with same claim support"
+      }
+    },
+    {
+      "evidence_id": "E018",
+      "evidence_text": "Early Anglo-Saxon burials are relatively easy to find (often barrow-covered) and typically include diverse burial goods.",
+      "evidence_type": "contextual_observation",
+      "verbatim_quote": "Burials provide much information on the early Anglo-Saxon period in England. Often covered by barrows, they are relatively easy to find and they typically include a wide range of burial goods.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 10
+      },
+      "supports_claims": [
+        "C014"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E019",
+      "evidence_text": "The study develops a phyletic seriation of beads from 72 early Anglo-Saxon female graves in southern and eastern England.",
+      "evidence_type": "sample_description",
+      "verbatim_quote": "This section develops a phyletic seriation of beads recovered from 72 early Anglo-Saxon female graves in cemeteries located in southern and eastern England.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 10
+      },
+      "supports_claims": [
+        "C014",
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E020",
+      "evidence_text": "Data sources comprise 52 female graves from Hines & Bayliss (2013) high-precision radiocarbon dating project and 20 additional graves from RAF Lakenheath cemetery.",
+      "evidence_type": "data_source",
+      "verbatim_quote": "Fifty-two of the female graves were investigated as part of a path-breaking project to establish a chronological framework for early Anglo-Saxon graves with high-precision radiocarbon dating of human bone (Hines & Bayliss, 2013). Subsequently, beads from another 20 female graves were added to the corpus after an early Anglo-Saxon cemetery was investigated at Royal Air Force Lakenheath (Hines, 2021).",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 10
+      },
+      "supports_claims": [
+        "C014"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E020",
+          "P1_E021"
+        ],
+        "consolidation_type": "granularity_reduction",
+        "information_preserved": "complete",
+        "rationale": "Both describe data sources contributing to the 72-grave corpus"
+      }
+    },
+    {
+      "evidence_id": "E022",
+      "evidence_text": "The bead data are well documented with detailed chronological analysis, ADS database, hierarchical Bayesian model, expert bead identifications, and established classification.",
+      "evidence_type": "data_quality_assessment",
+      "verbatim_quote": "The bead data were selected for phyletic seriation because they are well documented, with a detailed description of the chronological analysis (see Baxter, 2014), a relational database deposited with the Archaeological Data Service that catalogs the graves and the finds (Hines, 2013), a hierarchical Bayesian chronological model constructed by an experienced chronologist (Bayliss et al., 2013), and bead identifications by an expert (Nielsen, 2013) according to an established classification (Brugmann, 2004).",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 10,
+        "page_end": 11
+      },
+      "supports_claims": [
+        "C014",
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E023",
+      "evidence_text": "A priori chronological constraints include stratigraphic associations at several cemeteries, six graves with BU2-d/h buckles (post-AD 510), and one grave with a Dagobert I coin (post-AD 629).",
+      "evidence_type": "dating_constraints",
+      "verbatim_quote": "The chronological prior indicates that most of the graves are not stratigraphically associated with other graves. Nevertheless, pairs of graves at the Castledyke, Dover Buckland, and Edix Hill cemeteries are stratigraphically related, and four graves at the Melbourn cemetery are related stratigraphically to one another (Bayliss et al., 2013, pp. 339\u2013345). In addition to this small amount of a priori relative chronological information, six of the graves yielded a distinctive shield-on-tongue buckle with shoe-shaped rivets, BU2-d/h, with a known origin date that constrains the estimate for these graves to after ad 510 (Bayliss et al., 2013, p. 345). A single grave yielded a coin of the Merovingian king Dagobert I, and was constrained to date after ad 629.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 11
+      },
+      "supports_claims": [
+        "C016"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E023",
+          "P1_E024",
+          "P1_E025"
+        ],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "All three items describe chronological constraints in the prior with identical claim support"
+      }
+    },
+    {
+      "evidence_id": "E027",
+      "evidence_text": "The revised model calibrates with OxCal 4.4.2 and IntCal20, with five independent runs showing negligible between-run variability.",
+      "evidence_type": "model_validation",
+      "verbatim_quote": "The revised model calibrates with OxCal version 4.4.2 and the IntCal20 calibration curve (Reimer et al., 2020). As described in the Supplement, five independent runs of the model indicate negligible between-run variability.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 11
+      },
+      "supports_claims": [
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E028",
+      "evidence_text": "Analysts agree Anglo-Saxon female burial was a continuous process.",
+      "evidence_type": "scholarly_consensus",
+      "verbatim_quote": "Phyletic seriation assumes that artifacts derive from a single tradition (Dunnell, 1970). This assumption appears to be met with the Anglo-Saxon female graves; analysts agree that Anglo-Saxon female burial was a continuous process (Hines & Bayliss, 2013, p. 454; Baxter, 2014, pp. 10, 15).",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 11,
+        "page_end": 12
+      },
+      "supports_claims": [
+        "C018"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E029",
+      "evidence_text": "Polychrome glass beads, amber, monochrome glass (CylPen, CylRound), and metal bead BE2-c were frequently deposited in 5th-6th centuries, less frequently in 7th-8th centuries.",
+      "evidence_type": "deposition_pattern",
+      "verbatim_quote": "The polychrome glass bead types\u2014BE1-Dot34, BE1-DotReg, BE1-Koch20 in all colors, BE1-Koch34 in all colors, BE1-Koch49/50, BE1-Melon (Hines, 2021, p. 8), and BE1-Reticella\u2014, amber beads, the monochrome glass bead types BE1-CylPen and BE1-CylRound, and metal bead type BE2-c, were frequently deposited in the fifth and sixth centuries and less frequently in the seventh and eighth centuries, yielding tempo plots that rise early and then bend to the right.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 13
+      },
+      "supports_claims": [
+        "C020",
+        "C021"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E030",
+      "evidence_text": "Shell, mineral (amethyst), and late monochrome glass bead types were mostly deposited in 7th-8th centuries.",
+      "evidence_type": "deposition_pattern",
+      "verbatim_quote": "In contrast, shell bead types BE1-Cowrie and BE1-Disc, mineral bead type BE1-Amethyst, and monochrome glass bead types BE1-Dghnt, BE1-Orange, and BE1-WoundSp were mostly deposited in the seventh and eighth centuries, yielding tempo plots that start late or stretch to the right before rising quickly.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 14,
+        "page_end": 15
+      },
+      "supports_claims": [
+        "C020",
+        "C021"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E031",
+      "evidence_text": "Most bead deposition histories overlap, except possibly BE1-Disc which appears restricted to late 7th and early 8th century.",
+      "evidence_type": "temporal_observation",
+      "verbatim_quote": "With the possible exception of the late shell bead type BE1-Disc, which appears to be restricted to the second half of the seventh century and the early eighth century, the bead deposition histories overlap one another.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 15
+      },
+      "supports_claims": [
+        "C022"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E032",
+      "evidence_text": "Given current classification, evidence of transformation from one bead type to another is absent; transformation is restricted to change within individual bead types.",
+      "evidence_type": "analytical_finding",
+      "verbatim_quote": "Given the bead classification, evidence of transformation from one bead type to another appears to be absent in the bead assemblage as it is currently classified; instead transformation is restricted to change over time within individual bead types.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 15
+      },
+      "supports_claims": [
+        "C023"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E033",
+      "evidence_text": "The transformation relation ancestor(m)descendant requires equal end and start dates, which occurs extremely infrequently with continuous probability distributions.",
+      "evidence_type": "methodological_constraint",
+      "verbatim_quote": "The relation ancestor(m)descendant, characteristic of transformation, requires that the end date of one bead type be equal to the start date of another. The equality relation will occur extremely infrequently in our MCMC output simply because we are modeling with continuous probability distributions that include non-trivial amounts of uncertainty.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 15
+      },
+      "supports_claims": [
+        "C023"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E034",
+      "evidence_text": "Probability calculations indicate BE1-Amethyst and BE1-Cowrie always satisfy expected branching relation with BE3-Amber as ancestor; BE1-Disc descended from BE1-Cowrie with 0.87 probability; BE1-CylRound is most likely ancestor of late monochrome beads.",
+      "evidence_type": "probability_calculation",
+      "verbatim_quote": "The results indicate that bead types BE1-Amethyst and BE1-Cowrie are likely descendants of bead type BE3-Amber; their relation always satisfies the expected branching relation. Similarly, bead type BE1-Disc most likely descended from bead type BE1-Cowrie; their relation satisfies the expected branching relation with a probability of 0.87. In each case, the probability calculations point most strongly to BE1-CylRound as ancestral to the late monochrome bead types (see Supplement).",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 17
+      },
+      "supports_claims": [
+        "C024",
+        "C025"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E034",
+          "P1_E035",
+          "P1_E036"
+        ],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "All three items report probability calculations for branching inferences with overlapping claim support"
+      }
+    },
+    {
+      "evidence_id": "E037",
+      "evidence_text": "BE1-Dghnt is an unusual bead found only in England with a piercing method similar to stable solids, appearing to have evolved through reticulation from monochrome glass and stable solid ancestors.",
+      "evidence_type": "reticulation_inference",
+      "verbatim_quote": "This is an unusual bead, found only in England (Brugmann, 2004, pp. 75\u201376). The method of creating the hole in BE1-Dghnt differs from other glass beads, where the hole is typically formed by winding the molten glass around a wire, which is then removed, leaving a hole in the bead. Instead, the piercing method used to fashion a BE1-Dghnt bead is similar to how holes are created in the stable solid beads. Bead BE1-Dghnt appears to have evolved by acquiring characteristics from two ancestors, one from among the monochrome glass beads and another from among the stable solid beads.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 17,
+        "page_end": 18
+      },
+      "supports_claims": [
+        "C026",
+        "C027"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E037",
+          "P1_E038"
+        ],
+        "consolidation_type": "compound_finding",
+        "information_preserved": "complete",
+        "rationale": "Artefact characteristics and reticulation inference are integrated finding with identical claim support"
+      }
+    },
+    {
+      "evidence_id": "E039",
+      "evidence_text": "BE3-Amber is the most likely stable solid ancestor of BE1-Dghnt.",
+      "evidence_type": "probability_calculation",
+      "verbatim_quote": "Unsurprisingly, the most likely ancestor among the stable solid bead types is BE3-Amber (see Supplement).",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 18
+      },
+      "supports_claims": [
+        "C026"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E040",
+      "evidence_text": "The event time analysis by Hines & Bayliss was designed to establish phase sequences for assigning grave-assemblages and artifact-types.",
+      "evidence_type": "methodological_description",
+      "verbatim_quote": "The event time analysis was designed to establish a sequence of phases to which archaeologists might 'assign grave-assemblages and a wide range of artifact-types' (Hines & Bayliss, 2013, p. xvii).",
+      "location": {
+        "section": "Discussion",
+        "page": 20
+      },
+      "supports_claims": [
+        "C029"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E041",
+      "evidence_text": "Graves were divided into phases based on subjective expert opinion and modelled as abutting in chronological priors.",
+      "evidence_type": "methodological_description",
+      "verbatim_quote": "The ordered graves were then divided into phases, based on subjective expert opinion, and modeled as abutting one another in the chronological priors for a formal Bayesian analysis.",
+      "location": {
+        "section": "Discussion",
+        "page": 20
+      },
+      "supports_claims": [
+        "C029",
+        "C032"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E042",
+      "evidence_text": "The occurrence seriation's success at temporal ordination is estimated at 62-72%.",
+      "evidence_type": "quantitative_assessment",
+      "verbatim_quote": "Estimates of its success at temporal ordination range from 62\u201372% (Baxter, 2014, pp. 12\u201314)",
+      "location": {
+        "section": "Discussion",
+        "page": 20
+      },
+      "supports_claims": [
+        "C029"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E043",
+      "evidence_text": "Non-overlapping occurrences from Bayliss et al.'s occurrence seriation are not evident in the authors' deposition histories; probabilities for the 54 non-overlapping relations are variable but typically quite low.",
+      "evidence_type": "comparative_finding",
+      "verbatim_quote": "The non-overlapping occurrences of bead-types based on the occurrence seriation (Bayliss et al., 2013, Table 7.18) are not evident in the deposition histories we produced, which indicate that most bead-types were deposited concurrently with one another. As described in the Supplement to our paper, the probabilities that the 54 non-overlapping relations set out in Bayliss et al. (2013, Table 7.18) occur in the output from our modeling are variable, but typically quite low.",
+      "location": {
+        "section": "Discussion",
+        "page": 20
+      },
+      "supports_claims": [
+        "C029",
+        "C031"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E043",
+          "P1_E044"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "Both items describe analysis of non-overlapping relations with overlapping claim support"
+      }
+    },
+    {
+      "evidence_id": "E045",
+      "evidence_text": "Most constraints with probabilities >0.9 involve bead type BE1-Disc.",
+      "evidence_type": "quantitative_finding",
+      "verbatim_quote": "Most of the constraints with probabilities greater than 0.9 involve bead type BE1-Disc, which stands out as one of the later bead types (see fig. 4).",
+      "location": {
+        "section": "Discussion",
+        "page": 21
+      },
+      "supports_claims": [
+        "C031"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E046",
+      "evidence_text": "Bayliss et al.'s modelling assumptions constrain interment dates to 6th-7th centuries and produce a bimodal summed probability distribution, both effects of the phase deposition model.",
+      "evidence_type": "analytical_finding",
+      "verbatim_quote": "First, when the extra modeling assumptions are imposed, as they were by Bayliss et al. (2013), a posteriori interment date estimates are constrained to the sixth and seventh centuries, avoiding calibration curve irregularities in the fifth and eighth centuries that wreak havoc on the precision of age estimates (see fig. 3). The modeling assumptions used by Bayliss et al. (2013) are also responsible for the apparent variation in female interments during the sixth and seventh centuries, which a summed probability distribution shows is bimodal (Bayliss et al., 2013, Fig. 7.3). The peaks near the start of the sixth century and the end of the seventh century, at either end of the interment interval, show the effects of a priori modeling assumptions, in particular the phase deposition model (Nicholls & Jones, 2001).",
+      "location": {
+        "section": "Discussion",
+        "page": 21
+      },
+      "supports_claims": [
+        "C032"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_E046",
+          "P1_E047"
+        ],
+        "consolidation_type": "identical_support_pattern",
+        "information_preserved": "complete",
+        "rationale": "Both items describe effects of phase deposition model assumptions with identical claim support"
+      }
+    },
+    {
+      "evidence_id": "E048",
+      "evidence_text": "The phase deposition model is based on physical deposition process with thinning, but doesn't extend to multiphase models typical of substance time genealogical change.",
+      "evidence_type": "methodological_constraint",
+      "verbatim_quote": "The phase deposition model is based on a physical deposition process for each context followed by thinning due to decay of the archaeological record over time and the archaeologist's selection of samples for dating. It does not extend to the multiphase models (Buck et al., 1992) typical of genealogical change in substance time (Nicholls & Jones, 2001, pp. 514\u2013515), which in archaeology represent a tradition determined by social practice, rather than a physical process.",
+      "location": {
+        "section": "Discussion",
+        "page": 21,
+        "page_end": 22
+      },
+      "supports_claims": [
+        "C032",
+        "C035"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E049",
+      "evidence_text": "ChronoModel does not implement a phase deposition model.",
+      "evidence_type": "software_characteristic",
+      "verbatim_quote": "The ChronoModel application does not implement a phase deposition model and in this way is ideal for substance time analyses.",
+      "location": {
+        "section": "Discussion",
+        "page": 22
+      },
+      "supports_claims": [
+        "C036"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E050",
+      "evidence_text": "William 'Strata' Smith first combined event time stratigraphy with substance time change in fossils to produce his map of England and Wales.",
+      "evidence_type": "historical_precedent",
+      "verbatim_quote": "Geologists were the first to use reasoning to make historical inference when, in the early nineteenth century, William 'Strata' Smith combined the event time of stratigraphy with substance time change in fossil forms to produce his famous map, A Delineation of the Strata of England and Wales (Toulmin & Goodfield, 1965, pp. 162\u2013163).",
+      "location": {
+        "section": "Discussion",
+        "page": 22
+      },
+      "supports_claims": [
+        "C037",
+        "C038"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C001",
+      "claim_text": "Two views of archaeological time can be distinguished: an event view modelling stratigraphic relations and a substance view modelling genealogical relations among artifacts.",
+      "claim_type": "theoretical",
+      "claim_role": "core",
+      "verbatim_quote": "Two views of archaeological time are distinguished; an event view that models stratigraphic relations, and a substance view that models genealogical relations among artifacts, including the three modes of change represented by branching, transformation, and reticulation.",
+      "location": {
+        "section": "Abstract",
+        "page": 3
+      },
+      "supported_by": [
+        "E001",
+        "E002",
+        "E003"
+      ],
+      "supports_claims": [
+        "C040"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C002",
+      "claim_text": "Chronology construction is more complex in substance time than in event time, which only concerns transformation.",
+      "claim_type": "theoretical",
+      "claim_role": "core",
+      "verbatim_quote": "Chronology construction is more complex in substance time than it is in event time, which only concerns transformation.",
+      "location": {
+        "section": "Abstract",
+        "page": 3
+      },
+      "supported_by": [
+        "E002",
+        "E003"
+      ],
+      "supports_claims": [
+        "C006"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C003",
+      "claim_text": "Allen's interval algebra can specify chronological relations of modes of change, identifiable by post-processing Bayesian chronological model output.",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "Allen's interval algebra can be used to specify the chronological relations associated with the modes of change, and these relations can be identified by post-processing the output from Bayesian chronological models.",
+      "location": {
+        "section": "Abstract",
+        "page": 3
+      },
+      "supported_by": [
+        "E004",
+        "E006",
+        "E008"
+      ],
+      "supports_claims": [
+        "C040",
+        "C043"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C004",
+      "claim_text": "Chronology construction in event time can be considered a solved problem.",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Chronology construction in event time can be considered a solved problem; a Harris matrix record of a systematically excavated and carefully recorded archaeological site can be transformed into a format suitable for use in constructing a Bayesian chronological model either by hand or using a graph theoretic algorithm.",
+      "location": {
+        "section": "Introduction",
+        "page": 5
+      },
+      "supported_by": [
+        "E004"
+      ],
+      "supports_claims": [
+        "C005"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C005",
+      "claim_text": "Best implementation practices for substance time analysis including all three modes of change are not well documented or widely discussed.",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Nevertheless, best implementation practices for a substance time analysis that includes all three modes of change are not well documented or widely discussed.",
+      "location": {
+        "section": "Introduction",
+        "page": 5
+      },
+      "supported_by": [
+        "E007"
+      ],
+      "supports_claims": [
+        "C006"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C006",
+      "claim_text": "This paper intends to start the discussion of best practices for Bayesian chronology construction in substance time.",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "This paper intends to start the discussion of best practices for Bayesian chronology construction in substance time.",
+      "location": {
+        "section": "Introduction",
+        "page": 5
+      },
+      "supported_by": [
+        "E007"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C007",
+      "claim_text": "Allen's interval algebra provides a precise vocabulary for characterising chronological relations between intervals, whether definite or indefinite, using 13 basic relations.",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The chronological relations of two artifact classes related genealogically can be described with Allen's interval algebra, which identifies 13 basic relations that are distinct, exhaustive, and qualitative. Allen sets thus provide a precise vocabulary for characterizing the state of knowledge about the relation between two intervals, regardless of whether the intervals are definite or indefinite.",
+      "location": {
+        "section": "Allen's Interval Algebra",
+        "page": 6,
+        "page_end": 7
+      },
+      "supported_by": [
+        "E008",
+        "E010",
+        "E011"
+      ],
+      "supports_claims": [
+        "C003",
+        "C010"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C007",
+          "P1_C008"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Both claims describe utility of Allen's interval algebra with overlapping evidence base"
+      }
+    },
+    {
+      "claim_id": "C009",
+      "claim_text": "N\u00f6kel lattices provide a useful visualisation of Allen sets.",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "It is often useful to visualize an Allen set as a N\u00f6kel lattice (N\u00f6kel, 1991), a graphical representation in which the Allen relations are displayed on a lattice with the equals relation at the center.",
+      "location": {
+        "section": "Allen's Interval Algebra",
+        "page": 7
+      },
+      "supported_by": [],
+      "supports_claims": [
+        "C007"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C010",
+      "claim_text": "Chronological relations of the modes of change can be established analytically by Allen's interval algebra.",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Chronological relations of the modes of change can be established analytically by Allen's interval algebra.",
+      "location": {
+        "section": "Chronological Relations of Modes of Change",
+        "page": 8
+      },
+      "supported_by": [
+        "E012",
+        "E014",
+        "E016"
+      ],
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C011",
+      "claim_text": "The branching process entails no chronological constraints on the relation of two descendants from a common ancestor.",
+      "claim_type": "theoretical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The branching process entails no chronological constraints that might limit the potential of the future; two descendants of a common ancestor might be related to one another according to any one of the thirteen basic Allen relations.",
+      "location": {
+        "section": "Chronological Relations of Modes of Change",
+        "subsection": "Branching",
+        "page": 8
+      },
+      "supported_by": [
+        "E012"
+      ],
+      "supports_claims": [
+        "C010"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C012",
+      "claim_text": "Transformation viewed from the intermediate interval correctly distinguishes actual past from potential future.",
+      "claim_type": "theoretical",
+      "claim_role": "supporting",
+      "verbatim_quote": "In the figure, transformation is viewed from A, and correctly distinguishes the actual past of ancestor B from the potential future of descendant C.",
+      "location": {
+        "section": "Chronological Relations of Modes of Change",
+        "subsection": "Transformation",
+        "page": 9
+      },
+      "supported_by": [
+        "E014"
+      ],
+      "supports_claims": [
+        "C010"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C013",
+      "claim_text": "The Allen set for two ancestors in reticulation is stronger than for two descendants in branching and incomparable to transformation.",
+      "claim_type": "theoretical",
+      "claim_role": "supporting",
+      "verbatim_quote": "This Allen set is stronger than the Allen set for two descendants of the same ancestor in branching mode and incomparable to the Allen set for the ancestor and descendant in transformation mode.",
+      "location": {
+        "section": "Chronological Relations of Modes of Change",
+        "subsection": "Reticulation",
+        "page": 9
+      },
+      "supported_by": [
+        "E016"
+      ],
+      "supports_claims": [
+        "C010"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C014",
+      "claim_text": "The phyletic seriation constructs a genealogy of artifact types based on similarity estimates and chronological relations.",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The phyletic seriation reported here constructs a genealogy of artifact types based on estimates of their similarity and their chronological relations.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 11
+      },
+      "supported_by": [
+        "E018",
+        "E019",
+        "E020",
+        "E022"
+      ],
+      "supports_claims": [
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C015",
+      "claim_text": "In this illustrative example, similarity estimates are derived from type descriptions rather than expert-developed.",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "In this illustrative example, similarity estimates are derived from type descriptions, rather than developed by an expert.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 11
+      },
+      "supported_by": [],
+      "supports_claims": [
+        "C014"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C016",
+      "claim_text": "The chronological prior assumes radiocarbon dates on human bone date the interment of deceased and associated burial goods.",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "This chronological prior assumes that age determinations on human bone date the interment of the deceased and associated burial goods, including the beads.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 11
+      },
+      "supported_by": [
+        "E023"
+      ],
+      "supports_claims": [
+        "C014"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C017",
+      "claim_text": "The calibration results are replicable and stable, providing a suitable basis for MCMC exploration and phyletic seriation construction.",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Results of the calibration are replicable and stable; they provide a suitable basis for exploring MCMC output and, in particular, constructing a phyletic seriation of beads.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 11
+      },
+      "supported_by": [
+        "E019",
+        "E022",
+        "E027"
+      ],
+      "supports_claims": [
+        "C020"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C018",
+      "claim_text": "The assumption that artifacts derive from a single tradition appears to be met with Anglo-Saxon female graves.",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Phyletic seriation assumes that artifacts derive from a single tradition (Dunnell, 1970). This assumption appears to be met with the Anglo-Saxon female graves; analysts agree that Anglo-Saxon female burial was a continuous process.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 11,
+        "page_end": 12
+      },
+      "supported_by": [
+        "E028"
+      ],
+      "supports_claims": [
+        "C020"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C019",
+      "claim_text": "A smooth and monotone distribution in an occurrence plot can verify the single-tradition assumption.",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "We can check for this in our own analysis by ensuring a smooth and monotone distribution in an occurrence plot.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 12
+      },
+      "supported_by": [],
+      "supports_claims": [
+        "C018"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C020",
+      "claim_text": "Having established the graves plausibly derive from a single tradition, we can focus on bead deposition histories.",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Having established via the dating evidence that the graves, and hence the beads, plausibly derive from a single archaeological tradition, we can now move our focus to the deposition history of the beads themselves.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 12
+      },
+      "supported_by": [
+        "E029",
+        "E030"
+      ],
+      "supports_claims": [
+        "C021"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C021",
+      "claim_text": "Bead deposition histories reveal two temporal patterns of change in social practices associated with bead acquisition, use, and burial.",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The bead deposition histories reveal to the eye two patterns of change in the social practices (Schyfter, 2009) associated with bead acquisition, use, and burial.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 13
+      },
+      "supported_by": [
+        "E029",
+        "E030"
+      ],
+      "supports_claims": [
+        "C022"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C022",
+      "claim_text": "Overlapping bead deposition histories indicate burial continuity characterised by change in bead types buried.",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "This is another indication of burial continuity, albeit one characterized by change in the types of beads buried with Anglo-Saxon females.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 15
+      },
+      "supported_by": [
+        "E031"
+      ],
+      "supports_claims": [
+        "C018"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C023",
+      "claim_text": "Evidence of transformation from one bead type to another should be difficult to recover from MCMC output due to continuous probability distributions.",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "In practice, and regardless of how the beads are classified, evidence of transformation from one bead type to another should be difficult to recover from the MCMC output of Bayesian calibration.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 15
+      },
+      "supported_by": [
+        "E032",
+        "E033"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C024",
+      "claim_text": "Branching inference is based on similarity of two bead types augmented by chronological information that ancestor overlaps, is finished by, or contains descendant.",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Inference of branching change is based on the similarity of two bead types, augmented by chronological information that the period of deposition of the ancestor overlaps, is finished by, or contains that of the descendant, ancestor(oFD)descendant.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 16
+      },
+      "supported_by": [
+        "E034"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C025",
+      "claim_text": "Amber beads represent the ancestral stable solid bead type from which BE1-Cowrie, BE1-Amethyst, and BE1-Disc might have branched.",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "In the context of this distinction, amber beads\u2014the sole stable solid early bead type\u2014represent the ancestral stable solid bead type from which BE1-Cowrie, BE1-Amethyst, and BE1-Disc might have branched.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 17
+      },
+      "supported_by": [
+        "E034"
+      ],
+      "supports_claims": [
+        "C024"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C026",
+      "claim_text": "Reticulation inference is complex because it involves three bead types (two ancestors and one descendant) rather than two.",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "An inference of reticulation is made complex by the fact that it involves three bead types\u2014two ancestors and a descendant\u2014instead of two as in branching and transformation.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 17
+      },
+      "supported_by": [
+        "E037",
+        "E039"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C027",
+      "claim_text": "BE1-Dghnt appears to have evolved through reticulation, acquiring characteristics from both monochrome glass and stable solid bead ancestors.",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Bead BE1-Dghnt appears to have evolved by acquiring characteristics from two ancestors, one from among the monochrome glass beads and another from among the stable solid beads.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 18
+      },
+      "supported_by": [
+        "E037"
+      ],
+      "supports_claims": [
+        "C026"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C028",
+      "claim_text": "Potential ancestors in a reticulation can be identified using paradigmatic classification represented as a graph.",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "The procedure to identify potential ancestors in a reticulation can be formalized and illustrated with a refinement of a graph theoretic approach, which is used to order stylistic descriptions of artifacts with a principle of parsimony.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 18
+      },
+      "supported_by": [],
+      "supports_claims": [
+        "C026"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C029",
+      "claim_text": "The Hines & Bayliss occurrence seriation yielded mixed results (62-72% success), raising questions whether subjective phase constraints are reflected in radiocarbon data.",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "These explorations yielded mixed results because the occurrence seriation is imprecise. Estimates of its success at temporal ordination range from 62\u201372% (Baxter, 2014, pp. 12\u201314), which raises the question whether or not the subjective phase constraints derived from the occurrence seriation are reflected in the radiocarbon data.",
+      "location": {
+        "section": "Discussion",
+        "page": 20
+      },
+      "supported_by": [
+        "E040",
+        "E041",
+        "E042",
+        "E043"
+      ],
+      "supports_claims": [
+        "C031"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C029",
+          "P1_C030"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Imprecision finding and question about constraint validity are sequential arguments with overlapping evidence"
+      }
+    },
+    {
+      "claim_id": "C031",
+      "claim_text": "A national framework based on occurrence seriation will be difficult to apply in practice.",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "These results bolster the conclusion that a 'national framework' based on the occurrence seriation will be difficult to apply in practice (Hines, 2021, p. 34).",
+      "location": {
+        "section": "Discussion",
+        "page": 21
+      },
+      "supported_by": [
+        "E043",
+        "E045"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C032",
+      "claim_text": "Introduction of phases puts chronological modelling on event time ground, but phase deposition model characteristics that counteract statistical scatter are not helpful in substance time analysis.",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "At a technical level, introduction of phases puts the chronological modeling on ground made familiar by chronology construction in event time. These two characteristics of the phase deposition model, which counteract the statistical scatter on stratigraphic phase length estimates and are integral components of an event time analysis, are not helpful in a substance time analysis.",
+      "location": {
+        "section": "Discussion",
+        "page": 20,
+        "page_end": 21
+      },
+      "supported_by": [
+        "E041",
+        "E046",
+        "E048"
+      ],
+      "supports_claims": [
+        "C035"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C032",
+          "P1_C033"
+        ],
+        "consolidation_type": "narrative_consolidation",
+        "information_preserved": "complete",
+        "rationale": "Phase introduction and phase deposition model critique are sequential arguments in same passage"
+      }
+    },
+    {
+      "claim_id": "C034",
+      "claim_text": "In substance time analysis, the concern is that observed depositional history underestimates true temporal range due to preservation bias and sampling error.",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "In a substance time analysis, the effects of statistical scatter on depositional histories is not an issue. Rather, the concern is that the temporal range of an observed depositional history underestimates the true temporal range due to preservation bias and sampling error (Perreault, 2019, pp. 101\u2013104).",
+      "location": {
+        "section": "Discussion",
+        "page": 22
+      },
+      "supported_by": [],
+      "supports_claims": [
+        "C032"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C035",
+      "claim_text": "An effective substance time analysis will ensure the phase deposition model applies to event time but not directly to artifact substance time changes.",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "An effective substance time analysis will ensure that the phase deposition model applies to the event time portion of the chronological prior, but does not operate directly on age estimates for changes in the nature and relations of artifacts.",
+      "location": {
+        "section": "Discussion",
+        "page": 22
+      },
+      "supported_by": [
+        "E048"
+      ],
+      "supports_claims": [
+        "C045"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C036",
+      "claim_text": "ChronoModel is ideal for substance time analyses because it does not implement a phase deposition model.",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "The ChronoModel application does not implement a phase deposition model and in this way is ideal for substance time analyses.",
+      "location": {
+        "section": "Discussion",
+        "page": 22
+      },
+      "supported_by": [
+        "E049"
+      ],
+      "supports_claims": [
+        "C035"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C037",
+      "claim_text": "Substance time plays an indispensable role as one of two factors required for historical inference.",
+      "claim_type": "theoretical",
+      "claim_role": "core",
+      "verbatim_quote": "This is important because substance time plays an indispensable role as one of two factors required for historical inference.",
+      "location": {
+        "section": "Discussion",
+        "page": 22
+      },
+      "supported_by": [
+        "E050"
+      ],
+      "supports_claims": [
+        "C041"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C038",
+      "claim_text": "Stratigraphy/event time corresponds to the universal factor; artifact genealogies/substance time corresponds to the conditional factor. Bayesian chronology provides absolute time rather than just ordering.",
+      "claim_type": "theoretical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Stratigraphy and event time correspond to the repetitive universal factor operative at all times and places. Artifact genealogies and substance time correspond to the cumulative and progressive conditional factor significant at particular stages (Toulmin & Goodfield, 1965, p. 266). Bayesian chronology building provides archaeologists with the tools needed to carry out historical inference in much the same way, but with the added benefit that the conditional factors are expressed in absolute time, rather than simply ordered chronologically.",
+      "location": {
+        "section": "Discussion",
+        "page": 22
+      },
+      "supported_by": [
+        "E050"
+      ],
+      "supports_claims": [
+        "C037",
+        "C041"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P1_C038",
+          "P1_C039"
+        ],
+        "consolidation_type": "compound_interpretation",
+        "information_preserved": "complete",
+        "rationale": "Universal/conditional factor mapping and absolute time benefit are complementary aspects of same theoretical argument"
+      }
+    },
+    {
+      "claim_id": "C040",
+      "claim_text": "Event time and substance time can usefully be distinguished in a Bayesian analysis.",
+      "claim_type": "theoretical",
+      "claim_role": "core",
+      "verbatim_quote": "The two views of time used routinely by archaeologists\u2014event time and substance time\u2014can usefully be distinguished in a Bayesian analysis.",
+      "location": {
+        "section": "Conclusion",
+        "page": 23
+      },
+      "supported_by": [],
+      "supports_claims": [
+        "C041"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C041",
+      "claim_text": "Combining event time analysis with substance time analysis meets the necessary and sufficient conditions for historical inference.",
+      "claim_type": "theoretical",
+      "claim_role": "core",
+      "verbatim_quote": "Most Bayesian analyses in archaeology are carried out in event time to produce site chronologies that are necessary for historical inference but insufficient by themselves. When they are combined with a Bayesian analysis undertaken in substance time, then the necessary and sufficient conditions for historical inference are met.",
+      "location": {
+        "section": "Conclusion",
+        "page": 23
+      },
+      "supported_by": [],
+      "supports_claims": [
+        "C046"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C042",
+      "claim_text": "A substance view can augment expert opinion to establish artifact genealogies comprising branching, transformation, and reticulation.",
+      "claim_type": "theoretical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "A substance view that assumes absolute time and is concerned with changing qualities and relations of artifacts can augment expert opinion to establish artifact genealogies that comprise the modes of change represented by branching, transformation, and reticulation.",
+      "location": {
+        "section": "Conclusion",
+        "page": 23
+      },
+      "supported_by": [],
+      "supports_claims": [
+        "C041"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C043",
+      "claim_text": "Modes of change can be investigated with joint posteriors from MCMC output using ArchaeoPhases software.",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "The modes of change can be investigated with the joint posteriors recorded in the MCMC output of a Bayesian model using functions provided by ArchaeoPhases software (Philippe & Vibet, 2020).",
+      "location": {
+        "section": "Conclusion",
+        "page": 23
+      },
+      "supported_by": [],
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C044",
+      "claim_text": "Substance time analysis potentially adds a temporal strand to evidential reasoning about artifacts in archaeology.",
+      "claim_type": "theoretical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Substance time analysis potentially adds a temporal strand to the cable of evidential reasoning about artifacts in archaeology (Chapman & Wylie, 2016).",
+      "location": {
+        "section": "Conclusion",
+        "page": 23
+      },
+      "supported_by": [],
+      "supports_claims": [
+        "C046"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C045",
+      "claim_text": "In a Bayesian analysis, event and substance views of time should be articulated so methods proper to one do not unduly influence the other.",
+      "claim_type": "methodological_argument",
+      "claim_role": "intermediate",
+      "verbatim_quote": "In a Bayesian analysis, event and substance views of time should be articulated in such a way that methods proper to one do not unduly influence the other.",
+      "location": {
+        "section": "Conclusion",
+        "page": 23
+      },
+      "supported_by": [],
+      "supports_claims": [
+        "C046"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C046",
+      "claim_text": "When event and substance time are properly articulated, the chronological model can accommodate new observations and update posteriors benefiting historical inference.",
+      "claim_type": "theoretical",
+      "claim_role": "core",
+      "verbatim_quote": "When this is achieved, the resulting chronological model is set to accommodate new observations and update posterior probabilities in a way that potentially benefits historical inference.",
+      "location": {
+        "section": "Conclusion",
+        "page": 23
+      },
+      "supported_by": [],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    }
+  ],
+  "implicit_arguments": [
+    {
+      "implicit_argument_id": "IA001",
+      "argument_text": "The event/substance time distinction maps coherently onto Dunnell's space-like vs time-like views of reality, providing theoretical grounding for the methodology.",
+      "type": "disciplinary_assumption",
+      "trigger_text": [
+        "Within archaeology, this view of time is associated with a space-like view of reality (Dunnell, 1982).",
+        "Within archaeology, this view of time is associated with a time-like view of reality (Dunnell, 1982)."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Introduction",
+          "page": 4
+        },
+        {
+          "section": "Introduction",
+          "page": 4
+        }
+      ],
+      "inference_reasoning": "The paper assumes readers accept Dunnell's philosophical framework distinguishing space-like (event) and time-like (substance) views of reality, and that this framework appropriately grounds the methodological distinction between event time and substance time chronology construction.",
+      "supports_claims": [
+        "C001",
+        "C002"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inference_from_text"
+      }
+    },
+    {
+      "implicit_argument_id": "IA002",
+      "argument_text": "Allen's interval algebra, designed for definite intervals, can be meaningfully extended to the indefinite intervals typical of Bayesian chronological modelling.",
+      "type": "bridging_claim",
+      "trigger_text": [
+        "The interval algebra is defined for the relations between definite time intervals whose endpoints are single values.",
+        "Due to the probabilistic nature of the approach, Bayesian chronological modeling rarely yields definite (i.e., precisely known) time intervals. Instead, it typically yields indefinite intervals, whose endpoints are expressed as a range of plausible values"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Allen's Interval Algebra",
+          "page": 6
+        },
+        {
+          "section": "Allen's Interval Algebra",
+          "page": 7
+        }
+      ],
+      "inference_reasoning": "The paper moves from discussing definite intervals (for which Allen's algebra was designed) to indefinite intervals (what Bayesian models produce) without explicitly justifying that the algebra's semantics remain valid when extended to probability distributions over endpoints.",
+      "supports_claims": [
+        "C003",
+        "C007"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inference_from_text"
+      }
+    },
+    {
+      "implicit_argument_id": "IA003",
+      "argument_text": "The three modes of change (branching, transformation, reticulation) are exhaustive and sufficient for describing all genealogical relationships in artifact phylogenies.",
+      "type": "unstated_assumption",
+      "trigger_text": [
+        "The three modes provide an exhaustive catalog of changes sufficient to construct a phyletic seriation of arbitrary complexity."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Introduction",
+          "page": 5
+        }
+      ],
+      "inference_reasoning": "The paper asserts exhaustiveness but does not demonstrate why no other modes are possible or could emerge from archaeological contexts. The claim draws on phylogenetic analogy but artifacts may exhibit change patterns not captured by biological metaphors.",
+      "supports_claims": [
+        "C002",
+        "C042"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inference_from_text"
+      }
+    },
+    {
+      "implicit_argument_id": "IA004",
+      "argument_text": "Bead deposition dates reflect production and use periods rather than delayed deposition of heirlooms or curated objects.",
+      "type": "unstated_assumption",
+      "trigger_text": [
+        "This chronological prior assumes that age determinations on human bone date the interment of the deceased and associated burial goods, including the beads."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 11
+        }
+      ],
+      "inference_reasoning": "The analysis treats bead deposition dates as representative of bead type temporal ranges. This assumes beads were not curated as heirlooms or acquired long after manufacture. Bayliss et al. explicitly noted some beads might be 'anomalously old when buried' but this paper's analysis does not systematically address this potential bias.",
+      "supports_claims": [
+        "C014",
+        "C016",
+        "C020",
+        "C021"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inference_from_text"
+      }
+    },
+    {
+      "implicit_argument_id": "IA005",
+      "argument_text": "Similarity estimates derived from type descriptions are adequate proxies for expert-developed similarity assessments in constructing genealogical relationships.",
+      "type": "bridging_claim",
+      "trigger_text": [
+        "In this illustrative example, similarity estimates are derived from type descriptions, rather than developed by an expert."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 11
+        }
+      ],
+      "inference_reasoning": "The paper acknowledges this is illustrative but proceeds to draw conclusions about genealogical relationships. The validity of these inferences depends on type descriptions capturing the morphological features relevant to detecting genealogical relationships, which is assumed rather than demonstrated.",
+      "supports_claims": [
+        "C014",
+        "C015",
+        "C024",
+        "C025"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inference_from_text"
+      }
+    },
+    {
+      "implicit_argument_id": "IA006",
+      "argument_text": "Removing constraints from Bayliss et al.'s original model produces a more appropriate model for substance time analysis rather than an underspecified one.",
+      "type": "unstated_assumption",
+      "trigger_text": [
+        "A chronological model shorn of these constraints makes it possible to establish the temporal relations of bead types a posteriori by scrutinizing the MCMC output of the Bayesian analysis.",
+        "Our goal is a phyletic seriation using the posterior information derived from a Bayesian chronological analysis based only on robust and uncontroversial chronological a priori assumptions, none of which derives from the beads themselves."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 11
+        },
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 11
+        }
+      ],
+      "inference_reasoning": "The authors argue their stripped-down model is more appropriate for substance time analysis, but this assumes the removed constraints (uniform phase distribution, occurrence seriation sequences) were inappropriate rather than providing useful prior information. The decision to remove them is methodological but presented as if uncontroversially correct.",
+      "supports_claims": [
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inference_from_text"
+      }
+    },
+    {
+      "implicit_argument_id": "IA007",
+      "argument_text": "Manufacturing technique similarity (stable solid piercing vs glass winding) provides evidence for genealogical relationship between bead types.",
+      "type": "bridging_claim",
+      "trigger_text": [
+        "The method of creating the hole in BE1-Dghnt differs from other glass beads, where the hole is typically formed by winding the molten glass around a wire, which is then removed, leaving a hole in the bead. Instead, the piercing method used to fashion a BE1-Dghnt bead is similar to how holes are created in the stable solid beads.",
+        "Bead BE1-Dghnt appears to have evolved by acquiring characteristics from two ancestors, one from among the monochrome glass beads and another from among the stable solid beads."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 18
+        },
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 18
+        }
+      ],
+      "inference_reasoning": "The paper infers reticulation based on shared manufacturing technique. This assumes technological similarity indicates genealogical inheritance rather than independent innovation, convergent evolution, or trade/diffusion of techniques. The causal mechanism linking technique similarity to descent is assumed.",
+      "supports_claims": [
+        "C026",
+        "C027"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inference_from_text"
+      }
+    }
+  ],
+  "research_designs": [
+    {
+      "design_id": "RD001",
+      "design_text": "Theoretical framework distinguishing event time (stratigraphic relations) from substance time (genealogical relations) as two fundamental views of archaeological time, with substance time encompassing three modes of change: branching, transformation, and reticulation.",
+      "design_type": "theoretical_framework",
+      "design_status": "explicit",
+      "verbatim_quote": "Two views of archaeological time are distinguished; an event view that models stratigraphic relations, and a substance view that models genealogical relations among artifacts, including the three modes of change represented by branching, transformation, and reticulation.",
+      "location": {
+        "section": "Abstract",
+        "page": 3
+      },
+      "reasoning_approach": "deductive",
+      "supports_claims": [
+        "C001",
+        "C002"
+      ],
+      "enables_methods": [
+        "M001"
+      ],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_methods": [
+        "M001"
+      ]
+    },
+    {
+      "design_id": "RD002",
+      "design_text": "Application of Allen's interval algebra to specify chronological relations associated with modes of change, enabling post-processing identification from Bayesian chronological model output.",
+      "design_type": "analytical_framework",
+      "design_status": "explicit",
+      "verbatim_quote": "Allen's interval algebra can be used to specify the chronological relations associated with the modes of change, and these relations can be identified by post-processing the output from Bayesian chronological models.",
+      "location": {
+        "section": "Abstract",
+        "page": 3
+      },
+      "reasoning_approach": "deductive",
+      "supports_claims": [
+        "C003",
+        "C007"
+      ],
+      "enables_methods": [
+        "M002",
+        "M004",
+        "M007",
+        "M008"
+      ],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_methods": [
+        "M002",
+        "M004",
+        "M007",
+        "M008"
+      ]
+    },
+    {
+      "design_id": "RD003",
+      "design_text": "Case study design using Anglo-Saxon female grave beads to demonstrate substance time chronology construction through phyletic seriation.",
+      "design_type": "case_study",
+      "design_status": "explicit",
+      "verbatim_quote": "A worked example illustrates how identifying the chronological relations can aid construction of a phyletic seriation of beads recovered from Anglo-Saxon female graves.",
+      "location": {
+        "section": "Abstract",
+        "page": 3
+      },
+      "reasoning_approach": "inductive",
+      "supports_claims": [
+        "C014",
+        "C017"
+      ],
+      "enables_methods": [
+        "M003",
+        "M005",
+        "M006"
+      ],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_methods": [
+        "M003",
+        "M005",
+        "M006"
+      ]
+    },
+    {
+      "design_id": "RD004",
+      "design_text": "Paper positioned to initiate discussion of best practices for Bayesian chronology construction in substance time, addressing gap in documented implementation practices.",
+      "design_type": "research_goal",
+      "design_status": "explicit",
+      "verbatim_quote": "Nevertheless, best implementation practices for a substance time analysis that includes all three modes of change are not well documented or widely discussed. This paper intends to start the discussion of best practices for Bayesian chronology construction in substance time.",
+      "location": {
+        "section": "Introduction",
+        "page": 6
+      },
+      "reasoning_approach": "deductive",
+      "supports_claims": [
+        "C005",
+        "C006"
+      ],
+      "enables_methods": [
+        "M001"
+      ],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_methods": [
+        "M001"
+      ]
+    },
+    {
+      "design_id": "RD005",
+      "design_text": "Revised chronological model design removing controversial constraints from Bayliss et al. (2013) model to enable a posteriori exploration of bead type temporal relations using only robust chronological assumptions.",
+      "design_type": "model_design",
+      "design_status": "explicit",
+      "verbatim_quote": "A chronological model shorn of these constraints makes it possible to establish the temporal relations of bead types a posteriori by scrutinizing the MCMC output of the Bayesian analysis. Our goal is a phyletic seriation using the posterior information derived from a Bayesian chronological analysis based only on robust and uncontroversial chronological a priori assumptions, none of which derives from the beads themselves.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 12
+      },
+      "reasoning_approach": "deductive",
+      "supports_claims": [
+        "C017"
+      ],
+      "enables_methods": [
+        "M003",
+        "M004"
+      ],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_methods": [
+        "M003",
+        "M004"
+      ]
+    },
+    {
+      "design_id": "RD006",
+      "design_text": "Comparative analysis design contrasting substance time analysis with the event time analysis carried out by Bayliss et al. (2013).",
+      "design_type": "comparative_analysis",
+      "design_status": "explicit",
+      "verbatim_quote": "Section 5 contrasts the substance time analysis with the event time analysis carried out by Bayliss et al. (2013). Section 6 concludes that a properly formulated substance time analysis in combination with an event time analysis of site chronology has potential to contribute to historical inference.",
+      "location": {
+        "section": "Introduction",
+        "page": 6
+      },
+      "reasoning_approach": "deductive",
+      "supports_claims": [
+        "C029",
+        "C032"
+      ],
+      "enables_methods": [],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    }
+  ],
+  "methods": [
+    {
+      "method_id": "M001",
+      "method_text": "Bayesian chronology construction using sophisticated statistical modelling to estimate probability of event sequences using prior beliefs and chronological information, applicable to event time, substance time, or both.",
+      "method_type": "statistical_modelling",
+      "method_status": "explicit",
+      "verbatim_quote": "Bayesian chronology construction, a set of practices and software applications actively developed since the late 1980's... provides archaeologists with a sophisticated set of statistical modeling and analysis tools capable of carrying out inductive tests in event time, substance time, or a combination of the two to estimate the probability of sequences of events using prior beliefs and chronological information.",
+      "location": {
+        "section": "Introduction",
+        "page": 5
+      },
+      "implements_designs": [
+        "RD001",
+        "RD004"
+      ],
+      "realized_through_protocols": [
+        "P001",
+        "P002",
+        "P005"
+      ],
+      "produces_evidence": [
+        "E004"
+      ],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P001",
+        "P002",
+        "P005"
+      ]
+    },
+    {
+      "method_id": "M002",
+      "method_text": "Allen's interval algebra method for describing chronological relations between artifact classes, using 13 basic relations that are distinct, exhaustive, and qualitative.",
+      "method_type": "formal_analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "The chronological relations of two artifact classes related genealogically can be described with Allen's interval algebra, which identifies 13 basic relations that are distinct, exhaustive, and qualitative.",
+      "location": {
+        "section": "Allen's Interval Algebra",
+        "page": 6
+      },
+      "implements_designs": [
+        "RD002"
+      ],
+      "realized_through_protocols": [],
+      "produces_evidence": [
+        "E008"
+      ],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "method_id": "M003",
+      "method_text": "Phyletic seriation method constructing artifact type genealogies based on similarity estimates and chronological relations.",
+      "method_type": "seriation",
+      "method_status": "explicit",
+      "verbatim_quote": "The phyletic seriation reported here constructs a genealogy of artifact types based on estimates of their similarity and their chronological relations. In this illustrative example, similarity estimates are derived from type descriptions, rather than developed by an expert.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 11
+      },
+      "implements_designs": [
+        "RD003",
+        "RD005"
+      ],
+      "realized_through_protocols": [
+        "P008"
+      ],
+      "produces_evidence": [
+        "E019",
+        "E034"
+      ],
+      "expected_information_missing": [
+        "Expert-developed similarity estimates not used"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P008"
+      ]
+    },
+    {
+      "method_id": "M004",
+      "method_text": "Mode inference method estimating probability that bead type depositional histories are consistent with particular modes of change (branching, transformation, reticulation) from MCMC samples.",
+      "method_type": "probability_estimation",
+      "method_status": "explicit",
+      "verbatim_quote": "The probability that two bead types' depositional histories are directly related and consistent with a particular mode can be estimated from the MCMC samples from a Bayesian chronological model. The depositional histories of each pair of beads is observed at each iteration of the MCMC output and a tally kept of all relationships that are consistent with each mode.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 15
+      },
+      "implements_designs": [
+        "RD002",
+        "RD005"
+      ],
+      "realized_through_protocols": [
+        "P004",
+        "P007",
+        "P009",
+        "P010"
+      ],
+      "produces_evidence": [
+        "E034",
+        "E037"
+      ],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P004",
+        "P007",
+        "P009",
+        "P010"
+      ]
+    },
+    {
+      "method_id": "M005",
+      "method_text": "Occurrence plot method displaying substance time estimates of when sequential interments occurred without positing order for individual interments.",
+      "method_type": "visualisation",
+      "method_status": "explicit",
+      "verbatim_quote": "Such a plot displays a substance time estimate of when the 1st, 2nd, . . . , 72nd interment occurred, without positing an order for the individual interments. It is produced by ordering the date estimates for each grave at each iteration of the MCMC sample and associating the oldest date with interment 1, the second oldest with interment 2, and so on.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 12,
+        "page_end": 13
+      },
+      "implements_designs": [
+        "RD003"
+      ],
+      "realized_through_protocols": [
+        "P003",
+        "P006"
+      ],
+      "produces_evidence": [],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P003",
+        "P006"
+      ]
+    },
+    {
+      "method_id": "M006",
+      "method_text": "Tempo plot method illustrating bead type deposition histories with mean line reflecting pace of change: steep slope for rapid change, gentle slope for slow change.",
+      "method_type": "visualisation",
+      "method_status": "explicit",
+      "verbatim_quote": "A tempo plot is constructed in the same way as an occurrence plot, but with the addition of a line that follows the mean value of the posterior distribution. The tempo plot yields a graphic where the slope of the mean line directly reflects the pace of change: a period of rapid change yields a steep slope and a period of slow change yields a gentle slope.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 13
+      },
+      "implements_designs": [
+        "RD003"
+      ],
+      "realized_through_protocols": [
+        "P006"
+      ],
+      "produces_evidence": [
+        "E029",
+        "E030"
+      ],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P006"
+      ]
+    },
+    {
+      "method_id": "M007",
+      "method_text": "Paradigmatic classification method using presence/absence criteria represented as graph to identify potential ancestors in reticulation based on graph distance preserving similarity.",
+      "method_type": "classification",
+      "method_status": "explicit",
+      "verbatim_quote": "The procedure to identify potential ancestors in a reticulation can be formalized and illustrated with a refinement of a graph theoretic approach, which is used to order stylistic descriptions of artifacts with a principle of parsimony. The refinement uses a paradigmatic classification based on presence/absence criteria, which can yield an occurrence seriation in certain cases.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 18
+      },
+      "implements_designs": [
+        "RD002"
+      ],
+      "realized_through_protocols": [
+        "P010"
+      ],
+      "produces_evidence": [
+        "E037"
+      ],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P010"
+      ]
+    },
+    {
+      "method_id": "M008",
+      "method_text": "Analytical derivation of Allen relations for modes of change using composition operation to deduce indirect relations between intervals through common third interval.",
+      "method_type": "formal_analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "Chronological relations of the modes of change can be established analytically by Allen's interval algebra. The Allen set that describes direct relations between two intervals can be constructed with the aid of the chart of basic relations and indirect relations between two intervals, each of which is directly related to a common third interval, can be deduced with a composition operation.",
+      "location": {
+        "section": "Chronological Relations of Modes of Change",
+        "page": 8
+      },
+      "implements_designs": [
+        "RD002"
+      ],
+      "realized_through_protocols": [],
+      "produces_evidence": [
+        "E012",
+        "E014",
+        "E016"
+      ],
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    }
+  ],
+  "protocols": [
+    {
+      "protocol_id": "P001",
+      "protocol_text": "OxCal model implementation using version 4.4.2 with IntCal20 calibration curve. Model comprises two sections: first defining likelihoods and constraints, second defining occurrences for each bead type.",
+      "protocol_type": "software_configuration",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The revised chronological model was implemented in OxCal and is included in the Supplement. It comprises two sections; the first defines the likelihoods and their constraints, and the second defines occurrences for each of the bead types. The revised model calibrates with OxCal version 4.4.2 and the IntCal20 calibration curve.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 12
+      },
+      "implements_methods": [
+        "M001"
+      ],
+      "produces_evidence": [
+        "E027"
+      ],
+      "parameters": {
+        "software": "OxCal",
+        "version": "4.4.2",
+        "calibration_curve": "IntCal20"
+      },
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P002",
+      "protocol_text": "MCMC validation protocol running five independent runs to assess between-run variability and ensure replicable, stable calibration results.",
+      "protocol_type": "validation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "As described in the Supplement, five independent runs of the model indicate negligible between-run variability. Results of the calibration are replicable and stable; they provide a suitable basis for exploring MCMC output and, in particular, constructing a phyletic seriation of beads.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 12
+      },
+      "implements_methods": [
+        "M001"
+      ],
+      "produces_evidence": [
+        "E027"
+      ],
+      "parameters": {
+        "independent_runs": 5,
+        "validation_criterion": "negligible between-run variability"
+      },
+      "expected_information_missing": [
+        "Convergence diagnostics not specified"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P003",
+      "protocol_text": "Occurrence plot construction procedure: order date estimates for each grave at each MCMC iteration, associate oldest date with interment 1, second oldest with interment 2, etc., then summarise using 95% highest posterior density intervals.",
+      "protocol_type": "data_processing",
+      "protocol_status": "explicit",
+      "verbatim_quote": "It is produced by ordering the date estimates for each grave at each iteration of the MCMC sample and associating the oldest date with interment 1, the second oldest with interment 2, and so on. By collecting the date estimates together in this way, we are not estimating the date of any single grave, but we can make statements about the current state of knowledge of the date of the first, second, third and seventy-second oldest grave in the dataset e.g. by summarizing them using 95% highest posterior density (or credibility) intervals.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 12,
+        "page_end": 13
+      },
+      "implements_methods": [
+        "M005"
+      ],
+      "produces_evidence": [],
+      "parameters": {
+        "credibility_interval": "95%",
+        "summary_method": "highest posterior density"
+      },
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P004",
+      "protocol_text": "Mode probability tallying procedure: observe depositional histories of each bead pair at each MCMC iteration, tally relationships consistent with each mode, divide by total MCMC samples to yield proportion/probability.",
+      "protocol_type": "probability_calculation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The depositional histories of each pair of beads is observed at each iteration of the MCMC output and a tally kept of all relationships that are consistent with each mode. The tallies are then divided by the total number of MCMC samples to provide the proportion (and hence probability) of all samples that are consistent with the modes of interest.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 15
+      },
+      "implements_methods": [
+        "M004"
+      ],
+      "produces_evidence": [
+        "E034"
+      ],
+      "parameters": {},
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P005",
+      "protocol_text": "Constraint removal protocol: retain stratigraphic and known-age artifact constraints from Bayliss et al. model, but remove (i) uniform burial distribution sequence, (ii) occurrence seriation non-overlapping bead-type sequences, and (iii) combined age determination for MaDE1/MaDE2 that fails chi-squared test.",
+      "protocol_type": "model_modification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "These stratigraphic and known age artifact constraints were all retained in our own modeling, but other constraints in the Bayliss et al. (2013) chronological prior were removed including: (i) a sequence that models 'all the radiocarbon dates for the female graves as a continuous, uniformly distributed period of burial' because we were uncertain it was useful and preferred to explore evidence for burial tempo a posteriori, rather than impose a uniform distribution a priori; (ii) a sequence based on non-overlapping occurrences of bead-types derived from the occurrence seriation, which omits several beads believed to be 'anomalously old when buried' and introduces model constraints stronger than the underlying analysis; and (iii) a combined age determination for two burials, MaDE1 and MaDE2, which fails a \u03c7\u00b2 test for combining age determinations at the 5 percent level, apparently due to an outlier age determination for burial MaDE1.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 11,
+        "page_end": 12
+      },
+      "implements_methods": [
+        "M001"
+      ],
+      "produces_evidence": [],
+      "parameters": {
+        "chi_squared_significance_level": "5%"
+      },
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P006",
+      "protocol_text": "ArchaeoPhases R package implementation for generating occurrence and tempo plots from MCMC output.",
+      "protocol_type": "software_implementation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "ArchaeoPhases code to reproduce the figure is included in the Supplement.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 14,
+        "context": "Figure 3 caption"
+      },
+      "implements_methods": [
+        "M005",
+        "M006"
+      ],
+      "produces_evidence": [],
+      "parameters": {
+        "software": "ArchaeoPhases",
+        "language": "R"
+      },
+      "expected_information_missing": [
+        "R version not specified",
+        "ArchaeoPhases version not specified"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P007",
+      "protocol_text": "Branching inference protocol: assess probability that observed relation between potential ancestor and descendant bead types satisfies expected branching relation ancestor(oFD)descendant using MCMC tallying.",
+      "protocol_type": "inference_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Inference of branching change is based on the similarity of two bead types, augmented by chronological information that the period of deposition of the ancestor overlaps, is finished by, or contains that of the descendant, ancestor(oFD)descendant. In the case of the Anglo-Saxon beads, an inference of branching change will imply a relation between an early bead type and one of the later monochrome glass, shell, or mineral bead types.",
+      "location": {
+        "section": "Phyletic Seriation of Anglo-Saxon Beads",
+        "page": 17
+      },
+      "implements_methods": [
+        "M004"
+      ],
+      "produces_evidence": [
+        "E034"
+      ],
+      "parameters": {
+        "expected_allen_relation": "ancestor(oFD)descendant"
+      },
+      "expected_information_missing": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P008",
+      "protocol_text": "Similarity estimation procedure deriving similarity estimates from type descriptions rather than expert-developed assessments, used to establish genealogical plausibility between bead types.",
+      "protocol_type": "assessment_procedure",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "In this illustrative example, similarity estimates are derived from type descriptions, rather than developed by an expert.",
+        "The phyletic seriation reported here constructs a genealogy of artifact types based on estimates of their similarity and their chronological relations."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 11
+        },
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 11
+        }
+      ],
+      "inference_reasoning": "The paper explicitly states similarity estimates are 'derived from type descriptions' but provides no documentation of how this derivation was performed. What specific type description attributes were compared? How were similarities quantified or categorised? The procedure for translating textual type descriptions into similarity assessments is not documented anywhere in Methods.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Similarity estimation mentioned as derived from type descriptions but no documentation of: which attributes compared, how similarities quantified, decision thresholds for relatedness, or validation of similarity assessments.",
+        "assessability_impact": "Cannot verify similarity judgments or assess their validity. Cannot determine if similarity estimates are reproducible or subject to interpretive variation.",
+        "reconstruction_confidence": "low"
+      },
+      "implements_methods": [
+        "M003"
+      ],
+      "produces_evidence": [
+        "E019"
+      ],
+      "expected_information_missing": [
+        "Attribute comparison criteria",
+        "Similarity quantification method",
+        "Decision thresholds"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inference_from_text"
+      }
+    },
+    {
+      "protocol_id": "P009",
+      "protocol_text": "Transformation mode inference procedure assessing probability that two bead types' depositional histories satisfy expected transformation relation type1(mos)type2 using MCMC tallying, distinct from branching inference.",
+      "protocol_type": "inference_procedure",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "The expected Allen set for transformation, where type1 is transformed into type2, is type1(mos)type2.",
+        "The probability that two bead types' depositional histories are directly related and consistent with a particular mode can be estimated from the MCMC samples from a Bayesian chronological model.",
+        "Neither transformation nor reticulation is a plausible mode of change for these early polychrome types"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Chronological Relations of Modes of Change",
+          "page": 9
+        },
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 15
+        },
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 17
+        }
+      ],
+      "inference_reasoning": "While P007 documents branching inference explicitly with its Allen relation (oFD), the parallel transformation inference procedure using Allen relation (mos) is only implied. The paper provides the theoretical Allen set for transformation but does not give a parallel procedural description to P007 explaining how transformation is inferred in practice. The Results section refers to transformation findings without documenting the inference procedure.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Transformation Allen set (mos) documented theoretically, but no procedural description parallel to P007 for branching. How is transformation distinguished from other modes in practice?",
+        "assessability_impact": "Transformation mode results can be interpreted, but the specific procedural implementation cannot be verified or reproduced without more documentation.",
+        "reconstruction_confidence": "medium"
+      },
+      "implements_methods": [
+        "M004"
+      ],
+      "produces_evidence": [
+        "E034"
+      ],
+      "parameters": {
+        "expected_allen_relation": "type1(mos)type2"
+      },
+      "expected_information_missing": [
+        "Procedural description parallel to P007"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inference_from_text"
+      }
+    },
+    {
+      "protocol_id": "P010",
+      "protocol_text": "Reticulation inference procedure combining graph-theoretic paradigmatic classification with chronological evidence to identify genealogical relations arising from hybridisation or recombination of artifact type features.",
+      "protocol_type": "inference_procedure",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "The procedure to identify potential ancestors in a reticulation can be formalized and illustrated with a refinement of a graph theoretic approach",
+        "A reticulate relationship was identified with the overlapping deposition of BlackGlass, shell, and mineral beads and an earlier polychrome bead type, B1a.",
+        "Neither transformation nor reticulation is a plausible mode of change for these early polychrome types"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 18
+        },
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 17
+        },
+        {
+          "section": "Phyletic Seriation of Anglo-Saxon Beads",
+          "page": 17
+        }
+      ],
+      "inference_reasoning": "M007 describes the paradigmatic classification approach conceptually, but the complete reticulation inference procedure combining similarity (from graph distance) with chronological evidence (from MCMC output) is not as procedurally documented as branching (P007). The paper identifies reticulation in results without fully documenting how graph-theoretic approach + chronological analysis are combined operationally.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Graph-theoretic approach and paradigmatic classification described conceptually (M007), but operational procedure for combining with MCMC chronological evidence not fully documented. How are graph distance + Allen relations + similarity jointly evaluated?",
+        "assessability_impact": "Reticulation findings interpretable, but operational procedure for identifying reticulations cannot be precisely replicated without additional documentation.",
+        "reconstruction_confidence": "medium"
+      },
+      "implements_methods": [
+        "M004",
+        "M007"
+      ],
+      "produces_evidence": [
+        "E037"
+      ],
+      "expected_information_missing": [
+        "Operational combination of graph distance + Allen relations + similarity assessment"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inference_from_text"
+      }
+    }
+  ],
+  "extraction_notes": {
+    "passes_completed": [
+      "pass0",
+      "pass6",
+      "pass1",
+      "pass2",
+      "pass3",
+      "pass4",
+      "pass5",
+      "pass7"
+    ],
+    "session_completed": "D_complete",
+    "pass": 5,
+    "section_extracted": "All 6 section groups (Abstract+Introduction, Allen's Interval Algebra, Chronological Relations of Modes of Change, Phyletic Seriation Part 1, Phyletic Seriation Part 2, Discussion+Conclusion)",
+    "paper_characteristics": {
+      "length": "29 pages (5,681 words)",
+      "structure": "Introduction, Allen's Interval Algebra, Chronological Relations of Modes of Change, Phyletic Seriation of Anglo-Saxon Beads, Discussion, Conclusion",
+      "paper_type": "methodological",
+      "empirical_component": "Worked example using Anglo-Saxon bead data from Hines & Bayliss (2013)",
+      "theoretical_component": "Distinction between event time and substance time; application of Allen's interval algebra to modes of change"
+    },
+    "section_groups_planned": [
+      {
+        "group": 1,
+        "sections": "Abstract + Introduction (Section 1)",
+        "pages": "2-4",
+        "estimated_words": 900,
+        "content_summary": "Distinguishes event time (stratigraphic) from substance time (genealogical), introduces three modes of change"
+      },
+      {
+        "group": 2,
+        "sections": "Section 2: Allen's Interval Algebra",
+        "pages": "5-6",
+        "estimated_words": 700,
+        "content_summary": "Introduces 13 basic Allen relations, Allen sets, N\u00f6kel lattice visualisation"
+      },
+      {
+        "group": 3,
+        "sections": "Section 3: Chronological Relations of Modes of Change",
+        "pages": "7-9",
+        "estimated_words": 800,
+        "content_summary": "Analytical derivation of Allen relations for branching, transformation, reticulation"
+      },
+      {
+        "group": 4,
+        "sections": "Section 4: Phyletic Seriation of Anglo-Saxon Beads (part 1)",
+        "pages": "9-14",
+        "estimated_words": 1200,
+        "content_summary": "Data sources, chronological model, occurrence plots, tempo plots"
+      },
+      {
+        "group": 5,
+        "sections": "Section 4: Phyletic Seriation of Anglo-Saxon Beads (part 2)",
+        "pages": "14-18",
+        "estimated_words": 1100,
+        "content_summary": "Mode inference (transformation, branching, reticulation), paradigmatic classification"
+      },
+      {
+        "group": 6,
+        "sections": "Section 5: Discussion + Section 6: Conclusion",
+        "pages": "19-23",
+        "estimated_words": 1400,
+        "content_summary": "Comparison with Hines & Bayliss event time analysis, phase deposition model critique, substance time for historical inference"
+      }
+    ],
+    "infrastructure_notes": [
+      "All 4 authors have ORCIDs - excellent author identification",
+      "ArchaeoPhases R package on CRAN - stable software infrastructure",
+      "Uses published ADS dataset (Hines 2013) with DOI - good data provenance",
+      "Supplement contains model and code but lacks independent DOI",
+      "CC-BY-NC-ND licence for paper - allows sharing but not derivatives",
+      "No explicit funding statement"
+    ],
+    "pass1_notes": {
+      "evidence_count": 50,
+      "claims_count": 46,
+      "implicit_arguments_count": 7,
+      "core_claims_identified": [
+        "C001",
+        "C002",
+        "C003",
+        "C006",
+        "C037",
+        "C040",
+        "C041",
+        "C046"
+      ],
+      "extraction_strategy": "Liberal extraction following Pass 1 guidelines. Comprehensive capture of theoretical framework (event time vs substance time), Allen's interval algebra application, empirical case study findings, and methodological arguments. Systematic 4-type implicit argument search completed for all core claims.",
+      "compound_claims_noted": "Several compound claims extracted as single units (e.g., C041 combining necessity and sufficiency arguments). May be split in Pass 2 if evidence supports different parts.",
+      "uncertainties": [
+        "Some evidence items from Discussion section (E040-E048) relate to critique of Bayliss et al. rather than positive claims - retained for supporting comparative arguments",
+        "Implicit argument IA007 involves inference about manufacturing technique as genealogical evidence - uncertain whether this is explicit or implicit in author's reasoning"
+      ]
+    },
+    "pass2_notes": {
+      "items_before_rationalisation": 103,
+      "items_after_rationalisation": 87,
+      "reduction_percentage": 15.5,
+      "consolidations_performed": 15,
+      "additions_performed": 0,
+      "boundary_corrections": 1,
+      "evidence_consolidations": [
+        {
+          "from": [
+            "E004",
+            "E005"
+          ],
+          "to": "E004",
+          "type": "compound_finding",
+          "rationale": "Historical development and software capability consolidated"
+        },
+        {
+          "from": [
+            "E008",
+            "E009"
+          ],
+          "to": "E008",
+          "type": "identical_support_pattern",
+          "rationale": "Both define Allen's algebra properties with same claim support"
+        },
+        {
+          "from": [
+            "E012",
+            "E013"
+          ],
+          "to": "E012",
+          "type": "identical_support_pattern",
+          "rationale": "Branching mode direct relation and composition operation consolidated"
+        },
+        {
+          "from": [
+            "E014",
+            "E015"
+          ],
+          "to": "E014",
+          "type": "identical_support_pattern",
+          "rationale": "Transformation mode direct relation and composition operation consolidated"
+        },
+        {
+          "from": [
+            "E016",
+            "E017"
+          ],
+          "to": "E016",
+          "type": "identical_support_pattern",
+          "rationale": "Reticulation mode direct relation and composition operation consolidated"
+        },
+        {
+          "from": [
+            "E020",
+            "E021"
+          ],
+          "to": "E020",
+          "type": "granularity_reduction",
+          "rationale": "Both describe data sources contributing to corpus"
+        },
+        {
+          "from": [
+            "E023",
+            "E024",
+            "E025"
+          ],
+          "to": "E023",
+          "type": "compound_finding",
+          "rationale": "All dating constraints consolidated"
+        },
+        {
+          "from": [
+            "E034",
+            "E035",
+            "E036"
+          ],
+          "to": "E034",
+          "type": "compound_finding",
+          "rationale": "Branching probability calculations consolidated"
+        },
+        {
+          "from": [
+            "E037",
+            "E038"
+          ],
+          "to": "E037",
+          "type": "compound_finding",
+          "rationale": "BE1-Dghnt characteristics and reticulation inference consolidated"
+        },
+        {
+          "from": [
+            "E043",
+            "E044"
+          ],
+          "to": "E043",
+          "type": "identical_support_pattern",
+          "rationale": "Non-overlapping relations analysis consolidated"
+        },
+        {
+          "from": [
+            "E046",
+            "E047"
+          ],
+          "to": "E046",
+          "type": "identical_support_pattern",
+          "rationale": "Phase deposition model effects consolidated"
+        }
+      ],
+      "claims_consolidations": [
+        {
+          "from": [
+            "C007",
+            "C008"
+          ],
+          "to": "C007",
+          "type": "narrative_consolidation",
+          "rationale": "Allen's algebra utility claims consolidated"
+        },
+        {
+          "from": [
+            "C029",
+            "C030"
+          ],
+          "to": "C029",
+          "type": "narrative_consolidation",
+          "rationale": "Occurrence seriation critique consolidated"
+        },
+        {
+          "from": [
+            "C032",
+            "C033"
+          ],
+          "to": "C032",
+          "type": "narrative_consolidation",
+          "rationale": "Phase deposition critique consolidated"
+        },
+        {
+          "from": [
+            "C038",
+            "C039"
+          ],
+          "to": "C038",
+          "type": "compound_interpretation",
+          "rationale": "Universal/conditional factors and absolute time benefit consolidated"
+        }
+      ],
+      "boundary_corrections_detail": [
+        {
+          "item": "E026",
+          "action": "moved_to_metadata",
+          "rationale": "Orphaned evidence (chi-squared test result justifying model constraint removal) - methodological context moved to project_metadata"
+        }
+      ],
+      "cross_reference_updates": "All evidence references in claims updated to consolidated IDs. Implicit argument IA002 updated to reference C007 (consolidated from C007+C008)."
+    },
+    "pass3_notes": {
+      "research_designs_count": 6,
+      "methods_count": 8,
+      "protocols_count": 7,
+      "extraction_strategy": "Liberal explicit RDMAP extraction from all sections. Identified theoretical framework (event vs substance time), methodological innovations (Allen's algebra for genealogical change), and case study protocols (OxCal, ArchaeoPhases, mode inference procedures).",
+      "research_designs_extracted": [
+        "RD001: Theoretical framework distinguishing event time from substance time",
+        "RD002: Application of Allen's interval algebra to mode identification",
+        "RD003: Case study design using Anglo-Saxon bead data",
+        "RD004: Goal of establishing best practices for phyletic seriation",
+        "RD005: Revised chronological model after constraint removal",
+        "RD006: Comparative analysis with Bayliss et al. event-time approach"
+      ],
+      "methods_extracted": [
+        "M001: Bayesian chronological modelling",
+        "M002: Allen's interval algebra for relation inference",
+        "M003: Phyletic seriation using genealogical relations",
+        "M004: Mode of change inference from Allen sets",
+        "M005: Occurrence plot construction",
+        "M006: Tempo plot construction",
+        "M007: Paradigmatic classification",
+        "M008: Analytical derivation of Allen relations"
+      ],
+      "protocols_extracted": [
+        "P001: OxCal combined age determination",
+        "P002: MCMC output validation",
+        "P003: Occurrence plot procedure",
+        "P004: Mode tallying from tempo plots",
+        "P005: Constraint removal protocol",
+        "P006: ArchaeoPhases tempo computation",
+        "P007: Branching inference procedure"
+      ],
+      "uncertainties": [
+        "Some protocols (e.g., P007 branching inference) may benefit from additional implicit steps in Pass 4",
+        "Mode inference thresholds (sufficient proportion for confident inference) not explicitly quantified"
+      ]
+    },
+    "pass4_notes": {
+      "implicit_items_added": 3,
+      "total_research_designs": 6,
+      "total_methods": 8,
+      "total_protocols": 10,
+      "explicit_protocols": 7,
+      "implicit_protocols": 3,
+      "extraction_strategy": "Systematic 4-pattern implicit RDMAP scan. Identified protocols mentioned but undocumented (Pattern 1) and inferred from results (Pattern 2). No consolidation required - explicit items appropriately granular.",
+      "implicit_items_extracted": [
+        {
+          "id": "P008",
+          "type": "protocol",
+          "basis": "mentioned_undocumented",
+          "description": "Similarity estimation from type descriptions",
+          "transparency_gap": "Procedure for deriving similarity from type descriptions not documented"
+        },
+        {
+          "id": "P009",
+          "type": "protocol",
+          "basis": "mentioned_undocumented",
+          "description": "Transformation mode inference procedure",
+          "transparency_gap": "Allen relation (mos) documented theoretically but procedural implementation not specified like branching (P007)"
+        },
+        {
+          "id": "P010",
+          "type": "protocol",
+          "basis": "mentioned_undocumented",
+          "description": "Reticulation inference procedure",
+          "transparency_gap": "Graph-theoretic approach conceptually described but operational combination with chronological evidence not documented"
+        }
+      ],
+      "bidirectional_updates": [
+        "M003.realized_through_protocols: added P008",
+        "M004.realized_through_protocols: added P007, P009, P010",
+        "M007.realized_through_protocols: added P010"
+      ],
+      "consolidation_performed": false,
+      "consolidation_rationale": "Explicit RDMAP items from Pass 3 were appropriately granular. No redundancy or over-extraction detected. 6 RD, 8 M, 7 explicit P represent distinct methodological components."
+    },
+    "pass5_notes": {
+      "validation_type": "RDMAP rationalisation and bidirectional reference validation",
+      "consolidation_performed": false,
+      "consolidation_rationale": "No consolidation needed - RDMAP items were appropriately granular from Pass 3-4",
+      "bidirectional_fixes": [
+        "Added enables_methods to all 6 research designs (RD001-RD006)",
+        "Fixed M001.realized_through_protocols: added P005 (was missing)",
+        "Fixed M003.realized_through_protocols: removed P003, P004 (these implement M005, M004 respectively)"
+      ],
+      "tier_assignment_review": "All tier assignments verified correct: 6 RDs answer WHY, 8 Ms answer WHAT, 10 Ps answer HOW",
+      "boundary_review": "No RDMAP vs claims boundary issues detected",
+      "final_counts": {
+        "research_designs": 6,
+        "methods": 8,
+        "protocols_total": 10,
+        "protocols_explicit": 7,
+        "protocols_implicit": 3
+      },
+      "rdmap_hierarchy_verified": {
+        "RD001": {
+          "enables": [
+            "M001"
+          ]
+        },
+        "RD002": {
+          "enables": [
+            "M002",
+            "M004",
+            "M007",
+            "M008"
+          ]
+        },
+        "RD003": {
+          "enables": [
+            "M003",
+            "M005",
+            "M006"
+          ]
+        },
+        "RD004": {
+          "enables": [
+            "M001"
+          ]
+        },
+        "RD005": {
+          "enables": [
+            "M003",
+            "M004"
+          ]
+        },
+        "RD006": {
+          "enables": [],
+          "note": "Comparative framing design - no methods directly implement it"
+        }
+      }
+    },
+    "pass7_notes": {
+      "validation_type": "structural_integrity_and_cross_reference",
+      "automated_validators_run": [
+        "validate_bidirectional.py (25 auto-corrections made)",
+        "validate_extraction.py (12 page format fixes applied, all checks pass)"
+      ],
+      "validation_results": {
+        "cross_reference_integrity": "PASS - 25 bidirectional mappings auto-corrected",
+        "hierarchy_validation": "PASS - 100% method\u2192design and protocol\u2192method linking",
+        "schema_compliance": "PASS - all required fields present, ID formats correct",
+        "source_verification": {
+          "evidence": "100% (36/36 with verbatim_quote)",
+          "claims": "100% (42/42 with verbatim_quote)",
+          "implicit_arguments": "100% (7/7 with trigger_text)",
+          "implicit_protocols": "100% (3/3 with required fields)"
+        },
+        "consolidation_metadata": "PASS - 15 items with complete metadata"
+      },
+      "issues_found_and_resolved": [
+        "12 page ranges converted to integer format (e.g., '4-5' \u2192 4 with page_end=5)",
+        "25 missing reverse mappings added by bidirectional validator"
+      ],
+      "validation_status": "PASS",
+      "notes": [
+        "RD006 (comparative analysis design) has no implementing methods - acceptable for framing design",
+        "All 3 implicit protocols (P008, P009, P010) have complete implicit_metadata"
+      ]
+    },
+    "fair_assessment_notes": {
+      "assessment_validated": true,
+      "total_score": "26/40 (65%)",
+      "strengths": [
+        "Paper DOI present (10.1016/j.jas.2023.105765)",
+        "100% author ORCID coverage (4/4 authors)",
+        "ArchaeoPhases R package on CRAN with stable software infrastructure",
+        "Uses published Archaeological Data Service dataset (DOI: 10.5284/1018290)",
+        "Data availability statement present"
+      ],
+      "limitations": [
+        "Supplement materials lack independent DOI (only journal-attached)",
+        "OxCal model code in supplement lacks explicit licence",
+        "No formal data schema documentation",
+        "CC-BY-NC-ND restricts derivatives"
+      ],
+      "reproducibility_assessment": {
+        "analytical_reproducibility": "HIGH - OxCal model and R code provided",
+        "computational_reproducibility": "MODERATE - requires OxCal (proprietary) and R (open)",
+        "data_reuse_potential": "MODERATE - based on published ADS dataset, but supplement not independently archived"
+      }
+    }
+  }
+}

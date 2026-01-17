@@ -63,6 +63,7 @@ papers:
     assessment_summary:
       verdict: excellent
       aggregate_score: 84
+      primary_signals_mean: 90
       comprehensibility: 88
       transparency: 92
       plausibility: 82
@@ -72,7 +73,7 @@ papers:
       reproducibility: 90
       reproduction_priority: 1
       execution_feasibility: ready
-    notes: "Exemplary compendium. Code reviewed by Ben Marwick. Run comparison complete - session-per-pass preferred. Pass 9 assessment complete (2026-01-13): Excellent verdict, 84 aggregate. Priority 1 for reproduction attempt."
+    notes: "Exemplary compendium. Code reviewed by Ben Marwick. Run comparison complete - session-per-pass preferred. Pass 9 assessment complete (2026-01-13): Excellent verdict (primary mean 90), 84 aggregate. Priority 1 for reproduction attempt."
 
   - slug: marwick-2025
     title: "Is archaeology a science? Insights and imperatives from 10,000 articles and a year of reproducibility reviews"
@@ -107,6 +108,7 @@ papers:
     assessment_summary:
       verdict: excellent
       aggregate_score: 81
+      primary_signals_mean: 88.3
       comprehensibility: 85
       transparency: 90
       plausibility: 80
@@ -116,7 +118,7 @@ papers:
       reproducibility: 90
       reproduction_priority: 2
       execution_feasibility: ready
-    notes: "Meta-analysis by JAS Reproducibility Specialist. Exemplary reproducibility (90/100) and FAIR compliance (93.75%). Pass 9 complete (2026-01-14): Excellent verdict, 81 aggregate. Paper exemplifies practices it advocates. Priority 2 for reproduction attempt."
+    notes: "Meta-analysis by JAS Reproducibility Specialist. Exemplary reproducibility (90/100) and FAIR compliance (93.75%). Pass 9 complete (2026-01-14): Excellent verdict (primary mean 88.3), 81 aggregate. Paper exemplifies practices it advocates. Priority 2 for reproduction attempt."
 
   - slug: key-et-al-2024
     title: "Identifying accurate artefact morphological ranges using optimal linear estimation: Method validation, case studies, and code"
@@ -150,8 +152,9 @@ papers:
       fair_score: "9/15 (60%)"
       fair_rating: moderately_fair
     assessment_summary:
-      verdict: strong
+      verdict: good
       aggregate_score: 81
+      primary_signals_mean: 78
       comprehensibility: 88
       transparency: 78
       plausibility: 85
@@ -161,25 +164,52 @@ papers:
       reproducibility: 68
       reproduction_priority: 3
       execution_feasibility: needs_work
-    notes: "Complete (2026-01-14). Methods paper on OLE morphometric range estimation. 12 authors. Excellent validation design (ground truth testing). Strong overall credibility (81 mean). Reproducibility limited by supplementary-only code/data (no DOIs). Priority 3 for reproduction (needs dependency inference)."
+    notes: "Complete (2026-01-14). Methods paper on OLE morphometric range estimation. 12 authors. Excellent validation design (ground truth testing). Good verdict (primary mean 78). Reproducibility (68) limits primary signal average. Priority 3 for reproduction (needs dependency inference)."
 
   - slug: herskind-riede-2024
     title: "A computational linguistic methodology for assessing semiotic structure in prehistoric art and the meaning of southern Scandinavian Mesolithic ornamentation"
     authors: "Herskind, L.L.P., Riede, F."
     year: 2024
     doi: "10.1016/j.jas.2024.105969"
-    code_repository: null  # To verify from paper
-    code_verified: false
-    status: pending
+    code_repository: "https://doi.org/10.5281/zenodo.10623550"
+    code_verified: true
+    status: completed
     steps:
       pdf_obtained: true
       text_extracted: false
-      extraction_complete: false
-      classification_complete: false
-      assessment_complete: false
-      fair_assessed: false
+      extraction_complete: true  # Pass 0-7 complete 2026-01-17
+      classification_complete: true  # Pass 8 complete 2026-01-17
+      assessment_complete: true  # Pass 9 complete 2026-01-17
+      fair_assessed: true  # FAIR 10/16 (62.5%)
       reproduction_attempted: false
-    notes: "JAS-SAS Emerging Investigator Award 2024. Verify code availability."
+    classification_summary:
+      paper_type: methodological
+      validation_approach: inductive
+      category_fit: good
+      transparency_quality: high
+      confidence: high
+    extraction_summary:
+      evidence_count: 29
+      claims_count: 33
+      implicit_arguments_count: 6
+      research_designs_count: 6
+      methods_count: 8
+      protocols_count: 9
+      fair_score: "10/16 (62.5%)"
+    assessment_summary:
+      verdict: good
+      aggregate_score: 74
+      primary_signals_mean: 81.7
+      comprehensibility: 83
+      transparency: 82
+      plausibility: 78
+      validity: 72
+      robustness: 55
+      generalisability: 70
+      reproducibility: 80
+      reproduction_priority: 4
+      execution_feasibility: ready
+    notes: "JAS-SAS Emerging Investigator Award 2024. Computational linguistics methodology for Mesolithic art analysis. Pass 9 complete (2026-01-17): Good verdict (primary mean 81.7), 74 aggregate. R scripts + data in Zenodo. Priority 4 for reproduction (ready but lower priority than exemplary papers)."
 
   - slug: dye-et-al-2023
     title: "Bayesian Chronology Construction and Substance Time"
@@ -188,30 +218,72 @@ papers:
     doi: "10.1016/j.jas.2023.105765"
     code_repository: "https://cran.r-project.org/package=ArchaeoPhases"
     code_verified: true
-    status: pending
+    status: completed
     steps:
       pdf_obtained: true
       text_extracted: false
-      extraction_complete: false
-      classification_complete: false
-      assessment_complete: false
-      fair_assessed: false
+      extraction_complete: true  # Pass 0-7 complete 2026-01-17
+      classification_complete: true  # Pass 8 complete 2026-01-17
+      assessment_complete: true  # Pass 9 complete 2026-01-17
+      fair_assessed: true  # FAIR 26/40 (65%)
       reproduction_attempted: false
-    notes: "Associated with CRAN package ArchaeoPhases."
+    classification_summary:
+      paper_type: methodological
+      validation_approach: mixed
+      category_fit: excellent
+      transparency_quality: high
+      confidence: high
+    extraction_summary:
+      evidence_count: 36
+      claims_count: 42
+      implicit_arguments_count: 7
+      research_designs_count: 6
+      methods_count: 8
+      protocols_count: 10
+      fair_score: "26/40 (65%)"
+      fair_rating: moderately_fair
+    assessment_summary:
+      verdict: good
+      aggregate_score: 77
+      primary_signals_mean: 84.3
+      comprehensibility: 88
+      transparency: 85
+      plausibility: 82
+      validity: 78
+      robustness: 58
+      generalisability: 70
+      reproducibility: 80
+      reproduction_priority: 5
+      execution_feasibility: ready
+    notes: "Complete (2026-01-17). Methodological paper on event time vs substance time distinction with Allen's interval algebra. CRAN package ArchaeoPhases. 100% ORCID coverage. Pass 9 complete: Good verdict (primary mean 84.3), 77 aggregate. Priority 5 for reproduction (ready, ArchaeoPhases on CRAN provides stable starting point)."
 
-# Progress summary (updated 2026-01-14)
-# Extraction completed: 3/5 (crema-et-al-2024, marwick-2025, key-et-al-2024)
-# Classification completed: 3/5 (crema-et-al-2024: methodological/deductive; marwick-2025: meta_research/inductive; key-et-al-2024: methodological/deductive)
-# FAIR assessed: 3/5 (crema-et-al-2024: highly_fair; marwick-2025: 93.75%; key-et-al-2024: 60%)
-# Assessment completed: 3/5 (crema-et-al-2024: 84, marwick-2025: 81, key-et-al-2024: 81)
+# Progress summary (updated 2026-01-17)
+# Extraction completed: 5/5 (all pilot papers)
+# Classification completed: 5/5 (all pilot papers)
+# FAIR assessed: 5/5 (crema: highly_fair; marwick: 93.75%; key: 60%; herskind: 62.5%; dye: 65%)
+# Assessment completed: 5/5 (crema: 84, marwick: 81, key: 81, herskind: 74, dye: 77)
 # Reproduction attempted: 0/5
-# Completed: 3/5 (crema-et-al-2024, marwick-2025, key-et-al-2024)
-# Pending: 2/5 (herskind-riede-2024, dye-et-al-2023)
+# Full pipeline (Pass 0-9) complete: 5/5 (ALL PILOT PAPERS COMPLETE)
+#
+# Verdict criteria (formalised 2026-01-17):
+#   Verdict is based on PRIMARY SIGNAL MEAN (not aggregate). Thresholds:
+#   ≥85 = Excellent | 70-84 = Good | 55-69 = Acceptable | 40-54 = Weak | <40 = Very Weak
+#   Primary signals for methodological/meta-research: Comprehensibility, Transparency, Reproducibility
+#   See: .claude/skills/research-assessor/references/credibility/verdict-criteria.md
+#
+# Verdicts by primary signal mean:
+#   1. crema-et-al-2024: Excellent (primary mean 90.0)
+#   2. marwick-2025: Excellent (primary mean 88.3)
+#   3. dye-et-al-2023: Good (primary mean 84.3)
+#   4. herskind-riede-2024: Good (primary mean 81.7)
+#   5. key-et-al-2024: Good (primary mean 78.0)
 #
 # Reproduction priority queue:
 #   1. crema-et-al-2024 (90/100 reproducibility, execution_feasibility: ready)
 #   2. marwick-2025 (90/100 reproducibility, execution_feasibility: ready)
 #   3. key-et-al-2024 (68/100 reproducibility, execution_feasibility: needs_work)
+#   4. herskind-riede-2024 (80/100 reproducibility, execution_feasibility: ready)
+#   5. dye-et-al-2023 (80/100 reproducibility, execution_feasibility: ready)
 #
 # Methodology finding: Session-per-pass extraction yielded +75% claims, +100% research designs
 # vs autonomous for complex methodological papers. Recommended for remaining pilot papers.
@@ -219,4 +291,5 @@ papers:
 # Text vs PDF finding: Text extraction achieves 91.5% of PDF counts. PDF preferred for
 # page number preservation. See archive/extraction-runs/key-et-al-2024-text-vs-pdf-comparison/
 #
-# Next paper: herskind-riede-2024 (JAS-SAS Emerging Investigator Award 2024)
+# Phase 1 status: COMPLETE. All 5 pilot papers have completed full extraction and assessment
+# pipeline (Pass 0-9). Next step: reproduction attempts starting with crema-et-al-2024.
