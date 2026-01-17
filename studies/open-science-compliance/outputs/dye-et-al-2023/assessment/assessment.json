@@ -1,0 +1,179 @@
+{
+  "assessment_metadata": {
+    "paper_slug": "dye-et-al-2023",
+    "assessment_date": "2026-01-17",
+    "assessor_version": "v0.2-alpha",
+    "track_a_quality_state": "high",
+    "assessment_framework": "methodological_paper"
+  },
+
+  "paper_summary": {
+    "title": "Bayesian Chronology Construction and Substance Time",
+    "authors": ["Dye, T.S.", "Buck, C.E.", "DiNapoli, R.J.", "Philippe, A."],
+    "year": 2023,
+    "journal": "Journal of Archaeological Science",
+    "doi": "10.1016/j.jas.2023.105765"
+  },
+
+  "classification": {
+    "paper_type": "methodological",
+    "primary_approach": "abductive",
+    "secondary_approaches": ["inductive"],
+    "validation_approach": "mixed",
+    "taxonomy_fit": "excellent",
+    "harking_flag": false
+  },
+
+  "signal_scores": {
+    "comprehensibility": {
+      "score": 88,
+      "band": "excellent",
+      "priority": "primary",
+      "justification": "Explanatory claims explicitly stated, theoretical framework clear, inference logic transparent. Minor gaps in implicit protocol documentation."
+    },
+    "transparency": {
+      "score": 85,
+      "band": "excellent",
+      "priority": "primary",
+      "justification": "Framework explicitly stated, alternatives documented, reasoning traceable. Supplement lacks independent DOI; three implicit protocols."
+    },
+    "plausibility": {
+      "score": 82,
+      "band": "excellent",
+      "priority": "secondary",
+      "justification": "Framework coherent with domain knowledge, builds on established Allen's interval algebra and Bayesian chronology. No ad hoc assumptions."
+    },
+    "validity": {
+      "score": 78,
+      "band": "good",
+      "priority": "secondary",
+      "justification": "Mathematical derivations rigorous, case study demonstrates method. Case study is illustrative rather than validating (no ground truth)."
+    },
+    "robustness": {
+      "score": 58,
+      "band": "moderate",
+      "priority": "deemphasised",
+      "justification": "MCMC stability tested with 5 runs. Single analytical framework, no sensitivity testing. Appropriate for framework-introducing paper."
+    },
+    "generalisability": {
+      "score": 70,
+      "band": "good",
+      "priority": "deemphasised",
+      "justification": "Scope explicitly constrained as 'starting discussion of best practices'. Case study appropriately framed as illustrative."
+    },
+    "reproducibility": {
+      "score": 80,
+      "band": "excellent",
+      "priority": "primary",
+      "justification": "ArchaeoPhases on CRAN, OxCal model in supplement, data from ADS with DOI. Supplement lacks independent DOI; partial environment specification."
+    }
+  },
+
+  "cluster_scores": {
+    "cluster_1_foundational_clarity": {
+      "signals": ["comprehensibility", "transparency"],
+      "mean_score": 86.5,
+      "band": "excellent"
+    },
+    "cluster_2_evidential_strength": {
+      "signals": ["plausibility", "validity", "robustness", "generalisability"],
+      "mean_score": 72.0,
+      "band": "good"
+    },
+    "cluster_3_reproducibility": {
+      "signals": ["reproducibility"],
+      "mean_score": 80.0,
+      "band": "excellent"
+    }
+  },
+
+  "aggregate_scores": {
+    "mean_all_signals": 77.3,
+    "primary_signals_mean": 84.3,
+    "secondary_signals_mean": 80.0,
+    "deemphasised_signals_mean": 64.0,
+    "verdict": "good",
+    "verdict_basis": "primary_signals_mean (threshold: ≥85 for excellent)"
+  },
+
+  "fair_assessment": {
+    "findable": 7,
+    "accessible": 7,
+    "interoperable": 6,
+    "reusable": 6,
+    "total": 26,
+    "max_total": 40,
+    "percentage": 65.0,
+    "rating": "moderately_fair"
+  },
+
+  "reproducibility_readiness": {
+    "applies": true,
+    "inputs_available": "yes",
+    "code_available": "yes",
+    "environment_specified": "partial",
+    "outputs_documented": "yes",
+    "execution_feasibility": "ready",
+    "reproduction_priority": 5
+  },
+
+  "extraction_summary": {
+    "evidence_count": 36,
+    "claims_count": 42,
+    "implicit_arguments_count": 7,
+    "research_designs_count": 6,
+    "methods_count": 8,
+    "protocols_count": 10,
+    "protocols_explicit": 7,
+    "protocols_implicit": 3
+  },
+
+  "infrastructure_summary": {
+    "paper_doi_present": true,
+    "author_orcid_coverage": "100%",
+    "code_repository": "CRAN (ArchaeoPhases) + journal supplement",
+    "data_repository": "Archaeological Data Service",
+    "data_doi": "10.5284/1018290",
+    "preregistration": false,
+    "funding_statement": false,
+    "ethics_required": false
+  },
+
+  "key_strengths": [
+    "Clear theoretical contribution distinguishing event time from substance time",
+    "Rigorous mathematical framework with Allen's interval algebra",
+    "Excellent transparency with 8 methods and 10 protocols documented",
+    "Strong infrastructure: 100% ORCID coverage, CRAN package, ADS data with DOI",
+    "Appropriate scope constraint as framework introduction"
+  ],
+
+  "key_limitations": [
+    "Case study is illustrative, not validating (no ground truth comparison)",
+    "Moderate robustness (single framework, no sensitivity testing)",
+    "Three implicit protocols (similarity estimation, transformation/reticulation inference)",
+    "Supplement materials lack independent DOI",
+    "Mixed software dependencies (OxCal proprietary, R open source)"
+  ],
+
+  "recommendations": {
+    "for_users": [
+      "Document similarity estimation procedures explicitly when applying method",
+      "Consider sensitivity analysis for mode inference thresholds",
+      "Archive code and data in stable repositories with DOIs"
+    ],
+    "for_reproduction": [
+      "Install OxCal 4.4.2 for version compatibility",
+      "Use IntCal20 calibration curve",
+      "Contact authors for clarification on implicit protocols if needed"
+    ]
+  },
+
+  "assessment_files": {
+    "track_a_quality": "track-a-quality.md",
+    "cluster_1": "clusters/cluster-1-foundational-clarity.md",
+    "cluster_2": "clusters/cluster-2-evidential-strength.md",
+    "cluster_3": "clusters/cluster-3-reproducibility.md",
+    "credibility_report": "credibility-report-v1.md",
+    "classification": "classification.json"
+  }
+}
