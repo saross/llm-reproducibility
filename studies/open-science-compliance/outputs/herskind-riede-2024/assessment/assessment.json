@@ -1,0 +1,282 @@
+{
+  "paper_id": "herskind-riede-2024",
+  "assessment_date": "2026-01-17",
+  "system_version": "v0.2-alpha",
+
+  "classification": {
+    "expressed_approach": "none_stated",
+    "revealed_approach": "inductive",
+    "expressed_vs_revealed": "matched",
+    "primary_approach": "inductive",
+    "revealed_confidence": "high",
+    "harking_flag": false,
+    "credibility_framework_to_use": "methodological_paper_emphasis",
+    "signal_prioritisation": {
+      "primary_signals": ["transparency", "reproducibility", "comprehensibility"],
+      "secondary_signals": ["validity", "plausibility"],
+      "deemphasised_signals": ["generalisability", "robustness"]
+    }
+  },
+
+  "track_a": {
+    "quality_state": "high",
+    "extraction_confidence": "high",
+    "metric_signal_alignment": "yes",
+    "classification_confidence": "high",
+    "assessment_viability_summary": "High-quality extraction and classification enable confident credibility assessment with approach-specific anchors. Comprehensive 8-pass extraction with validation. All passes completed, all bidirectional mappings consistent, 100% source verification.",
+    "improvement_opportunities": [
+      "Consider ORCID availability check via publisher metadata",
+      "Note licence specification practices for deposited materials",
+      "Implement formal metrics (TCI, ESD, RIS) for corpus comparison"
+    ]
+  },
+
+  "signals": [
+    {
+      "signal_name": "comprehensibility",
+      "signal_number": 1,
+      "cluster": "foundational_clarity",
+      "score": 83,
+      "score_band": "80-85",
+      "confidence": "high",
+      "summary": "Excellent comprehensibility for an inductive methodological paper. Research questions and goals explicit, pattern descriptions clear and well-bounded, key technical terms defined, logical progression from observations to patterns to interpretation transparent.",
+      "strengths": [
+        "Explicit dual research goals (presenting method + demonstrating capability)",
+        "Well-defined technical terminology (skipgram, PMI, n-gram)",
+        "Carefully bounded pattern claims with explicit scope constraints",
+        "Traceable argument structure from evidence to claims",
+        "Clear distinction between methodological and empirical claims"
+      ],
+      "weaknesses": [
+        "Some archaeological domain terminology assumed",
+        "Bouissac framework not fully operationalised to specific analyses",
+        "Implicit transition from semiotic to socio-political interpretation"
+      ],
+      "justification": "Scored 83 (Excellent Comprehensibility band for inductive research). Meets 80-100 anchor criteria: research questions explicit, pattern descriptions clear and bounded, key terms defined, logical progression transparent. Minor deductions for assumed domain knowledge.",
+      "approach_context": "For inductive methodological papers, comprehensibility emphasises clear pattern descriptions rather than hypothesis precision. This paper excels at pattern clarity - findings about motif co-occurrence are precisely described.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {
+        "claims_count": 33,
+        "evidence_count": 29,
+        "claim_hierarchy_links": 12
+      }
+    },
+    {
+      "signal_name": "transparency",
+      "signal_number": 2,
+      "cluster": "foundational_clarity",
+      "score": 82,
+      "score_band": "80-85",
+      "confidence": "high",
+      "summary": "Excellent transparency for a computational methodology paper. Research design explicitly stated as exploratory/demonstrative, data collection and transformation documented, analysis workflow specified, data and code openly available in Zenodo with DOIs.",
+      "strengths": [
+        "Explicit design statement framing paper as methodology demonstration",
+        "Documented data source (Płonka catalogue) and transformation procedures",
+        "Reproducible analysis workflow with R version and package dependencies",
+        "Data and code openly available in two Zenodo repositories with DOIs",
+        "Explicit limitations acknowledged including 6 implicit assumptions"
+      ],
+      "weaknesses": [
+        "Classification scheme not independently validated (inter-coder reliability not tested)",
+        "Missing computational environment specification (no containerisation)",
+        "No explicit licence for deposited materials",
+        "Missing author ORCIDs"
+      ],
+      "justification": "Scored 82 (Excellent Transparency band for inductive research). Meets 80-100 anchor criteria: clear documentation of exploratory goals, comprehensive data procedures, workflow documented, data archived. Minor deductions for environment specification gaps.",
+      "approach_context": "For inductive research, transparency emphasises workflow documentation and data archiving over pre-registration (not expected for exploratory work). This paper meets inductive transparency standards excellently.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {
+        "FAIR_score": 10,
+        "FAIR_max": 16,
+        "FAIR_percentage": 62.5,
+        "RDMAP_count": {
+          "designs": 6,
+          "methods": 8,
+          "protocols": 9
+        }
+      }
+    },
+    {
+      "signal_name": "plausibility",
+      "signal_number": 3,
+      "cluster": "evidential_strength",
+      "score": 78,
+      "score_band": "75-80",
+      "confidence": "high",
+      "summary": "Good plausibility for a methodological paper. Method grounded in established computational linguistics, null finding consistent with domain expectations, interpretations appropriately cautious with alternative explanations considered.",
+      "strengths": [
+        "Method grounded in established computational linguistics (skipgram, PMI)",
+        "Bouissac's semiotic framework provides theoretical basis",
+        "Null finding (no semiotic structure) consistent with archaeological expectations",
+        "Alternative interpretations considered (neutral cultural transmission)",
+        "Interpretations appropriately hedged with modal language"
+      ],
+      "weaknesses": [
+        "Untested assumptions affect plausibility of method claims",
+        "Socio-political interpretation for Ertebølle cluster is speculative",
+        "Limited engagement with counter-evidence for the Ertebølle exception"
+      ],
+      "justification": "Scored 78 (Good Plausibility band for inductive research). Meets 60-79 anchor criteria: patterns consistent with domain knowledge, interpretations grounded in theory, alternative explanations considered, appropriate hedging. Does not reach 80+ due to untested assumptions.",
+      "approach_context": "For inductive research, plausibility assesses whether discovered patterns fit domain expectations. The absence of consistent motif combinations is expected based on archaeological understanding of Mesolithic art.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {}
+    },
+    {
+      "signal_name": "validity",
+      "signal_number": 4,
+      "cluster": "evidential_strength",
+      "score": 72,
+      "score_band": "70-75",
+      "confidence": "high",
+      "summary": "Good validity for a methodological demonstration paper. Substantial corpus (483 objects) provides statistical power, case study demonstrates method capability, though limitations in data quality (typological dating, classification reliability) are acknowledged.",
+      "strengths": [
+        "Substantial corpus (483 objects, nearly half of European Mesolithic portable art)",
+        "Quantitative findings clearly presented with tables and figures",
+        "Method capability demonstrated through successful pipeline execution",
+        "Limitations explicitly acknowledged"
+      ],
+      "weaknesses": [
+        "Typological dating used as proxy (most objects not directly radiocarbon dated)",
+        "Classification scheme not independently validated",
+        "Gap between method demonstration and archaeological conclusions",
+        "Limited positive validation (only Ertebølle cluster shows signal)"
+      ],
+      "justification": "Scored 72 (Good Validity band for inductive research). Meets 60-79 anchor criteria: sampling generally adequate, evidence quantity supports claims, limitations acknowledged. Does not reach 80+ due to dating and classification quality limitations.",
+      "approach_context": "For methodological papers, key validity question is case study adequacy. This paper provides adequate validation for a first demonstration - technical pipeline works and null finding is interpretable.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {
+        "evidence_count": 29,
+        "corpus_size": 483
+      }
+    },
+    {
+      "signal_name": "robustness",
+      "signal_number": 5,
+      "cluster": "evidential_strength",
+      "score": 55,
+      "score_band": "50-60",
+      "confidence": "medium",
+      "summary": "Moderate robustness, appropriate for initial method demonstration. Single analytical pipeline without sensitivity testing or alternative method comparison. Parameters documented but not varied.",
+      "strengths": [
+        "Analytical parameters explicitly stated (k=13, R v4.2.2, Quanteda)",
+        "Alternative interpretation considered (neutral drift vs. semiotic meaning)",
+        "Limitations of binary encoding acknowledged"
+      ],
+      "weaknesses": [
+        "No sensitivity analysis on k value, n-gram lengths, or frequency thresholds",
+        "No alternative methods tested (only skipgram + PMI)",
+        "Classification scheme not varied or tested with alternatives",
+        "Single corpus (no cross-validation)"
+      ],
+      "justification": "Scored 55 (Moderate Robustness band). Meets 40-59 criteria: single approach documented, interpretive alternatives discussed. Does not reach higher bands due to absence of sensitivity testing. Appropriate for novel method demonstration.",
+      "approach_context": "For methodological papers, robustness is appropriately deemphasised. Primary goal is demonstrating method capability, not exhaustive sensitivity analysis. Future work could address through parameter variation and cross-corpus validation.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {
+        "methods_count": 8,
+        "protocols_count": 9
+      }
+    },
+    {
+      "signal_name": "generalisability",
+      "signal_number": 6,
+      "cluster": "evidential_strength",
+      "score": 70,
+      "score_band": "65-75",
+      "confidence": "high",
+      "summary": "Good generalisability with appropriately bounded claims. Case study findings carefully constrained to South Scandinavian Mesolithic corpus. Method transferability framed as potential rather than demonstrated.",
+      "strengths": [
+        "Geographic scope explicit (South Scandinavia defined)",
+        "Temporal scope explicit (Mesolithic, 11,000-5950 BP)",
+        "Case study vs. method claims clearly distinguished",
+        "Transferability framed as potential, not demonstrated"
+      ],
+      "weaknesses": [
+        "Method transferability claimed but not empirically validated",
+        "Null finding may not generalise to other contexts",
+        "Sample representativeness assumed rather than examined"
+      ],
+      "justification": "Scored 70 (Good Generalisability band for inductive research). Meets 60-79 anchor criteria: scope constraints explicit, sample documented, claims bounded. Does not reach 80+ due to untested transferability claims.",
+      "approach_context": "For methodological papers, generalisability is appropriately deemphasised. Goal is demonstrating capability on one corpus, not comprehensive generalisation. Paper appropriately avoids over-claiming.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {}
+    },
+    {
+      "signal_name": "reproducibility",
+      "signal_number": 7,
+      "cluster": "reproducibility",
+      "score": 80,
+      "score_band": "78-82",
+      "confidence": "high",
+      "summary": "Excellent reproducibility for a computational methodology paper. Data and code openly archived in Zenodo with DOIs, R version and primary package documented, workflow clearly described. Main gaps: no containerisation, incomplete dependency specification.",
+      "strengths": [
+        "Data openly available in Zenodo with DOI (10.5281/zenodo.10623550)",
+        "Code openly available in Zenodo with same DOI",
+        "R version (4.2.2) and Quanteda package documented",
+        "Workflow clearly described enabling independent verification",
+        "Expected outputs documented for comparison"
+      ],
+      "weaknesses": [
+        "No computational environment containerisation",
+        "Incomplete dependency specification (only R and Quanteda noted)",
+        "No explicit licence for deposited materials",
+        "Missing author ORCIDs"
+      ],
+      "justification": "Scored 80 (Excellent Reproducibility band for inductive research). Meets 80-100 anchor criteria: data and code archived, workflow documented, key versions noted. Does not reach 85+ due to containerisation and dependency gaps.",
+      "approach_context": "For computational methodology papers, reproducibility emphasises code sharing and environment documentation. This paper meets expectations well with openly available materials enabling verification.",
+      "approach_anchors_applied": true,
+      "relevant_metrics": {
+        "FAIR_score": 10,
+        "FAIR_max": 16,
+        "FAIR_percentage": 62.5,
+        "PID_graph_connectivity": 3
+      }
+    }
+  ],
+
+  "reproducibility_readiness": {
+    "applies": true,
+    "pathway": "standard",
+    "if_not_applicable_reason": "",
+    "inputs_available": {
+      "status": "yes",
+      "details": "Corpus data in Zenodo (DOI: 10.5281/zenodo.10623550) containing 483 ornamented objects digitised from Płonka (2003) catalogue"
+    },
+    "code_available": {
+      "status": "yes",
+      "tool_type": "open_scriptable",
+      "details": "R scripts for skipgram analysis deposited in Zenodo. Uses R v4.2.2 and Quanteda package."
+    },
+    "environment_specified": {
+      "status": "partial",
+      "details": "R version 4.2.2 and Quanteda package documented. Full dependency list not provided. No containerisation."
+    },
+    "outputs_documented": {
+      "status": "yes",
+      "details": "Tables 1-2 provide frequency distributions and PMI summary statistics. Figures 3-5 show visualisations. These serve as comparison points for reproduction."
+    },
+    "execution_feasibility": "ready",
+    "feasibility_rationale": "Researcher with R programming experience could reproduce analysis with moderate effort. Standard R environment, open data, straightforward pipeline. Main risk is package version incompatibility over time.",
+    "publication_year": 2024,
+    "adoption_context": "early_majority"
+  },
+
+  "metrics": {
+    "FAIR_score": 10,
+    "FAIR_max": 16,
+    "FAIR_percentage": 62.5,
+    "PID_graph_connectivity": 3,
+    "evidence_count": 29,
+    "claims_count": 33,
+    "implicit_arguments_count": 6,
+    "research_designs_count": 6,
+    "methods_count": 8,
+    "protocols_count": 9
+  },
+
+  "report_metadata": {
+    "report_path": "assessment/credibility-report-v1.md",
+    "report_type": "standard",
+    "word_count": 2850,
+    "quality_caveats": false
+  }
+}

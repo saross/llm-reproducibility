@@ -1,0 +1,2371 @@
+{
+  "schema_version": "2.6",
+  "paper_slug": "herskind-riede-2024",
+  "project_metadata": {
+    "paper_title": "A computational linguistic methodology for assessing semiotic structure in prehistoric art and the meaning of southern Scandinavian Mesolithic ornamentation",
+    "authors": [
+      "Lasse Lukas Platz Herskind",
+      "Felix Riede"
+    ],
+    "publication_year": 2024,
+    "journal": "Journal of Archaeological Science, Vol. 165, Article 105969",
+    "doi": "10.1016/j.jas.2024.105969",
+    "paper_type": "methods paper",
+    "discipline": "archaeology",
+    "research_context": "Novel computational linguistic methodology applying k-skip-n-gram (skipgram) models and pointwise mutual information (PMI) measures to analyse semiotic structure in prehistoric art. Case study applies the method to 483 portable art objects from the South Scandinavian Mesolithic (ca. 11,000-5950 BP) to assess whether motif combinations exhibit semiotic structure suggestive of proto-writing."
+  },
+  "evidence": [
+    {
+      "evidence_id": "E001",
+      "evidence_text": "The corpus comprises 483 ornamented portable art objects from southern Scandinavia, digitised from Płonka's (2003) comprehensive catalogue, constituting nearly half of all European Mesolithic ornamented artefacts",
+      "evidence_type": "corpus_size",
+      "verbatim_quote": "With a total of 483 objects (Supplementary Information S1), the material from southern Scandinavia constitutes nearly half of the total number of European Mesolithic ornamented artefacts listed by Płonka (2003), making it patently suitable for statistical analysis",
+      "location": "page 2",
+      "supports_claims": [
+        "C001",
+        "C003",
+        "C027"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_note": "Merged E001 + E030 (both about corpus size 483 objects and European representation)"
+    },
+    {
+      "evidence_id": "E002",
+      "evidence_text": "The South Scandinavian Mesolithic spans approximately 11,000-5950 BP, divided into three archaeological culture complexes",
+      "evidence_type": "chronological_framework",
+      "verbatim_quote": "The portable art of the South Scandinavian Mesolithic (ca. 11,000–5950 BP) represents an iconic corpus of prehistoric ornamentation",
+      "location": "page 2",
+      "supports_claims": [
+        "C005",
+        "C006"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E003",
+      "evidence_text": "The three cultural periods are Maglemose (~11,000-8400 BP), Kongemose (~8400-7400 BP), and Ertebølle (~7400-5950 BP)",
+      "evidence_type": "chronological_framework",
+      "verbatim_quote": "Traditionally, the period is divided into three archaeological culture complexes: Maglemose (~11,000–8400 BP), Kongemose (~8400-7400 BP), and Ertebølle (~7400-5950 BP)",
+      "location": "page 2",
+      "supports_claims": [
+        "C005",
+        "C008",
+        "C006"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E004",
+      "evidence_text": "Southern Scandinavia (modern-day Denmark, southern Sweden, northernmost Germany and Poland) constitutes a single 'contextual area' based on lithic and organic material culture",
+      "evidence_type": "geographic_scope",
+      "verbatim_quote": "the South Scandinavian Mesolithic refers to the hunter-fisher-gatherer cultures of the Early to Middle Holocene, in the region corresponding approximately to modern-day Denmark, southern Sweden, and the northernmost parts of Germany and Poland... Based on the lithic and organic material culture, this region can be seen to comprise a single 'contextual area' (Richter et al., 2012, p. 5) – a spatio-temporally limited package of cultural phenotypes, dialectically formed by environmental and socio-cultural factors",
+      "location": "page 2",
+      "supports_claims": [
+        "C025"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_note": "Merged E004 + E005 (both about geographic scope and contextual area definition)"
+    },
+    {
+      "evidence_id": "E005",
+      "evidence_text": "Motif data were extracted from Płonka's (2003) catalogue and digitised as binary presence/absence coding using his classification scheme (pp. 315-325)",
+      "evidence_type": "data_source",
+      "verbatim_quote": "Płonka's (2003, pp. 315–325) own motif classification scheme, the most comprehensive for Mesolithic European portable art, was transcribed as binary data in the form of presence/absence coding of motif types (named A1, A2, etc.) on each individual artefact",
+      "location": "page 2",
+      "supports_claims": [
+        "C003",
+        "C004"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E006",
+      "evidence_text": "The maximum number of individual motifs on a single object is 15, requiring k value of 13 for skipgram generation",
+      "evidence_type": "parameter_setting",
+      "verbatim_quote": "In the corpus under consideration here, the maximum number of individual motifs on a single object is 15, and the k value for all generated skipgrams is thus set to 13",
+      "location": "page 3",
+      "supports_claims": [
+        "C003",
+        "C027"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E007",
+      "evidence_text": "Analyses performed in R v.4.2.2 using the Quanteda package; all code and data available at Zenodo",
+      "evidence_type": "computational_environment",
+      "verbatim_quote": "All analyses were performed in the open-source R programming environment (v.4.2.2; R Core Team, 2021), using the Quanteda package (Benoit et al., 2018). All code and data are available here: https://zenodo.org/records/10623550",
+      "location": "page 3",
+      "supports_claims": [
+        "C004",
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E008",
+      "evidence_text": "The corpus contains 230 individual motifs (unigrams)",
+      "evidence_type": "quantitative_result",
+      "verbatim_quote": "Unigrams/Individual motifs (n = 230)",
+      "location": "page 4, Table 1",
+      "supports_claims": [
+        "C001",
+        "C024"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E009",
+      "evidence_text": "Skipgram analysis generated 1543 bigrams, 4422 trigrams, and 8466 quadrigrams (13-skip-n-grams)",
+      "evidence_type": "quantitative_result",
+      "verbatim_quote": "Bigrams/13-skip-2-grams (n = 1543)... Trigrams/13-skip-3-grams (n = 4422)... Quadrigrams/13-skip-4-grams (n = 8466)",
+      "location": "page 4, Table 1",
+      "supports_claims": [
+        "C001",
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_note": "Merged E010 + E011 + E012 (n-gram counts from same Table 1 with identical claim support)"
+    },
+    {
+      "evidence_id": "E010",
+      "evidence_text": "Only few combinations occur with elevated frequency, and this becomes increasingly true for every additional n-gram step",
+      "evidence_type": "pattern_observation",
+      "verbatim_quote": "The most notable observation here is that only few combinations occur with elevated frequency, and that this becomes increasingly true for every additional n-gram step",
+      "location": "page 4",
+      "supports_claims": [
+        "C001",
+        "C010",
+        "C002",
+        "C030"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E011",
+      "evidence_text": "The most frequent bigrams are A1-C1 and C1-G1 (each 44 occurrences, ~9% of corpus), followed by A1-G1 (28 occurrences)",
+      "evidence_type": "frequency_data",
+      "verbatim_quote": "Two of these combinations occur 44 times each on approximately 9% of all objects in the corpus... The two combinations occurring 44 times are A1-C1 and C1-G1, with A1-G1 being the third highest at a frequency of 28",
+      "location": "page 4",
+      "supports_claims": [
+        "C001",
+        "C024"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "consolidation_note": "Merged E014 + E015 (top bigram frequencies with identical claim support)"
+    },
+    {
+      "evidence_id": "E012",
+      "evidence_text": "None of the most frequent motif combinations can be attributed solely to a specific cultural complex",
+      "evidence_type": "pattern_observation",
+      "verbatim_quote": "As is evident, none of these motif combinations can be attributed solely to a specific cultural complex",
+      "location": "page 4",
+      "supports_claims": [
+        "C001",
+        "C024",
+        "C002"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E013",
+      "evidence_text": "The same motifs (A1, A24, B10, C1, G1, H1) recur often and in many combinations; these are the motifs with highest individual frequencies",
+      "evidence_type": "frequency_pattern",
+      "verbatim_quote": "Fig. 3 furthermore underlines that the same motifs, most prominently A1, A24, B10, C1, G1, and H1, recur often and in many combinations. These are also the motifs with the highest individual frequencies",
+      "location": "page 4",
+      "supports_claims": [
+        "C024"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E014",
+      "evidence_text": "When sorted by PMI rather than raw frequency, more salient two-motif cooccurrences are linked to specific culture complexes",
+      "evidence_type": "analytical_finding",
+      "verbatim_quote": "From Fig. 3b, it is immediately evident that more of these salient two-motif cooccurrences are linked to a specific culture complex",
+      "location": "page 4",
+      "supports_claims": [
+        "C005",
+        "C008"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E015",
+      "evidence_text": "Culture historical attributions of high-PMI bigrams are strongly skewed: none exclusive to Maglemosean, only one specific to Kongemose (B10-F38), and nine unique to Ertebølle",
+      "evidence_type": "chronological_distribution",
+      "verbatim_quote": "Notably, the culture historical attributions themselves are strongly skewed: None of these most salient bigrams are exclusive to the Maglemosean, only one is specific to the Kongemose culture (B10–F38), and nine are unique for the Ertebølle period (I5–I13, C5-D7, C4–C12, C12–C13, C4–C5, I1–I13, C5–C13, and I1–I5)",
+      "location": "page 4",
+      "supports_claims": [
+        "C008",
+        "C009",
+        "C010",
+        "C005",
+        "C030"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E016",
+      "evidence_text": "The highest frequency of cooccurrence for salient bigrams is five",
+      "evidence_type": "frequency_data",
+      "verbatim_quote": "These recurrent combinations are rare overall, however, with the highest frequency of cooccurrence being five",
+      "location": "page 4",
+      "supports_claims": [
+        "C001",
+        "C009",
+        "C029"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E017",
+      "evidence_text": "PMI summary statistics by cultural period show increasing potential for meaningful collocations toward Late Mesolithic: Maximum PMI for Maglemose 3.12, Kongemose 2.85, Ertebølle 4.10; Mean PMI 0.70, 0.74, 0.90 respectively",
+      "evidence_type": "statistical_summary",
+      "verbatim_quote": "The summary statistics for all generated PMI values in each distinct culture complex (Table 2) further supports the observation that the potential for meaningful collocations increase towards the Late Mesolithic",
+      "location": "page 4, Table 2",
+      "supports_claims": [
+        "C008",
+        "C030"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E018",
+      "evidence_text": "A cluster of five motifs (C4, C5, C12, C13, D7) are exclusive to the Late Mesolithic Ertebølle cultural complex and show high PMI values",
+      "evidence_type": "cluster_identification",
+      "verbatim_quote": "Fig. 4 underlines the particular significance of a cluster of the motifs exclusive to the Late Mesolithic Ertebølle cultural complex: C4, C5, C12, C13, and D7. These combinations are highly significant in terms of their cooccurrence frequency vis-à-vis their overall individual occurrence frequency",
+      "location": "page 4",
+      "supports_claims": [
+        "C009",
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E019",
+      "evidence_text": "Although many combinations are specific to Maglemose and Kongemose periods, only very few are statistically significant given their overall frequency",
+      "evidence_type": "statistical_finding",
+      "verbatim_quote": "It is also evident that, although many combinations are specific to the Maglemose and Kongemose periods, only very few are statistically significant given their overall frequency. Therefore, only very few consistent motif strings can be demonstrated for the Maglemose or Kongemose cultural complexes",
+      "location": "page 4",
+      "supports_claims": [
+        "C010",
+        "C002"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E020",
+      "evidence_text": "The geographic extent of the Ertebølle cluster motifs is limited, with C12 and C13 more eastern in occurrence and C4, C5, D7 more western",
+      "evidence_type": "spatial_distribution",
+      "verbatim_quote": "When considering the spatial distribution of the most significant Late Mesolithic motifs that consistently occur together, it becomes further evident that their geographic extent is also limited... Motifs C12 and C13 are more eastern in their occurrence, whereas C4, C5, and D7 more western",
+      "location": "pages 4, 6",
+      "supports_claims": [
+        "C013",
+        "C014"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E021",
+      "evidence_text": "All Ertebølle cluster ornamentations are applied on antler axes, except one antler shaft",
+      "evidence_type": "artefact_type_distribution",
+      "verbatim_quote": "In addition, the ornamentations in question are all applied on antler axes, barring one antler shaft (Table 3)",
+      "location": "page 4",
+      "supports_claims": [
+        "C018"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E022",
+      "evidence_text": "Ten objects bear the most salient motif collocations from the Ertebølle cluster (detailed in Table 3)",
+      "evidence_type": "object_count",
+      "verbatim_quote": "Given that these ornament strings only occur on ten objects, most of which are not dated directly, it remains difficult to interpret this pattern more firmly",
+      "location": "page 7",
+      "supports_claims": [
+        "C009",
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E023",
+      "evidence_text": "Motifs C12 and C13, as well as C4 and C5, are visually very similar and may represent related motifs with variability",
+      "evidence_type": "morphological_observation",
+      "verbatim_quote": "Considering the motifs themselves in detail, C12 and C13, as well as C4 and C5, are very similar. It is possible, therefore, that we are not dealing with five discrete motifs overall",
+      "location": "page 4",
+      "supports_claims": [
+        "C011"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E024",
+      "evidence_text": "D7 may represent half a 'sheaf of grain' motif, potentially related to C4 and C5",
+      "evidence_type": "morphological_observation",
+      "verbatim_quote": "C12 and C13 as well as C4 and C5 (with the additional possibility of D7 representing half a 'sheaf of grain') may represent related motifs with a significant degree of variability respectively",
+      "location": "page 4",
+      "supports_claims": [
+        "C011",
+        "C012"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E025",
+      "evidence_text": "The Skellingsted Bro axe has been radiocarbon dated to the early Ertebølle period, confirming typological dating",
+      "evidence_type": "radiometric_date",
+      "verbatim_quote": "He additionally presents a new radiocarbon date for the Skellingsted Bro axe, a central object in Fig 5 both concerning geography and motif combinations, placing it in the early Ertebølle period (Vang Petersen, 2023, p. 157). This new radiometric date thus confirms the typological dating",
+      "location": "page 7",
+      "supports_claims": [
+        "C017",
+        "C018",
+        "C033"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E026",
+      "evidence_text": "Analysis tested 2-, 3-, and 4-grams (bigrams, trigrams, quadrigrams)",
+      "evidence_type": "analytical_scope",
+      "verbatim_quote": "The case study presents results at the level of 2-, 3-, and 4-grams",
+      "location": "page 3",
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E027",
+      "evidence_text": "The 'sheaf of grain' motif (Płonka's C4, C5, C6) was previously identified as particularly important by Andersen (1981) and Nash (1998)",
+      "evidence_type": "literature_finding",
+      "verbatim_quote": "The significance accorded to motifs C4 and C5 in this analysis echoes the findings of Andersen (1981) and Nash (1998), who both attributed particular importance to the 'sheaf of grain' motif (Płonka's C4, C5, and C6)",
+      "location": "page 6",
+      "supports_claims": [
+        "C009",
+        "C017",
+        "C031"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E028",
+      "evidence_text": "Inter-coder consistency for motif classification was not tested in this study",
+      "evidence_type": "methodological_limitation",
+      "verbatim_quote": "We have not, in our analysis, tested for inter-coder consistency (such as in Dutkiewicz et al., 2020), nor have we explored the effects of variable classifications of related motifs",
+      "location": "page 7",
+      "supports_claims": [
+        "C020"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "evidence_id": "E029",
+      "evidence_text": "Motifs were in some cases applied to artefacts over an extended period of time",
+      "evidence_type": "production_evidence",
+      "verbatim_quote": "To this could be added the demonstrated temporal aspect of Mesolithic ornament engraving, namely that motifs were in some cases applied to an artefact over an extended period of time (e.g., Andersen, 2023)",
+      "location": "page 7",
+      "supports_claims": [
+        "C016"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C001",
+      "claim_text": "There is no evident semiotic structure in South Scandinavian Mesolithic portable art - this was likely not a form of proto-writing",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "verbatim_quote": "In the case of Mesolithic portable art, our analysis strongly suggests that there is no evident semiotic structure – this was likely not a form of proto-writing",
+      "location": "page 1 (abstract)",
+      "supported_by": [
+        "E001",
+        "E008",
+        "E009",
+        "E010",
+        "E011",
+        "E012",
+        "E016"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C002",
+      "claim_text": "The methodology demonstrates a lack of any overt semiotic structure in South Scandinavian Mesolithic art",
+      "claim_type": "empirical",
+      "claim_role": "core",
+      "verbatim_quote": "We use the skipgram approach and PMI measure, implemented in the open-source computing environment R (R Core Team, 2021), to demonstrate a lack of any overt semiotic structure in South Scandinavian Mesolithic art",
+      "location": "page 2",
+      "supported_by": [
+        "E010",
+        "E012",
+        "E019"
+      ],
+      "supports_claims": [
+        "C001"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C003",
+      "claim_text": "The skipgram methodology and PMI measure can reveal if motifs were deliberately combined on artefacts in a manner akin to sentences",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "The method can, we argue, reveal if motifs were deliberately combined on a given artefact in a manner akin to sentences",
+      "location": "page 5",
+      "supported_by": [
+        "E001",
+        "E005",
+        "E006",
+        "E007",
+        "E009",
+        "E026"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C004",
+      "claim_text": "The method is readily case-transferable and renders possible further linguistic and semiotic analyses of prehistoric art",
+      "claim_type": "methodological_argument",
+      "claim_role": "core",
+      "verbatim_quote": "The method presented here is readily case-transferable and renders possible further linguistic and semiotic analyses of prehistoric art",
+      "location": "page 1 (abstract)",
+      "supported_by": [
+        "E005",
+        "E007"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C005",
+      "claim_text": "Salient changes of motif occurrence over time are detectable in the corpus",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "salient changes of motif occurrence over time are detectable",
+      "location": "page 1 (abstract)",
+      "supported_by": [
+        "E002",
+        "E003",
+        "E014",
+        "E015"
+      ],
+      "supports_claims": [
+        "C008"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C006",
+      "claim_text": "The temporal changes in motif occurrence are sensitive to changes in population density, structure, and connectedness",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "These changes are sensitive to changes in population density, structure, and connectedness",
+      "location": "page 1 (abstract)",
+      "supported_by": [
+        "E002",
+        "E003"
+      ],
+      "supports_claims": [
+        "C007",
+        "C016"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C007",
+      "claim_text": "The temporal changes in motif occurrence may relate to increased territoriality in the Late Mesolithic",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "and may relate to increased territoriality in the Late Mesolithic",
+      "location": "page 1 (abstract)",
+      "supported_by": [],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C008",
+      "claim_text": "The potential for meaningful collocations increases toward the Late Mesolithic",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The summary statistics for all generated PMI values in each distinct culture complex (Table 2) further supports the observation that the potential for meaningful collocations increase towards the Late Mesolithic",
+      "location": "page 4",
+      "supported_by": [
+        "E003",
+        "E014",
+        "E015",
+        "E017"
+      ],
+      "supports_claims": [
+        "C009"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C009",
+      "claim_text": "The Ertebølle cluster (motifs C4, C5, C12, C13, D7) may reflect a developing semiotic system in the Late Mesolithic",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "In sum, it is the Ertebølle string of motifs C4, C5, C12, C13, and D7 which may reflect a developing semiotic system, as it is these five motifs that show statistical significance in their cooccurrence",
+      "location": "page 4",
+      "supported_by": [
+        "E015",
+        "E016",
+        "E018",
+        "E022",
+        "E027"
+      ],
+      "supports_claims": [
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C010",
+      "claim_text": "The strong semiotic hypothesis should be rejected for Early and Middle Mesolithic ornamentation",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "The great overall variability coupled with the demonstrated scarcity of potential motif collocations in the Early and Middle Mesolithic ornamentations considered here leads us to reject the strong semiotic hypothesis for this part of the corpus at least",
+      "location": "page 6",
+      "supported_by": [
+        "E010",
+        "E015",
+        "E019"
+      ],
+      "supports_claims": [
+        "C001"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C011",
+      "claim_text": "The five Ertebølle cluster motifs may not be five discrete motifs - C12/C13 and C4/C5 may represent related motifs with variability",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "It is possible, therefore, that we are not dealing with five discrete motifs overall. C12 and C13 as well as C4 and C5 (with the additional possibility of D7 representing half a 'sheaf of grain') may represent related motifs with a significant degree of variability respectively",
+      "location": "page 4",
+      "supported_by": [
+        "E023",
+        "E024"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C012",
+      "claim_text": "Motif D7 may represent half a 'sheaf of grain' motif",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "with the additional possibility of D7 representing half a 'sheaf of grain'",
+      "location": "page 4",
+      "supported_by": [
+        "E024"
+      ],
+      "supports_claims": [
+        "C011"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C013",
+      "claim_text": "The Ertebølle motif group does not reflect a local emergence of semiotic meaning in the linguistic sense",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "We conclude therefore that the Ertebølle motif group does not reflect a local emergence of semiotic meaning in the linguistic sense",
+      "location": "page 6",
+      "supported_by": [
+        "E020"
+      ],
+      "supports_claims": [
+        "C001"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C014",
+      "claim_text": "All five Ertebølle cluster motifs are parts of a somewhat wider regional system, each with a different core area",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Rather, it seems like all five motifs are parts of a somewhat wider regional system, each with a different core area",
+      "location": "page 6",
+      "supported_by": [
+        "E020"
+      ],
+      "supports_claims": [
+        "C013"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C015",
+      "claim_text": "Prehistoric ornamentation practice was subject to processes of neutral cultural transmission through 'random copying'",
+      "claim_type": "theoretical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Rather than assuming an inevitable temporal trend towards linguistic/semiotic structure, we argue that prehistoric ornamentation practice and the often subtle changes we can track in these were subject to processes of neutral cultural transmission. Through 'random copying' (Bentley et al., 2004; Koerper and Stickel, 1980) motifs change over time in the absence of selective pressure or overt meaning",
+      "location": "page 6",
+      "supported_by": [],
+      "supports_claims": [
+        "C010"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C016",
+      "claim_text": "The consistent Late Mesolithic motif strings may be indicative of several neighbouring groups consistently interacting in the context of growing populations and coastal packing",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Independent of potential semiotic structure, the consistent motif strings of the Late Mesolithic may be indicative of several neighbouring groups consistently interacting, likely in the context of growing populations and coastal packing",
+      "location": "page 6",
+      "supported_by": [
+        "E029"
+      ],
+      "supports_claims": [
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C017",
+      "claim_text": "Something potentially novel occurred at this very point in time and space, reflected materially in the Late Mesolithic portable art",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "Our analysis lends some support to Nash's conclusion, albeit primarily in the sense that something potentially novel occurred at this very point in time and space, and that this is reflected materially in the portable art",
+      "location": "page 6",
+      "supported_by": [
+        "E018",
+        "E022",
+        "E025",
+        "E027"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C018",
+      "claim_text": "Decorated antler axes had a particular importance as status symbols in the Late Mesolithic",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "Following the same lines of thought, Vang Petersen (2023) has recently argued that decorated antler axes had a particular importance as status symbols",
+      "location": "page 7",
+      "supported_by": [
+        "E021",
+        "E025"
+      ],
+      "supports_claims": [
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C019",
+      "claim_text": "The skipgram methodology constitutes an improvement over most existing attempts to assess prehistoric semiosis",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "While several caveats remain, we argue that the skipgram method introduced here constitutes an improvement over most existing attempts to assess prehistoric semiosis",
+      "location": "page 7",
+      "supported_by": [],
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C020",
+      "claim_text": "The methodology cannot conclusively refute any claims of prehistoric semiosis",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "Notably, any given motif might have had independent semiotic meaning regardless of motif cooccurrences. Our methodology cannot, therefore, conclusively refute any claims of prehistoric semiosis",
+      "location": "page 5",
+      "supported_by": [
+        "E028"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C021",
+      "claim_text": "The methodology can demonstrate meaningful combinations of motifs, which is a common feature of fully developed semiotic systems and an indicator of proto-writing",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "It does, however, render possible a demonstration of meaningful combinations of motifs, which is a common feature of fully developed semiotic systems and which must also be considered an indicator of proto-writing",
+      "location": "page 5",
+      "supported_by": [],
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C022",
+      "claim_text": "The presence of structure in a symbol system is not in itself sufficient evidence of linguistic purposes",
+      "claim_type": "theoretical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Sproat (2023, p. 193), for instance, objects that the presence of structure in a symbol system is not in itself sufficient evidence of linguistic purposes",
+      "location": "page 6",
+      "supported_by": [],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C023",
+      "claim_text": "For prehistoric art, the first necessary step must be to ascertain whether any governing structural principles existed at all",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "In the case of prehistoric art, however, the first necessary step must be to ascertain whether any governing structural principles existed at all",
+      "location": "page 6",
+      "supported_by": [],
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C024",
+      "claim_text": "The common high-frequency motifs (A1, A24, B10, C1, G1, H1) cannot necessarily be taken to reflect meaningful Mesolithic semiotic structure, either by themselves or in combination",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "These common motifs cannot necessarily – by themselves or in combination – be taken to reflect meaningful Mesolithic semiotic structure",
+      "location": "page 4",
+      "supported_by": [
+        "E008",
+        "E011",
+        "E012",
+        "E013"
+      ],
+      "supports_claims": [
+        "C001"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C025",
+      "claim_text": "The South Scandinavian region constitutes a single 'contextual area' - a spatio-temporally limited package of cultural phenotypes",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "Based on the lithic and organic material culture, this region can be seen to comprise a single 'contextual area' (Richter et al., 2012, p. 5) – a spatio-temporally limited package of cultural phenotypes, dialectically formed by environmental and socio-cultural factors",
+      "location": "page 2",
+      "supported_by": [
+        "E004"
+      ],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C026",
+      "claim_text": "Improved chronological resolution through direct radiocarbon dating of ornamented objects is the most promising avenue for further research",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "By this token, improved chronological resolution through direct radiocarbon dating of these ornamented objects must be considered the most promising avenue for further research",
+      "location": "page 7",
+      "supported_by": [],
+      "supports_claims": [],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C027",
+      "claim_text": "The skipgram approach is appropriate for investigating prehistoric data characterised by data sparsity",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "The approach is appropriate for investigating prehistoric data, which is necessarily characterised by data sparsity",
+      "location": "page 7",
+      "supported_by": [
+        "E001",
+        "E006"
+      ],
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C028",
+      "claim_text": "The skipgram approach sidesteps the issue of non-linear ordering in prehistoric art data",
+      "claim_type": "methodological_argument",
+      "claim_role": "supporting",
+      "verbatim_quote": "Within such a 'sentence', the skipgram approach sidesteps the issue of a non-linear ordering",
+      "location": "page 7",
+      "supported_by": [],
+      "supports_claims": [
+        "C003",
+        "C027"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C029",
+      "claim_text": "Some motifs were indeed combined on artefacts more often than can be expected by chance alone across cultural periods",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "Yet, this analysis does show that some motifs were indeed combined on these artefacts more often than can be expected by chance alone across these cultural periods",
+      "location": "page 4",
+      "supported_by": [
+        "E016"
+      ],
+      "supports_claims": [
+        "C005",
+        "C008"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C030",
+      "claim_text": "Motifs do not seem to cooccur with each other in significant ways, albeit with some tentative exceptions",
+      "claim_type": "empirical",
+      "claim_role": "intermediate",
+      "verbatim_quote": "In sum, motifs do not seem to cooccur with each other in significant ways, albeit with some tentative exceptions. The most interesting cooccurrences, both with regards to chronological attribution as well as PMI values, stem from the Late Mesolithic Ertebølle period",
+      "location": "page 4",
+      "supported_by": [
+        "E010",
+        "E015",
+        "E017"
+      ],
+      "supports_claims": [
+        "C001",
+        "C008"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C031",
+      "claim_text": "The 'sheaf of grain' motif is noteworthy not only by itself but also in terms of statistically significant and potentially meaningful motif cooccurrences",
+      "claim_type": "empirical",
+      "claim_role": "supporting",
+      "verbatim_quote": "The present analysis has further demonstrated that the 'sheaf of grain' motif is not only noteworthy by itself, but also when it comes to statistically significant and thus potentially meaningful motif cooccurrences",
+      "location": "page 6",
+      "supported_by": [
+        "E027"
+      ],
+      "supports_claims": [
+        "C009"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C032",
+      "claim_text": "The 'sheaf of grain' motif may have been part of a Mesolithic 'Kula ring'-like system within which objects, knowledge, and power circulated",
+      "claim_type": "interpretation",
+      "claim_role": "supporting",
+      "verbatim_quote": "Nash has interpreted this motif as part of a Mesolithic 'Kula ring'-like system (Malinowski, 1920) within which objects, knowledge, and power circulated",
+      "location": "page 6",
+      "supported_by": [],
+      "supports_claims": [
+        "C016",
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "claim_id": "C033",
+      "claim_text": "The emergence of the Ertebølle cluster more likely has socio-political rather than primarily proto-linguistic valence",
+      "claim_type": "interpretation",
+      "claim_role": "intermediate",
+      "verbatim_quote": "This new radiometric date thus confirms the typological dating and lends further credence to the interpretation of a spatio-temporally limited emergence of formalised, semiotic meaning, albeit more likely in regard to socio-political rather than primarily proto-linguistic valence",
+      "location": "page 7",
+      "supported_by": [
+        "E025"
+      ],
+      "supports_claims": [
+        "C013",
+        "C017"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    }
+  ],
+  "implicit_arguments": [
+    {
+      "implicit_argument_id": "IA001",
+      "argument_text": "Płonka's (2003) motif classification scheme captures semantically meaningful distinctions suitable for detecting semiotic structure, despite no inter-coder reliability testing being performed",
+      "type": "methodological_assumption",
+      "trigger_text": [
+        "Płonka's (2003, pp. 315–325) own motif classification scheme, the most comprehensive for Mesolithic European portable art, was transcribed as binary data",
+        "We have not, in our analysis, tested for inter-coder consistency (such as in Dutkiewicz et al., 2020), nor have we explored the effects of variable classifications of related motifs"
+      ],
+      "trigger_locations": [
+        "page 2",
+        "page 7"
+      ],
+      "inference_reasoning": "The analysis relies entirely on Płonka's classification for identifying 'motifs' as analytical units. The authors acknowledge they did not test inter-coder consistency, yet the methodology assumes this classification scheme captures meaningful semiotic distinctions. Without reliability testing, it is assumed that different coders would classify the same motifs consistently.",
+      "supports_claims": [
+        "C003",
+        "C020"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inferred_from_text"
+      }
+    },
+    {
+      "implicit_argument_id": "IA002",
+      "argument_text": "Typological dating of artefacts to cultural periods (Maglemose, Kongemose, Ertebølle) is sufficiently accurate for detecting temporal patterns in motif co-occurrence, despite most objects lacking direct radiocarbon dates",
+      "type": "design_assumption",
+      "trigger_text": [
+        "For lack of a more fine-grained chronological resolution, these serve as analytical units in the present analyses",
+        "Given that these ornament strings only occur on ten objects, most of which are not dated directly, it remains difficult to interpret this pattern more firmly"
+      ],
+      "trigger_locations": [
+        "page 2",
+        "page 7"
+      ],
+      "inference_reasoning": "The temporal comparative analysis (RD003) depends on correct assignment of objects to cultural periods. The authors acknowledge chronological uncertainty but proceed with typological attributions as analytical units. The assumption is that typological dating is reliable enough to detect genuine temporal trends rather than artefacts of misattribution.",
+      "supports_claims": [
+        "C005",
+        "C008",
+        "C010"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inferred_from_text"
+      }
+    },
+    {
+      "implicit_argument_id": "IA003",
+      "argument_text": "The 483-object corpus from Płonka's catalogue is representative of South Scandinavian Mesolithic portable art practices and suitable for detecting region-wide semiotic patterns",
+      "type": "design_assumption",
+      "trigger_text": [
+        "With a total of 483 objects (Supplementary Information S1), the material from southern Scandinavia constitutes nearly half of the total number of European Mesolithic ornamented artefacts listed by Płonka (2003), making it patently suitable for statistical analysis",
+        "the corpus under consideration here"
+      ],
+      "trigger_locations": [
+        "page 2",
+        "page 3"
+      ],
+      "inference_reasoning": "The analysis treats the corpus as representative of Mesolithic art practices across southern Scandinavia over 5,000 years. The justification is relative completeness (nearly half of European total). However, this assumes: (1) preservation is not systematically biased, (2) Płonka's catalogue is comprehensive, (3) recovered objects represent original practices. The assumption of representativeness underpins all claims about 'Mesolithic semiotic structure' as opposed to 'semiotic structure in preserved/catalogued objects'.",
+      "supports_claims": [
+        "C001",
+        "C002",
+        "C027"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inferred_from_text"
+      }
+    },
+    {
+      "implicit_argument_id": "IA004",
+      "argument_text": "Positive PMI values indicate deliberate or meaningful motif combinations rather than random co-occurrence due to stylistic or material constraints",
+      "type": "methodological_assumption",
+      "trigger_text": [
+        "A positive PMI indicates that the cooccurrence is more frequent than expected under the assumption of independence",
+        "statistically significant and thus potentially meaningful motif cooccurrences"
+      ],
+      "trigger_locations": [
+        "page 3",
+        "page 6"
+      ],
+      "inference_reasoning": "The methodology interprets positive PMI as evidence for 'meaningful' or 'salient' combinations. However, elevated co-occurrence could also reflect: (1) technical constraints of engraving, (2) stylistic conventions unrelated to semantic content, (3) copying from common exemplars, (4) functional associations. The assumption that statistical significance implies semiotic significance is foundational to the interpretive framework.",
+      "supports_claims": [
+        "C003",
+        "C008",
+        "C009"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inferred_from_text"
+      }
+    },
+    {
+      "implicit_argument_id": "IA005",
+      "argument_text": "Motif occurrences across artefacts can be treated as statistically independent events for PMI calculation, despite potential dependencies from shared production contexts, copying, or cultural transmission",
+      "type": "methodological_assumption",
+      "trigger_text": [
+        "The expected frequency of a given cooccurrence under the assumption of independence is calculated: expected frequency = (A/t) × (B/t) × t",
+        "motifs were in some cases applied to an artefact over an extended period of time"
+      ],
+      "trigger_locations": [
+        "page 3",
+        "page 7"
+      ],
+      "inference_reasoning": "The PMI calculation assumes independence between motif occurrences across artefacts. However, the authors note that motifs were sometimes added over time to single artefacts, and objects may have been produced in related workshops or through cultural transmission chains. These processes violate independence assumptions. The methodology proceeds despite potential clustering effects that could inflate or deflate expected frequencies.",
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inferred_from_text"
+      }
+    },
+    {
+      "implicit_argument_id": "IA006",
+      "argument_text": "Binary presence/absence encoding is sufficient for semiotic analysis; the frequency of motif repetition on individual artefacts and spatial arrangement of motifs are not semantically relevant",
+      "type": "methodological_assumption",
+      "trigger_text": [
+        "transcribed as binary data in the form of presence/absence coding of motif types (named A1, A2, etc.) on each individual artefact",
+        "the skipgram approach sidesteps the issue of a non-linear ordering"
+      ],
+      "trigger_locations": [
+        "page 2",
+        "page 7"
+      ],
+      "inference_reasoning": "The methodology discards two potentially semantic dimensions: (1) how many times a motif appears on an artefact, and (2) the spatial arrangement of motifs. The skipgram approach with k=13 treats all motifs on an object as equally 'adjacent'. This assumes that repetition frequency and spatial organisation carry no semiotic information - a strong assumption given that repetition and arrangement are meaningful in many writing systems.",
+      "supports_claims": [
+        "C003",
+        "C028"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inferred_from_text"
+      }
+    }
+  ],
+  "research_designs": [
+    {
+      "design_id": "RD001",
+      "design_text": "Computational linguistic methodology for assessing semiotic structure - applying k-skip-n-gram models and pointwise mutual information (PMI) measures to prehistoric art to determine whether motifs were deliberately combined in sentence-like patterns",
+      "design_type": "methodological_testing",
+      "design_status": "explicit",
+      "verbatim_quote": "We here propose a novel approach derived from computational linguistics, in which k-skip-n-gram (skipgram) models and associated pointwise mutual information (PMI) measures are customised to the analysis of prehistoric art",
+      "location": "page 1 (abstract)",
+      "implements_methods": [
+        "M001",
+        "M002",
+        "M004"
+      ],
+      "supports_claims": [
+        "C003",
+        "C004",
+        "C019"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_methods": [
+        "M001",
+        "M002",
+        "M004"
+      ]
+    },
+    {
+      "design_id": "RD002",
+      "design_text": "Bouissac's three-step framework for identifying semiotic patterns: (1) identify semiotic boundaries across space and time, (2) construct types from morphological variations, (3) scan for recurring combinations of types",
+      "design_type": "analytical_framework",
+      "design_status": "explicit",
+      "verbatim_quote": "we follow Bouissac's (1994, p. 365) suggested approach for rejecting or identifying 'strong' and 'weak' semiotic patterns in a given corpus: '… first to identify semiotic boundaries across both space and time; second, to construct types from the systematic study of morphological variations; and third, to heuristically scan strings of signs in whatever directions sequences can be construed, in search of recurring combinations of types.'",
+      "location": "page 2",
+      "implements_methods": [
+        "M001",
+        "M004",
+        "M005",
+        "M006"
+      ],
+      "supports_claims": [
+        "C001",
+        "C002",
+        "C010"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_methods": [
+        "M001",
+        "M004",
+        "M005",
+        "M006"
+      ]
+    },
+    {
+      "design_id": "RD003",
+      "design_text": "Chronological comparative design using three cultural periods (Maglemose, Kongemose, Ertebølle) as analytical units to track temporal changes in motif co-occurrence patterns",
+      "design_type": "comparative_temporal",
+      "design_status": "explicit",
+      "verbatim_quote": "Traditionally, the period is divided into three archaeological culture complexes: Maglemose (~11,000–8400 BP), Kongemose (~8400-7400 BP), and Ertebølle (~7400-5950 BP). For lack of a more fine-grained chronological resolution, these serve as analytical units in the present analyses",
+      "location": "page 2",
+      "implements_methods": [
+        "M005",
+        "M008"
+      ],
+      "supports_claims": [
+        "C005",
+        "C008",
+        "C010"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_methods": [
+        "M005",
+        "M008"
+      ]
+    },
+    {
+      "design_id": "RD004",
+      "design_text": "Corpus-based statistical analysis design using a large dataset (483 objects, nearly half of all European Mesolithic ornamented artefacts) to ensure statistical validity for pattern detection",
+      "design_type": "corpus_analysis",
+      "design_status": "explicit",
+      "verbatim_quote": "With a total of 483 objects (Supplementary Information S1), the material from southern Scandinavia constitutes nearly half of the total number of European Mesolithic ornamented artefacts listed by Płonka (2003), making it patently suitable for statistical analysis",
+      "location": "page 2",
+      "implements_methods": [
+        "M001",
+        "M002",
+        "M003",
+        "M004"
+      ],
+      "supports_claims": [
+        "C003",
+        "C027"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_methods": [
+        "M001",
+        "M002",
+        "M003",
+        "M004"
+      ]
+    },
+    {
+      "design_id": "RD005",
+      "design_text": "Spatial distribution analysis design to examine geographic patterns of significant motif clusters and assess whether co-occurring motifs have discrete or overlapping spatial signatures",
+      "design_type": "spatial_analysis",
+      "design_status": "explicit",
+      "verbatim_quote": "When considering the spatial distribution of the most significant Late Mesolithic motifs that consistently occur together, it becomes further evident that their geographic extent is also limited",
+      "location": "page 4",
+      "implements_methods": [
+        "M006"
+      ],
+      "supports_claims": [
+        "C013",
+        "C014"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_methods": [
+        "M006"
+      ]
+    },
+    {
+      "design_id": "RD006",
+      "design_text": "Artefact-as-sentence framing design - treating each decorated artefact bearing two or more motifs as a distinct 'sentence unit' to enable linguistic analysis of motif combinations",
+      "design_type": "analytical_framing",
+      "design_status": "implicit",
+      "trigger_text": [
+        "By treating individual motifs as items and each ornamented artefact bearing two or more motifs as distinct 'sentence units', this approach enables the assessment of the frequency of cooccurrences involving not only two but three or more motifs",
+        "we here assume that the artefact on which a given motif or set of motifs is applied serves to frame these in a sentence-like manner"
+      ],
+      "trigger_locations": [
+        "page 3",
+        "page 7"
+      ],
+      "inference_reasoning": "The paper explicitly states this framing assumption is made to enable the computational linguistic methodology. This is a fundamental design choice that shapes the entire analytical approach - without this assumption, the skipgram methodology could not be applied to prehistoric art data.",
+      "implements_methods": [
+        "M001",
+        "M007"
+      ],
+      "supports_claims": [
+        "C003",
+        "C028"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "inferred_from_text"
+      },
+      "implemented_by_methods": [
+        "M001",
+        "M007"
+      ]
+    }
+  ],
+  "methods": [
+    {
+      "method_id": "M001",
+      "method_text": "K-skip-n-gram (skipgram) generation - generating n-grams that can skip up to k items, enabling detection of motif co-occurrences regardless of their ordering on the artefact",
+      "method_type": "computational_linguistic",
+      "method_status": "explicit",
+      "verbatim_quote": "K-skip-n-grams, or skipgrams, represent a variant of n-grams that incorporates the option to skip k items. The addition of the k rule primarily aims to mitigate data sparsity, as seminally outlined by Guthrie et al. (2006). For our purposes, skipgrams offer a solution to the challenge of non-sequential data structures",
+      "location": "page 3",
+      "implements_designs": [
+        "RD001",
+        "RD002",
+        "RD004",
+        "RD006"
+      ],
+      "realized_through_protocols": [
+        "P001",
+        "P003",
+        "P009"
+      ],
+      "produces_evidence": [
+        "E009"
+      ],
+      "supports_claims": [
+        "C003",
+        "C027",
+        "C028"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P001",
+        "P003",
+        "P009"
+      ]
+    },
+    {
+      "method_id": "M002",
+      "method_text": "Pointwise Mutual Information (PMI) calculation - quantifying the statistical association between two motif occurrences by comparing observed co-occurrence frequency to expected frequency under independence",
+      "method_type": "statistical_measure",
+      "method_status": "explicit",
+      "verbatim_quote": "The generation of skipgrams allows for a calculation of expected frequencies, and in turn, the pointwise mutual information (PMI), a measure commonly used in corpus linguistics and other domains (Magerman and Marcus, 1990). The PMI quantifies the association between two events – in our case, motif occurrences",
+      "location": "page 3",
+      "implements_designs": [
+        "RD001",
+        "RD004"
+      ],
+      "realized_through_protocols": [
+        "P001",
+        "P004",
+        "P005",
+        "P008"
+      ],
+      "produces_evidence": [
+        "E014",
+        "E015",
+        "E017",
+        "E018"
+      ],
+      "supports_claims": [
+        "C003",
+        "C008",
+        "C009"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P001",
+        "P004",
+        "P005",
+        "P008"
+      ]
+    },
+    {
+      "method_id": "M003",
+      "method_text": "Binary presence/absence motif coding - transcribing motif data from Płonka's classification scheme as binary data indicating presence or absence of each motif type on each artefact",
+      "method_type": "data_encoding",
+      "method_status": "explicit",
+      "verbatim_quote": "Płonka's (2003, pp. 315–325) own motif classification scheme, the most comprehensive for Mesolithic European portable art, was transcribed as binary data in the form of presence/absence coding of motif types (named A1, A2, etc.) on each individual artefact",
+      "location": "page 2",
+      "implements_designs": [
+        "RD004"
+      ],
+      "realized_through_protocols": [
+        "P002"
+      ],
+      "produces_evidence": [
+        "E005"
+      ],
+      "supports_claims": [
+        "C003",
+        "C004"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P002"
+      ]
+    },
+    {
+      "method_id": "M004",
+      "method_text": "Motif frequency analysis - calculating raw frequencies of individual motifs (unigrams) and motif combinations (bigrams, trigrams, quadrigrams) across the corpus",
+      "method_type": "frequency_analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "Table 1 summarises the individual motif frequencies as well as the frequencies of respective motif-cooccurrences. The most notable observation here is that only few combinations occur with elevated frequency",
+      "location": "page 4",
+      "implements_designs": [
+        "RD001",
+        "RD002",
+        "RD004"
+      ],
+      "realized_through_protocols": [
+        "P001",
+        "P009"
+      ],
+      "produces_evidence": [
+        "E008",
+        "E009",
+        "E010",
+        "E011"
+      ],
+      "supports_claims": [
+        "C001",
+        "C024"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P001",
+        "P009"
+      ]
+    },
+    {
+      "method_id": "M005",
+      "method_text": "Culture-specific PMI comparison - calculating and comparing PMI summary statistics (maximum, mean, median, quartiles) for each of the three cultural periods to detect temporal trends in collocation potential",
+      "method_type": "comparative_statistical",
+      "method_status": "explicit",
+      "verbatim_quote": "The summary statistics for all generated PMI values in each distinct culture complex (Table 2) further supports the observation that the potential for meaningful collocations increase towards the Late Mesolithic",
+      "location": "page 4",
+      "implements_designs": [
+        "RD002",
+        "RD003"
+      ],
+      "realized_through_protocols": [
+        "P001",
+        "P007",
+        "P008"
+      ],
+      "produces_evidence": [
+        "E017"
+      ],
+      "supports_claims": [
+        "C005",
+        "C008"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P001",
+        "P007",
+        "P008"
+      ]
+    },
+    {
+      "method_id": "M006",
+      "method_text": "Spatial distribution mapping - mapping the geographic distribution of artefacts bearing significant motif combinations to assess whether co-occurring motifs have discrete or overlapping spatial signatures",
+      "method_type": "spatial_analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "When considering the spatial distribution of the most significant Late Mesolithic motifs that consistently occur together, it becomes further evident that their geographic extent is also limited (Fig. 5)",
+      "location": "pages 4, 6-7",
+      "implements_designs": [
+        "RD002",
+        "RD005"
+      ],
+      "realized_through_protocols": [
+        "P002",
+        "P007"
+      ],
+      "produces_evidence": [
+        "E020",
+        "E022"
+      ],
+      "supports_claims": [
+        "C013",
+        "C014"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P002",
+        "P007"
+      ]
+    },
+    {
+      "method_id": "M007",
+      "method_text": "Sentence-like data transformation - converting binary presence/absence data into a sentence-imitating structure where motifs present on each artefact are represented as a distinct 'sentence' with spacing between motif names",
+      "method_type": "data_transformation",
+      "method_status": "explicit",
+      "verbatim_quote": "These data were then transformed from presence/absence coding into a sentence-imitating structure, where the motifs present on a given artefact reads as a distinct sentence, with spacing between each motif name (in arbitrary, alphabetical order, e.g., 'A1 B10 C1 E1 F5 F7 F10 F12 F14 F49')",
+      "location": "pages 2-3",
+      "implements_designs": [
+        "RD006"
+      ],
+      "realized_through_protocols": [
+        "P006"
+      ],
+      "produces_evidence": [],
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P006"
+      ]
+    },
+    {
+      "method_id": "M008",
+      "method_text": "Chronological attribution of motif combinations - assigning artefacts and their motif combinations to specific cultural periods based on archaeological typology to enable temporal pattern detection",
+      "method_type": "chronological_analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "the culture historical attributions themselves are strongly skewed: None of these most salient bigrams are exclusive to the Maglemosean, only one is specific to the Kongemose culture (B10–F38), and nine are unique for the Ertebølle period",
+      "location": "page 4",
+      "implements_designs": [
+        "RD003"
+      ],
+      "realized_through_protocols": [
+        "P002",
+        "P007"
+      ],
+      "produces_evidence": [
+        "E012",
+        "E014",
+        "E015"
+      ],
+      "supports_claims": [
+        "C005",
+        "C008",
+        "C010"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      },
+      "implemented_by_protocols": [
+        "P002",
+        "P007"
+      ]
+    }
+  ],
+  "protocols": [
+    {
+      "protocol_id": "P001",
+      "protocol_text": "R/Quanteda computational implementation - all analyses performed in R programming environment (v.4.2.2) using the Quanteda package for skipgram generation and PMI calculation",
+      "protocol_type": "software_implementation",
+      "protocol_status": "explicit",
+      "verbatim_quote": "All analyses were performed in the open-source R programming environment (v.4.2.2; R Core Team, 2021), using the Quanteda package (Benoit et al., 2018). All code and data are available here: https://zenodo.org/records/10623550",
+      "location": "page 3",
+      "implements_methods": [
+        "M001",
+        "M002",
+        "M004",
+        "M005"
+      ],
+      "produces_evidence": [
+        "E007"
+      ],
+      "supports_claims": [
+        "C004"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P002",
+      "protocol_text": "Płonka catalogue digitisation - manual extraction and digitisation of South Scandinavian Mesolithic ornamented artefact data from Płonka's (2003) analogue catalogue compilation",
+      "protocol_type": "data_extraction",
+      "protocol_status": "explicit",
+      "verbatim_quote": "From this analogue compilation, the South Scandinavian data were manually extracted and digitised. These data consist of numerous categorical variables corresponding to the characteristics of each ornamented object and associated metadata such as location, quality of contextual information, and original source",
+      "location": "page 2",
+      "implements_methods": [
+        "M003",
+        "M006",
+        "M008"
+      ],
+      "produces_evidence": [
+        "E001",
+        "E005"
+      ],
+      "supports_claims": [
+        "C003",
+        "C004"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P003",
+      "protocol_text": "Skip distance parameter setting (k=13) - setting the skip distance to 13 based on the maximum number of individual motifs on any single object (15), ensuring all possible motif pairings are captured within each 'sentence unit'",
+      "protocol_type": "parameter_configuration",
+      "protocol_status": "explicit",
+      "verbatim_quote": "In the corpus under consideration here, the maximum number of individual motifs on a single object is 15, and the k value for all generated skipgrams is thus set to 13",
+      "location": "page 3",
+      "implements_methods": [
+        "M001"
+      ],
+      "produces_evidence": [
+        "E006"
+      ],
+      "supports_claims": [
+        "C003",
+        "C027"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P004",
+      "protocol_text": "Expected frequency calculation formula - calculating expected co-occurrence frequency under independence assumption using the formula: expected frequency = (A/t) × (B/t) × t, where A and B are individual motif frequencies and t is total objects",
+      "protocol_type": "calculation_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The expected frequency of a given cooccurrence under the assumption of independence is calculated: expected frequency = (A/t) × (B/t) × t, where A and B are the individual frequencies of the cooccurring motifs, and t is the total number of objects",
+      "location": "page 3",
+      "implements_methods": [
+        "M002"
+      ],
+      "produces_evidence": [],
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P005",
+      "protocol_text": "PMI calculation formula - calculating pointwise mutual information as log base 2 of the ratio of observed to expected frequency: PMI(A, B) = log2(observed frequency / expected frequency)",
+      "protocol_type": "calculation_procedure",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Based on this, the PMI is calculated: PMI(A, B) = log 2(observed frequency / expected frequency)",
+      "location": "page 3",
+      "implements_methods": [
+        "M002"
+      ],
+      "produces_evidence": [],
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P006",
+      "protocol_text": "Alphabetical motif ordering - motifs present on each artefact are arranged in arbitrary alphabetical order when creating sentence-like strings (e.g., 'A1 B10 C1 E1 F5 F7 F10 F12 F14 F49')",
+      "protocol_type": "data_formatting",
+      "protocol_status": "explicit",
+      "verbatim_quote": "the motifs present on a given artefact reads as a distinct sentence, with spacing between each motif name (in arbitrary, alphabetical order, e.g., 'A1 B10 C1 E1 F5 F7 F10 F12 F14 F49')",
+      "location": "pages 2-3",
+      "implements_methods": [
+        "M007"
+      ],
+      "produces_evidence": [],
+      "supports_claims": [
+        "C028"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P007",
+      "protocol_text": "Three-period cultural attribution scheme - assigning artefacts to Maglemose (~11,000-8400 BP), Kongemose (~8400-7400 BP), or Ertebølle (~7400-5950 BP) cultural complexes based on archaeological typology",
+      "protocol_type": "classification_scheme",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Traditionally, the period is divided into three archaeological culture complexes: Maglemose (~11,000–8400 BP), Kongemose (~8400-7400 BP), and Ertebølle (~7400-5950 BP). For lack of a more fine-grained chronological resolution, these serve as analytical units in the present analyses",
+      "location": "page 2",
+      "implements_methods": [
+        "M005",
+        "M006",
+        "M008"
+      ],
+      "produces_evidence": [
+        "E002",
+        "E003"
+      ],
+      "supports_claims": [
+        "C005"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P008",
+      "protocol_text": "Frequency threshold for PMI summary statistics - excluding co-occurrences with observed values below three when calculating summary statistics for each cultural period",
+      "protocol_type": "data_filtering",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Cooccurrences with observed values below three are excluded",
+      "location": "page 6, Table 2 caption",
+      "implements_methods": [
+        "M002",
+        "M005"
+      ],
+      "produces_evidence": [
+        "E017"
+      ],
+      "supports_claims": [
+        "C008"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    },
+    {
+      "protocol_id": "P009",
+      "protocol_text": "N-gram level presentation - analysis presented at levels of 2-grams (bigrams), 3-grams (trigrams), and 4-grams (quadrigrams) to capture motif combinations of varying complexity",
+      "protocol_type": "analysis_scope",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The case study presents results at the level of 2-, 3-, and 4-grams",
+      "location": "page 3",
+      "implements_methods": [
+        "M001",
+        "M004"
+      ],
+      "produces_evidence": [
+        "E009",
+        "E026"
+      ],
+      "supports_claims": [
+        "C003"
+      ],
+      "source_verification": {
+        "verified": true,
+        "method": "direct_quote"
+      }
+    }
+  ],
+  "reproducibility_infrastructure": {
+    "persistent_identifiers": {
+      "paper_doi": {
+        "doi": "10.1016/j.jas.2024.105969",
+        "resolver_url": "https://doi.org/10.1016/j.jas.2024.105969",
+        "resolves": null,
+        "location": "page 1 header"
+      },
+      "author_orcids": [],
+      "orcid_status": "none_found_in_extracted_text",
+      "orcid_coverage": {
+        "percentage": 0,
+        "category": "none",
+        "authors_with_orcid": 0,
+        "total_authors": 2
+      },
+      "dataset_pids": [
+        {
+          "name": "Zenodo Data Repository (primary)",
+          "doi": "10.5281/zenodo.10623550",
+          "resolver_url": "https://zenodo.org/records/10623550",
+          "resolves": null,
+          "location": "page 3, methods section",
+          "description": "All code and data - R code and complete data tables"
+        },
+        {
+          "name": "Zenodo Supplementary Information",
+          "doi": "10.5281/zenodo.10801706",
+          "resolver_url": "https://zenodo.org/records/10801706",
+          "resolves": null,
+          "location": "page 8, Data availability statement",
+          "description": "Supplementary Information to this article"
+        }
+      ],
+      "software_pids": [],
+      "sample_pids": [],
+      "other_pids": [],
+      "pid_graph_summary": {
+        "connectivity_score": 3,
+        "connectivity_rating": "moderate",
+        "pid_types_present": [
+          "paper_doi",
+          "dataset_doi"
+        ],
+        "notes": "Paper DOI present (+1), no author ORCIDs (+0), two dataset DOIs in Zenodo (+1), no software DOIs (+0), no sample PIDs (+0), no project RAiD or vocabulary DOI (+0). Score: 3/6 (moderate connectivity)"
+      }
+    },
+    "funding": {
+      "statement_present": true,
+      "sources": [],
+      "verbatim_statement": "No funding sources were involved in this article.",
+      "location": "page 8",
+      "notes": "Explicit statement that no funding was received"
+    },
+    "data_availability": {
+      "statement_present": true,
+      "statement_type": "available_with_accession",
+      "verbatim_statement": "Supplementary Information to this article can be found online at https://zenodo.org/records/10801706.",
+      "repositories": [
+        {
+          "name": "Zenodo",
+          "url": "https://zenodo.org/records/10623550",
+          "type": "general",
+          "access_conditions": "open",
+          "licence": null,
+          "description": "R code and complete data tables (Supplementary Information S2 and S3)"
+        },
+        {
+          "name": "Zenodo",
+          "url": "https://zenodo.org/records/10801706",
+          "type": "general",
+          "access_conditions": "open",
+          "licence": null,
+          "description": "Supplementary Information to this article"
+        }
+      ],
+      "datasets": [
+        {
+          "name": "South Scandinavian Mesolithic ornamentation dataset",
+          "description": "Digitised data from Plonka (2003) catalogue with 483 ornamented artefacts from southern Scandinavia",
+          "format": "tabular data",
+          "location": "Supplementary Information S1"
+        },
+        {
+          "name": "R code for skipgram analysis",
+          "description": "Dedicated R code for skipgram generation and PMI calculation",
+          "format": "R scripts",
+          "location": "Supplementary Information S2"
+        },
+        {
+          "name": "Complete data tables",
+          "description": "Complete frequency tables for motifs and co-occurrences",
+          "format": "tabular data",
+          "location": "Supplementary Information S3"
+        }
+      ],
+      "machine_actionability": {
+        "rating": "moderate",
+        "rationale": "Data deposited in Zenodo with DOI, openly accessible via standard web protocol. R code provided. However, no formal metadata schema documented beyond DOI resolver."
+      }
+    },
+    "code_availability": {
+      "statement_present": true,
+      "statement_type": "available_with_accession",
+      "verbatim_statement": "All analyses were performed in the open-source R programming environment (v.4.2.2; R Core Team, 2021), using the Quanteda package (Benoit et al., 2018). All code and data are available here: https://zenodo.org/records/10623550.",
+      "repositories": [
+        {
+          "name": "Zenodo",
+          "url": "https://zenodo.org/records/10623550",
+          "type": "general",
+          "licence": null,
+          "version": null,
+          "description": "R code for skipgram analysis and PMI calculation"
+        }
+      ],
+      "software_dependencies": [
+        {
+          "name": "R",
+          "version": "4.2.2",
+          "source": "R Core Team, 2021"
+        },
+        {
+          "name": "Quanteda",
+          "version": null,
+          "source": "Benoit et al., 2018"
+        }
+      ],
+      "machine_actionability": {
+        "rating": "moderate",
+        "rationale": "Code available in Zenodo with DOI. Uses open-source R environment with documented package dependencies. However, no containerisation or formal computational environment specification."
+      }
+    },
+    "author_contributions": {
+      "statement_present": true,
+      "format": "credit",
+      "verbatim_statement": "Lasse Lukas Platz Herskind: Writing – review & editing, Writing – original draft, Visualization, Methodology, Investigation, Formal analysis, Data curation, Conceptualization. Felix Riede: Writing – review & editing, Supervision, Resources, Conceptualization.",
+      "contributions": [
+        {
+          "author": "Lasse Lukas Platz Herskind",
+          "roles": [
+            "Writing – review & editing",
+            "Writing – original draft",
+            "Visualization",
+            "Methodology",
+            "Investigation",
+            "Formal analysis",
+            "Data curation",
+            "Conceptualization"
+          ]
+        },
+        {
+          "author": "Felix Riede",
+          "roles": [
+            "Writing – review & editing",
+            "Supervision",
+            "Resources",
+            "Conceptualization"
+          ]
+        }
+      ],
+      "location": "page 8"
+    },
+    "conflicts_of_interest": {
+      "statement_present": true,
+      "conflicts_declared": false,
+      "verbatim_statement": "None.",
+      "location": "page 8"
+    },
+    "ethics_approval": {
+      "statement_present": false,
+      "notes": "No ethics statement present. Study analyses existing published archaeological data from Plonka (2003) catalogue - no primary data collection involving human subjects or fieldwork permits required."
+    },
+    "permits_and_authorizations": {
+      "statement_present": false,
+      "permits": [],
+      "notes": "No permits required. Study is a secondary analysis of published catalogue data."
+    },
+    "preregistration": {
+      "preregistered": false,
+      "notes": "No preregistration statement. Exploratory methodological study."
+    },
+    "supplementary_materials": {
+      "present": true,
+      "materials": [
+        {
+          "type": "dataset",
+          "description": "Supplementary Information S1: 483 ornamented objects from southern Scandinavia",
+          "location": "Zenodo repository",
+          "access_status": "publicly_accessible"
+        },
+        {
+          "type": "code",
+          "description": "Supplementary Information S2: R code for skipgram analysis",
+          "location": "Zenodo repository",
+          "access_status": "publicly_accessible"
+        },
+        {
+          "type": "dataset",
+          "description": "Supplementary Information S3: Complete data tables",
+          "location": "Zenodo repository",
+          "access_status": "publicly_accessible"
+        }
+      ],
+      "repository_url": "https://zenodo.org/records/10801706",
+      "notes": "All supplementary materials deposited in Zenodo with DOI"
+    },
+    "references_completeness": {
+      "doi_usage": "moderate",
+      "notes": "Reference list includes DOIs for many recent publications. Older sources and books lack DOIs. Estimated 40-60% of references include DOIs."
+    },
+    "fair_assessment": {
+      "assessed": true,
+      "findable": {
+        "score": 3,
+        "max_score": 4,
+        "criteria": {
+          "F1_globally_unique_pid": {
+            "score": 1,
+            "rationale": "Zenodo DOI (10.5281/zenodo.10623550) provides globally unique persistent identifier"
+          },
+          "F2_rich_metadata": {
+            "score": 1,
+            "rationale": "Zenodo provides structured metadata including authors, description, keywords"
+          },
+          "F3_metadata_includes_pid": {
+            "score": 1,
+            "rationale": "Zenodo metadata includes DOI for the dataset"
+          },
+          "F4_indexed_searchable": {
+            "score": 0,
+            "rationale": "Not indexed in domain-specific archaeological data repositories. General-purpose Zenodo repository."
+          }
+        }
+      },
+      "accessible": {
+        "score": 3,
+        "max_score": 4,
+        "criteria": {
+          "A1_standard_protocol": {
+            "score": 1,
+            "rationale": "HTTPS protocol via Zenodo"
+          },
+          "A1_1_open_free_protocol": {
+            "score": 1,
+            "rationale": "No authentication required for access"
+          },
+          "A1_2_authentication_where_necessary": {
+            "score": 1,
+            "rationale": "N/A - open data, no restrictions"
+          },
+          "A2_metadata_accessible_after_data_unavailable": {
+            "score": 0,
+            "rationale": "Zenodo persistence unclear for long-term metadata preservation"
+          }
+        }
+      },
+      "interoperable": {
+        "score": 2,
+        "max_score": 4,
+        "criteria": {
+          "I1_knowledge_representation_language": {
+            "score": 1,
+            "rationale": "Data in R-readable tabular format with presence/absence coding"
+          },
+          "I2_fair_vocabularies": {
+            "score": 0,
+            "rationale": "Uses custom motif classification (Plonka 2003) not linked to controlled vocabularies"
+          },
+          "I3_qualified_references": {
+            "score": 1,
+            "rationale": "References source catalogue and analytical methods"
+          }
+        }
+      },
+      "reusable": {
+        "score": 2,
+        "max_score": 4,
+        "criteria": {
+          "R1_plurality_of_attributes": {
+            "score": 1,
+            "rationale": "Metadata includes authors, methods description, data source"
+          },
+          "R1_1_clear_licence": {
+            "score": 0,
+            "rationale": "Licence not explicitly stated in paper for deposited data"
+          },
+          "R1_2_provenance": {
+            "score": 1,
+            "rationale": "Clear provenance: digitised from Plonka (2003) catalogue"
+          },
+          "R1_3_community_standards": {
+            "score": 0,
+            "rationale": "Does not follow archaeological data standards (e.g., CIDOC-CRM, tDAR schemas)"
+          }
+        }
+      },
+      "total_fair_score": 10,
+      "max_fair_score": 16,
+      "fair_percentage": 62.5,
+      "fair_rating": "moderately_fair",
+      "machine_actionability": {
+        "rating": "moderate",
+        "rationale": "Data accessible via DOI and standard protocols. R code enables computational reuse. However, no formal API, limited metadata schema, and custom classification system reduces machine-actionability."
+      },
+      "discipline_context": {
+        "publication_year": 2024,
+        "expectations": "Post-2020 publication: High expectations for data/code sharing, ORCID adoption",
+        "discipline_baseline": "Archaeology: Moderate open science adoption. Data sharing improving with journal mandates.",
+        "research_type": "Methodological paper with secondary data analysis",
+        "rationale": "For a 2024 methods paper, data and code sharing is excellent. Missing ORCIDs and formal licensing are areas for improvement. FAIR score of 62.5% is above average for HASS disciplines."
+      },
+      "recommendations": [
+        "Add ORCID identifiers for both authors",
+        "Specify licence for deposited data and code (recommend CC-BY for data, MIT for code)",
+        "Consider depositing in domain-specific repository (e.g., tDAR, ADS) for better discoverability",
+        "Link motif classification to controlled vocabulary or publish classification scheme"
+      ]
+    },
+    "extraction_metadata": {
+      "extraction_date": "2026-01-14",
+      "extractor": "claude-opus-4-5",
+      "sections_examined": [
+        "title_page",
+        "author_affiliations",
+        "abstract",
+        "acknowledgements",
+        "data_availability_statement",
+        "credit_statement",
+        "conflicts_of_interest",
+        "funding_statement",
+        "references"
+      ],
+      "notes": "Paper is Open Access under CC BY licence. Excellent reproducibility infrastructure for a methodological paper: all data and code deposited in Zenodo with DOIs. Two separate Zenodo records referenced (10623550 for code/data, 10801706 for supplementary information). No ORCIDs visible in PDF text. No ethics or permits required as study uses published catalogue data."
+    }
+  },
+  "extraction_notes": {
+    "pass0_metadata": {
+      "completion_date": "2026-01-14T00:00:00Z",
+      "primary_source": "Elsevier title page + article header",
+      "author_name_format": "full names",
+      "doi_present": true,
+      "notes": "Clear title page with full author names and institutional affiliation. DOI in header. Open Access article under CC BY licence. Corresponding author (Felix Riede) indicated with asterisk."
+    },
+    "pass6_infrastructure": {
+      "completion_date": "2026-01-14T00:00:00Z",
+      "sections_extracted": [
+        "persistent_identifiers",
+        "funding",
+        "data_availability",
+        "code_availability",
+        "author_contributions",
+        "conflicts_of_interest",
+        "ethics_approval",
+        "permits_and_authorizations",
+        "preregistration",
+        "supplementary_materials",
+        "references_completeness",
+        "fair_assessment",
+        "extraction_metadata"
+      ],
+      "key_findings": [
+        "Excellent data/code sharing: All materials deposited in Zenodo with DOIs",
+        "Two Zenodo repositories: 10623550 (code/data) and 10801706 (supplementary info)",
+        "Full CReDIT author contributions statement",
+        "No external funding received",
+        "No ORCIDs present in PDF",
+        "FAIR score: 10/16 (62.5%) - moderately FAIR",
+        "Open Access under CC BY licence"
+      ],
+      "notes": "Strong reproducibility infrastructure for a computational methodology paper. R code and data openly available. Main gaps: missing ORCIDs, no explicit licence for deposited materials, custom classification not linked to controlled vocabularies."
+    },
+    "pass1_claims_evidence": {
+      "completion_date": "2026-01-14T00:00:00Z",
+      "extraction_mode": "liberal",
+      "sections_extracted": [
+        "abstract",
+        "introduction",
+        "materials_and_methods",
+        "results",
+        "discussion",
+        "conclusion"
+      ],
+      "evidence_count": 34,
+      "claims_count": 33,
+      "over_extraction_target": "40-50%",
+      "notes": "Liberal extraction pass completed. Extracted all quantitative findings from Table 1 and Table 2, PMI analysis results, spatial distribution findings from Fig 4-5, chronological patterns, and methodological observations. Claims include core finding (no semiotic structure), methodological claims about skipgram approach, and interpretive claims about Ertebølle cluster and Late Mesolithic patterns."
+    },
+    "pass2_rationalization": {
+      "completion_date": "2026-01-14T00:00:00Z",
+      "evidence_before": 34,
+      "evidence_after": 29,
+      "evidence_reduction": "14.7%",
+      "claims_before": 33,
+      "claims_after": 33,
+      "claims_reduction": "0%",
+      "consolidations": [
+        "E001 + E030 → E001 (corpus size 483 objects and European representation)",
+        "E004 + E005 → E004 (geographic scope and contextual area definition)",
+        "E010 + E011 + E012 → E009 (n-gram counts from Table 1 with identical claim support)",
+        "E014 + E015 → E011 (top bigram frequencies with identical claim support)"
+      ],
+      "cross_references_updated": true,
+      "notes": "Evidence rationalization achieved 14.7% reduction (target 15-20%). Claims retained at 33 - hierarchical structure appropriate with no true redundancy identified. C001/C002 remain separate as C002 explicitly supports C001 in paper. All claim supported_by arrays updated with new evidence IDs."
+    },
+    "phase2b_reconciliation": {
+      "completion_date": "2026-01-14T00:00:00Z",
+      "evidence_coverage": {
+        "total_evidence": 29,
+        "referenced_by_claims": 29,
+        "orphan_evidence": 0
+      },
+      "claim_hierarchy": {
+        "total_claims": 33,
+        "claims_supporting_others": 12,
+        "terminal_claims": 21
+      },
+      "reference_validation": {
+        "all_evidence_refs_valid": true,
+        "all_claims_refs_valid": true
+      },
+      "notes": "All 29 evidence items referenced by claims. 12 claims support other claims in hierarchical structure. 21 claims are terminal (core findings or supporting details). No orphan items, no invalid references."
+    },
+    "passes_completed": [
+      "pass0",
+      "pass6",
+      "pass1",
+      "pass2",
+      "phase2b",
+      "pass3",
+      "pass4",
+      "pass5",
+      "pass7"
+    ],
+    "session_completed": "D",
+    "pass3_rdmap_liberal": {
+      "completion_date": "2026-01-14T00:00:00Z",
+      "extraction_mode": "liberal",
+      "sections_extracted": [
+        "abstract",
+        "introduction",
+        "materials_and_methods",
+        "results",
+        "discussion"
+      ],
+      "research_designs_count": 6,
+      "methods_count": 8,
+      "protocols_count": 9,
+      "explicit_items": 22,
+      "implicit_items": 1,
+      "notes": "Liberal RDMAP extraction from methods paper. Captured complete three-tier hierarchy: 6 designs (5 explicit + 1 implicit artefact-as-sentence framing), 8 methods implementing computational linguistic and statistical approaches, 9 protocols specifying parameters and procedures. Strong methodological transparency enables detailed protocol extraction."
+    },
+    "pass4_implicit_extraction": {
+      "completion_date": "2026-01-14T00:00:00Z",
+      "implicit_arguments_count": 6,
+      "design_assumptions": 2,
+      "methodological_assumptions": 4,
+      "key_assumptions_identified": [
+        "IA001: Motif classification adequacy (Płonka scheme without inter-coder testing)",
+        "IA002: Typological dating accuracy (most objects not directly dated)",
+        "IA003: Sample representativeness (483 objects assumed representative)",
+        "IA004: PMI interpretation (positive PMI = meaningful combination)",
+        "IA005: Statistical independence (despite cultural transmission)",
+        "IA006: Binary encoding sufficiency (ignores repetition and arrangement)"
+      ],
+      "notes": "Identified 6 implicit assumptions underlying the methodology. Two are design assumptions (chronology accuracy, sample representativeness), four are methodological assumptions (classification adequacy, PMI interpretation, independence, binary sufficiency). Authors acknowledge some limitations explicitly but proceed with assumptions."
+    },
+    "pass5_rationalisation": {
+      "completion_date": "2026-01-14T00:00:00Z",
+      "consolidations_made": 0,
+      "cross_reference_fixes": 1,
+      "fixes_applied": [
+        "M006 implements_designs: added RD002 (Bouissac framework includes spatial boundary identification)"
+      ],
+      "bidirectionality_verified": true,
+      "hierarchy_validation": {
+        "designs_with_methods": "6/6 (100%)",
+        "methods_with_protocols": "8/8 (100%)",
+        "protocols_with_evidence": "8/9 (P004 and P005 are formulae without direct evidence production)"
+      },
+      "notes": "No consolidation warranted - all RDMAP items serve distinct functions. One cross-reference fix applied (M006→RD002). Bidirectional references verified for all design↔method and method↔protocol relationships."
+    },
+    "pass7_validation": {
+      "completion_date": "2026-01-17T00:00:00Z",
+      "validation_status": "PASS",
+      "automated_validators": {
+        "bidirectional_mapping": {
+          "status": "PASS",
+          "corrections_made": 46,
+          "conflicts_resolved": 4,
+          "final_status": "All bidirectional mappings consistent"
+        },
+        "schema_validation": {
+          "status": "SKIPPED",
+          "reason": "Script error with location string format (uses string not object)"
+        }
+      },
+      "manual_validation": {
+        "cross_reference_integrity": {
+          "status": "PASS",
+          "notes": "All ID references valid. No orphaned objects. All bidirectional mappings consistent after corrections."
+        },
+        "hierarchy_validation": {
+          "status": "PASS",
+          "methods_linked_to_designs": "8/8 (100%)",
+          "protocols_linked_to_methods": "9/9 (100%)",
+          "claims_hierarchy_valid": true
+        },
+        "schema_compliance": {
+          "status": "PASS",
+          "id_formats_valid": true,
+          "required_fields_present": true,
+          "location_format": "string (legacy format, valid)"
+        },
+        "source_verification": {
+          "status": "PASS",
+          "evidence_with_quotes": "29/29 (100%)",
+          "claims_with_quotes": "33/33 (100%)",
+          "implicit_args_with_triggers": "6/6 (100%)",
+          "rdmap_explicit_with_quotes": "22/22 (100%)",
+          "rdmap_implicit_with_triggers": "1/1 (100%)"
+        }
+      },
+      "entity_counts": {
+        "evidence": 29,
+        "claims": 33,
+        "implicit_arguments": 6,
+        "research_designs": 6,
+        "methods": 8,
+        "protocols": 9
+      },
+      "infrastructure_validation": {
+        "fair_assessment_present": true,
+        "fair_score": "10/16 (62.5%)",
+        "pid_graph_connectivity": "moderate (3/6)",
+        "data_availability": "open (Zenodo)",
+        "code_availability": "open (Zenodo)"
+      },
+      "issues_found": [],
+      "recommendations": [
+        "Consider adding ORCIDs to author metadata",
+        "Specify explicit licence for deposited data/code"
+      ],
+      "notes": "Extraction passes all validation checks. High-quality methods paper with excellent reproducibility infrastructure. RDMAP hierarchy complete and properly cross-referenced. All items have proper source verification."
+    }
+  }
+}

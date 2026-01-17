@@ -1,0 +1,83 @@
+{
+  "classification_metadata": {
+    "classified_after_pass": 7,
+    "classification_date": "2026-01-17",
+    "classifier_version": "v0.2-alpha"
+  },
+
+  "paper_type": "methodological",
+  "paper_type_justification": "Primary contribution is a novel computational linguistic methodology (k-skip-n-gram models + pointwise mutual information measures) for assessing semiotic structure in prehistoric art. The paper presents the method's theoretical basis (Bouissac's three-step framework), technical implementation (skipgram generation, PMI calculation, binary encoding), and demonstrates capabilities through a case study. Claims C003, C004, C019-C021, C023, C027-C028 are explicitly methodological arguments about the method itself. The case study on 483 South Scandinavian Mesolithic portable art objects serves a demonstrative function - showing what the method can reveal - rather than being the primary contribution. The paper's title explicitly frames it as 'a computational linguistic methodology', and the extraction metadata correctly identifies it as a 'methods paper'.",
+
+  "methodological_characterisation": {
+    "subtype": "analytical_method",
+    "validation_approach": "inductive",
+    "validation_notes": "The skipgram + PMI methodology is validated through descriptive demonstration on a single archaeological case study (483 Mesolithic objects from southern Scandinavia). No formal hypothesis-testing of method performance, no benchmark comparison with alternative approaches, no systematic evaluation against known ground truth. Validation follows an inductive pattern: apply method → observe what it reveals → describe findings → interpret significance. The case study shows the method can detect motif co-occurrence patterns and identify potential semiotic clusters (the Ertebølle cluster), thereby demonstrating the method's capability for the intended purpose. R code and data are openly shared (Zenodo DOIs: 10623550, 10801706), enabling reproducibility of the demonstration."
+  },
+
+  "taxonomy_feedback": {
+    "category_fit_quality": "good",
+    "proposed_new_category": null,
+    "rationale_for_proposal": null,
+    "characteristics_of_proposed_category": null,
+    "alternative_papers_that_might_fit": []
+  },
+
+  "expressed_approach": {
+    "approach": "none_stated",
+    "evidence": [
+      "No explicit research approach terminology (deductive/inductive/abductive) appears in the paper",
+      "Paper framed as presenting 'a novel approach' (methodological framing, not epistemic framing)",
+      "RD001: 'applying k-skip-n-gram models... to determine whether motifs were deliberately combined' - exploratory question framing",
+      "Introduction states aim to 'test whether there is any statistical evidence for meaningful collocations' - sounds deductive but is actually exploratory pattern detection"
+    ],
+    "source_sections": ["abstract", "introduction"],
+    "confidence": "high",
+    "significance": "Absence of explicit epistemic framing is common for methodological papers, which typically focus on method presentation rather than epistemic positioning. The paper is transparent about its purpose (presenting and demonstrating a methodology) without using formal research design terminology. This is appropriate for the genre - methodological papers often implicitly adopt an inductive demonstration approach without explicitly labelling it."
+  },
+
+  "revealed_approach": {
+    "approach": "inductive",
+    "evidence": {
+      "claims_structure": "Claims are of two types: (1) methodological arguments about method capabilities (C003: 'skipgram methodology and PMI measure can reveal if motifs were deliberately combined', C004: 'method is readily case-transferable', C019: 'constitutes an improvement over existing attempts'), and (2) descriptive findings from the case study (C001: 'no evident semiotic structure', C008: 'potential for meaningful collocations increases toward the Late Mesolithic', C009: 'Ertebølle cluster may reflect a developing semiotic system'). Both types are pattern descriptions, not hypothesis tests.",
+      "methods_application": "Methods M001-M008 are applied to detect and describe patterns in the corpus. The analytical workflow (skipgram generation → PMI calculation → frequency analysis → spatial mapping → chronological comparison) is exploratory pattern discovery, not confirmatory hypothesis testing. No pre-specified predictions about PMI values or motif combinations are tested.",
+      "analytical_workflow": "Apply computational linguistic method → generate n-gram frequencies and PMI values → observe patterns (no semiotic structure in Early/Middle Mesolithic, potential Ertebølle cluster in Late Mesolithic) → interpret patterns (socio-political rather than proto-linguistic significance) → draw conclusions about Mesolithic art. This is an inductive sequence: data → patterns → interpretation."
+    },
+    "confidence": "high"
+  },
+
+  "expressed_vs_revealed": {
+    "alignment": "matched",
+    "harking_flag": false,
+    "mismatch_explanation": "As a methodological paper, the validation approach (not substantive research approach) is the relevant comparison. The paper is transparent about its purpose: presenting a novel methodology and demonstrating its capabilities through a case study. The expressed framing (method presentation with demonstration) matches the revealed approach (inductive case study demonstration). No HARKing concern - the paper does not claim to test hypotheses it did not pre-specify. The exploratory findings from the case study are appropriately framed as pattern descriptions and interpretations, not confirmatory tests."
+  },
+
+  "primary_classification": {
+    "approach": "inductive",
+    "confidence": "high",
+    "justification": "Classification is based on validation approach (appropriate for methodological papers), not substantive research approach. The skipgram + PMI methodology is validated through inductive/descriptive demonstration: the method is applied to a case study corpus, patterns are observed and described, and the method's utility is established through these observations. This is consistent with standard validation practices for methodological papers in HASS disciplines. The paper does not test hypotheses about method performance (deductive) or argue for method design through inference to best explanation (abductive). The inductive demonstration is well-executed: comprehensive corpus (483 objects, nearly half of all European Mesolithic ornamented artefacts), transparent methods with reproducible R code, and clear interpretation of findings. Confidence is high because the validation approach is unambiguous and appropriate for a methods paper."
+  },
+
+  "mixed_method_characterisation": {
+    "is_mixed": false
+  },
+
+  "transparency_assessment": {
+    "expressed_methodology_present": true,
+    "transparency_quality": "high",
+    "transparency_notes": "Excellent methodological transparency for a computational methods paper. The paper clearly specifies: (1) theoretical framework (Bouissac's three-step approach), (2) computational implementation (k-skip-n-grams with k=4, n=1-4; PMI formula; binary encoding), (3) data source (Plonka's classification scheme), (4) analytical parameters (all specified in Methods section and protocols). R code and data are openly available in Zenodo repositories (DOIs: 10623550, 10801706). FAIR assessment score of 10/16 (62.5%) with 'moderate' rating. The method's assumptions and limitations are explicitly acknowledged in the Discussion (e.g., artefact-as-sentence framing, binary encoding limitations, chronological resolution constraints). This level of transparency enables both reproducibility of the analysis and application of the method to other corpora."
+  },
+
+  "credibility_framework": {
+    "framework_to_use": "methodological_paper",
+    "signal_prioritisation": {
+      "primary_signals": ["transparency", "reproducibility", "comprehensibility"],
+      "secondary_signals": ["validity", "plausibility"],
+      "deemphasised_signals": ["generalisability", "robustness"],
+      "rationale": "Methodological paper framework applies because the primary contribution is the skipgram + PMI method, not the substantive findings about Mesolithic art. Primary signals: (1) Transparency - design decisions, parameter choices, and limitations are well documented; (2) Reproducibility - R code and data openly shared, enabling others to reproduce the analysis and apply the method to new corpora; (3) Comprehensibility - method clearly specified with theoretical rationale. Secondary signals: (4) Validity - claims about method capabilities should be assessed for adequacy; (5) Plausibility - theoretical basis (computational linguistics applied to prehistoric art) should be evaluated. Deemphasised: Generalisability and Robustness of the case study findings (the Ertebølle cluster interpretation) are less critical because the case study is illustrative, not the primary contribution. The case study need not generalise beyond demonstrating method capabilities."
+    }
+  },
+
+  "context_flags": ["🔧"],
+
+  "classification_notes": "This is a well-executed methodological paper presenting a novel computational linguistic approach to prehistoric art analysis. The method (k-skip-n-gram + PMI) is adapted from natural language processing and applied to a non-linguistic domain, which is an innovative contribution. The case study on South Scandinavian Mesolithic portable art serves as a compelling demonstration, revealing both null findings (no overt semiotic structure in Early/Middle Mesolithic) and tentative positive findings (Ertebølle cluster in Late Mesolithic). The paper acknowledges important limitations: binary encoding ignores motif repetition and arrangement, typological dating introduces chronological uncertainty, and the Plonka classification scheme lacks inter-coder reliability testing. These acknowledged limitations are appropriate for a methods paper proposing a new approach. The 🔧 context flag indicates this is a methodological paper where Reproducibility assessment should focus on 'Can users apply the method?' rather than 'Can users reproduce the substantive findings?'"
+}
