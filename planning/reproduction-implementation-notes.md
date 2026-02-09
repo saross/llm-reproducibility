@@ -219,6 +219,58 @@ For initial assessment, output generation verification may be sufficient. Full r
 | Stochastic elements | MCMC → expected variation | GAM → deterministic |
 | Statistical discrepancies | 0 (all within HPD) | 1 (p-value, non-material) |
 
+### herskind-riede-2024
+
+- **Runtime:** ~30 seconds (deterministic frequency counts and PMI)
+- **Pre-computed:** Yes — S3.xlsx contains bigram, trigram, and quadrigram PMI tables
+- **Dockerfile:** None — we constructed one using `rocker/r-ver:4.2.2`
+- **Dependency management:** None — 6 packages listed in `library()` calls, no version pinning
+- **Verification strategy:** Single-phase: Docker build + batch execution + CSV comparison
+  1. Built Docker image with R 4.2.2 and 6 packages (~20 min)
+  2. Wrote wrapper script to automate interactive workflow (~15 min)
+  3. Executed and compared all 291 n-gram entries against S3.xlsx (exact match)
+
+**Gotchas discovered during reproduction:**
+
+1. **Interactive script design** — S2.R is designed for RStudio with manual re-runs. Part 1
+   must be executed 3 times (n=2, 3, 4) with parameter changes, and again for each cultural
+   period subset. Lines are conditionally included/excluded by commenting. This required
+   writing a wrapper script with a parameterised function.
+
+2. **Proprietary font dependency** — Script specifies `Gill Sans MT` (Monotype, not freely
+   available). Falls back to `sans` without computational impact, but exact visual reproduction
+   of figures is impossible without purchasing the font.
+
+3. **No output file saving** — Bar plots use interactive `print()` only. Only the heatmap has
+   a `ggsave()` call. CSV export uses a generic `_grams.csv` filename that must be manually
+   renamed between runs.
+
+4. **Ampersand in filenames** — Original filenames contain `&` (`Herskind&Riede_S1.xlsx`)
+   which caused Docker volume mount issues. Renamed for compatibility.
+
+5. **GIMP post-processing** — The published PMI heatmap figure was manually refined in GIMP
+   after computational generation. The computational output (matrix values) matches exactly,
+   but the publication figure cannot be reproduced without manual intervention.
+
+**Comparison with Crema and Marwick:**
+
+| Aspect | Crema et al. 2024 | Marwick 2025 | Herskind & Riede 2024 |
+|--------|-------------------|--------------|----------------------|
+| Dockerfile modifications | 2 (typo + missing package) | 0 | N/A (no Dockerfile provided) |
+| Time to reproduce | ~18h compute + ~3h hands-on | ~13 min compute + ~7 min hands-on | ~30s compute + ~50 min hands-on |
+| Dependency approach | Manual install.packages() | renv.lock (169 packages) | None (6 library() calls) |
+| Stochastic elements | MCMC → expected variation | GAM → deterministic | None → exact match |
+| Statistical discrepancies | 0 (all within HPD) | 1 (p-value, non-material) | 0 (exact to machine epsilon) |
+| Script execution mode | Batch-ready | Literate programming | Interactive (wrapper required) |
+| Environment specification | Dockerfile | Dockerfile + renv.lock | R version in paper text only |
+
+**Key lesson: Determinism compensates for missing environment specification.** Despite having
+no Docker, no renv, and no session info, the analysis reproduced exactly because all
+computations are deterministic (frequency counts and logarithms). For stochastic analyses
+(MCMC, bootstrap, etc.), this level of environment under-specification would likely produce
+different numerical results. The reproducibility of this paper is a function of its analytical
+simplicity rather than its infrastructure practices.
+
 ---
 
-*Last updated: 2026-02-09*
+*Last updated: 2026-02-10*

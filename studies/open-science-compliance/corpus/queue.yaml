@@ -195,7 +195,15 @@ papers:
       classification_complete: true  # Pass 8 complete 2026-01-17
       assessment_complete: true  # Pass 9 complete 2026-01-17
       fair_assessed: true  # FAIR 10/16 (62.5%)
-      reproduction_attempted: false
+      reproduction_attempted: true
+    reproduction:
+      date: "2026-02-10"
+      verdict: successful
+      docker_modifications: 0  # No author Dockerfile existed; we constructed one
+      wrapper_script_required: true  # Original S2.R is interactive, not batch-ready
+      runtime_seconds: 30  # Deterministic analysis, trivially fast
+      discrepancies: 0  # All 291 n-gram entries match to machine epsilon
+      report: "outputs/herskind-riede-2024/reproduction/attempt-01/comparisons/comparison-report.md"
     classification_summary:
       paper_type: methodological
       validation_approach: inductive
@@ -223,7 +231,7 @@ papers:
       reproducibility: 80
       reproduction_priority: 4
       execution_feasibility: ready
-    notes: "JAS-SAS Emerging Investigator Award 2024. Computational linguistics methodology for Mesolithic art analysis. Pass 9 complete (2026-01-17): Good verdict (primary mean 81.7), 74 aggregate. R scripts + data in Zenodo. Priority 4 for reproduction (ready but lower priority than exemplary papers)."
+    notes: "JAS-SAS Emerging Investigator Award 2024. Computational linguistics methodology for Mesolithic art analysis. Pass 9 complete (2026-01-17): Good verdict (primary mean 81.7), 74 aggregate. R scripts + data in Zenodo. Priority 4 for reproduction. Reproduction SUCCESSFUL (2026-02-10): All 291 n-gram PMI values match exactly. Required wrapper script (interactive S2.R not batch-ready). No Docker/renv provided by authors."
 
   - slug: dye-et-al-2023
     title: "Bayesian Chronology Construction and Substance Time"
@@ -276,7 +284,7 @@ papers:
 # Classification completed: 5/5 (all pilot papers)
 # FAIR assessed: 5/5 (crema: highly_fair; marwick: 93.75%; key: 60%; herskind: 62.5%; dye: 65%)
 # Assessment completed: 5/5 (crema: 84, marwick: 81, key: 81, herskind: 74, dye: 77)
-# Reproduction attempted: 2/5 (crema: SUCCESSFUL 2026-02-09; marwick: SUCCESSFUL 2026-02-09)
+# Reproduction attempted: 3/5 (crema: SUCCESSFUL 2026-02-09; marwick: SUCCESSFUL 2026-02-09; herskind: SUCCESSFUL 2026-02-10)
 # Full pipeline (Pass 0-9) complete: 5/5 (ALL PILOT PAPERS COMPLETE)
 #
 # Verdict criteria (formalised 2026-01-17):
