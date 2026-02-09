@@ -36,7 +36,14 @@ papers:
       classification_complete: true  # Pass 8 completed 2026-01-13
       assessment_complete: true  # Pass 9 completed 2026-01-13
       fair_assessed: true  # Paper-based; API-based assessment pending
-      reproduction_attempted: false
+      reproduction_attempted: true
+    reproduction:
+      date: "2026-02-09"
+      verdict: successful
+      docker_modifications: 2  # RColorBrewer typo + missing rnaturalearthhires
+      runtime_hours: 18  # 3 parallel MCMC runs on sapphire
+      discrepancies: 0  # All parameters within HPD intervals
+      report: "outputs/crema-et-al-2024/reproduction/attempt-01/comparisons/comparison-report.md"
     classification_summary:
       paper_type: methodological
       validation_approach: deductive
@@ -90,7 +97,14 @@ papers:
       classification_complete: true  # Pass 8 complete 2026-01-14
       assessment_complete: true  # Pass 9 complete 2026-01-14
       fair_assessed: true  # Pass 6 complete: FAIR 30/32 (93.75%)
-      reproduction_attempted: false
+      reproduction_attempted: true
+    reproduction:
+      date: "2026-02-09"
+      verdict: successful
+      docker_modifications: 0  # No modifications needed
+      runtime_minutes: 13  # Single docker build (local)
+      discrepancies: 1  # Kendall p-value: 4.08e-7 vs published 2.67e-6 (both highly significant)
+      report: "outputs/marwick-2025/reproduction/attempt-01/comparisons/comparison-report.md"
     classification_summary:
       paper_type: meta_research
       validation_approach: inductive
@@ -262,7 +276,7 @@ papers:
 # Classification completed: 5/5 (all pilot papers)
 # FAIR assessed: 5/5 (crema: highly_fair; marwick: 93.75%; key: 60%; herskind: 62.5%; dye: 65%)
 # Assessment completed: 5/5 (crema: 84, marwick: 81, key: 81, herskind: 74, dye: 77)
-# Reproduction attempted: 0/5
+# Reproduction attempted: 2/5 (crema: SUCCESSFUL 2026-02-09; marwick: SUCCESSFUL 2026-02-09)
 # Full pipeline (Pass 0-9) complete: 5/5 (ALL PILOT PAPERS COMPLETE)
 #
 # Verdict criteria (formalised 2026-01-17):
