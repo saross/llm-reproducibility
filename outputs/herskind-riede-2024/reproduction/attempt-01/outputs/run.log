@@ -1,0 +1,151 @@
+Package version: 3.2.4
+Unicode version: 14.0
+ICU version: 70.1
+Parallel computing: 32 of 32 threads used.
+See https://quanteda.io for tutorials and examples.
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+Registering fonts with R
+=== Package versions ===
+R: 4.2.2 
+quanteda: 3.2.4 
+readxl: 1.4.2 
+ggplot2: 3.4.1 
+dplyr: 1.1.0 
+data.table: 1.14.8 
+extrafont: 0.19 
+========================
+
+Scanning ttf files in /usr/share/fonts/, /usr/local/share/fonts/ ...
+Extracting .afm files from .ttf files...
+Gill Sans MT not available, using default sans font
+Font fallback: using 'sans'
+New names:
+• `` -> `...17`
+• `` -> `...18`
+• `` -> `...19`
+• `` -> `...20`
+• `` -> `...21`
+• `` -> `...22`
+• `` -> `...23`
+• `` -> `...24`
+• `` -> `...25`
+• `` -> `...26`
+• `` -> `...27`
+• `` -> `...28`
+• `` -> `...29`
+• `` -> `...30`
+Loaded 483 objects from S1.xlsx
+Chronology distribution:
+
+          Ertebølle           Kongemose Kongemose/Ertebølle           Maglemose 
+                168                  87                  23                 205 
+
+
+=== Part 1: Generating skip-grams and PMI for full dataset ===
+
+Processing bigrams (n=2)...
+  n=2: 1543 unique k-skip-n-grams generated
+  Frequency distribution of observed frequencies:
+
+   1    2    3    4    5    6    7    8    9   10   12   13   14   15   16   22 
+1225  153   60   31   20   14    9    5    5    5    6    2    1    2    1    1 
+  28   44 
+   1    2 
+  Exported 165 rows to outputs/bigrams.csv
+
+Processing trigrams (n=3)...
+  n=3: 4422 unique k-skip-n-grams generated
+  Frequency distribution of observed frequencies:
+
+   1    2    3    4    5    6    7    8   19 
+4095  221   56   27    9    8    4    1    1 
+  Exported 106 rows to outputs/trigrams.csv
+
+Processing quadrigrams (n=4)...
+  n=4: 8466 unique k-skip-n-grams generated
+  Frequency distribution of observed frequencies:
+
+   1    2    3    4    5 
+8335  111   16    3    1 
+Warning messages:
+1: NA is replaced by empty string 
+2: NA is replaced by empty string 
+3: NA is replaced by empty string 
+  Exported 20 rows to outputs/quadrigrams.csv
+
+=== Part 2: Period-specific analyses ===
+Checking chronology values in data:
+[1] "Ertebølle"           "Kongemose"           "Kongemose/Ertebølle"
+[4] "Maglemose"          
+Warning message:
+NA is replaced by empty string 
+Summary stats written to outputs/summary-stats.txt
+=== PMI Summary Statistics ===
+
+
+Maglemose: 205 objects
+  n=4: 1437 unique k-skip-n-grams generated
+  Matched skip-grams with obs_freq > 2: 9
+  PMI summary for Maglemose (obs_freq > 2):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.745   2.272   3.146   3.406   4.286   5.618 
+
+Kongemose: 87 objects
+  n=4: 3931 unique k-skip-n-grams generated
+  Matched skip-grams with obs_freq > 2: 18
+  PMI summary for Kongemose (obs_freq > 2):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.425   2.285   3.078   3.223   3.624   5.618 
+
+Ertebølle: 168 objects
+  n=4: 3149 unique k-skip-n-grams generated
+  Matched skip-grams with obs_freq > 2: 10
+  PMI summary for Ertebølle (obs_freq > 2):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.425   2.276   2.777   3.377   3.606   7.925 
+
+Overall PMI summary (obs_freq > 2):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.425   2.261   3.078   3.384   3.794   7.925 
+
+=== Part 3: Generating bar plots ===
+  Saved outputs/freq_bigrams.png
+  Saved outputs/pmi_bigrams.png
+  Saved outputs/freq_trigrams.png
+  Saved outputs/pmi_trigrams.png
+  No quadrigrams with observed_freq > 9, skipping bar plots
+
+=== Part 4: Generating PMI heatmap ===
+  49 of 49 tokens in chronological order present in matrix
+  Saved outputs/heatmapPMI.png
+  Saved outputs/pmi-matrix.csv
+
+=== Analysis complete ===
+Output files in outputs/:
+  bigrams.csv
+  freq_bigrams.png
+  freq_trigrams.png
+  heatmapPMI.png
+  pmi_bigrams.png
+  pmi_trigrams.png
+  pmi-matrix.csv
+  quadrigrams.csv
+  summary-stats.txt
+  trigrams.csv 
