@@ -90,7 +90,7 @@ Session JSONL files can be large (10MB+). When querying:
 
 - Consider using Claude's large context window
 - For very large sessions, extract relevant portions first
-- Use the `--summarize` flag with `archive-cc-session.py` to get a session overview
+- Use `cc-session summarise SESSION_ID` to get a session overview
 
 ---
 

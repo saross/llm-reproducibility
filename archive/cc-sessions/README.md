@@ -35,37 +35,36 @@ archive/cc-sessions/
 
 ### Archiving Sessions
 
-Archive CC sessions using the provided script:
+Archive CC sessions using `cc-session` (installed via
+[cc-session-toolkit](https://github.com/saross/cc-session-toolkit)):
 
 ```bash
 # Archive the latest session
-python3 scripts/archive-cc-session.py
+cc-session archive
 
 # Archive a specific session
-python3 scripts/archive-cc-session.py --session-id UUID
+cc-session archive --session-id UUID
 
 # Archive all unarchived sessions
-python3 scripts/archive-cc-session.py --all
+cc-session archive --all
 
 # List sessions and archive status
-python3 scripts/archive-cc-session.py --list
+cc-session list
 ```
 
-**Note**: The current/active session cannot be archived until it ends. Run the archive script in a new session to archive previous ones.
+**Note**: The current/active session cannot be archived until it ends. Run the archive command in a new session to archive previous ones.
 
 ### Managing Session Metadata
 
-The archive script includes commands for managing session metadata:
-
 ```bash
 # List archives and their metadata status
-python3 scripts/archive-cc-session.py --list-archives
+cc-session list-archives
 
 # Summarise a session for metadata generation
-python3 scripts/archive-cc-session.py --summarize SESSION_ID
+cc-session summarise SESSION_ID
 
 # Update metadata for an archived session
-python3 scripts/archive-cc-session.py --update-metadata SESSION_ID -m metadata.json
+cc-session update SESSION_ID -m metadata.json
 ```
 
 ### Populating Metadata with LLM Assistance
@@ -74,7 +73,7 @@ The recommended workflow for generating session metadata:
 
 1. **Summarise the session** to get key information:
    ```bash
-   python3 scripts/archive-cc-session.py --summarize SESSION_ID
+   cc-session summarise SESSION_ID
    ```
 
 2. **Generate metadata using Claude Code** by reading the transcript and applying the prompt from `queries/populate-metadata.md`:
@@ -84,7 +83,7 @@ The recommended workflow for generating session metadata:
 
 3. **Apply the generated metadata**:
    ```bash
-   python3 scripts/archive-cc-session.py --update-metadata SESSION_ID -m /tmp/metadata.json
+   cc-session update SESSION_ID -m /tmp/metadata.json
    ```
 
 See `queries/populate-metadata.md` for the full prompt and JSON schema.
