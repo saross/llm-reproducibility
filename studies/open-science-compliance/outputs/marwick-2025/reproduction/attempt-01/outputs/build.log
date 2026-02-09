@@ -1,0 +1,821 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  525.4MB
+Step 1/11 : FROM rocker/verse:4.4.1
+4.4.1: Pulling from rocker/verse
+6414378b6477: Pulling fs layer
+69e5d7fd7299: Pulling fs layer
+daa59c8df8ab: Pulling fs layer
+c8dfa4bb1ae7: Pulling fs layer
+3a65b41a4654: Pulling fs layer
+cc34301daa01: Pulling fs layer
+c8dfa4bb1ae7: Waiting
+3a65b41a4654: Waiting
+9d4ef721346c: Pulling fs layer
+cc34301daa01: Waiting
+9d4ef721346c: Waiting
+ccdc0cb34d65: Pulling fs layer
+ccdc0cb34d65: Waiting
+e6643021b6e1: Pulling fs layer
+e6643021b6e1: Waiting
+5ac9f39ad9d8: Pulling fs layer
+c45a69275716: Pulling fs layer
+5ac9f39ad9d8: Waiting
+fc5e03979ca1: Pulling fs layer
+c45a69275716: Waiting
+856b10258a6e: Pulling fs layer
+de65c82e98eb: Pulling fs layer
+856b10258a6e: Waiting
+fc5e03979ca1: Waiting
+fe725d340657: Pulling fs layer
+e03fafc37429: Pulling fs layer
+905be7c7b447: Pulling fs layer
+c0e4127c6ef4: Pulling fs layer
+de65c82e98eb: Waiting
+fe725d340657: Waiting
+e03fafc37429: Waiting
+905be7c7b447: Waiting
+ca7ae5f5217c: Pulling fs layer
+a3b109f2265f: Pulling fs layer
+bd8984fc838b: Pulling fs layer
+c0e4127c6ef4: Waiting
+bf92d73c9c98: Pulling fs layer
+0bc543ae437d: Pulling fs layer
+bd8984fc838b: Waiting
+ca7ae5f5217c: Waiting
+bf92d73c9c98: Waiting
+a3b109f2265f: Waiting
+69e5d7fd7299: Download complete
+6414378b6477: Verifying Checksum
+6414378b6477: Download complete
+c8dfa4bb1ae7: Verifying Checksum
+c8dfa4bb1ae7: Download complete
+6414378b6477: Pull complete
+69e5d7fd7299: Pull complete
+3a65b41a4654: Verifying Checksum
+3a65b41a4654: Download complete
+cc34301daa01: Verifying Checksum
+cc34301daa01: Download complete
+9d4ef721346c: Verifying Checksum
+9d4ef721346c: Download complete
+e6643021b6e1: Verifying Checksum
+e6643021b6e1: Download complete
+5ac9f39ad9d8: Verifying Checksum
+5ac9f39ad9d8: Download complete
+daa59c8df8ab: Verifying Checksum
+daa59c8df8ab: Download complete
+c45a69275716: Download complete
+856b10258a6e: Verifying Checksum
+856b10258a6e: Download complete
+fc5e03979ca1: Verifying Checksum
+fc5e03979ca1: Download complete
+ccdc0cb34d65: Verifying Checksum
+ccdc0cb34d65: Download complete
+daa59c8df8ab: Pull complete
+c8dfa4bb1ae7: Pull complete
+3a65b41a4654: Pull complete
+de65c82e98eb: Verifying Checksum
+de65c82e98eb: Download complete
+cc34301daa01: Pull complete
+9d4ef721346c: Pull complete
+e03fafc37429: Verifying Checksum
+e03fafc37429: Download complete
+c0e4127c6ef4: Verifying Checksum
+c0e4127c6ef4: Download complete
+ccdc0cb34d65: Pull complete
+e6643021b6e1: Pull complete
+5ac9f39ad9d8: Pull complete
+c45a69275716: Pull complete
+fc5e03979ca1: Pull complete
+856b10258a6e: Pull complete
+de65c82e98eb: Pull complete
+ca7ae5f5217c: Verifying Checksum
+ca7ae5f5217c: Download complete
+905be7c7b447: Verifying Checksum
+905be7c7b447: Download complete
+a3b109f2265f: Verifying Checksum
+a3b109f2265f: Download complete
+bd8984fc838b: Download complete
+fe725d340657: Verifying Checksum
+fe725d340657: Download complete
+0bc543ae437d: Verifying Checksum
+0bc543ae437d: Download complete
+fe725d340657: Pull complete
+e03fafc37429: Pull complete
+905be7c7b447: Pull complete
+c0e4127c6ef4: Pull complete
+ca7ae5f5217c: Pull complete
+a3b109f2265f: Pull complete
+bd8984fc838b: Pull complete
+bf92d73c9c98: Download complete
+bf92d73c9c98: Pull complete
+0bc543ae437d: Pull complete
+Digest: sha256:15575c907b55ad12fe3414761881b4220f84b1b2046b3d08047ea89bb8f32d25
+Status: Downloaded newer image for rocker/verse:4.4.1
+ ---> 202c993befdc
+Step 2/11 : LABEL maintainer="Ben Marwick <bmarwick@uw.edu>"
+ ---> Running in 261788e709d9
+ ---> Removed intermediate container 261788e709d9
+ ---> f16c9d698daf
+Step 3/11 : ENV PROJ_DIR /home/rstudio/web-of-science-archaeology
+ ---> Running in 78b791ca624c
+ ---> Removed intermediate container 78b791ca624c
+ ---> 7e282abe70d1
+Step 4/11 : ENV RENV_PATHS_CACHE=/renv/cache
+ ---> Running in dfa6a501b588
+ ---> Removed intermediate container dfa6a501b588
+ ---> 0035373f4cca
+Step 5/11 : WORKDIR $PROJ_DIR
+ ---> Running in e5b37e6ff653
+ ---> Removed intermediate container e5b37e6ff653
+ ---> a7cd77d1fa96
+Step 6/11 : COPY . $PROJ_DIR
+ ---> 5eec9da20e36
+Step 7/11 : RUN chown -R rstudio:rstudio $PROJ_DIR
+ ---> Running in 92c5b0b311e5
+ ---> Removed intermediate container 92c5b0b311e5
+ ---> 8633abfff350
+Step 8/11 : RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
+ ---> Running in 0a6563c7a671
+
+R version 4.4.1 (2024-06-14) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+# Bootstrapping renv 1.1.4 ---------------------------------------------------
+- Downloading renv ... OK
+- Installing renv  ... OK
+
+ℹ Using R 4.4.1 (lockfile was generated with R 4.5.1)
+- Project '/home/rstudio/web-of-science-archaeology' loaded. [renv 1.1.4]
+- One or more packages recorded in the lockfile are not installed.
+- Use `renv::status()` for more details.
+> install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))
+# Downloading packages -------------------------------------------------------
+- Downloading renv from CRAN ...                OK [1.2 Mb in 0.32s]
+Successfully downloaded 1 package in 1.1 seconds.
+
+The following package(s) will be installed:
+- renv [1.1.7]
+These packages will be installed into "/home/rstudio/web-of-science-archaeology/renv/library/linux-ubuntu-jammy/R-4.4/x86_64-pc-linux-gnu".
+
+# Installing packages --------------------------------------------------------
+- Installing renv ...                           OK [built from source and cached in 6.3s]
+Successfully installed 1 package in 6.4 seconds.
+
+The following loaded package(s) have been updated:
+- renv
+Restart your R session to use the new versions.
+
+> 
+> 
+ ---> Removed intermediate container 0a6563c7a671
+ ---> 62ceb7fddb92
+Step 9/11 : RUN R -e "renv::restore()"
+ ---> Running in b0cade2c92af
+
+R version 4.4.1 (2024-06-14) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+renv 1.1.7 was loaded from project library, but this project is configured to use renv 1.1.4.
+- Use `renv::record("renv@1.1.7")` to record renv 1.1.7 in the lockfile.
+- Use `renv::restore(packages = "renv")` to install renv 1.1.4 into the project library.
+ℹ Using R 4.4.1 (lockfile was generated with R 4.5.1)
+- Project '/home/rstudio/web-of-science-archaeology' loaded. [renv 1.1.7]
+- One or more packages recorded in the lockfile are not installed.
+- Use `renv::status()` for more details.
+> renv::restore()
+The following required system packages are not installed:
+- pandoc-citeproc  [required by bayesplot, loo]
+The R packages depending on these system packages may fail to install.
+
+An administrator can install these packages with:
+- sudo apt install pandoc-citeproc
+
+The following package(s) will be updated:
+
+# CRAN -----------------------------------------------------------------------
+- boot             [1.3-30 -> 1.3-31]
+- MASS             [7.3-60.2 -> 7.3-65]
+- Matrix           [1.7-0 -> 1.7-3]
+- nlme             [3.1-164 -> 3.1-168]
+- survival         [3.6-4 -> 3.8-3]
+- askpass          [* -> 1.2.1]
+- backports        [* -> 1.5.0]
+- bayesplot        [* -> 1.12.0]
+- BH               [* -> 1.87.0-1]
+- bit64            [* -> 4.6.0-1]
+- blob             [* -> 1.2.4]
+- bridgesampling   [* -> 1.1-2]
+- brms             [* -> 2.22.0]
+- Brobdingnag      [* -> 1.2-9]
+- broom.mixed      [* -> 0.2.9.6]
+- bslib            [* -> 0.9.0]
+- cachem           [* -> 1.1.0]
+- callr            [* -> 3.7.6]
+- checkmate        [* -> 2.3.2]
+- cli              [* -> 3.6.5]
+- clipr            [* -> 0.8.0]
+- coda             [* -> 0.19-4.1]
+- conflicted       [* -> 1.2.0]
+- cowplot          [* -> 1.1.3]
+- crayon           [* -> 1.5.3]
+- DBI              [* -> 1.2.3]
+- dbplyr           [* -> 2.5.0]
+- desc             [* -> 1.4.3]
+- digest           [* -> 0.6.37]
+- distributional   [* -> 0.5.0]
+- dplyr            [* -> 1.1.4]
+- dtplyr           [* -> 1.3.1]
+- evaluate         [* -> 1.0.3]
+- fansi            [* -> 1.0.6]
+- farver           [* -> 2.1.2]
+- fastmap          [* -> 1.2.0]
+- fontawesome      [* -> 0.5.3]
+- forcats          [* -> 1.0.0]
+- fs               [* -> 1.6.6]
+- furrr            [* -> 0.3.1]
+- future           [* -> 1.40.0]
+- future.apply     [* -> 1.11.3]
+- gargle           [* -> 1.5.2]
+- generics         [* -> 0.1.3]
+- ggrepel          [* -> 0.9.6]
+- ggridges         [* -> 0.5.6]
+- globals          [* -> 0.17.0]
+- glue             [* -> 1.8.0]
+- googledrive      [* -> 2.1.1]
+- googlesheets4    [* -> 1.1.1]
+- gtable           [* -> 0.3.6]
+- haven            [* -> 2.5.4]
+- here             [* -> 1.0.1]
+- highr            [* -> 0.11]
+- hms              [* -> 1.1.3]
+- htmltools        [* -> 0.5.8.1]
+- httr             [* -> 1.4.7]
+- inline           [* -> 0.3.21]
+- irr              [* -> 0.84.1]
+- isoband          [* -> 0.2.7]
+- jquerylib        [* -> 0.1.4]
+- jsonlite         [* -> 2.0.0]
+- kableExtra       [* -> 1.4.0]
+- knitr            [* -> 1.50]
+- lifecycle        [* -> 1.0.4]
+- listenv          [* -> 0.9.1]
+- loo              [* -> 2.8.0]
+- lpSolve          [* -> 5.6.23]
+- lubridate        [* -> 1.9.4]
+- magrittr         [* -> 2.0.3]
+- matrixStats      [* -> 1.5.0]
+- memoise          [* -> 2.0.1]
+- mime             [* -> 0.13]
+- modelr           [* -> 0.1.11]
+- mvtnorm          [* -> 1.3-3]
+- nleqslv          [* -> 3.3.5]
+- openssl          [* -> 2.3.2]
+- parallelly       [* -> 1.43.0]
+- patchwork        [* -> 1.3.0]
+- pkgbuild         [* -> 1.4.7]
+- pkgconfig        [* -> 2.0.3]
+- plyr             [* -> 1.8.9]
+- posterior        [* -> 1.6.1]
+- prettyunits      [* -> 1.2.0]
+- progress         [* -> 1.2.3]
+- purrr            [* -> 1.0.4]
+- QuickJSR         [* -> 1.7.0]
+- rappdirs         [* -> 0.3.3]
+- Rcpp             [* -> 1.0.14]
+- RcppParallel     [* -> 5.1.10]
+- readr            [* -> 2.1.5]
+- rematch          [* -> 2.0.0]
+- rematch2         [* -> 2.1.2]
+- reprex           [* -> 2.1.1]
+- reshape2         [* -> 1.4.4]
+- rlang            [* -> 1.1.6]
+- rmarkdown        [* -> 2.29]
+- rprojroot        [* -> 2.0.4]
+- rstan            [* -> 2.32.7]
+- rstantools       [* -> 2.4.0]
+- rstudioapi       [* -> 0.17.1]
+- rvest            [* -> 1.0.4]
+- sass             [* -> 0.4.10]
+- scales           [* -> 1.4.0]
+- StanHeaders      [* -> 2.32.10]
+- stringi          [* -> 1.8.7]
+- stringr          [* -> 1.5.1]
+- svglite          [* -> 2.1.3]
+- sys              [* -> 3.4.3]
+- systemfonts      [* -> 1.2.3]
+- tensorA          [* -> 0.36.2.1]
+- textshaping      [* -> 1.0.1]
+- tibble           [* -> 3.2.1]
+- tidyr            [* -> 1.3.1]
+- tidyselect       [* -> 1.2.1]
+- tidyverse        [* -> 2.0.0]
+- timechange       [* -> 0.3.0]
+- tinytex          [* -> 0.57]
+- utf8             [* -> 1.2.5]
+- vctrs            [* -> 0.6.5]
+- viridisLite      [* -> 0.4.2]
+- vroom            [* -> 1.6.5]
+- withr            [* -> 3.0.2]
+- xfun             [* -> 0.52]
+
+# RSPM -----------------------------------------------------------------------
+- renv             [repo: CRAN -> RSPM; ver: 1.1.7 -> 1.1.4]
+- abind            [* -> 1.4-8]
+- base64enc        [* -> 0.1-3]
+- bit              [* -> 4.6.0]
+- broom            [* -> 1.0.8]
+- cellranger       [* -> 1.1.0]
+- confintr         [* -> 1.0.2]
+- cpp11            [* -> 0.5.2]
+- curl             [* -> 6.2.2]
+- data.table       [* -> 1.17.0]
+- ggplot2          [* -> 3.5.2]
+- ggpmisc          [* -> 0.6.1]
+- ggpp             [* -> 0.5.8-1]
+- gridExtra        [* -> 2.3]
+- ids              [* -> 1.0.1]
+- labeling         [* -> 0.4.3]
+- lmodel2          [* -> 1.7-4]
+- MatrixModels     [* -> 0.5-4]
+- multcomp         [* -> 1.4-28]
+- multcompView     [* -> 0.1-10]
+- numDeriv         [* -> 2016.8-1.1]
+- pillar           [* -> 1.10.2]
+- polynom          [* -> 1.4-1]
+- processx         [* -> 3.8.6]
+- ps               [* -> 1.9.1]
+- quantreg         [* -> 6.1]
+- R6               [* -> 2.6.1]
+- ragg             [* -> 1.4.0]
+- RColorBrewer     [* -> 1.1-3]
+- RcppEigen        [* -> 0.3.4.0.2]
+- readxl           [* -> 1.4.5]
+- sandwich         [* -> 3.1-1]
+- selectr          [* -> 0.4-2]
+- SparseM          [* -> 1.84-2]
+- splus2R          [* -> 1.3-5]
+- TH.data          [* -> 1.1-3]
+- tzdb             [* -> 0.5.0]
+- uuid             [* -> 1.2-1]
+- xml2             [* -> 1.3.8]
+- xts              [* -> 0.14.1]
+- yaml             [* -> 2.3.10]
+- zoo              [* -> 1.8-14]
+
+# Downloading packages -------------------------------------------------------
+- Querying repositories for available source packages ... Done!
+- Downloading MASS 7.3-65 from CRAN ...         OK [1.1 Mb in 1.7s]
+- Downloading Matrix 1.7-3 from CRAN ...        OK [4.7 Mb in 3.3s]
+- Downloading survival 3.8-3 from CRAN ...      OK [8.3 Mb in 1.1s]
+- Downloading nlme 3.1-168 from CRAN ...        OK [2.3 Mb in 1.7s]
+- Downloading boot 1.3-31 from CRAN ...         OK [629.7 Kb in 1.1s]
+- Downloading renv 1.1.4 from RSPM ...          OK [2.2 Mb in 1.1s]
+- Downloading BH 1.87.0-1 from CRAN ...         OK [12.7 Mb in 1.2s]
+- Downloading Brobdingnag 1.2-9 from CRAN ...   OK [1.3 Mb in 2.8s]
+- Downloading DBI 1.2.3 from CRAN ...           OK [895.9 Kb in 1.7s]
+- Downloading MatrixModels 0.5-4 from RSPM ...  OK [397.1 Kb in 2.5s]
+- Downloading QuickJSR 1.7.0 from CRAN ...      OK [551.6 Kb in 2.6s]
+- Downloading R6 2.6.1 from RSPM ...            OK [84.8 Kb in 1.7s]
+- Downloading RColorBrewer 1.1-3 from RSPM ...  OK [50.8 Kb in 1.0s]
+- Downloading Rcpp 1.0.14 from CRAN ...         OK [2.1 Mb in 3.0s]
+- Downloading RcppEigen 0.3.4.0.2 from RSPM ... OK [1.8 Mb in 1.1s]
+- Downloading RcppParallel 5.1.10 from CRAN ... OK [1.9 Mb in 2.9s]
+- Downloading SparseM 1.84-2 from RSPM ...      OK [864.7 Kb in 1.1s]
+- Downloading StanHeaders 2.32.10 from CRAN ... OK [3 Mb in 2.9s]
+- Downloading TH.data 1.1-3 from RSPM ...       OK [8.3 Mb in 3.6s]
+- Downloading abind 1.4-8 from RSPM ...         OK [63.6 Kb in 1.7s]
+- Downloading askpass 1.2.1 from CRAN ...       OK [21.4 Kb in 1.7s]
+- Downloading sys 3.4.3 from CRAN ...           OK [39.9 Kb in 1.7s]
+- Downloading backports 1.5.0 from CRAN ...     OK [113.3 Kb in 1.7s]
+- Downloading base64enc 0.1-3 from RSPM ...     OK [25.9 Kb in 1.1s]
+- Downloading bayesplot 1.12.0 from CRAN ...    OK [4.8 Mb in 3.5s]
+- Downloading dplyr 1.1.4 from CRAN ...         OK [1.4 Mb in 1.1s]
+- Downloading cli 3.6.5 from CRAN ...           OK [1.3 Mb in 1.7s]
+- Downloading generics 0.1.3 from CRAN ...      OK [80.9 Kb in 1.1s]
+- Downloading glue 1.8.0 from CRAN ...          OK [164.3 Kb in 1.0s]
+- Downloading lifecycle 1.0.4 from CRAN ...     OK [122.2 Kb in 1.0s]
+- Downloading rlang 1.1.6 from CRAN ...         OK [1.5 Mb in 2.8s]
+- Downloading magrittr 2.0.3 from CRAN ...      OK [218.7 Kb in 1.1s]
+- Downloading pillar 1.10.2 from RSPM ...       OK [644.5 Kb in 2.5s]
+- Downloading utf8 1.2.5 from CRAN ...          OK [148 Kb in 2.3s]
+- Downloading vctrs 0.6.5 from CRAN ...         OK [1.3 Mb in 1.1s]
+- Downloading tibble 3.2.1 from CRAN ...        OK [662.7 Kb in 1.0s]
+- Downloading fansi 1.0.6 from CRAN ...         OK [310.2 Kb in 1.0s]
+- Downloading pkgconfig 2.0.3 from CRAN ...     OK [17.7 Kb in 1.1s]
+- Downloading tidyselect 1.2.1 from CRAN ...    OK [220.2 Kb in 1.0s]
+- Downloading withr 3.0.2 from CRAN ...         OK [218.3 Kb in 1.7s]
+- Downloading ggplot2 3.5.2 from RSPM ...       OK [4.8 Mb in 3.3s]
+- Downloading gtable 0.3.6 from CRAN ...        OK [217.6 Kb in 1.7s]
+- Downloading isoband 0.2.7 from CRAN ...       OK [1.6 Mb in 1.1s]
+- Downloading scales 1.4.0 from CRAN ...        OK [823.7 Kb in 1.7s]
+- Downloading farver 2.1.2 from CRAN ...        OK [1.4 Mb in 1.7s]
+- Downloading labeling 0.4.3 from RSPM ...      OK [59.6 Kb in 1.1s]
+- Downloading viridisLite 0.4.2 from CRAN ...   OK [1.2 Mb in 1.1s]
+- Downloading ggridges 0.5.6 from CRAN ...      OK [2.2 Mb in 1.1s]
+- Downloading posterior 1.6.1 from CRAN ...     OK [1011.7 Kb in 2.7s]
+- Downloading checkmate 2.3.2 from CRAN ...     OK [726.5 Kb in 3.6s]
+- Downloading tensorA 0.36.2.1 from CRAN ...    OK [216.9 Kb in 2.3s]
+- Downloading distributional 0.5.0 from CRAN ... OK [467.3 Kb in 2.5s]
+- Downloading numDeriv 2016.8-1.1 from RSPM ... OK [111.8 Kb in 2.1s]
+- Downloading matrixStats 1.5.0 from CRAN ...   OK [459.6 Kb in 1.0s]
+- Downloading reshape2 1.4.4 from CRAN ...      OK [36.9 Kb in 1.1s]
+- Downloading plyr 1.8.9 from CRAN ...          OK [768.8 Kb in 1.0s]
+- Downloading stringr 1.5.1 from CRAN ...       OK [303.2 Kb in 1.0s]
+- Downloading stringi 1.8.7 from CRAN ...       OK [3.2 Mb in 1.1s]
+- Downloading tidyr 1.3.1 from CRAN ...         OK [1.1 Mb in 1.0s]
+- Downloading purrr 1.0.4 from CRAN ...         OK [524.3 Kb in 1.2s]
+- Downloading cpp11 0.5.2 from RSPM ...         OK [282.8 Kb in 1.7s]
+- Downloading bit 4.6.0 from RSPM ...           OK [615.5 Kb in 1.7s]
+- Downloading bit64 4.6.0-1 from CRAN ...       OK [480.7 Kb in 1.0s]
+- Downloading blob 1.2.4 from CRAN ...          OK [46.7 Kb in 1.9s]
+- Downloading bridgesampling 1.1-2 from CRAN ... OK [1.6 Mb in 1.9s]
+- Downloading mvtnorm 1.3-3 from CRAN ...       OK [929.4 Kb in 1.7s]
+- Downloading coda 0.19-4.1 from CRAN ...       OK [320.6 Kb in 1.1s]
+- Downloading brms 2.22.0 from CRAN ...         OK [7 Mb in 3.6s]
+- Downloading rstan 2.32.7 from CRAN ...        OK [12.6 Mb in 3.6s]
+- Downloading inline 0.3.21 from CRAN ...       OK [127.8 Kb in 2.1s]
+- Downloading gridExtra 2.3 from RSPM ...       OK [1.1 Mb in 2.7s]
+- Downloading loo 2.8.0 from CRAN ...           OK [1.8 Mb in 2.9s]
+- Downloading pkgbuild 1.4.7 from CRAN ...      OK [203 Kb in 2.4s]
+- Downloading callr 3.7.6 from CRAN ...         OK [439.5 Kb in 2.5s]
+- Downloading processx 3.8.6 from RSPM ...      OK [329.3 Kb in 1.7s]
+- Downloading ps 1.9.1 from RSPM ...            OK [488.7 Kb in 1.7s]
+- Downloading desc 1.4.3 from CRAN ...          OK [326.8 Kb in 1.6s]
+- Downloading rstantools 2.4.0 from CRAN ...    OK [166.1 Kb in 2.2s]
+- Downloading future 1.40.0 from CRAN ...       OK [875.5 Kb in 2.8s]
+- Downloading digest 0.6.37 from CRAN ...       OK [217.5 Kb in 1.0s]
+- Downloading globals 0.17.0 from CRAN ...      OK [123.7 Kb in 2.2s]
+- Downloading listenv 0.9.1 from CRAN ...       OK [103.7 Kb in 1.0s]
+- Downloading parallelly 1.43.0 from CRAN ...   OK [548.8 Kb in 2.7s]
+- Downloading future.apply 1.11.3 from CRAN ... OK [153.3 Kb in 1.1s]
+- Downloading nleqslv 3.3.5 from CRAN ...       OK [104.6 Kb in 2.1s]
+- Downloading broom 1.0.8 from RSPM ...         OK [1.8 Mb in 1.8s]
+- Downloading broom.mixed 0.2.9.6 from CRAN ... OK [5.1 Mb in 3.2s]
+- Downloading forcats 1.0.0 from CRAN ...       OK [411.7 Kb in 1.0s]
+- Downloading furrr 0.3.1 from CRAN ...         OK [995.7 Kb in 1.8s]
+- Downloading bslib 0.9.0 from CRAN ...         OK [5.4 Mb in 1.2s]
+- Downloading cachem 1.1.0 from CRAN ...        OK [65.9 Kb in 1.6s]
+- Downloading fastmap 1.2.0 from CRAN ...       OK [61.8 Kb in 1.7s]
+- Downloading htmltools 0.5.8.1 from CRAN ...   OK [347.8 Kb in 1.1s]
+- Downloading jquerylib 0.1.4 from CRAN ...     OK [514.5 Kb in 0.99s]
+- Downloading jsonlite 2.0.0 from CRAN ...      OK [1 Mb in 1.7s]
+- Downloading memoise 2.0.1 from CRAN ...       OK [47.6 Kb in 1.7s]
+- Downloading mime 0.13 from CRAN ...           OK [43.5 Kb in 1.6s]
+- Downloading sass 0.4.10 from CRAN ...         OK [2.3 Mb in 1.7s]
+- Downloading fs 1.6.6 from CRAN ...            OK [302.5 Kb in 1.1s]
+- Downloading rappdirs 0.3.3 from CRAN ...      OK [44.2 Kb in 1.0s]
+- Downloading cellranger 1.1.0 from RSPM ...    OK [101.3 Kb in 1.1s]
+- Downloading rematch 2.0.0 from CRAN ...       OK [15.9 Kb in 1.0s]
+- Downloading clipr 0.8.0 from CRAN ...         OK [50.1 Kb in 1.0s]
+- Downloading confintr 1.0.2 from RSPM ...      OK [166.5 Kb in 2.2s]
+- Downloading conflicted 1.2.0 from CRAN ...    OK [53.9 Kb in 1.0s]
+- Downloading cowplot 1.1.3 from CRAN ...       OK [1.3 Mb in 1.0s]
+- Downloading crayon 1.5.3 from CRAN ...        OK [159.6 Kb in 1.2s]
+- Downloading curl 6.2.2 from RSPM ...          OK [764.4 Kb in 2.7s]
+- Downloading data.table 1.17.0 from RSPM ...   OK [2.6 Mb in 2.9s]
+- Downloading dbplyr 2.5.0 from CRAN ...        OK [1.2 Mb in 2.8s]
+- Downloading dtplyr 1.3.1 from CRAN ...        OK [349.4 Kb in 1.7s]
+- Downloading evaluate 1.0.3 from CRAN ...      OK [99.3 Kb in 1.0s]
+- Downloading fontawesome 0.5.3 from CRAN ...   OK [1.3 Mb in 1.7s]
+- Downloading gargle 1.5.2 from CRAN ...        OK [755.6 Kb in 2.6s]
+- Downloading httr 1.4.7 from CRAN ...          OK [476.5 Kb in 1.0s]
+- Downloading openssl 2.3.2 from CRAN ...       OK [1.2 Mb in 1.1s]
+- Downloading ggpmisc 0.6.1 from RSPM ...       OK [1.5 Mb in 3.1s]
+- Downloading polynom 1.4-1 from RSPM ...       OK [397.8 Kb in 1.1s]
+- Downloading quantreg 6.1 from RSPM ...        OK [1.4 Mb in 2.7s]
+- Downloading lmodel2 1.7-4 from RSPM ...       OK [337.6 Kb in 2.4s]
+- Downloading splus2R 1.3-5 from RSPM ...       OK [324.1 Kb in 2.3s]
+- Downloading multcomp 1.4-28 from RSPM ...     OK [713 Kb in 2.7s]
+- Downloading sandwich 3.1-1 from RSPM ...      OK [1.4 Mb in 1.7s]
+- Downloading zoo 1.8-14 from RSPM ...          OK [1008.5 Kb in 2.8s]
+- Downloading multcompView 0.1-10 from RSPM ... OK [112.4 Kb in 2.2s]
+- Downloading lubridate 1.9.4 from CRAN ...     OK [963.2 Kb in 1.1s]
+- Downloading timechange 0.3.0 from CRAN ...    OK [168.4 Kb in 1.1s]
+- Downloading ggpp 0.5.8-1 from RSPM ...        OK [1.8 Mb in 3.1s]
+- Downloading xts 0.14.1 from RSPM ...          OK [1.2 Mb in 1.0s]
+- Downloading ggrepel 0.9.6 from CRAN ...       OK [292.8 Kb in 1.1s]
+- Downloading googledrive 2.1.1 from CRAN ...   OK [1.8 Mb in 3.0s]
+- Downloading uuid 1.2-1 from RSPM ...          OK [47.6 Kb in 1.9s]
+- Downloading googlesheets4 1.1.1 from CRAN ... OK [505.1 Kb in 2.6s]
+- Downloading ids 1.0.1 from RSPM ...           OK [119.8 Kb in 2.2s]
+- Downloading rematch2 2.1.2 from CRAN ...      OK [45 Kb in 1.9s]
+- Downloading haven 2.5.4 from CRAN ...         OK [371.7 Kb in 1.1s]
+- Downloading hms 1.1.3 from CRAN ...           OK [97.8 Kb in 1.1s]
+- Downloading readr 2.1.5 from CRAN ...         OK [819.8 Kb in 1.1s]
+- Downloading vroom 1.6.5 from CRAN ...         OK [914.8 Kb in 1.1s]
+- Downloading tzdb 0.5.0 from RSPM ...          OK [648.1 Kb in 1.7s]
+- Downloading progress 1.2.3 from CRAN ...      OK [85 Kb in 1.0s]
+- Downloading prettyunits 1.2.0 from CRAN ...   OK [149.4 Kb in 1.0s]
+- Downloading here 1.0.1 from CRAN ...          OK [52.2 Kb in 1.0s]
+- Downloading rprojroot 2.0.4 from CRAN ...     OK [104.7 Kb in 1.0s]
+- Downloading highr 0.11 from CRAN ...          OK [36.7 Kb in 1.0s]
+- Downloading xfun 0.52 from CRAN ...           OK [579.4 Kb in 2.6s]
+- Downloading irr 0.84.1 from CRAN ...          OK [146 Kb in 2.3s]
+- Downloading lpSolve 5.6.23 from CRAN ...      OK [365.3 Kb in 2.4s]
+- Downloading kableExtra 1.4.0 from CRAN ...    OK [2 Mb in 2.9s]
+- Downloading knitr 1.50 from CRAN ...          OK [1.1 Mb in 2.7s]
+- Downloading yaml 2.3.10 from RSPM ...         OK [112.7 Kb in 1.1s]
+- Downloading xml2 1.3.8 from RSPM ...          OK [275.3 Kb in 2.4s]
+- Downloading rmarkdown 2.29 from CRAN ...      OK [2.5 Mb in 1.1s]
+- Downloading tinytex 0.57 from CRAN ...        OK [140.2 Kb in 2.2s]
+- Downloading rstudioapi 0.17.1 from CRAN ...   OK [310.4 Kb in 1.1s]
+- Downloading svglite 2.1.3 from CRAN ...       OK [196.9 Kb in 2.3s]
+- Downloading systemfonts 1.2.3 from CRAN ...   OK [335.1 Kb in 1.7s]
+- Downloading modelr 0.1.11 from CRAN ...       OK [196.1 Kb in 1.0s]
+- Downloading patchwork 1.3.0 from CRAN ...     OK [3.2 Mb in 1.1s]
+- Downloading ragg 1.4.0 from RSPM ...          OK [646.3 Kb in 2.6s]
+- Downloading textshaping 1.0.1 from CRAN ...   OK [179.3 Kb in 2.3s]
+- Downloading readxl 1.4.5 from RSPM ...        OK [399.3 Kb in 1.0s]
+- Downloading reprex 2.1.1 from CRAN ...        OK [483.4 Kb in 1.7s]
+- Downloading rvest 1.0.4 from CRAN ...         OK [291.8 Kb in 1.7s]
+- Downloading selectr 0.4-2 from RSPM ...       OK [487.6 Kb in 2.6s]
+- Downloading tidyverse 2.0.0 from CRAN ...     OK [415.8 Kb in 1.1s]
+Successfully downloaded 166 packages in 310 seconds.
+
+# Installing packages --------------------------------------------------------
+- Installing MASS 7.3-65 ...                    OK [installed binary and cached in 0.15s]
+- Installing Matrix 1.7-3 ...                   OK [installed binary and cached in 0.75s]
+- Installing survival 3.8-3 ...                 OK [installed binary and cached in 0.74s]
+- Installing nlme 3.1-168 ...                   OK [installed binary and cached in 0.21s]
+- Installing boot 1.3-31 ...                    OK [installed binary and cached in 0.15s]
+- Installing renv 1.1.4 ...                     OK [installed binary and cached in 0.21s]
+- Installing BH 1.87.0-1 ...                    OK [installed binary and cached in 1.3s]
+- Installing Brobdingnag 1.2-9 ...              OK [installed binary and cached in 0.83s]
+- Installing DBI 1.2.3 ...                      OK [installed binary and cached in 0.23s]
+- Installing MatrixModels 0.5-4 ...             OK [installed binary and cached in 0.72s]
+- Installing QuickJSR 1.7.0 ...                 OK [installed binary and cached in 0.15s]
+- Installing R6 2.6.1 ...                       OK [installed binary and cached in 0.14s]
+- Installing RColorBrewer 1.1-3 ...             OK [installed binary and cached in 0.13s]
+- Installing Rcpp 1.0.14 ...                    OK [installed binary and cached in 0.26s]
+- Installing RcppEigen 0.3.4.0.2 ...            OK [installed binary and cached in 0.26s]
+- Installing RcppParallel 5.1.10 ...            OK [installed binary and cached in 0.21s]
+- Installing SparseM 1.84-2 ...                 OK [installed binary and cached in 0.18s]
+- Installing StanHeaders 2.32.10 ...            OK [installed binary and cached in 0.32s]
+- Installing TH.data 1.1-3 ...                  OK [installed binary and cached in 0.74s]
+- Installing abind 1.4-8 ...                    OK [installed binary and cached in 0.14s]
+- Installing sys 3.4.3 ...                      OK [installed binary and cached in 0.13s]
+- Installing askpass 1.2.1 ...                  OK [installed binary and cached in 0.17s]
+- Installing backports 1.5.0 ...                OK [installed binary and cached in 0.17s]
+- Installing base64enc 0.1-3 ...                OK [installed binary and cached in 0.14s]
+- Installing cli 3.6.5 ...                      OK [installed binary and cached in 0.17s]
+- Installing generics 0.1.3 ...                 OK [installed binary and cached in 0.13s]
+- Installing glue 1.8.0 ...                     OK [installed binary and cached in 0.16s]
+- Installing rlang 1.1.6 ...                    OK [installed binary and cached in 0.22s]
+- Installing lifecycle 1.0.4 ...                OK [installed binary and cached in 0.19s]
+- Installing magrittr 2.0.3 ...                 OK [installed binary and cached in 0.15s]
+- Installing utf8 1.2.5 ...                     OK [installed binary and cached in 0.15s]
+- Installing vctrs 0.6.5 ...                    OK [installed binary and cached in 0.23s]
+- Installing pillar 1.10.2 ...                  OK [installed binary and cached in 0.26s]
+- Installing fansi 1.0.6 ...                    OK [installed binary and cached in 0.15s]
+- Installing pkgconfig 2.0.3 ...                OK [installed binary and cached in 0.13s]
+- Installing tibble 3.2.1 ...                   OK [installed binary and cached in 0.3s]
+- Installing withr 3.0.2 ...                    OK [installed binary and cached in 0.14s]
+- Installing tidyselect 1.2.1 ...               OK [installed binary and cached in 0.24s]
+- Installing dplyr 1.1.4 ...                    OK [installed binary and cached in 0.32s]
+- Installing gtable 0.3.6 ...                   OK [installed binary and cached in 0.21s]
+- Installing isoband 0.2.7 ...                  OK [installed binary and cached in 0.16s]
+- Installing farver 2.1.2 ...                   OK [installed binary and cached in 0.16s]
+- Installing labeling 0.4.3 ...                 OK [installed binary and cached in 0.15s]
+- Installing viridisLite 0.4.2 ...              OK [installed binary and cached in 0.14s]
+- Installing scales 1.4.0 ...                   OK [installed binary and cached in 0.26s]
+- Installing ggplot2 3.5.2 ...                  OK [installed binary and cached in 0.55s]
+- Installing ggridges 0.5.6 ...                 OK [installed binary and cached in 0.51s]
+- Installing checkmate 2.3.2 ...                OK [installed binary and cached in 0.16s]
+- Installing tensorA 0.36.2.1 ...               OK [installed binary and cached in 0.18s]
+- Installing numDeriv 2016.8-1.1 ...            OK [installed binary and cached in 0.16s]
+- Installing distributional 0.5.0 ...           OK [installed binary and cached in 0.27s]
+- Installing matrixStats 1.5.0 ...              OK [installed binary and cached in 0.16s]
+- Installing posterior 1.6.1 ...                OK [installed binary and cached in 0.35s]
+- Installing plyr 1.8.9 ...                     OK [installed binary and cached in 0.18s]
+- Installing stringi 1.8.7 ...                  OK [installed binary and cached in 0.24s]
+- Installing stringr 1.5.1 ...                  OK [installed binary and cached in 0.23s]
+- Installing reshape2 1.4.4 ...                 OK [built from source and cached in 4.0s]
+- Installing purrr 1.0.4 ...                    OK [installed binary and cached in 0.24s]
+- Installing cpp11 0.5.2 ...                    OK [installed binary and cached in 0.15s]
+- Installing tidyr 1.3.1 ...                    OK [installed binary and cached in 0.32s]
+- Installing bayesplot 1.12.0 ...               OK [installed binary and cached in 0.5s]
+- Installing bit 4.6.0 ...                      OK [installed binary and cached in 0.16s]
+- Installing bit64 4.6.0-1 ...                  OK [installed binary and cached in 0.16s]
+- Installing blob 1.2.4 ...                     OK [installed binary and cached in 0.19s]
+- Installing mvtnorm 1.3-3 ...                  OK [installed binary and cached in 0.14s]
+- Installing coda 0.19-4.1 ...                  OK [installed binary and cached in 0.15s]
+- Installing bridgesampling 1.1-2 ...           OK [installed binary and cached in 0.87s]
+- Installing inline 0.3.21 ...                  OK [installed binary and cached in 0.18s]
+- Installing gridExtra 2.3 ...                  OK [installed binary and cached in 0.24s]
+- Installing loo 2.8.0 ...                      OK [installed binary and cached in 0.17s]
+- Installing ps 1.9.1 ...                       OK [installed binary and cached in 0.15s]
+- Installing processx 3.8.6 ...                 OK [installed binary and cached in 0.14s]
+- Installing callr 3.7.6 ...                    OK [installed binary and cached in 0.14s]
+- Installing desc 1.4.3 ...                     OK [installed binary and cached in 0.14s]
+- Installing pkgbuild 1.4.7 ...                 OK [installed binary and cached in 0.14s]
+- Installing rstan 2.32.7 ...                   OK [installed binary and cached in 2.4s]
+- Installing rstantools 2.4.0 ...               OK [installed binary and cached in 0.15s]
+- Installing digest 0.6.37 ...                  OK [installed binary and cached in 0.16s]
+- Installing globals 0.17.0 ...                 OK [installed binary and cached in 0.14s]
+- Installing listenv 0.9.1 ...                  OK [installed binary and cached in 0.14s]
+- Installing parallelly 1.43.0 ...              OK [installed binary and cached in 0.15s]
+- Installing future 1.40.0 ...                  OK [installed binary and cached in 0.19s]
+- Installing future.apply 1.11.3 ...            OK [installed binary and cached in 0.16s]
+- Installing nleqslv 3.3.5 ...                  OK [installed binary and cached in 0.15s]
+- Installing brms 2.22.0 ...                    OK [installed binary and cached in 1.3s]
+- Installing broom 1.0.8 ...                    OK [installed binary and cached in 0.32s]
+- Installing forcats 1.0.0 ...                  OK [installed binary and cached in 0.22s]
+- Installing furrr 0.3.1 ...                    OK [installed binary and cached in 0.26s]
+- Installing broom.mixed 0.2.9.6 ...            OK [installed binary and cached in 0.5s]
+- Installing fastmap 1.2.0 ...                  OK [installed binary and cached in 0.13s]
+- Installing cachem 1.1.0 ...                   OK [installed binary and cached in 0.21s]
+- Installing htmltools 0.5.8.1 ...              OK [installed binary and cached in 0.2s]
+- Installing jquerylib 0.1.4 ...                OK [installed binary and cached in 0.21s]
+- Installing jsonlite 2.0.0 ...                 OK [installed binary and cached in 0.16s]
+- Installing memoise 2.0.1 ...                  OK [installed binary and cached in 0.19s]
+- Installing mime 0.13 ...                      OK [installed binary and cached in 0.15s]
+- Installing fs 1.6.6 ...                       OK [installed binary and cached in 0.17s]
+- Installing rappdirs 0.3.3 ...                 OK [installed binary and cached in 0.13s]
+- Installing sass 0.4.10 ...                    OK [installed binary and cached in 0.24s]
+- Installing bslib 0.9.0 ...                    OK [installed binary and cached in 0.35s]
+- Installing rematch 2.0.0 ...                  OK [installed binary and cached in 0.13s]
+- Installing cellranger 1.1.0 ...               OK [installed binary and cached in 0.13s]
+- Installing clipr 0.8.0 ...                    OK [installed binary and cached in 0.13s]
+- Installing confintr 1.0.2 ...                 OK [installed binary and cached in 0.15s]
+- Installing conflicted 1.2.0 ...               OK [installed binary and cached in 0.2s]
+- Installing cowplot 1.1.3 ...                  OK [installed binary and cached in 0.51s]
+- Installing crayon 1.5.3 ...                   OK [installed binary and cached in 0.15s]
+- Installing curl 6.2.2 ...                     OK [installed binary and cached in 0.16s]
+- Installing data.table 1.17.0 ...              OK [installed binary and cached in 0.22s]
+- Installing dbplyr 2.5.0 ...                   OK [installed binary and cached in 0.47s]
+- Installing dtplyr 1.3.1 ...                   OK [installed binary and cached in 0.35s]
+- Installing evaluate 1.0.3 ...                 OK [installed binary and cached in 0.18s]
+- Installing fontawesome 0.5.3 ...              OK [installed binary and cached in 0.21s]
+- Installing openssl 2.3.2 ...                  OK [installed binary and cached in 0.17s]
+- Installing httr 1.4.7 ...                     OK [installed binary and cached in 0.14s]
+- Installing gargle 1.5.2 ...                   OK [installed binary and cached in 0.24s]
+- Installing polynom 1.4-1 ...                  OK [installed binary and cached in 0.14s]
+- Installing quantreg 6.1 ...                   OK [installed binary and cached in 0.71s]
+- Installing lmodel2 1.7-4 ...                  OK [installed binary and cached in 0.14s]
+- Installing splus2R 1.3-5 ...                  OK [installed binary and cached in 0.24s]
+- Installing zoo 1.8-14 ...                     OK [installed binary and cached in 0.17s]
+- Installing sandwich 3.1-1 ...                 OK [installed binary and cached in 0.17s]
+- Installing multcomp 1.4-28 ...                OK [installed binary and cached in 0.67s]
+- Installing multcompView 0.1-10 ...            OK [installed binary and cached in 0.16s]
+- Installing timechange 0.3.0 ...               OK [installed binary and cached in 0.13s]
+- Installing lubridate 1.9.4 ...                OK [installed binary and cached in 0.21s]
+- Installing xts 0.14.1 ...                     OK [installed binary and cached in 0.18s]
+- Installing ggpp 0.5.8-1 ...                   OK [installed binary and cached in 0.49s]
+- Installing ggpmisc 0.6.1 ...                  OK [installed binary and cached in 0.96s]
+- Installing ggrepel 0.9.6 ...                  OK [installed binary and cached in 0.48s]
+- Installing uuid 1.2-1 ...                     OK [installed binary and cached in 0.15s]
+- Installing googledrive 2.1.1 ...              OK [installed binary and cached in 0.38s]
+- Installing ids 1.0.1 ...                      OK [installed binary and cached in 0.13s]
+- Installing rematch2 2.1.2 ...                 OK [installed binary and cached in 0.27s]
+- Installing googlesheets4 1.1.1 ...            OK [installed binary and cached in 0.38s]
+- Installing hms 1.1.3 ...                      OK [installed binary and cached in 0.22s]
+- Installing tzdb 0.5.0 ...                     OK [installed binary and cached in 0.17s]
+- Installing prettyunits 1.2.0 ...              OK [installed binary and cached in 0.13s]
+- Installing progress 1.2.3 ...                 OK [installed binary and cached in 0.25s]
+- Installing vroom 1.6.5 ...                    OK [installed binary and cached in 0.32s]
+- Installing readr 2.1.5 ...                    OK [installed binary and cached in 0.3s]
+- Installing haven 2.5.4 ...                    OK [installed binary and cached in 0.29s]
+- Installing rprojroot 2.0.4 ...                OK [installed binary and cached in 0.14s]
+- Installing here 1.0.1 ...                     OK [installed binary and cached in 0.14s]
+- Installing xfun 0.52 ...                      OK [installed binary and cached in 0.14s]
+- Installing highr 0.11 ...                     OK [installed binary and cached in 0.15s]
+- Installing lpSolve 5.6.23 ...                 OK [installed binary and cached in 0.14s]
+- Installing irr 0.84.1 ...                     OK [installed binary and cached in 0.16s]
+- Installing yaml 2.3.10 ...                    OK [installed binary and cached in 0.13s]
+- Installing knitr 1.50 ...                     OK [installed binary and cached in 0.18s]
+- Installing xml2 1.3.8 ...                     OK [installed binary and cached in 0.2s]
+- Installing tinytex 0.57 ...                   OK [installed binary and cached in 0.14s]
+- Installing rmarkdown 2.29 ...                 OK [installed binary and cached in 0.29s]
+- Installing rstudioapi 0.17.1 ...              OK [installed binary and cached in 0.14s]
+- Installing systemfonts 1.2.3 ...              OK [installed binary and cached in 0.24s]
+- Installing svglite 2.1.3 ...                  OK [installed binary and cached in 0.2s]
+- Installing kableExtra 1.4.0 ...               OK [installed binary and cached in 0.35s]
+- Installing modelr 0.1.11 ...                  OK [installed binary and cached in 0.33s]
+- Installing patchwork 1.3.0 ...                OK [installed binary and cached in 0.5s]
+- Installing textshaping 1.0.1 ...              OK [installed binary and cached in 0.21s]
+- Installing ragg 1.4.0 ...                     OK [installed binary and cached in 0.23s]
+- Installing readxl 1.4.5 ...                   OK [installed binary and cached in 0.14s]
+- Installing reprex 2.1.1 ...                   OK [installed binary and cached in 0.23s]
+- Installing selectr 0.4-2 ...                  OK [installed binary and cached in 0.23s]
+- Installing rvest 1.0.4 ...                    OK [installed binary and cached in 0.24s]
+- Installing tidyverse 2.0.0 ...                OK [installed binary and cached in 0.14s]
+
+The following loaded package(s) have been updated:
+- renv
+Restart your R session to use the new versions.
+
+> 
+> 
+ ---> Removed intermediate container b0cade2c92af
+ ---> 363824d44916
+Step 10/11 : RUN chmod -R 777 /home/
+ ---> Running in 7a8cbe65480a
+ ---> Removed intermediate container 7a8cbe65480a
+ ---> b2f7d72d96ad
+Step 11/11 : RUN R -e "rmarkdown::render('analysis/paper/paper.qmd')"
+ ---> Running in a2c55b0ef8ee
+
+R version 4.4.1 (2024-06-14) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+ℹ Using R 4.4.1 (lockfile was generated with R 4.5.1)
+- Project '/home/rstudio/web-of-science-archaeology' loaded. [renv 1.1.4]
+- The project is out-of-sync -- use `renv::status()` for details.
+> rmarkdown::render('analysis/paper/paper.qmd')
+[91m
+
+processing file: paper.qmd
+[0m1/29                                 
+2/29 [unnamed-chunk-1]               
+3/29                                 
+4/29 [unnamed-chunk-2]               
+5/29                                 
+6/29 [fig-compare-other-fields]      
+7/29                                 
+8/29 [unnamed-chunk-3]               
+9/29                                 
+10/29 [fig-change-over-time_from_V1_1]
+11/29                                 
+12/29 [fig-change-over-time]          
+13/29                                 
+14/29 [unnamed-chunk-4]               
+15/29                                 
+16/29 [unnamed-chunk-5]               
+17/29                                 
+18/29 [unnamed-chunk-6]               
+19/29                                 
+20/29 [fig-variation-by-journal]      
+21/29                                 
+22/29 [fig-pca]                       
+23/29                                 
+24/29 [unnamed-chunk-7]               
+25/29                                 
+26/29 [fig-aer-summary]               
+27/29                                 
+28/29 [fig-checklist]                 
+29/29                                 
+[91moutput file: paper.knit.md
+
+[0m/usr/bin/pandoc +RTS -K512m -RTS paper.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output paper.html --lua-filter /renv/cache/v5/linux-ubuntu-jammy/R-4.4/x86_64-pc-linux-gnu/rmarkdown/2.29/df99277f63d01c34e95e3d2f06a79736/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /renv/cache/v5/linux-ubuntu-jammy/R-4.4/x86_64-pc-linux-gnu/rmarkdown/2.29/df99277f63d01c34e95e3d2f06a79736/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /renv/cache/v5/linux-ubuntu-jammy/R-4.4/x86_64-pc-linux-gnu/rmarkdown/2.29/df99277f63d01c34e95e3d2f06a79736/rmarkdown/rmarkdown/lua/table-classes.lua --embed-resources --standalone --variable bs3=TRUE --section-divs --template /renv/cache/v5/linux-ubuntu-jammy/R-4.4/x86_64-pc-linux-gnu/rmarkdown/2.29/df99277f63d01c34e95e3d2f06a79736/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable theme=bootstrap --mathjax --variable 'mathjax-url=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-in-header /tmp/Rtmpi9KZNw/rmarkdown-str762664526.html --citeproc 
+[91m[WARNING] Citeproc: citation fig-aer-summary not found
+[WARNING] Citeproc: citation fig-change-over-time not found
+[WARNING] Citeproc: citation fig-checklist not found
+[WARNING] Citeproc: citation fig-compare-oth[0m[91mer-fields not found
+[WARNING] Citeproc: citation fig-pca not found
+[WARNING] Citeproc: citation fig-variatio[0m[91mn-by-journal[0m[91m not fo[0m[91mund
+[0m[91m
+Output created: paper.html
+[0m> 
+> 
+ ---> Removed intermediate container a2c55b0ef8ee
+ ---> 8294220c1c7d
+Successfully built 8294220c1c7d
+Successfully tagged wos-archaeology:local
