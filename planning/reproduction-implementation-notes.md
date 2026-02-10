@@ -271,6 +271,75 @@ computations are deterministic (frequency counts and logarithms). For stochastic
 different numerical results. The reproducibility of this paper is a function of its analytical
 simplicity rather than its infrastructure practices.
 
+### dye-et-al-2023
+
+- **Runtime:** ~30 seconds (deterministic post-processing of pre-computed MCMC)
+- **Pre-computed:** Yes — MCMC output on author's personal server (`tsdye.online/AP/beads-1.csv`)
+- **Dockerfile:** None — we constructed one using `rocker/r-ver:4.3.1` (3 iterations)
+- **Dependency management:** None — ArchaeoPhases from CRAN, no version pinning
+- **Upstream proprietary software:** OxCal 4.4.2 (University of Oxford, not reproduced)
+- **Verification strategy:** Single-phase: Docker build + batch execution + exact comparison
+  1. Built Docker image with R 4.3.1 and ArchaeoPhases (~15 min, 3 iterations)
+  2. Wrote wrapper script from supplement sections (~30 min)
+  3. Executed and compared all 54 Allen algebra probability values against Tables 2-10 (exact match)
+
+**Gotchas discovered during reproduction:**
+
+1. **Supplement access barriers** — ScienceDirect returns HTTP 403 for programmatic download.
+   The undocumented CDN URL pattern (`ars.els-cdn.com/content/image/1-s2.0-{PII}-mmc1.pdf`)
+   works but could change at any time. This is a significant machine-actionability failure —
+   supplementary materials should be deposited in an open repository (Zenodo, GitHub, etc.).
+
+2. **MCMC data on personal server** — The MCMC output is hosted on the lead author's personal
+   domain (`tsdye.online`), not an institutional or archival repository. Still accessible in
+   February 2026, but could become unavailable at any time. The ArchaeoData package provides
+   `burials.csv` as an alternative, but it contains different data (different run or format).
+
+3. **Column index shift after `read_oxcal()`** — The supplement specifies column indices
+   `c(3:5, 7, 9, 12:78)` based on the raw CSV which includes a "Pass" column. `read_oxcal()`
+   drops this column, shifting all indices by -1. Required adjustment to `c(2:4, 6, 8, 11:77)`.
+   Both yield the same 72 interments.
+
+4. **Incremental code blocks** — The supplement uses 38 incremental code sections (5.1-5.38)
+   with manual list index management, designed for interactive R execution. Assembling these
+   into a batch script required careful tracking of positional indices and named list
+   construction. Multi-line string literals with embedded newlines (line wrapping in PDF)
+   broke column name matching.
+
+5. **Transitive system dependencies** — ArchaeoPhases pulls in `igraph` (needs `libglpk-dev`)
+   and `proj4` (needs `libproj-dev`, `libgdal-dev`). Three Docker build iterations needed.
+
+6. **`tempo_plot()` list vs vector** — The `tempo_plot()` function's `name` parameter expects
+   a list, not a character vector. Passing `c("name1", "name2")` fails; requires
+   `as.list(c("name1", "name2"))`.
+
+**Comparison with previous reproductions:**
+
+| Aspect | Crema 2024 | Marwick 2025 | Herskind 2024 | Dye 2023 |
+|--------|-----------|--------------|---------------|----------|
+| Dockerfile modifications | 2 (typo + missing pkg) | 0 | N/A (constructed) | N/A (constructed, 3 iterations) |
+| Time to reproduce | ~18h compute + ~3h hands-on | ~13 min compute + ~7 min hands-on | ~30s compute + ~50 min hands-on | ~30s compute + ~1.5h hands-on |
+| Dependency approach | Manual install.packages() | renv.lock (169 pkgs) | None (6 library() calls) | None (CRAN + r-universe) |
+| Stochastic elements | MCMC → expected variation | GAM → deterministic | None → exact match | None (post-processing) → exact match |
+| Statistical discrepancies | 0 (all within HPD) | 1 (p-value, non-material) | 0 (exact) | 0 (54/54 exact) |
+| Script execution mode | Batch-ready | Literate programming | Interactive (wrapper) | Incremental sections (wrapper) |
+| Environment specification | Dockerfile | Dockerfile + renv.lock | R version in text only | None |
+| Upstream proprietary software | None | None | None | OxCal 4.4.2 |
+
+**Key lesson: Proprietary upstream software need not block reproduction of analytical
+contributions.** The paper's contribution is the ArchaeoPhases methodology (Allen's interval
+algebra for archaeological chronology), not the OxCal modelling. Using the authors'
+pre-computed MCMC output for post-processing verification is analogous to Phase 1 of the
+Crema reproduction (using pre-computed posteriors). The deterministic nature of the
+post-processing step means that results are exactly reproducible given fixed MCMC samples,
+regardless of R version or platform.
+
+**Key lesson: Data persistence matters.** Hosting critical research data on a personal domain
+(`tsdye.online`) rather than an institutional or archival repository introduces a single point
+of failure. Similarly, depositing supplements on ScienceDirect rather than an open repository
+creates machine-actionability barriers. Both practices are common but undermine long-term
+reproducibility.
+
 ---
 
 *Last updated: 2026-02-10*
