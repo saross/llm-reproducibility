@@ -1,6 +1,6 @@
 # LLM Reproducibility Project - Research Paper Extraction
 
-**Version:** 2.7 | **Schema:** v2.6 | **Workflow:** 8-pass session-per-pass (v5.0.0)
+**Version:** 2.8 | **Schema:** v2.6 | **Workflow:** 8-pass session-per-pass (v5.0.0) | **Reproduction:** v1.0
 **Manifest:** See `manifest.yaml` for all component versions
 
 ## Project Purpose
@@ -81,6 +81,45 @@ When starting a new session or resuming after context compaction:
 **Launch prompt:** `input/extraction-launch.md` - Brief primer for starting new extractions
 
 **Queue:** `input/queue.yaml` - Paper processing queue with checkpoint/resume support
+
+## Reproduction Workflow
+
+**Skill:** `reproduction-assessor` — Docker-based reproduction, verification, and adversarial review
+
+**Planning guide:** `reproduction-system/reproduction-plan-guide.md` — Flexible model for paper-specific adaptation
+
+**Launch prompt:** `reproduction-system/reproduction-launch.md` — Quick-start primer for reproductions
+
+**Prompts:** `reproduction-system/prompts/` — Session-specific prompts (00-03)
+
+**Queue:** `studies/open-science-compliance/corpus/queue.yaml` — Paper queue with reproduction status
+
+### Reproduction Session Structure
+
+| Session | Prompt | Focus | Duration |
+|---------|--------|-------|----------|
+| **R-Plan** | `00-reproduction-plan.md` | Paper analysis, type classification, plan | 30-60 min |
+| **R-A** | `01-preparation.md` | Materials + Docker + script adaptation | 30-90 min |
+| **R-B** | `02-execution-and-verification.md` | Execution + comparison + documentation | 30 min - hours |
+| **R-C** | `03-adversarial-review.md` | 5-dimension sceptical audit (fresh context) | 30-60 min |
+
+### Reproduction Artefact Set
+
+Each reproduction produces artefacts in `outputs/{paper-slug}/reproduction/attempt-{NN}/`:
+
+- `Dockerfile` — Reproducible environment
+- `run-analysis.R` — Batch-executable script
+- `environment.md` — Software versions and dependencies
+- `log.md` — Timeline and modifications
+- `comparisons/comparison-report.md` — Quantitative results and verdict
+- `outputs/` — Generated analysis outputs
+
+### Verdict Categories
+
+- **SUCCESSFUL** — All (or nearly all) values reproduced within tolerances
+- **PARTIAL** — Some analyses reproduced, others could not
+- **FAILED** — Material discrepancies affecting conclusions
+- **BLOCKED** — Reproduction could not be attempted
 
 ## File Operations Safety
 
@@ -179,12 +218,20 @@ input/
 outputs/
 └── {paper-slug}/
     ├── extraction.json    # Primary extraction output
-    └── {paper-slug}.txt   # Extracted plain text
+    ├── {paper-slug}.txt   # Extracted plain text
+    └── reproduction/      # Reproduction artefacts
+        └── attempt-{NN}/
 
 extraction-system/
 ├── prompts/               # Pass-specific extraction prompts (00-07)
 ├── schema/                # JSON schema definitions (v2.6)
 └── extraction-plan-unified-model.md  # Flexible planning guidance
+
+reproduction-system/
+├── prompts/               # Session-specific reproduction prompts (00-03)
+├── templates/             # Document templates for artefacts
+├── reproduction-plan-guide.md  # Flexible planning model
+└── reproduction-launch.md      # Quick-start primer
 
 assessment-system/
 └── prompts/               # Assessment prompts (Pass 8-9, in development)
@@ -192,8 +239,8 @@ assessment-system/
 
 ## Skills Used
 
-- `research-assessor` - Primary extraction and assessment skill
-- Loads automatically from project knowledge and `/mnt/project/` files
+- `research-assessor` — Primary extraction and assessment skill
+- `reproduction-assessor` — Docker-based reproduction, verification, and adversarial review
 
 ## Validation Checks
 

@@ -1,14 +1,14 @@
 # Project Manifest - Single Source of Truth for Versions
-# Last Updated: 2026-01-13
+# Last Updated: 2026-02-10
 #
 # This manifest tracks version information for all project components.
 # READMEs and documentation should reference this file for consistency.
 
 project:
   name: LLM-Based Research Extraction and Assessment
-  version: "2.7"
-  status: Extraction system complete, assessment framework in development
-  last_updated: "2026-01-13"
+  version: "2.8"
+  status: Extraction system complete, assessment framework in development, reproduction system v1.0
+  last_updated: "2026-02-10"
   repository: https://github.com/saross/llm-reproducibility
 
 # Core component versions
@@ -103,6 +103,76 @@ assessment:
       last_updated: "2025-11-30"
       description: JSON schema for machine-readable credibility output
 
+# Reproduction system (v1.0 — R-based papers only)
+reproduction:
+  status: active
+  version: "1.0"
+  scope: R-based papers only (extension points for Python/Julia documented)
+  execution_mode: session-per-phase  # 4 sessions: R-Plan/R-A/R-B/R-C
+  last_updated: "2026-02-10"
+
+  skill:
+    name: reproduction-assessor
+    version: "1.0"
+    path: .claude/skills/reproduction-assessor/
+    description: Docker-based reproduction, verification, and adversarial review
+
+  planning_guide:
+    version: "1.0.0"
+    file: reproduction-system/reproduction-plan-guide.md
+    description: Flexible planning model for paper-specific adaptation
+
+  launch:
+    version: "1.0.0"
+    file: reproduction-system/reproduction-launch.md
+    description: Quick-start primer for reproductions
+
+  prompts:
+    reproduction_plan:
+      version: "1.0"
+      file: reproduction-system/prompts/00-reproduction-plan.md
+      description: Session R-Plan — paper analysis, classification, plan production
+    preparation:
+      version: "1.0"
+      file: reproduction-system/prompts/01-preparation.md
+      description: Session R-A — materials, Docker, script adaptation
+    execution_verification:
+      version: "1.0"
+      file: reproduction-system/prompts/02-execution-and-verification.md
+      description: Session R-B — execution, comparison, documentation
+    adversarial_review:
+      version: "1.0"
+      file: reproduction-system/prompts/03-adversarial-review.md
+      description: Session R-C — 5-dimension sceptical audit (fresh context)
+
+  templates:
+    environment: reproduction-system/templates/environment-template.md
+    log: reproduction-system/templates/log-template.md
+    comparison_report: reproduction-system/templates/comparison-report-template.md
+
+  pilot_statistics:
+    papers_attempted: 4
+    papers_successful: 4
+    success_rate: "100%"
+    mean_hands_on_time: "~1.5 hours"
+    papers:
+      - slug: crema-et-al-2024
+        type: B
+        verdict: successful
+        runtime: "~18h"
+      - slug: marwick-2025
+        type: A
+        verdict: successful
+        runtime: "~13 min"
+      - slug: herskind-riede-2024
+        type: C
+        verdict: successful
+        runtime: "~30s"
+      - slug: dye-et-al-2023
+        type: C+D
+        verdict: successful
+        runtime: "~30s"
+
 # Workflow structure
 workflow_passes:
   - pass: 0
@@ -134,7 +204,9 @@ workflow_passes:
 documentation:
   main_readme: README.md
   extraction_readme: extraction-system/README.md
-  skill_readme: .claude/skills/research-assessor/SKILL.md
+  reproduction_readme: reproduction-system/README.md
+  extraction_skill: .claude/skills/research-assessor/SKILL.md
+  reproduction_skill: .claude/skills/reproduction-assessor/SKILL.md
   workflow_guide: docs/user-guide/extraction-workflow.md
   schema_reference: docs/user-guide/schema-reference.md
   version_history: docs/research-assessor-guide/version.md
@@ -147,6 +219,16 @@ corpus:
 
 # Version history summary
 version_history:
+  - version: "2.8"
+    date: "2026-02-10"
+    changes:
+      - Reproduction system v1.0 (4-session workflow, R-based papers)
+      - reproduction-assessor skill with 5 decision frameworks
+      - 4 session prompts (R-Plan, R-A, R-B, R-C)
+      - Adversarial review framework (5-dimension audit)
+      - Planning guide, templates, pilot reproduction summary
+      - Validated on 4 pilot papers (100% success rate)
+
   - version: "2.7"
     date: "2026-01-13"
     changes:
