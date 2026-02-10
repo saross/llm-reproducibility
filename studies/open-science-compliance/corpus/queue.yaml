@@ -248,7 +248,16 @@ papers:
       classification_complete: true  # Pass 8 complete 2026-01-17
       assessment_complete: true  # Pass 9 complete 2026-01-17
       fair_assessed: true  # FAIR 26/40 (65%)
-      reproduction_attempted: false
+      reproduction_attempted: true
+    reproduction:
+      date: "2026-02-10"
+      verdict: successful
+      docker_modifications: 3  # No author Dockerfile; we built one (3 iterations for deps)
+      wrapper_script_required: true  # Supplement code is incremental sections, not batch-ready
+      runtime_seconds: 30  # Deterministic post-processing of pre-computed MCMC
+      discrepancies: 0  # All 54 Allen algebra probability values match exactly
+      scope_limitation: "OxCal 4.4.2 MCMC generation (proprietary) not reproduced"
+      report: "outputs/dye-et-al-2023/reproduction/attempt-01/comparisons/comparison-report.md"
     classification_summary:
       paper_type: methodological
       validation_approach: mixed
@@ -277,14 +286,14 @@ papers:
       reproducibility: 80
       reproduction_priority: 5
       execution_feasibility: ready
-    notes: "Complete (2026-01-17). Methodological paper on event time vs substance time distinction with Allen's interval algebra. CRAN package ArchaeoPhases. 100% ORCID coverage. Pass 9 complete: Good verdict (primary mean 84.3), 77 aggregate. Priority 5 for reproduction (ready, ArchaeoPhases on CRAN provides stable starting point)."
+    notes: "Complete (2026-01-17). Methodological paper on event time vs substance time distinction with Allen's interval algebra. CRAN package ArchaeoPhases. 100% ORCID coverage. Pass 9 complete: Good verdict (primary mean 84.3), 77 aggregate. Priority 5 for reproduction. Reproduction SUCCESSFUL (2026-02-10): All 54 Allen algebra probability values match exactly. OxCal MCMC step (proprietary) not reproduced; ArchaeoPhases post-processing fully verified. Required Dockerfile construction (3 iterations) and wrapper script (supplement code is incremental sections)."
 
 # Progress summary (updated 2026-01-17)
 # Extraction completed: 5/5 (all pilot papers)
 # Classification completed: 5/5 (all pilot papers)
 # FAIR assessed: 5/5 (crema: highly_fair; marwick: 93.75%; key: 60%; herskind: 62.5%; dye: 65%)
 # Assessment completed: 5/5 (crema: 84, marwick: 81, key: 81, herskind: 74, dye: 77)
-# Reproduction attempted: 3/5 (crema: SUCCESSFUL 2026-02-09; marwick: SUCCESSFUL 2026-02-09; herskind: SUCCESSFUL 2026-02-10)
+# Reproduction attempted: 4/5 (crema: SUCCESSFUL 2026-02-09; marwick: SUCCESSFUL 2026-02-09; herskind: SUCCESSFUL 2026-02-10; dye: SUCCESSFUL 2026-02-10)
 # Full pipeline (Pass 0-9) complete: 5/5 (ALL PILOT PAPERS COMPLETE)
 #
 # Verdict criteria (formalised 2026-01-17):
