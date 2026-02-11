@@ -519,7 +519,7 @@ After scoring all four signals:
 
 ```yaml
 cluster_2_evidential_strength:
-  paper_slug: "{slug}"
+  paper_id: "{slug}"
   assessment_date: "{date}"
   quality_state: "{state}"
   research_approach: "{approach}"

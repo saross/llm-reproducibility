@@ -399,7 +399,7 @@ cluster_synthesis:
 
 ```yaml
 cluster_1_foundational_clarity:
-  paper_slug: "{slug}"
+  paper_id: "{slug}"
   assessment_date: "{date}"
   quality_state: "{state}"
   research_approach: "{approach}"

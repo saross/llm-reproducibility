@@ -403,7 +403,7 @@ Publication year {year} places this paper in the **{stage}** era of reproducibil
 
 ```yaml
 cluster_3_reproducibility:
-  paper_slug: "{slug}"
+  paper_id: "{slug}"
   assessment_date: "{date}"
   quality_state: "{state}"
   research_approach: "{approach}"
