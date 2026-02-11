@@ -257,14 +257,17 @@ For each signal with a context flag, write an interpretation:
 
 ### STEP 8: Compile Infrastructure & FAIR Summary
 
-From extraction.json `reproducibility_infrastructure` section, summarise:
+From extraction.json `reproducibility_infrastructure.fair_assessment` section (v2.0), summarise:
 
-- **FAIR score** (0-40) and rating
+- **Data FAIR score** (/15) and rating (from `data_fair`)
+- **Code FAIR score** (/15) and rating (from `code_fair`)
 - **Code availability** (available/not_available/not_applicable/embargoed/upon_request)
 - **Data availability** (same options + partially_available)
 - **Preregistration** (preregistered/not_preregistered/not_applicable)
 - **PID coverage** (DOIs, ORCIDs present/absent)
 - **Infrastructure gaps** (what's missing)
+
+Report data and code FAIR scores independently — do NOT combine into a single aggregate.
 
 ---
 
@@ -313,9 +316,13 @@ Generate the structured JSON output block following the schema in `assessment-sy
       "cluster_3_rating": "{rating}"
     },
     "infrastructure": {
-      "fair_score": {score},
-      "fair_rating": "{rating}",
-      "fair_maximum": 40,
+      "fair_version": "2.0",
+      "data_fair_score": "{score}",
+      "data_fair_max": 15,
+      "data_fair_rating": "{rating}",
+      "code_fair_score": "{score}",
+      "code_fair_max": 15,
+      "code_fair_rating": "{rating}",
       "code_availability": "{status}",
       "data_availability": "{status}",
       "preregistration": "{status}"

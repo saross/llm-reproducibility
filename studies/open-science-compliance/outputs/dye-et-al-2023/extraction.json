@@ -178,29 +178,75 @@
       "code_licence": null
     },
     "fair_assessment": {
-      "findable": {
-        "score": 7,
-        "max": 10,
-        "notes": "Paper DOI present, all author ORCIDs present, ArchaeoPhases on CRAN. Supplement lacks independent DOI."
+      "version": "2.0",
+      "scale": "binary_sub_principles",
+      "data_fair": {
+        "available": true,
+        "findable": {
+          "F1_persistent_identifier": { "present": true, "evidence": "Paper DOI 10.1016/j.jas.2023.105765; upstream Anglo-Saxon dataset DOI 10.5284/1018290 (ADS)" },
+          "F2_rich_metadata": { "present": false, "evidence": "OxCal model in supplement without independent metadata record" },
+          "F3_metadata_includes_identifier": { "present": false, "evidence": "No separate data DOI; data only in publisher supplement" },
+          "F4_searchable_registry": { "present": false, "evidence": "Supplement data not in searchable repository; upstream ADS dataset is indexed but not authors' deposit" },
+          "subtotal": 1, "max": 4
+        },
+        "accessible": {
+          "A1_standard_protocol": { "present": true, "evidence": "HTTPS via publisher and White Rose repository" },
+          "A1_1_open_free_protocol": { "present": true, "evidence": "Open access via White Rose repository" },
+          "A1_2_auth_where_needed": { "present": true, "evidence": "No authentication required" },
+          "A2_metadata_persistent": { "present": true, "evidence": "Publisher and White Rose institutional repository metadata persistent" },
+          "subtotal": 4, "max": 4
+        },
+        "interoperable": {
+          "I1_formal_language": { "present": true, "evidence": "OxCal model in standard format; R data structures" },
+          "I2_fair_vocabularies": { "present": false, "evidence": "No formal controlled vocabularies for data description" },
+          "I3_qualified_references": { "present": true, "evidence": "References Anglo-Saxon Graves dataset via ADS DOI 10.5284/1018290" },
+          "subtotal": 2, "max": 3
+        },
+        "reusable": {
+          "R1_rich_metadata": { "present": true, "evidence": "Methods section documents data provenance and analytical procedures" },
+          "R1_1_clear_licence": { "present": false, "evidence": "Paper is CC-BY-NC-ND; no explicit licence for supplement data or OxCal model" },
+          "R1_2_provenance": { "present": true, "evidence": "Data derived from published ADS dataset with clear transformation documentation" },
+          "R1_3_community_standards": { "present": false, "evidence": "No domain metadata standard applied to data files" },
+          "subtotal": 2, "max": 4
+        },
+        "total": 9, "max": 15, "percentage": 60.0,
+        "rating": "moderately_fair"
       },
-      "accessible": {
-        "score": 7,
-        "max": 10,
-        "notes": "Open access via White Rose repository. ArchaeoPhases openly available on CRAN. Supplement accessible via journal."
+      "code_fair": {
+        "available": true,
+        "findable": {
+          "F1_persistent_identifier": { "present": true, "evidence": "ArchaeoPhases on CRAN with JSS publication DOI; supplement code via paper DOI" },
+          "F2_rich_metadata": { "present": true, "evidence": "CRAN package page provides structured metadata (version, authors, dependencies, licence)" },
+          "F3_metadata_includes_identifier": { "present": true, "evidence": "CRAN metadata includes package version and JSS article reference" },
+          "F4_searchable_registry": { "present": true, "evidence": "ArchaeoPhases indexed on CRAN, rdrr.io, R-universe" },
+          "subtotal": 4, "max": 4
+        },
+        "accessible": {
+          "A1_standard_protocol": { "present": true, "evidence": "HTTPS via CRAN mirrors" },
+          "A1_1_open_free_protocol": { "present": true, "evidence": "Open source, freely downloadable" },
+          "A1_2_auth_where_needed": { "present": true, "evidence": "No authentication required" },
+          "A2_metadata_persistent": { "present": true, "evidence": "CRAN maintains package archive including historical versions" },
+          "subtotal": 4, "max": 4
+        },
+        "interoperable": {
+          "I1_formal_language": { "present": true, "evidence": "R package with standard NAMESPACE, DESCRIPTION files" },
+          "I2_fair_vocabularies": { "present": false, "evidence": "No CodeMeta or software ontology" },
+          "I3_qualified_references": { "present": true, "evidence": "Package DESCRIPTION references dependencies; JSS paper references package" },
+          "subtotal": 2, "max": 3
+        },
+        "reusable": {
+          "R1_rich_metadata": { "present": true, "evidence": "CRAN DESCRIPTION, vignettes, JSS paper documentation" },
+          "R1_1_clear_licence": { "present": true, "evidence": "GPL-3 licence for ArchaeoPhases package" },
+          "R1_2_provenance": { "present": true, "evidence": "Version history on CRAN; development on GitHub" },
+          "R1_3_community_standards": { "present": true, "evidence": "Follows CRAN package standards (R CMD check, DESCRIPTION, NAMESPACE)" },
+          "subtotal": 4, "max": 4
+        },
+        "total": 14, "max": 15, "percentage": 93.3,
+        "rating": "highly_fair"
       },
-      "interoperable": {
-        "score": 6,
-        "max": 10,
-        "notes": "Standard formats (R, OxCal). Uses published Archaeological Data Service dataset. No formal data schema."
-      },
-      "reusable": {
-        "score": 6,
-        "max": 10,
-        "notes": "CC-BY-NC-ND licence for paper. ArchaeoPhases is reusable. OxCal model in supplement lacks explicit licence."
-      },
-      "total_score": 26,
-      "max_score": 40,
-      "fair_percentage": 65.0
+      "research_type": "computational",
+      "fair_profile": "Mixed FAIR (code highly FAIR via CRAN package infrastructure; data moderately FAIR, supplement-only without independent DOI)",
+      "contextual_notes": "Striking data-code asymmetry: ArchaeoPhases CRAN package scores 14/15 due to established package infrastructure (CRAN indexing, GPL-3 licence, versioned archive, JSS publication). Data scores 9/15 because supplement materials lack independent DOI and repository deposit. All 4 authors provide ORCIDs (unique in pilot corpus). Upstream ADS dataset has DOI but authors' own OxCal model lacks independent archival."
     }
   },
   "evidence": [

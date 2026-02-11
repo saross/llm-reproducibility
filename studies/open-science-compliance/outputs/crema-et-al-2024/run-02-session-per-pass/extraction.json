@@ -164,6 +164,77 @@
       "connectivity_score": 3,
       "max_score": 6,
       "notes": "JAS does not display author ORCIDs. Grant numbers provided but no ROR IDs for funders or institutions."
+    },
+    "fair_assessment": {
+      "version": "2.0",
+      "scale": "binary_sub_principles",
+      "data_fair": {
+        "available": true,
+        "findable": {
+          "F1_persistent_identifier": { "present": true, "evidence": "Zenodo DOI 10.5281/zenodo.10782942" },
+          "F2_rich_metadata": { "present": true, "evidence": "Zenodo provides structured DataCite metadata (authors, title, description, keywords)" },
+          "F3_metadata_includes_identifier": { "present": true, "evidence": "Zenodo metadata includes DOI reference" },
+          "F4_searchable_registry": { "present": true, "evidence": "Indexed in Zenodo, DataCite, Google Dataset Search" },
+          "subtotal": 4, "max": 4
+        },
+        "accessible": {
+          "A1_standard_protocol": { "present": true, "evidence": "HTTPS via DOI resolver" },
+          "A1_1_open_free_protocol": { "present": true, "evidence": "No authentication required, open access" },
+          "A1_2_auth_where_needed": { "present": true, "evidence": "Open data, no restrictions needed" },
+          "A2_metadata_persistent": { "present": true, "evidence": "Zenodo committed to long-term metadata persistence" },
+          "subtotal": 4, "max": 4
+        },
+        "interoperable": {
+          "I1_formal_language": { "present": true, "evidence": "Structured CSV data files in GitHub/Zenodo repository" },
+          "I2_fair_vocabularies": { "present": false, "evidence": "No formal controlled vocabularies with PIDs used for data description" },
+          "I3_qualified_references": { "present": true, "evidence": "DOI links between paper, data deposit, and code; IntCal20 calibration curve referenced" },
+          "subtotal": 2, "max": 3
+        },
+        "reusable": {
+          "R1_rich_metadata": { "present": true, "evidence": "README, data documentation, methods description in repository" },
+          "R1_1_clear_licence": { "present": false, "evidence": "Paper is CC BY but no explicit licence file in repository for data" },
+          "R1_2_provenance": { "present": true, "evidence": "Data sources documented: Japanese seed dates from published databases, British dates from Stevens compilations" },
+          "R1_3_community_standards": { "present": false, "evidence": "No domain metadata standard (e.g., Dublin Core, DataCite schema) applied to data files" },
+          "subtotal": 2, "max": 4
+        },
+        "total": 12, "max": 15, "percentage": 80.0,
+        "rating": "moderately_fair"
+      },
+      "code_fair": {
+        "available": true,
+        "findable": {
+          "F1_persistent_identifier": { "present": true, "evidence": "Zenodo DOI 10.5281/zenodo.10782942" },
+          "F2_rich_metadata": { "present": true, "evidence": "Zenodo DataCite metadata for code deposit" },
+          "F3_metadata_includes_identifier": { "present": true, "evidence": "Zenodo metadata includes DOI" },
+          "F4_searchable_registry": { "present": true, "evidence": "Indexed in Zenodo, DataCite" },
+          "subtotal": 4, "max": 4
+        },
+        "accessible": {
+          "A1_standard_protocol": { "present": true, "evidence": "HTTPS via DOI resolver and GitHub" },
+          "A1_1_open_free_protocol": { "present": true, "evidence": "Open access, no authentication" },
+          "A1_2_auth_where_needed": { "present": true, "evidence": "Open code, no restrictions" },
+          "A2_metadata_persistent": { "present": true, "evidence": "Zenodo long-term persistence" },
+          "subtotal": 4, "max": 4
+        },
+        "interoperable": {
+          "I1_formal_language": { "present": true, "evidence": "R scripts in standard open-source language" },
+          "I2_fair_vocabularies": { "present": false, "evidence": "No software ontology or CodeMeta used" },
+          "I3_qualified_references": { "present": true, "evidence": "Paper references code via DOI; code references data via relative paths" },
+          "subtotal": 2, "max": 3
+        },
+        "reusable": {
+          "R1_rich_metadata": { "present": true, "evidence": "README, Dockerfile, documented R scripts with comments" },
+          "R1_1_clear_licence": { "present": false, "evidence": "No explicit licence file in repository" },
+          "R1_2_provenance": { "present": true, "evidence": "Dockerfile documents environment; code reviewed by Ben Marwick" },
+          "R1_3_community_standards": { "present": false, "evidence": "No CITATION.cff or CodeMeta; no renv lockfile" },
+          "subtotal": 2, "max": 4
+        },
+        "total": 12, "max": 15, "percentage": 80.0,
+        "rating": "moderately_fair"
+      },
+      "research_type": "computational",
+      "fair_profile": "Moderately FAIR (computational research with strong findability/accessibility, gaps in licensing and community standards)",
+      "contextual_notes": "Exemplary repository practices (GitHub + Zenodo dual archival, Dockerfile, code review by Marwick) but missing explicit licence files and formal metadata standards. Both data and code share same Zenodo deposit."
     }
   },
 
