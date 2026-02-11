@@ -1064,7 +1064,7 @@ This is a source of extraction inconsistency that should be standardised.
 ## Known Gaps
 
 - **reproduction-implementation-notes.md**: Contains Key et al. 2024 lessons but file not yet updated with that paper's gotchas.
-- **Output location inconsistency** (low priority): Crema and Marwick reproduction artefacts live under `studies/open-science-compliance/outputs/`, while Dye, Herskind, and Key artefacts live under root `outputs/`. Not blocking anything; consolidation deferred.
+- ~~**Output location inconsistency**~~ ✅ **RESOLVED** (2026-02-11): All 5 study papers now consolidated under `studies/open-science-compliance/outputs/{slug}/reproduction/`. Added `output_dir` field to queue.yaml entries to prevent recurrence.
 
 ---
 

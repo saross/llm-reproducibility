@@ -70,7 +70,7 @@ Supplementary R scripts are in `/tmp/key-et-al-supp/extracted/`.
    bottleneck than computational reproducibility (for these papers) is the
    headline result.
 3. **Copy data to permanent location:** Move `/tmp/key-et-al-data/` to
-   `outputs/key-et-al-2024/reproduction/attempt-01/source-data/` before
+   `studies/open-science-compliance/outputs/key-et-al-2024/reproduction/attempt-01/source-data/` before
    the temp directory is cleaned.
 4. **Update queue.yaml** with reproduction status and findings.
 
