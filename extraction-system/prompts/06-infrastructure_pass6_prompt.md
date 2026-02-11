@@ -15,7 +15,7 @@ Extract reproducibility infrastructure and assess FAIR compliance from a researc
 - Evidence, claims, methods, protocols, research designs populated (Passes 1-5)
 - `reproducibility_infrastructure` section empty
 
-**Your responsibility:** Populate `reproducibility_infrastructure` with 13 sections:
+**Your responsibility:** Populate `reproducibility_infrastructure` with 14 sections:
 1. `persistent_identifiers` (PIDs + PID graph analysis)
 2. `funding`
 3. `data_availability`
@@ -28,7 +28,8 @@ Extract reproducibility infrastructure and assess FAIR compliance from a researc
 10. `supplementary_materials`
 11. `references_completeness`
 12. `fair_assessment` (Findable, Accessible, Interoperable, Reusable)
-13. `extraction_metadata`
+13. `data_completeness` (dataset inventory and accessibility assessment)
+14. `extraction_metadata`
 
 **Leave untouched:** Evidence, claims, methods, protocols, research_designs arrays (already extracted)
 
@@ -123,7 +124,9 @@ FINDABLE (max 4):
   F4: Resource indexed in searchable registry (Zenodo, CRAN, DataCite)      /1
 
 ACCESSIBLE (max 4):
-  A1:   Retrievable via identifier using standard protocol (HTTPS, DOI)     /1
+  A1:   Retrievable via standard protocol — assess against FULL research    /1
+        dataset, not just supplement. If data_completeness coverage is
+        "minimal" or "partial", A1 = 0. Exception: ethical restrictions.
   A1.1: Protocol is open, free, universally implementable                   /1
   A1.2: Protocol allows authentication/authorisation where needed           /1
         (CARE-compliant restrictions = POSITIVE signal)
@@ -188,6 +191,72 @@ TOTAL per artefact type: /15
   }
 }
 ```
+
+### Data Completeness Assessment
+
+Assess whether the paper shares **all** the data needed for reproduction, not just the subset deposited in a supplement or repository. This captures a dimension that FAIR infrastructure scoring alone misses.
+
+**Procedure:**
+
+1. **Enumerate datasets** referenced in Methods/Results (including upstream sources)
+2. **Classify each** using the 5-level access taxonomy:
+   - Level 0: Direct download (DOI-based repository, open supplement)
+   - Level 1: Programmatic extraction (HTML tables, API)
+   - Level 2: Available but requires manual steps (registration, paywall, PDF table extraction)
+   - Level 3: Exists but inaccessible (closed thesis, paywalled monograph, co-author held)
+   - Level 4: Not found / never published
+3. **Calculate coverage**: datasets accessible (Level 0-2) / total datasets. Where feasible, also compute record-weighted coverage.
+4. **Assign category**: complete (100%), substantial (75-99%), partial (25-74%), minimal (0-24%)
+5. **Identify barriers**: co-author gatekeeping, closed monograph, unpublished, embargoed, proprietary, ethics restricted, paywall, registration required
+
+**Assessment scope** (for meta-analyses or papers aggregating many datasets):
+- `straightforward`: <20 datasets — full inventory
+- `complex`: 20-99 datasets — sampled inventory with extrapolation
+- `infeasible`: 100+ datasets — estimate only, with rationale
+
+**Cross-reference with A1 scoring:** If `coverage_category` is "minimal" or "partial", set A1 = 0 for data FAIR. Exception: ethically restricted data (CARE principles, human subjects) does not count against completeness.
+
+**Output JSON structure:**
+
+```json
+{
+  "data_completeness": {
+    "assessment_scope": "straightforward | complex | infeasible",
+    "assessment_scope_rationale": "String",
+    "datasets_referenced": 13,
+    "datasets_accessible": 3,
+    "datasets_inaccessible": 10,
+    "coverage_percentage": 23.1,
+    "coverage_category": "minimal | partial | substantial | complete",
+    "record_weighted": {
+      "total_records": 5042,
+      "accessible_records": 2149,
+      "coverage_percentage": 42.6
+    },
+    "barriers": [
+      {
+        "type": "co_author_gatekeeping",
+        "datasets_affected": 6,
+        "description": "Six datasets held by co-authors with no independent deposit"
+      }
+    ],
+    "notes": "Free text summary"
+  }
+}
+```
+
+**Coverage category thresholds:**
+
+| Category | Range | Definition |
+|----------|-------|------------|
+| complete | 100% | All datasets accessible |
+| substantial | 75-99% | Most accessible, minor gaps |
+| partial | 25-74% | Significant gaps |
+| minimal | 0-24% | Few or no datasets accessible |
+
+**Barrier types:** `co_author_gatekeeping`, `closed_monograph`, `unpublished`, `embargoed`, `proprietary`, `ethics_restricted`, `paywall`, `registration_required`, `other`
+
+For papers where record counts are unavailable, `record_weighted` is null. For `infeasible` scope, inventory is omitted and coverage is estimated.
 
 ### Context-Dependent Assessment
 
@@ -641,11 +710,12 @@ Does paper have formal "Data/Code Availability" statement?
 - [ ] IGSNs follow expected alphanumeric format (if present)
 
 ### Completeness
-- [ ] All 13 infrastructure sections examined (even if "not present")
+- [ ] All 14 infrastructure sections examined (even if "not present")
 - [ ] extraction_metadata.sections_examined lists all checked sections
 - [ ] All identified PIDs have resolver URLs recorded
 - [ ] PID graph summary completed (connectivity_score calculated)
 - [ ] FAIR assessment completed if data/code shared (all four dimensions scored)
+- [ ] `data_completeness` populated (or `assessment_scope` = "infeasible" with rationale)
 - [ ] Author contributions count matches paper_metadata.authors count
 
 ### Cross-Checks
@@ -722,6 +792,7 @@ Does paper have formal "Data/Code Availability" statement?
     "supplementary_materials": { ... },
     "references_completeness": { ... },
     "fair_assessment": { ... },
+    "data_completeness": { ... },
     "extraction_metadata": { ... }
   }
 }

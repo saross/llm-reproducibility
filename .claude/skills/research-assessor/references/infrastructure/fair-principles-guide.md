@@ -165,16 +165,21 @@ When data or code is absent or not applicable to the research type, set `"availa
 
 **A1: Standard retrieval protocol** (0 or 1 point)
 
-- HTTPS URL, DOI resolver, FTP, API? → 1 point
+- Assess against the paper's **full research dataset**, not just the deposited subset
+- HTTPS URL, DOI resolver, FTP, API for the paper's research data? → 1 point
 - Email request, postal mail, proprietary system? → 0 points
+- **Completeness rule:** If `data_completeness.coverage_category` is "minimal" or "partial" (i.e., majority of research data is behind co-author gatekeeping, closed monographs, or unpublished), A1 = 0 — even if the deposited subset uses HTTPS
+- **Exception:** Ethically restricted data (CARE principles, human subjects, endangered species) does not count against completeness
 
 **A1.1: Open/free protocol** (0 or 1 point)
 
+- Evaluates protocol quality **for the accessible portion** of the data
 - Public HTTP/HTTPS, no login required for access? → 1 point
 - Requires paid subscription or proprietary software? → 0 points
 
 **A1.2: Authentication/authorisation where needed** (0 or 1 point)
 
+- Evaluates protocol quality **for the accessible portion** of the data
 - Restricted access with **ethical justification** (human subjects, Indigenous data, endangered species, cultural heritage protection)? → 1 point
 - **CARE-compliant restrictions = POSITIVE signal**
 - Completely closed with no justification? → 0 points
