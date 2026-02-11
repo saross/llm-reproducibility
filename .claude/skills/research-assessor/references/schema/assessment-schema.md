@@ -596,6 +596,27 @@ jq '.[] | {tci: .metrics.TCI, transparency: (.signals[] | select(.signal_name=="
 
 ---
 
+## Schema Compliance
+
+All assessment outputs MUST include these top-level metadata fields:
+
+| Field | Type | Example |
+|-------|------|---------|
+| `paper_id` | string (slug) | `"crema-et-al-2024"` |
+| `assessment_date` | ISO date | `"2026-02-12"` |
+| `assessor_version` | semver string | `"v1.0"` |
+| `schema_version` | string | `"1.1"` |
+| `quality_state` | enum | `"high"` |
+
+When the schema is updated, bump `schema_version` and update ALL:
+
+1. This file (assessment-schema.md)
+2. Cluster prompt output templates (1, 2, 3)
+3. Final report prompt assessment_metadata template (Pass 10)
+4. manifest.yaml assessment schema entries (if applicable)
+
+---
+
 ## Related References
 
 - `assessment-pillars.md` - **Three pillars framework** (Transparency, Credibility, Reproducibility)

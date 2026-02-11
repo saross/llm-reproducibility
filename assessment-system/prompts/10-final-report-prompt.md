@@ -336,7 +336,7 @@ Generate the structured JSON output block following the schema in `assessment-sy
     "assessment_metadata": {
       "assessment_date": "{YYYY-MM-DD}",
       "assessor_version": "v1.0",
-      "schema_version": "1.0"
+      "schema_version": "1.1"
     }
   }
 }
