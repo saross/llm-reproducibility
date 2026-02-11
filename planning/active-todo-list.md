@@ -1063,7 +1063,7 @@ This is a source of extraction inconsistency that should be standardised.
 
 ## Known Gaps
 
-- **reproduction-implementation-notes.md**: Contains Key et al. 2024 lessons but file not yet updated with that paper's gotchas.
+- ~~**reproduction-implementation-notes.md**~~ ✅ **RESOLVED** (2026-02-11): Key et al. 2024 gotchas integrated — data availability bottleneck, undocumented duplicate handling, paper errors, empty supplement, multi-hop citation chains, and 3 key lessons documented.
 - ~~**Output location inconsistency**~~ ✅ **RESOLVED** (2026-02-11): All 5 study papers now consolidated under `studies/open-science-compliance/outputs/{slug}/reproduction/`. Added `output_dir` field to queue.yaml entries to prevent recurrence.
 
 ---

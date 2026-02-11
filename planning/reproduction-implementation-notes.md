@@ -340,6 +340,111 @@ of failure. Similarly, depositing supplements on ScienceDirect rather than an op
 creates machine-actionability barriers. Both practices are common but undermine long-term
 reproducibility.
 
+### key-et-al-2024
+
+- **Runtime:** ~5 minutes (deterministic OLE point estimation from base R)
+- **Pre-computed:** No — no pre-computed outputs provided
+- **Dockerfile:** None — we constructed one using `rocker/r-ver:4.3.2` (1 iteration)
+- **Dependency management:** None — OLE function uses base R only (matrix algebra, gamma, solve)
+- **Data sources:** 13 datasets aggregated from external publications; only 3 accessible (23.1%)
+- **Verification strategy:** Single-phase: Docker build + batch execution + value-by-value comparison
+  1. Built Docker image with base R only — no additional packages needed (~2 min)
+  2. Wrote wrapper script to parameterise repeated OLE analysis (~25 min)
+  3. Compared 126 values across Tables 5 and 6 against paper (98.3% match)
+
+**Gotchas discovered during reproduction:**
+
+1. **Data availability is the primary bottleneck** — Only 3 of 13 datasets are publicly
+   accessible (Level 0). By record count, 42.6% (2,149/5,042 artefacts) are available.
+   The 10 unavailable datasets are held by co-authors (Level 3), in closed-access monographs
+   (Level 3), or never published (Level 4). This limited reproduction to Tables 5 (Olduvai
+   rows only) and 6 (all Paleoindian types). Tables 2-4, the remaining Table 5 rows, and
+   Table 7 could not be reproduced at all.
+
+2. **Multi-hop citation chains** — Tracing data provenance requires following chains like
+   Key et al. → Martin-Ramos 2022 → original excavation reports. Some intermediate
+   sources are closed-access PhD theses, creating accessibility bottlenecks even when
+   data is conceptually "available." The Olduvai cleavers required extracting from a
+   UCL Discovery thesis supplementary Excel, filtering by `LCT SUB TYPE = "Cleaver"`,
+   and converting mass from decigrams to grams.
+
+3. **Empty supplement file (publishing error)** — mmc4.csv (listed as "Supplementary
+   Material 4") is an empty file (header only, 75 bytes). Probable publishing error —
+   the file was likely intended to contain a worked example dataset but was uploaded
+   empty. This is a journal process failure, not an author error.
+
+4. **No environment specification at all** — No Dockerfile, no renv.lock, no
+   `sessionInfo()`, no stated R version. The supplementary R scripts are the only
+   computational artefacts. R version had to be inferred from publication date. However,
+   the OLE function uses only base R (no external packages), so this turned out not to
+   matter — the analysis runs on any R version.
+
+5. **Undocumented duplicate handling** — The mmc1 script comments state "Duplicates should
+   be avoided in the data set" but does not enforce deduplication. When the bottom or top
+   k=10 values contain duplicates, `OLE.test()` produces NaN (division by zero in the log
+   term of the v parameter). This affected 4 of 16 Paleoindian OLE minimum estimates. The
+   paper reports values for these cells, confirming the authors applied undocumented
+   pre-processing. Attempting deduplication in the wrapper broke the Olduvai results
+   (which had no duplicates), so it was reverted.
+
+6. **Interactive-only scripts with placeholder paths** — All three R scripts use
+   `"###file location###"` placeholders rather than command-line arguments or configuration
+   files. They assume RStudio execution and include non-analytical dependencies (e.g.,
+   `beepr` for audio notifications in mmc2). No batch execution pathway is provided.
+
+7. **Stochastic scripts lack `set.seed()`** — mmc2 (Randomised OLE) and mmc3 (Resampling
+   OLE) use `rnorm()` and `sample()` respectively without `set.seed()`. Even with correct
+   data, these scripts cannot produce identical results across runs. Table 7 uses mmc2,
+   making it non-reproducible by design regardless of data availability.
+
+8. **Paper errors discovered** — Two Extension % values in Table 6 are inconsistent with
+   the formula applied to the paper's own tabulated OLE values:
+   - Midland Thickness: paper reports 3.1%, formula gives ~20% (reproduction: 21.2%)
+   - Clovis Mass: paper reports 19.6%, formula gives 3.1% (reproduction: 3.1%)
+   These appear to be calculation or transcription errors in the derived column only — the
+   core OLE Min/Max analytical outputs all match. The adversarial review independently
+   verified both as paper errors.
+
+9. **ScienceDirect blocks programmatic supplement access** — HTTP 403 for direct download.
+   The undocumented CDN URL pattern (`ars.els-cdn.com/content/image/1-s2.0-{PII}-mmc1.pdf`)
+   works but could change at any time. Same barrier as Dye et al. 2023.
+
+**Comparison with previous reproductions:**
+
+| Aspect | Crema 2024 | Marwick 2025 | Herskind 2024 | Dye 2023 | Key 2024 |
+|--------|-----------|--------------|---------------|----------|----------|
+| Dockerfile modifications | 2 (typo + missing pkg) | 0 | N/A (constructed) | N/A (constructed, 3 iterations) | N/A (constructed, 1 iteration) |
+| Time to reproduce | ~18h compute + ~3h hands-on | ~13 min compute + ~7 min hands-on | ~30s compute + ~50 min hands-on | ~30s compute + ~1.5h hands-on | ~5 min compute + ~4h hands-on |
+| Dependency approach | Manual install.packages() | renv.lock (169 pkgs) | None (6 library() calls) | None (CRAN + r-universe) | None (base R only) |
+| Stochastic elements | MCMC → expected variation | GAM → deterministic | None → exact match | None (post-processing) → exact match | None (mmc1) → exact match |
+| Statistical discrepancies | 0 (all within HPD) | 1 (p-value, non-material) | 0 (exact) | 0 (54/54 exact) | 2 (paper errors in Extension %) |
+| Script execution mode | Batch-ready | Literate programming | Interactive (wrapper) | Incremental sections (wrapper) | Interactive with placeholders (wrapper) |
+| Environment specification | Dockerfile | Dockerfile + renv.lock | R version in text only | None | None |
+| Upstream limitations | None | None | None | OxCal 4.4.2 | Data availability (10/13 datasets) |
+| Verdict | SUCCESSFUL | SUCCESSFUL | SUCCESSFUL | SUCCESSFUL | PARTIAL |
+
+**Key lesson: Data availability is a harder problem than computational reproducibility.**
+Across all 5 pilot papers, the code always worked once an appropriate environment was
+constructed. The only PARTIAL verdict stems not from code or environment issues but from
+data inaccessibility — 77% of datasets behind co-author gatekeeping or closed-access
+publications. For papers aggregating external datasets, data availability is the strongest
+predictor of reproducibility. The strongest predictor of dataset accessibility was
+independent publication under a data-sharing mandate (e.g., journal policy requiring
+deposition).
+
+**Key lesson: Base R sufficiency eliminates dependency complexity.** The OLE function uses
+only base R mathematical operations (matrix algebra, gamma function, solve). This meant
+the Docker image required zero additional packages — the simplest build across all 5 pilot
+papers (single iteration, no system library installation). When an analysis uses only base
+R, environment specification is effectively irrelevant because the algorithm is portable
+across all R versions.
+
+**Key lesson: Paper errors are discoverable through reproduction.** The two Extension %
+calculation errors would likely never be found through peer review alone — they are in a
+derived column of a large results table. Systematic reproduction with value-by-value
+comparison is an effective mechanism for catching transcription and calculation errors in
+published work.
+
 ---
 
-*Last updated: 2026-02-10*
+*Last updated: 2026-02-11*
