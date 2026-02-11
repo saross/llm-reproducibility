@@ -371,4 +371,4 @@ Upon completion:
 
 **Version:** 1.0.0
 **Last updated:** 2025-10-30
-**Compatible with:** Schema v2.5
+**Compatible with:** Schema v2.6

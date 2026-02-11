@@ -1,7 +1,7 @@
-# RDMAP Extraction Prompt - PASS 1: Explicit Extraction v2.5
+# RDMAP Extraction Prompt - PASS 1: Explicit Extraction v2.6
 
-**Version:** 2.5 Pass 1
-**Last Updated:** 2025-10-28
+**Version:** 2.6 Pass 1
+**Last Updated:** 2026-02-12
 **Workflow Stage:** Pass 1 of 4 - Explicit RDMAP extraction (implicit extraction in Pass 1b)
 **Skill Context:** This prompt is part of the research-assessor skill
 **Schema Update:** Added mandatory sourcing to prevent hallucination
@@ -14,7 +14,7 @@ Extract **explicit RDMAP items** from research paper Methods/Approach sections: 
 
 **This is Pass 1: Liberal Extraction** - when uncertain about tier assignment or boundaries, err on the side of inclusion. Pass 2 will consolidate and rationalise.
 
-**Input:** JSON extraction document (schema v2.5)
+**Input:** JSON extraction document (schema v2.6)
 - May be blank template (starting fresh)
 - May be partially populated (if claims/evidence already extracted)
 

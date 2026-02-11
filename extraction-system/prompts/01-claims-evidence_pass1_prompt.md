@@ -1,7 +1,7 @@
-# Claims & Evidence Extraction Prompt - PASS 1: Liberal Extraction v2.5
+# Claims & Evidence Extraction Prompt - PASS 1: Liberal Extraction v2.6
 
-**Version:** 2.5 Pass 1  
-**Last Updated:** 2025-10-21  
+**Version:** 2.6 Pass 1
+**Last Updated:** 2026-02-12
 **Workflow Stage:** Pass 1 - Liberal extraction with over-capture strategy  
 **Update:** Added mandatory sourcing requirements (hallucination prevention)
 
@@ -11,7 +11,7 @@
 
 Extract evidence, claims, and implicit arguments from a research paper section. This is **Pass 1: Liberal Extraction** - when uncertain, err on the side of inclusion. Pass 2 will consolidate and refine.
 
-**Input:** JSON extraction document (schema v2.5)
+**Input:** JSON extraction document (schema v2.6)
 - May be blank template (starting fresh)
 - May be partially populated (if RDMAP or other sections already extracted)
 

@@ -1,9 +1,9 @@
 # Reproducibility Infrastructure Extraction - PASS 6: Infrastructure & FAIR Assessment v2.0
 
 **Version:** 2.0 Pass 6
-**Last Updated:** 2025-11-03
+**Last Updated:** 2026-02-12
 **Workflow Stage:** Pass 6 - Infrastructure extraction with FAIR assessment
-**Schema Version:** Canonical v2.5 + Infrastructure v2.0
+**Schema Version:** Canonical v2.6 + Infrastructure v2.0
 
 ---
 
@@ -11,7 +11,7 @@
 
 Extract reproducibility infrastructure and assess FAIR compliance from a research paper. This is **Pass 6: Infrastructure Extraction** - systematic capture of Persistent Identifiers (PIDs), funding, data/code availability, author contributions, ethics, permits, and supplementary materials.
 
-**Input:** JSON extraction document (schema v2.5) with content extraction complete
+**Input:** JSON extraction document (schema v2.6) with content extraction complete
 - Evidence, claims, methods, protocols, research designs populated (Passes 1-5)
 - `reproducibility_infrastructure` section empty
 

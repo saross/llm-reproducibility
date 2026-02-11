@@ -1,7 +1,7 @@
-# Validation Prompt - PASS 7: Integrity Checks v2.5
+# Validation Prompt - PASS 7: Integrity Checks v2.6
 
-**Version:** 2.5 Pass 7
-**Last Updated:** 2025-11-11
+**Version:** 2.6 Pass 7
+**Last Updated:** 2026-02-12
 **Workflow Stage:** Pass 7 of 7 - Comprehensive validation of Passes 0-6 extraction
 **Update:** Includes infrastructure validation (Pass 6 content) with PID verification, FAIR assessment validation, and CARE principles compliance
 
@@ -294,7 +294,7 @@ python3 extraction-system/scripts/validate_extraction.py outputs/paper-name/extr
 
 #### Check 3.2: Enum Values Valid
 
-**Check enum fields against schema v2.5 allowed values.**
+**Check enum fields against schema v2.6 allowed values.**
 
 **Critical enums (closed lists):**
 - **Status fields:** explicit, implicit (RDMAP items)
@@ -372,7 +372,7 @@ The skill contains complete procedures, decision trees, worked examples, and qua
 
 **🚨 CRITICAL: RDMAP items require same sourcing discipline as Evidence/Claims**
 
-Schema v2.5 requires all Research Designs, Methods, and Protocols to be properly sourced. Verify:
+Schema v2.6 requires all Research Designs, Methods, and Protocols to be properly sourced. Verify:
 
 **For explicit RDMAP items (status = "explicit"):**
 - `verbatim_quote` populated (required field, non-empty string)

@@ -1,16 +1,17 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Academic Research Extraction Schema v2.5",
+  "title": "Academic Research Extraction Schema v2.6",
   "description": "Unified schema for extracting evidence, claims, implicit arguments, research design, methods, and protocols from research papers. Enables comprehensive methodological transparency assessment for fieldwork-based disciplines.",
-  "version": "2.5",
-  "last_updated": "2025-10-21",
+  "version": "2.6",
+  "last_updated": "2026-02-12",
   "changelog": {
     "2.4": "Added RDMAP objects (research_design, method, protocol) with three-tier hierarchy; extended claim_type with 'methodological_argument'; extended implicit_argument.type with Type 4 (design_assumption) and Type 5 (methodological_assumption); added reasoning approach framework (inductive/abductive/deductive); added research questions vs hypotheses distinction; integrated TIDieR and CONSORT-Outcomes frameworks as expected information checklists; added fieldwork-specific adaptations (opportunistic decisions, field condition responses); maintained architectural consistency with v2.3",
     "2.3": "Added consolidation_metadata to evidence, claims, and implicit arguments for traceability; added related_evidence field; enhanced claim structure with primary_function, claim_nature, quantitative_details; added 'synthesis' to claim_role enum; enhanced declared_uncertainty structure",
     "2.2": "Separated extraction-time vs assessment-time fields; added credibility_assessment structure; enhanced evidence_strength for extraction-time observations",
     "2.1": "Formalized Type 3 (disciplinary_assumption) extraction; added optional COI field to implicit arguments",
     "2.0": "Initial comprehensive schema with dual-layer uncertainty and four-level hierarchy",
-    "2.5": "BREAKING CHANGE - Hallucination Prevention: Made verbatim_quote REQUIRED for evidence and claims; added trigger_text/trigger_locations/inference_reasoning REQUIRED for implicit arguments; set verbatim_quote to null for implicit arguments; added source_verification object to evidence, claims, and implicit arguments for Pass 3 validation"
+    "2.5": "BREAKING CHANGE - Hallucination Prevention: Made verbatim_quote REQUIRED for evidence and claims; added trigger_text/trigger_locations/inference_reasoning REQUIRED for implicit arguments; set verbatim_quote to null for implicit arguments; added source_verification object to evidence, claims, and implicit arguments for Pass 3 validation",
+    "2.6": "Added reproducibility_infrastructure object with 14 sections (PIDs, funding, data/code availability, FAIR assessment, data_completeness, etc.); added data_completeness field for dataset accessibility inventory"
   },
   "definitions": {
     "_comment_shared_definitions": "These structures are used across all object types to prevent drift and ensure consistency",
@@ -2252,7 +2253,7 @@
     ],
     "properties": {
       "schema_version": {
-        "const": "2.5",
+        "const": "2.6",
         "description": "Schema version used for this extraction"
       },
       "extraction_timestamp": {
