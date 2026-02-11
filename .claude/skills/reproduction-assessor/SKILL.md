@@ -87,6 +87,17 @@ Users will typically indicate which phase they want. Listen for:
 
 The user will provide or reference the session prompt for the current phase. These prompts are stored in `reproduction-system/prompts/` and contain detailed instructions for that specific session.
 
+### Step 2a: Determine the Output Directory
+
+Before starting any session, determine where artefacts should be saved:
+
+1. **Check the paper's queue entry** for an `output_dir` field
+2. **If `output_dir` is present**, use it as the base path instead of `outputs/{slug}`
+   (e.g., `studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/`)
+3. **If no `output_dir`**, use the default: `outputs/{slug}/reproduction/attempt-{NN}/`
+
+This ensures study papers route to their study directory automatically.
+
 ### Step 3: Consult Supporting References As Needed
 
 If you encounter uncertainty during reproduction, consult:

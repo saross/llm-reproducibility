@@ -237,6 +237,11 @@ assessment-system/
 └── prompts/               # Assessment prompts (Pass 8-9, in development)
 ```
 
+**Study papers** live under `studies/{study-name}/outputs/{paper-slug}/` with the
+same per-paper layout (extraction.json, assessment/, reproduction/). The paper's
+queue entry `output_dir` field is authoritative for determining the correct
+output path. Non-study papers use the default `outputs/{paper-slug}/` location.
+
 ## Skills Used
 
 - `research-assessor` — Primary extraction and assessment skill
