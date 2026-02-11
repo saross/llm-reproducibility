@@ -86,7 +86,7 @@ See "Low Priority / Nice to Have" section (Section 9) for:
 
 **Reproduction system:** 5-paper pilot programme complete (4 SUCCESSFUL, 1 PARTIAL). Skill upgraded to v1.1 with 12 improvements from adversarial review. Project v2.9.
 
-**Open science compliance study:** All 5 pilot papers have completed full pipeline (extraction → assessment → reproduction). Queue: `studies/open-science-compliance/corpus/queue.yaml`.
+**Open science compliance study:** All 5 pilot papers have completed full pipeline (extraction → assessment → reproduction). Phase 1 pilot findings report written (2026-02-11): `studies/open-science-compliance/reports/pilot-findings-report.md`. Queue: `studies/open-science-compliance/corpus/queue.yaml`.
 
 **Current Focus:** Phase 7 Step 5 (foundational clarity cluster prompt) for extraction/assessment system. Reproduction system at a natural pause point.
 
@@ -146,6 +146,26 @@ Create prompt/script that takes corpus profile + individual scorecards and gener
 4. Should interpretation be deterministic (rule-based) or use LLM for flexible analysis?
 
 **See also:** Section 9.1 (Extraction Quality Metrics Documentation) for related deferred work
+
+---
+
+#### 10.3 FAIR Assessment Scale Standardisation
+**Priority:** HIGH (required before Phase 2)
+**Status:** PENDING
+**Effort:** 2-3 hours
+**Added:** 2026-02-11 (from Phase 1 pilot findings report)
+
+**Problem:**
+Phase 1 FAIR assessments used four different scoring scales (15-point, 16-point, 32-point, 40-point) as the assessment framework evolved across papers. Crema's assessment predates numerical scoring entirely. Normalised percentages provide rough comparability but are not rigorous.
+
+**Task:**
+- [ ] Define a single normalised FAIR scoring scale for all papers
+- [ ] Align with study protocol's specified 0-10 per dimension (F/A/I/R) for 0-40 total
+- [ ] Retrospectively re-score pilot papers on the standardised scale
+- [ ] Update assessment.json files with standardised scores
+- [ ] Document the standardised rubric for Phase 2 assessors
+
+**Why HIGH priority:** Cross-paper FAIR comparison is a core study output. Inconsistent scales undermine the validity of H1 (policy effect on FAIR scores) testing in Phase 2.
 
 ---
 
