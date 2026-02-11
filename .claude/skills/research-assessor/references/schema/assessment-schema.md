@@ -210,7 +210,9 @@ Machine-readable consolidation of all assessment data for:
 {
   "paper_id": "paper-slug",
   "assessment_date": "2025-11-17",
-  "system_version": "v0.2-alpha",
+  "assessor_version": "v1.0",
+  "schema_version": "1.1",
+  "quality_state": "high",
 
   "classification": {
     "expressed_approach": "inductive|deductive|abductive|mixed|none_stated",
@@ -424,7 +426,9 @@ Machine-readable consolidation of all assessment data for:
 
 - `paper_id`: Paper slug identifier
 - `assessment_date`: ISO date of assessment
-- `system_version`: Skill version for reproducibility
+- `assessor_version`: Skill version for reproducibility
+- `schema_version`: Assessment.json schema version (currently "1.1")
+- `quality_state`: Track A quality state (`high`, `moderate`, `low`)
 
 ### classification Object
 
