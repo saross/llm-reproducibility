@@ -1063,35 +1063,18 @@ This is a source of extraction inconsistency that should be standardised.
 
 ## Known Gaps
 
-- **Crema et al. 2024 and Marwick 2025 reproduction artefacts**: Referenced in queue.yaml but artefacts may be missing from repository. Need to verify paths and recover if necessary.
 - **reproduction-implementation-notes.md**: Contains Key et al. 2024 lessons but file not yet updated with that paper's gotchas.
+- **Output location inconsistency** (low priority): Crema and Marwick reproduction artefacts live under `studies/open-science-compliance/outputs/`, while Dye, Herskind, and Key artefacts live under root `outputs/`. Not blocking anything; consolidation deferred.
 
 ---
 
-## Archive Candidates
+## Archive Candidates ✅ **COMPLETE** (verified 2026-02-11)
 
-The following planning documents should be moved to `archive/planning-completed/`:
+All 12 archive candidates were moved in prior sessions:
 
-- `planning/remaining-tasks-summary.md` - Phase 1 complete, superseded by this list
-- `planning/future-workflow-improvements.md` - Items extracted to this list, monitoring deferred
-- `planning/QA_REMEDIATION_PLAN.md` - Completed per user confirmation
-- `planning/schema_improvement_plan.md` - v2.5 complete
-- `planning/prompt-to-skill-optimization.md` - Historical, workflow finalized
-- `planning/skill-content-assessment.md` - Historical assessment
-- `planning/skill-structure-assessment.md` - Historical assessment
-- `planning/implicit-arguments-skill-assessment.md` - Assessment complete, workflow working
-
-The following docs should be archived to `archive/docs-obsolete/`:
-
-- `docs/development/repository-reorganization-v2.5.md` - Reorganization complete
-- `docs/development/schema-evolution.md` - Historical, could archive
-- `docs/schema/schema_crosswalk_v1.1.md` - Old version
-- `docs/schema/schema_crosswalk_v1.2.md` - Old version (keep if still referenced)
-
-**KEEP all files in:**
-- `docs/background-research/` - Research documentation
-- `docs/user-guide/` - Current user documentation
-- `docs/skill-documentation/` - Skill documentation
+- 8 planning docs → `archive/planning-completed/`
+- 3 docs files → `archive/docs-obsolete/`
+- 1 file (`docs/development/schema-evolution.md`) — not found anywhere; presumed deleted or never created
 
 ---
 
