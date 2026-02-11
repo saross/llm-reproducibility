@@ -150,6 +150,74 @@ The runtime approach is generally preferable for reproduction work, as it
 separates environment construction from analysis execution and makes output
 extraction straightforward.
 
+## Parameterised Loop Pattern (Multi-Dataset)
+
+For papers that apply the same analysis to multiple datasets and/or variables (e.g.,
+Key et al. 2024: 5 Olduvai variables, then 4 Paleoindian types × 4 variables), use
+nested loops with a load → subset → analyse → extract pattern:
+
+```r
+# Load all datasets once
+olduvai <- read.csv("data/olduvai-cleavers.csv")
+paleoindian <- read.csv("data/paleoindian-points.csv")
+
+# Define analysis parameters
+olduvai_vars <- c("length_mm", "breadth_mm", "thickness_mm", "edge_length_mm", "mass_g")
+paleo_types <- c("Clovis", "E.Clovis", "Folsom", "Midland")
+paleo_vars <- c("Length", "Width", "Thickness", "Mass")
+
+# Olduvai: iterate over variables
+results_olduvai <- list()
+for (var in olduvai_vars) {
+  values <- olduvai[[var]]
+  values <- values[!is.na(values)]
+  result <- OLE.test(values)  # Original function, unchanged
+  results_olduvai[[var]] <- result
+}
+
+# Paleoindian: nested iteration over types and variables
+results_paleo <- list()
+for (type in paleo_types) {
+  subset_data <- paleoindian[paleoindian$Type == type, ]
+  for (var in paleo_vars) {
+    values <- subset_data[[var]]
+    values <- values[!is.na(values)]
+    result <- OLE.test(values)
+    results_paleo[[paste(type, var, sep = "_")]] <- result
+  }
+}
+
+# Extract and save results
+write.csv(do.call(rbind, results_olduvai), "outputs/table-5-results.csv")
+write.csv(do.call(rbind, results_paleo), "outputs/table-6-results.csv")
+```
+
+This pattern preserves the original analysis function verbatim while parameterising the
+iteration. The loop structure replaces manual re-execution with different variable
+selections.
+
+## Interactive Placeholder Substitution
+
+Journal supplement scripts often use placeholder patterns for file paths that users
+must replace manually before running:
+
+```r
+# Common patterns found in supplements:
+data <- read.csv("###file location###")           # Key et al. 2024
+source("C:/Users/Author/Desktop/functions.R")     # Hardcoded personal path
+setwd("~/path/to/project")                        # Home directory reference
+```
+
+**Handling in wrapper scripts:**
+
+1. Search for placeholder patterns: `###...###`, `TODO`, `CHANGE THIS`, `your path here`
+2. Replace with relative paths appropriate for the Docker container
+3. Replace `setwd()` calls with relative paths or `here::here()`
+4. Document each substitution in the reproduction log
+
+**Do NOT modify the analysis logic when substituting paths.** Path changes are
+infrastructure, not analysis.
+
 ## Common Pitfalls
 
 - **Changing `setwd()` paths** — Avoid hardcoded absolute paths. Use relative
@@ -168,3 +236,16 @@ extraction straightforward.
   not be available in Docker containers. Accept font substitution or install
   open-source alternatives (e.g., `fonts-liberation`). Do not let missing fonts
   block reproduction.
+- **Empty supplement files** — Publishing errors can produce supplement files
+  that are empty or contain only headers. Check file sizes before relying on
+  supplement data (e.g., Key et al. 2024: mmc4.csv was 75 bytes, header only).
+  Document as a publishing error, not a data availability issue.
+- **Undocumented data preprocessing** — Original analyses may include data
+  cleaning steps (duplicate removal, outlier filtering, unit conversion) that
+  are not captured in the published scripts. If reproduced values include NaN
+  or unexpected results, check whether the input data differs from what the
+  original analysis used. Classify as CANNOT_COMPARE, not MAJOR_DISCREPANCY.
+- **Supplement file naming** — Journal supplement numbering (mmc1, mmc2, etc.)
+  may not correspond to the order referenced in the paper text. Verify which
+  supplement file contains which script or data by examining content, not by
+  relying on numbering alone.

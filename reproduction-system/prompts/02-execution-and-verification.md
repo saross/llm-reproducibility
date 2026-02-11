@@ -88,7 +88,10 @@ For each deterministic verification target:
 1. Extract the published value from the paper (table, text, supplement)
 2. Extract the reproduced value from the output files
 3. Compare at the precision reported in the paper
-4. Classify: EXACT_MATCH, WITHIN_PRECISION, or DISCREPANCY
+4. Classify: EXACT_MATCH, WITHIN_PRECISION, MINOR_DISCREPANCY, MAJOR_DISCREPANCY,
+   CANNOT_COMPARE (upstream data/preprocessing issue), or PAPER_ERROR (paper's own value
+   is internally inconsistent — verify by applying the formula to the paper's tabulated
+   inputs)
 
 **Transcription accuracy is critical.** Double-check both published and reproduced values. Transposed digits are the most common comparison error.
 
@@ -197,6 +200,14 @@ Completed:
 
 Verdict: {SUCCESSFUL / PARTIAL / FAILED / BLOCKED}
 Justification: {1-2 sentence summary}
+
+Artefact persistence check:
+- [ ] environment.md saved to outputs/{paper-slug}/reproduction/attempt-{NN}/
+- [ ] log.md saved to outputs/{paper-slug}/reproduction/attempt-{NN}/
+- [ ] comparison-report.md saved to outputs/{paper-slug}/reproduction/attempt-{NN}/comparisons/
+- [ ] Generated outputs saved to outputs/{paper-slug}/reproduction/attempt-{NN}/outputs/
+- [ ] All artefact files are non-empty and contain expected content
+- [ ] queue.yaml updated with verdict and report path
 
 Next session: R-C (Adversarial Review)
 Ready to continue when you are.

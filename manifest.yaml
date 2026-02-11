@@ -6,8 +6,8 @@
 
 project:
   name: LLM-Based Research Extraction and Assessment
-  version: "2.8"
-  status: Extraction system complete, assessment framework in development, reproduction system v1.0
+  version: "2.9"
+  status: Extraction system complete, assessment framework in development, reproduction system v1.1
   last_updated: "2026-02-10"
   repository: https://github.com/saross/llm-reproducibility
 
@@ -103,17 +103,17 @@ assessment:
       last_updated: "2025-11-30"
       description: JSON schema for machine-readable credibility output
 
-# Reproduction system (v1.0 — R-based papers only)
+# Reproduction system (v1.1 — R-based papers only)
 reproduction:
   status: active
-  version: "1.0"
+  version: "1.1"
   scope: R-based papers only (extension points for Python/Julia documented)
   execution_mode: session-per-phase  # 4 sessions: R-Plan/R-A/R-B/R-C
   last_updated: "2026-02-10"
 
   skill:
     name: reproduction-assessor
-    version: "1.0"
+    version: "1.1"
     path: .claude/skills/reproduction-assessor/
     description: Docker-based reproduction, verification, and adversarial review
 
@@ -151,10 +151,10 @@ reproduction:
     comparison_report: reproduction-system/templates/comparison-report-template.md
 
   pilot_statistics:
-    papers_attempted: 4
+    papers_attempted: 5
     papers_successful: 4
-    success_rate: "100%"
-    mean_hands_on_time: "~1.5 hours"
+    success_rate: "80%"
+    mean_hands_on_time: "~1.8 hours"
     papers:
       - slug: crema-et-al-2024
         type: B
@@ -172,6 +172,10 @@ reproduction:
         type: C+D
         verdict: successful
         runtime: "~30s"
+      - slug: key-et-al-2024
+        type: C
+        verdict: partial
+        runtime: "~5s"
 
 # Workflow structure
 workflow_passes:
@@ -219,6 +223,20 @@ corpus:
 
 # Version history summary
 version_history:
+  - version: "2.9"
+    date: "2026-02-10"
+    changes:
+      - Reproduction system v1.1 (post-pilot review, 12 improvements)
+      - Added CANNOT_COMPARE and PAPER_ERROR discrepancy categories
+      - Data provenance protocol with 5-level access taxonomy
+      - Artefact persistence checklists for all sessions
+      - Scope limitation taxonomy (4 categories with FAIR implications)
+      - Paper error handling guidance (independent verification protocol)
+      - Formal reproduction-plan.md artefact for R-Plan session
+      - Expanded wrapper script and Dockerfile pattern libraries
+      - Strengthened figure comparison guidance
+      - Validated on 5 pilot papers (4 SUCCESSFUL, 1 PARTIAL)
+
   - version: "2.8"
     date: "2026-02-10"
     changes:

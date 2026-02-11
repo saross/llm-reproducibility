@@ -13,7 +13,9 @@ Analyse the target paper and produce a paper-specific reproduction plan. This pl
 
 **Input:** Paper PDF, extraction.json (if available), code repository or supplement
 
-**Output:** A concrete reproduction plan with numbered execution steps, verification targets, risk assessment, and compute strategy
+**Output:** A concrete reproduction plan (`reproduction-plan.md`) with numbered execution
+steps, verification targets, risk assessment, and compute strategy. Save to
+`outputs/{paper-slug}/reproduction/attempt-{NN}/reproduction-plan.md`.
 
 ---
 
@@ -47,7 +49,11 @@ Analyse the target paper and produce a paper-specific reproduction plan. This pl
 Following the Reproduction Plan Guide (`reproduction-system/reproduction-plan-guide.md`):
 
 1. **Code location:** Where is the code? (GitHub, Zenodo, supplement, personal site)
-2. **Data availability:** Where is the data? Can it be downloaded programmatically?
+2. **Data availability:** Where is the data? Classify each dataset using the 5-level
+   access taxonomy (Level 0 = fully accessible through Level 4 = never published). For
+   papers with multiple data sources, create a data availability inventory with
+   dataset-weighted and record-weighted availability percentages. See the Reproduction
+   Plan Guide §1.2 for the full protocol.
 3. **Environment specification:** What does the paper provide? (Dockerfile, renv, sessionInfo, nothing)
 4. **Script execution mode:** How is the analysis designed to run? (batch, interactive, literate, incremental)
 
@@ -106,10 +112,15 @@ Session R-Plan complete for {paper-slug}
 Completed:
 - Paper analysis and type classification: {Type A/B/C/D}
 - Verification targets identified: {N tables, M figures, K statistics}
+- Data availability: {N/M datasets accessible, percentage by records}
 - Risks assessed: {brief list}
 - Compute estimate: {runtime category}
 
 Plan location: {where the plan was written/presented}
+
+Artefact persistence check:
+- [ ] reproduction-plan.md saved to outputs/{paper-slug}/reproduction/attempt-{NN}/
+- [ ] data-availability-inventory.md saved (if multi-source paper)
 
 Next session: R-A (Preparation)
 Awaiting plan approval before proceeding.
