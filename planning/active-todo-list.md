@@ -73,8 +73,8 @@ See "Low Priority / Nice to Have" section (Section 9) for:
 - Troubleshooting guide
 - Additional how-to guides
 
-**Current FAIR Score:** 9/15 (Moderately FAIR)
-**Path to 15/15:** DOI minting (→14/15) + FAIR vocabularies (→15/15)
+**Current FAIR Score:** 8/15 (Moderately FAIR)
+**Path to 15/15:** DOI minting (→13/15) + FAIR vocabularies (→15/15)
 
 ---
 
@@ -84,7 +84,7 @@ See "Low Priority / Nice to Have" section (Section 9) for:
 
 **Assessment system:** Phase 7 Steps 1-4 complete. Variability test (25 runs across 5 papers) confirmed classification stability (100% paper_type consistency, aggregate score CV 1.9-3.4%).
 
-**Reproduction system:** 5-paper pilot programme complete (4 SUCCESSFUL, 1 PARTIAL). Skill upgraded to v1.1 with 12 improvements from adversarial review. Project v2.9.
+**Reproduction system:** 5-paper pilot programme complete (4 SUCCESSFUL, 1 PARTIAL). Skill upgraded to v1.1 with 12 improvements from adversarial review. Project v3.0.
 
 **Open science compliance study:** All 5 pilot papers have completed full pipeline (extraction → assessment → reproduction). Phase 1 pilot findings report written (2026-02-11): `studies/open-science-compliance/reports/pilot-findings-report.md`. Queue: `studies/open-science-compliance/corpus/queue.yaml`.
 

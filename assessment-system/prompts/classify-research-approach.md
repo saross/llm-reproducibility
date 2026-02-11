@@ -891,7 +891,7 @@ Create directory before running Pass 8:
 - [ ] Output directory `assessment/` exists (error if not)
 - [ ] Extraction complete (claims, methods, designs arrays populated)
 - [ ] Valid JSON syntax (no trailing commas, proper quotes, correct structure)
-- [ ] classifier_version = "v0.2-alpha"
+- [ ] classifier_version = "v1.0"
 
 ---
 
@@ -908,7 +908,7 @@ Create directory before running Pass 8:
   "classification_metadata": {
     "classified_after_pass": 6,
     "classification_date": "2025-11-17",
-    "classifier_version": "v0.2-alpha"
+    "classifier_version": "v1.0"
   },
 
   "paper_type": "empirical",
@@ -966,7 +966,7 @@ Create directory before running Pass 8:
   "classification_metadata": {
     "classified_after_pass": 6,
     "classification_date": "2025-11-17",
-    "classifier_version": "v0.2-alpha"
+    "classifier_version": "v1.0"
   },
 
   "paper_type": "empirical",
@@ -1048,7 +1048,7 @@ Create directory before running Pass 8:
   "classification_metadata": {
     "classified_after_pass": 6,
     "classification_date": "2025-11-17",
-    "classifier_version": "v0.2-alpha"
+    "classifier_version": "v1.0"
   },
 
   "paper_type": "empirical",
@@ -1130,7 +1130,7 @@ Create directory before running Pass 8:
   "classification_metadata": {
     "classified_after_pass": 6,
     "classification_date": "2025-11-17",
-    "classifier_version": "v0.2-alpha"
+    "classifier_version": "v1.0"
   },
 
   "paper_type": "empirical",
@@ -1210,7 +1210,7 @@ Create directory before running Pass 8:
   "classification_metadata": {
     "classified_after_pass": 6,
     "classification_date": "2025-11-17",
-    "classifier_version": "v0.2-alpha"
+    "classifier_version": "v1.0"
   },
 
   "paper_type": "methodological",
@@ -1295,7 +1295,7 @@ Create directory before running Pass 8:
   "classification_metadata": {
     "classified_after_pass": 6,
     "classification_date": "2025-11-17",
-    "classifier_version": "v0.2-alpha"
+    "classifier_version": "v1.0"
   },
 
   "paper_type": "methodological",
@@ -1467,4 +1467,4 @@ Create directory before running Pass 8:
 - **Confidence matters:** Low confidence affects Track A gating - assign honestly
 - **Validation ≠ Research:** Methodological papers have validation approaches, not research approaches
 - **HARKing detection is important:** But distinguish from legitimately mixed methods
-- **classifier_version = "v0.2-alpha":** Track version for reproducibility
+- **classifier_version = "v1.0":** Track version for reproducibility

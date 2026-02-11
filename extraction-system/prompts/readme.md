@@ -249,7 +249,7 @@ Pass 7: Validation (structural integrity checks)
 
 | File | Purpose |
 |------|---------|
-| `qa-qi-prompt-v3.md` | Quality assurance and quality improvement guidance |
+| ~~`qa-qi-prompt-v3.md`~~ | Archived to `archive/superseded-prompts/` (2026-02-12) |
 
 ---
 
