@@ -1,7 +1,7 @@
-# RDMAP Extraction Prompt - PASS 1b: Implicit RDMAP Scanning v2.5
+# RDMAP Extraction Prompt - PASS 1b: Implicit RDMAP Scanning v2.6
 
-**Version:** 2.5 Pass 1b
-**Last Updated:** 2025-10-28
+**Version:** 2.6 Pass 1b
+**Last Updated:** 2026-02-12
 **Workflow Stage:** Pass 1b of 4 - Implicit RDMAP extraction following explicit extraction
 **Skill Context:** This prompt is part of the research-assessor skill
 **Purpose:** Systematically scan for RDMAP items that are mentioned but undocumented, or inferred from Results/Discussion

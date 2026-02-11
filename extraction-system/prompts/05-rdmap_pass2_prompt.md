@@ -1,10 +1,10 @@
-# RDMAP Extraction Prompt - PASS 2: Rationalization v2.5
+# RDMAP Extraction Prompt - PASS 2: Rationalisation v2.6
 
-**Version:** 2.5 Pass 2  
-**Last Updated:** 2025-10-21  
+**Version:** 2.6 Pass 2
+**Last Updated:** 2026-02-12
 **Workflow Stage:** Pass 2 of 3 - Consolidate and refine Pass 1 RDMAP extraction  
 **Skill Context:** This prompt is part of the research-assessor skill  
-**Schema Update:** Added source verification for consolidations (v2.5)
+**Schema Update:** Added source verification for consolidations (v2.6)
 
 ---
 
@@ -30,7 +30,7 @@ Review Pass 1 RDMAP extraction and apply consolidation principles to produce rat
 
 ## Sourcing Discipline Reminder
 
-Pass 2 consolidations must maintain v2.5 sourcing requirements established in Pass 1.
+Pass 2 consolidations must maintain v2.6 sourcing requirements established in Pass 1.
 
 **Quick reminder** (see extraction-fundamentals.md for complete guidance):
 - **Explicit RDMAP (status = "explicit"):** Must preserve or synthesize `verbatim_quote` from Methods section
