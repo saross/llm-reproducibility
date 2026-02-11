@@ -184,6 +184,12 @@ Completed:
 Environment: {Docker base image, key packages}
 Build iterations: {N}
 
+Artefact persistence check:
+- [ ] Dockerfile saved to outputs/{paper-slug}/reproduction/attempt-{NN}/
+- [ ] Wrapper script saved to outputs/{paper-slug}/reproduction/attempt-{NN}/
+- [ ] Source data copied to outputs/{paper-slug}/reproduction/attempt-{NN}/
+- [ ] Output directory created: outputs/{paper-slug}/reproduction/attempt-{NN}/outputs/
+
 Next session: R-B (Execution and Verification)
 Ready to continue when you are.
 ```

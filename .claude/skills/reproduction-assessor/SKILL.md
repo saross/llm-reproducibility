@@ -1,7 +1,7 @@
 ---
 name: reproduction-assessor
 description: "Reproduces computational research papers through systematic Docker-based execution, quantitative verification, and adversarial review. This skill should be used when the user requests reproduction of a paper, verification of computational results, or assessment of reproducibility infrastructure. Handles R analyses with deterministic or stochastic outputs via a 4-session workflow (R-Plan, R-A, R-B, R-C). R-based papers only in v1.0; extension points for Python/Julia documented."
-version: "1.0"
+version: "1.1"
 license: Apache 2.0
 ---
 
@@ -222,9 +222,24 @@ Even if the Dockerfile has minor issues, fix rather than reconstruct:
 |----------|-----------|----------------|
 | EXACT_MATCH | Values identical to reported precision | SUCCESSFUL |
 | WITHIN_PRECISION | Difference within rounding of reported precision | SUCCESSFUL |
-| WITHIN_CONFIDENCE | Within published confidence/HPD intervals (stochastic only) | SUCCESSFUL |
+| WITHIN_CONFIDENCE | Within published CI/HPD intervals (stochastic only) | SUCCESSFUL |
 | MINOR_DISCREPANCY | Small difference, conclusions unchanged | SUCCESSFUL with note |
 | MAJOR_DISCREPANCY | Substantive difference affecting conclusions | PARTIAL or FAILED |
+| CANNOT_COMPARE | Value could not be computed (upstream data/preprocessing issue) | Context-dependent |
+
+**CANNOT_COMPARE** covers cases where the reproduction cannot produce a value because of
+upstream issues outside the analytical pipeline — for example, NaN results from
+undocumented data preprocessing steps, missing input files, or data formatting
+mismatches. This is distinct from MAJOR_DISCREPANCY because the algorithm is not wrong;
+the input conditions differ from those (often undocumented) that produced the published
+result.
+
+**Paper error handling:** When a reproduced value disagrees with a published value but
+the reproduction is internally consistent and the paper's own tabulated data supports the
+reproduced value, classify as PAPER_ERROR rather than MAJOR_DISCREPANCY. To verify a
+suspected paper error: apply the published formula to the paper's own input values and
+check whether the paper's reported output is consistent. Document the verification in the
+comparison report.
 
 **Verdict categories:**
 
@@ -232,6 +247,41 @@ Even if the Dockerfile has minor issues, fix rather than reconstruct:
 - **PARTIAL** — Some analyses reproduced, others could not (scope limitations, missing data, etc.)
 - **FAILED** — Material discrepancies; reproduced results contradict published findings
 - **BLOCKED** — Reproduction could not be attempted (missing code, inaccessible data, proprietary tools with no intermediates)
+
+### F. Scope Limitation Taxonomy
+
+Not all scope limitations are equal. Classify each limitation by category:
+
+| Category | Description | FAIR Implication | Example |
+|----------|-------------|------------------|---------|
+| Proprietary upstream | Analysis depends on commercial/proprietary software | Not a FAIR failure — tool choice | Dye → OxCal MCMC generation |
+| Data unavailability | Required data cannot be accessed | FAIR failure — data not accessible | Key → 10/13 datasets unavailable |
+| Stochastic non-reproducibility | No random seed set; results will vary | Design limitation, not failure | Key → no `set.seed()` in mmc2/mmc3 |
+| Publishing error | Supplement files empty, corrupted, or mislabelled | Journal process failure | Key → mmc4.csv header only (75 bytes) |
+
+Each category has different implications for the verdict:
+
+- **Proprietary upstream:** Does not diminish a SUCCESSFUL verdict for the reproducible components
+- **Data unavailability:** May require PARTIAL verdict if substantial analyses are affected
+- **Stochastic non-reproducibility:** Use stochastic comparison tolerances; exact match not expected
+- **Publishing error:** Document and exclude from comparison; flag as a FAIR finding
+
+### G. R-Plan Output
+
+The planning session should produce a `reproduction-plan.md` artefact that captures the
+paper-specific plan, data availability assessment, and scope decisions. This document
+serves multiple purposes:
+
+1. **Guides R-A and R-B execution** — the plan is the reference for what to do
+2. **Enables R-C adversarial review** — the reviewer can assess whether the plan was
+   followed and whether scope decisions were justified
+3. **Preserves decision rationale** — why certain analyses were scoped out or prioritised
+
+The plan document should follow the template in the Reproduction Plan Guide (Part 6).
+For papers with multiple data sources, include a data availability inventory (see §E
+data access taxonomy).
+
+**Save to:** `outputs/{slug}/reproduction/attempt-{NN}/reproduction-plan.md`
 
 ## Artefact Specifications
 
@@ -252,9 +302,35 @@ Each reproduction produces a standard artefact set in `outputs/{paper-slug}/repr
 
 | Artefact | When Needed |
 |----------|-------------|
+| `reproduction-plan.md` | Session R-Plan output (recommended — see §G) |
+| `data-availability-inventory.md` | Papers with multiple/aggregated data sources |
 | `run.log` | Console output from Docker execution |
 | `docker-build.log` | Docker build output (if non-trivial) |
 | `adversarial-review.md` | Session R-C output |
+
+### Artefact Persistence Checklist
+
+**CRITICAL:** Verify artefact persistence at the end of each session. Missing artefacts
+undermine the reproducibility of the reproduction itself.
+
+**After R-A:**
+
+- [ ] Dockerfile saved to `outputs/{slug}/reproduction/attempt-{NN}/`
+- [ ] Wrapper script saved to `outputs/{slug}/reproduction/attempt-{NN}/`
+- [ ] Source data copied to `outputs/{slug}/reproduction/attempt-{NN}/`
+- [ ] Output directory created: `outputs/{slug}/reproduction/attempt-{NN}/outputs/`
+
+**After R-B:**
+
+- [ ] `environment.md` saved and non-empty
+- [ ] `log.md` saved and non-empty
+- [ ] `comparisons/comparison-report.md` saved and non-empty
+- [ ] Generated outputs in `outputs/` directory
+- [ ] `queue.yaml` updated with verdict and report path
+
+**After R-C:**
+
+- [ ] `adversarial-review.md` saved and non-empty
 
 ## Session Structure
 

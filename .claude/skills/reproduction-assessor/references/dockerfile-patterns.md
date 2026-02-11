@@ -168,3 +168,18 @@ Lessons learned from actual reproduction attempts:
   in July 2023. Older Dockerfiles or lockfiles referencing `mran.microsoft.com` will fail.
   Replace with `https://cloud.r-project.org` or use Posit Package Manager snapshots
   (`https://packagemanager.posit.co/cran/{date}`).
+
+- **Data server unreliability:** Scripts that download data from author personal servers or
+  institutional URLs may fail during Docker build if the server is offline, has moved, or
+  rate-limits. Download data locally first and COPY it into the image rather than relying on
+  `RUN curl` or `RUN wget` during the build. This also improves build reproducibility.
+
+- **Column naming mismatches:** Data files may use different column names than the analysis
+  scripts expect (e.g., `Length_mm` vs `length_mm`, `Mass` vs `mass_g`). Check column names
+  in the actual data file against the script's references. This is especially common when
+  data files are downloaded from different sources than the original analysis used.
+
+- **Base R sufficiency:** Not all analyses require external packages. Simple statistical
+  methods (arithmetic, basic plotting, file I/O) may run on base R alone. In these cases,
+  `rocker/r-ver:{version}` with zero additional `install.packages()` calls is sufficient,
+  resulting in fast builds and small images (e.g., Key et al. 2024: ~820 MB, ~5s runtime).

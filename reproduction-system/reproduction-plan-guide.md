@@ -33,9 +33,42 @@ Where is the analysis code?
 
 **Action:** Clone/download the code. Note any access barriers.
 
-### 1.2 Data Availability
+### 1.2 Data Availability and Provenance
 
-Where is the input data?
+Where is the input data? For papers with aggregated datasets from multiple sources,
+data availability is often THE primary bottleneck. Assess every dataset individually.
+
+#### Data Access Level Taxonomy
+
+Classify each dataset using this 5-level taxonomy:
+
+| Level | Description | Reliability | Example |
+|-------|-------------|-------------|---------|
+| **0** | Fully accessible — can download immediately | High | Zenodo deposit, GitHub repo, journal supplement CSV |
+| **1** | Accessible with effort — registration, request, or paywall | Medium | Institutional repository, data request form |
+| **2** | Partially accessible — subset or summary available | Low | Published summary statistics, sample data |
+| **3** | Inaccessible — held by co-authors, in monographs | Very low | "Available on request," unpublished theses |
+| **4** | Never published — unpublished or lost | None | Unpublished pilot data, private collections |
+
+#### Data Availability Inventory
+
+For papers with multiple data sources (especially aggregated-dataset papers), create a
+data availability inventory during R-Plan:
+
+| Dataset | Records | Source | Access Level | Impact on Reproduction |
+|---------|---------|--------|--------------|------------------------|
+| {name} | {N} | {URL/reference} | {0-4} | {which analyses depend on this} |
+
+**Quantify overall availability:**
+
+- Dataset-weighted: {accessible}/{total} datasets ({percentage}%)
+- Record-weighted: {accessible records}/{total records} ({percentage}%)
+
+Record-weighted availability is more informative because some datasets contain the
+majority of records. A paper where 3 of 13 datasets are accessible (23% by dataset) may
+still cover 42% of records if the accessible datasets are the largest.
+
+#### Source Reliability Assessment
 
 | Source | Reliability | Action |
 |--------|------------|--------|

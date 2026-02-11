@@ -30,11 +30,24 @@ The base rocker image required the following additional system libraries:
 
 ### Data Source(s)
 
+<!-- For papers with a single data source, a simple listing suffices. -->
+<!-- For papers with multiple/aggregated data sources, use the inventory table. -->
+
 - **File:** {filename} ({size})
 - **Source:** {URL or repository} ({access method})
 - **Format:** {rows, columns, content description}
+- **Access level:** {0-4, per taxonomy in reproduction-plan-guide.md §1.2}
 
-<!-- If multiple data sources, list each separately -->
+<!-- If multiple data sources, use the inventory table: -->
+
+#### Data Availability Inventory
+
+| Dataset | Records | Source | Access Level | Available? |
+|---------|---------|--------|--------------|------------|
+| {name} | {N} | {URL/reference} | {0-4} | {Yes/No} |
+
+**Overall availability:** {accessible}/{total} datasets ({percentage}% by dataset),
+{accessible records}/{total records} ({percentage}% by records)
 
 ### Upstream Software (Not Reproduced)
 

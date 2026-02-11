@@ -1,6 +1,6 @@
 # LLM Reproducibility Project - Research Paper Extraction
 
-**Version:** 2.8 | **Schema:** v2.6 | **Workflow:** 8-pass session-per-pass (v5.0.0) | **Reproduction:** v1.0
+**Version:** 2.9 | **Schema:** v2.6 | **Workflow:** 8-pass session-per-pass (v5.0.0) | **Reproduction:** v1.1
 **Manifest:** See `manifest.yaml` for all component versions
 
 ## Project Purpose

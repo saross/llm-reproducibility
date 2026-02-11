@@ -18,7 +18,7 @@
 
 | {Relation/Variable} | Published | Reproduced | Match |
 |----------------------|-----------|------------|-------|
-| {item} | {value} | {value} | {EXACT_MATCH / WITHIN_PRECISION / WITHIN_CONFIDENCE / MINOR_DISCREPANCY / MAJOR_DISCREPANCY} |
+| {item} | {value} | {value} | {EXACT_MATCH / WITHIN_PRECISION / WITHIN_CONFIDENCE / MINOR_DISCREPANCY / MAJOR_DISCREPANCY / CANNOT_COMPARE / PAPER_ERROR} |
 
 <!-- Repeat for each table or analysis -->
 
@@ -35,9 +35,12 @@
 
 #### {Figure Description} (Paper Figure {N})
 
-- {Key observation about the reproduced figure}
-- {Comparison with published figure}
-- {Any notable differences or confirmations}
+- **Figure type:** {statistical plot / map / diagram / composite panel}
+- **Data equivalence:** {underlying data verified numerically / visual comparison only}
+- **Structural match:** {axes, scales, legends match / differ}
+- **Scientific content:** {trends, magnitudes, orderings match / differ}
+- **Acceptable differences:** {colour palette, fonts, rendering — if any}
+- **Verdict:** {Match / Minor visual differences / Substantive difference}
 
 ---
 
@@ -53,10 +56,23 @@
 <!-- Explain the determinism/stochasticity of the analysis and why the -->
 <!-- observed match level is appropriate -->
 
+### Paper Errors Identified
+
+<!-- Include only if the reproduction detected errors in the published paper. -->
+<!-- For each suspected error, document: -->
+<!-- 1. The published value and location -->
+<!-- 2. The reproduced value -->
+<!-- 3. Independent verification (apply the paper's formula to its own tabulated inputs) -->
+<!-- 4. Classification: PAPER_ERROR (not MAJOR_DISCREPANCY) -->
+
 ### Scope Limitation(s)
 
-<!-- Include only if relevant. Explain what was not reproduced and why. -->
-<!-- Frame as documentation, not failure. -->
+<!-- Include only if relevant. Classify each limitation by category: -->
+<!-- - Proprietary upstream: depends on commercial software (e.g., OxCal) -->
+<!-- - Data unavailability: data cannot be accessed (quantify impact) -->
+<!-- - Stochastic non-reproducibility: no set.seed(); results vary between runs -->
+<!-- - Publishing error: supplement files empty/corrupted/mislabelled -->
+<!-- - Compute constraints: pipeline too expensive for verification scope -->
 
 ### Verdict Justification
 
