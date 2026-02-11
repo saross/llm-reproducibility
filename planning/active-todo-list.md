@@ -1,7 +1,7 @@
 # Active To-Do List
 
-**Last Updated:** 2026-01-08
-**Status:** Phase 7 (Credibility Assessment) - Steps 1-4 complete, ready for Step 5 (foundational clarity cluster prompt)
+**Last Updated:** 2026-02-11
+**Status:** Reproduction pilot COMPLETE (5/5 papers, v1.1 deployed). Phase 7 (Credibility Assessment) Steps 1-4 complete, ready for Step 5.
 
 ---
 
@@ -37,6 +37,29 @@
 - Location tracking simplified (sentence field removed, section/paragraph requirements clarified)
 - Schema v2.5 and skill documentation updated with location requirements
 - Comprehensive metrics reference guide (docs/assessment-guide/credibility-metrics-reference.md)
+
+### Reproduction Pilot Programme ✅ (2026-02-09 to 2026-02-10)
+
+**5/5 pilot papers reproduced.** Reproduction-assessor skill upgraded from v1.0 to v1.1.
+
+- Crema et al. 2024: SUCCESSFUL — MCMC re-run on sapphire, all values within HPD intervals
+- Marwick 2025: SUCCESSFUL — Docker build-as-render, all statistics matched
+- Herskind & Riede 2024: SUCCESSFUL — 291/291 n-gram values exact match
+- Dye et al. 2023: SUCCESSFUL — 54/54 Allen algebra values exact match
+- Key et al. 2024: PARTIAL — 98.3% match (116/118), 2 discrepancies traced to paper errors, data availability bottleneck (3/13 datasets)
+
+**v1.0 adversarial review** identified 12 issues (3 critical, 5 important, 4 minor). Review committed as `outputs/reproduction-system-review-v1.0.md`.
+
+**v1.1 upgrade** implemented all 12 recommendations:
+- 7-category discrepancy classification (CANNOT_COMPARE, PAPER_ERROR added)
+- 5-level data access taxonomy and provenance protocol
+- Artefact persistence checklists for all sessions
+- Scope limitation taxonomy with FAIR implications
+- Paper error handling with 5-step verification protocol
+- Expanded wrapper script and Dockerfile pattern libraries
+- Figure comparison checklist
+
+Project bumped to v2.9, reproduction system to v1.1.
 
 ### Phase 7: Credibility Assessment System - repliCATS Seven Signals (2025-11-16 to 2025-11-17) ⏳
 **Implementation Plan:** `planning/credibility-implementation-plan-v2.0.md`
@@ -105,14 +128,15 @@ See "Low Priority / Nice to Have" section (Section 9) for:
 
 ## Context
 
-RUN-08 successfully achieved all extraction goals:
-- ✅ Balanced extraction (159 items, ranked #3 of 7)
-- ✅ Strong RDMAP coverage (29 items, ranked #2 of 7)
-- ✅ Implicit RDMAP extraction working (5 items)
-- ✅ Implicit arguments extraction working (16 items)
-- ✅ High relationship mapping (81% evidence, 57% claims)
+**Extraction system:** 10-paper corpus complete. Session-per-pass workflow validated (+75% claims, +100% research designs). Schema v2.6, workflow v5.0.0.
 
-**Current Focus:** Step 5 (foundational clarity cluster prompt) — Steps 1-4 complete, Track A prompt discovered already exists and tested
+**Assessment system:** Phase 7 Steps 1-4 complete. Variability test (25 runs across 5 papers) confirmed classification stability (100% paper_type consistency, aggregate score CV 1.9-3.4%).
+
+**Reproduction system:** 5-paper pilot programme complete (4 SUCCESSFUL, 1 PARTIAL). Skill upgraded to v1.1 with 12 improvements from adversarial review. Project v2.9.
+
+**Open science compliance study:** All 5 pilot papers have completed full pipeline (extraction → assessment → reproduction). Queue: `studies/open-science-compliance/corpus/queue.yaml`.
+
+**Current Focus:** Phase 7 Step 5 (foundational clarity cluster prompt) for extraction/assessment system. Reproduction system at a natural pause point.
 
 ---
 
@@ -704,7 +728,8 @@ This aligns with:
 - Total: 12-18 hours
 
 **Dependencies:**
-- Crema-et-al-2024 extraction complete (provides test case)
+- ✅ Crema-et-al-2024 extraction complete (provides test case)
+- ✅ All 5 pilot paper reproductions complete (additional FAIR evidence from reproduction artefacts)
 - Understanding of WorldFAIR and FAIR Island approaches
 - Access to repository APIs (no authentication needed for public repos)
 
@@ -921,7 +946,7 @@ Aggregate scores: 65-70 (5-point spread)
   - C1 categorisation instability suggests assessment anchors may need refinement for this paper type
   - Consider whether methodological transparency variant (used for C3) should also apply to C1/C2
 
-- [ ] **Revisit ross-2005 after completing sobotkova-et-al-2016 variability runs**
+- [ ] **Revisit ross-2005 variability findings** (sobotkova-et-al-2016 runs now complete)
   - Compare variability patterns between methodological and interpretive papers
   - Assess whether instability is genre-specific or a broader issue
 
@@ -1036,6 +1061,13 @@ This is a source of extraction inconsistency that should be standardised.
 
 ---
 
+## Known Gaps
+
+- **Crema et al. 2024 and Marwick 2025 reproduction artefacts**: Referenced in queue.yaml but artefacts may be missing from repository. Need to verify paths and recover if necessary.
+- **reproduction-implementation-notes.md**: Contains Key et al. 2024 lessons but file not yet updated with that paper's gotchas.
+
+---
+
 ## Archive Candidates
 
 The following planning documents should be moved to `archive/planning-completed/`:
@@ -1124,13 +1156,23 @@ After documentation improvements, next steps:
 
 ## Next Major Milestones (Choose One)
 
-**Option A: DOI Release (v3.0 or v0.5)**
+**Option A: Phase 7 Step 5 — Foundational Clarity Cluster Prompt**
+- Effort: 1.5 hours (Step 5) + 1.5 hours (Step 6 testing) + 3-4 hours (Step 7 remaining clusters)
+- Continues the credibility assessment pipeline
+- Unblocks full automated assessment capability
+
+**Option B: DOI Release (v3.0 or v0.5)**
 - Effort: 2-4 hours
 - Mint Zenodo DOI
 - Update codemeta.json and CITATION.cff (2 lines each)
 - FAIR score impact: 9/15 → 14/15 (Exemplary FAIR)
 
-**Option B: FAIR Vocabularies Development (v2.7)**
+**Option C: Enhanced FAIR Assessment Framework (Section 11)**
+- Effort: 4-6 hours (Phase 1 rubric), 8-12 hours (Phase 2 API scripts)
+- Redesign FAIR scoring with human/machine-readable distinction
+- Dependencies now met (all pilot extractions + reproductions complete)
+
+**Option D: FAIR Vocabularies Development (v2.7)**
 - Effort: 38-58 hours over 5-7 weeks
 - Extract 20-25 paper corpus
 - Build evidence-based SKOS vocabularies
@@ -1138,7 +1180,7 @@ After documentation improvements, next steps:
 - FAIR score impact: 9/15 → 10/15 (alone), 9/15 → 15/15 (with DOI)
 - Planning: `planning/fair-vocabularies-development-plan.md`
 
-**Option C: Corpus Expansion**
+**Option E: Corpus Expansion**
 - Effort: 15-20 hours
 - Extract 5-10 diverse papers (ecology, ethnography, geology)
 - Build evidence base for vocabularies
@@ -1146,8 +1188,8 @@ After documentation improvements, next steps:
 
 ---
 
-*Last updated: 2026-01-08*
+*Last updated: 2026-02-11*
 
-*Status: Active - Post-RUN-08 milestone*
+*Status: Active — Reproduction pilot complete, Phase 7 Step 5 next for assessment system*
 
-*Next review: After documentation phase complete*
+*Next review: After Phase 7 completion or next milestone*
