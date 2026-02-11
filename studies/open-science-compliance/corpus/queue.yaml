@@ -149,7 +149,27 @@ papers:
       classification_complete: true  # Pass 8 completed 2026-01-14
       assessment_complete: true  # Pass 9 completed 2026-01-14
       fair_assessed: true
-      reproduction_attempted: false
+      reproduction_attempted: true
+    reproduction:
+      date: "2026-02-10"
+      verdict: partial
+      phase_completed: "R-B"
+      tables_reproduced: "Table 5 (Olduvai, 5 vars), Table 6 (Paleoindian, 4 types × 4 vars)"
+      tables_not_reproduced: "Tables 2-4 (validation), Table 5 (8 other rows), Table 7 (microliths)"
+      total_comparisons: 126
+      exact_matches: 89
+      within_precision: 27
+      cannot_compare: 8  # NaN from undocumented duplicate handling
+      major_discrepancy: 2  # Both Extension % values — paper calculation errors
+      match_rate: "98.3% (116/118 comparable)"
+      data_availability_dataset_count: "3/13 (23.1%)"
+      data_availability_record_weighted: "2149/5042 (42.6%)"
+      datasets_level_0: 3  # Olduvai cleavers, Paleoindian points, geometric microliths
+      datasets_level_3: 9  # Co-author-held or in monographs
+      datasets_level_4: 1  # Replica archaic points (never published)
+      missing_set_seed: true  # No set.seed() in any stochastic script
+      mmc4_empty: true  # Publishing error — header only, 75 bytes
+      report: "outputs/key-et-al-2024/reproduction/attempt-01/comparisons/comparison-report.md"
     classification_summary:
       paper_type: methodological
       validation_approach: deductive
@@ -178,7 +198,7 @@ papers:
       reproducibility: 68
       reproduction_priority: 3
       execution_feasibility: needs_work
-    notes: "Complete (2026-01-14). Methods paper on OLE morphometric range estimation. 12 authors. Excellent validation design (ground truth testing). Good verdict (primary mean 78). Reproducibility (68) limits primary signal average. Priority 3 for reproduction (needs dependency inference)."
+    notes: "Complete (2026-01-14). Methods paper on OLE morphometric range estimation. 12 authors. Excellent validation design (ground truth testing). Good verdict (primary mean 78). Reproducibility (68) limits primary signal average. Reproduction PARTIAL (2026-02-10): 98.3% match rate (116/118 comparable values) for Tables 5-6. Data availability is primary bottleneck — only 3/13 datasets accessible (42.6% by records). 2 major discrepancies are paper calculation errors in Extension% column (Midland Thickness 3.1% should be ~20%; Clovis Mass 19.6% should be ~3.1%). 8 NaN values from undocumented duplicate handling. Core OLE algorithm fully verified."
 
   - slug: herskind-riede-2024
     title: "A computational linguistic methodology for assessing semiotic structure in prehistoric art and the meaning of southern Scandinavian Mesolithic ornamentation"
@@ -293,7 +313,7 @@ papers:
 # Classification completed: 5/5 (all pilot papers)
 # FAIR assessed: 5/5 (crema: highly_fair; marwick: 93.75%; key: 60%; herskind: 62.5%; dye: 65%)
 # Assessment completed: 5/5 (crema: 84, marwick: 81, key: 81, herskind: 74, dye: 77)
-# Reproduction attempted: 4/5 (crema: SUCCESSFUL 2026-02-09; marwick: SUCCESSFUL 2026-02-09; herskind: SUCCESSFUL 2026-02-10; dye: SUCCESSFUL 2026-02-10)
+# Reproduction attempted: 5/5 (crema: SUCCESSFUL 2026-02-09; marwick: SUCCESSFUL 2026-02-09; herskind: SUCCESSFUL 2026-02-10; dye: SUCCESSFUL 2026-02-10; key: PARTIAL 2026-02-10 — data availability bottleneck)
 # Full pipeline (Pass 0-9) complete: 5/5 (ALL PILOT PAPERS COMPLETE)
 #
 # Verdict criteria (formalised 2026-01-17):
