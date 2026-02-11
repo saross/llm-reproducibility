@@ -1,7 +1,7 @@
 # Open Science Compliance in *Journal of Archaeological Science*: Phase 1 Pilot Findings
 
-**Version:** 1.0
-**Date:** 2026-02-11
+**Version:** 1.1
+**Date:** 2026-02-12
 **Authors:** Shawn Graham and Claude (Anthropic)
 **Study:** Open Science Compliance Study — Phase 1 Exploratory Pilot
 **Protocol:** `studies/open-science-compliance/protocol/study-protocol.md` v1.0
@@ -96,19 +96,21 @@ One notable gap: only Dye et al. include author ORCIDs in the paper. While JAS p
 
 ### 4.2 FAIR Scores
 
-**Table 5. Normalised FAIR scores**
+All five papers were re-scored using a standardised rubric of 15 binary sub-principles from the GO-FAIR specification (v2.0, standardised 2026-02-11). Data and code are assessed independently on the same /15 scale, capturing asymmetries that a combined score would obscure. The original Phase 1 assessments used four different scales (/15, /16, /32, /40) due to infrastructure maturity evolving over 10 months of development; this re-scoring resolves that inconsistency.
 
-| Paper | Raw Score | Scale | Normalised (%) | Rating |
-|-------|-----------|-------|-----------------|--------|
-| Crema et al. | — | — | — | Highly FAIR |
-| Marwick | 30 | /32 | 93.8% | Highly FAIR |
-| Key et al. | 9 | /15 | 60.0% | Moderately FAIR |
-| Herskind & Riede | 10 | /16 | 62.5% | Moderately FAIR |
-| Dye et al. | 26 | /40 | 65.0% | Moderately FAIR |
+**Table 5. Standardised FAIR scores (15 binary sub-principles, independent data/code)**
 
-**Methodological finding:** The FAIR scoring scale varied across papers — assessments used 15-point, 16-point, 32-point, and 40-point scales at different stages of the pilot as the assessment framework evolved. Crema's assessment predates the numerical scoring system entirely. The normalised percentages provide rough comparability, but we have flagged FAIR scale standardisation as a high-priority action for Phase 2. All future assessments will use a single normalised scale to enable direct comparison.
+| Paper | Data FAIR | Code FAIR | Data Rating | Code Rating |
+|-------|-----------|-----------|-------------|-------------|
+| Crema et al. | 12/15 (80%) | 12/15 (80%) | Moderately FAIR | Moderately FAIR |
+| Marwick | 14/15 (93%) | 14/15 (93%) | Highly FAIR | Highly FAIR |
+| Key et al. | 9/15 (60%) | 6/15 (40%) | Moderately FAIR | Minimally FAIR |
+| Herskind & Riede | 12/15 (80%) | 9/15 (60%) | Moderately FAIR | Moderately FAIR |
+| Dye et al. | 9/15 (60%) | 14/15 (93%) | Moderately FAIR | Highly FAIR |
 
-Two patterns emerge despite the scale inconsistency. First, code sharing is strong — all five papers provide analysis code in some form — but environment specification is weak. Only Crema and Marwick provide Dockerfiles; only Marwick pins package versions. Second, the gap between Marwick's 93.8% and the cluster of scores around 60–65% correlates with a specific infrastructure bundle: renv + Dockerfile + Zenodo archival + literate programming. No single practice accounts for the gap; the combination does.
+Independent scoring reveals data-code asymmetries invisible in combined metrics. Dye et al. scores 14/15 for code (ArchaeoPhases on CRAN with GPL-3 licence, versioned archive, and JSS publication) but only 9/15 for data (supplement-only without independent DOI). Key et al. shows the reverse pattern: data benefits from paper-level CC BY infrastructure (9/15) while code lacks any findability or reusability infrastructure (6/15). These asymmetries confirm the decision to report data and code FAIR scores separately.
+
+Three patterns emerge from the standardised scores. First, all five papers score 4/4 on Accessibility for both data and code — open access publication through JAS ensures baseline accessibility regardless of repository choices. Second, Interoperable is the weakest dimension across the corpus: no paper uses FAIR vocabularies (I2), and only papers with Zenodo or CRAN deposits score on qualified references (I3). Third, the gap between Marwick's 14/15 and the cluster around 9-12/15 correlates with a specific infrastructure bundle: renv + Dockerfile + Zenodo archival + explicit licensing + literate programming. No single practice accounts for the gap; the combination does.
 
 ## 5. Reproduction Outcomes
 
@@ -160,13 +162,13 @@ Three spectra emerged across the five papers that may structure Phase 2 analysis
 
 **Script design** ranges from literate programming that renders the manuscript inline (Marwick) through batch-ready scripts (Crema), to interactive scripts requiring parameter changes and manual re-execution (Herskind & Riede, Key), to incremental supplement sections needing assembly (Dye). Three of five papers required us to write wrapper scripts — a consistent friction point that literate programming and batch-ready design eliminate.
 
-With only five papers, we cannot draw statistical conclusions about relationships between FAIR scores and reproduction effort. Qualitatively, Marwick's high FAIR score (93.8%) correlates with the lowest reproduction effort (7 minutes hands-on), while the cluster of papers scoring 60–65% required 50 minutes to 4 hours. Whether this relationship holds at scale is a Phase 2 question.
+With only five papers, we cannot draw statistical conclusions about relationships between FAIR scores and reproduction effort. Qualitatively, Marwick's high FAIR scores (data 14/15, code 14/15) correlate with the lowest reproduction effort (7 minutes hands-on), while papers scoring 9-12/15 required 50 minutes to 4 hours. Whether this relationship holds at scale is a Phase 2 question.
 
 ## 7. Hypothesis Candidates for Phase 2
 
 We propose five hypotheses derived from Phase 1 observations, each to be preregistered on the Open Science Framework (OSF) before Phase 2 corpus selection.
 
-**H1: Policy effect on FAIR scores.** Papers published after JAS's January 2024 mandatory reproducibility review policy will have higher FAIR scores than papers published before the policy took effect. *Rationale:* Our corpus straddles the policy boundary (Dye 2023 pre-policy; Crema, Key, Herskind 2024 transitional; Marwick 2025 post-policy), and the highest FAIR score belongs to the most recent paper. *Proposed test:* Compare mean normalised FAIR scores between pre-policy and post-policy cohorts using a standardised assessment scale.
+**H1: Policy effect on FAIR scores.** Papers published after JAS's January 2024 mandatory reproducibility review policy will have higher FAIR scores than papers published before the policy took effect. *Rationale:* Our corpus straddles the policy boundary (Dye 2023 pre-policy; Crema, Key, Herskind 2024 transitional; Marwick 2025 post-policy), and the highest FAIR score belongs to the most recent paper. *Proposed test:* Compare mean FAIR scores (data /15 and code /15, independently) between pre-policy and post-policy cohorts using the standardised v2.0 binary sub-principle scale.
 
 **H2: Data availability as primary predictor.** Data availability (not code availability) will be the primary predictor of reproduction outcome. *Rationale:* All five pilot papers provided code in some form, yet the only PARTIAL verdict resulted from data inaccessibility. Code always ran once an environment was constructed. *Proposed test:* Logistic regression of reproduction verdict on data availability category, controlling for code availability and environment specification.
 
@@ -186,13 +188,13 @@ Session-per-pass extraction delivered richer structured data than single-session
 
 ### 8.2 What Needs Refinement
 
-Three areas require attention before Phase 2. First, the FAIR scoring scale must be standardised — our pilot used four different scales as the assessment framework evolved, making cross-paper comparison approximate rather than precise. Second, wrapper script effort needs systematic documentation as a reproduction metric; three of five papers required substantial wrapper development, and this effort should be captured quantitatively. Third, a data availability taxonomy would strengthen H2 testing — our current categories (open, gated, unavailable) are insufficiently granular to capture the multi-hop provenance chains we encountered with Key et al.
+Two areas require attention before Phase 2. First, wrapper script effort needs systematic documentation as a reproduction metric; three of five papers required substantial wrapper development, and this effort should be captured quantitatively. Second, a data availability taxonomy would strengthen H2 testing — our current categories (open, gated, unavailable) are insufficiently granular to capture the multi-hop provenance chains we encountered with Key et al. A third issue — FAIR scoring scale standardisation — has been resolved: all five pilot papers have been re-scored using 15 binary GO-FAIR sub-principles with independent data/code assessments (see Section 4.2).
 
 ## 9. Limitations
 
 This pilot assessed five papers from a single journal, selected with deliberate bias toward papers with visible computational components. The corpus is too small for inferential statistics, and our selection strategy likely overrepresents papers with better-than-average open science practices — papers without any code or data mention were excluded by design. Phase 2 should include a random sampling component alongside purposive selection.
 
-All assessments were conducted by a single assessor using LLM-assisted extraction. While the 25-run variability test demonstrates high reliability (100% classification stability, aggregate score CV 1.9–3.4%), we have not established inter-rater reliability against human assessors. All reproductions were limited to R-based analyses; our pipeline has not been tested against Python, Julia, or mixed-language projects. Finally, the FAIR scores reported here were assessed on inconsistent scales, a limitation we have flagged and are addressing for Phase 2.
+All assessments were conducted by a single assessor using LLM-assisted extraction. While the 25-run variability test demonstrates high reliability (100% classification stability, aggregate score CV 1.9–3.4%), we have not established inter-rater reliability against human assessors. All reproductions were limited to R-based analyses; our pipeline has not been tested against Python, Julia, or mixed-language projects. FAIR scores have been standardised to a 15-point binary sub-principle scale with independent data/code scoring (v1.1), resolving the scale inconsistency present in v1.0 of this report.
 
 ## Appendix References
 
