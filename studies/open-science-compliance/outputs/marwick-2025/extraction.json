@@ -129,112 +129,75 @@
       "notes": "Comprehensive reference list including primary sources for reproducibility studies across multiple disciplines, methodological guidance, and philosophical/sociological literature on science."
     },
     "fair_assessment": {
-      "data_fairness": {
+      "version": "2.0",
+      "scale": "binary_sub_principles",
+      "data_fair": {
+        "available": true,
         "findable": {
-          "score": 4,
-          "max_score": 4,
-          "details": {
-            "F1_persistent_identifier": true,
-            "F2_rich_metadata": true,
-            "F3_metadata_includes_identifier": true,
-            "F4_indexed_searchable": true
-          },
-          "rationale": "Data in Zenodo with DOI (F1), DataCite metadata (F2), DOI in metadata (F3), indexed in DataCite/Google Dataset Search (F4)."
+          "F1_persistent_identifier": { "present": true, "evidence": "Zenodo DOI 10.5281/zenodo.14897252" },
+          "F2_rich_metadata": { "present": true, "evidence": "Zenodo DataCite metadata (authors, title, description, keywords)" },
+          "F3_metadata_includes_identifier": { "present": true, "evidence": "Zenodo metadata includes DOI" },
+          "F4_searchable_registry": { "present": true, "evidence": "Indexed in Zenodo, DataCite, Google Dataset Search" },
+          "subtotal": 4, "max": 4
         },
         "accessible": {
-          "score": 4,
-          "max_score": 4,
-          "details": {
-            "A1_standard_protocol": true,
-            "A1_1_open_protocol": true,
-            "A1_2_authentication_if_needed": true,
-            "A2_metadata_persistent": true
-          },
-          "rationale": "HTTPS via DOI resolver (A1), no authentication required (A1.1), open access with no restrictions (A1.2), Zenodo metadata persistence guaranteed (A2)."
+          "A1_standard_protocol": { "present": true, "evidence": "HTTPS via DOI resolver" },
+          "A1_1_open_free_protocol": { "present": true, "evidence": "No authentication required" },
+          "A1_2_auth_where_needed": { "present": true, "evidence": "Open access, no restrictions" },
+          "A2_metadata_persistent": { "present": true, "evidence": "Zenodo metadata persistence guaranteed" },
+          "subtotal": 4, "max": 4
         },
         "interoperable": {
-          "score": 3,
-          "max_score": 4,
-          "details": {
-            "I1_formal_language": true,
-            "I2_fair_vocabularies": false,
-            "I3_qualified_references": true
-          },
-          "rationale": "Structured data formats expected (CSV, R data frames) (I1), no explicit controlled vocabulary usage documented (I2), DOI links to paper and related resources (I3)."
+          "I1_formal_language": { "present": true, "evidence": "Structured CSV and R data frames" },
+          "I2_fair_vocabularies": { "present": false, "evidence": "No explicit controlled vocabulary usage documented" },
+          "I3_qualified_references": { "present": true, "evidence": "DOI links to paper and related resources" },
+          "subtotal": 2, "max": 3
         },
         "reusable": {
-          "score": 4,
-          "max_score": 4,
-          "details": {
-            "R1_rich_metadata": true,
-            "R1_1_clear_licence": true,
-            "R1_2_provenance": true,
-            "R1_3_community_standards": true
-          },
-          "rationale": "Detailed documentation enabling reproduction (R1), explicit CC-0 licence (R1.1), R code documents processing pipeline (R1.2), follows Marwick et al. (2018) compendium standards (R1.3)."
+          "R1_rich_metadata": { "present": true, "evidence": "Detailed documentation enabling reproduction" },
+          "R1_1_clear_licence": { "present": true, "evidence": "Explicit CC-0 licence for data" },
+          "R1_2_provenance": { "present": true, "evidence": "R code documents complete processing pipeline from raw data" },
+          "R1_3_community_standards": { "present": true, "evidence": "Follows Marwick et al. (2018) research compendium standards" },
+          "subtotal": 4, "max": 4
         },
-        "score": 15,
-        "max_score": 16,
-        "rating": "highly_fair",
-        "applicability": "primary_output",
-        "rationale": "Bibliometric data and reproducibility review data shared via Zenodo with DOI, explicit licences, and comprehensive documentation. Exemplary data sharing practices."
+        "total": 14, "max": 15, "percentage": 93.3,
+        "rating": "highly_fair"
       },
-      "code_fairness": {
+      "code_fair": {
+        "available": true,
         "findable": {
-          "score": 4,
-          "max_score": 4,
-          "details": {
-            "F1_persistent_identifier": true,
-            "F2_rich_metadata": true,
-            "F3_metadata_includes_identifier": true,
-            "F4_indexed_searchable": true
-          },
-          "rationale": "Code in Zenodo with DOI (F1), DataCite metadata (F2), DOI in metadata (F3), indexed (F4)."
+          "F1_persistent_identifier": { "present": true, "evidence": "Zenodo DOI 10.5281/zenodo.14897252" },
+          "F2_rich_metadata": { "present": true, "evidence": "Zenodo DataCite metadata for code deposit" },
+          "F3_metadata_includes_identifier": { "present": true, "evidence": "Zenodo metadata includes DOI" },
+          "F4_searchable_registry": { "present": true, "evidence": "Indexed in Zenodo, DataCite" },
+          "subtotal": 4, "max": 4
         },
         "accessible": {
-          "score": 4,
-          "max_score": 4,
-          "details": {
-            "A1_standard_protocol": true,
-            "A1_1_open_protocol": true,
-            "A1_2_authentication_if_needed": true,
-            "A2_metadata_persistent": true
-          },
-          "rationale": "HTTPS via DOI (A1), open access (A1.1), no restrictions (A1.2), Zenodo persistence (A2)."
+          "A1_standard_protocol": { "present": true, "evidence": "HTTPS via DOI resolver" },
+          "A1_1_open_free_protocol": { "present": true, "evidence": "Open access, no authentication" },
+          "A1_2_auth_where_needed": { "present": true, "evidence": "Open code, no restrictions" },
+          "A2_metadata_persistent": { "present": true, "evidence": "Zenodo long-term persistence" },
+          "subtotal": 4, "max": 4
         },
         "interoperable": {
-          "score": 3,
-          "max_score": 4,
-          "details": {
-            "I1_formal_language": true,
-            "I2_fair_vocabularies": false,
-            "I3_qualified_references": true
-          },
-          "rationale": "R is standard open-source language (I1), no software ontology usage (I2), paper references code via DOI (I3)."
+          "I1_formal_language": { "present": true, "evidence": "R is standard open-source language" },
+          "I2_fair_vocabularies": { "present": false, "evidence": "No software ontology usage" },
+          "I3_qualified_references": { "present": true, "evidence": "Paper references code via DOI" },
+          "subtotal": 2, "max": 3
         },
         "reusable": {
-          "score": 4,
-          "max_score": 4,
-          "details": {
-            "R1_rich_metadata": true,
-            "R1_1_clear_licence": true,
-            "R1_2_provenance": true,
-            "R1_3_community_standards": true
-          },
-          "rationale": "Compendium structure enables reuse (R1), MIT licence explicit (R1.1), computational workflow documented (R1.2), follows research compendium standards (R1.3)."
+          "R1_rich_metadata": { "present": true, "evidence": "Research compendium structure with documentation" },
+          "R1_1_clear_licence": { "present": true, "evidence": "MIT licence explicit" },
+          "R1_2_provenance": { "present": true, "evidence": "Computational workflow documented, renv lockfile pins 169 packages" },
+          "R1_3_community_standards": { "present": true, "evidence": "Follows research compendium standards (Marwick et al. 2018)" },
+          "subtotal": 4, "max": 4
         },
-        "score": 15,
-        "max_score": 16,
-        "rating": "highly_fair",
-        "applicability": "primary_output",
-        "rationale": "Complete R code archived in Zenodo with DOI, MIT licence, and documentation enabling independent reproduction of all results."
+        "total": 14, "max": 15, "percentage": 93.3,
+        "rating": "highly_fair"
       },
       "research_type": "computational",
       "fair_profile": "Highly FAIR (computational research with exemplary practices for both data and code)",
-      "total_fair_score": 30,
-      "total_fair_max": 32,
-      "fair_percentage": 93.75,
-      "contextual_notes": "Exemplary FAIR practices from author who is JAS Associate Editor for Reproducibility. Demonstrates best practices advocated in paper: research compendium with Zenodo DOI, explicit licences (MIT/CC-0/CC-BY), R code enabling independent reproduction. One of few papers in test corpus achieving near-maximum FAIR scores for both data and code dimensions."
+      "contextual_notes": "Exemplary FAIR practices from author who is JAS Associate Editor for Reproducibility. Research compendium with Zenodo DOI, explicit licences (MIT/CC-0/CC-BY), renv lockfile, Dockerfile, R code enabling independent reproduction. Only I2 (FAIR vocabularies) missed on both dimensions."
     },
     "extraction_metadata": {
       "extractor": "Claude Opus 4.5",

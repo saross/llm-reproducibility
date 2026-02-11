@@ -117,36 +117,44 @@ The **FAIR Guiding Principles** (Wilkinson et al., 2016, *Scientific Data*) esta
 
 ## FAIR Scoring Framework
 
+**Rubric version:** 2.0 (standardised 2026-02-11)
+
 ### Scoring Approach
 
-Each FAIR principle is assessed as **present (1 point)** or **absent (0 points)**.
+Each of the 15 GO-FAIR sub-principles is assessed as **present (1 point)** or **absent (0 points)**. Dimensions retain their natural maxima — Interoperable has 3 sub-principles, not 4.
 
-**Total FAIR score**: Sum across all 15 principles (max 16 points, simplified here to 16 across four dimensions)
+**Data and code are scored independently.** Produce two parallel assessments: `data_fair` (/15) and `code_fair` (/15). Do NOT sum them into a single aggregate score. This captures asymmetries (e.g., code highly FAIR but data gated) without introducing misleading composites.
 
-**Simplified scoring for infrastructure extraction:**
+**Dimension maxima (natural, not normalised):**
+
 - **Findable (F1-F4)**: max 4 points
-- **Accessible (A1-A2)**: max 4 points
-- **Interoperable (I1-I3)**: max 4 points (simplified from 3)
-- **Reusable (R1-R1.3)**: max 4 points
+- **Accessible (A1, A1.1, A1.2, A2)**: max 4 points
+- **Interoperable (I1-I3)**: max 3 points
+- **Reusable (R1, R1.1, R1.2, R1.3)**: max 4 points
+- **Total**: 15 points maximum per artefact type
 
-**Total**: 16 points maximum
+When data or code is absent or not applicable to the research type, set `"available": false` and omit per-principle scores. Absence ≠ non-compliance.
 
 ### Findable Dimension Scoring
 
 **F1: Persistent identifiers** (0 or 1 point)
+
 - Data/code has DOI, IGSN, SWHID, or accession number? → 1 point
 - Only URLs or "available on request"? → 0 points
 
 **F2: Rich metadata** (0 or 1 point)
+
 - Repository provides structured metadata (authors, title, keywords, abstract, methods)? → 1 point
 - Just a file with filename only? → 0 points
 
 **F3: Metadata includes identifier** (0 or 1 point)
+
 - Repository metadata explicitly includes the DOI/PID? → 1 point
 - Metadata missing identifier reference? → 0 points
 
 **F4: Indexed in searchable resource** (0 or 1 point)
-- Repository indexed (Zenodo, Figshare, DataCite, institutional repo with search)? → 1 point
+
+- Repository indexed (Zenodo, Figshare, DataCite, CRAN, institutional repo with search)? → 1 point
 - Personal website, unindexed server, GitHub without Zenodo? → 0 points
 
 **Findable total**: 0-4 points
@@ -156,19 +164,23 @@ Each FAIR principle is assessed as **present (1 point)** or **absent (0 points)*
 ### Accessible Dimension Scoring
 
 **A1: Standard retrieval protocol** (0 or 1 point)
+
 - HTTPS URL, DOI resolver, FTP, API? → 1 point
 - Email request, postal mail, proprietary system? → 0 points
 
 **A1.1: Open/free protocol** (0 or 1 point)
+
 - Public HTTP/HTTPS, no login required for access? → 1 point
 - Requires paid subscription or proprietary software? → 0 points
 
 **A1.2: Authentication/authorisation where needed** (0 or 1 point)
+
 - Restricted access with **ethical justification** (human subjects, Indigenous data, endangered species, cultural heritage protection)? → 1 point
 - **CARE-compliant restrictions = POSITIVE signal**
 - Completely closed with no justification? → 0 points
 
 **A2: Metadata persistent even if data unavailable** (0 or 1 point)
+
 - Repository committed to metadata persistence (Zenodo, DANS, institutional commitment)? → 1 point
 - Metadata disappears if data removed (personal website, GitHub without archive)? → 0 points
 
@@ -179,40 +191,47 @@ Each FAIR principle is assessed as **present (1 point)** or **absent (0 points)*
 ### Interoperable Dimension Scoring
 
 **I1: Formal, shared language** (0 or 1 point)
+
 - Structured format (CSV with schema, JSON, XML, netCDF, GeoPackage, shapefile)? → 1 point
 - Unstructured format (PDF tables, Word doc, scanned images, plain text)? → 0 points
 
 **I2: FAIR vocabularies** (0 or 1 point)
+
 - Uses published ontologies, controlled vocabularies with PIDs? → 1 point
 - See "Controlled Vocabularies" section below
 - Ad hoc field names with no vocabulary standard? → 0 points
 
 **I3: Qualified references** (0 or 1 point)
+
 - Links to other datasets/samples/software use PIDs with relationship types? → 1 point
 - Examples: "is derived from [DOI]", "uses software [DOI]"
 - No linked resources or untyped links? → 0 points
 
-**Interoperable total**: 0-3 points (but scored proportionally to align with 4-point scale)
+**Interoperable total**: 0-3 points (natural maximum; do NOT scale to 4)
 
 ---
 
 ### Reusable Dimension Scoring
 
 **R1: Rich metadata** (0 or 1 point)
+
 - Detailed documentation, README, data dictionary, methods description? → 1 point
 - See "Metadata Richness" section below
 - Minimal or no documentation beyond title? → 0 points
 
 **R1.1: Clear licence** (0 or 1 point)
+
 - Explicit machine-readable licence (CC-BY, CC0, MIT, GPL, ODbL, custom with terms)? → 1 point
 - No licence, "all rights reserved", or "ask permission"? → 0 points
 
 **R1.2: Provenance** (0 or 1 point)
+
 - Creation process, data sources, transformations, software versions documented? → 1 point
 - No provenance information? → 0 points
 
 **R1.3: Community standards** (0 or 1 point)
-- Follows discipline-specific format (Darwin Core, EML, CIDOC-CRM, Dublin Core, ARIADNEplus, DataCite)? → 1 point
+
+- Follows discipline-specific format (Darwin Core, EML, CIDOC-CRM, Dublin Core, ARIADNEplus, DataCite, CRAN standards)? → 1 point
 - No community standard applied? → 0 points
 
 **Reusable total**: 0-4 points
@@ -221,15 +240,66 @@ Each FAIR principle is assessed as **present (1 point)** or **absent (0 points)*
 
 ### Overall FAIR Rating
 
-**Total FAIR score**: Sum of four dimension scores (max 16 points)
+**Total FAIR score per artefact type**: Sum of four dimension scores (max 15 points)
 
-**Rating categories:**
-- **0-4**: Not FAIR
-- **5-8**: Minimally FAIR
-- **9-12**: Moderately FAIR
-- **13-16**: Highly FAIR
+**Rating categories (applied independently to data and code):**
+
+- **13-15** (87-100%): Highly FAIR
+- **9-12** (60-80%): Moderately FAIR
+- **5-8** (33-53%): Minimally FAIR
+- **0-4** (0-27%): Not FAIR
 
 **Context matters**: See "Context-Dependent Assessment" section below
+
+### Output JSON Template (v2.0)
+
+```json
+{
+  "fair_assessment": {
+    "version": "2.0",
+    "scale": "binary_sub_principles",
+    "data_fair": {
+      "available": true,
+      "findable": {
+        "F1_persistent_identifier": { "present": true, "evidence": "..." },
+        "F2_rich_metadata": { "present": true, "evidence": "..." },
+        "F3_metadata_includes_identifier": { "present": true, "evidence": "..." },
+        "F4_searchable_registry": { "present": true, "evidence": "..." },
+        "subtotal": 4, "max": 4
+      },
+      "accessible": {
+        "A1_standard_protocol": { "present": true, "evidence": "..." },
+        "A1_1_open_free_protocol": { "present": true, "evidence": "..." },
+        "A1_2_auth_where_needed": { "present": true, "evidence": "..." },
+        "A2_metadata_persistent": { "present": true, "evidence": "..." },
+        "subtotal": 4, "max": 4
+      },
+      "interoperable": {
+        "I1_formal_language": { "present": true, "evidence": "..." },
+        "I2_fair_vocabularies": { "present": false, "evidence": "..." },
+        "I3_qualified_references": { "present": true, "evidence": "..." },
+        "subtotal": 2, "max": 3
+      },
+      "reusable": {
+        "R1_rich_metadata": { "present": true, "evidence": "..." },
+        "R1_1_clear_licence": { "present": true, "evidence": "..." },
+        "R1_2_provenance": { "present": true, "evidence": "..." },
+        "R1_3_community_standards": { "present": false, "evidence": "..." },
+        "subtotal": 3, "max": 4
+      },
+      "total": 13, "max": 15, "percentage": 86.7,
+      "rating": "highly_fair"
+    },
+    "code_fair": {
+      "available": true,
+      "...": "same structure as data_fair"
+    },
+    "research_type": "computational",
+    "fair_profile": "...",
+    "contextual_notes": "..."
+  }
+}
+```
 
 ---
 

@@ -2034,129 +2034,200 @@
       "notes": "Reference list includes DOIs for many recent publications. Older sources and books lack DOIs. Estimated 40-60% of references include DOIs."
     },
     "fair_assessment": {
-      "assessed": true,
-      "findable": {
-        "score": 3,
-        "max_score": 4,
-        "criteria": {
-          "F1_globally_unique_pid": {
-            "score": 1,
-            "rationale": "Zenodo DOI (10.5281/zenodo.10623550) provides globally unique persistent identifier"
+      "version": "2.0",
+      "scale": "binary_sub_principles",
+      "data_fair": {
+        "available": true,
+        "findable": {
+          "F1_persistent_identifier": {
+            "present": true,
+            "evidence": "Zenodo DOI 10.5281/zenodo.10623550"
           },
           "F2_rich_metadata": {
-            "score": 1,
-            "rationale": "Zenodo provides structured metadata including authors, description, keywords"
+            "present": true,
+            "evidence": "Zenodo provides structured DataCite metadata (authors, description, keywords)"
           },
-          "F3_metadata_includes_pid": {
-            "score": 1,
-            "rationale": "Zenodo metadata includes DOI for the dataset"
+          "F3_metadata_includes_identifier": {
+            "present": true,
+            "evidence": "Zenodo metadata includes DOI for the dataset"
           },
-          "F4_indexed_searchable": {
-            "score": 0,
-            "rationale": "Not indexed in domain-specific archaeological data repositories. General-purpose Zenodo repository."
-          }
-        }
-      },
-      "accessible": {
-        "score": 3,
-        "max_score": 4,
-        "criteria": {
+          "F4_searchable_registry": {
+            "present": true,
+            "evidence": "Zenodo indexed in DataCite, OpenAIRE; general-purpose but searchable"
+          },
+          "subtotal": 4,
+          "max": 4
+        },
+        "accessible": {
           "A1_standard_protocol": {
-            "score": 1,
-            "rationale": "HTTPS protocol via Zenodo"
+            "present": true,
+            "evidence": "HTTPS via Zenodo DOI resolver"
           },
           "A1_1_open_free_protocol": {
-            "score": 1,
-            "rationale": "No authentication required for access"
+            "present": true,
+            "evidence": "No authentication required"
           },
-          "A1_2_authentication_where_necessary": {
-            "score": 1,
-            "rationale": "N/A - open data, no restrictions"
+          "A1_2_auth_where_needed": {
+            "present": true,
+            "evidence": "Open data, no restrictions"
           },
-          "A2_metadata_accessible_after_data_unavailable": {
-            "score": 0,
-            "rationale": "Zenodo persistence unclear for long-term metadata preservation"
-          }
-        }
-      },
-      "interoperable": {
-        "score": 2,
-        "max_score": 4,
-        "criteria": {
-          "I1_knowledge_representation_language": {
-            "score": 1,
-            "rationale": "Data in R-readable tabular format with presence/absence coding"
+          "A2_metadata_persistent": {
+            "present": true,
+            "evidence": "Zenodo committed to long-term metadata persistence (EU-funded, CERN-hosted)"
+          },
+          "subtotal": 4,
+          "max": 4
+        },
+        "interoperable": {
+          "I1_formal_language": {
+            "present": true,
+            "evidence": "Tabular R-readable format with presence/absence coding"
           },
           "I2_fair_vocabularies": {
-            "score": 0,
-            "rationale": "Uses custom motif classification (Plonka 2003) not linked to controlled vocabularies"
+            "present": false,
+            "evidence": "Custom motif classification (Plonka 2003) not linked to controlled vocabularies"
           },
           "I3_qualified_references": {
-            "score": 1,
-            "rationale": "References source catalogue and analytical methods"
-          }
-        }
-      },
-      "reusable": {
-        "score": 2,
-        "max_score": 4,
-        "criteria": {
-          "R1_plurality_of_attributes": {
-            "score": 1,
-            "rationale": "Metadata includes authors, methods description, data source"
+            "present": true,
+            "evidence": "References source catalogue via DOI and bibliographic citation"
+          },
+          "subtotal": 2,
+          "max": 3
+        },
+        "reusable": {
+          "R1_rich_metadata": {
+            "present": true,
+            "evidence": "Zenodo metadata includes authors, methods description, data source"
           },
           "R1_1_clear_licence": {
-            "score": 0,
-            "rationale": "Licence not explicitly stated in paper for deposited data"
+            "present": false,
+            "evidence": "No explicit licence stated for deposited data in Zenodo record or paper"
           },
           "R1_2_provenance": {
-            "score": 1,
-            "rationale": "Clear provenance: digitised from Plonka (2003) catalogue"
+            "present": true,
+            "evidence": "Clear provenance: digitised from Plonka (2003) catalogue of South Scandinavian Mesolithic ornaments"
           },
           "R1_3_community_standards": {
-            "score": 0,
-            "rationale": "Does not follow archaeological data standards (e.g., CIDOC-CRM, tDAR schemas)"
-          }
-        }
+            "present": false,
+            "evidence": "Does not follow archaeological data standards (CIDOC-CRM, tDAR schemas)"
+          },
+          "subtotal": 2,
+          "max": 4
+        },
+        "total": 12,
+        "max": 15,
+        "percentage": 80.0,
+        "rating": "moderately_fair"
       },
-      "total_fair_score": 10,
-      "max_fair_score": 16,
-      "fair_percentage": 62.5,
-      "fair_rating": "moderately_fair",
-      "machine_actionability": {
-        "rating": "moderate",
-        "rationale": "Data accessible via DOI and standard protocols. R code enables computational reuse. However, no formal API, limited metadata schema, and custom classification system reduces machine-actionability."
+      "code_fair": {
+        "available": true,
+        "findable": {
+          "F1_persistent_identifier": {
+            "present": true,
+            "evidence": "Zenodo DOI 10.5281/zenodo.10623550 (code in same deposit as data)"
+          },
+          "F2_rich_metadata": {
+            "present": true,
+            "evidence": "Zenodo DataCite metadata for deposit"
+          },
+          "F3_metadata_includes_identifier": {
+            "present": true,
+            "evidence": "Zenodo metadata includes DOI"
+          },
+          "F4_searchable_registry": {
+            "present": true,
+            "evidence": "Indexed in Zenodo, DataCite"
+          },
+          "subtotal": 4,
+          "max": 4
+        },
+        "accessible": {
+          "A1_standard_protocol": {
+            "present": true,
+            "evidence": "HTTPS via Zenodo"
+          },
+          "A1_1_open_free_protocol": {
+            "present": true,
+            "evidence": "Open access, no authentication"
+          },
+          "A1_2_auth_where_needed": {
+            "present": true,
+            "evidence": "Open code, no restrictions"
+          },
+          "A2_metadata_persistent": {
+            "present": true,
+            "evidence": "Zenodo long-term persistence"
+          },
+          "subtotal": 4,
+          "max": 4
+        },
+        "interoperable": {
+          "I1_formal_language": {
+            "present": true,
+            "evidence": "R scripts using standard open-source language and Quanteda package"
+          },
+          "I2_fair_vocabularies": {
+            "present": false,
+            "evidence": "No CodeMeta or software ontology"
+          },
+          "I3_qualified_references": {
+            "present": false,
+            "evidence": "Scripts do not include PID references to data or dependencies"
+          },
+          "subtotal": 1,
+          "max": 3
+        },
+        "reusable": {
+          "R1_rich_metadata": {
+            "present": false,
+            "evidence": "R script requires manual parameter changes for re-execution; minimal inline documentation"
+          },
+          "R1_1_clear_licence": {
+            "present": false,
+            "evidence": "No explicit licence for code"
+          },
+          "R1_2_provenance": {
+            "present": false,
+            "evidence": "No session info, no dependency versions, no environment specification"
+          },
+          "R1_3_community_standards": {
+            "present": false,
+            "evidence": "No CITATION.cff, CodeMeta, or renv lockfile"
+          },
+          "subtotal": 0,
+          "max": 4
+        },
+        "total": 9,
+        "max": 15,
+        "percentage": 60.0,
+        "rating": "moderately_fair"
       },
-      "discipline_context": {
-        "publication_year": 2024,
-        "expectations": "Post-2020 publication: High expectations for data/code sharing, ORCID adoption",
-        "discipline_baseline": "Archaeology: Moderate open science adoption. Data sharing improving with journal mandates.",
-        "research_type": "Methodological paper with secondary data analysis",
-        "rationale": "For a 2024 methods paper, data and code sharing is excellent. Missing ORCIDs and formal licensing are areas for improvement. FAIR score of 62.5% is above average for HASS disciplines."
-      },
-      "recommendations": [
-        "Add ORCID identifiers for both authors",
-        "Specify licence for deposited data and code (recommend CC-BY for data, MIT for code)",
-        "Consider depositing in domain-specific repository (e.g., tDAR, ADS) for better discoverability",
-        "Link motif classification to controlled vocabulary or publish classification scheme"
-      ]
+      "research_type": "computational",
+      "fair_profile": "Moderately FAIR (data strong on findability/accessibility via Zenodo; code findable but weak on reusability due to missing licence, environment spec, and documentation)",
+      "contextual_notes": "Data-code asymmetry visible: data benefits from Zenodo deposit with DOI and metadata. Code is findable via same deposit but lacks reusability infrastructure (no licence, no environment specification, interactive workflow requiring manual parameter changes). Reproduction succeeded due to deterministic computation, not infrastructure quality."
     },
-    "extraction_metadata": {
-      "extraction_date": "2026-01-14",
-      "extractor": "claude-opus-4-5",
-      "sections_examined": [
-        "title_page",
-        "author_affiliations",
-        "abstract",
-        "acknowledgements",
-        "data_availability_statement",
-        "credit_statement",
-        "conflicts_of_interest",
-        "funding_statement",
-        "references"
-      ],
-      "notes": "Paper is Open Access under CC BY licence. Excellent reproducibility infrastructure for a methodological paper: all data and code deposited in Zenodo with DOIs. Two separate Zenodo records referenced (10623550 for code/data, 10801706 for supplementary information). No ORCIDs visible in PDF text. No ethics or permits required as study uses published catalogue data."
-    }
+    "recommendations": [
+      "Add ORCID identifiers for both authors",
+      "Specify licence for deposited data and code (recommend CC-BY for data, MIT for code)",
+      "Consider depositing in domain-specific repository (e.g., tDAR, ADS) for better discoverability",
+      "Link motif classification to controlled vocabulary or publish classification scheme"
+    ]
+  },
+  "extraction_metadata": {
+    "extraction_date": "2026-01-14",
+    "extractor": "claude-opus-4-5",
+    "sections_examined": [
+      "title_page",
+      "author_affiliations",
+      "abstract",
+      "acknowledgements",
+      "data_availability_statement",
+      "credit_statement",
+      "conflicts_of_interest",
+      "funding_statement",
+      "references"
+    ],
+    "notes": "Paper is Open Access under CC BY licence. Excellent reproducibility infrastructure for a methodological paper: all data and code deposited in Zenodo with DOIs. Two separate Zenodo records referenced (10623550 for code/data, 10801706 for supplementary information). No ORCIDs visible in PDF text. No ethics or permits required as study uses published catalogue data."
   },
   "extraction_notes": {
     "pass0_metadata": {

@@ -117,16 +117,31 @@ Three signal clusters assessed (repliCATS-adapted for HASS):
 
 ## 4. FAIR Compliance Assessment
 
+> **Scale standardised in v1.1 (2026-02-11)** after Phase 1 pilot identified
+> inconsistency across papers. Original protocol specified 0-10 per dimension
+> (0-40 total); standardised to 15 binary GO-FAIR sub-principles with
+> independent data and code scoring.
+
 ### 4.1 FAIR Dimensions
 
-Assessment based on Pass 7 extraction (`reproducibility_infrastructure`):
+Assessment based on Pass 6 extraction (`reproducibility_infrastructure.fair_assessment`), using 15 binary sub-principles from the GO-FAIR specification. Data and code scored independently (/15 each); do NOT aggregate into a single composite.
 
-| Dimension | Scope | Scale |
-|-----------|-------|-------|
-| **F**indable | PIDs, metadata, indexing | 0-10 |
-| **A**ccessible | Repository, licence, format | 0-10 |
-| **I**nteroperable | Standards, formats, protocols | 0-10 |
-| **R**eusable | Documentation, provenance | 0-10 |
+| Dimension | Sub-principles | Natural Max |
+|-----------|----------------|-------------|
+| **F**indable | F1 (PID), F2 (rich metadata), F3 (metadata includes PID), F4 (indexed) | /4 |
+| **A**ccessible | A1 (standard protocol), A1.1 (open/free), A1.2 (auth where needed), A2 (metadata persistent) | /4 |
+| **I**nteroperable | I1 (formal language), I2 (FAIR vocabularies), I3 (qualified references) | /3 |
+| **R**eusable | R1 (rich description), R1.1 (clear licence), R1.2 (provenance), R1.3 (community standards) | /4 |
+| **Total** | | **/15** |
+
+**Rating thresholds (applied independently to data and code):**
+
+| Score | Percentage | Rating |
+|-------|------------|--------|
+| 13-15 | 87-100% | Highly FAIR |
+| 9-12 | 60-80% | Moderately FAIR |
+| 5-8 | 33-53% | Minimally FAIR |
+| 0-4 | 0-27% | Not FAIR |
 
 ### 4.2 Infrastructure Fields
 
@@ -156,6 +171,7 @@ materials_availability:
 ### 4.3 PID Graph Connectivity
 
 Score based on linkages between:
+
 - Paper DOI ↔ Data DOI
 - Paper DOI ↔ Code DOI
 - Code DOI ↔ Data DOI

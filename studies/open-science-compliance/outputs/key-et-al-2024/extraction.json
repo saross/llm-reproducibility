@@ -2388,105 +2388,75 @@
       "notes": "References section contains mix of DOI-available and older publications without DOIs. Estimated 40-60% of references have DOIs available."
     },
     "fair_assessment": {
-      "assessed": true,
-      "assessment_scope": "code_and_data",
-      "findable": {
-        "F1_pid": {
-          "score": 1,
-          "rationale": "Paper has DOI. Supplementary materials accessible via paper DOI."
+      "version": "2.0",
+      "scale": "binary_sub_principles",
+      "data_fair": {
+        "available": true,
+        "findable": {
+          "F1_persistent_identifier": { "present": true, "evidence": "Paper DOI 10.1016/j.jas.2023.105921; supplementary data accessible via paper DOI" },
+          "F2_rich_metadata": { "present": false, "evidence": "No separate metadata record for datasets beyond paper abstract" },
+          "F3_metadata_includes_identifier": { "present": false, "evidence": "No separate dataset DOI; data only in publisher supplement" },
+          "F4_searchable_registry": { "present": false, "evidence": "Data not deposited in searchable repository (Zenodo, ADS, etc.); only in ScienceDirect supplement" },
+          "subtotal": 1, "max": 4
         },
-        "F2_rich_metadata": {
-          "score": 0,
-          "rationale": "No separate metadata record for code/data beyond paper abstract."
+        "accessible": {
+          "A1_standard_protocol": { "present": true, "evidence": "HTTPS via publisher website" },
+          "A1_1_open_free_protocol": { "present": true, "evidence": "CC BY 4.0 open access" },
+          "A1_2_auth_where_needed": { "present": true, "evidence": "No authentication required" },
+          "A2_metadata_persistent": { "present": true, "evidence": "Publisher (Elsevier) metadata persistence expected" },
+          "subtotal": 4, "max": 4
         },
-        "F3_pid_in_metadata": {
-          "score": 0,
-          "rationale": "No separate dataset/code DOI."
+        "interoperable": {
+          "I1_formal_language": { "present": true, "evidence": "CSV supplementary tables in structured format" },
+          "I2_fair_vocabularies": { "present": false, "evidence": "No controlled vocabularies for metadata" },
+          "I3_qualified_references": { "present": false, "evidence": "No qualified PID links between datasets" },
+          "subtotal": 1, "max": 3
         },
-        "F4_indexed": {
-          "score": 1,
-          "rationale": "Paper indexed in Web of Science, Scopus, Google Scholar."
+        "reusable": {
+          "R1_rich_metadata": { "present": true, "evidence": "Methods section describes data sources and collection procedures" },
+          "R1_1_clear_licence": { "present": true, "evidence": "CC BY 4.0 licence explicit" },
+          "R1_2_provenance": { "present": true, "evidence": "Data sources documented in Methods; 13 assemblages with citations" },
+          "R1_3_community_standards": { "present": false, "evidence": "No domain metadata standard applied" },
+          "subtotal": 3, "max": 4
         },
-        "subtotal": 2,
-        "max": 4
+        "total": 9, "max": 15, "percentage": 60.0,
+        "rating": "moderately_fair"
       },
-      "accessible": {
-        "A1_protocol": {
-          "score": 1,
-          "rationale": "HTTPS protocol via publisher website."
+      "code_fair": {
+        "available": true,
+        "findable": {
+          "F1_persistent_identifier": { "present": false, "evidence": "No DOI for code; only in publisher supplement" },
+          "F2_rich_metadata": { "present": false, "evidence": "No structured metadata for R scripts beyond paper text" },
+          "F3_metadata_includes_identifier": { "present": false, "evidence": "No code DOI or accession number" },
+          "F4_searchable_registry": { "present": false, "evidence": "Code not in GitHub, Zenodo, or any searchable registry" },
+          "subtotal": 0, "max": 4
         },
-        "A1_1_open_free": {
-          "score": 1,
-          "rationale": "Open access CC BY licence."
+        "accessible": {
+          "A1_standard_protocol": { "present": true, "evidence": "HTTPS via ScienceDirect supplement" },
+          "A1_1_open_free_protocol": { "present": true, "evidence": "Open access supplement (but HTTP 403 for programmatic access)" },
+          "A1_2_auth_where_needed": { "present": true, "evidence": "No authentication required for manual download" },
+          "A2_metadata_persistent": { "present": true, "evidence": "Publisher metadata persistence expected" },
+          "subtotal": 4, "max": 4
         },
-        "A1_2_auth_when_needed": {
-          "score": 1,
-          "rationale": "No authentication required for access."
+        "interoperable": {
+          "I1_formal_language": { "present": true, "evidence": "R scripts in standard open-source language" },
+          "I2_fair_vocabularies": { "present": false, "evidence": "No CodeMeta or software ontology" },
+          "I3_qualified_references": { "present": false, "evidence": "Scripts use placeholder file paths; no PID references to data" },
+          "subtotal": 1, "max": 3
         },
-        "A2_metadata_persistent": {
-          "score": 1,
-          "rationale": "Publisher metadata expected to persist."
+        "reusable": {
+          "R1_rich_metadata": { "present": false, "evidence": "Scripts contain placeholder paths ('###file location###'), minimal documentation" },
+          "R1_1_clear_licence": { "present": true, "evidence": "CC BY 4.0 licence covers supplement" },
+          "R1_2_provenance": { "present": false, "evidence": "No version info, no session info, no dependency documentation" },
+          "R1_3_community_standards": { "present": false, "evidence": "No CITATION.cff, CodeMeta, or community software standards" },
+          "subtotal": 1, "max": 4
         },
-        "subtotal": 4,
-        "max": 4
+        "total": 6, "max": 15, "percentage": 40.0,
+        "rating": "minimally_fair"
       },
-      "interoperable": {
-        "I1_knowledge_representation": {
-          "score": 0,
-          "rationale": "R scripts but no formal schema documentation."
-        },
-        "I2_fair_vocabularies": {
-          "score": 0,
-          "rationale": "No use of controlled vocabularies for metadata."
-        },
-        "I3_qualified_references": {
-          "score": 0,
-          "rationale": "No qualified links between datasets and code."
-        },
-        "subtotal": 0,
-        "max": 3
-      },
-      "reusable": {
-        "R1_plurality_attributes": {
-          "score": 1,
-          "rationale": "Methods described in paper text."
-        },
-        "R1_1_clear_licence": {
-          "score": 1,
-          "rationale": "CC BY 4.0 licence explicit."
-        },
-        "R1_2_provenance": {
-          "score": 1,
-          "rationale": "Data sources documented in Methods section."
-        },
-        "R1_3_community_standards": {
-          "score": 0,
-          "rationale": "No use of community metadata standards (e.g., CodeMeta for software)."
-        },
-        "subtotal": 3,
-        "max": 4
-      },
-      "total_fair_score": 9,
-      "fair_maximum": 15,
-      "fair_percentage": 60.0,
-      "fair_rating": "moderately_fair",
-      "machine_actionability": {
-        "rating": "low",
-        "rationale": "Code and data in publisher supplementary materials. No dedicated repository, no separate DOIs, limited metadata."
-      },
-      "discipline_context": {
-        "publication_year": 2024,
-        "era": "current",
-        "era_label": "FAIR and open science expectations established",
-        "baseline_expectations": "Current-era papers expected to use dedicated repositories with DOIs for code/data. This paper meets minimum requirements (open access, code available) but falls short of best practices.",
-        "context_rationale": "For a 2024 methods paper with R code, expected practice would be GitHub/Zenodo archiving with DOI. Supplementary-only provision is adequate but not optimal."
-      },
-      "recommendations": [
-        "Archive R scripts in dedicated repository (e.g., GitHub + Zenodo) with DOI",
-        "Add CodeMeta metadata for software",
-        "Create separate data package with DOI for morphometric datasets",
-        "Add ORCID identifiers for authors"
-      ]
+      "research_type": "computational",
+      "fair_profile": "Mixed FAIR (data moderately FAIR through paper infrastructure; code minimally FAIR, supplement-only without repository or metadata)",
+      "contextual_notes": "Strong data-code asymmetry: data benefits from paper-level infrastructure (DOI, CC BY, provenance) but code has no independent findability. 10/13 datasets inaccessible (co-author gatekeeping, closed monographs). Supplement mmc4.csv empty (75 bytes, header only). Scripts assume interactive RStudio with placeholder paths."
     },
     "extraction_metadata": {
       "extraction_date": "2026-01-14",

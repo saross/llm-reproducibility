@@ -103,49 +103,99 @@ Infrastructure is NOT in Methods/Results/Discussion. Target these specific locat
 
 ---
 
-## 🚨 CRITICAL: FAIR Assessment Framework
+## 🚨 CRITICAL: FAIR Assessment Framework (v2.0)
 
-**For complete FAIR principles framework, scoring rubrics, and assessment guidance:**
+**Rubric version:** 2.0 (standardised 2026-02-11)
+
+**For detailed criteria, examples, and context-dependent guidance:**
 → See `references/infrastructure/fair-principles-guide.md` in research-assessor skill
 
-**Key reference sections:**
-- The 15 FAIR principles (F1-F4, A1-A2, I1-I3, R1-R1.3) with detailed definitions
-- FAIR scoring framework (0-16 point scale with dimensional breakdowns)
-- Metadata richness (what makes metadata "rich" + DataCite examples)
-- Controlled vocabularies (HASS examples: PeriodO, Pleiades, Getty AAT, Darwin Core, CIDOC-CRM, EML)
-- Software-specific FAIR considerations (FAIR4RS, computational reproducibility spectrum)
-- Machine-actionability distinction (the critical FAIR concept)
-- Context-dependent assessment (publication year, discipline, research type)
+### Self-Contained Rubric: 15 Binary Sub-Principles
 
-### FAIR Scoring (Summary)
+Score data and code **independently** as two parallel FAIR assessments.
+Each sub-principle is binary: present (1) or absent (0).
 
-**Four dimensions, each scored 0-4 points:**
-- **Findable (F)**: PIDs, rich metadata, indexed repositories
-- **Accessible (A)**: Standard protocols, open access, metadata persistence (ethical restrictions = POSITIVE when justified)
-- **Interoperable (I)**: Structured formats, controlled vocabularies, qualified references
-- **Reusable (R)**: Documentation, clear licences, provenance, community standards
+```text
+FINDABLE (max 4):
+  F1: Globally unique persistent identifier (DOI, IGSN, SWHID, accession)  /1
+  F2: Rich metadata (structured: authors, title, keywords, description)     /1
+  F3: Metadata explicitly includes the identifier                           /1
+  F4: Resource indexed in searchable registry (Zenodo, CRAN, DataCite)      /1
 
-**Total FAIR score (max 16):**
-- 0-4: Not FAIR
-- 5-8: Minimally FAIR
-- 9-12: Moderately FAIR
-- 13-16: Highly FAIR
+ACCESSIBLE (max 4):
+  A1:   Retrievable via identifier using standard protocol (HTTPS, DOI)     /1
+  A1.1: Protocol is open, free, universally implementable                   /1
+  A1.2: Protocol allows authentication/authorisation where needed           /1
+        (CARE-compliant restrictions = POSITIVE signal)
+  A2:   Metadata remains accessible even if resource unavailable            /1
 
-**Machine-actionability rating:** None / Low / Moderate / High
+INTEROPERABLE (max 3 — NOT 4):
+  I1: Uses formal, accessible, shared knowledge representation              /1
+  I2: Vocabularies follow FAIR principles themselves                        /1
+  I3: Includes qualified references to other resources (PIDs)               /1
 
-**Context-dependent assessment required:**
+REUSABLE (max 4):
+  R1:   Richly described with plurality of relevant attributes              /1
+  R1.1: Released with clear, accessible data usage licence                  /1
+  R1.2: Associated with detailed provenance                                 /1
+  R1.3: Meets domain-relevant community standards                           /1
+
+TOTAL per artefact type: /15
+```
+
+### Independent Data and Code Scoring
+
+- Score `data_fair` (/15) and `code_fair` (/15) separately
+- Do NOT sum into a single aggregate — report independently
+- When data or code is absent/not applicable, set `"available": false`
+- Absence ≠ non-compliance (distinguish N/A from Not FAIR)
+
+### Rating Thresholds (per artefact type, on /15)
+
+| Score | Percentage | Rating |
+|-------|------------|--------|
+| 13-15 | 87-100% | Highly FAIR |
+| 9-12 | 60-80% | Moderately FAIR |
+| 5-8 | 33-53% | Minimally FAIR |
+| 0-4 | 0-27% | Not FAIR |
+
+### Output JSON Structure
+
+```json
+{
+  "fair_assessment": {
+    "version": "2.0",
+    "scale": "binary_sub_principles",
+    "data_fair": {
+      "available": true,
+      "findable": {
+        "F1_persistent_identifier": { "present": true, "evidence": "..." },
+        "F2_rich_metadata": { "present": true, "evidence": "..." },
+        "F3_metadata_includes_identifier": { "present": true, "evidence": "..." },
+        "F4_searchable_registry": { "present": true, "evidence": "..." },
+        "subtotal": 4, "max": 4
+      },
+      "accessible": { "...same pattern...", "subtotal": 4, "max": 4 },
+      "interoperable": { "...same pattern...", "subtotal": 2, "max": 3 },
+      "reusable": { "...same pattern...", "subtotal": 3, "max": 4 },
+      "total": 13, "max": 15, "percentage": 86.7,
+      "rating": "highly_fair"
+    },
+    "code_fair": { "...same structure as data_fair..." },
+    "research_type": "computational|data_centric|code_centric|mixed",
+    "fair_profile": "Human-readable summary",
+    "contextual_notes": "..."
+  }
+}
+```
+
+### Context-Dependent Assessment
+
 - Publication year expectations (pre-2016 vs 2016-2019 vs 2020+)
 - Discipline baseline (HASS 17-24% ORCID vs natural sciences 91-93%)
-- Research type considerations (fieldwork, laboratory, computational, archival)
+- Research type (fieldwork, laboratory, computational, archival)
 - CARE principles integration (ethical restrictions = positive)
-
-**See fair-principles-guide.md for:**
-- Detailed scoring criteria for each principle
-- Metadata richness examples (DataCite schema)
-- Controlled vocabulary usage identification
-- Computational reproducibility spectrum (5 levels from code-only to fully containerised)
-- Machine-actionability examples (what is and isn't FAIR-compliant)
-- Context-dependent scoring rationale
+- Machine-actionability rating: None / Low / Moderate / High
 
 ---
 
