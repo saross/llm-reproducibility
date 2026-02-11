@@ -6,8 +6,8 @@
 
 project:
   name: LLM-Based Research Extraction and Assessment
-  version: "2.9"
-  status: Extraction system complete, assessment framework in development, reproduction system v1.1
+  version: "3.0"
+  status: Extraction system complete, assessment framework pilot-tested, reproduction system v1.1
   last_updated: "2026-02-12"
   repository: https://github.com/saross/llm-reproducibility
 
@@ -46,41 +46,41 @@ components:
     last_updated: "2025-11-18"
     description: Extraction and assessment skill for Claude Code
 
-# Assessment system (in development)
+# Assessment system (pilot-tested)
 assessment:
-  status: in_development
+  status: pilot_tested
   framework: Three Pillars (Transparency → Credibility → Reproducibility)
   methodology: repliCATS Seven Signals adapted for HASS
 
   prompts:
     classify_research_approach:
-      version: "0.3"
+      version: "1.0"
       file: assessment-system/prompts/classify-research-approach.md
-      last_updated: "2025-11-29"
+      last_updated: "2026-02-12"
       description: Research approach classification (inductive, deductive, abductive)
 
     track_a_quality_gating:
-      version: "0.2"
+      version: "1.0"
       file: assessment-system/prompts/track-a-quality-gating.md
-      last_updated: "2025-11-28"
+      last_updated: "2026-02-12"
       description: Track A quality gate criteria for assessment
 
     cluster_1:
-      version: "0.2"
+      version: "1.0"
       file: assessment-system/prompts/cluster-1-foundational-clarity.md
-      last_updated: "2025-11-28"
+      last_updated: "2026-02-12"
       description: Signals 1-2 (Comprehensibility, Transparency)
 
     cluster_2:
-      version: "0.2"
+      version: "1.0"
       file: assessment-system/prompts/cluster-2-evidential-strength.md
-      last_updated: "2025-11-28"
+      last_updated: "2026-02-12"
       description: Signals 3-6 (Plausibility, Validity, Robustness, Generalisability)
 
     cluster_3:
-      version: "0.2"
+      version: "1.0"
       file: assessment-system/prompts/cluster-3-reproducibility.md
-      last_updated: "2025-11-29"
+      last_updated: "2026-02-12"
       description: Signal 7 (Reproducibility) with Methodological Transparency variant
 
     final_report:
@@ -223,6 +223,15 @@ corpus:
 
 # Version history summary
 version_history:
+  - version: "3.0"
+    date: "2026-02-12"
+    changes:
+      - Schema v2.6 alignment across all extraction prompts and schema file
+      - Schema file renamed to extraction-schema-v2.6.json (matches manifest)
+      - Assessment system promoted to pilot_tested status with v1.0 versions
+      - Added data_completeness to schema changelog
+      - Archived qa-qi-prompt-v3.md (superseded)
+
   - version: "2.9"
     date: "2026-02-10"
     changes:
