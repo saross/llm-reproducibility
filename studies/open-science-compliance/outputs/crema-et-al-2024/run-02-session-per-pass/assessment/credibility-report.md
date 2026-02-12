@@ -261,4 +261,4 @@
 
 ---
 
-*This credibility assessment was generated using the research-assessor skill (v0.2-alpha) as part of the Open Science Compliance Study, Phase 1.*
+*This credibility assessment was generated using the research-assessor skill (v1.0) as part of the Open Science Compliance Study, Phase 1.*
