@@ -60,3 +60,34 @@ a journal data-sharing mandate.
 This has implications for the open science compliance study's framing: the narrative should
 emphasise data practices over code practices as the primary determinant of reproducibility
 outcomes.
+
+## Observation 2: Schema drift as a systemic risk in multi-session LLM workflows (2026-02-12)
+
+### Context
+
+Standardising assessment.json across 5 pilot papers revealed 3+ different metadata
+structures produced by the same assessment pipeline over several weeks of sessions.
+
+### The observation
+
+When LLM-driven workflows produce structured outputs across multiple sessions, schema
+drift is near-inevitable unless actively prevented. The 5 pilot assessment.json files
+exhibited: nested vs flat metadata wrappers, `paper_slug` vs `paper_id` vs `slug`,
+`system_version` vs `assessor_version`, and version strings from `v0.2-alpha` to `v1.0`.
+Each file was internally valid but incompatible with the others.
+
+The root cause is that prompt templates embed output format specifications (field names,
+structure, version strings) that are not automatically synchronised when the canonical
+schema changes. A schema update in `assessment-schema.md` does not propagate to the 4
+prompt files that produce assessment outputs. This is analogous to the "stale cache"
+problem — the prompts cache an older schema definition.
+
+The mitigation adopted (a Schema Compliance section listing all locations that must be
+updated together, plus bumping schema_version to force awareness) is lightweight but
+depends on future instances reading and following the checklist. A stronger approach
+would be to have prompts reference the schema file directly rather than embedding
+output templates, but this would require restructuring the prompt design pattern.
+
+For the Phase 2 study design, this finding argues for: (a) running all papers through
+the pipeline in a compressed timeframe to minimise inter-session drift, and (b)
+validating output schema consistency as a post-extraction check rather than assuming it.

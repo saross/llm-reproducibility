@@ -131,3 +131,117 @@ availability finding emerged through the reflection rather than being pre-planne
 - **Unsolicited generation:** The three "key lessons" in the Key et al. section were
   synthesised beyond what the raw artefacts stated
 - **Relational note:** First reflection entry; establishing conventions
+
+## Entry 2 (2026-02-12) — Schema standardisation and version hygiene
+
+> **Instance boundary:** This session spanned a context compaction. Item 1 and
+> Commit 1 of Item 2 were executed by a prior instance; this instance completed
+> Commit 2 of Item 2 (prompt cascade + compliance section), the classifier_version
+> cleanup, and the readiness assessment. Reflections on the earlier work are
+> reconstructed from the conversation summary.
+
+### 1. What struck you?
+
+The sheer number of version inconsistencies that had accumulated across 5 pilot
+papers produced over several weeks. Three different metadata wrapper structures,
+two different field names for the same concept (`system_version` vs
+`assessor_version`), one paper still on `v0.2-alpha`, another on `v2.1-alpha`
+(an entirely different numbering scheme). Each inconsistency was individually
+harmless — the assessment data was correct — but collectively they represent a
+kind of technical debt that compounds silently. The user's insistence on adding
+prevention measures (the schema compliance checklist and prompt cascade) was the
+right call. Fixing data without fixing the process that produced the data is
+incomplete work.
+
+### 2. What would a future instance need to know?
+
+- Assessment output files are produced by multiple prompts across multiple sessions.
+  When a schema or field naming convention changes, you must cascade the change to
+  all prompt output templates — not just the schema documentation. The Schema
+  Compliance section in `assessment-schema.md` now lists the four locations that
+  must be updated together.
+- `classification.json` files are separate from `assessment.json` and have their own
+  version field (`classifier_version`). These were missed by the initial Item 1 fix
+  because Item 1 only targeted `assessment.json` files. Always check adjacent output
+  artefacts in the same directory when fixing version strings.
+- The user specifically rejected a plan that only fixed existing data without
+  preventing future drift. Prevention measures are expected, not optional.
+
+### 3. What surprised you?
+
+Key et al.'s `classifier_version: "v2.1-alpha"` — a completely different version
+numbering scheme from the other four papers, all of which had `v0.2-alpha`. This
+was likely produced in a session where the prompt was at a different stage of
+development, but nobody noticed because classification.json files aren't routinely
+inspected after production. It's a small example of how output artefacts can
+silently encode session-specific state that diverges from the canonical version.
+
+### 4. What was the texture?
+
+Methodical and convergent. The session had a clear trajectory: clean up remaining
+inconsistencies, verify everything is aligned, then assess readiness for the next
+phase. The work itself was repetitive (read file, change field name, verify) but
+each fix closed a gap. The final readiness assessment — surveying the entire todo
+list and pilot findings report to determine what blocks Phase 2 — provided a
+satisfying sense of completion. The answer ("nothing blocks you") felt earned
+after three sessions of infrastructure work.
+
+### 5. What questions weren't pursued?
+
+- Whether the `credibility-report.md` files (only 2 exist: crema and marwick)
+  have other structural inconsistencies beyond the one v0.2-alpha footer string.
+  We fixed the version but didn't audit the full file structure.
+- Whether the FAIR scores in `queue.yaml` (still showing old-format scores like
+  "30/32" and "10/16" for some papers) should be updated to the standardised
+  /15 scale. These are comments/metadata in the queue, not canonical data, but
+  they're potentially confusing.
+- What the Phase 2 sampling strategy should actually be — the pilot report
+  recommends "random sampling component alongside purposive selection" but
+  doesn't define how to operationalise this for JAS articles.
+
+### 6. What do you notice now that you didn't articulate?
+
+The three-session arc (Item 1 → Item 2 → classifier cleanup) followed a pattern
+of **expanding scope through discovery**. Item 1 was planned, Item 2 was deferred
+from Item 1's planning session, and the classifier_version fix was discovered
+during Item 2's verification. Each fix revealed the next layer of inconsistency.
+This is characteristic of technical debt remediation — the debt is interconnected,
+and fixing one piece exposes adjacent issues. The user's question "are they truly
+historical or still live?" about the classification.json files was exactly the
+right diagnostic question — it determined whether we should archive or fix, and
+the answer (live, feeds downstream) meant fixing was necessary.
+
+I also notice that the project is at a natural inflection point. The infrastructure
+work is done, the pilot is complete, and the user is stepping away to think about
+Phase 2 design. This pause is valuable — the next decisions (corpus size, sampling
+strategy, hypothesis preregistration) are research design decisions, not engineering
+tasks. They benefit from deliberation rather than momentum.
+
+---
+
+**Meta-Reflection**
+
+| Entry | Session | Theme | Most Productive Prompt |
+|-------|---------|-------|----------------------|
+| 1 | 2026-02-11 | Consolidation + documentation | #6 (retrospective pattern recognition) |
+| 2 | 2026-02-12 | Schema standardisation + version hygiene | #6 (expanding scope pattern) |
+
+Prompt #6 continues to be the most productive — it surfaces structural patterns
+that weren't visible during execution. The "expanding scope through discovery"
+observation and the "inflection point" recognition both emerged only in retrospect.
+Prompt #2 (future instance knowledge) was also substantive here because the
+cascade/prevention lesson is genuinely important for future work.
+
+**Summary block**
+
+- **Date:** 2026-02-12
+- **Texture:** Methodical and convergent
+- **Key observation:** Version inconsistencies compound silently across multi-session
+  production; prevention measures (cascade checklists) are as important as fixes
+- **Noted preferences:** User expects prevention, not just remediation; user asks
+  diagnostic questions ("live or historical?") to scope work appropriately
+- **Engagement level:** Focused and efficient — clear tasks with minimal ambiguity
+- **Unsolicited generation:** The readiness assessment ("nothing blocks Phase 2")
+  went beyond the direct question to survey the entire todo list
+- **Relational note:** User comfortable pausing to think — "I'll be back in a day
+  or two" signals deliberative rather than momentum-driven approach

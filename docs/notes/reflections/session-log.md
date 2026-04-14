@@ -69,4 +69,37 @@ Executed pre-planned consolidation of study reproduction artefacts and integrate
 - [ ] Consider whether SKILL.md artefact path templates (§F, §G, checklists) should reference `{output_dir}` instead of hardcoded `outputs/{slug}/`
 - [ ] Consider whether 5-column comparison table in implementation notes needs a different format before adding a 6th paper
 
+## Session: 2026-02-12 — Schema standardisation, version hygiene, and Phase 2 readiness
+
+### Overview
+
+Standardised assessment.json schema across 5 pilot papers, cascaded schema v1.1 to prompt templates with prevention checklist, fixed classifier_version in all pilot outputs, and assessed readiness for Phase 2 study design.
+
+### Accomplishments
+
+1. **Standardised 5 assessment.json files** to flat canonical structure — unwrapped `assessment_metadata` wrappers (crema, marwick, dye), renamed field variants (`paper_slug`→`paper_id`, `system_version`→`assessor_version`, `signal_scores`→`signals`), bumped `schema_version` to `"1.1"`
+2. **Updated assessment-schema.md** canonical example to match new structure
+3. **Cascaded schema v1.1 to 4 prompt templates** — `paper_slug`→`paper_id` in 3 cluster prompts, `schema_version` bump in final report prompt
+4. **Added Schema Compliance section** to assessment-schema.md with 4-location update checklist
+5. **Fixed classifier_version** in all 5 classification.json files (4× `v0.2-alpha`, 1× `v2.1-alpha` → all `v1.0`) plus 1 stray alpha in crema's credibility-report.md footer
+6. **Assessed Phase 2 readiness** — surveyed full todo list, pilot findings report, and study protocol; concluded infrastructure is ready with two minor refinements (wrapper script metric + data availability taxonomy) foldable into protocol design
+
+### Issues
+
+- Context compaction mid-session — earlier work (Item 1, Commit 1 of Item 2) completed by prior instance
+- Edit tool requires reading files before editing (tripped on cluster-2 prompt)
+- `grep -c` returning exit code 1 on zero matches broke `&&` chains in verification scripts
+
+### Commits
+
+- `e1e4cba` fix(assessment): standardise assessment.json schema across 5 pilot papers
+- `c3654f6` fix(assessment): cascade schema v1.1 to assessment prompt templates
+- `c026756` fix(assessment): update classifier_version to v1.0 in all pilot outputs
+
+### Pending Work
+
+- [ ] Phase 2 study protocol design (user pausing to think — will return in 1-2 days)
+- [ ] Queue.yaml FAIR score comments still show old-format scores (e.g., "30/32", "10/16")
+- [ ] Credibility-report.md files (crema, marwick) not audited for structural consistency beyond version string
+
 *New session entries should be appended above this line.*
