@@ -82,6 +82,22 @@ def test_readable_idempotent():
     assert C.normalise_text_readable(once) == once
 
 
+def test_dehyphenation_adjacent_stray_hyphen():
+    # a stray-hyphen line between the two halves (common PDF artefact):
+    # must join in ONE pass and be idempotent (regression: audit CRITICAL #1).
+    assert C.normalise_text_readable("multi-\n-\nfaceted") == "multifaceted"
+    once = C.normalise_text_readable("multi-\n-\nfaceted")
+    assert C.normalise_text_readable(once) == once
+    assert C.normalise_for_matching("multi-\n-\nfaceted") == "multifaceted"
+
+
+def test_crlf_handling():
+    assert C.normalise_for_matching("line one\r\nline two") == "line one line two"
+    assert C.normalise_text_readable("a\r\nb") == "a\nb"
+    # CRLF must not defeat dehyphenation
+    assert C.normalise_for_matching("archaeo-\r\nlogy") == "archaeology"
+
+
 def test_matching_substring_roundtrip():
     # ligature + line-break hyphenation in the source; plain quote should match.
     src = C.normalise_for_matching("The ﬁndings were sig-\nnificant across sites.")
@@ -196,6 +212,39 @@ def test_extract_pages_roundtrip():
     print("test_extract_pages_roundtrip OK")
 
 
+def test_extract_pages_section_carryover():
+    try:
+        import fitz  # noqa: F401
+    except Exception:
+        print("SKIP test_extract_pages_section_carryover (PyMuPDF not installed)")
+        return
+    import fitz
+    import extract_pdf_text as E
+
+    doc = fitz.open()
+    p0 = doc.new_page()
+    p0.insert_text((72, 72), "INTRODUCTION")
+    p0.insert_text((72, 100), "Intro body text on the first page.")
+    p1 = doc.new_page()
+    p1.insert_text((72, 72), "More body text on the second page, no heading.")
+    p2 = doc.new_page()
+    p2.insert_text((72, 72), "RESULTS")
+    p2.insert_text((72, 100), "Results body text on the third page.")
+    tmp = Path("/tmp/_test_extract_pages_sections.pdf")
+    doc.save(str(tmp))
+    doc.close()
+
+    try:
+        pages = E.PDFExtractor().extract_pages(tmp)
+        assert [p["page_index"] for p in pages] == [0, 1, 2]
+        assert pages[0]["section"] == "INTRODUCTION"   # heading's own page labelled
+        assert pages[1]["section"] == "INTRODUCTION"   # carried forward
+        assert pages[2]["section"] == "RESULTS"        # updated at next heading
+    finally:
+        tmp.unlink(missing_ok=True)
+    print("test_extract_pages_section_carryover OK")
+
+
 # --- runner (no pytest dependency) ------------------------------------------
 
 def _run() -> int:
@@ -209,6 +258,9 @@ def _run() -> int:
         except AssertionError as exc:
             failed += 1
             print(f"FAIL {fn.__name__}: {exc}")
+        except Exception as exc:  # don't let one broken test abort the run
+            failed += 1
+            print(f"ERROR {fn.__name__}: {type(exc).__name__}: {exc}")
     print(f"\n{len(fns) - failed}/{len(fns)} passed")
     return 1 if failed else 0
 

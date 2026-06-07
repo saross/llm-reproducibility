@@ -155,6 +155,13 @@ class PDFExtractor:
             List of ``{"page_index": int, "text": str, "section": str}`` dicts,
             one per page (0-based ``page_index``). ``section`` is the most recent
             heading detected at or before that page ("" if none yet).
+
+        ``page_index`` is the authoritative locator. ``section`` is a best-effort
+        hint only: with no font-size signal in this path it catches all-caps and
+        dot-numbered headings but may miss title-case headings, and an all-caps
+        non-heading line can occasionally be picked up. Downstream consumers
+        should treat ``section`` as advisory and rely on ``page_index`` for
+        verification.
         """
         pages: List[Dict] = []
         current_section = ""
@@ -167,15 +174,16 @@ class PDFExtractor:
                     raw = page.get_text("text") or ""
                     text = normalise_text_readable(raw)
 
-                    # Conservative, text-only section detection (no font size):
-                    # detect_section_heading only fires on numbered or all-caps
-                    # headings here, which is the right level for a locator hint.
+                    # Best-effort, text-only section detection (no font size):
+                    # detect_section_heading fires here only on all-caps or
+                    # dot-numbered headings. We do NOT touch self.stats here, to
+                    # avoid conflating this counter with the markdown extract()
+                    # path's section count.
                     for line in text.split("\n"):
                         stripped = line.strip()
                         if (stripped and detect_section_heading(stripped)
                                 and looks_like_heading(stripped)):
                             current_section = stripped
-                            self.stats['sections_detected'] += 1
 
                     pages.append({
                         "page_index": page_num,
