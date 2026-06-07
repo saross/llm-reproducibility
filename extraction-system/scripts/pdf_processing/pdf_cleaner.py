@@ -612,3 +612,23 @@ def strip_affiliation_tail(markdown: str) -> Tuple[str, int]:
         return markdown, 0
     cleaned = markdown[: match.start()].rstrip()
     return cleaned, len(markdown) - len(cleaned)
+
+
+def looks_like_heading(text: str) -> bool:
+    """Stricter gate for treating a detected heading as a section *locator*.
+
+    ``detect_section_heading`` accepts any short all-caps line, which on real
+    PDFs lets journal boilerplate through — e.g. an ISSN/price line such as
+    ``'2573-0142/2021/4-ART188 $15.00'`` is ``str.isupper()``-true because only
+    "ART" is cased. A genuine section heading contains a real alphabetic word
+    and is not dominated by digits or symbols. Pairs with (does not replace)
+    ``detect_section_heading``: use ``detect_section_heading(s) and
+    looks_like_heading(s)``.
+    """
+    if not re.search(r"[A-Za-z]{3,}", text):
+        return False
+    nonspace = re.sub(r"\s", "", text)
+    if not nonspace:
+        return False
+    alpha = sum(1 for c in nonspace if c.isalpha())
+    return alpha / len(nonspace) >= 0.5

@@ -33,6 +33,7 @@ from pdf_cleaner import (
     remove_headers_footers,
     clean_reference_section,
     normalise_text_readable,
+    looks_like_heading,
 )
 
 
@@ -171,7 +172,8 @@ class PDFExtractor:
                     # headings here, which is the right level for a locator hint.
                     for line in text.split("\n"):
                         stripped = line.strip()
-                        if stripped and detect_section_heading(stripped):
+                        if (stripped and detect_section_heading(stripped)
+                                and looks_like_heading(stripped)):
                             current_section = stripped
                             self.stats['sections_detected'] += 1
 
