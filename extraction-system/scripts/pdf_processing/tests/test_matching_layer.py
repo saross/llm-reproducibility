@@ -149,6 +149,19 @@ def test_strip_affiliation_tail():
     assert n > 0
 
 
+def test_looks_like_heading():
+    # real headings accepted
+    assert C.looks_like_heading("INTRODUCTION")
+    assert C.looks_like_heading("BACKGROUND AND RELATED WORK")
+    assert C.looks_like_heading("3.2 Methods and Materials")
+    assert C.looks_like_heading("Results")
+    # digit/symbol-dominated boilerplate rejected (the Buçinca ISSN/price line)
+    assert not C.looks_like_heading("2573-0142/2021/4-ART188 $15.00")
+    assert not C.looks_like_heading("188:3")
+    assert not C.looks_like_heading("12")
+    assert not C.looks_like_heading("")
+
+
 # --- E2: extract_pages round-trip (PDF; skipped without fitz) ----------------
 
 def test_extract_pages_roundtrip():
