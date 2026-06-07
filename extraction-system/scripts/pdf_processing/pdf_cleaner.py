@@ -329,9 +329,10 @@ def _apply_char_normalisation(text: str) -> str:
     """Character-level canonicalisation shared by both matching forms.
 
     NFKC, then ligature / quote / hyphen maps and zero-width removal, plus
-    form-feed -> newline. Idempotent.
+    CRLF/CR -> newline and form-feed -> newline. Idempotent.
     """
     text = unicodedata.normalize("NFKC", text)
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
     for src, dst in _LIGATURES.items():
         text = text.replace(src, dst)
     for src, dst in _QUOTE_MAP.items():
@@ -350,8 +351,14 @@ def _dehyphenate(text: str) -> str:
     ``'archaeo-\\nlogy' -> 'archaeology'``. Conservative: only a lowercase
     letter triggers the join, so a hyphenated compound broken before a capital
     (``'well-\\nKnown'``) is left intact rather than mis-joined.
+
+    The ``(?:-\\s*\\n\\s*)+`` prefix consumes a run of consecutive end-of-line
+    hyphens in a single pass (e.g. ``'multi-\\n-\\nfaceted'`` -> ``'multifaceted'``
+    where a stray-hyphen line sits between the two halves). This makes the
+    function idempotent: a second application is a no-op, which the readable and
+    matching normalisers both depend on.
     """
-    return re.sub(r"-\s*\n\s*([a-z])", r"\1", text)
+    return re.sub(r"(?:-\s*\n\s*)+([a-z])", r"\1", text)
 
 
 def normalise_text_readable(text: str) -> str:
@@ -529,7 +536,7 @@ _END_OF_BODY_MARKERS_RE = re.compile(
     r"Conflict\s+of\s+Interest|"
     r"Declaration\s+of\s+(?:Competing|Conflicting)\s+Interests?|"
     r"Supplementary\s+(?:Data|Materials?)|"
-    r"Appendix\s+[A-Z](?:\.|\s)"
+    r"Appendix\s+[A-Z]"
     r")\b",
     re.MULTILINE | re.IGNORECASE,
 )
