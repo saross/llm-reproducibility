@@ -31,7 +31,9 @@ from pdf_cleaner import (
     format_as_markdown_heading,
     extract_abstract,
     remove_headers_footers,
-    clean_reference_section
+    clean_reference_section,
+    normalise_text_readable,
+    looks_like_heading,
 )
 
 
@@ -134,6 +136,66 @@ class PDFExtractor:
             raise
 
         return blocks
+
+    def extract_pages(self, pdf_path: Path) -> List[Dict]:
+        """
+        Extract per-page text with locators, for quote-matching use cases.
+
+        Unlike :meth:`extract` (which flattens to a single Markdown string and
+        discards page numbers), this returns one entry per page with the page
+        index and the nearest preceding section heading preserved. Each page's
+        text is run through :func:`pdf_cleaner.normalise_text_readable`, so a
+        quote taken from it can be verified against the source via
+        :func:`pdf_cleaner.normalise_for_matching`.
+
+        Args:
+            pdf_path: Path to PDF file
+
+        Returns:
+            List of ``{"page_index": int, "text": str, "section": str}`` dicts,
+            one per page (0-based ``page_index``). ``section`` is the most recent
+            heading detected at or before that page ("" if none yet).
+
+        ``page_index`` is the authoritative locator. ``section`` is a best-effort
+        hint only: with no font-size signal in this path it catches all-caps and
+        dot-numbered headings but may miss title-case headings, and an all-caps
+        non-heading line can occasionally be picked up. Downstream consumers
+        should treat ``section`` as advisory and rely on ``page_index`` for
+        verification.
+        """
+        pages: List[Dict] = []
+        current_section = ""
+
+        try:
+            with fitz.open(pdf_path) as doc:
+                self.stats['pages'] = len(doc)
+
+                for page_num, page in enumerate(doc):
+                    raw = page.get_text("text") or ""
+                    text = normalise_text_readable(raw)
+
+                    # Best-effort, text-only section detection (no font size):
+                    # detect_section_heading fires here only on all-caps or
+                    # dot-numbered headings. We do NOT touch self.stats here, to
+                    # avoid conflating this counter with the markdown extract()
+                    # path's section count.
+                    for line in text.split("\n"):
+                        stripped = line.strip()
+                        if (stripped and detect_section_heading(stripped)
+                                and looks_like_heading(stripped)):
+                            current_section = stripped
+
+                    pages.append({
+                        "page_index": page_num,
+                        "text": text,
+                        "section": current_section,
+                    })
+
+        except Exception as e:
+            print(f"Error extracting pages with PyMuPDF: {e}")
+            raise
+
+        return pages
 
     def extract_tables_pdfplumber(self, pdf_path: Path) -> List[Dict]:
         """
