@@ -31,7 +31,8 @@ from pdf_cleaner import (
     format_as_markdown_heading,
     extract_abstract,
     remove_headers_footers,
-    clean_reference_section
+    clean_reference_section,
+    normalise_text_readable,
 )
 
 
@@ -134,6 +135,57 @@ class PDFExtractor:
             raise
 
         return blocks
+
+    def extract_pages(self, pdf_path: Path) -> List[Dict]:
+        """
+        Extract per-page text with locators, for quote-matching use cases.
+
+        Unlike :meth:`extract` (which flattens to a single Markdown string and
+        discards page numbers), this returns one entry per page with the page
+        index and the nearest preceding section heading preserved. Each page's
+        text is run through :func:`pdf_cleaner.normalise_text_readable`, so a
+        quote taken from it can be verified against the source via
+        :func:`pdf_cleaner.normalise_for_matching`.
+
+        Args:
+            pdf_path: Path to PDF file
+
+        Returns:
+            List of ``{"page_index": int, "text": str, "section": str}`` dicts,
+            one per page (0-based ``page_index``). ``section`` is the most recent
+            heading detected at or before that page ("" if none yet).
+        """
+        pages: List[Dict] = []
+        current_section = ""
+
+        try:
+            with fitz.open(pdf_path) as doc:
+                self.stats['pages'] = len(doc)
+
+                for page_num, page in enumerate(doc):
+                    raw = page.get_text("text") or ""
+                    text = normalise_text_readable(raw)
+
+                    # Conservative, text-only section detection (no font size):
+                    # detect_section_heading only fires on numbered or all-caps
+                    # headings here, which is the right level for a locator hint.
+                    for line in text.split("\n"):
+                        stripped = line.strip()
+                        if stripped and detect_section_heading(stripped):
+                            current_section = stripped
+                            self.stats['sections_detected'] += 1
+
+                    pages.append({
+                        "page_index": page_num,
+                        "text": text,
+                        "section": current_section,
+                    })
+
+        except Exception as e:
+            print(f"Error extracting pages with PyMuPDF: {e}")
+            raise
+
+        return pages
 
     def extract_tables_pdfplumber(self, pdf_path: Path) -> List[Dict]:
         """
