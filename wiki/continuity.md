@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-06-07
+updated: 2026-06-10
 status: seed
 ---
 
@@ -111,6 +111,38 @@ Caveats:
 - `/reflect`, `/observe`, `/handoff` are layout-aware and fall back to legacy
   paths; after migration they target `wiki/`.
 
+### C. Fix lossy de-hyphenation of genuine compounds  [ ]
+
+`_dehyphenate` (`extraction-system/scripts/pdf_processing/pdf_cleaner.py:348-361`,
+regex `re.sub(r"(?:-\s*\n\s*)+([a-z])", r"\1", text)`) joins any end-of-line
+hyphen followed by a **lowercase** letter and **drops the hyphen
+unconditionally**. This is correct for line-break artefacts
+(`archaeo-\nlogy` → `archaeology`) but **lossy for genuinely-hyphenated
+compounds broken before a lowercase letter** — e.g. `self-\ncorrection` →
+`selfcorrection` (hyphen lost). The existing guard only protects compounds
+broken before a **capital** (`well-\nKnown` stays). Feeds **both**
+`normalise_for_matching` and `normalise_text_readable`.
+
+Concrete case (re-verifiable): Huang et al. 2023 (Zotero attachment
+`K294C8KD`), `page_index 3`, "...after self-\ncorrection, the accuracies..." →
+the matching key contains `selfcorrection`, so a naturally-written quote
+("after self-correction, ...") **fails** the deterministic quote-checker even
+though the content is present. Discovered 2026-06-10 during the paper-b AB+
+co-design (`planning/section2-grounding/ab-plus/huang2023large.md`, "Extraction /
+fidelity notes").
+
+Impact: a quote spanning a line-broken hyphenated compound silently fails the
+checker; paper-b currently works around it (quote from text-as-extracted +
+display-cleanup) but the canonical key itself is wrong here.
+
+Fix direction (heuristic — full de-hyphenation is ambiguous): keep the hyphen
+when the prefix is a known hyphenating affix (`self-`, `multi-`, `non-`, `pre-`,
+`co-`, `anti-`, `inter-`, `intra-`, `well-`, `re-`, `e-`, …) or when **both**
+fragments are independently valid words (wordlist check); drop it otherwise.
+Must preserve `_dehyphenate`'s **idempotence** (the readable + matching
+normalisers depend on it) and keep golden tests green; add a regression test
+for the `self-correction` case. Additive/worktree discipline.
+
 ## Open decisions
 
 - [ ] `docs/` disposition: stay at repo root vs move to `wiki/docs/` (task B).
@@ -118,6 +150,17 @@ Caveats:
   and mechanical, B is structural) vs bundle.
 
 ## Session log
+
+### 2026-06-10 — de-hyphenation defect logged (task C)
+
+From a paper-b AB+ co-design session (no code changes to this repo). Building
+the first AB+ entry surfaced a lossy-de-hyphenation defect in `_dehyphenate`:
+genuinely-hyphenated compounds broken across a line before a lowercase letter
+(e.g. `self-\ncorrection`) lose their hyphen in the canonical matching key,
+breaking otherwise-valid quote checks. Logged as **pending task C** with a
+re-verifiable concrete case and a fix direction. Shawn asked for this to be
+recorded here for a proper fix later; paper-b proceeds with the
+quote-from-extracted-text + display-cleanup workaround for now.
 
 ### 2026-06-07 — seed created
 
