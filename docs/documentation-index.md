@@ -269,7 +269,7 @@ Located in `.claude/skills/research-assessor/references/`:
 
 ### Planning Documents
 
-Located in `planning/`:
+Located in `wiki/planning/`:
 - Active to-do list
 - FAIR vocabularies development plan
 - Pass 6 testing findings
@@ -375,7 +375,7 @@ The following documentation is planned but not yet created:
 - **Worked Extraction Examples** - Annotated example extractions
 - **Edge Case Catalogue** - Borderline item decisions documented
 
-**See:** [Planning documents](../planning/) for roadmaps addressing these gaps
+**See:** [Planning documents](../wiki/planning/) for roadmaps addressing these gaps
 
 ---
 

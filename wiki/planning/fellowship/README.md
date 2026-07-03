@@ -46,7 +46,7 @@
 
 ## Relationship to Active Planning
 
-**Active workflow planning:** See `planning/active-todo-list.md`
+**Active workflow planning:** See `wiki/planning/active-todo-list.md`
 
 **Fellowship planning (this folder):** Provides broader research context but doesn't contain immediate actionable workflow tasks.
 
@@ -89,7 +89,7 @@ The fellowship implementation plan anticipated "reliable Claim-Evidence-Method g
 - Explaining project scope to collaborators
 
 **When NOT to reference:**
-- Immediate workflow to-do items (use `planning/active-todo-list.md`)
+- Immediate workflow to-do items (use `wiki/planning/active-todo-list.md`)
 - Day-to-day extraction work (use `docs/user-guide/`)
 - Skill development (use `extraction-system/skill/`)
 

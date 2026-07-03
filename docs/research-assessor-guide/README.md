@@ -406,7 +406,7 @@ Primary testing across diverse corpus (2016-2024):
 5. **Consolidation testing** - Rationalisation quality assessed
 6. **Infrastructure testing** - PID, FAIR, reproducibility assessment validated
 
-**See `planning/pass6-phase1-testing-findings.md` for detailed Phase 1 infrastructure testing results.**
+**See `wiki/planning/pass6-phase1-testing-findings.md` for detailed Phase 1 infrastructure testing results.**
 
 ---
 

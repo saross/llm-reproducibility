@@ -338,8 +338,8 @@ For any intervention:
 ## Related Documentation
 
 - `outputs/variability-test/variability-analysis-report.md` — Full variability analysis
-- `planning/active-todo-list.md` Section 8a — Variability test findings
-- `planning/active-todo-list.md` Section 8b — Protocol standardisation proposal
+- `wiki/planning/active-todo-list.md` Section 8a — Variability test findings
+- `wiki/planning/active-todo-list.md` Section 8b — Protocol standardisation proposal
 - `input/variability-queue.yaml` — Complete run data
 
 ---

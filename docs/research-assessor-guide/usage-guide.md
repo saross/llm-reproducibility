@@ -892,7 +892,7 @@ jq '{
 **For advanced usage:**
 - Consult [architecture.md](architecture.md) for design rationale
 - Review skill references in `.claude/skills/research-assessor/references/`
-- Check testing findings in `planning/pass6-phase1-testing-findings.md`
+- Check testing findings in `wiki/planning/pass6-phase1-testing-findings.md`
 
 **Questions or issues?**
 - Check [quick-reference.md](quick-reference.md) for common problems

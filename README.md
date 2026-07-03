@@ -5,8 +5,8 @@
 
 Automated extraction of claims, evidence, and methodology from research papers using Large Language Models, enabling systematic assessment of research transparency, reproducibility, and credibility.
 
-**Version:** 2.6 | **Schema:** v2.6 | **Workflow:** 8-pass (0-7)
-**Status:** Extraction system complete and tested, assessment framework in development
+**Version:** 3.0.1 | **Schema:** v2.6 | **Workflow:** v5.0.0 (8-pass, session-per-pass)
+**Status:** Extraction system complete, assessment framework pilot-tested, reproduction system v1.1
 **Target Domains:** Fieldwork-based research (archaeology, ecology, ethnography, field geology, etc.)
 **Manifest:** See [manifest.yaml](manifest.yaml) for component versions
 
@@ -68,11 +68,13 @@ See [docs/user-guide/extraction-workflow.md](docs/user-guide/extraction-workflow
 llm-reproducibility/
 ├── input/                 # Workflow entry points (queue, launch prompt, workflow)
 ├── extraction-system/     # All extraction tools (skill, prompts, schema, scripts)
-├── assessment-system/     # Assessment tools (in development)
-├── docs/                  # Documentation (user guides, skill docs, development)
+├── assessment-system/     # Assessment tools (pilot-tested)
+├── reproduction-system/   # Docker-based reproduction workflow (prompts, templates)
+├── docs/                  # User-facing documentation (guides, skill docs, background)
+├── wiki/                  # Research process record (continuity, lab notebook, planning)
+├── studies/               # Research studies using the pipeline (open-science-compliance)
 ├── examples/              # Curated extraction examples
 ├── outputs/               # Extraction outputs organised by paper
-├── planning/              # Active project planning (assessment phase upcoming)
 ├── reports/               # Key testing and QA reports
 ├── archive/               # Development history organised by version
 ├── manifest.yaml          # Component version manifest (source of truth)
@@ -94,16 +96,25 @@ llm-reproducibility/
   - `scripts/` - PDF text extraction and validation utilities
   - `extraction-plan-unified-model.md` - Flexible planning guidance
 
-- **[docs/](docs/)** - All documentation
+- **[docs/](docs/)** - User-facing documentation: how to install and use the systems
   - `user-guide/` - Getting started, workflow, schema reference
   - `research-assessor-guide/` - Comprehensive skill documentation
   - `schema/` - Schema versioning and crosswalks
   - `background-research/` - Deep research reports
 
-- **[planning/](planning/)** - Active planning documents
-  - CWTS implementation plan (assessment phase)
-  - Schema improvement roadmap
-  - Strategic decisions
+- **[wiki/](wiki/)** - Versioned research process record: how the research is being done
+  - `continuity.md` - Cross-session state and session log
+  - `working-notes.md` - Empirical lab notebook
+  - `reflections/` - Meta-research observations
+  - `planning/` - Implementation plans and roadmaps
+  - Kept in-repo (not a GitHub Wiki) so the process record is versioned and
+    archived with the code — see `wiki/index.md`
+
+> **docs/ vs wiki/:** `docs/` documents the *product* (for users of the
+> extraction/assessment/reproduction systems); `wiki/` documents the *process*
+> (for provenance and project continuity). If you want to use the tools, start
+> in `docs/`; if you want to see how this project works day to day, start in
+> `wiki/`.
 
 - **[examples/](examples/)** - Example extractions
   - Complete extraction samples with annotations
@@ -158,7 +169,7 @@ Planned assessment dimensions adapted from repliCATS:
 - Reproducibility
 - Generalisability
 
-See [planning/credibility-implementation-plan-v2.0.md](planning/credibility-implementation-plan-v2.0.md) for roadmap.
+See [wiki/planning/credibility-implementation-plan-v2.0.md](wiki/planning/credibility-implementation-plan-v2.0.md) for roadmap.
 
 ---
 

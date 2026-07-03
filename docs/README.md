@@ -258,7 +258,7 @@ For contribution guidelines, see the Research Assessor skill documentation.
 - **[Extraction System](../extraction-system/README.md)** - All extraction tools, prompts, and scripts
 - **[Outputs Directory](../outputs/README.md)** - Extraction outputs and usage guide
 - **[Examples](../examples/)** - Worked extraction examples (coming soon)
-- **[Planning](../planning/)** - Project roadmap and active tasks
+- **[Planning](../wiki/planning/)** - Project roadmap and active tasks
 - **[Archive](../archive/)** - Development history and completed work
 
 ---

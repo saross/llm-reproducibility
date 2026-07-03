@@ -52,7 +52,7 @@ Complete changelog documenting the evolution of the Research Assessor skill from
 
 **Phase 1 Infrastructure Testing Complete:**
 - 4 diverse papers tested (2016-2024, 0-15 FAIR range)
-- Findings documented in `planning/pass6-phase1-testing-findings.md`
+- Findings documented in `wiki/planning/pass6-phase1-testing-findings.md`
 - 7 extraction challenges identified with solutions
 - 5 guidance gaps documented with recommendations
 - 5 schema gaps assessed with priority levels
@@ -92,8 +92,8 @@ Complete changelog documenting the evolution of the Research Assessor skill from
 **New Content:**
 - `extraction-system/README.md` - Extraction toolkit overview
 - `outputs/README.md` - Outputs directory guide
-- `planning/pass6-phase1-testing-findings.md` - Infrastructure testing results
-- `planning/pass6-software-documentation-enhancement.md` - Phase 2 planning
+- `wiki/planning/pass6-phase1-testing-findings.md` - Infrastructure testing results
+- `wiki/planning/pass6-software-documentation-enhancement.md` - Phase 2 planning
 
 ### Prompt Updates
 
@@ -161,7 +161,7 @@ Complete changelog documenting the evolution of the Research Assessor skill from
 - Prevents context loss errors (4 instances identified in cross-paper analysis)
 
 **Secondary Source Attribution:**
-- Analysis documented in `planning/secondary-source-attribution-analysis.md`
+- Analysis documented in `wiki/planning/secondary-source-attribution-analysis.md`
 - 6 instances of literature review vs empirical misclassification across 4 papers
 - Simple decision tree would prevent 100% of observed errors
 - Recommendation: Simple `claim_origin` field (novel/tested/supported/synthesised)
@@ -496,5 +496,5 @@ Complete changelog documenting the evolution of the Research Assessor skill from
 **For complete development narrative, see:**
 - [architecture.md](architecture.md) - Design rationale
 - `archive/documentation-archive/skill-documentation/prompt-revision-summary.md` - Historical prompt evolution
-- `planning/active-todo-list.md` - Current development priorities
-- `planning/pass6-phase1-testing-findings.md` - Infrastructure testing results
+- `wiki/planning/active-todo-list.md` - Current development priorities
+- `wiki/planning/pass6-phase1-testing-findings.md` - Infrastructure testing results

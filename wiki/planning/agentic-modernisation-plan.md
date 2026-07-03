@@ -1,10 +1,11 @@
 # Agentic Modernisation Plan — Reproduction and Open-Science Apparatus
 
-**Version:** 0.1 (draft for discussion)
+**Version:** 0.2
 **Date:** 2026-07-03
-**Status:** Proposed — Phase 0 complete; Phases 1-3 awaiting approval
+**Status:** Direction approved — study shape decided (Option A, §6, 2026-07-03); Phase 0
+complete; Phase 1 build ON HOLD pending Shawn's review of this plan
 **Author:** Claude (Fable 5), with Shawn Ross
-**Supersedes:** Extends (does not replace) `planning/automation-and-scaling-strategy.md` (2025-12-09)
+**Supersedes:** Extends (does not replace) `wiki/planning/automation-and-scaling-strategy.md` (2025-12-09)
 
 ---
 
@@ -114,7 +115,7 @@ pattern libraries, discrepancy taxonomies); agents reference them rather than du
 ### Phase 0 — Housekeeping ✅ (2026-07-03)
 
 Version-drift reconciliation: manifest v3.0.1, cluster_1 prompt v1.1 recorded,
-assessment_json schema entry added, `active-todo-list.md` and `planning/README.md` brought
+assessment_json schema entry added, `active-todo-list.md` and `wiki/planning/README.md` brought
 up to date, study README Phase 1 marked complete.
 
 ### Phase 1 — Build the agentic lane
@@ -145,7 +146,12 @@ examined, so this is preregistration-safe.
   few years of JAS" could be 20 papers or several hundred depending on screening criteria —
   these are different commitments and will be priced before launch.
 
-## 6. Open decision: study shape (BLOCKS Phase 3 only)
+## 6. Study shape — DECIDED: Option A (census + preregistered subset)
+
+**Decision (Shawn, 2026-07-03):** Option A. Preregister the five pilot hypotheses on OSF
+first; sweep JAS 2023-2026 as a descriptive FAIR census (which doubles as the sampling
+frame); reproduce the eligible computational subset as the preregistered confirmatory
+study. Options B and C below are retained for the record.
 
 The protocol (`studies/open-science-compliance/protocol/study-protocol.md`) requires OSF
 preregistration of Phase 2 hypotheses **before** Phase 2 corpus selection. FAIR scores are
@@ -173,11 +179,11 @@ Phases 0-2 are identical under all three options.
 
 ## 8. Relationship to existing plans
 
-- `planning/automation-and-scaling-strategy.md` — this plan implements that document's
+- `wiki/planning/automation-and-scaling-strategy.md` — this plan implements that document's
   long-term option ("API pipeline replicating skills") using native harness workflows; its
   quality arguments for human-attention batching are retained.
-- `planning/credibility-implementation-plan-v2.0.md` — untouched; the full credibility
+- `wiki/planning/credibility-implementation-plan-v2.0.md` — untouched; the full credibility
   assessment pipeline is out of scope for this modernisation phase and can be agentised
   later using the same pattern.
-- `planning/fair-vocabularies-development-plan.md` — the FAIR-lane census would generate
+- `wiki/planning/fair-vocabularies-development-plan.md` — the FAIR-lane census would generate
   exactly the evidence base that plan needs; potential convergence in Phase 3.

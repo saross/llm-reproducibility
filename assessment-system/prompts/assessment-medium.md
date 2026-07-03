@@ -3,7 +3,7 @@
 **Version:** 1.0
 **Last Updated:** 2025-10-31
 **Assessment Depth:** Medium (2-3 hours)
-**Based on:** planning/extraction-assessment-rubric-v1.md
+**Based on:** wiki/planning/extraction-assessment-rubric-v1.md
 
 ---
 

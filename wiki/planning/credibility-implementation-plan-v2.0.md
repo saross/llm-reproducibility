@@ -1284,7 +1284,7 @@ Example:
 - 3 signal cluster assessments (7 signals total)
 - track-a-quality.md (Quality gating and monitoring)
 
-**System Documentation:** planning/credibility-implementation-plan-v2.0.md
+**System Documentation:** wiki/planning/credibility-implementation-plan-v2.0.md
 ```
 
 ---
@@ -2003,7 +2003,7 @@ jq '.signals[] | "\(.signal_name): \(.score)"' paper-b/assessment/assessment.jso
 
 **Documentation of patterns:**
 
-Create `planning/cross-paper-assessment-patterns.md`:
+Create `wiki/planning/cross-paper-assessment-patterns.md`:
 ```markdown
 # Cross-Paper Assessment Patterns
 ## Corpus: 10 HASS papers
@@ -2660,7 +2660,7 @@ Synthesise credibility assessment from all inputs into 3-5 page report.
 3. Monitor for quality state distribution:
    - Expect mostly "high", some "moderate" acceptable, "low" triggers re-extraction
 4. Validate Checkpoint 6 (corpus testing - enhanced)
-5. Document patterns in `planning/cross-paper-assessment-patterns.md`
+5. Document patterns in `wiki/planning/cross-paper-assessment-patterns.md`
 
 **Key validations:**
 - Approach-specific scoring working (deductive ≠ inductive profiles)
@@ -2863,8 +2863,8 @@ Synthesise credibility assessment from all inputs into 3-5 page report.
 **Next Action:** Begin Step 1 (Extend research-assessor skill)
 
 **Related Documents:**
-- planning/credibility-implementation-plan-detailed.md (v1.0)
-- planning/synthesis-external-feedback.md (critical analysis)
-- planning/paper-credibility-analysis-framework.md (design decisions)
-- planning/research-approach-classification-framework.md (classification spec)
-- planning/gpt51-feedback/credibility-implementation-plan-detailed-feedback.md (external review)
+- wiki/planning/credibility-implementation-plan-detailed.md (v1.0)
+- wiki/planning/synthesis-external-feedback.md (critical analysis)
+- wiki/planning/paper-credibility-analysis-framework.md (design decisions)
+- wiki/planning/research-approach-classification-framework.md (classification spec)
+- wiki/planning/gpt51-feedback/credibility-implementation-plan-detailed-feedback.md (external review)

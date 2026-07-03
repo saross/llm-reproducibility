@@ -3,6 +3,10 @@ priority: 5
 scope: always
 title: "Session Log"
 audience: "project team"
+tags: [session-shape, working-practices]
+created: 2026-02-09
+updated: 2026-04-14
+status: active
 ---
 
 # Session Log
@@ -50,7 +54,7 @@ Executed pre-planned consolidation of study reproduction artefacts and integrate
 3. **Added `output_dir` field** to all 5 study queue.yaml entries for prevention
 4. **Added Step 2a** to reproduction-assessor SKILL.md for output directory determination
 5. **Added study layout note** to CLAUDE.md
-6. **Integrated Key et al. 2024 lessons** into `planning/reproduction-implementation-notes.md` — 9 gotchas, 3 key lessons, updated 5-paper comparison table
+6. **Integrated Key et al. 2024 lessons** into `wiki/planning/reproduction-implementation-notes.md` — 9 gotchas, 3 key lessons, updated 5-paper comparison table
 7. **Resolved both known gaps** in active-todo-list.md
 
 ### Issues

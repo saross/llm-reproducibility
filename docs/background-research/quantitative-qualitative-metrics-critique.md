@@ -901,9 +901,9 @@ The metrics are defensible **as a starting point for empirical investigation**, 
 
 ### Project-Specific Documents
 
-- `planning/assessment-implementation-plan.md` - Complete 5-phase plan
+- `wiki/planning/assessment-implementation-plan.md` - Complete 5-phase plan
 - `docs/background-research/replicats-seven-signals-hass-adaptation.md` - repliCATS adaptation
-- `planning/extraction-to-analysis-transition.md` - Assessment framework overview
+- `wiki/planning/extraction-to-analysis-transition.md` - Assessment framework overview
 - `extraction-system/schema/reproducibility-infrastructure-schema-v2.6.yaml` - Pass 6 schema
 - `assessment-system/scripts/analysis_toolkit.py` - Metric implementations
 
@@ -956,4 +956,4 @@ The quantitative metrics developed for this project are **experimental instrumen
 
 ---
 
-**Navigation:** [Main README](../../README.md) | [Assessment Plan](../../planning/assessment-implementation-plan.md) | [Background Research Index](../background-research/)
+**Navigation:** [Main README](../../README.md) | [Assessment Plan](../../wiki/planning/assessment-implementation-plan.md) | [Background Research Index](../background-research/)

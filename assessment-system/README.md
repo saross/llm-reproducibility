@@ -1,6 +1,6 @@
 # Extraction Assessment System
 
-Operational scaffolding for executing the extraction assessment rubric (`planning/extraction-assessment-rubric-v1.md`).
+Operational scaffolding for executing the extraction assessment rubric (`wiki/planning/extraction-assessment-rubric-v1.md`).
 
 **Purpose:** Systematic quality evaluation of completed extractions along two dimensions:
 1. **Accuracy** - Correct quotes, proper interpretation, no hallucinations
@@ -456,9 +456,9 @@ For large extractions (>200 items):
 
 ## Related Documentation
 
-- **Rubric:** `planning/extraction-assessment-rubric-v1.md` - Complete assessment methodology
-- **Metrics Analysis:** `planning/extraction-metrics-guidance-analysis.md` - Discussion of numeric targets
-- **Multi-run Protocol:** `planning/active-todo-list.md` Section 7 - Completeness via comparison
+- **Rubric:** `wiki/planning/extraction-assessment-rubric-v1.md` - Complete assessment methodology
+- **Metrics Analysis:** `wiki/planning/extraction-metrics-guidance-analysis.md` - Discussion of numeric targets
+- **Multi-run Protocol:** `wiki/planning/active-todo-list.md` Section 7 - Completeness via comparison
 - **Schema:** `extraction-system/schema/` - Extraction structure definitions
 
 ---
@@ -468,7 +468,7 @@ For large extractions (>200 items):
 For issues, questions, or suggestions:
 1. Check this README and the rubric
 2. Review example assessments in `outputs/*/assessment-report.md`
-3. Document issues in `planning/active-todo-list.md`
+3. Document issues in `wiki/planning/active-todo-list.md`
 
 ---
 

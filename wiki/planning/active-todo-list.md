@@ -1,7 +1,7 @@
 # Active To-Do List
 
 **Last Updated:** 2026-07-03
-**Status:** Reproduction pilot COMPLETE (5/5 papers, v1.1 deployed). Phase 7 (Credibility Assessment) COMPLETE — all cluster prompts exist and were pilot-tested on 5 papers (see 2026-07-03 reconciliation note below). Pipeline work resuming 2026-07-03 (paused since 2026-02-12; PDF-extraction infrastructure continued via the paper-b project — PR #1 merged 2026-06-07, see `wiki/continuity.md`); next milestone is agentic modernisation (`planning/agentic-modernisation-plan.md`).
+**Status:** Reproduction pilot COMPLETE (5/5 papers, v1.1 deployed). Phase 7 (Credibility Assessment) COMPLETE — all cluster prompts exist and were pilot-tested on 5 papers (see 2026-07-03 reconciliation note below). Pipeline work resuming 2026-07-03 (paused since 2026-02-12; PDF-extraction infrastructure continued via the paper-b project — PR #1 merged 2026-06-07, see `wiki/continuity.md`); next milestone is agentic modernisation (`wiki/planning/agentic-modernisation-plan.md`).
 
 > **Status reconciliation (2026-07-03):** This list previously said "Phase 7 Steps 1-4 complete, ready for Step 5". That was stale — cluster prompts 1-3 were created 2025-11-29 (per their file headers), tested via `outputs/testing/cluster-1-reliability-test/`, run on all 5 pilot papers, and promoted to pilot_tested v1.0 in `manifest.yaml` on 2026-02-12. Steps 5-7 are marked complete below on that evidence.
 
@@ -9,14 +9,14 @@
 
 ## Completed Milestones
 
-See `planning/completed-milestones-changelog.md` for full details.
+See `wiki/planning/completed-milestones-changelog.md` for full details.
 
 - ✅ **Phases 1-5: Documentation** (2025-11-13 to 2025-11-14) — READMEs, skill docs, FAIR4RS, scripts
 - ✅ **Phase 6: Credibility Metrics** (2025-11-15 to 2025-11-16) — 8 metrics, scorecards, corpus profile
 - ✅ **Reproduction Pilot** (2026-02-09 to 2026-02-10) — 5/5 papers, v1.1 skill upgrade
 
 ### Phase 7: Credibility Assessment System - repliCATS Seven Signals (2025-11-16 to 2025-11-17) ⏳
-**Implementation Plan:** `planning/credibility-implementation-plan-v2.0.md`
+**Implementation Plan:** `wiki/planning/credibility-implementation-plan-v2.0.md`
 
 **Step 1: Create Skill Reference Files** ✅ (2025-11-16)
 - Created 5 credibility reference files in `.claude/skills/research-assessor/references/credibility/`
@@ -59,7 +59,7 @@ See `planning/completed-milestones-changelog.md` for full details.
 - ✅ Reference exists: `.claude/skills/research-assessor/references/credibility/track-a-quality-criteria.md` (v2.0)
 - ✅ Tested: All 25 variability test runs produced valid Track A outputs
 - ✅ Gap analysis: 6 potential gaps reviewed, all found intentional or documentation-only
-- ✅ Plan documented: `planning/step-4-track-a-review-plan.md`
+- ✅ Plan documented: `wiki/planning/step-4-track-a-review-plan.md`
 
 **Remaining Steps:**
 - [x] Step 5: Create foundational clarity cluster prompt ✅ (2025-11-29 — `assessment-system/prompts/cluster-1-foundational-clarity.md`, now v1.1; marked done during 2026-07-03 reconciliation)
@@ -90,7 +90,7 @@ See "Low Priority / Nice to Have" section (Section 9) for:
 
 **Open science compliance study:** All 5 pilot papers have completed full pipeline (extraction → assessment → reproduction). Phase 1 pilot findings report written (2026-02-11): `studies/open-science-compliance/reports/pilot-findings-report.md`. Queue: `studies/open-science-compliance/corpus/queue.yaml`.
 
-**Current Focus:** Agentic modernisation of the reproduction and open-science apparatus (see `planning/agentic-modernisation-plan.md`), targeting a Journal of Archaeological Science (JAS) corpus run. Extraction/assessment systems complete and at a natural pause point.
+**Current Focus:** Agentic modernisation of the reproduction and open-science apparatus (see `wiki/planning/agentic-modernisation-plan.md`), targeting a Journal of Archaeological Science (JAS) corpus run. Extraction/assessment systems complete and at a natural pause point.
 
 ---
 
@@ -230,7 +230,7 @@ Add relationship mapping discipline section:
 **Status:** DEFERRED until multi-paper testing phase - awaiting empirical analysis of 10 completed extractions
 **Effort:** 3-4 hours audit + 2-3 hours refinement
 
-**Related Analysis:** See `planning/extraction-metrics-guidance-analysis.md` for comprehensive discussion of whether numeric targets help or harm extraction quality (premature stopping vs forced extraction).
+**Related Analysis:** See `wiki/planning/extraction-metrics-guidance-analysis.md` for comprehensive discussion of whether numeric targets help or harm extraction quality (premature stopping vs forced extraction).
 
 **Issue:**
 Extraction prompts and skill may contain metrics, targets, or patterns calibrated to Sobotkova et al. 2023 rather than generalisable across diverse fieldwork-based research. Additionally, providing specific numeric targets (e.g., "expect 40-50 claims") may create perverse incentives: premature stopping when targets are reached, or forced extraction of marginal items to hit targets.
@@ -256,7 +256,7 @@ Extraction prompts and skill may contain metrics, targets, or patterns calibrate
 - [ ] Identify evidence of target-seeking behaviour
 - [ ] Decision: Keep ranges with better framing, or remove numeric guidance entirely?
 
-**Assessment Tool:** Use `planning/extraction-assessment-rubric-v1.md` for systematic quality evaluation (Accuracy + Granularity dimensions)
+**Assessment Tool:** Use `wiki/planning/extraction-assessment-rubric-v1.md` for systematic quality evaluation (Accuracy + Granularity dimensions)
 
 **Phase 2: Implementation (3-4 hours audit + 2-3 hours refinement)**
 1. Replace specific numbers with principles (e.g., "Expect 4-6 designs" → "Quality over count - if <3 review for under-extraction, if >10 review for over-extraction")
@@ -272,7 +272,7 @@ Extraction prompts and skill may contain metrics, targets, or patterns calibrate
 
 ### 5a. Cross-Paper Error Analysis Follow-Up ✅ **COMPLETE** (2025-11-02)
 
-9.5 hours. Compound claims, secondary sources, schema field standardisation. See `planning/completed-milestones-changelog.md`.
+9.5 hours. Compound claims, secondary sources, schema field standardisation. See `wiki/planning/completed-milestones-changelog.md`.
 
 ---
 
@@ -308,7 +308,7 @@ Phase 1 infrastructure assessment capability deployed (2025-11-11):
 - ✅ Penske et al. 2023 (Nature) - High-profile genomics, 14/15 FAIR
 - ✅ Sobotkova et al. 2016 (Book chapter) - Pre-FAIR baseline, 0/15 FAIR
 
-**Findings Documented:** `planning/pass6-phase1-testing-findings.md`
+**Findings Documented:** `wiki/planning/pass6-phase1-testing-findings.md`
 - Extraction challenges: Missing statements, book chapters, ancient DNA ethics, GitHub-only sharing, missing ORCIDs, supplementary materials access
 - Guidance gaps: Pre-FAIR era papers, code vs data FAIR divergence, licence taxonomy, multi-component systems
 - Schema gaps: Software documentation structure, supplementary materials structure, computational environment specification
@@ -380,7 +380,7 @@ Phase 1 infrastructure assessment capability deployed (2025-11-11):
 **5b.8 Software Documentation Assessment Enhancement**
 - **Priority:** DEFERRED (Phase 2 - after testing)
 - **Status:** Recommendation documented, awaiting testing evidence
-- **Documentation:** `planning/pass6-software-documentation-enhancement.md`
+- **Documentation:** `wiki/planning/pass6-software-documentation-enhancement.md`
 - **Context:** Gap identified during Ballsun-Stanton et al. 2018 extraction - documentation is critical for FAIR R1 (Reusability) but lacks systematic assessment structure
 - **Proposed enhancement:** Add `documentation` sub-object within `code_availability`:
   - Documentation types taxonomy (readme, api_reference, user_manual, installation_guide, tutorial, etc.)
@@ -563,7 +563,7 @@ Verdict assignment criteria are now documented in the skill's internal reference
 **Effort:** 38-58 hours total (3 phases)
 **FAIR Impact:** I2: 0/1 → 1/1 | Combined with DOI: 9/15 → 15/15 (Exemplary FAIR)
 
-**Planning Document:** `planning/fair-vocabularies-development-plan.md`
+**Planning Document:** `wiki/planning/fair-vocabularies-development-plan.md`
 
 **Overview:**
 Development of FAIR-compliant controlled vocabularies for research designs, methods, and protocols using evidence-based approach from 20+ paper corpus extraction. Vocabularies published as SKOS with Zenodo DOIs, integrated via JSON-LD schema enhancement.
@@ -602,7 +602,7 @@ Development of FAIR-compliant controlled vocabularies for research designs, meth
 **Status:** Awaiting specific assessment goals to drive requirements
 **Effort:** TBD (requires methodological design)
 
-**Detailed Analysis:** See `planning/secondary-source-attribution-analysis.md` for comprehensive brainstorming on taxonomy, assessment dimensions, implementation phases, and extraction challenges.
+**Detailed Analysis:** See `wiki/planning/secondary-source-attribution-analysis.md` for comprehensive brainstorming on taxonomy, assessment dimensions, implementation phases, and extraction challenges.
 
 **Issue Summary:**
 Current extraction does not systematically distinguish the role of secondary sources (citations to previous work). A cited source can function as:
@@ -677,7 +677,7 @@ Quantify extraction variability and assess completeness through repeated extract
 3. Metrics guidance decision (Section 5) informs what to measure
 
 **Dependencies:**
-- Validated assessment rubric (planning/extraction-assessment-rubric-v1.md)
+- Validated assessment rubric (wiki/planning/extraction-assessment-rubric-v1.md)
 - Empirical analysis of 10-paper corpus
 - Potential workflow adaptation for cross-model testing
 
@@ -689,7 +689,7 @@ Quantify extraction variability and assess completeness through repeated extract
 
 **Priority:** MEDIUM
 **Status:** Test complete (25/25 runs, 2025-12-06). 3 follow-up actions pending.
-**Results:** `outputs/variability-test/variability-analysis-report.md` | Full details in `planning/completed-milestones-changelog.md`
+**Results:** `outputs/variability-test/variability-analysis-report.md` | Full details in `wiki/planning/completed-milestones-changelog.md`
 
 **Action Items (from ross-2005 interpretive philology findings):**
 
@@ -829,7 +829,7 @@ After documentation improvements, next steps:
 
 > **Note (2026-07-03):** The chosen milestone is now the agentic modernisation of the
 > reproduction + open-science lane and a JAS corpus run — see
-> `planning/agentic-modernisation-plan.md`. Options B-E below remain valid future work.
+> `wiki/planning/agentic-modernisation-plan.md`. Options B-E below remain valid future work.
 > Option A was already complete when this section was written (see reconciliation note above).
 
 **Option A: Phase 7 Step 5 — Foundational Clarity Cluster Prompt** ✅ (complete — see reconciliation note)
@@ -854,7 +854,7 @@ After documentation improvements, next steps:
 - Build evidence-based SKOS vocabularies
 - Publish to Zenodo with DOIs
 - FAIR score impact: 9/15 → 10/15 (alone), 9/15 → 15/15 (with DOI)
-- Planning: `planning/fair-vocabularies-development-plan.md`
+- Planning: `wiki/planning/fair-vocabularies-development-plan.md`
 
 **Option E: Corpus Expansion**
 - Effort: 15-20 hours
@@ -868,4 +868,4 @@ After documentation improvements, next steps:
 
 *Status: Active — All pilot-phase systems complete; agentic modernisation + JAS corpus run is the current milestone*
 
-*Next review: After agentic modernisation Phase 1 (see `planning/agentic-modernisation-plan.md`)*
+*Next review: After agentic modernisation Phase 1 (see `wiki/planning/agentic-modernisation-plan.md`)*

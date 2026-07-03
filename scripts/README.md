@@ -174,7 +174,7 @@ See `extraction-system/scripts/README.md` for detailed documentation.
 ## Related Documentation
 
 - **Extraction System Scripts:** [extraction-system/scripts/README.md](../extraction-system/scripts/README.md)
-- **Variability Test Plan:** [planning/](../planning/) (see variability test planning documents)
+- **Variability Test Plan:** [wiki/planning/](../wiki/planning/) (see variability test planning documents)
 - **Schema Reference:** [extraction-system/schema/README.md](../extraction-system/schema/README.md)
 
 ---

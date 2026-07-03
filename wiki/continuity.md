@@ -78,7 +78,19 @@ Caveats:
   empty — PR #1 already removed the one stray
   `extraction-system/scripts/pdf_processing/__pycache__/pdf_cleaner.cpython-312.pyc`).
 
-### B. Migrate docs to the wiki-style layout  [ ]
+### B. Migrate docs to the wiki-style layout  [x] 2026-07-03
+
+> Done 2026-07-03. `docs/notes/working-notes.md` → `wiki/working-notes.md`;
+> `docs/notes/reflections/` → `wiki/reflections/`; repo-root `planning/` →
+> `wiki/planning/` (all via `git mv`); created `wiki/index.md`,
+> `wiki/user-observations.md`, `wiki/claude-observations.md`; wiki frontmatter
+> merged into migrated pages (additive — `/reflect`'s priority/scope/audience
+> keys preserved); reference sweep across all living docs (archive/ and frozen
+> reproduction artefacts deliberately untouched); CLAUDE.md continuity pointer
+> added; README gained a docs-vs-wiki disambiguation map. **docs/ disposition
+> decided (Shawn, 2026-07-03): stays at repo root** — product documentation
+> follows the GitHub/JOSS convention (Pages builds from /docs); only the
+> process layer moved to wiki/.
 
 This repo uses the **legacy `docs/notes/` layout** and lacks `continuity.md`
 (this seed) and `user-observations.md`. Target = the canonical per-project
@@ -149,9 +161,10 @@ for the `self-correction` case. Additive/worktree discipline.
 
 ## Open decisions
 
-- [ ] `docs/` disposition: stay at repo root vs move to `wiki/docs/` (task B).
-- [ ] Sequencing: do A and B as separate commits/PRs (recommended — A is large
-  and mechanical, B is structural) vs bundle.
+- [x] 2026-07-03 `docs/` disposition: **stays at repo root** (decided with the
+  conventions rationale recorded in task B note above and README's docs-vs-wiki map).
+- [x] 2026-07-03 Sequencing: done as separate commits (A on 2026-07-03 standalone;
+  B as its own migration commit).
 
 ## Session log
 

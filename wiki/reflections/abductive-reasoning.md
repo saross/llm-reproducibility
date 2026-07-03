@@ -4,6 +4,10 @@ scope: conditional
 title: "Abductive Reasoning Investigation"
 audience: "researchers"
 conditions: "debugging with surprising results, hypothesis generation, belief revision, default-following corrections"
+tags: [llm-craft, research-methodology]
+created: 2026-02-09
+updated: 2026-04-14
+status: active
 ---
 
 # Abductive Reasoning Investigation

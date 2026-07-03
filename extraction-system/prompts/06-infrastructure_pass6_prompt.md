@@ -799,7 +799,7 @@ Does paper have formal "Data/Code Availability" statement?
 ```
 
 **For complete field definitions, examples, and PID formats:**
-→ See `planning/REPRODUCIBILITY_INFRASTRUCTURE_SCHEMA.md`
+→ See `wiki/planning/REPRODUCIBILITY_INFRASTRUCTURE_SCHEMA.md`
 
 **Leave unchanged:** Evidence, claims, methods, protocols, research_designs arrays
 

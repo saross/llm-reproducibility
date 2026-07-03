@@ -243,9 +243,9 @@ Session 17: Papers 49-50 (extract + assess) → done
 
 ## Related Documentation
 
-- `planning/open-science-production-readiness.md` — FAIR scoring issues, corpus selection
-- `planning/research-design-anchoring-assessment.md` — RD extraction anchoring (low priority)
-- `planning/extraction-as-data-improvements.md` — Extraction consistency (if needed)
+- `wiki/planning/open-science-production-readiness.md` — FAIR scoring issues, corpus selection
+- `wiki/planning/research-design-anchoring-assessment.md` — RD extraction anchoring (low priority)
+- `wiki/planning/extraction-as-data-improvements.md` — Extraction consistency (if needed)
 - `docs/automation-approaches/CC-advanced-techniques.md` — Headless mode patterns
 - `docs/automation-approaches/CC-research-workflows-guide.md` — Research automation philosophy
 

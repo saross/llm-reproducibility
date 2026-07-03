@@ -46,7 +46,7 @@ Original fellowship proposal and supporting documents:
 ## Archived Documents
 
 The following documents were superseded by `credibility-implementation-plan-v2.0.md` and
-have been archived to [archive/planning-completed/](../archive/planning-completed/)
+have been archived to [archive/planning-completed/](../../archive/planning-completed/)
 (archival verified 2026-07-03):
 
 - `assessment-implementation-plan.md` - Superseded by v2.0
@@ -71,13 +71,13 @@ have been archived to [archive/planning-completed/](../archive/planning-complete
 Completed planning from the extraction development phase:
 
 ### v2.0-v2.5 Planning (Archived)
-See [archive/extraction-development/](../archive/extraction-development/) for:
+See [archive/extraction-development/](../../archive/extraction-development/) for:
 - Claims extraction project plans
 - RDMAP implementation documents
 - Schema evolution documentation
 - Version-specific planning
 
-See [archive/README.md](../archive/README.md) for complete development history.
+See [archive/README.md](../../archive/README.md) for complete development history.
 
 ---
 
@@ -98,10 +98,10 @@ See [archive/README.md](../archive/README.md) for complete development history.
 
 ## Related Documentation
 
-- [Main README](../README.md) - Project overview
-- [User Guide](../docs/user-guide/getting-started.md) - Using the extraction system
-- [Research Assessor Guide](../docs/research-assessor-guide/) - Skill documentation
-- [Archive README](../archive/README.md) - Development history
+- [Main README](../../README.md) - Project overview
+- [User Guide](../../docs/user-guide/getting-started.md) - Using the extraction system
+- [Research Assessor Guide](../../docs/research-assessor-guide/) - Skill documentation
+- [Archive README](../../archive/README.md) - Development history
 
 ---
 

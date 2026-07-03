@@ -3,6 +3,10 @@ priority: 3
 scope: always
 title: "Working Notes"
 audience: "researchers"
+tags: [research-methodology, llm-craft, open-science]
+created: 2026-02-09
+updated: 2026-05-29
+status: active
 ---
 
 # Working Notes

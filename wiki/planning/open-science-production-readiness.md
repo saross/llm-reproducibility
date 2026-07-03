@@ -277,7 +277,7 @@ This approach:
 ## Related Documentation
 
 - `outputs/variability-test/variability-analysis-report.md` — Pipeline stability analysis
-- `planning/extraction-as-data-improvements.md` — Extraction consistency improvements
+- `wiki/planning/extraction-as-data-improvements.md` — Extraction consistency improvements
 - `assessment-system/prompts/` — All 7 assessment prompts
 - `.claude/skills/research-assessor/references/` — Skill reference documentation
 

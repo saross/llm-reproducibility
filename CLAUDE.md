@@ -1,7 +1,9 @@
 # LLM Reproducibility Project - Research Paper Extraction
 
-**Version:** 2.9 | **Schema:** v2.6 | **Workflow:** 8-pass session-per-pass (v5.0.0) | **Reproduction:** v1.1
+**Version:** 3.0.1 | **Schema:** v2.6 | **Workflow:** 8-pass session-per-pass (v5.0.0) | **Reproduction:** v1.1
 **Manifest:** See `manifest.yaml` for all component versions
+**Session continuity:** Read `wiki/continuity.md` at session start — cross-session state,
+pending tasks, and session log live there. Planning documents live in `wiki/planning/`.
 
 ## Project Purpose
 

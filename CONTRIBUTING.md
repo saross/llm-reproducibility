@@ -65,7 +65,7 @@ Thank you for your interest in contributing to this project! This document expla
 
 **Approach:** Bottom-up from real extractions, not top-down theory.
 
-**See:** [planning/fair-vocabularies-development-plan.md](planning/fair-vocabularies-development-plan.md) for complete roadmap
+**See:** [wiki/planning/fair-vocabularies-development-plan.md](wiki/planning/fair-vocabularies-development-plan.md) for complete roadmap
 
 ---
 
@@ -102,7 +102,7 @@ Thank you for your interest in contributing to this project! This document expla
 - Edge cases (book chapters, GitHub-only sharing, pre-FAIR papers)
 - Cross-disciplinary FAIR adoption comparisons
 
-**See:** [planning/pass6-phase1-testing-findings.md](planning/pass6-phase1-testing-findings.md) for identified gaps
+**See:** [wiki/planning/pass6-phase1-testing-findings.md](wiki/planning/pass6-phase1-testing-findings.md) for identified gaps
 
 ---
 
@@ -121,7 +121,7 @@ Thank you for your interest in contributing to this project! This document expla
 - Multi-discipline testing (archaeology, ecology, ethnography, geology)
 - Scale testing (long papers 40+ pages, multi-proxy studies)
 
-**See:** [planning/active-todo-list.md](planning/active-todo-list.md#testing--validation-queue) for testing priorities
+**See:** [wiki/planning/active-todo-list.md](wiki/planning/active-todo-list.md#testing--validation-queue) for testing priorities
 
 ---
 
@@ -150,7 +150,7 @@ Thank you for your interest in contributing to this project! This document expla
 
 **Status:** Deferred to Phase 2 (post-extraction system completion)
 
-**See:** [planning/cwts_implementation_plan.md](planning/cwts_implementation_plan.md) for assessment roadmap
+**See:** [wiki/planning/cwts_implementation_plan.md](wiki/planning/cwts_implementation_plan.md) for assessment roadmap
 
 ---
 

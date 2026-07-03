@@ -407,7 +407,7 @@ Based on diverse corpus testing (2016-2024):
 - `input/WORKFLOW.md` - Complete extraction workflow
 
 **Testing:**
-- `planning/pass6-phase1-testing-findings.md` - Infrastructure testing results
+- `wiki/planning/pass6-phase1-testing-findings.md` - Infrastructure testing results
 
 ---
 

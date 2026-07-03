@@ -108,7 +108,7 @@ For the primary use case (credibility assessment), current RD extraction is adeq
 
 ### If Undertaking Extraction-as-Data Work: Low-Risk Adjustment
 
-Bundle the following changes with other extraction-as-data improvements (see `planning/extraction-as-data-improvements.md`):
+Bundle the following changes with other extraction-as-data improvements (see `wiki/planning/extraction-as-data-improvements.md`):
 
 #### Change 1: Soften Purpose Statement
 
@@ -193,7 +193,7 @@ These are descriptive observations, not prescriptive targets. Extract what is pr
 
 ## Related Documentation
 
-- `planning/extraction-as-data-improvements.md` — Parent improvement plan
+- `wiki/planning/extraction-as-data-improvements.md` — Parent improvement plan
 - `outputs/variability-test/variability-analysis-report.md` — Full variability analysis
 - `.claude/skills/research-assessor/references/research-design-operational-guide.md` — Current guidance
 

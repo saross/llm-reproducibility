@@ -973,7 +973,7 @@ references:
    - Extract 20+ papers to build evidence base
    - Aggregate common research design types, methods, protocols
    - Document frequency and usage patterns
-   - See planning/pass6-phase1-testing-findings.md for methodology
+   - See wiki/planning/pass6-phase1-testing-findings.md for methodology
 
 2. **Phase 2: Publish controlled vocabularies**
    - Create SKOS vocabulary for research designs

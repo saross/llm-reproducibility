@@ -210,4 +210,4 @@ Per-paper reproduction detail is available in:
 
 Per-paper credibility assessments are in each paper's `assessment/` directory.
 
-Cross-paper reproduction synthesis: `planning/reproduction-implementation-notes.md`
+Cross-paper reproduction synthesis: `wiki/planning/reproduction-implementation-notes.md`

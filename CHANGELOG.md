@@ -43,14 +43,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Curated `examples/` with only best extraction + blank template
 - Archived development history by version in `archive/extraction-development/`
 - Streamlined `reports/` to key milestones only
-- Separated active `planning/` from archived development work
+- Separated active `wiki/planning/` from archived development work
 
 #### Added
 - Dual licensing: Apache 2.0 (code), CC-BY-4.0 International (documentation)
 - CITATION.cff for machine-readable citation
 - CHANGELOG.md (this file)
 - Comprehensive main README.md
-- Navigation README.md files at every level (planning/, docs/, examples/, reports/, archive/)
+- Navigation README.md files at every level (wiki/planning/, docs/, examples/, reports/, archive/)
 - User guide documentation (getting-started.md, extraction-workflow.md, pdf-extraction.md, schema-reference.md)
 - extraction-system/schema/README.md explaining versioning
 
@@ -166,7 +166,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - FAIR vocabularies for controlled terms
 - Additional domain-specific adaptations
 
-See [planning/credibility-implementation-plan-v2.0.md](planning/credibility-implementation-plan-v2.0.md) for detailed roadmap.
+See [wiki/planning/credibility-implementation-plan-v2.0.md](wiki/planning/credibility-implementation-plan-v2.0.md) for detailed roadmap.
 
 ---
 

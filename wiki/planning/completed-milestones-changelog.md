@@ -85,7 +85,7 @@ Project bumped to v2.9, reproduction system to v1.1.
 - [x] `extraction-system/README.md` - Overview of extraction workflow components (created 2025-11-13)
 - [x] `outputs/README.md` - Explanation of extraction outputs structure (created 2025-11-13)
 - [x] `archive/README.md` - Archive organisation and purpose (exists from 2025-10-23)
-- [x] `planning/README.md` - Active planning documents (exists from 2025-10-23)
+- [x] `wiki/planning/README.md` - Active planning documents (exists from 2025-10-23)
 - [x] `reports/README.md` - Types of reports and their purposes (exists from 2025-10-23)
 - [x] `examples/README.md` - Example extractions guide (created 2025-11-13)
 
@@ -168,7 +168,7 @@ Scripts in `outputs/*/` directories (~101 scripts) are ephemeral working scripts
 
 **Remaining FAIR gaps:**
 - F1, F3, F4, A1, A2: Blocked until DOI minted (v3.0/v0.5 release)
-- I2: FAIR vocabularies (deferred to v2.7, see planning/fair-vocabularies-development-plan.md)
+- I2: FAIR vocabularies (deferred to v2.7, see wiki/planning/fair-vocabularies-development-plan.md)
 
 ---
 
@@ -208,14 +208,14 @@ Scripts in `outputs/*/` directories (~101 scripts) are ephemeral working scripts
 **Completed:** 2025-11-02, **Time:** 2 hours
 
 **Files Modified:**
-- `planning/secondary-source-attribution-analysis.md` (+207 lines empirical findings section)
+- `wiki/planning/secondary-source-attribution-analysis.md` (+207 lines empirical findings section)
 
 ### 5a.3 Schema Field Name Standardisation ✅
 **Completed:** 2025-11-02, **Time:** 5.5 hours
 
 **Files Created:**
 - `extraction-system/scripts/migrate_field_names.py` (434 lines, full migration tool)
-- `planning/migration-log.md` (comprehensive documentation)
+- `wiki/planning/migration-log.md` (comprehensive documentation)
 
 **Migration Results:**
 - Papers migrated: 7/10 (3 already using canonical names)
