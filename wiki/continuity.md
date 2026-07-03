@@ -47,7 +47,11 @@ matching-grade PDF extractor merged here as PR #1).
 
 ## Pending tasks
 
-### A. Git hygiene — untrack the committed virtualenv  [ ]
+### A. Git hygiene — untrack the committed virtualenv  [x] 2026-07-03
+
+> Done 2026-07-03 exactly as prescribed below: 2,114 index deletions, files kept
+> on disk; post-check `git ls-files | grep -c '^venv/'` = 0; stray-bytecode sweep
+> outside venv = 0 tracked files.
 
 The repo tracks the **entire `venv/`** — **2,114 files** (verified 2026-06-07:
 `git ls-files | grep -c '^venv/'`), including thousands of `.pyc`. `.gitignore`
