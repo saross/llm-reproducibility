@@ -1,14 +1,14 @@
 # Project Manifest - Single Source of Truth for Versions
-# Last Updated: 2026-02-12
+# Last Updated: 2026-07-03
 #
 # This manifest tracks version information for all project components.
 # READMEs and documentation should reference this file for consistency.
 
 project:
   name: LLM-Based Research Extraction and Assessment
-  version: "3.0"
+  version: "3.0.1"
   status: Extraction system complete, assessment framework pilot-tested, reproduction system v1.1
-  last_updated: "2026-02-12"
+  last_updated: "2026-07-03"
   repository: https://github.com/saross/llm-reproducibility
 
 # Core component versions
@@ -66,7 +66,7 @@ assessment:
       description: Track A quality gate criteria for assessment
 
     cluster_1:
-      version: "1.0"
+      version: "1.1"
       file: assessment-system/prompts/cluster-1-foundational-clarity.md
       last_updated: "2026-02-12"
       description: Signals 1-2 (Comprehensibility, Transparency)
@@ -102,6 +102,12 @@ assessment:
       file: assessment-system/schema/credibility-report-schema.json
       last_updated: "2025-11-30"
       description: JSON schema for machine-readable credibility output
+
+    assessment_json:
+      version: "1.1"
+      file: .claude/skills/research-assessor/references/schema/assessment-schema.md
+      last_updated: "2026-02-12"
+      description: Schema for per-paper assessment.json (Pass 9 output); cascaded to v1.1 in commit c3654f6
 
 # Reproduction system (v1.1 — R-based papers only)
 reproduction:
@@ -223,6 +229,14 @@ corpus:
 
 # Version history summary
 version_history:
+  - version: "3.0.1"
+    date: "2026-07-03"
+    changes:
+      - Metadata reconciliation on project revival (no functional changes)
+      - cluster_1 prompt version corrected to v1.1 (matches file header after commit c3654f6)
+      - Added assessment_json schema entry (v1.1, lives in research-assessor skill references)
+      - active-todo-list.md and planning/README.md brought up to date with completed work
+
   - version: "3.0"
     date: "2026-02-12"
     changes:

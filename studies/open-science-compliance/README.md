@@ -1,6 +1,6 @@
 # Open Science Compliance Study
 
-**Status:** Phase 1 (Exploratory Pilot) — In Progress
+**Status:** Phase 1 (Exploratory Pilot) — COMPLETE (2026-02-12). Phase 2 (Confirmatory) not yet started; OSF preregistration pending.
 **Target Journal:** Journal of Archaeological Science (JAS)
 **Corpus Size:** 5 papers (Phase 1), 15-25 papers (Phase 2)
 
@@ -59,11 +59,11 @@ Papers must be:
 
 ## Timeline
 
-- [ ] Phase 1 corpus selection
-- [ ] Phase 1 protocol commit (timestamped)
-- [ ] Phase 1 extractions (5 papers)
-- [ ] Phase 1 findings report
-- [ ] Phase 2 hypothesis development
+- [x] Phase 1 corpus selection (2026-01-09)
+- [x] Phase 1 protocol commit (timestamped) (2026-01-09, commit d6f0126)
+- [x] Phase 1 extractions (5 papers) — full pipeline including assessment and reproduction (completed by 2026-02-11)
+- [x] Phase 1 findings report (2026-02-11, commit afab8f6; FAIR scores standardised 2026-02-12)
+- [ ] Phase 2 hypothesis development (5 candidates drafted in pilot findings report §"Hypothesis Candidates")
 - [ ] Phase 2 OSF preregistration
 - [ ] Phase 2 corpus selection
 - [ ] Phase 2 extractions

@@ -1,7 +1,9 @@
 # Active To-Do List
 
-**Last Updated:** 2026-02-11
-**Status:** Reproduction pilot COMPLETE (5/5 papers, v1.1 deployed). Phase 7 (Credibility Assessment) Steps 1-4 complete, ready for Step 5.
+**Last Updated:** 2026-07-03
+**Status:** Reproduction pilot COMPLETE (5/5 papers, v1.1 deployed). Phase 7 (Credibility Assessment) COMPLETE — all cluster prompts exist and were pilot-tested on 5 papers (see 2026-07-03 reconciliation note below). Pipeline work resuming 2026-07-03 (paused since 2026-02-12; PDF-extraction infrastructure continued via the paper-b project — PR #1 merged 2026-06-07, see `wiki/continuity.md`); next milestone is agentic modernisation (`planning/agentic-modernisation-plan.md`).
+
+> **Status reconciliation (2026-07-03):** This list previously said "Phase 7 Steps 1-4 complete, ready for Step 5". That was stale — cluster prompts 1-3 were created 2025-11-29 (per their file headers), tested via `outputs/testing/cluster-1-reliability-test/`, run on all 5 pilot papers, and promoted to pilot_tested v1.0 in `manifest.yaml` on 2026-02-12. Steps 5-7 are marked complete below on that evidence.
 
 ---
 
@@ -60,12 +62,12 @@ See `planning/completed-milestones-changelog.md` for full details.
 - ✅ Plan documented: `planning/step-4-track-a-review-plan.md`
 
 **Remaining Steps:**
-- Step 5: Create foundational clarity cluster prompt (1.5 hours) 🔲 (Next)
-- Step 6: Test foundational clarity with reliability checks (1.5 hours)
-- Step 7: Complete remaining cluster prompts (3-4 hours)
+- [x] Step 5: Create foundational clarity cluster prompt ✅ (2025-11-29 — `assessment-system/prompts/cluster-1-foundational-clarity.md`, now v1.1; marked done during 2026-07-03 reconciliation)
+- [x] Step 6: Test foundational clarity with reliability checks ✅ (2025-11-28 — `outputs/testing/cluster-1-reliability-test/`, 3 runs on sobotkova-et-al-2024, signal SD < 1 point)
+- [x] Step 7: Complete remaining cluster prompts ✅ (2025-11-29 — clusters 2-3 created v1.0; all three clusters ran on all 5 pilot papers; promoted to pilot_tested in manifest 2026-02-12)
 
 **Estimated total effort:** 10-12 hours across all 7 steps
-**Current progress:** Steps 1-4 complete, Step 5 next
+**Current progress:** Steps 1-7 complete — Phase 7 CLOSED (2026-02-12)
 
 ### Deferred Documentation Work
 See "Low Priority / Nice to Have" section (Section 9) for:
@@ -82,13 +84,13 @@ See "Low Priority / Nice to Have" section (Section 9) for:
 
 **Extraction system:** 10-paper corpus complete. Session-per-pass workflow validated (+75% claims, +100% research designs). Schema v2.6, workflow v5.0.0.
 
-**Assessment system:** Phase 7 Steps 1-4 complete. Variability test (25 runs across 5 papers) confirmed classification stability (100% paper_type consistency, aggregate score CV 1.9-3.4%).
+**Assessment system:** Phase 7 complete (all 7 steps); pilot_tested v1.0 per manifest. Variability test (25 runs across 5 papers) confirmed classification stability (100% paper_type consistency, aggregate score CV 1.9-3.4%).
 
 **Reproduction system:** 5-paper pilot programme complete (4 SUCCESSFUL, 1 PARTIAL). Skill upgraded to v1.1 with 12 improvements from adversarial review. Project v3.0.
 
 **Open science compliance study:** All 5 pilot papers have completed full pipeline (extraction → assessment → reproduction). Phase 1 pilot findings report written (2026-02-11): `studies/open-science-compliance/reports/pilot-findings-report.md`. Queue: `studies/open-science-compliance/corpus/queue.yaml`.
 
-**Current Focus:** Phase 7 Step 5 (foundational clarity cluster prompt) for extraction/assessment system. Reproduction system at a natural pause point.
+**Current Focus:** Agentic modernisation of the reproduction and open-science apparatus (see `planning/agentic-modernisation-plan.md`), targeting a Journal of Archaeological Science (JAS) corpus run. Extraction/assessment systems complete and at a natural pause point.
 
 ---
 
@@ -825,7 +827,12 @@ After documentation improvements, next steps:
 
 ## Next Major Milestones (Choose One)
 
-**Option A: Phase 7 Step 5 — Foundational Clarity Cluster Prompt**
+> **Note (2026-07-03):** The chosen milestone is now the agentic modernisation of the
+> reproduction + open-science lane and a JAS corpus run — see
+> `planning/agentic-modernisation-plan.md`. Options B-E below remain valid future work.
+> Option A was already complete when this section was written (see reconciliation note above).
+
+**Option A: Phase 7 Step 5 — Foundational Clarity Cluster Prompt** ✅ (complete — see reconciliation note)
 - Effort: 1.5 hours (Step 5) + 1.5 hours (Step 6 testing) + 3-4 hours (Step 7 remaining clusters)
 - Continues the credibility assessment pipeline
 - Unblocks full automated assessment capability
@@ -857,8 +864,8 @@ After documentation improvements, next steps:
 
 ---
 
-*Last updated: 2026-02-11*
+*Last updated: 2026-07-03*
 
-*Status: Active — Reproduction pilot complete, Phase 7 Step 5 next for assessment system*
+*Status: Active — All pilot-phase systems complete; agentic modernisation + JAS corpus run is the current milestone*
 
-*Next review: After Phase 7 completion or next milestone*
+*Next review: After agentic modernisation Phase 1 (see `planning/agentic-modernisation-plan.md`)*

@@ -43,9 +43,11 @@ Original fellowship proposal and supporting documents:
 
 ---
 
-## Documents to be Archived
+## Archived Documents
 
-The following documents are superseded by `credibility-implementation-plan-v2.0.md` and will be archived:
+The following documents were superseded by `credibility-implementation-plan-v2.0.md` and
+have been archived to [archive/planning-completed/](../archive/planning-completed/)
+(archival verified 2026-07-03):
 
 - `assessment-implementation-plan.md` - Superseded by v2.0
 - `credibility-assessment-implementation-roadmap.md` - Superseded
