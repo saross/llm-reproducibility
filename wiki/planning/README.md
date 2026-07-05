@@ -25,6 +25,14 @@ This is the current authoritative plan, covering:
 
 ### Active Working Documents
 
+#### [agentic-modernisation-plan.md](agentic-modernisation-plan.md)
+**Status:** Active (v0.2, 2026-07-03) — direction approved; Phase 1 build on hold pending review
+**Focus:** Migration of the reproduction + FAIR lanes to agents/workflows; JAS production run
+
+#### [cosmos-grant-application-framing.md](cosmos-grant-application-framing.md)
+**Status:** Active (v0.1, 2026-07-05) — framing agreed; budget section brainstorm-grade
+**Focus:** Cosmos Institute grant application — project choice, proximity scan, pitch, budget
+
 #### [active-todo-list.md](active-todo-list.md)
 **Status:** Active
 **Focus:** Current tasks and priorities

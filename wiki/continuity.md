@@ -168,6 +168,18 @@ for the `self-correction` case. Additive/worktree discipline.
 
 ## Session log
 
+### 2026-07-05 — Cosmos grant application framing externalised
+
+From a personal-assistant hub session (cross-repo candidate evaluation deliberately run
+there, not here). Decision: this repo is the basis for the Cosmos Institute grant
+application (AI x Truth-seeking track, deadline 26 Jul 2026). Full record — grant facts,
+portfolio proximity scan (186 grantees, no overlap; Metalens is complementary), pitch
+framing (reproduction + FAIR lanes with a sampled human-verification surface; extraction/
+credibility lanes as frame and track record, not deliverable), and a brainstorm-grade
+budget section — in `wiki/planning/cosmos-grant-application-framing.md`. Also indexed the
+agentic modernisation plan + the new doc in `wiki/planning/README.md` (the former was
+missing from the index).
+
 ### 2026-06-10 — de-hyphenation defect logged (task C)
 
 From a paper-b AB+ co-design session (no code changes to this repo). Building
