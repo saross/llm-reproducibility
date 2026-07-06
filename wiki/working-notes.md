@@ -5,7 +5,7 @@ title: "Working Notes"
 audience: "researchers"
 tags: [research-methodology, llm-craft, open-science]
 created: 2026-02-09
-updated: 2026-05-29
+updated: 2026-07-06
 status: active
 ---
 
@@ -95,3 +95,53 @@ output templates, but this would require restructuring the prompt design pattern
 For the Phase 2 study design, this finding argues for: (a) running all papers through
 the pipeline in a compressed timeframe to minimise inter-session drift, and (b)
 validating output schema consistency as a post-extraction check rather than assuming it.
+
+## Observation 3: Determinism constraint on canonical matching keys (2026-07-06)
+
+### Context
+
+Fixing lossy de-hyphenation (continuity task C, commit 245d820) required a dictionary
+to distinguish typographic line-break hyphens from genuine compounds. A system wordlist
+(`/usr/share/dict/american-english`) was available on the development machine.
+
+### The observation
+
+Any function feeding `normalise_for_matching` must not consume environment-dependent
+inputs — host wordlists, locale, tool versions — because the matching key's entire value
+is its machine-independence: the same PDF must produce the same canonical key on a
+laptop, on sapphire, or on a collaborator's machine, or deterministic quote verification
+silently becomes machine-relative. The fix therefore vendors a frozen 9,810-word
+dictionary subset (`affix-joined-words.txt`, provenance and regeneration command in its
+header) rather than reading the host dictionary at runtime. Regenerating the file is a
+deliberate, versioned act precisely because it changes matching keys.
+
+This generalises to every deterministic-verification layer in the pipeline: reproduction
+comparisons, FAIR sub-principle checks, and any future quote-checker all inherit the
+same rule — pin the reference data in the repo, never resolve it from the environment.
+
+## Observation 4: Subagent-relayed specifics ran ~1 in 10 wrong during repo exploration (2026-07-06)
+
+### Context
+
+Project revival (2026-07-03) used three parallel explorer agents to map a five-month-
+dormant repository: pilot-study state, reproduction-system internals, and overall repo
+state. Their reports drove the agentic modernisation plan written the same session.
+
+### The observation
+
+The maps were substantially accurate and made a one-session revival possible, but
+roughly one in ten relayed *specifics* required correction when re-verified at source:
+cluster-prompt dates taken from filesystem mtimes when the file headers said 2025-11-29,
+and a version claim ("all cluster prompts v1.1") that held for only one of three files.
+Breadth from agents, but every specific that reached a commit message, the README, or a
+memory was re-checked against the file first — and that re-verification pass is what
+caught the errors.
+
+Two implications. Methodologically for this project: when we describe LLM-assisted
+workflows in the compliance study or grant materials, "subagent reports are maps, not
+gazetteers, with a measurable ~10% specifics error rate absent source re-verification"
+is an honest, citable characterisation of current practice. Operationally for the
+agentic modernisation: the planned deterministic gates between workflow stages (file
+existence, value extraction from outputs rather than agent assertions) are not
+optional hardening — they are the mechanism that makes agent-relayed claims safe to
+act on at corpus scale.

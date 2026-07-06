@@ -25,13 +25,9 @@ what generalises.
 
 ---
 
-## 2026-07-06 — Drafted candidates (pending review)
+## 2026-07-06 — The conventions landscape reframed a tooling decision
 
-Drafted at the 2026-07-06 `/handoff`. Mark with ✓ (accept) / ✏ (edit, with
-revised text) / ✗ (discard) / replace inline. Unanswered candidates hold over
-to the next session — silence never discards.
-
-### Candidate 1: The conventions landscape reframed a tooling decision
+*(Accepted by Shawn 2026-07-06; candidates 2-4 from the same handoff discarded.)*
 
 When asked how docs/-vs-wiki/ splits are conventionally done, Claude answered
 with the ecosystem picture (GitHub Pages builds from /docs, GitHub Wikis are
@@ -41,29 +37,7 @@ important point that I hadn't considered in this light while building my
 tooling" — the answer changed not just this repo's layout but the cross-repo
 template (README disambiguation map convention, since promoted to PA).
 
-### Candidate 2: Paste-ready prompts as the cross-session interface
-
-The copy-paste prompt Claude produced for promoting the README-map convention
-was consumed verbatim by a parallel personal-assistant session ("I've already
-implemented the PA template promotion"). Zero re-explanation needed. Producing
-transfer-ready artefacts at session edges — rather than describing what another
-session should do — appears to be the right default when Shawn orchestrates
-parallel sessions.
-
-### Candidate 3: Invariant-only autonomy when a decision gate timed out
-
-When the study-shape question timed out (Shawn AFK), Claude proceeded only with
-work invariant under all three options (housekeeping, plan document) and
-recorded its recommendation without enacting it. On return, Shawn resolved the
-decision in one line and nothing needed undoing. Candidate principle: at an
-unanswered decision gate, do the intersection of all branches, never the
-recommended branch.
-
-### Candidate 4: Parallel explorers made revival fast but needed source re-verification
-
-The three-explorer sweep produced a full, largely accurate state map of a
-five-month-dormant project in one sitting — but ~1 in 10 relayed specifics
-(file dates from mtimes, version numbers) needed correction against sources
-before use. The pattern worked because breadth came from agents and every
-committed/published specific was re-verified. Worth noting as a helpfulness
-observation only if Shawn found the revival summary trustworthy in practice.
+**What generalises:** when Shawn asks "how is this usually done?", the useful
+answer is the conventions landscape plus an honest "what I'd do starting
+fresh" — it lets him test his own tooling conventions against community norms
+rather than just picking between pre-framed options.

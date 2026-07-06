@@ -229,9 +229,9 @@ commits behind origin at session start — fetch before characterising repo stat
   (frozen dictionary, regeneration command in header)
 - Memories saved: study shape (2026-07-04-856141514e0f), repo-layout convention
   (2026-07-04-e6d2685b35b4), build-on-hold (2026-07-04-f24eccedb145)
-- Carry-forward: two working-notes candidates surfaced at the 2026-07-06
-  /handoff (subagent-specifics error rate; frozen-dictionary determinism) —
-  **pending Shawn's verdict; re-surface at next /handoff or /recap if silent**
+- Handoff verdicts (Shawn, 2026-07-06): both working-notes candidates ACCEPTED
+  (now Observations 3-4 in `wiki/working-notes.md`); user-obs candidate 1
+  accepted, candidates 2-4 discarded. Nothing held over.
 
 ### 2026-07-05 — Cosmos grant application framing externalised
 
