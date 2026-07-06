@@ -127,7 +127,23 @@ Caveats:
 - `/reflect`, `/observe`, `/handoff` are layout-aware and fall back to legacy
   paths; after migration they target `wiki/`.
 
-### C. Fix lossy de-hyphenation of genuine compounds  [ ]
+### C. Fix lossy de-hyphenation of genuine compounds  [x] 2026-07-06
+
+> Done 2026-07-06, following the fix direction below with one refinement: the
+> dictionary check takes precedence over the affix list (if the joined form is
+> a known closed-form word, join — so `multi-\nple` → `multiple` even though
+> `multi-` is a compound prefix; otherwise a compound prefix keeps its hyphen —
+> `self-\ncorrection` → `self-correction`). Dictionary = frozen subset of
+> wamerican 2020.12.07-2 shipped at
+> `extraction-system/scripts/pdf_processing/affix-joined-words.txt` (9,810
+> affix-prefixed words) so canonical matching keys stay machine-independent.
+> Chained breaks handled (dict check sees the flattened fragment:
+> `multi-\nfa-\nceted` → `multifaceted`). Idempotence preserved; golden tests
+> green; 8 regression tests added incl. the Huang self-correction case
+> (32/32 pass). Residual ambiguity documented in the `_dehyphenate` docstring:
+> a deliberate hyphen broken at exactly that hyphen resolves to the closed
+> form when that form is a dictionary word; non-prefix compounds
+> (`decision-\nmaking`) keep the historical joining behaviour.
 
 `_dehyphenate` (`extraction-system/scripts/pdf_processing/pdf_cleaner.py:348-361`,
 regex `re.sub(r"(?:-\s*\n\s*)+([a-z])", r"\1", text)`) joins any end-of-line

@@ -8,6 +8,8 @@ Optimized for preparing text for LLM analysis.
 import collections
 import re
 import unicodedata
+import warnings
+from pathlib import Path
 from typing import List, Tuple
 
 
@@ -345,20 +347,79 @@ def _apply_char_normalisation(text: str) -> str:
     return text
 
 
+# Prefixes that commonly form genuinely-hyphenated compounds in academic prose
+# ("self-correction", "multi-proxy", "non-linear"). A line-break hyphen after
+# one of these keeps its hyphen UNLESS the joined form is a known closed-form
+# word (see _JOINED_WORDS), so ordinary syllable breaks after a prefix
+# ("multi-\nple" -> "multiple") still join. Task C, wiki/continuity.md.
+_COMPOUND_PREFIXES = frozenset((
+    "anti", "co", "counter", "cross", "e", "half", "inter", "intra",
+    "macro", "meta", "micro", "mid", "multi", "non", "over", "post",
+    "pre", "pseudo", "quasi", "re", "self", "semi", "sub", "super",
+    "ultra", "under", "well",
+))
+
+# Frozen dictionary subset (closed-form words starting with the prefixes
+# above), shipped with the repo so the canonical matching key is identical on
+# every machine — deliberately NOT read from the host's /usr/share/dict.
+_JOINED_WORDS_FILE = Path(__file__).resolve().parent / "affix-joined-words.txt"
+
+try:
+    _JOINED_WORDS = frozenset(
+        line.strip()
+        for line in _JOINED_WORDS_FILE.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.startswith("#")
+    )
+except OSError:  # pragma: no cover — the file ships with the repo
+    warnings.warn(
+        f"{_JOINED_WORDS_FILE.name} not found; de-hyphenation will keep the "
+        "hyphen for ALL compound-prefix line breaks (matching keys may differ "
+        "from a full checkout)",
+        stacklevel=2,
+    )
+    _JOINED_WORDS = frozenset()
+
+_LINEBREAK_HYPHEN_RE = re.compile(r"(\w+)(?:-\s*\n\s*)+(?=[a-z])")
+# The word fragment(s) following a break, possibly themselves line-broken.
+_CONTINUATION_RE = re.compile(r"[a-z]+(?:-\s*\n\s*[a-z]+)*")
+_BREAK_RE = re.compile(r"-\s*\n\s*")
+
+
 def _dehyphenate(text: str) -> str:
     """Join words split by an end-of-line hyphen before a lowercase letter.
 
     ``'archaeo-\\nlogy' -> 'archaeology'``. Conservative: only a lowercase
-    letter triggers the join, so a hyphenated compound broken before a capital
+    letter triggers a join, so a hyphenated compound broken before a capital
     (``'well-\\nKnown'``) is left intact rather than mis-joined.
 
-    The ``(?:-\\s*\\n\\s*)+`` prefix consumes a run of consecutive end-of-line
-    hyphens in a single pass (e.g. ``'multi-\\n-\\nfaceted'`` -> ``'multifaceted'``
-    where a stray-hyphen line sits between the two halves). This makes the
-    function idempotent: a second application is a no-op, which the readable and
-    matching normalisers both depend on.
+    Genuinely-hyphenated compounds keep their hyphen when the fragment before
+    the break is a compound-forming prefix (_COMPOUND_PREFIXES) and the joined
+    form is not a known closed-form word (_JOINED_WORDS):
+    ``'self-\\ncorrection' -> 'self-correction'`` but
+    ``'multi-\\nple' -> 'multiple'``. The dictionary check sees the fragment
+    flattened across any further line breaks, so chained breaks resolve
+    correctly (``'multi-\\nfa-\\nceted' -> 'multifaceted'``). Residual
+    ambiguity is irreducible without layout information — a word the author
+    hyphenated deliberately AND broke at exactly that hyphen (e.g. a UK-style
+    ``'non-\\nlinear'``) resolves to the closed form when that form is a
+    dictionary word; see wiki/continuity.md task C.
+
+    The ``(?:-\\s*\\n\\s*)+`` run consumes consecutive end-of-line hyphens in a
+    single pass (e.g. ``'multi-\\n-\\nfaceted'`` where a stray-hyphen line sits
+    between the halves). Output never contains a hyphen-newline sequence, so a
+    second application is a no-op — the readable and matching normalisers both
+    depend on this idempotence.
     """
-    return re.sub(r"(?:-\s*\n\s*)+([a-z])", r"\1", text)
+    def _join(match: re.Match) -> str:
+        prefix = match.group(1)
+        continuation = _CONTINUATION_RE.match(match.string, match.end())
+        flattened = _BREAK_RE.sub("", continuation.group(0)) if continuation else ""
+        joined = (prefix + flattened).lower()
+        if prefix.lower() in _COMPOUND_PREFIXES and joined not in _JOINED_WORDS:
+            return prefix + "-"
+        return prefix
+
+    return _LINEBREAK_HYPHEN_RE.sub(_join, text)
 
 
 def normalise_text_readable(text: str) -> str:

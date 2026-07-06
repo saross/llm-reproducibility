@@ -105,6 +105,62 @@ def test_matching_substring_roundtrip():
     assert quote in src
 
 
+# --- task C: compound-aware de-hyphenation (wiki/continuity.md) --------------
+
+def test_dehyphenation_compound_prefix_kept():
+    # The Huang et al. 2023 case that motivated task C: a genuinely-hyphenated
+    # compound broken at the line must keep its hyphen.
+    assert C.normalise_text_readable("after self-\ncorrection, the") == \
+        "after self-correction, the"
+    assert C.normalise_for_matching("after self-\ncorrection, the") == \
+        "after self-correction, the"
+
+
+def test_dehyphenation_prefix_syllable_break_joined():
+    # The dictionary check rescues ordinary syllable breaks after a prefix.
+    assert C.normalise_for_matching("multi-\nple") == "multiple"
+    assert C.normalise_for_matching("non-\nsense") == "nonsense"
+    assert C.normalise_for_matching("re-\nsearch") == "research"
+
+
+def test_dehyphenation_compound_technical_term():
+    # Domain compounds absent from the dictionary keep their hyphen.
+    assert C.normalise_for_matching("multi-\nproxy") == "multi-proxy"
+
+
+def test_dehyphenation_compound_chained_breaks():
+    # The dictionary check sees the fragment flattened across further breaks.
+    assert C.normalise_for_matching("self-\ncorrec-\ntion") == "self-correction"
+    assert C.normalise_for_matching("multi-\nfa-\nceted") == "multifaceted"
+
+
+def test_dehyphenation_compound_capitalised_prefix():
+    assert C.normalise_for_matching("Self-\ncorrection") == "Self-correction"
+
+
+def test_dehyphenation_compound_idempotent():
+    for s in ("self-\ncorrection", "multi-\nproxy", "multi-\nple"):
+        once = C.normalise_text_readable(s)
+        assert C.normalise_text_readable(once) == once, repr(s)
+        once_m = C.normalise_for_matching(s)
+        assert C.normalise_for_matching(once_m) == once_m, repr(s)
+
+
+def test_dehyphenation_non_prefix_join_unchanged():
+    # Non-prefix breaks keep the historical joining behaviour (residual
+    # lossiness for e.g. 'decision-\nmaking' is documented, not fixed).
+    assert C.normalise_for_matching("decision-\nmaking") == "decisionmaking"
+
+
+def test_matching_roundtrip_hyphenated_compound():
+    # The failure mode task C fixes: a naturally-written quote containing the
+    # compound must match the normalised source.
+    src = C.normalise_for_matching(
+        "accuracies improve after self-\ncorrection, the authors report."
+    )
+    assert C.normalise_for_matching("after self-correction, the authors") in src
+
+
 # --- P1-P4: promoted utilities ---------------------------------------------
 
 def test_strip_running_headers():
