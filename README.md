@@ -17,9 +17,10 @@ Automated extraction of claims, evidence, and methodology from research papers u
 This repository contains tools and workflows for:
 
 1. **Extraction** (Complete): Systematically extract claims, evidence, implicit arguments, research designs, methods, and protocols from research papers
-2. **Assessment** (In Development): Evaluate research transparency, replicability, and credibility based on extracted information
+2. **Assessment** (Pilot-tested): Evaluate research transparency, replicability, and credibility via research-approach classification, quality gating, and the repliCATS Seven Signals adapted for Humanities, Arts, and Social Sciences (HASS)
+3. **Reproduction** (v1.1): Docker-based reproduction of published computational analyses, with quantitative verification and adversarial review
 
-The extraction system uses a multi-pass workflow with Claude Sonnet 4.5+ to create structured JSON representations of research papers, enabling downstream analysis and quality assessment.
+The pipeline uses multi-pass workflows with Claude (Anthropic) to create structured JSON representations of research papers, enabling downstream analysis, credibility assessment, and reproduction attempts. All three systems were validated in a completed pilot study of five Journal of Archaeological Science papers (see `studies/open-science-compliance/`).
 
 ---
 
@@ -158,18 +159,44 @@ llm-reproducibility/
 - Distinguishes planned vs. actual procedures
 - Documents emergent discoveries
 
-### Assessment Framework (In Development)
+### Assessment Framework (Pilot-tested, v1.0)
 
-Planned assessment dimensions adapted from repliCATS:
-- Comprehensibility
-- Transparency
-- Plausibility
-- Evidential Adequacy
-- Robustness
-- Reproducibility
-- Generalisability
+Three Pillars framework (Transparency → Credibility → Reproducibility) with the
+repliCATS Seven Signals adapted for HASS disciplines:
 
-See [wiki/planning/credibility-implementation-plan-v2.0.md](wiki/planning/credibility-implementation-plan-v2.0.md) for roadmap.
+- **Pass 8 — Classification:** research approach (inductive/deductive/abductive)
+  with HARKing detection
+- **Track A — Quality gating:** extraction quality checks before assessment
+- **Pass 9 — Seven Signals in three clusters:** Foundational Clarity
+  (Comprehensibility, Transparency); Evidential Strength (Plausibility,
+  Validity, Robustness, Generalisability); Reproducibility
+
+Reliability evidence from a 25-run variability test (5 papers × 5 runs):
+100% classification stability, 96% verdict stability, aggregate-score
+coefficients of variation 1.9–3.4% (see
+[outputs/variability-test/](outputs/variability-test/)).
+
+See [wiki/planning/credibility-implementation-plan-v2.0.md](wiki/planning/credibility-implementation-plan-v2.0.md) for the framework design.
+
+### Reproduction System (v1.1)
+
+Docker-based reproduction of published computational analyses (R-based papers;
+Python/Julia extension points documented):
+
+- **Four-session workflow:** planning (R-Plan), preparation (R-A), execution and
+  verification (R-B), adversarial review (R-C, run in a fresh context)
+- **Paper-type classification** (batch-ready/Dockerfile through
+  interactive/proprietary) driving effort estimation
+- **Quantitative verification** against every table, figure, and inline statistic,
+  with a six-category discrepancy taxonomy including PAPER_ERROR (reproduction
+  can surface errors in the published paper itself)
+- **Verdicts:** SUCCESSFUL / PARTIAL / FAILED / BLOCKED
+
+Pilot results (5 JAS papers): 4 SUCCESSFUL, 1 PARTIAL (sole cause: data
+inaccessibility), including exact reproduction of deterministic analyses and
+discovery of two calculation errors in a published table. See
+[reproduction-system/](reproduction-system/) and the pilot findings report in
+[studies/open-science-compliance/reports/](studies/open-science-compliance/reports/).
 
 ---
 
@@ -188,33 +215,49 @@ See [wiki/planning/credibility-implementation-plan-v2.0.md](wiki/planning/credib
 - [Architecture](docs/research-assessor-guide/architecture.md) - How the skill works
 - [Quick Reference](docs/research-assessor-guide/quick-reference.md) - Cheat sheet for common tasks
 
+### Reproduction System
+- [Overview](reproduction-system/README.md) - Docker-based reproduction workflow
+- [Planning Guide](reproduction-system/reproduction-plan-guide.md) - Paper-specific adaptation
+- [Launch Primer](reproduction-system/reproduction-launch.md) - Quick-start for reproductions
+
 ### Schema and Development
 - [Schema Reference](docs/user-guide/schema-reference.md) - Current schema documentation
 - [Version History](docs/research-assessor-guide/version.md) - Skill version information
 
 ---
 
-## Testing
+## Validation
 
-Tested extensively on:
-- Sobotkova et al. (2023) "Arbitrary Offline Data Capture on All of Your Androids: The FAIMS Mobile Platform" (archaeological survey methodology)
+The pipeline has been validated at three levels:
 
-Quality metrics (v2.5):
-- ~120 objects extracted after rationalization
-- ~200+ cross-references mapped
-- 85%+ precision in object classification
-- 80%+ recall vs. hand-coding
-- Complete validation passing
+- **Extraction corpus:** 11 papers fully extracted (archaeology, ancient
+  history, environmental science; see [input/queue.yaml](input/queue.yaml)).
+  A run comparison demonstrated the session-per-pass workflow captures 75%
+  more claims and 100% more research designs than single-session extraction.
+- **Reliability:** 25-run variability test (5 papers × 5 context-cleared
+  runs) — extraction counts vary between runs, but assessments are stable:
+  100% classification stability, 96% verdict stability, aggregate-score CV
+  1.9–3.4%. Conclusion: a single run suffices for credibility assessment.
+  See [outputs/variability-test/](outputs/variability-test/).
+- **End-to-end pilot study:** 5 Journal of Archaeological Science papers
+  through the complete pipeline (extraction → assessment → FAIR scoring →
+  Docker reproduction), 4 SUCCESSFUL / 1 PARTIAL reproductions. See
+  [studies/open-science-compliance/](studies/open-science-compliance/).
 
-See [reports/extraction-testing/](reports/extraction-testing/) for detailed results.
+Earlier v2.5-era extraction-quality reports remain in
+[reports/extraction-testing/](reports/extraction-testing/).
 
 ---
 
 ## Dependencies
 
-**Extraction System:**
-- Claude AI with Skills support (Claude Sonnet 4.5+ recommended)
+**Extraction and Assessment:**
+- Claude with Skills support (via Claude Code)
 - Python 3.8+ for PDF extraction scripts
+
+**Reproduction System:**
+- Docker (all reproductions execute in containers)
+- R papers use rocker base images; no host R installation required
 
 **PDF Processing:**
 - PyMuPDF (fitz) - Text extraction
@@ -230,23 +273,24 @@ pip install -r requirements.txt
 
 ## Project Status
 
-### ✅ Completed (v2.6)
-- Extraction system complete and validated (8-pass workflow, Pass 0-7)
-- Infrastructure extraction (PIDs, FAIR assessment, funding, permits)
-- Schema v2.6 with complete object types
-- PDF processing pipeline working
-- Comprehensive documentation
-- Repository organisation and FAIR4RS preparation
+### ✅ Completed (v3.0.1)
+- Extraction system complete and validated (8-pass workflow, Pass 0-7; schema v2.6; 11-paper corpus)
+- Assessment framework pilot-tested (Pass 8-9: classification, quality gating, Seven Signals)
+- Reproduction system v1.1 (Docker-based, four-session workflow, adversarial review)
+- Phase 1 pilot study complete: 5 JAS papers through the full pipeline (4 SUCCESSFUL / 1 PARTIAL reproductions)
+- Reliability established (25-run variability test: assessments stable across runs)
+- FAIR scoring standardised (15 binary GO-FAIR sub-principles, data and code scored independently)
+- Repository organisation, FAIR4RS preparation, and wiki-layout process record
 
 ### 🚧 In Progress
-- Assessment framework development (Three Pillars: Transparency → Credibility → Reproducibility)
-- repliCATS Seven Signals adaptation for HASS disciplines
-- Testing on additional papers from varied domains
+- Agentic modernisation: subagent/workflow implementation of the reproduction
+  and FAIR lanes (see [wiki/planning/agentic-modernisation-plan.md](wiki/planning/agentic-modernisation-plan.md))
+- OSF preregistration of Phase 2 hypotheses (five candidates drafted from pilot findings)
 
 ### 📋 Planned (Next Phase)
-- Complete assessment framework (cluster prompts, quality gating)
-- Multi-paper batch processing
-- Integration with archaeological data repositories
+- JAS 2023-2026 corpus: descriptive FAIR census + preregistered confirmatory
+  reproduction study (census doubles as the sampling frame)
+- Python/Julia reproduction support (extension points documented)
 - Zenodo deposition and DOI assignment
 
 ---
@@ -271,11 +315,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 If you use this work in research, please cite:
 
 ```bibtex
-@software{llm-reproducibility-v2.6,
+@software{llm-reproducibility,
   title = {LLM-Based Research Extraction and Assessment},
   author = {[Author information in CITATION.cff]},
-  version = {2.6},
-  year = {2025},
+  version = {3.0.1},
+  year = {2026},
   url = {[Repository URL in CITATION.cff]}
 }
 ```
@@ -284,16 +328,9 @@ See [CITATION.cff](CITATION.cff) for machine-readable citation.
 
 ---
 
-## License
-
-- **Code** (extraction system, scripts): [Apache License 2.0](LICENSE-CODE)
-- **Documentation** (guides, prompts, schema): [CC-BY-4.0 International](LICENSE-DOCS)
-
----
-
 ## Acknowledgments
 
-- Developed with Claude Sonnet 4.5 (Anthropic)
+- Developed with Anthropic's Claude (Sonnet 4.5 through the Claude 5 family)
 - Tested on archaeological research papers
 - Informed by TIDieR, CONSORT-Outcomes, and SPIRIT frameworks
 - Assessment framework adapted from repliCATS methodology
@@ -318,8 +355,12 @@ This project has evolved through multiple versions:
 - **v2.4** (Oct 19-20, 2025): RDMAP extraction framework added
 - **v2.5** (Oct 23, 2025): Repository rationalisation and FAIR4RS preparation
 - **v2.6** (Nov 2025): Infrastructure extraction (Pass 6), 8-pass workflow complete (Pass 0-7), assessment framework development
+- **v2.7** (Jan 2026): Session-per-pass execution mode (+75% claims, +100% research designs vs autonomous)
+- **v2.8-2.9** (Feb 2026): Reproduction system v1.0 → v1.1, validated on 5 pilot papers
+- **v3.0** (Feb 2026): Schema v2.6 alignment; assessment system promoted to pilot-tested; JAS pilot study complete
+- **v3.0.1** (Jul 2026): Metadata reconciliation; wiki-layout migration; compound-aware de-hyphenation; agentic modernisation plan
 
-See [archive/README.md](archive/README.md) for complete development history.
+See [archive/README.md](archive/README.md) and [manifest.yaml](manifest.yaml) for complete development history.
 
 ---
 

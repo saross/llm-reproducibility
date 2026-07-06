@@ -5,6 +5,64 @@ All notable changes to the LLM-Based Research Extraction and Assessment project 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.1] - 2026-07-06
+
+### Project Revival: Metadata Reconciliation and Modernisation Planning
+
+#### Added
+- Agentic modernisation plan (`wiki/planning/agentic-modernisation-plan.md`) —
+  subagent/workflow implementation path for the reproduction and FAIR lanes,
+  targeting a Journal of Archaeological Science corpus run
+- Four-artefact wiki layout (`wiki/`): continuity, working notes, reflections,
+  observation registers, planning — the versioned research process record
+- Compound-aware de-hyphenation in `pdf_cleaner.py` with frozen dictionary
+  subset (`affix-joined-words.txt`) and 8 regression tests (continuity task C)
+- README docs-vs-wiki disambiguation map; reproduction system documentation links
+
+#### Changed
+- `planning/` and `docs/notes/` migrated into `wiki/` (git history preserved)
+- README deeper sections refreshed to v3.0.1 reality (assessment pilot-tested,
+  reproduction v1.1, pilot study complete)
+- Manifest corrections: cluster_1 prompt v1.1, assessment_json schema v1.1 entry
+
+#### Fixed
+- Stale status metadata (todo list, planning README, study README timeline)
+- Committed virtualenv untracked (2,114 files; already gitignored)
+
+## [3.0.0] - 2026-02-12
+
+### Assessment System Pilot-Tested
+
+- Schema v2.6 alignment across all extraction prompts and schema file
+- Assessment system promoted to pilot_tested status (v1.0 prompts)
+- assessment.json schema standardised (v1.1) across 5 pilot papers
+- FAIR scoring standardised to 15 binary GO-FAIR sub-principles, data and code
+  scored independently
+
+## [2.9.0] - 2026-02-10
+
+### Reproduction System v1.1
+
+- Post-pilot review with 12 improvements (CANNOT_COMPARE and PAPER_ERROR
+  discrepancy categories, 5-level data-access taxonomy, scope-limitation
+  taxonomy, artefact-persistence checklists, formal reproduction-plan artefact)
+- Validated on 5 pilot papers (4 SUCCESSFUL, 1 PARTIAL)
+
+## [2.8.0] - 2026-02-10
+
+### Reproduction System v1.0
+
+- Docker-based reproduction workflow (4 sessions: R-Plan, R-A, R-B, R-C)
+- reproduction-assessor skill with decision frameworks
+- Adversarial review framework (5-dimension audit, fresh context)
+
+## [2.7.0] - 2026-01-13
+
+### Session-per-Pass Execution Mode
+
+- Workflow v5.0.0: 4 focused sessions (A-D) replacing single autonomous runs
+- Run comparison: +75% claims, +100% research designs captured
+
 ## [2.6.0] - 2025-11-29
 
 ### Infrastructure Extraction and Assessment Framework
