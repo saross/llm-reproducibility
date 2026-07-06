@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-04-14
+updated: 2026-07-06
 status: active
 ---
 
@@ -96,3 +96,43 @@ Herskind) that don't match the standardised /15 scale adopted in v2.0. These are
 metadata comments, not functional data, but they're confusing for anyone reading
 the queue. A cleanup pass on queue.yaml comments to align with current FAIR
 scoring would be a small but worthwhile hygiene task.
+
+## 2026-07-06 — Revival and modernisation-planning session
+
+**On the continuity system working as designed:** This project's own scaffolding
+carried it across nearly five months of pipeline dormancy and a lateral intervention
+from another project (paper-b's PR #1). The June continuity seed held three pending
+tasks with enough context — including a re-verifiable concrete failure case and a fix
+direction for task C — that a fresh instance could execute all three without asking a
+single clarifying question about intent. That is what the write-side anchor discipline
+is for. The contrast with the *failure* is instructive too: the one thing the system
+did not survive was the local clone going stale, because continuity lives in git and
+an unfetched clone is a time capsule. The session-start hook read a five-month-old
+snapshot and never saw the continuity file at all.
+
+**On delegated exploration as pointers, not authority:** The three parallel explorers
+were the right call for breadth — the pilot-study, reproduction-system, and repo-state
+maps they returned were substantially accurate and made the modernisation plan possible
+in one session. But one explorer dated the cluster prompts to 2026-02-12 from filesystem
+mtimes when their headers said 2025-11-29, and another relayed version numbers I later
+had to correct against file headers (only cluster-1 was v1.1; clusters 2–3 were v1.0).
+Every specific that ended up in a commit, the README, or a memory got re-verified at
+source first, and roughly one in ten needed correcting. That ratio is worth remembering:
+subagent reports are excellent maps and unreliable gazetteers.
+
+**On deviating from a prescribed fix:** Task C's continuity note prescribed "affix list
+OR both-fragments-are-words". Implementing it literally would have corrupted `multi-\nple`
+→ `multi-ple` — the affix list alone can't distinguish a compound prefix from an ordinary
+syllable break. The dictionary-precedence refinement (check the joined form first) is a
+small design change, but it inverts the logic of the prescription while honouring its
+intent. The general point: a fix direction written at discovery time is a hypothesis, not
+a specification, and the implementing session owes it a fresh derivation, not obedience.
+
+**A mild criticism, symmetric to Entry 1's:** The project now has *four* places where
+version history lives (manifest.yaml `version_history`, CHANGELOG.md, README Development
+History, and docs/research-assessor-guide/version.md), and this session had to update
+three of them by hand to say the same thing. The manifest is nominally the single source
+of truth; the others are derived views that drift the moment anyone forgets the cascade.
+A future session could generate the CHANGELOG and README history sections from the
+manifest — the same prevention-over-remediation principle the user applied to the
+assessment schema in February.

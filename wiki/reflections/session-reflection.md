@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-04-14
+updated: 2026-07-06
 status: active
 ---
 
@@ -221,6 +221,59 @@ Phase 2 design. This pause is valuable — the next decisions (corpus size, samp
 strategy, hypothesis preregistration) are research design decisions, not engineering
 tasks. They benefit from deliberation rather than momentum.
 
+## Entry 3 (2026-07-06) — Project revival, agentic modernisation plan, and infrastructure catch-up
+
+*(llm-reproducibility; session ran 2026-07-03 → 2026-07-06 in one conversation, with
+Shawn intermittently AFK. Direct experience throughout — no compaction boundary to flag.)*
+
+### What surprised you?
+
+Two things, and they point the same direction. First, the gap between how Shawn framed
+the project ("on the back burner", "a bit slow / painful") and what the repository
+actually contained: a *complete* pilot — five papers through extraction, assessment,
+FAIR scoring, and Docker reproduction, with a genuinely publishable finding (data
+availability, not code availability, predicts reproduction outcome) and five drafted
+hypotheses waiting for preregistration. The memory of the process (painful, slow) had
+overwritten the memory of the outcome (finished, successful). Reading the repo corrected
+the framing before we made plans based on the wrong one.
+
+Second, the local clone was quietly eight commits behind origin — I had told Shawn the
+repo was "dormant since 2026-02-12" based on local state, and only a pre-push `git fetch`
+revealed the June activity (PR #1's matching-grade PDF layer, the continuity seed). The
+correction cost nothing because it surfaced mid-session, but the lesson is sharp: on
+project revival, fetch *before* characterising repo state, not before the first push.
+The stale local clone also meant the session-start hook never saw `wiki/continuity.md` —
+the very file designed to prevent exactly this kind of misorientation.
+
+### What decision made today will look arbitrary without this session's context?
+
+The frozen `affix-joined-words.txt` in task C. A future reader will wonder why a 9,810-word
+dictionary subset is vendored into the repo when `/usr/share/dict/words` exists. The answer:
+the de-hyphenation output feeds `normalise_for_matching`, whose whole job is to be a
+*canonical* key for deterministic quote verification — if the dictionary comes from the
+host, two machines with different wamerican versions produce different keys for the same
+PDF. Determinism beat elegance. Similarly, the dictionary-check-before-affix-list
+precedence (join `multi-\nple` because "multiple" is a word, keep `multi-\nproxy` because
+"multiproxy" isn't) was a deliberate refinement of the continuity doc's prescribed fix —
+without it, an affix list alone would corrupt common words like "multiple" and "research".
+
+The other candidate is the pacing decision: Phase 1 of the modernisation plan is built
+*nowhere* despite the plan being approved in direction. That is Shawn's explicit
+deliberation gate ("don't start building quite yet"), consistent with his documented
+pattern of pausing at design inflection points (see Entry 2's relational note). A future
+instance should not read the untouched plan as neglect.
+
+### What context will be hardest to reconstruct in 6 months?
+
+The preregistration-ordering constraint and its reach. Option A (census + preregistered
+subset) sounds like a scope decision, but its binding force is methodological: FAIR scores
+are the independent variable in H1/H2, so *computing FAIR scores over new JAS papers
+before the OSF preregistration exists* would contaminate the confirmatory study. This is
+why the modernisation plan's Phase 2 regression test uses only pilot papers, and why the
+corpus sweep cannot start "just to see what's there". The constraint is recorded in the
+plan §6 and in memory, but its implications for what *feels* like harmless exploratory
+work are easy to lose.
+
 ---
 
 **Meta-Reflection**
@@ -229,6 +282,7 @@ tasks. They benefit from deliberation rather than momentum.
 |-------|---------|-------|----------------------|
 | 1 | 2026-02-11 | Consolidation + documentation | #6 (retrospective pattern recognition) |
 | 2 | 2026-02-12 | Schema standardisation + version hygiene | #6 (expanding scope pattern) |
+| 3 | 2026-07-06 | Revival + modernisation plan + infrastructure | "What surprised you?" (framing-vs-reality gap; stale clone) |
 
 Prompt #6 continues to be the most productive — it surfaces structural patterns
 that weren't visible during execution. The "expanding scope through discovery"
@@ -249,3 +303,19 @@ cascade/prevention lesson is genuinely important for future work.
   went beyond the direct question to survey the entire todo list
 - **Relational note:** User comfortable pausing to think — "I'll be back in a day
   or two" signals deliberative rather than momentum-driven approach
+
+**Summary block (Entry 3)**
+
+- **Date:** 2026-07-06
+- **Texture:** Expansive then convergent — broad exploration and planning early,
+  tightening to two surgical fixes at the close
+- **Key observation:** Revived-project framing ("back burner", "painful") can diverge
+  sharply from repository reality (pilot complete, findings publishable); read the repo
+  before accepting the framing. Fetch before characterising repo state.
+- **Noted preferences:** User gates building on deliberation ("don't start building quite
+  yet") even after approving direction; user runs parallel sessions for parallel threads
+  (Cosmos grant, PA template promotion handled elsewhere while this session held the repo)
+- **Unsolicited generation:** The conventions landscape for docs/-vs-wiki/ (GitHub Pages,
+  JOSS, GitHub-Wiki-antipattern) reframed a binary choice into a template-level decision
+- **Relational note:** Longest-arc session in this repo (four calendar days, intermittent);
+  autonomous stretches worked from invariant-only principles when questions timed out

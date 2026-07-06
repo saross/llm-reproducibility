@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-04-14
+updated: 2026-07-06
 status: active
 ---
 
@@ -105,5 +105,80 @@ Standardised assessment.json schema across 5 pilot papers, cascaded schema v1.1 
 - [ ] Phase 2 study protocol design (user pausing to think — will return in 1-2 days)
 - [ ] Queue.yaml FAIR score comments still show old-format scores (e.g., "30/32", "10/16")
 - [ ] Credibility-report.md files (crema, marwick) not audited for structural consistency beyond version string
+
+## Session: 2026-07-03/06 — Project revival, modernisation plan, wiki migration, loose ends
+
+### Overview
+
+Revived the project after the February pause. Mapped repo state with three parallel
+explorers, reconciled stale metadata, wrote the agentic modernisation plan (direction
+approved; Phase 1 build on hold), migrated to the four-artefact wiki layout, cleared
+all three continuity pending tasks (venv untrack, wiki migration, de-hyphenation fix),
+and refreshed README/CHANGELOG to v3.0.1. Study-shape decision taken: Option A
+(census + preregistered subset).
+
+### Accomplishments
+
+1. **State assessment** — pilot confirmed complete (5/5 JAS papers, 4 SUCCESSFUL /
+   1 PARTIAL reproductions); discovered June lateral work (PR #1 PDF matching layer,
+   continuity seed) via pre-push fetch after local clone proved 8 commits stale
+2. **Metadata reconciliation** (manifest → v3.0.1) — todo list, planning README,
+   study README, cluster_1 version, assessment_json schema entry
+3. **Agentic modernisation plan** (`wiki/planning/agentic-modernisation-plan.md`,
+   v0.2) — five agents + three workflows for the reproduction/FAIR lanes; phased
+   path with regression test on pilot papers and a hard cost gate
+4. **Decisions recorded**: study shape Option A (preregister → JAS census →
+   confirmatory reproduction subset); docs/ stays at repo root, wiki/ = process
+   record (generalises to cross-repo template; promoted to PA in a parallel session)
+5. **Wiki migration** (continuity task B) — planning/ and docs/notes/ into wiki/;
+   created index, user-observations, claude-observations; reference sweep;
+   README docs-vs-wiki map
+6. **Venv untracked** (task A) — 2,114 files out of the index per prescription
+7. **De-hyphenation fix** (task C) — compound-prefix + frozen-dictionary heuristic
+   in `pdf_cleaner.py` (`affix-joined-words.txt`, 9,810 words); 32/32 tests incl.
+   8 new regressions; dictionary-precedence refinement over the prescribed direction
+8. **README/CHANGELOG refresh** — Features (incl. new Reproduction System section),
+   Validation, Project Status, Citation, Development History; CHANGELOG entries
+   2.7.0–3.0.1 added; all quantitative claims re-verified at source
+9. **Three memories saved** (study shape, repo-layout convention, build-on-hold)
+   with anchors and why/how_to_apply fields
+
+### Issues
+
+- Local clone 8 commits behind origin at session start → initial "dormant" claim
+  needed correction; session-start hook had read the stale snapshot
+- Explorer agents misdated cluster prompts (mtime vs header) and over-generalised
+  version claims — every relayed specific re-verified before use, ~1 in 10 corrected
+- AskUserQuestion timed out mid-session (user AFK) → proceeded on invariant-only
+  work (housekeeping + plan doc), deferred the study-shape decision
+
+### Commits
+
+- `11f5734` chore: reconcile stale status metadata on revival
+- `bab66ce` docs(planning): add agentic modernisation plan v0.1
+- `5440d12` chore: untrack committed virtualenv (already in .gitignore)
+- `8845a45` refactor: migrate to four-artefact wiki layout (task B)
+- `245d820` fix(pdf): compound-aware de-hyphenation (task C)
+- `3c7313c` docs: refresh README deeper sections and CHANGELOG to v3.0.1
+
+### Pending Work
+
+- [ ] Shawn reviews `wiki/planning/agentic-modernisation-plan.md` → unlocks Phase 1
+      (agent definitions + workflows); build explicitly ON HOLD until then
+- [ ] OSF preregistration of the five pilot hypotheses — must precede FAIR scoring
+      of any new JAS papers (Option A ordering constraint)
+- [ ] Version-history consolidation candidate: manifest/CHANGELOG/README history
+      maintained by hand in parallel (see llm-observations 2026-07-06)
+
+### Contextual assumptions
+
+Phase 1 build deferred by explicit user instruction (deliberation, not blockage).
+Cosmos Institute grant framing and the PA template promotion were handled in
+parallel sessions by the user — this session deliberately did not touch them
+beyond providing the paste-ready prompt. The pre-Claude-5 session prompts remain
+authoritative until the agentic lane replaces them; nothing in this session
+changed extraction/assessment/reproduction behaviour except the de-hyphenation
+fix, which alters canonical matching keys only for affix-prefixed compounds
+absent from the frozen dictionary.
 
 *New session entries should be appended above this line.*
