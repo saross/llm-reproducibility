@@ -2,8 +2,8 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-06-10
-status: seed
+updated: 2026-07-06
+status: active
 ---
 
 # llm-reproducibility — Continuity (Living Doc)
@@ -11,14 +11,14 @@ status: seed
 **Purpose:** cross-session state, pending work, and a session-by-session log
 for this repo. Updated in place at session end (no new file per session).
 
-**Status: SEED.** This file bootstraps the wiki-style documentation layout in
-this repo. The repo is otherwise still on the **legacy `docs/notes/` layout**
-(`docs/notes/working-notes.md` + `docs/notes/reflections/`) and has no
-`user-observations.md`. This file exists to (a) carry the two pending
-infrastructure tasks below across sessions, and (b) **initiate the migration**
-to the current per-project wiki layout. It was created 2026-06-07 from a
-session working primarily in the `2026-mq-llm-dh-judgement-paper-b` repo (the
-matching-grade PDF extractor merged here as PR #1).
+**Status: ACTIVE** (promoted from seed 2026-07-06). The four-artefact wiki
+layout is fully in place (migration completed 2026-07-03, task B below):
+continuity, working-notes, reflections/, user-observations, claude-observations,
+and planning/ all live under `wiki/`; `docs/` stays at repo root as product
+documentation (decided 2026-07-03). This file was created 2026-06-07 as the
+migration seed, from a session working primarily in the
+`2026-mq-llm-dh-judgement-paper-b` repo (the matching-grade PDF extractor
+merged here as PR #1).
 
 **How to update at session end** (per the canonical convention —
 `~/personal-assistant/global-claude-md/handoff-protocol.md`):
@@ -30,7 +30,16 @@ matching-grade PDF extractor merged here as PR #1).
 
 ---
 
-## Repo state (2026-06-07)
+## Repo state (2026-07-06)
+
+- `main` @ `3c7313c` plus this session's close-out commits (reflections,
+  observations, continuity). Working tree clean at handoff. Project v3.0.1.
+- **Current gates:** Phase 1 of the agentic modernisation plan
+  (`wiki/planning/agentic-modernisation-plan.md`, v0.2) is ON HOLD pending
+  Shawn's review; OSF preregistration must precede FAIR scoring of any new
+  JAS papers (Option A ordering constraint, plan §6).
+
+### Earlier state (2026-06-07)
 
 - `main` @ `1c4650e` (merge of PR #1). Working tree clean.
 - **PR #1** added a matching-grade extraction layer to
@@ -175,6 +184,16 @@ Must preserve `_dehyphenate`'s **idempotence** (the readable + matching
 normalisers depend on it) and keep golden tests green; add a regression test
 for the `self-correction` case. Additive/worktree discipline.
 
+### D. Consolidate version-history sources  [ ]
+
+Version history is now maintained by hand in four places (`manifest.yaml`
+`version_history` — nominally canonical; `CHANGELOG.md`; README "Development
+History"; `docs/research-assessor-guide/version.md`). The 2026-07-06 session
+updated three of them in parallel to say the same thing. Candidate fix: derive
+the CHANGELOG and README sections from the manifest (script or documented
+cascade checklist, mirroring the assessment-schema compliance pattern from
+February). Low priority; logged from llm-observations 2026-07-06.
+
 ## Open decisions
 
 - [x] 2026-07-03 `docs/` disposition: **stays at repo root** (decided with the
@@ -183,6 +202,36 @@ for the `self-correction` case. Additive/worktree discipline.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-07-03/06 — Revival: modernisation plan, wiki migration, tasks A-C closed
+
+Project revived after the February pause (one conversation spanning four days,
+Shawn intermittently AFK). Three parallel explorers mapped repo state: the JAS
+pilot is COMPLETE (5/5 papers, 4 SUCCESSFUL / 1 PARTIAL reproductions; headline
+finding: data availability, not code availability, predicts reproduction
+outcome). Wrote the agentic modernisation plan and took two structural
+decisions with Shawn: **study shape Option A** (OSF preregistration first →
+JAS 2023-2026 FAIR census as sampling frame → preregistered confirmatory
+reproduction subset) and **docs/ stays at repo root** (wiki/ = process record;
+convention promoted to the PA template in a parallel session). Executed the
+wiki-layout migration (task B), untracked the committed venv (task A), fixed
+lossy de-hyphenation with a frozen-dictionary heuristic (task C; 32/32 tests),
+reconciled all stale metadata to v3.0.1, and refreshed README/CHANGELOG.
+**Phase 1 build of the modernisation plan is ON HOLD by explicit instruction**
+until Shawn reviews the plan. Gotcha for future revivals: the local clone was 8
+commits behind origin at session start — fetch before characterising repo state.
+
+- Commits: `11f5734` (metadata reconciliation), `bab66ce` (modernisation plan),
+  `5440d12` (venv untrack), `8845a45` (wiki migration), `245d820` (task C fix),
+  `3c7313c` (README/CHANGELOG refresh), plus session-close commits
+- Key docs: `wiki/planning/agentic-modernisation-plan.md` (v0.2, Option A
+  recorded in §6); `extraction-system/scripts/pdf_processing/affix-joined-words.txt`
+  (frozen dictionary, regeneration command in header)
+- Memories saved: study shape (2026-07-04-856141514e0f), repo-layout convention
+  (2026-07-04-e6d2685b35b4), build-on-hold (2026-07-04-f24eccedb145)
+- Carry-forward: two working-notes candidates surfaced at the 2026-07-06
+  /handoff (subagent-specifics error rate; frozen-dictionary determinism) —
+  **pending Shawn's verdict; re-surface at next /handoff or /recap if silent**
 
 ### 2026-07-05 — Cosmos grant application framing externalised
 
