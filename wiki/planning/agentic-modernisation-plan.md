@@ -1,9 +1,10 @@
 # Agentic Modernisation Plan — Reproduction and Open-Science Apparatus
 
-**Version:** 0.2
-**Date:** 2026-07-03
+**Version:** 0.3
+**Date:** 2026-07-07
 **Status:** Direction approved — study shape decided (Option A, §6, 2026-07-03); Phase 0
-complete; Phase 1 build ON HOLD pending Shawn's review of this plan
+complete; Phase 1 build ON HOLD — guided review walkthrough done 2026-07-07; six judgement
+calls recorded (§9) awaiting Shawn's verdicts
 **Author:** Claude (Fable 5), with Shawn Ross
 **Supersedes:** Extends (does not replace) `wiki/planning/automation-and-scaling-strategy.md` (2025-12-09)
 
@@ -187,3 +188,43 @@ Phases 0-2 are identical under all three options.
   later using the same pattern.
 - `wiki/planning/fair-vocabularies-development-plan.md` — the FAIR-lane census would generate
   exactly the evidence base that plan needs; potential convergence in Phase 3.
+
+## 9. Open judgement calls from plan review (2026-07-07)
+
+Recorded from the guided walkthrough (Claude, with Shawn) so the revival can resume without
+reconstructing them. Phase 1 remains ON HOLD until Shawn returns verdicts on these. Walkthrough
+recommendation: **go**, with items 1, 3, and 5 folded into Phase 1–2 scope.
+
+1. **The FAIR-lane reliability licence is thinner than §3 states.** The 25-run variability
+   test (`outputs/variability-test/variability-analysis-report.md`, dated 2025-12-06, re-read
+   2026-07-07) covered the extraction → *credibility assessment* pipeline (96% verdict
+   stability) and never mentions FAIR. FAIR sub-principle scoring stability is untested — yet
+   FAIR scores are the independent variable in preregistered H1/H2. Proposed fix: a small FAIR
+   variability spot-check (~3 pilot papers × 3 runs; pilot papers only, so
+   preregistration-safe) folded into Phase 2.
+
+2. **Pilot-vs-census FAIR comparability.** Pilot FAIR scores were computed on top of full
+   8-pass extractions; the census `fair-assessor` would score from a lighter Pass 0 + Pass 6
+   path. If pilot and census papers ever sit in one analysis, that is a method change
+   mid-dataset. The item-1 spot-check can test both concerns at once (does the lightweight
+   path yield the same scores?).
+
+3. **Internal contradiction to resolve before building.** §4.1 says agents *reference* the
+   existing skills rather than duplicating them; the Phase 1 task list (§5) says "migrating
+   their content into agent definitions". Opposite maintenance stories. Walkthrough
+   recommendation: reference-not-duplicate — skills remain the single source of truth for
+   decision frameworks and pattern libraries; agent definitions stay thin (role + routing).
+
+4. **R-A + R-B merge into `reproduction-executor`.** The executor verifies its own
+   preparation; the genuinely load-bearing fresh-context boundary (R-C adversarial review) is
+   preserved. Walkthrough view: the merge is acceptable — noted for the record.
+
+5. **Phase 2 pass criterion needs a pre-committed drift clause.** Pilot artefacts were
+   produced by earlier models. Decide *in advance* what counts as benign drift (prose
+   differences, Docker build iteration counts) versus failure (verdict or value-level
+   changes), or the regression test's verdict becomes a post-hoc judgement call.
+
+6. **Sequencing opportunity: Open Science Framework (OSF) preregistration × Cosmos grant.**
+   Preregistration must precede the FAIR census anyway (§6); a live preregistration by
+   mid-July would be a concrete artefact for the 26 July 2026 Cosmos Institute application.
+   Drafting the preregistration is independent of the Phase 1 hold and can run in parallel.

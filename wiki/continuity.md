@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-06
+updated: 2026-07-07
 status: active
 ---
 
@@ -30,14 +30,22 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-07-06)
+## Repo state (2026-07-07)
 
-- `main` @ `3c7313c` plus this session's close-out commits (reflections,
-  observations, continuity). Working tree clean at handoff. Project v3.0.1.
+- `main` @ `a1e52de` plus this session's plan-review commit. Working tree
+  clean. Project v3.0.1.
 - **Current gates:** Phase 1 of the agentic modernisation plan
-  (`wiki/planning/agentic-modernisation-plan.md`, v0.2) is ON HOLD pending
-  Shawn's review; OSF preregistration must precede FAIR scoring of any new
-  JAS papers (Option A ordering constraint, plan §6).
+  (`wiki/planning/agentic-modernisation-plan.md`, now v0.3) remains ON HOLD —
+  the 2026-07-07 guided walkthrough recorded six judgement calls in plan §9;
+  Shawn's verdicts on those unlock Phase 1. OSF preregistration must precede
+  FAIR scoring of any new JAS papers (Option A ordering constraint, plan §6);
+  preregistration drafting is independent of the Phase 1 hold and would
+  strengthen the Cosmos application (plan §9 item 6).
+- **Immediate priority (displaces the above):** draft the Cosmos Institute
+  grant application (deadline 26 Jul 2026); framing in
+  `wiki/planning/cosmos-grant-application-framing.md`.
+- Stale-carry-forward note for future resumes: the 2026-07-06 handoff
+  verdicts were already applied in `a1e52de` — do not re-solicit them.
 
 ### Earlier state (2026-06-07)
 
