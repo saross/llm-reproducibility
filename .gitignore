@@ -34,6 +34,18 @@ outputs.backup-pre-migration/
 # Published paper PDFs (may include non-open-access papers)
 # Source papers are also covered by input/sources/ above
 studies/open-science-compliance/corpus/pdfs/
+corpus/pdfs/
+
+# Extracted article full text and third-party supplements (publisher copyright;
+# regenerate locally from source PDFs — see CLAUDE.md, PDF Handling).
+# Convention: paper text lives at {output_dir}/{paper-slug}.txt
+outputs/*/full_text.txt
+outputs/*/*-et-al-*.txt
+outputs/*/*-20??.txt
+studies/*/outputs/*/full_text.txt
+studies/*/outputs/*/*-et-al-*.txt
+studies/*/outputs/*/*-20??.txt
+**/reproduction/attempt-*/supplement.pdf
 
 # Claude Code session archives tracked via Git LFS
 # Use cc-session CLI to manage (pip install cc-session-toolkit)
