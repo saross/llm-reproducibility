@@ -160,7 +160,9 @@ scope and seriousness, not a funding plan — anchor items to what makes the dem
 ## 8. Next actions
 
 1. Open the Airtable application form and capture its actual questions (scoping the
-   half-day drafting session).
+   half-day drafting session). **Done 2026-07-07** — full capture in
+   `cosmos-application-form-questions.md` (21 fields; five-part proposal structure,
+   <500 words).
 2. Draft responses against §4/§5 framing; refine budget from §6.
 3. Confirm sequencing with the agentic modernisation plan phases (Phase 1 build is
    currently ON HOLD pending review — the application does not depend on it starting,
