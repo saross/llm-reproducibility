@@ -37,7 +37,7 @@ Shawn's framing feedback 2026-07-07 (broader-programme positioning; HASS-native 
    involving humanities-adjacent historical investigation. Candidate material for the
    self-pitch or form field 19.
 
-## Proposal draft v0.1 (form field 17, <500 words)
+## Proposal draft (form field 17, <500 words)
 
 <!-- proposal-body-start -->
 **Alignment.** I am applying to the AI x Truth-seeking stream to build infrastructure that
