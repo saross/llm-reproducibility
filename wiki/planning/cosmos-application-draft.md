@@ -1,9 +1,10 @@
 # Cosmos Grants Application — Working Draft
 
-**Version:** 0.1
+**Version:** 0.2
 **Date:** 2026-07-07
-**Status:** Proposal draft v0.1 for co-development with Shawn; title, one-liner, self-pitch,
-and grant amount not yet drafted
+**Status:** Proposal draft v0.2 — Shawn's verdicts on all six drafting choices applied;
+policy-question hook sharpened in Success; title, one-liner, self-pitch, and grant amount
+not yet drafted
 **Inputs:** `cosmos-grant-application-framing.md` (§4 pitch, §5 lane roles, §6 budget);
 `cosmos-application-form-questions.md` (field 17 five-part structure, <500 words);
 Shawn's framing feedback 2026-07-07 (broader-programme positioning; HASS-native emphasis)
@@ -28,7 +29,13 @@ Shawn's framing feedback 2026-07-07 (broader-programme positioning; HASS-native 
    a growing computational core where verification is tractable. The framework is HASS-native;
    the first production lane is deliberately computational; the graph core carries
    verification beyond the computational later. Avoids overclaiming non-computational
-   reproducibility (Shawn's caution).
+   reproducibility (Shawn's caution). Supporting context from Shawn (2026-07-07; for our
+   use, not necessarily the grant text): archaeology's quantitative tradition is old and
+   institutionalised — the Computer Applications and Quantitative Methods in Archaeology
+   (CAA) organisation dates to the early 1970s — making the discipline a credible bridge
+   from the "usual suspects" (biomedicine, quantitative social sciences) while still
+   involving humanities-adjacent historical investigation. Candidate material for the
+   self-pitch or form field 19.
 
 ## Proposal draft v0.1 (form field 17, <500 words)
 
@@ -71,28 +78,46 @@ interface, with expert spot-audits of sampled verdicts.
 
 **Success.** A public, clickable census of open-science practice in a flagship archaeology
 journal, with every reproduction verdict traceable to artefacts anyone can re-run;
-preregistered answers to live questions (did JAS's 2024 mandatory reproducibility policy
-change practice?); and a measured per-paper cost demonstrating that verification can be
+preregistered answers to live questions (for example: did JAS's January 2024 mandatory
+reproducibility-review policy actually change practice?); and a measured per-paper cost demonstrating that verification can be
 routine rather than heroic. The framework is HASS-native and extensible: the same
 claims–evidence core will carry verification beyond the computational as the wider
 programme grows.
 <!-- proposal-body-end -->
 
-## Drafting choices awaiting Shawn's reaction
+## Drafting choices — Shawn's verdicts (2026-07-07)
 
-1. First person singular ("I") throughout — standard grant voice; adjust if preferred.
-2. The 25-run variability study is *omitted* from the proposal for word budget; candidate
-   for form field 19 ("additional info") along with the follow-on-funding pointer
-   (framing §5) and the Metalens-complementarity line — none of these burn proposal words.
-3. The JAS January 2024 policy question is named as the concrete success hook (it is
-   preregistration hypothesis H1 in the pilot findings report §7).
-4. The human-verification interface is a committed deliverable; the *stretch* framing
-   (per framing §5) applies only to adding sampled claim–evidence pairs from the pilot
-   extractions — currently not mentioned in the 500 words; could be one clause if wanted.
-5. "A flagship archaeology journal" rather than "archaeology's flagship journal" —
-   deliberately hedged.
-6. Discourse-engagement analysis (Shawn's future-capability list) summarised only as
-   "how papers use — and ignore — the literature" to hold the word budget.
+1. First person singular ("I") — **confirmed**.
+2. Variability study, follow-on-funding pointer, and Metalens-complementarity line go to
+   form field 19 ("additional info"), not the 500 words — **confirmed**.
+3. Policy-question hook: Shawn couldn't spot it (it was a parenthetical in Success); now
+   sharpened to "(for example: did JAS's January 2024 mandatory reproducibility-review
+   policy actually change practice?)". It is preregistration hypothesis H1 (pilot findings
+   report §7).
+4. No stretch clause for sampled claim–evidence pairs — **confirmed** (crowded-area
+   caution; stay as drafted).
+5. "A flagship archaeology journal" hedge — **confirmed**.
+6. Literature-use compression ("how papers use — and ignore — the literature") —
+   **confirmed**; discourse-level framing held back for later use.
+
+## Preregistration sequencing (recommendation; awaiting Shawn's decision)
+
+Question (Shawn, 2026-07-07): lodge the OSF preregistration before submitting the
+application, so the application links a live registration?
+
+Recommendation: **yes — draft immediately, lodge before submission.** The prereg must
+precede the FAIR census anyway (Option A ordering, modernisation plan §6); its content is
+largely written (H1–H5 in the pilot findings report §7; study protocol exists); and a live,
+clickable OSF registration converts "I will preregister" into "already preregistered" —
+strong feasibility and truth-seeking signal at a ~9%-selective programme. Drafting care
+needed so Phases 1–2 need no amendment: specify the measures (15 binary GO-FAIR
+sub-principles, data/code scored independently) as instrument, permit pipeline
+implementation changes gated on regression tests against pilot artefacts, and commit that
+no new-corpus data is touched before registration. Fallback if review time runs short:
+submit the application citing "registration precedes any corpus contact" — weaker but
+acceptable. Interacts with plan §9 items 1–2 (FAIR stability spot-check): the spot-check
+uses pilot papers only, so it can run before or after registration without contaminating
+the design.
 
 ## Still to draft (other form fields)
 
