@@ -37,6 +37,15 @@ This is the current authoritative plan, covering:
 **Status:** Complete capture (v1.0, 2026-07-07)
 **Focus:** Verbatim Cosmos application form fields + drafting implications; scopes the draft
 
+#### [cosmos-application-draft.md](cosmos-application-draft.md)
+**Status:** Working draft (v0.2, 2026-07-07) — proposal text under Shawn's review
+**Focus:** Cosmos application proposal (<500 words) + framing resolutions + remaining fields
+
+#### [scout-reports/](scout-reports/)
+**Status:** Complete (2026-07-08) — 12 verified reports + synthesis
+**Focus:** Whole-stack positioning sweep vs state of the art (reproduction, CEM, RDMAP,
+credibility, FAIR, literature engagement); start at the synthesis
+
 #### [active-todo-list.md](active-todo-list.md)
 **Status:** Active
 **Focus:** Current tasks and priorities
