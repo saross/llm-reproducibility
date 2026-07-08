@@ -35,16 +35,22 @@ merged here as PR #1).
 - `main` current through the 2026-07-07/08 session's commits (plan v0.3 review,
   Cosmos form capture + proposal draft v0.2, article-text untracking, and the
   scout-report series). Project v3.0.1.
-- **Scout sweep COMPLETE (2026-07-08):** whole-stack positioning vs state of the
-  art — 12 verified reports + synthesis in `wiki/planning/scout-reports/`
-  (start at `2026-07-08-stack-positioning-synthesis.md`). Headline: our
-  combination is unclaimed in every lane; HASS/archaeology empty across all six.
-  Follow-up queue lives in synthesis §7 (incl. lit-scout author-rendering patch,
-  deeper-chaining go/no-gos, Zotero imports).
-- **Cosmos application:** proposal draft v0.2 in
-  `wiki/planning/cosmos-application-draft.md` awaiting Shawn's read; remaining
-  fields (title, one-liner, self-pitch, grant amount) undrafted; OSF
-  preregistration recommended before submission (draft on request).
+- **Scout sweep COMPLETE (2026-07-08), all follow-ups executed:** whole-stack
+  positioning (12 verified reports + synthesis), arXiv blind-spot sweeps (S1/S2),
+  approved deeper chaining (C1–C3), and the OSF/grey-literature guard pass (G1)
+  all live in `wiki/planning/scout-reports/` (start at the synthesis; README
+  indexes everything). Headlines: no direct competitor to any lane, but the
+  middle is converging (Chakravorti 2026; Zhu 2026 pair) — speed-to-publish now
+  matters; the zero-archaeology null is DOCUMENTED (G1, 26-query log) so
+  first-mover claims must be scoped + "to our knowledge" with Spennemann 2023
+  demarcated; Zotero staging holds all verified finds (P1–P6, S1–S2, chains).
+  lit-scout + verifier agents patched (author-count rule; arXiv handling).
+- **Cosmos application:** proposal draft v0.3 in
+  `wiki/planning/cosmos-application-draft.md` (body 482/500 words; field 19
+  evidence pack + bibliography drafted; guard-pass null folded in) — awaiting
+  Shawn's read; file deliberately uncommitted while under review. Remaining
+  fields: title, one-liner, self-pitch, grant amount. OSF preregistration
+  recommended before submission — urgency raised by competitor convergence.
 - **Current gates:** Phase 1 of the agentic modernisation plan
   (`wiki/planning/agentic-modernisation-plan.md`, now v0.3) remains ON HOLD —
   the 2026-07-07 guided walkthrough recorded six judgement calls in plan §9;

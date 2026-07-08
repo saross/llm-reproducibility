@@ -30,6 +30,15 @@ Scholar with DataCite DOIs (`10.48550/arXiv.*`):
 | S1 Citation integrity/coverage preprints | [s1 arXiv](2026-07-08-s1-citation-integrity-arxiv-verified.md) | P6 lane gap (30 rows, 150/150 verified) |
 | S2 Protocol/methods-extraction preprints | [s2 arXiv](2026-07-08-s2-protocol-extraction-arxiv-verified.md) | P3 lane gap (27 rows, 135/135 verified) |
 
+**Deeper-chaining round + guard pass (2026-07-08, approved go/no-gos):**
+
+| Run | Report | Headline |
+|-----|--------|----------|
+| C1 Competitor watch (Fraser/Thelwall/Serghiou forwards) | [c1](2026-07-08-c1-competitor-watch-chains-verified.md) | No direct rival; nearest threats named (Chakravorti 2026; Zhu 2026 pair); speed-to-publish now |
+| C2 Citation-integrity toolchain (Schreieder/CiteAudit/Sarol) | [c2](2026-07-08-c2-citation-toolchain-chains-verified.md) | Accuracy engine off-the-shelf; CitaLaw the lone non-STEM analogue |
+| C3 CEM/RDMAP lineages (Carriero/ReplicatorBench/Laï-king/Micropub) | [c3](2026-07-08-c3-cem-rdmap-chains-verified.md) | 7 competitor flags; appropriateness niche has zero citers |
+| G1 Archaeology guard pass (OSF/grey literature) | [g1](2026-07-08-g1-archaeology-guard-null-result.md) | Documented null (26 queries); first-mover claim holds scoped + "to our knowledge" |
+
 Provenance notes: proposer drafts and BibTeX exports live under the session scratchpad and
 `/tmp/lit-scout-*` (transient); the verified reports here are the durable record. The
 sweep was interrupted once by a session usage limit (2026-07-08 ~00:30–03:30 AEST); four
