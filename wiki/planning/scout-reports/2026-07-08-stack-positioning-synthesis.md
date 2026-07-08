@@ -158,9 +158,14 @@ project advocates:
   2024 (nearest-competitor detection), Sarol 2025 references (citation-integrity
   toolchain), Serghiou 2021 citers (LLM-vs-rule-based detection), and Micropublications
   forward L2 (direct CEM competitors).
-- **Dedicated arXiv/preprint sweep** for the 2025–26 citation-integrity and
-  novelty-assessment work without CrossRef DOIs (RMC, NovBench, GhostCite, BibAgent,
-  CiteGuard, ALCE lineage) and for LLM-era protocol extraction (P3's weakest recall).
+- ~~**Dedicated arXiv/preprint sweep**~~ **DONE (2026-07-08)** — see
+  `2026-07-08-s1-citation-integrity-arxiv-verified.md` (30 rows; all seven named leads
+  real; the joint fairness+accuracy+coverage+discourse space unclaimed on the preprint
+  record too) and `2026-07-08-s2-protocol-extraction-arxiv-verified.md` (27 rows;
+  appropriateness-vs-completeness and named implicit-methodology inference confirmed
+  open; zero archaeology/fieldwork preprints in either sweep). Both verified clean
+  (285/285 claims). Residual follow-up: a targeted OSF/grey-literature pass to confirm
+  the zero-archaeology finding before claiming first-mover status in writing.
 - **Zotero imports**: each verified lit report carries an import-priority list; the
   staging importer dedups by DOI. Notable: the library holds none of the FAIR-validation
   or transparency-detection clusters — the two most load-bearing for the preregistered

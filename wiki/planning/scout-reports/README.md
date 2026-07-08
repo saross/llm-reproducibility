@@ -21,6 +21,15 @@ verification meta-findings, follow-up queue).
 | P5 FAIR / open-science compliance | [p5 lit](2026-07-08-p5-fair-lit-verified.md) | [p5 prior-art](2026-07-07-p5-fair-prior-art-verified.md) |
 | P6 Literature/discourse engagement | [p6 lit](2026-07-08-p6-citation-lit-verified.md) | [p6 prior-art](2026-07-07-p6-citation-prior-art-verified.md) |
 
+**arXiv/preprint follow-up sweep (2026-07-08)** — covers the DOI pipeline's blind spot
+(CrossRef-invisible 2024–2026 preprints), grounded via the arXiv Atom API + Semantic
+Scholar with DataCite DOIs (`10.48550/arXiv.*`):
+
+| Sweep | Report | Covers |
+|-------|--------|--------|
+| S1 Citation integrity/coverage preprints | [s1 arXiv](2026-07-08-s1-citation-integrity-arxiv-verified.md) | P6 lane gap (30 rows, 150/150 verified) |
+| S2 Protocol/methods-extraction preprints | [s2 arXiv](2026-07-08-s2-protocol-extraction-arxiv-verified.md) | P3 lane gap (27 rows, 135/135 verified) |
+
 Provenance notes: proposer drafts and BibTeX exports live under the session scratchpad and
 `/tmp/lit-scout-*` (transient); the verified reports here are the durable record. The
 sweep was interrupted once by a session usage limit (2026-07-08 ~00:30–03:30 AEST); four
