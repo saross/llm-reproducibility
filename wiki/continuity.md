@@ -82,7 +82,23 @@ merged here as PR #1).
   judgement-call verdicts (agentic modernisation plan v0.3 §9) that unlock
   Phase 1; captured to the personal-assistant inbox; sequenced after Paper B
   and the OSF preregistration.
-- **OA check RESOLVED (2026-07-13), two actions pending:** six of eight
+- **HISTORY PURGE EXECUTED LOCALLY (2026-07-13) — force-push pending Shawn:**
+  git filter-repo removed the dye-et-al-2023 supplement.pdf (both historical
+  paths) and marwick-2025.txt from all 242 commits; local untracked copies
+  intact; full pre-purge backup (mirror, LFS objects, plain files,
+  commit-map) at `~/Code/repo-backups/llm-reproducibility-pre-purge-20260713/`.
+  Shawn runs: `git push --force --all origin` (then `git push --force --tags
+  origin`, `git branch --set-upstream-to=origin/main main`). CAVEATS: (1) all
+  commit hashes changed — hashes cited in wiki/docs before 2026-07-13 are
+  stale; translate via the backed-up commit-map or search by commit subject;
+  (2) GitHub's server-side LFS storage may retain the now-unreferenced
+  supplement object — full scrub needs a GitHub Support ticket or repo
+  delete/recreate (low urgency: no pointer references it); (3) any other
+  local clones must be re-cloned or hard-reset. The CC BY SocArXiv preprint
+  of Marwick 2025 downloaded to
+  `studies/open-science-compliance/corpus/pdfs/marwick-2025-socarxiv-preprint.pdf`
+  (gitignored dir) for future licence-clean extraction.
+- **OA check RESOLVED (2026-07-13):** six of eight
   papers are CC BY 4.0 — no purge needed (ballsun-stanton-et-al-2018,
   penske-et-al-2023, sobotkova-et-al-2016 [OA book], sobotkova-et-al-2024
   [Emerald page confirms CC BY despite Unpaywall "bronze"], crema-et-al-2024,
