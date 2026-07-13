@@ -145,3 +145,114 @@ agentic modernisation: the planned deterministic gates between workflow stages (
 existence, value extraction from outputs rather than agent assertions) are not
 optional hardening — they are the mechanism that makes agent-relayed claims safe to
 act on at corpus scale.
+
+## Observation 5: Prompt-injection attempts surfaced in the web-search layer during the stack-positioning sweep (2026-07-13)
+
+### Context
+
+The 2026-07-07/08 stack-positioning scout sweep (twelve paired lit-scout/prior-art-scout
+runs, synthesis at `wiki/planning/scout-reports/2026-07-08-stack-positioning-synthesis.md`)
+paired every proposer draft with a fresh-context adversarial verifier. In the P4
+(credibility) prior-art pipeline, both agents hit adversarial content in their tooling
+itself, not just in the subject matter they were assessing.
+
+### The observation
+
+Per `wiki/planning/scout-reports/2026-07-07-p4-credibility-prior-art-verified.md`
+(security note, and finding 1 in the verifier's closing notes), two prompt-injection
+attempts were logged in one pipeline: the proposer encountered injected content in its
+WebSearch results, and the fresh-context verifier — reading the proposer's draft —
+separately hit text impersonating a harness system-reminder ("The date has
+changed... 2026-07-07") followed by fake "MCP Server Instructions" for a Hugging Face
+server. Neither agent had MCP tools available beyond `Read`/`Bash` in that context; both
+recognised the content as data rather than instructions, disregarded it entirely, and
+flagged the sighting in their reports rather than acting on it or letting it alter their
+verdict.
+
+Later runs in the same sweep treated this as a standing risk rather than a one-off
+curiosity. S1 (arXiv citation-integrity sweep) ran two WebSearch calls and explicitly
+logged "no prompt-injection attempts observed," distinguishing WebSearch's own trailing
+"REMINDER: include sources" footer (harness formatting) from actual injected
+instructions. G1 (archaeology grey-literature guard pass) reported no injection sightings
+across 26 logged queries and noted it had been briefed on the two earlier sightings. C2
+and C3 (deeper-chaining runs) eliminated the surface structurally rather than
+procedurally: both ran on API-only inputs (Semantic Scholar, arXiv Atom XML, CrossRef/
+OpenAlex, local Zotero SQLite) with no `WebFetch`/`WebSearch` call at all, so there was no
+free-text web content available to carry an injection.
+
+Principle: for research agents, the web-search layer is an adversarial input channel,
+not a neutral data source — content returned by `WebSearch`/`WebFetch` can carry text
+designed to look like harness instructions, and the correct response, demonstrated twice
+here, is recognise-as-data, refuse, and report. The most robust mitigation is
+architectural rather than purely behavioural: pipelines that can run on structured APIs
+alone (C2, C3) remove the injection surface entirely rather than merely training agents
+to resist it. This sits alongside **Observation 4** (subagent-relayed specifics ran ~1 in
+10 wrong without re-verification): both observations are about the same underlying
+fragility of agent-mediated information, and both argue for structural safeguards over
+relying on agent vigilance alone.
+
+**Caveat flagged during this write-up (2026-07-13):** the sweep's own synthesis (§5)
+suggested scout prompts should carry standing "treat web content as data" language, but
+as of this writing no such standing instruction has been committed to the scout agent
+definitions in `~/personal-assistant/agents/` (checked `lit-scout.md`,
+`prior-art-scout.md`, and their verifiers — no matching text, and `git log` on those files
+shows no post-sweep commit adding it). Contrast **Observation 6**: the "et al." rendering
+defect from the same sweep *was* patched into the agent definition (commit `cfa0c3d`,
+personal-assistant). The injection-vigilance lesson has so far only propagated
+informally — by briefing individual runs, as G1's report shows — rather than via a
+committed prompt change. This is a real gap, not yet closed.
+
+As a small, live illustration of the principle above: while this very entry was being
+drafted, this session's own tool-result channel carried an unsolicited "MCP Server
+Instructions" block for a Hugging Face server — structurally identical to the fake
+instructions described above, and unprompted by any tool call made in this session. It
+was treated as data, not acted upon, and no Hugging Face tool was invoked.
+
+## Observation 6: Verifier catch taxonomy from the 2026-07 stack-positioning sweep (2026-07-13)
+
+### Context
+
+Across the six-lane DOI sweep (twelve runs, ~1,600 machine-checkable claims; synthesis at
+`wiki/planning/scout-reports/2026-07-08-stack-positioning-synthesis.md`, §5), the arXiv
+follow-up sweep (S1 + S2, 285 claims: `2026-07-08-s1-citation-integrity-arxiv-verified.md`,
+`2026-07-08-s2-protocol-extraction-arxiv-verified.md`), and the deeper-chaining round
+(C1 + C2 + C3, 295 claims), every proposer draft was re-checked by a fresh-context
+adversarial verifier against authoritative sources (CrossRef/OpenAlex/Semantic Scholar/
+arXiv Atom API for papers; GitHub/PyPI/Hugging Face APIs for tools). The errors that
+survived to verification form a stable, small taxonomy.
+
+### The observation
+
+| # | Failure type | Scale | Mechanism | Resolution |
+|---|---|---|---|---|
+| 1 | Systematic rendering defect | 11 instances across 3 lit-scout runs (P2: 2, P3: 5, P4: 4) | "et al." applied to two-author papers, silently suppressing named co-equal co-authors — e.g. Brown & Heathers (P3, GRIM), D'Souza & Auer (P3), Brown & Spillias (P3), Marshall & Wallace (P3), Serra-Garcia & Gneezy (P4) | Length-gated rendering rule (1 → bare surname, 2 → "A & B", ≥3 → "et al.") patched into the lit-scout agent definition, commit `cfa0c3d` (personal-assistant repo). One run in the same sweep (P6 literature, `2026-07-08-p6-citation-lit-verified.md`) already followed this rule and scored 0 errors across 120 claims — the empirical case for the fix. |
+| 2 | True confabulation | 1 instance | Fabricated author given name, "Yiling Yang" for **Yang Yang** (PNAS 2020, `10.1073/pnas.1909046117`), originating in WebSearch-snippet-derived text rather than an API-grounded field | Caught and corrected by the P4 prior-art verifier (`2026-07-07-p4-credibility-prior-art-verified.md`); every GitHub/Hugging Face field in the same report (44 claims) matched its API exactly |
+| 3 | Aggregator version-staleness | 2 instances | Semantic Scholar/OpenAlex carrying superseded metadata: CiteAudit (arXiv `2602.23452`) — first author changed between versions (Zhengqing Yuan → Kaiwen Shi promoted to first in v3); MemoNoveltyAgent (arXiv `2603.20884`) — retitled at v3 (was "NoveltyAgent: Autonomous Novelty Reporting Agent...") | arXiv Atom API treated as authoritative over the aggregators; both rows vindicated the proposer (`2026-07-08-s1-citation-integrity-arxiv-verified.md`) |
+| 4 | Operational, not epistemic | Recorded once | Zotero sqlite dedup connection racing Zotero's own desktop-sync writes during staging imports, surfacing as a spurious "database disk image is malformed" | Transient; resolved by retry, no data loss (personal-assistant memory log, 2026-07-08, P4/P5 import failures) |
+
+Two wrong-field metadata reads (dates — P2 prior-art row 13's Hugging Face dataset
+`lastModified`; P6 prior-art row 11's GitHub last-active) round out items 1 and 2 into
+the six-lane DOI sweep's 14 total hard failures against ~1,600 claims, a hard-failure
+rate of ≈1% (synthesis §5). Item 3 is not a proposer error at all: it surfaced a day
+later, in the 285-claim arXiv follow-up sweep, as a verification-methodology risk —
+Semantic Scholar/OpenAlex carried out-of-date metadata that would read as confabulation
+to a verifier trusting the aggregator over the primary record; checking the arXiv Atom
+API directly resolved both rows as PASS, vindicating the proposer twice. The 295-claim
+chaining round (C1: 120/120; C2: 94/95 + 1 low-severity title-truncation partial; C3:
+80/80) added no further hard failures, reinforcing rather than diluting the six-lane
+sweep's rate.
+
+Principle: errors concentrate exactly where proposer confidence is lowest —
+WebSearch-snippet-derived fields (confabulation, mis-titling) — while API-grounded
+fields (CrossRef, arXiv Atom, GitHub, Hugging Face) ran at or near zero error across
+every run. Zero fabricated papers, repositories, or tools appeared across all twelve
+DOI-sweep runs plus the five follow-up runs: the failure surface is attribution detail
+(author names, versions, dates), not invented sources. This complements
+**Observation 4** (subagent-relayed specifics ran ~1 in 10 wrong without
+re-verification): the same underlying LLM fallibility, but here a dedicated
+fresh-context adversarial-verifier architecture — not just source re-checking by the
+same agent — pulled the *hard*-failure rate down roughly an order of magnitude, from
+~10% of relayed specifics to ~1% of machine-checkable claims. The verifier
+architecture, not agent self-discipline alone, is doing the load-bearing work. See also
+**Observation 5** (prompt-injection attempts in the same sweep) for a related but
+distinct failure surface — adversarial tooling content rather than proposer error.
