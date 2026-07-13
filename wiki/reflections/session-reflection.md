@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-07-06
+updated: 2026-07-14
 status: active
 ---
 
@@ -319,3 +319,58 @@ cascade/prevention lesson is genuinely important for future work.
   JOSS, GitHub-Wiki-antipattern) reframed a binary choice into a template-level decision
 - **Relational note:** Longest-arc session in this repo (four calendar days, intermittent);
   autonomous stretches worked from invariant-only principles when questions timed out
+
+## Entry 4 (2026-07-14) — Verified landscape sweep, Cosmos evidence pack, and the licence reckoning
+
+*(llm-reproducibility; session ran 2026-07-07 → 2026-07-14 in one conversation, twice
+interrupted by usage limits and once by compaction early on 2026-07-08. Everything from
+the sweep endgame onward is direct experience; the overnight sweep setup and Cosmos
+drafting before the compaction are reconstruction from the continuation summary.)*
+
+### What surprised you?
+
+The deepest surprise inverted my model of what verification is for. Going in, the
+adversarial verifiers existed to catch proposer confabulation — and they did (eleven
+"et al."-on-two-author errors, one fabricated given name). But the two most dramatic
+verifier moments ran the other way: apparent errors that source-of-record checks
+resolved *in the proposer's favour*. CiteAudit's first author "changed" because
+Semantic Scholar carried a superseded arXiv version; a 2501-prefixed arXiv ID with a
+claimed 2024 year looked like a slam-dunk correction until the Atom record showed a
+December-2024 submission under a January-2025 identifier. Verification is not only a
+confabulation filter; it protects true claims from plausible-looking corrections —
+including mine. The obs-writer agent completed the inversion by refusing to write my
+own assertion that anti-injection language was "now standing" in the agent definitions
+(it was only ever in per-run prompts), which converted a false record into a real
+patch the same day. The verification culture turned inward, and it held.
+
+The second surprise was compounding yield. One overnight instruction ("run scouts over
+the rest of the stack") became nineteen verified reports; those became the Cosmos
+field-19 evidence pack, eleven Zotero staging collections, three agent patches, a
+documented first-mover null, a competitor watch that changed project strategy
+("speed-to-publish now beats novelty-of-concept"), and finally a second-paper concept
+whose survey sections are already evidenced. Artefact chains compound when every link
+is banked to the repo immediately — the two usage-limit outages cost almost nothing
+because nothing lived only in context.
+
+### What context will be hardest to reconstruct in six months?
+
+Three things. First, *why the framework paper treats assessor reliability as a sixth
+phase* rather than a methods footnote: the sweeps showed nobody in any lane reports
+run-to-run stability as a first-class metric, so the placement is a deliberate
+staking move, not an organisational quirk. Second, *why first-mover claims are worded
+"to our knowledge" with Spennemann 2023 explicitly demarcated*: the G1 guard pass
+established the null is documented-but-scoped, and Spennemann is the one item a
+reviewer would raise (it audits the LLM's archaeological citations, not the
+literature). Third, *why commit hashes in wiki documents written before 2026-07-13
+don't resolve*: the copyright purge rewrote all 242 commits; the commit-map sits in
+`~/Code/repo-backups/llm-reproducibility-pre-purge-20260713/`, and commit subjects
+still search. A future instance that doesn't know this will suspect corruption.
+
+### What decision made this week will look arbitrary without context?
+
+Splitting the corpus question from the purge. We purged two files surgically (an
+afternoon) while deferring the corpus-management redesign to a planning document —
+because the purge was a licence liability on a public repo *now*, while the redesign
+only has to land before the census acquires papers at scale. The beacon carries the
+ordering; without it, doing one without the other looks like half a job.
+

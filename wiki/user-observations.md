@@ -41,3 +41,28 @@ template (README disambiguation map convention, since promoted to PA).
 answer is the conventions landscape plus an honest "what I'd do starting
 fresh" — it lets him test his own tooling conventions against community norms
 rather than just picking between pre-framed options.
+
+## Pending review — 2026-07-14 handoff candidates (accept / edit / discard)
+
+1. **(In-the-moment reaction, relayed)** On reviewing the overnight sweep: "ok,
+   this is a great outcome — I see I ran us out of context and through a compact
+   event, which I try to avoid, but these results were worth it." The
+   run-verify-bank overnight pattern justified its context cost; worth treating
+   compaction as an acceptable price for large autonomous programmes when every
+   artefact is banked to the repo before it is needed in context.
+2. **Compressed delegation worked without clarification overhead.** From mid-week
+   Shawn issued numbered rapid-fire task lists (including mid-turn additions like
+   "3. please also patch the lit-scout agent") and got them executed and committed
+   without a round of questions — evidence that the artefact-banking discipline
+   and verified reports made low-bandwidth steering safe.
+3. **The irreversibility boundary held without friction.** The declined
+   force-push was met with everything pre-staged (backup, rewrite, commit-map,
+   exact commands), and Shawn ran the three commands himself within the hour.
+   The division — Claude prepares everything up to the outward irreversible
+   step; Shawn executes it — may be worth codifying as the standing pattern for
+   public-repo history operations.
+4. **Transparent corrections did not interrupt flow.** Twice the record was
+   corrected mid-stream (the "working notes you created" had never been written;
+   the obs-writer refused an unverified "standing rule" claim) and both times the
+   correction plus the fix landed in the same turn — the honesty cost nothing and
+   kept the artefact record trustworthy.

@@ -6,7 +6,7 @@ audience: "researchers"
 conditions: "debugging with surprising results, hypothesis generation, belief revision, default-following corrections"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-07-06
+updated: 2026-07-14
 status: active
 ---
 
@@ -67,3 +67,36 @@ the collision case, which determined that a simple rebase was safe. The generali
 correction: on project revival, fetch and read `HEAD..origin` *before* forming a state
 assessment, because absence of local evidence is not evidence of absence when the
 evidence lives in a distributed system.
+
+### 2026-07-14 — Assessment: Qualifying episodes (three)
+
+This session qualifies — three genuine surprising-fact → probe → belief-revision
+sequences, all in the verification layer.
+
+**Episode 1 — the 2501 identifier that wasn't 2025.** Surprising fact: a proposer
+claimed year 2024 for arXiv `2501.10385`, whose identifier prefix denotes the
+January-2025 announcement cycle. Hypothesis (mine, flagged to the verifier as a likely
+silent error): the proposer misread the v1 date. Probe: the verifier fetched the arXiv
+Atom `<published>` field directly. Revision: `2024-12-18` — a late-December submission
+issued a January identifier. The proposer was right; my heuristic ("ID prefix ⇒ year")
+was the error, and it would have *introduced* a defect if applied without the probe.
+Lesson: identifier conventions are administrative metadata, not publication facts.
+
+**Episode 2 — confabulation or staleness?** Surprising fact: Semantic Scholar and
+OpenAlex both listed a different first author for CiteAudit (`2602.23452`) than the
+proposer's "Shi et al.", and a different title for MemoNoveltyAgent (`2603.20884`).
+Competing hypotheses: proposer confabulation (the base-rate expectation the whole
+verifier architecture assumes) vs aggregator lag. Probe: version-current arXiv records.
+Revision: both papers changed between arXiv versions (authorship reordering; retitle) —
+the aggregators were stale, the proposer current. This generated a new named failure
+class ("aggregator version-staleness"), now encoded in the verifier's source-of-record
+hierarchy. Belief revised at the architecture level, not just the instance level.
+
+**Episode 3 — the marwick extraction source.** Surprising fact: extraction metadata for
+a closed-access article recorded `source: null`, making its licence status
+undecidable on paper. Hypothesis: the text came from the closed version of record
+(no preprint PDF anywhere in the tree; only the VoR DOI recorded). Probe: first-page
+text of the on-disk corpus PDF. Confirmation: Elsevier VoR banner — the hypothesis
+held, the file joined the purge, and the fix generalised into a provenance rule
+(extractions must record source file + hash) in the corpus-management plan.
+

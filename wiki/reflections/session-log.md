@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-07-06
+updated: 2026-07-14
 status: active
 ---
 
@@ -180,5 +180,55 @@ authoritative until the agentic lane replaces them; nothing in this session
 changed extraction/assessment/reproduction behaviour except the de-hyphenation
 fix, which alters canonical matching keys only for affix-prefixed compounds
 absent from the frozen dictionary.
+
+## Session: 2026-07-07/14 — Verified stack sweep, Cosmos evidence, licence purge, corpus plan
+
+*(One conversation across eight days; compaction boundary early 2026-07-08; two
+usage-limit interruptions with agent relaunch. Facts below verified against the repo.)*
+
+**Scout programme (2026-07-07/08):** six-lane positioning sweep (P1–P6, lit + prior-art,
+all adversarially verified), cross-stack synthesis, scout-reports README index. Follow-ups
+same window: arXiv blind-spot sweeps S1 (citation integrity, 30 rows) and S2 (protocol
+extraction, 27 rows); approved deeper chains C1 (competitor watch — no direct rival;
+Chakravorti 2026 and Zhu 2026 named nearest), C2 (citation toolchain — accuracy engine
+off-the-shelf), C3 (CEM/RDMAP — 7 competitor flags; appropriateness niche zero citers);
+G1 grey-literature guard pass (documented 26-query null; first-mover claims scoped
+"to our knowledge" with Spennemann 2023 demarcated). Nineteen verified reports total.
+
+**Bibliography:** ~330 verified finds imported to eleven dated Zotero staging
+subcollections (P1–P6, S1–S2, C1–C3), DOI-deduplicated; arXiv items via the DataCite path.
+
+**Agent hardening (personal-assistant):** length-gated author-rendering rule (`cfa0c3d`);
+arXiv/preprint handling for proposer + verifier (`096c48e`); standing injection-defence
+rule across the scout quartet (`b31342b`).
+
+**Cosmos application:** proposal v0.3 (body 482/500) with verifier-backed positioning
+sentence; field 19 evidence pack + 8-item verified bibliography; guard-pass null folded
+in. OSF preregistration confirmed as next task after Paper B. §9 verdicts captured to
+Shawn's inbox.
+
+**Publications planning:** framework-paper plan externalised
+(`long-tail-credibility-framework-paper.md`) — state-of-play/agenda genre, phase × status
+decomposition, RSOS/QSS venue read, solo-vs-consortium open (COS/CWTS/RDA contacts noted).
+
+**Working notes:** Obs 5 (injection sightings) and Obs 6 (verifier catch taxonomy)
+written via obs-writer, which also caught and corrected an unverified orchestrator claim.
+
+**Licence reckoning:** OA audit of eight untracked papers (six CC BY CLEAR); corpus-queue
+DOI fix for key-et-al-2024; `git filter-repo` purge of the dye supplement (two historical
+paths + LFS pointer) and marwick-2025.txt from all 242 commits; full pre-purge backup at
+`~/Code/repo-backups/llm-reproducibility-pre-purge-20260713/`; Shawn force-pushed; remote
+verified clean. CC BY SocArXiv preprint of Marwick 2025 downloaded for future
+licence-clean extraction. Corpus-management redesign agreed and externalised
+(`corpus-management-plan.md`), wired into the modernisation plan as a pre-Phase-1
+prerequisite.
+
+**Contextual assumptions:** all commit hashes cited in documents written before
+2026-07-13 predate the history rewrite and no longer resolve (commit-map in the backup;
+subjects still search). GitHub-side LFS storage may retain the unreferenced supplement
+object (Support ticket or repo recreate; low urgency). The Cosmos deadline (26 Jul) and
+the competitor-convergence finding jointly drove the "bank everything immediately"
+tempo; incremental commits after every verified artefact were a deliberate response to
+two prior usage-limit outages.
 
 *New session entries should be appended above this line.*

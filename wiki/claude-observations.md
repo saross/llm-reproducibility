@@ -95,3 +95,55 @@ to begin Phase 1 in the next idle moment. The build trigger will be explicit.
 the build as ON HOLD in the plan status and continuity (done this session),
 and wait for an explicit "go" before creating implementation artefacts — even
 when autonomous time is available and the work is reversible.
+
+## claude-obs 4 — 2026-07-14: When three verifiers prescribe the same fix, bring the patch, not the question
+
+**Pattern.** Shawn's mid-turn "please also patch the lit-scout agent" came after three
+independent verifier reports had converged on the identical prescription (length-gate
+author rendering). He didn't want options or a proposal — the evidence had already made
+the decision, and he expected the fix applied and committed. The same shape recurred
+with the arXiv-handling question ("do we need to update the agents?"): once the failure
+mode was demonstrated systematic, assessment and patch belonged in the same turn.
+
+**Lesson.** For Shawn, converging independent evidence *is* the authorisation for
+low-risk, reversible, git-tracked fixes. Asking "shall I?" after the third identical
+verifier prescription reads as friction, not care.
+
+**How to apply.** Distinguish evidence-settled fixes (apply, commit, report) from
+judgement calls (§9-style — externalise and wait). The discriminator is whether
+independent verification already made the decision, not whether the change is code.
+
+## claude-obs 5 — 2026-07-14: A declined permission is a routing instruction, not a setback
+
+**Pattern.** The `git push --force` for the history purge was denied at my hands. The
+productive response turned out to be exactly right: split the compound operation,
+complete every local/reversible step (backup, rewrite, remote re-add, commit-map),
+stage the irreversible step as three exact commands, and hand it over. Shawn ran them
+within the hour and confirmed without comment — the denial wasn't distrust of the
+purge, it was (correctly) keeping the one outward irreversible action in human hands.
+
+**Lesson.** On this project the boundary is precise: I rewrite history locally with
+full backups; Shawn pushes it to the world. Pre-staging everything up to that line is
+the collaboration working as designed, not a workaround.
+
+**How to apply.** For any public/irreversible operation, structure the work so the
+human's step is minimal, exact, and copy-pasteable — and treat a permission denial as
+information about where that line sits, never as something to retry.
+
+## claude-obs 6 — 2026-07-14: Correct false premises in the user's favourable memory, cheaply and immediately
+
+**Pattern.** Shawn asked me to "keep the two working notes you created" — but they had
+only ever been flagged as candidates, never written. The tempting path (silently write
+them now and let the premise stand) would have ratified a false memory. Stating the
+correction in one clause and writing the notes in the same turn cost nothing; the
+obs-writer then caught *my* equivalent false premise (claiming anti-injection language
+was "standing" when it was per-run only) and the same correct-then-fix pattern closed
+it as a real patch the same day.
+
+**Lesson.** Shawn's trust in the artefact record is the project's core asset — this is
+a project *about* verification. Small favourable-to-me false premises are exactly the
+ones most corrosive if ratified, and cheapest to correct at the moment they appear.
+
+**How to apply.** When a request embeds a premise that flatters prior work ("you
+created", "we already have"), verify it first; if false, correct it in a clause and
+fulfil the intent in the same turn. Never let the fulfilment silently backdate itself.

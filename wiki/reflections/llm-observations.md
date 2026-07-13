@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-07-06
+updated: 2026-07-14
 status: active
 ---
 
@@ -136,3 +136,40 @@ of truth; the others are derived views that drift the moment anyone forgets the 
 A future session could generate the CHANGELOG and README history sections from the
 manifest — the same prevention-over-remediation principle the user applied to the
 assessment schema in February.
+
+## 2026-07-14 — Scout-sweep and verification-round session
+
+*(Direct experience post-compaction, 2026-07-08 onward; earlier sweep setup known from
+the continuation summary.)*
+
+- **Rendering rules beat exhortation.** The "et al."-on-two-author defect appeared in
+  three independent lit-scout runs (11 instances) despite each prompt urging author
+  fidelity — and vanished completely once the agent definition carried a *deterministic*
+  length-gated rule (1 → bare surname, 2 → "A & B", ≥3 → "et al."). The one pre-patch
+  run that happened to use the rule scored 0/120 author errors. Behavioural instructions
+  about care do less than a mechanical rule the model can apply per row.
+- **Error concentrates where proposer confidence is lowest.** Across ~2,300 re-checked
+  claims, hard failures clustered almost entirely in WebSearch-snippet-derived fields;
+  API-grounded fields (fresh `metadata` calls, arXiv Atom XML) ran at effectively zero.
+  Proposers' own confidence flags predicted the error surface — honest self-flagging is
+  itself a verification signal worth requiring.
+- **A new failure class: aggregator version-staleness.** Semantic Scholar/OpenAlex can
+  carry superseded authorship and titles for arXiv papers whose versions changed
+  (CiteAudit v3 authorship; MemoNoveltyAgent v3 retitle). Indistinguishable from
+  confabulation unless the verifier consults the source of record. The verifier
+  hierarchy now encodes this: arXiv Atom API outranks aggregators for arXiv rows.
+- **Zero fabricated sources, ever.** Across nineteen verified runs, not one invented
+  paper, repository, or tool. The 2026-era failure surface in this workload is
+  attribution detail on real sources, not invented sources — which changes what
+  verification should optimise for.
+- **The injection surface is the search layer, and refusal generalises.** Two real
+  prompt-injection attempts arrived via WebSearch content (fake system reminder; fake
+  MCP tool-config block); both were refused by agents carrying only per-run warnings.
+  Pure-API chaining runs eliminate the surface structurally. Standing defence now lives
+  in all four scout agent definitions (personal-assistant `b31342b`).
+- **Clean-pass distrust works as a protocol.** Several verifiers returned 0-corrections
+  results and each documented an explicit "high-vigilance acknowledgment" — re-checking
+  methodology before accepting the clean pass, including re-querying every row rather
+  than sampling. The instruction "if you find zero errors, that is surprising —
+  re-check" produced visibly different behaviour from default verification.
+
