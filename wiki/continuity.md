@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-07
+updated: 2026-07-14
 status: active
 ---
 
@@ -30,9 +30,10 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-07-08)
+## Repo state (2026-07-14)
 
-- `main` current through the 2026-07-07/08 session's commits (plan v0.3 review,
+- `main` current through 2026-07-14 (history rewritten 2026-07-13 — pre-purge
+  hashes are stale). Earlier landmarks: plan v0.3 review,
   Cosmos form capture + proposal draft v0.2, article-text untracking, and the
   scout-report series). Project v3.0.1.
 - **Scout sweep COMPLETE (2026-07-08), all follow-ups executed:** whole-stack
@@ -107,7 +108,8 @@ merged here as PR #1).
   papers are CC BY 4.0 — no purge needed (ballsun-stanton-et-al-2018,
   penske-et-al-2023, sobotkova-et-al-2016 [OA book], sobotkova-et-al-2024
   [Emerald page confirms CC BY despite Unpaywall "bronze"], crema-et-al-2024,
-  key-et-al-2024). PENDING: (1) `git filter-repo` purge of
+  key-et-al-2024). ~~PENDING~~ [x] 2026-07-13 both actions COMPLETED (see
+  HISTORY PURGE COMPLETE above); original scoping notes retained: (1) `git filter-repo` purge of
   dye-et-al-2023's `reproduction/attempt-01/supplement.pdf` — publisher
   (Elsevier) supplement to a green-only article, no open licence; NOTE it
   was tracked via Git LFS, so the purge must remove the LFS object as well
@@ -299,6 +301,21 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-07-07/14 — Verified stack sweep, Cosmos evidence, licence purge, corpus plan
+
+Eight-day conversation (compaction 2026-07-08; two usage-limit interruptions).
+Full detail in `wiki/reflections/session-log.md` (2026-07-07/14 entry); highlights:
+19 verified scout reports + synthesis (P1–P6, S1–S2, C1–C3, G1) with the
+speed-to-publish competitor finding; eleven Zotero staging collections; three
+scout-agent patches (author gating, arXiv handling, injection defence); Cosmos
+draft v0.3 + field-19 evidence pack; framework-paper and corpus-management plans
+externalised; working notes Obs 5–6; OA audit → `git filter-repo` purge of two
+copyrighted files (Shawn pushed; remote verified clean; backup + commit-map at
+`~/Code/repo-backups/llm-reproducibility-pre-purge-20260713/`); Marwick CC BY
+preprint downloaded. Held-over gates: none new — queue is Paper B → OSF prereg →
+§9 verdicts → corpus implementation → Phase 1. No unreviewed working-note
+candidates (Obs 5–6 written and pushed).
 
 ### 2026-07-03/06 — Revival: modernisation plan, wiki migration, tasks A-C closed
 
