@@ -82,11 +82,21 @@ merged here as PR #1).
   judgement-call verdicts (agentic modernisation plan v0.3 §9) that unlock
   Phase 1; captured to the personal-assistant inbox; sequenced after Paper B
   and the OSF preregistration.
-- **OA check of untracked article texts IN PROGRESS (2026-07-13):** agent
-  dispatched to resolve OA status/licences for the eight papers whose
-  extracted texts were untracked in `3c790cf` (they remain in public git
-  history pre-untracking); Shawn manually checks any unresolved remainder;
-  `git filter-repo` purge only if any prove non-OA or licence-incompatible.
+- **OA check RESOLVED (2026-07-13), two actions pending:** six of eight
+  papers are CC BY 4.0 — no purge needed (ballsun-stanton-et-al-2018,
+  penske-et-al-2023, sobotkova-et-al-2016 [OA book], sobotkova-et-al-2024
+  [Emerald page confirms CC BY despite Unpaywall "bronze"], crema-et-al-2024,
+  key-et-al-2024). PENDING: (1) `git filter-repo` purge of
+  dye-et-al-2023's `reproduction/attempt-01/supplement.pdf` — publisher
+  (Elsevier) supplement to a green-only article, no open licence; NOTE it
+  was tracked via Git LFS, so the purge must remove the LFS object as well
+  as the pointer; history rewrite of the public repo awaits Shawn's go.
+  (2) Shawn to confirm whether `marwick-2025.txt` was extracted from the
+  closed JAS version of record (10.1016/j.jas.2025.106281 → purge) or from
+  the CC BY SocArXiv preprint (10.31235/osf.io/fdhvb → no purge); extraction
+  metadata records only the VoR DOI with source null. Side-fix applied:
+  key-et-al-2024's DOI in the corpus queue corrected to the resolving
+  2023-prefix form (recorded 2024-prefix form 404s; verified at CrossRef).
 - **Immediate priority (displaces the above):** draft the Cosmos Institute
   grant application (deadline 26 Jul 2026); framing in
   `wiki/planning/cosmos-grant-application-framing.md`.
