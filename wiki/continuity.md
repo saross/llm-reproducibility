@@ -91,10 +91,22 @@ merged here as PR #1).
   (Elsevier) supplement to a green-only article, no open licence; NOTE it
   was tracked via Git LFS, so the purge must remove the LFS object as well
   as the pointer; history rewrite of the public repo awaits Shawn's go.
-  (2) Shawn to confirm whether `marwick-2025.txt` was extracted from the
-  closed JAS version of record (10.1016/j.jas.2025.106281 → purge) or from
-  the CC BY SocArXiv preprint (10.31235/osf.io/fdhvb → no purge); extraction
-  metadata records only the VoR DOI with source null. Side-fix applied:
+  (2) `marwick-2025.txt` near-certainly from the closed VoR: the on-disk
+  source PDF (studies/open-science-compliance/corpus/pdfs/marwick-2025.pdf)
+  IS the Elsevier JAS version of record (first-page check 2026-07-13) and no
+  preprint PDF is present — joins the purge list pending Shawn's one-word
+  confirmation. LOCAL COPIES CONFIRMED before any purge (Shawn's
+  requirement, 2026-07-13): dye supplement intact on disk (820,582 bytes,
+  real PDF, not an LFS pointer) and marwick text + VoR PDF both on disk.
+  Purge scoping: the dye supplement exists at TWO historical paths
+  (pre-reorg `outputs/dye-et-al-2023/...` and the current `studies/...`
+  path) — filter by basename/blob, not one path — and the LFS object must
+  be removed too. History audit of all ever-tracked PDFs found one other
+  publisher PDF (Sobotkova et al. 2023, old `sources/PDF/` path) — checked:
+  Applied Geography, 10.1016/j.apgeog.2023.102967, hybrid OA, CC BY →
+  CLEAR, no purge. The corpus PDFs and `input/sources/original-pdf/` were
+  never tracked; all currently tracked PDFs are the project's own artefacts
+  (reproduction figures; a draft proposal). Side-fix applied:
   key-et-al-2024's DOI in the corpus queue corrected to the resolving
   2023-prefix form (recorded 2024-prefix form 404s; verified at CrossRef).
 - **Immediate priority (displaces the above):** draft the Cosmos Institute
