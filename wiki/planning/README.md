@@ -42,9 +42,16 @@ This is the current authoritative plan, covering:
 **Focus:** Cosmos application proposal (<500 words) + framing resolutions + remaining fields
 
 #### [scout-reports/](scout-reports/)
-**Status:** Complete (2026-07-08) — 12 verified reports + synthesis
+**Status:** Complete (2026-07-08) — 19 verified reports + synthesis (lanes P1–P6, arXiv
+sweeps S1–S2, chains C1–C3, guard G1)
 **Focus:** Whole-stack positioning sweep vs state of the art (reproduction, CEM, RDMAP,
 credibility, FAIR, literature engagement); start at the synthesis
+
+#### [long-tail-credibility-framework-paper.md](long-tail-credibility-framework-paper.md)
+**Status:** Plan externalised (v0.1, 2026-07-13) — awaiting prioritisation after Shawn's
+current paper; authorship model (solo state-of-play vs consortium) undecided
+**Focus:** Framework/state-of-play paper staking out long-tail research credibility
+assessment with AI; phase × status decomposition built on the verified scout sweeps
 
 #### [active-todo-list.md](active-todo-list.md)
 **Status:** Active

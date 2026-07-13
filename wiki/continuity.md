@@ -58,6 +58,23 @@ merged here as PR #1).
   FAIR scoring of any new JAS papers (Option A ordering constraint, plan §6);
   preregistration drafting is independent of the Phase 1 hold and would
   strengthen the Cosmos application (plan §9 item 6).
+- **Framework paper QUEUED (2026-07-13):** plan externalised to
+  `wiki/planning/long-tail-credibility-framework-paper.md` (v0.1) — a
+  state-of-play/agenda paper staking out long-tail research credibility
+  assessment with AI, built on the verified scout sweeps. Prioritisation
+  deferred until Shawn finishes his current paper (week of 2026-07-13); open
+  question is authorship model (solo lit-review-and-state-of-play — his
+  current lean — vs consortium via COS/CWTS Leiden/RDA contacts).
+- **Deferred watch list (from chain reports C1/C3):** re-check forward citers
+  of Chakravorti et al. 2026 (10.48550/arXiv.2605.27394) and the
+  ReplicatorBench cluster around Sep–Oct 2026; Cheng & Khoo 2025
+  (10.31083/ko44513) and Bolanos-Burgos et al. 2026 (10.7717/peerj-cs.3921)
+  around Oct 2026–Jan 2027. Sources: c1/c3 reports' deeper-chaining sections.
+- **Working-note candidates still unwritten** (flagged 2026-07-08, low
+  priority): the two prompt-injection sightings in the WebSearch layer; the
+  verifier catch taxonomy (two-author "et al." defect — since patched into the
+  agents; aggregator version-staleness on arXiv records; the Zotero sqlite
+  immutable-mode race during imports).
 - **Immediate priority (displaces the above):** draft the Cosmos Institute
   grant application (deadline 26 Jul 2026); framing in
   `wiki/planning/cosmos-grant-application-framing.md`.
