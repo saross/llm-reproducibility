@@ -121,6 +121,12 @@ up to date, study README Phase 1 marked complete.
 
 ### Phase 1 — Build the agentic lane
 
+**Prerequisite (added 2026-07-13):** implement the corpus-management redesign in
+`corpus-management-plan.md` (out-of-tree corpus store; DOI manifest + fetch-with-checksum
+script; LFS/pre-commit guardrails) BEFORE the census acquires papers at scale — it
+prevents the third-party-content-in-history failure mode that required the 2026-07-13
+`git filter-repo` purge, and the corpus-screener agent consumes the manifest directly.
+
 - Author the five agent definitions; wire the three workflows.
 - Add deterministic gate scripts (artefact checklist verification, Docker build/parse
   checks, queue updates) under `scripts/`.

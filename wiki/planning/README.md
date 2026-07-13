@@ -47,6 +47,12 @@ sweeps S1–S2, chains C1–C3, guard G1)
 **Focus:** Whole-stack positioning sweep vs state of the art (reproduction, CEM, RDMAP,
 credibility, FAIR, literature engagement); start at the synthesis
 
+#### [corpus-management-plan.md](corpus-management-plan.md)
+**Status:** Agreed direction (v0.1, 2026-07-13) — implementation deferred; pre-Phase-1
+prerequisite for the agentic modernisation
+**Focus:** Third-party article/supplement handling — out-of-tree corpus store, DOI
+manifest + fetch-with-checksum, LFS/pre-commit guardrails; ends OA-vigilance for good
+
 #### [long-tail-credibility-framework-paper.md](long-tail-credibility-framework-paper.md)
 **Status:** Plan externalised (v0.1, 2026-07-13) — awaiting prioritisation after Shawn's
 current paper; authorship model (solo state-of-play vs consortium) undecided
