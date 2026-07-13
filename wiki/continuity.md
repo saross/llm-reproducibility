@@ -45,12 +45,15 @@ merged here as PR #1).
   first-mover claims must be scoped + "to our knowledge" with Spennemann 2023
   demarcated; Zotero staging holds all verified finds (P1–P6, S1–S2, chains).
   lit-scout + verifier agents patched (author-count rule; arXiv handling).
-- **Cosmos application:** proposal draft v0.3 in
+- **Cosmos application:** proposal draft v0.3 committed (`7435865`) in
   `wiki/planning/cosmos-application-draft.md` (body 482/500 words; field 19
-  evidence pack + bibliography drafted; guard-pass null folded in) — awaiting
-  Shawn's read; file deliberately uncommitted while under review. Remaining
-  fields: title, one-liner, self-pitch, grant amount. OSF preregistration
-  recommended before submission — urgency raised by competitor convergence.
+  evidence pack + bibliography drafted; guard-pass null folded in). Remaining
+  fields: title, one-liner, self-pitch, grant amount. Deadline 26 Jul 2026.
+- **OSF preregistration CONFIRMED (2026-07-13):** Shawn will draft/lodge it
+  as the next task after finishing Paper B (this week). It precedes any
+  new-corpus FAIR scoring (Option A ordering) and should be linked live from
+  the Cosmos application. Content largely exists (H1–H5, pilot findings
+  report §7; drafting-care notes in the cosmos draft's prereg section).
 - **Current gates:** Phase 1 of the agentic modernisation plan
   (`wiki/planning/agentic-modernisation-plan.md`, now v0.3) remains ON HOLD —
   the 2026-07-07 guided walkthrough recorded six judgement calls in plan §9;
@@ -70,11 +73,20 @@ merged here as PR #1).
   ReplicatorBench cluster around Sep–Oct 2026; Cheng & Khoo 2025
   (10.31083/ko44513) and Bolanos-Burgos et al. 2026 (10.7717/peerj-cs.3921)
   around Oct 2026–Jan 2027. Sources: c1/c3 reports' deeper-chaining sections.
-- **Working-note candidates still unwritten** (flagged 2026-07-08, low
-  priority): the two prompt-injection sightings in the WebSearch layer; the
-  verifier catch taxonomy (two-author "et al." defect — since patched into the
-  agents; aggregator version-staleness on arXiv records; the Zotero sqlite
-  immutable-mode race during imports).
+- **Working notes WRITTEN (2026-07-13):** Obs 5 (prompt-injection sightings)
+  and Obs 6 (verifier catch taxonomy) in `wiki/working-notes.md` (`f51737b`).
+  The gap Obs 5 flagged — no standing anti-injection rule in the scout agent
+  definitions — was closed the same day (personal-assistant `b31342b`,
+  injection-defence rule added to all four scout agents' Constraints).
+- **§9 verdicts: Shawn has committed (2026-07-13)** to delivering the six
+  judgement-call verdicts (agentic modernisation plan v0.3 §9) that unlock
+  Phase 1; captured to the personal-assistant inbox; sequenced after Paper B
+  and the OSF preregistration.
+- **OA check of untracked article texts IN PROGRESS (2026-07-13):** agent
+  dispatched to resolve OA status/licences for the eight papers whose
+  extracted texts were untracked in `3c790cf` (they remain in public git
+  history pre-untracking); Shawn manually checks any unresolved remainder;
+  `git filter-repo` purge only if any prove non-OA or licence-incompatible.
 - **Immediate priority (displaces the above):** draft the Cosmos Institute
   grant application (deadline 26 Jul 2026); framing in
   `wiki/planning/cosmos-grant-application-framing.md`.
