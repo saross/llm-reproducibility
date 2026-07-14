@@ -155,7 +155,8 @@ Scripts in `outputs/*/` directories (~101 scripts) are ephemeral working scripts
 
 **Completed:**
 - [x] LICENSE files present (LICENSE-CODE: Apache-2.0, LICENSE-DOCS: CC-BY-4.0 - dual licensing)
-- [x] CITATION.cff file created (updated to v2.6, Shawn Graham authorship, placeholder DOI)
+- [x] CITATION.cff file created (updated to v2.6, Shawn Ross authorship [name confabulated
+  as "Shawn Graham" until corrected 2026-07-14], placeholder DOI)
 - [x] CODE_OF_CONDUCT.md created (Contributor Covenant v2.1 with research ethics additions)
 - [x] CONTRIBUTING.md created (comprehensive contribution guidelines, 9 contribution types)
 - [x] Software metadata file created (codemeta.json with complete CodeMeta 2.0 metadata)

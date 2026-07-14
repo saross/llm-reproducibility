@@ -2,7 +2,7 @@
 
 **Version:** 1.1
 **Date:** 2026-02-12
-**Authors:** Shawn Graham and Claude (Anthropic)
+**Authors:** Shawn Ross and Claude (Anthropic)
 **Study:** Open Science Compliance Study — Phase 1 Exploratory Pilot
 **Protocol:** `studies/open-science-compliance/protocol/study-protocol.md` v1.0
 

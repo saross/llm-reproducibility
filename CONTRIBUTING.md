@@ -163,7 +163,7 @@ Thank you for your interest in contributing to this project! This document expla
 - Schema improvements
 - Infrastructure guidance gaps
 
-**Where to report:** [GitHub Issues](https://github.com/shawngraham/llm-reproducibility/issues)
+**Where to report:** [GitHub Issues](https://github.com/saross/llm-reproducibility/issues)
 
 **When reporting bugs, include:**
 - What you were trying to do
@@ -198,7 +198,7 @@ Thank you for your interest in contributing to this project! This document expla
 
 1. **Fork and clone the repository:**
    ```bash
-   git clone https://github.com/shawngraham/llm-reproducibility.git
+   git clone https://github.com/saross/llm-reproducibility.git
    cd llm-reproducibility
    ```
 

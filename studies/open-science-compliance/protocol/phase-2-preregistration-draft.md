@@ -22,7 +22,7 @@ constraints).
   in *Journal of Archaeological Science* (JAS) papers, tested via a descriptive FAIR
   census of JAS 2023–2026 and Docker-based reproduction of the eligible computational
   subset.
-- **Contributors:** Shawn Ross (ORCID: [insert]) `[DECISION 1: sole registrant, or list
+- **Contributors:** Shawn Ross (ORCID: 0000-0002-6492-9025) `[DECISION 1: sole registrant, or list
   collaborators/LLM-assistance acknowledgement in contributor notes?]`
 - **Category:** Project
 - **Licence:** CC BY 4.0

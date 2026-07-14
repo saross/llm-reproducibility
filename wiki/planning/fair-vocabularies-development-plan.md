@@ -227,7 +227,7 @@ File: `fieldwork-research-designs.ttl`
 <https://w3id.org/rdmap/designs/> a skos:ConceptScheme ;
     dct:title "Fieldwork Research Designs Vocabulary"@en ;
     dct:description "Controlled vocabulary for strategic research design types in fieldwork-based disciplines (archaeology, ecology, ethnography, field geology)"@en ;
-    dct:creator "Shawn Graham, Claude Sonnet 4.5" ;
+    dct:creator "Shawn Ross, Claude Sonnet 4.5" ;
     dct:created "2025-11-13"^^xsd:date ;
     dct:license <https://creativecommons.org/licenses/by/4.0/> ;
     skos:hasTopConcept rdmap:survey-methodology,
@@ -280,7 +280,7 @@ File: `fieldwork-methods.ttl`
 <https://w3id.org/rdmap/methods/> a skos:ConceptScheme ;
     dct:title "Fieldwork Methods Vocabulary"@en ;
     dct:description "Controlled vocabulary for research methods in fieldwork-based disciplines"@en ;
-    dct:creator "Shawn Graham, Claude Sonnet 4.5" ;
+    dct:creator "Shawn Ross, Claude Sonnet 4.5" ;
     dct:created "2025-11-13"^^xsd:date ;
     dct:license <https://creativecommons.org/licenses/by/4.0/> ;
     skos:hasTopConcept rdmap:chronometric-methods,
@@ -326,7 +326,7 @@ File: `fieldwork-protocols.ttl`
 <https://w3id.org/rdmap/protocols/> a skos:ConceptScheme ;
     dct:title "Fieldwork Protocols Vocabulary"@en ;
     dct:description "Controlled vocabulary for operational protocols in fieldwork-based disciplines"@en ;
-    dct:creator "Shawn Graham, Claude Sonnet 4.5" ;
+    dct:creator "Shawn Ross, Claude Sonnet 4.5" ;
     dct:created "2025-11-13"^^xsd:date ;
     dct:license <https://creativecommons.org/licenses/by/4.0/> ;
     skos:hasTopConcept rdmap:recording-protocols,
@@ -371,7 +371,7 @@ rdmap:single-context-recording a skos:Concept ;
 2. Upload .ttl files with README documentation
 3. Add metadata:
    - Title: "Fieldwork Research Designs Vocabulary v1.0"
-   - Creators: Shawn Graham, Claude Sonnet 4.5
+   - Creators: Shawn Ross, Claude Sonnet 4.5
    - Description: Purpose, scope, development methodology
    - Keywords: FAIR, SKOS, controlled vocabulary, fieldwork, archaeology
    - Licence: CC-BY-4.0
