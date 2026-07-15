@@ -2,7 +2,7 @@
 title: "llm-reproducibility — User Observations"
 tags: [human-ai-collaboration]
 created: 2026-07-03
-updated: 2026-07-14
+updated: 2026-07-15
 status: active
 ---
 
@@ -112,3 +112,33 @@ single outward irreversible step from prepared commands — is the standing
 pattern for public-repo history operations and analogous high-stakes actions.
 A permission denial at that line is routing, not rejection: split the
 operation, finish the local half, and hand over a minimal, exact final step.
+
+## 2026-07-15 — Candidates (pending review)
+
+*(Drafted at handoff 2026-07-15; accept / edit / discard / replace. Held over
+until a verdict — silence never discards.)*
+
+**Candidate 1 — The confabulation catch came from the re-read habit, and landed
+well.** While drafting the preregistration, Claude re-read the pilot report's
+author line before attaching it to a public registration and found "Shawn
+Graham" — a confabulated identity that had sat in CITATION.cff, codemeta.json,
+and CONTRIBUTING.md since 2025-11-13. Shawn's in-the-moment reaction ("Hah…
+obviously more famous than me") suggests the flag-not-propagate move was the
+right call. The generalisable bit: the catch was produced by the standing
+anti-confabulation rule (re-read specifics before citing them into anything
+public), not by luck.
+
+**Candidate 2 — The requested register ("direct, information-dense, no
+filler") shaped a stress-testable deliverable.** Asked for a preregistration
+in a dense, direct style, Claude delivered claim → sample → measure → test →
+predicted-direction blocks rather than prose. Open question for Shawn's
+verdict: did this land closer to the target register than the
+'write like me' skill's output, and is the format worth reusing for other
+instrument-grade documents?
+
+**Candidate 3 — Verify-what-you-can, ask-only-the-irreducible.** During the
+identity fix, Claude resolved the ORCID from Shawn's own published papers and
+the repo URL from the git remote, but stopped to ask exactly one question —
+current affiliation — where three candidates (Macquarie/ANU/FAIMS) were all
+plausible and unverifiable from disk. One interruption instead of four;
+nothing guessed.

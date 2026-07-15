@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Claude Observations"
 tags: [human-ai-collaboration, llm-craft]
 created: 2026-07-03
-updated: 2026-07-06
+updated: 2026-07-15
 status: seed
 ---
 
@@ -147,3 +147,54 @@ ones most corrosive if ratified, and cheapest to correct at the moment they appe
 **How to apply.** When a request embeds a premise that flatters prior work ("you
 created", "we already have"), verify it first; if false, correct it in a clause and
 fulfil the intent in the same turn. Never let the fulfilment silently backdate itself.
+
+## claude-obs 7 — 2026-07-15: Shawn treats methods like code — the review gate applies to designs
+
+**Pattern.** Handed a complete preregistration draft, Shawn didn't line-edit it; he
+requested `/review-implementation` over its methods "so that we stress-test them
+before committing" — prioritising statistics but explicitly widening the net. He then
+accepted every must-fix and low-effort finding wholesale and made exactly one design
+decision himself (the DiD arm), once evidence was in hand.
+
+**Lesson.** In this collaboration a design artefact is not done when drafted; it is
+done when adversarially reviewed. The review gate Shawn applies to code and API spend
+extends to methodology, and he expects the reviewer to be harder on the draft than he
+would be.
+
+**How to apply.** At future design milestones (instruments, protocols, analysis plans),
+proactively offer the review pass rather than waiting for the ask, and budget a
+same-session revision cycle. Reviewing one's own hours-old draft works when the review
+runs a genuinely different protocol (capability scan / exploitation / quantitative
+audit) rather than re-reading for agreement.
+
+## claude-obs 8 — 2026-07-15: A domain expert's terminology question can be a design insight in disguise
+
+**Pattern.** Shawn asked whether "quantitative" would beat "computational" for the H1
+sample restriction — framed as a wording preference. The right answer was causal, not
+lexical: code presence is post-treatment (the policy can cause it), so filtering on it
+biases the comparison; the quantitative nature of the research is policy-invariant.
+Shawn had intuited the correct boundary without naming the mechanism.
+
+**Lesson.** His construct-precision questions are frequently hypotheses about design
+validity wearing terminology clothing. Answering them at the lexical level would
+squander the insight.
+
+**How to apply.** When Shawn queries a category boundary or term choice in a design
+document, check whether the boundary interacts with the causal structure (selection,
+conditioning, measurement) before answering as a word-choice question.
+
+## claude-obs 9 — 2026-07-15: Self-critique — verification code deserves the rigour of what it verifies
+
+**Pattern.** My first cross-machine checksum comparison broke on unquoted filenames
+with spaces and used an over-broad filter that swept in tracked files — producing a
+wall of noise presented under the label "final verification". The null-safe redo took
+two minutes and passed cleanly (30/30).
+
+**Lesson.** A sloppy verifier is worse than no verifier: it consumes trust while
+measuring nothing. Filename sets of unknown provenance get `-print0`/`xargs -0` by
+default, and a verification step should never be narrated as "final" before its
+output has been seen.
+
+**How to apply.** Dry-run verification mechanics on one item before batch execution;
+treat verification scripts as production code; keep the "final" label for output
+actually in hand.
