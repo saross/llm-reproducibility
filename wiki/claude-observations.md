@@ -198,3 +198,29 @@ output has been seen.
 **How to apply.** Dry-run verification mechanics on one item before batch execution;
 treat verification scripts as production code; keep the "final" label for output
 actually in hand.
+
+## claude-obs 10 — 2026-07-15: Shawn applies the anti-confabulation rule to his own memory
+
+*(Augmentation entry: /handoff wrote obs 7–9 earlier this session; this covers the
+post-handoff turns, per the symmetric dedup guard.)*
+
+**Pattern.** Before letting the skill update proceed, Shawn flagged his own recollection
+as unreliable ("I have a vague memory that they are symlinked… but I haven't updated one
+in a while and have forgotten") and asked for two independent checks — the filesystem
+and `/recall` — rather than authorising an edit on either his memory or mine. Later,
+juggling parallel sessions, he asked directly whether `/reflect` had run rather than
+guessing. Both moves treat human memory the way the project's standing rules treat
+mine: as a pointer to be re-verified at the source, not an authority.
+
+**Lesson.** The anti-confabulation discipline in this collaboration is symmetric and
+Shawn models it himself. Infrastructure conventions especially (where his machines,
+cron jobs, and my context all hold partial copies of the truth) get verified before
+they get acted on. And ritual-state questions ("have we run X?") are legitimate load
+to place on me — the session state is mine to track precisely so he doesn't have to
+across parallel sessions.
+
+**How to apply.** When Shawn prefixes a request with a hedged memory, treat the
+verification as part of the request, not a preliminary — answer with what the source
+of truth says, note where his recollection was right or stale, and only then act.
+Volunteer ritual/state accounting (what has and hasn't run this session) whenever a
+session nears close or he signals he's context-switching between machines or projects.

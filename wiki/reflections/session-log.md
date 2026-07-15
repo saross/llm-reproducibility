@@ -231,4 +231,47 @@ the competitor-convergence finding jointly drove the "bank everything immediatel
 tempo; incremental commits after every verified artefact were a deliberate response to
 two prior usage-limit outages.
 
+## Session: 2026-07-14/15 — Preregistration drafted + stress-tested, identity fix, machine switch
+
+*(Single conversation on zbook, no compaction; closed for the switch to amd-tower.
+/handoff ran mid-session after the sync; /reflect ran last.)*
+
+**Preregistration:** Phase 2 OSF preregistration drafted as an open-ended registration
+(`studies/open-science-compliance/protocol/phase-2-preregistration-draft.md`, v0.1
+`9405182`) from pilot report §7, protocol v1.0, and the Cosmos drafting-care
+constraints; then stress-tested via /review-implementation and revised to v0.2
+(`885e664`): H2 endpoint switched to verification-target coverage (denominator locked
+pre-execution; exact Jonckheere–Terpstra primary, fractional-logit secondary,
+verdict-based Fisher demoted to consistency check); H1 restricted to quantitative
+papers (post-treatment conditioning argument) with trend-adjusted secondary and a
+code-sharing-prevalence outcome; JAS: Reports DiD control arm added (Shawn approved;
+FAIR lane, reproduction exploratory; Marwick 2025 grounds AER absence; pre-launch
+re-check + fallback pre-specified); H4 reworded to match its test; blinding, 0.90
+stability threshold, human-validation subsample (n=12), and power table added. NINE
+decision points open — drafted but deliberately NOT lodged.
+
+**Identity fix (`38adf36`):** confabulated author identity (Shawn Graham / Carleton /
+`github.com/shawngraham`) corrected to Shawn Ross / Macquarie / `saross` + ORCID
+0000-0002-6492-9025 across CITATION.cff, codemeta.json, CONTRIBUTING.md, pilot report,
+and two living planning docs; archive and verbatim extracted texts left untouched.
+
+**Machine switch:** amd-tower pre-purge clone quarantined to
+`~/Code/repo-backups/llm-reproducibility-pre-purge-clone-20260715`; fresh clone
+verified clean (0 purged-path hits), hooks installed, 30 gitignored corpus/text assets
+rsynced with checksums verified; remote is HTTPS+gh (SSH key needs interactive agent).
+
+**Rituals and verdicts:** /handoff (continuity `9f16fd4`, obs `69b9e11`); same-session
+verdicts — WN-a/WN-b accepted as working-notes Obs 7–8, user-obs 1–3 accepted
+(`d4c1ac3`, `9ee5209`, `ac1fd36`). Skill-fitness question answered: protocol fit,
+checklist gap; study-design checklist applied to canonical skill (personal-assistant
+`5b76a87`). Skill-deployment convention verified on disk and memorised
+(`2026-07-15-db8154bebefb`): canonical in personal-assistant `skills/`, symlinked to
+`~/.claude/skills/` by `sync-symlinks.sh`.
+
+**Contextual assumptions:** the prereg's nine decision points were left open
+deliberately (post-lodgement changes are public amendments); the DiD arm is
+conditional on the pre-launch Reports policy re-check; amd-tower's venv is not
+recreated and its remote protocol changed — both noted in continuity. Cosmos deadline
+26 Jul unchanged.
+
 *New session entries should be appended above this line.*

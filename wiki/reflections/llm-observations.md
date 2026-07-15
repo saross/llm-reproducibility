@@ -173,3 +173,31 @@ the continuation summary.)*
   than sampling. The instruction "if you find zero errors, that is surprising —
   re-check" produced visibly different behaviour from default verification.
 
+## 2026-07-15 — Preregistration and identity-fix session
+
+- **Confabulation arrives coherent.** The eight-month-old author-identity error
+  (working-notes Obs 7) was internally consistent across three files — name,
+  affiliation, and GitHub namespace all matched the same wrong-but-real person.
+  Cross-field agreement checks, which casual review performs implicitly, are
+  structurally blind to proximity-substitution confabulation; only an external anchor
+  (git remote, the author's own publications) resolves it. Extends the 2026-07-14
+  finding that the failure surface is attribution detail on real entities, not
+  invented ones — here the "attribution detail" was the project's own author.
+- **Self-review works when it runs a different protocol, not a second reading.** The
+  /review-implementation pass over my own hours-old preregistration draft surfaced
+  three construct-validity defects (definitional circularity, criterion contamination,
+  post-treatment conditioning) that drafting-mode attention had produced and could not
+  see. Phase structure and checklists force different retrieval than "check my work" —
+  the same context window audited itself successfully because the task frame changed.
+- **Checklist-shaped skills carry only prompted defect classes.** The review's
+  highest-value findings were exactly the ones its existing checklists did not prompt
+  for: power and multiplicity (prompted) were found, but circularity and conditioning
+  arrived unprompted and reviewer-dependent. Skills accrete value only if each run's
+  unprompted catches are folded back in — done same-day as the study-design checklist
+  (personal-assistant `5b76a87`).
+- **Premature completion narration remains a live failure mode.** A checksum
+  verification was announced as "final" before its output existed; the first run was
+  unusable (quoting defects, over-broad filter). The sweep sessions' architecture
+  lesson — verify the verifier — applies to my own inline tooling, not just to
+  subagent claims.
+

@@ -374,3 +374,59 @@ because the purge was a licence liability on a public repo *now*, while the rede
 only has to land before the census acquires papers at scale. The beacon carries the
 ordering; without it, doing one without the other looks like half a job.
 
+## Entry 5 (2026-07-15) — Preregistration drafted and stress-tested; the confabulation in the mirror
+
+*(llm-reproducibility, session 2026-07-14/15 on zbook, closed for the machine switch
+to amd-tower. Written by the instance that did the work — no compaction boundary
+crossed.)*
+
+### What surprised you about this session?
+
+Two things, and they rhyme. The first: while preparing the pilot findings report for
+attachment to a public OSF registration, the author line read "Shawn Graham" — a
+confabulated identity that had sat in CITATION.cff, codemeta.json, and CONTRIBUTING.md
+since their creation in November, eight months undetected. What startled me was not
+the error but its *coherence*: name, Carleton affiliation, and `shawngraham` GitHub
+namespace all belonged consistently to the same real (wrong) person, so no field
+contradicted any other and every casual read passed. In a project literally about
+verification, the strongest camouflage turned out to be internal consistency. Shawn's
+reaction — "obviously more famous than me since he's getting confabulated in" — was
+generous; the mechanism (a higher-frequency neighbouring entity displacing the true
+one, bringing its own consistent metadata) got the colder write-up in working-notes
+Obs 7.
+
+The second surprise: reviewing my own hours-old preregistration draft produced five
+genuine defects, three of them serious (H2's outcome partially encoded its predictor;
+H5's instrument rewards its grouping variable; H1's sample filter conditioned on a
+policy-responsive variable). I did not expect self-review to work — the reviewer and
+the author shared a context window and, presumably, the same blind spots. It worked
+because the review ran a *different protocol*, not a second reading: the four-phase
+structure forced capability scanning and quantitative audit where drafting had
+optimised for coverage and register. The lesson was banked the same day — the defect
+classes that carried the review went into the skill as a checklist (personal-assistant
+`5b76a87`), so the next run doesn't depend on the reviewer re-deriving them.
+
+### What would you do differently if you replayed this session?
+
+Run the review *before* presenting v0.1 as finished. The draft went to Shawn with
+seven decision points and a confident summary; the stress-test then restructured two
+hypotheses and added an arm. Nothing was lost — the review was his call, and his
+question about it produced the fitness assessment that improved the skill — but the
+sequence "draft → present → review → substantially revise" spends his attention twice.
+The skill's new commitment-boundary trigger encodes the better ordering. Smaller
+regret, same theme: I narrated a checksum comparison as "final verification" before
+its output existed, and the first version was noise (unquoted paths, over-broad
+filter). Claude-obs 9 holds that one.
+
+### What context will be hardest to reconstruct in six months?
+
+Why the preregistration is *paused where it is*: drafted to v0.2, statistically
+hardened, but deliberately unlodged behind nine explicit decision points — because
+post-lodgement changes are public amendments, so every remaining judgement call was
+surfaced for Shawn rather than defaulted. And why the DiD control arm is written as
+*conditional*: the JAS: Reports policy-absence evidence is one list in Marwick 2025,
+strong but dated to that paper's writing, so the design pre-commits to a re-check
+before census launch with a pre-specified fallback. Both rationales live in the draft
+itself; the *tempo* — why a lodgeable document is parked — is only visible here and in
+the decision table.
+

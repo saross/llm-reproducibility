@@ -100,3 +100,36 @@ text of the on-disk corpus PDF. Confirmation: Elsevier VoR banner — the hypoth
 held, the file joined the purge, and the fix generalised into a provenance rule
 (extractions must record source file + hash) in the corpus-management plan.
 
+### 2026-07-15 — Qualifying episodes (two)
+
+**Episode 1 — whose name is on the pilot report?** Surprising fact: the pilot findings
+report's author line read "Shawn Graham" — a different, real digital-archaeology
+scholar — during preparation for OSF attachment. Competing hypotheses: a deliberate
+early collaboration I lacked context for, vs a confabulated identity from the
+scaffolding-generation era. Probe: git author config, user email, repo remote
+(`saross`), and ORCID resolution against author lines in the style-corpus copies of
+Shawn's own publications. Revision: confabulation, and wider than the report — the
+same coherent wrong identity (name + Carleton + `shawngraham` URLs) sat in
+CITATION.cff, codemeta.json, and CONTRIBUTING.md since 2025-11-13. The instructive
+part: the competing-hypothesis step mattered, because the extracted text of
+sobotkova-et-al-2016 *legitimately* mentions the real Graham — one more grep hit that
+had to be classified as genuine citation, not error, before the sweep could be
+declared complete. Lesson: internal consistency is camouflage; classification of each
+occurrence against an external anchor, not pattern-matching on the name, is what
+separated the six fixes from the one legitimate mention.
+
+**Episode 2 — is JAS: Reports a valid policy control?** Surprising fact (welcome
+kind): the difference-in-differences design needed JAS: Reports to lack the
+reproducibility-review policy, and this was assumed but unevidenced. Hypothesis:
+Reports, as the sister journal, was not covered by the January 2024 Associate Editor
+for Reproducibility appointment. Probe: ScienceDirect journal pages returned HTTP 403
+(the pilot's own Finding 5 biting the project that documented it); web search
+conflated the two journals; resolution came from the locally held CC BY Marwick
+preprint, whose text enumerates the 2024 AER adopters (JAS, Advances in Archaeological
+Practice, Journal of Field Archaeology, American Antiquity) — Reports absent.
+Confirmation with a caveat: evidence is dated to that paper's writing, so the
+registration pre-commits to a guidelines re-check before census launch with a
+pre-specified fallback. Lesson: the licence-clean local corpus is not just a
+compliance artefact — it was the only machine-accessible authority when both live
+routes failed.
+
