@@ -5,7 +5,7 @@ title: "Working Notes"
 audience: "researchers"
 tags: [research-methodology, llm-craft, open-science]
 created: 2026-02-09
-updated: 2026-07-06
+updated: 2026-07-15
 status: active
 ---
 
@@ -256,3 +256,73 @@ same agent — pulled the *hard*-failure rate down roughly an order of magnitude
 architecture, not agent self-discipline alone, is doing the load-bearing work. See also
 **Observation 5** (prompt-injection attempts in the same sweep) for a related but
 distinct failure surface — adversarial tooling content rather than proposer error.
+
+## Observation 7: Coherent identity confabulation survived 8 months in public metadata (2026-07-15)
+
+### Context
+
+CITATION.cff, codemeta.json, and CONTRIBUTING.md (all created 2025-11-13) carried a
+confabulated author identity: "Shawn Graham", Carleton University, and
+`github.com/shawngraham` repository URLs — the name, affiliation, and GitHub namespace
+of a real, better-known digital-archaeology scholar, not the project's actual author.
+The pilot findings report shared the wrong name. Detected 2026-07-14 only because
+preregistration drafting triggered the anti-confabulation re-read rule at a
+public-attachment boundary (the report was about to be frozen into an OSF
+registration). Corrected in `38adf36` (Shawn Ross, Macquarie University, `saross`,
+ORCID verified against author lines in published papers). Archive files and verbatim
+extracted paper text were deliberately left untouched — the "Shawn Graham of Carleton"
+mention inside `outputs/sobotkova-et-al-2016/` is the real Graham, cited by the source
+paper itself.
+
+### The observation
+
+The confabulation survived roughly eight months of active development undetected, and
+the mechanism is instructive: the wrong identity was **internally coherent**. Name,
+affiliation, and GitHub namespace all matched each other (they belong to the same real
+person — just not this project's author), so no field contradicted any other and every
+casual read passed. This is confabulation-by-proximity-substitution: a higher-frequency
+neighbouring entity from the same field displaced the true, lower-frequency one, and
+brought its own consistent metadata along. Two principles follow. First, **internal
+consistency is not evidence of correctness** — LLM confabulations arrive coherent, so
+cross-field agreement checks (the kind casual review performs implicitly) cannot catch
+them; only comparison against an external anchor (git remote, ORCID registry, the
+author's own publications) can. Second, **identity fields in generated metadata need an
+explicit audit at creation time** — names, affiliations, PIDs, and namespaces in
+CITATION.cff/codemeta-class files are durable, public, and feed citation infrastructure
+(GitHub's cite widget, Zenodo deposits), so an error there propagates outward silently.
+Complements **Observation 4** (the same fallibility class in relayed specifics): the
+failure surface is again attribution detail rather than invented entities — the
+substituted scholar exists; that is exactly why it read as plausible.
+
+## Observation 8: The adversarial review gate transfers from code to study designs (2026-07-15)
+
+### Context
+
+The Phase 2 OSF preregistration was drafted (v0.1, `9405182`) and stress-tested in the
+same session via `/review-implementation` (four-phase protocol: capability scan,
+exploitation review, quantitative audit, recommendation), with revisions landing as
+v0.2 (`885e664`). The review was requested by Shawn "so that we stress-test [the
+methods] before committing" — statistics prioritised, net cast wider.
+
+### The observation
+
+Applied to a study design rather than code, the review caught five substantive defects
+before lodgement, when they were still free to fix (post-lodgement they become public
+amendments): (1) **definitional circularity in H2** — the outcome (reproduction
+verdicts) partially encodes the predictor (data availability), fixed by switching to a
+verification-target coverage endpoint with denominators locked pre-execution;
+(2) **criterion contamination in H5** — the Transparency rubric directly rewards the
+grouping variable (literate programming); (3) **post-treatment conditioning in H1** —
+restricting the sample on code presence conditions on a policy-responsive variable;
+fixed by restricting on the policy-invariant property (quantitative) instead;
+(4) **hypothesis wording outrunning its test in H4** — an equivalence clause
+("regardless of environment quality") no test at this N can establish; (5) **a missing
+counterfactual** for the causal policy question, resolved by adding a *JAS: Reports*
+difference-in-differences control arm. Notably, the highest-value findings (1–3) are
+construct-validity and causal-structure defects that the skill's statistical checklist
+does not prompt for — power, multiplicity, and exact tests were prompted; circularity
+and conditioning came from unprompted reasoning. Principle: the
+review-before-commitment gate transfers cleanly from code to methodology and pays off
+most at pre-registration boundaries; but the skill needs a study-design checklist for
+the defect classes that carried this review (fitness gap logged at the 2026-07-15
+session close; see continuity).

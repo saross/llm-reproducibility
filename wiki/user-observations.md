@@ -113,10 +113,9 @@ pattern for public-repo history operations and analogous high-stakes actions.
 A permission denial at that line is routing, not rejection: split the
 operation, finish the local half, and hand over a minimal, exact final step.
 
-## 2026-07-15 — Candidates (pending review)
+## 2026-07-15 — Session observations
 
-*(Drafted at handoff 2026-07-15; accept / edit / discard / replace. Held over
-until a verdict — silence never discards.)*
+*(All three candidates accepted by Shawn 2026-07-15: "user obs: keep 1, 2, 3".)*
 
 **Candidate 1 — The confabulation catch came from the re-read habit, and landed
 well.** While drafting the preregistration, Claude re-read the pilot report's
