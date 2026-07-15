@@ -354,7 +354,11 @@ generalise; a "Study Designs and Preregistrations" domain checklist is the
 gap (circularity, criterion contamination, post-treatment conditioning,
 wording-vs-test match, counterfactual presence, pre-specification
 completeness, blinding, instrument validation, power-as-estimation) —
-drafted, awaiting his go to apply to the skill file.
+APPLIED 2026-07-15 to the canonical skill (personal-assistant `5b76a87`,
+`skills/review-implementation/SKILL.md`; live everywhere via the
+sync-symlinks convention — canonical skills in personal-assistant
+`skills/`, symlinked into `~/.claude/skills/` by
+`scripts/sync-symlinks.sh`; amd-tower gets it on next pull/cron sync).
 
 ### 2026-07-07/14 — Verified stack sweep, Cosmos evidence, licence purge, corpus plan
 
