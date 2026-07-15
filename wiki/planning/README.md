@@ -29,6 +29,12 @@ This is the current authoritative plan, covering:
 **Status:** Active (v0.3, 2026-07-07) — direction approved; Phase 1 on hold pending verdicts on §9
 **Focus:** Migration of the reproduction + FAIR lanes to agents/workflows; JAS production run
 
+#### [agent-content-routing-design.md](agent-content-routing-design.md)
+**Status:** Draft for review (v0.1, 2026-07-15) — resolves modernisation plan §9 item 3;
+queued for /review-implementation + prior-art scout before Phase 1 build
+**Focus:** Skill/agent content division — embed role behaviour, push instruments (with
+read receipts), pull pattern libraries; canonical-file registry and maintenance rules
+
 #### [cosmos-grant-application-framing.md](cosmos-grant-application-framing.md)
 **Status:** Active (v0.1, 2026-07-05) — framing agreed; budget section brainstorm-grade
 **Focus:** Cosmos Institute grant application — project choice, proximity scan, pitch, budget
