@@ -344,14 +344,17 @@ confabulation corrected across public metadata and living docs (`38adf36`).
 amd-tower brought into sync (quarantine + fresh clone + verified asset rsync;
 repo-state bullet has gotchas). Also: prereg v0.1 commit `9405182` includes the
 seven-decision table later superseded by v0.2's nine.
-**Held over pending Shawn's verdicts (no silent discard):** (1) two
-working-notes candidates — [WN-a] identity confabulation in scaffolding
-metadata survived 8 months undetected because everything around it was
-correct; audit identity fields at metadata creation; [WN-b]
-/review-implementation applied to a study design (not code) caught two partial
-circularities + a post-treatment conditioning risk pre-lodgement — the
-review-gate pattern transfers to methodology. (2) Three user-obs candidates in
-`wiki/user-observations.md` "(pending review)" section dated 2026-07-15.
+~~**Held over pending Shawn's verdicts (no silent discard):**~~ [x] 2026-07-15
+all verdicts returned same session: WN-a and WN-b both ACCEPTED (now
+Observations 7–8 in `wiki/working-notes.md`); user-obs candidates 1–3 all
+ACCEPTED (pending marker cleared). Follow-on question from Shawn: is
+`/review-implementation` fit for purpose for study-design reviews, or does it
+need a checklist update? Assessment delivered 2026-07-15: protocol phases
+generalise; a "Study Designs and Preregistrations" domain checklist is the
+gap (circularity, criterion contamination, post-treatment conditioning,
+wording-vs-test match, counterfactual presence, pre-specification
+completeness, blinding, instrument validation, power-as-estimation) —
+drafted, awaiting his go to apply to the skill file.
 
 ### 2026-07-07/14 — Verified stack sweep, Cosmos evidence, licence purge, corpus plan
 
