@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-14
+updated: 2026-07-15
 status: active
 ---
 
@@ -30,10 +30,10 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-07-14)
+## Repo state (2026-07-15)
 
-- `main` current through 2026-07-14 (history rewritten 2026-07-13 — pre-purge
-  hashes are stale). Earlier landmarks: plan v0.3 review,
+- `main` current through 2026-07-15 @ `885e664` (history rewritten 2026-07-13 —
+  pre-purge hashes are stale). Earlier landmarks: plan v0.3 review,
   Cosmos form capture + proposal draft v0.2, article-text untracking, and the
   scout-report series). Project v3.0.1.
 - **Scout sweep COMPLETE (2026-07-08), all follow-ups executed:** whole-stack
@@ -50,11 +50,22 @@ merged here as PR #1).
   `wiki/planning/cosmos-application-draft.md` (body 482/500 words; field 19
   evidence pack + bibliography drafted; guard-pass null folded in). Remaining
   fields: title, one-liner, self-pitch, grant amount. Deadline 26 Jul 2026.
-- **OSF preregistration CONFIRMED (2026-07-13):** Shawn will draft/lodge it
-  as the next task after finishing Paper B (this week). It precedes any
-  new-corpus FAIR scoring (Option A ordering) and should be linked live from
-  the Cosmos application. Content largely exists (H1–H5, pilot findings
-  report §7; drafting-care notes in the cosmos draft's prereg section).
+- **OSF preregistration DRAFTED + STRESS-TESTED (2026-07-14/15):**
+  `studies/open-science-compliance/protocol/phase-2-preregistration-draft.md`
+  v0.2 (`885e664`; v0.1 `9405182`). Open-ended registration format; honours all
+  three drafting-care constraints (instrument fixed, regression-gated pipeline
+  changes, no-new-corpus-contact). /review-implementation revisions: H2
+  de-circularised (verification-target coverage endpoint, exact
+  Jonckheere–Terpstra primary, fractional-logit secondary), H1 restricted to
+  quantitative papers (post-treatment conditioning argument) with
+  trend-adjusted secondary, **JAS: Reports DiD control arm (Shawn approved
+  2026-07-14** — FAIR lane; reproduction = exploratory stretch; AER absence
+  grounded in Marwick 2025, re-verify guidelines pre-launch), H4 reworded to
+  match its test, assessment-before-reproduction blinding, 0.90 stability
+  threshold, human-validation subsample (n=12), power table. **NINE decision
+  points open** in the draft's closing table — resolve, then lodge; it
+  precedes any new-corpus FAIR scoring (Option A ordering) and should be
+  linked live from the Cosmos application.
 - **Current gates:** Phase 1 of the agentic modernisation plan
   (`wiki/planning/agentic-modernisation-plan.md`, now v0.3) remains ON HOLD —
   the 2026-07-07 guided walkthrough recorded six judgement calls in plan §9;
@@ -132,6 +143,27 @@ merged here as PR #1).
   (reproduction figures; a draft proposal). Side-fix applied:
   key-et-al-2024's DOI in the corpus queue corrected to the resolving
   2023-prefix form (recorded 2024-prefix form 404s; verified at CrossRef).
+- **Identity confabulation CORRECTED (2026-07-14, `38adf36`):** CITATION.cff,
+  codemeta.json, CONTRIBUTING.md, and the pilot findings report had carried
+  "Shawn Graham" / Carleton University / github.com/shawngraham since their
+  2025-11-13 creation. Now Shawn Ross / Macquarie University /
+  github.com/saross, ORCID 0000-0002-6492-9025 (verified against author lines
+  in Shawn's published papers). archive/ and verbatim extracted texts left
+  untouched (the sobotkova-et-al-2016 mention is the real Shawn Graham).
+- **Machine sync COMPLETE (2026-07-15):** amd-tower ready for resume. Old
+  pre-purge clone quarantined (NOT deleted) at
+  `~/Code/repo-backups/llm-reproducibility-pre-purge-clone-20260715` on
+  amd-tower — never pull/push from it (pre-purge history; also holds on-disk
+  copies of the purged files, consistent with keep-local-copies). Fresh clone
+  at `~/Code/llm-reproducibility`: purged paths absent from history (verified
+  0 hits), pre-commit hooks installed, 30 gitignored corpus/text assets
+  rsynced from zbook with all checksums verified (incl. dye supplement
+  820,582 bytes; marwick CC BY preprint). Gotchas: amd-tower remote is now
+  **HTTPS + gh credentials** (its GitHub SSH key needs an interactive agent;
+  `git remote set-url origin git@github.com:saross/llm-reproducibility.git`
+  to switch back); venv not recreated (`python -m venv venv &&
+  venv/bin/pip install -r requirements.txt` when scripts are needed);
+  `.claude/settings.local.json` deliberately not copied (machine-local).
 - **Immediate priority (displaces the above):** draft the Cosmos Institute
   grant application (deadline 26 Jul 2026); framing in
   `wiki/planning/cosmos-grant-application-framing.md`.
@@ -301,6 +333,25 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-07-14/15 — Prereg drafted + stress-tested to v0.2; identity fix; amd-tower sync
+
+One-day session on zbook, closed for machine switch to amd-tower. Phase 2 OSF
+preregistration drafted (v0.1 `9405182`) then stress-tested via
+`/review-implementation` and revised to v0.2 (`885e664`) — see the repo-state
+bullet for the full change list; nine decision points open. Author-identity
+confabulation corrected across public metadata and living docs (`38adf36`).
+amd-tower brought into sync (quarantine + fresh clone + verified asset rsync;
+repo-state bullet has gotchas). Also: prereg v0.1 commit `9405182` includes the
+seven-decision table later superseded by v0.2's nine.
+**Held over pending Shawn's verdicts (no silent discard):** (1) two
+working-notes candidates — [WN-a] identity confabulation in scaffolding
+metadata survived 8 months undetected because everything around it was
+correct; audit identity fields at metadata creation; [WN-b]
+/review-implementation applied to a study design (not code) caught two partial
+circularities + a post-treatment conditioning risk pre-lodgement — the
+review-gate pattern transfers to methodology. (2) Three user-obs candidates in
+`wiki/user-observations.md` "(pending review)" section dated 2026-07-15.
 
 ### 2026-07-07/14 — Verified stack sweep, Cosmos evidence, licence purge, corpus plan
 
