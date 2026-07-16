@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-15
+updated: 2026-07-16
 status: active
 ---
 
@@ -30,7 +30,7 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-07-15)
+## Repo state (2026-07-16)
 
 - `main` current through 2026-07-15 @ `885e664` (history rewritten 2026-07-13 —
   pre-purge hashes are stale). Earlier landmarks: plan v0.3 review,
@@ -62,17 +62,28 @@ merged here as PR #1).
   2026-07-14** — FAIR lane; reproduction = exploratory stretch; AER absence
   grounded in Marwick 2025, re-verify guidelines pre-launch), H4 reworded to
   match its test, assessment-before-reproduction blinding, 0.90 stability
-  threshold, human-validation subsample (n=12), power table. **NINE decision
-  points open** in the draft's closing table — resolve, then lodge; it
-  precedes any new-corpus FAIR scoring (Option A ordering) and should be
-  linked live from the Cosmos application.
-- **Current gates:** Phase 1 of the agentic modernisation plan
-  (`wiki/planning/agentic-modernisation-plan.md`, now v0.3) remains ON HOLD —
-  the 2026-07-07 guided walkthrough recorded six judgement calls in plan §9;
-  Shawn's verdicts on those unlock Phase 1. OSF preregistration must precede
-  FAIR scoring of any new JAS papers (Option A ordering constraint, plan §6);
-  preregistration drafting is independent of the Phase 1 hold and would
-  strengthen the Cosmos application (plan §9 item 6).
+  threshold, human-validation subsample (n=12), power table. **All NINE
+  decision points RESOLVED (2026-07-15/16 session — verdicts in that session
+  log entry); draft edits NOT yet applied** — apply resolutions (especially
+  the D3 rewrite of §5 criterion 4), then lodge; it precedes any new-corpus
+  FAIR scoring (Option A ordering) and should be linked live from the Cosmos
+  application.
+- **Current gates:** the §9 verdicts are DELIVERED (2026-07-15/16), so the
+  Phase 1 hold on the agentic modernisation plan
+  (`wiki/planning/agentic-modernisation-plan.md`, v0.3) is now gated only on
+  (a) review of the content-routing design (below) and (b) the
+  corpus-management-plan implementation (pre-Phase-1 prerequisite). OSF
+  preregistration must precede FAIR scoring of any new JAS papers (Option A
+  ordering constraint, plan §6).
+- **Agent content-routing design v0.1 WRITTEN (2026-07-15, `10947aa`):**
+  `wiki/planning/agent-content-routing-design.md` — resolves plan §9 item 3
+  with a three-way routing rule (embed role behaviour / push instruments
+  verbatim with read receipts / pull pattern libraries; silent-vs-loud
+  failure as the routing criterion). Read receipts decided by Shawn
+  (reliability-first, duplication acceptable if cleanly split;
+  no-agent-to-agent-duplication rule; shared_content registry folds into
+  manifest.yaml). Queued: `/review-implementation` + prior-art-scout passes
+  against it (Shawn wants both) → v0.2 before Phase 1 build.
 - **Framework paper QUEUED (2026-07-13):** plan externalised to
   `wiki/planning/long-tail-credibility-framework-paper.md` (v0.1) — a
   state-of-play/agenda paper staking out long-tail research credibility
@@ -90,10 +101,12 @@ merged here as PR #1).
   The gap Obs 5 flagged — no standing anti-injection rule in the scout agent
   definitions — was closed the same day (personal-assistant `b31342b`,
   injection-defence rule added to all four scout agents' Constraints).
-- **§9 verdicts: Shawn has committed (2026-07-13)** to delivering the six
-  judgement-call verdicts (agentic modernisation plan v0.3 §9) that unlock
-  Phase 1; captured to the personal-assistant inbox; sequenced after Paper B
-  and the OSF preregistration.
+- ~~**§9 verdicts: Shawn has committed (2026-07-13)** to delivering the six
+  judgement-call verdicts~~ [x] 2026-07-15/16 ALL DELIVERED: items 1–2 =
+  prereg Decision 7 (reliability checks + 0.90 threshold, confirmed); item 3
+  = content-routing design (sign-off pending the review passes); items 4–5
+  accepted (R-A+R-B merge; drift clause as encoded in prereg §8); item 6
+  realised by the prereg draft itself.
 - **HISTORY PURGE COMPLETE (2026-07-13, pushed by Shawn; remote verified
   clean):** git filter-repo removed the dye-et-al-2023 supplement.pdf (both
   historical paths) and marwick-2025.txt from all 242 commits; local
@@ -333,6 +346,41 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-07-15/16 — All prereg decision points resolved; content-routing design v0.1
+
+amd-tower resume session, closed for machine swap to the laptop (train). All nine
+preregistration decision points resolved with Shawn:
+
+- **D1** sole registrant + LLM disclosure in Summary §8. **D2** cutoff 2026-06-30,
+  **D4** 15–25 band, **D5** per-hypothesis families (Holm only within H1a's pair),
+  **D6** availability taxonomy, **D8** *Reports* 120/60, **D9** n = 12 — all confirmed
+  as drafted.
+- **D3 REVISED:** compute cap raised 48 h → **168 h wall-clock on named reference
+  hardware**, with the archived-intermediates/table-regeneration partial path written
+  into §5 criterion 4 (over-cap papers scoped down via archived posteriors, not
+  excluded). Rationale: ad-hoc drops would systematically exclude Bayesian/MCMC papers
+  — exactly H4's stochastic side.
+- **D7** reliability checks + 0.90 threshold confirmed (= §9 items 1–2).
+- Verdict-capture caveat: D3, D7, and §9 items 4–5 arrived via rejected
+  AskUserQuestion dialogs (provisional but consistent; D7 twice) — reconfirm wording
+  when applying the draft edits.
+
+§9 verdicts thereby all delivered (see repo-state bullet). Item 3 resolved by the new
+`wiki/planning/agent-content-routing-design.md` v0.1 (`10947aa`): embed role behaviour
+/ push instruments with read receipts / pull pattern libraries. Shawn's design brief:
+reliability first, duplication acceptable if split cleanly; read receipts definitely
+in. Discussion en route covered pull-miss risk calibration (low per-call, silent,
+non-trivial at census scale; stability checks don't catch a consistently-wrong scorer
+— the n = 12 human subsample does).
+
+**NEXT ACTIONS (laptop):** (1) apply D1–D9 resolutions to the prereg draft and close
+its decision table; (2) run `/review-implementation` + prior-art-scout against the
+routing design → v0.2; (3) lodge prereg on OSF; (4) Cosmos remaining fields (deadline
+26 Jul); (5) corpus-management implementation before census. PA data synced for the
+swap (data `38b78d3`, pointer `183d5e0`). Interaction lesson recorded in the PA
+scratchpad: don't pair substantive prose with an AskUserQuestion dialog in one turn —
+the prose may not render.
 
 ### 2026-07-14/15 — Prereg drafted + stress-tested to v0.2; identity fix; amd-tower sync
 
