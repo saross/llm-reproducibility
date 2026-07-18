@@ -1,6 +1,6 @@
 # Phase 2 Preregistration — Draft for OSF Lodgement
 
-**Version:** 0.3 (lodgement candidate)
+**Version:** 0.4 (lodgement candidate)
 **Date:** 2026-07-18
 **Registration type:** OSF Open-Ended Registration (single narrative Summary field;
 supporting documents attached to the OSF project and frozen by the registration)
@@ -16,20 +16,24 @@ added (Shawn approved 2026-07-14); H4 reworded to match its test; blinding, stab
 threshold, human-validation subsample, and power table added. v0.3 applies the
 2026-07-15/16 decision-point resolutions: compute cap revised (48 h → 168 h on named
 reference hardware, with an archived-intermediates partial path in §5); all other draft
-positions confirmed; inline decision markers removed.
+positions confirmed; inline decision markers removed. v0.4 (Shawn, 2026-07-18):
+census window start moved to 2022-01-01 (two full pre-policy years); H5 and the
+credibility-assessment lane reclassified as pre-specified exploratory; *Reports*
+control gains a gate-authorised census option.
 
 ---
 
 ## OSF metadata (entered in the registration form, not the Summary field)
 
 - **Title:** Open science compliance and computational reproducibility in the
-  *Journal of Archaeological Science*, 2023–2026: a FAIR census with a controlled
+  *Journal of Archaeological Science*, 2022–2026: a FAIR census with a controlled
   policy comparison and preregistered reproduction study (Phase 2)
-- **Description (one sentence):** Preregistration of five hypotheses about Findable,
-  Accessible, Interoperable, Reusable (FAIR) compliance and computational reproducibility
-  in *Journal of Archaeological Science* (JAS) papers, tested via a descriptive FAIR
-  census of JAS 2023–2026 with a difference-in-differences control series from
-  *JAS: Reports*, and Docker-based reproduction of the eligible computational subset.
+- **Description (one sentence):** Preregistration of four confirmatory hypotheses and
+  one pre-specified exploratory analysis about Findable, Accessible, Interoperable,
+  Reusable (FAIR) compliance and computational reproducibility in *Journal of
+  Archaeological Science* (JAS) papers, tested via a descriptive FAIR census of JAS
+  2022–2026 with a difference-in-differences control series from *JAS: Reports*, and
+  Docker-based reproduction of the eligible computational subset.
 - **Contributors:** Shawn Ross (ORCID: 0000-0002-6492-9025), sole registrant; Large
   Language Model (LLM) assistance is disclosed in Summary §8.
 - **Category:** Project
@@ -66,7 +70,8 @@ AERs in 2024 — JAS, *Advances in Archaeological Practice*, *Journal of Field
 Archaeology*, and *American Antiquity*; *JAS: Reports* is not among them, which grounds
 its use as a control series (§3, §6 H1b).
 
-The five hypotheses below were generated from pilot observations (pilot findings report
+The five hypotheses below (H1–H4 confirmatory; H5 pre-specified exploratory, §6) were
+generated from pilot observations (pilot findings report
 v1.1 §7, attached). The five pilot papers are therefore hypothesis-generating data and are
 **excluded from all confirmatory tests** (§6). They appear in descriptive census tables
 flagged as pilot papers.
@@ -75,7 +80,7 @@ flagged as pilot papers.
 
 - Complete and public: all Phase 1 pilot artefacts for five papers (extractions,
   assessments, FAIR scores, reproduction artefacts), in the study repository.
-- **Not started:** the JAS 2023–2026 census sweep and the *JAS: Reports* control sample.
+- **Not started:** the JAS 2022–2026 census sweep and the *JAS: Reports* control sample.
   No paper beyond the five pilot papers has been screened, acquired, extracted,
   FAIR-scored, or reproduced, in either journal. No census metadata has been collected.
   FAIR scores are the dependent variable in H1 and the context for H2; no such scores
@@ -87,7 +92,7 @@ flagged as pilot papers.
 Three linked components:
 
 1. **Descriptive FAIR census (JAS main).** All eligible quantitative JAS papers,
-   2023–2026 (window defined §4), scored on the FAIR instrument (§7.1), data and code
+   2022–2026 (window defined §4), scored on the FAIR instrument (§7.1), data and code
    independently. Doubles as the sampling frame for component 3.
 2. **Control series (*JAS: Reports*).** A stratified random sample of quantitative
    *JAS: Reports* papers over the same window, scored on the same instrument by the same
@@ -96,14 +101,17 @@ Three linked components:
    resources permitting, never entering confirmatory analyses.
 3. **Confirmatory reproduction study.** The eligible computational subset of the JAS
    main census (criteria §5) undergoes the full pipeline: extraction, credibility
-   assessment, Docker-based reproduction, and fresh-context adversarial review. H2–H5
-   are tested on this subset.
+   assessment, Docker-based reproduction, and fresh-context adversarial review. H2–H4
+   are tested on this subset; H5 is examined on it as a pre-specified exploratory
+   analysis (§6). The credibility assessment runs on every subset paper (locked before
+   reproduction, §8) as instrument-development work; its outputs are reported for
+   discussion, not confirmatory inference.
 
 ### 4. Sampling frames and eligibility
 
 - **Frame construction:** CrossRef and OpenAlex sweep of *Journal of Archaeological
   Science* (main journal) and *Journal of Archaeological Science: Reports*, publication
-  window 2023-01-01 to 2026-06-30 inclusive. Window membership is defined on the
+  window 2022-01-01 to 2026-06-30 inclusive. Window membership is defined on the
   **earliest recorded publication date** (online-first or issue) reported by CrossRef;
   both dates are recorded. The two sources are merged as a union; DOI-level
   discrepancies between them are logged and resolved against the publisher record.
@@ -122,7 +130,9 @@ Three linked components:
   computational-component flag (code-based analysis), analysis language(s).
 - **_Reports_ control sample:** stratified random sample of quantitative *Reports*
   papers, proportional by publication year; target n = 120, floor n = 60 (final n set by
-  the pre-scale cost gate and recorded before scoring begins); seeded sampling, seed and
+  the pre-scale cost gate and recorded before scoring begins; the gate may lower n
+  toward the floor or raise it, up to a full census of eligible quantitative *Reports*
+  papers, as frame size and budget permit); seeded sampling, seed and
   code published.
 - **Control validity condition:** the DiD design assumes *JAS: Reports* had no
   reproducibility review during the window. Marwick (2025) supports this to 2025;
@@ -169,9 +179,11 @@ protocol v1.0 §1.3).
 
 Unless stated otherwise: tests two-tailed at α = 0.05 with directional predictions
 recorded; exact p-values and effect sizes with 95% confidence intervals reported
-throughout. Pilot papers excluded from all tests. Multiplicity handling: H1–H5 address
+throughout. Pilot papers excluded from all tests. Multiplicity handling: H1–H4 address
 distinct constructs and are treated as separate families; within-hypothesis multiple
-comparisons are Holm-corrected as specified per hypothesis. H1b and all secondary
+comparisons are Holm-corrected as specified per hypothesis. H5 is pre-specified but
+exploratory (see its entry below) and sits outside the confirmatory structure. H1b and
+all secondary
 analyses are estimation-focused (point estimate + interval), not gated on significance.
 
 Given the sample sizes in §10, H2–H5 are acknowledged at the outset as power-limited:
@@ -188,8 +200,8 @@ to it.
 - *Cohort assignment:* pre-policy = accepted before 2024-01-01; post-policy = received on
   or after 2024-01-01; transitional = received before, accepted after. Primary test
   compares pre vs post; sensitivity analyses merge the transitional cohort into each
-  side. Papers lacking received/accepted dates: assigned by publication year (2023 =
-  pre, 2025–2026 = post, 2024 = transitional).
+  side. Papers lacking received/accepted dates: assigned by publication year (2022–2023
+  = pre, 2025–2026 = post, 2024 = transitional).
 - *Measures:* data FAIR /15 on all quantitative papers; code FAIR /15 on papers with any
   code artefact (interpreted with the conditioning caveat above, since code presence is
   policy-responsive). Tested separately; Holm-corrected pair.
@@ -199,8 +211,9 @@ to it.
   ratio with 95% CI).
 - *Trend-adjusted secondary:* regression of FAIR score on continuous publication time
   plus a policy-period term (segmented form), heteroscedasticity-consistent (HC3)
-  standard errors. Interpretive caveat stated in advance: with a single pre-policy year,
-  the within-journal design cannot fully separate the policy from the secular trend —
+  standard errors. Interpretive caveat stated in advance: with a short pre-policy
+  series (two years, 2022–2023), the within-journal design cannot fully separate the
+  policy from the secular trend —
   that is what H1b is for.
 - *Predicted direction:* post > pre on all measures.
 
@@ -211,8 +224,10 @@ to it.
 - *Estimator:* ordinary least squares with journal, period (as in H1a; transitional
   excluded from the primary, sensitivity analyses as in H1a), and their interaction;
   HC3 standard errors. Reported as point estimate with 95% CI; estimation-focused.
-- *Assumptions, stated in advance:* (a) parallel trends — untestable with one pre-policy
-  year; within-2023 monthly trends will be inspected descriptively; (b) no spillover —
+- *Assumptions, stated in advance:* (a) parallel trends — partially checkable with two
+  pre-policy years: 2022–2023 annual and monthly FAIR-score trends in both journals
+  will be inspected before the interaction is interpreted, and the shortness of the
+  pre-series is stated as a limitation; (b) no spillover —
   authors publishing in both journals may carry practices across; violation biases the
   interaction toward null (conservative); (c) stable composition — method-type profiles
   of both journals over time reported descriptively as a check.
@@ -290,8 +305,15 @@ reproduce exactly than stochastic analyses.
   deterministic stratum.
 - *Predicted direction:* deterministic → exact.
 
-**H5 — Literate programming and transparency.** Papers using literate programming score
-higher on the Transparency credibility signal.
+**H5 (pre-specified exploratory) — Literate programming and transparency.** Papers using
+literate programming score higher on the Transparency credibility signal.
+
+*Exploratory status, stated in advance:* the repliCATS-adapted credibility instrument
+has evidenced run-to-run stability (§8) but no external validation against human
+raters or outcomes. The credibility-assessment lane is instrument-development work;
+its outputs (including this analysis) are presented for discussion, not confirmatory
+inference. The analysis below is nonetheless fully pre-specified to constrain
+analytical flexibility.
 
 - *Sample:* reproduction subset (the Transparency signal is produced by the credibility
   assessment, which runs only on this subset).
@@ -423,13 +445,13 @@ plan):
 
 | Test | Assumed split | Detectable at 80% power |
 |------|--------------|------------------------|
-| H1a rank-sum, census ~120 quantitative papers | 40 pre / 80 post | Cliff's δ ≈ 0.33 (moderate) |
-| H1a if census ~60 | 20 / 40 | δ ≈ 0.5 (large) |
-| H1b DiD interaction | ~120 + ~120 | interaction terms need ~4× the N of main effects; estimation-focused by design |
+| H1a rank-sum, census ~160 quantitative papers (2022–2026 window) | 80 pre / 80 post | Cliff's δ ≈ 0.28 (moderate) |
+| H1a if census ~80 | 40 / 40 | δ ≈ 0.40 (large) |
+| H1b DiD interaction | ~160 + ~120 | interaction terms need ~4× the N of main effects; estimation-focused by design |
 | H2 exact trend, n ≤ 25 across 3 levels | ~12 / 6 / 7 | large monotone trends only (pilot-sized effects) |
 | H3 | ~5 pinned / 20 unpinned | δ ≈ 0.7 (near-separation); estimation only |
 | H4 Fisher | ~10 / 15 | very large associations only |
-| H5 rank-sum | ~8 / 17 | δ ≈ 0.6 (large) |
+| H5 rank-sum (exploratory) | ~8 / 17 | δ ≈ 0.6 (large) |
 
 Census and *Reports* frame sizes are unknown until the sweep runs; frame sizes will be
 reported before any scoring. Additional stated limitations: author-cluster
@@ -464,6 +486,20 @@ Resolved this revision (Shawn, 2026-07-14): H1 sample restriction is **quantitat
 (not computational) — restriction must be policy-invariant; code presence is
 post-treatment. DiD control arm **approved** — FAIR lane, reproduction as exploratory
 stretch goal.
+
+Post-resolution revisions (Shawn, 2026-07-18, pre-lodgement):
+
+- Census window start 2023-01-01 → **2022-01-01**, giving two full pre-policy years.
+  Rationale: the pre-group roughly doubles (H1a power), and H1b's parallel-trends
+  assumption becomes partially checkable (2022–2023 pre-trends in both journals).
+  2022 was chosen over a symmetrical mid-2021 start to keep full-year strata and to
+  limit exposure to COVID-era compositional shifts in the submission cohorts.
+- **H5 and the credibility-assessment lane reclassified pre-specified exploratory**
+  (instrument stable across runs but not externally validated; presented for
+  discussion). Confirmatory structure is now H1–H4.
+- ***Reports* control:** the pre-scale cost gate may raise n above the 120 target, up
+  to a full census of eligible quantitative *Reports* papers, as frame size and budget
+  permit.
 
 Notes for review, not in the registration text:
 
