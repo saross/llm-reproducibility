@@ -1,10 +1,13 @@
 # Open Science Compliance in *Journal of Archaeological Science*: Phase 1 Pilot Findings
 
-**Version:** 1.1
-**Date:** 2026-02-12
-**Authors:** Shawn Ross and Claude (Anthropic)
+**Version:** 1.2
+**Date:** 2026-02-12 (v1.2 revision 2026-07-18)
+**Author:** Shawn Ross (ORCID: 0000-0002-6492-9025), Macquarie University
+**LLM use:** see §10
 **Study:** Open Science Compliance Study — Phase 1 Exploratory Pilot
 **Protocol:** `studies/open-science-compliance/protocol/study-protocol.md` v1.0
+**Revision note (v1.2):** authorship updated to comply with journal and institutional
+policies on AI authorship; LLM-use statement added (§10). Findings unchanged.
 
 ## Abstract
 
@@ -197,6 +200,10 @@ Two areas require attention before Phase 2. First, wrapper script effort needs s
 This pilot assessed five papers from a single journal, selected with deliberate bias toward papers with visible computational components. The corpus is too small for inferential statistics, and our selection strategy likely overrepresents papers with better-than-average open science practices — papers without any code or data mention were excluded by design. Phase 2 should include a random sampling component alongside purposive selection.
 
 All assessments were conducted by a single assessor using LLM-assisted extraction. While the 25-run variability test demonstrates high reliability (100% classification stability, aggregate score CV 1.9–3.4%), we have not established inter-rater reliability against human assessors. All reproductions were limited to R-based analyses; our pipeline has not been tested against Python, Julia, or mixed-language projects. FAIR scores have been standardised to a 15-point binary sub-principle scale with independent data/code scoring (v1.1), resolving the scale inconsistency present in v1.0 of this report.
+
+## 10. Use of Large Language Models
+
+This study used Claude (Anthropic) as its primary analysis instrument, operated under human direction throughout. Structured extraction, classification, credibility assessment, FAIR evaluation, and computational reproduction were performed by the LLM within the staged pipeline described in §2.2, including fresh-context adversarial review of each reproduction. Claude also drafted this report. The human author designed the study, directed and reviewed each stage, verified reported values against source artefacts, and takes sole responsibility for the methods, findings, interpretations, and any errors. In line with journal and institutional policies on authorship, the LLM is not listed as an author. Versions 1.0–1.1 of this report listed "Claude (Anthropic)" in the author line; v1.2 corrects this, with the change recorded here for transparency.
 
 ## Appendix References
 

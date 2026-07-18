@@ -1,12 +1,12 @@
 # Phase 2 Preregistration — Draft for OSF Lodgement
 
-**Version:** 0.6 (lodgement candidate)
+**Version:** 0.7 (lodgement candidate)
 **Date:** 2026-07-18
 **Registration type:** OSF Open-Ended Registration (single narrative Summary field;
 supporting documents attached to the OSF project and frozen by the registration)
 **Status:** RESOLVED — all nine decision points resolved (Shawn, 2026-07-15/16; table in
 the final section). Awaiting final read-through, then lodgement.
-**Sources:** pilot findings report v1.1 §7 (H1–H5); study protocol v1.0 §4, §7.2;
+**Sources:** pilot findings report v1.2 §7 (H1–H5); study protocol v1.0 §4, §7.2;
 agentic modernisation plan v0.3 §5–6, §9; Cosmos draft v0.3 prereg section (drafting-care
 constraints); Marwick 2025 (doi:10.1016/j.jas.2025.106281) for policy scope and trigger.
 **Revision provenance:** v0.2 applies the 2026-07-14 `/review-implementation` stress-test:
@@ -29,7 +29,10 @@ expected-information gaps); L4 request window shortened to three weeks with a
 late-response clause; credibility signals may be computed internally with
 aggregate-only reporting; FAIR4RS named as a planned amendment-path extension;
 FAIR-score/coverage association added to descriptive reporting; human-validation
-wording clarified (one instrument, data and code applications).
+wording clarified (one instrument, data and code applications). v0.7 (Shawn,
+2026-07-18): pilot findings report revised to v1.2 (sole human author with an
+LLM-use statement, per journal and institutional AI-authorship policies; findings
+unchanged); references updated accordingly.
 
 ---
 
@@ -51,7 +54,7 @@ wording clarified (one instrument, data and code applications).
 - **Subjects:** Archaeology; Science and Technology Studies; Library and Information Science
 - **Tags:** reproducibility; FAIR; open science; archaeology; meta-research;
   computational reproduction; preregistration; difference-in-differences
-- **Attachments (frozen with the registration):** pilot findings report v1.1; study
+- **Attachments (frozen with the registration):** pilot findings report v1.2; study
   protocol v1.0 (contains the FAIR instrument, §4); Pass 6 infrastructure prompt
   (operational FAIR scoring implementation); this document.
 
@@ -82,7 +85,7 @@ its use as a control series (§3, §6 H1b).
 
 The five hypotheses below (H1–H4 confirmatory; H5 pre-specified exploratory, §6) were
 generated from pilot observations (pilot findings report
-v1.1 §7, attached). The five pilot papers are therefore hypothesis-generating data and are
+v1.2 §7, attached). The five pilot papers are therefore hypothesis-generating data and are
 **excluded from all confirmatory tests** (§6). They appear in descriptive census tables
 flagged as pilot papers.
 
