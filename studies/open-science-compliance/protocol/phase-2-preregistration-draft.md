@@ -1,6 +1,6 @@
 # Phase 2 Preregistration — Draft for OSF Lodgement
 
-**Version:** 0.4 (lodgement candidate)
+**Version:** 0.5 (lodgement candidate)
 **Date:** 2026-07-18
 **Registration type:** OSF Open-Ended Registration (single narrative Summary field;
 supporting documents attached to the OSF project and frozen by the registration)
@@ -19,7 +19,11 @@ reference hardware, with an archived-intermediates partial path in §5); all oth
 positions confirmed; inline decision markers removed. v0.4 (Shawn, 2026-07-18):
 census window start moved to 2022-01-01 (two full pre-policy years); H5 and the
 credibility-assessment lane reclassified as pre-specified exploratory; *Reports*
-control gains a gate-authorised census option.
+control gains a gate-authorised census option. v0.5 (Shawn, 2026-07-18): credibility
+outputs constrained to descriptive structural metrics (H5 reworked, no test);
+availability taxonomy expanded to six friction-ordered levels with a standardised L4
+request protocol; reproduction-subset sampling cap gains a gate-authorised increase;
+pre-specified descriptive reporting block added; R-only limitation sharpened.
 
 ---
 
@@ -104,8 +108,9 @@ Three linked components:
    assessment, Docker-based reproduction, and fresh-context adversarial review. H2–H4
    are tested on this subset; H5 is examined on it as a pre-specified exploratory
    analysis (§6). The credibility assessment runs on every subset paper (locked before
-   reproduction, §8) as instrument-development work; its outputs are reported for
-   discussion, not confirmatory inference.
+   reproduction, §8) as instrument-development work. Its Phase 2 outputs are descriptive
+   structural metrics only (§6 H5); no categorical verdicts (credible/not credible) and
+   no composite or numeric scores are produced or reported.
 
 ### 4. Sampling frames and eligibility
 
@@ -173,7 +178,8 @@ and their coverage and verdicts recorded as the data warrant.
 **Resource cap:** if the eligible subset exceeds 25 papers, a simple random sample of 25
 is drawn (seeded; seed and sampling code published). If fewer than 15 are eligible, all
 are reproduced and the shortfall is reported as a limitation (band inherited from
-protocol v1.0 §1.3).
+protocol v1.0 §1.3). The pre-scale cost gate may raise the sampling cap above 25 (with
+the same seeded procedure, recorded before the subset is drawn) as budget permits.
 
 ### 6. Hypotheses and tests
 
@@ -186,7 +192,7 @@ exploratory (see its entry below) and sits outside the confirmatory structure. H
 all secondary
 analyses are estimation-focused (point estimate + interval), not gated on significance.
 
-Given the sample sizes in §10, H2–H5 are acknowledged at the outset as power-limited:
+Given the sample sizes in §10, H2–H4 are acknowledged at the outset as power-limited:
 effect sizes with confidence intervals are the primary reporting quantity, p-values
 secondary, and null results will not be interpreted as evidence of absence.
 
@@ -249,8 +255,8 @@ separates how much could be checked (data-side) from whether checked values matc
   reproduced within tolerance (§7.6). BLOCKED papers score 0 with targets enumerated
   from the paper text.
 - *Primary test:* exact (permutation) Jonckheere–Terpstra trend test of coverage across
-  ordered availability levels, collapsed to three (open = L1–L2; gated = L3;
-  restricted/absent = L4–L5; taxonomy §7.3). Effect size: Somers' d
+  ordered availability levels, collapsed to three (open = L1–L2; mediated = L3;
+  effectively closed = L4–L6; taxonomy §7.3). Effect size: Somers' d
   (availability → coverage) with bias-corrected bootstrap 95% CI; medians and
   interquartile ranges reported per level.
 - *Model-choice rationale (recorded so the choice is auditable):* the unit is the paper
@@ -263,7 +269,7 @@ separates how much could be checked (data-side) from whether checked values matc
 - *Secondary (estimation only):* fractional logistic regression (quasi-binomial, logit
   link; Papke–Wooldridge 1996) of coverage on availability level (ordinal score), code
   availability form, and environment-specification level (§7.5).
-- *Consistency check:* Fisher's exact test on dichotomised availability (L1–L2 vs L3–L5)
+- *Consistency check:* Fisher's exact test on dichotomised availability (L1–L2 vs L3–L6)
   × verdict (SUCCESSFUL vs not), reported with the coupling caveat.
 - *Predicted direction:* higher availability → higher coverage; code availability and
   environment specification predict coverage weakly or not at all once availability is
@@ -305,29 +311,45 @@ reproduce exactly than stochastic analyses.
   deterministic stratum.
 - *Predicted direction:* deterministic → exact.
 
-**H5 (pre-specified exploratory) — Literate programming and transparency.** Papers using
-literate programming score higher on the Transparency credibility signal.
+**H5 (pre-specified exploratory, descriptive) — Literate programming and argument
+transparency.** Papers using literate programming exhibit more explicitly evidenced
+argument structure.
 
-*Exploratory status, stated in advance:* the repliCATS-adapted credibility instrument
-has evidenced run-to-run stability (§8) but no external validation against human
-raters or outcomes. The credibility-assessment lane is instrument-development work;
-its outputs (including this analysis) are presented for discussion, not confirmatory
-inference. The analysis below is nonetheless fully pre-specified to constrain
-analytical flexibility.
+*Exploratory status, stated in advance:* the credibility-assessment lane is
+instrument-development work. In Phase 2 it produces descriptive structural metrics
+only — counts derived from the structured extraction — and no categorical verdicts
+(credible/not credible) or composite scores (marks out of ten, 0–100 signals). The
+repliCATS-adapted signal instrument, though stable across runs (§8), is not externally
+validated; it is deferred to a documented follow-on. The comparison below is fully
+pre-specified to constrain analytical flexibility.
 
-- *Sample:* reproduction subset (the Transparency signal is produced by the credibility
-  assessment, which runs only on this subset).
+- *Sample:* reproduction subset (the structured extraction runs only on this subset).
 - *Groups:* literate programming (RMarkdown/Quarto/Jupyter as the primary analysis
   artefact) vs standalone scripts.
-- *Measure:* Transparency signal, 0–100 (repliCATS-adapted instrument, pilot-validated).
-- *Test:* Wilcoxon rank-sum; rank-biserial correlation.
-- *Known criterion overlap, stated in advance:* the Transparency rubric rewards visible
-  analytical decision-making, which literate programming provides directly; the scorer
-  necessarily sees the paper's code style. H5 is therefore a test of whether the
-  instrument registers the practice, not an independent causal claim. Procedural
-  defence: assessment-before-reproduction blinding (§8) ensures no reproduction-outcome
-  knowledge contaminates the score.
-- *Predicted direction:* literate > standalone.
+- *Measures (per paper, from the structured extraction):* (a) claim count; (b)
+  proportion of claims linked to at least one evidence item; (c) median evidence items
+  per claim; (d) count of implicit assumptions surfaced by the extraction's
+  implicit-content pass.
+- *Analysis (estimation and description only, no test):* medians and interquartile
+  ranges per group; Hodges–Lehmann differences with 95% confidence intervals.
+- *Known criterion overlap, stated in advance:* literate programming makes analytical
+  decision-making visible, which plausibly increases what the extraction can count; the
+  comparison characterises the instrument's response to the practice as much as the
+  practice itself. Procedural defence: assessment-before-reproduction blinding (§8)
+  ensures no reproduction-outcome knowledge contaminates the extraction.
+- *Predicted direction:* literate programming > standalone scripts on (b) and (c).
+
+**Pre-specified descriptive and estimation-only reporting (no tests).** To keep later
+reporting free of selective-analysis concerns, the following are pre-specified: (a)
+coverage and Docker build iterations by environment-specification level (§7.5),
+medians and interquartile ranges per level, with Somers' d (level → coverage) and
+bias-corrected bootstrap 95% CI, estimation only; (b) practice-bundle cross-tabs
+(environment-specification level × data-availability level × literate programming ×
+dependency pinning — the pilot's infrastructure bundle, pilot report §4.2); (c)
+reproduction outcomes (verdicts, coverage) by H1a policy cohort, descriptive only —
+the subset is too small to support a policy-effect test on reproduction outcomes; (d)
+L4 data-request outcomes: compliance rate and response times (§7.3). Any further
+pattern noticed in the data will be reported as post hoc.
 
 ### 7. Instruments and measures (fixed at registration)
 
@@ -345,16 +367,31 @@ PARTIAL (some analyses reproduced, others could not be) / FAILED (material discr
 affecting conclusions) / BLOCKED (reproduction could not be attempted). Definitions as in
 the reproduction-assessor protocol used in the pilot.
 
-**7.3 Data availability taxonomy (5 levels).** L1 open-complete: all analysis data in a
-public repository with persistent identifier, no access barriers. L2 open-partial: more
-than 50% of the paper's datasets (counting unit: distinct datasets enumerated in the
-paper's data availability statement and methods) retrievable via standard protocol;
-remainder gated or missing. L3 gated: retrievable only via author contact, registration,
-or institutional access. L4 restricted: documented legal/ethical restriction. L5 absent:
-not available; includes unfulfilled availability claims. Assigned at reproduction time
-from actual retrieval attempts, not statements alone. For analysis, collapsed to three
-ordered levels: open (L1–L2), gated (L3), restricted/absent (L4–L5). (New instrument,
-drafted for this registration per pilot report §8.2.)
+**7.3 Data availability taxonomy (6 levels, ordered by access friction).** The scale
+encodes two boundaries: whether a machine can retrieve the data without human
+intervention (the L2/L3 boundary), and whether the human step is procedural or
+discretionary (the L3/L4 boundary). L1 open-complete: all analysis data
+machine-retrievable via standard protocol (persistent identifier resolves to the
+data), no authentication. L2 open-partial: more than 50% of the paper's datasets
+(counting unit: distinct datasets enumerated in the paper's data availability
+statement and methods) machine-retrievable as for L1; remainder higher-friction or
+missing. L3 authenticated: retrievable after standard registration or authentication
+with a repository or service whose access grant is procedural (automatic, or routine
+review under published criteria — e.g. registration with a data archive), not
+case-by-case discretionary. L4 discretionary: available only by case-by-case
+permission of authors or custodians ("data available on request", bespoke creator or
+institutional approval); a route exists in name but the grant may be refused or go
+unanswered. L5 restricted: documented legal or ethical restriction with no access
+route for this study. L6 absent: no availability route (no statement, dead links) or
+an unfulfilled open-availability claim. Assigned at reproduction time from actual
+retrieval attempts, not statements alone: the level records the highest-friction step
+actually required (or the terminal failure mode), and per-dataset logs record route,
+steps, and outcome. For L4 papers a standardised data request is sent (template
+published; one reminder at two weeks; four-week response window from first contact)
+and the outcome logged — request compliance is itself a reported descriptive outcome.
+For analysis, collapsed to three ordered levels: open (L1–L2), mediated (L3),
+effectively closed (L4–L6). (New instrument, drafted for this registration per pilot
+report §8.2; six-level friction ordering adopted 2026-07-18.)
 
 **7.4 Precision categories.** Exact = matches to machine precision; within tolerance =
 matches within pre-stated per-analysis tolerances (e.g. within published highest posterior
@@ -451,13 +488,14 @@ plan):
 | H2 exact trend, n ≤ 25 across 3 levels | ~12 / 6 / 7 | large monotone trends only (pilot-sized effects) |
 | H3 | ~5 pinned / 20 unpinned | δ ≈ 0.7 (near-separation); estimation only |
 | H4 Fisher | ~10 / 15 | very large associations only |
-| H5 rank-sum (exploratory) | ~8 / 17 | δ ≈ 0.6 (large) |
 
 Census and *Reports* frame sizes are unknown until the sweep runs; frame sizes will be
 reported before any scoring. Additional stated limitations: author-cluster
 non-independence (prolific authors contribute multiple papers; noted as a limitation,
 with a descriptive author-overlap check); single-assessor LLM pipeline (mitigated by the
-reliability checks and human validation subsample, §8); R-only reproduction scope.
+reliability checks and human validation subsample, §8); R-only reproduction scope, which
+may over-represent authors already engaged with the R-centred reproducibility movement
+in archaeology.
 
 ### 11. Timeline
 
@@ -500,6 +538,25 @@ Post-resolution revisions (Shawn, 2026-07-18, pre-lodgement):
 - ***Reports* control:** the pre-scale cost gate may raise n above the 120 target, up
   to a full census of eligible quantitative *Reports* papers, as frame size and budget
   permit.
+- **Credibility outputs constrained (Shawn, second 2026-07-18 batch):** Phase 2
+  credibility assessment produces descriptive structural metrics only — no categorical
+  verdicts, no composite or numeric scores. H5 reworked to countable
+  argument-structure measures, estimation-only analysis, no test.
+- **Availability taxonomy reworked to six friction-ordered levels:**
+  procedural-registration access (L3) split from discretionary "on request" (L4);
+  standardised request protocol (four-week window, one reminder) added; analysis
+  collapse now open / mediated / effectively closed.
+- **Reproduction-subset cap:** the cost gate may raise the 25-paper sampling cap,
+  recorded before the subset is drawn.
+- **Descriptive reporting block added** (environment-specification estimation,
+  practice bundles, outcomes by cohort, request compliance) — pre-specified as
+  estimation/description only.
+- **Python-primary papers remain deferred:** the reproduction harness is
+  pilot-validated for R only, and no Python regression baseline exists, so Python
+  support would enter production unvalidated and language effects would confound
+  reproducibility findings. Python papers are recorded in the frame; a validated
+  Python extension is a planned follow-on. The R-only external-validity caveat is
+  stated in §10.
 
 Notes for review, not in the registration text:
 
