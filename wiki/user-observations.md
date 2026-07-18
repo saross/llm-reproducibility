@@ -141,3 +141,35 @@ the repo URL from the git remote, but stopped to ask exactly one question —
 current affiliation — where three candidates (Macquarie/ANU/FAIMS) were all
 plausible and unverifiable from disk. One interruption instead of four;
 nothing guessed.
+
+## Candidates 2026-07-18 (pending review)
+
+**Candidate 1 — Domain judgement → formalisation division of labour on the
+friction taxonomy.** Shawn supplied the domain insight ("data available on
+request" is a meme open advocates particularly resent; registration with an
+archive is different in kind) and Claude formalised it into two named scale
+boundaries (machine-retrievable at L2/L3; procedural-vs-discretionary at
+L3/L4) plus the analysis collapse. Verdict sought: did the formalisation
+capture the intent, and is this co-design pattern worth naming for future
+instrument work?
+
+**Candidate 2 — Honest recalibration after pushback beat defending the
+original claim.** When Shawn challenged the pull-miss risk framing ("I've not
+seen an agent fail this way"), Claude downgraded its own earlier emphasis
+("per-call risk is low; you're right to push back") and relocated the risk to
+tails, scale, and silent failure modes instead of defending. The recalibrated
+version drove the read-receipts decision. Was the climb-down more useful than
+the original framing?
+
+**Candidate 3 — Redact-vs-bridge pushback on pilot per-paper scores.** Claude
+argued against Shawn's redaction instinct (record integrity; H5 provenance
+depends on a per-paper score; already-public artefacts) and supplied the
+bridging-note alternative instead. Productive pushback, or should the
+redaction question have been explored further?
+
+**Candidate 4 — Convention transfer with improvement, not copying.** Pointed
+at inscriptions/ for OSF materials, Claude located the convention, extracted
+the house build flags, and deviated deliberately where the convention would
+have failed here (DejaVu fonts after Latin Modern silently dropped statistical
+symbols; md-only for glyph-bearing instruments). Is deviate-with-documented-
+reason the right default when transferring conventions between projects?

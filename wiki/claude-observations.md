@@ -224,3 +224,56 @@ verification as part of the request, not a preliminary — answer with what the 
 of truth says, note where his recollection was right or stale, and only then act.
 Volunteer ritual/state accounting (what has and hasn't run this session) whenever a
 session nears close or he signals he's context-switching between machines or projects.
+
+## claude-obs 11 — 2026-07-18: Shawn reviews instruments by interrogating design implications, not prose
+
+**Pattern.** Every read-through pass on the preregistration produced
+methodological challenges, not wording notes: window symmetry (→ 2022 start),
+compute-cap arbitrariness (→ cap bounds scope, not membership), "available on
+request" (→ six-level friction taxonomy), credibility-instrument maturity
+(→ descriptive-only posture), AI authorship policy (→ report v1.2). Zero
+comments on style across five revision batches.
+
+**Lesson.** For instrument-grade documents his review is a design review;
+polish is never the bottleneck. The highest-value preparation is anticipating
+the methodologist's questions — circularity, boundary cases, policy
+compliance, auditability — not tightening prose.
+
+**How to apply.** Before presenting an instrument or protocol, run an explicit
+design-review pass against those four lenses and surface the weak points
+proactively; treat prose-level review as his lowest-priority need.
+
+## claude-obs 12 — 2026-07-18: Deferral hooks, never bare "no" — Shawn's scope-control idiom
+
+**Pattern.** Every scope pressure this session resolved to a named future
+vehicle rather than a refusal: FAIR4RS (OSF amendment path), cloud compute
+("let's not commit now"), Quarto workflow (inbox capture), Python support
+(validated follow-on), late data responses (revise-and-resubmit window).
+
+**Lesson.** Scope discipline with Shawn is not about refusing additions; it
+is about finding each addition its correct future home, in the same breath as
+the deferral.
+
+**How to apply.** When a good idea threatens the current artefact, propose the
+deferral vehicle immediately (amendment, inbox item, follow-on with
+validation, limitation note) rather than asking whether to include it.
+
+## claude-obs 13 — 2026-07-18: Self-critique — two verification failures with the same shape
+
+**Pattern.** (a) I reported "0 missing characters" for a PDF build whose
+--include-in-header pointed at a file I had never created; the pipe swallowed
+pandoc's error and grep -c returned 0 on an empty error stream. Only separate
+exit-status capture plus pdftotext content verification caught it. (b) I
+twice quoted the pilot report's author line ("Shawn Ross and Claude") as
+verified fact — even calling it "consistent with the §8 disclosure" — without
+evaluating it against journal AI-authorship policy; Shawn caught it on the
+eve of lodgement.
+
+**Lesson.** Two failures, one shape: a check that cannot fail visibly is not
+a check. A metric computed downstream of a swallowed error is not a metric;
+verifying a fact's accuracy is not evaluating its compliance.
+
+**How to apply.** In shell pipelines, capture exit codes separately from
+derived counts. For lodgement/publication artefacts, run a distinct
+policy-compliance lens (authorship, licensing, disclosure) after the accuracy
+lens — accuracy review actively creates false confidence about compliance.
