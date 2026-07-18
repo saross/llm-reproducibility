@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-16
+updated: 2026-07-18
 status: active
 ---
 
@@ -30,7 +30,7 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-07-16)
+## Repo state (2026-07-18)
 
 - `main` current through 2026-07-15 @ `885e664` (history rewritten 2026-07-13 —
   pre-purge hashes are stale). Earlier landmarks: plan v0.3 review,
@@ -62,10 +62,12 @@ merged here as PR #1).
   2026-07-14** — FAIR lane; reproduction = exploratory stretch; AER absence
   grounded in Marwick 2025, re-verify guidelines pre-launch), H4 reworded to
   match its test, assessment-before-reproduction blinding, 0.90 stability
-  threshold, human-validation subsample (n=12), power table. **All NINE
-  decision points RESOLVED (2026-07-15/16 session — verdicts in that session
-  log entry); draft edits NOT yet applied** — apply resolutions (especially
-  the D3 rewrite of §5 criterion 4), then lodge; it precedes any new-corpus
+  threshold, human-validation subsample (n=12), power table. **v0.7
+  LODGEMENT-READY at `ee3fda3` (2026-07-18)** — all resolutions applied plus
+  four review-batch revisions (see the 2026-07-18 session log entry);
+  lodgement materials in `studies/open-science-compliance/prereg/` (plain
+  summary, two glyph-verified PDFs, README with recipe + checklist); Shawn
+  lodges the morning of 2026-07-19; it precedes any new-corpus
   FAIR scoring (Option A ordering) and should be linked live from the Cosmos
   application.
 - **Current gates:** the §9 verdicts are DELIVERED (2026-07-15/16), so the
@@ -346,6 +348,62 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-07-18 — Prereg v0.3→v0.7 lodgement-ready; OSF materials; authorship posture
+
+Shawn returned (Paper B finished on the train) and final-reviewed the prereg
+through four revision batches; everything committed and pushed; lodgement is
+the morning of 2026-07-19. Version chain (all 2026-07-18):
+
+- **v0.3** — nine decision-point resolutions applied (D3 → 168 h on named
+  hardware + archived-intermediates partial path; others as drafted).
+- **v0.4** — census window start → 2022-01-01 (two full pre-policy years;
+  H1b parallel trends partially checkable; power table recomputed, δ ≈ 0.28
+  at 80/80); H5 + credibility lane reclassified pre-specified exploratory;
+  *Reports* control census option via cost gate.
+- **v0.5** — credibility outputs constrained to descriptive structural
+  metrics; availability taxonomy → six friction-ordered levels (machine
+  boundary L2/L3, discretion boundary L3/L4; "on request" split from
+  archive registration; standardised L4 request protocol); sampling-cap gate
+  clause; pre-specified descriptive reporting block; R-only limitation
+  sharpened (Marwick-adjacent oversampling caveat).
+- **v0.6** — H5 gains two schema-verified RDMAP metrics (implicit-status
+  proportion; expected-information gaps); L4 window → 3 weeks + late-response
+  clause; credibility signals computable internally with aggregate-only
+  reporting (per-paper scores never published); FAIR4RS named as
+  amendment-path extension; FAIR×coverage estimation added; human-validation
+  wording fixed (one instrument, data + code applications).
+- **v0.7 + pilot report v1.2** — LLM removed from authorship per
+  journal/university policy: report has sole human author + §10 LLM-use
+  statement (v1.0–v1.1 correction recorded in-document); CITATION.cff and
+  codemeta author fields cleaned (tooling disclosure retained in
+  runtimePlatform/softwareRequirements); git Co-Authored-By trailers stay
+  (Shawn confirmed — VCS provenance, not scholarly authorship).
+
+Lodgement materials (`studies/open-science-compliance/prereg/`, convention
+transferred from `~/Code/inscriptions/wiki/prereg/`): plain-prose summary
+(4,347 words, emphasis stripped to fixpoint), glyph-verified PDFs of prereg +
+pilot report (DejaVu fonts — Latin Modern silently dropped α/δ/≤; verified by
+pdftotext), README with regeneration recipe + lodgement checklist. Study
+protocol and Pass 6 prompt upload as markdown only (✅/❌ glyphs drop silently
+under xelatex). Upload set: 4 canonical .md + 2 PDFs at `ee3fda3`; commit
+hash goes in the OSF project description; tag `osf-prereg-phase2-<date>`
+after submission. OSF approach memorised (memory `2026-07-18-10b38c994a0a`);
+Quarto-workflow discussion captured to PA inbox for a future session.
+
+**NEXT:** (1) lodge on OSF (morning 2026-07-19; checklist in prereg README);
+(2) Cosmos application remaining fields + link the live registration
+(deadline 26 Jul); (3) weekend run: FAIR reliability spot-check + pilot
+regression gate (pilot papers only — prereg-safe before and after lodgement);
+(4) routing-design review passes (/review-implementation + prior-art-scout);
+(5) corpus-management implementation before census.
+
+**Held over pending Shawn's verdicts (no silent discard):** working-notes
+candidates WN-a (xelatex silently drops out-of-font glyphs — meaning-inversion
+hazard for instruments; verify builds by text extraction) and WN-b
+(markdown-emphasis stripping needs fixpoint iteration — nested/line-wrapped
+spans survive one pass); user-obs candidates 1–4 in
+`wiki/user-observations.md` (pending review).
 
 ### 2026-07-15/16 — All prereg decision points resolved; content-routing design v0.1
 
