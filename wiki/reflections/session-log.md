@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-07-14
+updated: 2026-07-18
 status: active
 ---
 
@@ -275,3 +275,42 @@ recreated and its remote protocol changed — both noted in continuity. Cosmos d
 26 Jul unchanged.
 
 *New session entries should be appended above this line.*
+
+## Session: 2026-07-15/18 — Prereg resolved to v0.7, OSF materials, lodgement eve
+
+*(One conversation resumed across 15–18 July on amd-tower; no compaction. /handoff
+and /reflect both ran at the 07-18 close; /handoff wrote the obs registers first.)*
+
+**07-15/16:** all nine prereg decision points resolved with Shawn (D3 revised to
+168 h on named hardware + archived-intermediates partial path; rest as drafted);
+all six modernisation-plan §9 verdicts delivered; agent-content-routing design
+v0.1 written and committed (`10947aa`) — embed role behaviour / push instruments
+with read receipts / pull pattern libraries; session closed for machine swap with
+full data sync.
+
+**07-18 (Paper B done; Shawn returned):** four review batches took the prereg from
+v0.2 to lodgement-ready v0.7 — resolutions applied (`d85bde9`); window → 2022-01-01
+with power table recomputed, H5 + credibility lane reclassified exploratory,
+*Reports* census option (`5407c0f`); descriptive-only credibility outputs,
+six-level friction-ordered availability taxonomy with standardised L4 request
+protocol, sampling-cap gate clause, pre-specified descriptive-reporting block
+(`c7d2165`); two schema-verified RDMAP metrics for H5, three-week L4 window with
+late-response clause, FAIR4RS as amendment-path extension, FAIR×coverage
+estimation, human-validation wording fix (`2c10768`); pilot per-paper-scores
+bridging note (`ba43599`); dangling analysis-plan reference fixed (`d003ade`).
+Lodgement materials built on the inscriptions `wiki/prereg/` convention
+(`2d26d95`): plain-prose summary, two glyph-verified PDFs, README recipe +
+checklist. Authorship policy applied (`ee3fda3`): pilot report v1.2 sole human
+author + §10 LLM-use statement; CITATION.cff/codemeta author fields cleaned; git
+trailers retained (Shawn confirmed). OSF project `llm-assisted-reproducibility`
+created by Shawn (programme-level description + six keywords supplied); lodgement
+approach saved to memory (`2026-07-18-10b38c994a0a`). READY TO LODGE at `ee3fda3`.
+
+### Contextual assumptions
+
+Lodgement deferred overnight by choice, not blockage. The Cosmos deadline (26 Jul)
+drives next week's sequencing; the weekend run intention is pilot-papers-only
+(reliability checks + regression gate), safe before or after lodgement. pandoc is
+absent from amd-tower's PATH — PDFs build via Quarto's bundled 3.6.3; the recipe is
+pinned in the prereg README. The census cutoff (2026-06-30) has passed, so
+lodgement timing cannot affect frame membership.

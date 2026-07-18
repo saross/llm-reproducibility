@@ -133,3 +133,27 @@ pre-specified fallback. Lesson: the licence-clean local corpus is not just a
 compliance artefact — it was the only machine-accessible authority when both live
 routes failed.
 
+
+### 2026-07-18 — Qualifying episodes (two)
+
+**Episode 1 — the directory that wasn't there.** Surprising fact: Shawn asked for
+"the OSF preregistration materials in inscriptions/" — no such directory in this
+repo. Competing hypotheses: (a) misremembered, never existed (create fresh); (b)
+uncommitted laptop work lost in the machine swap (plausible — the swap was three
+days earlier); (c) a different repository entirely. Probe: repo-scoped find
+(nothing), git history grep, then filesystem-wide find → `~/Code/inscriptions`, a
+sibling project with a mature `wiki/prereg/` lodgement convention (plain-prose
+addenda, house PDF flags, per-lodgement git tags). Revision: (c), with large
+payoff — the convention transferred wholesale with one documented deviation
+(fonts). The default under hypothesis (a) — invent the materials — would have
+produced plausible artefacts while silently discarding a battle-tested convention.
+
+**Episode 2 — the impossible clean build.** Surprising fact: a rebuild reported
+zero missing-character warnings immediately after a build with thirteen. Competing
+hypotheses: (a) the font change fixed everything; (b) the check itself was broken.
+The tell: the run referenced a header file never created, so it should have failed,
+not succeeded cleanly. Probe: create the header, re-run with exit status captured
+separately and stderr to a file, verify content by extracting known symbol strings
+from the PDF. Revision: (b) first (swallowed error, stale artefacts), then
+legitimately (a) on the honest re-run. Cross-referenced as claude-obs 13: a
+verification that cannot fail visibly verifies nothing.

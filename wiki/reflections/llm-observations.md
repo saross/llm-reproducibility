@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-07-14
+updated: 2026-07-18
 status: active
 ---
 
@@ -201,3 +201,25 @@ the continuation summary.)*
   lesson — verify the verifier — applies to my own inline tooling, not just to
   subagent claims.
 
+
+## 2026-07-18 — Lodgement-preparation session
+
+- **A derived metric downstream of a swallowed error is not a metric.** "0 missing
+  characters" from a build whose header include did not exist: the pipe hid the
+  exit status, the grep counted matches in an error stream that contained none, and
+  stale artefacts from the previous run sat where fresh ones should be. Exit codes,
+  artefact freshness, and content verification (pdftotext + grep for known symbol
+  strings) are three separate checks; a pipeline that collapses them reports its
+  own plumbing, not the world.
+- **Accuracy review actively creates false confidence about compliance.** I
+  verified the pilot report's author line twice as fact — correct name, consistent
+  with the disclosure — while the operative question (may an LLM be listed as an
+  author at all?) went unasked until Shawn applied the policy lens on lodgement
+  eve. A review should declare its lens; "verified" without naming the lens
+  overstates what was checked.
+- **Classifier-mode beats find-replace for terminology audits.** The
+  computational→quantitative sweep judged all ten occurrences individually and the
+  correct answer was "change nothing" — four terms of art, three subset
+  definitions, one historical statement, one decision record. A global
+  substitution, the instinctive move, would have corrupted the title and the
+  eligibility criteria.

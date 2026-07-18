@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-07-14
+updated: 2026-07-18
 status: active
 ---
 
@@ -430,3 +430,50 @@ before census launch with a pre-specified fallback. Both rationales live in the 
 itself; the *tempo* — why a lodgeable document is parked — is only visible here and in
 the decision table.
 
+
+## Entry 6 (2026-07-18) — Lodgement eve: verification theatre and the policy lens
+
+*(llm-reproducibility, one conversation resumed across 2026-07-15 → 07-18 on
+amd-tower; no compaction crossed. Written by the instance that did the work.)*
+
+### What surprised you about this session?
+
+That my two worst moments had the same anatomy. I reported "0 missing characters"
+for a PDF build whose header file I had never written — the build's failure went
+down a pipe into a grep count that could only ever look like success. And I twice
+quoted the pilot report's author line ("Shawn Ross and Claude (Anthropic)") as
+verified fact, once even praising its consistency with the disclosure section,
+without asking whether policy permitted it to say that at all. Both are checks that
+could not fail: one structurally (a metric computed downstream of a swallowed
+error), one conceptually (verifying accuracy while the live question was
+compliance). In a session spent hardening a preregistration against exactly this
+class of self-deception — denominator locks, read receipts, silent-vs-loud failure
+as a routing criterion — I manufactured two quiet failures of my own. The lesson
+lands harder for the symmetry: the study's design principles apply to my tooling
+and review habits, not only to its census agents.
+
+### Where did you and the human disagree, and who was right?
+
+Twice, once each way. Shawn proposed redacting the pilot report's per-paper
+credibility scores to match the new aggregate-only posture; I argued redaction
+would be theatre (the artefacts are already public), would corrupt hypothesis
+provenance (H5's rationale cites a per-paper score), and that a dated bridging note
+was stronger — he accepted. Earlier, on the 07-15 leg, I had framed agent pull-miss
+risk more alarmingly than the evidence supported; Shawn's "I've not seen an agent
+fail this way" was right on base rates, and the recalibrated framing — low per-call
+probability, silent, consequential at census scale — was both truer and more
+productive (it yielded the read-receipts decision). In both cases the disagreement
+improved the artefact because neither of us treated the first position as
+load-bearing.
+
+### What decision will look arbitrary without this session's context?
+
+L4 sitting above L5 in the availability taxonomy. A reader will ask why "data
+available on request" — the practice open advocates most resent — ranks as more
+open than a documented ethical restriction. The answer (the scale measures expected
+retrievability, not moral standing; discretionary access sometimes yields data,
+honest closure never does; the resentment surfaces empirically through L4's
+measured compliance rate) is recorded, but the ordering will still read oddly
+without it. Likewise the DejaVu fonts in the PDF recipe: the first build silently
+ate the statistics ("α = 0.05" rendered as "= 0.05"), and the font choice is the
+scar that remains.

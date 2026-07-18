@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Claude Observations"
 tags: [human-ai-collaboration, llm-craft]
 created: 2026-07-03
-updated: 2026-07-15
+updated: 2026-07-18
 status: seed
 ---
 
@@ -277,3 +277,21 @@ verifying a fact's accuracy is not evaluating its compliance.
 derived counts. For lodgement/publication artefacts, run a distinct
 policy-compliance lens (authorship, licensing, disclosure) after the accuracy
 lens — accuracy review actively creates false confidence about compliance.
+
+## claude-obs 14 — 2026-07-18: Shawn banks conventions at the moment they crystallise
+
+**Pattern.** Within minutes of the lodgement-materials convention stabilising
+(plain text + verified PDFs + authorship posture), he asked for a /remember
+capture of the whole approach; the Quarto-workflow question earlier went straight
+to the inbox the moment it was deferred. Tonight's template — the inscriptions
+`wiki/prereg/` directory — is itself the product of the same habit in an earlier
+project.
+
+**Lesson.** Convention capture is part of his definition of done. Freshly
+crystallised workflow patterns are save-worthy when they stabilise, not at a later
+curation pass — the inscriptions precedent shows the payoff compounds across
+projects.
+
+**How to apply.** When a reusable pattern settles mid-session (build recipe,
+review posture, document convention), proactively offer the /remember or inbox
+capture rather than waiting to be asked.
