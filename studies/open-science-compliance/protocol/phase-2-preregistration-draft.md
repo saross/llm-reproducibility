@@ -331,7 +331,12 @@ validated: signal scores may be computed internally as instrument development, b
 per-paper credibility scores and no categorical verdicts (credible/not credible) will
 be reported in study outputs. Aggregate instrument behaviour (score distributions,
 run-to-run stability, association with the descriptive metrics below) may be
-presented, without per-paper attribution, as a proposal for community discussion. The
+presented, without per-paper attribution, as a proposal for community discussion.
+Pilot per-paper credibility outputs (pilot findings report §3.2 and the per-paper
+assessment directories) remain public as part of the pilot record: they were produced
+with full human review during instrument development, and H5's rationale derives from
+them. The aggregate-only restriction is a Phase 2 policy for semi-automated assessment
+at scale, not a retraction of the pilot record. The
 comparison below is fully pre-specified to constrain analytical flexibility.
 
 - *Sample:* reproduction subset (the structured extraction runs only on this subset).
