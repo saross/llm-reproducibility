@@ -502,8 +502,8 @@ coefficients of variation of 1.9–3.4%.
 ### 10. Power and interpretation constraints
 
 Approximate power at α = 0.05 two-tailed (H1a at α = 0.025 for the Holm pair;
-z-approximations with pilot-informed group splits; full assumptions in the analysis
-plan):
+z-approximations with pilot-informed group splits; full assumptions and calculation
+code will be published with study outputs):
 
 | Test | Assumed split | Detectable at 80% power |
 |------|--------------|------------------------|
