@@ -367,8 +367,7 @@ of data FAIR and code FAIR scores (§7.1) with coverage — Somers' d with bias-
 bootstrap 95% CI, overall and within the open (L1–L2) availability stratum, estimation
 only. Overlap caveat stated in advance: the FAIR A-principles partially encode the
 availability taxonomy, so the informative comparison is FAIR-beyond-access within the
-open stratum. Any further
-pattern noticed in the data will be reported as post hoc.
+open stratum. Any further pattern noticed in the data will be reported as post hoc.
 
 ### 7. Instruments and measures (fixed at registration)
 
