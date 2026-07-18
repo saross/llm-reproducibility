@@ -1,11 +1,11 @@
 # Phase 2 Preregistration — Draft for OSF Lodgement
 
-**Version:** 0.2 (draft for Shawn's review)
-**Date:** 2026-07-14
+**Version:** 0.3 (lodgement candidate)
+**Date:** 2026-07-18
 **Registration type:** OSF Open-Ended Registration (single narrative Summary field;
 supporting documents attached to the OSF project and frozen by the registration)
-**Status:** DRAFT — not lodged. Decision points marked `[DECISION n]` inline and
-collected in the final section. Resolve all before lodgement.
+**Status:** RESOLVED — all nine decision points resolved (Shawn, 2026-07-15/16; table in
+the final section). Awaiting final read-through, then lodgement.
 **Sources:** pilot findings report v1.1 §7 (H1–H5); study protocol v1.0 §4, §7.2;
 agentic modernisation plan v0.3 §5–6, §9; Cosmos draft v0.3 prereg section (drafting-care
 constraints); Marwick 2025 (doi:10.1016/j.jas.2025.106281) for policy scope and trigger.
@@ -13,7 +13,10 @@ constraints); Marwick 2025 (doi:10.1016/j.jas.2025.106281) for policy scope and 
 H2 endpoint de-circularised (coverage, exact trend test); H1 restricted to quantitative
 papers with trend-adjusted secondary; JAS: Reports difference-in-differences control arm
 added (Shawn approved 2026-07-14); H4 reworded to match its test; blinding, stability
-threshold, human-validation subsample, and power table added.
+threshold, human-validation subsample, and power table added. v0.3 applies the
+2026-07-15/16 decision-point resolutions: compute cap revised (48 h → 168 h on named
+reference hardware, with an archived-intermediates partial path in §5); all other draft
+positions confirmed; inline decision markers removed.
 
 ---
 
@@ -27,8 +30,8 @@ threshold, human-validation subsample, and power table added.
   in *Journal of Archaeological Science* (JAS) papers, tested via a descriptive FAIR
   census of JAS 2023–2026 with a difference-in-differences control series from
   *JAS: Reports*, and Docker-based reproduction of the eligible computational subset.
-- **Contributors:** Shawn Ross (ORCID: 0000-0002-6492-9025) `[DECISION 1: sole registrant,
-  or list collaborators/LLM-assistance acknowledgement in contributor notes?]`
+- **Contributors:** Shawn Ross (ORCID: 0000-0002-6492-9025), sole registrant; Large
+  Language Model (LLM) assistance is disclosed in Summary §8.
 - **Category:** Project
 - **Licence:** CC BY 4.0
 - **Subjects:** Archaeology; Science and Technology Studies; Library and Information Science
@@ -104,7 +107,6 @@ Three linked components:
   **earliest recorded publication date** (online-first or issue) reported by CrossRef;
   both dates are recorded. The two sources are merged as a union; DOI-level
   discrepancies between them are logged and resolved against the publisher record.
-  `[DECISION 2: confirm cutoff date]`
 - **Census inclusion:** research articles (excluding editorials, corrigenda, letters,
   review articles without new analysis) with accessible full text, in English, that are
   **quantitative** — defined as reporting numerical analysis of data (measurements,
@@ -121,7 +123,7 @@ Three linked components:
 - **_Reports_ control sample:** stratified random sample of quantitative *Reports*
   papers, proportional by publication year; target n = 120, floor n = 60 (final n set by
   the pre-scale cost gate and recorded before scoring begins); seeded sampling, seed and
-  code published. `[DECISION 8: confirm target/floor]`
+  code published.
 - **Control validity condition:** the DiD design assumes *JAS: Reports* had no
   reproducibility review during the window. Marwick (2025) supports this to 2025;
   current *Reports* author guidelines will be re-checked (and editor confirmation sought
@@ -143,8 +145,14 @@ A JAS main census paper enters the reproduction subset if ALL of:
 3. Primary analysis in R. Python/Julia/mixed papers are recorded and deferred to a
    documented follow-on (pipeline extension points exist but are untested; deferral
    avoids conflating language support with reproducibility findings).
-4. Estimated compute within cap: ≤48 hours wall-clock per paper on available hardware.
-   Papers over cap are recorded, not silently dropped. `[DECISION 3: confirm cap]`
+4. Estimated compute within cap: ≤168 hours (7 days) wall-clock per paper on the study's
+   reference hardware (hardware documented per run in `environment.md`). The cap bounds
+   scope, not membership: where a paper's full analysis exceeds the cap but the paper
+   archives intermediate outputs (e.g. posterior draws or fitted model objects),
+   downstream verification targets are regenerated from those archives — the
+   table-regeneration path exercised by the §8 regression gate — and coverage is scored
+   on the testable targets. Papers over cap with no archived intermediates are recorded
+   as over-cap, not silently dropped.
 5. No study-team co-authorship. Papers co-authored by study personnel are census-included
    (flagged) but excluded from reproduction to avoid self-assessment.
 
@@ -154,8 +162,8 @@ and their coverage and verdicts recorded as the data warrant.
 
 **Resource cap:** if the eligible subset exceeds 25 papers, a simple random sample of 25
 is drawn (seeded; seed and sampling code published). If fewer than 15 are eligible, all
-are reproduced and the shortfall is reported as a limitation. `[DECISION 4: confirm
-15–25 band, inherited from protocol v1.0 §1.3]`
+are reproduced and the shortfall is reported as a limitation (band inherited from
+protocol v1.0 §1.3).
 
 ### 6. Hypotheses and tests
 
@@ -165,8 +173,6 @@ throughout. Pilot papers excluded from all tests. Multiplicity handling: H1–H5
 distinct constructs and are treated as separate families; within-hypothesis multiple
 comparisons are Holm-corrected as specified per hypothesis. H1b and all secondary
 analyses are estimation-focused (point estimate + interval), not gated on significance.
-`[DECISION 5: confirm this multiplicity stance; alternative is Holm across all primary
-tests]`
 
 Given the sample sizes in §10, H2–H5 are acknowledged at the outset as power-limited:
 effect sizes with confidence intervals are the primary reporting quantity, p-values
@@ -325,8 +331,8 @@ remainder gated or missing. L3 gated: retrievable only via author contact, regis
 or institutional access. L4 restricted: documented legal/ethical restriction. L5 absent:
 not available; includes unfulfilled availability claims. Assigned at reproduction time
 from actual retrieval attempts, not statements alone. For analysis, collapsed to three
-ordered levels: open (L1–L2), gated (L3), restricted/absent (L4–L5). `[DECISION 6:
-approve taxonomy — new instrument, drafted for this registration per pilot report §8.2]`
+ordered levels: open (L1–L2), gated (L3), restricted/absent (L4–L5). (New instrument,
+drafted for this registration per pilot report §8.2.)
 
 **7.4 Precision categories.** Exact = matches to machine precision; within tolerance =
 matches within pre-stated per-analysis tolerances (e.g. within published highest posterior
@@ -382,8 +388,8 @@ the census scoring path (lightweight metadata+infrastructure extraction) against
 pilot path (full extraction) on the same pilot papers. Both checks use pilot papers only
 and touch no new-corpus data. Outcomes reported with study results; instrument changes
 triggered by these checks would be lodged as a transparent OSF amendment **before**
-census scoring begins. `[DECISION 7: checks implement plan §9 items 1–2, which await
-your verdict — confirm inclusion and the 0.90 threshold]`
+census scoring begins. (These checks implement agentic-modernisation plan §9 items 1–2;
+verdicts delivered 2026-07-15/16.)
 
 **Human validation subsample.** A seeded random subsample of 12 census papers will be
 independently hand-scored on both FAIR instruments by the registrant, blinded to machine
@@ -391,7 +397,6 @@ scores. Per-sub-principle percent agreement and Cohen's kappa reported with stud
 results. This is validation evidence, not a gate; no published work validates LLM
 scoring of GO-FAIR sub-principles against human raters (cf. Candela et al. 2024,
 doi:10.5334/dsj-2024-033), and this subsample addresses that gap directly.
-`[DECISION 9: confirm n = 12]`
 
 Prior reliability evidence: a 25-run variability test (5 papers × 5 runs) of the
 extraction→credibility pipeline showed 100% classification stability and aggregate score
@@ -441,19 +446,19 @@ Q4 2026 – Q1 2027.
 
 ---
 
-## Decision points before lodgement
+## Decision points — all RESOLVED (Shawn, 2026-07-15/16)
 
-| # | Question | Draft position |
-|---|----------|----------------|
-| 1 | Contributors/LLM acknowledgement on OSF | Shawn Ross sole registrant; LLM assistance disclosed in Summary §8 |
-| 2 | Census window cutoff | 2026-06-30, earliest publication date |
-| 3 | Per-paper compute cap | 48 h wall-clock |
-| 4 | Reproduction subset size band | 15–25; random sample if >25 (seed published) |
-| 5 | Multiplicity stance | Per-hypothesis families; Holm only within H1a's data/code pair |
-| 6 | Data-availability taxonomy L1–L5 + 3-level collapse | As drafted §7.3 (new instrument) |
-| 7 | FAIR reliability + comparability checks, 0.90 threshold | Included (implements plan §9 items 1–2; awaiting your §9 verdicts) |
-| 8 | *Reports* control sample size | Target 120, floor 60, stratified by year |
-| 9 | Human validation subsample size | n = 12, seeded, blinded |
+| # | Question | Resolution |
+|---|----------|------------|
+| 1 | Contributors/LLM acknowledgement on OSF | Sole registrant; LLM assistance disclosed in Summary §8 — as drafted |
+| 2 | Census window cutoff | 2026-06-30, earliest publication date — as drafted |
+| 3 | Per-paper compute cap | **REVISED:** 48 h → 168 h wall-clock on named reference hardware; archived-intermediates partial path added to §5 criterion 4 (the cap bounds scope, not membership) |
+| 4 | Reproduction subset size band | 15–25; random sample if >25 (seed published) — as drafted |
+| 5 | Multiplicity stance | Per-hypothesis families; Holm only within H1a's data/code pair — as drafted |
+| 6 | Data-availability taxonomy L1–L5 + 3-level collapse | Approved as drafted (§7.3) |
+| 7 | FAIR reliability + comparability checks, 0.90 threshold | Confirmed — included; implements agentic-modernisation plan §9 items 1–2 (verdicts delivered 2026-07-15/16) |
+| 8 | *Reports* control sample size | Target 120, floor 60, stratified by year — as drafted |
+| 9 | Human validation subsample size | n = 12, seeded, blinded — as drafted |
 
 Resolved this revision (Shawn, 2026-07-14): H1 sample restriction is **quantitative**
 (not computational) — restriction must be policy-invariant; code presence is
@@ -462,6 +467,12 @@ stretch goal.
 
 Notes for review, not in the registration text:
 
+- D3 rationale (v0.3): a pre-specified compute rule prevents discretionary in-flight
+  drops ("this one is taking too long"), which would systematically exclude
+  Bayesian/Markov chain Monte Carlo papers — exactly H4's stochastic side and H2's
+  hardest tail. The worst observed pilot runtime was ~18 h, so 48 h offered thin
+  headroom; 168 h binds only genuinely extreme papers, and the archived-intermediates
+  path turns even those into partial data rather than exclusions.
 - H2's model choice was investigated before selection (v0.2): exact rank-based trend
   primary; fractional logit secondary; beta-family and aggregated-binomial models
   rejected for boundary-mass, over-parameterisation, and unit-weighting reasons recorded
