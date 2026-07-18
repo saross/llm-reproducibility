@@ -1,6 +1,6 @@
 # Phase 2 Preregistration — Draft for OSF Lodgement
 
-**Version:** 0.5 (lodgement candidate)
+**Version:** 0.6 (lodgement candidate)
 **Date:** 2026-07-18
 **Registration type:** OSF Open-Ended Registration (single narrative Summary field;
 supporting documents attached to the OSF project and frozen by the registration)
@@ -23,7 +23,13 @@ control gains a gate-authorised census option. v0.5 (Shawn, 2026-07-18): credibi
 outputs constrained to descriptive structural metrics (H5 reworked, no test);
 availability taxonomy expanded to six friction-ordered levels with a standardised L4
 request protocol; reproduction-subset sampling cap gains a gate-authorised increase;
-pre-specified descriptive reporting block added; R-only limitation sharpened.
+pre-specified descriptive reporting block added; R-only limitation sharpened. v0.6
+(Shawn, 2026-07-18): H5 gains two RDMAP-derived metrics (implicit-methods proportion,
+expected-information gaps); L4 request window shortened to three weeks with a
+late-response clause; credibility signals may be computed internally with
+aggregate-only reporting; FAIR4RS named as a planned amendment-path extension;
+FAIR-score/coverage association added to descriptive reporting; human-validation
+wording clarified (one instrument, data and code applications).
 
 ---
 
@@ -108,9 +114,11 @@ Three linked components:
    assessment, Docker-based reproduction, and fresh-context adversarial review. H2–H4
    are tested on this subset; H5 is examined on it as a pre-specified exploratory
    analysis (§6). The credibility assessment runs on every subset paper (locked before
-   reproduction, §8) as instrument-development work. Its Phase 2 outputs are descriptive
-   structural metrics only (§6 H5); no categorical verdicts (credible/not credible) and
-   no composite or numeric scores are produced or reported.
+   reproduction, §8) as instrument-development work. Its Phase 2 reported outputs are
+   descriptive structural metrics only (§6 H5); signal scores may be computed
+   internally as instrument development, but no per-paper credibility scores or
+   categorical verdicts are reported (aggregate instrument behaviour may be presented
+   for discussion, §6 H5).
 
 ### 4. Sampling frames and eligibility
 
@@ -316,20 +324,25 @@ transparency.** Papers using literate programming exhibit more explicitly eviden
 argument structure.
 
 *Exploratory status, stated in advance:* the credibility-assessment lane is
-instrument-development work. In Phase 2 it produces descriptive structural metrics
-only — counts derived from the structured extraction — and no categorical verdicts
-(credible/not credible) or composite scores (marks out of ten, 0–100 signals). The
+instrument-development work. In Phase 2 its reported outputs are descriptive
+structural metrics only — counts derived from the structured extraction. The
 repliCATS-adapted signal instrument, though stable across runs (§8), is not externally
-validated; it is deferred to a documented follow-on. The comparison below is fully
-pre-specified to constrain analytical flexibility.
+validated: signal scores may be computed internally as instrument development, but no
+per-paper credibility scores and no categorical verdicts (credible/not credible) will
+be reported in study outputs. Aggregate instrument behaviour (score distributions,
+run-to-run stability, association with the descriptive metrics below) may be
+presented, without per-paper attribution, as a proposal for community discussion. The
+comparison below is fully pre-specified to constrain analytical flexibility.
 
 - *Sample:* reproduction subset (the structured extraction runs only on this subset).
 - *Groups:* literate programming (RMarkdown/Quarto/Jupyter as the primary analysis
   artefact) vs standalone scripts.
 - *Measures (per paper, from the structured extraction):* (a) claim count; (b)
   proportion of claims linked to at least one evidence item; (c) median evidence items
-  per claim; (d) count of implicit assumptions surfaced by the extraction's
-  implicit-content pass.
+  per claim; (d) count of implicit arguments (unstated assumptions) surfaced by the
+  extraction's implicit-content pass; (e) proportion of extracted methods and protocols
+  with status implicit (procedures the paper relies on but does not describe); (f)
+  count of expected-but-missing information items flagged by the extraction.
 - *Analysis (estimation and description only, no test):* medians and interquartile
   ranges per group; Hodges–Lehmann differences with 95% confidence intervals.
 - *Known criterion overlap, stated in advance:* literate programming makes analytical
@@ -337,7 +350,8 @@ pre-specified to constrain analytical flexibility.
   comparison characterises the instrument's response to the practice as much as the
   practice itself. Procedural defence: assessment-before-reproduction blinding (§8)
   ensures no reproduction-outcome knowledge contaminates the extraction.
-- *Predicted direction:* literate programming > standalone scripts on (b) and (c).
+- *Predicted direction:* literate programming higher on (b) and (c), lower on (e)
+  and (f).
 
 **Pre-specified descriptive and estimation-only reporting (no tests).** To keep later
 reporting free of selective-analysis concerns, the following are pre-specified: (a)
@@ -348,7 +362,12 @@ bias-corrected bootstrap 95% CI, estimation only; (b) practice-bundle cross-tabs
 dependency pinning — the pilot's infrastructure bundle, pilot report §4.2); (c)
 reproduction outcomes (verdicts, coverage) by H1a policy cohort, descriptive only —
 the subset is too small to support a policy-effect test on reproduction outcomes; (d)
-L4 data-request outcomes: compliance rate and response times (§7.3). Any further
+L4 data-request outcomes: compliance rate and response times (§7.3); (e) association
+of data FAIR and code FAIR scores (§7.1) with coverage — Somers' d with bias-corrected
+bootstrap 95% CI, overall and within the open (L1–L2) availability stratum, estimation
+only. Overlap caveat stated in advance: the FAIR A-principles partially encode the
+availability taxonomy, so the informative comparison is FAIR-beyond-access within the
+open stratum. Any further
 pattern noticed in the data will be reported as post hoc.
 
 ### 7. Instruments and measures (fixed at registration)
@@ -360,7 +379,10 @@ protocol §4, attached), including the A1 completeness rule: A1 requires that a 
 of the research data be retrievable via standard protocol, with an exception for
 documented ethical/legal restriction. Rating bands: 13–15 Highly / 9–12 Moderately /
 5–8 Minimally / 0–4 Not FAIR. Unscoreable sub-principles score 0 (the instrument scores
-evidenced practice).
+evidenced practice). FAIR for Research Software (FAIR4RS) scoring of code artefacts is
+a planned exploratory extension, not part of this registration: if implemented, the
+FAIR4RS instrument will be lodged as a dated OSF amendment and will pass the same
+reliability protocol (§8) before any FAIR4RS scoring begins.
 
 **7.2 Reproduction verdicts.** SUCCESSFUL (all or nearly all values within tolerance) /
 PARTIAL (some analyses reproduced, others could not be) / FAILED (material discrepancies
@@ -387,8 +409,11 @@ an unfulfilled open-availability claim. Assigned at reproduction time from actua
 retrieval attempts, not statements alone: the level records the highest-friction step
 actually required (or the terminal failure mode), and per-dataset logs record route,
 steps, and outcome. For L4 papers a standardised data request is sent (template
-published; one reminder at two weeks; four-week response window from first contact)
+published; one reminder after ten days; three-week response window from first contact)
 and the outcome logged — request compliance is itself a reported descriptive outcome.
+Responses arriving after the window are recorded but do not enter the preregistered
+analyses; they may be incorporated in later, clearly demarcated updates (e.g. during
+peer-review revision), with the timing documented.
 For analysis, collapsed to three ordered levels: open (L1–L2), mediated (L3),
 effectively closed (L4–L6). (New instrument, drafted for this registration per pilot
 report §8.2; six-level friction ordering adopted 2026-07-18.)
@@ -451,7 +476,8 @@ census scoring begins. (These checks implement agentic-modernisation plan §9 it
 verdicts delivered 2026-07-15/16.)
 
 **Human validation subsample.** A seeded random subsample of 12 census papers will be
-independently hand-scored on both FAIR instruments by the registrant, blinded to machine
+independently hand-scored on the FAIR instrument — applied to both data (/15) and code
+(/15), as in the machine scoring — by the registrant, blinded to machine
 scores. Per-sub-principle percent agreement and Cohen's kappa reported with study
 results. This is validation evidence, not a gate; no published work validates LLM
 scoring of GO-FAIR sub-principles against human raters (cf. Candela et al. 2024,
@@ -557,6 +583,16 @@ Post-resolution revisions (Shawn, 2026-07-18, pre-lodgement):
   reproducibility findings. Python papers are recorded in the frame; a validated
   Python extension is a planned follow-on. The R-only external-validity caveat is
   stated in §10.
+- **Third 2026-07-18 batch (Shawn):** H5 metrics extended with two RDMAP-derived
+  measures (implicit-methods/protocols proportion; expected-information gaps) after
+  schema review. L4 request window three weeks (was four), one reminder after ten
+  days, late responses recorded but outside preregistered analyses. Credibility
+  posture refined: signals computable internally, reporting aggregate-only, per-paper
+  scores never published. FAIR4RS: planned exploratory extension via dated OSF
+  amendment plus reliability protocol, not in this registration. FAIR-score ×
+  coverage association added to the descriptive block (estimation only,
+  FAIR-beyond-access framing). Human-validation subsample wording fixed: one FAIR
+  instrument, applied to data and code.
 
 Notes for review, not in the registration text:
 
