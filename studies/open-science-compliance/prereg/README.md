@@ -1,5 +1,11 @@
 # OSF lodgement materials — Phase 2 preregistration
 
+**LODGED 2026-07-20:** <https://osf.io/dqnhg/> — Open-Ended Registration, no
+embargo; artefacts frozen at `ee3fda3`; tag `osf-prereg-phase2-2026-07-20`.
+Known cosmetic defect: the Summary's §10 power table pasted as run-together
+pipe text (accepted; fix rides with any future amendment — see the tables
+rule below).
+
 Submission-ready artefacts for the Open Science Framework (OSF) Open-Ended
 Registration of the Phase 2 study. Convention modelled on the inscriptions
 project (`~/Code/inscriptions/wiki/prereg/`): plain-prose paste files for OSF
@@ -74,8 +80,15 @@ missing glyphs silently — verify any rebuild with
 - [x] Regenerate summary + PDFs if the draft changed since the last commit here
       (2026-07-20: upload set verified byte-identical to `ee3fda3`; PDFs
       glyph-checked via pdftotext)
-- [ ] Upload the four canonical `.md` files plus the two PDFs to OSF Storage
-- [ ] Record the repo commit hash in the OSF project description
-- [ ] Tag the lodged commit: `git tag osf-prereg-phase2-<YYYY-MM-DD> && git push --tags`
-- [ ] Registration: Open-Ended template; paste `osf-registration-summary.txt`;
+- [x] Upload the four canonical `.md` files plus the two PDFs to OSF Storage
+      (2026-07-20, by hand; sizes verified against local originals; an
+      accidental duplicate of the prereg PDF was deleted before registering)
+- [x] Record the repo commit hash in the OSF project description
+      (2026-07-20, via `osf-project-metadata.txt` description paste)
+- [x] Tag the lodged commit: `git tag osf-prereg-phase2-<YYYY-MM-DD> && git push --tags`
+      (2026-07-20: `osf-prereg-phase2-2026-07-20`)
+- [x] Registration: Open-Ended template; paste `osf-registration-summary.txt`;
       metadata from the draft's OSF metadata block; no embargo (public immediately)
+      (2026-07-20: <https://osf.io/dqnhg/>; lodged from the project rather than
+      the standalone Registries flow, so all six artefacts froze from OSF
+      Storage without the five-file form cap)
