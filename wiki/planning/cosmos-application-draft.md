@@ -72,12 +72,12 @@ AI verdicts — AI and human checks by design.
 **Plan.** This is not a from-zero build: a completed pilot ran five Journal of
 Archaeological Science (JAS) papers through the full stack, yielding four successful and one
 partial reproduction and a measurable headline finding — data availability, not code
-availability, predicts whether a paper reproduces. In 90 days I will: (1) convert the
-piloted workflow into an autonomous agentic pipeline with deterministic quality gates and
-batched human approval; (2) regression-test it against pilot artefacts; (3) preregister five
-hypotheses on the Open Science Framework; (4) run a FAIR census of JAS 2023–2026 and
-reproduce the eligible computational subset; (5) publish the dashboard and verification
-interface, with expert spot-audits of sampled verdicts.
+availability, predicts whether a paper reproduces. Five hypotheses are already
+preregistered on the Open Science Framework (osf.io/dqnhg). In 90 days I will: (1) convert
+the piloted workflow into an autonomous agentic pipeline with deterministic quality gates
+and batched human approval; (2) regression-test it against pilot artefacts; (3) run a FAIR
+census of JAS 2022–2026 and reproduce the eligible computational subset; (4) publish the
+dashboard and verification interface, with expert spot-audits of sampled verdicts.
 
 **Success.** A public, clickable census of open-science practice in a flagship archaeology
 journal, with every reproduction verdict traceable to artefacts anyone can re-run;
@@ -103,12 +103,18 @@ beyond the computational as the wider programme grows.
 6. Literature-use compression ("how papers use — and ignore — the literature") —
    **confirmed**; discourse-level framing held back for later use.
 
-## Preregistration sequencing (recommendation; awaiting Shawn's decision)
+## Preregistration sequencing — RESOLVED: lodged before submission
+
+**[x] 2026-07-20 LODGED: <https://osf.io/dqnhg/>** (Open-Ended Registration, no
+embargo; artefacts frozen at `ee3fda3`; tag `osf-prereg-phase2-2026-07-20`). The
+proposal body now says "already preregistered" and links the registration; the
+fallback below is moot. At lodgement the registration was in OSF's admin-approval
+window — **verify the URL resolves publicly before submitting the application**.
 
 Question (Shawn, 2026-07-07): lodge the OSF preregistration before submitting the
 application, so the application links a live registration?
 
-Recommendation: **yes — draft immediately, lodge before submission.** The prereg must
+Recommendation (adopted): **yes — draft immediately, lodge before submission.** The prereg must
 precede the FAIR census anyway (Option A ordering, modernisation plan §6); its content is
 largely written (H1–H5 in the pilot findings report §7; study protocol exists); and a live,
 clickable OSF registration converts "I will preregister" into "already preregistered" —

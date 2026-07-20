@@ -66,17 +66,27 @@ merged here as PR #1).
   LODGEMENT-READY at `ee3fda3` (2026-07-18)** — all resolutions applied plus
   four review-batch revisions (see the 2026-07-18 session log entry);
   lodgement materials in `studies/open-science-compliance/prereg/` (plain
-  summary, two glyph-verified PDFs, README with recipe + checklist); Shawn
-  lodges the morning of 2026-07-19; it precedes any new-corpus
-  FAIR scoring (Option A ordering) and should be linked live from the Cosmos
-  application.
+  summary, two glyph-verified PDFs, README with recipe + checklist).
+  **LODGED 2026-07-20: <https://osf.io/dqnhg/>** — by hand from the project
+  flow (standalone Registries flow caps form attachments at five files; the
+  project flow froze all six artefacts from OSF Storage); no embargo; tag
+  `osf-prereg-phase2-2026-07-20`; paste files unwrapped to flowing lines
+  (OSF text boxes render line-breaks literally). Known cosmetic defect: §10
+  power table pasted as run-together pipe text — accepted, fix rides with
+  any future amendment (tables rule now in prereg README + convention
+  memory). At last check the registration sat in OSF's admin-approval
+  window — verify the URL resolves publicly (it auto-finalises if not
+  cancelled). Option A ordering satisfied: new-corpus FAIR scoring is
+  unblocked. Live URL linked from the Cosmos draft (body now reads "already
+  preregistered", census window corrected 2023→2022, 484/500 words).
 - **Current gates:** the §9 verdicts are DELIVERED (2026-07-15/16), so the
   Phase 1 hold on the agentic modernisation plan
   (`wiki/planning/agentic-modernisation-plan.md`, v0.3) is now gated only on
   (a) review of the content-routing design (below) and (b) the
-  corpus-management-plan implementation (pre-Phase-1 prerequisite). OSF
+  corpus-management-plan implementation (pre-Phase-1 prerequisite). ~~OSF
   preregistration must precede FAIR scoring of any new JAS papers (Option A
-  ordering constraint, plan §6).
+  ordering constraint, plan §6).~~ [x] 2026-07-20 SATISFIED — registration
+  lodged (<https://osf.io/dqnhg/>).
 - **Agent content-routing design v0.1 WRITTEN (2026-07-15, `10947aa`):**
   `wiki/planning/agent-content-routing-design.md` — resolves plan §9 item 3
   with a three-way routing rule (embed role behaviour / push instruments
