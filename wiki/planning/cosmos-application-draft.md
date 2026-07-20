@@ -105,11 +105,13 @@ beyond the computational as the wider programme grows.
 
 ## Preregistration sequencing — RESOLVED: lodged before submission
 
-**[x] 2026-07-20 LODGED: <https://osf.io/dqnhg/>** (Open-Ended Registration, no
-embargo; artefacts frozen at `ee3fda3`; tag `osf-prereg-phase2-2026-07-20`). The
+**[x] 2026-07-20 LODGED: <https://osf.io/dqnhg/>** (Open-Ended Registration;
+artefacts frozen at `ee3fda3`; tag `osf-prereg-phase2-2026-07-20`). The
 proposal body now says "already preregistered" and links the registration; the
-fallback below is moot. At lodgement the registration was in OSF's admin-approval
-window — **verify the URL resolves publicly before submitting the application**.
+fallback below is moot. **The registration is EMBARGOED** (Shawn 2026-07-21:
+double-blind peer-review contingency; journal policy check under way) — **lift
+the embargo before submitting the application** so the linked URL resolves for
+Cosmos reviewers.
 
 Question (Shawn, 2026-07-07): lodge the OSF preregistration before submitting the
 application, so the application links a live registration?

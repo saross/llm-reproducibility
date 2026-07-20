@@ -69,15 +69,19 @@ merged here as PR #1).
   summary, two glyph-verified PDFs, README with recipe + checklist).
   **LODGED 2026-07-20: <https://osf.io/dqnhg/>** — by hand from the project
   flow (standalone Registries flow caps form attachments at five files; the
-  project flow froze all six artefacts from OSF Storage); no embargo; tag
-  `osf-prereg-phase2-2026-07-20`; paste files unwrapped to flowing lines
-  (OSF text boxes render line-breaks literally). Known cosmetic defect: §10
-  power table pasted as run-together pipe text — accepted, fix rides with
-  any future amendment (tables rule now in prereg README + convention
-  memory). At last check the registration sat in OSF's admin-approval
-  window — verify the URL resolves publicly (it auto-finalises if not
-  cancelled). Option A ordering satisfied: new-corpus FAIR scoring is
-  unblocked. Live URL linked from the Cosmos draft (body now reads "already
+  project flow froze all six artefacts from OSF Storage); **EMBARGOED at
+  lodgement** (Shawn 2026-07-21: deliberate deviation from the no-embargo
+  plan — some journals require author anonymity for double-blind review;
+  lift once the target journal is chosen, and before Cosmos submission so
+  the linked URL resolves; journal policy check for JAS / JAS:R / JCAA
+  delegated 2026-07-21; note the lodgement tag's annotation still says "no
+  embargo" — predates the correction); tag `osf-prereg-phase2-2026-07-20`;
+  paste files unwrapped to flowing lines (OSF text boxes render line-breaks
+  literally). Known cosmetic defect: §10 power table pasted as run-together
+  pipe text — accepted, fix rides with any future amendment (tables rule
+  now in prereg README + convention memory). The URL will NOT resolve
+  publicly until the embargo lifts. Option A ordering satisfied:
+  new-corpus FAIR scoring is unblocked. Live URL linked from the Cosmos draft (body now reads "already
   preregistered", census window corrected 2023→2022, 484/500 words).
 - **Current gates:** the §9 verdicts are DELIVERED (2026-07-15/16), so the
   Phase 1 hold on the agentic modernisation plan

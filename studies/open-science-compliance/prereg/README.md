@@ -1,7 +1,11 @@
 # OSF lodgement materials — Phase 2 preregistration
 
-**LODGED 2026-07-20:** <https://osf.io/dqnhg/> — Open-Ended Registration, no
-embargo; artefacts frozen at `ee3fda3`; tag `osf-prereg-phase2-2026-07-20`.
+**LODGED 2026-07-20:** <https://osf.io/dqnhg/> — Open-Ended Registration,
+**embargoed at lodgement** (Shawn's deliberate deviation from the no-embargo
+recipe below: some journals require author anonymity for double-blind peer
+review; lift the embargo once the target journal is chosen, and before the
+Cosmos application is submitted so the linked URL resolves for reviewers);
+artefacts frozen at `ee3fda3`; tag `osf-prereg-phase2-2026-07-20`.
 Known cosmetic defect: the Summary's §10 power table pasted as run-together
 pipe text (accepted; fix rides with any future amendment — see the tables
 rule below).
@@ -91,4 +95,6 @@ missing glyphs silently — verify any rebuild with
       metadata from the draft's OSF metadata block; no embargo (public immediately)
       (2026-07-20: <https://osf.io/dqnhg/>; lodged from the project rather than
       the standalone Registries flow, so all six artefacts froze from OSF
-      Storage without the five-file form cap)
+      Storage without the five-file form cap; lodged WITH an embargo — a
+      deliberate deviation from this item's no-embargo recipe, see the note
+      at the top of this file)
