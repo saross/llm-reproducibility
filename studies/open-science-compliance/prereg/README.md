@@ -12,13 +12,14 @@ repository hosts multiple studies.
 | File | Purpose |
 |------|---------|
 | `osf-registration-summary.txt` | Registration Summary (§1–§11 of the draft), plain prose with markdown emphasis stripped — paste into the Open-Ended Registration Summary field |
+| `osf-project-metadata.txt` | Plain-text paste values for the project and registration metadata fields (title, description with commit pin, contributors, licence, subjects, tags) |
 | `phase-2-preregistration-draft.pdf` | Reading copy of the full preregistration — upload alongside the canonical `.md` |
-| `pilot-findings-report.pdf` | Reading copy of pilot findings report v1.1 — upload alongside the canonical `.md` |
+| `pilot-findings-report.pdf` | Reading copy of pilot findings report v1.2 — upload alongside the canonical `.md` |
 
 ## Canonical sources (upload the `.md` files as the frozen artefacts)
 
-1. `../protocol/phase-2-preregistration-draft.md` (v0.6)
-2. `../reports/pilot-findings-report.md` (v1.1)
+1. `../protocol/phase-2-preregistration-draft.md` (v0.7)
+2. `../reports/pilot-findings-report.md` (v1.2)
 3. `../protocol/study-protocol.md` (v1.0) — **markdown only, no PDF**: contains
    ✅/❌ status glyphs that xelatex silently drops, and a rendered copy that
    loses glyphs from an instrument document risks inverting meaning
@@ -54,7 +55,9 @@ missing glyphs silently — verify any rebuild with
 
 ## Lodgement checklist
 
-- [ ] Regenerate summary + PDFs if the draft changed since the last commit here
+- [x] Regenerate summary + PDFs if the draft changed since the last commit here
+      (2026-07-20: upload set verified byte-identical to `ee3fda3`; PDFs
+      glyph-checked via pdftotext)
 - [ ] Upload the four canonical `.md` files plus the two PDFs to OSF Storage
 - [ ] Record the repo commit hash in the OSF project description
 - [ ] Tag the lodged commit: `git tag osf-prereg-phase2-<YYYY-MM-DD> && git push --tags`
