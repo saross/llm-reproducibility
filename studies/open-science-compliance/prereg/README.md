@@ -34,8 +34,20 @@ and italic substitution to a fixpoint — nested and line-wrapped spans need
 it), as scripted in the git history of this directory. Then unwrap hard
 line-breaks so each paragraph and each list item is a single flowing line —
 OSF text boxes render pasted line-breaks literally, so wrapped source lines
-break mid-sentence. Applies to every paste file in this directory
-(`osf-registration-summary.txt`, `osf-project-metadata.txt`).
+break mid-sentence (`unwrap-paste-file.py` in this directory). Applies to
+every paste file in this directory (`osf-registration-summary.txt`,
+`osf-project-metadata.txt`).
+
+**Tables: avoid entirely in paste-field content.** Markdown tables do not
+survive plain-text paste — the pipes render literally, and unwrapping must
+never join table rows (the 2026-07-20 lodgement pasted the §10 power table
+as run-together pipe text; accepted rather than re-lodged). When drafting a
+future registration or amendment, keep tables out of the Registration
+summary section — put them in the attached documents and reference them, or
+convert each row to a labelled prose line during the plain-prose pass.
+`unwrap-paste-file.py` now leaves `|`-prefixed lines unjoined as a backstop,
+but row-per-line pipe text is still ugly in a text box: prose is the fix,
+the script is damage limitation.
 
 PDFs (pandoc 3.6.3 via Quarto's bundled binary, matching the inscriptions
 house build):
