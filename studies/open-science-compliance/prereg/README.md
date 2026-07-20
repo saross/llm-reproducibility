@@ -31,7 +31,11 @@ repository hosts multiple studies.
 Plain-text summary: extract the `## Registration summary` section of the
 draft, strip heading hashes, backticks, and emphasis markers (iterate bold
 and italic substitution to a fixpoint — nested and line-wrapped spans need
-it), as scripted in the git history of this directory.
+it), as scripted in the git history of this directory. Then unwrap hard
+line-breaks so each paragraph and each list item is a single flowing line —
+OSF text boxes render pasted line-breaks literally, so wrapped source lines
+break mid-sentence. Applies to every paste file in this directory
+(`osf-registration-summary.txt`, `osf-project-metadata.txt`).
 
 PDFs (pandoc 3.6.3 via Quarto's bundled binary, matching the inscriptions
 house build):

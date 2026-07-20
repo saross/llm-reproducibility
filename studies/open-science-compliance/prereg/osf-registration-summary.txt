@@ -1,474 +1,161 @@
 1. Background and prior work
 
-Phase 1 (exploratory pilot, completed 2026-02) assessed five computational papers from
-the Journal of Archaeological Science (JAS), 2023–2025, through structured extraction,
-credibility assessment, FAIR (Findable, Accessible, Interoperable, Reusable) scoring, and
-Docker-based computational reproduction with adversarial review. Results: four SUCCESSFUL
-and one PARTIAL reproduction; the sole PARTIAL was caused by data inaccessibility (3 of 13
-source datasets retrievable), not code failure. Reproduction detected two calculation
-errors in one published paper that peer review had missed. The pilot protocol was
-timestamped by git commit before pilot work began (study protocol v1.0, 2025-01-09); its
-§7.2 committed to OSF preregistration of Phase 2 hypotheses before Phase 2 corpus
-selection. This registration fulfils that commitment.
+Phase 1 (exploratory pilot, completed 2026-02) assessed five computational papers from the Journal of Archaeological Science (JAS), 2023–2025, through structured extraction, credibility assessment, FAIR (Findable, Accessible, Interoperable, Reusable) scoring, and Docker-based computational reproduction with adversarial review. Results: four SUCCESSFUL and one PARTIAL reproduction; the sole PARTIAL was caused by data inaccessibility (3 of 13 source datasets retrievable), not code failure. Reproduction detected two calculation errors in one published paper that peer review had missed. The pilot protocol was timestamped by git commit before pilot work began (study protocol v1.0, 2025-01-09); its §7.2 committed to OSF preregistration of Phase 2 hypotheses before Phase 2 corpus selection. This registration fulfils that commitment.
 
-Policy context: JAS introduced an Associate Editor for Reproducibility (AER) in January
-2024, conducting reproducibility reviews of "submissions that mentioned programming
-languages such as R or Python in the methods sections" (Marwick 2025,
-doi:10.1016/j.jas.2025.106281). Marwick (2025) lists the archaeology journals that added
-AERs in 2024 — JAS, Advances in Archaeological Practice, Journal of Field
-Archaeology, and American Antiquity; JAS: Reports is not among them, which grounds
-its use as a control series (§3, §6 H1b).
+Policy context: JAS introduced an Associate Editor for Reproducibility (AER) in January 2024, conducting reproducibility reviews of "submissions that mentioned programming languages such as R or Python in the methods sections" (Marwick 2025, doi:10.1016/j.jas.2025.106281). Marwick (2025) lists the archaeology journals that added AERs in 2024 — JAS, Advances in Archaeological Practice, Journal of Field Archaeology, and American Antiquity; JAS: Reports is not among them, which grounds its use as a control series (§3, §6 H1b).
 
-The five hypotheses below (H1–H4 confirmatory; H5 pre-specified exploratory, §6) were
-generated from pilot observations (pilot findings report
-v1.2 §7, attached). The five pilot papers are therefore hypothesis-generating data and are
-excluded from all confirmatory tests (§6). They appear in descriptive census tables
-flagged as pilot papers.
+The five hypotheses below (H1–H4 confirmatory; H5 pre-specified exploratory, §6) were generated from pilot observations (pilot findings report v1.2 §7, attached). The five pilot papers are therefore hypothesis-generating data and are excluded from all confirmatory tests (§6). They appear in descriptive census tables flagged as pilot papers.
 
 2. Status of data collection at registration
 
-- Complete and public: all Phase 1 pilot artefacts for five papers (extractions,
-  assessments, FAIR scores, reproduction artefacts), in the study repository.
-- Not started: the JAS 2022–2026 census sweep and the JAS: Reports control sample.
-  No paper beyond the five pilot papers has been screened, acquired, extracted,
-  FAIR-scored, or reproduced, in either journal. No census metadata has been collected.
-  FAIR scores are the dependent variable in H1 and the context for H2; no such scores
-  exist for any non-pilot paper at registration.
+- Complete and public: all Phase 1 pilot artefacts for five papers (extractions, assessments, FAIR scores, reproduction artefacts), in the study repository.
+- Not started: the JAS 2022–2026 census sweep and the JAS: Reports control sample. No paper beyond the five pilot papers has been screened, acquired, extracted, FAIR-scored, or reproduced, in either journal. No census metadata has been collected. FAIR scores are the dependent variable in H1 and the context for H2; no such scores exist for any non-pilot paper at registration.
 - Commitment: no new-corpus data will be touched before this registration is lodged.
 
 3. Design overview
 
 Three linked components:
 
-1. Descriptive FAIR census (JAS main). All eligible quantitative JAS papers,
-   2022–2026 (window defined §4), scored on the FAIR instrument (§7.1), data and code
-   independently. Doubles as the sampling frame for component 3.
-2. Control series (JAS: Reports). A stratified random sample of quantitative
-   JAS: Reports papers over the same window, scored on the same instrument by the same
-   pipeline — the FAIR lane only. Provides the difference-in-differences (DiD) contrast
-   for H1b. Reproduction of Reports papers is an exploratory stretch goal only:
-   resources permitting, never entering confirmatory analyses.
-3. Confirmatory reproduction study. The eligible computational subset of the JAS
-   main census (criteria §5) undergoes the full pipeline: extraction, credibility
-   assessment, Docker-based reproduction, and fresh-context adversarial review. H2–H4
-   are tested on this subset; H5 is examined on it as a pre-specified exploratory
-   analysis (§6). The credibility assessment runs on every subset paper (locked before
-   reproduction, §8) as instrument-development work. Its Phase 2 reported outputs are
-   descriptive structural metrics only (§6 H5); signal scores may be computed
-   internally as instrument development, but no per-paper credibility scores or
-   categorical verdicts are reported (aggregate instrument behaviour may be presented
-   for discussion, §6 H5).
+1. Descriptive FAIR census (JAS main). All eligible quantitative JAS papers, 2022–2026 (window defined §4), scored on the FAIR instrument (§7.1), data and code independently. Doubles as the sampling frame for component 3.
+2. Control series (JAS: Reports). A stratified random sample of quantitative JAS: Reports papers over the same window, scored on the same instrument by the same pipeline — the FAIR lane only. Provides the difference-in-differences (DiD) contrast for H1b. Reproduction of Reports papers is an exploratory stretch goal only: resources permitting, never entering confirmatory analyses.
+3. Confirmatory reproduction study. The eligible computational subset of the JAS main census (criteria §5) undergoes the full pipeline: extraction, credibility assessment, Docker-based reproduction, and fresh-context adversarial review. H2–H4 are tested on this subset; H5 is examined on it as a pre-specified exploratory analysis (§6). The credibility assessment runs on every subset paper (locked before reproduction, §8) as instrument-development work. Its Phase 2 reported outputs are descriptive structural metrics only (§6 H5); signal scores may be computed internally as instrument development, but no per-paper credibility scores or categorical verdicts are reported (aggregate instrument behaviour may be presented for discussion, §6 H5).
 
 4. Sampling frames and eligibility
 
-- Frame construction: CrossRef and OpenAlex sweep of Journal of Archaeological
-  Science (main journal) and Journal of Archaeological Science: Reports, publication
-  window 2022-01-01 to 2026-06-30 inclusive. Window membership is defined on the
-  earliest recorded publication date (online-first or issue) reported by CrossRef;
-  both dates are recorded. The two sources are merged as a union; DOI-level
-  discrepancies between them are logged and resolved against the publisher record.
-- Census inclusion: research articles (excluding editorials, corrigenda, letters,
-  review articles without new analysis) with accessible full text, in English, that are
-  quantitative — defined as reporting numerical analysis of data (measurements,
-  counts, statistics, or model outputs). Rationale: the H1 sample must be restricted on
-  a characteristic the policy cannot influence. Whether a paper mentions or shares code
-  is itself a plausible policy outcome, so conditioning the sample on code presence
-  would condition on a post-treatment variable; the quantitative nature of the research
-  is fixed by its content. Code-sharing prevalence is analysed as an outcome, not used
-  as a filter (§6 H1a).
-- Recorded for every frame paper (including census-excluded): DOI, publication dates
-  (online-first and issue), received/accepted dates where published, open-access status,
-  presence of data and code availability statements, quantitative flag,
-  computational-component flag (code-based analysis), analysis language(s).
-- _Reports_ control sample: stratified random sample of quantitative Reports
-  papers, proportional by publication year; target n = 120, floor n = 60 (final n set by
-  the pre-scale cost gate and recorded before scoring begins; the gate may lower n
-  toward the floor or raise it, up to a full census of eligible quantitative Reports
-  papers, as frame size and budget permit); seeded sampling, seed and
-  code published.
-- Control validity condition: the DiD design assumes JAS: Reports had no
-  reproducibility review during the window. Marwick (2025) supports this to 2025;
-  current Reports author guidelines will be re-checked (and editor confirmation sought
-  if ambiguous) before census launch, with the check documented. Pre-specified
-  fallback: if Reports adopted an AER or equivalent during the window, the DiD arm
-  is dropped and H1b is reported as a descriptive cross-journal comparison only.
-- Screening decisions are logged per paper; frames and screening logs will be published
-  with study outputs.
+- Frame construction: CrossRef and OpenAlex sweep of Journal of Archaeological Science (main journal) and Journal of Archaeological Science: Reports, publication window 2022-01-01 to 2026-06-30 inclusive. Window membership is defined on the earliest recorded publication date (online-first or issue) reported by CrossRef; both dates are recorded. The two sources are merged as a union; DOI-level discrepancies between them are logged and resolved against the publisher record.
+- Census inclusion: research articles (excluding editorials, corrigenda, letters, review articles without new analysis) with accessible full text, in English, that are quantitative — defined as reporting numerical analysis of data (measurements, counts, statistics, or model outputs). Rationale: the H1 sample must be restricted on a characteristic the policy cannot influence. Whether a paper mentions or shares code is itself a plausible policy outcome, so conditioning the sample on code presence would condition on a post-treatment variable; the quantitative nature of the research is fixed by its content. Code-sharing prevalence is analysed as an outcome, not used as a filter (§6 H1a).
+- Recorded for every frame paper (including census-excluded): DOI, publication dates (online-first and issue), received/accepted dates where published, open-access status, presence of data and code availability statements, quantitative flag, computational-component flag (code-based analysis), analysis language(s).
+- _Reports_ control sample: stratified random sample of quantitative Reports papers, proportional by publication year; target n = 120, floor n = 60 (final n set by the pre-scale cost gate and recorded before scoring begins; the gate may lower n toward the floor or raise it, up to a full census of eligible quantitative Reports papers, as frame size and budget permit); seeded sampling, seed and code published.
+- Control validity condition: the DiD design assumes JAS: Reports had no reproducibility review during the window. Marwick (2025) supports this to 2025; current Reports author guidelines will be re-checked (and editor confirmation sought if ambiguous) before census launch, with the check documented. Pre-specified fallback: if Reports adopted an AER or equivalent during the window, the DiD arm is dropped and H1b is reported as a descriptive cross-journal comparison only.
+- Screening decisions are logged per paper; frames and screening logs will be published with study outputs.
 
 5. Reproduction subset eligibility
 
 A JAS main census paper enters the reproduction subset if ALL of:
 
-1. Computational component present (analysis producing published numerical/graphical
-   results from code).
-2. Code available in any form (repository, archive, supplement) — availability claims
-   that cannot be fulfilled are recorded as such and the paper is retained with verdict
-   BLOCKED (this is an outcome, not an exclusion).
-3. Primary analysis in R. Python/Julia/mixed papers are recorded and deferred to a
-   documented follow-on (pipeline extension points exist but are untested; deferral
-   avoids conflating language support with reproducibility findings).
-4. Estimated compute within cap: ≤168 hours (7 days) wall-clock per paper on the study's
-   reference hardware (hardware documented per run in environment.md). The cap bounds
-   scope, not membership: where a paper's full analysis exceeds the cap but the paper
-   archives intermediate outputs (e.g. posterior draws or fitted model objects),
-   downstream verification targets are regenerated from those archives — the
-   table-regeneration path exercised by the §8 regression gate — and coverage is scored
-   on the testable targets. Papers over cap with no archived intermediates are recorded
-   as over-cap, not silently dropped.
-5. No study-team co-authorship. Papers co-authored by study personnel are census-included
-   (flagged) but excluded from reproduction to avoid self-assessment.
+1. Computational component present (analysis producing published numerical/graphical results from code).
+2. Code available in any form (repository, archive, supplement) — availability claims that cannot be fulfilled are recorded as such and the paper is retained with verdict BLOCKED (this is an outcome, not an exclusion).
+3. Primary analysis in R. Python/Julia/mixed papers are recorded and deferred to a documented follow-on (pipeline extension points exist but are untested; deferral avoids conflating language support with reproducibility findings).
+4. Estimated compute within cap: ≤168 hours (7 days) wall-clock per paper on the study's reference hardware (hardware documented per run in environment.md). The cap bounds scope, not membership: where a paper's full analysis exceeds the cap but the paper archives intermediate outputs (e.g. posterior draws or fitted model objects), downstream verification targets are regenerated from those archives — the table-regeneration path exercised by the §8 regression gate — and coverage is scored on the testable targets. Papers over cap with no archived intermediates are recorded as over-cap, not silently dropped.
+5. No study-team co-authorship. Papers co-authored by study personnel are census-included (flagged) but excluded from reproduction to avoid self-assessment.
 
-Data availability is deliberately NOT an eligibility criterion — it is the H2
-predictor and must vary across the subset. Papers with inaccessible data are attempted
-and their coverage and verdicts recorded as the data warrant.
+Data availability is deliberately NOT an eligibility criterion — it is the H2 predictor and must vary across the subset. Papers with inaccessible data are attempted and their coverage and verdicts recorded as the data warrant.
 
-Resource cap: if the eligible subset exceeds 25 papers, a simple random sample of 25
-is drawn (seeded; seed and sampling code published). If fewer than 15 are eligible, all
-are reproduced and the shortfall is reported as a limitation (band inherited from
-protocol v1.0 §1.3). The pre-scale cost gate may raise the sampling cap above 25 (with
-the same seeded procedure, recorded before the subset is drawn) as budget permits.
+Resource cap: if the eligible subset exceeds 25 papers, a simple random sample of 25 is drawn (seeded; seed and sampling code published). If fewer than 15 are eligible, all are reproduced and the shortfall is reported as a limitation (band inherited from protocol v1.0 §1.3). The pre-scale cost gate may raise the sampling cap above 25 (with the same seeded procedure, recorded before the subset is drawn) as budget permits.
 
 6. Hypotheses and tests
 
-Unless stated otherwise: tests two-tailed at α = 0.05 with directional predictions
-recorded; exact p-values and effect sizes with 95% confidence intervals reported
-throughout. Pilot papers excluded from all tests. Multiplicity handling: H1–H4 address
-distinct constructs and are treated as separate families; within-hypothesis multiple
-comparisons are Holm-corrected as specified per hypothesis. H5 is pre-specified but
-exploratory (see its entry below) and sits outside the confirmatory structure. H1b and
-all secondary
-analyses are estimation-focused (point estimate + interval), not gated on significance.
+Unless stated otherwise: tests two-tailed at α = 0.05 with directional predictions recorded; exact p-values and effect sizes with 95% confidence intervals reported throughout. Pilot papers excluded from all tests. Multiplicity handling: H1–H4 address distinct constructs and are treated as separate families; within-hypothesis multiple comparisons are Holm-corrected as specified per hypothesis. H5 is pre-specified but exploratory (see its entry below) and sits outside the confirmatory structure. H1b and all secondary analyses are estimation-focused (point estimate + interval), not gated on significance.
 
-Given the sample sizes in §10, H2–H4 are acknowledged at the outset as power-limited:
-effect sizes with confidence intervals are the primary reporting quantity, p-values
-secondary, and null results will not be interpreted as evidence of absence.
+Given the sample sizes in §10, H2–H4 are acknowledged at the outset as power-limited: effect sizes with confidence intervals are the primary reporting quantity, p-values secondary, and null results will not be interpreted as evidence of absence.
 
-H1 — Policy effect on FAIR scores. Papers subject to JAS's reproducibility review
-regime (policy effective January 2024) have higher FAIR scores than papers not subject
-to it.
+H1 — Policy effect on FAIR scores. Papers subject to JAS's reproducibility review regime (policy effective January 2024) have higher FAIR scores than papers not subject to it.
 
 H1a — within-journal cohort comparison (JAS main).
 
 - Sample: quantitative census papers (minus pilot papers).
-- Cohort assignment: pre-policy = accepted before 2024-01-01; post-policy = received on
-  or after 2024-01-01; transitional = received before, accepted after. Primary test
-  compares pre vs post; sensitivity analyses merge the transitional cohort into each
-  side. Papers lacking received/accepted dates: assigned by publication year (2022–2023
-  = pre, 2025–2026 = post, 2024 = transitional).
-- Measures: data FAIR /15 on all quantitative papers; code FAIR /15 on papers with any
-  code artefact (interpreted with the conditioning caveat above, since code presence is
-  policy-responsive). Tested separately; Holm-corrected pair.
+- Cohort assignment: pre-policy = accepted before 2024-01-01; post-policy = received on or after 2024-01-01; transitional = received before, accepted after. Primary test compares pre vs post; sensitivity analyses merge the transitional cohort into each side. Papers lacking received/accepted dates: assigned by publication year (2022–2023 = pre, 2025–2026 = post, 2024 = transitional).
+- Measures: data FAIR /15 on all quantitative papers; code FAIR /15 on papers with any code artefact (interpreted with the conditioning caveat above, since code presence is policy-responsive). Tested separately; Holm-corrected pair.
 - Test: Wilcoxon rank-sum; rank-biserial correlation and Hodges–Lehmann shift estimate.
-- Additional pre-specified outcome: code-sharing prevalence — proportion of
-  quantitative papers with any code artefact, pre vs post (two-proportion test, odds
-  ratio with 95% CI).
-- Trend-adjusted secondary: regression of FAIR score on continuous publication time
-  plus a policy-period term (segmented form), heteroscedasticity-consistent (HC3)
-  standard errors. Interpretive caveat stated in advance: with a short pre-policy
-  series (two years, 2022–2023), the within-journal design cannot fully separate the
-  policy from the secular trend —
-  that is what H1b is for.
+- Additional pre-specified outcome: code-sharing prevalence — proportion of quantitative papers with any code artefact, pre vs post (two-proportion test, odds ratio with 95% CI).
+- Trend-adjusted secondary: regression of FAIR score on continuous publication time plus a policy-period term (segmented form), heteroscedasticity-consistent (HC3) standard errors. Interpretive caveat stated in advance: with a short pre-policy series (two years, 2022–2023), the within-journal design cannot fully separate the policy from the secular trend — that is what H1b is for.
 - Predicted direction: post > pre on all measures.
 
 H1b — difference-in-differences (JAS main vs JAS: Reports).
 
-- Estimand: the journal × period interaction on data FAIR score among quantitative
-  papers — the policy effect net of the secular trend common to both journals.
-- Estimator: ordinary least squares with journal, period (as in H1a; transitional
-  excluded from the primary, sensitivity analyses as in H1a), and their interaction;
-  HC3 standard errors. Reported as point estimate with 95% CI; estimation-focused.
-- Assumptions, stated in advance: (a) parallel trends — partially checkable with two
-  pre-policy years: 2022–2023 annual and monthly FAIR-score trends in both journals
-  will be inspected before the interaction is interpreted, and the shortness of the
-  pre-series is stated as a limitation; (b) no spillover —
-  authors publishing in both journals may carry practices across; violation biases the
-  interaction toward null (conservative); (c) stable composition — method-type profiles
-  of both journals over time reported descriptively as a check.
-- Predicted direction: positive interaction (JAS main improves more than Reports
-  post-2024).
+- Estimand: the journal × period interaction on data FAIR score among quantitative papers — the policy effect net of the secular trend common to both journals.
+- Estimator: ordinary least squares with journal, period (as in H1a; transitional excluded from the primary, sensitivity analyses as in H1a), and their interaction; HC3 standard errors. Reported as point estimate with 95% CI; estimation-focused.
+- Assumptions, stated in advance: (a) parallel trends — partially checkable with two pre-policy years: 2022–2023 annual and monthly FAIR-score trends in both journals will be inspected before the interaction is interpreted, and the shortness of the pre-series is stated as a limitation; (b) no spillover — authors publishing in both journals may carry practices across; violation biases the interaction toward null (conservative); (c) stable composition — method-type profiles of both journals over time reported descriptively as a check.
+- Predicted direction: positive interaction (JAS main improves more than Reports post-2024).
 
-H2 — Data availability as primary predictor of reproduction success. Data
-availability, not code availability or environment specification, determines how much of
-a paper's results can be reproduced.
+H2 — Data availability as primary predictor of reproduction success. Data availability, not code availability or environment specification, determines how much of a paper's results can be reproduced.
 
-Known coupling, stated in advance: reproduction verdicts (§7.2) are partially defined
-by data access (a data-caused PARTIAL is a definitional link, not an empirical finding).
-The primary endpoint is therefore verification-target coverage (§7.6), which
-separates how much could be checked (data-side) from whether checked values matched
-(code-side). The verdict-based test is retained only as a consistency check.
+Known coupling, stated in advance: reproduction verdicts (§7.2) are partially defined by data access (a data-caused PARTIAL is a definitional link, not an empirical finding). The primary endpoint is therefore verification-target coverage (§7.6), which separates how much could be checked (data-side) from whether checked values matched (code-side). The verdict-based test is retained only as a consistency check.
 
 - Sample: reproduction subset.
-- Primary endpoint: coverage — the proportion of pre-enumerated verification targets
-  reproduced within tolerance (§7.6). BLOCKED papers score 0 with targets enumerated
-  from the paper text.
-- Primary test: exact (permutation) Jonckheere–Terpstra trend test of coverage across
-  ordered availability levels, collapsed to three (open = L1–L2; mediated = L3;
-  effectively closed = L4–L6; taxonomy §7.3). Effect size: Somers' d
-  (availability → coverage) with bias-corrected bootstrap 95% CI; medians and
-  interquartile ranges reported per level.
-- Model-choice rationale (recorded so the choice is auditable): the unit is the paper
-  (N ≤ 25) and coverage is bounded with expected point masses at 0 and 1. Beta
-  regression cannot accept boundary values without ad hoc transformation;
-  zero-one-inflated beta is over-parameterised at this N; aggregated binomial models
-  weight papers by their target counts (papers with many targets would dominate) and
-  require fragile cluster corrections. An exact rank-based trend test is
-  assumption-light, exact at this N, and respects the paper as the unit.
-- Secondary (estimation only): fractional logistic regression (quasi-binomial, logit
-  link; Papke–Wooldridge 1996) of coverage on availability level (ordinal score), code
-  availability form, and environment-specification level (§7.5).
-- Consistency check: Fisher's exact test on dichotomised availability (L1–L2 vs L3–L6)
-  × verdict (SUCCESSFUL vs not), reported with the coupling caveat.
-- Predicted direction: higher availability → higher coverage; code availability and
-  environment specification predict coverage weakly or not at all once availability is
-  accounted for.
+- Primary endpoint: coverage — the proportion of pre-enumerated verification targets reproduced within tolerance (§7.6). BLOCKED papers score 0 with targets enumerated from the paper text.
+- Primary test: exact (permutation) Jonckheere–Terpstra trend test of coverage across ordered availability levels, collapsed to three (open = L1–L2; mediated = L3; effectively closed = L4–L6; taxonomy §7.3). Effect size: Somers' d (availability → coverage) with bias-corrected bootstrap 95% CI; medians and interquartile ranges reported per level.
+- Model-choice rationale (recorded so the choice is auditable): the unit is the paper (N ≤ 25) and coverage is bounded with expected point masses at 0 and 1. Beta regression cannot accept boundary values without ad hoc transformation; zero-one-inflated beta is over-parameterised at this N; aggregated binomial models weight papers by their target counts (papers with many targets would dominate) and require fragile cluster corrections. An exact rank-based trend test is assumption-light, exact at this N, and respects the paper as the unit.
+- Secondary (estimation only): fractional logistic regression (quasi-binomial, logit link; Papke–Wooldridge 1996) of coverage on availability level (ordinal score), code availability form, and environment-specification level (§7.5).
+- Consistency check: Fisher's exact test on dichotomised availability (L1–L2 vs L3–L6) × verdict (SUCCESSFUL vs not), reported with the coupling caveat.
+- Predicted direction: higher availability → higher coverage; code availability and environment specification predict coverage weakly or not at all once availability is accounted for.
 
-H3 — Pinned dependencies reduce build effort. Papers with pinned dependency
-management require fewer Docker build iterations. Framed as effect-size estimation:
-at pilot base rates (~20% pinned) the pinned group is expected to number ~5 papers, so
-hypothesis testing is nominal (§10).
+H3 — Pinned dependencies reduce build effort. Papers with pinned dependency management require fewer Docker build iterations. Framed as effect-size estimation: at pilot base rates (~20% pinned) the pinned group is expected to number ~5 papers, so hypothesis testing is nominal (§10).
 
 - Sample: reproduction subset papers reaching the build stage.
-- Groups: pinned (renv/packrat lockfile, conda-lock, pinned container digest, or
-  equivalent machine-readable pin set) vs unpinned.
-- Measure: Docker build iterations = 1 + number of failed-build-then-modify cycles
-  before first successful build (logged automatically by the pipeline).
-- Analysis: medians per group; Hodges–Lehmann difference with exact 95% CI; exact
-  Wilcoxon rank-sum reported secondarily.
-- Interpretive limit, stated in advance: pinning co-occurs with Dockerfiles and
-  literate programming (pilot §4.2 found an infrastructure bundle); this design cannot
-  isolate pinning from the bundle.
+- Groups: pinned (renv/packrat lockfile, conda-lock, pinned container digest, or equivalent machine-readable pin set) vs unpinned.
+- Measure: Docker build iterations = 1 + number of failed-build-then-modify cycles before first successful build (logged automatically by the pipeline).
+- Analysis: medians per group; Hodges–Lehmann difference with exact 95% CI; exact Wilcoxon rank-sum reported secondarily.
+- Interpretive limit, stated in advance: pinning co-occurs with Dockerfiles and literate programming (pilot §4.2 found an infrastructure bundle); this design cannot isolate pinning from the bundle.
 - Predicted direction: pinned < unpinned.
 
-H4 — Determinism and exact reproduction. Deterministic analyses are more likely to
-reproduce exactly than stochastic analyses.
+H4 — Determinism and exact reproduction. Deterministic analyses are more likely to reproduce exactly than stochastic analyses.
 
 - Sample: reproduction subset papers with comparable numerical outputs.
-- Classification: deterministic = no pseudo-random number generation in the verified
-  analysis path; stochastic otherwise. Seeded-stochastic (PRNG use fully seeded in the
-  published code) recorded as a subcategory.
-- Primary test: Fisher's exact on determinism × precision category (exact vs
-  not-exact; §7.4).
-- Sensitivity: primary test repeated excluding seeded-stochastic papers (fixed seeds
-  in a matched environment can legitimately yield exact reproduction, diluting the
-  association).
-- Descriptive extension (no test): the pilot's stronger conjecture — that determinism
-  yields exact reproduction regardless of environment-specification quality — is an
-  equivalence claim this sample cannot test. It is examined descriptively via a
-  stratified table of precision category by environment-specification level within the
-  deterministic stratum.
+- Classification: deterministic = no pseudo-random number generation in the verified analysis path; stochastic otherwise. Seeded-stochastic (PRNG use fully seeded in the published code) recorded as a subcategory.
+- Primary test: Fisher's exact on determinism × precision category (exact vs not-exact; §7.4).
+- Sensitivity: primary test repeated excluding seeded-stochastic papers (fixed seeds in a matched environment can legitimately yield exact reproduction, diluting the association).
+- Descriptive extension (no test): the pilot's stronger conjecture — that determinism yields exact reproduction regardless of environment-specification quality — is an equivalence claim this sample cannot test. It is examined descriptively via a stratified table of precision category by environment-specification level within the deterministic stratum.
 - Predicted direction: deterministic → exact.
 
-H5 (pre-specified exploratory, descriptive) — Literate programming and argument
-transparency. Papers using literate programming exhibit more explicitly evidenced
-argument structure.
+H5 (pre-specified exploratory, descriptive) — Literate programming and argument transparency. Papers using literate programming exhibit more explicitly evidenced argument structure.
 
-Exploratory status, stated in advance: the credibility-assessment lane is
-instrument-development work. In Phase 2 its reported outputs are descriptive
-structural metrics only — counts derived from the structured extraction. The
-repliCATS-adapted signal instrument, though stable across runs (§8), is not externally
-validated: signal scores may be computed internally as instrument development, but no
-per-paper credibility scores and no categorical verdicts (credible/not credible) will
-be reported in study outputs. Aggregate instrument behaviour (score distributions,
-run-to-run stability, association with the descriptive metrics below) may be
-presented, without per-paper attribution, as a proposal for community discussion.
-Pilot per-paper credibility outputs (pilot findings report §3.2 and the per-paper
-assessment directories) remain public as part of the pilot record: they were produced
-with full human review during instrument development, and H5's rationale derives from
-them. The aggregate-only restriction is a Phase 2 policy for semi-automated assessment
-at scale, not a retraction of the pilot record. The
-comparison below is fully pre-specified to constrain analytical flexibility.
+Exploratory status, stated in advance: the credibility-assessment lane is instrument-development work. In Phase 2 its reported outputs are descriptive structural metrics only — counts derived from the structured extraction. The repliCATS-adapted signal instrument, though stable across runs (§8), is not externally validated: signal scores may be computed internally as instrument development, but no per-paper credibility scores and no categorical verdicts (credible/not credible) will be reported in study outputs. Aggregate instrument behaviour (score distributions, run-to-run stability, association with the descriptive metrics below) may be presented, without per-paper attribution, as a proposal for community discussion. Pilot per-paper credibility outputs (pilot findings report §3.2 and the per-paper assessment directories) remain public as part of the pilot record: they were produced with full human review during instrument development, and H5's rationale derives from them. The aggregate-only restriction is a Phase 2 policy for semi-automated assessment at scale, not a retraction of the pilot record. The comparison below is fully pre-specified to constrain analytical flexibility.
 
 - Sample: reproduction subset (the structured extraction runs only on this subset).
-- Groups: literate programming (RMarkdown/Quarto/Jupyter as the primary analysis
-  artefact) vs standalone scripts.
-- Measures (per paper, from the structured extraction): (a) claim count; (b)
-  proportion of claims linked to at least one evidence item; (c) median evidence items
-  per claim; (d) count of implicit arguments (unstated assumptions) surfaced by the
-  extraction's implicit-content pass; (e) proportion of extracted methods and protocols
-  with status implicit (procedures the paper relies on but does not describe); (f)
-  count of expected-but-missing information items flagged by the extraction.
-- Analysis (estimation and description only, no test): medians and interquartile
-  ranges per group; Hodges–Lehmann differences with 95% confidence intervals.
-- Known criterion overlap, stated in advance: literate programming makes analytical
-  decision-making visible, which plausibly increases what the extraction can count; the
-  comparison characterises the instrument's response to the practice as much as the
-  practice itself. Procedural defence: assessment-before-reproduction blinding (§8)
-  ensures no reproduction-outcome knowledge contaminates the extraction.
-- Predicted direction: literate programming higher on (b) and (c), lower on (e)
-  and (f).
+- Groups: literate programming (RMarkdown/Quarto/Jupyter as the primary analysis artefact) vs standalone scripts.
+- Measures (per paper, from the structured extraction): (a) claim count; (b) proportion of claims linked to at least one evidence item; (c) median evidence items per claim; (d) count of implicit arguments (unstated assumptions) surfaced by the extraction's implicit-content pass; (e) proportion of extracted methods and protocols with status implicit (procedures the paper relies on but does not describe); (f) count of expected-but-missing information items flagged by the extraction.
+- Analysis (estimation and description only, no test): medians and interquartile ranges per group; Hodges–Lehmann differences with 95% confidence intervals.
+- Known criterion overlap, stated in advance: literate programming makes analytical decision-making visible, which plausibly increases what the extraction can count; the comparison characterises the instrument's response to the practice as much as the practice itself. Procedural defence: assessment-before-reproduction blinding (§8) ensures no reproduction-outcome knowledge contaminates the extraction.
+- Predicted direction: literate programming higher on (b) and (c), lower on (e) and (f).
 
-Pre-specified descriptive and estimation-only reporting (no tests). To keep later
-reporting free of selective-analysis concerns, the following are pre-specified: (a)
-coverage and Docker build iterations by environment-specification level (§7.5),
-medians and interquartile ranges per level, with Somers' d (level → coverage) and
-bias-corrected bootstrap 95% CI, estimation only; (b) practice-bundle cross-tabs
-(environment-specification level × data-availability level × literate programming ×
-dependency pinning — the pilot's infrastructure bundle, pilot report §4.2); (c)
-reproduction outcomes (verdicts, coverage) by H1a policy cohort, descriptive only —
-the subset is too small to support a policy-effect test on reproduction outcomes; (d)
-L4 data-request outcomes: compliance rate and response times (§7.3); (e) association
-of data FAIR and code FAIR scores (§7.1) with coverage — Somers' d with bias-corrected
-bootstrap 95% CI, overall and within the open (L1–L2) availability stratum, estimation
-only. Overlap caveat stated in advance: the FAIR A-principles partially encode the
-availability taxonomy, so the informative comparison is FAIR-beyond-access within the
-open stratum. Any further pattern noticed in the data will be reported as post hoc.
+Pre-specified descriptive and estimation-only reporting (no tests). To keep later reporting free of selective-analysis concerns, the following are pre-specified: (a) coverage and Docker build iterations by environment-specification level (§7.5), medians and interquartile ranges per level, with Somers' d (level → coverage) and bias-corrected bootstrap 95% CI, estimation only; (b) practice-bundle cross-tabs (environment-specification level × data-availability level × literate programming × dependency pinning — the pilot's infrastructure bundle, pilot report §4.2); (c) reproduction outcomes (verdicts, coverage) by H1a policy cohort, descriptive only — the subset is too small to support a policy-effect test on reproduction outcomes; (d) L4 data-request outcomes: compliance rate and response times (§7.3); (e) association of data FAIR and code FAIR scores (§7.1) with coverage — Somers' d with bias-corrected bootstrap 95% CI, overall and within the open (L1–L2) availability stratum, estimation only. Overlap caveat stated in advance: the FAIR A-principles partially encode the availability taxonomy, so the informative comparison is FAIR-beyond-access within the open stratum. Any further pattern noticed in the data will be reported as post hoc.
 
 7. Instruments and measures (fixed at registration)
 
-7.1 FAIR instrument. 15 binary GO-FAIR sub-principles (F1–F4, A1–A2 incl. A1.1/A1.2,
-I1–I3, R1 incl. R1.1–R1.3), scored independently for data (/15) and code (/15); never
-aggregated into a combined score. Instrument v2.0 as standardised 2026-02-11 (study
-protocol §4, attached), including the A1 completeness rule: A1 requires that a majority
-of the research data be retrievable via standard protocol, with an exception for
-documented ethical/legal restriction. Rating bands: 13–15 Highly / 9–12 Moderately /
-5–8 Minimally / 0–4 Not FAIR. Unscoreable sub-principles score 0 (the instrument scores
-evidenced practice). FAIR for Research Software (FAIR4RS) scoring of code artefacts is
-a planned exploratory extension, not part of this registration: if implemented, the
-FAIR4RS instrument will be lodged as a dated OSF amendment and will pass the same
-reliability protocol (§8) before any FAIR4RS scoring begins.
+7.1 FAIR instrument. 15 binary GO-FAIR sub-principles (F1–F4, A1–A2 incl. A1.1/A1.2, I1–I3, R1 incl. R1.1–R1.3), scored independently for data (/15) and code (/15); never aggregated into a combined score. Instrument v2.0 as standardised 2026-02-11 (study protocol §4, attached), including the A1 completeness rule: A1 requires that a majority of the research data be retrievable via standard protocol, with an exception for documented ethical/legal restriction. Rating bands: 13–15 Highly / 9–12 Moderately / 5–8 Minimally / 0–4 Not FAIR. Unscoreable sub-principles score 0 (the instrument scores evidenced practice). FAIR for Research Software (FAIR4RS) scoring of code artefacts is a planned exploratory extension, not part of this registration: if implemented, the FAIR4RS instrument will be lodged as a dated OSF amendment and will pass the same reliability protocol (§8) before any FAIR4RS scoring begins.
 
-7.2 Reproduction verdicts. SUCCESSFUL (all or nearly all values within tolerance) /
-PARTIAL (some analyses reproduced, others could not be) / FAILED (material discrepancies
-affecting conclusions) / BLOCKED (reproduction could not be attempted). Definitions as in
-the reproduction-assessor protocol used in the pilot.
+7.2 Reproduction verdicts. SUCCESSFUL (all or nearly all values within tolerance) / PARTIAL (some analyses reproduced, others could not be) / FAILED (material discrepancies affecting conclusions) / BLOCKED (reproduction could not be attempted). Definitions as in the reproduction-assessor protocol used in the pilot.
 
-7.3 Data availability taxonomy (6 levels, ordered by access friction). The scale
-encodes two boundaries: whether a machine can retrieve the data without human
-intervention (the L2/L3 boundary), and whether the human step is procedural or
-discretionary (the L3/L4 boundary). L1 open-complete: all analysis data
-machine-retrievable via standard protocol (persistent identifier resolves to the
-data), no authentication. L2 open-partial: more than 50% of the paper's datasets
-(counting unit: distinct datasets enumerated in the paper's data availability
-statement and methods) machine-retrievable as for L1; remainder higher-friction or
-missing. L3 authenticated: retrievable after standard registration or authentication
-with a repository or service whose access grant is procedural (automatic, or routine
-review under published criteria — e.g. registration with a data archive), not
-case-by-case discretionary. L4 discretionary: available only by case-by-case
-permission of authors or custodians ("data available on request", bespoke creator or
-institutional approval); a route exists in name but the grant may be refused or go
-unanswered. L5 restricted: documented legal or ethical restriction with no access
-route for this study. L6 absent: no availability route (no statement, dead links) or
-an unfulfilled open-availability claim. Assigned at reproduction time from actual
-retrieval attempts, not statements alone: the level records the highest-friction step
-actually required (or the terminal failure mode), and per-dataset logs record route,
-steps, and outcome. For L4 papers a standardised data request is sent (template
-published; one reminder after ten days; three-week response window from first contact)
-and the outcome logged — request compliance is itself a reported descriptive outcome.
-Responses arriving after the window are recorded but do not enter the preregistered
-analyses; they may be incorporated in later, clearly demarcated updates (e.g. during
-peer-review revision), with the timing documented.
-For analysis, collapsed to three ordered levels: open (L1–L2), mediated (L3),
-effectively closed (L4–L6). (New instrument, drafted for this registration per pilot
-report §8.2; six-level friction ordering adopted 2026-07-18.)
+7.3 Data availability taxonomy (6 levels, ordered by access friction). The scale encodes two boundaries: whether a machine can retrieve the data without human intervention (the L2/L3 boundary), and whether the human step is procedural or discretionary (the L3/L4 boundary). L1 open-complete: all analysis data machine-retrievable via standard protocol (persistent identifier resolves to the data), no authentication. L2 open-partial: more than 50% of the paper's datasets (counting unit: distinct datasets enumerated in the paper's data availability statement and methods) machine-retrievable as for L1; remainder higher-friction or missing. L3 authenticated: retrievable after standard registration or authentication with a repository or service whose access grant is procedural (automatic, or routine review under published criteria — e.g. registration with a data archive), not case-by-case discretionary. L4 discretionary: available only by case-by-case permission of authors or custodians ("data available on request", bespoke creator or institutional approval); a route exists in name but the grant may be refused or go unanswered. L5 restricted: documented legal or ethical restriction with no access route for this study. L6 absent: no availability route (no statement, dead links) or an unfulfilled open-availability claim. Assigned at reproduction time from actual retrieval attempts, not statements alone: the level records the highest-friction step actually required (or the terminal failure mode), and per-dataset logs record route, steps, and outcome. For L4 papers a standardised data request is sent (template published; one reminder after ten days; three-week response window from first contact) and the outcome logged — request compliance is itself a reported descriptive outcome. Responses arriving after the window are recorded but do not enter the preregistered analyses; they may be incorporated in later, clearly demarcated updates (e.g. during peer-review revision), with the timing documented. For analysis, collapsed to three ordered levels: open (L1–L2), mediated (L3), effectively closed (L4–L6). (New instrument, drafted for this registration per pilot report §8.2; six-level friction ordering adopted 2026-07-18.)
 
-7.4 Precision categories. Exact = matches to machine precision; within tolerance =
-matches within pre-stated per-analysis tolerances (e.g. within published highest posterior
-density intervals for Markov chain Monte Carlo outputs), tolerances recorded in each
-reproduction plan before execution; material discrepancy = outside tolerance with
-potential to affect conclusions.
+7.4 Precision categories. Exact = matches to machine precision; within tolerance = matches within pre-stated per-analysis tolerances (e.g. within published highest posterior density intervals for Markov chain Monte Carlo outputs), tolerances recorded in each reproduction plan before execution; material discrepancy = outside tolerance with potential to affect conclusions.
 
-7.5 Environment-specification levels (ordinal). 0 none / 1 language version stated /
-2 unpinned dependency list / 3 pinned lockfile / 4 container specification / 5 container
-plus pinned lockfile.
+7.5 Environment-specification levels (ordinal). 0 none / 1 language version stated / 2 unpinned dependency list / 3 pinned lockfile / 4 container specification / 5 container plus pinned lockfile.
 
-7.6 Verification-target coverage. For each reproduction-subset paper, the approved
-reproduction plan enumerates verification targets (published tables, figures, and named
-values) before execution begins; this locked list is the denominator. Coverage =
-(targets reproduced exactly or within pre-stated tolerance) / (targets enumerated).
-Targets that cannot be tested (missing data, unbuildable environment) count against
-coverage. BLOCKED papers: targets enumerated from the paper text; coverage 0. The
-denominator lock prevents post hoc redefinition of scope.
+7.6 Verification-target coverage. For each reproduction-subset paper, the approved reproduction plan enumerates verification targets (published tables, figures, and named values) before execution begins; this locked list is the denominator. Coverage = (targets reproduced exactly or within pre-stated tolerance) / (targets enumerated). Targets that cannot be tested (missing data, unbuildable environment) count against coverage. BLOCKED papers: targets enumerated from the paper text; coverage 0. The denominator lock prevents post hoc redefinition of scope.
 
 8. Pipeline, permitted changes, and reliability checks
 
-All extraction, FAIR scoring, and reproduction work is LLM-assisted (Claude, Anthropic)
-under human oversight, executing inside Docker with deterministic artefact-persistence
-gates. Every reproduction receives an adversarial review in a fresh context with no
-memory of the reproduction it audits. Human checkpoints: batched approval of reproduction
-plans before compute spend; escalation of QUALIFIED/CHALLENGED reviews, paper-error
-findings, and cannot-compare calls; spot-check sampling of SUCCESSFUL verdicts.
+All extraction, FAIR scoring, and reproduction work is LLM-assisted (Claude, Anthropic) under human oversight, executing inside Docker with deterministic artefact-persistence gates. Every reproduction receives an adversarial review in a fresh context with no memory of the reproduction it audits. Human checkpoints: batched approval of reproduction plans before compute spend; escalation of QUALIFIED/CHALLENGED reviews, paper-error findings, and cannot-compare calls; spot-check sampling of SUCCESSFUL verdicts.
 
-Assessment-before-reproduction blinding. For every reproduction-subset paper, FAIR
-scoring and credibility assessment are completed and locked (committed to the study
-repository) before reproduction execution begins for that paper. Assessment and
-reproduction run as architecturally separate agents with no shared context, so no
-knowledge of reproduction outcomes can contaminate scores (relevant to H2 covariates and
-H5).
+Assessment-before-reproduction blinding. For every reproduction-subset paper, FAIR scoring and credibility assessment are completed and locked (committed to the study repository) before reproduction execution begins for that paper. Assessment and reproduction run as architecturally separate agents with no shared context, so no knowledge of reproduction outcomes can contaminate scores (relevant to H2 covariates and H5).
 
-Permitted implementation changes. The pilot ran as a manually-orchestrated
-session-per-pass pipeline; Phase 2 will run an agentic implementation of the same
-protocol. Implementation changes are permitted only if the new pipeline passes a
-regression test against pilot artefacts: re-running at least two pilot papers must yield
-identical verdicts and identical value-level comparison results (prose differences and
-build-iteration counts may drift; verdict or value changes are failures). The gate
-includes a stochastic-path leg: regeneration of published tables from the Crema et al.
-archived posteriors (minutes of compute), exercising the table-regeneration path used
-for long-running Markov chain Monte Carlo papers. The full-MCMC path (~18 h) is not
-re-run; this scope limit is stated rather than silent. The gate touches pilot data only.
+Permitted implementation changes. The pilot ran as a manually-orchestrated session-per-pass pipeline; Phase 2 will run an agentic implementation of the same protocol. Implementation changes are permitted only if the new pipeline passes a regression test against pilot artefacts: re-running at least two pilot papers must yield identical verdicts and identical value-level comparison results (prose differences and build-iteration counts may drift; verdict or value changes are failures). The gate includes a stochastic-path leg: regeneration of published tables from the Crema et al. archived posteriors (minutes of compute), exercising the table-regeneration path used for long-running Markov chain Monte Carlo papers. The full-MCMC path (~18 h) is not re-run; this scope limit is stated rather than silent. The gate touches pilot data only.
 
-Instrument reliability. Before census scoring: (a) FAIR scoring stability estimated
-by repeated scoring of at least three pilot papers, three runs each. Acceptance
-threshold: mean per-sub-principle agreement ≥ 0.90 across runs. If below threshold,
-the census is scored by majority vote of three independent runs per paper (a ~3× cost
-multiplier on the cheap lane, priced by the pre-scale cost gate). (b) Comparability of
-the census scoring path (lightweight metadata+infrastructure extraction) against the
-pilot path (full extraction) on the same pilot papers. Both checks use pilot papers only
-and touch no new-corpus data. Outcomes reported with study results; instrument changes
-triggered by these checks would be lodged as a transparent OSF amendment before
-census scoring begins. (These checks implement agentic-modernisation plan §9 items 1–2;
-verdicts delivered 2026-07-15/16.)
+Instrument reliability. Before census scoring: (a) FAIR scoring stability estimated by repeated scoring of at least three pilot papers, three runs each. Acceptance threshold: mean per-sub-principle agreement ≥ 0.90 across runs. If below threshold, the census is scored by majority vote of three independent runs per paper (a ~3× cost multiplier on the cheap lane, priced by the pre-scale cost gate). (b) Comparability of the census scoring path (lightweight metadata+infrastructure extraction) against the pilot path (full extraction) on the same pilot papers. Both checks use pilot papers only and touch no new-corpus data. Outcomes reported with study results; instrument changes triggered by these checks would be lodged as a transparent OSF amendment before census scoring begins. (These checks implement agentic-modernisation plan §9 items 1–2; verdicts delivered 2026-07-15/16.)
 
-Human validation subsample. A seeded random subsample of 12 census papers will be
-independently hand-scored on the FAIR instrument — applied to both data (/15) and code
-(/15), as in the machine scoring — by the registrant, blinded to machine
-scores. Per-sub-principle percent agreement and Cohen's kappa reported with study
-results. This is validation evidence, not a gate; no published work validates LLM
-scoring of GO-FAIR sub-principles against human raters (cf. Candela et al. 2024,
-doi:10.5334/dsj-2024-033), and this subsample addresses that gap directly.
+Human validation subsample. A seeded random subsample of 12 census papers will be independently hand-scored on the FAIR instrument — applied to both data (/15) and code (/15), as in the machine scoring — by the registrant, blinded to machine scores. Per-sub-principle percent agreement and Cohen's kappa reported with study results. This is validation evidence, not a gate; no published work validates LLM scoring of GO-FAIR sub-principles against human raters (cf. Candela et al. 2024, doi:10.5334/dsj-2024-033), and this subsample addresses that gap directly.
 
-Prior reliability evidence: a 25-run variability test (5 papers × 5 runs) of the
-extraction→credibility pipeline showed 100% classification stability and aggregate score
-coefficients of variation of 1.9–3.4%.
+Prior reliability evidence: a 25-run variability test (5 papers × 5 runs) of the extraction→credibility pipeline showed 100% classification stability and aggregate score coefficients of variation of 1.9–3.4%.
 
 9. Exclusions, missing data, deviations
 
 - Papers excluded at any stage are logged with reasons; the log is published.
 - Missing received/accepted dates: H1 fallback assignment by publication year (§6 H1a).
-- Papers whose code cannot be obtained at all: retained, verdict BLOCKED, coverage 0
-  (H2 data).
-- Withdrawn/corrected papers: census-included with erratum noted; reproduction targets
-  the corrected version.
-- If JAS: Reports is found to have adopted a reproducibility review during the window,
-  the DiD arm is dropped per the pre-specified fallback (§4).
-- Any deviation from this registration will be lodged as a dated OSF amendment with
-  rationale before the affected analysis runs.
+- Papers whose code cannot be obtained at all: retained, verdict BLOCKED, coverage 0 (H2 data).
+- Withdrawn/corrected papers: census-included with erratum noted; reproduction targets the corrected version.
+- If JAS: Reports is found to have adopted a reproducibility review during the window, the DiD arm is dropped per the pre-specified fallback (§4).
+- Any deviation from this registration will be lodged as a dated OSF amendment with rationale before the affected analysis runs.
 
 10. Power and interpretation constraints
 
-Approximate power at α = 0.05 two-tailed (H1a at α = 0.025 for the Holm pair;
-z-approximations with pilot-informed group splits; full assumptions and calculation
-code will be published with study outputs):
+Approximate power at α = 0.05 two-tailed (H1a at α = 0.025 for the Holm pair; z-approximations with pilot-informed group splits; full assumptions and calculation code will be published with study outputs):
 
-| Test | Assumed split | Detectable at 80% power |
-|------|--------------|------------------------|
-| H1a rank-sum, census ~160 quantitative papers (2022–2026 window) | 80 pre / 80 post | Cliff's δ ≈ 0.28 (moderate) |
-| H1a if census ~80 | 40 / 40 | δ ≈ 0.40 (large) |
-| H1b DiD interaction | ~160 + ~120 | interaction terms need ~4× the N of main effects; estimation-focused by design |
-| H2 exact trend, n ≤ 25 across 3 levels | ~12 / 6 / 7 | large monotone trends only (pilot-sized effects) |
-| H3 | ~5 pinned / 20 unpinned | δ ≈ 0.7 (near-separation); estimation only |
-| H4 Fisher | ~10 / 15 | very large associations only |
+| Test | Assumed split | Detectable at 80% power | |------|--------------|------------------------| | H1a rank-sum, census ~160 quantitative papers (2022–2026 window) | 80 pre / 80 post | Cliff's δ ≈ 0.28 (moderate) | | H1a if census ~80 | 40 / 40 | δ ≈ 0.40 (large) | | H1b DiD interaction | ~160 + ~120 | interaction terms need ~4× the N of main effects; estimation-focused by design | | H2 exact trend, n ≤ 25 across 3 levels | ~12 / 6 / 7 | large monotone trends only (pilot-sized effects) | | H3 | ~5 pinned / 20 unpinned | δ ≈ 0.7 (near-separation); estimation only | | H4 Fisher | ~10 / 15 | very large associations only |
 
-Census and Reports frame sizes are unknown until the sweep runs; frame sizes will be
-reported before any scoring. Additional stated limitations: author-cluster
-non-independence (prolific authors contribute multiple papers; noted as a limitation,
-with a descriptive author-overlap check); single-assessor LLM pipeline (mitigated by the
-reliability checks and human validation subsample, §8); R-only reproduction scope, which
-may over-represent authors already engaged with the R-centred reproducibility movement
-in archaeology.
+Census and Reports frame sizes are unknown until the sweep runs; frame sizes will be reported before any scoring. Additional stated limitations: author-cluster non-independence (prolific authors contribute multiple papers; noted as a limitation, with a descriptive author-overlap check); single-assessor LLM pipeline (mitigated by the reliability checks and human validation subsample, §8); R-only reproduction scope, which may over-represent authors already engaged with the R-centred reproducibility movement in archaeology.
 
 11. Timeline
 
-Registration July 2026 → reliability checks and pipeline regression test (pilot papers
-only) Q3 2026 → Reports policy-scope re-verification, census sweep, and FAIR scoring
-(both journals) Q3 2026 → reproduction subset Q3–Q4 2026 → analysis and reporting
-Q4 2026 – Q1 2027.
+Registration July 2026 → reliability checks and pipeline regression test (pilot papers only) Q3 2026 → Reports policy-scope re-verification, census sweep, and FAIR scoring (both journals) Q3 2026 → reproduction subset Q3–Q4 2026 → analysis and reporting Q4 2026 – Q1 2027.
