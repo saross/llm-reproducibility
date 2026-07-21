@@ -288,12 +288,17 @@ doi:10.5334/jcaa.96) — preregistration and FAIR are not new commitments for th
 
 ### One-sentence description (field 16)
 
-1. An open-source pipeline that reproduces the computational results of published papers
+Selected 2026-07-21: the merged candidate (candidate 2's three-verb architecture inside
+candidate 1's open-source container) is recommended; the original noun-phrase version
+remains as the alternate.
+
+1. An open-source pipeline in which AI agents re-run published analyses and score data
+   and code openness, adversarial reviewers audit every verdict, and human experts
+   spot-check the output, delivered as a public census of a flagship archaeology
+   journal.
+2. An open-source pipeline that reproduces the computational results of published papers
    and scores their openness, with AI and human checks, demonstrated as a live
    verification census of a flagship archaeology journal.
-2. AI agents re-run published analyses and score data and code openness, adversarial
-   reviewers audit every verdict, and human experts spot-check the output, delivered as
-   a public census of a flagship archaeology journal.
 
 ### Self-pitch, 1–2 sentences (field 6)
 
@@ -303,7 +308,7 @@ background — not memberships or fellowships. Both candidates verification-corr
 (pilot outcome = four complete + one partial, not "reproduced five").
 
 1. Archaeologist and open-infrastructure builder: co-founder and director of EFN
-   (Fieldmark), which commercialised the FAIMS field-data platform, and formerly
+   (Fieldmark), which commercialises the (open-source) FAIMS field-data platform, and formerly
    product manager of the RAiD persistent identifier — delivered into the European
    Open Science Cloud — and manager of the national-infrastructure products team at
    the Australian Research Data Commons. My verification pipeline has run five
