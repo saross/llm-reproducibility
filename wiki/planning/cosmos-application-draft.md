@@ -156,10 +156,10 @@ beyond the computational as the wider programme grows.
 **[x] 2026-07-20 LODGED: <https://osf.io/dqnhg/>** (Open-Ended Registration;
 artefacts frozen at `ee3fda3`; tag `osf-prereg-phase2-2026-07-20`). The
 proposal body now says "already preregistered" and links the registration; the
-fallback below is moot. **The registration is EMBARGOED** (Shawn 2026-07-21:
-double-blind peer-review contingency; journal policy check under way) — **lift
-the embargo before submitting the application** so the linked URL resolves for
-Cosmos reviewers.
+fallback below is moot. The lodgement-time embargo (double-blind contingency) was
+**LIFTED 2026-07-21** after the journal-policy check cleared all three candidate
+venues; the registration is publicly resolvable (verified by anonymous API) with
+**DOI 10.17605/OSF.IO/DQNHG** — the submission gate is closed.
 
 Question (Shawn, 2026-07-07): lodge the OSF preregistration before submitting the
 application, so the application links a live registration?
@@ -398,8 +398,8 @@ a signal of scope and seriousness, not a funding plan.
 
 ### Field 19 paste block — lead with the links
 
-> Preregistration: https://osf.io/dqnhg/ (OSF Open-Ended Registration, lodged 2026-07-20
-> — verify it resolves publicly after the embargo lift, before submitting).
+> Preregistration: https://osf.io/dqnhg/ (OSF Open-Ended Registration, lodged
+> 2026-07-20; DOI 10.17605/OSF.IO/DQNHG).
 > Project repository: https://github.com/saross/llm-reproducibility
 >
 > [then the field 19 evidence-pack paragraphs above]
@@ -410,6 +410,8 @@ a signal of scope and seriousness, not a funding plan.
 - Field 20 (how-did-you-hear) — factual, Shawn supplies
 - Optional profile links (website, LinkedIn, X, Substack) — form says they aid review;
   from the CVs: Brian lists techethicsai.au; Shawn's CV carries ORCID only
-- Lift the OSF embargo and verify <https://osf.io/dqnhg/> resolves publicly with DOI
+- [x] 2026-07-21 Lift the OSF embargo and verify <https://osf.io/dqnhg/> resolves
+  publicly with DOI (lifted by Shawn; verified via anonymous API: public, accepted,
+  DOI 10.17605/OSF.IO/DQNHG)
 - Trim field 19 to any form limit at submission (guard-pass null folded in 2026-07-08;
   source: scout-reports/2026-07-08-g1-archaeology-guard-null-result.md)

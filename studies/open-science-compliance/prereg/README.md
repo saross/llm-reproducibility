@@ -1,11 +1,13 @@
 # OSF lodgement materials — Phase 2 preregistration
 
 **LODGED 2026-07-20:** <https://osf.io/dqnhg/> — Open-Ended Registration,
-**embargoed at lodgement** (Shawn's deliberate deviation from the no-embargo
+embargoed at lodgement (Shawn's deliberate deviation from the no-embargo
 recipe below: some journals require author anonymity for double-blind peer
-review; lift the embargo once the target journal is chosen, and before the
-Cosmos application is submitted so the linked URL resolves for reviewers);
-artefacts frozen at `ee3fda3`; tag `osf-prereg-phase2-2026-07-20`.
+review). **Embargo LIFTED 2026-07-21** after a journal-policy check found no
+candidate venue (JAS, JAS: Reports, JCAA) currently requires double-blind
+review; registration verified publicly resolvable by anonymous API the same
+day. **DOI: 10.17605/OSF.IO/DQNHG.** Artefacts frozen at `ee3fda3`; tag
+`osf-prereg-phase2-2026-07-20`.
 Known cosmetic defect: the Summary's §10 power table pasted as run-together
 pipe text (accepted; fix rides with any future amendment — see the tables
 rule below).

@@ -67,11 +67,12 @@ merged here as PR #1).
   scoping, DataCite + Spennemann demarcation, web-search-layer, CC0
   demarcated from registration); self-pitch recomposed to Shawn's
   done-things steer; **final paste set drafted for every form field (1–21)**.
-  Awaiting Shawn's manual edit + field selection. Pre-submission
-  gates: lift OSF embargo (journal check 2026-07-21: no candidate venue
-  requires double-blind — JAS/JAS:R single-anonymised, JAS:R dropped
-  double-blind since mid-2024, JCAA author's choice), verify URL + DOI resolve.
-  Deadline 26 Jul 2026. (v0.3 was `7435865`, body 482/500.)
+  Awaiting Shawn's manual edit + field selection. ~~Pre-submission
+  gates~~ [x] 2026-07-21 BOTH CLEARED: embargo lifted by Shawn (journal
+  check had cleared JAS / JAS:R / JCAA — none requires double-blind);
+  registration verified public via anonymous API, DOI 10.17605/OSF.IO/DQNHG
+  (recorded in draft, paste blocks, prereg README). Deadline 26 Jul 2026.
+  (v0.3 was `7435865`, body 482/500.)
 - **OSF preregistration DRAFTED + STRESS-TESTED (2026-07-14/15):**
   `studies/open-science-compliance/protocol/phase-2-preregistration-draft.md`
   v0.2 (`885e664`; v0.1 `9405182`). Open-ended registration format; honours all
@@ -91,18 +92,19 @@ merged here as PR #1).
   summary, two glyph-verified PDFs, README with recipe + checklist).
   **LODGED 2026-07-20: <https://osf.io/dqnhg/>** — by hand from the project
   flow (standalone Registries flow caps form attachments at five files; the
-  project flow froze all six artefacts from OSF Storage); **EMBARGOED at
-  lodgement** (Shawn 2026-07-21: deliberate deviation from the no-embargo
-  plan — some journals require author anonymity for double-blind review;
-  lift once the target journal is chosen, and before Cosmos submission so
-  the linked URL resolves; journal policy check for JAS / JAS:R / JCAA
-  delegated 2026-07-21; note the lodgement tag's annotation still says "no
-  embargo" — predates the correction); tag `osf-prereg-phase2-2026-07-20`;
+  project flow froze all six artefacts from OSF Storage); embargoed at
+  lodgement (Shawn 2026-07-21: deliberate deviation from the no-embargo
+  plan — double-blind peer-review contingency; the lodgement tag's
+  annotation still says "no embargo", predating the correction).
+  **Embargo LIFTED 2026-07-21** (journal check cleared JAS / JAS:R / JCAA:
+  none requires double-blind; JAS:R dropped its double-blind mandate
+  between mid-2024 and 2026-07-21). **Registration PUBLIC, verified by
+  anonymous API 2026-07-21; DOI 10.17605/OSF.IO/DQNHG.**
+  Tag `osf-prereg-phase2-2026-07-20`;
   paste files unwrapped to flowing lines (OSF text boxes render line-breaks
   literally). Known cosmetic defect: §10 power table pasted as run-together
   pipe text — accepted, fix rides with any future amendment (tables rule
-  now in prereg README + convention memory). The URL will NOT resolve
-  publicly until the embargo lifts. Option A ordering satisfied:
+  now in prereg README + convention memory). Option A ordering satisfied:
   new-corpus FAIR scoring is unblocked. Live URL linked from the Cosmos draft (body now reads "already
   preregistered", census window corrected 2023→2022, 484/500 words).
 - **Current gates:** the §9 verdicts are DELIVERED (2026-07-15/16), so the
