@@ -377,19 +377,18 @@ table below remains the audit map.
 
 ### Field 18 paste block
 
-Recalibrated 2026-07-21 (Shawn): identity → done → will-do, list-entry brevity;
-supporting role with ownership kept grammatically with the applicant ("supporting the
-applicant's conceptualisation and execution"); skills/runner kept as an instance of
-support, not a standalone workstream; team-pedigree line dropped for brevity (both CVs
-are attached to the form).
+Final form 2026-07-21 (Shawn): parity rule — the collaborator gets no more ink than
+the proposer's two sentences. Name line + identity/artefact/relationship triple +
+award sentence ("for which he won" keeps the person, not the framework, as the award's
+recipient, per the CV). Explicit role line dropped ("list any collaborators" argues
+brevity; "my long-time collaborator" carries the applicant-led calibration); skills/
+runner deliverable left to speak for itself if it materialises.
 
-> Dr Brian Ballsun-Stanton (Lecturer, Faculty of Arts, Macquarie University),
-> philosopher of science and technologist. FAIMS founding data architect; led
-> Macquarie's responsible-AI-in-research framework (Vice-Chancellor's Excellence in
-> Research Integrity Award, 2025). On this project: supporting the applicant's
-> conceptualisation and execution of the reproduction and compliance pipeline,
-> including packaging it as installable Claude and Codex agent skills and a
-> self-hostable runner.
+> Dr Brian Ballsun-Stanton (Lecturer, Faculty of Arts, Macquarie University). Brian is
+> a philosopher of science and technologist, founding data architect of FAIMS, and my
+> long-time collaborator in open science and sociotechnical research. He led
+> Macquarie's responsible-AI-in-research framework, for which he won the
+> Vice-Chancellor's Excellence in Research Integrity Award (2025).
 
 ### Field 19 paste block — lead with the links
 
