@@ -1,7 +1,12 @@
 # Cosmos Grants Application — Working Draft
 
-**Version:** 0.4
+**Version:** 0.5
 **Date:** 2026-07-21
+**v0.5 (same day):** affiliations resolved from both CVs (read from ~/Downloads/, kept
+out of the repo — Shawn's CV not yet public): applicant = Honorary Professor (MQ) +
+EFN director; Brian = Lecturer, Faculty of Arts, MQ, with research-integrity-award and
+FAIMS-architect credentials; team-pedigree line added (preregistration chapter + JCAA
+FAIRer-data paper); self-pitch credential fragments added.
 **Status:** Proposal draft v0.4 — pre-submission integration pass (2026-07-21, academic-prose
 skill): body aligned with the lodged registration (already-preregistered sentence with
 osf.io/dqnhg; 2022–2026 window; control-series clause; pilot error-detection instance;
@@ -223,15 +228,35 @@ submission. Every specific below is verifier-backed (sources: scout-reports seri
   papers", *The Lancet*. doi:10.1016/S0140-6736(26)00603-3 — the integrity context making
   routine verification urgent.
 
-## Field 18 — collaborators (added 2026-07-21)
+## Applicant affiliation (fields 1–5; decided 2026-07-21, CV-verified)
 
-Brian Ballsun-Stanton [unverified: affiliation/title — Shawn to supply] — packages the
-pipeline as installable Claude and Codex agent skills and builds the self-hostable
-runner for public deployment. Role from Brian's own feedback (relayed by Shawn,
-2026-07-21): "ship it as a claude, codex skill", "build it into a self-hostable runner
-online". He has no JAS or *JAS: Reports* papers in the census window; if his role makes
-him study personnel, prereg §5 criterion 5 (study-personnel papers excluded from
-reproduction) applies automatically at no practical cost.
+Primary: Honorary Professor of History and Archaeology, School of Humanities, Macquarie
+University (Feb 2026–present). Secondary where the form allows: Co-Founder and Director,
+Electronic Field Notebooks Pty Ltd (EFN). Rationale: the honorary MQ line matches the
+author line on the frozen pilot report; EFN evidences the infrastructure-builder claim.
+Contact identifiers on the CV: ORCID 0000-0002-6492-9025; shawn@fieldnote.au.
+
+## Field 18 — collaborators (added 2026-07-21; CV-verified)
+
+Dr Brian Ballsun-Stanton (Lecturer, Faculty of Arts, Macquarie University; ORCID
+0000-0003-4932-7912) — packages the pipeline as installable Claude and Codex agent
+skills and builds the self-hostable runner for public deployment. Role from Brian's own
+feedback (relayed by Shawn, 2026-07-21): "ship it as a claude, codex skill", "build it
+into a self-hostable runner online". Supporting credentials from his CV (2026-06-01):
+FAIMS founding data architect (2012); winner, Macquarie Vice-Chancellor's Excellence in
+Research Integrity Award 2025, for leading the university's responsible-AI-in-research
+framework (40+ workshops, 1,500+ researchers trained); AI and NLP skills listed include
+prompt and harness engineering and LLM deployment on HPC. He has no JAS or *JAS:
+Reports* papers in the census window; if his role makes him study personnel, prereg §5
+criterion 5 (study-personnel papers excluded from reproduction) applies automatically at
+no practical cost.
+
+**Team-pedigree line (candidate for field 19 or self-pitch, CV-verified):** the
+applicant and collaborator co-authored the chapter introducing preregistration of
+research design to archaeology (Ross & Ballsun-Stanton 2022, in *Digital Heritage and
+Archaeology in Practice*, University Press of Florida) and the FAIMS FAIRer-data paper
+(Ross et al. 2022, *Journal of Computer Applications in Archaeology*,
+doi:10.5334/jcaa.96) — preregistration and FAIR are not new commitments for this team.
 
 ## Candidate drafts — fields 15, 16, 6, 14 (2026-07-21; Shawn selects and edits)
 
@@ -265,6 +290,14 @@ reproduction) applies automatically at no practical cost.
    already reproduced five published papers and caught calculation errors that peer
    review missed.
 
+Credential fragments to weave in, all CV-verified (2026-07-21): Honorary Professor,
+Macquarie; co-founder and director of EFN (Fieldmark; CSIRO bushfire-recovery contract);
+41 publications including a 2023 *Nature* co-authorship; AUD $4.8M competitive grant
+income ($2.6M as lead chief investigator); Fellow of the Royal Society of NSW and the
+Society of Antiquaries of London; former ARDC product manager for the RAiD persistent
+identifier (open-science infrastructure at national scale); co-introduced
+preregistration of research design to archaeology (Ross & Ballsun-Stanton 2022).
+
 ### Grant request (field 14) — worked candidate
 
 **US$8,000** (form integer: 8000). Composition (framing §6 lines plus Brian's runner):
@@ -284,9 +317,10 @@ a signal of scope and seriousness, not a funding plan.
 
 ## Remaining at submission (Shawn)
 
-- Select and edit the candidates above; supply Brian's affiliation line
+- Select and edit the candidates above (affiliations now resolved from CVs)
 - Field 20 (how-did-you-hear) — factual, Shawn supplies
-- Optional profile links (website, LinkedIn, X, Substack) — form says they aid review
+- Optional profile links (website, LinkedIn, X, Substack) — form says they aid review;
+  from the CVs: Brian lists techethicsai.au; Shawn's CV carries ORCID only
 - Lift the OSF embargo and verify <https://osf.io/dqnhg/> resolves publicly with DOI
 - Trim field 19 to any form limit at submission (guard-pass null folded in 2026-07-08;
   source: scout-reports/2026-07-08-g1-archaeology-guard-null-result.md)

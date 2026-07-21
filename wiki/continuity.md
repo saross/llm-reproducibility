@@ -52,9 +52,14 @@ merged here as PR #1).
   pilot error-detection, window 2022–2026); field 19 extended (human-validation
   link, agent-relay audit line, delivery-and-follow-on paragraph: Claude/Codex
   skills + self-hostable runner with Brian Ballsun-Stanton, FAIR4RS, CC0 data
-  outputs, follow-on API-cost driver); field 18 Brian entry (affiliation line
-  pending); candidates drafted for title/one-liner/self-pitch/amount (worked
-  US$8,000). Awaiting Shawn's manual edit + field selection. Pre-submission
+  outputs, follow-on API-cost driver); field 18 Brian entry (v0.5: CV-verified
+  — Lecturer, Faculty of Arts, MQ; research-integrity award; both CVs read
+  from ~/Downloads/, kept out of repo); applicant affiliation resolved
+  (Honorary Professor MQ primary + EFN director secondary); team-pedigree
+  line (preregistration chapter + JCAA FAIRer-data paper); candidates
+  drafted for title/one-liner/self-pitch/amount (worked US$8,000) with
+  CV-verified credential fragments. Awaiting Shawn's manual edit + field
+  selection. Pre-submission
   gates: lift OSF embargo (journal check 2026-07-21: no candidate venue
   requires double-blind — JAS/JAS:R single-anonymised, JAS:R dropped
   double-blind since mid-2024, JCAA author's choice), verify URL + DOI resolve.
