@@ -135,9 +135,9 @@ options, not additions.
 """)
 
 out.append(field("FIELDS 1-5 - First name / Last name / Email / Phone / Location (required)",
-    "NOTE: factual, no drafted text. Suggested email shawn@fieldnote.au (CV\n"
-    "NOTE: contact). Location: Sydney, NSW, Australia. CHECK THE PHONE - the CV\n"
-    "NOTE: letterhead renders '+61 1 04 758 300', which looks like a typo."))
+    "NOTE: entered 2026-07-21: Shawn Ross, shawn@fieldnote.au, Sydney, NSW,\n"
+    "NOTE: Australia. Phone entered on the form but not recorded in this public\n"
+    "NOTE: file (the CV letterhead's rendering of it is a typo - fix someday)."))
 
 out.append(field("FIELD 6 - Pitch yourself in 1-2 sentences (required)",
     "NOTE: selected statement first (builder + scholar, no pipeline content -\n"
@@ -148,21 +148,22 @@ out.append(field("FIELD 6 - Pitch yourself in 1-2 sentences (required)",
     pitches[1]))
 
 out.append(field("FIELD 7 - Website (optional)",
-    "NOTE: no personal site on the CV. Options: EFN/Fieldmark company site\n"
-    "NOTE: (supply URL) or leave blank."))
+    "NOTE: as entered 2026-07-21.",
+    "https://orcid.org/0000-0002-6492-9025"))
 
 out.append(field("FIELD 8 - LinkedIn (optional)",
-    "NOTE: supply or leave blank; the form says optional fields aid review."))
+    "NOTE: as entered 2026-07-21.",
+    "https://www.linkedin.com/in/shawn-ross-7019823/"))
 
 out.append(field("FIELD 9 - X (twitter) handle (optional)",
-    "NOTE: supply or leave blank."))
+    "NOTE: none - left blank (2026-07-21)."))
 
 out.append(field("FIELD 10 - GitHub repository (optional)",
-    "NOTE: visibility re-confirmed PUBLIC 2026-07-21.",
+    "NOTE: as entered 2026-07-21; visibility re-confirmed PUBLIC.",
     "https://github.com/saross/llm-reproducibility"))
 
 out.append(field("FIELD 11 - Substack (optional)",
-    "NOTE: supply or leave blank."))
+    "NOTE: none - left blank (2026-07-21)."))
 
 out.append(field("FIELD 12 - Resume / CV upload (optional)",
     "NOTE: upload ~/Downloads/Ross_CV_Cosmos_Institute.pdf (15 pp, tailored\n"
@@ -203,16 +204,16 @@ out.append(field("FIELD 18 - Collaborators (optional)",
     f18))
 
 out.append(field("FIELD 19 - Project website / additional info (optional)",
-    "NOTE: LIVE FORM DELTA (2026-07-21): renders links only, no long text.\n"
-    "NOTE: The evidence pack is published at docs/cosmos-evidence-pack.md\n"
-    "NOTE: instead; paste these links, one per line.",
-    "https://github.com/saross/llm-reproducibility\n"
-    "https://osf.io/dqnhg/\n"
-    "https://github.com/saross/llm-reproducibility/blob/main/docs/cosmos-evidence-pack.md"))
+    "NOTE: renders links only, no long text. Entered 2026-07-21: the OSF\n"
+    "NOTE: project overview (registration + artefacts reachable from it; the\n"
+    "NOTE: registration URL also sits inside the field 17 body). The published\n"
+    "NOTE: evidence pack (docs/cosmos-evidence-pack.md) remains a recommended\n"
+    "NOTE: addition if the field takes another link.",
+    "https://osf.io/sk8ru/overview"))
 
 out.append(field("FIELD 20 - How did you hear about Cosmos Grants? (required)",
-    "NOTE: factual - the help text asks for the names of any person or\n"
-    "NOTE: organisation recommending you. Shawn supplies."))
+    "NOTE: as entered 2026-07-21.",
+    "Greg Lukianoff's 'The eternally radical idea' Substack"))
 
 out.append(field("FIELD 21 - Applicant Agreement (required, checkbox)",
     "NOTE: tick to consent. Submitters are auto-added to the Cosmos Substack\n"
