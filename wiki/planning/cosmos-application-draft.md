@@ -313,7 +313,7 @@ combination below; the earlier builder-content draft retained as alternate.
 1. I am an archaeologist and open-infrastructure builder: co-founder and director of
    EFN (Fieldmark), which commercialises the open-source FAIMS field-data platform,
    and formerly product manager of the RAiD persistent identifier and manager of the National Information Infrastructure products
-   team at the Australian Research Data Commons. I have led landscape archaeology projects in Bulgaria, Greece, and Australia, and published in journals from Classical Philology to Nature.
+   team at the Australian Research Data Commons. I have had a 25 year academic career, leading landscape archaeology projects in Bulgaria, Greece, and Australia, and publishing in journals from Classical Philology to Nature.
 2. Archaeologist and open-infrastructure builder: co-founder and director of EFN
    (Fieldmark), which commercialises the (open-source) FAIMS field-data platform, and
    formerly product manager of the RAiD persistent identifier (delivered into the
@@ -377,13 +377,19 @@ table below remains the audit map.
 
 ### Field 18 paste block
 
-> Dr Brian Ballsun-Stanton (Lecturer, Faculty of Arts, Macquarie University) — packages
-> the pipeline as installable Claude and Codex agent skills and builds its self-hostable
-> runner. FAIMS founding data architect; winner of Macquarie's 2025 Vice-Chancellor's
-> Excellence in Research Integrity Award for leading the university's
-> responsible-AI-in-research framework. With the applicant he co-authored "Introducing
-> preregistration of research design to archaeology" (2022) and the FAIMS FAIRer-data
-> paper (Journal of Computer Applications in Archaeology, 2022).
+Recalibrated 2026-07-21 (Shawn): identity → done → will-do, list-entry brevity;
+supporting role with ownership kept grammatically with the applicant ("supporting the
+applicant's conceptualisation and execution"); skills/runner kept as an instance of
+support, not a standalone workstream; team-pedigree line dropped for brevity (both CVs
+are attached to the form).
+
+> Dr Brian Ballsun-Stanton (Lecturer, Faculty of Arts, Macquarie University),
+> philosopher of science and technologist. FAIMS founding data architect; led
+> Macquarie's responsible-AI-in-research framework (Vice-Chancellor's Excellence in
+> Research Integrity Award, 2025). On this project: supporting the applicant's
+> conceptualisation and execution of the reproduction and compliance pipeline,
+> including packaging it as installable Claude and Codex agent skills and a
+> self-hostable runner.
 
 ### Field 19 paste block — lead with the links
 
