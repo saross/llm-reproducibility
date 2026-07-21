@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-07-18
+updated: 2026-07-21
 status: active
 ---
 
@@ -223,3 +223,35 @@ the continuation summary.)*
   definitions, one historical statement, one decision record. A global
   substitution, the instinctive move, would have corrupted the title and the
   eligibility criteria.
+
+## 2026-07-20/21 — Lodgement and submission session
+
+- **Independence beats capability, measured again.** The clean-context
+  adversarial verification agent (same model family as the sessions it audited)
+  found three wrong pointers in a verification ledger written hours earlier by a
+  sibling session, plus six wording-level drifts in text I had verified myself.
+  None of these were visible from inside the producing contexts. The catch rate
+  came from context isolation and an adversarial brief ("treat the prior ledger
+  as untested claims"), not from a smarter model — the same architecture the
+  study itself preregisters for reproduction review.
+- **An active anti-confabulation frame did not stop a predicted number.** With
+  the academic-prose register loaded (anchor test: "never state an unverified
+  specific"), I still announced a word count ("497") before running the count
+  (542). The register's anchor discipline is trained at *recorded* specifics;
+  a *forecast* of my own imminent measurement slipped past it. Counts are
+  computations: run first, say second. The failure was self-caught only because
+  the compensating habit — count after every edit — was mechanical.
+- **Register knowledge in context does not prevent register violations in
+  generation.** Three violations (an announcement colon, a semicolon that wanted
+  a full stop, an em-dash interpretive tag — the register's named deny-case)
+  appeared in prose I wrote *while the register document was in context*. The
+  skill's countable exit checks caught all three. Generation biases survive
+  instruction; they yield to gates. This is the strongest small-scale evidence
+  yet for the project's checklist-over-exhortation design stance.
+- **Verification tooling has its own failure modes.** A grep-based presence
+  check returned false negatives because the target strings wrapped across
+  lines; a naive reading would have concluded two implemented edits were
+  missing. The two-tier check (shorter substring, then eyeball) resolved it —
+  but the episode belongs in the same family as the earlier silent-glyph-drop
+  and swallowed-exit-status observations: every verifier needs a probe that
+  can distinguish "absent" from "my instrument can't see it".

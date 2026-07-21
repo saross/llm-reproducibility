@@ -6,7 +6,7 @@ audience: "researchers"
 conditions: "debugging with surprising results, hypothesis generation, belief revision, default-following corrections"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-07-14
+updated: 2026-07-21
 status: active
 ---
 
@@ -157,3 +157,33 @@ separately and stderr to a file, verify content by extracting known symbol strin
 from the PDF. Revision: (b) first (swallowed error, stale artefacts), then
 legitimately (a) on the honest re-run. Cross-referenced as claude-obs 13: a
 verification that cannot fail visibly verifies nothing.
+
+## 2026-07-21 — The embargo guarding an expired fact
+
+**Surprising fact.** Shawn lodged the OSF registration WITH an embargo,
+contradicting the lodgement plan's explicit "no embargo (public immediately)"
+recipe. His stated reason: some candidate journals require author anonymity for
+double-blind review, and a public preregistration would break it.
+
+**Probe.** A background agent checked the three candidate venues' live author
+guidelines against their Wayback histories, plus OSF's own embargo mechanics
+documentation. Hypothesis space at launch: (a) the embargo is necessary (a
+candidate journal mandates double-blind); (b) it is unnecessary (no candidate
+does); (c) it is unnecessary but was once necessary (policy drift).
+
+**Revision.** The answer was (c), which nobody had on the board explicitly:
+JAS: Reports *did* mandate double-anonymised review as of the 18 July 2024
+snapshot and has since dropped it — the current guide carries single-anonymised
+wording only. Shawn's caution encoded a fact that was true when he formed the
+belief and false when he acted on it. The embargo was lifted the same day, the
+registration went public with its DOI, and the sequence is now recorded in the
+prereg README. The generalisation joins Entry 6's policy lens: institutional
+facts are time-indexed, and a verification project must date-stamp not only its
+claims but the *external policies its decisions are calibrated against*. The
+recheck cost one agent-run; the alternative was submitting a grant application
+whose central link resolved to "Page Not Found".
+
+Cross-reference: the same session's verifier-of-the-verifier sequence (three
+wrong pointers found in a sibling session's verification ledger) is recorded in
+llm-observations 2026-07-20/21 and session-reflection Entry 7 — same shape,
+internal rather than external: a record about sources drifted from the sources.

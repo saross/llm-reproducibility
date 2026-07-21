@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-07-18
+updated: 2026-07-21
 status: active
 ---
 
@@ -314,3 +314,53 @@ drives next week's sequencing; the weekend run intention is pilot-papers-only
 absent from amd-tower's PATH — PDFs build via Quarto's bundled 3.6.3; the recipe is
 pinned in the prereg README. The census cutoff (2026-06-30) has passed, so
 lodgement timing cannot affect frame membership.
+
+## Session: 2026-07-20/21 — Prereg lodged on OSF; Cosmos application submitted
+
+**Preregistration lodged (2026-07-20, by hand, Claude-guided):** browser extension
+unavailable, so Shawn drove OSF while the session supplied verified paste
+artefacts. Upload set (4 md + 2 pdf) confirmed byte-identical to `ee3fda3`;
+five-file form cap dodged by lodging from the project (all six artefacts froze
+from OSF Storage); duplicate PDF upload caught by size-check and deleted.
+Paste-file convention extended twice under fire: hard line-breaks unwrapped to
+one flowing line per paragraph (`e873026`, `f2f467a`; OSF text boxes render
+breaks literally), and the §10 power table pasted as run-together pipes —
+accepted, not re-lodged; tables now banned from paste-field content
+(`6577119`, README recipe + convention memory updated). Tag
+`osf-prereg-phase2-2026-07-20`; registration <https://osf.io/dqnhg/>.
+
+**Embargo arc:** lodged WITH embargo (double-blind contingency; deviation
+recorded `90b0c37`). Journal-policy agent: JAS single-anonymised; JAS: Reports
+dropped its mid-2024 double-blind mandate; JCAA author's choice — no candidate
+venue requires it. Shawn lifted the embargo 2026-07-21; public resolution
+verified by anonymous API; **DOI 10.17605/OSF.IO/DQNHG** (`13261c1`).
+
+**Cosmos application v0.4→v0.7 and submission (2026-07-21):** v0.4
+registration-alignment pass under the academic-prose skill (error-detection
+sentence, DiD clause, hypothesis wording, 499/500; `7d37530`); v0.5 CV-verified
+affiliations and credentials, both CVs read from ~/Downloads and kept out of
+the repo (`cd0065b`); v0.6 clean-context adversarial verification reconciled
+against the PA-hub session's ledger (`ef8a6cb`) — all claims confirmed, three
+ledger pointers corrected, six field 19 wording fixes, self-pitch
+overstatements fixed (`c897cce`); v0.7 Shawn's body revision tightened 566→498,
+we-voice (Brian named), truth-seeking token restored (`44bef42`+). Field
+selections: title "Making Verification of Published Research Routine"
+(statement-of-mission, no colon); merged one-liner; two-sentence self-pitch
+(builder + domain leadership, preregistration claims toned to "argued the case
+for"); parity-length Brian entry (philosopher of science and technologist,
+supporting role calibrated via "my long-time collaborator"). Live-form deltas
+(links-only additional-info field; multi-file CV upload) → evidence pack
+published at `docs/cosmos-evidence-pack.md`; paste file + committed generator
+(`build-cosmos-form-paste.py`) keep form text and verified draft in lockstep.
+**SUBMITTED 2026-07-21**, US$8,000, five days ahead of deadline (`f9c14b0`).
+
+### Contextual assumptions
+
+Three-way concurrency shaped the session: Shawn edited the draft live, the
+PA-hub session committed its verification ledger to this repo mid-stream, and
+this session spliced generated text — two edit collisions and one
+stale-buffer warning were the visible cost; re-read-before-edit and
+diff-before-commit were the discipline. The 26 Jul deadline and rolling review
+drove same-day iteration. The form capture of 2026-07-07 had drifted from the
+live form by submission day — future form-fill work should re-screenshot at
+fill time. Body word limit is strictly <500; the generator asserts it.

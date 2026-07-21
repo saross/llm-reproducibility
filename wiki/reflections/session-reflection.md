@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-07-18
+updated: 2026-07-21
 status: active
 ---
 
@@ -477,3 +477,44 @@ measured compliance rate) is recorded, but the ordering will still read oddly
 without it. Likewise the DejaVu fonts in the PDF recipe: the first build silently
 ate the statistics ("α = 0.05" rendered as "= 0.05"), and the font choice is the
 scar that remains.
+
+## Entry 7 (2026-07-20/21) — Lodgement, submission, and the verifier verified
+
+*llm-reproducibility, amd-tower session, 2026-07-20/21. First-person throughout —
+no compaction boundary; this instance did the work it is reflecting on.*
+
+The surprise of the session was recursive: the clean-context adversarial agent I
+sent against the Cosmos application also, incidentally, audited the *other*
+session's verification ledger — and found three wrong pointers in it (an
+observation number, a section citation, a both-CVs claim that was true of one CV).
+Nothing substantive was wrong; every number held. But the ledger that certified
+"the from-memory set is EMPTY" itself contained from-memory pointers. The lesson
+is not that verification failed — it caught everything that mattered — but that
+verification *documents* are prose like any other and inherit prose's failure
+modes. The fix that worked was structural, not exhortative: a second pass with no
+shared context, instructed to treat the first pass's claims as untested. Trust
+chains bottom out in primary sources, never in records about primary sources.
+
+The second surprise was slower and quieter: the embargo Shawn lodged against a
+double-blind contingency turned out to be guarding against a policy that no longer
+exists. JAS: Reports required double-anonymised review in mid-2024 (Wayback
+confirms) and has since silently dropped it. Nobody was wrong — Shawn's caution
+was calibrated to a true fact that expired. The same pattern recurred at smaller
+scale with the application form itself: the 2026-07-07 capture was faithful, and
+fourteen days later the live form had a links-only additional-info field and a
+multi-file CV upload. Two instances of the same moral: recorded facts about
+external systems have half-lives, and the recheck-before-use discipline this
+project preaches for citations applies equally to its own operational records.
+
+What was different about this session was its concurrency. Three actors edited
+one repository: this session, Shawn live in an editor, and the PA-hub session
+committing a verification ledger mid-stream. Twice my edits collided with his;
+once I had to warn him his editor buffer was about to clobber a spliced body.
+The working draft functioned as shared mutable state with no locking, and the
+discipline that emerged — re-read before every edit, diff before every commit,
+name his concurrent changes in my commit messages — is the small-scale version
+of what the project's own deterministic gates do for agents. The cadence was
+also new: dozens of small propose-approve-implement loops rather than long
+autonomous stretches, which suited a deadline artefact where every sentence was
+contested. The two-day arc from "browser extension isn't connected" to
+"Submitted!! yay" ran almost entirely on that rhythm.

@@ -295,3 +295,81 @@ projects.
 **How to apply.** When a reusable pattern settles mid-session (build recipe,
 review posture, document convention), proactively offer the /remember or inbox
 capture rather than waiting to be asked.
+
+## claude-obs 15 — 2026-07-21: Shawn deflates his own claims at final review — draft to his ceiling
+
+**Pattern.** Three times in one day, Shawn's final-pass edits calibrated claims
+*downward*: "co-introduced preregistration to archaeology" → "argued the case
+for" ("we published a paper arguing researchers should do it… let's not go too
+far"); the collaborator entry capped at "the two sentences I was allocated as
+proposer"; the pilot claim trimmed from "reproduced five papers" territory
+before I even offered it. The corrections were never about grammar — always
+about the gap between what was done and what the words implied.
+
+**Lesson.** His ceiling is the strongest *literally accurate* claim; anything
+that borrows even rhetorical inflation gets caught and costs a round trip. My
+drafts trended one notch above his ceiling and his edits form a consistent
+one-way ratchet down.
+
+**How to apply.** Pre-calibrate: for any claim about his work, draft the
+version he would write after his own deflation pass — state the act
+("argued", "ran", "built"), not the outcome halo ("introduced",
+"reproduced", "established"). Where a publication title carries the strong
+verb, quote the title and let bibliography do the claiming.
+
+## claude-obs 16 — 2026-07-21: Shawn thinks in submission surfaces — build the paste artefact early
+
+**Pattern.** The working draft was verified, complete, and useless to him at
+the form: "it's a bit hard to read / copy… no forced returns… plain text, as
+with the preregistration forms." The same request-shape appeared at OSF
+(unwrapped paste files) and again at the Cosmos form (fields in form order,
+notes separated from copy text) — and both times the live surface differed
+from our records (five-file cap; links-only field). He works from the actual
+input surface, not the document.
+
+**Lesson.** For Shawn, a deliverable that feeds a form isn't done until it
+exists in the form's own shape — one paste block per field, flowing lines,
+provenance visibly separated — and the surface has been re-checked at fill
+time, not capture time.
+
+**How to apply.** When any output targets an external interface, generate the
+interface-shaped artefact from the verified source (committed generator, so
+they cannot diverge) as part of the deliverable, not as an afterthought; and
+treat any form/UI capture older than days as stale until re-screenshotted.
+
+## claude-obs 17 — 2026-07-21: Self-critique — my own forecasts are unanchored specifics
+
+**Pattern.** I told Shawn a candidate revision was "497 words" before running
+the count; it measured 542. The academic-prose register — with its anchor
+test — was loaded at the time. The rule I follow for recorded facts
+("re-read the source before citing") has a blind spot for numbers I am about
+to produce: a prediction of my own measurement feels like knowledge and
+isn't. Related same-day miss: I hard-coded `assert == 498` into the paste
+generator, freezing that turn's value as an invariant that would have blocked
+Shawn's next edit (caught and loosened to the real invariant, `< 500`).
+
+**Lesson.** Compute-then-say applies to my own outputs, not just external
+sources; and today's measured value is not a constraint — encode the
+*requirement*, never the *observation*.
+
+**How to apply.** Never state a count, size, or diff summary in prose before
+the tool call that produces it; in generated checks, assert the specification
+limit, not the current reading.
+
+## claude-obs 18 — 2026-07-21: Concurrent sessions and live edits — the draft is shared mutable state
+
+**Pattern.** Shawn ran the PA-hub session (which committed a verification
+ledger to this repo mid-stream) and edited the draft in his editor while this
+session spliced generated text into the same file. Two of my edits collided
+with his; once the risk ran the other way and he needed a stale-buffer
+warning before saving over the spliced body. He treats this as normal
+working style, not an exception.
+
+**Lesson.** In Shawn's multi-session workflow, no file state older than the
+current turn can be assumed; his concurrent edits are intentional inputs to
+fold in (and name in commit messages), not noise to revert.
+
+**How to apply.** Late in any interactive session: re-read (or diff) before
+every edit to a file he touches; describe his concurrent changes in the
+commit that sweeps them; and when I rewrite a file he likely has open, say so
+explicitly so he reloads the buffer before his next save.
