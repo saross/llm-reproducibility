@@ -137,7 +137,7 @@ options, not additions.
 out.append(field("FIELDS 1-5 - First name / Last name / Email / Phone / Location (required)",
     "NOTE: entered 2026-07-21: Shawn Ross, shawn@fieldnote.au, Sydney, NSW,\n"
     "NOTE: Australia. Phone entered on the form but not recorded in this public\n"
-    "NOTE: file (the CV letterhead's rendering of it is a typo - fix someday)."))
+    "NOTE: file (the CV letterhead phone was corrected 2026-07-21)."))
 
 out.append(field("FIELD 6 - Pitch yourself in 1-2 sentences (required)",
     "NOTE: selected statement first (builder + scholar, no pipeline content -\n"
@@ -166,8 +166,9 @@ out.append(field("FIELD 11 - Substack (optional)",
     "NOTE: none - left blank (2026-07-21)."))
 
 out.append(field("FIELD 12 - Resume / CV upload (optional)",
-    "NOTE: upload ~/Downloads/Ross_CV_Cosmos_Institute.pdf (15 pp, tailored\n"
-    "NOTE: copy). Fix the letterhead phone first if it is indeed a typo."))
+    "NOTE: both CVs attached on the form 2026-07-21 (multi-file upload);\n"
+    "NOTE: letterhead phone corrected same day - re-attach the fixed PDF if\n"
+    "NOTE: the earlier version is still the one on the form."))
 
 out.append(field("FIELD 13 - Which stream are you applying to? (required, single select)",
     "NOTE: select the verbatim option below - it is a dropdown, not a text box.",
