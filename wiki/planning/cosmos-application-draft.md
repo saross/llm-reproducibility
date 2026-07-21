@@ -1,6 +1,11 @@
 # Cosmos Grants Application — Working Draft
 
-**Version:** 0.7 (body revised by Shawn and jointly tightened; submission-ready)
+**Version:** 0.7 — **SUBMITTED 2026-07-21** (rolling review, decision ~1 month;
+round closes 26 Jul 2026). Submitted content = the paste file
+(`cosmos-application-form-paste.txt`) as of `de30d7c`; both CVs attached (Ross CV
+with corrected letterhead); links: OSF project overview (field 19), repo (field 10),
+registration URL inside the body, evidence pack published at
+`docs/cosmos-evidence-pack.md`.
 **Date:** 2026-07-21
 **v0.7 (same day):** Shawn's manual revision of the body (long-tail reframing,
 combined-approaches problem statement, JAS: Reports named, survey clause, Plan

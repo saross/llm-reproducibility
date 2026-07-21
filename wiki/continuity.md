@@ -46,7 +46,14 @@ merged here as PR #1).
   first-mover claims must be scoped + "to our knowledge" with Spennemann 2023
   demarcated; Zotero staging holds all verified finds (P1–P6, S1–S2, chains).
   lit-scout + verifier agents patched (author-count rule; arXiv handling).
-- **Cosmos application:** proposal draft v0.4 (2026-07-21, academic-prose pass)
+- **Cosmos application: SUBMITTED 2026-07-21** 🎉 (deadline 26 Jul; rolling
+  review, decision ~1 month — watch for Cosmos correspondence mid-August).
+  Submitted content = `cosmos-application-form-paste.txt` at `de30d7c`: title
+  "Making Verification of Published Research Routine"; merged one-liner;
+  498-word we-voice body; parity-length Brian entry; US$8,000; evidence pack
+  live at `docs/cosmos-evidence-pack.md`; both CVs attached (Ross letterhead
+  phone corrected + re-uploaded); field 20 = Lukianoff Substack. Draft
+  history below. Proposal draft v0.4 (2026-07-21, academic-prose pass)
   in `wiki/planning/cosmos-application-draft.md` — body 499/500 aligned with the
   lodged registration (already-preregistered + osf.io/dqnhg, control series,
   pilot error-detection, window 2022–2026); field 19 extended (human-validation
