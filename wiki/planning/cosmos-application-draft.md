@@ -279,12 +279,15 @@ doi:10.5334/jcaa.96) — preregistration and FAIR are not new commitments for th
 
 ### Project title (field 15)
 
-1. Routine Verification of Published Research: an AI Reproduction and FAIR-Assessment
-   Pipeline, Piloted on Archaeology
+Selected 2026-07-21 (Shawn): statement-of-mission form, no colon — the field 16
+one-liner carries the explanation, so a colon-title would pay twice for the same
+real estate. Colon-form drafts retained as alternates.
+
+1. Making Verification of Published Research Routine
 2. Cheap Enough to Check: AI-Assisted Reproduction and Openness Scoring of Published
    Archaeological Science
-3. Making Published Research Checkable: an AI-and-Human Verification Pipeline for
-   Archaeology
+3. Routine Verification of Published Research: an AI Reproduction and FAIR-Assessment
+   Pipeline, Piloted on Archaeology
 
 ### One-sentence description (field 16)
 
@@ -365,7 +368,7 @@ table below remains the audit map.
 | 12 CV upload | `~/Downloads/Ross_CV_Cosmos_Institute.pdf` (tailored copy, 15 pp) |
 | 13 stream | Select the verbatim option "AI and Truth-seeking: Cosmos x FIRE" |
 | 14 grant request | **8000** (integer, USD); lean variant 7000 without honoraria — see table above |
-| 15 title | Recommended: candidate 2, "Cheap Enough to Check: AI-Assisted Reproduction and Openness Scoring of Published Archaeological Science" — echoes the body's "cheap enough to be routine"; candidates 1 and 3 as safer descriptive alternates |
+| 15 title | Selected: "Making Verification of Published Research Routine" (statement-of-mission, no colon; the one-liner carries the explanation) — colon-form alternates retained in the candidates section |
 | 16 one-liner | Candidate 1 above (recommended) |
 | 17 proposal | Paste the body between the proposal-body markers (499/500 after the v0.7 revision; underlying claims verified by two independent passes 2026-07-21, new phrasings re-checked against the synthesis and registration) |
 | 18 collaborators | Paste block below |

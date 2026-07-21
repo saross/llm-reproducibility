@@ -178,11 +178,11 @@ out.append(field("FIELD 14 - Grant request ($) (required, integer, USD)",
     "8000"))
 
 out.append(field("FIELD 15 - Project title (required)",
-    "NOTE: recommended first (echoes the body's 'cheap enough to be routine');\n"
-    "NOTE: two descriptive alternates follow.",
-    titles[1],
-    "ALTERNATE:",
+    "NOTE: selected title first (statement-of-mission, no colon - the field 16\n"
+    "NOTE: one-liner carries the explanation); colon-form alternates follow.",
     titles[0],
+    "ALTERNATE:",
+    titles[1],
     "ALTERNATE:",
     titles[2]))
 
