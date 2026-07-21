@@ -173,3 +173,31 @@ the house build flags, and deviated deliberately where the convention would
 have failed here (DejaVu fonts after Latin Modern silently dropped statistical
 symbols; md-only for glyph-bearing instruments). Is deviate-with-documented-
 reason the right default when transferring conventions between projects?
+
+## Candidates 2026-07-21 (pending review)
+
+**Candidate 5 — Two independent verification passes plus reconciliation.** The
+PA-hub session's claim ledger and this session's clean-context adversarial
+agent each verified the Cosmos application; reconciling them caught three
+ledger pointer errors and six wording drifts that neither pass saw alone.
+Verdict sought: worth standardising as the pattern for submission-grade
+documents, or was this deadline-grade overkill?
+
+**Candidate 6 — In-the-moment reactions (relayed).** "Submitted!! yay" and, at
+close, "don't know what I'd do without your help, most appreciated" — recorded
+as data about the two-day lodge-verify-submit support pattern (paste
+artefacts, background policy checks, field-by-field iteration).
+
+**Candidate 7 — Interface-shaped artefacts removed the copy friction.** After
+"it's a bit hard to read / copy", the generated form-paste file (fields in
+form order, notes separated, flowing lines, committed generator) became the
+actual submission tool. Verdict sought: should a form-shaped paste artefact be
+the default deliverable whenever output targets an external interface, built
+early rather than on request?
+
+**Candidate 8 — Claude drafted one notch above Shawn's claim ceiling.**
+"Co-introduced preregistration", "reproduced five papers" — each required
+Shawn's deflation at final pass; Claude then propagated the deflation to
+sibling texts unprompted (fragments list, field 18 title-quote). Verdict
+sought: is draft-then-deflate an acceptable division of labour, or should
+Claude pre-deflate to the literally-accurate ceiling (per claude-obs 15)?

@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-18
+updated: 2026-07-21
 status: active
 ---
 
@@ -30,7 +30,7 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-07-18)
+## Repo state (2026-07-21)
 
 - `main` current through 2026-07-15 @ `885e664` (history rewritten 2026-07-13 —
   pre-purge hashes are stale). Earlier landmarks: plan v0.3 review,
@@ -398,6 +398,44 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-07-20/21 — Prereg LODGED on OSF; Cosmos application SUBMITTED
+
+amd-tower session, two days. Preregistration lodged by hand (browser extension
+unavailable; Claude supplied verified paste artefacts): project-flow lodgement
+dodged the standalone form's five-file cap; paste files unwrapped to flowing
+lines (`f2f467a`) after OSF text boxes rendered breaks literally; §10 power
+table pasted as pipe soup — accepted, tables now banned from paste-field
+content (`6577119`, README + convention memory). Lodged WITH embargo
+(double-blind contingency); journal-policy agent found no candidate venue
+requires it (JAS:R dropped its mid-2024 mandate); embargo lifted, registration
+public, **DOI 10.17605/OSF.IO/DQNHG** (`13261c1`). Cosmos application then
+driven v0.4→v0.7: registration alignment, CV-verified credentials, two-pass
+claim verification (PA-hub ledger `ef8a6cb` reconciled against a clean-context
+adversarial agent — three ledger pointer errors and six wording drifts fixed),
+Shawn's body revision tightened 566→498 in we-voice, all fields selected
+(statement-of-mission title; merged one-liner; two-sentence self-pitch and
+parity-length Brian entry, preregistration claims deflated to "argued the case
+for"). Live form differed from the 2026-07-07 capture (links-only
+additional-info field; multi-file CV upload) → evidence pack published at
+`docs/cosmos-evidence-pack.md`; paste file + committed generator
+(`build-cosmos-form-paste.py`) keep form text and verified draft in lockstep.
+**SUBMITTED 2026-07-21** (`f9c14b0`), US$8,000, five days ahead of deadline.
+Reflections + claude-obs 15–18 written (`f7450dc`).
+
+**NEXT:** (1) weekend run: FAIR reliability spot-check + pilot regression gate
+(pilot papers only; prereg-safe); (2) routing-design review passes
+(/review-implementation + prior-art-scout) → v0.2; (3) corpus-management
+implementation before census; (4) watch for Cosmos correspondence ~mid-August;
+(5) census sweep once gates pass.
+
+**Held over pending Shawn's verdicts (no silent discard):** working-notes
+candidates WN-a/WN-b (2026-07-18: xelatex glyph-drop hazard; emphasis-stripping
+fixpoint — still unverdicted) plus NEW WN-c/d/e (2026-07-21: paste-surface
+conventions; external-fact half-life — the JAS:R policy drift; verification
+ledgers drift from sources); user-obs candidates 1–4 (2026-07-18, pending
+in-file) plus NEW candidates 5–8 (2026-07-21, written to
+`wiki/user-observations.md` pending review).
 
 ### 2026-07-18 — Prereg v0.3→v0.7 lodgement-ready; OSF materials; authorship posture
 
