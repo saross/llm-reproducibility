@@ -167,8 +167,8 @@ out.append(field("FIELD 11 - Substack (optional)",
 
 out.append(field("FIELD 12 - Resume / CV upload (optional)",
     "NOTE: both CVs attached on the form 2026-07-21 (multi-file upload);\n"
-    "NOTE: letterhead phone corrected same day - re-attach the fixed PDF if\n"
-    "NOTE: the earlier version is still the one on the form."))
+    "NOTE: Ross CV re-uploaded same day with the letterhead phone corrected\n"
+    "NOTE: (same filename)."))
 
 out.append(field("FIELD 13 - Which stream are you applying to? (required, single select)",
     "NOTE: select the verbatim option below - it is a dropdown, not a text box.",
