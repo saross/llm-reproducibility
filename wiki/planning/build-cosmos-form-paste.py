@@ -105,7 +105,8 @@ pitch_block = section(r"### Self-pitch[^\n]*\n", r"Credential fragments")
 pitches = numbered_items(pitch_block)
 
 # --- validations ---------------------------------------------------------
-assert len(body.split()) == 498, f"body word count {len(body.split())}"
+BODY_WORDS = len(body.split())
+assert BODY_WORDS < 500, f"body over the form limit: {BODY_WORDS} words"
 assert len(titles) == 3 and len(oneliners) == 2 and len(pitches) == 2, \
     (len(titles), len(oneliners), len(pitches))
 for name, blob in [("body", body), ("f18", f18), ("f19", f19_evidence),
@@ -192,8 +193,8 @@ out.append(field("FIELD 16 - 1 sentence project description (required)",
     oneliners[1]))
 
 out.append(field("FIELD 17 - Short proposal, under 500 words (required)",
-    "NOTE: 498 words including the five section labels; claim-verified\n"
-    "NOTE: 2026-07-21. Paste everything below this note block.",
+    f"NOTE: {BODY_WORDS} words including the five section labels (limit <500).\n"
+    "NOTE: Paste everything below this note block.",
     body))
 
 out.append(field("FIELD 18 - Collaborators (optional)",
