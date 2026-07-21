@@ -140,9 +140,9 @@ out.append(field("FIELDS 1-5 - First name / Last name / Email / Phone / Location
     "NOTE: letterhead renders '+61 1 04 758 300', which looks like a typo."))
 
 out.append(field("FIELD 6 - Pitch yourself in 1-2 sentences (required)",
-    "NOTE: recommended candidate first; stays first-person singular by design\n"
-    "NOTE: (pitch-yourself field). Alternate below if you prefer the\n"
-    "NOTE: discipline-tradition angle.",
+    "NOTE: selected statement first (builder + scholar, no pipeline content -\n"
+    "NOTE: the project lives in fields 16/17/19). Builder-only fragment kept\n"
+    "NOTE: as fallback.",
     pitches[0],
     "ALTERNATE:",
     pitches[1]))
