@@ -67,7 +67,12 @@ merged here as PR #1).
   scoping, DataCite + Spennemann demarcation, web-search-layer, CC0
   demarcated from registration); self-pitch recomposed to Shawn's
   done-things steer; **final paste set drafted for every form field (1–21)**.
-  Awaiting Shawn's manual edit + field selection. ~~Pre-submission
+  Body revised by Shawn 2026-07-21 (long-tail reframing, combined-approaches
+  problem, JAS: Reports named, survey clause) and jointly tightened to v0.7 at
+  499/500 — voice now "we" (Brian named collaborator; supersedes the
+  first-person-singular verdict; field 6 self-pitch stays "I"), truth-seeking
+  token restored, computational-subset wording protected. Remaining: field
+  selections, profile links, field 20, phone check, submit. ~~Pre-submission
   gates~~ [x] 2026-07-21 BOTH CLEARED: embargo lifted by Shawn (journal
   check had cleared JAS / JAS:R / JCAA — none requires double-blind);
   registration verified public via anonymous API, DOI 10.17605/OSF.IO/DQNHG

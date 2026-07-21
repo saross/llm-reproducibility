@@ -1,7 +1,16 @@
 # Cosmos Grants Application — Working Draft
 
-**Version:** 0.6 (adversarially verified and reconciled; final paste set drafted)
+**Version:** 0.7 (body revised by Shawn and jointly tightened; submission-ready)
 **Date:** 2026-07-21
+**v0.7 (same day):** Shawn's manual revision of the body (long-tail reframing,
+combined-approaches problem statement, JAS: Reports named, survey clause, Plan
+restructure) reviewed and tightened from 566 to 499/500 with correctness fixes
+(computational not quantitative subset; broken Alignment sentence rebuilt; grammar/typo
+fixes; unanchored earth/environmental-sciences claim dropped). Voice changed to
+first-person plural (Brian now a named collaborator — supersedes drafting verdict 1);
+"truth-seeking" token restored to the Alignment close. Literature-lanes sentence cut
+from the body (word budget) — it survives in field 19's Delivery-and-follow-on
+paragraph.
 **v0.6 (same day):** clean-context adversarial verification run and reconciled against
 the PA-hub ledger below (three ledger pointers corrected; wording fixes applied to field
 19 and both self-pitch candidates); self-pitch recomposed to the done-things steer;
@@ -88,57 +97,26 @@ Shawn's framing feedback 2026-07-07 (broader-programme positioning; HASS-native 
 ## Proposal draft (form field 17, <500 words)
 
 <!-- proposal-body-start -->
-**Alignment.** I am applying to the AI x Truth-seeking stream to build infrastructure that
-makes verification of published research cheap enough to be routine — so that trust in a
-paper is earned through open contestation rather than presumed from authority. The pipeline
-implements contestation literally: every reproduction is audited by an adversarial AI
-reviewer in a fresh context, with no memory of the work it audits, and its
-challenges are published alongside the verdict. The aim is not compliance policing but
-lowering the cost of checking until open inquiry into published claims is normal.
+**Alignment.** We propose to build LLM-assisted assessment and reproduction infrastructure that makes verification of published research inexpensive enough to be routine, so that trust in a publication is earned through open contestation rather than presumed from authority. The pipeline implements contestation literally: every reproduction is audited by an adversarial AI reviewer with no memory of the work it audits, and its challenges are published alongside the verdict. The aim is to combine automated compliance checking and reproduction into a routine part of truth-seeking about published research.
 
-**Problem.** Most published findings are never independently checked: verifying that numbers
-reproduce, that data and code are available and usable, and that evidence supports claims is skilled,
-tedious, unrewarded work. Existing reproducibility infrastructure serves biomedicine and the
-quantitative social sciences; an independently verified landscape review (July 2026) found
-no comparable system for the humanities, arts, and social sciences (HASS) — and most new
-assessment tools never execute code. Archaeology is the ideal bridgehead — an interpretive field discipline whose
-primary observations are unrepeatable (excavation consumes its own evidence), yet with a
-fast-growing computational core where verification is tractable. My wider framework, already
-running, decomposes a paper into a graph of claims (explicit and implicit), evidence,
-methods, and research designs, and evaluates claim–evidence strength and method
-appropriateness; planned lanes will assess how papers use — and ignore — the
-literature. This project builds the framework's verification lanes: computational
-reproduction and FAIR (Findable, Accessible, Interoperable, Reusable) assessment.
+**Problem.** Most published findings are never independently checked: verifying that analyses reproduce, that data and code are available and usable, and that evidence supports claims is skilled, tedious, unrewarded work. A landscape review in July 2026 found LLM-assisted reproducibility tools emerging in computer science and quantitative social science (which do not assess other credibility markers) alongside Findable, Accessible, Interoperable, Reusable (FAIR) evaluators and rigour-criteria presence checkers in biomedicine (which do not execute code). No system combines the two approaches, and none serves long-tail disciplines like most of the Humanities, Arts, and Social Sciences (HASS).
 
-**Medium.** Open-source code plus a public demonstration: an agentic pipeline (Docker-based
-reproduction, FAIR scoring, fresh-context adversarial review), a browsable results
-dashboard, and a human-verification interface where domain experts audit sampled
-AI verdicts — AI and human checks by design.
+**Medium.** Open-source code plus a public demonstration: an agentic pipeline (Docker-based reproduction, FAIR scoring, fresh-context adversarial review), a results dashboard, and a human-verification interface where domain experts audit sampled AI verdicts — AI and human checks by design.
 
-**Plan.** This is not a from-zero build: a completed pilot ran five Journal of
-Archaeological Science (JAS) papers through the full stack, yielding four successful and one
-partial reproduction and a headline finding — data availability, not code availability,
-predicts whether a paper reproduces. The pilot also caught two calculation errors that
-peer review had missed. Four confirmatory hypotheses (and a pre-specified exploratory
-analysis) are preregistered on the Open Science Framework (osf.io/dqnhg). In 90 days I
-will: (1) convert the piloted workflow into an autonomous agentic pipeline with
-deterministic quality gates and batched human approval; (2) regression-test it against
-pilot artefacts; (3) run a FAIR census of JAS 2022–2026, with a control series from its
-sister journal, and reproduce the eligible computational subset; (4) publish the
-dashboard and verification interface, with expert spot-audits of sampled verdicts.
+**Plan.** Our pilot system already decomposes a paper into a graph of claims (explicit and implicit), evidence, methods, and research designs, and evaluates claim–evidence strength and method appropriateness. This project builds the verification lanes: computational reproduction and FAIR assessment of data and software. Work to date focuses on archaeology, an interpretive field discipline serving as a bridgehead: its primary observations are unrepeatable (excavation consumes its own evidence; survey assesses a changing landscape), yet it has a computational core where reproduction is tractable.
 
-**Success.** A public, clickable census of open-science practice in a flagship archaeology
-journal, with every reproduction verdict traceable to artefacts anyone can re-run;
-preregistered answers to live questions (for example: did JAS's January 2024 mandatory
-reproducibility-review policy actually change practice?); and a measured per-paper cost 
-showing verification can be routine rather than heroic. The framework is 
-HASS-native and extensible: the same claims–evidence core will carry verification 
-beyond the computational as the wider programme grows.
+A completed pilot ran five Journal of Archaeological Science (JAS) papers through the full stack, yielding four successful and one partial reproduction and finding that data availability, not code availability, predicts whether a paper reproduces. The pilot also caught two calculation errors that peer review had missed.
+
+Four confirmatory hypotheses (and a pre-specified exploratory analysis) are preregistered on the Open Science Framework (osf.io/dqnhg). In 90 days we will: (1) convert the piloted workflow into an autonomous agentic pipeline with deterministic quality gates and batched human approval; (2) regression-test it against pilot artefacts; (3) run a FAIR census of JAS 2022–2026, with a control series from its sister journal (JAS: Reports), and reproduce the eligible computational subset; (4) publish the dashboard and verification interface, with expert spot-audits of sampled verdicts.
+
+**Success.** A public census of open-science practice in a flagship archaeology journal, with every reproduction verdict traceable to artefacts anyone can re-run; preregistered answers to live questions (did JAS's January 2024 mandatory reproducibility-review policy actually change practice?); and a measured per-paper cost showing verification can be routine rather than heroic. The framework is long-tail-native and extensible: the same claims-evidence core will carry verification beyond the computational as the programme grows.
 <!-- proposal-body-end -->
 
 ## Drafting choices — Shawn's verdicts (2026-07-07)
 
-1. First person singular ("I") — **confirmed**.
+1. First person singular ("I") — **confirmed**. ~~SUPERSEDED~~ 2026-07-21: body voice
+   changed to "we" after Brian Ballsun-Stanton joined as named collaborator (field 18);
+   the field 6 self-pitch remains first-person singular (it is a pitch-yourself field).
 2. Variability study, follow-on-funding pointer, and Metalens-complementarity line go to
    form field 19 ("additional info"), not the 500 words — **confirmed**.
 3. Policy-question hook: Shawn couldn't spot it (it was a parenthetical in Success); now
@@ -379,7 +357,7 @@ a signal of scope and seriousness, not a funding plan.
 | 14 grant request | **8000** (integer, USD); lean variant 7000 without honoraria — see table above |
 | 15 title | Recommended: candidate 2, "Cheap Enough to Check: AI-Assisted Reproduction and Openness Scoring of Published Archaeological Science" — echoes the body's "cheap enough to be routine"; candidates 1 and 3 as safer descriptive alternates |
 | 16 one-liner | Candidate 1 above (recommended) |
-| 17 proposal | Paste the body between the proposal-body markers (499/500; claim-verified by two independent passes 2026-07-21) |
+| 17 proposal | Paste the body between the proposal-body markers (499/500 after the v0.7 revision; underlying claims verified by two independent passes 2026-07-21, new phrasings re-checked against the synthesis and registration) |
 | 18 collaborators | Paste block below |
 | 19 website / additional info | Paste block below: two project links, then the field 19 evidence pack above (trim to any form limit) |
 | 20 how-did-you-hear | Factual — the help text asks for recommenders' names if any; Shawn supplies |
