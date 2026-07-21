@@ -58,8 +58,16 @@ merged here as PR #1).
   (Honorary Professor MQ primary + EFN director secondary); team-pedigree
   line (preregistration chapter + JCAA FAIRer-data paper); candidates
   drafted for title/one-liner/self-pitch/amount (worked US$8,000) with
-  CV-verified credential fragments. Awaiting Shawn's manual edit + field
-  selection. Pre-submission
+  CV-verified credential fragments. **v0.6 (2026-07-21): clean-context
+  adversarial verification run + reconciled with the PA-hub session's ledger**
+  — all submission-facing claims confirmed (499/500 recounted; 2,118 scout
+  ledger records so "over 1,800" conservative); three ledger pointer errors
+  fixed (Obs 4 not 6; pilot §1/§7; Florida chapter in Brian's CV only);
+  field 19 wording corrected (registrant hand-scoring, ReplicatorBench/I4R
+  scoping, DataCite + Spennemann demarcation, web-search-layer, CC0
+  demarcated from registration); self-pitch recomposed to Shawn's
+  done-things steer; **final paste set drafted for every form field (1–21)**.
+  Awaiting Shawn's manual edit + field selection. Pre-submission
   gates: lift OSF embargo (journal check 2026-07-21: no candidate venue
   requires double-blind — JAS/JAS:R single-anonymised, JAS:R dropped
   double-blind since mid-2024, JCAA author's choice), verify URL + DOI resolve.
