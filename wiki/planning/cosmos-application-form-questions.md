@@ -114,3 +114,13 @@ The written artefacts to produce, mapped to the framing doc
 Everything except fields 1-5, 20, and the optional profile links is drafting work against
 existing framing decisions — no new strategic decisions required. The half-day-artefact
 estimate in framing §7 stands.
+
+## Live-form deltas observed at submission (2026-07-21, screenshot)
+
+- Field 12 (CV upload) accepts multiple files — both the applicant's and the
+  collaborator's CVs were attached.
+- Field 18 (collaborators) is a long-text box, suitable for the full role block.
+- Field 19 (project website / additional info) renders links only — no long-form
+  text. The evidence pack therefore lives at `docs/cosmos-evidence-pack.md` in the
+  public repository and is supplied as a link.
+- Fields otherwise as captured 2026-07-07.

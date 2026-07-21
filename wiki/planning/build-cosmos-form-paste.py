@@ -198,17 +198,17 @@ out.append(field("FIELD 17 - Short proposal, under 500 words (required)",
     body))
 
 out.append(field("FIELD 18 - Collaborators (optional)",
+    "NOTE: LIVE FORM (2026-07-21): a long-text box - paste the full block\n"
+    "NOTE: below, not just the name.",
     f18))
 
 out.append(field("FIELD 19 - Project website / additional info (optional)",
-    "NOTE: paste the links paragraph plus the five evidence paragraphs; the\n"
-    "NOTE: bibliography tail is optional - include if the box accepts it,\n"
-    "NOTE: otherwise stop before it (the pack ends with an available-on-request\n"
-    "NOTE: line either way). Trim from the bottom if a length limit bites.",
-    f19_links,
-    f19_evidence,
-    "OPTIONAL TAIL - supporting bibliography (all DOIs verified 2026-07-07/08):",
-    biblio))
+    "NOTE: LIVE FORM DELTA (2026-07-21): renders links only, no long text.\n"
+    "NOTE: The evidence pack is published at docs/cosmos-evidence-pack.md\n"
+    "NOTE: instead; paste these links, one per line.",
+    "https://github.com/saross/llm-reproducibility\n"
+    "https://osf.io/dqnhg/\n"
+    "https://github.com/saross/llm-reproducibility/blob/main/docs/cosmos-evidence-pack.md"))
 
 out.append(field("FIELD 20 - How did you hear about Cosmos Grants? (required)",
     "NOTE: factual - the help text asks for the names of any person or\n"
