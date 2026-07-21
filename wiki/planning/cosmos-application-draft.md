@@ -1,7 +1,30 @@
 # Cosmos Grants Application — Working Draft
 
-**Version:** 0.5
+**Version:** 0.5 (claim-verified)
 **Date:** 2026-07-21
+**Pre-submission claim verification (2026-07-21, PA-hub session):** every number, name,
+date, and factual claim in the field 17 body, field 19, and the v0.5 candidate fields was
+listed and checked verified-against-record; the from-memory set is EMPTY. Key anchors:
+499/500 words (counted); four-successful-one-partial, two calculation errors, data-not-code
+headline (`studies/open-science-compliance/reports/pilot-findings-report.md` §§1, 5.2, 6);
+"mandatory" Jan 2024 policy wording matches the frozen pilot report verbatim (its §2.1 and
+H1); H1–H4 confirmatory + H5 pre-specified exploratory, 2022–2026 window, JAS: Reports
+control, 12-paper blinded hand-scoring with Cohen's kappa
+(`studies/open-science-compliance/prereg/osf-registration-summary.txt`); landscape nulls +
+"most tools never execute code" (`scout-reports/2026-07-08-stack-positioning-synthesis.md`
+§§2, 5); "over 1,800 claims" is conservative — the scout-report claim ledgers hold 2,118
+records (grep count; the synthesis's ~1,600 predates the five follow-up runs); one
+fabricated author name + two prompt-injection refusals (synthesis §5); ~10% agent-relay
+rate (this repo's `wiki/working-notes.md` Obs 6); 96% verdict stability
+(`wiki/planning/extraction-as-data-improvements.md` §1); 26-query guard null (g1 report);
+ReplicatorBench + I4R engine (p1/p4 prior-art reports — note I4R's engine is pre-release,
+which "nearest funded neighbours" phrasing tolerates); all CV specifics for both authors
+re-read from `~/Downloads/Ross_CV_Cosmos_Institute.pdf` +
+`Ballsun-Stanton_CV_Cosmos_Institute.pdf` ($4,799,690/$2,628,673 grants summary; 41
+publications; Nature 2023; both fellowships; ORCIDs; Brian's 2025 VC award, 40+
+workshops/1,500+ researchers, "Prompt Engineering, Harness Engineering, LLM deployment on
+HPC" verbatim; jcaa.96 + UP Florida chapter in both CVs). "Stream" is the form's own term
+(field 13). **Cleared to submit once the OSF embargo on osf.io/dqnhg is lifted.**
 **v0.5 (same day):** affiliations resolved from both CVs (read from ~/Downloads/, kept
 out of the repo — Shawn's CV not yet public): applicant = Honorary Professor (MQ) +
 EFN director; Brian = Lecturer, Faculty of Arts, MQ, with research-integrity-award and
