@@ -312,12 +312,8 @@ combination below; the earlier builder-content draft retained as alternate.
 
 1. I am an archaeologist and open-infrastructure builder: co-founder and director of
    EFN (Fieldmark), which commercialises the open-source FAIMS field-data platform,
-   and formerly product manager of the RAiD persistent identifier (now a European
-   Open Science Cloud component) and manager of the national-infrastructure products
-   team at the Australian Research Data Commons. As a researcher (41 publications,
-   including a 2023 Nature co-authorship; AUD $4.8M in competitive grants, most of it
-   funding research infrastructure), I co-introduced preregistration of research
-   design to archaeology.
+   and formerly product manager of the RAiD persistent identifier and manager of the National Information Infrastructure products
+   team at the Australian Research Data Commons. I have led landscape archaeology projects in Bulgaria, Greece, and Australia, and published in journals from Classical Philology to Nature.
 2. Archaeologist and open-infrastructure builder: co-founder and director of EFN
    (Fieldmark), which commercialises the (open-source) FAIMS field-data platform, and
    formerly product manager of the RAiD persistent identifier (delivered into the
@@ -329,8 +325,11 @@ the steer: took FAIMS from research grants to commercial spin-out (EFN/Fieldmark
 CSIRO bushfire-recovery monitoring contract); managed ARDC teams delivering Research
 Data Australia, Research Vocabularies Australia, and Persistent Identifier Services;
 RAiD delivered as a European Open Science Cloud component (FAIRCORE4EOSC); led
-Macquarie's research-data transformation (5,000+ researchers); co-introduced
-preregistration of research design to archaeology (Ross & Ballsun-Stanton 2022);
+Macquarie's research-data transformation (5,000+ researchers); argued the case for
+preregistration of research design in archaeology (Ross & Ballsun-Stanton 2022);
+two decades of landscape archaeology leadership (TRAP Bulgaria from 2006; Perachora,
+Greece; Blue Mountains ARC Linkage) with publications spanning Nature (2023) to
+Classical Philology (2005);
 41 publications including a 2023 *Nature* co-authorship; AUD $4.8M competitive grant
 income ($2.6M as lead chief investigator); Honorary Professor, Macquarie.
 
@@ -382,10 +381,9 @@ table below remains the audit map.
 > the pipeline as installable Claude and Codex agent skills and builds its self-hostable
 > runner. FAIMS founding data architect; winner of Macquarie's 2025 Vice-Chancellor's
 > Excellence in Research Integrity Award for leading the university's
-> responsible-AI-in-research framework. With the applicant he co-authored the chapter
-> introducing preregistration of research design to archaeology (Ross & Ballsun-Stanton
-> 2022) and the FAIMS FAIRer-data paper (Journal of Computer Applications in
-> Archaeology, 2022).
+> responsible-AI-in-research framework. With the applicant he co-authored "Introducing
+> preregistration of research design to archaeology" (2022) and the FAIMS FAIRer-data
+> paper (Journal of Computer Applications in Archaeology, 2022).
 
 ### Field 19 paste block — lead with the links
 
