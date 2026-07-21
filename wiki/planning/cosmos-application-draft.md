@@ -1,12 +1,16 @@
 # Cosmos Grants Application — Working Draft
 
-**Version:** 0.3
-**Date:** 2026-07-08
-**Status:** Proposal draft v0.3 — Shawn's review edits (2026-07-08) preserved; body
-enriched with one verifier-backed positioning sentence (Problem); field 19 evidence pack
-and supporting bibliography drafted from the 2026-07-07/08 scout sweep; title, one-liner,
-self-pitch, and grant amount still to draft. File deliberately left uncommitted while
-under Shawn's review.
+**Version:** 0.4
+**Date:** 2026-07-21
+**Status:** Proposal draft v0.4 — pre-submission integration pass (2026-07-21, academic-prose
+skill): body aligned with the lodged registration (already-preregistered sentence with
+osf.io/dqnhg; 2022–2026 window; control-series clause; pilot error-detection instance;
+499/500 words); field 19 gains the human-validation link, the agent-relay audit line, and
+a delivery-and-follow-on paragraph (Claude/Codex skills + self-hostable runner with
+B. Ballsun-Stanton, FAIR4RS, CC0 data outputs, follow-on API-cost driver); field 18 entry
+added; candidate drafts for fields 15/16/6/14 below for Shawn's selection. Awaiting
+Shawn's manual editing pass. (v0.3's "left uncommitted" note superseded — committed since
+`7435865`.)
 **Inputs:** `cosmos-grant-application-framing.md` (§4 pitch, §5 lane roles, §6 budget);
 `cosmos-application-form-questions.md` (field 17 five-part structure, <500 words);
 Shawn's framing feedback 2026-07-07 (broader-programme positioning; HASS-native emphasis)
@@ -46,7 +50,7 @@ Shawn's framing feedback 2026-07-07 (broader-programme positioning; HASS-native 
 makes verification of published research cheap enough to be routine — so that trust in a
 paper is earned through open contestation rather than presumed from authority. The pipeline
 implements contestation literally: every reproduction is audited by an adversarial AI
-reviewer running in a fresh context, with no memory of the work it audits, and its
+reviewer in a fresh context, with no memory of the work it audits, and its
 challenges are published alongside the verdict. The aim is not compliance policing but
 lowering the cost of checking until open inquiry into published claims is normal.
 
@@ -59,31 +63,33 @@ assessment tools never execute code. Archaeology is the ideal bridgehead — an 
 primary observations are unrepeatable (excavation consumes its own evidence), yet with a
 fast-growing computational core where verification is tractable. My wider framework, already
 running, decomposes a paper into a graph of claims (explicit and implicit), evidence,
-methods, and research designs, and evaluates the strength of claim–evidence links and the
-appropriateness of methods; planned lanes will assess how papers use — and ignore — the
+methods, and research designs, and evaluates claim–evidence strength and method
+appropriateness; planned lanes will assess how papers use — and ignore — the
 literature. This project builds the framework's verification lanes: computational
 reproduction and FAIR (Findable, Accessible, Interoperable, Reusable) assessment.
 
 **Medium.** Open-source code plus a public demonstration: an agentic pipeline (Docker-based
 reproduction, FAIR scoring, fresh-context adversarial review), a browsable results
-dashboard, and a human-verification interface through which domain experts audit samples of
+dashboard, and a human-verification interface where domain experts audit sampled
 AI verdicts — AI and human checks by design.
 
 **Plan.** This is not a from-zero build: a completed pilot ran five Journal of
 Archaeological Science (JAS) papers through the full stack, yielding four successful and one
-partial reproduction and a measurable headline finding — data availability, not code
-availability, predicts whether a paper reproduces. Five hypotheses are already
-preregistered on the Open Science Framework (osf.io/dqnhg). In 90 days I will: (1) convert
-the piloted workflow into an autonomous agentic pipeline with deterministic quality gates
-and batched human approval; (2) regression-test it against pilot artefacts; (3) run a FAIR
-census of JAS 2022–2026 and reproduce the eligible computational subset; (4) publish the
+partial reproduction and a headline finding — data availability, not code availability,
+predicts whether a paper reproduces. The pilot also caught two calculation errors that
+peer review had missed. Four confirmatory hypotheses (and a pre-specified exploratory
+analysis) are preregistered on the Open Science Framework (osf.io/dqnhg). In 90 days I
+will: (1) convert the piloted workflow into an autonomous agentic pipeline with
+deterministic quality gates and batched human approval; (2) regression-test it against
+pilot artefacts; (3) run a FAIR census of JAS 2022–2026, with a control series from its
+sister journal, and reproduce the eligible computational subset; (4) publish the
 dashboard and verification interface, with expert spot-audits of sampled verdicts.
 
 **Success.** A public, clickable census of open-science practice in a flagship archaeology
 journal, with every reproduction verdict traceable to artefacts anyone can re-run;
 preregistered answers to live questions (for example: did JAS's January 2024 mandatory
 reproducibility-review policy actually change practice?); and a measured per-paper cost 
-demonstrating that verification can be routine rather than heroic. The framework is 
+showing verification can be routine rather than heroic. The framework is 
 HASS-native and extensible: the same claims–evidence core will carry verification 
 beyond the computational as the wider programme grows.
 <!-- proposal-body-end -->
@@ -137,7 +143,7 @@ submission. Every specific below is verifier-backed (sources: scout-reports seri
 2026-07-07/08).
 
 > **Reliability.** The credibility-assessment stack has been stress-tested for the failure
-> mode most cited against LLM assessors: twenty-five independent runs on the same paper
+> mode most cited against LLM assessors: 25 independent runs (five papers, five runs each)
 > yielded 96% verdict stability, reported as a first-class reliability metric — a practice
 > almost absent from the LLM-as-assessor literature (the nearest published analogue treats
 > repeated-run quality scores as probability distributions; Thelwall & Yang 2025).
@@ -150,7 +156,10 @@ submission. Every specific below is verifier-backed (sources: scout-reports seri
 > replication engine — serve quantitative social science and re-execute analyses without
 > scoring openness or credibility. No published work validates LLM scoring of the GO-FAIR
 > sub-principles against human raters; the FAIR-evaluation literature itself calls for
-> exactly this (Candela et al. 2024). A separate grey-literature guard pass (OSF/SocArXiv,
+> exactly this (Candela et al. 2024). The registered design addresses that gap directly,
+> with a preregistered subsample of 12 census papers independently hand-scored, blinded
+> to machine scores, and per-sub-principle agreement and Cohen's kappa reported. A
+> separate grey-literature guard pass (OSF/SocArXiv,
 > Zenodo, Humanities Commons, and six archaeology venues; 26 logged queries, July 2026)
 > confirmed the null: to our knowledge, no prior work applies large language models to
 > assess, extract from, or reproduce archaeological research. This proposal complements,
@@ -167,8 +176,23 @@ submission. Every specific below is verifier-backed (sources: scout-reports seri
 > proposer-plus-adversarial-verifier architecture: over 1,800 machine-checkable claims were
 > independently re-verified, catching an approximately 1% metadata error rate — including
 > one fabricated author name — and detecting and refusing two prompt-injection attempts
-> embedded in web-search results. The method the grant funds is the method that produced
-> this application's evidence.
+> embedded in web-search results. A parallel internal audit measured a ~10% error rate in
+> agent-relayed specifics absent source re-verification. The pipeline's deterministic
+> gates exist to catch exactly that measured failure mode. The method the grant funds is
+> the method that produced this application's evidence.
+>
+> **Delivery and follow-on.** The pipeline ships as open-source code, as installable
+> agent skills for the Claude and Codex ecosystems, and as a self-hostable runner (built
+> by collaborator Brian Ballsun-Stanton), so any group can run the verifier on its own
+> literature rather than trusting our dashboard. FAIR for Research Software (FAIR4RS)
+> scoring of code artefacts is a named next step, pre-committed in the registration to a
+> dated amendment path and the same reliability protocol before use. Census and
+> reproduction data tables will be deposited under CC0 (documents under CC BY 4.0), and
+> archival costs are zero by design (Zenodo, OSF), keeping the budget open-by-default.
+> The extraction and credibility lane (claim–evidence graphs, literature use and neglect)
+> is the natural follow-on. It carries a known cost driver this budget excludes
+> (bibliographic and citation-index API access, e.g. Web of Science), and Metalens's
+> support from two Cosmos programmes is precedent for sequencing follow-on funding.
 >
 > Supporting bibliography available on request (or see below if space permits).
 
@@ -199,12 +223,70 @@ submission. Every specific below is verifier-backed (sources: scout-reports seri
   papers", *The Lancet*. doi:10.1016/S0140-6736(26)00603-3 — the integrity context making
   routine verification urgent.
 
-## Still to draft (other form fields)
+## Field 18 — collaborators (added 2026-07-21)
 
-- Project title (field 15)
-- One-sentence project description (field 16)
-- Self-pitch, 1–2 sentences (field 6)
-- Grant request integer (field 14) — refine from framing §6 brainstorm
-- ~~Field 19 "additional info" paragraph~~ — drafted above (v0.3); guard-pass null folded
-  in 2026-07-08 (source: scout-reports/2026-07-08-g1-archaeology-guard-null-result.md);
-  trim to form limits at submission
+Brian Ballsun-Stanton [unverified: affiliation/title — Shawn to supply] — packages the
+pipeline as installable Claude and Codex agent skills and builds the self-hostable
+runner for public deployment. Role from Brian's own feedback (relayed by Shawn,
+2026-07-21): "ship it as a claude, codex skill", "build it into a self-hostable runner
+online". He has no JAS or *JAS: Reports* papers in the census window; if his role makes
+him study personnel, prereg §5 criterion 5 (study-personnel papers excluded from
+reproduction) applies automatically at no practical cost.
+
+## Candidate drafts — fields 15, 16, 6, 14 (2026-07-21; Shawn selects and edits)
+
+### Project title (field 15)
+
+1. Routine Verification of Published Research: an AI Reproduction and FAIR-Assessment
+   Pipeline, Piloted on Archaeology
+2. Cheap Enough to Check: AI-Assisted Reproduction and Openness Scoring of Published
+   Archaeological Science
+3. Making Published Research Checkable: an AI-and-Human Verification Pipeline for
+   Archaeology
+
+### One-sentence description (field 16)
+
+1. An open-source pipeline that reproduces the computational results of published papers
+   and scores their openness, with AI and human checks, demonstrated as a live
+   verification census of a flagship archaeology journal.
+2. AI agents re-run published analyses and score data and code openness, adversarial
+   reviewers audit every verdict, and human experts spot-check the output, delivered as
+   a public census of a flagship archaeology journal.
+
+### Self-pitch, 1–2 sentences (field 6)
+
+1. Archaeologist and open-science infrastructure builder (co-founder of the
+   FAIMS/Fieldmark field-data platform), now applying AI agents to make verification of
+   published research routine. A completed five-paper pilot is already running, with
+   every verdict auditable by humans.
+2. I am an archaeologist working in the discipline's half-century-old quantitative
+   tradition (Computer Applications and Quantitative Methods in Archaeology, founded
+   early 1970s), and I build open research infrastructure. My verification pipeline has
+   already reproduced five published papers and caught calculation errors that peer
+   review missed.
+
+### Grant request (field 14) — worked candidate
+
+**US$8,000** (form integer: 8000). Composition (framing §6 lines plus Brian's runner):
+
+| Line | US$ | Justification |
+|------|-----|---------------|
+| Inference credits, two vendors | 4,000 | Anthropic + OpenAI; cross-model verification is methodological, not redundancy |
+| Cloud compute for reproductions | 1,200 | Long jobs off the local host; host-independence is itself a reproducibility claim |
+| Hosting + domain (dashboard, runner, skills distribution) | 500 | The clickable public demo; Brian's runner distribution |
+| Human-verification honoraria | 1,000 | Strengthens "AI and human checks"; framing §6 flags the admin overhead — confirm deliberately |
+| Dissemination (CAA contribution) | 600 | Community the pilot papers come from |
+| Contingency (~10%) | 700 | |
+| Archival | 0 | Zenodo + OSF free by design — say so in the application |
+
+Lean variant without honoraria: ≈ US$7,000. Range anchor from framing §6: US$1k–10k as
+a signal of scope and seriousness, not a funding plan.
+
+## Remaining at submission (Shawn)
+
+- Select and edit the candidates above; supply Brian's affiliation line
+- Field 20 (how-did-you-hear) — factual, Shawn supplies
+- Optional profile links (website, LinkedIn, X, Substack) — form says they aid review
+- Lift the OSF embargo and verify <https://osf.io/dqnhg/> resolves publicly with DOI
+- Trim field 19 to any form limit at submission (guard-pass null folded in 2026-07-08;
+  source: scout-reports/2026-07-08-g1-archaeology-guard-null-result.md)

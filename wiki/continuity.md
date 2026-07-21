@@ -46,10 +46,19 @@ merged here as PR #1).
   first-mover claims must be scoped + "to our knowledge" with Spennemann 2023
   demarcated; Zotero staging holds all verified finds (P1–P6, S1–S2, chains).
   lit-scout + verifier agents patched (author-count rule; arXiv handling).
-- **Cosmos application:** proposal draft v0.3 committed (`7435865`) in
-  `wiki/planning/cosmos-application-draft.md` (body 482/500 words; field 19
-  evidence pack + bibliography drafted; guard-pass null folded in). Remaining
-  fields: title, one-liner, self-pitch, grant amount. Deadline 26 Jul 2026.
+- **Cosmos application:** proposal draft v0.4 (2026-07-21, academic-prose pass)
+  in `wiki/planning/cosmos-application-draft.md` — body 499/500 aligned with the
+  lodged registration (already-preregistered + osf.io/dqnhg, control series,
+  pilot error-detection, window 2022–2026); field 19 extended (human-validation
+  link, agent-relay audit line, delivery-and-follow-on paragraph: Claude/Codex
+  skills + self-hostable runner with Brian Ballsun-Stanton, FAIR4RS, CC0 data
+  outputs, follow-on API-cost driver); field 18 Brian entry (affiliation line
+  pending); candidates drafted for title/one-liner/self-pitch/amount (worked
+  US$8,000). Awaiting Shawn's manual edit + field selection. Pre-submission
+  gates: lift OSF embargo (journal check 2026-07-21: no candidate venue
+  requires double-blind — JAS/JAS:R single-anonymised, JAS:R dropped
+  double-blind since mid-2024, JCAA author's choice), verify URL + DOI resolve.
+  Deadline 26 Jul 2026. (v0.3 was `7435865`, body 482/500.)
 - **OSF preregistration DRAFTED + STRESS-TESTED (2026-07-14/15):**
   `studies/open-science-compliance/protocol/phase-2-preregistration-draft.md`
   v0.2 (`885e664`; v0.1 `9405182`). Open-ended registration format; honours all
