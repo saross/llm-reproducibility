@@ -345,6 +345,11 @@ a signal of scope and seriousness, not a funding plan.
 
 ## Final paste set (v0.6, post-verification — every form field, form order)
 
+**For actual form-filling use `cosmos-application-form-paste.txt`** (same directory):
+fields in form order, NOTE: lines separated from copy text, one unwrapped flowing line
+per paragraph, markdown stripped — generated from this document's verified blocks. The
+table below remains the audit map.
+
 | Field | Entry |
 |-------|-------|
 | 1–5 name/email/phone/location | Factual. Suggested email shawn@fieldnote.au (CV contact); location Sydney, NSW, Australia. **Check the phone**: the CV letterhead renders "+61 1 04 758 300", which looks like a typesetting slip |
