@@ -305,24 +305,24 @@ remains as the alternate.
 
 ### Self-pitch, 1–2 sentences (field 6)
 
-Steer (Shawn, 2026-07-21): lead with what we have done — infrastructure built, products
-and teams managed at national and international scale, complementing the academic
-background — not memberships or fellowships. Both candidates verification-corrected
-(pilot outcome = four complete + one partial, not "reproduced five").
+Steer (Shawn, 2026-07-21): the field is about the applicant, not the project — no
+pipeline content (that lives in fields 16/17/19); "I am…" form (candidate 2's approach)
+with the builder content of candidate 1; evidence of being the right person. Selected
+combination below; the earlier builder-content draft retained as alternate.
 
-1. Archaeologist and open-infrastructure builder: co-founder and director of EFN
-   (Fieldmark), which commercialises the (open-source) FAIMS field-data platform, and formerly
-   product manager of the RAiD persistent identifier — delivered into the European
-   Open Science Cloud — and manager of the national-infrastructure products team at
-   the Australian Research Data Commons. My verification pipeline has run five
-   published archaeology papers through full reproduction, reproducing four
-   completely and catching calculation errors that peer review missed.
-2. I am an archaeologist working in the discipline's half-century-old quantitative
-   tradition (Computer Applications and Quantitative Methods in Archaeology, founded
-   early 1970s), and I build open research infrastructure, from the FAIMS field-data
-   platform to national persistent-identifier services. My pipeline has run five
-   published papers through full reproduction, reproducing four completely, and
-   caught calculation errors that peer review missed.
+1. I am an archaeologist and open-infrastructure builder: co-founder and director of
+   EFN (Fieldmark), which commercialises the open-source FAIMS field-data platform,
+   and formerly product manager of the RAiD persistent identifier (now a European
+   Open Science Cloud component) and manager of the national-infrastructure products
+   team at the Australian Research Data Commons. As a researcher (41 publications,
+   including a 2023 Nature co-authorship; AUD $4.8M in competitive grants, most of it
+   funding research infrastructure), I co-introduced preregistration of research
+   design to archaeology.
+2. Archaeologist and open-infrastructure builder: co-founder and director of EFN
+   (Fieldmark), which commercialises the (open-source) FAIMS field-data platform, and
+   formerly product manager of the RAiD persistent identifier (delivered into the
+   European Open Science Cloud) and manager of the national-infrastructure products
+   team at the Australian Research Data Commons.
 
 Credential fragments to weave in, all CV-verified (2026-07-21), done-things first per
 the steer: took FAIMS from research grants to commercial spin-out (EFN/Fieldmark;
