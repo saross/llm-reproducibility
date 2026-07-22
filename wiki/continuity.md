@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-21
+updated: 2026-07-22
 status: active
 ---
 
@@ -30,8 +30,44 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-07-21)
+## Repo state (2026-07-22)
 
+- **Routing-design review passes COMPLETE + externalised (2026-07-22):**
+  implementation review at
+  `wiki/planning/reviews/2026-07-22-routing-design-implementation-review.md`
+  (10 defects D1–D10, 8 enhancements E1–E8; headline: build push/receipt/
+  pre-flight on native harness primitives — SubagentStart/SubagentStop hooks,
+  `skills:` preload, `--json-schema` — not hand-rolled plumbing; pin model IDs);
+  prior-art scout, adversarially verified 110/110 claims clean, at
+  `wiki/planning/scout-reports/2026-07-22-routing-design-prior-art-verified.md`
+  (headline: subagent cold-cache caveat + open issue anthropics/claude-code#29966
+  — census cost gate must NOT assume prompt-cache discount without an empirical
+  `cache_read_input_tokens` check). Design v0.2 fold-in is the next design task.
+- **Pass 6 instrument defects FIXED (2026-07-22, `abdc526`):** stale /16
+  example, legacy 5-level access taxonomy (renamed Tier 0–4 + demarcation
+  note vs prereg L1–L6), dead schema pointer — all three were in the
+  OSF-frozen copy at `ee3fda3`. **Erratum log started** (Shawn approved
+  erratum-then-amendment path):
+  `studies/open-science-compliance/prereg/erratum-log.md` — amendment must
+  lodge before census scoring; instrument-file extraction (review D1) queued
+  for Phase 1 build.
+- **Sequence BLESSED (Shawn, 2026-07-22):** Pass 6 fix → routing design v0.2
+  + sign-off → corpus-management implementation → Phase 1 agentic build →
+  ONE combined validation phase (regression gate ≥2 pilots incl. Crema
+  posterior-table leg + FAIR reliability spot-check 3 papers × 3 runs) →
+  census. The previously planned standalone "weekend run" is superseded —
+  both checks now ride the post-build validation phase, run once on the
+  pipeline + model(s) that will score the census.
+- **Model-testing decisions (Shawn, 2026-07-22):** step-5 spot-check
+  benchmarks ALL THREE Claude models. Sonnet 5 + Opus 4.8 first, on the
+  Claude Max subscription; **ASK before running Fable 5** (may go via API
+  instead — Max coverage unclear). Shawn also wants an OpenAI **Sol** arm
+  (GPT-5.6 Sol, released ~Jul 2026:
+  <https://openai.com/index/previewing-gpt-5-6-sol/>; "capable but not
+  Fable-level") — possibly a Fable-driving-Sol combination; design discussion
+  deferred; cross-provider arm needs its own harness and an OSF amendment if
+  adopted for the census (registration documents Claude as the instrument).
+  API-call approval gate applies to every run as usual.
 - `main` current through 2026-07-15 @ `885e664` (history rewritten 2026-07-13 —
   pre-purge hashes are stale). Earlier landmarks: plan v0.3 review,
   Cosmos form capture + proposal draft v0.2, article-text untracking, and the
