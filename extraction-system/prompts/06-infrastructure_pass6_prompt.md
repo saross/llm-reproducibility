@@ -199,13 +199,20 @@ Assess whether the paper shares **all** the data needed for reproduction, not ju
 **Procedure:**
 
 1. **Enumerate datasets** referenced in Methods/Results (including upstream sources)
-2. **Classify each** using the 5-level access taxonomy:
-   - Level 0: Direct download (DOI-based repository, open supplement)
-   - Level 1: Programmatic extraction (HTML tables, API)
-   - Level 2: Available but requires manual steps (registration, paywall, PDF table extraction)
-   - Level 3: Exists but inaccessible (closed thesis, paywalled monograph, co-author held)
-   - Level 4: Not found / never published
-3. **Calculate coverage**: datasets accessible (Level 0-2) / total datasets. Where feasible, also compute record-weighted coverage.
+2. **Classify each** using the five-tier access classification (Tier 0-4):
+   - Tier 0: Direct download (DOI-based repository, open supplement)
+   - Tier 1: Programmatic extraction (HTML tables, API)
+   - Tier 2: Available but requires manual steps (registration, paywall, PDF table extraction)
+   - Tier 3: Exists but inaccessible (closed thesis, paywalled monograph, co-author held)
+   - Tier 4: Not found / never published
+
+   > **Demarcation note (2026-07-22):** these access tiers are a Pass 6 working
+   > classification used only for the data-completeness coverage computation.
+   > They are distinct from the preregistered six-level data-availability
+   > taxonomy (L1-L6, Phase 2 preregistration §7.3), which is assigned only at
+   > reproduction time from actual retrieval attempts. Never conflate the two.
+
+3. **Calculate coverage**: datasets accessible (Tier 0-2) / total datasets. Where feasible, also compute record-weighted coverage.
 4. **Assign category**: complete (100%), substantial (75-99%), partial (25-74%), minimal (0-24%)
 5. **Identify barriers**: co-author gatekeeping, closed monograph, unpublished, embargoed, proprietary, ethics restricted, paywall, registration required
 
@@ -659,8 +666,8 @@ Does paper have formal "Data/Code Availability" statement?
 
 4. **Calculate totals:**
    - Sum per dimension (e.g., Findable: 3/4)
-   - Total FAIR score (e.g., 14/16)
-   - FAIR percentage (e.g., 87.5%)
+   - Total FAIR score (e.g., 14/15)
+   - FAIR percentage (e.g., 93.3%)
    - FAIR rating (not_fair, minimally_fair, moderately_fair, highly_fair)
 
 5. **Assess machine-actionability:**
@@ -799,7 +806,9 @@ Does paper have formal "Data/Code Availability" statement?
 ```
 
 **For complete field definitions, examples, and PID formats:**
-→ See `wiki/planning/REPRODUCIBILITY_INFRASTRUCTURE_SCHEMA.md`
+→ See `extraction-system/schema/extraction-schema-v2.6.json` (canonical field
+definitions); historical design rationale in
+`archive/planning-completed/reproducibility-infrastructure-schema.md`
 
 **Leave unchanged:** Evidence, claims, methods, protocols, research_designs arrays
 
