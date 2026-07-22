@@ -431,11 +431,13 @@ implementation before census; (4) watch for Cosmos correspondence ~mid-August;
 
 **Held over pending Shawn's verdicts (no silent discard):** working-notes
 candidates WN-a/WN-b (2026-07-18: xelatex glyph-drop hazard; emphasis-stripping
-fixpoint — still unverdicted) plus NEW WN-c/d/e (2026-07-21: paste-surface
-conventions; external-fact half-life — the JAS:R policy drift; verification
-ledgers drift from sources); user-obs candidates 1–4 (2026-07-18, pending
-in-file) plus NEW candidates 5–8 (2026-07-21, written to
-`wiki/user-observations.md` pending review).
+fixpoint) plus NEW WN-c/d/e (2026-07-21: paste-surface conventions;
+external-fact half-life — the JAS:R policy drift; verification ledgers drift
+from sources) — WN verdicts still owed. ~~user-obs candidates 1–8~~ [x]
+2026-07-22 ALL RESOLVED: 1–5 and 7 accepted (7 elevated to a standing
+default: interface-shaped paste artefacts for any web-form output; riders on
+1 and 2: critical-friend pushback on domain judgements stays welcome; hold
+ground when pushback is off-base), 6 and 8 discarded.
 
 ### 2026-07-18 — Prereg v0.3→v0.7 lodgement-ready; OSF materials; authorship posture
 
@@ -490,8 +492,9 @@ regression gate (pilot papers only — prereg-safe before and after lodgement);
 candidates WN-a (xelatex silently drops out-of-font glyphs — meaning-inversion
 hazard for instruments; verify builds by text extraction) and WN-b
 (markdown-emphasis stripping needs fixpoint iteration — nested/line-wrapped
-spans survive one pass); user-obs candidates 1–4 in
-`wiki/user-observations.md` (pending review).
+spans survive one pass); ~~user-obs candidates 1–4 in
+`wiki/user-observations.md` (pending review)~~ [x] 2026-07-22 all four
+accepted (with riders; see user-observations.md).
 
 ### 2026-07-15/16 — All prereg decision points resolved; content-routing design v0.1
 

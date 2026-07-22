@@ -142,37 +142,78 @@ current affiliation — where three candidates (Macquarie/ANU/FAIMS) were all
 plausible and unverifiable from disk. One interruption instead of four;
 nothing guessed.
 
-## Candidates 2026-07-18 (pending review)
+## 2026-07-18 — Domain judgement → formalisation division of labour on instruments
 
-**Candidate 1 — Domain judgement → formalisation division of labour on the
-friction taxonomy.** Shawn supplied the domain insight ("data available on
-request" is a meme open advocates particularly resent; registration with an
-archive is different in kind) and Claude formalised it into two named scale
-boundaries (machine-retrievable at L2/L3; procedural-vs-discretionary at
-L3/L4) plus the analysis collapse. Verdict sought: did the formalisation
-capture the intent, and is this co-design pattern worth naming for future
-instrument work?
+*(Accepted by Shawn 2026-07-22: the formalisation captured the intent and the
+pattern is worth naming — with the standing rider that critical-friend
+pushback on his domain judgements remains welcome; the division of labour is
+not a deference instruction.)*
 
-**Candidate 2 — Honest recalibration after pushback beat defending the
-original claim.** When Shawn challenged the pull-miss risk framing ("I've not
-seen an agent fail this way"), Claude downgraded its own earlier emphasis
-("per-call risk is low; you're right to push back") and relocated the risk to
-tails, scale, and silent failure modes instead of defending. The recalibrated
-version drove the read-receipts decision. Was the climb-down more useful than
-the original framing?
+Shawn supplied the discriminating domain insight ("data available on request"
+is a practice open advocates particularly resent; registration with an
+archive is different in kind — discretionary versus procedural access) and
+Claude formalised it into the availability taxonomy's two named boundaries
+(machine-retrievable at L2/L3; procedural-vs-discretionary at L3/L4), the
+three-level analysis collapse, and the standardised L4 request protocol. The
+result is now frozen in the OSF registration as H2's predictor variable.
 
-**Candidate 3 — Redact-vs-bridge pushback on pilot per-paper scores.** Claude
-argued against Shawn's redaction instinct (record integrity; H5 provenance
-depends on a per-paper score; already-public artefacts) and supplied the
-bridging-note alternative instead. Productive pushback, or should the
-redaction question have been explored further?
+**What generalises:** instrument co-design default — Shawn supplies the
+discriminating judgement, Claude names the boundaries and encodes the
+analysis structure; and Claude stress-tests the judgement itself rather than
+merely formalising it.
 
-**Candidate 4 — Convention transfer with improvement, not copying.** Pointed
-at inscriptions/ for OSF materials, Claude located the convention, extracted
-the house build flags, and deviated deliberately where the convention would
-have failed here (DejaVu fonts after Latin Modern silently dropped statistical
-symbols; md-only for glyph-bearing instruments). Is deviate-with-documented-
-reason the right default when transferring conventions between projects?
+## 2026-07-18 — Update-in-the-open when field experience contradicts the risk model
+
+*(Accepted by Shawn 2026-07-22, edited: update-in-the-open is preferable, with
+the symmetric rider to hold ground when the pushback is off-base — the goal
+is calibration, not capitulation.)*
+
+When Shawn challenged the pull-miss risk framing ("I've not seen an agent
+fail this way"), Claude conceded the per-call point explicitly and relocated
+the risk to where the evidence still supported it: silent failures,
+census-scale accumulation, and the consistently-wrong-scorer case that
+stability checks cannot catch (the n = 12 human subsample can). The
+recalibrated framing, not the original, drove the read-receipts decision.
+
+**What generalises:** when Shawn's field experience contradicts a risk model,
+concede what his evidence covers and relocate the residual risk precisely,
+rather than defending the original emphasis — and, symmetrically, hold
+ground when his pushback misses the mechanism.
+
+## 2026-07-18 — Productive pushback protected the pilot record (redact vs bridge)
+
+*(Accepted by Shawn 2026-07-22: "I really appreciated the productive
+pushback.")*
+
+Against Shawn's instinct to redact the pilot's already-public per-paper
+credibility scores for consistency with Phase 2's aggregate-only policy,
+Claude argued record integrity (published artefacts), provenance (H5's
+rationale derives from them), and supplied the alternative in the same
+breath: the bridging note plus the registered wording that the restriction
+"is a Phase 2 policy… not a retraction of the pilot record."
+
+**What generalises:** when an instinct risks the integrity of a public
+record, object *with* a concrete alternative instrument — the pushback that
+lands pairs the objection with the better option, not with compliance or bare
+disagreement.
+
+## 2026-07-18 — Deviate-with-documented-reason is the convention-transfer default
+
+*(Accepted by Shawn 2026-07-22 as drafted.)*
+
+Pointed at inscriptions/ for OSF lodgement materials, Claude located the
+convention, adopted the house build recipe, and deviated deliberately where
+the convention would have failed here (DejaVu fonts after Latin Modern
+silently dropped statistical symbols; markdown-only for glyph-bearing
+instruments), documenting each deviation in the README recipe. Postscript:
+within 72 hours the same convention absorbed two further documented
+extensions (line-break unwrapping; the tables ban) and generalised to the
+Cosmos form-paste pipeline — the transfer-and-extend pattern proved
+load-bearing immediately.
+
+**What generalises:** transfer conventions by locating, adopting, and
+deviating where they would fail — each deviation documented at the point of
+use. Faithful copying without scrutiny and silent deviation are both wrong.
 
 ## 2026-07-21 — Two independent verification passes plus reconciliation
 
