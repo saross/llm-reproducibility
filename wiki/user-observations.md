@@ -174,30 +174,39 @@ have failed here (DejaVu fonts after Latin Modern silently dropped statistical
 symbols; md-only for glyph-bearing instruments). Is deviate-with-documented-
 reason the right default when transferring conventions between projects?
 
-## Candidates 2026-07-21 (pending review)
+## 2026-07-21 — Two independent verification passes plus reconciliation
 
-**Candidate 5 — Two independent verification passes plus reconciliation.** The
-PA-hub session's claim ledger and this session's clean-context adversarial
-agent each verified the Cosmos application; reconciling them caught three
-ledger pointer errors and six wording drifts that neither pass saw alone.
-Verdict sought: worth standardising as the pattern for submission-grade
-documents, or was this deadline-grade overkill?
+*(Accepted by Shawn 2026-07-22, as drafted. Candidates 6 and 8 from the same
+handoff discarded.)*
 
-**Candidate 6 — In-the-moment reactions (relayed).** "Submitted!! yay" and, at
-close, "don't know what I'd do without your help, most appreciated" — recorded
-as data about the two-day lodge-verify-submit support pattern (paste
-artefacts, background policy checks, field-by-field iteration).
+The PA-hub session's claim ledger and the project session's clean-context
+adversarial agent each verified the Cosmos application; reconciling them
+caught three ledger pointer errors and six wording drifts that neither pass
+saw alone. The producing context could not see its own from-memory pointers;
+the second pass was instructed to treat the first pass's record as untested
+claims, and that adversarial independence — not extra capability — produced
+the catches.
 
-**Candidate 7 — Interface-shaped artefacts removed the copy friction.** After
-"it's a bit hard to read / copy", the generated form-paste file (fields in
-form order, notes separated, flowing lines, committed generator) became the
-actual submission tool. Verdict sought: should a form-shaped paste artefact be
-the default deliverable whenever output targets an external interface, built
-early rather than on request?
+**What generalises:** for submission-grade documents, run two independent
+verification passes and reconcile them explicitly; the reconciliation step is
+where the value concentrates, because it surfaces disagreements between
+verifiers that single-pass review presents as settled facts.
 
-**Candidate 8 — Claude drafted one notch above Shawn's claim ceiling.**
-"Co-introduced preregistration", "reproduced five papers" — each required
-Shawn's deflation at final pass; Claude then propagated the deflation to
-sibling texts unprompted (fragments list, field 18 title-quote). Verdict
-sought: is draft-then-deflate an acceptable division of labour, or should
-Claude pre-deflate to the literally-accurate ceiling (per claude-obs 15)?
+## 2026-07-21 — Interface-shaped paste artefacts are the default for web-form output
+
+*(Accepted by Shawn 2026-07-22, edited: elevated from question to standing
+default — generalise the OSF prereg approach to any web-form-based output.)*
+
+After "it's a bit hard to read / copy", the generated form-paste file (fields
+in form order, NOTE lines separated from copy text, one flowing line per
+paragraph, committed generator keeping paste text and verified source in
+lockstep) became the actual submission tool. The same convention had already
+worked twice at OSF (prereg summary and project metadata), and the friction
+disappeared the moment the artefact matched the input surface.
+
+**What generalises (Shawn's standing default):** whenever output targets a
+web form or similar external interface, build the interface-shaped paste
+artefact early as part of the deliverable — the OSF preregistration approach,
+generalised: plain flowing text, form-order fields, provenance separated from
+copy text, generated from the verified source, and the live surface re-checked
+at fill time rather than trusted from capture.
