@@ -100,3 +100,12 @@ missing glyphs silently — verify any rebuild with
       Storage without the five-file form cap; lodged WITH an embargo — a
       deliberate deviation from this item's no-embargo recipe, see the note
       at the top of this file)
+
+## Post-lodgement errata
+
+Defects discovered in the frozen OSF artefacts after lodgement are recorded in
+[`erratum-log.md`](erratum-log.md), together with the repository-side
+corrections. Entries accumulate there until an amendment is worthwhile; an
+amendment folding them in must be lodged before census scoring begins
+(preregistration §8-§9). First entry: 2026-07-22 (three defects in the Pass 6
+FAIR instrument prompt, corrected in commit `abdc526`).
