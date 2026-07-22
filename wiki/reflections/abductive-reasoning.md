@@ -24,12 +24,16 @@ sessions, explicitly state the assessment and skip.
 
 ### 2026-02-11 — Assessment: No qualifying episodes
 
+**Session anchor (retro-matched 2026-07-22):** `2026-02-11T10-23_178d6a22` — session `178d6a22-27bc-4413-9ab8-3028161e55a3`, confidence: transcript-confirmed.
+
 This session involved executing a pre-planned refactoring (file moves, path updates) and
 synthesising existing artefacts into documentation. No debugging with surprising results,
 no hypothesis generation, no belief revision, and no default-following corrections occurred.
 Skipped.
 
 ### 2026-02-12 — Assessment: No qualifying episodes
+
+**Session anchor (retro-matched 2026-07-22):** `2026-02-11T22-30_05d95504` — session `05d95504-543f-4088-af61-8ce05f3a6e4c`, confidence: transcript-confirmed.
 
 Schema standardisation and version string cleanup. Work was procedural: read files,
 identify inconsistencies against a known canonical form, apply fixes, verify. The
@@ -40,6 +44,8 @@ type A, the same version likely persists in adjacent file type B." No belief
 revision or hypothesis generation occurred. Skipped.
 
 ### 2026-07-06 — One qualifying episode: the dormancy revision
+
+**Session anchor (retro-matched 2026-07-22):** `2026-07-03T08-26_revive-llm-reproducibility-with` — session `285a2a41-b2ca-4b6a-b9c5-8fabfe57a2f8`, confidence: meta-matched.
 
 **Surprising fact:** A routine pre-push `git fetch` reported the local clone 8 commits
 behind origin — after I had already asserted to the user, in a delivered summary, that
@@ -69,6 +75,8 @@ assessment, because absence of local evidence is not evidence of absence when th
 evidence lives in a distributed system.
 
 ### 2026-07-14 — Assessment: Qualifying episodes (three)
+
+**Session anchor (retro-matched 2026-07-22):** unmatched — no archive located; see match report 2026-07-22.
 
 This session qualifies — three genuine surprising-fact → probe → belief-revision
 sequences, all in the verification layer.
@@ -101,6 +109,8 @@ held, the file joined the purge, and the fix generalised into a provenance rule
 (extractions must record source file + hash) in the corpus-management plan.
 
 ### 2026-07-15 — Qualifying episodes (two)
+
+**Session anchor (retro-matched 2026-07-22):** unmatched — no archive located; see match report 2026-07-22.
 
 **Episode 1 — whose name is on the pilot report?** Surprising fact: the pilot findings
 report's author line read "Shawn Graham" — a different, real digital-archaeology
@@ -136,6 +146,8 @@ routes failed.
 
 ### 2026-07-18 — Qualifying episodes (two)
 
+**Session anchor (retro-matched 2026-07-22):** `2026-07-15T04-21_resolve-phase-2-preregistration-decisions` — session `5c5ebf15-5088-4e1f-8036-b2a2118b4666`, confidence: transcript-confirmed.
+
 **Episode 1 — the directory that wasn't there.** Surprising fact: Shawn asked for
 "the OSF preregistration materials in inscriptions/" — no such directory in this
 repo. Competing hypotheses: (a) misremembered, never existed (create fresh); (b)
@@ -159,6 +171,8 @@ legitimately (a) on the honest re-run. Cross-referenced as claude-obs 13: a
 verification that cannot fail visibly verifies nothing.
 
 ## 2026-07-21 — The embargo guarding an expired fact
+
+**Session anchor (retro-matched 2026-07-22):** un-archived transcript `~/.claude/projects/-home-shawn-Code-llm-reproducibility/8b126d42-00d9-4060-bc79-e2b56efc9459.jsonl` — session `8b126d42-00d9-4060-bc79-e2b56efc9459`, confidence: transcript-confirmed.
 
 **Surprising fact.** Shawn lodged the OSF registration WITH an embargo,
 contradicting the lodgement plan's explicit "no embargo (public immediately)"
