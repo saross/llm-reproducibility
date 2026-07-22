@@ -45,7 +45,7 @@ revision or hypothesis generation occurred. Skipped.
 
 ### 2026-07-06 — One qualifying episode: the dormancy revision
 
-**Session anchor (retro-matched 2026-07-22):** `2026-07-03T08-26_revive-llm-reproducibility-with` — session `285a2a41-b2ca-4b6a-b9c5-8fabfe57a2f8`, confidence: meta-matched.
+**Session anchor (retro-matched 2026-07-22):** `2026-07-03T08-26_revive-llm-reproducibility-with` — session `285a2a41-b2ca-4b6a-b9c5-8fabfe57a2f8`, confidence: transcript-confirmed.
 
 **Surprising fact:** A routine pre-push `git fetch` reported the local clone 8 commits
 behind origin — after I had already asserted to the user, in a delivered summary, that
@@ -76,7 +76,7 @@ evidence lives in a distributed system.
 
 ### 2026-07-14 — Assessment: Qualifying episodes (three)
 
-**Session anchor (retro-matched 2026-07-22):** unmatched — no archive located; see match report 2026-07-22.
+**Session anchor (retro-matched 2026-07-22):** `2026-07-06T04-47_7611d1aa` — session `7611d1aa-3419-49ba-a23e-b887887a92ea`, confidence: transcript-confirmed. (Archive completed 2026-07-22: the earlier snapshot ended 2026-07-07T23:21Z mid-session; the full transcript to 2026-07-13T23:41Z was re-archived from zbook.)
 
 This session qualifies — three genuine surprising-fact → probe → belief-revision
 sequences, all in the verification layer.
@@ -110,7 +110,7 @@ held, the file joined the purge, and the fix generalised into a provenance rule
 
 ### 2026-07-15 — Qualifying episodes (two)
 
-**Session anchor (retro-matched 2026-07-22):** unmatched — no archive located; see match report 2026-07-22.
+**Session anchor (retro-matched 2026-07-22):** `2026-07-13T23-54_draft-phase-2-osf-preregistration-with` — session `6590f824-0c1c-4409-9964-cd46192bd67b`, confidence: transcript-confirmed.
 
 **Episode 1 — whose name is on the pilot report?** Surprising fact: the pilot findings
 report's author line read "Shawn Graham" — a different, real digital-archaeology
