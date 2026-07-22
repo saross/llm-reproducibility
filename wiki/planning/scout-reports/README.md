@@ -39,6 +39,17 @@ Scholar with DataCite DOIs (`10.48550/arXiv.*`):
 | C3 CEM/RDMAP lineages (Carriero/ReplicatorBench/Laï-king/Micropub) | [c3](2026-07-08-c3-cem-rdmap-chains-verified.md) | 7 competitor flags; appropriateness niche has zero citers |
 | G1 Archaeology guard pass (OSF/grey literature) | [g1](2026-07-08-g1-archaeology-guard-null-result.md) | Documented null (26 queries); first-mover claim holds scoped + "to our knowledge" |
 
+**Routing-design review pass (2026-07-22)** — prior-art scout against the agent
+content-routing design's §7 open questions, adversarially verified (110 claims,
+107 confirmed, 0 corrected, 3 declared-null):
+
+| Run | Report | Headline |
+|-----|--------|----------|
+| Routing-design prior art | [routing prior-art](2026-07-22-routing-design-prior-art-verified.md) | Harness-native `skills:` push answers §7.1/§7.5; subagent cold-cache caveat (issue #29966) means census cost gate must not assume caching; deterministic-sweep + narrow-LLM-triage screener shape well supported |
+
+The companion implementation review lives in
+[`../reviews/2026-07-22-routing-design-implementation-review.md`](../reviews/2026-07-22-routing-design-implementation-review.md).
+
 Provenance notes: proposer drafts and BibTeX exports live under the session scratchpad and
 `/tmp/lit-scout-*` (transient); the verified reports here are the durable record. The
 sweep was interrupted once by a session usage limit (2026-07-08 ~00:30–03:30 AEST); four
