@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-22
+updated: 2026-07-23
 status: active
 ---
 
@@ -30,8 +30,20 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-07-22)
+## Repo state (2026-07-23)
 
+- **Routing design v0.2 WRITTEN (2026-07-23, `3914f81`) — awaiting Shawn's
+  review/sign-off** (he is reading it; the four judgement calls to check: hook
+  injection as primary push; §2.2 remediation ladder; instrument extraction
+  deferred to build; memory prohibition + hot-reload governance). Phase 1 build
+  blocked on this sign-off.
+- **Corpus-management implementation SCOPED (2026-07-23):** repo audit, build
+  order (8 items, ≈1 day, items 1–4 census-blocking), target structure, and
+  decision log now in `wiki/planning/corpus-management-plan.md` v0.2. Decision
+  status: path mechanism AGREED; out-of-tree store and study-scoped manifests
+  recommended (registration-integrity argument: purges rewrite history and
+  would invalidate the hashes the OSF registration pins) — awaiting Shawn's
+  confirmation; execution ON HOLD until the routing-design review lands.
 - **Routing-design review passes COMPLETE + externalised (2026-07-22):**
   implementation review at
   `wiki/planning/reviews/2026-07-22-routing-design-implementation-review.md`
