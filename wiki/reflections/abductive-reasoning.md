@@ -281,3 +281,54 @@ prior calibration, not fabrication: vendor-internal behaviour recalled from
 training belongs in the same low-trust class as stale external facts (cf. the
 2026-07-21 expired-embargo entry), and a practitioner's lived prior outweighed
 three rounds of my documented-behaviour reasoning.
+
+## 2026-07-24 — The dated snapshot IDs that don't exist
+
+**Session:** 87be8687-d934-4a3e-a240-a44a21b28554
+**Instance:** primary
+
+### Surprising fact
+
+The routing design (v0.2.2, reviewed twice, signed off) mandates pinning "full
+model IDs" in agent frontmatter, explicitly contrasting them with the
+"floating aliases" that per-call overrides accept — language implying dated
+snapshot identifiers exist for the census models. The authoritative model
+reference, loaded before authoring the pins, states the opposite: for Sonnet 5
+and Opus 4.8 the alias is the complete ID, no dated form exists, and appending
+a date suffix is an error that 404s.
+
+### Probe
+
+Reading the claude-api reference before writing any pin (the skill's own
+discipline forced this — "never answer model-ID questions from memory"), then
+cross-checking the models catalogue's Full ID column: "—" for every
+current-generation model; only legacy models (Opus 4.5, Haiku 4.5) carry dated
+full IDs.
+
+### Belief revision
+
+The pin/alias dichotomy the design leans on is a property of an older model
+generation, silently dissolved for current models. Pinning an alias is not a
+weaker choice than pinning a snapshot — it is the only choice, and the
+byte-string can no longer do drift-detection work: if Anthropic re-points an
+alias, the frontmatter is unchanged. The design survives because its receipt
+layer already hard-gates the *runtime* `model_id` against the manifest pin —
+drift detection was always going to be runtime work; the snapshot-ID language
+just obscured that.
+
+### What would change this belief
+
+Anthropic publishing dated snapshot IDs for Sonnet 5/Opus 4.8 (as it did for
+earlier generations), or the Models API's `id` field diverging from the alias
+at retrieval time — either would restore a meaningful byte-level pin and
+justify tightening the manifest to it.
+
+### Implications for practice
+
+Design documents inherit vocabulary from the API generation they were drafted
+against; when a design mandates an artefact ("full ID", "snapshot", "beta
+header"), verify the artefact still exists before building the mandate.
+Direction note for the corpus: unlike the 2026-07-24 Elsevier entry (three
+stories erring optimistic about vendor self-service), this prior erred toward
+assuming *more* vendor machinery than exists — miscalibration about external
+systems runs both ways.

@@ -574,3 +574,55 @@ entry and the session log. Related: the reliability spot-check's statistics
 (unanimity definition, gates-plus-cost selection, the ±0.09 confidence interval
 that killed model ranking) were computed in a scratchpad review now archived in
 `wiki/planning/reviews/`; the amendment that will cite them is still undrafted.
+
+## Entry 9 (2026-07-24) — The build session: executing under one's own governance
+
+*llm-reproducibility, second session of 2026-07-24, run in parallel with and then
+past the close of the 2026-07-22/24 session. First-person throughout — no
+compaction boundary; this instance did the work it reflects on.*
+
+### What was different about this session compared to recent ones?
+
+Almost everything recent has been design, review, or lodgement — sessions whose
+output was argued prose. This one was execution: a resume prompt, a build queue,
+five commits, and no human in the loop until the work was done. What made it
+unusual was that the guardrails I was building were also the guardrails I was
+building *under* — by mid-session the D5 gate I had written in hour one was
+blocking my own test mutations at commit time, and by the end the hooks I wrote
+were registered against agent definitions I had authored forty minutes earlier.
+There is a specific discipline to this bootstrap posture: every governance
+mechanism had to pass through the ungoverned gap it was built to close, and the
+order of construction (checker → content → consumers → enforcement) was chosen so
+the gap narrowed monotonically. The session also inverted the recent
+collaboration rhythm twice over — pure autonomy for the build, then Shawn's
+return converted the accumulated judgement calls into the most decision-dense
+exchange of the project (seven decisions, sequentially, in under an hour). The
+two rhythms suited their material; neither would have suited the other's.
+
+### What surprised me?
+
+Small things, all in the same direction: reality kept being simpler than the
+design's vocabulary implied. The design speaks of "pinned full model IDs" against
+"floating aliases" — and the authoritative reference dissolved the dichotomy:
+for current models the alias *is* the complete ID, there are no dated snapshots
+to hunt, and drift detection was always going to be runtime work (which the
+receipt layer already did). The "verbatim mirror" of the commit record turned out
+to be verbatim only in its normative blocks — prose legitimately diverged — which
+is why the mirror check tests fenced blocks and table rows rather than bytes.
+And the feared parallel-session collision resolved into a clean rebase over
+disjoint files. In each case the surprise was not a hazard but a category that
+didn't survive contact with the actual artefacts; the checks that emerged are
+better targeted for it.
+
+### What decision made today will look arbitrary without this session's context?
+
+Three, all now annotated but worth stating plainly. The reproduction-lane agents
+are pinned to Opus 4.8 *provisionally* because Shawn expects Opus 5 imminently —
+without that rationale (now in the manifest comment) the provisional flag reads
+as indecision rather than deliberate optionality. The mirror check's
+normative-block scope will look like laziness ("why not byte-compare?") unless
+the reader knows the human-lane prose was *found* divergent and judged
+legitimately so. And the SKILL.md mirror registration — an extension the design
+never asked for — exists because the discrepancy tables in the skill were one
+undetected edit away from contradicting a frozen instrument; Shawn ratified it,
+but the counterfactual (drift discovered mid-census) is invisible in the diff.

@@ -286,3 +286,32 @@ the continuation summary.)*
 - **Mid-session hook registration works.** Project-settings hooks took effect
   without a session restart — operationally useful (spikes can run same-session)
   and worth knowing before assuming restart-required semantics.
+
+## 2026-07-24 — Build-execution and decision-pass session (second session)
+
+- **Current-model aliases ARE the exact IDs — the pin/alias dichotomy is
+  dissolved.** Sonnet 5 and Opus 4.8 expose no dated snapshot IDs; the
+  reference is explicit that date suffixes must never be appended. "Pin a full
+  model ID" therefore reduces to "record the alias and hard-gate the receipted
+  runtime model_id" — byte-string pinning cannot do the drift-detection work by
+  itself. (Full episode in abductive-reasoning, this date.)
+- **Synthetic pipe-tests are the missing middle layer between doc-reading and
+  live spikes.** Seventeen crafted stdin events validated the entire hook
+  plumbing (injection, receipt logging, block/pass/escalate, fail-closed,
+  deny paths) without spawning a single agent. Cost: minutes. The layer
+  complements the canary-probe finding from the D-2 spike: probes establish
+  that the harness delivers events; pipe-tests establish that your logic
+  handles them; only the conjunction needs a live end-to-end run.
+- **Commit messages are claims, not evidence.** The spike commit described the
+  Pass 6 mirror as "verbatim"; the actual diff showed prose divergence around
+  byte-identical normative blocks. Designing the machine check from the commit
+  message would have produced a checker that failed on day one or, worse, one
+  scoped to nothing. Anti-confabulation applies to one's own prior commits:
+  diff the artefacts before encoding an assumption about them.
+- **A check whose output is not a gate is decoration.** The concurrent-session
+  protocol says verify `0 behind` before pushing; I ran `git status -sb` inside
+  a compound `&&` chain, where it printed `[behind 3]` and succeeded anyway —
+  the commit landed on a stale base and the push bounced. Harmless here
+  (rebase, disjoint files), but the mechanism note generalises: standing rules
+  enforced by *displaying* state don't bind an agent barrelling through a
+  command chain; they must be wired as conditionals that fail.

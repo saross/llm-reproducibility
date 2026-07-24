@@ -421,3 +421,36 @@ to an API key the §Phase-3.2 arithmetic changes. Elsevier diagnostics ran throu
 Shawn's campus terminal because entitlement is network-dependent — the session
 itself sits on the home network. The corpus store's second copy is manual-cadence
 (no automated sync schedule exists anywhere on rpi-server).
+
+## Session: 2026-07-24 — Phase 1 build queue executed; decision pass (second session)
+
+Single session in two movements. **Autonomous build (six commits, all pushed):**
+D5 manifest-consistency gate (`scripts/check-manifest-consistency.py` +
+17 unit tests, wired into pre-commit, block-tested; `b1aab17`); instrument
+canon completed — five new canonical files extracted from prereg §4–§7 and
+plan §4.3, adversarial-review framework promoted pull→push with governance
+header, reproduction SKILL.md registered as second machine-checked mirror,
+7 `shared_content` entries total (`18cb659`); five agent definitions with
+pinned models + `agent_definitions` hash registry, D5 extended with model-pin
+and memory-prohibition checks (`de175d3`); production hooks — manifest-driven
+SubagentStart push with sha256 receipts, SubagentStop receipt gate (version/
+token/model_id/transcript checks, fail-closed, ESCALATE passthrough),
+PreToolUse pre-flight; probe archived; 17 synthetic pipe-tests (`115d202`);
+consolidated OSF amendment 1 drafted from the ratified scope with
+pre-lodgement checklist (`8f0cad8`). **Decision pass (Shawn, seven decisions,
+`88f9c50`):** reproduction pins stay provisional (Opus 5 expected); Fable
+variant deferred to benchmark approval; amendment read once at lodgement;
+three build judgement calls ratified; WN-a–g all accepted → working-notes
+Observations 9–15; user-obs A–C all accepted (C → bilateral confidence-label
+rule); MQ TDM enquiry dropped. Mid-build rebase over the parallel session's
+handoff commits (disjoint files, clean).
+
+**Contextual assumptions.** The reproduction-lane pins were left provisional
+specifically because Shawn expects Opus 5 imminently — the manifest comment
+records this, but the session context is that model selection is deliberately
+deferred to the validation phase, not unfinished. The pin vocabulary shifted
+mid-session on discovering current models expose no dated snapshot IDs (the
+aliases are exact; see abductive entry). A parallel session was running for
+part of the build — known, coordinated, no conflict; its handoff wrote Entry 8
+and claude-obs 19–21 before this session's reflect pass, which is why today's
+registers carry two sessions' entries.

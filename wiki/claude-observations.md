@@ -430,3 +430,66 @@ policy permits buy their verb with a quote or probe *before* drafting — the
 probes are almost always seconds long (the spike: 20 s; the §8 re-read: 30 s).
 Where the probe must wait, the verb is "conditional on", not "adopted". This is
 the write-side anti-confabulation rule extended from specifics to permissions.
+
+## claude-obs 22 — 2026-07-24: Shawn prunes to terminal options — closure beats parking
+
+**Pattern.** In the seven-decision pass I recommended "hold until the proxy
+verdict" for the MQ TDM enquiry — the option-preserving choice. Shawn picked
+"drop it" without hesitation. Same signature elsewhere in the project: 2 of 8
+user-obs candidates discarded outright on 2026-07-22 where I would have
+parked them; the superseded "weekend run" was deleted, not deferred, when the
+validation phase absorbed its purpose. When a queue item's value depends on a
+contingency, he prices the carrying cost of keeping it higher than I do.
+
+**Lesson.** My recommendations skew toward optionality — park, hold, revisit —
+which quietly grows the carry-forward list he then has to re-read every
+session. He treats an explicit DISCARD as a first-class outcome, not a loss.
+
+**How to apply.** When presenting decisions, make the terminal option a real
+candidate with its case argued, not a reluctant third bullet — and when a
+contingency would moot an item, say so explicitly (he'll usually close it).
+Complements claude-obs 19 (separable stages): stage the decisions, but within
+each stage, offer closure.
+
+## claude-obs 23 — 2026-07-24: Self-critique — two standing guards were decorative this session
+
+**Pattern.** Two rules that existed in writing failed to bind my behaviour.
+The concurrent-session protocol says re-verify `0 behind` before pushing; I
+ran the status check inside a compound `&&` chain where it *displayed*
+`[behind 3]` and succeeded anyway — commit landed on a stale base, push
+bounced. And the 2026-07-16 scratchpad rule (never pair substantive prose
+with an AskUserQuestion dialog in the same turn) went unconsulted while I
+structured the entire decision pass exactly that way; I only noticed when the
+scratchpad happened to scroll past near session end. Both worked out — clean
+rebase, Shawn engaged with the prose — but by luck, not design.
+
+**Lesson.** A guard whose output is displayed rather than enforced is
+decoration to an agent moving through a command chain; a standing rule stored
+in a file I didn't read is indistinguishable from no rule. The fix is
+structural, not attentional: wire state checks as failing conditionals, and
+check the scratchpad's standing interaction rules *before* choosing an
+interaction pattern, not after.
+
+**How to apply.** Before multi-question exchanges: grep the scratchpad for
+standing rules about the surface I'm about to use. Before any push in this
+multi-machine setup: a behind-check that fails the chain, not one that prints.
+
+## claude-obs 24 — 2026-07-24: Rationale arrives mid-turn — capture it in the governed record immediately
+
+**Pattern.** Shawn dropped the load-bearing rationale for the provisional
+model pins ("everyone expects Opus 5 to drop any day now") as a mid-turn
+aside while I was already presenting the next decision. It was not an answer
+to any question I had asked — it was him annotating a decision already made.
+Written straight into the manifest comment, it converts a flag that would
+read as indecision into recorded optionality.
+
+**Lesson.** His decision rationale often arrives asynchronously and
+informally, decoupled from the decision itself; the governed artefacts only
+capture it if I treat the aside as a first-class input at the moment it
+lands. Six months out, the rationale is worth more than the decision — the
+decision is visible in the diff, the why is not.
+
+**How to apply.** When a mid-turn aside explains a recorded decision, write it
+into the artefact that carries the decision (manifest comment, continuity
+bullet) in the same session — not into memory, not into the reflection layer
+alone.
