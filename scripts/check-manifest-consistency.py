@@ -206,8 +206,29 @@ def check_consumers(name: str, entry: dict, root: Path, report: Report) -> None:
             report.error(f"{name}: consumer {agent!r} has unknown mechanism {mechanism!r}")
 
 
+FRONTMATTER_KEY_RE = {
+    "model": re.compile(r"^model:\s*(\S+)\s*$", re.MULTILINE),
+    "memory": re.compile(r"^memory:", re.MULTILINE),
+}
+
+
+def frontmatter_of(text: str) -> str:
+    """Return the YAML frontmatter block of an agent definition ('' if none)."""
+    if not text.startswith("---"):
+        return ""
+    end = text.find("\n---", 3)
+    return text[:end] if end != -1 else ""
+
+
 def check_agent_hashes(manifest: dict, root: Path, report: Report) -> None:
-    """Hot-reload guard (§3.4): .claude/agents/ contents ↔ manifest hash registry."""
+    """Hot-reload guard (§3.4): .claude/agents/ contents ↔ manifest hash registry.
+
+    Also enforces two per-agent governance rules from the routing design:
+    §3.3 — every agent pins a model in frontmatter, matching the manifest's
+    recorded pin and never the uncontrolled default 'inherit'; §3.9 — no
+    `memory:` frontmatter on any registered agent (cross-session memory would
+    quietly violate the fixed-instrument assumption).
+    """
     registry: dict = manifest.get("agent_definitions") or {}
     agents_dir = root / ".claude" / "agents"
     on_disk = sorted(agents_dir.glob("*.md")) if agents_dir.is_dir() else []
@@ -226,6 +247,26 @@ def check_agent_hashes(manifest: dict, root: Path, report: Report) -> None:
             report.error(f"agent_definitions.{agent_name}: hash mismatch for {rel} — "
                          f"manifest {want[:16]}…, file {got[:16]}… (ungated edit? "
                          f"regression gate + manifest update required)")
+
+        frontmatter = frontmatter_of(path.read_text(encoding="utf-8"))
+        model_match = FRONTMATTER_KEY_RE["model"].search(frontmatter)
+        if not model_match:
+            report.error(f"agent_definitions.{agent_name}: no 'model:' pin in "
+                         f"frontmatter of {rel} (design §3.3 — 'inherit' default "
+                         f"is uncontrolled)")
+        else:
+            pinned = model_match.group(1)
+            want_model = str(info.get("model", "")).strip()
+            if pinned == "inherit":
+                report.error(f"agent_definitions.{agent_name}: model pin is 'inherit' "
+                             f"in {rel} — pin an exact model ID (design §3.3)")
+            elif want_model and pinned != want_model:
+                report.error(f"agent_definitions.{agent_name}: model-pin drift — "
+                             f"manifest {want_model!r}, frontmatter {pinned!r}")
+        if FRONTMATTER_KEY_RE["memory"].search(frontmatter):
+            report.error(f"agent_definitions.{agent_name}: 'memory:' frontmatter is "
+                         f"prohibited on registered agents (design §3.9 — "
+                         f"fixed-instrument assumption)")
 
     for path in on_disk:
         rel = str(path.relative_to(root))

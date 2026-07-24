@@ -209,6 +209,27 @@ class ManifestConsistencyTests(unittest.TestCase):
                                                                  encoding="utf-8")
         self.assert_error_containing("unregistered agent definition")
 
+    def test_missing_model_pin_caught(self) -> None:
+        self.rewrite(AGENT_REL, "model: claude-test-1-20260101\n", "")
+        self.reregister_agent_hash()
+        self.assert_error_containing("no 'model:' pin")
+
+    def test_inherit_model_pin_caught(self) -> None:
+        self.rewrite(AGENT_REL, "model: claude-test-1-20260101", "model: inherit")
+        self.reregister_agent_hash()
+        self.assert_error_containing("model pin is 'inherit'")
+
+    def test_model_pin_drift_caught(self) -> None:
+        self.rewrite("manifest.yaml", 'file: {AGENT}'.replace("{AGENT}", AGENT_REL),
+                     f"file: {AGENT_REL}\n    model: claude-other-model")
+        self.assert_error_containing("model-pin drift")
+
+    def test_memory_frontmatter_caught(self) -> None:
+        self.rewrite(AGENT_REL, "model: claude-test-1-20260101",
+                     "model: claude-test-1-20260101\nmemory: project")
+        self.reregister_agent_hash()
+        self.assert_error_containing("'memory:' frontmatter is prohibited")
+
     def test_duplicate_receipt_tokens_caught(self) -> None:
         second = CANONICAL_TEXT.replace("Test instrument", "Second instrument")
         (self.root / "protocol/instruments/second-instrument.md").write_text(

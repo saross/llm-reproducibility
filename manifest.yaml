@@ -326,8 +326,11 @@ shared_content:
     receipt_token: "3ddcbfd82575a2f8"
     status: frozen-by-osf-registration  # DOI 10.17605/OSF.IO/DQNHG; edits need regression gate + erratum + amendment
     consumers:
-      - agent: fair-assessor        # to be authored (Phase 1)
-        mechanism: push             # SubagentStart injection, receipt required
+      - agent: fair-assessor-sonnet-5   # per-model variant (validation benchmark: Sonnet 5 + Opus 4.8)
+        mechanism: push                 # SubagentStart injection, receipt required
+        status: planned                 # flip to active when production hooks land
+      - agent: fair-assessor-opus-4-8
+        mechanism: push
         status: planned
       - agent: research-assessor    # human/session lane
         mechanism: mirror           # normative blocks byte-identical; banner cites version + token
@@ -389,3 +392,38 @@ shared_content:
       - agent: adversarial-reviewer
         mechanism: push
         status: planned
+
+# Agent-definition registry (routing design §3.4 hot-reload guard, added
+# 2026-07-24). Every file under .claude/agents/ must be registered here with a
+# matching sha256; scripts/check-manifest-consistency.py enforces both
+# directions. An agent-definition edit is a governed change: §8 regression gate
+# + hash update here in the same commit. `model` records the pinned model ID —
+# the receipted runtime model_id is hard-gated against it (design §3.3).
+# Reproduction-lane pins are provisional defaults pending the validation-phase
+# model benchmark (Shawn 2026-07-22: Sonnet 5 + Opus 4.8 first; ask-before-Fable).
+agent_definitions:
+  fair-assessor-sonnet-5:
+    file: .claude/agents/fair-assessor-sonnet-5.md
+    version: "1.0"
+    model: claude-sonnet-5
+    sha256: "7fd70ab5d8cb360db4ec002469ea3e7433d86bbc62fb5e28784ed4501d0b6c96"
+  fair-assessor-opus-4-8:
+    file: .claude/agents/fair-assessor-opus-4-8.md
+    version: "1.0"
+    model: claude-opus-4-8
+    sha256: "598836edf0ff607f89b3ad85281ec3cc94d4e8e7dd2826517fa7d0513866a1bc"
+  reproduction-planner:
+    file: .claude/agents/reproduction-planner.md
+    version: "1.0"
+    model: claude-opus-4-8
+    sha256: "c13297f81458917362c9b20c5f25a0a5aab8f0c62caba14115c30b2b7efb00c3"
+  reproduction-executor:
+    file: .claude/agents/reproduction-executor.md
+    version: "1.0"
+    model: claude-opus-4-8
+    sha256: "dbb5987ad285c7575c0aa601c331502315709e5c4ef64effb07688f4009d07bb"
+  adversarial-reviewer:
+    file: .claude/agents/adversarial-reviewer.md
+    version: "1.0"
+    model: claude-opus-4-8
+    sha256: "8409f8dd522385d260e4a4752fc0bb96ae8402f9f64424e92d15311edb26ba25"
