@@ -47,3 +47,57 @@ file with the registration's own normative text; no instrument semantics
 changed. The corrections will nonetheless ride through the §8 regression gate
 with the Phase 1 validation runs before census scoring, and this entry is
 queued for inclusion in the first OSF amendment.
+
+---
+
+## Queued amendment scope (running list)
+
+**PROPOSED 2026-07-24** (pre-build juncture review, findings D-1/D-4/D-5 +
+E-1/E-4/E-7/E-8; report at
+`wiki/planning/reviews/2026-07-24-pre-build-juncture-review.md`) — **pending the
+registrant's ratification**; amendment text to be drafted once ratified.
+**Deadline note:** items 2–4 below govern the combined validation phase itself, so
+the consolidated amendment must lodge **before the validation phase runs** — earlier
+than the before-census-scoring deadline that Entry 1 alone would require.
+
+1. **Entry 1 corrections** (Pass 6 instrument defects, above) — already committed to
+   an amendment; folds in here.
+2. **Below-threshold remediation ladder** (routing design §2.2): one routing-fix
+   attempt (delivery mechanism only; instrument text untouched) followed by a re-run
+   of the §8(a) stability check, permitted **once**; a still-below-threshold re-run
+   → the registered majority-vote consequence applies with no further iteration;
+   both pre-fix and post-fix reliability results reported with study outcomes.
+3. **Validation-phase pre-specifications:**
+   - *Agreement statistic* for the 3-run stability check — proposed: **unanimity
+     proportion** (strictest of the three candidate definitions; the review shows
+     the candidates cross the 0.90 gate at item-flip rates from ~10% to ~30%, so
+     the choice cannot be left implicit).
+   - *Pilot-paper set* — proposed: **all five** pilot papers (preregistration says
+     "at least three"; n rises 90→150 items and the false-pass rate at true 0.85
+     halves, ~12%→~5.5%; no amendment strictly required for this item, recorded for
+     completeness).
+   - *Model-selection rule* — proposed: **gates-plus-cost**. The spot-check cannot
+     statistically rank models (±0.09 confidence interval on an agreement
+     difference; no preregistration-compliant n exists before the census). Any
+     model passing (a) the 0.90 stability gate and (b) a concordance floor against
+     the pilot reference scores (proposed ≥0.90 on the same statistic — the
+     accuracy gate, review E-4) is eligible; among eligible models the cheapest
+     scores the census; agreement differences inside the confidence interval are
+     pre-declared not to be selection grounds.
+   - *Within-phase ordering:* spot-check → select model → regression-gate the
+     **selected** configuration (both lanes pinned) → census.
+   - *Run independence and provenance:* each run is a fresh spawn with no shared
+     context and no persistent memory; sampling seeds are not controllable in this
+     harness, so each run records session ID, timestamp, and the full receipt
+     triple {instrument_versions, agent_version, model_id}, and reports state that
+     run-to-run variation reflects default-temperature sampling.
+4. **Read-scope isolation rule** (review D-4): validation-phase scoring runs
+   execute with read access only to the paper source and the pushed/pulled
+   instrument files — the repository holds the pilot papers' canonical scores, so
+   an unisolated scorer could reproduce recorded answers and return perfect,
+   uninformative agreement. Enforced by tool allowlist/sandbox scope and verified
+   from the harness transcript; per-run file-access lists archived with run
+   artefacts. The same hygiene applies at census to any paper with pre-existing
+   repository artefacts.
+5. **Robustness annex** (review E-7): scored runs from non-selected passing model
+   arms are archived and citable as cross-model robustness data, not discarded.

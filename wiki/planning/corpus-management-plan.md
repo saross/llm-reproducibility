@@ -1,7 +1,12 @@
 # Corpus management plan: articles, supplements, and third-party materials
 
-**Version:** 0.2
-**Date:** 2026-07-23 (v0.1: 2026-07-13)
+**Version:** 0.2.1
+**Date:** 2026-07-24 (v0.2: 2026-07-23; v0.1: 2026-07-13)
+**v0.2.1:** applies the 2026-07-24 pre-build juncture review
+(`wiki/planning/reviews/2026-07-24-pre-build-juncture-review.md`, D-9/D-10/D-11 +
+E-2): backup promoted to census-blocking; copy-then-verify migration; `meta.json`
+machine-generated from the canonical manifest; fetch-script politeness specified;
+Elsevier TDM enquiry and manual-acquisition budget added.
 **Status:** Agreed direction (Shawn, 2026-07-13); implementation SCOPED 2026-07-23
 (repo audit + build order + target structure below, §Implementation scope) —
 execution on hold pending Shawn's confirmation of decisions 1 and 3 and his
@@ -140,19 +145,31 @@ Principle: **manifest = stable citable record of a corpus; queue = workflow stat
 side by side per study, never merged. Store stays flat by slug (slugs are
 project-unique), so `CORPUS_ROOT/<slug>/` resolves without knowing the study.
 
-**Build order and effort** (items 1–4 are census blockers; 5–8 trail; ≈1 day total;
-no Large Language Model (LLM) API spend — Unpaywall/CrossRef are free public APIs):
+**Build order and effort** (items 1–4 **and 7** are census blockers — item 7
+promoted per the 2026-07-24 review, D-9: census acquisition will pour 100–200
+manually acquired closed-access PDFs into what would otherwise be a single-copy
+store; 5–6 and 8 trail; ≈1 day total; no Large Language Model (LLM) API spend —
+Unpaywall/CrossRef are free public APIs):
 
 | # | Work item | Effort |
 |---|---|---|
-| 1 | Create store; migrate all 17 papers (PDFs + extracted texts + `meta.json` stubs); transitional symlinks; verify pipeline paths | ~1 h |
-| 2 | Manifest schema + populate all holdings (sha256 everything; metadata from queue.yaml/CrossRef) | ~1–2 h |
-| 3 | `fetch-corpus.py` (Unpaywall resolution, checksum verify, closed-item report) | ~half day |
+| 1 | Create store; migrate all 17 papers (PDFs + extracted texts) **copy-then-verify — originals deleted only after item 7 lands**; transitional symlinks; verify pipeline paths | ~1 h |
+| 2 | Manifest schema **+ `meta.json` schema** + populate all holdings (sha256 everything; metadata from queue.yaml/CrossRef); `meta.json` written after this item defines both schemas (D-10) | ~1–2 h |
+| 3 | `fetch-corpus.py` (Unpaywall resolution, checksum verify, closed-item report estimating the manual queue; politeness: ≤1 req/s, exponential backoff, `mailto`/User-Agent + Unpaywall email param; ScienceDirect 403 manual path stated in-spec) | ~half day |
 | 4 | Narrow LFS to own-artefact dirs; pre-commit gate on new PDF/txt outside whitelist | ~30 min |
 | 5 | reproduction-assessor prompt updates (fetch-with-checksum default; store/scratch destinations; log URL+hash) — §8 implementation change, rides the post-build regression gate | ~1 h |
 | 6 | Additive schema bump v2.6→v2.7: `source_file` + `source_sha256` in extraction metadata | ~30 min |
-| 7 | rsync script to rpi-server (drive-mount check per network guardrails) + backups | ~30 min |
+| 7 | **CENSUS-BLOCKING (promoted 2026-07-24):** rsync script to rpi-server (drive-mount check per network guardrails) + **verify `~/corpora/` falls inside an actual backup scope** — configuration, not assertion | ~30 min |
 | 8 | CLAUDE.md PDF-handling update + cross-references | ~15 min |
+
+`meta.json` is **machine-generated** by `fetch-corpus.py` as a per-paper projection
+of the canonical manifest plus store-local facts (file inventory, acquisition
+method, licence-evidence URL) — never hand-maintained; the git manifest is
+canonical (D-10: two hand-maintained records of the same facts is the drift
+pathology the routing design just engineered out of the instrument layer).
+**Manual-acquisition budget:** planning range 40–70% of the ~280-paper frame
+closed-access → ~110–200 papers ≈ **4–10 h of Shawn's time** via library proxy,
+unless the Elsevier TDM route (decision 5) lands.
 
 **Decision log (2026-07-23):**
 
@@ -168,6 +185,12 @@ no Large Language Model (LLM) API spend — Unpaywall/CrossRef are free public A
    Shawn's confirmation.*
 4. Timing — **HOLD (Shawn, 2026-07-23):** execution waits on his routing-design v0.2
    review.
+5. Elsevier text-and-data-mining (TDM) route (added 2026-07-24, review E-2) —
+   **ACTION Shawn:** one enquiry to the Macquarie University library about
+   institutional TDM API entitlement (api.elsevier.com), before build item 3 is
+   written. If available, a TDM leg in `fetch-corpus.py` legally automates most of
+   the closed-access acquisition (est. 4–10 h manual otherwise) and retires the
+   ScienceDirect 403 workaround fragility.
 
 ## Implementation checklist (v0.1, superseded by the scoped build order above)
 

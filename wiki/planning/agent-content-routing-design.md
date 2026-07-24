@@ -1,9 +1,18 @@
 # Agent content-routing design: skills, agents, and shared instruments
 
-**Version:** 0.2.1
-**Date:** 2026-07-24 (v0.2: 2026-07-23; v0.1: 2026-07-15)
+**Version:** 0.2.2
+**Date:** 2026-07-24 (v0.2.1: 2026-07-24; v0.2: 2026-07-23; v0.1: 2026-07-15)
 **v0.2.1:** adds §9 (Claude Code workflows adopted as the batch orchestration
-engine), prompted by Shawn's review question 2026-07-24. No other changes.
+engine), prompted by Shawn's review question 2026-07-24.
+**v0.2.2:** applies the 2026-07-24 pre-build juncture review
+(`wiki/planning/reviews/2026-07-24-pre-build-juncture-review.md`; 12 defects,
+8 enhancements): §2.2 remediation ladder made preregistration-compliant
+(amendment-gated, one attempt, §8(a) stability-check mislabel fixed); §9 made
+conditional on a hook-verification spike with the headless `--agent` fallback
+named, same-session-only resume corrected, Max-plan cost instrumentation
+re-specified; blocking pre-flight moved to `PreToolUse[Agent]`; per-invocation
+model-alias layer hard-gated; transcript-lag retry added; promptfoo and
+cache-pipelining decisions recorded.
 **Status:** Revised per the 2026-07-22 review passes — awaiting Shawn's sign-off
 before the Phase 1 build begins.
 **Origin:** 2026-07-15 discussion of pull-failure risk (an agent instructed to read a
@@ -104,11 +113,19 @@ For the scoring lane, per-invocation silent misses of *interpretive* pulled mate
 the preregistration §8 reliability check (three pilot papers × three runs,
 ≥0.90 mean per-sub-principle agreement) is positioned to measure. That check is the
 empirical backstop for every class-(c) entry in the `fair-assessor` row of §5.
-**If the 0.90 threshold fails, the first remediation to try is a routing fix** —
-push a trimmed interpretive core (~2k tokens) and re-run the pilot comparability
-check — **not** the preregistration's 3× majority-vote fallback, which triples
-census cost. A routing fix is an implementation change under §8's permitted-changes
-clause (regression gate on pilot papers only, plus an erratum-log entry).
+The preregistration's pre-specified consequence of a below-threshold result is
+majority-vote census scoring (a 3× cost multiplier). A cheaper remediation exists —
+one routing-fix attempt (push a trimmed interpretive core, ~2k tokens) followed by a
+re-run of the **§8(a) stability check** — but substituting it for the registered
+consequence is a **deviation, not an implementation change** (2026-07-24 review,
+D-1), so it is available only if pre-specified in the consolidated OSF amendment
+lodged **before the validation phase runs** (queued in the erratum log). As
+pre-specified there: one attempt maximum — a still-below-threshold re-run means
+majority vote applies with no further iteration; both pre-fix and post-fix
+reliability results are reported with study outcomes. The routing fix *itself*
+(delivery mechanism only; instrument text untouched) remains an ordinary §8
+implementation change, gated by the pilot regression test plus an erratum-log
+entry.
 
 ## 3. Reliability engineering (cross-cutting — rebuilt on harness primitives in v0.2)
 
@@ -140,7 +157,10 @@ harness-recorded evidence that does not depend on the model's honesty.
    - *Hard gate:* a `SubagentStop` hook parses the harness-recorded agent
      transcript and verifies the Read tool calls actually made (paths; absence of
      `limit`/`offset` truncation) against the agent's declared pulled-file
-     receipts. Harness evidence, not self-report.
+     receipts. Harness evidence, not self-report. (Transcripts are written
+     asynchronously and can lag — the hook retries briefly on missing expected
+     entries before blocking, and parses outputs from `last_assistant_message`;
+     2026-07-24 review, D-12.)
    - *Structural requirement:* receipts are required fields of the output schema
      (item 6), so a missing receipt is a schema failure, not a soft omission.
    - *Self-healing:* on receipt/contract failure the `SubagentStop` hook returns
@@ -153,13 +173,22 @@ harness-recorded evidence that does not depend on the model's honesty.
    uncontrolled); agent-definition versions are registered in the manifest; and
    pre-flight fails the run if `CLAUDE_CODE_SUBAGENT_MODEL` is set unexpectedly
    (it silently outranks frontmatter). Any model change is a §8 regression-gate
-   trigger — now detectable, not just declared.
-4. **Pre-flight as a `SubagentStart` hook** (so it also protects ad hoc interactive
-   invocations, not only scripted batches): every file the agent will be given or
+   trigger — now detectable, not just declared. Two further controls (2026-07-24
+   review, D-7): the per-invocation `model` parameter *also* outranks the
+   frontmatter pin and accepts only floating aliases, so orchestration never
+   passes per-call model overrides — model identity lives in agent definitions
+   only (per-model variants with pinned full IDs, as files or via the `--agents`
+   JSON flag); and the receipted `model_id` comparison against the manifest pin
+   is a **hard gate** — a mismatch blocks the item rather than merely logging.
+4. **Pre-flight as a `PreToolUse` hook matched on the Agent tool** — `SubagentStart`
+   cannot block a spawn, while `PreToolUse` can deny it before token spend
+   (2026-07-24 review, D-3). Checks: every file the agent will be given or
    pointed at exists and is non-empty; the manifest-consistency check (§4) passes;
    agent-definition file hashes match the manifest (guarding against the harness's
    hot-reload of edited definitions bypassing the regression gate); the model
-   environment override is unset. Missing canon fails the batch before token spend.
+   environment override is unset. `SubagentStart` retains what it can do: content
+   injection (item 1) and advisory warnings. The scripted lane additionally runs
+   pre-flight in the runner before any invocation.
 5. **Deterministic gates between stages** (plan §4.2–4.3), extended: Docker image
    builds, scripts parse, expected artefacts exist and are non-empty, queue updated
    — **plus structural validation of quantitative artefacts**: the comparison
@@ -328,12 +357,26 @@ All five v0.1 open questions were answered by the 2026-07-22 review passes
 
 The v0.2 text specified orchestrator *behaviour* (pre-flight, push, receipts,
 gates) without committing to an engine, implicitly assuming a hand-rolled runner
-over headless invocations. **Claude Code workflows are adopted as the batch
-orchestration engine** wherever control flow must be deterministic:
+over headless invocations. **Claude Code workflows are adopted — conditional on a
+verification spike — as the batch orchestration engine** wherever control flow
+must be deterministic. The spike runs in Phase 1's opening hour and must show the
+§3 reliability layer functions for workflow-spawned agents: current documentation
+scopes `SubagentStart`/`SubagentStop` to Agent-tool spawns and explicitly
+distinguishes workflow `agent()` spawns, so hook firing is more likely to fail
+than pass (2026-07-24 review, D-2). **Named fallback if the spike fails: a
+per-paper headless `claude -p --agent fair-assessor` fan-out** — on that path
+frontmatter hooks are documented to fire, the full-ID `model:` pin applies,
+`--json-schema` output enforcement applies, and the main-session **1-hour
+subscription cache TTL** replaces the subagent cold-cache penalty: with a
+byte-stable prefix (agent definition + pushed instruments first, paper content
+last), papers processed within each window read the instrument tokens at ~0.1× —
+the §7.3 empirical check confirms or refutes this on the first probe at no extra
+cost. Same architecture, different engine; the appendix's runner + `flock`
+provides the 4–6-worker concurrency either way.
 
 | Lane | Workflow role |
 |---|---|
-| Census FAIR scoring | `pipeline()` over the paper list: per-paper `agent()` calls with schema-enforced structured outputs (tool-layer validation with retries), native concurrency (≈ the 4–6 workers of the appendix), and resume-from-run-ID with completed calls cached — the queue's checkpoint/resume without hand-built locking. The persisted workflow script + run journal are archived with study outputs as provenance |
+| Census FAIR scoring | `pipeline()` over the paper list: per-paper `agent()` calls with schema-enforced structured outputs (tool-layer validation with bounded retries), native concurrency (4–6 workers planned; headroom to 16 subject to Max-window pacing), and resume-from-run-ID with completed calls cached — **same-session only** (D-6): cross-session resume stays with queue.yaml, the invoking session enumerating the remaining papers as `args`. Provenance: persisted workflow script + OpenTelemetry `workflow.run_id` traces archived with study outputs |
 | Validation phase (regression gate + reliability spot-check) | Deterministic matrix fan-out (papers × runs × models) with per-call model override; the ask-before-Fable gate is honoured by which models the approved script enumerates |
 | Adversarial review | Each `agent()` call is a fresh context, so invariant 4 (no shared context with any reproduction conversation) holds by construction |
 | Screener triage (E7) | The narrow LLM step runs as a pipeline over the DOI batch with the same schema + receipt treatment |
@@ -360,7 +403,18 @@ pre-flight checking the alias→pinned-ID mapping.
   concurrent headless workers bring it to ~8–14 h. Requires only a per-paper lock
   discipline on the queue (status files or `flock`). Reproduction-lane parallelism
   stays bounded by Docker/compute and human plan approval — serial is fine there.
-- **Cost-gate instrumentation:** headless `--output-format json` returns
-  `total_cost_usd` (and per-model breakdown) per invocation, so the pre-scale cost
-  gate (plan §5 Phase 3) gets exact per-paper numbers from the first 2–3 papers for
-  free — including the empirical cache-behaviour check flagged in §7.3.
+- **Cost-gate instrumentation (re-specified per 2026-07-24 review, D-8):** per
+  probe paper the pre-scale cost gate (plan §5 Phase 3) records three things:
+  exact token counts with cache splits (the §7.3 empirical check); the notional
+  `total_cost_usd` estimate (a client-side price-table figure, labelled as such —
+  not billing data, and billing-irrelevant on the Max plan); and **plan-window
+  consumption** (`/usage` read before and after the probe). Together these yield a
+  weeks-to-census figure and an explicit decision point: pace the census across
+  usage windows, buy usage credits, or run the lane on an API key.
+- **Recorded decisions (2026-07-24 review, E-6 + fidelity notes):** promptfoo's
+  pass-rate-drop continuous-integration pattern (scout report row 8) is **not
+  adopted** for the §8 regression gate — the gate compares a handful of pinned
+  pilot artefacts, small enough to hand-roll; revisit if gate comparisons grow.
+  Cache-warmth pipelining (scheduling invocations inside the 5-minute subagent
+  cache window) is **retained as a §7.3 remediation option** should workflows
+  survive the spike but subagent caching prove absent.

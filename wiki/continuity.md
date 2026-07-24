@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-23
+updated: 2026-07-24
 status: active
 ---
 
@@ -30,9 +30,29 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-07-23)
+## Repo state (2026-07-24)
 
-- **Routing design v0.2 WRITTEN (2026-07-23, `3914f81`) — awaiting Shawn's
+- **Pre-build juncture /review-implementation COMPLETE (2026-07-24, Shawn's
+  request):** fresh-context review of design v0.2.1 + corpus scope v0.2 +
+  validation-phase plan. Verdict: proceed, four cheap fixes first. 12 defects
+  (1 critical compliance: the §2.2 remediation ladder was a deviation from
+  prereg §8's registered majority-vote consequence — must be pre-specified by
+  amendment BEFORE the validation phase) + 8 enhancements. Fidelity audit of
+  v0.2 vs the 2026-07-22 findings: clean. Report externalised to
+  `wiki/planning/reviews/2026-07-24-pre-build-juncture-review.md`. ALL cheap
+  fixes APPLIED same day: design → v0.2.2 (§2.2 compliant ladder; §9
+  conditional-on-spike with headless `--agent` fallback named; pre-flight →
+  `PreToolUse[Agent]`; model-alias layer hard-gated; D-12 transcript-lag
+  retry; cost gate re-specified for Max-plan window consumption); corpus plan
+  → v0.2.1 (item 7 backup PROMOTED to census-blocking; copy-then-verify;
+  `meta.json` machine-generated; fetch politeness; Elsevier TDM enquiry =
+  ACTION Shawn); erratum-log gains a **Queued amendment scope** section
+  (ladder, unanimity statistic, all-five-pilots, gates-plus-cost model
+  selection with E-4 concordance floor, read-scope isolation, robustness
+  annex) — PROPOSED, pending Shawn's ratification; consolidated amendment must
+  lodge before the validation phase. D-2 hook spike = Phase 1 opening hour.
+- **Routing design v0.2 WRITTEN (2026-07-23, `3914f81`) — superseded by
+  v0.2.2 above; still awaiting Shawn's
   review/sign-off** (he is reading it; the four judgement calls to check: hook
   injection as primary push; §2.2 remediation ladder; instrument extraction
   deferred to build; memory prohibition + hot-reload governance). Phase 1 build
