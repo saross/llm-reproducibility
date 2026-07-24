@@ -146,6 +146,14 @@ jq '{evidence: (.evidence|length), claims: (.claims|length)}' extraction.json
 
 **CRITICAL**: Always prefer reading PDFs directly using the Read tool.
 
+**Paper sources live in the out-of-tree corpus store** (2026-07-24):
+`~/corpora/llm-reproducibility/<slug>/` — `vor.pdf`, `preprint.pdf`,
+`supplement-*.pdf`, `extracted.txt`. Entry point and manifests: `corpus/README.md`.
+The gitignored symlink `corpus/store/<slug>/` reaches the same files from inside
+the repo. Legacy in-repo copies (`studies/*/corpus/pdfs/`, `input/sources/`)
+remain transitionally but the store is canonical; never add third-party PDFs or
+extracted article text to git (pre-commit corpus gate enforces this).
+
 **Tested finding** (Key et al. 2024 comparison): Text extraction achieves 91.5% of PDF extraction counts. PDF is preferred because it performs equally well while preserving additional context.
 
 - ✅ **Read PDFs directly** - Extraction quality is equivalent or slightly better

@@ -50,6 +50,35 @@ if [ -n "$violations" ]; then
   exit 1
 fi
 
+# Corpus gate (corpus-management-plan v0.2.1 item 4): block newly added
+# .pdf/.txt outside the own-artefact whitelist. Third-party article PDFs,
+# supplements, and extracted full text belong in the out-of-tree store
+# (see corpus/README.md), never in git — a blanket LFS rule once swept a
+# publisher supplement into public history (purged 2026-07-13).
+# Override for deliberate own-content additions: CORPUS_GATE_OVERRIDE=1 git commit ...
+if [ "${CORPUS_GATE_OVERRIDE:-0}" != "1" ]; then
+  corpus_violations=$(git diff --cached --name-only --diff-filter=ACR | \
+    grep -E '\.(pdf|txt)$' | \
+    grep -v -E '^(docs|archive|wiki|scripts|extraction-system)/' | \
+    grep -v -E '/(reproduction|prereg|assessment)/' | \
+    grep -v -E '^requirements\.txt$')
+
+  if [ -n "$corpus_violations" ]; then
+    echo ""
+    echo "❌ ERROR: new .pdf/.txt outside the own-artefact whitelist (corpus gate)"
+    echo ""
+    echo "Files:"
+    echo "$corpus_violations" | sed 's/^/  /'
+    echo ""
+    echo "Third-party PDFs and extracted article text belong in the out-of-tree"
+    echo "corpus store (~/corpora/llm-reproducibility/ — see corpus/README.md),"
+    echo "never in git. If this file is genuinely your own content, override with:"
+    echo "  CORPUS_GATE_OVERRIDE=1 git commit ..."
+    echo ""
+    exit 1
+  fi
+fi
+
 # Success - allow commit
 exit 0
 EOF
