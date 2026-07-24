@@ -106,6 +106,14 @@ Infrastructure is NOT in Methods/Results/Discussion. Target these specific locat
 
 ## 🚨 CRITICAL: FAIR Assessment Framework (v2.0)
 
+> **Canonical home (2026-07-24):** the FAIR instrument lives at
+> `studies/open-science-compliance/protocol/instruments/fair-instrument.md`
+> (v2.0, receipt token `3ddcbfd82575a2f8`, FROZEN by the OSF registration).
+> This section and the Data Completeness Assessment below **mirror it** for the
+> human/session lane; the manifest consistency check verifies the mirror.
+> **Edit only the canonical file** — instrument edits require the §8 regression
+> gate + erratum-log entry + OSF amendment.
+
 **Rubric version:** 2.0 (standardised 2026-02-11)
 
 **For detailed criteria, examples, and context-dependent guidance:**

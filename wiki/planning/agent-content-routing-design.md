@@ -14,10 +14,20 @@ re-specified; blocking pre-flight moved to `PreToolUse[Agent]`; per-invocation
 model-alias layer hard-gated; transcript-lag retry added; promptfoo and
 cache-pipelining decisions recorded.
 **Status: SIGNED OFF (Shawn, 2026-07-24, at v0.2.2)** — governs the Phase 1 build.
-The §9 engine choice remains conditional on the D-2 hook spike (Phase 1 opening
-hour); the §2.2 ladder is available only once the consolidated OSF amendment
-lodges (registrant's timing decision 2026-07-24: defer lodgement to just before
-the validation phase, accumulating any further errata).
+**D-2 hook spike PASSED (2026-07-24, Phase 1 opening): §9 engine = workflows,
+CONFIRMED.** Empirical results (probe log + canary replies, two haiku probes):
+(i) `SubagentStart`/`SubagentStop` both fire for workflow `agent()` spawns —
+refuting the docs-based pessimism; (ii) injected `additionalContext` reaches
+workflow-spawned agents (canary echoed verbatim); (iii) `SubagentStop` delivers
+`agent_transcript_path`, so the transcript receipt gate works in workflows;
+(iv) a named `agentType` reports that name to hook matchers (the generic
+`workflow-subagent` label appears only for unnamed spawns) — **build rule:
+production workflow `agent()` calls always pass `agentType`**, so per-agent
+matcher scoping works. Hooks also register mid-session without a restart.
+The headless `--agent` fan-out remains documented as the fallback engine but is
+not needed. The §2.2 ladder is available only once the consolidated OSF
+amendment lodges (registrant's timing decision 2026-07-24: defer lodgement to
+just before the validation phase, accumulating any further errata).
 **Origin:** 2026-07-15 discussion of pull-failure risk (an agent instructed to read a
 skill file may silently not read it, or fail the read and helpfully continue). Design
 brief from Shawn: engineer for reliability first, accepting some duplication cost, but

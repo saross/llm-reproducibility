@@ -310,3 +310,21 @@ version_history:
 licences:
   code: Apache-2.0
   documentation: CC-BY-4.0
+
+# Shared content registry (routing design §4, added 2026-07-24).
+# Each canonical file's version and receipt token, and which agents consume it
+# by which mechanism. Machine-verified by the consistency-check script (build
+# item D5, forthcoming): version lines and receipt tokens are diffed against
+# the files; consumer lists are diffed against agent definitions and hook
+# config. Until the script lands, this section is verified at commit review.
+shared_content:
+  fair-instrument:
+    canonical_file: studies/open-science-compliance/protocol/instruments/fair-instrument.md
+    version: "2.0"
+    receipt_token: "3ddcbfd82575a2f8"
+    status: frozen-by-osf-registration  # DOI 10.17605/OSF.IO/DQNHG; edits need regression gate + erratum + amendment
+    consumers:
+      - agent: fair-assessor        # to be authored (Phase 1)
+        mechanism: push             # SubagentStart injection, receipt required
+      - agent: research-assessor    # human/session lane
+        mechanism: mirror           # verbatim copy in 06-infrastructure_pass6_prompt.md, consistency-checked
