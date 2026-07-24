@@ -1,7 +1,9 @@
 # Agent content-routing design: skills, agents, and shared instruments
 
-**Version:** 0.2
-**Date:** 2026-07-23 (v0.1: 2026-07-15)
+**Version:** 0.2.1
+**Date:** 2026-07-24 (v0.2: 2026-07-23; v0.1: 2026-07-15)
+**v0.2.1:** adds §9 (Claude Code workflows adopted as the batch orchestration
+engine), prompted by Shawn's review question 2026-07-24. No other changes.
 **Status:** Revised per the 2026-07-22 review passes — awaiting Shawn's sign-off
 before the Phase 1 build begins.
 **Origin:** 2026-07-15 discussion of pull-failure risk (an agent instructed to read a
@@ -321,6 +323,35 @@ All five v0.1 open questions were answered by the 2026-07-22 review passes
   instrument correction.
 - **Depends on:** corpus-management-plan.md (DOI manifest consumed by the
   corpus-screener script).
+
+## 9. Execution engine: Claude Code workflows (v0.2.1)
+
+The v0.2 text specified orchestrator *behaviour* (pre-flight, push, receipts,
+gates) without committing to an engine, implicitly assuming a hand-rolled runner
+over headless invocations. **Claude Code workflows are adopted as the batch
+orchestration engine** wherever control flow must be deterministic:
+
+| Lane | Workflow role |
+|---|---|
+| Census FAIR scoring | `pipeline()` over the paper list: per-paper `agent()` calls with schema-enforced structured outputs (tool-layer validation with retries), native concurrency (≈ the 4–6 workers of the appendix), and resume-from-run-ID with completed calls cached — the queue's checkpoint/resume without hand-built locking. The persisted workflow script + run journal are archived with study outputs as provenance |
+| Validation phase (regression gate + reliability spot-check) | Deterministic matrix fan-out (papers × runs × models) with per-call model override; the ask-before-Fable gate is honoured by which models the approved script enumerates |
+| Adversarial review | Each `agent()` call is a fresh context, so invariant 4 (no shared context with any reproduction conversation) holds by construction |
+| Screener triage (E7) | The narrow LLM step runs as a pipeline over the DOI batch with the same schema + receipt treatment |
+
+**Not used for:** deterministic corpus tooling (fetch/hash/manifest — plain
+Python, no LLM), and reproduction *execution* (Docker/compute-bound with batched
+human plan approval between stages — a background workflow cannot pause for a
+human, so workflows at most bracket the stages: plan-generation batch → approval
+→ execution batch).
+
+**Complements, does not replace, §3.** Workflow scripts deliberately have no
+filesystem access, so pushed content enters via script arguments (assembled by
+the invoking session from the canonical files) or via the agent definitions; the
+hook/receipt layer remains the reliability mechanism. Two build-time
+verifications: (i) `SubagentStart`/`SubagentStop` hooks fire for
+workflow-spawned agents; (ii) workflow model selection uses aliases, so the
+receipted `model_id` (§3.3) is the authoritative record of what ran, with
+pre-flight checking the alias→pinned-ID mapping.
 
 ## Appendix: execution notes for the Phase 1 build (from review E4–E5)
 
