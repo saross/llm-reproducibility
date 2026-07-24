@@ -313,10 +313,12 @@ licences:
 
 # Shared content registry (routing design §4, added 2026-07-24).
 # Each canonical file's version and receipt token, and which agents consume it
-# by which mechanism. Machine-verified by the consistency-check script (build
-# item D5, forthcoming): version lines and receipt tokens are diffed against
-# the files; consumer lists are diffed against agent definitions and hook
-# config. Until the script lands, this section is verified at commit review.
+# by which mechanism. Machine-verified by scripts/check-manifest-consistency.py
+# (build item D5, wired into pre-commit): version lines and receipt tokens are
+# diffed against the files; consumer lists are diffed against agent definitions
+# and hook config; mirror consumers must contain the canonical file's fenced
+# blocks and table rows byte-identically. Consumers with `status: planned`
+# (artefact not yet authored) warn instead of fail; flip to active when built.
 shared_content:
   fair-instrument:
     canonical_file: studies/open-science-compliance/protocol/instruments/fair-instrument.md
@@ -326,5 +328,7 @@ shared_content:
     consumers:
       - agent: fair-assessor        # to be authored (Phase 1)
         mechanism: push             # SubagentStart injection, receipt required
+        status: planned
       - agent: research-assessor    # human/session lane
-        mechanism: mirror           # verbatim copy in 06-infrastructure_pass6_prompt.md, consistency-checked
+        mechanism: mirror           # normative blocks byte-identical; banner cites version + token
+        mirror_file: extraction-system/prompts/06-infrastructure_pass6_prompt.md

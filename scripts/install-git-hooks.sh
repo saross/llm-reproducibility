@@ -79,6 +79,27 @@ if [ "${CORPUS_GATE_OVERRIDE:-0}" != "1" ]; then
   fi
 fi
 
+# Manifest-consistency gate (routing design §4, build item D5): version lines,
+# receipt tokens, mirrors, and agent-definition hashes must match manifest.yaml.
+# Runs on every commit (fast, read-only). Fails closed: python3 + PyYAML are
+# standard on this repo's machines — fix the environment rather than bypassing.
+repo_root="$(git rev-parse --show-toplevel)"
+if [ -f "$repo_root/scripts/check-manifest-consistency.py" ]; then
+  if ! python3 "$repo_root/scripts/check-manifest-consistency.py" --quiet; then
+    echo ""
+    echo "❌ ERROR: manifest consistency check failed"
+    echo ""
+    echo "Run for the full report:"
+    echo "  python3 scripts/check-manifest-consistency.py"
+    echo ""
+    echo "Fix the drift (manifest.yaml shared_content / agent_definitions vs the"
+    echo "files) rather than bypassing. Instrument edits require the §8 regression"
+    echo "gate + erratum-log entry + OSF amendment before affected analyses run."
+    echo ""
+    exit 1
+  fi
+fi
+
 # Success - allow commit
 exit 0
 EOF
