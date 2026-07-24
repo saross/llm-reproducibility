@@ -52,10 +52,12 @@ queued for inclusion in the first OSF amendment.
 
 ## Queued amendment scope (running list)
 
-**PROPOSED 2026-07-24** (pre-build juncture review, findings D-1/D-4/D-5 +
-E-1/E-4/E-7/E-8; report at
-`wiki/planning/reviews/2026-07-24-pre-build-juncture-review.md`) — **pending the
-registrant's ratification**; amendment text to be drafted once ratified.
+**RATIFIED by the registrant 2026-07-24** (proposed the same day from the
+pre-build juncture review, findings D-1/D-4/D-5 + E-1/E-4/E-7/E-8; report at
+`wiki/planning/reviews/2026-07-24-pre-build-juncture-review.md`). Registrant's
+lodgement timing decision: **defer to the hard stop** — the amendment lodges
+just before the validation phase runs, so any further errata found during the
+corpus and Phase 1 builds accumulate into the same single amendment.
 **Deadline note:** items 2–4 below govern the combined validation phase itself, so
 the consolidated amendment must lodge **before the validation phase runs** — earlier
 than the before-census-scoring deadline that Entry 1 alone would require.

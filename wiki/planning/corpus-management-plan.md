@@ -162,6 +162,18 @@ Unpaywall/CrossRef are free public APIs):
 | 7 | **CENSUS-BLOCKING (promoted 2026-07-24):** rsync script to rpi-server (drive-mount check per network guardrails) + **verify `~/corpora/` falls inside an actual backup scope** — configuration, not assertion | ~30 min |
 | 8 | CLAUDE.md PDF-handling update + cross-references | ~15 min |
 
+**EXECUTED 2026-07-24 — items 1–4, 7, and 8 complete:** store live at
+`~/corpora/llm-reproducibility/` (16 papers, 28 manifest-listed files, 71.7 MB,
+every copy sha256-verified against its original; originals retained in place —
+copy-then-verify); both manifests written and `verify` passes 28/28;
+`fetch-corpus.py` operational (verify/fetch/report/gen-meta; meta.json generated
+for all 16 papers); LFS narrowed to own-artefact scopes (existing LFS files
+re-verified under the new patterns); pre-commit corpus gate installed and
+block-tested; first QNAP sync complete (44 files both sides, mount-verified).
+Remaining: items 5 (reproduction-assessor prompts) and 6 (schema v2.7
+source-provenance fields) ride the Phase 1 build. **No automated sync schedule
+exists** — run `scripts/sync-corpus.sh` after each acquisition session.
+
 `meta.json` is **machine-generated** by `fetch-corpus.py` as a per-paper projection
 of the canonical manifest plus store-local facts (file inventory, acquisition
 method, licence-evidence URL) — never hand-maintained; the git manifest is
@@ -173,24 +185,34 @@ unless the Elsevier TDM route (decision 5) lands.
 
 **Decision log (2026-07-23):**
 
-1. Store location in-repo vs out-of-tree — discussed; recommendation **out-of-tree**
-   (registration-integrity argument above; public repo; clones can never be complete
-   anyway), with the manifest + fetch script providing one-command rebuild and the
-   gitignored symlink providing in-tree ergonomics. *Awaiting Shawn's confirmation.*
+1. Store location in-repo vs out-of-tree — **CONFIRMED out-of-tree (Shawn,
+   2026-07-24)** (registration-integrity argument above; public repo; clones can
+   never be complete anyway), with the manifest + fetch script providing
+   one-command rebuild and the gitignored symlink providing in-tree ergonomics.
 2. Path mechanism — **AGREED (Shawn):** `corpus_root` key in manifest + env-var
    override + transitional symlinks from the old gitignored paths, retired after the
    census tooling is proven.
-3. Manifest home — recommendation **study-scoped manifests** beside each study's
-   queue, plus root `corpus/README.md` as the index (structure above). *Awaiting
-   Shawn's confirmation.*
-4. Timing — **HOLD (Shawn, 2026-07-23):** execution waits on his routing-design v0.2
-   review.
+3. Manifest home — **CONFIRMED (Shawn, 2026-07-24):** study-scoped manifests
+   beside each study's queue, plus root `corpus/README.md` as the index
+   (structure above).
+4. Timing — ~~HOLD (Shawn, 2026-07-23)~~ **CLEARED (Shawn, 2026-07-24):**
+   routing design signed off at v0.2.2; execution of census-blocking items
+   1–4 + 7 approved.
 5. Elsevier text-and-data-mining (TDM) route (added 2026-07-24, review E-2) —
-   **ACTION Shawn:** one enquiry to the Macquarie University library about
-   institutional TDM API entitlement (api.elsevier.com), before build item 3 is
-   written. If available, a TDM leg in `fetch-corpus.py` legally automates most of
-   the closed-access acquisition (est. 4–10 h manual otherwise) and retires the
-   ScienceDirect 403 workaround fragility.
+   **IN PROGRESS (Shawn, 2026-07-24):** API key requested from
+   dev.elsevier.com the same day. Key storage convention: variable
+   `ELSEVIER_API_KEY_TDM` in `~/personal-assistant/.env` (gitignored;
+   target-suffixed per the Zotero credential convention; value never in any
+   repo or chat transcript). Note the entitlement nuance: the free academic
+   key alone returns metadata/abstracts/open-access text — **closed full text
+   requires the institutional-subscription path** (requests from campus/VPN IP
+   space, or an Elsevier-issued institutional token `inst_token`), plus MQ
+   actually subscribing to JAS. First test once the key is stored: one known
+   closed JAS article via the Article Retrieval API from campus; if full text
+   returns, the TDM leg is viable. Also verify the response format — the API
+   may return XML/JSON full text rather than the typeset PDF, which has
+   implications for the page-anchored `location` fields the extraction
+   workflow prefers.
 
 ## Implementation checklist (v0.1, superseded by the scoped build order above)
 

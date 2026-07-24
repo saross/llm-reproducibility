@@ -32,6 +32,25 @@ merged here as PR #1).
 
 ## Repo state (2026-07-24)
 
+- **ROUTING DESIGN SIGNED OFF (Shawn, 2026-07-24, at v0.2.2)** — Phase 1
+  design gate CLEARED. Amendment scope RATIFIED same day; lodgement timing:
+  defer to the hard stop (just before the validation phase), accumulating any
+  further errata into one amendment.
+- **CORPUS MANAGEMENT EXECUTED (2026-07-24) — census blockers DONE:** store
+  live at `~/corpora/llm-reproducibility/` (16 papers, 28 files, 71.7 MB, all
+  sha256-verified; originals retained, copy-then-verify); manifests written
+  (`corpus/development-manifest.yaml` 11 papers;
+  `studies/open-science-compliance/corpus/manifest.yaml` 5 pilots);
+  `scripts/fetch-corpus.py` operational (verify 28/28 OK; gen-meta done);
+  LFS narrowed to own-artefact scopes; pre-commit corpus gate installed +
+  block-tested (override: `CORPUS_GATE_OVERRIDE=1`); first QNAP sync complete
+  via `scripts/sync-corpus.sh` (44 files both sides; NO automated schedule —
+  run after each acquisition session). Remaining corpus items 5–6 ride
+  Phase 1. **Elsevier TDM:** Shawn requested an API key 2026-07-24; storage
+  convention `ELSEVIER_API_KEY_TDM` in `~/personal-assistant/.env`;
+  entitlement test (closed JAS article from campus) pending — see corpus plan
+  decision 5 for the nuances. **NEXT: Phase 1 build**, opening with the D-2
+  hook spike (workflows vs headless `--agent` engine decision).
 - **Pre-build juncture /review-implementation COMPLETE (2026-07-24, Shawn's
   request):** fresh-context review of design v0.2.1 + corpus scope v0.2 +
   validation-phase plan. Verdict: proceed, four cheap fixes first. 12 defects

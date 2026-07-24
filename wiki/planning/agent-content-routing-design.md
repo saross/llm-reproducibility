@@ -13,8 +13,11 @@ named, same-session-only resume corrected, Max-plan cost instrumentation
 re-specified; blocking pre-flight moved to `PreToolUse[Agent]`; per-invocation
 model-alias layer hard-gated; transcript-lag retry added; promptfoo and
 cache-pipelining decisions recorded.
-**Status:** Revised per the 2026-07-22 review passes — awaiting Shawn's sign-off
-before the Phase 1 build begins.
+**Status: SIGNED OFF (Shawn, 2026-07-24, at v0.2.2)** — governs the Phase 1 build.
+The §9 engine choice remains conditional on the D-2 hook spike (Phase 1 opening
+hour); the §2.2 ladder is available only once the consolidated OSF amendment
+lodges (registrant's timing decision 2026-07-24: defer lodgement to just before
+the validation phase, accumulating any further errata).
 **Origin:** 2026-07-15 discussion of pull-failure risk (an agent instructed to read a
 skill file may silently not read it, or fail the read and helpfully continue). Design
 brief from Shawn: engineer for reliability first, accepting some duplication cost, but
