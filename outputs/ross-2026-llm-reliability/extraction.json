@@ -1,6 +1,6 @@
 {
   "schema_version": "2.6",
-  "extraction_timestamp": "2026-07-24T13:07:16+10:00",
+  "extraction_timestamp": "2026-07-24T13:37:47+10:00",
   "extractor": "Claude Fable 5 (Claude Code, session-per-pass workflow v5.0.0)",
   "project_metadata": {
     "paper_title": "Reliability in research with large language models is a property of the human–AI system",
@@ -11114,7 +11114,8 @@
       "pass3",
       "pass4",
       "pass5",
-      "phase5b"
+      "phase5b",
+      "pass7"
     ],
     "session_log": [
       "Session A (2026-07-24): Pre-Flight + Pass 0 (metadata) + Pass 6 (infrastructure, light mode: FAIR scoring deferred by design for pre-submission draft)",
@@ -11125,6 +11126,14 @@
         "session": "C",
         "date": "2026-07-24",
         "summary": "Pass 3 (liberal explicit RDMAP over the same 18 Session B groups, equal attention: 28 designs, 45 methods, 36 protocols, 100% mechanically verified quotes) + Pass 4 (whole-paper implicit scan: 1 design, 6 methods, 7 protocols, verified triggers, sequential-ID convention) + Pass 5 (16 consolidations, 13.0% reduction, 1 boundary correction, merged quotes preserved verbatim) + Phase 5b (validate_bidirectional exit 0; completeness check clean). Final RDMAP: 25 designs, 44 methods, 38 protocols (14 implicit, 13.1%). Evidence/claims/implicit_arguments untouched (283/166/20). Seven presubmission_qa_flags left unmodified; flagged numbers extracted as stated where encountered (M042, M026)."
+      },
+      {
+        "session": "D",
+        "date": "2026-07-24",
+        "passes": [
+          "pass7"
+        ],
+        "summary": "Pass 7 validation: PASS_WITH_WARNINGS. 0 critical, 0 important, 0 minor, 1 informational. Quote re-verification 100.0% (625 passages re-tested under extraction-time normalisation, including consolidation provenance quotes). Shared validators (validate_extraction.py with extraction-schema-v2.6.json, check_rdmap_completeness.py, validate_bidirectional.py) all clean, 0 corrections. Counts unchanged: 283 evidence, 166 claims, 20 implicit arguments, 25 designs, 44 methods, 38 protocols. Implicit RDMAP 14/107 = 13.1%. FAIR and Cluster 3 deferred by design. Seven presubmission_qa_flags carried forward unmodified."
       }
     ],
     "extraction_strategy": "Session-per-pass workflow v5.0.0. Purpose: pre-submission quality check (claims vs evidence, RDMAP). FAIR assessment and Cluster 3 (computational reproducibility) deferred: pre-submission, repositories and DOIs not final.",
@@ -11668,6 +11677,193 @@
     "phase5b_reconciliation": {
       "validate_bidirectional": "exit 0 — all mappings consistent, 0 corrections, 0 conflicts",
       "check_rdmap_completeness": "0 orphaned methods, 0 orphaned protocols, 100.0% protocol-to-method linkage"
+    },
+    "pass7_validation": {
+      "validation_summary": {
+        "overall_status": "PASS_WITH_WARNINGS",
+        "critical": 0,
+        "important": 0,
+        "minor": 0,
+        "informational": 1,
+        "total_items_validated": 576,
+        "item_counts": {
+          "evidence": 283,
+          "claims": 166,
+          "implicit_arguments": 20,
+          "research_designs": 25,
+          "methods": 44,
+          "protocols": 38
+        },
+        "rdmap_total": 107,
+        "implicit_rdmap": 14,
+        "implicit_rdmap_pct": 13.1
+      },
+      "source_verification": {
+        "passages_checked": 625,
+        "passages_failed": 0,
+        "pass_rate_pct": 100.0,
+        "failures": [],
+        "normalisation": "curly quotes to straight, en/em dash to hyphen, soft hyphen removed, fi/fl ligatures expanded, whitespace collapsed (rdmap_lib.normalise)"
+      },
+      "sourcing_completeness": {
+        "research_designs": {
+          "explicit": {
+            "total": 24,
+            "passed": 24
+          },
+          "implicit": {
+            "total": 1,
+            "passed": 1
+          }
+        },
+        "methods": {
+          "explicit": {
+            "total": 38,
+            "passed": 38
+          },
+          "implicit": {
+            "total": 6,
+            "passed": 6
+          }
+        },
+        "protocols": {
+          "explicit": {
+            "total": 31,
+            "passed": 31
+          },
+          "implicit": {
+            "total": 7,
+            "passed": 7
+          }
+        },
+        "evidence": {
+          "total": 283,
+          "passed": 283
+        },
+        "claims": {
+          "total": 166,
+          "passed": 166
+        },
+        "implicit_arguments": {
+          "total": 20,
+          "passed": 20
+        }
+      },
+      "cross_reference_integrity": {
+        "broken_references": [],
+        "reverse_reference_mismatches": [],
+        "mirrored_field_mismatches": []
+      },
+      "hierarchy_validation": {
+        "orphaned_methods": [],
+        "orphaned_protocols": [],
+        "designs_without_methods": [
+          "RD001",
+          "RD003",
+          "RD004",
+          "RD005",
+          "RD006",
+          "RD008",
+          "RD020",
+          "RD023",
+          "RD027",
+          "RD029"
+        ],
+        "designs_without_methods_by_type": {
+          "research_question": [
+            "RD001"
+          ],
+          "theoretical_framework": [
+            "RD003",
+            "RD005",
+            "RD008"
+          ],
+          "scope_definition": [
+            "RD004",
+            "RD006",
+            "RD020",
+            "RD023",
+            "RD027"
+          ],
+          "study_design": [
+            "RD029"
+          ]
+        },
+        "designs_without_methods_non_framing": [
+          "RD029"
+        ],
+        "protocol_method_linkage_pct": 100.0
+      },
+      "schema_compliance": {
+        "invalid_ids": [],
+        "duplicate_ids": [],
+        "location_issues": [],
+        "invalid_enum_values": []
+      },
+      "metadata_completeness": {
+        "missing_fields": [],
+        "expected_nulls": [
+          "journal",
+          "doi"
+        ],
+        "notes": [
+          "journal, doi null - expected: pre-submission draft, no venue or DOI assigned yet"
+        ]
+      },
+      "clip_audit": {
+        "documented": [
+          "E026",
+          "E040",
+          "E130",
+          "E136",
+          "E197",
+          "E252",
+          "E277",
+          "M003",
+          "M028",
+          "P005"
+        ],
+        "undocumented": [],
+        "absent_consolidated": [],
+        "interpretation": "Clipped page-break-spanning quotes are a deliberate sourcing decision, not a sourcing failure. Omitted text is verifiable against the PDF."
+      },
+      "consolidation_verification": {
+        "items_with_consolidation_metadata": 41,
+        "by_convention": {
+          "pass2_absorbed_items": 25,
+          "pass5_merged_sources": 16
+        },
+        "metadata_issues": [],
+        "resurrected_sources": []
+      },
+      "issues": {
+        "critical": [],
+        "important": [],
+        "minor": [],
+        "informational": [
+          "10 of 25 designs have no implementing methods; 9 are framing-tier (research_question/theoretical_framework/scope_definition) and are not expected to be implemented by a procedure. Non-framing: ['RD029']"
+        ]
+      },
+      "conventions_validated_against": [
+        "No source_verification objects: quotes verified mechanically at extraction time by pass1_lib.py/rdmap_lib.py; this pass re-runs the same normalised-substring test (deviation from prompt 07 Checks 4.1/4.3)",
+        "Implicit RDMAP uses sequential RD###/M###/P### IDs with *_status='implicit', not IMP prefixes (see pass4_extraction)",
+        "Methods mirror realized_through_protocols and implemented_by_protocols; both rebuilt by rdmap_lib.sync_reverse_refs",
+        "Page-break-spanning quotes deliberately clipped with the omission documented on the item; not sourcing failures",
+        "consolidation_metadata.merged_sources are provenance records preserving pre-consolidation quotes, not live items"
+      ],
+      "out_of_scope": [
+        "FAIR assessment: deliberately deferred (pre-submission draft, repositories and DOIs not final)",
+        "Cluster 3 computational reproducibility: deliberately deferred",
+        "Passes 8-9 (classification, credibility assessment): not run"
+      ],
+      "presubmission_qa_flags_carried_forward": 7,
+      "validated_by": "Claude Fable 5 (Session D)",
+      "validation_date": "2026-07-24"
+    },
+    "deferred_by_design": {
+      "fair_assessment": "Deferred: pre-submission draft with repositories and DOIs not final. See reproducibility_infrastructure.fair_assessment.notes. To be scored post-submission if desired.",
+      "cluster_3_reproducibility": "Deferred: computational reproducibility assessment requires final deposited materials, which do not exist for a pre-submission draft.",
+      "passes_8_9": "Out of scope for this run: extraction ends at Session D. Research approach classification (Pass 8) and credibility assessment (Pass 9) not run."
     }
   },
   "reproducibility_infrastructure": {
