@@ -213,6 +213,22 @@ unless the Elsevier TDM route (decision 5) lands.
    may return XML/JSON full text rather than the typeset PDF, which has
    implications for the page-anchored `location` fields the extraction
    workflow prefers.
+   **Test result (2026-07-24): HTTP 403 from campus** on the closed-article
+   test (Marwick 2025), key generated under MQ credentials — key accepted
+   (not 401), entitlement refused. Interpretation: entitlement is checked
+   per-request (registered IP ranges or an institutional token), not
+   per-account; campus wifi egress evidently sits outside MQ's registered
+   ranges. Next steps: (a) discriminating tests — inspect the 403 error body,
+   and repeat against an open-access JAS article (Crema 2024, CC BY) to
+   separate key-permission problems from pure entitlement; try MQ VPN if
+   available; (b) request an **institutional token (`inst_token`)** for
+   non-commercial TDM via the MQ library / Elsevier developer support (the
+   "upon request, subject to approval" clause) — once issued, one extra
+   `X-ELS-Insttoken` header in the fetch script's TDM leg. Census NOT blocked
+   meanwhile: manual acquisition via library proxy remains the budgeted
+   fallback (4–10 h), sized precisely by `fetch-corpus.py report` once the
+   census frame exists. Key still needs adding to amd-tower's `.env` (census
+   fetch runs there).
 
 ## Implementation checklist (v0.1, superseded by the scoped build order above)
 
