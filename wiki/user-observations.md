@@ -251,3 +251,33 @@ artefact early as part of the deliverable — the OSF preregistration approach,
 generalised: plain flowing text, form-order fields, provenance separated from
 copy text, generated from the verified source, and the live surface re-checked
 at fill time rather than trusted from capture.
+
+## 2026-07-24 — Candidates (pending review)
+
+*Drafted at handoff (session 2026-07-22/24); accept / edit / discard / replace.
+Silence holds these over — no silent discard.*
+
+**Candidate A — The review-of-the-reviewer request paid for itself.** Your
+"can we please /review-implementation at this juncture" caught a
+preregistration-compliance deviation inside Claude's own signed-off-ready
+synthesis (§2.2), plus the workflows hook risk and the undefined spot-check
+statistics — four catches Claude's in-context re-reading had missed. Verdict
+data point: "Great, I'm happy…", "Good catch", "great finds". The pattern —
+fresh-context review of Claude's synthesis at every commitment boundary, even
+when the synthesis is itself built from reviews — looks like a keeper.
+
+**Candidate B — Remote-hands diagnosis with copy-paste probes worked.** The
+Elsevier trail ran through your campus terminal via one-liners Claude designed
+to print status codes and error bodies but never the key: three hypotheses
+eliminated in four short probes, no credential ever touching the transcript,
+and the entitlement test ran from the network that mattered. Worth keeping as
+the default shape for anything network- or credential-dependent.
+
+**Candidate C — Claude's confident vendor-behaviour predictions cost a
+round-trip.** "The likely fix costs five minutes: recreate the key with the
+TDM use case" — stated with more confidence than portal knowledge from
+training merits, and wrong. If Claude had labelled it "worth trying first,
+uncertain", the expectation would have been set right. You may want
+confidence labels on any prediction about external-system behaviour as a
+standing rule (Claude has self-imposed a version of this in claude-obs 21;
+your verdict would make it bilateral).

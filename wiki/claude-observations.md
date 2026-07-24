@@ -373,3 +373,60 @@ fold in (and name in commit messages), not noise to revert.
 every edit to a file he touches; describe his concurrent changes in the
 commit that sweeps them; and when I rewrite a file he likely has open, say so
 explicitly so he reloads the buffer before his next save.
+
+## claude-obs 19 — 2026-07-24: Shawn gates commitment in separable stages — never bundle his decisions
+
+**Pattern.** Across three days: "hold — discuss first" on the weekend run, then
+staged approvals (routing passes yes / run no); sign-off withheld until the
+juncture review he requested; ratification given as four separable verdicts with
+riders ("start with sonnet and opus, then ASK before Fable"); the amendment
+deferred "to as late as possible just in case". He consistently accepts most of a
+package and holds exactly the element with open risk or spend.
+
+**Lesson.** His approval style is itemised, not batch. Presenting decisions as
+separable line items with independent risk profiles gets fast, clean verdicts;
+bundling would force him to either over-approve or block everything.
+
+**How to apply.** Structure every approval request as discrete numbered items,
+each with its own cost/risk, and expect partial acceptance. Record the riders
+verbatim (ask-before-Fable is a hard gate, not a preference) and treat a held
+item as a scheduling fact, not an obstacle.
+
+## claude-obs 20 — 2026-07-24: His outsider questions at review boundaries are discovery probes — treat them as such
+
+**Pattern.** "Would it be useful to use CC 'workflows' for any of this?" — asked
+at sign-off, from the self-described non-programmer — surfaced the one execution
+engine the expert-lane synthesis had never considered, reshaping §9 and then the
+build. Earlier equivalents: the self-containment challenge on the corpus store
+(which forced the registration-integrity argument into words) and "is anyone
+identifiable"-class questions in other projects. The question's power came from
+its altitude: he asks about capabilities and purposes, not implementations.
+
+**Lesson.** When Shawn asks "would X help?" at a commitment boundary, the
+expected value of a serious scoped answer is high — these questions have found
+real gaps at a rate my own capability scans should envy.
+
+**How to apply.** Never deflect such questions with a quick yes/no. Give the
+scoped fit analysis (where it helps, where it does not, what it would break),
+fold the answer into the governing document the same turn, and check whether the
+new capability invalidates any existing design assumption — his workflows
+question did, twice.
+
+## claude-obs 21 — 2026-07-24: Self-critique — I wrote committed verbs on uncommitted evidence, three times
+
+**Pattern.** §9 said workflows were "adopted" three days before the spike that
+justified any verb at all; §2.2 claimed shelter under a prereg clause whose text
+said otherwise; the Elsevier TDM checkbox got called "the likely five-minute fix"
+and then 403'd. Three domains, one error shape: at synthesis speed I stated what
+an external system permits without quoting or probing it first. Every catch came
+from outside the writing context — the juncture review twice, reality once.
+
+**Lesson.** My prose defaults to commitment ahead of evidence when the claim
+concerns external-system behaviour; in-context re-reading does not catch it
+because the claim reads as sensible engineering from inside.
+
+**How to apply.** Claims about what a harness, registration, vendor API, or
+policy permits buy their verb with a quote or probe *before* drafting — the
+probes are almost always seconds long (the spike: 20 s; the §8 re-read: 30 s).
+Where the probe must wait, the verb is "conditional on", not "adopted". This is
+the write-side anti-confabulation rule extended from specifics to permissions.
