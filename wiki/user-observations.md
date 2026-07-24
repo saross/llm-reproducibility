@@ -252,10 +252,12 @@ generalised: plain flowing text, form-order fields, provenance separated from
 copy text, generated from the verified source, and the live surface re-checked
 at fill time rather than trusted from capture.
 
-## 2026-07-24 — Candidates (pending review)
+## 2026-07-24 — Candidates
 
-*Drafted at handoff (session 2026-07-22/24); accept / edit / discard / replace.
-Silence holds these over — no silent discard.*
+*Drafted at handoff (session 2026-07-22/24). All three ACCEPTED by Shawn
+2026-07-24 (decision pass, second session). Candidate C's acceptance makes
+confidence labels on external-system predictions a bilateral standing rule
+(pairs with claude-obs 21).*
 
 **Candidate A — The review-of-the-reviewer request paid for itself.** Your
 "can we please /review-implementation at this juncture" caught a

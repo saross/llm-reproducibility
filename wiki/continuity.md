@@ -566,12 +566,26 @@ below landed while this session ran).
 
 **NEXT:** Phase 1 remainder per the repo-state bullet — census screener,
 output schemas + workflow scripts, corpus items 5–6; amendment lodgement then
-validation phase. **Carry-forward unchanged:** WN-a–g verdicts + user-obs
-candidates A–C pending (no silent discard); Shawn: Zotero-proxy
-investigation, amd-tower `.env` key, optional MQ TDM enquiry; Cosmos watch
-~mid-August; PA data-submodule unpushed inbox commit; zbook: re-run
-`./scripts/install-git-hooks.sh` after pulling (hook now includes the D5
-manifest gate).
+validation phase.
+
+**Decision pass (Shawn, 2026-07-24, same session, all seven queued decisions
+resolved):** (1) reproduction-lane model pins stay provisional (Opus 5
+expected imminently; real selection at the validation phase — rationale
+recorded in the manifest comment); (2) fair-assessor Fable 5 variant deferred
+— authored only when Shawn approves the Fable benchmark run (billing route
+decided then); (3) amendment-1 draft gets one read, at lodgement; (4) all
+three build judgement calls RATIFIED (env-levels co-location, invariants to
+all three reproduction agents, SKILL.md mirror); (5) WN-a–g ALL ACCEPTED →
+working-notes Observations 9–15; (6) user-obs candidates A–C ALL ACCEPTED —
+C makes confidence labels on external-system predictions a bilateral
+standing rule; (7) MQ TDM enquiry DROPPED (rely on Zotero-proxy route +
+Elsevier support-email fallback). Parallel session confirmed finished, no
+conflict.
+
+**Carry-forward (pruned):** Shawn: Zotero-proxy investigation, amd-tower
+`.env` key; Cosmos watch ~mid-August; PA data-submodule unpushed inbox
+commit (PA session to sweep); zbook: re-run `./scripts/install-git-hooks.sh`
+after pulling (hook now includes the D5 manifest gate).
 
 ### 2026-07-22/24 — Review cascade; corpus infrastructure; Phase 1 opens
 
@@ -603,7 +617,10 @@ first); (2) draft the consolidated OSF amendment from the ratified scope
 Zotero-proxy investigation, amd-tower `.env` key, MQ TDM enquiry optional;
 (4) Cosmos correspondence watch ~mid-August.
 
-**Held over pending Shawn's verdicts (no silent discard):** working-notes
+~~**Held over pending Shawn's verdicts (no silent discard):**~~ [x] 2026-07-24
+ALL RESOLVED in the second session's decision pass: WN-a–g all ACCEPTED
+(now working-notes Observations 9–15); user-obs candidates A–C all ACCEPTED
+(C → bilateral confidence-label rule). Original hold-over text: working-notes
 candidates WN-a/b (2026-07-18) + WN-c/d/e (2026-07-21) — still owed — plus
 NEW this session: WN-f (docs-vs-harness canary-probe method: settings-hook
 canary + control/test spawns settled in 20 s what three doc citations

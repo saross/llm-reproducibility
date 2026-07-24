@@ -5,7 +5,7 @@ title: "Working Notes"
 audience: "researchers"
 tags: [research-methodology, llm-craft, open-science]
 created: 2026-02-09
-updated: 2026-07-15
+updated: 2026-07-24
 status: active
 ---
 
@@ -326,3 +326,129 @@ review-before-commitment gate transfers cleanly from code to methodology and pay
 most at pre-registration boundaries; but the skill needs a study-design checklist for
 the defect classes that carried this review (fitness gap logged at the 2026-07-15
 session close; see continuity).
+
+## Observation 9: xelatex silently drops out-of-font glyphs (2026-07-18)
+
+### Context
+
+Building PDF artefacts for the OSF preregistration lodgement, xelatex builds of
+instrument-bearing documents (accepted from the 2026-07-18 handoff, verdict
+returned 2026-07-24).
+
+### The observation
+
+xelatex drops glyphs absent from the selected font silently — the failure
+surfaces only as a log warning, never in the visual output flow. For
+instrument text this is a meaning-inversion hazard: a vanished "≥", "±", or
+minus sign changes what a threshold or tolerance says, while the PDF remains
+visually plausible. Principle: never sign off a built PDF by eyeballing;
+verify by machine text extraction and comparison against the source.
+
+## Observation 10: Markdown-emphasis stripping needs fixpoint iteration (2026-07-18)
+
+### Context
+
+Preparing plain-text paste artefacts from markdown sources for the OSF
+lodgement (accepted from the 2026-07-18 handoff, verdict returned 2026-07-24).
+
+### The observation
+
+Single-pass regex stripping of markdown emphasis leaves survivors: nested
+spans (bold inside italic) and spans broken across wrapped lines. The robust
+shape is fixpoint iteration — re-apply the strip until the text stops
+changing. Generalises to any peel-one-layer text transformation over nestable
+markup.
+
+## Observation 11: Web forms need interface-shaped paste artefacts (2026-07-21)
+
+### Context
+
+OSF registration lodgement 2026-07-20/21: text boxes rendered markdown line
+breaks literally, and the §10 power table pasted as pipe soup (accepted from
+the 2026-07-21 handoff, verdict returned 2026-07-24; elevated to a standing
+default by the 2026-07-22 user-obs verdicts).
+
+### The observation
+
+Output destined for a web form must be shaped for the form, not for the
+repository: paste files unwrapped to flowing lines, no tables in paste-field
+content (restructure as prose or lists), and a committed generator script so
+the form text and the verified draft stay in lockstep. The repository copy
+and the paste artefact are different renderings of one source, never two
+sources.
+
+## Observation 12: External facts have a half-life (2026-07-21)
+
+### Context
+
+The registration was lodged with an embargo on the strength of a journal
+policy (JAS: Reports double-blind mandate) that had lapsed mid-2024; a
+re-check cleared it and the embargo was lifted the next day (accepted from
+the 2026-07-21 handoff, verdict returned 2026-07-24).
+
+### The observation
+
+Externally sourced facts — journal policies, vendor portal behaviour, API
+surfaces — decay without notice. Re-verify at the moment of use, not at the
+moment of recall, and record the check date alongside the fact so the next
+reader can judge staleness. Complements Observation 13: internal records
+drift too.
+
+## Observation 13: Verification ledgers drift from their sources (2026-07-21)
+
+### Context
+
+The Cosmos application's claim ledger, reconciled against a clean-context
+adversarial agent before submission: three pointer errors and six wording
+drifts against the underlying sources (accepted from the 2026-07-21 handoff,
+verdict returned 2026-07-24).
+
+### The observation
+
+A verification ledger is a pointer structure, not an authority — it drifts
+from its sources as both evolve. Before reuse in anything outward-facing,
+reconcile the ledger against the sources with a fresh-context adversarial
+pass; the maintaining context cannot see its own drift. Same epistemics as
+the anti-confabulation rule: specifics are suspect until re-checked at
+source.
+
+## Observation 14: Canary probes beat documentation for harness behaviour (2026-07-24)
+
+### Context
+
+The D-2 engine spike: three documentation citations predicted that
+SubagentStart/SubagentStop hooks would not fire for workflow `agent()`
+spawns, making the workflows engine "more likely to fail than pass" the
+reliability requirements.
+
+### The observation
+
+A settings-hook canary plus one control and one test spawn settled the
+question empirically in about 20 seconds — hooks fire, injected context
+arrives, the transcript path is delivered, and named agent types reach
+matchers. All three documentation-based predictions were wrong. For
+load-bearing harness behaviour, documentation is a hypothesis generator;
+the cheap empirical probe is the evidence. Budget the 20 seconds before
+architecting around a documented limitation.
+
+## Observation 15: Reliability-gate statistics are decision-relevantly sensitive to design choices (2026-07-24)
+
+### Context
+
+Pre-build juncture review of the §8 validation phase (findings folded into
+the ratified amendment scope; accepted from the 2026-07-24 handoff).
+
+### The observation
+
+Three statistical facts that change how the 0.90 reliability gate should be
+run. First, power: at n=90 items (three pilot papers) a true agreement of
+0.85 false-passes the gate roughly 12% of the time; scoring all five pilots
+(n=150) roughly halves that to ~5.5%. Second, definition sensitivity:
+candidate agreement statistics cross the same 0.90 gate at item-flip rates
+ranging from ~10% to ~30%, so the statistic must be pre-specified (unanimity
+proportion chosen as strictest). Third, ranking impossibility: the
+achievable spot-check n puts ~±0.09 confidence intervals on between-model
+agreement differences, so no preregistration-compliant model ranking exists
+before the census — selection must be gates-plus-cost, not ranking. Gate
+design choices that look like implementation detail carry first-order
+inferential consequences.
