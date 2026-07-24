@@ -332,3 +332,60 @@ shared_content:
       - agent: research-assessor    # human/session lane
         mechanism: mirror           # normative blocks byte-identical; banner cites version + token
         mirror_file: extraction-system/prompts/06-infrastructure_pass6_prompt.md
+  data-availability-taxonomy:
+    canonical_file: studies/open-science-compliance/protocol/instruments/data-availability-taxonomy.md
+    version: "1.0"
+    receipt_token: "068d5f05793429d7"
+    status: frozen-by-osf-registration  # prereg §7.3; L-levels assigned at reproduction time only
+    consumers:
+      - agent: reproduction-planner
+        mechanism: push
+        status: planned
+  verdicts-and-precision:
+    canonical_file: studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md
+    version: "1.0"
+    receipt_token: "fe9bca3d3c95f931"
+    status: frozen-by-osf-registration  # prereg §7.2/§7.4/§7.5 + reproduction protocol v1.1
+    consumers:
+      - agent: reproduction-executor
+        mechanism: push
+        status: planned
+      - agent: reproduction-assessor  # human/session lane skill
+        mechanism: mirror             # discrepancy/tolerance/scope tables byte-identical
+        mirror_file: .claude/skills/reproduction-assessor/SKILL.md
+  coverage-rules:
+    canonical_file: studies/open-science-compliance/protocol/instruments/coverage-rules.md
+    version: "1.0"
+    receipt_token: "a2a4c0a899291c2b"
+    status: frozen-by-osf-registration  # prereg §7.6; denominator lock
+    consumers:
+      - agent: reproduction-planner
+        mechanism: push
+        status: planned
+      - agent: reproduction-executor
+        mechanism: push
+        status: planned
+  eligibility-criteria:
+    canonical_file: studies/open-science-compliance/protocol/instruments/eligibility-criteria.md
+    version: "1.0"
+    receipt_token: "8f88ae3af8e03284"
+    status: frozen-by-osf-registration  # prereg §4–§5 incl. compute cap
+    consumers:
+      - agent: reproduction-planner
+        mechanism: push
+        status: planned
+  pipeline-invariants:
+    canonical_file: .claude/shared/invariants.md
+    version: "1.0"
+    receipt_token: "f847020d25d57382"
+    status: frozen-by-osf-registration  # anchored in prereg §8; plan §4.3
+    consumers:
+      - agent: reproduction-planner
+        mechanism: push
+        status: planned
+      - agent: reproduction-executor
+        mechanism: push
+        status: planned
+      - agent: adversarial-reviewer
+        mechanism: push
+        status: planned

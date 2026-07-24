@@ -189,6 +189,15 @@ Even if the Dockerfile has minor issues, fix rather than reconstruct:
 
 ### C. Verification Strategy
 
+> **Canonical home (2026-07-24):** verdicts, precision categories, tolerance
+> rules, discrepancy classification, and scope-limitation taxonomy live at
+> `studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md`
+> (v1.0, receipt token `fe9bca3d3c95f931`, FROZEN by the OSF registration).
+> Sections C, E, and F below **mirror its tables** for the human/session lane;
+> the manifest consistency check verifies the mirror. **Edit only the canonical
+> file** — instrument edits require the §8 regression gate + erratum-log entry
+> + OSF amendment.
+
 | Analysis Type | Strategy | Tolerance | Example |
 |---------------|----------|-----------|---------|
 | Deterministic | Exact match | 0 | Herskind (frequency counts), Dye (post-processing) |
