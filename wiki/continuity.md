@@ -32,6 +32,42 @@ merged here as PR #1).
 
 ## Repo state (2026-07-24)
 
+- **PHASE 1 BUILD QUEUE EXECUTED (2026-07-24, second session; commits
+  `b1aab17`→`115d202`):** the four-item queue from the bullet below is DONE.
+  (1) **D5 gate live:** `scripts/check-manifest-consistency.py` wired into
+  pre-commit (block-tested) — verifies version lines, end-of-file receipt
+  tokens, mirror normative blocks (fenced code + table rows byte-identical),
+  push/pull consumer routing evidence, agent-definition hashes (§3.4),
+  model pins (§3.3, no `inherit`), and the `memory:` prohibition (§3.9);
+  17 unit tests in `tests/test_manifest_consistency.py`. (2) **Instrument
+  canon complete — 7 `shared_content` entries:** FAIR instrument + five new
+  canonical files (data-availability-taxonomy, verdicts-and-precision incl.
+  env levels 0–5, coverage-rules, eligibility-criteria,
+  `.claude/shared/invariants.md`) + adversarial-review-framework promoted
+  pull→push and registered (v1.1, governed header + token); reproduction
+  SKILL.md registered as a second machine-checked mirror (verdict/tolerance/
+  scope tables). (3) **Five agent definitions** with pinned models:
+  fair-assessor ×2 per-model variants (`claude-sonnet-5`, `claude-opus-4-8`
+  — NB Sonnet 5/Opus 4.8 expose NO dated snapshot IDs; the aliases ARE the
+  exact IDs, never append dates); reproduction-planner/executor/
+  adversarial-reviewer provisionally `claude-opus-4-8` pending the
+  validation-phase benchmark (pin changes are governed manifest edits).
+  `agent_definitions` hash registry added to the manifest. (4) **Production
+  hooks live** (probe archived to `archive/phase1-spike/`): manifest-driven
+  SubagentStart push + sha256/version receipt log; SubagentStop receipt gate
+  (version echo, token quote, model_id hard gate, transcript-verified full
+  pulled reads, D-12 retry-then-fail-closed, ESCALATE passthrough,
+  decision:block self-healing); PreToolUse[Agent|Task] pre-flight denying
+  governed spawns on D5 failure / missing instruments /
+  `CLAUDE_CODE_SUBAGENT_MODEL`; 17 synthetic pipe-tests green. **Consolidated
+  OSF amendment DRAFTED** from the ratified scope:
+  `studies/open-science-compliance/prereg/amendment-1-draft.md` (lodge just
+  before the validation phase; pre-lodgement checklist inside; erratum log
+  cross-references it). **NEXT (Phase 1 remainder):** census screener
+  (deterministic script + instrument-like triage prompt, design §5); output
+  schemas for the structured-output layer + census/validation workflow
+  scripts (§9); corpus items 5–6; then amendment lodgement → validation
+  phase.
 - **PHASE 1 OPENED (2026-07-24):** D-2 hook spike **PASSED** on all four
   datapoints (two haiku probes: hooks fire for workflow spawns; injected
   context arrives; transcript path delivered; named `agentType` reaches
@@ -506,6 +542,36 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-07-24 (second session) — Phase 1 build queue executed; amendment drafted
+
+Single autonomous session off the resume prompt. Four build-queue items + the
+amendment draft, five commits (`b1aab17` D5 gate → `18cb659` instrument canon
+→ `de175d3` agent definitions → `115d202` production hooks → amendment/
+continuity commit): D5 consistency gate (pre-commit-wired, block-tested,
+17 unit tests incl. §3.3 model-pin and §3.9 memory-prohibition checks);
+instrument canon to 7 registered entries (five new canonical files + the
+adversarial framework promoted pull→push; reproduction SKILL.md became a
+second machine-checked mirror); five agent definitions with pinned models
+(claude-api reference confirmed Sonnet 5/Opus 4.8 have no dated snapshot IDs
+— the aliases are the exact IDs; reproduction-lane pins provisional
+`claude-opus-4-8` pending the validation benchmark); production hooks
+(manifest-driven push + receipt log, receipt gate with model_id hard gate and
+transcript-verified pulled reads, PreToolUse pre-flight; 17 synthetic
+pipe-tests). OSF amendment 1 drafted at
+`prereg/amendment-1-draft.md` from the ratified scope — lodgement deferred to
+just before the validation phase per Shawn's timing call. One mid-session
+rebase over a parallel session's handoff commits (the 2026-07-22/24 entry
+below landed while this session ran).
+
+**NEXT:** Phase 1 remainder per the repo-state bullet — census screener,
+output schemas + workflow scripts, corpus items 5–6; amendment lodgement then
+validation phase. **Carry-forward unchanged:** WN-a–g verdicts + user-obs
+candidates A–C pending (no silent discard); Shawn: Zotero-proxy
+investigation, amd-tower `.env` key, optional MQ TDM enquiry; Cosmos watch
+~mid-August; PA data-submodule unpushed inbox commit; zbook: re-run
+`./scripts/install-git-hooks.sh` after pulling (hook now includes the D5
+manifest gate).
 
 ### 2026-07-22/24 — Review cascade; corpus infrastructure; Phase 1 opens
 

@@ -52,6 +52,11 @@ queued for inclusion in the first OSF amendment.
 
 ## Queued amendment scope (running list)
 
+**Consolidated draft written 2026-07-24:** `amendment-1-draft.md` (this
+directory) carries the lodgement wording for every item below plus Entry 1;
+new entries added here after that date must also be folded into the draft
+(its pre-lodgement checklist enforces this).
+
 **RATIFIED by the registrant 2026-07-24** (proposed the same day from the
 pre-build juncture review, findings D-1/D-4/D-5 + E-1/E-4/E-7/E-8; report at
 `wiki/planning/reviews/2026-07-24-pre-build-juncture-review.md`). Registrant's
