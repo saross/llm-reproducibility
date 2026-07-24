@@ -1,6 +1,6 @@
 {
   "schema_version": "2.6",
-  "extraction_timestamp": "2026-07-24T12:14:51+10:00",
+  "extraction_timestamp": "2026-07-24T13:07:16+10:00",
   "extractor": "Claude Fable 5 (Claude Code, session-per-pass workflow v5.0.0)",
   "project_metadata": {
     "paper_title": "Reliability in research with large language models is a property of the human–AI system",
@@ -8438,9 +8438,2671 @@
       "assessment_implications": "A secondary supporting argument for the thesis; its weight depends on how uniquely reliability explains lab behaviour."
     }
   ],
-  "research_designs": [],
-  "methods": [],
-  "protocols": [],
+  "research_designs": [
+    {
+      "design_id": "RD001",
+      "design_text": "Research framing: set aside broader questions about AI's trajectory and focus on narrower questions facing working researchers — what LLMs can actually do as research tools, and under what conditions their output can be trusted, especially on larger-scale, longer-running tasks where errors accumulate.",
+      "design_type": "research_question",
+      "design_status": "explicit",
+      "verbatim_quote": "In the spirit of Mowshowitz's mundane utility (Mowshowitz, 2023), we set aside the broader questions about artificial intelligence's trajectory and focus on narrower questions that researchers face: what can these systems actually do as research tools, and under what conditions can their output be trusted, particularly on larger-scale, longer-running tasks where errors accumulate?",
+      "location": {
+        "section": "Introduction",
+        "page": 2
+      },
+      "expected_information_missing": [
+        "No explicit statement of hypotheses or predictions attached to the research questions"
+      ],
+      "implemented_by_methods": [],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "RD007"
+        ],
+        "consolidation_type": "rationale_synthesis",
+        "information_preserved": "complete",
+        "rationale": "Background restatement of the Introduction's research-question framing (deployment-not-adoption question); same strategic framing, assessed together.",
+        "merged_sources": [
+          {
+            "id": "RD007",
+            "verbatim_quote": "The real question is not whether to use these systems but how to deploy them so that research tasks can be completed and their output can be trusted. Verification is where practice needs development.",
+            "trigger_text": null,
+            "location": {
+              "section": "Background",
+              "subsection": "2.1 LLMs in research",
+              "page": 3
+            }
+          }
+        ]
+      }
+    },
+    {
+      "design_id": "RD002",
+      "design_text": "Two-episode grounding design: claims are grounded in two episodes a year apart — a 2025 evaluation of commercial LLMs applied to a research-software longevity study, and a partial 2026 re-application via an agent built in a current framework — so that persistence of failure modes across a model generation can support the claim that reliability is structural rather than model-specific. The primary phase illustrates the argument in depth while the secondary episode indicates persistence of the characteristics.",
+      "design_type": "study_design",
+      "design_status": "explicit",
+      "verbatim_quote": "We ground these claims in two episodes a year apart. The first is a 2025 evaluation of commercial LLMs applied to a study of archaeological research-software longevity involving system customisation and prompts, the levers available at the time. The second is a partial 2026 re-application: an agent built within a current framework.",
+      "location": {
+        "section": "Introduction",
+        "page": 2
+      },
+      "expected_information_missing": [
+        "No discussion of alternative designs considered (e.g., controlled replication rather than incidental re-application)"
+      ],
+      "implemented_by_methods": [
+        "M035",
+        "M037"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "RD012"
+        ],
+        "consolidation_type": "rationale_synthesis",
+        "information_preserved": "complete",
+        "rationale": "Methods restatement of the Introduction's two-episode grounding design (primary illustrates in depth, secondary indicates persistence); one design.",
+        "merged_sources": [
+          {
+            "id": "RD012",
+            "verbatim_quote": "We argue that failure modes persist across models and harnesses, and that reliability must be engineered into the human–AI system; the primary phase illustrates our argument in depth, while the secondary episode indicates persistence of the characteristics.",
+            "trigger_text": null,
+            "location": {
+              "section": "Methods",
+              "page": 6
+            }
+          }
+        ]
+      }
+    },
+    {
+      "design_id": "RD003",
+      "design_text": "Theoretical framework: scaffolding in its original pedagogic sense (Wood, Bruner and Ross 1976; van de Pol et al. 2010) applied to LLM-assisted research — the structure a researcher builds around a model to supply judgement — grounding the paper's central thesis about the locus of reliability.",
+      "design_type": "theoretical_framework",
+      "design_status": "explicit",
+      "verbatim_quote": "We use 'scaffolding' in its original, pedagogic sense, the support a more capable partner supplies so that a learner can complete a task beyond unaided competence (Wood, Bruner, and G. Ross, 1976; Pol, Volman, and Beishuizen, 2010). Applied to LLM-assisted research, scaffolding denotes the structure a researcher builds around a model to supply judgement.",
+      "location": {
+        "section": "Introduction",
+        "page": 1
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": []
+    },
+    {
+      "design_id": "RD004",
+      "design_text": "Definitional scope decision: the scaffolding/harness boundary is drawn functionally rather than architecturally, because the argument concerns the source of judgement rather than its location in the software stack.",
+      "design_type": "scope_definition",
+      "design_status": "explicit",
+      "verbatim_quote": "We draw the boundary functionally rather than architecturally because our argument concerns the source of judgement rather than its location in the stack.",
+      "location": {
+        "section": "Introduction",
+        "page": 2
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": []
+    },
+    {
+      "design_id": "RD005",
+      "design_text": "Analytic framework: the augmentation-versus-automation distinction — augmentation requires a human to supply judgement the system cannot (through scaffolding and targeted verification), automation would require the system to supply that judgement itself — structures the paper's assessment of LLM research use.",
+      "design_type": "theoretical_framework",
+      "design_status": "explicit",
+      "verbatim_quote": "Our answer turns on a distinction: LLMs can augment a researcher but not yet automate research. Augmentation in this case requires a human to supply judgement the system cannot, primarily through construction of scaffolding to guide the model, secondarily through targeted verification. Automation would require the system to supply that judgement itself.",
+      "location": {
+        "section": "Introduction",
+        "page": 2
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": []
+    },
+    {
+      "design_id": "RD006",
+      "design_text": "Scope division with companion paper: the epistemic argument (models lack intrinsic judgement) is assigned to a companion paper, while this paper takes the practitioner's complement — what the model cannot supply from within can be elicited from without.",
+      "design_type": "scope_definition",
+      "design_status": "explicit",
+      "verbatim_quote": "A companion paper argues that these systems lack intrinsic judgement as an epistemic capability Ballsun-Stanton and S. A. Ross, 2026. The argument here is the practitioner's complement: what the model cannot supply from within can be elicited from without.",
+      "location": {
+        "section": "Introduction",
+        "page": 2
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": []
+    },
+    {
+      "design_id": "RD008",
+      "design_text": "Theoretical framework: compound AI systems — quality and reliability arise not from the model itself but as a property of interacting components (multiple model calls, retrievers, external tools), grounding the paper's system-level treatment of reliability.",
+      "design_type": "theoretical_framework",
+      "design_status": "explicit",
+      "verbatim_quote": "A growing body of work on compound AI systems contends that quality and reliability arise not from the model itself, but as a property of interacting components, including multiple calls to one or more models, alongside invocation of retrievers or other external tools (Zaharia et al., 2024).",
+      "location": {
+        "section": "Background",
+        "subsection": "2.3 Reliability as a property of structure",
+        "page": 4
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": []
+    },
+    {
+      "design_id": "RD009",
+      "design_text": "Conceptual structure for the study's scaffolding: two complementary halves — building judgement into the workflow (decomposition and externalisation) and verifying whether it worked from a position the producer cannot influence. This framework organises both the Methods account and the design principles.",
+      "design_type": "theoretical_framework",
+      "design_status": "explicit",
+      "verbatim_quote": "Reliability, therefore, must be engineered into the scaffolding of the human–AI system (Ballsun-Stanton and S. A. Ross, 2026). That scaffold has two complementary halves: building judgement into the workflow, so the model can do the task, and verifying whether it worked, from a position the producer cannot influence.",
+      "location": {
+        "section": "Background",
+        "subsection": "2.3 Reliability as a property of structure",
+        "page": 5
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": [
+        "M001"
+      ]
+    },
+    {
+      "design_id": "RD010",
+      "design_text": "Verification-design framework: because unaided LLM (self or second) and human review both fail, verification power must come from the compound system — especially independence of context and external reference (later joined by orthogonal framing). This framework governs the study's verification architecture.",
+      "design_type": "theoretical_framework",
+      "design_status": "explicit",
+      "verbatim_quote": "Again, decomposition is necessary but not sufficient; the mechanics of the verification are also important. Unaided LLM (self or second) and human review both fail, so verification power has to come from the compound system, especially independence and external reference.",
+      "location": {
+        "section": "Background",
+        "subsection": "2.3 Reliability as a property of structure",
+        "page": 5
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": [
+        "M012",
+        "M028",
+        "M035"
+      ]
+    },
+    {
+      "design_id": "RD011",
+      "design_text": "Case-study temporal scope: LLM-assisted research February 2025 to mid-2026, structured as a primary phase of domain research (Feb-Jul 2025), systematic verification during manuscript preparation (Nov-Dec 2025), and a secondary episode during preparation of this paper (Apr-Jun 2026).",
+      "design_type": "scope_definition",
+      "design_status": "explicit",
+      "verbatim_quote": "This case study examines LLM-assisted research conducted between February 2025 and mid-2026: a primary phase of domain research (February–July 2025), systematic verification of its outputs during manuscript preparation (November–December 2025), and a secondary episode arising during the preparation of this paper (April–June 2026).",
+      "location": {
+        "section": "Methods",
+        "page": 6
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": [
+        "M003",
+        "M004"
+      ]
+    },
+    {
+      "design_id": "RD013",
+      "design_text": "Host-study revival design: LLMs adopted as research assistants to revive a stalled mid-2010s study of longevity and succession in archaeological research software — for tool discovery, documentation, and evidence collection, plus literature review, ideation, and writing support — because the process could not be scaled without assistance.",
+      "design_type": "study_design",
+      "design_status": "explicit",
+      "verbatim_quote": "This project, originally conceived in the mid-2010s, had stalled due to a lack of research assistance needed to locate, describe, and find lifecycle evidence for the software. We had worked through this tool discovery, tool documentation, and evidence collection process for a handful of tools, but could not scale it without assistance. In early 2025, we turned to LLMs as research assistants for these tasks, plus literature review and ideation and writing support, to see if we could revive the project.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 6
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": [
+        "M002",
+        "M031"
+      ]
+    },
+    {
+      "design_id": "RD014",
+      "design_text": "Embedded evaluation design: LLM performance, failures, and mitigations were evaluated while the disciplinary research was underway, prioritising what matters to working researchers — whether these systems make research 'faster', 'better', or neither. Each tool is reported on what it showed itself able to do in authentic research, measured against its intended use.",
+      "design_type": "study_design",
+      "design_status": "explicit",
+      "verbatim_quote": "While this disciplinary research was underway, we evaluated LLM performance, failures, and mitigations. The evaluation prioritised what matters to working researchers: whether these systems make research 'faster', 'better', or neither.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 6
+      },
+      "expected_information_missing": [
+        "'Faster' and 'better' are not operationalised as measurable criteria"
+      ],
+      "implemented_by_methods": [
+        "M002",
+        "M009",
+        "M010",
+        "M021",
+        "M027",
+        "M030",
+        "M037",
+        "M041",
+        "M051"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "RD022"
+        ],
+        "consolidation_type": "scope_integration",
+        "information_preserved": "complete",
+        "rationale": "The authentic-use measurement stance (Results 4) operationalises the embedded evaluation's practitioner priority (Methods 3.1); a single evaluative stance.",
+        "merged_sources": [
+          {
+            "id": "RD022",
+            "verbatim_quote": "We report what each tool showed itself able to do in authentic research, measured against its intended use.",
+            "trigger_text": null,
+            "location": {
+              "section": "Results",
+              "page": 9
+            }
+          }
+        ]
+      }
+    },
+    {
+      "design_id": "RD015",
+      "design_text": "Service-selection design: candidate services selected for commercial availability and task fit, then narrowed by progressive elimination as fundamental limitations emerged.",
+      "design_type": "scope_definition",
+      "design_status": "explicit",
+      "verbatim_quote": "Candidate services were selected for commercial availability and task fit, then narrowed by progressive elimination as fundamental limitations emerged; Section 4 details what was deployed at each stage.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 6
+      },
+      "expected_information_missing": [
+        "Initial candidate pool and the task-fit criteria are not enumerated in Methods"
+      ],
+      "implemented_by_methods": [
+        "M018",
+        "M026",
+        "M033"
+      ]
+    },
+    {
+      "design_id": "RD016",
+      "design_text": "Correctness requirement driving the verification regime: because tool discovery, documentation, and evidence-collection outputs would serve as a research dataset, they had to be correct; verification was therefore designed in two waves.",
+      "design_type": "study_design",
+      "design_status": "explicit",
+      "verbatim_quote": "Because the results from tool discovery, documentation, and evidence collection would serve as a research dataset, they had to be correct. Verification proceeded in two waves.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": [
+        "M006",
+        "M007",
+        "M008",
+        "M011",
+        "M012",
+        "M013",
+        "M023",
+        "M024",
+        "M028",
+        "M034",
+        "M036",
+        "M038",
+        "M042",
+        "M046",
+        "M047",
+        "M048"
+      ]
+    },
+    {
+      "design_id": "RD017",
+      "design_text": "Incidental second-phase design: the 2026 phase was incidental rather than designed — lit-scout was built as a training exercise for an unrelated project, and its first opportunistic test run (Claude Opus 4.6) was this paper's information-science literature search.",
+      "design_type": "study_design",
+      "design_status": "explicit",
+      "verbatim_quote": "The second phase was incidental rather than designed. In April 2026, one of us built lit-scout, a Claude Code agent for systematic literature discovery, as a training exercise in preparation for an unrelated project. The agent's first opportunistic test run (using Claude Opus 4.6) was this paper's search of information-science literature related to LLM output verification.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.2 The 2026 phase",
+        "page": 8
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": [
+        "M014",
+        "M015",
+        "M036"
+      ]
+    },
+    {
+      "design_id": "RD018",
+      "design_text": "Case-study design: situated depth rather than statistical generalisability (Flyvbjerg 2006; Yin 2018), with the artefacts captured across both phases as the shared evidence base.",
+      "design_type": "study_design",
+      "design_status": "explicit",
+      "verbatim_quote": "The approach is a case study presenting situated depth rather than statistical generalisability (Flyvbjerg, 2006; Yin, 2018).",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.3 Reflexivity",
+        "page": 8
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": [
+        "M016"
+      ]
+    },
+    {
+      "design_id": "RD019",
+      "design_text": "Reflexivity/positionality: LLMs were used extensively in the research process itself; the risk that an LLM may fluently affirm anything proposed to it was mitigated through validation between co-authors and by anchoring every empirical claim to a logged artefact (session transcripts, git history, output spreadsheets).",
+      "design_type": "positionality",
+      "design_status": "explicit",
+      "verbatim_quote": "LLMs were used extensively in the research process. The main risk of such use is that an LLM may fluently and confidently affirm anything proposed to it. We mitigated this through validation between co-authors and especially by anchoring every empirical claim to a logged artefact (session transcripts, git history, output spreadsheets).",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.3 Reflexivity",
+        "page": 8
+      },
+      "expected_information_missing": [
+        "Co-author validation procedure is not described"
+      ],
+      "implemented_by_methods": [
+        "M017",
+        "M040",
+        "M050"
+      ]
+    },
+    {
+      "design_id": "RD020",
+      "design_text": "Snapshot scope framing: because newer models and research tools were released throughout the study, each phase is treated as a snapshot of the capabilities of its moment.",
+      "design_type": "scope_definition",
+      "design_status": "explicit",
+      "verbatim_quote": "Newer models and research-oriented tools were released throughout the study and during manuscript preparation; each phase is therefore a snapshot of the capabilities of its moment (full release timeline in Supplement A).",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.3 Reflexivity",
+        "page": 8
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": []
+    },
+    {
+      "design_id": "RD021",
+      "design_text": "Four-stage bounded project scope: the 2025 work comprised a bounded, verifiable project covering literature discovery, tool discovery, tool documentation, and evidence collection.",
+      "design_type": "scope_definition",
+      "design_status": "explicit",
+      "verbatim_quote": "Work in 2025 involved a bounded, verifiable project covering four stages of research: literature discovery, tool discovery, tool documentation, and evidence collection.",
+      "location": {
+        "section": "Results",
+        "page": 9
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": [
+        "M018",
+        "M022",
+        "M025",
+        "M031"
+      ]
+    },
+    {
+      "design_id": "RD023",
+      "design_text": "Tool-screening decisions: three tools excluded from the campaign — Open Deep Research (cost at scale), Computer Use (technology demonstration status), and Operator (minimal contribution after trial).",
+      "design_type": "scope_definition",
+      "design_status": "explicit",
+      "verbatim_quote": "Three tools were screened out. Hugging Face's Open Deep Research was architecturally attractive, but at roughly $200 per run on o1-pro credits it was impractical at scale. Anthropic's Computer Use remained a technology demonstration rather than a production instrument during the testing window. OpenAI's Operator, though trialled, contributed only three discovery records (Table 4).",
+      "location": {
+        "section": "Results",
+        "page": 9
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": []
+    },
+    {
+      "design_id": "RD024",
+      "design_text": "Stage-1 evaluation question: can a service discover relevant literature, and can its output be ingested into a reference manager without human intervention?",
+      "design_type": "research_question",
+      "design_status": "explicit",
+      "verbatim_quote": "The first stage focused on a ubiquitous research task: can a service discover relevant literature, and can its output be ingested into a reference manager without human intervention?",
+      "location": {
+        "section": "Results",
+        "subsection": "4.1 Literature discovery and synthesis",
+        "page": 9
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": [
+        "M019",
+        "M020",
+        "M049"
+      ]
+    },
+    {
+      "design_id": "RD025",
+      "design_text": "Journal sampling frame for tool discovery: five journals selected where research software is likely to be described in a software paper or mentioned in relation to a dataset or digital method — Internet Archaeology, JOSS, JOAD, JCAA, and SoftwareX.",
+      "design_type": "scope_definition",
+      "design_status": "explicit",
+      "verbatim_quote": "The second stage involved building a dataset of research software by examining issues of five journals where such software is likely to be described in a software paper or mentioned in relation to a dataset or digital method: Internet Archaeology, the Journal of Open Source Software (JOSS), the Journal of Open Archaeology Data (JOAD), the Journal of Computer Applications in Archaeology (JCAA), and SoftwareX.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.2 Tool discovery",
+        "page": 11
+      },
+      "expected_information_missing": [
+        "Issue/volume coverage per journal is not systematically enumerated in the main text"
+      ],
+      "implemented_by_methods": [
+        "M022"
+      ]
+    },
+    {
+      "design_id": "RD026",
+      "design_text": "FAIMS ground-truth design: model selection for the documentation stage rested on comparison of output across four prompt iterations against FAIMS, software the authors built and maintained over a decade — using first-hand knowledge as ground truth.",
+      "design_type": "study_design",
+      "design_status": "explicit",
+      "verbatim_quote": "We had built and maintained FAIMS over a decade, and model selection rested on comparison of output across four prompt iterations against it.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.3 Tool documentation",
+        "page": 13
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": [
+        "M013",
+        "M026",
+        "M033"
+      ]
+    },
+    {
+      "design_id": "RD027",
+      "design_text": "Direction-not-magnitude reporting stance: because the samples are small (a four-row spot-check, a single agent build), the paper reports the direction of each failure and treats its magnitude as uncertain. Accordingly the verifier is presented as a worked design pattern rather than a benchmarked result.",
+      "design_type": "scope_definition",
+      "design_status": "explicit",
+      "verbatim_quote": "The samples mentioned are small (a four-row spotcheck, a single agent build), so we report the direction of each failure and treat its magnitude as uncertain.",
+      "location": {
+        "section": "Discussion",
+        "subsection": "5.3 Limitations",
+        "page": 24
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": [],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "RD028"
+        ],
+        "consolidation_type": "scope_integration",
+        "information_preserved": "complete",
+        "rationale": "Both Limitations statements express one small-sample reporting stance: direction over magnitude, and the verifier as worked pattern rather than benchmarked result.",
+        "merged_sources": [
+          {
+            "id": "RD028",
+            "verbatim_quote": "As such, we present the verifier as a worked design pattern rather than a benchmarked result (Section 4.5).",
+            "trigger_text": null,
+            "location": {
+              "section": "Discussion",
+              "subsection": "5.3 Limitations",
+              "page": 24
+            }
+          }
+        ]
+      }
+    },
+    {
+      "design_id": "RD029",
+      "design_text": "Capability-adoption-upon-release strategy: newly released models, research modes, and harnesses were adopted as they became available (Claude research mode on release; Claude Code + Opus 4.5 for the audit; Opus 4.6 for the 2026 agent and slop re-assessment), an operative strategic practice never stated as a design decision.",
+      "design_type": "study_design",
+      "design_status": "implicit",
+      "trigger_text": [
+        "After Anthropic released such a mode, we began using it (see Supplement A for the release and availability timeline).",
+        "At this time we switched harness to Claude Code and used the best available model (primarily Claude Opus 4.5).",
+        "Newer models and research-oriented tools were released throughout the study and during manuscript preparation"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Results",
+          "subsection": "4 (coverage)",
+          "page": 9
+        },
+        {
+          "section": "Methods",
+          "subsection": "3.1 The 2025 phase",
+          "page": 7
+        },
+        {
+          "section": "Methods",
+          "subsection": "3.3 Reflexivity",
+          "page": 8
+        }
+      ],
+      "inference_reasoning": "Across both phases the study repeatedly moved to the newest available capability (research modes on release, harness switch for the audit, newest model for the re-assessment). This consistent practice shaped which services were compared at each stage, yet no section states adoption-on-release as a strategic decision or discusses its trade-offs (e.g., comparability across stages versus capability).",
+      "implicit_metadata": {
+        "basis": "inferred_from_results",
+        "transparency_gap": "No stated policy for when/why newer models or harnesses were adopted mid-study, or how adoption interacts with cross-stage comparability",
+        "assessability_impact": "Readers cannot assess whether stage-to-stage differences reflect task characteristics or capability drift from rolling adoption",
+        "reconstruction_confidence": "medium"
+      },
+      "location": {
+        "section": "Methods/Results (multiple)",
+        "page": 7
+      },
+      "expected_information_missing": [],
+      "implemented_by_methods": []
+    }
+  ],
+  "methods": [
+    {
+      "method_id": "M001",
+      "method_text": "Three-step task decomposition of the software-tool research: after initial failures of an integrated approach, the task was split into tool discovery, tool documentation, and cataloguing tool-use evidence.",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "After initial failures of an integrated approach, for example, we split our own software tool research into three steps: tool discovery, tool documentation, and cataloguing tool use evidence (Section 4).",
+      "location": {
+        "section": "Background",
+        "subsection": "2.3 Reliability as a property of structure",
+        "page": 5
+      },
+      "implements_designs": [
+        "RD009"
+      ],
+      "expected_information_missing": [
+        "The 'initial failures of an integrated approach' that motivated the split are not documented in detail"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M002",
+      "method_text": "Web-interface deployment with prompts as the empirical instrument: work conducted in the services' web interfaces, with prompts backed by user customisation.",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "The work was conducted in the services' web interfaces. Prompts, backed by user customisation, were the empirical instrument.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 6
+      },
+      "implements_designs": [
+        "RD013",
+        "RD014"
+      ],
+      "expected_information_missing": [
+        "User-customisation settings (system instructions) are not reproduced in the Methods section"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M003",
+      "method_text": "Contemporaneous documentation: run outcomes logged in spreadsheets and notes at the time of execution; prompts saved and reflections recorded during the process. (The sentence 'Run outcomes were logged in spreadsheets and notes at the time of execution' spans the p6/p7 page break; the quote is clipped to the p7 sentences.)",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "During this process, we also saved prompts and recorded our reflections on the work.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_designs": [
+        "RD011"
+      ],
+      "expected_information_missing": [
+        "Spreadsheet structure and logging fields are not specified"
+      ],
+      "realized_through_protocols": [
+        "P039"
+      ],
+      "implemented_by_protocols": [
+        "P039"
+      ]
+    },
+    {
+      "method_id": "M004",
+      "method_text": "Retrospective record consolidation: session transcripts bulk-exported where possible to create a more comprehensive record (detailed in Supplement A).",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "Later, we bulk-exported session transcripts where possible to create a more comprehensive record (see Supplement A).",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_designs": [
+        "RD011"
+      ],
+      "expected_information_missing": [
+        "Export mechanism and coverage criteria ('where possible') are not specified in Methods"
+      ],
+      "realized_through_protocols": [
+        "P038"
+      ],
+      "implemented_by_protocols": [
+        "P038"
+      ]
+    },
+    {
+      "method_id": "M006",
+      "method_text": "Comprehensive-then-spot-check verification (wave 1): outputs first checked comprehensively until prompt performance was acceptable, then switched to informal spot-checks. This constitutes wave 1 of the two-wave verification structure (wave 2: the Nov-Dec 2025 exhaustive audit, M011).",
+      "method_type": "quality_control",
+      "method_status": "explicit",
+      "verbatim_quote": "During the initial research, outputs (including on these familiar targets) were first checked comprehensively until prompts evolved to the point where performance was acceptable, and then we switched to informal spot-checks.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [
+        "Acceptability threshold for switching to spot-checks is not defined",
+        "Spot-check sampling rate and procedure are not documented"
+      ],
+      "realized_through_protocols": [
+        "P037"
+      ],
+      "implemented_by_protocols": [
+        "P037"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "M005"
+        ],
+        "consolidation_type": "workflow_integration",
+        "information_preserved": "complete",
+        "rationale": "The two-wave umbrella statement is structural context for the wave-1 (comprehensive-then-spot-check) and wave-2 (M011 audit) methods; its sentence is preserved verbatim on RD016.",
+        "merged_sources": [
+          {
+            "id": "M005",
+            "verbatim_quote": "Because the results from tool discovery, documentation, and evidence collection would serve as a research dataset, they had to be correct. Verification proceeded in two waves.",
+            "trigger_text": null,
+            "location": {
+              "section": "Methods",
+              "subsection": "3.1 The 2025 phase",
+              "page": 7
+            }
+          }
+        ]
+      }
+    },
+    {
+      "method_id": "M007",
+      "method_text": "External curated-source comparison: tool discoveries and basic metadata compared against the open-archaeo project on GitHub where possible. Documentation outputs were likewise manually checked against first-hand knowledge or sources such as the open-archaeo catalogue and GitHub.",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "Tool discoveries and basic metadata were compared to an external curated source (the open-archaeo project on GitHub) where possible.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [
+        "Comparison procedure and handling of disagreements are not documented",
+        "Sampling and coverage of the manual checks are not quantified"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": [],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "M029"
+        ],
+        "consolidation_type": "validation_chain",
+        "information_preserved": "complete",
+        "rationale": "External-source comparison (open-archaeo) and documentation-stage manual accuracy checks against first-hand knowledge, open-archaeo, and GitHub form one external accuracy-checking method applied across stages.",
+        "merged_sources": [
+          {
+            "id": "M029",
+            "verbatim_quote": "We manually checked accuracy against first-hand knowledge of tools or against sources like the open-archaeo catalogue and GitHub.",
+            "trigger_text": null,
+            "location": {
+              "section": "Results",
+              "subsection": "4.3 Tool documentation",
+              "page": 15
+            }
+          }
+        ]
+      }
+    },
+    {
+      "method_id": "M008",
+      "method_text": "Item-by-item manual verification of the literature search: every AI-supplied bibliographic reference manually verified and its disposition tagged in a shared Zotero library, never falling back to spot-checks.",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "The literature search received stricter treatment due to persistent errors: we undertook a manual, item-by-item verification of every AI-supplied bibliographic reference and tagged each item's disposition in a shared Zotero library, never falling back to spot-checks.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [
+        "Disposition tag vocabulary is not enumerated in the Methods section"
+      ],
+      "realized_through_protocols": [
+        "P007",
+        "P042"
+      ],
+      "implemented_by_protocols": [
+        "P007",
+        "P042"
+      ]
+    },
+    {
+      "method_id": "M009",
+      "method_text": "Iterative prompt revision: prompts revised iteratively to mitigate failures and improve quality, converging on techniques grouped as decomposition, templating, and guardrails.",
+      "method_type": "analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "We iteratively revised prompts to mitigate failures and improve quality, converging on techniques that can be grouped into decomposition, templating, and guardrails.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_designs": [
+        "RD014"
+      ],
+      "expected_information_missing": [
+        "Revision trigger criteria (what counted as a failure requiring revision) are not stated"
+      ],
+      "realized_through_protocols": [
+        "P001",
+        "P002",
+        "P003",
+        "P013",
+        "P015",
+        "P021",
+        "P022",
+        "P027",
+        "P031"
+      ],
+      "implemented_by_protocols": [
+        "P001",
+        "P002",
+        "P003",
+        "P013",
+        "P015",
+        "P021",
+        "P022",
+        "P027",
+        "P031"
+      ]
+    },
+    {
+      "method_id": "M010",
+      "method_text": "Meta-prompting: models enlisted to draft, critique, and reword prompts and to suggest task-definition reframings, with the recognised risk that the practice could propagate flaws as readily as repair them. The supplement records the collaborative form of this practice: enlisting the model as prompt designer ('How could the definition be improved to help you make that determination?').",
+      "method_type": "analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "In revising, we routinely enlisted the models themselves, asking them to draft, critique, and reword prompts, and even to suggest how a task definition might be reframed so the model could apply it more reliably (meta-prompting). The practice cut both ways: it could propagate a flaw as readily as repair one.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_designs": [
+        "RD014"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [
+        "P032"
+      ],
+      "implemented_by_protocols": [
+        "P032"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "M044"
+        ],
+        "consolidation_type": "rationale_synthesis",
+        "information_preserved": "complete",
+        "rationale": "Supplement A.3's model-as-prompt-designer strategy is the same meta-prompting practice described in Methods 3.1; single method, multi-location.",
+        "merged_sources": [
+          {
+            "id": "M044",
+            "verbatim_quote": "The evolution followed a distinctive collaborative strategy: the researcher enlisted the model as prompt designer, asking \"How could the definition be improved to help you make that determination?\"",
+            "trigger_text": null,
+            "location": {
+              "section": "Supplement A",
+              "subsection": "A.3 Domestication examples",
+              "page": 36
+            }
+          }
+        ]
+      }
+    },
+    {
+      "method_id": "M011",
+      "method_text": "Exhaustive audit (wave 2, Nov-Dec 2025): tool discovery and tool evidence outputs audited exhaustively after inconsistencies were discovered between phase outputs, using the Claude Code harness with primarily Claude Opus 4.5.",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "Later (November–December 2025), upon discovering inconsistencies between phase outputs (e.g., tool discovery versus tool documentation), we audited tool discovery and tool evidence outputs exhaustively. At this time we switched harness to Claude Code and used the best available model (primarily Claude Opus 4.5).",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [
+        "How the phase-output inconsistencies were detected is not described"
+      ],
+      "realized_through_protocols": [
+        "P004",
+        "P005"
+      ],
+      "implemented_by_protocols": [
+        "P004",
+        "P005"
+      ]
+    },
+    {
+      "method_id": "M012",
+      "method_text": "LLM-review of evidence events at scale: because no ready-made external source equivalent to open-archaeo existed for evidence events, they were LLM-reviewed against a documented three-point workflow, with informal manual spot-checks in all cases. Every event was reviewed; the check occurred in fresh context and was re-grounded in the sources themselves.",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "Since the scale of evidence-events was greater and no ready-made external source equivalent to open-archaeo was available, evidence-events were LLM-reviewed against a documented three-point workflow (the source exists; it mentions the tool; the stated year matches). In all cases informal manual spot-checks were performed.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 8
+      },
+      "implements_designs": [
+        "RD016",
+        "RD010"
+      ],
+      "expected_information_missing": [
+        "Spot-check sampling procedure is not documented"
+      ],
+      "realized_through_protocols": [
+        "P006",
+        "P036",
+        "P037"
+      ],
+      "implemented_by_protocols": [
+        "P006",
+        "P036",
+        "P037"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "M032"
+        ],
+        "consolidation_type": "workflow_integration",
+        "information_preserved": "complete",
+        "rationale": "Results 4.4 describes the execution of the same three-point evidence-event verification stated in Methods 3.1; single method, multi-location.",
+        "merged_sources": [
+          {
+            "id": "M032",
+            "verbatim_quote": "Every event was reviewed against the three-point workflow of Section 3.1 (source exists; source mentions the tool; year matches). This check occurred in fresh context and was re-grounded in the sources themselves.",
+            "trigger_text": null,
+            "location": {
+              "section": "Results",
+              "subsection": "4.4 Tool evidence collection",
+              "page": 16
+            }
+          }
+        ]
+      }
+    },
+    {
+      "method_id": "M013",
+      "method_text": "Familiar-target grounding: initial runs focused on sources and tools known first-hand, including software the authors had built, enabling direct accuracy assessment. During tool documentation, trials ran against software known first-hand until the task completed reliably and failures were understood to be all-or-nothing.",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "Initial runs were focused on sources and tools we knew first-hand, including software we had built.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_designs": [
+        "RD016",
+        "RD026"
+      ],
+      "expected_information_missing": [
+        "Number of qualification trials and the reliability criterion are not quantified"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": [],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "M039"
+        ],
+        "consolidation_type": "workflow_integration",
+        "information_preserved": "complete",
+        "rationale": "Discussion 5.2's qualification trials against first-hand software are the same familiar-target grounding practice stated in Methods 3.1; single method.",
+        "merged_sources": [
+          {
+            "id": "M039",
+            "verbatim_quote": "In our case, during tool documentation, we ran trials against software we knew first-hand, until we were sure that the task was completing reliably and had come to understand that failures were all-or-nothing and thus readily identifiable (Section 4.3).",
+            "trigger_text": null,
+            "location": {
+              "section": "Discussion",
+              "subsection": "5.2 Design principles (Match the mandate)",
+              "page": 23
+            }
+          }
+        ]
+      }
+    },
+    {
+      "method_id": "M014",
+      "method_text": "Registry-grounded agent instrument: a declaratively defined Claude Code agent (lit-scout) paired with a tested helper script (lit-search.py) wrapping the APIs of three bibliographic registries (CrossRef, Semantic Scholar, OpenAlex) to ground its output.",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "Instead of prompts pasted into a web interface, the instrument was now a declaratively defined agent, paired with a tested helper script (lit-search.py) wrapping the application programming interfaces (APIs) of three bibliographic registries (CrossRef, Semantic Scholar, and OpenAlex) to ground its output.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.2 The 2026 phase",
+        "page": 8
+      },
+      "implements_designs": [
+        "RD017"
+      ],
+      "expected_information_missing": [
+        "Agent definition and helper-script code are referenced but not reproduced in the paper body"
+      ],
+      "realized_through_protocols": [
+        "P011"
+      ],
+      "implemented_by_protocols": [
+        "P011"
+      ]
+    },
+    {
+      "method_id": "M015",
+      "method_text": "Iterative agent refinement: the agent was iteratively refined through verification runs and literature-review use (through June 2026), maturing into a proposer-verifier agent pair.",
+      "method_type": "analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "Like the earlier prompts, this agent was iteratively refined, with verification runs and literature-review use continuing through June 2026, eventually maturing into a proposer-verifier agent pair.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.2 The 2026 phase",
+        "page": 8
+      },
+      "implements_designs": [
+        "RD017"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [
+        "P008",
+        "P009",
+        "P010",
+        "P041"
+      ],
+      "implemented_by_protocols": [
+        "P008",
+        "P009",
+        "P010",
+        "P041"
+      ]
+    },
+    {
+      "method_id": "M016",
+      "method_text": "Artefact evidence base with manifest: transcripts, observations, and version histories captured across both phases form the shared evidence base; a manifest accompanying the archived materials indexes sources per stage, including known gaps.",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "The artefacts captured across both phases (transcripts, observations, and version histories) form the shared evidence base for the claims that follow; a manifest accompanying the archived materials indexes sources for each stage, including known gaps (e.g., for Perplexity, Elicit, and most Gemini runs, tabulated results survive but not conversation transcripts).",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.3 Reflexivity",
+        "page": 8
+      },
+      "implements_designs": [
+        "RD018"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M017",
+      "method_text": "Co-author validation and artefact anchoring: empirical claims validated between co-authors and anchored to logged artefacts (session transcripts, git history, output spreadsheets) to mitigate LLM affirmation risk.",
+      "method_type": "quality_control",
+      "method_status": "explicit",
+      "verbatim_quote": "We mitigated this through validation between co-authors and especially by anchoring every empirical claim to a logged artefact (session transcripts, git history, output spreadsheets).",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.3 Reflexivity",
+        "page": 8
+      },
+      "implements_designs": [
+        "RD019"
+      ],
+      "expected_information_missing": [
+        "Anchoring procedure (how claims were traced to artefacts) is not described"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M018",
+      "method_text": "Comparative multi-service deployment: three model families exercised across the campaign (OpenAI, Anthropic, Google) plus Perplexity and Elicit for literature discovery, with per-task coverage recorded (Table 1).",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "Across the campaign we exercised three model families (OpenAI, Anthropic, and Google), plus Perplexity and Elicit for literature discovery (see Table 1).",
+      "location": {
+        "section": "Results",
+        "page": 9
+      },
+      "implements_designs": [
+        "RD015",
+        "RD021"
+      ],
+      "expected_information_missing": [
+        "Run counts per service per stage are not summarised in the main text"
+      ],
+      "realized_through_protocols": [
+        "P028",
+        "P043"
+      ],
+      "implemented_by_protocols": [
+        "P028",
+        "P043"
+      ]
+    },
+    {
+      "method_id": "M019",
+      "method_text": "Traditional-search baseline comparison: Web of Science and Scopus queries across the same scope, compared against the AI-assisted yield.",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "A Web of Science query across the same scope produced three relevant results from the first 50 returned, but the corpus already held all three. A parallel Scopus search fared similarly, contributing only one new source.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.1 Literature discovery and synthesis",
+        "page": 10
+      },
+      "implements_designs": [
+        "RD024"
+      ],
+      "expected_information_missing": [
+        "Query strings and evaluation depth beyond the first 50 results are not documented"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M020",
+      "method_text": "Corpus assembly method: final literature corpus built from AI-assisted search plus manual discoveries via citation chaining or as side-effects of searching for confabulated sources.",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "The final output was built from AI-assisted search plus manual discoveries found either by citation chaining or as a side-effect of searching for (confabulated) sources.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.1 Literature discovery and synthesis",
+        "page": 10
+      },
+      "implements_designs": [
+        "RD024"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M021",
+      "method_text": "Synthesis evaluation task: the same systems asked to synthesise discovered sources (rather than find them), assessed for analytical integration.",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "When the same systems were asked not to find sources but to synthesise them, the augmentation evaporated.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.1 Literature discovery and synthesis",
+        "page": 11
+      },
+      "implements_designs": [
+        "RD014"
+      ],
+      "expected_information_missing": [
+        "Synthesis task prompts and assessment criteria are not documented in the main text"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M022",
+      "method_text": "Journal-issue examination method for tool discovery: building the research- software dataset by examining issues of the five selected journals via LLM discovery runs.",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "The second stage involved building a dataset of research software by examining issues of five journals where such software is likely to be described in a software paper or mentioned in relation to a dataset or digital method: Internet Archaeology, the Journal of Open Source Software (JOSS), the Journal of Open Archaeology Data (JOAD), the Journal of Computer Applications in Archaeology (JCAA), and SoftwareX.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.2 Tool discovery",
+        "page": 11
+      },
+      "implements_designs": [
+        "RD025",
+        "RD021"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [
+        "P012",
+        "P013",
+        "P040"
+      ],
+      "implemented_by_protocols": [
+        "P012",
+        "P013",
+        "P040"
+      ]
+    },
+    {
+      "method_id": "M023",
+      "method_text": "Human process-monitoring during runs: one of two scaffolding-failure classes required human monitoring of execution (rather than prompt improvement) to catch.",
+      "method_type": "quality_control",
+      "method_status": "explicit",
+      "verbatim_quote": "Two scaffolding failures account for many of the errors. One was mitigated through better prompting, the other required human process-monitoring.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.2 Tool discovery",
+        "page": 12
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [
+        "Monitoring cadence and coverage (which runs were watched) are not documented"
+      ],
+      "realized_through_protocols": [
+        "P014"
+      ],
+      "implemented_by_protocols": [
+        "P014"
+      ]
+    },
+    {
+      "method_id": "M024",
+      "method_text": "Second-model verification trial: a different model (o3-mini-high) tasked with verifying a Deep Research run's output, supplied with the complete results file and instructed to read each linked article.",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "Suspicious that a Deep Research run might have confabulations, we tasked a different model (o3-mini-high) with verifying output. We supplied the complete results as a file and instructed the verifier to read each linked article.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.2 Tool discovery",
+        "page": 13
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [
+        "P029"
+      ],
+      "implemented_by_protocols": [
+        "P029"
+      ]
+    },
+    {
+      "method_id": "M025",
+      "method_text": "Metadata-collection stage method: structured metadata collected for each verified tool, with the scaffolding (the metadata prompt) treated as an explicit artefact.",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "The third stage collected structured metadata for each verified tool, and here the scaffolding became an explicit artefact.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.3 Tool documentation",
+        "page": 13
+      },
+      "implements_designs": [
+        "RD021"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [
+        "P015",
+        "P018"
+      ],
+      "implemented_by_protocols": [
+        "P015",
+        "P018"
+      ]
+    },
+    {
+      "method_id": "M026",
+      "method_text": "Comparative three-service assessment for metadata collection: OpenAI o3, Claude Sonnet 3.7 in research mode, and Gemini 2.5 Pro via Google AI Studio. Per Supplement A.4, FAIMS was the primary ground truth and outputs for other familiar archaeological tools were also validated.",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "We assessed three services: OpenAI o3, Claude Sonnet 3.7 in research mode, and Gemini 2.5 Pro via Google AI Studio.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.3 Tool documentation",
+        "page": 13
+      },
+      "implements_designs": [
+        "RD026",
+        "RD015"
+      ],
+      "expected_information_missing": [
+        "Note: Supplement A.4 names the services differently (Claude Research, Google Gemini 2.5 Pro, ChatGPT Deep Research) — recorded as presubmission QA flag in Session B; extracted as stated in each location",
+        "Which 'other familiar archaeological tools' were validated is not enumerated"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": [],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "M045"
+        ],
+        "consolidation_type": "workflow_integration",
+        "information_preserved": "complete",
+        "rationale": "Supplement A.4 records the same three-service metadata assessment as Results 4.3 with FAIMS as primary ground truth; single method, multi-location. Service-naming discrepancy between the two locations remains flagged in presubmission_qa_flags.",
+        "merged_sources": [
+          {
+            "id": "M045",
+            "verbatim_quote": "We tested three services for metadata collection — Claude Research, Google Gemini 2.5 Pro, and ChatGPT Deep Research — and retained Claude Research for production on output quality. The primary ground truth was FAIMS, a tool the authors created and maintained over a decade; outputs for other familiar archaeological tools were also validated.",
+            "trigger_text": null,
+            "location": {
+              "section": "Supplement A",
+              "subsection": "A.4 Per-tool ground-truth comparison",
+              "page": 36
+            }
+          }
+        ]
+      }
+    },
+    {
+      "method_id": "M027",
+      "method_text": "Work-with-the-grain schema evolution: recurring revision principle of folding the model's spontaneous tendencies into the schema rather than fighting them (domesticating unwanted tendencies; codifying useful additions).",
+      "method_type": "analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "One principle recurred across these revisions: work with the model's grain, folding its spontaneous tendencies into the schema rather than fighting them.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.3 Tool documentation",
+        "page": 13
+      },
+      "implements_designs": [
+        "RD014"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [
+        "P016",
+        "P017",
+        "P032"
+      ],
+      "implemented_by_protocols": [
+        "P016",
+        "P017",
+        "P032"
+      ]
+    },
+    {
+      "method_id": "M028",
+      "method_text": "Orthogonal metadata check on discovery outputs: in fresh context, asking for a tool's repository, licence, and version (rather than merely whether it existed) exposed misattributions and granularity errors that had survived discovery verification. (The second sentence spans the p14/p15 break; quote clipped to the first sentence.)",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "Metadata collection doubled as an orthogonal check on discovery outputs.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.3 Tool documentation",
+        "page": 14
+      },
+      "implements_designs": [
+        "RD016",
+        "RD010"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M030",
+      "method_text": "Slop re-assessment (March 2026): Claude Opus 4.6 assessed 88 of 89 documented entries using the Shaib et al. (2025) slop taxonomy, with overall severity summarised on a four-band scale of the authors' own design; assessment measured stylistic quality and information density, not factual accuracy, with self-preference bias acknowledged.",
+      "method_type": "analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "In March 2026, a newer Claude model (Opus 4.6) subsequently assessed 88 of the 89 documented entries (one was excluded by a configuration error) using the slop taxonomy proposed by Shaib et al. (2025), with overall severity summarised on a four-band scale of our own design (Shaib et al.'s protocol elicits a binary judgement).",
+      "location": {
+        "section": "Results",
+        "subsection": "4.3 Tool documentation",
+        "page": 15
+      },
+      "implements_designs": [
+        "RD014"
+      ],
+      "expected_information_missing": [
+        "The configuration error that excluded one entry is not described"
+      ],
+      "realized_through_protocols": [
+        "P019"
+      ],
+      "implemented_by_protocols": [
+        "P019"
+      ]
+    },
+    {
+      "method_id": "M031",
+      "method_text": "Evidence-of-life collection: gathering dated references, citations, releases, and mentions establishing a temporal footprint for each documented tool.",
+      "method_type": "data_collection",
+      "method_status": "explicit",
+      "verbatim_quote": "The final stage gathered 'evidence of life' for each documented tool: dated references, citations, releases, and mentions establishing a temporal footprint.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.4 Tool evidence collection",
+        "page": 15
+      },
+      "implements_designs": [
+        "RD021",
+        "RD013"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [
+        "P020",
+        "P021",
+        "P022"
+      ],
+      "implemented_by_protocols": [
+        "P020",
+        "P021",
+        "P022"
+      ]
+    },
+    {
+      "method_id": "M033",
+      "method_text": "Trial comparison and production selection for evidence collection: Claude (inappropriate tool fragmentation) and Gemini (snapshot-inflated counts) trialled against ChatGPT Deep Research, which was retained for production on aggregation, source-type classification, and yield.",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "In trial comparisons Claude fragmented individual tools inappropriately (e.g., FAIMS was split into four tools: FAIMS, FAIMS Mobile Platform, FAIMS 3.0, and Fieldmark), requiring manual reconciliation. Gemini inflated counts by treating successive web-archive snapshots as distinct evidence-events. ChatGPT Deep Research was used in production since it maintained appropriate aggregation, classified source types cleanly, and yielded the most evidence.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.4 Tool evidence collection",
+        "page": 16
+      },
+      "implements_designs": [
+        "RD015",
+        "RD026"
+      ],
+      "expected_information_missing": [
+        "Trial run counts and tool sets used for the comparison are given only in Supplement A"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M034",
+      "method_text": "Sampled spot-check of the agent's first run: four rows sampled from the 37-row findings table, checking author attributions, DOIs, and titles.",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "A spot-check of four rows sampled from the table found the author attributions wrong on three of them, while DOIs and titles were correct throughout.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.5.1 The failure: partial-grounding collapse",
+        "page": 17
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [
+        "Sampling procedure for the four rows is not described"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M035",
+      "method_text": "Two-guard mitigation architecture: once mature, mitigation consisted of two guards situated at different levels of the agent's architecture (workflow-level re-grounding and independent-context verification).",
+      "method_type": "quality_control",
+      "method_status": "explicit",
+      "verbatim_quote": "Like the 2025 prompts, the agent-based approach to literature survey evolved over several iterations. Once mature, our mitigation consisted of two guards situated at different levels of the agent's architecture (per Section 2.3).",
+      "location": {
+        "section": "Results",
+        "subsection": "4.5.2 The fix: two guards",
+        "page": 18
+      },
+      "implements_designs": [
+        "RD010",
+        "RD002"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [
+        "P023",
+        "P024",
+        "P025"
+      ],
+      "implemented_by_protocols": [
+        "P023",
+        "P024",
+        "P025"
+      ]
+    },
+    {
+      "method_id": "M036",
+      "method_text": "Operational deployment of the redesigned proposer-verifier pair: fifteen runs between April and June 2026, re-checking some 360 records in fresh context and against external sources.",
+      "method_type": "validation",
+      "method_status": "explicit",
+      "verbatim_quote": "The redesigned proposer–verifier pair ran fifteen times between April and June 2026, rechecking some 360 records in fresh context and against external sources.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.5.2 The fix: two guards",
+        "page": 18
+      },
+      "implements_designs": [
+        "RD017",
+        "RD016"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M037",
+      "method_text": "Build-fail-fix system-construction loop: build the tool, run it on a real task, manually observe and characterise the failure, design a scaffold around it, re-test — the persistent development experience across both episodes.",
+      "method_type": "analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "The experience of constructing systems also persisted: build the tool, run it on a real task, manually observe and characterise the failure, design a scaffold around it, re-test.",
+      "location": {
+        "section": "Discussion",
+        "subsection": "5.1 The persistence finding",
+        "page": 20
+      },
+      "implements_designs": [
+        "RD002",
+        "RD014"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M038",
+      "method_text": "Human-checkpoint allocation practice: considerable human judgement spent on early tool-documentation outputs (model choice, prompt refinement) before stepping back to spot-checks as quality improved, whereas every literature-search result was human-reviewed because errors persisted.",
+      "method_type": "quality_control",
+      "method_status": "explicit",
+      "verbatim_quote": "In our work, for example, considerable human judgement was spent on early tool documentation outputs (choosing a model and refining the prompt) before we stepped back to spot-checks as quality improved (Olofsson et al., 2014), whereas a human reviewed every literature search result since errors persisted (Sections 4.3 and 4.1).",
+      "location": {
+        "section": "Discussion",
+        "subsection": "5.2 Design principles (Stage-gated workflows)",
+        "page": 22
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [
+        "Criteria for 'quality improved' sufficient to step back to spot-checks are not stated"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M040",
+      "method_text": "Transparency provision: all outputs, specifications, and session transcripts provided (Supplement A) so readers can assess the paper's claims.",
+      "method_type": "quality_control",
+      "method_status": "explicit",
+      "verbatim_quote": "Provision of all outputs, specifications, and session transcripts (Supplement A) allows readers to assess our claims.",
+      "location": {
+        "section": "Discussion",
+        "subsection": "5.3 Limitations",
+        "page": 24
+      },
+      "implements_designs": [
+        "RD019"
+      ],
+      "expected_information_missing": [
+        "Repository location and persistent identifiers for the archived materials are not final in this pre-submission draft"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M041",
+      "method_text": "Reasoning-trace examination: model 'thinking' logs examined to diagnose failure mechanisms (e.g., Gemini's conflation of multiple complex tasks into single operations). Chat transcripts were likewise examined to identify failure triggers (e.g., the JOAD silent mode-switch).",
+      "method_type": "analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "Examination of its \"thinking\" logs revealed a tendency to conflate multiple complex tasks into single operations.",
+      "location": {
+        "section": "Supplement A",
+        "subsection": "A.1 The Gemini 'source soup' anecdote",
+        "page": 31
+      },
+      "implements_designs": [
+        "RD014"
+      ],
+      "expected_information_missing": [
+        "Which runs' traces were examined, and how systematically, is not stated"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": [],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "M043"
+        ],
+        "consolidation_type": "workflow_integration",
+        "information_preserved": "complete",
+        "rationale": "Reasoning-trace ('thinking' log) and chat-transcript examination are one failure-diagnosis analysis method applied across episodes (Gemini task conflation; JOAD silent mode-switch).",
+        "merged_sources": [
+          {
+            "id": "M043",
+            "verbatim_quote": "Examination of the chat transcript revealed the trigger: when prompted to continue from JOAD volumes 1–8 (which used research mode and returned legitimate articles) to volumes 9–16, ChatGPT Deep Research silently dropped out of research mode.",
+            "trigger_text": null,
+            "location": {
+              "section": "Supplement A",
+              "subsection": "A.2 The JOAD silent mode-switch",
+              "page": 34
+            }
+          }
+        ]
+      }
+    },
+    {
+      "method_id": "M042",
+      "method_text": "Error-classification taxonomy for discovery verification: outcomes classified as verified legitimate research software, misattributions (real software not meeting the supplied tool definition), confabulations (fabricated tools with no real-world counterpart), or granularity errors (a non-tool entity such as a project or consortium reported as a specific tool). Note: totals here (243 unique tools, 155 verified) are among the recorded pre-submission QA flags (supplement-vs-main-text offsets); extracted as stated.",
+      "method_type": "analysis",
+      "method_status": "explicit",
+      "verbatim_quote": "Across multiple discovery runs against the target journals, the systems identified 243 unique tools, of which 155 (63.8%) verified as legitimate research software; 53 (21.8%) were misattributions (real software that did not meet the definition of 'tool' provided to the model), 33 (13.6%) were confabulations (fabricated tools with no real-world counterpart), and 2 (0.8%) were granularity errors (a non-tool entity, such as a project or consortium, reported as a specific tool).",
+      "location": {
+        "section": "Supplement A",
+        "subsection": "A.2 Per-journal confabulation detail",
+        "page": 33
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [
+        "Classification procedure (who classified, adjudication of borderline cases) is not described"
+      ],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M046",
+      "method_text": "Cross-phase consistency checking: inconsistencies between phase outputs (tool discovery versus tool documentation) were discovered, triggering the exhaustive audit — implying a comparison method that is never described.",
+      "method_type": "quality_control",
+      "method_status": "implicit",
+      "trigger_text": [
+        "upon discovering inconsistencies between phase outputs (e.g., tool discovery versus tool documentation), we audited tool discovery and tool evidence outputs exhaustively"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "3.1 The 2025 phase",
+          "page": 7
+        }
+      ],
+      "inference_reasoning": "Discovering inconsistencies between phase outputs presupposes some procedure for comparing them (joining datasets, matching tool identities across stages), but no comparison procedure is documented anywhere in the paper.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "How phase outputs were compared and what counted as an inconsistency is not described",
+        "assessability_impact": "Cannot assess the sensitivity of the check that triggered the wave-2 audit",
+        "reconstruction_confidence": "medium"
+      },
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M047",
+      "method_text": "QA reclassification process (to March 2026): verification columns in Tables 4-5 were amended by 'QA reclassifications' after the Nov-Dec 2025 audit, implying a continuing quality-assurance review whose procedure is undocumented.",
+      "method_type": "quality_control",
+      "method_status": "implicit",
+      "trigger_text": [
+        "as amended by QA reclassifications to March 2026",
+        "verification columns reflect the Nov–Dec 2025 audit, as amended by QA reclassifications to March 2026"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Results",
+          "subsection": "4.2 Tool discovery (Table 4 caption)",
+          "page": 11
+        },
+        {
+          "section": "Results",
+          "subsection": "4.2 Tool discovery (Table 5 caption)",
+          "page": 12
+        }
+      ],
+      "inference_reasoning": "Both discovery-outcome tables state their verification columns were amended by QA reclassifications continuing to March 2026, implying a post-audit review process that changed classifications; neither the trigger for reclassification nor the procedure is described.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Reclassification criteria, count of changes, and reviewer are not documented",
+        "assessability_impact": "Cannot trace which reported numbers changed after the audit or why",
+        "reconstruction_confidence": "low"
+      },
+      "location": {
+        "section": "Results",
+        "subsection": "4.2 Tool discovery",
+        "page": 11
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M048",
+      "method_text": "Verified-outcome accounting: the campaign is summarised as yielding 'some two thousand discrete, verifiable outcomes', implying an accounting method for defining and tallying outcome units across heterogeneous stages.",
+      "method_type": "analysis",
+      "method_status": "implicit",
+      "trigger_text": [
+        "Across the stages this yielded some two thousand discrete, verifiable outcomes: a tool exists or does not, a reference resolves or does not, a stated year matches or does not."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "3.1 The 2025 phase",
+          "page": 8
+        }
+      ],
+      "inference_reasoning": "Reporting a cross-stage total of verifiable outcomes requires a unitisation and counting method (what counts as one outcome per stage, how overlaps are handled); the examples indicate the unit types but the accounting is not documented.",
+      "implicit_metadata": {
+        "basis": "inferred_from_results",
+        "transparency_gap": "Outcome unitisation and the composition of the ~2,000 figure are not itemised",
+        "assessability_impact": "The headline verification scale cannot be decomposed or recomputed by a reader from the main text alone",
+        "reconstruction_confidence": "medium"
+      },
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 8
+      },
+      "implements_designs": [
+        "RD016"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M049",
+      "method_text": "Literature inclusion criteria and academic-seriousness thresholds: source validity judgements ('sources meeting inclusion criteria', 'academic seriousness thresholds') are applied throughout the literature-discovery evaluation without the criteria being specified.",
+      "method_type": "analysis",
+      "method_status": "implicit",
+      "trigger_text": [
+        "Valid: sources meeting inclusion criteria.",
+        "all met academic seriousness thresholds, with no lightweight or non-academic content requiring exclusion",
+        "5 web pages failed to meet academic seriousness thresholds"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Results",
+          "subsection": "4.1 (Table 2 caption)",
+          "page": 10
+        },
+        {
+          "section": "Supplement A",
+          "subsection": "A.1 Per-tool source-type composition",
+          "page": 30
+        },
+        {
+          "section": "Supplement A",
+          "subsection": "A.1 Per-tool source-type composition",
+          "page": 31
+        }
+      ],
+      "inference_reasoning": "Valid/invalid classification of every discovered source depends on inclusion criteria and 'academic seriousness thresholds' that are referenced repeatedly but never defined; the classification method must exist for the reported error tables to have been produced.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Inclusion criteria and seriousness thresholds are not enumerated",
+        "assessability_impact": "Error rates by service cannot be independently reproduced from stated criteria",
+        "reconstruction_confidence": "medium"
+      },
+      "location": {
+        "section": "Results",
+        "subsection": "4.1 Literature discovery and synthesis",
+        "page": 10
+      },
+      "implements_designs": [
+        "RD024"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M050",
+      "method_text": "Co-author validation procedure: validation between co-authors is stated as a reflexivity mitigation, but the procedure (what was validated, how disagreements were resolved) is undocumented.",
+      "method_type": "quality_control",
+      "method_status": "implicit",
+      "trigger_text": [
+        "We mitigated this through validation between co-authors and especially by anchoring every empirical claim to a logged artefact (session transcripts, git history, output spreadsheets)."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "3.3 Reflexivity",
+          "page": 8
+        }
+      ],
+      "inference_reasoning": "Co-author validation is named as one of two mitigations for LLM affirmation risk, implying a review process between authors; no procedure, scope, or disagreement-resolution mechanism is described.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Validation scope and procedure between co-authors are unspecified",
+        "assessability_impact": "The strength of this mitigation cannot be assessed",
+        "reconstruction_confidence": "low"
+      },
+      "location": {
+        "section": "Methods",
+        "subsection": "3.3 Reflexivity",
+        "page": 8
+      },
+      "implements_designs": [
+        "RD019"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    },
+    {
+      "method_id": "M051",
+      "method_text": "Run-type classification and error-rate computation: runs are classified as exploratory, main production, and final targeted, with error rates computed per class ('about half', 'about a third', 'single digits'), but the classification and computation method is undocumented.",
+      "method_type": "analysis",
+      "method_status": "implicit",
+      "trigger_text": [
+        "Overall, exploratory runs produced errors about half the time, main production runs with structured prompts about a third, and final, targeted runs drove error rates into the single digits."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Results",
+          "subsection": "4.2 Tool discovery",
+          "page": 13
+        }
+      ],
+      "inference_reasoning": "Per-class error rates presuppose that runs were classified into exploratory/production/targeted categories and that errors were tallied per class; neither the class assignment rules nor the denominators are given.",
+      "implicit_metadata": {
+        "basis": "inferred_from_results",
+        "transparency_gap": "Run classification rules and per-class denominators are not reported",
+        "assessability_impact": "The improvement trajectory across run types cannot be recomputed",
+        "reconstruction_confidence": "medium"
+      },
+      "location": {
+        "section": "Results",
+        "subsection": "4.2 Tool discovery",
+        "page": 13
+      },
+      "implements_designs": [
+        "RD014"
+      ],
+      "expected_information_missing": [],
+      "realized_through_protocols": [],
+      "implemented_by_protocols": []
+    }
+  ],
+  "protocols": [
+    {
+      "protocol_id": "P001",
+      "protocol_text": "Decomposition protocol: compound prompts decomposed into tightly scoped tasks (e.g., separating tool discovery from documentation and evidence collection); limited iterations per prompt (up to five journal issues; a single tool's metadata); each task undertaken in a new chat with fresh context. In production this meant tool documentation proceeded tool by tool, one CSV row at a time, and tool discovery examined journal issues in small blocks.",
+      "protocol_type": "task_structuring",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Compound prompts were decomposed into tightly scoped tasks (e.g., separating tool discovery from documentation and evidence collection), limited iterations of a task were undertaken per prompt (examine up to five issues of a journal; find metadata about a single tool), and each task was undertaken in a new chat with fresh context.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_methods": [
+        "M009"
+      ],
+      "expected_information_missing": [],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P026"
+        ],
+        "consolidation_type": "parameter_integration",
+        "information_preserved": "complete",
+        "rationale": "Discussion 5.2 supplies the production granularity of the same decomposition protocol (tool by tool, one CSV row at a time; journal issues in small blocks).",
+        "merged_sources": [
+          {
+            "id": "P026",
+            "verbatim_quote": "Our tool documentation was most reliable when it proceeded tool by tool, one CSV row at a time, and tool discovery when it examined journal issues in small blocks (Sections 3.1, 4.2, and 4.3).",
+            "trigger_text": null,
+            "location": {
+              "section": "Discussion",
+              "subsection": "5.2 Design principles (Independence of context)",
+              "page": 20
+            }
+          }
+        ]
+      }
+    },
+    {
+      "protocol_id": "P002",
+      "protocol_text": "Templating protocol: output template specifying quoted CSV inside a fenced code block, named column schemas, controlled vocabularies, date formats, row-granularity rules, and a self-check of column counts against the header row.",
+      "protocol_type": "output_constraint",
+      "protocol_status": "explicit",
+      "verbatim_quote": "An output template specified quoted CSV inside a fenced code block, with named column schemas and controlled vocabularies, date formats, and row-granularity rules, plus a self-check of column counts against the header row.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_methods": [
+        "M009"
+      ],
+      "expected_information_missing": [
+        "The controlled vocabularies themselves are not reproduced in the Methods section"
+      ]
+    },
+    {
+      "protocol_id": "P003",
+      "protocol_text": "Guardrails protocol: prompt constraints prohibiting conjecture, extrapolation, and synthesis; unsuppressible tendencies redirected into dedicated fields (tool-history, technical-implementation, AI-notes/AI-tags); plus a tool definition with inclusion-exclusion rubric, source-quality hierarchy, readback confirmation, thoroughness-over-speed directive, and an explicit uncertainty field.",
+      "protocol_type": "output_constraint",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Constraints built into the prompt prohibited conjecture, extrapolation, and synthesis, while tendencies that could not be suppressed were redirected into dedicated fields. Asked for a snapshot of the current state, for example, models would often provide a history instead; a tool-history field 'domesticated' this tendency, with a technical-implementation field and AI-notes/AI-tags fields playing similar roles for implementation detail and commentary. Quality was further encouraged by providing a tool definition with an inclusion-exclusion rubric, a source-quality hierarchy, a readback confirmation of the task, a thoroughness-over-speed directive, and an explicit uncertainty field.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_methods": [
+        "M009"
+      ],
+      "expected_information_missing": [
+        "The inclusion-exclusion rubric and source-quality hierarchy contents are not reproduced in Methods (prompt lineage in Supplement A.3)"
+      ]
+    },
+    {
+      "protocol_id": "P004",
+      "protocol_text": "Discovery-event verification protocol (Nov-Dec 2025 audit): every discovery event manually reviewed against three criteria — tool exists, tool is mentioned in source, tool definition met.",
+      "protocol_type": "verification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Every discovery event was manually reviewed under a verification protocol (tool exists, tool is mentioned in source, tool definition met).",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_methods": [
+        "M011"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P005",
+      "protocol_text": "LLM-based confabulation-check protocol: where a confabulation was suspected, tool existence checked against the cited links, GitHub, GitLab, CRAN, PyPI, and a general web search, with an evidence report indicating which sources were checked and the outcome. (The sentence spans the p7/p8 page break; the quote is clipped at the break — it completes 'and the outcome' on p. 8.)",
+      "protocol_type": "verification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "If a confabulation was suspected, we implemented an additional LLM-based verification, where the existence of the tool was checked against the cited links, GitHub, GitLab, CRAN, PyPI, and a general web search, with an evidence report indicating which sources were checked",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_methods": [
+        "M011"
+      ],
+      "expected_information_missing": [
+        "Prompt used for the LLM-based verification is not reproduced"
+      ]
+    },
+    {
+      "protocol_id": "P006",
+      "protocol_text": "Evidence-event three-point verification workflow: for each evidence event, check that the source exists, that it mentions the tool, and that the stated year matches. All 1,040 events were reviewed by hand and with LLM assistance, reconciling results with the discovery and metadata outcomes.",
+      "protocol_type": "verification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Since the scale of evidence-events was greater and no ready-made external source equivalent to open-archaeo was available, evidence-events were LLM-reviewed against a documented three-point workflow (the source exists; it mentions the tool; the stated year matches).",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 8
+      },
+      "implements_methods": [
+        "M012"
+      ],
+      "expected_information_missing": [
+        "Division of labour between hand review and LLM assistance is not quantified"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P035"
+        ],
+        "consolidation_type": "workflow_integration",
+        "information_preserved": "complete",
+        "rationale": "Supplement A.5 details the execution of the same three-point evidence review (by hand and with LLM assistance, reconciled with discovery and metadata outcomes); single protocol, multi-location.",
+        "merged_sources": [
+          {
+            "id": "P035",
+            "verbatim_quote": "All 1,040 evidence events were reviewed, by hand and with LLM assistance. For each event we checked whether the cited source existed, whether it mentioned the correct tool, and whether the stated year matched the source's publication date, reconciling results with the discovery and metadata outcomes.",
+            "trigger_text": null,
+            "location": {
+              "section": "Supplement A",
+              "subsection": "A.5 Full evidence-collection error catalogue",
+              "page": 38
+            }
+          }
+        ]
+      }
+    },
+    {
+      "protocol_id": "P007",
+      "protocol_text": "Zotero disposition-tagging protocol: each verified bibliographic item's disposition recorded as a tag in a shared Zotero library.",
+      "protocol_type": "recording",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The literature search received stricter treatment due to persistent errors: we undertook a manual, item-by-item verification of every AI-supplied bibliographic reference and tagged each item's disposition in a shared Zotero library, never falling back to spot-checks.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_methods": [
+        "M008"
+      ],
+      "expected_information_missing": [
+        "Disposition tag vocabulary is not enumerated"
+      ]
+    },
+    {
+      "protocol_id": "P008",
+      "protocol_text": "Driver skill protocol: a reusable skill definition executed outside both agents' context windows dispatches proposer then verifier in turn, shuttling corrections from verifier to proposer and iterating in a loop until outputs pass.",
+      "protocol_type": "workflow_orchestration",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The workflow comprises a proposer that drafts the discovery report, a verifier that audits it, and a driver: a reusable skill definition, executed outside both agents' context windows, that dispatches each agent in turn and shuttles corrections from verifier to proposer as needed to iterate in a loop until the outputs pass.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.2 The 2026 phase",
+        "page": 8
+      },
+      "implements_methods": [
+        "M015"
+      ],
+      "expected_information_missing": [
+        "Pass/fail criteria for loop termination are not specified in the Methods section"
+      ]
+    },
+    {
+      "protocol_id": "P009",
+      "protocol_text": "Proposer agent protocol: discovery decomposed into phases (seed searches across multiple indices, then backward and forward citation chaining); output templated as a named-column table plus a machine-readable claims block of granular verifiable assertions; guardrails prohibit generation from memory — every author, year, title, and citation count must come from a registry response; unverifiable attributions flagged; draft carries an explicit verification-pending marker.",
+      "protocol_type": "agent_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The proposer agent decomposes discovery into phases (seed searches across multiple indices, then backward and forward citation chaining). Its output is templated as a table with named columns plus a machine-readable claims block that decomposes the table into granular, verifiable assertions. Its guardrails prohibit generation from memory: every author, year, title, and citation count must come from a registry response. Unverifiable attributions are flagged, and the draft carries an explicit \"verification-pending\" marker.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.2 The 2026 phase",
+        "page": 8
+      },
+      "implements_methods": [
+        "M015"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P010",
+      "protocol_text": "Verifier agent protocol: invoked in a fresh context window; re-queries every DOI against the same registry APIs, compares each claimed field, and emits an audit trail of corrections (original table, verification summary, corrected table).",
+      "protocol_type": "verification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "A verifier agent is then invoked in a fresh context window; this verifier re-queries every digital object identifier (DOI) against the same registry APIs, compares each claimed field, and emits an audit trail of corrections (original table, verification summary, corrected table).",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.2 The 2026 phase",
+        "page": 8
+      },
+      "implements_methods": [
+        "M015"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P011",
+      "protocol_text": "lit-search.py helper-script specification: a tested script wrapping the CrossRef, Semantic Scholar, and OpenAlex APIs, supplying registry grounding to the agent.",
+      "protocol_type": "software_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Instead of prompts pasted into a web interface, the instrument was now a declaratively defined agent, paired with a tested helper script (lit-search.py) wrapping the application programming interfaces (APIs) of three bibliographic registries (CrossRef, Semantic Scholar, and OpenAlex) to ground its output.",
+      "location": {
+        "section": "Methods",
+        "subsection": "3.2 The 2026 phase",
+        "page": 8
+      },
+      "implements_methods": [
+        "M014"
+      ],
+      "expected_information_missing": [
+        "Script version, query parameters, and how it was 'tested' are not documented"
+      ]
+    },
+    {
+      "protocol_id": "P012",
+      "protocol_text": "Early JOSS open-search prompt (superseded): a meta-prompting-developed prompt proposing an open search ('find archaeology software') against a broad-coverage journal; the model browsed by tag, drifted out of scope, and confabulated.",
+      "protocol_type": "prompt_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The early JOSS prompt, developed largely through meta-prompting, proposed an open search (\"find archaeology software\") against a journal with broad coverage: the model browsed by tag, drifted out of scope and, finding few genuine archaeology hits, confabulated.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.2 Tool discovery",
+        "page": 12
+      },
+      "implements_methods": [
+        "M022"
+      ],
+      "expected_information_missing": [
+        "Full prompt text is not reproduced in the main body (lineage in Supplement A)"
+      ]
+    },
+    {
+      "protocol_id": "P013",
+      "protocol_text": "Revised JOSS enumeration-and-extraction prompt: bounded issue coverage, article-by-article extraction against the tool definition, output constrained by a fixed schema — the manually written replacement for the open search.",
+      "protocol_type": "prompt_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The manually written fix replaced the open search with the enumeration-and-extraction scaffolding described in Section 3.1: bounded issue coverage, article-by-article extraction against the tool definition, output constrained by a fixed schema.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.2 Tool discovery",
+        "page": 12
+      },
+      "implements_methods": [
+        "M022",
+        "M009"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P014",
+      "protocol_text": "Process-monitoring challenge and re-run protocol: on noticing the missing harness (Deep Research) indicator, the researcher re-ran the prompt in the same context appended with a challenge ('your prior response wasn't deep research'); routine fresh-context prompting was introduced a few days after this incident.",
+      "protocol_type": "verification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Only process monitoring caught it: one of us noticed the missing harness indicator and re-ran the prompt (in the same context appended with \"your prior response wasn't deep research\"; routine prompting in fresh context wasn't introduced until a few days after this incident).",
+      "location": {
+        "section": "Results",
+        "subsection": "4.2 Tool discovery",
+        "page": 13
+      },
+      "implements_methods": [
+        "M023"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P015",
+      "protocol_text": "Metadata prompt eight-iteration evolution: from five prose fields rendered as CSV to a thirty-four-field schema, each elaboration fixing a documented failure or absence in the previous run. Field detail (A.3): the original five prose fields (description, history, technical discussion, strengths, weaknesses) were joined by further prose fields (interoperability, survivability, alternatives, usage indicators) and structured metadata (URLs, repository locations, licence, language, platform, authors, release dates, development status, institutional backing); the prompt grew from ~120 to ~310 lines before streamlining to ~250.",
+      "protocol_type": "prompt_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The metadata prompt began as five prose fields rendered as commaseparated values and grew, over eight iterations, into a thirty-four-field schema, each elaboration fixing a documented failure or absence in the previous run.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.3 Tool documentation",
+        "page": 13
+      },
+      "implements_methods": [
+        "M025",
+        "M009"
+      ],
+      "expected_information_missing": [
+        "Per-iteration change log is summarised only in Supplement A.3"
+      ],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P030"
+        ],
+        "consolidation_type": "parameter_integration",
+        "information_preserved": "complete",
+        "rationale": "Supplement A.3 enumerates the field-level content of the same eight-iteration metadata prompt lineage; single instrument specification.",
+        "merged_sources": [
+          {
+            "id": "P030",
+            "verbatim_quote": "The initial metadata prompt requested five prose fields per tool (description, history, technical discussion, strengths, and weaknesses) formatted as CSV output. Over eight iterations, the schema expanded to 34 data fields: the original five were joined by additional prose fields (interoperability, survivability, alternatives, usage indicators) and structured metadata (URLs, repository locations, licence, language, platform, authors, release dates, development status, and institutional backing).",
+            "trigger_text": null,
+            "location": {
+              "section": "Supplement A",
+              "subsection": "A.3 The eight-version metadata prompt",
+              "page": 35
+            }
+          }
+        ]
+      }
+    },
+    {
+      "protocol_id": "P016",
+      "protocol_text": "History-field domestication: when Claude persisted in supplying version histories despite requests for a current snapshot only, a structured history field was added to the schema.",
+      "protocol_type": "prompt_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Sometimes that meant 'domesticating' an initially unwanted tendency. When Claude, for example, was asked to provide only a current snapshot of each tool but persisted in supplying version histories, we added a structured history field.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.3 Tool documentation",
+        "page": 13
+      },
+      "implements_methods": [
+        "M027"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P017",
+      "protocol_text": "Codification of spontaneous additions: when the model unprompted noted that a tool's closed, proprietary design undermined reproducibility, instructions were added to capture 'transparency and reproducibility' consistently.",
+      "protocol_type": "prompt_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Sometimes it meant codifying a useful addition spontaneously produced by the model. When the model noted in a 'weaknesses' field that one tool's closed, proprietary design undermined reproducibility, we added instructions to capture 'transparency and reproducibility' consistently.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.3 Tool documentation",
+        "page": 13
+      },
+      "implements_methods": [
+        "M027"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P018",
+      "protocol_text": "CSV follow-up workaround: the production model emitted narrative reports on first response; comma-separated output was obtained via a follow-up 'please provide the requested CSV' prompt in each session.",
+      "protocol_type": "operational_workaround",
+      "protocol_status": "explicit",
+      "verbatim_quote": "It was retained for production runs, despite one intractable annoyance: it produced narrative reports only on first response, emitting comma-separated output only after a follow-up \"please provide the requested CSV\" prompt.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.3 Tool documentation",
+        "page": 14
+      },
+      "implements_methods": [
+        "M025"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P019",
+      "protocol_text": "Slop-assessment operationalisation: seven-code taxonomy from Shaib et al. (2025); four overall assessment bands (none/minimal/moderate/significant) as the authors' operationalisation, with thresholds on generic-phrase count and anchored-claim density; anchored claims defined as verifiable factual statements.",
+      "protocol_type": "assessment_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Assessed using the seven-code taxonomy from Shaib et al. (2025); the four overall assessment bands (none/minimal/moderate/significant) are our operationalisation, with thresholds on genericphrase count and anchored-claim density, where Shaib et al. elicit a binary judgement. Anchored claims are verifiable factual statements (named individuals, specific dates, version numbers, funding codes).",
+      "location": {
+        "section": "Results",
+        "subsection": "4.3 Tool documentation (Table 8 caption)",
+        "page": 15
+      },
+      "implements_methods": [
+        "M030"
+      ],
+      "expected_information_missing": [
+        "Numeric threshold values for the four bands are not stated"
+      ]
+    },
+    {
+      "protocol_id": "P020",
+      "protocol_text": "Conservative evidence prompt: prohibited synthesis, required the model to report only what a source explicitly stated (leaving assessment to the researchers), and articulated a precision-over-recall guardrail ('if there is any doubt, there is no doubt').",
+      "protocol_type": "prompt_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Outputs were constrained by a conservative prompt that prohibited synthesis, required the model to report only what a source explicitly stated (leaving assessment to the researchers), and articulated a guardrail that traded recall for precision (\"if there is any doubt, there is no doubt\", from the film Ronin, Frankenheimer, 1998).",
+      "location": {
+        "section": "Results",
+        "subsection": "4.4 Tool evidence collection",
+        "page": 15
+      },
+      "implements_methods": [
+        "M031"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P021",
+      "protocol_text": "Superseded aggregate-metrics evidence prompt: early iterations asked the model to compute aggregate metrics and emit one synthesised row per tool; consistently failed with refusals or confabulations. Version 1 specified a 15-column synthesis format requiring aggregate metrics (commit counts, contributor numbers, release tags) and one row per tool.",
+      "protocol_type": "prompt_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Early iterations of the prompt asked the model to compute aggregate metrics and emit one synthesised row per tool, but they consistently failed (with refusals or confabulations).",
+      "location": {
+        "section": "Results",
+        "subsection": "4.4 Tool evidence collection",
+        "page": 15
+      },
+      "implements_methods": [
+        "M031",
+        "M009"
+      ],
+      "expected_information_missing": [],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P033"
+        ],
+        "consolidation_type": "parameter_integration",
+        "information_preserved": "complete",
+        "rationale": "Supplement A.3's evidence prompt v1 (15-column synthesis format with aggregate metrics) is the same superseded protocol as Results 4.4's early iterations.",
+        "merged_sources": [
+          {
+            "id": "P033",
+            "verbatim_quote": "Version 1 specified a complex 15-column synthesis format that required the model to calculate aggregate metrics (commit counts, contributor numbers, release tags) and produce a single row per tool. This approach consistently failed: models either refused the task or produced heavily confabulated synthesis.",
+            "trigger_text": null,
+            "location": {
+              "section": "Supplement A",
+              "subsection": "A.3 The fifteen-column to five-column evidence prompt",
+              "page": 36
+            }
+          }
+        ]
+      }
+    },
+    {
+      "protocol_id": "P022",
+      "protocol_text": "One-row-per-sighting evidence schema: refined prompt recording each piece of evidence individually, decomposing the task and narrowing the model's remit. Version 5 reduced output to 5 columns (Tool, Year, Source, URL, AI_Notes) with one row per source and an explicit prohibition of synthesis.",
+      "protocol_type": "prompt_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Later, we refined the prompt into a well-specified, one-row-per-sighting schema that recorded each piece of evidence individually. Decomposing the task and narrowing the model's remit produced consistent output.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.4 Tool evidence collection",
+        "page": 15
+      },
+      "implements_methods": [
+        "M031",
+        "M009"
+      ],
+      "expected_information_missing": [],
+      "consolidation_metadata": {
+        "consolidated_from": [
+          "P034"
+        ],
+        "consolidation_type": "parameter_integration",
+        "information_preserved": "complete",
+        "rationale": "Supplement A.3's evidence prompt v5 (5 columns, one row per source, synthesis prohibited) is the same one-row-per-sighting schema as Results 4.4.",
+        "merged_sources": [
+          {
+            "id": "P034",
+            "verbatim_quote": "Version 5 inverted the approach, reducing output to 5 columns (Tool, Year, Source, URL, AI_Notes) with one row per source and an explicit prohibition of synthesis.",
+            "trigger_text": null,
+            "location": {
+              "section": "Supplement A",
+              "subsection": "A.3 The fifteen-column to five-column evidence prompt",
+              "page": 36
+            }
+          }
+        ]
+      }
+    },
+    {
+      "protocol_id": "P023",
+      "protocol_text": "Guard A — workflow-level re-grounding: before drafting any narrative column, the proposer agent must re-ground outputs by running a metadata query on every candidate and use the results to populate key fields, with no synthesis from memory; a required retrieval step rather than an exhortation.",
+      "protocol_type": "verification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The first, Guard A, is an explicit workflow-level discipline incorporated into the proposer agent. Before drafting any narrative column, the agent must re-ground outputs by running a metadata query on every candidate and use the results to populate key fields, with no synthesis from memory.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.5.2 The fix: two guards",
+        "page": 18
+      },
+      "implements_methods": [
+        "M035"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P024",
+      "protocol_text": "Guard B — independent-context adversarial verifier: a separate agent whose only input is the drafted report, re-querying metadata from source in a context that cannot see the proposer's reasoning; it verifies anew from evidence rather than assessing whether the proposer's claims look correct.",
+      "protocol_type": "verification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The second, Guard B, is an independent-context adversarial verifier: a separate agent whose only input is the drafted report, which re-queries the metadata from source in a context that cannot see the proposer's reasoning. It verifies anew from evidence rather than assessing whether the proposer's claims look correct.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.5.2 The fix: two guards",
+        "page": 18
+      },
+      "implements_methods": [
+        "M035"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P025",
+      "protocol_text": "Multi-source independence check: for claims where sources of independent provenance exist, the verifier's check terminates in more than one source, so an error carried by a single registry cannot confirm itself (e.g., a registry author- order error corrected by querying the arXiv preprint directly).",
+      "protocol_type": "verification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "For claims where sources of independent provenance exist, the check terminates in more than one, so that an error carried by a single registry cannot confirm itself.",
+      "location": {
+        "section": "Results",
+        "subsection": "4.5.2 The fix: two guards",
+        "page": 18
+      },
+      "implements_methods": [
+        "M035"
+      ],
+      "expected_information_missing": [
+        "Which claim types have multi-source coverage is not enumerated"
+      ]
+    },
+    {
+      "protocol_id": "P027",
+      "protocol_text": "Lit-discovery prompt revision: an initial standard prompt produced unusable output; a revised prompt emphasising scholarly sources yielded the documented results (ChatGPT Deep Research required two prompting attempts).",
+      "protocol_type": "prompt_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "It required two prompting attempts: an initial standard prompt produced unusable output, while a revised prompt emphasising scholarly sources yielded the documented results.",
+      "location": {
+        "section": "Supplement A",
+        "subsection": "A.1 Per-tool source-type composition and citation accuracy",
+        "page": 30
+      },
+      "implements_methods": [
+        "M009"
+      ],
+      "expected_information_missing": [
+        "Neither prompt's text is reproduced"
+      ]
+    },
+    {
+      "protocol_id": "P028",
+      "protocol_text": "Identical-prompt comparison: the same prompts run across services to compare yield (e.g., Elicit's 9 useful sources against 55 from Deep Research from identical prompts).",
+      "protocol_type": "comparison_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "From identical prompts, Elicit yielded only 9 useful sources against 55 from Deep Research.",
+      "location": {
+        "section": "Supplement A",
+        "subsection": "A.1 Per-tool source-type composition and citation accuracy",
+        "page": 31
+      },
+      "implements_methods": [
+        "M018"
+      ],
+      "expected_information_missing": [
+        "Which prompt variants were standardised across services is not documented"
+      ]
+    },
+    {
+      "protocol_id": "P029",
+      "protocol_text": "o3-mini-high verification instruction protocol: complete run output supplied as CSV input with explicit instructions — 'Do not search for articles. Use the CSV I gave you. My intention is for you to read each article as linked.'",
+      "protocol_type": "verification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "Suspicious of the JOSS output, the researcher tasked o3-mini-high with verifying Deep Research's results, supplying the complete run output as a CSV input with explicit instructions: \"Do not search for articles. Use the CSV I gave you. My intention is for you to read each article as linked.\"",
+      "location": {
+        "section": "Supplement A",
+        "subsection": "A.2 The o3-mini-high verification pass",
+        "page": 34
+      },
+      "implements_methods": [
+        "M024"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P031",
+      "protocol_text": "Prompt-register evolution: emphatic epistemic ground rules of the February evidence prompts ('ABOVE ALL ELSE... If there is any doubt, there is no doubt'), copied into early metadata versions, were dropped from the metadata lineage by version 8 (replaced by controlled vocabularies and validation checks) while the evidence lineage retained its guardrail deliberately as precision-over-recall calibration.",
+      "protocol_type": "prompt_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "The register evolved with the structure: the emphatic epistemic ground rules of the February evidence prompts (\"ABOVE ALL ELSE. . . If there is any doubt, there is no doubt\"), copied into early metadata versions, had been dropped from the metadata lineage by version 8, their work taken over by controlled vocabularies and validation checks — while the evidence lineage retained its guardrail deliberately, as the precision-over-recall calibration described below.",
+      "location": {
+        "section": "Supplement A",
+        "subsection": "A.3 Prompt evolution histories",
+        "page": 35
+      },
+      "implements_methods": [
+        "M009"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P032",
+      "protocol_text": "Domestication schema adjustments: loosening the model's overly binary classification (adding a 'maybe' category for human review), broadening a discipline-specific definition after cross-domain tools were misclassified, and separating current from historical information after the model conflated the two.",
+      "protocol_type": "prompt_specification",
+      "protocol_status": "explicit",
+      "verbatim_quote": "This domestication also involved loosening the model's overly binary classification (adding a \"maybe\" category for human review), broadening a discipline-specific definition after cross-domain tools were misclassified, and separating current from historical information after the model conflated the two.",
+      "location": {
+        "section": "Supplement A",
+        "subsection": "A.3 Domestication examples",
+        "page": 36
+      },
+      "implements_methods": [
+        "M010",
+        "M027"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P036",
+      "protocol_text": "Unverifiable-category classification rule: events whose sources could not be accessed are recorded as a distinct category — asserted neither confirmed nor confabulated — because verification could not be completed.",
+      "protocol_type": "classification_rule",
+      "protocol_status": "explicit",
+      "verbatim_quote": "These are not asserted to be either confirmed or confabulated; they are recorded as a distinct category precisely because the verification could not be completed.",
+      "location": {
+        "section": "Supplement A",
+        "subsection": "A.5 The 22 unverifiable events",
+        "page": 38
+      },
+      "implements_methods": [
+        "M012"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P037",
+      "protocol_text": "Informal spot-check procedure: spot-checks are the stated fallback verification across stages ('informal spot-checks', 'informal manual spot-checks were performed'), but sample sizes, frequency, and selection criteria are undocumented (the single documented instance is the 2026 four-row spot-check).",
+      "protocol_type": "verification",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "and then we switched to informal spot-checks",
+        "In all cases informal manual spot-checks were performed."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "3.1 The 2025 phase",
+          "page": 7
+        },
+        {
+          "section": "Methods",
+          "subsection": "3.1 The 2025 phase",
+          "page": 8
+        }
+      ],
+      "inference_reasoning": "Spot-checking is repeatedly invoked as a verification mechanism but no procedure (sampling rate, selection, escalation on failure) is documented for the 2025 campaign; the practice must have had some operational form to be 'performed' in all cases.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Spot-check sampling rates, selection method, and escalation rules are unspecified",
+        "assessability_impact": "Cannot assess residual error risk in stages verified only by spot-checks",
+        "reconstruction_confidence": "low"
+      },
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_methods": [
+        "M006",
+        "M012"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P038",
+      "protocol_text": "Session-transcript bulk-export procedure: transcripts were bulk-exported 'where possible', with known gaps for some services; the export mechanism, tooling, and the conditions determining possibility are undocumented.",
+      "protocol_type": "recording",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "Later, we bulk-exported session transcripts where possible to create a more comprehensive record (see Supplement A).",
+        "for Perplexity, Elicit, and most Gemini runs, tabulated results survive but not conversation transcripts"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "3.1 The 2025 phase",
+          "page": 7
+        },
+        {
+          "section": "Methods",
+          "subsection": "3.3 Reflexivity",
+          "page": 8
+        }
+      ],
+      "inference_reasoning": "Bulk export happened and produced the archived record with service-specific gaps, implying a per-service export procedure whose mechanism and coverage rules are not documented.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Export tooling and why some services could not be exported are unspecified",
+        "assessability_impact": "Archive completeness per service cannot be predicted from the described procedure",
+        "reconstruction_confidence": "medium"
+      },
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 7
+      },
+      "implements_methods": [
+        "M004"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P039",
+      "protocol_text": "Run-outcome logging schema: run outcomes were logged in spreadsheets and notes at execution time (the sentence spans the p6/p7 break; first trigger clipped at the break), but the spreadsheet structure, fields, and logging conventions are undocumented.",
+      "protocol_type": "recording",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "Run outcomes were logged in spreadsheets and",
+        "anchoring every empirical claim to a logged artefact (session transcripts, git history, output spreadsheets)"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "3.1 The 2025 phase",
+          "page": 6
+        },
+        {
+          "section": "Methods",
+          "subsection": "3.3 Reflexivity",
+          "page": 8
+        }
+      ],
+      "inference_reasoning": "Contemporaneous spreadsheet logging is the evidentiary backbone for run outcomes, and output spreadsheets are named as anchoring artefacts, implying a logging schema; its fields and conventions are never described.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Spreadsheet fields, granularity, and update discipline are unspecified",
+        "assessability_impact": "A reader cannot judge what was captured at execution time versus reconstructed later",
+        "reconstruction_confidence": "low"
+      },
+      "location": {
+        "section": "Methods",
+        "subsection": "3.1 The 2025 phase",
+        "page": 6
+      },
+      "implements_methods": [
+        "M003"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P040",
+      "protocol_text": "Journal issue/volume coverage allocation: discovery prompts bounded issue coverage (up to five issues per prompt; JOAD volumes 1-8 then 9-16), implying a coverage plan allocating volumes/issues per journal; the overall allocation and completeness of coverage per journal is undocumented.",
+      "protocol_type": "task_structuring",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "examine up to five issues of a journal",
+        "when prompted to continue from JOAD volumes 1–8 (which used research mode and returned legitimate articles) to volumes 9–16",
+        "bounded issue coverage"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "3.1 The 2025 phase",
+          "page": 7
+        },
+        {
+          "section": "Supplement A",
+          "subsection": "A.2 The JOAD silent mode-switch",
+          "page": 34
+        },
+        {
+          "section": "Results",
+          "subsection": "4.2 Tool discovery",
+          "page": 12
+        }
+      ],
+      "inference_reasoning": "Batched issue examination and volume-range continuation prompts imply a coverage allocation across each journal's run history; whether every volume of every journal was covered, and in what order, is not documented.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Per-journal volume/issue coverage and completeness are not reported",
+        "assessability_impact": "Discovery yield per journal cannot be normalised against corpus coverage",
+        "reconstruction_confidence": "medium"
+      },
+      "location": {
+        "section": "Results",
+        "subsection": "4.2 Tool discovery",
+        "page": 12
+      },
+      "implements_methods": [
+        "M022"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P041",
+      "protocol_text": "Verifier field-check rubric: the 2026 verifier compares 'each claimed field', and one documented miss was 'an author error the check was not yet looking for', implying an evolving rubric enumerating which fields and error types are checked; the rubric's contents and versions are undocumented in the paper body.",
+      "protocol_type": "verification",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "compares each claimed field",
+        "Its two documented misses were one of scope (a verified claim corrupted by the step that wrote it to the bibliography) and one of rubric (an author error the check was not yet looking for)."
+      ],
+      "trigger_locations": [
+        {
+          "section": "Methods",
+          "subsection": "3.2 The 2026 phase",
+          "page": 8
+        },
+        {
+          "section": "Results",
+          "subsection": "4.5.2 The fix: two guards",
+          "page": 18
+        }
+      ],
+      "inference_reasoning": "A miss attributed to 'rubric' entails a defined check-list of fields/error types the verifier inspects, which changed over time as misses were closed by structural fixes; the rubric itself is not reproduced.",
+      "implicit_metadata": {
+        "basis": "inferred_from_results",
+        "transparency_gap": "The verifier's field/error rubric and its version history are not documented in the body",
+        "assessability_impact": "Coverage of the automated verification cannot be enumerated by a reader",
+        "reconstruction_confidence": "medium"
+      },
+      "location": {
+        "section": "Results",
+        "subsection": "4.5.2 The fix: two guards",
+        "page": 18
+      },
+      "implements_methods": [
+        "M015"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P042",
+      "protocol_text": "Manual bibliographic-correction procedure: roughly two-thirds of valid AI-discovered sources needed manual correction of URLs, DOIs, or author information, implying a correction workflow (rediscovery, canonical-source lookup) that is not described.",
+      "protocol_type": "data_processing",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "roughly two-thirds of the valid AI-discovered sources needed manual correction of URLs, DOIs, or author information",
+        "10 sources carried incorrect URLs requiring manual rediscovery"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Results",
+          "subsection": "4.1 Literature discovery and synthesis",
+          "page": 10
+        },
+        {
+          "section": "Supplement A",
+          "subsection": "A.1 Per-tool source-type composition",
+          "page": 30
+        }
+      ],
+      "inference_reasoning": "Correcting URLs, DOIs, and author fields at that scale requires a repeatable manual workflow (how canonical values were found and recorded); the workflow is mentioned by its outcomes only.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Correction sources and recording of corrections are unspecified",
+        "assessability_impact": "Cannot distinguish corrected from originally correct fields in the final corpus",
+        "reconstruction_confidence": "medium"
+      },
+      "location": {
+        "section": "Results",
+        "subsection": "4.1 Literature discovery and synthesis",
+        "page": 10
+      },
+      "implements_methods": [
+        "M008"
+      ],
+      "expected_information_missing": []
+    },
+    {
+      "protocol_id": "P043",
+      "protocol_text": "Line-by-line quote verification during Claude Code evaluation: Claude Code's qualitative-research trial required line-by-line verification of all quoted material due to its confabulation rate; the verification procedure is undocumented.",
+      "protocol_type": "verification",
+      "protocol_status": "implicit",
+      "trigger_text": [
+        "though its confabulation rate remained high enough to require line-by-line verification of all quoted material"
+      ],
+      "trigger_locations": [
+        {
+          "section": "Supplement A",
+          "subsection": "A.1 Other tools screened out",
+          "page": 33
+        }
+      ],
+      "inference_reasoning": "The stated requirement for line-by-line verification of quoted material during the Claude Code trial implies a quote-checking procedure against source files; no procedure is described.",
+      "implicit_metadata": {
+        "basis": "mentioned_undocumented",
+        "transparency_gap": "Quote-verification procedure for the Claude Code trial is unspecified",
+        "assessability_impact": "Minor: affects only the screened-tool evaluation, not production outputs",
+        "reconstruction_confidence": "low"
+      },
+      "location": {
+        "section": "Supplement A",
+        "subsection": "A.1 Other tools screened out",
+        "page": 33
+      },
+      "implements_methods": [
+        "M018"
+      ],
+      "expected_information_missing": []
+    }
+  ],
   "extraction_notes": {
     "passes_completed": [
       "pre-flight",
@@ -8448,13 +11110,22 @@
       "pass6",
       "pass1",
       "pass2",
-      "phase2b"
+      "phase2b",
+      "pass3",
+      "pass4",
+      "pass5",
+      "phase5b"
     ],
     "session_log": [
       "Session A (2026-07-24): Pre-Flight + Pass 0 (metadata) + Pass 6 (infrastructure, light mode: FAIR scoring deferred by design for pre-submission draft)",
       "Session B (2026-07-24): Pass 1 liberal extraction complete - 18 section groups (13 main text + 5 Supplement A; references pp. 24-30 skipped), 288 evidence, 192 claims, 20 implicit arguments, all verbatim quotes mechanically verified against the page-anchored md",
       "Session B (2026-07-24): Pass 2 rationalisation - claims 192->166, evidence 288->283, implicit arguments unchanged (20); 30 consolidations + 1 boundary correction (E007 -> project_metadata.definitional_grounding); all cross-references repaired transitively in both directions",
-      "Session B (2026-07-24): Phase 2b bidirectional reconciliation - 37 script auto-corrections, 146 one-directional listings resolved by symmetric union, re-run exit 0 (all consistent)"
+      "Session B (2026-07-24): Phase 2b bidirectional reconciliation - 37 script auto-corrections, 146 one-directional listings resolved by symmetric union, re-run exit 0 (all consistent)",
+      {
+        "session": "C",
+        "date": "2026-07-24",
+        "summary": "Pass 3 (liberal explicit RDMAP over the same 18 Session B groups, equal attention: 28 designs, 45 methods, 36 protocols, 100% mechanically verified quotes) + Pass 4 (whole-paper implicit scan: 1 design, 6 methods, 7 protocols, verified triggers, sequential-ID convention) + Pass 5 (16 consolidations, 13.0% reduction, 1 boundary correction, merged quotes preserved verbatim) + Phase 5b (validate_bidirectional exit 0; completeness check clean). Final RDMAP: 25 designs, 44 methods, 38 protocols (14 implicit, 13.1%). Evidence/claims/implicit_arguments untouched (283/166/20). Seven presubmission_qa_flags left unmodified; flagged numbers extracted as stated where encountered (M042, M026)."
+      }
     ],
     "extraction_strategy": "Session-per-pass workflow v5.0.0. Purpose: pre-submission quality check (claims vs evidence, RDMAP). FAIR assessment and Cluster 3 (computational reproducibility) deferred: pre-submission, repositories and DOIs not final.",
     "source_files": {
@@ -8733,7 +11404,271 @@
       "Per-journal confabulation denominators: main text quotes per-run rates (JOSS first run 44%, JOAD sole DR run 93%); supplement quotes overall rates (JOSS 22%, JOAD 82%) and elsewhere 14 of 18 JOAD discoveries. Consider clarifying which denominator each figure uses. (E107 vs E241, E244)",
       "A.4 hyperbolic-titles paragraph says 'three distinct interventions' then lists four (style guide, title-format conventions, system prompt, inline instructions). (E275)",
       "ArboDat accounts: Section 4.4 says the model recorded the 1997 statement in notes but reported 'no date'; A.4 says it extracted a 2024 metadata timestamp as the development date. If these are different rows of the same episode, a linking sentence would avoid the appearance of inconsistency. (E157 vs E277)"
-    ]
+    ],
+    "pass3_section_extracted": [
+      {
+        "group": "G1",
+        "section_title": "Abstract + Introduction",
+        "page_range": "1-3",
+        "scan_note": "Design-dense framing group: research questions, two-episode grounding, scaffolding framework, definitional scope, augment/automate frame, companion-paper division. No procedural methods or protocols documented in this group; episode procedures deferred to Methods/Results groups.",
+        "items_extracted": {
+          "research_designs": 6,
+          "methods": 0,
+          "protocols": 0
+        }
+      },
+      {
+        "group": "G2",
+        "section_title": "Background 2.1 (LLMs in research) + 2.2 (The limits of 'disclose and verify')",
+        "page_range": "3-4",
+        "scan_note": "Systematic scan performed with equal attention. Group is literature synthesis and argumentation (verification failure evidence, self-check limits); no procedures of the present study are documented here. One explicit design-level framing statement extracted (deployment question). Prior work's methods (Luo et al., Steyvers et al.) deliberately NOT extracted per literature-review attribution rule.",
+        "items_extracted": {
+          "research_designs": 1,
+          "methods": 0,
+          "protocols": 0
+        }
+      },
+      {
+        "group": "G3",
+        "section_title": "Background 2.3 Reliability as a property of structure",
+        "page_range": "4-6",
+        "scan_note": "Three theoretical frameworks extracted as designs (compound systems, two-halves scaffold, verification principles); one own-practice method (three-step decomposition) described within the background. The CSV output-constraint mention (p. 5) is extracted with the templating protocol in G4 where fully described.",
+        "items_extracted": {
+          "research_designs": 3,
+          "methods": 1,
+          "protocols": 0
+        }
+      },
+      {
+        "group": "G4",
+        "section_title": "Methods 3 (intro) + 3.1 The 2025 phase: systematic evaluation",
+        "page_range": "6-8",
+        "scan_note": "Densest RDMAP group as expected: 6 designs, 12 methods, 7 protocols. Two page-break-spanning sentences handled by clipping (M003 p6/p7; P005 p7/p8), noted on the items. The 'prompts evolved from open-ended scripts to templated data-entry instruments' summary sentence treated as context for M009 rather than a separate item.",
+        "items_extracted": {
+          "research_designs": 6,
+          "methods": 12,
+          "protocols": 7
+        }
+      },
+      {
+        "group": "G5",
+        "section_title": "Methods 3.2 The 2026 phase + 3.3 Reflexivity",
+        "page_range": "8-9",
+        "scan_note": "Short group but RDMAP-dense: 2026 instrument methods and agent protocols plus the case-study, reflexivity, and snapshot designs.",
+        "items_extracted": {
+          "research_designs": 4,
+          "methods": 4,
+          "protocols": 4
+        }
+      },
+      {
+        "group": "G6",
+        "section_title": "Results 4 (intro/coverage) + 4.1 Literature discovery and synthesis",
+        "page_range": "9-11",
+        "scan_note": "Results-opening group: four-stage scope, authentic-use stance, screening decisions, and stage-1 question extracted as designs; baseline comparison, corpus assembly, and synthesis-evaluation methods extracted. Tables 1-3 are evidence (Session B); per-service error narratives are claims/evidence, not RDMAP.",
+        "items_extracted": {
+          "research_designs": 4,
+          "methods": 4,
+          "protocols": 0
+        }
+      },
+      {
+        "group": "G7",
+        "section_title": "Results 4.2 Tool discovery",
+        "page_range": "11-13",
+        "scan_note": "Journal sampling frame (design + method), process monitoring, second-model verification trial, and the JOSS prompt lineage (superseded and revised versions). The o3-JOSS-run count-exclusion rule (Table 4 caption) noted but not extracted as a separate protocol; error-rate narratives are evidence.",
+        "items_extracted": {
+          "research_designs": 1,
+          "methods": 3,
+          "protocols": 3
+        }
+      },
+      {
+        "group": "G8",
+        "section_title": "Results 4.3 Tool documentation",
+        "page_range": "13-15",
+        "scan_note": "Documentation-stage RDMAP: FAIMS ground-truth design, stage method, service assessment, work-with-grain principle, orthogonal check (p14/p15 clip noted on M028), manual checks, slop re-assessment, and five prompt/assessment protocols. Binary-failure-mode narrative and spawning events are evidence, not RDMAP.",
+        "items_extracted": {
+          "research_designs": 1,
+          "methods": 6,
+          "protocols": 5
+        }
+      },
+      {
+        "group": "G9",
+        "section_title": "Results 4.4 Tool evidence collection",
+        "page_range": "15-17",
+        "scan_note": "Evidence-stage RDMAP: collection method, every-event fresh-context verification, trial comparison/production selection, and the evidence-prompt lineage (conservative guardrail; failed v1 aggregate schema; one-row-per-sighting schema). Verification outcome tables and the ArboDat/dplR narratives are evidence.",
+        "items_extracted": {
+          "research_designs": 0,
+          "methods": 3,
+          "protocols": 3
+        }
+      },
+      {
+        "group": "G10",
+        "section_title": "Results 4.5 The 2026 literature search re-application (failure + fix)",
+        "page_range": "17-19",
+        "scan_note": "2026-episode RDMAP: spot-check method, two-guard architecture, 15-run deployment, and the Guard A / Guard B / multi-source protocols. The partial-grounding-collapse narrative and correction counts are evidence; the improvised-verifier episode is evidence (its design implications extracted in Discussion groups).",
+        "items_extracted": {
+          "research_designs": 0,
+          "methods": 3,
+          "protocols": 3
+        }
+      },
+      {
+        "group": "G11",
+        "section_title": "Discussion 5 (opening) + 5.1 The persistence finding + 5.2 opening (independence of context)",
+        "page_range": "19-20",
+        "scan_note": "Equal-attention Discussion scan. The persistence analysis and design-principle argumentation are claims (Session B); own-practice methodology extracted where the Discussion describes what was actually done: build-fail-fix loop (M037) and decomposed-production granularity (P026). Restatements of the evidence-check and verifier protocols (already extracted from Methods/Results) not duplicated.",
+        "items_extracted": {
+          "research_designs": 0,
+          "methods": 1,
+          "protocols": 1
+        }
+      },
+      {
+        "group": "G12",
+        "section_title": "Discussion 5.2 design principles (re-grounding through mandate-matching)",
+        "page_range": "21-22",
+        "scan_note": "Equal-attention Discussion scan. The eight design principles are prescriptive claims (Session B). Own-practice content: checkpoint allocation (M038) extracted; the external-state summary (Zotero tags, templated CSV, claims blocks/audit trail) and multi-source-authority statements restate protocols P007, P002, P009-P010, and P025 and were not duplicated.",
+        "items_extracted": {
+          "research_designs": 0,
+          "methods": 1,
+          "protocols": 0
+        }
+      },
+      {
+        "group": "G13",
+        "section_title": "Discussion 5.2 (end) + 5.3 Limitations + 6 Conclusion",
+        "page_range": "23-24",
+        "scan_note": "Equal-attention scan. Limitations yields two reporting-stance designs; qualification trials and transparency provision extracted as methods. The Jones 90% threshold adoption and future-work programme are prescriptive/prospective claims, not executed RDMAP, and were not extracted.",
+        "items_extracted": {
+          "research_designs": 2,
+          "methods": 2,
+          "protocols": 0
+        }
+      },
+      {
+        "group": "G14",
+        "section_title": "Supplement A intro + A.1 per-tool literature-discovery detail, source overlap, Gemini 'source soup'",
+        "page_range": "30-32",
+        "scan_note": "Equal-attention supplement scan. Mostly granular evidence (per-service yields, error compositions — Session B). RDMAP: trace-examination method, two-attempt prompt revision, identical-prompt comparison. Screened-out tool evaluations (Operator, Computer Use, Claude Code) are evidence supporting RD023.",
+        "items_extracted": {
+          "research_designs": 0,
+          "methods": 1,
+          "protocols": 2
+        }
+      },
+      {
+        "group": "G15",
+        "section_title": "Supplement A.1 source synthesis per-model detail + other tools screened out + A.2 per-journal confabulation detail",
+        "page_range": "32-34",
+        "scan_note": "Equal-attention supplement scan. Synthesis per-model detail and per-journal rates are evidence (Session B). RDMAP: the error-classification taxonomy with explicit category definitions (M042). No new protocols.",
+        "items_extracted": {
+          "research_designs": 0,
+          "methods": 1,
+          "protocols": 0
+        }
+      },
+      {
+        "group": "G16",
+        "section_title": "Supplement A.2 episode anatomy (JOAD mode-switch, JOSS DOI-walking, o3-mini-high pass, fabricated performance, difficulty-avoidant substitution, Debates snippet)",
+        "page_range": "34-35",
+        "scan_note": "Equal-attention supplement scan. Episode anatomies are evidence (Session B). RDMAP: transcript-based diagnosis method (M043) and the o3-mini-high verification instruction protocol (P029). The verification-run count-exclusion rule (excluded from Table 4 discovery counts) spans a page break + footnote and is recorded here as a scan note rather than a separate protocol.",
+        "items_extracted": {
+          "research_designs": 0,
+          "methods": 1,
+          "protocols": 1
+        }
+      },
+      {
+        "group": "G17",
+        "section_title": "Supplement A.3 prompt evolution histories + A.4 per-tool ground-truth comparison",
+        "page_range": "35-38",
+        "scan_note": "Prompt-lineage protocols (metadata v1-v8, register evolution, domestication adjustments, evidence v1/v5) and two methods (model-as-designer, A.4 ground-truth testing). A.4 per-model failure narratives (Gemini version confusion, ade4 flip, Claude CSV refusal, ArboDat timestamp) are evidence; the conservative-guardrail paragraph restates P020 and was not duplicated.",
+        "items_extracted": {
+          "research_designs": 0,
+          "methods": 2,
+          "protocols": 5
+        }
+      },
+      {
+        "group": "G18",
+        "section_title": "Supplement A.5 full evidence-collection error catalogue + per-model selection comparison",
+        "page_range": "38-39",
+        "scan_note": "Equal-attention supplement scan. Error catalogue contents (52 confabulated events, collisions, granularity errors, malformed provenance) and per-model selection comparison are evidence (Session B). RDMAP: full-review procedure with reconciliation (P035) and the unverifiable-category rule (P036).",
+        "items_extracted": {
+          "research_designs": 0,
+          "methods": 0,
+          "protocols": 2
+        }
+      }
+    ],
+    "pass3_extraction": {
+      "approach": "Liberal explicit RDMAP extraction (40-50% over-extraction accepted) using the SAME 18 section groups as Pass 1 (G1-G18), equal attention to all groups including Introduction, Background, Discussion, Conclusion, and Supplement A. 100% sourcing discipline: every verbatim_quote mechanically verified against the processed markdown via rdmap_lib.py before save; three page-break-spanning sentences clipped with notes on the items (M003, M028, P005, P030). Reverse references (implemented_by_methods, realized_through_protocols, implemented_by_protocols) rebuilt deterministically from forward references on every save.",
+      "counts": {
+        "research_designs": 28,
+        "methods": 45,
+        "protocols": 36
+      },
+      "scripts": "pass3_g01.py-pass3_g18.py + rdmap_lib.py"
+    },
+    "pass4_implicit_scan": [
+      {
+        "group": "Pass4-implicit",
+        "section_title": "Whole-paper implicit RDMAP scan (4 patterns x 3 tiers x all sections)",
+        "page_range": "1-39",
+        "scan_note": "Systematic scan: Abstract/Intro (no implicit RDMAP beyond explicit designs); Background (frameworks explicit); Methods (logging schema, transcript export, spot-checks, co-author validation, outcome accounting); Results (QA reclassifications, run-type classification, inclusion criteria, coverage allocation, verifier rubric, correction workflow); Discussion (practices explicit); Supplement (line-by-line verification). One implicit design (capability adoption-upon-release). Implicit ratio 14/123 = 11.4%, consistent with a methods-transparent methodological paper.",
+        "items_extracted": {
+          "research_designs": 1,
+          "methods": 6,
+          "protocols": 7
+        }
+      }
+    ],
+    "pass4_extraction": {
+      "approach": "Whole-paper implicit RDMAP scan using the 4 recognition patterns per tier per major section, seeded from Pass 3 explicit RDMAP. All trigger_text mechanically verified against the processed markdown. ID convention: sequential RD###/M###/P### numbering continued from Pass 3 with *_status='implicit' (corpus convention, e.g. sobotkova-et-al-2024 P010-P012), deviating from prompt 04's suggested IMP-prefixed IDs for consistency with prior extractions and downstream tooling.",
+      "counts": {
+        "implicit_designs": 1,
+        "implicit_methods": 6,
+        "implicit_protocols": 7
+      },
+      "implicit_ratio": "14/123 (11.4%)",
+      "script": "pass4_implicit_rdmap.py"
+    },
+    "pass5_rationalisation": {
+      "items_before": 123,
+      "items_after": 107,
+      "reduction_percentage": 13.0,
+      "consolidations_performed": 16,
+      "consolidations": [
+        "RD007 -> RD001 (rationale_synthesis)",
+        "RD012 -> RD002 (rationale_synthesis)",
+        "RD022 -> RD014 (scope_integration)",
+        "RD028 -> RD027 (scope_integration)",
+        "M005 -> M006 (workflow_integration)",
+        "M032 -> M012 (workflow_integration)",
+        "M043 -> M041 (workflow_integration)",
+        "M044 -> M010 (rationale_synthesis)",
+        "M045 -> M026 (workflow_integration)",
+        "M039 -> M013 (workflow_integration)",
+        "M029 -> M007 (validation_chain)",
+        "P026 -> P001 (parameter_integration)",
+        "P035 -> P006 (workflow_integration)",
+        "P030 -> P015 (parameter_integration)",
+        "P033 -> P021 (parameter_integration)",
+        "P034 -> P022 (parameter_integration)"
+      ],
+      "tier_corrections": 0,
+      "boundary_corrections": 1,
+      "boundary_correction_detail": "P013 protocol_text trimmed of the effectiveness outcome ('reducing confabulations from 15 to none'), which is claims/evidence territory; the verbatim_quote is unchanged.",
+      "rationale": "13.0% reduction, below the 15-20% target and appropriate for a methodological paper whose procedures are genuinely well-differentiated: consolidations are confined to supplement/discussion restatements of main-text items, same-instrument lineage detail, and duplicate framings. Distinct prompt-lineage versions (P012/P013, P021/P022), domestication instances (P016/P017/P032), and stage-level designs were deliberately preserved for independent transparency assessment. All merged quotes preserved verbatim in consolidation_metadata.merged_sources."
+    },
+    "phase5b_reconciliation": {
+      "validate_bidirectional": "exit 0 — all mappings consistent, 0 corrections, 0 conflicts",
+      "check_rdmap_completeness": "0 orphaned methods, 0 orphaned protocols, 100.0% protocol-to-method linkage"
+    }
   },
   "reproducibility_infrastructure": {
     "persistent_identifiers": {
