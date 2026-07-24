@@ -239,12 +239,17 @@ unless the Elsevier TDM route (decision 5) lands.
    order: (i) ~~META-view probe~~ **run 2026-07-24: also HTTP 403** — the key
    cannot touch the Article Retrieval API in any view, confirming zero
    ScienceDirect provisioning on the key;
-   (ii) **recreate the key at dev.elsevier.com selecting the
-   text-and-data-mining use case** and accepting the TDM provisions — the
-   likely missing "configuration setting" (five minutes); (iii) if the
-   portal offers no TDM option, email Elsevier developer support / MQ
-   library quoting the exact error, requesting TDM provisioning +
-   `inst_token` (draft available on request).
+   (ii) ~~recreate the key with the TDM provisions accepted~~ **done
+   2026-07-24 (label `article-reproduction`, both agreements ticked):
+   STILL HTTP 403** — the TDM checkbox was necessary but not sufficient;
+   (iii) **ACTIVE: support-email route** — draft provided to Shawn
+   2026-07-24 (send via dev.elsevier.com contact or MQ Library eResources;
+   quotes the exact error, registration DOI, ~300-article scope, ≤1 req/s,
+   no-redistribution terms; requests provisioning + `inst_token`).
+   Pending sanity checks: single `.env` entry for the new key; whether the
+   new key's error body still reads AUTHENTICATION_ERROR or has shifted to
+   an entitlement code. Census unblocked throughout — manual acquisition
+   remains the budgeted fallback.
 
 ## Implementation checklist (v0.1, superseded by the scoped build order above)
 
