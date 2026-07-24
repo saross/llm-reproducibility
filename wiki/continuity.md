@@ -32,6 +32,26 @@ merged here as PR #1).
 
 ## Repo state (2026-07-24)
 
+- **PHASE 1 OPENED (2026-07-24):** D-2 hook spike **PASSED** on all four
+  datapoints (two haiku probes: hooks fire for workflow spawns; injected
+  context arrives; transcript path delivered; named `agentType` reaches
+  matchers) — **engine = workflows CONFIRMED**; build rule: workflow
+  `agent()` calls always pass `agentType`; headless `--agent` fan-out stays
+  as documented fallback. FAIR instrument v2.0 extracted to its canonical
+  file (`studies/open-science-compliance/protocol/instruments/fair-instrument.md`,
+  receipt token `3ddcbfd82575a2f8`; Pass 6 prompt keeps a banner-marked
+  verbatim mirror); `manifest.yaml` `shared_content` registry started
+  (`25d1c0d`). Probe hook neutered to log-only scaffolding. **Elsevier TDM
+  trail:** three diagnostic 403s (entitlement → key-provisioning →
+  TDM-checkbox-insufficient; full chain in corpus plan decision 5); support
+  email drafted but deprioritised on Brian's field intelligence — **Zotero +
+  institutional proxy is the probable acquisition route** (Shawn
+  investigating); key still to add on amd-tower. **BUILD QUEUE NEXT:** D5
+  manifest-consistency script (pre-commit + pre-flight) → remaining
+  instrument files (taxonomy L1–L6, verdicts+precision, coverage rules,
+  eligibility, `.claude/shared/invariants.md`) → five agent definitions with
+  pinned full model IDs → production push/receipt hooks +
+  `PreToolUse[Agent]` pre-flight → corpus items 5–6.
 - **ROUTING DESIGN SIGNED OFF (Shawn, 2026-07-24, at v0.2.2)** — Phase 1
   design gate CLEARED. Amendment scope RATIFIED same day; lodgement timing:
   defer to the hard stop (just before the validation phase), accumulating any
@@ -49,8 +69,9 @@ merged here as PR #1).
   Phase 1. **Elsevier TDM:** Shawn requested an API key 2026-07-24; storage
   convention `ELSEVIER_API_KEY_TDM` in `~/personal-assistant/.env`;
   entitlement test (closed JAS article from campus) pending — see corpus plan
-  decision 5 for the nuances. **NEXT: Phase 1 build**, opening with the D-2
-  hook spike (workflows vs headless `--agent` engine decision).
+  decision 5 for the nuances. ~~NEXT: Phase 1 build, opening with the D-2
+  hook spike~~ [x] 2026-07-24 spike RUN and PASSED — see the Phase 1 bullet
+  at the top of this list.
 - **Pre-build juncture /review-implementation COMPLETE (2026-07-24, Shawn's
   request):** fresh-context review of design v0.2.1 + corpus scope v0.2 +
   validation-phase plan. Verdict: proceed, four cheap fixes first. 12 defects
@@ -485,6 +506,46 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-07-22/24 — Review cascade; corpus infrastructure; Phase 1 opens
+
+Three-day amd-tower session (remote-controlled from campus days 2–3; four
+zbook paper-b commits rebased over mid-session). **Day 1:** routing-design
+review passes run + adversarially verified (110/110 clean); Pass 6 instrument
+defects found in the OSF-frozen copy and fixed (`abdc526`); erratum log
+started (`f4dfa0e`, Shawn-approved accumulate-then-amend path); reports
+externalised (`c9a6ecd`); model-testing decisions recorded (three-model
+spot-check; Sonnet 5 + Opus 4.8 on Max first; ask-before-Fable;
+Sol arm later). **Day 2:** design v0.2 (`3914f81`); corpus implementation
+scoped (`edf7f56`); zbook synced. **Day 3:** §9 workflows added (v0.2.1,
+`74e7ed9`, from Shawn's review question); pre-build juncture
+/review-implementation (his request) found 12 defects incl. one critical
+compliance catch (§2.2 ladder = prereg deviation) — all cheap fixes applied
+(v0.2.2 + corpus v0.2.1 + ratified amendment scope queued in erratum log,
+`3080022`); **Shawn SIGNED OFF v0.2.2 and confirmed corpus decisions**
+(`01fd8d4`); corpus census blockers EXECUTED (`fbf477c`: store 16 papers /
+71.7 MB verified, manifests, fetch-corpus.py, LFS narrowed, corpus gate
+tested, first QNAP sync); **Phase 1 opened** — D-2 spike PASSED, engine =
+workflows, FAIR instrument extracted to canon (`25d1c0d`); Elsevier trail
+diagnosed to unresolved key-provisioning failure, Zotero-proxy now the
+probable route (`c903b89`…`5b77b78`); migration script archived (`cb7a24c`).
+Reflections + claude-obs 19–21 written at close.
+
+**NEXT:** (1) build queue per the Phase 1 bullet (D5 consistency script
+first); (2) draft the consolidated OSF amendment from the ratified scope
+(lodge just before the validation phase — Shawn's timing call); (3) Shawn:
+Zotero-proxy investigation, amd-tower `.env` key, MQ TDM enquiry optional;
+(4) Cosmos correspondence watch ~mid-August.
+
+**Held over pending Shawn's verdicts (no silent discard):** working-notes
+candidates WN-a/b (2026-07-18) + WN-c/d/e (2026-07-21) — still owed — plus
+NEW this session: WN-f (docs-vs-harness canary-probe method: settings-hook
+canary + control/test spawns settled in 20 s what three doc citations
+mispredicted) and WN-g (reliability-gate statistics: n=90 gives ~12%
+false-pass at true 0.85, halved by all-five pilots; agreement definition
+shifts the 0.90 gate across 10–30% item-flip rates; model ranking
+structurally unavailable pre-census). User-obs candidates for 2026-07-24
+written to `wiki/user-observations.md` (pending review).
 
 ### 2026-07-20/21 — Prereg LODGED on OSF; Cosmos application SUBMITTED
 
