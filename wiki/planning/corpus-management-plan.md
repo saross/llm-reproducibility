@@ -229,6 +229,20 @@ unless the Elsevier TDM route (decision 5) lands.
    fallback (4–10 h), sized precisely by `fetch-corpus.py report` once the
    census frame exists. Key still needs adding to amd-tower's `.env` (census
    fetch runs there).
+   **Discriminating tests run (2026-07-24): diagnosis revised to
+   key-provisioning, not entitlement.** The open-access control (Crema 2024,
+   CC BY) ALSO returned 403, and the error body reads `AUTHENTICATION_ERROR:
+   "Requestor configuration settings insufficient for access to this
+   resource"` — a correctly provisioned key retrieves OA content from any
+   network, so the key itself lacks ScienceDirect Article-Retrieval/TDM
+   provisioning. Nothing yet implicates MQ's subscription. Next steps, in
+   order: (i) META-view probe (does the key touch ScienceDirect at all);
+   (ii) **recreate the key at dev.elsevier.com selecting the
+   text-and-data-mining use case** and accepting the TDM provisions — the
+   likely missing "configuration setting" (five minutes); (iii) if the
+   portal offers no TDM option, email Elsevier developer support / MQ
+   library quoting the exact error, requesting TDM provisioning +
+   `inst_token`.
 
 ## Implementation checklist (v0.1, superseded by the scoped build order above)
 
