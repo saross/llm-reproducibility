@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-07-21
+updated: 2026-07-24
 status: active
 ---
 
@@ -364,3 +364,60 @@ diff-before-commit were the discipline. The 26 Jul deadline and rolling review
 drove same-day iteration. The form capture of 2026-07-07 had drifted from the
 live form by submission day — future form-fill work should re-screenshot at
 fill time. Body word limit is strictly <500; the generator asserts it.
+
+## Session: 2026-07-22/24 — Review cascade, corpus infrastructure, Phase 1 opens
+
+Three-day amd-tower session, remote-controlled from campus for much of days two
+and three (Shawn on zbook; four zbook paper-b commits rebased over mid-session).
+
+**Day 1 (07-22):** Routing-design review passes run and adversarially verified —
+implementation review (D1–D10, E1–E8) + prior-art scout (110 claims, 107
+confirmed, 0 corrected). Critical catch: three defects in the Pass 6 FAIR prompt,
+present in the OSF-frozen copy at `ee3fda3`; fixed in-repo (`abdc526`), erratum
+log started (`f4dfa0e`, path approved by Shawn: accumulate errata, amend at the
+hard stop). Reports externalised (`c9a6ecd`). Model-testing decisions recorded:
+three-Claude-model spot-check, Sonnet 5 + Opus 4.8 on Max first, ask-before-Fable
+gate, OpenAI Sol arm to be designed later (needs own harness + amendment). The
+standalone weekend run superseded by one post-build validation phase.
+
+**Day 2 (07-23):** Design v0.2 written (`3914f81`) — policy retained, mechanisms
+rebuilt on native harness primitives, all five open questions closed.
+Corpus-management implementation scoped (`edf7f56`): repo audit, 8-item build
+order, target structure (out-of-tree store, study-scoped manifests). zbook synced
+(repo + 31 gitignored corpus files).
+
+**Day 3 (07-24):** §9 added — workflows as batch engine (v0.2.1, `74e7ed9`) after
+Shawn's review question. Pre-build juncture /review-implementation (his request):
+12 defects, 8 enhancements; headline catches — §2.2 ladder was a prereg deviation
+(now amendment-gated), §9 hook assumption doubted, spot-check statistics
+undefined, contamination risk (repo-readable pilot scores). All cheap fixes
+applied same day (design v0.2.2, corpus plan v0.2.1, amendment scope queued in
+erratum log — `3080022`). **Shawn signed off v0.2.2; amendment scope ratified;
+corpus decisions confirmed** (`01fd8d4`). Corpus census blockers executed
+(`fbf477c`): store live (16 papers, 28 files, 71.7 MB, sha256-verified),
+manifests + `fetch-corpus.py` (verify 28/28) + `sync-corpus.sh` (first QNAP sync,
+44 files), LFS narrowed, pre-commit corpus gate installed and block-tested.
+**Phase 1 opened:** D-2 hook spike PASSED on all four counts (two haiku probes) —
+engine = workflows confirmed; FAIR instrument extracted to its canonical file
+with receipt token; manifest `shared_content` registry started (`25d1c0d`).
+Elsevier TDM trail: three diagnostic 403s (entitlement → provisioning →
+checkbox-insufficient), support email drafted, route deprioritised on Brian's
+field intelligence — Zotero-proxy recorded as the probable path
+(`c903b89`…`5b77b78`). Migration script archived (`cb7a24c`).
+
+**Carry-forward:** WN-a/b/c/d/e verdicts (Shawn, owed since 07-18/21); amendment
+drafting + lodgement before the validation phase; build queue (D5 consistency
+script → instrument files → agent definitions → production hooks → corpus items
+5–6); Elsevier/Zotero investigation + amd-tower `.env` key (Shawn); Cosmos watch
+~mid-August.
+
+### Contextual assumptions
+
+Concurrent zbook sessions pushed paper-b work throughout — every push here
+required a fetch-first/rebase discipline. Fable usage windows gated session
+timing ("usage has reset" opened day 2). The cost-gate re-specification assumes
+Max-plan billing (usage windows, notional `total_cost_usd`); if the census moves
+to an API key the §Phase-3.2 arithmetic changes. Elsevier diagnostics ran through
+Shawn's campus terminal because entitlement is network-dependent — the session
+itself sits on the home network. The corpus store's second copy is manual-cadence
+(no automated sync schedule exists anywhere on rpi-server).

@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-07-21
+updated: 2026-07-24
 status: active
 ---
 
@@ -255,3 +255,34 @@ the continuation summary.)*
   but the episode belongs in the same family as the earlier silent-glyph-drop
   and swallowed-exit-status observations: every verifier needs a probe that
   can distinguish "absent" from "my instrument can't see it".
+
+## 2026-07-22/24 — Review-cascade and build-opening session
+
+- **Documentation is a hypothesis source, not a verdict source.** Three
+  independent documentation statements grounded a HIGH review finding that
+  Subagent hooks would not fire for workflow-spawned agents; a canary-hook probe
+  (two haiku agents, ~43k tokens, twenty seconds) showed hooks fire, injected
+  context arrives, transcripts are delivered, and named agent types reach
+  matchers. The docs described a subset of harness reality. The efficient order
+  is docs → hypothesis → probe, never docs → architecture.
+- **Independence catches the author too.** The fresh-context juncture review
+  found a preregistration-compliance deviation in a paragraph I had written and
+  re-read several times (§2.2's remediation ladder). From inside the writing
+  context it read as obviously sensible engineering; only a reviewer instructed
+  to check the claim against the registration's exact wording saw that it
+  replaced a pre-specified consequence. Same mechanism as the sibling-session
+  ledger catch of 2026-07-21, but this time the audited party was me.
+- **A zero-correction verification exists — and earned scepticism of itself.**
+  The prior-art verifier returned 107/110 confirmed, 0 corrected on a 24-row
+  table, then flagged its own result as surprising and re-audited its method
+  before concluding clean. That reflex — treat an unusually clean result as a
+  prompt to audit the instrument — is the right calibration and worth copying.
+- **Vendor-internals priors miscalibrate in a consistent direction.** Three
+  successive plausible causal stories about one Elsevier 403 (entitlement →
+  key provisioning → provisioning-necessary-but-insufficient) were each
+  overturned by a cheap discriminating probe, all three erring toward optimism
+  about documented self-service paths. A collaborator's field prior ("never got
+  one working") carried more information than my portal-knowledge reasoning.
+- **Mid-session hook registration works.** Project-settings hooks took effect
+  without a session restart — operationally useful (spikes can run same-session)
+  and worth knowing before assuming restart-required semantics.

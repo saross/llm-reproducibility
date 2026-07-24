@@ -6,7 +6,7 @@ audience: "researchers"
 conditions: "debugging with surprising results, hypothesis generation, belief revision, default-following corrections"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-07-21
+updated: 2026-07-24
 status: active
 ---
 
@@ -201,3 +201,83 @@ Cross-reference: the same session's verifier-of-the-verifier sequence (three
 wrong pointers found in a sibling session's verification ledger) is recorded in
 llm-observations 2026-07-20/21 and session-reflection Entry 7 — same shape,
 internal rather than external: a record about sources drifted from the sources.
+
+## 2026-07-24 — The hooks the documentation said would not fire
+
+**Session:** 315db0da-e4ee-498b-8951-731bc63f0fc7
+**Instance:** primary
+
+### Surprising fact
+
+The pre-build juncture review (fresh context, docs-grounded) rated hook firing
+for workflow-spawned agents "more likely to fail than pass", citing three
+independent documentation statements — `SubagentStart` scoped to Agent-tool
+spawns; workflow `agent()` spawns explicitly distinguished from Agent-tool
+spawns; frontmatter hooks documented for Agent-tool and `--agent` paths only.
+The empirical spike then passed on every count, first try.
+
+### Probe
+
+A canary hook (logs every firing; injects a token-demand into `additionalContext`)
+plus three spawns: an Agent-tool control, a default workflow `agent()` spawn, and
+a named-`agentType` workflow spawn. Four measurements per spawn: Start fired /
+canary echoed / Stop fired / transcript path delivered.
+
+### Belief revision
+
+From "the documentation bounds what the harness does" to "the documentation
+lags the harness; workflow spawns are full participants in the hook system" —
+including the unexpected refinement that a named `agentType` reports its own
+name to matchers (the generic `workflow-subagent` label appears only for
+unnamed spawns), which preserves per-agent hook scoping. The review's finding
+was correct *as a risk assessment given its evidence*; the evidence class was
+the problem.
+
+### What would change this belief
+
+A harness update altering hook scope or `agent_type` reporting. The exposure is
+pinned: the probe is cheap and re-runnable, and any model/harness change already
+triggers the §8 regression gate, where the spike belongs as a standing item.
+
+### Implications for practice
+
+Architecture commitments that rest on documented-behaviour claims get an
+empirical spike *before* the design text uses a committed verb. The twenty-second
+probe was available three days before it ran; the interim cost was a wrongly
+committed §9 and a review finding against it.
+
+## 2026-07-24 — Three wrong stories about one 403
+
+**Session:** 315db0da-e4ee-498b-8951-731bc63f0fc7
+**Instance:** primary
+
+### Surprising fact
+
+The open-access control returned 403. Under the reigning story (valid key,
+missing institutional entitlement), CC BY content should have returned 200 from
+any network.
+
+### Probe
+
+A discriminating chain, each step cheap: error-body inspection
+(`AUTHENTICATION_ERROR: requestor configuration settings insufficient`); the
+OA control; the META view (also 403 — zero ScienceDirect API access); key
+re-registration with the TDM provisions accepted (still 403).
+
+### Belief revision
+
+Serial: entitlement gap → key-provisioning gap → provisioning necessary but not
+sufficient → (Brian's field prior) the Elsevier key path is unreliable in
+practice; route switched to Zotero-plus-proxy, support email drafted but
+deprioritised. End state genuinely unresolved — no confirmed root cause, three
+eliminated hypotheses, all three of my causal stories having erred in the same
+direction (optimism about documented self-service paths).
+
+### What this is not
+
+Not a confabulation episode: each story was stated as probable, probed, and
+discarded on evidence — elimination working as designed. The finding is about
+prior calibration, not fabrication: vendor-internal behaviour recalled from
+training belongs in the same low-trust class as stale external facts (cf. the
+2026-07-21 expired-embargo entry), and a practitioner's lived prior outweighed
+three rounds of my documented-behaviour reasoning.

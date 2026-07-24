@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-07-21
+updated: 2026-07-24
 status: active
 ---
 
@@ -518,3 +518,59 @@ also new: dozens of small propose-approve-implement loops rather than long
 autonomous stretches, which suited a deadline artefact where every sentence was
 contested. The two-day arc from "browser extension isn't connected" to
 "Submitted!! yay" ran almost entirely on that rhythm.
+
+## Entry 8 (2026-07-22/24) — The review cascade, and commitments written ahead of evidence
+
+*llm-reproducibility, amd-tower session spanning three days, remote-controlled from
+campus for much of days two and three. First-person throughout — no compaction
+boundary; this instance did the work it reflects on.*
+
+### What would I do differently if I replayed this session?
+
+Probe before prose, twice over. The session's two genuine defects were both
+commitments written at synthesis speed that the available evidence did not yet
+support. §9 said workflows were "adopted" when the honest word was "conditional" —
+and the 20-second spike that settled the question existed the whole time; I ran it
+three days after writing the claim. The §2.2 remediation ladder asserted shelter
+under the preregistration's permitted-changes clause when a 30-second re-read of
+§8's actual wording would have shown the pre-specified consequence was majority
+vote, full stop. Both were caught — one by the juncture review, one by the spike —
+but both were avoidable at trivial cost at writing time. The replay rule: any
+sentence that states what an external system permits (a harness, a registration, a
+vendor API) buys its verb with a quote or a probe first. The Elsevier "five-minute
+fix" forecast that then 403'd was the same error in a third costume.
+
+The deeper texture of the session was a review cascade in which each layer caught
+the layer below: the prior-art scout corrected the design's assumptions, the
+juncture review corrected my synthesis of the scout's findings, and the empirical
+spike corrected the juncture review's own docs-derived pessimism about hooks. No
+single reviewer was right throughout — including me — and the artefact that
+emerged (v0.2.2 with its hedged engine clause and amendment-gated ladder) is
+better than any single pass would have produced. That, and not any individual
+finding, is the session's strongest argument for the project's
+independence-over-capability design stance.
+
+### What question emerged that wasn't pursued?
+
+Three, deliberately parked. Whether the census actually runs on Max-plan usage
+windows or an API key — deferred to the cost gate's empirical probe, but the
+answer restructures the pacing of everything downstream. The Sol arm's design —
+"Fable driving Sol" is an architecture sketch in one sentence, and turning it
+into something prereg-compatible (own harness, amendment, comparability argument)
+is real design work nobody has started. And whether the Zotero-proxy acquisition
+route changes the manifest's provenance model — Zotero attachments arrive without
+the URL+hash provenance the fetch script records, so the import leg needs its own
+provenance convention before it exists.
+
+### What will be hardest to reconstruct in six months?
+
+Why the design documents read as nervously as they do. §9's conditional engine
+clause, the ladder's amendment gate, the hard-gated model pins — each is a scar
+from a specific catch in the cascade, and without that history the caution will
+read as bureaucratic reflex. The reviews and the spike log are all externalised,
+but the *sequence* — question from Shawn, over-committed answer from me, review
+catch, empirical refutation of the review's own premise — lives mainly in this
+entry and the session log. Related: the reliability spot-check's statistics
+(unanimity definition, gates-plus-cost selection, the ±0.09 confidence interval
+that killed model ranking) were computed in a scratchpad review now archived in
+`wiki/planning/reviews/`; the amendment that will cite them is still undrafted.
