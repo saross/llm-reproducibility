@@ -328,10 +328,8 @@ shared_content:
     consumers:
       - agent: fair-assessor-sonnet-5   # per-model variant (validation benchmark: Sonnet 5 + Opus 4.8)
         mechanism: push                 # SubagentStart injection, receipt required
-        status: planned                 # flip to active when production hooks land
       - agent: fair-assessor-opus-4-8
         mechanism: push
-        status: planned
       - agent: research-assessor    # human/session lane
         mechanism: mirror           # normative blocks byte-identical; banner cites version + token
         mirror_file: extraction-system/prompts/06-infrastructure_pass6_prompt.md
@@ -343,7 +341,6 @@ shared_content:
     consumers:
       - agent: reproduction-planner
         mechanism: push
-        status: planned
   verdicts-and-precision:
     canonical_file: studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md
     version: "1.0"
@@ -352,7 +349,6 @@ shared_content:
     consumers:
       - agent: reproduction-executor
         mechanism: push
-        status: planned
       - agent: reproduction-assessor  # human/session lane skill
         mechanism: mirror             # discrepancy/tolerance/scope tables byte-identical
         mirror_file: .claude/skills/reproduction-assessor/SKILL.md
@@ -364,10 +360,8 @@ shared_content:
     consumers:
       - agent: reproduction-planner
         mechanism: push
-        status: planned
       - agent: reproduction-executor
         mechanism: push
-        status: planned
   eligibility-criteria:
     canonical_file: studies/open-science-compliance/protocol/instruments/eligibility-criteria.md
     version: "1.0"
@@ -376,7 +370,6 @@ shared_content:
     consumers:
       - agent: reproduction-planner
         mechanism: push
-        status: planned
   pipeline-invariants:
     canonical_file: .claude/shared/invariants.md
     version: "1.0"
@@ -385,13 +378,18 @@ shared_content:
     consumers:
       - agent: reproduction-planner
         mechanism: push
-        status: planned
       - agent: reproduction-executor
         mechanism: push
-        status: planned
       - agent: adversarial-reviewer
         mechanism: push
-        status: planned
+  adversarial-review-framework:
+    canonical_file: .claude/skills/reproduction-assessor/references/adversarial-review-framework.md
+    version: "1.1"
+    receipt_token: "0f83c3181c5dbe00"
+    status: governed-instrument  # not OSF-frozen; §8 regression gate applies (promoted pull→push, design §5)
+    consumers:
+      - agent: adversarial-reviewer
+        mechanism: push
 
 # Agent-definition registry (routing design §3.4 hot-reload guard, added
 # 2026-07-24). Every file under .claude/agents/ must be registered here with a

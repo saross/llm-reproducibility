@@ -10,12 +10,23 @@
     "ask": []
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/preflight-agent.py"
+          }
+        ]
+      }
+    ],
     "SubagentStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/subagent-probe.sh start"
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/subagent-push.py"
           }
         ]
       }
@@ -25,7 +36,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/subagent-probe.sh stop"
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/subagent-receipt-gate.py"
           }
         ]
       }

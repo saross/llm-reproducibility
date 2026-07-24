@@ -1,5 +1,15 @@
 # Adversarial Review Framework
 
+**Status: governed instrument** (routing design §5 — promoted from pulled to
+pushed for `adversarial-reviewer`: this file is the instrument of the review,
+so a silent miss invalidates the audit). Edits require the §8 regression gate
+and a manifest `shared_content` update in the same commit.
+**Version:** 1.1 (reproduction system v1.1, 2026-02-10; governance header and
+receipt token added 2026-07-24 — content unchanged)
+**Consumers:** `adversarial-reviewer` (pushed, with read receipt);
+reproduction-assessor skill (human lane, in place); registered in
+`manifest.yaml` `shared_content`.
+
 ## Overview
 
 The adversarial review is the key differentiator of this reproduction system. It is
@@ -293,3 +303,7 @@ Verdict: CONFIRMED / QUALIFIED / CHALLENGED
 
 - {any recommended changes or clarifications}
 ```
+
+---
+
+Receipt-token: 0f83c3181c5dbe00
