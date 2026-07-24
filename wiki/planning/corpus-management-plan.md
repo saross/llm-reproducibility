@@ -250,6 +250,18 @@ unless the Elsevier TDM route (decision 5) lands.
    new key's error body still reads AUTHENTICATION_ERROR or has shifted to
    an entitlement code. Census unblocked throughout — manual acquisition
    remains the budgeted fallback.
+   **Field intelligence (Brian Ballsun-Stanton, 2026-07-24): he has never
+   got an Elsevier API key working properly and uses Zotero + institutional
+   proxy instead.** Expectation for the support-email route accordingly
+   lowered (email remains cheap to send). **Probable practical route:
+   Zotero-mediated acquisition** — census DOIs into a Zotero collection,
+   Zotero resolves PDFs via institutional access, a script maps attachments
+   into the store by slug and hashes them into the manifest. Fits the
+   plan's existing "Zotero as bibliographic layer, store as blob layer,
+   joined by DOI" division; would become a `zotero-import` leg in
+   fetch-corpus.py rather than a TDM leg. Shawn to investigate the Zotero
+   mechanics; scale/ToS note: keep retrieval per-item-paced, as Zotero
+   itself does.
 
 ## Implementation checklist (v0.1, superseded by the scoped build order above)
 
