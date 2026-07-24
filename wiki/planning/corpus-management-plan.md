@@ -236,13 +236,15 @@ unless the Elsevier TDM route (decision 5) lands.
    resource"` — a correctly provisioned key retrieves OA content from any
    network, so the key itself lacks ScienceDirect Article-Retrieval/TDM
    provisioning. Nothing yet implicates MQ's subscription. Next steps, in
-   order: (i) META-view probe (does the key touch ScienceDirect at all);
+   order: (i) ~~META-view probe~~ **run 2026-07-24: also HTTP 403** — the key
+   cannot touch the Article Retrieval API in any view, confirming zero
+   ScienceDirect provisioning on the key;
    (ii) **recreate the key at dev.elsevier.com selecting the
    text-and-data-mining use case** and accepting the TDM provisions — the
    likely missing "configuration setting" (five minutes); (iii) if the
    portal offers no TDM option, email Elsevier developer support / MQ
    library quoting the exact error, requesting TDM provisioning +
-   `inst_token`.
+   `inst_token` (draft available on request).
 
 ## Implementation checklist (v0.1, superseded by the scoped build order above)
 
