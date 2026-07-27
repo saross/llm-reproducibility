@@ -30,6 +30,44 @@ merged here as PR #1).
 
 ---
 
+## Repo state (2026-07-27)
+
+- **D5 GATE HARDENED (2026-07-27, amd-tower; `03f10ad`→`ceb1d79`).** A third
+  session, resuming from the 2026-07-24 handoff, independently reimplemented D5
+  before discovering the zbook build had already landed (7 commits pulled
+  mid-session). Rather than discard either, the two were compared; the second
+  implementation caught two gaps in the first, both now ported in and tested:
+  - **Byte-exact mirror regions.** The structural check (fenced blocks + table
+    rows) cannot see prose. **The Pass 6 prompt's "verbatim mirror" banner was
+    untrue** — four normative statements from prereg §7.1 were missing
+    (unscoreable→0; never aggregated; the A1 majority rule; FAIR4RS out of
+    scope) while every block and row matched, so the gate reported PASS.
+    Marker pairs now delimit the region and it is compared byte for byte.
+    **Erratum-log Entry 2**; impact checked against persisted pilot outputs —
+    no pilot score revised (all /15, none unscored, none aggregated,
+    key-et-al-2024 shows the A1 rule operating).
+  - **Reverse sweep.** An unregistered `.md` dropped into the instruments
+    directory passed the old gate. Every file in
+    `shared_content_policy.scan_directories` must now be registered.
+  - Mirrors that cannot be one contiguous region declare
+    `mirror_mode: structural` and warn every run that prose divergence is
+    undetected — the weaker guarantee is announced, not assumed.
+  - Tests 17→28. Amendment 1 draft updated (§1 gains Entry 2; §3 gains the
+    model-identifier provenance limit — pinned IDs are the provider's exact
+    complete strings with no dated snapshot available, so an ID names a model
+    as served at call time, not a frozen weight set).
+- **OPEN — needs Shawn's decision:** the second registered mirror
+  (`verdicts-and-precision` → reproduction-assessor `SKILL.md`) omits five
+  canonical prose paragraphs (`CANNOT_COMPARE` definition, paper-error
+  handling, proprietary-upstream verdict implications, environment-spec levels
+  0–5). Not an erratum (SKILL.md is not in the frozen set; its banner claims
+  only the tables), but the reproduction human lane does not see that prose.
+  Converge the mirror, or accept `structural` mode as final?
+- **Process note for concurrent sessions:** this collision cost a full
+  duplicate build. `git fetch` before starting work, not only before
+  committing — the session-start snapshot said `0 behind` and was stale within
+  the hour.
+
 ## Repo state (2026-07-24)
 
 - **PHASE 1 BUILD QUEUE EXECUTED (2026-07-24, second session; commits
