@@ -286,9 +286,11 @@ your verdict would make it bilateral).
 
 ## 2026-07-27 — Candidates
 
-*Drafted at handoff (session 2026-07-27, amd-tower). **Pending your review** —
-accept / edit / discard / replace. Silence holds them over; it does not
-discard them.*
+*Drafted at handoff (session 2026-07-27, amd-tower). **Reviewed and HELD OVER
+by Shawn 2026-07-27** (second session, verdict pass): not accepted, not
+discarded — carried forward for a later decision. They remain live candidates;
+re-present them at the next handoff rather than treating the hold as a soft
+rejection.*
 
 **Candidate A — "Can we converge X without a prereg update, or does it need an
 erratum?" was the right question, asked at the right grain.** You did not ask

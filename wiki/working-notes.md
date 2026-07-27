@@ -5,7 +5,7 @@ title: "Working Notes"
 audience: "researchers"
 tags: [research-methodology, llm-craft, open-science]
 created: 2026-02-09
-updated: 2026-07-24
+updated: 2026-07-27
 status: active
 ---
 
@@ -452,3 +452,51 @@ agreement differences, so no preregistration-compliant model ranking exists
 before the census — selection must be gates-plus-cost, not ranking. Gate
 design choices that look like implementation detail carry first-order
 inferential consequences.
+
+## Observation 16: Structural instrument checks have a prose-shaped blind spot (2026-07-27)
+
+### Context
+
+The D5 manifest-consistency gate's first implementation verified registered
+mirrors by comparing fenced code blocks and table rows between the canonical
+instrument file and its operational copy. The Pass 6 prompt carried a banner
+asserting a *verbatim* mirror of the FAIR instrument.
+
+### The observation
+
+Every block and every row matched, so the gate reported PASS — while four
+normative statements from preregistration §7.1 were absent from the prompt:
+that unscoreable sub-principles score 0; that data and code scores are never
+aggregated; the A1 majority-retrievability rule in full; and the FAIR4RS
+out-of-scope statement. All four were prose, which is exactly the shape the
+check could not see (erratum-log Entry 2). A structural check reports on the
+fraction of a document it can parse and is silent about the rest, so the
+guarantee it delivers is strictly weaker than the one the banner claimed.
+Where the claim is "verbatim", the check must be byte-exact over a delimited
+region rather than structural over parseable fragments. The banner asserting
+equivalence had been written before anything verified it, and was untrue for
+five days across a frozen artefact. Impact was nil — no pilot score revised —
+which is luck, not design.
+
+## Observation 17: Independent reimplementation is a review technique (2026-07-27)
+
+### Context
+
+A third session resumed from the 2026-07-24 handoff and rebuilt the D5 gate
+from the same specification, unaware the zbook build had already landed. Seven
+commits arrived mid-session; the two implementations were compared rather than
+either being discarded (`03f10ad`→`ceb1d79`).
+
+### The observation
+
+The delta between two independent readings of one specification was two real
+defects in the already-shipped build, both since ported in: the
+structural-versus-byte-exact mirror gap (Observation 16), and a reverse-sweep
+gap that let an unregistered `.md` dropped into the instruments directory pass
+the gate. Neither is a matter of taste. Both sit where the specification was
+silent and the first reading resolved the silence one way without registering
+that a choice was being made — which is precisely what re-reading a single
+implementation cannot surface, because the reader inherits the same
+resolution. A second independent reading makes the underdetermined points
+visible as disagreements. Too expensive to schedule as routine practice, but
+nearly free when it happens by accident: compare before discarding.

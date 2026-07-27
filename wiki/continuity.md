@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-24
+updated: 2026-07-27
 status: active
 ---
 
@@ -29,6 +29,44 @@ merged here as PR #1).
 4. Carry forward open questions.
 
 ---
+
+## Repo state (2026-07-27, second session)
+
+- **FOUR HELD-OVER VERDICTS CLEARED (2026-07-27, amd-tower, second session).**
+  The block flagged below under "HELD OVER" is resolved:
+  1. **WN-h/WN-i ACCEPTED** → `wiki/working-notes.md` Observations 16
+     (structural instrument checks have a prose-shaped blind spot) and 17
+     (independent reimplementation is a review technique). Both existed only as
+     one-line summaries in this file; drafted against their sources (erratum-log
+     Entry 2, and the `03f10ad`→`ceb1d79` commit range) before the verdict.
+  2. **User-obs candidates A–C: HELD AGAIN.** Reviewed, not accepted, not
+     discarded — annotated as such in `wiki/user-observations.md` so they read
+     as triaged rather than untouched. Re-present at the next handoff.
+  3. **Opus-5 benchmark arm CONFIRMED, plus a third arm authorised.** Shawn
+     approved the deferred Fable 5 variant, discharging the 2026-07-22
+     "ask-before-Fable" condition. Benchmark arms are now **Sonnet 5 + Opus 5 +
+     Fable 5**.
+  4. **Amendment §3 provenance paragraph: read at lodgement**, per the
+     2026-07-24 one-read decision. Text unchanged
+     (`amendment-1-draft.md:113–125`); the pre-lodgement checklist governs.
+- **FABLE 5 ARM BUILT.** `.claude/agents/fair-assessor-fable-5.md` generated
+  *from* the Opus 5 file rather than hand-transcribed, then diffed: the three
+  variants differ only in name, description, model pin, role heading, sibling
+  sentence, and `agent_version` — the "only the model pin differs" claim is now
+  verified, not asserted. (Hand-transcription had silently introduced a
+  `sub-principle`→`sub principle` defect; the diff caught it.) Registered in
+  `manifest.yaml` with sha256; the sibling-sentence edit changed the Sonnet 5
+  and Opus 5 hashes too, all three updated in the same commit. **32 tests green,
+  live gate PASS (0 errors, 0 warnings)** — and because the D5 gate enforces the
+  agent registry in both directions, that PASS is positive evidence the new file
+  is registered and correctly hashed.
+- **Fable 5 caveats recorded in the manifest comment, neither blocking
+  authorship:** $10/$50 per MTok (2× Opus 5, 3.3× Sonnet 5 standard), and it
+  requires 30-day data retention — unavailable under zero data retention, which
+  surfaces as a 400 on *every* call rather than as a capability difference.
+  **The benchmark run itself is still ungated:** authoring a definition is not
+  an API call, so the run needs explicit approval with a billing route decided.
+  Three arms × 5 pilot papers × 3 runs = 45 scoring spawns.
 
 ## Repo state (2026-07-27)
 
@@ -88,7 +126,8 @@ merged here as PR #1).
   `~/personal-assistant/.env.bak-2026-07-27` held live API keys and was not
   gitignored (`.env` was covered, `.env.*` was not) — broadened, committed,
   pushed.
-- **HELD OVER — needs Shawn's verdict (no silent discard):** two working-notes
+- **HELD OVER — needs Shawn's verdict (no silent discard):** [x] 2026-07-27
+  ALL FOUR CLEARED — see the second-session block above. Two working-notes
   candidates drafted at this handoff, **WN-h** (structural instrument checks
   have a systematic blind spot: fenced blocks and table rows pass while
   normative prose diverges — measured on the live Pass 6 mirror) and **WN-i**
