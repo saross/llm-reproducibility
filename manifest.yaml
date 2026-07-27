@@ -340,9 +340,11 @@ shared_content:
     receipt_token: "3ddcbfd82575a2f8"
     status: frozen-by-osf-registration  # DOI 10.17605/OSF.IO/DQNHG; edits need regression gate + erratum + amendment
     consumers:
-      - agent: fair-assessor-sonnet-5   # per-model variant (validation benchmark: Sonnet 5 + Opus 5)
+      - agent: fair-assessor-sonnet-5   # per-model variant (benchmark: Sonnet 5 + Opus 5 + Fable 5)
         mechanism: push                 # SubagentStart injection, receipt required
       - agent: fair-assessor-opus-5
+        mechanism: push
+      - agent: fair-assessor-fable-5
         mechanism: push
       - agent: research-assessor    # human/session lane
         mechanism: mirror           # normative blocks byte-identical; banner cites version + token
@@ -425,17 +427,31 @@ shared_content:
 # forward-looking pin — same price ($5/$25 per MTok), higher capability, no
 # reason to prefer 4.8 for new work. Past artefacts keep whatever model they
 # actually ran on; nothing is rewritten.
+# THIRD ARM ADDED 2026-07-27 (Shawn, second decision pass): the deferred Fable 5
+# variant is authorised and authored, discharging the 2026-07-22 "ask-before-
+# Fable" condition. Benchmark arms are now Sonnet 5 + Opus 5 + Fable 5. Two
+# operational caveats, neither blocking authorship: Fable 5 is $10/$50 per MTok
+# (2x Opus 5, 3.3x Sonnet 5 standard), and it requires 30-day data retention —
+# it is unavailable to organisations configured for zero data retention, which
+# would surface as a 400 on every call rather than a capability difference.
+# Authoring the definition is not an API call; the benchmark RUN still needs
+# explicit approval with a billing route decided, per the standing review gate.
 agent_definitions:
   fair-assessor-sonnet-5:
     file: .claude/agents/fair-assessor-sonnet-5.md
     version: "1.0"
     model: claude-sonnet-5
-    sha256: "2c74c8a7bb942576fa8e358f6c0bf4d2dda0c03b4466e28a0562bb134ae861b3"
+    sha256: "f48e29d2aef5bc902d90d229e9daa74de9ab08da87ff16c62405def7b2e93e87"
   fair-assessor-opus-5:
     file: .claude/agents/fair-assessor-opus-5.md
     version: "1.0"
     model: claude-opus-5
-    sha256: "af8580c04dc89a4266e314eaa77199abcd660e6cdb42a6805dd7609bc5a21a1b"
+    sha256: "33262a7c3ff0ad62088cde9b0ea99a83836d9ce73419c1376c39c236ab5c236e"
+  fair-assessor-fable-5:
+    file: .claude/agents/fair-assessor-fable-5.md
+    version: "1.0"
+    model: claude-fable-5
+    sha256: "067f25aace52b3f2677ff5dd10a17065f254f41aab303d62a6c11a943a57975a"
   reproduction-planner:
     file: .claude/agents/reproduction-planner.md
     version: "1.0"
