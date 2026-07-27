@@ -184,11 +184,16 @@ consumer in the registry:
 - `region` (default) — the marker-delimited region
   (`<!-- canon-begin: <id> -->` … in the canonical file,
   `<!-- mirror-begin: <id> -->` … in the mirror) must be **byte-identical**.
-  Prose outside the markers is free to differ per lane.
-- `structural` — fenced blocks and table rows only, for mirrors whose canonical
-  content is distributed across several sections and cannot be wrapped in one
-  contiguous region. **Prose divergence is not detected in this mode**, so the
-  check warns on every run to keep the weaker guarantee visible.
+  Prose outside the markers is free to differ per lane. Where the canonical
+  content lands in several places in the consuming document, add a **segment
+  suffix** — `<!-- canon-begin: <id>#tolerances -->` — and each segment is
+  compared separately, so a document keeps its own structure without giving up
+  byte-exactness. A segment in canon with no counterpart in the mirror (or the
+  reverse) is an error.
+- `structural` — fenced blocks and table rows only, the declared-weaker
+  fallback for a mirror that genuinely cannot be segmented. **Prose divergence
+  is not detected in this mode**, so the check warns on every run to keep the
+  weaker guarantee visible. Nothing in the registry currently uses it.
 
 The distinction exists because the structural check alone passed a Pass 6 prompt
 that had dropped four normative sentences from preregistration §7.1 — every

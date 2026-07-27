@@ -293,14 +293,24 @@ of it, and the assertion is most dangerous once it is written down**, because
 subsequent readers treat it as established. Both mirrors in the registry carried such
 a banner; neither had ever been compared.
 
-Where a mirror cannot be one contiguous region — canonical tables distributed across
-several sections of a skill's workflow — the consumer declares `mirror_mode:
-structural` and the check warns on every run that prose divergence is undetected. The
-weaker guarantee is announced rather than assumed. `verdicts-and-precision` →
-reproduction-assessor `SKILL.md` is currently in that mode and is missing five
-canonical prose paragraphs (`CANNOT_COMPARE` definition, paper-error handling,
-proprietary-upstream verdict implications, environment-specification levels 0–5) —
-flagged for a decision on whether the reproduction human lane needs them inline.
+Where canonical content lands in several places in the consuming document, the markers
+take a **named segment** suffix (`<!-- canon-begin: id#part -->`) and each segment is
+compared separately. This was the resolution for `verdicts-and-precision` →
+reproduction-assessor `SKILL.md`, whose tables sit in three different workflow
+sections: rather than restructure the skill or accept a weaker check, the instrument
+now lands in six segments (`#verdicts`, `#precision`, `#tolerances`, `#discrepancy`,
+`#scope`, `#environment`) placed where each belongs. Converging it replaced reworded
+restatements with canon's own wording and added two things the skill never carried —
+the PAPER_ERROR human-escalation sentence and the environment-specification levels
+0–5. That change needed no erratum and no amendment: `SKILL.md` is not in the frozen
+artefact set, the discrepancy vocabulary it carries is not registered text, and
+converging a mirror changes delivery rather than instrument semantics (erratum log,
+Entry 2, "related finding").
+
+`mirror_mode: structural` remains available for any mirror that genuinely cannot be
+segmented — fenced blocks and table rows only, with a warning on every run that prose
+divergence is undetected. Nothing in the registry uses it now; the weaker guarantee
+would be announced rather than assumed.
 
 ## 5. Per-agent routing
 

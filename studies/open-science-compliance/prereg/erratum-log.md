@@ -112,16 +112,37 @@ orchestrator pre-flight. A future divergence fails loudly instead of persisting
 behind a banner asserting it cannot happen — which is the failure mode this
 entry documents: the assertion was written before anything checked it.
 
-**Related finding, not an erratum.** The same comparison showed that the second
-registered mirror — `verdicts-and-precision.md` into the reproduction-assessor
-`SKILL.md` — omits five canonical prose paragraphs (the `CANNOT_COMPARE`
-definition, paper-error handling, proprietary-upstream verdict implications, and
-the environment-specification levels 0–5). That mirror is **not** an erratum
-against the registration: `SKILL.md` is not part of the frozen artefact set, and
-its banner claims only to mirror the canonical *tables*. Its registry entry now
-declares `mirror_mode: structural` so the weaker guarantee is explicit and the
-check warns on every run. Pending a decision on whether the reproduction human
-lane needs that prose inline.
+**Related finding, resolved the same day — deliberately not an erratum.** The
+same comparison showed the second registered mirror — `verdicts-and-precision.md`
+into the reproduction-assessor `SKILL.md` — carried the canonical prose only in
+reworded form, and omitted two things outright: the sentence escalating
+PAPER_ERROR findings for human confirmation before they enter study data, and
+the environment-specification levels 0–5 (registration §7.5), which the skill
+never carried at all.
+
+No erratum entry and no amendment are required for that mirror, on three
+independent grounds. First, `SKILL.md` is not part of the frozen artefact set —
+the registration froze four files (the preregistration draft, the pilot findings
+report, `study-protocol.md`, and the Pass 6 prompt), and an erratum by definition
+records a defect in a frozen artefact. Second, the content brought into line is
+either not registered at all (the discrepancy vocabulary — `CANNOT_COMPARE`,
+`PAPER_ERROR`, `MAJOR_DISCREPANCY` — appears nowhere in the registration; it
+comes from the reproduction-assessor protocol v1.1 that §7.2's "definitions as
+in" clause points to) or is registered text already faithfully carried by the
+canonical file (§7.4 precision, §7.5 environment levels). Third, converging a
+mirror changes delivery, not instrument semantics: it removes a divergence
+between two lanes rather than altering what either lane is supposed to apply.
+It is therefore an ordinary §8 implementation change, riding the Phase 1
+regression gate with everything else before production use.
+
+**Resolved 2026-07-27:** the mirror is now byte-exact. Because the canonical
+content lands in four different places in the skill's workflow, the check gained
+named segments (`#precision`, `#tolerances`, `#discrepancy`, `#verdicts`,
+`#scope`, `#environment`), each compared separately, so the skill keeps its
+structure without giving up byte-exactness. `mirror_mode: structural` — the
+declared-weaker fallback — is retained in the checker for any future mirror that
+genuinely cannot be segmented, and warns on every run when used. Nothing in the
+registry uses it now.
 
 ---
 

@@ -56,17 +56,42 @@ merged here as PR #1).
     model-identifier provenance limit — pinned IDs are the provider's exact
     complete strings with no dated snapshot available, so an ID names a model
     as served at call time, not a frozen weight set).
-- **OPEN — needs Shawn's decision:** the second registered mirror
-  (`verdicts-and-precision` → reproduction-assessor `SKILL.md`) omits five
-  canonical prose paragraphs (`CANNOT_COMPARE` definition, paper-error
-  handling, proprietary-upstream verdict implications, environment-spec levels
-  0–5). Not an erratum (SKILL.md is not in the frozen set; its banner claims
-  only the tables), but the reproduction human lane does not see that prose.
-  Converge the mirror, or accept `structural` mode as final?
-- **Process note for concurrent sessions:** this collision cost a full
-  duplicate build. `git fetch` before starting work, not only before
-  committing — the session-start snapshot said `0 behind` and was stale within
-  the hour.
+- **SECOND MIRROR CONVERGED (2026-07-27, Shawn's call).**
+  `verdicts-and-precision` → reproduction-assessor `SKILL.md` is now byte-exact
+  in six **named segments** (`#verdicts`, `#precision`, `#tolerances`,
+  `#discrepancy`, `#scope`, `#environment`) — the check gained segment support
+  so a mirror can land in several places in a document without giving up
+  byte-exactness. Convergence replaced reworded restatements with canon's
+  wording and added two things the skill never carried: the PAPER_ERROR
+  human-escalation sentence and environment-spec levels 0–5 (new SKILL.md
+  section H). **No erratum, no amendment** — SKILL.md is not in the frozen
+  artefact set, the discrepancy vocabulary is not registered text, and
+  converging a mirror changes delivery not instrument semantics; ordinary §8
+  implementation change riding the Phase 1 regression gate. Reasoning recorded
+  in erratum-log Entry 2 under "related finding". `mirror_mode: structural`
+  survives as the declared-weaker fallback; nothing uses it.
+- **FORWARD MODEL PINS → OPUS 5 (2026-07-27, Shawn's call).** Every pin that
+  was `claude-opus-4-8` is now `claude-opus-5`: `fair-assessor-opus-4-8.md`
+  renamed to `fair-assessor-opus-5.md`, plus reproduction-planner,
+  reproduction-executor, adversarial-reviewer. Same price ($5/$25 per MTok),
+  higher capability, no reason to prefer 4.8 for new work. **History is not
+  rewritten** — no scored artefact ever ran on 4.8 (existing extractions record
+  `claude-opus-4-5`/`claude-sonnet-4-5` and keep those), and the dated decision
+  records in the session log and reflections stand as written; the manifest
+  comment records 2026-07-22 → 2026-07-24 → superseded-2026-07-27 as a chain.
+  The validation benchmark's Opus arm is now Opus 5. Selection still happens at
+  the validation phase under the amendment's gates-plus-cost rule.
+- **Process fix for concurrent sessions — IMPLEMENTED.** The collision cost a
+  full duplicate build. Root cause: `git status` and
+  `git rev-list origin/main...HEAD` read the *local* `origin/main` ref and never
+  contact the remote, so without a `git fetch` they report "in sync" from a
+  stale pointer — indistinguishable from real sync. The harness's session-start
+  snapshot does not fetch either. Reflog confirms this repo's `origin/main`
+  pointer had not moved since 2026-07-24 14:16 until a fetch at 2026-07-27
+  11:25, while the zbook commits landed 14:29–20:01 on 24 July. Fix: fetch-first
+  is now the opening instruction in this repo's `CLAUDE.md`, and the `/handoff`
+  resume-prompt template opens with `git fetch && git status -sb`
+  (`~/personal-assistant/global-claude-md/handoff-protocol.md` step 6).
 
 ## Repo state (2026-07-24)
 

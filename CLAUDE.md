@@ -2,8 +2,19 @@
 
 **Version:** 3.0.1 | **Schema:** v2.6 | **Workflow:** 8-pass session-per-pass (v5.0.0) | **Reproduction:** v1.1
 **Manifest:** See `manifest.yaml` for all component versions
-**Session continuity:** Read `wiki/continuity.md` at session start — cross-session state,
-pending tasks, and session log live there. Planning documents live in `wiki/planning/`.
+**Session continuity:** Run `git fetch` **first**, before reading anything or
+starting work, and report ahead/behind. Then read `wiki/continuity.md` —
+cross-session state, pending tasks, and session log live there. Planning
+documents live in `wiki/planning/`.
+
+> **Why fetch first.** This repository is worked from several machines
+> (amd-tower, zbook). `git status` and `git rev-list origin/main...HEAD` read
+> the *local* `origin/main` ref and never contact the remote, so without a
+> fetch they report "in sync" from a stale pointer — which looks exactly like
+> genuinely being in sync. The harness's session-start git snapshot does not
+> fetch either. On 2026-07-27 this cost a full duplicate build of the D5 gate:
+> the resumed session's check said `0 behind` while seven commits sat unfetched
+> from three days earlier.
 
 ## Project Purpose
 
