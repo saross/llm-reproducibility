@@ -15,6 +15,25 @@
 <!-- Log each significant step with approximate timing. -->
 <!-- Include failed attempts and iterations — they inform future reproductions. -->
 
+### Materials Acquired
+
+Every artefact fetched for this reproduction — code, data, supplements — with
+the URL it came from and the SHA-256 of the bytes actually received. This is
+the provenance record: without it, a later reader cannot tell whether a
+re-fetch returned the same artefact, and a silently-updated file on a personal
+server or a repository's "latest" endpoint is indistinguishable from the one
+that produced these results.
+
+| Artefact | Source URL or DOI | Retrieved (UTC) | SHA-256 | Destination |
+|----------|-------------------|-----------------|---------|-------------|
+| `{filename}` | {url} | {YYYY-MM-DD} | `{64-hex}` | {store / attempt-dir / scratch} |
+
+<!-- Record every fetch, including ones later discarded. -->
+<!-- Git clones: record the commit hash in the SHA-256 column, prefixed `git:`. -->
+<!-- Hand-acquired items (proxy, paywall): record the access method, not a URL -->
+<!-- that would not resolve for anyone else, and hash the file all the same. -->
+<!-- If an artefact could NOT be hashed, say why here rather than leaving blank. -->
+
 ### Modifications Required
 
 1. **{Modification category}** ({N iterations if applicable}):
