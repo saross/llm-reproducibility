@@ -67,6 +67,47 @@ merged here as PR #1).
   **The benchmark run itself is still ungated:** authoring a definition is not
   an API call, so the run needs explicit approval with a billing route decided.
   Three arms × 5 pilot papers × 3 runs = 45 scoring spawns.
+- **CORPUS ITEMS 5 AND 6 DONE — the corpus plan's build list is now closed.**
+  Both were already *specified* in `corpus/README.md`; only the implementations
+  were missing.
+  - **Item 5 (`bd5bc40`, on main):** reproduction preparation prompt v1.0→v1.1.
+    New §1.0 (hash at fetch time — reconstructing at session end makes the
+    retrieval dates guesses) and §1.0.1 (three destinations: corpus store for
+    publisher content and never git; attempt directory for author-released
+    materials; scratch for what nothing references). `log-template.md` gains a
+    **Materials Acquired** table. Verification and handoff gained matching
+    checks.
+  - **Item 6 (PR #2, branch `feat/schema-v2.7-source-provenance`):** schema
+    v2.7 adding optional `source_file` + `source_sha256`. Branched not pushed,
+    per the standing schema-change rule. Additivity verified mechanically (no
+    v2.6 property or top-level key dropped; `required` unchanged), not asserted.
+    **v2.6 retained and the pilots deliberately not back-filled** — the field
+    records what a run actually read, so retro-fitting a digest would make it
+    lie in its first use. Out of scope and flagged in the PR:
+    `docs/user-guide/schema-reference.md` and `docs/README.md` still say v2.6
+    (prose rewrite; belongs with task D).
+- **FINDING — the D5 gate's version check covers 7 of 25 registered entries.**
+  Found by probing this session's own change: setting the reproduction
+  preparation prompt's manifest version to a deliberately wrong `9.9` still
+  produced `PASS`. Cause is scope, not a bug — `check_canonical_entry`
+  (`scripts/check-manifest-consistency.py:180`) runs **only** over
+  `shared_content`, so `components.*`, `assessment.prompts.*`,
+  `reproduction.prompts.*` and the rest are unchecked. Same shape as
+  Observation 16: a gate reporting PASS over a narrower scope than a reader
+  assumes — and this file described D5 as "verifies version lines" without the
+  qualifier. A sweep of all 25 registered `file`+`version` entries found:
+  8 matching, 1 **genuine mismatch**, 6 cosmetic `v1.0`-vs-`1.0` prefix
+  differences, and 8 with no `**Version:**` line (the six agent definitions use
+  frontmatter and are hash-checked instead — stronger, not weaker).
+  **Not fixed, needs Shawn:** (a) whether to widen the gate's version check,
+  which is a design decision with an immediate drift bow-wave; (b) the genuine
+  mismatch — `assessment_json` is `1.1` in `manifest.yaml` but
+  `**Version:** 2.1` at
+  `.claude/skills/research-assessor/references/schema/assessment-schema.md:7`,
+  and the commit cited as that entry's provenance (`c3654f6`, in both the
+  manifest description and the v3.0.1 version-history entry) **does not resolve
+  in this repository** — so which number is right cannot be settled from the
+  record alone.
 
 ## Repo state (2026-07-27)
 
