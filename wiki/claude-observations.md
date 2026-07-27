@@ -558,3 +558,31 @@ consolation rather than a justification is what keeps the process fix motivated.
 the cost load-bearing: "this found two real gaps; the same comparison was
 available deliberately for a fraction of the price". Never let an accidental
 benefit stand as the summary of an avoidable error.
+
+## claude-obs 28 — 2026-07-27: "Does anything need *this* context?" is his wind-down test
+
+**Pattern.** Closing the session, Shawn did not ask "are we finished?" — he
+asked whether anything outstanding "needs to be handled in this context", and
+told me to flag it if so. That is a sharper question, and a different one: it
+separates work that is merely unfinished (durable in git, resumable anywhere)
+from work whose inputs live only in the current conversation. His wind-down
+gate is about *context-dependence*, not completion.
+
+**Lesson.** Answering it properly means auditing for volatile state rather than
+for open todos — findings not yet written down, verifications only I have run,
+half-formed judgements that would cost real effort to reconstruct. When I ran
+that audit honestly the answer was "nothing", but the audit itself turned up two
+items worth surfacing (zbook's hooks needing reinstallation after this session's
+gate change, and an ungitignored `.env` backup holding live keys) that a
+completion-focused check would have walked straight past.
+
+**Lesson (second).** The corollary is that I should be running this test
+*before* he asks. If a finding exists only in my context, it is one compaction
+away from being lost, and the fix is always the same: write it into a governed
+artefact now. Cross-references claude-obs 25 — same instinct (durable mechanism
+over transient state), applied to session state rather than process rules.
+
+**How to apply.** At any wind-down signal, audit for context-dependent state
+first and report that audit explicitly — "nothing needs this context, but here
+are N things that need *someone's* context" — then close. Do not conflate "all
+committed" with "nothing would be lost".

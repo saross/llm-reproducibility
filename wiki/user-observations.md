@@ -283,3 +283,41 @@ uncertain", the expectation would have been set right. You may want
 confidence labels on any prediction about external-system behaviour as a
 standing rule (Claude has self-imposed a version of this in claude-obs 21;
 your verdict would make it bilateral).
+
+## 2026-07-27 — Candidates
+
+*Drafted at handoff (session 2026-07-27, amd-tower). **Pending your review** —
+accept / edit / discard / replace. Silence holds them over; it does not
+discard them.*
+
+**Candidate A — "Can we converge X without a prereg update, or does it need an
+erratum?" was the right question, asked at the right grain.** You did not ask
+Claude to fix the second mirror, and you did not ask whether it *should* be
+fixed. You asked what governance class the fix falls into — which is the
+question that actually gated the work, and one Claude had left open by
+flagging the finding without resolving its status. Answering it required
+checking three separate things (frozen-artefact membership, whether the
+vocabulary is registered text, whether mirroring is delivery or semantics),
+and the answer — no erratum, no amendment — is what made a same-session
+convergence legitimate rather than a governance risk. Asking for the
+*category* before the action is a pattern worth keeping where registered
+artefacts are involved.
+
+**Candidate B — Asking "explain what went wrong so I can avoid it" produced a
+better fix than a correction would have.** When the stale-ref collision
+surfaced you did not ask Claude to be more careful; you asked for the
+mechanism, and then proposed where the guard belongs (the generated handoff
+prompt). That framing turned a one-off apology into two durable insertions —
+this repo's `CLAUDE.md` and `handoff-protocol.md` step 6 — inside the same
+turn. The counterfactual, "please fetch next time", would have produced
+nothing durable. Worth noting the diagnosis was only possible because you
+asked for it: Claude had already moved on to the reconciliation work.
+
+**Candidate C — The context-budget check before the wind-down question.** You
+noticed context burn and asked whether anything *needed this context* before
+closing, rather than either pushing on or closing blind. That surfaced two
+things that would otherwise have been lost silently (the zbook hook
+reinstallation, and an unrelated secret-safety gap Claude found while
+checking). The pattern — "is there anything that can only be done here?" as a
+distinct question from "are we done?" — seems to catch a category that a
+plain wind-down misses.
