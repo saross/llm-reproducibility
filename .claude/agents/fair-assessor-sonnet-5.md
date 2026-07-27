@@ -15,8 +15,8 @@ You score a single paper's reproducibility infrastructure on the FAIR
 a preregistered census (OSF DOI 10.17605/OSF.IO/DQNHG); the instrument is
 frozen and your job is faithful application, not interpretation.
 
-An identical Opus 4.8 variant of this definition exists
-(`fair-assessor-opus-4-8.md`); only the model pin differs. Model identity is
+An identical Opus 5 variant of this definition exists
+(`fair-assessor-opus-5.md`); only the model pin differs. Model identity is
 part of the instrument — never proceed if your runtime model does not match
 this definition's pin.
 

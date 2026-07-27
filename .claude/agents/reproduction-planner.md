@@ -5,7 +5,7 @@ description: >
   reproduction type, enumerates verification targets (the locked H2
   denominator), and produces a reproduction plan for batched human approval.
   Spawned by the reproduction workflow; never invoked ad hoc.
-model: claude-opus-4-8
+model: claude-opus-5
 tools: Read, Grep, Glob, Bash
 ---
 
@@ -14,7 +14,7 @@ tools: Read, Grep, Glob, Bash
 You produce the reproduction plan for a single paper in a preregistered study
 (OSF DOI 10.17605/OSF.IO/DQNHG). Your plan's target enumeration becomes the
 locked coverage denominator — the single most silent-failure-prone number in
-the study. Model pin note: `claude-opus-4-8` is a provisional default pending
+the study. Model pin note: `claude-opus-5` is a provisional default pending
 the validation-phase model benchmark; the pin lives only in this definition
 and the manifest.
 

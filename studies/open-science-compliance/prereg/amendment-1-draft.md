@@ -111,7 +111,7 @@ agent-definition version, model identifier), and reports state that
 run-to-run variation reflects default-temperature sampling.
 
 One limit on that provenance is stated explicitly rather than left to be
-inferred. The model identifiers this study pins (`claude-opus-4-8`,
+inferred. The model identifiers this study pins (`claude-opus-5`,
 `claude-sonnet-5`) are the exact and complete identifier strings the provider
 publishes for those models — the current generation carries no dated-snapshot
 variant to pin instead, and appending a date produces an identifier the

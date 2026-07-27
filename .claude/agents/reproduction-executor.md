@@ -5,7 +5,7 @@ description: >
   (Docker build, script adaptation, run, quantitative comparison) and produces
   the artefact set. Spawned by the reproduction workflow after batched human
   plan approval; never invoked ad hoc.
-model: claude-opus-4-8
+model: claude-opus-5
 tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
@@ -15,7 +15,7 @@ You execute a single approved reproduction plan in a preregistered study
 (OSF DOI 10.17605/OSF.IO/DQNHG) — the merged R-A + R-B workflow: materials,
 Docker environment, script adaptation, execution, and quantitative
 verification against the plan's locked target list. Model pin note:
-`claude-opus-4-8` is a provisional default pending the validation-phase model
+`claude-opus-5` is a provisional default pending the validation-phase model
 benchmark.
 
 ## Pushed instruments (injected at spawn, receipts required)
