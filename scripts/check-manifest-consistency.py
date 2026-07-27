@@ -73,6 +73,19 @@ MIRROR_BEGIN = "<!-- mirror-begin: {name} -->"
 MIRROR_END = "<!-- mirror-end: {name} -->"
 
 
+def segment_ids(text: str, name: str, kind: str) -> list[str]:
+    """Return the segment suffixes of every marker for `name` in `text`.
+
+    A mirror whose canonical content is distributed across several sections of
+    the consuming document uses named segments — `<!-- canon-begin: id#part -->`
+    — so each part stays byte-exact where it naturally belongs. An unsegmented
+    marker yields [""], the single-region case.
+    """
+    pattern = re.compile(
+        rf"<!-- {kind}-begin: {re.escape(name)}(#[A-Za-z0-9_-]+)? -->")
+    return [m.group(1) or "" for m in pattern.finditer(text)]
+
+
 def marked_region(text: str, begin: str, end: str) -> str | None:
     """Return the text strictly between two marker lines, or None if absent.
 
@@ -264,24 +277,43 @@ def check_mirror_region(name: str, canonical_text: str, mirror_text: str,
     mirror is exactly the state the banner claims cannot exist, and treating it
     as passing would reinstate the defect this check exists to catch.
     """
-    canonical_region = marked_region(
-        canonical_text, CANON_BEGIN.format(name=name), CANON_END.format(name=name))
-    mirror_region = marked_region(
-        mirror_text, MIRROR_BEGIN.format(name=name), MIRROR_END.format(name=name))
+    canon_segments = segment_ids(canonical_text, name, "canon")
+    mirror_segments = segment_ids(mirror_text, name, "mirror")
 
-    if canonical_region is None:
-        report.error(f"{name}: canonical file lacks the "
-                     f"'{CANON_BEGIN.format(name=name)}' / "
-                     f"'{CANON_END.format(name=name)}' marker pair — mirror unverifiable")
-    if mirror_region is None:
-        report.error(f"{name}: mirror {mirror_rel} lacks the "
-                     f"'{MIRROR_BEGIN.format(name=name)}' / "
-                     f"'{MIRROR_END.format(name=name)}' marker pair — mirror unverifiable")
-    if canonical_region is None or mirror_region is None:
+    if not canon_segments:
+        report.error(f"{name}: canonical file carries no "
+                     f"'<!-- canon-begin: {name} -->' marker — mirror unverifiable")
+    if not mirror_segments:
+        report.error(f"{name}: mirror {mirror_rel} carries no "
+                     f"'<!-- mirror-begin: {name} -->' marker — mirror unverifiable")
+    if not canon_segments or not mirror_segments:
         return
-    if canonical_region != mirror_region:
-        report.error(f"{name}: mirror {mirror_rel} region is not byte-identical to canon "
-                     f"({first_difference(canonical_region, mirror_region)})")
+
+    for missing in sorted(set(canon_segments) - set(mirror_segments)):
+        report.error(f"{name}: mirror {mirror_rel} is missing canonical segment "
+                     f"'{name}{missing}' — that content is not in the human lane")
+    for extra in sorted(set(mirror_segments) - set(canon_segments)):
+        report.error(f"{name}: mirror {mirror_rel} declares segment '{name}{extra}' "
+                     f"which does not exist in the canonical file")
+
+    for segment in sorted(set(canon_segments) & set(mirror_segments)):
+        label = f"{name}{segment}"
+        canonical_region = marked_region(
+            canonical_text, CANON_BEGIN.format(name=label), CANON_END.format(name=label))
+        mirror_region = marked_region(
+            mirror_text, MIRROR_BEGIN.format(name=label), MIRROR_END.format(name=label))
+        if canonical_region is None:
+            report.error(f"{name}: canonical segment '{label}' has no closing "
+                         f"'{CANON_END.format(name=label)}'")
+            continue
+        if mirror_region is None:
+            report.error(f"{name}: mirror segment '{label}' has no closing "
+                         f"'{MIRROR_END.format(name=label)}'")
+            continue
+        if canonical_region != mirror_region:
+            report.error(f"{name}: mirror {mirror_rel} segment '{label}' is not "
+                         f"byte-identical to canon "
+                         f"({first_difference(canonical_region, mirror_region)})")
 
 
 def check_consumers(name: str, entry: dict, root: Path, report: Report) -> None:

@@ -340,9 +340,9 @@ shared_content:
     receipt_token: "3ddcbfd82575a2f8"
     status: frozen-by-osf-registration  # DOI 10.17605/OSF.IO/DQNHG; edits need regression gate + erratum + amendment
     consumers:
-      - agent: fair-assessor-sonnet-5   # per-model variant (validation benchmark: Sonnet 5 + Opus 4.8)
+      - agent: fair-assessor-sonnet-5   # per-model variant (validation benchmark: Sonnet 5 + Opus 5)
         mechanism: push                 # SubagentStart injection, receipt required
-      - agent: fair-assessor-opus-4-8
+      - agent: fair-assessor-opus-5
         mechanism: push
       - agent: research-assessor    # human/session lane
         mechanism: mirror           # normative blocks byte-identical; banner cites version + token
@@ -366,15 +366,11 @@ shared_content:
       - agent: reproduction-assessor  # human/session lane skill
         mechanism: mirror             # discrepancy/tolerance/scope tables byte-identical
         mirror_file: .claude/skills/reproduction-assessor/SKILL.md
-        # STRUCTURAL mode: the canonical tables are distributed across SKILL.md
-        # sections C, E, and F, so no single contiguous region can wrap them.
-        # Tables and fenced blocks are verified; PROSE IS NOT. Five canonical
-        # prose paragraphs are currently absent from this mirror (CANNOT_COMPARE
-        # definition, paper-error handling, proprietary-upstream verdict
-        # implications, environment-specification levels 0-5) — flagged
-        # 2026-07-27, pending a decision on whether the reproduction human lane
-        # needs them inline. Promote to `region` if this mirror is restructured.
-        mirror_mode: structural
+        # REGION mode with named segments: the canonical content lands in
+        # SKILL.md sections C, E, F, and H, each byte-compared separately
+        # (converged 2026-07-27 — previously structural, which could not see
+        # prose and so missed reworded restatements and two omissions).
+        mirror_mode: region
   coverage-rules:
     canonical_file: studies/open-science-compliance/protocol/instruments/coverage-rules.md
     version: "1.0"
@@ -421,33 +417,37 @@ shared_content:
 # + hash update here in the same commit. `model` records the pinned model ID —
 # the receipted runtime model_id is hard-gated against it (design §3.3).
 # Reproduction-lane pins are provisional defaults pending the validation-phase
-# model benchmark (Shawn 2026-07-22: Sonnet 5 + Opus 4.8 first; ask-before-Fable).
-# Shawn 2026-07-24: pins deliberately stay provisional — Opus 5 is expected
-# imminently, so the real selection happens at the validation phase with
-# whatever models are then current.
+# model benchmark; the real selection happens at the validation phase under the
+# amendment's gates-plus-cost rule. Decision history: Shawn 2026-07-22 set the
+# benchmark arms as Sonnet 5 + Opus 4.8 (ask-before-Fable) and 2026-07-24 kept
+# the pins provisional because Opus 5 was expected imminently. SUPERSEDED
+# 2026-07-27 (Shawn): Opus 5 replaces Opus 4.8 as the Opus arm and as every
+# forward-looking pin — same price ($5/$25 per MTok), higher capability, no
+# reason to prefer 4.8 for new work. Past artefacts keep whatever model they
+# actually ran on; nothing is rewritten.
 agent_definitions:
   fair-assessor-sonnet-5:
     file: .claude/agents/fair-assessor-sonnet-5.md
     version: "1.0"
     model: claude-sonnet-5
-    sha256: "7fd70ab5d8cb360db4ec002469ea3e7433d86bbc62fb5e28784ed4501d0b6c96"
-  fair-assessor-opus-4-8:
-    file: .claude/agents/fair-assessor-opus-4-8.md
+    sha256: "2c74c8a7bb942576fa8e358f6c0bf4d2dda0c03b4466e28a0562bb134ae861b3"
+  fair-assessor-opus-5:
+    file: .claude/agents/fair-assessor-opus-5.md
     version: "1.0"
-    model: claude-opus-4-8
-    sha256: "598836edf0ff607f89b3ad85281ec3cc94d4e8e7dd2826517fa7d0513866a1bc"
+    model: claude-opus-5
+    sha256: "af8580c04dc89a4266e314eaa77199abcd660e6cdb42a6805dd7609bc5a21a1b"
   reproduction-planner:
     file: .claude/agents/reproduction-planner.md
     version: "1.0"
-    model: claude-opus-4-8
-    sha256: "c13297f81458917362c9b20c5f25a0a5aab8f0c62caba14115c30b2b7efb00c3"
+    model: claude-opus-5
+    sha256: "1ebb9bc17b771a93b0c639721004279397d1ce67cb925a4c20608f2b920cc0a4"
   reproduction-executor:
     file: .claude/agents/reproduction-executor.md
     version: "1.0"
-    model: claude-opus-4-8
-    sha256: "dbb5987ad285c7575c0aa601c331502315709e5c4ef64effb07688f4009d07bb"
+    model: claude-opus-5
+    sha256: "dfcae90d0fea5711f0020b89cc20e692636b4c0619d6156b9b80988f4ff05a90"
   adversarial-reviewer:
     file: .claude/agents/adversarial-reviewer.md
     version: "1.0"
-    model: claude-opus-4-8
-    sha256: "8409f8dd522385d260e4a4752fc0bb96ae8402f9f64424e92d15311edb26ba25"
+    model: claude-opus-5
+    sha256: "ed116e21970483ab5c0b84f5d985534135eda9c7380f21731cc8c9c0a1524bcf"

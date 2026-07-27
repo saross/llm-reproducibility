@@ -193,11 +193,22 @@ Even if the Dockerfile has minor issues, fix rather than reconstruct:
 > rules, discrepancy classification, and scope-limitation taxonomy live at
 > `studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md`
 > (v1.0, receipt token `fe9bca3d3c95f931`, FROZEN by the OSF registration).
-> Sections C, E, and F below **mirror its tables** for the human/session lane;
-> the manifest consistency check verifies the mirror. **Edit only the canonical
+> Sections C, E, F, and H below **mirror it byte for byte** for the
+> human/session lane, in marker-delimited segments the manifest consistency
+> check compares against the canonical file. **Edit only the canonical
 > file** — instrument edits require the §8 regression gate + erratum-log entry
 > + OSF amendment.
 
+<!-- mirror-begin: verdicts-and-precision#precision -->
+Exact = matches to machine precision; within tolerance = matches within
+pre-stated per-analysis tolerances (e.g. within published highest posterior
+density intervals for Markov chain Monte Carlo outputs), tolerances recorded in
+each reproduction plan **before execution**; material discrepancy = outside
+tolerance with potential to affect conclusions.
+
+<!-- mirror-end: verdicts-and-precision#precision -->
+
+<!-- mirror-begin: verdicts-and-precision#tolerances -->
 | Analysis Type | Strategy | Tolerance | Example |
 |---------------|----------|-----------|---------|
 | Deterministic | Exact match | 0 | Herskind (frequency counts), Dye (post-processing) |
@@ -206,15 +217,15 @@ Even if the Dockerfile has minor issues, fix rather than reconstruct:
 | GAM/regression | Coefficient comparison | Within reported precision | Marwick (minor p-value difference) |
 | Proprietary upstream | Document scope limitation | N/A | Dye (OxCal not reproduced) |
 
-**Deterministic analyses:** Every value must match. Differences indicate a bug in the reproduction, not expected variation.
+Deterministic analyses: every value must match — differences indicate a bug in
+the reproduction, not expected variation. Stochastic analyses: fresh runs
+produce different point estimates; verify point estimates within published
+HPD/CI intervals, qualitative conclusions unchanged, direction and magnitude of
+effects consistent. Figure verification is visual (layout, patterns, relative
+positions) — exact pixel matching is not expected; the scientific content must
+match.
 
-**Stochastic analyses:** Fresh MCMC runs will produce different point estimates. Verify:
-
-1. Point estimates within published HPD/CI intervals
-2. Qualitative conclusions unchanged
-3. Direction and magnitude of effects consistent
-
-**Figure verification:** Visual comparison — layout, patterns, relative positions. Exact pixel matching not expected (rendering differences). Focus on whether the scientific content matches.
+<!-- mirror-end: verdicts-and-precision#tolerances -->
 
 **For complete strategies and HPD interval checking:**
 → See `references/verification-strategies.md`
@@ -238,6 +249,7 @@ Even if the Dockerfile has minor issues, fix rather than reconstruct:
 
 ### E. Discrepancy Classification
 
+<!-- mirror-begin: verdicts-and-precision#discrepancy -->
 | Category | Definition | Verdict Impact |
 |----------|-----------|----------------|
 | EXACT_MATCH | Values identical to reported precision | SUCCESSFUL |
@@ -247,31 +259,41 @@ Even if the Dockerfile has minor issues, fix rather than reconstruct:
 | MAJOR_DISCREPANCY | Substantive difference affecting conclusions | PARTIAL or FAILED |
 | CANNOT_COMPARE | Value could not be computed (upstream data/preprocessing issue) | Context-dependent |
 
-**CANNOT_COMPARE** covers cases where the reproduction cannot produce a value because of
-upstream issues outside the analytical pipeline — for example, NaN results from
-undocumented data preprocessing steps, missing input files, or data formatting
-mismatches. This is distinct from MAJOR_DISCREPANCY because the algorithm is not wrong;
-the input conditions differ from those (often undocumented) that produced the published
-result.
+**CANNOT_COMPARE** covers cases where the reproduction cannot produce a value
+because of upstream issues outside the analytical pipeline — for example, NaN
+results from undocumented data preprocessing steps, missing input files, or
+data formatting mismatches. Distinct from MAJOR_DISCREPANCY because the
+algorithm is not wrong; the input conditions differ from those (often
+undocumented) that produced the published result.
 
-**Paper error handling:** When a reproduced value disagrees with a published value but
-the reproduction is internally consistent and the paper's own tabulated data supports the
-reproduced value, classify as PAPER_ERROR rather than MAJOR_DISCREPANCY. To verify a
-suspected paper error: apply the published formula to the paper's own input values and
-check whether the paper's reported output is consistent. Document the verification in the
-comparison report.
+**Paper error handling:** when a reproduced value disagrees with a published
+value but the reproduction is internally consistent and the paper's own
+tabulated data supports the reproduced value, classify as PAPER_ERROR rather
+than MAJOR_DISCREPANCY. To verify a suspected paper error: apply the published
+formula to the paper's own input values and check whether the paper's reported
+output is consistent. Document the verification in the comparison report.
+PAPER_ERROR findings escalate for human confirmation before entering study
+data (modernisation plan §4.4).
 
-**Verdict categories:**
+<!-- mirror-end: verdicts-and-precision#discrepancy -->
 
+<!-- mirror-begin: verdicts-and-precision#verdicts -->
 - **SUCCESSFUL** — All (or nearly all) values reproduced within expected tolerances; conclusions confirmed
 - **PARTIAL** — Some analyses reproduced, others could not (scope limitations, missing data, etc.)
 - **FAILED** — Material discrepancies; reproduced results contradict published findings
 - **BLOCKED** — Reproduction could not be attempted (missing code, inaccessible data, proprietary tools with no intermediates)
 
+BLOCKED is an outcome, not an exclusion: availability claims that cannot be
+fulfilled are recorded and the paper is retained with verdict BLOCKED
+(preregistration §5.2).
+
+<!-- mirror-end: verdicts-and-precision#verdicts -->
+
 ### F. Scope Limitation Taxonomy
 
 Not all scope limitations are equal. Classify each limitation by category:
 
+<!-- mirror-begin: verdicts-and-precision#scope -->
 | Category | Description | FAIR Implication | Example |
 |----------|-------------|------------------|---------|
 | Proprietary upstream | Analysis depends on commercial/proprietary software | Not a FAIR failure — tool choice | Dye → OxCal MCMC generation |
@@ -279,12 +301,13 @@ Not all scope limitations are equal. Classify each limitation by category:
 | Stochastic non-reproducibility | No random seed set; results will vary | Design limitation, not failure | Key → no `set.seed()` in mmc2/mmc3 |
 | Publishing error | Supplement files empty, corrupted, or mislabelled | Journal process failure | Key → mmc4.csv header only (75 bytes) |
 
-Each category has different implications for the verdict:
+Verdict implications: proprietary upstream does not diminish a SUCCESSFUL
+verdict for the reproducible components; data unavailability may require
+PARTIAL if substantial analyses are affected; stochastic non-reproducibility
+uses stochastic tolerances (exact match not expected); publishing errors are
+documented, excluded from comparison, and flagged as FAIR findings.
 
-- **Proprietary upstream:** Does not diminish a SUCCESSFUL verdict for the reproducible components
-- **Data unavailability:** May require PARTIAL verdict if substantial analyses are affected
-- **Stochastic non-reproducibility:** Use stochastic comparison tolerances; exact match not expected
-- **Publishing error:** Document and exclude from comparison; flag as a FAIR finding
+<!-- mirror-end: verdicts-and-precision#scope -->
 
 ### G. R-Plan Output
 
@@ -302,6 +325,20 @@ For papers with multiple data sources, include a data availability inventory (se
 data access taxonomy).
 
 **Save to:** `outputs/{slug}/reproduction/attempt-{NN}/reproduction-plan.md`
+
+### H. Environment-Specification Levels
+
+Recorded in `environment.md` for every reproduction; the ordinal scale is
+registered (preregistration §7.5).
+
+<!-- mirror-begin: verdicts-and-precision#environment -->
+- **0** — none
+- **1** — language version stated
+- **2** — unpinned dependency list
+- **3** — pinned lockfile
+- **4** — container specification
+- **5** — container plus pinned lockfile
+<!-- mirror-end: verdicts-and-precision#environment -->
 
 ## Artefact Specifications
 

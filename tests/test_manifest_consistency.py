@@ -233,12 +233,12 @@ class ManifestConsistencyTests(unittest.TestCase):
     def test_missing_canon_markers_caught(self) -> None:
         """An unmarked canonical file is unverifiable, not silently passing."""
         self.rewrite(CANONICAL_REL, "<!-- canon-begin: test-instrument -->\n", "")
-        self.assert_error_containing("marker pair — mirror unverifiable")
+        self.assert_error_containing("canonical file carries no")
 
     def test_missing_mirror_markers_caught(self) -> None:
         """An unmarked mirror is unverifiable, not silently passing."""
         self.rewrite(MIRROR_REL, "<!-- mirror-begin: test-instrument -->\n", "")
-        self.assert_error_containing("marker pair — mirror unverifiable")
+        self.assert_error_containing("carries no")
 
     def test_prose_outside_region_is_allowed(self) -> None:
         """Lane-specific framing outside the markers must not fail the check."""
@@ -265,6 +265,57 @@ class ManifestConsistencyTests(unittest.TestCase):
         self.rewrite("manifest.yaml", f"        mirror_file: {MIRROR_REL}",
                      f"        mirror_file: {MIRROR_REL}\n        mirror_mode: sloppy")
         self.assert_error_containing("unknown mirror_mode")
+
+    # --- multi-segment mirrors -------------------------------------------
+    # For mirrors whose canonical content lands in several places in the
+    # consuming document (reproduction-assessor SKILL.md sections C, E, F, H).
+
+    def segment_the_fixture(self) -> None:
+        """Split the single region into two named segments in both files."""
+        for rel, kind in ((CANONICAL_REL, "canon"), (MIRROR_REL, "mirror")):
+            path = self.root / rel
+            text = path.read_text(encoding="utf-8")
+            text = text.replace(
+                f"<!-- {kind}-begin: test-instrument -->\n## Rubric",
+                f"<!-- {kind}-begin: test-instrument#rubric -->\n## Rubric")
+            text = text.replace(
+                "\n## Bands",
+                f"<!-- {kind}-end: test-instrument#rubric -->\n\n"
+                f"<!-- {kind}-begin: test-instrument#bands -->\n## Bands")
+            text = text.replace(
+                f"<!-- {kind}-end: test-instrument -->",
+                f"<!-- {kind}-end: test-instrument#bands -->")
+            path.write_text(text, encoding="utf-8")
+
+    def test_segmented_mirror_baseline_passes(self) -> None:
+        self.segment_the_fixture()
+        report = self.run_checks()
+        self.assertEqual(report.errors, [])
+
+    def test_segment_missing_from_mirror_caught(self) -> None:
+        """Canon declares a segment the mirror never carries."""
+        self.segment_the_fixture()
+        self.rewrite(MIRROR_REL, "<!-- mirror-begin: test-instrument#bands -->\n", "")
+        self.rewrite(MIRROR_REL, "<!-- mirror-end: test-instrument#bands -->\n", "")
+        self.assert_error_containing("missing canonical segment 'test-instrument#bands'")
+
+    def test_segment_not_in_canon_caught(self) -> None:
+        """The mirror claims a segment canon does not define."""
+        self.segment_the_fixture()
+        self.rewrite(MIRROR_REL, "<!-- mirror-end: test-instrument#bands -->",
+                     "<!-- mirror-end: test-instrument#bands -->\n"
+                     "<!-- mirror-begin: test-instrument#invented -->\n"
+                     "Invented content.\n"
+                     "<!-- mirror-end: test-instrument#invented -->")
+        self.assert_error_containing("declares segment 'test-instrument#invented'")
+
+    def test_per_segment_divergence_caught(self) -> None:
+        """A prose edit inside one segment names that segment in the error."""
+        self.segment_the_fixture()
+        self.rewrite(MIRROR_REL,
+                     "Unscoreable criteria score 0 — prose the structural check cannot see.",
+                     "Unscoreable criteria are skipped.")
+        self.assert_error_containing("segment 'test-instrument#rubric' is not byte-identical")
 
     # --- reverse sweep ---------------------------------------------------
 

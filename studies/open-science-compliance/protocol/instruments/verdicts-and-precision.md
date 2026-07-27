@@ -18,6 +18,7 @@ in `manifest.yaml` `shared_content`.
 
 ## Verdict categories (preregistration §7.2)
 
+<!-- canon-begin: verdicts-and-precision#verdicts -->
 - **SUCCESSFUL** — All (or nearly all) values reproduced within expected tolerances; conclusions confirmed
 - **PARTIAL** — Some analyses reproduced, others could not (scope limitations, missing data, etc.)
 - **FAILED** — Material discrepancies; reproduced results contradict published findings
@@ -27,16 +28,22 @@ BLOCKED is an outcome, not an exclusion: availability claims that cannot be
 fulfilled are recorded and the paper is retained with verdict BLOCKED
 (preregistration §5.2).
 
+<!-- canon-end: verdicts-and-precision#verdicts -->
+
 ## Precision categories (preregistration §7.4)
 
+<!-- canon-begin: verdicts-and-precision#precision -->
 Exact = matches to machine precision; within tolerance = matches within
 pre-stated per-analysis tolerances (e.g. within published highest posterior
 density intervals for Markov chain Monte Carlo outputs), tolerances recorded in
 each reproduction plan **before execution**; material discrepancy = outside
 tolerance with potential to affect conclusions.
 
+<!-- canon-end: verdicts-and-precision#precision -->
+
 ## Tolerance rules by analysis type
 
+<!-- canon-begin: verdicts-and-precision#tolerances -->
 | Analysis Type | Strategy | Tolerance | Example |
 |---------------|----------|-----------|---------|
 | Deterministic | Exact match | 0 | Herskind (frequency counts), Dye (post-processing) |
@@ -53,8 +60,11 @@ effects consistent. Figure verification is visual (layout, patterns, relative
 positions) — exact pixel matching is not expected; the scientific content must
 match.
 
+<!-- canon-end: verdicts-and-precision#tolerances -->
+
 ## Discrepancy classification
 
+<!-- canon-begin: verdicts-and-precision#discrepancy -->
 | Category | Definition | Verdict Impact |
 |----------|-----------|----------------|
 | EXACT_MATCH | Values identical to reported precision | SUCCESSFUL |
@@ -80,8 +90,11 @@ output is consistent. Document the verification in the comparison report.
 PAPER_ERROR findings escalate for human confirmation before entering study
 data (modernisation plan §4.4).
 
+<!-- canon-end: verdicts-and-precision#discrepancy -->
+
 ## Scope-limitation taxonomy
 
+<!-- canon-begin: verdicts-and-precision#scope -->
 | Category | Description | FAIR Implication | Example |
 |----------|-------------|------------------|---------|
 | Proprietary upstream | Analysis depends on commercial/proprietary software | Not a FAIR failure — tool choice | Dye → OxCal MCMC generation |
@@ -95,14 +108,19 @@ PARTIAL if substantial analyses are affected; stochastic non-reproducibility
 uses stochastic tolerances (exact match not expected); publishing errors are
 documented, excluded from comparison, and flagged as FAIR findings.
 
+<!-- canon-end: verdicts-and-precision#scope -->
+
 ## Environment-specification levels (preregistration §7.5, ordinal)
 
+<!-- canon-begin: verdicts-and-precision#environment -->
 - **0** — none
 - **1** — language version stated
 - **2** — unpinned dependency list
 - **3** — pinned lockfile
 - **4** — container specification
 - **5** — container plus pinned lockfile
+<!-- canon-end: verdicts-and-precision#environment -->
+
 
 ---
 
