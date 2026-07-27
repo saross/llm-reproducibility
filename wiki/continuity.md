@@ -81,6 +81,23 @@ merged here as PR #1).
   comment records 2026-07-22 → 2026-07-24 → superseded-2026-07-27 as a chain.
   The validation benchmark's Opus arm is now Opus 5. Selection still happens at
   the validation phase under the amendment's gates-plus-cost rule.
+- **Session close (2026-07-27):** `/reflect` written — session-reflection Entry
+  10, llm-observations (independent reimplementation as a review technique),
+  abductive entry (the sync check that could not fail, reflog-anchored),
+  session log, claude-obs 25–28. Secret-safety fix outside this repo:
+  `~/personal-assistant/.env.bak-2026-07-27` held live API keys and was not
+  gitignored (`.env` was covered, `.env.*` was not) — broadened, committed,
+  pushed.
+- **HELD OVER — needs Shawn's verdict (no silent discard):** two working-notes
+  candidates drafted at this handoff, **WN-h** (structural instrument checks
+  have a systematic blind spot: fenced blocks and table rows pass while
+  normative prose diverges — measured on the live Pass 6 mirror) and **WN-i**
+  (independent reimplementation as a review technique: two readings of one
+  specification map where the spec was silent; the delta was two real gaps).
+  Plus **user-obs candidates A–C for 2026-07-27** in `wiki/user-observations.md`
+  (pending review). Also still open from earlier: the Opus-5 benchmark-arm
+  change and the amendment's provenance paragraph, both flagged in-session but
+  not explicitly signed off.
 - **Process fix for concurrent sessions — IMPLEMENTED.** The collision cost a
   full duplicate build. Root cause: `git status` and
   `git rev-list origin/main...HEAD` read the *local* `origin/main` ref and never
