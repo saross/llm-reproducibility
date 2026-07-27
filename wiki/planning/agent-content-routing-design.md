@@ -268,6 +268,40 @@ against the consumer lists), wired into the existing pre-commit hook and orchest
 pre-flight (review D5). The manifest can then drift for at most one commit. The same
 script's agent-file hash check implements the hot-reload guard (§3.4).
 
+**BUILT 2026-07-27** — `scripts/check-manifest-consistency.py`, wired into the
+pre-commit hook (override `MANIFEST_GATE_OVERRIDE=1`) and the `PreToolUse[Agent]`
+pre-flight, with `tests/test_manifest_consistency.py` (28 stdlib cases: a green
+baseline fixture plus one injected defect each). Two checks were added the same day
+after an independent second implementation of D5 was compared against the first;
+both close silent-failure gaps the review's specification left open:
+
+- **Reverse sweep.** Diffing the registry against the files it names cannot detect a
+  file the registry never names. Every `*.md` in a scanned instrument directory must
+  be registered, so a new instrument nobody adds to the manifest fails loudly instead
+  of being invisible. (Verified by test: an unregistered file dropped into the
+  instruments directory passed the gate before this check existed.)
+- **Byte-exact mirror regions**, via HTML-comment marker pairs in both files. The
+  original check compared fenced blocks and table rows — structured content only —
+  and so could not see prose. That gap was live: the Pass 6 prompt's "verbatim
+  mirror" banner (added at extraction, 2026-07-24) was asserting something untrue,
+  with four normative statements from preregistration §7.1 missing while every block
+  and row matched. Recorded as erratum-log Entry 2 and fixed by embedding a byte copy
+  of canon, Pass 6 workflow content relocated outside the region.
+
+The general lesson is worth keeping: **a banner asserting an invariant is not a check
+of it, and the assertion is most dangerous once it is written down**, because
+subsequent readers treat it as established. Both mirrors in the registry carried such
+a banner; neither had ever been compared.
+
+Where a mirror cannot be one contiguous region — canonical tables distributed across
+several sections of a skill's workflow — the consumer declares `mirror_mode:
+structural` and the check warns on every run that prose divergence is undetected. The
+weaker guarantee is announced rather than assumed. `verdicts-and-precision` →
+reproduction-assessor `SKILL.md` is currently in that mode and is missing five
+canonical prose paragraphs (`CANNOT_COMPARE` definition, paper-error handling,
+proprietary-upstream verdict implications, environment-specification levels 0–5) —
+flagged for a decision on whether the reproduction human lane needs them inline.
+
 ## 5. Per-agent routing
 
 | Agent | (a) Embedded role behaviour | (b) Pushed instruments | (c) Pulled references |

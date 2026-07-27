@@ -19,6 +19,9 @@ This directory contains project-level utility scripts that support the variabili
 | `analyse-extraction-variability.py` | Compute variability metrics across runs | After completing multiple runs of same paper |
 | `validate-run-uniqueness.sh` | Verify runs have unique content (not copies) | After completing variability test runs |
 | `batch-assess.py` | Rapid quality assessment across extractions | Batch validation, quality comparison |
+| `check-manifest-consistency.py` | Verify the shared-content registry against the tree | Every commit (hook); orchestrator pre-flight; after editing an instrument |
+| `fetch-corpus.py` | Acquire and verify corpus files against a manifest | Corpus acquisition sessions |
+| `sync-corpus.sh` | Mirror the out-of-tree corpus store to QNAP | After each acquisition session |
 | `install-git-hooks.sh` | Install pre-commit hooks | Initial setup, new clones |
 | `quick_infrastructure_scan.py` | Scan codebase for infrastructure patterns | Exploratory analysis |
 
@@ -151,6 +154,53 @@ Found 5 extraction files
 
 See `extraction-system/scripts/README.md` for detailed documentation.
 
+### check-manifest-consistency.py
+
+**Purpose:** Verify `manifest.yaml`'s `shared_content` registry against the
+working tree. The registry hand-duplicates facts held in canonical-file headers,
+agent definitions, and hook configuration — the hand-synchronisation pathology
+it exists to prevent — so it is machine-verified rather than merely maintained
+(routing design §4; 2026-07-22 review finding D5). One script serves both
+callers: the pre-commit hook, bounding registry drift to a single commit, and
+the orchestrator `PreToolUse[Agent]` pre-flight.
+
+**Usage:**
+
+```bash
+python3 scripts/check-manifest-consistency.py             # full report
+python3 scripts/check-manifest-consistency.py --quiet     # errors only (hook mode)
+python3 scripts/check-manifest-consistency.py --preflight # + model-override check
+```
+
+**Checks:** canonical file presence, version lines, and end-of-file receipt
+tokens including uniqueness; consumer routing evidence for push/pull; mirror
+fidelity; agent-definition hashes in both directions (the hot-reload guard);
+a reverse sweep for unregistered instrument files; and, under `--preflight`,
+that `CLAUDE_CODE_SUBAGENT_MODEL` is unset.
+
+**Mirror modes.** A mirror consumer is checked in one of two modes, declared per
+consumer in the registry:
+
+- `region` (default) — the marker-delimited region
+  (`<!-- canon-begin: <id> -->` … in the canonical file,
+  `<!-- mirror-begin: <id> -->` … in the mirror) must be **byte-identical**.
+  Prose outside the markers is free to differ per lane.
+- `structural` — fenced blocks and table rows only, for mirrors whose canonical
+  content is distributed across several sections and cannot be wrapped in one
+  contiguous region. **Prose divergence is not detected in this mode**, so the
+  check warns on every run to keep the weaker guarantee visible.
+
+The distinction exists because the structural check alone passed a Pass 6 prompt
+that had dropped four normative sentences from preregistration §7.1 — every
+fenced block and table row matched (erratum-log Entry 2).
+
+**Exit codes:** 0 pass (warnings allowed), 1 error, 2 environment/usage failure.
+
+**Tests:** `python3 tests/test_manifest_consistency.py` (stdlib only, 28 cases —
+a green baseline fixture plus one injected defect per test).
+
+**Override (work in progress only):** `MANIFEST_GATE_OVERRIDE=1 git commit ...`
+
 ### install-git-hooks.sh
 
 **Purpose:** Install pre-commit hooks for the repository.
@@ -161,9 +211,12 @@ See `extraction-system/scripts/README.md` for detailed documentation.
 ./scripts/install-git-hooks.sh
 ```
 
-**Installs:**
+**Installs a single pre-commit hook with three gates:**
 - Filename convention enforcement (lowercase-with-hyphens)
-- Other project-specific hooks
+- Corpus gate — blocks new `.pdf`/`.txt` outside the own-artefact whitelist
+  (override: `CORPUS_GATE_OVERRIDE=1`)
+- Manifest consistency — runs `check-manifest-consistency.py --quiet`
+  (override: `MANIFEST_GATE_OVERRIDE=1`)
 
 ### quick_infrastructure_scan.py
 
