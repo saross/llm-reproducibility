@@ -19,8 +19,8 @@ literally and reduce tables to pipe soup; established 2026-07-20).
 2026-07-20, public 2026-07-21. Frozen artefact set at repository commit
 `ee3fda3` (tag `osf-prereg-phase2-2026-07-20`).
 
-**Nature of this amendment.** This amendment (a) corrects three clerical
-defects found in one frozen artefact file, and (b) pre-specifies procedural
+**Nature of this amendment.** This amendment (a) corrects clerical and
+restatement defects found in one frozen artefact file, and (b) pre-specifies procedural
 detail for the registered reliability checks (registration §8) that the
 registration left implicit, before any affected analysis runs. No hypothesis,
 sampling frame, instrument scale, outcome definition, or analysis is changed.
@@ -45,6 +45,24 @@ the canonical schema file. The registration's normative instrument statement
 (§7.1) is internally consistent and unaffected; all pilot scoring
 demonstrably used the /15 scale. These are erratum-class corrections aligning
 an operational file with the registration's own normative text.
+
+A fourth correction to the same file was found on 2026-07-27 (erratum log entry
+2). The prompt's restatement of the instrument omitted four normative
+statements that §7.1 carries: that unscoreable sub-principles score 0 (the
+instrument scores evidenced practice); that data and code scores are never
+aggregated into a combined score; the A1 completeness rule in full (A1 requires
+that a majority of the research data be retrievable via standard protocol, with
+an exception for documented ethical or legal restriction — the prompt carried
+only the coverage-category trigger); and the statement that FAIR for Research
+Software scoring is outside this registration. The operational file now embeds
+a byte-exact copy of the canonical instrument, and the copy is verified
+mechanically on every repository commit rather than by assertion. Checked
+against the persisted pilot outputs, none of the four omissions changed a
+recorded score: every pilot uses the 15-sub-principle scale, none leaves a
+sub-principle unscored, none records an aggregate score, and the one pilot
+where the A1 majority rule was decisive records A1 as absent with the
+supporting count. This too is erratum-class: the registration's normative text
+governed throughout and is unchanged.
 
 ### 2. Below-threshold remediation ladder (reliability check §8(a))
 
@@ -92,6 +110,20 @@ identifier, timestamp, and the full receipt triple (instrument versions,
 agent-definition version, model identifier), and reports state that
 run-to-run variation reflects default-temperature sampling.
 
+One limit on that provenance is stated explicitly rather than left to be
+inferred. The model identifiers this study pins (`claude-opus-4-8`,
+`claude-sonnet-5`) are the exact and complete identifier strings the provider
+publishes for those models — the current generation carries no dated-snapshot
+variant to pin instead, and appending a date produces an identifier the
+interface rejects. A pinned identifier therefore names a model as the provider
+serves it at the time of the call, not an immutable set of weights the study
+controls. The receipt triple fixes what was requested and the run record fixes
+when, so any provider-side change is bounded and visible in the archived
+artefacts; it is not prevented. Reports will describe model identity as
+identifier plus run date on that basis, and a provider-announced revision to a
+pinned model is treated as a §8 regression-gate trigger in the same way as a
+deliberate model change.
+
 ### 4. Read-scope isolation rule
 
 Validation-phase scoring runs execute with read access restricted to the
@@ -113,7 +145,9 @@ discarded.
 
 ## Pre-lodgement checklist
 
-- [ ] Fold in any erratum-log entries added after 2026-07-24.
+- [x] Fold in any erratum-log entries added after 2026-07-24.
+      (2026-07-27: Entry 2 folded into §1; model-identifier provenance limit
+      added to §3. Re-check this item if further entries land.)
 - [ ] Word-for-word consistency check of §1 against the canonical
       `fair-instrument.md` and the Pass 6 prompt mirror (maintenance rule 4);
       record deliberate differences.

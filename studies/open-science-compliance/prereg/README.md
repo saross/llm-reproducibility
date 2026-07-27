@@ -105,7 +105,11 @@ missing glyphs silently — verify any rebuild with
 
 Defects discovered in the frozen OSF artefacts after lodgement are recorded in
 [`erratum-log.md`](erratum-log.md), together with the repository-side
-corrections. Entries accumulate there until an amendment is worthwhile; an
-amendment folding them in must be lodged before census scoring begins
-(preregistration §8-§9). First entry: 2026-07-22 (three defects in the Pass 6
-FAIR instrument prompt, corrected in commit `abdc526`).
+corrections. Entries accumulate there until an amendment is worthwhile; the
+consolidated amendment (`amendment-1-draft.md`) must lodge **before the
+validation phase runs** — earlier than the before-census deadline, because the
+queued scope governs the validation phase itself. Entries so far: 2026-07-22
+(three defects in the Pass 6 FAIR instrument prompt, corrected in `abdc526`)
+and 2026-07-27 (the same prompt restated the instrument incompletely — found by
+the manifest-consistency check's first byte-exact comparison of the mirror
+against canon).

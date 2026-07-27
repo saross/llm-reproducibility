@@ -50,6 +50,81 @@ queued for inclusion in the first OSF amendment.
 
 ---
 
+## Entry 2 — 2026-07-27: Pass 6 prompt restated the FAIR instrument incompletely
+
+**Artefact affected:** `extraction-system/prompts/06-infrastructure_pass6_prompt.md`
+(uploaded to OSF as markdown in the frozen artefact set at `ee3fda3`).
+**Discovered by:** extending the manifest-consistency check
+(`scripts/check-manifest-consistency.py`, build item D5) with a byte-exact
+comparison of the marker-delimited mirror region against the canonical file
+(`studies/open-science-compliance/protocol/instruments/fair-instrument.md`,
+extracted 2026-07-24). The check as first built compared the canonical file's
+fenced code blocks and table rows — all of which matched. The banner added at
+extraction asserted a *verbatim* mirror; the first byte-level comparison showed
+the assertion was untrue, because everything missing was prose.
+**Corrected in repository:** 2026-07-27 (see the session log).
+
+Four normative statements present in preregistration §7.1 and in the canonical
+file were absent from the operational prompt:
+
+| # | Omitted from the Pass 6 prompt | Source |
+|---|---|---|
+| 1 | "Unscoreable sub-principles score 0 (the instrument scores evidenced practice)" | Registration §7.1 |
+| 2 | Scores are "never aggregated into a combined score" | Registration §7.1 |
+| 3 | The A1 completeness rule in full: "A1 requires that a majority of the research data be retrievable via standard protocol, with an exception for documented ethical/legal restriction" (the prompt carried only the coverage-category trigger) | Registration §7.1 |
+| 4 | The FAIR4RS out-of-scope statement (planned amendment-path extension, not part of this registration) | Registration §7.1 |
+
+**Correction.** The prompt's FAIR section now embeds a byte-exact,
+marker-delimited copy of the canonical instrument. Pass 6 workflow content that
+previously interleaved with the instrument — output JSON structures, the
+coverage-category threshold table, the barrier-type enumeration, and the
+context-dependent assessment notes — was relocated below the mirrored region
+under a heading marking it as workflow guidance, not instrument. No workflow
+content was removed: the restructure was performed programmatically and the
+result diffed line by line against the original, every difference accounted for
+as either a canonical rewording or one of the four additions above.
+
+**Impact assessment.** The registration's normative instrument statement (§7.1)
+is unchanged and was always the governing text; the defect was an incomplete
+operational restatement of it, so this is the same erratum class as Entry 1.
+Checked against the persisted pilot outputs
+(`studies/open-science-compliance/outputs/*/extraction.json`, the four papers
+carrying FAIR assessments — dye-et-al-2023, herskind-riede-2024, key-et-al-2024,
+marwick-2025):
+
+- all four use the `binary_sub_principles` /15 scale;
+- no sub-principle is recorded unscored (zero null `present` values), so
+  omission 1 changed no pilot score;
+- no output carries a combined or aggregate FAIR field, so omission 2 was
+  honoured in practice;
+- omission 3 was likewise applied where it bit — key-et-al-2024 records
+  A1 = false with the evidence "Only 3 of 13 datasets (23.1%) retrievable via
+  HTTPS", the majority rule operating as registered;
+- omission 4 is declaratory and affects no score.
+
+Classification: erratum-class corrections aligning the operational file with the
+registration's own normative text; no instrument semantics changed and no pilot
+score is revised. The corrections ride the §8 regression gate with the Phase 1
+validation runs, and this entry folds into the consolidated amendment below.
+
+**Recurrence prevented.** The mirror is now byte-compared on every commit and at
+orchestrator pre-flight. A future divergence fails loudly instead of persisting
+behind a banner asserting it cannot happen — which is the failure mode this
+entry documents: the assertion was written before anything checked it.
+
+**Related finding, not an erratum.** The same comparison showed that the second
+registered mirror — `verdicts-and-precision.md` into the reproduction-assessor
+`SKILL.md` — omits five canonical prose paragraphs (the `CANNOT_COMPARE`
+definition, paper-error handling, proprietary-upstream verdict implications, and
+the environment-specification levels 0–5). That mirror is **not** an erratum
+against the registration: `SKILL.md` is not part of the frozen artefact set, and
+its banner claims only to mirror the canonical *tables*. Its registry entry now
+declares `mirror_mode: structural` so the weaker guarantee is explicit and the
+check warns on every run. Pending a decision on whether the reproduction human
+lane needs that prose inline.
+
+---
+
 ## Queued amendment scope (running list)
 
 **Consolidated draft written 2026-07-24:** `amendment-1-draft.md` (this
@@ -67,8 +142,10 @@ corpus and Phase 1 builds accumulate into the same single amendment.
 the consolidated amendment must lodge **before the validation phase runs** — earlier
 than the before-census-scoring deadline that Entry 1 alone would require.
 
-1. **Entry 1 corrections** (Pass 6 instrument defects, above) — already committed to
-   an amendment; folds in here.
+1. **Entry 1 and Entry 2 corrections** (Pass 6 instrument defects, above) — already
+   committed to an amendment; fold in here. Entry 2 was found on 2026-07-27, after the
+   consolidated draft was written, by the D5 check's first byte-exact mirror
+   comparison; the draft's §1 and its pre-lodgement checklist are updated accordingly.
 2. **Below-threshold remediation ladder** (routing design §2.2): one routing-fix
    attempt (delivery mechanism only; instrument text untouched) followed by a re-run
    of the §8(a) stability check, permitted **once**; a still-below-threshold re-run
