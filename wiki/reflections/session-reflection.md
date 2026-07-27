@@ -626,3 +626,88 @@ legitimately so. And the SKILL.md mirror registration — an extension the desig
 never asked for — exists because the discrepancy tables in the skill were one
 undetected edit away from contradicting a frozen instrument; Shawn ratified it,
 but the counterfactual (drift discovered mid-census) is invisible in the diff.
+
+## Entry 10 (2026-07-27) — Building something that already existed
+
+*llm-reproducibility, amd-tower. First-person throughout — no compaction
+boundary; this instance did the work it reflects on, including the mistake it
+opens with.*
+
+### What is the single most important thing a future reader should know?
+
+I spent the first half of this session building something that had existed for
+three days, and the check that should have caught it told me everything was
+fine. The resume prompt said Phase 1 was open with D5 first; I ran
+`git rev-list --count --left-right origin/main...HEAD`, got `0 0`, reported "in
+sync with origin" to Shawn, and built the gate. The comparison was against a
+remote-tracking ref last updated on 24 July at 14:16 — the zbook commits landed
+from 14:29 that same afternoon. `git rev-list` reads a local cache. It never
+contacts the remote. The output of a stale check and the output of a true check
+are the same three characters.
+
+What makes this worth recording is not the wasted hours but the shape of the
+error. I did run a sync check. I ran it early, deliberately, because the
+project's own `CLAUDE.md` warns about concurrent sessions. I then reported its
+result as fact. The check was necessary, insufficient, and indistinguishable
+from sufficient — which is precisely the failure mode the day's technical work
+turned out to be about. The Pass 6 prompt carried a banner asserting a verbatim
+mirror; nothing had ever compared the files. The registry checked every file it
+named and was structurally blind to files it didn't name. Three instances of the
+same thing in one session: **an assertion of an invariant standing in for a test
+of it, and reading as reassurance precisely because it is written down.** I
+walked into the third one while documenting the first two.
+
+The duplicate build also paid for itself, which I did not expect and should not
+over-learn from. Comparing two independent implementations of the same
+specification surfaced two real gaps in the surviving one — the byte-exact
+mirror check and the reverse sweep — and the first of those exposed a live
+governance defect on `main`. That is a genuine argument for independent
+reimplementation as a review technique. It is not an argument for accidental
+duplication: the same benefit was available deliberately, for a fraction of the
+cost, at any point in the last three days.
+
+### What felt uncertain or unresolved at the end?
+
+Two things I did that Shawn has not confirmed, both flagged but neither closed.
+
+The repin to Opus 5 changes the validation benchmark's Opus arm, and the
+three-model spot-check arms were a ratified decision from 22 July. Shawn's
+instruction was explicit and general ("no reason to use 4.8 in future"), and the
+amendment's selection rule is gates-plus-cost rather than a named model list, so
+I am fairly confident this is inside the intent. But "update the pins" and
+"change which models the registered benchmark compares" are not obviously the
+same instruction, and I executed both on the strength of one.
+
+The second is smaller and bothers me more. I added a paragraph to the amendment
+draft — the model-identifier provenance limit — that was not in the ratified
+scope. It is defensible on the merits: pinning `claude-opus-5` pins a name the
+provider resolves at call time, not a weight set, and a reproducibility study
+that says "we pinned the model" without that caveat is overclaiming. But the
+whole architecture of this project exists to stop instruments and registered
+text drifting through well-intentioned local edits, and I made a well-intentioned
+local edit to registered text. I flagged it in the same message, which is the
+right mitigation, and I would still write the paragraph. I am not sure I should
+have written it into the draft rather than proposing it.
+
+### Where did Shawn and I disagree, and who was right?
+
+Not a disagreement so much as a shared wrong premise that the evidence settled
+against both of us. Shawn said he thought he had fetched at the start of work; I
+had already told him we were in sync. The reflog showed no fetch touched this
+repository between 24 July 14:16 and my own at 27 July 11:25. Neither of us had
+the state we each believed we had.
+
+What I got right was going to the reflog instead of reconstructing the sequence
+from memory, and saying plainly that the false reassurance was mine — I ran the
+check and reported it. What Shawn got right, and immediately, was refusing to
+treat it as a one-off: his response to a process failure was to ask where the
+guard belongs so it cannot recur, and to propose putting it in the generated
+handoff prompt rather than in anyone's discipline. That instinct — fix the
+generator, not the instance — is why the fix landed in
+`handoff-protocol.md` and this repo's `CLAUDE.md` within the same turn as the
+diagnosis, instead of becoming a resolution nobody keeps.
+
+**Texture.** Two distinct halves: a solitary build that turned out to be
+redundant, then a fast reconciliation under a clear decision from Shawn.
+Discovering the collision was genuinely deflating for about a minute, until the
+comparison started paying out.

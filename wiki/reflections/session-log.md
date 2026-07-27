@@ -454,3 +454,72 @@ aliases are exact; see abductive entry). A parallel session was running for
 part of the build — known, coordinated, no conflict; its handoff wrote Entry 8
 and claude-obs 19–21 before this session's reflect pass, which is why today's
 registers carry two sessions' entries.
+
+## 2026-07-27 — D5 hardening, mirror convergence, Opus 5 repin (third session)
+
+Third session, amd-tower, resuming from the 2026-07-22/24 handoff. Roughly
+bisected: an unwitting duplicate build, then reconciliation and three decisions
+from Shawn.
+
+**Collision.** The resume prompt opened Phase 1 with D5 first. Built
+`scripts/check-manifest-consistency.py` (nine checks, pre-commit wiring,
+fault-injection tested, hook block-tested), converged the Pass 6 mirror, and
+drafted erratum Entry 2 — then a pre-commit `git fetch` revealed `origin/main`
+seven commits ahead: zbook had executed the whole Phase 1 queue on 24 July,
+including its own D5 checker (340 lines + 247 lines of pytest) and the
+consolidated amendment draft. Stopped before committing; nothing was pushed over
+the other session's work.
+
+**Reconciliation (Shawn's call: port my checks into theirs).** Reset, fast-
+forwarded, then compared the two implementations. Theirs survives — broader
+registry (7 entries), wired to the agents, hooks, and tests. Two gaps ported in
+(`03f10ad`): **byte-exact mirror regions** via HTML-comment marker pairs, and a
+**reverse sweep** for unregistered instrument files. Both verified as live gaps
+first: their gate reported `PASS (0 errors)` on a tree whose Pass 6 mirror was
+missing four normative statements from prereg §7.1, and an unregistered `.md`
+dropped into the instruments directory passed silently.
+
+**Erratum Entry 2 (`a867319`).** The Pass 6 prompt — in the OSF-frozen artefact
+set — restated the FAIR instrument incompletely: unscoreable→0, never-aggregate,
+the A1 majority rule, and the FAIR4RS scope statement all absent. Impact checked
+against persisted pilot outputs rather than asserted: four pilots, all /15, none
+unscored, none aggregated, key-et-al-2024 showing the A1 rule operating
+("Only 3 of 13 datasets (23.1%)"). Erratum-class; no pilot score revised. Folded
+into amendment §1, with a model-identifier provenance limit added to §3.
+
+**Second mirror converged (`700173c`, Shawn's call).** `verdicts-and-precision`
+→ reproduction-assessor `SKILL.md` carried canon's prose *reworded*, and omitted
+the PAPER_ERROR human-escalation sentence and environment-spec levels 0–5
+entirely. Because the content lands in three separate workflow sections, added
+**named segments** (`canon-begin: id#part`); the instrument now mirrors in six
+segments plus a new SKILL.md section H. Determined no erratum and no amendment
+required, on three grounds: SKILL.md is not in the frozen set (four files are),
+the discrepancy vocabulary is not registered text, and converging a mirror
+changes delivery not instrument semantics. `mirror_mode: structural` retained as
+a declared-weaker fallback; unused.
+
+**Opus 5 repin (`9d35221`, Shawn's call).** All four `claude-opus-4-8` pins →
+`claude-opus-5`; `fair-assessor-opus-4-8.md` renamed. Verified no scored
+artefact ever ran on 4.8 (extractions record `claude-opus-4-5`/
+`claude-sonnet-4-5`); history untouched, manifest comment carries the
+22 Jul → 24 Jul → superseded-27 Jul chain. All five agent hashes recomputed and
+independently re-verified.
+
+**Process fix (`8e485b2`).** Fetch-first added to this repo's `CLAUDE.md` and to
+step 6 of the handoff protocol, with the mechanism recorded (remote-tracking
+refs are local caches). Separately, `~/personal-assistant/.env.bak-2026-07-27`
+held live API keys and was not gitignored — `.env` was covered, `.env.*` was
+not; broadened and pushed.
+
+Tests 17 → 32. Both repos clean and `0/0` at close.
+
+**Contextual assumptions.** The duplicate build was not a coordination failure
+between Shawn and me — he was on zbook on 24 July and told me so at session
+start; the resume prompt simply predated that work, and my sync check read a
+stale ref rather than reporting it. Two items were flagged and remain
+unconfirmed at close: the repin changes the validation benchmark's Opus arm
+(an input to the ratified 22 July three-model decision), and the amendment's
+provenance paragraph is an addition beyond the ratified scope. Both were
+executed and flagged rather than deferred, on the reading that Shawn's repin
+instruction was general and the provenance caveat is load-bearing for a
+reproducibility claim — but neither has an explicit sign-off.

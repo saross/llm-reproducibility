@@ -332,3 +332,84 @@ Direction note for the corpus: unlike the 2026-07-24 Elsevier entry (three
 stories erring optimistic about vendor self-service), this prior erred toward
 assuming *more* vendor machinery than exists — miscalibration about external
 systems runs both ways.
+
+## 2026-07-27 — The sync check that could not fail
+
+**Session:** 44849478-4899-4ba6-ba71-3d85740448e3
+**Instance:** primary
+
+### Surprising fact
+
+Roughly fourteen minutes into the session I ran `git fetch -q origin` before
+committing, and the working tree went from `0 behind, 0 ahead` to `7 behind` —
+seven commits containing the entire Phase 1 build queue I had just spent the
+session reimplementing. The surprise was not that another machine had pushed;
+this is a two-machine project and the resume prompt named zbook explicitly. The
+surprise was that I had *already run the sync check*, early and deliberately,
+precisely to avoid this. Its output was `0 0`. Nothing about that output
+distinguished it from the same check run against current data.
+
+### Probe
+
+Two questions, in order: is this a race (did zbook push in the last fourteen
+minutes?), or was the earlier check wrong? `git reflog show origin/main
+--date=iso` settles it without inference: the local `origin/main` pointer moved
+2026-07-24 14:16:36 (a push from this machine), then did not move again until
+`2026-07-27 11:25:14: fetch -q origin: fast-forward`. That fetch was mine.
+Cross-checking the commits themselves — `git log --format='%h %cd'` on the two
+endpoints — put the zbook work at 24 July 14:29 to 20:01, thirteen minutes after
+this machine's last push and nearly three days before my check.
+
+So: not a race. The earlier check compared `HEAD` against a ref that had been
+stale for three days. The failure was not in the timing, and it was not that I
+skipped a step.
+
+### Belief revision
+
+I had been treating `git rev-list --count --left-right origin/main...HEAD` as *a
+sync check*. It is not. It is a comparison against a **local cache** of the
+remote's state — `refs/remotes/origin/main` is a file on disk, updated only by
+`fetch`, `pull`, or `push`. The command performs no network operation. The same
+is true of `git status`'s "ahead/behind" line, and of the harness's session-start
+git snapshot.
+
+The general form: **a read of a cached remote ref cannot distinguish "the remote
+agrees with me" from "I have not asked the remote recently"** — and it reports
+the first in both cases. Any check whose failure mode is silently returning the
+reassuring answer needs a freshness precondition, not just correct logic. Before
+this I would have said the risk of a stale check was that it might be *slightly*
+out of date; the actual risk is that it is unfalsifiable from its own output.
+
+The revision compounded a prior belief. On 2026-07-24 I recorded the project's
+concurrent-session discipline as "re-verify 0 behind before committing", copied
+from `CLAUDE.md`. That wording is defective in the same way the check is: it
+specifies the comparison and omits the fetch. I had followed the instruction
+exactly and still been wrong, which is the signature of a rule that under-
+specifies rather than an operator who deviated.
+
+### What would change this belief
+
+If `git rev-list origin/main...HEAD` were shown to contact the remote under some
+configuration (a background `fetch.auto` setting, a filesystem-shared remote, a
+`remote.origin.fetch` refspec side-effect), the "cannot distinguish" claim would
+need narrowing to the default configuration. I have not tested those cases; the
+reflog evidence establishes only that no fetch occurred here over three days,
+which is sufficient for the practical rule but not for the strong general claim.
+
+### Implications for practice
+
+Fetch-first became an instruction in two places the same day: this repository's
+`CLAUDE.md` session-continuity line, and step 6 of
+`~/personal-assistant/global-claude-md/handoff-protocol.md`, so the generated
+resume prompt itself opens with `git fetch && git status -sb`. Shawn's framing
+was the better one — put the guard in the generator rather than in anyone's
+memory. Worth noting the fix is *cheap*: a fetch costs under a second, and the
+failure it prevents cost a day of duplicated build.
+
+### What this is not
+
+Not an argument that the duplicate work was worthless — comparing the two
+implementations found two real gaps and one live governance defect. But that is
+a consolation, not a justification: the same comparison was available
+deliberately and cheaply at any point, and treating the accident as vindication
+would be the wrong lesson.

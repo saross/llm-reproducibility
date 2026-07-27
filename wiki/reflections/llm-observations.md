@@ -315,3 +315,52 @@ the continuation summary.)*
   (rebase, disjoint files), but the mechanism note generalises: standing rules
   enforced by *displaying* state don't bind an agent barrelling through a
   command chain; they must be wired as conditionals that fail.
+
+## 2026-07-27 — Independent reimplementation as a review technique (third session)
+
+- **Two implementations of one specification find each other's blind spots —
+  and the finding is asymmetric, not symmetric.** An accidental duplicate build
+  of D5 produced two checkers written from the same design §4 and the same
+  review finding. Comparing them surfaced two gaps, both in the surviving
+  implementation, neither in mine: no reverse sweep, and a mirror check that
+  compared fenced blocks and table rows but not prose. Nothing in the reverse
+  direction — theirs had the broader registry, mine had the sharper checks. The
+  useful generalisation is not "duplicate work is fine"; it is that a
+  specification loose enough for two competent readings will be *read* two ways,
+  and the delta between them is a map of where the spec was silent. Design §4
+  said "diff version lines and receipt tokens against the manifest" and never
+  said what a mirror is, so one reading checked structure and the other checked
+  bytes.
+- **Structural checks on structured content have a predictable blind spot:
+  everything unstructured.** The mirror check verified every fenced block and
+  every table row. The four normative statements missing from the Pass 6 prompt
+  were prose sentences — unscoreable→0, never-aggregate, the A1 majority rule,
+  FAIR4RS scope. All of them scoring-relevant; none of them in a table. The gate
+  reported PASS. Where a document mixes tables with normative prose, a
+  table-and-block check reads as thorough while covering the half of the content
+  least likely to be caught by eye.
+- **The banner-as-check pathology, three instances in one session.** (i) The
+  Pass 6 prompt asserted a verbatim mirror that had never been compared. (ii)
+  The registry verified every file it named and could not see files it did not
+  name. (iii) My own `git rev-list origin/main...HEAD` sync check read a local
+  cache and reported "in sync" from a three-day-old ref. In each case an
+  artefact *stating* an invariant occupied the place where a *test* of it should
+  have been, and the statement was load-bearing precisely because later readers
+  — including me — treated a written assertion as settled. Worth a standing
+  question at review time: for each invariant this document asserts, what
+  executes to check it?
+- **Wording drift is the failure mode that survives review; formatting drift is
+  the tell.** The second mirror (SKILL.md) had *most* of the canonical prose,
+  reworded — numbered lists where canon had paragraphs — plus two outright
+  omissions hidden in that noise. A human reviewer comparing the two would very
+  plausibly have called them equivalent. Byte-exactness is unforgiving in a way
+  that is exactly right for instrument text and would be wrong almost anywhere
+  else: the point is not that the wording is better, but that *no one gets to
+  improve it silently*.
+- **Named segments resolve the contiguity constraint that would otherwise force
+  a false choice.** Byte-exact regions initially looked incompatible with a
+  mirror whose canonical content lands in three separate workflow sections — the
+  options appeared to be restructure the consuming document or accept a weaker
+  check. A segment suffix (`canon-begin: id#part`) dissolves it: each fragment is
+  byte-compared where it naturally belongs. Generalisable wherever canonical
+  content must interleave with a consumer's own structure.
