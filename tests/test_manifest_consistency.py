@@ -35,18 +35,18 @@ CANONICAL_REL = "protocol/instruments/test-instrument.md"
 MIRROR_REL = "prompts/test-mirror-prompt.md"
 AGENT_REL = ".claude/agents/test-assessor.md"
 
-CANONICAL_TEXT = """# Test instrument v1.0 — canonical file
-
-**Status: FROZEN by OSF registration** — governance applies.
-**Version:** 1.0 (fixture)
-
-## Rubric
+# The mirrored body is defined once and interpolated into both fixture files,
+# so the baseline is byte-identical by construction and any divergence a test
+# asserts on is unambiguously the injected one.
+MIRRORED_BODY = """## Rubric
 
 ```text
 CRITERION (max 2):
   C1: First criterion   /1
   C2: Second criterion  /1
 ```
+
+Unscoreable criteria score 0 — prose the structural check cannot see.
 
 ## Bands
 
@@ -54,29 +54,32 @@ CRITERION (max 2):
 |-------|--------|
 | 2 | Good |
 | 0-1 | Poor |
+"""
+
+CANONICAL_TEXT = f"""# Test instrument v1.0 — canonical file
+
+**Status: FROZEN by OSF registration** — governance applies.
+**Version:** 1.0 (fixture)
+
+<!-- canon-begin: test-instrument -->
+{MIRRORED_BODY}<!-- canon-end: test-instrument -->
 
 ---
 
 Receipt-token: feedfacecafebeef
 """
 
-MIRROR_TEXT = """# Test mirror prompt
+MIRROR_TEXT = f"""# Test mirror prompt
 
 > Canonical home: `protocol/instruments/test-instrument.md`
 > (v1.0, receipt token `feedfacecafebeef`, FROZEN).
 
-Human-lane framing prose may differ from the canonical file.
+Human-lane framing prose may differ outside the mirrored region.
 
-```text
-CRITERION (max 2):
-  C1: First criterion   /1
-  C2: Second criterion  /1
-```
+<!-- mirror-begin: test-instrument -->
+{MIRRORED_BODY}<!-- mirror-end: test-instrument -->
 
-| Score | Rating |
-|-------|--------|
-| 2 | Good |
-| 0-1 | Poor |
+Workflow guidance that is not instrument may follow the region.
 """
 
 AGENT_TEXT = """---
@@ -90,7 +93,12 @@ Push target: protocol/instruments/test-instrument.md
 
 def build_manifest(agent_sha: str) -> str:
     """Return fixture manifest text with the given agent-definition hash."""
-    return f"""shared_content:
+    return f"""shared_content_policy:
+  scan_directories:
+    - protocol/instruments
+  scan_exclusions:
+    - README.md
+shared_content:
   test-instrument:
     canonical_file: {CANONICAL_REL}
     version: "1.0"
@@ -197,6 +205,89 @@ class ManifestConsistencyTests(unittest.TestCase):
         report = self.run_checks()
         self.assertEqual(report.errors, [])
         self.assertTrue(any("planned" in w for w in report.warnings))
+
+    # --- mirror region (byte-exact) -------------------------------------
+    # These cover the gap that let the Pass 6 prompt drop four normative
+    # statements while every fenced block and table row still matched
+    # (erratum-log Entry 2, 2026-07-27).
+
+    def test_mirror_prose_divergence_caught(self) -> None:
+        """A prose-only edit inside the region fails, though blocks/rows match."""
+        self.rewrite(MIRROR_REL,
+                     "Unscoreable criteria score 0 — prose the structural check cannot see.",
+                     "Unscoreable criteria are skipped.")
+        self.assert_error_containing("not byte-identical to canon")
+
+    def test_mirror_prose_deletion_caught(self) -> None:
+        """Deleting a normative sentence from the mirror fails."""
+        self.rewrite(MIRROR_REL,
+                     "\nUnscoreable criteria score 0 — prose the structural check cannot see.\n",
+                     "\n")
+        self.assert_error_containing("not byte-identical to canon")
+
+    def test_mirror_whitespace_drift_caught(self) -> None:
+        """Byte-exactness means trailing whitespace counts too."""
+        self.rewrite(MIRROR_REL, "| 2 | Good |", "| 2 | Good | ")
+        self.assert_error_containing("not byte-identical to canon")
+
+    def test_missing_canon_markers_caught(self) -> None:
+        """An unmarked canonical file is unverifiable, not silently passing."""
+        self.rewrite(CANONICAL_REL, "<!-- canon-begin: test-instrument -->\n", "")
+        self.assert_error_containing("marker pair — mirror unverifiable")
+
+    def test_missing_mirror_markers_caught(self) -> None:
+        """An unmarked mirror is unverifiable, not silently passing."""
+        self.rewrite(MIRROR_REL, "<!-- mirror-begin: test-instrument -->\n", "")
+        self.assert_error_containing("marker pair — mirror unverifiable")
+
+    def test_prose_outside_region_is_allowed(self) -> None:
+        """Lane-specific framing outside the markers must not fail the check."""
+        self.rewrite(MIRROR_REL,
+                     "Workflow guidance that is not instrument may follow the region.",
+                     "Entirely different human-lane workflow guidance.")
+        report = self.run_checks()
+        self.assertEqual(report.errors, [])
+
+    def test_structural_mode_warns_and_skips_region(self) -> None:
+        """Declared-weaker mode passes prose divergence but announces the gap."""
+        self.rewrite("manifest.yaml", f"        mirror_file: {MIRROR_REL}",
+                     f"        mirror_file: {MIRROR_REL}\n        mirror_mode: structural")
+        self.rewrite(MIRROR_REL,
+                     "Unscoreable criteria score 0 — prose the structural check cannot see.",
+                     "Unscoreable criteria are skipped.")
+        report = self.run_checks()
+        self.assertEqual(report.errors, [])
+        self.assertTrue(any("structural" in w and "NOT detected" in w
+                            for w in report.warnings),
+                        f"expected the weaker-guarantee warning, got: {report.warnings}")
+
+    def test_unknown_mirror_mode_caught(self) -> None:
+        self.rewrite("manifest.yaml", f"        mirror_file: {MIRROR_REL}",
+                     f"        mirror_file: {MIRROR_REL}\n        mirror_mode: sloppy")
+        self.assert_error_containing("unknown mirror_mode")
+
+    # --- reverse sweep ---------------------------------------------------
+
+    def test_unregistered_instrument_file_caught(self) -> None:
+        """A new instrument nobody registered must not be invisible."""
+        stray = self.root / "protocol/instruments/unregistered-instrument.md"
+        stray.write_text("# Stray\n", encoding="utf-8")
+        self.assert_error_containing("unregistered instrument file")
+
+    def test_scan_exclusion_respected(self) -> None:
+        """Excluded filenames (README.md) do not trip the sweep."""
+        (self.root / "protocol/instruments/README.md").write_text("# Index\n", encoding="utf-8")
+        report = self.run_checks()
+        self.assertEqual(report.errors, [])
+
+    def test_absent_scan_policy_warns(self) -> None:
+        """Without scan_directories the sweep cannot run — say so, don't imply cover."""
+        self.rewrite("manifest.yaml",
+                     "shared_content_policy:\n  scan_directories:\n    - protocol/instruments\n"
+                     "  scan_exclusions:\n    - README.md\n", "")
+        report = self.run_checks()
+        self.assertTrue(any("no reverse sweep" in w for w in report.warnings),
+                        f"expected a no-sweep warning, got: {report.warnings}")
 
     def test_agent_hash_mismatch_caught(self) -> None:
         path = self.root / AGENT_REL

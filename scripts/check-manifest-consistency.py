@@ -16,13 +16,23 @@ hot-reload guard:
    definition (`.claude/agents/<agent>.md`) or the hook configuration
    (`.claude/settings.json`, `.claude/hooks/*`); `mirror` consumers must name
    a `mirror_file` whose banner cites the registered version and receipt
-   token and which contains every normative block of the canonical file
-   byte-identically (fenced code blocks and table rows; surrounding prose may
-   differ per lane). Consumers marked `status: planned` warn instead of fail.
+   token, which contains every normative block of the canonical file
+   byte-identically (fenced code blocks and table rows), and whose
+   marker-delimited region is byte-identical to the canonical region.
+   Consumers marked `status: planned` warn instead of fail.
 3. **Agent-definition hashes** (hot-reload guard): every file under
    `.claude/agents/` must be registered in `manifest.yaml agent_definitions`
    with a matching sha256, and vice versa — an ungated edit stops the batch
    rather than silently changing the instrument.
+4. **Reverse sweep**: every `*.md` in a directory listed under
+   `shared_content_policy.scan_directories` must be registered, so an
+   instrument nobody added to the manifest fails loudly instead of being
+   invisible to a registry that only checks the files it already names.
+
+Checks 2 (region comparison) and 4 were added 2026-07-27 after the structural
+mirror check passed a Pass 6 prompt that had dropped four normative statements
+from preregistration §7.1 (erratum-log Entry 2), and after an unregistered file
+placed in the instruments directory went undetected.
 
 With `--preflight`, additionally fails if `CLAUDE_CODE_SUBAGENT_MODEL` is set
 (it silently outranks agent-frontmatter model pins; 2026-07-24 review D-7).
@@ -53,6 +63,45 @@ VERSION_LINE_RE = re.compile(r"^\*\*Version:\*\*\s*([^\s(]+)", re.MULTILINE)
 # Receipt token line — must be the final non-empty line of the canonical file
 # so a header-only read cannot echo it (routing design §3.2).
 RECEIPT_LINE_RE = re.compile(r"^Receipt-token:\s*(\S+)\s*$")
+
+# Marker pairs delimiting the mirrorable region in the canonical file and its
+# mirror. HTML comments: invisible in rendered markdown, inert to a model
+# reading either file. Added 2026-07-27 — see check_mirror_region.
+CANON_BEGIN = "<!-- canon-begin: {name} -->"
+CANON_END = "<!-- canon-end: {name} -->"
+MIRROR_BEGIN = "<!-- mirror-begin: {name} -->"
+MIRROR_END = "<!-- mirror-end: {name} -->"
+
+
+def marked_region(text: str, begin: str, end: str) -> str | None:
+    """Return the text strictly between two marker lines, or None if absent.
+
+    Excludes the markers and the newline terminating the begin marker, so a
+    canonical region and its mirror compare byte for byte regardless of the
+    prose surrounding each.
+    """
+    start = text.find(begin)
+    if start == -1:
+        return None
+    start += len(begin)
+    if text[start:start + 1] == "\n":
+        start += 1
+    stop = text.find(end, start)
+    if stop == -1:
+        return None
+    return text[start:stop]
+
+
+def first_difference(left: str, right: str) -> str:
+    """One-line description of where two regions diverge, for the report."""
+    left_lines, right_lines = left.splitlines(), right.splitlines()
+    for index, (a, b) in enumerate(zip(left_lines, right_lines), start=1):
+        if a != b:
+            return (f"first difference at region line {index}: "
+                    f"{a.strip()[:60]!r} vs {b.strip()[:60]!r}")
+    if len(left_lines) != len(right_lines):
+        return f"canon has {len(left_lines)} lines, mirror has {len(right_lines)}"
+    return "regions differ in trailing whitespace"
 
 
 def fenced_blocks(text: str) -> list[str]:
@@ -180,6 +229,60 @@ def check_mirror(name: str, entry: dict, consumer: dict, root: Path, report: Rep
         if row not in mirror_rows:
             report.error(f"{name}: mirror {mirror_rel} lacks canonical table row: {row}")
 
+    mode = str(consumer.get("mirror_mode", "region")).strip().lower()
+    if mode == "region":
+        check_mirror_region(name, canonical_text, mirror_text, mirror_rel, report)
+    elif mode == "structural":
+        # Declared-weaker mode for mirrors that cannot be one contiguous region
+        # (e.g. canonical tables distributed across several sections of a
+        # skill's workflow). The guarantee is announced rather than assumed:
+        # prose divergence is NOT detected in this mode, so the warning is the
+        # honest statement of what the gate does and does not cover.
+        report.warn(f"{name}: mirror {mirror_rel} is checked in 'structural' mode "
+                    f"(fenced blocks and table rows only) — prose divergence between "
+                    f"canon and this mirror is NOT detected; see erratum-log Entry 2 "
+                    f"for why that gap matters")
+    else:
+        report.error(f"{name}: unknown mirror_mode {mode!r} for {mirror_rel} "
+                     f"(expected 'region' or 'structural')")
+
+
+def check_mirror_region(name: str, canonical_text: str, mirror_text: str,
+                        mirror_rel: str, report: Report) -> None:
+    """Byte-compare the marker-delimited mirror region against canon.
+
+    The fenced-block and table-row checks above verify that the *structured*
+    normative content survives into the mirror, but they cannot see prose. That
+    gap was not theoretical: on 2026-07-27 the Pass 6 prompt was missing three
+    normative sentences from preregistration §7.1 (unscoreable sub-principles
+    score 0; scores are never aggregated; the A1 majority rule) plus the FAIR4RS
+    scope statement, while every fenced block and table row matched — so the
+    structural check passed a mirror that had silently dropped the
+    scoring-relevant text. Erratum-log Entry 2 records the correction.
+
+    A missing marker pair is an error rather than a skip: an unverifiable
+    mirror is exactly the state the banner claims cannot exist, and treating it
+    as passing would reinstate the defect this check exists to catch.
+    """
+    canonical_region = marked_region(
+        canonical_text, CANON_BEGIN.format(name=name), CANON_END.format(name=name))
+    mirror_region = marked_region(
+        mirror_text, MIRROR_BEGIN.format(name=name), MIRROR_END.format(name=name))
+
+    if canonical_region is None:
+        report.error(f"{name}: canonical file lacks the "
+                     f"'{CANON_BEGIN.format(name=name)}' / "
+                     f"'{CANON_END.format(name=name)}' marker pair — mirror unverifiable")
+    if mirror_region is None:
+        report.error(f"{name}: mirror {mirror_rel} lacks the "
+                     f"'{MIRROR_BEGIN.format(name=name)}' / "
+                     f"'{MIRROR_END.format(name=name)}' marker pair — mirror unverifiable")
+    if canonical_region is None or mirror_region is None:
+        return
+    if canonical_region != mirror_region:
+        report.error(f"{name}: mirror {mirror_rel} region is not byte-identical to canon "
+                     f"({first_difference(canonical_region, mirror_region)})")
+
 
 def check_consumers(name: str, entry: dict, root: Path, report: Report) -> None:
     """Check each declared consumer has routing evidence for its mechanism."""
@@ -275,6 +378,46 @@ def check_agent_hashes(manifest: dict, root: Path, report: Report) -> None:
                          f"register hash in manifest.yaml agent_definitions)")
 
 
+def check_unregistered_instruments(manifest: dict, root: Path, report: Report) -> None:
+    """Reverse sweep: every file in an instrument directory must be registered.
+
+    The registry-to-file checks above can only verify files the registry names,
+    so they are structurally blind to an instrument nobody registered — a new
+    canonical file lands, the manifest is never updated, and the gate keeps
+    reporting PASS. This is the same class of blindness the registry itself was
+    created to fix, one level up. `.claude/agents/` already has an equivalent
+    sweep in check_agent_hashes; this extends it to instrument content.
+
+    Directories come from `shared_content_policy.scan_directories`. Pull-class
+    reference libraries (`.claude/skills/**/references/`) are deliberately not
+    swept: unregistered files there are the normal case, and only the few
+    promoted to instrument status appear in the registry.
+    """
+    policy = manifest.get("shared_content_policy") or {}
+    directories = policy.get("scan_directories") or []
+    if not directories:
+        report.warn("shared_content_policy.scan_directories is unset — no reverse sweep "
+                    "for unregistered instrument files")
+        return
+    exclusions = set(policy.get("scan_exclusions") or [])
+    registered = {entry.get("canonical_file")
+                  for entry in (manifest.get("shared_content") or {}).values()}
+
+    for rel_dir in directories:
+        directory = root / rel_dir
+        if not directory.is_dir():
+            report.warn(f"scan directory does not exist: {rel_dir}")
+            continue
+        for path in sorted(directory.rglob("*.md")):
+            if path.name in exclusions:
+                continue
+            rel = str(path.relative_to(root))
+            if rel not in registered:
+                report.error(f"unregistered instrument file: {rel} (in scanned directory "
+                             f"{rel_dir} — add it to manifest.yaml shared_content, or "
+                             f"list it in shared_content_policy.scan_exclusions)")
+
+
 def run_checks(manifest_path: Path, root: Path, preflight: bool) -> Report:
     """Run all consistency checks; return the populated report."""
     report = Report()
@@ -300,6 +443,7 @@ def run_checks(manifest_path: Path, root: Path, preflight: bool) -> Report:
         check_consumers(name, entry, root, report)
 
     check_agent_hashes(manifest, root, report)
+    check_unregistered_instruments(manifest, root, report)
 
     if preflight and os.environ.get("CLAUDE_CODE_SUBAGENT_MODEL"):
         report.error("CLAUDE_CODE_SUBAGENT_MODEL is set — it silently outranks agent "

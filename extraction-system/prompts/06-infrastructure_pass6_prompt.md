@@ -119,10 +119,13 @@ Infrastructure is NOT in Methods/Results/Discussion. Target these specific locat
 **For detailed criteria, examples, and context-dependent guidance:**
 → See `references/infrastructure/fair-principles-guide.md` in research-assessor skill
 
-### Self-Contained Rubric: 15 Binary Sub-Principles
+<!-- mirror-begin: fair-instrument -->
+## Rubric: 15 binary sub-principles, data and code scored independently
 
-Score data and code **independently** as two parallel FAIR assessments.
-Each sub-principle is binary: present (1) or absent (0).
+Score data and code **independently** as two parallel Findable, Accessible,
+Interoperable, Reusable (FAIR) assessments. Each sub-principle is binary:
+present (1) or absent (0). **Unscoreable sub-principles score 0 — the instrument
+scores evidenced practice** (preregistration §7.1).
 
 ```text
 FINDABLE (max 4):
@@ -154,14 +157,15 @@ REUSABLE (max 4):
 TOTAL per artefact type: /15
 ```
 
-### Independent Data and Code Scoring
+## Independent data and code scoring
 
-- Score `data_fair` (/15) and `code_fair` (/15) separately
+- Score `data_fair` (/15) and `code_fair` (/15) separately.
 - Do NOT sum into a single aggregate — report independently
-- When data or code is absent/not applicable, set `"available": false`
-- Absence ≠ non-compliance (distinguish N/A from Not FAIR)
+  (never aggregated into a combined score; preregistration §7.1).
+- When data or code is absent/not applicable, set `"available": false`.
+- Absence ≠ non-compliance (distinguish N/A from Not FAIR).
 
-### Rating Thresholds (per artefact type, on /15)
+## Rating bands (per artefact type, on /15)
 
 | Score | Percentage | Rating |
 |-------|------------|--------|
@@ -169,6 +173,66 @@ TOTAL per artefact type: /15
 | 9-12 | 60-80% | Moderately FAIR |
 | 5-8 | 33-53% | Minimally FAIR |
 | 0-4 | 0-27% | Not FAIR |
+
+Worked example of totals: Findable 3/4; total 14/15; percentage 93.3%;
+rating `highly_fair`.
+
+## Data-completeness coverage procedure
+
+Assess whether the paper shares **all** the data needed for reproduction, not
+just the subset deposited in a supplement or repository. This feeds the A1
+completeness rule and captures a dimension FAIR infrastructure scoring alone
+misses.
+
+1. **Enumerate datasets** referenced in Methods/Results (including upstream
+   sources).
+2. **Classify each** using the five-tier access classification (Tier 0-4):
+   - Tier 0: Direct download (DOI-based repository, open supplement)
+   - Tier 1: Programmatic extraction (HTML tables, API)
+   - Tier 2: Available but requires manual steps (registration, paywall, PDF
+     table extraction)
+   - Tier 3: Exists but inaccessible (closed thesis, paywalled monograph,
+     co-author held)
+   - Tier 4: Not found / never published
+
+   > **Demarcation note (2026-07-22):** these access tiers are a working
+   > classification used only for the data-completeness coverage computation.
+   > They are distinct from the preregistered six-level data-availability
+   > taxonomy (L1-L6, Phase 2 preregistration §7.3), which is assigned only at
+   > reproduction time from actual retrieval attempts. Never conflate the two.
+
+3. **Calculate coverage**: datasets accessible (Tier 0-2) / total datasets.
+   Where feasible, also compute record-weighted coverage.
+4. **Assign category**: complete (100%), substantial (75-99%), partial
+   (25-74%), minimal (0-24%).
+5. **Identify barriers**: co-author gatekeeping, closed monograph, unpublished,
+   embargoed, proprietary, ethics restricted, paywall, registration required.
+
+**Assessment scope** (for meta-analyses or papers aggregating many datasets):
+`straightforward` (<20 datasets — full inventory) / `complex` (20-99 —
+sampled inventory with extrapolation) / `infeasible` (100+ — estimate only,
+with rationale).
+
+**A1 cross-reference:** if `coverage_category` is "minimal" or "partial", set
+A1 = 0 for data FAIR. Exception: ethically restricted data (CARE principles,
+human subjects) does not count against completeness — A1 requires that a
+*majority* of the research data be retrievable via standard protocol, with an
+exception for documented ethical/legal restriction (preregistration §7.1).
+
+## Out of scope
+
+FAIR for Research Software (FAIR4RS) scoring of code artefacts is a planned
+exploratory extension, not part of the registration: if implemented, the
+FAIR4RS instrument will be lodged as a dated OSF amendment and will pass the
+same reliability protocol (preregistration §8) before any FAIR4RS scoring
+begins.
+<!-- mirror-end: fair-instrument -->
+
+### Pass 6 output structures and enumerations
+
+*Workflow guidance, not instrument: these JSON shapes and enumerations serve the
+Pass 6 extraction schema. They sit outside the mirrored region and may be revised
+without instrument governance, provided the scoring semantics above are unchanged.*
 
 ### Output JSON Structure
 
@@ -199,37 +263,6 @@ TOTAL per artefact type: /15
   }
 }
 ```
-
-### Data Completeness Assessment
-
-Assess whether the paper shares **all** the data needed for reproduction, not just the subset deposited in a supplement or repository. This captures a dimension that FAIR infrastructure scoring alone misses.
-
-**Procedure:**
-
-1. **Enumerate datasets** referenced in Methods/Results (including upstream sources)
-2. **Classify each** using the five-tier access classification (Tier 0-4):
-   - Tier 0: Direct download (DOI-based repository, open supplement)
-   - Tier 1: Programmatic extraction (HTML tables, API)
-   - Tier 2: Available but requires manual steps (registration, paywall, PDF table extraction)
-   - Tier 3: Exists but inaccessible (closed thesis, paywalled monograph, co-author held)
-   - Tier 4: Not found / never published
-
-   > **Demarcation note (2026-07-22):** these access tiers are a Pass 6 working
-   > classification used only for the data-completeness coverage computation.
-   > They are distinct from the preregistered six-level data-availability
-   > taxonomy (L1-L6, Phase 2 preregistration §7.3), which is assigned only at
-   > reproduction time from actual retrieval attempts. Never conflate the two.
-
-3. **Calculate coverage**: datasets accessible (Tier 0-2) / total datasets. Where feasible, also compute record-weighted coverage.
-4. **Assign category**: complete (100%), substantial (75-99%), partial (25-74%), minimal (0-24%)
-5. **Identify barriers**: co-author gatekeeping, closed monograph, unpublished, embargoed, proprietary, ethics restricted, paywall, registration required
-
-**Assessment scope** (for meta-analyses or papers aggregating many datasets):
-- `straightforward`: <20 datasets — full inventory
-- `complex`: 20-99 datasets — sampled inventory with extrapolation
-- `infeasible`: 100+ datasets — estimate only, with rationale
-
-**Cross-reference with A1 scoring:** If `coverage_category` is "minimal" or "partial", set A1 = 0 for data FAIR. Exception: ethically restricted data (CARE principles, human subjects) does not count against completeness.
 
 **Output JSON structure:**
 

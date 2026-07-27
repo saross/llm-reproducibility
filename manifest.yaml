@@ -317,8 +317,22 @@ licences:
 # (build item D5, wired into pre-commit): version lines and receipt tokens are
 # diffed against the files; consumer lists are diffed against agent definitions
 # and hook config; mirror consumers must contain the canonical file's fenced
-# blocks and table rows byte-identically. Consumers with `status: planned`
-# (artefact not yet authored) warn instead of fail; flip to active when built.
+# blocks and table rows byte-identically, AND their marker-delimited region
+# must be byte-identical to the canonical region (added 2026-07-27 — the
+# structural check alone passed a mirror missing four normative sentences; see
+# erratum-log Entry 2). Consumers with `status: planned` (artefact not yet
+# authored) warn instead of fail; flip to active when built.
+shared_content_policy:
+  # Reverse sweep: every *.md in these directories must appear as some entry's
+  # canonical_file, so a new instrument cannot be invisible to the registry.
+  # Pull-class reference libraries are deliberately excluded — unregistered
+  # files there are the normal case.
+  scan_directories:
+    - studies/open-science-compliance/protocol/instruments
+    - .claude/shared
+  scan_exclusions:
+    - README.md
+
 shared_content:
   fair-instrument:
     canonical_file: studies/open-science-compliance/protocol/instruments/fair-instrument.md
@@ -352,6 +366,15 @@ shared_content:
       - agent: reproduction-assessor  # human/session lane skill
         mechanism: mirror             # discrepancy/tolerance/scope tables byte-identical
         mirror_file: .claude/skills/reproduction-assessor/SKILL.md
+        # STRUCTURAL mode: the canonical tables are distributed across SKILL.md
+        # sections C, E, and F, so no single contiguous region can wrap them.
+        # Tables and fenced blocks are verified; PROSE IS NOT. Five canonical
+        # prose paragraphs are currently absent from this mirror (CANNOT_COMPARE
+        # definition, paper-error handling, proprietary-upstream verdict
+        # implications, environment-specification levels 0-5) — flagged
+        # 2026-07-27, pending a decision on whether the reproduction human lane
+        # needs them inline. Promote to `region` if this mirror is restructured.
+        mirror_mode: structural
   coverage-rules:
     canonical_file: studies/open-science-compliance/protocol/instruments/coverage-rules.md
     version: "1.0"

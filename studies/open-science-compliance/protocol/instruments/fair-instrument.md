@@ -16,6 +16,7 @@ Pass 6 prompt (verbatim mirror, human lane); registered in `manifest.yaml`
 
 ---
 
+<!-- canon-begin: fair-instrument -->
 ## Rubric: 15 binary sub-principles, data and code scored independently
 
 Score data and code **independently** as two parallel Findable, Accessible,
@@ -122,6 +123,7 @@ exploratory extension, not part of the registration: if implemented, the
 FAIR4RS instrument will be lodged as a dated OSF amendment and will pass the
 same reliability protocol (preregistration §8) before any FAIR4RS scoring
 begins.
+<!-- canon-end: fair-instrument -->
 
 ---
 
