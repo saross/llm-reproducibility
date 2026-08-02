@@ -586,3 +586,96 @@ over transient state), applied to session state rather than process rules.
 first and report that audit explicitly — "nothing needs this context, but here
 are N things that need *someone's* context" — then close. Do not conflate "all
 committed" with "nothing would be lost".
+
+## claude-obs 29 — 2026-08-02: "Is there any reason not to?" is an invitation to look, not a nudge to proceed
+
+**Pattern.** With PR #2 sitting open and clean, Shawn asked "is there any reason
+not to merge the PR?" He did not ask me to merge it. The question shifted the
+burden onto finding an objection, and the objection existed: the schema would
+have been registered while eight extraction prompts still emitted `2.6`, so the
+new provenance fields would never have been populated — and completing that
+cascade edits a frozen artefact in the pre-lodgement window. Had he written
+"merge the PR", I would almost certainly have merged it; the branch was clean,
+the tests green, and I had nothing queued that would have prompted the check.
+
+**Lesson.** He reaches for the reason-not-to before acting on something that
+looks obviously fine, and phrasing it as a question rather than an instruction
+is what makes the check happen. Note where the risk actually sat: not in the
+merge mechanics, which were flawless, but in the *completeness* of the change —
+exactly the dimension a green build cannot see.
+
+**How to apply.** When a change looks obviously ready, run the reason-not-to
+search unprompted, and aim it at completeness and sequencing rather than
+correctness: what does this change claim that the rest of the system does not
+yet deliver, and is there a governance window it should not land inside?
+"Merges cleanly and passes" is evidence about mechanics only.
+
+## claude-obs 30 — 2026-08-02: He specifies the stopping condition, not just the task
+
+**Pattern.** Asked to handle the gate-coverage finding, Shawn wrote: "I'd like
+to sort out Thing 1 (at least to 'we have a plan') and then wind the session
+down" — and, on the sibling-project research, "Don't start implementing that
+yet". Two explicit brakes in one message. The scope of the deliverable was fixed
+before I began, so the work landed as a plan document with gated phases rather
+than as a half-built checker.
+
+**Lesson.** The instruction that constrains the *depth* of a response is worth
+more than the one that describes its content, because depth is where I default
+badly: given an approved direction and a clear design, the pull is to start
+implementing. His brake converted an open-ended "widen the gate" into a bounded
+artefact that he can review before any code moves.
+
+**How to apply.** When a direction is approved but the stopping point is not
+stated, ask for it or propose one explicitly ("I'll take this to a plan with
+phases and stop there") rather than inferring it from enthusiasm. And when a
+brake is given, treat it as load-bearing — the plan's §8 sequencing note exists
+because implementation was deferred, and it caught the fact that Phase 2 touches
+the gate guarding the frozen artefact set.
+
+## claude-obs 31 — 2026-08-02: He hands over a sibling implementation *and* warns it will not transfer
+
+**Pattern.** Pointing me at map-reader-llm's audit apparatus, Shawn added: "I
+know the context is different… we need an analogous approach here… look at
+map-reader for…inspiration, as it won't translate exactly into what we're doing
+here." The warning came bundled with the pointer, unprompted.
+
+**Lesson.** That framing pre-empted the specific failure I was most likely to
+commit — importing the charter's machinery wholesale because it is good and
+already written. It made "where the analogy stops" a required section of the
+plan rather than an afterthought, and that section is where the real thinking
+happened: map-reader verifies prose claims against artefacts and needs a JSONL
+ledger because its claims cannot be re-enumerated mechanically; this repo
+verifies artefacts against each other and can enumerate from the manifest every
+run, so a ledger here would recreate the very drift pathology decision D-10
+exists to prevent.
+
+**How to apply.** When borrowing a design from a sibling project, write the
+disanalogy section first and let it constrain what gets lifted. If nothing in
+the source resists transfer, that is a sign the analysis has not been done, not
+that the fit is perfect.
+
+## claude-obs 32 — 2026-08-02: I escalated unfinished analysis as a decision, and let the close-out ritual lapse
+
+**Pattern.** Two self-critiques from the same session. First: I reported the
+`assessment_json` version conflict to Shawn as a defect requiring his
+adjudication — "which number is right cannot be settled from the record alone" —
+when four `git log -S` commands settled it completely. He held a non-existent
+decision for five days. Second: the session reached a wind-down twice, and both
+times I produced a summary and a resume prompt but never ran `/reflect` or
+`/handoff`. Only Shawn's memory — while closing three sessions at once — caught
+that two sessions' reflection had lapsed.
+
+**Lesson.** These share a root: I treated a *ritual* as satisfied by its
+*appearance*. Escalation looked like appropriate deference and was actually
+incomplete work handed upward; a wind-down summary looked like a session close
+and was actually the close-out ritual skipped. In both cases the visible artefact
+resembled the real thing closely enough that neither of us noticed the substance
+was missing — which is, uncomfortably, the same failure mode as the gate that
+reported PASS over a scope it had never examined.
+
+**How to apply.** Before escalating, state what would settle the question and
+check whether I can run it — escalate genuine decisions, never analysis I
+stopped short of finishing. And treat "wind the session down" as invoking the
+close-out ritual, not as a request for a summary: offer `/reflect` and
+`/handoff` explicitly at the first wind-down signal rather than waiting to be
+asked, since the material decays fastest exactly when the session feels over.

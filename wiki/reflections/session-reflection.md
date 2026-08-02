@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-07-24
+updated: 2026-08-02
 status: active
 ---
 
@@ -711,3 +711,86 @@ diagnosis, instead of becoming a resolution nobody keeps.
 redundant, then a fast reconciliation under a clear decision from Shawn.
 Discovering the collision was genuinely deflating for about a minute, until the
 comparison started paying out.
+
+## Entry 11 (2026-07-27 second session / 2026-08-02) — Measuring the instrument I was measuring with
+
+Two sittings, one arc: clear four held-over verdicts and close the corpus build
+list, then return five days later to walk a cold collaborator through what was
+found. The work landed — Observations 16 and 17, the Fable 5 arm, corpus items
+5 and 6, the amendment's third identifier, a monitoring plan. But the session's
+real subject turned out to be measurement, and I was on the wrong side of it
+twice.
+
+### What would I do differently if I replayed this session?
+
+I would validate the instrument before reporting the reading. Twice I produced a
+characterisation faster than I produced grounds for it.
+
+The first: I reported `assessment_json` as a "genuine mismatch" — manifest `1.1`
+against a file header reading `2.1` — and escalated it to Shawn as a decision he
+needed to make, with the added weight that the cited provenance commit did not
+resolve. It was not a mismatch. The two numbers measure different things: the
+document version of `assessment-schema.md`, and the payload `schema_version`
+stamped into each `assessment.json`. Both correct, neither drifting. My sweep had
+compared a document heading against a payload field and reported the difference
+as a defect. Shawn spent five days holding a decision that did not exist.
+
+The second, twenty minutes later: sweeping for stale commit references, I ran a
+regex that returned 187 non-resolving "hashes" — and the number was garbage. It
+had swept up DOIs, ORCIDs, Semantic Scholar corpus IDs, page offsets, and the
+deliberate `1234567` placeholders in the PID guide. I caught that one before it
+reached Shawn, tightened the sweep to backticked tokens containing at least one
+hex letter in commit-referencing files, and got the real figure: 115 resolving,
+21 not, all 21 in `wiki/`.
+
+What makes this worth recording is not that I made two measurement errors. It is
+that **the session's entire subject was gates reporting PASS over a narrower
+scope than their readers assume** — Observation 16, the D5 coverage gap, the
+whole monitoring plan — and I twice built exactly that instrument and read from
+it without checking its scope. The naive version sweep did not know which axis it
+was comparing. The naive hash regex did not know what a commit reference looks
+like. Both returned confident numbers. Neither had any way to signal the
+question it could not see.
+
+The corrective is not "be more careful". It is the one already written into the
+plan: an instrument should report its own coverage in the same breath as its
+verdict. Had my sweep printed *what it was comparing* alongside the count, both
+errors would have been visible on first read.
+
+### What question emerged that wasn't pursued?
+
+The two-axes problem generalises and I did not chase it. `assessment_json` is
+one registry entry that tracks a payload version while pointing at a file
+carrying a document version. How many others silently do the same? The registry
+records version *numbers* but never records *what those numbers measure* — and
+a number without a named referent is exactly the shape that produced the false
+positive. I logged it as entity class E5 in the monitoring plan and moved on
+without enumerating. Phase 0 will have to do it, and the answer may be
+uncomfortable: if several entries conflate axes, then widening the version check
+naively — which is the obvious reading of "check everything hard" — would
+manufacture false positives faster than it caught real drift.
+
+### What context will be hardest to reconstruct in six months?
+
+Why PR #2 sat open for weeks. On the surface it is a clean, additive, fully
+tested schema change that merges without conflict — leaving it unmerged reads as
+neglect, or as someone forgetting to press the button. The reasoning is recorded
+(the prompt cascade is incomplete, so `source_file` and `source_sha256` would be
+registered but never populated; and completing that cascade edits
+`06-infrastructure_pass6_prompt.md`, which is in the frozen artefact set, in the
+window immediately before an amendment about that set lodges). What will not
+survive is the *shape* of the judgement: that merging would have been actively
+worse than not merging, because it would have created the appearance of
+provenance capture without the capture — the same failure mode as the Pass 6
+banner that asserted a verbatim mirror before anything checked it. A future
+reader who sees only "clean PR, held for weeks" will reasonably assume the hold
+was caution. It was not; it was the specific recognition that a half-landed
+cascade is a false assurance, and false assurance was the thing this session
+kept finding.
+
+**Texture.** The first sitting was brisk and productive — verdicts, a build, two
+corpus items closed. The second opened cold, with Shawn returning from
+map-reader and apologising for it, and turned into the more valuable half:
+walking someone through findings is the fastest way to discover which of them do
+not survive being explained. The `assessment_json` correction happened precisely
+because I had to lay the evidence out for a reader.

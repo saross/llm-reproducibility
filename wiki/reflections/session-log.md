@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-07-24
+updated: 2026-08-02
 status: active
 ---
 
@@ -530,3 +530,97 @@ provenance paragraph is an addition beyond the ratified scope. Both were
 executed and flagged rather than deferred, on the reading that Shawn's repin
 instruction was general and the provenance caveat is load-bearing for a
 reproducibility claim — but neither has an explicit sign-off.
+
+## Session: 2026-07-27 (second) / 2026-08-02 — Verdicts cleared, corpus list closed, monitoring planned
+
+### Overview
+
+Two sittings on amd-tower, resumed from the 2026-07-27 handoff. First: clear the
+four held-over verdicts and close the corpus build list. Second, five days later:
+walk a returning collaborator through two findings, correct one of them, and
+plan the gate widening. Six commits to `main` (`640ffbb` → `11c4066`), one PR
+opened and deliberately held.
+
+### Accomplishments
+
+- **Four held-over verdicts cleared.** WN-h/WN-i accepted as working-notes
+  Observations 16 (structural checks have a prose-shaped blind spot) and 17
+  (independent reimplementation as a review technique) — both drafted against
+  sources first, since only one-line summaries existed. User-obs candidates A–C
+  held again and annotated as triaged. Opus-5 benchmark arm confirmed. Amendment
+  §3 provenance paragraph deferred to the lodgement read.
+- **Fable 5 census arm built** (`640ffbb`). Generated from the Opus 5 definition
+  and diffed rather than transcribed; registered in `manifest.yaml` with sha256.
+  The sibling-sentence edit changed the Sonnet 5 and Opus 5 hashes too — all
+  three updated in the same commit.
+- **Corpus item 5** (`bd5bc40`): reproduction preparation prompt v1.0 → v1.1 —
+  fetch-with-checksum default, store/attempt/scratch destinations, Materials
+  Acquired table in `log-template.md`.
+- **Corpus item 6** (PR #2, unmerged): extraction schema v2.7 adding optional
+  `source_file` + `source_sha256`. Additivity verified mechanically; v2.6
+  retained; pilots deliberately not back-filled.
+- **Commit-hash defect fixed** (`92aa098`): three orphaned pre-rewrite hashes
+  remapped by exact message match, with an inline note recording the remap.
+- **Monitoring plan drafted**: `wiki/planning/artefact-integrity-monitoring-plan.md`
+  — seven entity classes, per-entity `check:` declarations, generated coverage
+  self-report, five gated phases.
+- **Amendment §3 now names three model identifiers** (`11c4066`), closing task E1.
+
+### Decisions
+
+- **Widen the D5 gate so every registered entity is checked hard** (Shawn,
+  2026-08-02). Reorganisation acceptable. Plan drafted, not implemented.
+- **Add the Fable arm to the lodged amendment text** (Shawn, 2026-08-02), with
+  the pre-declaration that it cannot be selected for the census under the cost
+  rule — its role is instrument evidence plus §5 robustness data.
+- **Billing route settled**: Max-plan Fable allocation first, API billing account
+  for excess; the run is governed by the ordinary standing API review gate.
+- **PR #2 held until after lodgement** — merging would register v2.7 while eight
+  extraction prompts still emit `2.6`, and completing the cascade edits a frozen
+  artefact in the pre-lodgement window.
+- **User-obs A–C held over a second time** rather than accepted or discarded.
+
+### Corrections
+
+- The `assessment_json` "genuine mismatch" reported 2026-07-27 was a measurement
+  error, not repo drift: `1.1` (payload) and `2.1` (document) are different
+  version axes, both correct. Escalated to Shawn as a decision; withdrawn
+  2026-08-02 with the evidence.
+- An initial stale-hash sweep returned a meaningless 187 (DOIs, ORCIDs, corpus
+  IDs, placeholders). Corrected before reporting: 115 resolving, 21 not.
+
+### Measurements
+
+- D5 version check covers **7 of 25** registered `file`+`version` entries.
+- Backticked commit references: **115 resolve, 21 do not**; all 21 in `wiki/`;
+  3 fixed, 18 outstanding.
+- 32/32 tests green and gate PASS at every commit; `0 behind / 0 ahead` at open
+  and close of both sittings.
+
+### Commits
+
+- `640ffbb` feat(agents): add Fable 5 benchmark arm to the census lane
+- `9091706` docs(wiki): clear the four held-over verdicts
+- `bd5bc40` feat(repro): corpus item 5 — fetch-with-checksum, destinations, URL+hash log
+- `aedc7f5` docs(continuity): corpus items 5-6; D5 version-check coverage finding
+- `92aa098` fix(manifest): remap orphaned commit hashes; plan artefact-integrity monitoring
+- `11c4066` docs(prereg): name the Fable 5 arm in amendment §3; close task E1
+- `134eb04` feat(schema): v2.7 — source_file + source_sha256 provenance *(PR #2, deliberately unmerged)*
+
+### Pending work
+
+Task E in `continuity.md`: E1 closed; **E2** (§1 word-for-word consistency check)
+and **E3** (OSF paste artefact) are Claude's and unstarted; **E4** is Shawn's
+read-and-lodge. E3 should follow E4, not precede it. Then PR #2 plus the prompt
+cascade as one change, then monitoring Phase 0.
+
+### Contextual assumptions
+
+The second sitting opened with Shawn cold after several days on map-reader-llm,
+which shaped it into an explain-then-act session rather than a build session —
+and the `assessment_json` correction surfaced precisely because the finding had
+to be laid out for a reader. The monitoring plan draws on map-reader's
+verification charter at Shawn's suggestion; that charter already names this
+repository as a future target, so the borrowing is anticipated rather than
+opportunistic. Sequencing throughout assumes the amendment lodges before any
+gate work begins.

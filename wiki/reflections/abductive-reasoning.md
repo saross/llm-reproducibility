@@ -6,7 +6,7 @@ audience: "researchers"
 conditions: "debugging with surprising results, hypothesis generation, belief revision, default-following corrections"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-07-24
+updated: 2026-08-02
 status: active
 ---
 
@@ -413,3 +413,126 @@ implementations found two real gaps and one live governance defect. But that is
 a consolation, not a justification: the same comparison was available
 deliberately and cheaply at any point, and treating the accident as vindication
 would be the wrong lesson.
+
+## 2026-08-02 — The mismatch that was two measurements
+
+**Session:** f4a97952-5a82-4631-907e-805722b20b0e
+**Instance:** primary
+
+### Surprising fact
+
+A sweep of every registered `file`+`version` pair in `manifest.yaml` reported one
+genuine conflict: `assessment_json` registered at `1.1`, while the file it points
+at opens `**Version:** 2.1`. The provenance was worse than the conflict — the
+manifest cited commit `c3654f6` as the authority for the `1.1` figure, and
+`git cat-file -t c3654f6` returned *not a valid object name*. A version claim
+whose only anchor does not exist looked like drift with the audit trail already
+gone. I reported it to Shawn as a defect needing his adjudication, on the grounds
+that which number was correct could not be settled from the record.
+
+### Probe
+
+`git log -S'**Version:** 2.1'` and `-S'**Version:** 1.1'` against the file, then
+reading both candidate version strings at each of its four commits.
+
+The result inverted the framing. The document heading went `2.0` → `2.1` at
+`05e9706` (2025-11-29) and was *never* `1.x`. A second, different version string
+— `"schema_version": "1.1"` — appeared inside the same file at `aa75817`
+(2026-02-12), describing the payload stamped into each `assessment.json`. Two
+version axes in one document: the version *of the guide*, and the version *of the
+thing the guide specifies*. The manifest entry tracks the second; its `file:`
+field points at the document carrying the first. Both numbers correct. No drift.
+
+The dead hash resolved separately and cleanly: `faef450` carries the manifest
+description's wording verbatim ("cascade schema v1.1 to assessment prompt
+templates"). Testing its two logged siblings showed all three stale, all three
+message-matchable to commits of the same date — a history rewrite had orphaned
+the identifiers while leaving contents untouched.
+
+### Belief revision
+
+I had believed I was measuring drift. I was measuring the difference between two
+quantities that were never supposed to be equal, and reporting it as a defect
+because my instrument had no representation of *what each number meant*. The
+registry records version numbers; it does not record their referents. Absent a
+referent, "manifest says X, file says Y, therefore drift" is not a check — it is
+a coincidence detector that fires whenever a file happens to carry more than one
+version string.
+
+This sharpens the widening decision taken the same day. "Check every registered
+entity hard" reads as a coverage problem — 7 of 25 entries checked, widen to 25.
+But coverage was not the binding constraint here; **semantics** was. A naive
+widening would have promoted this false positive to a permanent build failure,
+and the likely response to a gate that fails on a correct file is to add an
+exception, which is how checks decay into noise. The registry therefore has to
+name the axis (`version_source: json-field`, `$.schema_version`) before the
+checker can be widened over it — which is why entity class E5 exists in the plan
+and why Phase 1 (registry reorganisation) precedes Phase 2 (widen the checker)
+rather than following it.
+
+### What would change this belief
+
+If Phase 0's enumeration finds that `assessment_json` is the only entry with two
+axes, the semantic problem is a single special case and plain coverage widening
+would have been nearly right — the ordering of Phases 1 and 2 would be defensible
+but not load-bearing. If several entries conflate axes, the ordering is
+essential. I have not enumerated; the claim currently rests on one instance.
+
+### What this is not
+
+Not evidence that the dead commit hash was harmless. It was a real defect, and
+the reason the episode was legible at all: had `c3654f6` resolved, I would have
+read its diff, seen the cascade, and probably concluded the file's own heading
+was simply stale — reaching the wrong answer with more confidence. The broken
+anchor forced the reconstruction that found the two axes.
+
+## 2026-08-02 — A green gate is not evidence about the change that turned it green
+
+**Session:** f4a97952-5a82-4631-907e-805722b20b0e
+**Instance:** primary
+
+### Surprising fact
+
+After bumping the reproduction preparation prompt to v1.1 in both the file and
+the manifest, the D5 consistency gate returned `PASS (0 errors, 0 warnings)`.
+Expected. Then, testing whether the gate had actually *seen* the change, I set
+the manifest version to a deliberately wrong `9.9` and re-ran. Still `PASS`.
+
+### Probe
+
+Read the checker rather than inferring from behaviour:
+`scripts/check-manifest-consistency.py:467-468` is
+`for name, entry in shared.items(): check_canonical_entry(...)`. The
+version-line comparison iterates `shared_content` — the seven registered
+instruments — and nothing else. Enumerating the manifest gave the ratio: 7 of 25
+registered `file`+`version` entries within scope. The extraction prompts, the
+assessment prompts, the reproduction prompts, the schemas, and the workflow had
+never been checked.
+
+### Belief revision
+
+My belief that the gate verified version lines came from this repository's own
+`continuity.md`, which describes D5 as "verifies version lines" without
+qualification — a description I had also repeated to Shawn earlier in the same
+session. The description was not false so much as unscoped, and an unscoped
+description of a check is indistinguishable from a complete one when the check
+is passing.
+
+This is the same structure as the stale-ref episode of 2026-07-27, one level up.
+There, a command reported "in sync" whether or not it had asked the remote. Here,
+a gate reports PASS whether or not it examined the artefact in question. In both
+cases the failure mode is *silently returning the reassuring answer*, and in both
+cases the output carries no signal distinguishing "checked and fine" from "not
+checked". The generalisation I now hold: **any verification whose scope is
+narrower than its verdict's apparent scope will be read as the wider claim**, and
+the fix is not more careful reading but making the instrument state its own
+coverage — which is why the monitoring plan's §6 requires the gate to print
+`25/25 entities checked` beside `PASS`.
+
+### Implications for practice
+
+Break it on purpose. After wiring any change into a checked system, inject a
+defect and confirm the check notices before trusting the green. Twenty seconds
+here; the gap it exposed had been live since the gate was built on 2026-07-24 and
+would have persisted indefinitely, because a passing check generates no occasion
+to inspect it.
