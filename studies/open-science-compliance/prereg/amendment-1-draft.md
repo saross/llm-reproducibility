@@ -45,7 +45,7 @@ contained three defects, discovered by implementation review on 2026-07-22 and
 corrected in the repository the same day (commit `abdc526`; erratum log entry
 1). First, a stale worked example read "14/16" and "87.5%", contradicting the
 registered 15-sub-principle scale; corrected to 14/15 and 93.3%. Second, a
-legacy "5-level access taxonomy (Level 0–4)" collided in vocabulary with the
+legacy "5-level access taxonomy" (Level 0–4) collided in vocabulary with the
 registered six-level data-availability taxonomy (§7.3); renamed to "five-tier
 access classification (Tier 0–4)" with an explicit demarcation note — the
 L1–L6 taxonomy remains assigned only at reproduction time from actual
@@ -175,7 +175,8 @@ selection by construction.
 - [x] Word-for-word consistency check of §1 against the canonical
       `fair-instrument.md` and the Pass 6 prompt mirror (maintenance rule 4);
       record deliberate differences. (2026-08-02: done — record below. Three
-      items flagged for the registrant's read. Re-run if §1 wording changes.)
+      flags adjudicated same day: 1 fixed, 2 accepted as typography, 3
+      dissolved by investigation. Re-run if §1 wording changes.)
 - [ ] Registrant reads the final text; lodgement is by hand from the project
       view (five-file cap does not apply there), paste files unwrapped to
       flowing lines via `unwrap-paste-file.py`.
@@ -234,25 +235,31 @@ present=false with the "Only 3 of 13 datasets (23.1%)" count.
    "on every repository commit"; the log adds "and at orchestrator
    pre-flight". The amendment claims the subset, which is true as stated.
 
-**Flagged for the registrant's pre-lodgement read (E4) — not corrected here.**
+**Flagged for the registrant's pre-lodgement read (E4) — verdicts 2026-08-02.**
 
-1. **Quotation placement, second defect:** §1 quotes «"5-level access taxonomy
+1. **Quotation placement, second defect — RESOLVED (minimal fix applied,
+   registrant's verdict 2026-08-02).** §1 quoted «"5-level access taxonomy
    (Level 0–4)"» with the parenthetical inside the quotation marks; the frozen
    copy contains "5-level access taxonomy" with Level 0…Level 4 as list items,
-   never that literal string. Erratum log entry 1 places the parenthetical
-   outside the quotes. Minimal fix: move "(Level 0–4)" outside the closing
-   quotation mark.
-2. **Same pattern in the correction quote:** «"five-tier access classification
-   (Tier 0–4)"» is quoted with an en dash where canon reads "(Tier 0-4)" —
-   one character inside quotation marks; subsumed by difference 1 above if
-   accepted as typography.
-3. **Scope of the pilot-impact sentence:** "Checked against the persisted
-   pilot outputs … every pilot uses the 15-sub-principle scale". The persisted
-   outputs carrying FAIR assessments are four of the five pilots
-   (crema-et-al-2024 has none; its /15 scores live in pilot findings report
-   v1.2, Table 5, which covers all five). Erratum entry 2 scopes its check to
-   "the four papers carrying FAIR assessments". The sentence is true, but its
-   evidential frame overstates the persisted-output coverage by one paper.
-   Optional minimal fix: "every pilot was scored on the 15-sub-principle scale
-   (pilot findings report v1.2, Table 5); in the four persisted FAIR
-   assessments none leaves a sub-principle unscored …".
+   never that literal string. The parenthetical now sits outside the closing
+   quotation mark, matching erratum log entry 1.
+2. **En dash inside the correction quote — ACCEPTED as typography
+   (registrant's verdict 2026-08-02).** «"five-tier access classification
+   (Tier 0–4)"» is quoted with an en dash where canon reads "(Tier 0-4)";
+   subsumed by deliberate difference 1 above. No change.
+3. **Scope of the pilot-impact sentence — PREMISE REVISED by the 2026-08-02
+   investigation; no text change needed.** The flag claimed the persisted
+   outputs carry FAIR assessments for four of the five pilots. Wrong: a fifth
+   persisted assessment exists for crema-et-al-2024 at
+   `outputs/crema-et-al-2024/run-02-session-per-pass/extraction.json`, under
+   the pre-v2.6-convention top-level key `infrastructure` (the four later
+   pilots use `reproducibility_infrastructure`) and one directory deeper than
+   the `outputs/*/extraction.json` glob reaches — the two structural reasons
+   both the erratum entry 2 sweep and this check's first pass missed it.
+   Verified 2026-08-02: `binary_sub_principles`, data 12/15, code 12/15
+   (matching pilot findings report v1.2 Table 5 exactly), 30 sub-principles
+   scored, none unscored, no aggregate field, A1 present — so key-et-al-2024
+   remains the one pilot where the A1 majority rule was decisive. §1's
+   sentence is therefore fully supported for all five pilots as written.
+   Related run-01 artefacts were archived, not lost (`c41242b`, 2026-01-13,
+   100% rename into `archive/extraction-runs/`).

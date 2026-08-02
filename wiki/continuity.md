@@ -608,10 +608,20 @@ lives at the foot of
       (byte-identical to canon, 5,123 bytes, re-diffed), prereg §7.1, the
       frozen copy at `ee3fda3`, and the persisted pilot outputs. Record in
       `amendment-1-draft.md` (final section): 7 deliberate differences
-      recorded; **3 items flagged for the E4 read** — two quotation-precision
-      points (a parenthetical quoted as if literal; an en dash inside quotes)
-      and one scope point ("every pilot" vs the four persisted FAIR
-      assessments; crema's /15 lives only in findings report Table 5).
+      recorded; 3 flags raised and **adjudicated same day** — (1) quotation
+      placement FIXED (parenthetical moved outside the quotes, Shawn's
+      verdict); (2) en dash inside quotes ACCEPTED as typography; (3) the
+      "four of five persisted FAIR assessments" scope flag DISSOLVED: a fifth
+      persisted assessment exists (crema run-02, key `infrastructure` not
+      `reproducibility_infrastructure`, one level below the `outputs/*/`
+      glob — the two reasons erratum Entry 2's sweep and this check's first
+      pass both missed it). Verified: 12/15 + 12/15 matching Table 5, none
+      unscored, no aggregate, A1 present. §1's sentence stands as written for
+      all five pilots. Run-01 was archived not lost (`c41242b`). **Candidate
+      follow-ups, Shawn's call:** dated correction note on erratum Entry 2's
+      "the four papers carrying FAIR assessments" scoping; working-notes obs
+      candidate (Observation-16 shape again — a sweep scoped narrower than
+      its readers assume, this time by glob depth + key name).
 - [ ] **E3. Build the paste artefact — Claude's task, unstarted.**
       The draft is Markdown with headings and OSF text boxes render line breaks
       literally. Convert via
