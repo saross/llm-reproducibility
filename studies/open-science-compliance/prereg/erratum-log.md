@@ -102,6 +102,25 @@ marwick-2025):
   HTTPS", the majority rule operating as registered;
 - omission 4 is declaratory and affects no score.
 
+**Coverage correction (2026-08-02).** The scoping statement above — "the four
+papers carrying FAIR assessments" — under-counts. A fifth persisted FAIR
+assessment exists, for crema-et-al-2024, at
+`studies/open-science-compliance/outputs/crema-et-al-2024/run-02-session-per-pass/extraction.json`.
+The 2026-07-27 sweep missed it for two structural reasons: the file sits one
+directory below the `outputs/*/extraction.json` pattern swept, and it stores
+the assessment under the pre-v2.6-convention top-level key `infrastructure`
+rather than `reproducibility_infrastructure`. Located 2026-08-02 on the
+registrant's query and re-checked the same day: it uses the
+`binary_sub_principles` /15 scale (data 12/15, code 12/15, matching pilot
+findings report v1.2 Table 5 exactly), leaves no sub-principle unscored,
+carries no aggregate field, and records A1 present — so key-et-al-2024 remains
+the one pilot where the A1 majority rule was decisive. All four impact
+conclusions above therefore hold across five of five pilots; this entry's
+conclusion is strengthened, not weakened. (The related run-01 artefacts were
+archived, not deleted — `c41242b`, 2026-01-13. Working-notes Observation 20
+records the sweep-scope lesson; the monitoring plan §1(c) and class E8 carry
+the structural fix.)
+
 Classification: erratum-class corrections aligning the operational file with the
 registration's own normative text; no instrument semantics changed and no pilot
 score is revised. The corrections ride the §8 regression gate with the Phase 1
