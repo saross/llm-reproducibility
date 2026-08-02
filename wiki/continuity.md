@@ -585,16 +585,24 @@ call). Three items stand between here and the OSF form; the checklist itself
 lives at the foot of
 `studies/open-science-compliance/prereg/amendment-1-draft.md`.
 
-- [ ] **E1. Fold the third benchmark arm into §3 — needs Shawn's wording call.**
-      §3 currently reads "The model identifiers this study pins
-      (`claude-opus-5`, `claude-sonnet-5`)". Since 2026-07-27 the benchmark has
-      **three** arms — Fable 5 was authorised and authored. Lodged as drafted,
-      the registration would describe a two-arm benchmark while the study is
-      configured for three. Two options, and it is a commitment either way:
-      (a) name all three identifiers, or (b) reword the paragraph to be about
-      pinned identifiers generally, with the arm roster left to the protocol.
-      Note the Fable 5 *run* is still unapproved pending a billing route, so
-      (b) keeps more room. **Do not lodge before resolving this.**
+- [x] **E1. Fold the third benchmark arm into §3.** 2026-08-02 — **Shawn:
+      add the Fable arm** (option (a), name all three identifiers). Done: §3's
+      provenance paragraph now pins `claude-sonnet-5`, `claude-opus-5`,
+      `claude-fable-5`. Two further edits followed from it, both pre-declaring
+      rather than reconstructing:
+      - §3's selection rule now states that the three arms are strictly
+        ordered by published price, so **the Fable arm cannot be selected for
+        the census under any spot-check outcome** — it is run to test whether a
+        more capable model clears the same reliability gates (evidence about
+        the instrument, not the model) and to supply §5 robustness data. A
+        pricing-change clause applies the rule to prices in force at selection.
+      - §5 now says the annex explicitly covers an arm excluded from selection
+        by construction.
+      **Billing route settled the same day:** Max-plan Fable allocation first
+      (if that route is feasible for subagent spawns), with a configured
+      Anthropic API billing account for direct calls or excess-of-plan usage.
+      No per-arm approval outstanding — the run is governed by the ordinary
+      standing API review gate, presented once before it runs.
 - [ ] **E2. §1 word-for-word consistency check — Claude's task, unstarted.**
       Check the amendment's §1 erratum text against canonical
       `studies/open-science-compliance/protocol/instruments/fair-instrument.md`

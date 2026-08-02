@@ -438,8 +438,15 @@ shared_content:
 # (2x Opus 5, 3.3x Sonnet 5 standard), and it requires 30-day data retention —
 # it is unavailable to organisations configured for zero data retention, which
 # would surface as a 400 on every call rather than a capability difference.
-# Authoring the definition is not an API call; the benchmark RUN still needs
-# explicit approval with a billing route decided, per the standing review gate.
+# BILLING ROUTE SETTLED 2026-08-02 (Shawn): Max-plan Fable allocation first —
+# enough to test the arm, if the plan route proves feasible for subagent spawns
+# — with a configured Anthropic API billing account for direct calls or
+# excess-of-plan usage. No separate per-arm approval is now outstanding: the
+# benchmark run is governed by the ordinary standing API review gate, presented
+# once before the run (model, batch vs real-time, call count, estimated cost).
+# Note the arm cannot be SELECTED for the census — amendment §3 selects the
+# cheapest eligible model and Fable 5 is the most expensive of the three — so
+# its output is robustness data and evidence about the instrument, per §5.
 agent_definitions:
   fair-assessor-sonnet-5:
     file: .claude/agents/fair-assessor-sonnet-5.md

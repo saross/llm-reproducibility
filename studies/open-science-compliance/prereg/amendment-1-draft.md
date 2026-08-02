@@ -11,6 +11,16 @@ append any new erratum-log entries, and convert to a paste artefact (flowing
 lines, no tables — Open Science Framework (OSF) text boxes render breaks
 literally and reduce tables to pipe soup; established 2026-07-20).
 
+**Text change 2026-08-02 (registrant's decision).** §3 now pins three model
+identifiers rather than two: the Fable 5 benchmark arm, authorised 2026-07-27
+and authored the same day, is named in the registration. Two consequential
+edits accompany it — §3 pre-declares that the arms are strictly price-ordered
+and that the most expensive therefore cannot be selected for the census under
+the cost rule (so its purpose is instrument evidence plus §5 robustness data,
+stated in advance rather than reconstructed), and §5 confirms the annex covers
+an arm excluded from selection by construction. The registrant's pre-lodgement
+read covers this wording.
+
 ---
 
 ## Amendment text (draft for the OSF field)
@@ -99,6 +109,19 @@ among eligible models, the cheapest scores the census. Agreement differences
 inside the confidence interval are pre-declared not to be grounds for
 selection.
 
+Three model arms are benchmarked: `claude-sonnet-5`, `claude-opus-5`, and
+`claude-fable-5`. Cost is evaluated at selection time from the provider's
+published per-token prices. On pricing published at the time of this
+amendment those three arms are strictly ordered, so the most capable and most
+expensive arm cannot be selected for the census under any outcome of the
+spot-check. It is run regardless, for two reasons stated in advance rather
+than reconstructed afterwards: to establish whether a more capable model
+clears the same reliability gates, which is evidence about the instrument
+rather than about the model; and to supply the cross-model robustness data
+described in §5. Should published pricing change the ordering before
+selection, the rule applies to the prices in force at selection and the
+change is recorded with the selection.
+
 **Within-phase ordering.** Spot-check, then model selection, then the
 registered regression gate run on the selected configuration with both lanes
 pinned, then census.
@@ -111,11 +134,11 @@ agent-definition version, model identifier), and reports state that
 run-to-run variation reflects default-temperature sampling.
 
 One limit on that provenance is stated explicitly rather than left to be
-inferred. The model identifiers this study pins (`claude-opus-5`,
-`claude-sonnet-5`) are the exact and complete identifier strings the provider
-publishes for those models — the current generation carries no dated-snapshot
-variant to pin instead, and appending a date produces an identifier the
-interface rejects. A pinned identifier therefore names a model as the provider
+inferred. The model identifiers this study pins (`claude-sonnet-5`,
+`claude-opus-5`, `claude-fable-5`) are the exact and complete identifier
+strings the provider publishes for those models — the current generation
+carries no dated-snapshot variant to pin instead, and appending a date
+produces an identifier the interface rejects. A pinned identifier therefore names a model as the provider
 serves it at the time of the call, not an immutable set of weights the study
 controls. The receipt triple fixes what was requested and the run record fixes
 when, so any provider-side change is bounded and visible in the archived
@@ -139,7 +162,8 @@ repository artefacts.
 
 Scored runs from model arms that pass the gates but are not selected for the
 census are archived and citable as cross-model robustness data rather than
-discarded.
+discarded. This includes any arm that the cost rule in §3 excludes from
+selection by construction.
 
 ---
 
