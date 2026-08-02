@@ -501,35 +501,55 @@ resolution. A second independent reading makes the underdetermined points
 visible as disagreements. Too expensive to schedule as routine practice, but
 nearly free when it happens by accident: compare before discarding.
 
-## Candidates pending review (drafted at handoff 2026-08-02)
+## Observation 18: An ad-hoc sweep is an unscoped gate, and it fails the same way (2026-08-02)
 
-*Pending Shawn's verdict — accept / edit / discard. Silence holds them over; it
-does not discard them.*
+*(Accepted by Shawn 2026-08-02, as drafted.)*
 
-**WN-j — An ad-hoc sweep is an unscoped gate, and it fails the same way.**
-*Context:* sweeping the repository for stale commit references while
-investigating a manifest defect. *The observation:* the first regex returned 187
-non-resolving "hashes"; the number was meaningless, having swept up DOIs,
-ORCIDs, Semantic Scholar corpus IDs, page offsets, and the deliberate `1234567`
-placeholders in the PID guide. Tightened to backticked tokens containing at
+### Context
+
+Sweeping the repository for stale commit references, while investigating a
+manifest defect during the same session that found the D5 gate's coverage gap.
+
+### The observation
+
+The first regex returned 187 non-resolving "hashes". The number was meaningless:
+it had swept up Digital Object Identifiers (DOIs), ORCIDs, Semantic Scholar
+corpus identifiers, page offsets, and the deliberate `1234567` placeholders in
+the persistent-identifier guide. Tightened to backticked tokens containing at
 least one hex letter within commit-referencing files, the real figure was 115
-resolving and 21 not. The failure is identical in structure to Observation 16 —
-an instrument reporting confidently over a scope its author never checked — but
-it applies to the *disposable* measurements written mid-session, which get no
-review, no tests, and no pre-commit gate. The practical rule: before quoting a
-swept count, hand-check a sample of the hits, and prefer a sweep that prints
-*what it matched* over one that prints only *how many*.
+resolving and 21 not.
 
-**WN-k — A version number without a recorded referent cannot be checked, only
-compared.** *Context:* extending the manifest consistency gate to cover all
-registered entries. *The observation:* `manifest.yaml` registers version numbers
-but never records what each number *measures*. One entry
-(`assessment_json`) tracks the payload `schema_version` emitted into
-`assessment.json` while pointing at a document whose own heading carries a
-different version — two legitimate axes, no drift. A naive widening of the
-version check would have converted that correct state into a permanent build
-failure, and the usual response to a gate that fails on a correct file is to add
-an exception, which is how checks decay into noise. Coverage was the visible
-problem (7 of 25 entries checked); *semantics* was the binding one. Hence the
-monitoring plan sequences registry reorganisation (declare the axis) before
-checker widening (compare it) rather than the reverse.
+The failure is identical in structure to Observation 16 — an instrument
+reporting confidently over a scope its author never checked — but it applies to
+the *disposable* measurements written mid-session, which get no review, no
+tests, and no pre-commit gate. Those are the instruments most likely to produce
+a number that reaches a person, and the least likely to be scrutinised before it
+does. The practical rule: before quoting a swept count, hand-check a sample of
+the hits, and prefer a sweep that prints *what it matched* over one that prints
+only *how many*.
+
+## Observation 19: A version number without a recorded referent can only be compared, not checked (2026-08-02)
+
+*(Accepted by Shawn 2026-08-02, as drafted.)*
+
+### Context
+
+Planning the extension of the manifest-consistency gate from 7 of 25 registered
+entries to all of them.
+
+### The observation
+
+`manifest.yaml` registers version numbers but never records what each number
+*measures*. One entry (`assessment_json`) tracks the payload `schema_version`
+emitted into each `assessment.json`, while pointing at a document whose own
+heading carries a different version — two legitimate axes, no drift. A naive
+widening of the version check would have converted that correct state into a
+permanent build failure, and the usual response to a gate that fails on a
+correct file is to add an exception, which is how checks decay into noise.
+
+Coverage was the visible problem; *semantics* was the binding one. A comparison
+between two numbers is only a check when both are known to measure the same
+thing — otherwise it is a coincidence detector that fires whenever a file
+carries more than one version string. This is why the monitoring plan sequences
+registry reorganisation (declare the axis) before checker widening (compare it),
+rather than the reverse.

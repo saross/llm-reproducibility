@@ -804,10 +804,11 @@ ordinary API review gate before the run); PR #2 held until after lodgement.
 Claude's; E3 follows Shawn's read, not precedes it. Then PR #2 plus the prompt
 cascade as one change; then monitoring Phase 0.
 
-**Carry-forward:** user-obs candidates A–C (2026-07-27) still held; new
-candidates D–F drafted 2026-08-02 pending review; working-notes candidates
-WN-j/WN-k pending. zbook must run `./scripts/install-git-hooks.sh` after
-pulling. Shawn: Zotero-proxy investigation; `ELSEVIER_API_KEY_TDM` still absent
+**Carry-forward:** user-obs candidates A–C (2026-07-27) **still held and
+un-adjudicated** — carried a second time. Of the 2026-08-02 batch, F accepted,
+D and E discarded (Shawn, 2026-08-02). Working-notes candidates WN-j/WN-k
+**accepted** as Observations 18 and 19. zbook must run
+`./scripts/install-git-hooks.sh` after pulling. Shawn: Zotero-proxy investigation; `ELSEVIER_API_KEY_TDM` still absent
 from `~/personal-assistant/.env`; Cosmos watch ~mid-August.
 
 ### 2026-07-24 (second session) — Phase 1 build queue executed; amendment drafted
