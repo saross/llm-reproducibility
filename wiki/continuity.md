@@ -96,18 +96,39 @@ merged here as PR #1).
   Observation 16: a gate reporting PASS over a narrower scope than a reader
   assumes — and this file described D5 as "verifies version lines" without the
   qualifier. A sweep of all 25 registered `file`+`version` entries found:
-  8 matching, 1 **genuine mismatch**, 6 cosmetic `v1.0`-vs-`1.0` prefix
-  differences, and 8 with no `**Version:**` line (the six agent definitions use
-  frontmatter and are hash-checked instead — stronger, not weaker).
-  **Not fixed, needs Shawn:** (a) whether to widen the gate's version check,
-  which is a design decision with an immediate drift bow-wave; (b) the genuine
-  mismatch — `assessment_json` is `1.1` in `manifest.yaml` but
-  `**Version:** 2.1` at
-  `.claude/skills/research-assessor/references/schema/assessment-schema.md:7`,
-  and the commit cited as that entry's provenance (`c3654f6`, in both the
-  manifest description and the v3.0.1 version-history entry) **does not resolve
-  in this repository** — so which number is right cannot be settled from the
-  record alone.
+  8 matching, 6 cosmetic `v1.0`-vs-`1.0` prefix differences, 8 with no
+  `**Version:**` line (the six agent definitions use frontmatter and are
+  hash-checked instead — stronger, not weaker), and 1 apparent mismatch that
+  **turned out not to be one** (see below).
+  **Shawn's decision 2026-08-02: WIDEN — every registered entity is to be
+  checked hard.** A reorganisation to support that is acceptable. Plan drafted
+  at `wiki/planning/artefact-integrity-monitoring-plan.md`; not implemented.
+
+- **CORRECTED 2026-08-02 — the `assessment_json` "mismatch" was mine, not the
+  repo's.** On 2026-07-27 this was logged as a genuine conflict needing a
+  verdict on which number was right. It is not: `1.1` and `2.1` measure
+  different things, and both are correct. `**Version:** 2.1` is the *document*
+  version of `assessment-schema.md` (2.0→2.1 at `05e9706`, 2025-11-29; never
+  1.x). `schema_version: "1.1"` is the *payload* version stamped into each
+  `assessment.json` (1.0→1.1 at `faef450`, 2026-02-12). The manifest entry
+  tracks the payload axis while its `file:` points at the guide documenting it.
+  The naive sweep compared the two axes and reported a conflict that does not
+  exist; a note in `manifest.yaml` now says so, so the next reader does not
+  "reconcile" them into one number.
+- **STALE COMMIT HASHES — a history rewrite orphaned pre-rewrite references.**
+  The real defect behind the above. `c3654f6` does not resolve; nor do the two
+  hashes logged beside it. All three were re-identified by exact
+  commit-message match (`e1e4cba`→`aa75817`, `c3654f6`→`faef450`,
+  `c026756`→`be7271a`, all 2026-02-12, contents unchanged). Fixed in
+  `manifest.yaml` and `wiki/reflections/session-log.md` (with an inline note
+  recording the remap rather than silently swapping).
+  **Scale, measured 2026-08-02:** of backticked commit-shaped references across
+  `wiki/`, `manifest.yaml`, `studies/`, and `corpus/`, **115 resolve and 21 do
+  not**; all 21 sit in `wiki/` (continuity, session-log, reflections,
+  working-notes). Three are now fixed; **18 remain** and each needs
+  message-match re-identification. Deliberately not batch-fixed here — the
+  remap must be verified per commit, not guessed. A resolve-check is a
+  candidate control in the monitoring plan.
 
 ## Repo state (2026-07-27)
 
@@ -555,6 +576,42 @@ merged here as PR #1).
   `planning/pdf-extractor-consolidation-plan-2026-06-07.md`.
 
 ## Pending tasks
+
+### E. AMENDMENT LODGEMENT — three tasks, then the validation phase unblocks  [ ]
+
+**This is the critical path.** The consolidated OSF amendment must lodge
+*before* the validation phase runs (hard stop, registrant's 2026-07-24 timing
+call). Three items stand between here and the OSF form; the checklist itself
+lives at the foot of
+`studies/open-science-compliance/prereg/amendment-1-draft.md`.
+
+- [ ] **E1. Fold the third benchmark arm into §3 — needs Shawn's wording call.**
+      §3 currently reads "The model identifiers this study pins
+      (`claude-opus-5`, `claude-sonnet-5`)". Since 2026-07-27 the benchmark has
+      **three** arms — Fable 5 was authorised and authored. Lodged as drafted,
+      the registration would describe a two-arm benchmark while the study is
+      configured for three. Two options, and it is a commitment either way:
+      (a) name all three identifiers, or (b) reword the paragraph to be about
+      pinned identifiers generally, with the arm roster left to the protocol.
+      Note the Fable 5 *run* is still unapproved pending a billing route, so
+      (b) keeps more room. **Do not lodge before resolving this.**
+- [ ] **E2. §1 word-for-word consistency check — Claude's task, unstarted.**
+      Check the amendment's §1 erratum text against canonical
+      `studies/open-science-compliance/protocol/instruments/fair-instrument.md`
+      and the Pass 6 prompt mirror (maintenance rule 4); record deliberate
+      differences rather than silently accepting them.
+- [ ] **E3. Build the paste artefact — Claude's task, unstarted.**
+      The draft is Markdown with headings and OSF text boxes render line breaks
+      literally. Convert via
+      `studies/open-science-compliance/prereg/unwrap-paste-file.py` (note: in
+      the prereg directory, *not* `scripts/`). Its docstring prescribes the
+      verification: word count unchanged (`wc -w`), bullet and numbered-line
+      counts unchanged. **Keep tables out of paste content entirely** — the
+      2026-07-20 lodgement pasted the §10 power table as run-together pipe text.
+- [ ] **E4. Then Shawn:** read the final text, lodge by hand from the OSF
+      project view (the five-file cap does not apply there), tag the repository
+      state at lodgement, and record the amendment DOI/URL in the draft and in
+      `erratum-log.md`.
 
 ### A. Git hygiene — untrack the committed virtualenv  [x] 2026-07-03
 

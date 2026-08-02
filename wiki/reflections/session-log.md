@@ -96,9 +96,16 @@ Standardised assessment.json schema across 5 pilot papers, cascaded schema v1.1 
 
 ### Commits
 
-- `e1e4cba` fix(assessment): standardise assessment.json schema across 5 pilot papers
-- `c3654f6` fix(assessment): cascade schema v1.1 to assessment prompt templates
-- `c026756` fix(assessment): update classifier_version to v1.0 in all pilot outputs
+- `aa75817` fix(assessment): standardise assessment.json schema across 5 pilot papers
+- `faef450` fix(assessment): cascade schema v1.1 to assessment prompt templates
+- `be7271a` fix(assessment): update classifier_version to v1.0 in all pilot outputs
+
+<!-- Hashes remapped 2026-08-02. As recorded, these read `e1e4cba`, `c3654f6`,
+     and `c026756`, none of which resolve in current history — they are
+     pre-rewrite hashes. Each was re-identified by exact commit-message match
+     against current history; all three land on 2026-02-12, the original date.
+     The commit contents are unchanged; only the identifiers were orphaned. -->
+
 
 ### Pending Work
 
