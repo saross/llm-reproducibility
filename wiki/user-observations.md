@@ -2,7 +2,7 @@
 title: "llm-reproducibility — User Observations"
 tags: [human-ai-collaboration]
 created: 2026-07-03
-updated: 2026-07-15
+updated: 2026-08-02
 status: active
 ---
 
@@ -286,11 +286,15 @@ your verdict would make it bilateral).
 
 ## 2026-07-27 — Candidates
 
-*Drafted at handoff (session 2026-07-27, amd-tower). **Reviewed and HELD OVER
-by Shawn 2026-07-27** (second session, verdict pass): not accepted, not
-discarded — carried forward for a later decision. They remain live candidates;
-re-present them at the next handoff rather than treating the hold as a soft
-rejection.*
+*Drafted at handoff (session 2026-07-27, amd-tower); held over 2026-07-27 and
+carried through 2026-08-02. **Adjudicated by Shawn 2026-08-02:** A and B
+ACCEPTED — B generalised at his direction to "investigate, explain, avoid"
+(see its closing paragraph). C ("the context-budget check before the
+wind-down question" — asking whether anything needs this context before
+closing) DISCARDED as routine practice: "I always ask if I think there might
+be loose ends". Its residue is systematised instead as handoff-protocol
+step 0 (context-residue sweep), so the check no longer depends on him
+remembering to ask.*
 
 **Candidate A — "Can we converge X without a prereg update, or does it need an
 erratum?" was the right question, asked at the right grain.** You did not ask
@@ -315,14 +319,16 @@ turn. The counterfactual, "please fetch next time", would have produced
 nothing durable. Worth noting the diagnosis was only possible because you
 asked for it: Claude had already moved on to the reconciliation work.
 
-**Candidate C — The context-budget check before the wind-down question.** You
-noticed context burn and asked whether anything *needed this context* before
-closing, rather than either pushing on or closing blind. That surfaced two
-things that would otherwise have been lost silently (the zbook hook
-reinstallation, and an unrelated secret-safety gap Claude found while
-checking). The pattern — "is there anything that can only be done here?" as a
-distinct question from "are we done?" — seems to catch a category that a
-plain wind-down misses.
+*Generalised on acceptance (Shawn, 2026-08-02): the pattern is "investigate,
+explain, avoid" rather than "fix".* When something looks wrong, the request
+shape that pays is mechanism-first: run the cause down, explain it, then
+derive where the guard belongs — a correction alone leaves nothing durable
+behind. Corroborated the day it was accepted: "was it accidentally
+discarded?" (the fifth pilot FAIR assessment) forced a four-command run-down
+that found the artefact archived-not-lost, exposed two silent sweep
+scope-narrowers, and yielded a new monitoring-plan entity class (E8), a
+dated erratum correction, and working-notes Observation 20 — where "please
+restore the file" would have produced none of it.
 
 ## 2026-08-02 — Sibling-project handover with a translation warning attached
 
