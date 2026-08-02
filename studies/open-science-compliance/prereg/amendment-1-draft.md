@@ -172,11 +172,87 @@ selection by construction.
 - [x] Fold in any erratum-log entries added after 2026-07-24.
       (2026-07-27: Entry 2 folded into §1; model-identifier provenance limit
       added to §3. Re-check this item if further entries land.)
-- [ ] Word-for-word consistency check of §1 against the canonical
+- [x] Word-for-word consistency check of §1 against the canonical
       `fair-instrument.md` and the Pass 6 prompt mirror (maintenance rule 4);
-      record deliberate differences.
+      record deliberate differences. (2026-08-02: done — record below. Three
+      items flagged for the registrant's read. Re-run if §1 wording changes.)
 - [ ] Registrant reads the final text; lodgement is by hand from the project
       view (five-file cap does not apply there), paste files unwrapped to
       flowing lines via `unwrap-paste-file.py`.
 - [ ] Tag the repository state at lodgement and record the amendment DOI/URL
       here and in `erratum-log.md`.
+
+---
+
+## §1 consistency check record — maintenance rule 4 (2026-08-02)
+
+**Method.** Three-way comparison of §1's restatements against (a) the canonical
+`protocol/instruments/fair-instrument.md`, (b) the Pass 6 prompt mirror, and
+(c) preregistration §7.1 (`protocol/phase-2-preregistration-draft.md:382-392`),
+with every quoted defect string re-verified against the frozen copy
+(`git show ee3fda3:extraction-system/prompts/06-infrastructure_pass6_prompt.md`)
+and every pilot-impact claim re-checked against the persisted
+`outputs/*/extraction.json` files. The mirror region is byte-identical to the
+canon region (5,123 bytes between markers, diffed this check), so (a) and (b)
+are a single comparison target — which also re-confirms §1's "byte-exact copy,
+verified mechanically" claim directly rather than by citing the gate.
+
+**Verified at source.** The frozen-copy defect strings ("14/16", "87.5%",
+"5-level access taxonomy" with Level 0-4 list, dead pointer) at `ee3fda3`
+lines 662-663, 202-208, and 802, matching the erratum log's line references;
+commit `abdc526` resolves and is dated 2026-07-22 ("the same day"); the
+corrected worked example matches canon word-for-word ("total 14/15;
+percentage 93.3%"); all four Entry 2 normative statements are present in
+prereg §7.1 and in canon, and §1's restatements are word-for-word up to the
+deliberate differences below; "never aggregated into a combined score" is
+identical in all three sources; the four persisted FAIR assessments
+(dye-et-al-2023, herskind-riede-2024, key-et-al-2024, marwick-2025) all use
+`binary_sub_principles`, score 30 sub-principles each with zero left
+unscored, carry no aggregate field, and key-et-al-2024 records A1
+present=false with the "Only 3 of 13 datasets (23.1%)" count.
+
+**Deliberate differences (recorded, no change made).**
+
+1. **Range typography:** the amendment's prose uses en dashes ("Tier 0–4",
+   "Level 0–4", "L1–L6") where the canonical file uses ASCII hyphens
+   ("Tier 0-4", "L1-L6"). Wording identical.
+2. **Unscoreable statement, parentheses not em dash:** §1's "(the instrument
+   scores evidenced practice)" matches preregistration §7.1's exact rendering;
+   canon carries the same statement with an em dash and bold. The amendment
+   sides with the registration's own text.
+3. **"ethical or legal restriction"** for canon's and §7.1's "ethical/legal
+   restriction" — the slash expanded for flowing OSF prose. The only
+   word-level difference found in any restated normative statement.
+4. **Canon's italics on "majority" dropped** — formatting would not survive
+   the OSF paste in any case.
+5. **FAIR4RS statement summarised, not quoted** ("outside this registration"
+   for canon/§7.1 "not part of the/this registration"); no quotation marks
+   used, so a paraphrase, and consistent.
+6. **"a 2026-07-03 repository reorganisation"** generalises the erratum log's
+   "wiki migration" for an external audience.
+7. **Mirror-verification claim narrower than the erratum log:** §1 says
+   "on every repository commit"; the log adds "and at orchestrator
+   pre-flight". The amendment claims the subset, which is true as stated.
+
+**Flagged for the registrant's pre-lodgement read (E4) — not corrected here.**
+
+1. **Quotation placement, second defect:** §1 quotes «"5-level access taxonomy
+   (Level 0–4)"» with the parenthetical inside the quotation marks; the frozen
+   copy contains "5-level access taxonomy" with Level 0…Level 4 as list items,
+   never that literal string. Erratum log entry 1 places the parenthetical
+   outside the quotes. Minimal fix: move "(Level 0–4)" outside the closing
+   quotation mark.
+2. **Same pattern in the correction quote:** «"five-tier access classification
+   (Tier 0–4)"» is quoted with an en dash where canon reads "(Tier 0-4)" —
+   one character inside quotation marks; subsumed by difference 1 above if
+   accepted as typography.
+3. **Scope of the pilot-impact sentence:** "Checked against the persisted
+   pilot outputs … every pilot uses the 15-sub-principle scale". The persisted
+   outputs carrying FAIR assessments are four of the five pilots
+   (crema-et-al-2024 has none; its /15 scores live in pilot findings report
+   v1.2, Table 5, which covers all five). Erratum entry 2 scopes its check to
+   "the four papers carrying FAIR assessments". The sentence is true, but its
+   evidential frame overstates the persisted-output coverage by one paper.
+   Optional minimal fix: "every pilot was scored on the 15-sub-principle scale
+   (pilot findings report v1.2, Table 5); in the four persisted FAIR
+   assessments none leaves a sub-principle unscored …".

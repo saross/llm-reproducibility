@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-27
+updated: 2026-08-02
 status: active
 ---
 
@@ -603,11 +603,15 @@ lives at the foot of
       Anthropic API billing account for direct calls or excess-of-plan usage.
       No per-arm approval outstanding — the run is governed by the ordinary
       standing API review gate, presented once before it runs.
-- [ ] **E2. §1 word-for-word consistency check — Claude's task, unstarted.**
-      Check the amendment's §1 erratum text against canonical
-      `studies/open-science-compliance/protocol/instruments/fair-instrument.md`
-      and the Pass 6 prompt mirror (maintenance rule 4); record deliberate
-      differences rather than silently accepting them.
+- [x] **E2. §1 word-for-word consistency check — done 2026-08-02.**
+      Checked against canonical `fair-instrument.md`, the Pass 6 prompt mirror
+      (byte-identical to canon, 5,123 bytes, re-diffed), prereg §7.1, the
+      frozen copy at `ee3fda3`, and the persisted pilot outputs. Record in
+      `amendment-1-draft.md` (final section): 7 deliberate differences
+      recorded; **3 items flagged for the E4 read** — two quotation-precision
+      points (a parenthetical quoted as if literal; an en dash inside quotes)
+      and one scope point ("every pilot" vs the four persisted FAIR
+      assessments; crema's /15 lives only in findings report Table 5).
 - [ ] **E3. Build the paste artefact — Claude's task, unstarted.**
       The draft is Markdown with headings and OSF text boxes render line breaks
       literally. Convert via
