@@ -5,7 +5,7 @@ title: "Working Notes"
 audience: "researchers"
 tags: [research-methodology, llm-craft, open-science]
 created: 2026-02-09
-updated: 2026-07-27
+updated: 2026-08-02
 status: active
 ---
 
@@ -500,3 +500,36 @@ implementation cannot surface, because the reader inherits the same
 resolution. A second independent reading makes the underdetermined points
 visible as disagreements. Too expensive to schedule as routine practice, but
 nearly free when it happens by accident: compare before discarding.
+
+## Candidates pending review (drafted at handoff 2026-08-02)
+
+*Pending Shawn's verdict — accept / edit / discard. Silence holds them over; it
+does not discard them.*
+
+**WN-j — An ad-hoc sweep is an unscoped gate, and it fails the same way.**
+*Context:* sweeping the repository for stale commit references while
+investigating a manifest defect. *The observation:* the first regex returned 187
+non-resolving "hashes"; the number was meaningless, having swept up DOIs,
+ORCIDs, Semantic Scholar corpus IDs, page offsets, and the deliberate `1234567`
+placeholders in the PID guide. Tightened to backticked tokens containing at
+least one hex letter within commit-referencing files, the real figure was 115
+resolving and 21 not. The failure is identical in structure to Observation 16 —
+an instrument reporting confidently over a scope its author never checked — but
+it applies to the *disposable* measurements written mid-session, which get no
+review, no tests, and no pre-commit gate. The practical rule: before quoting a
+swept count, hand-check a sample of the hits, and prefer a sweep that prints
+*what it matched* over one that prints only *how many*.
+
+**WN-k — A version number without a recorded referent cannot be checked, only
+compared.** *Context:* extending the manifest consistency gate to cover all
+registered entries. *The observation:* `manifest.yaml` registers version numbers
+but never records what each number *measures*. One entry
+(`assessment_json`) tracks the payload `schema_version` emitted into
+`assessment.json` while pointing at a document whose own heading carries a
+different version — two legitimate axes, no drift. A naive widening of the
+version check would have converted that correct state into a permanent build
+failure, and the usual response to a gate that fails on a correct file is to add
+an exception, which is how checks decay into noise. Coverage was the visible
+problem (7 of 25 entries checked); *semantics* was the binding one. Hence the
+monitoring plan sequences registry reorganisation (declare the axis) before
+checker widening (compare it) rather than the reverse.

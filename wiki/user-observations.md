@@ -323,3 +323,41 @@ reinstallation, and an unrelated secret-safety gap Claude found while
 checking). The pattern — "is there anything that can only be done here?" as a
 distinct question from "are we done?" — seems to catch a category that a
 plain wind-down misses.
+
+## 2026-08-02 — Candidates
+
+*Drafted at handoff (session 2026-08-02, amd-tower). **Pending your review** —
+accept / edit / discard / replace. Silence holds them over; it does not discard
+them. Note candidates A–C (2026-07-27) remain held over and un-adjudicated.*
+
+**Candidate D — "Is there any reason not to merge the PR?" stopped a change
+that would have shipped a false assurance.** You did not tell me to merge it,
+and you did not ask whether it was ready — you asked for the objection. The
+objection existed and I had not gone looking for it: merging would have
+registered schema v2.7 while eight extraction prompts still emitted `2.6`, so
+`source_file` and `source_sha256` would have been declared and never populated,
+and completing that cascade edits a frozen artefact in the window before an
+amendment about that artefact set lodges. Everything I had checked said go —
+clean merge, gate PASS, 32/32 green. All of that was evidence about mechanics,
+and the risk was in completeness. Asking for the reason-not-to rather than the
+readiness is what aimed the check at the right dimension.
+
+**Candidate E — Naming the stopping condition inside the instruction kept a
+plan from becoming a half-built implementation.** "Sort out Thing 1 (at least to
+'we have a plan')" and "Don't start implementing that yet" were two brakes in
+one message, and they were the reason the gate-widening work landed as a
+phased plan you can review rather than as code you would have had to unpick.
+Left to my own judgement with an approved direction and a clear design, I would
+have started building. Worth keeping as a default for anything where you have
+approved the *direction* but not yet the *design* — the depth constraint is
+doing more work than the task description.
+
+**Candidate F — Handing over the sibling project *with* the warning that it
+would not transfer.** Pointing me at map-reader-llm's audit apparatus while
+saying in the same breath that it "won't translate exactly" pre-empted the
+failure I was most likely to commit: importing a good, already-written charter
+wholesale. It made "where the analogy stops" a required section rather than an
+afterthought, and that section is where the actual thinking happened — the
+decision *not* to build a JSONL ledger here, because our entities are
+enumerable from the manifest every run and a parallel record would recreate the
+exact drift pathology the corpus plan's decision D-10 exists to prevent.
