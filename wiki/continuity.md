@@ -768,6 +768,48 @@ February). Low priority; logged from llm-observations 2026-07-06.
 
 ## Session log
 
+### 2026-07-27 (second session) / 2026-08-02 — Verdicts cleared, corpus list closed, monitoring planned
+
+Two sittings on amd-tower off the 2026-07-27 resume prompt; seven commits
+(`640ffbb`→`8a4e946`) plus PR #2 opened and deliberately held. **Sitting one:**
+all four held-over verdicts cleared — WN-h/WN-i accepted as working-notes
+Observations 16–17 (drafted against sources first, since only one-line summaries
+existed), user-obs A–C held again, Opus-5 arm confirmed and a Fable 5 arm
+authorised, provenance paragraph deferred to the lodgement read. Fable 5 agent
+definition *generated from* the Opus 5 file and diffed rather than transcribed —
+which caught a `sub-principle`→`sub principle` defect the hand-written attempt
+had introduced. Corpus items 5 (fetch-with-checksum, destinations, Materials
+Acquired table) and 6 (schema v2.7, PR #2) closed the corpus build list.
+**Sitting two:** walked a returning collaborator through two findings and
+corrected one of them; fixed the orphaned commit hashes; drafted the monitoring
+plan; named the Fable arm in amendment §3, closing task E1.
+
+**Findings.** The D5 gate's version check covers **7 of 25** registered entries
+(`check_canonical_entry` iterates `shared_content` only) — found by probing this
+session's own change with a deliberately wrong version. Backticked commit
+references: **115 resolve, 21 do not**, all 21 in `wiki/`; 3 remapped by exact
+message match, 18 outstanding.
+
+**Correction.** The `assessment_json` "genuine mismatch" escalated on 2026-07-27
+was a measurement error, not repo drift — `1.1` (payload `schema_version`) and
+`2.1` (document version) are different axes, both correct. Withdrawn 2026-08-02
+with evidence; a manifest note now prevents the next reader "reconciling" them.
+
+**Decisions (Shawn, 2026-08-02):** widen the gate so every registered entity is
+checked hard, reorganisation acceptable; add the Fable arm to the lodged
+amendment text; billing route settled (Max-plan first, API account for excess,
+ordinary API review gate before the run); PR #2 held until after lodgement.
+
+**NEXT:** task E — E2 (§1 consistency check) and E3 (paste artefact) are
+Claude's; E3 follows Shawn's read, not precedes it. Then PR #2 plus the prompt
+cascade as one change; then monitoring Phase 0.
+
+**Carry-forward:** user-obs candidates A–C (2026-07-27) still held; new
+candidates D–F drafted 2026-08-02 pending review; working-notes candidates
+WN-j/WN-k pending. zbook must run `./scripts/install-git-hooks.sh` after
+pulling. Shawn: Zotero-proxy investigation; `ELSEVIER_API_KEY_TDM` still absent
+from `~/personal-assistant/.env`; Cosmos watch ~mid-August.
+
 ### 2026-07-24 (second session) — Phase 1 build queue executed; amendment drafted
 
 Single autonomous session off the resume prompt. Four build-queue items + the
