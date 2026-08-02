@@ -24,7 +24,7 @@ without conversational memory.
 
 ## 1. The problem, measured
 
-Two findings from 2026-07-27 and 2026-08-02, both re-verified at source:
+Three findings from 2026-07-27 and 2026-08-02, all re-verified at source:
 
 **(a) The version check covers 7 of 25 registered entries.**
 `scripts/check-manifest-consistency.py:467-468` iterates `shared_content` only,
@@ -44,6 +44,19 @@ references across `wiki/`, `manifest.yaml`, `studies/`, and `corpus/`,
 **115 resolve and 21 do not**. A history rewrite orphaned the 21. Three were
 re-identified by exact commit-message match and fixed on 2026-08-02
 (`e1e4cba`→`aa75817`, `c3654f6`→`faef450`, `c026756`→`be7271a`); **18 remain**.
+
+**(c) A five-item reference set was enumerated as four by two silent
+scope-narrowers (found 2026-08-02, E2 flag-3 investigation).** The persisted
+pilot FAIR assessments — the concordance-floor denominator for
+validation-phase model selection (amendment §3) — number five, but every
+sweep to date returned four: crema-et-al-2024's assessment sits one directory
+below the `outputs/*/extraction.json` glob and under the pre-v2.6 top-level
+key `infrastructure` rather than `reproducibility_infrastructure`. The
+shortfall was visible (five pilots are named throughout the study record) and
+was rationalised into prose rather than investigated (erratum-log Entry 2,
+coverage correction 2026-08-02; working-notes Observation 20). Unlike (a),
+no gate even nominally covers these files: reference data consumed by a
+registered analysis currently sits outside the registry altogether.
 
 **The measurement error is itself a design requirement.** The apparent
 `assessment_json` conflict — manifest `1.1` versus file `**Version:** 2.1` —
@@ -111,6 +124,7 @@ Naming the classes is what makes "check everything hard" tractable.
 | **E5 Two-axis entity** | `assessment_json` and anything like it | manifest must name *which* axis it tracks; check that axis only | **absent; requires registry change** |
 | **E6 Unversioned registered file** | templates (`log-template.md` etc.) | existence + optional content hash; must declare "unversioned" explicitly rather than silently having no check | **absent** |
 | **E7 Cross-reference** | commit hashes, file paths, and DOIs cited in registered docs | resolvability (`git cat-file -t`, path exists, DOI resolves) | **absent** |
+| **E8 Reference dataset** | the five pilot FAIR assessments (the §3 concordance-floor denominator); any future set an analysis reads as ground truth | explicit per-item path **and JSON key path** declared in the registry; enumeration generated from the registry, never re-derived by glob; expected cardinality asserted and checked | **absent; items not registered at all** (added 2026-08-02 from finding (c)) |
 
 ## 5. Proposed registry reorganisation
 
@@ -224,3 +238,9 @@ was verified by a different instrument than the one described.
    Warn-first is proposed; blocking would currently fail 18 times.
 3. **The 18 remaining stale hashes** — remap by message match in one pass, or
    leave and let the E7 check surface them as they are touched?
+4. **Crema's divergent artefact (new 2026-08-02)** — normalise the run-02 file
+   in place (`infrastructure` → `reproducibility_infrastructure`, which edits
+   a persisted historical output), or register it as-is with its path and key
+   declared per the E8 pattern? Register-without-rewrite is proposed: the
+   file records what a 2026-01 run actually emitted, and the declare-the-axis
+   principle (§5) extends naturally to declare-the-key.

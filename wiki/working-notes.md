@@ -553,3 +553,43 @@ thing — otherwise it is a coincidence detector that fires whenever a file
 carries more than one version string. This is why the monitoring plan sequences
 registry reorganisation (declare the axis) before checker widening (compare it),
 rather than the reverse.
+
+## Observation 20: An enumeration that returns n−1 of a known-n set is a finding, not a fact (2026-08-02)
+
+*(Approved by Shawn 2026-08-02; drafted after the approval, wording unreviewed.)*
+
+### Context
+
+The amendment §1 consistency check (task E2) re-ran erratum-log Entry 2's
+impact sweep over the persisted pilot outputs. Both the original 2026-07-27
+sweep and the re-run enumerated four FAIR assessments from a five-pilot set,
+and both wrote "the four papers carrying FAIR assessments" into the record as
+a fact about the corpus.
+
+### The observation
+
+The fifth assessment existed the whole time: crema-et-al-2024's sits one
+directory below the `outputs/*/extraction.json` glob and under the pre-v2.6
+top-level key `infrastructure` rather than `reproducibility_infrastructure`.
+Two silent scope-narrowers — a path pattern and a schema assumption — trimmed
+the set before any check ran.
+
+This is the Observation 16 shape again (a check reporting over a narrower
+scope than its readers assume), but it is the dual of Observation 18. That
+sweep *over*-matched, and its countermeasure — print what you matched, not
+just how many — works because the junk is in the output. An under-match cannot
+be exposed that way: nothing prints what a glob never enumerated. The control
+that was available here was cheaper and different: the expected cardinality
+was known — five pilots, named everywhere — the sweep returned four, and the
+shortfall was rationalised into prose instead of investigated. It took the
+registrant asking "was it accidentally discarded?" to force the run-down,
+which then took four commands (`git log --follow` found it archived-not-lost;
+`jq` found the divergent key).
+
+Two rules follow. When an enumeration over a set of known size returns fewer
+members, the missing member is a defect to run down before the count enters
+any record. And when the set is decision-relevant — these five reference
+scores are the §3 concordance-floor denominator for validation-phase model
+selection — the enumeration itself should be registered and generated, never
+re-derived by glob at each use (monitoring plan §1(c) and class E8; erratum
+log Entry 2 coverage correction, 2026-08-02).
