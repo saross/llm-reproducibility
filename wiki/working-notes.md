@@ -556,7 +556,7 @@ rather than the reverse.
 
 ## Observation 20: An enumeration that returns n−1 of a known-n set is a finding, not a fact (2026-08-02)
 
-*(Approved by Shawn 2026-08-02; drafted after the approval, wording unreviewed.)*
+*(Approved by Shawn 2026-08-02; wording accepted as drafted, same day.)*
 
 ### Context
 
