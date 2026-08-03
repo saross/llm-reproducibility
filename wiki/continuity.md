@@ -649,12 +649,21 @@ lives at the foot of
       sitting. **DOI unchanged by design**; amendment version URL
       <https://osf.io/dqnhg?revisionId=6a7017da97adb06288afef80>; tag
       `osf-amendment-1-2026-08-03`. Reading done at promotion.
-      **TASK E COMPLETE — the validation phase is unblocked.** Now
-      unblocked in order: PR #2 + the eight-prompt version cascade +
-      project.version bump as one change; monitoring plan Phase 0 (after
-      Shawn answers §9); the three-arm benchmark run (still gated on the
-      standing API review presentation: model, batch vs real-time, 45
-      spawns, estimated cost). Flag from the docs sweep, low priority: the
+      **TASK E COMPLETE — the validation phase is unblocked.** Same-day
+      follow-through (2026-08-03): **PR #2 MERGED** (`58c3fe7`) as the one
+      change — schema v2.7 + eight-prompt cascade + project.version 3.0.1 →
+      3.1; Pass 6 edits outside the mirror region, classified an ordinary
+      §8 implementation change (no erratum, no amendment; classification
+      presented, standing land decision applied). **Monitoring §9 all
+      RESOLVED** (Shawn: wiki not registered; E7 warn-first; one verified
+      remap pass early Phase 4; crema register-without-rewrite) and
+      **Phase 0 COMPLETE** — 55 entities enumerated and classified, plan
+      §10; per-entry re-check found no true drift, four
+      missing-version-carrier flags for Phase 1. **Phase 0 GATE pending
+      Shawn's review**, then Phase 1 (registry `check:` blocks). Remaining
+      after that: the three-arm benchmark run (still gated on the standing
+      API review presentation: model, batch vs real-time, 45 spawns,
+      estimated cost). Flag from the docs sweep, low priority: the
       original registration text's two escaped comparators ("post &gt; pre
       on all measures", "pinned &lt; unpinned") may render as literal
       entity strings on the public page; eyeball, and if wrong it is
