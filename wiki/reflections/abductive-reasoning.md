@@ -536,3 +536,60 @@ defect and confirm the check notices before trusting the green. Twenty seconds
 here; the gap it exposed had been live since the gate was built on 2026-07-24 and
 would have persisted indefinitely, because a passing check generates no occasion
 to inspect it.
+
+## 2026-08-03 — The operative control was not the one on the org chart
+
+**Session:** 0360402e-e4b8-4e21-9de6-1eb48c14b416
+**Instance:** primary
+
+### Surprising fact
+
+Arm 1 of the validation benchmark completed 15/15 with receipts that
+verified perfectly — yet `receipt-gate-log.jsonl` showed the SubagentStop
+receipt gate had emitted fifteen `block` decisions and zero `pass` events
+for those spawns. The mechanism the design documents named as the runtime
+receipt control had never validated a production receipt; the run was
+clean anyway.
+
+### Probe
+
+Tallied the gate log by arm and event type; read the gate source against
+the workflow's output path. The gate searched the agent's *final message*
+for JSON, but workflow-lane structured output rides a tool call the gate
+never inspects — so every spawn was blocked once, re-prompted after its
+output was already banked, and the data flowed through untouched. The
+operative control was my orchestrator-side post-hoc verification, which
+the run records had (accurately) described all along. Fixed the gate to
+read transcript tool calls; the fix commit's own re-audit then showed the
+fable arm still blocking 9 of 15 — the fallback keyed on an event field
+name sourced from a design document, never confirmed against a live event.
+
+### Belief revision
+
+Before: the layered receipt apparatus (push hook, receipt gate, pre-flight)
+was operative because it was wired, tested at build, and its log existed.
+After: a control is operative only when its log shows it *passing real
+traffic* — wiring plus green tests plus a log of blocks is fully consistent
+with a control that has never once done its job. And a fix to such a
+control inherits the same burden: my repair was ~40% effective for the same
+root reason (an unverified interface assumption) that made the original 0%
+effective. The reliable pattern in this repo remains: the orchestrator-side
+verification that reads persisted artefacts is the control that has caught
+things (marwick r2's arithmetic, the model-id marker); hook-lane controls
+are aspirational until their pass-events exist.
+
+### What would change this belief
+
+A census run whose gate log shows per-item pass events with agent ids,
+where a deliberately injected bad receipt (wrong model_id) is blocked at
+SubagentStop and the block demonstrably re-prompts to a corrected output —
+the end-to-end catch, observed once, would promote the gate from
+aspirational to operative.
+
+### Implications for practice
+
+Before trusting any event-driven control, capture one real event and diff
+its keys against the code's assumptions (Observation 14, applied to hooks);
+and after "fixing" a control, demand its first live pass-event before
+declaring it repaired — the follow-ups register now requires exactly this
+before the census.

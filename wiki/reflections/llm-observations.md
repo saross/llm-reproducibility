@@ -413,3 +413,33 @@ reading both axes at each commit). The escalation was the error: I had enough
 information to resolve it and reached for the human instead. Worth separating the
 two habits — escalating genuine decisions is right, and escalating unfinished
 analysis dressed as a decision is not.
+
+## 2026-08-03 — Capability does not buy scoring stability
+
+Three model arms (Sonnet 5, Opus 5, Fable 5) ran the identical frozen FAIR
+instrument over identical inputs, three runs each: unanimity proportions
+0.807 / 0.873 / 0.813, concordance with pilot references 0.773 / 0.807 /
+0.820 — every arm below both registered 0.90 gates, and the *most capable
+and most expensive model was less stable than the mid-tier one*. The
+instability is item-structured and shared: A1.2 (auth-where-needed on
+fully open resources), R1.1 (which artefact's licence), A2, R1.3, and the
+F-block upstream-crediting question recur across all three arms, and one
+paper (dye) swings 6→13 on data FAIR *within* the Fable arm on a single
+interpretive fork the instrument leaves open. Two observations for the
+LLM-instrument literature: (1) reliability of a binary rubric under LLM
+scoring is dominated by residual ambiguity in the rubric, not by model
+tier — scaling the model does not purchase agreement; (2) run-to-run
+disagreement concentrates precisely where a careful human panel would also
+split, which makes unanimity-across-runs a cheap, automatable probe for
+locating a rubric's underspecified clauses — three runs of one model found
+the same five clauses a cross-model comparison found. The benchmark cost
+~$27 and 4.25M tokens; as instrument diagnostics go, that is inexpensive.
+
+Configuration note for comparability: the census lane scores from the
+paper PDF alone, while the pilot references were produced with
+reproduction-informed context — some concordance shortfall is a property
+of the configuration under validation, not scoring error. The two effects
+(rubric ambiguity, evidential context) are separable in the item data:
+ambiguity shows as within-arm disagreement, context as systematic
+cross-configuration offsets (e.g. supplement-only availability scoring
+lower paper-only than it did reproduction-informed).

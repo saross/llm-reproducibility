@@ -794,3 +794,38 @@ map-reader and apologising for it, and turned into the more valuable half:
 walking someone through findings is the fastest way to discover which of them do
 not survive being explained. The `assessment_json` correction happened precisely
 because I had to lay the evidence out for a reader.
+
+## Entry 12 (2026-08-03) — The day the apparatus was used in anger
+
+**Project:** llm-reproducibility. **Session:** 0360402e-e4b8-4e21-9de6-1eb48c14b416 (primary instance, no compaction at time of writing).
+
+**What would I do differently if I replayed this session?** Two things,
+both about the receipt gate. First, I would have captured one real
+SubagentStop event before writing a hook that parses SubagentStop events —
+the entire C4 fix was built on a field name (`agent_transcript_path`) taken
+from a design document, and the re-audit's verdict that the fix was roughly
+40% effective traces straight to that unverified assumption. The project
+has a rule for this — canary probes beat documentation (Observation 14) —
+and I had read it, cited it, and did not apply it. Second, I would have run
+the audit *before* launching arm 1, not during arm 2. The audits were
+Shawn's suggestion, made while the benchmark idled; had they been part of
+my own launch sequence, the gate's blindness would have been found for the
+price of zero spawns rather than being reconstructed from a live log
+mid-run. The deeper pattern: I treat pre-flight as "does the gate pass?"
+when the better question is "has anyone ever watched the gate catch
+something real?" — a gate that has only ever passed is unproven, which is
+this project's oldest lesson wearing new clothes.
+
+**What's the single most important thing a future reader should know?**
+That the benchmark's triple failure is a *good* result, and nothing about
+it was improvised. Every consequence now in play — the one routing-fix
+attempt, the majority-vote fallback, the framing of cross-arm instability
+as instrument evidence — was pre-specified in an amendment lodged hours
+before the runs, through a mechanism (OSF versioned registration updates)
+we discovered the same morning. The registered study absorbed a negative
+reliability result without a single ad-hoc decision. That is what the
+governance machinery was for, and 2026-08-03 is the day it was used in
+anger: lodgement at breakfast, phases 0–3 by lunch, 45 spawns and two
+audit rounds by evening, and the decision that matters — §2's single
+remediation card — deliberately left on the table for a fresh session
+rather than played at the end of a long one.

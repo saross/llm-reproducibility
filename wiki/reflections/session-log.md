@@ -624,3 +624,69 @@ verification charter at Shawn's suggestion; that charter already names this
 repository as a future target, so the borrowing is anticipated rather than
 opportunistic. Sequencing throughout assumes the amendment lodges before any
 gate work begins.
+
+## Session: 2026-08-03 — Lodgement, monitoring phases 0–3, the benchmark, two audit rounds
+
+Single long session on amd-tower (session
+0360402e-e4b8-4e21-9de6-1eb48c14b416), resumed from the 2026-08-02 handoff.
+Roughly 25 commits, `a208f9d` → `9f67480`, plus reflections/handoff.
+
+**Amendment (task E, closed).** E2 rule-4 consistency check (13 frozen
+phrases verified at source; three flags raised and adjudicated same day —
+one fixed, one accepted as typography, one dissolved when the "missing"
+fifth pilot FAIR assessment was found intact under crema's pre-v2.6
+`infrastructure` key). Erratum entry 2 gained a dated coverage correction;
+working-notes Observation 20 accepted; monitoring plan gained finding (c) +
+class E8. User-obs A–C adjudicated (A, B accepted — B generalised to
+"investigate, explain, avoid"; C discarded and systematised as
+handoff-protocol step 0). Academic-prose skill's first test re-expressed
+the amendment (token-invariant, register exit-checks clean); registrant
+promoted it, added a §5 cross-vendor pre-declaration (OpenAI arms
+considered, deferred to the FAIR4RS-style extension pattern), and E3's
+paste artefact passed its docstring verification. **Lodged via the OSF API**
+as a versioned registration update (SchemaResponse revision
+`6a7017da97adb06288afef80`; DOI unchanged; tag
+`osf-amendment-1-2026-08-03`) after an Opus-agent sweep of the developer
+docs, a staged byte-identical draft, and the registrant's
+placement decision (append at end). Validation phase unblocked.
+
+**Post-lodgement queue.** PR #2 merged as one change with the
+eight-prompt v2.6→v2.7 cascade and project.version 3.1 (`58c3fe7`).
+Monitoring plan §9 resolved (wiki unregistered; E7 warn-first; one
+verified remap pass in Phase 4; crema register-without-rewrite). Phases
+0–3 shipped same day: 55-entity enumeration and classification (§10);
+central `entity_checks` map + E8 reference-dataset registration; checker
+widened with per-class verification and undeclared-entity failure (closure
+probe: the 2026-08-02 false-PASS probe now fails); coverage self-report
+line. Tests 32 → 48.
+
+**Benchmark (amendment §3).** API gate presented and approved (billing:
+Max first, API for Fable excess). Built the missing pieces: benchmark
+output schema v1.0 (registered E4) and validation output home. Three arms
+× 5 pilots × 3 runs via per-arm workflows; per-arm verification (receipts,
+push log, isolation sweeps, arithmetic), run records with per-spawn
+tokens. **Result: all arms below both 0.90 gates** — stability
+0.807/0.873/0.813, concordance 0.773/0.807/0.820 — with item-structured
+disagreement shared across arms (A1.2, R1.1, A2, R1.3, F-block upstream
+crediting). 4.25M tokens, ≈$27 API-equivalent. Decision package in
+`benchmark-summary.md`; §2 remediation decision deliberately deferred to
+next session.
+
+**Audits.** Two-lens /audit (Opus agents, read-only, GOVERNED fencing) of
+all code since the 2026-07-27 review: 9+ Criticals including a receipt
+gate that had never validated a production receipt (15 blocks, 0 passes in
+arm 1) and fail-open pre-flight paths. Fix pass `3b01676` (tests 48 → 84,
+committed hook suite replacing the never-committed "17 pipe-tests");
+re-audit of the fix found real regressions (gate still blocked 9/15 fable
+spawns; cross-item receipt substitution; blast-radius and encoding holes)
+— registered in `wiki/planning/audit-2026-08-03-follow-ups.md` with
+deferred-by-design items (schema v1.1 pre-census; C7 instrument sha256
+GOVERNED; unwrap-paste fixes pre-lodgement; wiki pipe-tests correction).
+
+**Contextual assumptions.** Sonnet 5 intro pricing ($2/$10) runs to
+2026-08-31, which the amendment's price-ordering tolerates either way. The
+`[1m]` model-id marker on the opus arm is treated as the harness's
+1M-context surface of the pinned model, accepted by prefix and recorded
+verbatim. Schema fixes were deliberately withheld mid-benchmark to keep
+arm configs identical — v1.1 must land before the census, not merely
+eventually.

@@ -679,3 +679,44 @@ stopped short of finishing. And treat "wind the session down" as invoking the
 close-out ritual, not as a request for a summary: offer `/reflect` and
 `/handoff` explicitly at the first wind-down signal rather than waiting to be
 asked, since the material decays fastest exactly when the session feels over.
+
+## claude-obs 33 — 2026-08-03: Parallel authorisation with clean decision boundaries
+
+**Pattern.** At peak load Shawn ran three concurrent threads — benchmark
+arms, a wide audit, and monitoring phases — steering each with one-line
+verdicts ("both please"; "1. Agree… 4. register-without-rewrite is fine")
+while explicitly reserving the decisions that were his (the §2 remediation
+card, the OpenAI deferral, prose promotion). He never asked for status
+that notifications would deliver anyway, and never took a decision that
+data in flight would improve.
+
+**Lesson.** The bottleneck in a heavy session is not model throughput but
+decision hygiene: his terse-verdict style works because each verdict
+arrives exactly at a pre-built decision point with its options laid out.
+The preparation of the decision package *is* the collaboration.
+
+**How to apply.** Keep shaping work so that everything Shawn must decide
+arrives as a numbered package with recommendations, and everything else
+proceeds; when a decision would be improved by data still arriving, say so
+and park it visibly rather than asking early.
+
+## claude-obs 34 — 2026-08-03: My fix pass repeated the defect class it was fixing
+
+**Pattern.** The audit found the receipt gate blind because its author
+had assumed an output path without observing one. My fix assumed an event
+field name (`agent_transcript_path`) from a design document without
+capturing a live event — and the re-audit measured the result: ~40%
+effective, root cause undiagnosable from its own log. I wrote the fix
+citing Observation 14 (canary probes beat documentation) in the same hour
+I violated it.
+
+**Lesson.** Fixing a verification gap under audit pressure reproduces the
+gap's cause unless the fix's own assumptions are verified by the same
+standard — reading the lesson is not applying it. The re-audit-the-fixes
+step of /audit earned its cost precisely here.
+
+**How to apply.** Before the census: capture one real SubagentStop event,
+diff its keys against the gate's assumptions, and require the gate's first
+live pass-event before calling it repaired. Generally: any fix to an
+interface-consuming control starts with one observed instance of the
+interface.
