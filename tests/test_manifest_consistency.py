@@ -460,7 +460,7 @@ agent_definitions:""")
                      "  components.guide: {class: E3, version_source: markdown-header, "
                      "normalise: strip-v-prefix}",
                      "  components.guide: {class: E1}")
-        self.assert_error_containing("class E1 declared for a non-shared_content")
+        self.assert_error_containing("class E1 declared for a versioned entity")
 
     def test_e3_version_drift_caught(self) -> None:
         """E3: a prose artefact whose header moves off the registered version."""
@@ -514,6 +514,139 @@ agent_definitions:""")
         """E8: a reference item whose file is gone fails, not shrinks the set."""
         (self.root / REFITEM_REL).unlink()
         self.assert_error_containing("item 't1' file missing")
+    # --- audit 2026-08-03 regression tests (lenses A and B) ----------------
+
+    def run_script(self, *extra_args, env_extra=None):
+        """Run the checker as a subprocess against the fixture root."""
+        import os
+        import subprocess
+        import sys
+        env = dict(os.environ)
+        if env_extra:
+            env.update(env_extra)
+        return subprocess.run(
+            [sys.executable, str(SCRIPT), "--root", str(self.root),
+             "--manifest", str(self.manifest), *extra_args],
+            capture_output=True, text=True, env=env, timeout=60)
+
+    def test_exit_code_contract(self) -> None:
+        """B/C1: pre-commit and pre-flight consume the exit code, so pin it."""
+        clean = self.run_script()
+        self.assertEqual(clean.returncode, 0, clean.stdout + clean.stderr)
+        self.rewrite(GUIDE_REL, "**Version:** v1.0", "**Version:** v9.9")
+        broken = self.run_script()
+        self.assertEqual(broken.returncode, 1, broken.stdout + broken.stderr)
+        self.assertIn("version drift", broken.stdout)
+
+    def test_quiet_mode_still_reports_coverage_and_exit(self) -> None:
+        """A/M7: the automated callers use --quiet; scope must stay visible."""
+        result = self.run_script("--quiet")
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("entities checked", result.stdout)
+
+    def test_preflight_env_override_denied(self) -> None:
+        """B/C2: CLAUDE_CODE_SUBAGENT_MODEL outranks pins; --preflight must fail."""
+        result = self.run_script("--preflight",
+                                 env_extra={"CLAUDE_CODE_SUBAGENT_MODEL": "claude-x"})
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("CLAUDE_CODE_SUBAGENT_MODEL", result.stdout)
+
+    def test_malformed_manifest_reports_error_not_pass(self) -> None:
+        """B/C3: a corrupt manifest must fail, never fail-open."""
+        self.manifest.write_text("{{{ not yaml: [", encoding="utf-8")
+        result = self.run_script()
+        self.assertEqual(result.returncode, 1)
+
+    def test_malformed_declaration_is_an_error(self) -> None:
+        """A/C1: a scalar or null declaration must not silently disable a check."""
+        self.rewrite("manifest.yaml",
+                     "  components.guide: {class: E3, version_source: markdown-header, "
+                     "normalise: strip-v-prefix}",
+                     "  components.guide: E3")
+        report = self.run_checks()
+        self.assertTrue(any("malformed declaration" in e or "must be a mapping" in e
+                            for e in report.errors), report.errors)
+        self.assertIn("6/7", report.coverage)
+
+    def test_file_without_version_requires_declaration(self) -> None:
+        """A/C2a: a registered file without a version cannot escape enumeration."""
+        (self.root / "docs/loose.md").write_text("# Loose\n", encoding="utf-8")
+        self.rewrite("manifest.yaml", "  dataspec:",
+                     "  loose:\n    file: docs/loose.md\n  dataspec:")
+        self.assert_error_containing("undeclared entity: components.loose")
+
+    def test_new_top_level_section_is_enumerated(self) -> None:
+        """A/C2b: a new manifest section cannot silently escape the gate."""
+        (self.root / "docs/newthing.md").write_text("**Version:** 1.0\n", encoding="utf-8")
+        path = self.root / "manifest.yaml"
+        path.write_text(path.read_text(encoding="utf-8")
+                        + "newsection:\n  thing:\n    version: \"1.0\"\n"
+                          "    file: docs/newthing.md\n", encoding="utf-8")
+        self.assert_error_containing("undeclared entity: newsection.thing")
+
+    def test_e8_cardinality_growth_caught(self) -> None:
+        """B/M2: the reference set must not silently grow past its declaration."""
+        (self.root / "outputs/t2").mkdir(parents=True, exist_ok=True)
+        (self.root / "outputs/t2/extraction.json").write_text(
+            REFITEM_TEXT, encoding="utf-8")
+        self.rewrite("manifest.yaml",
+                     "      - slug: t1",
+                     "      - slug: t2\n        file: outputs/t2/extraction.json\n"
+                     "        fair_key: infrastructure.fair_assessment\n"
+                     "      - slug: t1")
+        self.assert_error_containing("cardinality drift")
+
+    def test_e4_corrupt_json_is_an_error(self) -> None:
+        """B/M3: invalid JSON must error, not crash or pass."""
+        (self.root / DATASPEC_REL).write_text("{not json", encoding="utf-8")
+        self.assert_error_containing("not valid JSON")
+
+    def test_e8_corrupt_item_json_is_an_error(self) -> None:
+        (self.root / REFITEM_REL).write_text("{not json", encoding="utf-8")
+        self.assert_error_containing("not valid JSON")
+
+    def test_class_for_wrong_kind_errors_not_crashes(self) -> None:
+        """A/M1: an E3 class on a path-scalar entity errors instead of crashing."""
+        self.rewrite("manifest.yaml",
+                     "  documentation.readme_fixture: {class: E6, verify: exists}",
+                     "  documentation.readme_fixture: {class: E3, "
+                     "version_source: markdown-header}")
+        report = self.run_checks()
+        self.assertTrue(any("declaration/entity mismatch" in e for e in report.errors),
+                        report.errors)
+
+    def test_mirror_version_citation_caught(self) -> None:
+        """B/M4: the mirror banner's version citation is load-bearing."""
+        self.rewrite(MIRROR_REL, "(v1.0, receipt token", "(version elided, receipt token")
+        self.assert_error_containing("does not cite version")
+
+    def test_agents_subdirectory_swept(self) -> None:
+        """A/M6a: an unregistered agent in a subdirectory must not hide."""
+        sub = self.root / ".claude/agents/sub"
+        sub.mkdir(parents=True, exist_ok=True)
+        (sub / "rogue.md").write_text("---\nname: rogue\nmodel: m\n---\n",
+                                      encoding="utf-8")
+        self.assert_error_containing("unregistered agent definition")
+
+    def test_non_markdown_instrument_swept(self) -> None:
+        """A/M6b: the reverse sweep covers every file type in scan directories."""
+        (self.root / "protocol/instruments/rogue.txt").write_text("x\n", encoding="utf-8")
+        self.assert_error_containing("unregistered instrument file")
+
+    def test_unknown_normalise_rule_is_an_error(self) -> None:
+        """A/L: a typo'd normalise rule must not silently disable normalisation."""
+        self.rewrite("manifest.yaml", "normalise: strip-v-prefix",
+                     "normalise: strip-v-prefixx")
+        self.assert_error_containing("unknown normalise rule")
+
+    def test_e8_empty_but_resolved_key_passes(self) -> None:
+        """A/M5: an empty-but-present node resolves; only a missing key fails."""
+        (self.root / REFITEM_REL).write_text(
+            '{"infrastructure": {"fair_assessment": {}}}', encoding="utf-8")
+        report = self.run_checks()
+        self.assertFalse(any("does not resolve" in e for e in report.errors),
+                         report.errors)
+
 
     def test_coverage_self_report_generated(self) -> None:
         """Phase 3: coverage is generated from the registry, never asserted."""

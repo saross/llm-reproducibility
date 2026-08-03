@@ -23,9 +23,16 @@ import os
 import subprocess
 import sys
 
-from hooklib import REPO_ROOT, governed_agents, load_manifest, pushed_instruments
+# Fail-closed import (audit 2026-08-03 C8): if the shared library or PyYAML is
+# unavailable, deny governed-unknown spawns rather than crash-allowing them.
+try:
+    from hooklib import REPO_ROOT, governed_agents, load_manifest, pushed_instruments
+    _IMPORT_ERROR = None
+except Exception as _exc:  # pragma: no cover - environment defect
+    _IMPORT_ERROR = _exc
+    REPO_ROOT = None
 
-D5_SCRIPT = REPO_ROOT / "scripts" / "check-manifest-consistency.py"
+D5_SCRIPT = (REPO_ROOT / "scripts" / "check-manifest-consistency.py") if REPO_ROOT else None
 
 
 def deny(reasons: list[str]) -> int:
@@ -40,14 +47,30 @@ def deny(reasons: list[str]) -> int:
 
 
 def main() -> int:
-    """Gate governed-agent spawns on the consistency and environment checks."""
+    """Gate governed-agent spawns on the consistency and environment checks.
+
+    Fail-closed (audit 2026-08-03 C8): unparseable events, import failures,
+    unexpected input shapes, and checker errors all DENY rather than
+    crash-allow — this is the only layer that can stop a governed scoring
+    spawn before token spend, so a visible deny beats a silent pass.
+    """
+    if _IMPORT_ERROR is not None:
+        return deny([f"hook environment broken ({_IMPORT_ERROR}) — cannot determine "
+                     f"whether this spawn is governed"])
     try:
         event = json.load(sys.stdin)
     except json.JSONDecodeError:
-        return 0
+        return deny(["unparseable PreToolUse event — cannot determine whether this "
+                     "spawn is governed"])
+    if not isinstance(event, dict):
+        return deny(["unexpected PreToolUse event shape — cannot determine whether "
+                     "this spawn is governed"])
     if event.get("tool_name") not in ("Agent", "Task"):
         return 0
-    subagent_type = (event.get("tool_input") or {}).get("subagent_type") or ""
+    tool_input = event.get("tool_input")
+    if not isinstance(tool_input, dict):
+        tool_input = {}
+    subagent_type = str(tool_input.get("subagent_type") or "")
 
     try:
         manifest = load_manifest()
@@ -62,8 +85,11 @@ def main() -> int:
         reasons.append("CLAUDE_CODE_SUBAGENT_MODEL is set — it silently outranks the "
                        "agent's model pin; unset it before spawning scoring agents")
 
-    result = subprocess.run([sys.executable, str(D5_SCRIPT), "--quiet"],
-                            capture_output=True, text=True, timeout=60)
+    try:
+        result = subprocess.run([sys.executable, str(D5_SCRIPT), "--quiet"],
+                                capture_output=True, text=True, timeout=60)
+    except Exception as exc:  # timeout or spawn failure: deny, don't crash-allow
+        return deny([f"manifest consistency check could not run ({exc.__class__.__name__})"])
     if result.returncode != 0:
         detail = (result.stdout or result.stderr).strip().splitlines()
         reasons.append("manifest consistency check failed: " + "; ".join(detail[:5]))

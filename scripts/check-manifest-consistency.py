@@ -189,7 +189,10 @@ def routing_evidence_files(root: Path, agent: str) -> list[Path]:
                   root / ".claude" / "settings.json"]
     hooks_dir = root / ".claude" / "hooks"
     if hooks_dir.is_dir():
-        candidates.extend(p for p in sorted(hooks_dir.iterdir()) if p.is_file())
+        # Configuration files only: runtime logs (*.jsonl) are gitignored local
+        # state and must not satisfy a routing check (audit 2026-08-03 M2).
+        candidates.extend(p for p in sorted(hooks_dir.iterdir())
+                          if p.is_file() and p.suffix in (".py", ".json"))
     return [p for p in candidates if p.is_file()]
 
 
@@ -382,7 +385,7 @@ def check_agent_hashes(manifest: dict, root: Path, report: Report) -> None:
     """
     registry: dict = manifest.get("agent_definitions") or {}
     agents_dir = root / ".claude" / "agents"
-    on_disk = sorted(agents_dir.glob("*.md")) if agents_dir.is_dir() else []
+    on_disk = sorted(agents_dir.rglob("*.md")) if agents_dir.is_dir() else []
 
     registered_paths = set()
     for agent_name, info in registry.items():
@@ -456,8 +459,8 @@ def check_unregistered_instruments(manifest: dict, root: Path, report: Report) -
         if not directory.is_dir():
             report.warn(f"scan directory does not exist: {rel_dir}")
             continue
-        for path in sorted(directory.rglob("*.md")):
-            if path.name in exclusions:
+        for path in sorted(directory.rglob("*")):
+            if not path.is_file() or path.name in exclusions:
                 continue
             rel = str(path.relative_to(root))
             if rel not in registered:
@@ -468,12 +471,14 @@ def check_unregistered_instruments(manifest: dict, root: Path, report: Report) -
 
 # --- Entity checks (monitoring plan Phase 2) --------------------------------
 
-# "<version> Pass <n>" prompt headers: the trailing pass label is identity,
-# not version. Tolerates the 1b-style letter suffix.
-PASS_SUFFIX_RE = re.compile(r"\s+Pass\s+\w+$", re.IGNORECASE)
-
 # Frontmatter version line in a SKILL.md (quoted or bare).
 FRONTMATTER_VERSION_RE = re.compile(r'^version:\s*"?([^"\s]+)"?\s*$', re.MULTILINE)
+
+# Known normalisation rules. "strip-pass-suffix" was removed 2026-08-03: the
+# header capture stops at the first space, so "2.7 Pass 1" already reads as
+# "2.7" and the rule was unreachable dead code (audit finding). An unknown
+# declared rule is an error, not a silent no-op.
+KNOWN_NORMALISE_RULES = {"strip-v-prefix"}
 
 
 def normalise_version(value: str, rules) -> str:
@@ -484,11 +489,17 @@ def normalise_version(value: str, rules) -> str:
         rules = [rules]
     value = value.strip()
     for rule in rules:
-        if rule == "strip-v-prefix" and value.startswith("v"):
+        if rule == "strip-v-prefix" and re.match(r"v\d", value):
             value = value[1:]
-        elif rule == "strip-pass-suffix":
-            value = PASS_SUFFIX_RE.sub("", value)
     return value
+
+
+def normalise_rules_of(decl: dict) -> list:
+    """Return the declaration's normalise rules as a list."""
+    rules = decl.get("normalise")
+    if rules is None:
+        return []
+    return [rules] if isinstance(rules, str) else list(rules)
 
 
 def enumerate_entities(manifest: dict) -> dict[str, tuple[str, object]]:
@@ -512,13 +523,22 @@ def enumerate_entities(manifest: dict) -> dict[str, tuple[str, object]]:
     def walk(node: object, path: str) -> None:
         if not isinstance(node, dict):
             return
-        if ("file" in node or "path" in node) and "version" in node:
-            entities[path] = ("versioned", node)
+        if "file" in node or "path" in node:
+            kind = "versioned" if "version" in node else "file-unversioned"
+            entities[path] = (kind, node)
         for key, value in node.items():
             walk(value, f"{path}.{key}")
 
-    for section in ("components", "assessment", "reproduction"):
-        walk(manifest.get(section) or {}, section)
+    # Walk every top-level section not handled specially above/below, so a
+    # new section (or a file entry without a version) cannot silently escape
+    # enumeration (audit 2026-08-03 C2 — the "7 of 25" recurrence path).
+    specially_handled = {"project", "shared_content", "shared_content_policy",
+                         "agent_definitions", "workflow_passes", "documentation",
+                         "corpus", "reference_datasets", "entity_checks",
+                         "version_history", "licences"}
+    for section, node in manifest.items():
+        if section not in specially_handled:
+            walk(node, section)
 
     for key, value in (manifest.get("documentation") or {}).items():
         entities[f"documentation.{key}"] = ("path-scalar", value)
@@ -528,7 +548,8 @@ def enumerate_entities(manifest: dict) -> dict[str, tuple[str, object]]:
     if queue_file:
         entities["corpus.queue_file"] = ("path-scalar", queue_file)
     for index, item in enumerate(manifest.get("workflow_passes") or []):
-        entities[f"workflow_passes.pass-{item.get('pass', index)}"] = ("pass-prompt", item)
+        if isinstance(item, dict):
+            entities[f"workflow_passes.pass-{item.get('pass', index)}"] = ("pass-prompt", item)
     for key, value in (manifest.get("reference_datasets") or {}).items():
         entities[f"reference_datasets.{key}"] = ("reference-dataset", value)
     return entities
@@ -570,13 +591,20 @@ def check_entity_declarations(manifest: dict, root: Path, report: Report) -> Non
         return
     entities = enumerate_entities(manifest)
 
-    declared = sum(1 for path in entities if path in checks)
+    if not isinstance(checks, dict):
+        report.error("entity_checks must be a mapping of dotted registry paths to "
+                     "check declarations")
+        return
+    valid_declaration = {
+        path for path in entities
+        if isinstance(checks.get(path), dict)
+        and str(checks[path].get("class", "")).strip()
+    }
+    declared = len(valid_declaration)
     by_class: dict[str, int] = {}
-    for path in entities:
-        decl = checks.get(path)
-        if isinstance(decl, dict):
-            cls = str(decl.get("class", "?"))
-            by_class[cls] = by_class.get(cls, 0) + 1
+    for path in valid_declaration:
+        cls = str(checks[path]["class"]).strip()
+        by_class[cls] = by_class.get(cls, 0) + 1
     class_counts = " ".join(f"{cls}:{n}" for cls, n in sorted(by_class.items()))
     report.coverage = (f"{declared}/{len(entities)} entities checked "
                        f"({class_counts}), {len(entities) - declared} undeclared")
@@ -585,37 +613,58 @@ def check_entity_declarations(manifest: dict, root: Path, report: Report) -> Non
         if path not in checks:
             report.error(f"undeclared entity: {path} has no entity_checks entry "
                          f"(monitoring plan §5 — no entity may lack a check)")
+        elif path not in valid_declaration:
+            report.error(f"entity_checks.{path}: declaration must be a mapping with a "
+                         f"'class' — a malformed declaration silently disables the "
+                         f"check (audit 2026-08-03 C1)")
     for path in checks:
         if path not in entities:
             report.error(f"entity_checks.{path}: does not resolve to a registered "
                          f"entity — stale or mistyped registry path")
 
+    kind_for_class = {
+        "E1": ("shared-content",),
+        "E2": ("agent-definition",),
+        "E3": ("versioned", "pass-prompt"),
+        "E4": ("versioned",),
+        "E5": ("versioned",),
+        "E6": ("path-scalar", "versioned", "file-unversioned"),
+        "E8": ("reference-dataset",),
+    }
     for path, decl in checks.items():
         data = entities.get(path)
         if data is None or not isinstance(decl, dict):
-            continue
+            continue  # unresolvable and malformed declarations reported above
         kind, node = data
         cls = str(decl.get("class", "")).strip()
         prefix = f"entity_checks.{path}"
 
+        allowed = kind_for_class.get(cls)
+        if allowed is not None and kind not in allowed:
+            report.error(f"{prefix}: class {cls} declared for a {kind} entity — "
+                         f"declaration/entity mismatch (audit 2026-08-03 M1)")
+            continue
+        unknown_rules = [r for r in normalise_rules_of(decl)
+                         if r not in KNOWN_NORMALISE_RULES]
+        if unknown_rules:
+            report.error(f"{prefix}: unknown normalise rule(s) {unknown_rules!r} — "
+                         f"a typo here silently disables normalisation")
+            continue
+
         if cls == "E1":
-            if kind != "shared-content":
-                report.error(f"{prefix}: class E1 declared for a non-shared_content "
-                             f"entity ({kind})")
+            pass  # kind check above; hard checks run in check_canonical_entry
         elif cls == "E2":
-            if kind != "agent-definition":
-                report.error(f"{prefix}: class E2 declared for a non-agent entity "
-                             f"({kind})")
+            pass  # kind check above; hard checks run in check_agent_hashes
         elif cls == "E3":
-            want = str(decl.get("version") or (node or {}).get("version") or "").strip()
+            want = str(decl.get("version") or node.get("version") or "").strip()
             rel = (decl.get("version_file")
-                   or (node or {}).get("file")
-                   or ((node or {}).get("prompt") if kind == "pass-prompt" else None))
+                   or node.get("file")
+                   or (node.get("prompt") if kind == "pass-prompt" else None))
             if not want or not rel:
                 report.error(f"{prefix}: E3 needs a version and a file "
                              f"(or version_file for path-registered entities)")
                 continue
-            got = read_declared_version(root / rel, decl, report, prefix)
+            got = read_declared_version(root / str(rel), decl, report, prefix)
             if got is not None:
                 normalised = normalise_version(got, decl.get("normalise"))
                 if normalised != want:
@@ -623,8 +672,8 @@ def check_entity_declarations(manifest: dict, root: Path, report: Report) -> Non
                                  f"file carries {got!r} (normalised {normalised!r})")
         elif cls == "E4":
             import json as _json
-            want = str((node or {}).get("version", "")).strip()
-            rel = (node or {}).get("file", "")
+            want = str(node.get("version", "")).strip()
+            rel = str(node.get("file", ""))
             json_path = str(decl.get("json_path", "$.version"))
             file_path = root / rel
             if not file_path.is_file():
@@ -635,8 +684,13 @@ def check_entity_declarations(manifest: dict, root: Path, report: Report) -> Non
             except _json.JSONDecodeError as exc:
                 report.error(f"{prefix}: {rel} is not valid JSON ({exc})")
                 continue
-            if not json_path.startswith("$."):
-                report.error(f"{prefix}: unsupported json_path {json_path!r}")
+            if not json_path.startswith("$.") or "." in json_path[2:]:
+                report.error(f"{prefix}: unsupported json_path {json_path!r} — only "
+                             f"top-level $.key paths are implemented")
+                continue
+            if not isinstance(document, dict):
+                report.error(f"{prefix}: {rel} JSON top level is "
+                             f"{type(document).__name__}, expected an object")
                 continue
             got = document.get(json_path[2:])
             if got is None:
@@ -645,8 +699,8 @@ def check_entity_declarations(manifest: dict, root: Path, report: Report) -> Non
                 report.error(f"{prefix}: version drift — manifest {want!r}, "
                              f"{json_path} is {got!r}")
         elif cls == "E5":
-            want = str((node or {}).get("version", "")).strip()
-            rel = (node or {}).get("file", "")
+            want = str(node.get("version", "")).strip()
+            rel = str(node.get("file", ""))
             pattern = decl.get("pattern")
             file_path = root / rel
             if not pattern:
@@ -673,6 +727,9 @@ def check_entity_declarations(manifest: dict, root: Path, report: Report) -> Non
                 report.error(f"{prefix}: cardinality drift — declared {want_n}, "
                              f"registry lists {len(items)} item(s)")
             for item in items:
+                if not isinstance(item, dict):
+                    report.error(f"{prefix}: reference item {item!r} is not a mapping")
+                    continue
                 slug = item.get("slug", "<unnamed>")
                 item_path = root / item.get("file", "")
                 if not item_path.is_file():
@@ -687,7 +744,7 @@ def check_entity_declarations(manifest: dict, root: Path, report: Report) -> Non
                 key_node = document
                 for part in str(item.get("fair_key", "")).split("."):
                     key_node = key_node.get(part) if isinstance(key_node, dict) else None
-                if not key_node:
+                if key_node is None:
                     report.error(f"{prefix}: item {slug!r} declared key "
                                  f"{item.get('fair_key')!r} does not resolve in "
                                  f"{item.get('file')}")
@@ -752,9 +809,9 @@ def main() -> int:
     if not args.quiet:
         for message in report.warnings:
             print(f"warning: {message}")
-        verdict = "FAIL" if report.errors else "PASS"
-        print(f"manifest consistency: {verdict} — {report.coverage} "
-              f"({len(report.errors)} error(s), {len(report.warnings)} warning(s))")
+    verdict = "FAIL" if report.errors else "PASS"
+    print(f"manifest consistency: {verdict} — {report.coverage} "
+          f"({len(report.errors)} error(s), {len(report.warnings)} warning(s))")
     return 1 if report.errors else 0
 
 

@@ -576,17 +576,19 @@ entity_checks:
   reproduction.prompts.adversarial_review: {class: E3, version_source: markdown-header}
   # E3 — workflow_passes prompts: the pass list above carries no version
   # fields, so the expected version is declared HERE (single source, no
-  # duplicate). Passes 1-5 and 7 track the schema version and carry
-  # "<version> Pass <n>" headers; pass 6's document version is the FAIR
+  # duplicate). Passes 1-5 and 7 track the schema version; headers read
+  # "<version> Pass <n>" and the checker's first-token capture reads the
+  # version alone (the former strip-pass-suffix rule was unreachable and
+  # removed, audit 2026-08-03). Pass 6's document version is the FAIR
   # instrument version (2.0) — its schema pointer is a separate header line.
   workflow_passes.pass-0: {class: E3, version: "1.0.0", version_source: markdown-header}
-  workflow_passes.pass-1: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
-  workflow_passes.pass-2: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
-  workflow_passes.pass-3: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
-  workflow_passes.pass-4: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
-  workflow_passes.pass-5: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
-  workflow_passes.pass-6: {class: E3, version: "2.0", version_source: markdown-header, normalise: strip-pass-suffix}
-  workflow_passes.pass-7: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
+  workflow_passes.pass-1: {class: E3, version: "2.7", version_source: markdown-header}
+  workflow_passes.pass-2: {class: E3, version: "2.7", version_source: markdown-header}
+  workflow_passes.pass-3: {class: E3, version: "2.7", version_source: markdown-header}
+  workflow_passes.pass-4: {class: E3, version: "2.7", version_source: markdown-header}
+  workflow_passes.pass-5: {class: E3, version: "2.7", version_source: markdown-header}
+  workflow_passes.pass-6: {class: E3, version: "2.0", version_source: markdown-header}
+  workflow_passes.pass-7: {class: E3, version: "2.7", version_source: markdown-header}
   # E4 — versioned data artefacts (JSON version field)
   components.schema: {class: E4, version_source: json-field, json_path: $.version}
   components.schema.previous: {class: E4, version_source: json-field, json_path: $.version}
