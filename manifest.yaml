@@ -112,6 +112,12 @@ assessment:
       last_updated: "2025-11-30"
       description: JSON schema for machine-readable credibility output
 
+    benchmark_fair_output:
+      version: "1.0"
+      file: assessment-system/schema/benchmark-fair-output-schema.json
+      last_updated: "2026-08-03"
+      description: Structured-output contract for fair-assessor-* benchmark/census spawns (supplied at spawn; receipts required)
+
     assessment_json:
       version: "1.1"
       file: .claude/skills/research-assessor/references/schema/assessment-schema.md
@@ -585,6 +591,7 @@ entity_checks:
   components.schema: {class: E4, version_source: json-field, json_path: $.version}
   components.schema.previous: {class: E4, version_source: json-field, json_path: $.version}
   assessment.schemas.credibility_report: {class: E4, version_source: json-field, json_path: $.version}
+  assessment.schemas.benchmark_fair_output: {class: E4, version_source: json-field, json_path: $.version}
   # E5 — two-axis entity: manifest tracks the PAYLOAD axis (assessment.json
   # schema_version), documented in the .md; the file's own document version
   # (2.1) is a different axis — never compare the two.

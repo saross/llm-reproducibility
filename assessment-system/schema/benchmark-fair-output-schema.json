@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Benchmark FAIR scoring output",
+  "description": "Structured output contract for fair-assessor-* benchmark and census spawns; supplied at spawn per the agent definition's output contract. Receipts are required fields: a scoring record without receipts is a schema failure, not a warning.",
+  "version": "1.0",
+  "type": "object",
+  "required": ["status", "paper_slug", "receipts", "data_fair", "code_fair", "data_completeness"],
+  "additionalProperties": false,
+  "properties": {
+    "status": {"type": "string", "enum": ["OK", "ESCALATE"]},
+    "escalate_reason": {"type": ["string", "null"]},
+    "paper_slug": {"type": "string"},
+    "receipts": {
+      "type": "object",
+      "required": ["instrument_versions", "instrument_receipts", "agent_version", "model_id", "pulled_files_read"],
+      "additionalProperties": false,
+      "properties": {
+        "instrument_versions": {"type": "object", "additionalProperties": {"type": "string"}},
+        "instrument_receipts": {"type": "object", "additionalProperties": {"type": "string"}},
+        "agent_version": {"type": "string"},
+        "model_id": {"type": "string"},
+        "pulled_files_read": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "stated_availability": {
+      "type": ["string", "null"],
+      "description": "Descriptive record of availability statements only; never mapped to L1-L6 (preregistration section 7.3)"
+    },
+    "data_fair": {"$ref": "#/definitions/fair_score"},
+    "code_fair": {"$ref": "#/definitions/fair_score"},
+    "data_completeness": {
+      "type": "object",
+      "required": ["datasets_enumerated", "datasets_accessible_tier_0_2", "coverage_percentage", "coverage_category", "assessment_scope"],
+      "additionalProperties": false,
+      "properties": {
+        "datasets_enumerated": {"type": "integer"},
+        "datasets_accessible_tier_0_2": {"type": "integer"},
+        "coverage_percentage": {"type": "number"},
+        "coverage_category": {"type": "string", "enum": ["complete", "substantial", "partial", "minimal"]},
+        "assessment_scope": {"type": "string", "enum": ["straightforward", "complex", "infeasible"]},
+        "barriers": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  },
+  "definitions": {
+    "fair_score": {
+      "type": "object",
+      "required": ["available", "sub_principles", "total"],
+      "additionalProperties": false,
+      "properties": {
+        "available": {"type": "boolean"},
+        "total": {"type": "integer", "minimum": 0, "maximum": 15},
+        "sub_principles": {
+          "type": "object",
+          "required": ["F1", "F2", "F3", "F4", "A1", "A1_1", "A1_2", "A2", "I1", "I2", "I3", "R1", "R1_1", "R1_2", "R1_3"],
+          "additionalProperties": false,
+          "properties": {
+            "F1": {"$ref": "#/definitions/sub_principle"},
+            "F2": {"$ref": "#/definitions/sub_principle"},
+            "F3": {"$ref": "#/definitions/sub_principle"},
+            "F4": {"$ref": "#/definitions/sub_principle"},
+            "A1": {"$ref": "#/definitions/sub_principle"},
+            "A1_1": {"$ref": "#/definitions/sub_principle"},
+            "A1_2": {"$ref": "#/definitions/sub_principle"},
+            "A2": {"$ref": "#/definitions/sub_principle"},
+            "I1": {"$ref": "#/definitions/sub_principle"},
+            "I2": {"$ref": "#/definitions/sub_principle"},
+            "I3": {"$ref": "#/definitions/sub_principle"},
+            "R1": {"$ref": "#/definitions/sub_principle"},
+            "R1_1": {"$ref": "#/definitions/sub_principle"},
+            "R1_2": {"$ref": "#/definitions/sub_principle"},
+            "R1_3": {"$ref": "#/definitions/sub_principle"}
+          }
+        }
+      }
+    },
+    "sub_principle": {
+      "type": "object",
+      "required": ["present", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "present": {"type": "integer", "enum": [0, 1]},
+        "evidence": {"type": "string", "description": "Quote or concrete observation grounding the score; for absent, what was looked for and not found"}
+      }
+    }
+  }
+}
