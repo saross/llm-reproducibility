@@ -667,9 +667,13 @@ lives at the foot of
       schema). Two Phase 0 flags dissolved — the skills and the
       credibility template already carried versions under labels the
       Phase 0 regex missed; carriers declared instead of added. Gate
-      PASS, 32/32. **Next gate: Phase 2** (widen the checker to read
-      `entity_checks` — E3/E4/E5/E6, v-prefix normalisation,
-      undeclared-entity failure, one negative test per class). Remaining
+      PASS, 32/32. **Phase 2 COMPLETE same day** (`e2b6568`): the gate now reads
+      `entity_checks` — per-class verification E3-E8, undeclared-entity
+      and unresolvable-declaration failures, declared normalisation.
+      Tests 32 → 46 (one injected defect per class). Closure probe: the
+      2026-08-02 probe (9.9 on the preparation prompt) that then
+      produced PASS now FAILS with a named error. **Next gate:
+      Phase 3** (coverage self-report line + pre-flight wiring). Remaining
       after that: the three-arm benchmark run (still gated on the
       standing API review presentation: model, batch vs real-time, 45
       spawns, estimated cost). Flag from the docs sweep, low priority: the

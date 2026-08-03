@@ -227,11 +227,19 @@ Each phase ends at a **GATE** — Shawn reviews before the next starts.
       an instance of the very scope-narrowing this plan exists to catch.
       Their actual carriers are now declared (`skill-frontmatter`,
       `header_label`). Gate PASS, 32/32 tests. **GATE.**
-- [ ] **Phase 2 — widen the checker.** Implement E3/E4/E5/E6, the
-      `v`-prefix normalisation, and the undeclared-entity failure. Extend the
-      test suite (currently 32 tests) with a negative test per class — each new
-      check must be demonstrated to fail on an injected defect, per the existing
-      fixture pattern in `tests/test_manifest_consistency.py`. **GATE.**
+- [x] 2026-08-03 **Phase 2 — widen the checker.** Done (`e2b6568`). New
+      check 5 in `check-manifest-consistency.py`: executable enumeration of
+      the Phase 0 entity set, undeclared-entity and
+      unresolvable-declaration failures, and per-class verification of
+      every declaration (E3 carriers + normalisation, E4 JSON field, E5
+      declared-axis-only pattern, E6 existence, E8 registry enumeration +
+      key resolution + cardinality). Tests 32 → 46, one injected defect
+      per class plus coverage/mismatch cases. **Closure probe:** the exact
+      2026-08-02 probe (9.9 on the preparation prompt) that then produced
+      PASS now fails with a named error. E8 in particular means the
+      finding-(c) failure mode — a glob silently enumerating four of five
+      — is now mechanically impossible for the pilot reference set. Live
+      gate PASS, 0 warnings. **GATE: presented for review 2026-08-03.**
 - [ ] **Phase 3 — coverage self-report.** Emit the §6 line; wire into
       pre-commit and orchestrator pre-flight. **GATE.**
 - [ ] **Phase 4 — E7 cross-reference resolvability.** Commit-hash resolution
