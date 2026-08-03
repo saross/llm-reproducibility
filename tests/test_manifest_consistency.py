@@ -90,6 +90,20 @@ model: claude-test-1-20260101
 Push target: protocol/instruments/test-instrument.md
 """
 
+# Entity-check fixtures (monitoring plan Phase 2): one entity per class
+# E3-E8, each with its declared carrier, so every class has a green
+# baseline to inject a defect into.
+GUIDE_REL = "docs/guide.md"
+GUIDE_TEXT = "# Fixture guide\n\n**Version:** v1.0\n\nProse.\n"
+DATASPEC_REL = "schema/data.json"
+DATASPEC_TEXT = '{"version": "1.0", "title": "fixture"}\n'
+TWOAXIS_REL = "docs/twoaxis.md"
+TWOAXIS_TEXT = ('# Two-axis fixture\n\n**Version:** 9.9\n\n'
+                'The payload stamps "schema_version": "1.0" into outputs.\n')
+README_FIXTURE_REL = "docs/readme-fixture.md"
+REFITEM_REL = "outputs/t1/extraction.json"
+REFITEM_TEXT = '{"infrastructure": {"fair_assessment": {"scale": "fixture"}}}\n'
+
 
 def build_manifest(agent_sha: str) -> str:
     """Return fixture manifest text with the given agent-definition hash."""
@@ -113,6 +127,33 @@ agent_definitions:
   test-assessor:
     file: {AGENT_REL}
     sha256: "{agent_sha}"
+components:
+  guide:
+    version: "1.0"
+    file: {GUIDE_REL}
+  dataspec:
+    version: "1.0"
+    file: {DATASPEC_REL}
+  twoaxis:
+    version: "1.0"
+    file: {TWOAXIS_REL}
+documentation:
+  readme_fixture: {README_FIXTURE_REL}
+reference_datasets:
+  test_refset:
+    cardinality: 1
+    items:
+      - slug: t1
+        file: {REFITEM_REL}
+        fair_key: infrastructure.fair_assessment
+entity_checks:
+  shared_content.test-instrument: {{class: E1}}
+  agent_definitions.test-assessor: {{class: E2}}
+  components.guide: {{class: E3, version_source: markdown-header, normalise: strip-v-prefix}}
+  components.dataspec: {{class: E4, version_source: json-field, json_path: $.version}}
+  components.twoaxis: {{class: E5, axis: payload, version_source: markdown-body-pattern, pattern: '"schema_version": "{{version}}"'}}
+  documentation.readme_fixture: {{class: E6, verify: exists}}
+  reference_datasets.test_refset: {{class: E8, verify: enumerate-from-registry, assert_cardinality: true}}
 """
 
 
@@ -124,7 +165,12 @@ class ManifestConsistencyTests(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
         for rel, text in ((CANONICAL_REL, CANONICAL_TEXT),
                           (MIRROR_REL, MIRROR_TEXT),
-                          (AGENT_REL, AGENT_TEXT)):
+                          (AGENT_REL, AGENT_TEXT),
+                          (GUIDE_REL, GUIDE_TEXT),
+                          (DATASPEC_REL, DATASPEC_TEXT),
+                          (TWOAXIS_REL, TWOAXIS_TEXT),
+                          (README_FIXTURE_REL, "# Fixture readme\n"),
+                          (REFITEM_REL, REFITEM_TEXT)):
             path = self.root / rel
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(text, encoding="utf-8")
@@ -383,6 +429,91 @@ class ManifestConsistencyTests(unittest.TestCase):
     receipt_token: "feedfacecafebeef"
 agent_definitions:""")
         self.assert_error_containing("tokens must be unique")
+
+    # --- entity checks (monitoring plan Phase 2, 2026-08-03) -------------
+    # One injected defect per class, per the plan's negative-test rule:
+    # every new check is demonstrated to fail before it is trusted to pass.
+
+    def test_missing_entity_checks_section_caught(self) -> None:
+        """A manifest without entity_checks fails — coverage is not optional."""
+        manifest_text = self.manifest.read_text(encoding="utf-8")
+        head = manifest_text.split("entity_checks:")[0]
+        self.manifest.write_text(head, encoding="utf-8")
+        self.assert_error_containing("no entity_checks section")
+
+    def test_undeclared_entity_caught(self) -> None:
+        """A registry entry with no check declaration fails the gate (plan §5)."""
+        (self.root / "docs/orphan.md").write_text("**Version:** 1.0\n", encoding="utf-8")
+        self.rewrite("manifest.yaml", "  dataspec:",
+                     "  orphan:\n    version: \"1.0\"\n    file: docs/orphan.md\n  dataspec:")
+        self.assert_error_containing("undeclared entity: components.orphan")
+
+    def test_unresolvable_check_entry_caught(self) -> None:
+        """A check declaration pointing at nothing is stale, not ignorable."""
+        self.rewrite("manifest.yaml", "entity_checks:",
+                     "entity_checks:\n  components.ghost: {class: E3}")
+        self.assert_error_containing("entity_checks.components.ghost: does not resolve")
+
+    def test_class_mismatch_caught(self) -> None:
+        """Declaring E1 for a non-shared_content entity is a classification error."""
+        self.rewrite("manifest.yaml",
+                     "  components.guide: {class: E3, version_source: markdown-header, "
+                     "normalise: strip-v-prefix}",
+                     "  components.guide: {class: E1}")
+        self.assert_error_containing("class E1 declared for a non-shared_content")
+
+    def test_e3_version_drift_caught(self) -> None:
+        """E3: a prose artefact whose header moves off the registered version."""
+        self.rewrite(GUIDE_REL, "**Version:** v1.0", "**Version:** v2.0")
+        self.assert_error_containing("entity_checks.components.guide: version drift")
+
+    def test_e3_v_prefix_normalisation_is_declared_not_automatic(self) -> None:
+        """Removing the declared normalise rule makes the v-prefix a drift."""
+        self.rewrite("manifest.yaml", ", normalise: strip-v-prefix}", "}")
+        self.assert_error_containing("entity_checks.components.guide: version drift")
+
+    def test_e4_json_version_drift_caught(self) -> None:
+        """E4: a JSON schema whose version field moves off the manifest."""
+        self.rewrite(DATASPEC_REL, '"version": "1.0"', '"version": "2.0"')
+        self.assert_error_containing("entity_checks.components.dataspec: version drift")
+
+    def test_e4_missing_json_field_caught(self) -> None:
+        """E4: a schema with no version field is unverifiable, not passing."""
+        self.rewrite(DATASPEC_REL, '"version": "1.0", ', "")
+        self.assert_error_containing("has no $.version field")
+
+    def test_e5_tracked_axis_drift_caught(self) -> None:
+        """E5: the declared payload axis drifts; the document axis stays out of it."""
+        self.rewrite(TWOAXIS_REL, '"schema_version": "1.0"', '"schema_version": "9.9"')
+        self.assert_error_containing("declared axis pattern")
+
+    def test_e5_other_axis_ignored(self) -> None:
+        """E5: moving the document-version axis alone must NOT fail the check."""
+        self.rewrite(TWOAXIS_REL, "**Version:** 9.9", "**Version:** 10.0")
+        report = self.run_checks()
+        self.assertEqual(report.errors, [],
+                         f"document-axis edit must not trip the payload check: {report.errors}")
+
+    def test_e6_missing_file_caught(self) -> None:
+        """E6: a declared-unversioned file that vanishes is an error, not silence."""
+        (self.root / README_FIXTURE_REL).unlink()
+        self.assert_error_containing("declared-unversioned file missing")
+
+    def test_e8_cardinality_drift_caught(self) -> None:
+        """E8: the registry must list exactly the asserted number of items."""
+        self.rewrite("manifest.yaml", "    cardinality: 1", "    cardinality: 2")
+        self.assert_error_containing("cardinality drift")
+
+    def test_e8_declared_key_unresolvable_caught(self) -> None:
+        """E8: an item whose declared key no longer resolves fails loudly."""
+        self.rewrite(REFITEM_REL, '"fair_assessment"', '"renamed_assessment"')
+        self.assert_error_containing("declared key 'infrastructure.fair_assessment' "
+                                     "does not resolve")
+
+    def test_e8_missing_item_file_caught(self) -> None:
+        """E8: a reference item whose file is gone fails, not shrinks the set."""
+        (self.root / REFITEM_REL).unlink()
+        self.assert_error_containing("item 't1' file missing")
 
 
 if __name__ == "__main__":

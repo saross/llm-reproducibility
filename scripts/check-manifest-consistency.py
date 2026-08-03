@@ -34,6 +34,18 @@ mirror check passed a Pass 6 prompt that had dropped four normative statements
 from preregistration §7.1 (erratum-log Entry 2), and after an unregistered file
 placed in the instruments directory went undetected.
 
+5. **Entity checks** (monitoring plan Phase 2, 2026-08-03): every registered
+   entity must have an `entity_checks` declaration, and every declaration is
+   verified per its class — E1/E2 map to the implemented checks above;
+   E3 compares a version carrier (markdown header, custom header label, or
+   skill frontmatter) against the manifest with declared normalisation;
+   E4 compares a JSON version field; E5 verifies the declared axis's pattern
+   without ever comparing the other axis; E6 verifies existence of files
+   declared unversioned; E8 enumerates a reference dataset from the registry,
+   resolving each item's declared key and asserting cardinality. Undeclared
+   entities and unresolvable declarations both fail — the "7 of 25" scope gap
+   (plan §1a) cannot silently recur.
+
 With `--preflight`, additionally fails if `CLAUDE_CODE_SUBAGENT_MODEL` is set
 (it silently outranks agent-frontmatter model pins; 2026-07-24 review D-7).
 
@@ -450,6 +462,224 @@ def check_unregistered_instruments(manifest: dict, root: Path, report: Report) -
                              f"list it in shared_content_policy.scan_exclusions)")
 
 
+# --- Entity checks (monitoring plan Phase 2) --------------------------------
+
+# "<version> Pass <n>" prompt headers: the trailing pass label is identity,
+# not version. Tolerates the 1b-style letter suffix.
+PASS_SUFFIX_RE = re.compile(r"\s+Pass\s+\w+$", re.IGNORECASE)
+
+# Frontmatter version line in a SKILL.md (quoted or bare).
+FRONTMATTER_VERSION_RE = re.compile(r'^version:\s*"?([^"\s]+)"?\s*$', re.MULTILINE)
+
+
+def normalise_version(value: str, rules) -> str:
+    """Apply declared normalisation rules to a version string read from a file."""
+    if rules is None:
+        rules = []
+    elif isinstance(rules, str):
+        rules = [rules]
+    value = value.strip()
+    for rule in rules:
+        if rule == "strip-v-prefix" and value.startswith("v"):
+            value = value[1:]
+        elif rule == "strip-pass-suffix":
+            value = PASS_SUFFIX_RE.sub("", value)
+    return value
+
+
+def enumerate_entities(manifest: dict) -> dict[str, tuple[str, object]]:
+    """Return every registered entity as {dotted_path: (kind, data)}.
+
+    This is the Phase 0 enumeration made executable: shared_content and
+    agent_definitions keys; every versioned dict carrying `file` or `path`
+    under components/assessment/reproduction; the documentation, template,
+    and queue-file path scalars (other `corpus` keys are counts and output
+    locations — metadata, not artefacts); the workflow_passes prompt list;
+    and reference_datasets. The undeclared-entity check below runs over
+    exactly this set, so an entity added to the manifest without a check
+    declaration fails the gate rather than joining a silent remainder.
+    """
+    entities: dict[str, tuple[str, object]] = {}
+    for key in (manifest.get("shared_content") or {}):
+        entities[f"shared_content.{key}"] = ("shared-content", None)
+    for key in (manifest.get("agent_definitions") or {}):
+        entities[f"agent_definitions.{key}"] = ("agent-definition", None)
+
+    def walk(node: object, path: str) -> None:
+        if not isinstance(node, dict):
+            return
+        if ("file" in node or "path" in node) and "version" in node:
+            entities[path] = ("versioned", node)
+        for key, value in node.items():
+            walk(value, f"{path}.{key}")
+
+    for section in ("components", "assessment", "reproduction"):
+        walk(manifest.get(section) or {}, section)
+
+    for key, value in (manifest.get("documentation") or {}).items():
+        entities[f"documentation.{key}"] = ("path-scalar", value)
+    for key, value in ((manifest.get("reproduction") or {}).get("templates") or {}).items():
+        entities[f"reproduction.templates.{key}"] = ("path-scalar", value)
+    queue_file = (manifest.get("corpus") or {}).get("queue_file")
+    if queue_file:
+        entities["corpus.queue_file"] = ("path-scalar", queue_file)
+    for index, item in enumerate(manifest.get("workflow_passes") or []):
+        entities[f"workflow_passes.pass-{item.get('pass', index)}"] = ("pass-prompt", item)
+    for key, value in (manifest.get("reference_datasets") or {}).items():
+        entities[f"reference_datasets.{key}"] = ("reference-dataset", value)
+    return entities
+
+
+def read_declared_version(path: Path, decl: dict, report: Report,
+                          label_prefix: str) -> str | None:
+    """Extract the version a file carries, per the declared version_source."""
+    if not path.is_file():
+        report.error(f"{label_prefix}: file missing: {path}")
+        return None
+    text = path.read_text(encoding="utf-8", errors="replace")
+    source = str(decl.get("version_source", "markdown-header"))
+
+    if source == "markdown-header":
+        label = str(decl.get("header_label", "Version"))
+        match = re.search(rf"^\*\*{re.escape(label)}:\*\*\s*([^\s(|]+)",
+                          text, re.MULTILINE)
+        if not match:
+            report.error(f"{label_prefix}: no '**{label}:**' line in {path.name}")
+            return None
+        return match.group(1)
+    if source == "skill-frontmatter":
+        match = FRONTMATTER_VERSION_RE.search(frontmatter_of(text))
+        if not match:
+            report.error(f"{label_prefix}: no 'version:' in frontmatter of {path.name}")
+            return None
+        return match.group(1)
+    report.error(f"{label_prefix}: unknown version_source {source!r}")
+    return None
+
+
+def check_entity_declarations(manifest: dict, root: Path, report: Report) -> None:
+    """Verify entity_checks coverage in both directions, then each declaration."""
+    checks = manifest.get("entity_checks")
+    if checks is None:
+        report.error("manifest has no entity_checks section — every registered "
+                     "entity must declare its check class (monitoring plan Phase 1)")
+        return
+    entities = enumerate_entities(manifest)
+
+    for path in entities:
+        if path not in checks:
+            report.error(f"undeclared entity: {path} has no entity_checks entry "
+                         f"(monitoring plan §5 — no entity may lack a check)")
+    for path in checks:
+        if path not in entities:
+            report.error(f"entity_checks.{path}: does not resolve to a registered "
+                         f"entity — stale or mistyped registry path")
+
+    for path, decl in checks.items():
+        data = entities.get(path)
+        if data is None or not isinstance(decl, dict):
+            continue
+        kind, node = data
+        cls = str(decl.get("class", "")).strip()
+        prefix = f"entity_checks.{path}"
+
+        if cls == "E1":
+            if kind != "shared-content":
+                report.error(f"{prefix}: class E1 declared for a non-shared_content "
+                             f"entity ({kind})")
+        elif cls == "E2":
+            if kind != "agent-definition":
+                report.error(f"{prefix}: class E2 declared for a non-agent entity "
+                             f"({kind})")
+        elif cls == "E3":
+            want = str(decl.get("version") or (node or {}).get("version") or "").strip()
+            rel = (decl.get("version_file")
+                   or (node or {}).get("file")
+                   or ((node or {}).get("prompt") if kind == "pass-prompt" else None))
+            if not want or not rel:
+                report.error(f"{prefix}: E3 needs a version and a file "
+                             f"(or version_file for path-registered entities)")
+                continue
+            got = read_declared_version(root / rel, decl, report, prefix)
+            if got is not None:
+                normalised = normalise_version(got, decl.get("normalise"))
+                if normalised != want:
+                    report.error(f"{prefix}: version drift — manifest {want!r}, "
+                                 f"file carries {got!r} (normalised {normalised!r})")
+        elif cls == "E4":
+            import json as _json
+            want = str((node or {}).get("version", "")).strip()
+            rel = (node or {}).get("file", "")
+            json_path = str(decl.get("json_path", "$.version"))
+            file_path = root / rel
+            if not file_path.is_file():
+                report.error(f"{prefix}: file missing: {rel}")
+                continue
+            try:
+                document = _json.loads(file_path.read_text(encoding="utf-8"))
+            except _json.JSONDecodeError as exc:
+                report.error(f"{prefix}: {rel} is not valid JSON ({exc})")
+                continue
+            if not json_path.startswith("$."):
+                report.error(f"{prefix}: unsupported json_path {json_path!r}")
+                continue
+            got = document.get(json_path[2:])
+            if got is None:
+                report.error(f"{prefix}: {rel} has no {json_path} field")
+            elif str(got) != want:
+                report.error(f"{prefix}: version drift — manifest {want!r}, "
+                             f"{json_path} is {got!r}")
+        elif cls == "E5":
+            want = str((node or {}).get("version", "")).strip()
+            rel = (node or {}).get("file", "")
+            pattern = decl.get("pattern")
+            file_path = root / rel
+            if not pattern:
+                report.error(f"{prefix}: E5 declaration has no pattern")
+                continue
+            if not file_path.is_file():
+                report.error(f"{prefix}: file missing: {rel}")
+                continue
+            needle = str(pattern).replace("{version}", want)
+            if needle not in file_path.read_text(encoding="utf-8", errors="replace"):
+                report.error(f"{prefix}: declared axis pattern {needle!r} not found "
+                             f"in {rel} — the tracked axis has drifted (the file's "
+                             f"other version axis is deliberately not compared)")
+        elif cls == "E6":
+            rel = node if isinstance(node, str) else (node or {}).get("file", "")
+            if not rel or not (root / rel).is_file():
+                report.error(f"{prefix}: declared-unversioned file missing: {rel!r}")
+        elif cls == "E8":
+            import json as _json
+            spec = node or {}
+            items = spec.get("items") or []
+            want_n = spec.get("cardinality")
+            if decl.get("assert_cardinality") and len(items) != want_n:
+                report.error(f"{prefix}: cardinality drift — declared {want_n}, "
+                             f"registry lists {len(items)} item(s)")
+            for item in items:
+                slug = item.get("slug", "<unnamed>")
+                item_path = root / item.get("file", "")
+                if not item_path.is_file():
+                    report.error(f"{prefix}: item {slug!r} file missing: "
+                                 f"{item.get('file')}")
+                    continue
+                try:
+                    document = _json.loads(item_path.read_text(encoding="utf-8"))
+                except _json.JSONDecodeError as exc:
+                    report.error(f"{prefix}: item {slug!r} is not valid JSON ({exc})")
+                    continue
+                key_node = document
+                for part in str(item.get("fair_key", "")).split("."):
+                    key_node = key_node.get(part) if isinstance(key_node, dict) else None
+                if not key_node:
+                    report.error(f"{prefix}: item {slug!r} declared key "
+                                 f"{item.get('fair_key')!r} does not resolve in "
+                                 f"{item.get('file')}")
+        else:
+            report.error(f"{prefix}: unknown check class {cls!r}")
+
+
 def run_checks(manifest_path: Path, root: Path, preflight: bool) -> Report:
     """Run all consistency checks; return the populated report."""
     report = Report()
@@ -476,6 +706,7 @@ def run_checks(manifest_path: Path, root: Path, preflight: bool) -> Report:
 
     check_agent_hashes(manifest, root, report)
     check_unregistered_instruments(manifest, root, report)
+    check_entity_declarations(manifest, root, report)
 
     if preflight and os.environ.get("CLAUDE_CODE_SUBAGENT_MODEL"):
         report.error("CLAUDE_CODE_SUBAGENT_MODEL is set — it silently outranks agent "
