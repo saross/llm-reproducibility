@@ -1,6 +1,6 @@
-# Claims & Evidence Extraction Prompt - PASS 2: Rationalisation v2.6
+# Claims & Evidence Extraction Prompt - PASS 2: Rationalisation v2.7
 
-**Version:** 2.6 Pass 2
+**Version:** 2.7 Pass 2
 **Last Updated:** 2026-02-12
 **Workflow Stage:** Pass 2 - Consolidate and refine Pass 1 extraction  
 **Update:** Added source verification for consolidations
@@ -419,7 +419,7 @@ When consolidating items, cross-references in OTHER arrays must be updated to po
 
 ```json
 {
-  "schema_version": "2.6",
+  "schema_version": "2.7",
   "extraction_timestamp": "ISO 8601",
   "extractor": "Claude Sonnet 4.5",
   

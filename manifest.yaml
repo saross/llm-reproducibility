@@ -6,7 +6,7 @@
 
 project:
   name: LLM-Based Research Extraction and Assessment
-  version: "3.0.1"
+  version: "3.1"
   status: Extraction system complete, assessment framework pilot-tested, reproduction system v1.1
   last_updated: "2026-07-03"
   repository: https://github.com/saross/llm-reproducibility
@@ -14,10 +14,19 @@ project:
 # Core component versions
 components:
   schema:
-    version: "2.6"
-    file: extraction-system/schema/extraction-schema-v2.6.json
-    last_updated: "2026-02-12"
-    description: JSON schema for extraction output with infrastructure object and data_completeness
+    version: "2.7"
+    file: extraction-system/schema/extraction-schema-v2.7.json
+    last_updated: "2026-07-27"
+    description: JSON schema for extraction output; adds source_file + source_sha256 provenance (corpus item 6)
+    # v2.6 (extraction-system/schema/extraction-schema-v2.6.json) is RETAINED, not
+    # superseded-and-deleted: the five Phase 1 pilot extractions declare
+    # schema_version "2.6" and validate against that file. They are deliberately
+    # not migrated — source_sha256 records what a run actually read, and
+    # back-filling it now would assert an unverifiable fact about a past run.
+    # New extractions target v2.7.
+    previous:
+      version: "2.6"
+      file: extraction-system/schema/extraction-schema-v2.6.json
 
   workflow:
     version: "5.0.0"
@@ -233,6 +242,16 @@ corpus:
 
 # Version history summary
 version_history:
+  - version: "3.1"
+    date: "2026-08-03"
+    changes:
+      - Schema v2.7 (additive) — source_file + source_sha256 in extraction_output; corpus-management-plan item 6
+      - v2.6 retained, not superseded — all five Phase 1 pilot extractions declare 2.6 and are deliberately not migrated
+      - Reproduction preparation prompt v1.0 → v1.1 — fetch-with-checksum default, store/attempt/scratch destinations, URL+hash in log.md (corpus item 5)
+      - log-template.md gains a Materials Acquired table (artefact, source, retrieval date, digest, destination)
+      - Fable 5 census-lane arm authored and registered; benchmark arms now Sonnet 5 + Opus 5 + Fable 5
+      - Eight extraction prompts + prompts readme cascaded v2.6 → v2.7 current-version pointers (historical attributions retained); landed with the schema as one change, post-lodgement per the 2026-08-02 sequencing decision
+
   - version: "3.0.1"
     date: "2026-07-03"
     changes:
