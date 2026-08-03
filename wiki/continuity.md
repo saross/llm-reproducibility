@@ -622,18 +622,28 @@ lives at the foot of
       "the four papers carrying FAIR assessments" scoping; working-notes obs
       candidate (Observation-16 shape again — a sweep scoped narrower than
       its readers assume, this time by glob depth + key name).
-- [ ] **E3. Build the paste artefact — Claude's task, unstarted.**
-      The draft is Markdown with headings and OSF text boxes render line breaks
-      literally. Convert via
-      `studies/open-science-compliance/prereg/unwrap-paste-file.py` (note: in
-      the prereg directory, *not* `scripts/`). Its docstring prescribes the
-      verification: word count unchanged (`wc -w`), bullet and numbered-line
-      counts unchanged. **Keep tables out of paste content entirely** — the
-      2026-07-20 lodgement pasted the §10 power table as run-together pipe text.
-- [ ] **E4. Then Shawn:** read the final text, lodge by hand from the OSF
-      project view (the five-file cap does not apply there), tag the repository
-      state at lodgement, and record the amendment DOI/URL in the draft and in
-      `erratum-log.md`.
+- [x] **E3. Build the paste artefact — done 2026-08-03.**
+      `prereg/osf-amendment-1.txt`, generated mechanically from the promoted
+      amendment text and unwrapped via `unwrap-paste-file.py`. Docstring
+      verification passed: word count unchanged by unwrap (1,263 → 1,263),
+      numbered lines 5 → 5 (the section headings), 0 bullets, 0 table rows,
+      no markdown residue; token comparison against the canonical section
+      identical (68 numeric, 4 quoted, 10 § refs).
+      **Context for E4 (2026-08-03 decisions):** the lodgement text is the
+      promoted academic-prose re-expression (registrant read both versions;
+      skill-test record archived at `archive/prereg/`); rule-4 check re-run
+      against it, PASS (13 frozen phrases verbatim, addendum in the draft's
+      record section). §5 gained a two-sentence cross-vendor pre-declaration:
+      **OpenAI arms (Sol/Terra/Luna) considered and deferred** to a possible
+      post-census extension via dated amendment plus the §8 reliability
+      protocol — not folded into this registration's validation phase
+      (confound: cross-vendor arms cannot hold the delivery apparatus
+      constant, so they compare model+harness bundles, not models).
+- [ ] **E4. Then Shawn:** lodge by hand from the OSF project view (the
+      five-file cap does not apply there) using `prereg/osf-amendment-1.txt`,
+      tag the repository state at lodgement, and record the amendment DOI/URL
+      in the draft and in `erratum-log.md`. (Reading done 2026-08-03 — both
+      versions read at promotion; §5 addition displayed then.)
 
 ### A. Git hygiene — untrack the committed virtualenv  [x] 2026-07-03
 
