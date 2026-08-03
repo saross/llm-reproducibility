@@ -62,7 +62,7 @@ consumed (see Phase D).
 
 ## Phase A — root-cause analysis and clarification drafting (no API spend)
 
-- [ ] **A1. Disagreement mining pass.** Script recomputes stability and
+- [x] 2026-08-03 **A1. Disagreement mining pass.** Script recomputes stability and
       concordance from the 45 spawn outputs and the E8-registered reference
       scores (`manifest.yaml:510–533`), verifying the published figures;
       extracts every disputed item (within-arm disagreement or
