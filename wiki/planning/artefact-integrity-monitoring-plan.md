@@ -2,13 +2,15 @@
 title: "Artefact-Integrity Monitoring — Plan v0.1"
 tags: [infrastructure, reproducibility, governance]
 created: 2026-08-02
-updated: 2026-08-02
-status: draft-for-approval
+updated: 2026-08-03
+status: active — phase-gated
 ---
 
 # Artefact-Integrity Monitoring — Plan v0.1
 
-**Status: DRAFT, NOT IMPLEMENTED.** Written 2026-08-02 on Shawn's decision to
+**Status: ACTIVE, phase-gated. §9 questions resolved and Phase 0 complete
+(2026-08-03, output in §10); Phase 1 awaits the Phase 0 gate review.**
+Written 2026-08-02 on Shawn's decision to
 widen the D5 gate so that *every registered entity is checked hard*, with a
 reorganisation acceptable if one is needed. Inspiration taken from the
 map-reader-llm verification charter (`~/Code/map-reader-llm/planning/audit-charter.md`,
@@ -204,9 +206,10 @@ Worth stating so the apparatus is not over-imported:
 
 Each phase ends at a **GATE** — Shawn reviews before the next starts.
 
-- [ ] **Phase 0 — enumerate and classify.** Assign every current registry entry
-      to a class from §4; produce the coverage table as it stands. No code
-      changes. Output: a table in this file. **GATE.**
+- [x] 2026-08-03 **Phase 0 — enumerate and classify.** Done — output in §10
+      (55 entities, per-entry version re-check run same day, no true drift;
+      four missing-version-carrier flags for Phase 1). **GATE: presented for
+      review 2026-08-03.**
 - [ ] **Phase 1 — registry reorganisation.** Add `check:` blocks for all
       entries. Purely additive to `manifest.yaml`; gate not yet reading them.
       **GATE.**
@@ -228,19 +231,79 @@ lodged, because Phase 2 touches the gate that guards the frozen artefact set,
 and changing that gate between now and lodgement would mean the lodged state
 was verified by a different instrument than the one described.
 
-## 9. Open questions for Shawn
+## 9. Open questions — RESOLVED (Shawn, 2026-08-03)
 
-1. **Scope of "registered entity"** — §4 covers what `manifest.yaml` names.
-   Should the `wiki/` four-artefact set (continuity, working-notes,
-   reflections, user-observations) also be registered and checked, or does it
-   stay deliberately low-authority prose?
-2. **E7 severity** — block commits on an unresolvable commit hash, or warn?
-   Warn-first is proposed; blocking would currently fail 18 times.
-3. **The 18 remaining stale hashes** — remap by message match in one pass, or
-   leave and let the E7 check surface them as they are touched?
-4. **Crema's divergent artefact (new 2026-08-02)** — normalise the run-02 file
-   in place (`infrastructure` → `reproducibility_infrastructure`, which edits
-   a persisted historical output), or register it as-is with its path and key
-   declared per the E8 pattern? Register-without-rewrite is proposed: the
-   file records what a 2026-01 run actually emitted, and the declare-the-axis
-   principle (§5) extends naturally to declare-the-key.
+1. **Scope of "registered entity" — NOT registered.** The `wiki/`
+   four-artefact set stays deliberately low-authority prose, per the §3
+   hierarchy (level 7 is the expected place for decay). The E7 sweep checks
+   references *in* wiki files without registering their content.
+2. **E7 severity — warn-first**, then revisit tightening once the stale-hash
+   backlog is cleared.
+3. **The 18 stale hashes — one verified pass, early in Phase 4.** Each remap
+   by exact commit-message match, verified per commit, never guessed.
+4. **Crema's divergent artefact — register-without-rewrite.** The run-02
+   file records what a 2026-01 run actually emitted; the E8 registry entry
+   declares its path and its `infrastructure` key, extending the
+   declare-the-axis principle (§5) to declare-the-key.
+
+## 10. Phase 0 output — registry enumeration and classification (2026-08-03)
+
+Every `manifest.yaml` entry enumerated and classified; every E3/E4 version
+re-checked against its file **today** (post schema-v2.7 merge, `58c3fe7`),
+not inherited from the 2026-08-02 sweep. Paths shortened:
+`instruments/` = `studies/open-science-compliance/protocol/instruments/`.
+
+**E1 — frozen instruments (7), check implemented, all PASS today:**
+fair-instrument 2.0 (mirror: Pass 6 prompt, byte-exact region);
+data-availability-taxonomy 1.0; verdicts-and-precision 1.0 (mirror:
+reproduction SKILL.md, six named segments); coverage-rules 1.0;
+eligibility-criteria 1.0; pipeline-invariants 1.0 (`.claude/shared/`);
+adversarial-review-framework 1.1.
+
+**E2 — agent definitions (6), check implemented (sha256 + model pin +
+registry both directions), all PASS today:** fair-assessor-sonnet-5 /
+-opus-5 / -fable-5, reproduction-planner, reproduction-executor,
+adversarial-reviewer, all v1.0.
+
+**E3 — versioned prose artefacts (26), check absent:**
+
+| Entity | Manifest v | Today's finding |
+|---|---|---|
+| components.workflow | 5.0.0 | **no `**Version:**` line in `input/workflow.md`** — Phase 1: add line or declare source |
+| components.extraction_plan | 1.1.0 | match |
+| components.extraction_launch | 2.0.0 | match |
+| assessment.prompts ×6 | 1.0–1.1 | all match (v-prefix, normalise in checker) |
+| assessment.templates.credibility_report | 1.0 | **no version line in file** — Phase 1: add or declare |
+| reproduction.planning_guide, .launch | 1.0.0 | match |
+| reproduction.prompts ×4 | 1.0–1.1 | all match |
+| components.skill, reproduction.skill | 2.6, 1.1 | **directory-scoped** — Phase 1: declare version_source (SKILL.md header?) |
+| workflow_passes prompts ×8 | **(no version field in registry)** | files carry headers (2.7 Pass 1–7 post-cascade; pass 0 = 1.0.0; pass 6 = 2.0) — Phase 1: add version fields |
+
+**E4 — versioned data artefacts (3), check absent:** components.schema 2.7
+(JSON version field matches); components.schema.previous 2.6 (pinned
+historical, matches — checker should assert the const); 
+assessment.schemas.credibility_report 1.0 (**JSON carries no version
+field** — Phase 1: add field or declare none).
+
+**E5 — two-axis (1):** assessment_json — payload 1.1 vs document 2.1, both
+correct, axis note already in the manifest; Phase 1 formalises
+`json_path`.
+
+**E6 — unversioned registered files (12), no explicit check:** 3
+reproduction templates, 8 documentation pointers, corpus.queue_file.
+Phase 1: explicit `class: none`-or-hash declarations, loud not silent.
+
+**E7 — cross-references (check class, not entities):** 115 resolve / 18
+stale remain, all in `wiki/`. Warn-first (Q2); one verified remap pass
+early in Phase 4 (Q3).
+
+**E8 — reference datasets (1 set, 5 items, unregistered):** the pilot FAIR
+assessments — dye-et-al-2023, herskind-riede-2024, key-et-al-2024,
+marwick-2025 (key `reproducibility_infrastructure`), crema-et-al-2024
+run-02 (key `infrastructure`, one directory deeper). Register per Q4:
+per-item path + JSON key path + asserted cardinality of five.
+
+**Coverage as it stands: 55 registered entities; 13 checked hard (E1+E2),
+42 unchecked or implicit; plus one unregistered E8 set.** No true drift
+found today — the four flagged items are missing version carriers, not
+mismatched versions.
