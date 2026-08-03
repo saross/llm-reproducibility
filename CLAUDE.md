@@ -1,6 +1,6 @@
 # LLM Reproducibility Project - Research Paper Extraction
 
-**Version:** 3.0.1 | **Schema:** v2.7 | **Workflow:** 8-pass session-per-pass (v5.0.0) | **Reproduction:** v1.1
+**Version:** 3.1 | **Schema:** v2.7 | **Workflow:** 8-pass session-per-pass (v5.0.0) | **Reproduction:** v1.1
 **Manifest:** See `manifest.yaml` for all component versions
 **Session continuity:** Run `git fetch` **first**, before reading anything or
 starting work, and report ahead/behind. Then read `wiki/continuity.md` —

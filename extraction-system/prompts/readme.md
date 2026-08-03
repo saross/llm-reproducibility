@@ -1,6 +1,6 @@
 # Research Extraction Workflow - Prompts Reference
 
-**Version:** 2.6
+**Version:** 2.7
 **Last Updated:** 2025-11-18
 **Status:** Production ready
 
@@ -10,7 +10,7 @@
 
 This workflow extracts **Research Design, Methods, and Protocols (RDMAP)** plus **Claims and Evidence** from research papers using a systematic 8-pass approach. All extraction passes operate on a **single shared JSON document** that accumulates content as it flows through the pipeline.
 
-**Current Schema:** v2.6
+**Current Schema:** v2.7
 **Total Passes:** 8 (Passes 0-7)
 
 ---
@@ -23,7 +23,7 @@ Create or use the blank extraction template:
 
 ```json
 {
-  "schema_version": "2.6",
+  "schema_version": "2.7",
   "extraction_timestamp": "ISO 8601",
   "extractor": "string",
   "project_metadata": {},
@@ -446,6 +446,7 @@ Claims/evidence arrays remain empty. Validation notes deferred validation for cr
 
 ## Version History
 
+- **v2.7 (2026-08-03):** Added optional source_file + source_sha256 provenance fields to extraction_output (records what a run actually read); additive, v2.6 retained for pilot extractions
 - **v2.6 (2025-11-18):** Added Pass 6 (Infrastructure extraction), updated to 8-pass workflow (0-7), added bidirectional reconciliation phases (2b, 5b), updated schema to v2.6
 - **v2.5 (2025-10-30):** Added Pass 0 (Metadata extraction), updated to 7-pass workflow (0-6)
 - **v2.4 (2025-10-19):** Unified claims/evidence and RDMAP extraction with iterative accumulation workflow
