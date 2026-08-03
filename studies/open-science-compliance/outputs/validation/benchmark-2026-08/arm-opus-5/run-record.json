@@ -1,0 +1,67 @@
+{
+  "arm": "opus-5",
+  "model_pin": "claude-opus-5",
+  "model_id_reported": [
+    "claude-opus-5[1m]"
+  ],
+  "model_id_note": "runtime reports the pin with the harness 1M-context marker \"[1m]\" appended; sonnet arm reported the bare pin \u2014 recorded verbatim per amendment \u00a73 provenance",
+  "agent_definition": "fair-assessor-opus-5 v1.0",
+  "workflow_run_id": "wf_4eaecf54-890",
+  "date": "2026-08-03",
+  "spawns": 15,
+  "config": {
+    "paper_source": "corpus-store vor.pdf only, supplements deliberately excluded (uniform across arms)",
+    "output_schema": "assessment-system/schema/benchmark-fair-output-schema.json v1.0",
+    "receipt_gate_note": "SubagentStop gate blocked each spawn once (final-message JSON check does not see tool-call structured output); data captured via workflow schema mechanism; post-hoc verification is the operative receipt control for this arm, as for arm 1"
+  },
+  "verification": {
+    "receipts": "15/15 pass (model_id pin-prefix match, note above); problems: 0",
+    "totals_arithmetic": "15/15 consistent"
+  },
+  "usage": {
+    "total_tokens": 1535598,
+    "per_spawn_tokens": {
+      "dye-et-al-2023 r1": 118039,
+      "herskind-riede-2024 r1": 107198,
+      "key-et-al-2024 r1": 114517,
+      "marwick-2025 r1": 79704,
+      "crema-et-al-2024 r1": 88421,
+      "dye-et-al-2023 r2": 113948,
+      "herskind-riede-2024 r2": 107120,
+      "key-et-al-2024 r2": 92059,
+      "marwick-2025 r2": 79717,
+      "crema-et-al-2024 r2": 101797,
+      "dye-et-al-2023 r3": 130286,
+      "herskind-riede-2024 r3": 107257,
+      "key-et-al-2024 r3": 126285,
+      "marwick-2025 r3": 85964,
+      "crema-et-al-2024 r3": 83286
+    }
+  },
+  "stability": {
+    "unanimity_proportion": 0.8733,
+    "items": 150,
+    "agreed": 131,
+    "disagreements": [
+      "crema-et-al-2024 data_fair I3: [1, 0, 0]",
+      "crema-et-al-2024 data_fair R1_1: [1, 1, 0]",
+      "crema-et-al-2024 data_fair R1_3: [1, 0, 1]",
+      "crema-et-al-2024 code_fair I3: [1, 0, 1]",
+      "crema-et-al-2024 code_fair R1_1: [1, 1, 0]",
+      "dye-et-al-2023 data_fair A1_2: [1, 0, 1]",
+      "dye-et-al-2023 code_fair A1_1: [0, 0, 1]",
+      "dye-et-al-2023 code_fair A1_2: [1, 0, 1]",
+      "herskind-riede-2024 data_fair R1_1: [1, 0, 1]",
+      "herskind-riede-2024 code_fair R1_1: [1, 0, 1]",
+      "key-et-al-2024 data_fair A1_1: [0, 1, 1]",
+      "key-et-al-2024 data_fair A1_2: [0, 0, 1]",
+      "key-et-al-2024 data_fair A2: [0, 0, 1]",
+      "key-et-al-2024 data_fair R1: [0, 1, 1]",
+      "key-et-al-2024 data_fair R1_1: [0, 1, 1]",
+      "key-et-al-2024 data_fair R1_2: [0, 1, 1]",
+      "key-et-al-2024 code_fair F1: [1, 0, 0]",
+      "key-et-al-2024 code_fair A1_2: [1, 0, 1]",
+      "key-et-al-2024 code_fair A2: [0, 0, 1]"
+    ]
+  }
+}
