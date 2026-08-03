@@ -515,6 +515,24 @@ agent_definitions:""")
         (self.root / REFITEM_REL).unlink()
         self.assert_error_containing("item 't1' file missing")
 
+    def test_coverage_self_report_generated(self) -> None:
+        """Phase 3: coverage is generated from the registry, never asserted."""
+        report = self.run_checks()
+        self.assertIn("7/7 entities checked", report.coverage)
+        for fragment in ("E1:1", "E2:1", "E3:1", "E4:1", "E5:1", "E6:1", "E8:1"):
+            self.assertIn(fragment, report.coverage,
+                          f"expected {fragment!r} in: {report.coverage}")
+        self.assertIn("0 undeclared", report.coverage)
+
+    def test_coverage_counts_undeclared(self) -> None:
+        """Phase 3: an undeclared entity shows in the coverage line, not just errors."""
+        (self.root / "docs/orphan.md").write_text("**Version:** 1.0\n", encoding="utf-8")
+        self.rewrite("manifest.yaml", "  dataspec:",
+                     "  orphan:\n    version: \"1.0\"\n    file: docs/orphan.md\n  dataspec:")
+        report = self.run_checks()
+        self.assertIn("7/8 entities checked", report.coverage)
+        self.assertIn("1 undeclared", report.coverage)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

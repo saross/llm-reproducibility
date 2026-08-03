@@ -166,6 +166,10 @@ class Report:
     def __init__(self) -> None:
         self.errors: list[str] = []
         self.warnings: list[str] = []
+        # Coverage self-report (monitoring plan §6): generated from the
+        # registry each run, never hand-maintained, so the SCOPE of the
+        # assurance is visible in the same breath as the verdict.
+        self.coverage: str = "coverage not computed"
 
     def error(self, message: str) -> None:
         self.errors.append(message)
@@ -566,6 +570,17 @@ def check_entity_declarations(manifest: dict, root: Path, report: Report) -> Non
         return
     entities = enumerate_entities(manifest)
 
+    declared = sum(1 for path in entities if path in checks)
+    by_class: dict[str, int] = {}
+    for path in entities:
+        decl = checks.get(path)
+        if isinstance(decl, dict):
+            cls = str(decl.get("class", "?"))
+            by_class[cls] = by_class.get(cls, 0) + 1
+    class_counts = " ".join(f"{cls}:{n}" for cls, n in sorted(by_class.items()))
+    report.coverage = (f"{declared}/{len(entities)} entities checked "
+                       f"({class_counts}), {len(entities) - declared} undeclared")
+
     for path in entities:
         if path not in checks:
             report.error(f"undeclared entity: {path} has no entity_checks entry "
@@ -738,7 +753,7 @@ def main() -> int:
         for message in report.warnings:
             print(f"warning: {message}")
         verdict = "FAIL" if report.errors else "PASS"
-        print(f"manifest consistency: {verdict} "
+        print(f"manifest consistency: {verdict} — {report.coverage} "
               f"({len(report.errors)} error(s), {len(report.warnings)} warning(s))")
     return 1 if report.errors else 0
 

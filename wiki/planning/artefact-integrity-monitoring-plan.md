@@ -240,8 +240,12 @@ Each phase ends at a **GATE** — Shawn reviews before the next starts.
       finding-(c) failure mode — a glob silently enumerating four of five
       — is now mechanically impossible for the pilot reference set. Live
       gate PASS, 0 warnings. **GATE: presented for review 2026-08-03.**
-- [ ] **Phase 3 — coverage self-report.** Emit the §6 line; wire into
-      pre-commit and orchestrator pre-flight. **GATE.**
+- [x] 2026-08-03 **Phase 3 — coverage self-report.** Done. The verdict
+      line now carries the generated coverage: `PASS — 56/56 entities
+      checked (E1:7 E2:6 E3:26 E4:3 E5:1 E6:12 E8:1), 0 undeclared`.
+      Emitted by the already-wired pre-commit and --preflight paths; two
+      new tests (coverage generated; undeclared entities counted in the
+      line, not only in errors). Tests 46 → 48. **GATE.**
 - [ ] **Phase 4 — E7 cross-reference resolvability.** Commit-hash resolution
       first (18 known stale refs to remap by message match), then paths, then
       DOIs. Likely warn-only at first: these live in low-authority prose and
