@@ -1,6 +1,24 @@
-# OSF amendment 1 — consolidated draft (NOT YET LODGED)
+# OSF amendment 1 — LODGED 2026-08-03
 
-**Status: DRAFT.** Lodgement timing per the registrant's 2026-07-24 decision:
+**Status: LODGED 2026-08-03.** Filed via the OSF API as a versioned
+registration update (SchemaResponse revision `6a7017da97adb06288afef80`,
+created, populated, submitted, and approved the same day on the registrant's
+instruction): the amendment text was appended to the registration's Summary
+field under a dated banner, after the registrant's placement decision
+(append at end; the summary field is the landing content and the amendment
+is unintelligible before the registration it references). The registration
+DOI is unchanged — 10.17605/OSF.IO/DQNHG; OSF mints no new identifier for a
+version. The amended version is now the registration's default view; the
+original response remains permanently visible with a machine-readable diff.
+Amendment version URL:
+<https://osf.io/dqnhg?revisionId=6a7017da97adb06288afef80>. Repository
+state at lodgement tagged `osf-amendment-1-2026-08-03`. Round-trip
+verification at staging: all 39,725 characters returned byte-identical
+(original 30,907 untouched, amendment appended); `updated_response_keys`
+exactly `["summary"]`.
+
+**Drafting-period note (superseded by lodgement).** Lodgement timing per
+the registrant's 2026-07-24 decision:
 this amendment lodges **just before the validation phase runs** (the hard
 stop), so further errata found during the corpus and Phase 1 builds accumulate
 here rather than generating piecemeal amendments. Scope RATIFIED by the
@@ -196,15 +214,19 @@ protocol (registration §8) before any cross-vendor scoring begins.
       flags adjudicated same day: 1 fixed, 2 accepted as typography, 3
       dissolved by investigation. 2026-08-03: re-run against the promoted
       re-expression, PASS — addendum at the foot of the record below.)
-- [ ] Registrant reads the final text; lodgement is by hand from the project
-      view (five-file cap does not apply there), paste files unwrapped to
-      flowing lines via `unwrap-paste-file.py`.
+- [x] Registrant reads the final text; lodgement executed.
       (2026-08-03: registrant read both versions and promoted the
       re-expression; the §5 pre-declaration was displayed at promotion. Paste
-      artefact built and verified — `osf-amendment-1.txt`. Hand-lodgement
-      remains.)
-- [ ] Tag the repository state at lodgement and record the amendment DOI/URL
-      here and in `erratum-log.md`.
+      artefact built and verified — `osf-amendment-1.txt`. Lodgement route
+      changed by the registrant's same-day decision: filed via the OSF API as
+      a versioned registration update rather than by-hand paste, after an
+      agent sweep of the developer docs and a staged draft the registrant
+      approved. Submit and approve completed in one sitting, as the
+      48-hour auto-approval hazard requires.)
+- [x] Tag the repository state at lodgement and record the amendment DOI/URL
+      here and in `erratum-log.md`. (2026-08-03: tag
+      `osf-amendment-1-2026-08-03`; DOI unchanged by design — version URL
+      recorded in the status block above and in `erratum-log.md`.)
 
 ---
 

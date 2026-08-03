@@ -4,6 +4,13 @@
 lodged 2026-07-20, public 2026-07-21.
 **Frozen artefact set:** repository state at commit `ee3fda3`
 (tag `osf-prereg-phase2-2026-07-20`).
+**Amendment 1: LODGED 2026-08-03** as an OSF versioned registration update
+(SchemaResponse revision `6a7017da97adb06288afef80`), appending the
+consolidated amendment text to the registration Summary field. DOI
+unchanged (no new identifier is minted for a version); amendment version
+URL <https://osf.io/dqnhg?revisionId=6a7017da97adb06288afef80>; repository
+tag `osf-amendment-1-2026-08-03`. Entries 1–2 and queued-scope items 1–5
+below are all folded into the lodged text and discharged.
 **Purpose:** records defects discovered in the frozen registration artefacts
 after lodgement, together with the corresponding repository-side corrections.
 The frozen Open Science Framework (OSF) copies cannot be edited by design;
