@@ -346,3 +346,30 @@ afterthought, and that section is where the actual thinking happened — the
 decision *not* to build a JSONL ledger here, because our entities are
 enumerable from the manifest every run and a parallel record would recreate the
 exact drift pathology the corpus plan's decision D-10 exists to prevent.
+
+
+## 2026-08-03 — Candidates
+
+*Drafted at handoff (session 0360402e). Pending review; A–C from
+2026-07-27 remain held separately (A and B since accepted, C discarded).*
+
+**Candidate A — "While we are waiting" turned idle time into the session's
+highest-value work.** You slotted the wide audit into benchmark wall-clock
+time, and its findings (a receipt gate that had never validated anything)
+landed early enough to fix before the expensive arm ran. The pattern —
+fill known dead time with independent verification work, not with more
+building — found the defect at the cheapest possible moment.
+
+**Candidate B — Scoping by governance rather than by file list.** "At
+least where it doesn't touch anything that can't be touched due to the
+preregistration" gave the audit a *governance* boundary instead of a path
+list — auditors read everything, remediation respected the frozen set, and
+GOVERNED findings routed to gated processes instead of being either fixed
+recklessly or skipped. A reusable way to authorise broad work inside a
+registered study.
+
+**Candidate C — The billing pre-clearance removed a mid-run stall.** Before
+the benchmark you volunteered the Fable overflow arrangement ("charged the
+account, we should be fine") plus a forward-looking ask (track tokens for
+better estimates). The run never paused on a spend question, and the
+per-spawn baselines you asked for now exist in three run-records.

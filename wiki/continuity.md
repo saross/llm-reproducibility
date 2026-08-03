@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-08-02
+updated: 2026-08-03
 status: active
 ---
 
@@ -29,6 +29,45 @@ merged here as PR #1).
 4. Carry forward open questions.
 
 ---
+
+## Repo state (2026-08-03)
+
+- **AMENDMENT 1 LODGED — TASK E COMPLETE.** Filed via the OSF API as
+  registration Version 2 (revision `6a7017da97adb06288afef80`, DOI
+  unchanged, tag `osf-amendment-1-2026-08-03`); lodgement text is the
+  promoted academic-prose re-expression + a §5 cross-vendor
+  pre-declaration (OpenAI arms considered, deferred to the FAIR4RS
+  extension pattern). Details in the task-E block and the draft's status
+  header.
+- **MONITORING PHASES 0–3 SHIPPED** (plan §8/§10): 57-entity enumeration,
+  `entity_checks` registry + E8 reference-dataset registration, per-class
+  checker with undeclared-entity failure, coverage self-report line.
+  §9 all resolved. Phase 4 (E7 hashes) remains.
+- **BENCHMARK COMPLETE — ALL THREE ARMS BELOW BOTH 0.90 GATES.**
+  Stability 0.807 (sonnet) / 0.873 (opus) / 0.813 (fable); concordance
+  0.773 / 0.807 / 0.820. Item-structured disagreement shared across arms
+  (A1.2, R1.1, A2, R1.3, F-block upstream crediting) = instrument
+  evidence. Full package:
+  `studies/open-science-compliance/outputs/validation/benchmark-2026-08/`
+  (benchmark-summary.md + per-arm run-records with per-spawn tokens).
+  **NEXT SESSION'S FIRST DECISION (Shawn, amendment §2): the single
+  permitted routing-fix attempt** — candidate: push
+  `fair-principles-guide.md` uniformly (receipts show inconsistent
+  pulling) — then one re-run; else the registered majority-vote census
+  (arm choice to be recorded explicitly). The workflow harness is rescued
+  at `studies/open-science-compliance/protocol/validation/fair-benchmark-arm.workflow.js`.
+- **AUDIT ROUND 2 OPEN.** Two-lens audit + fix pass `3b01676` (tests
+  48→84, committed hook suite) + re-audit that found regressions in the
+  fixes. Register: `wiki/planning/audit-2026-08-03-follow-ups.md` —
+  fix round 2 and schema v1.1 are PRE-CENSUS requirements; C7 (instrument
+  sha256) is a GOVERNED decision for Shawn. **Correction owed:** the
+  2026-07-24 records claim "17 synthetic pipe-tests" for the hooks — those
+  were ephemeral and never committed (audit C4); `tests/test_hooks.py`
+  now exists. This note is the dated correction's anchor.
+- **PENDING VERDICTS (no silent discard):** working-notes candidates WN-l,
+  WN-m; user-obs candidates A–C (2026-08-03 batch); user-obs A–C from
+  2026-07-27 — A and B ACCEPTED 2026-08-02/03, C discarded (systematised
+  as handoff step 0).
 
 ## Repo state (2026-07-27, second session)
 
@@ -828,6 +867,34 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-08-03 — Lodgement, monitoring 0–3, benchmark, two audit rounds
+
+One very long session (0360402e); ~28 commits `a208f9d`→`9f67480` + tag
+`osf-amendment-1-2026-08-03` + reflections/handoff. Task E closed:
+E2 re-check, crema "missing assessment" dissolved (pre-v2.6 key), prose
+re-expression promoted, §5 cross-vendor pre-declaration added, lodged via
+the OSF API as registration Version 2 (DOI unchanged). PR #2 + cascade
+merged; monitoring §9 resolved and Phases 0–3 shipped same day. Benchmark
+ran per amendment §3 (45 spawns, 4.25M tokens, ≈$27): all arms below both
+gates, item-structured — the §2 remediation decision is deliberately
+parked for next session. Two audit rounds: fix pass 3b01676 (tests
+48→84), re-audit found regressions in the fixes; everything registered in
+audit-2026-08-03-follow-ups.md. Full factual log:
+`wiki/reflections/session-log.md` 2026-08-03.
+
+**NEXT (in order):** (1) Shawn's §2 decision (routing-fix candidate:
+uniform push of fair-principles-guide) → possible single re-run via the
+rescued workflow script; (2) audit fix round 2 + schema v1.1 — both
+PRE-CENSUS; before the census the gate needs one captured SubagentStop
+event and one live pass-plus-catch demonstration; (3) C7 GOVERNED
+decision; (4) monitoring Phase 4; (5) census frame.
+
+**Carry-forward:** zbook must run `./scripts/install-git-hooks.sh` after
+pulling. Shawn: check Fable Max-allocation vs API billing split after this
+session's ~1.4M Fable tokens; Zotero-proxy investigation;
+`ELSEVIER_API_TDM` key still absent; Cosmos watch ~mid-August. Pending
+verdicts listed in the 2026-08-03 repo-state block.
 
 ### 2026-07-27 (second session) / 2026-08-02 — Verdicts cleared, corpus list closed, monitoring planned
 

@@ -593,3 +593,27 @@ scores are the §3 concordance-floor denominator for validation-phase model
 selection — the enumeration itself should be registered and generated, never
 re-derived by glob at each use (monitoring plan §1(c) and class E8; erratum
 log Entry 2 coverage correction, 2026-08-02).
+
+
+## Candidates — 2026-08-03 (pending review)
+
+*Drafted at handoff; Shawn adjudicates next session. No silent discard.*
+
+**Candidate WN-l — A wired, tested control is aspirational until its log
+shows a real pass.** The receipt gate was designed, wired, and
+build-tested, and its log carried only blocks: it had never validated one
+production receipt, and the run it "guarded" was protected entirely by
+orchestrator-side post-hoc verification. The repaired gate then blocked
+9/15 spawns for a reason its own log cannot distinguish. Companion rule to
+Observations 14/16: a control's operative status is evidenced by logged
+passes on real traffic plus one observed catch, not by wiring, tests, or
+the existence of its log file. (Sources: receipt-gate-log tallies in the
+three arm run-records; audit + re-audit reports, 2026-08-03.)
+
+**Candidate WN-m — Within-model run disagreement is a rubric-ambiguity
+locator.** Across three arms, run-to-run disagreement concentrated on the
+same five instrument clauses (A1.2, R1.1, A2, R1.3, F-block upstream
+crediting), and the most capable model was not the most stable. Three runs
+of a single cheap model would have located the same clauses as the full
+cross-model benchmark — a ~$3 instrument diagnostic. (Source: per-arm
+stability disagreement lists in the 2026-08-03 run-records.)
