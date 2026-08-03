@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-07-24
+updated: 2026-08-02
 status: active
 ---
 
@@ -364,3 +364,52 @@ the continuation summary.)*
   check. A segment suffix (`canon-begin: id#part`) dissolves it: each fragment is
   byte-compared where it naturally belongs. Generalisable wherever canonical
   content must interleave with a consumer's own structure.
+
+## 2026-07-27/08-02 — Generate-then-diff, and the cost of an unvalidated sweep
+
+**Generating an artefact from its sibling beats writing it, when the claim is
+sameness.** The Fable 5 agent definition had to be identical to the Opus 5 one
+apart from the model pin — that identity is the whole design of a per-model
+variant. I hand-wrote it first. The result looked right and contained a silent
+defect: `sub-principle` had become `sub principle`. Regenerating it with `sed`
+from the Opus file and then `diff`ing against both siblings caught it
+immediately, and turned "only the pin differs" from an assertion into a verified
+claim — the diff output *is* the evidence, enumerable in six lines. The general
+form: when the requirement is "identical except X", never transcribe; derive,
+then diff to prove the exception set. Transcription introduces variance that
+review does not reliably catch, because a reader checks whether the text is
+*plausible*, not whether it is *the same*.
+
+**Probe your own change before trusting the gate that passed it.** After bumping
+the reproduction prompt to v1.1 in both file and manifest, the D5 gate said
+PASS. Rather than accept that, I set the manifest version to a deliberately
+wrong `9.9` and re-ran: still PASS. The version check iterates `shared_content`
+only, so it had never covered that file — 7 of 25 registered entries. The green
+result had been meaningless for that change, and would have stayed meaningless
+indefinitely, because a passing gate produces no reason to look. Cheap rule:
+after wiring a change into a checked system, break it once on purpose and
+confirm the check notices. Twenty seconds; the alternative was eight months of
+false assurance.
+
+**An unvalidated sweep is a gate with unknown scope, and it lies the same way.**
+Sweeping for stale commit hashes, my first regex returned 187 non-resolving
+"hashes" — DOIs, ORCIDs, corpus IDs, page numbers, and the `1234567` placeholders
+from the PID guide. Tightened to backticked tokens containing a hex letter in
+commit-referencing files: 115 resolve, 21 do not. The 187 was not a
+near-miss; it was a number with no referent, and it would have been quoted to
+Shawn as a finding. Notably this happened *inside* a session whose subject was
+checks that report over narrower scopes than assumed — the failure mode
+generalises past instruments in the repository to the ad-hoc ones I write mid-
+session, and those get no review at all. Before quoting a swept count: hand-check
+a sample of the hits, and prefer a sweep that prints what it matched over one
+that prints only how many.
+
+**A "mismatch" between two numbers is not a defect until you know what each
+measures.** `assessment_json` at manifest `1.1` versus file `**Version:** 2.1`
+was reported as genuine drift needing Shawn's adjudication. It was two version
+axes — payload `schema_version` and document version — both correct, and the git
+history settled it in four commands (`git log -S` on each version string, then
+reading both axes at each commit). The escalation was the error: I had enough
+information to resolve it and reached for the human instead. Worth separating the
+two habits — escalating genuine decisions is right, and escalating unfinished
+analysis dressed as a decision is not.

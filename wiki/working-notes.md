@@ -5,7 +5,7 @@ title: "Working Notes"
 audience: "researchers"
 tags: [research-methodology, llm-craft, open-science]
 created: 2026-02-09
-updated: 2026-07-27
+updated: 2026-08-02
 status: active
 ---
 
@@ -500,3 +500,96 @@ implementation cannot surface, because the reader inherits the same
 resolution. A second independent reading makes the underdetermined points
 visible as disagreements. Too expensive to schedule as routine practice, but
 nearly free when it happens by accident: compare before discarding.
+
+## Observation 18: An ad-hoc sweep is an unscoped gate, and it fails the same way (2026-08-02)
+
+*(Accepted by Shawn 2026-08-02, as drafted.)*
+
+### Context
+
+Sweeping the repository for stale commit references, while investigating a
+manifest defect during the same session that found the D5 gate's coverage gap.
+
+### The observation
+
+The first regex returned 187 non-resolving "hashes". The number was meaningless:
+it had swept up Digital Object Identifiers (DOIs), ORCIDs, Semantic Scholar
+corpus identifiers, page offsets, and the deliberate `1234567` placeholders in
+the persistent-identifier guide. Tightened to backticked tokens containing at
+least one hex letter within commit-referencing files, the real figure was 115
+resolving and 21 not.
+
+The failure is identical in structure to Observation 16 — an instrument
+reporting confidently over a scope its author never checked — but it applies to
+the *disposable* measurements written mid-session, which get no review, no
+tests, and no pre-commit gate. Those are the instruments most likely to produce
+a number that reaches a person, and the least likely to be scrutinised before it
+does. The practical rule: before quoting a swept count, hand-check a sample of
+the hits, and prefer a sweep that prints *what it matched* over one that prints
+only *how many*.
+
+## Observation 19: A version number without a recorded referent can only be compared, not checked (2026-08-02)
+
+*(Accepted by Shawn 2026-08-02, as drafted.)*
+
+### Context
+
+Planning the extension of the manifest-consistency gate from 7 of 25 registered
+entries to all of them.
+
+### The observation
+
+`manifest.yaml` registers version numbers but never records what each number
+*measures*. One entry (`assessment_json`) tracks the payload `schema_version`
+emitted into each `assessment.json`, while pointing at a document whose own
+heading carries a different version — two legitimate axes, no drift. A naive
+widening of the version check would have converted that correct state into a
+permanent build failure, and the usual response to a gate that fails on a
+correct file is to add an exception, which is how checks decay into noise.
+
+Coverage was the visible problem; *semantics* was the binding one. A comparison
+between two numbers is only a check when both are known to measure the same
+thing — otherwise it is a coincidence detector that fires whenever a file
+carries more than one version string. This is why the monitoring plan sequences
+registry reorganisation (declare the axis) before checker widening (compare it),
+rather than the reverse.
+
+## Observation 20: An enumeration that returns n−1 of a known-n set is a finding, not a fact (2026-08-02)
+
+*(Approved by Shawn 2026-08-02; wording accepted as drafted, same day.)*
+
+### Context
+
+The amendment §1 consistency check (task E2) re-ran erratum-log Entry 2's
+impact sweep over the persisted pilot outputs. Both the original 2026-07-27
+sweep and the re-run enumerated four FAIR assessments from a five-pilot set,
+and both wrote "the four papers carrying FAIR assessments" into the record as
+a fact about the corpus.
+
+### The observation
+
+The fifth assessment existed the whole time: crema-et-al-2024's sits one
+directory below the `outputs/*/extraction.json` glob and under the pre-v2.6
+top-level key `infrastructure` rather than `reproducibility_infrastructure`.
+Two silent scope-narrowers — a path pattern and a schema assumption — trimmed
+the set before any check ran.
+
+This is the Observation 16 shape again (a check reporting over a narrower
+scope than its readers assume), but it is the dual of Observation 18. That
+sweep *over*-matched, and its countermeasure — print what you matched, not
+just how many — works because the junk is in the output. An under-match cannot
+be exposed that way: nothing prints what a glob never enumerated. The control
+that was available here was cheaper and different: the expected cardinality
+was known — five pilots, named everywhere — the sweep returned four, and the
+shortfall was rationalised into prose instead of investigated. It took the
+registrant asking "was it accidentally discarded?" to force the run-down,
+which then took four commands (`git log --follow` found it archived-not-lost;
+`jq` found the divergent key).
+
+Two rules follow. When an enumeration over a set of known size returns fewer
+members, the missing member is a defect to run down before the count enters
+any record. And when the set is decision-relevant — these five reference
+scores are the §3 concordance-floor denominator for validation-phase model
+selection — the enumeration itself should be registered and generated, never
+re-derived by glob at each use (monitoring plan §1(c) and class E8; erratum
+log Entry 2 coverage correction, 2026-08-02).

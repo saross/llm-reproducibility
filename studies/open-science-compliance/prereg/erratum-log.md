@@ -4,6 +4,13 @@
 lodged 2026-07-20, public 2026-07-21.
 **Frozen artefact set:** repository state at commit `ee3fda3`
 (tag `osf-prereg-phase2-2026-07-20`).
+**Amendment 1: LODGED 2026-08-03** as an OSF versioned registration update
+(SchemaResponse revision `6a7017da97adb06288afef80`), appending the
+consolidated amendment text to the registration Summary field. DOI
+unchanged (no new identifier is minted for a version); amendment version
+URL <https://osf.io/dqnhg?revisionId=6a7017da97adb06288afef80>; repository
+tag `osf-amendment-1-2026-08-03`. Entries 1–2 and queued-scope items 1–5
+below are all folded into the lodged text and discharged.
 **Purpose:** records defects discovered in the frozen registration artefacts
 after lodgement, together with the corresponding repository-side corrections.
 The frozen Open Science Framework (OSF) copies cannot be edited by design;
@@ -101,6 +108,25 @@ marwick-2025):
   A1 = false with the evidence "Only 3 of 13 datasets (23.1%) retrievable via
   HTTPS", the majority rule operating as registered;
 - omission 4 is declaratory and affects no score.
+
+**Coverage correction (2026-08-02).** The scoping statement above — "the four
+papers carrying FAIR assessments" — under-counts. A fifth persisted FAIR
+assessment exists, for crema-et-al-2024, at
+`studies/open-science-compliance/outputs/crema-et-al-2024/run-02-session-per-pass/extraction.json`.
+The 2026-07-27 sweep missed it for two structural reasons: the file sits one
+directory below the `outputs/*/extraction.json` pattern swept, and it stores
+the assessment under the pre-v2.6-convention top-level key `infrastructure`
+rather than `reproducibility_infrastructure`. Located 2026-08-02 on the
+registrant's query and re-checked the same day: it uses the
+`binary_sub_principles` /15 scale (data 12/15, code 12/15, matching pilot
+findings report v1.2 Table 5 exactly), leaves no sub-principle unscored,
+carries no aggregate field, and records A1 present — so key-et-al-2024 remains
+the one pilot where the A1 majority rule was decisive. All four impact
+conclusions above therefore hold across five of five pilots; this entry's
+conclusion is strengthened, not weakened. (The related run-01 artefacts were
+archived, not deleted — `c41242b`, 2026-01-13. Working-notes Observation 20
+records the sweep-scope lesson; the monitoring plan §1(c) and class E8 carry
+the structural fix.)
 
 Classification: erratum-class corrections aligning the operational file with the
 registration's own normative text; no instrument semantics changed and no pilot

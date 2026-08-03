@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-07-27
+updated: 2026-08-02
 status: active
 ---
 
@@ -67,6 +67,68 @@ merged here as PR #1).
   **The benchmark run itself is still ungated:** authoring a definition is not
   an API call, so the run needs explicit approval with a billing route decided.
   Three arms × 5 pilot papers × 3 runs = 45 scoring spawns.
+- **CORPUS ITEMS 5 AND 6 DONE — the corpus plan's build list is now closed.**
+  Both were already *specified* in `corpus/README.md`; only the implementations
+  were missing.
+  - **Item 5 (`bd5bc40`, on main):** reproduction preparation prompt v1.0→v1.1.
+    New §1.0 (hash at fetch time — reconstructing at session end makes the
+    retrieval dates guesses) and §1.0.1 (three destinations: corpus store for
+    publisher content and never git; attempt directory for author-released
+    materials; scratch for what nothing references). `log-template.md` gains a
+    **Materials Acquired** table. Verification and handoff gained matching
+    checks.
+  - **Item 6 (PR #2, branch `feat/schema-v2.7-source-provenance`):** schema
+    v2.7 adding optional `source_file` + `source_sha256`. Branched not pushed,
+    per the standing schema-change rule. Additivity verified mechanically (no
+    v2.6 property or top-level key dropped; `required` unchanged), not asserted.
+    **v2.6 retained and the pilots deliberately not back-filled** — the field
+    records what a run actually read, so retro-fitting a digest would make it
+    lie in its first use. Out of scope and flagged in the PR:
+    `docs/user-guide/schema-reference.md` and `docs/README.md` still say v2.6
+    (prose rewrite; belongs with task D).
+- **FINDING — the D5 gate's version check covers 7 of 25 registered entries.**
+  Found by probing this session's own change: setting the reproduction
+  preparation prompt's manifest version to a deliberately wrong `9.9` still
+  produced `PASS`. Cause is scope, not a bug — `check_canonical_entry`
+  (`scripts/check-manifest-consistency.py:180`) runs **only** over
+  `shared_content`, so `components.*`, `assessment.prompts.*`,
+  `reproduction.prompts.*` and the rest are unchecked. Same shape as
+  Observation 16: a gate reporting PASS over a narrower scope than a reader
+  assumes — and this file described D5 as "verifies version lines" without the
+  qualifier. A sweep of all 25 registered `file`+`version` entries found:
+  8 matching, 6 cosmetic `v1.0`-vs-`1.0` prefix differences, 8 with no
+  `**Version:**` line (the six agent definitions use frontmatter and are
+  hash-checked instead — stronger, not weaker), and 1 apparent mismatch that
+  **turned out not to be one** (see below).
+  **Shawn's decision 2026-08-02: WIDEN — every registered entity is to be
+  checked hard.** A reorganisation to support that is acceptable. Plan drafted
+  at `wiki/planning/artefact-integrity-monitoring-plan.md`; not implemented.
+
+- **CORRECTED 2026-08-02 — the `assessment_json` "mismatch" was mine, not the
+  repo's.** On 2026-07-27 this was logged as a genuine conflict needing a
+  verdict on which number was right. It is not: `1.1` and `2.1` measure
+  different things, and both are correct. `**Version:** 2.1` is the *document*
+  version of `assessment-schema.md` (2.0→2.1 at `05e9706`, 2025-11-29; never
+  1.x). `schema_version: "1.1"` is the *payload* version stamped into each
+  `assessment.json` (1.0→1.1 at `faef450`, 2026-02-12). The manifest entry
+  tracks the payload axis while its `file:` points at the guide documenting it.
+  The naive sweep compared the two axes and reported a conflict that does not
+  exist; a note in `manifest.yaml` now says so, so the next reader does not
+  "reconcile" them into one number.
+- **STALE COMMIT HASHES — a history rewrite orphaned pre-rewrite references.**
+  The real defect behind the above. `c3654f6` does not resolve; nor do the two
+  hashes logged beside it. All three were re-identified by exact
+  commit-message match (`e1e4cba`→`aa75817`, `c3654f6`→`faef450`,
+  `c026756`→`be7271a`, all 2026-02-12, contents unchanged). Fixed in
+  `manifest.yaml` and `wiki/reflections/session-log.md` (with an inline note
+  recording the remap rather than silently swapping).
+  **Scale, measured 2026-08-02:** of backticked commit-shaped references across
+  `wiki/`, `manifest.yaml`, `studies/`, and `corpus/`, **115 resolve and 21 do
+  not**; all 21 sit in `wiki/` (continuity, session-log, reflections,
+  working-notes). Three are now fixed; **18 remain** and each needs
+  message-match re-identification. Deliberately not batch-fixed here — the
+  remap must be verified per commit, not guessed. A resolve-check is a
+  candidate control in the monitoring plan.
 
 ## Repo state (2026-07-27)
 
@@ -515,6 +577,89 @@ merged here as PR #1).
 
 ## Pending tasks
 
+### E. AMENDMENT LODGEMENT — three tasks, then the validation phase unblocks  [x] 2026-08-03
+
+**This is the critical path.** The consolidated OSF amendment must lodge
+*before* the validation phase runs (hard stop, registrant's 2026-07-24 timing
+call). Three items stand between here and the OSF form; the checklist itself
+lives at the foot of
+`studies/open-science-compliance/prereg/amendment-1-draft.md`.
+
+- [x] **E1. Fold the third benchmark arm into §3.** 2026-08-02 — **Shawn:
+      add the Fable arm** (option (a), name all three identifiers). Done: §3's
+      provenance paragraph now pins `claude-sonnet-5`, `claude-opus-5`,
+      `claude-fable-5`. Two further edits followed from it, both pre-declaring
+      rather than reconstructing:
+      - §3's selection rule now states that the three arms are strictly
+        ordered by published price, so **the Fable arm cannot be selected for
+        the census under any spot-check outcome** — it is run to test whether a
+        more capable model clears the same reliability gates (evidence about
+        the instrument, not the model) and to supply §5 robustness data. A
+        pricing-change clause applies the rule to prices in force at selection.
+      - §5 now says the annex explicitly covers an arm excluded from selection
+        by construction.
+      **Billing route settled the same day:** Max-plan Fable allocation first
+      (if that route is feasible for subagent spawns), with a configured
+      Anthropic API billing account for direct calls or excess-of-plan usage.
+      No per-arm approval outstanding — the run is governed by the ordinary
+      standing API review gate, presented once before it runs.
+- [x] **E2. §1 word-for-word consistency check — done 2026-08-02.**
+      Checked against canonical `fair-instrument.md`, the Pass 6 prompt mirror
+      (byte-identical to canon, 5,123 bytes, re-diffed), prereg §7.1, the
+      frozen copy at `ee3fda3`, and the persisted pilot outputs. Record in
+      `amendment-1-draft.md` (final section): 7 deliberate differences
+      recorded; 3 flags raised and **adjudicated same day** — (1) quotation
+      placement FIXED (parenthetical moved outside the quotes, Shawn's
+      verdict); (2) en dash inside quotes ACCEPTED as typography; (3) the
+      "four of five persisted FAIR assessments" scope flag DISSOLVED: a fifth
+      persisted assessment exists (crema run-02, key `infrastructure` not
+      `reproducibility_infrastructure`, one level below the `outputs/*/`
+      glob — the two reasons erratum Entry 2's sweep and this check's first
+      pass both missed it). Verified: 12/15 + 12/15 matching Table 5, none
+      unscored, no aggregate, A1 present. §1's sentence stands as written for
+      all five pilots. Run-01 was archived not lost (`c41242b`). **Candidate
+      follow-ups, Shawn's call:** dated correction note on erratum Entry 2's
+      "the four papers carrying FAIR assessments" scoping; working-notes obs
+      candidate (Observation-16 shape again — a sweep scoped narrower than
+      its readers assume, this time by glob depth + key name).
+- [x] **E3. Build the paste artefact — done 2026-08-03.**
+      `prereg/osf-amendment-1.txt`, generated mechanically from the promoted
+      amendment text and unwrapped via `unwrap-paste-file.py`. Docstring
+      verification passed: word count unchanged by unwrap (1,263 → 1,263),
+      numbered lines 5 → 5 (the section headings), 0 bullets, 0 table rows,
+      no markdown residue; token comparison against the canonical section
+      identical (68 numeric, 4 quoted, 10 § refs).
+      **Context for E4 (2026-08-03 decisions):** the lodgement text is the
+      promoted academic-prose re-expression (registrant read both versions;
+      skill-test record archived at `archive/prereg/`); rule-4 check re-run
+      against it, PASS (13 frozen phrases verbatim, addendum in the draft's
+      record section). §5 gained a two-sentence cross-vendor pre-declaration:
+      **OpenAI arms (Sol/Terra/Luna) considered and deferred** to a possible
+      post-census extension via dated amendment plus the §8 reliability
+      protocol — not folded into this registration's validation phase
+      (confound: cross-vendor arms cannot hold the delivery apparatus
+      constant, so they compare model+harness bundles, not models).
+- [x] **E4. LODGED 2026-08-03 — route changed to API filing on Shawn's
+      decision.** Not by-hand paste: filed as an OSF versioned registration
+      update (SchemaResponse revision `6a7017da97adb06288afef80`) after an
+      Opus-agent sweep of the developer docs, a staged in-progress draft
+      verified byte-identical on round-trip (39,725 chars; original 30,907
+      untouched), and Shawn's placement decision (append at end — the
+      summary field is the landing content). Submit + approve in one
+      sitting. **DOI unchanged by design**; amendment version URL
+      <https://osf.io/dqnhg?revisionId=6a7017da97adb06288afef80>; tag
+      `osf-amendment-1-2026-08-03`. Reading done at promotion.
+      **TASK E COMPLETE — the validation phase is unblocked.** Now
+      unblocked in order: PR #2 + the eight-prompt version cascade +
+      project.version bump as one change; monitoring plan Phase 0 (after
+      Shawn answers §9); the three-arm benchmark run (still gated on the
+      standing API review presentation: model, batch vs real-time, 45
+      spawns, estimated cost). Flag from the docs sweep, low priority: the
+      original registration text's two escaped comparators ("post &gt; pre
+      on all measures", "pinned &lt; unpinned") may render as literal
+      entity strings on the public page; eyeball, and if wrong it is
+      erratum-log material for a future revision, not a ride-along edit.
+
 ### A. Git hygiene — untrack the committed virtualenv  [x] 2026-07-03
 
 > Done 2026-07-03 exactly as prescribed below: 2,114 index deletions, files kept
@@ -661,6 +806,49 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-07-27 (second session) / 2026-08-02 — Verdicts cleared, corpus list closed, monitoring planned
+
+Two sittings on amd-tower off the 2026-07-27 resume prompt; seven commits
+(`640ffbb`→`8a4e946`) plus PR #2 opened and deliberately held. **Sitting one:**
+all four held-over verdicts cleared — WN-h/WN-i accepted as working-notes
+Observations 16–17 (drafted against sources first, since only one-line summaries
+existed), user-obs A–C held again, Opus-5 arm confirmed and a Fable 5 arm
+authorised, provenance paragraph deferred to the lodgement read. Fable 5 agent
+definition *generated from* the Opus 5 file and diffed rather than transcribed —
+which caught a `sub-principle`→`sub principle` defect the hand-written attempt
+had introduced. Corpus items 5 (fetch-with-checksum, destinations, Materials
+Acquired table) and 6 (schema v2.7, PR #2) closed the corpus build list.
+**Sitting two:** walked a returning collaborator through two findings and
+corrected one of them; fixed the orphaned commit hashes; drafted the monitoring
+plan; named the Fable arm in amendment §3, closing task E1.
+
+**Findings.** The D5 gate's version check covers **7 of 25** registered entries
+(`check_canonical_entry` iterates `shared_content` only) — found by probing this
+session's own change with a deliberately wrong version. Backticked commit
+references: **115 resolve, 21 do not**, all 21 in `wiki/`; 3 remapped by exact
+message match, 18 outstanding.
+
+**Correction.** The `assessment_json` "genuine mismatch" escalated on 2026-07-27
+was a measurement error, not repo drift — `1.1` (payload `schema_version`) and
+`2.1` (document version) are different axes, both correct. Withdrawn 2026-08-02
+with evidence; a manifest note now prevents the next reader "reconciling" them.
+
+**Decisions (Shawn, 2026-08-02):** widen the gate so every registered entity is
+checked hard, reorganisation acceptable; add the Fable arm to the lodged
+amendment text; billing route settled (Max-plan first, API account for excess,
+ordinary API review gate before the run); PR #2 held until after lodgement.
+
+**NEXT:** task E — E2 (§1 consistency check) and E3 (paste artefact) are
+Claude's; E3 follows Shawn's read, not precedes it. Then PR #2 plus the prompt
+cascade as one change; then monitoring Phase 0.
+
+**Carry-forward:** user-obs candidates A–C (2026-07-27) **still held and
+un-adjudicated** — carried a second time. Of the 2026-08-02 batch, F accepted,
+D and E discarded (Shawn, 2026-08-02). Working-notes candidates WN-j/WN-k
+**accepted** as Observations 18 and 19. zbook must run
+`./scripts/install-git-hooks.sh` after pulling. Shawn: Zotero-proxy investigation; `ELSEVIER_API_KEY_TDM` still absent
+from `~/personal-assistant/.env`; Cosmos watch ~mid-August.
 
 ### 2026-07-24 (second session) — Phase 1 build queue executed; amendment drafted
 
