@@ -659,11 +659,20 @@ lives at the foot of
       remap pass early Phase 4; crema register-without-rewrite) and
       **Phase 0 COMPLETE** — 55 entities enumerated and classified, plan
       §10; per-entry re-check found no true drift, four
-      missing-version-carrier flags for Phase 1. **Phase 0 GATE pending
-      Shawn's review**, then Phase 1 (registry `check:` blocks). Remaining
-      after that: the three-arm benchmark run (still gated on the standing
-      API review presentation: model, batch vs real-time, 45 spawns,
-      estimated cost). Flag from the docs sweep, low priority: the
+      missing-version-carrier flags for Phase 1. Phase 0 gate passed and
+      **Phase 1 COMPLETE same day** (Shawn's go, 2026-08-03): central
+      `entity_checks:` map (56 declarations) + `reference_datasets:` E8
+      registration (five pilot FAIR assessments, crema's key declared
+      as-is) + two version carriers added (workflow.md, credibility JSON
+      schema). Two Phase 0 flags dissolved — the skills and the
+      credibility template already carried versions under labels the
+      Phase 0 regex missed; carriers declared instead of added. Gate
+      PASS, 32/32. **Next gate: Phase 2** (widen the checker to read
+      `entity_checks` — E3/E4/E5/E6, v-prefix normalisation,
+      undeclared-entity failure, one negative test per class). Remaining
+      after that: the three-arm benchmark run (still gated on the
+      standing API review presentation: model, batch vs real-time, 45
+      spawns, estimated cost). Flag from the docs sweep, low priority: the
       original registration text's two escaped comparators ("post &gt; pre
       on all measures", "pinned &lt; unpinned") may render as literal
       entity strings on the public page; eyeball, and if wrong it is

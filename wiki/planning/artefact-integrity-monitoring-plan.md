@@ -210,9 +210,23 @@ Each phase ends at a **GATE** — Shawn reviews before the next starts.
       (55 entities, per-entry version re-check run same day, no true drift;
       four missing-version-carrier flags for Phase 1). **GATE: presented for
       review 2026-08-03.**
-- [ ] **Phase 1 — registry reorganisation.** Add `check:` blocks for all
-      entries. Purely additive to `manifest.yaml`; gate not yet reading them.
-      **GATE.**
+- [x] 2026-08-03 **Phase 1 — registry reorganisation.** Done, gate-approved
+      same day. Implementation decision (the "settled at implementation"
+      the §5 sketch anticipated): a central `entity_checks:` map keyed by
+      dotted registry path, not inline per-entry blocks — one insertion
+      point, the commented sections above it untouched. 56 declarations
+      (E1:7, E2:6, E3:26, E4:3, E5:1, E6:12, E8:1) plus the
+      `reference_datasets:` E8 registration (five items, declared keys,
+      all five verified resolving to `binary_sub_principles` assessments).
+      Two version carriers added (`input/workflow.md` gains a Version
+      line; the credibility JSON schema gains a top-level `version`
+      field). **Two Phase 0 flags dissolved on closer reading** — the
+      skills carry `version:` in SKILL.md frontmatter matching the
+      manifest, and the credibility template carries `**Assessor
+      Version:** v1.0`; the Phase 0 regex looked only for `**Version:**`,
+      an instance of the very scope-narrowing this plan exists to catch.
+      Their actual carriers are now declared (`skill-frontmatter`,
+      `header_label`). Gate PASS, 32/32 tests. **GATE.**
 - [ ] **Phase 2 — widen the checker.** Implement E3/E4/E5/E6, the
       `v`-prefix normalisation, and the undeclared-entity failure. Extend the
       test suite (currently 32 tests) with a negative test per class — each new
