@@ -1,15 +1,15 @@
-# OSF amendment 1 — academic-prose re-expression (TEST ARTEFACT)
+# OSF amendment 1 — academic-prose re-expression (ARCHIVED SKILL-TEST RECORD)
 
-**Status: NOT THE LODGEMENT COPY.** Generated 2026-08-03 with the
+**Status: PROMOTED 2026-08-03, then archived.** Generated 2026-08-03 with the
 academic-prose skill as an initial test of that skill, from the E2-verified
-`amendment-1-draft.md` (file state as committed at `bbf9409`). Content is
-frozen and only expression differs: every number, identifier, date, commit
-hash, model identifier, quoted string, and E2-verified normative phrase is
-carried over verbatim, and a mechanical token comparison against the source
-accompanies the generating session. The registrant chooses which version
-lodges. If this version is promoted, the §1 word-for-word consistency check
-(maintenance rule 4) must re-run against it, and the E3 paste artefact must
-be generated from it rather than from the original.
+`amendment-1-draft.md` (file state as committed at `bbf9409`). On the
+registrant's decision the text below was promoted into the canonical
+`studies/open-science-compliance/prereg/amendment-1-draft.md`, which then
+gained the §5 cross-vendor pre-declaration this file does not carry. The
+canonical file is authoritative; this copy is retained unmodified as the
+skill-test record and is not maintained. The rule-4 re-run against the
+promoted wording (PASS, 13 frozen phrases verbatim, token-invariant) is
+recorded in the canonical file's consistency-check addendum.
 
 ---
 

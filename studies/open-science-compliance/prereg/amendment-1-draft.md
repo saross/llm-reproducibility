@@ -21,6 +21,18 @@ stated in advance rather than reconstructed), and §5 confirms the annex covers
 an arm excluded from selection by construction. The registrant's pre-lodgement
 read covers this wording.
 
+**Promotion 2026-08-03 (registrant's decision).** The amendment text below is
+the academic-prose re-expression, promoted after the registrant's read of
+both versions. Content was verified token-invariant against the pre-promotion
+text (all four token classes; generating session, 2026-08-03), the rule-4 §1
+check was re-run against the promoted wording the same day (addendum in the
+record below), and the skill-test file is archived at
+`archive/prereg/amendment-1-draft-academic-prose.md`. §5 gains a two-sentence
+cross-vendor pre-declaration (registrant's decision, 2026-08-03): a possible
+extension to another provider's models is named as exploratory, not part of
+this registration, and bound to the dated-amendment-plus-reliability-protocol
+path that §7.1's FAIR4RS clause established.
+
 ---
 
 ## Amendment text (draft for the OSF field)
@@ -29,121 +41,123 @@ read covers this wording.
 2026-07-20, public 2026-07-21. Frozen artefact set at repository commit
 `ee3fda3` (tag `osf-prereg-phase2-2026-07-20`).
 
-**Nature of this amendment.** This amendment (a) corrects clerical and
-restatement defects found in one frozen artefact file, and (b) pre-specifies procedural
-detail for the registered reliability checks (registration §8) that the
-registration left implicit, before any affected analysis runs. No hypothesis,
-sampling frame, instrument scale, outcome definition, or analysis is changed.
-No census or validation-phase data existed when the amendment scope was fixed
-(ratified 2026-07-24); the amendment is lodged before the validation phase
-executes.
+**Nature of this amendment.** This amendment corrects clerical and
+restatement defects found in one frozen artefact file, and pre-specifies
+procedural detail that the registration left implicit for the registered
+reliability checks (registration §8). Both actions precede any affected
+analysis. No hypothesis, sampling frame, instrument scale, outcome
+definition, or analysis is changed. No census or validation-phase data
+existed when the amendment scope was fixed (ratified 2026-07-24), and the
+amendment is lodged before the validation phase executes.
 
 ### 1. Erratum corrections to the Pass 6 instrument prompt
 
 The frozen copy of `extraction-system/prompts/06-infrastructure_pass6_prompt.md`
-contained three defects, discovered by implementation review on 2026-07-22 and
-corrected in the repository the same day (commit `abdc526`; erratum log entry
-1). First, a stale worked example read "14/16" and "87.5%", contradicting the
-registered 15-sub-principle scale; corrected to 14/15 and 93.3%. Second, a
-legacy "5-level access taxonomy" (Level 0–4) collided in vocabulary with the
-registered six-level data-availability taxonomy (§7.3); renamed to "five-tier
-access classification (Tier 0–4)" with an explicit demarcation note — the
-L1–L6 taxonomy remains assigned only at reproduction time from actual
-retrieval attempts, exactly as registered. Third, a dead file pointer to a
-document removed in a 2026-07-03 repository reorganisation was repointed to
-the canonical schema file. The registration's normative instrument statement
-(§7.1) is internally consistent and unaffected; all pilot scoring
-demonstrably used the /15 scale. These are erratum-class corrections aligning
-an operational file with the registration's own normative text.
+contained three defects. Implementation review discovered them on 2026-07-22,
+and the repository was corrected the same day (commit `abdc526`; erratum log
+entry 1). First, a stale worked example read "14/16" and "87.5%",
+contradicting the registered 15-sub-principle scale. The example now reads
+14/15 and 93.3%. Second, a legacy "5-level access taxonomy" (Level 0–4)
+collided in vocabulary with the registered six-level data-availability
+taxonomy (§7.3). It has been renamed to "five-tier access classification
+(Tier 0–4)" with an explicit demarcation note, and the L1–L6 taxonomy
+remains assigned only at reproduction time from actual retrieval attempts,
+exactly as registered. Third, a dead file pointer to a document removed in a
+2026-07-03 repository reorganisation was repointed to the canonical schema
+file. The registration's normative instrument statement (§7.1) is internally
+consistent and unaffected, and all pilot scoring demonstrably used the /15
+scale. These are erratum-class corrections that align an operational file
+with the registration's own normative text.
 
-A fourth correction to the same file was found on 2026-07-27 (erratum log entry
-2). The prompt's restatement of the instrument omitted four normative
+A fourth correction to the same file followed on 2026-07-27 (erratum log
+entry 2). The prompt's restatement of the instrument omitted four normative
 statements that §7.1 carries: that unscoreable sub-principles score 0 (the
 instrument scores evidenced practice); that data and code scores are never
-aggregated into a combined score; the A1 completeness rule in full (A1 requires
-that a majority of the research data be retrievable via standard protocol, with
-an exception for documented ethical or legal restriction — the prompt carried
-only the coverage-category trigger); and the statement that FAIR for Research
-Software scoring is outside this registration. The operational file now embeds
-a byte-exact copy of the canonical instrument, and the copy is verified
-mechanically on every repository commit rather than by assertion. Checked
-against the persisted pilot outputs, none of the four omissions changed a
-recorded score: every pilot uses the 15-sub-principle scale, none leaves a
-sub-principle unscored, none records an aggregate score, and the one pilot
-where the A1 majority rule was decisive records A1 as absent with the
-supporting count. This too is erratum-class: the registration's normative text
-governed throughout and is unchanged.
+aggregated into a combined score; the A1 completeness rule in full, namely
+that A1 requires that a majority of the research data be retrievable via
+standard protocol, with an exception for documented ethical or legal
+restriction, where the prompt carried only the coverage-category trigger;
+and the statement that FAIR for Research Software scoring is outside this
+registration. The operational file now embeds a byte-exact copy of the
+canonical instrument, and every repository commit now verifies that copy
+mechanically rather than by assertion. The four omissions were checked
+against the persisted pilot outputs, and none changed a recorded score.
+Every pilot uses the 15-sub-principle scale, none leaves a sub-principle
+unscored, and none records an aggregate score. In the one pilot where the A1
+majority rule was decisive, A1 is recorded as absent with the supporting
+count. This correction is likewise erratum-class, since the registration's
+normative text governed throughout and is unchanged.
 
 ### 2. Below-threshold remediation ladder (reliability check §8(a))
 
 The registration specifies that if mean per-sub-principle agreement falls
 below 0.90, the census is scored by majority vote of three independent runs.
-This amendment pre-specifies the permitted remediation path: one routing-fix
-attempt (correcting the content-delivery mechanism only; instrument text
-untouched) followed by a single re-run of the §8(a) stability check. If the
-re-run remains below threshold, the registered majority-vote consequence
-applies with no further iteration. Both pre-fix and post-fix reliability
-results are reported with study outcomes.
+This amendment pre-specifies the permitted remediation path. One routing-fix
+attempt is allowed, correcting the content-delivery mechanism only and
+leaving instrument text untouched, followed by a single re-run of the §8(a)
+stability check. If the re-run remains below threshold, the registered
+majority-vote consequence applies with no further iteration. Both pre-fix
+and post-fix reliability results are reported with study outcomes.
 
 ### 3. Validation-phase pre-specifications
 
 **Agreement statistic.** The 3-run stability check uses the unanimity
-proportion: the proportion of sub-principle items on which all three runs
-agree. This is the strictest of the candidate agreement definitions;
+proportion, the proportion of sub-principle items on which all three runs
+agree. This is the strictest of the candidate agreement definitions. Since
 candidate statistics cross the 0.90 gate at item-flip rates ranging from
-roughly 10% to 30%, so the choice cannot be left implicit.
+roughly 10% to 30%, the choice cannot be left implicit.
 
-**Pilot-paper set.** The stability check scores all five pilot papers (the
-registration requires at least three). This raises the item count from 90 to
-150 and roughly halves the false-pass rate at a true agreement of 0.85 (from
-about 12% to about 5.5%). Recorded for completeness; it strengthens rather
-than alters the registered check.
+**Pilot-paper set.** The stability check scores all five pilot papers, where
+the registration requires at least three. This raises the item count from 90
+to 150 and roughly halves the false-pass rate at a true agreement of 0.85,
+from about 12% to about 5.5%. It is recorded for completeness, and it
+strengthens rather than alters the registered check.
 
-**Model-selection rule (gates plus cost).** The reliability spot-check cannot
-statistically rank models: the confidence interval on an agreement difference
-at the achievable n is approximately ±0.09, and no registration-compliant
-sample size exists before the census. Accordingly, any model that passes both
-(a) the registered 0.90 stability gate and (b) a concordance floor of at
-least 0.90 (same statistic) against the pilot reference scores is eligible;
-among eligible models, the cheapest scores the census. Agreement differences
-inside the confidence interval are pre-declared not to be grounds for
-selection.
+**Model-selection rule (gates plus cost).** The reliability spot-check
+cannot statistically rank models. The confidence interval on an agreement
+difference at the achievable n is approximately ±0.09, and no
+registration-compliant sample size exists before the census. Accordingly,
+any model that passes both (a) the registered 0.90 stability gate and (b) a
+concordance floor of at least 0.90 (same statistic) against the pilot
+reference scores is eligible, and among eligible models the cheapest scores
+the census. Agreement differences inside the confidence interval are
+pre-declared not to be grounds for selection.
 
 Three model arms are benchmarked: `claude-sonnet-5`, `claude-opus-5`, and
 `claude-fable-5`. Cost is evaluated at selection time from the provider's
 published per-token prices. On pricing published at the time of this
-amendment those three arms are strictly ordered, so the most capable and most
-expensive arm cannot be selected for the census under any outcome of the
-spot-check. It is run regardless, for two reasons stated in advance rather
-than reconstructed afterwards: to establish whether a more capable model
-clears the same reliability gates, which is evidence about the instrument
-rather than about the model; and to supply the cross-model robustness data
-described in §5. Should published pricing change the ordering before
-selection, the rule applies to the prices in force at selection and the
-change is recorded with the selection.
+amendment those three arms are strictly ordered, so the most capable and
+most expensive arm cannot be selected for the census under any outcome of
+the spot-check. It is run regardless, for two reasons stated in advance.
+First, it establishes whether a more capable model clears the same
+reliability gates, which is evidence about the instrument rather than about
+the model. Second, it supplies the cross-model robustness data described in
+§5. Should published pricing change the ordering before selection, the rule
+applies to the prices in force at selection and the change is recorded with
+the selection.
 
 **Within-phase ordering.** Spot-check, then model selection, then the
 registered regression gate run on the selected configuration with both lanes
 pinned, then census.
 
 **Run independence and provenance.** Each validation run is a fresh agent
-spawn with no shared context and no persistent memory. Sampling seeds are not
-controllable in the execution harness; each run therefore records session
-identifier, timestamp, and the full receipt triple (instrument versions,
-agent-definition version, model identifier), and reports state that
-run-to-run variation reflects default-temperature sampling.
+spawn with no shared context and no persistent memory. Sampling seeds are
+not controllable in the execution harness. Each run therefore records its
+session identifier, its timestamp, and the full receipt triple (instrument
+versions, agent-definition version, model identifier), and reports state
+that run-to-run variation reflects default-temperature sampling.
 
-One limit on that provenance is stated explicitly rather than left to be
-inferred. The model identifiers this study pins (`claude-sonnet-5`,
-`claude-opus-5`, `claude-fable-5`) are the exact and complete identifier
-strings the provider publishes for those models — the current generation
-carries no dated-snapshot variant to pin instead, and appending a date
-produces an identifier the interface rejects. A pinned identifier therefore names a model as the provider
-serves it at the time of the call, not an immutable set of weights the study
-controls. The receipt triple fixes what was requested and the run record fixes
-when, so any provider-side change is bounded and visible in the archived
-artefacts; it is not prevented. Reports will describe model identity as
-identifier plus run date on that basis, and a provider-announced revision to a
+One limit on that provenance is stated explicitly. The model identifiers
+this study pins (`claude-sonnet-5`, `claude-opus-5`, `claude-fable-5`) are
+the exact and complete identifier strings the provider publishes for those
+models. The current generation carries no dated-snapshot variant to pin
+instead, and appending a date produces an identifier the interface rejects.
+A pinned identifier therefore names a model as the provider serves it at the
+time of the call, not an immutable set of weights the study controls. The
+receipt triple fixes what was requested and the run record fixes when, so
+any provider-side change is bounded and visible in the archived artefacts,
+although it is not prevented. Reports will describe model identity as
+identifier plus run date on that basis. A provider-announced revision to a
 pinned model is treated as a §8 regression-gate trigger in the same way as a
 deliberate model change.
 
@@ -152,18 +166,22 @@ deliberate model change.
 Validation-phase scoring runs execute with read access restricted to the
 paper source and the pushed or pulled instrument files. The repository holds
 the pilot papers' canonical scores, so an unisolated scorer could reproduce
-recorded answers and return perfect but uninformative agreement. Isolation is
-enforced by tool allowlist and sandbox scope and verified from the harness
-transcript; per-run file-access lists are archived with run artefacts. The
-same hygiene applies at census scoring to any paper with pre-existing
-repository artefacts.
+recorded answers and return perfect but uninformative agreement. Isolation
+is enforced by tool allowlist and sandbox scope, and verified from the
+harness transcript. Per-run file-access lists are archived with run
+artefacts. The same hygiene applies at census scoring to any paper with
+pre-existing repository artefacts.
 
 ### 5. Robustness annex
 
 Scored runs from model arms that pass the gates but are not selected for the
-census are archived and citable as cross-model robustness data rather than
-discarded. This includes any arm that the cost rule in §3 excludes from
-selection by construction.
+census are archived and remain citable as cross-model robustness data. This
+includes any arm that the cost rule in §3 excludes from selection by
+construction. A cross-vendor extension, benchmarking models from
+another provider on the same instrument, is a planned exploratory
+direction and is not part of this registration. If implemented, it will
+be lodged as a dated OSF amendment and will pass the same reliability
+protocol (registration §8) before any cross-vendor scoring begins.
 
 ---
 
@@ -176,10 +194,15 @@ selection by construction.
       `fair-instrument.md` and the Pass 6 prompt mirror (maintenance rule 4);
       record deliberate differences. (2026-08-02: done — record below. Three
       flags adjudicated same day: 1 fixed, 2 accepted as typography, 3
-      dissolved by investigation. Re-run if §1 wording changes.)
+      dissolved by investigation. 2026-08-03: re-run against the promoted
+      re-expression, PASS — addendum at the foot of the record below.)
 - [ ] Registrant reads the final text; lodgement is by hand from the project
       view (five-file cap does not apply there), paste files unwrapped to
       flowing lines via `unwrap-paste-file.py`.
+      (2026-08-03: registrant read both versions and promoted the
+      re-expression; the §5 pre-declaration was displayed at promotion. Paste
+      artefact built and verified — `osf-amendment-1.txt`. Hand-lodgement
+      remains.)
 - [ ] Tag the repository state at lodgement and record the amendment DOI/URL
       here and in `erratum-log.md`.
 
@@ -263,3 +286,21 @@ present=false with the "Only 3 of 13 datasets (23.1%)" count.
    sentence is therefore fully supported for all five pilots as written.
    Related run-01 artefacts were archived, not lost (`c41242b`, 2026-01-13,
    100% rename into `archive/extraction-runs/`).
+
+**Addendum — re-run against the promoted re-expression (2026-08-03).** The
+academic-prose re-expression was promoted to lodgement text on the
+registrant's decision. The rule-4 check re-ran against the promoted wording:
+a token comparison across all four classes (backticked, quoted, numeric,
+section references) is invariant against the pre-promotion text, and 13
+frozen phrases (the four §7.1 normative restatements, the quoted defect and
+correction strings, the DOI, tag, commit, and model identifiers) were each
+verified verbatim in the promoted §1 and §3. The seven deliberate
+differences above are unchanged in kind. The re-expression introduces
+expression-only deltas: sentences split toward the register target, em
+dashes removed, the "(a)/(b)" enumerators dropped from the
+nature-of-amendment paragraph, and rhetorical antitheses trimmed where they
+did not carry the claim. New content in this version is confined to the
+registrant-commissioned §5 cross-vendor pre-declaration (two sentences,
+2026-08-03), which restates the registered FAIR4RS extension pattern for a
+possible other-provider benchmark and binds it to a dated amendment plus the
+§8 reliability protocol.
