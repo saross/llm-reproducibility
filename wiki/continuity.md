@@ -577,7 +577,7 @@ merged here as PR #1).
 
 ## Pending tasks
 
-### E. AMENDMENT LODGEMENT — three tasks, then the validation phase unblocks  [ ]
+### E. AMENDMENT LODGEMENT — three tasks, then the validation phase unblocks  [x] 2026-08-03
 
 **This is the critical path.** The consolidated OSF amendment must lodge
 *before* the validation phase runs (hard stop, registrant's 2026-07-24 timing
@@ -639,11 +639,26 @@ lives at the foot of
       protocol — not folded into this registration's validation phase
       (confound: cross-vendor arms cannot hold the delivery apparatus
       constant, so they compare model+harness bundles, not models).
-- [ ] **E4. Then Shawn:** lodge by hand from the OSF project view (the
-      five-file cap does not apply there) using `prereg/osf-amendment-1.txt`,
-      tag the repository state at lodgement, and record the amendment DOI/URL
-      in the draft and in `erratum-log.md`. (Reading done 2026-08-03 — both
-      versions read at promotion; §5 addition displayed then.)
+- [x] **E4. LODGED 2026-08-03 — route changed to API filing on Shawn's
+      decision.** Not by-hand paste: filed as an OSF versioned registration
+      update (SchemaResponse revision `6a7017da97adb06288afef80`) after an
+      Opus-agent sweep of the developer docs, a staged in-progress draft
+      verified byte-identical on round-trip (39,725 chars; original 30,907
+      untouched), and Shawn's placement decision (append at end — the
+      summary field is the landing content). Submit + approve in one
+      sitting. **DOI unchanged by design**; amendment version URL
+      <https://osf.io/dqnhg?revisionId=6a7017da97adb06288afef80>; tag
+      `osf-amendment-1-2026-08-03`. Reading done at promotion.
+      **TASK E COMPLETE — the validation phase is unblocked.** Now
+      unblocked in order: PR #2 + the eight-prompt version cascade +
+      project.version bump as one change; monitoring plan Phase 0 (after
+      Shawn answers §9); the three-arm benchmark run (still gated on the
+      standing API review presentation: model, batch vs real-time, 45
+      spawns, estimated cost). Flag from the docs sweep, low priority: the
+      original registration text's two escaped comparators ("post &gt; pre
+      on all measures", "pinned &lt; unpinned") may render as literal
+      entity strings on the public page; eyeball, and if wrong it is
+      erratum-log material for a future revision, not a ride-along edit.
 
 ### A. Git hygiene — untrack the committed virtualenv  [x] 2026-07-03
 
