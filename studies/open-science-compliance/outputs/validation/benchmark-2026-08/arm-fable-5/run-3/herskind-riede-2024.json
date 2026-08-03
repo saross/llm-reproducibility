@@ -1,0 +1,163 @@
+{
+  "status": "OK",
+  "paper_slug": "herskind-riede-2024",
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-fable-5 v1.0",
+    "model_id": "claude-fable-5",
+    "pulled_files_read": [
+      "/home/shawn/corpora/llm-reproducibility/herskind-riede-2024/vor.pdf",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/fair-principles-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/pid-systems-guide.md"
+    ]
+  },
+  "stated_availability": "Data availability statement (p. 8): \"Supplementary Information to this article can be found online at https://zenodo.org/records/10801706.\" Methods \u00a72.2 (p. 3): \"Dedicated R code and complete data tables are reported in Supplementary Information S2 and S3... All code and data are available here: https://zenodo.org/records/10623550.\" Appendix A (p. 8): \"Supplementary data to this article can be found online at https://doi.org/10.1016/j.jas.2024.105969.\" (Descriptive only; not mapped to L1-L6.)",
+  "data_fair": {
+    "available": true,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "\"All code and data are available here: https://zenodo.org/records/10623550\" (Methods \u00a72.2, p. 3); supplement at https://zenodo.org/records/10801706 (Data availability statement, p. 8). Zenodo deposit: record accession in a DOI-minting archival repository (every Zenodo record carries a DataCite DOI). Caveat: the paper cites record URLs rather than the DOI strings."
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "Deposit in Zenodo, which enforces structured DataCite metadata (creators, title, description, resource type) on every published record; platform-entailed by the evidenced deposit at zenodo.org/records/10623550 and /10801706."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "DataCite metadata schema mandates the Identifier (DOI) field; Zenodo record metadata includes its own identifier. Platform-entailed by the evidenced Zenodo deposits."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Zenodo is a searchable registry named in the instrument's F4 examples and is indexed via DataCite; deposits at zenodo.org/records/10623550 and /10801706."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Full research dataset (digitised 483-object corpus with motif presence/absence and metadata) retrievable via HTTPS from Zenodo; data_completeness coverage = complete, so the completeness rule is not triggered. \"All code and data are available here: https://zenodo.org/records/10623550\" (p. 3)."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "HTTPS retrieval from open Zenodo records; no registration, subscription, or proprietary software required. Open, free, universally implementable protocol."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "HTTPS/Zenodo supports authentication and authorisation where needed (restricted/embargoed access options); no restrictions needed for this non-sensitive archaeological catalogue data, and none imposed."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo (CERN-operated) commits to metadata persistence with DataCite tombstone records even if files become unavailable; platform-entailed by the evidenced deposit."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "\"Complete data tables\" (S3) and the 483-object corpus (S1) are co-deposited with dedicated R code and consumed by an R/Quanteda pipeline (\"All analyses were performed in the open-source R programming environment (v.4.2.2)\", p. 3), evidencing machine-readable structured tabular data (presence/absence coding matrix), not PDF-only tables."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "Motif types follow \"P\u0142onka's (2003, pp. 315-325) own motif classification scheme\" (p. 2) \u2014 a printed-monograph typology without PIDs or machine-readable form; no FAIR vocabulary (e.g., PeriodO, Getty AAT) evidenced."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No evidence of qualified, typed PID references in the dataset: upstream source P\u0142onka (2003) is a monograph without PID; the paper links the Zenodo records by bare URL without typed relationships."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Rich description of the data: \"numerous categorical variables corresponding to the characteristics of each ornamented object and associated metadata such as location, quality of contextual information, and original source\" (\u00a72.1, p. 2), plus artefact classes, chronology, and spatial distribution (\u00a75, p. 7)."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "No licence stated for the data deposits anywhere in the paper; the CC BY statement (p. 1) covers the article only. Licence unclear = not met; a licence may exist in the Zenodo record metadata but is not evidenced in the paper."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Detailed provenance: \"From this analogue compilation, the South Scandinavian data were manually extracted and digitised\" from P\u0142onka (2003); motif scheme \"transcribed as binary data in the form of presence/absence coding\" then transformed into sentence-like strings (\u00a72.1, pp. 2-3); CRediT assigns Data curation to Herskind (p. 8)."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No formal domain-relevant data/metadata standard (ARIADNEplus, CIDOC-CRM, Dublin Core) evidenced; data use P\u0142onka's published motif typology but are encoded in a project-specific presence/absence format."
+      }
+    },
+    "total": 11
+  },
+  "code_fair": {
+    "available": true,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "\"Dedicated R code... reported in Supplementary Information S2... All code and data are available here: https://zenodo.org/records/10623550\" (Methods \u00a72.2, p. 3). Zenodo deposit: record accession in a DOI-minting archival repository. Caveat: record URL cited rather than the DOI string."
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "Code deposited on Zenodo, which enforces structured DataCite metadata (creators, title, description, resource type) on every published record; platform-entailed by the evidenced deposit."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "DataCite metadata schema mandates the Identifier (DOI) field; Zenodo record metadata includes its own identifier. Platform-entailed by the evidenced deposit at zenodo.org/records/10623550."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Zenodo is a searchable registry named in the instrument's F4 examples and is indexed via DataCite; code deposit at zenodo.org/records/10623550."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Complete analysis code (\"Dedicated R code\", S2) retrievable via HTTPS from Zenodo: \"All code and data are available here: https://zenodo.org/records/10623550\" (p. 3)."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "HTTPS retrieval from an open Zenodo record; no registration, subscription, or proprietary software required."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "HTTPS/Zenodo supports authentication and authorisation where needed; no restrictions needed for this open analysis code, and none imposed."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo commits to metadata persistence with DataCite tombstone records even if files become unavailable; platform-entailed by the evidenced deposit."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "Code written in R, a formal, accessible, shared open-source language: \"All analyses were performed in the open-source R programming environment (v.4.2.2; R Core Team, 2021), using the Quanteda package (Benoit et al., 2018)\" (p. 3)."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No vocabulary or ontology standards for software evidenced (no CodeMeta vocabulary use or equivalent)."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No evidence that the code artefact carries qualified PID references to dependencies; the paper's reference list cites Quanteda's JOSS DOI (10.21105/joss.00774), but typed PID references within the code deposit are not evidenced."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Code function richly described in Methods \u00a72.2 (pp. 3): skipgram generation with k=13, expected-frequency and PMI formulas given explicitly, 2-/3-/4-gram levels, R v4.2.2 and Quanteda named \u2014 a detailed methods description of the deposited code."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "No software licence stated anywhere in the paper; the CC BY statement (p. 1) covers the article only. Licence unclear = not met."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Provenance documented: software environment and versions (\"R programming environment (v.4.2.2)\", Quanteda, p. 3), analysis parameters (k=13), and authorship via CRediT (Formal analysis, Methodology, Software-adjacent roles to Herskind, p. 8)."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No community software standards evidenced: no CITATION.cff, CodeMeta, containerisation, dependency lockfile, or CRAN-style packaging mentioned; plain R scripts deposited."
+      }
+    },
+    "total": 11
+  },
+  "data_completeness": {
+    "datasets_enumerated": 2,
+    "datasets_accessible_tier_0_2": 2,
+    "coverage_percentage": 100,
+    "coverage_category": "complete",
+    "assessment_scope": "straightforward",
+    "barriers": [
+      "Upstream source P\u0142onka (2003) is a print monograph (Tier 2: library/purchase access with manual steps), but its analysed content \u2014 all 483 South Scandinavian objects and the motif classification \u2014 was fully digitised and openly deposited (S1/S3, Zenodo records 10623550 and 10801706), so record-weighted coverage of the data needed for reproduction is 100%"
+    ]
+  },
+  "escalate_reason": null
+}

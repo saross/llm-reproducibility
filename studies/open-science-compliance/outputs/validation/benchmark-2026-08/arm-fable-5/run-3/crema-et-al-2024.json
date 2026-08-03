@@ -1,0 +1,168 @@
+{
+  "status": "OK",
+  "paper_slug": "crema-et-al-2024",
+  "escalate_reason": null,
+  "stated_availability": "Data/code statement (p. 7, opening of \u00a75 Results): \"We used the IntCal20 curve for all models (Reimer et al., 2020) using the calibration process defined in equation [3]. All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942.\" Article licence (p. 1 footer): \"0305-4403/\u00a9 2024 The Authors. Published by Elsevier Ltd. This is an open access article under the CC BY license (http://creativecommons.org/licenses/by/4.0/).\" Appendix A (p. 9): \"Supplementary data to this article can be found online at https://doi.org/10.1016/j.jas.2024.105962.\" Descriptive only; no L1-L6 level assigned (L-levels are assigned at reproduction time per preregistration \u00a77.3).",
+  "data_fair": {
+    "available": true,
+    "total": 12,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "Data carry a DOI via the archived deposit: 'All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942' (p. 7). Zenodo DOI 10.5281/zenodo.10782942 is a globally unique persistent identifier covering the data."
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "The deposit is on Zenodo, which mints DataCite metadata (creators, title, publisher, publication year, resource type, description) for every record; the paper points to the archived record by DOI (p. 7). Deposit contents were not directly inspected (supplementary/repository files deliberately withheld for this assessment); scored on the evidenced use of a DataCite-backed archive, consistent with the pushed guide's GitHub+Zenodo pattern."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "Zenodo/DataCite records carry the DOI itself as the identifier element of the metadata record; the paper cites that DOI (10.5281/zenodo.10782942, p. 7) as the permanent archive for the data, so metadata and identifier are bound."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Zenodo is named explicitly in the instrument as a searchable registry ('Resource indexed in searchable registry (Zenodo, CRAN, DataCite)'). The data are 'permanently archived on https://doi.org/10.5281/zenodo.10782942' (p. 7), hence indexed in Zenodo/DataCite/OpenAIRE."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Retrievable via HTTPS/DOI resolution from Zenodo and GitHub (p. 7). Assessed against the full research dataset: data-completeness coverage is 'substantial' (16/17 datasets at Tier 0-2, 94.1%), so the A1 completeness rule (A1=0 when minimal or partial) is not triggered. All three analysis-ready case-study datasets and the simulated datasets are stated to be in the deposit."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "Access is by public HTTPS via a DOI resolver and a public GitHub repository (https://github.com/ercrema/diffusionCurve, p. 7) \u2014 open, free, universally implementable; no login, subscription, or proprietary client required."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "Zenodo/HTTPS supports authentication and authorisation where needed; none is needed here \u2014 the material is archaeological radiocarbon data with no human-subject or CARE-relevant sensitivity, and no restriction, embargo, or 'on request' gating is stated anywhere in the paper."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "The data are 'permanently archived' on Zenodo (p. 7), a CERN-operated repository with committed metadata persistence (DataCite metadata and tombstone records survive file withdrawal) \u2014 unlike the parallel GitHub URL, which alone would not satisfy A2."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "The whole analysis is script-driven in R/NIMBLE against the deposited data ('All data and R scripts are available...', p. 7; models 'implemented using the NIMBLE ... probabilistic programming language in R', \u00a74.2), which entails machine-parseable tabular data rather than PDF/Word/scanned formats. Inferred from the scripted workflow; deposit file formats were not directly inspected."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No controlled vocabulary or ontology is used or cited anywhere (no PeriodO, Getty AAT, CIDOC-CRM, ARIADNEplus, Dublin Core). Chronological and material categories are stated in free text (e.g. 'Final Jomon and Yayoi periods', 'cremation' vs 'inhumation', 'wheat', 'barley', 'hazelnut', \u00a7\u00a74.1.2-4.1.3) with no vocabulary PIDs. Unscoreable/absent = 0."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "Upstream sources are cited bibliographically in the text ('Japanese dates were collated from the radiocarbon database of Japan (Kudo et al., 2023) and the rice radiocarbon database used in (Crema et al., 2022)', \u00a74.1.2), but there is no evidence of typed, PID-based relationships ('isDerivedFrom [DOI]') in the data or its metadata. Scored 0 per the unscoreable-scores-0 rule."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Datasets are richly described with a plurality of attributes in \u00a74.1: 'We examined a total of 1479 14C dates on seed remains from Japan (n = 551, from 215 sites ...) and Britain (n = 928, from 314 sites)'; taxon breakdowns (rice n = 203; wild nuts n = 348; wheat n = 261; barley n = 130; hazelnut n = 537; cremation n = 1417; inhumation n = 1119); chronological filters, spatial extent, and exclusions ('excluded the island of Hokkaido and the Ryukyuan islands')."
+      },
+      "R1_1": {
+        "present": 1,
+        "evidence": "The archived deposit is on Zenodo, where an open-access record requires a licence declaration in its metadata, and the article itself is released under CC BY 4.0 ('This is an open access article under the CC BY license (http://creativecommons.org/licenses/by/4.0/)', p. 1; 'the author has applied a Creative Commons Attribution (CC BY) licence to any Author Accepted Manuscript version arising from this submission', Acknowledgements). Deposit licence file not directly inspected."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Detailed provenance is documented: named upstream sources per dataset (\u00a7\u00a74.1.2-4.1.3, e.g. burial dates 'collated from different published sources (Bevan et al., 2017; Bloxam, 2020; Bloxam and Parker Pearson, 2022; Healy, 2012; Mallick and Reich, 2023; Olalde et al., 2018; Wilkin, 2013; Willis et al., 2016)'); transformation/filtering rules ('cumulative calibrated probability mass equal to or larger than 0.99 for the interval 5500-2000 cal BP'); calibration curve ('We used the IntCal20 curve for all models (Reimer et al., 2020)'); and a CRediT statement assigning Data curation to all four authors."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No domain data standard or domain repository is claimed or used for the data: no ARIADNEplus, tDAR, Open Context, Dublin Core, or documented radiocarbon-data schema. IntCal20 is a calibration standard applied in analysis, not a data-documentation community standard. Zenodo's DataCite metadata is already credited under F2/F3/F4/A2/R1.1 and is not counted again here."
+      }
+    }
+  },
+  "code_fair": {
+    "available": true,
+    "total": 12,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "Analysis code carries a persistent identifier through the same archived deposit: 'All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942' (p. 7). The GitHub URL alone would fail F1; the Zenodo DOI satisfies it."
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "Zenodo record for the code deposit carries DataCite metadata (creators, title, publisher, year, resource type, description) generated on deposit; cited by DOI at p. 7. No CITATION.cff or CodeMeta.json is evidenced in the paper, but repository-level structured metadata is present by virtue of the Zenodo archive. Deposit not directly inspected."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "The archived software record's DataCite metadata includes its own DOI (10.5281/zenodo.10782942), which the paper cites as the permanent archive of the R scripts (p. 7)."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Code is archived on Zenodo, a searchable registry named in the instrument, and thereby indexed in DataCite/OpenAIRE ('permanently archived on https://doi.org/10.5281/zenodo.10782942', p. 7)."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "The full analytical code is retrievable by standard protocol \u2014 HTTPS via DOI resolution (Zenodo) and via the public GitHub repository (p. 7). The scripts implement both models described in \u00a74.2, so the retrievable code covers the paper's analyses rather than a fragment."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "Public HTTPS access with no authentication, subscription, or proprietary tooling; the runtime stack is itself open source \u2014 'implemented using the NIMBLE (de Valpine et al., 2017, 2020) probabilistic programming language in R (R Core Team, 2020) and the nimbleCarbon R package (Crema, 2022b)' (\u00a74.2)."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "Zenodo/GitHub over HTTPS support authentication and authorisation where required; no restriction is imposed or needed for this code, and nothing is gated behind request-based or proprietary access."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Code is 'permanently archived' on Zenodo (p. 7), whose DataCite metadata persists independently of file availability \u2014 materially stronger than the GitHub repository alone, which could be deleted or made private."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "Code is plain R source using open, widely implemented representations: 'Both the hierarchical model described in equations [5-6] and the random walk ICAR model were implemented using the NIMBLE ... probabilistic programming language in R' (\u00a74.2), with the nimbleCarbon package. No compiled binaries or proprietary formats."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No software-metadata vocabulary is evidenced (no CodeMeta.json, CITATION.cff, or SPDX identifier stated in the paper). Per the instrument, unscoreable = 0."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "Dependencies are cited bibliographically in the paper \u2014 including NIMBLE with a software DOI ('de Valpine, P., et al., 2020. NIMBLE: MCMC, Particle Filtering, and Programmable Hierarchical Modeling. https://doi.org/10.5281/zenodo.1211190', References p. 10) and 'nimbleCarbon ... with NIMBLE, 0.2.0' \u2014 but there is no evidence of typed, PID-qualified references inside the code or its deposit metadata (e.g. CodeMeta dependency declarations or Zenodo relatedIdentifiers). Scored 0."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "The implementation is richly described: model equations [5]-[9], explicit priors 'r ~ Exponential(100)', 'mu ~ Beta(2,2)', 'phi ~ Gamma(5,0.1)' (equations [10]-[12]), MCMC settings ('four chains, each with 1 million iterations (half discarded as burn-in) and with thinning set to 50'; ICAR: 'four chains, each with 100,000 iterations (20,000 of which were discarded for burn-in), with parameters collected every four steps'), and convergence diagnostics (Gelman-Rubin, agreement indices). The Acknowledgements record that the authors thank 'Ben Marwick for reviewing the computational code and providing suggestions to improve its reproducibility'."
+      },
+      "R1_1": {
+        "present": 1,
+        "evidence": "Licence terms accompany the archived release: the Zenodo deposit (p. 7) requires a declared licence for open records, and the publication itself is CC BY 4.0 with a CC BY licence applied to the Author Accepted Manuscript (p. 1 footer; Acknowledgements). A repository LICENCE file was not directly inspected."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Computational provenance is documented: named software with versioned/PID-bearing citations (R Core Team 2020; NIMBLE with Zenodo DOI 10.5281/zenodo.1211190; 'nimbleCarbon: Models and Utility Functions for Bayesian Analyses of Radiocarbon Dates with NIMBLE, 0.2.0'), calibration curve (IntCal20), full parameterisation and workflow order in \u00a74.2, and CRediT roles assigning 'Software' and 'Formal analysis' to E.R. Crema. Random seeds are not reported."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No software community standard is evidenced for the analysis repository: no CITATION.cff, CodeMeta, container (Dockerfile), renv lockfile, unit tests, JOSS/CRAN submission, or Software Heritage identifier is mentioned. External code review for reproducibility (Acknowledgements) is a positive quality signal but not conformance to a documented community standard."
+      }
+    }
+  },
+  "data_completeness": {
+    "datasets_enumerated": 17,
+    "datasets_accessible_tier_0_2": 16,
+    "coverage_percentage": 94.1,
+    "coverage_category": "substantial",
+    "assessment_scope": "straightforward",
+    "barriers": [
+      "Closed monograph chapter: Healy 2012 ('Chronology, corpuses, ceramics, copper, and lithics', in 'Is There a British Chalcolithic?', Oxbow Books, pp. 144-163) is an upstream source for the burial dataset with no open route to its date list (Tier 3).",
+      "Paywall: upstream burial-date sources Bloxam and Parker Pearson 2022 (Proc. Prehist. Soc.), Willis et al. 2016 (Antiquity), and Olalde et al. 2018 (Nature) require subscription or manual supplement retrieval (Tier 2).",
+      "Manual PDF/thesis extraction: upstream doctoral theses Bloxam 2020 (UCL) and Wilkin 2013 (University of Birmingham) require locating institutional-repository PDFs and extracting date tables by hand (Tier 2).",
+      "Mitigating note (not a barrier to reproduction): the paper states all analysis-ready data are deposited ('All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942', p. 7), so record-weighted coverage of the data actually analysed is effectively complete; the Tier 2-3 items are provenance sources for the compiled British burial dataset only.",
+      "Verification limit: repository/supplementary files were deliberately withheld from this assessment, so tier assignments rest on the paper's own statements and reference list rather than on retrieval attempts."
+    ]
+  },
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-fable-5 v1.0",
+    "model_id": "claude-fable-5",
+    "pulled_files_read": [
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/fair-principles-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/pid-systems-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/credit-taxonomy.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/checklists/expected-information.md"
+    ]
+  }
+}

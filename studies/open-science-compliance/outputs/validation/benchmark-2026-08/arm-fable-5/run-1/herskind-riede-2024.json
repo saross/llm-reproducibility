@@ -1,0 +1,162 @@
+{
+  "status": "OK",
+  "paper_slug": "herskind-riede-2024",
+  "escalate_reason": null,
+  "stated_availability": "Methods \u00a72.2 (p. 3): \"Dedicated R code and complete data tables are reported in Supplementary Information S2 and S3. All analyses were performed in the open-source R programming environment (v.4.2.2; R Core Team, 2021), using the Quanteda package (Benoit et al., 2018). All code and data are available here: https://zenodo.org/records/10623550.\" Data availability statement (p. 8): \"Supplementary Information to this article can be found online at https://zenodo.org/records/10801706.\" Appendix A (p. 8): \"Supplementary data to this article can be found online at https://doi.org/10.1016/j.jas.2024.105969.\" Descriptive record only; no L1-L6 level assigned (L-levels are assigned at reproduction time).",
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-fable-5 v1.0",
+    "model_id": "claude-fable-5",
+    "pulled_files_read": [
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/pid-systems-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/fair-principles-guide.md"
+    ]
+  },
+  "data_fair": {
+    "available": true,
+    "total": 12,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "\"All code and data are available here: https://zenodo.org/records/10623550\" (\u00a72.2, p. 3); Data availability statement: \"https://zenodo.org/records/10801706\" (p. 8). Zenodo deposit entails a minted DataCite DOI; record IDs are globally unique accessions in a persistent repository. Paper cites the record URL rather than the DOI form."
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "Zenodo publication mandates structured DataCite metadata (creators, title, description, resource type) \u2014 platform entailment of the evidenced deposit; deposit itself not retrievable in this desk-based run."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "DataCite metadata schema mandates the identifier field within the metadata record \u2014 platform entailment of Zenodo deposit."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Zenodo is explicitly named in the instrument's F4 registry examples; records are indexed in Zenodo search and the DataCite index."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Data retrievable via HTTPS from Zenodo (records 10623550, 10801706). Completeness rule satisfied: coverage category is complete \u2014 \"complete data tables\" (S2/S3) and the full corpus \"With a total of 483 objects (Supplementary Information S1)\" (\u00a72.1) are deposited."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "Public HTTPS download from Zenodo; open, free, universally implementable protocol; no subscription or proprietary software required. Analyses use the \"open-source R programming environment\" (\u00a72.2)."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "HTTPS/Zenodo supports authentication and authorisation where needed (restricted-record capability); none needed here \u2014 non-sensitive data digitised from a published catalogue, shared fully open with no unjustified closure."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo/DataCite commit to metadata persistence (tombstone records survive file withdrawal; CERN preservation commitment) \u2014 platform entailment of the evidenced deposit."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "Structured machine-readable data entailed: \"transcribed as binary data in the form of presence/absence coding of motif types (named A1, A2, etc.)\" then \"transformed... into a sentence-imitating structure\" (\u00a72.1) and analysed programmatically in R/Quanteda \u2014 not unstructured PDF-only content."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "Motif typology follows \"P\u0142onka's (2003, pp. 315-325) own motif classification scheme\" from a print monograph; no PID-bearing FAIR vocabulary or ontology (e.g., Getty AAT, PeriodO) evidenced."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No PID-qualified references from the data to other resources evidenced; upstream source (P\u0142onka 2003 monograph) cited without PID; per-object \"original source\" metadata are bibliographic, not typed PID references."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Dataset richly described: \"numerous categorical variables corresponding to the characteristics of each ornamented object and associated metadata such as location, quality of contextual information, and original source\" (\u00a72.1); per-object attributes also shown in Table 3 (site, region, artefact type, motifs)."
+      },
+      "R1_1": {
+        "present": 1,
+        "evidence": "Zenodo publication requires an explicit licence declaration in record metadata (platform entailment; pulled guide precedent: \"licence captured in Zenodo metadata\"); article itself is CC BY. Specific deposit licence not verifiable in this run."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Provenance documented: \"the South Scandinavian data were manually extracted and digitised\" from P\u0142onka (2003) (\u00a72.1), with the transcription procedure to presence/absence coding and sentence-like strings described; CRediT assigns Data curation to Herskind (p. 8)."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No domain-relevant community data standard (e.g., ARIADNEplus, CIDOC-CRM, Dublin Core beyond platform defaults) evidenced for the dataset."
+      }
+    }
+  },
+  "code_fair": {
+    "available": true,
+    "total": 13,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "\"Dedicated R code... reported in Supplementary Information S2 and S3\"; \"All code and data are available here: https://zenodo.org/records/10623550\" (\u00a72.2, p. 3). Zenodo deposit entails a minted DataCite DOI; paper cites the record URL rather than the DOI form."
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "Zenodo publication mandates structured DataCite metadata (creators, title, description, resource type) \u2014 platform entailment of the evidenced deposit."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "DataCite metadata schema mandates the identifier field within the metadata record \u2014 platform entailment of Zenodo deposit."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Zenodo is explicitly named in the instrument's F4 registry examples; record indexed in Zenodo search and the DataCite index."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "All analysis code (\"Dedicated R code\", \u00a72.2) retrievable via HTTPS from Zenodo record 10623550."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "Public HTTPS download; \"open-source R programming environment (v.4.2.2; R Core Team, 2021)\" (\u00a72.2) \u2014 no proprietary protocol or licence needed to obtain or run."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "HTTPS/Zenodo supports authentication and authorisation where needed; none needed here \u2014 code fully open with no unjustified closure."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo/DataCite metadata persistence (tombstone records; CERN preservation commitment) \u2014 platform entailment of the evidenced deposit."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "Code in an open, standard, shared language: \"All analyses were performed in the open-source R programming environment (v.4.2.2; R Core Team, 2021), using the Quanteda package (Benoit et al., 2018)\" (\u00a72.2)."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No code metadata vocabularies or standards (CodeMeta.json, CITATION.cff) evidenced in the paper."
+      },
+      "I3": {
+        "present": 1,
+        "evidence": "Dependencies referenced with typed, PID-bearing citations: \"using the Quanteda package (Benoit et al., 2018)\" \u2014 reference list carries DOI 10.21105/joss.00774 (JOSS); R Core Team (2021) cited for the environment (v.4.2.2)."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Method implemented by the code is documented in detail in \u00a72.2: skipgram construction, skip distance \"k value... set to 13\", expected-frequency and PMI formulas, and analysis levels (2-, 3-, 4-grams)."
+      },
+      "R1_1": {
+        "present": 1,
+        "evidence": "Zenodo publication requires an explicit licence declaration in record metadata (platform entailment; pulled guide precedent). Specific deposit licence not verifiable in this run."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Software provenance documented: R v.4.2.2 and Quanteda with citations (\u00a72.2); CRediT assigns Methodology and Formal analysis to Herskind (p. 8)."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No community code standards evidenced: not a CRAN package; no containerisation, tests, CITATION.cff, or packaging conventions reported."
+      }
+    }
+  },
+  "data_completeness": {
+    "datasets_enumerated": 2,
+    "datasets_accessible_tier_0_2": 1,
+    "coverage_percentage": 100,
+    "coverage_category": "complete",
+    "assessment_scope": "straightforward",
+    "barriers": [
+      "Upstream analogue source (P\u0142onka 2003, print monograph, Tier 3) is not directly retrievable online, but its South Scandinavian content was fully digitised and redistributed in the deposit (\"complete data tables\", Supplementary Information S1-S3; \"All code and data are available\" at Zenodo record 10623550) \u2014 it does not gate reproduction. Record-weighted coverage: 483/483 analysed objects deposited (100%); the sole analysis dataset is Tier 0."
+    ]
+  }
+}

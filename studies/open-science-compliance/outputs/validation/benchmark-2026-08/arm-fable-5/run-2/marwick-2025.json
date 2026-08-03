@@ -1,0 +1,162 @@
+{
+  "status": "OK",
+  "paper_slug": "marwick-2025",
+  "stated_availability": "Data availability statement: \"The data that support the findings of this study are openly available in Zenodo at https://doi.org/10.5281/zenodo.14897252.\" Section 2 additionally states: \"The entire R code (R Core Team, 2024) used for all the analysis and visualizations contained in this paper is at https://doi.org/10.5281/zenodo.14897252 to enable re-use of materials and improve reproducibility and transparency (Marwick, 2017). All the figures, tables, and statistical test results presented here can be independently reproduced with the code and data in this compendium (Marwick et al., 2018). The R code is released under the MIT license, the data as CC-0, and figures as CC-BY, to enable maximum re-use.\" (Descriptive record only; not mapped to L1-L6.)",
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-fable-5 v1.0",
+    "model_id": "claude-fable-5",
+    "pulled_files_read": [
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/fair-principles-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/pid-systems-guide.md"
+    ]
+  },
+  "data_fair": {
+    "available": true,
+    "total": 14,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "\"The data that support the findings of this study are openly available in Zenodo at https://doi.org/10.5281/zenodo.14897252\" (Data availability statement) \u2014 DOI-based persistent identifier."
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "Deposit is in Zenodo (\"openly available in Zenodo at https://doi.org/10.5281/zenodo.14897252\"); Zenodo mandates DataCite-structured metadata (creators, title, description, resource type) for every record."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "Zenodo records carry DataCite metadata in which the DOI is a mandatory field, so the metadata for 10.5281/zenodo.14897252 explicitly includes the identifier."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Zenodo is a searchable registry named in the instrument (F4 examples: \"Zenodo, CRAN, DataCite\") and is indexed via DataCite/OpenAIRE."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Retrievable via HTTPS DOI resolution (\"openly available in Zenodo at https://doi.org/10.5281/zenodo.14897252\"). Completeness rule satisfied: coverage_category is \"complete\" (all four enumerated datasets Tier 0-2), so A1 is not forced to 0."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "HTTPS/DOI resolution is open, free, and universally implementable; deposit is \"openly available\" with data released as CC-0, no fee or proprietary protocol."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "Zenodo's HTTPS protocol supports authentication/authorisation where needed (restricted/embargoed deposits); here no restriction is needed \u2014 fully open deposit with no ethically restricted content."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo (CERN) commits to long-term preservation and DataCite metadata persists (tombstone pages) even if files are withdrawn \u2014 metadata for 10.5281/zenodo.14897252 remains accessible independent of the files."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "\"All the figures, tables, and statistical test results presented here can be independently reproduced with the code and data in this compendium (Marwick et al., 2018)\" \u2014 data must be in machine-readable structured form consumed directly by the R code, per the research-compendium packaging standard."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No FAIR-published vocabularies evidenced. Sample derives from \"Clarivate's Web of Science database by first selecting the Web of Science category 'Archaeology'\" \u2014 WoS categories are proprietary, not FAIR vocabularies with PIDs."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No qualified PID references (typed related identifiers) in the deposit's metadata are evidenced from the paper alone; unscoreable sub-principles score 0 per the instrument."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Rich description: Methods detail sample construction and variables, and \"Further details about the model specifications and diagnostics are available at https://doi.org/10.5281/zenodo.14897252\" (Fig. 2 caption) \u2014 documentation beyond title within the deposit."
+      },
+      "R1_1": {
+        "present": 1,
+        "evidence": "\"The R code is released under the MIT license, the data as CC-0, and figures as CC-BY, to enable maximum re-use\" \u2014 explicit CC0 data licence."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Detailed provenance: \"This sample was collected from Clarivate's Web of Science database by first selecting the Web of Science category 'Archaeology' and the Document type 'article' (n = 28,871)\", filtered to top-25 journals by h-index (Journal Citation Indicator), excluding journals <100 articles, yielding 9697 papers 1975-2025; variable derivations (Price index, Shannon diversity, Yitzhaki title-length method) documented."
+      },
+      "R1_3": {
+        "present": 1,
+        "evidence": "Deposit explicitly follows the research-compendium community standard: \"reproduced with the code and data in this compendium (Marwick et al., 2018)\"; Zenodo deposit conforms to the DataCite metadata standard."
+      }
+    }
+  },
+  "code_fair": {
+    "available": true,
+    "total": 14,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "\"The entire R code (R Core Team, 2024) used for all the analysis and visualizations contained in this paper is at https://doi.org/10.5281/zenodo.14897252\" (\u00a72) \u2014 archived with a DOI, not a bare GitHub URL."
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "Code archived in Zenodo, which generates DataCite-structured metadata (creators, title, description, resource type) for the record at 10.5281/zenodo.14897252."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "Zenodo/DataCite metadata schema mandatorily includes the DOI, so the record's metadata explicitly includes the identifier."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Zenodo is a searchable registry named in the instrument's F4 examples and is indexed via DataCite/OpenAIRE."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Code retrievable via standard HTTPS DOI resolution: \"is at https://doi.org/10.5281/zenodo.14897252 to enable re-use of materials and improve reproducibility and transparency\"."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "HTTPS/DOI resolution is open, free, and universally implementable; MIT-licensed code openly deposited, no fee or proprietary protocol."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "Zenodo's HTTPS protocol supports authentication/authorisation where needed; no restriction required here \u2014 fully open code deposit."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo/DataCite metadata persistence: DOI metadata for the record remains accessible even if the deposited files become unavailable (CERN preservation commitment, tombstone pages)."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "Code is in R, a formal, accessible, shared language: \"The entire R code (R Core Team, 2024) used for all the analysis and visualizations\"."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No FAIR vocabulary usage evidenced for the code artefact (no CodeMeta/ontology-based description evidenced in the paper)."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No qualified PID references (e.g., typed related identifiers linking code to paper or dependencies) are evidenced from the paper alone; unscoreable sub-principles score 0."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Compendium packaged per Marwick et al. (2018) with documentation beyond code files: \"Further details about the model specifications and diagnostics are available at https://doi.org/10.5281/zenodo.14897252\" (Fig. 2 caption)."
+      },
+      "R1_1": {
+        "present": 1,
+        "evidence": "\"The R code is released under the MIT license\" \u2014 clear, machine-readable open-source licence."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Provenance documented: sole author, R environment cited (\"R Core Team, 2024\"), and explicit code-to-output mapping \u2014 \"All the figures, tables, and statistical test results presented here can be independently reproduced with the code and data in this compendium\"; model specifications and diagnostics documented in the deposit."
+      },
+      "R1_3": {
+        "present": 1,
+        "evidence": "Explicit conformance to the domain's research-compendium standard: \"in this compendium (Marwick et al., 2018)\" \u2014 the community standard for reproducible packaging of data-analytic work in archaeology."
+      }
+    }
+  },
+  "data_completeness": {
+    "datasets_enumerated": 4,
+    "datasets_accessible_tier_0_2": 4,
+    "coverage_percentage": 100,
+    "coverage_category": "complete",
+    "assessment_scope": "straightforward",
+    "barriers": [
+      "Upstream Clarivate Web of Science raw records (n = 28,871 initial query) sit behind an institutional-subscription paywall (Tier 2); the derived bibliometric dataset of 9,697 articles is openly deposited in the Zenodo compendium (Tier 0), so reproduction does not require WoS access"
+    ]
+  },
+  "escalate_reason": null
+}

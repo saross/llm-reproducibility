@@ -1,0 +1,164 @@
+{
+  "status": "OK",
+  "paper_slug": "dye-et-al-2023",
+  "stated_availability": "\"Availability of Data and Materials \u2014 Data and materials are available in the Supplement.\" (p. 24, lines 565-566). Descriptive record only; no L1-L6 level assigned (levels are assigned at reproduction time per preregistration \u00a77.3).",
+  "escalate_reason": null,
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-fable-5 v1.0",
+    "model_id": "claude-fable-5",
+    "pulled_files_read": [
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/fair-principles-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/pid-systems-guide.md"
+    ]
+  },
+  "data_fair": {
+    "available": true,
+    "total": 13,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "Core research dataset carries a DOI: 'Hines, J. (2013). Anglo-Saxon graves and grave goods of the 6th and 7th centuries AD: A chronological framework [data-set]. Archaeological Data Service. https://doi.org/10.5284/1018290' (References, p. 26); this deposit supplies the grave/find database and the OxCal prior model ('a relational database deposited with the Archaeological Data Service that catalogs the graves and the finds (Hines, 2013)', p. 10)."
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "Dataset held in the Archaeological Data Service (ADS), a domain repository whose DataCite DOI registration mandates structured metadata (creator, title, publisher, year, resource type); the in-paper citation itself is structured (author, title, date, publisher, '[data-set]' type, identifier) (p. 26)."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "DataCite registration of DOI 10.5284/1018290 requires the identifier inside the metadata record describing the dataset; the paper's data citation binds identifier to dataset description (p. 26)."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "ADS is a searchable domain repository and the dataset DOI is indexed in DataCite \u2014 an instrument-named registry ('Archaeological Data Service. https://doi.org/10.5284/1018290', p. 26)."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Data-completeness coverage is 'substantial' (80%), so the minimal/partial zeroing rule does not apply. Majority of the research data (52 of 72 graves plus the chronological prior) is retrievable via DOI/HTTPS from ADS; remaining compiled materials 'are available in the Supplement' (p. 24) via publisher HTTPS."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "The dominant accessible portion (ADS deposit) is public HTTPS, free, no login; DOI resolution is open and universally implementable."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "HTTPS/DOI resolution supports authentication/authorisation where needed; no ethical or legal access restrictions are asserted for this open archaeological dataset, so none were necessary."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "DataCite-registered DOI (10.5284/1018290) guarantees a persistent metadata record independent of data availability; ADS is a preservation-mandated domain repository."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "'a relational database deposited with the Archaeological Data Service' (p. 10) \u2014 structured relational format; the chronological prior is 'from the OxCal model deposited in the project archive (Hines, 2013)' (p. 10), a formal machine-readable model specification; the revised model is likewise an OxCal-format artefact (p. 11)."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "Bead types follow 'an established classification (Brugmann, 2004)' (p. 10) \u2014 a print-monograph typology with no PIDs or machine-readable vocabulary; no FAIR-published vocabularies or ontologies are evidenced for the data."
+      },
+      "I3": {
+        "present": 1,
+        "evidence": "Qualified, typed reference with PID: chronological relations 'are based on a chronological prior from the OxCal model deposited in the project archive (Hines, 2013)' (p. 10), citing the '[data-set]' DOI https://doi.org/10.5284/1018290 (p. 26) \u2014 a derivation relationship to a PID-bearing dataset."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Rich dataset description: 72 female graves (52 from the Hines & Bayliss project + 20 from RAF Lakenheath, pp. 9-10); selection rationale \u2014 'The bead data were selected for phyletic seriation because they are well documented, with a detailed description of the chronological analysis..., a relational database..., a hierarchical Bayesian chronological model..., and bead identifications by an expert' (p. 10)."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "No data usage licence is stated anywhere; the availability statement says only 'Data and materials are available in the Supplement.' (p. 24). The CC-BY-NC-ND on the cover sheet is the White Rose eprint's article licence, not a data licence; per instrument guidance, unstated licence = 0."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Detailed provenance: prior taken from Bayliss et al. (2013, pp. 339-345); constraints retained vs removed itemised (i)-(iii) with reasons, e.g. removing the combined determination for 'MaDE1 and MaDE2, which fails a X\u00b2 test for combining age determinations (Ward & Wilson, 1978) at the 5 percent level' (pp. 10-11); Lakenheath additions documented (p. 10)."
+      },
+      "R1_3": {
+        "present": 1,
+        "evidence": "Domain community standards: source data archived in ADS (UK archaeology's domain repository); calibration with 'OxCal version 4.4.2 and the IntCal20 calibration curve (Reimer et al., 2020)' (p. 11); standard radiocarbon combination testing (Ward & Wilson, 1978)."
+      }
+    }
+  },
+  "code_fair": {
+    "available": true,
+    "total": 11,
+    "sub_principles": {
+      "F1": {
+        "present": 0,
+        "evidence": "No PID for any code: the revised OxCal model and analysis scripts are only 'included in the Supplement' (p. 11; figs 3-4 captions) with no DOI/SWHID; ArchaeoPhases is cited via the JSS article DOI (10.18637/jss.v093.c01, p. 28), an article identifier, not a software PID; a CRAN package name is not a DOI/SWHID/accession."
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "'Analysis of archaeological phases using the CRAN package ArchaeoPhases' (Philippe & Vibet 2020, p. 28): CRAN mandates structured package metadata (title, authors, description, version) for the method's software, which is within this paper's code footprint ('AP maintains the ArchaeoPhases software, improved the R code for tempo and occurrence plots', Author's Contributions, p. 24)."
+      },
+      "F3": {
+        "present": 0,
+        "evidence": "No persistent identifier exists for the code (F1 = 0), so no metadata record can explicitly include one."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "ArchaeoPhases is indexed in CRAN \u2014 a searchable registry explicitly named in the instrument's F4 examples ('the CRAN package ArchaeoPhases', p. 28)."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Code retrievable via standard HTTPS: 'ArchaeoPhases code to reproduce the figure is included in the Supplement' (fig. 3 caption, p. 13; fig. 4 caption, p. 15); 'The revised chronological model was implemented in OxCal and is included in the Supplement' (p. 11); ArchaeoPhases distributed via CRAN."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "CRAN (ArchaeoPhases) and OxCal are free, open HTTPS distribution without login for the dominant accessible portion of the code. Caveat: the paper-specific supplement sits with a subscription journal; the accepted manuscript is openly deposited at https://eprints.whiterose.ac.uk/197500/ (cover sheet)."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "HTTPS supports authentication/authorisation where needed; no access restrictions are asserted for the code, so none were necessary."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "CRAN permanently retains package metadata and archived sources even after packages leave the main index; the supplement is bound to the Crossref-registered article DOI (https://doi.org/10.1016/j.jas.2023.105765, cover sheet) whose metadata record persists independently of file availability."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "Formal, shared representations: R code (ArchaeoPhases scripts) and the OxCal model language \u2014 'It comprises two sections; the first defines the likelihoods and their constraints, and the second defines occurrences for each of the bead types' (p. 11)."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No FAIR-published vocabularies or ontologies are evidenced in the code artefacts; Allen-set notation is a formal calculus but not a PID-bearing vocabulary."
+      },
+      "I3": {
+        "present": 1,
+        "evidence": "Qualified software references with identifiers: 'using functions provided by ArchaeoPhases software (Philippe & Vibet, 2020)' (p. 23) with DOI 10.18637/jss.v093.c01 (p. 28); 'The revised model calibrates with OxCal version 4.4.2 and the IntCal20 calibration curve (Reimer et al., 2020)' (p. 11); ChronoModel http://www.chronomodel.fr and BCal http://intarch.ac.uk/journal/issue7/buck/ (references)."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Code richly described: model structure (two sections, p. 11), software versions (OxCal 4.4.2, IntCal20), stability documentation ('As described in the Supplement, five independent runs of the model indicate negligible between-run variability', p. 11), and named figure-reproduction scripts (figs 3-4 captions)."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "No licence is stated in the paper for the supplement code or for ArchaeoPhases; per instrument guidance, unstated licence = 0."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Code provenance documented: revised model derived from the Bayliss et al. (2013) OxCal model with itemised modifications (i)-(iii) (pp. 10-11); code authorship and maintenance attributed ('AP maintains the ArchaeoPhases software, improved the R code for tempo and occurrence plots', p. 24; 'TSD drafted... the supplementary material', p. 24)."
+      },
+      "R1_3": {
+        "present": 1,
+        "evidence": "Community standards: CRAN packaging (an instrument-listed R1.3 standard); OxCal model format is the domain standard for Bayesian chronological modelling; replicate MCMC runs for stability checking (p. 11)."
+      }
+    }
+  },
+  "data_completeness": {
+    "datasets_enumerated": 5,
+    "datasets_accessible_tier_0_2": 4,
+    "coverage_percentage": 80,
+    "coverage_category": "substantial",
+    "assessment_scope": "straightforward",
+    "barriers": [
+      "Paywalled monograph (Tier 3): Bayliss et al. 2013 in Hines & Bayliss (2013), Society for Medieval Archaeology \u2014 source of stratigraphic constraints (pp. 339-345), known-age constraints (p. 345), and occurrence-seriation Table 7.18 used in the Discussion comparison.",
+      "Paywall (Tier 2): the paper's own Supplement (revised OxCal model, run documentation, probability calculations) sits with the subscription Journal of Archaeological Science; Hines 2021 Lakenheath bead data are in The Antiquaries Journal (paywalled).",
+      "Enumeration notes: Tier 0 \u2014 Hines 2013 ADS deposit (DOI 10.5284/1018290; relational database + OxCal prior model) and IntCal20 (Reimer et al. 2020). Brugmann 2004 and Baxter 2014 were treated as a classification scheme and a methods commentary respectively, not datasets. Record-weighted view: 52/72 graves via Tier 0 ADS, 20/72 via Tier 2 journal \u2014 100% of grave records Tier 0-2, consistent with 'substantial'."
+    ]
+  }
+}
