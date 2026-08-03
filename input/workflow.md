@@ -1,5 +1,7 @@
 # Research Extraction Workflow
 
+**Version:** 5.0.0
+
 ---
 
 # PLANNING MODE REQUIREMENTS - READ THIS FIRST

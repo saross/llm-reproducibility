@@ -497,3 +497,110 @@ agent_definitions:
     version: "1.0"
     model: claude-opus-5
     sha256: "ed116e21970483ab5c0b84f5d985534135eda9c7380f21731cc8c9c0a1524bcf"
+
+# Reference datasets read as ground truth by registered analyses
+# (monitoring plan §4 class E8; §9 Q4: register-without-rewrite —
+# crema's pre-v2.6 key is declared, not normalised away).
+reference_datasets:
+  pilot_fair_assessments:
+    description: >-
+      The five pilot FAIR assessments — the concordance-floor denominator for
+      validation-phase model selection (amendment 1 §3). Enumeration is
+      generated from this list, never re-derived by glob (working-notes
+      Observation 20).
+    cardinality: 5
+    items:
+      - slug: dye-et-al-2023
+        file: studies/open-science-compliance/outputs/dye-et-al-2023/extraction.json
+        fair_key: reproducibility_infrastructure.fair_assessment
+      - slug: herskind-riede-2024
+        file: studies/open-science-compliance/outputs/herskind-riede-2024/extraction.json
+        fair_key: reproducibility_infrastructure.fair_assessment
+      - slug: key-et-al-2024
+        file: studies/open-science-compliance/outputs/key-et-al-2024/extraction.json
+        fair_key: reproducibility_infrastructure.fair_assessment
+      - slug: marwick-2025
+        file: studies/open-science-compliance/outputs/marwick-2025/extraction.json
+        fair_key: reproducibility_infrastructure.fair_assessment
+      - slug: crema-et-al-2024
+        file: studies/open-science-compliance/outputs/crema-et-al-2024/run-02-session-per-pass/extraction.json
+        fair_key: infrastructure.fair_assessment  # pre-v2.6 key, registered as-is (2026-01 run)
+
+# Per-entity check declarations (monitoring plan Phase 1, 2026-08-03).
+# DECLARATIVE ONLY in Phase 1: the consistency gate does not read this
+# section yet (that is Phase 2). Central map keyed by dotted registry path
+# — settled at implementation in place of inline per-entry blocks, so the
+# heavily-commented sections above stay untouched. Phase 2 rule: every
+# registered entity must have an entry here; an undeclared entity fails
+# the gate. Classes per wiki/planning/artefact-integrity-monitoring-plan.md §4.
+entity_checks:
+  # E1 — frozen canonical instruments (checks implemented today)
+  shared_content.fair-instrument: {class: E1}
+  shared_content.data-availability-taxonomy: {class: E1}
+  shared_content.verdicts-and-precision: {class: E1}
+  shared_content.coverage-rules: {class: E1}
+  shared_content.eligibility-criteria: {class: E1}
+  shared_content.pipeline-invariants: {class: E1}
+  shared_content.adversarial-review-framework: {class: E1}
+  # E2 — agent definitions (checks implemented today)
+  agent_definitions.fair-assessor-sonnet-5: {class: E2}
+  agent_definitions.fair-assessor-opus-5: {class: E2}
+  agent_definitions.fair-assessor-fable-5: {class: E2}
+  agent_definitions.reproduction-planner: {class: E2}
+  agent_definitions.reproduction-executor: {class: E2}
+  agent_definitions.adversarial-reviewer: {class: E2}
+  # E3 — versioned prose artefacts
+  components.workflow: {class: E3, version_source: markdown-header}
+  components.extraction_plan: {class: E3, version_source: markdown-header}
+  components.extraction_launch: {class: E3, version_source: markdown-header}
+  components.skill: {class: E3, version_source: skill-frontmatter, version_file: .claude/skills/research-assessor/SKILL.md}
+  reproduction.skill: {class: E3, version_source: skill-frontmatter, version_file: .claude/skills/reproduction-assessor/SKILL.md}
+  assessment.prompts.classify_research_approach: {class: E3, version_source: markdown-header, normalise: strip-v-prefix}
+  assessment.prompts.track_a_quality_gating: {class: E3, version_source: markdown-header, normalise: strip-v-prefix}
+  assessment.prompts.cluster_1: {class: E3, version_source: markdown-header, normalise: strip-v-prefix}
+  assessment.prompts.cluster_2: {class: E3, version_source: markdown-header, normalise: strip-v-prefix}
+  assessment.prompts.cluster_3: {class: E3, version_source: markdown-header, normalise: strip-v-prefix}
+  assessment.prompts.final_report: {class: E3, version_source: markdown-header, normalise: strip-v-prefix}
+  assessment.templates.credibility_report: {class: E3, version_source: markdown-header, header_label: Assessor Version, normalise: strip-v-prefix}
+  reproduction.planning_guide: {class: E3, version_source: markdown-header}
+  reproduction.launch: {class: E3, version_source: markdown-header}
+  reproduction.prompts.reproduction_plan: {class: E3, version_source: markdown-header}
+  reproduction.prompts.preparation: {class: E3, version_source: markdown-header}
+  reproduction.prompts.execution_verification: {class: E3, version_source: markdown-header}
+  reproduction.prompts.adversarial_review: {class: E3, version_source: markdown-header}
+  # E3 — workflow_passes prompts: the pass list above carries no version
+  # fields, so the expected version is declared HERE (single source, no
+  # duplicate). Passes 1-5 and 7 track the schema version and carry
+  # "<version> Pass <n>" headers; pass 6's document version is the FAIR
+  # instrument version (2.0) — its schema pointer is a separate header line.
+  workflow_passes.pass-0: {class: E3, version: "1.0.0", version_source: markdown-header}
+  workflow_passes.pass-1: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
+  workflow_passes.pass-2: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
+  workflow_passes.pass-3: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
+  workflow_passes.pass-4: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
+  workflow_passes.pass-5: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
+  workflow_passes.pass-6: {class: E3, version: "2.0", version_source: markdown-header, normalise: strip-pass-suffix}
+  workflow_passes.pass-7: {class: E3, version: "2.7", version_source: markdown-header, normalise: strip-pass-suffix}
+  # E4 — versioned data artefacts (JSON version field)
+  components.schema: {class: E4, version_source: json-field, json_path: $.version}
+  components.schema.previous: {class: E4, version_source: json-field, json_path: $.version}
+  assessment.schemas.credibility_report: {class: E4, version_source: json-field, json_path: $.version}
+  # E5 — two-axis entity: manifest tracks the PAYLOAD axis (assessment.json
+  # schema_version), documented in the .md; the file's own document version
+  # (2.1) is a different axis — never compare the two.
+  assessment.schemas.assessment_json: {class: E5, axis: payload, version_source: markdown-body-pattern, pattern: '"schema_version": "{version}"'}
+  # E6 — unversioned registered files: existence only, declared loudly
+  documentation.main_readme: {class: E6, verify: exists}
+  documentation.extraction_readme: {class: E6, verify: exists}
+  documentation.reproduction_readme: {class: E6, verify: exists}
+  documentation.extraction_skill: {class: E6, verify: exists}
+  documentation.reproduction_skill: {class: E6, verify: exists}
+  documentation.workflow_guide: {class: E6, verify: exists}
+  documentation.schema_reference: {class: E6, verify: exists}
+  documentation.version_history: {class: E6, verify: exists}
+  reproduction.templates.environment: {class: E6, verify: exists}
+  reproduction.templates.log: {class: E6, verify: exists}
+  reproduction.templates.comparison_report: {class: E6, verify: exists}
+  corpus.queue_file: {class: E6, verify: exists}
+  # E8 — reference dataset (items in reference_datasets above)
+  reference_datasets.pilot_fair_assessments: {class: E8, verify: enumerate-from-registry, assert_cardinality: true}
