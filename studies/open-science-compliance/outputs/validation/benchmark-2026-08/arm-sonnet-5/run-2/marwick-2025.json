@@ -1,0 +1,160 @@
+{
+  "status": "OK",
+  "paper_slug": "marwick-2025",
+  "escalate_reason": null,
+  "stated_availability": "Single blanket statement covering both data and code: \"The data that support the findings of this study are openly available in Zenodo at https://doi.org/10.5281/zenodo.14897252\" (Data availability statement, p.10). In-text (p.2): \"The entire R code (R Core Team, 2024) used for all the analysis and visualizations contained in this paper is at https://doi.org/10.5281/zenodo.14897252 ... All the figures, tables, and statistical test results presented here can be independently reproduced with the code and data in this compendium (Marwick, et al., 2018). The R code is released under the MIT license, the data as CC-0, and figures as CC-BY, to enable maximum re-use.\" Fig. 2 caption adds: \"Further details about the model specifications and diagnostics are available at https://doi.org/10.5281/zenodo.14897252\" (same DOI, split across a line wrap in the PDF).",
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-sonnet-5 v1.0",
+    "model_id": "claude-sonnet-5",
+    "pulled_files_read": []
+  },
+  "data_fair": {
+    "available": true,
+    "total": 11,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "Data availability statement gives a resolvable DOI: 'The data that support the findings of this study are openly available in Zenodo at https://doi.org/10.5281/zenodo.14897252' (p.10)."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "Unscoreable: the paper gives only a bare DOI link inline and in the availability statement, with no formatted citation (title/creators/keywords/description) to the Zenodo record itself and no description of its metadata fields; actual repository metadata richness is not evidenced in the text."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "The resource is a DOI (DataCite-registered via Zenodo/CERN); DOI registration structurally embeds the identifier in the record's own metadata as part of the minting process, and the paper consistently cites the identical DOI (10.5281/zenodo.14897252) for the resource itself, its data, and its documentation."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Deposited on Zenodo, which the instrument's own F4 example lists as a qualifying searchable registry ('F4: ...(Zenodo, CRAN, DataCite)'); paper text also independently describes Zenodo as 'a non-profit generic research data repository hosted by CERN that accepts any file format and freely assigns all publicly available uploads a DOI' (p.8)."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Data-completeness coverage assessed as 'complete' (see data_completeness), so the A1 forced-zero rule does not apply. Statement: 'The data that support the findings of this study are openly available in Zenodo at https://doi.org/10.5281/zenodo.14897252' (p.10), retrievable via standard HTTPS download, no registration/paywall indicated, no ethical restriction stated."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "Zenodo is accessed via open, free HTTPS; no cost or proprietary client required to retrieve the DOI-linked record (platform property of the named repository, consistent with the paper's own description of Zenodo on p.8)."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "Zenodo's HTTPS delivery protocol supports authentication/embargo where needed; the paper indicates no restriction is required here ('the data as CC-0', p.2), i.e. the protocol trivially satisfies this criterion since full open access was chosen and nothing blocks it."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo/CERN's DOI persistence policy retains the metadata landing page even if files were later withdrawn -- a structural platform guarantee associated with the named DOI-issuing repository used here (p.8: 'CERN... freely assigns all publicly available uploads a DOI to make the files easily and uniquely citable')."
+      },
+      "I1": {
+        "present": 0,
+        "evidence": "Unscoreable: the paper never states the file format(s) of the deposited data (e.g. CSV vs. R-specific binary .rds), so use of a formal, shared, non-proprietary representation cannot be evidenced from the text."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No mention anywhere in the text of controlled vocabularies, ontologies, or FAIR-compliant vocabulary use for describing the dataset variables."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No evidence that the deposited data's own metadata contains qualified/typed references (PIDs) to related resources (e.g. linking the dataset record to the article DOI or to related datasets); only the article text itself carries citation links."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Dataset attributes are described in detail in Methods: 'I quantify the number of authors, length of article, relative title length, age of references, and diversity of references for a large sample of peer-reviewed journal articles' (p.2), with each variable further defined (e.g. Price index for recency, Shannon Index for diversity, p.2-3)."
+      },
+      "R1_1": {
+        "present": 1,
+        "evidence": "'the data as CC-0 ... to enable maximum re-use' (p.2) -- an explicit, clear, open data licence."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Sampling/collection provenance is detailed: 'This sample was collected from Clarivate Web of Science database by first selecting the Web of Science category \"Archaeology\" and the Document type \"article\" (n = 28,871)... I analysed 9697 papers published during 1975-2025... included only articles published in the top-ranking 25 journals... excluded journals with less than 100 articles... resulting in 20 journals' (p.2); further modelling provenance pointer: 'Further details about the model specifications and diagnostics are available at https://doi.org/10.5281/zenodo.14897252' (Fig. 2 caption, p.4)."
+      },
+      "R1_3": {
+        "present": 1,
+        "evidence": "Variable construction explicitly follows established bibliometric/scientometric community methods, e.g. following Fanelli and Gl\u00e4nzel (2013) and using recognised indices (Price index for recency, Shannon Index for diversity of references), situating the dataset within domain-standard bibliometric practice (p.2-3)."
+      }
+    }
+  },
+  "code_fair": {
+    "available": true,
+    "total": 12,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "Same DOI covers the code: 'The entire R code (R Core Team, 2024) used for all the analysis and visualizations contained in this paper is at https://doi.org/10.5281/zenodo.14897252' (p.2)."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "Unscoreable: no formatted citation or description of the Zenodo record's own structured metadata (title/creators/keywords/description) is given in the paper text -- only a bare inline DOI link."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "DOI-registered Zenodo deposit; DataCite DOI minting structurally embeds the identifier within the record's own metadata, and the paper repeatedly and consistently cites the same DOI (10.5281/zenodo.14897252) to reference the code."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Code is hosted on Zenodo, explicitly named as a qualifying registry example in the instrument's own F4 criterion; paper independently describes Zenodo as a CERN-hosted repository that 'freely assigns all publicly available uploads a DOI to make the files easily and uniquely citable' (p.8)."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "'All the figures, tables, and statistical test results presented here can be independently reproduced with the code and data in this compendium' (p.2) -- an explicit completeness claim for the code, retrievable via the same open Zenodo DOI."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "Retrieved via open, free HTTPS from Zenodo, no cost or restricted client required (platform property of the named repository, p.8)."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "Zenodo's protocol supports authentication/embargo where required; code stated as fully open under MIT licence with no restriction invoked (p.2), so the criterion is satisfied by the protocol's inherent capability."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Same Zenodo/CERN DOI-persistence guarantee applies to the code deposit as to the data deposit (p.8 description of Zenodo's DOI assignment and citability)."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "Code is explicitly R: 'The entire R code (R Core Team, 2024) used for all the analysis and visualizations...' (p.2) -- R is a formal, open-source, widely documented, shared language/format (plain-text .R scripts), directly evidenced in text (also the dominant reproducibility-review software per Fig. 5A: 'R, followed by Python')."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No evidence of controlled vocabularies or standardised code-metadata schemas (e.g. CodeMeta) being used to describe the code or its dependencies."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No textual evidence that the code repository's own metadata contains qualified/typed PID references to other resources (e.g. linked package DOIs, related-identifier links to the article)."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Code's purpose and scope are richly described: it reproduces 'all the figures, tables, and statistical test results' (p.2), with specific statistical methods detailed (Bayesian Generalized Additive Models, Zero-One Inflated Beta, Negative Binomial and Gaussian families, PCA, Borda Count ranking -- p.4-5) and a pointer to further model-specification documentation at the same DOI (Fig. 2 caption)."
+      },
+      "R1_1": {
+        "present": 1,
+        "evidence": "'The R code is released under the MIT license' (p.2) -- explicit, clear, permissive open-source licence."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Detailed methodological/computational provenance given in-text (specific model families, link functions, software versions cited: 'R Core Team, 2024'), plus 'Further details about the model specifications and diagnostics are available at https://doi.org/10.5281/zenodo.14897252' (Fig. 2 caption, p.4)."
+      },
+      "R1_3": {
+        "present": 1,
+        "evidence": "R is identified in the paper's own reproducibility-review data as the dominant language used by archaeologists (Fig. 5A), and the author explicitly aligns with community-recommended reproducible-compendium practice, citing his own prior methodological papers on packaging reproducible R-based research (Marwick, 2017; Marwick et al., 2018, cited p.2 and reference list) as the basis for this release."
+      }
+    }
+  },
+  "data_completeness": {
+    "datasets_enumerated": 3,
+    "datasets_accessible_tier_0_2": 3,
+    "coverage_percentage": 100,
+    "coverage_category": "complete",
+    "assessment_scope": "straightforward",
+    "barriers": [
+      "Underlying raw Web of Science corpus (n=28,871 records queried, narrowed to 9,697 analysed) originates from a proprietary/subscription database (Clarivate Web of Science); the paper does not clarify whether raw WoS records or only the author's derived/computed bibliometric variables are redistributed in the Zenodo deposit -- treated as a potential but unstated/unconfirmed barrier, not counted against coverage given the explicit blanket availability statement.",
+      "Fanelli and Gl\u00e4nzel (2013) comparison values (overlaid reference boxplots in Fig. 1) are an upstream source from a separate publication rather than data hosted in this paper's own repository; however that source (PLoS One 8, e66938) is itself a fully open-access journal, so classified Tier 2 (accessible with some effort) rather than a blocking barrier."
+    ]
+  }
+}

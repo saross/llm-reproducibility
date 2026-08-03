@@ -1,0 +1,161 @@
+{
+  "paper_slug": "herskind-riede-2024",
+  "status": "OK",
+  "escalate_reason": null,
+  "stated_availability": "Two partially inconsistent statements. (1) Formal \"Data availability statement\" (p.8): \"Supplementary Information to this article can be found online at https://zenodo.org/records/10801706.\" (2) In-text Methods statement (p.3, end of \u00a72.2): \"All code and data are available here: https://zenodo.org/records/10623550.\" (3) Standard Elsevier \"Appendix A. Supplementary data\" note (p.8) points to the article's own DOI (https://doi.org/10.1016/j.jas.2024.105969). The two Zenodo record numbers differ (10801706 vs 10623550) and the paper does not clarify the relationship between them. Descriptive only; not mapped to L1-L6.",
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-sonnet-5 v1.0",
+    "model_id": "claude-sonnet-5",
+    "pulled_files_read": []
+  },
+  "data_fair": {
+    "available": true,
+    "total": 7,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "Data availability statement (p.8) and in-text methods statement (p.3) both cite specific Zenodo record numbers (zenodo.org/records/10801706; zenodo.org/records/10623550). Zenodo record URLs correspond to DataCite-minted DOIs, a globally unique persistent identifier per the instrument's own examples."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "Unscoreable: the paper gives only bare URLs to the Zenodo records, with no description of the record's structured metadata fields (authors, title, keywords, description) as displayed on the repository landing page; supplementary files were deliberately not provided for this assessment and no web verification is permitted."
+      },
+      "F3": {
+        "present": 0,
+        "evidence": "Unscoreable: whether the Zenodo record's own metadata block explicitly re-displays/includes its identifier cannot be confirmed from the paper text alone."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Both cited URLs (zenodo.org/records/10801706 and .../10623550, p.3 and p.8) place the resource in Zenodo, which is named directly in the instrument's own F4 example list ('Zenodo, CRAN, DataCite')."
+      },
+      "A1": {
+        "present": 0,
+        "evidence": "Data-completeness coverage assessed as 'partial' (50%): the shared Zenodo deposit contains only the authors' derived presence/absence digitisation, not the primary source catalogue (P\u0142onka 2003) from which it was manually extracted -- 'From this analogue compilation, the South Scandinavian data were manually extracted and digitised' (p.2). Per the A1 cross-reference rule, coverage_category = partial forces A1 = 0; no ethical-restriction exception applies (this is a publishing/access barrier, not an ethics one)."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "Data are pointed to via standard HTTPS URLs to Zenodo (p.3, p.8), an open, free, universally implementable protocol requiring no proprietary client or paid access."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "Zenodo (the stated host) natively supports authentication/access-control options for restricted deposits where required; no ethical/CARE restriction is indicated as needed here, and nothing in the text suggests the protocol lacks this capability."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo/DataCite persistent-identifier infrastructure (evidenced by the DOI-bearing record links cited on p.3 and p.8) guarantees metadata persistence even if a given file becomes unavailable; this is a structural property of the cited PID system."
+      },
+      "I1": {
+        "present": 0,
+        "evidence": "No file format or formal shared data representation (e.g., CSV, RDF) is specified anywhere in the text for the digitised dataset; only that it was 'transcribed as binary data' and turned into a 'sentence-imitating structure' (p.2) -- an internal bespoke representation, not shown to use a formal shared standard."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "The motif classification is P\u0142onka's (2003) own bespoke scheme ('P\u0142onka's (2003, pp. 315-325) own motif classification scheme', p.2) -- an idiosyncratic, non-standardised vocabulary specific to one monograph, with no indication it follows FAIR vocabulary practice itself."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "Table 3 references source figures by page/plate number in P\u0142onka (2003) (e.g., 'Figure in P\u0142onka (2003): 145', p.7) rather than qualified PID-based references; no evidence of PID-linked cross-references within the dataset."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "'These data consist of numerous categorical variables corresponding to the characteristics of each ornamented object and associated metadata such as location, quality of contextual information, and original source' (p.2) -- explicit plurality of relevant attributes described."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "The article itself is CC BY (p.1 footer), but no explicit usage licence is stated for the externally-hosted Zenodo data specifically, and the two differing Zenodo record citations create ambiguity about which deposit -- and under what licence -- actually holds the data."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Detailed provenance given in Methods: source (P\u0142onka 2003, specific pages 315-325), extraction method (manual extraction/digitisation), and encoding scheme (presence/absence binary coding into 'sentence-imitating structure', p.2-3)."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No reference to any archaeological data community standard (e.g., a recognised metadata schema or ontology) being followed; the classification rests solely on one monograph's bespoke typology."
+      }
+    }
+  },
+  "code_fair": {
+    "available": true,
+    "total": 9,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "Same cited Zenodo record(s) host 'Dedicated R code' (p.3: 'Dedicated R code and complete data tables are reported in Supplementary Information S2 and S3'; 'All code and data are available here: https://zenodo.org/records/10623550'), giving the code a DOI-bearing Zenodo identifier."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "Unscoreable: no description of the code repository's structured metadata (authors, title, keywords, description) is given in the paper text; cannot verify without visiting the withheld/external record."
+      },
+      "F3": {
+        "present": 0,
+        "evidence": "Unscoreable: whether the code record's own metadata explicitly displays its identifier is not stated in the paper."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Code is hosted at zenodo.org (p.3: 'https://zenodo.org/records/10623550'), directly matching the instrument's own F4 example registry list."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "'Dedicated R code ... reported in Supplementary Information S2' (p.3) plus the explicit statement 'All code and data are available here' indicates the code used for the analysis is retrievable via the stated Zenodo link; the data-completeness/A1 cross-reference rule applies only to data FAIR per the instrument, not code, and no missing-subset issue is indicated for the code itself."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "Code accessed via standard HTTPS URL to Zenodo (p.3), an open, free, universally implementable protocol."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "Zenodo (stated host) supports authentication/access-control mechanisms where needed; no restriction is indicated as necessary for this code, consistent with an open deposit."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo/DataCite PID infrastructure (evidenced by the DOI-bearing record link, p.3) structurally guarantees persistent metadata even were the code files themselves to become unavailable."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "'All analyses were performed in the open-source R programming environment (v.4.2.2; R Core Team, 2021), using the Quanteda package (Benoit et al., 2018)' (p.3) -- R is an explicitly open-source, widely shared, formal computing environment."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No evidence of the code following FAIR-compliant shared vocabularies/interfaces beyond naming one dependency (Quanteda); not clearly evidenced as satisfying this sub-principle."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No indication that the code itself contains qualified, PID-based references to other resources (e.g., machine-readable citation/dependency metadata); only narrative citation of the Quanteda package in the references list, not shown to be embedded as a qualified reference in the code artefact."
+      },
+      "R1": {
+        "present": 0,
+        "evidence": "Unscoreable: beyond naming the software version and one package, the paper gives no description of the code's own structure, documentation, or attributes (no README/usage description mentioned)."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "No explicit usage licence is stated for the code specifically; the article's CC BY (p.1) is not confirmed to extend to the externally Zenodo-hosted code given the ambiguity between the two cited Zenodo records."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Software version and dependency are specified ('v.4.2.2; R Core Team, 2021', 'Quanteda package (Benoit et al., 2018)', p.3), and the underlying computations are documented via explicit formulas for expected frequency and PMI (p.3) -- reasonable methodological provenance for the code."
+      },
+      "R1_3": {
+        "present": 1,
+        "evidence": "Use of R and the peer-reviewed, JOSS-published Quanteda package aligns with community-standard open-source tooling, and the authors explicitly endorse this norm: 'approaches such as the skipgram methodology are implemented in open-source software solutions that promote transparency and replicability, features that are swiftly becoming essential in archaeological research in general (Marwick et al., 2017)' (p.7-8)."
+      }
+    }
+  },
+  "data_completeness": {
+    "datasets_enumerated": 2,
+    "datasets_accessible_tier_0_2": 1,
+    "coverage_percentage": 50,
+    "coverage_category": "partial",
+    "assessment_scope": "straightforward",
+    "barriers": [
+      "Primary upstream source data -- P\u0142onka's (2003) monograph catalogue 'The portable art of Mesolithic Europe' (Wroc\u0142aw University Press), from which all 483 objects' motif codings were manually extracted (p.2) -- is a specialist academic monograph with no indication of open/digital availability in the paper; classified Tier 3 (matches the instrument's own 'paywalled monograph' example).",
+      "The authors' own derived presence/absence digitisation (plus R code and output tables) is stated as openly available via Zenodo DOI-based records, classified Tier 0.",
+      "Internal inconsistency: the formal Data availability statement (p.8) cites Zenodo record 10801706, while the in-text Methods statement (p.3) cites a different record, 10623550, with no explanation of the relationship between the two -- creating ambiguity about exactly what is deposited where."
+    ]
+  }
+}

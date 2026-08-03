@@ -1,0 +1,164 @@
+{
+  "status": "OK",
+  "paper_slug": "herskind-riede-2024",
+  "stated_availability": "Two divergent Zenodo pointers given for what appears to be the same code+data deposit: (1) formal 'Data availability statement' (p.8): \"Supplementary Information to this article can be found online at https://zenodo.org/records/10801706.\" (2) In-text, end of Methods \u00a72.2 (p.3): \"Dedicated R code and complete data tables are reported in Supplementary Information S2 and S3 ... All code and data are available here: https://zenodo.org/records/10623550.\" A third pointer, Appendix A \"Supplementary data\" (p.8), links to the article's own DOI (https://doi.org/10.1016/j.jas.2024.105969), presumably Elsevier's own supplementary-file host. The paper does not explain why the two Zenodo record numbers differ. Article published open access under CC BY 4.0 (p.1). No funding statement (\"No funding sources were involved in this article\", p.8). The underlying primary data source (P\u0142onka 2003 catalogue of Mesolithic ornamentation) is a print academic monograph that is itself not deposited, digitised, or shared by the authors.",
+  "escalate_reason": null,
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-sonnet-5 v1.0",
+    "model_id": "claude-sonnet-5",
+    "pulled_files_read": [
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/fair-principles-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/pid-systems-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/checklists/expected-information.md"
+    ]
+  },
+  "data_fair": {
+    "available": true,
+    "total": 7,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "Data availability statement (p.8): 'Supplementary Information to this article can be found online at https://zenodo.org/records/10801706.' Methods \u00a72.2 (p.3) additionally states 'All code and data are available here: https://zenodo.org/records/10623550' -- two different Zenodo record numbers are cited for the same claimed deposit, but both are DOI-minting Zenodo records, evidencing use of a persistent-identifier repository."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "Paper text does not describe the metadata fields (authors, title, keywords, description) attached to either cited Zenodo record. Supplementary files were deliberately withheld from this review and no web access is permitted, so metadata richness is unscoreable from the paper alone and scores 0 per the unscoreable-sub-principle rule."
+      },
+      "F3": {
+        "present": 0,
+        "evidence": "No paper-text evidence that the Zenodo record's own metadata explicitly cites its identifier; unverifiable without accessing the repository, which is out of scope for this assessment."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Paper states the data are deposited at Zenodo (https://zenodo.org/records/10801706 and /10623550); Zenodo is named explicitly in the instrument text as a qualifying searchable registry."
+      },
+      "A1": {
+        "present": 0,
+        "evidence": "Per the data-completeness coverage procedure, coverage = 'partial' (1 of 2 enumerated datasets accessible at Tier 0-2). The digitised presence/absence corpus is claimed Tier 0 via Zenodo, but the upstream primary source -- Plonka, T., 2003, 'The portable art of mesolithic europe,' Wydawn. Uniw. Wroclawskiego (cited p.2, 'the comprehensive catalogue of Mesolithic ornamentation compiled by Plonka (2003)') -- is an academic monograph with no DOI in the reference list and no stated open-access route, matching the instrument's own 'paywalled monograph' Tier-3 example. Per the A1 cross-reference rule, coverage_category = 'partial' forces A1 = 0 for data FAIR; no ethical-restriction exception applies."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "The claimed deposit is on Zenodo, accessed via open HTTPS URLs ('https://zenodo.org/records/10801706'); no login, payment, or proprietary client is indicated for the accessible portion."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "No restriction is imposed or indicated on the digitised motif dataset (no CARE/ethics restriction applies to Mesolithic artefact motif codes); the HTTPS/Zenodo protocol used is capable of supporting authentication where necessary, satisfying the 'where needed' clause by default for openly available, non-sensitive data."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo (CERN-operated, DataCite-integrated) carries a standing metadata-persistence commitment; the paper's citation of a Zenodo record for the deposit is evidence this applies, inferred from repository choice rather than the paper directly describing a persistence/tombstone policy."
+      },
+      "I1": {
+        "present": 0,
+        "evidence": "Paper does not state the file format of the deposited 'complete data tables' (Supplementary Information S3) or catalogue data (S1) -- no mention of CSV/JSON/structured schema versus PDF tables. Format cannot be confirmed as machine-actionable from the paper text alone."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "The motif classification used ('Plonka's (2003, pp. 315-325) own motif classification scheme', p.2) is a single-publication, bespoke typology (motif codes such as A1, C4, C12) with no PID, no published ontology status, and no evidence of alignment with a broader FAIR vocabulary/ontology."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No evidence that the deposited (meta)data include typed/qualified references (e.g., 'isDerivedFrom [PID]') to related resources. The paper cites Plonka (2003) narratively but without a DOI or other PID (none listed in the reference entry)."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Paper documents a plurality of dataset attributes: 'These data consist of numerous categorical variables corresponding to the characteristics of each ornamented object and associated metadata such as location, quality of contextual information, and original source' (p.2); Table 3 additionally lists site, region, artefact type, motifs, and source figure for a data subset."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "The article itself is published 'under the CC BY license' (p.1), but no licence is stated specifically for the deposited data on Zenodo; the article's CC-BY notice is not stated to extend automatically to a separately hosted Zenodo deposit, so a data-specific licence is not evidenced in the paper text."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Paper documents provenance in detail: source (Plonka 2003 catalogue), transformation steps ('manually extracted and digitised... transcribed as binary data... transformed from presence/absence coding into a sentence-imitating structure', pp.2-3), and computational parameters (skip distance k=13, PMI formula, p.3)."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No evidence the deposited dataset follows a named domain community standard (e.g., ARIADNEplus, Dublin Core, Darwin Core); classification follows only Plonka's own idiosyncratic typology, not a shared archaeological data standard."
+      }
+    }
+  },
+  "code_fair": {
+    "available": true,
+    "total": 9,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "Same Zenodo deposit claimed to hold code: 'All code and data are available here: https://zenodo.org/records/10623550' (p.3, section 2.2) and the Data availability statement '.../records/10801706' (p.8). Zenodo assigns DOIs to records, evidencing PID use for code as for data (same caveat: two different record numbers cited for the same code+data bundle)."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "As with data, the paper does not describe the Zenodo record's structured metadata for the code deposit; unscoreable from paper text alone without accessing the repository."
+      },
+      "F3": {
+        "present": 0,
+        "evidence": "No paper-text evidence of whether the code deposit's metadata explicitly embeds its own identifier; unverifiable without accessing the repository."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Code is stated to be co-deposited with data on Zenodo, an instrument-recognised searchable registry ('All code and data are available here: https://zenodo.org/records/10623550')."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Code retrieval is assessed on its own accessibility; the instrument's coverage cross-reference rule is explicitly limited to 'data FAIR'. The paper states code is retrievable via a standard HTTPS Zenodo URL ('All code... are available here: https://zenodo.org/records/10623550')."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "Zenodo access is via open HTTPS; no paywall or proprietary client indicated for the code deposit."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "No restriction indicated on the code; open HTTPS/Zenodo protocol supports authentication where necessary by default, satisfying the 'where needed' clause for non-restricted code."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo's DataCite-backed metadata-persistence commitment applies equally to the code deposit as claimed in the paper."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "Code is stated to be written in R ('open-source R programming environment (v.4.2.2; R Core Team, 2021)') using the Quanteda package (p.3) -- R scripts are a formal, shared, machine-executable knowledge-representation/programming language, satisfying I1."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No evidence of code-level controlled-vocabulary or ontology use (e.g., CodeMeta.json); R/Quanteda are general-purpose tools, not FAIR vocabularies per se."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No paper-text evidence that the deposited code's own metadata contains qualified, typed references (e.g., dependency PIDs in a codemeta.json/CITATION.cff). The article's reference list cites the Quanteda package with a DOI ('quanteda: an R package... JOSS 3, 774. https://doi.org/10.21105/joss.00774'), but this is a manuscript-level citation, not confirmed evidence of PID-qualified references embedded in the code repository itself."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Code's purpose and logic are richly described in prose: full PMI/expected-frequency formulas given (p.3), skip-distance parameter (k=13) justified, package and version specified (Quanteda; R v4.2.2), and code is explicitly split into documented components (S2 code, S3 data tables)."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "As with data, no licence specific to the code deposit is stated in the paper text beyond the article's own CC BY notice, which is not stated to extend to the Zenodo code deposit."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Provenance for the code is well documented: software environment (R v4.2.2), specific package with citation (Quanteda; Benoit et al., 2018, JOSS, DOI given), and the mathematical formulae implemented (expected frequency and PMI equations, p.3) are all specified in-text."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No evidence of adherence to software community standards (e.g., CRAN packaging, rOpenSci review, JOSS submission, unit testing); this is a research script bundle, not a reviewed/packaged software release."
+      }
+    }
+  },
+  "data_completeness": {
+    "datasets_enumerated": 2,
+    "datasets_accessible_tier_0_2": 1,
+    "coverage_percentage": 50,
+    "coverage_category": "partial",
+    "assessment_scope": "straightforward",
+    "barriers": [
+      "Closed/paywalled academic monograph (Plonka, T., 2003, 'The portable art of mesolithic europe,' Wydawn. Uniw. Wroclawskiego -- no DOI in reference list, not evidenced as openly accessible) as the upstream primary data source underlying the digitised corpus",
+      "Inconsistent Zenodo record identifiers cited across the in-text data statement (section 2.2, record 10623550) and the formal Data Availability Statement (record 10801706), complicating direct retrieval of 'the' deposited dataset"
+    ]
+  }
+}

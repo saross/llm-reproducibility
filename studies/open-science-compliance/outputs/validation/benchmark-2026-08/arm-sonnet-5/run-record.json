@@ -1,0 +1,75 @@
+{
+  "arm": "sonnet-5",
+  "model_id": "claude-sonnet-5",
+  "agent_definition": "fair-assessor-sonnet-5 v1.0",
+  "workflow_run_id": "wf_9fcbff61-646",
+  "date": "2026-08-03",
+  "spawns": 15,
+  "config": {
+    "paper_source": "corpus-store vor.pdf only, supplements deliberately excluded (uniform across arms)",
+    "output_schema": "assessment-system/schema/benchmark-fair-output-schema.json v1.0",
+    "instrument_pushed": "fair-instrument v2.0 (push-receipts.jsonl: 15 entries verified)",
+    "sampling": "default temperature; seeds not controllable (amendment \u00a73)"
+  },
+  "verification": {
+    "receipts": "15/15 pass (version, token, agent_version, model_id)",
+    "totals_arithmetic": "15/15 consistent",
+    "isolation": "zero reads under studies/ or outputs/; per-agent lists in file-access-lists.json"
+  },
+  "usage": {
+    "total_tokens": 1313017,
+    "per_spawn_tokens": {
+      "dye-et-al-2023 r1": 79452,
+      "herskind-riede-2024 r1": 57251,
+      "key-et-al-2024 r1": 45133,
+      "marwick-2025 r1": 87762,
+      "crema-et-al-2024 r1": 90722,
+      "dye-et-al-2023 r2": 118507,
+      "herskind-riede-2024 r2": 114448,
+      "key-et-al-2024 r2": 93343,
+      "marwick-2025 r2": 35460,
+      "crema-et-al-2024 r2": 108787,
+      "dye-et-al-2023 r3": 99178,
+      "herskind-riede-2024 r3": 107949,
+      "key-et-al-2024 r3": 101613,
+      "marwick-2025 r3": 92819,
+      "crema-et-al-2024 r3": 80593
+    }
+  },
+  "stability": {
+    "unanimity_proportion": 0.8067,
+    "items": 150,
+    "agreed": 121,
+    "disagreements": [
+      "dye-et-al-2023 data_fair A1: [0, 1, 1]",
+      "dye-et-al-2023 data_fair A1_1: [1, 1, 0]",
+      "dye-et-al-2023 data_fair I1: [1, 0, 1]",
+      "dye-et-al-2023 code_fair A1_1: [1, 1, 0]",
+      "dye-et-al-2023 code_fair I2: [0, 0, 1]",
+      "herskind-riede-2024 data_fair A1_2: [1, 0, 1]",
+      "herskind-riede-2024 code_fair A1_2: [1, 0, 1]",
+      "herskind-riede-2024 code_fair R1: [0, 1, 1]",
+      "herskind-riede-2024 code_fair R1_3: [1, 0, 0]",
+      "key-et-al-2024 data_fair A1_2: [1, 0, 0]",
+      "key-et-al-2024 data_fair A2: [0, 1, 1]",
+      "key-et-al-2024 data_fair R1_3: [1, 1, 0]",
+      "key-et-al-2024 code_fair A1_2: [1, 0, 0]",
+      "key-et-al-2024 code_fair A2: [0, 1, 1]",
+      "key-et-al-2024 code_fair R1_3: [1, 0, 0]",
+      "marwick-2025 data_fair F2: [1, 0, 1]",
+      "marwick-2025 data_fair A1_2: [0, 1, 1]",
+      "marwick-2025 data_fair I1: [1, 0, 1]",
+      "marwick-2025 data_fair R1_3: [0, 1, 0]",
+      "marwick-2025 code_fair F2: [1, 0, 1]",
+      "marwick-2025 code_fair A1_2: [0, 1, 1]",
+      "crema-et-al-2024 data_fair A1: [1, 1, 0]",
+      "crema-et-al-2024 data_fair A1_2: [1, 0, 1]",
+      "crema-et-al-2024 data_fair I1: [0, 1, 0]",
+      "crema-et-al-2024 data_fair I3: [0, 0, 1]",
+      "crema-et-al-2024 data_fair R1_3: [0, 1, 1]",
+      "crema-et-al-2024 code_fair A1_2: [1, 0, 1]",
+      "crema-et-al-2024 code_fair I3: [0, 1, 1]",
+      "crema-et-al-2024 code_fair R1_3: [0, 1, 1]"
+    ]
+  }
+}

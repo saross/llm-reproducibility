@@ -1,0 +1,161 @@
+{
+  "status": "OK",
+  "paper_slug": "dye-et-al-2023",
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-sonnet-5 v1.0",
+    "model_id": "claude-sonnet-5",
+    "pulled_files_read": []
+  },
+  "stated_availability": "\"Data and materials are available in the Supplement.\" (Availability of Data and Materials, p.24). Supporting statements: \"The revised chronological model was implemented in OxCal and is included in the Supplement\" (p.11); \"ArchaeoPhases code to reproduce the figure is included in the Supplement\" (Fig. 3 caption p.13, Fig. 4 caption p.15); probability-calculation results for modes of change \"(see Supplement)\" (pp.16-17).",
+  "escalate_reason": null,
+  "data_fair": {
+    "available": true,
+    "total": 6,
+    "sub_principles": {
+      "F1": {
+        "present": 0,
+        "evidence": "Availability statement (p.24) only states 'Data and materials are available in the Supplement' with no DOI/accession for the Supplement itself; contrast with the third-party Hines (2013) ADS dataset which does carry a DOI (10.5284/1018290, p.26 References) but is not this paper's own deposited artefact."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "No structured metadata record (title, description, keywords) exists for the Supplement independent of the one-line availability statement on p.24."
+      },
+      "F3": {
+        "present": 0,
+        "evidence": "No identifier exists for the Supplement (F1=0), so none can be included in metadata."
+      },
+      "F4": {
+        "present": 0,
+        "evidence": "No indication the Supplement is indexed in a searchable data registry (e.g. Zenodo, DataCite); it is an ordinary Elsevier journal-article supplementary file attached to the DOI-bearing article (10.1016/j.jas.2023.105765), not separately registry-deposited."
+      },
+      "A1": {
+        "present": 0,
+        "evidence": "Data-completeness coverage computed as 'partial' (60%, 3/5 Tier 0-2 sources; see data_completeness), which per the instrument's cross-reference rule forces A1=0. Underlying typology/classification sources (Hines & Bayliss, 2013, Society for Medieval Archaeology monograph, p.10 refs; Brugmann, 2004, Oxbow Books, p.10 refs) are not confirmed openly accessible and no ethical-restriction exception applies."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "The Supplement is distributed via the journal's standard web-based delivery alongside the article at https://doi.org/10.1016/j.jas.2023.105765 (title page, p.1) - an open, free, universally implementable HTTP(S) protocol."
+      },
+      "A1_2": {
+        "present": 0,
+        "evidence": "No statement in the paper describes authentication/authorisation mechanisms for the Supplement, and no CARE-related or ethical restriction is discussed for these archaeological bead/grave data."
+      },
+      "A2": {
+        "present": 0,
+        "evidence": "No independent metadata record or landing page for the Supplement is described that would persist if the underlying file link failed; only the article's own DOI record would remain."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "'The revised chronological model was implemented in OxCal ... It comprises two sections; the first defines the likelihoods and their constraints, and the second defines occurrences for each of the bead types' (p.11) - OxCal's CQL2 model syntax is a formal, documented, shared representation used across the Bayesian chronology community."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No evidence that bead-type codes (e.g. 'BE1-Dghnt', 'BE3-Amber') are FAIR-compliant linked/controlled vocabularies; they are ad hoc typological labels drawn from Brugmann (2004) and Nielsen (2013) classifications."
+      },
+      "I3": {
+        "present": 1,
+        "evidence": "The chronological model's data source is traceably cited with a full DOI: 'Hines, J. (2013). Anglo-Saxon graves and grave goods of the 6th and 7th centuries AD: A chronological framework [data-set]. Archaeological Data Service. https://doi.org/10.5284/1018290' (References, p.26), and the text states the prior 'is based on a chronological prior from the OxCal model deposited in the project archive (Hines, 2013)' (p.10)."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Model structure and validation are described with reasonable richness in-text: 'It comprises two sections; the first defines the likelihoods and their constraints, and the second defines occurrences for each of the bead types... five independent runs of the model indicate negligible between-run variability' (p.11)."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "No explicit data-usage licence is stated for the Supplement/data; the only licence mentioned is CC-BY-NC-ND for 'this article' on the White Rose repository cover page (p.1), which does not clearly extend to the data/materials."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "'The revised model calibrates with OxCal version 4.4.2 and the IntCal20 calibration curve (Reimer et al., 2020). As described in the Supplement, five independent runs of the model indicate negligible between-run variability. Results of the calibration are replicable and stable' (p.11) - detailed version and reproducibility provenance."
+      },
+      "R1_3": {
+        "present": 1,
+        "evidence": "Use of OxCal (the field-standard Bayesian radiocarbon calibration tool) and the community-standard IntCal20 calibration curve (Reimer et al., 2020, p.11) demonstrates conformance to domain-relevant standards for archaeological chronology data."
+      }
+    }
+  },
+  "code_fair": {
+    "available": true,
+    "total": 7,
+    "sub_principles": {
+      "F1": {
+        "present": 0,
+        "evidence": "No independent PID exists for the paper-specific analysis code; only 'ArchaeoPhases code to reproduce the figure is included in the Supplement' (Fig. 3 caption p.13, Fig. 4 caption p.15) is stated, with no DOI/repository accession for that script. The general ArchaeoPhases package has its own DOI (10.18637/jss.v093.c01, p.28) but that is third-party software, not the paper's script."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "No structured metadata (title, authorship, description) exists for the code files beyond the brief in-text mentions in figure captions."
+      },
+      "F3": {
+        "present": 0,
+        "evidence": "No identifier exists for the code (F1=0), so none can be included in metadata."
+      },
+      "F4": {
+        "present": 0,
+        "evidence": "The code is not deposited in a searchable code registry (e.g. GitHub, Zenodo, CRAN) but bundled as an Elsevier journal-article supplementary file."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "'ArchaeoPhases code to reproduce the figure is included in the Supplement' (Fig. 3 and Fig. 4 captions, pp.13, 15), and probability-calculation code likewise '(see Supplement)' (pp.16-17) - code is stated as retrievable via the standard supplementary-file mechanism; the instrument's completeness cross-reference rule applies only to data_fair, not code_fair."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "Same standard web-based (HTTP/HTTPS) delivery via the journal article page (DOI 10.1016/j.jas.2023.105765, p.1) as the data - an open, free, universally implementable protocol."
+      },
+      "A1_2": {
+        "present": 0,
+        "evidence": "No statement on authentication/authorisation protocol for the code in the Supplement."
+      },
+      "A2": {
+        "present": 0,
+        "evidence": "No independent metadata/landing page for the code exists that would persist if the Supplement file link failed."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "Code is written for OxCal (CQL2 model scripting) and R/ArchaeoPhases (p.11, p.13-15) - both formal, documented, shared computational environments used across the archaeological chronology field."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No evidence of FAIR-compliant controlled vocabularies or ontologies used within the code itself."
+      },
+      "I3": {
+        "present": 1,
+        "evidence": "The paper properly cites the ArchaeoPhases package with a qualified DOI: 'Philippe, A., & Vibet, M.-A. (2020). Analysis of archaeological phases using the CRAN package ArchaeoPhases. Journal of Statistical Software, 93. https://doi.org/10.18637/jss.v093.c01' (References, p.28), and states in the Conclusion: 'The modes of change can be investigated with the joint posteriors recorded in the MCMC output of a Bayesian model using functions provided by ArchaeoPhases software (Philippe & Vibet, 2020)' (p.23)."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Code purpose/structure is described in reasonable detail: 'The depositional histories of each pair of beads is observed at each iteration of the MCMC output and a tally kept of all relationships that are consistent with each mode. The tallies are then divided by the total number of MCMC samples to provide the proportion (and hence probability)...' (p.14)."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "No explicit software licence (e.g. MIT, GPL, CC0) is stated for the paper-specific code included in the Supplement."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Version and validation provenance given: 'calibrates with OxCal version 4.4.2 and the IntCal20 calibration curve ... five independent runs of the model indicate negligible between-run variability' (p.11); Author's Contributions states 'AP maintains the ArchaeoPhases software, improved the R code for tempo and occurrence plots and augmented their description in the text' (p.24)."
+      },
+      "R1_3": {
+        "present": 1,
+        "evidence": "Use of OxCal and the peer-reviewed, JSS-published ArchaeoPhases R package (Philippe & Vibet, 2020, p.28) demonstrates conformance to established domain computational standards for Bayesian archaeological chronology analysis."
+      }
+    }
+  },
+  "data_completeness": {
+    "datasets_enumerated": 5,
+    "datasets_accessible_tier_0_2": 3,
+    "coverage_percentage": 60,
+    "coverage_category": "partial",
+    "assessment_scope": "straightforward",
+    "barriers": [
+      "paywalled/limited-availability monograph: Hines & Bayliss (2013), Society for Medieval Archaeology - source of interpretative chronologies (Bayliss et al. 2013 chapter) and typology (Nielsen 2013 chapter) used to build the chronological prior and bead classification",
+      "paywalled/limited-availability monograph: Brugmann (2004), Oxbow Books - source of the established bead classification used for seriation",
+      "journal paywall: Hines (2021), The Antiquaries Journal - source of the additional 20 RAF Lakenheath female-grave beads added to the corpus"
+    ]
+  }
+}

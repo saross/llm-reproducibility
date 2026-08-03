@@ -1,0 +1,161 @@
+{
+  "status": "OK",
+  "paper_slug": "crema-et-al-2024",
+  "stated_availability": "Section 4.2 (Methods, p.7, immediately before Section 5 Results): \"We used the IntCal20 curve for all models (Reimer et al., 2020) using the calibration process defined in equation [3]. All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942.\" No separate data-only or code-only availability statement exists; data and code are described as a single combined archive. Article itself is CC BY open access (title page, and Acknowledgements p.9: \"the author has applied a Creative Commons Attribution (CC BY) licence to any Author Accepted Manuscript version arising from this submission\" -- this licence is explicitly scoped to the article/manuscript, not stated to cover the GitHub/Zenodo repository).",
+  "escalate_reason": null,
+  "data_fair": {
+    "available": true,
+    "total": 10,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "Data permanently archived with a DOI. p.7 (Section 4.2): 'All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942.'"
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "Zenodo mandates structured author/title/description fields for every deposit; the archived DOI 10.5281/zenodo.10782942 stated in the paper therefore carries at minimum this structured metadata. Not independently verified via repository access (no web-browsing tool available to this FAIR-only assessment)."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "Zenodo landing pages display the deposit's own DOI within the record's citation/metadata block by platform-standard design, so the archived record at 10.5281/zenodo.10782942 (p.7) includes its own identifier in its metadata."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Archived on Zenodo, which the frozen instrument's own F4 definition explicitly names as a qualifying searchable registry ('Zenodo, CRAN, DataCite'). p.7: '...permanently archived on https://doi.org/10.5281/zenodo.10782942.'"
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Data-completeness coverage assessed as 'complete' (see data_completeness object) on the strength of the paper's explicit 'All data ... are available' claim (p.7), so the A1 minimal/partial override is not triggered. Retrievable via standard HTTPS/DOI-resolution protocol (GitHub + Zenodo). This rests on the authors' self-report; not independently verified by visiting the repository, which is outside the scope of this FAIR-only (non-reproduction) assessment."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "GitHub and Zenodo are free, public, HTTPS-based services with no subscription, licence fee, or login required to view/download openly deposited material (archival statement, p.7)."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "No ethical or access restriction is stated or implied for the aggregated radiocarbon-date compilations (not human-subjects or Indigenous-sensitive data); the stated 'All data ... are available' with no gating satisfies A1.2 vacuously -- no barrier is imposed where none is necessary."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo (CERN-operated, DataCite/OpenAIRE-compliant) commits to persistent DOI/metadata resolution (tombstone pages) even if deposited files are later withdrawn -- a standing platform policy applying to the archived DOI 10.5281/zenodo.10782942 cited on p.7."
+      },
+      "I1": {
+        "present": 0,
+        "evidence": "The paper does not state the file format(s) of the archived compiled radiocarbon-date data (e.g., CSV, .rds, .xlsx). Format could not be confirmed from the paper's own text, and repository inspection is outside this task's scope. Scored 0 as unscoreable per instrument rule ('unscoreable sub-principles score 0')."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No mention anywhere in the paper of controlled vocabularies, ontologies, or FAIR-compliant term systems applied to the shared data."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No evidence that the archived data record itself contains qualified/typed references (e.g., DataCite relatedIdentifier fields) to other resources; not verifiable from the paper's text alone."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Extensive accompanying description of the data's structure, provenance, and composition: p.5 (Section 4.1.2): 'We examined a total of 1479 14C dates on seed remains from Japan (n = 551, from 215 sites, Fig. 1a) and Britain (n = 928, from 314 sites, Fig. 1b) ... dates on rice (n = 203) and various edible wild nuts ... (n = 348)'; and p.5 (Section 4.1.3) for the n=1417 cremation / n=1119 inhumation burial dataset."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "No licence specific to the GitHub/Zenodo data repository is stated anywhere in the paper. The CC BY licence mentioned (title page; Acknowledgements p.9) is explicitly scoped to 'this article' / 'any Author Accepted Manuscript version', not to the separately hosted data-and-code archive."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Detailed provenance given per dataset: original sources named (Kudo et al., 2023; Bevan et al., 2017; Bloxam, 2020; Bloxam and Parker Pearson, 2022; Healy, 2012; Mallick and Reich, 2023; Olalde et al., 2018; Wilkin, 2013; Willis et al., 2016), plus explicit calibrated-probability filtering thresholds (e.g., 'cumulative calibrated probability mass equal to or larger than 0.5 for the interval 4000-1700 cal BP', p.5) and classification criteria (domesticate vs wild; cremation vs inhumation)."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No explicit statement that the shared data conforms to a named domain data standard/schema. IntCal20 (Reimer et al., 2020) is cited as the calibration curve used, but this is a methodological standard, not documented evidence that the deposited data file itself follows a named community data-structure standard."
+      }
+    }
+  },
+  "code_fair": {
+    "available": true,
+    "total": 11,
+    "sub_principles": {
+      "F1": {
+        "present": 1,
+        "evidence": "Same permanently archived DOI covers the code. p.7: 'All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942.'"
+      },
+      "F2": {
+        "present": 1,
+        "evidence": "Zenodo mandates structured author/title/description metadata for the deposit that bundles the R scripts (same record as data, 10.5281/zenodo.10782942); not independently verified via repository access."
+      },
+      "F3": {
+        "present": 1,
+        "evidence": "Zenodo record display includes the DOI within its own metadata/citation block by default, applying to the same archived deposit at 10.5281/zenodo.10782942 that contains 'All ... R scripts' (p.7)."
+      },
+      "F4": {
+        "present": 1,
+        "evidence": "Archived on Zenodo, explicitly named as a qualifying searchable registry by the frozen instrument's F4 definition ('Zenodo, CRAN, DataCite'). p.7 archival statement."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "R scripts explicitly stated as retrievable at the same GitHub/Zenodo location via standard HTTPS/DOI-resolution protocol (p.7: 'All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942'). The instrument's coverage-completeness override applies only to data_fair's A1, not code."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "GitHub and Zenodo are free, public, HTTPS platforms with no login/subscription required, per the same archival statement (p.7)."
+      },
+      "A1_2": {
+        "present": 1,
+        "evidence": "No restriction stated or implied for the code; fully open sharing satisfies A1.2 vacuously (no auth barrier imposed where none is necessary)."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Zenodo's standing policy of persistent DOI/metadata resolution even after file withdrawal applies equally to the code portion of the same archived deposit (10.5281/zenodo.10782942)."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "Code is explicitly identified as R scripts using formal, shared programming frameworks: p.6-7 (Section 4.2): 'Both the hierarchical model described in equations [5-6] and the random walk ICAR model were implemented using the NIMBLE (de Valpine et al., 2017, 2020) probabilistic programming language in R (R Core Team, 2020) and the nimbleCarbon R package (Crema, 2022b; Crema and Shoda, 2021).'"
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No FAIR-compliant vocabulary/ontology use is described for the code."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No evidence that the archived code record itself contains qualified/typed PID references to related resources (e.g., a codemeta.json or CITATION.cff with relatedIdentifier fields); not verifiable from the paper's text alone (the paper's own bibliographic citations of NIMBLE/nimbleCarbon are adjacent but not confirmed as embedded in the repository's own metadata)."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Modelling code documented in substantial detail: equations [5]-[9] (hierarchical model), the ICAR model description (p.3-4), and the software stack used to implement them (p.6-7), constituting a rich accompanying description of the shared scripts."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "No licence specific to the code repository is stated; the article's CC BY licence is explicitly scoped to the manuscript only (see data R1.1 rationale)."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Detailed computational provenance given: priors specified in eq. [10]-[12] (r~Exponential(100), mu~Beta(2,2), phi~Gamma(5,0.1)); MCMC settings documented, p.6: 'four chains, each with 1 million iterations (half discarded as burn-in) and with thinning set to 50' (hierarchical model) and 'four chains, each with 100,000 iterations (20,000 of which were discarded for burn-in), with parameters collected every four steps' (ICAR model); convergence diagnostics (Gelman-Rubin statistic, agreement indices) also documented, p.6."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No explicit statement that the shared scripts follow a named software community standard (e.g., installable R package structure, ROpenSci-style review); described only as 'R scripts' accompanying the analysis, not as a packaged/reviewed software artefact."
+      }
+    }
+  },
+  "data_completeness": {
+    "datasets_enumerated": 10,
+    "datasets_accessible_tier_0_2": 10,
+    "coverage_percentage": 100,
+    "coverage_category": "complete",
+    "assessment_scope": "straightforward",
+    "barriers": []
+  },
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-sonnet-5 v1.0",
+    "model_id": "claude-sonnet-5",
+    "pulled_files_read": [
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/fair-principles-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/pid-systems-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/checklists/expected-information.md"
+    ]
+  }
+}

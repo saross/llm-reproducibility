@@ -1,0 +1,166 @@
+{
+  "status": "OK",
+  "paper_slug": "key-et-al-2024",
+  "stated_availability": "Data: only a generic Appendix A pointer \u2014 \"Supplementary data to this article can be found online at https://doi.org/10.1016/j.jas.2023.105921\" \u2014 the article's own DOI, not a separate dataset repository/DOI. The two newly created replica assemblages (handaxes n=500, archaic points n=45) are summarised only as descriptive statistics in-text (Table 1); the archaic-point specimens are stated to be physically curated at the Kent State University Experimental Archaeology Laboratory with no digital deposit mentioned. The ten case-study datasets are drawn from prior sources, several explicitly closed: one from an \"Unpublished thesis. University College London\" (Mart\u00edn-Ramos 2022, Olduvai cleavers), two from paywalled monographs (Petrie 2020; Robb 2007), the rest from journal articles cited only narratively with no stated availability. Code: stated twice, verbatim, as \"The script used to run all validation analyses is available in the supplementary information\" and \"The script used to run all case study tests is available in the supplementary information,\" both via the same Appendix A / article-DOI link. R version 4.3.0 stated; no GitHub/Zenodo/Software Heritage identifiers for code or data anywhere in the paper. Article is CC BY 4.0 open access.",
+  "data_fair": {
+    "available": true,
+    "total": 5,
+    "sub_principles": {
+      "F1": {
+        "present": 0,
+        "evidence": "\"Appendix A. Supplementary data \u2014 Supplementary data to this article can be found online at https://doi.org/10.1016/j.jas.2023.105921.\" No dataset-specific DOI/accession is issued; the data shares the article's own DOI rather than having a distinct persistent identifier."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "No standalone structured metadata record for the dataset exists; the only description is in-article table captions (e.g. Table 1: \"Descriptive morphometric data for the two replica stone tool assemblages used in the validation analyses\"), not a repository metadata record."
+      },
+      "F3": {
+        "present": 0,
+        "evidence": "No dataset-specific identifier exists to be included in any metadata (dependent on F1=0)."
+      },
+      "F4": {
+        "present": 0,
+        "evidence": "No evidence the data are indexed in a searchable data registry (Zenodo, DataCite, tDAR, etc.); it is only a generic Elsevier \"Supplementary data\" file attached to the article page."
+      },
+      "A1": {
+        "present": 0,
+        "evidence": "Data-completeness coverage = 'partial' (8/12 enumerated datasets at Tier 0-2 = 66.7%): 4 of 12 sourced datasets are Tier 3 (unpublished PhD thesis for Olduvai Bed IV cleavers \u2014 'Mart\u00edn-Ramos, C., 2022... Unpublished thesis. University College London'; two paywalled monographs, Petrie 2020 and Robb 2007; and lab-curated, non-deposited archaic-point specimens). Per the instrument's A1 completeness rule, coverage_category = partial forces A1 = 0; no ethical-restriction exception applies."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "\"This is an open access article under the CC BY license (http://creativecommons.org/licenses/by/4.0/)\" \u2014 the accessible supplementary-data portion is reached via free HTTPS DOI resolution with no paywall or proprietary system."
+      },
+      "A1_2": {
+        "present": 0,
+        "evidence": "No statement anywhere addresses authentication/authorisation procedures for the data; no ethical restriction is documented and no access-control mechanism is described for the Elsevier supplementary-data hosting."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "The article DOI (https://doi.org/10.1016/j.jas.2023.105921) is a persistent Elsevier/Crossref-registered identifier; its landing-page metadata (including the Appendix A pointer to supplementary data) would remain resolvable under standard publisher persistence commitments even if the specific supplementary file became unavailable."
+      },
+      "I1": {
+        "present": 0,
+        "evidence": "Data are presented as PDF tables within the article (Tables 1, 2, 3, 5, 6, 7); no structured, machine-readable format (CSV/JSON with schema) is stated for the supplementary data file itself."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No controlled vocabulary or ontology (e.g. CIDOC-CRM, Getty AAT) is cited for artefact types or morphometric attributes; variable names (length, breadth, PC1, elongation, refinement) are discipline-conventional but not linked to a FAIR vocabulary with PIDs."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "Source datasets are cited via standard author-year references only (e.g. \"the methods used to collect these data are described in Key and Lycett (2017)\"), not as qualified/typed PID-based relationships."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Table 1 and the case-study tables (2, 3, 5, 6, 7) report a plurality of relevant attributes per assemblage (mean, SD, CV, min, max for length, breadth, thickness, mass, elongation, refinement, PC1, PC2) with units and explicit methodological references (e.g. \"The methods used to collect these data are described in Key and Lycett (2017)\")."
+      },
+      "R1_1": {
+        "present": 1,
+        "evidence": "\"This is an open access article under the CC BY license\" \u2014 a clear, machine-recognisable open licence declared for the published work, of which the Appendix A supplementary data is stated to be part; no contradictory or more restrictive licence is stated for the data specifically."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Detailed provenance given per dataset, e.g. \"500 replica Acheulean handaxes were produced by [Key and Lycett] on British flint over the course of 18 months for use in a series of experimental functional studies\"; each of the ten case studies similarly states site/excavation/production context and cites the specific methodological source."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No domain data standard (ARIADNEplus, Dublin Core, Darwin Core, CIDOC-CRM) is cited as having been used to structure or describe the morphometric datasets."
+      }
+    }
+  },
+  "code_fair": {
+    "available": true,
+    "total": 7,
+    "sub_principles": {
+      "F1": {
+        "present": 0,
+        "evidence": "Code is bundled as \"Supplementary data\" at the article's own DOI (https://doi.org/10.1016/j.jas.2023.105921); no distinct DOI/SWHID/accession is issued for the script itself."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "No structured software metadata (CodeMeta.json, CITATION.cff, README) is described; the paper only states, twice, that \"the script...is available in the supplementary information\" with no further metadata record."
+      },
+      "F3": {
+        "present": 0,
+        "evidence": "No code-specific identifier exists to be referenced in metadata (dependent on F1=0)."
+      },
+      "F4": {
+        "present": 0,
+        "evidence": "No evidence the code is indexed in a software registry (CRAN, Software Heritage, Zenodo, GitHub); it is only an Elsevier-hosted \"Supplementary data\" file."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "\"The script used to run all validation analyses is available in the supplementary information\" and \"The script used to run all case study tests is available in the supplementary information\" (Appendix A links this to https://doi.org/10.1016/j.jas.2023.105921) \u2014 retrievable via a standard HTTPS/DOI-resolver protocol."
+      },
+      "A1_1": {
+        "present": 1,
+        "evidence": "Open-access CC BY 4.0 article (\"This is an open access article under the CC BY license\"); supplementary code reached via free HTTPS DOI resolution, no paywall or proprietary system stated."
+      },
+      "A1_2": {
+        "present": 0,
+        "evidence": "No statement addresses any authentication/authorisation procedure for the code; no restriction or justification is documented anywhere in the paper."
+      },
+      "A2": {
+        "present": 1,
+        "evidence": "Article DOI (https://doi.org/10.1016/j.jas.2023.105921) is a persistent Elsevier/Crossref-registered identifier whose landing-page metadata (including the Appendix A reference to the supplementary script) would remain resolvable under standard publisher persistence commitments even if the script file itself were removed."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "\"All analyses were undertaken in 'R' version 4.3.0\" \u2014 the shared script is written in R, a formal, widely used, machine-readable programming language, not a narrative description of the analysis."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No dependency/package manifest or controlled software vocabulary (e.g. CodeMeta types, package DESCRIPTION) is described for the script."
+      },
+      "I3": {
+        "present": 0,
+        "evidence": "No qualified, PID-based references from the code to other resources (e.g. versioned package citations, dependency DOIs) are stated."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "Sections 2.3 and 2.4 describe in detail what the script implements \u2014 the OLE modelling procedure (following Roberts and Solow, 2003), subsampling percentages (5/10/20/50%), k-value conditions (5, 10, 20, 30), and the confidence-interval coverage procedure (following Rivadeneira et al., 2009) \u2014 giving substantial descriptive context for the shared code beyond a bare file listing."
+      },
+      "R1_1": {
+        "present": 1,
+        "evidence": "\"This is an open access article under the CC BY license\" \u2014 the supplementary script is declared, via the same Appendix A / article-DOI package, to be part of the open-access publication; no separate, more restrictive licence is stated for the code."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Software version documented (\"'R' version 4.3.0\") together with a detailed narrative of the algorithm, parameters (k values, sampling percentages), and validation procedure implemented by the script."
+      },
+      "R1_3": {
+        "present": 0,
+        "evidence": "No community software standard (CRAN packaging conventions, rOpenSci review, JOSS-style review) is stated as having been followed for the script."
+      }
+    }
+  },
+  "data_completeness": {
+    "datasets_enumerated": 12,
+    "datasets_accessible_tier_0_2": 8,
+    "coverage_percentage": 66.7,
+    "coverage_category": "partial",
+    "assessment_scope": "straightforward",
+    "barriers": [
+      "Co-author/lab gatekeeping: replica archaic point specimens (n=45) 'curated in the Kent State University Experimental Archaeology Laboratory' with no digital data deposit stated",
+      "Unpublished thesis: Olduvai Bed IV cleaver data (n=134) sourced from Mart\u00edn-Ramos (2022), an 'Unpublished thesis. University College London'",
+      "Paywalled monograph: Middle Historic ceramic bowl data (n up to 1466) sourced from Petrie (2020), Oxbow Books monograph 'Resistance at the Edge of Empires'",
+      "Paywalled monograph: Neolithic Impressed Ware/Stentinello pot data sourced from Robb (2007), Cambridge University Press monograph 'The Early Mediterranean Village'"
+    ]
+  },
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-sonnet-5 v1.0",
+    "model_id": "claude-sonnet-5",
+    "pulled_files_read": [
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/fair-principles-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/infrastructure/pid-systems-guide.md",
+      "/home/shawn/Code/llm-reproducibility/.claude/skills/research-assessor/references/checklists/expected-information.md"
+    ]
+  },
+  "escalate_reason": null
+}

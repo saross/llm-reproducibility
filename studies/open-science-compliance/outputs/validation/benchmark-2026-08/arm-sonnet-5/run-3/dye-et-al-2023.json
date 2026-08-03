@@ -1,0 +1,162 @@
+{
+  "status": "OK",
+  "paper_slug": "dye-et-al-2023",
+  "stated_availability": "\"Data and materials are available in the Supplement.\" (Availability of Data and Materials section, p. 24). Additional detail: \"The revised chronological model was implemented in OxCal and is included in the Supplement\" (p. 11); \"ArchaeoPhases code to reproduce the figure is included in the Supplement\" (fig. 3 caption p. 13; fig. 4 caption p. 15).",
+  "escalate_reason": null,
+  "receipts": {
+    "instrument_versions": {
+      "fair-instrument": "2.0"
+    },
+    "instrument_receipts": {
+      "fair-instrument": "3ddcbfd82575a2f8"
+    },
+    "agent_version": "fair-assessor-sonnet-5 v1.0",
+    "model_id": "claude-sonnet-5",
+    "pulled_files_read": []
+  },
+  "data_fair": {
+    "available": true,
+    "sub_principles": {
+      "F1": {
+        "present": 0,
+        "evidence": "No PID/DOI is given for the authors' own data/materials; the availability statement reads only \"Data and materials are available in the Supplement\" (p. 24), with no identifier attached. The reused upstream Hines (2013) ADS dataset does carry a DOI (10.5284/1018290, p. 26) but is a third-party prior dataset, not this study's own deposited output."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "No standalone structured metadata record (title/authors/keywords/description) is evidenced for the Supplement data object; it is described only in article prose: \"It comprises two sections; the first defines the likelihoods and their constraints, and the second defines occurrences for each of the bead types\" (p. 11)."
+      },
+      "F3": {
+        "present": 0,
+        "evidence": "No identifier exists for the data object (see F1), so metadata cannot be shown to include one."
+      },
+      "F4": {
+        "present": 0,
+        "evidence": "The Supplement is a journal-attached file with no evidence of indexing in a searchable data registry (Zenodo, CRAN, DataCite); only the upstream Hines (2013) dataset is registry-indexed (Archaeological Data Service), and that is not this paper's own output."
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Data-completeness coverage is 'substantial' (80%; 4/5 enumerated datasets at Tier 0-2), so the instrument's forced-zero rule for 'minimal'/'partial' coverage does not trigger. A majority of the research data is retrievable via a standard protocol: the core reused grave/bead dataset is DOI-resolvable at ADS (\"Hines, J. (2013)...https://doi.org/10.5284/1018290\", p. 26), IntCal20 is a standard open calibration resource, and the authors' revised model is stated to be included in the Supplement attached to the DOI'd journal article (p. 24)."
+      },
+      "A1_1": {
+        "present": 0,
+        "evidence": "Openness/cost of retrieval is not confirmed for a material share of the needed data: Hines (2021, Antiquaries Journal), Bayliss et al. (2013), and Brugmann (2004) are subscription journal/monograph sources (pp. 25-27), and the paper gives no URL, licence, or explicit open-access statement for its own Supplement, so 'open, free, universally implementable' is not evidenced across the full dataset."
+      },
+      "A1_2": {
+        "present": 0,
+        "evidence": "No authentication/authorisation protocol or CARE-based restriction is described anywhere in the paper; unscoreable, scores 0 per instrument default."
+      },
+      "A2": {
+        "present": 0,
+        "evidence": "No independent, persistent metadata/landing-page record for the data object is evidenced beyond its being folded into 'the Supplement' of the article; no separate record that would survive removal of the files is described."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "\"The revised chronological model was implemented in OxCal...The revised model calibrates with OxCal version 4.4.2 and the IntCal20 calibration curve (Reimer et al., 2020)\" (p. 11) \u2014 OxCal's CQL scripting is a formal, freely accessible, community-shared representation for Bayesian chronological modelling in archaeology."
+      },
+      "I2": {
+        "present": 0,
+        "evidence": "No evidence is given about whether OxCal's own scripting vocabulary meets FAIR criteria in its own right (independent registration, PID, etc.); unscoreable, scores 0."
+      },
+      "I3": {
+        "present": 1,
+        "evidence": "\"Chronological relations among the female graves are based on a chronological prior from the OxCal model deposited in the project archive (Hines, 2013)\" (p. 10), with Hines (2013) cited by DOI in the reference list (p. 26) \u2014 a qualified reference to another PID'd resource."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "The dataset/model is described with plural relevant attributes: composition (two sections \u2014 likelihoods/constraints and bead-type occurrences), software version, calibration curve, and stability checks (\"five independent runs of the model indicate negligible between-run variability\", p. 11)."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "No data usage licence is stated for the deposited data/materials. The CC-BY-NC-ND notice on the White Rose repository cover page (\"Article available under the terms of the CC-BY-NC-ND licence\", p. 1) applies to the article text, not to the Supplement's data/materials."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Detailed provenance is given: the authors specify exactly which constraints from Bayliss et al. (2013) were retained or removed and why (p. 10-11, items i-iii), the OxCal version (4.4.2) and calibration curve (IntCal20) used, and validation via five independent MCMC runs (p. 11)."
+      },
+      "R1_3": {
+        "present": 1,
+        "evidence": "The model uses OxCal (the field-standard Bayesian radiocarbon calibration tool) and the IntCal20 calibration curve (Reimer et al., 2020), meeting established community standards for Bayesian chronological modelling in archaeology (p. 11)."
+      }
+    },
+    "total": 6
+  },
+  "code_fair": {
+    "available": true,
+    "sub_principles": {
+      "F1": {
+        "present": 0,
+        "evidence": "No PID is given for the study-specific R/ArchaeoPhases script; only \"ArchaeoPhases code to reproduce the figure is included in the Supplement\" (fig. 3 and 4 captions, pp. 13, 15) is stated, without an identifier."
+      },
+      "F2": {
+        "present": 0,
+        "evidence": "No standalone structured metadata (title/authors/keywords/description) is evidenced for the code file itself, beyond brief prose description in figure captions and author contributions (\"AP...improved the R code for tempo and occurrence plots\", p. 24)."
+      },
+      "F3": {
+        "present": 0,
+        "evidence": "No identifier exists for the code (see F1)."
+      },
+      "F4": {
+        "present": 0,
+        "evidence": "The study-specific code is not indexed in a searchable registry; it is only 'included in the Supplement.' (The general-purpose ArchaeoPhases package it depends on IS CRAN-indexed and JSS-published, but that is the external tool, not this paper's own analysis script.)"
+      },
+      "A1": {
+        "present": 1,
+        "evidence": "Code FAIR's A1 is not gated by the data-completeness coverage rule (that rule is explicitly scoped to data FAIR). The code is stated to be retrievable as part of the Supplement attached to the DOI'd journal article (\"ArchaeoPhases code to reproduce the figure is included in the Supplement\", pp. 13/15; \"Data and materials are available in the Supplement\", p. 24) \u2014 a standard web-based retrieval route."
+      },
+      "A1_1": {
+        "present": 0,
+        "evidence": "No URL, licence, or explicit open-access statement is given for the Supplement code; openness/cost cannot be confirmed from the paper's own statements, so 'open, free, universally implementable' is not evidenced."
+      },
+      "A1_2": {
+        "present": 0,
+        "evidence": "No authentication/authorisation protocol is described for the code; unscoreable, scores 0."
+      },
+      "A2": {
+        "present": 0,
+        "evidence": "No independent, persistent metadata/landing-page record is evidenced for the code object beyond its inclusion in 'the Supplement'."
+      },
+      "I1": {
+        "present": 1,
+        "evidence": "The code is written in R using the ArchaeoPhases package, a formal, freely accessible, community-shared tool: \"AP maintains the ArchaeoPhases software, improved the R code for tempo and occurrence plots\" (p. 24), citing \"Philippe, A., & Vibet, M.-A. (2020)...Journal of Statistical Software, 93. https://doi.org/10.18637/jss.v093.c01\" (p. 28)."
+      },
+      "I2": {
+        "present": 1,
+        "evidence": "The ArchaeoPhases vocabulary/package the code depends on is itself evidenced to meet FAIR criteria: peer-reviewed publication with a DOI (10.18637/jss.v093.c01) and hosting on CRAN, a searchable software registry (p. 28)."
+      },
+      "I3": {
+        "present": 1,
+        "evidence": "The code's dependency on ArchaeoPhases is a qualified reference to another PID'd resource (DOI 10.18637/jss.v093.c01, p. 28), and the MCMC output it processes is tied to the DOI'd Hines (2013) project archive (p. 10, 26)."
+      },
+      "R1": {
+        "present": 1,
+        "evidence": "The code's function is described with several relevant attributes: it reproduces the tempo and occurrence plots (figs. 3-4 captions) and implements the 'tallying approach' for mode-of-change probability calculations (p. 14: \"a tally [is] kept of all relationships that are consistent with each mode...divided by the total number of MCMC samples\")."
+      },
+      "R1_1": {
+        "present": 0,
+        "evidence": "No licence is stated for the study-specific code in the Supplement."
+      },
+      "R1_2": {
+        "present": 1,
+        "evidence": "Provenance is described: the code processes output from a specifically versioned OxCal model (4.4.2, IntCal20 curve) validated across five independent runs, and the author contributions note who wrote/improved it (p. 11, p. 24)."
+      },
+      "R1_3": {
+        "present": 1,
+        "evidence": "The code builds on ArchaeoPhases, a peer-reviewed, purpose-built R package for exactly this class of analysis (published in Journal of Statistical Software), meeting domain community standards for post-processing Bayesian chronological MCMC output (p. 28)."
+      }
+    },
+    "total": 7
+  },
+  "data_completeness": {
+    "datasets_enumerated": 5,
+    "datasets_accessible_tier_0_2": 4,
+    "coverage_percentage": 80,
+    "coverage_category": "substantial",
+    "assessment_scope": "straightforward",
+    "barriers": [
+      "Bayliss et al. (2013) chronological-framework monograph (Society for Medieval Archaeology) \u2014 closed/paywalled monograph providing bead typology (Nielsen 2013 chapter) and the occurrence-seriation Table 7.18; not freely available (Tier 3)",
+      "Brugmann (2004) glass-beads monograph (Oxbow Books) \u2014 closed/paywalled monograph used for bead classification/similarity estimation; not freely available (Tier 3)",
+      "Hines (2021) RAF Lakenheath report (The Antiquaries Journal) \u2014 subscription journal article providing the additional 20-grave dataset; open-access status not confirmed by the paper (Tier 2)",
+      "Authors' own revised OxCal model and ArchaeoPhases R code \u2014 stated only as 'included in the Supplement' with no URL, DOI, or explicit open-access statement given in the paper text, so exact accessibility could not be confirmed from the paper alone"
+    ]
+  }
+}
