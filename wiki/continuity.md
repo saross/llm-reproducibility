@@ -65,14 +65,13 @@ merged here as PR #1).
   quotation (personal-assistant `a3f5793`). Eleven verified refs in Zotero
   staging `2026-08-10-fair-third-party-artefacts-prior-art`; Marwick 2017 +
   Tedersoo 2021 read directly (both support the ruling).
-- **PENDING VERDICTS (no silent discard):** WN-l, WN-m (2026-08-03, still
-  held); user-obs candidates A–C (2026-08-03) and A–C (2026-08-10) pending
-  in `wiki/user-observations.md`; NEW working-notes candidates **WN-n**
-  (audit surface must equal the reader's trust surface — claims ledger
-  passed 65/68 while every fabricated quote sat outside the emitted set;
-  Obs-16 shape, third sighting) and **WN-o** (test a one-shot resource's
-  premise against primary artefacts before spending it — the receipts count
-  reversed the session's opening plan), presented 2026-08-10.
+- **PENDING VERDICTS (no silent discard):** WN-l, WN-m (2026-08-03) and
+  user-obs candidates A–C (2026-08-03) remain held. **Cleared 2026-08-10:**
+  WN-n and WN-o ACCEPTED → working-notes **Observations 21** (audit surface
+  must equal the reader's trust surface) **and 22** (test a one-shot
+  resource's premise against primary artefacts before spending it);
+  user-obs 2026-08-10 batch adjudicated — A dropped, B and C accepted
+  ("both are good approaches going forward").
 - **PRE-CENSUS REQUIREMENTS UNCHANGED:** audit fix round 2 + schema v1.1
   (now also carries the provenance flag) + receipt-gate operative demo
   (`wiki/planning/audit-2026-08-03-follow-ups.md`); C7 GOVERNED decision

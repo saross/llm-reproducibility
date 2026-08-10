@@ -617,3 +617,78 @@ crediting), and the most capable model was not the most stable. Three runs
 of a single cheap model would have located the same clauses as the full
 cross-model benchmark — a ~$3 instrument diagnostic. (Source: per-arm
 stability disagreement lists in the 2026-08-03 run-records.)
+
+## Observation 21: An audit surface must equal the reader's trust surface (2026-08-10)
+
+*(Approved by Shawn 2026-08-10; drafted at handoff the same day.)*
+
+### Context
+
+The prior-art scout's report on FAIR third-party-artefact handling shipped
+with a machine-readable claims ledger, and the adversarial verifier passed
+65 of its 68 claims — every GitHub API field and every DOI metadata claim
+exact. The same verification pass found four direct quotations that do not
+exist at their cited sources and one load-bearing claim inverted (ACM
+Artifact Review and Badging v1.1's "Author-created artifacts…" rendered as
+the absence of any authorship gate).
+
+### The observation
+
+Every fabricated quotation sat *outside* the emitted claim set. The
+proposer emitted claims for what it had queried mechanically — the
+cheap-to-verify stratum — and none for the prose it wrote from reading,
+which is where a reader's trust actually lands. An audit over a
+proposer-selected claim set therefore clears exactly the content it never
+covers: the ledger's 96% pass rate was an artefact of claim-set selection,
+not evidence of a clean report.
+
+This is the Observation 16 shape (a green check over a narrower scope than
+its readers assume) in its third costume — first a mirror check blind to
+prose, then a sweep blind to its own scope, now a verification ledger
+blind to quotations. The recurring cure is the same: define the checked
+surface from the *consumer's* side (everything a reader would treat as
+verified — here, everything inside quotation marks), never from the
+producer's convenience. Countermeasure shipped 2026-08-10: the scout's
+definition now requires a `quotation` claim for every quoted string, with
+unfetchable material demoted to labelled paraphrase (personal-assistant
+`a3f5793`). Corollary worth keeping: the substance of three of the four
+fabricated quotes was *correct* — the failure mode is fluent paraphrase
+drifting into quotation marks, so the marks themselves, not the content,
+are what the audit must bind.
+
+## Observation 22: Test a one-shot resource's premise against primary artefacts before spending it (2026-08-10)
+
+*(Approved by Shawn 2026-08-10; drafted at handoff the same day.)*
+
+### Context
+
+Amendment 1 §2 permits exactly one routing-fix attempt before the
+registered majority-vote consequence applies. The 2026-08-03 handoff
+carried a ready candidate: push `fair-principles-guide.md` uniformly,
+premised on "receipts show inconsistent pulling". The next session's
+opening move was to re-check that premise against the 45 persisted spawn
+receipts before presenting the decision.
+
+### The observation
+
+The premise held for one arm of three: sonnet pulled the guide in 9/15
+spawns, but opus and fable pulled it in 15/15 each — and both failed both
+gates on the same item cluster. Two follow-up probes sealed it: the guide
+is silent on the disputed cases (pushing a document that lacks the answer
+cannot make the answer uniform), and the within-sonnet correlation between
+guideless spawns and minority votes, while real (17 of 29 splits vs ~11.3
+expected), sat on the wrong gate — sonnet's binding constraint was
+concordance. The card, if played, would have been spent to nudge one arm's
+stability while eligibility stayed out of reach for all three.
+
+The rule: when a plan is about to spend a resource that cannot be
+re-spent — a registered one-shot remediation, an irreversible filing, a
+single permitted re-run — its stated premise is a hypothesis, and the
+cheapest test of that hypothesis against primary artefacts comes first.
+Here the test cost a quarter of an hour against artefacts already on disk
+and reversed the session's opening plan. The handoff that carried the
+candidate was faithful; the premise it recorded was simply narrower than
+the evidence — which is exactly why premises recorded under context
+pressure get re-verified at the source before they are acted on
+(cross-reference: the anti-confabulation rule, and Observation 14's
+canary-probes-beat-documentation).

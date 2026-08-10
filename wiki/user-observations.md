@@ -376,8 +376,12 @@ per-spawn baselines you asked for now exist in three run-records.
 
 ## 2026-08-10 — Candidates
 
-*Drafted at handoff (session 52a81f4b). Pending review; also still pending:
-the 2026-08-03 candidates A–C above.*
+*Drafted at handoff (session 52a81f4b). **Adjudicated by Shawn same day:**
+A DROPPED; B and C ACCEPTED — "both are good approaches going forward"
+(pre-formed infrastructure proposals that operationalise a ruling; batched
+decision points with recommendations as the default format for
+decision-dense sessions). The 2026-08-03 candidates A–C above remain
+pending.*
 
 **Candidate A — The verified scout pipeline exceeded expectations, and said
 so mattered.** Your in-the-moment reaction to the prior-art report — "this
