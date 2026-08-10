@@ -227,14 +227,26 @@ results, not author compliance.
   reads.
 - **#7 RULED:** the registered unscoreable→0 default applies only after
   the #2 ladder (including the evidence pack) is exhausted.
-- **#6 OPEN — F1 identifier granularity.** Shawn asks for intermediate
-  practice between own-DOI and zero. Proposal presented 2026-08-10: read
-  F1 as "a persistent identifier explicitly associated with the artefact"
+- **#6 RULED (Shawn, 2026-08-10):** the gradient proposal adopted — F1
+  reads "a persistent identifier explicitly associated with the artefact"
   (own DOI, or the article DOI where the artefact is distributed as its
-  supplement), and let F2/F3/F4 carry the granularity penalty — yielding
-  a natural within-binary gradient on the F subtotal: own-DOI repository
-  deposit 4/4; supplement under the article DOI 1/4; unpublished 0/4.
-  Awaiting Shawn's verdict.
+  supplement); F2/F3/F4 carry the granularity penalty. F-subtotal
+  gradient within binary items: own-DOI deposit 4/4; supplement under
+  the article DOI 1/4; unpublished 0/4. Stated explicitly in the
+  instrument as a deliberate departure from the F-UJI-strict reading.
+- **Harvester platform list is extensible by design** (Shawn,
+  2026-08-10): start with DataCite/Crossref/Zenodo/GitHub/OSF; add
+  platforms as encountered — Dataverse, the Australian Data Archive
+  (ADA), and Figshare already flagged as likely early additions.
+- **Publication stance (Shawn, 2026-08-10):** in early publications the
+  approach and metrics are presented as *up for discussion*, not the
+  last word. Two consequences: (a) iterate now during paper work —
+  Sonnet-arm probe runs are cheap for testing rule variations where
+  output is unsatisfying or uncertain (caveat from the benchmark:
+  sonnet's within-arm stability is ~7 points below opus, so probes
+  should be 3-run majority-voted, and gate-grade conclusions still need
+  the registered configuration); (b) adjust in response to engagement
+  once publishing begins, via the established dated-amendment path.
 
 ## Phase B — concordance-reference decision (Shawn + Claude)
 
