@@ -202,6 +202,15 @@ results, not author compliance.
   and article-level Crossref persistence — but no independent metadata
   record, no licence field, no registry indexing, no resource-level
   identifier of their own.
+  *Consolidated 2026-08-11 (ratification read): rung (i) is direct
+  evidence — paper text plus the item-8 evidence pack, with same-artefact
+  disagreements governed by the specific rules (e.g. most-restrictive
+  licence); rung (ii) is the by-construction table, applicable only to
+  facts on which rung (i) is silent. Table entitlements are floors, not
+  ceilings. The supplement row applies only to supplements served
+  directly from the article landing page with no independent deposit;
+  repository-hosted supplements (e.g. Figshare-hosted journal
+  supplements, Dryad) score as deposits on that platform.*
 - **#3 RULED:** A1.2 is satisfied where no restriction is necessary.
 - **#4 RULED:** R1.3 targets what GO-FAIR measures — artefact
   reusability, deposit-level standards only; methodological standards
@@ -286,10 +295,16 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       due before amendment 2's paste artefact.
 - [ ] **C6. Artefact-metadata harvester** (decision #5 operationalisation):
       script resolving a paper's declared artefact links via
-      DataCite/Crossref/Zenodo/GitHub/OSF APIs into a verified,
-      receipt-covered evidence pack per paper; licence fields, metadata
-      records, and conflict detection (most-restrictive rule). Feeds the
-      re-specified read-scope in amendment 2.
+      DataCite/Crossref/Zenodo/GitHub/GitLab/OSF APIs (CRAN and Dryad
+      flagged as early additions; endpoint list settled 2026-08-11) into
+      a verified, receipt-covered evidence pack per paper; licence
+      fields, metadata records, and conflict detection (most-restrictive
+      rule, per-artefact scope). Feeds the re-specified read-scope in
+      amendment 2. At build time, verify each platform-table row's
+      asserted entitlements against the platform's current mandatory
+      requirements (dated check — e.g. Zenodo's mandatory-vs-optional
+      field set): table entitlements are floors, and the floor heights
+      are empirical claims.
 
 ## Phase D — amendment 2, re-benchmark, then the registered ladder
 
@@ -323,3 +338,7 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
 | 2026-08-10 | Amendment 2 names the assessment-object definition the **research-surface rule** (framing endorsed) | Shawn |
 | 2026-08-10 | **Decision point #1 RULED:** research-surface rule adopted as drafted (baseline to iterate from); #8 merged into #1; ACM v1.1 recorded as the named deliberate departure | Shawn |
 | 2026-08-10 | prior-art-scout agent definition amended: every direct quotation must be emitted as a verifiable claim (personal-assistant `a3f5793`) | Shawn |
+| 2026-08-11 | Ratification-read fixes to Entry 3: item-1 clause restored; ladder consolidated to two rungs — rung (i) direct evidence (paper + evidence pack), rung (ii) by-construction table; entitlements are floors, not ceilings | Shawn |
+| 2026-08-11 | R1.1 conflict rule scoped per artefact: clean paper/dataset/software licence divisions score separately; most-restrictive applies only to same-artefact disagreements (in-document supplements; paper-vs-service assertions) | Shawn |
+| 2026-08-11 | Endpoint list and platform table maintained independently; GitLab added to endpoints; CRAN + Dryad flagged as early endpoint additions; row-entitlement verification queued at C6 | Shawn |
+| 2026-08-11 | Supplement table row qualified: applies only to supplements served from the article landing page with no independent deposit; repository-hosted supplements (Figshare, Dryad) score as platform deposits; Dryad added to flagged table additions | Shawn |

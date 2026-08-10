@@ -310,24 +310,36 @@ and the validation-phase re-specification. Consolidation into
    proportion-weighted.
 
 3. **Evidence-admissibility ladder + platform table** (new instrument
-   section; ruled 2026-08-10). Admissible evidence, in order: (i) the
-   paper's own text; (ii) the verified artefact evidence pack (item 8);
-   (iii) by-construction properties of platforms in a closed,
-   instrument-listed table, applicable only where the evidence pack has no
-   record. Initial table rows: DataCite-registered DOI (metadata record
-   carrying the identifier; tombstone persistence); Zenodo (DataCite
-   metadata; licence field exists — the licence itself must still be
-   identified per item 6); CRAN (structured package metadata; archival);
-   accredited domain repositories (ADS, tDAR, DANS: ingest-enforced domain
-   metadata standard — satisfies R1.3 by construction); GitHub/GitLab
-   (licence field via evidence pack only; no persistence entitlement);
-   publisher supplement of a Crossref-registered article (HTTPS delivery
-   via the article landing page; article-level record persistence; NO
-   independent metadata record, licence field, registry indexing, or
-   resource-level identifier — hence F2 = F3 = F4 = 0 and A2 = 0 for
-   supplement-only deposits). The table is extensible by dated amendment
-   or, pre-census, by gated instrument edit (Dataverse, Australian Data
-   Archive, Figshare flagged as likely additions).
+   section; ruled 2026-08-10; ladder form consolidated 2026-08-11).
+   Admissible evidence forms a two-rung ladder. Rung (i), direct
+   evidence: the paper's own text and the verified artefact evidence
+   pack (item 8) — complementary records, with disagreements between
+   them governed by the specific rules (e.g. item 6's most-restrictive
+   licence rule). Rung (ii), by-construction inference: platform
+   entitlements from a closed, instrument-listed table, applicable only
+   to facts on which rung (i) is silent. Table entitlements are floors,
+   not ceilings: they state the minimum apparatus the platform enforces
+   on everything it hosts; rung-(i) evidence may establish more. Initial
+   table rows: DataCite-registered DOI (metadata record carrying the
+   identifier; tombstone persistence); Zenodo (DataCite metadata;
+   licence field exists — the licence itself must still be identified
+   per item 6); CRAN (structured package metadata; archival); accredited
+   domain repositories (ADS, tDAR, DANS: ingest-enforced domain metadata
+   standard — satisfies R1.3 by construction); GitHub/GitLab (licence
+   field via evidence pack only; no persistence entitlement); publisher
+   supplement of a Crossref-registered article, applicable only where
+   the supplement is served directly from the article landing page with
+   no independent deposit (HTTPS delivery via the article landing page;
+   article-level record persistence; NO independent metadata record,
+   licence field, registry indexing, or resource-level identifier —
+   hence F2 = F3 = F4 = 0 and A2 = 0 for supplement-only deposits). A
+   supplement deposited under its own identifier in a general or domain
+   repository (e.g. journal supplements hosted at Figshare; data in
+   Dryad) is scored as a deposit on that platform — via the evidence
+   pack and, where listed, that platform's row — never under the
+   supplement row. The table is extensible by dated amendment or,
+   pre-census, by gated instrument edit (Dataverse, Australian Data
+   Archive, Figshare, and Dryad flagged as likely additions).
 
 4. **A1.2 no-restriction case** (ruled 2026-08-10). Appended to the A1.2
    line: "A fully open resource requiring no authentication satisfies
@@ -346,15 +358,24 @@ and the validation-phase re-specification. Consolidation into
    yielding F subtotals of 4/4 (own-PID deposit), 1/4 (supplement under
    the article DOI), 0/4 (unpublished)."
 
-6. **R1.1 licence semantics** (ruled 2026-08-10). "Unless explicitly
-   stated otherwise, an article's licence extends to its publisher-hosted
-   supplements: check for both article and supplement licences; absent a
-   separate supplement licence, default to same-as-paper. Artefacts hosted
-   on third-party services are scored on the licence recorded at the
-   service (via the evidence pack) — a platform's mandatory licence field
-   does not itself satisfy R1.1; the licence must be identified. Where
-   paper and repository conflict, the most restrictive licence governs
-   scoring."
+6. **R1.1 licence semantics** (ruled 2026-08-10; per-artefact scope
+   clarified 2026-08-11). "Licences are assessed per artefact: where a
+   paper and its separately deposited dataset or software carry
+   different licences, each artefact is scored on its own licence — a
+   clean division, not a conflict. The most-restrictive default applies
+   only where sources disagree about the licence of the *same* artefact:
+   (a) a supplement carried in or served with the article itself —
+   unless explicitly stated otherwise, the article's licence extends to
+   publisher-hosted supplements; check for both article and supplement
+   licences; absent a separate supplement licence, default to
+   same-as-paper; where both exist and differ, the more restrictive
+   governs; (b) a deposited artefact whose licence as asserted in the
+   paper differs from the licence recorded at the hosting service — the
+   more restrictive governs scoring (the responsible-consumer reading).
+   Where the paper is silent, artefacts on third-party services are
+   scored on the licence recorded at the service (via the evidence
+   pack) — a platform's mandatory licence field does not itself satisfy
+   R1.1; the licence must be identified."
 
 7. **R1.3 qualifying standards** (ruled 2026-08-10). "R1.3 scores
    deposit-level standards — what GO-FAIR measures: artefact reusability,
@@ -367,15 +388,20 @@ and the validation-phase re-specification. Consolidation into
    established methods) do not qualify."
 
 8. **Read-scope re-specification + artefact-metadata harvester** (ruled
-   2026-08-10; supersedes amendment 1 §4's paper-only formulation for the
-   re-validation and census). Scoring spawns receive: the paper source,
-   the pushed instruments, and a per-paper verified evidence pack produced
-   by a deterministic harvester that resolves the paper's declared
-   artefact links via enumerated endpoints (DataCite, Crossref, Zenodo,
-   GitHub, OSF; extensible) into licence fields, metadata records, and
-   conflict flags, receipt-covered like the instruments. Spawns remain
-   network-free; evidence is identical across runs. The prohibition on
-   reading persisted assessments stands unchanged.
+   2026-08-10; endpoint list settled 2026-08-11; supersedes amendment 1
+   §4's paper-only formulation for the re-validation and census).
+   Scoring spawns receive: the paper source, the pushed instruments, and
+   a per-paper verified evidence pack produced by a deterministic
+   harvester that resolves the paper's declared artefact links via
+   enumerated endpoints (DataCite, Crossref, Zenodo, GitHub, GitLab,
+   OSF; CRAN and Dryad flagged as early additions; extensible) into
+   licence fields, metadata records, and conflict flags, receipt-covered
+   like the instruments. The endpoint list and the item-3 platform table
+   are maintained independently: endpoints are chosen for queryability
+   of verifiable records, table rows for defensible by-construction
+   entitlements; membership in one implies nothing about the other.
+   Spawns remain network-free; evidence is identical across runs. The
+   prohibition on reading persisted assessments stands unchanged.
 
 9. **Unscoreable boundary** (ruled 2026-08-10). The registered
    unscoreable→0 default applies only after the item-3 ladder is
