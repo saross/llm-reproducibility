@@ -183,3 +183,4 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
 | 2026-08-10 | Working position, decision point #1: assessment target = the research surface (empirical status, fault-free); ruling deferred to the verified prior-art scout report | Shawn |
 | 2026-08-10 | Provenance flag accepted: per-input author-deposited / third-party / undeterminable metadata, never affecting scores; upstream-attributable failures become findings | Shawn |
 | 2026-08-10 | Aggregation rule: reasonable initial choice, then iterate; instrument refinement declared an explicit research goal for the study's expansion | Shawn |
+| 2026-08-10 | Amendment 2 names the assessment-object definition the **research-surface rule** (framing endorsed) | Shawn |
