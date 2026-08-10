@@ -160,7 +160,12 @@ prose it never covers (Observation-16 shape); verifier recommends
 requiring claim emission for every direct quotation (prior-art-scout agent
 definition change, Shawn's tooling, pending his nod).
 
-### Proposed ruling text — decision point #1 (awaiting Shawn's word)
+### Ruling — decision point #1 (RULED: Shawn, 2026-08-10)
+
+**Adopted as drafted, as the baseline to iterate from.** Decision point #8
+(coverage denominator) is merged into this rule; the aggregation rule for
+heterogeneous input sets is drafted under A2 as a reasonable initial
+choice and iterated per the 2026-08-10 decision.
 
 > **Research-surface rule.** The unit of assessment is the paper's
 > research surface: the complete set of digital artefacts — data, code,
@@ -249,3 +254,5 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
 | 2026-08-10 | Provenance flag accepted: per-input author-deposited / third-party / undeterminable metadata, never affecting scores; upstream-attributable failures become findings | Shawn |
 | 2026-08-10 | Aggregation rule: reasonable initial choice, then iterate; instrument refinement declared an explicit research goal for the study's expansion | Shawn |
 | 2026-08-10 | Amendment 2 names the assessment-object definition the **research-surface rule** (framing endorsed) | Shawn |
+| 2026-08-10 | **Decision point #1 RULED:** research-surface rule adopted as drafted (baseline to iterate from); #8 merged into #1; ACM v1.1 recorded as the named deliberate departure | Shawn |
+| 2026-08-10 | prior-art-scout agent definition amended: every direct quotation must be emitted as a verifiable claim (personal-assistant `a3f5793`) | Shawn |
