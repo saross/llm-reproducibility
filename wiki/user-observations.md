@@ -373,3 +373,33 @@ the benchmark you volunteered the Fable overflow arrangement ("charged the
 account, we should be fine") plus a forward-looking ask (track tokens for
 better estimates). The run never paused on a spend question, and the
 per-spawn baselines you asked for now exist in three run-records.
+
+## 2026-08-10 — Candidates
+
+*Drafted at handoff (session 52a81f4b). Pending review; also still pending:
+the 2026-08-03 candidates A–C above.*
+
+**Candidate A — The verified scout pipeline exceeded expectations, and said
+so mattered.** Your in-the-moment reaction to the prior-art report — "this
+is a richer haul than I expected" — arrived before verification, and the
+verifier then removed four fabricated quotations from under it. The
+pipeline's value was the *pair*: breadth from the cheap proposer, trust
+from the adversarial pass. Worth recording that the enthusiasm survived
+the corrections — the corrected report was still the decision-grade
+artefact you wanted.
+
+**Candidate B — Infrastructure proposals that operationalise your rulings
+land best pre-formed.** When your licence ruling implied external API
+checks, the harvester proposal arrived as a concrete design (deterministic,
+receipt-covered, evidence identical across runs) rather than a question —
+and your response was immediate adoption plus extension ("love it...
+Dataverse / ADA and Figshare jump to mind"). The pattern: translate a
+ruling's operational cost into a designed mechanism before presenting it.
+
+**Candidate C — Batch decision points with recommendations enabled seven
+rulings in two messages.** The numbered decision table (each point: what it
+resolves, options, a starting recommendation) let you rule quickly where
+you agreed, redirect where you disagreed (#1's construct reversal), and
+ask precisely where the design genuinely needed your expertise (#6's
+granularity question). Decision-dense sessions may want this as the
+default presentation format.

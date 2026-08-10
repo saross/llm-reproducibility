@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-08-03
+updated: 2026-08-10
 status: active
 ---
 
@@ -29,6 +29,54 @@ merged here as PR #1).
 4. Carry forward open questions.
 
 ---
+
+## Repo state (2026-08-10)
+
+- **§2 ROUTING-FIX CARD DECLINED (Shawn, 2026-08-03/10) — INSTRUMENT
+  CLARIFICATION ROUTE ADOPTED.** Receipts evidence killed the candidate's
+  premise (sonnet pulled the guide 9/15; opus and fable 15/15 and failed
+  both gates anyway; the guide is silent on the disputed cases). Route:
+  erratum → OSF amendment 2 → re-benchmark. **Plan of record:
+  `wiki/planning/instrument-clarification-plan.md`** (phases A–D, decision
+  log, all rulings). Phase A COMPLETE except A3 (guide alignment, rides
+  D1): A1 mining pass verified and reduced 68/150 disputed items to three
+  root causes; A2 drafted as **erratum-log Entry 3 + "Queued amendment 2
+  scope"** (ten items of operative text, PROPOSED — Shawn's ratification
+  read pending).
+- **ALL EIGHT DECISION POINTS RULED (Shawn, 2026-08-10):** research-surface
+  rule (unit = artefacts required to reproduce, status scored, fault never;
+  provenance as non-scoring per-input flag); two-rung evidence ladder with
+  closed platform table; A1.2 open-case satisfied; R1.3 deposit-level
+  standards only; R1.1 licence semantics (supplements default same-as-paper;
+  repository licences checked at the service; conflicts → most restrictive);
+  F-block gradient (F1 explicit-association; 4/4 vs 1/4 vs 0/4);
+  unscoreable→0 only after the ladder. **Deterministic artefact-metadata
+  harvester approved** (plan C6; extensible platform list — Dataverse/ADA/
+  Figshare flagged); amendment 2 re-specifies §4 read-scope as paper +
+  receipt-covered evidence pack. **Reference re-derivation (Phase B1) is
+  now ENTAILED** — rulings flip identified reference scores (dye data
+  R1.3, key A2, F-block items).
+- **SCOUT/VERIFIER PIPELINE:** prior-art survey verified with material
+  corrections — four fabricated quotations, ACM v1.1 claim INVERTED
+  (origin-gated "Author-created artifacts…" → named deliberate departure);
+  JIE badges survive as closest precedent. Cite only
+  `wiki/planning/scout-reports/2026-08-10-fair-third-party-artefacts-prior-art-verified.md`.
+  Countermeasure shipped: prior-art-scout must emit a claim per direct
+  quotation (personal-assistant `a3f5793`). Eleven verified refs in Zotero
+  staging `2026-08-10-fair-third-party-artefacts-prior-art`; Marwick 2017 +
+  Tedersoo 2021 read directly (both support the ruling).
+- **PENDING VERDICTS (no silent discard):** WN-l, WN-m (2026-08-03, still
+  held); user-obs candidates A–C (2026-08-03) and A–C (2026-08-10) pending
+  in `wiki/user-observations.md`; NEW working-notes candidates **WN-n**
+  (audit surface must equal the reader's trust surface — claims ledger
+  passed 65/68 while every fabricated quote sat outside the emitted set;
+  Obs-16 shape, third sighting) and **WN-o** (test a one-shot resource's
+  premise against primary artefacts before spending it — the receipts count
+  reversed the session's opening plan), presented 2026-08-10.
+- **PRE-CENSUS REQUIREMENTS UNCHANGED:** audit fix round 2 + schema v1.1
+  (now also carries the provenance flag) + receipt-gate operative demo
+  (`wiki/planning/audit-2026-08-03-follow-ups.md`); C7 GOVERNED decision
+  still open; monitoring Phase 4 unstarted.
 
 ## Repo state (2026-08-03)
 
@@ -867,6 +915,41 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-08-03 (second) / 2026-08-10 — §2 declined, research-surface rulings, A2 drafted
+
+One session, two sittings a week apart (52a81f4b; renamed
+"LLM-Repro-2026-08-06"); twelve commits `b686b6f`→`8521d50` + handoff, plus
+personal-assistant `a3f5793`. The §2 card was declined on receipts evidence
+gathered before presenting; Shawn chose the instrument-clarification route
+(robust instrument over speed-to-census) and, across two sittings, ruled
+all eight benchmark-derived decision points — anchored by his
+research-surface reframing of the assessment target. Prior-art scout +
+adversarial verifier ran the evidence leg (four fabricated quotations
+caught; ACM inverted claim converted to a named departure; agent-definition
+countermeasure shipped); Marwick and Tedersoo read directly; eleven
+verified references staged in Zotero. Phase A closed bar A3: mining pass
+verified all published benchmark figures from primary artefacts, and A2's
+ten items of drafted operative text sit in erratum-log Entry 3 awaiting
+ratification. Full factual log: `wiki/reflections/session-log.md`
+2026-08-03/10 entry; plan of record:
+`wiki/planning/instrument-clarification-plan.md`.
+
+**NEXT (in order):** (1) Shawn's ratification read of erratum Entry 3's
+drafted text; (2) Phase C build — audit fix round 2, schema v1.1 (+
+provenance flag), C6 harvester, C7 GOVERNED decision; (3) A3 + D1
+consolidation → lodge amendment 2 → re-benchmark; (4) Phase B reference
+re-derivation design (entailed, needs Shawn's shape decision).
+
+**Carry-forward:** zbook still needs `./scripts/install-git-hooks.sh` after
+pull. Shawn: Fable Max-vs-API billing split check still open; Zotero-proxy;
+`ELSEVIER_API_KEY_TDM` still absent; **Cosmos decision window now open**
+(~1 month from 2026-07-21 submission). New this session: lit-scout may want
+the same quotation-claim rule (deferred pending evidence); COPE case URL
+unverifiable by automation (browser-check before ever citing); Marwick 2017
+now has duplicate Zotero items (573 + 4151, merge when convenient);
+`published/agents/prior-art-scout.md` drift picked up at next `/retro`.
+Pending verdicts: see the 2026-08-10 repo-state block.
 
 ### 2026-08-03 — Lodgement, monitoring 0–3, benchmark, two audit rounds
 
