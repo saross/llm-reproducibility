@@ -284,7 +284,8 @@ and the validation-phase re-specification. Consolidation into
    well-archived third-party input earns full credit; a closed or
    unpublished input is penalised even where closure is beyond the authors'
    control. Provenance (author-deposited / third-party / undeterminable) is
-   recorded per required input as non-scoring metadata." Amendment
+   recorded per required input as non-scoring metadata, keeping
+   responsibility reportable as a study finding." Amendment
    rationale cites the verified precedent set (RDA FDMM v1.00
    10.15497/rda00050; JIE Data Openness Badges secondary-data rule,
    10.1111/jiec.12738; CODECHECK; Colavizza et al. 2020; Culina et al.
