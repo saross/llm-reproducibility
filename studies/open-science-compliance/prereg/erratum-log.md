@@ -232,3 +232,159 @@ than the before-census-scoring deadline that Entry 1 alone would require.
    repository artefacts.
 5. **Robustness annex** (review E-7): scored runs from non-selected passing model
    arms are archived and citable as cross-model robustness data, not discarded.
+
+## Entry 3 — 2026-08-10: benchmark-revealed instrument ambiguities (item-structured disagreement)
+
+**Status: instrument ambiguity record + queued amendment 2 scope (PROPOSED —
+pending registrant ratification of the drafted text below; the underlying
+scoring-policy decisions were ruled by the registrant 2026-08-10).**
+
+The 2026-08-03 validation benchmark (amendment 1 §3: three arms × five pilot
+papers × three runs) put all three arms below both 0.90 gates — stability
+0.807/0.873/0.813, concordance 0.773/0.807/0.820 — with the disagreement
+item-structured and shared across arms. The registrant declined the §2
+routing-fix card (its premise held only for the sonnet arm: pull receipts
+show 9/15 guide pulls for sonnet vs 15/15 for both other arms, which failed
+anyway) and chose instrument clarification via this log and OSF amendment 2
+(decision 2026-08-03; plan at `wiki/planning/instrument-clarification-plan.md`).
+
+The Phase A1 mining pass (`studies/open-science-compliance/outputs/validation/
+benchmark-2026-08/disagreement-analysis.md`, machine-readable
+`disputed-items.json`) recomputed both statistics from primary artefacts
+(exact match to published figures) and found 68 of 150 items disputed,
+reducing to three root causes: (1) the assessment target was undefined
+(third-party/upstream/article-level crediting); (2) the admissible evidence
+basis under paper-only scoring was undefined (platform-by-construction
+inference vs paper text); (3) semantic gaps in A1.2 (all 10 possible items
+disputed) and R1.3 (8 of 10). A verified prior-art survey
+(`wiki/planning/scout-reports/2026-08-10-fair-third-party-artefacts-prior-art-verified.md`)
+grounds the clarifications; the registrant ruled all eight decision points
+on 2026-08-10 (plan, decision log).
+
+**Consequence for the reference scores:** the clarifications below flip
+identifiable pilot reference scores (at minimum dye-et-al-2023 data R1.3;
+key-et-al-2024 A2; F-block items on both) and the current reference set
+takes both sides of the target question across papers — reference
+re-derivation under the clarified instrument (plan Phase B1) is entailed,
+not optional.
+
+## Queued amendment 2 scope (running list; PROPOSED 2026-08-10)
+
+Items 1–9 below are drafted operative text for the instrument (v2.0 → v2.1)
+and the validation-phase re-specification. Consolidation into
+`amendment-2-draft.md` follows the registrant's read (plan Phase D1).
+
+1. **Research-surface rule** (new instrument section; ruled 2026-08-10).
+   "The unit of assessment is the paper's research surface: the complete
+   set of digital artefacts — data, code, and other digital inputs —
+   required to reproduce the paper's reported results, as reachable from
+   the published paper. Each FAIR sub-principle scores the empirical status
+   of those artefacts; creator identity, depositor identity, and
+   responsibility for closure never affect scores. A precisely cited,
+   well-archived third-party input earns full credit; a closed or
+   unpublished input is penalised even where closure is beyond the authors'
+   control. Provenance (author-deposited / third-party / undeterminable) is
+   recorded per required input as non-scoring metadata." Amendment
+   rationale cites the verified precedent set (RDA FDMM v1.00
+   10.15497/rda00050; JIE Data Openness Badges secondary-data rule,
+   10.1111/jiec.12738; CODECHECK; Colavizza et al. 2020; Culina et al.
+   2020; Tedersoo et al. 2021; Marwick 2017) and names ACM Artifact Review
+   and Badging v1.1 ("Author-created artifacts…") as the deliberate
+   departure: the study measures the credibility of published results, not
+   author compliance.
+
+2. **Aggregation rule for heterogeneous input sets (initial draft —
+   explicitly iterable per the registrant's 2026-08-10 decision).**
+   "Within each artefact type, sub-principles are scored on the principal
+   artefact(s): those whose absence would block reproduction of the
+   reported results. For data, a sub-principle scores 1 only if it holds
+   for every principal dataset (conjunctive scoring — mirroring the
+   most-restrictive rule for licence conflicts); proportional coverage of
+   the full required set, including non-principal upstream sources, is
+   carried by the data-completeness lane and feeds the A1 override as
+   registered. For code, the paper's own analysis scripts are always
+   principal; third-party dependencies are never substitutes for them and
+   enter scoring only through citation quality (I3) and the evidence
+   pack." Alternatives recorded for iteration: majority-over-principals;
+   proportion-weighted.
+
+3. **Evidence-admissibility ladder + platform table** (new instrument
+   section; ruled 2026-08-10). Admissible evidence, in order: (i) the
+   paper's own text; (ii) the verified artefact evidence pack (item 8);
+   (iii) by-construction properties of platforms in a closed,
+   instrument-listed table, applicable only where the evidence pack has no
+   record. Initial table rows: DataCite-registered DOI (metadata record
+   carrying the identifier; tombstone persistence); Zenodo (DataCite
+   metadata; licence field exists — the licence itself must still be
+   identified per item 6); CRAN (structured package metadata; archival);
+   accredited domain repositories (ADS, tDAR, DANS: ingest-enforced domain
+   metadata standard — satisfies R1.3 by construction); GitHub/GitLab
+   (licence field via evidence pack only; no persistence entitlement);
+   publisher supplement of a Crossref-registered article (HTTPS delivery
+   via the article landing page; article-level record persistence; NO
+   independent metadata record, licence field, registry indexing, or
+   resource-level identifier — hence F2 = F3 = F4 = 0 and A2 = 0 for
+   supplement-only deposits). The table is extensible by dated amendment
+   or, pre-census, by gated instrument edit (Dataverse, Australian Data
+   Archive, Figshare flagged as likely additions).
+
+4. **A1.2 no-restriction case** (ruled 2026-08-10). Appended to the A1.2
+   line: "A fully open resource requiring no authentication satisfies
+   A1.2 — the protocol supports authentication where needed, and none is
+   needed. Score 0 only where access control exists or is warranted but
+   the mechanism is undocumented or unjustified."
+
+5. **F-block identifier granularity** (ruled 2026-08-10). F1 reads: "a
+   globally unique, persistent identifier explicitly associated with the
+   artefact — its own PID, or the article DOI where the artefact is
+   distributed as that article's supplement. This is a deliberate,
+   declared departure from the strict object-PID reading (cf. F-UJI):
+   F2/F3/F4 remain strictly artefact-level (independent metadata record;
+   identifier carried in that record; registry indexing), so the
+   granularity deficiency of supplement-only deposit is scored there,
+   yielding F subtotals of 4/4 (own-PID deposit), 1/4 (supplement under
+   the article DOI), 0/4 (unpublished)."
+
+6. **R1.1 licence semantics** (ruled 2026-08-10). "Unless explicitly
+   stated otherwise, an article's licence extends to its publisher-hosted
+   supplements: check for both article and supplement licences; absent a
+   separate supplement licence, default to same-as-paper. Artefacts hosted
+   on third-party services are scored on the licence recorded at the
+   service (via the evidence pack) — a platform's mandatory licence field
+   does not itself satisfy R1.1; the licence must be identified. Where
+   paper and repository conflict, the most restrictive licence governs
+   scoring."
+
+7. **R1.3 qualifying standards** (ruled 2026-08-10). "R1.3 scores
+   deposit-level standards — what GO-FAIR measures: artefact reusability,
+   not method quality. Qualifying routes: (a) generic metadata schemas
+   (DataCite, Dublin Core); (b) domain schemas and vocabularies
+   (ARIADNEplus, CIDOC-CRM, Darwin Core); (c) deposit in an accredited
+   domain repository whose ingest enforces its metadata standard. For
+   code: package structure, CITATION.cff, CodeMeta, or community review
+   (CRAN, JOSS, rOpenSci). Methodological standards (IntCal20, OxCal,
+   established methods) do not qualify."
+
+8. **Read-scope re-specification + artefact-metadata harvester** (ruled
+   2026-08-10; supersedes amendment 1 §4's paper-only formulation for the
+   re-validation and census). Scoring spawns receive: the paper source,
+   the pushed instruments, and a per-paper verified evidence pack produced
+   by a deterministic harvester that resolves the paper's declared
+   artefact links via enumerated endpoints (DataCite, Crossref, Zenodo,
+   GitHub, OSF; extensible) into licence fields, metadata records, and
+   conflict flags, receipt-covered like the instruments. Spawns remain
+   network-free; evidence is identical across runs. The prohibition on
+   reading persisted assessments stands unchanged.
+
+9. **Unscoreable boundary** (ruled 2026-08-10). The registered
+   unscoreable→0 default applies only after the item-3 ladder is
+   exhausted: a sub-principle is unscoreable only when neither the paper,
+   nor the evidence pack, nor a listed by-construction entitlement speaks
+   to it.
+
+10. **Ride-alongs:** remediation ladder restated for the re-specified
+    validation check (one routing-fix attempt, single re-run, else the
+    registered majority-vote consequence — carrying amendment 1 §2's
+    structure forward); the two escaped-comparator cosmetic fixes flagged
+    at amendment 1 lodgement; `fair-principles-guide.md` alignment with
+    the clarified text plus promotion pull → push (plan A3).

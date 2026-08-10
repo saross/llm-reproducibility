@@ -71,10 +71,13 @@ consumed (see Phase D).
       `disagreement-analysis.md` (+ machine-readable `disputed-items.json`)
       in the benchmark package. Also re-verifies the sonnet
       guideless-minority correlation above.
-- [ ] **A2. One clarification draft per ambiguity class**, each an
-      erratum-log entry with proposed replacement instrument text and the
-      observed failure it resolves. Known five (mining may add more), each
-      a scoring-policy decision for Shawn:
+- [x] 2026-08-10 **A2. One clarification draft per ambiguity class** —
+      all eight decision points ruled by Shawn (see rulings sections
+      above); drafted operative text written as erratum-log **Entry 3 +
+      "Queued amendment 2 scope"** (ten items, PROPOSED, in
+      `studies/open-science-compliance/prereg/erratum-log.md`).
+      Ratification of the drafted wording rides the registrant's read at
+      D1 consolidation. Original decision list, for the record:
       - A1.2 — does a fully open resource needing no authentication score 1?
       - R1.1 — which artefact's licence counts?
       - A2 — metadata persistence for supplement-only deposits.
