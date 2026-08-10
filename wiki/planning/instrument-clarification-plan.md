@@ -86,6 +86,40 @@ consumed (see Phase D).
       context is uniform by construction; rides amendment 2's delivery
       spec, subsuming the §2 card question).
 
+### Working position on decision point #1 (2026-08-10, pending scout)
+
+**The assessment target is the "research surface"** (Shawn's framing): the
+study assesses credibility — reproducibility, transparency, FAIRness — from
+a reviewer's, funder's, or consumer-researcher's standpoint. What matters is
+what the available research surface of the publication supports as the
+culmination of the research programmes that produced it (the authors' work
+and whatever the authors chose to utilise), not who created or deposited any
+given artefact. Consequences accepted:
+
+- Well-archived third-party inputs earn full credit; closed or unpublished
+  inputs are penalised even where blameless — the empirical status of the
+  research is what is measured, fault is not.
+- Decision points #1 and #8 merge: the coverage denominator and the
+  assessment object are the same rule ("the set of artefacts required to
+  reproduce the result").
+- **Provenance is recorded as a per-input flag** (author-deposited /
+  third-party / undeterminable) that never touches scores — keeping fault
+  visible as a reportable *finding* (e.g. the share of FAIR failures
+  attributable to upstream artefacts). Flag rides the schema work (C3).
+- The aggregation rule for heterogeneous input sets is acknowledged
+  non-trivial: make a reasonable initial choice, iterate until results
+  "vibe right" against pilot papers, and declare instrument refinement an
+  explicit research goal as the study expands.
+- Final ruling deferred until the prior-art scout report
+  (`wiki/planning/scout-reports/2026-08-10-fair-third-party-artefacts-prior-art.md`)
+  is in and verified, so any departure from field convention is deliberate
+  and citable.
+
+**Stretch goal (not scheduled):** a sidecar report per paper — "how did
+these researchers, at their stage of the greater research chain, do on
+reproducibility?" — crediting value added (data/code clean-up, artefact
+quality). Side quest; recorded so it is not lost.
+
 ## Phase B — concordance-reference decision (Shawn + Claude)
 
 The E8 reference scores are old-instrument, reproduction-informed; the
@@ -146,3 +180,6 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
 |---|---|---|
 | 2026-08-03 | Routing-fix card declined as candidate stood; instrument-clarification route (path 3) adopted; robust-instrument goal overrides speed-to-census | Shawn |
 | 2026-08-03 | Phase B to draw on Shawn's FAIR expertise; plan externalised to this file | Shawn |
+| 2026-08-10 | Working position, decision point #1: assessment target = the research surface (empirical status, fault-free); ruling deferred to the verified prior-art scout report | Shawn |
+| 2026-08-10 | Provenance flag accepted: per-input author-deposited / third-party / undeterminable metadata, never affecting scores; upstream-attributable failures become findings | Shawn |
+| 2026-08-10 | Aggregation rule: reasonable initial choice, then iterate; instrument refinement declared an explicit research goal for the study's expansion | Shawn |
