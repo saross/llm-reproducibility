@@ -114,11 +114,76 @@ given artefact. Consequences accepted:
   (`wiki/planning/scout-reports/2026-08-10-fair-third-party-artefacts-prior-art.md`)
   is in and verified, so any departure from field convention is deliberate
   and citable.
+- **Scout's two full-text gaps closed by direct reads (2026-08-10; PDFs in
+  Zotero, collection Archaeology-reproducibility).** Both strengthen the
+  working position. *Marwick 2017* (JAMT 24(2), manuscript p. 6): the
+  release obligation attaches to "the most raw form possible of the data
+  from which the summaries and plots were generated" — the paper's
+  evidentiary basis, with no authorship gate — while "the provenance of
+  the data must always be stated, even if the data are not publicly
+  accessible" (copyright, cultural sensitivity acknowledged as legitimate
+  closure); the Madjebebe compendium treats its nineteen user-contributed
+  R packages as declared infrastructure, not a liability. *Tedersoo et
+  al. 2021* (Sci Data 8:192): unit is the article; availability of "most
+  critical data" is coded by access method with storage options that
+  explicitly include "previous publications" and "museum" (Fig. 9) — 
+  reused/third-party holdings count as the article's data — and authors'
+  reasons for declining (data lost, agreements, privacy; Fig. 8) are
+  recorded as findings separate from the availability score: the
+  score-status/record-reasons split already operating in a major audit.
 
 **Stretch goal (not scheduled):** a sidecar report per paper — "how did
 these researchers, at their stage of the greater research chain, do on
 reproducibility?" — crediting value added (data/code clean-up, artefact
 quality). Side quest; recorded so it is not lost.
+
+### Scout verification outcome (2026-08-10)
+
+The adversarial verifier found **material defects in the scout draft**:
+four direct quotations do not exist at their cited sources, and the ACM
+Artifact Review and Badging claim is **inverted** — the operative v1.1
+"Artifacts Available" text reads "**Author-created artifacts** relevant to
+this paper have been placed on a publically accessible archival
+repository…", so ACM is origin-gated: a named **counter-example** the
+research-surface rule deliberately departs from, not supporting precedent.
+The JIE Data Openness Badges precedent survives on its verified text (gold
+data contribution via "links to external or secondary data sets (including
+licensed databases)"; the scheme's own term is "secondary data", and its
+"not data ownership" framing sentence was fabricated). RDA FDMM must be
+cited as v1.00, DOI 10.15497/rda00050 (the draft cited the superseded
+v0.90 draft DOI). Cite ONLY the verified report
+(`…-prior-art-verified.md`); the draft is banner-marked superseded.
+**Process finding (working-notes candidate, pending verdict):** the
+proposer's claims ledger passed 65/68 while every fabricated quotation sat
+outside the emitted claim set — a claims-ledger audit clears exactly the
+prose it never covers (Observation-16 shape); verifier recommends
+requiring claim emission for every direct quotation (prior-art-scout agent
+definition change, Shawn's tooling, pending his nod).
+
+### Proposed ruling text — decision point #1 (awaiting Shawn's word)
+
+> **Research-surface rule.** The unit of assessment is the paper's
+> research surface: the complete set of digital artefacts — data, code,
+> and other digital inputs — required to reproduce the paper's reported
+> results, as reachable from the published paper. Each FAIR sub-principle
+> scores the empirical status of those artefacts; creator identity,
+> depositor identity, and responsibility for closure never affect scores.
+> A precisely cited, well-archived third-party input earns full credit; a
+> closed or unpublished input is penalised even where closure is beyond
+> the authors' control. Provenance (author-deposited / third-party /
+> undeterminable) is recorded per required input as non-scoring metadata,
+> keeping responsibility reportable as a study finding.
+
+Precedent set (verified): RDA FDMM v1.00 resource/reuse definitions with
+no creator-conditioned indicator (10.15497/rda00050); JIE Data Openness
+Badges secondary-data rule (10.1111/jiec.12738 + policy page); CODECHECK
+author-guide language; Colavizza et al. 2020 category coding; Culina et
+al. 2020 (verified negative finding); Tedersoo et al. 2021 storage-mode
+coding with decline reasons recorded separately (direct read); Marwick
+2017 evidentiary-data framing (direct read). **Named departure:** ACM
+Artifact Review and Badging v1.1 (origin-gated) — departed from
+deliberately because the study measures the credibility of published
+results, not author compliance.
 
 ## Phase B — concordance-reference decision (Shawn + Claude)
 

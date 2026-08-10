@@ -1,4 +1,9 @@
-⚠ VERIFICATION PENDING
+⚠ SUPERSEDED — VERIFICATION FOUND MATERIAL DEFECTS. Cite only
+`2026-08-10-fair-third-party-artefacts-prior-art-verified.md` (same
+directory). In this draft, the ACM row 9 operative-text claim is INVERTED
+relative to the source, the JIE row 18 "not data ownership" quotation is
+fabricated, and two further quotations (rows 6, 15) do not exist at their
+cited sources. Retained unmodified as the dated proposer artefact.
 
 **Provenance note (session 2026-08-10):** produced by the prior-art-scout
 agent (sonnet pin per agent definition); the agent returned content inline
