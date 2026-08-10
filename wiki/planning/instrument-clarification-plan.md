@@ -190,6 +190,52 @@ Artifact Review and Badging v1.1 (origin-gated) — departed from
 deliberately because the study measures the credibility of published
 results, not author compliance.
 
+### Rulings — decision points #2–#5 and #7 (Shawn, 2026-08-10); #6 open
+
+- **#2 RULED — two-rung evidence ladder adopted:** (i) paper text;
+  (ii) by-construction properties of a closed, instrument-listed platform
+  table. Publisher supplements enter that table with a deliberately thin
+  entitlement row: standard HTTPS delivery via the article landing page
+  and article-level Crossref persistence — but no independent metadata
+  record, no licence field, no registry indexing, no resource-level
+  identifier of their own.
+- **#3 RULED:** A1.2 is satisfied where no restriction is necessary.
+- **#4 RULED:** R1.3 targets what GO-FAIR measures — artefact
+  reusability, deposit-level standards only; methodological standards
+  (IntCal20, OxCal) excluded. Explicitly includes deposit in an
+  accredited domain repository whose ingest enforces its metadata
+  standard (e.g. ADS, tDAR, DANS) — R1.3 = 1 by construction,
+  interlocking with the #2 platform table. Flips the current reference
+  score on dye-et-al-2023 data R1.3.
+- **#5 RULED (operational):** unless explicitly stated otherwise, an
+  article's licence extends to publisher-hosted supplements — check for
+  both article and supplement licences (they can differ); absent a
+  separate supplement licence, default to same-as-paper. Artefacts hosted
+  on third-party services (Zenodo, OSF, GitHub/GitLab, …) MUST be
+  licence-checked at the service, via the appropriate API — analogous to
+  verifying citations against Crossref/OpenAlex. **Conflicts default to
+  the most restrictive licence** (consumer-realist reading).
+  **Operationalisation (proposed): a deterministic artefact-metadata
+  harvester** — per paper, resolve declared artefact links via
+  DataCite/Crossref/Zenodo/GitHub/OSF APIs into a small verified
+  evidence pack pushed to scoring spawns with receipts. Keeps spawns
+  network-free, holds evidence identical across runs (stability stays
+  meaningful), replaces much rung-(ii) inference with fetched fact, and
+  narrows the reference-configuration concordance confound.
+  **Amendment 2 must re-specify the §4 read-scope rule:** paper + the
+  evidence pack (enumerated endpoints); still no persisted-assessment
+  reads.
+- **#7 RULED:** the registered unscoreable→0 default applies only after
+  the #2 ladder (including the evidence pack) is exhausted.
+- **#6 OPEN — F1 identifier granularity.** Shawn asks for intermediate
+  practice between own-DOI and zero. Proposal presented 2026-08-10: read
+  F1 as "a persistent identifier explicitly associated with the artefact"
+  (own DOI, or the article DOI where the artefact is distributed as its
+  supplement), and let F2/F3/F4 carry the granularity penalty — yielding
+  a natural within-binary gradient on the F subtotal: own-DOI repository
+  deposit 4/4; supplement under the article DOI 1/4; unpublished 0/4.
+  Awaiting Shawn's verdict.
+
 ## Phase B — concordance-reference decision (Shawn + Claude)
 
 The E8 reference scores are old-instrument, reproduction-informed; the
@@ -223,6 +269,12 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       instrument edits, so clarified text lands hash-checked from day one.
 - [ ] **C5. `unwrap-paste-file.py` M14–M16 fixes** with a self-check —
       due before amendment 2's paste artefact.
+- [ ] **C6. Artefact-metadata harvester** (decision #5 operationalisation):
+      script resolving a paper's declared artefact links via
+      DataCite/Crossref/Zenodo/GitHub/OSF APIs into a verified,
+      receipt-covered evidence pack per paper; licence fields, metadata
+      records, and conflict detection (most-restrictive rule). Feeds the
+      re-specified read-scope in amendment 2.
 
 ## Phase D — amendment 2, re-benchmark, then the registered ladder
 
