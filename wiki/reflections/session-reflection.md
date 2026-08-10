@@ -829,3 +829,51 @@ anger: lodgement at breakfast, phases 0–3 by lunch, 45 spawns and two
 audit rounds by evening, and the decision that matters — §2's single
 remediation card — deliberately left on the table for a fresh session
 rather than played at the end of a long one.
+
+## Entry 13 (2026-08-03 second session / 2026-08-10) — The card not played
+
+**Project:** llm-reproducibility. **Session:**
+52a81f4b-eb60-481f-a02e-a80edde49fb9 (primary instance; one session spanning
+two sittings a week apart — resumed live, not from summary).
+
+**Where did Shawn and I disagree, and who was right?** On the assessment
+target. My decision table's starting recommendation was to score the paper's
+own deposits only and push upstream sources into the completeness lane —
+tidy, and wrong. Shawn argued the study assesses the reproducibility and
+FAIRness of *the research as published*, from a reviewer's or
+consumer-researcher's standpoint: the research surface, blame-free. The
+decisive argument was his data-paper observation — under my construct, a
+team that publishes its dataset as a first-class DOI-bearing deposit and
+cites it from the analysis paper would be *penalised* on that paper,
+punishing exactly the modular publishing that open science wants. What made
+the disagreement productive was that he moved it up a level: once the
+question became "what does the study measure?" rather than "who gets
+credit?", the eight downstream decision points fell out in a single sitting,
+each a corollary of the construct. I supplied the aggregation-rule cost and
+the provenance-flag compromise; the frame was his, and the frame was the
+decision.
+
+**What surprised me?** Not that the scout fabricated quotations — the
+verifier exists because that risk is known — but *where* the fabrications
+sat: all four outside the emitted claims ledger, which passed 65 of 68. The
+audit surface and the fabrication surface were disjoint sets. The proposer
+emitted claims for everything cheap to check (GitHub fields, DOI metadata —
+all exact) and nothing for the prose it wrote from reading, which is where
+the ACM inversion and the invented JIE sentence lived. This is Observation
+16's shape — a green check over a narrower scope than the reader assumes —
+making its third appearance, this time inside the verification tooling
+itself. The fix (every quoted string is a claim) landed in the agent
+definition the same day, which is the system working; that it was needed at
+all is the lesson.
+
+**What feels uncertain or unresolved?** Two things, both honest openings
+rather than loose ends. The aggregation rule is drafted
+conjunctive-over-principals and explicitly labelled an initial, iterable
+choice — "principal artefact" will demand per-paper judgement that the
+census screener has to operationalise, and I do not yet know how often that
+judgement will be contested. And Phase B looms larger than it did this
+morning: the rulings demonstrably flip reference scores, so re-derivation
+is entailed — but whether re-derived references under the clarified
+instrument and evidence-pack configuration make 0.90 concordance
+*reachable* is an empirical question only the re-benchmark can answer. We
+have fixed the causes we found; we have not yet proven they were sufficient.

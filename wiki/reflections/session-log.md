@@ -690,3 +690,79 @@ GOVERNED; unwrap-paste fixes pre-lodgement; wiki pipe-tests correction).
 verbatim. Schema fixes were deliberately withheld mid-benchmark to keep
 arm configs identical — v1.1 must land before the census, not merely
 eventually.
+
+## Session: 2026-08-03 (second) / 2026-08-10 — §2 card declined, research-surface rulings, amendment 2 scope drafted
+
+**Session id:** 52a81f4b-eb60-481f-a02e-a80edde49fb9 (one session, two
+sittings a week apart; renamed "LLM-Repro-2026-08-06" by Shawn mid-gap).
+Eleven commits: `b686b6f`→`5a588a6` (this repo) + `a3f5793`
+(personal-assistant).
+
+**Sitting one (2026-08-03 evening).** Session-start warnings fixed
+(`Write(...)` allow rules are dead config; swapped to `Edit(...)`,
+`b686b6f`). Resume per protocol (fetch clean). §2 decision evidence
+gathered before presenting: pull receipts contradicted the routing-fix
+premise (sonnet 9/15; opus and fable 15/15, both failing anyway); the
+guide is silent on the disputed cases. Shawn declined the card and chose
+the instrument-clarification route — overriding goal: a robust
+instrument, root problems solved even at the cost of errata or further
+amendment. Plan externalised (`wiki/planning/instrument-clarification-plan.md`,
+phases A–D, `5e8e508`). **Phase A1 executed:** mining script recomputed
+both registered statistics from primary artefacts (exact match to all
+published figures), found 68/150 items disputed under the union
+criterion, reduced them to three root causes (assessment target
+undefined; evidence basis undefined; A1.2 + R1.3 semantic gaps), and
+tabled eight decision points (`disagreement-analysis.md` +
+`disputed-items.json` + script, `253fb5b`).
+
+**Sitting two (2026-08-10).** Shawn's research-surface framing ruled the
+target question (empirical status, fault-free, reviewer/funder/consumer
+standpoint; provenance recorded as non-scoring per-input flag; `866317c`).
+Prior-art scout (sonnet, per pin) surveyed 19 frameworks (`d3b0216`);
+opus verifier found four fabricated quotations and one inverted claim —
+ACM v1.1 is origin-gated ("Author-created artifacts…"), converting it
+from supporting precedent to named deliberate departure; JIE Data
+Openness Badges survived as closest precedent on verified text
+(`9589d50`). Scout's two full-text gaps closed by direct reads (Marwick
+2017, Tedersoo 2021 — both support the ruling; Tedersoo codes "previous
+publications" and "museum" as storage categories and records decline
+reasons separately from availability). Eleven verified references
+imported to Zotero staging subcollection
+`2026-08-10-fair-third-party-artefacts-prior-art`. prior-art-scout agent
+definition amended: every direct quotation must be emitted as a
+verifiable claim (personal-assistant `a3f5793`). **All eight decision
+points ruled** (`7cb410a`, `cfc276d`, `7f58eb3`): research-surface rule;
+two-rung evidence ladder with closed platform table (thin
+publisher-supplement row); A1.2 no-restriction case satisfied; R1.3
+deposit-level standards only (accredited domain-repository ingest counts
+by construction); R1.1 licence semantics (same-as-paper supplement
+default, repository record mandatory via API, most-restrictive on
+conflict); F-block granularity gradient (F1 explicit-association
+reading; 4/4 vs 1/4 vs 0/4 subtotals); unscoreable→0 only after the
+ladder. **Deterministic artefact-metadata harvester approved** (new plan
+item C6; platform list extensible — Dataverse/ADA/Figshare flagged);
+amendment 2 will re-specify the §4 read-scope as paper + receipt-covered
+evidence pack. Publication stance recorded: early-publication metrics
+are up for discussion; iterate with 3-run sonnet probes, gate-grade
+conclusions on the registered configuration. **A2 drafted:** erratum-log
+Entry 3 + "Queued amendment 2 scope" (ten items of operative text,
+PROPOSED pending ratification read; `5a588a6`). Reference re-derivation
+(Phase B1) recorded as *entailed* — the rulings flip identified
+reference scores (dye data R1.3, key A2, F-block items).
+
+**NEXT (in order):** (1) Shawn's ratification read of erratum Entry 3's
+drafted text; (2) Phase C build — audit fix round 2, schema v1.1 (+
+provenance flag), C6 harvester, C7 GOVERNED decision; (3) A3 guide
+alignment (rides D1); (4) Phase B reference re-derivation design; (5) D1
+consolidation → lodge amendment 2 → re-benchmark.
+
+**Contextual assumptions.** The harness date changed mid-session
+(2026-08-03 → 2026-08-10 across the sitting gap); the scout flagged the
+date-change system notice as a suspected injection — false positive,
+correctly surfaced rather than silently obeyed. Both scout and verifier
+declined to write files (operating-constraint interpretation) and
+returned reports inline; the orchestrating session persisted both, with
+the verified report's two bulk sections condensed and the condensation
+declared in its provenance note. Benchmark figures cited here were
+recomputed from primary artefacts this session, not carried from
+summaries.

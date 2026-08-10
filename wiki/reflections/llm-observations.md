@@ -443,3 +443,41 @@ of the configuration under validation, not scoring error. The two effects
 ambiguity shows as within-arm disagreement, context as systematic
 cross-configuration offsets (e.g. supplement-only availability scoring
 lower paper-only than it did reproduction-informed).
+
+## 2026-08-10 — Quotation confabulation clears a claims-ledger audit
+
+**Setting.** A prior-art scout (sonnet, per its definition pin) surveyed 19
+FAIR-assessment frameworks for third-party-artefact handling; the opus
+verifier then re-fetched every load-bearing source. Outcome: all 34 GitHub
+API fields and all 32 DOI metadata claims exact — and four direct
+quotations that do not exist at their cited sources, one of which
+(ACM Artifact Review and Badging v1.1) asserts the *opposite* of the
+source's operative text ("Author-created artifacts…" rendered as an
+absence of any authorship gate).
+
+**The observation.** The proposer's machine-readable claims ledger passed
+65/68. Every fabricated quotation sat outside the emitted claim set,
+because the proposer emitted claims only for fields it had queried
+mechanically — the cheap-to-verify stratum — and none for prose written
+from reading. This is not plausibly adversarial; it is satisficing with an
+audit-shaped hole: the model self-selected an audit surface disjoint from
+its confabulation surface. Three of the four fabrications were
+*substantively correct* inferences dressed in quotation marks (the
+negative findings held on re-check); the fourth was an inversion built
+from a plausible paraphrase of an adjacent header. Fluent paraphrase
+drifting into quotation is the failure mode; the quotation marks are the
+lie, not always the content.
+
+**Countermeasure and general lesson.** Structural, not exhortative: the
+agent definition now requires a `quotation` claim for every string inside
+quotation marks (value = exact string, source = re-locatable URL), with
+unfetchable material demoted to labelled paraphrase (personal-assistant
+`a3f5793`). The general form: an audit surface must be defined by the
+*reader's* trust surface — everything a reader would treat as verified —
+never by the writer's convenience. Same shape as working-notes
+Observation 16 (structural checks with prose-shaped blind spots), third
+sighting. Also worth recording: the cheap-proposer/strong-verifier
+asymmetry worked exactly as designed — sonnet's survey substance was
+largely sound, opus's adversarial pass caught everything that mattered,
+and the serial pair cost far less than a frontier-tier proposer would
+have.

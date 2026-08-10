@@ -593,3 +593,55 @@ its keys against the code's assumptions (Observation 14, applied to hooks);
 and after "fixing" a control, demand its first live pass-event before
 declaring it repaired — the follow-ups register now requires exactly this
 before the census.
+
+## 2026-08-10 — The routing fix's premise died on a receipts count
+
+**Session:** 52a81f4b-eb60-481f-a02e-a80edde49fb9
+**Instance:** primary
+
+### Surprising fact
+
+The handoff carried a ready-to-play remediation candidate — amendment 1
+§2's single permitted routing-fix attempt, premised on "receipts show
+inconsistent pulling of fair-principles-guide.md". Re-checked against all
+45 spawn receipts at session start, the premise held for one arm only:
+sonnet pulled the guide in 9/15 spawns, but opus and fable pulled it in
+15/15 each — and both full-pulling arms failed both 0.90 gates on the
+same item cluster.
+
+### Probe
+
+Three steps, cheapest first. (1) Count guide pulls per arm across the
+persisted receipts (minutes; the premise-breaker). (2) Read the guide
+against the disputed cases — it is silent on A1.2's
+fully-open-no-authentication case, R1.1's licence target, and F-block
+upstream crediting, so pushing it could not make the missing answers
+uniform. (3) Test the within-sonnet correlation properly: of 29 two-one
+splits, 17 minority votes came from guideless spawns against ~11.3
+expected by chance — a real delivery effect, but secondary, and on the
+wrong gate (sonnet's binding constraint was concordance at 0.773).
+
+### Belief revision
+
+Delivery was not the binding constraint; instrument ambiguity was. The
+registered one-shot card would have been spent to nudge one arm's
+stability while concordance stayed structurally out of reach for all
+three. Recommended declining the card; the registrant agreed and chose
+the instrument-clarification route (erratum → amendment 2 → re-benchmark).
+
+### What would change this belief
+
+If the re-benchmark on the clarified instrument — with the guide pushed
+uniformly and the evidence pack supplied — still shows the
+A1.2/R1.1/F-block cluster unstable, then ambiguity was not the operative
+cause and the delivery hypothesis regains standing. The post-fix run is
+the falsification test, and both pre- and post-fix results are reported
+per the registered rule.
+
+### Implications for practice
+
+Before spending a registered one-shot resource, test its premise against
+primary artefacts. The check cost a quarter of an hour and reversed the
+session's opening plan; the alternative was burning the only permitted
+remediation attempt on a hypothesis two-thirds of the evidence already
+contradicted.

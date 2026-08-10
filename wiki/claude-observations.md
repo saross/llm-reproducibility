@@ -720,3 +720,68 @@ diff its keys against the gate's assumptions, and require the gate's first
 live pass-event before calling it repaired. Generally: any fix to an
 interface-consuming control starts with one observed instance of the
 interface.
+
+## claude-obs 35 — 2026-08-10: Construct-level reframing dissolved a rule-level deadlock
+
+**Pattern.** Faced with my binary recommendation on third-party crediting
+(score the authors' own deposits vs credit the research surface), Shawn
+did not pick a side — he moved the question up a level: "what we are
+assessing, at heart, is the reproducibility/FAIRness of the research",
+from a reviewer/funder/consumer standpoint. Once the construct was named,
+eight downstream decision points resolved in a single sitting, each a
+corollary rather than a fresh negotiation.
+
+**Lesson.** When a scoring or policy question resists resolution at rule
+level, the block is usually an unstated construct choice. Presenting
+"what would each option *measure*?" is faster and produces more durable
+decisions than presenting "how should this item score?".
+
+**How to apply.** In decision tables, name the construct each option
+operationalises, not just its scoring consequence. When Shawn pushes a
+question up a level of abstraction, follow — the reframing *is* the
+decision, and the remaining items should be re-derived from it before
+being re-presented.
+
+## claude-obs 36 — 2026-08-10: I relayed an unverified subagent quote as fact, and the verifier inverted it
+
+**Pattern.** My summary to Shawn stated that ACM's badge definition "has
+no authorship gate" — the scout's claim, pre-verification, on one of the
+two most load-bearing rows. Verification showed the source says the
+opposite. I had labelled the summary "pre-verification" globally, but the
+sentence itself carried no marker, and I owed Shawn an explicit
+walk-back a day later. This project's propose-then-verify architecture
+exists precisely because of this failure mode — and I still let the
+draft's confidence leak into my own prose.
+
+**Lesson.** A global "provisional" caveat does not survive the reader's
+memory; load-bearing specifics need sentence-level attribution ("the
+scout claims, unverified") until the verifier lands. The alternative is
+retailing confabulations under my own voice, which spends trust the
+verification pipeline was built to protect.
+
+**How to apply.** When summarising any unverified subagent report, mark
+each claim I would expect Shawn to *act on or repeat* with inline
+attribution and verification status — and when a verdict later flips one,
+lead the correction with what I got wrong, as its own sentence, before
+the new finding.
+
+## claude-obs 37 — 2026-08-10: Effort-for-verifiability is the default trade; precision is calibrated to publication stage
+
+**Pattern.** Two rulings in one message: licence checks *must* hit the
+repository record "even if that means another API call... use an
+external source to confirm wherever possible" (maximal rigour, accepted
+infrastructure cost — the harvester was approved with enthusiasm); and
+simultaneously, "our approach and the metrics we use will be up for
+discussion, not presented as the last word" (instrument semantics
+explicitly provisional, iterate with cheap sonnet probes).
+
+**Lesson.** These are not in tension — they are Shawn's epistemic policy:
+*facts get hardened, judgements stay revisable*. Verification
+infrastructure is never the place to economise; instrument semantics are
+never the place to over-polish before contact with data and readers.
+
+**How to apply.** Propose fact-hardening infrastructure (harvesters,
+verifiers, receipts) without asking permission to spend the effort; draft
+judgement-bearing text as explicitly iterable initial choices with
+alternatives recorded, rather than defending single answers to
+publication grade prematurely.
