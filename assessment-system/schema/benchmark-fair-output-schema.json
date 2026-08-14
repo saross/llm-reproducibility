@@ -1,30 +1,52 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Benchmark FAIR scoring output",
-  "description": "Structured output contract for fair-assessor-* benchmark and census spawns; supplied at spawn per the agent definition's output contract. Receipts are required fields: a scoring record without receipts is a schema failure, not a warning.",
-  "version": "1.0",
+  "description": "Structured output contract for fair-assessor-* benchmark and census spawns; supplied at spawn per the agent definition's output contract. Receipts are required fields: a scoring record without receipts is a schema failure, not a warning. v1.1 (2026-08-14): ESCALATE no longer forces fabricated scoring blocks (audit C6) — scoring blocks are required only when status is OK, and escalate_reason is required when status is ESCALATE; bounds and minimum lengths added throughout (audit M12); the A1 cross-reference is soft-enforced — coverage_category minimal/partial with A1 scored 1 requires a named a1_exception_rationale, honouring the instrument's ethical-restriction exception rather than hard-zeroing it; schema_version (const) echoes the contract version into every output so the validated contract is self-documented (audit S3); input_provenance carries the ratified research-surface provenance flag as NON-SCORING metadata; sub_principles' optional pack_refs cite evidence-pack record ids (C3/C6 joint design note, instrument-clarification plan). Naming note (audit M13): sub-principle keys replace dots with underscores — instrument A1.1 is schema A1_1, A1.2 is A1_2, R1.1/R1.2/R1.3 are R1_1/R1_2/R1_3.",
+  "version": "1.1",
   "type": "object",
-  "required": ["status", "paper_slug", "receipts", "data_fair", "code_fair", "data_completeness"],
+  "required": ["status", "schema_version", "paper_slug", "receipts"],
   "additionalProperties": false,
   "properties": {
     "status": {"type": "string", "enum": ["OK", "ESCALATE"]},
+    "schema_version": {
+      "const": "1.1",
+      "description": "Contract self-identification, enforced by the validator: every output names the schema version it validated against (audit S3 — schema identity must be receipted, not hand-typed into run records)"
+    },
     "escalate_reason": {"type": ["string", "null"]},
-    "paper_slug": {"type": "string"},
+    "paper_slug": {"type": "string", "minLength": 1},
     "receipts": {
       "type": "object",
       "required": ["instrument_versions", "instrument_receipts", "agent_version", "model_id", "pulled_files_read"],
       "additionalProperties": false,
       "properties": {
-        "instrument_versions": {"type": "object", "additionalProperties": {"type": "string"}},
-        "instrument_receipts": {"type": "object", "additionalProperties": {"type": "string"}},
-        "agent_version": {"type": "string"},
-        "model_id": {"type": "string"},
-        "pulled_files_read": {"type": "array", "items": {"type": "string"}}
+        "instrument_versions": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+        "instrument_receipts": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+        "agent_version": {"type": "string", "minLength": 1},
+        "model_id": {"type": "string", "minLength": 1},
+        "pulled_files_read": {"type": "array", "items": {"type": "string", "minLength": 1}}
       }
     },
     "stated_availability": {
       "type": ["string", "null"],
       "description": "Descriptive record of availability statements only; never mapped to L1-L6 (preregistration section 7.3)"
+    },
+    "input_provenance": {
+      "type": "array",
+      "description": "Ratified research-surface rule (erratum-log Entry 3, item 1): provenance is recorded per required input as NON-SCORING metadata — it never affects any sub-principle score; it keeps responsibility reportable as a study finding",
+      "items": {
+        "type": "object",
+        "required": ["input", "provenance"],
+        "additionalProperties": false,
+        "properties": {
+          "input": {"type": "string", "minLength": 1, "description": "The required input as named in the paper (dataset, code repository, or other digital input)"},
+          "provenance": {"type": "string", "enum": ["author-deposited", "third-party", "undeterminable"]}
+        }
+      }
+    },
+    "a1_exception_rationale": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Required only when data coverage_category is minimal/partial AND data A1 is scored 1: names the documented ethical/legal restriction (CARE principles, human subjects) that the instrument's A1 cross-reference excepts (preregistration section 7.1)"
     },
     "data_fair": {"$ref": "#/definitions/fair_score"},
     "code_fair": {"$ref": "#/definitions/fair_score"},
@@ -33,15 +55,43 @@
       "required": ["datasets_enumerated", "datasets_accessible_tier_0_2", "coverage_percentage", "coverage_category", "assessment_scope"],
       "additionalProperties": false,
       "properties": {
-        "datasets_enumerated": {"type": "integer"},
-        "datasets_accessible_tier_0_2": {"type": "integer"},
-        "coverage_percentage": {"type": "number"},
+        "datasets_enumerated": {"type": "integer", "minimum": 0},
+        "datasets_accessible_tier_0_2": {"type": "integer", "minimum": 0},
+        "coverage_percentage": {"type": "number", "minimum": 0, "maximum": 100},
         "coverage_category": {"type": "string", "enum": ["complete", "substantial", "partial", "minimal"]},
         "assessment_scope": {"type": "string", "enum": ["straightforward", "complex", "infeasible"]},
-        "barriers": {"type": "array", "items": {"type": "string"}}
+        "barriers": {"type": "array", "items": {"type": "string", "minLength": 1}}
       }
     }
   },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "OK"}}},
+      "then": {"required": ["status", "schema_version", "paper_slug", "receipts", "data_fair", "code_fair", "data_completeness", "input_provenance"]},
+      "else": {"required": ["status", "schema_version", "paper_slug", "receipts", "escalate_reason"]}
+    },
+    {
+      "if": {
+        "required": ["data_completeness", "data_fair"],
+        "properties": {
+          "data_completeness": {
+            "required": ["coverage_category"],
+            "properties": {"coverage_category": {"enum": ["minimal", "partial"]}}
+          },
+          "data_fair": {
+            "required": ["sub_principles"],
+            "properties": {
+              "sub_principles": {
+                "required": ["A1"],
+                "properties": {"A1": {"required": ["present"], "properties": {"present": {"const": 1}}}}
+              }
+            }
+          }
+        }
+      },
+      "then": {"required": ["a1_exception_rationale"]}
+    }
+  ],
   "definitions": {
     "fair_score": {
       "type": "object",
@@ -80,7 +130,12 @@
       "additionalProperties": false,
       "properties": {
         "present": {"type": "integer", "enum": [0, 1]},
-        "evidence": {"type": "string", "description": "Quote or concrete observation grounding the score; for absent, what was looked for and not found"}
+        "evidence": {"type": "string", "minLength": 1, "description": "Quote or concrete observation grounding the score; for absent, what was looked for and not found"},
+        "pack_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "description": "Optional citations of evidence-pack record ids (C3/C6 joint design: record_id = '<endpoint>:<identifier>', stable within a pack); paper-only scoring omits this"
+        }
       }
     }
   }
