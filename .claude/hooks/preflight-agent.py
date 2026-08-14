@@ -9,7 +9,8 @@ this hook denies the spawn unless:
   non-empty, version lines and receipt tokens match, mirrors intact,
   agent-definition hashes match — the §3.4 hot-reload guard);
 - `CLAUDE_CODE_SUBAGENT_MODEL` is unset (it silently outranks agent model
-  pins; review D-7);
+  pins; review D-7) — checked inside the D5 run via its `--preflight` mode,
+  one shared implementation (audit N5, 2026-08-14);
 - every instrument pushed to the target agent exists and is non-empty.
 
 Ungoverned agent types pass through untouched — this gate protects the
@@ -19,7 +20,6 @@ study's scoring and reproduction lanes, not general subagent use.
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 import sys
 
@@ -49,27 +49,35 @@ def deny(reasons: list[str]) -> int:
 def main() -> int:
     """Gate governed-agent spawns on the consistency and environment checks.
 
-    Fail-closed (audit 2026-08-03 C8): unparseable events, import failures,
-    unexpected input shapes, and checker errors all DENY rather than
-    crash-allow — this is the only layer that can stop a governed scoring
-    spawn before token spend, so a visible deny beats a silent pass.
+    Fail-closed (audit 2026-08-03 C8; policy decided ONCE for both hooks,
+    2026-08-14): unparseable or undecodable events (M-2), import failures,
+    unexpected event and tool_input shapes, and checker errors all DENY
+    rather than crash-allow — this is the only layer that can stop a
+    governed scoring spawn before token spend, so a visible deny beats a
+    silent pass. Deny reasons for unattributable events name the fault
+    class so they read as environment/parse faults, not manifest verdicts.
     """
     if _IMPORT_ERROR is not None:
-        return deny([f"hook environment broken ({_IMPORT_ERROR}) — cannot determine "
-                     f"whether this spawn is governed"])
+        return deny([f"hook environment broken ({_IMPORT_ERROR}) — environment "
+                     f"fault, not a manifest verdict; cannot determine whether "
+                     f"this spawn is governed"])
     try:
         event = json.load(sys.stdin)
-    except json.JSONDecodeError:
-        return deny(["unparseable PreToolUse event — cannot determine whether this "
-                     "spawn is governed"])
+    except Exception as exc:  # includes non-UTF-8 bytes (M-2)
+        return deny([f"unattributable PreToolUse event ({exc.__class__.__name__}) — "
+                     f"parse fault, not a manifest verdict; cannot determine "
+                     f"whether this spawn is governed"])
     if not isinstance(event, dict):
-        return deny(["unexpected PreToolUse event shape — cannot determine whether "
-                     "this spawn is governed"])
+        return deny(["PreToolUse event is not a JSON object — parse fault, not a "
+                     "manifest verdict; cannot determine whether this spawn is "
+                     "governed"])
     if event.get("tool_name") not in ("Agent", "Task"):
         return 0
     tool_input = event.get("tool_input")
     if not isinstance(tool_input, dict):
-        tool_input = {}
+        return deny(["tool_input is not an object — cannot read subagent_type; "
+                     "denying rather than treating a possibly governed spawn as "
+                     "ungoverned (fail-closed, 2026-08-14)"])
     subagent_type = str(tool_input.get("subagent_type") or "")
 
     try:
@@ -81,12 +89,12 @@ def main() -> int:
         return 0
 
     reasons = []
-    if os.environ.get("CLAUDE_CODE_SUBAGENT_MODEL"):
-        reasons.append("CLAUDE_CODE_SUBAGENT_MODEL is set — it silently outranks the "
-                       "agent's model pin; unset it before spawning scoring agents")
-
+    # The CLAUDE_CODE_SUBAGENT_MODEL check runs inside the D5 script's
+    # --preflight mode — one shared implementation instead of two divergent
+    # copies (audit N5, 2026-08-14).
     try:
-        result = subprocess.run([sys.executable, str(D5_SCRIPT), "--quiet"],
+        result = subprocess.run([sys.executable, str(D5_SCRIPT), "--quiet",
+                                 "--preflight"],
                                 capture_output=True, text=True, timeout=60)
     except Exception as exc:  # timeout or spawn failure: deny, don't crash-allow
         return deny([f"manifest consistency check could not run ({exc.__class__.__name__})"])

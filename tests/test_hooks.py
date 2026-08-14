@@ -309,11 +309,65 @@ class PreflightPipeTests(unittest.TestCase):
         self.assertIsNotNone(reason)
         self.assertIn("CLAUDE_CODE_SUBAGENT_MODEL", reason)
 
-    def test_list_tool_input_denies_not_crashes(self) -> None:
-        """C8 regression: unexpected tool_input shape cannot crash-allow."""
+    def test_list_tool_input_denies(self) -> None:
+        """Item 3 / L-7 (2026-08-14): an unreadable tool_input fails closed —
+        the docstring's fail-closed claim is now the actual behaviour."""
         result = self.run_hook(json.dumps({"tool_name": "Agent", "tool_input": [1, 2]}))
-        # A list tool_input means the type cannot be read; the hook treats it
-        # as ungoverned-unknown but must not crash (rc 0 either way).
+        self.assertIsNotNone(self.deny_reason(result))
+        self.assertEqual(result.returncode, 0)
+
+    def test_non_utf8_stdin_denies(self) -> None:
+        """Item 3 / M-2 (2026-08-14): undecodable bytes deny, not crash-allow."""
+        env = dict(os.environ)
+        env.pop("CLAUDE_CODE_SUBAGENT_MODEL", None)
+        result = subprocess.run([sys.executable, str(PREFLIGHT)],
+                                input=b"\xff\xfe garbage", capture_output=True,
+                                env=env, timeout=120)
+        decision = json.loads(result.stdout.decode("utf-8"))
+        self.assertEqual(decision["hookSpecificOutput"]["permissionDecision"],
+                         "deny")
+
+
+class GatePipeTests(unittest.TestCase):
+    """Pipe tests for the gate's unattributable-event policy (item 3) and the
+    log env seam (item 2a) — a temp log keeps the live run evidence clean."""
+
+    def setUp(self) -> None:
+        handle, self.log_path = tempfile.mkstemp(suffix=".jsonl")
+        os.close(handle)
+        self.addCleanup(os.unlink, self.log_path)
+
+    def run_gate_pipe(self, stdin_data):
+        env = dict(os.environ)
+        env["LLMR_RECEIPT_GATE_LOG"] = self.log_path
+        kwargs = {"input": stdin_data, "capture_output": True, "env": env,
+                  "timeout": 120}
+        if isinstance(stdin_data, str):
+            kwargs["text"] = True
+        return subprocess.run([sys.executable, str(GATE)], **kwargs)
+
+    def logged_events(self) -> list[dict]:
+        text = Path(self.log_path).read_text(encoding="utf-8")
+        return [json.loads(line) for line in text.splitlines()]
+
+    def test_garbage_stdin_blocks_and_logs_via_seam(self) -> None:
+        """Item 3 (2026-08-14): unattributable event blocks, names the fault
+        class, and the decision lands in the env-overridden log (item 2a)."""
+        result = self.run_gate_pipe("not json at all")
+        decision = json.loads(result.stdout)
+        self.assertEqual(decision["decision"], "block")
+        self.assertIn("parse fault", decision["reason"])
+        self.assertEqual(self.logged_events()[-1]["event"], "block")
+
+    def test_non_object_event_blocks(self) -> None:
+        result = self.run_gate_pipe(json.dumps([1, 2]))
+        self.assertEqual(json.loads(result.stdout)["decision"], "block")
+
+    def test_ungoverned_stop_event_passes_quietly(self) -> None:
+        """A well-formed event for an ungoverned agent emits nothing."""
+        result = self.run_gate_pipe(json.dumps(
+            {"agent_type": "general-purpose", "last_assistant_message": "done"}))
+        self.assertEqual(result.stdout.strip(), "")
         self.assertEqual(result.returncode, 0)
 
 

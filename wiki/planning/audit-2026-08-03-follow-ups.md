@@ -62,8 +62,16 @@ denominator.
    - **2b.** Confirm the real SubagentStop field names from a captured
      live event (closed by C2's capture, which also records whether the
      event carries assignment identifiers — audit S6).
-3. **Preflight fail-closed blast radius (re-audit M-1) + non-UTF-8 hole
-   (M-2) + docstring contradictions (M-3/M-4).** Catch `Exception` not just
+3. **[x] 2026-08-14 — Preflight fail-closed blast radius (re-audit M-1) +
+   non-UTF-8 hole (M-2) + docstring contradictions (M-3/M-4).** Policy
+   decided ONCE and applied to both hooks: unattributable events (parse
+   failures incl. non-UTF-8, non-object events, non-object tool_input,
+   import failures) fail closed — preflight denies, gate blocks — with
+   messages naming the fault class as environment/parse fault, not a
+   verdict (audit N2). Gate gains the same fail-closed import guard as
+   preflight; L-7 test now asserts denial; N5 folded (preflight passes
+   `--preflight` to D5, duplicate env check removed). Tests 91 → 95.
+   Original defect: Catch `Exception` not just
    `JSONDecodeError`; decide deny-vs-allow for unattributable events ONCE,
    apply consistently across both hooks, and make docstrings state the
    actual behaviour. Current state: preflight denies unparseable (all spawn

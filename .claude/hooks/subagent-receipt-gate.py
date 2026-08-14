@@ -29,10 +29,14 @@ final-message-only search blocked every workflow spawn once).
 the receipt and model-identity checks pass — escalation is a valid outcome,
 but it is not an exemption from provenance (audit 2026-08-03 C5).
 
-Fail-closed: unexpected payload shapes and internal errors block rather than
-crash-allow (audit 2026-08-03 C9). On failure the hook returns
-`decision: "block"` with the reason, re-prompting the same subagent instead
-of failing the batch item (§3.2 self-healing).
+Fail-closed (policy decided ONCE for both hooks, audit item 3, 2026-08-14):
+unexpected payload shapes, unattributable events (unparseable or non-object
+stdin, undecodable bytes — M-2), hook-environment import failures, and
+internal errors all block rather than crash-allow (audit 2026-08-03 C9).
+Unattributable-event blocks name the fault class so an operator reads them
+as environment/parse faults, not receipt verdicts (pre-run audit N2). On
+failure the hook returns `decision: "block"` with the reason, re-prompting
+the same subagent instead of failing the batch item (§3.2 self-healing).
 """
 
 from __future__ import annotations
@@ -42,8 +46,16 @@ import sys
 import time
 from pathlib import Path
 
-from hooklib import (GATE_LOG, REPO_ROOT, extract_json_object, governed_agents,
-                     load_manifest, log_jsonl, pushed_instruments)
+# Fail-closed import (mirrors preflight-agent.py, audit item 3 2026-08-14):
+# if the shared library or PyYAML is unavailable, block rather than
+# crash-allowing unvalidated output.
+try:
+    from hooklib import (GATE_LOG, REPO_ROOT, extract_json_object,
+                         governed_agents, load_manifest, log_jsonl,
+                         pushed_instruments)
+    _IMPORT_ERROR = None
+except Exception as _exc:  # pragma: no cover - environment defect
+    _IMPORT_ERROR = _exc
 
 RECEIPT_FIELDS = ("instrument_versions", "instrument_receipts", "agent_version",
                   "model_id", "pulled_files_read")
@@ -278,13 +290,29 @@ def validate(event: dict) -> int:
 
 
 def main() -> int:
-    """Parse the SubagentStop event and validate fail-closed."""
+    """Parse the SubagentStop event and validate fail-closed.
+
+    Unattributable events (unparseable, undecodable, or non-object stdin)
+    BLOCK: governedness cannot be determined, and refusing beats letting a
+    governed scoring spawn stop ungated (policy decided once for both
+    hooks, 2026-08-14). The block reason names the fault class so it reads
+    as an environment/parse fault, not a receipt verdict.
+    """
+    if _IMPORT_ERROR is not None:
+        print(json.dumps({"decision": "block",
+                          "reason": f"Receipt gate: hook environment broken "
+                                    f"({_IMPORT_ERROR}) — environment fault, not a "
+                                    f"receipt verdict; fix the hook environment"}))
+        return 0
     try:
         event = json.load(sys.stdin)
-    except json.JSONDecodeError:
-        return 0  # not a JSON event for us; nothing to gate
+    except Exception as exc:  # includes non-UTF-8 bytes (M-2)
+        return block("", f"unattributable SubagentStop event "
+                         f"({exc.__class__.__name__}: {exc}) — parse fault, not a "
+                         f"receipt verdict", {"event_keys": []})
     if not isinstance(event, dict):
-        return 0
+        return block("", "SubagentStop event is not a JSON object — parse fault, "
+                         "not a receipt verdict", {"event_keys": []})
     agent_type = str(event.get("agent_type") or "")
     try:
         return validate(event)
