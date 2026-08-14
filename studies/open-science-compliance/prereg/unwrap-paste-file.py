@@ -15,7 +15,16 @@ that always keep their own line:
   power table pasted as run-together pipe text.
 
 Verify after running: word count must be unchanged (``wc -w``), and bullet /
-numbered-line counts must match the wrapped original.
+numbered-line counts must match the wrapped original. The committed
+self-check is ``tests/test_unwrap_paste.py`` (audit M14-M16 regressions +
+idempotence on the lodged amendment-1 artefact) — run it before generating
+any new paste artefact.
+
+Fixed 2026-08-14 (audit M14/M15/M16, plan C5): indented list items are now
+protected (M14); a 4-digit year followed by ". " is prose, not a numbered
+list item — list numbers are 1-3 digits (M15); the double-space collapse
+applies only to joined prose lines, never to protected lines whose spacing
+is deliberate (M16).
 
 Usage: python3 unwrap-paste-file.py <file>   (rewrites the file in place)
 """
@@ -24,7 +33,7 @@ import re
 import sys
 from pathlib import Path
 
-KEEP_OWN_LINE = re.compile(r"^(- |[0-9]+\. |\|)")
+KEEP_OWN_LINE = re.compile(r"^\s*(- |[0-9]{1,3}\. |\|)")
 
 
 def unwrap(text: str) -> str:
@@ -50,7 +59,7 @@ def unwrap(text: str) -> str:
             if current is not None:
                 out_lines.append(current)
             current = line
-        elif current.startswith("|"):
+        elif current.lstrip().startswith("|"):
             # Never append prose onto a table row; start a fresh line.
             # (List items, by contrast, do absorb their wrapped
             # continuation lines.)
@@ -60,8 +69,16 @@ def unwrap(text: str) -> str:
             current += " " + line.strip()
     if current is not None:
         out_lines.append(current)
-    # Collapse any accidental double spaces introduced by the joins.
-    return "\n".join(re.sub(r"  +", " ", line) for line in out_lines)
+
+    def tidy(line: str) -> str:
+        # Collapse join-introduced double spaces in prose only: protected
+        # lines (list items, table rows) keep their deliberate spacing,
+        # including leading indentation (M16).
+        if KEEP_OWN_LINE.match(line):
+            return line
+        return re.sub(r"  +", " ", line)
+
+    return "\n".join(tidy(line) for line in out_lines)
 
 
 def main() -> None:

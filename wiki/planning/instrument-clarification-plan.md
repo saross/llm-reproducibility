@@ -323,8 +323,13 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       `sha256:` content-integrity hashes to `shared_content` entries.
       Implementation rides the amendment 2 instrument edits (D1/D2
       window), so clarified text lands hash-checked from day one.
-- [ ] **C5. `unwrap-paste-file.py` M14–M16 fixes** with a self-check —
-      due before amendment 2's paste artefact.
+- [x] 2026-08-14 **C5. `unwrap-paste-file.py` M14–M16 fixes** with a
+      self-check — done: indented items protected (M14), list numbers
+      capped at 3 digits so year-sentences unwrap (M15), double-space
+      collapse restricted to joined prose (M16);
+      `tests/test_unwrap_paste.py` (audit N4's committed home) anchors
+      each fix plus idempotence on the lodged amendment-1 artefact.
+      Tests 130 → 139. Ready for amendment 2's paste artefact.
 - [ ] **C6. Artefact-metadata harvester** (decision #5 operationalisation):
       script resolving a paper's declared artefact links via
       DataCite/Crossref/Zenodo/GitHub/GitLab/OSF APIs (CRAN and Dryad

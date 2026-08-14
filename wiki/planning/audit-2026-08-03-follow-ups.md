@@ -154,9 +154,10 @@ record and contract amendments in
 11. **S4 — v1.1 validator compatibility.** Standard JSON Schema
     keywords only; a validator probe confirms acceptance before D3.
     New stop condition: v1.1 rejected at spawn time halts the block.
-12. **N4 — C5's self-check gets a committed home:**
+12. **[x] 2026-08-14 — N4 — C5's self-check gets a committed home:**
     `tests/test_unwrap_paste.py`, regression-anchored to the
-    amendment 1 paste artefact.
+    amendment 1 paste artefact (idempotence proven on the lodged file);
+    M14/M15/M16 all fixed and individually regression-tested.
 
 ## Deferred by design (with reasons)
 
