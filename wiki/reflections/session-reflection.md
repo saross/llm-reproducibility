@@ -877,3 +877,45 @@ is entailed — but whether re-derived references under the clarified
 instrument and evidence-pack configuration make 0.90 concordance
 *reachable* is an empirical question only the re-benchmark can answer. We
 have fixed the causes we found; we have not yet proven they were sufficient.
+
+## Entry 14 (2026-08-10 / 2026-08-14–15) — Auditing the auditors
+
+**Project:** llm-reproducibility. **Session:**
+04169f15-06f9-421d-a149-39a04367b3b5 (primary instance; one session, three
+sittings — the ratification-read discussion on the 10th, then Phase C built
+end to end across the 14th and 15th).
+
+**What would I do differently if I replayed this session?** Run the
+retrospective reconciliation *first*. The forty-five benchmark transcripts
+had been sitting on disk for eleven days carrying the whole diagnosis —
+every payload present, every receipt valid, the 39 blocks explainable only
+as transcript write-lag — and we reached them last, after the operator
+dialogue, the clean-context audit, and three live probes. The probes were
+not wasted: only a live engineered violation could show that a block is
+never delivered back to the agent, and only a live capture could confirm
+the event field names. But the cheap, read-only, retrospective analysis
+should have preceded the spend, not followed it; "what do the artefacts we
+already have say?" is the question I would now put first. The second replay
+change is humbler: I committed a deliberately failing test to the public
+record and later shipped a commit whose message claimed a change its
+staging missed — two index-versus-worktree incidents in one sitting, both
+the exact residual I had documented that morning, both while building
+integrity tooling. The irony is the instruction: verify git state with the
+same rigour as test state.
+
+**What context will be hardest to reconstruct in six months?** The
+conversational provenance of the platform-floor verification. The committed
+note reads like planned method — six rows, thirty-four assertions, dated
+quotations — but it exists because Shawn mused, mid-ratification
+discussion, that "hypothetically, anything in Zenodo might get a B grade,
+but with extra work it gets an A." That aside became the floors-not-ceilings
+sentence in the ratified text, then the C6 build-time check, and the check
+then found things nobody was looking for: DataCite's own retraction
+workflow contradicting the tombstone entitlement, and Zenodo's licence
+floor being a form default (82.6% of sampled records carry the pre-filled
+CC-BY). A future reader will see a rigorous verification pipeline; they
+will not see that its origin was a hunch offered in passing and taken
+seriously. The same goes for C8 and C9 being one script — they converged
+during the build because both turned out to be post-hoc transcript
+analysis, not because anyone designed them together.
+

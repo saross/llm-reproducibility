@@ -766,3 +766,88 @@ the verified report's two bulk sections condensed and the condensation
 declared in its provenance note. Benchmark figures cited here were
 recomputed from primary artefacts this session, not carried from
 summaries.
+
+## Session: 2026-08-10 / 2026-08-14–15 — Ratification, pre-run review, Phase C built end to end
+
+One session (04169f15), three sittings; commits `f3368ff`→`2d8b074`
+(~25), tests 84 → 172, D5 gate 57 → 65 entities, all pushed.
+
+**Sitting 1 (2026-08-10, evening).** Ratification-read discussion of
+erratum-log Entry 3: item-1 clause restored to the ruled text; ladder
+consolidated to two rungs (rung (i) direct evidence = paper + evidence
+pack; rung (ii) by-construction table; entitlements declared floors);
+R1.1 conflict rule scoped per artefact (clean divisions score
+separately; most-restrictive fires only on same-artefact disagreements);
+endpoint list and platform table declared independently maintained
+(GitLab added; CRAN + Dryad flagged); supplement row qualified to
+landing-page-served deposits, repository-hosted supplements routed to
+their platform's scoring; Dryad added to flagged table additions.
+
+**Sitting 2 (2026-08-14).** Entry 3 + amendment 2 scope RATIFIED; C7
+ruled YES (hashes in the D1 governed window); Phase B focused discussion
+scheduled before D1. `/pre-run-review` run on Phase C (six sections;
+ten-hardening contract committed; amd-tower venv recreated, baseline
+84/84). Clean-context Opus audit PoC on the hardened contract: 4
+blockers, 9 should-fixes, 5 notes; all four blockers confirmed on
+adjudication — B1 extended by re-derivation (39/45 benchmark spawns
+blocked with no downstream consequence); B4 ruled implement-first (new
+item C8); consolidated D1 governed-edit window adopted. C1 executed:
+all audit round-2 register items across eight commits (fallback binding
+re-specified and fixed with the substitution guard; decision-context
+logging with env-seam log paths; one fail-closed policy across both
+hooks; enumeration walk fixed with zero live churn; stray-file and
+scalar-rule tripwires; eight lows; pre-commit test-suite gate,
+block-tested). C2 probes (3 sonnet spawns, approved): field names
+anchored (workflow-lane events lack `last_assistant_message`); pass
+paths proven in both lanes; block consequence absent in the workflow
+lane; retry budget raised and `transcript_state` logged. Incident: the
+gate-probe test's unstaging failed silently and leaked into `5618e30`
+(removed next commit) — the S1 index-vs-worktree residual observed live.
+
+**Sitting 3 (2026-08-15).** C3: schema v1.1 (conditional ESCALATE
+requirements; bounds; soft A1 cross-reference honouring the
+ethical-restriction exception, re-verified against canon before
+encoding; `schema_version` const; ratified `input_provenance` flag;
+`pack_refs`) + gate schema-identity check; 20 defect-injection tests.
+C5: unwrap script M14–M16 fixed with a committed self-check proving
+idempotence on the lodged amendment-1 artefact. C6: GitHub fine-grained
+public-read token adopted (env-file, read at run time only);
+artefact-metadata harvester v1.0 + curated links registry + five
+committed evidence packs (timestamps + response hashes; dedupe by
+record_id; CC-URL canonicalisation; conflict flags — marwick's three
+asserted component licences vs Zenodo's single cc-by-4.0 fired, key's
+CC BY cleared; marwick's cited 10.5281/zenodo.14561925 404s at DataCite
+and Zenodo — dead-link finding for Phase B; CRAN an honest
+endpoint-flagged gap). C8+C9 built as one tool (`reconcile-run.py`):
+post-hoc receipt re-validation, per-spawn file-access lists with
+contamination flagging, divergence tripwire, log-slice archival, exit-1
+hard stop; proven on all retained runs — three benchmark arms 45/45
+clean with zero contaminating accesses (§4 isolation empirically held;
+one warning-grade path-confusion case: a sonnet spawn's guide reads
+failed at a nonexistent user-level path and it honestly declared no
+pulls), C2 probe run correctly fails probe C. Attempts-are-not-reads
+rule added to gate and reconciler (a declared pull whose every Read
+errored blocks). Platform-row verification note committed (clean-context
+agent; 34 assertions; every row HOLDS WITH CAVEAT; DataCite tombstone
+sub-assertion contradicted; Zenodo licence floor is a pre-filled
+default; ADS ≫ DANS > tDAR; GitLab licence data opt-in with no SPDX;
+Crossref persistence a member obligation; 9.3M component DOIs;
+tDAR/DANS bot-gate scripted fetches) — corrections queued for the
+registrant's D1 ruling. Harvester GitLab route fixed to `license=true`.
+Incident: `5fdc172`'s message claimed the live-gate rule its staging
+missed; completed in `2d8b074`. **Phase C COMPLETE.** Remaining to
+census: Phase B shape discussion → A3 + D1 governed window (definitions
+wording, C7 hashes, guide promotion, §4 rewording, table corrections,
+pack-staleness sentence) → D2 lodgement → D3 re-benchmark (C9 wiring +
+validator probe + standing API gate) → D4.
+
+**Contextual assumptions.** Fable-driven session with Opus/Sonnet
+subagents per the standing model policy; probes ran on the Max
+allowance under the standing API gate. The retrospective reconciliation
+was possible only because the 2026-08-03 workflow transcripts were
+still on disk — transcript retention is incidental, not guaranteed,
+which is itself an argument for the reconciliation tool archiving into
+run directories. tDAR/DANS page fetches required browser rendering;
+their entitlement rows rest partly on rendered pages a scripted
+harvester cannot reach.
+

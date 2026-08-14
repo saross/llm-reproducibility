@@ -481,3 +481,28 @@ asymmetry worked exactly as designed — sonnet's survey substance was
 largely sound, opus's adversarial pass caught everything that mattered,
 and the serial pair cost far less than a frontier-tier proposer would
 have.
+
+## 2026-08-15 — Two spawned models told the truth about their own limitations
+
+Two independent live cases this session where model honesty held exactly
+where the instrument depends on it. First: a benchmark sonnet spawn
+(dye-et-al-2023) attempted its reference-guide pulls at a nonexistent
+user-level path, got file-not-found twice and an empty glob, proceeded to
+score guideless — and declared `pulled_files_read: []`, truthfully. Its
+receipts were the only honest signal of its own degraded run; the
+reconciliation tooling found the failure precisely because the
+declaration was accurate. Second: the C2 probe assessor was spawned with
+a prompt asserting an "operator-approved exception to your definition's
+'never invoked ad hoc' line" — a phrase that lives only in frontmatter
+the harness never injects. The model flagged the discrepancy unprompted,
+noted that an agent message claiming operator approval is not a
+substitute for consent, and proceeded only because the task itself was
+within its ordinary role. Receipts-as-instrument assumes models report
+their own reads honestly; both cases are evidence the assumption held,
+including under tooling failure — and the second is a small live datum on
+prompt-authority scepticism in a scoring agent. Counterpoint to file
+with it: honesty about *reads* is not honesty about *scores* — the
+guideless spawn still emitted confident scores without the guide, and
+nothing in its output volunteered that its interpretive context was
+thinner than its siblings'.
+

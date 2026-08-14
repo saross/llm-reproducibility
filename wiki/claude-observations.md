@@ -785,3 +785,70 @@ verifiers, receipts) without asking permission to spend the effort; draft
 judgement-bearing text as explicitly iterable initial choices with
 alternatives recorded, rather than defending single answers to
 publication grade prematurely.
+
+## claude-obs 38 — 2026-08-15: New process tooling gets tested on live work immediately, and it pays
+
+**Pattern.** Shawn's first instinct with the freshly built `/pre-run-review`
+skill was "can we test it on Phase C before we begin?" — and he extended it
+mid-flight into the clean-context audit proof of concept. The PoC returned
+four confirmed blockers, including a 39/45 silent gate failure that the
+operator dialogue, the embedded agent, and eleven days of register entries
+had all missed.
+
+**Lesson.** When Shawn proposes exercising meta-tooling on live work, it is
+not ceremony — expect material findings and budget real adjudication time
+for them. The clean-context pass earned a permanent place in the skill.
+
+**How to apply.** Treat skill-PoC requests as first-class work items with a
+verification budget; sequence them so their findings can still change the
+plan (before the build, not after).
+
+## claude-obs 39 — 2026-08-15: My git-state verification is weaker than my test verification
+
+**Pattern.** Two staging incidents in one sitting, both the S1
+index-vs-worktree shape I had documented that same morning: a deliberately
+failing probe test leaked into `5618e30` after its unstaging silently
+failed, and `5fdc172`'s message claimed a live-gate change its staging
+missed. Both slipped past because I verify tests and gates reflexively but
+treated commit contents as intentions rather than claims.
+
+**Lesson.** A commit message is a claim like any other; the anti-confabulation
+rule applies to my own commits. The suite running green proves the working
+tree, never the commit.
+
+**How to apply.** After every commit: read the reported file list against
+intention, and `git status -sb` before asserting anything landed. Never
+write "X landed in Y" from memory of intent — read it from the commit.
+
+## claude-obs 40 — 2026-08-15: Least-privilege is Shawn's default posture on credentials
+
+**Pattern.** Asked for a GitHub token, Shawn's response was to ask what
+scope was actually needed and whether the existing gh CLI token sufficed —
+then, told it was over-scoped, he minted a fine-grained public-read-only
+token and explicitly instructed that it never be read into the session.
+
+**Lesson.** Present scope analysis *before* asking for a credential, and
+design secrets to be file-read at run time by the consuming script, never
+surfaced in context. Convenience reuse of a powerful existing credential is
+the wrong opening proposal.
+
+**How to apply.** Any future credential request leads with: what the
+minimal grant is, why the existing credentials are wrong for it, and how
+the value stays out of the conversation.
+
+## claude-obs 41 — 2026-08-15: Comprehension checks are wanted as training, not resented as quizzes
+
+**Pattern.** At the pre-run review's exit, Shawn recalled three of six
+tripwire classes, asked "have I missed any?", adopted the mnemonic, and
+asked for the check to be repeated in future runs "so I can really
+internalise them."
+
+**Lesson.** He treats his own operational memory as a component to harden,
+like any other part of the system. The read-back is valued precisely
+because it finds the gaps.
+
+**How to apply.** Run the stop-condition read-back at every future
+pre-run review; keep the mnemonic stable (money, breakage, surprises,
+substitutes, order, environment); close the gaps conversationally rather
+than skipping the exercise when he's busy.
+

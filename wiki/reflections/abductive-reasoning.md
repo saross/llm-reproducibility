@@ -645,3 +645,113 @@ primary artefacts. The check cost a quarter of an hour and reversed the
 session's opening plan; the alternative was burning the only permitted
 remediation attempt on a hypothesis two-thirds of the evidence already
 contradicted.
+
+## 2026-08-15 — The gate blocked 39 spawns, stopped none, and everything it blocked was valid
+
+**Session:** 04169f15-06f9-421d-a149-39a04367b3b5
+**Instance:** primary
+
+### Surprising fact
+
+The audit register carried the finding as "gate blocked 9/15 fable spawns
+and cannot say why." The clean-context pre-run audit re-derived the true
+scale from the gate log: 39 of 45 benchmark spawns "blocked" (opus 15/15,
+sonnet 15/15, fable 9/15) — and every one of the 45 outputs was collected
+and published anyway. Two shocks in one: the blocking was near-universal,
+and it was inert.
+
+### Probe
+
+Three operator-approved probes plus a retrospective sweep. Probe A
+(Agent lane): full pass, field names captured. Probe B (workflow lane,
+schema-forced): transcript-borne pass — so the search path works when the
+transcript is readable. Probe C (engineered receipt omission): the gate
+correctly blocked, the block message appeared nowhere in the agent's
+transcript, no retry occurred, and the workflow collected the receipt-less
+output — consequence absence demonstrated under controlled conditions.
+Then the retrospective: today's search function finds a well-formed
+receipt payload in all 45 retained benchmark transcripts, and full
+validation (versions, tokens, model pins, agent versions, declared pulls
+against transcript Read calls) passes 45/45. With payloads provably
+present, the only surviving explanation for the runtime failures is
+transcript write-lag beyond the gate's 3-second retry budget — and the
+block message had conflated "transcript unavailable" with "searched and
+found nothing", which is why the register mis-described the fault for
+eleven days.
+
+### Belief revision
+
+Three revisions, one per layer. The 39 blocks were false alarms, not
+detections — the gate's failure mode was crying wolf, not sleeping.
+SubagentStop block decisions are advisory in the workflow lane — the
+harness collects structured output regardless, so any real consequence
+must live orchestrator-side, after completion. And the benchmark's
+provenance was sound all along: the run the blocks appeared to indict is
+now machine-verified cleaner than the hand tally claimed. The reconciling
+tool built in response (receipt re-validation from completed transcripts,
+exit-1 hard stop) is the authoritative control; hook-time gating is
+demoted to a fast path.
+
+### What would change this belief
+
+A future reconciled run finding an invalid payload the hook passed (the
+lag story explains blocks, not passes — a false pass would reopen the
+question), or lag-shaped blocks persisting under the raised 8-second
+budget now that `transcript_state` is logged per decision — the new field
+makes the write-lag hypothesis directly testable at D3.
+
+### Implications for practice
+
+Authoritative verification belongs after completion, on durable
+artefacts; in-flight hooks are advisory speed, not integrity. And distinct
+fault classes need distinct messages — one block message covering two
+branches hid a systemic timing fault behind an apparent payload fault for
+eleven days.
+
+## 2026-08-15 — The licence floor was a form default
+
+**Session:** 04169f15-06f9-421d-a149-39a04367b3b5
+**Instance:** primary
+
+### Surprising fact
+
+Of 298 newest Zenodo records sampled by the platform-floor verification
+agent, 82.6% carry `cc-by-4.0` — the value Zenodo pre-fills. And the
+"licence field on every record" entitlement is falsified outright for
+restricted deposits (27/100 sampled carry the field at all): the policy
+scopes the requirement to publicly available files.
+
+### Probe
+
+The agent quoted the platform's own deposit documentation ("Zenodo
+defaults to the Creative Commons Attribution 4.0 International (CC-BY)
+license"; "Users must specify a license for all publicly available
+files") and sampled the live REST API across access classes. DANS shares
+the artefact: its deposit manual pre-fills CC0. CRAN, by contrast, has a
+mandatory licence field with a controlled vocabulary and *no default* —
+the one row where a licence value is genuine evidence of an author act.
+
+### Belief revision
+
+Platform by-construction entitlements are *presence* floors, not *choice*
+floors. A licence value on a Zenodo record is weak evidence of an author
+decision; the ratified rule that "a platform's mandatory licence field
+does not itself satisfy R1.1 — the licence must be identified" is thereby
+upgraded from prudent caution to load-bearing instrument design. The
+floors themselves were empirical claims, and measuring them moved every
+row of the table to HOLDS WITH CAVEAT.
+
+### What would change this belief
+
+A properly random corpus-wide sample showing the default-value rate far
+below the recency-sampled 82.6% would soften the artefact's magnitude —
+though not the structural point, which rests on the platform's own
+documentation of the pre-fill.
+
+### Implications for practice
+
+Never let an instrument credit field presence where the platform supplies
+the value; and re-verify "by construction" claims against the
+construction, dated — the table's corrections are now amendment-2 draft
+material for the registrant's D1 ruling.
+
