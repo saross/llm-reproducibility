@@ -310,6 +310,63 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       field set): table entitlements are floors, and the floor heights
       are empirical claims.
 
+### Phase C pre-run review — hardened execution contract (2026-08-14)
+
+Six-section `/pre-run-review` dialogue (operator: Shawn; sections 1–6
+presented, probed, and approved 2026-08-14). Hardenings of record:
+
+1. **Step 0 (DONE 2026-08-14):** amd-tower venv recreated; baseline
+   suite green at 84/84 before any Phase C edit (matches `3b01676`).
+2. **Ordering:** C1's logging fix precedes the C2 capture; C2's
+   field-name confirmation closes C1 item 2; the pass-plus-catch demo
+   runs only after all C1 hook fixes land. C3's supply mechanism and
+   C6's receipt registration land after C1 (shared hook files). C5 is
+   simultaneous-safe and slots anywhere.
+3. **One-commit rule:** each fix lands with its regression test and its
+   register tick in one commit; no red tests at commit boundaries.
+4. **C3/C6 joint design note:** the evidence-pack record shape and the
+   schema's pack-citation shape are settled once, inside C3; C6
+   conforms. Schema v1.1 is designed against the ratified instrument
+   (provenance flag included) so C6 does not force a v1.2 bump.
+5. **Consolidated D1 governed-edit window (ADOPTED):** the gated
+   agent-definition edits (output-contract wording, v1.1 pointer),
+   guide pull→push promotion (A3), and C7 sha256 hashes land as ONE
+   governed batch at D1, hash-checked from day one — not piecemeal.
+   Interim v1.0-era definition wording is accepted as benign (no
+   scoring spawns before D3).
+6. **Registration compliance:** no scoring spawn receives an evidence
+   pack before amendment 2 lodges (amendment 1 §4's read-scope governs
+   until then). C2 probes are harness-test spawns: pack-free, output
+   discarded, nothing persisted. Amendment 2 lodgement (D2) is a hard
+   stop before the D3 re-benchmark, exactly as amendment 1 was for the
+   first validation run.
+7. **C2 spend gate:** up to three cheap probe spawns (capture; pass;
+   catch), presented under the standing API review gate before running.
+8. **C6 determinism:** every pack record carries retrieval timestamp
+   and response-content hash ("evidence identical across runs" is
+   checked, not hoped). Rate limits: wait or authenticate; never
+   substitute a different endpoint mid-harvest (Shawn can supply a
+   GitHub token — see continuity). Dead links or licence conflicts
+   found in pilot papers are recorded findings feeding Phase B, never
+   scored around.
+9. **Layer-2 verification commitments:** C1 gets a fresh-context
+   round-3 re-audit of the fix commits; C6 gets a cold re-fetch
+   verifier that re-derives licence/metadata conclusions and diffs
+   against the packs. Both report their denominator; a conflicting
+   correction triggers a third derivation or operator adjudication,
+   never verifier-wins.
+10. **Anchors:** the captured SubagentStop event is committed as a
+    dated annex (the anchor for all field-name claims); the
+    platform-row entitlement note is dated and cites platform
+    documentation URLs. Pack-staleness policy sentence queued for
+    amendment 2 item 8 wording at D1.
+
+Clean-context audit (proof of concept for extending `/pre-run-review`):
+one Opus-class fresh-context agent audits this contract from the
+committed artefacts after the operator dialogue — naive-reviewer
+stance, denominator required, findings are claims not verdicts —
+folded before the operator go/no-go.
+
 ## Phase D — amendment 2, re-benchmark, then the registered ladder
 
 - [ ] **D1. Consolidate amendment 2:** instrument clarifications (A2
@@ -348,3 +405,4 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
 | 2026-08-11 | Supplement table row qualified: applies only to supplements served from the article landing page with no independent deposit; repository-hosted supplements (Figshare, Dryad) score as platform deposits; Dryad added to flagged table additions | Shawn |
 | 2026-08-14 | Erratum-log Entry 3 + queued amendment 2 scope RATIFIED (end-to-end read, as amended through 2026-08-11) — A2 closed; D1 consolidation unblocked pending the Phase B shape decision and A3 | Shawn |
 | 2026-08-14 | C7 RULED YES: sha256 content-integrity hashes on `shared_content` entries, implementation riding the amendment 2 instrument edits; Phase B shape discussion scheduled as a focused session before D1 | Shawn |
+| 2026-08-14 | Phase C pre-run review (six-section dialogue) approved: hardened contract recorded in Phase C; consolidated D1 governed-edit window adopted; C2 probes gated and pack-free; amendment 2 lodgement confirmed as hard stop before D3, not before Phase C | Shawn |

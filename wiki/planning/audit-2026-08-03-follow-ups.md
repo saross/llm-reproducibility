@@ -2,7 +2,7 @@
 title: "Audit 2026-08-03 — outstanding follow-ups"
 tags: [infrastructure, governance]
 created: 2026-08-03
-updated: 2026-08-03
+updated: 2026-08-14
 status: open
 ---
 
@@ -13,6 +13,14 @@ hooks, schema, and unwrap script, plus a second-pass re-audit of the fix
 commit `3b01676`. First-round Critical/Medium fixes landed in `3b01676`;
 this file records everything still open so nothing lives only in a chat
 log. Deferred-by-design items carry their reason.
+
+**Pre-run review 2026-08-14:** the Phase C execution contract governing
+these fixes is hardened and recorded in
+`wiki/planning/instrument-clarification-plan.md` (Phase C pre-run review
+section). It binds every item below: one-commit rule (fix + regression
+test + register tick per commit), the C1↔C2 ordering interlock, and a
+fresh-context round-3 re-audit of the fix commits with a reported
+denominator.
 
 ## Round 2 — regressions found in the fix commit (fix next)
 

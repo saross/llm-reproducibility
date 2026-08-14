@@ -76,6 +76,14 @@ merged here as PR #1).
   (now also carries the provenance flag) + receipt-gate operative demo
   (`wiki/planning/audit-2026-08-03-follow-ups.md`); C7 GOVERNED decision
   still open; monitoring Phase 4 unstarted.
+- **2026-08-14 (mid-session addenda):** erratum-log Entry 3 + amendment 2
+  scope RATIFIED; C7 RULED YES (hashes land in the D1 governed-edit
+  window); Phase C pre-run review complete — hardened contract in
+  `wiki/planning/instrument-clarification-plan.md`; amd-tower venv
+  recreated, baseline 84/84 green. **Shawn will provide a GitHub API
+  token for the C6 harvester when asked** (rate-limit headroom for the
+  GitHub endpoint; unauthenticated is 60 req/h) — request it at C6
+  build time.
 
 ## Repo state (2026-08-03)
 
