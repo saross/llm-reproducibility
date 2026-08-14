@@ -407,3 +407,36 @@ you agreed, redirect where you disagreed (#1's construct reversal), and
 ask precisely where the design genuinely needed your expertise (#6's
 granularity question). Decision-dense sessions may want this as the
 default presentation format.
+
+## Pending review — 2026-08-15 batch (drafted at handoff, session 04169f15)
+
+**Candidate A — The tripwire mnemonic landed as wanted training.** Your
+in-the-moment "thanks for the mnemonic, let's continue to review during
+future runs so I can really internalise them" — after recalling three of
+six stop-condition classes — converted a comprehension check that could
+have read as a quiz into a standing feature you asked to keep. Data point:
+recall scaffolds at ritual exits are helpful, not condescending, when the
+gaps are closed collaboratively.
+
+**Candidate B — Adjudicated findings, not raw agent output, made the
+blocker rulings fast.** The clean-context audit returned four blockers; what
+reached you was each one re-derived against the primary artefacts first
+(B1 re-counted from the gate log and extended 9/15 → 39/45, B4's §4 text
+re-read at source), with dispositions proposed. Your three rulings took one
+short message. The pattern: verification-before-presentation turns audit
+volume into decision speed.
+
+**Candidate C — Unvarnished incident reporting let you defer process fixes
+without losing the record.** Twice this session I shipped a git-state
+mistake and reported it in the same message as the results, with the
+residual named in the register. Your response — "we'll deal with preventing
+future, similar incidents later" — deferred the process work while the
+dated record kept it actionable. Honest same-breath reporting appears to
+be what makes deferral safe.
+
+**Candidate D — The spend gate needed one more field: where it runs.** The
+C2 gate presentation covered model, mode, count, and cost, yet your
+approval hinged on a question it hadn't answered — "runs here in Claude
+Code, not a separate API call?" Billing *route* (plan allowance vs API
+account) belongs in the standing gate template alongside cost.
+

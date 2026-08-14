@@ -30,6 +30,84 @@ merged here as PR #1).
 
 ---
 
+## Repo state (2026-08-15)
+
+- **PHASE C COMPLETE (2026-08-14–15) — all nine items; tests 84 → 172;
+  D5 gate 57 → 65 entities; 25 commits `f3368ff`→`7ba9a45` + handoff.**
+  Erratum-log **Entry 3 + amendment 2 scope RATIFIED** (2026-08-14,
+  incorporating the 2026-08-11 ratification-read consolidations);
+  **C7 RULED YES**; **consolidated D1 governed-edit window ADOPTED**
+  (one batch, on a branch: definitions wording + v1.1 pointer + guide
+  pull→push promotion + C7 sha256 hashes + §4 rewording + platform-table
+  corrections + pack-staleness sentence).
+- **Pre-run review + clean-context audit PoC (2026-08-14):**
+  ten-hardening execution contract in the plan; the Opus audit confirmed
+  4 blockers — headline: the receipt gate "blocked" 39/45 benchmark
+  spawns with zero downstream consequence. C2 probes diagnosed it:
+  transcript write-lag false alarms (the block message conflated two
+  fault classes), and SubagentStop blocks are **advisory in the workflow
+  lane** (probe C's engineered violation was logged-blocked yet
+  collected; the block never reached the agent).
+- **THE BENCHMARK IS RETROACTIVELY VINDICATED:** all 45 retained
+  transcripts machine-validate — receipts 45/45 (versions, tokens,
+  model pins, agent versions, pulls) AND **zero contaminating file
+  accesses** (§4 isolation empirically held). Committed evidence:
+  `studies/open-science-compliance/outputs/validation/benchmark-2026-08/reconciliation-2026-08-15/`.
+  One warning case: the dye/sonnet spawn's guide reads failed at a
+  nonexistent user-level path and it honestly declared no pulls,
+  scoring guideless — **footnote for the §2-card "sonnet pulled 9/15"
+  evidence: pull counts were attempt-based and may mislead in both
+  directions.**
+- **Built and pushed:** schema **v1.1** (ESCALATE no longer forces
+  fabrication; bounds; soft A1 cross-reference honouring the ethical
+  exception; `schema_version` const enforced by validator AND gate;
+  ratified `input_provenance`; `pack_refs`); unwrap script M14–M16 +
+  committed self-check; **artefact-metadata harvester + five committed
+  evidence packs** (`corpus/evidence-packs/`; conflict flags live —
+  marwick's three asserted licences vs Zenodo's single cc-by-4.0 fired,
+  key's CC BY cleared after CC-URL canonicalisation; marwick's cited
+  DOI 10.5281/zenodo.14561925 **404s at DataCite and Zenodo** — Phase B
+  finding; CRAN an honest endpoint-flagged gap); **`reconcile-run.py`**
+  (C8+C9 in one tool: post-hoc receipt re-validation incl. the new
+  **attempts-are-not-reads** rule, per-spawn file-access lists with
+  contamination flagging, divergence tripwire, log-slice archival,
+  exit-1 hard stop). GitHub fine-grained public-read token in the PA
+  `.env` (`GITHUB_API_TOKEN_LLMR`), read at run time only.
+- **PLATFORM-ROW VERIFICATION NOTE AWAITS SHAWN'S D1 RULINGS**
+  (`outputs/validation/platform-rows-2026-08-15/verification-note.md`,
+  34 assertions, every row HOLDS WITH CAVEAT): DataCite's own
+  retraction workflow withdraws metadata from the Public API
+  (tombstone limb contradicted); Zenodo's licence floor is a
+  **pre-filled form default** (82.6% of sampled records) and scoped to
+  open records only; ADS ≫ DANS > tDAR on ingest enforcement; GitLab
+  licence data is opt-in with no SPDX id; Crossref article persistence
+  is a member obligation + Crossref right, not a warranty; component
+  DOIs number 9.3M but are metadata-poor; tDAR/DANS bot-gate scripted
+  fetches (rendering + challenge-page detection needed for future
+  endpoints).
+- **Incidents (both the S1 index-vs-worktree residual, now observed
+  live twice):** a deliberately failing probe test leaked into
+  `5618e30` (removed `d2cb58a`); `5fdc172`'s message claimed the
+  live-gate rule its staging missed (completed `2d8b074`). Standing
+  remedy adopted (claude-obs 39): post-commit stat + status check
+  before claiming anything landed.
+- **NEXT (in order):** (1) **Phase B shape discussion (Shawn)** —
+  re-derivation design (human-adjudication anchor? n=12 subsample
+  seed? E8 update retaining the old set); (2) **A3 + D1 consolidation**
+  — the governed window above, incl. Shawn's rulings on the
+  platform-table corrections; (3) **D2 lodge** (API route; C5-fixed
+  unwrap for the paste artefact); (4) **D3 re-benchmark prep**: wire
+  reconcile-run into `fair-benchmark-arm.workflow.js` as a per-item
+  hard stop + schema push with sha256 receipts + the S4 validator
+  probe; standing API gate (45 spawns) — **gate template addition:
+  state the billing route (plan allowance vs API), per user-obs
+  candidate D**; (5) D4 gates → selection → census.
+- **PENDING VERDICTS (no silent discard):** WN-l, WN-m and user-obs
+  A–C (2026-08-03 batch) still held; **NEW this session:** working-notes
+  candidates **WN-p/q/r** (see 2026-08-15 session-log entry) and
+  user-obs **2026-08-15 batch A–D** (pending in
+  `wiki/user-observations.md`).
+
 ## Repo state (2026-08-10)
 
 - **§2 ROUTING-FIX CARD DECLINED (Shawn, 2026-08-03/10) — INSTRUMENT
@@ -928,6 +1006,46 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-08-10 / 2026-08-14–15 — Ratification, pre-run review, Phase C end to end
+
+One session (04169f15), three sittings; 25 commits `f3368ff`→`7ba9a45`;
+tests 84 → 172; gate 57 → 65 entities. Sitting 1 landed the four
+ratification-read consolidations (clause restored; two-rung ladder with
+the pack inside rung (i); per-artefact licence-conflict scope;
+endpoint/table independence + supplement-row qualification). Sitting 2:
+Entry 3 RATIFIED, C7 ruled, `/pre-run-review` on Phase C (ten-hardening
+contract), the clean-context Opus audit PoC (4 blockers confirmed — B1
+extended to 39/45 inert blocks), C1's eight fix commits, and the three
+C2 probes (field names anchored; workflow lane lacks
+`last_assistant_message`; consequence absent). Sitting 3: schema v1.1,
+unwrap self-check, harvester + five evidence packs, reconcile-run
+(C8+C9), the platform-row verification note, and Phase C closure — with
+the 45/45 + zero-contamination retro-vindication of the benchmark as
+the day's headline. Full factual log:
+`wiki/reflections/session-log.md` 2026-08-10/14–15 entry; plan of
+record unchanged: `wiki/planning/instrument-clarification-plan.md`.
+
+**Held-over candidates (no silent discard), for Shawn's verdicts:**
+
+- **WN-p:** hook-time gate decisions are advisory in the workflow lane;
+  authoritative verification must run post-hoc on completed artefacts
+  (measured: probe C collected despite block; 39/45 lag false alarms;
+  45/45 retro-validation).
+- **WN-q:** platform by-construction entitlements are presence floors,
+  not choice floors — and the floors are empirical claims (Zenodo
+  82.6% pre-filled default; DataCite tombstone contradiction; dated
+  note committed).
+- **WN-r:** receipt checks must verify success, not attempts — a
+  declared pull whose every Read errored never entered context (dye/
+  sonnet guideless spawn; rule now in gate + reconciler).
+
+**Carry-forward:** zbook needs `./scripts/install-git-hooks.sh` after
+pull **and a venv** (`python3 -m venv venv && venv/bin/pip install -r
+requirements.txt pytest`) — the new commit test gate's fallback needs
+jsonschema. Shawn: **Cosmos decision window OPEN**; Fable billing split;
+Zotero proxy; `ELSEVIER_API_KEY_TDM`; Marwick Zotero duplicates
+(573 + 4151); PA data-submodule inbox flag.
 
 ### 2026-08-03 (second) / 2026-08-10 — §2 declined, research-surface rulings, A2 drafted
 
