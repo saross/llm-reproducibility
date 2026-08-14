@@ -1,0 +1,69 @@
+{
+  "agents": [
+    {
+      "agent_id": "a8df23f30c440eba9",
+      "agent_type": "fair-assessor-sonnet-5",
+      "divergence": {
+        "blocked_but_output_present": false,
+        "no_gate_event": false
+      },
+      "file_access": {
+        "all": [
+          {
+            "errored": false,
+            "target": "tests/fixtures/c2-synthetic-paper.md",
+            "tool": "Read"
+          }
+        ],
+        "contaminating": [],
+        "flagged": []
+      },
+      "gate_events": [
+        "pass"
+      ],
+      "push_events": 1,
+      "receipts": {
+        "paper_slug": "c2-synthetic-fixture-b",
+        "problems": [],
+        "valid": true
+      },
+      "reconciled": true
+    },
+    {
+      "agent_id": "ad4e71866853621b8",
+      "agent_type": "fair-assessor-sonnet-5",
+      "divergence": {
+        "blocked_but_output_present": false,
+        "no_gate_event": false
+      },
+      "file_access": {
+        "all": [
+          {
+            "errored": false,
+            "target": "tests/fixtures/c2-synthetic-paper.md",
+            "tool": "Read"
+          }
+        ],
+        "contaminating": [],
+        "flagged": []
+      },
+      "gate_events": [
+        "block"
+      ],
+      "push_events": 1,
+      "receipts": {
+        "problems": [
+          "no well-formed receipt payload in transcript"
+        ],
+        "valid": false
+      },
+      "reconciled": false
+    }
+  ],
+  "clean": false,
+  "reconciled_at": "2026-08-14T14:41:01.037059+00:00",
+  "reconciliation_version": "1.0",
+  "run_dir": "/home/shawn/.claude/projects/-home-shawn-Code-llm-reproducibility/04169f15-06f9-421d-a149-39a04367b3b5/subagents/workflows/wf_cf1f820a-d6a",
+  "spawns": 2,
+  "spawns_reconciled": 1
+}
