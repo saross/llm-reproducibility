@@ -59,9 +59,13 @@ denominator.
      early) and env-overridable log paths (`LLMR_RECEIPT_GATE_LOG`,
      `LLMR_PUSH_RECEIPT_LOG`) as the test seam / C8 archival hook. Tests
      84 → 87.
-   - **2b.** Confirm the real SubagentStop field names from a captured
-     live event (closed by C2's capture, which also records whether the
-     event carries assignment identifiers — audit S6).
+   - **[x] 2026-08-14 2b.** Confirm the real SubagentStop field names from
+     a captured live event — done via the C2 probes (annex:
+     `studies/open-science-compliance/outputs/validation/c2-probes-2026-08-14/`).
+     `agent_transcript_path` is real; workflow-lane events carry NO
+     `last_assistant_message`; on S6's question, the event carries
+     `agent_id` and `prompt_id` but no paper-level identifier, so item
+     binding stays payload-side (`paper_slug`, per item 1's re-spec).
 3. **[x] 2026-08-14 — Preflight fail-closed blast radius (re-audit M-1) +
    non-UTF-8 hole (M-2) + docstring contradictions (M-3/M-4).** Policy
    decided ONCE and applied to both hooks: unattributable events (parse
@@ -130,7 +134,13 @@ record and contract amendments in
    transcript-borne pass (the shape that actually failed 39/45), and a
    consequence-verified catch — the blocked spawn's output demonstrably
    excluded or retried, never merely a `block` line in the log (audit
-   B1).
+   B1). **Outcome 2026-08-14:** case 1 ✓ (probe A), case 2 ✓ (probe B),
+   case 3 half: the catch fires correctly but the consequence is ABSENT
+   in the workflow lane (probe C — block undelivered, output collected);
+   operative status in that lane pends plan item C9's reconciliation.
+   Diagnostic bonus: all 45 benchmark transcripts re-validated clean
+   post-hoc — the 39 benchmark blocks were transcript-lag false alarms.
+   Full record in the C2 annex.
 10. **S3 — schema identity receipted.** C3 adds schema version + sha256
     to the receipt fields; the benchmark workflow stops stripping
     `version` before spawn.

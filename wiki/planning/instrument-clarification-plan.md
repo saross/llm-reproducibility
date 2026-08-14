@@ -293,9 +293,20 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       probe test leaked into `5618e30` while the worktree-reading gate
       saw green; removed in `d2cb58a`) — the residual is observed, not
       theoretical, and the pathspec discipline stands.
-- [ ] **C2. Capture one live SubagentStop event** (single cheap probe
-      spawn) to confirm real field names; then the live pass-plus-catch
-      demonstration. Gate counts as operative only after both.
+- [x] 2026-08-14 **C2. Capture one live SubagentStop event + operative
+      demo** — three probes run (A: Agent-lane pass; B: workflow-lane
+      transcript-borne pass; C: workflow-lane catch), operator-approved.
+      Field names anchored (2b closed; workflow-lane events lack
+      `last_assistant_message`); pass paths proven in both lanes; the
+      catch fires correctly but its consequence is ABSENT in the
+      workflow lane (block undelivered, output collected — pre-run audit
+      B1's mechanism confirmed), so the workflow-lane gate is operative
+      only once C9 lands. Diagnostic bonus: today's search + full
+      validation over all 45 retained benchmark transcripts passes
+      45/45 — the 39 benchmark blocks were transcript-write-lag false
+      alarms and the benchmark's receipt provenance is now
+      machine-verified. Annex:
+      `studies/open-science-compliance/outputs/validation/c2-probes-2026-08-14/`.
 - [ ] **C3. Schema v1.1** (C6 ESCALATE-forces-fabrication; M12; M13) plus
       its supply mechanism (currently orchestrator-side only).
 - [x] 2026-08-14 **C4. C7 GOVERNED decision (Shawn): RULED YES** — add
@@ -330,6 +341,19 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       archival into run directories (audit S8) rides this item. Any §4
       clause that cannot honestly be implemented is recorded in the
       erratum log for amendment 2 wording at D1.
+- [ ] **C9. Workflow-lane gate reconciliation** (C2 probes, 2026-08-14 —
+      pre-census requirement; **the D3 re-benchmark must not run without
+      it**). SubagentStop blocks are advisory in the workflow lane
+      (probe C: block logged, never delivered to the agent, output
+      collected anyway), and hook-time transcript lag produced all 39
+      benchmark false-alarm blocks (45/45 transcripts re-validated clean
+      post-hoc). Build: after each workflow `agent()` returns, look up
+      the gate log by `agent_id`; anything but `pass` triggers
+      authoritative post-hoc re-validation of the completed transcript
+      (the C2 prototype); failed or unverifiable items are re-run or
+      failed, never collected silently. Implements the adopted
+      gate-events-vs-outputs divergence tripwire; wires into
+      `fair-benchmark-arm.workflow.js` as part of D3 preparation.
 
 ### Phase C pre-run review — hardened execution contract (2026-08-14)
 
@@ -467,3 +491,4 @@ manifest.
 | 2026-08-14 | C7 RULED YES: sha256 content-integrity hashes on `shared_content` entries, implementation riding the amendment 2 instrument edits; Phase B shape discussion scheduled as a focused session before D1 | Shawn |
 | 2026-08-14 | Phase C pre-run review (six-section dialogue) approved: hardened contract recorded in Phase C; consolidated D1 governed-edit window adopted; C2 probes gated and pack-free; amendment 2 lodgement confirmed as hard stop before D3, not before Phase C | Shawn |
 | 2026-08-14 | Clean-context audit (Opus PoC) adjudicated: all 4 blockers confirmed, B1 extended (39/45 spawns blocked with no downstream consequence); B4 ruled IMPLEMENT → new item C8, with erratum-route text modification where infeasible; B1 consequence-verified catch confirmed; disposition table approved in full | Shawn |
+| 2026-08-14 | C2 probes run (3 sonnet spawns, approved): field names anchored, pass paths proven both lanes, workflow-lane block consequence ABSENT → new pre-census item C9 (gate reconciliation, blocks D3); benchmark receipts retroactively machine-verified 45/45 — the 39 blocks were transcript-lag false alarms | Claude (probes approved by Shawn) |
