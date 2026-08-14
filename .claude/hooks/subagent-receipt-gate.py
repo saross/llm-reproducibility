@@ -121,6 +121,39 @@ def tool_use_inputs(lines: list[str], names: tuple[str, ...] | None) -> list[dic
     return inputs
 
 
+def read_calls(lines: list[str]) -> list[dict]:
+    """Read tool calls paired with their result status from the transcript.
+
+    Returns [{"input": dict, "error": bool}]. A call with no recorded
+    result counts as errored: an unverifiable read must not verify a
+    declared pull. Added 2026-08-15 (C6/C8 reconciliation finding): a
+    benchmark spawn declared pulls whose only Read attempts had failed
+    with file-not-found — attempt-matching passed them, success-matching
+    must not.
+    """
+    uses: list[tuple[str, dict]] = []
+    errors: dict[str, bool] = {}
+    for line in lines:
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        content = ((entry.get("message") or {}).get("content")
+                   if isinstance(entry.get("message"), dict) else entry.get("content"))
+        if not isinstance(content, list):
+            continue
+        for blk in content:
+            if not isinstance(blk, dict):
+                continue
+            if blk.get("type") == "tool_use" and blk.get("name") == "Read" \
+                    and isinstance(blk.get("input"), dict):
+                uses.append((str(blk.get("id")), blk["input"]))
+            elif blk.get("type") == "tool_result":
+                errors[str(blk.get("tool_use_id"))] = bool(blk.get("is_error"))
+    return [{"input": call_input, "error": errors.get(use_id, True)}
+            for use_id, call_input in uses]
+
+
 def structured_output_from_transcript(lines: list[str]) -> dict | None:
     """Find the last schema-shaped structured output among tool_use inputs.
 
@@ -314,7 +347,7 @@ def validate(event: dict) -> int:
             return block(agent_type, "agent transcript unavailable after retries — cannot "
                                      "verify declared pulled-file reads (D-12 fail-closed)",
                          ctx)
-        calls = tool_use_inputs(lines, ("Read",))
+        calls = read_calls(lines)
         for declared in pulled:
             declared_path = str(declared).strip()
             if not declared_path:
@@ -323,12 +356,23 @@ def validate(event: dict) -> int:
                 return block(agent_type, "pulled_files_read contains an empty path — "
                                          "declare the actual file read or remove the "
                                          "entry", ctx)
-            matching = [c for c in calls if declared_path in str(c.get("file_path", ""))]
+            matching = [c for c in calls
+                        if declared_path in str(c["input"].get("file_path", ""))]
             if not matching:
                 return block(agent_type, f"declared pulled read {declared!r} has no matching "
                                          f"Read call in the transcript — re-read it in full "
                                          f"and re-emit receipts", ctx)
-            if not any("limit" not in c and "offset" not in c for c in matching):
+            successful = [c for c in matching if not c["error"]]
+            if not successful:
+                # 2026-08-15: attempts are not reads — a declared pull whose
+                # every Read errored (wrong path, missing file) never
+                # entered the agent's context.
+                return block(agent_type, f"declared pulled read {declared!r} was attempted "
+                                         f"but every matching Read errored — the file was "
+                                         f"never actually read; re-read it in full from "
+                                         f"its canonical path and re-emit receipts", ctx)
+            if not any("limit" not in c["input"] and "offset" not in c["input"]
+                       for c in successful):
                 return block(agent_type, f"pulled read {declared!r} was truncated with "
                                          f"limit/offset — re-read the file in full", ctx)
 

@@ -286,6 +286,42 @@ class ReceiptGateTests(unittest.TestCase):
         """v1.0-era payloads predate self-identification and pass unchanged."""
         self.assertEqual(self.run_gate(valid_payload()), ["pass"])
 
+    def _transcript_with_read(self, path: str, error: bool,
+                              payload: dict) -> str:
+        """Transcript with a Read use+result pair plus a structured output."""
+        entries = [
+            {"message": {"content": [{"type": "tool_use", "name": "Read",
+                                      "id": "toolu_r1",
+                                      "input": {"file_path": path}}]}},
+            {"message": {"content": [{"type": "tool_result",
+                                      "tool_use_id": "toolu_r1",
+                                      "is_error": error, "content": "x"}]}},
+            {"message": {"content": [{"type": "tool_use",
+                                      "name": "StructuredOutput",
+                                      "id": "toolu_s1", "input": payload}]}},
+        ]
+        with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as f:
+            for entry in entries:
+                f.write(json.dumps(entry) + "\n")
+            transcript = f.name
+        self.addCleanup(os.unlink, transcript)
+        return transcript
+
+    def test_errored_pull_blocks(self) -> None:
+        """2026-08-15 (C6/C8 finding): a declared pull whose every Read
+        errored was never actually read — attempts are not reads."""
+        payload = valid_payload()
+        payload["receipts"]["pulled_files_read"] = ["/ref/guide.md"]
+        transcript = self._transcript_with_read("/ref/guide.md", True, payload)
+        self.assertEqual(self.run_gate(None, transcript=transcript), ["block"])
+        self.assertIn("never actually read", self.events[0]["reason"])
+
+    def test_successful_pull_passes(self) -> None:
+        payload = valid_payload()
+        payload["receipts"]["pulled_files_read"] = ["/ref/guide.md"]
+        transcript = self._transcript_with_read("/ref/guide.md", False, payload)
+        self.assertEqual(self.run_gate(None, transcript=transcript), ["pass"])
+
     def test_incomplete_receipts_dict_does_not_mask_flat_fields(self) -> None:
         """Item 7 / L-1 (2026-08-14): an incomplete nested `receipts` dict
         must not mask complete, well-typed flat receipt fields."""
