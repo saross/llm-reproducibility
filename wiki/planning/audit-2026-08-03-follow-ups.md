@@ -28,15 +28,33 @@ denominator.
    carries a payload with missing/malformed receipt fields, the gate
    silently discards it and validates an earlier transcript tool-call
    payload — receipts are not bound to the item (`paper_slug` never read).
-   Fix: fall back to the transcript ONLY when no final-message payload
-   exists; when both exist, require `paper_slug` agreement.
+   ~~Fix: fall back to the transcript ONLY when no final-message payload
+   exists; when both exist, require `paper_slug` agreement.~~
+   **Fix re-specified 2026-08-14 (pre-run audit B2: the struck wording
+   was self-contradictory and, read literally, reinstated the C4-era
+   final-message-only regression):** the gate searches for a
+   *well-formed receipt payload* — final message first; only if the
+   final message carries no well-formed receipt payload does it search
+   the transcript's tool calls (a receipt-less JSON object in the final
+   message must NOT suppress that search). If well-formed payloads exist
+   in both places, they must agree on `paper_slug`; disagreement blocks.
+   `paper_slug` agreement is internal consistency, not item binding
+   (audit S6) — binding design follows the C2 capture.
 2. **Gate still blocked 9/15 fable spawns and cannot say why (re-audit
    C-1).** One block message covers two branches; the log carries no
    `agent_id` and no fallback-branch marker; `agent_transcript_path` is a
-   design-doc field name never confirmed against a live event. Fix: log
-   event keys (names only) + `agent_id` + branch on every decision; confirm
-   the real SubagentStop field names from a captured event before the
-   census.
+   design-doc field name never confirmed against a live event.
+   **Scale correction (2026-08-14, pre-run audit B1, re-derived from the
+   gate log):** the benchmark-wide picture was 39/45 spawns blocked
+   (opus 15/15, sonnet 15/15, fable 9/15) with every output still
+   collected — the block decision had no downstream consequence
+   anywhere, on any arm.
+   **Fix, split per the one-commit rule (audit N1):**
+   - **2a.** Log event keys (names only) + `agent_id` + branch on every
+     decision — tickable at its own commit.
+   - **2b.** Confirm the real SubagentStop field names from a captured
+     live event (closed by C2's capture, which also records whether the
+     event carries assignment identifiers — audit S6).
 3. **Preflight fail-closed blast radius (re-audit M-1) + non-UTF-8 hole
    (M-2) + docstring contradictions (M-3/M-4).** Catch `Exception` not just
    `JSONDecodeError`; decide deny-vs-allow for unattributable events ONCE,
@@ -45,6 +63,9 @@ denominator.
    types — project-wide stop if the env breaks); receipt gate ALLOWS
    unparseable; `tool_input` non-dict allows. `test_list_tool_input_denies_
    not_crashes` asserts nothing about denial (L-7) — rename or fix.
+   Also fold in (audit N5): `preflight-agent.py` invokes the D5 checker
+   without `--preflight`, leaving the script's env-override branch
+   test-only — unify so both hooks share one fail-closed path.
 4. **Enumeration exclusions still leak (re-audit M-5).** `corpus`/`project`
    /`version_history`/`licences` subtrees and list-of-dicts entries escape.
    Fix: walk lists too; shrink the exclusion set to sections that produce
@@ -61,6 +82,34 @@ denominator.
    free pass (L-3), E6 path-only error message (L-4), list-rooted manifest
    traceback (L-5), untested `main()` fail-closed handler (L-6), no
    allowed-governed-spawn test (L-8), weak E8 empty-key assertion (L-10).
+
+## Pre-run audit additions (2026-08-14, adjudicated; registrant approved)
+
+Clean-context audit findings folded into this register (adjudication
+record and contract amendments in
+`wiki/planning/instrument-clarification-plan.md`, Phase C):
+
+8. **S1 — commit gate runs tests.** Add the pytest suite to the
+   pre-commit hook (the suite runs in under a second). Accepted
+   residual, documented: the D5 pre-commit check reads the working
+   tree, not the index, so a partially staged manifest/instrument pair
+   can commit green — mitigated by the standing explicit-pathspec
+   discipline for concurrent sessions; index-accurate checking is a
+   future enhancement, not a Phase C item.
+9. **S2 — operative demo covers three cases:** final-message pass,
+   transcript-borne pass (the shape that actually failed 39/45), and a
+   consequence-verified catch — the blocked spawn's output demonstrably
+   excluded or retried, never merely a `block` line in the log (audit
+   B1).
+10. **S3 — schema identity receipted.** C3 adds schema version + sha256
+    to the receipt fields; the benchmark workflow stops stripping
+    `version` before spawn.
+11. **S4 — v1.1 validator compatibility.** Standard JSON Schema
+    keywords only; a validator probe confirms acceptance before D3.
+    New stop condition: v1.1 rejected at spawn time halts the block.
+12. **N4 — C5's self-check gets a committed home:**
+    `tests/test_unwrap_paste.py`, regression-anchored to the
+    amendment 1 paste artefact.
 
 ## Deferred by design (with reasons)
 

@@ -309,6 +309,20 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       requirements (dated check — e.g. Zenodo's mandatory-vs-optional
       field set): table entitlements are floors, and the floor heights
       are empirical claims.
+- [ ] **C8. Implement amendment 1 §4's asserted isolation controls**
+      (pre-run audit B4; registrant ruled 2026-08-14: implement, and
+      where a control is infeasible, modify the registered text by
+      erratum/amendment instead). The lodged §4 asserts enforcement by
+      tool allowlist and sandbox scope, verification from the harness
+      transcript, and per-run file-access lists archived with run
+      artefacts — none of which the harness currently provides beyond
+      the agent tool list. Build: derive each scoring spawn's complete
+      file-access list from its transcript (the gate already parses
+      transcripts), archive it with the run artefacts, and flag
+      out-of-scope reads as a gate failure; mechanical log-slice
+      archival into run directories (audit S8) rides this item. Any §4
+      clause that cannot honestly be implemented is recorded in the
+      erratum log for amendment 2 wording at D1.
 
 ### Phase C pre-run review — hardened execution contract (2026-08-14)
 
@@ -367,6 +381,45 @@ committed artefacts after the operator dialogue — naive-reviewer
 stance, denominator required, findings are claims not verdicts —
 folded before the operator go/no-go.
 
+**Audit outcome (2026-08-14):** the clean-context pass returned 4
+blockers, 9 should-fixes, 5 notes (its denominator: 27 files opened,
+16 contract claims checked, 27 command probes). All four blockers
+CONFIRMED on adjudication — B1 extended by independent re-derivation:
+the receipt gate blocked 39/45 benchmark spawns (opus 15/15, sonnet
+15/15, fable 9/15) with every output still collected; the block
+decision had no downstream consequence on any arm. Registrant rulings:
+
+- **B4 → new item C8** (implement; text modification by
+  erratum/amendment where a control is infeasible).
+- **B1 → C2's finish line is a consequence-verified catch**, plus a new
+  tripwire: gate events diverging from outputs-collected halts any run.
+  C2 probe budget revised to up to four cheap spawns (capture +
+  three-case demo).
+- **B2 → register item 1 re-specified** (well-formed-payload search
+  order; the contradictory wording struck in place).
+- **B3 → C6 gains an early delivery-architecture design task**:
+  per-spawn pack delivery + receipting (candidate mechanisms: workflow
+  prompt injection with sha256 echoed in receipts, or per-spawn
+  push-hook context) — settled at C6's start, not inside the D1 window.
+
+Disposition table approved in full. Folded into the register: S1
+(pytest in pre-commit + documented index/worktree residual), S2
+(three-case demo), S3 (schema identity receipted; workflow stops
+stripping `version`), S4 (standard keywords + validator probe + new
+stop condition), N1 (item 2 split 2a/2b), N4 (self-check at
+`tests/test_unwrap_paste.py`), N5 (preflight flag unification).
+Recorded here as contract amendments: **S5** — the pre-lodgement fence
+generalises to ALL amendment-2-derived content, and C2 probes score a
+synthetic fixture, never a corpus paper, so the committed annex carries
+no real scores; **S7** — the harvester script and its packs are
+registered in the manifest with checks; **S8** — log-slice archival
+rides C8; **S9** — the operative demo is the compensating control for
+D5's substring routing evidence (checker enhancement noted as future
+work, not Phase C scope); **N2** — the D1 governed-edit window executes
+on a branch + PR; **N3** — packs live outside `studies/` and
+`outputs/`, and the benchmark workflow file is registered in the
+manifest.
+
 ## Phase D — amendment 2, re-benchmark, then the registered ladder
 
 - [ ] **D1. Consolidate amendment 2:** instrument clarifications (A2
@@ -406,3 +459,4 @@ folded before the operator go/no-go.
 | 2026-08-14 | Erratum-log Entry 3 + queued amendment 2 scope RATIFIED (end-to-end read, as amended through 2026-08-11) — A2 closed; D1 consolidation unblocked pending the Phase B shape decision and A3 | Shawn |
 | 2026-08-14 | C7 RULED YES: sha256 content-integrity hashes on `shared_content` entries, implementation riding the amendment 2 instrument edits; Phase B shape discussion scheduled as a focused session before D1 | Shawn |
 | 2026-08-14 | Phase C pre-run review (six-section dialogue) approved: hardened contract recorded in Phase C; consolidated D1 governed-edit window adopted; C2 probes gated and pack-free; amendment 2 lodgement confirmed as hard stop before D3, not before Phase C | Shawn |
+| 2026-08-14 | Clean-context audit (Opus PoC) adjudicated: all 4 blockers confirmed, B1 extended (39/45 spawns blocked with no downstream consequence); B4 ruled IMPLEMENT → new item C8, with erratum-route text modification where infeasible; B1 consequence-verified catch confirmed; disposition table approved in full | Shawn |

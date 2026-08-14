@@ -83,7 +83,13 @@ merged here as PR #1).
   recreated, baseline 84/84 green. **Shawn will provide a GitHub API
   token for the C6 harvester when asked** (rate-limit headroom for the
   GitHub endpoint; unauthenticated is 60 req/h) — request it at C6
-  build time.
+  build time. Clean-context pre-run audit (Opus PoC) adjudicated: all
+  four blockers confirmed — headline: the receipt gate blocked 39/45
+  benchmark spawns with no downstream consequence (B1, scale-corrected
+  from the register's 9/15); new plan item **C8** implements amendment
+  1 §4's asserted isolation controls (registrant: implement, erratum
+  where infeasible). PoC verdict: the clean-context pass belongs in
+  `/pre-run-review` — extension queued (personal-assistant repo).
 
 ## Repo state (2026-08-03)
 
