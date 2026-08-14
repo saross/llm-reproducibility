@@ -462,6 +462,12 @@ def check_unregistered_instruments(manifest: dict, root: Path, report: Report) -
         for path in sorted(directory.rglob("*")):
             if not path.is_file() or path.name in exclusions:
                 continue
+            # Editor/OS droppings must not block every commit and governed
+            # spawn (re-audit M-6): skip dotfiles, dot-directories, and
+            # __pycache__ — none is a registrable instrument.
+            if any(part.startswith(".") or part == "__pycache__"
+                   for part in path.relative_to(directory).parts):
+                continue
             rel = str(path.relative_to(root))
             if rel not in registered:
                 report.error(f"unregistered instrument file: {rel} (in scanned directory "
@@ -495,11 +501,20 @@ def normalise_version(value: str, rules) -> str:
 
 
 def normalise_rules_of(decl: dict) -> list:
-    """Return the declaration's normalise rules as a list."""
+    """Return the declaration's normalise rules as a list.
+
+    A non-string scalar or other unexpected shape yields an '<invalid>'
+    sentinel so the unknown-rule error fires instead of a crash (re-audit
+    M-7): a malformed declaration must fail loudly, not take down the gate.
+    """
     rules = decl.get("normalise")
     if rules is None:
         return []
-    return [rules] if isinstance(rules, str) else list(rules)
+    if isinstance(rules, str):
+        return [rules]
+    if isinstance(rules, list):
+        return [rule if isinstance(rule, str) else "<invalid>" for rule in rules]
+    return ["<invalid>"]
 
 
 def enumerate_entities(manifest: dict) -> dict[str, tuple[str, object]]:

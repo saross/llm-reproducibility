@@ -670,6 +670,29 @@ agent_definitions:""")
                         encoding="utf-8")
         self.assert_error_containing("undeclared entity: corpus.extra")
 
+    def test_stray_dotfile_does_not_block(self) -> None:
+        """Item 5 (2026-08-14): a .DS_Store or editor swap file in a scan
+        directory must not block all commits and spawns (re-audit M-6)."""
+        (self.root / "protocol/instruments/.DS_Store").write_bytes(b"\x00junk")
+        (self.root / "protocol/instruments/.canonical.md.swp").write_bytes(b"\x00")
+        report = self.run_checks()
+        self.assertEqual(report.errors, [], report.errors)
+
+    def test_pycache_does_not_block(self) -> None:
+        """Item 5 (2026-08-14): __pycache__ contents are not instruments."""
+        cache = self.root / "protocol/instruments/__pycache__"
+        cache.mkdir()
+        (cache / "mod.cpython-312.pyc").write_bytes(b"\x00")
+        report = self.run_checks()
+        self.assertEqual(report.errors, [], report.errors)
+
+    def test_scalar_normalise_rule_errors_not_crashes(self) -> None:
+        """Item 6 (2026-08-14): a non-string normalise value errors as an
+        unknown rule instead of crashing the checker (re-audit M-7)."""
+        self.rewrite("manifest.yaml", "normalise: strip-v-prefix",
+                     "normalise: 3")
+        self.assert_error_containing("unknown normalise rule")
+
     def test_coverage_self_report_generated(self) -> None:
         """Phase 3: coverage is generated from the registry, never asserted."""
         report = self.run_checks()

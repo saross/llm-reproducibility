@@ -88,12 +88,15 @@ denominator.
    entity_checks, workflow_passes). Live manifest unchanged at 57/57
    (zero entity churn, as the pre-run audit's simulation predicted).
    Tests 95 → 97.
-5. **`rglob("*")` stray-file tripwire (re-audit M-6).** A `.DS_Store`/swap
-   file in a scan directory blocks all commits and all governed spawns.
-   Fix: skip dot-directories/dotfiles and `__pycache__`, or filter via
-   `git check-ignore`.
-6. **`normalise_rules_of` crashes on scalar rules (re-audit M-7).** Return
-   an `<invalid>` sentinel so the unknown-rule error fires instead.
+5. **[x] 2026-08-14 — `rglob("*")` stray-file tripwire (re-audit M-6).**
+   Fixed: the reverse sweep skips dotfiles, dot-directories, and
+   `__pycache__` in scan directories (dotfile route chosen over
+   `git check-ignore` — deterministic, no subprocess). Tests cover
+   `.DS_Store`, an editor swap file, and `__pycache__` contents.
+6. **[x] 2026-08-14 — `normalise_rules_of` crashes on scalar rules
+   (re-audit M-7).** Fixed with the `<invalid>` sentinel as specified;
+   a scalar `normalise: 3` now raises the unknown-rule error instead of
+   crashing the gate. Items 5+6 tests: 97 → 100.
 7. Lows worth batching: gate log without item identifier (M-9), flat+
    `receipts`-dict carrier misselection (L-1), empty-string pulled path
    free pass (L-3), E6 path-only error message (L-4), list-rooted manifest
