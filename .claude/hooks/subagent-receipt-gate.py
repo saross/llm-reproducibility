@@ -164,19 +164,44 @@ def validate(event: dict) -> int:
     if agent_type not in registry:
         return 0
 
+    # Payload selection (re-audit C-2, re-specified 2026-08-14): prefer a
+    # WELL-FORMED receipt payload from the final message; only when the final
+    # message carries none may the transcript's tool calls supply one — and a
+    # receipt-less JSON object in the final message must not suppress that
+    # search (the C4-era regression). A transcript payload adopted while the
+    # final message names a different paper_slug is substitution, not
+    # fallback, and blocks: receipts must be bound to this item.
     output_text = event.get("last_assistant_message") or ""
-    payload = extract_json_object(output_text) if output_text else None
-    if payload is not None:
-        ctx["payload_source"] = "final_message"
+    final_payload = extract_json_object(output_text) if output_text else None
+    payload = None
     lines = None
-    if payload is None or receipt_fields(payload) is None:
+    if final_payload is not None and receipt_fields(final_payload) is not None:
+        payload = final_payload
+        ctx["payload_source"] = "final_message"
+    else:
         transcript_path = str(event.get("agent_transcript_path") or "")
         lines = transcript_lines(transcript_path) if transcript_path else None
-        if lines:
-            from_tool = structured_output_from_transcript(lines)
-            if from_tool is not None:
-                payload = from_tool
+        from_tool = structured_output_from_transcript(lines) if lines else None
+        if from_tool is not None and receipt_fields(from_tool) is not None:
+            final_slug = str((final_payload or {}).get("paper_slug") or "")
+            tool_slug = str(from_tool.get("paper_slug") or "")
+            if final_slug and tool_slug and final_slug != tool_slug:
                 ctx["payload_source"] = "transcript_tool_call"
+                return block(agent_type,
+                             f"final message names paper_slug {final_slug!r} but the "
+                             f"transcript's structured output names {tool_slug!r} — "
+                             f"receipts are not bound to this item; re-emit your full "
+                             f"structured output including receipts", ctx)
+            payload = from_tool
+            ctx["payload_source"] = "transcript_tool_call"
+        elif from_tool is not None:
+            # Malformed in both places (or final absent): report against the
+            # transcript candidate so the reason names real receipt fields.
+            payload = from_tool
+            ctx["payload_source"] = "transcript_tool_call"
+        elif final_payload is not None:
+            payload = final_payload
+            ctx["payload_source"] = "final_message"
     if payload is None:
         return block(agent_type, "no structured output found in the final message or "
                                  "the transcript's tool calls — re-emit your full "

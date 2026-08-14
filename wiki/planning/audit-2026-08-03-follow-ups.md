@@ -24,7 +24,11 @@ denominator.
 
 ## Round 2 — regressions found in the fix commit (fix next)
 
-1. **Gate fallback substitution (re-audit C-2).** When the final message
+1. **[x] 2026-08-14 — Gate fallback substitution (re-audit C-2).** Fixed per
+   the re-specified rule below; four regression tests (receipt-less final
+   JSON falls through, cross-slug substitution blocks, same-slug fallback
+   passes, well-formed final payload is never overridden). Tests 87 → 91.
+   Original defect: when the final message
    carries a payload with missing/malformed receipt fields, the gate
    silently discards it and validates an earlier transcript tool-call
    payload — receipts are not bound to the item (`paper_slug` never read).

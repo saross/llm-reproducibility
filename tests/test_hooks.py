@@ -166,6 +166,57 @@ class ReceiptGateTests(unittest.TestCase):
     def test_no_output_anywhere_blocks(self) -> None:
         self.assertEqual(self.run_gate(None), ["block"])
 
+    def _transcript_with(self, payload: dict) -> str:
+        """Write a one-line transcript carrying a structured-output tool call."""
+        with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as f:
+            f.write(json.dumps({"message": {"content": [
+                {"type": "tool_use", "name": "StructuredOutput",
+                 "input": payload}]}}) + "\n")
+            path = f.name
+        self.addCleanup(os.unlink, path)
+        return path
+
+    def run_gate_text(self, final_text: str, transcript: str) -> list[str]:
+        """Run validate() with a raw final-message text (not JSON-serialised)."""
+        import contextlib
+        import io
+        event = {"agent_type": "test-scorer",
+                 "last_assistant_message": final_text,
+                 "agent_transcript_path": transcript}
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.gate.validate(event)
+        return [e.get("event") for e in self.events]
+
+    def test_receiptless_final_json_does_not_suppress_transcript(self) -> None:
+        """Item 1 re-spec (2026-08-14): a receipt-less JSON object in the
+        final message must not reinstate the C4 final-message-only regression."""
+        transcript = self._transcript_with(valid_payload())
+        summary = json.dumps({"status": "OK", "note": "summary only"})
+        self.assertEqual(self.run_gate_text(summary, transcript), ["pass"])
+
+    def test_transcript_substitution_for_other_item_blocks(self) -> None:
+        """Item 1 re-spec (2026-08-14): a transcript payload for a different
+        paper_slug is substitution, not fallback — receipts must bind."""
+        transcript = self._transcript_with(valid_payload())  # slug "fixture"
+        other = json.dumps({"status": "OK", "paper_slug": "other-paper"})
+        self.assertEqual(self.run_gate_text(other, transcript), ["block"])
+        self.assertIn("not bound", self.events[0]["reason"])
+
+    def test_transcript_fallback_with_matching_slug_passes(self) -> None:
+        transcript = self._transcript_with(valid_payload())
+        same = json.dumps({"status": "OK", "paper_slug": "fixture"})
+        self.assertEqual(self.run_gate_text(same, transcript), ["pass"])
+
+    def test_wellformed_final_payload_is_not_overridden(self) -> None:
+        """Item 1 re-spec (2026-08-14): a well-formed final-message payload is
+        validated as-is; the transcript is not consulted."""
+        wrong = valid_payload()
+        wrong["receipts"]["model_id"] = "claude-other"
+        transcript = self._transcript_with(valid_payload())  # would pass
+        self.assertEqual(self.run_gate_text(json.dumps(wrong), transcript),
+                         ["block"])
+        self.assertIn("model_id", self.events[0]["reason"])
+
     def test_ungoverned_agent_passes_through(self) -> None:
         self.assertEqual(self.run_gate(valid_payload(), agent_type="general-purpose"),
                          [])
