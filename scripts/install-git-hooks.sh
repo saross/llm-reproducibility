@@ -100,6 +100,32 @@ if [ -f "$repo_root/scripts/check-manifest-consistency.py" ]; then
   fi
 fi
 
+# Test-suite gate (Phase C pre-run hardening S1, 2026-08-14): the committed
+# suites must be green at every commit boundary (one-commit rule; the full
+# suite runs in about a second). Prefers the per-machine venv's pytest and
+# falls back to stdlib unittest discovery, so a machine without a venv still
+# enforces the gate. Known residual (register item 8): like the D5 gate this
+# runs against the working tree, not the index.
+if [ -d "$repo_root/tests" ]; then
+  if [ -x "$repo_root/venv/bin/python" ] && \
+     "$repo_root/venv/bin/python" -c "import pytest" >/dev/null 2>&1; then
+    test_runner=("$repo_root/venv/bin/python" -m pytest "$repo_root/tests" -q)
+  else
+    test_runner=(python3 -m unittest discover -s "$repo_root/tests")
+  fi
+  if ! "${test_runner[@]}" >/dev/null 2>&1; then
+    echo ""
+    echo "❌ ERROR: test suite failed — no red tests at a commit boundary"
+    echo "   (Phase C pre-run hardening S1)"
+    echo ""
+    echo "Run for the full report:"
+    echo "  venv/bin/python -m pytest tests/ -q"
+    echo "  (or without a venv: python3 -m unittest discover -s tests)"
+    echo ""
+    exit 1
+  fi
+fi
+
 # Success - allow commit
 exit 0
 EOF
@@ -111,7 +137,8 @@ echo ""
 echo "Git hooks installation complete!"
 echo ""
 echo "Installed hooks:"
-echo "  - pre-commit: Filename style enforcement"
+echo "  - pre-commit: filename style + corpus gate + manifest consistency (D5)"
+echo "                + test-suite gate (S1)"
 echo ""
 echo "To bypass a hook (use sparingly):"
 echo "  git commit --no-verify"

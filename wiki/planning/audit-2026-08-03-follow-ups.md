@@ -113,13 +113,16 @@ Clean-context audit findings folded into this register (adjudication
 record and contract amendments in
 `wiki/planning/instrument-clarification-plan.md`, Phase C):
 
-8. **S1 — commit gate runs tests.** Add the pytest suite to the
-   pre-commit hook (the suite runs in under a second). Accepted
-   residual, documented: the D5 pre-commit check reads the working
-   tree, not the index, so a partially staged manifest/instrument pair
-   can commit green — mitigated by the standing explicit-pathspec
-   discipline for concurrent sessions; index-accurate checking is a
-   future enhancement, not a Phase C item.
+8. **[x] 2026-08-14 — S1 — commit gate runs tests.** Done, block-tested
+   live (an injected red test refused a commit). Prefers the venv's
+   pytest, falls back to stdlib unittest discovery so venv-less machines
+   still enforce it; zbook picks this up when it re-runs
+   `./scripts/install-git-hooks.sh` (standing carry-forward). Accepted
+   residual, documented: like D5, the gate reads the working tree, not
+   the index, so a partially staged manifest/instrument pair can commit
+   green — mitigated by the standing explicit-pathspec discipline for
+   concurrent sessions; index-accurate checking is a future enhancement,
+   not a Phase C item.
 9. **S2 — operative demo covers three cases:** final-message pass,
    transcript-borne pass (the shape that actually failed 39/45), and a
    consequence-verified catch — the blocked spawn's output demonstrably
