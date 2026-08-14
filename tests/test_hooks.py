@@ -253,6 +253,43 @@ class ReceiptGateTests(unittest.TestCase):
         self.run_gate(None, transcript=transcript)
         self.assertEqual(self.events[0]["payload_source"], "transcript_tool_call")
 
+    def test_incomplete_receipts_dict_does_not_mask_flat_fields(self) -> None:
+        """Item 7 / L-1 (2026-08-14): an incomplete nested `receipts` dict
+        must not mask complete, well-typed flat receipt fields."""
+        flat = valid_payload()
+        flat.update(flat.pop("receipts"))
+        flat["receipts"] = {"note": "not the receipt carrier"}
+        self.assertEqual(self.run_gate(flat), ["pass"])
+
+    def test_empty_pulled_path_blocks(self) -> None:
+        """Item 7 / L-3 (2026-08-14): an empty declared pull is a block,
+        not a substring-of-everything free pass."""
+        payload = valid_payload()
+        payload["receipts"]["pulled_files_read"] = [""]
+        transcript = self._transcript_with(valid_payload())
+        self.assertEqual(self.run_gate_text(json.dumps(payload), transcript),
+                         ["block"])
+        self.assertIn("empty path", self.events[0]["reason"])
+
+    def test_main_handler_blocks_on_internal_error(self) -> None:
+        """Item 7 / L-6 (2026-08-14): main()'s last-resort handler emits a
+        block decision instead of crash-allowing."""
+        import contextlib
+        import io
+        self.gate.validate = lambda event: (_ for _ in ()).throw(
+            RuntimeError("boom"))
+        out = io.StringIO()
+        real_stdin = sys.stdin
+        sys.stdin = io.StringIO(json.dumps({"agent_type": "test-scorer"}))
+        try:
+            with contextlib.redirect_stdout(out):
+                self.gate.main()
+        finally:
+            sys.stdin = real_stdin
+        decision = json.loads(out.getvalue())
+        self.assertEqual(decision["decision"], "block")
+        self.assertIn("internal error", decision["reason"])
+
     def test_internal_error_blocks_not_crashes(self) -> None:
         """Fail-closed: an unexpected internal error blocks the item."""
         self.gate.load_manifest = lambda: (_ for _ in ()).throw(RuntimeError("boom"))
@@ -314,6 +351,15 @@ class PreflightPipeTests(unittest.TestCase):
         the docstring's fail-closed claim is now the actual behaviour."""
         result = self.run_hook(json.dumps({"tool_name": "Agent", "tool_input": [1, 2]}))
         self.assertIsNotNone(self.deny_reason(result))
+        self.assertEqual(result.returncode, 0)
+
+    def test_clean_governed_spawn_allows(self) -> None:
+        """Item 7 / L-8 (2026-08-14): the positive path — a governed spawn
+        against the real, green manifest is allowed, not denied."""
+        result = self.run_hook(json.dumps(
+            {"tool_name": "Agent",
+             "tool_input": {"subagent_type": "fair-assessor-sonnet-5"}}))
+        self.assertIsNone(self.deny_reason(result))
         self.assertEqual(result.returncode, 0)
 
     def test_non_utf8_stdin_denies(self) -> None:

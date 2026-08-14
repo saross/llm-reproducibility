@@ -133,19 +133,22 @@ def receipt_fields(payload: dict) -> dict | None:
     """Return the five receipt fields from a payload, flat or nested.
 
     The benchmark output schema nests them under `receipts`; the agent
-    definitions list them without specifying nesting. Accept both; None if
-    any field is missing or the carrier has the wrong type.
+    definitions list them without specifying nesting. Try the nested
+    carrier first, then the payload itself (L-1, 2026-08-14: an incomplete
+    `receipts` dict must not mask complete flat fields). None if no
+    carrier holds all five fields well-typed.
     """
-    carrier = payload.get("receipts") if isinstance(payload.get("receipts"), dict) \
-        else payload
-    if not all(f in carrier for f in RECEIPT_FIELDS):
-        return None
-    fields = {f: carrier[f] for f in RECEIPT_FIELDS}
-    if not isinstance(fields["instrument_versions"], dict) \
-            or not isinstance(fields["instrument_receipts"], dict) \
-            or not isinstance(fields["pulled_files_read"], list):
-        return None
-    return fields
+    nested = payload.get("receipts") \
+        if isinstance(payload.get("receipts"), dict) else None
+    for carrier in (nested, payload):
+        if carrier is None or not all(f in carrier for f in RECEIPT_FIELDS):
+            continue
+        fields = {f: carrier[f] for f in RECEIPT_FIELDS}
+        if isinstance(fields["instrument_versions"], dict) \
+                and isinstance(fields["instrument_receipts"], dict) \
+                and isinstance(fields["pulled_files_read"], list):
+            return fields
+    return None
 
 
 def model_matches(got: str, pinned: str) -> bool:
@@ -275,7 +278,14 @@ def validate(event: dict) -> int:
                          ctx)
         calls = tool_use_inputs(lines, ("Read",))
         for declared in pulled:
-            matching = [c for c in calls if str(declared) in str(c.get("file_path", ""))]
+            declared_path = str(declared).strip()
+            if not declared_path:
+                # L-3 (2026-08-14): "" is a substring of every path — an
+                # empty declaration must not be a free pass.
+                return block(agent_type, "pulled_files_read contains an empty path — "
+                                         "declare the actual file read or remove the "
+                                         "entry", ctx)
+            matching = [c for c in calls if declared_path in str(c.get("file_path", ""))]
             if not matching:
                 return block(agent_type, f"declared pulled read {declared!r} has no matching "
                                          f"Read call in the transcript — re-read it in full "

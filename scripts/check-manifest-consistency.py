@@ -742,8 +742,16 @@ def check_entity_declarations(manifest: dict, root: Path, report: Report) -> Non
                              f"in {rel} — the tracked axis has drifted (the file's "
                              f"other version axis is deliberately not compared)")
         elif cls == "E6":
-            rel = node if isinstance(node, str) else (node or {}).get("file", "")
-            if not rel or not (root / rel).is_file():
+            if isinstance(node, str):
+                rel = node
+            else:
+                rel = str((node or {}).get("file") or (node or {}).get("path") or "")
+            if not rel:
+                # L-4 (2026-08-14): name the actual failure — an entity with
+                # nothing to check is an error, not a confusing missing-''.
+                report.error(f"{prefix}: E6 entity declares no file or path to "
+                             f"verify — nothing to check is not a pass")
+            elif not (root / rel).is_file():
                 report.error(f"{prefix}: declared-unversioned file missing: {rel!r}")
         elif cls == "E8":
             import json as _json
@@ -786,6 +794,12 @@ def run_checks(manifest_path: Path, root: Path, preflight: bool) -> Report:
         manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     except (OSError, yaml.YAMLError) as exc:
         report.error(f"cannot load manifest {manifest_path}: {exc}")
+        return report
+    if not isinstance(manifest, dict):
+        # L-5 (2026-08-14): a list- or scalar-rooted manifest must report,
+        # not traceback on the first .get().
+        report.error(f"manifest top level is {type(manifest).__name__}, expected "
+                     f"a mapping — cannot check a non-mapping manifest")
         return report
 
     shared: dict = manifest.get("shared_content") or {}

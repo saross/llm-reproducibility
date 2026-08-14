@@ -640,12 +640,35 @@ agent_definitions:""")
         self.assert_error_containing("unknown normalise rule")
 
     def test_e8_empty_but_resolved_key_passes(self) -> None:
-        """A/M5: an empty-but-present node resolves; only a missing key fails."""
+        """A/M5: an empty-but-present node resolves; only a missing key fails.
+        Strengthened per L-10 (2026-08-14): the whole report must be clean,
+        not merely free of one error string."""
         (self.root / REFITEM_REL).write_text(
             '{"infrastructure": {"fair_assessment": {}}}', encoding="utf-8")
         report = self.run_checks()
-        self.assertFalse(any("does not resolve" in e for e in report.errors),
-                         report.errors)
+        self.assertEqual(report.errors, [], report.errors)
+
+    def test_e6_path_key_entity_verified(self) -> None:
+        """Item 7 / L-4 (2026-08-14): E6 honours `path:` entities and its
+        error names the real target, never a confusing missing-''."""
+        path = self.root / "manifest.yaml"
+        path.write_text(path.read_text(encoding="utf-8")
+                        + "extras:\n  pathonly:\n    path: docs/pathonly.md\n",
+                        encoding="utf-8")
+        self.rewrite("manifest.yaml", "entity_checks:",
+                     "entity_checks:\n  extras.pathonly: {class: E6}")
+        report = self.run_checks()
+        self.assertTrue(
+            any("declared-unversioned file missing: 'docs/pathonly.md'" in e
+                for e in report.errors), report.errors)
+
+    def test_list_rooted_manifest_errors_not_crashes(self) -> None:
+        """Item 7 / L-5 (2026-08-14): a list-rooted manifest reports an
+        error instead of an AttributeError traceback."""
+        self.manifest.write_text("- a\n- b\n", encoding="utf-8")
+        report = self.run_checks()
+        self.assertTrue(any("top level" in e for e in report.errors),
+                        report.errors)
 
 
     def test_list_nested_file_entry_is_enumerated(self) -> None:

@@ -97,11 +97,15 @@ denominator.
    (re-audit M-7).** Fixed with the `<invalid>` sentinel as specified;
    a scalar `normalise: 3` now raises the unknown-rule error instead of
    crashing the gate. Items 5+6 tests: 97 → 100.
-7. Lows worth batching: gate log without item identifier (M-9), flat+
-   `receipts`-dict carrier misselection (L-1), empty-string pulled path
-   free pass (L-3), E6 path-only error message (L-4), list-rooted manifest
-   traceback (L-5), untested `main()` fail-closed handler (L-6), no
-   allowed-governed-spawn test (L-8), weak E8 empty-key assertion (L-10).
+7. **[x] 2026-08-14 — Lows batch, all eight closed:** M-9 (item identifier
+   in every gate log — landed early with item 2a); L-1 (an incomplete
+   nested `receipts` dict no longer masks complete flat fields); L-3
+   (empty declared pull blocks instead of matching everything); L-4 (E6
+   honours `path:` entities and names its real target); L-5 (list-rooted
+   manifest reports instead of tracebacking); L-6 (`main()`'s last-resort
+   handler now under test); L-8 (positive allowed-governed-spawn test);
+   L-10 (E8 empty-key test asserts a clean report, not one absent
+   string). Tests 100 → 106.
 
 ## Pre-run audit additions (2026-08-14, adjudicated; registrant approved)
 
