@@ -62,8 +62,13 @@ RECEIPT_FIELDS = ("instrument_versions", "instrument_receipts", "agent_version",
 # Harness marker appended to a model ID when the 1M context window is active;
 # the underlying model is the pinned one (recorded verbatim in run records).
 CONTEXT_MARKER = "[1m]"
-TRANSCRIPT_RETRIES = 4
-TRANSCRIPT_RETRY_DELAY_S = 0.75
+# Retry budget raised 4x0.75s -> 8x1.0s (C2 probes, 2026-08-14): all 45
+# benchmark transcripts held valid payloads yet 39 searches failed at hook
+# time — write lag beyond the old 3 s budget is the only surviving
+# explanation, so the budget is insurance, and the orchestrator-side
+# reconciliation (plan C9) is the authoritative backstop.
+TRANSCRIPT_RETRIES = 8
+TRANSCRIPT_RETRY_DELAY_S = 1.0
 
 
 def block(agent_type: str, reason: str, ctx: dict | None = None) -> int:
@@ -167,7 +172,8 @@ def validate(event: dict) -> int:
     # paper_slug identifies the item (M-9).
     ctx = {"event_keys": sorted(str(k) for k in event.keys()),
            "agent_id": str(event.get("agent_id") or ""),
-           "payload_source": "none"}
+           "payload_source": "none",
+           "transcript_state": "not-needed"}
 
     try:
         manifest = load_manifest()
@@ -195,7 +201,13 @@ def validate(event: dict) -> int:
         ctx["payload_source"] = "final_message"
     else:
         transcript_path = str(event.get("agent_transcript_path") or "")
-        lines = transcript_lines(transcript_path) if transcript_path else None
+        if not transcript_path:
+            lines = None
+            ctx["transcript_state"] = "none-declared"
+        else:
+            lines = transcript_lines(transcript_path)
+            ctx["transcript_state"] = ("read" if lines is not None
+                                       else "unavailable-after-retries")
         from_tool = structured_output_from_transcript(lines) if lines else None
         if from_tool is not None and receipt_fields(from_tool) is not None:
             final_slug = str((final_payload or {}).get("paper_slug") or "")
@@ -218,6 +230,16 @@ def validate(event: dict) -> int:
             payload = final_payload
             ctx["payload_source"] = "final_message"
     if payload is None:
+        # Distinct reasons per branch (re-audit C-1; C2 finding 2026-08-14):
+        # "transcript unavailable" and "searched and found nothing" are
+        # different faults with different remedies — conflating them hid the
+        # benchmark's write-lag failure mode for eleven days.
+        if ctx["transcript_state"] == "unavailable-after-retries":
+            return block(agent_type, "no structured output in the final message and "
+                                     "the agent transcript was unavailable after "
+                                     "retries — transcript write lag suspected, not "
+                                     "a missing payload; re-emit your full "
+                                     "structured output including receipts", ctx)
         return block(agent_type, "no structured output found in the final message or "
                                  "the transcript's tool calls — re-emit your full "
                                  "structured output including receipts", ctx)

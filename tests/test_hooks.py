@@ -252,6 +252,19 @@ class ReceiptGateTests(unittest.TestCase):
         self.addCleanup(os.unlink, transcript)
         self.run_gate(None, transcript=transcript)
         self.assertEqual(self.events[0]["payload_source"], "transcript_tool_call")
+        self.assertEqual(self.events[0]["transcript_state"], "read")
+
+    def test_unavailable_transcript_is_named_in_log_and_reason(self) -> None:
+        """C2 finding (2026-08-14): transcript-unavailable blocks are
+        distinguished from searched-and-empty blocks — conflating them hid
+        the benchmark's write-lag failure mode."""
+        self.gate.TRANSCRIPT_RETRIES = 1
+        self.gate.TRANSCRIPT_RETRY_DELAY_S = 0
+        self.run_gate(None, transcript="/nonexistent/never-written.jsonl")
+        record = self.events[0]
+        self.assertEqual(record["event"], "block")
+        self.assertEqual(record["transcript_state"], "unavailable-after-retries")
+        self.assertIn("write lag", record["reason"])
 
     def test_incomplete_receipts_dict_does_not_mask_flat_fields(self) -> None:
         """Item 7 / L-1 (2026-08-14): an incomplete nested `receipts` dict
