@@ -330,19 +330,46 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       `tests/test_unwrap_paste.py` (audit N4's committed home) anchors
       each fix plus idempotence on the lodged amendment-1 artefact.
       Tests 130 → 139. Ready for amendment 2's paste artefact.
-- [ ] **C6. Artefact-metadata harvester** (decision #5 operationalisation):
-      script resolving a paper's declared artefact links via
-      DataCite/Crossref/Zenodo/GitHub/GitLab/OSF APIs (CRAN and Dryad
-      flagged as early additions; endpoint list settled 2026-08-11) into
-      a verified, receipt-covered evidence pack per paper; licence
-      fields, metadata records, and conflict detection (most-restrictive
-      rule, per-artefact scope). Feeds the re-specified read-scope in
-      amendment 2. At build time, verify each platform-table row's
-      asserted entitlements against the platform's current mandatory
-      requirements (dated check — e.g. Zenodo's mandatory-vs-optional
-      field set): table entitlements are floors, and the floor heights
-      are empirical claims.
-- [ ] **C8. Implement amendment 1 §4's asserted isolation controls**
+- [x] 2026-08-15 **C6. Artefact-metadata harvester** — built (`897959f` +
+      GitLab fix in `5fdc172`): curated links registry (anchored to the
+      pilots' extraction records) → five committed evidence packs, every
+      record carrying retrieved_at + response_sha256; dedupe by
+      record_id with declared_by merging; CC-URL canonicalisation;
+      conflict flags (marwick's three asserted component licences vs
+      Zenodo's single cc-by-4.0 fired; key's CC BY correctly cleared);
+      CRAN recorded as an honest endpoint-flagged gap; marwick's cited
+      10.5281/zenodo.14561925 404s at both DataCite and Zenodo — a
+      dead-link finding for Phase B. Delivery mechanism decided:
+      workflow-prompt injection with pack sha256 echoed in receipts,
+      implemented with C9 wiring at D3 prep. **Platform-row entitlement
+      verification done, dated 2026-08-15** (6/6 rows, 34 assertions,
+      denominator disclosed):
+      `studies/open-science-compliance/outputs/validation/platform-rows-2026-08-15/verification-note.md`
+      — every row HOLDS WITH CAVEAT; the corrections (DataCite tombstone
+      metadata contradiction; Zenodo licence-field scoping +
+      default-licence artefact; non-uniform ADS/DANS/tDAR floors;
+      GitLab no-SPDX/opt-in; Crossref persistence as member obligation;
+      9.3M component DOIs) are **amendment-2 draft material awaiting the
+      registrant's ruling at D1**. tDAR/DANS bot-gating noted: scripted
+      fetches get 403/challenge pages — future endpoint additions for
+      those hosts need rendering + a challenge-page detector.
+- [x] 2026-08-15 **C8 — implemented via `scripts/reconcile-run.py`**
+      (`5fdc172`): per-spawn file-access lists derived from Read/Grep/
+      Glob use+result pairs, contamination flagging (successful
+      out-of-scope access fails; failed attempts and empty Globs warn),
+      report + log-slice archival into run directories (audit S8).
+      **Empirical §4 result: all 45 benchmark spawns show zero
+      contaminating accesses** — isolation held; one warning-grade
+      path-confusion case (dye/sonnet attempted the reference guides at
+      a nonexistent user-level path, failed, honestly declared no
+      pulls, and scored guideless — part of the §2-card guide-pull
+      story). **Infeasible remainder per the 2026-08-14 ruling:**
+      spawn-time path-scoped read enforcement (the harness permission
+      model is repo-wide) — §4's "enforced by tool allowlist and
+      sandbox scope" wording goes to the erratum-route text
+      modification at D1 (allowlist + post-hoc verification +
+      reconciliation gate is the real control). Original item text:
+      **Implement amendment 1 §4's asserted isolation controls**
       (pre-run audit B4; registrant ruled 2026-08-14: implement, and
       where a control is infeasible, modify the registered text by
       erratum/amendment instead). The lodged §4 asserts enforcement by
@@ -356,7 +383,18 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       archival into run directories (audit S8) rides this item. Any §4
       clause that cannot honestly be implemented is recorded in the
       erratum log for amendment 2 wording at D1.
-- [ ] **C9. Workflow-lane gate reconciliation** (C2 probes, 2026-08-14 —
+- [x] 2026-08-15 **C9 — tool built, tested, and proven** (`5fdc172`,
+      with `tests/test_reconcile.py`): receipt re-validation from
+      completed transcripts (including the new attempts-are-not-reads
+      rule, also landed in the live gate), divergence tripwire, exit-1
+      hard stop. Proven on all retained runs: three benchmark arms
+      45/45 clean; the C2 probe run correctly fails probe C — the
+      output that was silently collected on 2026-08-14 can no longer
+      survive reconciliation. **Remaining, explicitly at D3 prep:**
+      wire the tool into `fair-benchmark-arm.workflow.js` as a
+      per-item gate (plus schema push with sha256 receipts per the C6
+      delivery decision). Original item text:
+      **C9. Workflow-lane gate reconciliation** (C2 probes, 2026-08-14 —
       pre-census requirement; **the D3 re-benchmark must not run without
       it**). SubagentStop blocks are advisory in the workflow lane
       (probe C: block logged, never delivered to the agent, output
@@ -526,3 +564,6 @@ manifest.
 | 2026-08-14 | Clean-context audit (Opus PoC) adjudicated: all 4 blockers confirmed, B1 extended (39/45 spawns blocked with no downstream consequence); B4 ruled IMPLEMENT → new item C8, with erratum-route text modification where infeasible; B1 consequence-verified catch confirmed; disposition table approved in full | Shawn |
 | 2026-08-14 | C2 probes run (3 sonnet spawns, approved): field names anchored, pass paths proven both lanes, workflow-lane block consequence ABSENT → new pre-census item C9 (gate reconciliation, blocks D3); benchmark receipts retroactively machine-verified 45/45 — the 39 blocks were transcript-lag false alarms | Claude (probes approved by Shawn) |
 | 2026-08-14 | C3 schema v1.1 landed with the A1 cross-reference soft-enforced (named exception rationale) rather than hard-zeroed — faithful to canon's ethical-restriction exception; pack record shape settled in the C3/C6 joint design note | Claude (per ratified instrument text) |
+| 2026-08-15 | C6 built and run: five evidence packs committed; conflict detector proven live (marwick fired, key cleared after canonicalisation); dead cited DOI (zenodo.14561925) recorded for Phase B; GitHub token adopted (fine-grained, public read-only) | Claude (build); Shawn (token) |
+| 2026-08-15 | C8+C9 built as one reconciliation tool; benchmark retro-reconciled 45/45 clean with zero contaminating accesses (§4 isolation empirically held); attempts-are-not-reads rule added to gate and reconciler; workflow wiring deferred to D3 prep | Claude |
+| 2026-08-15 | Platform-row verification note committed (6/6 rows, every verdict HOLDS WITH CAVEAT; DataCite tombstone sub-assertion contradicted; Zenodo/DANS default-licence artefact) — corrections queued as amendment-2 draft material for the registrant's D1 ruling | Claude (findings); Shawn (ruling pending) |
