@@ -170,6 +170,38 @@ class ReceiptGateTests(unittest.TestCase):
         self.assertEqual(self.run_gate(valid_payload(), agent_type="general-purpose"),
                          [])
 
+    def test_pass_log_carries_decision_context(self) -> None:
+        """Item 2a (2026-08-14): every decision logs the event's key names,
+        the agent_id, the payload-source branch, and the item slug (M-9)."""
+        self.run_gate(valid_payload())
+        record = self.events[0]
+        self.assertEqual(record["event"], "pass")
+        self.assertEqual(record["event_keys"],
+                         ["agent_transcript_path", "agent_type",
+                          "last_assistant_message"])
+        self.assertEqual(record["payload_source"], "final_message")
+        self.assertEqual(record["paper_slug"], "fixture")
+        self.assertIn("agent_id", record)
+
+    def test_block_log_carries_decision_context(self) -> None:
+        """Item 2a (2026-08-14): block decisions carry the same context."""
+        self.run_gate(None)
+        record = self.events[0]
+        self.assertEqual(record["event"], "block")
+        self.assertEqual(record["payload_source"], "none")
+        self.assertIn("event_keys", record)
+
+    def test_transcript_payload_source_is_logged_as_branch(self) -> None:
+        """Item 2a (2026-08-14): the fallback branch is named in the log."""
+        with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as f:
+            f.write(json.dumps({"message": {"content": [
+                {"type": "tool_use", "name": "StructuredOutput",
+                 "input": valid_payload()}]}}) + "\n")
+            transcript = f.name
+        self.addCleanup(os.unlink, transcript)
+        self.run_gate(None, transcript=transcript)
+        self.assertEqual(self.events[0]["payload_source"], "transcript_tool_call")
+
     def test_internal_error_blocks_not_crashes(self) -> None:
         """Fail-closed: an unexpected internal error blocks the item."""
         self.gate.load_manifest = lambda: (_ for _ in ()).throw(RuntimeError("boom"))

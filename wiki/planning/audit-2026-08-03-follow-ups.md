@@ -50,8 +50,11 @@ denominator.
    collected — the block decision had no downstream consequence
    anywhere, on any arm.
    **Fix, split per the one-commit rule (audit N1):**
-   - **2a.** Log event keys (names only) + `agent_id` + branch on every
-     decision — tickable at its own commit.
+   - **[x] 2026-08-14 2a.** Log event keys (names only) + `agent_id` + branch on
+     every decision — done, plus `paper_slug` on every decision (closes M-9
+     early) and env-overridable log paths (`LLMR_RECEIPT_GATE_LOG`,
+     `LLMR_PUSH_RECEIPT_LOG`) as the test seam / C8 archival hook. Tests
+     84 → 87.
    - **2b.** Confirm the real SubagentStop field names from a captured
      live event (closed by C2's capture, which also records whether the
      event carries assignment identifiers — audit S6).

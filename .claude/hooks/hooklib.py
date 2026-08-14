@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -18,8 +19,14 @@ import yaml
 HOOKS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = HOOKS_DIR.parent.parent
 MANIFEST_PATH = REPO_ROOT / "manifest.yaml"
-PUSH_RECEIPT_LOG = HOOKS_DIR / "push-receipts.jsonl"
-GATE_LOG = HOOKS_DIR / "receipt-gate-log.jsonl"
+# Log paths accept an env override (audit fix round 2, item 2a): tests point
+# them at temp files so pipe-level tests never pollute the live run evidence,
+# and C8's per-run archival can redirect a scoring run's slice to its
+# artefact directory.
+PUSH_RECEIPT_LOG = Path(os.environ.get("LLMR_PUSH_RECEIPT_LOG")
+                        or HOOKS_DIR / "push-receipts.jsonl")
+GATE_LOG = Path(os.environ.get("LLMR_RECEIPT_GATE_LOG")
+                or HOOKS_DIR / "receipt-gate-log.jsonl")
 
 
 def load_manifest() -> dict:

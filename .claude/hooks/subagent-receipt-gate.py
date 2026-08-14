@@ -54,9 +54,16 @@ TRANSCRIPT_RETRIES = 4
 TRANSCRIPT_RETRY_DELAY_S = 0.75
 
 
-def block(agent_type: str, reason: str) -> int:
-    """Emit a block decision (re-prompts the subagent) and log it."""
-    log_jsonl(GATE_LOG, {"event": "block", "agent_type": agent_type, "reason": reason})
+def block(agent_type: str, reason: str, ctx: dict | None = None) -> int:
+    """Emit a block decision (re-prompts the subagent) and log it.
+
+    `ctx` carries the re-audit C-1 decision context — the event's key names
+    (so the real SubagentStop field names are learned from live traffic),
+    the agent_id where the event supplies one, the branch that supplied the
+    payload, and the item identifier (M-9) — logged on every decision.
+    """
+    log_jsonl(GATE_LOG, {"event": "block", "agent_type": agent_type,
+                         **(ctx or {}), "reason": reason})
     print(json.dumps({"decision": "block",
                       "reason": f"Receipt gate (routing design §3.2): {reason}"}))
     return 0
@@ -137,11 +144,21 @@ def model_matches(got: str, pinned: str) -> bool:
 def validate(event: dict) -> int:
     """Validate one governed agent's receipts; block on failure."""
     agent_type = str(event.get("agent_type") or "")
+    # Decision context, logged on every outcome (re-audit C-1): the event's
+    # key names teach us the real SubagentStop field shape from live traffic
+    # (design-doc names like agent_transcript_path are unconfirmed until the
+    # C2 capture), agent_id attributes the decision where the event carries
+    # one, payload_source records which branch supplied the payload, and
+    # paper_slug identifies the item (M-9).
+    ctx = {"event_keys": sorted(str(k) for k in event.keys()),
+           "agent_id": str(event.get("agent_id") or ""),
+           "payload_source": "none"}
 
     try:
         manifest = load_manifest()
     except Exception as exc:
-        return block(agent_type, f"manifest unreadable ({exc}) — cannot validate receipts")
+        return block(agent_type,
+                     f"manifest unreadable ({exc}) — cannot validate receipts", ctx)
 
     registry = governed_agents(manifest)
     if agent_type not in registry:
@@ -149,6 +166,8 @@ def validate(event: dict) -> int:
 
     output_text = event.get("last_assistant_message") or ""
     payload = extract_json_object(output_text) if output_text else None
+    if payload is not None:
+        ctx["payload_source"] = "final_message"
     lines = None
     if payload is None or receipt_fields(payload) is None:
         transcript_path = str(event.get("agent_transcript_path") or "")
@@ -157,16 +176,18 @@ def validate(event: dict) -> int:
             from_tool = structured_output_from_transcript(lines)
             if from_tool is not None:
                 payload = from_tool
+                ctx["payload_source"] = "transcript_tool_call"
     if payload is None:
         return block(agent_type, "no structured output found in the final message or "
                                  "the transcript's tool calls — re-emit your full "
-                                 "structured output including receipts")
+                                 "structured output including receipts", ctx)
+    ctx["paper_slug"] = str(payload.get("paper_slug") or "")
 
     fields = receipt_fields(payload)
     if fields is None:
         return block(agent_type, "receipt fields missing or malformed (need "
                                  + ", ".join(RECEIPT_FIELDS)
-                                 + ", flat or under 'receipts') — re-emit receipts")
+                                 + ", flat or under 'receipts') — re-emit receipts", ctx)
 
     versions, receipts = fields["instrument_versions"], fields["instrument_receipts"]
     for spec in pushed_instruments(manifest, agent_type):
@@ -174,12 +195,14 @@ def validate(event: dict) -> int:
         if got_version != spec["version"]:
             return block(agent_type, f"instrument_versions[{spec['name']}] is "
                                      f"{got_version!r}, manifest says {spec['version']!r} — "
-                                     f"re-read the injected instrument and re-emit receipts")
+                                     f"re-read the injected instrument and re-emit receipts",
+                         ctx)
         got_token = str(receipts.get(spec["name"], "")).strip()
         if got_token != spec["token"]:
             return block(agent_type, f"instrument_receipts[{spec['name']}] does not match "
                                      f"the end-of-file Receipt-token — read the injected "
-                                     f"instrument to its final line and re-emit receipts")
+                                     f"instrument to its final line and re-emit receipts",
+                         ctx)
 
     entry = registry[agent_type]
     pinned = str(entry.get("model", "")).strip()
@@ -187,19 +210,20 @@ def validate(event: dict) -> int:
     if pinned and not model_matches(got_model, pinned):
         return block(agent_type, f"model_id {got_model!r} does not match the manifest pin "
                                  f"{pinned!r} — model identity is part of the instrument "
-                                 f"(design §3.3); this item is blocked, not retried: escalate")
+                                 f"(design §3.3); this item is blocked, not retried: escalate",
+                     ctx)
 
     expected_agent_version = f"{agent_type} v{str(entry.get('version', '')).strip()}"
     got_agent_version = str(fields["agent_version"]).strip()
     if got_agent_version != expected_agent_version:
         return block(agent_type, f"agent_version {got_agent_version!r} does not match "
                                  f"{expected_agent_version!r} — re-emit receipts from your "
-                                 f"agent brief")
+                                 f"agent brief", ctx)
 
     # ESCALATE passes through to the orchestrator only after provenance holds.
     if str(payload.get("status", "")) == "ESCALATE":
         log_jsonl(GATE_LOG, {"event": "escalate-passthrough", "agent_type": agent_type,
-                             "model_id": got_model,
+                             **ctx, "model_id": got_model,
                              "reason": payload.get("escalate_reason")})
         return 0
 
@@ -210,20 +234,21 @@ def validate(event: dict) -> int:
             lines = transcript_lines(transcript_path) if transcript_path else None
         if lines is None:
             return block(agent_type, "agent transcript unavailable after retries — cannot "
-                                     "verify declared pulled-file reads (D-12 fail-closed)")
+                                     "verify declared pulled-file reads (D-12 fail-closed)",
+                         ctx)
         calls = tool_use_inputs(lines, ("Read",))
         for declared in pulled:
             matching = [c for c in calls if str(declared) in str(c.get("file_path", ""))]
             if not matching:
                 return block(agent_type, f"declared pulled read {declared!r} has no matching "
                                          f"Read call in the transcript — re-read it in full "
-                                         f"and re-emit receipts")
+                                         f"and re-emit receipts", ctx)
             if not any("limit" not in c and "offset" not in c for c in matching):
                 return block(agent_type, f"pulled read {declared!r} was truncated with "
-                                         f"limit/offset — re-read the file in full")
+                                         f"limit/offset — re-read the file in full", ctx)
 
     log_jsonl(GATE_LOG, {"event": "pass", "agent_type": agent_type,
-                         "model_id": got_model, "pulled": len(pulled)})
+                         **ctx, "model_id": got_model, "pulled": len(pulled)})
     return 0
 
 
@@ -240,7 +265,8 @@ def main() -> int:
         return validate(event)
     except Exception as exc:  # fail-closed: block rather than crash-allow (C9)
         return block(agent_type, f"receipt gate internal error ({exc.__class__.__name__}: "
-                                 f"{exc}) — blocking rather than passing unvalidated output")
+                                 f"{exc}) — blocking rather than passing unvalidated output",
+                     {"event_keys": sorted(str(k) for k in event.keys())})
 
 
 if __name__ == "__main__":
