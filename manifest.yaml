@@ -565,7 +565,21 @@ evidence_packs:
     crema-et-al-2024:
       file: corpus/evidence-packs/crema-et-al-2024.json
 
+run_reconciliation:
+  # Plan C8+C9 (2026-08-15): post-run authoritative verification of governed
+  # workflow spawns — receipt re-validation from completed transcripts,
+  # per-spawn file-access lists with contamination flagging (amendment 1
+  # §4), gate-events-vs-outputs divergence, and log-slice archival. Wire
+  # into the benchmark workflow at D3 prep; exit 1 is a hard stop.
+  tool:
+    version: "1.0"
+    file: scripts/reconcile-run.py
+    last_updated: "2026-08-15"
+    description: Post-run reconciliation of governed workflow spawns (plan C8+C9); proven against the three 2026-08-03 benchmark arms (45/45 clean) and the C2 probe run (probe C correctly failed)
+
 entity_checks:
+  # E3 — run-reconciliation tool (plan C8+C9, 2026-08-15)
+  run_reconciliation.tool: {class: E3, version_source: markdown-header}
   # E3/E6 — evidence-pack apparatus (plan C6, 2026-08-15)
   evidence_packs.harvester: {class: E3, version_source: markdown-header}
   evidence_packs.links_registry: {class: E6, verify: exists}

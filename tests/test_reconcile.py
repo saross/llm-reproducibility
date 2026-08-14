@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""Unit tests for the post-run reconciliation tool (plan C8 + C9).
+
+Synthetic run directories only — each case builds a transcript, meta file,
+and hook-log fixture, then asserts the reconciliation verdict. The live
+invocations against the retained benchmark and C2 runs are recorded in the
+C6/C8/C9 closure notes; these tests keep the verdict logic honest.
+
+Run: ``venv/bin/python -m pytest tests/test_reconcile.py -q``
+"""
+
+from __future__ import annotations
+
+import importlib.machinery
+import importlib.util
+import json
+import tempfile
+import unittest
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+SCRIPT = REPO_ROOT / "scripts" / "reconcile-run.py"
+
+_spec = importlib.util.spec_from_loader(
+    "reconcile_run",
+    importlib.machinery.SourceFileLoader("reconcile_run", str(SCRIPT)))
+reconciler = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(reconciler)
+
+FIXTURE_MANIFEST = {
+    "shared_content": {
+        "test-instrument": {
+            "canonical_file": "protocol/instruments/test-instrument.md",
+            "version": "1.0",
+            "receipt_token": "feedfacecafebeef",
+            "consumers": [{"agent": "test-scorer", "mechanism": "push"}],
+        },
+    },
+    "agent_definitions": {
+        "test-scorer": {"file": ".claude/agents/test-scorer.md",
+                        "version": "1.0", "model": "claude-test-1"},
+    },
+}
+
+ALLOWED = ("corpus/", "tests/fixtures/")
+
+
+def payload(**overrides) -> dict:
+    """A receipt-valid structured output for the fixture manifest."""
+    base = {
+        "status": "OK",
+        "paper_slug": "fixture",
+        "receipts": {
+            "instrument_versions": {"test-instrument": "1.0"},
+            "instrument_receipts": {"test-instrument": "feedfacecafebeef"},
+            "agent_version": "test-scorer v1.0",
+            "model_id": "claude-test-1",
+            "pulled_files_read": [],
+        },
+    }
+    base.update(overrides)
+    return base
+
+
+class ReconcileTests(unittest.TestCase):
+    """One synthetic run directory per case."""
+
+    def setUp(self) -> None:
+        self.run_dir = Path(tempfile.mkdtemp(prefix="recon-fixture-"))
+        import shutil
+        self.addCleanup(shutil.rmtree, self.run_dir, ignore_errors=True)
+        self.gate_log = self.run_dir / "gate.jsonl"
+        self.push_log = self.run_dir / "push.jsonl"
+        self.gate_log.write_text("", encoding="utf-8")
+        self.push_log.write_text("", encoding="utf-8")
+
+    def write_agent(self, agent_id: str, reads: list[tuple[str, bool]],
+                    output: dict) -> None:
+        """Write one agent transcript (reads = [(path, is_error)]) + meta."""
+        entries = []
+        for index, (path, is_error) in enumerate(reads):
+            use_id = f"toolu_{agent_id}_{index}"
+            entries.append({"message": {"content": [
+                {"type": "tool_use", "name": "Read", "id": use_id,
+                 "input": {"file_path": path}}]}})
+            entries.append({"message": {"content": [
+                {"type": "tool_result", "tool_use_id": use_id,
+                 "is_error": is_error, "content": "x"}]}})
+        entries.append({"message": {"content": [
+            {"type": "tool_use", "name": "StructuredOutput",
+             "id": f"toolu_{agent_id}_out", "input": output}]}})
+        transcript = self.run_dir / f"agent-{agent_id}.jsonl"
+        transcript.write_text("\n".join(json.dumps(e) for e in entries) + "\n",
+                              encoding="utf-8")
+        (self.run_dir / f"agent-{agent_id}.meta.json").write_text(
+            json.dumps({"agentType": "test-scorer"}), encoding="utf-8")
+
+    def log_gate_event(self, agent_id: str, event: str) -> None:
+        with self.gate_log.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps({"agent_id": agent_id, "event": event}) + "\n")
+
+    def run_reconcile(self) -> dict:
+        return reconciler.reconcile(self.run_dir, ALLOWED,
+                                    self.gate_log, self.push_log,
+                                    manifest=FIXTURE_MANIFEST)
+
+    def test_valid_spawn_reconciles(self) -> None:
+        self.write_agent("a1", [("corpus/paper.md", False)], payload())
+        self.log_gate_event("a1", "pass")
+        report = self.run_reconcile()
+        self.assertTrue(report["clean"], report)
+        agent = report["agents"][0]
+        self.assertTrue(agent["reconciled"])
+        self.assertFalse(agent["divergence"]["no_gate_event"])
+
+    def test_invalid_receipts_fail(self) -> None:
+        bad = payload()
+        bad["receipts"]["instrument_receipts"]["test-instrument"] = "0000"
+        self.write_agent("a1", [("corpus/paper.md", False)], bad)
+        report = self.run_reconcile()
+        self.assertFalse(report["clean"])
+        self.assertIn("receipt token mismatch",
+                      " ".join(report["agents"][0]["receipts"]["problems"]))
+
+    def test_successful_out_of_scope_read_fails(self) -> None:
+        """C8 / amendment 1 §4: a successful read outside the allowed scope
+        is contamination and fails the spawn."""
+        self.write_agent("a1", [("corpus/paper.md", False),
+                                ("outputs/pilot/assessment.json", False)],
+                         payload())
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertFalse(agent["reconciled"])
+        self.assertEqual(agent["file_access"]["contaminating"][0]["target"],
+                         "outputs/pilot/assessment.json")
+
+    def test_errored_out_of_scope_attempt_warns_not_fails(self) -> None:
+        """The live 2026-08-03 case: a failed Read of a wrong path is a
+        warning-grade attempt, not contamination."""
+        self.write_agent("a1", [("corpus/paper.md", False),
+                                ("~/nonexistent/guide.md", True)],
+                         payload())
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertTrue(agent["reconciled"], agent)
+        self.assertEqual(len(agent["file_access"]["flagged"]), 1)
+        self.assertEqual(len(agent["file_access"]["contaminating"]), 0)
+
+    def test_declared_pull_that_only_errored_fails(self) -> None:
+        """C6/C8 finding (2026-08-15): attempts are not reads."""
+        declared = payload()
+        declared["receipts"]["pulled_files_read"] = ["corpus/ref.md"]
+        self.write_agent("a1", [("corpus/ref.md", True)], declared)
+        report = self.run_reconcile()
+        self.assertIn("every Read errored",
+                      " ".join(report["agents"][0]["receipts"]["problems"]))
+
+    def test_block_with_collected_output_is_named_divergence(self) -> None:
+        """The B1 tripwire: a blocked spawn whose output validates post hoc
+        is exactly the silent-collection case — it must be named."""
+        self.write_agent("a1", [("corpus/paper.md", False)], payload())
+        self.log_gate_event("a1", "block")
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertTrue(agent["divergence"]["blocked_but_output_present"])
+
+    def test_missing_gate_event_is_named_divergence(self) -> None:
+        self.write_agent("a1", [("corpus/paper.md", False)], payload())
+        report = self.run_reconcile()
+        self.assertTrue(report["agents"][0]["divergence"]["no_gate_event"])
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

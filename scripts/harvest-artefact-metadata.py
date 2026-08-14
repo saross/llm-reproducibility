@@ -165,7 +165,10 @@ def classify(link: str) -> list[tuple[str, str]]:
         return [("github", f"https://api.github.com/repos/{owner_repo}")]
     if host.endswith("gitlab.com"):
         project = urllib.parse.quote(parsed.path.strip("/"), safe="")
-        return [("gitlab", f"https://gitlab.com/api/v4/projects/{project}")]
+        # license=true is opt-in — without it GitLab omits licence data
+        # entirely (platform-row verification note, 2026-08-15: a live
+        # false-negative risk, not a theoretical one).
+        return [("gitlab", f"https://gitlab.com/api/v4/projects/{project}?license=true")]
     if host.endswith("zenodo.org"):
         match = re.search(r"/records?/(\d+)", parsed.path)
         if match:
@@ -229,11 +232,14 @@ def extract_fields(endpoint: str, document: dict) -> dict:
             "persistence_entitlement": False,
         }
     if endpoint == "gitlab":
+        licence = document.get("license") or {}
         return {
             "full_name": document.get("path_with_namespace"),
             "default_branch": document.get("default_branch"),
             "last_activity_at": document.get("last_activity_at"),
-            "licences": [],
+            # GitLab exposes key/name only — no SPDX identifier field
+            # (platform-row verification note, 2026-08-15).
+            "licences": [licence.get("key")] if licence.get("key") else [],
             "metadata_record": False,
             "persistence_entitlement": False,
         }

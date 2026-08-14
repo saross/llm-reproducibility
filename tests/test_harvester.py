@@ -51,6 +51,13 @@ class RoutingTests(unittest.TestCase):
         self.assertEqual(steps[0][1],
                          "https://api.github.com/repos/ercrema/diffusionCurve")
 
+    def test_gitlab_route_requests_licence_data(self) -> None:
+        """Platform-row note (2026-08-15): GitLab licence data is opt-in —
+        omitting license=true reads every GitLab licence as missing."""
+        steps = harvester.classify("https://gitlab.com/group/project")
+        self.assertEqual(steps[0][0], "gitlab")
+        self.assertIn("license=true", steps[0][1])
+
     def test_cran_url_is_flagged_not_resolved(self) -> None:
         steps = harvester.classify("https://cran.r-project.org/package=ArchaeoPhases")
         self.assertEqual(steps, [("cran", "")])
