@@ -74,10 +74,13 @@ consumed (see Phase D).
 - [x] 2026-08-10 **A2. One clarification draft per ambiguity class** —
       all eight decision points ruled by Shawn (see rulings sections
       above); drafted operative text written as erratum-log **Entry 3 +
-      "Queued amendment 2 scope"** (ten items, PROPOSED, in
+      "Queued amendment 2 scope"** (ten items, in
       `studies/open-science-compliance/prereg/erratum-log.md`).
-      Ratification of the drafted wording rides the registrant's read at
-      D1 consolidation. Original decision list, for the record:
+      **RATIFIED 2026-08-14:** registrant read the log end-to-end and
+      approved, incorporating the 2026-08-11 ratification-read
+      consolidations (item-1 clause restored; two-rung ladder; per-artefact
+      licence scope; endpoint/table independence; supplement-row
+      qualification). Original decision list, for the record:
       - A1.2 — does a fully open resource needing no authentication score 1?
       - R1.1 — which artefact's licence counts?
       - A2 — metadata persistence for supplement-only deposits.
@@ -342,3 +345,4 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
 | 2026-08-11 | R1.1 conflict rule scoped per artefact: clean paper/dataset/software licence divisions score separately; most-restrictive applies only to same-artefact disagreements (in-document supplements; paper-vs-service assertions) | Shawn |
 | 2026-08-11 | Endpoint list and platform table maintained independently; GitLab added to endpoints; CRAN + Dryad flagged as early endpoint additions; row-entitlement verification queued at C6 | Shawn |
 | 2026-08-11 | Supplement table row qualified: applies only to supplements served from the article landing page with no independent deposit; repository-hosted supplements (Figshare, Dryad) score as platform deposits; Dryad added to flagged table additions | Shawn |
+| 2026-08-14 | Erratum-log Entry 3 + queued amendment 2 scope RATIFIED (end-to-end read, as amended through 2026-08-11) — A2 closed; D1 consolidation unblocked pending the Phase B shape decision and A3 | Shawn |

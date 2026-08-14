@@ -235,8 +235,9 @@ than the before-census-scoring deadline that Entry 1 alone would require.
 
 ## Entry 3 — 2026-08-10: benchmark-revealed instrument ambiguities (item-structured disagreement)
 
-**Status: instrument ambiguity record + queued amendment 2 scope (PROPOSED —
-pending registrant ratification of the drafted text below; the underlying
+**Status: instrument ambiguity record + queued amendment 2 scope (RATIFIED —
+registrant read the log end-to-end and approved 2026-08-14, incorporating
+the 2026-08-11 ratification-read consolidations; the underlying
 scoring-policy decisions were ruled by the registrant 2026-08-10).**
 
 The 2026-08-03 validation benchmark (amendment 1 §3: three arms × five pilot
@@ -268,11 +269,12 @@ takes both sides of the target question across papers — reference
 re-derivation under the clarified instrument (plan Phase B1) is entailed,
 not optional.
 
-## Queued amendment 2 scope (running list; PROPOSED 2026-08-10)
+## Queued amendment 2 scope (running list; RATIFIED 2026-08-14)
 
-Items 1–9 below are drafted operative text for the instrument (v2.0 → v2.1)
-and the validation-phase re-specification. Consolidation into
-`amendment-2-draft.md` follows the registrant's read (plan Phase D1).
+Items 1–9 below are ratified operative text for the instrument (v2.0 → v2.1)
+and the validation-phase re-specification (registrant's end-to-end read,
+2026-08-14). Consolidation into `amendment-2-draft.md` is plan Phase D1,
+pending the Phase B concordance-reference decision and A3.
 
 1. **Research-surface rule** (new instrument section; ruled 2026-08-10).
    "The unit of assessment is the paper's research surface: the complete
