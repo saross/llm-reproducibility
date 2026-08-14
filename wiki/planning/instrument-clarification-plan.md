@@ -283,9 +283,16 @@ incoherent and structurally caps concordance below the gate. Options
 
 Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
 
-- [ ] **C1. Audit fix round 2** — all seven register items; priority to the
-      receipt-gate binding (re-audit C-2) and gate logging/field-names
-      (re-audit C-1).
+- [x] 2026-08-14 **C1. Audit fix round 2** — all register items closed
+      (1, 2a, 3–8) across eight commits `f00d6dd`…`d2cb58a`; tests
+      84 → 106, gate PASS throughout; item 2b (field-name confirmation)
+      rides C2 by design. Includes the re-specified fallback-binding
+      rule, the one fail-closed policy across both hooks, and the
+      pre-commit test-suite gate (block-tested live). The S1
+      index-vs-worktree residual manifested live the same day (a staged
+      probe test leaked into `5618e30` while the worktree-reading gate
+      saw green; removed in `d2cb58a`) — the residual is observed, not
+      theoretical, and the pathspec discipline stands.
 - [ ] **C2. Capture one live SubagentStop event** (single cheap probe
       spawn) to confirm real field names; then the live pass-plus-catch
       demonstration. Gate counts as operative only after both.

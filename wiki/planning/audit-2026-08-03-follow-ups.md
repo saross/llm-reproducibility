@@ -122,7 +122,10 @@ record and contract amendments in
    the index, so a partially staged manifest/instrument pair can commit
    green — mitigated by the standing explicit-pathspec discipline for
    concurrent sessions; index-accurate checking is a future enhancement,
-   not a Phase C item.
+   not a Phase C item. **Residual observed live the same day:** the
+   block-test probe's unstaging failed silently and the staged copy
+   leaked into `5618e30` while the worktree-reading gate saw green;
+   removed in `d2cb58a`. Observed, not theoretical.
 9. **S2 — operative demo covers three cases:** final-message pass,
    transcript-borne pass (the shape that actually failed 39/45), and a
    consequence-verified catch — the blocked spawn's output demonstrably
