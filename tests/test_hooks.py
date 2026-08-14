@@ -58,6 +58,9 @@ FIXTURE_MANIFEST = {
         "test-scorer": {"file": ".claude/agents/test-scorer.md",
                         "version": "1.0", "model": "claude-test-1"},
     },
+    "assessment": {
+        "schemas": {"benchmark_fair_output": {"version": "1.1"}},
+    },
 }
 
 
@@ -265,6 +268,23 @@ class ReceiptGateTests(unittest.TestCase):
         self.assertEqual(record["event"], "block")
         self.assertEqual(record["transcript_state"], "unavailable-after-retries")
         self.assertIn("write lag", record["reason"])
+
+    def test_matching_schema_version_passes(self) -> None:
+        """C3b / S3 (2026-08-14): a payload naming the registered contract
+        version validates."""
+        self.assertEqual(self.run_gate(valid_payload(schema_version="1.1")),
+                         ["pass"])
+
+    def test_stale_schema_version_blocks(self) -> None:
+        """C3b / S3 (2026-08-14): a stale schema_version means the spawn was
+        supplied the wrong contract — block, escalate to the orchestrator."""
+        self.assertEqual(self.run_gate(valid_payload(schema_version="1.0")),
+                         ["block"])
+        self.assertIn("schema_version", self.events[0]["reason"])
+
+    def test_absent_schema_version_passes(self) -> None:
+        """v1.0-era payloads predate self-identification and pass unchanged."""
+        self.assertEqual(self.run_gate(valid_payload()), ["pass"])
 
     def test_incomplete_receipts_dict_does_not_mask_flat_fields(self) -> None:
         """Item 7 / L-1 (2026-08-14): an incomplete nested `receipts` dict

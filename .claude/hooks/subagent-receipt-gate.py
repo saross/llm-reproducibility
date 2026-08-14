@@ -282,6 +282,22 @@ def validate(event: dict) -> int:
                                  f"{expected_agent_version!r} — re-emit receipts from your "
                                  f"agent brief", ctx)
 
+    # Delivery verification for the output contract (audit S3, 2026-08-14):
+    # v1.1+ payloads carry a validator-enforced schema_version; when present
+    # it must match the registered contract. v1.0-era payloads lack the
+    # field and pass unchanged (the old contract predates
+    # self-identification).
+    declared_schema = str(payload.get("schema_version") or "").strip()
+    if declared_schema:
+        registered = str((((manifest.get("assessment") or {}).get("schemas") or {})
+                          .get("benchmark_fair_output") or {}).get("version", "")).strip()
+        if registered and declared_schema != registered:
+            return block(agent_type, f"schema_version {declared_schema!r} does not match "
+                                     f"the registered output contract {registered!r} — "
+                                     f"the spawn was supplied a stale or unregistered "
+                                     f"schema; orchestrator attention needed, not a "
+                                     f"retry: escalate", ctx)
+
     # ESCALATE passes through to the orchestrator only after provenance holds.
     if str(payload.get("status", "")) == "ESCALATE":
         log_jsonl(GATE_LOG, {"event": "escalate-passthrough", "agent_type": agent_type,

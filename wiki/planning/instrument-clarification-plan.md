@@ -307,8 +307,18 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       alarms and the benchmark's receipt provenance is now
       machine-verified. Annex:
       `studies/open-science-compliance/outputs/validation/c2-probes-2026-08-14/`.
-- [ ] **C3. Schema v1.1** (C6 ESCALATE-forces-fabrication; M12; M13) plus
-      its supply mechanism (currently orchestrator-side only).
+- [x] 2026-08-14 **C3. Schema v1.1** — landed (`89f6706` + gate check):
+      conditional ESCALATE requirements (C6), bounds + minLength (M12),
+      soft A1 cross-reference honouring the instrument's ethical
+      exception (rule re-verified against canon before encoding), M13
+      naming note, `schema_version` const (S3), the ratified
+      `input_provenance` flag, and `pack_refs` per the joint design note
+      below. 20 defect-injection tests; the receipt gate now blocks
+      mismatched schema_version claims. Supply mechanism: contract
+      self-identification + E4/C7 registry hashes close the chain;
+      workflow-side stop-stripping and run-record wiring ride C9/D3
+      prep; the runtime-validator probe (S4) remains a D3-prep stop
+      condition.
 - [x] 2026-08-14 **C4. C7 GOVERNED decision (Shawn): RULED YES** — add
       `sha256:` content-integrity hashes to `shared_content` entries.
       Implementation rides the amendment 2 instrument edits (D1/D2
@@ -354,6 +364,24 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       failed, never collected silently. Implements the adopted
       gate-events-vs-outputs divergence tripwire; wires into
       `fair-benchmark-arm.workflow.js` as part of D3 preparation.
+
+### C3/C6 joint design note — evidence-pack record shape (2026-08-14)
+
+Settled once in C3 (contract hardening 4); C6 conforms. A pack is one
+JSON file per paper: `{paper_slug, harvested_at, endpoint_versions,
+records: []}`. Each record carries `record_id`
+("<endpoint>:<identifier>", stable within and across packs),
+`source_endpoint` (from the ratified item-8 endpoint list), `url`,
+`retrieved_at` (ISO 8601), `response_sha256` (the determinism anchor,
+hardening 8), plus typed fields (licence, metadata record, conflict
+flags under the most-restrictive rule). Scoring outputs cite records
+via schema v1.1's optional `pack_refs` arrays. Packs are registered,
+receipt-covered artefacts (audit S7); their delivery mechanism is C6's
+first build task (audit B3). Validator-compat fallback (audit S4): if
+the runtime validator rejects draft-07 conditionals at the D3-prep
+probe, v1.1's conditional requirements move to C9's reconciliation
+layer and the schema retreats to unconditional requireds — decided at
+the probe, recorded by dated note here.
 
 ### Phase C pre-run review — hardened execution contract (2026-08-14)
 
@@ -492,3 +520,4 @@ manifest.
 | 2026-08-14 | Phase C pre-run review (six-section dialogue) approved: hardened contract recorded in Phase C; consolidated D1 governed-edit window adopted; C2 probes gated and pack-free; amendment 2 lodgement confirmed as hard stop before D3, not before Phase C | Shawn |
 | 2026-08-14 | Clean-context audit (Opus PoC) adjudicated: all 4 blockers confirmed, B1 extended (39/45 spawns blocked with no downstream consequence); B4 ruled IMPLEMENT → new item C8, with erratum-route text modification where infeasible; B1 consequence-verified catch confirmed; disposition table approved in full | Shawn |
 | 2026-08-14 | C2 probes run (3 sonnet spawns, approved): field names anchored, pass paths proven both lanes, workflow-lane block consequence ABSENT → new pre-census item C9 (gate reconciliation, blocks D3); benchmark receipts retroactively machine-verified 45/45 — the 39 blocks were transcript-lag false alarms | Claude (probes approved by Shawn) |
+| 2026-08-14 | C3 schema v1.1 landed with the A1 cross-reference soft-enforced (named exception rationale) rather than hard-zeroed — faithful to canon's ethical-restriction exception; pack record shape settled in the C3/C6 joint design note | Claude (per ratified instrument text) |

@@ -129,7 +129,10 @@ record and contract amendments in
    not a Phase C item. **Residual observed live the same day:** the
    block-test probe's unstaging failed silently and the staged copy
    leaked into `5618e30` while the worktree-reading gate saw green;
-   removed in `d2cb58a`. Observed, not theoretical.
+   removed in `d2cb58a`. Observed, not theoretical. (2026-08-14
+   addendum: the fallback unittest runner now needs jsonschema for the
+   C3 schema battery — a venv-less machine gets a loud import failure
+   at commit; create the per-machine venv per step-0.)
 9. **S2 — operative demo covers three cases:** final-message pass,
    transcript-borne pass (the shape that actually failed 39/45), and a
    consequence-verified catch — the blocked spawn's output demonstrably
@@ -141,9 +144,13 @@ record and contract amendments in
    Diagnostic bonus: all 45 benchmark transcripts re-validated clean
    post-hoc — the 39 benchmark blocks were transcript-lag false alarms.
    Full record in the C2 annex.
-10. **S3 — schema identity receipted.** C3 adds schema version + sha256
-    to the receipt fields; the benchmark workflow stops stripping
-    `version` before spawn.
+10. **[x] 2026-08-14 — S3 — schema identity receipted.** Landed as a
+    validator-enforced `schema_version` const in v1.1 (the model cannot
+    hash a schema, so self-identification + the E4/C7 registry hashes
+    close the chain instead of a model-echoed sha256); the receipt gate
+    blocks payloads whose declared schema_version mismatches the
+    registry (absent = v1.0-era, passes). Workflow-side stop-stripping
+    of `version` and run-record hash wiring ride C9/D3 prep.
 11. **S4 — v1.1 validator compatibility.** Standard JSON Schema
     keywords only; a validator probe confirms acceptance before D3.
     New stop condition: v1.1 rejected at spawn time halts the block.
