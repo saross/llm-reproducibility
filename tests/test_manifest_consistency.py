@@ -648,6 +648,28 @@ agent_definitions:""")
                          report.errors)
 
 
+    def test_list_nested_file_entry_is_enumerated(self) -> None:
+        """Item 4 (2026-08-14): a file-carrying dict inside a list cannot
+        escape enumeration (re-audit M-5)."""
+        (self.root / "docs/listed.md").write_text("**Version:** 1.0\n",
+                                                  encoding="utf-8")
+        path = self.root / "manifest.yaml"
+        path.write_text(path.read_text(encoding="utf-8")
+                        + "history:\n  - note: irrelevant\n"
+                          "  - version: \"1.0\"\n    file: docs/listed.md\n",
+                        encoding="utf-8")
+        self.assert_error_containing("undeclared entity: history[1]")
+
+    def test_previously_excluded_section_is_enumerated(self) -> None:
+        """Item 4 (2026-08-14): corpus-subtree file entries no longer escape
+        the walk (re-audit M-5)."""
+        (self.root / "docs/corpus-doc.md").write_text("x\n", encoding="utf-8")
+        path = self.root / "manifest.yaml"
+        path.write_text(path.read_text(encoding="utf-8")
+                        + "corpus:\n  extra:\n    file: docs/corpus-doc.md\n",
+                        encoding="utf-8")
+        self.assert_error_containing("undeclared entity: corpus.extra")
+
     def test_coverage_self_report_generated(self) -> None:
         """Phase 3: coverage is generated from the registry, never asserted."""
         report = self.run_checks()

@@ -81,11 +81,13 @@ denominator.
    Also fold in (audit N5): `preflight-agent.py` invokes the D5 checker
    without `--preflight`, leaving the script's env-override branch
    test-only — unify so both hooks share one fail-closed path.
-4. **Enumeration exclusions still leak (re-audit M-5).** `corpus`/`project`
-   /`version_history`/`licences` subtrees and list-of-dicts entries escape.
-   Fix: walk lists too; shrink the exclusion set to sections that produce
-   their own entity kinds (shared_content, agent_definitions,
-   reference_datasets, entity_checks, workflow_passes).
+4. **[x] 2026-08-14 — Enumeration exclusions still leak (re-audit M-5).**
+   Fixed as specified: the walk recurses into lists (`section[i]` paths)
+   and the exclusion set shrank to the five sections producing their own
+   entity kinds (shared_content, agent_definitions, reference_datasets,
+   entity_checks, workflow_passes). Live manifest unchanged at 57/57
+   (zero entity churn, as the pre-run audit's simulation predicted).
+   Tests 95 → 97.
 5. **`rglob("*")` stray-file tripwire (re-audit M-6).** A `.DS_Store`/swap
    file in a scan directory blocks all commits and all governed spawns.
    Fix: skip dot-directories/dotfiles and `__pycache__`, or filter via

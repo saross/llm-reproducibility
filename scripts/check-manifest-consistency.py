@@ -521,6 +521,12 @@ def enumerate_entities(manifest: dict) -> dict[str, tuple[str, object]]:
         entities[f"agent_definitions.{key}"] = ("agent-definition", None)
 
     def walk(node: object, path: str) -> None:
+        if isinstance(node, list):
+            # Walk list entries too (re-audit M-5): a file-carrying dict
+            # inside a list must not escape enumeration.
+            for index, item in enumerate(node):
+                walk(item, f"{path}[{index}]")
+            return
         if not isinstance(node, dict):
             return
         if "file" in node or "path" in node:
@@ -532,10 +538,16 @@ def enumerate_entities(manifest: dict) -> dict[str, tuple[str, object]]:
     # Walk every top-level section not handled specially above/below, so a
     # new section (or a file entry without a version) cannot silently escape
     # enumeration (audit 2026-08-03 C2 — the "7 of 25" recurrence path).
-    specially_handled = {"project", "shared_content", "shared_content_policy",
-                         "agent_definitions", "workflow_passes", "documentation",
-                         "corpus", "reference_datasets", "entity_checks",
-                         "version_history", "licences"}
+    # Only sections that produce their own entity kinds are excluded
+    # (re-audit M-5: the old set also skipped project, corpus,
+    # version_history, licences, documentation, and shared_content_policy
+    # wholesale, so file-carrying entries there escaped entirely). The
+    # dedicated path-scalar loops below keep their jobs; anything
+    # file-shaped added to a walked section now fails as undeclared
+    # instead of vanishing.
+    specially_handled = {"shared_content", "agent_definitions",
+                         "workflow_passes", "reference_datasets",
+                         "entity_checks"}
     for section, node in manifest.items():
         if section not in specially_handled:
             walk(node, section)
