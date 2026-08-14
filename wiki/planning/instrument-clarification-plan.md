@@ -291,9 +291,10 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       demonstration. Gate counts as operative only after both.
 - [ ] **C3. Schema v1.1** (C6 ESCALATE-forces-fabrication; M12; M13) plus
       its supply mechanism (currently orchestrator-side only).
-- [ ] **C4. C7 GOVERNED decision (Shawn):** add `sha256:` content-integrity
-      hashes to `shared_content` entries alongside the amendment 2
-      instrument edits, so clarified text lands hash-checked from day one.
+- [x] 2026-08-14 **C4. C7 GOVERNED decision (Shawn): RULED YES** — add
+      `sha256:` content-integrity hashes to `shared_content` entries.
+      Implementation rides the amendment 2 instrument edits (D1/D2
+      window), so clarified text lands hash-checked from day one.
 - [ ] **C5. `unwrap-paste-file.py` M14–M16 fixes** with a self-check —
       due before amendment 2's paste artefact.
 - [ ] **C6. Artefact-metadata harvester** (decision #5 operationalisation):
@@ -346,3 +347,4 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
 | 2026-08-11 | Endpoint list and platform table maintained independently; GitLab added to endpoints; CRAN + Dryad flagged as early endpoint additions; row-entitlement verification queued at C6 | Shawn |
 | 2026-08-11 | Supplement table row qualified: applies only to supplements served from the article landing page with no independent deposit; repository-hosted supplements (Figshare, Dryad) score as platform deposits; Dryad added to flagged table additions | Shawn |
 | 2026-08-14 | Erratum-log Entry 3 + queued amendment 2 scope RATIFIED (end-to-end read, as amended through 2026-08-11) — A2 closed; D1 consolidation unblocked pending the Phase B shape decision and A3 | Shawn |
+| 2026-08-14 | C7 RULED YES: sha256 content-integrity hashes on `shared_content` entries, implementation riding the amendment 2 instrument edits; Phase B shape discussion scheduled as a focused session before D1 | Shawn |
