@@ -1,0 +1,106 @@
+# Declared artefact links — the five pilot papers (plan C6 input registry)
+#
+# Curated 2026-08-15 from each pilot's persisted extraction record (the
+# study's own reading of the papers' availability statements); source_anchor
+# names the extraction file and section each entry derives from. The
+# harvester (scripts/harvest-artefact-metadata.py) resolves these into the
+# per-paper evidence packs in this directory. paper_asserted_licence feeds
+# the conflict detector (erratum-log Entry 3, item 6: same-artefact
+# disagreements default to the most restrictive licence).
+#
+# Entry types: article | data | code | data+code | supplement.
+# CRAN entries carry endpoint 'cran' — flagged for addition per the
+# ratified endpoint list; the harvester records them as an honest gap
+# rather than improvising a resolution.
+
+papers:
+  dye-et-al-2023:
+    article_doi: "10.1016/j.jas.2023.105765"
+    links:
+      - id: article
+        type: article
+        link: "10.1016/j.jas.2023.105765"
+        source_anchor: "studies/open-science-compliance/outputs/dye-et-al-2023/extraction.json reproducibility_infrastructure"
+      - id: supplement
+        type: supplement
+        link: "10.1016/j.jas.2023.105765"
+        note: "Data + OxCal model + R scripts in journal supplement; no independent deposit declared"
+        source_anchor: "… data_availability + code_availability"
+      - id: archaeophases-cran
+        type: code
+        link: "https://cran.r-project.org/package=ArchaeoPhases"
+        note: "Third-party R package dependency named in code_availability"
+        source_anchor: "… code_availability.repositories"
+      - id: ads-deposit
+        type: data
+        link: "10.5284/1018290"
+        note: "Archaeology Data Service DOI cited in the infrastructure record (upstream data)"
+        source_anchor: "… reproducibility_infrastructure (cited identifier)"
+
+  herskind-riede-2024:
+    article_doi: "10.1016/j.jas.2024.105969"
+    links:
+      - id: article
+        type: article
+        link: "10.1016/j.jas.2024.105969"
+        source_anchor: "studies/open-science-compliance/outputs/herskind-riede-2024/extraction.json reproducibility_infrastructure"
+      - id: code-data-zenodo
+        type: data+code
+        link: "10.5281/zenodo.10623550"
+        note: "R code and complete data tables (S2, S3)"
+        source_anchor: "… code_availability.verbatim_statement"
+      - id: supplement-zenodo
+        type: supplement
+        link: "10.5281/zenodo.10801706"
+        note: "Repository-hosted supplement — scores as a platform deposit, never under the thin supplement row (erratum item 3)"
+        source_anchor: "… data_availability.verbatim_statement"
+
+  key-et-al-2024:
+    article_doi: "10.1016/j.jas.2023.105921"
+    links:
+      - id: article
+        type: article
+        link: "10.1016/j.jas.2023.105921"
+        source_anchor: "studies/open-science-compliance/outputs/key-et-al-2024/extraction.json reproducibility_infrastructure"
+      - id: supplement
+        type: supplement
+        link: "10.1016/j.jas.2023.105921"
+        paper_asserted_licence: "CC BY"
+        note: "Supplementary tables/figures + R scripts on the publisher site; extraction records access as Open access (CC BY)"
+        source_anchor: "… data_availability.datasets[0].access_conditions"
+
+  marwick-2025:
+    article_doi: "10.1016/j.jas.2025.106281"
+    links:
+      - id: article
+        type: article
+        link: "10.1016/j.jas.2025.106281"
+        source_anchor: "studies/open-science-compliance/outputs/marwick-2025/extraction.json reproducibility_infrastructure"
+      - id: compendium-zenodo
+        type: data+code
+        link: "10.5281/zenodo.14897252"
+        paper_asserted_licence: "MIT (code); CC0 (data); CC BY (figures)"
+        note: "Research compendium; paper asserts three component licences against Zenodo's single licence field — expected conflict-flag exercise"
+        source_anchor: "… code_availability.licences + data_availability.access_conditions"
+      - id: related-zenodo
+        type: data
+        link: "10.5281/zenodo.14561925"
+        note: "Additional Zenodo DOI cited in the infrastructure record"
+        source_anchor: "… reproducibility_infrastructure (cited identifier)"
+
+  crema-et-al-2024:
+    article_doi: "10.1016/j.jas.2024.105962"
+    links:
+      - id: article
+        type: article
+        link: "10.1016/j.jas.2024.105962"
+        source_anchor: "studies/open-science-compliance/outputs/crema-et-al-2024/run-02-session-per-pass/extraction.json infrastructure"
+      - id: repo-github
+        type: data+code
+        link: "https://github.com/ercrema/diffusionCurve"
+        source_anchor: "… data_availability.repository_url"
+      - id: archive-zenodo
+        type: data+code
+        link: "10.5281/zenodo.10782942"
+        note: "Permanent archive of the GitHub repository"
+        source_anchor: "… data_availability.persistent_archive"

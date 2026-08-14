@@ -539,7 +539,41 @@ reference_datasets:
 # heavily-commented sections above stay untouched. Phase 2 rule: every
 # registered entity must have an entry here; an undeclared entity fails
 # the gate. Classes per wiki/planning/artefact-integrity-monitoring-plan.md §4.
+evidence_packs:
+  # Plan C6 (2026-08-15): the artefact-metadata harvester and its outputs.
+  # Packs are dated snapshots — re-harvests are ordinary commits with
+  # meaningful diffs (records carry retrieved_at + response_sha256).
+  # Delivery to scoring spawns: workflow-prompt injection with the pack's
+  # sha256 echoed in receipts, implemented with C9 at D3 prep (audit B3).
+  harvester:
+    version: "1.0"
+    file: scripts/harvest-artefact-metadata.py
+    last_updated: "2026-08-15"
+    description: Deterministic artefact-metadata harvester (plan C6); resolves declared links into per-paper evidence packs via the ratified endpoint list (erratum-log Entry 3 item 8)
+  links_registry:
+    file: corpus/evidence-packs/declared-links.yaml
+    description: Curated declared-artefact-links registry for the five pilots (harvester input; anchors each entry to its extraction record)
+  packs:
+    dye-et-al-2023:
+      file: corpus/evidence-packs/dye-et-al-2023.json
+    herskind-riede-2024:
+      file: corpus/evidence-packs/herskind-riede-2024.json
+    key-et-al-2024:
+      file: corpus/evidence-packs/key-et-al-2024.json
+    marwick-2025:
+      file: corpus/evidence-packs/marwick-2025.json
+    crema-et-al-2024:
+      file: corpus/evidence-packs/crema-et-al-2024.json
+
 entity_checks:
+  # E3/E6 — evidence-pack apparatus (plan C6, 2026-08-15)
+  evidence_packs.harvester: {class: E3, version_source: markdown-header}
+  evidence_packs.links_registry: {class: E6, verify: exists}
+  evidence_packs.packs.dye-et-al-2023: {class: E6, verify: exists}
+  evidence_packs.packs.herskind-riede-2024: {class: E6, verify: exists}
+  evidence_packs.packs.key-et-al-2024: {class: E6, verify: exists}
+  evidence_packs.packs.marwick-2025: {class: E6, verify: exists}
+  evidence_packs.packs.crema-et-al-2024: {class: E6, verify: exists}
   # E1 — frozen canonical instruments (checks implemented today)
   shared_content.fair-instrument: {class: E1}
   shared_content.data-availability-taxonomy: {class: E1}
