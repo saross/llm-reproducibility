@@ -552,14 +552,20 @@ manifest.
 
 ## Phase D — amendment 2, re-benchmark, then the registered ladder
 
-- [ ] **D1-prep. Repository-evaluation enrichment pass** (RULED
-      2026-08-15, rides the row-4 grading): for each repository in the
-      table (ADS, tDAR, DANS, Zenodo; CRAN noted as out of registry
-      scope), verify CoreTrustSeal certification status against the
-      CoreTrustSeal register and pull the re3data.org registry record
-      (certificates, PID systems, database/content licences, scope) —
-      dated addendum to the platform-rows verification note, same
-      denominator discipline. Principle (Shawn, from eResearch
+- [x] 2026-08-15 **D1-prep. Repository-evaluation enrichment pass**
+      (RULED 2026-08-15, rides the row-4 grading) — DONE same day
+      (`506125c`): CoreTrustSeal register queried via its GraphQL
+      backend (the public register SPA returns an empty shell to
+      scripted fetches — item-12 failure class confirmed live) +
+      five re3data records; raw evidence archived with checksums.
+      Headlines: ADS certified to 2027-02-12 (renewal chain); DANS
+      Data Station Archaeology certified to 2028-02-27; **tDAR lapsed
+      2025-12-16, renewal at First Submit**; **Zenodo absent from all
+      556 certification requests** (never applied); CRAN pidSystem
+      none at the registry layer. re3data's certificate field diverges
+      from the CTS register on every certified row — certification
+      must be cited at the service. Addendum:
+      `studies/open-science-compliance/outputs/validation/platform-rows-2026-08-15/enrichment-addendum-2026-08-15.md`. Principle (Shawn, from eResearch
       practice): **evaluate at the infrastructure layer, where all
       lodged artefacts inherit the platform's characteristics; spend
       artefact-level investigation only where the infrastructure is
