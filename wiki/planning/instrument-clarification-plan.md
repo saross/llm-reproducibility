@@ -270,14 +270,39 @@ census lane is new-instrument, paper-only. Comparing across both axes is
 incoherent and structurally caps concordance below the gate. Options
 (Claude's preference order; Shawn decides with FAIR expertise):
 
-- [ ] **B1 (preferred). Re-derive reference scores** under the clarified
-      instrument and census configuration, anchored by human adjudication
-      (the preregistration's n=12 human-validation subsample can seed
-      this); register the new set as an E8 update, retaining the old set.
+- [x] 2026-08-15 **B1 (preferred). Re-derive reference scores** under the
+      clarified instrument and census configuration, anchored by human
+      adjudication (the preregistration's n=12 human-validation subsample
+      can seed this); register the new set as an E8 update, retaining the
+      old set. **RULED (Shawn, 2026-08-15) — B1 adopted with this shape:**
+      - **Anchor — ruling-driven + targeted adjudication.** Start from the
+        old E8 set; apply the ratified Entry 3 rulings item by item; Shawn
+        adjudicates every changed item, all 68 A1-disputed items, and any
+        item whose old score rests on reproduction-only evidence (a
+        census-surface check runs across all 150 items: each reference
+        score must be derivable from paper + receipt-covered evidence pack
+        via the ratified two-rung ladder, unscoreable→0 only after the
+        ladder); plus a spot-check sample of undisputed items. No API
+        spend; no machine-derived reference (circularity declined).
+      - **n=12 linkage — shared protocol, separate exercises.** One
+        hand-scoring/adjudication protocol is written; the pilot
+        re-derivation rehearses it now, and the census n=12 subsample runs
+        it later exactly as registered (blinded, post-census). Amendment 2
+        records that the pilot adjudication is unblinded (benchmark
+        outputs seen) while the census subsample remains blinded.
+      - **E8 — new set registered as v2, old set retained.** Per-item
+        provenance (old score → ruling applied → adjudication note); the
+        old set stays registered as historical; amendment 2 re-points the
+        concordance gate at v2.
+      Harvester findings feed the re-derivation: marwick's dead cited DOI
+      (10.5281/zenodo.14561925 404s at DataCite and Zenodo), its
+      three-licence conflict vs Zenodo's cc-by-4.0 (most-restrictive rule,
+      per-artefact scope), and the CRAN endpoint-flagged gap.
 - [ ] **B2. Redefine the concordance check** in amendment 2 to compare
-      like-with-like another way.
+      like-with-like another way. — Not taken (2026-08-15): B1 ruled.
 - [ ] **B3. Keep the gate as-is** — advised against: a structurally
-      unreachable gate measures nothing.
+      unreachable gate measures nothing. — Not taken (2026-08-15): B1
+      ruled.
 
 ## Phase C — harness hardening (pre-census register, runs in parallel)
 
@@ -567,3 +592,4 @@ manifest.
 | 2026-08-15 | C6 built and run: five evidence packs committed; conflict detector proven live (marwick fired, key cleared after canonicalisation); dead cited DOI (zenodo.14561925) recorded for Phase B; GitHub token adopted (fine-grained, public read-only) | Claude (build); Shawn (token) |
 | 2026-08-15 | C8+C9 built as one reconciliation tool; benchmark retro-reconciled 45/45 clean with zero contaminating accesses (§4 isolation empirically held); attempts-are-not-reads rule added to gate and reconciler; workflow wiring deferred to D3 prep | Claude |
 | 2026-08-15 | Platform-row verification note committed (6/6 rows, every verdict HOLDS WITH CAVEAT; DataCite tombstone sub-assertion contradicted; Zenodo/DANS default-licence artefact) — corrections queued as amendment-2 draft material for the registrant's D1 ruling | Claude (findings); Shawn (ruling pending) |
+| 2026-08-15 | **Phase B shape RULED — B1 adopted:** anchor = ruling-driven re-derivation + targeted adjudication (changed items, all 68 A1-disputed items, census-surface check across all 150, spot-check of undisputed items; no machine-derived reference); n=12 linkage = shared protocol, separate exercises (pilot rehearsal unblinded and recorded as such; census subsample blinded as registered); E8 = new set registered as v2 with per-item provenance, old set retained, concordance gate re-pointed at v2 in amendment 2. D1 now blocked only on A3 and the platform-table rulings | Shawn |
