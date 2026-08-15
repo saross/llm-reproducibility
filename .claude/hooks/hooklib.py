@@ -55,6 +55,7 @@ def pushed_instruments(manifest: dict, agent_type: str) -> list[dict]:
                     "path": entry.get("canonical_file", ""),
                     "version": str(entry.get("version", "")),
                     "token": str(entry.get("receipt_token", "")),
+                    "registry_sha256": str(entry.get("sha256", "")),
                 })
     return specs
 

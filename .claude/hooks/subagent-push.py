@@ -55,10 +55,24 @@ def main() -> int:
                          f"Emit status: ESCALATE — do not proceed from memory.\n"
                          f"</pushed-instrument>")
             continue
+        digest = sha256_text(text)
+        registry_sha = spec.get("registry_sha256", "")
+        if registry_sha and digest != registry_sha:
+            # C7 (2026-08-15): the bytes on disk differ from the registered
+            # content-integrity hash — never inject drifted instrument text.
+            log_jsonl(PUSH_RECEIPT_LOG, {"event": "push-error", "agent_type": agent_type,
+                                         "agent_id": agent_id, "file": spec["path"],
+                                         "error": (f"sha256 drift: registry "
+                                                   f"{registry_sha[:16]}…, file {digest[:16]}…")})
+            parts.append(f"<pushed-instrument name=\"{spec['name']}\" status=\"HASH-MISMATCH\">\n"
+                         f"The instrument {spec['path']} does not match its registered "
+                         f"content-integrity hash. Emit status: ESCALATE — do not proceed.\n"
+                         f"</pushed-instrument>")
+            continue
         log_jsonl(PUSH_RECEIPT_LOG, {"event": "push", "agent_type": agent_type,
                                      "agent_id": agent_id, "file": spec["path"],
                                      "name": spec["name"], "version": spec["version"],
-                                     "sha256": sha256_text(text)})
+                                     "sha256": digest})
         parts.append(f"<pushed-instrument name=\"{spec['name']}\" path=\"{spec['path']}\" "
                      f"version=\"{spec['version']}\">\n{text}\n</pushed-instrument>")
 

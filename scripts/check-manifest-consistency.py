@@ -227,6 +227,20 @@ def check_canonical_entry(name: str, entry: dict, root: Path, report: Report) ->
         report.error(f"{name}: receipt-token drift — manifest {want_token!r}, "
                      f"file {token_match.group(1)!r}")
 
+    # C7 (ruled 2026-08-15): every shared_content entry carries a content-
+    # integrity hash, checked hard — a registered instrument whose bytes
+    # drift from the registry fails the gate even when version line and
+    # receipt token still match.
+    want_sha = str(entry.get("sha256", "")).strip()
+    if not want_sha:
+        report.error(f"{name}: no sha256 registered (C7 requires a content-integrity "
+                     f"hash on every shared_content entry)")
+    else:
+        got_sha = sha256_of(path)
+        if got_sha != want_sha:
+            report.error(f"{name}: sha256 drift — manifest {want_sha[:16]}…, "
+                         f"file {got_sha[:16]}… ({rel})")
+
 
 def check_mirror(name: str, entry: dict, consumer: dict, root: Path, report: Report) -> None:
     """Check a mirror consumer: banner cites version+token; normative blocks match."""
