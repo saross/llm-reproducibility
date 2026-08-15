@@ -374,8 +374,11 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       metadata contradiction; Zenodo licence-field scoping +
       default-licence artefact; non-uniform ADS/DANS/tDAR floors;
       GitLab no-SPDX/opt-in; Crossref persistence as member obligation;
-      9.3M component DOIs) are **amendment-2 draft material awaiting the
-      registrant's ruling at D1**. tDAR/DANS bot-gating noted: scripted
+      9.3M component DOIs) are **amendment-2 draft material — RULED
+      2026-08-15, see decision log** (all §A rewrites accepted; row 4
+      graded; all §B additions adopted; item 7 footnote with the
+      operative-default principle; item 12 as amendment-2 methods
+      commitment). tDAR/DANS bot-gating noted: scripted
       fetches get 403/challenge pages — future endpoint additions for
       those hosts need rendering + a challenge-page detector.
 - [x] 2026-08-15 **C8 — implemented via `scripts/reconcile-run.py`**
@@ -549,12 +552,27 @@ manifest.
 
 ## Phase D — amendment 2, re-benchmark, then the registered ladder
 
+- [ ] **D1-prep. Repository-evaluation enrichment pass** (RULED
+      2026-08-15, rides the row-4 grading): for each repository in the
+      table (ADS, tDAR, DANS, Zenodo; CRAN noted as out of registry
+      scope), verify CoreTrustSeal certification status against the
+      CoreTrustSeal register and pull the re3data.org registry record
+      (certificates, PID systems, database/content licences, scope) —
+      dated addendum to the platform-rows verification note, same
+      denominator discipline. Principle (Shawn, from eResearch
+      practice): **evaluate at the infrastructure layer, where all
+      lodged artefacts inherit the platform's characteristics; spend
+      artefact-level investigation only where the infrastructure is
+      silent.** Repositories are assessed once; the table is the
+      instrument's memory of that assessment and is built out over
+      time (Dataverse, ADA, Figshare, Dryad flagged).
 - [ ] **D1. Consolidate amendment 2:** instrument clarifications (A2
       outputs), concordance-reference decision (B), guide routing (A3),
       the remediation ladder restated for the new check (carry §2's
       structure: one routing-fix attempt, single re-run, else majority
-      vote), plus the two escaped-comparator cosmetic fixes flagged at
-      amendment 1 lodgement.
+      vote), the platform-table corrections as ruled 2026-08-15
+      (decision log), plus the two escaped-comparator cosmetic fixes
+      flagged at amendment 1 lodgement.
 - [ ] **D2. Lodge** via the proven OSF API route (versioned registration
       update; DOI unchanged).
 - [ ] **D3. Re-benchmark** on the clarified instrument, schema v1.1, and
@@ -593,3 +611,6 @@ manifest.
 | 2026-08-15 | C8+C9 built as one reconciliation tool; benchmark retro-reconciled 45/45 clean with zero contaminating accesses (§4 isolation empirically held); attempts-are-not-reads rule added to gate and reconciler; workflow wiring deferred to D3 prep | Claude |
 | 2026-08-15 | Platform-row verification note committed (6/6 rows, every verdict HOLDS WITH CAVEAT; DataCite tombstone sub-assertion contradicted; Zenodo/DANS default-licence artefact) — corrections queued as amendment-2 draft material for the registrant's D1 ruling | Claude (findings); Shawn (ruling pending) |
 | 2026-08-15 | **Phase B shape RULED — B1 adopted:** anchor = ruling-driven re-derivation + targeted adjudication (changed items, all 68 A1-disputed items, census-surface check across all 150, spot-check of undisputed items; no machine-derived reference); n=12 linkage = shared protocol, separate exercises (pilot rehearsal unblinded and recorded as such; census subsample blinded as registered); E8 = new set registered as v2 with per-item provenance, old set retained, concordance gate re-pointed at v2 in amendment 2. D1 now blocked only on A3 and the platform-table rulings | Shawn |
+| 2026-08-15 | **Platform-table corrections RULED:** §A rewrites 1/2/4/5 accepted as drafted (DataCite tombstone; Zenodo licence-field scoped to open records; GitLab no-SPDX/opt-in split from GitHub; Crossref persistence = member obligation + right, not warranty); row 4 graded within one row — ADS keeps R1.3-by-construction, DANS and tDAR require rung-(i) evidence (dye data R1.3 flip unaffected: dye's deposit is ADS, DOI 10.5284/1018290); §B additions 6/8/9/10/11/13 all adopted incl. the Zenodo persistence strengthening; item 7 = footnote on Zenodo+DANS rows; item 12 = amendment-2 methods commitment (rendering + challenge-page detection), implementation at D3 prep | Shawn |
+| 2026-08-15 | **Operative-default principle (item 7 footnote wording):** a default-valued licence is fully operative even where author choice is doubtful — the instrument assesses the research surface, not intent; the footnote records the empirical default-domination (82.6% Zenodo CC-BY-4.0; DANS CC0) as interpretive context only, never a score modifier | Shawn |
+| 2026-08-15 | **Infrastructure-layer evaluation principle + table build-out endorsed** (from Shawn's eResearch practice): evaluate at the infrastructure layer, where all lodged artefacts inherit platform characteristics; artefact-level investigation only where the infrastructure is silent; repositories assessed once, so enrich rows with CoreTrustSeal + re3data evidence and build the table out over time → new item D1-prep | Shawn |
