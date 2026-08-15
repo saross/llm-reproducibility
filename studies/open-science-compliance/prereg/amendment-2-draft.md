@@ -158,7 +158,22 @@ DANS returns HTTP 200 with a JavaScript challenge body — a silent false
 positive; tDAR returns 403) are fetched through a rendering step with
 challenge-page detection before any census reliance; where a register is
 served by a script-only application, its data source is queried directly
-and the queries recorded.
+and the queries recorded. **Identifier-recovery rule (registrant,
+2026-08-15):** where a declared identifier fails to resolve — a cited DOI
+that 404s at its registrar, or a dead repository link — the harvest
+procedure attempts a bounded recovery before recording the gap: one search
+of the relevant registrar's public API (DataCite or Crossref) by title and
+author, and one search of the named repository where one is named. A
+recovered record enters the evidence pack flagged `recovered`, with the
+query recorded, and is never silently substituted for the cited
+identifier: the citation defect remains visible in the pack and reportable
+as a study finding, while the recovered record supplies ordinary rung-(i)
+evidence about the artefact's actual status. Recovery is deliberately
+bounded — the analogue of the reproduction lane's minimal, documented code
+corrections — and a no-result after the two searches is recorded as a dead
+link, not pursued further. Precedent case: marwick-2025's cited
+10.5281/zenodo.14561925 resolves at neither DataCite nor Zenodo
+(2026-08-15).
 
 The isolation wording of amendment 1 §4 is corrected to what is actually
 enforced (registrant's 2026-08-14 ruling: implement what can be
