@@ -440,6 +440,18 @@ shared_content:
     consumers:
       - agent: adversarial-reviewer
         mechanism: push
+  fair-principles-guide:
+    canonical_file: .claude/skills/research-assessor/references/infrastructure/fair-principles-guide.md
+    version: "1.1"
+    receipt_token: "0eed0b8d570bf55e"
+    status: governed-instrument  # promoted pull→push 2026-08-15 (plan A3, D1 window): benchmark receipts showed inconsistent pulling (sonnet 9/15, and pull counts were attempt-based); pushing makes interpretive context uniform by construction. The research-assessor human lane reads the same file in place (it lives inside the skill) — no mirror.
+    consumers:
+      - agent: fair-assessor-sonnet-5
+        mechanism: push
+      - agent: fair-assessor-opus-5
+        mechanism: push
+      - agent: fair-assessor-fable-5
+        mechanism: push
 
 # Agent-definition registry (routing design §3.4 hot-reload guard, added
 # 2026-07-24). Every file under .claude/agents/ must be registered here with a
@@ -475,19 +487,19 @@ shared_content:
 agent_definitions:
   fair-assessor-sonnet-5:
     file: .claude/agents/fair-assessor-sonnet-5.md
-    version: "1.0"
+    version: "1.1"
     model: claude-sonnet-5
-    sha256: "f48e29d2aef5bc902d90d229e9daa74de9ab08da87ff16c62405def7b2e93e87"
+    sha256: "e890d27042b8c5e29b9dbbcb88bf9acc099e4cbbcf4cd58145cee345d4b56f6c"
   fair-assessor-opus-5:
     file: .claude/agents/fair-assessor-opus-5.md
-    version: "1.0"
+    version: "1.1"
     model: claude-opus-5
-    sha256: "33262a7c3ff0ad62088cde9b0ea99a83836d9ce73419c1376c39c236ab5c236e"
+    sha256: "b42d211d488edcd3d97c7b361677d0606bfe92db4e39c0e4c3e65f66d3385192"
   fair-assessor-fable-5:
     file: .claude/agents/fair-assessor-fable-5.md
-    version: "1.0"
+    version: "1.1"
     model: claude-fable-5
-    sha256: "067f25aace52b3f2677ff5dd10a17065f254f41aab303d62a6c11a943a57975a"
+    sha256: "da64bbb01a760ac2e768d036d16aa1112298071df2db7f8d5825073d82c0649e"
   reproduction-planner:
     file: .claude/agents/reproduction-planner.md
     version: "1.0"
@@ -596,6 +608,7 @@ entity_checks:
   shared_content.eligibility-criteria: {class: E1}
   shared_content.pipeline-invariants: {class: E1}
   shared_content.adversarial-review-framework: {class: E1}
+  shared_content.fair-principles-guide: {class: E1}  # governed-instrument; promoted pull→push 2026-08-15 (A3)
   # E2 — agent definitions (checks implemented today)
   agent_definitions.fair-assessor-sonnet-5: {class: E2}
   agent_definitions.fair-assessor-opus-5: {class: E2}
