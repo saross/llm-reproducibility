@@ -499,7 +499,7 @@ class PushListTests(unittest.TestCase):
             self.assertIn("fair-instrument", names,
                           f"{arm} must be pushed the FAIR instrument; got {names}")
             spec = next(s for s in specs if s["name"] == "fair-instrument")
-            self.assertEqual(spec["version"], "2.0")
+            self.assertEqual(spec["version"], "2.1")
             self.assertTrue(spec["token"])
 
 
