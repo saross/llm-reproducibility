@@ -254,12 +254,23 @@ outputs validate against structured-output contract v1.1
 per-sub-principle evidence-pack citations; escalation without fabricated
 scoring blocks).
 
-### 6. Cosmetic corrections
+### 6. Cosmetic corrections — dissolved on verification
 
-Two comparator strings in the original registration text may render as
-HTML entities on the public page ("post &gt; pre on all measures";
-"pinned &lt; unpinned"); they are corrected to the literal characters
-("post > pre on all measures"; "pinned < unpinned"). No semantic change.
+*(Revised 2026-08-17 at pre-lodgement verification; the approved draft
+proposed correcting the strings in place. The staged in-place fix was
+re-escaped by the registry's write path — round-trip diff, four spans —
+and the render check then showed no visible defect exists, so the
+correction dissolves into this verification record.)*
+
+Amendment 1's lodgement flagged two comparator strings in the original
+registration text ("post > pre on all measures"; "pinned < unpinned") as
+possibly rendering as literal HTML entity strings on the public page.
+Pre-lodgement verification of this amendment (2026-08-17) resolved the
+flag: the registry stores every literal comparator character as an HTML
+entity on write, and its renderer decodes them correctly, so the public
+page has always displayed the intended characters and no defect exists.
+No correction is required or made; this section records the verification
+outcome so the flag is closed rather than silently dropped.
 
 ---
 
@@ -336,8 +347,14 @@ evidence pack, principal, unscoreable).
    (evidence detail retained in the verification note); the amendment
    states the qualitative both-halves finding.
 
-**§6 defect confirmed at source (2026-08-17):** the anonymous API read of
-the current stored summary (revision `6a7017da97adb06288afef80`) contains
-`post &gt; pre` (×1) and `pinned &lt; unpinned` (×1) as literal entity
-strings — the correction is warranted, and both fixes plus the appended
-amendment touch only the `summary` response key.
+**§6 outcome (2026-08-17, superseding the morning's "defect confirmed"
+note):** the anonymous API read found both entity strings in the stored
+summary (revision `6a7017da97adb06288afef80`) — but that observed the
+*storage encoding*, not a rendering defect. The staged in-place fix was
+re-escaped by the registry's write path (round-trip diff caught all four
+sent comparators stored as entities), and the browser render check of the
+public page showed the intended literal characters displayed throughout,
+with zero entity strings visible. §6 was therefore revised from a
+correction to a dissolution record before submission; the appended
+amendment remains the only change, touching only the `summary` response
+key.
