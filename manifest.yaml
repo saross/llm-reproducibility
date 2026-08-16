@@ -566,10 +566,10 @@ evidence_packs:
   # Delivery to scoring spawns: workflow-prompt injection with the pack's
   # sha256 echoed in receipts, implemented with C9 at D3 prep (audit B3).
   harvester:
-    version: "1.0"
+    version: "1.1"
     file: scripts/harvest-artefact-metadata.py
-    last_updated: "2026-08-15"
-    description: Deterministic artefact-metadata harvester (plan C6); resolves declared links into per-paper evidence packs via the ratified endpoint list (erratum-log Entry 3 item 8)
+    last_updated: "2026-08-17"
+    description: Deterministic artefact-metadata harvester (plan C6); resolves declared links into per-paper evidence packs via the ratified endpoint list (erratum-log Entry 3 item 8). v1.1 adds the bounded identifier-recovery rule (amendment 2 SS2) — registrar + named-repository searches on registered title/author for unresolved links, candidates recorded for curation; curated recovered links flagged recovered_from
   links_registry:
     file: corpus/evidence-packs/declared-links.yaml
     description: Curated declared-artefact-links registry for the five pilots (harvester input; anchors each entry to its extraction record)

@@ -87,6 +87,25 @@ papers:
         link: "10.5281/zenodo.14561925"
         note: "Additional Zenodo DOI cited in the infrastructure record"
         source_anchor: "… reproducibility_infrastructure (cited identifier)"
+        # Identifier-recovery rule (amendment 2 §2, ruled 2026-08-15): this
+        # DOI 404s at DataCite and Zenodo (2026-08-15 finding). The bounded
+        # recovery searches run on the registered title + author below;
+        # candidates land in the pack record's recovery block for curation.
+        recovery:
+          title: "Is archaeology a science? Insights and imperatives from 10,000 articles and a year of reproducibility reviews"
+          author: "Ben Marwick"
+      - id: related-zenodo-recovered
+        type: data
+        link: "10.5281/zenodo.15603267"
+        note: >-
+          Recovered deposit for the dead cited DOI (identifier-recovery rule,
+          amendment 2 §2): research compendium for the publication. Curated
+          2026-08-17 from the recovery search's top Zenodo candidate on an
+          exact title match, then verified findable at DataCite (creator Ben
+          Marwick, Zenodo, 2025, cc-by-4.0). The dead link's own record stays
+          in the pack; the citation defect remains a study finding.
+        source_anchor: "recovery block of record datacite:10.5281/zenodo.14561925 (2026-08-17 harvest)"
+        recovered_from: "10.5281/zenodo.14561925"
 
   crema-et-al-2024:
     article_doi: "10.1016/j.jas.2024.105962"

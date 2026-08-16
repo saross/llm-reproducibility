@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Artefact-metadata harvester — deterministic evidence packs (plan C6).
 
-**Version:** 1.0
+**Version:** 1.1
 
 Resolves each pilot paper's declared artefact links (the curated registry at
 ``corpus/evidence-packs/declared-links.yaml``) into a per-paper evidence pack
@@ -55,8 +55,8 @@ REGISTRY_PATH = REPO_ROOT / "corpus" / "evidence-packs" / "declared-links.yaml"
 OUT_DIR = REPO_ROOT / "corpus" / "evidence-packs"
 ENV_PATH = Path.home() / "personal-assistant" / ".env"
 
-HARVESTER_VERSION = "1.0"
-USER_AGENT = ("llm-reproducibility-harvester/1.0 "
+HARVESTER_VERSION = "1.1"
+USER_AGENT = ("llm-reproducibility-harvester/1.1 "
               "(mailto:shawn@faims.edu.au; research-integrity study OSF "
               "10.17605/OSF.IO/DQNHG)")
 REQUEST_DELAY_S = 1.0
@@ -269,6 +269,82 @@ def licences_conflict(asserted: str, recorded: list[str]) -> bool:
     return True
 
 
+RECOVERY_PAGE_SIZE = 5
+
+
+def attempt_recovery(link: str, entry: dict) -> dict:
+    """Bounded identifier recovery (amendment 2 §2; registrant's 2026-08-15
+    ruling, precedent case marwick-2025's dead 10.5281/zenodo.14561925).
+
+    Exactly two searches, both recorded verbatim with hashes: one registrar
+    API query (DataCite for data/software artefact types, Crossref
+    otherwise) by the registered title + author, and one search of the
+    named repository where the dead link names one (currently: Zenodo).
+    Candidates are recorded for curation — this tool never promotes a
+    candidate itself. A curated recovered identifier re-enters the registry
+    as an ordinary link entry carrying `recovered_from`, so its resolved
+    pack record is flagged `recovered` while the citation defect stays
+    visible and reportable.
+    """
+    spec = entry.get("recovery") or {}
+    title = str(spec.get("title") or "").strip()
+    author = str(spec.get("author") or "").strip()
+    if not (title or author):
+        return {"attempted": False,
+                "note": "no recovery query registered (identifier-recovery "
+                        "rule, amendment 2 §2)"}
+    query = " ".join(part for part in (title, author) if part)
+    quoted = urllib.parse.quote(query)
+    searches: list[dict] = []
+
+    def run_search(name: str, url: str, hits_fn) -> None:
+        status, body = cached_fetch(url)
+        record = {"search": name, "request_url": url, "http_status": status,
+                  "response_sha256": (hashlib.sha256(body).hexdigest()
+                                      if body else None),
+                  "candidates": []}
+        if status == 200:
+            try:
+                document = json.loads(body.decode("utf-8"))
+                record["candidates"] = hits_fn(document)[:RECOVERY_PAGE_SIZE]
+            except (json.JSONDecodeError, UnicodeDecodeError, KeyError,
+                    TypeError):
+                record["note"] = "unparseable search response"
+        searches.append(record)
+
+    if str(entry.get("type") or "") in ("data", "dataset", "software"):
+        run_search(
+            "datacite",
+            f"https://api.datacite.org/dois?query={quoted}"
+            f"&page[size]={RECOVERY_PAGE_SIZE}",
+            lambda d: [{"doi": item.get("id"),
+                        "title": (((item.get("attributes") or {}).get("titles")
+                                   or [{}])[0]).get("title"),
+                        "publisher": (item.get("attributes") or {}).get("publisher")}
+                       for item in (d.get("data") or [])])
+    else:
+        run_search(
+            "crossref",
+            f"https://api.crossref.org/works?query.bibliographic={quoted}"
+            f"&rows={RECOVERY_PAGE_SIZE}",
+            lambda d: [{"doi": item.get("DOI"),
+                        "title": (item.get("title") or [None])[0]}
+                       for item in ((d.get("message") or {}).get("items") or [])])
+    if "10.5281/" in link or "zenodo" in link.lower():
+        run_search(
+            "zenodo",
+            f"https://zenodo.org/api/records?q={quoted}"
+            f"&size={RECOVERY_PAGE_SIZE}",
+            lambda d: [{"doi": ((hit.get("metadata") or {}).get("doi")
+                                or hit.get("doi")),
+                        "title": (hit.get("metadata") or {}).get("title")}
+                       for hit in ((d.get("hits") or {}).get("hits") or [])])
+    return {"attempted": True, "query": query, "searches": searches,
+            "note": "bounded recovery (amendment 2 §2): candidates recorded "
+                    "for curation, never auto-substituted for the cited "
+                    "identifier"}
+
+
 def harvest_link(entry: dict) -> list[dict]:
     """Resolve one registry entry into one or more pack records.
 
@@ -289,6 +365,12 @@ def harvest_link(entry: dict) -> list[dict]:
             "retrieved_at": retrieved_at,
             "licence_conflicts": [],
         }
+        # Identifier-recovery rule: a curated recovered link carries its
+        # dead predecessor; the resolved record is flagged, never a silent
+        # substitute (the dead link's own record remains in the pack).
+        if entry.get("recovered_from"):
+            base["recovered"] = True
+            base["recovered_from"] = str(entry["recovered_from"])
         if endpoint not in IMPLEMENTED:
             base.update({"status": "endpoint-flagged",
                          "note": f"'{endpoint}' is on the ratified flagged-additions "
@@ -309,6 +391,7 @@ def harvest_link(entry: dict) -> list[dict]:
             base["status"] = "unresolved"
             base["note"] = ("transport failure after retry" if status == 0
                             else f"HTTP {status}")
+            base["recovery"] = attempt_recovery(link, entry)
             records.append(base)
             continue
         try:
