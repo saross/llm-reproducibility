@@ -611,6 +611,24 @@ manifest.
       ≈ $27 API-equivalent at benchmark rates), harness
       `studies/open-science-compliance/protocol/validation/fair-benchmark-arm.workflow.js`.
       Standing API review gate presented before the run.
+      **D3 PREP DONE 2026-08-17** (`5d5a874`, `1d7e8d9`, `c01691c`):
+      reconcile-run v1.1 (evidence-pack hash + full-read verification;
+      ungoverned-agent skip); workflow v1.1 (per-paper pack injection —
+      prompt line is the reconciler-regex source of truth — and a
+      per-item haiku Reconcile stage binding verdicts to scoring
+      agent_ids: the C9 hard stop; returns clean + reconcile_failures);
+      harvester v1.1 with the identifier-recovery rule LIVE (first run
+      recovered marwick's lost deposit: dead zenodo.14561925 → curated
+      zenodo.15603267, the paper's research compendium, verified at
+      DataCite, flagged recovered in the pack); all five packs
+      re-harvested fresh for the D3 cycle; E8-v2 adjudication worksheet
+      generated (150 items, 68 disputed joined, 3 entailed flips, seeded
+      10-item spot-check) at
+      `outputs/validation/e8-v2-rederivation/worksheet.md`.
+      **Remaining before the run:** S4 validator probe (1 cheap spawn) +
+      the standing API gate — presented 2026-08-17, awaiting approval;
+      Shawn's worksheet adjudication sitting (concordance computes once
+      E8 v2 lands; stability computes immediately).
 - [ ] **D4. Gates → selection → census.** Pass: cheapest eligible arm,
       registered regression gate, census. Still below: majority-vote
       consequence, now with a defensible claim that the residual is
