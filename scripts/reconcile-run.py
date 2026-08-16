@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Post-run reconciliation of governed workflow spawns (plan C8 + C9).
 
-**Version:** 1.0
+**Version:** 1.1
 
 The C2 probes established that SubagentStop gate decisions are advisory in
 the workflow lane (a block is logged but the output is collected anyway)
@@ -42,15 +42,24 @@ logs; --out defaults to <dir>/reconciliation/.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.machinery
 import importlib.util
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOKS_DIR = REPO_ROOT / ".claude" / "hooks"
+
+# D3 prep (2026-08-17): the benchmark workflow injects exactly this line per
+# spawn (single source of format truth: fair-benchmark-arm.workflow.js); the
+# reconciler verifies the pack's bytes still match the declared hash and that
+# the spawn actually read the pack in full.
+PACK_DECLARATION_RE = re.compile(
+    r"Evidence pack \(read in full\): (\S+) \(sha256 ([0-9a-f]{64})\)")
 
 DEFAULT_ALLOWED_PREFIXES = (
     "corpus/",
@@ -143,6 +152,19 @@ def access_allowed(target: str, allowed_prefixes: tuple[str, ...],
                for prefix in tuple(allowed_prefixes) + tuple(extra_allowed))
 
 
+def declared_pack(lines: list[str]) -> tuple[str, str] | None:
+    """The workflow-prompt evidence-pack declaration, if any: (path, sha256).
+
+    Scans raw transcript lines so the check is robust to message shape; the
+    first declaration wins (one pack per scoring spawn by design).
+    """
+    for line in lines:
+        match = PACK_DECLARATION_RE.search(line)
+        if match:
+            return match.group(1), match.group(2)
+    return None
+
+
 def revalidate(lines: list[str], agent_type: str, manifest: dict, gate,
                hooklib) -> dict:
     """Re-run the gate's receipt checks post-hoc on a completed transcript."""
@@ -181,6 +203,32 @@ def revalidate(lines: list[str], agent_type: str, manifest: dict, gate,
         elif not any("limit" not in c["input"] and "offset" not in c["input"]
                      for c in successful):
             problems.append(f"declared pull truncated: {declared_path}")
+
+    # D3 pack verification (amendment 2 §2): a workflow-declared evidence
+    # pack must still hash to its declared value AND have been fully read —
+    # the attempts-are-not-reads rule applies to packs exactly as to pulls.
+    pack = declared_pack(lines)
+    if pack:
+        pack_path, pack_sha = pack
+        try:
+            actual = hashlib.sha256((REPO_ROOT / pack_path).read_bytes()).hexdigest()
+        except OSError:
+            actual = None
+        if actual is None:
+            problems.append(f"declared evidence pack missing on disk: {pack_path}")
+        elif actual != pack_sha:
+            problems.append(f"evidence pack sha256 drift: {pack_path}")
+        pack_calls = [c for c in calls
+                      if pack_path in str(c["input"].get("file_path", ""))]
+        pack_ok = [c for c in pack_calls if not c["error"]]
+        if not pack_calls:
+            problems.append(f"declared evidence pack never read: {pack_path}")
+        elif not pack_ok:
+            problems.append(f"evidence pack read attempted but every Read "
+                            f"errored (never actually read): {pack_path}")
+        elif not any("limit" not in c["input"] and "offset" not in c["input"]
+                     for c in pack_ok):
+            problems.append(f"evidence pack read truncated: {pack_path}")
     return {"valid": not problems, "problems": problems,
             "paper_slug": str((payload or {}).get("paper_slug") or "")}
 
@@ -216,11 +264,21 @@ def reconcile(run_dir: Path, allowed_prefixes: tuple[str, ...],
     push_events = load_log(push_log_path)
 
     agents = []
+    skipped_ungoverned = []
     for transcript in sorted(run_dir.glob("agent-*.jsonl")):
         agent_id = transcript.stem.replace("agent-", "")
         meta_path = transcript.parent / f"{transcript.stem}.meta.json"
         meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.is_file() else {}
         agent_type = str(meta.get("agentType") or "")
+        # v1.1: only governed agent types are reconciled. The D3 workflow's
+        # per-item reconcile agents (general-purpose, mechanical) write
+        # transcripts into the same run directory; validating them as
+        # governed spawns would poison every report. They are counted, not
+        # judged — the governed set is the reconciliation's whole subject.
+        if agent_type not in (manifest.get("agent_definitions") or {}):
+            skipped_ungoverned.append({"agent_id": agent_id,
+                                       "agent_type": agent_type})
+            continue
         lines = transcript.read_text(encoding="utf-8").splitlines()
 
         validation = revalidate(lines, agent_type, manifest, gate, hooklib)
@@ -250,10 +308,11 @@ def reconcile(run_dir: Path, allowed_prefixes: tuple[str, ...],
 
     clean = all(a["reconciled"] for a in agents)
     return {
-        "reconciliation_version": "1.0",
+        "reconciliation_version": "1.1",
         "run_dir": str(run_dir),
         "reconciled_at": datetime.now(timezone.utc).isoformat(),
         "agents": agents,
+        "skipped_ungoverned": skipped_ungoverned,
         "spawns": len(agents),
         "spawns_reconciled": sum(a["reconciled"] for a in agents),
         "clean": clean,

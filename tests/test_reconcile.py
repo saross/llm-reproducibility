@@ -75,9 +75,12 @@ class ReconcileTests(unittest.TestCase):
         self.push_log.write_text("", encoding="utf-8")
 
     def write_agent(self, agent_id: str, reads: list[tuple[str, bool]],
-                    output: dict) -> None:
+                    output: dict, prompt: str | None = None) -> None:
         """Write one agent transcript (reads = [(path, is_error)]) + meta."""
         entries = []
+        if prompt is not None:
+            entries.append({"message": {"role": "user", "content": [
+                {"type": "text", "text": prompt}]}})
         for index, (path, is_error) in enumerate(reads):
             use_id = f"toolu_{agent_id}_{index}"
             entries.append({"message": {"content": [
@@ -112,6 +115,80 @@ class ReconcileTests(unittest.TestCase):
         agent = report["agents"][0]
         self.assertTrue(agent["reconciled"])
         self.assertFalse(agent["divergence"]["no_gate_event"])
+
+    # --- evidence-pack verification (D3 prep, reconcile-run v1.1) ---------
+
+    def write_pack(self, rel: str = "corpus/evidence-packs/fixture.json",
+                   body: str = '{"paper_slug": "fixture", "records": []}') -> tuple[str, str]:
+        """Write a fixture pack under a patched REPO_ROOT; return (path, sha)."""
+        import hashlib as _hashlib
+        original_root = reconciler.REPO_ROOT
+        reconciler.REPO_ROOT = self.run_dir
+        self.addCleanup(setattr, reconciler, "REPO_ROOT", original_root)
+        pack = self.run_dir / rel
+        pack.parent.mkdir(parents=True, exist_ok=True)
+        pack.write_text(body, encoding="utf-8")
+        return rel, _hashlib.sha256(pack.read_bytes()).hexdigest()
+
+    def pack_prompt(self, rel: str, sha: str) -> str:
+        return (f"Benchmark scoring task. "
+                f"Evidence pack (read in full): {rel} (sha256 {sha})")
+
+    def test_pack_declared_read_and_hashed_reconciles(self) -> None:
+        rel, sha = self.write_pack()
+        self.write_agent("a1", [("corpus/paper.md", False), (rel, False)],
+                         payload(), prompt=self.pack_prompt(rel, sha))
+        self.log_gate_event("a1", "pass")
+        report = self.run_reconcile()
+        self.assertTrue(report["clean"], report)
+
+    def test_pack_sha_drift_fails(self) -> None:
+        rel, sha = self.write_pack()
+        (self.run_dir / rel).write_text('{"tampered": true}', encoding="utf-8")
+        self.write_agent("a1", [(rel, False)], payload(),
+                         prompt=self.pack_prompt(rel, sha))
+        self.log_gate_event("a1", "pass")
+        report = self.run_reconcile()
+        self.assertFalse(report["clean"])
+        self.assertTrue(any("evidence pack sha256 drift" in p
+                            for p in report["agents"][0]["receipts"]["problems"]), report)
+
+    def test_pack_declared_but_never_read_fails(self) -> None:
+        rel, sha = self.write_pack()
+        self.write_agent("a1", [("corpus/paper.md", False)], payload(),
+                         prompt=self.pack_prompt(rel, sha))
+        self.log_gate_event("a1", "pass")
+        report = self.run_reconcile()
+        self.assertFalse(report["clean"])
+        self.assertTrue(any("never read" in p
+                            for p in report["agents"][0]["receipts"]["problems"]), report)
+
+    def test_pack_read_that_only_errored_fails(self) -> None:
+        rel, sha = self.write_pack()
+        self.write_agent("a1", [(rel, True)], payload(),
+                         prompt=self.pack_prompt(rel, sha))
+        self.log_gate_event("a1", "pass")
+        report = self.run_reconcile()
+        self.assertFalse(report["clean"])
+        self.assertTrue(any("every Read errored" in p
+                            for p in report["agents"][0]["receipts"]["problems"]), report)
+
+    def test_ungoverned_agent_skipped_not_judged(self) -> None:
+        """A general-purpose reconcile agent's own transcript in the run dir
+        must not poison the report (reconcile-run v1.1)."""
+        self.write_agent("a1", [("corpus/paper.md", False)], payload())
+        self.log_gate_event("a1", "pass")
+        # An ungoverned agent with no receipts at all, same directory.
+        self.write_agent("r1", [("scripts/reconcile-run.py", False)],
+                         {"slug": "fixture", "verdict": "pass"})
+        (self.run_dir / "agent-r1.meta.json").write_text(
+            json.dumps({"agentType": "general-purpose"}), encoding="utf-8")
+        report = self.run_reconcile()
+        self.assertTrue(report["clean"], report)
+        self.assertEqual(report["spawns"], 1)
+        self.assertEqual(len(report["skipped_ungoverned"]), 1)
+        self.assertEqual(report["skipped_ungoverned"][0]["agent_type"],
+                         "general-purpose")
 
     def test_invalid_receipts_fail(self) -> None:
         bad = payload()

@@ -592,10 +592,10 @@ run_reconciliation:
   # §4), gate-events-vs-outputs divergence, and log-slice archival. Wire
   # into the benchmark workflow at D3 prep; exit 1 is a hard stop.
   tool:
-    version: "1.0"
+    version: "1.1"
     file: scripts/reconcile-run.py
-    last_updated: "2026-08-15"
-    description: Post-run reconciliation of governed workflow spawns (plan C8+C9); proven against the three 2026-08-03 benchmark arms (45/45 clean) and the C2 probe run (probe C correctly failed)
+    last_updated: "2026-08-17"
+    description: Post-run reconciliation of governed workflow spawns (plan C8+C9); proven against the three 2026-08-03 benchmark arms (45/45 clean) and the C2 probe run (probe C correctly failed). v1.1 (D3 prep) adds evidence-pack verification — declared pack hash re-computed and full-read enforced (attempts-are-not-reads)
 
 entity_checks:
   # E3 — run-reconciliation tool (plan C8+C9, 2026-08-15)
