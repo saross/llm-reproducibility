@@ -417,3 +417,17 @@ pending the Phase B concordance-reference decision and A3.
     structure forward); the two escaped-comparator cosmetic fixes flagged
     at amendment 1 lodgement; `fair-principles-guide.md` alignment with
     the clarified text plus promotion pull → push (plan A3).
+
+**D1 window executed 2026-08-15** (branch `feat/d1-amendment-2-window`):
+items 1–9 implemented as FAIR instrument v2.1 (canon region; Pass 6 mirror
+re-spliced byte-identically), with the platform table carrying the
+registrant's 2026-08-15 rulings on the platform-row verification note (all
+§A rewrites; row 4 graded — ADS by construction, DANS/tDAR rung-(i);
+all §B additions; operative-default footnote; harvester-integrity
+commitment) and the same-day CoreTrustSeal/re3data enrichment evidence.
+Item 10 executed: guide v1.1 aligned and promoted pull→push;
+agent definitions v1.1; C7 content-integrity hashes registered and
+gate-enforced. Consolidated amendment text drafted at
+`amendment-2-draft.md`; the Phase B reference re-derivation shape (ruled
+2026-08-15) is pre-specified in its §3. Lodgement (plan D2) remains the
+hard stop before the D3 re-benchmark.

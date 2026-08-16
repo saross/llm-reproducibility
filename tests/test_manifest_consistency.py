@@ -105,8 +105,8 @@ REFITEM_REL = "outputs/t1/extraction.json"
 REFITEM_TEXT = '{"infrastructure": {"fair_assessment": {"scale": "fixture"}}}\n'
 
 
-def build_manifest(agent_sha: str) -> str:
-    """Return fixture manifest text with the given agent-definition hash."""
+def build_manifest(agent_sha: str, canon_sha: str) -> str:
+    """Return fixture manifest text with the given agent and canon hashes."""
     return f"""shared_content_policy:
   scan_directories:
     - protocol/instruments
@@ -117,6 +117,7 @@ shared_content:
     canonical_file: {CANONICAL_REL}
     version: "1.0"
     receipt_token: "feedfacecafebeef"
+    sha256: "{canon_sha}"
     consumers:
       - agent: test-assessor
         mechanism: push
@@ -175,8 +176,9 @@ class ManifestConsistencyTests(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(text, encoding="utf-8")
         agent_sha = hashlib.sha256((self.root / AGENT_REL).read_bytes()).hexdigest()
+        canon_sha = hashlib.sha256((self.root / CANONICAL_REL).read_bytes()).hexdigest()
         self.manifest = self.root / "manifest.yaml"
-        self.manifest.write_text(build_manifest(agent_sha), encoding="utf-8")
+        self.manifest.write_text(build_manifest(agent_sha, canon_sha), encoding="utf-8")
 
     def run_checks(self) -> "checker.Report":
         return checker.run_checks(self.manifest, self.root, preflight=False)
@@ -215,6 +217,24 @@ class ManifestConsistencyTests(unittest.TestCase):
         (self.root / CANONICAL_REL).unlink()
         self.assert_error_containing("canonical file missing")
 
+    # --- C7 content-integrity hashes (ruled 2026-08-15) ------------------
+
+    def test_shared_sha256_missing_caught(self) -> None:
+        """Every shared_content entry must register a C7 hash."""
+        text = self.manifest.read_text(encoding="utf-8")
+        text = re.sub(r'    sha256: "[0-9a-f]{64}"\n', "", text, count=1)
+        self.manifest.write_text(text, encoding="utf-8")
+        self.assert_error_containing("no sha256 registered")
+
+    def test_shared_sha256_drift_caught(self) -> None:
+        """Registered hash must match the canonical file's actual bytes —
+        even when the version line and receipt token still agree."""
+        text = self.manifest.read_text(encoding="utf-8")
+        text = re.sub(r'    sha256: "[0-9a-f]{64}"',
+                      f'    sha256: "{"0" * 64}"', text, count=1)
+        self.manifest.write_text(text, encoding="utf-8")
+        self.assert_error_containing("sha256 drift")
+
     def test_mirror_block_drift_caught(self) -> None:
         self.rewrite(MIRROR_REL, "C2: Second criterion  /1", "C2: Second criterion  /2")
         self.assert_error_containing("lacks canonical fenced block")
@@ -228,11 +248,16 @@ class ManifestConsistencyTests(unittest.TestCase):
         self.assert_error_containing("does not cite receipt token")
 
     def reregister_agent_hash(self) -> None:
-        """Update the manifest's registered hash after a deliberate agent-file edit."""
+        """Update the manifest's registered hash after a deliberate agent-file edit.
+
+        Context-anchored on the agent's `file:` line so it can never clobber a
+        shared_content entry's C7 hash (which shares the field name).
+        """
         new_sha = hashlib.sha256((self.root / AGENT_REL).read_bytes()).hexdigest()
         manifest_text = self.manifest.read_text(encoding="utf-8")
         self.manifest.write_text(
-            re.sub(r'sha256: "[0-9a-f]{64}"', f'sha256: "{new_sha}"', manifest_text),
+            re.sub(rf'(file: {re.escape(AGENT_REL)}\n    sha256: ")[0-9a-f]{{64}}',
+                   rf'\g<1>{new_sha}', manifest_text),
             encoding="utf-8")
 
     def test_push_consumer_without_evidence_caught(self) -> None:
@@ -332,6 +357,19 @@ class ManifestConsistencyTests(unittest.TestCase):
                 f"<!-- {kind}-end: test-instrument -->",
                 f"<!-- {kind}-end: test-instrument#bands -->")
             path.write_text(text, encoding="utf-8")
+        self.resync_canon_sha()
+
+    def resync_canon_sha(self) -> None:
+        """Re-register the canonical file's C7 hash after a deliberate edit.
+
+        Context-anchored on the receipt-token line, mirroring
+        reregister_agent_hash's anchoring discipline.
+        """
+        new_sha = hashlib.sha256((self.root / CANONICAL_REL).read_bytes()).hexdigest()
+        text = self.manifest.read_text(encoding="utf-8")
+        text = re.sub(r'(receipt_token: "feedfacecafebeef"\n    sha256: ")[0-9a-f]{64}',
+                      rf'\g<1>{new_sha}', text)
+        self.manifest.write_text(text, encoding="utf-8")
 
     def test_segmented_mirror_baseline_passes(self) -> None:
         self.segment_the_fixture()

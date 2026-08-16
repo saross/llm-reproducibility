@@ -1,5 +1,11 @@
 # FAIR Principles Assessment Guide
 
+**Version:** 1.1 (instrument-v2.1 alignment, 2026-08-15; v1.0 2025-11-11)
+**Status:** governed-instrument — registered in `manifest.yaml` `shared_content`;
+**pushed** to every FAIR-scoring spawn (promoted pull → push 2026-08-15, plan A3,
+so interpretive context is uniform by construction); edits ride the §8
+regression gate.
+
 **Purpose**: Reference guide for assessing FAIR compliance in research infrastructure
 
 **Context**: FAIR emphasises machine-actionability — the capacity of computational systems to find, access, interoperate with, and reuse data **with minimal human intervention**
@@ -117,7 +123,38 @@ The **FAIR Guiding Principles** (Wilkinson et al., 2016, *Scientific Data*) esta
 
 ## FAIR Scoring Framework
 
-**Rubric version:** 2.0 (standardised 2026-02-11)
+**Rubric version:** 2.1 (clarifications 2026-08-15; v2.0 standardised 2026-02-11)
+
+### Instrument v2.1 alignment (2026-08-15)
+
+The canonical FAIR instrument
+(`studies/open-science-compliance/protocol/instruments/fair-instrument.md`,
+v2.1) **governs wherever this guide is silent or diverges** — including in
+this guide's worked examples, which are illustrative, not normative. The
+v2.1 clarification sections to apply:
+
+- **Research-surface rule**: the unit of assessment is the complete set of
+  digital artefacts required to reproduce the reported results, as reachable
+  from the paper; creator/depositor identity and responsibility for closure
+  never affect scores; per-input provenance is recorded as non-scoring
+  metadata.
+- **Aggregation**: sub-principles score the principal artefact(s),
+  conjunctively for data; the paper's own analysis scripts are always
+  principal for code.
+- **Evidence admissibility**: the two-rung ladder (paper + verified evidence
+  pack; then the closed platform entitlement table); unscoreable→0 only
+  after the ladder is exhausted.
+- **A1.2 open case**: a fully open resource requiring no authentication
+  satisfies A1.2.
+- **F1 granularity**: an artefact's own PID, or the article DOI where the
+  artefact is a supplement of that article (F2/F3/F4 stay artefact-level).
+- **R1.1 licence semantics**: per-artefact scoring; the most-restrictive
+  rule only for same-artefact disagreements; a platform's licence field does
+  not itself satisfy R1.1.
+- **R1.3 boundary**: deposit-level standards only; methodological standards
+  (IntCal20, OxCal) do not qualify; the accredited-repository route is
+  graded per the platform table (ADS by construction; DANS and tDAR need
+  direct evidence).
 
 ### Scoring Approach
 
@@ -140,6 +177,11 @@ When data or code is absent or not applicable to the research type, set `"availa
 **F1: Persistent identifiers** (0 or 1 point)
 
 - Data/code has DOI, IGSN, SWHID, or accession number? → 1 point
+- Artefact distributed as a supplement of the article, under the article
+  DOI? → 1 point (v2.1: a declared departure from the strict object-PID
+  reading; the granularity deficiency is scored at F2/F3/F4, which stay
+  strictly artefact-level — F subtotals 4/4 own-PID, 1/4 supplement-only,
+  0/4 unpublished)
 - Only URLs or "available on request"? → 0 points
 
 **F2: Rich metadata** (0 or 1 point)
@@ -180,8 +222,12 @@ When data or code is absent or not applicable to the research type, set `"availa
 **A1.2: Authentication/authorisation where needed** (0 or 1 point)
 
 - Evaluates protocol quality **for the accessible portion** of the data
+- **Fully open resource requiring no authentication? → 1 point** (v2.1: the
+  protocol supports authentication where needed, and none is needed)
 - Restricted access with **ethical justification** (human subjects, Indigenous data, endangered species, cultural heritage protection)? → 1 point
 - **CARE-compliant restrictions = POSITIVE signal**
+- Access control exists or is warranted but the mechanism is undocumented
+  or unjustified? → 0 points (v2.1: this is the only 0 case)
 - Completely closed with no justification? → 0 points
 
 **A2: Metadata persistent even if data unavailable** (0 or 1 point)
@@ -228,6 +274,12 @@ When data or code is absent or not applicable to the research type, set `"availa
 
 - Explicit machine-readable licence (CC-BY, CC0, MIT, GPL, ODbL, custom with terms)? → 1 point
 - No licence, "all rights reserved", or "ask permission"? → 0 points
+- v2.1 semantics: licences are assessed **per artefact** (paper, dataset,
+  software each on its own licence — a clean division, not a conflict);
+  the most-restrictive rule applies only where sources disagree about the
+  licence of the *same* artefact; a platform's mandatory licence field
+  does not itself satisfy R1.1 — the licence must be identified (and a
+  default-valued licence, once identified, is fully operative)
 
 **R1.2: Provenance** (0 or 1 point)
 
@@ -237,6 +289,14 @@ When data or code is absent or not applicable to the research type, set `"availa
 **R1.3: Community standards** (0 or 1 point)
 
 - Follows discipline-specific format (Darwin Core, EML, CIDOC-CRM, Dublin Core, ARIADNEplus, DataCite, CRAN standards)? → 1 point
+- Deposited in an accredited domain repository whose ingest enforces its
+  metadata standard? → 1 point by construction (v2.1: graded per the
+  platform table — currently ADS; DANS and tDAR require direct evidence)
+- For code: package structure, CITATION.cff, CodeMeta, or community review
+  (CRAN, JOSS, rOpenSci)? → 1 point
+- **Methodological standards (IntCal20, OxCal, established methods) do NOT
+  qualify** (v2.1: R1.3 scores deposit-level standards — artefact
+  reusability, not method quality)
 - No community standard applied? → 0 points
 
 **Reusable total**: 0-4 points
@@ -1397,6 +1457,10 @@ Instead of single overall scores, use **categorical profiles**:
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2025-11-11
-**Part of**: research-assessor skill infrastructure assessment capability
+**Document Version**: 1.1
+**Last Updated**: 2026-08-15
+**Part of**: research-assessor skill infrastructure assessment capability;
+pushed to FAIR-scoring spawns as a governed instrument (manifest
+`shared_content`)
+
+Receipt-token: 0eed0b8d570bf55e

@@ -499,7 +499,22 @@ class PushListTests(unittest.TestCase):
             self.assertIn("fair-instrument", names,
                           f"{arm} must be pushed the FAIR instrument; got {names}")
             spec = next(s for s in specs if s["name"] == "fair-instrument")
-            self.assertEqual(spec["version"], "2.0")
+            self.assertEqual(spec["version"], "2.1")
+            self.assertTrue(spec["token"])
+
+    def test_fair_assessors_receive_the_principles_guide(self) -> None:
+        """A3 (2026-08-15): the guide is pushed, not pulled — uniform
+        interpretive context by construction. Regression-pins the promotion."""
+        hooklib = load_hook_module(HOOKS_DIR / "hooklib.py", "hooklib_under_test")
+        manifest = hooklib.load_manifest()
+        for arm in ("fair-assessor-sonnet-5", "fair-assessor-opus-5",
+                    "fair-assessor-fable-5"):
+            specs = hooklib.pushed_instruments(manifest, arm)
+            names = {s["name"] for s in specs}
+            self.assertIn("fair-principles-guide", names,
+                          f"{arm} must be pushed the principles guide; got {names}")
+            spec = next(s for s in specs if s["name"] == "fair-principles-guide")
+            self.assertEqual(spec["version"], "1.1")
             self.assertTrue(spec["token"])
 
 

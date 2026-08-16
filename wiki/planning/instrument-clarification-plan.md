@@ -87,10 +87,17 @@ consumed (see Phase D).
       - R1.3 — what counts as a domain-relevant community standard?
       - F-block — does a DOI-bearing *upstream* dataset credit the paper's
         own data FAIR?
-- [ ] **A3. Align `fair-principles-guide.md`** with the clarified text and
-      decide its routing (candidate: promote pull → push so interpretive
-      context is uniform by construction; rides amendment 2's delivery
-      spec, subsuming the §2 card question).
+- [x] 2026-08-15 **A3. Align `fair-principles-guide.md`** with the clarified
+      text and decide its routing — DONE in the D1 window (branch
+      `feat/d1-amendment-2-window`): guide v1.0 → v1.1 with an
+      instrument-v2.1 alignment section (supremacy clause; F1/A1.2/R1.1/
+      R1.3 bullets patched to the ratified rules), registered in
+      `shared_content` and **promoted pull → push** to all three
+      fair-assessor arms, receipt token + version line + C7 hash;
+      push-list regression test pins the promotion. Original candidate
+      adopted as drafted: interpretive context uniform by construction,
+      pre-declared in amendment 2 §5 (not consuming the routing-fix
+      attempt).
 
 ### Working position on decision point #1 (2026-08-10, pending scout)
 
@@ -572,13 +579,21 @@ manifest.
       silent.** Repositories are assessed once; the table is the
       instrument's memory of that assessment and is built out over
       time (Dataverse, ADA, Figshare, Dryad flagged).
-- [ ] **D1. Consolidate amendment 2:** instrument clarifications (A2
-      outputs), concordance-reference decision (B), guide routing (A3),
-      the remediation ladder restated for the new check (carry §2's
-      structure: one routing-fix attempt, single re-run, else majority
-      vote), the platform-table corrections as ruled 2026-08-15
-      (decision log), plus the two escaped-comparator cosmetic fixes
-      flagged at amendment 1 lodgement.
+- [x] 2026-08-15 **D1. Consolidate amendment 2** — EXECUTED as the
+      governed-edit window on branch `feat/d1-amendment-2-window`
+      (four commits: instrument v2.1 + mirror + manifest; A3 guide
+      promotion + agent definitions v1.1; C7 hashes + gate + hook
+      byte-verification; amendment-2 draft + erratum-log execution
+      note). The consolidated draft
+      (`studies/open-science-compliance/prereg/amendment-2-draft.md`)
+      carries: instrument clarifications (items 1–9 + corrected platform
+      table), §2 evidence-pack/read-scope re-specification superseding
+      amendment 1 §4 (with pack-staleness rule + harvester-integrity
+      commitment), §3 E8-v2 reference re-derivation (Phase B shape as
+      ruled), §4 re-validation design + restated remediation ladder,
+      §5 delivery/receipts spec, §6 escaped-comparator fixes, and the
+      D2 pre-lodgement checklist. **Awaiting the registrant's read +
+      branch merge; then D2.**
 - [ ] **D2. Lodge** via the proven OSF API route (versioned registration
       update; DOI unchanged).
 - [ ] **D3. Re-benchmark** on the clarified instrument, schema v1.1, and
@@ -620,3 +635,5 @@ manifest.
 | 2026-08-15 | **Platform-table corrections RULED:** §A rewrites 1/2/4/5 accepted as drafted (DataCite tombstone; Zenodo licence-field scoped to open records; GitLab no-SPDX/opt-in split from GitHub; Crossref persistence = member obligation + right, not warranty); row 4 graded within one row — ADS keeps R1.3-by-construction, DANS and tDAR require rung-(i) evidence (dye data R1.3 flip unaffected: dye's deposit is ADS, DOI 10.5284/1018290); §B additions 6/8/9/10/11/13 all adopted incl. the Zenodo persistence strengthening; item 7 = footnote on Zenodo+DANS rows; item 12 = amendment-2 methods commitment (rendering + challenge-page detection), implementation at D3 prep | Shawn |
 | 2026-08-15 | **Operative-default principle (item 7 footnote wording):** a default-valued licence is fully operative even where author choice is doubtful — the instrument assesses the research surface, not intent; the footnote records the empirical default-domination (82.6% Zenodo CC-BY-4.0; DANS CC0) as interpretive context only, never a score modifier | Shawn |
 | 2026-08-15 | **Infrastructure-layer evaluation principle + table build-out endorsed** (from Shawn's eResearch practice): evaluate at the infrastructure layer, where all lodged artefacts inherit platform characteristics; artefact-level investigation only where the infrastructure is silent; repositories assessed once, so enrich rows with CoreTrustSeal + re3data evidence and build the table out over time → new item D1-prep | Shawn |
+| 2026-08-15 | **A3 + D1 governed-edit window EXECUTED** on branch `feat/d1-amendment-2-window` (per the adopted one-batch contract): instrument v2.1 with ratified clarifications + corrected platform table (mirror byte-synced); guide v1.1 aligned + promoted pull→push; agent definitions v1.1 (diff-verified variants); C7 sha256 hashes registered, gate-required, and push-hook byte-verified; amendment-2 draft consolidated. Gate PASS 66/66, tests 207 green throughout. Awaiting registrant read + merge, then D2 lodgement (hard stop before D3) | Claude (build); Shawn (read pending) |
+| 2026-08-15 | **Identifier-recovery rule adopted** (amendment 2 §2): where a declared DOI/PID fails to resolve, attempt a bounded recovery — one registrar-API search (DataCite/Crossref) by title + author, one search of the named repository — before recording a dead link; recovered records enter the pack flagged `recovered` (query recorded), never silently substituted for the cited identifier; the citation defect stays reportable as a finding. No heroic efforts — the analogue of the reproduction lane's minimal documented code corrections. Harvester implementation rides D3 prep (before the next pack harvest); marwick's dead zenodo.14561925 is the precedent case | Shawn |

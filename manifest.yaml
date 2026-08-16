@@ -365,9 +365,10 @@ shared_content_policy:
 shared_content:
   fair-instrument:
     canonical_file: studies/open-science-compliance/protocol/instruments/fair-instrument.md
-    version: "2.0"
-    receipt_token: "3ddcbfd82575a2f8"
-    status: frozen-by-osf-registration  # DOI 10.17605/OSF.IO/DQNHG; edits need regression gate + erratum + amendment
+    version: "2.1"
+    receipt_token: "5ff4c48c4f5c7321"
+    sha256: "299fe8abc342f6736474c2312cf62ee02a0f26957d6d00a9831ddd60a071851e"  # C7 content-integrity hash (2026-08-15)
+    status: frozen-by-osf-registration  # DOI 10.17605/OSF.IO/DQNHG; v2.1 per erratum Entry 3 (ratified 2026-08-14) + 2026-08-15 platform-table rulings; amendment 2 must lodge before D3 scoring
     consumers:
       - agent: fair-assessor-sonnet-5   # per-model variant (benchmark: Sonnet 5 + Opus 5 + Fable 5)
         mechanism: push                 # SubagentStart injection, receipt required
@@ -382,6 +383,7 @@ shared_content:
     canonical_file: studies/open-science-compliance/protocol/instruments/data-availability-taxonomy.md
     version: "1.0"
     receipt_token: "068d5f05793429d7"
+    sha256: "1c6ce7dc2109335a043403ca2aabaaa1cc852b8887197988ff5014ffe6b1416e"  # C7 content-integrity hash (2026-08-15)
     status: frozen-by-osf-registration  # prereg §7.3; L-levels assigned at reproduction time only
     consumers:
       - agent: reproduction-planner
@@ -390,6 +392,7 @@ shared_content:
     canonical_file: studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md
     version: "1.0"
     receipt_token: "fe9bca3d3c95f931"
+    sha256: "dfbbdb5b738d44f84f4c0cf250c548943b21c94e7f9c8e790f89235d90b3d290"  # C7 content-integrity hash (2026-08-15)
     status: frozen-by-osf-registration  # prereg §7.2/§7.4/§7.5 + reproduction protocol v1.1
     consumers:
       - agent: reproduction-executor
@@ -406,6 +409,7 @@ shared_content:
     canonical_file: studies/open-science-compliance/protocol/instruments/coverage-rules.md
     version: "1.0"
     receipt_token: "a2a4c0a899291c2b"
+    sha256: "b271126191888cc4792a51493284e3427bb56d7c51e56e0aecd44b0032501dbd"  # C7 content-integrity hash (2026-08-15)
     status: frozen-by-osf-registration  # prereg §7.6; denominator lock
     consumers:
       - agent: reproduction-planner
@@ -416,6 +420,7 @@ shared_content:
     canonical_file: studies/open-science-compliance/protocol/instruments/eligibility-criteria.md
     version: "1.0"
     receipt_token: "8f88ae3af8e03284"
+    sha256: "ede77cb28aa36600c12a507a490681af23a04316b1a206939af97b4442993207"  # C7 content-integrity hash (2026-08-15)
     status: frozen-by-osf-registration  # prereg §4–§5 incl. compute cap
     consumers:
       - agent: reproduction-planner
@@ -424,6 +429,7 @@ shared_content:
     canonical_file: .claude/shared/invariants.md
     version: "1.0"
     receipt_token: "f847020d25d57382"
+    sha256: "1983c03468f5ae22732787c348946fd995c5487cf3b85a80dc6c2d900755c534"  # C7 content-integrity hash (2026-08-15)
     status: frozen-by-osf-registration  # anchored in prereg §8; plan §4.3
     consumers:
       - agent: reproduction-planner
@@ -436,9 +442,23 @@ shared_content:
     canonical_file: .claude/skills/reproduction-assessor/references/adversarial-review-framework.md
     version: "1.1"
     receipt_token: "0f83c3181c5dbe00"
+    sha256: "716e3cbe1162ed7bc4e455acd21774170bc505004aced7510f4aaf064e06984b"  # C7 content-integrity hash (2026-08-15)
     status: governed-instrument  # not OSF-frozen; §8 regression gate applies (promoted pull→push, design §5)
     consumers:
       - agent: adversarial-reviewer
+        mechanism: push
+  fair-principles-guide:
+    canonical_file: .claude/skills/research-assessor/references/infrastructure/fair-principles-guide.md
+    version: "1.1"
+    receipt_token: "0eed0b8d570bf55e"
+    sha256: "f9405dde7391b3aaf75e0bcff7354af72969b80749fd0b757717d38379cced71"  # C7 content-integrity hash (2026-08-15)
+    status: governed-instrument  # promoted pull→push 2026-08-15 (plan A3, D1 window): benchmark receipts showed inconsistent pulling (sonnet 9/15, and pull counts were attempt-based); pushing makes interpretive context uniform by construction. The research-assessor human lane reads the same file in place (it lives inside the skill) — no mirror.
+    consumers:
+      - agent: fair-assessor-sonnet-5
+        mechanism: push
+      - agent: fair-assessor-opus-5
+        mechanism: push
+      - agent: fair-assessor-fable-5
         mechanism: push
 
 # Agent-definition registry (routing design §3.4 hot-reload guard, added
@@ -475,19 +495,19 @@ shared_content:
 agent_definitions:
   fair-assessor-sonnet-5:
     file: .claude/agents/fair-assessor-sonnet-5.md
-    version: "1.0"
+    version: "1.1"
     model: claude-sonnet-5
-    sha256: "f48e29d2aef5bc902d90d229e9daa74de9ab08da87ff16c62405def7b2e93e87"
+    sha256: "e890d27042b8c5e29b9dbbcb88bf9acc099e4cbbcf4cd58145cee345d4b56f6c"
   fair-assessor-opus-5:
     file: .claude/agents/fair-assessor-opus-5.md
-    version: "1.0"
+    version: "1.1"
     model: claude-opus-5
-    sha256: "33262a7c3ff0ad62088cde9b0ea99a83836d9ce73419c1376c39c236ab5c236e"
+    sha256: "b42d211d488edcd3d97c7b361677d0606bfe92db4e39c0e4c3e65f66d3385192"
   fair-assessor-fable-5:
     file: .claude/agents/fair-assessor-fable-5.md
-    version: "1.0"
+    version: "1.1"
     model: claude-fable-5
-    sha256: "067f25aace52b3f2677ff5dd10a17065f254f41aab303d62a6c11a943a57975a"
+    sha256: "da64bbb01a760ac2e768d036d16aa1112298071df2db7f8d5825073d82c0649e"
   reproduction-planner:
     file: .claude/agents/reproduction-planner.md
     version: "1.0"
@@ -596,6 +616,7 @@ entity_checks:
   shared_content.eligibility-criteria: {class: E1}
   shared_content.pipeline-invariants: {class: E1}
   shared_content.adversarial-review-framework: {class: E1}
+  shared_content.fair-principles-guide: {class: E1}  # governed-instrument; promoted pull→push 2026-08-15 (A3)
   # E2 — agent definitions (checks implemented today)
   agent_definitions.fair-assessor-sonnet-5: {class: E2}
   agent_definitions.fair-assessor-opus-5: {class: E2}
