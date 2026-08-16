@@ -37,9 +37,11 @@ the amendment-1 precedents cited below are anchored in
 
 ## Project tooling and checks
 
-- **Paste artefact tool:** `scripts/unwrap-paste-file.py` (M14–M16 fixes;
-  `tests/test_unwrap_paste.py` anchors idempotence on the lodged
-  amendment-1 artefact).
+- **Paste artefact tool:**
+  `studies/open-science-compliance/prereg/unwrap-paste-file.py` (M14–M16
+  fixes; `tests/test_unwrap_paste.py` anchors idempotence on the lodged
+  amendment-1 artefact). Path corrected 2026-08-17 — first recorded as
+  `scripts/`, caught at first use.
 - **Consistency check = maintenance rule 4:** amendment operative text
   word-for-word against the canonical instrument, the Pass 6 prompt
   mirror, and the erratum log; deliberate differences recorded in the

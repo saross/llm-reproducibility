@@ -282,3 +282,62 @@ HTML entities on the public page ("post &gt; pre on all measures";
 - [ ] Only after lodgement: begin D3 preparation (reconcile-run wiring,
       schema push with sha256 receipts, S4 validator probe, standing API
       review gate for the 45-spawn re-benchmark — billing route stated).
+
+---
+
+## Promotion record (2026-08-17)
+
+**Registrant approval.** Shawn read the full draft (as amended through
+`ce0171e`, the identifier-recovery rule) and approved with no corrections
+(2026-08-17). The approved text is promoted verbatim — no register
+re-expression was produced, so there is no second version to choose
+between (the amendment-1 re-expression step existed because two versions
+did). The paste artefact is a mechanical format conversion of this
+approved text (markdown structure to flowing OSF paragraphs), verified
+token-invariant below.
+
+**Registers loaded** (academic-prose gate; recorded per the canonical
+preregistration register's promotion rule):
+
+1. `~/personal-assistant/data/notes/style-guides/academic/reference_register-academic.md`
+2. `~/personal-assistant/data/notes/style-guides/academic/reference_register-preregistration.md`
+3. `.notes/reference_register-prereg.md` (project layer)
+
+## §1 consistency check record — maintenance rule 4 (2026-08-17)
+
+Checked against: instrument v2.1 canon (`fair-instrument.md`), the Pass 6
+prompt mirror, erratum-log Entry 3 + ratified scope, the benchmark
+summary, the disagreement analysis, the platform-rows verification note +
+enrichment addendum, and `manifest.yaml`.
+
+**Verified specifics (all match their sources):** benchmark statistics
+(stability 121/131/122 of 150 = 0.807/0.873/0.813; concordance
+0.773/0.807/0.820); 68 of 150 disputed items; the 82.6% Zenodo default
+sample; CoreTrustSeal dates (ADS 2027-02-12; DANS 2028-02-27; tDAR lapsed
+2025-12-16); precedent DOIs (10.15497/rda00050, 10.1111/jiec.12738); the
+dead DOI 10.5281/zenodo.14561925; model pins (claude-sonnet-5,
+claude-opus-5, claude-fable-5) against the manifest; version identifiers
+(instrument v2.1, guide v1.1, contract v1.1); registered vocabulary terms
+present in canon (research surface, rung (i)/(ii), by-construction,
+evidence pack, principal, unscoreable).
+
+**Deliberate differences (recorded, not defects):**
+
+1. §1 items compress the ratified operative text rather than restating it
+   byte-for-byte; the operative home is the canonical instrument v2.1,
+   hash-registered (C7) at the tagged lodgement commit. Items 1, 4, and 5
+   are near-verbatim; items 2, 3, 6, and 7 are condensed with no
+   token-class change.
+2. Item 1 drops Entry 3's closing clause "keeping responsibility
+   reportable as a study finding" (present in canon; the amendment's
+   research-surface paragraph states the same fact as "recorded per
+   required input as non-scoring metadata").
+3. The instrument's Row 6 drops the dated 9.3M component-DOI count
+   (evidence detail retained in the verification note); the amendment
+   states the qualitative both-halves finding.
+
+**§6 defect confirmed at source (2026-08-17):** the anonymous API read of
+the current stored summary (revision `6a7017da97adb06288afef80`) contains
+`post &gt; pre` (×1) and `pinned &lt; unpinned` (×1) as literal entity
+strings — the correction is warranted, and both fixes plus the appended
+amendment touch only the `summary` response key.
