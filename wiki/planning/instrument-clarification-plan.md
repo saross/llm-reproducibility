@@ -594,8 +594,18 @@ manifest.
       §5 delivery/receipts spec, §6 escaped-comparator fixes, and the
       D2 pre-lodgement checklist. **Awaiting the registrant's read +
       branch merge; then D2.**
-- [ ] **D2. Lodge** via the proven OSF API route (versioned registration
-      update; DOI unchanged).
+- [x] 2026-08-17 **D2. Lodge** via the proven OSF API route — DONE:
+      SchemaResponse revision `6a824828f323f5c6ead66c4b` approved same
+      day (DOI unchanged; `updated_response_keys` = `["summary"]`; tag
+      `osf-amendment-2-2026-08-17` at `9f7343e`). Registrant approved
+      the draft verbatim (2026-08-17); the identifier-recovery rule rode
+      §2; rule-4 consistency check + token-invariance verified (five
+      fidelity drops caught and restored); round-trip verified under the
+      registry's write transform; public page render-checked. **§6
+      comparator fix DISSOLVED on verification** — the registry escapes
+      literal comparators on write and decodes on render; no visible
+      defect ever existed; §6 lodged as a dissolution record. **D3 is
+      unblocked.**
 - [ ] **D3. Re-benchmark** on the clarified instrument, schema v1.1, and
       fixed harness — same design (3 arms × 5 papers × 3 runs = 45 spawns,
       ≈ $27 API-equivalent at benchmark rates), harness
@@ -637,3 +647,4 @@ manifest.
 | 2026-08-15 | **Infrastructure-layer evaluation principle + table build-out endorsed** (from Shawn's eResearch practice): evaluate at the infrastructure layer, where all lodged artefacts inherit platform characteristics; artefact-level investigation only where the infrastructure is silent; repositories assessed once, so enrich rows with CoreTrustSeal + re3data evidence and build the table out over time → new item D1-prep | Shawn |
 | 2026-08-15 | **A3 + D1 governed-edit window EXECUTED** on branch `feat/d1-amendment-2-window` (per the adopted one-batch contract): instrument v2.1 with ratified clarifications + corrected platform table (mirror byte-synced); guide v1.1 aligned + promoted pull→push; agent definitions v1.1 (diff-verified variants); C7 sha256 hashes registered, gate-required, and push-hook byte-verified; amendment-2 draft consolidated. Gate PASS 66/66, tests 207 green throughout. Awaiting registrant read + merge, then D2 lodgement (hard stop before D3) | Claude (build); Shawn (read pending) |
 | 2026-08-15 | **Identifier-recovery rule adopted** (amendment 2 §2): where a declared DOI/PID fails to resolve, attempt a bounded recovery — one registrar-API search (DataCite/Crossref) by title + author, one search of the named repository — before recording a dead link; recovered records enter the pack flagged `recovered` (query recorded), never silently substituted for the cited identifier; the citation defect stays reportable as a finding. No heroic efforts — the analogue of the reproduction lane's minimal documented code corrections. Harvester implementation rides D3 prep (before the next pack harvest); marwick's dead zenodo.14561925 is the precedent case | Shawn |
+| 2026-08-17 | **Amendment 2 draft approved verbatim** (no corrections) and **D2 LODGED same day**: PR #3 merged (`127260f`); rule-4 check + token-invariance run (five fidelity drops restored); revision `6a824828f323f5c6ead66c4b` approved, tag `osf-amendment-2-2026-08-17`. §6 comparator fix dissolved at verification (registry write-path escaping + correct render decoding — no defect ever visible); lodged as a dissolution record. D3 re-benchmark unblocked | Shawn (approval, proceed); Claude (lodgement) |

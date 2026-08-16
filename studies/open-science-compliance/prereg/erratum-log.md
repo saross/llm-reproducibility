@@ -431,3 +431,15 @@ gate-enforced. Consolidated amendment text drafted at
 `amendment-2-draft.md`; the Phase B reference re-derivation shape (ruled
 2026-08-15) is pre-specified in its §3. Lodgement (plan D2) remains the
 hard stop before the D3 re-benchmark.
+
+**AMENDMENT 2 LODGED 2026-08-17** (SchemaResponse revision
+`6a824828f323f5c6ead66c4b`, approved; DOI unchanged; tag
+`osf-amendment-2-2026-08-17` at commit `9f7343e`; round-trip and public
+render verified). Registrant approved the draft verbatim; the
+identifier-recovery rule (ruled 2026-08-17) rode in §2. One item changed
+at pre-lodgement verification: **the item-10 escaped-comparator fix
+DISSOLVED** — the registry's write path stores every literal comparator
+as an HTML entity and its renderer decodes them correctly, so the public
+page never had a defect; amendment §6 records the dissolution instead of
+a correction. The D3 re-benchmark's lodgement hard stop is now
+discharged.

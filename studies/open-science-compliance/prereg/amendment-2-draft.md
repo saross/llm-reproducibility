@@ -1,6 +1,26 @@
-# OSF amendment 2 — DRAFT (consolidated at plan D1, 2026-08-15)
+# OSF amendment 2 — LODGED 2026-08-17
 
-**Status: DRAFT.** Consolidated from erratum-log Entry 3's ratified scope
+**Status: LODGED 2026-08-17.** Filed via the OSF API as a versioned
+registration update (SchemaResponse revision `6a824828f323f5c6ead66c4b`,
+created, populated, submitted, and approved the same day on the
+registrant's proceed instruction): the amendment text was appended to the
+registration's Summary field under a dated banner, following the
+amendment-1 placement precedent. DOI unchanged — 10.17605/OSF.IO/DQNHG.
+Round-trip verification (authenticated at patch time, anonymous after
+approval): stored text equals the sent text under the registry's known
+write transform (literal comparators stored as HTML entities, decoded
+correctly by the renderer); the original registration + amendment 1 body
+is byte-identical; `updated_response_keys` exactly `["summary"]`. Public
+page render-checked: AMENDMENT 2 banner visible, zero entity artefacts,
+§6's quoted comparators display correctly. Repository state at lodgement
+tagged `osf-amendment-2-2026-08-17` (commit `9f7343e`). Amendment
+version URL:
+<https://osf.io/dqnhg?revisionId=6a824828f323f5c6ead66c4b>.
+Paste artefact: `osf-amendment-2.txt` (this directory). **The D3
+re-benchmark is now unblocked** (lodgement was its hard stop).
+
+**Drafting-period note (superseded by lodgement).** Consolidated at plan
+D1 (2026-08-15) from erratum-log Entry 3's ratified scope
 (RATIFIED 2026-08-14), the registrant's 2026-08-10/11 scoring-policy rulings,
 and the 2026-08-15 rulings (Phase B shape; platform-table corrections;
 operative-default and infrastructure-layer principles). Lodgement (plan D2)
@@ -276,21 +296,21 @@ outcome so the flag is closed rather than silently dropped.
 
 ## Pre-lodgement checklist (D2)
 
-- [ ] Re-run the §1 consistency check of this amendment's operative text
+- [x] 2026-08-17 Re-run the §1 consistency check of this amendment's operative text
       against the canonical instrument v2.1, the Pass 6 mirror, and the
       erratum log (maintenance rule 4); record deliberate differences.
-- [ ] Verify the D5 gate PASS and the full test suite green at the
+- [x] 2026-08-17 Verify the D5 gate PASS and the full test suite green at the
       lodgement commit; tag the repository state
       (`osf-amendment-2-<date>`).
-- [ ] Convert to a paste artefact with the C5-fixed unwrap script
+- [x] 2026-08-17 Convert to a paste artefact with the C5-fixed unwrap script
       (`scripts/unwrap-paste-file.py`, M14–M16 + idempotence self-check);
       flowing lines, no tables (OSF text boxes render breaks literally).
-- [ ] Lodge via the OSF API as a versioned registration update appended
+- [x] 2026-08-17 Lodge via the OSF API as a versioned registration update appended
       to the Summary field under a dated banner (amendment-1 route); DOI
       unchanged; round-trip verify byte-identical.
-- [ ] Confirm the two §6 comparator fixes render correctly on the public
+- [x] 2026-08-17 (ran pre-lodgement; correction dissolved — see §6) Confirm the two §6 comparator fixes render correctly on the public
       page after lodgement.
-- [ ] Only after lodgement: begin D3 preparation (reconcile-run wiring,
+- [x] 2026-08-17 UNBLOCKED — Only after lodgement: begin D3 preparation (reconcile-run wiring,
       schema push with sha256 receipts, S4 validator probe, standing API
       review gate for the 45-spawn re-benchmark — billing route stated).
 
