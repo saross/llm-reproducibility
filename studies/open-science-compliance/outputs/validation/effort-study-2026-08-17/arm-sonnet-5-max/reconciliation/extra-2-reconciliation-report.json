@@ -1,0 +1,87 @@
+{
+  "agents": [
+    {
+      "agent_id": "ab88ea13d2169d9cd",
+      "agent_type": "fair-assessor-sonnet-5",
+      "divergence": {
+        "blocked_but_output_present": true,
+        "no_gate_event": false
+      },
+      "file_access": {
+        "all": [
+          {
+            "errored": false,
+            "target": "corpus/evidence-packs/key-et-al-2024.json",
+            "tool": "Read"
+          },
+          {
+            "errored": false,
+            "target": "~/.claude/projects/-home-shawn-Code-llm-reproducibility/f605c78a-e90b-4d9d-bbec-1fd3903ced31/tool-results/hook-fae2f135-9ce0-482e-b9a9-6c1fa51de8ff-1-additionalContext.txt",
+            "tool": "Read"
+          },
+          {
+            "errored": false,
+            "target": "~/corpora/llm-reproducibility/key-et-al-2024/vor.pdf",
+            "tool": "Read"
+          },
+          {
+            "errored": true,
+            "target": "~/corpora/llm-reproducibility/key-et-al-2024/vor.pdf",
+            "tool": "Read"
+          }
+        ],
+        "contaminating": [],
+        "flagged": []
+      },
+      "gate_events": [
+        "block"
+      ],
+      "push": {
+        "events": [
+          {
+            "event": "push",
+            "name": "fair-instrument",
+            "sha256": "299fe8abc342f6736474c2312cf62ee02a0f26957d6d00a9831ddd60a071851e"
+          },
+          {
+            "event": "push",
+            "name": "fair-principles-guide",
+            "sha256": "f9405dde7391b3aaf75e0bcff7354af72969b80749fd0b757717d38379cced71"
+          }
+        ],
+        "problems": []
+      },
+      "receipts": {
+        "paper_slug": "key-et-al-2024",
+        "problems": [],
+        "receipted": {
+          "agent_version": "fair-assessor-sonnet-5 v1.2",
+          "instrument_receipts": {
+            "fair-instrument": "5ff4c48c4f5c7321",
+            "fair-principles-guide": "0eed0b8d570bf55e"
+          },
+          "instrument_versions": {
+            "fair-instrument": "2.1",
+            "fair-principles-guide": "1.1"
+          },
+          "model_id": "claude-sonnet-5"
+        },
+        "valid": true
+      },
+      "reconciled": true
+    }
+  ],
+  "clean": true,
+  "count_problems": [],
+  "reconciled_at": "2026-08-17T08:12:45.080761+00:00",
+  "reconciliation_version": "1.2",
+  "run_dir": "/home/shawn/.claude/projects/-home-shawn-Code-llm-reproducibility/f605c78a-e90b-4d9d-bbec-1fd3903ced31/subagents/workflows/wf_63013f81-a3a",
+  "skipped_ungoverned": [
+    {
+      "agent_id": "afe46b8533caf3bc9",
+      "agent_type": "general-purpose"
+    }
+  ],
+  "spawns": 1,
+  "spawns_reconciled": 1
+}

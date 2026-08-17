@@ -1,0 +1,271 @@
+{
+ "code_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "Code is directly retrievable via HTTPS from the live GitHub repository (github.com/ercrema/diffusionCurve; evidence pack http_status 200) and via the Zenodo DOI resolver (access_right 'open'). Code is not subject to the data-completeness A1 override, which the instrument text restricts explicitly to 'data FAIR'.",
+    "pack_refs": [
+     "github:https://github.com/ercrema/diffusionCurve",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "A1_1": {
+    "evidence": "HTTPS access via GitHub and the Zenodo/DOI resolver \u2014 open, free, universally implementable protocol, no proprietary client or subscription required.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10782942",
+     "github:https://github.com/ercrema/diffusionCurve"
+    ],
+    "present": 1
+   },
+   "A1_2": {
+    "evidence": "Fully open resource (Zenodo access_right 'open'; public GitHub repo, http_status 200); no authentication required, satisfying the A1.2 open case under v2.1 clarification.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10782942",
+     "github:https://github.com/ercrema/diffusionCurve"
+    ],
+    "present": 1
+   },
+   "A2": {
+    "evidence": "Same Row-2 Zenodo persistence entitlement as scored for data (tombstone page and metadata retention on withdrawal, lifetime-of-repository retention), applicable to the code bundled in the same deposit; paper is silent on this hypothetical so rung-(ii) applies.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "F1": {
+    "evidence": "Same paper statement ('All data and R scripts are available on [GitHub] ... permanently archived on [Zenodo DOI]', p.7) covers the code. Evidence pack declares both the GitHub and Zenodo/DataCite records under artefact_type 'data+code' \u2014 the code shares the same own-PID deposit (DOI 10.5281/zenodo.10782942), not merely an article supplement.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "F2": {
+    "evidence": "Same combined DataCite/Zenodo metadata record covers the code (resource_type 'Software'/'software' in both pack endpoints, metadata_record: true, populated non-null fields). Paper documents the code's function in detail: model equations [5]-[9], priors [10]-[12], MCMC settings, software stack (NIMBLE, nimbleCarbon, R).",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "F3": {
+    "evidence": "identifier_in_metadata: true on the same combined data+code deposit record, confirmed by both the datacite: and zenodo: pack endpoints.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "F4": {
+    "evidence": "Same Zenodo/DataCite registry indexing ('state': 'findable') covers the code artefact bundled in the same deposit as the data; Zenodo is a listed searchable registry (platform table Row 2).",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "I1": {
+    "evidence": "Code is written in R, an open-source, standard, widely documented programming language, explicitly named throughout Methods: 'implemented using the NIMBLE ... probabilistic programming language in R (R Core Team, 2020)' \u2014 a formal, accessible, shared representation, not a proprietary/closed format.",
+    "present": 1
+   },
+   "I2": {
+    "evidence": "No evidence of controlled-vocabulary/ontology use for code metadata (e.g. no CodeMeta/schema.org typed fields reported in the evidence pack); the paper does not describe any vocabulary standard applied to the code itself. Looked for and not found.",
+    "present": 0
+   },
+   "I3": {
+    "evidence": "No qualified PID-typed references from the code artefact's own metadata to its dependencies are evidenced. The paper's bibliography cites NIMBLE's Zenodo DOI (de Valpine et al. 2020) at the article level, but this is a paper-level citation, not a qualified reference embedded in the code deposit's own metadata (no codemeta.json/DESCRIPTION dependency-PID field reported in the evidence pack).",
+    "present": 0
+   },
+   "R1": {
+    "evidence": "Paper documents the code's model structure in detail: equations [5]-[9], weakly informative priors (equations [10]-[12]), full MCMC parameterisation (four chains, 1,000,000 iterations for the hierarchical model / 100,000 for the ICAR model, burn-in fractions, thinning), and convergence diagnostics (Gelman-Rubin statistic, agreement indices) \u2014 a plurality of relevant attributes describing the code's operation.",
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "Same combined data+code Zenodo deposit carries licence 'cc-by-4.0', confirmed identically by the datacite: and zenodo: pack records; no licence_conflicts flagged. GitHub's empty licence field is non-conflicting (NOASSERTION per Row 5 caveat) and the paper directs readers to the Zenodo archive as the permanent, citable copy.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942",
+     "github:https://github.com/ercrema/diffusionCurve"
+    ],
+    "present": 1
+   },
+   "R1_2": {
+    "evidence": "Paper documents software provenance: named packages with citations, and for nimbleCarbon an explicit version number ('nimbleCarbon ... 0.2.0', Crema 2022b), the calibration curve used (IntCal20, Reimer et al. 2020), and full MCMC parameterisation (chains, iterations, burn-in, thinning) \u2014 detailed procedural provenance for the code.",
+    "present": 1
+   },
+   "R1_3": {
+    "evidence": "Same DataCite-schema-conformant deposit (resource_type 'Software'/'software', metadata_record: true on both endpoints) as scored for data R1.3, satisfying route (a) (generic metadata schema, DataCite) for the code artefact \u2014 the instrument's R1.3 text presents routes (a)-(c) generally before adding a 'for code' list, read here as additive rather than code-exclusive. No code-specific signal (CITATION.cff, CodeMeta, package structure, CRAN/JOSS/rOpenSci review) is independently evidenced, but route (a) alone suffices; this is the most interpretively loaded call in this assessment.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   }
+  },
+  "total": 13
+ },
+ "data_completeness": {
+  "assessment_scope": "straightforward",
+  "barriers": [],
+  "coverage_category": "complete",
+  "coverage_percentage": 100,
+  "datasets_accessible_tier_0_2": 13,
+  "datasets_enumerated": 13
+ },
+ "data_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "Data-completeness coverage assessed as 'complete' (100%) from the paper's unqualified 'All data ... are available' statement (p.7), so the A1 minimal/partial override does not trigger. Direct retrievability confirmed: evidence pack Zenodo record shows 'access_right': 'open', delivered via HTTPS DOI resolution.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "A1_1": {
+    "evidence": "Retrieval is via HTTPS through GitHub and the Zenodo/DOI resolver \u2014 an open, free, universally implementable protocol; no paywall or proprietary client required (evidence pack: Zenodo access_right 'open').",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "A1_2": {
+    "evidence": "Zenodo record shows 'access_right': 'open' \u2014 a fully open resource requiring no authentication, satisfying A1.2 under the v2.1 clarification ('the protocol supports authentication where needed, and none is needed'). No ethical-restriction context applies (radiocarbon/archaeobotanical dates; no human-subjects or Indigenous-data sensitivity indicated in the paper).",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "A2": {
+    "evidence": "Platform entitlement table Row 2 (Zenodo) guarantees metadata persistence on withdrawal (tombstone page, DOI/URL retained, metadata always publicly accessible). The paper's text is silent on this hypothetical, so rung-(ii) by-construction inference applies, corroborated by the confirmed genuine Zenodo/DataCite deposit in the evidence pack.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "F1": {
+    "evidence": "Paper: 'All data and R scripts are available on [GitHub] and permanently archived on https://doi.org/10.5281/zenodo.10782942' (p.7) \u2014 the compiled data has its own Zenodo DOI, independent of the article DOI. Evidence pack confirms DOI 10.5281/zenodo.10782942 resolves with a DataCite/Zenodo record (state: 'findable'), an own-PID deposit not merely an article supplement.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "F2": {
+    "evidence": "DataCite AND Zenodo endpoint records both report 'metadata_record': true with populated (non-null-coded) fields \u2014 publisher 'Zenodo', publication_year 2024, resource_type \u2014 corroborated by two independent rung-i sources; paper Methods (sec.4.1) additionally documents dataset composition, sample sizes and filtering thresholds for every case study, extending descriptive context reachable from the published paper.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "F3": {
+    "evidence": "Both the datacite: and zenodo: pack records report 'identifier_in_metadata': true for DOI 10.5281/zenodo.10782942 (resolving to version DOI 10.5281/zenodo.10816946) \u2014 the metadata explicitly carries the identifier it describes.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "F4": {
+    "evidence": "Deposit is on Zenodo, a listed searchable registry (platform table Row 2); the DataCite endpoint record's 'state' field is 'findable' (DataCite's own registry-indexed status).",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   },
+   "I1": {
+    "evidence": "Neither the paper's text nor the evidence pack states a file format for the deposited data (e.g. CSV/JSON/structured schema). The platform entitlement table gives no format guarantee for Zenodo/GitHub deposits (any file type may be hosted). Ladder exhausted without evidence -> unscoreable default of 0.",
+    "present": 0
+   },
+   "I2": {
+    "evidence": "No mention in the paper of controlled vocabularies or PID-bearing ontologies/gazetteers (e.g. PeriodO, Getty AAT, Darwin Core) applied to the compiled dataset's categorical fields. Category labels used (rice, wheat/barley, hazelnut, cremation, inhumation) appear only as narrative prose, not linked to an external vocabulary standard. Looked for and not found in paper or pack.",
+    "present": 0
+   },
+   "I3": {
+    "evidence": "No qualified references (typed PID links, e.g. 'isDerivedFrom [DOI]') from the data deposit's own metadata to other resources are stated in the paper or surfaced in the evidence pack (no related-identifiers field reported). The concept-DOI/version-DOI pair (10.5281/zenodo.10782942 <-> 10.5281/zenodo.10816946) is an internal versioning relation to the same object, not a qualified reference to another resource.",
+    "present": 0
+   },
+   "R1": {
+    "evidence": "Methods sec.4.1 gives extensive, plurality-of-attribute description of every dataset: sample sizes/site counts per case study (e.g. 'n = 551, from 215 sites' Japan; 'n = 928, from 314 sites' Britain; n=1417 cremation/n=1119 inhumation), chronological filtering thresholds (cumulative calibrated probability mass >=0.5 or >=0.99), taxon-proxy definitions, and geographic exclusions (Hokkaido/Ryukyu) \u2014 rich contextual documentation reachable from the published paper (rung-i paper text is explicitly admissible evidence).",
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "The Zenodo deposit \u2014 the paper's own designated 'permanent archive' \u2014 carries licence 'cc-by-4.0', confirmed identically by both the datacite: and zenodo: pack records; no licence_conflicts flagged in any record. GitHub's own licence field is empty, but per the platform table's Row 5 caveat this reflects GitHub's NOASSERTION detection behaviour rather than a competing licence claim, and the paper directs readers to the Zenodo archive as the citable, permanent copy.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942",
+     "github:https://github.com/ercrema/diffusionCurve"
+    ],
+    "present": 1
+   },
+   "R1_2": {
+    "evidence": "Paper documents detailed data provenance: named upstream sources per case study (Kudo et al. 2023; Crema et al. 2022a; Bevan et al. 2017; for case study 2: Bloxam 2020; Bloxam and Parker Pearson 2022; Healy 2012; Mallick and Reich 2023; Olalde et al. 2018; Wilkin 2013; Willis et al. 2016), plus explicit selection/transformation criteria (calibrated probability-mass thresholds of 0.5 and 0.99, taxon-proxy choices, geographic exclusions of Hokkaido/Ryukyu).",
+    "present": 1
+   },
+   "R1_3": {
+    "evidence": "Deposit carries a genuine DataCite metadata record (confirmed via both datacite: and zenodo: pack endpoints: 'metadata_record': true, 'identifier_in_metadata': true) \u2014 DataCite is explicitly named as a qualifying generic metadata schema under instrument R1.3 route (a). The deposit is not on an accredited domain repository (Row 4), so route (c) does not apply, but route (a) is satisfied.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10782942",
+     "zenodo:10.5281/zenodo.10782942"
+    ],
+    "present": 1
+   }
+  },
+  "total": 12
+ },
+ "input_provenance": [
+  {
+   "input": "R scripts and compiled analysis data repository (GitHub: ercrema/diffusionCurve)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Permanent Zenodo archive of data and R scripts (https://doi.org/10.5281/zenodo.10782942)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Archaeological radiocarbon database of Japan (Kudo et al., 2023)",
+   "provenance": "third-party"
+  },
+  {
+   "input": "Rice radiocarbon database (Crema et al., 2022a)",
+   "provenance": "third-party"
+  },
+  {
+   "input": "British radiocarbon dataset (Bevan et al., 2017)",
+   "provenance": "third-party"
+  },
+  {
+   "input": "British burial radiocarbon compilation (Bloxam, 2020; Bloxam and Parker Pearson, 2022; Healy, 2012; Mallick and Reich, 2023; Olalde et al., 2018; Wilkin, 2013; Willis et al., 2016)",
+   "provenance": "third-party"
+  },
+  {
+   "input": "Publisher-hosted supplementary data (Appendix A, via article DOI 10.1016/j.jas.2024.105962)",
+   "provenance": "author-deposited"
+  }
+ ],
+ "paper_slug": "crema-et-al-2024",
+ "receipts": {
+  "agent_version": "fair-assessor-sonnet-5 v1.2",
+  "instrument_receipts": {
+   "fair-instrument": "5ff4c48c4f5c7321",
+   "fair-principles-guide": "0eed0b8d570bf55e"
+  },
+  "instrument_versions": {
+   "fair-instrument": "2.1",
+   "fair-principles-guide": "1.1"
+  },
+  "model_id": "claude-sonnet-5",
+  "pulled_files_read": [
+   "/home/shawn/corpora/llm-reproducibility/crema-et-al-2024/vor.pdf",
+   "/home/shawn/Code/llm-reproducibility/corpus/evidence-packs/crema-et-al-2024.json"
+  ]
+ },
+ "schema_version": "1.1",
+ "stated_availability": "\"All data and R scripts are available on https://github.com/ercrema/diffusionCurve and permanently archived on https://doi.org/10.5281/zenodo.10782942.\" (Methods, p.7, immediately before the Results section). Additionally: \"Supplementary data to this article can be found online at https://doi.org/10.1016/j.jas.2024.105962.\" (Appendix A, p.9). Article itself: \"This is an open access article under the CC BY license\" (p.1); CRediT/funding note confirms \"the author has applied a Creative Commons Attribution (CC BY) licence to any Author Accepted Manuscript version\" (p.9).",
+ "status": "OK"
+}
