@@ -3,7 +3,7 @@ export const meta = {
   description: 'One validation-benchmark arm: 5 pilot papers x 3 runs of FAIR scoring with per-item reconciliation hard stop',
   phases: [{ title: 'Score' }, { title: 'Reconcile' }],
 }
-// v1.2 (D3 prep + clean-context audit fixes, 2026-08-17; amendment 2 SS2/SS5). Changes from the v1.0
+// v1.3 (D3 prep + audit fixes + S4 retreat, 2026-08-17; amendment 2 SS2/SS5). Changes from the v1.0
 // script that ran the 2026-08-03 arms: (1) per-paper evidence-pack
 // injection — the prompt line format is the single source of truth for
 // scripts/reconcile-run.py's PACK_DECLARATION_RE, change both together;
@@ -74,7 +74,7 @@ const reconcilePrompt = (t) =>
   `filename stem after "agent-" is the scoring spawn's agent_id. If it has no StructuredOutput tool call ` +
   `yet (still being written), wait 5 seconds and re-check, up to 6 attempts.\n` +
   `2. From the repository root /home/shawn/Code/llm-reproducibility run:\n` +
-  `   venv/bin/python scripts/reconcile-run.py <run_dir> --require-pack --out <run_dir>/reconciliation\n` +
+  `   venv/bin/python scripts/reconcile-run.py <run_dir> --require-pack --contract-schema assessment-system/schema/benchmark-fair-output-schema.json --out <run_dir>/reconciliation\n` +
   `   A non-zero exit is EXPECTED whenever any spawn in the directory fails or is still incomplete - ` +
   `do not treat exit status as this item's verdict.\n` +
   `3. Read <run_dir>/reconciliation/reconciliation-report.json and find the record in "agents" whose ` +

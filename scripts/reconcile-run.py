@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Post-run reconciliation of governed workflow spawns (plan C8 + C9).
 
-**Version:** 1.2
+**Version:** 1.3
 
 The C2 probes established that SubagentStop gate decisions are advisory in
 the workflow lane (a block is logged but the output is collected anyway)
@@ -166,7 +166,8 @@ def declared_pack(lines: list[str]) -> tuple[str, str] | None:
 
 
 def revalidate(lines: list[str], agent_type: str, manifest: dict, gate,
-               hooklib, require_pack: bool = False) -> dict:
+               hooklib, require_pack: bool = False,
+               contract_schema: dict | None = None) -> dict:
     """Re-run the gate's receipt checks post-hoc on a completed transcript."""
     problems: list[str] = []
     payload = gate.structured_output_from_transcript(lines)
@@ -174,6 +175,23 @@ def revalidate(lines: list[str], agent_type: str, manifest: dict, gate,
     if fields is None:
         return {"valid": False,
                 "problems": ["no well-formed receipt payload in transcript"]}
+    # v1.3 (S4 retreat, probed 2026-08-17): the spawn-side API rejects
+    # top-level allOf, so schema v1.1's conditional requirements are
+    # enforced HERE — the payload is validated in full against the
+    # registered contract file (draft-07, jsonschema), which the runtime
+    # variant could not carry.
+    if contract_schema is not None:
+        try:
+            import jsonschema
+            validator = jsonschema.Draft7Validator(contract_schema)
+            for error in sorted(validator.iter_errors(payload),
+                                key=lambda e: list(e.absolute_path)):
+                path = "/".join(str(part) for part in error.absolute_path) or "(root)"
+                problems.append(f"contract-schema violation at {path}: "
+                                f"{error.message[:160]}")
+        except ImportError:
+            problems.append("contract-schema validation requested but "
+                            "jsonschema is not importable")
     for spec in hooklib.pushed_instruments(manifest, agent_type):
         if str(fields["instrument_versions"].get(spec["name"], "")).strip() != spec["version"]:
             problems.append(f"instrument version mismatch: {spec['name']}")
@@ -263,7 +281,8 @@ def reconcile(run_dir: Path, allowed_prefixes: tuple[str, ...],
               paper_paths_allowed: tuple[str, ...] = (),
               manifest: dict | None = None,
               expect_spawns: int | None = None,
-              require_pack: bool = False) -> dict:
+              require_pack: bool = False,
+              contract_schema: dict | None = None) -> dict:
     """Reconcile every agent transcript in a workflow run directory.
 
     `manifest` is injectable for tests; the live default is the repo
@@ -318,7 +337,8 @@ def reconcile(run_dir: Path, allowed_prefixes: tuple[str, ...],
         lines = transcript.read_text(encoding="utf-8").splitlines()
 
         validation = revalidate(lines, agent_type, manifest, gate, hooklib,
-                                require_pack=require_pack)
+                                require_pack=require_pack,
+                                contract_schema=contract_schema)
         accesses = file_accesses(lines, gate)
         flagged = [a for a in accesses
                    if not access_allowed(a["target"], allowed_prefixes,
@@ -406,13 +426,20 @@ def main() -> int:
     parser.add_argument("--require-pack", action="store_true",
                         help="every governed spawn must carry an evidence-pack "
                              "declaration (audit F18)")
+    parser.add_argument("--contract-schema", type=Path, default=None,
+                        help="validate each governed payload in full against "
+                             "this JSON Schema file (S4 retreat: conditional "
+                             "requirements enforce here, not spawn-side)")
     args = parser.parse_args()
+    contract_schema = (json.loads(args.contract_schema.read_text(encoding="utf-8"))
+                       if args.contract_schema else None)
 
     report = reconcile(args.run_dir.resolve(), DEFAULT_ALLOWED_PREFIXES,
                        args.gate_log, args.push_log,
                        tuple(args.allow),
                        expect_spawns=args.expect_spawns,
-                       require_pack=args.require_pack)
+                       require_pack=args.require_pack,
+                       contract_schema=contract_schema)
     out_dir = args.out or (args.run_dir / "reconciliation")
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "reconciliation-report.json").write_text(

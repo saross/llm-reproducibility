@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the D3 benchmark workflow's args deterministically (audit F15/F17).
 
-**Version:** 1.0
+**Version:** 1.1
 
 The clean-context audit (2026-08-17) found nothing binding the S4 probe's
 schema decision — or anything else — to the arm invocations: args were
@@ -53,6 +53,16 @@ def main() -> int:
 
     schema_rel = manifest["assessment"]["schemas"]["benchmark_fair_output"]["file"]
     schema = json.loads((REPO_ROOT / schema_rel).read_text())
+    # S4 retreat (probed 2026-08-17, wf_56a0ba6f-93e): the spawn-side API
+    # rejects top-level allOf/anyOf/oneOf in tool input schemas ("400
+    # input_schema does not support oneOf, allOf, or anyOf at the top
+    # level"), so the runtime variant strips the conditionals; the
+    # registered v1.1 file remains the contract of record and its
+    # conditional requirements are enforced post hoc by reconcile-run's
+    # --contract-schema full validation (the C9 layer), exactly as the
+    # pre-specified fallback decided. $ref/definitions are retained —
+    # proven acceptable by the 2026-08-03 v1.0 run.
+    schema.pop("allOf", None)
 
     packs = manifest["evidence_packs"]["packs"]
     registry = manifest["reference_datasets"]["pilot_fair_assessments"]["items"]

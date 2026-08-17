@@ -286,6 +286,26 @@ class ReconcileTests(unittest.TestCase):
                          {"test-instrument": "1.0"})
         self.assertEqual(receipted["model_id"], "claude-test-1")
 
+    def test_contract_schema_enforces_moved_conditionals(self) -> None:
+        """S4 retreat (2026-08-17): the spawn-side API rejects top-level
+        allOf, so the v1.1 conditionals enforce at reconciliation. An
+        ESCALATE payload without escalate_reason must fail here — validated
+        against the real registered contract file."""
+        contract = json.loads(
+            (REPO_ROOT / "assessment-system/schema/benchmark-fair-output-schema.json")
+            .read_text(encoding="utf-8"))
+        bad = payload(status="ESCALATE", schema_version="1.1")
+        self.write_agent("a1", [("corpus/paper.md", False)], bad)
+        self.log_gate_event("a1", "pass")
+        report = reconciler.reconcile(self.run_dir, ALLOWED,
+                                      self.gate_log, self.push_log,
+                                      manifest=FIXTURE_MANIFEST,
+                                      contract_schema=contract)
+        self.assertFalse(report["clean"])
+        self.assertTrue(any("contract-schema violation" in p
+                            for p in report["agents"][0]["receipts"]["problems"]),
+                        report["agents"][0]["receipts"]["problems"])
+
     def test_invalid_receipts_fail(self) -> None:
         bad = payload()
         bad["receipts"]["instrument_receipts"]["test-instrument"] = "0000"
