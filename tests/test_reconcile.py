@@ -190,6 +190,102 @@ class ReconcileTests(unittest.TestCase):
         self.assertEqual(report["skipped_ungoverned"][0]["agent_type"],
                          "general-purpose")
 
+    # --- v1.2 audit fixes (clean-context Opus audit, 2026-08-17) ----------
+
+    def test_empty_directory_is_not_clean(self) -> None:
+        """Audit F1: zero governed spawns must never read as clean."""
+        report = self.run_reconcile()
+        self.assertFalse(report["clean"])
+        self.assertTrue(any("no governed spawns" in p
+                            for p in report["count_problems"]), report)
+
+    def test_expected_spawn_count_enforced(self) -> None:
+        """Audit F1: a partial directory fails the denominator assertion."""
+        self.write_agent("a1", [("corpus/paper.md", False)], payload())
+        self.log_gate_event("a1", "pass")
+        report = reconciler.reconcile(self.run_dir, ALLOWED,
+                                      self.gate_log, self.push_log,
+                                      manifest=FIXTURE_MANIFEST,
+                                      expect_spawns=15)
+        self.assertFalse(report["clean"])
+        self.assertTrue(any("expected 15" in p
+                            for p in report["count_problems"]), report)
+
+    def test_missing_meta_fails_not_skips(self) -> None:
+        """Audit F2: an unattributable transcript shrinks clean, never the
+        denominator."""
+        self.write_agent("a1", [("corpus/paper.md", False)], payload())
+        (self.run_dir / "agent-a1.meta.json").unlink()
+        self.log_gate_event("a1", "pass")
+        report = self.run_reconcile()
+        self.assertFalse(report["clean"])
+        self.assertEqual(report["spawns"], 1)
+        self.assertEqual(report["skipped_ungoverned"], [])
+        self.assertTrue(any("unattributable" in p
+                            for p in report["agents"][0]["receipts"]["problems"]))
+
+    def test_push_error_event_fails_spawn(self) -> None:
+        """Audit F6: a logged push-error is a reconciliation problem."""
+        self.write_agent("a1", [("corpus/paper.md", False)], payload())
+        self.log_gate_event("a1", "pass")
+        with self.push_log.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps({"agent_id": "a1", "event": "push-error",
+                                     "error": "sha256 drift"}) + "\n")
+        report = self.run_reconcile()
+        self.assertFalse(report["clean"])
+        self.assertTrue(any("push-error" in p
+                            for p in report["agents"][0]["receipts"]["problems"]))
+
+    def test_pushed_sha_mismatch_fails_spawn(self) -> None:
+        """Audit F6: pushed bytes differing from the registered C7 hash fail."""
+        manifest = json.loads(json.dumps(FIXTURE_MANIFEST))
+        manifest["shared_content"]["test-instrument"]["sha256"] = "a" * 64
+        self.write_agent("a1", [("corpus/paper.md", False)], payload())
+        self.log_gate_event("a1", "pass")
+        with self.push_log.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps({"agent_id": "a1", "event": "push",
+                                     "name": "test-instrument",
+                                     "sha256": "b" * 64}) + "\n")
+        report = reconciler.reconcile(self.run_dir, ALLOWED,
+                                      self.gate_log, self.push_log,
+                                      manifest=manifest)
+        self.assertFalse(report["clean"])
+        self.assertTrue(any("differ from registered hash" in p
+                            for p in report["agents"][0]["receipts"]["problems"]))
+
+    def test_require_pack_flags_missing_declaration(self) -> None:
+        """Audit F18: a regex non-match must fail loudly under --require-pack."""
+        self.write_agent("a1", [("corpus/paper.md", False)], payload())
+        self.log_gate_event("a1", "pass")
+        report = reconciler.reconcile(self.run_dir, ALLOWED,
+                                      self.gate_log, self.push_log,
+                                      manifest=FIXTURE_MANIFEST,
+                                      require_pack=True)
+        self.assertFalse(report["clean"])
+        self.assertTrue(any("no evidence-pack declaration" in p
+                            for p in report["agents"][0]["receipts"]["problems"]))
+
+    def test_uppercase_pack_hash_matches(self) -> None:
+        """Audit F18: an uppercase-hex declared sha256 must not silently
+        disable pack verification."""
+        rel, sha = self.write_pack()
+        self.write_agent("a1", [(rel, False)], payload(),
+                         prompt=self.pack_prompt(rel, sha.upper()))
+        self.log_gate_event("a1", "pass")
+        report = self.run_reconcile()
+        self.assertTrue(report["clean"], report)
+
+    def test_receipted_values_recorded(self) -> None:
+        """Audit F7: the report carries receipted VALUES for the cross-arm
+        identity check."""
+        self.write_agent("a1", [("corpus/paper.md", False)], payload())
+        self.log_gate_event("a1", "pass")
+        report = self.run_reconcile()
+        receipted = report["agents"][0]["receipts"]["receipted"]
+        self.assertEqual(receipted["instrument_versions"],
+                         {"test-instrument": "1.0"})
+        self.assertEqual(receipted["model_id"], "claude-test-1")
+
     def test_invalid_receipts_fail(self) -> None:
         bad = payload()
         bad["receipts"]["instrument_receipts"]["test-instrument"] = "0000"

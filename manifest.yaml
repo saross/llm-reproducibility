@@ -495,19 +495,19 @@ shared_content:
 agent_definitions:
   fair-assessor-sonnet-5:
     file: .claude/agents/fair-assessor-sonnet-5.md
-    version: "1.1"
+    version: "1.2"
     model: claude-sonnet-5
-    sha256: "e890d27042b8c5e29b9dbbcb88bf9acc099e4cbbcf4cd58145cee345d4b56f6c"
+    sha256: "42de4ba61acb5cc50d51b2e602cdf95833aaccc5b434aa0932262c2a11b34409"
   fair-assessor-opus-5:
     file: .claude/agents/fair-assessor-opus-5.md
-    version: "1.1"
+    version: "1.2"
     model: claude-opus-5
-    sha256: "b42d211d488edcd3d97c7b361677d0606bfe92db4e39c0e4c3e65f66d3385192"
+    sha256: "17628d11a963bdd32f0ab369deca652910491e171002204ec3917da8aec9950b"
   fair-assessor-fable-5:
     file: .claude/agents/fair-assessor-fable-5.md
-    version: "1.1"
+    version: "1.2"
     model: claude-fable-5
-    sha256: "da64bbb01a760ac2e768d036d16aa1112298071df2db7f8d5825073d82c0649e"
+    sha256: "1c15d0deae13fa57cb8a96317452a72b02d4c929e9e7f039a4f85196e5fda5e5"
   reproduction-planner:
     file: .claude/agents/reproduction-planner.md
     version: "1.0"
@@ -592,10 +592,10 @@ run_reconciliation:
   # §4), gate-events-vs-outputs divergence, and log-slice archival. Wire
   # into the benchmark workflow at D3 prep; exit 1 is a hard stop.
   tool:
-    version: "1.1"
+    version: "1.2"
     file: scripts/reconcile-run.py
     last_updated: "2026-08-17"
-    description: Post-run reconciliation of governed workflow spawns (plan C8+C9); proven against the three 2026-08-03 benchmark arms (45/45 clean) and the C2 probe run (probe C correctly failed). v1.1 (D3 prep) adds evidence-pack verification — declared pack hash re-computed and full-read enforced (attempts-are-not-reads)
+    description: Post-run reconciliation of governed workflow spawns (plan C8+C9); proven against the three 2026-08-03 benchmark arms (45/45 clean) and the C2 probe run (probe C correctly failed). v1.1 (D3 prep) adds evidence-pack verification. v1.2 (clean-context audit fixes) adds denominator assertions (--expect-spawns; empty set never clean), unattributable-transcript failure, pushed-bytes verification against C7 hashes with push-error flagging, receipted-value recording for the cross-arm identity check, --require-pack, case-tolerant pack hashes, and gate/push log-slice archival
 
 entity_checks:
   # E3 — run-reconciliation tool (plan C8+C9, 2026-08-15)

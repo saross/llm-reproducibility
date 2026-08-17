@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Post-run reconciliation of governed workflow spawns (plan C8 + C9).
 
-**Version:** 1.1
+**Version:** 1.2
 
 The C2 probes established that SubagentStop gate decisions are advisory in
 the workflow lane (a block is logged but the output is collected anyway)
@@ -59,7 +59,7 @@ HOOKS_DIR = REPO_ROOT / ".claude" / "hooks"
 # reconciler verifies the pack's bytes still match the declared hash and that
 # the spawn actually read the pack in full.
 PACK_DECLARATION_RE = re.compile(
-    r"Evidence pack \(read in full\): (\S+) \(sha256 ([0-9a-f]{64})\)")
+    r"Evidence pack \(read in full\): (\S+) \(sha256 ([0-9a-fA-F]{64})\)")
 
 DEFAULT_ALLOWED_PREFIXES = (
     "corpus/",
@@ -166,7 +166,7 @@ def declared_pack(lines: list[str]) -> tuple[str, str] | None:
 
 
 def revalidate(lines: list[str], agent_type: str, manifest: dict, gate,
-               hooklib) -> dict:
+               hooklib, require_pack: bool = False) -> dict:
     """Re-run the gate's receipt checks post-hoc on a completed transcript."""
     problems: list[str] = []
     payload = gate.structured_output_from_transcript(lines)
@@ -208,8 +208,15 @@ def revalidate(lines: list[str], agent_type: str, manifest: dict, gate,
     # pack must still hash to its declared value AND have been fully read —
     # the attempts-are-not-reads rule applies to packs exactly as to pulls.
     pack = declared_pack(lines)
+    if require_pack and not pack:
+        # v1.2 (audit F18): a silent regex non-match must not disable pack
+        # verification — benchmark scoring spawns are launched with packs
+        # by construction, so absence of a declaration is itself a fault.
+        problems.append("no evidence-pack declaration found in transcript "
+                        "(--require-pack set)")
     if pack:
         pack_path, pack_sha = pack
+        pack_sha = pack_sha.lower()
         try:
             actual = hashlib.sha256((REPO_ROOT / pack_path).read_bytes()).hexdigest()
         except OSError:
@@ -230,7 +237,16 @@ def revalidate(lines: list[str], agent_type: str, manifest: dict, gate,
                      for c in pack_ok):
             problems.append(f"evidence pack read truncated: {pack_path}")
     return {"valid": not problems, "problems": problems,
-            "paper_slug": str((payload or {}).get("paper_slug") or "")}
+            "paper_slug": str((payload or {}).get("paper_slug") or ""),
+            # v1.2 (audit F7): the receipted VALUES are recorded, not just
+            # their validity — the cross-arm receipt-identity check
+            # (contract hardening 12) is mechanical over these.
+            "receipted": {
+                "instrument_versions": dict(fields["instrument_versions"]),
+                "instrument_receipts": dict(fields["instrument_receipts"]),
+                "model_id": str(fields["model_id"]).strip(),
+                "agent_version": str(fields["agent_version"]).strip(),
+            }}
 
 
 def load_log(path: Path) -> list[dict]:
@@ -245,7 +261,9 @@ def load_log(path: Path) -> list[dict]:
 def reconcile(run_dir: Path, allowed_prefixes: tuple[str, ...],
               gate_log_path: Path, push_log_path: Path,
               paper_paths_allowed: tuple[str, ...] = (),
-              manifest: dict | None = None) -> dict:
+              manifest: dict | None = None,
+              expect_spawns: int | None = None,
+              require_pack: bool = False) -> dict:
     """Reconcile every agent transcript in a workflow run directory.
 
     `manifest` is injectable for tests; the live default is the repo
@@ -275,13 +293,32 @@ def reconcile(run_dir: Path, allowed_prefixes: tuple[str, ...],
         # transcripts into the same run directory; validating them as
         # governed spawns would poison every report. They are counted, not
         # judged — the governed set is the reconciliation's whole subject.
+        # v1.2 (audit F2): a transcript with NO meta sidecar or an EMPTY
+        # agentType is unattributable — it fails the run rather than being
+        # silently reclassified as ungoverned (a meta-write lag or partial
+        # directory copy must shrink `clean`, never the denominator).
+        if not agent_type:
+            agents.append({
+                "agent_id": agent_id,
+                "agent_type": "",
+                "receipts": {"valid": False,
+                             "problems": ["unattributable transcript: missing "
+                                          "meta sidecar or empty agentType"]},
+                "file_access": {"all": [], "flagged": [], "contaminating": []},
+                "gate_events": [], "push": {"events": [], "problems": []},
+                "divergence": {"no_gate_event": True,
+                               "blocked_but_output_present": False},
+                "reconciled": False,
+            })
+            continue
         if agent_type not in (manifest.get("agent_definitions") or {}):
             skipped_ungoverned.append({"agent_id": agent_id,
                                        "agent_type": agent_type})
             continue
         lines = transcript.read_text(encoding="utf-8").splitlines()
 
-        validation = revalidate(lines, agent_type, manifest, gate, hooklib)
+        validation = revalidate(lines, agent_type, manifest, gate, hooklib,
+                                require_pack=require_pack)
         accesses = file_accesses(lines, gate)
         flagged = [a for a in accesses
                    if not access_allowed(a["target"], allowed_prefixes,
@@ -289,6 +326,25 @@ def reconcile(run_dir: Path, allowed_prefixes: tuple[str, ...],
         contaminating = [a for a in flagged if not a["errored"]]
         own_gate_events = [e for e in gate_events if e.get("agent_id") == agent_id]
         own_push_events = [e for e in push_events if e.get("agent_id") == agent_id]
+        # v1.2 (audit F6): pushed-instrument BYTES are verified, not just the
+        # version/token echo — each push event's logged sha256 is compared to
+        # the registered C7 hash, and push-error events are problems.
+        push_problems: list[str] = []
+        registry = {s["name"]: s for s in hooklib.pushed_instruments(manifest, agent_type)}
+        for event in own_push_events:
+            if event.get("event") == "push-error":
+                push_problems.append(f"push-error logged: {event.get('error', '?')}")
+                continue
+            spec = registry.get(str(event.get("name")))
+            want = (spec or {}).get("registry_sha256", "")
+            got = str(event.get("sha256") or "")
+            if want and got and got != want:
+                push_problems.append(
+                    f"pushed bytes differ from registered hash: {event.get('name')} "
+                    f"(pushed {got[:16]}…, registered {want[:16]}…)")
+        if push_problems:
+            validation["problems"] = list(validation.get("problems") or []) + push_problems
+            validation["valid"] = False
         agents.append({
             "agent_id": agent_id,
             "agent_type": agent_type,
@@ -296,7 +352,9 @@ def reconcile(run_dir: Path, allowed_prefixes: tuple[str, ...],
             "file_access": {"all": accesses, "flagged": flagged,
                             "contaminating": contaminating},
             "gate_events": [e.get("event") for e in own_gate_events],
-            "push_events": len(own_push_events),
+            "push": {"events": [{k: e.get(k) for k in ("event", "name", "sha256")}
+                                for e in own_push_events],
+                     "problems": push_problems},
             "divergence": {
                 "no_gate_event": not own_gate_events,
                 "blocked_but_output_present": (
@@ -307,14 +365,26 @@ def reconcile(run_dir: Path, allowed_prefixes: tuple[str, ...],
         })
 
     clean = all(a["reconciled"] for a in agents)
+    count_problems: list[str] = []
+    # v1.2 (audit F1): a reconciliation over ZERO governed spawns says
+    # nothing and must never read as clean; with an expected count, the
+    # denominator itself is asserted.
+    if not agents:
+        clean = False
+        count_problems.append("no governed spawns found in run directory")
+    if expect_spawns is not None and len(agents) != expect_spawns:
+        clean = False
+        count_problems.append(f"expected {expect_spawns} governed spawns, "
+                              f"found {len(agents)}")
     return {
-        "reconciliation_version": "1.1",
+        "reconciliation_version": "1.2",
         "run_dir": str(run_dir),
         "reconciled_at": datetime.now(timezone.utc).isoformat(),
         "agents": agents,
         "skipped_ungoverned": skipped_ungoverned,
         "spawns": len(agents),
         "spawns_reconciled": sum(a["reconciled"] for a in agents),
+        "count_problems": count_problems,
         "clean": clean,
     }
 
@@ -330,16 +400,36 @@ def main() -> int:
                         default=HOOKS_DIR / "receipt-gate-log.jsonl")
     parser.add_argument("--push-log", type=Path,
                         default=HOOKS_DIR / "push-receipts.jsonl")
+    parser.add_argument("--expect-spawns", type=int, default=None,
+                        help="assert exactly N governed spawns (audit F1: an "
+                             "empty or partial directory must not read clean)")
+    parser.add_argument("--require-pack", action="store_true",
+                        help="every governed spawn must carry an evidence-pack "
+                             "declaration (audit F18)")
     args = parser.parse_args()
 
     report = reconcile(args.run_dir.resolve(), DEFAULT_ALLOWED_PREFIXES,
                        args.gate_log, args.push_log,
-                       tuple(args.allow))
+                       tuple(args.allow),
+                       expect_spawns=args.expect_spawns,
+                       require_pack=args.require_pack)
     out_dir = args.out or (args.run_dir / "reconciliation")
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "reconciliation-report.json").write_text(
         json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
         encoding="utf-8")
+    # v1.2 (audit F10): the gate/push log slices the docstring promises are
+    # actually written — filtered to this run's agent ids, so the committed
+    # artefact directory carries the full decision trail.
+    run_ids = {a["agent_id"] for a in report["agents"]} | {
+        s["agent_id"] for s in report["skipped_ungoverned"]}
+    for log_path, slice_name in ((args.gate_log, "gate-log-slice.jsonl"),
+                                 (args.push_log, "push-log-slice.jsonl")):
+        entries = [e for e in load_log(log_path)
+                   if e.get("agent_id") in run_ids]
+        (out_dir / slice_name).write_text(
+            "\n".join(json.dumps(e, ensure_ascii=False) for e in entries)
+            + ("\n" if entries else ""), encoding="utf-8")
 
     for agent in report["agents"]:
         state = "OK " if agent["reconciled"] else "FAIL"
@@ -351,6 +441,8 @@ def main() -> int:
               f"receipts {'valid' if agent['receipts']['valid'] else 'INVALID'}; "
               f"{contaminating} contaminating access(es){warn}; gate events "
               f"{agent['gate_events'] or ['NONE']}")
+    for problem in report["count_problems"]:
+        print(f"[FAIL] denominator: {problem}")
     print(f"reconciliation: {report['spawns_reconciled']}/{report['spawns']} clean "
           f"-> {out_dir / 'reconciliation-report.json'}")
     return 0 if report["clean"] else 1

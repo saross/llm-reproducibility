@@ -3,7 +3,7 @@ export const meta = {
   description: 'One validation-benchmark arm: 5 pilot papers x 3 runs of FAIR scoring with per-item reconciliation hard stop',
   phases: [{ title: 'Score' }, { title: 'Reconcile' }],
 }
-// v1.1 (D3 prep, 2026-08-17; amendment 2 SS2/SS5). Changes from the v1.0
+// v1.2 (D3 prep + clean-context audit fixes, 2026-08-17; amendment 2 SS2/SS5). Changes from the v1.0
 // script that ran the 2026-08-03 arms: (1) per-paper evidence-pack
 // injection — the prompt line format is the single source of truth for
 // scripts/reconcile-run.py's PACK_DECLARATION_RE, change both together;
@@ -20,6 +20,11 @@ const { agentType, arm, papers, schema } = (typeof args === "string" ? JSON.pars
 // the runtime validator is strict JSON Schema, so strip non-standard keywords
 // from the copy handed to agents.
 delete schema.version
+if (agentType !== `fair-assessor-${arm}`) {
+  // Audit F17: a mislabelled invocation (sonnet scores filed as opus) would
+  // otherwise be invisible in-band.
+  throw new Error(`arm/agentType mismatch: arm=${arm} agentType=${agentType}`)
+}
 for (const p of papers) {
   if (!p.pack || !p.pack_sha256) throw new Error(`paper ${p.slug}: pack path + pack_sha256 required (amendment 2 SS2)`)
 }
@@ -62,11 +67,14 @@ const reconcilePrompt = (t) =>
   `1. Locate the live workflow run directory: list candidates newest-first with\n` +
   `   ls -td ~/.claude/projects/-home-shawn-Code-llm-reproducibility/*/subagents/workflows/wf_*/ 2>/dev/null | head -5\n` +
   `   and pick the newest directory containing an agent-*.jsonl transcript whose text contains BOTH ` +
-  `"arm ${arm}, run ${t.run} of 3" AND "Paper: ${t.slug}" (grep -l). The matched transcript's filename stem ` +
-  `after "agent-" is the scoring spawn's agent_id. If the transcript has no StructuredOutput tool call yet ` +
-  `(still being written), wait 5 seconds and re-check, up to 6 attempts.\n` +
+  `"arm ${arm}, run ${t.run} of 3" AND "Paper: ${t.slug}" (grep -l). CRITICAL disambiguation (your own ` +
+  `transcript also contains those strings): for EVERY grep match, read the sibling agent-<id>.meta.json ` +
+  `and keep only transcripts whose agentType is "${agentType}" — that is the scoring spawn; discard any ` +
+  `match whose meta says general-purpose (that is you or a sibling verifier). The surviving transcript's ` +
+  `filename stem after "agent-" is the scoring spawn's agent_id. If it has no StructuredOutput tool call ` +
+  `yet (still being written), wait 5 seconds and re-check, up to 6 attempts.\n` +
   `2. From the repository root /home/shawn/Code/llm-reproducibility run:\n` +
-  `   venv/bin/python scripts/reconcile-run.py <run_dir> --out <run_dir>/reconciliation\n` +
+  `   venv/bin/python scripts/reconcile-run.py <run_dir> --require-pack --out <run_dir>/reconciliation\n` +
   `   A non-zero exit is EXPECTED whenever any spawn in the directory fails or is still incomplete - ` +
   `do not treat exit status as this item's verdict.\n` +
   `3. Read <run_dir>/reconciliation/reconciliation-report.json and find the record in "agents" whose ` +
@@ -85,17 +93,25 @@ const results = await pipeline(tasks,
 )
 
 const ok = results.filter(Boolean)
+const missing = tasks.length - ok.length
 const failures = ok.filter(x => !x.reconcile || x.reconcile.verdict !== 'pass')
-log(`arm ${arm}: ${ok.length}/${tasks.length} spawns returned; ` +
-    `${ok.length - failures.length} reconciled pass, ${failures.length} NOT reconciled`)
-if (failures.length) {
-  log(`HARD STOP (C9): ${failures.map(f => `${f.slug} r${f.run} (${f.reconcile ? f.reconcile.verdict : 'no reconcile result'})`).join('; ')} ` +
-      `- these items are unusable until re-run or operator-adjudicated; do not compute gates over them`)
+// Audit F13: ESCALATE outputs are counted in-band, not left to log archaeology.
+const escalates = ok.filter(x => x.result && x.result.status === 'ESCALATE')
+log(`arm ${arm}: ${ok.length}/${tasks.length} spawns returned (${missing} missing); ` +
+    `${ok.length - failures.length} reconciled pass, ${failures.length} NOT reconciled; ` +
+    `${escalates.length} ESCALATE`)
+if (failures.length || missing || escalates.length) {
+  log(`HARD STOP (C9): ${failures.map(f => `${f.slug} r${f.run} (${f.reconcile ? f.reconcile.verdict : 'no reconcile result'})`).join('; ') || 'no reconcile failures'}; ` +
+      `${missing} item(s) never returned; ${escalates.length} ESCALATE(s) ` +
+      `- unusable items must be re-run or operator-adjudicated; do not compute gates over them`)
 }
 return {
   arm,
   count: ok.length,
-  clean: failures.length === 0,
+  missing,
+  // Audit F4: an arm with items that never returned is NOT clean.
+  clean: failures.length === 0 && missing === 0 && escalates.length === 0,
+  escalates: escalates.map(x => ({ slug: x.slug, run: x.run })),
   reconcile_failures: failures.map(f => ({ slug: f.slug, run: f.run, reconcile: f.reconcile })),
   results,
 }

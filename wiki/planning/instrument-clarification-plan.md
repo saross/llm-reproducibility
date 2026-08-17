@@ -680,10 +680,58 @@ manifest.
           registrant's gates ruling; disagreement rule: third
           derivation or operator adjudication, never verifier-wins.
 
-      Clean-context Opus audit of this contract (per the skill's
-      standing-complement design): run after the operator dialogue,
-      naive-reviewer stance, denominator required, findings are claims
-      not verdicts — outcome recorded below when adjudicated.
+      **Clean-context Opus audit — RUN AND ADJUDICATED 2026-08-17.**
+      19 findings (5 BLOCKER, 9 SHOULD-FIX, 5 NOTE) against a full
+      denominator (17 files read whole, 24 contract claims checked, 11
+      probes incl. two live fault-injection executions of the
+      reconciler), plus 9 clean probes. ALL CONFIRMED on adjudication;
+      fixes landed same day (reconcile-run v1.2, workflow v1.2, agent
+      definitions v1.2, args launcher, analyse-tool flags, full pack
+      re-harvest). Contract amendments from the audit:
+
+      - **H3 honesty (audit F13):** threshold enforcement is
+        operator-at-arm-boundary; the workflow reports in-band (`clean`
+        now requires zero failures AND zero missing items AND zero
+        ESCALATEs; counts returned) but does not abort mid-arm.
+      - **H4 metric defined (audit F5):** the spend tripwire's unit is
+        the transcript recount excluding `cache_read_input_tokens`
+        (the run-record `total_tokens` proved unreproducible — recount
+        of the sonnet arm gave 3.33M vs recorded 1.31M). Baseline
+        ≈ 3.33M/arm on this metric; **tripwire = 7M per arm** (~2×).
+      - **H6 completed (audit F9/F10):** the output home also carries
+        per-run score payloads (`run-<N>/<slug>.json`, written from the
+        workflow's returned results at assembly — they are the only
+        input to stability) and the reconciler's gate/push log slices
+        (now actually written by reconcile-run v1.2).
+      - **H7 extended (audit F14):** a second cheap probe (P2) rides
+        the S4 gate — one haiku general-purpose workflow spawn proving
+        Bash capability in the reconcile lane before any scoring spend.
+      - **H9–11 residual (audit F16):** resume caching is same-session
+        only; a cross-session stop means incomplete items re-run (paid
+        again) — accepted, with the wind-down budget covering clean
+        completion; no journal-harvest tool exists (noted, not built).
+      - **H12 now mechanical (audit F7):** reconciliation reports carry
+        receipted VALUES, so the cross-arm identity check reads three
+        reports, not 45 transcripts.
+      - **New H14 (audit F15/F17):** arm args are built only by
+        `scripts/build-benchmark-args.py` (agentType derived from arm;
+        packs hashed from disk; schema loaded from its registered
+        file); the workflow asserts the arm/agentType binding.
+      - **New H15 (audit F1/F18):** the authoritative per-arm
+        reconciliation is invoked `--expect-spawns 15 --require-pack`
+        — an empty or partial directory, or a spawn without a pack
+        declaration, can never read clean.
+      - **Deferred with rationale (audit F12):** the rendering +
+        challenge-page-detection commitment is scoped "before any
+        census reliance" (amendment 2 §2); D3's packs use only the six
+        implemented JSON endpoints, none bot-gated. Implementation is
+        a pre-census item (below), and the 2026-08-15 decision-log
+        line overstating it as "implementation at D3 prep" is
+        corrected by this note.
+- [ ] **Pre-census (from amendment 2 §2 + audit F12): harvester
+      rendering step + challenge-page detection** for bot-gated
+      endpoints (DANS 200-with-challenge-body; tDAR 403) before any
+      census reliance on scripted fetches.
 - [ ] **D4. Gates → selection → census.** Pass: cheapest eligible arm,
       registered regression gate, census. Still below: majority-vote
       consequence, now with a defensible claim that the residual is

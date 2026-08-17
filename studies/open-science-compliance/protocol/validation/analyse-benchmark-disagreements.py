@@ -47,10 +47,16 @@ from typing import Any
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-BENCH_DIR = (
+# Audit F8 (2026-08-17): the benchmark directory is a CLI argument, not a
+# constant — running this against a new cycle must be explicit, and the
+# concordance half is suppressible: computing concordance against the OLD
+# E8 reference for a post-clarification cycle is exactly what the D3 run
+# contract's hardening 5 forbids (partial concordance).
+DEFAULT_BENCH_DIR = (
     REPO_ROOT
     / "studies/open-science-compliance/outputs/validation/benchmark-2026-08"
 )
+BENCH_DIR = DEFAULT_BENCH_DIR  # rebound in main() from --bench-dir
 MANIFEST = REPO_ROOT / "manifest.yaml"
 
 ARMS = ["sonnet-5", "opus-5", "fable-5"]
@@ -148,6 +154,19 @@ def load_references() -> dict[str, dict[str, dict[str, dict[str, Any]]]]:
 
 
 def main() -> None:
+    global BENCH_DIR
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--bench-dir", type=Path, default=DEFAULT_BENCH_DIR,
+                        help="benchmark cycle directory (default: the "
+                             "2026-08-03 cycle)")
+    parser.add_argument("--stability-only", action="store_true",
+                        help="suppress concordance (D3 contract hardening 5: "
+                             "no partial concordance against a retired "
+                             "reference)")
+    cli = parser.parse_args()
+    BENCH_DIR = cli.bench_dir.resolve()
+    stability_only = cli.stability_only
     """Recompute statistics, verify them, and emit the disputed-item record."""
     spawns = load_spawns()
     refs = load_references()
@@ -180,8 +199,9 @@ def main() -> None:
                     majority = int(sum(votes) >= 2)
                     stability[arm]["items"] += 1
                     stability[arm]["agreed"] += int(unanimous)
-                    concordance[arm]["items"] += 1
-                    concordance[arm]["agreed"] += int(majority == ref["present"])
+                    if not stability_only:
+                        concordance[arm]["items"] += 1
+                        concordance[arm]["agreed"] += int(majority == ref["present"])
                     if not unanimous or majority != ref["present"]:
                         item_disputed = True
                     arms_detail[arm] = {
@@ -214,6 +234,10 @@ def main() -> None:
             f"{arm}: stability {agreed}/{items} = {agreed / items:.4f} "
             f"(run-record {pub['agreed']}/{pub['items']}) {flag}"
         )
+        if stability_only:
+            print(f"{arm}: concordance SUPPRESSED (--stability-only; "
+                  f"pending E8 v2)")
+            continue
         c_agreed, c_items = concordance[arm]["agreed"], concordance[arm]["items"]
         print(
             f"{arm}: concordance {c_agreed}/{c_items} = {c_agreed / c_items:.4f} "

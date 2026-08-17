@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+"""Build the D3 benchmark workflow's args deterministically (audit F15/F17).
+
+**Version:** 1.0
+
+The clean-context audit (2026-08-17) found nothing binding the S4 probe's
+schema decision — or anything else — to the arm invocations: args were
+ad hoc. This launcher makes the args a single derived artefact:
+
+- `agentType` is derived from the arm (never typed independently — the
+  workflow additionally asserts the binding, audit F17);
+- papers are enumerated from the E8 registry order with corpus-store
+  `vor.pdf` paths, existence-checked;
+- each paper's evidence pack path + sha256 are computed from the committed
+  pack bytes at build time (the workflow injects them; the reconciler
+  re-verifies them);
+- the structured-output schema is loaded from its manifest-registered file
+  (`assessment.schemas.benchmark_fair_output`), so a stale or wrong schema
+  cannot be handed to an arm without the manifest saying so. If the S4
+  probe forces the named retreat (conditionals → reconciliation layer),
+  the schema file changes under governance and this builder picks it up.
+
+Usage:
+    venv/bin/python scripts/build-benchmark-args.py <arm> [--out FILE]
+
+    <arm> ∈ {sonnet-5, opus-5, fable-5}
+
+Output: the args JSON for Workflow({scriptPath, args}) on stdout (or FILE).
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+import yaml
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+CORPUS_STORE = Path.home() / "corpora" / "llm-reproducibility"
+ARMS = ("sonnet-5", "opus-5", "fable-5")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("arm", choices=ARMS)
+    parser.add_argument("--out", type=Path, default=None)
+    args = parser.parse_args()
+
+    manifest = yaml.safe_load((REPO_ROOT / "manifest.yaml").read_text())
+
+    schema_rel = manifest["assessment"]["schemas"]["benchmark_fair_output"]["file"]
+    schema = json.loads((REPO_ROOT / schema_rel).read_text())
+
+    packs = manifest["evidence_packs"]["packs"]
+    registry = manifest["reference_datasets"]["pilot_fair_assessments"]["items"]
+
+    papers = []
+    for entry in registry:
+        slug = entry["slug"]
+        paper_path = CORPUS_STORE / slug / "vor.pdf"
+        if not paper_path.is_file():
+            print(f"ERROR: paper source missing: {paper_path}", file=sys.stderr)
+            return 1
+        pack_rel = packs[slug]["file"]
+        pack_bytes = (REPO_ROOT / pack_rel).read_bytes()
+        papers.append({
+            "slug": slug,
+            "path": str(paper_path),
+            "pack": pack_rel,
+            "pack_sha256": hashlib.sha256(pack_bytes).hexdigest(),
+        })
+
+    payload = {
+        "agentType": f"fair-assessor-{args.arm}",
+        "arm": args.arm,
+        "papers": papers,
+        "schema": schema,
+    }
+    text = json.dumps(payload, indent=1, sort_keys=True) + "\n"
+    if args.out:
+        args.out.write_text(text, encoding="utf-8")
+        print(f"args for arm {args.arm}: {len(papers)} papers -> {args.out}")
+    else:
+        print(text)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
