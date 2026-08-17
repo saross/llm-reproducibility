@@ -1,0 +1,244 @@
+{
+ "code_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "Both principal scripts are retrievable via HTTPS from the open-access article landing page (Row 6 entitlement: HTTPS delivery via the article landing page); the article DOI resolves (pack http_status 200) and the article is open access under CC BY.",
+    "pack_refs": [
+     "crossref:10.1016/j.jas.2023.105921"
+    ],
+    "present": 1
+   },
+   "A1_1": {
+    "evidence": "HTTPS to an open-access CC BY article: \"This is an open access article under the CC BY license\" - open, free, universally implementable, no subscription or proprietary software required.",
+    "present": 1
+   },
+   "A1_2": {
+    "evidence": "Fully open supplement requiring no authentication; per v2.1, \"a fully open resource requiring no authentication satisfies A1.2\".",
+    "present": 1
+   },
+   "A2": {
+    "evidence": "Row 6: supplement-only deposits have no independent metadata record, and article-level record persistence is a Crossref member obligation under \"commercially reasonable efforts\", \"not a by-construction warranty\" - A2 = 0.",
+    "present": 0
+   },
+   "F1": {
+    "evidence": "The paper's own analysis scripts are distributed as the article's supplement under the article DOI: \"The script used to run all validation analyses is available in the supplementary information\"; \"Supplementary data to this article can be found online at https://doi.org/10.1016/j.jas.2023.105921.\" v2.1 F1 credits the article DOI for supplement-distributed artefacts; the pack shows the DOI resolved (status 200) with the supplement declared under it.",
+    "pack_refs": [
+     "crossref:10.1016/j.jas.2023.105921"
+    ],
+    "present": 1
+   },
+   "F2": {
+    "evidence": "No independent metadata record exists for the code artefact: platform Row 6 (publisher supplement of a Crossref-registered article) guarantees no independent metadata record, and the pack shows no component DOI - its Crossref record describes the article, not the script.",
+    "pack_refs": [
+     "crossref:10.1016/j.jas.2023.105921"
+    ],
+    "present": 0
+   },
+   "F3": {
+    "evidence": "No artefact-level metadata record exists to carry an identifier for the scripts (Row 6: supplement-only deposits have F2 = F3 = F4 = 0).",
+    "present": 0
+   },
+   "F4": {
+    "evidence": "The supplementary scripts are not indexed in any searchable code registry (no Zenodo/CRAN/Software Heritage deposit evidenced; Row 6: no registry indexing for supplement-only deposits).",
+    "present": 0
+   },
+   "I1": {
+    "evidence": "The code is R source: \"All analyses were undertaken in 'R' version 4.3.0\" - a formal, open, widely shared representation of the analysis.",
+    "present": 1
+   },
+   "I2": {
+    "evidence": "No FAIR vocabularies are evidenced in or about the code; looked for vocabulary or ontology usage statements, found none.",
+    "present": 0
+   },
+   "I3": {
+    "evidence": "No evidence that the scripts or any metadata about them carry qualified PID references; supplement contents are not inspectable from the paper or the pack, and no table entitlement speaks to this.",
+    "present": 0
+   },
+   "R1": {
+    "evidence": "The scripts' purpose and behaviour are documented in detail in the article served with them: validation design (k = 5, 10, 20, 30; 5-50% sampling; \"One thousand iterations of each process\"), duplicate-handling procedure (Section 2.4.1.6.1), and runtime (\"'R' version 4.3.0\").",
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "The supplement is served with the article and carries the article licence by the v2.1 same-as-paper default: \"This is an open access article under the CC BY license (http://creativecommons.org/licenses/by/4.0/)\"; the pack records cc-by-4.0 with licence_conflicts conflict: false.",
+    "pack_refs": [
+     "crossref:10.1016/j.jas.2023.105921"
+    ],
+    "present": 1
+   },
+   "R1_2": {
+    "evidence": "Code provenance is documented: runtime version (\"'R' version 4.3.0\"), method lineage (OLE per Roberts and Solow 2003; Key et al. 2021a), full analytical parameters, and CRediT roles attributing analysis to named authors (e.g. \"Alastair Key: Conceptualization, Data curation, Formal analysis...\").",
+    "present": 1
+   },
+   "R1_3": {
+    "evidence": "No package structure, CITATION.cff, CodeMeta, or community review (CRAN, JOSS, rOpenSci) is evidenced for the supplementary scripts.",
+    "present": 0
+   }
+  },
+  "total": 8
+ },
+ "data_completeness": {
+  "assessment_scope": "straightforward",
+  "barriers": [
+   "co-author gatekeeping: most morphometric datasets are held by the author team with no deposit and no availability statement",
+   "never published: replica Early Archaic point data \"have not been used in any other published studies\" (curated at Kent State University Experimental Archaeology Laboratory)",
+   "unpublished thesis: Olduvai cleaver data described in Martin-Ramos 2022, an unpublished UCL doctoral thesis",
+   "closed monographs: Middle Historic bowl data per Petrie 2020 (Oxbow) and Neolithic pot data per Robb 2007 (CUP)",
+   "recent unarchived fieldwork: Old Park flake data from the 2020 excavation season, no deposit stated",
+   "no data availability statement in the article; only summary statistics published (Tables 1-7)"
+  ],
+  "coverage_category": "minimal",
+  "coverage_percentage": 16.7,
+  "datasets_accessible_tier_0_2": 2,
+  "datasets_enumerated": 12
+ },
+ "data_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "Data-completeness coverage is minimal (2 of 12 datasets, 16.7%, reachable only via cited prior publications); the instrument's A1 cross-reference sets A1 = 0. No documented ethical/legal restriction exists - the data are simply not deposited (Declaration of competing interest: \"None\"; no CARE or human-subjects claim).",
+    "present": 0
+   },
+   "A1_1": {
+    "evidence": "No retrieval protocol of any kind exists for the majority of principal datasets (unpublished, co-author-held); conjunctive scoring over principal datasets fails.",
+    "present": 0
+   },
+   "A1_2": {
+    "evidence": "De facto access control (data obtainable, if at all, only by approaching the authors) with no documented or justified mechanism: no availability statement, no request procedure, no ethical justification - the v2.1 score-0 case.",
+    "present": 0
+   },
+   "A2": {
+    "evidence": "No metadata records exist independent of the undeposited datasets; nothing would survive resource unavailability.",
+    "present": 0
+   },
+   "F1": {
+    "evidence": "No principal dataset carries its own PID and none is distributed as the article's supplement: the paper states only that scripts are in the supplementary information; raw data for the 12 required datasets are nowhere stated as deposited (e.g. the Early Archaic points \"have not been used in any other published studies\"). The evidence pack contains no dataset record.",
+    "present": 0
+   },
+   "F2": {
+    "evidence": "No independent metadata record exists for any dataset; nothing is deposited in any repository. The pack's only record is the Crossref record for the article itself.",
+    "pack_refs": [
+     "crossref:10.1016/j.jas.2023.105921"
+    ],
+    "present": 0
+   },
+   "F3": {
+    "evidence": "No dataset metadata record exists, so no record carries a dataset identifier; searched paper and pack, found none.",
+    "present": 0
+   },
+   "F4": {
+    "evidence": "No dataset is indexed in any searchable registry: no deposit is stated in the paper and the evidence pack holds no dataset record.",
+    "present": 0
+   },
+   "I1": {
+    "evidence": "Data appear only as summary statistics in PDF tables (Tables 1-7) and distribution figures; no machine-actionable structured format (CSV, structured schema) is evidenced for any principal dataset.",
+    "present": 0
+   },
+   "I2": {
+    "evidence": "No controlled vocabularies or ontologies with PIDs are referenced for any dataset; looked for vocabulary/ontology conformance statements, found none.",
+    "present": 0
+   },
+   "I3": {
+    "evidence": "No dataset metadata exists to carry qualified PID references; upstream data sources are cited bibliographically only (e.g. \"Data are derived from Buchanan and Hamilton's (2021) study\").",
+    "present": 0
+   },
+   "R1": {
+    "evidence": "Every principal dataset is richly described in a dedicated Methods subsection (2.3.1-2.4.4.2) with site/cultural context, chronology, material, sample sizes, variables, and measurement procedures (e.g. bowls \"measured using diameter boards with 1 cm increments, callipers and a metal rule (see: Petrie, 2020)\"), plus per-dataset summary statistics (Tables 1, 5-7).",
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "No dataset is deposited, so no dataset carries any licence; the article's CC BY licence attaches to the article and its supplement, not to the undeposited principal datasets.",
+    "present": 0
+   },
+   "R1_2": {
+    "evidence": "Conjunctive scoring fails on the copper socketed tang point dataset (n = 93): unlike every other case study, no collection source, measurer, or data-collection citation is given (Section 2.4.3.1 states only \"we investigate the potential morphological range of socketed tang points using length (mm), breadth (mm), thickness (mm) and mass (g)\"). Most other datasets do carry provenance (e.g. \"Data collection for the Olduvai cleavers was conducted as part of CMR's doctoral research\").",
+    "present": 0
+   },
+   "R1_3": {
+    "evidence": "No deposit exists, so no metadata schema (DataCite/Dublin Core), domain vocabulary, or accredited-repository ingest applies to any dataset.",
+    "present": 0
+   }
+  },
+  "total": 1
+ },
+ "escalate_reason": null,
+ "input_provenance": [
+  {
+   "input": "Replica handaxe assemblage morphometric data (n = 500; Key and Lycett 2017 replicas)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Replica Early Archaic point morphometric data (n = 45; knapped by M.I.E. in 2021, curated at Kent State)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Old Park flake morphometric data (n = 173, 2020 excavation season)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Boxgrove handaxe morphometric data (n = 254)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Olduvai Gorge Beds III-IV cleaver morphometric data (n = 134; CMR doctoral research)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Sibudu bipolar core morphometric data (n = 131)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Capuchin flake morphometric data (n = 31; Serra da Capivara)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Copper socketed tang point morphometric data (n = 93; Old Copper Culture)",
+   "provenance": "undeterminable"
+  },
+  {
+   "input": "Middle Historic ceramic bowl morphometric data (Bannu Basin; n up to 1466)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Neolithic Impressed Ware and Stentinello pot morphometric data (Penitenzeria)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Paleoindian point morphometric data (Clovis n = 810, Eastern Clovis n = 228, Folsom n = 179, Midland n = 64; from Buchanan and Hamilton 2021)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Geometric microlith morphometric data, Cueva de la Cocina phases A (n = 344) and B (n = 390)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "OLE validation R script (supplementary information)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "OLE case-study R script (supplementary information)",
+   "provenance": "author-deposited"
+  }
+ ],
+ "paper_slug": "key-et-al-2024",
+ "receipts": {
+  "agent_version": "fair-assessor-fable-5 v1.2",
+  "instrument_receipts": {
+   "fair-instrument": "5ff4c48c4f5c7321",
+   "fair-principles-guide": "0eed0b8d570bf55e"
+  },
+  "instrument_versions": {
+   "fair-instrument": "2.1",
+   "fair-principles-guide": "1.1"
+  },
+  "model_id": "claude-fable-5",
+  "pulled_files_read": [
+   "/home/shawn/corpora/llm-reproducibility/key-et-al-2024/vor.pdf",
+   "/home/shawn/Code/llm-reproducibility/corpus/evidence-packs/key-et-al-2024.json",
+   "/home/shawn/.claude/projects/-home-shawn-Code-llm-reproducibility/6e8352ed-2013-4674-8720-85245d97fbc7/tool-results/hook-c91010a8-39a8-409a-835d-153cc9b50bbd-1-additionalContext.txt"
+  ]
+ },
+ "schema_version": "1.1",
+ "stated_availability": "No formal data availability statement is present. Code: \"The script used to run all validation analyses is available in the supplementary information\" (Section 2.3.3) and \"The script used to run all case study tests is available in the supplementary information\" (Section 2.4). Appendix A: \"Supplementary data to this article can be found online at https://doi.org/10.1016/j.jas.2023.105921.\" Raw morphometric data are nowhere stated as deposited; the replica Early Archaic points \"have not been used in any other published studies\"; case-study data are attributed to co-author-held sources, monographs (Petrie 2020; Robb 2007), an unpublished thesis (Martin-Ramos 2022), and prior studies (Buchanan and Hamilton 2021; Cortell-Nicolau et al. 2023). Only descriptive statistics appear in the article (Tables 1-7). Descriptive record only; not mapped to L1-L6.",
+ "status": "OK"
+}
