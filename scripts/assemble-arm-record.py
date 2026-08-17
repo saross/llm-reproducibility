@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble one benchmark arm's committed artefact set (D3 run contract H6).
 
-**Version:** 1.3
+**Version:** 1.4
 
 From a completed arm workflow's transcript directory, produce the committed
 arm directory: per-run score payloads (`run-<N>/<slug>.json` — the only
@@ -9,6 +9,17 @@ input to stability, audit F9), the authoritative reconciliation report and
 gate/push log slices (audit F10), and `run-record.json` carrying per-spawn
 identity, receipts, and the contract-defined spend recount (transcript
 tokens excluding cache reads — hardening H4's reproducible unit).
+
+v1.4 (effort pinning, 2026-08-17): the workflow (v1.5) injects a
+``Provenance: launch commit <hash>; reasoning effort pinned: <level>.``
+line into every scoring prompt. The assembler parses it back from the
+transcripts — the record's ``provenance_pinned`` block is artefact-derived,
+unlike the operator-attested ``run_environment`` values. Mixed values
+across an arm's scoring spawns are a hard error (mixed-vintage, the H12
+analogue); ``--expect-effort`` / ``--expect-launch-commit`` let the
+operator assert the intended pin. Pre-pinning transcripts (the 2026-08-17
+D3 arms and earlier) carry no Provenance line and assemble with the block
+null-valued.
 
 Usage:
     venv/bin/python scripts/assemble-arm-record.py <run_dir> <arm> <out_dir>
@@ -27,6 +38,13 @@ from pathlib import Path
 # The prompt sits inside a JSON string in the transcript, so the newline
 # appears as an escaped \n two-character sequence; accept both forms.
 PROMPT_RE = re.compile(r"arm (\S+), run (\d) of 3\)\.(?:\\n|\n)Paper: ([A-Za-z0-9-]+)\.")
+
+# Effort pinning (v1.4): format truth lives in the workflow's scorePrompt
+# (fair-benchmark-arm.workflow.js v1.5) — change both together;
+# tests/test_effort_pinning.py cross-checks the two files.
+PROVENANCE_RE = re.compile(
+    r"Provenance: launch commit ([0-9a-f]{40}); "
+    r"reasoning effort pinned: (low|medium|high|xhigh|max)\.")
 
 
 def transcript_payload(lines: list[str]) -> dict | None:
@@ -56,6 +74,35 @@ def transcript_identity(text: str) -> tuple[str, int, str] | None:
     return match.group(1), int(match.group(2)), match.group(3)
 
 
+def transcript_provenance(text: str) -> tuple[str, str] | None:
+    """(launch_commit, effort) parsed from the scoring prompt's Provenance
+    line, or None for pre-pinning transcripts (v1.4)."""
+    match = PROVENANCE_RE.search(text)
+    if not match:
+        return None
+    return match.group(1), match.group(2)
+
+
+def derive_arm_provenance(
+        per_spawn: list[tuple[str, str] | None]) -> tuple[str | None, str | None]:
+    """Arm-level (launch_commit, effort) from non-superseded scoring spawns.
+
+    All-absent (a pre-pinning run) derives (None, None); any mix — absent
+    beside present, or differing values — is a hard error, the
+    mixed-vintage condition (contract H12 analogue).
+
+    Raises:
+        ValueError: on mixed provenance across the arm's scoring spawns.
+    """
+    distinct = set(per_spawn)
+    if distinct == {None}:
+        return None, None
+    if len(distinct) != 1:
+        raise ValueError(
+            f"mixed scoring-spawn provenance across the arm: {sorted(map(str, distinct))}")
+    return distinct.pop()
+
+
 def transcript_telemetry(lines: list[str]) -> dict:
     """Artefact-derived spawn telemetry (v1.3, operator directive
     2026-08-17): validator retry count (errored StructuredOutput results),
@@ -82,9 +129,12 @@ def transcript_telemetry(lines: list[str]) -> dict:
                 continue
             if blk.get("type") == "thinking":
                 thinking_blocks += 1
-            elif blk.get("type") == "tool_use"                     and blk.get("name") == "StructuredOutput":
+            elif (blk.get("type") == "tool_use"
+                  and blk.get("name") == "StructuredOutput"):
                 structured_ids.add(str(blk.get("id")))
-            elif blk.get("type") == "tool_result"                     and str(blk.get("tool_use_id")) in structured_ids                     and blk.get("is_error"):
+            elif (blk.get("type") == "tool_result"
+                  and str(blk.get("tool_use_id")) in structured_ids
+                  and blk.get("is_error")):
                 retries += 1
     wallclock = None
     if first_ts and last_ts:
@@ -135,6 +185,16 @@ def main() -> int:
                         help="superseded scoring spawn in the primary dir "
                              "(excluded from payloads and clean requirement; "
                              "its spend still counts against the wire)")
+    parser.add_argument("--expect-effort",
+                        choices=["low", "medium", "high", "xhigh", "max"],
+                        default=None,
+                        help="assert the artefact-derived effort pin matches "
+                             "this value (error on mismatch or absence)")
+    parser.add_argument("--expect-launch-commit", default=None,
+                        metavar="COMMIT",
+                        help="assert the artefact-derived launch commit "
+                             "matches this full hash (error on mismatch or "
+                             "absence)")
     parser.add_argument("--environment", action="append", default=[],
                         metavar="KEY=VALUE",
                         help="run-environment attestation (repeatable): "
@@ -174,6 +234,7 @@ def main() -> int:
                   "cache_creation_input_tokens": 0,
                   "cache_read_input_tokens": 0, "contract_metric_tokens": 0}
     payload_count = 0
+    provenance_values: list[tuple[str, str] | None] = []
     transcripts = [tr for directory in all_dirs
                    for tr in sorted(directory.glob("agent-*.jsonl"))]
     for transcript in transcripts:
@@ -200,8 +261,12 @@ def main() -> int:
                       f"or payload", file=sys.stderr)
                 return 1
             _, run, slug = identity
+            provenance = transcript_provenance(text)
+            provenance_values.append(provenance)
             record.update({"run": run, "slug": slug,
-                           "status": payload.get("status")})
+                           "status": payload.get("status"),
+                           "launch_commit": provenance[0] if provenance else None,
+                           "effort_pinned": provenance[1] if provenance else None})
             run_out = out_dir / f"run-{run}"
             run_out.mkdir(exist_ok=True)
             (run_out / f"{slug}.json").write_text(
@@ -212,6 +277,21 @@ def main() -> int:
     if payload_count != 15:
         print(f"ERROR: expected 15 score payloads, wrote {payload_count}",
               file=sys.stderr)
+        return 1
+
+    try:
+        arm_commit, arm_effort = derive_arm_provenance(provenance_values)
+    except ValueError as exc:
+        print(f"ERROR: {exc} — assembly refused (mixed-vintage)",
+              file=sys.stderr)
+        return 1
+    if args.expect_effort and arm_effort != args.expect_effort:
+        print(f"ERROR: --expect-effort {args.expect_effort} but transcripts "
+              f"derive {arm_effort!r}", file=sys.stderr)
+        return 1
+    if args.expect_launch_commit and arm_commit != args.expect_launch_commit:
+        print(f"ERROR: --expect-launch-commit {args.expect_launch_commit} "
+              f"but transcripts derive {arm_commit!r}", file=sys.stderr)
         return 1
 
     recon_out = out_dir / "reconciliation"
@@ -271,10 +351,20 @@ def main() -> int:
                        + [f"reconciliation/extra-{i+1}-reconciliation-report.json"
                           for i in range(len(reports) - 1)],
         },
+        "provenance_pinned": {
+            "note": "artefact-derived: parsed from the Provenance line the "
+                    "workflow (v1.5+) injects into every scoring prompt; "
+                    "null values mean a pre-pinning run (effort was "
+                    "session-inherited and attestation-only)",
+            "effort": arm_effort,
+            "launch_commit": arm_commit,
+        },
         "run_environment": {
             "note": "session/operator-attested values plus auto-captured "
                     "harness version; the spawn metadata records no effort "
-                    "field, so these are attestations, not artefact-derived",
+                    "field, so these are attestations, not artefact-derived "
+                    "— for effort, provenance_pinned supersedes these when "
+                    "non-null",
             "claude_code_version": claude_version,
             **{kv.split("=", 1)[0]: kv.split("=", 1)[1]
                for kv in args.environment if "=" in kv},
@@ -288,9 +378,11 @@ def main() -> int:
     }
     (out_dir / "run-record.json").write_text(
         json.dumps(record, indent=1, sort_keys=True) + "\n")
+    pin_note = (f"effort {arm_effort}, commit {arm_commit[:12]}"
+                if arm_effort else "no provenance pin (pre-pinning run)")
     print(f"arm {args.arm}: {payload_count} payloads, "
           f"{record['usage_contract_metric']['contract_metric_tokens']:,} "
-          f"contract-metric tokens -> {out_dir}")
+          f"contract-metric tokens, {pin_note} -> {out_dir}")
     return 0
 
 

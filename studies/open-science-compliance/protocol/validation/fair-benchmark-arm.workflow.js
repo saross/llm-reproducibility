@@ -3,10 +3,21 @@ export const meta = {
   description: 'One validation-benchmark arm: 5 pilot papers x 3 runs of FAIR scoring with per-item reconciliation hard stop',
   phases: [{ title: 'Score' }, { title: 'Reconcile' }],
 }
-// v1.4 (D3 prep + audit fixes + S4 retreat + arm-1 discovery fix, 2026-08-17; amendment 2 SS2/SS5). Changes from the v1.0
-// script that ran the 2026-08-03 arms: (1) per-paper evidence-pack
-// injection — the prompt line format is the single source of truth for
-// scripts/reconcile-run.py's PACK_DECLARATION_RE, change both together;
+// v1.5 (effort pinning, 2026-08-17). Changes from v1.4 (which ran the D3
+// arms): (4) reasoning effort is PINNED, never session-inherited — args
+// carry {effort, launch_commit} (built only by
+// scripts/build-benchmark-args.py, which refuses a dirty tracked tree);
+// effort rides the scoring agent() opts (behavioural pin) AND a Provenance
+// line in every scoring prompt (artefact-derived record: the harness
+// persists no effort field in spawn metadata, so the transcript prompt is
+// the only durable carrier). The Provenance line format is the single
+// source of truth for scripts/assemble-arm-record.py's PROVENANCE_RE —
+// change both together, and never touch prompt lines 1-3 (assembler
+// PROMPT_RE + reconciler PACK_DECLARATION_RE anchor there).
+// Prior changes from the v1.0 script that ran the 2026-08-03 arms:
+// (1) per-paper evidence-pack injection — the prompt line format is the
+// single source of truth for scripts/reconcile-run.py's
+// PACK_DECLARATION_RE, change both together;
 // (2) a per-item Reconcile stage (cheap mechanical agent) runs
 // scripts/reconcile-run.py after each scoring spawn and binds the verdict
 // to that spawn's agent_id — the C9 per-item hard stop (SubagentStop gate
@@ -14,8 +25,18 @@ export const meta = {
 // reconcile_failures and clean so the operator accepts no unreconciled
 // item. The operator still runs the whole-dir reconciliation afterwards as
 // the authoritative archival pass.
-// Args shape: {agentType, arm, papers: [{slug, path, pack, pack_sha256}], schema}
-const { agentType, arm, papers, schema } = (typeof args === "string" ? JSON.parse(args) : args)
+// Args shape: {agentType, arm, effort, launch_commit, papers: [{slug, path, pack, pack_sha256}], schema}
+const { agentType, arm, effort, launch_commit, papers, schema } = (typeof args === "string" ? JSON.parse(args) : args)
+const EFFORT_LEVELS = ["low", "medium", "high", "xhigh", "max"]
+if (!EFFORT_LEVELS.includes(effort)) {
+  // Effort pinning: an absent or malformed pin means the spawns would
+  // silently inherit the session's effort — the exact failure this build
+  // exists to close. Hard stop, never default.
+  throw new Error(`effort must be one of ${EFFORT_LEVELS.join("/")}, got: ${effort}`)
+}
+if (!/^[0-9a-f]{40}$/.test(launch_commit || "")) {
+  throw new Error(`launch_commit must be a full 40-hex commit hash, got: ${launch_commit}`)
+}
 // The registered schema file carries a document-version field (E4 carrier);
 // the runtime validator is strict JSON Schema, so strip non-standard keywords
 // from the copy handed to agents.
@@ -32,7 +53,8 @@ const tasks = []
 for (let run = 1; run <= 3; run++) {
   for (const p of papers) tasks.push({ run, slug: p.slug, path: p.path, pack: p.pack, pack_sha256: p.pack_sha256 })
 }
-log(`arm ${arm}: ${tasks.length} scoring spawns (5 papers x 3 runs), each with a per-item reconcile stage`)
+log(`arm ${arm}: ${tasks.length} scoring spawns (5 papers x 3 runs), each with a per-item reconcile stage; ` +
+    `effort pinned ${effort}, launch commit ${launch_commit.slice(0, 12)}`)
 
 const RECONCILE_SCHEMA = {
   type: "object",
@@ -51,6 +73,7 @@ const scorePrompt = (t) =>
   `Benchmark scoring task (preregistered validation phase, arm ${arm}, run ${t.run} of 3).\n` +
   `Paper: ${t.slug}. Source (read in full): ${t.path}\n` +
   `Evidence pack (read in full): ${t.pack} (sha256 ${t.pack_sha256})\n` +
+  `Provenance: launch commit ${launch_commit}; reasoning effort pinned: ${effort}.\n` +
   `Score this paper on the pushed FAIR instrument (v2.1, with its clarification sections) exactly per your agent brief. ` +
   `The paper PDF is the sole paper source: supplementary files are deliberately not provided; ` +
   `apply the data-completeness coverage procedure from the paper's own statements and content. ` +
@@ -86,7 +109,7 @@ const reconcilePrompt = (t) =>
   `with what you observed in detail. Never guess an agent_id.`
 
 const results = await pipeline(tasks,
-  t => agent(scorePrompt(t), { agentType, label: `${t.slug} r${t.run}`, phase: 'Score', schema })
+  t => agent(scorePrompt(t), { agentType, effort, label: `${t.slug} r${t.run}`, phase: 'Score', schema })
     .then(v => ({ arm, run: t.run, slug: t.slug, result: v })),
   (scored, t) => scored === null ? null : agent(reconcilePrompt(t), {
     agentType: 'general-purpose', model: 'haiku', effort: 'low',
@@ -109,6 +132,8 @@ if (failures.length || missing || escalates.length) {
 }
 return {
   arm,
+  effort,
+  launch_commit,
   count: ok.length,
   missing,
   // Audit F4: an arm with items that never returned is NOT clean.
