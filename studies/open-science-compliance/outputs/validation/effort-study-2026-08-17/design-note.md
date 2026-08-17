@@ -38,9 +38,18 @@ per-item reconcile spawns per arm. Arms sequential with per-arm hard stop:
 4. `opus-5` @ `max` — **OFF unless the opus xhigh run shows deficiencies**
    (operator ruling 2026-08-17, superseding the original arm-2 plan).
 
-**Result, arm 1 (2026-08-17):** sonnet@max stability **130/150 = 0.8667**,
-below the gate — +2 items over xhigh at 3.4× cost
-(`arm-sonnet-5-max/completion-report-2026-08-17.md`).
+**Results (2026-08-17):**
+
+| Arm | Stability | Contract-metric tokens | Compliance |
+|---|---|---|---|
+| sonnet-5 @ high | **122/150 = 0.8133** | 5,664,843 | clean first pass |
+| sonnet-5 @ xhigh (D3, attested) | 128/150 = 0.8533 | 6,216,252 | clean after verifier adjudication |
+| sonnet-5 @ max | **130/150 = 0.8667** | 21,245,484 | 4 items re-run; 14 dead attempts; key r2 × 3 |
+
+The sonnet effort-response curve is monotone but shallow and never
+reaches the ≥ 0.90 gate: +6 items for high→xhigh (at ~equal cost), +2 for
+xhigh→max (at 3.4× cost with compliance degradation). Effort does not
+rescue the arm. Detail: `arm-sonnet-5-max/completion-report-2026-08-17.md`.
 
 ## Arm identity and provenance (Q1, Q2)
 

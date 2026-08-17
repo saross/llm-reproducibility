@@ -1,0 +1,206 @@
+{
+ "code_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "Row 6 entitlement: HTTPS delivery via the article landing page. The data-completeness A1 override is specific to data FAIR per the instrument and is not applied to code; the code is retrievable via the same standard DOI/HTTPS protocol as the article.",
+    "present": 1
+   },
+   "A1_1": {
+    "evidence": "As for data: no confirmed open/free access to the Elsevier-hosted Supplement containing the code; the evidence pack's Crossref record lists only TDM policy links, not an open-reading/CC licence.",
+    "pack_refs": [
+     "crossref:10.1016/j.jas.2023.105765"
+    ],
+    "present": 0
+   },
+   "A1_2": {
+    "evidence": "Access control (inferred Elsevier subscription paywall) exists without ethical/CARE justification for the code supplement, scoring 0 per the instrument's A1.2 rule.",
+    "pack_refs": [
+     "crossref:10.1016/j.jas.2023.105765"
+    ],
+    "present": 0
+   },
+   "A2": {
+    "evidence": "Row 6 by-construction: A2 = 0 for supplement-only deposits (no independent metadata persistence mechanism for the code).",
+    "present": 0
+   },
+   "F1": {
+    "evidence": "\"ArchaeoPhases code to reproduce the figure is included in the Supplement\" (Fig. 3 caption p.13; Fig. 4 caption p.15); the OxCal model script is likewise in the Supplement (p.11). Per F1's declared departure, code distributed as the article's own supplement scores F1=1 under the article DOI.",
+    "pack_refs": [
+     "crossref:10.1016/j.jas.2023.105765"
+    ],
+    "present": 1
+   },
+   "F2": {
+    "evidence": "Row 6 by-construction: supplement-only code carries no independent structured metadata record (no CodeMeta/CITATION.cff or repository metadata record is described).",
+    "present": 0
+   },
+   "F3": {
+    "evidence": "Row 6: no independent metadata record exists for the code to explicitly include its own identifier.",
+    "present": 0
+   },
+   "F4": {
+    "evidence": "The code is not separately indexed in any searchable code registry (e.g., Software Heritage, Zenodo, CRAN); only the third-party ArchaeoPhases dependency is CRAN-indexed, and that is not the authors' own principal code.",
+    "present": 0
+   },
+   "I1": {
+    "evidence": "The paper's own code is R (using the ArchaeoPhases package) and an OxCal script \u2014 both standard, shared programming/scripting languages for the domain (\"ArchaeoPhases code to reproduce the figure\", p.13,15; OxCal model structure, p.11), satisfying I1 per the guide's 'standard format - R code' criterion.",
+    "present": 1
+   },
+   "I2": {
+    "evidence": "No evidence of code using FAIR controlled vocabularies/ontologies.",
+    "present": 0
+   },
+   "I3": {
+    "evidence": "The paper's own code carries a qualified, citable reference to its principal third-party dependency: \"Philippe, A., & Vibet, M.-A. (2020). Analysis of archaeological phases using the CRAN package ArchaeoPhases. Journal of Statistical Software, 93. https://doi.org/10.18637/jss.v093.c01\" (p.28) \u2014 a typed dependency reference with a resolvable DOI, satisfying the instrument's citation-quality route for third-party dependencies.",
+    "pack_refs": [
+     "cran:https://cran.r-project.org/package=ArchaeoPhases"
+    ],
+    "present": 1
+   },
+   "R1": {
+    "evidence": "The paper documents what the code does in reasonable detail: construction of occurrence and tempo plots from MCMC output via ArchaeoPhases functions, and the two-section OxCal model structure (pp.11-13).",
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "Same default-to-same-as-paper reasoning as data_fair R1.1: the paper's stated licence, CC-BY-NC-ND (p.1), applies by the instrument's explicit default rule absent a separately stated supplement licence.",
+    "present": 1
+   },
+   "R1_2": {
+    "evidence": "OxCal version (4.4.2) and calibration-curve (IntCal20) provenance are stated, and reproducibility/stability is documented: \"five independent runs of the model indicate negligible between-run variability. Results of the calibration are replicable and stable\" (p.11).",
+    "present": 1
+   },
+   "R1_3": {
+    "evidence": "The paper's own principal scripts (OxCal model, R/ArchaeoPhases figure code) show no evidence of CITATION.cff, CodeMeta, formal package structure, or community review (CRAN/JOSS/rOpenSci); only the third-party ArchaeoPhases dependency is CRAN/JSS-reviewed, and per the instrument third-party dependencies are never substitutes for the paper's own principal code on this sub-principle.",
+    "present": 0
+   }
+  },
+  "total": 7
+ },
+ "data_completeness": {
+  "assessment_scope": "straightforward",
+  "barriers": [
+   "Closed monograph \u2014 Nielsen (2013), 'Typology', chapter in Hines & Bayliss (2013) Anglo-Saxon graves and grave goods of the 6th and 7th centuries AD (Society for Medieval Archaeology); no online/open access indicated in the paper or reference list.",
+   "Closed monograph \u2014 Brugmann (2004) Glass beads from early Anglo-Saxon graves (Oxbow Books), the established bead classification the beads are identified against; no online/open access indicated.",
+   "Paywall/manual extraction \u2014 Hines (2021) RAF Lakenheath cemetery bead data (20 additional graves) is reported within a journal article (The Antiquaries Journal) rather than independently deposited with a dataset PID; reference list gives no DOI for it."
+  ],
+  "coverage_category": "partial",
+  "coverage_percentage": 50,
+  "datasets_accessible_tier_0_2": 2,
+  "datasets_enumerated": 4
+ },
+ "data_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "Data-completeness coverage_category = 'partial' (50%: 2 of 4 enumerated upstream data sources at Tier 0-2). Per instrument: 'if coverage_category is minimal or partial, set A1 = 0 for data FAIR.' No ethical/legal-restriction exception applies \u2014 barriers are ordinary publication-access barriers (closed monographs, non-deposited journal-article data), not CARE/human-subjects restrictions.",
+    "present": 0
+   },
+   "A1_1": {
+    "evidence": "Neither the paper nor the evidence pack confirms open/free access to the Elsevier-hosted Supplement. The evidence pack's Crossref record for the article DOI lists only TDM (text-and-data-mining) policy links (elsevier.com/legal/tdmrep-license, tdm/userlicense/1.0/), not a general open-reading/CC licence \u2014 consistent with a subscription-gated venue rather than confirmed open access.",
+    "pack_refs": [
+     "crossref:10.1016/j.jas.2023.105765"
+    ],
+    "present": 0
+   },
+   "A1_2": {
+    "evidence": "Access control (an Elsevier subscription paywall, inferred from the TDM-only licence fields in the evidence pack, with no open-access CC licence recorded for the article DOI) exists without any ethical/CARE justification \u2014 an ordinary commercial restriction, which per the instrument scores 0 ('only where access control exists or is warranted but the mechanism is undocumented or unjustified').",
+    "pack_refs": [
+     "crossref:10.1016/j.jas.2023.105765"
+    ],
+    "present": 0
+   },
+   "A2": {
+    "evidence": "Row 6 by-construction: 'NO independent metadata record... A2 = 0 for supplement-only deposits.' No tombstone/persistence mechanism independent of the article itself is described.",
+    "present": 0
+   },
+   "F1": {
+    "evidence": "Paper states the model/data is distributed as the article's own supplement: \"Data and materials are available in the Supplement\" (p.24) and \"The revised chronological model was implemented in OxCal and is included in the Supplement\" (p.11). Per instrument F1's declared departure, an artefact distributed as the article's supplement scores F1=1 under the article DOI, confirmed resolved in the evidence pack.",
+    "pack_refs": [
+     "crossref:10.1016/j.jas.2023.105765"
+    ],
+    "present": 1
+   },
+   "F2": {
+    "evidence": "Platform-table Row 6 (publisher supplement of a Crossref-registered article): supplement-only deposits carry no independent structured metadata record beyond the article's own Crossref record. No paper text or evidence-pack record describes a separate metadata record for the Supplement file.",
+    "present": 0
+   },
+   "F3": {
+    "evidence": "Row 6: 'NO independent metadata record, licence field, registry indexing, or resource-level identifier \u2014 hence F2 = F3 = F4 = 0 ... for supplement-only deposits.' No evidence of a metadata record carrying its own identifier for the Supplement.",
+    "present": 0
+   },
+   "F4": {
+    "evidence": "Row 6 by-construction: the Supplement is not separately indexed in any searchable registry (Zenodo/DataCite/CRAN); it is only reachable via the article landing page.",
+    "present": 0
+   },
+   "I1": {
+    "evidence": "The Supplement's OxCal chronological model is described as having a defined, formal structure: \"It comprises two sections; the first defines the likelihoods and their constraints, and the second defines occurrences for each of the bead types\" (p.11) \u2014 a formal, structured, domain-shared scripting representation (OxCal CQL2) for the chronological data.",
+    "present": 1
+   },
+   "I2": {
+    "evidence": "No evidence in the paper or evidence pack of controlled-vocabulary/ontology use (e.g., PeriodO, CIDOC-CRM) for the underlying grave/bead data.",
+    "present": 0
+   },
+   "I3": {
+    "evidence": "The data/model is qualifiedly tied to a cited, identifiable external resource: \"The revised model calibrates with OxCal version 4.4.2 and the IntCal20 calibration curve (Reimer et al., 2020)\" (p.11), with the IntCal20 reference fully cited (p.28).",
+    "present": 1
+   },
+   "R1": {
+    "evidence": "The paper describes the Supplement's content with a plurality of relevant attributes: two-section OxCal model structure, and verification detail \u2014 \"As described in the Supplement, five independent runs of the model indicate negligible between-run variability. Results of the calibration are replicable and stable\" (p.11).",
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "Per the instrument's licence-default rule ('absent a separate supplement licence, default to same-as-paper'), the paper's own front matter states: \"Article available under the terms of the CC-BY-NC-ND licence (https://creativecommons.org/licenses/by-nc-nd/4.0/)\" (p.1) \u2014 a clear, identified licence.",
+    "present": 1
+   },
+   "R1_2": {
+    "evidence": "Detailed provenance is documented: OxCal version 4.4.2, IntCal20 calibration curve, an explicit account of which constraints were retained/removed from the Bayliss et al. (2013) chronological prior and why (pp.10-11), and verification via five independent MCMC runs (p.11).",
+    "present": 1
+   },
+   "R1_3": {
+    "evidence": "R1.3 explicitly excludes 'methodological standards (IntCal20, OxCal, established methods)' from qualifying. No deposit-level community metadata standard (DataCite, Dublin Core, domain schema, or accredited-repository ingest standard) is evidenced for the Supplement itself \u2014 it is a publisher supplement, not a domain-repository deposit.",
+    "present": 0
+   }
+  },
+  "total": 6
+ },
+ "input_provenance": [
+  {
+   "input": "Anglo-Saxon graves and grave goods relational database (Hines, 2013, Archaeological Data Service, DOI 10.5284/1018290)",
+   "provenance": "third-party"
+  },
+  {
+   "input": "RAF Lakenheath cemetery bead/grave data (Hines, 2021, The Antiquaries Journal)",
+   "provenance": "third-party"
+  },
+  {
+   "input": "Bead typological classification (Nielsen, 2013 in Hines & Bayliss, 2013; Brugmann, 2004)",
+   "provenance": "third-party"
+  },
+  {
+   "input": "ArchaeoPhases R package (Philippe & Vibet, 2020, CRAN/JSS)",
+   "provenance": "third-party"
+  },
+  {
+   "input": "Revised OxCal chronological model and R/ArchaeoPhases figure-reproduction code (paper's own Supplement)",
+   "provenance": "author-deposited"
+  }
+ ],
+ "paper_slug": "dye-et-al-2023",
+ "receipts": {
+  "agent_version": "fair-assessor-sonnet-5 v1.2",
+  "instrument_receipts": {
+   "fair-instrument": "5ff4c48c4f5c7321",
+   "fair-principles-guide": "0eed0b8d570bf55e"
+  },
+  "instrument_versions": {
+   "fair-instrument": "2.1",
+   "fair-principles-guide": "1.1"
+  },
+  "model_id": "claude-sonnet-5",
+  "pulled_files_read": []
+ },
+ "schema_version": "1.1",
+ "stated_availability": "\"Data and materials are available in the Supplement.\" (Availability of Data and Materials section, p.24). Also: \"The revised chronological model was implemented in OxCal and is included in the Supplement\" (p.11); \"ArchaeoPhases code to reproduce the figure is included in the Supplement\" (Fig. 3 and Fig. 4 captions, pp.13,15).",
+ "status": "OK"
+}
