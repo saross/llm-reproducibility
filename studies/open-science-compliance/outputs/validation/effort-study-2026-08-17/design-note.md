@@ -45,11 +45,13 @@ per-item reconcile spawns per arm. Arms sequential with per-arm hard stop:
 | sonnet-5 @ high | **122/150 = 0.8133** | 5,664,843 | clean first pass |
 | sonnet-5 @ xhigh (D3, attested) | 128/150 = 0.8533 | 6,216,252 | clean after verifier adjudication |
 | sonnet-5 @ max | **130/150 = 0.8667** | 21,245,484 | 4 items re-run; 14 dead attempts; key r2 × 3 |
+| opus-5 @ high | **143/150 = 0.9533 (PASS)** | 5,138,631 | clean first pass |
 
 The sonnet effort-response curve is monotone but shallow and never
-reaches the ≥ 0.90 gate: +6 items for high→xhigh (at ~equal cost), +2 for
-xhigh→max (at 3.4× cost with compliance degradation). Effort does not
-rescue the arm. Detail: `arm-sonnet-5-max/completion-report-2026-08-17.md`.
+reaches the ≥ 0.90 gate; opus is effort-insensitive (identical 143/150 at
+high and xhigh, near-identical cost) and **opus@high is the cheapest
+known passing configuration**. Full analysis:
+`study-summary-2026-08-17.md`.
 
 ## Arm identity and provenance (Q1, Q2)
 
