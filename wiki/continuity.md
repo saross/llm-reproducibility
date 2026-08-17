@@ -86,10 +86,11 @@ merged here as PR #1).
   0.853); (3) Shawn's E8-v2 worksheet sitting → concordance across ALL
   arms in one pass → gates ruling → census selection; (4) D4.
 - **PENDING VERDICTS (no silent discard):** WN-l/m + user-obs A–C
-  (2026-08-03); WN-p/q/r + user-obs A–D (2026-08-15); **NEW:**
-  working-notes candidates WN-s/t/u (see 2026-08-17 session-log entry)
-  and user-obs **2026-08-17 batch A–D** (pending in
-  `wiki/user-observations.md`).
+  (2026-08-03); WN-p/q/r + user-obs A–D (2026-08-15). **CLEARED
+  2026-08-17 at close:** WN-s/t/u ACCEPTED → working-notes Observations
+  23–25, plus Shawn-directed Observation 26 (errors-are-specimens /
+  the failure-register decision); user-obs batch adjudicated — B and C
+  accepted, A and D dropped with reasons recorded (`5b60221`).
 
 ## Repo state (2026-08-15)
 
