@@ -534,3 +534,26 @@ machinery around capable models: the better the model, the less the
 schema validator is measuring. Evidence anchors:
 `outputs/validation/failure-modes/register.md`;
 `benchmark-2026-08-17/arm-*/run-record.json` telemetry.
+
+## 2026-08-17 (second session) — Effort moves the pen, not the judgement
+
+Six datapoints across two models and three effort levels, identical
+instrument, packs, and prompts (bar the Provenance line). What effort
+demonstrably changed: output volume (sonnet spawns at max emitted 33K–
+346K tokens each against an arm-wide xhigh average near 50K; opus at
+high generated a third less than at xhigh), exploratory appetite (max
+sonnet reached for repo-root and reference Globs the xhigh arm never
+attempted; one status-OK-without-scores payload), and wall-clock. What
+it barely changed: the judgements. Sonnet's stability crawled 0.813 →
+0.853 → 0.867 while its disputes stayed concentrated on the same
+instrument boundary (dye's supplement-only deposit); opus sat at 0.953
+regardless, with its pack-utilisation equally flat (~80% at either
+effort, against sonnet's 47–57%). The grounding profile — how often a
+score cites rung-(i) evidence — tracked model identity, not thinking
+budget. Provisional reading: on a rubric-application task with pushed
+instruments, effort buys verbosity and thoroughness of *presentation*,
+while consistency of *application* is a property of the model (or of
+the instrument's residual ambiguity meeting the model's tolerance for
+it). Corollary for harness design: max-effort verbosity is not free —
+it collides with per-response output caps and turns into retry churn
+(24% of the max arm's spend) unless the cap is provisioned for it.

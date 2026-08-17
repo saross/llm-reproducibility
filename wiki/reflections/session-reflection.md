@@ -969,3 +969,42 @@ register of model fabrications, I logged my own confabulation to the
 confab tracker. The correction cascaded properly: memory, provenance
 fields with honest source attributions, and a run-record note that
 effort is attestation until pinned.
+
+## Entry 16 (2026-08-17, second session) — The axis that wasn't
+
+**Project:** llm-reproducibility. **Session:**
+f605c78a-e90b-4d9d-bbec-1fd3903ced31 (primary instance; one sitting —
+effort-pinning build, delta review, then the effort study end to end:
+sonnet@max halted and completed, sonnet@high, opus@high, six datapoints).
+
+**What context from this session will be hardest to reconstruct in six
+months?** Why the study's headline numbers look the way they do — the
+invisible infrastructure underneath each figure. Sonnet@max's 0.867 sits
+on top of a halt, an adjudication, a raised output cap, and three
+attempts at one item; its 21.25M token cost is one-quarter dead retry
+churn from a harness constant (64K per response) that nothing in the
+preregistration ever mentioned. Opus's flat effort-response (0.953 at
+both efforts, cost-indistinguishable) reads as a null result, but it was
+nearly reported as "high is cheapest" — the aggregate contract metric
+runs 92% effort-independent cache-writes, and only Shawn's one-line
+question forced the decomposition that killed the headline. Six months
+from now the table will say "model, not effort, is the operative axis";
+the part that will be hard to believe is how much of the effort *signal*
+was actually plumbing: caps, cache accounting, retry loops, and a
+metric designed as a spend wire being casually misread as a cost
+measure. The committed artefacts hold the numbers; this entry holds the
+warning that every number in that table has a mechanism attached.
+
+**What question emerged that wasn't pursued?** Whether sonnet's
+instability is *reducible by anything at all*. The study varied effort
+and got a shallow monotone curve; dye-et-al-2023's supplement-boundary
+block (F2/F3/F4 flipping together) stayed the dominant dispute at every
+effort level, which suggests the instability lives in a genuine
+instrument boundary case rather than in reasoning depth. The unpursued
+probe: whether a targeted instrument clarification for the
+supplement-only-deposit case would move sonnet's stability more than
+any amount of effort — which would be a much cheaper intervention than
+model upgrade, and would test whether "model capability" here is really
+"tolerance for residual instrument ambiguity". That question now sits
+behind the E8-v2 sitting and the gates ruling, where the disputed-item
+analysis may answer it for free.

@@ -817,3 +817,94 @@ and the authoritative reconciler misclassified the push channel. Every
 one was caught by an adjacent layer or the operator. Defence-in-depth is
 not redundancy against model failure alone; it is how checker failures
 get caught.
+
+## 2026-08-17 (second session) — Twenty-eight transcripts for fifteen items
+
+**Session:** f605c78a-e90b-4d9d-bbec-1fd3903ced31
+**Instance:** primary
+
+### Surprising fact
+
+The sonnet@max arm's authoritative reconciliation reported "expected 15
+governed spawns, found 28" — thirteen extra fair-assessor transcripts,
+none with a payload, none with a gate event. The workflow had returned
+15 results with `missing: 0`, and the per-item reconcile stage had run
+for every item. Nothing in the design anticipated surplus transcripts.
+
+### Probe
+
+Mapped every transcript to its (paper, run) identity via the assembler's
+prompt regex, with payload presence, timestamps, and per-transcript
+token counts. Pattern: items with multiple transcripts had earlier
+attempts dying at ~64–75K accumulated output and later attempts
+starting at ~16-minute intervals; the workflow's failures line named a
+64K output-token API error; the journal held no result entry for either
+of dye r2's transcripts, yet dye r2's reconcile stage had run —
+exposing a second, independent defect (the stage-2 null guard tested
+the wrapper object, not the inner result). Causal confirmation came by
+intervention: raising `CLAUDE_CODE_MAX_OUTPUT_TOKENS` to 128K produced
+zero dead attempts across five subsequent re-run spawns.
+
+### Belief revision
+
+From "max effort degrades sonnet's harness compliance" (a model-
+behaviour claim) to "max-effort verbosity collides with an undocumented
+harness constant, and the harness's silent retry loop converts that
+collision into invisible spend" (an infrastructure × behaviour
+interaction). The model-behaviour residue is real but smaller than it
+first appeared: the boundary Globs and the missing-scores payload
+remain model-attributable; the 24%-of-spend churn does not.
+
+### What would change this belief
+
+If a 128K-capped sonnet@max arm still produced dead attempts (it did
+not — 0/5 re-run spawns), or if other models at max showed churn at the
+raised cap, the constant would be exonerated and the verbosity itself
+implicated.
+
+### Implications for practice
+
+Denominator assertions (--expect-spawns) are the cheapest tripwire for
+"the harness did something the design didn't model" — the surplus was
+caught by an inequality, not by any behavioural check. And every hard
+cap in the serving path is part of the experimental apparatus; a study
+that varies effort without provisioning output headroom measures the
+cap, not the model.
+
+## 2026-08-17 (second session) — The cheapest arm that wasn't
+
+**Session:** f605c78a-e90b-4d9d-bbec-1fd3903ced31
+**Instance:** primary
+
+### Surprising fact
+
+Opus@high — generating a third fewer output tokens than opus@xhigh
+(294K vs 437K) — nonetheless recorded a *higher* contract-metric total
+(5.14M vs 5.07M). I had already published "cheapest known passing
+configuration" before Shawn's one-line question surfaced the
+contradiction.
+
+### Probe
+
+Component decomposition of both run records: the contract metric is
+~92% cache-creation tokens (per-spawn context writes — PDF, instrument,
+pack), which are effort-independent and wobble a few percent with turn
+structure. The −143K output saving was swamped by a +213K cache-write
+wobble. In API-equivalent dollars the ordering inverts (output prices
+at 4× the cache-write rate), and both gaps sit inside single-arm noise.
+
+### Belief revision
+
+From "the contract metric measures arm cost" to "the contract metric
+measures spend for wire purposes and is structurally insensitive to
+effort — within-model effort comparisons must read the effort-sensitive
+component (output tokens) or a component-weighted dollar figure".
+Corrected in the committed record (`5c193e3`) rather than silently.
+
+### Implications for practice
+
+Composite metrics inherit the dynamics of their dominant component;
+before any ranking claim, check the ordering survives in each
+economically distinct component. The claims layer has no mechanical
+verifier — this error passed every gate in the stack and was caught
+only by operator scepticism.

@@ -924,3 +924,58 @@ economics). The census-selection ruling deliberately waits on Shawn's
 E8-v2 worksheet sitting; no partial concordance was computed against the
 retired reference. The freeze window governed sittings 2–3: verifier
 and assembler edits were adjudicated as outside spawn-input scope.
+
+## Session: 2026-08-17 (second session) — Effort-pinning build; effort study end to end; opus passes at high
+
+**Session id:** f605c78a. **Commits:** `3f4cde6`→`5c193e3` (+ handoff/
+reflect commits following); pa-data `f72fa19`. One sitting.
+
+**Done:**
+
+- **Effort-pinning build** (`3f4cde6`): launcher v1.2 (required
+  `--effort`, `launch_commit` embedding, dirty-tree refusal), workflow
+  v1.5 (opts pin + Provenance prompt line), assembler v1.4
+  (artefact-derived `provenance_pinned`, mixed-vintage hard error,
+  `--expect-*` assertions), 17 tests incl. cross-file format contracts.
+  Proven first: harness spawn metadata carries no effort field.
+- **Delta pre-run review** ruled Q1–Q7 (Shawn); corrected the carried
+  study cost estimate 4–5× upward pre-gate (≈$80–120 API-equivalent;
+  prior ≈$15–25 omitted cache-write premium + read volume). GO given at
+  the corrected figure. Session `/effort` could not move to max (cache
+  invalidation) → mitigation 1 amended to **P3 differential probe**
+  (`a293fe1`): opts low-vs-max, 7.5× output differential — channel
+  verified pre-spend (`a042c50`).
+- **Arm sonnet-5@max**: primary run `wf_46738e9f-9a3` HALTED at the
+  boundary — 4/15 unusable, wire tripped 17.93M/12M, 14 dead retry
+  transcripts (64K per-response cap × max verbosity, 24% of spend);
+  halt report `73cbb3f`. Shawn ruled completion: cap → 128,000
+  (project settings, spawn inheritance live-verified P5), workflow
+  v1.6 (items re-run filter + null-guard fix), launcher v1.3,
+  assembler v1.5 (`--allow-launch-commits`), register **F-008–F-011**
+  lodged (`d6c35eb`). Re-runs `wf_0d67dbff-d2b` + `wf_63013f81-a3a`
+  (key r2 clean on third attempt). Assembled 15/15, declared
+  two-commit provenance, **stability 130/150 = 0.8667** (`1f68108`).
+- **Arm sonnet-5@high** `wf_17f3336f-c5e`: clean first pass, 10.4 min,
+  5.66M tokens, **stability 122/150 = 0.8133** (`b23e59e`).
+- **Arm opus-5@high** `wf_d691e836-2f2`: clean first pass, 8.6 min,
+  5.14M tokens, **stability 143/150 = 0.9533 PASS** — identical to
+  opus@xhigh; cost-indistinguishable (`9978367`; "cheapest passing
+  configuration" claim corrected on Shawn's catch, `5c193e3`).
+- **Quality layer (a)** `check-payload-quality.py` + tests (`bc5867d`):
+  zero unresolvable pack_refs and zero A1-rule violations study-wide
+  (2,700 scores); pack-utilisation separates models (opus ~80%,
+  sonnet 47–57%, fable 60%), not efforts. Study summary committed.
+
+**Decided (Shawn):** completion over abandonment at the halt;
+sonnet@high and opus@high arms added; opus@max off absent xhigh
+deficiencies; quality-beyond-stability approach (mechanical checks now,
+concordance + error direction at E8 v2, optional groundedness audit
+gated).
+
+**Contextual assumptions:** sonnet-5 rates were intro pricing (ends
+2026-08-31); both opus arms served `claude-opus-5[1m]`; all stability
+figures are single-arm recounts replicating the registered derivation —
+H13 fresh-context re-derivation deliberately deferred to the gates
+stage; concordance deliberately uncomputed pending E8 v2; the
+registered analysis tool cannot yet read effort-study arm dirs
+(hardcoded three-arm layout).
