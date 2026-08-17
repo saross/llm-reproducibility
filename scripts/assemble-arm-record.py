@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble one benchmark arm's committed artefact set (D3 run contract H6).
 
-**Version:** 1.2
+**Version:** 1.3
 
 From a completed arm workflow's transcript directory, produce the committed
 arm directory: per-run score payloads (`run-<N>/<slug>.json` — the only
@@ -54,6 +54,50 @@ def transcript_identity(text: str) -> tuple[str, int, str] | None:
     if not match:
         return None
     return match.group(1), int(match.group(2)), match.group(3)
+
+
+def transcript_telemetry(lines: list[str]) -> dict:
+    """Artefact-derived spawn telemetry (v1.3, operator directive
+    2026-08-17): validator retry count (errored StructuredOutput results),
+    thinking-block count, and wall-clock from first/last entry timestamps."""
+    structured_ids: set[str] = set()
+    retries = 0
+    thinking_blocks = 0
+    first_ts = last_ts = None
+    for line in lines:
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        ts = entry.get("timestamp")
+        if isinstance(ts, str) and ts:
+            first_ts = first_ts or ts
+            last_ts = ts
+        content = ((entry.get("message") or {}).get("content")
+                   if isinstance(entry.get("message"), dict) else None)
+        if not isinstance(content, list):
+            continue
+        for blk in content:
+            if not isinstance(blk, dict):
+                continue
+            if blk.get("type") == "thinking":
+                thinking_blocks += 1
+            elif blk.get("type") == "tool_use"                     and blk.get("name") == "StructuredOutput":
+                structured_ids.add(str(blk.get("id")))
+            elif blk.get("type") == "tool_result"                     and str(blk.get("tool_use_id")) in structured_ids                     and blk.get("is_error"):
+                retries += 1
+    wallclock = None
+    if first_ts and last_ts:
+        try:
+            from datetime import datetime as _dt
+            parse = lambda s: _dt.fromisoformat(s.replace("Z", "+00:00"))
+            wallclock = round((parse(last_ts) - parse(first_ts)).total_seconds(), 1)
+        except ValueError:
+            pass
+    return {"structured_output_retries": retries,
+            "thinking_blocks": thinking_blocks,
+            "wallclock_seconds": wallclock,
+            "started_at": first_ts, "finished_at": last_ts}
 
 
 def transcript_tokens(lines: list[str]) -> dict:
@@ -143,7 +187,7 @@ def main() -> int:
             arm_tokens[key] += tokens[key]
         agent_type = str(meta.get("agentType") or "")
         record = {"agent_id": agent_id, "agent_type": agent_type,
-                  "usage": tokens}
+                  "usage": tokens, "telemetry": transcript_telemetry(lines)}
         if agent_id in superseded:
             record["superseded"] = True
             spawns.append(record)
@@ -192,10 +236,18 @@ def main() -> int:
     except (OSError, subprocess.TimeoutExpired):
         claude_version = "unavailable"
 
+    import platform as _platform
+    platform_info = {"os": " ".join(_platform.uname()[:3]),
+                     "python": _platform.python_version()}
+
     receipted = [a["receipts"].get("receipted") for r in reports
                  for a in r["agents"]
                  if a["agent_id"] not in superseded and a["reconciled"]]
     model_ids = sorted({r["model_id"] for r in receipted if r})
+    # Served-variant markers (v1.3): bracket suffixes in receipted ids name
+    # the served variant (e.g. claude-opus-5[1m] = 1M-context) — surfaced
+    # explicitly rather than left for a reader to notice.
+    variants = sorted({m[m.index("["):] for m in model_ids if "[" in m})
     record = {
         "arm": args.arm,
         "workflow_run_id": run_dir.name,
@@ -205,6 +257,8 @@ def main() -> int:
         "spawns": spawns,
         "score_payloads": payload_count,
         "model_ids_receipted": model_ids,
+        "served_variant_markers": variants,
+        "platform": platform_info,
         "reconciliation": {
             "accepted_rule": "every non-superseded governed spawn across all "
                              "directories reconciled (H1/H11)",
