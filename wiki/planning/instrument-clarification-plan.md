@@ -629,6 +629,61 @@ manifest.
       the standing API gate — presented 2026-08-17, awaiting approval;
       Shawn's worksheet adjudication sitting (concordance computes once
       E8 v2 lands; stability computes immediately).
+
+      **D3 run contract (pre-run review, 2026-08-17 — operator: Shawn;
+      six sections presented and probed; hardenings of record):**
+
+      1. **Sequential arms with per-arm hard stop** (sonnet → opus →
+         fable): no arm starts until the previous arm's authoritative
+         whole-dir reconciliation is clean and its run record committed.
+         Also removes the per-item reconcile agent's dir-discovery race.
+      2. **Governed-edit freeze window**: no instrument, guide,
+         definition, schema, or manifest-hash edit lands during the
+         block (a mid-block edit would fork receipt hashes across
+         spawns; C7 receipts would catch it, the freeze prevents it).
+      3. **Per-arm halt thresholds**: >2 per-item reconcile
+         fails/unverifiables, or >2 ESCALATE outputs, halts the arm —
+         systemic signal, not item noise. ESCALATEs are counted, never
+         scored.
+      4. **Per-arm spend tripwire**: 3M tokens (~2× the 2026-08-03
+         per-arm average) halts before the next arm.
+      5. **Concordance deferred**: the new-cycle summary carries
+         stability now and marks concordance pending E8 v2 — no partial
+         concordance is ever computed against the old reference.
+      6. **Output home**: `outputs/validation/benchmark-2026-08-17/`
+         (per-arm `arm-<arm>/run-record.json` + reconciliation
+         artefacts + log slices, one commit per arm).
+      7. **S4 probe strictly first**; a validator rejection takes the
+         named retreat (conditionals → reconciliation layer, schema to
+         unconditional requireds) by dated note, never silently.
+      8. **Billing-route events are reported**: a Max-plan → API switch
+         is surfaced, with — per the registrant, 2026-08-17 — **up to
+         $50 authorised for clean wind-down** (completing in-flight
+         items so the stop lands at an item boundary); continuation
+         beyond wind-down needs a fresh go.
+      9. **Resume procedure**: on any mid-arm stop, note runId +
+         transcript dir; resume same-session via `resumeFromRunId`
+         (completed calls replay from cache; only in-flight items
+         re-spend).
+      10. **Prompt/opts freeze across stop–resume**: no script or args
+          edit between stop and resume (the cache keys on them); an
+          unavoidable edit means a declared new run + journal harvest
+          of completed results.
+      11. **Split-provenance reconciliation**: after a resume, the
+          authoritative reconciliation runs over every transcript dir
+          the arm touched and the run record names the split.
+      12. **Cross-arm receipt identity**: summary assembly asserts all
+          45 spawns pinned identical instrument versions + receipt
+          tokens (mixed-vintage check).
+      13. **Summary verification pass**: stability statistics re-derived
+          by a fresh-context pass (denominator reported) before the
+          registrant's gates ruling; disagreement rule: third
+          derivation or operator adjudication, never verifier-wins.
+
+      Clean-context Opus audit of this contract (per the skill's
+      standing-complement design): run after the operator dialogue,
+      naive-reviewer stance, denominator required, findings are claims
+      not verdicts — outcome recorded below when adjudicated.
 - [ ] **D4. Gates → selection → census.** Pass: cheapest eligible arm,
       registered regression gate, census. Still below: majority-vote
       consequence, now with a defensible claim that the residual is
