@@ -56,7 +56,16 @@ constraint structure with description annotations trimmed for the call;
 constraint-wise byte-equivalent. The 400 depends only on the presence of
 top-level `allOf`.
 
-## Addendum — re-probe after the retreat
+## Addendum — re-probe after the retreat: PASS (gate satisfied)
 
-(Recorded after the re-probe run; expected: the runtime variant is
-accepted and an ESCALATE-shaped output validates.)
+Resumed run `wf_56a0ba6f-93e` (2026-08-17). **S4 with the runtime
+variant: PASS** — the allOf-stripped schema registered without error and
+the probe returned a fully valid ESCALATE-shaped output
+(`schema_version: "1.1"`, `escalate_reason` present, complete receipts).
+**P2 re-confirmed** on the re-run, its report now naming the v1.3
+`--contract-schema` flag in `reconcile-run.py --help` — the moved
+conditionals' enforcement point is live in the lane that will call it.
+Probe-gate spend: ~74k haiku tokens across both runs (well inside the
+gate's probe budget). **Both probes PASS; contract hardening 7 is
+discharged and the block may start.** The governed-edit freeze window
+(hardening 2) begins at arm-1 launch.
