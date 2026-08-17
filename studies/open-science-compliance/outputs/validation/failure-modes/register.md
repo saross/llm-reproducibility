@@ -130,6 +130,71 @@ retro-validated clean. **Anchors:** clean-context audit B1
 
 ---
 
+## F-008 — 64K output cap × max-effort verbosity: dead-attempt retry loops (sonnet-5@max)
+
+**Date:** 2026-08-17 (adjudicated same day). **Category:
+harness-constraint × model-behaviour.** **What happened:** at pinned
+`effort: max`, sonnet-5 single-response emissions (thinking + structured
+payload) exceeded the harness per-response cap
+(`CLAUDE_CODE_MAX_OUTPUT_TOKENS` = 64,000); the harness silently
+respawned fresh attempts, producing 28 scoring transcripts for 15 items —
+13 dead attempts (4.25M tokens, 24% of arm spend) — and one item (dye r2)
+that never survived any attempt. **Disposition:** operator ruled
+completion: cap raised to 128,000 via project settings (spawn inheritance
+live-verified, probe P5), 4 unusable items re-run under workflow v1.6.
+**Anchors:** `effort-study-2026-08-17/arm-sonnet-5-max/halt-report-2026-08-17.md`;
+run `wf_46738e9f-9a3`; `.claude/settings.json` env block.
+
+---
+
+## F-009 — Workflow null-guard tests wrapper, not result: missing under-count
+
+**Date:** 2026-08-17. **Category: verifier-error (harness lane).**
+**What happened:** the v1.5 pipeline's stage-2 guard tested the wrapper
+object rather than the inner agent result, so dye r2's terminal API error
+was misreported as `missing: 0` and a reconcile stage ran against a dead
+transcript. Defence in depth held — the item still failed per-item and
+authoritative reconciliation. **Disposition:** fixed in workflow v1.6
+(null propagates; item counts missing); source-pinned by
+`tests/test_effort_pinning.py`. **Anchors:** halt report §"dominant
+failure mode"; `fair-benchmark-arm.workflow.js` v1.6 header.
+
+---
+
+## F-010 — Max-effort exploratory Globs cross the isolation boundary (sonnet-5@max)
+
+**Date:** 2026-08-17 (adjudicated same day). **Category:
+model-boundary; partially verifier (pattern-vs-path) — split OPEN.**
+**What happened:** two spawns at `max` reached for files via Glob where
+the 15/15-clean xhigh arm never did: crema r2 globbed the repository root
+(unscoped listing capable of surfacing `studies/`/`outputs/` paths;
+F-002's closest cousin), and dye r3 issued three unanchored
+`**/references/...` globs whose *resolved* targets are on the reconciler's
+allowed-prefix list but whose *patterns* fail prefix matching.
+**Disposition:** both items re-run under the operator's completion ruling;
+the verifier question — whether unanchored patterns resolving to allowed
+paths should reconcile clean (reconcile-run v1.5 candidate) — is
+deliberately left open. **Anchors:** halt report §"contamination
+failures"; `arm-sonnet-5-max/reconciliation/reconciliation-report.json`
+(agents `ab4f70a2d`, `ab558a6d5`).
+
+---
+
+## F-011 — status OK without scoring blocks: the S4-retreat class caught by C9 (key r2)
+
+**Date:** 2026-08-17. **Category: model-honest-failure (contract);
+harness working as designed.** **What happened:** one sonnet-5@max spawn
+emitted `status: OK` with no `data_fair`/`code_fair`/`data_completeness`/
+`input_provenance` — valid under the conditional-stripped spawn-side
+schema, invalid under the registered contract; exactly the class the S4
+retreat moved to post-hoc enforcement, and reconcile-run's
+`--contract-schema` layer caught it. **Disposition:** item re-run; no
+harness change (the layer performed as specified). **Anchors:** halt
+report per-item ledger; reconciliation report (agent `ab56697f9`,
+4 contract-schema violations).
+
+---
+
 ## Observations for joint analysis (running)
 
 1. **The two genuine model incidents this cycle both came from the most

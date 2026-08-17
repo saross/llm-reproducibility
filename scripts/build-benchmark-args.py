@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the D3 benchmark workflow's args deterministically (audit F15/F17).
 
-**Version:** 1.2
+**Version:** 1.3
 
 The clean-context audit (2026-08-17) found nothing binding the S4 probe's
 schema decision — or anything else — to the arm invocations: args were
@@ -30,8 +30,14 @@ files is refused outright (no bypass flag): args built from uncommitted
 instrument, schema, pack, or manifest edits would carry an unreproducible
 vintage. Commit first, then build.
 
+v1.3 (re-run support, 2026-08-17): optional ``--items slug:run,...`` embeds
+an items list restricting the workflow (v1.6+) to declared
+contract-mandated re-run items; slugs are validated against the registry
+and runs against 1-3.
+
 Usage:
-    venv/bin/python scripts/build-benchmark-args.py <arm> --effort LEVEL [--out FILE]
+    venv/bin/python scripts/build-benchmark-args.py <arm> --effort LEVEL \\
+        [--items slug:run,slug:run] [--out FILE]
 
     <arm> ∈ {sonnet-5, opus-5, fable-5}
     LEVEL ∈ {low, medium, high, xhigh, max}
@@ -93,6 +99,10 @@ def main() -> int:
                         help="reasoning-effort pin for the scoring spawns "
                              "(passed in workflow opts AND stated in every "
                              "scoring prompt; required — no session inherit)")
+    parser.add_argument("--items", default=None,
+                        help="comma-separated slug:run pairs restricting the "
+                             "workflow to declared re-run items "
+                             "(e.g. dye-et-al-2023:2,key-et-al-2024:2)")
     parser.add_argument("--out", type=Path, default=None)
     args = parser.parse_args()
 
@@ -101,6 +111,17 @@ def main() -> int:
     except RuntimeError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
+
+    items = None
+    if args.items:
+        items = []
+        for token in args.items.split(","):
+            slug, _, run = token.partition(":")
+            if not run.isdigit() or int(run) not in (1, 2, 3):
+                print(f"ERROR: --items entry {token!r}: run must be 1-3",
+                      file=sys.stderr)
+                return 1
+            items.append({"slug": slug, "run": int(run)})
 
     manifest = yaml.safe_load((REPO_ROOT / "manifest.yaml").read_text())
 
@@ -144,10 +165,19 @@ def main() -> int:
         "papers": papers,
         "schema": schema,
     }
+    if items is not None:
+        known = {p["slug"] for p in papers}
+        unknown = [it["slug"] for it in items if it["slug"] not in known]
+        if unknown:
+            print(f"ERROR: --items slugs not in registry: {unknown}",
+                  file=sys.stderr)
+            return 1
+        payload["items"] = items
     text = json.dumps(payload, indent=1, sort_keys=True) + "\n"
     if args.out:
         args.out.write_text(text, encoding="utf-8")
-        print(f"args for arm {args.arm}: {len(papers)} papers, "
+        item_note = f", {len(items)} re-run item(s)" if items is not None else ""
+        print(f"args for arm {args.arm}: {len(papers)} papers{item_note}, "
               f"effort {args.effort}, commit {launch_commit[:12]} -> {args.out}")
     else:
         print(text)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble one benchmark arm's committed artefact set (D3 run contract H6).
 
-**Version:** 1.4
+**Version:** 1.5
 
 From a completed arm workflow's transcript directory, produce the committed
 arm directory: per-run score payloads (`run-<N>/<slug>.json` — the only
@@ -20,6 +20,14 @@ analogue); ``--expect-effort`` / ``--expect-launch-commit`` let the
 operator assert the intended pin. Pre-pinning transcripts (the 2026-08-17
 D3 arms and earlier) carry no Provenance line and assemble with the block
 null-valued.
+
+v1.5 (declared split provenance, 2026-08-17): contract-mandated re-runs
+necessarily carry a different launch commit than the original arm (the
+launcher derives HEAD, and the halt artefacts are committed in between),
+so ``--allow-launch-commits c1,c2`` declares the exact commit set an
+assembly may contain — effort stays hard-uniform, the derived commit set
+must equal the declared set exactly, and the record carries the list.
+Undeclared mixing remains the v1.4 hard error.
 
 Usage:
     venv/bin/python scripts/assemble-arm-record.py <run_dir> <arm> <out_dir>
@@ -101,6 +109,37 @@ def derive_arm_provenance(
         raise ValueError(
             f"mixed scoring-spawn provenance across the arm: {sorted(map(str, distinct))}")
     return distinct.pop()
+
+
+def derive_split_provenance(
+        per_spawn: list[tuple[str, str] | None],
+        allowed_commits: set[str]) -> tuple[list[str], str]:
+    """Arm-level provenance for a declared re-run split (v1.5).
+
+    Every non-superseded scoring spawn must carry a Provenance pin; efforts
+    must be uniform; the distinct commit set must equal ``allowed_commits``
+    exactly (a declared commit with no spawns is as suspicious as an
+    undeclared one).
+
+    Returns:
+        (sorted commit list, the uniform effort).
+
+    Raises:
+        ValueError: on a missing pin, mixed efforts, or a commit-set
+        mismatch against the declaration.
+    """
+    if None in per_spawn:
+        raise ValueError("split-provenance assembly requires every scoring "
+                         "spawn to carry a Provenance pin")
+    efforts = {effort for _, effort in per_spawn}
+    if len(efforts) != 1:
+        raise ValueError(f"mixed efforts across declared split: {sorted(efforts)}")
+    commits = {commit for commit, _ in per_spawn}
+    if commits != allowed_commits:
+        raise ValueError(
+            f"commit set mismatch: transcripts derive {sorted(commits)}, "
+            f"declared {sorted(allowed_commits)}")
+    return sorted(commits), efforts.pop()
 
 
 def transcript_telemetry(lines: list[str]) -> dict:
@@ -195,6 +234,12 @@ def main() -> int:
                         help="assert the artefact-derived launch commit "
                              "matches this full hash (error on mismatch or "
                              "absence)")
+    parser.add_argument("--allow-launch-commits", default=None,
+                        metavar="COMMIT1,COMMIT2",
+                        help="declared split provenance (v1.5): the exact "
+                             "commit set a re-run assembly may contain; "
+                             "efforts must still be uniform. Mutually "
+                             "exclusive with --expect-launch-commit")
     parser.add_argument("--environment", action="append", default=[],
                         metavar="KEY=VALUE",
                         help="run-environment attestation (repeatable): "
@@ -279,8 +324,18 @@ def main() -> int:
               file=sys.stderr)
         return 1
 
+    if args.allow_launch_commits and args.expect_launch_commit:
+        print("ERROR: --allow-launch-commits and --expect-launch-commit are "
+              "mutually exclusive", file=sys.stderr)
+        return 1
     try:
-        arm_commit, arm_effort = derive_arm_provenance(provenance_values)
+        if args.allow_launch_commits:
+            allowed = set(args.allow_launch_commits.split(","))
+            commit_list, arm_effort = derive_split_provenance(
+                provenance_values, allowed)
+            arm_commit = commit_list
+        else:
+            arm_commit, arm_effort = derive_arm_provenance(provenance_values)
     except ValueError as exc:
         print(f"ERROR: {exc} — assembly refused (mixed-vintage)",
               file=sys.stderr)
@@ -355,7 +410,9 @@ def main() -> int:
             "note": "artefact-derived: parsed from the Provenance line the "
                     "workflow (v1.5+) injects into every scoring prompt; "
                     "null values mean a pre-pinning run (effort was "
-                    "session-inherited and attestation-only)",
+                    "session-inherited and attestation-only); a list of "
+                    "launch commits means a declared re-run split "
+                    "(--allow-launch-commits, v1.5)",
             "effort": arm_effort,
             "launch_commit": arm_commit,
         },
@@ -378,8 +435,12 @@ def main() -> int:
     }
     (out_dir / "run-record.json").write_text(
         json.dumps(record, indent=1, sort_keys=True) + "\n")
-    pin_note = (f"effort {arm_effort}, commit {arm_commit[:12]}"
-                if arm_effort else "no provenance pin (pre-pinning run)")
+    if arm_effort:
+        commit_repr = (",".join(c[:12] for c in arm_commit)
+                       if isinstance(arm_commit, list) else arm_commit[:12])
+        pin_note = f"effort {arm_effort}, commit {commit_repr}"
+    else:
+        pin_note = "no provenance pin (pre-pinning run)"
     print(f"arm {args.arm}: {payload_count} payloads, "
           f"{record['usage_contract_metric']['contract_metric_tokens']:,} "
           f"contract-metric tokens, {pin_note} -> {out_dir}")

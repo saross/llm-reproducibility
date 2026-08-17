@@ -3,6 +3,17 @@ export const meta = {
   description: 'One validation-benchmark arm: 5 pilot papers x 3 runs of FAIR scoring with per-item reconciliation hard stop',
   phases: [{ title: 'Score' }, { title: 'Reconcile' }],
 }
+// v1.6 (re-run support + null-guard fix, 2026-08-17). Changes from v1.5
+// (which ran the sonnet-5@max arm): (5) optional args.items — a list of
+// {slug, run} pairs restricting the task set to contract-mandated re-runs
+// (each pair must reference a declared paper; prompt wording for a given
+// (slug, run) is byte-identical to a full-arm run bar the Provenance
+// line's launch commit, so reconciler and assembler regexes anchor
+// unchanged); (6) the scoring stage now returns null when agent()
+// resolves null (terminal API error after harness retries) instead of
+// wrapping it — the sonnet-5@max arm misreported missing=0 because the
+// old guard tested the wrapper object, not the inner result, and ran a
+// reconcile stage against a dead transcript.
 // v1.5 (effort pinning, 2026-08-17). Changes from v1.4 (which ran the D3
 // arms): (4) reasoning effort is PINNED, never session-inherited — args
 // carry {effort, launch_commit} (built only by
@@ -25,8 +36,8 @@ export const meta = {
 // reconcile_failures and clean so the operator accepts no unreconciled
 // item. The operator still runs the whole-dir reconciliation afterwards as
 // the authoritative archival pass.
-// Args shape: {agentType, arm, effort, launch_commit, papers: [{slug, path, pack, pack_sha256}], schema}
-const { agentType, arm, effort, launch_commit, papers, schema } = (typeof args === "string" ? JSON.parse(args) : args)
+// Args shape: {agentType, arm, effort, launch_commit, papers: [{slug, path, pack, pack_sha256}], schema, items?: [{slug, run}]}
+const { agentType, arm, effort, launch_commit, papers, schema, items } = (typeof args === "string" ? JSON.parse(args) : args)
 const EFFORT_LEVELS = ["low", "medium", "high", "xhigh", "max"]
 if (!EFFORT_LEVELS.includes(effort)) {
   // Effort pinning: an absent or malformed pin means the spawns would
@@ -49,12 +60,23 @@ if (agentType !== `fair-assessor-${arm}`) {
 for (const p of papers) {
   if (!p.pack || !p.pack_sha256) throw new Error(`paper ${p.slug}: pack path + pack_sha256 required (amendment 2 SS2)`)
 }
+const byName = Object.fromEntries(papers.map(p => [p.slug, p]))
 const tasks = []
-for (let run = 1; run <= 3; run++) {
-  for (const p of papers) tasks.push({ run, slug: p.slug, path: p.path, pack: p.pack, pack_sha256: p.pack_sha256 })
+if (items) {
+  // Re-run mode (v1.6): only the declared contract-mandated items.
+  for (const it of items) {
+    const p = byName[it.slug]
+    if (!p) throw new Error(`items: unknown slug ${it.slug}`)
+    if (![1, 2, 3].includes(it.run)) throw new Error(`items: run must be 1-3, got ${it.run}`)
+    tasks.push({ run: it.run, slug: p.slug, path: p.path, pack: p.pack, pack_sha256: p.pack_sha256 })
+  }
+} else {
+  for (let run = 1; run <= 3; run++) {
+    for (const p of papers) tasks.push({ run, slug: p.slug, path: p.path, pack: p.pack, pack_sha256: p.pack_sha256 })
+  }
 }
-log(`arm ${arm}: ${tasks.length} scoring spawns (5 papers x 3 runs), each with a per-item reconcile stage; ` +
-    `effort pinned ${effort}, launch commit ${launch_commit.slice(0, 12)}`)
+log(`arm ${arm}: ${tasks.length} scoring spawns${items ? ' (RE-RUN of declared items)' : ' (5 papers x 3 runs)'}, ` +
+    `each with a per-item reconcile stage; effort pinned ${effort}, launch commit ${launch_commit.slice(0, 12)}`)
 
 const RECONCILE_SCHEMA = {
   type: "object",
@@ -110,7 +132,10 @@ const reconcilePrompt = (t) =>
 
 const results = await pipeline(tasks,
   t => agent(scorePrompt(t), { agentType, effort, label: `${t.slug} r${t.run}`, phase: 'Score', schema })
-    .then(v => ({ arm, run: t.run, slug: t.slug, result: v })),
+    // v1.6 null-guard fix: a terminal agent error resolves null — propagate
+    // it so the item counts as missing and no reconcile stage runs against
+    // a dead transcript.
+    .then(v => v === null ? null : ({ arm, run: t.run, slug: t.slug, result: v })),
   (scored, t) => scored === null ? null : agent(reconcilePrompt(t), {
     agentType: 'general-purpose', model: 'haiku', effort: 'low',
     label: `reconcile ${t.slug} r${t.run}`, phase: 'Reconcile', schema: RECONCILE_SCHEMA,

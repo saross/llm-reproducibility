@@ -103,7 +103,7 @@ class FormatContractTests(unittest.TestCase):
     def test_workflow_pins_effort_in_scoring_opts(self):
         source = WORKFLOW_JS.read_text(encoding="utf-8")
         self.assertRegex(source, r"agent\(scorePrompt\(t\), \{ agentType, effort,")
-        self.assertIn("launch_commit, papers, schema }", source)
+        self.assertIn("launch_commit, papers, schema, items }", source)
 
 
 class ProvenanceParsingTests(unittest.TestCase):
@@ -162,6 +162,54 @@ class DeriveArmProvenanceTests(unittest.TestCase):
         values = [(DUMMY_COMMIT, "max"), ("c" * 40, "max")]
         with self.assertRaises(ValueError):
             assembler.derive_arm_provenance(values)
+
+
+class DeriveSplitProvenanceTests(unittest.TestCase):
+    """v1.5 declared split provenance for contract-mandated re-runs."""
+
+    COMMIT_B = "c" * 40
+
+    def test_declared_two_commit_split_derives(self):
+        values = [(DUMMY_COMMIT, "max")] * 11 + [(self.COMMIT_B, "max")] * 4
+        commits, effort = assembler.derive_split_provenance(
+            values, {DUMMY_COMMIT, self.COMMIT_B})
+        self.assertEqual(commits, sorted([DUMMY_COMMIT, self.COMMIT_B]))
+        self.assertEqual(effort, "max")
+
+    def test_undeclared_commit_raises(self):
+        values = [(DUMMY_COMMIT, "max")] * 14 + [(self.COMMIT_B, "max")]
+        with self.assertRaises(ValueError):
+            assembler.derive_split_provenance(values, {DUMMY_COMMIT})
+
+    def test_declared_but_absent_commit_raises(self):
+        values = [(DUMMY_COMMIT, "max")] * 15
+        with self.assertRaises(ValueError):
+            assembler.derive_split_provenance(
+                values, {DUMMY_COMMIT, self.COMMIT_B})
+
+    def test_mixed_efforts_raise(self):
+        values = [(DUMMY_COMMIT, "max")] * 14 + [(self.COMMIT_B, "high")]
+        with self.assertRaises(ValueError):
+            assembler.derive_split_provenance(
+                values, {DUMMY_COMMIT, self.COMMIT_B})
+
+    def test_missing_pin_raises(self):
+        values = [(DUMMY_COMMIT, "max")] * 14 + [None]
+        with self.assertRaises(ValueError):
+            assembler.derive_split_provenance(values, {DUMMY_COMMIT})
+
+
+class WorkflowRerunSupportTests(unittest.TestCase):
+    """v1.6 workflow source carries items filtering and the null guard."""
+
+    def test_items_in_args_destructure(self):
+        source = WORKFLOW_JS.read_text(encoding="utf-8")
+        self.assertIn("papers, schema, items }", source)
+        self.assertIn("items: unknown slug", source)
+
+    def test_null_guard_tests_inner_result(self):
+        source = WORKFLOW_JS.read_text(encoding="utf-8")
+        self.assertIn("v === null ? null : ({ arm, run: t.run", source)
 
 
 class ResolveLaunchCommitTests(unittest.TestCase):

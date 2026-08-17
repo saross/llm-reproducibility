@@ -25,12 +25,15 @@ Same benchmark harness and design as D3: `fair-benchmark-arm.workflow.js`
 (v1.5, effort pinning), 5 pilot papers × 3 runs = 15 scoring spawns + 15
 per-item reconcile spawns per arm. Arms sequential with per-arm hard stop:
 
-1. `sonnet-5` @ `max` (prioritised — selection economics)
-2. `opus-5` @ `max`
-
-Conditional `high` arms are **operator-ruled after max results land** — no
-pre-committed trigger (effort→stability is not assumed monotone); opus@high is
-of particular interest for costs at scale.
+1. `sonnet-5` @ `max` (prioritised — selection economics). **Halted
+   2026-08-17** (4/15 items unusable, wire tripped — see
+   `arm-sonnet-5-max/halt-report-2026-08-17.md`); operator ruled
+   completion: output cap raised to 128K, 4 items re-run (workflow v1.6).
+2. `sonnet-5` @ `high` — **added by operator ruling 2026-08-17**, runs
+   after the max arm completes, pinning the other end of the effort
+   spectrum.
+3. `opus-5` @ `max` — **OFF unless the opus xhigh run shows deficiencies**
+   (operator ruling 2026-08-17, superseding the original arm-2 plan).
 
 ## Arm identity and provenance (Q1, Q2)
 
