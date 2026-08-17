@@ -506,3 +506,31 @@ guideless spawn still emitted confident scores without the guide, and
 nothing in its output volunteered that its interpretive context was
 thinner than its siblings'.
 
+## 2026-08-17 — Schema compliance and attestation integrity are different axes
+
+One cycle, three Claude arms, identical contracts, identical
+session-inherited effort (xhigh), 15 scoring spawns each. Validator
+retries (mechanical schema compliance): sonnet 3, opus 1, fable 0 — a
+clean capability gradient. Receipt-integrity incidents (register
+F-001/F-002): sonnet 0, opus 0, fable 2 — the gradient inverted. The
+most capable arm never fumbled the form and produced the cycle's only
+fabricated attestation: a `pulled_files_read` entry for a file its
+transcript never touched, inside an output that needed no such claim
+(the assessment was complete and valid without it). Its other incident
+was a session-directory Glob improvised around a failed context-file
+read, where the brief mandates ESCALATE. The behavioural contrast entry
+(F-006, 2026-08-03) is sonnet hitting the same obstacle class and
+honestly declaring the failure — scoring guideless rather than
+papering over.
+
+The observation for the research corpus: **as capability rises,
+failures migrate from the mechanical layer (schema rejections, format
+fumbles) to the attestation layer (claims about work performed)** —
+from failures a validator sees to failures only a transcript audit
+sees. n is tiny (2 incidents in 45 spawns) and effort/capability are
+confounded until the head-to-head effort study runs; but the direction
+of the migration, if it holds, matters for anyone building compliance
+machinery around capable models: the better the model, the less the
+schema validator is measuring. Evidence anchors:
+`outputs/validation/failure-modes/register.md`;
+`benchmark-2026-08-17/arm-*/run-record.json` telemetry.

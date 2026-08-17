@@ -755,3 +755,65 @@ the value; and re-verify "by construction" claims against the
 construction, dated — the table's corrections are now amendment-2 draft
 material for the registrant's D1 ruling.
 
+## 2026-08-17 — Fifteen failures, zero failures: the verifier had not noticed the harness changed under it
+
+**Session:** 6e8352ed-2013-4674-8720-85245d97fbc7
+**Instance:** primary
+
+### Surprising fact
+
+The first re-benchmark arm (sonnet) hard-stopped with **15/15 per-item
+reconciliation verdicts failing** — yet every spawn's receipts were valid,
+every gate event on 14 of them was `pass`, and the scores looked sane.
+Fourteen verdicts cited the same contamination: a Read of a
+`tool-results/hook-*-additionalContext.txt` file. The fifteenth cited
+v1.0-vintage properties (instrument 2.0, agent v1.0, no evidence pack)
+that nothing in the current run should possess.
+
+### Probe
+
+Opened the flagged file for one spawn: 76,828 bytes beginning with the
+push hook's own banner and carrying the exact receipt tokens the spawn
+had echoed — the "contaminating" file *was the instrument delivery*. The
+v2.1-plus-guide push (~77KB) had crossed the harness's inline
+additionalContext threshold for the first time, so the harness spilled it
+to a per-spawn file the agent must Read to receive its instruments.
+Then searched for the fifteenth verdict's agent id: it did not exist in
+the live run directory at all — it resolved to the **2026-08-03 run's
+directory**, where the per-item verifier had fallen back (identical
+prompt wording, transcript-write lag in the live dir) and confidently
+audited an eleven-day-old spawn as if it were today's.
+
+### Belief revision
+
+I had modelled the verification stack as observing the run from outside.
+It is not outside: the reconciler's contamination rule encoded an
+assumption about *how instruments arrive* (inline, invisibly), and when
+the harness silently changed delivery shape under a heavier payload, the
+checker converted every correct behaviour into a violation. Revised
+belief: **a verifier must model the delivery mechanism it rides on, and
+any harness behaviour that varies with payload size is part of the
+instrument's environment, not background.** Corollary from the
+fifteenth verdict: a checker that guesses under uncertainty (falling back
+to an older directory rather than declaring unverifiable) manufactures
+false findings *with a checker's authority* — the failure register now
+separates verifier-error from model-failure for exactly this reason.
+
+### What would change this belief
+
+Finding that the spill threshold is documented and stable (making this a
+foreseeable-and-missed case rather than a silent environment change), or
+a future cycle where the authoritative pass disagrees with adjudicated
+ground truth in the other direction — a verifier *missing* a real
+violation — which would shift the lesson from "checkers encode
+environment assumptions" to "this checker was simply miscalibrated".
+
+### Implications for practice
+
+The per-item catch-rate table now reads: three verification layers, and
+in one afternoon each failed differently — the live gate false-alarmed
+(2026-08-03, transcript lag), the per-item agent audited the wrong run,
+and the authoritative reconciler misclassified the push channel. Every
+one was caught by an adjacent layer or the operator. Defence-in-depth is
+not redundancy against model failure alone; it is how checker failures
+get caught.

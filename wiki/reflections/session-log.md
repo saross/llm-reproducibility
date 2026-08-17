@@ -851,3 +851,76 @@ run directories. tDAR/DANS page fetches required browser rendering;
 their entitlement rows rest partly on rendered pages a scripted
 harvester cannot reach.
 
+## Session: 2026-08-15 → 2026-08-17 — Phase B ruled, amendment 2 lodged, D3 run and passed by two arms, failure register born
+
+**Session id:** 6e8352ed-2013-4674-8720-85245d97fbc7 (three sittings).
+Commits `f9976fc` → `fe16f95` on main plus PR #3 (merged `127260f`), tag
+`osf-amendment-2-2026-08-17`; personal-assistant `0b3a6bd` (skill
+codification) + pa-data `c96f43e`/`1325b49` (registers, craft note).
+
+**Sitting 1 (2026-08-15).** Phase B shape RULED (B1: ruling-driven
+re-derivation + targeted adjudication; shared protocol with census n=12,
+separate exercises; E8 v2 retaining the old set). Platform-table
+corrections RULED (all §A rewrites; row 4 graded; all §B additions; item
+7 footnote with the operative-default principle; item 12 as methods
+commitment) plus the infrastructure-layer evaluation principle. D1-prep
+enrichment pass: CoreTrustSeal register (via its GraphQL backend — the
+public SPA is a JS shell) + re3data: ADS certified to 2027, DANS to
+2028, tDAR lapsed with renewal at First Submit, Zenodo absent from all
+556 requests; evidence committed with checksums. D1 governed window
+executed on a branch: instrument v2.1 (ratified items 1–9 + corrected
+platform table, Pass 6 mirror byte-synced), guide v1.1 promoted
+pull→push, agent definitions v1.1, C7 sha256 hashes gate-enforced,
+amendment-2 draft consolidated. Identifier-recovery rule ruled and
+added (bounded registrar + repository search; recovered records flagged,
+never substituted).
+
+**Sitting 2 (2026-08-17, first half).** PR #3 merged. Preregistration
+register layer created (canonical supplement in pa-data + project
+`.notes/` note). D2 LODGED: rule-4 consistency check (five paste
+fidelity drops caught and restored), OSF SchemaResponse
+`6a824828f323f5c6ead66c4b` approved same day, round-trip verified under
+the registry's write transform; §6 comparator fix DISSOLVED on
+verification (OSF escapes comparators on write and decodes on render —
+no visible defect ever existed). D3 prep: reconcile-run v1.1 (pack
+verification), workflow v1.1 (pack injection + per-item C9 stage),
+harvester v1.1 with recovery live — first run recovered marwick's lost
+deposit (dead zenodo.14561925 → curated zenodo.15603267, verified at
+DataCite); packs re-harvested; E8-v2 adjudication worksheet generated
+(150 items, 68 disputed, seeded spot-check).
+
+**Sitting 3 (2026-08-17, second half).** Pre-run review (six sections,
+13 hardenings incl. Shawn's resume-semantics probe and $50 wind-down)
++ clean-context Opus audit: 19 findings, 5 blockers pre-spend (empty-set
+reconciliation reads clean; missing-meta silently ungoverned; reconcile
+agent self-match; null-filtered clean; irreproducible spend metric), all
+confirmed and fixed (reconcile-run v1.2, workflow v1.2, definitions
+v1.2, args launcher, analyse-tool flags); clean-context pass CODIFIED
+into the pre-run-review skill on two-run evidence. Probe gate: P2 pass;
+S4 rejected (API bans top-level allOf) → named retreat executed
+(runtime schema strips conditionals; enforcement moves to
+reconcile-run v1.3 --contract-schema). Arms sequential: sonnet 15/15
+clean after adjudicating two verifier defects (hook-spill delivery
+reads — the ~77KB push crossed the inline threshold; old-run discovery
+fallback) → reconcile-run v1.4 + workflow v1.4; opus clean first pass;
+fable 13/15 with two genuine incidents (fabricated pull declaration;
+session-dir Glob), items re-run clean, arm accepted at 7.10M tokens with
+the tripwire event documented and the wire rule amended to
+remediation-scaled (Shawn). **Stability: sonnet 0.853 (below), opus
+0.953 PASS, fable 0.947 PASS** (vs 0.807/0.873/0.813); disputed items
+68 → 56; concordance deliberately uncomputed pending E8 v2.
+**Failure-mode register created** (operator directive): seven seeded
+entries, categorised and anchored. Run-environment capture (effort
+attestations, harness, billing) + assembler v1.3 telemetry (validator
+retries 3/1/0; thinking blocks; wall-clock; served-variant markers —
+opus ran `[1m]`). Effort confabulation corrected (claimed high, /effort
+showed xhigh) and logged to the confab tracker.
+
+**Contextual assumptions.** Effort was session-inherited (xhigh) and is
+attestation-only until pinned — the pinning + launch-commit embedding
+ride the next session, ahead of the agreed effort study (sonnet+opus at
+max first, conditional high, sonnet prioritised for selection
+economics). The census-selection ruling deliberately waits on Shawn's
+E8-v2 worksheet sitting; no partial concordance was computed against the
+retired reference. The freeze window governed sittings 2–3: verifier
+and assembler edits were adjudicated as outside spawn-input scope.

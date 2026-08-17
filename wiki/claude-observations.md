@@ -852,3 +852,62 @@ pre-run review; keep the mnemonic stable (money, breakage, surprises,
 substitutes, order, environment); close the gaps conversationally rather
 than skipping the exercise when he's busy.
 
+## claude-obs 42 — 2026-08-17: Shawn converts errors into instruments, not just corrections
+
+**Pattern.** When my effort-level confabulation surfaced ("high" vs the
+actual xhigh), Shawn's response was not merely to correct it: within two
+messages the error had become a /confab log entry, a provenance rule
+("we definitely need to at least *capture* effort/thinking level and
+harness"), and run-record fields with honest source attributions. The
+same move produced the failure register from the fable fabrication: his
+first instinct on seeing a failure class is to build the collector for
+it ("record all failures with details so we can analyse them together
+later").
+
+**Lesson.** In this collaboration an error's highest value is as a
+specimen. Fixing it quietly discards most of that value.
+
+**How to apply.** When I catch or commit an error, propose the
+instrument alongside the fix: where does this class get logged, what
+field would have prevented it, what register should hold it. Shawn will
+almost always say yes.
+
+## claude-obs 43 — 2026-08-17: His curiosity questions are audit probes — treat them as such
+
+**Pattern.** Twice this session an "out of curiosity" question found a
+real defect: "what thinking / effort levels are we using?" exposed both
+my confabulation and the unpinned-parameter gap; "any other metadata we
+aren't capturing?" surfaced the `[1m]` served-variant marker hiding in
+the opus receipts. Neither question was idle; both were aimed, lightly,
+at provenance surfaces I had marked done.
+
+**Lesson.** Shawn's casual-register questions about configuration are
+QA passes in social clothing. The correct response is artefact-checking
+rigour, not conversational recall — my "high" answer failed precisely
+because I matched the register of the question instead of its function.
+
+**How to apply.** Any question about a config value, parameter, or
+setting gets a source check before an answer, however conversational
+the phrasing — and the answer should name its source, so an
+attestation is never dressed as a derivation.
+
+## claude-obs 44 — 2026-08-17: Budgets that bend with explained cause — his governance signature
+
+**Pattern.** Three rulings in one arc: the $50 wind-down authorisation
+("cleanly wind down" rather than hard-freeze), the tripwire acceptance
+with documentation when remediation spend pushed 1.4% over, and the
+remediation-scaled wire rule ("if X% needs re-running, increase the
+wire by X%, unless something points to a stuck loop"). The consistent
+shape: hard limits exist, but a limit breached *by the contract's own
+remediation machinery, with cause fully explained*, bends rather than
+halts — while unexplained or repeating overruns still stop everything.
+
+**Lesson.** Shawn's stop-states distinguish "spending more than
+planned" from "spending without explanation". Rules I draft for him
+should encode that distinction from the start rather than proposing
+rigid ceilings he will soften on first contact.
+
+**How to apply.** When drafting spend or safety tripwires, pair every
+ceiling with its legitimate-excess clause and its illegitimate-loop
+indicator, and make the event reportable either way — the reporting is
+the invariant; the ceiling is contingent.
