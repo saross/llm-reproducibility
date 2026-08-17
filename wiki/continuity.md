@@ -30,6 +30,69 @@ merged here as PR #1).
 
 ---
 
+## Repo state (2026-08-17, second session)
+
+- **EFFORT STUDY COMPLETE — OPUS PASSES AT HIGH; EFFORT DOES NOT RESCUE
+  SONNET.** Six datapoints (sonnet high/xhigh/max 0.813/0.853/0.867 all
+  below the ≥0.90 gate; opus high/xhigh both 0.953 PASS; fable xhigh
+  0.947 context): model, not effort, is the operative axis. Opus is
+  effort-insensitive on stability, cost, AND pack-utilisation (~80% vs
+  sonnet's 47–57%); **opus@high and opus@xhigh are cost-indistinguishable**
+  (the "cheapest passing configuration" headline was CORRECTED on
+  Shawn's catch, `5c193e3` — the contract metric is ~92% effort-independent
+  cache-writes; within-model effort comparisons must read output tokens,
+  which fell 33% at high). Study spend ≈32.2M contract-metric tokens
+  under explicit authorisations. Full record:
+  `studies/open-science-compliance/outputs/validation/effort-study-2026-08-17/`
+  (design note, study summary, per-arm run records + reconciliation).
+- **EFFORT PINNING SHIPPED** (`3f4cde6`): launcher v1.3 (required
+  `--effort`, `launch_commit` embedding, dirty-tree refusal, `--items`
+  re-runs), workflow v1.6 (opts pin + Provenance prompt line + items
+  filter + null-guard fix), assembler v1.5 (artefact-derived
+  `provenance_pinned`, mixed-vintage error, `--allow-launch-commits`
+  declared splits, `--expect-effort`). The harness persists NO effort
+  field in spawn metadata (proven) — the transcript prompt is the only
+  durable carrier. P3 differential probe verified the opts channel
+  (7.5× output differential) before spend; P5 verified settings-env
+  inheritance to spawns.
+- **SONNET@MAX HALT AND COMPLETION** — the study's richest specimen:
+  max-effort emissions blew the 64K per-response harness cap → 14 dead
+  retry transcripts (24% of arm spend), 4 unusable items, wire tripped
+  at 17.9M/12M; Shawn adjudicated completion (cap → 128,000 in
+  `.claude/settings.json`, STANDING; zero dead attempts after — F-008
+  confirmed causally); key r2 took three attempts (schema violation →
+  repo-root Glob → clean). **Register F-008–F-011 lodged**; F-010's
+  pattern-vs-path verifier question (unanchored Globs resolving to
+  allowed paths) is deliberately OPEN for ruling.
+- **Mechanical quality layer LIVE** (`scripts/check-payload-quality.py`,
+  operator-accepted approach): pack_refs validity, A1-rule consistency,
+  pack-utilisation. Study-wide: zero unresolvable pack_refs (2,700
+  scores), zero A1 violations. Tests 222 → 251; gate 66/66 throughout.
+- **NEXT (agreed order):** (1) **Shawn's E8-v2 worksheet sitting**
+  (`outputs/validation/e8-v2-rederivation/worksheet.md`) → concordance
+  across ALL arms in one pass (effort arms included; add the
+  error-direction split) → gates ruling → census selection — candidate
+  set now includes opus at either effort; (2) H13 fresh-context
+  stability re-derivation at the gates stage (my figures are recounts
+  replicating the registered derivation, flagged in every run record);
+  (3) F-010 pattern-vs-path ruling (reconcile v1.5 candidate);
+  (4) pre-census harvester rendering + challenge-page detection;
+  (5) D4. **Opus@max stays OFF** (no deficiency in either opus record);
+  optional small-sample evidence-groundedness audit (quality layer c)
+  awaits explicit go.
+- **Carry-forward gotchas:** the registered analysis tool
+  (`analyse-benchmark-disagreements.py`) hardcodes the three-arm
+  benchmark layout and cannot read effort-study arm dirs — needs an
+  `--arms` extension (v-bump) before study arms join a tool-run at the
+  summary/gates stage. Sonnet-5 intro API pricing ends 2026-08-31
+  (cost projections in the design note used it). The 128K output cap in
+  project settings is deliberate and standing.
+- **PENDING VERDICTS (no silent discard):** WN-l/m + user-obs A–C
+  (2026-08-03); WN-p/q/r + user-obs A–D (2026-08-15); **NEW this
+  session:** WN-v/w/x (see session log) + user-obs 2026-08-17
+  second-session batch A–D (written pending in
+  `wiki/user-observations.md`).
+
 ## Repo state (2026-08-17)
 
 - **AMENDMENT 2 LODGED AND THE D3 RE-BENCHMARK RUN — TWO ARMS PASS
@@ -1068,6 +1131,54 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-08-17 (second session) — Effort study end to end: pinning built, six datapoints, opus passes at high
+
+One session (f605c78a), one sitting; 12 commits `3f4cde6`→`5c193e3` +
+handoff/reflect commits. Built and shipped effort pinning (launcher
+v1.2→v1.3, workflow v1.5→v1.6, assembler v1.4→v1.5, 29 new tests) after
+proving the harness drops opts.effort from spawn metadata. Delta
+pre-run review ruled Q1–Q7; the session-/effort mitigation died on the
+CLI cache constraint and was replaced (operator-accepted) by the P3
+differential probe (7.5× output differential = channel verified).
+Sonnet@max halted at the boundary (4 unusable items, wire 17.9M/12M;
+64K-cap retry churn = 24% of spend) → Shawn ruled completion at cap
+128K; key r2 took three attempts; register F-008–F-011 lodged.
+Sonnet@high and opus@high both clean first pass. Result: sonnet
+0.813/0.853/0.867 (below gate at every effort), opus 0.953 at BOTH
+efforts, cost-indistinguishable — Shawn's "is it really cheaper?" catch
+corrected the cheapest-configuration headline (`5c193e3`); the contract
+metric is a spend wire, not an effort-response measure. Mechanical
+quality checker shipped: zero invalid pack_refs / zero A1 violations
+study-wide; pack-utilisation separates models (opus ~80%, sonnet
+47–57%), not efforts. Corrected the carried study cost estimate 4–5×
+upward pre-gate ($80–120 API-equivalent vs $15–25; cache-write premium
++ read volume had been omitted).
+
+**Held-over candidates (no silent discard), for Shawn's verdicts:**
+
+- **WN-v:** effort pins must be artefact-derived — the harness persists
+  no effort field in spawn metadata, so the injected prompt line is the
+  only durable carrier; verify the opts channel with a differential
+  probe before spend (P3: 7.5× at cents), because a passive fallback
+  only masks failure, never detects it.
+- **WN-w:** a spend metric dominated by effort-independent components
+  cannot measure effort response — the contract metric is ~92%
+  cache-writes; opus output fell 33% at high while the total rose 1.4%;
+  decompose composite metrics before any cost ranking.
+- **WN-x:** harness caps are part of the measurement apparatus — the
+  64K per-response cap converted max-effort verbosity into 14 dead
+  attempts (24% of spend) and one unrecoverable item, and raising it to
+  128K eliminated the failure mode causally; what reads as model
+  non-compliance can be infrastructure.
+
+**Carry-forward:** analysis tool needs `--arms` extension before study
+arms join a tool-run; H13 fresh-context re-derivation at gates stage;
+F-010 open; 128K cap standing; sonnet intro pricing ends 2026-08-31;
+zbook hooks+venv still pending; Shawn's list (Cosmos window, Fable
+billing split, Zotero proxy, ELSEVIER key, Marwick duplicates)
+unchanged. Prior pending verdicts (2026-08-03 and 2026-08-15 batches)
+still held.
 
 ### 2026-08-15 → 2026-08-17 — Phase B ruled, amendment 2 lodged, D3 passed by two arms, register born
 
