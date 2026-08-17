@@ -3,7 +3,7 @@ export const meta = {
   description: 'One validation-benchmark arm: 5 pilot papers x 3 runs of FAIR scoring with per-item reconciliation hard stop',
   phases: [{ title: 'Score' }, { title: 'Reconcile' }],
 }
-// v1.3 (D3 prep + audit fixes + S4 retreat, 2026-08-17; amendment 2 SS2/SS5). Changes from the v1.0
+// v1.4 (D3 prep + audit fixes + S4 retreat + arm-1 discovery fix, 2026-08-17; amendment 2 SS2/SS5). Changes from the v1.0
 // script that ran the 2026-08-03 arms: (1) per-paper evidence-pack
 // injection — the prompt line format is the single source of truth for
 // scripts/reconcile-run.py's PACK_DECLARATION_RE, change both together;
@@ -67,12 +67,14 @@ const reconcilePrompt = (t) =>
   `1. Locate the live workflow run directory: list candidates newest-first with\n` +
   `   ls -td ~/.claude/projects/-home-shawn-Code-llm-reproducibility/*/subagents/workflows/wf_*/ 2>/dev/null | head -5\n` +
   `   and pick the newest directory containing an agent-*.jsonl transcript whose text contains BOTH ` +
-  `"arm ${arm}, run ${t.run} of 3" AND "Paper: ${t.slug}" (grep -l). CRITICAL disambiguation (your own ` +
-  `transcript also contains those strings): for EVERY grep match, read the sibling agent-<id>.meta.json ` +
-  `and keep only transcripts whose agentType is "${agentType}" — that is the scoring spawn; discard any ` +
-  `match whose meta says general-purpose (that is you or a sibling verifier). The surviving transcript's ` +
-  `filename stem after "agent-" is the scoring spawn's agent_id. If it has no StructuredOutput tool call ` +
-  `yet (still being written), wait 5 seconds and re-check, up to 6 attempts.\n` +
+  `"arm ${arm}, run ${t.run} of 3" AND "Paper: ${t.slug}" (grep -l). TWO CRITICAL disambiguations: ` +
+  `(a) your own transcript also contains those strings — for EVERY grep match, read the sibling ` +
+  `agent-<id>.meta.json and keep only transcripts whose agentType is "${agentType}"; ` +
+  `(b) OLDER benchmark runs used identical prompt wording — the transcript must ALSO contain the ` +
+  `literal string "Evidence pack (read in full)" (pre-2026-08-17 runs have none). Use ONLY the newest ` +
+  `directory; if the expected transcript is not yet visible there, wait 5 seconds and re-check the ` +
+  `NEWEST directory again (up to 6 attempts) — NEVER fall back to an older directory. The surviving ` +
+  `transcript's filename stem after "agent-" is the scoring spawn's agent_id.\n` +
   `2. From the repository root /home/shawn/Code/llm-reproducibility run:\n` +
   `   venv/bin/python scripts/reconcile-run.py <run_dir> --require-pack --contract-schema assessment-system/schema/benchmark-fair-output-schema.json --out <run_dir>/reconciliation\n` +
   `   A non-zero exit is EXPECTED whenever any spawn in the directory fails or is still incomplete - ` +

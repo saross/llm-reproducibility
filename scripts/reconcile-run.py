@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Post-run reconciliation of governed workflow spawns (plan C8 + C9).
 
-**Version:** 1.3
+**Version:** 1.4
 
 The C2 probes established that SubagentStop gate decisions are advisory in
 the workflow lane (a block is logged but the output is collected anyway)
@@ -145,9 +145,22 @@ def file_accesses(lines: list[str], gate) -> list[dict]:
                   key=lambda a: (a["tool"], a["target"], a["errored"]))
 
 
+# v1.4 (arm-1 adjudication, 2026-08-17): when the pushed-instrument payload
+# exceeds the harness's inline additionalContext threshold, the harness
+# spills it to a per-spawn file under tool-results/ and the agent must Read
+# it — that Read IS the push delivery (verified: the flagged file opens
+# with the push hook's banner and carries the receipt tokens the spawn
+# echoed). Scoring agents are read-only, so the pattern cannot be forged
+# into existence by a spawn.
+HOOK_DELIVERY_RE = re.compile(r"/tool-results/hook-[0-9a-f-]+-\d+-additionalContext\.txt$")
+
+
 def access_allowed(target: str, allowed_prefixes: tuple[str, ...],
                    extra_allowed: tuple[str, ...]) -> bool:
-    """True when a normalised target sits under an allowed prefix."""
+    """True when a normalised target sits under an allowed prefix, or is a
+    harness hook-delivery file (the push channel itself)."""
+    if HOOK_DELIVERY_RE.search(target):
+        return True
     return any(target.startswith(prefix)
                for prefix in tuple(allowed_prefixes) + tuple(extra_allowed))
 

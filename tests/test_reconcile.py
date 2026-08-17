@@ -286,6 +286,19 @@ class ReconcileTests(unittest.TestCase):
                          {"test-instrument": "1.0"})
         self.assertEqual(receipted["model_id"], "claude-test-1")
 
+    def test_hook_delivery_read_is_not_contaminating(self) -> None:
+        """Arm-1 adjudication (2026-08-17): a spilled additionalContext read
+        is the push channel, never contamination."""
+        self.write_agent("a1", [
+            ("corpus/paper.md", False),
+            ("/home/other/.claude/projects/x/session/tool-results/"
+             "hook-613de023-f3fe-4f97-be2c-5f86359ce4b3-1-additionalContext.txt",
+             False),
+        ], payload())
+        self.log_gate_event("a1", "pass")
+        report = self.run_reconcile()
+        self.assertTrue(report["clean"], report["agents"][0]["file_access"])
+
     def test_contract_schema_enforces_moved_conditionals(self) -> None:
         """S4 retreat (2026-08-17): the spawn-side API rejects top-level
         allOf, so the v1.1 conditionals enforce at reconciliation. An
