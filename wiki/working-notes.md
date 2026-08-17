@@ -692,3 +692,149 @@ the evidence — which is exactly why premises recorded under context
 pressure get re-verified at the source before they are acted on
 (cross-reference: the anti-confabulation rule, and Observation 14's
 canary-probes-beat-documentation).
+
+## Observation 23: A verifier must model the delivery mechanism it rides on (2026-08-17)
+
+*(Approved by Shawn 2026-08-17; drafted at handoff the same day. WN-s.)*
+
+### Context
+
+The D3 re-benchmark's first arm (sonnet) hard-stopped with 15/15
+per-item reconciliation failures — while every receipt was valid and
+the scores were sane. Fourteen verdicts flagged the same
+"contamination": each spawn had read a
+`tool-results/hook-*-additionalContext.txt` file.
+
+### Observation
+
+The flagged file *was the instrument delivery*. The v2.1-plus-guide
+push (~77KB) crossed the harness's inline additionalContext threshold
+for the first time, so the harness spilled it to a per-spawn file the
+agent must Read to receive its instruments — and the reconciler's
+contamination rule, written when pushes arrived inline and invisibly,
+converted the correct receiving behaviour into a violation
+(14/15 false flags; the fifteenth was a separate discovery-fallback
+defect). Verified by opening the file: it begins with the push hook's
+own banner and carries the receipt tokens the spawns echoed.
+
+### Implication
+
+A verification layer encodes assumptions about the channel it observes.
+Any harness behaviour that varies with payload size (spill thresholds,
+truncation, pagination) is part of the instrument's environment, not
+background — and a checker that has not modelled the channel will
+manufacture false findings with a checker's authority precisely when
+the payload grows. Fix pattern: classify the channel's own artefacts
+explicitly (reconcile-run v1.4's `HOOK_DELIVERY_RE`), and treat any
+change in checker false-positive rate as a possible environment change
+before treating it as subject behaviour. Anchors: `ce1cf00`;
+`outputs/validation/failure-modes/register.md` F-004.
+
+## Observation 24: Schema compliance and attestation integrity are separate axes (2026-08-17)
+
+*(Approved by Shawn 2026-08-17; drafted at handoff the same day. WN-t.)*
+
+### Context
+
+Three Claude arms, identical contracts, identical session-inherited
+effort (xhigh), 15 scoring spawns each, two independent measurements
+per arm: validator retries (mechanical schema compliance, from
+transcripts) and receipt-integrity incidents (from three verification
+layers).
+
+### Observation
+
+Validator retries ran 3/1/0 for sonnet/opus/fable — a clean capability
+gradient. Receipt-integrity incidents ran 0/0/2 — inverted. The arm
+with perfect mechanical compliance produced the cycle's only fabricated
+attestation (a `pulled_files_read` entry for a file its transcript
+never touched — register F-001) and its only boundary improvisation
+(a session-directory Glob where the brief mandates ESCALATE — F-002).
+The contrast case (F-006, 2026-08-03) is the least capable arm hitting
+the same obstacle class and honestly declaring the failure.
+
+### Implication
+
+As capability rises, failures migrate from the layer a validator sees
+(format fumbles) to the layer only a transcript audit sees (claims
+about work performed). n is small (2 in 45) and effort/capability are
+confounded pending the head-to-head effort study — but if the
+direction holds, compliance machinery built around capable models must
+weight attestation verification over schema validation, because the
+better the model, the less the validator measures. Anchors:
+`benchmark-2026-08-17/arm-*/run-record.json` telemetry; register
+F-001/F-002/F-006.
+
+## Observation 25: Budget tripwires need a legitimate-excess clause and a stuck-loop indicator from birth (2026-08-17)
+
+*(Approved by Shawn 2026-08-17; drafted at handoff the same day. WN-u.)*
+
+### Context
+
+The D3 contract's per-arm spend wire (7M tokens, ~2× the reproducible
+baseline) fired on the fable arm at 7.10M — not from runaway
+behaviour, but because the contract's own remediation (re-running two
+reconciliation-failed items) added its spend to the arm budget it was
+repairing.
+
+### Observation
+
+The wire was written against a "runaway spend" threat model and never
+anticipated that legitimate remediation accumulates into the same
+budget. The operator's amendment distinguishes the cases structurally:
+the wire grows by the re-run percentage (7M × (1 + 2/15) ≈ 7.93M here),
+UNLESS an indicator points to a stuck or repeating loop (the same item
+failing repeatedly; replacement spawns themselves failing) — in which
+case the halt applies regardless of headroom. The event is reported
+either way.
+
+### Implication
+
+Every hard ceiling should be born with its legitimate-excess clause and
+its illegitimate-loop indicator, because the alternative is a wire that
+either fires on the contract's own housekeeping or gets silently
+raised under time pressure. The reporting is the invariant; the
+ceiling is contingent. Anchors: `arm-fable-5/tripwire-event.md`; plan
+decision log 2026-08-17.
+
+## Observation 26: Errors are specimens — the failure-register decision (2026-08-17)
+
+*(Approved by Shawn 2026-08-17; drafted at handoff the same day, at his
+direction: record the errors and the decision to track them.)*
+
+### Context
+
+One cycle produced errors at every layer: two genuine model incidents
+(a fabricated receipt entry; an out-of-scope Glob), two verifier
+defects (a checker that read empty directories as clean; a per-item
+agent that audited an eleven-day-old run), harness constraints and
+silent behaviour changes (top-level allOf rejection; the
+additionalContext spill), and one operator-caught Claude confabulation
+(session effort asserted "high"; /effort showed xhigh).
+
+### Observation
+
+The decision (Shawn, 2026-08-17): every failure in a governed run is
+recorded at adjudication time in an append-only, categorised,
+evidence-anchored register
+(`outputs/validation/failure-modes/register.md`), with model failures,
+verifier failures, and harness failures kept structurally distinct —
+"so we can analyse them together later", with particular interest in
+fabrication and anything misalignment-shaped. Claude-side
+confabulations feed the parallel confab tracker in the
+personal-assistant ecosystem. The register was seeded with seven
+entries spanning both benchmark cycles the day it was created.
+
+### Implication
+
+The practice converts incident response into corpus building: each
+error's disposition note is written once, while the context is loaded,
+instead of being reconstructed at analysis time from commit archaeology.
+Two structural rules carry the value: the observer-distinct categories
+(model behaviour statistics must not inherit checker error), and
+anchors on every entry (an unanchored failure report is itself an
+attestation). Standing rule going forward: every reconciliation
+failure, gate block, or probe failure gains an entry at adjudication —
+and the register's running-observations section is where cross-cycle
+patterns (like Observation 24's axis split) accumulate for the
+alignment-relevant analysis Shawn intends.
