@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble one benchmark arm's committed artefact set (D3 run contract H6).
 
-**Version:** 1.0
+**Version:** 1.2
 
 From a completed arm workflow's transcript directory, produce the committed
 arm directory: per-run score payloads (`run-<N>/<slug>.json` — the only
@@ -83,30 +83,58 @@ def main() -> int:
     parser.add_argument("run_dir", type=Path)
     parser.add_argument("arm")
     parser.add_argument("out_dir", type=Path)
+    parser.add_argument("--extra-dir", action="append", default=[], type=Path,
+                        help="replacement-run transcript directory (repeatable; "
+                             "contract H11 split provenance)")
+    parser.add_argument("--supersede", action="append", default=[],
+                        metavar="AGENT_ID",
+                        help="superseded scoring spawn in the primary dir "
+                             "(excluded from payloads and clean requirement; "
+                             "its spend still counts against the wire)")
+    parser.add_argument("--environment", action="append", default=[],
+                        metavar="KEY=VALUE",
+                        help="run-environment attestation (repeatable): "
+                             "effort/thinking level, harness route, billing "
+                             "route. Recorded verbatim under run_environment "
+                             "as session/operator-attested values — the "
+                             "harness persists none of these itself "
+                             "(v1.1, operator directive 2026-08-17)")
     args = parser.parse_args()
     run_dir = args.run_dir.expanduser().resolve()
     out_dir = args.out_dir
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    report_path = run_dir / "reconciliation-authoritative" / "reconciliation-report.json"
-    if not report_path.is_file():
-        print(f"ERROR: authoritative reconciliation missing: {report_path}",
-              file=sys.stderr)
+    superseded = set(args.supersede)
+    all_dirs = [run_dir] + [d.expanduser().resolve() for d in args.extra_dir]
+    reports = []
+    for directory in all_dirs:
+        report_path = directory / "reconciliation-authoritative" / "reconciliation-report.json"
+        if not report_path.is_file():
+            print(f"ERROR: authoritative reconciliation missing: {report_path}",
+                  file=sys.stderr)
+            return 1
+        reports.append(json.loads(report_path.read_text()))
+    # Contract H1 as amended by H11: every NON-superseded governed spawn
+    # across all directories must reconcile; superseded spawns are excluded
+    # from acceptance but named in the record.
+    unreconciled = [a["agent_id"] for r in reports for a in r["agents"]
+                    if not a["reconciled"] and a["agent_id"] not in superseded]
+    if unreconciled:
+        print(f"ERROR: unreconciled non-superseded spawns: {unreconciled} — "
+              f"assembly refused (contract hardenings 1/11)", file=sys.stderr)
         return 1
-    report = json.loads(report_path.read_text())
-    if not report.get("clean"):
-        print("ERROR: authoritative reconciliation is not clean — "
-              "assembly refused (contract hardening 1)", file=sys.stderr)
-        return 1
+    report = reports[0]
 
     spawns = []
     arm_tokens = {"input_tokens": 0, "output_tokens": 0,
                   "cache_creation_input_tokens": 0,
                   "cache_read_input_tokens": 0, "contract_metric_tokens": 0}
     payload_count = 0
-    for transcript in sorted(run_dir.glob("agent-*.jsonl")):
+    transcripts = [tr for directory in all_dirs
+                   for tr in sorted(directory.glob("agent-*.jsonl"))]
+    for transcript in transcripts:
         agent_id = transcript.stem.replace("agent-", "")
-        meta_path = run_dir / f"{transcript.stem}.meta.json"
+        meta_path = transcript.parent / f"{transcript.stem}.meta.json"
         meta = json.loads(meta_path.read_text()) if meta_path.is_file() else {}
         text = transcript.read_text(encoding="utf-8")
         lines = text.splitlines()
@@ -116,6 +144,10 @@ def main() -> int:
         agent_type = str(meta.get("agentType") or "")
         record = {"agent_id": agent_id, "agent_type": agent_type,
                   "usage": tokens}
+        if agent_id in superseded:
+            record["superseded"] = True
+            spawns.append(record)
+            continue
         if agent_type.startswith("fair-assessor-"):
             identity = transcript_identity(text)
             payload = transcript_payload(lines)
@@ -145,22 +177,53 @@ def main() -> int:
         source = run_dir / "reconciliation-authoritative" / name
         if source.is_file():
             shutil.copy2(source, recon_out / name)
+    for index, directory in enumerate(all_dirs[1:], start=1):
+        for name in ("reconciliation-report.json", "gate-log-slice.jsonl",
+                     "push-log-slice.jsonl"):
+            source = directory / "reconciliation-authoritative" / name
+            if source.is_file():
+                shutil.copy2(source, recon_out / f"extra-{index}-{name}")
 
-    receipted = [a["receipts"].get("receipted") for a in report["agents"]]
+    import subprocess
+    try:
+        claude_version = subprocess.run(
+            ["claude", "--version"], capture_output=True, text=True,
+            timeout=10).stdout.strip() or "unavailable"
+    except (OSError, subprocess.TimeoutExpired):
+        claude_version = "unavailable"
+
+    receipted = [a["receipts"].get("receipted") for r in reports
+                 for a in r["agents"]
+                 if a["agent_id"] not in superseded and a["reconciled"]]
     model_ids = sorted({r["model_id"] for r in receipted if r})
     record = {
         "arm": args.arm,
         "workflow_run_id": run_dir.name,
+        "extra_run_dirs": [d.name for d in all_dirs[1:]],
+        "superseded_spawns": sorted(superseded),
         "assembled_at": datetime.now(timezone.utc).isoformat(),
         "spawns": spawns,
         "score_payloads": payload_count,
         "model_ids_receipted": model_ids,
         "reconciliation": {
-            "clean": report["clean"],
-            "spawns": report["spawns"],
-            "spawns_reconciled": report["spawns_reconciled"],
-            "skipped_ungoverned": len(report.get("skipped_ungoverned", [])),
-            "report": "reconciliation/reconciliation-report.json",
+            "accepted_rule": "every non-superseded governed spawn across all "
+                             "directories reconciled (H1/H11)",
+            "spawns_total": sum(r["spawns"] for r in reports),
+            "spawns_reconciled": sum(r["spawns_reconciled"] for r in reports),
+            "superseded": len(superseded),
+            "skipped_ungoverned": sum(len(r.get("skipped_ungoverned", []))
+                                      for r in reports),
+            "reports": ["reconciliation/reconciliation-report.json"]
+                       + [f"reconciliation/extra-{i+1}-reconciliation-report.json"
+                          for i in range(len(reports) - 1)],
+        },
+        "run_environment": {
+            "note": "session/operator-attested values plus auto-captured "
+                    "harness version; the spawn metadata records no effort "
+                    "field, so these are attestations, not artefact-derived",
+            "claude_code_version": claude_version,
+            **{kv.split("=", 1)[0]: kv.split("=", 1)[1]
+               for kv in args.environment if "=" in kv},
         },
         "usage_contract_metric": {
             "definition": "sum of transcript usage input+output+cache_creation, "
