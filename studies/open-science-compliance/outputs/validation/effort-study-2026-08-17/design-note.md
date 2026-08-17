@@ -32,8 +32,15 @@ per-item reconcile spawns per arm. Arms sequential with per-arm hard stop:
 2. `sonnet-5` @ `high` — **added by operator ruling 2026-08-17**, runs
    after the max arm completes, pinning the other end of the effort
    spectrum.
-3. `opus-5` @ `max` — **OFF unless the opus xhigh run shows deficiencies**
+3. `opus-5` @ `high` — **added by operator ruling 2026-08-17 (second
+   sitting)**: with sonnet high/xhigh/max and opus high/xhigh this
+   completes the stability datapoints; runs after sonnet@high closes.
+4. `opus-5` @ `max` — **OFF unless the opus xhigh run shows deficiencies**
    (operator ruling 2026-08-17, superseding the original arm-2 plan).
+
+**Result, arm 1 (2026-08-17):** sonnet@max stability **130/150 = 0.8667**,
+below the gate — +2 items over xhigh at 3.4× cost
+(`arm-sonnet-5-max/completion-report-2026-08-17.md`).
 
 ## Arm identity and provenance (Q1, Q2)
 
