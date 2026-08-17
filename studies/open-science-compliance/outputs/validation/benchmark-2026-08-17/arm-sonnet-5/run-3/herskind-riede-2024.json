@@ -1,0 +1,251 @@
+{
+ "code_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "'Dedicated R code and complete data tables are reported in Supplementary Information S2 and S3... All code and data are available here: https://zenodo.org/records/10623550' (p.3) \u2014 retrievable via HTTPS DOI resolution. The data-completeness A1 override is explicitly scoped by the instrument to 'A1 = 0 for data FAIR' only and does not extend to code FAIR.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "A1_1": {
+    "evidence": "Zenodo access_right: 'open'; HTTPS, no login required.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "A1_2": {
+    "evidence": "Fully open resource, no authentication needed \u2014 satisfies A1.2 by construction (v2.1).",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "A2": {
+    "evidence": "Platform entitlement table Row 2 (Zenodo) persistence entitlement (tombstone page, metadata always publicly accessible) applies to the code-bearing deposit.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "F1": {
+    "evidence": "'All code and data are available here: https://zenodo.org/records/10623550' (p.3, Methods \u00a72.2). Code shares the same Zenodo deposit (own DOI, concept DOI 10.5281/zenodo.10623549) confirmed by the evidence pack's 'code-data-zenodo' record.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10623550",
+     "datacite:10.5281/zenodo.10801706",
+     "zenodo:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "F2": {
+    "evidence": "Same combined Zenodo/DataCite record as data (metadata_record: true, state: findable) covers the deposited R code alongside the data.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "F3": {
+    "evidence": "identifier_in_metadata: true in the evidence pack for the code-data Zenodo record.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "F4": {
+    "evidence": "Indexed at Zenodo/DataCite (source_endpoint: datacite, state: findable).",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "I1": {
+    "evidence": "'All analyses were performed in the open-source R programming environment (v.4.2.2; R Core Team, 2021), using the Quanteda package (Benoit et al., 2018)' (p.3) \u2014 the deposited 'Dedicated R code' (Supplementary Information S2) is R script, a standard, structured, machine-readable programming-language format.",
+    "pack_refs": [],
+    "present": 1
+   },
+   "I2": {
+    "evidence": "No FAIR-compliant software vocabularies/ontologies (e.g. CodeMeta controlled terms) evidenced for the deposited code.",
+    "pack_refs": [],
+    "present": 0
+   },
+   "I3": {
+    "evidence": "No qualified PID-based references (e.g. relatedIdentifiers to dependencies or the article DOI) confirmed in the pack's metadata fields for the code-bearing record; the paper cites the Quanteda dependency with a DOI in its own reference list (Benoit et al., 2018, https://doi.org/10.21105/joss.00774) but this is a paper-text citation, not a qualified reference embedded in the deposited artefact's own metadata.",
+    "pack_refs": [],
+    "present": 0
+   },
+   "R1": {
+    "evidence": "Methods \u00a72.2 (p.3) describes the code's function in detail: skipgram generation logic, the expected-frequency and PMI formulas, the k=13 skip-distance rationale, and the specific software environment (R v4.2.2, Quanteda package).",
+    "pack_refs": [],
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "Evidence pack: licences: ['cc-by-4.0'] on the same combined code-data Zenodo deposit.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "R1_2": {
+    "evidence": "Software environment and dependency documented in-text: R v.4.2.2 (R Core Team, 2021) and the Quanteda package (Benoit et al., 2018); PMI/expected-frequency formulas given explicitly (p.3) as analytical provenance.",
+    "pack_refs": [],
+    "present": 1
+   },
+   "R1_3": {
+    "evidence": "No evidence of package structure, CITATION.cff, CodeMeta, or community review (CRAN/JOSS/rOpenSci) for the deposited 'Dedicated R code' \u2014 described as standalone analysis scripts, not a reviewed/structured package.",
+    "pack_refs": [],
+    "present": 0
+   }
+  },
+  "total": 12
+ },
+ "data_completeness": {
+  "assessment_scope": "straightforward",
+  "barriers": [
+   "closed monograph",
+   "paywall"
+  ],
+  "coverage_category": "partial",
+  "coverage_percentage": 50,
+  "datasets_accessible_tier_0_2": 1,
+  "datasets_enumerated": 2
+ },
+ "data_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "data_completeness coverage_category = 'partial' (50%): the digitised South Scandinavian subset (Supplementary Information S1, 483 objects) is openly on Zenodo, but was 'manually extracted and digitised' (p.2) from P\u0142onka's (2003) print catalogue ('the comprehensive catalogue of Mesolithic ornamentation compiled by P\u0142onka (2003)'; motif scheme 'P\u0142onka's (2003, pp.315-325) own motif classification scheme'), a paywalled academic monograph (Acta Universitatis Wratislaviensis) not freely available online \u2014 the instrument's own Tier-3 'paywalled monograph' barrier example. No CARE/ethical restriction applies (copyright/paywall barrier, not ethical), so the A1 exception does not apply; per the A1 cross-reference rule, coverage='partial' forces A1=0 for data.",
+    "pack_refs": [],
+    "present": 0
+   },
+   "A1_1": {
+    "evidence": "Zenodo record access_right: 'open'; HTTPS DOI resolution, no login required for the deposited (accessible) portion.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "A1_2": {
+    "evidence": "Fully open resource (access_right: open) requiring no authentication; per v2.1, an open resource needing no auth satisfies A1.2 by construction.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "A2": {
+    "evidence": "Platform entitlement table Row 2 (Zenodo): 'tombstone page on withdrawal with DOI and URL retained... metadata always publicly accessible' \u2014 rung-(ii) by-construction inference, applicable since the artefact is confirmed hosted at Zenodo (rung-i).",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "F1": {
+    "evidence": "Data Availability Statement (p.8): 'Supplementary Information to this article can be found online at https://zenodo.org/records/10801706.' Own DOI (10.5281/zenodo.10801706), not merely the article DOI; confirmed findable-state DataCite record.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10801706",
+     "zenodo:10.5281/zenodo.10801706",
+     "datacite:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "F2": {
+    "evidence": "Evidence pack shows a genuine structured DataCite/Zenodo record (metadata_record: true, state: findable, doi/publisher/publication_year/resource_type/licences populated) rather than a bare filename; DataCite 'findable' state requires the mandatory creator/title/publisher/year/resourceType fields to be populated.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10801706",
+     "zenodo:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "F3": {
+    "evidence": "Evidence pack field 'identifier_in_metadata': true for both zenodo:10.5281/zenodo.10623550 and zenodo:10.5281/zenodo.10801706.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "F4": {
+    "evidence": "Deposit is DataCite-indexed on Zenodo (source_endpoint: datacite, state: findable) \u2014 a searchable registry per platform table Row 2.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "I1": {
+    "evidence": "Neither the paper nor the evidence pack states the file format of the deposited data tables (Supplementary Information S1/S3); the text describes content ('483 objects', 'complete data tables') but not a structured file format (CSV/JSON/etc.). Unscoreable on the two-rung ladder \u2192 0.",
+    "pack_refs": [],
+    "present": 0
+   },
+   "I2": {
+    "evidence": "The motif classification scheme used (P\u0142onka 2003 codes A1, A2, B10, C1, etc.) is a bespoke single-publication typology with no PIDs and no evidence of alignment with a published FAIR vocabulary/ontology (e.g. Getty AAT, CIDOC-CRM).",
+    "pack_refs": [],
+    "present": 0
+   },
+   "I3": {
+    "evidence": "No qualified PID-based references (e.g. relatedIdentifiers linking the dataset to the article DOI or to P\u0142onka 2003) evidenced in the pack's Zenodo/DataCite fields; P\u0142onka (2003) is cited only as a conventional bibliographic reference (no DOI in the reference list).",
+    "pack_refs": [],
+    "present": 0
+   },
+   "R1": {
+    "evidence": "Methods \u00a72.1 (p.2) richly documents dataset attributes: 'numerous categorical variables corresponding to the characteristics of each ornamented object and associated metadata such as location, quality of contextual information, and original source', plus chronological attribution (Maglemose/Kongemose/Erteb\u00f8lle) and the motif-type coding scheme.",
+    "pack_refs": [],
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "Evidence pack: licences: ['cc-by-4.0'] on both zenodo:10.5281/zenodo.10623550 and zenodo:10.5281/zenodo.10801706 \u2014 clear, identified licence at the hosting service (paper is silent on a separate data licence, so the service-recorded licence governs per R1.1 semantics).",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "R1_2": {
+    "evidence": "Methods \u00a72.1 (p.2) documents provenance in detail: source (P\u0142onka 2003 catalogue), extraction method ('manually extracted and digitised'), coding scheme ('transcribed as binary data in the form of presence/absence coding of motif types'), and transformation ('transformed from presence/absence coding into a sentence-imitating structure...').",
+    "pack_refs": [],
+    "present": 1
+   },
+   "R1_3": {
+    "evidence": "Zenodo is a general-purpose repository, not an accredited domain repository per the platform table's graded Row 4 (ADS/DANS/tDAR); no domain metadata schema (ARIADNEplus, CIDOC-CRM, Darwin Core) or community-standard conformance beyond bare DataCite registration is claimed.",
+    "pack_refs": [],
+    "present": 0
+   }
+  },
+  "total": 10
+ },
+ "input_provenance": [
+  {
+   "input": "Code and data Zenodo repository (in-text link, https://zenodo.org/records/10623550)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "Supplementary Information Zenodo repository (Data Availability Statement, https://zenodo.org/records/10801706)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "P\u0142onka (2003) portable art of Mesolithic Europe catalogue (upstream classification source)",
+   "provenance": "third-party"
+  }
+ ],
+ "paper_slug": "herskind-riede-2024",
+ "receipts": {
+  "agent_version": "fair-assessor-sonnet-5 v1.2",
+  "instrument_receipts": {
+   "fair-instrument": "5ff4c48c4f5c7321",
+   "fair-principles-guide": "0eed0b8d570bf55e"
+  },
+  "instrument_versions": {
+   "fair-instrument": "2.1",
+   "fair-principles-guide": "1.1"
+  },
+  "model_id": "claude-sonnet-5",
+  "pulled_files_read": [
+   "/home/shawn/Code/llm-reproducibility/corpus/evidence-packs/herskind-riede-2024.json"
+  ]
+ },
+ "schema_version": "1.1",
+ "stated_availability": "In-text (Methods \u00a72.2, p.3): \"All code and data are available here: https://zenodo.org/records/10623550.\" Formal Data Availability Statement (p.8): \"Supplementary Information to this article can be found online at https://zenodo.org/records/10801706.\" Both DOIs share the same Zenodo concept DOI (10.5281/zenodo.10623549) per the evidence pack, i.e. two versions of one deposit bundling code and data together.",
+ "status": "OK"
+}

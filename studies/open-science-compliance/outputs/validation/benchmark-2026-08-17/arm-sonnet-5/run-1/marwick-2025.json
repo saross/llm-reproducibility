@@ -1,0 +1,264 @@
+{
+ "code_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "Code is directly retrievable via the same DOI/HTTPS resolution path; the data-completeness A1 override is data-specific and code is not subject to it. access_right='open'.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "A1_1": {
+    "evidence": "DOI resolution over open HTTPS via Handle/DataCite/Zenodo, access_right='open' - no proprietary protocol, login, or paywall.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "A1_2": {
+    "evidence": "Fully open resource, access_right='open', no authentication required; satisfies A1.2 per v2.1 semantics.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "A2": {
+    "evidence": "By-construction entitlement, platform table Row 2 (Zenodo): tombstone page with DOI/URL retained on withdrawal, metadata always publicly accessible, retention for the lifetime of the repository.",
+    "pack_refs": [],
+    "present": 1
+   },
+   "F1": {
+    "evidence": "Paper (p.2): 'The entire R code (R Core Team, 2024) used for the analysis and visualizations contained in this paper is at https://doi.org/10.5281/zenodo.14897252' - own-artefact DOI explicitly associated with the code, confirmed resolvable via DataCite/Zenodo.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252",
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "F2": {
+    "evidence": "Same bundled DataCite/Zenodo record as the data artefact (metadata_record=true, identifier_in_metadata=true, publisher='Zenodo', resource_type='Software', publication_year=2025); recovered version-record title 'benmarwick/web-of-science-archaeology: Research compendium for the publication \"Is archaeology a science?\"' corroborates structured author/title/description content for the code.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252",
+     "zenodo:10.5281/zenodo.14897252",
+     "datacite:10.5281/zenodo.15603267"
+    ],
+    "present": 1
+   },
+   "F3": {
+    "evidence": "'identifier_in_metadata': true recorded for 10.5281/zenodo.14897252 in both DataCite and Zenodo evidence-pack entries.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252",
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "F4": {
+    "evidence": "DataCite record state='findable' for 10.5281/zenodo.14897252; deposit hosted on Zenodo, a searchable registry per platform table Row 2.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "I1": {
+    "evidence": "Paper (p.2): 'The entire R code (R Core Team, 2024) used for the analysis and visualizations' - R is a formal, open, widely-implemented, shared programming language for computational analysis, directly evidenced in the paper text.",
+    "pack_refs": [],
+    "present": 1
+   },
+   "I2": {
+    "evidence": "No evidence in the paper or evidence pack of controlled vocabularies applied within the code/software metadata (e.g. no CodeMeta software-type ontology, no dependency vocabulary).",
+    "pack_refs": [],
+    "present": 0
+   },
+   "I3": {
+    "evidence": "The same concept-DOI version relationship (10.5281/zenodo.15603267 -> concept_doi 10.5281/zenodo.14897252) is a typed qualified reference within the deposited artefact's own metadata; this single record is the joint code+data compendium.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.15603267",
+     "datacite:10.5281/zenodo.15603267"
+    ],
+    "present": 1
+   },
+   "R1": {
+    "evidence": "Same structured metadata bundle as the data artefact, plus in-text methodological documentation of the modelling approach implemented in the code (Bayesian Generalized Additive Models, family distributions specified per variable, Fig. 2 caption p.4) constitutes rich description of the code's function.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252",
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "Paper (p.2): 'The R code is released under the MIT license'; Zenodo/DataCite record the single-record licence as 'cc-by-4.0'. Evidence pack flags the same-artefact disagreement (paper_asserted MIT for code vs service_recorded cc-by-4.0); per the most-restrictive rule CC-BY-4.0 governs scoring. Either value is a clear, machine-readable open licence, so R1.1 is satisfied.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252",
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "R1_2": {
+    "evidence": "In-text documentation of statistical/model provenance for the code's analyses (Fig. 2 caption, p.4): 'Bayesian Generalized Additive Models were computed ... Zero-One Inflated Beta distribution family ... Negative Binomial family ... Gaussian family ... standard log link function'; software citation 'R Core Team, 2024' documents the language/version context.",
+    "pack_refs": [],
+    "present": 1
+   },
+   "R1_3": {
+    "evidence": "Route (a) of the R1.3 clarification (generic metadata schema, DataCite) applies by construction to the code deposit via the same single Zenodo/DataCite record confirmed resolved in the evidence pack (platform table Row 1/Row 2 entitlement).",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   }
+  },
+  "total": 14
+ },
+ "data_completeness": {
+  "assessment_scope": "straightforward",
+  "barriers": [],
+  "coverage_category": "complete",
+  "coverage_percentage": 100,
+  "datasets_accessible_tier_0_2": 2,
+  "datasets_enumerated": 2
+ },
+ "data_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "Data-completeness coverage assessed as 'complete' (both enumerated datasets - WoS bibliometric sample and JAS reproducibility-review data - stated by the paper to be in the one compendium), so the minimal/partial A1 override does not apply. Zenodo record access_right='open', http_status 200 on DataCite and Zenodo endpoints, DOI resolves via HTTPS/Handle.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "A1_1": {
+    "evidence": "DOI resolution over open HTTPS via Handle/DataCite/Zenodo, access_right='open' - no proprietary protocol, login, or paywall.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "A1_2": {
+    "evidence": "Fully open resource, access_right='open', no authentication required; per v2.1 A1.2 semantics a fully open resource requiring no authentication satisfies A1.2.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "A2": {
+    "evidence": "By-construction entitlement, platform table Row 2 (Zenodo): tombstone page with DOI/URL retained on withdrawal, metadata always publicly accessible, retention for the lifetime of the repository. Paper and pack are silent on an actual withdrawal event; scored via the rung-(ii) by-construction floor.",
+    "pack_refs": [],
+    "present": 1
+   },
+   "F1": {
+    "evidence": "Paper (p.2): 'The entire R code ... used for the analysis and visualizations contained in this paper is at https://doi.org/10.5281/zenodo.14897252'; Data availability statement (p.10) gives the same DOI for 'the data that support the findings of this study'. Evidence pack confirms this DOI resolves via DataCite and Zenodo (own-artefact PID, not merely the article DOI).",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252",
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "F2": {
+    "evidence": "Evidence pack shows a populated DataCite/Zenodo record for 10.5281/zenodo.14897252 (metadata_record=true, identifier_in_metadata=true, publisher='Zenodo', resource_type='Software', publication_year=2025 - substantive, non-null-code values). The version record (15603267, same concept DOI) carries the descriptive title 'benmarwick/web-of-science-archaeology: Research compendium for the publication \"Is archaeology a science?\"', corroborating structured author/title/description content.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252",
+     "zenodo:10.5281/zenodo.14897252",
+     "datacite:10.5281/zenodo.15603267"
+    ],
+    "present": 1
+   },
+   "F3": {
+    "evidence": "'identifier_in_metadata': true recorded in both the DataCite and Zenodo evidence-pack entries for 10.5281/zenodo.14897252.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252",
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "F4": {
+    "evidence": "DataCite record state='findable' for 10.5281/zenodo.14897252 (DataCite Search indexing); deposit hosted on Zenodo, a searchable registry per platform table Row 2.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "I1": {
+    "evidence": "Neither the paper text nor the evidence pack states the file format(s) of the deposited data (e.g. CSV/JSON vs PDF/proprietary); the platform entitlement table does not cover file-format facts for Zenodo. Unscoreable after the two-rung ladder is exhausted -> 0 per the registered default.",
+    "pack_refs": [],
+    "present": 0
+   },
+   "I2": {
+    "evidence": "No mention in the paper or evidence pack of controlled/FAIR vocabularies applied to the bibliometric or reproducibility-review data (e.g. no PeriodO/Getty AAT/Darwin Core-style terms cited for this dataset).",
+    "pack_refs": [],
+    "present": 0
+   },
+   "I3": {
+    "evidence": "Zenodo record for 10.5281/zenodo.15603267 carries 'concept_doi': '10.5281/zenodo.14897252', a typed DataCite version relationship (IsVersionOf/HasVersion) - a qualified reference to another PID-identified resource within the artefact's own metadata.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.15603267",
+     "datacite:10.5281/zenodo.15603267"
+    ],
+    "present": 1
+   },
+   "R1": {
+    "evidence": "Structured metadata bundle (title, publisher, resource type, publication year, licence, related identifier) plus in-text description of dataset construction (WoS category/document-type/journal-ranking filtering steps, p.2) constitutes a plurality of relevant descriptive attributes.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252",
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "Paper (p.2): 'the data as CC-0'; Zenodo/DataCite record the single-record licence as 'cc-by-4.0'. Evidence pack flags a same-artefact disagreement (paper_asserted 'MIT (code); CC0 (data); CC BY (figures)' vs service_recorded ['cc-by-4.0']); per the R1.1 most-restrictive rule, CC-BY-4.0 (the service-recorded value, and the most restrictive of {CC0, MIT, CC-BY}) governs scoring. Either value is a clear, machine-readable open licence, so R1.1 is satisfied.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252",
+     "zenodo:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   },
+   "R1_2": {
+    "evidence": "Paper documents detailed dataset provenance in-text (p.2): WoS category='Archaeology', Document type='article' (n=28,871), filtered to top-25 h-index journals, journals with <100 articles excluded, yielding 9697 papers across 20 journals, 1975-2025.",
+    "pack_refs": [],
+    "present": 1
+   },
+   "R1_3": {
+    "evidence": "By construction, route (a) of the R1.3 clarification (generic metadata schemas: DataCite, Dublin Core): the deposit carries a DataCite metadata record confirmed resolved in the evidence pack (platform table Row 1/Row 2 entitlement).",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.14897252"
+    ],
+    "present": 1
+   }
+  },
+  "total": 13
+ },
+ "input_provenance": [
+  {
+   "input": "Web of Science-derived bibliometric dataset (n=9697 articles, 20 journals, 1975-2025)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "JAS reproducibility-review dataset (25 manuscripts / 47 reviews, Fig. 5)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "R analysis and visualisation code",
+   "provenance": "author-deposited"
+  }
+ ],
+ "paper_slug": "marwick-2025",
+ "receipts": {
+  "agent_version": "fair-assessor-sonnet-5 v1.2",
+  "instrument_receipts": {
+   "fair-instrument": "5ff4c48c4f5c7321",
+   "fair-principles-guide": "0eed0b8d570bf55e"
+  },
+  "instrument_versions": {
+   "fair-instrument": "2.1",
+   "fair-principles-guide": "1.1"
+  },
+  "model_id": "claude-sonnet-5",
+  "pulled_files_read": [
+   "/home/shawn/corpora/llm-reproducibility/marwick-2025/vor.pdf",
+   "/home/shawn/Code/llm-reproducibility/corpus/evidence-packs/marwick-2025.json"
+  ]
+ },
+ "schema_version": "1.1",
+ "stated_availability": "Data availability statement (p.10): \"The data that support the findings of this study are openly available in Zenodo at https://doi.org/10.5281/zenodo.14897252.\" Main text (p.2): \"The entire R code (R Core Team, 2024) used for the analysis and visualizations contained in this paper is at https://doi.org/10.5281/zenodo.14897252 to enable re-use of materials and improve reproducibility and transparency (Marwick, 2017). All the figures, tables, and statistical test results presented here can be independently reproduced with the code and data in this compendium (Marwick et al., 2018). The R code is released under the MIT license, the data as CC-0, and figures as CC-BY, to enable maximum re-use.\" Descriptive only; not mapped to L1-L6.",
+ "status": "OK"
+}
