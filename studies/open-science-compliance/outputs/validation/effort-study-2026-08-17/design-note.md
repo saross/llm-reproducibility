@@ -49,9 +49,10 @@ per-item reconcile spawns per arm. Arms sequential with per-arm hard stop:
 
 The sonnet effort-response curve is monotone but shallow and never
 reaches the ≥ 0.90 gate; opus is effort-insensitive (identical 143/150 at
-high and xhigh, near-identical cost) and **opus@high is the cheapest
-known passing configuration**. Full analysis:
-`study-summary-2026-08-17.md`.
+high and xhigh, cost indistinguishable — raw tokens marginally favour
+xhigh, API-equivalent dollars marginally favour high, both within
+single-arm noise; "cheapest passing configuration" claim CORRECTED
+2026-08-17, operator catch). Full analysis: `study-summary-2026-08-17.md`.
 
 ## Arm identity and provenance (Q1, Q2)
 

@@ -26,10 +26,18 @@ E8 v2**.
    the gate, with the high→xhigh step (+6 items) essentially free and the
    xhigh→max step (+2 items) costing 3.4× plus compliance degradation
    (F-008–F-011).
-2. **Opus is effort-insensitive on this task.** Identical stability
-   (143/150), near-identical cost, and near-identical pack-utilisation at
-   high and xhigh. **opus-5 @ high is now the cheapest known passing
-   configuration** — at roughly sonnet-xhigh cost.
+2. **Opus is effort-insensitive on this task — in stability AND cost.**
+   Identical stability (143/150) and pack-utilisation at high and xhigh.
+   Cost is indistinguishable (CORRECTED 2026-08-17, operator catch): the
+   contract metric slightly favours xhigh (5.07M vs 5.14M, +1.4%) while
+   API-equivalent dollars slightly favour high (output tokens fell 33%,
+   437K → 294K, but the effort-independent cache-write component — ~92%
+   of the metric — wobbled +4.6% and swamped it in raw tokens). Both
+   gaps are inside single-arm noise; the defensible claim is **opus at
+   either effort passes at roughly sonnet-xhigh cost**, not that high is
+   cheapest. Methodological note: the contract metric is a spend wire
+   (H4), not an effort-response measure — within-model effort
+   comparisons should read the output-token component.
 3. **Effort→cost (the operator's measurand):** within a model, high ≈
    xhigh in cost; max triples-plus it. The presumed effort→cost
    monotonicity holds only at the top step, and the top step's stability
@@ -53,9 +61,11 @@ E8 v2**.
 
 ## Selection implication (for D4, not a ruling)
 
-The "cheapest eligible arm" candidate set now includes **opus-5 @ high**:
-it passes stability at ~18% less token cost than fable@xhigh and roughly
-sonnet-xhigh cost, with the study's best evidence-grounding profile.
+The "cheapest eligible arm" candidate set now includes **opus-5 at
+either effort** (high and xhigh are cost-indistinguishable on this
+evidence): both pass stability at ~28% less token cost than fable@xhigh
+and roughly sonnet-xhigh cost, with the study's best evidence-grounding
+profile.
 Sonnet is not rescued at any effort. No deficiency appeared in either
 opus record, so **opus@max remains off** per the operator's ruling.
 Concordance across ALL arms in one pass (once E8 v2 lands) remains the
