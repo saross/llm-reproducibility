@@ -71,11 +71,21 @@ The D3 `xhigh` baselines were **session-inherited and operator-attested**; the
 study's `max` arms are **pinned via workflow opts** — the request channel
 itself changed between cycles. Residual R1: the pin is a *requested* value;
 nothing artefact-derived proves the *served* effort matched (spawn metadata
-carries no effort field — proven 2026-08-17). Mitigations, both adopted:
+carries no effort field — proven 2026-08-17). Mitigations, both adopted
+(mitigation 1 AMENDED 2026-08-17, operator-accepted: the CLI could not switch
+the main session to `max` without invalidating the session cache, so the
+passive fallback-equals-pin arrangement is replaced by an active probe):
 
-1. Session `/effort` set to the arm target before launch (fallback-equals-pin:
-   if the opts pin were silently ignored, inherit lands on the target anyway),
-   attested in `run_environment` via `--environment session_effort=max`.
+1. **P3 differential effort probe, strictly before arm 1** — two sonnet-5
+   spawns, identical reasoning prompt (bar an attribution label), one pinned
+   `effort: low` and one `effort: max` via workflow opts. Transcript recount
+   (thinking blocks + output tokens, same machinery as the assembler) must
+   show a large differential; near-identical telemetry means the opts channel
+   is ignored and the study halts before any arm spend. Session effort
+   remains `xhigh` and is attested honestly
+   (`--environment session_effort=xhigh`); a silent pin failure despite P3
+   would produce an xhigh replicate of the D3 condition — conservative, and
+   caught by mitigation 2 before arm 2 launches.
 2. The telemetry-contrast step above — thinking-block and token deltas against
    the xhigh baselines are the empirical served-effort evidence.
 
