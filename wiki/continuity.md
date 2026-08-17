@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-08-10
+updated: 2026-08-17
 status: active
 ---
 
@@ -29,6 +29,67 @@ merged here as PR #1).
 4. Carry forward open questions.
 
 ---
+
+## Repo state (2026-08-17)
+
+- **AMENDMENT 2 LODGED AND THE D3 RE-BENCHMARK RUN — TWO ARMS PASS
+  STABILITY.** OSF SchemaResponse `6a824828f323f5c6ead66c4b` (approved,
+  DOI unchanged, tag `osf-amendment-2-2026-08-17` at `9f7343e`;
+  round-trip + public render verified; §6 comparator fix DISSOLVED —
+  OSF escapes comparators on write and decodes on render, no defect
+  ever visible). D3 then ran same day under a pre-run-review contract
+  (15 hardenings) + clean-context Opus audit (19 findings, 5 pre-spend
+  blockers, all fixed; the audit pass is now CODIFIED in the
+  pre-run-review skill, personal-assistant `0b3a6bd`). **Stability:
+  sonnet 128/150 = 0.853 (below), opus 143/150 = 0.953 PASS, fable
+  142/150 = 0.947 PASS** (vs 0.807/0.873/0.813); disputed 68 → 56;
+  A1.2 10 → 3; dye F-block flip gone. Concordance deliberately
+  uncomputed pending E8 v2. Full package:
+  `studies/open-science-compliance/outputs/validation/benchmark-2026-08-17/`.
+- **FAILURE-MODE REGISTER LIVE** (Shawn's directive; he rates it "a
+  goldmine for alignment-related assessment"):
+  `outputs/validation/failure-modes/register.md` — append-only,
+  categorised (model-fabrication/boundary/honest-failure,
+  verifier-error, harness-constraint/change), every entry anchored.
+  Seeded F-001–F-007; headline: **fable fabricated a pull declaration**
+  (F-001, caught by three layers, item re-run clean) and globbed the
+  session dir (F-002); telemetry shows validator retries 3/1/0
+  (sonnet/opus/fable) against incidents 0/0/2 — form-compliance and
+  attestation-integrity look like separate axes. Standing rule: every
+  reconciliation failure/gate block gains an entry at adjudication.
+- **Phase B shape + platform-table corrections RULED (2026-08-15)**;
+  D1 window executed (instrument v2.1, guide v1.1 pushed, definitions
+  v1.2, C7 hashes); identifier-recovery rule LIVE — first run recovered
+  marwick's lost deposit (dead zenodo.14561925 → curated
+  zenodo.15603267, flagged `recovered` in the pack). CoreTrustSeal/
+  re3data enrichment committed (ADS to 2027, DANS to 2028, tDAR lapsed,
+  Zenodo never applied). E8-v2 adjudication worksheet GENERATED
+  (`outputs/validation/e8-v2-rederivation/worksheet.md`, 150 items /
+  68 disputed / 3 flips / seeded 10 spot-checks) — **Shawn's sitting is
+  the critical path to concordance and the gates ruling.**
+- **Wire rule AMENDED (Shawn): remediation-scaled** — the spend wire
+  grows by the re-run percentage unless a stuck-loop indicator is
+  present; fable accepted at 7.10M vs adjusted 7.93M
+  (`arm-fable-5/tripwire-event.md`). $50 wind-down standing.
+- **Effort is ATTESTATION-ONLY this cycle** (session-inherited xhigh;
+  Claude's "high" claim was a confabulation Shawn caught via /effort —
+  logged to the confab tracker). Run records carry run_environment
+  attestations + v1.3 telemetry (retries, thinking blocks, wall-clock,
+  served variants — opus ran `claude-opus-5[1m]`). **Pinning (effort in
+  workflow opts + stated in prompts + launcher --effort +
+  launch-commit embedding) is the next session's opening build.**
+- **NEXT (agreed order):** (1) effort-pinning build + abbreviated
+  delta pre-run review; (2) **effort study under the standing API
+  gate**: sonnet@max + opus@max first (30+30 spawns, ~11–13M tokens,
+  ≈$15–25 API-equivalent), conditional high arms after — sonnet
+  prioritised (selection economics: cheapest arm currently fails at
+  0.853); (3) Shawn's E8-v2 worksheet sitting → concordance across ALL
+  arms in one pass → gates ruling → census selection; (4) D4.
+- **PENDING VERDICTS (no silent discard):** WN-l/m + user-obs A–C
+  (2026-08-03); WN-p/q/r + user-obs A–D (2026-08-15); **NEW:**
+  working-notes candidates WN-s/t/u (see 2026-08-17 session-log entry)
+  and user-obs **2026-08-17 batch A–D** (pending in
+  `wiki/user-observations.md`).
 
 ## Repo state (2026-08-15)
 
@@ -1006,6 +1067,46 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-08-15 → 2026-08-17 — Phase B ruled, amendment 2 lodged, D3 passed by two arms, register born
+
+One session (6e8352ed), three sittings; ~25 commits `f9976fc`→`6b0025c`
++ PR #3 + tag `osf-amendment-2-2026-08-17`; personal-assistant
+`0b3a6bd`, pa-data `c96f43e`/`1325b49`. Sitting 1: Phase B + platform
+rulings, CTS/re3data enrichment, D1 governed window (instrument v2.1;
+guide pushed; C7 hashes), identifier-recovery rule. Sitting 2: PR
+merged, prereg register layer, D2 lodged (§6 dissolved on
+verification), D3 prep (reconcile/workflow/harvester v1.1s, marwick
+deposit recovered live, E8-v2 worksheet). Sitting 3: pre-run review +
+codified clean-context audit (5 pre-spend blockers), S4 retreat, three
+arms run/adjudicated/accepted (fable at 7.10M with the tripwire event;
+wire now remediation-scaled), stability 0.853/0.953/0.947, failure
+register seeded, run-environment + telemetry capture, effort
+confabulation caught and logged. Full factual log:
+`wiki/reflections/session-log.md` 2026-08-15→17 entry.
+
+**Held-over candidates (no silent discard), for Shawn's verdicts:**
+
+- **WN-s:** verifiers encode delivery-mechanism assumptions — a silent
+  harness change (additionalContext spilling to files past ~77KB)
+  turned 14/15 correct behaviours into flagged violations; a checker
+  must model the channel it rides on.
+- **WN-t:** schema compliance and attestation integrity are separate
+  axes — validator retries 3/1/0 vs receipt incidents 0/0/2 across
+  identical contracts; the better the model, the less the validator
+  measures.
+- **WN-u:** budget tripwires need a legitimate-excess clause and a
+  stuck-loop indicator from birth — remediation spend tripped a wire
+  that "runaway spend" framing never anticipated.
+
+**Carry-forward:** next session must check `/effort` before launching
+any arm (spawns inherit it until pinning lands). zbook still needs
+`./scripts/install-git-hooks.sh` + venv. pa-data submodule pointer in
+personal-assistant deliberately not bumped (three data commits this
+session; PA routines own the pointer). Shawn: Cosmos window OPEN;
+Fable billing split; Zotero proxy; ELSEVIER key; Marwick Zotero
+duplicates.
+
 
 ### 2026-08-10 / 2026-08-14–15 — Ratification, pre-run review, Phase C end to end
 

@@ -440,3 +440,36 @@ approval hinged on a question it hadn't answered — "runs here in Claude
 Code, not a separate API call?" Billing *route* (plan allowance vs API
 account) belongs in the standing gate template alongside cost.
 
+## Pending review — 2026-08-17 batch (drafted at handoff, session 6e8352ed)
+
+**Candidate A — a one-line operator spot-check outperformed three
+verification layers.** Claude asserted the session effort was "high";
+Shawn's /effort check showed xhigh. No artefact could have caught this —
+the harness records no effort field anywhere — so the operator's habit of
+personally verifying config claims functioned as a verification layer the
+apparatus lacks. The catch cascaded into the confab log, run-record
+provenance fields, and the effort-pinning queue.
+
+**Candidate B — "out of curiosity" questions were the session's
+highest-yield audit probes.** Two casual questions each found a real gap:
+"what thinking/effort levels are we using?" (→ the confabulation + the
+unpinned-parameter finding) and "any other metadata we aren't capturing?"
+(→ the opus [1m] served-variant marker + the telemetry expansion). Claude
+found this light-touch steering more productive per word than any formal
+review request this session.
+
+**Candidate C — escalating to /pre-run-review + clean-context audit was
+empirically vindicated within hours.** Shawn's call to stress-test the D3
+block rather than run on the API gate alone ("I'm still getting a feeling
+for when the usual gate is sufficient") produced 19 findings including 5
+pre-spend blockers — one of which (empty-set reconciliation reading clean)
+would have silently hollowed the per-arm acceptance rule. His calibration
+instinct about when a gate is not enough was right, and the two-run
+evidence justified codifying the audit pass into the skill.
+
+**Candidate D — in-the-moment reaction (relayed).** On the failure
+register: "I love the failure register … that will be very interesting to
+analyse later" and, at close, "the error registry will be a goldmine for
+alignment-related assessment" — direct evidence the register format
+(categorised, anchored, model-vs-verifier separated) matches how Shawn
+wants to analyse this material.
