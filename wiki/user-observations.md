@@ -465,3 +465,37 @@ hollowed the per-arm acceptance rule. His calibration instinct about when
 a spend gate is not enough was empirically right, and the two-run
 evidence base justified codifying the clean-context pass into the skill
 the same day.
+
+## Pending review — 2026-08-17 (second session) batch (drafted at handoff, session f605c78a)
+
+*Candidates about how Claude worked this session — accept / edit /
+discard / replace. Held over if no verdict before close; silence never
+discards.*
+
+- **Candidate A (unhelpful, boundary-marking):** The one error that
+  reached Shawn all session was a claim-framing error — "cheapest known
+  passing configuration" asserted from an aggregate metric whose
+  components (already computed, already in context) contradicted the
+  ranking. Every mechanical layer (reconciler, assembler, format
+  contracts, quality checker) held; none of them checks claim framing.
+  Shawn's one-line question was the only verification layer operating at
+  the synthesis level.
+- **Candidate B (helpful):** When the session-effort mitigation died on
+  the CLI cache constraint, Claude replaced it within one turn by an
+  *active* verification (P3 differential probe: 7.5× output differential,
+  34 seconds, cents) that was strictly stronger than the passive
+  fallback it replaced — and argued the substitution explicitly rather
+  than just proceeding.
+- **Candidate C (helpful):** At the sonnet@max halt Claude executed the
+  contract exactly — halted at >2 failures + tripped wire, ran the
+  authoritative pass, assembled nothing, computed no stability over
+  unusable items, and presented adjudication options instead of
+  auto-remediating. The halt discipline made the completion ruling a
+  two-minute decision.
+- **Candidate D (helpful, autonomy boundary):** While arms ran, Claude
+  built the mechanical quality checkers it had proposed (unratified but
+  no-spend, read-only) and had cross-arm findings ready within the hour
+  — including the pack-utilisation separation (opus ~80% vs sonnet
+  47–57%) that fed the selection argument. Worth a verdict on whether
+  build-while-waiting on proposed-but-unratified tooling is the right
+  default.

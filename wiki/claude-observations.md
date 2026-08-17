@@ -911,3 +911,68 @@ rigid ceilings he will soften on first contact.
 ceiling with its legitimate-excess clause and its illegitimate-loop
 indicator, and make the event reportable either way — the reporting is
 the invariant; the ceiling is contingent.
+
+## claude-obs 45 — 2026-08-17: I wrote a superlative before decomposing the metric it rested on
+
+**Pattern.** At the effort-study close I headlined opus@high as "the
+cheapest known passing configuration" from the aggregate contract metric
+— while the component breakdowns that falsified the claim (output tokens
+−33%, cache-writes +4.6%, net +1.4%) were already in my context from the
+halt-report work. Shawn's one-line question ("is it really cheaper?")
+overturned the claim in minutes. The verification stack caught every
+data-integrity error this session; the one error that reached him was a
+claim-framing error at the synthesis layer, which no reconciler checks.
+
+**Lesson.** Milestone moments create pressure to produce a headline, and
+a composite metric offers one cheaply. The decomposition discipline I
+applied under audit pressure (halt report) lapsed at the celebratory
+moment. Claim framing is a verification surface with no mechanical
+checker — currently the operator is the only layer covering it.
+
+**How to apply.** Before any superlative or ranking claim in a summary,
+decompose the metric it rests on and check the ordering survives in each
+economically distinct component; state noise floors (n=1 arm) alongside
+point differences. Treat "cheapest/best/fastest" as claims requiring the
+same anchoring as counts and hashes.
+
+## claude-obs 46 — 2026-08-17: Shawn extends studies arm-by-arm on results, not by maximal upfront design
+
+**Pattern.** The effort study grew by ratchet: sonnet@max approved →
+halt adjudicated with completion + sonnet@high added → opus@high added
+("that should give us the datapoints we need") → opus@max explicitly
+conditioned on observed deficiency and never run. Each extension was a
+small, results-informed decision with its own spend acknowledgement,
+and the study ended with exactly the arms the argument needed.
+
+**Lesson.** His instinct is sequential experimental design under a
+budget: buy the next datapoint only when the previous one changes the
+decision landscape. Proposals that bundle many arms upfront fight this
+instinct; proposals that name the next arm and its decision value work
+with it.
+
+**How to apply.** Present spend as a decision tree, not a package:
+"this arm answers X; if X, then Y becomes worth buying." Keep every
+increment separately approvable, and volunteer the stop condition
+(as with opus@max) rather than waiting to be asked.
+
+## claude-obs 47 — 2026-08-17: Constraint-surfacing division of labour — he reports the wall, delegates the redesign, ratifies the substitute
+
+**Pattern.** When the CLI refused to move session effort to max without
+invalidating the cache, Shawn did not design a workaround: he reported
+the constraint precisely (including the CLI's warning text), offered the
+options he could execute (new session), and asked how to proceed. I
+proposed replacing the passive fallback with an active differential
+probe (P3); he ratified with "Good approach. Go!" — three turns from
+wall to verified substitute mitigation.
+
+**Lesson.** The efficient division is: operator supplies ground-truth
+constraints from surfaces only he can touch; Claude redesigns within
+them and argues the substitution explicitly (what was lost, what
+replaces it, why it is stronger or weaker); operator ratifies. He does
+not want the constraint hidden or the redesign pre-ratified.
+
+**How to apply.** When a mitigation dies on an operator-side constraint,
+respond with an explicit substitution argument — name what the dead
+mitigation actually provided (P3's predecessor only masked failure, it
+never detected it), and prefer replacements that verify over
+replacements that pad.
