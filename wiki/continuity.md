@@ -88,10 +88,12 @@ merged here as PR #1).
   (cost projections in the design note used it). The 128K output cap in
   project settings is deliberate and standing.
 - **PENDING VERDICTS (no silent discard):** WN-l/m + user-obs A–C
-  (2026-08-03); WN-p/q/r + user-obs A–D (2026-08-15); **NEW this
-  session:** WN-v/w/x (see session log) + user-obs 2026-08-17
-  second-session batch A–D (written pending in
-  `wiki/user-observations.md`).
+  (2026-08-03); WN-p/q/r + user-obs A–D (2026-08-15). **CLEARED at
+  close (Shawn, 2026-08-17 s2):** WN-v/w/x ACCEPTED → working-notes
+  Observations 27–29; user-obs s2 batch adjudicated — A and D accepted
+  (D carries a standing ruling: **build-while-waiting on
+  proposed-but-unratified no-spend read-only tooling is the right
+  default**), B and C dropped as routine contract-following.
 
 ## Repo state (2026-08-17)
 
@@ -1155,22 +1157,12 @@ study-wide; pack-utilisation separates models (opus ~80%, sonnet
 upward pre-gate ($80–120 API-equivalent vs $15–25; cache-write premium
 + read volume had been omitted).
 
-**Held-over candidates (no silent discard), for Shawn's verdicts:**
-
-- **WN-v:** effort pins must be artefact-derived — the harness persists
-  no effort field in spawn metadata, so the injected prompt line is the
-  only durable carrier; verify the opts channel with a differential
-  probe before spend (P3: 7.5× at cents), because a passive fallback
-  only masks failure, never detects it.
-- **WN-w:** a spend metric dominated by effort-independent components
-  cannot measure effort response — the contract metric is ~92%
-  cache-writes; opus output fell 33% at high while the total rose 1.4%;
-  decompose composite metrics before any cost ranking.
-- **WN-x:** harness caps are part of the measurement apparatus — the
-  64K per-response cap converted max-effort verbosity into 14 dead
-  attempts (24% of spend) and one unrecoverable item, and raising it to
-  128K eliminated the failure mode causally; what reads as model
-  non-compliance can be infrastructure.
+**Candidates ADJUDICATED at close (Shawn, same session):** WN-v/w/x all
+ACCEPTED → working-notes Observations 27 (artefact-derived effort pins +
+channel probes), 28 (composite spend metrics cannot measure effort
+response), 29 (harness caps are part of the measurement apparatus).
+User-obs s2 batch: A + D accepted (D with the standing
+build-while-waiting ruling), B + C dropped.
 
 **Carry-forward:** analysis tool needs `--arms` extension before study
 arms join a tool-run; H13 fresh-context re-derivation at gates stage;

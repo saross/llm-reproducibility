@@ -838,3 +838,105 @@ failure, gate block, or probe failure gains an entry at adjudication —
 and the register's running-observations section is where cross-cycle
 patterns (like Observation 24's axis split) accumulate for the
 alignment-relevant analysis Shawn intends.
+
+## Observation 27: Effort pins must be artefact-derived — the harness persists no effort field (2026-08-17)
+
+*(Approved by Shawn 2026-08-17; drafted at handoff the same day. WN-v.)*
+
+### Context
+
+The effort study required pinning reasoning effort per scoring spawn.
+Direct inspection of spawn metadata from the D3 reconcile lane — whose
+spawns were launched with `effort: 'low'` in workflow opts — showed the
+harness persists only `agentType`, `spawnDepth`, and `model`: the
+requested effort leaves no trace in any artefact.
+
+### Observation
+
+A parameter passed through opts controls behaviour but is
+attestation-only unless deliberately made durable. The build therefore
+carried the pin on three legs: opts (behavioural), a Provenance line
+injected into every scoring prompt (the only durable, artefact-derived
+carrier — it survives in the transcript), and assembler parse-back with
+a mixed-vintage hard error. Before any spend, the opts channel itself
+was verified by a differential probe (P3: identical prompts at low vs
+max produced a 7.5× output differential in 34 seconds, for cents) —
+replacing a passive fallback that could only have masked failure, never
+detected it.
+
+### Implication
+
+For any served parameter an experiment varies: (1) check what the
+infrastructure actually records — assume nothing; (2) if nothing, route
+the value through a channel that lands in a durable artefact; (3) verify
+the control channel with a cheap differential probe before committing
+spend. Anchors: workflow v1.5 header; `assemble-arm-record.py` v1.4
+`provenance_pinned`; `effort-study-2026-08-17/p3-probe/probe-report.md`.
+
+## Observation 28: A spend metric dominated by effort-independent components cannot measure effort response (2026-08-17)
+
+*(Approved by Shawn 2026-08-17; drafted at handoff the same day. WN-w.)*
+
+### Context
+
+Opus@high generated 33% fewer output tokens than opus@xhigh (294K vs
+437K) yet recorded a marginally higher contract-metric total (5.14M vs
+5.07M). The aggregate briefly supported a published "cheapest passing
+configuration" claim — overturned by Shawn's one-line question and a
+component decomposition.
+
+### Observation
+
+The contract metric is ~92% cache-creation tokens — per-spawn context
+writes (PDF, instrument, pack) that effort cannot touch and that wobble
+a few percent with turn structure. The effort-sensitive component
+(output) moved exactly as effort theory predicts; the aggregate hid it.
+In component-weighted dollars the ordering inverted; both gaps sit
+inside single-arm noise.
+
+### Implication
+
+Composite metrics inherit the dynamics of their dominant component. The
+contract metric was designed as a runaway-spend wire (H4) and remains
+correct for that; it is structurally wrong for within-model effort
+comparison, which must read output tokens or a component-weighted cost.
+Before any ranking claim, check the ordering survives per economically
+distinct component. Anchors: study summary finding 2 (corrected,
+`5c193e3`); run records for both opus arms.
+
+## Observation 29: Harness caps are part of the measurement apparatus (2026-08-17)
+
+*(Approved by Shawn 2026-08-17; drafted at handoff the same day. WN-x.)*
+
+### Context
+
+The sonnet@max arm produced 28 scoring transcripts for 15 items: 14 dead
+attempts with no payload and no gate event, consuming 4.25M tokens (24%
+of arm spend), with one item unrecoverable after two attempts. The
+per-item lane misattributed some of this; the authoritative
+reconciliation's denominator assertion (`--expect-spawns 15`) caught the
+surplus by simple inequality.
+
+### Observation
+
+Max-effort emissions (thinking plus a large structured payload in one
+response) exceeded the harness's per-response output cap
+(`CLAUDE_CODE_MAX_OUTPUT_TOKENS` = 64,000); the harness silently killed
+and respawned, converting model verbosity into invisible spend. The
+attribution was settled by intervention, not inference: raising the cap
+to 128,000 produced zero dead attempts across five subsequent re-run
+spawns. What initially read as "max effort degrades harness compliance"
+was substantially an infrastructure constant colliding with a
+behavioural change the study itself induced; genuine model-attributable
+residue remained (boundary Globs, one missing-scores payload), but a
+quarter of the arm's cost was apparatus artefact.
+
+### Implication
+
+Every hard cap in the serving path is part of the experimental
+apparatus: a study that varies a behaviour-inflating parameter without
+provisioning the caps it will press against measures the cap, not the
+model. Denominator assertions are the cheapest tripwire for "the
+harness did something the design never modelled". Anchors: register
+F-008/F-009; `arm-sonnet-5-max/halt-report-2026-08-17.md`;
+`.claude/settings.json` env block (cap standing at 128,000).

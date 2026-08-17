@@ -466,36 +466,33 @@ a spend gate is not enough was empirically right, and the two-run
 evidence base justified codifying the clean-context pass into the skill
 the same day.
 
-## Pending review — 2026-08-17 (second session) batch (drafted at handoff, session f605c78a)
+## 2026-08-17 (second session) batch — adjudicated same session
 
-*Candidates about how Claude worked this session — accept / edit /
-discard / replace. Held over if no verdict before close; silence never
-discards.*
+Verdicts (Shawn): A and D accepted (below); B (P3 substitution) and C
+(halt discipline) dropped — sound behaviour, but routine
+contract-following rather than observations worth the register.
 
-- **Candidate A (unhelpful, boundary-marking):** The one error that
-  reached Shawn all session was a claim-framing error — "cheapest known
-  passing configuration" asserted from an aggregate metric whose
-  components (already computed, already in context) contradicted the
-  ranking. Every mechanical layer (reconciler, assembler, format
-  contracts, quality checker) held; none of them checks claim framing.
-  Shawn's one-line question was the only verification layer operating at
-  the synthesis level.
-- **Candidate B (helpful):** When the session-effort mitigation died on
-  the CLI cache constraint, Claude replaced it within one turn by an
-  *active* verification (P3 differential probe: 7.5× output differential,
-  34 seconds, cents) that was strictly stronger than the passive
-  fallback it replaced — and argued the substitution explicitly rather
-  than just proceeding.
-- **Candidate C (helpful):** At the sonnet@max halt Claude executed the
-  contract exactly — halted at >2 failures + tripped wire, ran the
-  authoritative pass, assembled nothing, computed no stability over
-  unusable items, and presented adjudication options instead of
-  auto-remediating. The halt discipline made the completion ruling a
-  two-minute decision.
-- **Candidate D (helpful, autonomy boundary):** While arms ran, Claude
-  built the mechanical quality checkers it had proposed (unratified but
-  no-spend, read-only) and had cross-arm findings ready within the hour
-  — including the pack-utilisation separation (opus ~80% vs sonnet
-  47–57%) that fed the selection argument. Worth a verdict on whether
-  build-while-waiting on proposed-but-unratified tooling is the right
-  default.
+## 2026-08-17 — The claims layer has no mechanical verifier (accepted from s2 candidate A)
+
+The one error that reached Shawn all session was a claim-framing error —
+"cheapest known passing configuration" asserted from an aggregate metric
+whose components (already computed, already in context) contradicted the
+ranking. Every mechanical layer (reconciler, assembler, format
+contracts, quality checker) held; none of them checks claim framing.
+Shawn's one-line question ("is it really cheaper?") was the only
+verification layer operating at the synthesis level, and it overturned a
+committed headline within minutes. Correction landed as a visible fix
+commit (`5c193e3`), not a silent edit.
+
+## 2026-08-17 — Build-while-waiting on unratified no-spend tooling is the right default (accepted from s2 candidate D, ruling attached)
+
+While arms ran, Claude built the mechanical quality checkers it had
+proposed but Shawn had not yet ratified (no-spend, read-only, pure
+analysis over committed artefacts) and had cross-arm findings ready
+within the hour — including the pack-utilisation separation (opus ~80%
+vs sonnet 47–57%) that fed the selection argument. **Shawn's ruling
+(2026-08-17): this is the right default.** Standing guidance: when a
+proposed tool is spend-free, read-only, and squarely inside the agreed
+work, build it during dead time rather than waiting for ratification;
+the gate stays where it belongs — on spend, on governed artefacts, and
+on anything hard to reverse.
