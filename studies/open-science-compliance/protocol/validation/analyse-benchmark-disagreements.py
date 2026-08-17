@@ -177,7 +177,10 @@ def main() -> None:
         record = json.loads(
             (BENCH_DIR / f"arm-{arm}" / "run-record.json").read_text()
         )
-        published[arm] = record["stability"]
+        # A fresh cycle's run records carry no published stability figure
+        # yet (this tool is what derives it); the cross-check is only
+        # meaningful against a cycle whose figures were already published.
+        published[arm] = record.get("stability")
 
     disputed: dict[tuple[str, str, str], dict[str, Any]] = {}
     stability: dict[str, Counter] = {arm: Counter() for arm in ARMS}
@@ -229,11 +232,15 @@ def main() -> None:
     for arm in ARMS:
         agreed, items = stability[arm]["agreed"], stability[arm]["items"]
         pub = published[arm]
-        flag = "OK" if (agreed, items) == (pub["agreed"], pub["items"]) else "MISMATCH"
-        print(
-            f"{arm}: stability {agreed}/{items} = {agreed / items:.4f} "
-            f"(run-record {pub['agreed']}/{pub['items']}) {flag}"
-        )
+        if pub is None:
+            print(f"{arm}: stability {agreed}/{items} = {agreed / items:.4f} "
+                  f"(fresh cycle — no published figure to verify against)")
+        else:
+            flag = "OK" if (agreed, items) == (pub["agreed"], pub["items"]) else "MISMATCH"
+            print(
+                f"{arm}: stability {agreed}/{items} = {agreed / items:.4f} "
+                f"(run-record {pub['agreed']}/{pub['items']}) {flag}"
+            )
         if stability_only:
             print(f"{arm}: concordance SUPPRESSED (--stability-only; "
                   f"pending E8 v2)")
