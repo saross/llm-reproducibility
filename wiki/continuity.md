@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-08-17
+updated: 2026-08-19
 status: active
 ---
 
@@ -29,6 +29,59 @@ merged here as PR #1).
 4. Carry forward open questions.
 
 ---
+
+## Repo state (2026-08-19)
+
+- **BALL IS IN SHAWN'S COURT — his two tasks, in order:** (1) **E8-v2
+  worksheet sitting** (`outputs/validation/e8-v2-rederivation/worksheet.md`
+  — adjudication columns still empty; 150 items, 68 disputed, 3 entailed
+  flips, 10 spot-checks); (2) **F-010 pattern-vs-path ruling** (register
+  entry is self-contained). Everything downstream of the sitting
+  (all-arms concordance + error-direction → gates ruling → census
+  selection) is now tooled and waiting. H13 fresh-context re-derivation
+  is Claude's, sequenced at the gates stage.
+- **ANALYSIS TOOL v1.1 SHIPPED** (`48568fb`, 2026-08-17 evening): the
+  `--arms` carry-forward is CLEARED. `--arms` takes explicit arm dirs
+  spanning cycles (labels from `arm-*` basenames, duplicate labels
+  rejected; `--out-dir` required so no cycle's committed
+  disputed-items.json is overwritten); per-arm error-direction split
+  (over-/under-credit + per-item `error_direction`); `--reference-key`
+  (E8-v2 reference joins by manifest registration, not code edit);
+  guideless-minority reporting generalised to every arm. Verified:
+  legacy mode byte-identical to committed 2026-08 disputed-items;
+  six-arm `--stability-only` pass matched every known figure. Tests
+  251 → 267; gate 66/66.
+- **Found en route: the guideless predicate was VACUOUS post-A3** — all
+  90 spawns in the 2026-08-17 cycles reported guideless because A3's
+  pull→push promotion (2026-08-15) moved the guide from
+  `pulled_files_read` into `instrument_receipts` and the detector was
+  pull-era. Fixed (two-era detection, same commit). Corollary: the
+  guideless-minority correlation is era-bound — structurally
+  unmeasurable on post-A3 data (treatment group cannot exist). Logged in
+  reflections (abductive + llm-observations); working-notes candidates
+  WN-y/WN-z pending Shawn's verdict below.
+- **Gates-stage invocation (ready to run once E8 v2 lands in the
+  manifest):** from repo root, `venv/bin/python
+  studies/open-science-compliance/protocol/validation/analyse-benchmark-disagreements.py
+  --arms <V>/benchmark-2026-08-17/arm-{sonnet-5,opus-5,fable-5}
+  <V>/effort-study-2026-08-17/arm-{sonnet-5-high,sonnet-5-max,opus-5-high}
+  --reference-key <e8-v2 manifest key> --out-dir <new analysis dir>`
+  where `<V>=studies/open-science-compliance/outputs/validation` (drop
+  `--stability-only` for the concordance pass; brace expansion needs a
+  shell, else list the six dirs).
+- **PENDING VERDICTS (no silent discard):** NEW this session —
+  working-notes candidates **WN-y** (apparatus evolution silently
+  vacates derived statistics; two-era semantics required) and **WN-z**
+  (the A3 promotion consumed its own evidence base — guideless
+  correlation frozen at old-cycle n; re-test = deliberate ablation), plus
+  **user-obs 2026-08-19 batch A–C** (pending-review section written in
+  user-observations.md). Still held from before: WN-l/m + user-obs A–C
+  (2026-08-03); WN-p/q/r + user-obs A–D (2026-08-15).
+- **Carry-forward (unchanged):** sonnet intro API pricing ends
+  2026-08-31; 128K output cap in project settings deliberate and
+  standing; zbook still needs install-git-hooks.sh + venv; Shawn's list
+  (Cosmos window, Fable billing split, Zotero proxy, ELSEVIER key,
+  Marwick duplicates). Shawn away for a few days after 2026-08-19.
 
 ## Repo state (2026-08-17, second session)
 
@@ -1133,6 +1186,24 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-08-17 (third session) → 2026-08-19 — Analysis tool v1.1 shipped while waiting; ball handed to Shawn
+
+One build sitting (evening of the 17th, session 92427cb5), wind-down on
+the 19th. No spend, no rulings — the first pure build-while-waiting
+session, run under the standing default ruled at the s2 close. Resumed
+at `1a0ae7d` (clean, 0/0, fetch-first); verified 251 tests + 66/66 gate;
+built and shipped `analyse-benchmark-disagreements.py` v1.1
+(`48568fb`): `--arms` spanning cycles, error-direction split,
+`--reference-key`, per-arm guideless reporting, and — found via
+ground-truth verification — the two-era guide-detection fix (the
+pull-era predicate was vacuous for all 90 post-A3 spawns). Legacy mode
+verified byte-identical; six-arm stability pass matched every known
+figure. Tests 251 → 267. /reflect + /handoff run at wind-down
+(reflections Entry 17, abductive entry, llm-observations entry,
+claude-obs 48–49, user-obs A–C pending, WN-y/z pending). E8-v2
+worksheet untouched (Shawn's sitting); F-010 open; concordance
+deliberately uncomputed pending E8 v2.
 
 ### 2026-08-17 (second session) — Effort study end to end: pinning built, six datapoints, opus passes at high
 
