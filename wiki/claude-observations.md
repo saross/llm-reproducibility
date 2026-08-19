@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Claude Observations"
 tags: [human-ai-collaboration, llm-craft]
 created: 2026-07-03
-updated: 2026-07-18
+updated: 2026-08-19
 status: seed
 ---
 
@@ -976,3 +976,44 @@ respond with an explicit substitution argument — name what the dead
 mitigation actually provided (P3's predecessor only masked failure, it
 never detected it), and prefer replacements that verify over
 replacements that pad.
+
+## claude-obs 48 — 2026-08-19: The build-while-waiting ruling converted a blocked resume into a shipped tool
+
+**Pattern.** Shawn ratified "build-while-waiting on no-spend read-only
+tooling is the right default" at the previous session's close (user-obs D,
+2026-08-17 s2). This session opened with the critical path blocked on his
+worksheet sitting from the first minute — and the ruling meant the `--arms`
+carry-forward could be scoped, built, tested, and pushed (`48568fb`)
+without a single permission round-trip, in a session he wasn't present
+for most of.
+
+**Lesson.** Standing rulings on default behaviours are the
+highest-leverage adjudications in the project: a per-instance approval
+pays out once, a ratified default pays out in every future session that
+hits the covered situation. The cost asymmetry favours proposing them —
+a bad default gets corrected once and cheaply.
+
+**How to apply.** When the same permission question recurs across
+sessions, stop asking per-instance and propose a standing default for
+ratification, with its boundary stated (here: no-spend, read-only,
+already-agreed need). Log the ruling where the next session will read it.
+
+## claude-obs 49 — 2026-08-19: Wind-down by explicit ball-in-court check before a multi-day gap
+
+**Pattern.** Before going away for several days, Shawn didn't just end the
+session — he asked "do you have any outstanding tasks that should be
+completed before we wind down? I *think* the ball is in my court", and
+asked for his own tasks to be flagged at the top of the next session's
+handoff. The question forced an explicit ownership audit: it confirmed
+nothing was silently agent-owned (which would have stalled invisibly for
+days) and converted his open items into a named list (worksheet sitting,
+F-010 ruling) rather than a vague sense of "things pending".
+
+**Lesson.** The ownership question at session close is nearly free and
+catches the worst wind-down failure mode: work that both parties assume
+the other is holding. Its value scales with the length of the coming gap.
+
+**How to apply.** At any wind-down before an absence, enumerate every open
+item with whose court it is in, and write the human's items first in the
+handoff — the next session's opening context should lead with what the
+returning human must do, not with what the agent did.

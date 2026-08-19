@@ -496,3 +496,31 @@ proposed tool is spend-free, read-only, and squarely inside the agreed
 work, build it during dead time rather than waiting for ratification;
 the gate stays where it belongs — on spend, on governed artefacts, and
 on anything hard to reverse.
+
+## Pending review — 2026-08-19 batch (drafted at handoff, session 92427cb5)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence
+holds them over — never discards.*
+
+**Candidate A — the build-while-waiting ruling delivered on its first
+outing.** The session opened blocked on Shawn's worksheet sitting;
+under the standing default ruled at the previous close, Claude scoped,
+built, tested, and pushed the `--arms` extension (`48568fb`) with zero
+permission round-trips, and the session ended with the carry-forward
+cleared rather than merely re-described. Evidence that ratifying
+default behaviours converts dead time into work.
+
+**Candidate B — ground-truth-first verification caught what no gate
+could.** Before trusting the extended tool's novel output, Claude made
+it reproduce known figures (legacy byte-identical diff against the
+committed disputed-items; six-arm stability cross-checked against run
+records). That habit — not any test or gate — exposed the vacuously
+guideless statistic (90/90 spawns "guideless" post-A3). The failure
+class is invisible to unit tests written alongside the same
+misunderstanding.
+
+**Candidate C — a direct ownership answer at wind-down.** Asked "any
+outstanding tasks before we wind down? I *think* the ball is in my
+court", Claude answered with a definite ownership audit (nothing
+agent-owned; two named Shawn-tasks; one dated deadline) rather than a
+hedge — which is what makes a multi-day absence safe to start.
