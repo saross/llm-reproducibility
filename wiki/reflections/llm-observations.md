@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-08-02
+updated: 2026-08-19
 status: active
 ---
 
@@ -557,3 +557,27 @@ the instrument's residual ambiguity meeting the model's tolerance for
 it). Corollary for harness design: max-effort verbosity is not free —
 it collides with per-response output caps and turns into retry churn
 (24% of the max arm's spend) unless the cap is provisioned for it.
+
+## 2026-08-19 — Promoting an instrument to push destroyed the experiment that justified the promotion
+
+No spawns ran this session; the observation is about the measurement
+layer. The guideless-minority correlation — sonnet's 2-1 minority votes
+correlating with spawns whose receipts showed the FAIR principles guide
+was never pulled (17 of 29 splits in the 2026-08 cycle) — was part of
+the evidence base for promoting the guide from pull-on-demand to push
+delivery (A3, instrument v2.1, 2026-08-15). The promotion worked: all
+90 post-promotion spawns receipt the guide. But that means the
+correlation is now structurally unmeasurable — the "guideless" treatment
+group can no longer exist, so the finding is frozen at the old cycle's
+n and can never be strengthened, weakened, or replicated under the
+current apparatus. The intervention consumed its own evidence base.
+
+**Lesson.** When an observed behavioural correlation motivates an
+apparatus change, the correlation becomes era-bound the moment the
+change lands. Archive its derivation with an explicit era boundary
+("measurable only on pre-A3 cycles") *before* the change, and treat
+any post-change recomputation as vacuous by construction — this
+session's tooling now reports guideless = ∅ for post-A3 arms, which is
+correct and permanently uninformative. If the correlation itself ever
+needs re-testing, that is a deliberate ablation run (withhold the
+push), not a free byproduct of normal operation.

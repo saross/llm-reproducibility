@@ -6,7 +6,7 @@ audience: "researchers"
 conditions: "debugging with surprising results, hypothesis generation, belief revision, default-following corrections"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-08-02
+updated: 2026-08-19
 status: active
 ---
 
@@ -908,3 +908,62 @@ before any ranking claim, check the ordering survives in each
 economically distinct component. The claims layer has no mechanical
 verifier — this error passed every gate in the stack and was caught
 only by operator scepticism.
+
+## 2026-08-19 — Ninety guideless spawns: the statistic outlived its carrier
+
+**Session:** 92427cb5-9fa4-47f0-9571-ebaf54089c1b
+**Instance:** primary
+
+### Surprising fact
+
+The first all-arms run of the newly extended analysis tool (v1.1,
+`--arms` spanning both 2026-08-17 cycles) reported **all 90 spawns in
+all six arms as guideless** — the guide never read — with every 2-1
+minority vote consequently attributed to a guideless spawn (22/22,
+7/7, 8/8, 28/28, 20/20, 7/7 across the arms). This included the two
+opus arms at 0.953 stability. Meanwhile the same binary, in legacy
+mode, reproduced the old 2026-08 cycle's expected pattern exactly
+(6 guideless sonnet spawns; 17 of 29 minority votes guideless).
+
+### Probe
+
+Diffed receipts for the same paper/arm position across cycles. Old
+cycle: the guide appears in `pulled_files_read` (spawn chose to read
+it) and `instrument_receipts` lists only `fair-instrument`. New cycle:
+`pulled_files_read` carries the paper PDF, the evidence pack, and a
+hook-delivery artefact — no guide — while `instrument_receipts` lists
+both `fair-instrument` **and** `fair-principles-guide`. Cross-checked
+the governance record: A3 promoted the guide from pull-on-demand to
+push delivery in instrument v2.1 (2026-08-15). Every post-promotion
+spawn receives the guide; none pulls it.
+
+### Belief revision
+
+From "the detection predicate identifies guideless spawns" to "the
+predicate identifies *pull-era* guideless spawns; guide presence has
+two carriers, one per delivery era." The general revision: a derived
+statistic's definition silently binds to the apparatus version that
+existed when it was written. Apparatus evolution does not fail loudly —
+it renders downstream statistics vacuously true or false, and the
+vacuity surfaces only when a new consumer runs against post-change data
+with known figures to compare. Fixed by making detection span both
+carriers (commit `48568fb`); after the fix, the old cycle's correlation
+is byte-identical and post-A3 arms correctly report guideless = ∅.
+
+### What would change this belief
+
+A post-A3 spawn whose `instrument_receipts` lacks the guide entry —
+that would mean push delivery is not universal and the era boundary is
+soft, requiring per-spawn rather than per-era semantics. None exists
+in 90/90 spawns. Also: a third delivery mechanism appearing in a future
+instrument version would reopen the question in the same form.
+
+### Implications for practice
+
+When a governed instrument changes delivery mode, grep for every
+consumer of its receipts at change time — the reconciler was updated
+for A3, the analysis tool was not, and nothing connected the two. And
+the catching mechanism generalises: new tooling must first reproduce
+known ground truth (here, the run-record cross-check lines) before its
+novel outputs are read; the absurd 100% figure was only visibly absurd
+because correct known figures sat directly above it in the same output.

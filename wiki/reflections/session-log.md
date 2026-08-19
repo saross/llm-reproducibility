@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-08-02
+updated: 2026-08-19
 status: active
 ---
 
@@ -979,3 +979,49 @@ H13 fresh-context re-derivation deliberately deferred to the gates
 stage; concordance deliberately uncomputed pending E8 v2; the
 registered analysis tool cannot yet read effort-study arm dirs
 (hardcoded three-arm layout).
+
+## Session: 2026-08-17 (third session) → 2026-08-19 — Analysis tool v1.1: --arms, error direction, two-era guide detection
+
+One build sitting (evening of the 17th), wind-down on the 19th. No API
+spend, no rulings, no new datapoints — carry-forward tooling only,
+under the standing build-while-waiting ruling.
+
+**Done:**
+
+- Resumed at `1a0ae7d`, clean, 0 ahead/0 behind (fetch-first); verified
+  251 tests green and gate 66/66 on amd-tower.
+- Extended `analyse-benchmark-disagreements.py` to v1.1 (`48568fb`,
+  pushed): `--arms` accepts explicit arm directories spanning cycles
+  (labels from `arm-*` basenames, duplicates rejected, `--out-dir`
+  required so no cycle's committed `disputed-items.json` is overwritten
+  implicitly); per-arm error-direction split on concordance mismatches
+  (over-credit vs under-credit, per-item `error_direction` in the JSON);
+  `--reference-key` so the E8-v2 reference joins by manifest
+  registration; guideless-minority correlation generalised from
+  hardcoded sonnet-5 to every arm; guide detection made two-era
+  (pull-era `pulled_files_read` OR post-A3 `instrument_receipts`).
+- Verification: legacy mode byte-identical to the committed 2026-08
+  disputed-items (68 items; stability 121/131/122 all OK; sonnet
+  guideless correlation 29/17 unchanged). Six-arm `--stability-only`
+  pass matched every known figure: 0.8533/0.9533/0.9467 (D3 xhigh arms)
+  and 0.8133/0.8667/0.9533 (effort arms, OK against run-records).
+- Found and fixed en route: the guideless predicate was vacuous for
+  post-A3 spawns (all 90 reported guideless before the fix) — A3's
+  pull→push promotion changed the receipt carrier. Logged in
+  abductive-reasoning and llm-observations.
+- Tests 251 → 267 (new `tests/test_analyse_benchmark.py`: resolve_arms,
+  error_direction, two-era guide detection, synthetic two-arm
+  end-to-end with known answers, CLI guard rails).
+
+**Not done / deliberately untouched:** E8-v2 worksheet adjudication
+columns still empty (Shawn's sitting — the critical path); F-010 ruling
+open (register entry self-contained); H13 re-derivation waits at the
+gates stage; no concordance computed against any reference (capability
+shipped, computation pending E8 v2 per D3 hardening 5).
+
+**Contextual assumptions:** the build was authorised by the standing
+build-while-waiting ruling (user-obs D, adjudicated 2026-08-17 s2), not
+by a per-instance request; Shawn away for several days after the 19th,
+so the handoff flags his two tasks (worksheet sitting, F-010 ruling)
+first; sonnet intro API pricing ends 2026-08-31, relevant only if a
+further sonnet arm were ever wanted.

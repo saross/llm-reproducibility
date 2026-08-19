@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-08-02
+updated: 2026-08-19
 status: active
 ---
 
@@ -1008,3 +1008,45 @@ model upgrade, and would test whether "model capability" here is really
 "tolerance for residual instrument ambiguity". That question now sits
 behind the E8-v2 sitting and the gates ruling, where the disputed-item
 analysis may answer it for free.
+
+## Entry 17 (2026-08-17 → 2026-08-19, third session) — Ninety guideless spawns
+
+**Project:** llm-reproducibility. **Session:**
+92427cb5-9fa4-47f0-9571-ebaf54089c1b (primary instance; one build
+sitting on the evening of the 17th, wind-down on the 19th).
+
+**What was different about this session compared to recent ones?** It
+was the first session in the programme with no spend, no rulings, and
+no new datapoints — the entire agenda came from the carry-forward list,
+executed under the build-while-waiting default Shawn ratified at the
+previous close. The critical path (his E8-v2 worksheet sitting) was
+blocked on him from the first minute, and instead of idling or asking,
+the session cleared the one item that gates the path from my side: the
+registered analysis tool's hardcoded three-arm layout. One commit
+(`48568fb`), sixteen new tests, verified against every known figure,
+pushed. The recent sessions have been expeditions; this one was
+maintenance of the vehicle while the driver was away, and the standing
+ruling is what made that possible without a permission round-trip. It
+was also the first session to end with an explicit ball-in-court
+exchange — Shawn asking whether anything was agent-owned before a
+multi-day gap — which is a cheap ritual that deserves to persist.
+
+**What surprised you about this session?** The verification run, not
+the build. The first all-arms invocation of the extended tool reported
+every one of the ninety 2026-08-17 spawns as "guideless" — the
+guideless-minority correlation showing 100% of minority votes from
+spawns that never read the principles guide, across arms including the
+0.953-stability opus pair. The number was absurd on its face, and the
+cause was quiet: A3's pull-to-push promotion (instrument v2.1,
+2026-08-15) moved the guide from `pulled_files_read` into
+`instrument_receipts`, and the detection predicate was written in the
+pull era. The registered evidence-base check had been *structurally
+vacuous* since the day of the promotion, and nothing failed — no test,
+no gate, no reconciler noticed, because no consumer of the statistic
+had run against post-promotion data until now. The surprise with teeth
+is not the bug but the class: apparatus evolution does not break
+derived statistics loudly; it renders them vacuously true or false,
+and only a new consumer with known ground truth to compare against
+exposes it. The fix (two-era detection) took twenty minutes; the
+habit that caught it — never trust a new tool's output until it
+reproduces figures you already know — is the part worth keeping.
