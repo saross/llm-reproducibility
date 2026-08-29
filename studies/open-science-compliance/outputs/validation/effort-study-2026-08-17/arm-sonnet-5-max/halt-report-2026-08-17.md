@@ -103,3 +103,21 @@ P3 channel verification (7.5× differential).
   rationale that motivated the study.
 
 No option is executed without the operator's ruling.
+
+## Correction (2026-08-29, F-012 / F-010 ruling — original text above left as written)
+
+The §"Contamination failures" description of **crema r2** is wrong: the
+spawn's only Glob was `pattern: corpus/evidence-packs/crema-et-al-2024.json`
+with `path: <repo root>` — an exact-filename existence check returning the
+one in-scope path it then Read. reconcile-run ≤ v1.4 recorded the base
+path in place of the pattern and never read the result (F-012,
+verifier-error); the "unscoped listing over the whole repository" and the
+F-002 analogy describe that mangled record, not the transcript. crema r2
+reconciles **clean** under v1.5 and was re-run on a checker error. The
+**dye r3** description is corrected in the other direction: its third
+`**/references/…` glob returned an out-of-scope `archive/` duplicate of
+the skill file, so its verdict is contaminating under both the pattern and
+the path rule — the "resolved targets are on the allowed-prefix list"
+premise was false for one of three. Ruling, replay, and anchors:
+`failure-modes/register.md` (F-012; F-010 ruling) and
+`reconcile-v1.5-replay-2026-08-29/replay-summary.md`.

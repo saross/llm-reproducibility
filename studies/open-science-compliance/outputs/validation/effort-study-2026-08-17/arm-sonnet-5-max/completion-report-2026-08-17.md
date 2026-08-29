@@ -68,3 +68,20 @@ Provenance pin in all 33 scoring transcripts triangulate served `max`.
 sonnet-5 @ `high` (full 15-item arm, 12M wire) launches on this arm's
 closure; opus-5 @ `max` stays off unless the opus xhigh record shows
 deficiencies.
+
+## Correction (2026-08-29, F-012 / F-010 ruling — original text above left as written)
+
+Two rows and one bullet above carry the reconciler's ≤ v1.4 mangled record
+rather than the transcripts (F-012, verifier-error). **crema r2** in the
+primary run was not a repo-root Glob — it was an exact-filename existence
+check on its own evidence pack, clean under v1.5; its re-run in
+`wf_0d67dbff-d2b` was spend on a checker error. **key r2 attempt 2** did
+fail legitimately, but the cause was not a "repo-root Glob": its three
+unanchored `**/` globs for the brief's pulled references surfaced an
+out-of-scope `archive/` duplicate of `expected-information.md` — the same
+shape as dye r3. The "two distinct max-effort failure modes on one slot"
+reading therefore stands (contract-schema violation, then unscoped
+reference hunting), with the second mode re-described. Superseded-transcript
+count unchanged (the re-run happened); the register's per-arm incident
+count for sonnet@max drops by one. See `failure-modes/register.md` (F-012;
+F-010 ruling) and `reconcile-v1.5-replay-2026-08-29/replay-summary.md`.
