@@ -98,6 +98,33 @@ class ReconcileTests(unittest.TestCase):
         (self.run_dir / f"agent-{agent_id}.meta.json").write_text(
             json.dumps({"agentType": "test-scorer"}), encoding="utf-8")
 
+    def write_agent_calls(self, agent_id: str,
+                          calls: list[tuple[str, dict, str, bool]],
+                          output: dict | None = None) -> None:
+        """Write one agent transcript from explicit tool calls + meta.
+
+        calls = [(tool_name, input_dict, result_text, is_error)] — the
+        general form of write_agent, for Glob/Grep enumerations whose
+        verdict depends on the result the harness returned.
+        """
+        entries = []
+        for index, (tool, call_input, result, is_error) in enumerate(calls):
+            use_id = f"toolu_{agent_id}_{index}"
+            entries.append({"message": {"content": [
+                {"type": "tool_use", "name": tool, "id": use_id,
+                 "input": call_input}]}})
+            entries.append({"message": {"content": [
+                {"type": "tool_result", "tool_use_id": use_id,
+                 "is_error": is_error, "content": result}]}})
+        entries.append({"message": {"content": [
+            {"type": "tool_use", "name": "StructuredOutput",
+             "id": f"toolu_{agent_id}_out", "input": output or payload()}]}})
+        transcript = self.run_dir / f"agent-{agent_id}.jsonl"
+        transcript.write_text("\n".join(json.dumps(e) for e in entries) + "\n",
+                              encoding="utf-8")
+        (self.run_dir / f"agent-{agent_id}.meta.json").write_text(
+            json.dumps({"agentType": "test-scorer"}), encoding="utf-8")
+
     def log_gate_event(self, agent_id: str, event: str) -> None:
         with self.gate_log.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps({"agent_id": agent_id, "event": event}) + "\n")
@@ -351,6 +378,157 @@ class ReconcileTests(unittest.TestCase):
         self.assertTrue(agent["reconciled"], agent)
         self.assertEqual(len(agent["file_access"]["flagged"]), 1)
         self.assertEqual(len(agent["file_access"]["contaminating"]), 0)
+
+    # --- v1.5 path rule (F-010 ruling, 2026-08-29) -------------------------
+
+    REPO = str(reconciler.REPO_ROOT)
+
+    def test_exact_glob_with_repo_root_base_is_clean(self) -> None:
+        """F-012 (crema r2, key r2 attempt 2): an exact-filename existence
+        check with base = repo root was mis-recorded by v1.4 as a repo-root
+        listing. The returned path is in scope; the search root is in scope;
+        nothing is flagged or unscoped."""
+        self.write_agent_calls("a1", [
+            ("Glob", {"pattern": "corpus/evidence-packs/fixture.json",
+                      "path": self.REPO},
+             "corpus/evidence-packs/fixture.json", False),
+            ("Read", {"file_path": "corpus/paper.md"}, "x", False),
+        ])
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertTrue(report["clean"], agent["file_access"])
+        self.assertEqual(agent["file_access"]["unscoped"], [])
+        glob = [a for a in agent["file_access"]["all"] if a["tool"] == "Glob"][0]
+        self.assertEqual(glob["target"], "corpus/evidence-packs/fixture.json")
+        self.assertEqual(glob["pattern"], "corpus/evidence-packs/fixture.json")
+        self.assertEqual(glob["returned"], ["corpus/evidence-packs/fixture.json"])
+
+    def test_unscoped_glob_returning_only_in_scope_paths_warns_not_fails(self) -> None:
+        """Path rule: an unanchored `**` glob from the repo root whose every
+        returned path is in scope reconciles clean, but is recorded as an
+        unscoped enumeration (the behavioural signal survives)."""
+        self.write_agent_calls("a1", [
+            ("Glob", {"pattern": "**/guide.md"}, "corpus/refs/guide.md", False),
+        ])
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertTrue(agent["reconciled"], agent["file_access"])
+        self.assertEqual(len(agent["file_access"]["unscoped"]), 1)
+        self.assertEqual(agent["file_access"]["flagged"], [])
+        self.assertEqual(agent["file_access"]["unscoped"][0]["target"], "")
+
+    def test_glob_returning_out_of_scope_path_is_contaminating(self) -> None:
+        """dye r3 / key r2 attempt 2: the third `**` glob also returned an
+        `archive/` duplicate — that path string entered context."""
+        self.write_agent_calls("a1", [
+            ("Glob", {"pattern": "**/expected-information.md", "path": self.REPO},
+             "corpus/refs/expected-information.md\n"
+             "archive/old-skill/refs/expected-information.md", False),
+        ])
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertFalse(agent["reconciled"])
+        self.assertEqual(len(agent["file_access"]["contaminating"]), 1)
+        self.assertEqual(agent["file_access"]["contaminating"][0]["out_of_scope"],
+                         ["archive/old-skill/refs/expected-information.md"])
+
+    def test_empty_glob_over_out_of_scope_root_is_attempt(self) -> None:
+        """The live 2026-08-03 case survives v1.5: a wrong-base glob that
+        matched nothing is a warning-grade attempt, never contamination."""
+        self.write_agent_calls("a1", [
+            ("Glob", {"pattern": "~/.claude/skills/nonexistent/**"},
+             "No files found", False),
+        ])
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertTrue(agent["reconciled"], agent["file_access"])
+        self.assertEqual(len(agent["file_access"]["flagged"]), 1)
+        self.assertEqual(agent["file_access"]["contaminating"], [])
+        self.assertTrue(agent["file_access"]["flagged"][0]["errored"])
+
+    def test_truncated_glob_result_is_unverifiable_and_fails(self) -> None:
+        """A cut-short result list cannot show that every returned path was
+        in scope; the conservative verdict is contamination."""
+        self.write_agent_calls("a1", [
+            ("Glob", {"pattern": "**/*.md"},
+             "corpus/a.md\ncorpus/b.md\n"
+             "(Results are truncated. Consider using a more specific path or pattern.)",
+             False),
+        ])
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertFalse(agent["reconciled"])
+        self.assertTrue(agent["file_access"]["contaminating"][0]["truncated"])
+
+    def test_hook_delivery_exemption_does_not_cover_enumerations(self) -> None:
+        """F-002 shape: a glob over the session directory returning other
+        spawns' hook-delivery files is contaminating even though a Read of
+        the spawn's OWN delivery file is exempt."""
+        session = "/home/other/.claude/projects/x/session"
+        self.write_agent_calls("a1", [
+            ("Glob", {"pattern": "tool-results/hook-*.txt", "path": session},
+             f"{session}/tool-results/hook-aaaa1111-1-additionalContext.txt\n"
+             f"{session}/tool-results/hook-bbbb2222-stdout.txt", False),
+            ("Read", {"file_path":
+                      f"{session}/tool-results/hook-613de023-f3fe-4f97-be2c-5f86359ce4b3"
+                      "-1-additionalContext.txt"}, "x", False),
+        ])
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertFalse(agent["reconciled"])
+        contaminating = agent["file_access"]["contaminating"]
+        self.assertEqual(len(contaminating), 1)
+        self.assertEqual(contaminating[0]["tool"], "Glob")
+        self.assertEqual(len(contaminating[0]["out_of_scope"]), 2)
+
+    def test_grep_rooted_in_scope_is_clean_by_construction(self) -> None:
+        self.write_agent_calls("a1", [
+            ("Grep", {"pattern": "zenodo", "path": "corpus/paper/extracted.txt",
+                      "output_mode": "content", "-n": True},
+             "128: see zenodo.12345\n201: and zenodo.67890", False),
+            ("Grep", {"pattern": "zenodo", "path": "corpus/paper"},
+             "Found 1 file\ncorpus/paper/extracted.txt", False),
+        ])
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertTrue(agent["reconciled"], agent["file_access"])
+        self.assertEqual(agent["file_access"]["unscoped"], [])
+
+    def test_grep_over_repo_root_returning_out_of_scope_content_fails(self) -> None:
+        self.write_agent_calls("a1", [
+            ("Grep", {"pattern": "data_fair", "output_mode": "content", "-n": True},
+             "outputs/pilot/assessment.json:12:  \"data_fair\": 11\n"
+             "corpus/paper/extracted.txt:3: data_fair", False),
+        ])
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertFalse(agent["reconciled"])
+        self.assertEqual(agent["file_access"]["contaminating"][0]["out_of_scope"],
+                         ["outputs/pilot/assessment.json"])
+        self.assertEqual(len(agent["file_access"]["unscoped"]), 1)
+
+    def test_grep_with_no_matches_over_out_of_scope_root_is_attempt(self) -> None:
+        self.write_agent_calls("a1", [
+            ("Grep", {"pattern": "14561925"}, "No matches found", False),
+        ])
+        report = self.run_reconcile()
+        agent = report["agents"][0]
+        self.assertTrue(agent["reconciled"], agent["file_access"])
+        self.assertEqual(agent["file_access"]["contaminating"], [])
+        self.assertEqual(len(agent["file_access"]["flagged"]), 1)
+
+    def test_search_root_derivation(self) -> None:
+        """The root is the base joined with the pattern's literal prefix;
+        absolute patterns ignore the base; no base means the repo root."""
+        root = reconciler.search_root
+        self.assertEqual(root("Glob", {"pattern": "corpus/x/*.md"}), "corpus/x/")
+        self.assertEqual(root("Glob", {"pattern": "**/x.md"}), "")
+        self.assertEqual(root("Glob", {"pattern": "**/x.md", "path": self.REPO}), "")
+        self.assertEqual(root("Glob", {"pattern": "/home/shawn/corpora/p/*",
+                                        "path": "/elsewhere"}),
+                         reconciler.normalise_path("/home/shawn/corpora/p/"))
+        self.assertEqual(root("Grep", {"pattern": "x", "path": "corpus/p"}), "corpus/p")
+        self.assertEqual(root("Grep", {"pattern": "x"}), "")
 
     def test_declared_pull_that_only_errored_fails(self) -> None:
         """C6/C8 finding (2026-08-15): attempts are not reads."""
