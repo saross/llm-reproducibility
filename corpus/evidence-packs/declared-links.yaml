@@ -12,6 +12,13 @@
 # CRAN entries carry endpoint 'cran' — flagged for addition per the
 # ratified endpoint list; the harvester records them as an honest gap
 # rather than improvising a resolution.
+#
+# Curation practice (registrant ruling, 2026-09-03, E8-v2 adjudication log
+# AP-5): supplement-embedded artefact URLs enter this registry when found —
+# the harvester cannot see inside supplements, so registry curation is the
+# only route by which such artefacts reach the evidence packs. Unrouted
+# hosts (e.g. personal servers) are recorded as honest gaps, which is
+# itself the informative fact.
 
 papers:
   dye-et-al-2023:
@@ -36,6 +43,16 @@ papers:
         link: "10.5284/1018290"
         note: "Archaeology Data Service DOI cited in the infrastructure record (upstream data)"
         source_anchor: "… reproducibility_infrastructure (cited identifier)"
+      - id: beads-mcmc-personal-server
+        type: data
+        link: "https://tsdye.online/AP/beads-1.csv"
+        note: >-
+          MCMC output read by the supplement's R code; personal server
+          (shared commercial hosting), no PID, no licence. Principal per
+          E8-v2 adjudication 2026-09-03 (AP-3); supplement-embedded URL
+          (pack-blind class, AP-5). Unrouted host — harvester records an
+          honest gap.
+        source_anchor: "studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-01/log.md:44 + environment.md:40"
 
   herskind-riede-2024:
     article_doi: "10.1016/j.jas.2024.105969"
