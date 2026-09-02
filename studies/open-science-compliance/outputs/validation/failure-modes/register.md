@@ -310,8 +310,9 @@ replay summary as above.
    verifier's error (F-012, 2026-08-29).** F-010's description of crema r2
    was composed from the reconciliation report's mangled target, not from
    the transcript's tool call and result; it stood for twelve days as a
-   max-effort model-boundary incident. Proposed standing practice (for
-   ratification at handoff): a `model-boundary` or `model-fabrication`
-   entry quotes the tool call **and its result** verbatim from the
-   transcript, and names the verifier output only as the thing that
-   raised the alarm.
+   max-effort model-boundary incident. Standing practice (proposed
+   2026-08-29; **RATIFIED, Shawn, 2026-09-03**): a `model-boundary` or
+   `model-fabrication` entry quotes the tool call **and its result**
+   verbatim from the transcript, and names the verifier output only as
+   the thing that raised the alarm. (F-012 and the F-010 ruling entry
+   already follow it.)
