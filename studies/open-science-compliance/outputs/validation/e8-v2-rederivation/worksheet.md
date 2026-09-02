@@ -25,23 +25,34 @@ new = adjudicated v2.1 score; note = adjudication note.
 
 | sub | old | D (s/o/f) | flags | v2.1 ruling | old evidence | S | new | note |
 |---|---|---|---|---|---|---|---|---|
-| F1 | 1 | D 0/1/1 |  | item 5 (supplement under article DOI = 1) | Paper DOI 10.1016/j.jas.2023.105765; upstream Anglo-Saxon dataset DOI  |  |  |  |
-| F2 | 0 | D 0/1/0 |  | item 5 + table row 6 (artefact-level; supplement-onl | OxCal model in supplement without independent metadata record |  |  |  |
-| F3 | 0 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | No separate data DOI; data only in publisher supplement |  |  |  |
-| F4 | 0 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Supplement data not in searchable repository; upstream ADS dataset is  |  |  |  |
-| A1 | 1 | D 1/1/1 |  | unchanged (completeness rule + ethical exception) | HTTPS via publisher and White Rose repository |  |  |  |
-| A1_1 | 1 | D 1/1/1 |  | unchanged | Open access via White Rose repository |  |  |  |
-| A1_2 | 1 | D 0/1/1 |  | item 4 (fully open, no auth needed = 1) | No authentication required |  |  |  |
-| A2 | 1 | D 0/1/1 |  | table rows 2/6 (Zenodo persistence entitlements; sup | Publisher and White Rose institutional repository metadata persistent |  |  |  |
-| I1 | 1 | D 1/1/1 |  | unchanged (aggregation: principal artefacts) | OxCal model in standard format; R data structures |  |  |  |
-| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No formal controlled vocabularies for data description |  |  |  |
-| I3 | 1 |  |  | item 2 (third-party dependencies enter here) | References Anglo-Saxon Graves dataset via ADS DOI 10.5284/1018290 |  |  |  |
-| R1 | 1 |  |  | unchanged | Methods section documents data provenance and analytical procedures |  |  |  |
-| R1_1 | 0 |  |  | item 6 (per-artefact; most-restrictive same-artefact | Paper is CC-BY-NC-ND; no explicit licence for supplement data or OxCal |  |  |  |
-| R1_2 | 1 |  | C | unchanged | Data derived from published ADS dataset with clear transformation docu |  |  |  |
-| R1_3 | 0 | D 1/1/1 | F | item 7 + graded table row 4 (ADS by construction; DA | No domain metadata standard applied to data files |  |  |  |
+| F1 | 1 | D 0/1/1 |  | item 5 (supplement under article DOI = 1) | Paper DOI 10.1016/j.jas.2023.105765; upstream Anglo-Saxon dataset DOI  | y | 0 | FLIP 1→0 — beads-1.csv principal (P1), no PID; conjunctive; supplement-read reqd (pack-blind) |
+| F2 | 0 | D 0/1/0 |  | item 5 + table row 6 (artefact-level; supplement-onl | OxCal model in supplement without independent metadata record | y | 0 | unchanged — row 6 supplement-only |
+| F3 | 0 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | No separate data DOI; data only in publisher supplement | y | 0 | unchanged — row 6 supplement-only |
+| F4 | 0 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Supplement data not in searchable repository; upstream ADS dataset is  | y | 0 | unchanged — row 6 supplement-only |
+| A1 | 1 | D 1/1/1 |  | unchanged (completeness rule + ethical exception) | HTTPS via publisher and White Rose repository | y | 1 | unchanged — HTTPS; completeness complete |
+| A1_1 | 1 | D 1/1/1 |  | unchanged | Open access via White Rose repository | y | 1 | unchanged — OA article + free supplement |
+| A1_2 | 1 | D 0/1/1 |  | item 4 (fully open, no auth needed = 1) | No authentication required | y | 1 | unchanged — item 4 no-auth case |
+| A2 | 1 | D 0/1/1 |  | table rows 2/6 (Zenodo persistence entitlements; sup | Publisher and White Rose institutional repository metadata persistent | y | 0 | FLIP 1→0 — row 6 A2=0; personal server no persistence (sonnet minority correct) |
+| I1 | 1 | D 1/1/1 |  | unchanged (aggregation: principal artefacts) | OxCal model in standard format; R data structures | y | 1 | unchanged — OxCal formal language + CSV |
+| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No formal controlled vocabularies for data description | y | 0 | unchanged |
+| I3 | 1 |  |  | item 2 (third-party dependencies enter here) | References Anglo-Saxon Graves dataset via ADS DOI 10.5284/1018290 | y | 1 | unchanged — ADS DOI qualified reference (item 2) |
+| R1 | 1 |  |  | unchanged | Methods section documents data provenance and analytical procedures | y | 1 | unchanged — Methods + 50pp supplement |
+| R1_1 | 0 |  |  | item 6 (per-artefact; most-restrictive same-artefact | Paper is CC-BY-NC-ND; no explicit licence for supplement data or OxCal | y | 0 | unchanged at 0 — beads-1.csv no licence anywhere; supplement-read reqd (pack-blind) |
+| R1_2 | 1 |  | C | unchanged | Data derived from published ADS dataset with clear transformation docu | y | 1 | spot-check CONFIRMED — provenance chain ADS→OxCal→MCMC documented |
+| R1_3 | 0 | D 1/1/1 | F | item 7 + graded table row 4 (ADS by construction; DA | No domain metadata standard applied to data files | y | 0 | ENTAILED flip REJECTED — AP-4: conjunction blocks ADS entitlement |
 
 - **R1_3 flip note:** ENTAILED: ADS deposit (10.5284/1018290) → R1.3 = 1 by construction (ruling #4 + graded row 4)
+
+- **Adjudicated 2026-09-03 (Sitting 1; registrant: Shawn). data_fair 9 → 7.**
+  Principal-set ruling P1: supplement contents + the personal-server MCMC
+  file (`https://tsdye.online/AP/beads-1.csv`, read by the supplement's R
+  code — reproduction `attempt-01/log.md:44`) are principal; the ADS
+  deposit (10.5284/1018290) is upstream third-party, non-principal (enters
+  via I3 + the completeness lane). "Paper" includes the published
+  supplement (AP-2); the pack is blind to supplement-embedded artefacts.
+  Flips: F1 1→0, A2 1→0; the R1_3 ENTAILED flag was rejected (AP-4:
+  conjunction blocks entitlement lifts). Reasoning + forward principles:
+  `adjudication-log.md` Sitting 1.
 
 ## dye-et-al-2023 — code_fair
 
