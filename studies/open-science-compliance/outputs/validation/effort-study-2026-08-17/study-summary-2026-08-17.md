@@ -77,3 +77,21 @@ sonnet@max 21.25M + sonnet@high 5.66M + opus@high 5.14M + probes P3/P5
 (~0.1M) ≈ **32.2M tokens** against the operator's continuation
 authorisations (12M initial wire, tripped and adjudicated; completion +
 two high arms explicitly approved).
+
+## Correction (2026-08-29, F-012 / F-010 ruling — original text above left as written)
+
+Finding 4's "exploratory boundary Globs (F-010, verifier pattern-vs-path
+split OPEN)" is amended. The split is **ruled** (path rule; reconcile-run
+v1.5), and the incident count behind the finding changes: of the sonnet@max
+arm's contamination failures, crema r2 was a **verifier error** (an
+exact-filename existence check mis-recorded as a repo-root listing —
+F-012; clean under v1.5; re-run on checker error), while dye r3 and key r2
+attempt 2 were **one behaviour seen twice** — unanchored `**/` globs
+hunting for pulled references whose exact paths the brief supplied, which
+surfaced an out-of-scope `archive/` duplicate and are contaminating under
+both rules. Finding 4's direction (max effort degrades harness compliance
+for sonnet) holds on F-008 and F-011 plus one boundary behaviour, not two
+incidents; the claim that this behaviour was "absent from the 15/15-clean
+xhigh arm" holds. Replay of every committed reconciliation under v1.5:
+one verdict flip (crema r2), zero receipt changes —
+`reconcile-v1.5-replay-2026-08-29/replay-summary.md`.

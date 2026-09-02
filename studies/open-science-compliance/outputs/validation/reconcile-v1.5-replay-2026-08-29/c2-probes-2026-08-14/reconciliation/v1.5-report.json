@@ -1,0 +1,109 @@
+{
+  "agents": [
+    {
+      "agent_id": "a8df23f30c440eba9",
+      "agent_type": "fair-assessor-sonnet-5",
+      "divergence": {
+        "blocked_but_output_present": false,
+        "no_gate_event": false
+      },
+      "file_access": {
+        "all": [
+          {
+            "contaminating": false,
+            "errored": false,
+            "flagged": false,
+            "out_of_scope": [],
+            "target": "tests/fixtures/c2-synthetic-paper.md",
+            "tool": "Read",
+            "unscoped": false
+          }
+        ],
+        "contaminating": [],
+        "flagged": [],
+        "unscoped": []
+      },
+      "gate_events": [
+        "pass"
+      ],
+      "push": {
+        "events": [
+          {
+            "event": "push",
+            "name": "fair-instrument",
+            "sha256": "9f162d8189411e3dca45e2c09216fdc7735d87ed77d8ce94a6d8fb6c8f5effe5"
+          }
+        ],
+        "problems": []
+      },
+      "receipts": {
+        "paper_slug": "c2-synthetic-fixture-b",
+        "problems": [],
+        "receipted": {
+          "agent_version": "fair-assessor-sonnet-5 v1.0",
+          "instrument_receipts": {
+            "fair-instrument": "3ddcbfd82575a2f8"
+          },
+          "instrument_versions": {
+            "fair-instrument": "2.0"
+          },
+          "model_id": "claude-sonnet-5"
+        },
+        "valid": true
+      },
+      "reconciled": true
+    },
+    {
+      "agent_id": "ad4e71866853621b8",
+      "agent_type": "fair-assessor-sonnet-5",
+      "divergence": {
+        "blocked_but_output_present": false,
+        "no_gate_event": false
+      },
+      "file_access": {
+        "all": [
+          {
+            "contaminating": false,
+            "errored": false,
+            "flagged": false,
+            "out_of_scope": [],
+            "target": "tests/fixtures/c2-synthetic-paper.md",
+            "tool": "Read",
+            "unscoped": false
+          }
+        ],
+        "contaminating": [],
+        "flagged": [],
+        "unscoped": []
+      },
+      "gate_events": [
+        "block"
+      ],
+      "push": {
+        "events": [
+          {
+            "event": "push",
+            "name": "fair-instrument",
+            "sha256": "9f162d8189411e3dca45e2c09216fdc7735d87ed77d8ce94a6d8fb6c8f5effe5"
+          }
+        ],
+        "problems": []
+      },
+      "receipts": {
+        "problems": [
+          "no well-formed receipt payload in transcript"
+        ],
+        "valid": false
+      },
+      "reconciled": false
+    }
+  ],
+  "clean": false,
+  "count_problems": [],
+  "reconciled_at": "2026-08-29T04:58:26.691311+00:00",
+  "reconciliation_version": "1.5",
+  "run_dir": "/home/shawn/.claude/projects/-home-shawn-Code-llm-reproducibility/04169f15-06f9-421d-a149-39a04367b3b5/subagents/workflows/wf_cf1f820a-d6a",
+  "skipped_ungoverned": [],
+  "spawns": 2,
+  "spawns_reconciled": 1
+}
