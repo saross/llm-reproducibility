@@ -45,9 +45,26 @@ Exercise is unblinded (recorded in amendment 2 §3).
   full text `protocol/data-repair-rule-2026-09-03.md`): (a)
   archived-equivalent retrieval where a proper deposit of the at-risk
   artefact exists; (b) documented re-derivation from archived/published
-  inputs where only the generator is archived. Compute/model-time caps on
-  repair work are deferred — to be set empirically if such cases recur.
-  (Shawn, 2026-09-03.)
+  inputs where only the generator is archived. (Shawn, 2026-09-03.)
+  **Effort bound (initial heuristic, Shawn, 2026-09-03, second ruling):**
+  up to ~3× the dye estimate (≈ one to two sessions, ~6–12 h wall-clock,
+  modest CPU on sapphire, Claude Max session work) proceeds without
+  discussion; above that, discuss first. Refine empirically from the
+  recorded cost of each repair.
+- **AP-7 — Anti-perversity generalisation check** (Shawn, 2026-09-03):
+  before applying any adjudication precedent forward, ask *"does
+  generalisation of this precedent produce any foreseeable perverse
+  result?"* — and record the answer whenever it is not obviously no.
+  Type case: the dye code_fair precedent (dependency evidence
+  inadmissible for principal-artefact scores) must not penalise a paper
+  that cites versioned CRAN packages and properly deposits a specific
+  wrapper script — there the wrapper is the principal artefact and
+  scores on its own (good) deposit; dye's penalty attaches to the
+  principal scripts' publication quality, never to the fact of using
+  dependencies. Noted foreseeable edge, not yet ruled: a paper whose
+  entire analysis is a bare invocation of a dependency with no custom
+  code — the principal-script set is empty and conjunctive scoring needs
+  a convention; rule it when a paper poses it.
 
 ## Sitting 1 — 2026-09-03 — dye-et-al-2023 `data_fair`: 9 → 7
 

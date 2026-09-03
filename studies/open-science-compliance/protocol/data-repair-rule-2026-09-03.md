@@ -37,10 +37,14 @@ reserve** — considered, not adopted (registrant, 2026-09-03).
 
 ## Bounds
 
-Repair is bounded good-will work, not heroics: no cap is set today;
-compute/model-time caps are to be set **empirically** if such cases recur
-(registrant, 2026-09-03). Every repair records what was attempted, what it
-cost, and its outcome, so a future cap has an evidence base.
+Repair is bounded good-will work, not heroics. **Initial heuristic
+(registrant, 2026-09-03):** with current resources (sapphire for compute;
+Claude Max plan for session work), repair effort up to **about 3× the dye
+estimate** — roughly one to two focused sessions, ~6–12 hours wall-clock,
+with modest CPU compute — proceeds without discussion; anything above that
+is discussed before proceeding. The heuristic is to be refined
+empirically: every repair records what was attempted, what it cost, and
+its outcome, so revisions have an evidence base.
 
 ## Precedent
 
