@@ -35,6 +35,16 @@ the amendment-1 precedents cited below are anchored in
 - Never conflate the Tier 0–4 access tiers with the registered L1–L6
   data-availability taxonomy (demarcation note in the instrument).
 
+## Anti-tic rules (added 2026-09-22)
+
+The cross-register source of truth is
+`~/personal-assistant/data/notes/style-guides/reference_anti-tic.md`.
+Load it with this register. The generic preregistration deltas are in
+`~/personal-assistant/data/notes/style-guides/academic/reference_register-preregistration.md`;
+this file carries only what is specific to this project.
+
+---
+
 ## Project tooling and checks
 
 - **Paste artefact tool:**
