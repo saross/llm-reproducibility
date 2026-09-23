@@ -24,6 +24,7 @@ from __future__ import annotations
 import importlib.machinery
 import importlib.util
 import json
+import os
 import re
 import subprocess
 import tempfile
@@ -216,10 +217,18 @@ class ResolveLaunchCommitTests(unittest.TestCase):
     """Launcher dirty-tree refusal in a throwaway git repository."""
 
     def _git(self, repo: Path, *argv: str) -> None:
+        # Scrub inherited GIT_* variables before touching the throwaway repo.
+        # Git exports GIT_DIR, a *relative* GIT_INDEX_FILE, and
+        # GIT_CONFIG_PARAMETERS to hook processes. When the suite runs from
+        # the pre-commit gate those leak into these calls, resolve against the
+        # temporary directory, and the inner commit exits 1 -- so the suite
+        # passed standalone and failed at every commit boundary, blocking all
+        # commits to the repository (diagnosed 2026-09-23).
+        env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
         subprocess.run(
             ["git", "-C", str(repo), "-c", "user.name=t",
              "-c", "user.email=t@example.invalid", *argv],
-            check=True, capture_output=True)
+            check=True, capture_output=True, env=env)
 
     def _repo_with_commit(self, tmp: str) -> Path:
         repo = Path(tmp)
