@@ -41,11 +41,16 @@ Exercise is unblinded (recorded in amendment 2 §3).
   enter `corpus/evidence-packs/declared-links.yaml` when found, so census
   packs record their status even where no routing endpoint exists (the
   harvester logs them as honest gaps). (Shawn, 2026-09-03.)
-- **AP-6 — Repair rule** (two routes, above-and-beyond, good-will;
+- **AP-6 — Repair rule** (three routes since 2026-10-02, above-and-beyond, good-will;
   full text `protocol/data-repair-rule-2026-09-03.md`): (a)
   archived-equivalent retrieval where a proper deposit of the at-risk
   artefact exists; (b) documented re-derivation from archived/published
   inputs where only the generator is archived. (Shawn, 2026-09-03.)
+  **Route (c) added (Shawn, 2026-10-02, with AP-9):** format recovery —
+  extracting code or data from a non-machine-actionable carrier (e.g. code
+  printed in a PDF), verified by parsing, running, and matching published
+  outputs. Like (a) and (b), it is score-independent and reported as a
+  recoverable or unrecoverable error.
   **Effort bound (initial heuristic, Shawn, 2026-09-03, second ruling):**
   up to ~3× the dye estimate (≈ one to two sessions, ~6–12 h wall-clock,
   modest CPU on sapphire, Claude Max session work) proceeds without
@@ -77,11 +82,67 @@ Exercise is unblinded (recorded in amendment 2 §3).
   without breaching its licence) but is not R1.1's gate. Coheres with the
   instrument's A1.2 stance (CARE-compliant restriction is a positive
   signal); a permissiveness gate would penalise clearly licensed sensitive
-  data (AP-7). Clerk's reading of the boundary, **pending registrant
-  confirmation**: a bare copyright reservation ("all rights reserved") or
-  "available on request" publishes no usage licence → 0 (the guide's
-  existing 0 category). Backward consistency: Sitting 1's dye data R1.1 = 0
-  stands — conjunction with beads-1.csv, which carries no licence anywhere.
+  data (AP-7). **Boundary (Shawn, 2026-10-02):** "available on request" →
+  0 — no usage licence is published. **"All rights reserved" — OPEN**,
+  pending a survey of how established FAIR assessment frameworks treat it
+  (the guide's existing "→ 0" line dates from the Pass 6 build, commit
+  `4ff87a2`, with no recorded source, so it is not relied on). Backward
+  consistency: Sitting 1's dye data R1.1 = 0 stands — conjunction with
+  beads-1.csv, which carries no licence anywhere.
+- **AP-9 — I1 assesses the artefact as served: is it machine-actionable as
+  published?** (Shawn, 2026-10-02.) Code or data available only as text or
+  tables inside a PDF fails I1, whatever the formal language underneath;
+  extraction is reconstruction (repair route (c)), not an executable
+  download. Rationale (registrant): machine-actionability is expected by
+  the original FAIR principles, and "human-only FAIR" is generally seen as
+  a defect; whitespace-significant languages such as Python make
+  code-in-PDF as layout-dependent and unreliable to extract as a table.
+  Clerk's supporting arguments, endorsed: scores must be properties of
+  papers, not of assessor tooling (a repairability test would score the
+  same paper 0 in 2020 and 1 in 2026); and "repairable → pass" fails AP-7
+  — almost everything is now model-repairable, so I1 would stop
+  discriminating and proper deposit would earn no credit. Guards (AP-7,
+  endorsed): (i) where the same artefact is also served in a
+  machine-actionable form, I1 scores the best form, so printing code for
+  readers alongside a proper deposit is never penalised; (ii) illustrative
+  snippets are not principal artefacts and never enter I1. Accepted
+  consequence: outlets that accept only PDF supplements push their authors
+  to 0 — consistent with the research-surface rule, with responsibility
+  recorded as non-scoring provenance. File format is scored only at I1, so
+  this counts no fact twice. **Held in reserve:** a "human FAIR vs machine
+  FAIR" refinement scoring actionability separately (registrant notes a
+  lively discourse on this).
+
+## Beyond-instrument (BI) tags — concordance reporting convention
+
+Adopted 2026-10-02 (Shawn). A reference item is tagged when its adjudicated
+score rests on something the benchmark arms could not have applied, so that
+the gates can report concordance **with and without** BI items rather than
+grading the arms against the instrument's silences. Two reason codes, in
+the worksheet note column (`[BI: …]`) and as `beyond_instrument` in
+`worksheet.json`:
+
+- `rule` — a principle adopted at adjudication that the pushed instrument
+  v2.1 and guide v1.1 do not state.
+- `input` — evidence the benchmark spawns were deliberately not given. The
+  benchmark workflow tells every scoring spawn "The paper PDF is the sole
+  paper source: supplementary files are deliberately not provided"
+  (`protocol/validation/fair-benchmark-arm.workflow.js:100`); all 110
+  governed spawns in the 2026-08-17 cycles read only `vor.pdf`.
+
+Tagged so far: dye data F1 [input], R1.1 [input], I1 [input, rule]; dye
+code I1 [input, rule]. Items whose reference score is derivable from the
+main paper and the pack are not tagged even where the supplement adds
+detail (e.g. dye code R1: all nine v2.1 runs scored 1 from the main text).
+Rulings that disambiguate pushed text (AP-4, AP-8) are not `rule`-tagged;
+they go on the pre-census clarification list instead.
+
+**OPEN — supplements as scoring inputs (registrant ruling needed):** AP-2
+rules that "paper" includes the published supplement, but the benchmark
+workflow withholds supplements. The exclusion entered with the original
+benchmark harness (`d34edd9`, 2026-08-03) and has no recorded protocol
+decision; amendment 2 §2 says only that spawns receive "the paper source".
+Whether the census workflow should supply supplements is pending.
 
 ## Sitting 1 — 2026-09-03 — dye-et-al-2023 `data_fair`: 9 → 7
 
@@ -118,7 +179,12 @@ reproduction attempt-02. **Effort estimate accepted (Shawn, 2026-09-03):**
 one focused session, roughly 2–4 h wall-clock, negligible compute, no API
 spend; scheduled after the worksheet sittings.
 
-## Sitting 2 — 2026-10-01 — dye-et-al-2023 `code_fair`: 14 → 8 or 9 (I1 pending)
+**Amended 2026-10-02 — backward application of AP-9 (approved by the
+registrant): data I1 1→0, data_fair 7 → 6.** The principal OxCal model is
+served only as text inside the supplement PDF. BI tags added: F1 [input],
+R1.1 [input], I1 [input, rule].
+
+## Sitting 2 — 2026-10-01/02 — dye-et-al-2023 `code_fair`: 14 → 8
 
 **Framing (no new ruling needed):** principal code = the supplement's own
 scripts (OxCal model + R code), per the aggregation rule ("the paper's own
@@ -150,10 +216,12 @@ confirmed:** F1 = 1 (supplement code under the article DOI, item 5 + AP-2
 package structure, CITATION.cff, CodeMeta, or community review; CRAN's
 review is the dependency's).
 
-**Pending — I1 (decision D3):** does I1 assess the representation language
-(R and OxCal's model language → 1) or the artefact as served (code
-available only as text inside a PDF → 0)? Totals: 9 if I1 = 1, 8 if I1 = 0
-(old 14).
+**I1 — decision D3, ruled 2026-10-02: the as-served reading (AP-9), I1 =
+0.** The supplement scripts are served only as text inside a PDF, spread
+over 38 incremental sections (5.1–5.38), which attempt-01 rebuilt into a
+477-line wrapper script (`attempt-01/log.md:18`, `log.md:48–51`).
+Extracting them is repair route (c), recorded as a recoverable error. BI
+tag [input, rule]. **code_fair total: 8** (old 14).
 
 **Context for D3:** all nine v2.1 runs (2026-08-17 cycle) scored code I1 =
 1, but every justification quotes the main paper's description of the code

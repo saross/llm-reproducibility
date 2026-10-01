@@ -21,11 +21,19 @@ s/o/f = sonnet/opus/fable); flags = F entailed flip, C spot-check;
 S = census-surface check (y = derivable from paper+pack; n = not);
 new = adjudicated v2.1 score; note = adjudication note.
 
+BI tags (end of the note column) mark **beyond-instrument** items, added
+2026-10-02: `rule` = the score rests on a principle adopted at adjudication
+that the pushed instrument v2.1 and guide v1.1 do not state; `input` = the
+score rests on evidence the benchmark spawns were deliberately not given
+(supplementary files). The JSON twin carries them as `beyond_instrument`.
+Concordance is reported with and without BI items — see
+`adjudication-log.md`.
+
 ## dye-et-al-2023 — data_fair
 
 | sub | old | D (s/o/f) | flags | v2.1 ruling | old evidence | S | new | note |
 |---|---|---|---|---|---|---|---|---|
-| F1 | 1 | D 0/1/1 |  | item 5 (supplement under article DOI = 1) | Paper DOI 10.1016/j.jas.2023.105765; upstream Anglo-Saxon dataset DOI  | y | 0 | FLIP 1→0 — beads-1.csv principal (P1), no PID; conjunctive; supplement-read reqd (pack-blind) |
+| F1 | 1 | D 0/1/1 |  | item 5 (supplement under article DOI = 1) | Paper DOI 10.1016/j.jas.2023.105765; upstream Anglo-Saxon dataset DOI  | y | 0 | FLIP 1→0 — beads-1.csv principal (P1), no PID; conjunctive; supplement-read reqd (pack-blind) [BI: input] |
 | F2 | 0 | D 0/1/0 |  | item 5 + table row 6 (artefact-level; supplement-onl | OxCal model in supplement without independent metadata record | y | 0 | unchanged — row 6 supplement-only |
 | F3 | 0 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | No separate data DOI; data only in publisher supplement | y | 0 | unchanged — row 6 supplement-only |
 | F4 | 0 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Supplement data not in searchable repository; upstream ADS dataset is  | y | 0 | unchanged — row 6 supplement-only |
@@ -33,11 +41,11 @@ new = adjudicated v2.1 score; note = adjudication note.
 | A1_1 | 1 | D 1/1/1 |  | unchanged | Open access via White Rose repository | y | 1 | unchanged — OA article + free supplement |
 | A1_2 | 1 | D 0/1/1 |  | item 4 (fully open, no auth needed = 1) | No authentication required | y | 1 | unchanged — item 4 no-auth case |
 | A2 | 1 | D 0/1/1 |  | table rows 2/6 (Zenodo persistence entitlements; sup | Publisher and White Rose institutional repository metadata persistent | y | 0 | FLIP 1→0 — row 6 A2=0; personal server no persistence (sonnet minority correct) |
-| I1 | 1 | D 1/1/1 |  | unchanged (aggregation: principal artefacts) | OxCal model in standard format; R data structures | y | 1 | unchanged — OxCal formal language + CSV |
+| I1 | 1 | D 1/1/1 |  | unchanged (aggregation: principal artefacts) | OxCal model in standard format; R data structures | y | 0 | AS-SERVED (AP-9) FLIP 1→0, backward application approved 2026-10-02 — principal OxCal model served only inside the supplement PDF [BI: input+rule] |
 | I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No formal controlled vocabularies for data description | y | 0 | unchanged |
 | I3 | 1 |  |  | item 2 (third-party dependencies enter here) | References Anglo-Saxon Graves dataset via ADS DOI 10.5284/1018290 | y | 1 | unchanged — ADS DOI qualified reference (item 2) |
 | R1 | 1 |  |  | unchanged | Methods section documents data provenance and analytical procedures | y | 1 | unchanged — Methods + 50pp supplement |
-| R1_1 | 0 |  |  | item 6 (per-artefact; most-restrictive same-artefact | Paper is CC-BY-NC-ND; no explicit licence for supplement data or OxCal | y | 0 | unchanged at 0 — beads-1.csv no licence anywhere; supplement-read reqd (pack-blind) |
+| R1_1 | 0 |  |  | item 6 (per-artefact; most-restrictive same-artefact | Paper is CC-BY-NC-ND; no explicit licence for supplement data or OxCal | y | 0 | unchanged at 0 — beads-1.csv no licence anywhere; supplement-read reqd (pack-blind) [BI: input] |
 | R1_2 | 1 |  | C | unchanged | Data derived from published ADS dataset with clear transformation docu | y | 1 | spot-check CONFIRMED — provenance chain ADS→OxCal→MCMC documented |
 | R1_3 | 0 | D 1/1/1 | F | item 7 + graded table row 4 (ADS by construction; DA | No domain metadata standard applied to data files | y | 0 | ENTAILED flip REJECTED — AP-4: conjunction blocks ADS entitlement |
 
@@ -53,6 +61,10 @@ new = adjudicated v2.1 score; note = adjudication note.
   Flips: F1 1→0, A2 1→0; the R1_3 ENTAILED flag was rejected (AP-4:
   conjunction blocks entitlement lifts). Reasoning + forward principles:
   `adjudication-log.md` Sitting 1.
+- **Amended 2026-10-02 (backward application of AP-9, approved by the
+  registrant):** I1 1→0 — the principal OxCal model is served only as text
+  inside the supplement PDF, so it is not machine-actionable as published.
+  **data_fair 7 → 6.**
 
 ## dye-et-al-2023 — code_fair
 
@@ -66,13 +78,21 @@ new = adjudicated v2.1 score; note = adjudication note.
 | A1_1 | 1 | D 1/0/1 |  | unchanged | Open source, freely downloadable | y | 1 | unchanged — OA article, free supplement |
 | A1_2 | 1 | D 0/1/1 |  | item 4 (fully open, no auth needed = 1) | No authentication required | y | 1 | unchanged — item 4 no-auth case |
 | A2 | 1 | D 0/0/0 |  | table rows 2/6 (Zenodo persistence entitlements; sup | CRAN maintains package archive including historical versions | y | 0 | FLIP 1→0 — row 6 A2=0; CRAN archive is the dependency's |
-| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R package with standard NAMESPACE, DESCRIPTION files | y |  | PENDING D3 — language reading (1) vs as-served reading (0) |
+| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R package with standard NAMESPACE, DESCRIPTION files | y | 0 | AS-SERVED (AP-9) FLIP 1→0 — code served only as text inside the supplement PDF; not machine-actionable as published [BI: input+rule] |
 | I2 | 0 | D 0/0/0 |  | unchanged (aggregation: principal artefacts) | No CodeMeta or software ontology | y | 0 | unchanged |
 | I3 | 1 |  | C | item 2 (third-party dependencies enter here) | Package DESCRIPTION references dependencies; JSS paper references pack | y | 1 | spot-check CONFIRMED — JSS DOI cited (printed link malformed: doubled doi.org prefix) |
-| R1 | 1 |  |  | unchanged | CRAN DESCRIPTION, vignettes, JSS paper documentation | y | 1 | unchanged, basis corrected — 50pp sectioned supplement |
+| R1 | 1 |  |  | unchanged | CRAN DESCRIPTION, vignettes, JSS paper documentation | y | 1 | unchanged, basis corrected — main-text code description (pp. 11–14) + sectioned supplement |
 | R1_1 | 1 | D 0/0/0 |  | item 6 (per-artefact; most-restrictive same-artefact | GPL-3 licence for ArchaeoPhases package | y | 1 | unchanged, basis corrected — AP-8 clarity: inherited article licence published; GPL-3 was the dependency's |
 | R1_2 | 1 |  |  | unchanged | Version history on CRAN; development on GitHub | y | 1 | unchanged, basis corrected — OxCal 4.4.2 + IntCal20; derivation itemised; CRediT |
 | R1_3 | 1 | D 1/1/0 |  | item 7 + graded table row 4 (ADS by construction; DA | Follows CRAN package standards (R CMD check, DESCRIPTION, NAMESPACE) | y | 0 | FLIP 1→0 — principal scripts: no package/CITATION.cff/CodeMeta/review |
+
+- **Adjudicated 2026-10-01/02 (Sitting 2; registrant: Shawn). code_fair
+  14 → 8.** Principal code = the supplement's own OxCal and R scripts
+  (aggregation rule); ArchaeoPhases/CRAN evidence is the dependency's and
+  inadmissible for principal-artefact scores. Flips: F2, F3, F4, A2, and
+  R1.3 1→0 (row 6; no code standard on the principal scripts); I1 1→0
+  (AP-9, as-served). Unchanged with corrected basis: F1, R1, R1.1 (AP-8
+  clarity), and R1.2. Reasoning: `adjudication-log.md` Sitting 2.
 
 ## herskind-riede-2024 — data_fair
 
