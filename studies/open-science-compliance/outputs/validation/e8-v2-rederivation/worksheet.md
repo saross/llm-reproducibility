@@ -58,21 +58,21 @@ new = adjudicated v2.1 score; note = adjudication note.
 
 | sub | old | D (s/o/f) | flags | v2.1 ruling | old evidence | S | new | note |
 |---|---|---|---|---|---|---|---|---|
-| F1 | 1 | D 0/0/0 |  | item 5 (supplement under article DOI = 1) | ArchaeoPhases on CRAN with JSS publication DOI; supplement code via pa |  |  |  |
-| F2 | 1 | D 0/0/0 |  | item 5 + table row 6 (artefact-level; supplement-onl | CRAN package page provides structured metadata (version, authors, depe |  |  |  |
-| F3 | 1 | D 0/0/0 |  | item 5 + table row 6 (artefact-level; supplement-onl | CRAN metadata includes package version and JSS article reference |  |  |  |
-| F4 | 1 | D 0/0/0 |  | item 5 + table row 6 (artefact-level; supplement-onl | ArchaeoPhases indexed on CRAN, rdrr.io, R-universe |  |  |  |
-| A1 | 1 |  | C | unchanged (completeness rule + ethical exception) | HTTPS via CRAN mirrors |  |  |  |
-| A1_1 | 1 | D 1/0/1 |  | unchanged | Open source, freely downloadable |  |  |  |
-| A1_2 | 1 | D 0/1/1 |  | item 4 (fully open, no auth needed = 1) | No authentication required |  |  |  |
-| A2 | 1 | D 0/0/0 |  | table rows 2/6 (Zenodo persistence entitlements; sup | CRAN maintains package archive including historical versions |  |  |  |
-| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R package with standard NAMESPACE, DESCRIPTION files |  |  |  |
-| I2 | 0 | D 0/0/0 |  | unchanged (aggregation: principal artefacts) | No CodeMeta or software ontology |  |  |  |
-| I3 | 1 |  | C | item 2 (third-party dependencies enter here) | Package DESCRIPTION references dependencies; JSS paper references pack |  |  |  |
-| R1 | 1 |  |  | unchanged | CRAN DESCRIPTION, vignettes, JSS paper documentation |  |  |  |
-| R1_1 | 1 | D 0/0/0 |  | item 6 (per-artefact; most-restrictive same-artefact | GPL-3 licence for ArchaeoPhases package |  |  |  |
-| R1_2 | 1 |  |  | unchanged | Version history on CRAN; development on GitHub |  |  |  |
-| R1_3 | 1 | D 1/1/0 |  | item 7 + graded table row 4 (ADS by construction; DA | Follows CRAN package standards (R CMD check, DESCRIPTION, NAMESPACE) |  |  |  |
+| F1 | 1 | D 0/0/0 |  | item 5 (supplement under article DOI = 1) | ArchaeoPhases on CRAN with JSS publication DOI; supplement code via pa | y | 1 | unchanged, basis corrected — supplement code under article DOI (item 5 + AP-2); CRAN evidence inadmissible (dependency) |
+| F2 | 1 | D 0/0/0 |  | item 5 + table row 6 (artefact-level; supplement-onl | CRAN package page provides structured metadata (version, authors, depe | y | 0 | FLIP 1→0 — row 6 supplement-only; CRAN metadata is the dependency's |
+| F3 | 1 | D 0/0/0 |  | item 5 + table row 6 (artefact-level; supplement-onl | CRAN metadata includes package version and JSS article reference | y | 0 | FLIP 1→0 — row 6 supplement-only |
+| F4 | 1 | D 0/0/0 |  | item 5 + table row 6 (artefact-level; supplement-onl | ArchaeoPhases indexed on CRAN, rdrr.io, R-universe | y | 0 | FLIP 1→0 — row 6 supplement-only; CRAN indexing is the dependency's |
+| A1 | 1 |  | C | unchanged (completeness rule + ethical exception) | HTTPS via CRAN mirrors | y | 1 | spot-check CONFIRMED — HTTPS via landing page (403 was scripted-only) |
+| A1_1 | 1 | D 1/0/1 |  | unchanged | Open source, freely downloadable | y | 1 | unchanged — OA article, free supplement |
+| A1_2 | 1 | D 0/1/1 |  | item 4 (fully open, no auth needed = 1) | No authentication required | y | 1 | unchanged — item 4 no-auth case |
+| A2 | 1 | D 0/0/0 |  | table rows 2/6 (Zenodo persistence entitlements; sup | CRAN maintains package archive including historical versions | y | 0 | FLIP 1→0 — row 6 A2=0; CRAN archive is the dependency's |
+| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R package with standard NAMESPACE, DESCRIPTION files | y |  | PENDING D3 — language reading (1) vs as-served reading (0) |
+| I2 | 0 | D 0/0/0 |  | unchanged (aggregation: principal artefacts) | No CodeMeta or software ontology | y | 0 | unchanged |
+| I3 | 1 |  | C | item 2 (third-party dependencies enter here) | Package DESCRIPTION references dependencies; JSS paper references pack | y | 1 | spot-check CONFIRMED — JSS DOI cited (printed link malformed: doubled doi.org prefix) |
+| R1 | 1 |  |  | unchanged | CRAN DESCRIPTION, vignettes, JSS paper documentation | y | 1 | unchanged, basis corrected — 50pp sectioned supplement |
+| R1_1 | 1 | D 0/0/0 |  | item 6 (per-artefact; most-restrictive same-artefact | GPL-3 licence for ArchaeoPhases package | y | 1 | unchanged, basis corrected — AP-8 clarity: inherited article licence published; GPL-3 was the dependency's |
+| R1_2 | 1 |  |  | unchanged | Version history on CRAN; development on GitHub | y | 1 | unchanged, basis corrected — OxCal 4.4.2 + IntCal20; derivation itemised; CRediT |
+| R1_3 | 1 | D 1/1/0 |  | item 7 + graded table row 4 (ADS by construction; DA | Follows CRAN package standards (R CMD check, DESCRIPTION, NAMESPACE) | y | 0 | FLIP 1→0 — principal scripts: no package/CITATION.cff/CodeMeta/review |
 
 ## herskind-riede-2024 — data_fair
 

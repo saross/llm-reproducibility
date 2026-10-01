@@ -65,6 +65,23 @@ Exercise is unblinded (recorded in amendment 2 §3).
   entire analysis is a bare invocation of a dependency with no custom
   code — the principal-script set is empty and conjunctive scoring needs
   a convention; rule it when a paper poses it.
+- **AP-8 — R1.1 is a clarity test, not a permissiveness test** (Shawn,
+  2026-10-01). R1.1 = 1 when a usage licence is published for the artefact
+  at all — however restrictive, and even where it is not entirely
+  appropriate to the artefact type. Same-artefact contradictions still
+  resolve to the most restrictive licence (item 6), which passes if it is
+  itself a published licence. A Creative Commons licence applied to code is
+  a non-fatal author/outlet error that signals intent to make the code
+  available: recorded as a finding, never a fail. Restrictiveness can bear
+  on other parts of an assessment (e.g. whether code can be run or adapted
+  without breaching its licence) but is not R1.1's gate. Coheres with the
+  instrument's A1.2 stance (CARE-compliant restriction is a positive
+  signal); a permissiveness gate would penalise clearly licensed sensitive
+  data (AP-7). Clerk's reading of the boundary, **pending registrant
+  confirmation**: a bare copyright reservation ("all rights reserved") or
+  "available on request" publishes no usage licence → 0 (the guide's
+  existing 0 category). Backward consistency: Sitting 1's dye data R1.1 = 0
+  stands — conjunction with beads-1.csv, which carries no licence anywhere.
 
 ## Sitting 1 — 2026-09-03 — dye-et-al-2023 `data_fair`: 9 → 7
 
@@ -97,5 +114,68 @@ no archived copy of the MCMC output exists anywhere; re-derivation =
 re-run the supplement's OxCal model (dates embedded; OxCal + IntCal20
 public) and compare statistically, tolerance framed by the authors' own
 five-run replicability analysis (Supplement §3, Table 1). Queued as
-reproduction attempt-02 pending the registrant's acceptance of the effort
-estimate.
+reproduction attempt-02. **Effort estimate accepted (Shawn, 2026-09-03):**
+one focused session, roughly 2–4 h wall-clock, negligible compute, no API
+spend; scheduled after the worksheet sittings.
+
+## Sitting 2 — 2026-10-01 — dye-et-al-2023 `code_fair`: 14 → 8 or 9 (I1 pending)
+
+**Framing (no new ruling needed):** principal code = the supplement's own
+scripts (OxCal model + R code), per the aggregation rule ("the paper's own
+analysis scripts are always principal; third-party dependencies are never
+substitutes"). Fourteen of the fifteen old scores cited ArchaeoPhases/CRAN —
+the dependency — and that evidence is inadmissible for principal-artefact
+scores (AP-7 type case).
+
+**Rulings (Shawn, 2026-10-01):** **R1.1 = 1** under AP-8 — the supplement
+carries no licence statement, so item 6's default extends the article's
+licence to it; published licences exist (CC-BY-NC-ND on the
+accepted-version cover sheet; the Elsevier licence set on the
+version-of-record Crossref record in the evidence pack), so whichever
+governs under most-restrictive, R1.1 passes. Finding: the code carries only
+an inherited article licence (CC-on-code class, non-fatal). **R1.2 = 1** —
+software versions named (OxCal 4.4.2 and the IntCal20 curve, main text p.
+11), the model's derivation from Bayliss et al. (2013) with retained and
+removed constraints itemised, and code authorship via CRediT. **Nods:** I3
+= 1 (spot-check — ArchaeoPhases cited via Philippe & Vibet (2020), Journal
+of Statistical Software, DOI 10.18637/jss.v093.c01; the printed link
+carries a doubled `https://doi.org/` prefix — a citation-formatting defect
+recorded as a finding; the PID itself is unambiguous); R1 = 1 (50-page
+sectioned supplement); A1 = 1 (spot-check — supplement retrieved over HTTPS
+from the article landing page in attempt-01; the HTTP 403 was
+scripted-access-only, attempt-01 `log.md:14,65`). **Entailed set
+confirmed:** F1 = 1 (supplement code under the article DOI, item 5 + AP-2
+— basis corrected from CRAN); F2/F3/F4 = 0 (row 6); A1.1 = 1; A1.2 = 1
+(item 4); A2 = 0 (row 6); I2 = 0; R1.3 = 0 (principal scripts carry no
+package structure, CITATION.cff, CodeMeta, or community review; CRAN's
+review is the dependency's).
+
+**Pending — I1 (decision D3):** does I1 assess the representation language
+(R and OxCal's model language → 1) or the artefact as served (code
+available only as text inside a PDF → 0)? Totals: 9 if I1 = 1, 8 if I1 = 0
+(old 14).
+
+**Context for D3:** all nine v2.1 runs (2026-08-17 cycle) scored code I1 =
+1, but every justification quotes the main paper's description of the code
+(p. 11, figure captions) — none quotes the code itself, and one (sonnet r3)
+calls it "not unstructured text or PDF". The arms were never in a position
+to see the carrier, so their unanimity is uninformative on D3 (and is an
+AP-2 workflow item for census: spawns must read supplements).
+
+**Clerk's corrections to the Sitting 2 briefing:** (1) the briefing's
+totals were overstated by one — I1 was counted twice; correct figures
+above. (2) The briefing attributed "incremental code blocks with manual
+execution" to attempt-01 `log.md:49`; the log reads "Supplement uses
+incremental code blocks (sections 5.1-5.38) with manual list index
+management" (`log.md:48-50`). No score rested on the misquote (R1.3 = 0
+stands on its own grounds). (3) The briefing argued a carrier-based I1 = 0
+would count one fact several times over (F2–F4, A2, R1.3). That is wrong:
+the same scripts served as an `.R` file supplement would score identically
+at F2–F4, A2, and R1.3, so file format is scored only at I1. (4) Sitting
+1's principal-set wording lists the supplement's "probability tables" as
+principal data; those tables are reported results (the reproduction's
+comparison targets), not inputs — the principal inputs are the OxCal model
+(dates embedded) and beads-1.csv. No Sitting 1 score changes from the
+wording fix; it matters only under the language reading of D3, where
+typeset tables would otherwise fall under the guide's existing PDF-tables
+→ 0 rule.
