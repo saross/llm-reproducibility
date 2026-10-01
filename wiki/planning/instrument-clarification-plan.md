@@ -732,6 +732,20 @@ manifest.
       rendering step + challenge-page detection** for bot-gated
       endpoints (DANS 200-with-challenge-body; tDAR 403) before any
       census reliance on scripted fetches.
+- [ ] **Pre-census (from the E8-v2 adjudication, opened 2026-10-02):
+      instrument clarifications + workflow inputs.** Fold into the
+      pre-census governed edit: (i) AP-9 — I1 assesses the artefact as
+      served (machine-actionable as published), with its two guards; (ii)
+      AP-8 — R1.1 is a clarity test, plus the "all rights reserved"
+      boundary once ruled (the v2.1 arms split three ways on dye code
+      R1.1, so the text underdetermines it); (iii) any further principles
+      the remaining sittings adopt. Workflow: whether census spawns
+      receive supplementary files (AP-2 vs the benchmark workflow's
+      deliberate exclusion — registrant ruling pending). Concordance
+      tooling: the gates pass reports concordance with and without
+      beyond-instrument (BI) items (`worksheet.json` field
+      `beyond_instrument`); `analyse-benchmark-disagreements.py` needs an
+      exclusion option for this.
 - [ ] **D4. Gates → selection → census.** Pass: cheapest eligible arm,
       registered regression gate, census. Still below: majority-vote
       consequence, now with a defensible claim that the residual is
@@ -779,3 +793,4 @@ manifest.
 | 2026-09-03 | **F-010 package closed** (pending PR #4 merge): register Observation 4 RATIFIED as standing practice (boundary/fabrication entries quote the transcript's tool call and result verbatim; the verifier output is only what raised the alarm); governance endorsed as register + plan only, **no OSF amendment** | Shawn |
 | 2026-09-03 | **E8-v2 Sitting 1 — dye data_fair adjudicated 9 → 7** (F1 1→0, A2 1→0; R1_3 ENTAILED flip rejected). PR #4 merged (`5ebb6a0`). **Forward principles AP-1–AP-6 adopted** (E8-v2 `adjudication-log.md`): scores assess the published surface, repair score-independent with recoverable/unrecoverable findings (differential scoring held in reserve); "paper" includes the published supplement (packs are blind to supplement-embedded artefacts); personal-server artefacts fail what the evidence shows; conjunction blocks entitlement lifts (ENTAILED flags advisory); supplement-embedded URLs enter the declared-links registry (beads-1.csv added); repair rule lodged as dated protocol note `data-repair-rule-2026-09-03.md`, compute caps deferred/empirical. Worksheet sections to proceed one at a time with principles applied forward | Shawn (rulings); Claude (clerk) |
 | 2026-09-03 | **Repair effort bound (initial heuristic):** up to ~3× the dye re-derivation estimate (≈ 6–12 h wall-clock, modest CPU) proceeds without discussion; above that, discuss — refine empirically from recorded repair costs. **AP-7 adopted — anti-perversity generalisation check:** before applying a precedent forward, ask whether generalisation produces foreseeable perverse results (type case: dependency-evidence inadmissibility must never penalise a well-deposited wrapper + versioned dependencies); empty-principal-set edge noted, to be ruled when a paper poses it | Shawn |
+| 2026-10-02 | **E8-v2 Sitting 2 closed — dye code_fair 14 → 8; dye data_fair amended 7 → 6.** AP-8 adopted (R1.1 is a clarity test, not a permissiveness test; CC-on-code a non-fatal finding; "available on request" → 0; "all rights reserved" OPEN pending a FAIR-framework survey). **AP-9 adopted — I1 assesses the artefact as served** (machine-actionable as published; code or data only inside a PDF fails), with two guards (best available form scores; illustrative snippets never principal); backward application to dye data I1 approved; repair route (c) format recovery added; "human vs machine FAIR" refinement held in reserve. **Beyond-instrument (BI) tags adopted** (reason codes `rule`/`input`) so the gates report concordance with and without them. Found: the benchmark workflow deliberately withholds supplements from scoring spawns (inherited from the 2026-08-03 harness, no recorded decision) — conflicts with AP-2; ruling pending | Shawn (rulings); Claude (clerk) |

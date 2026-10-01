@@ -29,6 +29,14 @@ identifier-recovery rule:
    tolerance stated in advance — preferring the authors' own
    replicability figures where published.
 
+3. **Route (c) — format recovery** (added 2026-10-02 with the E8-v2
+   as-served I1 ruling, adjudication log AP-9). Where an artefact is
+   published only in a non-machine-actionable carrier — code or data
+   printed as text or tables inside a PDF being the type case — it is
+   extracted and the extraction verified: the code parses and runs, and
+   its outputs match the published results. The carrier still fails I1;
+   the extraction is the repair.
+
 A successful repair is reported as a **recoverable error** finding, with
 explanation; a failed or unavailable repair leaves an **unrecoverable
 error** finding. Neither outcome modifies any FAIR score. Differential
