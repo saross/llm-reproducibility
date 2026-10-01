@@ -84,7 +84,7 @@ Exercise is unblinded (recorded in amendment 2 §3).
   signal); a permissiveness gate would penalise clearly licensed sensitive
   data (AP-7). **Boundary (Shawn, 2026-10-02):** "available on request" →
   0 — no usage licence is published. **"All rights reserved" — OPEN**,
-  pending a survey of how established FAIR assessment frameworks treat it
+  pending registrant ruling on the survey of how FAIR assessment frameworks treat it (`rights-reserved-survey-2026-10-02.md`)
   (the guide's existing "→ 0" line dates from the Pass 6 build, commit
   `4ff87a2`, with no recorded source, so it is not relied on). Backward
   consistency: Sitting 1's dye data R1.1 = 0 stands — conjunction with
@@ -94,8 +94,12 @@ Exercise is unblinded (recorded in amendment 2 §3).
   tables inside a PDF fails I1, whatever the formal language underneath;
   extraction is reconstruction (repair route (c)), not an executable
   download. Rationale (registrant): machine-actionability is expected by
-  the original FAIR principles, and "human-only FAIR" is generally seen as
-  a defect; whitespace-significant languages such as Python make
+  the original FAIR principles — Wilkinson et al. 2016: "the FAIR
+  Principles put specific emphasis on enhancing the ability of machines to
+  automatically find and use the data, in addition to supporting its reuse
+  by individuals" (abstract; verified 2026-10-02, see
+  `rights-reserved-survey-2026-10-02.md`) — and "human-only FAIR" is
+  generally seen as a defect; whitespace-significant languages such as Python make
   code-in-PDF as layout-dependent and unreliable to extract as a table.
   Clerk's supporting arguments, endorsed: scores must be properties of
   papers, not of assessor tooling (a repairability test would score the
