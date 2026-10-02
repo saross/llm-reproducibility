@@ -143,6 +143,17 @@ adversarial review outcomes against the pilot's `attempt-01` artefacts. **Pass c
 same verdicts, same value-level matches, no new unexplained discrepancies. No new data is
 examined, so this is preregistration-safe.
 
+**APPROVED 2026-10-02 (Shawn) — option (a):** the §4.2 execution workflow was never wired,
+so build a minimal reproduction workflow first (planner → batched plan approval →
+executor → fresh-context adversarial reviewer, with deterministic artefact gates), then
+run the two papers, instrumenting per-paper cost (tokens, wall-clock, human minutes) as an
+early read for the Phase 3 cost gate. Sequenced after the current E8-v2 adjudication
+sittings; deadline driver: the Cosmos Ventures pitch, to be submitted by Fri 9 Oct 2026.
+Working assumption, pending confirmation: the regression run takes `attempt-02` as written
+above, and dye's separately approved OxCal re-derivation (E8-v2 adjudication log, Sitting
+1) moves to `attempt-03`. Known risk to the pass criterion: herskind's attempt-01 used
+Zenodo v1, while the version rule (adjudication log AP-12) selects v2, whose files differ.
+
 ### Phase 3 — Corpus tooling and the JAS run
 
 - Build the sampling frame: JAS 2023-2026 sweep via CrossRef/OpenAlex; screen for

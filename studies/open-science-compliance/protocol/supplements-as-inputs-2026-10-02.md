@@ -59,6 +59,11 @@ These items are tracked in the plan's pre-census item.
      rendering step.
    - Record each paper's supplement status as none, collected, or
      unobtainable. An unobtainable supplement is itself a finding.
+   - Elsevier route, verified for herskind-riede-2024 on 2026-10-02: the
+     article's PII comes from its Crossref `link` records, and the files are
+     served unauthenticated at
+     `https://ars.els-cdn.com/content/image/1-s2.0-<PII>-mmcN.<ext>`, so the
+     ScienceDirect landing-page block does not apply.
 2. **Readable formats.** Scoring spawns have only read-only tools.
    - Archives and spreadsheets need a recorded curation conversion before
      spawns can read them.

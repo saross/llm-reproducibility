@@ -738,8 +738,15 @@ manifest.
       served (machine-actionable as published), with its two guards; (ii)
       AP-8 — R1.1 is a clarity test, plus the "all rights reserved"
       boundary once ruled (the v2.1 arms split three ways on dye code
-      R1.1, so the text underdetermines it); (iii) any further principles
-      the remaining sittings adopt. Workflow: census spawns receive
+      R1.1, so the text underdetermines it); (iii) AP-10 — completeness
+      counts only upstream sources reproduction requires (a fully
+      transcribed source is provenance); (iv) AP-11 — a DataCite deposit
+      with mandatory metadata passes R1.3 route (a); (v) AP-12 — version
+      selection for versioned deposits; (vi) any further principles the
+      remaining sittings adopt. Harvester: record each repository
+      record's file list and formats, description, keywords, related
+      identifiers, version, version date, and concept DOI (F2, I1, I3, and
+      AP-12 turned on these in Sitting 3). Workflow: census spawns receive
       published supplementary files (RULED 2026-10-02, Option A —
       `studies/open-science-compliance/protocol/supplements-as-inputs-2026-10-02.md`):
       supplement collection in corpus curation (status none / collected /
@@ -800,3 +807,5 @@ manifest.
 | 2026-09-03 | **Repair effort bound (initial heuristic):** up to ~3× the dye re-derivation estimate (≈ 6–12 h wall-clock, modest CPU) proceeds without discussion; above that, discuss — refine empirically from recorded repair costs. **AP-7 adopted — anti-perversity generalisation check:** before applying a precedent forward, ask whether generalisation produces foreseeable perverse results (type case: dependency-evidence inadmissibility must never penalise a well-deposited wrapper + versioned dependencies); empty-principal-set edge noted, to be ruled when a paper poses it | Shawn |
 | 2026-10-02 | **E8-v2 Sitting 2 closed — dye code_fair 14 → 8; dye data_fair amended 7 → 6.** AP-8 adopted (R1.1 is a clarity test, not a permissiveness test; CC-on-code a non-fatal finding; "available on request" → 0; "all rights reserved" OPEN pending a FAIR-framework survey). **AP-9 adopted — I1 assesses the artefact as served** (machine-actionable as published; code or data only inside a PDF fails), with two guards (best available form scores; illustrative snippets never principal); backward application to dye data I1 approved; repair route (c) format recovery added; "human vs machine FAIR" refinement held in reserve. **Beyond-instrument (BI) tags adopted** (reason codes `rule`/`input`) so the gates report concordance with and without them. Found: the benchmark workflow deliberately withholds supplements from scoring spawns (inherited from the 2026-08-03 harness, no recorded decision) — conflicts with AP-2; ruling pending | Shawn (rulings); Claude (clerk) |
 | 2026-10-02 | **"All rights reserved" → 0** (AP-8 boundary closed on the FAIR-framework survey `rights-reserved-survey-2026-10-02.md`): an ARR notice grants nothing — the test is any grant versus no grant, never how much; guards: a grant plus "all other rights reserved" passes, and a copyright notice beside a licence is not a most-restrictive conflict. **Supplements as scoring inputs — Option A:** AP-2 stands; census spawns receive published supplements (amendment 2 §2 "the paper source" read as including them; dated protocol note, no OSF amendment); the completed benchmark is not re-run — `input`-tagged reference items are reported with and without | Shawn |
+| 2026-10-02 | **E8-v2 Sitting 3 — herskind-riede data_fair 12 → 12 (recomposed).** AP-10 adopted (completeness counts only what reproduction requires; a fully transcribed upstream source is provenance), AP-11 adopted (a DataCite deposit with mandatory metadata passes R1.3 route (a); F2 carries metadata poverty; graded R1.3 held in reserve), AP-12 adopted (version selection: supplement checksum match, then the single cited version, then the latest version on or before first online appearance; later versions are findings, not flaws). Registrant: the approach is adequate for this stage; refine with larger corpora | Shawn (rulings); Claude (clerk) |
+| 2026-10-02 | **Phase 2 regression test APPROVED — option (a)** (agentic-modernisation plan §5): build a minimal reproduction workflow (planner → batched plan approval → executor → fresh-context reviewer, with artefact gates), then run herskind-riede and dye; per-paper cost instrumented (tokens, wall-clock, human minutes). Sequenced **after the current E8-v2 sittings**; the Cosmos Ventures pitch may slip past Tue 6 Oct, but must be submitted by **Fri 9 Oct** at the latest. Requested by the cv-and-applications session (cross-session message, 2026-10-02) | Shawn |
