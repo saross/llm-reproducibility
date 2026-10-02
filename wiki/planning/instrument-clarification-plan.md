@@ -742,8 +742,13 @@ manifest.
       counts only upstream sources reproduction requires (a fully
       transcribed source is provenance); (iv) AP-11 — a DataCite deposit
       with mandatory metadata passes R1.3 route (a); (v) AP-12 — version
-      selection for versioned deposits; (vi) any further principles the
-      remaining sittings adopt. Harvester: record each repository
+      selection for versioned deposits; (vi) AP-11's scope — data only; code
+      R1.3 uses the instrument's code list; (vii) AP-13 — unpublished
+      principal data fail artefact-property sub-principles conjunctively;
+      (viii) AP-14 — R1 and R1.2 earnable from documentation when data are
+      closed, while the paper is never the metadata for machine-actionable
+      sub-principles; (ix) any further principles the remaining sittings
+      adopt. Harvester: record each repository
       record's file list and formats, description, keywords, related
       identifiers, version, version date, and concept DOI (F2, I1, I3, and
       AP-12 turned on these in Sitting 3). Workflow: census spawns receive
@@ -809,3 +814,4 @@ manifest.
 | 2026-10-02 | **"All rights reserved" → 0** (AP-8 boundary closed on the FAIR-framework survey `rights-reserved-survey-2026-10-02.md`): an ARR notice grants nothing — the test is any grant versus no grant, never how much; guards: a grant plus "all other rights reserved" passes, and a copyright notice beside a licence is not a most-restrictive conflict. **Supplements as scoring inputs — Option A:** AP-2 stands; census spawns receive published supplements (amendment 2 §2 "the paper source" read as including them; dated protocol note, no OSF amendment); the completed benchmark is not re-run — `input`-tagged reference items are reported with and without | Shawn |
 | 2026-10-02 | **E8-v2 Sitting 3 — herskind-riede data_fair 12 → 12 (recomposed).** AP-10 adopted (completeness counts only what reproduction requires; a fully transcribed upstream source is provenance), AP-11 adopted (a DataCite deposit with mandatory metadata passes R1.3 route (a); F2 carries metadata poverty; graded R1.3 held in reserve), AP-12 adopted (version selection: supplement checksum match, then the single cited version, then the latest version on or before first online appearance; later versions are findings, not flaws). Registrant: the approach is adequate for this stage; refine with larger corpora | Shawn (rulings); Claude (clerk) |
 | 2026-10-02 | **Phase 2 regression test APPROVED — option (a)** (agentic-modernisation plan §5): build a minimal reproduction workflow (planner → batched plan approval → executor → fresh-context reviewer, with artefact gates), then run herskind-riede and dye; per-paper cost instrumented (tokens, wall-clock, human minutes). Sequenced **after the current E8-v2 sittings**; the Cosmos Ventures pitch may slip past Tue 6 Oct, but must be submitted by **Fri 9 Oct** at the latest. Requested by the cv-and-applications session (cross-session message, 2026-10-02) | Shawn |
+| 2026-10-03 | **E8-v2 Sittings 4–5 — herskind-riede code_fair 9 → 12; key-et-al data_fair 8 → 1.** AP-11 scoped to data (code R1.3 uses the code list). AP-13 adopted (unpublished principal data fail conjunctively — the accessible-portion reading rejected). AP-14 adopted (R1 and R1.2 earnable from documentation when data are closed; "the paper is the metadata" never supplies machine-actionable sub-principles — extracting metadata from prose is reconstruction, as with AP-9; code I3 rulings confirmed to rest on Crossref-deposited reference metadata). Future-work idea recorded: a FAIR and reproducibility uplift tool (`active-todo-list.md` item 10) | Shawn (rulings); Claude (clerk) |
