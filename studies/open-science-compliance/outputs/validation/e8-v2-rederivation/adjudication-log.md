@@ -124,6 +124,50 @@ Exercise is unblinded (recorded in amendment 2 §3).
   FAIR" refinement scoring actionability separately (registrant notes a
   lively discourse on this).
 
+- **AP-10 — Completeness counts only what reproduction requires** (Shawn,
+  2026-10-02; the purposive reading, generalised to analogous cases). An
+  upstream source enters the data-completeness coverage denominator only if
+  reproducing the reported results needs it — the aggregation rule's "full
+  *required* set". A source that the authors have fully transcribed or
+  derived into the deposited analysis inputs is provenance: it is scored at
+  R1.2 and listed in the completeness inventory with its tier, but it is not
+  counted. Guard (AP-7): if a transcription is partial and the results need
+  fields that exist only in the source, the source is required and counts.
+  Perverse result avoided: the literal reading would penalise authors for
+  digitising and depositing an analogue source, and reward not citing it.
+  A disambiguation of pushed text (seven of nine v2.1 runs read it this
+  way), so no BI tag; on the pre-census clarification list. Herskind
+  precedent: Płonka (2003), a printed catalogue (Tier 3), fully transcribed
+  into S1.xlsx.
+- **AP-11 — R1.3 route (a): a DataCite-registered deposit with its mandatory
+  metadata passes** (Shawn, 2026-10-02; option (a), applying ratified
+  erratum-log item 7 as written). A deposit's DataCite record is compliance
+  with a generic community metadata standard. The poverty of a minimal
+  record is scored at F2, not R1.3, so passing R1.3 hides nothing.
+  Accepted property: for data, R1.3 then nearly coincides with "has a
+  DataCite deposit" and does not separate domain-standard deposits from bare
+  ones. F-UJI makes the same distinction as a gradient (multidisciplinary
+  standard at maturity 1, community-specific at 3); a graded R1.3 is
+  **held in reserve** with differential scoring.
+- **AP-12 — Which version of a versioned deposit is scored and reproduced**
+  (Shawn, 2026-10-02, with clerk refinements). In priority order: (1)
+  published supplementary files, by checksum match against the repository
+  versions — the supplement is the publisher's record of what was
+  published (AP-2); (2) the version the paper cites, if it cites exactly
+  one; (3) the latest version published on or before the article's first
+  online appearance (Crossref `published-online`, else the record's
+  `created` date, as proxy). A concept DOI (all versions) resolves to the
+  latest version, which may post-date the paper, so rule (3) applies to it.
+  Versions published after the article are out of scope for scoring (the
+  published surface, AP-1) and are recorded as findings, not flaws —
+  updating datasets is normal. A paper citing two different versions is a
+  minor citation-inconsistency finding. Pre-census: the harvester must
+  record each repository record's version, version date, and concept DOI.
+  Herskind precedent: the methods cite v1 (10.5281/zenodo.10623550, 2024-02-06),
+  the data-availability statement cites v2 (10.5281/zenodo.10801706,
+  2024-03-10), the article first appeared 2024-04-03; the publisher's
+  supplement files match v2 byte for byte, and rule (3) also selects v2.
+
 ## Beyond-instrument (BI) tags — concordance reporting convention
 
 Adopted 2026-10-02 (Shawn). A reference item is tagged when its adjudicated
@@ -264,3 +308,50 @@ comparison targets), not inputs — the principal inputs are the OxCal model
 wording fix; it matters only under the language reading of D3, where
 typeset tables would otherwise fall under the guide's existing PDF-tables
 → 0 rule.
+
+## Sitting 3 — 2026-10-02 — herskind-riede-2024 `data_fair`: 12 → 12 (recomposed)
+
+**Context.** The principal data is S1.xlsx — the coding of 483 ornamented
+objects, transcribed from Płonka's (2003) printed catalogue — with S3.xlsx
+(precomputed tables, a reproduction comparison target) and S2.R (code),
+deposited as two versions of one Zenodo record (concept DOI
+10.5281/zenodo.10623549), both CC-BY-4.0. Scored version: v2
+(10.5281/zenodo.10801706), per AP-12. The publisher's supplement (Elsevier
+`mmc1.xlsx`, `mmc2.zip`, `mmc3.xlsx` for PII S0305440324000359, fetched
+2026-10-02 from `https://ars.els-cdn.com/content/image/1-s2.0-S0305440324000359-mmcN.<ext>`)
+is a byte-identical copy of v2: MD5 `0bcde6d1…` (S1), `812be545…` (S3), and
+`6760ccb3…` (S2.R inside the zip) all match v2's Zenodo checksums. So AP-2
+adds nothing new, and AP-9's best-form guard scores the Zenodo deposit.
+Reproduction attempt-01 (verdict SUCCESSFUL) used v1.
+
+**Rulings (Shawn, 2026-10-02):** A1 = 1 under AP-10 — Płonka (2003) is
+fully transcribed into S1 (S1's own notes: "all South Scandinavian objects
+were manually transcribed into this document"), so it is provenance and not
+in the coverage denominator; coverage complete. R1.3 0→1 under AP-11. The
+nod table confirmed: F2 1→0 (both versions have an empty Zenodo
+description and no keywords — Zenodo API, 2026-10-02; Row 1: mandatory
+DataCite fields are not substantive description; Row 2: Zenodo does not
+guarantee a description); I3 1→0 (neither version has any related
+identifiers, not even the article DOI; Płonka (2003) has no persistent
+identifier; all nine v2.1 runs scored 0); R1.1 0→1 (CC-BY-4.0 on both
+versions; article CC BY; all nine runs scored 1); I1 = 1 (`.xlsx` is an
+open standard, ECMA-376 / ISO/IEC 29500, read directly with R's readxl in
+attempt-01 — AP-9; BI [input], since neither paper nor pack gave the
+format); R1.2 = 1 (spot-check confirmed: S1's notes give per-column
+provenance); R1 = 1 (basis corrected: Methods §2.1–2.2 plus v2's
+README.txt; the Zenodo description cited by the old reference is empty).
+Unchanged: F1, F3, F4, A1.1, A1.2, A2 = 1; I2 = 0. **Total 12** (old 12;
+recomposed: F2 and I3 down, R1.1 and R1.3 up). Registrant's note: the
+approach is adequate for this stage of research and development; precedent
+is to be built and refined as larger corpora supply more examples.
+
+**Findings (no score effect):** (1) the paper cites two versions in
+different sections (AP-12 precedent); v2's S2.R is 33,834 bytes against
+v1's 18,707. (2) Both Zenodo records list only Herskind as creator; Riede
+is absent. (3) The pilot extraction's data-completeness notes for this
+paper describe "lithic measurements, use-wear images", which are not in
+this paper — a defect in the old E8 evidence base. (4) Pre-census: the
+harvester should capture file formats, descriptions, keywords, related
+identifiers, and version metadata (F2, I1, I3, and AP-12 all turned on
+them); Elsevier supplements can be fetched without the ScienceDirect 403
+via the Crossref PII and the CDN pattern above.

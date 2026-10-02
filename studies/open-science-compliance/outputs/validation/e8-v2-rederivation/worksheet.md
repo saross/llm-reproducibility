@@ -98,21 +98,28 @@ Concordance is reported with and without BI items — see
 
 | sub | old | D (s/o/f) | flags | v2.1 ruling | old evidence | S | new | note |
 |---|---|---|---|---|---|---|---|---|
-| F1 | 1 |  |  | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.10623550 |  |  |  |
-| F2 | 1 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo provides structured DataCite metadata (authors, description, ke |  |  |  |
-| F3 | 1 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI for the dataset |  |  |  |
-| F4 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo indexed in DataCite, OpenAIRE; general-purpose but searchable |  |  |  |
-| A1 | 1 | D 0/1/1 |  | unchanged (completeness rule + ethical exception) | HTTPS via Zenodo DOI resolver |  |  |  |
-| A1_1 | 1 |  |  | unchanged | No authentication required |  |  |  |
-| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open data, no restrictions |  |  |  |
-| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo committed to long-term metadata persistence (EU-funded, CERN-ho |  |  |  |
-| I1 | 1 | D 0/1/1 |  | unchanged (aggregation: principal artefacts) | Tabular R-readable format with presence/absence coding |  |  |  |
-| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | Custom motif classification (Plonka 2003) not linked to controlled voc |  |  |  |
-| I3 | 1 | D 0/0/0 |  | item 2 (third-party dependencies enter here) | References source catalogue via DOI and bibliographic citation |  |  |  |
-| R1 | 1 |  |  | unchanged | Zenodo metadata includes authors, methods description, data source |  |  |  |
-| R1_1 | 0 | D 0/1/1 |  | item 6 (per-artefact; most-restrictive same-artefact | No explicit licence stated for deposited data in Zenodo record or pape |  |  |  |
-| R1_2 | 1 |  | C | unchanged | Clear provenance: digitised from Plonka (2003) catalogue of South Scan |  |  |  |
-| R1_3 | 0 |  | C | item 7 + graded table row 4 (ADS by construction; DA | Does not follow archaeological data standards (CIDOC-CRM, tDAR schemas |  |  |  |
+| F1 | 1 |  |  | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.10623550 | y | 1 | unchanged — own DOI; scored version v2 per AP-12 (supplement checksum match) |
+| F2 | 1 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo provides structured DataCite metadata (authors, description, ke | y | 0 | FLIP 1→0 — empty Zenodo description, no keywords (both versions); Row 1/2 |
+| F3 | 1 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI for the dataset | y | 1 | unchanged — DataCite record carries the DOI |
+| F4 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo indexed in DataCite, OpenAIRE; general-purpose but searchable | y | 1 | unchanged — DataCite-indexed |
+| A1 | 1 | D 0/1/1 |  | unchanged (completeness rule + ethical exception) | HTTPS via Zenodo DOI resolver | y | 1 | unchanged — AP-10: Płonka (2003) fully transcribed → provenance; coverage complete |
+| A1_1 | 1 |  |  | unchanged | No authentication required | y | 1 | unchanged |
+| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open data, no restrictions | y | 1 | unchanged — item 4 no-auth case |
+| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo committed to long-term metadata persistence (EU-funded, CERN-ho | y | 1 | unchanged — Row 2 Zenodo persistence |
+| I1 | 1 | D 0/1/1 |  | unchanged (aggregation: principal artefacts) | Tabular R-readable format with presence/absence coding | y | 1 | unchanged — .xlsx open standard, read by readxl (AP-9) [BI: input] |
+| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | Custom motif classification (Plonka 2003) not linked to controlled voc | y | 0 | unchanged |
+| I3 | 1 | D 0/0/0 |  | item 2 (third-party dependencies enter here) | References source catalogue via DOI and bibliographic citation | y | 0 | FLIP 1→0 — no related identifiers on either version; Płonka has no PID |
+| R1 | 1 |  |  | unchanged | Zenodo metadata includes authors, methods description, data source | y | 1 | unchanged, basis corrected — Methods §2.1–2.2 + v2 README |
+| R1_1 | 0 | D 0/1/1 |  | item 6 (per-artefact; most-restrictive same-artefact | No explicit licence stated for deposited data in Zenodo record or pape | y | 1 | FLIP 0→1 — CC-BY-4.0 on both versions; article CC BY |
+| R1_2 | 1 |  | C | unchanged | Clear provenance: digitised from Plonka (2003) catalogue of South Scan | y | 1 | spot-check CONFIRMED — S1 per-column provenance notes |
+| R1_3 | 0 |  | C | item 7 + graded table row 4 (ADS by construction; DA | Does not follow archaeological data standards (CIDOC-CRM, tDAR schemas | y | 1 | FLIP 0→1 — AP-11: DataCite deposit + mandatory metadata (route (a)) |
+
+- **Adjudicated 2026-10-02 (Sitting 3; registrant: Shawn). data_fair 12 → 12
+  (recomposed).** Scored version: Zenodo v2 (10.5281/zenodo.10801706), per
+  AP-12 — the publisher's supplement files match it byte for byte. Flips: F2
+  1→0 and I3 1→0; R1.1 0→1 and R1.3 0→1 (AP-11). A1 = 1 under AP-10 (Płonka
+  2003 is fully transcribed into S1, so it is provenance, not a required
+  dataset). Reasoning and findings: `adjudication-log.md` Sitting 3.
 
 ## herskind-riede-2024 — code_fair
 
