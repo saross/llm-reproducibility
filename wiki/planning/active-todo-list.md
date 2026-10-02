@@ -803,6 +803,44 @@ This is a source of extraction inconsistency that should be standardised.
 
 **When to implement:** On-demand when users request specific guidance or when patterns emerge from corpus expansion
 
+
+---
+
+### 10. FAIR and Reproducibility Uplift Tool
+
+**Priority:** DEFERRED (future work; idea recorded 2026-10-03)
+**Status:** Idea only — no design yet
+**Origin:** Shawn, during the E8-v2 reference adjudication (Sitting 5;
+`studies/open-science-compliance/outputs/validation/e8-v2-rederivation/adjudication-log.md`)
+
+**Idea:** a tool that takes a faulty publication, undertakes every possible
+repair and reconstruction, and produces a FAIR apparatus for it. The
+adjudication has already named the repair classes it would automate:
+
+- archived-equivalent retrieval and re-derivation of at-risk data (repair
+  routes (a) and (b), `studies/open-science-compliance/protocol/data-repair-rule-2026-09-03.md`);
+- format recovery — code and tables locked in PDFs extracted and verified
+  by parsing, running, and matching (route (c));
+- metadata reconstruction — "the paper is the metadata" turned into
+  machine-readable records (adjudication log AP-14);
+- identifier recovery for dead or mis-cited links (amendment 2 §2), version
+  disambiguation (AP-12), and supplement collection.
+
+**Output:** a deposit-ready package — structured metadata (DataCite, plus
+CodeMeta or CITATION.cff for code), machine-readable data and code, licence
+and provenance records, and a repair log — that a publication's authors,
+or a third-party steward, could deposit.
+
+**Boundary:** strictly separate from scoring. Scores assess the published
+research surface and repair never lifts them (AP-1); the tool's value is
+remediation and evidence of what is recoverable. Its outputs would also
+inform the held-in-reserve question of scoring recoverable and
+unrecoverable errors differently.
+
+**When:** after the census, once the reproduction lane has run at scale and
+the repair classes and their costs are measured (the repair rule's effort
+heuristic and the Phase 3 cost gate supply the evidence base).
+
 ---
 
 ## Testing & Validation Queue
