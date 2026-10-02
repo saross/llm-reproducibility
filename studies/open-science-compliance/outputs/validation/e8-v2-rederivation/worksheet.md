@@ -151,23 +151,30 @@ Concordance is reported with and without BI items — see
 
 | sub | old | D (s/o/f) | flags | v2.1 ruling | old evidence | S | new | note |
 |---|---|---|---|---|---|---|---|---|
-| F1 | 1 | D 0/0/0 |  | item 5 (supplement under article DOI = 1) | Paper DOI 10.1016/j.jas.2023.105921; supplementary data accessible via |  |  |  |
-| F2 | 0 |  | C | item 5 + table row 6 (artefact-level; supplement-onl | No separate metadata record for datasets beyond paper abstract |  |  |  |
-| F3 | 0 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | No separate dataset DOI; data only in publisher supplement |  |  |  |
-| F4 | 0 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Data not deposited in searchable repository (Zenodo, ADS, etc.); only  |  |  |  |
-| A1 | 0 |  |  | unchanged (completeness rule + ethical exception) | Only 3 of 13 datasets (23.1%) retrievable via HTTPS; 10 datasets gated |  |  |  |
-| A1_1 | 1 | D 1/1/1 |  | unchanged | CC BY 4.0 open access |  |  |  |
-| A1_2 | 1 | D 0/0/1 |  | item 4 (fully open, no auth needed = 1) | No authentication required |  |  |  |
-| A2 | 1 | D 1/0/0 | F | table rows 2/6 (Zenodo persistence entitlements; sup | Publisher (Elsevier) metadata persistence expected |  |  |  |
-| I1 | 1 | D 0/0/0 |  | unchanged (aggregation: principal artefacts) | CSV supplementary tables in structured format |  |  |  |
-| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No controlled vocabularies for metadata |  |  |  |
-| I3 | 0 |  |  | item 2 (third-party dependencies enter here) | No qualified PID links between datasets |  |  |  |
-| R1 | 1 | D 1/1/1 |  | unchanged | Methods section describes data sources and collection procedures |  |  |  |
-| R1_1 | 1 | D 1/1/1 |  | item 6 (per-artefact; most-restrictive same-artefact | CC BY 4.0 licence explicit |  |  |  |
-| R1_2 | 1 | D 1/1/1 |  | unchanged | Data sources documented in Methods; 13 assemblages with citations |  |  |  |
-| R1_3 | 0 | D 1/0/0 |  | item 7 + graded table row 4 (ADS by construction; DA | No domain metadata standard applied |  |  |  |
+| F1 | 1 | D 0/0/0 |  | item 5 (supplement under article DOI = 1) | Paper DOI 10.1016/j.jas.2023.105921; supplementary data accessible via | y | 0 | FLIP 1→0 — no dataset has a PID; supplement holds no data (header-only template) |
+| F2 | 0 |  | C | item 5 + table row 6 (artefact-level; supplement-onl | No separate metadata record for datasets beyond paper abstract | y | 0 | unchanged |
+| F3 | 0 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | No separate dataset DOI; data only in publisher supplement | y | 0 | unchanged |
+| F4 | 0 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Data not deposited in searchable repository (Zenodo, ADS, etc.); only  | y | 0 | unchanged |
+| A1 | 0 |  |  | unchanged (completeness rule + ethical exception) | Only 3 of 13 datasets (23.1%) retrievable via HTTPS; 10 datasets gated | y | 0 | unchanged — AP-10: all 13 datasets required; coverage 3/13 minimal |
+| A1_1 | 1 | D 1/1/1 |  | unchanged | CC BY 4.0 open access | y | 0 | FLIP 1→0 — AP-13: unpublished principal data have no protocol |
+| A1_2 | 1 | D 0/0/1 |  | item 4 (fully open, no auth needed = 1) | No authentication required | y | 0 | FLIP 1→0 — AP-13: closed data, no documented access mechanism |
+| A2 | 1 | D 1/0/0 | F | table rows 2/6 (Zenodo persistence entitlements; sup | Publisher (Elsevier) metadata persistence expected | y | 0 | FLIP 1→0 — entailed: nothing deposited |
+| I1 | 1 | D 0/0/0 |  | unchanged (aggregation: principal artefacts) | CSV supplementary tables in structured format | y | 0 | FLIP 1→0 — old 'CSV tables' is the header-only template |
+| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No controlled vocabularies for metadata | y | 0 | unchanged |
+| I3 | 0 |  |  | item 2 (third-party dependencies enter here) | No qualified PID links between datasets | y | 0 | unchanged |
+| R1 | 1 | D 1/1/1 |  | unchanged | Methods section describes data sources and collection procedures | y | 1 | unchanged — AP-14: every dataset described in the paper |
+| R1_1 | 1 | D 1/1/1 |  | item 6 (per-artefact; most-restrictive same-artefact | CC BY 4.0 licence explicit | y | 0 | FLIP 1→0 — AP-13: unpublished data carry no licence |
+| R1_2 | 1 | D 1/1/1 |  | unchanged | Data sources documented in Methods; 13 assemblages with citations | y | 0 | FLIP 1→0 — AP-14 conjunctive: copper tang points' source unstated (§2.4.3.1) |
+| R1_3 | 0 | D 1/0/0 |  | item 7 + graded table row 4 (ADS by construction; DA | No domain metadata standard applied | y | 0 | unchanged |
 
 - **A2 flip note:** ENTAILED review: A2 under the clarified metadata-persistence entitlements (Entry 3 consequence note)
+
+- **Adjudicated 2026-10-03 (Sitting 5; registrant: Shawn). data_fair 8 → 1.**
+  The 13 required assemblage datasets are 10/13 unpublished and the
+  supplement holds no data, so under AP-13 (conjunctive) every
+  artefact-property sub-principle fails; R1 = 1 survives from the paper's
+  documentation (AP-14), R1.2 fails on the copper dataset's unstated
+  source. Reasoning: `adjudication-log.md` Sitting 5.
 
 ## key-et-al-2024 — code_fair
 

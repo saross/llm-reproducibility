@@ -177,6 +177,42 @@ Exercise is unblinded (recorded in amendment 2 §3).
   2024-03-10), the article first appeared 2024-04-03; the publisher's
   supplement files match v2 byte for byte, and rule (3) also selects v2.
 
+- **AP-13 — Unpublished principal data fail conjunctively** (Shawn,
+  2026-10-03; option (β)). Under the aggregation rule a sub-principle holds
+  only if it holds for every principal dataset. An unpublished or closed
+  principal dataset has no persistent identifier, no retrieval protocol, no
+  access mechanism, and no licence, so F1, A1.1, A1.2, and R1.1 (and every
+  other artefact-property sub-principle) fail — the registered
+  "unscoreable → 0" default applied as written. Scoring the article or its
+  published summary statistics as if they were the data ("the accessible
+  portion", option (α)) is rejected: it is the error that inflated the old
+  key-et-al reference. Known property (AP-7): conjunction is harsh when
+  most principal datasets are open; that harshness belongs to the ratified
+  rule (flagged iterable 2026-08-10), and the completeness percentage
+  carries the nuance. The arms split on the instrument text, so this is a
+  clarification for the pre-census list, not a BI rule.
+- **AP-14 — R1 and R1.2 can be earned from documentation when data are
+  closed; the paper is not the metadata for machine-actionable
+  sub-principles** (Shawn, 2026-10-03). FAIR separates metadata from data
+  (A2: metadata stay accessible when data do not), so descriptive richness
+  (R1) and provenance (R1.2) can be satisfied by the paper's documentation
+  even for unpublished data; requiring published data would fail
+  access-restricted sensitive datasets with exemplary documentation (AP-7).
+  Conjunction still applies: R1.2 fails if any principal dataset's
+  provenance is unstated. The counterpart, in the registrant's words:
+  "I've heard the argument 'the paper is the metadata', but this is
+  analogous to an earlier decision we made about information locked in a
+  PDF — extracting metadata from a paper is a repair / reconstruction
+  project, and FAIR expects machine-readable information." So prose in a
+  paper never supplies the machine-actionable sub-principles — F2's
+  structured metadata record, F3, F4, I1–I3, R1.3 — just as code inside a
+  PDF fails I1 (AP-9). Consistency check, 2026-10-03: the code I3 = 1
+  rulings for dye (Sitting 2) and herskind (Sitting 4) rest on dependency
+  DOIs that are deposited in Crossref's machine-readable reference metadata
+  for each article (`reference` entries with a `DOI` field asserted by
+  Crossref: 10.18637/jss.v093.c01 among dye's 51 deposited references,
+  10.21105/joss.00774 among herskind's 90), not on prose, so they stand.
+
 ## Beyond-instrument (BI) tags — concordance reporting convention
 
 Adopted 2026-10-02 (Shawn). A reference item is tagged when its adjudicated
@@ -390,3 +426,40 @@ tags.
 **Findings (no score effect):** the paper states R 4.2.2 but the v2 README
 states R 4.3.2; the Zenodo record is typed "Dataset" although it contains
 code; CC licence on code (AP-8 finding class).
+
+## Sitting 5 — 2026-10-03 — key-et-al-2024 `data_fair`: 8 → 1
+
+**Context.** The analysis needs record-level morphometric data from 13
+assemblages; the pilot inventory (and reproduction attempt-01's
+`data-availability-inventory.md`) finds 3 accessible through other
+publications and 10 unpublished: 6 co-author-held, 3 in closed monographs
+or a thesis, 1 never published. The publisher supplement (Elsevier, PII
+S0305440323002017, fetched 2026-10-02 by the CDN route) holds three R
+scripts (`mmc1`–`mmc3` zips), a header-only input template (`mmc4.csv`,
+75 bytes), and a results document (`mmc5.docx`) — no input data. Under
+AP-10 all 13 datasets are required (none is transcribed into a deposit),
+so coverage is 3/13 (23%), "minimal", and A1 = 0. Reproduction attempt-01:
+PARTIAL.
+
+**Rulings (Shawn, 2026-10-03):** AP-13 (β) — A1.1, A1.2, R1.1 1→0. AP-14 —
+R1 = 1 (every dataset described: context, variables, units, n); R1.2 1→0
+(conjunctive: §2.4.3.1, the copper socketed tang points, states no
+specimen source, collection, or measurer — unlike, e.g., the ceramics
+section, which cites Petrie 2020 and its instruments; attempt-01 traced
+the source only by following citations outside the paper). **Nods
+confirmed:** F1 1→0 (no dataset has a PID; the supplement holds no data;
+seven of nine v2.1 runs scored 0); A2 1→0 (entailed flag; nothing is
+deposited); I1 1→0 (the old "CSV supplementary tables" is the header-only
+template). Unchanged at 0: A1, F2, F3, F4, I2, I3, R1.3. **Total 1** (old
+8). No BI tags — every score is derivable from the paper, which itself
+says the supplement holds scripts.
+
+**Findings (no score effect):** the paper has no data-availability
+statement (the "Supplementary data … can be found online" line is
+Elsevier's Appendix A boilerplate); a supplementary CSV is a header-only
+template.
+
+**Future-work idea recorded (registrant, 2026-10-03):** a FAIR and
+reproducibility uplift tool that performs every possible repair and
+reconstruction and produces a FAIR apparatus for a faulty publication —
+`wiki/planning/active-todo-list.md`, Deferred / Future Projects item 10.
