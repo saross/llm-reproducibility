@@ -83,10 +83,17 @@ Exercise is unblinded (recorded in amendment 2 §3).
   instrument's A1.2 stance (CARE-compliant restriction is a positive
   signal); a permissiveness gate would penalise clearly licensed sensitive
   data (AP-7). **Boundary (Shawn, 2026-10-02):** "available on request" →
-  0 — no usage licence is published. **"All rights reserved" — OPEN**,
-  pending registrant ruling on the survey of how FAIR assessment frameworks treat it (`rights-reserved-survey-2026-10-02.md`)
-  (the guide's existing "→ 0" line dates from the Pass 6 build, commit
-  `4ff87a2`, with no recorded source, so it is not relied on). Backward
+  0 — no usage licence is published. **"All rights reserved" → 0 (Shawn,
+  2026-10-02, on the survey `rights-reserved-survey-2026-10-02.md`):** an
+  "all rights reserved" notice is not a licence to *do* anything, under any
+  circumstances. The test is any grant versus no grant, never how much is
+  granted. Guards (endorsed): (i) the rule turns on the absence of any
+  grant, not the phrase — a grant followed by "all other rights reserved"
+  passes; (ii) a copyright notice alongside a licence is not a
+  same-artefact conflict — the most-restrictive rule compares licences
+  with licences, never a notice with a licence. This matches the pushed
+  guide's existing line, so it needs no `rule` tag and no guide change.
+  Backward
   consistency: Sitting 1's dye data R1.1 = 0 stands — conjunction with
   beads-1.csv, which carries no licence anywhere.
 - **AP-9 — I1 assesses the artefact as served: is it machine-actionable as
@@ -141,12 +148,18 @@ detail (e.g. dye code R1: all nine v2.1 runs scored 1 from the main text).
 Rulings that disambiguate pushed text (AP-4, AP-8) are not `rule`-tagged;
 they go on the pre-census clarification list instead.
 
-**OPEN — supplements as scoring inputs (registrant ruling needed):** AP-2
-rules that "paper" includes the published supplement, but the benchmark
-workflow withholds supplements. The exclusion entered with the original
-benchmark harness (`d34edd9`, 2026-08-03) and has no recorded protocol
-decision; amendment 2 §2 says only that spawns receive "the paper source".
-Whether the census workflow should supply supplements is pending.
+**RULED 2026-10-02 — supplements as scoring inputs: Option A (Shawn).**
+AP-2 rules that "paper" includes the published supplement, but the
+benchmark workflow withheld supplements; the exclusion entered with the
+original benchmark harness (`d34edd9`, 2026-08-03) with no recorded
+protocol decision. Ruling: AP-2 stands and **census scoring spawns receive
+published supplements** alongside the paper PDF. Amendment 2 §2's "the
+paper source" is read as including the published supplement, so this
+implements §2 rather than departing from it. Governance: a dated protocol
+note (`protocol/supplements-as-inputs-2026-10-02.md`) plus a plan
+decision-log row; no OSF amendment, as with F-010. The completed benchmark
+is not re-run: its supplement-dependent reference items carry the `input`
+tag, and the gates report concordance with and without them.
 
 ## Sitting 1 — 2026-09-03 — dye-et-al-2023 `data_fair`: 9 → 7
 
