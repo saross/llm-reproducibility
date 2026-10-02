@@ -149,6 +149,15 @@ Exercise is unblinded (recorded in amendment 2 §3).
   ones. F-UJI makes the same distinction as a gradient (multidisciplinary
   standard at maturity 1, community-specific at 3); a graded R1.3 is
   **held in reserve** with differential scoring.
+  **Scope (Shawn, 2026-10-02, Sitting 4): data only.** For code, R1.3 uses
+  the instrument's code list — package structure, CITATION.cff, CodeMeta,
+  or community review (CRAN, JOSS, rOpenSci) — which replaces routes
+  (a)–(c) for code. Reasons: code has well-defined, low-cost community
+  standards, so R1.3 can separate packaged or citable code from a bare
+  script; extending route (a) would pass every Zenodo code deposit and
+  make R1.3 track deposit location only (AP-7); and a DataCite record
+  typed "Dataset" does not describe the code as software. Eight of nine
+  v2.1 runs read the instrument this way, so no BI tag.
 - **AP-12 — Which version of a versioned deposit is scored and reproduced**
   (Shawn, 2026-10-02, with clerk refinements). In priority order: (1)
   published supplementary files, by checksum match against the repository
@@ -355,3 +364,29 @@ harvester should capture file formats, descriptions, keywords, related
 identifiers, and version metadata (F2, I1, I3, and AP-12 all turned on
 them); Elsevier supplements can be fetched without the ScienceDirect 403
 via the Crossref PII and the CDN pattern above.
+
+## Sitting 4 — 2026-10-02 — herskind-riede-2024 `code_fair`: 9 → 12
+
+**Context.** The code is S2.R, deposited in the same Zenodo record as the
+data (version v2 scored, per AP-12; the publisher's `mmc2.zip` holds a
+byte-identical copy). **AP-12 changes two scores here:** the old reference
+assessed v1 (10.5281/zenodo.10623550), whose S2.R has 451 lines, 117
+comment lines, no figure mapping, and no README or version information. v2's
+S2.R has 759 lines, 210 comment lines, and a contents table mapping each
+part to the figure or table it produces; v2 adds a README listing R 4.3.2
+and all seven package versions.
+
+**Ruling (Shawn, 2026-10-02):** R1.3 = 0 under reading (i) — AP-11 is
+data-only, and the script meets none of the instrument's code standards.
+**Nods confirmed:** F2 1→0 (same record as the data: empty description, no
+keywords); R1 0→1 (v2 annotation and README); R1.2 0→1 (v2 README versions;
+the paper names R and quanteda); R1.1 0→1 (CC-BY-4.0 covers the record —
+AP-8; CC-on-code is a non-fatal finding); I3 0→1 (quanteda cited with its
+JOSS DOI 10.21105/joss.00774 — the dye code precedent: dependencies enter
+through citation quality, item 2). Unchanged: F1 (spot-check confirmed),
+F3, F4, A1, A1.1, A1.2, A2, I1 = 1; I2 = 0. **Total 12** (old 9). No BI
+tags.
+
+**Findings (no score effect):** the paper states R 4.2.2 but the v2 README
+states R 4.3.2; the Zenodo record is typed "Dataset" although it contains
+code; CC licence on code (AP-8 finding class).

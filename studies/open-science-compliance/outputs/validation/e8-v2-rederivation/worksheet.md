@@ -125,21 +125,27 @@ Concordance is reported with and without BI items — see
 
 | sub | old | D (s/o/f) | flags | v2.1 ruling | old evidence | S | new | note |
 |---|---|---|---|---|---|---|---|---|
-| F1 | 1 |  | C | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.10623550 (code in same deposit as data) |  |  |  |
-| F2 | 1 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo DataCite metadata for deposit |  |  |  |
-| F3 | 1 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI |  |  |  |
-| F4 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Indexed in Zenodo, DataCite |  |  |  |
-| A1 | 1 |  |  | unchanged (completeness rule + ethical exception) | HTTPS via Zenodo |  |  |  |
-| A1_1 | 1 |  |  | unchanged | Open access, no authentication |  |  |  |
-| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open code, no restrictions |  |  |  |
-| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo long-term persistence |  |  |  |
-| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R scripts using standard open-source language and Quanteda package |  |  |  |
-| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No CodeMeta or software ontology |  |  |  |
-| I3 | 0 | D 0/0/0 |  | item 2 (third-party dependencies enter here) | Scripts do not include PID references to data or dependencies |  |  |  |
-| R1 | 0 | D 1/1/1 |  | unchanged | R script requires manual parameter changes for re-execution; minimal i |  |  |  |
-| R1_1 | 0 | D 0/1/1 |  | item 6 (per-artefact; most-restrictive same-artefact | No explicit licence for code |  |  |  |
-| R1_2 | 0 | D 1/1/1 |  | unchanged | No session info, no dependency versions, no environment specification |  |  |  |
-| R1_3 | 0 | D 0/0/0 |  | item 7 + graded table row 4 (ADS by construction; DA | No CITATION.cff, CodeMeta, or renv lockfile |  |  |  |
+| F1 | 1 |  | C | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.10623550 (code in same deposit as data) | y | 1 | spot-check CONFIRMED — own DOI (v2 per AP-12) |
+| F2 | 1 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo DataCite metadata for deposit | y | 0 | FLIP 1→0 — same record as data: empty description, no keywords |
+| F3 | 1 | D 0/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI | y | 1 | unchanged |
+| F4 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Indexed in Zenodo, DataCite | y | 1 | unchanged |
+| A1 | 1 |  |  | unchanged (completeness rule + ethical exception) | HTTPS via Zenodo | y | 1 | unchanged — HTTPS via Zenodo |
+| A1_1 | 1 |  |  | unchanged | Open access, no authentication | y | 1 | unchanged |
+| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open code, no restrictions | y | 1 | unchanged — item 4 |
+| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo long-term persistence | y | 1 | unchanged — Row 2 Zenodo persistence |
+| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R scripts using standard open-source language and Quanteda package | y | 1 | unchanged — plain-text R script |
+| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No CodeMeta or software ontology | y | 0 | unchanged |
+| I3 | 0 | D 0/0/0 |  | item 2 (third-party dependencies enter here) | Scripts do not include PID references to data or dependencies | y | 1 | FLIP 0→1 — quanteda cited with JOSS DOI (dye precedent, item 2) |
+| R1 | 0 | D 1/1/1 |  | unchanged | R script requires manual parameter changes for re-execution; minimal i | y | 1 | FLIP 0→1 — v2 annotated script + README (old 0 described v1) |
+| R1_1 | 0 | D 0/1/1 |  | item 6 (per-artefact; most-restrictive same-artefact | No explicit licence for code | y | 1 | FLIP 0→1 — CC-BY-4.0 covers record (AP-8; CC-on-code finding) |
+| R1_2 | 0 | D 1/1/1 |  | unchanged | No session info, no dependency versions, no environment specification | y | 1 | FLIP 0→1 — v2 README lists R + package versions (old 0 described v1) |
+| R1_3 | 0 | D 0/0/0 |  | item 7 + graded table row 4 (ADS by construction; DA | No CITATION.cff, CodeMeta, or renv lockfile | y | 0 | unchanged at 0 — AP-11 is data-only; no package/CITATION.cff/CodeMeta/review |
+
+- **Adjudicated 2026-10-02 (Sitting 4; registrant: Shawn). code_fair 9 → 12.**
+  Scored version v2 (AP-12), which is better documented than the v1 the old
+  reference assessed. Flips: F2 1→0; I3, R1, R1.1, and R1.2 0→1. R1.3 stays
+  0 — AP-11 is data-only, so code needs package structure, CITATION.cff,
+  CodeMeta, or community review. Reasoning: `adjudication-log.md` Sitting 4.
 
 ## key-et-al-2024 — data_fair
 
