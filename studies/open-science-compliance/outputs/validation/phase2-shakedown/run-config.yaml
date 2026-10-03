@@ -25,6 +25,34 @@ effort: high          # Shawn 2026-10-03; Opus 5.5 defaults to medium, so pinned
 # pilot papers live here).
 output_root: studies/open-science-compliance/outputs
 
+# Registrant rulings (Shawn, 2026-10-03, from reviewing the first plan
+# round, wf_5d10728a-820). These are general rules, passed verbatim to every
+# planner and executor spawn. The first round's paper-specific target lists
+# are NOT passed, so the re-plan enumerates independently. R1 answers both
+# papers' "no author code" questions; R2–R4 generalise the accepted answers
+# to the remaining scope questions.
+rulings:
+  - >-
+    R1 No author code: a target whose published result has no supplied code
+    may be tested with clearly labelled verification aids. Aids are
+    read-only lookups in the deposited data, and calls to documented
+    functions of the package the authors used. They make no new
+    statistical choices, and they live in a separate comparison script,
+    never in the authors' code. A difference caused only by an unpublished
+    convention (for example histogram bin edges) is MINOR_DISCREPANCY.
+  - >-
+    R2 Unavailable inputs: a target whose inputs cannot be obtained stays
+    in the locked denominator as expected-untestable and counts against
+    coverage. Never drop it to narrow scope.
+  - >-
+    R3 Granularity: one target per display item. A multi-panel figure is
+    one target, and its panels are described within it. Named values in
+    the text are separate targets.
+  - >-
+    R4 Internal inconsistency: where the paper's text and its own tables or
+    figures disagree, score against the stated value. Apply the PAPER_ERROR
+    protocol if the reproduction disagrees, and escalate.
+
 agents:
   planner: reproduction-planner
   executor: reproduction-executor
