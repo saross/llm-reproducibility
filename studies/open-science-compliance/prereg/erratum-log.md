@@ -443,3 +443,55 @@ as an HTML entity and its renderer decodes them correctly, so the public
 page never had a defect; amendment §6 records the dissolution instead of
 a correction. The D3 re-benchmark's lodgement hard stop is now
 discharged.
+
+## Entry 4 — 2026-10-03: amendment 2 §2's precedent case was a pilot-extraction error
+
+**Status: correction recorded; public correction queued for the next OSF
+lodgement (registrant decision, 2026-10-03, option (a)).**
+
+**Lodged text affected.** Amendment 2 §2 (lodged 2026-08-17) closes its
+identifier-recovery rule with: "Precedent case: marwick-2025's cited
+10.5281/zenodo.14561925 resolves at neither DataCite nor Zenodo
+(2026-08-15)."
+
+**Defect.** The paper does not cite 10.5281/zenodo.14561925. Verified
+2026-10-03: the identifier appears nowhere in the version of record, the
+preprint, or the corpus extracted text. Its only source is the pilot
+extraction record (`studies/open-science-compliance/outputs/marwick-2025/extraction.json`,
+field `reproducibility_infrastructure.data_completeness.assessment_scope_rationale`:
+"Bibliometric study with all data in Zenodo research compendium (DOI:
+10.5281/zenodo.14561925)") — an unverified identifier in a model-produced
+record. The paper cites the compendium's concept DOI
+10.5281/zenodo.14897252 (data-availability statement and §2.1); the
+preprint cites v1.1 (10.5281/zenodo.14897253). The deposit "recovered" for
+the dead identifier, 10.5281/zenodo.15603267, is v1.3 of that same concept
+(published 2025-06-05). No deposit was lost, and the paper carries no
+dead-link citation defect.
+
+**Propagation.** The declared-links registry was curated from the pilot
+extraction records (2026-08-15), so the identifier entered the harvester's
+input, both evidence-pack cycles, the D3 arms' inputs, the plan, the
+continuity log, and the lodged §2 text.
+
+**Unaffected.** The identifier-recovery rule itself, which worked as
+specified on a wrong input, and every registered analysis.
+
+**Repository-side corrections (2026-10-03).** The registry entry moved to
+`withdrawn_links` (never harvested again); the v1.3 entry re-described as
+the version selected by the E8-v2 version rule (adjudication log AP-12),
+not a recovery; dated correction notes added to the plan and the continuity
+log. The committed evidence packs stay as dated snapshots.
+
+**Safeguard (registrant direction, 2026-10-03).** A deterministic check that
+every identifier in the declared-links registry appears verbatim in the
+paper or its supplement — and, more generally, mechanical verification
+wherever it is possible (pre-census item in
+`wiki/planning/instrument-clarification-plan.md`).
+
+## Queued amendment 3 scope (running list)
+
+1. Entry 4 — correct amendment 2 §2's precedent case.
+2. Candidates: the pre-census instrument clarifications collected from the
+   E8-v2 adjudication (plan pre-census item), if they are lodged as an
+   instrument amendment rather than a gated edit.
+

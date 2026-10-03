@@ -13,6 +13,9 @@
 # ratified endpoint list; the harvester records them as an honest gap
 # rather than improvising a resolution.
 #
+# withdrawn_links (2026-10-03): entries found to be erroneous move here, kept
+# for the record and never harvested (the harvester reads only `links`).
+#
 # Curation practice (registrant ruling, 2026-09-03, E8-v2 adjudication log
 # AP-5): supplement-embedded artefact URLs enter this registry when found —
 # the harvester cannot see inside supplements, so registry curation is the
@@ -99,30 +102,34 @@ papers:
         paper_asserted_licence: "MIT (code); CC0 (data); CC BY (figures)"
         note: "Research compendium; paper asserts three component licences against Zenodo's single licence field — expected conflict-flag exercise"
         source_anchor: "… code_availability.licences + data_availability.access_conditions"
+      - id: compendium-zenodo-v1.3
+        type: data+code
+        link: "10.5281/zenodo.15603267"
+        note: >-
+          Zenodo v1.3 (published 2025-06-05) of the research compendium whose
+          concept DOI (10.5281/zenodo.14897252) the paper cites; the version
+          scored and reproduced under the E8-v2 version rule (adjudication log
+          AP-12, rule 3: the latest version before the article first appeared,
+          2025-06-18). Formerly id `related-zenodo-recovered`, recorded as a
+          recovery of 10.5281/zenodo.14561925 — withdrawn 2026-10-03
+          (erratum-log Entry 4).
+        source_anchor: "paper data-availability statement (concept DOI) + Zenodo version list, checked 2026-10-03"
+    withdrawn_links:
       - id: related-zenodo
         type: data
         link: "10.5281/zenodo.14561925"
+        withdrawn: "2026-10-03"
+        reason: >-
+          Never cited by the paper or its preprint: the identifier came from
+          the pilot extraction record
+          (data_completeness.assessment_scope_rationale), an unverified
+          identifier in a model-produced record. Kept for the record; the
+          harvester reads only `links`. Erratum-log Entry 4.
         note: "Additional Zenodo DOI cited in the infrastructure record"
         source_anchor: "… reproducibility_infrastructure (cited identifier)"
-        # Identifier-recovery rule (amendment 2 §2, ruled 2026-08-15): this
-        # DOI 404s at DataCite and Zenodo (2026-08-15 finding). The bounded
-        # recovery searches run on the registered title + author below;
-        # candidates land in the pack record's recovery block for curation.
         recovery:
           title: "Is archaeology a science? Insights and imperatives from 10,000 articles and a year of reproducibility reviews"
           author: "Ben Marwick"
-      - id: related-zenodo-recovered
-        type: data
-        link: "10.5281/zenodo.15603267"
-        note: >-
-          Recovered deposit for the dead cited DOI (identifier-recovery rule,
-          amendment 2 §2): research compendium for the publication. Curated
-          2026-08-17 from the recovery search's top Zenodo candidate on an
-          exact title match, then verified findable at DataCite (creator Ben
-          Marwick, Zenodo, 2025, cc-by-4.0). The dead link's own record stays
-          in the pack; the citation defect remains a study finding.
-        source_anchor: "recovery block of record datacite:10.5281/zenodo.14561925 (2026-08-17 harvest)"
-        recovered_from: "10.5281/zenodo.14561925"
 
   crema-et-al-2024:
     article_doi: "10.1016/j.jas.2024.105962"

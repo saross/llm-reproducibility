@@ -179,7 +179,9 @@ merged here as PR #1).
   D1 window executed (instrument v2.1, guide v1.1 pushed, definitions
   v1.2, C7 hashes); identifier-recovery rule LIVE — first run recovered
   marwick's lost deposit (dead zenodo.14561925 → curated
-  zenodo.15603267, flagged `recovered` in the pack). CoreTrustSeal/
+  zenodo.15603267, flagged `recovered` in the pack) [correction 2026-10-03: no deposit
+  was lost — 15603267 is v1.3 of the concept DOI the paper cites;
+  14561925 came from the pilot extraction; erratum-log Entry 4]. CoreTrustSeal/
   re3data enrichment committed (ADS to 2027, DANS to 2028, tDAR lapsed,
   Zenodo never applied). E8-v2 adjudication worksheet GENERATED
   (`outputs/validation/e8-v2-rederivation/worksheet.md`, 150 items /
@@ -247,7 +249,8 @@ merged here as PR #1).
   marwick's three asserted licences vs Zenodo's single cc-by-4.0 fired,
   key's CC BY cleared after CC-URL canonicalisation; marwick's cited
   DOI 10.5281/zenodo.14561925 **404s at DataCite and Zenodo** — Phase B
-  finding; CRAN an honest endpoint-flagged gap); **`reconcile-run.py`**
+  finding [correction 2026-10-03: never cited by the paper; a
+  pilot-extraction error, erratum-log Entry 4]; CRAN an honest endpoint-flagged gap); **`reconcile-run.py`**
   (C8+C9 in one tool: post-hoc receipt re-validation incl. the new
   **attempts-are-not-reads** rule, per-spawn file-access lists with
   contamination flagging, divergence tripwire, log-slice archival,
