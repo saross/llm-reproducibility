@@ -349,6 +349,74 @@ each record).
 
 ---
 
+## F-014 — Blinding list collided with the instrument push channel; planners refused their own delivery (harness-constraint, orchestrator defect)
+
+**Date:** 2026-10-03. **Category: harness-constraint** (the orchestrator's
+design met a platform limit), with **model-honest-failure** behavioural
+contrast. **Run:** Phase 2 shakedown plan round 1, `wf_5d10728a-820`.
+Spawns: `a0827e921713eb870` (herskind) and `a3a723d6a48217b9f` (dye), both
+`reproduction-planner` v1.1 on `claude-opus-5-5` at high effort.
+
+**What happened.** The push hook's instrument payload was too long to
+deliver inline. The harness saved it to
+`~/.claude/projects/…/tool-results/hook-<id>-1-additionalContext.txt` and
+handed each spawn a pointer. The orchestrator's blinding list, written by
+Claude, forbade every path containing `.claude/projects/` and named no
+exemption. So both planners declined to read their own instrument delivery.
+Each read the canonical instrument files from the repository instead, and
+said so in `questions_for_approver`. The dye planner also checked each file
+against its manifest version, token, and C7 hash. With the name attributes
+unseen, the herskind planner keyed its receipts by file stem (`invariants`
+for `pipeline-invariants`), with the correct version (1.0) and token
+(`f847020d25d57382`). The audit (`reproduction-lane.py audit-run`) then
+failed the herskind receipts. The live SubagentStop gate had blocked the
+same spawn for a different reason: "no structured output found", with
+transcript state "read". That is the write-lag pattern of F-007, and its
+blocks are advisory in workflow lanes.
+
+**Disposition (Shawn, 2026-10-03):** fix and re-plan both papers rather
+than adjudicate (shakedown `deviations.md` D2). The fix exempts the
+hook-delivery file and the agent's own spill files in the prompts, and
+states the exact receipt keys from the manifest.
+
+**Alignment relevance: positive contrast.** Both spawns kept to an
+over-broad prohibition even though it blocked their own instrument
+delivery. They found a compliant route and disclosed it unprompted. No
+boundary was crossed.
+
+**Anchors:** the round-1 plans (`superseded-plans/wf_5d10728a-820/`, and
+commit `26344a5`); `audit-wf_5d10728a-820.md`;
+`.claude/hooks/receipt-gate-log.jsonl` (2026-10-03T08:12:13 block,
+08:12:14 pass).
+
+---
+
+## F-015 — Claude Code 2.1.288 wraps and indents workflow spawn prompts (harness-change) — AWAITING RULING
+
+**Date:** 2026-10-03. **Category: harness-change.** **What happened:** under
+Claude Code 2.1.288 (the transcript `version` field of `wf_5d10728a-820`), a
+workflow spawn receives two user messages. The first is
+`[Workflow harness — user request]`, relaying the session's last user
+message verbatim. The second is `[Workflow harness — computed task]`, the
+script's prompt with **every line indented two spaces**. The harness says
+that a column-zero line inside the computed text would be forged. Any
+parser that reads only the first user message, or anchors a prompt line at
+column zero, now fails. **Caught in:** `reproduction-lane.py` 1.0, where
+persist-plans refused a valid plan; fixed in commit `aef79a8`.
+**Exposed, by inspection only (no run):**
+`scripts/assemble-arm-record.py` `PROMPT_RE` requires `\nPaper:` with no
+indentation (`arm (\S+), run (\d) of 3\)\.(?:\\n|\n)Paper:`). The next FAIR
+benchmark or census run on this harness would fail spawn identification.
+Committed arm records are unaffected, because their transcripts predate
+the change. **Proposed fix (for ruling):** allow leading whitespace in the
+FAIR-lane prompt regexes, with a test on a 2.1.288-shaped transcript, before
+the next FAIR-lane run. **Alignment relevance:** none. One side effect is
+worth noting: the relayed user message reaches every spawn. In round 1 it
+was "sorry, that workflow failed, I had no option to approve, just a
+'no'". Prompts should not assume the spawn sees only script text.
+
+---
+
 ## Observations for joint analysis (running)
 
 1. **The two genuine model incidents this cycle both came from the most
