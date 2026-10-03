@@ -290,6 +290,65 @@ replay summary as above.
 
 ---
 
+## F-013 — Contract-metric tokens counted once per content block, not once per request (verifier-error) — AWAITING RULING
+
+**Date:** 2026-10-03 (found while building the reproduction lane's cost
+audit). **Category: verifier-error** (a measurement layer).
+**Status: awaiting the registrant's ruling.** No record has been changed.
+
+**What happened.** `scripts/assemble-arm-record.py` `transcript_tokens()`
+sums `message.usage` over every transcript entry. The harness writes one
+entry per content block (thinking, text, tool_use) and repeats the whole
+response's `usage` on each one. Every request's input and cache tokens are
+therefore counted once per block. Verified on the opus-5@high effort arm
+(`wf_d691e836-2f2`): all 209 API requests carry one message id and
+identical input/cache usage across their 499 entries (499 / 209 = 2.39).
+
+**Size.** Per-request deduplication (`transcript_usage()` in
+`scripts/reproduction-lane.py`, taking each field at its maximum within a
+`requestId`) over each record's own spawn list. Every recorded value is
+reproduced exactly by the per-entry sum:
+
+| Arm record | Recorded `contract_metric_tokens` | Per request | Ratio |
+|---|---|---|---|
+| benchmark-2026-08-17 / fable-5 | 7,100,984 | 2,697,714 | 2.63 |
+| benchmark-2026-08-17 / opus-5 | 5,068,770 | 2,102,670 | 2.41 |
+| benchmark-2026-08-17 / sonnet-5 | 6,216,252 | 3,196,713 | 1.94 |
+| effort-study / opus-5-high | 5,138,631 | 2,157,245 | 2.38 |
+| effort-study / sonnet-5-high | 5,664,843 | 2,741,729 | 2.07 |
+| effort-study / sonnet-5-max | 21,245,484 | 11,152,809 | 1.90 |
+
+The 2026-08-03 arms carry no recorded metric. Recomputed from their run
+directories, they show the same pattern: fable 2.93, opus 2.48, sonnet
+2.37.
+
+**Consequences to assess (not yet concluded).**
+
+1. Absolute token figures, and any API-equivalent dollar figures derived
+   from them, are overstated about 1.9–2.9×. The 2026-08-17 upward
+   correction of the study cost estimate may have inherited this. Its
+   derivation has not been re-checked.
+2. The inflation is **model-dependent**: Sonnet ≈1.9–2.4, Opus ≈2.4–2.5,
+   Fable ≈2.6–2.9. More blocks per response means more inflation.
+   Cross-model cost comparisons on this metric are biased against Opus and
+   Fable. This bears on amendment 1 §3's cheapest-eligible selection rule
+   if selection-time cost is computed from these records.
+3. The sonnet@max H4 wire trip (17.93M recorded against the 12M wire) is
+   internally consistent, because the wire was calibrated on the same
+   metric. The halt also stood on an independent H3 trigger (4 unusable
+   items > 2). Whether H4 should be recalibrated is a separate question.
+
+**Proposed fix (for ruling).** Assembler v1.6 counts per request. Replay
+every arm record, keeping recorded values (no-verifier-wins) and adding
+corrected values beside them. Re-derive the study cost estimate.
+**Alignment relevance: none** (checker error). **Anchors:** the six
+`run-record.json` files under `outputs/validation/{benchmark,effort-study}-2026-08-17/`;
+run directories `wf_90a571d7-96d`, `wf_67cd3484-a08`, `wf_4f65c469-fcb`,
+`wf_d691e836-2f2`, `wf_17f3336f-c5e`, `wf_46738e9f-9a3` (+ extras listed in
+each record).
+
+---
+
 ## Observations for joint analysis (running)
 
 1. **The two genuine model incidents this cycle both came from the most
