@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Mine validation-benchmark outputs for instrument ambiguities.
 
-**Version:** 1.1
+**Version:** 1.2
 
 Phase A1 of the instrument clarification plan
 (``wiki/planning/instrument-clarification-plan.md``). Recomputes the two
@@ -47,7 +47,15 @@ Outputs:
 
 No API calls; reads persisted artefacts only.
 
-Changelog: v1.1 (2026-08-17) adds ``--arms`` (explicit arm directories
+Changelog: v1.2 (2026-10-03) adds ``--exclude-bi``: concordance over the
+items whose reference leaf carries no ``beyond_instrument`` tag (the E8-v2
+reference tags 9 of 150 items whose adjudication needed input or a rule
+outside the frozen instrument, so concordance is reported with and without
+them); stability is unaffected (it never reads the reference). Also writes
+``summary.json`` (per-arm stability and concordance counts, the BI items
+excluded) beside ``disputed-items.json``, which keeps its v1.1 shape — a
+reference leaf's ``beyond_instrument`` field is carried into it only when
+the reference supplies one. v1.1 (2026-08-17) adds ``--arms`` (explicit arm directories
 spanning cycles — the effort-study arms join the one-pass computation),
 ``--reference-key``, the per-arm error-direction split, and per-arm
 guideless-minority reporting. v1.0 is the audit-F8 state (``--bench-dir``
@@ -227,11 +235,17 @@ def load_references(
                     match = REF_KEY_ID.match(ref_key)
                     if not match:
                         sys.exit(f"unmappable reference key {ref_key!r}")
-                    refs[slug][artefact][match.group(1)] = {
+                    entry = {
                         "present": int(bool(leaf["present"])),
                         "evidence": str(leaf.get("evidence", "")),
                         "ref_key": ref_key,
                     }
+                    # v1.2: E8-v2 leaves carry beyond-instrument tags; v1
+                    # leaves do not, and their entries keep the v1.1 shape.
+                    if "beyond_instrument" in leaf:
+                        entry["beyond_instrument"] = sorted(
+                            leaf.get("beyond_instrument") or [])
+                    refs[slug][artefact][match.group(1)] = entry
             missing = set(SUB_PRINCIPLES) - set(refs[slug][artefact])
             if missing:
                 sys.exit(f"{slug} {artefact} reference missing {sorted(missing)}")
@@ -259,6 +273,10 @@ def main() -> None:
                         help="manifest reference_datasets entry to score "
                              "concordance against (default: the E8 pilot "
                              "reference)")
+    parser.add_argument("--exclude-bi", action="store_true",
+                        help="compute concordance only over items whose "
+                             "reference carries no beyond_instrument tag "
+                             "(E8-v2); stability is unaffected")
     parser.add_argument("--stability-only", action="store_true",
                         help="suppress concordance (D3 contract hardening 5: "
                              "no partial concordance against a retired "
@@ -283,6 +301,18 @@ def main() -> None:
     spawns = load_spawns()
     refs = load_references(cli.reference_key)
     slugs = sorted({slug for (_, _, slug) in spawns})
+    exclude_bi = cli.exclude_bi
+    if exclude_bi:
+        if stability_only:
+            sys.exit("--exclude-bi applies to concordance; it is meaningless "
+                     "with --stability-only")
+        tagged = any("beyond_instrument" in leaf
+                     for paper in refs.values() for artefact in paper.values()
+                     for leaf in artefact.values())
+        if not tagged:
+            sys.exit(f"--exclude-bi: reference {cli.reference_key!r} carries "
+                     f"no beyond_instrument tags to exclude by")
+    bi_excluded: list[tuple[str, str, str]] = []
 
     published = {}
     for arm in ARMS:
@@ -303,6 +333,9 @@ def main() -> None:
             for sub in SUB_PRINCIPLES:
                 item_key = (slug, artefact, sub)
                 ref = refs[slug][artefact][sub]
+                skip_concordance = exclude_bi and bool(ref.get("beyond_instrument"))
+                if skip_concordance:
+                    bi_excluded.append(item_key)
                 arms_detail: dict[str, Any] = {}
                 item_disputed = False
                 for arm in ARMS:
@@ -315,7 +348,7 @@ def main() -> None:
                     stability[arm]["items"] += 1
                     stability[arm]["agreed"] += int(unanimous)
                     direction = error_direction(majority, ref["present"])
-                    if not stability_only:
+                    if not stability_only and not skip_concordance:
                         concordance[arm]["items"] += 1
                         concordance[arm]["agreed"] += int(direction is None)
                         if direction:
@@ -362,8 +395,9 @@ def main() -> None:
                   f"pending E8 v2)")
             continue
         c_agreed, c_items = concordance[arm]["agreed"], concordance[arm]["items"]
+        scope = f" [BI excluded: {len(set(bi_excluded))} items]" if exclude_bi else ""
         print(
-            f"{arm}: concordance {c_agreed}/{c_items} = {c_agreed / c_items:.4f} "
+            f"{arm}: concordance {c_agreed}/{c_items} = {c_agreed / c_items:.4f}{scope} "
             f"(summary table published to 3 dp); errors: "
             f"{concordance[arm]['over_credit']} over-credit, "
             f"{concordance[arm]['under_credit']} under-credit"
@@ -417,7 +451,7 @@ def main() -> None:
         json.dumps(
             {
                 "generated_by":
-                    "analyse-benchmark-disagreements.py v1.1 (Phase A1)",
+                    "analyse-benchmark-disagreements.py v1.2 (Phase A1)",
                 "criteria": "within-arm disagreement OR majority-vs-reference mismatch",
                 "arms": {arm: rel(ARM_DIRS[arm]) for arm in ARMS},
                 "reference_key": cli.reference_key,
@@ -429,6 +463,31 @@ def main() -> None:
         + "\n"
     )
     print(f"\nwrote {rel(out_path)} ({len(disputed)} items)")
+
+    # v1.2: the per-arm figures, machine-readable (previously stdout only).
+    summary_path = out_dir / "summary.json"
+    summary_path.write_text(json.dumps({
+        "generated_by": "analyse-benchmark-disagreements.py v1.2",
+        "reference_key": cli.reference_key,
+        "stability_only": stability_only,
+        "exclude_bi": exclude_bi,
+        "bi_items_excluded": [list(k) for k in sorted(set(bi_excluded))],
+        "arms": {
+            arm: {
+                "dir": rel(ARM_DIRS[arm]),
+                "stability": {"agreed": stability[arm]["agreed"],
+                              "items": stability[arm]["items"]},
+                "concordance": None if stability_only else {
+                    "agreed": concordance[arm]["agreed"],
+                    "items": concordance[arm]["items"],
+                    "over_credit": concordance[arm]["over_credit"],
+                    "under_credit": concordance[arm]["under_credit"],
+                },
+            }
+            for arm in ARMS
+        },
+    }, indent=2) + "\n")
+    print(f"wrote {rel(summary_path)}")
 
 
 if __name__ == "__main__":

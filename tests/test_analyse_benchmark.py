@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Unit tests for analyse-benchmark-disagreements.py (v1.1).
+"""Unit tests for analyse-benchmark-disagreements.py (v1.2).
 
 Covers the v1.1 ``--arms`` extension (explicit arm directories spanning
-cycles), the error-direction split, and the two-era guide-presence
-detection. The end-to-end case builds a synthetic two-arm corpus with
+cycles), the error-direction split, the two-era guide-presence
+detection, and the v1.2 ``--exclude-bi`` option with ``summary.json``.
+The end-to-end case builds a synthetic two-arm corpus with
 known stability, concordance, and error-direction answers, plus a
 synthetic manifest reference, and checks both stdout figures and the
 written disputed-items.json.
@@ -67,7 +68,8 @@ def write_arm(root: Path, name: str, run_overrides: dict,
     return arm
 
 
-def write_reference(root: Path, overrides: dict | None = None) -> Path:
+def write_reference(root: Path, overrides: dict | None = None,
+                    bi_tags: dict | None = None) -> Path:
     """Write a synthetic manifest + reference files; all-zero + overrides.
 
     ``overrides`` maps (slug, artefact, sub) -> 1. Returns the manifest
@@ -84,6 +86,10 @@ def write_reference(root: Path, overrides: dict | None = None) -> Path:
                 present = int((overrides or {}).get((slug, artefact, sub), 0))
                 leaves[f"{sub}_synthetic"] = {
                     "present": present, "evidence": "synthetic reference"}
+                if bi_tags is not None:
+                    # E8-v2 shape: every leaf carries the field (v1.2).
+                    leaves[f"{sub}_synthetic"]["beyond_instrument"] = list(
+                        bi_tags.get((slug, artefact, sub), []))
             artefacts[artefact] = {"dim": leaves}
         ref_file.write_text(json.dumps({"fair": artefacts}))
         items.append({"slug": slug, "file": str(ref_file), "fair_key": "fair"})
@@ -242,6 +248,35 @@ class EndToEndTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             run_main(["--arms", str(self.alpha), "--out-dir",
                       str(self.out_dir), "--bench-dir", str(self.alpha.parent)])
+
+    def test_v1_reference_keeps_v11_shape(self):
+        _, written = self.run_tool()
+        for item in written["items"]:
+            self.assertNotIn("beyond_instrument", item["reference"])
+
+    def test_exclude_bi_needs_tags(self):
+        with self.assertRaises(SystemExit):
+            self.run_tool(["--exclude-bi"])
+
+    def test_exclude_bi_drops_tagged_items_from_concordance_only(self):
+        v2_root = Path(self._tmp.name) / "v2"
+        v2_root.mkdir()
+        tool.MANIFEST = write_reference(
+            v2_root, {("paper-1", "data_fair", "F1"): 1},
+            bi_tags={("paper-1", "data_fair", "F1"): ["input"]})
+        stdout, written = self.run_tool(["--exclude-bi"])
+        # F1 (the shared under-credit) is BI-tagged, so it leaves the
+        # concordance denominator; stability still covers all 150 items.
+        self.assertIn("alpha: stability 149/150", stdout)
+        self.assertIn("alpha: concordance 149/149 = 1.0000 [BI excluded: 1 items]", stdout)
+        self.assertIn("beta: concordance 148/149 = 0.9933", stdout)
+        summary = json.loads((self.out_dir / "summary.json").read_text())
+        self.assertTrue(summary["exclude_bi"])
+        self.assertEqual(summary["bi_items_excluded"], [["paper-1", "data_fair", "F1"]])
+        self.assertEqual(summary["arms"]["beta"]["concordance"],
+                         {"agreed": 148, "items": 149, "over_credit": 1, "under_credit": 0})
+        f1 = next(i for i in written["items"] if i["sub_principle"] == "F1")
+        self.assertEqual(f1["reference"]["beyond_instrument"], ["input"])
 
     def test_unknown_reference_key_rejected(self):
         with self.assertRaises(SystemExit):

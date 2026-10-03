@@ -1,0 +1,303 @@
+{
+  "reference_record_version": "1.0",
+  "reference": "E8-v2",
+  "slug": "dye-et-al-2023",
+  "generated_by": "scripts/assemble-e8v2-reference.py v1.0",
+  "worksheet": "studies/open-science-compliance/outputs/validation/e8-v2-rederivation/worksheet.json",
+  "worksheet_sha256": "32d3cb365e68d9891c5316fe44e76345348c158b7f79e666439824afc6b2f722",
+  "adjudication_log": "studies/open-science-compliance/outputs/validation/e8-v2-rederivation/adjudication-log.md",
+  "fair_assessment": {
+    "version": "E8-v2",
+    "scale": "15 binary sub-principles per artefact type",
+    "data_fair": {
+      "findable": {
+        "F1_persistent_identifier": {
+          "present": 0,
+          "evidence": "FLIP 1→0 — beads-1.csv principal (P1), no PID; conjunctive; supplement-read reqd (pack-blind) [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [
+            "input"
+          ],
+          "old_evidence": "Paper DOI 10.1016/j.jas.2023.105765; upstream Anglo-Saxon dataset DOI 10.5284/1018290 (ADS)"
+        },
+        "F2_rich_metadata": {
+          "present": 0,
+          "evidence": "unchanged — row 6 supplement-only [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 0,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "OxCal model in supplement without independent metadata record"
+        },
+        "F3_metadata_includes_identifier": {
+          "present": 0,
+          "evidence": "unchanged — row 6 supplement-only [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 0,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "No separate data DOI; data only in publisher supplement"
+        },
+        "F4_searchable_registry": {
+          "present": 0,
+          "evidence": "unchanged — row 6 supplement-only [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 0,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Supplement data not in searchable repository; upstream ADS dataset is indexed but not authors' deposit"
+        },
+        "subtotal": 0,
+        "max": 4
+      },
+      "accessible": {
+        "A1_standard_protocol": {
+          "present": 1,
+          "evidence": "unchanged — HTTPS; completeness complete [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "HTTPS via publisher and White Rose repository"
+        },
+        "A1_1_open_free_protocol": {
+          "present": 1,
+          "evidence": "unchanged — OA article + free supplement [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Open access via White Rose repository"
+        },
+        "A1_2_auth_where_needed": {
+          "present": 1,
+          "evidence": "unchanged — item 4 no-auth case [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "No authentication required"
+        },
+        "A2_metadata_persistent": {
+          "present": 0,
+          "evidence": "FLIP 1→0 — row 6 A2=0; personal server no persistence (sonnet minority correct) [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [],
+          "old_evidence": "Publisher and White Rose institutional repository metadata persistent"
+        },
+        "subtotal": 3,
+        "max": 4
+      },
+      "interoperable": {
+        "I1_formal_language": {
+          "present": 0,
+          "evidence": "AS-SERVED (AP-9) FLIP 1→0, backward application approved 2026-10-02 — principal OxCal model served only inside the supplement PDF",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [
+            "input",
+            "rule"
+          ],
+          "old_evidence": "OxCal model in standard format; R data structures"
+        },
+        "I2_fair_vocabularies": {
+          "present": 0,
+          "evidence": "unchanged [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 0,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "No formal controlled vocabularies for data description"
+        },
+        "I3_qualified_references": {
+          "present": 1,
+          "evidence": "unchanged — ADS DOI qualified reference (item 2) [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "References Anglo-Saxon Graves dataset via ADS DOI 10.5284/1018290"
+        },
+        "subtotal": 1,
+        "max": 3
+      },
+      "reusable": {
+        "R1_rich_metadata": {
+          "present": 1,
+          "evidence": "unchanged — Methods + 50pp supplement [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Methods section documents data provenance and analytical procedures"
+        },
+        "R1_1_clear_licence": {
+          "present": 0,
+          "evidence": "unchanged at 0 — beads-1.csv no licence anywhere; supplement-read reqd (pack-blind) [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 0,
+          "changed": false,
+          "beyond_instrument": [
+            "input"
+          ],
+          "old_evidence": "Paper is CC-BY-NC-ND; no explicit licence for supplement data or OxCal model"
+        },
+        "R1_2_provenance": {
+          "present": 1,
+          "evidence": "spot-check CONFIRMED — provenance chain ADS→OxCal→MCMC documented [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Data derived from published ADS dataset with clear transformation documentation"
+        },
+        "R1_3_community_standards": {
+          "present": 0,
+          "evidence": "ENTAILED flip REJECTED — AP-4: conjunction blocks ADS entitlement [adjudicated 2026-09-03, Sitting 1]",
+          "old_present": 0,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "No domain metadata standard applied to data files"
+        },
+        "subtotal": 2,
+        "max": 4
+      },
+      "total": 6,
+      "max": 15
+    },
+    "code_fair": {
+      "findable": {
+        "F1_persistent_identifier": {
+          "present": 1,
+          "evidence": "unchanged, basis corrected — supplement code under article DOI (item 5 + AP-2); CRAN evidence inadmissible (dependency) [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "ArchaeoPhases on CRAN with JSS publication DOI; supplement code via paper DOI"
+        },
+        "F2_rich_metadata": {
+          "present": 0,
+          "evidence": "FLIP 1→0 — row 6 supplement-only; CRAN metadata is the dependency's [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [],
+          "old_evidence": "CRAN package page provides structured metadata (version, authors, dependencies, licence)"
+        },
+        "F3_metadata_includes_identifier": {
+          "present": 0,
+          "evidence": "FLIP 1→0 — row 6 supplement-only [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [],
+          "old_evidence": "CRAN metadata includes package version and JSS article reference"
+        },
+        "F4_searchable_registry": {
+          "present": 0,
+          "evidence": "FLIP 1→0 — row 6 supplement-only; CRAN indexing is the dependency's [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [],
+          "old_evidence": "ArchaeoPhases indexed on CRAN, rdrr.io, R-universe"
+        },
+        "subtotal": 1,
+        "max": 4
+      },
+      "accessible": {
+        "A1_standard_protocol": {
+          "present": 1,
+          "evidence": "spot-check CONFIRMED — HTTPS via landing page (403 was scripted-only) [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "HTTPS via CRAN mirrors"
+        },
+        "A1_1_open_free_protocol": {
+          "present": 1,
+          "evidence": "unchanged — OA article, free supplement [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Open source, freely downloadable"
+        },
+        "A1_2_auth_where_needed": {
+          "present": 1,
+          "evidence": "unchanged — item 4 no-auth case [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "No authentication required"
+        },
+        "A2_metadata_persistent": {
+          "present": 0,
+          "evidence": "FLIP 1→0 — row 6 A2=0; CRAN archive is the dependency's [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [],
+          "old_evidence": "CRAN maintains package archive including historical versions"
+        },
+        "subtotal": 3,
+        "max": 4
+      },
+      "interoperable": {
+        "I1_formal_language": {
+          "present": 0,
+          "evidence": "AS-SERVED (AP-9) FLIP 1→0 — code served only as text inside the supplement PDF; not machine-actionable as published [adjudicated 2026-10-02, Sitting 2]",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [
+            "input",
+            "rule"
+          ],
+          "old_evidence": "R package with standard NAMESPACE, DESCRIPTION files"
+        },
+        "I2_fair_vocabularies": {
+          "present": 0,
+          "evidence": "unchanged [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 0,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "No CodeMeta or software ontology"
+        },
+        "I3_qualified_references": {
+          "present": 1,
+          "evidence": "spot-check CONFIRMED — JSS DOI cited (printed link malformed: doubled doi.org prefix) [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Package DESCRIPTION references dependencies; JSS paper references package"
+        },
+        "subtotal": 1,
+        "max": 3
+      },
+      "reusable": {
+        "R1_rich_metadata": {
+          "present": 1,
+          "evidence": "unchanged, basis corrected — main-text code description (pp. 11–14) + sectioned supplement [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "CRAN DESCRIPTION, vignettes, JSS paper documentation"
+        },
+        "R1_1_clear_licence": {
+          "present": 1,
+          "evidence": "unchanged, basis corrected — AP-8 clarity: inherited article licence published; GPL-3 was the dependency's [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "GPL-3 licence for ArchaeoPhases package"
+        },
+        "R1_2_provenance": {
+          "present": 1,
+          "evidence": "unchanged, basis corrected — OxCal 4.4.2 + IntCal20; derivation itemised; CRediT [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Version history on CRAN; development on GitHub"
+        },
+        "R1_3_community_standards": {
+          "present": 0,
+          "evidence": "FLIP 1→0 — principal scripts: no package/CITATION.cff/CodeMeta/review [adjudicated 2026-10-01, Sitting 2]",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [],
+          "old_evidence": "Follows CRAN package standards (R CMD check, DESCRIPTION, NAMESPACE)"
+        },
+        "subtotal": 3,
+        "max": 4
+      },
+      "total": 8,
+      "max": 15
+    }
+  }
+}
