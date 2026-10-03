@@ -1,0 +1,165 @@
+{
+  "record_version": "1.0",
+  "run_id": "phase2-shakedown-2026-10",
+  "workflow_run": "wf_20ac2b6b-9aa",
+  "agent_id": "a66cc6d70d067d421",
+  "agent_type": "reproduction-executor",
+  "launch_commit": "e5f35543c07d2a9314d1742ff34df40a12bd35fd",
+  "effort": "high",
+  "persisted_at": "2026-10-03T12:40:24+00:00",
+  "orchestrator_notes": [],
+  "payload": {
+    "status": "OK",
+    "paper_slug": "herskind-riede-2024",
+    "verdict": "SUCCESSFUL",
+    "attempt_dir": "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02",
+    "artefacts_written": [
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/Dockerfile",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/run-analysis.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/environment.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/log.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/data/Herskind&Riede_S1.xlsx",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/data/Herskind&Riede_S2.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/data/Herskind&Riede_S3.xlsx",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/data/README.txt",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/outputs/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/comparison.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/comparison-report.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/compare.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/compare-console.log",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/published-values/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/results/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/aids/"
+    ],
+    "coverage": {
+      "targets_enumerated": 15,
+      "targets_reproduced": 12
+    },
+    "data_availability": {
+      "level": "L1",
+      "datasets": [
+        {
+          "dataset": "S1 motif presence/absence data, Herskind&Riede_S1.xlsx (483 objects); the only dataset enumerated in the data availability statement and methods",
+          "route": "DOI 10.5281/zenodo.10801706 (version 2) -> Zenodo files API, open HTTPS",
+          "steps": "One unauthenticated GET per file (S1, S2.R, S3, README) on 2026-10-03; md5 verified against the published Zenodo checksums; sha256 recorded before and after copying into data/",
+          "outcome": "Retrieved complete; md5 0bcde6d178b5a8f3da80a023a64ff510 matches the published value",
+          "checksum": "sha256:d76b9d6328465658aa1582c5c8de0912f9167ff1f8c737bd7998d91fd5692030"
+        },
+        {
+          "dataset": "Płonka (2003) analogue catalogue (upstream source transcribed into S1)",
+          "route": "Printed monograph",
+          "steps": "Not attempted; transcription is outside the computational scope per the approved plan",
+          "outcome": "Not retrieved; not a dataset enumerated by the paper's data statement, so it does not enter the L-level",
+          "checksum": null
+        },
+        {
+          "dataset": "Fig. 2 / Fig. 5 base maps and Fig. 5 motif-extent patch layers",
+          "route": "None stated in the paper or the deposit",
+          "steps": "No route to attempt",
+          "outcome": "Unavailable; this makes the T14 patches CANNOT_COMPARE, and the T02 base map is not scored. Not an enumerated dataset.",
+          "checksum": null
+        }
+      ]
+    },
+    "docker": {
+      "image_tag": "llmr-herskind-riede-2024-attempt-02",
+      "base_image": "rocker/r-ver:4.3.2@sha256:4e32addfc4da3e660f6e0d05ce5e43d3eceb9db58a60b9a142e0dde9a654ead1",
+      "build_attempts": 1
+    },
+    "environment_spec_level": 2,
+    "modifications": [
+      {
+        "file": "Dockerfile",
+        "change": "Built from rocker/r-ver:4.3.2. Installed the README package versions from the image's frozen P3M 2024-02-28 snapshot, with a build-time assertion that fails on any version mismatch. Set the C.UTF-8 locale. Added fontconfig with a 'Gill Sans MT' -> DejaVu Sans alias and the cairo libraries.",
+        "rationale": "The authors provide R and package versions only. The locale is needed for the non-ASCII identifier ertebølledata. Gill Sans MT is proprietary and absent; the font affects typography only.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "run-analysis.R",
+        "change": "Reads data/Herskind&Riede_S2.R verbatim and evaluates it statement by statement in its own order, split at the script's own #PART headers, echoing like source(echo=TRUE). Between parts it writes copies of existing objects to outputs/capture-*.csv. Fig. 3 per-panel tables are copied read-only from the authors' ggplot objects ($data and the label layer).",
+        "rationale": "Tables 1-2 exist only as console output, and the per-panel objects are overwritten later in the script. Capture changes how the code runs, not what it computes.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "run-analysis.R",
+        "change": "Runs S2.R with outputs/ as the working directory, via a temporary symlink Herskind&Riede_S1.xlsx -> ../data/, removed at the end.",
+        "rationale": "Lets the authors' relative read and write paths resolve unchanged.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "run-analysis.R",
+        "change": "The single authors' statement font_import(pattern = \"GIL\", prompt = FALSE) is error-tolerant (it failed: 'arguments imply differing number of rows: 0, 1'); any other error stops the run.",
+        "rationale": "The font files are absent, and the authors' own comment says this call errors without affecting output. It only registers fonts.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "run-analysis.R",
+        "change": "Auto-printed plots are routed to a cairo_pdf file (console-plots.pdf); options(bitmapType='cairo'). The authors' ggsave calls are untouched.",
+        "rationale": "Rscript's default pdf() device cannot resolve the 'Gill Sans MT' family name. This is a headless display substitute.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "docker run invocation",
+        "change": "Final run executed with --user host uid:gid and HOME=/tmp. Run 1 (as root) was hashed to scratch and replaced; the two runs are byte-identical except for timestamps.",
+        "rationale": "Avoids root-owned files on the host; doubles as a determinism check.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "comparisons/compare.R",
+        "change": "A separate verification-aid script (ruling R1). It performs read-only S1/S3 lookups, ggplot2 point plots of S1 coordinates, the authors' createResultTable and chrongrams parsed verbatim from S2.R and applied to the observed > 2 bigrams (approval ruling 6), and a read-only sum of C(m,k) over the S1 Total column for the T04 PAPER_ERROR verification. Two defects in my own script were fixed before scoring: a totals merge, and a site-name-only join that picked the wrong 'Korsør, Glasværk' row.",
+        "rationale": "Targets without authors' code need verification aids, kept apart from the authors' code.",
+        "changes_what_is_computed": false
+      }
+    ],
+    "escalations": [
+      {
+        "kind": "PAPER_ERROR",
+        "target_id": "T04",
+        "detail": "Table 1 n values differ by 1 in 8 of 130 cells: bigrams at frequencies 8/7/4/3/2/1 (published 6/8/32/59/154/1224, reproduced 5/9/31/60/153/1225) and trigrams at 2/1 (222/4094 vs 221/4095). The authors' deposited S3 gives 60/31/9/5 at bigram frequencies 3/4/7/8, matching the reproduction. Sum of C(m,2) and C(m,3) over the S1 Total column gives 2513/4961 occurrences, equal to the reproduction; Table 1 implies 2516/4962. Totals and conclusions are unaffected."
+      },
+      {
+        "kind": "PAPER_ERROR",
+        "target_id": "T08",
+        "detail": "The Section 3 text says nine salient bigrams are unique to the Ertebølle period but names eight. The reproduction confirms nine; the omitted one is C5-C12 (3 objects, all Ertebølle, PMI 2.1890). Stated counts 0/1/9 are scored and match (EXACT_MATCH); the list omission is for human confirmation."
+      },
+      {
+        "kind": "CANNOT_COMPARE",
+        "target_id": "T14",
+        "detail": "The Fig. 5 motif-extent patches have no stated source or deposited input. The pie compositions (10/10) and relative positions match via R1 aids. Confirm CANNOT_COMPARE, or reclassify if the patches are judged cartographic."
+      },
+      {
+        "kind": "OTHER",
+        "target_id": "T11",
+        "detail": "Published Fig. 4 boxes also mark many observed <= 2 cells (no PMI fill). The approved aid (createResultTable on observed > 2) covers 32 cells, all matching in colour; the remaining boxes are unverified. The planning assumption was incomplete; a human should decide whether a deviation note or a further check is needed. Scope was not changed."
+      }
+    ],
+    "escalate_reason": null,
+    "receipts": {
+      "instrument_versions": {
+        "verdicts-and-precision": "1.0",
+        "coverage-rules": "1.0",
+        "pipeline-invariants": "1.0"
+      },
+      "instrument_receipts": {
+        "verdicts-and-precision": "fe9bca3d3c95f931",
+        "coverage-rules": "a2a4c0a899291c2b",
+        "pipeline-invariants": "f847020d25d57382"
+      },
+      "agent_version": "reproduction-executor v1.1",
+      "model_id": "claude-opus-5-5",
+      "pulled_files_read": [
+        ".claude/skills/reproduction-assessor/references/dockerfile-patterns.md",
+        ".claude/skills/reproduction-assessor/references/wrapper-script-patterns.md",
+        "reproduction-system/templates/README.md",
+        "reproduction-system/templates/log-template.md",
+        "reproduction-system/templates/environment-template.md",
+        "reproduction-system/templates/comparison-report-template.md",
+        "reproduction-system/prompts/01-preparation.md",
+        "reproduction-system/prompts/02-execution-and-verification.md",
+        "reproduction-system/schemas/comparison-record.json",
+        "studies/open-science-compliance/protocol/instruments/data-availability-taxonomy.md"
+      ]
+    },
+    "notes": "I reproduced Herskind and Riede (2024) successfully: 12 of the 15 locked targets match within tolerance (coverage 0.80), and the check-attempt gate passes with no errors or warnings. The verdict depends on human confirmation of two paper-error calls and one cannot-compare call.\n\n**Approval check.** The plan's sha256 (5cdc8071...abaf63) matches both the spawn hash and the approval record, which has decision \"approve\".\n\n**What ran.** The authors' S2.R (Zenodo v2), unmodified, in Docker on R 4.3.2 with all seven README package versions. The image built on the first attempt, and the build fails if any version differs. The analysis takes about 6 seconds. Two independent runs were byte-identical apart from timestamps.\n\n**Results by target.**\n- **Exact matches:** S3 1601/1601 cells (T15), Fig. 3 labels 128/128 with bar order (T07), Table 3 50/50 (T12), and T01, T03, T06, T08, T09, T13.\n- **Within precision:** Table 2 18/18 (T10), T05, and T11 (all 32 tested Fig. 4 cells match).\n- **T04 (Table 1), paper error:** 122/130 values match. Eight cells differ by 1. The authors' own deposited S3, and arithmetic on S1's Total column (2513 bigram and 4961 trigram occurrences against 2516 and 4962 implied by Table 1), both support the reproduction rather than the table.\n- **T02 (Fig. 2), minor discrepancy:** the published bars stack the culture periods in a different order from the deposited code; segment sizes agree.\n- **T14 (Fig. 5), cannot compare:** pie compositions (10/10) and positions match, but the coloured motif-extent patches have no source anywhere.\n\n**Escalations for human confirmation.**\n- T04 paper error (the Table 1 cells above).\n- T08: the text says nine Ertebølle-only bigrams but names eight; the missing one is C5-C12. The stated counts match, so this does not change the score.\n- T14 cannot-compare call.\n- T11: the published boxes also mark rarely occurring bigrams (observed 2 or less), which the approved check does not cover. The 32 cells it does cover all match.\n\n**Findings recorded but not scored.** The paper prints PMI with log2, but the code and every published value use the natural log. The paper says R 4.2.2; the README says R 4.3.2.\n\n**Blinding disclosures.**\n- A directory listing of the reproduction-assessor references folder printed the bare names of the blinded file verification-strategies.md and the examples subfolder. Neither was opened.\n- A repository-wide `git status` printed untracked path names from another paper's concurrent attempt directory (dye-et-al-2023). Nothing there was opened, read, or modified.\n- Both are logged in log.md.\n\n**Other.**\n- The approved plan says S2.R has 760 lines; it actually has 759, which does not matter.\n- Publisher content was never copied into the attempt directory; page renders used to read the published figures went to scratch only.\n- Nothing was committed."
+  }
+}

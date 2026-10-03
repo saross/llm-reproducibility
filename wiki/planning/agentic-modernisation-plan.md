@@ -154,6 +154,30 @@ above, and dye's separately approved OxCal re-derivation (E8-v2 adjudication log
 1) moves to `attempt-03`. Known risk to the pass criterion: herskind's attempt-01 used
 Zenodo v1, while the version rule (adjudication log AP-12) selects v2, whose files differ.
 
+**Rulings 2026-10-03 (Shawn), and the build:**
+
+- **Attempt numbering confirmed:** the run is `attempt-02` for both papers; OxCal
+  re-derivation is dye `attempt-03`.
+- **Framing — pre-gate shakedown, not the registered gate.** Preregistration §8 already
+  fixes this gate's pass criterion and drift clause (§9 item 5 below is answered there).
+  The registered gate adds a Crema stochastic-path leg (table regeneration from archived
+  posteriors), and amendment 1 §3 orders it *after* model selection, on the selected
+  configuration with both lanes pinned. This run therefore applies the §8 criterion as a
+  rehearsal on herskind and dye. The registered gate (herskind, dye, and Crema) runs
+  after FAIR-lane model selection.
+- **Model:** the three reproduction agents move from the provisional `claude-opus-5` to
+  `claude-opus-5-5` (definitions v1.1). The FAIR-lane benchmark arms do not bind this
+  lane, and a model change is a §8 gate trigger that the registered gate will discharge.
+  **Effort** is pinned `high` (Opus 5.5 defaults to medium).
+- **Blinding:** the agents are barred from attempt-01, the pilot summaries, extractions,
+  assessments, validation records, and the wiki. Instruction now; `audit-run` transcript
+  scan afterwards.
+- **Built** (branch `feat/reproduction-workflow`): `reproduction-system/workflows/`
+  (plan and execute workflows plus runbook), four schemas in `reproduction-system/schemas/`,
+  `scripts/reproduction-lane.py` (args, persistence, approval lock, artefact gate, audit),
+  and 24 tests. Run inputs and the pre-committed criterion are in
+  `studies/open-science-compliance/outputs/validation/phase2-shakedown/`.
+
 ### Phase 3 — Corpus tooling and the JAS run
 
 - Build the sampling frame: JAS 2023-2026 sweep via CrossRef/OpenAlex; screen for

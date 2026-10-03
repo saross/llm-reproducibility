@@ -175,6 +175,46 @@ reproduction:
     log: reproduction-system/templates/log-template.md
     comparison_report: reproduction-system/templates/comparison-report-template.md
 
+  # Agentic lane (modernisation plan §4.2; Phase 2 option (a), approved
+  # 2026-10-02; built 2026-10-03). Runs alongside the session-per-phase
+  # human lane above: plan workflow -> batched approval -> execute workflow
+  # (executor -> deterministic gate -> fresh-context adversarial reviewer).
+  schemas:
+    plan_output:
+      version: "1.0"
+      file: reproduction-system/schemas/reproduction-plan-output.json
+      last_updated: "2026-10-03"
+      description: Structured-output contract for reproduction-planner spawns; the persisted payload's verification_targets become the locked coverage denominator on approval
+    execution_output:
+      version: "1.0"
+      file: reproduction-system/schemas/reproduction-execution-output.json
+      last_updated: "2026-10-03"
+      description: Structured-output contract for reproduction-executor spawns (self-report; persistence verified from disk, invariant 6)
+    review_output:
+      version: "1.0"
+      file: reproduction-system/schemas/adversarial-review-output.json
+      last_updated: "2026-10-03"
+      description: Structured-output contract for adversarial-reviewer spawns (five framework dimensions, CONFIRMED/QUALIFIED/CHALLENGED)
+    comparison_record:
+      version: "1.0"
+      file: reproduction-system/schemas/comparison-record.json
+      last_updated: "2026-10-03"
+      description: On-disk comparisons/comparison.json written by the executor — one record per locked target id; coverage recomputed by the gate
+
+  workflows:
+    plan:
+      file: reproduction-system/workflows/reproduction-plan.workflow.js
+      description: Stage 1 — governed planner fan-out; plans return for persistence and batched human approval (v1.0, 2026-10-03)
+    execute:
+      file: reproduction-system/workflows/reproduction-execute.workflow.js
+      description: Stage 2 — per approved paper, executor -> mechanical artefact gate -> fresh-context adversarial reviewer (v1.0, 2026-10-03)
+
+  lane_tool:
+    version: "1.0"
+    file: scripts/reproduction-lane.py
+    last_updated: "2026-10-03"
+    description: Deterministic orchestration for the agentic lane — args builders (commit-pinned, approval-gated), plan persistence + triage, hash-bound approval, the artefact gate (check-attempt), result persistence, and the post-run audit (receipts, blinding, per-request token dedup, API-equivalent cost)
+
   pilot_statistics:
     papers_attempted: 5
     papers_successful: 4
@@ -510,19 +550,19 @@ agent_definitions:
     sha256: "1c15d0deae13fa57cb8a96317452a72b02d4c929e9e7f039a4f85196e5fda5e5"
   reproduction-planner:
     file: .claude/agents/reproduction-planner.md
-    version: "1.0"
-    model: claude-opus-5
-    sha256: "1ebb9bc17b771a93b0c639721004279397d1ce67cb925a4c20608f2b920cc0a4"
+    version: "1.1"
+    model: claude-opus-5-5
+    sha256: "d0d32935606d6bef8bd00658688297751bdfff1417b5c17ea5afbb7716b9652c"
   reproduction-executor:
     file: .claude/agents/reproduction-executor.md
-    version: "1.0"
-    model: claude-opus-5
-    sha256: "dfcae90d0fea5711f0020b89cc20e692636b4c0619d6156b9b80988f4ff05a90"
+    version: "1.1"
+    model: claude-opus-5-5
+    sha256: "9f03e4430de79f22a57c4fc355d25ecdb8ff7f9cdbf3833b6f1f32589ccee2e5"
   adversarial-reviewer:
     file: .claude/agents/adversarial-reviewer.md
-    version: "1.0"
-    model: claude-opus-5
-    sha256: "ed116e21970483ab5c0b84f5d985534135eda9c7380f21731cc8c9c0a1524bcf"
+    version: "1.1"
+    model: claude-opus-5-5
+    sha256: "356982bd1b52eb3a05a91c2fb24fa560a5da4bb907c70149886a18cef2d099b0"
 
 # Reference datasets read as ground truth by registered analyses
 # (monitoring plan §4 class E8; §9 Q4: register-without-rewrite —
@@ -642,6 +682,14 @@ entity_checks:
   evidence_packs.packs.key-et-al-2024: {class: E6, verify: exists}
   evidence_packs.packs.marwick-2025: {class: E6, verify: exists}
   evidence_packs.packs.crema-et-al-2024: {class: E6, verify: exists}
+  # E3/E4/E6 — agentic reproduction lane (2026-10-03)
+  reproduction.lane_tool: {class: E3, version_source: markdown-header}
+  reproduction.schemas.plan_output: {class: E4, version_source: json-field, json_path: $.version}
+  reproduction.schemas.execution_output: {class: E4, version_source: json-field, json_path: $.version}
+  reproduction.schemas.review_output: {class: E4, version_source: json-field, json_path: $.version}
+  reproduction.schemas.comparison_record: {class: E4, version_source: json-field, json_path: $.version}
+  reproduction.workflows.plan: {class: E6, verify: exists}
+  reproduction.workflows.execute: {class: E6, verify: exists}
   # E1 — frozen canonical instruments (checks implemented today)
   shared_content.fair-instrument: {class: E1}
   shared_content.data-availability-taxonomy: {class: E1}

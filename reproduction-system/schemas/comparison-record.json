@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Reproduction comparison record",
+  "description": "On-disk machine-readable comparison written by reproduction-executor to <attempt_dir>/comparisons/comparison.json (agent definition v1.1, workflow step 4). One record per locked target id from the approved plan — no more, no fewer (pipeline invariant 3); scripts/reproduction-lane.py check-attempt enforces the one-to-one match and recomputes coverage from the outcomes. Outcome categories are the verdicts-and-precision v1.0 discrepancy classification plus PAPER_ERROR (its paper-error handling rule). Coverage numerator per coverage-rules v1.0: targets reproduced exactly or within pre-stated tolerance = EXACT_MATCH, WITHIN_PRECISION, WITHIN_CONFIDENCE.",
+  "version": "1.0",
+  "type": "object",
+  "required": ["schema_version", "paper_slug", "attempt", "plan_sha256", "verdict", "targets"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "paper_slug": {"type": "string", "minLength": 1},
+    "attempt": {"type": "integer", "minimum": 1},
+    "plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the approved reproduction-plan.json this comparison scores against"},
+    "verdict": {"type": "string", "enum": ["SUCCESSFUL", "PARTIAL", "FAILED", "BLOCKED"]},
+    "verdict_rationale": {"type": "string"},
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target_id", "outcome", "testable", "values_compared", "values_matched", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "target_id": {"type": "string", "pattern": "^T[0-9]{2,3}$"},
+          "outcome": {"type": "string", "enum": ["EXACT_MATCH", "WITHIN_PRECISION", "WITHIN_CONFIDENCE", "MINOR_DISCREPANCY", "MAJOR_DISCREPANCY", "CANNOT_COMPARE", "PAPER_ERROR"]},
+          "testable": {"type": "boolean", "description": "False when the target could not be tested (missing data, unbuildable environment); untestable targets stay in the denominator"},
+          "failure_mode": {"type": ["string", "null"], "description": "Required in substance when testable is false or the outcome is CANNOT_COMPARE"},
+          "values_compared": {"type": "integer", "minimum": 0},
+          "values_matched": {"type": "integer", "minimum": 0},
+          "max_abs_difference": {"type": ["number", "null"]},
+          "evidence": {"type": "string", "minLength": 1, "description": "Path (relative to the attempt directory) of the value-level detail file, or the comparison procedure for visual targets"},
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "targets_enumerated": {"type": "integer", "minimum": 0},
+        "targets_reproduced": {"type": "integer", "minimum": 0},
+        "coverage_fraction": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "escalations": {
+      "type": "array",
+      "description": "PAPER_ERROR and CANNOT_COMPARE calls surface for human confirmation before entering study data (modernisation plan §4.4)",
+      "items": {
+        "type": "object",
+        "required": ["kind", "detail"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {"type": "string", "enum": ["PAPER_ERROR", "CANNOT_COMPARE", "OTHER"]},
+          "target_id": {"type": ["string", "null"]},
+          "detail": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

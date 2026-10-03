@@ -1,0 +1,139 @@
+# Phase 2 shakedown — reproduction-lane run configuration
+#
+# Single source of run inputs for scripts/reproduction-lane.py (build-plan-args,
+# persist-plans, approve, build-exec-args, audit-run). The workflow scripts
+# never read this file (workflow scripts have no filesystem access); the
+# builder turns it into hashed, commit-pinned args.
+#
+# Framing (Shawn, 2026-10-03): a PRE-GATE SHAKEDOWN of the agentic
+# reproduction lane — NOT the registered §8 regression gate. Preregistration
+# §8 (protocol/phase-2-preregistration-draft.md:463-471) defines the gate and
+# its Crema stochastic-path leg; amendment 1 §3 (prereg/osf-amendment-1.txt:25)
+# orders it after model selection, on the selected configuration with both
+# lanes pinned. That gate runs later. This run tests the workflow, measures
+# per-paper cost for the Phase 3 cost gate and the Cosmos pitch, and
+# applies the §8 pass criterion as a pre-committed rehearsal
+# (regression-criterion.md, this directory).
+
+run_id: phase2-shakedown-2026-10
+config_version: "1.0"
+attempt: 2            # Shawn 2026-10-03: shakedown = attempt-02 for both papers;
+                      # dye's approved OxCal re-derivation moves to attempt-03
+effort: high          # Shawn 2026-10-03; Opus 5.5 defaults to medium, so pinned
+# Attempt directories are <output_root>/<slug>/reproduction/attempt-NN/
+# (study papers: the queue entry's output_dir is authoritative; all five
+# pilot papers live here).
+output_root: studies/open-science-compliance/outputs
+
+# Registrant rulings (Shawn, 2026-10-03, from reviewing the first plan
+# round, wf_5d10728a-820). These are general rules, passed verbatim to every
+# planner and executor spawn. The first round's paper-specific target lists
+# are NOT passed, so the re-plan enumerates independently. R1 answers both
+# papers' "no author code" questions; R2–R4 generalise the accepted answers
+# to the remaining scope questions.
+rulings:
+  - >-
+    R1 No author code: a target whose published result has no supplied code
+    may be tested with clearly labelled verification aids. Aids are
+    read-only lookups in the deposited data, and calls to documented
+    functions of the package the authors used. They make no new
+    statistical choices, and they live in a separate comparison script,
+    never in the authors' code. A difference caused only by an unpublished
+    convention (for example histogram bin edges) is MINOR_DISCREPANCY.
+  - >-
+    R2 Unavailable inputs: a target whose inputs cannot be obtained stays
+    in the locked denominator as expected-untestable and counts against
+    coverage. Never drop it to narrow scope.
+  - >-
+    R3 Granularity: one target per display item. A multi-panel figure is
+    one target, and its panels are described within it. Named values in
+    the text are separate targets.
+  - >-
+    R4 Internal inconsistency: where the paper's text and its own tables or
+    figures disagree, score against the stated value. Apply the PAPER_ERROR
+    protocol if the reproduction disagrees, and escalate.
+
+agents:
+  planner: reproduction-planner
+  executor: reproduction-executor
+  reviewer: adversarial-reviewer
+
+schemas:
+  plan: reproduction-system/schemas/reproduction-plan-output.json
+  execution: reproduction-system/schemas/reproduction-execution-output.json
+  review: reproduction-system/schemas/adversarial-review-output.json
+  comparison_record: reproduction-system/schemas/comparison-record.json
+
+# Blinding (Shawn 2026-10-03: "Blind them"). Agents are told never to touch
+# any path containing one of these substrings; audit-run scans every
+# transcript afterwards. Spawn-time path enforcement is infeasible in the
+# harness (amendment 2 §4), so the control is instruction + post-run
+# detection, as in the FAIR lane. Residual exposure, stated rather than
+# hidden: the frozen instrument verdicts-and-precision.md and the
+# reproduction-assessor SKILL.md / plan guide name these papers as worked
+# examples of reproduction types and scope (e.g. "Dye (OxCal not
+# reproduced)") but carry no reproduced values.
+blinding:
+  forbidden_substrings:
+    - reproduction/attempt-01          # the pilot's artefacts (regression baseline)
+    - extraction.json                  # pilot extractions incl. FAIR assessments
+    - /assessment/                     # credibility assessments
+    - outputs/validation/              # benchmark records, worksheet, this run
+    - open-science-compliance/reports/ # pilot findings report
+    - outputs/variability-test
+    - reproduction-system-review       # v1.0 review of the pilot
+    - pilot-reproduction-summary
+    - references/examples/             # skill worked examples (pilot outcomes)
+    - verification-strategies.md       # states the pilot's value-level outcomes
+    - wiki/
+    - .claude/projects/                # session transcripts
+    - cc-archives
+    - personal-assistant/
+    - agent-mail/
+  # Harness push-channel spill files live under .claude/projects/; reading
+  # them IS instrument delivery (reconcile-run v1.4 precedent).
+  exempt_regex: '/tool-results/hook-[0-9a-f-]+-\d+-additionalContext\.txt$'
+  # Each paper's agents must also stay out of the other papers' output trees.
+  cross_paper_slugs:
+    - herskind-riede-2024
+    - dye-et-al-2023
+    - key-et-al-2024
+    - marwick-2025
+    - crema-et-al-2024
+
+# API-equivalent prices, USD per million tokens (claude-api skill price
+# table cached 2026-09-25; cache writes 1.25x input for 5-minute TTL and 2x
+# for 1-hour TTL, per its prompt-caching reference). The Max plan bills by
+# subscription; these figures are the API-equivalent for the cost gate.
+pricing_usd_per_mtok:
+  claude-opus-5-5: {input: 4.00, output: 20.00, cache_write_5m: 5.00, cache_write_1h: 8.00, cache_read: 0.20}
+  claude-haiku-4-5: {input: 1.00, output: 5.00, cache_write_5m: 1.25, cache_write_1h: 2.00, cache_read: 0.10}
+
+papers:
+  - slug: herskind-riede-2024
+    paper_pdf: ~/corpora/llm-reproducibility/herskind-riede-2024/vor.pdf
+    supplements: []
+    deposits:
+      - identifier: https://doi.org/10.5281/zenodo.10801706
+        description: >-
+          Zenodo record, version 2 (2024-03-10): S1.xlsx (data), S2.R (code),
+          S3.xlsx (precomputed tables), README.txt. Reproduce THIS version.
+    run_notes: >-
+      Version selection (adjudication rule AP-12, Shawn 2026-10-02/03):
+      reproduce with the code and data as of the paper. The paper's methods
+      cite version 1 (10.5281/zenodo.10623550) and its data-availability
+      statement cites version 2; the publisher's supplementary files are
+      byte-identical to version 2, so version 2 is the version of record.
+      Do not use version 1 or the concept DOI.
+
+  - slug: dye-et-al-2023
+    paper_pdf: ~/corpora/llm-reproducibility/dye-et-al-2023/vor.pdf
+    supplements:
+      - ~/corpora/llm-reproducibility/dye-et-al-2023/supplement-1.pdf
+    deposits: []
+    run_notes: >-
+      Scope boundary for this attempt: regenerating the OxCal MCMC output is
+      handled by a separately approved attempt (attempt-03). Treat the MCMC
+      output file that the supplement's R code reads as this attempt's
+      analysis input, retrieved from the location the supplement gives, and
+      record OxCal regeneration as a scope limitation in the plan.

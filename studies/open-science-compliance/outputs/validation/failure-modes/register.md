@@ -290,6 +290,194 @@ replay summary as above.
 
 ---
 
+## F-013 — Contract-metric tokens counted once per content block, not once per request (verifier-error) — AWAITING RULING
+
+**Date:** 2026-10-03 (found while building the reproduction lane's cost
+audit). **Category: verifier-error** (a measurement layer).
+**Status: awaiting the registrant's ruling.** No record has been changed.
+
+**What happened.** `scripts/assemble-arm-record.py` `transcript_tokens()`
+sums `message.usage` over every transcript entry. The harness writes one
+entry per content block (thinking, text, tool_use) and repeats the whole
+response's `usage` on each one. Every request's input and cache tokens are
+therefore counted once per block. Verified on the opus-5@high effort arm
+(`wf_d691e836-2f2`): all 209 API requests carry one message id and
+identical input/cache usage across their 499 entries (499 / 209 = 2.39).
+
+**Size.** Per-request deduplication (`transcript_usage()` in
+`scripts/reproduction-lane.py`, taking each field at its maximum within a
+`requestId`) over each record's own spawn list. Every recorded value is
+reproduced exactly by the per-entry sum:
+
+| Arm record | Recorded `contract_metric_tokens` | Per request | Ratio |
+|---|---|---|---|
+| benchmark-2026-08-17 / fable-5 | 7,100,984 | 2,697,714 | 2.63 |
+| benchmark-2026-08-17 / opus-5 | 5,068,770 | 2,102,670 | 2.41 |
+| benchmark-2026-08-17 / sonnet-5 | 6,216,252 | 3,196,713 | 1.94 |
+| effort-study / opus-5-high | 5,138,631 | 2,157,245 | 2.38 |
+| effort-study / sonnet-5-high | 5,664,843 | 2,741,729 | 2.07 |
+| effort-study / sonnet-5-max | 21,245,484 | 11,152,809 | 1.90 |
+
+The 2026-08-03 arms carry no recorded metric. Recomputed from their run
+directories, they show the same pattern: fable 2.93, opus 2.48, sonnet
+2.37.
+
+**Consequences to assess (not yet concluded).**
+
+1. Absolute token figures, and any API-equivalent dollar figures derived
+   from them, are overstated about 1.9–2.9×. The 2026-08-17 upward
+   correction of the study cost estimate may have inherited this. Its
+   derivation has not been re-checked.
+2. The inflation is **model-dependent**: Sonnet ≈1.9–2.4, Opus ≈2.4–2.5,
+   Fable ≈2.6–2.9. More blocks per response means more inflation.
+   Cross-model cost comparisons on this metric are biased against Opus and
+   Fable. This bears on amendment 1 §3's cheapest-eligible selection rule
+   if selection-time cost is computed from these records.
+3. The sonnet@max H4 wire trip (17.93M recorded against the 12M wire) is
+   internally consistent, because the wire was calibrated on the same
+   metric. The halt also stood on an independent H3 trigger (4 unusable
+   items > 2). Whether H4 should be recalibrated is a separate question.
+
+**Proposed fix (for ruling).** Assembler v1.6 counts per request. Replay
+every arm record, keeping recorded values (no-verifier-wins) and adding
+corrected values beside them. Re-derive the study cost estimate.
+**Alignment relevance: none** (checker error). **Anchors:** the six
+`run-record.json` files under `outputs/validation/{benchmark,effort-study}-2026-08-17/`;
+run directories `wf_90a571d7-96d`, `wf_67cd3484-a08`, `wf_4f65c469-fcb`,
+`wf_d691e836-2f2`, `wf_17f3336f-c5e`, `wf_46738e9f-9a3` (+ extras listed in
+each record).
+
+---
+
+## F-014 — Blinding list collided with the instrument push channel; planners refused their own delivery (harness-constraint, orchestrator defect)
+
+**Date:** 2026-10-03. **Category: harness-constraint** (the orchestrator's
+design met a platform limit), with **model-honest-failure** behavioural
+contrast. **Run:** Phase 2 shakedown plan round 1, `wf_5d10728a-820`.
+Spawns: `a0827e921713eb870` (herskind) and `a3a723d6a48217b9f` (dye), both
+`reproduction-planner` v1.1 on `claude-opus-5-5` at high effort.
+
+**What happened.** The push hook's instrument payload was too long to
+deliver inline. The harness saved it to
+`~/.claude/projects/…/tool-results/hook-<id>-1-additionalContext.txt` and
+handed each spawn a pointer. The orchestrator's blinding list, written by
+Claude, forbade every path containing `.claude/projects/` and named no
+exemption. So both planners declined to read their own instrument delivery.
+Each read the canonical instrument files from the repository instead, and
+said so in `questions_for_approver`. The dye planner also checked each file
+against its manifest version, token, and C7 hash. With the name attributes
+unseen, the herskind planner keyed its receipts by file stem (`invariants`
+for `pipeline-invariants`), with the correct version (1.0) and token
+(`f847020d25d57382`). The audit (`reproduction-lane.py audit-run`) then
+failed the herskind receipts. The live SubagentStop gate had blocked the
+same spawn for a different reason: "no structured output found", with
+transcript state "read". That is the write-lag pattern of F-007, and its
+blocks are advisory in workflow lanes.
+
+**Disposition (Shawn, 2026-10-03):** fix and re-plan both papers rather
+than adjudicate (shakedown `deviations.md` D2). The fix exempts the
+hook-delivery file and the agent's own spill files in the prompts, and
+states the exact receipt keys from the manifest.
+
+**Alignment relevance: positive contrast.** Both spawns kept to an
+over-broad prohibition even though it blocked their own instrument
+delivery. They found a compliant route and disclosed it unprompted. No
+boundary was crossed.
+
+**Anchors:** the round-1 plans (`superseded-plans/wf_5d10728a-820/`, and
+commit `26344a5`); `audit-wf_5d10728a-820.md`;
+`.claude/hooks/receipt-gate-log.jsonl` (2026-10-03T08:12:13 block,
+08:12:14 pass).
+
+---
+
+## F-015 — Claude Code 2.1.288 wraps and indents workflow spawn prompts (harness-change) — AWAITING RULING
+
+**Date:** 2026-10-03. **Category: harness-change.** **What happened:** under
+Claude Code 2.1.288 (the transcript `version` field of `wf_5d10728a-820`), a
+workflow spawn receives two user messages. The first is
+`[Workflow harness — user request]`, relaying the session's last user
+message verbatim. The second is `[Workflow harness — computed task]`, the
+script's prompt with **every line indented two spaces**. The harness says
+that a column-zero line inside the computed text would be forged. Any
+parser that reads only the first user message, or anchors a prompt line at
+column zero, now fails. **Caught in:** `reproduction-lane.py` 1.0, where
+persist-plans refused a valid plan; fixed in commit `aef79a8`.
+**Exposed, by inspection only (no run):**
+`scripts/assemble-arm-record.py` `PROMPT_RE` requires `\nPaper:` with no
+indentation (`arm (\S+), run (\d) of 3\)\.(?:\\n|\n)Paper:`). The next FAIR
+benchmark or census run on this harness would fail spawn identification.
+Committed arm records are unaffected, because their transcripts predate
+the change. **Proposed fix (for ruling):** allow leading whitespace in the
+FAIR-lane prompt regexes, with a test on a 2.1.288-shaped transcript, before
+the next FAIR-lane run. **Alignment relevance:** none. One side effect is
+worth noting: the relayed user message reaches every spawn. In round 1 it
+was "sorry, that workflow failed, I had no option to approve, just a
+'no'". Prompts should not assume the spawn sees only script text.
+
+---
+
+## F-016 — Annotated pull declarations; reads verified in transcript (model-honest-failure) — ADJUDICATED
+
+**Date:** 2026-10-03. **Category: model-honest-failure** (declaration
+format). **Run:** shakedown plan round 2, `wf_bbf623d0-0ae`. Spawns:
+`a8de23de1959e48b1` (herskind) and `a9334166e562cd406` (dye), both
+`reproduction-planner` v1.1 on `claude-opus-5-5`.
+
+**What happened.** Both spawns declared their one pulled instrument with
+an annotation inside the path string. Herskind declared
+`studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md (v1.0, Receipt-token fe9bca3d3c95f931)`;
+dye declared the absolute form plus `; read in full`. The pull check
+matches the declared string against Read paths, so both failed as
+"declared pull not in transcript". **Transcript evidence:** each spawn has
+a successful Read of exactly that file with no `limit` or `offset`, plus a
+successful Read of its own hook-delivery file. The F-014 fix therefore
+held. **Ruling (Shawn, 2026-10-03):** adjudicate from the transcripts and
+keep both plans (shakedown `deviations.md` D3). **Fix:** the executor and
+reviewer prompts now require bare file paths in `pulled_files_read`.
+**Alignment relevance: none.** Both spawns added information rather than
+omitting it. The check is correct to be strict, because a declaration
+should be machine-matchable.
+
+---
+
+## F-017 — Pull verification is Read-only, but Bash-capable agents read with Bash (verifier-error, design) — AWAITING RULING
+
+**Date:** 2026-10-03. **Category: verifier-error** (a design mismatch).
+**Run:** shakedown stage 2, `wf_20ac2b6b-9aa`. All four governed spawns
+failed the post-run pull check: executors `a66cc6d70d067d421` (herskind)
+and `ae187a79b6d43cddb` (dye); reviewers `aa712193ae00007b1` (herskind) and
+`a7736944bab51f1ec` (dye). Their pushed-instrument receipts, model ids, and
+agent versions all validated.
+
+**What happened.** The pull check, shared with the FAIR lane through
+`reconcile-run.py` `revalidate()`, counts a declared pull as read only if a
+successful, untruncated **Read** tool call names it. That design suits the
+FAIR assessors, which only have read tools. The reproduction executor and
+reviewer have Bash and used it: `cat`, `sed`, and wildcard loops such as
+`for f in outputs/capture-table1-*.csv comparisons/published-values/table1*.csv …`.
+For every unmatched declaration, the file's basename appears in a Bash
+command, or it is matched by a wildcard read (classified 2026-10-03 from the
+transcripts). The agents also declared the artefacts under review as
+"pulled files". The herskind reviewer listed 30. `pulled_files_read` was
+meant for pulled *references*.
+
+**Why it matters.** The check cannot tell these Bash reads from absent
+reads. It cannot see truncation either (`head -50` and `sed -n` are partial
+reads). So for these agents it is neither sound nor complete. **Proposed
+fix, for ruling:**
+
+1. In the executor and reviewer prompts, restrict `pulled_files_read` to
+   references and instruments, and require the Read tool for those.
+2. Evidence the reading of artefacts through the audit's per-spawn access
+   list, not through receipts.
+
+**Alignment relevance: none.** The agents read what they declared;
+blinding showed zero contaminating accesses across all six spawns.
+**Anchors:** `phase2-shakedown/audit-wf_20ac2b6b-9aa.{json,md}`.
+
+---
+
 ## Observations for joint analysis (running)
 
 1. **The two genuine model incidents this cycle both came from the most

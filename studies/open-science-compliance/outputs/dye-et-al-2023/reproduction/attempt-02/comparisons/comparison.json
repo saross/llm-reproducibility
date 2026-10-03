@@ -1,0 +1,411 @@
+{
+  "schema_version": "1.0",
+  "paper_slug": "dye-et-al-2023",
+  "attempt": 2,
+  "plan_sha256": "7ff05a24d1342b84ebe5f61f2f0e7b15df040baf73ad1c67aa13c63ff49f0f35",
+  "verdict": "PARTIAL",
+  "verdict_rationale": "The authors' R post-processing of the archived OxCal output reproduces exactly: all 54 cells of Supplement Tables 2-10, every supplement section 10 text value, the main-text ancestor inferences (T05, T07, T08) and the 54-relation summary, the Fig 4 tempo plots in content, and the section 11/12 lattice values through R1 aids. Two analyses could not be reproduced: paper Fig 3 (the authors' section 4 code fails on the published data, a code-data mismatch) and the five-run replicability analysis (Supplement Table 1 and its summary; four of five MCMC runs unavailable). One main-text value (T06, 0.87) is a suspected paper error that leaves the conclusion intact. Coverage 25/34. With two substantive analyses not reproducible, PARTIAL rather than SUCCESSFUL. OxCal regeneration is out of scope (attempt-03).",
+  "targets": [
+    {
+      "target_id": "T01",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 78,
+      "values_matched": 78,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T01-fig-2-memberships.csv",
+      "notes": "R1 verification aid: allen_illustrate('branching'|'transformation'|'reticulation'|'branch'|'transform'|'reticulate') (ArchaeoPhases 1.8). All 78 relation memberships (13 x 6 lattices) equal the opaque labels of paper Fig 2 (read from a 300 dpi render) and the section 3 text sets. Titles and styling not scored, per plan."
+    },
+    {
+      "target_id": "T02",
+      "outcome": "CANNOT_COMPARE",
+      "testable": false,
+      "failure_mode": "Authors' code fails on the published data: burial.dates <- c(3:5, 7, 9, 12:78) indexes column 78, but read_oxcal() (ArchaeoPhases 1.8) returns 77 columns, so occurrence_plot() stops with 'undefined columns selected'. The code's x_min=500/x_max=700 also disagree with the published 400-800 axis: the published figure was not made from the published code + data as given (code-data mismatch).",
+      "values_compared": 0,
+      "values_matched": 0,
+      "max_abs_difference": null,
+      "evidence": "comparisons/values/T02-section-04-status.csv",
+      "notes": "Authors' section 4 code run verbatim (path-only edits) on the published beads-1.csv. Not corrected: changing the index vector would change the data selection (invariant 2). Surfaced for human confirmation."
+    },
+    {
+      "target_id": "T03",
+      "outcome": "MINOR_DISCREPANCY",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 23,
+      "values_matched": 23,
+      "max_abs_difference": null,
+      "evidence": "comparisons/values/T03-tempo-shape-summary.csv",
+      "notes": "outputs/test-bead-tempos.pdf (authors' section 6 code) compared panel by panel with paper Fig 4 (200 dpi render): same 23 panels in the same order and same mean/credible-interval curve shapes. The text's early versus late classes separate cleanly (median event year <= 590 for every early type; >= 626 for every late type). BE1-Disc first event 665, last 756 (later 7th to mid 8th c.). The only difference is the ggplot2 theme (grey panel background versus published white): a style difference from an unpublished convention, which the plan pre-classes as MINOR_DISCREPANCY."
+    },
+    {
+      "target_id": "T04",
+      "outcome": "MINOR_DISCREPANCY",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 8,
+      "values_matched": 8,
+      "max_abs_difference": null,
+      "evidence": "comparisons/values/T04-fig-6-links.csv",
+      "notes": "All 8 depicted links are supported by the reproduced probabilities: CylRound(oFD) Orange 0.95, SegGlob 1.00, WoundSp 0.96, Dghnt 0.99; Amber(oFDm)Dghnt 1; Amber(oFD) Cowrie 1, Amethyst 1; Cowrie(oFD)Disc 1.00. Placements (comparisons/values/T04-fig-6-placements.csv; illustration-box positions measured on a 400 dpi render) agree in relative order with the reproduced tempo first/last event years. Largest endpoint differences (years): Disc lower box 47, Cowrie upper 42, Amethyst upper 41, WoundSp upper 34, Orange 33 (both ends), Dghnt upper 28; all others within 20: within a few decades, so MINOR_DISCREPANCY per the plan. Hand-composed figure; illustrations not scored."
+    },
+    {
+      "target_id": "T05",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2,
+      "values_matched": 2,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T05-amber-branching.csv",
+      "notes": "Section 7 matrix: BE3-Amber(oFD)BE1-Amethyst = 1 and BE3-Amber(oFD)BE1-Cowrie = 1 exactly ('always satisfies'); converse cells 0, confirming row = ancestor orientation."
+    },
+    {
+      "target_id": "T06",
+      "outcome": "PAPER_ERROR",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 0,
+      "max_abs_difference": 0.13,
+      "evidence": "comparisons/values/T06-cowrie-disc.csv",
+      "notes": "Published BE1-Cowrie(oFD)BE1-Disc = 0.87; reproduced 0.99967 (2 dp 1.00) from the authors' section 7 code. The published 0.87 equals a different cell of the same matrix, BE1-Amethyst(oFD)BE1-Disc = 0.86717 (comparisons/values/T06-section-07-full-matrix.csv), consistent with a misread row. Verification: the same inputs and code reproduce all 54 tabulated values of Supplement Tables 2-10 exactly, including R-rounding edge cases (0.065 -> 0.06). Orientation confirmed by T05. The paper's qualitative claim (Disc most likely descended from Cowrie) holds and is stronger (1.00 > Amethyst 0.87 > Amber 0.83). SUSPECTED: escalated for human confirmation. Residual alternative: a different, unpublished MCMC run."
+    },
+    {
+      "target_id": "T07",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 3,
+      "values_matched": 3,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T07-cylround-ancestor.csv",
+      "notes": "Section 8 (oFD): CylRound is the unique argmax ancestor for Orange (0.950 vs CylPen 0.924, Melon 0.842, SegGlob 0.507), WoundSp (0.959 vs 0.875, 0.365, 0.835) and Dghnt (0.992 vs 0.946, 0.440, 0.908)."
+    },
+    {
+      "target_id": "T08",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T08-amber-dghnt-reticulation.csv",
+      "notes": "Section 9 (oFDm): BE3-Amber -> BE1-Dghnt = 1.000; Amethyst 0.132, Cowrie 0.271, Disc 0.001. Argmax = BE3-Amber."
+    },
+    {
+      "target_id": "T09",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2,
+      "values_matched": 2,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T09-54-relations-summary.csv",
+      "notes": "54 relations reproduced (all equal to the published tables at 2 dp). (a) Typically low: median 0.375; 20 of 54 <= 0.10 (identical to published). (b) 12 relations > 0.9, all involve BE1-Disc (identical to published)."
+    },
+    {
+      "target_id": "T10",
+      "outcome": "CANNOT_COMPARE",
+      "testable": false,
+      "failure_mode": "Missing inputs: beads-0.csv, beads-2.csv, beads-3.csv, beads-4.csv are not published (supplement uses /path/to/ placeholders; https://tsdye.online/AP/beads-{0,2,3,4}.csv HTTP 404 on 2026-10-03). Section 3 not executed.",
+      "values_compared": 0,
+      "values_matched": 0,
+      "max_abs_difference": null,
+      "evidence": "comparisons/values/T10-section-03-status.csv",
+      "notes": "Expected-untestable per ruling R2; stays in the denominator. No L4 request sent (approver ruling)."
+    },
+    {
+      "target_id": "T11",
+      "outcome": "CANNOT_COMPARE",
+      "testable": false,
+      "failure_mode": "Missing inputs: four of the five OxCal MCMC runs required by estimate_range() are unavailable (HTTP 404, no stated location).",
+      "values_compared": 0,
+      "values_matched": 0,
+      "max_abs_difference": null,
+      "evidence": "comparisons/values/T11-section-03-status.csv",
+      "notes": "Expected-untestable per ruling R2 (462 values); stays in the denominator. Section 3 transcribed (authors-code/section-03-replicability.R) but not executed."
+    },
+    {
+      "target_id": "T12",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 16,
+      "values_matched": 16,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T12-supp-table-2.csv",
+      "notes": "Supplement Table 2: every cell of round(res$observed, 2) from the authors' section 10 code equals the published value (difference 0 at 2 dp)."
+    },
+    {
+      "target_id": "T13",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 7,
+      "values_matched": 7,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T13-supp-table-3.csv",
+      "notes": "Supplement Table 3: every cell of round(res$observed, 2) from the authors' section 10 code equals the published value (difference 0 at 2 dp)."
+    },
+    {
+      "target_id": "T14",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 5,
+      "values_matched": 5,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T14-supp-table-4.csv",
+      "notes": "Supplement Table 4: every cell of round(res$observed, 2) from the authors' section 10 code equals the published value (difference 0 at 2 dp)."
+    },
+    {
+      "target_id": "T15",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 12,
+      "values_matched": 12,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T15-supp-table-5.csv",
+      "notes": "Supplement Table 5: every cell of round(res$observed, 2) from the authors' section 10 code equals the published value (difference 0 at 2 dp)."
+    },
+    {
+      "target_id": "T16",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 6,
+      "values_matched": 6,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T16-supp-table-6.csv",
+      "notes": "Supplement Table 6: every cell of round(res$observed, 2) from the authors' section 10 code equals the published value (difference 0 at 2 dp)."
+    },
+    {
+      "target_id": "T17",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2,
+      "values_matched": 2,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T17-supp-table-7.csv",
+      "notes": "Supplement Table 7: every cell of round(res$observed, 2) from the authors' section 10 code equals the published value (difference 0 at 2 dp)."
+    },
+    {
+      "target_id": "T18",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T18-supp-table-8.csv",
+      "notes": "Supplement Table 8: every cell of round(res$observed, 2) from the authors' section 10 code equals the published value (difference 0 at 2 dp)."
+    },
+    {
+      "target_id": "T19",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T19-supp-table-9.csv",
+      "notes": "Supplement Table 9: every cell of round(res$observed, 2) from the authors' section 10 code equals the published value (difference 0 at 2 dp)."
+    },
+    {
+      "target_id": "T20",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 4,
+      "values_matched": 4,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T20-supp-table-10.csv",
+      "notes": "Supplement Table 10: every cell of round(res$observed, 2) from the authors' section 10 code equals the published value (difference 0 at 2 dp)."
+    },
+    {
+      "target_id": "T21",
+      "outcome": "MINOR_DISCREPANCY",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 26,
+      "values_matched": 26,
+      "max_abs_difference": null,
+      "evidence": "comparisons/values/T21-supp-fig-1-memberships.csv",
+      "notes": "R1 aids: allen_illustrate('basic', plot_title='') and allen_observe(BE1-Dghnt vs BE1-Dghnt). Scientific content matches: top, all 13 relations; bottom, only 'equals' (probability 1), title 'BE1-Dghnt(e)BE1-Dghnt' identical. Styling differs (grey panel background; the top panel shows a one-value legend that the published panel lacks): MINOR_DISCREPANCY per the plan's tolerance."
+    },
+    {
+      "target_id": "T22",
+      "outcome": "MINOR_DISCREPANCY",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 10,
+      "values_matched": 8,
+      "max_abs_difference": 1,
+      "evidence": "comparisons/values/T22-supp-fig-2-bins.csv",
+      "notes": "R1 aid: ggplot2 histogram of the 54 reproduced relations, 0.1-wide bins from 0 (the published bar edges). Planned method (unrounded values) gives 19, 5, 2, 3, 3, 4, 4, 1, 1, 12 against the published 20, 4, 2, 3, 3, 4, 4, 1, 1, 12. The single difference is BE1-Koch20Wh(p)BE1-WoundSp = 0.10017 sitting on the 0.1 bin edge. With the 2-dp values as published in Table 5 (0.1) and right-closed bins, all 10 bins match exactly. A difference caused only by the unpublished bin-edge/rounding convention, hence MINOR_DISCREPANCY per R1 and the plan (max_abs_difference in counts)."
+    },
+    {
+      "target_id": "T23",
+      "outcome": "MINOR_DISCREPANCY",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 26,
+      "values_matched": 26,
+      "max_abs_difference": null,
+      "evidence": "comparisons/values/T23-supp-fig-3-memberships.csv",
+      "notes": "R1 aids: right panel allen_observe(BE1-Koch20Wh vs BE1-WhSpiral) gives relation set poDd with 'overlaps' dominant (0.725; p 0.268, D 0.006, d 0.001); title and legend breaks (0.0-0.6) identical to the published panel. Left panel via the documented allen_illustrate('transform') (composition m.m = {p}) renders exactly {p}. Styling differs (grey background): MINOR_DISCREPANCY per the plan."
+    },
+    {
+      "target_id": "T24",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 8,
+      "values_matched": 8,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T24-supp-10-1-text.csv",
+      "notes": "Each value or range stated in the supplement section 10 text was derived (read-only) from the reproduced matrix and equals the stated value at 2 dp. Text and Table agree, so R4 is not triggered."
+    },
+    {
+      "target_id": "T25",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 3,
+      "values_matched": 3,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T25-supp-10-2-text.csv",
+      "notes": "Each value or range stated in the supplement section 10 text was derived (read-only) from the reproduced matrix and equals the stated value at 2 dp. Text and Table agree, so R4 is not triggered."
+    },
+    {
+      "target_id": "T26",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 5,
+      "values_matched": 5,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T26-supp-10-3-text.csv",
+      "notes": "Each value or range stated in the supplement section 10 text was derived (read-only) from the reproduced matrix and equals the stated value at 2 dp. Text and Table agree, so R4 is not triggered."
+    },
+    {
+      "target_id": "T27",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 6,
+      "values_matched": 6,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T27-supp-10-4-text.csv",
+      "notes": "Each value or range stated in the supplement section 10 text was derived (read-only) from the reproduced matrix and equals the stated value at 2 dp. Text and Table agree, so R4 is not triggered."
+    },
+    {
+      "target_id": "T28",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 6,
+      "values_matched": 6,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T28-supp-10-5-text.csv",
+      "notes": "Each value or range stated in the supplement section 10 text was derived (read-only) from the reproduced matrix and equals the stated value at 2 dp. Text and Table agree, so R4 is not triggered."
+    },
+    {
+      "target_id": "T29",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 4,
+      "values_matched": 4,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T29-supp-10-6-text.csv",
+      "notes": "Each value or range stated in the supplement section 10 text was derived (read-only) from the reproduced matrix and equals the stated value at 2 dp. Text and Table agree, so R4 is not triggered."
+    },
+    {
+      "target_id": "T30",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T30-supp-10-7-text.csv",
+      "notes": "Each value or range stated in the supplement section 10 text was derived (read-only) from the reproduced matrix and equals the stated value at 2 dp. Text and Table agree, so R4 is not triggered."
+    },
+    {
+      "target_id": "T31",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T31-supp-10-8-text.csv",
+      "notes": "Each value or range stated in the supplement section 10 text was derived (read-only) from the reproduced matrix and equals the stated value at 2 dp. Text and Table agree, so R4 is not triggered."
+    },
+    {
+      "target_id": "T32",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 5,
+      "values_matched": 5,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T32-supp-10-9-text.csv",
+      "notes": "Each value or range stated in the supplement section 10 text was derived (read-only) from the reproduced matrix and equals the stated value at 2 dp. Text and Table agree, so R4 is not triggered."
+    },
+    {
+      "target_id": "T33",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/T33-dghnt-identity.csv",
+      "notes": "R1 aid allen_observe(BE1-Dghnt vs BE1-Dghnt): P(equals) = 1 exactly."
+    },
+    {
+      "target_id": "T34",
+      "outcome": "WITHIN_PRECISION",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2,
+      "values_matched": 2,
+      "max_abs_difference": 0.005,
+      "evidence": "comparisons/values/T34-koch20wh-whspiral.csv",
+      "notes": "R1 aid allen_observe: non-zero relation set {p,o,D,d} = poDd (exact). P(overlaps) = 0.725 exactly (4350/6000), which is the published 0.73 under round-half-up; R's round() gives 0.72. Difference 0.005 is within rounding of the reported 2-dp precision."
+    }
+  ],
+  "coverage": {
+    "targets_enumerated": 34,
+    "targets_reproduced": 25,
+    "coverage_fraction": 0.7353
+  },
+  "escalations": [
+    {
+      "kind": "PAPER_ERROR",
+      "target_id": "T06",
+      "detail": "Paper p.16 l.374-376 reports BE1-Cowrie(oFD)BE1-Disc = 0.87; the authors' own section 7 code on the published beads-1.csv gives 0.99967 (1.00). 0.87 is the BE1-Amethyst(oFD)BE1-Disc cell (0.86717) of the same matrix. All 54 Supplement Table 2-10 values reproduce exactly from the same inputs, so the pipeline matches the authors'. Conclusion unaffected. Needs human confirmation before entering study data."
+    },
+    {
+      "kind": "CANNOT_COMPARE",
+      "target_id": "T02",
+      "detail": "Paper Fig 3: the supplement section 4 code indexes column 78 of a 77-column read_oxcal() result and stops ('undefined columns selected'); its x-limits (500-700) also differ from the published axis (~400-800). Code-data mismatch in the published materials; not corrected (invariant 2)."
+    },
+    {
+      "kind": "CANNOT_COMPARE",
+      "target_id": "T10",
+      "detail": "Replicability summary needs beads-0/2/3/4.csv: not published, HTTP 404 at tsdye.online, no stated location. Expected-untestable (R2); no L4 request per approver ruling."
+    },
+    {
+      "kind": "CANNOT_COMPARE",
+      "target_id": "T11",
+      "detail": "Supplement Table 1 (462 values) needs the same four unavailable MCMC runs as T10."
+    }
+  ]
+}

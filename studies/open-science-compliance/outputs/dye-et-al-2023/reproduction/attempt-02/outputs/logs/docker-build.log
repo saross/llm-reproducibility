@@ -1,0 +1,1760 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 3.56kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/rocker/r-ver:4.2.3
+#2 DONE 2.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 3.18MB 0.0s done
+#4 DONE 0.0s
+
+#5 [1/7] FROM docker.io/rocker/r-ver:4.2.3@sha256:6dff804fb051f7c38cf9ebcaf307b5102b46e5187ffe2ce921d760a26facd693
+#5 resolve docker.io/rocker/r-ver:4.2.3@sha256:6dff804fb051f7c38cf9ebcaf307b5102b46e5187ffe2ce921d760a26facd693 done
+#5 sha256:22202dfb31f3a1b515936bac559a9f56b67585adce2c14d063f97478940d374a 1.44kB / 1.44kB done
+#5 sha256:7646c8da332499ae416b15479ce832db32e39a501c662e24324f595509a0d3db 0B / 29.53MB 0.1s
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 0B / 269.33MB 0.1s
+#5 sha256:6dff804fb051f7c38cf9ebcaf307b5102b46e5187ffe2ce921d760a26facd693 1.61kB / 1.61kB done
+#5 sha256:17251b326d256df52324d594fda758ed9508adcb6f268e6453949440082f93b6 5.80kB / 5.80kB done
+#5 sha256:7152e2fa06c377694d16a28ec5348689647bc6209a10bb3c0f940f0af1ee536a 0B / 1.85kB 0.1s
+#5 sha256:7646c8da332499ae416b15479ce832db32e39a501c662e24324f595509a0d3db 5.24MB / 29.53MB 0.3s
+#5 sha256:7646c8da332499ae416b15479ce832db32e39a501c662e24324f595509a0d3db 16.78MB / 29.53MB 0.4s
+#5 sha256:7646c8da332499ae416b15479ce832db32e39a501c662e24324f595509a0d3db 28.31MB / 29.53MB 0.5s
+#5 sha256:7646c8da332499ae416b15479ce832db32e39a501c662e24324f595509a0d3db 29.53MB / 29.53MB 0.5s done
+#5 sha256:7152e2fa06c377694d16a28ec5348689647bc6209a10bb3c0f940f0af1ee536a 1.85kB / 1.85kB 0.5s done
+#5 extracting sha256:7646c8da332499ae416b15479ce832db32e39a501c662e24324f595509a0d3db 0.1s
+#5 sha256:6c41dd9852b5d9ae042662f7c734bb2058a0ebb88447154cd30799ee59b1aad8 0B / 1.53kB 0.6s
+#5 sha256:eb1e120f7351d4efaf6b89120279eaef3f147edc590abd264f470784319702a4 0B / 27.57MB 0.6s
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 19.92MB / 269.33MB 1.0s
+#5 sha256:6c41dd9852b5d9ae042662f7c734bb2058a0ebb88447154cd30799ee59b1aad8 1.53kB / 1.53kB 0.8s done
+#5 sha256:eb1e120f7351d4efaf6b89120279eaef3f147edc590abd264f470784319702a4 11.53MB / 27.57MB 1.0s
+#5 sha256:efdfa224d47aa058b81a33f52c46dfa7cd443b44f3fa435caa14f9f234d1921b 0B / 22.77kB 1.0s
+#5 extracting sha256:7646c8da332499ae416b15479ce832db32e39a501c662e24324f595509a0d3db 0.5s done
+#5 sha256:eb1e120f7351d4efaf6b89120279eaef3f147edc590abd264f470784319702a4 24.12MB / 27.57MB 1.2s
+#5 sha256:efdfa224d47aa058b81a33f52c46dfa7cd443b44f3fa435caa14f9f234d1921b 22.77kB / 22.77kB 1.1s done
+#5 extracting sha256:7152e2fa06c377694d16a28ec5348689647bc6209a10bb3c0f940f0af1ee536a done
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 50.33MB / 269.33MB 1.4s
+#5 sha256:eb1e120f7351d4efaf6b89120279eaef3f147edc590abd264f470784319702a4 27.57MB / 27.57MB 1.3s done
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 74.45MB / 269.33MB 1.6s
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 97.52MB / 269.33MB 1.8s
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 118.49MB / 269.33MB 2.0s
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 140.51MB / 269.33MB 2.2s
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 164.63MB / 269.33MB 2.4s
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 199.23MB / 269.33MB 2.7s
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 223.35MB / 269.33MB 2.9s
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 246.42MB / 269.33MB 3.1s
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 269.33MB / 269.33MB 3.3s
+#5 sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 269.33MB / 269.33MB 3.5s done
+#5 extracting sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 0.1s
+#5 extracting sha256:f6e91e564c4230ccc79d0808a8cefd5c5aab3a161f62fa27fe48caf72d852701 2.5s done
+#5 extracting sha256:6c41dd9852b5d9ae042662f7c734bb2058a0ebb88447154cd30799ee59b1aad8 done
+#5 extracting sha256:eb1e120f7351d4efaf6b89120279eaef3f147edc590abd264f470784319702a4
+#5 extracting sha256:eb1e120f7351d4efaf6b89120279eaef3f147edc590abd264f470784319702a4 0.2s done
+#5 extracting sha256:efdfa224d47aa058b81a33f52c46dfa7cd443b44f3fa435caa14f9f234d1921b done
+#5 DONE 6.5s
+
+#6 [2/7] RUN apt-get update && apt-get install -y --no-install-recommends         libproj-dev         libglpk-dev         libgmp-dev         libxml2-dev         libcairo2-dev         libfontconfig1-dev         libfreetype6-dev         libpng-dev         libharfbuzz-dev         libfribidi-dev         libcurl4-openssl-dev         libssl-dev         fonts-dejavu-core     && rm -rf /var/lib/apt/lists/*
+#6 0.838 Get:1 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+#6 0.885 Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+#6 2.396 Get:3 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [4376 kB]
+#6 2.507 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+#6 2.901 Get:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+#6 3.294 Get:6 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+#6 4.205 Get:7 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+#6 4.607 Get:8 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [7843 kB]
+#6 5.679 Get:9 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+#6 5.698 Get:10 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+#6 5.726 Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [8198 kB]
+#6 6.378 Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1623 kB]
+#6 6.502 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [4747 kB]
+#6 6.864 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [93.2 kB]
+#6 6.867 Get:15 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [82.9 kB]
+#6 6.871 Get:16 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.6 kB]
+#6 7.114 Get:17 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1321 kB]
+#6 7.400 Get:18 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [84.6 kB]
+#6 7.420 Fetched 48.8 MB in 7s (6774 kB/s)
+#6 7.420 Reading package lists...
+#6 8.246 Reading package lists...
+#6 9.057 Building dependency tree...
+#6 9.265 Reading state information...
+#6 9.456 The following additional packages will be installed:
+#6 9.456   gir1.2-glib-2.0 gir1.2-harfbuzz-0.0 icu-devtools libamd2 libblkid-dev
+#6 9.456   libblkid1 libbrotli-dev libbtf1 libcairo-gobject2
+#6 9.456   libcairo-script-interpreter2 libcairo2 libcamd2 libccolamd2 libcholmod3
+#6 9.456   libcolamd2 libcurl3-gnutls libcurl4 libcxsparse3 libdeflate-dev libdpkg-perl
+#6 9.456   libexpat1 libexpat1-dev libffi-dev libfontconfig-dev libfreetype-dev
+#6 9.456   libfreetype6 libgdbm-compat4 libgdbm6 libgirepository-1.0-1 libglib2.0-0
+#6 9.456   libglib2.0-bin libglib2.0-dev libglib2.0-dev-bin libglpk40 libgmpxx4ldbl
+#6 9.456   libgraphite2-3 libgraphite2-dev libharfbuzz-gobject0 libharfbuzz-icu0
+#6 9.456   libharfbuzz0b libice-dev libicu-dev libjbig-dev libklu1 libldl2 libltdl7
+#6 9.456   liblzma-dev liblzma5 liblzo2-2 libmetis5 libmongoose2 libmount-dev libmount1
+#6 9.456   libmpdec3 libpcre16-3 libpcre2-dev libpcre3-dev libpcre32-3 libpcrecpp0v5
+#6 9.456   libperl5.34 libpixman-1-dev libpng16-16 libproj22 libpthread-stubs0-dev
+#6 9.456   libpython3-stdlib libpython3.10-minimal libpython3.10-stdlib librbio2
+#6 9.456   libselinux1-dev libsepol-dev libsliplu1 libsm-dev libspqr2 libsqlite3-0
+#6 9.456   libsqlite3-dev libssl3 libsuitesparse-dev libsuitesparseconfig5 libtiff-dev
+#6 9.456   libtiff5 libtiffxx5 libumfpack5 libuuid1 libx11-dev libxau-dev
+#6 9.456   libxcb-render0-dev libxcb-shm0-dev libxcb1-dev libxdmcp-dev libxext-dev
+#6 9.457   libxml2 libxrender-dev media-types perl perl-base perl-modules-5.34
+#6 9.457   pkg-config proj-data python3 python3-distutils python3-lib2to3
+#6 9.457   python3-minimal python3.10 python3.10-minimal uuid-dev x11proto-dev
+#6 9.457   xorg-sgml-doctools xtrans-dev zlib1g-dev
+#6 9.458 Suggested packages:
+#6 9.458   libcairo2-doc libcurl4-doc libidn11-dev libkrb5-dev libldap2-dev librtmp-dev
+#6 9.458   libssh2-1-dev debian-keyring gnupg patch git bzr freetype2-doc gdbm-l10n
+#6 9.458   libgirepository1.0-dev libglib2.0-doc libgdk-pixbuf2.0-bin
+#6 9.458   | libgdk-pixbuf2.0-dev libxml2-utils libiodbc2-dev
+#6 9.458   default-libmysqlclient-dev gmp-doc libgmp10-doc libmpfr-dev
+#6 9.458   libgraphite2-utils libice-doc icu-doc cryptsetup-bin proj-bin libsm-doc
+#6 9.458   sqlite3-doc libssl-doc libx11-doc libxcb-doc libxext-doc perl-doc
+#6 9.458   libterm-readline-gnu-perl | libterm-readline-perl-perl
+#6 9.458   libtap-harness-archive-perl dpkg-dev python3-doc python3-tk python3-venv
+#6 9.458   python3.10-venv python3.10-doc binfmt-support
+#6 9.458 Recommended packages:
+#6 9.458   libfile-fcntllock-perl liblocale-gettext-perl bzip2 xz-utils
+#6 9.458   shared-mime-info xdg-user-dirs libpng-tools libgraphblas-dev uuid-runtime
+#6 9.458   netbase
+#6 9.717 The following NEW packages will be installed:
+#6 9.717   fonts-dejavu-core gir1.2-glib-2.0 gir1.2-harfbuzz-0.0 icu-devtools libamd2
+#6 9.718   libblkid-dev libbrotli-dev libbtf1 libcairo-gobject2
+#6 9.718   libcairo-script-interpreter2 libcairo2-dev libcamd2 libccolamd2 libcholmod3
+#6 9.718   libcolamd2 libcurl3-gnutls libcurl4-openssl-dev libcxsparse3 libdeflate-dev
+#6 9.718   libdpkg-perl libexpat1-dev libffi-dev libfontconfig-dev libfontconfig1-dev
+#6 9.718   libfreetype-dev libfreetype6-dev libfribidi-dev libgdbm-compat4 libgdbm6
+#6 9.718   libgirepository-1.0-1 libglib2.0-bin libglib2.0-dev libglib2.0-dev-bin
+#6 9.718   libglpk-dev libglpk40 libgmp-dev libgmpxx4ldbl libgraphite2-dev
+#6 9.718   libharfbuzz-dev libharfbuzz-gobject0 libharfbuzz-icu0 libice-dev libicu-dev
+#6 9.718   libjbig-dev libklu1 libldl2 libltdl7 liblzma-dev liblzo2-2 libmetis5
+#6 9.718   libmongoose2 libmount-dev libmpdec3 libpcre16-3 libpcre2-dev libpcre3-dev
+#6 9.718   libpcre32-3 libpcrecpp0v5 libperl5.34 libpixman-1-dev libpng-dev libproj-dev
+#6 9.718   libproj22 libpthread-stubs0-dev libpython3-stdlib libpython3.10-minimal
+#6 9.718   libpython3.10-stdlib librbio2 libselinux1-dev libsepol-dev libsliplu1
+#6 9.718   libsm-dev libspqr2 libsqlite3-0 libsqlite3-dev libssl-dev libsuitesparse-dev
+#6 9.718   libsuitesparseconfig5 libtiff-dev libumfpack5 libx11-dev libxau-dev
+#6 9.718   libxcb-render0-dev libxcb-shm0-dev libxcb1-dev libxdmcp-dev libxext-dev
+#6 9.718   libxml2-dev libxrender-dev media-types perl perl-modules-5.34 pkg-config
+#6 9.718   proj-data python3 python3-distutils python3-lib2to3 python3-minimal
+#6 9.718   python3.10 python3.10-minimal uuid-dev x11proto-dev xorg-sgml-doctools
+#6 9.718   xtrans-dev zlib1g-dev
+#6 9.720 The following packages will be upgraded:
+#6 9.720   libblkid1 libcairo2 libcurl4 libexpat1 libfreetype6 libglib2.0-0
+#6 9.720   libgraphite2-3 libharfbuzz0b liblzma5 libmount1 libpng16-16 libssl3 libtiff5
+#6 9.721   libtiffxx5 libuuid1 libxml2 perl-base
+#6 10.35 17 upgraded, 105 newly installed, 0 to remove and 92 not upgraded.
+#6 10.35 Need to get 67.5 MB of archives.
+#6 10.35 After this operation, 246 MB of additional disk space will be used.
+#6 10.35 Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl-base amd64 5.34.0-3ubuntu1.9 [1762 kB]
+#6 12.84 Get:2 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libssl3 amd64 3.0.2-0ubuntu1.30 [1907 kB]
+#6 13.18 Get:3 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-minimal amd64 3.10.12-1~22.04.18 [817 kB]
+#6 13.25 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libexpat1 amd64 2.4.7-1ubuntu0.9 [96.9 kB]
+#6 13.26 Get:5 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10-minimal amd64 3.10.12-1~22.04.18 [2277 kB]
+#6 13.47 Get:6 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-minimal amd64 3.10.6-1~22.04.1 [24.3 kB]
+#6 13.47 Get:7 http://archive.ubuntu.com/ubuntu jammy/main amd64 media-types all 7.0.0 [25.5 kB]
+#6 13.47 Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 liblzma5 amd64 5.2.5-2ubuntu1.1 [99.6 kB]
+#6 13.48 Get:9 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmpdec3 amd64 2.5.1-2build2 [86.8 kB]
+#6 13.48 Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsqlite3-0 amd64 3.37.2-2ubuntu0.8 [642 kB]
+#6 13.52 Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libuuid1 amd64 2.37.2-4ubuntu3.6 [24.0 kB]
+#6 13.52 Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-stdlib amd64 3.10.12-1~22.04.18 [1850 kB]
+#6 13.77 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10 amd64 3.10.12-1~22.04.18 [508 kB]
+#6 13.79 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3-stdlib amd64 3.10.6-1~22.04.1 [6812 B]
+#6 13.79 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3 amd64 3.10.6-1~22.04.1 [22.8 kB]
+#6 13.79 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl-modules-5.34 all 5.34.0-3ubuntu1.9 [2977 kB]
+#6 13.94 Get:17 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgdbm6 amd64 1.23-1 [33.9 kB]
+#6 14.07 Get:18 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgdbm-compat4 amd64 1.23-1 [6606 B]
+#6 14.07 Get:19 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libperl5.34 amd64 5.34.0-3ubuntu1.9 [4796 kB]
+#6 14.39 Get:20 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl amd64 5.34.0-3ubuntu1.9 [232 kB]
+#6 14.39 Get:21 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libblkid1 amd64 2.37.2-4ubuntu3.6 [103 kB]
+#6 14.40 Get:22 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libmount1 amd64 2.37.2-4ubuntu3.6 [122 kB]
+#6 14.40 Get:23 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libglib2.0-0 amd64 2.72.4-0ubuntu2.10 [1469 kB]
+#6 14.44 Get:24 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgirepository-1.0-1 amd64 1.72.0-1 [55.6 kB]
+#6 14.44 Get:25 http://archive.ubuntu.com/ubuntu jammy/main amd64 gir1.2-glib-2.0 amd64 1.72.0-1 [164 kB]
+#6 14.45 Get:26 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libxml2 amd64 2.9.13+dfsg-1ubuntu0.13 [764 kB]
+#6 14.53 Get:27 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpng16-16 amd64 1.6.37-3ubuntu0.6 [192 kB]
+#6 14.66 Get:28 http://archive.ubuntu.com/ubuntu jammy/main amd64 fonts-dejavu-core all 2.37-2build1 [1041 kB]
+#6 14.83 Get:29 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libfreetype6 amd64 2.11.1+dfsg-1ubuntu0.3 [388 kB]
+#6 14.84 Get:30 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libgraphite2-3 amd64 1.3.14-1ubuntu0.1 [71.6 kB]
+#6 14.84 Get:31 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libharfbuzz0b amd64 2.7.4-1ubuntu3.2 [353 kB]
+#6 14.85 Get:32 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gir1.2-harfbuzz-0.0 amd64 2.7.4-1ubuntu3.2 [31.6 kB]
+#6 14.85 Get:33 http://archive.ubuntu.com/ubuntu jammy/main amd64 icu-devtools amd64 70.1-2 [197 kB]
+#6 14.96 Get:34 http://archive.ubuntu.com/ubuntu jammy/main amd64 libsuitesparseconfig5 amd64 1:5.10.1+dfsg-4build1 [10.4 kB]
+#6 14.96 Get:35 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libamd2 amd64 1:5.10.1+dfsg-4build1 [21.6 kB]
+#6 14.96 Get:36 http://archive.ubuntu.com/ubuntu jammy/main amd64 libbrotli-dev amd64 1.0.9-2build6 [337 kB]
+#6 15.25 Get:37 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libbtf1 amd64 1:5.10.1+dfsg-4build1 [12.1 kB]
+#6 15.25 Get:38 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcairo2 amd64 1.16.0-5ubuntu2.1 [628 kB]
+#6 15.26 Get:39 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcairo-gobject2 amd64 1.16.0-5ubuntu2.1 [19.5 kB]
+#6 15.26 Get:40 http://archive.ubuntu.com/ubuntu jammy/main amd64 liblzo2-2 amd64 2.10-2build3 [53.7 kB]
+#6 15.27 Get:41 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcairo-script-interpreter2 amd64 1.16.0-5ubuntu2.1 [62.5 kB]
+#6 15.27 Get:42 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libexpat1-dev amd64 2.4.7-1ubuntu0.9 [151 kB]
+#6 15.54 Get:43 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 zlib1g-dev amd64 1:1.2.11.dfsg-2ubuntu9.2 [164 kB]
+#6 15.55 Get:44 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpng-dev amd64 1.6.37-3ubuntu0.6 [193 kB]
+#6 15.55 Get:45 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libfreetype-dev amd64 2.11.1+dfsg-1ubuntu0.3 [555 kB]
+#6 15.57 Get:46 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libfreetype6-dev amd64 2.11.1+dfsg-1ubuntu0.3 [8298 B]
+#6 15.84 Get:47 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 uuid-dev amd64 2.37.2-4ubuntu3.6 [33.1 kB]
+#6 15.84 Get:48 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libdpkg-perl all 1.21.1ubuntu2.6 [237 kB]
+#6 15.84 Get:49 http://archive.ubuntu.com/ubuntu jammy/main amd64 pkg-config amd64 0.29.2-1ubuntu3 [48.2 kB]
+#6 15.84 Get:50 http://archive.ubuntu.com/ubuntu jammy/main amd64 libfontconfig-dev amd64 2.13.1-4.2ubuntu5 [151 kB]
+#6 15.85 Get:51 http://archive.ubuntu.com/ubuntu jammy/main amd64 libfontconfig1-dev amd64 2.13.1-4.2ubuntu5 [1836 B]
+#6 15.85 Get:52 http://archive.ubuntu.com/ubuntu jammy/main amd64 xorg-sgml-doctools all 1:1.11-1.1 [10.9 kB]
+#6 16.13 Get:53 http://archive.ubuntu.com/ubuntu jammy/main amd64 x11proto-dev all 2021.5-1 [604 kB]
+#6 16.15 Get:54 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxau-dev amd64 1:1.0.9-1build5 [9724 B]
+#6 16.15 Get:55 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxdmcp-dev amd64 1:1.1.3-0ubuntu5 [26.5 kB]
+#6 16.15 Get:56 http://archive.ubuntu.com/ubuntu jammy/main amd64 xtrans-dev all 1.4.0-1 [68.9 kB]
+#6 16.42 Get:57 http://archive.ubuntu.com/ubuntu jammy/main amd64 libpthread-stubs0-dev amd64 0.4-1build2 [5516 B]
+#6 16.42 Get:58 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxcb1-dev amd64 1.14-3ubuntu3 [86.5 kB]
+#6 16.43 Get:59 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libx11-dev amd64 2:1.7.5-1ubuntu0.3 [744 kB]
+#6 16.45 Get:60 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxrender-dev amd64 1:0.9.10-1build4 [26.7 kB]
+#6 16.45 Get:61 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxext-dev amd64 2:1.3.4-1build1 [84.7 kB]
+#6 16.45 Get:62 http://archive.ubuntu.com/ubuntu jammy/main amd64 libice-dev amd64 2:1.0.10-1build2 [51.4 kB]
+#6 16.72 Get:63 http://archive.ubuntu.com/ubuntu jammy/main amd64 libsm-dev amd64 2:1.2.3-1build2 [18.1 kB]
+#6 16.72 Get:64 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpixman-1-dev amd64 0.40.0-1ubuntu0.22.04.1 [280 kB]
+#6 16.73 Get:65 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxcb-render0-dev amd64 1.14-3ubuntu3 [19.6 kB]
+#6 16.73 Get:66 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxcb-shm0-dev amd64 1.14-3ubuntu3 [6848 B]
+#6 17.01 Get:67 http://archive.ubuntu.com/ubuntu jammy/main amd64 libffi-dev amd64 3.4.2-4 [63.7 kB]
+#6 17.02 Get:68 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libglib2.0-bin amd64 2.72.4-0ubuntu2.10 [80.9 kB]
+#6 17.02 Get:69 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-lib2to3 all 3.10.8-1~22.04 [77.6 kB]
+#6 17.02 Get:70 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-distutils all 3.10.8-1~22.04 [139 kB]
+#6 17.02 Get:71 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libglib2.0-dev-bin amd64 2.72.4-0ubuntu2.10 [117 kB]
+#6 17.03 Get:72 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libblkid-dev amd64 2.37.2-4ubuntu3.6 [186 kB]
+#6 17.31 Get:73 http://archive.ubuntu.com/ubuntu jammy/main amd64 libsepol-dev amd64 3.3-1build1 [378 kB]
+#6 17.32 Get:74 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpcre2-dev amd64 10.39-3ubuntu0.1 [730 kB]
+#6 17.34 Get:75 http://archive.ubuntu.com/ubuntu jammy/main amd64 libselinux1-dev amd64 3.3-1build2 [158 kB]
+#6 17.34 Get:76 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libmount-dev amd64 2.37.2-4ubuntu3.6 [14.6 kB]
+#6 17.60 Get:77 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpcre16-3 amd64 2:8.39-13ubuntu0.22.04.1 [164 kB]
+#6 17.61 Get:78 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpcre32-3 amd64 2:8.39-13ubuntu0.22.04.1 [155 kB]
+#6 17.61 Get:79 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpcrecpp0v5 amd64 2:8.39-13ubuntu0.22.04.1 [16.5 kB]
+#6 17.61 Get:80 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpcre3-dev amd64 2:8.39-13ubuntu0.22.04.1 [579 kB]
+#6 17.63 Get:81 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libglib2.0-dev amd64 2.72.4-0ubuntu2.10 [1745 kB]
+#6 17.67 Get:82 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcairo2-dev amd64 1.16.0-5ubuntu2.1 [692 kB]
+#6 17.90 Get:83 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libcamd2 amd64 1:5.10.1+dfsg-4build1 [23.3 kB]
+#6 17.90 Get:84 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libccolamd2 amd64 1:5.10.1+dfsg-4build1 [25.2 kB]
+#6 17.90 Get:85 http://archive.ubuntu.com/ubuntu jammy/main amd64 libcolamd2 amd64 1:5.10.1+dfsg-4build1 [18.0 kB]
+#6 17.90 Get:86 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libmetis5 amd64 5.1.0.dfsg-7build2 [181 kB]
+#6 18.19 Get:87 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libcholmod3 amd64 1:5.10.1+dfsg-4build1 [346 kB]
+#6 18.20 Get:88 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl3-gnutls amd64 7.81.0-1ubuntu1.29 [286 kB]
+#6 18.21 Get:89 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl4 amd64 7.81.0-1ubuntu1.29 [292 kB]
+#6 18.22 Get:90 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcurl4-openssl-dev amd64 7.81.0-1ubuntu1.29 [387 kB]
+#6 18.23 Get:91 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libcxsparse3 amd64 1:5.10.1+dfsg-4build1 [70.8 kB]
+#6 18.23 Get:92 http://archive.ubuntu.com/ubuntu jammy/main amd64 libdeflate-dev amd64 1.10-2 [59.2 kB]
+#6 18.49 Get:93 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libfribidi-dev amd64 1.0.8-2ubuntu3.1 [64.8 kB]
+#6 18.49 Get:94 http://archive.ubuntu.com/ubuntu jammy/main amd64 libltdl7 amd64 2.4.6-15build2 [39.6 kB]
+#6 18.49 Get:95 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libglpk40 amd64 5.0-1 [361 kB]
+#6 18.50 Get:96 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgmpxx4ldbl amd64 2:6.2.1+dfsg-3ubuntu1 [9580 B]
+#6 18.78 Get:97 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgmp-dev amd64 2:6.2.1+dfsg-3ubuntu1 [337 kB]
+#6 18.79 Get:98 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libklu1 amd64 1:5.10.1+dfsg-4build1 [77.6 kB]
+#6 18.79 Get:99 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libldl2 amd64 1:5.10.1+dfsg-4build1 [11.7 kB]
+#6 18.79 Get:100 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libmongoose2 amd64 1:5.10.1+dfsg-4build1 [33.5 kB]
+#6 18.79 Get:101 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libumfpack5 amd64 1:5.10.1+dfsg-4build1 [250 kB]
+#6 19.38 Get:102 http://archive.ubuntu.com/ubuntu jammy/universe amd64 librbio2 amd64 1:5.10.1+dfsg-4build1 [26.6 kB]
+#6 20.04 Get:103 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libspqr2 amd64 1:5.10.1+dfsg-4build1 [71.6 kB]
+#6 20.50 Get:104 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libsliplu1 amd64 1:5.10.1+dfsg-4build1 [37.1 kB]
+#6 20.67 Get:105 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libsuitesparse-dev amd64 1:5.10.1+dfsg-4build1 [1058 kB]
+#6 21.61 Get:106 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libglpk-dev amd64 5.0-1 [430 kB]
+#6 21.73 Get:107 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libgraphite2-dev amd64 1.3.14-1ubuntu0.1 [14.7 kB]
+#6 21.74 Get:108 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libharfbuzz-icu0 amd64 2.7.4-1ubuntu3.2 [5890 B]
+#6 21.74 Get:109 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libharfbuzz-gobject0 amd64 2.7.4-1ubuntu3.2 [26.0 kB]
+#6 21.75 Get:110 http://archive.ubuntu.com/ubuntu jammy/main amd64 libicu-dev amd64 70.1-2 [11.6 MB]
+#6 22.82 Get:111 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libharfbuzz-dev amd64 2.7.4-1ubuntu3.2 [554 kB]
+#6 22.85 Get:112 http://archive.ubuntu.com/ubuntu jammy/universe amd64 proj-data all 8.2.1-1 [10.0 MB]
+#6 23.59 Get:113 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libtiff5 amd64 4.3.0-6ubuntu0.13 [185 kB]
+#6 23.60 Get:114 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libproj22 amd64 8.2.1-1 [1257 kB]
+#6 23.71 Get:115 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsqlite3-dev amd64 3.37.2-2ubuntu0.8 [847 kB]
+#6 23.77 Get:116 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libssl-dev amd64 3.0.2-0ubuntu1.30 [2377 kB]
+#6 23.94 Get:117 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libjbig-dev amd64 2.1-3.1ubuntu0.22.04.1 [27.4 kB]
+#6 23.94 Get:118 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 liblzma-dev amd64 5.2.5-2ubuntu1.1 [159 kB]
+#6 23.95 Get:119 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libtiffxx5 amd64 4.3.0-6ubuntu0.13 [5742 B]
+#6 23.95 Get:120 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libtiff-dev amd64 4.3.0-6ubuntu0.13 [316 kB]
+#6 23.98 Get:121 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libxml2-dev amd64 2.9.13+dfsg-1ubuntu0.13 [805 kB]
+#6 24.04 Get:122 http://archive.ubuntu.com/ubuntu jammy/universe amd64 libproj-dev amd64 8.2.1-1 [1594 kB]
+#6 24.28 debconf: delaying package configuration, since apt-utils is not installed
+#6 24.31 Fetched 67.5 MB in 14s (4677 kB/s)
+#6 24.33 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13504 files and directories currently installed.)
+#6 24.34 Preparing to unpack .../perl-base_5.34.0-3ubuntu1.9_amd64.deb ...
+#6 24.35 Unpacking perl-base (5.34.0-3ubuntu1.9) over (5.34.0-3ubuntu1.3) ...
+#6 25.13 Setting up perl-base (5.34.0-3ubuntu1.9) ...
+#6 25.17 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13504 files and directories currently installed.)
+#6 25.18 Preparing to unpack .../libssl3_3.0.2-0ubuntu1.30_amd64.deb ...
+#6 25.18 Unpacking libssl3:amd64 (3.0.2-0ubuntu1.30) over (3.0.2-0ubuntu1.15) ...
+#6 25.25 Setting up libssl3:amd64 (3.0.2-0ubuntu1.30) ...
+#6 25.30 debconf: unable to initialize frontend: Dialog
+#6 25.30 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#6 25.30 debconf: falling back to frontend: Readline
+#6 25.30 debconf: unable to initialize frontend: Readline
+#6 25.30 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.34.0 /usr/local/share/perl/5.34.0 /usr/lib/x86_64-linux-gnu/perl5/5.34 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.34 /usr/share/perl/5.34 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
+#6 25.30 debconf: falling back to frontend: Teletype
+#6 25.34 Selecting previously unselected package libpython3.10-minimal:amd64.
+#6 25.34 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13504 files and directories currently installed.)
+#6 25.35 Preparing to unpack .../libpython3.10-minimal_3.10.12-1~22.04.18_amd64.deb ...
+#6 25.35 Unpacking libpython3.10-minimal:amd64 (3.10.12-1~22.04.18) ...
+#6 25.42 Preparing to unpack .../libexpat1_2.4.7-1ubuntu0.9_amd64.deb ...
+#6 25.42 Unpacking libexpat1:amd64 (2.4.7-1ubuntu0.9) over (2.4.7-1ubuntu0.3) ...
+#6 25.45 Selecting previously unselected package python3.10-minimal.
+#6 25.45 Preparing to unpack .../python3.10-minimal_3.10.12-1~22.04.18_amd64.deb ...
+#6 25.45 Unpacking python3.10-minimal (3.10.12-1~22.04.18) ...
+#6 25.49 Setting up libpython3.10-minimal:amd64 (3.10.12-1~22.04.18) ...
+#6 25.50 Setting up libexpat1:amd64 (2.4.7-1ubuntu0.9) ...
+#6 25.51 Setting up python3.10-minimal (3.10.12-1~22.04.18) ...
+#6 25.91 Selecting previously unselected package python3-minimal.
+#6 25.91 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13798 files and directories currently installed.)
+#6 25.92 Preparing to unpack .../python3-minimal_3.10.6-1~22.04.1_amd64.deb ...
+#6 25.92 Unpacking python3-minimal (3.10.6-1~22.04.1) ...
+#6 25.94 Selecting previously unselected package media-types.
+#6 25.94 Preparing to unpack .../media-types_7.0.0_all.deb ...
+#6 25.94 Unpacking media-types (7.0.0) ...
+#6 25.96 Preparing to unpack .../liblzma5_5.2.5-2ubuntu1.1_amd64.deb ...
+#6 25.96 Unpacking liblzma5:amd64 (5.2.5-2ubuntu1.1) over (5.2.5-2ubuntu1) ...
+#6 26.00 Setting up liblzma5:amd64 (5.2.5-2ubuntu1.1) ...
+#6 26.02 Selecting previously unselected package libmpdec3:amd64.
+#6 26.02 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13824 files and directories currently installed.)
+#6 26.03 Preparing to unpack .../libmpdec3_2.5.1-2build2_amd64.deb ...
+#6 26.03 Unpacking libmpdec3:amd64 (2.5.1-2build2) ...
+#6 26.05 Selecting previously unselected package libsqlite3-0:amd64.
+#6 26.05 Preparing to unpack .../libsqlite3-0_3.37.2-2ubuntu0.8_amd64.deb ...
+#6 26.05 Unpacking libsqlite3-0:amd64 (3.37.2-2ubuntu0.8) ...
+#6 26.08 Preparing to unpack .../libuuid1_2.37.2-4ubuntu3.6_amd64.deb ...
+#6 26.08 Unpacking libuuid1:amd64 (2.37.2-4ubuntu3.6) over (2.37.2-4ubuntu3.4) ...
+#6 26.11 Setting up libuuid1:amd64 (2.37.2-4ubuntu3.6) ...
+#6 26.13 Selecting previously unselected package libpython3.10-stdlib:amd64.
+#6 26.13 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13837 files and directories currently installed.)
+#6 26.14 Preparing to unpack .../libpython3.10-stdlib_3.10.12-1~22.04.18_amd64.deb ...
+#6 26.14 Unpacking libpython3.10-stdlib:amd64 (3.10.12-1~22.04.18) ...
+#6 26.22 Selecting previously unselected package python3.10.
+#6 26.22 Preparing to unpack .../python3.10_3.10.12-1~22.04.18_amd64.deb ...
+#6 26.22 Unpacking python3.10 (3.10.12-1~22.04.18) ...
+#6 26.24 Selecting previously unselected package libpython3-stdlib:amd64.
+#6 26.24 Preparing to unpack .../libpython3-stdlib_3.10.6-1~22.04.1_amd64.deb ...
+#6 26.24 Unpacking libpython3-stdlib:amd64 (3.10.6-1~22.04.1) ...
+#6 26.26 Setting up python3-minimal (3.10.6-1~22.04.1) ...
+#6 26.38 Selecting previously unselected package python3.
+#6 26.38 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 14205 files and directories currently installed.)
+#6 26.38 Preparing to unpack .../0-python3_3.10.6-1~22.04.1_amd64.deb ...
+#6 26.39 Unpacking python3 (3.10.6-1~22.04.1) ...
+#6 26.40 Selecting previously unselected package perl-modules-5.34.
+#6 26.41 Preparing to unpack .../1-perl-modules-5.34_5.34.0-3ubuntu1.9_all.deb ...
+#6 26.41 Unpacking perl-modules-5.34 (5.34.0-3ubuntu1.9) ...
+#6 26.61 Selecting previously unselected package libgdbm6:amd64.
+#6 26.62 Preparing to unpack .../2-libgdbm6_1.23-1_amd64.deb ...
+#6 26.62 Unpacking libgdbm6:amd64 (1.23-1) ...
+#6 26.64 Selecting previously unselected package libgdbm-compat4:amd64.
+#6 26.64 Preparing to unpack .../3-libgdbm-compat4_1.23-1_amd64.deb ...
+#6 26.64 Unpacking libgdbm-compat4:amd64 (1.23-1) ...
+#6 26.66 Selecting previously unselected package libperl5.34:amd64.
+#6 26.66 Preparing to unpack .../4-libperl5.34_5.34.0-3ubuntu1.9_amd64.deb ...
+#6 26.66 Unpacking libperl5.34:amd64 (5.34.0-3ubuntu1.9) ...
+#6 26.80 Selecting previously unselected package perl.
+#6 26.80 Preparing to unpack .../5-perl_5.34.0-3ubuntu1.9_amd64.deb ...
+#6 26.80 Unpacking perl (5.34.0-3ubuntu1.9) ...
+#6 26.83 Preparing to unpack .../6-libblkid1_2.37.2-4ubuntu3.6_amd64.deb ...
+#6 26.83 Unpacking libblkid1:amd64 (2.37.2-4ubuntu3.6) over (2.37.2-4ubuntu3.4) ...
+#6 26.86 Setting up libblkid1:amd64 (2.37.2-4ubuntu3.6) ...
+#6 26.89 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 16213 files and directories currently installed.)
+#6 26.90 Preparing to unpack .../libmount1_2.37.2-4ubuntu3.6_amd64.deb ...
+#6 26.90 Unpacking libmount1:amd64 (2.37.2-4ubuntu3.6) over (2.37.2-4ubuntu3.4) ...
+#6 26.93 Setting up libmount1:amd64 (2.37.2-4ubuntu3.6) ...
+#6 26.96 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 16213 files and directories currently installed.)
+#6 26.97 Preparing to unpack .../00-libglib2.0-0_2.72.4-0ubuntu2.10_amd64.deb ...
+#6 26.98 Unpacking libglib2.0-0:amd64 (2.72.4-0ubuntu2.10) over (2.72.4-0ubuntu2.3) ...
+#6 27.04 Selecting previously unselected package libgirepository-1.0-1:amd64.
+#6 27.04 Preparing to unpack .../01-libgirepository-1.0-1_1.72.0-1_amd64.deb ...
+#6 27.04 Unpacking libgirepository-1.0-1:amd64 (1.72.0-1) ...
+#6 27.06 Selecting previously unselected package gir1.2-glib-2.0:amd64.
+#6 27.06 Preparing to unpack .../02-gir1.2-glib-2.0_1.72.0-1_amd64.deb ...
+#6 27.06 Unpacking gir1.2-glib-2.0:amd64 (1.72.0-1) ...
+#6 27.08 Preparing to unpack .../03-libxml2_2.9.13+dfsg-1ubuntu0.13_amd64.deb ...
+#6 27.09 Unpacking libxml2:amd64 (2.9.13+dfsg-1ubuntu0.13) over (2.9.13+dfsg-1ubuntu0.4) ...
+#6 27.12 Preparing to unpack .../04-libpng16-16_1.6.37-3ubuntu0.6_amd64.deb ...
+#6 27.13 Unpacking libpng16-16:amd64 (1.6.37-3ubuntu0.6) over (1.6.37-3build5) ...
+#6 27.16 Selecting previously unselected package fonts-dejavu-core.
+#6 27.16 Preparing to unpack .../05-fonts-dejavu-core_2.37-2build1_all.deb ...
+#6 27.16 Unpacking fonts-dejavu-core (2.37-2build1) ...
+#6 27.23 Preparing to unpack .../06-libfreetype6_2.11.1+dfsg-1ubuntu0.3_amd64.deb ...
+#6 27.23 Unpacking libfreetype6:amd64 (2.11.1+dfsg-1ubuntu0.3) over (2.11.1+dfsg-1ubuntu0.2) ...
+#6 27.26 Preparing to unpack .../07-libgraphite2-3_1.3.14-1ubuntu0.1_amd64.deb ...
+#6 27.27 Unpacking libgraphite2-3:amd64 (1.3.14-1ubuntu0.1) over (1.3.14-1build2) ...
+#6 27.29 Preparing to unpack .../08-libharfbuzz0b_2.7.4-1ubuntu3.2_amd64.deb ...
+#6 27.30 Unpacking libharfbuzz0b:amd64 (2.7.4-1ubuntu3.2) over (2.7.4-1ubuntu3.1) ...
+#6 27.32 Selecting previously unselected package gir1.2-harfbuzz-0.0:amd64.
+#6 27.32 Preparing to unpack .../09-gir1.2-harfbuzz-0.0_2.7.4-1ubuntu3.2_amd64.deb ...
+#6 27.33 Unpacking gir1.2-harfbuzz-0.0:amd64 (2.7.4-1ubuntu3.2) ...
+#6 27.34 Selecting previously unselected package icu-devtools.
+#6 27.34 Preparing to unpack .../10-icu-devtools_70.1-2_amd64.deb ...
+#6 27.34 Unpacking icu-devtools (70.1-2) ...
+#6 27.37 Selecting previously unselected package libsuitesparseconfig5:amd64.
+#6 27.37 Preparing to unpack .../11-libsuitesparseconfig5_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 27.37 Unpacking libsuitesparseconfig5:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 27.39 Selecting previously unselected package libamd2:amd64.
+#6 27.39 Preparing to unpack .../12-libamd2_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 27.39 Unpacking libamd2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 27.40 Selecting previously unselected package libbrotli-dev:amd64.
+#6 27.41 Preparing to unpack .../13-libbrotli-dev_1.0.9-2build6_amd64.deb ...
+#6 27.41 Unpacking libbrotli-dev:amd64 (1.0.9-2build6) ...
+#6 27.43 Selecting previously unselected package libbtf1:amd64.
+#6 27.44 Preparing to unpack .../14-libbtf1_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 27.44 Unpacking libbtf1:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 27.46 Preparing to unpack .../15-libcairo2_1.16.0-5ubuntu2.1_amd64.deb ...
+#6 27.46 Unpacking libcairo2:amd64 (1.16.0-5ubuntu2.1) over (1.16.0-5ubuntu2) ...
+#6 27.49 Selecting previously unselected package libcairo-gobject2:amd64.
+#6 27.49 Preparing to unpack .../16-libcairo-gobject2_1.16.0-5ubuntu2.1_amd64.deb ...
+#6 27.49 Unpacking libcairo-gobject2:amd64 (1.16.0-5ubuntu2.1) ...
+#6 27.52 Selecting previously unselected package liblzo2-2:amd64.
+#6 27.52 Preparing to unpack .../17-liblzo2-2_2.10-2build3_amd64.deb ...
+#6 27.52 Unpacking liblzo2-2:amd64 (2.10-2build3) ...
+#6 27.54 Selecting previously unselected package libcairo-script-interpreter2:amd64.
+#6 27.54 Preparing to unpack .../18-libcairo-script-interpreter2_1.16.0-5ubuntu2.1_amd64.deb ...
+#6 27.54 Unpacking libcairo-script-interpreter2:amd64 (1.16.0-5ubuntu2.1) ...
+#6 27.56 Selecting previously unselected package libexpat1-dev:amd64.
+#6 27.56 Preparing to unpack .../19-libexpat1-dev_2.4.7-1ubuntu0.9_amd64.deb ...
+#6 27.56 Unpacking libexpat1-dev:amd64 (2.4.7-1ubuntu0.9) ...
+#6 27.58 Selecting previously unselected package zlib1g-dev:amd64.
+#6 27.58 Preparing to unpack .../20-zlib1g-dev_1%3a1.2.11.dfsg-2ubuntu9.2_amd64.deb ...
+#6 27.58 Unpacking zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu9.2) ...
+#6 27.60 Selecting previously unselected package libpng-dev:amd64.
+#6 27.60 Preparing to unpack .../21-libpng-dev_1.6.37-3ubuntu0.6_amd64.deb ...
+#6 27.60 Unpacking libpng-dev:amd64 (1.6.37-3ubuntu0.6) ...
+#6 27.62 Selecting previously unselected package libfreetype-dev:amd64.
+#6 27.62 Preparing to unpack .../22-libfreetype-dev_2.11.1+dfsg-1ubuntu0.3_amd64.deb ...
+#6 27.63 Unpacking libfreetype-dev:amd64 (2.11.1+dfsg-1ubuntu0.3) ...
+#6 27.65 Selecting previously unselected package libfreetype6-dev:amd64.
+#6 27.66 Preparing to unpack .../23-libfreetype6-dev_2.11.1+dfsg-1ubuntu0.3_amd64.deb ...
+#6 27.66 Unpacking libfreetype6-dev:amd64 (2.11.1+dfsg-1ubuntu0.3) ...
+#6 27.67 Selecting previously unselected package uuid-dev:amd64.
+#6 27.68 Preparing to unpack .../24-uuid-dev_2.37.2-4ubuntu3.6_amd64.deb ...
+#6 27.68 Unpacking uuid-dev:amd64 (2.37.2-4ubuntu3.6) ...
+#6 27.69 Selecting previously unselected package libdpkg-perl.
+#6 27.70 Preparing to unpack .../25-libdpkg-perl_1.21.1ubuntu2.6_all.deb ...
+#6 27.70 Unpacking libdpkg-perl (1.21.1ubuntu2.6) ...
+#6 27.73 Selecting previously unselected package pkg-config.
+#6 27.73 Preparing to unpack .../26-pkg-config_0.29.2-1ubuntu3_amd64.deb ...
+#6 27.73 Unpacking pkg-config (0.29.2-1ubuntu3) ...
+#6 27.75 Selecting previously unselected package libfontconfig-dev:amd64.
+#6 27.75 Preparing to unpack .../27-libfontconfig-dev_2.13.1-4.2ubuntu5_amd64.deb ...
+#6 27.75 Unpacking libfontconfig-dev:amd64 (2.13.1-4.2ubuntu5) ...
+#6 27.77 Selecting previously unselected package libfontconfig1-dev:amd64.
+#6 27.77 Preparing to unpack .../28-libfontconfig1-dev_2.13.1-4.2ubuntu5_amd64.deb ...
+#6 27.77 Unpacking libfontconfig1-dev:amd64 (2.13.1-4.2ubuntu5) ...
+#6 27.79 Selecting previously unselected package xorg-sgml-doctools.
+#6 27.79 Preparing to unpack .../29-xorg-sgml-doctools_1%3a1.11-1.1_all.deb ...
+#6 27.80 Unpacking xorg-sgml-doctools (1:1.11-1.1) ...
+#6 27.81 Selecting previously unselected package x11proto-dev.
+#6 27.82 Preparing to unpack .../30-x11proto-dev_2021.5-1_all.deb ...
+#6 27.82 Unpacking x11proto-dev (2021.5-1) ...
+#6 27.86 Selecting previously unselected package libxau-dev:amd64.
+#6 27.86 Preparing to unpack .../31-libxau-dev_1%3a1.0.9-1build5_amd64.deb ...
+#6 27.86 Unpacking libxau-dev:amd64 (1:1.0.9-1build5) ...
+#6 27.88 Selecting previously unselected package libxdmcp-dev:amd64.
+#6 27.88 Preparing to unpack .../32-libxdmcp-dev_1%3a1.1.3-0ubuntu5_amd64.deb ...
+#6 27.88 Unpacking libxdmcp-dev:amd64 (1:1.1.3-0ubuntu5) ...
+#6 27.89 Selecting previously unselected package xtrans-dev.
+#6 27.90 Preparing to unpack .../33-xtrans-dev_1.4.0-1_all.deb ...
+#6 27.90 Unpacking xtrans-dev (1.4.0-1) ...
+#6 27.92 Selecting previously unselected package libpthread-stubs0-dev:amd64.
+#6 27.92 Preparing to unpack .../34-libpthread-stubs0-dev_0.4-1build2_amd64.deb ...
+#6 27.92 Unpacking libpthread-stubs0-dev:amd64 (0.4-1build2) ...
+#6 27.94 Selecting previously unselected package libxcb1-dev:amd64.
+#6 27.94 Preparing to unpack .../35-libxcb1-dev_1.14-3ubuntu3_amd64.deb ...
+#6 27.94 Unpacking libxcb1-dev:amd64 (1.14-3ubuntu3) ...
+#6 27.96 Selecting previously unselected package libx11-dev:amd64.
+#6 27.96 Preparing to unpack .../36-libx11-dev_2%3a1.7.5-1ubuntu0.3_amd64.deb ...
+#6 27.96 Unpacking libx11-dev:amd64 (2:1.7.5-1ubuntu0.3) ...
+#6 27.99 Selecting previously unselected package libxrender-dev:amd64.
+#6 27.99 Preparing to unpack .../37-libxrender-dev_1%3a0.9.10-1build4_amd64.deb ...
+#6 27.99 Unpacking libxrender-dev:amd64 (1:0.9.10-1build4) ...
+#6 28.00 Selecting previously unselected package libxext-dev:amd64.
+#6 28.01 Preparing to unpack .../38-libxext-dev_2%3a1.3.4-1build1_amd64.deb ...
+#6 28.01 Unpacking libxext-dev:amd64 (2:1.3.4-1build1) ...
+#6 28.03 Selecting previously unselected package libice-dev:amd64.
+#6 28.03 Preparing to unpack .../39-libice-dev_2%3a1.0.10-1build2_amd64.deb ...
+#6 28.03 Unpacking libice-dev:amd64 (2:1.0.10-1build2) ...
+#6 28.05 Selecting previously unselected package libsm-dev:amd64.
+#6 28.05 Preparing to unpack .../40-libsm-dev_2%3a1.2.3-1build2_amd64.deb ...
+#6 28.05 Unpacking libsm-dev:amd64 (2:1.2.3-1build2) ...
+#6 28.07 Selecting previously unselected package libpixman-1-dev:amd64.
+#6 28.07 Preparing to unpack .../41-libpixman-1-dev_0.40.0-1ubuntu0.22.04.1_amd64.deb ...
+#6 28.07 Unpacking libpixman-1-dev:amd64 (0.40.0-1ubuntu0.22.04.1) ...
+#6 28.09 Selecting previously unselected package libxcb-render0-dev:amd64.
+#6 28.09 Preparing to unpack .../42-libxcb-render0-dev_1.14-3ubuntu3_amd64.deb ...
+#6 28.10 Unpacking libxcb-render0-dev:amd64 (1.14-3ubuntu3) ...
+#6 28.11 Selecting previously unselected package libxcb-shm0-dev:amd64.
+#6 28.11 Preparing to unpack .../43-libxcb-shm0-dev_1.14-3ubuntu3_amd64.deb ...
+#6 28.12 Unpacking libxcb-shm0-dev:amd64 (1.14-3ubuntu3) ...
+#6 28.13 Selecting previously unselected package libffi-dev:amd64.
+#6 28.13 Preparing to unpack .../44-libffi-dev_3.4.2-4_amd64.deb ...
+#6 28.14 Unpacking libffi-dev:amd64 (3.4.2-4) ...
+#6 28.15 Selecting previously unselected package libglib2.0-bin.
+#6 28.16 Preparing to unpack .../45-libglib2.0-bin_2.72.4-0ubuntu2.10_amd64.deb ...
+#6 28.16 Unpacking libglib2.0-bin (2.72.4-0ubuntu2.10) ...
+#6 28.18 Selecting previously unselected package python3-lib2to3.
+#6 28.18 Preparing to unpack .../46-python3-lib2to3_3.10.8-1~22.04_all.deb ...
+#6 28.18 Unpacking python3-lib2to3 (3.10.8-1~22.04) ...
+#6 28.22 Selecting previously unselected package python3-distutils.
+#6 28.22 Preparing to unpack .../47-python3-distutils_3.10.8-1~22.04_all.deb ...
+#6 28.22 Unpacking python3-distutils (3.10.8-1~22.04) ...
+#6 28.25 Selecting previously unselected package libglib2.0-dev-bin.
+#6 28.25 Preparing to unpack .../48-libglib2.0-dev-bin_2.72.4-0ubuntu2.10_amd64.deb ...
+#6 28.26 Unpacking libglib2.0-dev-bin (2.72.4-0ubuntu2.10) ...
+#6 28.28 Selecting previously unselected package libblkid-dev:amd64.
+#6 28.28 Preparing to unpack .../49-libblkid-dev_2.37.2-4ubuntu3.6_amd64.deb ...
+#6 28.28 Unpacking libblkid-dev:amd64 (2.37.2-4ubuntu3.6) ...
+#6 28.30 Selecting previously unselected package libsepol-dev:amd64.
+#6 28.30 Preparing to unpack .../50-libsepol-dev_3.3-1build1_amd64.deb ...
+#6 28.30 Unpacking libsepol-dev:amd64 (3.3-1build1) ...
+#6 28.33 Selecting previously unselected package libpcre2-dev:amd64.
+#6 28.33 Preparing to unpack .../51-libpcre2-dev_10.39-3ubuntu0.1_amd64.deb ...
+#6 28.33 Unpacking libpcre2-dev:amd64 (10.39-3ubuntu0.1) ...
+#6 28.36 Selecting previously unselected package libselinux1-dev:amd64.
+#6 28.36 Preparing to unpack .../52-libselinux1-dev_3.3-1build2_amd64.deb ...
+#6 28.36 Unpacking libselinux1-dev:amd64 (3.3-1build2) ...
+#6 28.39 Selecting previously unselected package libmount-dev:amd64.
+#6 28.39 Preparing to unpack .../53-libmount-dev_2.37.2-4ubuntu3.6_amd64.deb ...
+#6 28.39 Unpacking libmount-dev:amd64 (2.37.2-4ubuntu3.6) ...
+#6 28.41 Selecting previously unselected package libpcre16-3:amd64.
+#6 28.41 Preparing to unpack .../54-libpcre16-3_2%3a8.39-13ubuntu0.22.04.1_amd64.deb ...
+#6 28.41 Unpacking libpcre16-3:amd64 (2:8.39-13ubuntu0.22.04.1) ...
+#6 28.44 Selecting previously unselected package libpcre32-3:amd64.
+#6 28.44 Preparing to unpack .../55-libpcre32-3_2%3a8.39-13ubuntu0.22.04.1_amd64.deb ...
+#6 28.44 Unpacking libpcre32-3:amd64 (2:8.39-13ubuntu0.22.04.1) ...
+#6 28.46 Selecting previously unselected package libpcrecpp0v5:amd64.
+#6 28.46 Preparing to unpack .../56-libpcrecpp0v5_2%3a8.39-13ubuntu0.22.04.1_amd64.deb ...
+#6 28.46 Unpacking libpcrecpp0v5:amd64 (2:8.39-13ubuntu0.22.04.1) ...
+#6 28.48 Selecting previously unselected package libpcre3-dev:amd64.
+#6 28.48 Preparing to unpack .../57-libpcre3-dev_2%3a8.39-13ubuntu0.22.04.1_amd64.deb ...
+#6 28.48 Unpacking libpcre3-dev:amd64 (2:8.39-13ubuntu0.22.04.1) ...
+#6 28.51 Selecting previously unselected package libglib2.0-dev:amd64.
+#6 28.51 Preparing to unpack .../58-libglib2.0-dev_2.72.4-0ubuntu2.10_amd64.deb ...
+#6 28.51 Unpacking libglib2.0-dev:amd64 (2.72.4-0ubuntu2.10) ...
+#6 28.60 Selecting previously unselected package libcairo2-dev:amd64.
+#6 28.60 Preparing to unpack .../59-libcairo2-dev_1.16.0-5ubuntu2.1_amd64.deb ...
+#6 28.60 Unpacking libcairo2-dev:amd64 (1.16.0-5ubuntu2.1) ...
+#6 28.63 Selecting previously unselected package libcamd2:amd64.
+#6 28.63 Preparing to unpack .../60-libcamd2_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 28.64 Unpacking libcamd2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 28.65 Selecting previously unselected package libccolamd2:amd64.
+#6 28.66 Preparing to unpack .../61-libccolamd2_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 28.66 Unpacking libccolamd2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 28.68 Selecting previously unselected package libcolamd2:amd64.
+#6 28.68 Preparing to unpack .../62-libcolamd2_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 28.68 Unpacking libcolamd2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 28.70 Selecting previously unselected package libmetis5:amd64.
+#6 28.70 Preparing to unpack .../63-libmetis5_5.1.0.dfsg-7build2_amd64.deb ...
+#6 28.70 Unpacking libmetis5:amd64 (5.1.0.dfsg-7build2) ...
+#6 28.72 Selecting previously unselected package libcholmod3:amd64.
+#6 28.72 Preparing to unpack .../64-libcholmod3_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 28.72 Unpacking libcholmod3:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 28.74 Selecting previously unselected package libcurl3-gnutls:amd64.
+#6 28.75 Preparing to unpack .../65-libcurl3-gnutls_7.81.0-1ubuntu1.29_amd64.deb ...
+#6 28.75 Unpacking libcurl3-gnutls:amd64 (7.81.0-1ubuntu1.29) ...
+#6 28.77 Preparing to unpack .../66-libcurl4_7.81.0-1ubuntu1.29_amd64.deb ...
+#6 28.78 Unpacking libcurl4:amd64 (7.81.0-1ubuntu1.29) over (7.81.0-1ubuntu1.16) ...
+#6 28.80 Selecting previously unselected package libcurl4-openssl-dev:amd64.
+#6 28.81 Preparing to unpack .../67-libcurl4-openssl-dev_7.81.0-1ubuntu1.29_amd64.deb ...
+#6 28.81 Unpacking libcurl4-openssl-dev:amd64 (7.81.0-1ubuntu1.29) ...
+#6 28.83 Selecting previously unselected package libcxsparse3:amd64.
+#6 28.83 Preparing to unpack .../68-libcxsparse3_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 28.83 Unpacking libcxsparse3:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 28.85 Selecting previously unselected package libdeflate-dev:amd64.
+#6 28.85 Preparing to unpack .../69-libdeflate-dev_1.10-2_amd64.deb ...
+#6 28.86 Unpacking libdeflate-dev:amd64 (1.10-2) ...
+#6 28.88 Selecting previously unselected package libfribidi-dev:amd64.
+#6 28.88 Preparing to unpack .../70-libfribidi-dev_1.0.8-2ubuntu3.1_amd64.deb ...
+#6 28.88 Unpacking libfribidi-dev:amd64 (1.0.8-2ubuntu3.1) ...
+#6 28.90 Selecting previously unselected package libltdl7:amd64.
+#6 28.90 Preparing to unpack .../71-libltdl7_2.4.6-15build2_amd64.deb ...
+#6 28.90 Unpacking libltdl7:amd64 (2.4.6-15build2) ...
+#6 28.92 Selecting previously unselected package libglpk40:amd64.
+#6 28.92 Preparing to unpack .../72-libglpk40_5.0-1_amd64.deb ...
+#6 28.93 Unpacking libglpk40:amd64 (5.0-1) ...
+#6 28.96 Selecting previously unselected package libgmpxx4ldbl:amd64.
+#6 28.96 Preparing to unpack .../73-libgmpxx4ldbl_2%3a6.2.1+dfsg-3ubuntu1_amd64.deb ...
+#6 28.96 Unpacking libgmpxx4ldbl:amd64 (2:6.2.1+dfsg-3ubuntu1) ...
+#6 28.98 Selecting previously unselected package libgmp-dev:amd64.
+#6 28.98 Preparing to unpack .../74-libgmp-dev_2%3a6.2.1+dfsg-3ubuntu1_amd64.deb ...
+#6 28.98 Unpacking libgmp-dev:amd64 (2:6.2.1+dfsg-3ubuntu1) ...
+#6 29.01 Selecting previously unselected package libklu1:amd64.
+#6 29.01 Preparing to unpack .../75-libklu1_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 29.02 Unpacking libklu1:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 29.04 Selecting previously unselected package libldl2:amd64.
+#6 29.04 Preparing to unpack .../76-libldl2_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 29.04 Unpacking libldl2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 29.06 Selecting previously unselected package libmongoose2:amd64.
+#6 29.06 Preparing to unpack .../77-libmongoose2_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 29.06 Unpacking libmongoose2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 29.08 Selecting previously unselected package libumfpack5:amd64.
+#6 29.08 Preparing to unpack .../78-libumfpack5_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 29.08 Unpacking libumfpack5:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 29.10 Selecting previously unselected package librbio2:amd64.
+#6 29.10 Preparing to unpack .../79-librbio2_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 29.11 Unpacking librbio2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 29.12 Selecting previously unselected package libspqr2:amd64.
+#6 29.12 Preparing to unpack .../80-libspqr2_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 29.13 Unpacking libspqr2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 29.15 Selecting previously unselected package libsliplu1:amd64.
+#6 29.15 Preparing to unpack .../81-libsliplu1_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 29.15 Unpacking libsliplu1:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 29.17 Selecting previously unselected package libsuitesparse-dev:amd64.
+#6 29.17 Preparing to unpack .../82-libsuitesparse-dev_1%3a5.10.1+dfsg-4build1_amd64.deb ...
+#6 29.17 Unpacking libsuitesparse-dev:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 29.21 Selecting previously unselected package libglpk-dev:amd64.
+#6 29.21 Preparing to unpack .../83-libglpk-dev_5.0-1_amd64.deb ...
+#6 29.22 Unpacking libglpk-dev:amd64 (5.0-1) ...
+#6 29.25 Selecting previously unselected package libgraphite2-dev:amd64.
+#6 29.25 Preparing to unpack .../84-libgraphite2-dev_1.3.14-1ubuntu0.1_amd64.deb ...
+#6 29.26 Unpacking libgraphite2-dev:amd64 (1.3.14-1ubuntu0.1) ...
+#6 29.27 Selecting previously unselected package libharfbuzz-icu0:amd64.
+#6 29.28 Preparing to unpack .../85-libharfbuzz-icu0_2.7.4-1ubuntu3.2_amd64.deb ...
+#6 29.28 Unpacking libharfbuzz-icu0:amd64 (2.7.4-1ubuntu3.2) ...
+#6 29.30 Selecting previously unselected package libharfbuzz-gobject0:amd64.
+#6 29.30 Preparing to unpack .../86-libharfbuzz-gobject0_2.7.4-1ubuntu3.2_amd64.deb ...
+#6 29.30 Unpacking libharfbuzz-gobject0:amd64 (2.7.4-1ubuntu3.2) ...
+#6 29.32 Selecting previously unselected package libicu-dev:amd64.
+#6 29.32 Preparing to unpack .../87-libicu-dev_70.1-2_amd64.deb ...
+#6 29.32 Unpacking libicu-dev:amd64 (70.1-2) ...
+#6 29.46 Selecting previously unselected package libharfbuzz-dev:amd64.
+#6 29.47 Preparing to unpack .../88-libharfbuzz-dev_2.7.4-1ubuntu3.2_amd64.deb ...
+#6 29.47 Unpacking libharfbuzz-dev:amd64 (2.7.4-1ubuntu3.2) ...
+#6 29.50 Selecting previously unselected package proj-data.
+#6 29.50 Preparing to unpack .../89-proj-data_8.2.1-1_all.deb ...
+#6 29.50 Unpacking proj-data (8.2.1-1) ...
+#6 29.58 Preparing to unpack .../90-libtiff5_4.3.0-6ubuntu0.13_amd64.deb ...
+#6 29.59 Unpacking libtiff5:amd64 (4.3.0-6ubuntu0.13) over (4.3.0-6ubuntu0.9) ...
+#6 29.61 Selecting previously unselected package libproj22:amd64.
+#6 29.62 Preparing to unpack .../91-libproj22_8.2.1-1_amd64.deb ...
+#6 29.62 Unpacking libproj22:amd64 (8.2.1-1) ...
+#6 29.64 Selecting previously unselected package libsqlite3-dev:amd64.
+#6 29.65 Preparing to unpack .../92-libsqlite3-dev_3.37.2-2ubuntu0.8_amd64.deb ...
+#6 29.65 Unpacking libsqlite3-dev:amd64 (3.37.2-2ubuntu0.8) ...
+#6 29.67 Selecting previously unselected package libssl-dev:amd64.
+#6 29.67 Preparing to unpack .../93-libssl-dev_3.0.2-0ubuntu1.30_amd64.deb ...
+#6 29.67 Unpacking libssl-dev:amd64 (3.0.2-0ubuntu1.30) ...
+#6 29.74 Selecting previously unselected package libjbig-dev:amd64.
+#6 29.74 Preparing to unpack .../94-libjbig-dev_2.1-3.1ubuntu0.22.04.1_amd64.deb ...
+#6 29.74 Unpacking libjbig-dev:amd64 (2.1-3.1ubuntu0.22.04.1) ...
+#6 29.76 Selecting previously unselected package liblzma-dev:amd64.
+#6 29.76 Preparing to unpack .../95-liblzma-dev_5.2.5-2ubuntu1.1_amd64.deb ...
+#6 29.76 Unpacking liblzma-dev:amd64 (5.2.5-2ubuntu1.1) ...
+#6 29.79 Preparing to unpack .../96-libtiffxx5_4.3.0-6ubuntu0.13_amd64.deb ...
+#6 29.79 Unpacking libtiffxx5:amd64 (4.3.0-6ubuntu0.13) over (4.3.0-6ubuntu0.9) ...
+#6 29.81 Selecting previously unselected package libtiff-dev:amd64.
+#6 29.82 Preparing to unpack .../97-libtiff-dev_4.3.0-6ubuntu0.13_amd64.deb ...
+#6 29.82 Unpacking libtiff-dev:amd64 (4.3.0-6ubuntu0.13) ...
+#6 29.84 Selecting previously unselected package libxml2-dev:amd64.
+#6 29.84 Preparing to unpack .../98-libxml2-dev_2.9.13+dfsg-1ubuntu0.13_amd64.deb ...
+#6 29.84 Unpacking libxml2-dev:amd64 (2.9.13+dfsg-1ubuntu0.13) ...
+#6 29.87 Selecting previously unselected package libproj-dev:amd64.
+#6 29.87 Preparing to unpack .../99-libproj-dev_8.2.1-1_amd64.deb ...
+#6 29.88 Unpacking libproj-dev:amd64 (8.2.1-1) ...
+#6 29.93 Setting up media-types (7.0.0) ...
+#6 29.94 Setting up libpcrecpp0v5:amd64 (2:8.39-13ubuntu0.22.04.1) ...
+#6 29.94 Setting up libgraphite2-3:amd64 (1.3.14-1ubuntu0.1) ...
+#6 29.94 Setting up libpixman-1-dev:amd64 (0.40.0-1ubuntu0.22.04.1) ...
+#6 29.95 Setting up proj-data (8.2.1-1) ...
+#6 29.96 Setting up libpcre16-3:amd64 (2:8.39-13ubuntu0.22.04.1) ...
+#6 29.96 Setting up libpcre2-dev:amd64 (10.39-3ubuntu0.1) ...
+#6 29.97 Setting up libglib2.0-0:amd64 (2.72.4-0ubuntu2.10) ...
+#6 29.98 No schema files found: doing nothing.
+#6 29.98 Setting up libfribidi-dev:amd64 (1.0.8-2ubuntu3.1) ...
+#6 29.98 Setting up libsqlite3-0:amd64 (3.37.2-2ubuntu0.8) ...
+#6 29.99 Setting up libldl2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 29.99 Setting up libjbig-dev:amd64 (2.1-3.1ubuntu0.22.04.1) ...
+#6 30.00 Setting up libglib2.0-bin (2.72.4-0ubuntu2.10) ...
+#6 30.00 Setting up liblzo2-2:amd64 (2.10-2build3) ...
+#6 30.01 Setting up libcurl3-gnutls:amd64 (7.81.0-1ubuntu1.29) ...
+#6 30.01 Setting up libmetis5:amd64 (5.1.0.dfsg-7build2) ...
+#6 30.02 Setting up perl-modules-5.34 (5.34.0-3ubuntu1.9) ...
+#6 30.02 Setting up libffi-dev:amd64 (3.4.2-4) ...
+#6 30.03 Setting up libpthread-stubs0-dev:amd64 (0.4-1build2) ...
+#6 30.03 Setting up libbtf1:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.04 Setting up xtrans-dev (1.4.0-1) ...
+#6 30.04 Setting up libgraphite2-dev:amd64 (1.3.14-1ubuntu0.1) ...
+#6 30.05 Setting up libgmpxx4ldbl:amd64 (2:6.2.1+dfsg-3ubuntu1) ...
+#6 30.05 Setting up libexpat1-dev:amd64 (2.4.7-1ubuntu0.9) ...
+#6 30.06 Setting up libsqlite3-dev:amd64 (3.37.2-2ubuntu0.8) ...
+#6 30.06 Setting up uuid-dev:amd64 (2.37.2-4ubuntu3.6) ...
+#6 30.06 Setting up libssl-dev:amd64 (3.0.2-0ubuntu1.30) ...
+#6 30.07 Setting up libpng16-16:amd64 (1.6.37-3ubuntu0.6) ...
+#6 30.07 Setting up libpcre32-3:amd64 (2:8.39-13ubuntu0.22.04.1) ...
+#6 30.08 Setting up icu-devtools (70.1-2) ...
+#6 30.09 Setting up fonts-dejavu-core (2.37-2build1) ...
+#6 30.11 Setting up libsepol-dev:amd64 (3.3-1build1) ...
+#6 30.11 Setting up libltdl7:amd64 (2.4.6-15build2) ...
+#6 30.12 Setting up liblzma-dev:amd64 (5.2.5-2ubuntu1.1) ...
+#6 30.12 Setting up zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu9.2) ...
+#6 30.13 Setting up libmpdec3:amd64 (2.5.1-2build2) ...
+#6 30.13 Setting up libcurl4:amd64 (7.81.0-1ubuntu1.29) ...
+#6 30.14 Setting up libgirepository-1.0-1:amd64 (1.72.0-1) ...
+#6 30.14 Setting up xorg-sgml-doctools (1:1.11-1.1) ...
+#6 30.15 Setting up libcxsparse3:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.15 Setting up libtiff5:amd64 (4.3.0-6ubuntu0.13) ...
+#6 30.16 Setting up libdeflate-dev:amd64 (1.10-2) ...
+#6 30.16 Setting up libicu-dev:amd64 (70.1-2) ...
+#6 30.17 Setting up libxml2:amd64 (2.9.13+dfsg-1ubuntu0.13) ...
+#6 30.17 Setting up libsuitesparseconfig5:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.18 Setting up libbrotli-dev:amd64 (1.0.9-2build6) ...
+#6 30.18 Setting up librbio2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.19 Setting up libtiffxx5:amd64 (4.3.0-6ubuntu0.13) ...
+#6 30.19 Setting up libgdbm6:amd64 (1.23-1) ...
+#6 30.19 Setting up x11proto-dev (2021.5-1) ...
+#6 30.20 Setting up libblkid-dev:amd64 (2.37.2-4ubuntu3.6) ...
+#6 30.21 Setting up libamd2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.21 Setting up libgmp-dev:amd64 (2:6.2.1+dfsg-3ubuntu1) ...
+#6 30.22 Setting up libxau-dev:amd64 (1:1.0.9-1build5) ...
+#6 30.22 Setting up libcolamd2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.22 Setting up libice-dev:amd64 (2:1.0.10-1build2) ...
+#6 30.23 Setting up libsm-dev:amd64 (2:1.2.3-1build2) ...
+#6 30.23 Setting up libselinux1-dev:amd64 (3.3-1build2) ...
+#6 30.24 Setting up libpcre3-dev:amd64 (2:8.39-13ubuntu0.22.04.1) ...
+#6 30.24 Setting up libpng-dev:amd64 (1.6.37-3ubuntu0.6) ...
+#6 30.25 Setting up libproj22:amd64 (8.2.1-1) ...
+#6 30.25 Setting up libsliplu1:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.26 Setting up libpython3.10-stdlib:amd64 (3.10.12-1~22.04.18) ...
+#6 30.26 Setting up libcamd2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.27 Setting up libmongoose2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.27 Setting up libxdmcp-dev:amd64 (1:1.1.3-0ubuntu5) ...
+#6 30.28 Setting up libxml2-dev:amd64 (2.9.13+dfsg-1ubuntu0.13) ...
+#6 30.28 Setting up libfreetype6:amd64 (2.11.1+dfsg-1ubuntu0.3) ...
+#6 30.29 Setting up libtiff-dev:amd64 (4.3.0-6ubuntu0.13) ...
+#6 30.29 Setting up libglpk40:amd64 (5.0-1) ...
+#6 30.30 Setting up libcurl4-openssl-dev:amd64 (7.81.0-1ubuntu1.29) ...
+#6 30.30 Setting up libproj-dev:amd64 (8.2.1-1) ...
+#6 30.31 Setting up libgdbm-compat4:amd64 (1.23-1) ...
+#6 30.31 Setting up gir1.2-glib-2.0:amd64 (1.72.0-1) ...
+#6 30.32 Setting up libklu1:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.32 Setting up libccolamd2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.32 Setting up libharfbuzz0b:amd64 (2.7.4-1ubuntu3.2) ...
+#6 30.33 Setting up libmount-dev:amd64 (2.37.2-4ubuntu3.6) ...
+#6 30.34 Setting up libcholmod3:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.34 Setting up libpython3-stdlib:amd64 (3.10.6-1~22.04.1) ...
+#6 30.36 Setting up libspqr2:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 30.36 Setting up libperl5.34:amd64 (5.34.0-3ubuntu1.9) ...
+#6 30.37 Setting up libharfbuzz-icu0:amd64 (2.7.4-1ubuntu3.2) ...
+#6 30.37 Setting up libxcb1-dev:amd64 (1.14-3ubuntu3) ...
+#6 30.38 Setting up python3.10 (3.10.12-1~22.04.18) ...
+#6 30.79 Setting up libx11-dev:amd64 (2:1.7.5-1ubuntu0.3) ...
+#6 30.79 Setting up python3 (3.10.6-1~22.04.1) ...
+#6 30.80 running python rtupdate hooks for python3.10...
+#6 30.93 running python post-rtupdate hooks for python3.10...
+#6 30.99 Setting up libharfbuzz-gobject0:amd64 (2.7.4-1ubuntu3.2) ...
+#6 30.99 Setting up gir1.2-harfbuzz-0.0:amd64 (2.7.4-1ubuntu3.2) ...
+#6 30.99 Setting up libcairo2:amd64 (1.16.0-5ubuntu2.1) ...
+#6 31.00 Setting up libfreetype-dev:amd64 (2.11.1+dfsg-1ubuntu0.3) ...
+#6 31.00 Setting up libxcb-shm0-dev:amd64 (1.14-3ubuntu3) ...
+#6 31.01 Setting up perl (5.34.0-3ubuntu1.9) ...
+#6 31.02 Setting up libumfpack5:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 31.02 Setting up libxcb-render0-dev:amd64 (1.14-3ubuntu3) ...
+#6 31.03 Setting up libdpkg-perl (1.21.1ubuntu2.6) ...
+#6 31.03 Setting up libxext-dev:amd64 (2:1.3.4-1build1) ...
+#6 31.04 Setting up libcairo-gobject2:amd64 (1.16.0-5ubuntu2.1) ...
+#6 31.04 Setting up python3-lib2to3 (3.10.8-1~22.04) ...
+#6 31.11 Setting up libxrender-dev:amd64 (1:0.9.10-1build4) ...
+#6 31.12 Setting up python3-distutils (3.10.8-1~22.04) ...
+#6 31.19 Setting up libcairo-script-interpreter2:amd64 (1.16.0-5ubuntu2.1) ...
+#6 31.20 Setting up libglib2.0-dev-bin (2.72.4-0ubuntu2.10) ...
+#6 31.30 Setting up libsuitesparse-dev:amd64 (1:5.10.1+dfsg-4build1) ...
+#6 31.30 Setting up libfreetype6-dev:amd64 (2.11.1+dfsg-1ubuntu0.3) ...
+#6 31.31 Setting up libglpk-dev:amd64 (5.0-1) ...
+#6 31.31 Setting up pkg-config (0.29.2-1ubuntu3) ...
+#6 31.33 Setting up libfontconfig-dev:amd64 (2.13.1-4.2ubuntu5) ...
+#6 31.34 Setting up libglib2.0-dev:amd64 (2.72.4-0ubuntu2.10) ...
+#6 31.34 Setting up libcairo2-dev:amd64 (1.16.0-5ubuntu2.1) ...
+#6 31.35 Setting up libharfbuzz-dev:amd64 (2.7.4-1ubuntu3.2) ...
+#6 31.36 Setting up libfontconfig1-dev:amd64 (2.13.1-4.2ubuntu5) ...
+#6 31.36 Processing triggers for fontconfig (2.13.1-4.2ubuntu5) ...
+#6 31.38 Processing triggers for libc-bin (2.35-0ubuntu3.8) ...
+#6 DONE 31.7s
+
+#7 [3/7] RUN echo "options(repos = c(CRAN = 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23'))"         >> /usr/local/lib/R/etc/Rprofile.site
+#7 DONE 0.1s
+
+#8 [4/7] RUN R -q -e "install.packages(c('coda', 'hdrcde', 'shiny', 'readr', 'toOrdinal',         'ggplot2', 'ggalt', 'reshape2', 'dplyr', 'digest', 'gplots', 'magrittr',         'ggraph', 'gtools', 'jsonlite'))"     && R -q -e "stopifnot(all(sapply(c('coda','hdrcde','shiny','readr','toOrdinal',         'ggplot2','ggalt','reshape2','dplyr','digest','gplots','magrittr','ggraph',         'gtools','jsonlite'), requireNamespace, quietly = TRUE)))"
+#8 0.330 > install.packages(c('coda', 'hdrcde', 'shiny', 'readr', 'toOrdinal',         'ggplot2', 'ggalt', 'reshape2', 'dplyr', 'digest', 'gplots', 'magrittr',         'ggraph', 'gtools', 'jsonlite'))
+#8 0.332 Installing packages into '/usr/local/lib/R/site-library'
+#8 0.332 (as 'lib' is unspecified)
+#8 3.312 also installing the dependencies 'sys', 'askpass', 'highr', 'xfun', 'tinytex', 'misc3d', 'fs', 'rappdirs', 'bit', 'prettyunits', 'rprojroot', 'diffobj', 'rematch2', 'colorspace', 'curl', 'openssl', 'yaml', 'knitr', 'rmarkdown', 'FNN', 'kernlab', 'mclust', 'multicool', 'mvtnorm', 'plot3D', 'pracma', 'base64enc', 'sass', 'jquerylib', 'memoise', 'pkgconfig', 'fansi', 'bit64', 'progress', 'brio', 'callr', 'desc', 'evaluate', 'pkgload', 'praise', 'processx', 'ps', 'waldo', 'farver', 'labeling', 'munsell', 'viridisLite', 'extrafontdb', 'Rttf2pt1', 'httr', 'htmlwidgets', 'tidyr', 'lazyeval', 'crosstalk', 'purrr', 'data.table', 'stringi', 'utf8', 'bitops', 'tweenr', 'polyclip', 'systemfonts', 'RcppEigen', 'gridExtra', 'RcppArmadillo', 'locfit', 'ash', 'ks', 'RColorBrewer', 'httpuv', 'mime', 'xtable', 'fontawesome', 'htmltools', 'R6', 'sourcetools', 'later', 'promises', 'crayon', 'rlang', 'fastmap', 'withr', 'commonmark', 'glue', 'bslib', 'cachem', 'ellipsis', 'lifecycle', 'cli', 'clipr', 'hms', 'tibble', 'vroom', 'cpp11', 'tzdb', 'testthat', 'gtable', 'isoband', 'scales', 'vctrs', 'proj4', 'maps', 'extrafont', 'plotly', 'plyr', 'Rcpp', 'stringr', 'generics', 'pillar', 'tidyselect', 'caTools', 'ggforce', 'igraph', 'ggrepel', 'viridis', 'tidygraph', 'graphlayouts'
+#8 3.312 
+#8 3.313 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/sys_3.4.1.tar.gz'
+#8 5.315 Content type 'binary/octet-stream' length 53793 bytes (52 KB)
+#8 5.315 ==================================================
+#8 5.317 downloaded 52 KB
+#8 5.317 
+#8 5.320 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/askpass_1.1.tar.gz'
+#8 7.281 Content type 'binary/octet-stream' length 22352 bytes (21 KB)
+#8 7.281 ==================================================
+#8 7.281 downloaded 21 KB
+#8 7.281 
+#8 7.284 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/highr_0.10.tar.gz'
+#8 9.276 Content type 'binary/octet-stream' length 38771 bytes (37 KB)
+#8 9.276 ==================================================
+#8 9.576 downloaded 37 KB
+#8 9.576 
+#8 9.579 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/xfun_0.37.tar.gz'
+#8 11.78 Content type 'binary/octet-stream' length 393438 bytes (384 KB)
+#8 11.78 ==================================================
+#8 12.51 downloaded 384 KB
+#8 12.51 
+#8 12.52 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/tinytex_0.44.tar.gz'
+#8 14.61 Content type 'binary/octet-stream' length 132104 bytes (129 KB)
+#8 14.61 ==================================================
+#8 15.11 downloaded 129 KB
+#8 15.11 
+#8 15.12 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/misc3d_0.9-1.tar.gz'
+#8 17.33 Content type 'binary/octet-stream' length 236767 bytes (231 KB)
+#8 17.33 ==================================================
+#8 17.88 downloaded 231 KB
+#8 17.88 
+#8 17.88 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/fs_1.6.1.tar.gz'
+#8 19.87 Content type 'binary/octet-stream' length 284423 bytes (277 KB)
+#8 19.87 ==================================================
+#8 19.88 downloaded 277 KB
+#8 19.88 
+#8 19.88 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/rappdirs_0.3.3.tar.gz'
+#8 21.98 Content type 'binary/octet-stream' length 43896 bytes (42 KB)
+#8 21.98 ==================================================
+#8 22.28 downloaded 42 KB
+#8 22.28 
+#8 22.28 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/bit_4.0.5.tar.gz'
+#8 24.34 Content type 'binary/octet-stream' length 1121918 bytes (1.1 MB)
+#8 24.34 ==================================================
+#8 24.36 downloaded 1.1 MB
+#8 24.36 
+#8 24.36 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/prettyunits_1.1.1.tar.gz'
+#8 26.37 Content type 'binary/octet-stream' length 34318 bytes (33 KB)
+#8 26.37 ==================================================
+#8 26.57 downloaded 33 KB
+#8 26.57 
+#8 26.57 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/rprojroot_2.0.3.tar.gz'
+#8 28.56 Content type 'binary/octet-stream' length 101422 bytes (99 KB)
+#8 28.56 ==================================================
+#8 28.95 downloaded 99 KB
+#8 28.95 
+#8 28.95 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/diffobj_0.3.5.tar.gz'
+#8 30.95 Content type 'binary/octet-stream' length 995010 bytes (971 KB)
+#8 30.95 ==================================================
+#8 30.96 downloaded 971 KB
+#8 30.96 
+#8 30.96 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/rematch2_2.1.2.tar.gz'
+#8 33.01 Content type 'binary/octet-stream' length 44231 bytes (43 KB)
+#8 33.01 ==================================================
+#8 33.31 downloaded 43 KB
+#8 33.31 
+#8 33.32 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/colorspace_2.1-0.tar.gz'
+#8 35.39 Content type 'binary/octet-stream' length 2589197 bytes (2.5 MB)
+#8 35.69 ==================================================
+#8 36.65 downloaded 2.5 MB
+#8 36.65 
+#8 36.65 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/curl_5.0.0.tar.gz'
+#8 38.64 Content type 'binary/octet-stream' length 727485 bytes (710 KB)
+#8 38.64 ==================================================
+#8 38.65 downloaded 710 KB
+#8 38.65 
+#8 38.65 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/openssl_2.0.6.tar.gz'
+#8 40.64 Content type 'binary/octet-stream' length 1305232 bytes (1.2 MB)
+#8 40.64 ==================================================
+#8 40.66 downloaded 1.2 MB
+#8 40.66 
+#8 40.66 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/yaml_2.3.7.tar.gz'
+#8 42.79 Content type 'binary/octet-stream' length 111239 bytes (108 KB)
+#8 42.79 ==================================================
+#8 43.19 downloaded 108 KB
+#8 43.19 
+#8 43.19 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/knitr_1.42.tar.gz'
+#8 45.36 Content type 'binary/octet-stream' length 1435645 bytes (1.4 MB)
+#8 45.56 ==================================================
+#8 46.25 downloaded 1.4 MB
+#8 46.25 
+#8 46.26 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/rmarkdown_2.20.tar.gz'
+#8 48.47 Content type 'binary/octet-stream' length 3671159 bytes (3.5 MB)
+#8 48.87 ==================================================
+#8 49.79 downloaded 3.5 MB
+#8 49.79 
+#8 49.79 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/FNN_1.1.3.2.tar.gz'
+#8 51.84 Content type 'binary/octet-stream' length 124256 bytes (121 KB)
+#8 51.84 ==================================================
+#8 52.35 downloaded 121 KB
+#8 52.35 
+#8 52.35 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/kernlab_0.9-32.tar.gz'
+#8 54.62 Content type 'binary/octet-stream' length 2210505 bytes (2.1 MB)
+#8 54.82 ==================================================
+#8 55.81 downloaded 2.1 MB
+#8 55.81 
+#8 55.81 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/mclust_6.0.0.tar.gz'
+#8 57.82 Content type 'binary/octet-stream' length 4085105 bytes (3.9 MB)
+#8 58.32 ==================================================
+#8 59.29 downloaded 3.9 MB
+#8 59.29 
+#8 59.29 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/multicool_0.1-12.tar.gz'
+#8 61.43 Content type 'binary/octet-stream' length 109937 bytes (107 KB)
+#8 61.43 ==================================================
+#8 61.82 downloaded 107 KB
+#8 61.82 
+#8 61.82 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/mvtnorm_1.1-3.tar.gz'
+#8 63.87 Content type 'binary/octet-stream' length 263444 bytes (257 KB)
+#8 63.87 ==================================================
+#8 64.49 downloaded 257 KB
+#8 64.49 
+#8 64.49 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/plot3D_1.4.tar.gz'
+#8 66.67 Content type 'binary/octet-stream' length 2790642 bytes (2.7 MB)
+#8 66.87 ==================================================
+#8 67.87 downloaded 2.7 MB
+#8 67.87 
+#8 67.87 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/pracma_2.4.2.tar.gz'
+#8 70.00 Content type 'binary/octet-stream' length 1705059 bytes (1.6 MB)
+#8 70.19 ==================================================
+#8 71.17 downloaded 1.6 MB
+#8 71.17 
+#8 71.17 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/base64enc_0.1-3.tar.gz'
+#8 73.21 Content type 'binary/octet-stream' length 26101 bytes (25 KB)
+#8 73.21 ==================================================
+#8 73.51 downloaded 25 KB
+#8 73.51 
+#8 73.51 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/sass_0.4.5.tar.gz'
+#8 75.58 Content type 'binary/octet-stream' length 2414026 bytes (2.3 MB)
+#8 75.77 ==================================================
+#8 76.76 downloaded 2.3 MB
+#8 76.76 
+#8 76.76 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/jquerylib_0.1.4.tar.gz'
+#8 78.79 Content type 'binary/octet-stream' length 526505 bytes (514 KB)
+#8 78.79 ==================================================
+#8 79.62 downloaded 514 KB
+#8 79.62 
+#8 79.62 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/memoise_2.0.1.tar.gz'
+#8 81.62 Content type 'binary/octet-stream' length 47159 bytes (46 KB)
+#8 81.62 ==================================================
+#8 81.93 downloaded 46 KB
+#8 81.93 
+#8 81.93 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/pkgconfig_2.0.3.tar.gz'
+#8 83.95 Content type 'binary/octet-stream' length 17562 bytes (17 KB)
+#8 83.95 ==================================================
+#8 83.95 downloaded 17 KB
+#8 83.95 
+#8 83.96 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/fansi_1.0.4.tar.gz'
+#8 85.95 Content type 'binary/octet-stream' length 302543 bytes (295 KB)
+#8 85.95 ==================================================
+#8 85.95 downloaded 295 KB
+#8 85.95 
+#8 85.96 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/bit64_4.0.5.tar.gz'
+#8 87.95 Content type 'binary/octet-stream' length 574906 bytes (561 KB)
+#8 87.95 ==================================================
+#8 87.96 downloaded 561 KB
+#8 87.96 
+#8 87.96 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/progress_1.2.2.tar.gz'
+#8 89.99 Content type 'binary/octet-stream' length 83456 bytes (81 KB)
+#8 89.99 ==================================================
+#8 90.39 downloaded 81 KB
+#8 90.39 
+#8 90.40 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/brio_1.1.3.tar.gz'
+#8 92.37 Content type 'binary/octet-stream' length 44049 bytes (43 KB)
+#8 92.37 ==================================================
+#8 92.37 downloaded 43 KB
+#8 92.37 
+#8 92.37 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/callr_3.7.3.tar.gz'
+#8 94.38 Content type 'binary/octet-stream' length 425227 bytes (415 KB)
+#8 94.38 ==================================================
+#8 94.39 downloaded 415 KB
+#8 94.39 
+#8 94.39 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/desc_1.4.2.tar.gz'
+#8 96.38 Content type 'binary/octet-stream' length 319936 bytes (312 KB)
+#8 96.38 ==================================================
+#8 96.38 downloaded 312 KB
+#8 96.38 
+#8 96.39 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/evaluate_0.20.tar.gz'
+#8 98.42 Content type 'binary/octet-stream' length 77520 bytes (75 KB)
+#8 98.42 ==================================================
+#8 98.92 downloaded 75 KB
+#8 98.92 
+#8 98.92 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/pkgload_1.3.2.tar.gz'
+#8 101.1 Content type 'binary/octet-stream' length 173399 bytes (169 KB)
+#8 101.1 ==================================================
+#8 101.5 downloaded 169 KB
+#8 101.5 
+#8 101.5 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/praise_1.0.0.tar.gz'
+#8 103.6 Content type 'binary/octet-stream' length 16092 bytes (15 KB)
+#8 103.6 ==================================================
+#8 103.6 downloaded 15 KB
+#8 103.6 
+#8 103.6 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/processx_3.8.0.tar.gz'
+#8 105.6 Content type 'binary/octet-stream' length 431183 bytes (421 KB)
+#8 105.6 ==================================================
+#8 106.4 downloaded 421 KB
+#8 106.4 
+#8 106.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/ps_1.7.3.tar.gz'
+#8 108.7 Content type 'binary/octet-stream' length 382923 bytes (373 KB)
+#8 108.7 ==================================================
+#8 109.3 downloaded 373 KB
+#8 109.3 
+#8 109.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/waldo_0.4.0.tar.gz'
+#8 111.3 Content type 'binary/octet-stream' length 99881 bytes (97 KB)
+#8 111.3 ==================================================
+#8 111.8 downloaded 97 KB
+#8 111.8 
+#8 111.8 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/farver_2.1.1.tar.gz'
+#8 114.0 Content type 'binary/octet-stream' length 2297101 bytes (2.2 MB)
+#8 114.2 ==================================================
+#8 115.3 downloaded 2.2 MB
+#8 115.3 
+#8 115.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/labeling_0.4.2.tar.gz'
+#8 117.2 Content type 'binary/octet-stream' length 58419 bytes (57 KB)
+#8 117.2 ==================================================
+#8 117.4 downloaded 57 KB
+#8 117.4 
+#8 117.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/munsell_0.5.0.tar.gz'
+#8 119.5 Content type 'binary/octet-stream' length 240157 bytes (234 KB)
+#8 119.5 ==================================================
+#8 120.0 downloaded 234 KB
+#8 120.0 
+#8 120.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/viridisLite_0.4.1.tar.gz'
+#8 122.0 Content type 'binary/octet-stream' length 1296653 bytes (1.2 MB)
+#8 122.2 ==================================================
+#8 123.2 downloaded 1.2 MB
+#8 123.2 
+#8 123.2 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/extrafontdb_1.0.tar.gz'
+#8 125.3 Content type 'binary/octet-stream' length 6808 bytes
+#8 125.3 ==================================================
+#8 125.3 downloaded 6808 bytes
+#8 125.3 
+#8 125.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/Rttf2pt1_1.3.12.tar.gz'
+#8 127.4 Content type 'binary/octet-stream' length 273764 bytes (267 KB)
+#8 127.4 ==================================================
+#8 128.0 downloaded 267 KB
+#8 128.0 
+#8 128.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/httr_1.4.5.tar.gz'
+#8 130.0 Content type 'binary/octet-stream' length 497681 bytes (486 KB)
+#8 130.0 ==================================================
+#8 130.0 downloaded 486 KB
+#8 130.0 
+#8 130.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/htmlwidgets_1.6.2.tar.gz'
+#8 132.3 Content type 'binary/octet-stream' length 811990 bytes (792 KB)
+#8 132.3 ==================================================
+#8 133.1 downloaded 792 KB
+#8 133.1 
+#8 133.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/tidyr_1.3.0.tar.gz'
+#8 135.1 Content type 'binary/octet-stream' length 1198134 bytes (1.1 MB)
+#8 135.3 ==================================================
+#8 136.3 downloaded 1.1 MB
+#8 136.3 
+#8 136.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/lazyeval_0.2.2.tar.gz'
+#8 138.4 Content type 'binary/octet-stream' length 151758 bytes (148 KB)
+#8 138.4 ==================================================
+#8 138.9 downloaded 148 KB
+#8 138.9 
+#8 138.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/crosstalk_1.2.0.tar.gz'
+#8 141.0 Content type 'binary/octet-stream' length 403976 bytes (394 KB)
+#8 141.0 ==================================================
+#8 141.7 downloaded 394 KB
+#8 141.7 
+#8 141.8 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/purrr_1.0.1.tar.gz'
+#8 143.8 Content type 'binary/octet-stream' length 484591 bytes (473 KB)
+#8 143.8 ==================================================
+#8 144.6 downloaded 473 KB
+#8 144.6 
+#8 144.6 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/data.table_1.14.8.tar.gz'
+#8 146.7 Content type 'binary/octet-stream' length 2127462 bytes (2.0 MB)
+#8 147.0 ==================================================
+#8 147.9 downloaded 2.0 MB
+#8 147.9 
+#8 147.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/stringi_1.7.12.tar.gz'
+#8 150.0 Content type 'binary/octet-stream' length 3218223 bytes (3.1 MB)
+#8 150.3 ==================================================
+#8 151.3 downloaded 3.1 MB
+#8 151.3 
+#8 151.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/utf8_1.2.3.tar.gz'
+#8 153.3 Content type 'binary/octet-stream' length 145534 bytes (142 KB)
+#8 153.3 ==================================================
+#8 153.7 downloaded 142 KB
+#8 153.7 
+#8 153.7 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/bitops_1.0-7.tar.gz'
+#8 155.7 Content type 'binary/octet-stream' length 32391 bytes (31 KB)
+#8 155.7 ==================================================
+#8 155.7 downloaded 31 KB
+#8 155.7 
+#8 155.7 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/tweenr_2.0.2.tar.gz'
+#8 158.0 Content type 'binary/octet-stream' length 1672861 bytes (1.6 MB)
+#8 158.2 ==================================================
+#8 159.1 downloaded 1.6 MB
+#8 159.1 
+#8 159.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/polyclip_1.10-4.tar.gz'
+#8 161.2 Content type 'binary/octet-stream' length 503874 bytes (492 KB)
+#8 161.2 ==================================================
+#8 162.0 downloaded 492 KB
+#8 162.0 
+#8 162.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/systemfonts_1.0.4.tar.gz'
+#8 164.2 Content type 'binary/octet-stream' length 2166167 bytes (2.1 MB)
+#8 164.4 ==================================================
+#8 165.3 downloaded 2.1 MB
+#8 165.3 
+#8 165.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/RcppEigen_0.3.3.9.3.tar.gz'
+#8 167.4 Content type 'binary/octet-stream' length 1547173 bytes (1.5 MB)
+#8 167.6 ==================================================
+#8 168.4 downloaded 1.5 MB
+#8 168.4 
+#8 168.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/gridExtra_2.3.tar.gz'
+#8 170.4 Content type 'binary/octet-stream' length 1106750 bytes (1.1 MB)
+#8 170.6 ==================================================
+#8 171.4 downloaded 1.1 MB
+#8 171.4 
+#8 171.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/RcppArmadillo_0.12.0.1.0.tar.gz'
+#8 173.5 Content type 'binary/octet-stream' length 1035064 bytes (1010 KB)
+#8 173.8 ==================================================
+#8 174.5 downloaded 1010 KB
+#8 174.5 
+#8 174.5 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/locfit_1.5-9.7.tar.gz'
+#8 176.5 Content type 'binary/octet-stream' length 529746 bytes (517 KB)
+#8 176.5 ==================================================
+#8 177.3 downloaded 517 KB
+#8 177.3 
+#8 177.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/ash_1.0-15.tar.gz'
+#8 179.2 Content type 'binary/octet-stream' length 31333 bytes (30 KB)
+#8 179.2 ==================================================
+#8 179.4 downloaded 30 KB
+#8 179.4 
+#8 179.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/ks_1.14.0.tar.gz'
+#8 181.7 Content type 'binary/octet-stream' length 1898639 bytes (1.8 MB)
+#8 181.9 ==================================================
+#8 182.9 downloaded 1.8 MB
+#8 182.9 
+#8 182.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/RColorBrewer_1.1-3.tar.gz'
+#8 184.9 Content type 'binary/octet-stream' length 53076 bytes (51 KB)
+#8 184.9 ==================================================
+#8 185.1 downloaded 51 KB
+#8 185.1 
+#8 185.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/httpuv_1.6.9.tar.gz'
+#8 187.3 Content type 'binary/octet-stream' length 594359 bytes (580 KB)
+#8 187.3 ==================================================
+#8 188.0 downloaded 580 KB
+#8 188.0 
+#8 188.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/mime_0.12.tar.gz'
+#8 190.0 Content type 'binary/octet-stream' length 35486 bytes (34 KB)
+#8 190.0 ==================================================
+#8 190.0 downloaded 34 KB
+#8 190.0 
+#8 190.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/xtable_1.8-4.tar.gz'
+#8 192.1 Content type 'binary/octet-stream' length 700768 bytes (684 KB)
+#8 192.1 ==================================================
+#8 192.8 downloaded 684 KB
+#8 192.8 
+#8 192.8 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/fontawesome_0.5.0.tar.gz'
+#8 194.9 Content type 'binary/octet-stream' length 1381471 bytes (1.3 MB)
+#8 195.1 ==================================================
+#8 195.9 downloaded 1.3 MB
+#8 195.9 
+#8 195.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/htmltools_0.5.4.tar.gz'
+#8 198.0 Content type 'binary/octet-stream' length 342787 bytes (334 KB)
+#8 198.0 ==================================================
+#8 198.6 downloaded 334 KB
+#8 198.6 
+#8 198.6 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/R6_2.5.1.tar.gz'
+#8 200.5 Content type 'binary/octet-stream' length 82449 bytes (80 KB)
+#8 200.5 ==================================================
+#8 200.5 downloaded 80 KB
+#8 200.5 
+#8 200.5 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/sourcetools_0.1.7-1.tar.gz'
+#8 202.6 Content type 'binary/octet-stream' length 45983 bytes (44 KB)
+#8 202.6 ==================================================
+#8 202.8 downloaded 44 KB
+#8 202.8 
+#8 202.8 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/later_1.3.0.tar.gz'
+#8 204.8 Content type 'binary/octet-stream' length 129825 bytes (126 KB)
+#8 204.8 ==================================================
+#8 205.2 downloaded 126 KB
+#8 205.2 
+#8 205.2 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/promises_1.2.0.1.tar.gz'
+#8 207.2 Content type 'binary/octet-stream' length 1612138 bytes (1.5 MB)
+#8 207.5 ==================================================
+#8 208.3 downloaded 1.5 MB
+#8 208.3 
+#8 208.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/crayon_1.5.2.tar.gz'
+#8 210.3 Content type 'binary/octet-stream' length 158600 bytes (154 KB)
+#8 210.3 ==================================================
+#8 210.3 downloaded 154 KB
+#8 210.3 
+#8 210.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/rlang_1.1.0.tar.gz'
+#8 212.3 Content type 'binary/octet-stream' length 1539993 bytes (1.5 MB)
+#8 212.3 ==================================================
+#8 212.4 downloaded 1.5 MB
+#8 212.4 
+#8 212.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/fastmap_1.1.1.tar.gz'
+#8 214.4 Content type 'binary/octet-stream' length 61804 bytes (60 KB)
+#8 214.4 ==================================================
+#8 214.6 downloaded 60 KB
+#8 214.6 
+#8 214.6 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/withr_2.5.0.tar.gz'
+#8 216.6 Content type 'binary/octet-stream' length 225662 bytes (220 KB)
+#8 216.6 ==================================================
+#8 216.6 downloaded 220 KB
+#8 216.6 
+#8 216.6 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/commonmark_1.9.0.tar.gz'
+#8 218.8 Content type 'binary/octet-stream' length 146717 bytes (143 KB)
+#8 218.8 ==================================================
+#8 219.2 downloaded 143 KB
+#8 219.2 
+#8 219.2 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/glue_1.6.2.tar.gz'
+#8 221.2 Content type 'binary/octet-stream' length 146461 bytes (143 KB)
+#8 221.2 ==================================================
+#8 221.2 downloaded 143 KB
+#8 221.2 
+#8 221.2 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/bslib_0.4.2.tar.gz'
+#8 223.4 Content type 'binary/octet-stream' length 4801431 bytes (4.6 MB)
+#8 223.8 ==================================================
+#8 224.7 downloaded 4.6 MB
+#8 224.7 
+#8 224.7 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/cachem_1.0.7.tar.gz'
+#8 226.7 Content type 'binary/octet-stream' length 65819 bytes (64 KB)
+#8 226.7 ==================================================
+#8 226.7 downloaded 64 KB
+#8 226.7 
+#8 226.7 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/ellipsis_0.3.2.tar.gz'
+#8 228.7 Content type 'binary/octet-stream' length 33777 bytes (32 KB)
+#8 228.7 ==================================================
+#8 228.9 downloaded 32 KB
+#8 228.9 
+#8 228.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/lifecycle_1.0.3.tar.gz'
+#8 230.9 Content type 'binary/octet-stream' length 121937 bytes (119 KB)
+#8 230.9 ==================================================
+#8 230.9 downloaded 119 KB
+#8 230.9 
+#8 230.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/cli_3.6.0.tar.gz'
+#8 232.9 Content type 'binary/octet-stream' length 1234518 bytes (1.2 MB)
+#8 232.9 ==================================================
+#8 232.9 downloaded 1.2 MB
+#8 232.9 
+#8 232.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/clipr_0.8.0.tar.gz'
+#8 234.8 Content type 'binary/octet-stream' length 50415 bytes (49 KB)
+#8 234.8 ==================================================
+#8 235.0 downloaded 49 KB
+#8 235.0 
+#8 235.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/hms_1.1.3.tar.gz'
+#8 236.9 Content type 'binary/octet-stream' length 96547 bytes (94 KB)
+#8 236.9 ==================================================
+#8 237.3 downloaded 94 KB
+#8 237.3 
+#8 237.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/tibble_3.2.1.tar.gz'
+#8 239.3 Content type 'binary/octet-stream' length 672060 bytes (656 KB)
+#8 239.3 ==================================================
+#8 240.1 downloaded 656 KB
+#8 240.1 
+#8 240.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/vroom_1.6.1.tar.gz'
+#8 242.4 Content type 'binary/octet-stream' length 958604 bytes (936 KB)
+#8 242.6 ==================================================
+#8 243.3 downloaded 936 KB
+#8 243.3 
+#8 243.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/cpp11_0.4.3.tar.gz'
+#8 245.3 Content type 'binary/octet-stream' length 299415 bytes (292 KB)
+#8 245.3 ==================================================
+#8 245.3 downloaded 292 KB
+#8 245.3 
+#8 245.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/tzdb_0.3.0.tar.gz'
+#8 247.5 Content type 'binary/octet-stream' length 1569245 bytes (1.5 MB)
+#8 247.8 ==================================================
+#8 248.6 downloaded 1.5 MB
+#8 248.6 
+#8 248.6 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/testthat_3.1.7.tar.gz'
+#8 250.6 Content type 'binary/octet-stream' length 1777454 bytes (1.7 MB)
+#8 250.9 ==================================================
+#8 251.9 downloaded 1.7 MB
+#8 251.9 
+#8 251.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/gtable_0.3.3.tar.gz'
+#8 254.0 Content type 'binary/octet-stream' length 214221 bytes (209 KB)
+#8 254.0 ==================================================
+#8 254.6 downloaded 209 KB
+#8 254.6 
+#8 254.6 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/isoband_0.2.7.tar.gz'
+#8 256.6 Content type 'binary/octet-stream' length 1642137 bytes (1.6 MB)
+#8 256.8 ==================================================
+#8 257.7 downloaded 1.6 MB
+#8 257.7 
+#8 257.7 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/scales_1.2.1.tar.gz'
+#8 259.8 Content type 'binary/octet-stream' length 607905 bytes (593 KB)
+#8 259.8 ==================================================
+#8 260.7 downloaded 593 KB
+#8 260.7 
+#8 260.7 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/vctrs_0.6.1.tar.gz'
+#8 262.8 Content type 'binary/octet-stream' length 1277424 bytes (1.2 MB)
+#8 263.1 ==================================================
+#8 263.8 downloaded 1.2 MB
+#8 263.8 
+#8 263.8 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/proj4_1.0-12.tar.gz'
+#8 265.9 Content type 'binary/octet-stream' length 24819 bytes (24 KB)
+#8 265.9 ==================================================
+#8 266.1 downloaded 24 KB
+#8 266.1 
+#8 266.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/maps_3.4.1.tar.gz'
+#8 268.2 Content type 'binary/octet-stream' length 3128753 bytes (3.0 MB)
+#8 268.4 ==================================================
+#8 269.4 downloaded 3.0 MB
+#8 269.4 
+#8 269.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/extrafont_0.19.tar.gz'
+#8 271.5 Content type 'binary/octet-stream' length 54174 bytes (52 KB)
+#8 271.5 ==================================================
+#8 271.8 downloaded 52 KB
+#8 271.8 
+#8 271.8 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/plotly_4.10.1.tar.gz'
+#8 273.8 Content type 'binary/octet-stream' length 3175523 bytes (3.0 MB)
+#8 274.0 ==================================================
+#8 275.0 downloaded 3.0 MB
+#8 275.0 
+#8 275.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/plyr_1.8.8.tar.gz'
+#8 277.1 Content type 'binary/octet-stream' length 819020 bytes (799 KB)
+#8 277.1 ==================================================
+#8 278.1 downloaded 799 KB
+#8 278.1 
+#8 278.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/Rcpp_1.0.10.tar.gz'
+#8 280.2 Content type 'binary/octet-stream' length 2121875 bytes (2.0 MB)
+#8 280.4 ==================================================
+#8 281.4 downloaded 2.0 MB
+#8 281.4 
+#8 281.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/stringr_1.5.0.tar.gz'
+#8 283.4 Content type 'binary/octet-stream' length 299596 bytes (292 KB)
+#8 283.4 ==================================================
+#8 284.0 downloaded 292 KB
+#8 284.0 
+#8 284.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/generics_0.1.3.tar.gz'
+#8 286.1 Content type 'binary/octet-stream' length 73201 bytes (71 KB)
+#8 286.1 ==================================================
+#8 286.4 downloaded 71 KB
+#8 286.4 
+#8 286.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/pillar_1.9.0.tar.gz'
+#8 288.3 Content type 'binary/octet-stream' length 644477 bytes (629 KB)
+#8 288.3 ==================================================
+#8 288.3 downloaded 629 KB
+#8 288.3 
+#8 288.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/tidyselect_1.2.0.tar.gz'
+#8 290.4 Content type 'binary/octet-stream' length 219415 bytes (214 KB)
+#8 290.4 ==================================================
+#8 291.1 downloaded 214 KB
+#8 291.1 
+#8 291.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/caTools_1.18.2.tar.gz'
+#8 293.3 Content type 'binary/octet-stream' length 199944 bytes (195 KB)
+#8 293.3 ==================================================
+#8 293.9 downloaded 195 KB
+#8 293.9 
+#8 293.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/ggforce_0.4.1.tar.gz'
+#8 295.9 Content type 'binary/octet-stream' length 1826752 bytes (1.7 MB)
+#8 296.1 ==================================================
+#8 297.0 downloaded 1.7 MB
+#8 297.0 
+#8 297.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/igraph_1.4.1.tar.gz'
+#8 299.0 Content type 'binary/octet-stream' length 4382385 bytes (4.2 MB)
+#8 299.4 ==================================================
+#8 300.4 downloaded 4.2 MB
+#8 300.4 
+#8 300.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/ggrepel_0.9.3.tar.gz'
+#8 302.6 Content type 'binary/octet-stream' length 270934 bytes (264 KB)
+#8 302.6 ==================================================
+#8 303.1 downloaded 264 KB
+#8 303.1 
+#8 303.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/viridis_0.6.2.tar.gz'
+#8 305.1 Content type 'binary/octet-stream' length 2997414 bytes (2.9 MB)
+#8 305.3 ==================================================
+#8 306.3 downloaded 2.9 MB
+#8 306.3 
+#8 306.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/tidygraph_1.2.3.tar.gz'
+#8 308.4 Content type 'binary/octet-stream' length 501355 bytes (489 KB)
+#8 308.4 ==================================================
+#8 309.3 downloaded 489 KB
+#8 309.3 
+#8 309.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/graphlayouts_0.8.4.tar.gz'
+#8 311.6 Content type 'binary/octet-stream' length 2641898 bytes (2.5 MB)
+#8 311.8 ==================================================
+#8 312.8 downloaded 2.5 MB
+#8 312.8 
+#8 312.8 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/coda_0.19-4.tar.gz'
+#8 315.1 Content type 'binary/octet-stream' length 320587 bytes (313 KB)
+#8 315.1 ==================================================
+#8 315.6 downloaded 313 KB
+#8 315.6 
+#8 315.6 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/hdrcde_3.4.tar.gz'
+#8 317.9 Content type 'binary/octet-stream' length 218785 bytes (213 KB)
+#8 317.9 ==================================================
+#8 318.4 downloaded 213 KB
+#8 318.4 
+#8 318.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/shiny_1.7.4.tar.gz'
+#8 320.5 Content type 'binary/octet-stream' length 4244923 bytes (4.0 MB)
+#8 320.9 ==================================================
+#8 321.9 downloaded 4.0 MB
+#8 321.9 
+#8 321.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/readr_2.1.4.tar.gz'
+#8 324.0 Content type 'binary/octet-stream' length 862922 bytes (842 KB)
+#8 324.3 ==================================================
+#8 325.0 downloaded 842 KB
+#8 325.0 
+#8 325.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/toOrdinal_1.3-0.0.tar.gz'
+#8 327.1 Content type 'binary/octet-stream' length 29188 bytes (28 KB)
+#8 327.1 ==================================================
+#8 327.3 downloaded 28 KB
+#8 327.3 
+#8 327.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/ggplot2_3.4.1.tar.gz'
+#8 329.6 Content type 'binary/octet-stream' length 4209396 bytes (4.0 MB)
+#8 330.0 ==================================================
+#8 331.0 downloaded 4.0 MB
+#8 331.0 
+#8 331.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/ggalt_0.4.0.tar.gz'
+#8 333.1 Content type 'binary/octet-stream' length 2360526 bytes (2.3 MB)
+#8 333.4 ==================================================
+#8 334.4 downloaded 2.3 MB
+#8 334.4 
+#8 334.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/reshape2_1.4.4.tar.gz'
+#8 336.4 Content type 'binary/octet-stream' length 115912 bytes (113 KB)
+#8 336.4 ==================================================
+#8 336.9 downloaded 113 KB
+#8 336.9 
+#8 336.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/dplyr_1.1.1.tar.gz'
+#8 339.1 Content type 'binary/octet-stream' length 1452057 bytes (1.4 MB)
+#8 339.4 ==================================================
+#8 340.1 downloaded 1.4 MB
+#8 340.1 
+#8 340.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/digest_0.6.31.tar.gz'
+#8 342.1 Content type 'binary/octet-stream' length 197228 bytes (192 KB)
+#8 342.1 ==================================================
+#8 342.1 downloaded 192 KB
+#8 342.1 
+#8 342.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/gplots_3.1.3.tar.gz'
+#8 344.2 Content type 'binary/octet-stream' length 594297 bytes (580 KB)
+#8 344.2 ==================================================
+#8 345.0 downloaded 580 KB
+#8 345.0 
+#8 345.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/magrittr_2.0.3.tar.gz'
+#8 347.0 Content type 'binary/octet-stream' length 232131 bytes (226 KB)
+#8 347.0 ==================================================
+#8 347.6 downloaded 226 KB
+#8 347.6 
+#8 347.6 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/ggraph_2.1.0.tar.gz'
+#8 349.8 Content type 'binary/octet-stream' length 3935242 bytes (3.8 MB)
+#8 350.2 ==================================================
+#8 351.2 downloaded 3.8 MB
+#8 351.2 
+#8 351.2 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/gtools_3.9.4.tar.gz'
+#8 353.5 Content type 'binary/octet-stream' length 352174 bytes (343 KB)
+#8 353.5 ==================================================
+#8 354.0 downloaded 343 KB
+#8 354.0 
+#8 354.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-03-23/src/contrib/jsonlite_1.8.4.tar.gz'
+#8 355.9 Content type 'binary/octet-stream' length 1086370 bytes (1.0 MB)
+#8 355.9 ==================================================
+#8 355.9 downloaded 1.0 MB
+#8 355.9 
+#8 356.1 * installing *binary* package 'sys' ...
+#8 356.1 * DONE (sys)
+#8 356.3 * installing *binary* package 'xfun' ...
+#8 356.3 * DONE (xfun)
+#8 356.5 * installing *binary* package 'misc3d' ...
+#8 356.5 * DONE (misc3d)
+#8 356.7 * installing *binary* package 'fs' ...
+#8 356.7 * DONE (fs)
+#8 356.9 * installing *binary* package 'rappdirs' ...
+#8 356.9 * DONE (rappdirs)
+#8 357.1 * installing *binary* package 'bit' ...
+#8 357.1 * DONE (bit)
+#8 357.3 * installing *binary* package 'prettyunits' ...
+#8 357.3 * DONE (prettyunits)
+#8 357.5 * installing *binary* package 'rprojroot' ...
+#8 357.5 * DONE (rprojroot)
+#8 357.9 * installing *binary* package 'colorspace' ...
+#8 357.9 * DONE (colorspace)
+#8 358.2 * installing *binary* package 'curl' ...
+#8 358.2 * DONE (curl)
+#8 358.3 * installing *binary* package 'yaml' ...
+#8 358.3 * DONE (yaml)
+#8 358.5 * installing *binary* package 'FNN' ...
+#8 358.5 * DONE (FNN)
+#8 358.8 * installing *binary* package 'kernlab' ...
+#8 358.8 * DONE (kernlab)
+#8 359.1 * installing *binary* package 'mclust' ...
+#8 359.1 * DONE (mclust)
+#8 359.3 * installing *binary* package 'mvtnorm' ...
+#8 359.4 * DONE (mvtnorm)
+#8 359.6 * installing *binary* package 'pracma' ...
+#8 359.6 * DONE (pracma)
+#8 359.8 * installing *binary* package 'base64enc' ...
+#8 359.8 * DONE (base64enc)
+#8 360.0 * installing *binary* package 'pkgconfig' ...
+#8 360.0 * DONE (pkgconfig)
+#8 360.2 * installing *binary* package 'fansi' ...
+#8 360.2 * DONE (fansi)
+#8 360.4 * installing *binary* package 'brio' ...
+#8 360.4 * DONE (brio)
+#8 360.5 * installing *binary* package 'evaluate' ...
+#8 360.5 * DONE (evaluate)
+#8 360.7 * installing *binary* package 'praise' ...
+#8 360.7 * DONE (praise)
+#8 361.0 * installing *binary* package 'ps' ...
+#8 361.0 * DONE (ps)
+#8 361.3 * installing *binary* package 'farver' ...
+#8 361.3 * DONE (farver)
+#8 361.5 * installing *binary* package 'labeling' ...
+#8 361.5 * DONE (labeling)
+#8 361.7 * installing *binary* package 'viridisLite' ...
+#8 361.7 * DONE (viridisLite)
+#8 361.9 * installing *binary* package 'extrafontdb' ...
+#8 361.9 * DONE (extrafontdb)
+#8 362.2 * installing *binary* package 'Rttf2pt1' ...
+#8 362.2 * DONE (Rttf2pt1)
+#8 362.4 * installing *binary* package 'lazyeval' ...
+#8 362.4 * DONE (lazyeval)
+#8 362.7 * installing *binary* package 'data.table' ...
+#8 362.7 * DONE (data.table)
+#8 363.1 * installing *binary* package 'stringi' ...
+#8 363.1 * DONE (stringi)
+#8 363.3 * installing *binary* package 'utf8' ...
+#8 363.3 * DONE (utf8)
+#8 363.5 * installing *binary* package 'bitops' ...
+#8 363.5 * DONE (bitops)
+#8 363.7 * installing *binary* package 'polyclip' ...
+#8 363.7 * DONE (polyclip)
+#8 364.0 * installing *binary* package 'locfit' ...
+#8 364.0 * DONE (locfit)
+#8 364.1 * installing *binary* package 'ash' ...
+#8 364.2 * DONE (ash)
+#8 364.3 * installing *binary* package 'RColorBrewer' ...
+#8 364.3 * DONE (RColorBrewer)
+#8 364.5 * installing *binary* package 'mime' ...
+#8 364.5 * DONE (mime)
+#8 364.7 * installing *binary* package 'xtable' ...
+#8 364.7 * DONE (xtable)
+#8 364.9 * installing *binary* package 'R6' ...
+#8 364.9 * DONE (R6)
+#8 365.2 * installing *binary* package 'sourcetools' ...
+#8 365.2 * DONE (sourcetools)
+#8 365.4 * installing *binary* package 'crayon' ...
+#8 365.4 * DONE (crayon)
+#8 365.6 * installing *binary* package 'rlang' ...
+#8 365.6 * DONE (rlang)
+#8 365.8 * installing *binary* package 'fastmap' ...
+#8 365.8 * DONE (fastmap)
+#8 366.0 * installing *binary* package 'withr' ...
+#8 366.1 * DONE (withr)
+#8 366.3 * installing *binary* package 'commonmark' ...
+#8 366.3 * DONE (commonmark)
+#8 366.5 * installing *binary* package 'glue' ...
+#8 366.5 * DONE (glue)
+#8 366.7 * installing *binary* package 'cli' ...
+#8 366.7 * DONE (cli)
+#8 367.0 * installing *binary* package 'clipr' ...
+#8 367.0 * DONE (clipr)
+#8 367.2 * installing *binary* package 'cpp11' ...
+#8 367.2 * DONE (cpp11)
+#8 367.5 * installing *binary* package 'isoband' ...
+#8 367.5 * DONE (isoband)
+#8 367.7 * installing *binary* package 'proj4' ...
+#8 367.7 * DONE (proj4)
+#8 368.1 * installing *binary* package 'maps' ...
+#8 368.1 * DONE (maps)
+#8 368.8 * installing *binary* package 'Rcpp' ...
+#8 368.9 * DONE (Rcpp)
+#8 369.1 * installing *binary* package 'generics' ...
+#8 369.1 * DONE (generics)
+#8 369.4 * installing *binary* package 'coda' ...
+#8 369.4 * DONE (coda)
+#8 369.6 * installing *binary* package 'digest' ...
+#8 369.6 * DONE (digest)
+#8 369.8 * installing *binary* package 'magrittr' ...
+#8 369.9 * DONE (magrittr)
+#8 370.1 * installing *binary* package 'gtools' ...
+#8 370.1 * DONE (gtools)
+#8 370.3 * installing *binary* package 'jsonlite' ...
+#8 370.3 * DONE (jsonlite)
+#8 370.5 * installing *binary* package 'askpass' ...
+#8 370.5 * DONE (askpass)
+#8 370.8 * installing *binary* package 'highr' ...
+#8 370.8 * DONE (highr)
+#8 371.0 * installing *binary* package 'tinytex' ...
+#8 371.0 * DONE (tinytex)
+#8 371.3 * installing *binary* package 'diffobj' ...
+#8 371.3 * DONE (diffobj)
+#8 371.5 * installing *binary* package 'multicool' ...
+#8 371.5 * DONE (multicool)
+#8 371.9 * installing *binary* package 'plot3D' ...
+#8 371.9 * DONE (plot3D)
+#8 372.2 * installing *binary* package 'bit64' ...
+#8 372.2 * DONE (bit64)
+#8 372.4 * installing *binary* package 'desc' ...
+#8 372.4 * DONE (desc)
+#8 372.6 * installing *binary* package 'processx' ...
+#8 372.7 * DONE (processx)
+#8 372.9 * installing *binary* package 'munsell' ...
+#8 372.9 * DONE (munsell)
+#8 373.2 * installing *binary* package 'systemfonts' ...
+#8 373.3 * DONE (systemfonts)
+#8 373.9 * installing *binary* package 'RcppEigen' ...
+#8 373.9 * DONE (RcppEigen)
+#8 374.6 * installing *binary* package 'RcppArmadillo' ...
+#8 374.6 * DONE (RcppArmadillo)
+#8 374.9 * installing *binary* package 'later' ...
+#8 374.9 * DONE (later)
+#8 375.1 * installing *binary* package 'cachem' ...
+#8 375.1 * DONE (cachem)
+#8 375.4 * installing *binary* package 'ellipsis' ...
+#8 375.4 * DONE (ellipsis)
+#8 375.6 * installing *binary* package 'lifecycle' ...
+#8 375.6 * DONE (lifecycle)
+#8 376.0 * installing *binary* package 'tzdb' ...
+#8 376.1 * DONE (tzdb)
+#8 376.3 * installing *binary* package 'extrafont' ...
+#8 376.3 * DONE (extrafont)
+#8 376.5 * installing *binary* package 'plyr' ...
+#8 376.5 * DONE (plyr)
+#8 376.8 * installing *binary* package 'caTools' ...
+#8 376.8 * DONE (caTools)
+#8 377.2 * installing *binary* package 'igraph' ...
+#8 377.2 * DONE (igraph)
+#8 377.5 * installing *binary* package 'openssl' ...
+#8 377.5 * DONE (openssl)
+#8 377.9 * installing *binary* package 'knitr' ...
+#8 377.9 * DONE (knitr)
+#8 378.1 * installing *binary* package 'memoise' ...
+#8 378.1 * DONE (memoise)
+#8 378.3 * installing *binary* package 'callr' ...
+#8 378.3 * DONE (callr)
+#8 378.5 * installing *binary* package 'pkgload' ...
+#8 378.5 * DONE (pkgload)
+#8 378.8 * installing *binary* package 'ks' ...
+#8 378.8 * DONE (ks)
+#8 379.1 * installing *binary* package 'htmltools' ...
+#8 379.1 * DONE (htmltools)
+#8 379.4 * installing *binary* package 'promises' ...
+#8 379.4 * DONE (promises)
+#8 379.6 * installing *binary* package 'gtable' ...
+#8 379.6 * DONE (gtable)
+#8 379.9 * installing *binary* package 'scales' ...
+#8 379.9 * DONE (scales)
+#8 380.2 * installing *binary* package 'vctrs' ...
+#8 380.2 * DONE (vctrs)
+#8 380.5 * installing *binary* package 'graphlayouts' ...
+#8 380.5 * DONE (graphlayouts)
+#8 380.7 * installing *binary* package 'gplots' ...
+#8 380.8 * DONE (gplots)
+#8 381.2 * installing *binary* package 'sass' ...
+#8 381.2 * DONE (sass)
+#8 381.4 * installing *binary* package 'jquerylib' ...
+#8 381.4 * DONE (jquerylib)
+#8 381.7 * installing *binary* package 'httr' ...
+#8 381.7 * DONE (httr)
+#8 381.9 * installing *binary* package 'crosstalk' ...
+#8 381.9 * DONE (crosstalk)
+#8 382.2 * installing *binary* package 'purrr' ...
+#8 382.2 * DONE (purrr)
+#8 382.6 * installing *binary* package 'tweenr' ...
+#8 382.6 * DONE (tweenr)
+#8 382.9 * installing *binary* package 'gridExtra' ...
+#8 382.9 * DONE (gridExtra)
+#8 383.1 * installing *binary* package 'httpuv' ...
+#8 383.2 * DONE (httpuv)
+#8 383.5 * installing *binary* package 'fontawesome' ...
+#8 383.5 * DONE (fontawesome)
+#8 383.7 * installing *binary* package 'hms' ...
+#8 383.7 * DONE (hms)
+#8 383.9 * installing *binary* package 'stringr' ...
+#8 384.0 * DONE (stringr)
+#8 384.2 * installing *binary* package 'pillar' ...
+#8 384.2 * DONE (pillar)
+#8 384.5 * installing *binary* package 'tidyselect' ...
+#8 384.5 * DONE (tidyselect)
+#8 384.7 * installing *binary* package 'progress' ...
+#8 384.7 * DONE (progress)
+#8 385.3 * installing *binary* package 'bslib' ...
+#8 385.4 * DONE (bslib)
+#8 385.7 * installing *binary* package 'tibble' ...
+#8 385.7 * DONE (tibble)
+#8 385.9 * installing *binary* package 'reshape2' ...
+#8 385.9 * DONE (reshape2)
+#8 386.2 * installing *binary* package 'rematch2' ...
+#8 386.2 * DONE (rematch2)
+#8 386.8 * installing *binary* package 'rmarkdown' ...
+#8 386.8 * DONE (rmarkdown)
+#8 387.2 * installing *binary* package 'vroom' ...
+#8 387.2 * DONE (vroom)
+#8 387.8 * installing *binary* package 'shiny' ...
+#8 387.8 * DONE (shiny)
+#8 388.2 * installing *binary* package 'ggplot2' ...
+#8 388.2 * DONE (ggplot2)
+#8 388.4 * installing *binary* package 'dplyr' ...
+#8 388.5 * DONE (dplyr)
+#8 388.7 * installing *binary* package 'waldo' ...
+#8 388.7 * DONE (waldo)
+#8 388.9 * installing *binary* package 'htmlwidgets' ...
+#8 389.0 * DONE (htmlwidgets)
+#8 389.3 * installing *binary* package 'tidyr' ...
+#8 389.3 * DONE (tidyr)
+#8 389.6 * installing *binary* package 'ggforce' ...
+#8 389.6 * DONE (ggforce)
+#8 389.9 * installing *binary* package 'ggrepel' ...
+#8 389.9 * DONE (ggrepel)
+#8 390.2 * installing *binary* package 'viridis' ...
+#8 390.2 * DONE (viridis)
+#8 390.4 * installing *binary* package 'hdrcde' ...
+#8 390.4 * DONE (hdrcde)
+#8 390.7 * installing *binary* package 'readr' ...
+#8 390.7 * DONE (readr)
+#8 391.1 * installing *binary* package 'testthat' ...
+#8 391.1 * DONE (testthat)
+#8 391.6 * installing *binary* package 'plotly' ...
+#8 391.7 * DONE (plotly)
+#8 391.9 * installing *binary* package 'tidygraph' ...
+#8 391.9 * DONE (tidygraph)
+#8 392.1 * installing *binary* package 'toOrdinal' ...
+#8 392.1 * DONE (toOrdinal)
+#8 392.4 * installing *binary* package 'ggalt' ...
+#8 392.4 * DONE (ggalt)
+#8 392.8 * installing *binary* package 'ggraph' ...
+#8 392.8 * DONE (ggraph)
+#8 392.8 
+#8 392.8 The downloaded source packages are in
+#8 392.8 	'/tmp/Rtmpk7wOcK/downloaded_packages'
+#8 392.8 > 
+#8 392.8 > 
+#8 393.0 > stopifnot(all(sapply(c('coda','hdrcde','shiny','readr','toOrdinal',         'ggplot2','ggalt','reshape2','dplyr','digest','gplots','magrittr','ggraph',         'gtools','jsonlite'), requireNamespace, quietly = TRUE)))
+#8 393.7 Registered S3 methods overwritten by 'ggalt':
+#8 393.7   method                  from   
+#8 393.7   grid.draw.absoluteGrob  ggplot2
+#8 393.7   grobHeight.absoluteGrob ggplot2
+#8 393.7   grobWidth.absoluteGrob  ggplot2
+#8 393.7   grobX.absoluteGrob      ggplot2
+#8 393.7   grobY.absoluteGrob      ggplot2
+#8 394.0 > 
+#8 394.0 > 
+#8 DONE 394.3s
+
+#9 [5/7] COPY vendor/ArchaeoPhases_1.8.tar.gz /tmp/ArchaeoPhases_1.8.tar.gz
+#9 DONE 0.0s
+
+#10 [6/7] RUN echo "728a0d0c3a487e8f90b8c550a977a7678855d0c355a0347629d4a4afd5a5a801  /tmp/ArchaeoPhases_1.8.tar.gz"         | sha256sum -c -     && R CMD INSTALL /tmp/ArchaeoPhases_1.8.tar.gz     && R -q -e "library(ArchaeoPhases); stopifnot(packageVersion('ArchaeoPhases') == '1.8');         stopifnot(all(c('read_oxcal','allen_observe_frequency','allen_illustrate',         'allen_observe','estimate_range','occurrence_plot','tempo_plot') %in%         getNamespaceExports('ArchaeoPhases')))"     && rm /tmp/ArchaeoPhases_1.8.tar.gz
+#10 0.166 /tmp/ArchaeoPhases_1.8.tar.gz: OK
+#10 0.737 * installing to library '/usr/local/lib/R/site-library'
+#10 0.757 * installing *source* package 'ArchaeoPhases' ...
+#10 0.775 ** package 'ArchaeoPhases' successfully unpacked and MD5 sums checked
+#10 0.776 ** using staged installation
+#10 0.790 ** R
+#10 0.802 ** data
+#10 0.803 *** moving datasets to lazyload DB
+#10 1.054 ** inst
+#10 1.060 ** byte-compile and prepare package for lazy loading
+#10 3.338 ** help
+#10 3.496 *** installing help indices
+#10 3.633 ** building package indices
+#10 3.916 ** installing vignettes
+#10 3.921 ** testing if installed package can be loaded from temporary location
+#10 4.775 ** testing if installed package can be loaded from final location
+#10 5.832 ** testing if installed package keeps a record of temporary installation path
+#10 5.835 * DONE (ArchaeoPhases)
+#10 6.033 > library(ArchaeoPhases); stopifnot(packageVersion('ArchaeoPhases') == '1.8');         stopifnot(all(c('read_oxcal','allen_observe_frequency','allen_illustrate',         'allen_observe','estimate_range','occurrence_plot','tempo_plot') %in%         getNamespaceExports('ArchaeoPhases')))
+#10 6.035 Loading required package: coda
+#10 6.060 Loading required package: hdrcde
+#10 6.074 This is hdrcde 3.4
+#10 6.814 To produce graphics for the package vignettes, you must install the
+#10 6.814 ArchaeoPhases.dataset packagef from CRAN. To install that package, run
+#10 6.814 `install.packages('ArchaeoPhases.dataset')`.
+#10 6.815 > 
+#10 6.815 > 
+#10 DONE 6.9s
+
+#11 [7/7] WORKDIR /project
+#11 DONE 0.0s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 1.5s done
+#12 writing image sha256:981fd7690fe67cc345ad3a2e3dc406cca2990f8d79831a9b8ec472d7caf0a6a7 done
+#12 naming to docker.io/library/llmr-dye-et-al-2023-attempt-02 done
+#12 DONE 1.5s
