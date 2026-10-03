@@ -1090,3 +1090,119 @@ an R version the deposit contradicts); Observation 30 (licence
 conflicts, the legal layer of the same noise). Anchors: adjudication
 log Sittings 2–7 ("Findings (no score effect)" blocks) and AP-12;
 erratum-log Entry 4.
+
+## Observation 32: The old reference carried the same error classes — model-produced pilot assessments got specifics wrong and assessed the wrong artefact or version (2026-10-03)
+
+*(Approved by Shawn 2026-10-03; extends Observation 31, class 9.)*
+
+### Context
+
+The E8-v2 reference re-derivation re-checks every old E8 reference item
+against primary sources: the paper, its supplement, the deposit, and
+registry APIs. The old E8 scores and evidence strings are the pilot FAIR
+assessments inside the pilot extraction records (under
+`studies/open-science-compliance/outputs/`), each produced by a model
+extractor: "Claude Opus 4.5" (`dye-et-al-2023/extraction.json:5`;
+`marwick-2025/extraction.json:4`), "claude-opus-4-5"
+(`herskind-riede-2024/extraction.json:2230`), and
+"claude-opus-4-5-20251101" (`key-et-al-2024/extraction.json:2565`).
+After Sitting 8, 120 of the 150 items (five papers × two sections × 15
+sub-principles) have been re-derived; crema-et-al-2024's two sections
+remain.
+
+### Observation
+
+The sittings surfaced three kinds of defect. Counts are floors: they are
+what item-by-item adjudication met, not a systematic audit of all 150
+evidence strings.
+
+1. **Wrong specifics:** the evidence string asserts something the
+   primary source contradicts. At least nine items:
+   - herskind data F2, "Zenodo provides structured DataCite metadata
+     (authors, description, keywords)": both versions have an empty
+     description and no keywords (Sitting 3);
+   - herskind data I3, "References source catalogue via DOI …": Płonka
+     (2003) has no persistent identifier, and neither deposit version
+     carries any related identifier (Sitting 3);
+   - herskind data R1.1, "No explicit licence stated … in Zenodo record
+     or paper": both versions are CC-BY-4.0, the article CC BY
+     (Sitting 3);
+   - herskind data R1, "Zenodo metadata includes authors, methods
+     description, data source": the description is empty; the score
+     stands on a corrected basis (Sitting 3);
+   - key data F1, "supplementary data accessible via paper DOI": the
+     supplement holds no data (Sitting 5);
+   - key data I1, "CSV supplementary tables in structured format": the
+     only CSV, `mmc4.csv`, is a 75-byte header-only template (Sitting 5);
+   - key code R1.2, "No version info …": the paper states R 4.3.0
+     (Sitting 6);
+   - marwick data F2, "… description, keywords": no keywords, and the
+     description is a single sentence citing the paper (Sitting 7);
+   - marwick data I3, "DOI links to paper and related resources": the
+     record's only typed relation is `isSupplementTo` a GitHub tree URL
+     (Sitting 7).
+
+   Eight of the nine changed score at re-derivation. Outside the item
+   evidence the same kind appears twice more: herskind's
+   data-completeness notes describe "lithic measurements, use-wear
+   images", which are not in the paper (Sitting 3;
+   `herskind-riede-2024/extraction.json:2225`), and marwick's carried
+   10.5281/zenodo.14561925, which the paper never cites, through to
+   lodged amendment 2 §2 (erratum-log Entry 4).
+2. **Wrong artefact assessed.** dye code: Sitting 2 counts 14 of the 15
+   old scores as citing ArchaeoPhases/CRAN evidence, the dependency,
+   rather than the supplement's own OxCal and R scripts (12 strings name
+   the package, CRAN, or its DESCRIPTION outright; the rest are
+   generic). Re-derived on the principal scripts, code_fair went 14 → 8.
+3. **Wrong version assessed, relative to AP-12.** herskind code R1 and
+   R1.2 (both 0→1) described Zenodo v1, whose S2.R has 451 lines and no
+   README or version information, not the v2 that the published
+   supplement matches byte for byte (Sitting 4). marwick code R1.2's
+   "renv lockfile pins 169 packages" matches main's post-publication
+   `renv.lock` (169), not v1.3's (152): a version error, not a miscount
+   (Sitting 8, clarified 2026-10-03); the score stays 1.
+
+The kinds differ in how far they depend on later rules. Kind 1 strings
+are false under any reading of the instrument. Kind 2 rests partly on
+the instrument: Entry 3's first root cause was that v2.0 left the
+assessment target undefined, and the rule that the paper's own scripts
+are always principal arrived with amendment 2. Kind 3 is defined by
+AP-12 (ruled 2026-10-02).
+
+### Implication
+
+First, the 2026-08-03 benchmark's concordance figures (0.773 sonnet-5,
+0.807 opus-5, 0.820 fable-5, all below the 0.90 gate; erratum-log Entry
+3) were measured against this reference, so some recorded arm
+disagreements were reference errors. herskind data I3 is the clean
+case: the old reference scored 1, all nine runs in that cycle scored 0,
+all nine v2.1 runs scored 0, and the re-derivation rules 0 — the arms
+were right. key code F1 is the case the v2.1 cycle would have
+miscounted: the old reference scored 0 and all nine v2.1 runs scored 1,
+which the re-derivation upholds; that cycle's disputed-items list
+records it as a majority-vs-reference mismatch, though the cycle
+deliberately computed no concordance against the retired reference (in
+the 2026-08-03 cycle, under v2.0, the arm majorities had matched the
+old 0). The 2026-08-03 summary already discounted concordance for one
+known gap, a reproduction-informed reference against paper-only arms;
+reference error is a second, and removing it is what E8-v2 is for.
+Second, item-level primary-source verification of each evidence string
+is what caught these; a model-produced reference dataset needs the same
+mechanical verification as any other model output (Observation 31 class
+9; erratum-log Entry 4; the registrant's 2026-10-03 direction to verify
+mechanically wherever possible). Third, gate statistics inherit
+reference quality: the reference is part of the measurement apparatus.
+Relations: Observation 31 (class 9, extended here from the extraction
+records to the reference dataset built from them); Observation 4
+(subagent-relayed specifics ran ~1 in 10 wrong; the counts here are
+floors from adjudication, not a sampled rate); Observation 13
+(verification ledgers drift from their sources; a reference dataset is
+a ledger of the same kind, and item-level re-checking is what reconciles
+it); Observation 15 (reliability-gate statistics are
+decision-relevantly sensitive to design choices; reference quality is
+one more). Anchors:
+`studies/open-science-compliance/outputs/validation/e8-v2-rederivation/adjudication-log.md`
+Sittings 2–8 and AP-12; erratum-log Entries 3 and 4; the
+`benchmark-summary.md` and `disputed-items.json` of the sibling
+`benchmark-2026-08/` and `benchmark-2026-08-17/` cycles (the latter
+computed no concordance); the four pilot extraction records.
