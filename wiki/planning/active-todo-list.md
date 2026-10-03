@@ -848,6 +848,33 @@ unrecoverable errors differently.
 the repair classes and their costs are measured (the repair rule's effort
 heuristic and the Phase 3 cost gate supply the evidence base).
 
+**Publishable independently** (registrant, 2026-10-03), as is item 11.
+
+---
+
+### 11. Human-FAIR vs Machine-FAIR Study
+
+**Priority:** DEFERRED (future work; idea recorded 2026-10-03)
+**Status:** Idea only — no design yet
+**Origin:** Shawn, during the E8-v2 reference adjudication (Sitting 7;
+`studies/open-science-compliance/outputs/validation/e8-v2-rederivation/adjudication-log.md`,
+AP-9, AP-14, AP-15)
+
+**Idea:** score each research surface twice — once for what a person with
+unlimited time *could* learn or extract from the paper, supplement, and
+deposits (human-FAIR), and once for what is actually machine-readable and
+machine-actionable without an LLM-driven or probabilistic reconstruction
+(machine-FAIR, the instrument's current stance). The gap between the two
+measures how much FAIR-relevant information is locked in prose, PDFs, and
+inconsistent records. Possibly an instrument option rather than a separate
+instrument. The registrant notes a lively discourse on "the paper is the
+metadata"; this study would put numbers on it.
+
+**Relation to item 10:** the uplift tool closes the gap that this study
+measures.
+
+**When:** after the census provides the machine-FAIR baseline.
+
 ---
 
 ## Testing & Validation Queue

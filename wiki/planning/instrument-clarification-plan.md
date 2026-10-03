@@ -305,6 +305,9 @@ incoherent and structurally caps concordance below the gate. Options
       (10.5281/zenodo.14561925 404s at DataCite and Zenodo), its
       three-licence conflict vs Zenodo's cc-by-4.0 (most-restrictive rule,
       per-artefact scope), and the CRAN endpoint-flagged gap.
+      **[Correction 2026-10-03: the paper never cites
+      10.5281/zenodo.14561925; the identifier came from the pilot
+      extraction record — erratum-log Entry 4.]**
 - [ ] **B2. Redefine the concordance check** in amendment 2 to compare
       like-with-like another way. — Not taken (2026-08-15): B1 ruled.
 - [ ] **B3. Keep the gate as-is** — advised against: a structurally
@@ -371,7 +374,9 @@ Register of record: `wiki/planning/audit-2026-08-03-follow-ups.md`.
       Zenodo's single cc-by-4.0 fired; key's CC BY correctly cleared);
       CRAN recorded as an honest endpoint-flagged gap; marwick's cited
       10.5281/zenodo.14561925 404s at both DataCite and Zenodo — a
-      dead-link finding for Phase B. Delivery mechanism decided:
+      dead-link finding for Phase B **[correction 2026-10-03: not a
+      paper defect — the identifier came from the pilot extraction
+      record; erratum-log Entry 4]**. Delivery mechanism decided:
       workflow-prompt injection with pack sha256 echoed in receipts,
       implemented with C9 wiring at D3 prep. **Platform-row entitlement
       verification done, dated 2026-08-15** (6/6 rows, 34 assertions,
@@ -620,7 +625,9 @@ manifest.
       harvester v1.1 with the identifier-recovery rule LIVE (first run
       recovered marwick's lost deposit: dead zenodo.14561925 → curated
       zenodo.15603267, the paper's research compendium, verified at
-      DataCite, flagged recovered in the pack); all five packs
+      DataCite, flagged recovered in the pack) **[correction 2026-10-03:
+      no deposit was lost — 15603267 is v1.3 of the concept DOI the paper
+      cites; erratum-log Entry 4]**; all five packs
       re-harvested fresh for the D3 cycle; E8-v2 adjudication worksheet
       generated (150 items, 68 disputed joined, 3 entailed flips, seeded
       10-item spot-check) at
@@ -747,8 +754,17 @@ manifest.
       principal data fail artefact-property sub-principles conjunctively;
       (viii) AP-14 — R1 and R1.2 earnable from documentation when data are
       closed, while the paper is never the metadata for machine-actionable
-      sub-principles; (ix) any further principles the remaining sittings
-      adopt. Harvester: record each repository
+      sub-principles; (ix) AP-15 — F2 needs a machine-readable record that
+      itself describes the artefact; (x) any further principles the
+      remaining sittings adopt. **Mechanical verification (registrant
+      direction, 2026-10-03):** build a deterministic check that every
+      identifier in the declared-links registry appears verbatim in the
+      paper or its supplement (normalising line-break splits), run before
+      every harvest; and, generally, replace judgement checks with
+      mechanical ones wherever possible (e.g. F2 from registry-API
+      description and subject fields). **OSF:** amendment 2 §2's precedent
+      case is wrong (erratum-log Entry 4); its public correction rides
+      the next lodgement (amendment 3 running list). Harvester: record each repository
       record's file list and formats, description, keywords, related
       identifiers, version, version date, and concept DOI (F2, I1, I3, and
       AP-12 turned on these in Sitting 3). Workflow: census spawns receive
@@ -815,3 +831,5 @@ manifest.
 | 2026-10-02 | **E8-v2 Sitting 3 — herskind-riede data_fair 12 → 12 (recomposed).** AP-10 adopted (completeness counts only what reproduction requires; a fully transcribed upstream source is provenance), AP-11 adopted (a DataCite deposit with mandatory metadata passes R1.3 route (a); F2 carries metadata poverty; graded R1.3 held in reserve), AP-12 adopted (version selection: supplement checksum match, then the single cited version, then the latest version on or before first online appearance; later versions are findings, not flaws). Registrant: the approach is adequate for this stage; refine with larger corpora | Shawn (rulings); Claude (clerk) |
 | 2026-10-02 | **Phase 2 regression test APPROVED — option (a)** (agentic-modernisation plan §5): build a minimal reproduction workflow (planner → batched plan approval → executor → fresh-context reviewer, with artefact gates), then run herskind-riede and dye; per-paper cost instrumented (tokens, wall-clock, human minutes). Sequenced **after the current E8-v2 sittings**; the Cosmos Ventures pitch may slip past Tue 6 Oct, but must be submitted by **Fri 9 Oct** at the latest. Requested by the cv-and-applications session (cross-session message, 2026-10-02) | Shawn |
 | 2026-10-03 | **E8-v2 Sittings 4–5 — herskind-riede code_fair 9 → 12; key-et-al data_fair 8 → 1.** AP-11 scoped to data (code R1.3 uses the code list). AP-13 adopted (unpublished principal data fail conjunctively — the accessible-portion reading rejected). AP-14 adopted (R1 and R1.2 earnable from documentation when data are closed; "the paper is the metadata" never supplies machine-actionable sub-principles — extracting metadata from prose is reconstruction, as with AP-9; code I3 rulings confirmed to rest on Crossref-deposited reference metadata). Future-work idea recorded: a FAIR and reproducibility uplift tool (`active-todo-list.md` item 10) | Shawn (rulings); Claude (clerk) |
+| 2026-10-03 | **E8-v2 Sittings 6–7 — key-et-al code_fair 6 → 8; marwick-2025 data_fair 14 → 12.** Key: no decisions needed (principles and all nine runs agree); findings — GPL-2-derived code (sExtinct) under CC BY, sExtinct uncited as software — added as uplift-tool capabilities. Marwick: AP-15 adopted (F2 needs a machine-readable record that itself describes the artefact; empty or pointer-only descriptions fail; positive threshold to be tested at crema); AP-12 extended to reproduction (replicate with the version as of the paper). Future work: human-FAIR vs machine-FAIR study (`active-todo-list.md` item 11; items 10 and 11 independently publishable) | Shawn (rulings); Claude (clerk) |
+| 2026-10-03 | **Amendment 2 §2 precedent case found wrong — option (a):** the paper never cites 10.5281/zenodo.14561925; it came from the pilot extraction record and propagated through the registry, packs, plan, and the lodged text. Erratum-log Entry 4 recorded; registry entry withdrawn; public correction queued for amendment 3. Registrant direction: a deterministic identifier check, and mechanical verification wherever possible | Shawn |
