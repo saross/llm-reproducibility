@@ -233,21 +233,26 @@ Concordance is reported with and without BI items — see
 
 | sub | old | D (s/o/f) | flags | v2.1 ruling | old evidence | S | new | note |
 |---|---|---|---|---|---|---|---|---|
-| F1 | 1 |  |  | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.14897252 |  |  |  |
-| F2 | 1 | D 1/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo DataCite metadata for code deposit |  |  |  |
-| F3 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI |  |  |  |
-| F4 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Indexed in Zenodo, DataCite |  |  |  |
-| A1 | 1 |  |  | unchanged (completeness rule + ethical exception) | HTTPS via DOI resolver |  |  |  |
-| A1_1 | 1 |  |  | unchanged | Open access, no authentication |  |  |  |
-| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open code, no restrictions |  |  |  |
-| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo long-term persistence |  |  |  |
-| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R is standard open-source language |  |  |  |
-| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No software ontology usage |  |  |  |
-| I3 | 1 | D 0/0/0 |  | item 2 (third-party dependencies enter here) | Paper references code via DOI |  |  |  |
-| R1 | 1 |  |  | unchanged | Research compendium structure with documentation |  |  |  |
-| R1_1 | 1 |  |  | item 6 (per-artefact; most-restrictive same-artefact | MIT licence explicit |  |  |  |
-| R1_2 | 1 |  |  | unchanged | Computational workflow documented, renv lockfile pins 169 packages |  |  |  |
-| R1_3 | 1 |  |  | item 7 + graded table row 4 (ADS by construction; DA | Follows research compendium standards (Marwick et al. 2018) |  |  |  |
+| F1 | 1 |  |  | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.14897252 | y | 1 | unchanged — concept DOI; scored v1.3 (AP-12) |
+| F2 | 1 | D 1/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo DataCite metadata for code deposit | y | 0 | FLIP 1→0 — AP-15: same record as data (pointer-only description) |
+| F3 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI | y | 1 | unchanged |
+| F4 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Indexed in Zenodo, DataCite | y | 1 | unchanged |
+| A1 | 1 |  |  | unchanged (completeness rule + ethical exception) | HTTPS via DOI resolver | y | 1 | unchanged |
+| A1_1 | 1 |  |  | unchanged | Open access, no authentication | y | 1 | unchanged |
+| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open code, no restrictions | y | 1 | unchanged — item 4 |
+| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo long-term persistence | y | 1 | unchanged — Row 2 |
+| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R is standard open-source language | y | 1 | unchanged — plain-text R and Quarto |
+| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No software ontology usage | y | 0 | unchanged |
+| I3 | 1 | D 0/0/0 |  | item 2 (third-party dependencies enter here) | Paper references code via DOI | y | 1 | unchanged, basis corrected — AP-16: renv.lock pins 152 packages [BI: rule+input] |
+| R1 | 1 |  |  | unchanged | Research compendium structure with documentation | y | 1 | unchanged — README + compendium documentation |
+| R1_1 | 1 |  |  | item 6 (per-artefact; most-restrictive same-artefact | MIT licence explicit | y | 1 | unchanged — MIT (paper, LICENSE.md) vs Zenodo CC-BY-4.0; AP-8 |
+| R1_2 | 1 |  |  | unchanged | Computational workflow documented, renv lockfile pins 169 packages | y | 1 | unchanged — renv.lock (152, not 169) + Dockerfile |
+| R1_3 | 1 |  |  | item 7 + graded table row 4 (ADS by construction; DA | Follows research compendium standards (Marwick et al. 2018) | y | 0 | FLIP 1→0 — no DESCRIPTION/CITATION.cff/CodeMeta; citing ≠ conforming |
+
+- **Adjudicated 2026-10-03 (Sitting 8; registrant: Shawn). code_fair 14 → 12.**
+  F2 1→0 (AP-15) and R1.3 1→0 (no package metadata; open to
+  reconsideration). I3 stays 1 on a corrected basis — the lockfile, under
+  AP-16. Reasoning: `adjudication-log.md` Sitting 8.
 
 ## crema-et-al-2024 — data_fair
 

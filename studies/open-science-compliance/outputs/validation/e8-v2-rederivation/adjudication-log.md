@@ -93,6 +93,13 @@ Exercise is unblinded (recorded in amendment 2 §3).
   same-artefact conflict — the most-restrictive rule compares licences
   with licences, never a notice with a licence. This matches the pushed
   guide's existing line, so it needs no `rule` tag and no guide change.
+  **Validity is not adjudicated (Shawn, 2026-10-03, Sitting 7):** R1.1
+  records whether a licence is published, not whether the licensor holds
+  the rights it purports to license — FAIR does not enforce copyright.
+  Rights problems are coded as findings: GPL-derived code under CC BY
+  (key-et-al) and third-party-restricted content under an open licence
+  (marwick's Web of Science exports, coded "data shared,
+  rights-incompatible").
   Backward
   consistency: Sitting 1's dye data R1.1 = 0 stands — conjunction with
   beads-1.csv, which carries no licence anywhere.
@@ -162,6 +169,12 @@ Exercise is unblinded (recorded in amendment 2 §3).
   make R1.3 track deposit location only (AP-7); and a DataCite record
   typed "Dataset" does not describe the code as software. Eight of nine
   v2.1 runs read the instrument this way, so no BI tag.
+  **Compendium case (Shawn, 2026-10-03, Sitting 8; an initial decision,
+  open to reconsideration as more papers are seen):** a research compendium
+  without package metadata — no `DESCRIPTION`, `CITATION.cff`, or CodeMeta —
+  does not meet the code list; citing the compendium convention (Marwick et
+  al. 2018) does not make the deposit conform (AP-14). Its reproducibility
+  engineering (lockfile, container) is credited at R1.2 and I3 (AP-16).
 - **AP-12 — Which version of a versioned deposit is scored and reproduced**
   (Shawn, 2026-10-02, with clerk refinements). In priority order: (1)
   published supplementary files, by checksum match against the repository
@@ -237,6 +250,22 @@ Exercise is unblinded (recorded in amendment 2 §3).
   subject keywords. Both fields are checkable from the registry API, so F2
   becomes mechanically verifiable (registrant direction: mechanical
   verification wherever possible).
+
+- **AP-16 — For code, a complete machine-readable dependency manifest
+  satisfies I3** (Shawn, 2026-10-03, Sitting 8). A lockfile or manifest that
+  pins every dependency by name, exact version, and source (`renv.lock`, a
+  pinned `requirements.txt` or lockfile, a versioned `DESCRIPTION`, an
+  `environment.yml`) counts as qualified references, alongside PID-bearing
+  dependency citations that are deposited as machine-readable references
+  (AP-14). Reason (AP-7): otherwise one cited DOI (dye, herskind) outranks
+  152 pinned dependencies (marwick); and a lockfile is the most
+  machine-actionable dependency reference there is, since it restores the
+  environment. It extends the instrument's "(PIDs)" wording, so items it
+  decides carry the BI `rule` tag. No earlier ruling changes (dye and
+  herskind already 1; key has neither citation nor manifest). Registrant's
+  note: this weighs on the F2 keyword question — a rich machine-readable
+  description without formal keywords could otherwise lose to one or two
+  keywords — but the standard's wording governs.
 
 ## Beyond-instrument (BI) tags — concordance reporting convention
 
@@ -583,4 +612,27 @@ Keywords Plus, addresses, and funding (older files are sparser). Unless
 the author obtained Clarivate's consent (the README mentions none), the
 deposit exceeds the public terms, and its CC-0/CC-BY/MIT labels purport
 to license rights the depositor may not hold. Author emails are also
-personal data. Coding of this finding: pending the registrant.
+personal data. **Coded (Shawn, 2026-10-03):** "data shared,
+rights-incompatible" — a licensing violation in the registrant's words,
+but FAIR does not enforce copyright, so R1.1 stays 1 (AP-8). Uplift route:
+publish the exact query plus record identifiers (DOIs or WoS accession
+numbers) and rebuild records from an open source such as OpenAlex.
+
+## Sitting 8 — 2026-10-03 — marwick-2025 `code_fair`: 14 → 12
+
+**Context.** The code lives in the same Zenodo v1.3 record as the data
+(AP-12). At tag 1.3 the compendium has analysis scripts (`analysis/code/`),
+Quarto sources (`analysis/paper/`), a Dockerfile, and a `renv.lock` pinning
+152 packages to a Posit Package Manager CRAN snapshot. It has no
+`DESCRIPTION`, `CITATION.cff`, or `codemeta.json` at tag 1.3 or on main.
+
+**Rulings (Shawn, 2026-10-03):** I3 = 1 under AP-16 (the lockfile; the paper
+cites R by URL only and no packages with PIDs; BI [rule, input] — the arms
+never saw the lockfile, and AP-16 extends the "(PIDs)" wording). R1.3 1→0
+(compendium without package metadata — AP-11 compendium case; open to
+reconsideration). **Nods confirmed:** F2 1→0 (same record as the data,
+AP-15); R1.1 = 1 (the paper and `LICENSE.md` say MIT, Zenodo says
+CC-BY-4.0; AP-8; CC-on-code finding); R1.2 = 1 (lockfile and Dockerfile —
+the old evidence's "169 packages" is wrong for v1.3, which pins 152); I1 = 1
+(plain-text R and Quarto). Unchanged: F1, F3, F4, A1, A1.1, A1.2, A2, R1 =
+1; I2 = 0. **Total 12** (old 14).

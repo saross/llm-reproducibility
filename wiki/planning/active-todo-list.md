@@ -832,6 +832,11 @@ adjudication has already named the repair classes it would automate:
 - detection of uncredited source software — code adapted from packages
   the paper never cites (same case; registrant: "common practice,
   unfortunately"), with a suggested citation in the apparatus.
+- rights-compatibility checking for redistributed third-party content —
+  e.g. marwick-2025's deposit of full Web of Science records under open
+  licences, against Clarivate's terms (adjudication log, Sitting 7); the
+  uplift route is to publish the exact query plus record identifiers and
+  rebuild records from an open source such as OpenAlex.
 
 **Output:** a deposit-ready package — structured metadata (DataCite, plus
 CodeMeta or CITATION.cff for code), machine-readable data and code, licence
