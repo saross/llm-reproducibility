@@ -1,0 +1,686 @@
+S2.R lines: 759 
+Part boundaries (start-end lines):
+  part start end
+1    1    19  32
+2    2    33  75
+3    3    76 221
+4    4   222 264
+5    5   265 322
+6    6   323 625
+7    7   626 697
+8    8   698 759
+
+==============================================================================
+== S2.R PART 1 (lines 19-32)
+==============================================================================
+> library(quanteda)
+[warning] undefined subclass "ndiMatrix" of class "replValueSp"; definition not updated 
+[message] Package version: 3.3.1
+Unicode version: 14.0
+ICU version: 70.1
+[message] Parallel computing: 16 of 16 threads used.
+[message] See https://quanteda.io for tutorials and examples.
+> library(readxl)
+> library(ggplot2)
+> library(dplyr)
+[message] 
+Attaching package: ‘dplyr’
+
+[message] The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+[message] The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+> library(data.table)
+[message] 
+Attaching package: ‘data.table’
+
+[message] The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+> library(forcats)
+> library(extrafont)
+[message] Registering fonts with R
+> font_import(pattern = "GIL", prompt = FALSE)
+[message] Scanning ttf files in /usr/share/fonts/, /usr/local/share/fonts/ ...
+[message] Extracting .afm files from .ttf files...
+[wrapper] tolerated error at authors' font_import() call: arguments imply differing number of rows: 0, 1 
+> data <- read_excel("Herskind&Riede_S1.xlsx")
+[message] New names:
+• `` -> `...17`
+• `` -> `...18`
+• `` -> `...19`
+• `` -> `...20`
+• `` -> `...21`
+• `` -> `...22`
+• `` -> `...23`
+• `` -> `...24`
+• `` -> `...25`
+• `` -> `...26`
+• `` -> `...27`
+• `` -> `...28`
+• `` -> `...29`
+• `` -> `...30`[wrapper] nrow(data) = 483 ; ncol(data) = 290 
+
+==============================================================================
+== S2.R PART 2 (lines 33-75)
+==============================================================================
+> DS <- data %>%
++   rename(Artefact_Type = `Artefact type`)
+> Artefact_levels <- c("axe", "shaft", "pendant", "dagger", "knife", "mattock-head", 
++                      "point", "harpoon-head", "figurine", "long bone", "pick", 
++                      "sleeve", "ulna dagger", "core", "flake", "plate", 
++                      "slotted point", "other")
+> Artefact_levels <- rev(Artefact_levels)
+> DS$Artefact_Type <- fct_collapse(DS$Artefact_Type,
++                                  other = c("blade", "paddle", "chisel", "haft", "hammer", "leister", "mattock", 
++                                            "needle case", "nodule", "beam", "bow", "burin", "endscraper", 
++                                            "flint axe", "leister prong", "needle", "net sinker", "pebble", 
++                                            "pickaxe", "retoucher", "tine", "fragment")
++ )
+> DS$Artefact_Type <- fct_relevel(DS$Artefact_Type, Artefact_levels)
+> artefact_type_chronology <- ggplot(DS, aes(y = Artefact_Type, fill = Chronology)) +
++   geom_bar() +
++   scale_fill_manual(values = c("#FAD02E", "#D98888", "#E8BB8B", "#B4A1C1")) +
++   labs(x = NULL, y = NULL) +
++   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
++         axis.text.x = element_text(vjust = 1, hjust = 0.5),
++         text = element_text(family = "Gill Sans MT", size = 17)) +
++   guides(fill = "none")
+> artefact_type_chronology
+> ggsave("artefact_type_chronology.png", plot = artefact_type_chronology, width = 3.5, height = 5.5, units = "in", dpi = 300)
+
+==============================================================================
+== S2.R PART 3 (lines 76-221)
+==============================================================================
+> corpus <- corpus(data$Motifs_as_text)
+[warning] NA is replaced by empty string 
+> t <- 482
+> n <- 2
+> k <- 0:13
+> ngramfunction <- function(n, k, corpus, token_freqs) {
++   # tokenizing the corpus
++   toks <- tokens(corpus)
++   
++   # creating the k-skip-n-grams
++   ksngrams <- tokens_ngrams(toks, n = n, skip = k, concatenator = " ")
++   
++   # creating a document-feature matrix
++   dfm <- dfm(ksngrams)
++   
++   # calculating the frequency of each k-skip-n-gram:
++   if (n == 2) {
++     bigramfreqs <- colSums(dfm)
++   }
++   if (n == 3) {
++     trigramfreqs <- colSums(dfm)
++   }
++   if (n == 4) {
++     quadrigramfreqs <- colSums(dfm)
++   }
++   
++   # Creating a data frame with k-skip-n-grams and their observed frequencies
++   if (n == 2) {
++     ksngram_freq <- data.frame(ksngrams = names(bigramfreqs), observed_freq = bigramfreqs)
++   }
++   if (n == 3) {
++     ksngram_freq <- data.frame(ksngrams = names(trigramfreqs), observed_freq = trigramfreqs)
++   }
++   if (n == 4) {
++     ksngram_freq <- data.frame(ksngrams = names(quadrigramfreqs), observed_freq = quadrigramfreqs)
++   }
++   ksngram_freq$token1 <- sapply(strsplit(ksngram_freq$ksngrams, " "), `[`, 1)
++   ksngram_freq$token2 <- sapply(strsplit(ksngram_freq$ksngrams, " "), `[`, 2)
++   ##NEXT LINE IF RUNNING TRIGRAMS##
++   if (n >= 3) {
++     ksngram_freq$token3 <- sapply(strsplit(ksngram_freq$ksngrams, " "), `[`, 3)
++   }
++   ##NEXT LINE IF RUNNING QUADRIGRAMS##
++   if (n >= 4) {
++     ksngram_freq$token4 <- sapply(strsplit(ksngram_freq$ksngrams, " "), `[`, 4)
++   }
++   
++   # Creating a vector of all tokens
++   dfm_toks <- dfm(toks)
++   token_freqs <- colSums(dfm_toks)
++   all_tokens <- names(token_freqs)
++   
++   # Adding columns for token frequencies
++   ksngram_freq$token1_freq <- token_freqs[match(ksngram_freq$token1, all_tokens)]
++   ksngram_freq$token2_freq <- token_freqs[match(ksngram_freq$token2, all_tokens)]
++   # Next line if we're running trigrams
++   if (n >= 3) {
++     ksngram_freq$token3_freq <- token_freqs[match(ksngram_freq$token3, all_tokens)]
++   }
++   # Next line if we're running quadrigrams
++   if (n >= 4) {
++     ksngram_freq$token4_freq <- token_freqs[match(ksngram_freq$token4, all_tokens)]
++   }
++   
++   # Calculating the expected frequency for each ksngram
++   # For bigrams:
++   if (n == 2) {
++     ksngram_freq$expected_freq <- ((ksngram_freq$token1_freq/t) * (ksngram_freq$token2_freq/t)) * t
++   }
++   # For trigrams:
++   if (n == 3) {
++     ksngram_freq$expected_freq <- ((ksngram_freq$token1_freq/t) * (ksngram_freq$token2_freq/t) * (ksngram_freq$token3_freq/t)) * t
++   }
++   # For quadrigrams:
++   if (n == 4) {
++     ksngram_freq$expected_freq <- ((ksngram_freq$token1_freq/t) * (ksngram_freq$token2_freq/t) * (ksngram_freq$token3_freq/t) * (ksngram_freq$token4_freq/t)) * t
++   }
++   
++   # Calculating PMI for bigrams:
++   if (n == 2) {
++     # Defining PMI function
++     calculate_PMI <- function(observed_freq, token1_freq, token2_freq, expected_freq) {
++       pmi <- log(observed_freq / expected_freq)
++       return(pmi)
++     }
++     
++     # Apply the function to create the PMI column
++     ksngram_freq$PMI <- with(ksngram_freq, calculate_PMI(observed_freq, token1_freq, token2_freq, expected_freq))
++   }
++   
++   # Calculating PMI for trigrams:
++   if (n == 3) {
++     # Defining PMI function for trigrams
++     calculate_PMI_trigram <- function(observed_freq, token1_freq, token2_freq, token3_freq, expected_freq) {
++       pmi <- log(observed_freq / expected_freq)
++       return(pmi)
++     }
++     
++     ksngram_freq$PMI <- with(ksngram_freq, calculate_PMI_trigram(observed_freq, token1_freq, token2_freq, token3_freq, expected_freq))
++   }
++   
++   # Calculating PMI for quadrigrams:
++   if (n == 4) {
++     # Defining PMI function for quadrigrams
++     calculate_PMI_quadrigram <- function(observed_freq, token1_freq, token2_freq, token3_freq, token4_freq, expected_freq) {
++       pmi <- log(observed_freq / expected_freq)
++       return(pmi)
++     }
++     
++     ksngram_freq$PMI <- with(ksngram_freq, calculate_PMI_quadrigram(observed_freq, token1_freq, token2_freq, token3_freq, token4_freq, expected_freq))
++   }
++   
++   return(ksngram_freq)
++ }
+> n <- 2
+> bigrams <- ngramfunction(n, k, corpus, token_freqs)
+> head(bigrams)
+       ksngrams observed_freq token1 token2 token1_freq token2_freq expected_freq        PMI
+a1 b10   a1 b10            15     a1    b10         136          50    14.1078838 0.06131642
+a1 c1     a1 c1            44     a1     c1         136         125    35.2697095 0.22116512
+a1 e1     a1 e1             8     a1     e1         136          17     4.7966805 0.51151743
+a1 f5     a1 f5            12     a1     f5         136          36    10.1576763 0.16667694
+a1 f7     a1 f7             2     a1     f7         136           2     0.5643154 1.26528923
+a1 f10   a1 f10             1     a1    f10         136           1     0.2821577 1.26528923
+> n <- 3
+> trigrams <- ngramfunction(n, k, corpus, token_freqs)
+> head(trigrams)
+             ksngrams observed_freq token1 token2 token3 token1_freq token2_freq token3_freq expected_freq       PMI
+a1 b10 c1   a1 b10 c1             7     a1    b10     c1         136          50         125    3.65868356 0.6488067
+a1 b10 e1   a1 b10 e1             3     a1    b10     e1         136          50          17    0.49758096 1.7966093
+a1 b10 f5   a1 b10 f5             4     a1    b10     f5         136          50          36    1.05370087 1.3339858
+a1 b10 f7   a1 b10 f7             1     a1    b10     f7         136          50           2    0.05853894 2.8380632
+a1 b10 f10 a1 b10 f10             1     a1    b10    f10         136          50           1    0.02926947 3.5312103
+a1 b10 f12 a1 b10 f12             2     a1    b10    f12         136          50          22    0.64392831 1.1333151
+> n <- 4
+> quadrigrams <- ngramfunction(n, k, corpus, token_freqs)
+> head(quadrigrams)
+                   ksngrams observed_freq token1 token2 token3 token4 token1_freq token2_freq token3_freq token4_freq
+a1 b10 c1 e1   a1 b10 c1 e1             3     a1    b10     c1     e1         136          50         125          17
+a1 b10 c1 f5   a1 b10 c1 f5             1     a1    b10     c1     f5         136          50         125          36
+a1 b10 c1 f7   a1 b10 c1 f7             1     a1    b10     c1     f7         136          50         125           2
+a1 b10 c1 f10 a1 b10 c1 f10             1     a1    b10     c1    f10         136          50         125           1
+a1 b10 c1 f12 a1 b10 c1 f12             1     a1    b10     c1    f12         136          50         125          22
+a1 b10 c1 f14 a1 b10 c1 f14             2     a1    b10     c1    f14         136          50         125          16
+              expected_freq      PMI
+a1 b10 c1 e1     0.12904071 3.146240
+a1 b10 c1 f5     0.27326267 1.297322
+a1 b10 c1 f7     0.01518126 4.187694
+a1 b10 c1 f10    0.00759063 4.880841
+a1 b10 c1 f12    0.16699386 1.789798
+a1 b10 c1 f14    0.12145008 2.801399
+[wrapper] corpus documents = 483 ; t = 482 
+
+==============================================================================
+== S2.R PART 4 (lines 222-264)
+==============================================================================
+> freqs <- colSums(data[,31:289])
+> freqs <- freqs[freqs != 0]
+> table(freqs)
+freqs
+  1   2   3   4   5   6   7   8   9  10  11  12  13  14  16  17  18  19  21  22  23  26  28  34  36  49  50  69  97 125 
+123  39  20   5   4   7   2   3   2   1   2   1   1   1   2   1   1   1   1   2   1   1   1   1   1   1   1   1   1   1 
+136 
+  1 
+> {n <- 2
++   toks <- tokens(corpus)
++   ksngrams <- tokens_ngrams(toks, n = n, skip = k, concatenator = " ")
++   dfm <- dfm(ksngrams)
++   bigramfreqs <- colSums(dfm)
++   table(bigramfreqs)}
+bigramfreqs
+   1    2    3    4    5    6    7    8    9   10   12   13   14   15   16   22   28   44 
+1225  153   60   31   20   14    9    5    5    5    6    2    1    2    1    1    1    2 
+> {n <- 3
++   toks <- tokens(corpus)
++   ksngrams <- tokens_ngrams(toks, n = n, skip = k, concatenator = " ")
++   dfm <- dfm(ksngrams)
++   trigramfreqs <- colSums(dfm)
++   table(trigramfreqs)}
+trigramfreqs
+   1    2    3    4    5    6    7    8   19 
+4095  221   56   27    9    8    4    1    1 
+> {n <- 4
++   toks <- tokens(corpus)
++   ksngrams <- tokens_ngrams(toks, n = n, skip = k, concatenator = " ")
++   dfm <- dfm(ksngrams)
++   quadrigramfreqs <- colSums(dfm)
++   table(quadrigramfreqs)}
+quadrigramfreqs
+   1    2    3    4    5 
+8335  111   16    3    1 
+> length(freqs)
+[1] 230
+> length(bigramfreqs)
+[1] 1543
+> length(trigramfreqs)
+[1] 4422
+> length(quadrigramfreqs)
+[1] 8466
+
+==============================================================================
+== S2.R PART 5 (lines 265-322)
+==============================================================================
+> maglemosedata <- subset(data, Chronology == "Maglemose")
+> kongemosedata <- subset(data, Chronology == "Kongemose")
+> ertebølledata <- subset(data, Chronology == "Ertebølle")
+> n <- 2
+> corpus <- corpus(maglemosedata$Motifs_as_text)
+> magle_ksngrams <- ngramfunction(n, k, corpus, token_freqs)
+> head(magle_ksngrams)
+        ksngrams observed_freq token1 token2 token1_freq token2_freq expected_freq      PMI
+a6 f12    a6 f12             1     a6    f12           1           9   0.018672199 3.980720
+a6 f14    a6 f14             1     a6    f14           1           4   0.008298755 4.791650
+f12 f14  f12 f14             1    f12    f14           9           4   0.074688797 2.594425
+a7 a24    a7 a24             1     a7    a24           1          55   0.114107884 2.170611
+a7 b10    a7 b10             1     a7    b10           1          38   0.078838174 2.540358
+a24 b10  a24 b10            12    a24    b10          55          38   4.336099585 1.017931
+> corpus <- corpus(kongemosedata$Motifs_as_text)
+> konge_ksngrams <- ngramfunction(n, k, corpus, token_freqs)
+> head(konge_ksngrams)
+       ksngrams observed_freq token1 token2 token1_freq token2_freq expected_freq      PMI
+a1 b10   a1 b10             4     a1    b10          35           9    0.65352697 1.811666
+a1 c1     a1 c1            18     a1     c1          35          30    2.17842324 2.111770
+a1 e1     a1 e1             4     a1     e1          35           9    0.65352697 1.811666
+a1 f5     a1 f5             6     a1     f5          35          19    1.37966805 1.469917
+a1 f7     a1 f7             2     a1     f7          35           2    0.14522822 2.622596
+a1 f10   a1 f10             1     a1    f10          35           1    0.07261411 2.622596
+> corpus <- corpus(ertebølledata$Motifs_as_text)
+[warning] NA is replaced by empty string 
+> erte_ksngrams <- ngramfunction(n, k, corpus, token_freqs)
+> head(erte_ksngrams)
+             ksngrams observed_freq token1 token2 token1_freq token2_freq expected_freq      PMI
+b13 c2         b13 c2             1    b13     c2           2           2   0.008298755 4.791650
+b13 f5         b13 f5             1    b13     f5           2           8   0.033195021 3.405355
+b13 f53       b13 f53             1    b13    f53           2           2   0.008298755 4.791650
+b13 h1         b13 h1             1    b13     h1           2          18   0.074688797 2.594425
+b13 relief b13 relief             1    b13 relief           2           6   0.024896266 3.693037
+c2 f5           c2 f5             1     c2     f5           2           8   0.033195021 3.405355
+> corpus <- corpus(data$Motifs_as_text)
+[warning] NA is replaced by empty string 
+> bigrams <- ngramfunction(n, k, corpus, token_freqs)
+> magle_ksngram_stats <- bigrams[match(magle_ksngrams$ksngrams, bigrams$ksngrams, nomatch = 0), ]
+> magle_ksngram_subset <- magle_ksngram_stats[magle_ksngram_stats$observed_freq > 2,]
+> konge_ksngram_stats <- bigrams[match(konge_ksngrams$ksngrams, bigrams$ksngrams, nomatch = 0), ]
+> konge_ksngram_subset <- konge_ksngram_stats[konge_ksngram_stats$observed_freq > 2,]
+> erte_ksngram_stats <- bigrams[match(erte_ksngrams$ksngrams, bigrams$ksngrams, nomatch = 0), ]
+> erte_ksngram_subset <- erte_ksngram_stats[erte_ksngram_stats$observed_freq > 2,]
+> summary(magle_ksngram_subset$PMI)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-1.0214  0.2286  0.5583  0.7041  0.9721  3.1177 
+> summary(konge_ksngram_subset$PMI)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-1.0214  0.2510  0.6020  0.7446  1.0983  2.8457 
+> summary(erte_ksngram_subset$PMI)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-1.0214  0.2510  0.6899  0.9031  1.2951  4.0985 
+[wrapper] subset sizes: Maglemose 205 Kongemose 87 Ertebølle 168 
+
+==============================================================================
+== S2.R PART 6 (lines 323-625)
+==============================================================================
+> bigrams_subset <- subset(bigrams, observed_freq > 9)
+> bigrams_subset <- bigrams_subset %>% arrange(desc(observed_freq))
+> bigrams_PMI <- bigrams %>% arrange(desc(PMI))
+> bigrams_PMI <- subset(bigrams_PMI, observed_freq > 2)
+> bigrams_PMI21 <- head(bigrams_PMI, 21)
+> bigrams_subset$ksngrams <- toupper(bigrams_subset$ksngrams)
+> bigrams_PMI21$ksngrams <- toupper(bigrams_PMI21$ksngrams)
+> chrongrams <-data[,c(11,31:289)]
+> createResultTable <- function(data) {
++   result_tables <- list()
++   skipgrams <- unique(data$ksngrams)
++   
++   for (skipgram in skipgrams) {
++     filter_condition <- paste(strsplit(skipgram, " ")[[1]], "== 1", collapse = " & ")
++     filtered_data <- chrongrams %>% filter(eval(parse(text = filter_condition)))
++     
++     result_table <- table(filtered_data$Chronology)
++     result_tables[[skipgram]] <- data.frame(Skipgram = skipgram, Chronology = names(result_table), Frequency = as.numeric(result_table))
++   }
++   
++   final_result <- do.call(rbind, result_tables)
++   return(final_result)
++ }
+> skipgramsFreq <- createResultTable(bigrams_subset)
+> skipgramsPMI <- createResultTable(bigrams_PMI21)
+> bigrams$ksngrams <- toupper(bigrams$ksngrams)
+> skipgramsFreq$PMI <- bigrams$PMI[match(skipgramsFreq$Skipgram, bigrams$ksngrams)]
+> skipgramsPMI$PMI <- bigrams$PMI[match(skipgramsPMI$Skipgram, bigrams$ksngrams)]
+> skipgram_order1 <- unique(bigrams_subset$ksngrams)
+> summary_freq <- skipgramsFreq %>%
++   distinct(Skipgram, .keep_all = TRUE)
+> bigramsBYfrequency <- ggplot(skipgramsFreq, aes(x = Frequency, fill = Chronology, y = reorder(Skipgram, desc(match(Skipgram, skipgram_order1))))) +
++   geom_col(position = "stack") +
++   geom_text(data = summary_freq, aes(label = sprintf("%.4f", PMI)), #Paste sprintf("%.4f", PMI instead on '""' to show the PMI)
++             position = position_stack(vjust = 0), color = "black", size = 3) +
++   scale_fill_manual(values = c("#FAD02E", "#D98888", "#E8BB8B", "#B4A1C1")) +
++   xlab("Frequency") +
++   ylab("Co-occurrence") +
++   theme(plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
++         legend.text = element_text(size = 10),
++         legend.title = element_blank(),
++         legend.position = c(0.85, 0.15), #I get an error message due to this legend.position, but it seems to work nonetheless
++         legend.background = element_rect(fill = "transparent"),
++         axis.text.x = element_text(vjust = 0.4, hjust = 1),
++         text = element_text(size = 14, family = "Gill Sans MT")) +
++   ggtitle("Most frequent bigrams")
+[warning] A numeric `legend.position` argument in `theme()` was deprecated in ggplot2 3.5.0.
+ℹ Please use the `legend.position.inside` argument of `theme()` instead. 
+> bigramsBYfrequency
+> summary_pmi <- skipgramsPMI %>%
++   distinct(Skipgram, .keep_all = TRUE)
+> bigramsBYpmi <- ggplot(skipgramsPMI, aes(x = Frequency, fill = Chronology, y = reorder(Skipgram, PMI))) +
++   geom_col(position = "stack") +
++   geom_text(data = summary_pmi, aes(label = sprintf("%.4f", PMI)), #Paste sprintf("%.4f", PMI instead on '""' to show the PMI)
++             position = position_stack(vjust = 0), color = "black", size = 3) +
++   scale_fill_manual(values = c("#FAD02E", "#D98888", "#E8BB8B", "#B4A1C1")) +
++   xlab("Frequency") +
++   ylab("Co-occurrence") +
++   theme(plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
++         axis.text.x = element_text(vjust = 1, hjust = 0.5),
++         text = element_text(size = 14, family = "Gill Sans MT")) +
++   ggtitle("Bigrams by highest PMI value")+
++   guides(fill = "none")
+> bigramsBYpmi
+> {
++ 
++   n <- 3
++   trigrams <- ngramfunction(n, k, corpus, token_freqs)
++   
++ #Subsetting by raw frequency (the >4 arbitrary threshold is fitting for our trigrams)
++ trigrams_subset <- subset(trigrams, observed_freq > 4)
++ 
++ #Sorting by observed freq.
++ trigrams_subset <- trigrams_subset %>% arrange(desc(observed_freq))
++ 
++ #Creating a new object, sorted by PMI in descending order
++ trigrams_PMI <- trigrams %>% arrange(desc(PMI))
++ 
++ #Subsetting this object to exclude observed frequencies below 3 (as these PMI's are
++ #the most dubious)
++ trigrams_PMI <- subset(trigrams_PMI, observed_freq > 2)
++ 
++ #Only including the highest 23 PMI scores (once again, an arbitrary number, this
++ #time set to 23 as there are only 23 bigrams with observed frequencies above 4.
++ trigrams_PMI23 <- head(trigrams_PMI, 23)
++ 
++ #To make the bar plots stacked, we need to add the chronology variable. As most
++ #of the skipgrams are attributed to more than one chronology level, we need to
++ #change the shape of the data, connecting each co-occurrence to its corresponding
++ #chronology
++ 
++ #Changing the 'ksngrams' column contents to uppercase, in order to match it to
++ #the original data
++ trigrams_subset$ksngrams <- toupper(trigrams_subset$ksngrams)
++ trigrams_PMI23$ksngrams <- toupper(trigrams_PMI23$ksngrams)
++ 
++ skipgramsFreq <- createResultTable(trigrams_subset)
++ skipgramsPMI <- createResultTable(trigrams_PMI23)
++ 
++ #Adding PMI values
++ trigrams$ksngrams <- toupper(trigrams$ksngrams)
++ 
++ skipgramsFreq$PMI <- trigrams$PMI[match(skipgramsFreq$Skipgram, trigrams$ksngrams)]
++ skipgramsPMI$PMI <- trigrams$PMI[match(skipgramsPMI$Skipgram, trigrams$ksngrams)]
++ 
++ #Extracting unique skipgrams from ksngram_freq_subset and setting the order
++ skipgram_order2 <- unique(trigrams_subset$ksngrams)
++ 
++ #Making sure to plot only one PMI value per stacked bar
++ summary_freq <- skipgramsFreq %>%
++   distinct(Skipgram, .keep_all = TRUE)
++ 
++ #Plotting the skipgrams by frequency, stacked by chronology
++ trigramsBYfrequency <- ggplot(skipgramsFreq, aes(x = Frequency, fill = Chronology, y = reorder(Skipgram, desc(match(Skipgram, skipgram_order2))))) +
++   geom_col(position = "stack") +
++   geom_text(data = summary_freq, aes(label = sprintf("%.4f", PMI)), #Paste sprintf("%.4f", PMI instead on '""' to show the PMI)
++             position = position_stack(vjust = 0), color = "black", size = 3) +
++   scale_fill_manual(values = c("#FAD02E", "#D98888", "#E8BB8B", "#B4A1C1")) +
++   xlab("Frequency") +
++   ylab("Co-occurrence") +
++   theme(plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
++         legend.text = element_text(size = 10),
++         legend.title = element_blank(),
++         legend.position = c(0.85, 0.15),
++         legend.background = element_rect(fill = "transparent"),
++         axis.text.x = element_text(vjust = 0.4, hjust = 1),
++         text = element_text(size = 14, family = "Gill Sans MT")) +
++   ggtitle("Most frequent trigrams")
++ 
++ #Doing the same thing as above, but plotting by PMI
++ 
++ # Making sure to plot only one PMI value per stacked bar
++ summary_pmi <- skipgramsPMI %>%
++   distinct(Skipgram, .keep_all = TRUE)
++ 
++ trigramsBYpmi <- ggplot(skipgramsPMI, aes(x = Frequency, fill = Chronology, y = reorder(Skipgram, PMI))) +
++   geom_col(position = "stack") +
++   geom_text(data = summary_pmi, aes(label = sprintf("%.4f", PMI)), #Paste sprintf("%.4f", PMI instead on '""' to show the PMI)
++             position = position_stack(vjust = 0), color = "black", size = 3) +
++   scale_fill_manual(values = c("#FAD02E", "#D98888", "#B4A1C1")) +
++   xlab("Frequency") +
++   ylab("Co-occurrence") +
++   theme(plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
++         axis.text.x = element_text(vjust = 1, hjust = 0.5),
++         text = element_text(size = 14, family = "Gill Sans MT")) +
++   ggtitle("Trigrams by highest PMI value")+
++   guides(fill = "none")
++ 
++ #Finally, we'll do the same thing as above but for quadrigrams:
++ n <- 4
++ quadrigrams <- ngramfunction(n, k, corpus, token_freqs)
++ 
++ #Subsetting by raw frequency (the >2 arbitrary threshold is fitting for our quadrigrams)
++ quadrigrams_subset <- subset(quadrigrams, observed_freq > 2)
++ 
++ #Sorting by observed freq.
++ quadrigrams_subset <- quadrigrams_subset %>% arrange(desc(observed_freq))
++ 
++ #Creating a new object, sorted by PMI in descending order
++ quadrigrams_PMI <- quadrigrams %>% arrange(desc(PMI))
++ 
++ #Subsetting this object to exclude observed freq's below 3 (as these PMI's are
++ #the most dubious)
++ quadrigrams_PMI <- subset(quadrigrams_PMI, observed_freq > 2)
++ 
++ #Only including the highest 20 PMI scores (once again, an arbitrary number, this
++ #time set to 20 as there are only 20 quadrigrams with observed freq's above 2.
++ quadrigrams_PMI20 <- head(quadrigrams_PMI, 20)
++ 
++ #To make the bar plots stacked, we need to add the chronology variable. As most
++ #of the skipgrams are attributed to more than one chronology level, we need to
++ #change the shape of the data, connecting each co-occurrence to its corresponding
++ #chronology
++ 
++ #Changing the 'ksngrams' column contents to uppercase, in order to match it to
++ #the original data
++ quadrigrams_subset$ksngrams <- toupper(quadrigrams_subset$ksngrams)
++ quadrigrams_PMI20$ksngrams <- toupper(quadrigrams_PMI20$ksngrams)
++ 
++ skipgramsFreq <- createResultTable(quadrigrams_subset)
++ skipgramsPMI <- createResultTable(quadrigrams_PMI20)
++ 
++ #Adding PMI values
++ quadrigrams$ksngrams <- toupper(quadrigrams$ksngrams)
++ 
++ skipgramsFreq$PMI <- quadrigrams$PMI[match(skipgramsFreq$Skipgram, quadrigrams$ksngrams)]
++ skipgramsPMI$PMI <- quadrigrams$PMI[match(skipgramsPMI$Skipgram, quadrigrams$ksngrams)]
++ 
++ #Extracting unique skipgrams from ksngram_freq_subset and set the order
++ skipgram_order3 <- unique(quadrigrams_subset$ksngrams)
++ 
++ #Making sure to plot only one PMI value per stacked bar
++ summary_freq <- skipgramsFreq %>%
++   distinct(Skipgram, .keep_all = TRUE)
++ 
++ #Plotting the skipgrams by frequency, stacked by chronology
++ quadrigramsBYfrequency <- ggplot(skipgramsFreq, aes(x = Frequency, fill = Chronology, y = reorder(Skipgram, desc(match(Skipgram, skipgram_order3))))) +
++   geom_col(position = "stack") +
++   geom_text(data = summary_freq, aes(label = sprintf("%.4f", PMI)),
++             position = position_stack(vjust = 0), color = "black", size = 3) +
++   scale_fill_manual(values = c("#FAD02E", "#D98888", "#B4A1C1")) +
++   xlab("Frequency") +
++   ylab("Co-occurrence") +
++   theme(plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
++         legend.text = element_text(size = 10),
++         legend.title = element_blank(),
++         legend.position = c(0.85, 0.15),
++         legend.background = element_rect(fill = "transparent"),
++         axis.text.x = element_text(vjust = 0.4, hjust = 1),
++         text = element_text(size = 14, family = "Gill Sans MT")) +
++   ggtitle("Most frequent quadrigrams")
++ 
++ #Doing the same thing, but plotting by PMI
++ 
++ # Making sure to plot only one PMI value per stacked bar
++ summary_pmi <- skipgramsPMI %>%
++   distinct(Skipgram, .keep_all = TRUE)
++ 
++ quadrigramsBYpmi <- ggplot(skipgramsPMI, aes(x = Frequency, fill = Chronology, y = reorder(Skipgram, PMI))) +
++   geom_col(position = "stack") +
++   geom_text(data = summary_pmi, aes(label = sprintf("%.4f", PMI)), #Paste sprintf("%.4f", PMI instead on '""' to show the PMI)
++             position = position_stack(vjust = 0), color = "black", size = 3) +
++   scale_fill_manual(values = c("#FAD02E", "#D98888", "#B4A1C1")) +
++   xlab("Frequency") +
++   ylab("Co-occurrence") +
++   theme(plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
++         axis.text.x = element_text(vjust = 1, hjust = 0.5),
++         text = element_text(size = 14, family = "Gill Sans MT")) +
++   ggtitle("Quadrigrams by highest PMI value")+
++   guides(fill = "none")
++ }
+> bigramsBYfrequency
+> bigramsBYpmi
+> trigramsBYfrequency
+> trigramsBYpmi
+> quadrigramsBYfrequency
+> quadrigramsBYpmi
+> ggsave("bigramsBYfrequency.png", plot = bigramsBYfrequency, width = 6, height = 5, units = "in", dpi = 300)
+> ggsave("bigramsBYpmi.png", plot = bigramsBYpmi, width = 6, height = 5, units = "in", dpi = 300)
+> ggsave("trigramsBYfrequency.png", plot = trigramsBYfrequency, width = 6, height = 5, units = "in", dpi = 300)
+> ggsave("trigramsBYpmi.png", plot = trigramsBYpmi, width = 6, height = 5, units = "in", dpi = 300)
+> ggsave("quadrigramsBYfrequency.png", plot = quadrigramsBYfrequency, width = 6, height = 5, units = "in", dpi = 300)
+> ggsave("quadrigramsBYpmi.png", plot = quadrigramsBYpmi, width = 6, height = 5, units = "in", dpi = 300)
+
+==============================================================================
+== S2.R PART 7 (lines 626-697)
+==============================================================================
+> bigrams <- subset(bigrams, observed_freq > 2)
+> tokens <- unique(c(as.character(bigrams$token1), as.character(bigrams$token2)))
+> m <- matrix(0, nrow = length(tokens), ncol = length(tokens), dimnames = list(tokens, tokens))
+> for (i in 1:nrow(bigrams)) {
++   row_index <- match(bigrams[i, "token1"], tokens)
++   col_index <- match(bigrams[i, "token2"], tokens)
++   m[row_index, col_index] <- bigrams[i, "PMI"]
++   m[col_index, row_index] <- bigrams[i, "PMI"]
++ }
+> m <- m[c("a14","b3","a24","b10","b2","b12","e4","a5","d5","b13","b4","b1","a1","a3","ant",
++          "f12","e1","b6","e5","f5","f13","f38","d29","b8","d33","h1","g2","c1","f14","i1",
++          "f35","zoo","d19","g1","d3","d15","f15","c12","c14","c5","c13","c4","c6","d7",
++          "f55","g7","i13","i5","relief"), 
++        c("a14","b3","a24","b10","b2","b12","e4","a5","d5","b13","b4","b1","a1","a3","ant",
++          "f12","e1","b6","e5","f5","f13","f38","d29","b8","d33","h1","g2","c1","f14","i1",
++          "f35","zoo","d19","g1","d3","d15","f15","c12","c14","c5","c13","c4","c6","d7",
++          "f55","g7","i13","i5","relief")]
+> df <- as.data.frame.table(m)
+> names(df) <- c("token1", "token2", "PMI")
+> heatmap <- ggplot(df, aes(x = token2, y = token1, fill = PMI)) +
++   geom_tile(color = "gray90") +
++   scale_fill_gradient2(low = "white", mid = "white", high = "red",
++                        midpoint = 0.5, name = "PMI") +
++   labs(x = "Token 2", y = "Token 1", title = "Co-occurrence matrix") +
++   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.4),
++         plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
++         text = element_text(family = "Gill Sans MT", size = 12),
++         legend.text = element_text(size = 10)) +
++   scale_x_discrete(limits = c("a14","b3","a24","b10","b2","b12","e4","a5","d5","b13","b4","b1","a1","a3","ant",
++                               "f12","e1","b6","e5","f5","f13","f38","d29","b8","d33","h1","g2","c1","f14","i1",
++                               "f35","zoo","d19","g1","d3","d15","f15","c12","c14","c5","c13","c4","c6","d7",
++                               "f55","g7","i13","i5","relief"),
++                    labels = toupper,
++                    name = NULL,
++                    drop = FALSE) +
++   scale_y_discrete(limits = c("a14","b3","a24","b10","b2","b12","e4","a5","d5","b13","b4","b1","a1","a3","ant",
++                               "f12","e1","b6","e5","f5","f13","f38","d29","b8","d33","h1","g2","c1","f14","i1",
++                               "f35","zoo","d19","g1","d3","d15","f15","c12","c14","c5","c13","c4","c6","d7",
++                               "f55","g7","i13","i5","relief"),
++                    labels = toupper,
++                    name = NULL,
++                    drop = FALSE) +
++   ggtitle("Motif co-occurrence heatmap by PMI")
+> heatmap
+> ggsave("heatmapPMI.png", plot = heatmap, width = 8, height = 8, units = "in", dpi = 300)
+
+==============================================================================
+== S2.R PART 8 (lines 698-759)
+==============================================================================
+> bigrams$token1 <- toupper(bigrams$token1)
+> bigrams$token2 <- toupper(bigrams$token2)
+> bigrams <- bigrams %>%
++   select(token1, token2, token1_freq, token2_freq, observed_freq, expected_freq, PMI)
+> bigrams_dt <- as.data.table(bigrams)
+> bigrams_dt <- subset(bigrams_dt, observed_freq > 2)
+> bigrams_dt <- bigrams_dt %>% arrange(desc(PMI))
+> fwrite(bigrams_dt, "Bigrams.csv")
+> trigrams$token1 <- toupper(trigrams$token1)
+> trigrams$token2 <- toupper(trigrams$token2)
+> trigrams$token3 <- toupper(trigrams$token3)
+> trigrams <- trigrams %>%
++   select(token1, token2, token3, token1_freq, token2_freq, token3_freq, observed_freq, expected_freq, PMI)
+> trigrams_dt <- as.data.table(trigrams)
+> trigrams_dt <- subset(trigrams_dt, observed_freq > 2)
+> trigrams_dt <- trigrams_dt %>% arrange(desc(PMI))
+> fwrite(trigrams_dt, "Trigrams.csv")
+> quadrigrams$token1 <- toupper(quadrigrams$token1)
+> quadrigrams$token2 <- toupper(quadrigrams$token2)
+> quadrigrams$token3 <- toupper(quadrigrams$token3)
+> quadrigrams$token4 <- toupper(quadrigrams$token4)
+> quadrigrams <- quadrigrams %>%
++   select(token1, token2, token3, token4, token1_freq, token2_freq, token3_freq, token4_freq, observed_freq, expected_freq, PMI)
+> quadrigrams_dt <- as.data.table(quadrigrams)
+> quadrigrams_dt <- subset(quadrigrams_dt, observed_freq > 2)
+> quadrigrams_dt <- quadrigrams_dt %>% arrange(desc(PMI))
+> fwrite(quadrigrams_dt, "Quadrigrams.csv")
+[1] TRUE
+
+[wrapper] completed: 2026-10-03 12:15:32 UTC 

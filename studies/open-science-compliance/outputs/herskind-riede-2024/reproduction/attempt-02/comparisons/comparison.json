@@ -1,0 +1,202 @@
+{
+  "schema_version": "1.0",
+  "paper_slug": "herskind-riede-2024",
+  "attempt": 2,
+  "plan_sha256": "5cdc80717f2f50faf21f5ec1eb876f642e391605e11b4e6ff90286b0b7abaf63",
+  "verdict": "SUCCESSFUL",
+  "verdict_rationale": "The authors' unmodified S2.R, run in Docker on Zenodo v2 with the README pins, reproduced every code-generated value to machine precision: S3 1601/1601, Fig. 3 labels 128/128 with bar order, and Table 2 18/18. The exception is 8 of 130 Table 1 cells, which the paper's own deposited S1/S3 show to be a paper error. All named values and Table 3 match. The remaining items are a cosmetic stack-order convention (T02) and an unsourced map layer (T14). Conclusions confirmed. Coverage is 12/15; the verdict is conditional on human confirmation of the PAPER_ERROR (T04, T08 text) and CANNOT_COMPARE (T14) calls.",
+  "targets": [
+    {
+      "target_id": "T01",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/results/t01-corpus-size.csv",
+      "notes": "483 S1 data rows and 483 corpus documents in S2.R Part 3. The code's t = 482 (one empty motif string) is recorded, not scored."
+    },
+    {
+      "target_id": "T02",
+      "outcome": "MINOR_DISCREPANCY",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 5,
+      "values_matched": 4,
+      "max_abs_difference": null,
+      "evidence": "comparisons/results/t02-fig2-visual-check.csv",
+      "notes": "Bar panel: the 18 levels, their order, the totals (axe 103, shaft 58, ...), and the colours match. The stack order within bars differs: published Maglemose|Kongemose|Kongemose/Ertebølle|Ertebølle, code Maglemose|Kongemose/Ertebølle|Kongemose|Ertebølle; segment sizes agree. This is an unpublished factor-level convention, MINOR per the pre-stated tolerance. Map panel (R1 aid comparisons/aids/fig2-map-points-aid.png): point distribution and colouring consistent. The base map is not scored. values_compared counts the 5 scored visual elements (bar order, bar totals, colours, stack order, map point pattern); the one unmatched is stack order. The base map and typography are not scored."
+    },
+    {
+      "target_id": "T03",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/results/t03-max-motifs.csv",
+      "notes": "R1 aid: max of S1 Total = 15, cross-checked by row sums of columns 31:289."
+    },
+    {
+      "target_id": "T04",
+      "outcome": "PAPER_ERROR",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 130,
+      "values_matched": 122,
+      "max_abs_difference": 1,
+      "evidence": "comparisons/results/t04-table1.csv",
+      "notes": "Unigram (31 rows) and quadrigram (5 rows) columns, all 63 frequency levels, and all 4 totals match exactly. Eight n cells differ by 1: bigrams at frequencies 8/7/4/3/2/1 (published 6/8/32/59/154/1224, reproduced 5/9/31/60/153/1225) and trigrams at 2/1 (222/4094 vs 221/4095). The authors' deposited S3 gives 60/31/9/5 at bigram frequencies 3/4/7/8, matching the reproduction. Sum of C(m,k) over the S1 Total column gives 2513 bigram and 4961 trigram occurrences; the reproduction gives 2513/4961 and Table 1 implies 2516/4962 (comparisons/results/t04-occurrence-check.csv). Escalated for human confirmation."
+    },
+    {
+      "target_id": "T05",
+      "outcome": "WITHIN_PRECISION",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 3,
+      "values_matched": 3,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/results/t05-a1c1-c1g1.csv",
+      "notes": "A1 C1 = 44 and C1 G1 = 44 (exact). The share is 44/483 = 9.11% (44/482 = 9.13%), against 'approximately 9%'."
+    },
+    {
+      "target_id": "T06",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/results/t06-a1g1.csv",
+      "notes": "A1 G1 observed frequency 28, rank 3 by frequency."
+    },
+    {
+      "target_id": "T07",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 128,
+      "values_matched": 128,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/results/t07-fig3-labels.csv",
+      "notes": "All 128 four-decimal PMI labels match, matched by skipgram identity. Bar order matches at 128/128 positions, including tied PMI groups. Per-chronology stacks are in comparisons/results/t07-fig3-bar-stacks.csv (spot-checked visually). GIMP compositing and fonts are not scored."
+    },
+    {
+      "target_id": "T08",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 3,
+      "values_matched": 3,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/results/t08-culture-exclusive-counts.csv",
+      "notes": "Exclusive counts Maglemose 0, Kongemose 1 (B10 F38), Ertebølle 9, matching the stated counts (R4). All eight named Ertebølle bigrams are exclusive. The ninth, C5 C12, is omitted from the text's list: a text PAPER_ERROR, escalated, which does not affect the score."
+    },
+    {
+      "target_id": "T09",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/results/t09-max-exclusive-frequency.csv",
+      "notes": "The maximum among culture-exclusive Fig. 3b bigrams is 5 (C4 C5)."
+    },
+    {
+      "target_id": "T10",
+      "outcome": "WITHIN_PRECISION",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 18,
+      "values_matched": 18,
+      "max_abs_difference": 0.00485780853577,
+      "evidence": "comparisons/results/t10-table2.csv",
+      "notes": "All 18 summary statistics round to the published 2-decimal values (|diff| <= 0.005)."
+    },
+    {
+      "target_id": "T11",
+      "outcome": "WITHIN_PRECISION",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 32,
+      "values_matched": 32,
+      "max_abs_difference": null,
+      "evidence": "comparisons/results/t11-fig4-visual-box-check.csv",
+      "notes": "Skeleton (outputs/heatmapPMI.png): the axis order, populated cells, and relative intensities match the published upper-left triangle. Approved aid (the authors' createResultTable on observed > 2 bigrams): 32 single-culture cells (21 yellow, 6 purple, 5 red); all 32 carry a matching published box. Published boxes on observed <= 2 cells (no PMI fill) are outside the approved aid and unverified (escalated, kind OTHER). Motif drawings (GIMP) are not scored. Comparison is visual (comparisons/aids/fig4-exclusive-boxes-aid.png)."
+    },
+    {
+      "target_id": "T12",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 50,
+      "values_matched": 50,
+      "max_abs_difference": null,
+      "evidence": "comparisons/results/t12-table3.csv",
+      "notes": "R1 aid: S1 lookups, S1 No. 116, 51, 88, 240, 252, 23, 141, 225, 278, 189. Artefact type = S1 Material + Artefact type in sentence case. The ten objects are exactly the S1 objects bearing at least 2 of C4/C5/C12/C13/D7."
+    },
+    {
+      "target_id": "T13",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2,
+      "values_matched": 2,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/results/t13-cluster-objects.csv",
+      "notes": "10 objects; 9 antler axes + 1 antler shaft. S1 holds no further objects bearing at least 2 of the five cluster motifs."
+    },
+    {
+      "target_id": "T14",
+      "outcome": "CANNOT_COMPARE",
+      "testable": true,
+      "failure_mode": "The Fig. 5 coloured patches ('known extent of each individual motif') are a substantive data layer with no stated source, code, or deposited input (data unavailability for that component), so the figure cannot be compared in full.",
+      "values_compared": 10,
+      "values_matched": 10,
+      "max_abs_difference": null,
+      "evidence": "comparisons/results/t14-fig5-pies.csv",
+      "notes": "Testable components match: pie compositions 10/10 (R1 S1 lookup), and relative positions are consistent (comparisons/aids/fig5-object-positions-aid.png). The motif-extent patches cannot be compared. Escalated for human confirmation."
+    },
+    {
+      "target_id": "T15",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1601,
+      "values_matched": 1601,
+      "max_abs_difference": 0.0,
+      "evidence": "comparisons/results/t15-s3-cells.csv",
+      "notes": "S3 deposit vs reproduced Part 8 CSVs, joined on the motif tuple. Row membership is identical (165/106/20), row order is identical, and all 1601 numeric cells are equal (max abs diff 0). Membership: comparisons/results/t15-s3-membership.csv."
+    }
+  ],
+  "coverage": {
+    "targets_enumerated": 15,
+    "targets_reproduced": 12,
+    "coverage_fraction": 0.8
+  },
+  "escalations": [
+    {
+      "kind": "PAPER_ERROR",
+      "target_id": "T04",
+      "detail": "Table 1 n values differ by 1 in 8 cells (bigrams at frequencies 8/7/4/3/2/1; trigrams at 2/1). The deposited S3 (authors' Part 8 output) supports the reproduction at bigram frequencies 3/4/7/8 (60/31/9/5). Sum of C(m,2) and C(m,3) over S1 Total gives 2513/4961 occurrences, equal to the reproduction; Table 1 implies 2516/4962. Totals and conclusions are unaffected. Possible cause: transcription, or a table produced from an earlier data state (methods cite Zenodo v1, not used per AP-12)."
+    },
+    {
+      "kind": "PAPER_ERROR",
+      "target_id": "T08",
+      "detail": "The Section 3 text says nine salient bigrams are unique to the Ertebølle period but names only eight. The reproduction confirms nine; the omitted bigram is C5-C12 (3 objects, all Ertebølle, PMI 2.1890, visible in Fig. 3b). Scored against the stated counts (R4), so T08 is EXACT_MATCH; the list error is for human confirmation."
+    },
+    {
+      "kind": "CANNOT_COMPARE",
+      "target_id": "T14",
+      "detail": "The Fig. 5 motif-extent patches have no stated source or deposited input. Pie compositions (10/10) and relative positions match via R1 aids. Confirm CANNOT_COMPARE, or reclassify if the patches are judged cartographic rather than scientific content."
+    },
+    {
+      "kind": "OTHER",
+      "target_id": "T11",
+      "detail": "Published Fig. 4 boxes also mark many cells with observed <= 2 (no PMI fill). The approved aid (createResultTable on observed > 2) covers only 32 cells, all matching. The planning assumption was incomplete; decide whether a documented deviation or a further check is needed. No scope was changed by the executor."
+    }
+  ]
+}
