@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-10-03
+updated: 2026-10-04
 status: active
 ---
 
@@ -1081,3 +1081,83 @@ clarifications, amendment 3); dye attempt-03.
 registrant present; the version rule's dates were Crossref `created`
 proxies where `published-online` was absent; Clarivate's terms were read
 from public documents only (institutional licences unseen).
+
+## Session: 2026-10-03 (second session) → 2026-10-04 — Agentic reproduction lane built; Phase 2 shakedown run; E8-v2 registered
+
+**Session:** 4d22016c-9af3-43a8-9ab6-f14c9391eacd (Opus 5.5). Shawn was
+present until about 22:45 AEST on the 3rd; the close ran autonomously
+overnight. Spend: $21.14 API-equivalent across three workflow runs, each
+stage approved at an API gate.
+
+- **Lane built** (PR #5, `feat/reproduction-workflow`):
+  - plan and execute workflows (`reproduction-system/workflows/`);
+  - `scripts/reproduction-lane.py` (commit-pinned and checksummed args,
+    a hash-bound approval lock, the artefact gate, persistence, and the
+    audit);
+  - four schemas;
+  - agent definitions v1.1 pinned to `claude-opus-5-5`
+    (`98f3eb9`, `87c5365`).
+- **Rulings (Shawn):**
+  - Opus 5.5 at `high` effort;
+  - attempt numbering confirmed (shakedown = attempt-02; OxCal = dye
+    attempt-03);
+  - agents blinded from the pilot;
+  - a pre-gate shakedown framing, because §8 and amendment 1 put the
+    registered gate after model selection, with a Crema leg (`7b5e898`);
+  - R1–R4 and criterion clarification D1 (`56e58aa`);
+  - receipt adjudication F-016 (`e5f3554`).
+- **Runs:**
+  - plan round 1, `wf_5d10728a-820`, superseded by F-014;
+  - plan round 2, `wf_bbf623d0-0ae`, approved with herskind at 15
+    targets and dye at 34;
+  - execute, `wf_20ac2b6b-9aa`, 40 min: herskind SUCCESSFUL (12/15),
+    dye PARTIAL (25/34), both reviews QUALIFIED.
+
+  Values are identical to the pilot (`regression-value-check.json`).
+  Results: `phase2-shakedown/results-2026-10-03.md` (`77e2d50`). Cost per
+  paper: $7.50 and $10.89.
+- **Fixed en route:**
+  - a launcher withdrawn for an args checksum (`344049d`);
+  - wrapped-prompt parsing and own-spill exemptions (`aef79a8`);
+  - harness-file exemptions and stated receipt keys (`26b9a5b`);
+  - bare-path declarations (`b06b1fd`).
+- **Register:**
+  - F-013, the token over-count (`846f8b5`);
+  - F-014 and F-015 (`4112b2d`);
+  - F-016;
+  - F-017, the Read-only pull check versus agents that read with Bash
+    (`77e2d50`).
+- **E8-v2 and concordance** (PR #6, `feat/e8v2-registration`, built in a
+  worktree):
+  - reference assembled and registered (`fd24cf4`);
+  - analysis tool v1.2 with `--exclude-bi` (`f9de633`);
+  - six-arm concordance (`6e0d17a`): only fable-5 clears both gates on
+    all items; opus-5 clears both efforts with the BI items excluded;
+  - a launcher `GIT_*` scrub fixing commits in worktrees (`c692fb1`).
+- **Also:**
+  - herskind v1/v2 input-drift check: data identical (`6de3f27`);
+  - the result was reported to cv-and-applications-d9, which recorded it
+    in its §15 (commit `0c80fde`);
+  - a time-on-task preference memory;
+  - handoff (`532f6d8`, `9a4efd6`).
+
+**Not done:**
+
+- the nine-item human queue (results report);
+- held-out dye artefacts (`data/beads-1.csv`, `vendor/`);
+- PR merges;
+- H13 and the gates ruling;
+- rulings on F-013, F-015, and F-017;
+- marwick-2025 as a third paper;
+- dye attempt-03 (OxCal).
+
+**Contextual assumptions:**
+
+- Costs are API-equivalent at the claude-api skill's 2026-09-25 price
+  table; the Max plan bills by subscription.
+- Human minutes come from Shawn's `/track` log, at quarter-hour
+  granularity.
+- Dye's paper text was read from the White Rose accepted manuscript,
+  because the version of record was inaccessible (HTTP 403).
+- The safety classifier timed out for two subagents. Their transcripts
+  were reviewed by the operator, not the classifier.

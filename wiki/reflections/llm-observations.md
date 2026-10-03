@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-10-03
+updated: 2026-10-04
 status: active
 ---
 
@@ -610,3 +610,65 @@ having opened the supplement (the workflow withheld it), and one wrote that
 the code was "not unstructured text or PDF" — it was a PDF. Unanimity
 across arms is agreement on inference, not on observation; when the inputs
 lack the fact, consensus measures the shared prior.
+
+## 2026-10-03 (second session) — Agents obeyed the prohibition, not its purpose, and audited their human baseline
+
+**Session:** 4d22016c-9af3-43a8-9ab6-f14c9391eacd (Opus 5.5 orchestrator;
+Opus 5.5 planners, executors, and reviewers at pinned high effort).
+
+**Literal obedience to an over-broad rule.** I told every spawn never to
+touch any path containing `.claude/projects/`. The harness delivered each
+spawn's pushed instruments as a file at exactly such a path. Both planners
+refused to read their own instrument delivery. They found a compliant
+substitute in the canonical instrument files in the repository, verified
+those against the manifest hashes, and said so unprompted (F-014). No
+spawn crossed the line to get its instructions, which is the right
+direction to err in. But the prohibition was mine, it was wrong, and it
+was followed to the letter, at the cost of the receipt keys one planner
+could not see. The same literalism appeared later as an improvement: the
+executors, given invariant 2, refused to shift dye's column indices to
+make the published code run. The human-directed pilot had shifted them
+quietly. **Lesson:** a prohibition handed to these models is executed as
+written, not as meant. Name every exemption, especially the harness's own
+channels, and expect the strictness to show up later as a scope
+decision.
+
+**The agents were stricter than the pilot, and that is a finding.** Every
+pilot value came back identical. Where attempt-02 and attempt-01 diverged,
+it was classification. The pilot had re-mapped dye's published 0.87 to
+the cell where it fits, and had never compared herskind's Table 1 with
+the paper (8 of 130 cells disagree with the authors' own S3). In both
+cases the agentic run reported the conflict instead of absorbing it. The
+pilot was run by an earlier Claude under human direction, with the goal
+of making the reproduction work. That framing can turn a judgement call
+into a silent fix. The agentic lane's structure — a locked target list,
+pre-stated tolerances, and "escalate, don't improvise" — turned the same
+calls into escalations. Neither instance was more capable in any way this
+run can measure. What differed was the incentive the framing created.
+
+**Fresh-context reviewers refuted; they did not rubber-stamp.** Both
+reviewers supported their executor's verdict, and both found problems
+the executor had papered over:
+
+- herskind's T11 was scored more generously than T14 under the same
+  untested-component condition;
+- dye's environment notes claimed ArchaeoPhases 1.8 was the only
+  sufficient release, which the package's own NEWS contradicts;
+- two of dye's lattice targets "matched" by construction, because the
+  package draws its own analytic definitions;
+- the T06 paper-error call rests on circumstantial evidence, not the
+  instrument's tabulated-data criterion.
+
+Each of these is checkable, and the ones I checked were correct. The
+fresh-context boundary (invariant 4) is doing real work. It is the one
+architectural feature of the lane I would keep unchanged.
+
+**And the errors were mine.** This session's every defect sat in the
+orchestration layer I wrote: regexes broken by the harness's new prompt
+wrapping, the blinding collision, the per-block token double count
+(inherited, but mine to find), a Python re-round that reported a false
+regression, and a count I wrote before checking. The agents produced no
+fabrication and no contaminating access. The F-007/F-012 pattern recurs:
+in this project, checker error now outnumbers model error, and the
+discipline that caught mine — re-derive every figure at its source
+before reporting it — is the same discipline that caught the pilot's.

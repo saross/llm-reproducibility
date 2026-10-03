@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-10-03
+updated: 2026-10-04
 status: active
 ---
 
@@ -1106,3 +1106,74 @@ stands. Shawn's own summary of the session — a stalled project moving again
 — is fair; what moved it was not speed but a reference dataset rebuilt item
 by item against primary sources, which turned out to be as much a part of
 the measurement apparatus as the models it will grade.
+
+## Entry 19 (2026-10-03 → 10-04) — The bottleneck moved to adjudication
+
+**Project:** llm-reproducibility. **Session:**
+4d22016c-9af3-43a8-9ab6-f14c9391eacd. One instance throughout (Opus 5.5),
+no compaction. Shawn was present until about 22:45 AEST on the 3rd; the
+post-run steps, the PRs, and the E8-v2 work ran autonomously overnight
+inside the gates he had already approved.
+
+**What's the single most important thing a future reader should know
+about this session?** Execution stopped being the expensive part. Two
+papers went from approved plan to reviewed result in 40 minutes of
+elapsed time, for $15.45 of agent spend. Every value the pilot had
+computed came back identical. What came back with it was a queue of nine
+items that only an expert can settle:
+
+- whether an index shift is mechanics or a change to what is computed;
+- whether a misattributed 0.87 is a paper error when no table states the
+  matrix;
+- how strictly to score a figure's untested component;
+- what to do with an unlicensed input file.
+
+Shawn's planning and approval time was about 7.5 minutes per paper.
+Clearing this queue will take longer, and the queue grows with the
+agents' thoroughness: the more completely the planner enumerates, the
+more the executor finds that needs a ruling. For the cost gate and the
+pitch, the unit economics are set by adjudication minutes, not tokens.
+
+**What question emerged that wasn't pursued?** How stable is the
+denominator? The same planner configuration enumerated dye at 23 targets
+in round 1 and 34 in round 2. But round 2 received rulings that round 1
+did not, including my over-broad R3, so the run cannot separate wording
+from run-to-run variance. The clean test is cheap: two or three planner
+spawns per paper under an identical prompt, about $4. It matters because
+coverage is H2's outcome, and amendment 1 already shows that a statistic
+can look stable when only part of its noise has been measured. I recorded
+the safeguard (two planners, reconciled union) as a candidate and did not
+run the test. That was the right restraint overnight, and it is the right
+first question for the census.
+
+**What felt uncertain or unresolved at the end?** Two things.
+
+The regression criterion assumed the pilot was the ground truth.
+"Identical verdicts" makes sense if the baseline is right. Here the values
+were identical, but the classifications differed where the human-directed
+pilot had been more permissive. It re-mapped a published 0.87 to the cell
+where it fits, and it shifted column indices to make failing published
+code run. On T06 the agentic run is plainly more faithful to the paper's
+text. On T02 the adversarial reviewer argues the pilot's shift was
+legitimate mechanics, and that the agentic executor, reading invariant 2
+conservatively, was over-cautious. Neither attempt is simply right. A
+regression test against a human baseline also audits the baseline, and the
+pre-committed labels have no category for "the baseline was wrong". That
+gap is the one to close before the registered §8 gate.
+
+The provenance apparatus was built for agents that only read. The receipt
+checks, the Read-only pull verification, and the blinding list all assume
+read-only spawns. The executor and reviewer have Bash, and they used it
+sensibly. In practice the apparatus then misfired:
+
+- receipts failed even though the reads demonstrably happened (F-017);
+- the blinding list stopped the planners reading their own instrument
+  delivery (F-014);
+- a `git status` surfaced another paper's file names.
+
+None of this produced a contaminated or fabricated result, and the agents'
+own disclosures were exemplary. But "verified by the orchestrator, not
+asserted by the agent" now holds less tightly for the lane that matters
+most. The honest summary for this session: every error came from my
+orchestration layer, not from the agents, and the controls that held were
+the dumb deterministic ones (sha256s, the artefact gate, checksummed args).

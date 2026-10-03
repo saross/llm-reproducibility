@@ -1168,3 +1168,22 @@ tie or edge case.
 **How to apply.** Run every new orchestrator check against real artefacts
 before trusting a red flag. When a check fails, ask first whether the
 checker is wrong.
+
+## claude-obs 58 — 2026-10-04: He checks that the closing rituals all ran, not just that the work closed
+
+**Pattern.** After an overnight autonomous close, `/handoff` had run with
+continuity, observations, commits, and a resume prompt, so the session
+looked closed. Shawn's first morning question was "Did you /reflect?". It
+had not run. I had treated `/handoff`'s claude-obs step as covering
+reflection, but the reflection documents (session reflection, LLM
+observations, abductive investigation, session log) are a separate
+research record that only `/reflect` writes.
+
+**Lesson.** The two rituals serve different records: `/handoff` serves
+continuity, and `/reflect` serves the meta-research corpus. A heavy
+session needs both. When he is absent, the close is mine to complete in
+full, because no one is there to prompt the second ritual.
+
+**How to apply.** At any autonomous or overnight close of a heavy
+session, run `/reflect` alongside `/handoff`, in either order, using the
+symmetric dedup guard. Say in the close-out message that both ran.

@@ -589,6 +589,7 @@ new spend:
 
 Everything needing a ruling was queued rather than decided. Built to show
 whether "as far as you can" was read as intended.
+*Relayed reaction (2026-10-04, morning):* "this is excellent work".
 
 **Candidate C (unhelpful) — generalising rulings beyond what was ruled.**
 Claude turned Shawn's round-1 answers into general rulings R1–R4 for the

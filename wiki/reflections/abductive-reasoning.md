@@ -6,7 +6,7 @@ audience: "researchers"
 conditions: "debugging with surprising results, hypothesis generation, belief revision, default-following corrections"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-10-03
+updated: 2026-10-04
 status: active
 ---
 
@@ -1044,3 +1044,101 @@ resolution is not verification.
 
 Before trusting any version selection, look for something in the paper
 that only one version can reproduce.
+
+## 2026-10-03 (second session) — Most of the cache writes were echoes
+
+**Session:** 4d22016c-9af3-43a8-9ab6-f14c9391eacd
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+Building the reproduction lane's cost audit, I summed `message.usage` over
+one effort-study run's transcripts (`wf_d691e836-2f2`). Cache-creation
+came to 4.84M tokens. Keeping one usage record per `requestId` gave
+1.86M, while output tokens barely moved. A 2.6× gap in the input-side
+fields alone did not fit any billing model I knew.
+
+### Probe
+
+1. Checked whether the repeated entries were one API call or several. All
+   209 requests in that run carry a single message id, with identical
+   input and cache usage across their entries. There are 499 entries,
+   one per content block: thinking, text, tool_use.
+2. Recomputed all six recorded `contract_metric_tokens` values from their
+   own spawn lists. Each was reproduced **exactly** by the per-entry sum,
+   and each was 1.90–2.63× the per-request value.
+3. Checked the variation. The ratio tracks blocks per response: Sonnet
+   about 1.9–2.1, Opus about 2.4, Fable about 2.6.
+
+### Belief revision
+
+The registered spend metric counted each request once per content block,
+not once per request. So it overstates spend, and it does so in a
+model-dependent way, which biases any cross-model cost comparison against
+the more verbose-thinking models. The effort study's "cost-indistinguishable"
+reading and the upward correction to the study cost estimate both used
+this metric. Both need re-derivation (register F-013, awaiting ruling).
+
+### What would change this belief
+
+A provider usage report for the same runs showing totals near the
+per-entry sums. That would mean repeated entries are separately billed,
+which contradicts the one-message-id evidence. It is not available on the
+Max plan, so the dedup rests on transcript structure alone.
+
+### Implications for practice
+
+Before trusting a token metric, find the unit the provider bills
+(request/message) and dedupe to it. Shape-checking a figure ("this run
+cost 5M tokens") cannot catch a constant-factor inflation applied
+everywhere.
+
+## 2026-10-03 (second session) — The baseline was the thing that failed
+
+**Session:** 4d22016c-9af3-43a8-9ab6-f14c9391eacd
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+The agentic executor escalated dye T06 as a PAPER_ERROR: the paper's 0.87
+for BE1-Cowrie→BE1-Disc does not reproduce (0.99967). The pilot's
+attempt-01 table lists the same published 0.87 as an EXACT match. The
+regression test's premise was that a disagreement means the new harness
+is wrong.
+
+### Probe
+
+1. Compared values first. The regression script found all 54 Supplement
+   Table 2–10 cells and the 12-cell section-7 matrix identical between the
+   attempts, so the two runs computed the same numbers.
+2. Read the paper itself (accepted manuscript, p.16, ll.374–376): "bead
+   type BE1-Disc most likely descended from bead type BE1-Cowrie … with a
+   probability of 0.87".
+3. Compared that with the matrix. 0.87 is the Amethyst→Disc cell (0.867);
+   Cowrie→Disc is 1.00.
+4. Found where 0.87 sat in the pilot's table: listed as "Published 0.87"
+   against Amethyst→Disc, which the text does not say.
+
+### Belief revision
+
+The pilot's comparison had silently re-mapped the published value to the
+cell where it fits. The disagreement exposed a baseline error, not a
+harness error. The same pattern recurred at herskind, where the pilot had
+never compared Table 1 with the paper (8 of 130 cells disagree with the
+authors' own S3). A regression test against a human-directed baseline
+also audits the baseline. The pre-committed criterion's labels (PASS,
+FAIL, explained drift, inconclusive) have no category for "the baseline
+was wrong".
+
+### What would change this belief
+
+The version of record printing Amethyst, not Cowrie, at p.16, which
+would mean a correction in proof that our accepted-manuscript copy lacks.
+The pilot would then have been right, from a source we did not hold.
+
+### Implications for practice
+
+When a regression disagrees, check the baseline against the primary
+source before attributing the difference to the new system. And design
+regression criteria with an explicit branch for "baseline incorrect,
+confirmed at source".
