@@ -755,7 +755,9 @@ manifest.
       (viii) AP-14 — R1 and R1.2 earnable from documentation when data are
       closed, while the paper is never the metadata for machine-actionable
       sub-principles; (ix) AP-15 — F2 needs a machine-readable record that
-      itself describes the artefact; (x) AP-16 — a complete machine-readable
+      itself describes the artefact — conjunctive: creators, title,
+      substantive content description, and at least one subject keyword
+      (ruled 2026-10-03); (x) AP-16 — a complete machine-readable
       dependency manifest satisfies code I3; (xi) census coding variable
       for rights problems ("data shared, rights-incompatible"; AP-8
       validity note); (xii) any further principles the
@@ -837,3 +839,4 @@ manifest.
 | 2026-10-03 | **E8-v2 Sittings 6–7 — key-et-al code_fair 6 → 8; marwick-2025 data_fair 14 → 12.** Key: no decisions needed (principles and all nine runs agree); findings — GPL-2-derived code (sExtinct) under CC BY, sExtinct uncited as software — added as uplift-tool capabilities. Marwick: AP-15 adopted (F2 needs a machine-readable record that itself describes the artefact; empty or pointer-only descriptions fail; positive threshold to be tested at crema); AP-12 extended to reproduction (replicate with the version as of the paper). Future work: human-FAIR vs machine-FAIR study (`active-todo-list.md` item 11; items 10 and 11 independently publishable) | Shawn (rulings); Claude (clerk) |
 | 2026-10-03 | **Amendment 2 §2 precedent case found wrong — option (a):** the paper never cites 10.5281/zenodo.14561925; it came from the pilot extraction record and propagated through the registry, packs, plan, and the lodged text. Erratum-log Entry 4 recorded; registry entry withdrawn; public correction queued for amendment 3. Registrant direction: a deterministic identifier check, and mechanical verification wherever possible | Shawn |
 | 2026-10-03 | **E8-v2 Sitting 8 — marwick-2025 code_fair 14 → 12.** AP-16 adopted (a complete machine-readable dependency manifest satisfies code I3 — avoids one DOI citation outranking a full lockfile); R1.3 = 0 for a compendium without package metadata (initial decision, open to reconsideration). **Clarivate finding coded:** marwick's deposit redistributes full Web of Science records against Clarivate's public terms — a licensing violation, coded "data shared, rights-incompatible"; R1.1 unaffected (FAIR does not enforce copyright; AP-8 validity note); uplift route: publish the query and identifiers | Shawn |
+| 2026-10-03 | **F2 positive threshold RULED (AP-15):** F2 = 1 requires creators, title, a substantive description of the artefact's own content, and at least one subject keyword — the registered instrument names keywords, and F-UJI's top-maturity F2 test requires them; registrant: keywords matter for machine-readability. Conjunctive, so keywords alone never outrank a rich description. No earlier F2 score changes | Shawn |

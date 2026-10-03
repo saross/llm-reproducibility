@@ -250,6 +250,24 @@ Exercise is unblinded (recorded in amendment 2 §3).
   subject keywords. Both fields are checkable from the registry API, so F2
   becomes mechanically verifiable (registrant direction: mechanical
   verification wherever possible).
+  **Positive threshold RULED (Shawn, 2026-10-03, before crema): F2 = 1
+  requires all four — creators, title, a substantive description of the
+  artefact's own content, and at least one subject keyword.** Basis: the
+  registered instrument names keywords ("F2: Rich metadata (structured:
+  authors, title, keywords, description)", `fair-instrument.md:58`; the
+  guide's scoring line likewise), and F-UJI's top-maturity F2 test ("Core
+  descriptive metadata is available", default metrics v0.8) requires
+  `summary` and `keywords`; the FAIR principle itself (Wilkinson et al.
+  2016), GO FAIR's interpretation, and RDA-F2-01M do not name keywords.
+  Registrant: keywords matter for machine-readability compared with
+  free-text descriptions. The test is conjunctive, so keywords alone can
+  never outrank a rich description — the perverse case AP-16 guarded
+  against does not arise; a rich description without keywords scoring 0 is
+  a mild harshness the registered wording accepts (extend wording only
+  when the literal reading is perverse, AP-7). Mechanical check: DataCite
+  `creators`, `titles`, `subjects` non-empty; `descriptions` present and
+  not merely a citation of the paper (the one residual judgement). No
+  earlier F2 score changes (all four papers so far score 0).
 
 - **AP-16 — For code, a complete machine-readable dependency manifest
   satisfies I3** (Shawn, 2026-10-03, Sitting 8). A lockfile or manifest that
@@ -633,6 +651,9 @@ never saw the lockfile, and AP-16 extends the "(PIDs)" wording). R1.3 1→0
 reconsideration). **Nods confirmed:** F2 1→0 (same record as the data,
 AP-15); R1.1 = 1 (the paper and `LICENSE.md` say MIT, Zenodo says
 CC-BY-4.0; AP-8; CC-on-code finding); R1.2 = 1 (lockfile and Dockerfile —
-the old evidence's "169 packages" is wrong for v1.3, which pins 152); I1 = 1
+the old evidence's "169 packages" is wrong for v1.3, which pins 152 —
+**clarified 2026-10-03:** main's `renv.lock` pins 169, so the old
+assessment read the post-publication repository, a version error (AP-12)
+rather than a miscount); I1 = 1
 (plain-text R and Quarto). Unchanged: F1, F3, F4, A1, A1.1, A1.2, A2, R1 =
 1; I2 = 0. **Total 12** (old 14).
