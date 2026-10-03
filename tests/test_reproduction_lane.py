@@ -511,5 +511,51 @@ class SpillExemptionTests(unittest.TestCase):
         self.assertIn("other456", flagged[0])
         self.assertEqual(record["blinding"]["warnings"], [])
 
+class ReplanTests(unittest.TestCase):
+    """Receipt keys come from the manifest; re-planning respects the lock."""
+
+    def test_receipt_keys_match_manifest_pushes(self):
+        import yaml
+        manifest = yaml.safe_load((REPO_ROOT / "manifest.yaml").read_text(encoding="utf-8"))
+        for agent in ("reproduction-planner", "reproduction-executor", "adversarial-reviewer"):
+            expected = [name for name, entry in manifest["shared_content"].items()
+                        for c in entry.get("consumers") or []
+                        if c.get("agent") == agent and c.get("mechanism") == "push"]
+            self.assertEqual(lane.receipt_keys(agent), expected, agent)
+        self.assertIn("pipeline-invariants", lane.receipt_keys("reproduction-planner"))
+
+    def test_supersede_archives_unapproved_and_refuses_approved(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = {"attempt": 2, "output_root": str(root),
+                      "_path": root / "cfg" / "run-config.yaml"}
+            target = root / "a-2024" / "reproduction" / "attempt-02"
+            record = dict(plan_record(["T01"], slug="a-2024"), workflow_run="wf_old")
+            write(target / lane.PLAN_FILE, json.dumps(record))
+            write(target / lane.PLAN_VIEW_FILE, "# view\n")
+            archive = lane.supersede_plan(config, "a-2024")
+            self.assertFalse((target / lane.PLAN_FILE).exists())
+            self.assertTrue((archive / lane.PLAN_FILE).exists())
+            self.assertEqual(archive, root / "cfg" / "superseded-plans" / "wf_old" / "a-2024")
+            write(target / lane.PLAN_FILE, json.dumps(record))
+            write(target / lane.APPROVAL_FILE, "{}")
+            with self.assertRaises(lane.LaneError):
+                lane.supersede_plan(config, "a-2024")
+
+    def test_prompt_exemption_matches_audit_regex(self):
+        import yaml
+        config = yaml.safe_load((REPO_ROOT / "studies" / "open-science-compliance" / "outputs"
+                                 / "validation" / "phase2-shakedown" / "run-config.yaml")
+                                .read_text(encoding="utf-8"))
+        exempt = re.compile(config["blinding"]["exempt_regex"])
+        example = ("~/.claude/projects/p/s/tool-results/"
+                   "hook-1d8724ae-a365-4faa-85a9-43914d631a73-1-additionalContext.txt")
+        self.assertIsNotNone(exempt.search(example))
+        for workflow in ("reproduction-plan.workflow.js", "reproduction-execute.workflow.js"):
+            source = (WORKFLOWS / workflow).read_text(encoding="utf-8")
+            self.assertIn("additionalContext.txt", source, workflow)
+            self.assertIn("Full output saved to", source, workflow)
+            self.assertIn("receipt_keys", source, workflow)
+
 if __name__ == "__main__":
     unittest.main()

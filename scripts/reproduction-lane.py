@@ -17,6 +17,10 @@ re-run:
     Both args builders stamp ``args_checksum``; the workflows recompute it and
     refuse to start on any mismatch, so args pasted into the Workflow tool
     cannot carry a silent transcription error.
+``supersede-plans``
+    Archive unapproved plans beside the run config (a blinded location)
+    before a re-plan, so a new planner cannot read and anchor on the old one.
+    Approved plans are locked and refused.
 ``persist-plans``
     Read a completed plan workflow's results (journal, else transcripts),
     validate each planner payload
@@ -381,6 +385,27 @@ def paper_inputs(paper: dict) -> dict:
             "supplements": supplements}
 
 
+def receipt_keys(agent_type: str) -> list[str]:
+    """Names of the instruments pushed to ``agent_type`` — the receipt keys.
+
+    Read from the manifest through the hooks' own library, so the keys an
+    agent is told to use are exactly the keys the receipt gate checks. The
+    first plan round (wf_5d10728a-820) showed why they must be stated: when
+    the push payload is spilled to a file the agent may not see the name
+    attributes, and one planner keyed by file stem instead.
+    """
+    sys.path.insert(0, str(HOOKS_DIR))
+    try:
+        import hooklib  # noqa: PLC0415 — hooks dir is not a package
+    finally:
+        sys.path.pop(0)
+    names = [spec["name"] for spec in hooklib.pushed_instruments(hooklib.load_manifest(),
+                                                                  agent_type)]
+    if not names:
+        raise LaneError(f"no pushed instruments registered for {agent_type!r}")
+    return names
+
+
 def blinding_args(config: dict) -> dict:
     """The blinding block handed to every governed spawn."""
     blinding = config["blinding"]
@@ -399,9 +424,13 @@ def cmd_build_plan_args(args: argparse.Namespace) -> int:
     papers = []
     for paper in config["papers"]:
         target_dir = attempt_dir(config, paper["slug"])
+        if (target_dir / APPROVAL_FILE).exists():
+            raise LaneError(f"{paper['slug']}: {display_path(target_dir / APPROVAL_FILE)} "
+                            f"exists — an approved plan is locked and cannot be re-planned")
         if (target_dir / PLAN_FILE).exists():
             raise LaneError(f"{paper['slug']}: {display_path(target_dir / PLAN_FILE)} "
-                            f"already exists — this attempt has been planned")
+                            f"already exists — run supersede-plans and commit first, so "
+                            f"the new planner cannot read (and anchor on) the old plan")
         scratch = Path(args.scratch_root).expanduser() / config["run_id"] / paper["slug"]
         papers.append({"slug": paper["slug"],
                        "attempt_dir": str(target_dir),
@@ -412,6 +441,8 @@ def cmd_build_plan_args(args: argparse.Namespace) -> int:
     emit_args({"run_id": config["run_id"], "attempt": config["attempt"],
                "effort": config["effort"], "launch_commit": launch_commit,
                "agent_type": config["agents"]["planner"],
+               "receipt_keys": receipt_keys(config["agents"]["planner"]),
+               "rulings": [str(r).strip() for r in config.get("rulings") or []],
                "schema": runtime_schema(expand(config["schemas"]["plan"])),
                "blinding": blinding_args(config), "papers": papers}, args.out)
     return 0
@@ -707,6 +738,46 @@ def render_plan(record: dict) -> str:
     return "\n".join(out) + "\n"
 
 
+def supersede_plan(config: dict, slug: str) -> Path:
+    """Move an unapproved plan out of the attempt directory before a re-plan.
+
+    The archive sits beside the run config (a blinded location), keyed by
+    the superseded plan's workflow run, so the executor never sees two
+    plans and nothing is lost.
+
+    Returns:
+        The archive directory.
+
+    Raises:
+        LaneError: if the plan is approved (approved plans are locked).
+    """
+    target_dir = attempt_dir(config, slug)
+    if (target_dir / APPROVAL_FILE).exists():
+        raise LaneError(f"{slug}: plan is approved and locked — cannot supersede it")
+    old_record = json.loads((target_dir / PLAN_FILE).read_text(encoding="utf-8"))
+    archive = (Path(config["_path"]).parent / "superseded-plans"
+               / str(old_record.get("workflow_run") or "unknown") / slug)
+    archive.mkdir(parents=True, exist_ok=True)
+    for name in (PLAN_FILE, PLAN_VIEW_FILE):
+        if (target_dir / name).exists():
+            (target_dir / name).replace(archive / name)
+    return archive
+
+
+def cmd_supersede_plans(args: argparse.Namespace) -> int:
+    """Archive unapproved plans so a paper can be re-planned independently."""
+    config = load_config(args.config)
+    slugs = [p["slug"] for p in config["papers"]] if args.all else [args.slug]
+    for slug in slugs:
+        if slug not in {p["slug"] for p in config["papers"]}:
+            raise LaneError(f"unknown paper {slug!r}")
+        if not (attempt_dir(config, slug) / PLAN_FILE).exists():
+            print(f"{slug}: no plan to supersede")
+            continue
+        print(f"{slug}: archived to {display_path(supersede_plan(config, slug))}")
+    return 0
+
+
 def cmd_persist_plans(args: argparse.Namespace) -> int:
     """Persist planner payloads from a plan-workflow run, plus a triage report."""
     config = load_config(args.config)
@@ -736,6 +807,9 @@ def cmd_persist_plans(args: argparse.Namespace) -> int:
         if errors:
             blocking.append((slug, errors))
             continue
+        if (target_dir / PLAN_FILE).exists():
+            archive = supersede_plan(config, slug)
+            print(f"superseded plan archived to {display_path(archive)}")
         record = {"plan_record_version": "1.0", "run_id": config["run_id"],
                   "attempt": config["attempt"], "workflow_run": run_dir.name,
                   "agent_id": item["agent_id"],
@@ -878,6 +952,9 @@ def cmd_build_exec_args(args: argparse.Namespace) -> int:
                "effort": config["effort"], "launch_commit": launch_commit,
                "agent_types": {"executor": config["agents"]["executor"],
                                "reviewer": config["agents"]["reviewer"]},
+               "receipt_keys": {"executor": receipt_keys(config["agents"]["executor"]),
+                                "reviewer": receipt_keys(config["agents"]["reviewer"])},
+               "rulings": [str(r).strip() for r in config.get("rulings") or []],
                "schemas": {"execution": runtime_schema(expand(config["schemas"]["execution"])),
                            "review": runtime_schema(expand(config["schemas"]["review"]))},
                "comparison_schema_path": str(expand(config["schemas"]["comparison_record"])),
@@ -1455,6 +1532,13 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--scratch-root", required=True)
     p.add_argument("--out", type=Path, default=None)
     p.set_defaults(func=cmd_build_plan_args)
+
+    p = sub.add_parser("supersede-plans", help="archive unapproved plans before a re-plan")
+    p.add_argument("--config", type=Path, required=True)
+    group = p.add_mutually_exclusive_group(required=True)
+    group.add_argument("--slug")
+    group.add_argument("--all", action="store_true")
+    p.set_defaults(func=cmd_supersede_plans)
 
     p = sub.add_parser("persist-plans", help="persist planner payloads + triage")
     p.add_argument("--config", type=Path, required=True)

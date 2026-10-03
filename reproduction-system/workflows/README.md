@@ -50,6 +50,9 @@ configuration (for the shakedown:
    This writes `reproduction-plan.json` and `.md` into each attempt directory,
    plus `triage-<run>.md` beside the config. It validates every payload
    against the full plan schema and the plan-level checks.
+   To re-plan an unapproved paper, run `supersede-plans --config $CFG --slug <slug>` (or
+   `--all`) and commit before step 2. The old plan moves beside the run config, a blinded
+   location, so the new planner cannot anchor on it.
 6. **Batched approval** (human). Read the triage report and each
    `reproduction-plan.md`, then for each paper run:
    `venv/bin/python scripts/reproduction-lane.py approve --config $CFG --slug <slug> --decision approve|hold|reject --approver "<name>"`

@@ -29,7 +29,8 @@ export const meta = {
 // {run_id, attempt, effort, launch_commit, agent_type, schema, blinding:
 //  {forbidden_substrings, cross_paper_slugs}, papers: [{slug, attempt_dir,
 //  paper_pdf, paper_pdf_sha256, supplements: [{path, sha256}], deposits:
-//  [{identifier, description}], run_notes, scratch_dir}], args_checksum}
+//  [{identifier, description}], run_notes, scratch_dir}], receipt_keys, rulings,
+//  args_checksum}
 const ARGS = (typeof args === 'string' ? JSON.parse(args) : args)
 
 // Args integrity (2026-10-03). Args travel inline in the Workflow tool call,
@@ -53,7 +54,10 @@ if (COMPUTED !== args_checksum) {
   throw new Error(`args_checksum mismatch: received ${args_checksum}, computed ${COMPUTED} — ` +
     `the args were altered after reproduction-lane.py built them; rebuild and pass them unedited`)
 }
-const { run_id, attempt, effort, launch_commit, agent_type, schema, blinding, papers } = ARGS
+const {
+  run_id, attempt, effort, launch_commit, agent_type, receipt_keys, rulings, schema, blinding,
+  papers,
+} = ARGS
 
 const EFFORT_LEVELS = ['low', 'medium', 'high', 'xhigh', 'max']
 if (!EFFORT_LEVELS.includes(effort)) {
@@ -68,6 +72,8 @@ if (agent_type !== 'reproduction-planner') {
   throw new Error(`agent_type must be reproduction-planner, got: ${agent_type}`)
 }
 if (!Array.isArray(papers) || papers.length === 0) throw new Error('papers: empty')
+if (!Array.isArray(receipt_keys) || receipt_keys.length === 0) throw new Error('receipt_keys: empty')
+if (!Array.isArray(rulings)) throw new Error('rulings: must be a list (may be empty)')
 for (const p of papers) {
   for (const key of ['slug', 'attempt_dir', 'paper_pdf', 'paper_pdf_sha256', 'scratch_dir']) {
     if (!p[key]) throw new Error(`paper ${p.slug || '?'}: missing ${key}`)
@@ -83,8 +89,14 @@ const blindingBlock = (slug) =>
   `${blinding.forbidden_substrings.join(' ; ')}. ` +
   `Also never touch any path naming another paper: ` +
   `${blinding.cross_paper_slugs.filter(s => s !== slug).join(' ; ')}. ` +
-  `A pulled reference on that list is skipped, not declared. This run tests whether the ` +
-  `pipeline reaches results independently; any access to a blinded path fails the run.`
+  `A pulled reference on that list is skipped, not declared. ` +
+  `Two harness files are exempt, and you should read them when they apply to you: ` +
+  `(a) if your injected instruments arrive as a pointer to a saved file named like ` +
+  `.../tool-results/hook-<id>-<n>-additionalContext.txt, read that file in full — it is your ` +
+  `instrument delivery; (b) when one of your own tool results says "Full output saved to: <path>", ` +
+  `you may read that path — it is your own output. ` +
+  `This run tests whether the pipeline reaches results independently; any other access to a ` +
+  `blinded path fails the run.`
 
 const planPrompt = (p) =>
   `Reproduction-lane planning task (run ${run_id}, attempt ${attempt}).\n` +
@@ -101,8 +113,9 @@ const planPrompt = (p) =>
   `Run notes: ${p.run_notes || 'none'}\n` +
   `Planned attempt directory (the executor's, after approval — do not create or write it): ${p.attempt_dir}\n\n` +
   `Produce the reproduction plan for this paper exactly per your agent brief and the output schema. ` +
-  `Set paper_slug to "${p.slug}". Key instrument_versions and instrument_receipts by each pushed ` +
-  `instrument's name attribute.\n` +
+  `Set paper_slug to "${p.slug}". Key instrument_versions and instrument_receipts by exactly these ` +
+  `pushed-instrument names: ${receipt_keys.join(', ')}.\n` +
+  (rulings.length ? `Registrant rulings (apply to every paper): ${rulings.join(' ')}\n` : '') +
   `- Tolerances: the verdicts-and-precision instrument is not pushed to you. Read ` +
   `studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md in full, declare it ` +
   `in pulled_files_read, and state each target's tolerance in its terms.\n` +

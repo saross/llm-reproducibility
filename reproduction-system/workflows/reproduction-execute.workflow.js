@@ -32,8 +32,8 @@ export const meta = {
 //  schemas: {execution, review}, comparison_schema_path, repo_root, blinding,
 //  papers: [{slug, attempt, attempt_dir, plan_path, plan_sha256,
 //  approval_path, target_ids, paper_pdf, paper_pdf_sha256, supplements,
-//  deposits, run_notes, executor_scratch_dir, image_tag}], skipped,
-//  args_checksum}
+//  deposits, run_notes, executor_scratch_dir, image_tag}], skipped, receipt_keys:
+//  {executor, reviewer}, rulings, args_checksum}
 const ARGS = (typeof args === 'string' ? JSON.parse(args) : args)
 
 // Args integrity (2026-10-03). Args travel inline in the Workflow tool call,
@@ -58,8 +58,8 @@ if (COMPUTED !== args_checksum) {
     `the args were altered after reproduction-lane.py built them; rebuild and pass them unedited`)
 }
 const {
-  run_id, attempt, effort, launch_commit, agent_types, schemas, comparison_schema_path,
-  repo_root, blinding, papers, skipped,
+  run_id, attempt, effort, launch_commit, agent_types, receipt_keys, rulings, schemas,
+  comparison_schema_path, repo_root, blinding, papers, skipped,
 } = ARGS
 
 const EFFORT_LEVELS = ['low', 'medium', 'high', 'xhigh', 'max']
@@ -73,6 +73,12 @@ if (agent_types.executor !== 'reproduction-executor' || agent_types.reviewer !==
   throw new Error(`unexpected agent types: ${JSON.stringify(agent_types)}`)
 }
 if (!Array.isArray(papers) || papers.length === 0) throw new Error('papers: empty')
+for (const role of ['executor', 'reviewer']) {
+  if (!receipt_keys || !Array.isArray(receipt_keys[role]) || receipt_keys[role].length === 0) {
+    throw new Error(`receipt_keys.${role}: empty`)
+  }
+}
+if (!Array.isArray(rulings)) throw new Error('rulings: must be a list (may be empty)')
 for (const p of papers) {
   for (const key of ['slug', 'attempt_dir', 'plan_path', 'plan_sha256', 'approval_path',
     'paper_pdf', 'executor_scratch_dir', 'image_tag']) {
@@ -105,8 +111,14 @@ const blindingBlock = (slug) =>
   `${blinding.forbidden_substrings.join(' ; ')}. ` +
   `Also never touch any path naming another paper: ` +
   `${blinding.cross_paper_slugs.filter(s => s !== slug).join(' ; ')}. ` +
-  `Earlier reproduction attempts of this paper are blinded too. This run tests whether the ` +
-  `pipeline reaches results independently; any access to a blinded path fails the run.`
+  `Earlier reproduction attempts of this paper are blinded too. ` +
+  `Two harness files are exempt, and you should read them when they apply to you: ` +
+  `(a) if your injected instruments arrive as a pointer to a saved file named like ` +
+  `.../tool-results/hook-<id>-<n>-additionalContext.txt, read that file in full — it is your ` +
+  `instrument delivery; (b) when one of your own tool results says "Full output saved to: <path>", ` +
+  `you may read that path — it is your own output. ` +
+  `This run tests whether the pipeline reaches results independently; any other access to a ` +
+  `blinded path fails the run.`
 
 const inputsBlock = (p) =>
   `Paper PDF: ${p.paper_pdf} (sha256 ${p.paper_pdf_sha256})\n` +
@@ -134,7 +146,9 @@ const execPrompt = (p) =>
   `Docker image tag: ${p.image_tag}\n` +
   inputsBlock(p) + `\n` +
   `Execute the approved plan exactly per your agent brief and the output schema. Set paper_slug to ` +
-  `"${p.slug}". Key instrument_versions and instrument_receipts by each pushed instrument's name.\n` +
+  `"${p.slug}". Key instrument_versions and instrument_receipts by exactly these pushed-instrument ` +
+  `names: ${receipt_keys.executor.join(', ')}.\n` +
+  (rulings.length ? `Registrant rulings (apply to every paper): ${rulings.join(' ')}\n` : '') +
   `1. First verify the approval: sha256sum the plan file and confirm it equals both the hash above and ` +
   `the approval record's plan_sha256, with decision "approve". Any mismatch: ESCALATE and stop.\n` +
   `2. Write ONLY under the attempt directory (and the scratch directory for throwaway work). Required ` +
@@ -184,7 +198,9 @@ const reviewPrompt = (p) =>
   `artefacts permit — hashes, recomputing a sample of reproduced and published values from the ` +
   `output and comparison files, reading the paper's tables, parsing the scripts — but never re-run ` +
   `the analysis and write nothing anywhere. Set paper_slug to "${p.slug}". Key instrument_versions ` +
-  `and instrument_receipts by each pushed instrument's name.\n` +
+  `and instrument_receipts by exactly these pushed-instrument names: ` +
+  `${receipt_keys.reviewer.join(', ')}.\n` +
+  (rulings.length ? `Registrant rulings the reproduction was run under: ${rulings.join(' ')}\n` : '') +
   `${blindingBlock(p.slug)}`
 
 log(`run ${run_id}: ${papers.length} approved paper(s); effort pinned ${effort}; launch commit ` +
