@@ -566,4 +566,21 @@ repository (AP-12 reproduction clause); (2) the Zenodo record is typed
 disagreement — registrant: keep tracking licence conflicts, they show how
 messy the surface is and are a research finding in their own right; (4)
 the deposit redistributes Web of Science export records, whose terms are
-Clarivate's — a background check of those terms was launched 2026-10-03.
+Clarivate's. **Checked 2026-10-03** (research agent; decisive clauses
+re-verified by the clerk against the fetched documents): Clarivate Terms
+v3.3 §3(b) licenses use "solely for internal analysis and research
+purposes"; Terms of Use v3.1 (last updated 24 Nov 2023) bars use without
+"the express written consent of Clarivate" beyond "insubstantial
+portions" (defined as having no significant commercial value of their own
+and not substituting for access); Product Terms v3.7 asks bibliometric
+researchers whose use is not covered to request permission; and *Science
+Editing* 2021;8(1):129 (corrigendum) records Clarivate's position that WoS
+Core Collection downloads "or their derivatives" may not be posted on open
+access data repositories. The deposited exports are full records: in
+`savedrecs (30).txt` and `(58).txt` (500 records each) abstracts appear in
+445 and 495 records, author emails in 431 and 489, plus cited references,
+Keywords Plus, addresses, and funding (older files are sparser). Unless
+the author obtained Clarivate's consent (the README mentions none), the
+deposit exceeds the public terms, and its CC-0/CC-BY/MIT labels purport
+to license rights the depositor may not hold. Author emails are also
+personal data. Coding of this finding: pending the registrant.
