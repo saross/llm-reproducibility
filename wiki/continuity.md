@@ -30,6 +30,97 @@ merged here as PR #1).
 
 ---
 
+## Repo state (2026-10-03, second session — overnight close)
+
+- **TWO PRs OPEN, both unmerged; `main` is untouched by them.**
+  [#5](https://github.com/saross/llm-reproducibility/pull/5)
+  (`feat/reproduction-workflow`, head `77e2d50`) holds the agentic
+  reproduction lane and the Phase 2 shakedown.
+  [#6](https://github.com/saross/llm-reproducibility/pull/6)
+  (`feat/e8v2-registration`, head `6e0d17a`) holds E8-v2 registration,
+  analysis tool v1.2, the six-arm concordance, and a launcher fix. Merge #6
+  first or alongside #5: #5's `reproduction-lane.py` reuses the launcher
+  function #6 fixes. #6 was built in a worktree,
+  `~/worktrees/llm-reproducibility/claude-e8v2`; remove it after merge
+  (`git worktree remove`; it holds an untracked `venv` symlink).
+- **(1) Phase 2 — DONE as a pre-gate shakedown** (Shawn: not the registered
+  §8 gate; that gate runs after model selection and adds the Crema leg).
+  Results are in
+  `studies/open-science-compliance/outputs/validation/phase2-shakedown/results-2026-10-03.md`
+  (on #5).
+  - **Verdicts:** herskind SUCCESSFUL, matching the pilot, coverage 12/15.
+    Dye PARTIAL against the pilot's SUCCESSFUL, coverage 25/34.
+  - **Values:** identical to the pilot wherever both attempts computed
+    them (`regression-value-check.json`).
+  - **Reviews:** both QUALIFIED, each supporting its executor's verdict.
+  - **Cost:** herskind $7.50, dye $10.89 (API-equivalent, counted per
+    request); human time about 7.5 min per paper from the `/track` log.
+  - **Reported** to cv-and-applications-d9 by SendMessage (2026-10-03).
+    It recorded the result in its
+    `planning/cosmos-pitch-suggested-text-2026-09-25.md` §15 (commit
+    `0c80fde`), with the PAPER_ERROR calls marked PENDING. **Owed:** a
+    one-line message with the file anchor to cv-and-applications if Shawn
+    confirms the PAPER_ERROR calls or approves marwick-2025.
+- **(2) E8-v2 registration and concordance — DONE** (on #6;
+  `e8-v2-concordance-2026-10-03/summary.md`). Over all 150 items only
+  fable-5 clears both 0.90 gates. With the 9 BI items excluded, opus-5
+  also clears at both efforts (0.922 xhigh, 0.901 high), and its errors
+  are all over-credit.
+- **NEXT, in order:**
+  1. **Shawn clears the shakedown human queue** (results §"Human queue";
+     items 1–9). These include dye T02 (the pilot's index shift: mechanical
+     or not?) and T06 (the p.16 0.87 PAPER_ERROR), the herskind PAPER_ERROR
+     calls, T11 versus T14 consistency, the dye L-level, and F-017.
+  2. Decide on the **held-out artefacts**: dye
+     `attempt-02/data/beads-1.csv` (unlicensed; identical to attempt-01's
+     tracked copy) and `vendor/ArchaeoPhases_1.8.tar.gz`. Both are
+     untracked in the main checkout.
+  3. Merge PRs #6 and #5.
+  4. **H13** fresh-context re-derivation, then **Shawn's gates ruling**,
+     informed by the concordance readings. The central question is
+     whether the BI-excluded figure is admissible.
+  5. Optional: marwick-2025 as a third shakedown paper. It needs a plan
+     approval and an API gate, at roughly $8–12.
+- **Register entries awaiting ruling:**
+  - **F-013:** the contract-metric token over-count, 1.9–2.9× and
+    model-dependent, bears on cost claims and the cheapest-eligible rule.
+  - **F-015:** Claude Code 2.1.288 indents spawn prompts. By inspection,
+    FAIR-lane `assemble-arm-record.py` `PROMPT_RE` breaks on the next run;
+    fix before the next FAIR run.
+  - **F-017:** the Read-only pull check versus executors and reviewers
+    that read with Bash.
+
+  F-014 and F-016 are closed.
+- **Paper-level findings (pending confirmation):**
+  - herskind: Table 1 has 8 of 130 cells off by one against the authors'
+    own S3, with v1/v2 data drift excluded by `input-drift-herskind.md`.
+    The "nine" list names eight; C5–C12 is omitted.
+  - dye: p.16's 0.87 is the Amethyst→Disc cell. The pilot's table had
+    silently re-mapped it.
+  - dye: the section-4 code fails under ArchaeoPhases 1.8, which the
+    reviewer attributes to the package version.
+  - dye: the corpus `vor.pdf` is the **White Rose accepted manuscript**,
+    not the version of record (corpus mislabel).
+- **Live state:**
+  - Docker images `llmr-{herskind-riede-2024,dye-et-al-2023}-attempt-02`
+    are kept locally for any approved T02 re-execution.
+  - The main checkout is back on `main`.
+- **Carry-forward:**
+  - The archive-drift infra gate (2 raw sessions unarchived) was relayed
+    at session start; run `scripts/bulk-archive.py` in personal-assistant.
+  - The pitch deadline is Fri 9 Oct; cv-and-applications cited "Shawn
+    sends on Tue 6 Oct".
+  - zbook still needs `install-git-hooks.sh` and a venv.
+  - The 128K output cap is standing.
+- **PENDING VERDICTS (no silent discard):**
+  - NEW: user-obs 2026-10-03 (second session) batch A–D, in the pending
+    section of `wiki/user-observations.md`;
+  - NEW: working-notes candidates WN-aa, WN-ab, and WN-ac (session log
+    below);
+  - still held: the 2026-10-03 (first session) batch A–D; WN-y/z and
+    user-obs A–C (2026-08-19); WN-l/m and user-obs A–C (2026-08-03);
+    WN-p/q/r and user-obs A–D (2026-08-15).
+
 ## Repo state (2026-10-03)
 
 - **E8-v2 WORKSHEET COMPLETE** (`7da90bf`): all 150 reference items
@@ -1254,6 +1345,59 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-03 (second session) — Agentic lane built and shaken down on herskind + dye; E8-v2 registered; concordance run
+
+One session (4d22016c) on Opus 5.5, with Shawn present until about 22:45
+AEST and autonomous overnight close. API spend, each stage gated: $21.14
+API-equivalent across three workflow runs. Built the minimal reproduction
+workflow (Phase 2 option (a)): plan and execute workflows, a deterministic
+lane tool, four schemas, and agent definitions v1.1 pinned to Opus 5.5 at
+`high` effort.
+
+Shawn's rulings:
+
+- the run is a pre-gate shakedown, because preregistration §8 and
+  amendment 1 place the registered gate after model selection, with a
+  Crema leg;
+- attempt numbering is confirmed (shakedown = attempt-02; OxCal = dye
+  attempt-03);
+- the agents are blinded from the pilot;
+- R1–R4 planning rulings;
+- criterion clarification D1;
+- two adjudications.
+
+Plan round 1 was superseded by an orchestrator defect (F-014: the blinding
+list collided with the push channel). Round 2 was approved. Execution
+reproduced every pilot value and surfaced paper-level errors the pilot had
+missed or absorbed. While waiting, registered E8-v2 and ran the six-arm
+concordance on a worktree branch. Found and fixed a launcher bug that
+blocked every worktree commit. Found the token over-count, F-013.
+
+- PR #5 (`feat/reproduction-workflow`): `98f3eb9` agents; `87c5365` lane;
+  `a411e3c` inputs; `7b5e898` plan rulings; `191744b` → `344049d` launcher
+  replaced by checksum; `aef79a8`, `26b9a5b`, `b06b1fd` harness fixes;
+  `846f8b5`, `4112b2d` register F-013, F-014, F-015; `26344a5`, `56e58aa`,
+  `e5f3554` plan rounds and approvals (F-016); `6de3f27` input drift;
+  `cfbd79b`, `4e77cec` attempt-02 artefacts; `77e2d50` results and F-017.
+- PR #6 (`feat/e8v2-registration`): `c692fb1` launcher `GIT_*` scrub;
+  `fd24cf4` E8-v2 reference; `f9de633` analysis v1.2; `6e0d17a`
+  concordance.
+- Feedback was sent: the Workflow dialog offered only "no" for a scratchpad
+  launcher script.
+- **Working-notes candidates (held for Shawn's verdict):**
+  - **WN-aa:** the coverage denominator moved from 23 to 34 targets for dye
+    between plan rounds, with rulings partly responsible (R3 wording). H2's
+    denominator is sensitive to wording and run-to-run variation; a
+    two-planner reconciliation safeguard is proposed.
+  - **WN-ab:** regression against a human-directed baseline also audits the
+    baseline. All values were identical, but the agentic run flagged errors
+    the pilot had absorbed (dye p.16 re-mapped; herskind Table 1 never
+    checked against the paper).
+  - **WN-ac:** harness transcripts repeat a response's usage on every
+    content block, so per-entry token sums over-count by 1.9–2.9×
+    depending on the model (F-013). Measurement apparatus is part of the
+    instrument.
 
 ### 2026-08-29 → 2026-10-03 — F-010 path rule shipped; E8-v2 worksheet adjudicated end to end
 
