@@ -147,7 +147,8 @@ const execPrompt = (p) =>
   inputsBlock(p) + `\n` +
   `Execute the approved plan exactly per your agent brief and the output schema. Set paper_slug to ` +
   `"${p.slug}". Key instrument_versions and instrument_receipts by exactly these pushed-instrument ` +
-  `names: ${receipt_keys.executor.join(', ')}.\n` +
+  `names: ${receipt_keys.executor.join(', ')}. In pulled_files_read list bare file paths only — ` +
+  `no versions, tokens, or comments in the string.\n` +
   (rulings.length ? `Registrant rulings (apply to every paper): ${rulings.join(' ')}\n` : '') +
   `1. First verify the approval: sha256sum the plan file and confirm it equals both the hash above and ` +
   `the approval record's plan_sha256, with decision "approve". Any mismatch: ESCALATE and stop.\n` +
@@ -199,7 +200,8 @@ const reviewPrompt = (p) =>
   `output and comparison files, reading the paper's tables, parsing the scripts — but never re-run ` +
   `the analysis and write nothing anywhere. Set paper_slug to "${p.slug}". Key instrument_versions ` +
   `and instrument_receipts by exactly these pushed-instrument names: ` +
-  `${receipt_keys.reviewer.join(', ')}.\n` +
+  `${receipt_keys.reviewer.join(', ')}. In pulled_files_read list bare file paths only — no ` +
+  `versions, tokens, or comments in the string.\n` +
   (rulings.length ? `Registrant rulings the reproduction was run under: ${rulings.join(' ')}\n` : '') +
   `${blindingBlock(p.slug)}`
 

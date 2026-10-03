@@ -114,7 +114,8 @@ const planPrompt = (p) =>
   `Planned attempt directory (the executor's, after approval — do not create or write it): ${p.attempt_dir}\n\n` +
   `Produce the reproduction plan for this paper exactly per your agent brief and the output schema. ` +
   `Set paper_slug to "${p.slug}". Key instrument_versions and instrument_receipts by exactly these ` +
-  `pushed-instrument names: ${receipt_keys.join(', ')}.\n` +
+  `pushed-instrument names: ${receipt_keys.join(', ')}. In pulled_files_read list bare file paths ` +
+  `only — no versions, tokens, or comments in the string.\n` +
   (rulings.length ? `Registrant rulings (apply to every paper): ${rulings.join(' ')}\n` : '') +
   `- Tolerances: the verdicts-and-precision instrument is not pushed to you. Read ` +
   `studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md in full, declare it ` +
