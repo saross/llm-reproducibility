@@ -552,6 +552,40 @@ reference_datasets:
         file: studies/open-science-compliance/outputs/crema-et-al-2024/run-02-session-per-pass/extraction.json
         fair_key: infrastructure.fair_assessment  # pre-v2.6 key, registered as-is (2026-01 run)
 
+  pilot_fair_assessments_v2:
+    description: >-
+      E8-v2 — the re-derived pilot FAIR reference (amendment 2 §3 shape
+      ruling: ruling-driven re-derivation with targeted human adjudication).
+      All 150 items adjudicated by the registrant in ten sittings
+      (2026-09-03, 2026-10-01 → 10-03) under instrument v2.1 and forward
+      principles AP-1 to AP-17; totals 110 → 95 of 150, 39 items changed,
+      9 tagged beyond-instrument (leaf field beyond_instrument) so
+      concordance can be reported with and without them. Assembled
+      deterministically from the worksheet by
+      scripts/assemble-e8v2-reference.py (--check guards drift). Supersedes
+      pilot_fair_assessments for concordance; the v1 entry stays registered
+      as the historical reference the 2026-08 cycles were scored against.
+    cardinality: 5
+    worksheet: studies/open-science-compliance/outputs/validation/e8-v2-rederivation/worksheet.json
+    worksheet_sha256: "32d3cb365e68d9891c5316fe44e76345348c158b7f79e666439824afc6b2f722"
+    adjudication_log: studies/open-science-compliance/outputs/validation/e8-v2-rederivation/adjudication-log.md
+    items:
+      - slug: dye-et-al-2023
+        file: studies/open-science-compliance/outputs/validation/e8-v2-rederivation/reference/dye-et-al-2023.json
+        fair_key: fair_assessment
+      - slug: herskind-riede-2024
+        file: studies/open-science-compliance/outputs/validation/e8-v2-rederivation/reference/herskind-riede-2024.json
+        fair_key: fair_assessment
+      - slug: key-et-al-2024
+        file: studies/open-science-compliance/outputs/validation/e8-v2-rederivation/reference/key-et-al-2024.json
+        fair_key: fair_assessment
+      - slug: marwick-2025
+        file: studies/open-science-compliance/outputs/validation/e8-v2-rederivation/reference/marwick-2025.json
+        fair_key: fair_assessment
+      - slug: crema-et-al-2024
+        file: studies/open-science-compliance/outputs/validation/e8-v2-rederivation/reference/crema-et-al-2024.json
+        fair_key: fair_assessment
+
 # Per-entity check declarations (monitoring plan Phase 1, 2026-08-03).
 # DECLARATIVE ONLY in Phase 1: the consistency gate does not read this
 # section yet (that is Phase 2). Central map keyed by dotted registry path
@@ -682,3 +716,4 @@ entity_checks:
   corpus.queue_file: {class: E6, verify: exists}
   # E8 — reference dataset (items in reference_datasets above)
   reference_datasets.pilot_fair_assessments: {class: E8, verify: enumerate-from-registry, assert_cardinality: true}
+  reference_datasets.pilot_fair_assessments_v2: {class: E8, verify: enumerate-from-registry, assert_cardinality: true}

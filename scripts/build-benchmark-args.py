@@ -50,6 +50,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -70,12 +71,20 @@ def resolve_launch_commit(repo_root: Path) -> str:
     Modified or staged tracked files mean the args would embed a commit hash
     that does not describe the bytes actually used — refuse, no bypass.
 
+    Inherited ``GIT_*`` variables are scrubbed (2026-10-03): git exports
+    ``GIT_DIR`` and ``GIT_INDEX_FILE`` to hook processes, and in a linked
+    worktree they are absolute, so ``git -C <repo_root>`` would silently
+    inspect the hook's repository instead of ``repo_root``. That blocked
+    every commit from a worktree (the pre-commit test gate ran this against
+    the wrong tree) and could misreport cleanliness when run from a hook.
+
     Raises:
         RuntimeError: if tracked files are modified/staged, or git fails.
     """
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     status = subprocess.run(
         ["git", "-C", str(repo_root), "status", "--porcelain"],
-        capture_output=True, text=True, timeout=30)
+        capture_output=True, text=True, timeout=30, env=env)
     if status.returncode != 0:
         raise RuntimeError(f"git status failed: {status.stderr.strip()}")
     dirty = [line for line in status.stdout.splitlines()
@@ -86,7 +95,7 @@ def resolve_launch_commit(repo_root: Path) -> str:
             f"(launch_commit must describe the bytes used): {dirty}")
     head = subprocess.run(
         ["git", "-C", str(repo_root), "rev-parse", "HEAD"],
-        capture_output=True, text=True, timeout=30)
+        capture_output=True, text=True, timeout=30, env=env)
     if head.returncode != 0:
         raise RuntimeError(f"git rev-parse failed: {head.stderr.strip()}")
     return head.stdout.strip()
