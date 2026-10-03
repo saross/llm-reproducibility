@@ -524,3 +524,40 @@ outstanding tasks before we wind down? I *think* the ball is in my
 court", Claude answered with a definite ownership audit (nothing
 agent-owned; two named Shawn-tasks; one dated deadline) rather than a
 hedge — which is what makes a multi-day absence safe to start.
+
+## Pending review — 2026-10-03 batch (drafted at handoff, session 003fda8b)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence
+holds them over — never discards.*
+
+**Candidate A — tracking minor errors as findings even when no score
+moves.** Claude logged small defects as findings at every sitting —
+records typed "Software" that hold data, creators missing from deposits,
+two versions cited in one paper, a doubled DOI prefix — although none
+changed a score. Shawn, in the moment: "it's really good that you're
+tracking minor errors like incorrect typing … it shows how messy things
+are, and demonstrates a real role for LLMs in producing metadata". The
+running record became Observations 30–31.
+
+**Candidate B — holding the governing principle steady across many
+rulings.** Across ten sittings Claude carried the rulings forward as
+named principles (AP-1 to AP-17) and checked each new case against them,
+including the research-surface rule when the repair question tempted a
+score lift. Shawn, in the moment: "Thanks for keeping the *principle* in
+mind: scores assess published research surfaces."
+
+**Candidate C — primary-source checks that overturned inherited claims.**
+Checking at source found that amendment 2's precedent DOI was never in
+the paper, that crema's published Table 1 matches v1.0.0 rather than the
+date rule's v2.0.0, and that Clarivate's terms restrict the redistribution
+Shawn had believed permitted. Shawn: "Excellent observation"; "a really
+important finding".
+
+**Candidate D — decision-focused briefs, with entailed items separated
+from the real calls.** After Shawn asked to "focus on the judgement calls
+I need to make … so that I can make a careful and informed decision",
+the briefs split each section into decisions (with options, the
+perversity check, and a recommendation) and nods. Most sittings then
+closed in a single exchange. The counterweight, which Claude self-flagged:
+several briefs carried errors that were corrected later (a supplements
+framing, a double-counting argument, a misquote, a total off by one).
