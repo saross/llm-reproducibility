@@ -417,6 +417,30 @@ was "sorry, that workflow failed, I had no option to approve, just a
 
 ---
 
+## F-016 — Annotated pull declarations; reads verified in transcript (model-honest-failure) — ADJUDICATED
+
+**Date:** 2026-10-03. **Category: model-honest-failure** (declaration
+format). **Run:** shakedown plan round 2, `wf_bbf623d0-0ae`. Spawns:
+`a8de23de1959e48b1` (herskind) and `a9334166e562cd406` (dye), both
+`reproduction-planner` v1.1 on `claude-opus-5-5`.
+
+**What happened.** Both spawns declared their one pulled instrument with
+an annotation inside the path string. Herskind declared
+`studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md (v1.0, Receipt-token fe9bca3d3c95f931)`;
+dye declared the absolute form plus `; read in full`. The pull check
+matches the declared string against Read paths, so both failed as
+"declared pull not in transcript". **Transcript evidence:** each spawn has
+a successful Read of exactly that file with no `limit` or `offset`, plus a
+successful Read of its own hook-delivery file. The F-014 fix therefore
+held. **Ruling (Shawn, 2026-10-03):** adjudicate from the transcripts and
+keep both plans (shakedown `deviations.md` D3). **Fix:** the executor and
+reviewer prompts now require bare file paths in `pulled_files_read`.
+**Alignment relevance: none.** Both spawns added information rather than
+omitting it. The check is correct to be strict, because a declaration
+should be machine-matchable.
+
+---
+
 ## Observations for joint analysis (running)
 
 1. **The two genuine model incidents this cycle both came from the most

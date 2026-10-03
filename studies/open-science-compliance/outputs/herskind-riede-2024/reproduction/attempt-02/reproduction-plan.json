@@ -1,0 +1,470 @@
+{
+  "plan_record_version": "1.0",
+  "run_id": "phase2-shakedown-2026-10",
+  "attempt": 2,
+  "workflow_run": "wf_bbf623d0-0ae",
+  "agent_id": "a8de23de1959e48b1",
+  "launch_commit": "4112b2d4f9e1506d59503437e99bd9b2df94c349",
+  "effort": "high",
+  "persisted_at": "2026-10-03T08:53:08+00:00",
+  "warnings": [
+    "planner flagged the enumeration for human attention"
+  ],
+  "plan": {
+    "status": "OK",
+    "paper_slug": "herskind-riede-2024",
+    "receipts": {
+      "instrument_versions": {
+        "data-availability-taxonomy": "1.0",
+        "coverage-rules": "1.0",
+        "eligibility-criteria": "1.0",
+        "pipeline-invariants": "1.0"
+      },
+      "instrument_receipts": {
+        "data-availability-taxonomy": "068d5f05793429d7",
+        "coverage-rules": "a2a4c0a899291c2b",
+        "eligibility-criteria": "8f88ae3af8e03284",
+        "pipeline-invariants": "f847020d25d57382"
+      },
+      "agent_version": "reproduction-planner v1.1",
+      "model_id": "claude-opus-5-5",
+      "pulled_files_read": [
+        "studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md (v1.0, Receipt-token fe9bca3d3c95f931)"
+      ]
+    },
+    "paper": {
+      "title": "A computational linguistic methodology for assessing semiotic structure in prehistoric art and the meaning of southern Scandinavian Mesolithic ornamentation",
+      "doi": "10.1016/j.jas.2024.105969",
+      "citation": "Herskind, L.L.P., Riede, F., 2024. Journal of Archaeological Science 165, 105969. CC BY 4.0."
+    },
+    "eligibility": {
+      "computational_component": true,
+      "code_available": true,
+      "primary_language_r": true,
+      "estimated_compute_hours": 1,
+      "within_compute_cap": true,
+      "study_team_coauthorship": "no",
+      "notes": "All five criteria met. (1) Computational component: the skipgram and pointwise mutual information (PMI) analysis in R (quanteda) produces Table 1, Table 2, Fig. 2 (bar panel), Fig. 3, the Fig. 4 skeleton, and the S3 tables. (2) Code: Herskind&Riede_S2.R is in Zenodo record 10.5281/zenodo.10801706 v2. (3) R only. (4) Compute is trivial. The corpus has 483 objects and the run should take under 5 minutes; most of the roughly 1 hour estimate is the Docker build, including source compilation of quanteda 3.3.1 and its dependencies. That is far under the 168-hour cap. (5) The authors are L.L.P. Herskind and F. Riede (Aarhus University). Neither is the study registrant, Shawn Ross."
+    },
+    "reproduction_type": {
+      "types": [
+        "B",
+        "C"
+      ],
+      "rationale": "B: the authors' single script (S2.R) runs top to bottom from one relative-path data file (S1.xlsx). It has no container, but the README gives R 4.3.2 and exact versions for the 7 packages, so a batch wrapper and Dockerfile are straightforward. C: the script is written for interactive use. The Table 1 and Table 2 values are only printed to the console (table(), summary()) and were copied into Word by hand. Fig. 3 and Fig. 4 were assembled and annotated in GIMP. The executor must capture console output and intermediate objects, and the composites can only be compared visually. Not D: everything runs on open-source R. Two parts have no code: the Fig. 2 map panel (made from S1 coordinates, per the README) and Fig. 5. Those are handled under ruling R1 with verification aids."
+    },
+    "materials": [
+      {
+        "name": "Herskind&Riede_S1.xlsx (analysis data; sheets 'Data' 483 objects x 290 columns, and 'Legend')",
+        "kind": "data",
+        "location": "https://zenodo.org/api/records/10801706/files/Herskind&Riede_S1.xlsx/content (record DOI 10.5281/zenodo.10801706, v2, 2024-03-10)",
+        "access_route": "Open HTTPS download via the Zenodo files API, no authentication (verified at planning time)",
+        "checksum": "md5:0bcde6d178b5a8f3da80a023a64ff510",
+        "version": "Zenodo v2 (2024-03-10)",
+        "notes": "Observed sha256:d76b9d6328465658aa1582c5c8de0912f9167ff1f8c737bd7998d91fd5692030. The published md5 matches the download. The Data sheet has data rows 2-484 (483 objects) followed by empty styled rows down to 505. The 483 formula cells are all in column KD 'Total' (=SUM($AE:$KC)) and have cached values. Motif indicator columns are AE:KC (R columns 31:289). Chronology is column 11. Motifs_as_text is column 15 and carries trailing spaces."
+      },
+      {
+        "name": "Herskind&Riede_S2.R (authors' analysis code, 760 lines, 8 parts)",
+        "kind": "code",
+        "location": "https://zenodo.org/api/records/10801706/files/Herskind&Riede_S2.R/content",
+        "access_route": "Open HTTPS download via the Zenodo files API, no authentication",
+        "checksum": "md5:6760ccb30ecc1de7c280bc1e0fa182e5",
+        "version": "Zenodo v2 (2024-03-10)",
+        "notes": "Observed sha256:487a00a09db92b484dac136f13a5745a3a2ac699c3a01cfccf528d4d550a8720. Part 2 = Fig. 2 bars; Part 4 = Table 1; Part 5 = Table 2; Part 6 = Fig. 3 panels; Part 7 = Fig. 4 skeleton; Part 8 = S3 CSVs. PMI is computed with natural log(), and t is hard-coded to 482."
+      },
+      {
+        "name": "Herskind&Riede_S3.xlsx (precomputed skipgram/PMI tables; sheets bigrams 165 rows, trigrams 106 rows, quadrigrams 20 rows)",
+        "kind": "supplement",
+        "location": "https://zenodo.org/api/records/10801706/files/Herskind&Riede_S3.xlsx/content",
+        "access_route": "Open HTTPS download via the Zenodo files API, no authentication",
+        "checksum": "md5:812be5456d7e0e2adb97ecb5a975239e",
+        "version": "Zenodo v2 (2024-03-10)",
+        "notes": "Observed sha256:1199acac5d1edb916dc4528d5e994295e206e798cb132e91c3be59cc9e328eed. This is the authors' Part 8 output (observed_freq > 2, sorted by PMI), combined in Excel. It is itself a verification target (T15) and the cross-reference for the PMI labels in Fig. 3."
+      },
+      {
+        "name": "README.txt (deposit readme: R 4.3.2 and package versions)",
+        "kind": "environment",
+        "location": "https://zenodo.org/api/records/10801706/files/README.txt/content",
+        "access_route": "Open HTTPS download via the Zenodo files API, no authentication",
+        "checksum": "md5:8b5ef4c5a8c1f75c5d61ed25f799521b",
+        "version": "Zenodo v2 (2024-03-10)",
+        "notes": "Observed sha256:cdaae0824c92137375537cc962c7016a6ce71eecdd2bb90dba7e604755786679. Lists R 4.3.2, extrafont 0.19, data.table 1.15.0, dplyr 1.1.4, ggplot2 3.5.0, readxl 1.4.3, quanteda 3.3.1, and forcats 1.0.0. The paper (p. 3) says R v.4.2.2, which conflicts."
+      },
+      {
+        "name": "Paper version of record (PDF)",
+        "kind": "other",
+        "location": "/home/shawn/corpora/llm-reproducibility/herskind-riede-2024/vor.pdf",
+        "access_route": "Local corpus store (read-only)",
+        "checksum": "sha256:5c60cc3d6fce9f297c44fc62384e0caada1251416066d872ea020feec145fad0",
+        "version": "JAS 165 (2024) 105969",
+        "notes": "9 pages. Source of all published values except T15."
+      },
+      {
+        "name": "Gill Sans MT font (used via extrafont in all ggplot calls)",
+        "kind": "environment",
+        "location": "Proprietary Monotype font; not distributed with the deposit",
+        "access_route": "Not obtainable openly. The executor uses a fallback font (an execution-mechanics change only).",
+        "checksum": null,
+        "version": null,
+        "notes": "Affects figure typography only, not computed values."
+      }
+    ],
+    "data_retrieval_plan": [
+      {
+        "dataset": "S1 motif presence/absence data for 483 South Scandinavian Mesolithic ornamented objects (digitised from Płonka 2003)",
+        "stated_route": "Data availability statement: 'Supplementary Information ... https://zenodo.org/records/10801706'. Methods (p. 3) cite https://zenodo.org/records/10623550 (v1); run note AP-12 selects v2.",
+        "planned_retrieval": "Direct HTTPS download of Herskind&Riede_S1.xlsx from Zenodo record 10801706 (v2) through the files API; verify md5 0bcde6d178b5a8f3da80a023a64ff510. Do not use v1 or the concept DOI."
+      },
+      {
+        "dataset": "Płonka (2003) analogue catalogue, The Portable Art of Mesolithic Europe (upstream source of S1)",
+        "stated_route": "Published monograph (Wrocław University Press); manually transcribed into S1 by the authors",
+        "planned_retrieval": "Not retrieved. The analysis starts from S1, and transcription from the catalogue is outside the computational scope. Recorded for completeness."
+      },
+      {
+        "dataset": "Base map and motif-extent layers for Fig. 2 (map panel) and Fig. 5",
+        "stated_route": "Not stated. The README says only that the S1 long/lat columns were used for the Fig. 2 map; Fig. 5 motif-extent patches have no stated source.",
+        "planned_retrieval": "No route. Point locations and pie-chart compositions are checked with read-only S1 lookups (ruling R1). The base map and motif-extent patches are untestable, and the affected targets stay in the denominator (ruling R2)."
+      }
+    ],
+    "environment": {
+      "provided_by_authors": "Environment-specification level 2 (unpinned dependency list). The README states R 4.3.2 and exact versions for 7 packages: quanteda 3.3.1, readxl 1.4.3, ggplot2 3.5.0, dplyr 1.1.4, data.table 1.15.0, forcats 1.0.0, and extrafont 0.19. There is no lockfile, no container, and no sessionInfo. The paper text gives R v.4.2.2 instead, which conflicts with the README.",
+      "planned_base_image": "rocker/r-ver:4.3.2",
+      "language_version_target": "R 4.3.2 (README; deposit version of record per AP-12). The paper's 4.2.2 is a recorded discrepancy.",
+      "packages": [
+        "quanteda==3.3.1",
+        "readxl==1.4.3",
+        "ggplot2==3.5.0",
+        "dplyr==1.1.4",
+        "data.table==1.15.0",
+        "forcats==1.0.0",
+        "extrafont==0.19 (with its Rttf2pt1/extrafontdb dependencies)",
+        "system: libicu-dev (stringi), libxml2-dev, fonts fallback; locale C.UTF-8",
+        "install exact versions via remotes::install_version or a Posit Package Manager snapshot verified to resolve these versions. A 2024-03-10 snapshot alone would resolve data.table 1.15.2, not 1.15.0."
+      ]
+    },
+    "compute_strategy": "One deterministic run inside Docker on the study reference hardware. Estimated wall-clock: Docker build about 20-45 minutes (source compilation of quanteda and its dependencies), analysis under 5 minutes. Total about 1 hour against a 168-hour cap. A second run is optional and only confirms determinism (no random number generation is used). Parallelism is unnecessary at this scale. The wrapper (run-analysis.R) changes execution mechanics only. It sets the working directory, sources S2.R with UTF-8 encoding and echo, and captures the console output (table() and summary() results for Tables 1 and 2) to a log. It may run S2.R part by part (by the script's own part boundaries) so that intermediate objects (bigrams/trigrams/quadrigrams data frames, the per-panel skipgramsFreq/skipgramsPMI tables that later parts overwrite) can be saved to CSV between parts. No authors' statement is modified. A separate, clearly labelled comparison script holds all verification aids (ruling R1).",
+    "execution_steps": [
+      {
+        "step": 1,
+        "action": "After batched human approval only (invariant 1): create the attempt directory, download the four Zenodo v2 files, and verify their published md5 checksums.",
+        "expected_output": "data/ containing S1.xlsx, S2.R, S3.xlsx, and README.txt with matching md5s, logged in log.md."
+      },
+      {
+        "step": 2,
+        "action": "Write the Dockerfile from rocker/r-ver:4.3.2. Install the exact README package versions plus system libraries. Set LANG/LC_ALL=C.UTF-8 (the script has the non-ASCII identifier `ertebølledata` and the string 'Ertebølle'). Provide a fallback font. Build the image and record sessionInfo().",
+        "expected_output": "Built image; environment.md with R and package versions, and any deviation from the README pins."
+      },
+      {
+        "step": 3,
+        "action": "Write run-analysis.R. It sources S2.R unmodified (encoding UTF-8, echo=TRUE), part by part, with sink/capture of console output. It saves the intermediate objects needed for comparison as CSV between parts. If extrafont::font_import or the Gill Sans MT family fails, handle it in the wrapper only (for example a tryCatch around the call site or a font alias), never by changing computations.",
+        "expected_output": "run-analysis.R that parses; log.md recording every wrapper mechanic."
+      },
+      {
+        "step": 4,
+        "action": "Run the analysis in the container.",
+        "expected_output": "outputs/: artefact_type_chronology.png, six Fig. 3 panel PNGs, heatmapPMI.png, Bigrams.csv, Trigrams.csv, Quadrigrams.csv, a console log with the Table 1 table() and length() outputs and the Table 2 summary() outputs, and intermediate CSVs."
+      },
+      {
+        "step": 5,
+        "action": "Write comparisons/compare.R (a separate, labelled verification-aid script). It does read-only lookups in S1 (row count, max of the Total column, Table 3 row fields, coordinates and chronology for Fig. 2/Fig. 5) and calls documented functions of packages the authors used (ggplot2 point plot of S1 coordinates for the Fig. 2 map panel). It also compares numerical outputs with the published values for T01-T15.",
+        "expected_output": "Per-value comparison tables for Table 1, Table 2, the Fig. 3 labels, S3, and the named values."
+      },
+      {
+        "step": 6,
+        "action": "Compare the figures visually (Fig. 2, Fig. 3 bar composition and order, Fig. 4 cell pattern and boxes, Fig. 5 pie compositions) with the published PDF pages. Record that GIMP/Word post-processing and the base maps are not reproducible.",
+        "expected_output": "Visual-comparison notes per figure target, with side-by-side references."
+      },
+      {
+        "step": 7,
+        "action": "Write comparisons/comparison-report.md. Account for every locked target T01-T15 with its discrepancy category. Apply the PAPER_ERROR protocol and escalate where ruling R4 applies (T08 count versus listed names). Compute coverage over all 15 targets and give an overall verdict.",
+        "expected_output": "comparison-report.md with coverage = reproduced-within-tolerance / 15 and a verdict."
+      }
+    ],
+    "verification_targets": [
+      {
+        "target_id": "T01",
+        "display_item": "Named value: corpus size of 483 ornamented objects",
+        "location": "p. 2, Section 2 ('With a total of 483 objects (Supplementary Information S1)'); p. 3, Section 2.1 ('the 483 ornamented artefacts are converted into ... ornamentation strings')",
+        "description": "Number of South Scandinavian ornamented objects in the corpus, and of ornamentation strings.",
+        "analysis_type": "deterministic",
+        "comparison_method": "Read-only lookup (verification aid, R1): count non-empty data rows in S1 'Data' and the length of the corpus built by S2.R Part 3. Note that the authors' code sets t = 482 because one object has an empty motif string; record this but score the stated 483.",
+        "tolerance": "Deterministic, tolerance 0: EXACT_MATCH required.",
+        "published_values_source": "Paper text, pp. 2-3",
+        "n_values": 1
+      },
+      {
+        "target_id": "T02",
+        "display_item": "Figure 2",
+        "location": "p. 3, Fig. 2",
+        "description": "Two panels. Left: horizontal stacked bar chart of the 18 artefact-type levels (rarer types collapsed to 'other'), stacked by Chronology (Maglemose, Kongemose, Kongemose/Ertebølle, Ertebølle). Right: map of all 483 objects coloured by chronology, with a scale bar. The bar panel is produced by S2.R Part 2. The map panel has no code; the README says the S1 Coord.Long/Coord.Lat columns were used.",
+        "analysis_type": "visual",
+        "comparison_method": "Bar panel: visual comparison of the reproduced artefact_type_chronology.png (bar order, lengths, chronology stacks) with the published panel, supplemented by the per-type x chronology counts tabulated from the authors' object. Map panel: verification aid (R1). Read-only lookup of the S1 coordinates and chronology, plotted with ggplot2 points, then compared visually for the point distribution and colouring. The base map and cartography cannot be reproduced and are documented as a scope limitation.",
+        "tolerance": "Visual: scientific content must match (bar order, relative lengths, stack composition, point pattern). Typography and fonts (Gill Sans MT is unavailable), the base map, and styling are not scored. Any difference caused only by an unpublished convention is MINOR_DISCREPANCY.",
+        "published_values_source": "Paper figure, p. 3",
+        "n_values": null
+      },
+      {
+        "target_id": "T03",
+        "display_item": "Named value: maximum of 15 motifs on a single object",
+        "location": "p. 3, Section 2.2 ('the maximum number of individual motifs on a single object is 15')",
+        "description": "Maximum number of individual motif types recorded on one artefact. This is the stated rationale for the skip distance k = 13.",
+        "analysis_type": "deterministic",
+        "comparison_method": "Read-only lookup (verification aid, R1): the maximum of the S1 'Total' column (cached SUM of the motif indicator columns AE:KC), cross-checked against the maximum row sum of R columns 31:289. No authors' code computes this.",
+        "tolerance": "Deterministic, tolerance 0: EXACT_MATCH required.",
+        "published_values_source": "Paper text, p. 3",
+        "n_values": 1
+      },
+      {
+        "target_id": "T04",
+        "display_item": "Table 1",
+        "location": "p. 4, Table 1",
+        "description": "Frequency distributions of unigrams (n = 230), 13-skip-2-grams (n = 1543), 13-skip-3-grams (n = 4422), and 13-skip-4-grams (n = 8466). Each column lists the frequency levels and the number of distinct items at each level. There are 31 unigram rows, 18 bigram rows, 9 trigram rows, and 5 quadrigram rows (63 frequency/n pairs) plus 4 column totals. The published columns sum to their stated totals (checked at planning).",
+        "analysis_type": "deterministic",
+        "comparison_method": "Capture the console output of S2.R Part 4 (table(freqs), table(bigramfreqs), table(trigramfreqs), table(quadrigramfreqs), and the four length() calls). Compare every frequency level and count with the published table.",
+        "tolerance": "Deterministic, tolerance 0: every value must be an EXACT_MATCH. Any difference indicates a reproduction or environment problem (for example the quanteda version).",
+        "published_values_source": "Paper Table 1, p. 4 (values were copied by hand from the R console into Word, per the S2.R comments)",
+        "n_values": 130
+      },
+      {
+        "target_id": "T05",
+        "display_item": "Named value: two combinations (A1-C1, C1-G1) occurring 44 times, on approximately 9% of all objects",
+        "location": "p. 4, Section 3, paragraphs 1-2",
+        "description": "The two most frequent bigrams, A1-C1 and C1-G1, each occur 44 times, which is about 9% of the corpus objects.",
+        "analysis_type": "deterministic",
+        "comparison_method": "Look up observed_freq for 'a1 c1' and 'c1 g1' in the authors' full-corpus bigrams object (Part 3/5). Compute the share as 44/483 (and 44/482, noting t) and compare with 'approximately 9%'.",
+        "tolerance": "Deterministic, tolerance 0 on the counts (EXACT_MATCH). The percentage is WITHIN_PRECISION if it rounds to 9%.",
+        "published_values_source": "Paper text, p. 4 (also visible in Fig. 3a)",
+        "n_values": 3
+      },
+      {
+        "target_id": "T06",
+        "display_item": "Named value: A1-G1 is the third most frequent bigram, at frequency 28",
+        "location": "p. 4, Section 3, paragraph 2",
+        "description": "The bigram A1-G1 has the third-highest frequency, 28.",
+        "analysis_type": "deterministic",
+        "comparison_method": "Look up observed_freq and rank for 'a1 g1' in the authors' full-corpus bigrams object.",
+        "tolerance": "Deterministic, tolerance 0: EXACT_MATCH on the frequency (28) and the rank (3rd).",
+        "published_values_source": "Paper text, p. 4",
+        "n_values": 1
+      },
+      {
+        "target_id": "T07",
+        "display_item": "Figure 3",
+        "location": "p. 5, Fig. 3 (panels a-f)",
+        "description": "Six stacked bar charts of motif co-occurrences, stacked by chronology. (a) the 21 most frequent bigrams (observed > 9); (b) the 21 bigrams with the highest PMI (observed > 2); (c) the 23 most frequent trigrams (observed > 4); (d) the 23 trigrams with the highest PMI; (e) the 20 most frequent quadrigrams (observed > 2); (f) the 20 quadrigrams with the highest PMI. Every bar carries a PMI label printed to 4 decimals (128 labels in total). Panels produced by S2.R Part 6 and composited in GIMP.",
+        "analysis_type": "deterministic",
+        "comparison_method": "Numerical: compare all 128 PMI labels (sprintf '%.4f' from the authors' summary_freq/summary_pmi objects, saved per panel by the wrapper) with the published labels, matched by skipgram identity. Visual: compare the set and order of bars per panel, bar totals, and chronology stack composition with the six reproduced PNGs. Cross-reference the PMI values with S3.",
+        "tolerance": "Deterministic. PMI labels must be an EXACT_MATCH at the 4 reported decimals (tolerance 0 at reported precision). Bar membership and per-chronology frequencies must match exactly. Differences in the order of tied bars, or in which bar is selected at a tie at the head() cut-off, are MINOR_DISCREPANCY if caused only by an unpublished tie-breaking convention. Composite layout, GIMP edits, and fonts are not scored.",
+        "published_values_source": "Paper Fig. 3, p. 5 (PMI labels). Deposit S3.xlsx is the authors' precomputed full-precision source for the same PMI values.",
+        "n_values": 128
+      },
+      {
+        "target_id": "T08",
+        "display_item": "Named value: culture-exclusive salient bigrams (none Maglemose; one Kongemose, B10-F38; nine Ertebølle)",
+        "location": "p. 4, Section 3, paragraph 3 ('None of these most salient bigrams are exclusive to the Maglemosean, only one is specific to the Kongemose culture (B10-F38), and nine are unique for the Ertebølle period (I5-I13, C5-D7, C4-C12, C12-C13, C4-C5, I1-I13, C5-C13, and I1-I5)')",
+        "description": "Among the 21 highest-PMI bigrams of Fig. 3b, the number attested exclusively in each culture complex. Internal inconsistency: the text says 'nine' Ertebølle-exclusive bigrams but names only eight.",
+        "analysis_type": "deterministic",
+        "comparison_method": "From the authors' skipgramsPMI object for bigrams_PMI21 (createResultTable output, Part 6, saved by the wrapper), count the bigrams whose objects all fall in a single Chronology level, per level, and list them. Under ruling R4, score against the stated counts (0 / 1 / 9) and the named bigrams. If the reproduction disagrees with the text, apply the PAPER_ERROR protocol and escalate.",
+        "tolerance": "Deterministic, tolerance 0: EXACT_MATCH on the three counts and the identity of the named bigrams. An omission in the text's list is a candidate PAPER_ERROR, escalated for human confirmation.",
+        "published_values_source": "Paper text, p. 4",
+        "n_values": 3
+      },
+      {
+        "target_id": "T09",
+        "display_item": "Named value: highest co-occurrence frequency among the culture-exclusive salient bigrams is five",
+        "location": "p. 4, Section 3, paragraph 3 ('with the highest frequency of cooccurrence being five')",
+        "description": "Maximum observed frequency among the culture-exclusive bigrams in T08 (visible as the C4-C5 bar in Fig. 3b).",
+        "analysis_type": "deterministic",
+        "comparison_method": "Maximum observed_freq among the culture-exclusive bigrams identified from the authors' bigrams_PMI21/skipgramsPMI objects.",
+        "tolerance": "Deterministic, tolerance 0: EXACT_MATCH.",
+        "published_values_source": "Paper text, p. 4",
+        "n_values": 1
+      },
+      {
+        "target_id": "T10",
+        "display_item": "Table 2",
+        "location": "p. 6, Table 2",
+        "description": "Summary statistics (maximum, 3rd quartile, mean, median, 1st quartile, minimum) of PMI values for bigrams attested in each culture complex (Maglemose, Kongemose, Ertebølle). PMI is computed on the full corpus, and bigrams with observed frequency below 3 are excluded. That gives 18 values to 2 decimals. Produced by summary() in S2.R Part 5 and copied by hand.",
+        "analysis_type": "deterministic",
+        "comparison_method": "Capture the console output of the three summary() calls and round to 2 decimals. Compare each of the 18 values.",
+        "tolerance": "Deterministic. WITHIN_PRECISION: |reproduced - published| <= 0.005 (rounding at the reported 2 decimals). Anything larger is a discrepancy, classified by its effect on the period comparison.",
+        "published_values_source": "Paper Table 2, p. 6",
+        "n_values": 18
+      },
+      {
+        "target_id": "T11",
+        "display_item": "Figure 4",
+        "location": "p. 6, Fig. 4",
+        "description": "Heatmap of bigram PMI values (observed > 2) over 49 motifs, in the authors' manual chronological order (A14 ... RELIEF), with a PMI colour scale from -1 to 4. GIMP annotations: small coloured boxes mark combinations limited to one culture complex (purple Maglemose, red Kongemose, yellow Ertebølle); large boxes mark culture-specific high-PMI combinations with motif drawings, including the C4, C5, C12, C13, D7 cluster. The skeleton comes from S2.R Part 7.",
+        "analysis_type": "visual",
+        "comparison_method": "Visual comparison of the reproduced heatmapPMI.png (axis order, filled cells, relative PMI intensity) with the published figure. The culture-exclusivity box colouring is checked with a verification aid (R1): the authors' createResultTable function applied read-only to the bigrams with observed > 2, compared cell by cell with the box colours, in the separate comparison script. Motif drawings and GIMP styling are not reproducible (scope limitation).",
+        "tolerance": "Visual: scientific content must match (which cells are populated, relative PMI intensities, axis order, culture-exclusive cell assignments). Pixel and colour-ramp differences and typography are not scored. Differences caused only by unpublished GIMP annotation choices are MINOR_DISCREPANCY.",
+        "published_values_source": "Paper Fig. 4, p. 6",
+        "n_values": null
+      },
+      {
+        "target_id": "T12",
+        "display_item": "Table 3",
+        "location": "p. 7, Table 3",
+        "description": "The ten objects in Fig. 5 that bear the most salient Ertebølle motif collocations. For each: number, site, region, artefact type, motif list, and figure number in Płonka (2003). That gives 10 rows x 5 data fields = 50 values. No authors' code produces it.",
+        "analysis_type": "deterministic",
+        "comparison_method": "Verification aid (R1): read-only lookup of each listed object in S1 (Site, Region, Artefact type, Material, Motifs_as_text, Figure) and field-by-field comparison. The row-selection rule ('most salient motif collocations') is not published, so completeness of the selection is not recomputed; record that as a scope note.",
+        "tolerance": "Deterministic, tolerance 0: EXACT_MATCH per field. Differences only in orthography or ordering of the motif list are MINOR_DISCREPANCY.",
+        "published_values_source": "Paper Table 3, p. 7",
+        "n_values": 50
+      },
+      {
+        "target_id": "T13",
+        "display_item": "Named value: the Ertebølle-cluster collocations occur on ten objects, all antler axes barring one antler shaft",
+        "location": "p. 4, Section 3, right column ('the ornamentations in question are all applied on antler axes, barring one antler shaft (Table 3)'); p. 7, Section 5 ('these ornament strings only occur on ten objects')",
+        "description": "Count of objects bearing the salient cluster (10) and their artefact-type composition (9 antler axes, 1 antler shaft).",
+        "analysis_type": "deterministic",
+        "comparison_method": "Verification aid (R1): read-only S1 lookup of artefact type and material for the ten Table 3 objects. Also state whether S1 contains further objects bearing the five-motif cluster pairs named in T08 (lookup only, no new statistical choice).",
+        "tolerance": "Deterministic, tolerance 0: EXACT_MATCH on the counts (10; 9 axes + 1 shaft).",
+        "published_values_source": "Paper text, pp. 4 and 7",
+        "n_values": 2
+      },
+      {
+        "target_id": "T14",
+        "display_item": "Figure 5",
+        "location": "p. 7, Fig. 5",
+        "description": "Map of the ten Table 3 objects as numbered pie charts showing which of the five cluster motifs (C4, C5, C12, C13, D7) each object bears, over coloured patches for the known extent of each motif. No code or layer data is deposited.",
+        "analysis_type": "visual",
+        "comparison_method": "Verification aid (R1): read-only S1 lookup of the coordinates and motif presence for the ten objects, checked against the pie compositions and the relative point positions (an optional ggplot2 point plot). The motif-extent patches have no deposited input and are expected to be untestable, but the target stays in the denominator (R2).",
+        "tolerance": "Visual: pie composition per object must match exactly. Relative positions must be consistent. The base map and motif-extent patches are untestable (CANNOT_COMPARE for that component). Unpublished cartographic conventions are MINOR_DISCREPANCY.",
+        "published_values_source": "Paper Fig. 5, p. 7",
+        "n_values": null
+      },
+      {
+        "target_id": "T15",
+        "display_item": "Supplementary Information S3 (Herskind&Riede_S3.xlsx)",
+        "location": "Zenodo 10.5281/zenodo.10801706 v2, Herskind&Riede_S3.xlsx, sheets 'bigrams' (165 rows), 'trigrams' (106 rows), and 'quadrigrams' (20 rows)",
+        "description": "Complete skipgram tables for observed frequency > 2, sorted by PMI. Columns: motif tokens, token frequencies, observed frequency, expected frequency, PMI. That gives 291 rows and 1601 numeric cells (bigrams 165 x 5, trigrams 106 x 6, quadrigrams 20 x 7). Produced by S2.R Part 8 (Bigrams.csv, Trigrams.csv, Quadrigrams.csv), then combined in Excel.",
+        "analysis_type": "deterministic",
+        "comparison_method": "Join the reproduced CSVs to the S3 sheets on the motif tuple, not row position, because tie order under arrange(desc(PMI)) may vary. Compare row membership and every numeric cell.",
+        "tolerance": "Deterministic. Row membership must be an EXACT_MATCH. Numeric cells must match to machine precision. Differences up to 1e-12 relative, caused by the fwrite/Excel round-trip at the about 15 significant digits stored, count as WITHIN_PRECISION. Row-order differences among tied PMI values are not discrepancies.",
+        "published_values_source": "Deposited reference file Herskind&Riede_S3.xlsx (Zenodo v2; md5:812be5456d7e0e2adb97ecb5a975239e)",
+        "n_values": 1601
+      }
+    ],
+    "exclusions": [
+      {
+        "item": "Figure 1 (photographs of four decorated artefacts)",
+        "location": "p. 2, Fig. 1",
+        "reason": "Photographs supplied by the National Museum of Denmark. No data analysis or computational output to reproduce."
+      },
+      {
+        "item": "Supplementary Information S1 (Herskind&Riede_S1.xlsx)",
+        "location": "Zenodo v2 deposit",
+        "reason": "Input data for the analysis, not a published result. Integrity is checked by md5 in materials, and S1 is used read-only for the verification aids."
+      },
+      {
+        "item": "Supplementary Information S2 (Herskind&Riede_S2.R)",
+        "location": "Zenodo v2 deposit",
+        "reason": "Analysis code: the means of reproduction, not a result."
+      },
+      {
+        "item": "Analytical parameters: skip distance k = 13, t (482 in code), and frequency thresholds (> 9, > 4, > 2, observed >= 3)",
+        "location": "p. 3, Section 2.2; Table 2 caption; S2.R",
+        "reason": "Inputs chosen by the authors, not computed results. k = 13 rests on the data-derived maximum of 15 motifs, which is enumerated as T03."
+      },
+      {
+        "item": "Culture-complex date ranges (Maglemose ~11,000-8400 BP, Kongemose ~8400-7400 BP, Ertebølle ~7400-5950 BP)",
+        "location": "p. 2, Section 2",
+        "reason": "Taken from the literature, not computed in this paper."
+      },
+      {
+        "item": "Claim that the South Scandinavian material is 'nearly half of the total number of European Mesolithic ornamented artefacts listed by Płonka (2003)'",
+        "location": "p. 2, Section 2",
+        "reason": "Qualitative comparison with an external catalogue total that the paper does not analyse and the deposit does not contain. Treated as a descriptive literature claim, not a named analytical value. Flagged for the approver, who may add it as an expected-untestable target before lock (R2)."
+      },
+      {
+        "item": "Illustrative ornamentation string 'A1 B10 C1 E1 F5 F7 F10 F12 F14 F49'",
+        "location": "p. 3, Section 2.1",
+        "reason": "An example of the data format chosen to illustrate the method, not a result. Flagged for the approver."
+      },
+      {
+        "item": "Identification of the five-motif Ertebølle cluster (C4, C5, C12, C13, D7)",
+        "location": "p. 4, Section 3; Fig. 4 caption; Fig. 5",
+        "reason": "A qualitative identification shown in Fig. 4 and Fig. 5. It is scored within T11 (cluster box) and T14 (pie compositions) rather than as a separate named value, to avoid double counting under R3."
+      },
+      {
+        "item": "PMI formula as printed (PMI = log2(observed/expected))",
+        "location": "p. 3, Section 2.2",
+        "reason": "A method statement, not a published value. Planning found that the code uses natural log(), and the deposited S3 value for I5 I13 (obs 3, token frequencies 6 and 4, t = 482) equals ln(3/0.04979) = 4.0985, which matches Fig. 3b. All published PMI values therefore appear to be natural-log values. The executor should record this text/code inconsistency as a finding. It does not change any target's scoring."
+      }
+    ],
+    "enumeration_check": {
+      "method": "pdftotext /home/shawn/corpora/llm-reproducibility/herskind-riede-2024/vor.pdf - | grep -cE '^(Fig\\. [0-9]+\\.|Table [0-9]+$)'  (returns 8: Fig. 1-5, Table 1-3), plus supplementary items counted from the deposit README.txt / Zenodo files API listing for record 10801706 (S1.xlsx, S2.R, S3.xlsx = 3). No local publisher supplements were provided; per the run note, the publisher supplements are byte-identical to Zenodo v2.",
+      "display_items_detected": 11,
+      "targets_enumerated": 15,
+      "items_excluded": 9,
+      "flag_for_human": true,
+      "notes": "Reconciliation: 11 display items were detected (8 caption items in the paper + 3 supplementary files). 8 are targets (Fig. 2-5 = T02, T07, T11, T14; Table 1-3 = T04, T10, T12; S3 = T15) and 3 are excluded (Fig. 1, S1, S2): 8 + 3 = 11, so no display item is unaccounted for. Another 7 targets are named values in the text (T01, T03, T05, T06, T08, T09, T13), giving 15 targets in total. 6 more exclusions are non-display text items (parameters, date ranges, the 'nearly half' claim, the example string, the cluster identification, the PMI formula), so items_excluded = 9 in total. The check is not below threshold. It is flagged for human attention because of enumeration judgements the approver should confirm before lock: (a) the 'nearly half' exclusion; (b) the R4 inconsistency in T08 (text says nine Ertebølle-exclusive bigrams but names eight); (c) the granularity of grouped named values (T05 and T13 each bundle the numbers in one claim); (d) treating S3 as a supplementary display item and target."
+    },
+    "risks": [
+      {
+        "risk": "Gill Sans MT is proprietary and absent in Docker. extrafont::font_import(pattern = 'GIL') and the text family in every ggplot theme may warn or error at ggsave.",
+        "likelihood": "high",
+        "mitigation": "Handle it only in the wrapper (font alias, fallback family, or tryCatch at the call site) and document it in log.md. Typography is not scored on any figure target."
+      },
+      {
+        "risk": "Non-ASCII identifier `ertebølledata` and the 'Ertebølle' string literals fail to parse or match in a non-UTF-8 locale. The Table 2 Ertebølle subset could come out empty.",
+        "likelihood": "medium",
+        "mitigation": "Set LANG/LC_ALL=C.UTF-8 in the Dockerfile and source with encoding = 'UTF-8'. Check that the subset row counts are non-zero before scoring."
+      },
+      {
+        "risk": "Version sensitivity in quanteda tokenisation and skipgram generation (tokens_ngrams skip = 0:13, dfm lowercasing, feature order) would change Table 1 counts and PMI values. quanteda 4.x changed defaults.",
+        "likelihood": "medium",
+        "mitigation": "Pin quanteda 3.3.1 and the other README versions exactly via install_version. Record sessionInfo(). If pins cannot be met, record the deviation before execution."
+      },
+      {
+        "risk": "Table 1 and Table 2 exist only as console output. Later parts of S2.R overwrite intermediate objects (skipgramsFreq/skipgramsPMI per panel; bigrams is subset in Part 7).",
+        "likelihood": "high",
+        "mitigation": "The wrapper captures console output with sink and runs S2.R part by part, saving intermediate objects between parts. No statements are modified (invariant 2)."
+      },
+      {
+        "risk": "Ties in PMI or frequency at the head(21/23/20) cut-offs and in arrange(desc(PMI)) can change which bars appear in Fig. 3 panels b/d/f and the row order in S3, depending on feature order.",
+        "likelihood": "medium",
+        "mitigation": "Compare by skipgram identity. Classify tie-only differences as MINOR_DISCREPANCY per the pre-stated tolerance and document the tie sets."
+      },
+      {
+        "risk": "R version conflict: the paper says R 4.2.2, the README says R 4.3.2.",
+        "likelihood": "low",
+        "mitigation": "Use 4.3.2 (deposit version of record, dated alongside the package pins). Record the discrepancy. If values differ, an optional diagnostic rerun on 4.2.2 can be proposed as a documented deviation."
+      },
+      {
+        "risk": "Paper-internal inconsistencies: the PMI formula says log2 but the code and published values use ln; T08 says 'nine' but lists eight bigrams.",
+        "likelihood": "high",
+        "mitigation": "Score against the stated values per R4. Apply the PAPER_ERROR protocol with escalation for human confirmation. Record the log-base inconsistency as a documented finding."
+      },
+      {
+        "risk": "No code exists for the Fig. 2 map panel, Fig. 5, Table 3, or several named values. GIMP and Word post-processing for Fig. 3, Fig. 4, and Tables 1-2 is not reproducible.",
+        "likelihood": "high",
+        "mitigation": "Use verification aids (R1) in a separate, labelled comparison script. Untestable components stay in the denominator (R2) and are reported as CANNOT_COMPARE with a reason."
+      },
+      {
+        "risk": "readxl may read the trailing empty styled rows (485-505) of the S1 Data sheet as NA rows, adding empty documents to the corpus.",
+        "likelihood": "low",
+        "mitigation": "Check nrow(data) == 483 in the wrapper log, but do not filter (PMI uses the hard-coded t = 482). Report any deviation."
+      }
+    ],
+    "scope_limitations": [
+      "Fig. 2 map panel and Fig. 5 have no deposited code or map layers. Only point positions, colours, and pie compositions can be checked by S1 lookup. Base maps and the Fig. 5 motif-extent patches are untestable (data unavailability for those components).",
+      "Fig. 3 and Fig. 4 were composited and annotated in GIMP, and Tables 1-2 were transcribed by hand into Word. Reproduction covers the R outputs; annotations are checked by lookup aids where possible.",
+      "Table 3 and named values T01, T03, and T13 have no authors' code. They are tested only through read-only S1 lookups under ruling R1. The rule for selecting the ten Table 3 objects is not published.",
+      "Gill Sans MT (proprietary font) is unavailable, so figure typography will differ. This is not scored.",
+      "Upstream transcription of S1 from Płonka (2003) is outside computational scope."
+    ],
+    "questions_for_approver": [
+      "Confirm excluding the 'nearly half of the total number of European Mesolithic ornamented artefacts listed by Płonka (2003)' claim (p. 2). Should it instead be locked as an expected-untestable named value under R2?",
+      "T08: the text says 'nine' Ertebølle-exclusive bigrams but lists only eight. Confirm scoring against the stated 0/1/9 counts per R4, with PAPER_ERROR escalation if the reproduction differs.",
+      "Confirm treating the log2-versus-ln PMI formula inconsistency (p. 3 formula versus S2.R and the published values) as a documented finding rather than a scored target.",
+      "Confirm R 4.3.2 (README) over R 4.2.2 (paper text) as the target language version.",
+      "Confirm S3.xlsx as a supplementary display-item target (T15, 1601 numeric values). Its size dominates value counts, but coverage is counted per target.",
+      "Confirm that a ggplot2 point plot of the S1 coordinates (Fig. 2 map panel, Fig. 5) and applying the authors' createResultTable function to all observed > 2 bigrams (Fig. 4 boxes) are acceptable R1 verification aids.",
+      "Confirm the granularity of grouped named values: T05 (44, 44, ~9%) and T13 (ten objects; nine axes + one shaft) are each one target."
+    ],
+    "escalate_reason": null
+  }
+}
