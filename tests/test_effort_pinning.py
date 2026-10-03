@@ -259,6 +259,28 @@ class ResolveLaunchCommitTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 launcher.resolve_launch_commit(repo)
 
+    def test_inherited_git_dir_does_not_redirect(self):
+        # A worktree pre-commit hook exports an ABSOLUTE GIT_DIR; the
+        # launcher must still inspect the repository it was given
+        # (2026-10-03: worktree commits were blocked by exactly this).
+        with tempfile.TemporaryDirectory() as tmp, \
+                tempfile.TemporaryDirectory() as other:
+            repo = self._repo_with_commit(tmp)
+            decoy = self._repo_with_commit(other)
+            (decoy / "tracked.txt").write_text("dirty\n")
+            saved = {k: os.environ.get(k) for k in ("GIT_DIR", "GIT_INDEX_FILE")}
+            os.environ["GIT_DIR"] = str(decoy / ".git")
+            os.environ["GIT_INDEX_FILE"] = str(decoy / ".git" / "index")
+            try:
+                commit = launcher.resolve_launch_commit(repo)
+            finally:
+                for key, value in saved.items():
+                    if value is None:
+                        os.environ.pop(key, None)
+                    else:
+                        os.environ[key] = value
+            self.assertTrue(re.fullmatch(r"[0-9a-f]{40}", commit))
+
     def test_untracked_file_ignored(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo = self._repo_with_commit(tmp)
