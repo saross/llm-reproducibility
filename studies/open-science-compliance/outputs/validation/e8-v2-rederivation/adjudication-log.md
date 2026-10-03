@@ -463,3 +463,38 @@ template.
 reproducibility uplift tool that performs every possible repair and
 reconstruction and produces a FAIR apparatus for a faulty publication —
 `wiki/planning/active-todo-list.md`, Deferred / Future Projects item 10.
+
+## Sitting 6 — 2026-10-03 — key-et-al-2024 `code_fair`: 6 → 8
+
+**Context.** The code is three plain-text R scripts in zip archives in the
+publisher supplement (`mmc1`–`mmc3`; OLE main, randomised, and resampling
+variants), under the article's CC BY 4.0. The first section with no
+decisions: the established principles and all nine v2.1 runs agree item
+for item — convergence wherever the instrument text is clear.
+
+**Nods confirmed (Shawn, 2026-10-03):** F1 0→1 (supplement code under the
+article DOI — item 5 + AP-2, as for dye's code); A2 1→0 (row 6;
+entailed flag); R1 0→1 (the scripts' input-formatting instructions plus
+§2.3.3 and §2.4.6.1, which give every parameter); R1.2 0→1 (the paper
+states R 4.3.0 — the old "no version info" was wrong — the workflow is
+fully specified, CRediT names the analysts, and the scripts disclose that
+the OLE function was "taken and adapted from sExtinct package"); I1 = 1
+(a zip is a lossless standard container, so the code is machine-actionable
+as served under AP-9, unlike dye's code-in-PDF); R1.1 = 1 (item 6 + AP-8);
+I3 = 0 (the only runtime package, beepr, is uncited; the adapted sExtinct
+code is not cited as software; the method papers cited with DOIs describe
+the method, not the dependencies). Unchanged: A1, A1.1, A1.2 = 1; F2, F3,
+F4, I2, R1.3 = 0. **Total 8** (old 6), matching all nine runs. No BI tags.
+
+**Findings (no score effect):** (1) **possible licence inconsistency** —
+sExtinct v1.1 (2013, Christopher Clements; removed from CRAN 2019-01-26)
+is licensed GPL-2 per its CRAN archive DESCRIPTION, but the scripts that
+adapt its OLE function are distributed under the article's CC BY 4.0;
+GPL-2's copyleft would normally require derived code to stay GPL-2, so a
+reuser should treat the adapted function as GPL-2. Under AP-8 this does
+not touch R1.1. Registrant: "a good catch and the sort of thing that
+should be flagged". (2) **Uncredited source software** — the paper never
+cites sExtinct as software; only the script comments disclose the
+adaptation. Registrant: "common practice, unfortunately". Both are
+capabilities for the uplift tool (`wiki/planning/active-todo-list.md`
+item 10).

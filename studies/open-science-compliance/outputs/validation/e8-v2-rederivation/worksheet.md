@@ -180,23 +180,28 @@ Concordance is reported with and without BI items — see
 
 | sub | old | D (s/o/f) | flags | v2.1 ruling | old evidence | S | new | note |
 |---|---|---|---|---|---|---|---|---|
-| F1 | 0 | D 0/0/0 |  | item 5 (supplement under article DOI = 1) | No DOI for code; only in publisher supplement |  |  |  |
-| F2 | 0 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | No structured metadata for R scripts beyond paper text |  |  |  |
-| F3 | 0 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | No code DOI or accession number |  |  |  |
-| F4 | 0 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Code not in GitHub, Zenodo, or any searchable registry |  |  |  |
-| A1 | 1 |  |  | unchanged (completeness rule + ethical exception) | HTTPS via ScienceDirect supplement |  |  |  |
-| A1_1 | 1 |  |  | unchanged | Open access supplement (but HTTP 403 for programmatic access) |  |  |  |
-| A1_2 | 1 | D 0/1/1 |  | item 4 (fully open, no auth needed = 1) | No authentication required for manual download |  |  |  |
-| A2 | 1 | D 1/0/0 | F | table rows 2/6 (Zenodo persistence entitlements; sup | Publisher metadata persistence expected |  |  |  |
-| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R scripts in standard open-source language |  |  |  |
-| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No CodeMeta or software ontology |  |  |  |
-| I3 | 0 |  |  | item 2 (third-party dependencies enter here) | Scripts use placeholder file paths; no PID references to data |  |  |  |
-| R1 | 0 | D 1/1/1 |  | unchanged | Scripts contain placeholder paths ('###file location###'), minimal doc |  |  |  |
-| R1_1 | 1 |  |  | item 6 (per-artefact; most-restrictive same-artefact | CC BY 4.0 licence covers supplement |  |  |  |
-| R1_2 | 0 | D 1/0/1 |  | unchanged | No version info, no session info, no dependency documentation |  |  |  |
-| R1_3 | 0 | D 0/0/0 |  | item 7 + graded table row 4 (ADS by construction; DA | No CITATION.cff, CodeMeta, or community software standards |  |  |  |
+| F1 | 0 | D 0/0/0 |  | item 5 (supplement under article DOI = 1) | No DOI for code; only in publisher supplement | y | 1 | FLIP 0→1 — supplement code under article DOI (item 5 + AP-2) |
+| F2 | 0 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | No structured metadata for R scripts beyond paper text | y | 0 | unchanged — row 6 |
+| F3 | 0 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | No code DOI or accession number | y | 0 | unchanged — row 6 |
+| F4 | 0 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Code not in GitHub, Zenodo, or any searchable registry | y | 0 | unchanged — row 6 |
+| A1 | 1 |  |  | unchanged (completeness rule + ethical exception) | HTTPS via ScienceDirect supplement | y | 1 | unchanged |
+| A1_1 | 1 |  |  | unchanged | Open access supplement (but HTTP 403 for programmatic access) | y | 1 | unchanged — OA supplement (403 is scripted-only) |
+| A1_2 | 1 | D 0/1/1 |  | item 4 (fully open, no auth needed = 1) | No authentication required for manual download | y | 1 | unchanged — item 4 |
+| A2 | 1 | D 1/0/0 | F | table rows 2/6 (Zenodo persistence entitlements; sup | Publisher metadata persistence expected | y | 0 | FLIP 1→0 — row 6 supplement-only (entailed) |
+| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R scripts in standard open-source language | y | 1 | unchanged — plain-text R in zip: lossless container (AP-9) |
+| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No CodeMeta or software ontology | y | 0 | unchanged |
+| I3 | 0 |  |  | item 2 (third-party dependencies enter here) | Scripts use placeholder file paths; no PID references to data | y | 0 | unchanged — beepr and adapted sExtinct code uncited as software |
+| R1 | 0 | D 1/1/1 |  | unchanged | Scripts contain placeholder paths ('###file location###'), minimal doc | y | 1 | FLIP 0→1 — input instructions + §2.3.3/§2.4.6.1 parameters |
+| R1_1 | 1 |  |  | item 6 (per-artefact; most-restrictive same-artefact | CC BY 4.0 licence covers supplement | y | 1 | unchanged — article CC BY inherited (AP-8); GPL-2 derivation finding |
+| R1_2 | 0 | D 1/0/1 |  | unchanged | No version info, no session info, no dependency documentation | y | 1 | FLIP 0→1 — R 4.3.0 stated; workflow specified; sExtinct origin disclosed |
+| R1_3 | 0 | D 0/0/0 |  | item 7 + graded table row 4 (ADS by construction; DA | No CITATION.cff, CodeMeta, or community software standards | y | 0 | unchanged — code list not met |
 
 - **A2 flip note:** ENTAILED review: A2 under the clarified metadata-persistence entitlements (Entry 3 consequence note)
+
+- **Adjudicated 2026-10-03 (Sitting 6; registrant: Shawn). code_fair 6 → 8.**
+  No decisions needed: principles and all nine v2.1 runs agree. Flips: F1,
+  R1, R1.2 0→1; A2 1→0. Findings: GPL-2-derived code (sExtinct) under CC BY;
+  sExtinct uncited as software. Reasoning: `adjudication-log.md` Sitting 6.
 
 ## marwick-2025 — data_fair
 

@@ -825,6 +825,13 @@ adjudication has already named the repair classes it would automate:
   machine-readable records (adjudication log AP-14);
 - identifier recovery for dead or mis-cited links (amendment 2 §2), version
   disambiguation (AP-12), and supplement collection.
+- licence-compatibility checking for derived code — e.g. key-et-al-2024's
+  scripts adapt a GPL-2 function (sExtinct) but ship under the article's
+  CC BY 4.0 (adjudication log, Sitting 6; registrant: "the sort of thing
+  that should be flagged");
+- detection of uncredited source software — code adapted from packages
+  the paper never cites (same case; registrant: "common practice,
+  unfortunately"), with a suggested citation in the apparatus.
 
 **Output:** a deposit-ready package — structured metadata (DataCite, plus
 CodeMeta or CITATION.cff for code), machine-readable data and code, licence
