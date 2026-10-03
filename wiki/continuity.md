@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-08-19
+updated: 2026-10-03
 status: active
 ---
 
@@ -29,6 +29,71 @@ merged here as PR #1).
 4. Carry forward open questions.
 
 ---
+
+## Repo state (2026-10-03)
+
+- **E8-v2 WORKSHEET COMPLETE** (`7da90bf`): all 150 reference items
+  adjudicated in ten sittings (2026-09-03, 2026-10-01 → 10-03). Reference
+  **110 → 95 of 150**; 39 items changed (27 down, 12 up); 9 tagged
+  beyond-instrument (`worksheet.json` field `beyond_instrument`) so
+  concordance can be reported with and without them. Reasoning and forward
+  principles AP-1 to AP-17:
+  `studies/open-science-compliance/outputs/validation/e8-v2-rederivation/adjudication-log.md`.
+- **NEXT, in order (Shawn's sequencing):** (1) **Phase 2 regression test**
+  (approved 2026-10-02, option (a); `wiki/planning/agentic-modernisation-plan.md`
+  Phase 2 note): build a minimal reproduction workflow (planner → batched
+  plan approval → executor → fresh-context adversarial reviewer, with
+  artefact gates), then run herskind-riede (Zenodo v2 per AP-12) and dye,
+  instrumenting per-paper cost (tokens, wall-clock, human minutes). Needs
+  Shawn: plan approvals (~10–20 min) and the API gate. **Deadline: the
+  Cosmos Ventures pitch must be submitted by Fri 9 Oct 2026.** Report
+  results with file anchors to the cv-and-applications session by agent
+  mail. (2) **E8-v2 registration and concordance:** assemble the reference
+  from `worksheet.json`, register it in `manifest.yaml`
+  `reference_datasets`, add a BI-exclusion option to
+  `analyse-benchmark-disagreements.py`, then run the six-arm concordance
+  with and without BI items (invocation in the 2026-08-19 block). (3) H13
+  fresh-context re-derivation, then Shawn's gates ruling.
+- **Open in Shawn's court:** confirm attempt numbering — regression test =
+  dye attempt-02, the approved OxCal re-derivation → attempt-03 (recorded
+  only as a working assumption).
+- **F-010 CLOSED** — path rule; reconcile-run v1.5 (PR #4, merged
+  `5ebb6a0`); replay of 13 reconciliations, one flip (crema r2 → clean);
+  register F-012. Tests 267 → 277; gate 66/66.
+- **Rulings with protocol consequences:** repair rule
+  (`studies/open-science-compliance/protocol/data-repair-rule-2026-09-03.md`,
+  routes a/b/c, effort bound ~3× the dye estimate); census spawns receive
+  supplements (`studies/open-science-compliance/protocol/supplements-as-inputs-2026-10-02.md`;
+  benchmark not re-run); "all rights reserved" → 0; F2 requires creators,
+  title, content description, and ≥1 keyword; AP-12 refined (score and
+  reproduce the cited version; always run supplement / published-values /
+  date checks; unspecified versions flagged).
+- **Amendment 2 precedent error:** the paper never cites
+  10.5281/zenodo.14561925 — erratum-log Entry 4 (`dfc74ef`); registry entry
+  withdrawn; public correction queued on the amendment 3 running list.
+- **Pre-census queue** (plan pre-census items, `wiki/planning/instrument-clarification-plan.md`):
+  instrument clarifications AP-8 to AP-17; harvester fields (file formats,
+  descriptions, keywords, related identifiers, versions); a deterministic
+  identifier check (presence in the paper's text, record-number matching,
+  extraction records scanned too); supplement collection (Elsevier CDN
+  route verified); census coding variables (licence-conflict type; "data
+  shared, rights-incompatible"); amendment 3.
+- **Findings logged:** Observations 30–33 in `wiki/working-notes.md`
+  (licence conflicts; the noisy surface; the old reference's errors;
+  resolution is not verification); Clarivate terms vs marwick's deposited
+  Web of Science records (rights-incompatible); GPL-2-derived code under CC
+  BY (key); herskind's pilot extraction cites two unrelated DOIs that
+  resolve.
+- **Carry-forward:** publisher supplement files fetched this session
+  (herskind 3, key 5, crema 1) sit only in a scratchpad, not the corpus
+  store — URLs and checksums are in the adjudication log; marwick's version
+  of record is unresolved for reproduction (immaterial for scores); dye
+  attempt-03 (OxCal re-derivation) accepted, after the worksheet; zbook
+  still needs install-git-hooks.sh + venv; 128K output cap standing.
+- **PENDING VERDICTS (no silent discard):** NEW user-obs 2026-10-03 batch
+  A–D (pending section in `wiki/user-observations.md`); still held: WN-y/z
+  + user-obs A–C (2026-08-19); WN-l/m + user-obs A–C (2026-08-03); WN-p/q/r
+  + user-obs A–D (2026-08-15).
 
 ## Repo state (2026-08-19)
 
@@ -1189,6 +1254,32 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-08-29 → 2026-10-03 — F-010 path rule shipped; E8-v2 worksheet adjudicated end to end
+
+One session (003fda8b) across three sittings separated by Shawn's absences;
+model changed from Fable 5 to Opus 5.5 at the 2026-10-01 resume; no API
+spend. Shipped the F-010 path rule (reconcile-run v1.5, PR #4, `5ebb6a0`),
+then adjudicated the whole E8-v2 worksheet with the registrant, adopting
+forward principles AP-1 to AP-17 that were applied to every later section.
+Primary-source checks overturned several inherited claims: amendment 2's
+precedent DOI was never in the paper (erratum-log Entry 4); crema's version
+of record is v1.0.0 by published-values match, not the date rule's v2.0.0;
+marwick's open deposit of Web of Science records conflicts with Clarivate's
+public terms. Approved mid-session (via agent mail from cv-and-applications):
+the Phase 2 regression test, sequenced after the worksheet, for a pitch due
+Fri 9 Oct.
+
+- Validation: `6fc45df`, `383e3c6`, `af81640`, `be11750` (F-010); sittings
+  `b764b5e`, `c9fee3e`, `e07a2a6`, `0bb03ad`, `7298681`, `8fee957`,
+  `45aaa2a`, `6c0c2ec`, `8905c6c`, `7da90bf`; ARR survey `399b86b`; F2
+  keywords `6b6d14a`; Clarivate `34fe6a3`.
+- Protocol and prereg: `01cd737`, `e3fd5b2`, `cba1d77`, `64f0454`; erratum
+  Entry 4 `dfc74ef`.
+- Planning: `795caab`, `834b020`, `c53e2ce`, `a10c747` (future-work items
+  10 and 11).
+- Observations: `8c91342`, `e70fadb`, `87873e3`, pointer `7eb4f96`;
+  reflections `2bf6671` (claude-obs 50–53).
 
 ### 2026-08-17 (third session) → 2026-08-19 — Analysis tool v1.1 shipped while waiting; ball handed to Shawn
 
