@@ -207,21 +207,27 @@ Concordance is reported with and without BI items — see
 
 | sub | old | D (s/o/f) | flags | v2.1 ruling | old evidence | S | new | note |
 |---|---|---|---|---|---|---|---|---|
-| F1 | 1 |  |  | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.14897252 |  |  |  |
-| F2 | 1 | D 1/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo DataCite metadata (authors, title, description, keywords) |  |  |  |
-| F3 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI |  |  |  |
-| F4 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Indexed in Zenodo, DataCite, Google Dataset Search |  |  |  |
-| A1 | 1 |  | C | unchanged (completeness rule + ethical exception) | HTTPS via DOI resolver |  |  |  |
-| A1_1 | 1 |  |  | unchanged | No authentication required |  |  |  |
-| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open access, no restrictions |  |  |  |
-| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo metadata persistence guaranteed |  |  |  |
-| I1 | 1 | D 1/1/1 |  | unchanged (aggregation: principal artefacts) | Structured CSV and R data frames |  |  |  |
-| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No explicit controlled vocabulary usage documented |  |  |  |
-| I3 | 1 | D 0/0/0 |  | item 2 (third-party dependencies enter here) | DOI links to paper and related resources |  |  |  |
-| R1 | 1 |  |  | unchanged | Detailed documentation enabling reproduction |  |  |  |
-| R1_1 | 1 |  |  | item 6 (per-artefact; most-restrictive same-artefact | Explicit CC-0 licence for data |  |  |  |
-| R1_2 | 1 |  |  | unchanged | R code documents complete processing pipeline from raw data |  |  |  |
-| R1_3 | 1 | D 0/1/1 |  | item 7 + graded table row 4 (ADS by construction; DA | Follows Marwick et al. (2018) research compendium standards |  |  |  |
+| F1 | 1 |  |  | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.14897252 | y | 1 | unchanged — concept DOI cited; scored v1.3 (AP-12 rule 3) |
+| F2 | 1 | D 1/1/1 |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo DataCite metadata (authors, title, description, keywords) | y | 0 | FLIP 1→0 — AP-15: description only cites the paper; no keywords |
+| F3 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI | y | 1 | unchanged |
+| F4 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Indexed in Zenodo, DataCite, Google Dataset Search | y | 1 | unchanged |
+| A1 | 1 |  | C | unchanged (completeness rule + ethical exception) | HTTPS via DOI resolver | y | 1 | spot-check CONFIRMED — AP-10: WoS exports deposited; complete |
+| A1_1 | 1 |  |  | unchanged | No authentication required | y | 1 | unchanged |
+| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open access, no restrictions | y | 1 | unchanged — item 4 |
+| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo metadata persistence guaranteed | y | 1 | unchanged — Row 2 Zenodo persistence |
+| I1 | 1 | D 1/1/1 |  | unchanged (aggregation: principal artefacts) | Structured CSV and R data frames | y | 1 | unchanged — tab-delimited exports, CSV, RDS (AP-9) [BI: input] |
+| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No explicit controlled vocabulary usage documented | y | 0 | unchanged |
+| I3 | 1 | D 0/0/0 |  | item 2 (third-party dependencies enter here) | DOI links to paper and related resources | y | 0 | FLIP 1→0 — only relation is a GitHub URL; article DOI only in prose |
+| R1 | 1 |  |  | unchanged | Detailed documentation enabling reproduction | y | 1 | unchanged — README + compendium documentation |
+| R1_1 | 1 |  |  | item 6 (per-artefact; most-restrictive same-artefact | Explicit CC-0 licence for data | y | 1 | unchanged — three-way conflict (CC-0 / CC-BY-4.0 / MIT); AP-8 |
+| R1_2 | 1 |  |  | unchanged | R code documents complete processing pipeline from raw data | y | 1 | unchanged — raw exports + import code document the pipeline |
+| R1_3 | 1 | D 0/1/1 |  | item 7 + graded table row 4 (ADS by construction; DA | Follows Marwick et al. (2018) research compendium standards | y | 1 | unchanged — AP-11 DataCite; research-compendium structure |
+
+- **Adjudicated 2026-10-03 (Sitting 7; registrant: Shawn). data_fair 14 → 12.**
+  Scored version: Zenodo v1.3 (AP-12 rule 3; the paper cites the concept
+  DOI). Flips: F2 1→0 (AP-15) and I3 1→0. The pack's "dead cited DOI"
+  (zenodo.14561925) was a pilot-extraction error, not a paper defect —
+  erratum-log Entry 4. Reasoning: `adjudication-log.md` Sitting 7.
 
 ## marwick-2025 — code_fair
 

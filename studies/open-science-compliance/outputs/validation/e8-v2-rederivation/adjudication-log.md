@@ -123,6 +123,10 @@ Exercise is unblinded (recorded in amendment 2 §3).
   this counts no fact twice. **Held in reserve:** a "human FAIR vs machine
   FAIR" refinement scoring actionability separately (registrant notes a
   lively discourse on this).
+  Registrant, 2026-10-03: a potentially independently publishable
+  exercise, perhaps as an instrument option — whether a person with
+  unlimited time *could* extract what FAIR expects, against what machines
+  can actually act on (`wiki/planning/active-todo-list.md` item 11).
 
 - **AP-10 — Completeness counts only what reproduction requires** (Shawn,
   2026-10-02; the purposive reading, generalised to analogous cases). An
@@ -172,6 +176,12 @@ Exercise is unblinded (recorded in amendment 2 §3).
   updating datasets is normal. A paper citing two different versions is a
   minor citation-inconsistency finding. Pre-census: the harvester must
   record each repository record's version, version date, and concept DOI.
+  **Reproduction (Shawn, 2026-10-03):** replicate with the code and data as
+  of the paper whenever the correct version can be determined — the AP-12
+  selection governs reproduction as well as scoring. Marwick precedent:
+  attempt-01 cloned the live repository, 8 commits past v1.3 (last commit
+  2025-07-07, after the article appeared; renv.lock R 4.5.1 against v1.3's
+  4.5.0).
   Herskind precedent: the methods cite v1 (10.5281/zenodo.10623550, 2024-02-06),
   the data-availability statement cites v2 (10.5281/zenodo.10801706,
   2024-03-10), the article first appeared 2024-04-03; the publisher's
@@ -212,6 +222,21 @@ Exercise is unblinded (recorded in amendment 2 §3).
   for each article (`reference` entries with a `DOI` field asserted by
   Crossref: 10.18637/jss.v093.c01 among dye's 51 deposited references,
   10.21105/joss.00774 among herskind's 90), not on prose, so they stand.
+
+- **AP-15 — F2 needs a machine-readable record that itself describes the
+  artefact** (Shawn, 2026-10-03). A deposit record whose description is
+  empty (herskind, Sitting 3) or only points to the paper (marwick, Sitting
+  7: one sentence citing the article) fails F2, as do bare
+  registrar-mandatory fields (Rows 1 and 2). In the registrant's words,
+  "FAIR requires *machine readable* metadata without a major
+  LLM-driven/probabilistic extraction/reconstruction exercise" — AP-14
+  applied to F2. **Positive threshold — working definition, proposed
+  2026-10-03 and to be tested at crema:** the deposit's own metadata
+  describes what the artefact contains (a substantive description of its
+  content, not only its provenance or parent publication) and carries
+  subject keywords. Both fields are checkable from the registry API, so F2
+  becomes mechanically verifiable (registrant direction: mechanical
+  verification wherever possible).
 
 ## Beyond-instrument (BI) tags — concordance reporting convention
 
@@ -498,3 +523,47 @@ cites sExtinct as software; only the script comments disclose the
 adaptation. Registrant: "common practice, unfortunately". Both are
 capabilities for the uplift tool (`wiki/planning/active-todo-list.md`
 item 10).
+
+## Sitting 7 — 2026-10-03 — marwick-2025 `data_fair`: 14 → 12
+
+**Context.** The paper's data-availability statement and §2.1 cite the
+research compendium's concept DOI, 10.5281/zenodo.14897252; the preprint
+cites v1.1 (10.5281/zenodo.14897253). There is no publisher supplement.
+Scored version: v1.3 (10.5281/zenodo.15603267, published 2025-06-05),
+under AP-12 rule 3 (the article first appeared 2025-06-18; v1.2 is
+2025-05-17, v1.1 2025-02-19). The compendium (GitHub tag 1.3, archived on
+Zenodo) holds the 58 raw Web of Science exports (`analysis/data/savedrecs
+(1)–(58).txt`), the processed `.rds`, a Journal Citation Reports CSV, the
+reproducibility-review data CSV, the import code, a README, a renv.lock,
+and a Dockerfile.
+
+**Correction found en route (registrant decision, option (a)):** the
+pack's "dead cited DOI" 10.5281/zenodo.14561925 is not cited by the paper;
+it came from the pilot extraction record. Amendment 2 §2's lodged precedent
+case is therefore wrong — erratum-log Entry 4; registry entry withdrawn;
+public correction queued for amendment 3. Registrant direction: a
+deterministic identifier check, and mechanical verification wherever
+possible.
+
+**Rulings (Shawn, 2026-10-03):** F2 1→0 under AP-15 (the description is a
+single sentence citing the paper; no keywords; one creator). **Nods
+confirmed:** A1 = 1 (spot-check confirmed — under AP-10 Web of Science is
+upstream provenance because its exports are deposited; coverage complete);
+I1 = 1 (tab-delimited exports, CSV, RDS — machine-actionable; BI [input],
+since neither the paper nor the pack gives the formats); I3 1→0 (the
+record's only typed relation is `isSupplementTo` a GitHub tree URL, not a
+persistent identifier; the article DOI appears only in the description's
+prose, AP-14); R1.1 = 1 (three-way disagreement for the data — the paper
+says CC-0, Zenodo's field says CC-BY-4.0, and the deposit's `LICENSE.md`
+is MIT for the whole repository; the most restrictive still is a published
+licence, AP-8); R1.3 = 1 (AP-11; also the research-compendium structure of
+Marwick et al. 2018). Unchanged: F1, F3, F4, A1.1, A1.2, A2, R1, R1.2 = 1;
+I2 = 0. **Total 12** (old 14).
+
+**Findings (no score effect):** (1) attempt-01 used the post-publication
+repository (AP-12 reproduction clause); (2) the Zenodo record is typed
+"Software" though it holds the data; (3) the three-way licence
+disagreement — registrant: keep tracking licence conflicts, they show how
+messy the surface is and are a research finding in their own right; (4)
+the deposit redistributes Web of Science export records, whose terms are
+Clarivate's — a background check of those terms was launched 2026-10-03.
