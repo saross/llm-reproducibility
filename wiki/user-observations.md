@@ -561,3 +561,48 @@ perversity check, and a recommendation) and nods. Most sittings then
 closed in a single exchange. The counterweight, which Claude self-flagged:
 several briefs carried errors that were corrected later (a supplements
 framing, a double-counting argument, a misquote, a total off by one).
+
+## Pending review — 2026-10-03 (second session) batch (drafted at handoff, session 4d22016c)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence
+holds them over — never discards.*
+
+**Candidate A — checking the registration before answering a question
+about the model pin.** Shawn asked whether the Opus 5 pin was intentional.
+Claude read the preregistration and amendments before answering. It
+answered the question: the pin was a provisional default, and nothing
+registered binds the lane. It also found that §8 already fixes the
+regression criterion, adds a Crema leg, and orders the registered gate
+after model selection. The run was reframed as a pre-gate shakedown before
+any spend, rather than claimed as the gate afterwards.
+
+**Candidate B — proceeding overnight inside the existing gates.** Asked to
+"proceed as far as you can overnight", Claude did the following with no
+new spend:
+
+- finished the post-run gate, persistence, and audit;
+- reviewed the two subagents whose safety-classifier check had timed out;
+- ran the value-identity check and wrote the results report;
+- opened PRs #5 and #6;
+- reported to cv-and-applications;
+- registered E8-v2 and ran the six-arm concordance in a worktree.
+
+Everything needing a ruling was queued rather than decided. Built to show
+whether "as far as you can" was read as intended.
+
+**Candidate C (unhelpful) — generalising rulings beyond what was ruled.**
+Claude turned Shawn's round-1 answers into general rulings R1–R4 for the
+re-plan. Its wording of R3 ("Named values in the text are separate
+targets") led the dye planner to enumerate text restatements of table
+values that round 1 had excluded, and that Shawn had accepted as
+excluded. Dye went from 23 targets to 34. Claude disclosed this at
+triage, but the generalisation should have gone to Shawn before it went
+into the prompt.
+
+**Candidate D (mixed) — engineering against the tool's grain.** To avoid
+hand-copying 10 KB of arguments, Claude built a launcher script outside
+the repository that ran a nested workflow. The permission dialog then
+offered Shawn only "no" ("sorry, that workflow failed, I had no option to
+approve, just a 'no'"). Claude recovered with the standard invocation plus
+a checksum guard, which is a better design. The detour cost a round trip
+and a failed approval at a moment when Shawn was trying to go to bed.

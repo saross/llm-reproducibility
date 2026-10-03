@@ -1099,3 +1099,72 @@ principles applied forward.
 cost and deadline and ask where it goes in the sequence. Don't start it
 until he places it, and relay his sequencing to the requesting session the
 same day.
+
+## claude-obs 54 — 2026-10-03: He interrogates recommended defaults rather than accepting them
+
+**Pattern.** Offered "high (Recommended)" for effort, Shawn answered a
+different question: "is pinning to Opus 5 intentional? Is there a reason
+not to use 5.5? Are we intentionally reproducing an Opus 5 result?" The pin
+turned out to be a stale provisional default. Answering him properly led
+to the §8 finding that reframed the whole run.
+
+**Lesson.** A recommendation that rests on an inherited default invites
+his scrutiny. Questions about provenance ("why is this here?") are where
+he adds the most leverage.
+
+**How to apply.** When presenting a pinned or inherited setting, state its
+provenance and whether anything registered binds it. Don't present it as
+a neutral option.
+
+## claude-obs 55 — 2026-10-03: Human time-on-task comes from his records, and he prefers to be told in advance
+
+**Pattern.** Claude proposed measuring his decision minutes from
+question-to-answer latency. He corrected this: he multitasks across
+sessions, so his `/track` log is better, and he will record time more
+carefully when he knows it is needed. (Captured in the JSONL memory store,
+id 2026-10-03-dfd63f97fccc.)
+
+**Lesson.** Session latency is not human effort. His figures are close
+but quarter-hour grained, and allocation blurs between entries.
+
+**How to apply.** Before any run whose report needs human minutes, tell
+him up front. Afterwards, cite the time-log entries and their granularity.
+
+## claude-obs 56 — 2026-10-03 (self-critique): I generalised his rulings into new scope
+
+**Pattern.** I turned his specific round-1 answers into general rulings
+R1–R4 and passed them straight into the re-plan prompts. My R3 wording
+went beyond what he had accepted, and dye's denominator grew from 23 to
+34 targets.
+
+**Lesson.** A generalisation of a ruling is my proposal, not his ruling.
+In a preregistered design where the denominator is the outcome, wording
+is scope.
+
+**How to apply.** Transcribe rulings verbatim. Where a general rule would
+help, draft it as a proposal for his sign-off before it reaches an agent
+prompt.
+
+## claude-obs 57 — 2026-10-03 (self-critique): My own checkers made the errors the agents didn't
+
+**Pattern.** The agents' work held up. My orchestration layer produced the
+errors:
+
+- regexes that missed the harness's new prompt wrapping;
+- a blinding list that blocked the agents' own instrument delivery;
+- a token-accounting assumption (since fixed);
+- a "52 disputed items" figure written before it was checked (it was 49);
+- a Python re-rounding that reported a false regression (0.065 rounds to
+  0.06 in R and 0.07 in Python).
+
+The verification steps caught each one before it reached Shawn as a
+claim.
+
+**Lesson.** This is register Observation 3 again: checkers are code, and
+in this session they outnumbered model errors. Verify a number at its
+source before writing it, and test comparison scripts against a known
+tie or edge case.
+
+**How to apply.** Run every new orchestrator check against real artefacts
+before trusting a red flag. When a check fails, ask first whether the
+checker is wrong.
