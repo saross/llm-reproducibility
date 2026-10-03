@@ -1208,3 +1208,105 @@ Sittings 2–8 and AP-12; erratum-log Entries 3 and 4; the
 `benchmark-summary.md` and `disputed-items.json` of the sibling
 `benchmark-2026-08/` and `benchmark-2026-08-17/` cycles (the latter
 computed no concordance); the four pilot extraction records.
+
+## Observation 33: Resolution is not verification — an identifier or version is verified only when it resolves to the expected target (2026-10-03)
+
+*(Approved by Shawn 2026-10-03; drafted during the E8-v2 reference adjudication.)*
+
+### Context
+
+The E8-v2 reference re-derivation checks identifiers and versions against
+primary sources, and the registrant's 2026-10-03 direction is to verify
+mechanically wherever possible. The plan's pre-census item
+(`wiki/planning/instrument-clarification-plan.md`, "Mechanical
+verification") asks for a deterministic identifier check before every
+harvest. The obvious mechanical check is resolution: does the DOI
+resolve? Three cases show that it is not enough. In the registrant's
+words, "*correct* resolution to the *expected target* is verification".
+
+### Observation
+
+1. **Resolves, wrong target.** herskind-riede-2024's pilot extraction
+   calls the paper an "Experimental replication study with all data in
+   two Zenodo deposits (10.5281/zenodo.10023618,
+   10.5281/zenodo.10027675)"
+   (`studies/open-science-compliance/outputs/herskind-riede-2024/extraction.json:2217`,
+   `data_completeness.assessment_scope_rationale`). The paper cites
+   neither; its deposits are Zenodo records 10623550 (v1) and 10801706
+   (v2). Both DOIs resolve, to real but unrelated records published
+   2023-10-20: "heplersa/USDMdata: Discretized US Drought Data to
+   Support Statistical Modeling" and "PalMuc/CalciteSea: archive for
+   Zenodo" (Zenodo API, re-checked 2026-10-03). A resolution check
+   passes both (adjudication log, Sitting 3 addendum).
+2. **Does not resolve, never cited.** marwick-2025's pilot extraction
+   carried 10.5281/zenodo.14561925, which neither the version of record
+   nor the preprint cites (the paper cites the concept DOI
+   10.5281/zenodo.14897252) and which resolves nowhere (doi.org and the
+   Zenodo API both return 404, re-checked 2026-10-03). It reached lodged
+   amendment 2 §2 as a dead-link precedent
+   (`studies/open-science-compliance/prereg/erratum-log.md` Entry 4). A
+   resolution check did flag it, but misread it: as the paper's dead
+   link, not the extractor's invention. Cases 1 and 2 are caught only by
+   checking against the paper's own text.
+3. **Version resolves, wrong target.** crema-et-al-2024 cites the
+   concept DOI 10.5281/zenodo.10782942 (§4, Materials and methods),
+   which resolves to the latest version, v2.0.0
+   (10.5281/zenodo.10816946, published 2024-03-14). AP-12's date rule
+   (rule 3: the latest version on or before the article's first online
+   appearance, here 16 March 2024; Crossref carries no
+   `published-online`, and its `created` date agrees) also selects
+   v2.0.0. But the published Table 1 (all eight medians, eight 90 %
+   highest posterior density (HPD) intervals, and eight Rhat values)
+   matches `figures_and_tables/table1.csv` in v1.0.0
+   (10.5281/zenodo.10782943, published 2024-03-05) exactly, and 18 of
+   v2.0.0's 24 values differ (e.g. Japan r 0.1023 against 0.1003, Japan
+   μ 0.703 against 0.701). v2.0.0 re-ran the model: every
+   `results/*.RData` file and `table1.csv` change between the tags
+   (commit `b1bd710`, "Updated everything after final check",
+   2024-03-13). Both versions post-date acceptance (29 February 2024)
+   and pre-date first appearance, so dates cannot decide. Source: the
+   clerk's 2026-10-03 comparison through the GitHub API (repository
+   ercrema/diffusionCurve, tags v1.0.0 and v2.0.0) against the paper's
+   PDF text, re-derived the same day by the Observation writer, who also
+   confirmed that the `table1.csv` inside each Zenodo archive is
+   byte-identical to its tag's (SHA-256 `70316f98…` for v1.0.0,
+   `2d2e7566…` for v2.0.0).
+
+### Implication
+
+Verification is resolution **plus** a match to the expected target. For
+an identifier, the target is the registry record's title, creators, and
+stated relationship to the paper, all checkable through registry APIs;
+herskind's two DOIs fail on title and creators at once. Stated
+relationships are often missing (Observation 31, class 5: herskind's
+genuine deposits carry no related identifier), so title and creators
+often carry the test alone. For a version, the target is a checksum
+match against the published supplement (AP-12 rule 1) or a match to
+values printed in the paper, as in case 3. Both are largely mechanical,
+so the pre-census identifier check should be built this way: presence
+in the paper's text first (the plan's design lesson), then resolution,
+then a target match. A resolution-only check would have passed case 1,
+misread case 2, and confirmed the wrong version in case 3. Resolution is
+weak evidence in a densely allocated namespace: a plausible-looking
+Zenodo number may well land on someone's record. The registrant's
+version rule follows the same logic (being refined in the adjudication
+log's AP-12): score and reproduce the version the paper cites, always
+run the checks, and treat a cited version that fails them as a
+correction finding; a missing version should be flagged. crema is the
+case the refinement has to handle: its concept DOI names no version, and
+only the printed values identify v1.0.0. Relations: Observation 19 (a
+version number without a recorded referent can only be compared, not
+checked; a DOI that resolves has been compared with a registry, not
+checked against its referent); Observation 13 (verification ledgers
+drift from their sources; a resolution pass never consults the source);
+Observation 31 (the noisy surface: cases 1 and 2 are class 9 errors,
+identifiers in model-produced records, and case 3 is a class 3 version
+problem in the research record itself); Observation 32 (the old
+reference carried the same error classes; its kind 3, wrong version
+assessed, can arise from following the citation itself). Anchors:
+`studies/open-science-compliance/outputs/validation/e8-v2-rederivation/adjudication-log.md`
+Sitting 3 addendum and AP-12; erratum-log Entry 4; the plan's pre-census
+"Mechanical verification" item; `corpus/store/crema-et-al-2024/extracted.txt`
+lines 75–76 (dates) and 433–434 (concept DOI); Zenodo records 10023618,
+10027675, 10782943, and 10816946; ercrema/diffusionCurve tags v1.0.0 and
+v2.0.0.
