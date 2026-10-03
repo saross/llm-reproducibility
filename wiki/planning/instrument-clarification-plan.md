@@ -765,7 +765,14 @@ manifest.
       direction, 2026-10-03):** build a deterministic check that every
       identifier in the declared-links registry appears verbatim in the
       paper or its supplement (normalising line-break splits), run before
-      every harvest; and, generally, replace judgement checks with
+      every harvest — design lessons from a first ad-hoc scan of all five
+      pilot extractions (2026-10-03): check presence in the paper's text,
+      not resolution (herskind's extraction carried two DOIs that resolve to
+      unrelated records); match record numbers as well as DOI strings
+      (papers cite `zenodo.org/records/N` URLs); scan model-produced
+      extraction records too, not only the registry. Scan result: 3
+      unverified identifiers across 5 pilots (herskind 2, marwick 1), none
+      in dye, key, or crema; and, generally, replace judgement checks with
       mechanical ones wherever possible (e.g. F2 from registry-API
       description and subject fields). **OSF:** amendment 2 §2's precedent
       case is wrong (erratum-log Entry 4); its public correction rides

@@ -467,7 +467,17 @@ different sections (AP-12 precedent); v2's S2.R is 33,834 bytes against
 v1's 18,707. (2) Both Zenodo records list only Herskind as creator; Riede
 is absent. (3) The pilot extraction's data-completeness notes for this
 paper describe "lithic measurements, use-wear images", which are not in
-this paper — a defect in the old E8 evidence base. (4) Pre-census: the
+this paper — a defect in the old E8 evidence base. **Addendum
+2026-10-03:** the same block's `assessment_scope_rationale`
+(`herskind-riede-2024/extraction.json:2217`) calls the paper an
+"Experimental replication study with all data in two Zenodo deposits
+(10.5281/zenodo.10023618, 10.5281/zenodo.10027675)". The paper cites
+neither, and both **resolve to unrelated real records** (US drought data;
+a calcite archive; both published 2023-10-20) — a resolution check would
+pass them; only a check against the paper's text catches them. They
+appear nowhere else in the repository, so unlike marwick's they never
+reached the registry or packs (found by the Obs 32 writer agent; verified
+by the clerk). (4) Pre-census: the
 harvester should capture file formats, descriptions, keywords, related
 identifiers, and version metadata (F2, I1, I3, and AP-12 all turned on
 them); Elsevier supplements can be fetched without the ScienceDirect 403

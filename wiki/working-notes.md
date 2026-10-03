@@ -1091,6 +1091,8 @@ conflicts, the legal layer of the same noise). Anchors: adjudication
 log Sittings 2–7 ("Findings (no score effect)" blocks) and AP-12;
 erratum-log Entry 4.
 
+*→ Extended by Observation 32 (2026-10-03): the old E8 reference's evidence — the model-produced pilot assessments — carried the same error classes (class 9 above).*
+
 ## Observation 32: The old reference carried the same error classes — model-produced pilot assessments got specifics wrong and assessed the wrong artefact or version (2026-10-03)
 
 *(Approved by Shawn 2026-10-03; extends Observation 31, class 9.)*
