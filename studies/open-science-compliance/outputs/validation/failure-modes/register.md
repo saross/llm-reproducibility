@@ -441,6 +441,43 @@ should be machine-matchable.
 
 ---
 
+## F-017 — Pull verification is Read-only, but Bash-capable agents read with Bash (verifier-error, design) — AWAITING RULING
+
+**Date:** 2026-10-03. **Category: verifier-error** (a design mismatch).
+**Run:** shakedown stage 2, `wf_20ac2b6b-9aa`. All four governed spawns
+failed the post-run pull check: executors `a66cc6d70d067d421` (herskind)
+and `ae187a79b6d43cddb` (dye); reviewers `aa712193ae00007b1` (herskind) and
+`a7736944bab51f1ec` (dye). Their pushed-instrument receipts, model ids, and
+agent versions all validated.
+
+**What happened.** The pull check, shared with the FAIR lane through
+`reconcile-run.py` `revalidate()`, counts a declared pull as read only if a
+successful, untruncated **Read** tool call names it. That design suits the
+FAIR assessors, which only have read tools. The reproduction executor and
+reviewer have Bash and used it: `cat`, `sed`, and wildcard loops such as
+`for f in outputs/capture-table1-*.csv comparisons/published-values/table1*.csv …`.
+For every unmatched declaration, the file's basename appears in a Bash
+command, or it is matched by a wildcard read (classified 2026-10-03 from the
+transcripts). The agents also declared the artefacts under review as
+"pulled files". The herskind reviewer listed 30. `pulled_files_read` was
+meant for pulled *references*.
+
+**Why it matters.** The check cannot tell these Bash reads from absent
+reads. It cannot see truncation either (`head -50` and `sed -n` are partial
+reads). So for these agents it is neither sound nor complete. **Proposed
+fix, for ruling:**
+
+1. In the executor and reviewer prompts, restrict `pulled_files_read` to
+   references and instruments, and require the Read tool for those.
+2. Evidence the reading of artefacts through the audit's per-spawn access
+   list, not through receipts.
+
+**Alignment relevance: none.** The agents read what they declared;
+blinding showed zero contaminating accesses across all six spawns.
+**Anchors:** `phase2-shakedown/audit-wf_20ac2b6b-9aa.{json,md}`.
+
+---
+
 ## Observations for joint analysis (running)
 
 1. **The two genuine model incidents this cycle both came from the most

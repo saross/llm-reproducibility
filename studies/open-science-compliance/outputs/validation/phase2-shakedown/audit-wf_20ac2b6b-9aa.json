@@ -1,0 +1,368 @@
+{
+  "audit_version": "1.0",
+  "audited_at": "2026-10-03T12:40:24+00:00",
+  "run_id": "phase2-shakedown-2026-10",
+  "workflow_run": "wf_20ac2b6b-9aa",
+  "agents": [
+    {
+      "agent_type": "general-purpose",
+      "paper": "dye-et-al-2023",
+      "governed": false,
+      "provenance": null,
+      "blinding": {
+        "contaminating": [],
+        "warnings": []
+      },
+      "writes_outside_scope": [],
+      "usage": {
+        "input_tokens": 26,
+        "output_tokens": 616,
+        "cache_creation_input_tokens": 36737,
+        "cache_read_input_tokens": 70014,
+        "cache_write_5m": 36737,
+        "cache_write_1h": 0,
+        "requests": 3,
+        "models": [
+          "claude-haiku-4-5-20251001"
+        ]
+      },
+      "cost_usd": 0.056,
+      "started_at": "2026-10-03T12:32:00.003Z",
+      "finished_at": "2026-10-03T12:32:13.029Z",
+      "wallclock_seconds": 13.0,
+      "clean": true,
+      "agent_id": "a071346fc6857754f"
+    },
+    {
+      "agent_type": "reproduction-executor",
+      "paper": "herskind-riede-2024",
+      "governed": true,
+      "provenance": {
+        "run_id": "phase2-shakedown-2026-10",
+        "launch_commit": "e5f35543c07d2a9314d1742ff34df40a12bd35fd",
+        "effort": "high"
+      },
+      "receipts": {
+        "valid": false,
+        "problems": [
+          "declared pull not in transcript: .claude/skills/reproduction-assessor/references/dockerfile-patterns.md",
+          "declared pull not in transcript: .claude/skills/reproduction-assessor/references/wrapper-script-patterns.md",
+          "declared pull not in transcript: reproduction-system/templates/README.md",
+          "declared pull not in transcript: reproduction-system/templates/log-template.md",
+          "declared pull not in transcript: reproduction-system/templates/environment-template.md",
+          "declared pull not in transcript: reproduction-system/templates/comparison-report-template.md",
+          "declared pull not in transcript: reproduction-system/prompts/01-preparation.md",
+          "declared pull not in transcript: reproduction-system/prompts/02-execution-and-verification.md",
+          "declared pull not in transcript: reproduction-system/schemas/comparison-record.json",
+          "declared pull not in transcript: studies/open-science-compliance/protocol/instruments/data-availability-taxonomy.md"
+        ],
+        "paper_slug": "herskind-riede-2024",
+        "receipted": {
+          "instrument_versions": {
+            "verdicts-and-precision": "1.0",
+            "coverage-rules": "1.0",
+            "pipeline-invariants": "1.0"
+          },
+          "instrument_receipts": {
+            "verdicts-and-precision": "fe9bca3d3c95f931",
+            "coverage-rules": "a2a4c0a899291c2b",
+            "pipeline-invariants": "f847020d25d57382"
+          },
+          "model_id": "claude-opus-5-5",
+          "agent_version": "reproduction-executor v1.1"
+        }
+      },
+      "blinding": {
+        "contaminating": [],
+        "warnings": [
+          {
+            "tool": "Bash",
+            "path": "verification-strategies.md",
+            "rule": "blinded path named in command output (review)",
+            "command": "cat reproduction-system/schemas/comparison-record.json; ls reproduction-system/templates/ reproduction-system/prompts/ .claude/skills/reproduction-assessor/references/"
+          },
+          {
+            "tool": "Bash",
+            "path": "references/verification-strategies.md",
+            "rule": "blinded path named in command output (review)",
+            "command": "sed -n '200,400p' reproduction-system/prompts/01-preparation.md; echo ======; cat reproduction-system/prompts/02-execution-and-verification.md | head -250"
+          },
+          {
+            "tool": "Bash",
+            "path": "studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/Dockerfile",
+            "rule": "blinded path named in command output (review)",
+            "command": "cd /home/shawn/Code/llm-reproducibility; sha256sum studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/reproduction-plan.json; git status --porcelain | grep -v \"^?? studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/\" ; git status --po"
+          }
+        ]
+      },
+      "writes_outside_scope": [],
+      "usage": {
+        "input_tokens": 154,
+        "output_tokens": 55133,
+        "cache_creation_input_tokens": 292904,
+        "cache_read_input_tokens": 13982695,
+        "cache_write_5m": 292904,
+        "cache_write_1h": 0,
+        "requests": 77,
+        "models": [
+          "claude-opus-5-5"
+        ]
+      },
+      "cost_usd": 5.3643,
+      "started_at": "2026-10-03T11:58:59.179Z",
+      "finished_at": "2026-10-03T12:24:15.131Z",
+      "wallclock_seconds": 1516.0,
+      "clean": false,
+      "agent_id": "a66cc6d70d067d421"
+    },
+    {
+      "agent_type": "adversarial-reviewer",
+      "paper": "dye-et-al-2023",
+      "governed": true,
+      "provenance": {
+        "run_id": "phase2-shakedown-2026-10",
+        "launch_commit": "e5f35543c07d2a9314d1742ff34df40a12bd35fd",
+        "effort": "high"
+      },
+      "receipts": {
+        "valid": false,
+        "problems": [
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md"
+        ],
+        "paper_slug": "dye-et-al-2023",
+        "receipted": {
+          "instrument_versions": {
+            "pipeline-invariants": "1.0",
+            "adversarial-review-framework": "1.1"
+          },
+          "instrument_receipts": {
+            "pipeline-invariants": "f847020d25d57382",
+            "adversarial-review-framework": "0f83c3181c5dbe00"
+          },
+          "model_id": "claude-opus-5-5",
+          "agent_version": "adversarial-reviewer v1.1"
+        }
+      },
+      "blinding": {
+        "contaminating": [],
+        "warnings": []
+      },
+      "writes_outside_scope": [],
+      "usage": {
+        "input_tokens": 78,
+        "output_tokens": 13373,
+        "cache_creation_input_tokens": 150299,
+        "cache_read_input_tokens": 4094168,
+        "cache_write_5m": 150299,
+        "cache_write_1h": 0,
+        "requests": 39,
+        "models": [
+          "claude-opus-5-5"
+        ]
+      },
+      "cost_usd": 1.8381,
+      "started_at": "2026-10-03T12:33:13.123Z",
+      "finished_at": "2026-10-03T12:39:15.813Z",
+      "wallclock_seconds": 362.7,
+      "clean": false,
+      "agent_id": "a7736944bab51f1ec"
+    },
+    {
+      "agent_type": "adversarial-reviewer",
+      "paper": "herskind-riede-2024",
+      "governed": true,
+      "provenance": {
+        "run_id": "phase2-shakedown-2026-10",
+        "launch_commit": "e5f35543c07d2a9314d1742ff34df40a12bd35fd",
+        "effort": "high"
+      },
+      "receipts": {
+        "valid": false,
+        "problems": [
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/reproduction-plan.json",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/plan-approval.json",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/gate-report.json",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/Dockerfile",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/environment.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/comparison.json",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/compare.R",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/compare-console.log",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/published-values/table1.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/published-values/table1-totals.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/published-values/table2.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/published-values/table3.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/published-values/named-values.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/published-values/fig3-labels.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/results/summary.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/results/t04-table1.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/results/t04-occurrence-check.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/results/t07-fig3-labels.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/results/t10-table2.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/results/t02-fig2-visual-check.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/results/t11-fig4-visual-box-check.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/results/t12-table3.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/comparisons/results/t14-fig5-pies.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/outputs/capture-table1-bigram-frequencies.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/outputs/capture-table1-trigram-frequencies.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/outputs/capture-table2-pmi-summary.csv",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/outputs/session-info.txt",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/outputs/run-console.log",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/data/Herskind&Riede_S1.xlsx",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-02/data/Herskind&Riede_S2.R"
+        ],
+        "paper_slug": "herskind-riede-2024",
+        "receipted": {
+          "instrument_versions": {
+            "pipeline-invariants": "1.0",
+            "adversarial-review-framework": "1.1"
+          },
+          "instrument_receipts": {
+            "pipeline-invariants": "f847020d25d57382",
+            "adversarial-review-framework": "0f83c3181c5dbe00"
+          },
+          "model_id": "claude-opus-5-5",
+          "agent_version": "adversarial-reviewer v1.1"
+        }
+      },
+      "blinding": {
+        "contaminating": [],
+        "warnings": []
+      },
+      "writes_outside_scope": [],
+      "usage": {
+        "input_tokens": 38,
+        "output_tokens": 12118,
+        "cache_creation_input_tokens": 117076,
+        "cache_read_input_tokens": 1478225,
+        "cache_write_5m": 117076,
+        "cache_write_1h": 0,
+        "requests": 19,
+        "models": [
+          "claude-opus-5-5"
+        ]
+      },
+      "cost_usd": 1.1235,
+      "started_at": "2026-10-03T12:26:20.939Z",
+      "finished_at": "2026-10-03T12:31:00.966Z",
+      "wallclock_seconds": 280.0,
+      "clean": false,
+      "agent_id": "aa712193ae00007b1"
+    },
+    {
+      "agent_type": "general-purpose",
+      "paper": "herskind-riede-2024",
+      "governed": false,
+      "provenance": null,
+      "blinding": {
+        "contaminating": [],
+        "warnings": []
+      },
+      "writes_outside_scope": [],
+      "usage": {
+        "input_tokens": 26,
+        "output_tokens": 558,
+        "cache_creation_input_tokens": 36702,
+        "cache_read_input_tokens": 69801,
+        "cache_write_5m": 36702,
+        "cache_write_1h": 0,
+        "requests": 3,
+        "models": [
+          "claude-haiku-4-5-20251001"
+        ]
+      },
+      "cost_usd": 0.0557,
+      "started_at": "2026-10-03T12:26:05.171Z",
+      "finished_at": "2026-10-03T12:26:18.240Z",
+      "wallclock_seconds": 13.1,
+      "clean": true,
+      "agent_id": "ac21cc91abc1228a3"
+    },
+    {
+      "agent_type": "reproduction-executor",
+      "paper": "dye-et-al-2023",
+      "governed": true,
+      "provenance": {
+        "run_id": "phase2-shakedown-2026-10",
+        "launch_commit": "e5f35543c07d2a9314d1742ff34df40a12bd35fd",
+        "effort": "high"
+      },
+      "receipts": {
+        "valid": false,
+        "problems": [
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/.claude/skills/reproduction-assessor/references/dockerfile-patterns.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/.claude/skills/reproduction-assessor/references/wrapper-script-patterns.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/templates/README.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/templates/log-template.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/templates/environment-template.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/templates/comparison-report-template.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/prompts/01-preparation.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/data-availability-taxonomy.md"
+        ],
+        "paper_slug": "dye-et-al-2023",
+        "receipted": {
+          "instrument_versions": {
+            "verdicts-and-precision": "1.0",
+            "coverage-rules": "1.0",
+            "pipeline-invariants": "1.0"
+          },
+          "instrument_receipts": {
+            "verdicts-and-precision": "fe9bca3d3c95f931",
+            "coverage-rules": "a2a4c0a899291c2b",
+            "pipeline-invariants": "f847020d25d57382"
+          },
+          "model_id": "claude-opus-5-5",
+          "agent_version": "reproduction-executor v1.1"
+        }
+      },
+      "blinding": {
+        "contaminating": [],
+        "warnings": [
+          {
+            "tool": "Bash",
+            "path": "verification-strategies.md",
+            "rule": "blinded path named in command output (review)",
+            "command": "cat reproduction-system/schemas/comparison-record.json && ls reproduction-system/templates/ reproduction-system/prompts/ .claude/skills/reproduction-assessor/references/"
+          }
+        ]
+      },
+      "writes_outside_scope": [],
+      "usage": {
+        "input_tokens": 180,
+        "output_tokens": 40350,
+        "cache_creation_input_tokens": 477685,
+        "cache_read_input_tokens": 19112365,
+        "cache_write_5m": 477685,
+        "cache_write_1h": 0,
+        "requests": 90,
+        "models": [
+          "claude-opus-5-5"
+        ]
+      },
+      "cost_usd": 7.0186,
+      "started_at": "2026-10-03T11:59:00.235Z",
+      "finished_at": "2026-10-03T12:31:55.041Z",
+      "wallclock_seconds": 1974.8,
+      "clean": false,
+      "agent_id": "ae187a79b6d43cddb"
+    }
+  ],
+  "per_paper": {
+    "dye-et-al-2023": {
+      "agents": 3,
+      "output_tokens": 54339,
+      "input_side_tokens": 23941552,
+      "cost_usd": 8.9127,
+      "agent_wallclock_seconds": 2350.5,
+      "unpriced_agents": 0
+    },
+    "herskind-riede-2024": {
+      "agents": 3,
+      "output_tokens": 67809,
+      "input_side_tokens": 15977621,
+      "cost_usd": 6.5435,
+      "agent_wallclock_seconds": 1809.1,
+      "unpriced_agents": 0
+    }
+  },
+  "clean": false
+}
