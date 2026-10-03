@@ -837,6 +837,10 @@ adjudication has already named the repair classes it would automate:
   licences, against Clarivate's terms (adjudication log, Sitting 7); the
   uplift route is to publish the exact query plus record identifiers and
   rebuild records from an open source such as OpenAlex.
+- recording independent code reviews as metadata — e.g. crema-et-al-2024's
+  code was reviewed by JAS's reproducibility editor, but only a prose
+  acknowledgement records it (adjudication log AP-17); and version-of-record
+  detection by published-values match (AP-12, Observation 33).
 
 **Output:** a deposit-ready package — structured metadata (DataCite, plus
 CodeMeta or CITATION.cff for code), machine-readable data and code, licence

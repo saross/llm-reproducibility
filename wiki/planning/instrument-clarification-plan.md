@@ -760,7 +760,11 @@ manifest.
       (ruled 2026-10-03); (x) AP-16 — a complete machine-readable
       dependency manifest satisfies code I3; (xi) census coding variable
       for rights problems ("data shared, rights-incompatible"; AP-8
-      validity note); (xii) any further principles the
+      validity note); (xii) AP-12 as refined 2026-10-03 — score the cited
+      version, always run supplement / published-values / date checks, flag
+      unspecified versions (concept DOIs count as unspecified); (xiii) AP-17 —
+      independent code review counts for code R1.3 only when recorded
+      machine-readably; (xiv) any further principles the
       remaining sittings adopt. **Mechanical verification (registrant
       direction, 2026-10-03):** build a deterministic check that every
       identifier in the declared-links registry appears verbatim in the
@@ -847,3 +851,4 @@ manifest.
 | 2026-10-03 | **Amendment 2 §2 precedent case found wrong — option (a):** the paper never cites 10.5281/zenodo.14561925; it came from the pilot extraction record and propagated through the registry, packs, plan, and the lodged text. Erratum-log Entry 4 recorded; registry entry withdrawn; public correction queued for amendment 3. Registrant direction: a deterministic identifier check, and mechanical verification wherever possible | Shawn |
 | 2026-10-03 | **E8-v2 Sitting 8 — marwick-2025 code_fair 14 → 12.** AP-16 adopted (a complete machine-readable dependency manifest satisfies code I3 — avoids one DOI citation outranking a full lockfile); R1.3 = 0 for a compendium without package metadata (initial decision, open to reconsideration). **Clarivate finding coded:** marwick's deposit redistributes full Web of Science records against Clarivate's public terms — a licensing violation, coded "data shared, rights-incompatible"; R1.1 unaffected (FAIR does not enforce copyright; AP-8 validity note); uplift route: publish the query and identifiers | Shawn |
 | 2026-10-03 | **F2 positive threshold RULED (AP-15):** F2 = 1 requires creators, title, a substantive description of the artefact's own content, and at least one subject keyword — the registered instrument names keywords, and F-UJI's top-maturity F2 test requires them; registrant: keywords matter for machine-readability. Conjunctive, so keywords alone never outrank a rich description. No earlier F2 score changes | Shawn |
+| 2026-10-03 | **E8-v2 worksheet COMPLETE — Sittings 9–10 (crema data 12 → 12, code 12 → 12, both recomposed).** AP-12 REFINED (registrant): score and reproduce the cited version; always run the checks (supplement checksum, published-values match, dates against the article history); a cited version that fails is a correction finding; unspecified versions (concept DOIs, untagged URLs, two cited versions) are flagged and chosen by the checks. Crema's version of record is v1.0.0 by published-values match — the date rule would have picked v2.0.0, which re-ran the model (Obs 33). AP-17 adopted: independent code review (journal reproducibility review, CODECHECK) counts for code R1.3 only when recorded machine-readably. **Reference totals: 110 → 95 of 150; 39 items changed (27 down, 12 up); 9 BI-tagged.** Next: register E8-v2, concordance with and without BI items, gates ruling; Phase 2 regression-test build (pitch deadline Fri 9 Oct) | Shawn (rulings); Claude (clerk) |

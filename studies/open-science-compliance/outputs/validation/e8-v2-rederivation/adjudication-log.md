@@ -199,6 +199,35 @@ Exercise is unblinded (recorded in amendment 2 §3).
   the data-availability statement cites v2 (10.5281/zenodo.10801706,
   2024-03-10), the article first appeared 2024-04-03; the publisher's
   supplement files match v2 byte for byte, and rule (3) also selects v2.
+  **REFINED (Shawn, 2026-10-03, Sitting 9) — supersedes the priority order
+  above.** (1) **Score and reproduce the version the paper cites**, when it
+  cites exactly one specific version (a version DOI, a tagged release, or a
+  commit): that is the published surface (AP-1) and what every reader will
+  expect to work. (2) **Always run the checks**, cited version or not: a
+  supplement checksum match; a **published-values match** (a version whose
+  deposited outputs — tables, summary statistics — reproduce the values
+  printed in the paper is the version of record; mechanical wherever outputs
+  are tabular); and dates read against the article history (received,
+  revised, accepted, online). (3) A cited version that fails the checks is a
+  **version-citation error** (correction finding): the score still assesses
+  the cited version; reproduction tries the cited version first, as a reader
+  would, and if it fails uses the version the checks identify, recorded as a
+  recoverable repair (route (a)). (4) **No single version cited** — a
+  concept DOI (it silently resolves to the latest version, which may
+  post-date the paper), a repository URL without a tag or commit, or two
+  different versions — is **flagged as a finding**, and the checks choose,
+  in order: supplement match, published-values match, then dates. (5) If the
+  candidates do not differ on any scored fact, record the choice as
+  immaterial; if they do and nothing settles it, score both and report the
+  sensitivity. Applications: dye — `beads-1.csv` is unversioned (flagged);
+  herskind — two versions cited (flagged), supplement match → v2
+  (unchanged); marwick — concept DOI (flagged), v1.2 and v1.3 identical on
+  every scored fact (same licence, no keywords, only a GitHub-URL relation,
+  152 pinned packages, same key files), so immaterial and the scores stand;
+  crema — concept DOI (flagged), published-values match → v1.0.0 (Sitting
+  9). Dates are weak: crema's two versions both post-date acceptance, and
+  the date-only rule picked the version that never produced the published
+  numbers (Observation 33).
 
 - **AP-13 — Unpublished principal data fail conjunctively** (Shawn,
   2026-10-03; option (β)). Under the aggregation rule a sub-principle holds
@@ -284,6 +313,19 @@ Exercise is unblinded (recorded in amendment 2 §3).
   note: this weighs on the F2 keyword question — a rich machine-readable
   description without formal keywords could otherwise lose to one or two
   keywords — but the standard's wording governs.
+
+- **AP-17 — Independent code review counts as R1.3 community review only
+  when it is recorded machine-readably** (Shawn, 2026-10-03, Sitting 10;
+  following "FAIR = machine-actionable FAIR", AP-9/AP-14/AP-15). A journal
+  reproducibility review or a CODECHECK is, in principle, the same kind of
+  independent check as CRAN, JOSS, or rOpenSci review — excluding it would
+  rank independently verified code with bare scripts (AP-7) — but it counts
+  for code R1.3 only when it leaves a machine-readable record (a certificate
+  DOI, a badge or relation in the deposit or article metadata). A prose
+  acknowledgement records that the review happened: a finding ("reviewed,
+  unrecorded"), and an uplift-tool action (record the review as metadata).
+  Crema precedent: "Ben Marwick for reviewing the computational code and
+  providing suggestions to improve its reproducibility" (acknowledgements).
 
 ## Beyond-instrument (BI) tags — concordance reporting convention
 
@@ -667,3 +709,75 @@ assessment read the post-publication repository, a version error (AP-12)
 rather than a miscount); I1 = 1
 (plain-text R and Quarto). Unchanged: F1, F3, F4, A1, A1.1, A1.2, A2, R1 =
 1; I2 = 0. **Total 12** (old 14).
+
+## Sitting 9 — 2026-10-03 — crema-et-al-2024 `data_fair`: 12 → 12 (recomposed)
+
+**Context.** The paper cites the GitHub repository and the concept DOI
+10.5281/zenodo.10782942 (registry matched the paper — first clean identifier
+check); versions v1.0.0 (10.5281/zenodo.10782943, 2024-03-05) and v2.0.0
+(10.5281/zenodo.10816946, 2024-03-14); article history: received 17 Oct 2023,
+revised 27 Feb 2024, accepted 29 Feb 2024, online 16 Mar 2024. The publisher
+supplement (Elsevier PII S0305440324000281, `mmc1.pdf`) is a 6-page
+supplementary-figures PDF with no data. **Version of record: v1.0.0**, by
+published-values match (refined AP-12): the published Table 1 (8 medians, 8
+90% HPD intervals, 8 Rhat values) matches v1.0.0's
+`figures_and_tables/table1.csv` exactly, while 18 of v2.0.0's 24 values
+differ (v2.0.0 re-ran the model; e.g. Japan r 0.1023 vs 0.1003) — re-derived
+independently by the Obs 33 writer agent, which also found each Zenodo
+archive's `table1.csv` byte-identical to its tag's copy. The date-only rule
+would have picked v2.0.0. v1.0.0's deposit holds the raw upstream radiocarbon
+snapshots (`data/raw/c14db_1.1.0.csv`, `R14CDB.csv`, `burialdates.csv`,
+`Taxa_Edible_Classifications.csv`), cleaning scripts, and cleaned `.RData`;
+its Zenodo record has one creator, a 273-character pointer description, no
+keywords, CC-BY-4.0, and only an `isSupplementTo` GitHub-tree relation (v2.0.0
+added the article-DOI relation).
+
+**Rulings (Shawn, 2026-10-03):** refined AP-12 → v1.0.0; nods confirmed on
+that version: F2 1→0 (AP-15: no keywords, pointer description); I3 1→0 (v1.0.0
+has no PID relation, only a GitHub URL — BI [input, rule]: relations are not
+in the pack, and the version choice rests on the refined rule); R1.1 0→1
+(Zenodo CC-BY-4.0; the repository's missing licence file is silence, not a
+conflicting licence; AP-8); R1.3 0→1 (AP-11); A1 = 1 (AP-10: raw upstream
+snapshots deposited; coverage complete); I1 = 1 (CSV and RData; BI [input]);
+R1.2 = 1 (spot-check confirmed: the README cites every data source with URLs
+and gives a cleaning script per dataset). Unchanged: F1, F3, F4 (spot-check
+confirmed via DataCite), A1.1, A1.2, A2, R1 = 1; I2 = 0. **Total 12** (old 12;
+recomposed: F2 and I3 down, R1.1 and R1.3 up).
+
+**Findings (no score effect):** version not specified (concept DOI; refined
+AP-12 flag); creator omission (the Zenodo record lists only Crema — Bloxam,
+Stevens, and Vander Linden absent); licence only in Zenodo's field (no licence
+file in the repository); record typed "Software" though it holds the data;
+v2.0.0, published two days before the article appeared, re-ran the model and
+added the pipeline description and Dockerfile; `c14db_1.1.0.csv` is a 15 MB
+snapshot of an institutional database whose download URL is a login page —
+rights unchecked (uplift-tool question).
+
+## Sitting 10 — 2026-10-03 — crema-et-al-2024 `code_fair`: 12 → 12 (recomposed)
+
+**Context.** The code is in the same v1.0.0 record: R scripts under
+`analysis/`, `data/`, `figures_and_tables/`, and `sim/`; no `DESCRIPTION`,
+`CITATION.cff`, `codemeta.json`, `renv.lock`, Dockerfile, or licence file at
+v1.0.0 (the Dockerfile arrived in v2.0.0). The README embeds a
+`sessionInfo()` listing with package versions (e.g. nimble 1.0.1,
+nimbleCarbon 0.2.4, sf 1.0-14).
+
+**Rulings (Shawn, 2026-10-03):** R1.3 = 0 under AP-17 (Decision C) — the code
+was independently reviewed by JAS's reproducibility editor, but only a prose
+acknowledgement records it; no package metadata either (AP-11 scope).
+**Nods confirmed:** F2 1→0 (same record as the data, AP-15); R1.1 0→1 (Zenodo
+CC-BY-4.0, AP-8; CC-on-code finding); I3 = 1, basis corrected (NIMBLE's
+software paper, de Valpine et al. 2017, DOI 10.1080/10618600.2016.1172487, is
+in Crossref's deposited references — the dye and herskind precedent; the old
+basis, "paper references code via DOI", points the wrong way); R1 = 1 (README
+plus commented scripts; the old evidence's "Dockerfile" is v2.0.0 only); R1.2
+= 1 (`sessionInfo()` versions in the README). Unchanged: F1, F3, F4, A1,
+A1.1, A1.2, A2, I1 = 1; I2 = 0. **Total 12** (old 12; recomposed: F2 down,
+R1.1 up). No BI tags.
+
+**Findings (no score effect):** independently reviewed for reproducibility
+but unrecorded (AP-17 — uplift action: record the review as metadata); CC
+licence on code; no licence file in the repository.
+
+**Worksheet complete (2026-10-03): all 150 items adjudicated across ten
+sittings.**

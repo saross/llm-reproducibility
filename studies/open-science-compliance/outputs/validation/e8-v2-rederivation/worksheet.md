@@ -258,39 +258,48 @@ Concordance is reported with and without BI items — see
 
 | sub | old | D (s/o/f) | flags | v2.1 ruling | old evidence | S | new | note |
 |---|---|---|---|---|---|---|---|---|
-| F1 | 1 |  |  | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.10782942 |  |  |  |
-| F2 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo provides structured DataCite metadata (authors, title, descript |  |  |  |
-| F3 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI reference |  |  |  |
-| F4 | 1 |  | C | item 5 + table row 6 (artefact-level; supplement-onl | Indexed in Zenodo, DataCite, Google Dataset Search |  |  |  |
-| A1 | 1 | D 1/1/1 |  | unchanged (completeness rule + ethical exception) | HTTPS via DOI resolver |  |  |  |
-| A1_1 | 1 |  |  | unchanged | No authentication required, open access |  |  |  |
-| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open data, no restrictions needed |  |  |  |
-| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo committed to long-term metadata persistence |  |  |  |
-| I1 | 1 | D 0/1/1 |  | unchanged (aggregation: principal artefacts) | Structured CSV data files in GitHub/Zenodo repository |  |  |  |
-| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No formal controlled vocabularies with PIDs used for data description |  |  |  |
-| I3 | 1 | D 0/0/0 |  | item 2 (third-party dependencies enter here) | DOI links between paper, data deposit, and code; IntCal20 calibration  |  |  |  |
-| R1 | 1 |  |  | unchanged | README, data documentation, methods description in repository |  |  |  |
-| R1_1 | 0 | D 0/1/1 |  | item 6 (per-artefact; most-restrictive same-artefact | Paper is CC BY but no explicit licence file in repository for data |  |  |  |
-| R1_2 | 1 |  | C | unchanged | Data sources documented: Japanese seed dates from published databases, |  |  |  |
-| R1_3 | 0 | D 1/1/0 |  | item 7 + graded table row 4 (ADS by construction; DA | No domain metadata standard (e.g., Dublin Core, DataCite schema) appli |  |  |  |
+| F1 | 1 |  |  | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.10782942 | y | 1 | unchanged — concept DOI; version of record v1.0.0 (published-values match) |
+| F2 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo provides structured DataCite metadata (authors, title, descript | y | 0 | FLIP 1→0 — AP-15: no keywords; pointer description |
+| F3 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI reference | y | 1 | unchanged |
+| F4 | 1 |  | C | item 5 + table row 6 (artefact-level; supplement-onl | Indexed in Zenodo, DataCite, Google Dataset Search | y | 1 | spot-check CONFIRMED — DataCite-indexed |
+| A1 | 1 | D 1/1/1 |  | unchanged (completeness rule + ethical exception) | HTTPS via DOI resolver | y | 1 | unchanged — AP-10: raw upstream snapshots deposited; complete |
+| A1_1 | 1 |  |  | unchanged | No authentication required, open access | y | 1 | unchanged |
+| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open data, no restrictions needed | y | 1 | unchanged — item 4 |
+| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo committed to long-term metadata persistence | y | 1 | unchanged — Row 2 |
+| I1 | 1 | D 0/1/1 |  | unchanged (aggregation: principal artefacts) | Structured CSV data files in GitHub/Zenodo repository | y | 1 | unchanged — CSV + RData (AP-9) [BI: input] |
+| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No formal controlled vocabularies with PIDs used for data description | y | 0 | unchanged |
+| I3 | 1 | D 0/0/0 |  | item 2 (third-party dependencies enter here) | DOI links between paper, data deposit, and code; IntCal20 calibration  | y | 0 | FLIP 1→0 — v1.0.0 has only a GitHub-URL relation (v2.0.0 added the article DOI) [BI: input+rule] |
+| R1 | 1 |  |  | unchanged | README, data documentation, methods description in repository | y | 1 | unchanged — README + data documentation |
+| R1_1 | 0 | D 0/1/1 |  | item 6 (per-artefact; most-restrictive same-artefact | Paper is CC BY but no explicit licence file in repository for data | y | 1 | FLIP 0→1 — Zenodo CC-BY-4.0; repo silence is not a conflict (AP-8) |
+| R1_2 | 1 |  | C | unchanged | Data sources documented: Japanese seed dates from published databases, | y | 1 | spot-check CONFIRMED — README cites every source + cleaning scripts |
+| R1_3 | 0 | D 1/1/0 |  | item 7 + graded table row 4 (ADS by construction; DA | No domain metadata standard (e.g., Dublin Core, DataCite schema) appli | y | 1 | FLIP 0→1 — AP-11 DataCite deposit |
+
+- **Adjudicated 2026-10-03 (Sitting 9; registrant: Shawn). data_fair 12 → 12
+  (recomposed).** Version of record v1.0.0 by published-values match (refined
+  AP-12; the date rule would have picked v2.0.0, which re-ran the model). F2
+  and I3 1→0; R1.1 and R1.3 0→1. Reasoning: `adjudication-log.md` Sitting 9.
 
 ## crema-et-al-2024 — code_fair
 
 | sub | old | D (s/o/f) | flags | v2.1 ruling | old evidence | S | new | note |
 |---|---|---|---|---|---|---|---|---|
-| F1 | 1 |  |  | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.10782942 |  |  |  |
-| F2 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo DataCite metadata for code deposit |  |  |  |
-| F3 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI |  |  |  |
-| F4 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Indexed in Zenodo, DataCite |  |  |  |
-| A1 | 1 |  |  | unchanged (completeness rule + ethical exception) | HTTPS via DOI resolver and GitHub |  |  |  |
-| A1_1 | 1 |  |  | unchanged | Open access, no authentication |  |  |  |
-| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open code, no restrictions |  |  |  |
-| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo long-term persistence |  |  |  |
-| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R scripts in standard open-source language |  |  |  |
-| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No software ontology or CodeMeta used |  |  |  |
-| I3 | 1 | D 1/1/0 |  | item 2 (third-party dependencies enter here) | Paper references code via DOI; code references data via relative paths |  |  |  |
-| R1 | 1 |  |  | unchanged | README, Dockerfile, documented R scripts with comments |  |  |  |
-| R1_1 | 0 | D 0/1/1 |  | item 6 (per-artefact; most-restrictive same-artefact | No explicit licence file in repository |  |  |  |
-| R1_2 | 1 |  |  | unchanged | Dockerfile documents environment; code reviewed by Ben Marwick |  |  |  |
-| R1_3 | 0 | D 1/1/0 |  | item 7 + graded table row 4 (ADS by construction; DA | No CITATION.cff or CodeMeta; no renv lockfile |  |  |  |
+| F1 | 1 |  |  | item 5 (supplement under article DOI = 1) | Zenodo DOI 10.5281/zenodo.10782942 | y | 1 | unchanged — concept DOI; v1.0.0 |
+| F2 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo DataCite metadata for code deposit | y | 0 | FLIP 1→0 — AP-15: same record as data |
+| F3 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Zenodo metadata includes DOI | y | 1 | unchanged |
+| F4 | 1 |  |  | item 5 + table row 6 (artefact-level; supplement-onl | Indexed in Zenodo, DataCite | y | 1 | unchanged |
+| A1 | 1 |  |  | unchanged (completeness rule + ethical exception) | HTTPS via DOI resolver and GitHub | y | 1 | unchanged |
+| A1_1 | 1 |  |  | unchanged | Open access, no authentication | y | 1 | unchanged |
+| A1_2 | 1 | D 1/1/1 |  | item 4 (fully open, no auth needed = 1) | Open code, no restrictions | y | 1 | unchanged — item 4 |
+| A2 | 1 |  |  | table rows 2/6 (Zenodo persistence entitlements; sup | Zenodo long-term persistence | y | 1 | unchanged — Row 2 |
+| I1 | 1 |  |  | unchanged (aggregation: principal artefacts) | R scripts in standard open-source language | y | 1 | unchanged — plain-text R |
+| I2 | 0 |  |  | unchanged (aggregation: principal artefacts) | No software ontology or CodeMeta used | y | 0 | unchanged |
+| I3 | 1 | D 1/1/0 |  | item 2 (third-party dependencies enter here) | Paper references code via DOI; code references data via relative paths | y | 1 | unchanged, basis corrected — NIMBLE software paper DOI in Crossref refs |
+| R1 | 1 |  |  | unchanged | README, Dockerfile, documented R scripts with comments | y | 1 | unchanged — README + commented scripts (Dockerfile is v2 only) |
+| R1_1 | 0 | D 0/1/1 |  | item 6 (per-artefact; most-restrictive same-artefact | No explicit licence file in repository | y | 1 | FLIP 0→1 — Zenodo CC-BY-4.0 (AP-8); CC-on-code finding |
+| R1_2 | 1 |  |  | unchanged | Dockerfile documents environment; code reviewed by Ben Marwick | y | 1 | unchanged — sessionInfo() versions in README |
+| R1_3 | 0 | D 1/1/0 |  | item 7 + graded table row 4 (ADS by construction; DA | No CITATION.cff or CodeMeta; no renv lockfile | y | 0 | unchanged at 0 — AP-17: review acknowledged in prose only; no package metadata |
 
+- **Adjudicated 2026-10-03 (Sitting 10; registrant: Shawn). code_fair 12 → 12
+  (recomposed).** F2 1→0; R1.1 0→1. R1.3 stays 0 under AP-17 — the
+  reproducibility review is acknowledged in prose only. **Worksheet complete:
+  all 150 items adjudicated.** Reasoning: `adjudication-log.md` Sitting 10.
