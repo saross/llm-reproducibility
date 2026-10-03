@@ -1,0 +1,18 @@
+## ===========================================================================
+## Dye et al. (2023) supplement (mmc1.pdf), section 10.9 — authors' R code.
+## Transcribed from the printed listing by tools/transcribe_supplement.py
+## (typographic restoration only: line numbers and wrap marks removed, curly
+## quotes made ASCII). Raw transcription: authors-code-raw/section-10-9-row-9.R
+## Execution-mechanics edits in this copy (wrapper cardinal rule, invariant 2)
+## are marked inline with 'LLMR-PATH:' and listed in log.md.
+## ===========================================================================
+library(ArchaeoPhases)
+burials.ox <- read_oxcal("data/beads-1.csv")  ## LLMR-PATH: was "https://tsdye.online/AP/beads-1.csv" (verified local copy, same sha256)
+## Depends on previous definition of bead_list
+row.9 <- list("BE1-Disc" = bead_list$BE1.Disc,
+"BE1-Orange" = bead_list$BE1.Orange,
+"BE1-WhSpiral" = bead_list$BE1.WhSpiral,
+"BE2-c Metal" = bead_list$BE2.c.Metal,
+"BE1-Koch34Bl" = bead_list$BE1.Koch34Bl)
+res <- allen_observe_frequency(burials.ox, row.9, "p")
+round(res$observed,2)
