@@ -107,14 +107,20 @@ REPRODUCED_OUTCOMES = {"EXACT_MATCH", "WITHIN_PRECISION", "WITHIN_CONFIDENCE"}
 PROVENANCE_RE = re.compile(
     r"Provenance: run (\S+); launch commit ([0-9a-f]{40}); "
     r"reasoning effort pinned: (low|medium|high|xhigh|max)\.")
-PAPER_RE = re.compile(r"^Paper: (\S+)$", re.MULTILINE)
-SCRATCH_RE = re.compile(r"^Scratch directory: (\S+)$", re.MULTILINE)
-ATTEMPT_DIR_RE = re.compile(r"^Attempt directory: (\S+)$", re.MULTILINE)
+# Leading whitespace is allowed: since Claude Code 2.1.288 (observed
+# 2026-10-03, wf_5d10728a-820) the harness delivers a workflow prompt as a
+# "[Workflow harness — computed task]" message with every line indented.
+PAPER_RE = re.compile(r"^\s*Paper: (\S+)$", re.MULTILINE)
+SCRATCH_RE = re.compile(r"^\s*Scratch directory: (\S+)$", re.MULTILINE)
+ATTEMPT_DIR_RE = re.compile(r"^\s*Attempt directory: (\S+)$", re.MULTILINE)
 # Tokens in a Bash command that could name a local file: split on shell
 # punctuation, then keep path-like tokens that are not URLs (a URL's path
 # segment — e.g. a Wikipedia /wiki/ link — is not a local access).
 SHELL_SPLIT_RE = re.compile(r"[\s'\"=;|&<>()`,]+")
 DATE_SUFFIX_RE = re.compile(r"-\d{8}$")
+# The harness spills an over-long tool result to a file and says so in the
+# result text; reading back one's OWN spill is not an out-of-scope access.
+SPILL_RE = re.compile(r"Full output saved to: (\S+)")
 
 
 # ---------------------------------------------------------------------------
@@ -412,22 +418,34 @@ def cmd_build_plan_args(args: argparse.Namespace) -> int:
 
 
 def first_user_text(lines: list[str]) -> str:
-    """The spawn prompt: the first user message's text in a transcript."""
+    """The spawn prompt: every user message before the agent's first reply.
+
+    Workflow spawns may open with more than one user message — current
+    harness versions relay the triggering user request first, then the
+    script's prompt as an indented "computed task" message — so all user
+    text preceding the first assistant entry is joined. Tool results are
+    not text blocks and are skipped.
+    """
+    parts: list[str] = []
     for line in lines:
         try:
             entry = json.loads(line)
         except json.JSONDecodeError:
             continue
         message = entry.get("message")
-        if not isinstance(message, dict) or message.get("role") != "user":
+        if not isinstance(message, dict):
+            continue
+        if message.get("role") == "assistant":
+            break
+        if message.get("role") != "user":
             continue
         content = message.get("content")
         if isinstance(content, str):
-            return content
-        if isinstance(content, list):
-            return "".join(str(b.get("text", "")) for b in content
-                           if isinstance(b, dict) and b.get("type") == "text")
-    return ""
+            parts.append(content)
+        elif isinstance(content, list):
+            parts.append("".join(str(b.get("text", "")) for b in content
+                                 if isinstance(b, dict) and b.get("type") == "text"))
+    return "\n".join(parts)
 
 
 def structured_output(lines: list[str]) -> dict | None:
@@ -1178,6 +1196,30 @@ def write_targets(lines: list[str]) -> list[str]:
     return targets
 
 
+def own_spill_files(lines: list[str]) -> set[str]:
+    """Spill files the harness created for THIS transcript's own tool results.
+
+    Matched exactly (display form), so another agent's or the orchestrator's
+    spill under the same ``tool-results/`` directory stays blinded.
+    """
+    spills: set[str] = set()
+    for line in lines:
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        message = entry.get("message")
+        content = message.get("content") if isinstance(message, dict) else None
+        for block in content if isinstance(content, list) else []:
+            if not isinstance(block, dict) or block.get("type") != "tool_result":
+                continue
+            raw = block.get("content")
+            text = ("".join(str(p.get("text", "")) for p in raw if isinstance(p, dict))
+                    if isinstance(raw, list) else str(raw or ""))
+            spills.update(display_path(path) for path in SPILL_RE.findall(text))
+    return spills
+
+
 def path_tokens(text: str) -> list[str]:
     """Path-like tokens in shell text (URLs excluded)."""
     return [t for t in SHELL_SPLIT_RE.split(text)
@@ -1236,10 +1278,13 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
             record["receipts"]["problems"].append(
                 f"effort {provenance.group(3)!r} != run config {config['effort']!r}")
     contaminating, warnings = [], []
+    own_spills = own_spill_files(lines)
     for access in reconcile.file_accesses(lines, gate):
         targets = [access["target"]] if access["tool"] == "Read" else \
             list(access.get("returned") or []) + [access["target"]]
         for target in targets:
+            if display_path(target) in own_spills:
+                continue
             rule = blinding.hit(target)
             if rule:
                 bucket = warnings if access["errored"] else contaminating
@@ -1253,7 +1298,8 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
             bucket.append({"tool": "Bash", "path": command_hits[0][0],
                            "rule": command_hits[0][1], "command": call["command"][:300]})
             continue
-        output_hits = [t for t in path_tokens(call["output"]) if blinding.hit(t)]
+        output_hits = [t for t in path_tokens(call["output"])
+                       if blinding.hit(t) and display_path(t) not in own_spills]
         if output_hits:
             warnings.append({"tool": "Bash", "path": output_hits[0],
                              "rule": "blinded path named in command output (review)",

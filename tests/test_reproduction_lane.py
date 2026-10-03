@@ -108,6 +108,25 @@ class FormatContracts(unittest.TestCase):
         rendered = render_template("reproduction-execute.workflow.js", "`Attempt directory:")
         self.assertIsNotNone(lane.ATTEMPT_DIR_RE.search(rendered.replace("\\n", "\n")))
 
+    def test_harness_wrapped_prompt(self):
+        # Claude Code 2.1.288 wraps a workflow prompt: a relayed user request,
+        # then the computed task with every line indented two spaces.
+        relay = "[Workflow harness — user request] relayed:\n  please go"
+        task = ("[Workflow harness — computed task] The computed task text follows:\n"
+                "  Reproduction-lane planning task (run r, attempt 2).\n"
+                "  Paper: a-2024\n"
+                f"  Provenance: run r; launch commit {DUMMY_COMMIT}; "
+                "reasoning effort pinned: high.\n"
+                "  Scratch directory: /tmp/s\n")
+        lines = [json.dumps({"message": {"role": "user", "content": relay}}),
+                 json.dumps({"message": {"role": "user", "content": task}}),
+                 json.dumps({"message": {"role": "assistant", "content": [
+                     {"type": "text", "text": "Paper: other-2024"}]}})]
+        prompt = lane.first_user_text(lines)
+        self.assertEqual(lane.PAPER_RE.search(prompt).group(1), "a-2024")
+        self.assertEqual(lane.PROVENANCE_RE.search(prompt).group(3), "high")
+        self.assertEqual(lane.SCRATCH_RE.search(prompt).group(1), "/tmp/s")
+
     def test_planner_prompt_grants_no_write_root(self):
         # The planner must not get an "Attempt directory:" line — the audit
         # would read it as a permitted write root.
@@ -454,6 +473,43 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(record["writes_outside_scope"], ["/elsewhere/notes.md"])
         self.assertFalse(record["clean"])
 
+
+class SpillExemptionTests(unittest.TestCase):
+    """Own spill files are in scope; another agent's spill stays blinded."""
+
+    def test_own_spill_exempt_other_spill_flagged(self):
+        home = str(Path.home())
+        own = f"{home}/.claude/projects/p/s/tool-results/own123.txt"
+        other = f"{home}/.claude/projects/p/s/tool-results/other456.txt"
+        config = {"run_id": "t", "effort": "high",
+                  "agents": {"planner": "reproduction-planner",
+                             "executor": "reproduction-executor",
+                             "reviewer": "adversarial-reviewer"},
+                  "schemas": {}, "pricing_usd_per_mtok": {},
+                  "blinding": {"forbidden_substrings": [".claude/projects/"],
+                               "cross_paper_slugs": []}}
+        lines = transcript(
+            {"message": {"role": "user", "content": "  Paper: a-2024\n"}},
+            {"message": {"role": "assistant", "content": [
+                {"type": "tool_use", "id": "b1", "name": "Bash",
+                 "input": {"command": "cat big.R"}}]}},
+            {"message": {"role": "user", "content": [
+                {"type": "tool_result", "tool_use_id": "b1",
+                 "content": f"<persisted-output>\nFull output saved to: {own}\n"}]}},
+            {"message": {"role": "assistant", "content": [
+                {"type": "tool_use", "id": "r1", "name": "Read", "input": {"file_path": own}},
+                {"type": "tool_use", "id": "r2", "name": "Read",
+                 "input": {"file_path": other}}]}},
+            {"message": {"role": "user", "content": [
+                {"type": "tool_result", "tool_use_id": "r1", "content": "x"},
+                {"type": "tool_result", "tool_use_id": "r2", "content": "y"}]}})
+        reconcile = load_script("reconcile_run_s", "reconcile-run.py")
+        record = lane.audit_agent(lines, "general-purpose", config, {"agent_definitions": {}},
+                                  reconcile, reconcile.load_gate_module(), None)
+        flagged = [c["path"] for c in record["blinding"]["contaminating"]]
+        self.assertEqual(len(flagged), 1)
+        self.assertIn("other456", flagged[0])
+        self.assertEqual(record["blinding"]["warnings"], [])
 
 if __name__ == "__main__":
     unittest.main()
