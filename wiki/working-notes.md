@@ -940,3 +940,153 @@ model. Denominator assertions are the cheapest tripwire for "the
 harness did something the design never modelled". Anchors: register
 F-008/F-009; `arm-sonnet-5-max/halt-report-2026-08-17.md`;
 `.claude/settings.json` env block (cap standing at 128,000).
+
+## Observation 30: Licence conflicts are the norm on research surfaces, not the edge case (2026-10-03)
+
+*(Approved by Shawn 2026-10-03; drafted during the E8-v2 reference adjudication.)*
+
+### Context
+
+The E8-v2 reference re-derivation scores R1.1 under AP-8, a clarity
+test rather than a permissiveness test: any published licence passes;
+same-artefact contradictions resolve to the most restrictive licence
+(item 6); and validity is not adjudicated, because FAIR does not
+enforce copyright (AP-8's validity note, Sitting 7).
+
+### Observation
+
+Every pilot paper adjudicated so far (four of five; crema pending)
+carries at least one licence problem on its research surface, and the
+problems come in four kinds:
+
+1. **Divergent licences across copies of one artefact.**
+   dye-et-al-2023: CC-BY-NC-ND on the accepted-version cover sheet
+   against the Elsevier licence set on the version-of-record Crossref
+   record; the supplement code inherits whichever governs (Sitting 2).
+2. **Licences unsuited to the artefact type.** Creative Commons
+   licences on code: dye's supplement code, by inheritance from the
+   article (Sitting 2); herskind-riede-2024's S2.R under CC-BY-4.0
+   (Sitting 4); marwick-2025's code, per its Zenodo field (Sitting 8).
+3. **Multi-way assertion conflicts.** marwick-2025's data: the paper
+   says CC-0, Zenodo's licence field says CC-BY-4.0, and the deposit's
+   `LICENSE.md` is MIT for the whole repository (Sitting 7). Its code
+   splits two ways: MIT in the paper and `LICENSE.md`, CC-BY-4.0 on
+   Zenodo (Sitting 8).
+4. **Licences that claim rights the licensor may not hold.**
+   key-et-al-2024's scripts adapt the OLE function from sExtinct
+   (GPL-2 per its CRAN archive DESCRIPTION) yet ship under the
+   article's CC BY 4.0 (Sitting 6). marwick-2025 deposits full Web of
+   Science records (abstracts, cited references, author emails) under
+   open licences, beyond Clarivate's public terms unless consent was
+   obtained, which the README does not mention. Coded "data shared,
+   rights-incompatible" (Sitting 7); in Shawn's words, a licensing
+   violation.
+
+None of these moves an R1.1 score. Every conflicted artefact still
+carries a published licence, so the most-restrictive rule passes it;
+the R1.1 zeros so far come from absent licences (dye's `beads-1.csv`,
+Sitting 1; key's unpublished data, Sitting 5).
+
+### Implication
+
+The most-restrictive rule settles scoring but hides how messy the legal
+surface is: a reuser often faces two or three candidate licences for a
+single artefact, and sometimes licences that cannot be valid. Licence
+conflicts are therefore a research finding in their own right (Shawn,
+Sitting 7: keep tracking them; they show how messy the surface is). The
+census should code conflict type, the four kinds above, as a variable
+of its own beside the binary R1.1. Licence- and rights-compatibility
+checking is a capability for the uplift tool
+(`wiki/planning/active-todo-list.md`, Deferred / Future Projects item
+10); for third-party data, its route is to publish the exact query plus
+record identifiers and rebuild the records from an open source such as
+OpenAlex. Relations: Observation 1 (data availability is the dominant
+bottleneck; once data are out, licence clarity is the next layer);
+Observation 7 (errors persist unnoticed in public metadata);
+Observation 24 (schema compliance and integrity are separate axes; here
+a schema-valid Zenodo licence field contradicts the deposit's own
+licence file). Anchors:
+`studies/open-science-compliance/outputs/validation/e8-v2-rederivation/adjudication-log.md`
+AP-8 and Sittings 1, 2, 4, 5, 6, 7, and 8; active-todo-list item 10.
+
+## Observation 31: The noisy surface — research records carry many small metadata inconsistencies, and model-produced records carry the same ones (2026-10-03)
+
+*(Approved by Shawn 2026-10-03; drafted during the E8-v2 reference adjudication.)*
+
+### Context
+
+The same adjudication logs, sitting by sitting, findings with "no score
+effect": defects met while scoring that move no sub-principle. Across
+the four papers adjudicated so far (crema pending) they fall into
+recurring classes.
+
+### Observation
+
+Classes found so far (anchors are adjudication-log sittings unless
+stated otherwise):
+
+1. **Wrong resource type.** marwick-2025's compendium (data and code)
+   is typed "Software" (Sitting 7); herskind-riede-2024's record (data
+   and code) is typed "Dataset" (Sitting 4).
+2. **Missing creator.** Both versions of herskind's Zenodo record list
+   only Herskind; Riede is absent (Sitting 3).
+3. **Version inconsistencies.** herskind cites v1 in its methods and v2
+   in its data-availability statement, and the files differ (v2's S2.R
+   is 33,834 bytes against v1's 18,707; AP-12, Sitting 3); herskind's
+   paper states R 4.2.2, its v2 README R 4.3.2 (Sitting 4); marwick's
+   preprint cites v1.1 where the version of record cites the concept
+   DOI (Sitting 7). One slip is ours: marwick reproduction attempt-01
+   cloned the live repository, 8 commits past v1.3 (AP-12).
+4. **Malformed identifiers.** dye-et-al-2023 prints the DOI of its
+   ArchaeoPhases citation (Philippe & Vibet 2020) with a doubled
+   `https://doi.org/` prefix (Sitting 2).
+5. **Missing relations.** Neither version of herskind's deposit carries
+   any related identifier, not even the article DOI (Sitting 3);
+   marwick's only typed relation is `isSupplementTo` a GitHub tree URL,
+   not a persistent identifier (Sitting 7).
+6. **Empty or placeholder content.** key-et-al-2024's supplementary
+   `mmc4.csv` is a 75-byte header-only template (Sitting 5); herskind's
+   Zenodo descriptions are empty (Sitting 3); marwick's is one sentence
+   citing the paper (Sitting 7, AP-15).
+7. **Uncredited source software.** key adapts sExtinct's OLE function
+   without citing the package; only the script comments disclose it
+   (Sitting 6).
+8. **Publisher boilerplate mistaken for a data statement.** key has no
+   data-availability statement; its "Supplementary data … can be found
+   online" line is Elsevier's Appendix A boilerplate (Sitting 5).
+9. **The same classes in our own model-produced records.** The pilot
+   herskind extraction's completeness notes describe "lithic
+   measurements, use-wear images", which are not in the paper (Sitting
+   3; `studies/open-science-compliance/outputs/herskind-riede-2024/extraction.json:2225`).
+   The pilot marwick extraction carried a DOI that the paper never
+   cites and that resolves nowhere (10.5281/zenodo.14561925); through
+   the declared-links registry it reached amendment 2 §2 as lodged
+   2026-08-17 (`studies/open-science-compliance/prereg/erratum-log.md`
+   Entry 4). With class 3's attempt-01 slip, that is content,
+   identifier, and version errors: the research records' own classes.
+
+### Implication
+
+Each error is minor and none changes a score on its own, but together
+they make the research surface noisy in ways reusers trip over. All were
+found by cross-checking sources against one another (paper against
+deposit, deposit against registry API, registry record against file
+contents), which LLMs do well and at scale; Shawn notes this shows a
+real role for LLMs in producing and auditing metadata. Class 9 is the
+counterweight: model-produced records show the same error classes, so
+they need mechanical verification (registrant direction, 2026-10-03: a
+deterministic check that every registry identifier appears verbatim in
+the paper or its supplement, and mechanical verification wherever
+possible). Both point to the uplift tool and the human-FAIR vs
+machine-FAIR study (`wiki/planning/active-todo-list.md` items 10 and
+11). Relations: Observation 4 (subagent-relayed specifics ran ~1 in 10
+wrong); Observation 7 (errors persist in public metadata, and internal
+consistency is no evidence of correctness); Observation 12 (external
+facts have a half-life; deposits keep versioning after publication);
+Observation 13 (verification ledgers drift from their sources; the
+registry was curated from the extraction records); Observation 19 (a
+version number without a recorded referent, as with a concept DOI or
+an R version the deposit contradicts); Observation 30 (licence
+conflicts, the legal layer of the same noise). Anchors: adjudication
+log Sittings 2–7 ("Findings (no score effect)" blocks) and AP-12;
+erratum-log Entry 4.
