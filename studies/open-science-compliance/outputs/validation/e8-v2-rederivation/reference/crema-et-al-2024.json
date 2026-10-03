@@ -1,0 +1,298 @@
+{
+  "reference_record_version": "1.0",
+  "reference": "E8-v2",
+  "slug": "crema-et-al-2024",
+  "generated_by": "scripts/assemble-e8v2-reference.py v1.0",
+  "worksheet": "studies/open-science-compliance/outputs/validation/e8-v2-rederivation/worksheet.json",
+  "worksheet_sha256": "32d3cb365e68d9891c5316fe44e76345348c158b7f79e666439824afc6b2f722",
+  "adjudication_log": "studies/open-science-compliance/outputs/validation/e8-v2-rederivation/adjudication-log.md",
+  "fair_assessment": {
+    "version": "E8-v2",
+    "scale": "15 binary sub-principles per artefact type",
+    "data_fair": {
+      "findable": {
+        "F1_persistent_identifier": {
+          "present": 1,
+          "evidence": "unchanged — concept DOI; version of record v1.0.0 (published-values match) [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Zenodo DOI 10.5281/zenodo.10782942"
+        },
+        "F2_rich_metadata": {
+          "present": 0,
+          "evidence": "FLIP 1→0 — AP-15: no keywords; pointer description [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [],
+          "old_evidence": "Zenodo provides structured DataCite metadata (authors, title, description, keywords)"
+        },
+        "F3_metadata_includes_identifier": {
+          "present": 1,
+          "evidence": "unchanged [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Zenodo metadata includes DOI reference"
+        },
+        "F4_searchable_registry": {
+          "present": 1,
+          "evidence": "spot-check CONFIRMED — DataCite-indexed [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Indexed in Zenodo, DataCite, Google Dataset Search"
+        },
+        "subtotal": 3,
+        "max": 4
+      },
+      "accessible": {
+        "A1_standard_protocol": {
+          "present": 1,
+          "evidence": "unchanged — AP-10: raw upstream snapshots deposited; complete [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "HTTPS via DOI resolver"
+        },
+        "A1_1_open_free_protocol": {
+          "present": 1,
+          "evidence": "unchanged [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "No authentication required, open access"
+        },
+        "A1_2_auth_where_needed": {
+          "present": 1,
+          "evidence": "unchanged — item 4 [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Open data, no restrictions needed"
+        },
+        "A2_metadata_persistent": {
+          "present": 1,
+          "evidence": "unchanged — Row 2 [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Zenodo committed to long-term metadata persistence"
+        },
+        "subtotal": 4,
+        "max": 4
+      },
+      "interoperable": {
+        "I1_formal_language": {
+          "present": 1,
+          "evidence": "unchanged — CSV + RData (AP-9) [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [
+            "input"
+          ],
+          "old_evidence": "Structured CSV data files in GitHub/Zenodo repository"
+        },
+        "I2_fair_vocabularies": {
+          "present": 0,
+          "evidence": "unchanged [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 0,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "No formal controlled vocabularies with PIDs used for data description"
+        },
+        "I3_qualified_references": {
+          "present": 0,
+          "evidence": "FLIP 1→0 — v1.0.0 has only a GitHub-URL relation (v2.0.0 added the article DOI) [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [
+            "input",
+            "rule"
+          ],
+          "old_evidence": "DOI links between paper, data deposit, and code; IntCal20 calibration curve referenced"
+        },
+        "subtotal": 1,
+        "max": 3
+      },
+      "reusable": {
+        "R1_rich_metadata": {
+          "present": 1,
+          "evidence": "unchanged — README + data documentation [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "README, data documentation, methods description in repository"
+        },
+        "R1_1_clear_licence": {
+          "present": 1,
+          "evidence": "FLIP 0→1 — Zenodo CC-BY-4.0; repo silence is not a conflict (AP-8) [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 0,
+          "changed": true,
+          "beyond_instrument": [],
+          "old_evidence": "Paper is CC BY but no explicit licence file in repository for data"
+        },
+        "R1_2_provenance": {
+          "present": 1,
+          "evidence": "spot-check CONFIRMED — README cites every source + cleaning scripts [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Data sources documented: Japanese seed dates from published databases, British dates from Stevens compilations"
+        },
+        "R1_3_community_standards": {
+          "present": 1,
+          "evidence": "FLIP 0→1 — AP-11 DataCite deposit [adjudicated 2026-10-03, Sitting 9]",
+          "old_present": 0,
+          "changed": true,
+          "beyond_instrument": [],
+          "old_evidence": "No domain metadata standard (e.g., Dublin Core, DataCite schema) applied to data files"
+        },
+        "subtotal": 4,
+        "max": 4
+      },
+      "total": 12,
+      "max": 15
+    },
+    "code_fair": {
+      "findable": {
+        "F1_persistent_identifier": {
+          "present": 1,
+          "evidence": "unchanged — concept DOI; v1.0.0 [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Zenodo DOI 10.5281/zenodo.10782942"
+        },
+        "F2_rich_metadata": {
+          "present": 0,
+          "evidence": "FLIP 1→0 — AP-15: same record as data [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": true,
+          "beyond_instrument": [],
+          "old_evidence": "Zenodo DataCite metadata for code deposit"
+        },
+        "F3_metadata_includes_identifier": {
+          "present": 1,
+          "evidence": "unchanged [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Zenodo metadata includes DOI"
+        },
+        "F4_searchable_registry": {
+          "present": 1,
+          "evidence": "unchanged [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Indexed in Zenodo, DataCite"
+        },
+        "subtotal": 3,
+        "max": 4
+      },
+      "accessible": {
+        "A1_standard_protocol": {
+          "present": 1,
+          "evidence": "unchanged [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "HTTPS via DOI resolver and GitHub"
+        },
+        "A1_1_open_free_protocol": {
+          "present": 1,
+          "evidence": "unchanged [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Open access, no authentication"
+        },
+        "A1_2_auth_where_needed": {
+          "present": 1,
+          "evidence": "unchanged — item 4 [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Open code, no restrictions"
+        },
+        "A2_metadata_persistent": {
+          "present": 1,
+          "evidence": "unchanged — Row 2 [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Zenodo long-term persistence"
+        },
+        "subtotal": 4,
+        "max": 4
+      },
+      "interoperable": {
+        "I1_formal_language": {
+          "present": 1,
+          "evidence": "unchanged — plain-text R [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "R scripts in standard open-source language"
+        },
+        "I2_fair_vocabularies": {
+          "present": 0,
+          "evidence": "unchanged [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 0,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "No software ontology or CodeMeta used"
+        },
+        "I3_qualified_references": {
+          "present": 1,
+          "evidence": "unchanged, basis corrected — NIMBLE software paper DOI in Crossref refs [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Paper references code via DOI; code references data via relative paths"
+        },
+        "subtotal": 2,
+        "max": 3
+      },
+      "reusable": {
+        "R1_rich_metadata": {
+          "present": 1,
+          "evidence": "unchanged — README + commented scripts (Dockerfile is v2 only) [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "README, Dockerfile, documented R scripts with comments"
+        },
+        "R1_1_clear_licence": {
+          "present": 1,
+          "evidence": "FLIP 0→1 — Zenodo CC-BY-4.0 (AP-8); CC-on-code finding [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 0,
+          "changed": true,
+          "beyond_instrument": [],
+          "old_evidence": "No explicit licence file in repository"
+        },
+        "R1_2_provenance": {
+          "present": 1,
+          "evidence": "unchanged — sessionInfo() versions in README [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 1,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "Dockerfile documents environment; code reviewed by Ben Marwick"
+        },
+        "R1_3_community_standards": {
+          "present": 0,
+          "evidence": "unchanged at 0 — AP-17: review acknowledged in prose only; no package metadata [adjudicated 2026-10-03, Sitting 10]",
+          "old_present": 0,
+          "changed": false,
+          "beyond_instrument": [],
+          "old_evidence": "No CITATION.cff or CodeMeta; no renv lockfile"
+        },
+        "subtotal": 3,
+        "max": 4
+      },
+      "total": 12,
+      "max": 15
+    }
+  }
+}
