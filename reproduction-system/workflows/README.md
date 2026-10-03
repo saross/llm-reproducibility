@@ -40,11 +40,11 @@ configuration (for the shakedown:
    `venv/bin/python scripts/reproduction-lane.py build-plan-args --config $CFG --scratch-root $SCRATCH --out $SCRATCH/plan-args.json`
 3. **API gate** (global rule): state the model, the number of spawns, and the
    estimated cost, and get explicit approval.
-4. **Launcher:**
-   `venv/bin/python scripts/reproduction-lane.py make-launcher --args $SCRATCH/plan-args.json --workflow reproduction-system/workflows/reproduction-plan.workflow.js --out $SCRATCH/plan-launcher.js`.
-   Then **run** the launcher with the `Workflow` tool (`scriptPath`). It
-   embeds the args byte-for-byte and runs the committed workflow unmodified
-   as a sub-workflow, so no hand-copied JSON reaches the agents.
+4. **Run** `reproduction-plan.workflow.js` from the repository with the
+   `Workflow` tool: `scriptPath` set to the committed file, `args` set to the
+   builder's JSON, passed unedited. The builder stamps `args_checksum`. The
+   workflow recomputes it over what it received and refuses to start on any
+   difference, so a transcription slip cannot reach the agents.
 5. **Persist:**
    `venv/bin/python scripts/reproduction-lane.py persist-plans --config $CFG --run-dir <workflow run dir>`
    This writes `reproduction-plan.json` and `.md` into each attempt directory,
@@ -61,8 +61,8 @@ configuration (for the shakedown:
    `venv/bin/python scripts/reproduction-lane.py build-exec-args --config $CFG --scratch-root $SCRATCH --out $SCRATCH/exec-args.json`
    Only papers with a committed approval whose hash still matches go in.
    Others are listed in `skipped`, never dropped silently.
-9. **API gate** again (each stage is approved separately), then
-   `make-launcher` for `reproduction-execute.workflow.js` and run it.
+9. **API gate** again (each stage is approved separately), then run
+   `reproduction-execute.workflow.js` the same way.
 10. **Verify and persist:** for each paper, re-run
     `reproduction-lane.py check-attempt <attempt dir>`. This is the
     authoritative gate; the in-workflow gate is a relay. Then run

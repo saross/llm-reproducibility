@@ -17,6 +17,8 @@ access). These tests pin:
    review overall-verdict rule.
 4. The audit: per-request token deduplication, pricing, and blinded-path
    detection across Read and Bash (URL paths excluded).
+5. The args checksum: the workflows' own JavaScript, run in Node, agrees
+   with the Python builder (skipped when Node is absent).
 
 Run: ``venv/bin/python -m pytest tests/test_reproduction_lane.py -q``
 """
@@ -29,6 +31,8 @@ import importlib.machinery
 import importlib.util
 import json
 import re
+import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -306,7 +310,7 @@ def transcript(*entries: dict) -> list[str]:
 
 
 class ResultRecoveryTests(unittest.TestCase):
-    """Transcript fallback for results and the args-embedding launcher."""
+    """Transcript fallback for results, and the args checksum."""
 
     def test_structured_output_takes_last_accepted_call(self):
         lines = transcript(
@@ -341,21 +345,35 @@ class ResultRecoveryTests(unittest.TestCase):
         self.assertEqual(results[0]["result"]["paper_slug"], "a-2024")
         self.assertEqual(lane.PAPER_RE.search(results[0]["prompt"]).group(1), "a-2024")
 
-    def test_launcher_embeds_args_verbatim(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            args_path = Path(tmp) / "args.json"
-            payload = {"run_id": "r", "papers": [{"sha256": "f" * 64, "note": "ü & 'q'"}]}
-            args_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-            out = Path(tmp) / "launcher.js"
-            lane.cmd_make_launcher(argparse.Namespace(
-                args=str(args_path), out=str(out),
-                workflow="reproduction-system/workflows/reproduction-plan.workflow.js"))
-            script = out.read_text(encoding="utf-8")
-        self.assertTrue(script.startswith("export const meta = {"))
-        embedded = next(row for row in script.splitlines() if row.startswith("const ARGS = "))
-        self.assertEqual(json.loads(embedded[len("const ARGS = "):]), payload)
-        self.assertIn("reproduction-plan.workflow.js", script)
+    def test_args_checksum_matches_workflow_javascript(self):
+        """The workflows' own checksum code, run in Node, agrees with Python."""
+        if shutil.which("node") is None:
+            self.skipTest("node not installed")
+        payload = {"run_id": "r", "attempt": 2, "flag": True, "none": None,
+                   "papers": [{"sha256": "f" * 64, "note": "ü & 'q' \"x\" \\ \n 🦴",
+                               "n": [0, 1, -3]}]}
+        expected = lane.args_checksum(payload)
+        for workflow in ("reproduction-plan.workflow.js", "reproduction-execute.workflow.js"):
+            source = (WORKFLOWS / workflow).read_text(encoding="utf-8")
+            block = source[source.index("const { args_checksum, ...UNSUMMED } = ARGS"):
+                           source.index("if (COMPUTED !== args_checksum)")]
+            script = (f"const ARGS = {json.dumps(dict(payload, args_checksum='x'))};\n"
+                      f"{block}\nprocess.stdout.write(COMPUTED)")
+            result = subprocess.run(["node", "-e", script], capture_output=True, text=True,
+                                    timeout=30)
+            self.assertEqual(result.stdout, expected, (workflow, result.stderr))
 
+    def test_args_checksum_rejects_floats(self):
+        with self.assertRaises(lane.LaneError):
+            lane.args_checksum({"x": 1.0})
+
+    def test_emit_args_stamps_checksum_last(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "args.json"
+            lane.emit_args({"run_id": "r", "args_checksum": "stale"}, out)
+            written = json.loads(out.read_text(encoding="utf-8"))
+        self.assertEqual(list(written), ["run_id", "args_checksum"])
+        self.assertEqual(written["args_checksum"], lane.args_checksum({"run_id": "r"}))
 
 class AuditTests(unittest.TestCase):
     """Token deduplication, pricing, and blinded-path detection."""

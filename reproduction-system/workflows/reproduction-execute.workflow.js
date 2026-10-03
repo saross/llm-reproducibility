@@ -32,11 +32,35 @@ export const meta = {
 //  schemas: {execution, review}, comparison_schema_path, repo_root, blinding,
 //  papers: [{slug, attempt, attempt_dir, plan_path, plan_sha256,
 //  approval_path, target_ids, paper_pdf, paper_pdf_sha256, supplements,
-//  deposits, run_notes, executor_scratch_dir, image_tag}], skipped}
+//  deposits, run_notes, executor_scratch_dir, image_tag}], skipped,
+//  args_checksum}
+const ARGS = (typeof args === 'string' ? JSON.parse(args) : args)
+
+// Args integrity (2026-10-03). Args travel inline in the Workflow tool call,
+// so the ~10 KB built by reproduction-lane.py passes through a copy step
+// nothing else re-checks. The builder stamps args_checksum; recompute it over
+// what actually arrived and refuse to start on any difference. Algorithm
+// mirrors reproduction-lane.py args_checksum(): compact JSON.stringify of the
+// args minus the checksum, as UTF-16 code units, 32-bit FNV-1a then 32-bit
+// djb2-xor, each as 8 hex digits. Change both together.
+const { args_checksum, ...UNSUMMED } = ARGS
+const CANONICAL = JSON.stringify(UNSUMMED)
+let fnv = 2166136261
+let djb = 5381
+for (let i = 0; i < CANONICAL.length; i++) {
+  const unit = CANONICAL.charCodeAt(i)
+  fnv = Math.imul(fnv ^ unit, 16777619) >>> 0
+  djb = (Math.imul(djb, 33) ^ unit) >>> 0
+}
+const COMPUTED = fnv.toString(16).padStart(8, '0') + djb.toString(16).padStart(8, '0')
+if (COMPUTED !== args_checksum) {
+  throw new Error(`args_checksum mismatch: received ${args_checksum}, computed ${COMPUTED} — ` +
+    `the args were altered after reproduction-lane.py built them; rebuild and pass them unedited`)
+}
 const {
   run_id, attempt, effort, launch_commit, agent_types, schemas, comparison_schema_path,
   repo_root, blinding, papers, skipped,
-} = (typeof args === 'string' ? JSON.parse(args) : args)
+} = ARGS
 
 const EFFORT_LEVELS = ['low', 'medium', 'high', 'xhigh', 'max']
 if (!EFFORT_LEVELS.includes(effort)) {

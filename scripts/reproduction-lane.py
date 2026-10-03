@@ -14,10 +14,9 @@ re-run:
     Turn a run configuration into hashed, commit-pinned args for the plan
     workflow. Refuses a dirty tracked tree (the launch commit must describe
     the bytes used) and refuses to re-plan an attempt that already has a plan.
-``make-launcher``
-    Write a launcher script that embeds an args file byte-for-byte and runs
-    the committed workflow unmodified as a sub-workflow (no hand-copied
-    JSON in the tool call).
+    Both args builders stamp ``args_checksum``; the workflows recompute it and
+    refuse to start on any mismatch, so args pasted into the Workflow tool
+    cannot carry a silent transcription error.
 ``persist-plans``
     Read a completed plan workflow's results (journal, else transcripts),
     validate each planner payload
@@ -50,8 +49,6 @@ re-run:
 Usage:
     venv/bin/python scripts/reproduction-lane.py build-plan-args \\
         --config <run-config.yaml> --scratch-root <dir> [--out FILE]
-    venv/bin/python scripts/reproduction-lane.py make-launcher \\
-        --args <args.json> --workflow <workflow.js> --out <launcher.js>
     venv/bin/python scripts/reproduction-lane.py persist-plans \\
         --config <run-config.yaml> --run-dir <workflow-run-dir> [--force]
     venv/bin/python scripts/reproduction-lane.py approve --config <cfg> \\
@@ -188,6 +185,53 @@ def emit(payload: Any, out: Path | None) -> None:
 
 class LaneError(Exception):
     """A refused operation; the message is shown to the operator verbatim."""
+
+
+def args_checksum(payload: dict) -> str:
+    """Integrity checksum of workflow args, mirrored in the workflow scripts.
+
+    Workflow args travel inline in the Workflow tool call, so ~10 KB of JSON
+    (hashes included) passes through a copy step nothing else re-checks.
+    The builder stamps this checksum; each workflow recomputes it over the
+    args it actually received and refuses to start on mismatch.
+
+    Algorithm (must match the JavaScript in reproduction-system/workflows/):
+    compact JSON (``separators=(",", ":")``, non-ASCII unescaped, key order
+    as built) read as UTF-16 code units, hashed by 32-bit FNV-1a and 32-bit
+    djb2-xor; the result is the two as 8-digit hex, concatenated.
+
+    Raises:
+        LaneError: if the payload holds a float (Python and JavaScript
+            serialise some floats differently, e.g. ``1.0`` vs ``1``).
+    """
+    def reject_floats(node: Any) -> None:
+        if isinstance(node, float):
+            raise LaneError("args contain a float — checksum serialisation would differ "
+                            "between Python and JavaScript")
+        if isinstance(node, dict):
+            for value in node.values():
+                reject_floats(value)
+        elif isinstance(node, list):
+            for value in node:
+                reject_floats(value)
+
+    reject_floats(payload)
+    text = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
+    raw = text.encode("utf-16-le")
+    fnv, djb = 2166136261, 5381
+    for index in range(0, len(raw), 2):
+        unit = raw[index] | (raw[index + 1] << 8)
+        fnv = ((fnv ^ unit) * 16777619) & 0xFFFFFFFF
+        djb = (((djb * 33) & 0xFFFFFFFF) ^ unit) & 0xFFFFFFFF
+    return f"{fnv:08x}{djb:08x}"
+
+
+def emit_args(payload: dict, out: Path | None) -> None:
+    """Stamp ``args_checksum`` (last key) and emit workflow args."""
+    payload = dict(payload)
+    payload.pop("args_checksum", None)
+    payload["args_checksum"] = args_checksum(payload)
+    emit(payload, out)
 
 
 def load_config(path: Path) -> dict:
@@ -359,11 +403,11 @@ def cmd_build_plan_args(args: argparse.Namespace) -> int:
                        "deposits": paper.get("deposits") or [],
                        "run_notes": str(paper.get("run_notes") or "").strip(),
                        "scratch_dir": str(scratch / "planner")})
-    emit({"run_id": config["run_id"], "attempt": config["attempt"],
-          "effort": config["effort"], "launch_commit": launch_commit,
-          "agent_type": config["agents"]["planner"],
-          "schema": runtime_schema(expand(config["schemas"]["plan"])),
-          "blinding": blinding_args(config), "papers": papers}, args.out)
+    emit_args({"run_id": config["run_id"], "attempt": config["attempt"],
+               "effort": config["effort"], "launch_commit": launch_commit,
+               "agent_type": config["agents"]["planner"],
+               "schema": runtime_schema(expand(config["schemas"]["plan"])),
+               "blinding": blinding_args(config), "papers": papers}, args.out)
     return 0
 
 
@@ -419,8 +463,8 @@ def journal_results(run_dir: Path) -> list[dict]:
     """Every agent result in a workflow run: journal first, transcripts second.
 
     The journal records each agent's return value. Agents it does not
-    record — for example those of a sub-workflow launched by a generated
-    launcher (``make-launcher``) — are recovered from their transcripts'
+    record — for example those of a nested sub-workflow — are recovered
+    from their transcripts'
     accepted StructuredOutput payload, so persistence never depends on one
     harness bookkeeping channel.
 
@@ -471,40 +515,6 @@ def journal_results(run_dir: Path) -> list[dict]:
                         "result": structured_output(lines),
                         "prompt": first_user_text(lines), "source": "transcript"})
     return results
-
-
-def cmd_make_launcher(args: argparse.Namespace) -> int:
-    """Write a launcher that runs a committed workflow with embedded args.
-
-    Workflow args must be passed inline, and hand-copying ~10 KB of JSON
-    (hashes included) into a tool call is an unchecked transcription step.
-    The launcher embeds the args file byte-for-byte via ``json.dumps`` and
-    runs the committed workflow file unmodified as a sub-workflow, so the
-    bytes the agents see are exactly the builder's output.
-    """
-    args_path = Path(args.args).expanduser()
-    payload = json.loads(args_path.read_text(encoding="utf-8"))
-    workflow = expand(args.workflow).resolve()
-    if not workflow.is_file():
-        raise LaneError(f"workflow not found: {workflow}")
-    name = workflow.name.removesuffix(".workflow.js")
-    script = (
-        "export const meta = {\n"
-        f"  name: '{name}-launcher',\n"
-        f"  description: 'Run {workflow.name} unmodified with commit-pinned args "
-        f"embedded by reproduction-lane.py make-launcher',\n"
-        "}\n"
-        f"// Generated {now_utc()} by scripts/reproduction-lane.py make-launcher from\n"
-        f"// {display_path(args_path)} (sha256 {sha256_file(args_path)}).\n"
-        f"// Child workflow: {display_path(workflow)} "
-        f"(sha256 {sha256_file(workflow)}).\n"
-        f"const ARGS = {json.dumps(payload, ensure_ascii=False)}\n"
-        f"return await workflow({{ scriptPath: {json.dumps(str(workflow))} }}, ARGS)\n")
-    out = Path(args.out).expanduser()
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(script, encoding="utf-8")
-    print(f"wrote {out} (launches {display_path(workflow)})")
-    return 0
 
 
 def select_results(results: list[dict], agent_type: str,
@@ -846,16 +856,16 @@ def cmd_build_exec_args(args: argparse.Namespace) -> int:
     if not papers:
         raise LaneError("no approved papers — nothing to execute: "
                         + "; ".join(f"{s['slug']}: {s['reason']}" for s in skipped))
-    emit({"run_id": config["run_id"], "attempt": config["attempt"],
-          "effort": config["effort"], "launch_commit": launch_commit,
-          "agent_types": {"executor": config["agents"]["executor"],
-                          "reviewer": config["agents"]["reviewer"]},
-          "schemas": {"execution": runtime_schema(expand(config["schemas"]["execution"])),
-                      "review": runtime_schema(expand(config["schemas"]["review"]))},
-          "comparison_schema_path": str(expand(config["schemas"]["comparison_record"])),
-          "repo_root": str(REPO_ROOT),
-          "blinding": blinding_args(config), "papers": papers, "skipped": skipped},
-         args.out)
+    emit_args({"run_id": config["run_id"], "attempt": config["attempt"],
+               "effort": config["effort"], "launch_commit": launch_commit,
+               "agent_types": {"executor": config["agents"]["executor"],
+                               "reviewer": config["agents"]["reviewer"]},
+               "schemas": {"execution": runtime_schema(expand(config["schemas"]["execution"])),
+                           "review": runtime_schema(expand(config["schemas"]["review"]))},
+               "comparison_schema_path": str(expand(config["schemas"]["comparison_record"])),
+               "repo_root": str(REPO_ROOT),
+               "blinding": blinding_args(config), "papers": papers, "skipped": skipped},
+              args.out)
     return 0
 
 
@@ -1399,12 +1409,6 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--scratch-root", required=True)
     p.add_argument("--out", type=Path, default=None)
     p.set_defaults(func=cmd_build_plan_args)
-
-    p = sub.add_parser("make-launcher", help="launcher embedding args verbatim")
-    p.add_argument("--args", required=True, help="args JSON from a build-*-args step")
-    p.add_argument("--workflow", required=True, help="committed workflow script")
-    p.add_argument("--out", required=True)
-    p.set_defaults(func=cmd_make_launcher)
 
     p = sub.add_parser("persist-plans", help="persist planner payloads + triage")
     p.add_argument("--config", type=Path, required=True)
