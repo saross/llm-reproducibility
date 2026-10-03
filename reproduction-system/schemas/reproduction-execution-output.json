@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Reproduction execution output",
+  "description": "Structured-output contract for reproduction-executor spawns (agent definition v1.1), supplied at spawn by the reproduction-execute workflow. This is the executor's self-report: invariant 6 means the orchestrator verifies persistence from disk (scripts/reproduction-lane.py check-attempt) and never takes artefacts_written on trust. The authoritative per-target record is comparisons/comparison.json (comparison-record schema). Runtime-safe: no top-level allOf or conditionals.",
+  "version": "1.0",
+  "type": "object",
+  "required": ["status", "paper_slug", "receipts"],
+  "additionalProperties": false,
+  "properties": {
+    "status": {"type": "string", "enum": ["OK", "ESCALATE"]},
+    "escalate_reason": {"type": ["string", "null"]},
+    "paper_slug": {"type": "string", "minLength": 1},
+    "receipts": {
+      "type": "object",
+      "required": ["instrument_versions", "instrument_receipts", "agent_version", "model_id", "pulled_files_read"],
+      "additionalProperties": false,
+      "properties": {
+        "instrument_versions": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+        "instrument_receipts": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+        "agent_version": {"type": "string", "minLength": 1},
+        "model_id": {"type": "string", "minLength": 1},
+        "pulled_files_read": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "attempt_dir": {"type": "string", "minLength": 1},
+    "verdict": {"type": "string", "enum": ["SUCCESSFUL", "PARTIAL", "FAILED", "BLOCKED"]},
+    "coverage": {
+      "type": "object",
+      "required": ["targets_enumerated", "targets_reproduced"],
+      "additionalProperties": false,
+      "properties": {
+        "targets_enumerated": {"type": "integer", "minimum": 0},
+        "targets_reproduced": {"type": "integer", "minimum": 0}
+      }
+    },
+    "data_availability": {
+      "type": "object",
+      "required": ["level", "datasets"],
+      "additionalProperties": false,
+      "properties": {
+        "level": {"type": "string", "enum": ["L1", "L2", "L3", "L4", "L5", "L6"], "description": "Assigned from actual retrieval attempts: the highest-friction step required or the terminal failure mode"},
+        "datasets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["dataset", "route", "steps", "outcome"],
+            "additionalProperties": false,
+            "properties": {
+              "dataset": {"type": "string", "minLength": 1},
+              "route": {"type": "string", "minLength": 1},
+              "steps": {"type": "string", "minLength": 1},
+              "outcome": {"type": "string", "minLength": 1},
+              "checksum": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    },
+    "environment_spec_level": {"type": "integer", "minimum": 0, "maximum": 5, "description": "The paper's environment-specification level (verdicts-and-precision v1.0, ordinal 0-5), not the reproduction's"},
+    "docker": {
+      "type": "object",
+      "required": ["image_tag", "base_image", "build_attempts"],
+      "additionalProperties": false,
+      "properties": {
+        "image_tag": {"type": "string", "minLength": 1},
+        "base_image": {"type": "string", "minLength": 1},
+        "build_attempts": {"type": "integer", "minimum": 0}
+      }
+    },
+    "modifications": {
+      "type": "array",
+      "description": "Every change to how the authors' code runs, each tested against the wrapper cardinal rule (invariant 2)",
+      "items": {
+        "type": "object",
+        "required": ["file", "change", "rationale", "changes_what_is_computed"],
+        "additionalProperties": false,
+        "properties": {
+          "file": {"type": "string", "minLength": 1},
+          "change": {"type": "string", "minLength": 1},
+          "rationale": {"type": "string", "minLength": 1},
+          "changes_what_is_computed": {"type": "boolean", "description": "True would breach invariant 2 and must be escalated, not made"}
+        }
+      }
+    },
+    "escalations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "detail"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {"type": "string", "enum": ["PAPER_ERROR", "CANNOT_COMPARE", "OTHER"]},
+          "target_id": {"type": ["string", "null"]},
+          "detail": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "artefacts_written": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "notes": {"type": "string"}
+  }
+}

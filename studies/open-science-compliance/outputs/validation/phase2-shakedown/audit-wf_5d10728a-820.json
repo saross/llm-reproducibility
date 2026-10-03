@@ -1,0 +1,145 @@
+{
+  "audit_version": "1.0",
+  "audited_at": "2026-10-03T08:14:27+00:00",
+  "run_id": "phase2-shakedown-2026-10",
+  "workflow_run": "wf_5d10728a-820",
+  "agents": [
+    {
+      "agent_type": "reproduction-planner",
+      "paper": "herskind-riede-2024",
+      "governed": true,
+      "provenance": {
+        "run_id": "phase2-shakedown-2026-10",
+        "launch_commit": "344049db784bd30671745a5dcf5a956aff4277e4",
+        "effort": "high"
+      },
+      "receipts": {
+        "valid": false,
+        "problems": [
+          "instrument version mismatch: pipeline-invariants",
+          "receipt token mismatch: pipeline-invariants"
+        ],
+        "paper_slug": "herskind-riede-2024",
+        "receipted": {
+          "instrument_versions": {
+            "coverage-rules": "1.0",
+            "eligibility-criteria": "1.0",
+            "data-availability-taxonomy": "1.0",
+            "invariants": "1.0"
+          },
+          "instrument_receipts": {
+            "coverage-rules": "a2a4c0a899291c2b",
+            "eligibility-criteria": "8f88ae3af8e03284",
+            "data-availability-taxonomy": "068d5f05793429d7",
+            "invariants": "f847020d25d57382"
+          },
+          "model_id": "claude-opus-5-5",
+          "agent_version": "reproduction-planner v1.1"
+        }
+      },
+      "blinding": {
+        "contaminating": [],
+        "warnings": []
+      },
+      "writes_outside_scope": [],
+      "usage": {
+        "input_tokens": 40,
+        "output_tokens": 20726,
+        "cache_creation_input_tokens": 87701,
+        "cache_read_input_tokens": 1073058,
+        "cache_write_5m": 87701,
+        "cache_write_1h": 0,
+        "requests": 20,
+        "models": [
+          "claude-opus-5-5"
+        ]
+      },
+      "cost_usd": 1.0678,
+      "started_at": "2026-10-03T08:05:39.806Z",
+      "finished_at": "2026-10-03T08:12:13.479Z",
+      "wallclock_seconds": 393.7,
+      "clean": false,
+      "agent_id": "a0827e921713eb870"
+    },
+    {
+      "agent_type": "reproduction-planner",
+      "paper": "dye-et-al-2023",
+      "governed": true,
+      "provenance": {
+        "run_id": "phase2-shakedown-2026-10",
+        "launch_commit": "344049db784bd30671745a5dcf5a956aff4277e4",
+        "effort": "high"
+      },
+      "receipts": {
+        "valid": true,
+        "problems": [],
+        "paper_slug": "dye-et-al-2023",
+        "receipted": {
+          "instrument_versions": {
+            "coverage-rules": "1.0",
+            "eligibility-criteria": "1.0",
+            "data-availability-taxonomy": "1.0",
+            "pipeline-invariants": "1.0"
+          },
+          "instrument_receipts": {
+            "coverage-rules": "a2a4c0a899291c2b",
+            "eligibility-criteria": "8f88ae3af8e03284",
+            "data-availability-taxonomy": "068d5f05793429d7",
+            "pipeline-invariants": "f847020d25d57382"
+          },
+          "model_id": "claude-opus-5-5",
+          "agent_version": "reproduction-planner v1.1"
+        }
+      },
+      "blinding": {
+        "contaminating": [],
+        "warnings": [
+          {
+            "tool": "Bash",
+            "path": "studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-01/supplement.pdf",
+            "rule": "blinded path named in command output (review)",
+            "command": "grep -n -B1 -A4 -E \"^  (coverage-rules|eligibility-criteria|pipeline-invariants):\" manifest.yaml; cat /home/shawn/corpora/llm-reproducibility/dye-et-al-2023/meta.json"
+          }
+        ]
+      },
+      "writes_outside_scope": [],
+      "usage": {
+        "input_tokens": 50,
+        "output_tokens": 19238,
+        "cache_creation_input_tokens": 157440,
+        "cache_read_input_tokens": 2581646,
+        "cache_write_5m": 157440,
+        "cache_write_1h": 0,
+        "requests": 25,
+        "models": [
+          "claude-opus-5-5"
+        ]
+      },
+      "cost_usd": 1.6885,
+      "started_at": "2026-10-03T08:05:40.690Z",
+      "finished_at": "2026-10-03T08:12:14.195Z",
+      "wallclock_seconds": 393.5,
+      "clean": true,
+      "agent_id": "a3a723d6a48217b9f"
+    }
+  ],
+  "per_paper": {
+    "herskind-riede-2024": {
+      "agents": 1,
+      "output_tokens": 20726,
+      "input_side_tokens": 1160799,
+      "cost_usd": 1.0678,
+      "agent_wallclock_seconds": 393.7,
+      "unpriced_agents": 0
+    },
+    "dye-et-al-2023": {
+      "agents": 1,
+      "output_tokens": 19238,
+      "input_side_tokens": 2739136,
+      "cost_usd": 1.6885,
+      "agent_wallclock_seconds": 393.5,
+      "unpriced_agents": 0
+    }
+  },
+  "clean": false
+}

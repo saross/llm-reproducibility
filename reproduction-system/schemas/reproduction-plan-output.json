@@ -1,0 +1,188 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Reproduction plan output",
+  "description": "Structured-output contract for reproduction-planner spawns (agent definition v1.1), supplied at spawn by the reproduction-plan workflow. The orchestrator persists the validated payload as the attempt's reproduction-plan.json; after batched human approval its verification_targets list is the locked coverage denominator (coverage-rules v1.0). Receipts are required: a plan without receipts is a schema failure. Runtime-safe: no top-level allOf or conditionals (the spawn-side validator rejects them, 2026-08-17 S4 probe); ESCALATE consistency is checked post-run by scripts/reproduction-lane.py.",
+  "version": "1.0",
+  "type": "object",
+  "required": ["status", "paper_slug", "receipts"],
+  "additionalProperties": false,
+  "properties": {
+    "status": {"type": "string", "enum": ["OK", "ESCALATE"]},
+    "escalate_reason": {"type": ["string", "null"]},
+    "paper_slug": {"type": "string", "minLength": 1},
+    "receipts": {"$ref": "#/definitions/receipts"},
+    "paper": {
+      "type": "object",
+      "required": ["title", "doi"],
+      "additionalProperties": false,
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "doi": {"type": "string", "minLength": 1},
+        "citation": {"type": "string"}
+      }
+    },
+    "reproduction_type": {
+      "type": "object",
+      "required": ["types", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "types": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "enum": ["A", "B", "C", "D"]},
+          "description": "A batch-ready with container; B batch-ready without container; C interactive scripts without container; D proprietary upstream. A paper can carry several types."
+        },
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "materials": {
+      "type": "array",
+      "description": "Every code, data, and supplementary input the reproduction needs, with where it lives and how it is reached.",
+      "items": {
+        "type": "object",
+        "required": ["name", "kind", "location", "access_route"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "enum": ["code", "data", "supplement", "environment", "other"]},
+          "location": {"type": "string", "minLength": 1, "description": "URL, DOI, or local path"},
+          "version": {"type": ["string", "null"]},
+          "access_route": {"type": "string", "minLength": 1, "description": "How the executor is expected to retrieve it (standard protocol, authentication, request, none)"},
+          "checksum": {"type": ["string", "null"], "description": "Published or observed checksum, with algorithm prefix (md5:, sha256:)"},
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "required": ["provided_by_authors", "planned_base_image"],
+      "additionalProperties": false,
+      "properties": {
+        "provided_by_authors": {"type": "string", "minLength": 1, "description": "What the paper and deposit specify (container, lockfile, package list, language version, nothing)"},
+        "planned_base_image": {"type": "string", "minLength": 1},
+        "language_version_target": {"type": ["string", "null"]},
+        "packages": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "execution_steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "action", "expected_output"],
+        "additionalProperties": false,
+        "properties": {
+          "step": {"type": "integer", "minimum": 1},
+          "action": {"type": "string", "minLength": 1},
+          "expected_output": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "verification_targets": {
+      "type": "array",
+      "description": "The candidate locked denominator: every published table, figure, and named value the reproduction will be scored against. Target ids must be unique within the plan.",
+      "items": {"$ref": "#/definitions/target"}
+    },
+    "exclusions": {
+      "type": "array",
+      "description": "Display items or named values deliberately not enumerated as targets, each with a reason. Exclusions are visible to the approver; silent omission is a scope reduction.",
+      "items": {
+        "type": "object",
+        "required": ["item", "location", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "item": {"type": "string", "minLength": 1},
+          "location": {"type": "string", "minLength": 1},
+          "reason": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "enumeration_check": {
+      "type": "object",
+      "description": "The deterministic enumeration-completeness check (coverage-rules v1.0, planner-side duties).",
+      "required": ["method", "display_items_detected", "targets_enumerated", "items_excluded", "flag_for_human", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "method": {"type": "string", "minLength": 1, "description": "The command or procedure used to count display items, reproducible by the approver"},
+        "display_items_detected": {"type": "integer", "minimum": 0},
+        "targets_enumerated": {"type": "integer", "minimum": 0},
+        "items_excluded": {"type": "integer", "minimum": 0},
+        "flag_for_human": {"type": "boolean"},
+        "notes": {"type": "string"}
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "required": ["computational_component", "code_available", "primary_language_r", "estimated_compute_hours", "within_compute_cap", "study_team_coauthorship", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "computational_component": {"type": "boolean"},
+        "code_available": {"type": "boolean"},
+        "primary_language_r": {"type": "boolean"},
+        "estimated_compute_hours": {"type": "number", "minimum": 0},
+        "within_compute_cap": {"type": "boolean"},
+        "study_team_coauthorship": {"type": "string", "enum": ["no", "yes", "unknown"]},
+        "notes": {"type": "string"}
+      }
+    },
+    "data_retrieval_plan": {
+      "type": "array",
+      "description": "Per-dataset planned retrieval route. L-levels are assigned by the executor from actual retrieval attempts, never here (data-availability taxonomy v1.0).",
+      "items": {
+        "type": "object",
+        "required": ["dataset", "stated_route", "planned_retrieval"],
+        "additionalProperties": false,
+        "properties": {
+          "dataset": {"type": "string", "minLength": 1},
+          "stated_route": {"type": "string", "minLength": 1},
+          "planned_retrieval": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["risk", "mitigation"],
+        "additionalProperties": false,
+        "properties": {
+          "risk": {"type": "string", "minLength": 1},
+          "likelihood": {"type": "string", "enum": ["low", "medium", "high"]},
+          "mitigation": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "compute_strategy": {"type": "string"},
+    "scope_limitations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "questions_for_approver": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  },
+  "definitions": {
+    "receipts": {
+      "type": "object",
+      "required": ["instrument_versions", "instrument_receipts", "agent_version", "model_id", "pulled_files_read"],
+      "additionalProperties": false,
+      "properties": {
+        "instrument_versions": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+        "instrument_receipts": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+        "agent_version": {"type": "string", "minLength": 1},
+        "model_id": {"type": "string", "minLength": 1},
+        "pulled_files_read": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "target": {
+      "type": "object",
+      "required": ["target_id", "display_item", "location", "description", "analysis_type", "comparison_method", "tolerance", "published_values_source"],
+      "additionalProperties": false,
+      "properties": {
+        "target_id": {"type": "string", "pattern": "^T[0-9]{2,3}$", "description": "T01, T02, ... unique within the plan"},
+        "display_item": {"type": "string", "minLength": 1, "description": "e.g. 'Table 2', 'Figure 4', 'Supplement Table S3', 'Named value: PMI maximum'"},
+        "location": {"type": "string", "minLength": 1, "description": "Page and section, or supplement file and sheet"},
+        "description": {"type": "string", "minLength": 1},
+        "n_values": {"type": ["integer", "null"], "minimum": 0, "description": "Number of individual published values in the target; null for visual-only targets"},
+        "analysis_type": {"type": "string", "enum": ["deterministic", "stochastic_mcmc", "stochastic_resampling", "regression", "proprietary_upstream", "visual"]},
+        "comparison_method": {"type": "string", "minLength": 1},
+        "tolerance": {"type": "string", "minLength": 1, "description": "Pre-stated per-analysis tolerance (verdicts-and-precision v1.0 tolerance rules)"},
+        "published_values_source": {"type": "string", "minLength": 1, "description": "Where the published values are read from: the paper text, a supplement, or a deposited reference file"}
+      }
+    }
+  }
+}

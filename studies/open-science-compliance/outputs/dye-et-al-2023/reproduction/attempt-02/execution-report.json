@@ -1,0 +1,168 @@
+{
+  "record_version": "1.0",
+  "run_id": "phase2-shakedown-2026-10",
+  "workflow_run": "wf_20ac2b6b-9aa",
+  "agent_id": "ae187a79b6d43cddb",
+  "agent_type": "reproduction-executor",
+  "launch_commit": "e5f35543c07d2a9314d1742ff34df40a12bd35fd",
+  "effort": "high",
+  "persisted_at": "2026-10-03T12:40:24+00:00",
+  "orchestrator_notes": [],
+  "payload": {
+    "status": "ESCALATE",
+    "paper_slug": "dye-et-al-2023",
+    "verdict": "PARTIAL",
+    "attempt_dir": "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02",
+    "escalate_reason": "Suspected PAPER_ERROR on T06 (paper p.16 reports BE1-Cowrie(oFD)BE1-Disc = 0.87; the authors' own section 7 code on the published beads-1.csv gives 0.99967, and 0.87 is the BE1-Amethyst(oFD)BE1-Disc cell, 0.86717, while all 54 Supplement Table 2-10 values reproduce exactly). Plus CANNOT_COMPARE calls on T02 (the published section 4 code indexes column 78 of a 77-column file and errors) and T10/T11 (four of five MCMC runs unavailable, HTTP 404). All need human confirmation before entering study data. All 34 targets were completed and the artefact set persisted; the self-check gate passes.",
+    "escalations": [
+      {
+        "kind": "PAPER_ERROR",
+        "target_id": "T06",
+        "detail": "Paper p.16 l.374-376: BE1-Cowrie(oFD)BE1-Disc = 0.87. Reproduced from the authors' section 7 code on the published beads-1.csv: 0.99967 (2 dp 1.00). 0.87 equals the BE1-Amethyst(oFD)BE1-Disc cell (0.86717) of the same matrix, consistent with a misread row. Orientation is confirmed by T05; the same inputs and code reproduce all 54 tabulated Supplement Table 2-10 values exactly. The qualitative conclusion is unaffected. Evidence: comparisons/values/T06-cowrie-disc.csv and T06-section-07-full-matrix.csv."
+      },
+      {
+        "kind": "CANNOT_COMPARE",
+        "target_id": "T02",
+        "detail": "Paper Fig 3: supplement section 4 code burial.dates <- c(3:5, 7, 9, 12:78) indexes column 78, but read_oxcal() (ArchaeoPhases 1.8) returns 77 columns for the published beads-1.csv, so occurrence_plot() errors with 'undefined columns selected'. x_min=500/x_max=700 also disagree with the published ~400-800 axis. This is a code-data mismatch in the published materials; it was not corrected because changing the indices would change the data selection (invariant 2)."
+      },
+      {
+        "kind": "CANNOT_COMPARE",
+        "target_id": "T10",
+        "detail": "Between-run variability summary needs beads-0/2/3/4.csv: unpublished (supplement uses /path/to/ placeholders), and https://tsdye.online/AP/beads-{0,2,3,4}.csv returned HTTP 404 on 2026-10-03. Expected-untestable per R2; no L4 request sent, per the approver's ruling."
+      },
+      {
+        "kind": "CANNOT_COMPARE",
+        "target_id": "T11",
+        "detail": "Supplement Table 1 (462 values, estimate_range across five runs) needs the same four unavailable MCMC runs as T10. Section 3 transcribed but not executed."
+      }
+    ],
+    "coverage": {
+      "targets_enumerated": 34,
+      "targets_reproduced": 25
+    },
+    "data_availability": {
+      "level": "L6",
+      "datasets": [
+        {
+          "dataset": "beads-1.csv (OxCal MCMC output used for all reported post-processing)",
+          "route": "HTTPS GET https://tsdye.online/AP/beads-1.csv (URL hard-coded in the supplement's read_oxcal calls; author personal server, no persistent identifier, no authentication)",
+          "steps": "curl, 2026-10-03 11:59 UTC: HTTP 200, 3,688,071 bytes, Last-Modified 2022-10-20 16:24:44 GMT; sha256 verified against the plan; copied to data/ with the hash re-verified; checked again at every run start",
+          "outcome": "Retrieved (open machine-retrieval, L1-type)",
+          "checksum": "sha256:02cf52d4ace408b6329e69e7a0e4bd457084ae9605f2fa5eccc2abad20ab9051"
+        },
+        {
+          "dataset": "beads-0.csv, beads-2.csv, beads-3.csv, beads-4.csv (four further OxCal runs for Supplement Table 1)",
+          "route": "No location stated (supplement section 3 uses /path/to/beads-N.csv placeholders); probed the author's server by analogy with beads-1.csv",
+          "steps": "2026-10-03 11:59 UTC: GET https://tsdye.online/AP/beads-{0,2,3,4}.csv each HTTP 404; https://tsdye.online/AP/ HTTP 403 (no index); https://tsdye.online/AP/beads-0.csv.gz 404; https://tsdye.online/beads-0.csv 404. No L4 request sent (approver ruling)",
+          "outcome": "Unavailable: unfulfilled availability claim ('Data and materials are available in the Supplement'), L6. Paper-level: 1 of 2 enumerated datasets (50%, so not above the L2 threshold), terminal failure mode L6",
+          "checksum": null
+        }
+      ]
+    },
+    "docker": {
+      "image_tag": "llmr-dye-et-al-2023-attempt-02",
+      "base_image": "rocker/r-ver:4.2.3@sha256:6dff804fb051f7c38cf9ebcaf307b5102b46e5187ffe2ce921d760a26facd693",
+      "build_attempts": 1
+    },
+    "environment_spec_level": 0,
+    "modifications": [
+      {
+        "file": "authors-code/*.R (from tools/transcribe_supplement.py)",
+        "change": "Transcribed the supplement's printed R listings (sections 3-10): line numbers stripped, PDF wrap marks rejoined with one space, typographic quotes made ASCII. Two parser bugs (form-feed line splitting and form-feed-prefixed lines) were fixed before use.",
+        "rationale": "The authors' code exists only as typeset PDF listings and must become plain R source to run in batch. Verified against rendered pages and by a label check (77/77 pos and 68/68 bead_list labels match beads-1.csv columns).",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "authors-code/section-04,06,07,08,09,10-*.R",
+        "change": "read_oxcal(\"https://tsdye.online/AP/beads-1.csv\") changed to read_oxcal(\"data/beads-1.csv\")",
+        "rationale": "Path only: verified local copy with an identical sha256; runs with --network none.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "authors-code/section-10-4-row-4.R",
+        "change": "Author-local path /home/dk/Projects/hierarchical-sequence-prior/phyletic-seriation/project_source/lakenheath/beads-1.csv changed to data/beads-1.csv",
+        "rationale": "Path only: the author's machine path is unavailable; same verified file.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "authors-code/section-03-replicability.R",
+        "change": "Placeholders /path/to/beads-N.csv changed to data/beads-N.csv; section not executed because four inputs are missing",
+        "rationale": "Path only, as the supplement instructs users to revise these paths.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "authors-code/section-04-occurrence-plot.R; authors-code/section-06-tempo-plot.R",
+        "change": "Output file= arguments changed from all-burials.pdf and test-bead-tempos.pdf to outputs/all-burials.pdf and outputs/test-bead-tempos.pdf",
+        "rationale": "Output location only.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "run-analysis.R",
+        "change": "Batch wrapper: sources sections in one global environment (section 5 before 6-10), with per-section tryCatch, a null default device for dev.new() previews, and capture of res$observed, tempo data, and bead_list to CSV/RDS. Section 6 runs after sections 7-10.",
+        "rationale": "Execution mechanics and output capture only. Section 6 only reads bead_list, bead_names, and the MCMC file, and sections 7-10 do not depend on it, so the order cannot change any value. Logged as a deviation from plan step 4.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "Dockerfile",
+        "change": "Constructed environment: rocker/r-ver:4.2.3, PPM 2023-03-23 snapshot, system libraries, ArchaeoPhases 1.8 from the vendored CRAN archive tarball with an in-build sha256 check",
+        "rationale": "The authors specify no environment; the plan's pinning was implemented.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "scripts/verification-aids.R; scripts/compare.R; scripts/check-labels.R",
+        "change": "Separate R1 verification aids (documented exports allen_illustrate and allen_observe; display-only plot_title and file_name arguments) and read-only comparison and label-check scripts",
+        "rationale": "Ruling R1 for targets with no author code (T01, T21-T23, T33, T34) and value-level comparison. Kept apart from the authors' code.",
+        "changes_what_is_computed": false
+      }
+    ],
+    "artefacts_written": [
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/Dockerfile",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/run-all.sh",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/run-analysis.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/authors-code/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/authors-code-raw/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/scripts/check-labels.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/scripts/verification-aids.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/scripts/compare.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/tools/transcribe_supplement.py",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/data/beads-1.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/vendor/ArchaeoPhases_1.8.tar.gz",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/environment.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/log.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/comparisons/comparison-report.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/comparisons/comparison.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/comparisons/published-values.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/comparisons/values/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/outputs/test-bead-tempos.pdf",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/outputs/authors/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/outputs/aids/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/outputs/checks/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/dye-et-al-2023/reproduction/attempt-02/outputs/logs/"
+    ],
+    "receipts": {
+      "instrument_versions": {
+        "verdicts-and-precision": "1.0",
+        "coverage-rules": "1.0",
+        "pipeline-invariants": "1.0"
+      },
+      "instrument_receipts": {
+        "verdicts-and-precision": "fe9bca3d3c95f931",
+        "coverage-rules": "a2a4c0a899291c2b",
+        "pipeline-invariants": "f847020d25d57382"
+      },
+      "agent_version": "reproduction-executor v1.1",
+      "model_id": "claude-opus-5-5",
+      "pulled_files_read": [
+        "/home/shawn/Code/llm-reproducibility/.claude/skills/reproduction-assessor/references/dockerfile-patterns.md",
+        "/home/shawn/Code/llm-reproducibility/.claude/skills/reproduction-assessor/references/wrapper-script-patterns.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/templates/README.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/templates/log-template.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/templates/environment-template.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/templates/comparison-report-template.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/prompts/01-preparation.md",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/data-availability-taxonomy.md"
+      ]
+    },
+    "notes": "Approval verified before work: the plan sha256 7ff05a24…0f35 equals the spawn hash and plan-approval.json (decision approve); it was re-verified unchanged at the end. The self-check gate (reproduction-lane.py check-attempt) passes with no errors or warnings; coverage 25/34 = 0.7353; executor verdict PARTIAL. Outcomes: 24 EXACT_MATCH, 1 WITHIN_PRECISION (T34: P(overlaps) = 0.725 exactly, published 0.73 under half-up rounding), 5 MINOR_DISCREPANCY (T03, T21, T23 ggplot2 grey background versus published white, an unpublished theme convention; T22 one value, 0.10017, on the 0.1 bin edge, 8/10 bins by the planned unrounded method and 10/10 with the published 2-dp values; T04 all 8 Fig 6 links supported, placements within about 47 years), 3 CANNOT_COMPARE (T02, T10, T11), 1 PAPER_ERROR (T06, suspected). Every published Supplement Table cell equals R's round(x, 2) of the reproduced frequency, including edge cases (0.065 -> 0.06): strong evidence that the inputs and code are identical to the authors'. Recorded finding per the approver: supplement section 10.5 says 'nine' (p.42) versus 'six' (p.41) relations; Table 6 has 6. Data-availability L6 follows the plan's two-dataset enumeration; it would be L2 if the model file and the ADS archive were counted as datasets (see environment.md). Blinding: one host listing of .claude/skills/reproduction-assessor/references/, made to locate the pulled references, displayed the names of two blinded entries; neither was opened, read, or searched (logged in log.md). Deviation: section 6 (tempo plot) ran after sections 7-10; it is independent, so no value changes. The data-availability taxonomy was read to assign the L-level because the plan does not echo the level definitions (declared in pulled_files_read). Publisher content (paper, mmc1, mmc2.zip) never entered the attempt directory. All execution was in Docker with --network none; the final run used the host uid. Nothing was committed."
+  }
+}
