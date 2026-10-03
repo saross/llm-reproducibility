@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-08-19
+updated: 2026-10-03
 status: active
 ---
 
@@ -1025,3 +1025,59 @@ by a per-instance request; Shawn away for several days after the 19th,
 so the handoff flags his two tasks (worksheet sitting, F-010 ruling)
 first; sonnet intro API pricing ends 2026-08-31, relevant only if a
 further sonnet arm were ever wanted.
+
+## Session: 2026-08-29 → 2026-10-03 — F-010 path rule shipped; E8-v2 worksheet adjudicated end to end
+
+Session 003fda8b-6037-409d-94d1-c7ed1b2a5202; resumed at `28d6870` (0/0,
+fetch-first); three sittings separated by Shawn's absences (2026-08-29;
+2026-09-03; 2026-10-01 → 10-03). Model changed from Fable 5 to Opus 5.5 at
+the 2026-10-01 resume. No API spend; subagents only for research and
+observation writing.
+
+**Done:**
+
+- **F-010 ruled — path rule** (2026-08-29; PR #4, merged `5ebb6a0`):
+  reconcile-run v1.5 judges a Glob/Grep by the paths it returned (`6fc45df`);
+  replay of all 13 committed reconciliations, 157 spawns, one verdict flip
+  — crema r2 → clean (`383e3c6`); register F-012 (verifier error) and the
+  F-010 ruling entry (`af81640`); register Observation 4 ratified and
+  governance endorsed (`be11750`). Tests 267 → 277.
+- **Repair rule and curation practice** (2026-09-03, `01cd737`, `e3fd5b2`):
+  scores assess the published surface and repair is score-independent;
+  routes (a) retrieval, (b) re-derivation, later (c) format recovery
+  (`cba1d77`); effort bound ~3× the dye estimate; supplement-embedded URLs
+  enter the registry. Dye OxCal re-derivation accepted (now attempt-03).
+- **E8-v2 worksheet adjudicated, all 150 items, ten sittings** (`b764b5e`,
+  `c9fee3e`, `e07a2a6`, `0bb03ad`, `7298681`, `8fee957`, `45aaa2a`,
+  `6c0c2ec`, `8905c6c`, `7da90bf`); forward principles AP-1 to AP-17 in
+  `adjudication-log.md`. Reference **110 → 95 of 150**; 39 items changed (27
+  down, 12 up); 9 tagged beyond-instrument for with/without concordance.
+- **Rulings with protocol consequences:** supplements become census inputs
+  (Option A, `64f0454`, dated protocol note); "all rights reserved" → 0 on a
+  verified FAIR-framework survey (`399b86b`, `64f0454`); F2 requires
+  creators, title, a content description, and ≥1 keyword (`6b6d14a`);
+  version rule refined (cited version scored; checks always run).
+- **Amendment 2 precedent error found** (`dfc74ef`): the paper never cites
+  the "dead DOI" — erratum-log Entry 4; registry entry withdrawn; public
+  correction queued for amendment 3.
+- **Findings recorded:** a GPL-2 derivation under CC BY (key); full Web of
+  Science records redistributed against Clarivate's public terms, coded
+  "data shared, rights-incompatible" (marwick, `34fe6a3`); herskind's pilot
+  extraction cites two unrelated-but-resolving DOIs (`7eb4f96`).
+- **Observations 30–33** (`8c91342`, `e70fadb`, `87873e3`; Obs 31 pointer
+  `7eb4f96`); future-work items 10 (uplift tool) and 11 (human-FAIR vs
+  machine-FAIR) (`834b020`, `a10c747`); inbox capture of the uplift idea.
+- **Phase 2 regression test approved** (option (a), `795caab`) at the
+  cv-and-applications session's request via agent mail; sequenced after
+  the worksheet; Cosmos pitch due Fri 9 Oct.
+
+**Not done:** E8-v2 registration and assembly; the six-arm concordance
+(needs a BI-exclusion option in the analysis tool); H13 re-derivation and
+the gates ruling; the regression-test workflow build; the pre-census queue
+(identifier check, harvester fields, supplement collection, instrument
+clarifications, amendment 3); dye attempt-03.
+
+**Contextual assumptions:** rulings were made in single sittings with the
+registrant present; the version rule's dates were Crossref `created`
+proxies where `published-online` was absent; Clarivate's terms were read
+from public documents only (institutional licences unseen).

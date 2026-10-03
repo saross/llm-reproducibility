@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-08-19
+updated: 2026-10-03
 status: active
 ---
 
@@ -581,3 +581,32 @@ session's tooling now reports guideless = ∅ for post-A3 arms, which is
 correct and permanently uninformative. If the correlation itself ever
 needs re-testing, that is a deliberate ablation run (withhold the
 push), not a free byproduct of normal operation.
+
+## 2026-10-03 — Confabulated identifiers hid in free-text rationale fields, not structured ones
+
+Two pilot extraction records, both naming Claude Opus 4.5 as extractor,
+carried Zenodo DOIs their papers never cite — and in both, the invented
+identifier sat in the same narrative field,
+`data_completeness.assessment_scope_rationale`. The structured identifier
+fields of the same records were correct: herskind's
+`data_availability.repositories` list the two real Zenodo records, and
+marwick's `supplementary_materials` carries the real concept DOI.
+Herskind's two invented DOIs resolve to unrelated real records (a US
+drought dataset and a calcite archive), so a resolution check passes them;
+marwick's resolves nowhere, and it reached a lodged OSF amendment because a
+human-curated registry later read the rationale string as data.
+
+**Lesson.** A free-text rationale written after the structured fields is
+where a model "remembers" specifics it never extracted. It reads as a
+summary, nothing consumes it mechanically, and so it escapes verification
+until something downstream treats it as data. Treat every identifier in a
+narrative field of a model-produced record as unverified by default, scan
+such fields mechanically against the source text, and never curate
+downstream inputs from them.
+
+A related pattern in the scoring arms: all nine v2.1 runs scored dye's
+supplement code I1 = 1 from the paper's *description* of the code, never
+having opened the supplement (the workflow withheld it), and one wrote that
+the code was "not unstructured text or PDF" — it was a PDF. Unanimity
+across arms is agreement on inference, not on observation; when the inputs
+lack the fact, consensus measures the shared prior.

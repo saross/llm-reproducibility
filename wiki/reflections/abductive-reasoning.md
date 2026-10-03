@@ -6,7 +6,7 @@ audience: "researchers"
 conditions: "debugging with surprising results, hypothesis generation, belief revision, default-following corrections"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-08-19
+updated: 2026-10-03
 status: active
 ---
 
@@ -967,3 +967,80 @@ the catching mechanism generalises: new tooling must first reproduce
 known ground truth (here, the run-record cross-check lines) before its
 novel outputs are read; the absurd 100% figure was only visibly absurd
 because correct known figures sat directly above it in the same output.
+
+## 2026-10-03 — The precedent that was never in the paper
+
+**Session:** 003fda8b-6037-409d-94d1-c7ed1b2a5202
+**Instance:** primary (Opus 5.5; the registry curation that seeded the
+error predates this session)
+
+### Surprising fact
+
+Preparing marwick-2025 `data_fair`, the evidence pack's "dead cited DOI" —
+10.5281/zenodo.14561925, 404 at DataCite and Zenodo, and the precedent case
+named in lodged amendment 2 §2 — appeared nowhere in the paper: zero hits in
+the version of record, the preprint, and the corpus extracted text. The
+deposit "recovered" for it, 10.5281/zenodo.15603267, turned out to be v1.3
+of the concept DOI (10.5281/zenodo.14897252) that the paper does cite.
+
+### Probe
+
+Counted each identifier across all three text sources; traced the dead DOI
+through the repository to its only origin, the pilot extraction's
+`data_completeness.assessment_scope_rationale`; listed the concept's
+versions through the Zenodo API; and read the declared-links registry's
+header, which says it was curated from the extraction records.
+
+### Belief revision
+
+The registry was never an independent reading of the papers: "the paper
+cites X" in the apparatus can be second-hand, inherited from a
+model-produced record. The identifier-recovery rule worked as specified;
+its premise was wrong. Corrected as erratum-log Entry 4, with a standing
+direction for a mechanical identifier check — presence in the paper's text,
+not mere resolution (a later scan found two more such identifiers in
+herskind's record, both resolving to unrelated records).
+
+### What would change this belief
+
+Finding the identifier in a version of the paper the corpus does not hold
+(an earlier online version, say). Only the version of record, the preprint,
+and the extracted text were checked.
+
+## 2026-10-03 — The version the dates chose never produced the paper
+
+**Session:** 003fda8b-6037-409d-94d1-c7ed1b2a5202
+**Instance:** primary
+
+### Surprising fact
+
+Under the version rule as then written, crema-et-al-2024's cited concept
+DOI resolved to v2.0.0 (2024-03-14), and the date fallback — the latest
+version before the article first appeared (2024-03-16) — also picked
+v2.0.0. But the paper's Table 1 matched v1.0.0's `table1.csv` on all 24
+values (8 medians, 8 intervals, 8 Rhat values), and 18 of v2.0.0's 24
+differ.
+
+### Probe
+
+Read the article history (accepted 29 February 2024, so both versions
+post-date acceptance and dates cannot decide); diffed v1.0.0 → v2.0.0 at
+GitHub (11 commits re-running the analyses and regenerating every figure
+and `table1.csv`); compared each tag's `table1.csv` with the PDF's Table 1.
+The Obs 33 writer agent re-derived the comparison independently and found
+each Zenodo archive's `table1.csv` byte-identical to its tag's copy.
+
+### Belief revision
+
+Dates are a weak proxy for the version of record; a published-values match
+is decisive wherever outputs are tabular. Shawn's prior — a deposit eleven
+days before publication is a plausible target, given publication lags —
+was right where the rule was wrong. AP-12 was refined (score and reproduce
+the cited version; always run the checks; a failing citation is a
+correction finding), and the general point became Observation 33:
+resolution is not verification.
+
+### Implications for practice
+
+Before trusting any version selection, look for something in the paper
+that only one version can reproduce.

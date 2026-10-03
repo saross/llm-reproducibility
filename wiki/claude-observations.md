@@ -1017,3 +1017,85 @@ the other is holding. Its value scales with the length of the coming gap.
 item with whose court it is in, and write the human's items first in the
 handoff — the next session's opening context should lead with what the
 returning human must do, not with what the agent did.
+
+## claude-obs 50 — 2026-10-03: Shawn rules on principle, then asks for the perverse case before he commits
+
+**Pattern.** Across ten worksheet sittings Shawn's rulings followed one
+shape: state the principle ("scores assess published research surfaces";
+"FAIR = machine-actionable FAIR"), then test it against its worst
+generalisation before adopting it. He made that test explicit as AP-7 ("does
+generalisation of this precedent produce any foreseeable, perverse
+results?") and then applied it himself — in the keyword decision he named
+the perverse outcome he feared (a few formal keywords beating a rich
+description) before asking me to check the registered wording, and accepted
+the literal reading once it was shown not to produce that outcome.
+
+**Lesson.** Briefings for him land best when they carry the
+principle-level framing and the perversity check already run, with the
+strongest case for the other side. The decisions that went quickest were
+the ones where the brief had done both.
+
+**How to apply.** For any scoring or protocol decision, lead with the
+principle at stake, show the generalisation that would break it, say which
+reading survives, and only then recommend.
+
+## claude-obs 51 — 2026-10-03: I argued from second-hand facts, and each one cost a correction
+
+**Pattern.** My own errors this session shared a cause: I built arguments on
+facts I had not checked at their source. I framed AP-2 on scoring spawns
+"can read" supplements without opening the workflow that withholds them; I
+argued a multiple-counting point without the counterfactual; I misquoted a
+log line from memory; I overstated a total by one. The longest-lived error
+was inherited rather than mine — the marwick "dead DOI" — but I had
+repeated it in planning text for weeks without checking it against the
+paper. Every error was caught by a later primary-source check, several by
+subagents verifying my briefs before writing.
+
+**Lesson.** The anti-confabulation rule applies to my own framing as well as
+to cited specifics. A fact I am about to rest a recommendation on deserves
+the same check as a fact I am about to quote. Shawn turned this into a
+standing direction: mechanical verification wherever possible.
+
+**How to apply.** Before a briefing goes out, list the facts its
+recommendation depends on and verify each at its source — workflow code,
+the paper text, the registry API — rather than at the record that cites it.
+When a subagent corrects a brief, treat the correction as data about my
+process, not just about the item.
+
+## claude-obs 52 — 2026-10-03: His "I'm not sure how to do better" was an invitation to find the decisive test
+
+**Pattern.** When Shawn questioned the date rule for crema ("I suspect …
+a dataset from 2024-03-05 would be a plausible target … I'm not sure how to
+do better here"), his doubt was well calibrated: he knows publication lags.
+The productive response was not to defend or soften the rule but to look
+for evidence only one version could produce. The published Table 1 matched
+v1.0.0 on every value, and AP-12 was refined on the strength of it.
+
+**Lesson.** When he marks the limit of a method and his own uncertainty
+together, the most useful move is a test that makes neither of our priors
+matter. His domain intuition points to where to look; a mechanical check
+settles it.
+
+**How to apply.** When Shawn says he can't see a better way, propose one
+decisive, cheap check (content match, checksum, primary source) before
+offering any refinement of the heuristic.
+
+## claude-obs 53 — 2026-10-03: He sequences competing demands explicitly and protects the current thread
+
+**Pattern.** When a cross-project request arrived mid-sitting (the Phase 2
+regression test for the Cosmos pitch), Shawn approved it and set its order
+and deadline in one line: option (a), "after we've finished the work
+underway here … if that means the timeline slips past Tuesday, that's OK,
+but I want submission by Friday at the latest. Let's finish the current
+work first." The worksheet kept its momentum, and the peer session got a
+definite answer and date.
+
+**Lesson.** He prefers finishing a coherent body of work before switching,
+and he states the outer deadline rather than the inner schedule. Inserting
+the new work immediately would have broken a ten-sitting chain of
+principles applied forward.
+
+**How to apply.** When new work arrives mid-thread, present it with its
+cost and deadline and ask where it goes in the sequence. Don't start it
+until he places it, and relay his sequencing to the requesting session the
+same day.

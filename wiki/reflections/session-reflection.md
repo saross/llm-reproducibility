@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-08-19
+updated: 2026-10-03
 status: active
 ---
 
@@ -1050,3 +1050,59 @@ and only a new consumer with known ground truth to compare against
 exposes it. The fix (two-era detection) took twenty minutes; the
 habit that caught it — never trust a new tool's output until it
 reproduces figures you already know — is the part worth keeping.
+
+## Entry 18 (2026-08-29 → 2026-10-03) — The reference was part of the instrument
+
+**Project:** llm-reproducibility. **Session:**
+003fda8b-6037-409d-94d1-c7ed1b2a5202 — one session spanning five calendar
+weeks (2026-08-29; 2026-09-03; 2026-10-01 → 10-03) and a mid-session model
+change: Fable 5 drove the F-010 work and the first two worksheet sittings;
+Opus 5.5 drove the rest and writes this. The earlier turns are in context
+verbatim, not as a summary, but observations about them are read rather
+than remembered.
+
+**Where did you and the human disagree, and who was right?** Twice, and
+Shawn was right both times. On version selection I proposed ranking a
+published-values match above the version the paper cites; he put the cited
+version first — "that's what everyone will expect to work" — with every
+check always run and a failing citation recorded as a correction. His order
+keeps scoring anchored to the published surface (AP-1), the principle the
+whole adjudication rested on; mine would have quietly substituted the
+version that *should* have been cited for the one that was. And on crema,
+when I presented v2.0.0 by the date rule, he said a 2024-03-05 deposit was
+a plausible target for a 2024-03-16 article. The published Table 1 then
+matched v1.0.0 on all 24 values. His sense of publication lag beat my rule,
+and his "I'm not sure how to do better here" was the prompt that produced
+the decisive test. The keyword question was not a disagreement but a
+shared uncertainty he refused to settle by prior: the FAIR principle does
+not name keywords, but our registered instrument and F-UJI do, and the
+check mattered more than either of our expectations.
+
+**What would you do differently if you replayed this session?** Check
+provenance before arguing from a fact. Most of the session's corrections
+were mine: I told Shawn scoring spawns "can read" supplements (true of the
+read scope, false of the workflow, which withholds them by design); I
+argued that a format-based I1 = 0 would count one fact several times (I1
+is format's only home); I misquoted the dye reproduction log and
+overstated a total by one. Longest-lived of all, the project had carried
+marwick's "dead cited DOI" as a paper defect for five weeks — it lived in
+our own pilot extraction, never in the paper, and had reached a lodged OSF
+amendment. Every one was caught by a later primary-source check, some by
+me and some by subagents verifying my briefs. Replayed, the first move on
+any "the record says" fact would be a mechanical check against its source
+— the direction Shawn has now made standing.
+
+**What decision or trade-off made today will look arbitrary without this
+session's context?** When the instrument's wording was extended and when it
+was not. AP-16 reads "(PIDs)" generously (a lockfile counts for code I3);
+AP-15 reads "keywords" strictly (required, conjunctively); AP-11 lets a
+DataCite deposit pass R1.3 for data but not for code. Read cold, these look
+inconsistent. The rule that reconciles them is AP-7 as Shawn applied it:
+follow the registered text unless the literal reading produces a perverse
+result, and run the perversity test explicitly each time. One cited DOI
+outranking 152 pinned packages is perverse; keywords alone can never
+outrank a rich description under a conjunctive test, so the literal reading
+stands. Shawn's own summary of the session — a stalled project moving again
+— is fair; what moved it was not speed but a reference dataset rebuilt item
+by item against primary sources, which turned out to be as much a part of
+the measurement apparatus as the models it will grade.
