@@ -305,6 +305,58 @@ def transcript(*entries: dict) -> list[str]:
     return [json.dumps(e) for e in entries]
 
 
+class ResultRecoveryTests(unittest.TestCase):
+    """Transcript fallback for results and the args-embedding launcher."""
+
+    def test_structured_output_takes_last_accepted_call(self):
+        lines = transcript(
+            {"message": {"role": "assistant", "content": [
+                {"type": "tool_use", "id": "s1", "name": "StructuredOutput",
+                 "input": {"paper_slug": "rejected"}}]}},
+            {"message": {"role": "user", "content": [
+                {"type": "tool_result", "tool_use_id": "s1", "is_error": True,
+                 "content": "schema violation"}]}},
+            {"message": {"role": "assistant", "content": [
+                {"type": "tool_use", "id": "s2", "name": "StructuredOutput",
+                 "input": {"paper_slug": "accepted"}}]}},
+            {"message": {"role": "user", "content": [
+                {"type": "tool_result", "tool_use_id": "s2", "content": "ok"}]}})
+        self.assertEqual(lane.structured_output(lines), {"paper_slug": "accepted"})
+
+    def test_journal_results_falls_back_to_transcripts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp)
+            (run_dir / "agent-x1.meta.json").write_text(
+                json.dumps({"agentType": "reproduction-planner"}))
+            (run_dir / "agent-x1.jsonl").write_text("\n".join(transcript(
+                {"message": {"role": "user", "content": "task\nPaper: a-2024\n"}},
+                {"message": {"role": "assistant", "content": [
+                    {"type": "tool_use", "id": "s1", "name": "StructuredOutput",
+                     "input": {"paper_slug": "a-2024", "status": "OK"}}]}},
+                {"message": {"role": "user", "content": [
+                    {"type": "tool_result", "tool_use_id": "s1", "content": "ok"}]}})))
+            results = lane.journal_results(run_dir)
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]["source"], "transcript")
+        self.assertEqual(results[0]["result"]["paper_slug"], "a-2024")
+        self.assertEqual(lane.PAPER_RE.search(results[0]["prompt"]).group(1), "a-2024")
+
+    def test_launcher_embeds_args_verbatim(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args_path = Path(tmp) / "args.json"
+            payload = {"run_id": "r", "papers": [{"sha256": "f" * 64, "note": "ü & 'q'"}]}
+            args_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+            out = Path(tmp) / "launcher.js"
+            lane.cmd_make_launcher(argparse.Namespace(
+                args=str(args_path), out=str(out),
+                workflow="reproduction-system/workflows/reproduction-plan.workflow.js"))
+            script = out.read_text(encoding="utf-8")
+        self.assertTrue(script.startswith("export const meta = {"))
+        embedded = next(row for row in script.splitlines() if row.startswith("const ARGS = "))
+        self.assertEqual(json.loads(embedded[len("const ARGS = "):]), payload)
+        self.assertIn("reproduction-plan.workflow.js", script)
+
+
 class AuditTests(unittest.TestCase):
     """Token deduplication, pricing, and blinded-path detection."""
 

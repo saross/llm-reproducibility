@@ -14,8 +14,13 @@ re-run:
     Turn a run configuration into hashed, commit-pinned args for the plan
     workflow. Refuses a dirty tracked tree (the launch commit must describe
     the bytes used) and refuses to re-plan an attempt that already has a plan.
+``make-launcher``
+    Write a launcher script that embeds an args file byte-for-byte and runs
+    the committed workflow unmodified as a sub-workflow (no hand-copied
+    JSON in the tool call).
 ``persist-plans``
-    Read a completed plan workflow's journal, validate each planner payload
+    Read a completed plan workflow's results (journal, else transcripts),
+    validate each planner payload
     against the full plan schema plus plan-level checks, and write
     ``reproduction-plan.json`` (the record the approval binds to),
     ``reproduction-plan.md`` (the human view), and a triage report for
@@ -45,6 +50,8 @@ re-run:
 Usage:
     venv/bin/python scripts/reproduction-lane.py build-plan-args \\
         --config <run-config.yaml> --scratch-root <dir> [--out FILE]
+    venv/bin/python scripts/reproduction-lane.py make-launcher \\
+        --args <args.json> --workflow <workflow.js> --out <launcher.js>
     venv/bin/python scripts/reproduction-lane.py persist-plans \\
         --config <run-config.yaml> --run-dir <workflow-run-dir> [--force]
     venv/bin/python scripts/reproduction-lane.py approve --config <cfg> \\
@@ -379,22 +386,60 @@ def first_user_text(lines: list[str]) -> str:
     return ""
 
 
+def structured_output(lines: list[str]) -> dict | None:
+    """The accepted StructuredOutput payload in a transcript, if any.
+
+    Schema-forced spawns return their result through a StructuredOutput
+    tool call; a call the validator rejected comes back with an errored
+    tool_result and is retried, so the last call whose result did not
+    error is the accepted payload.
+    """
+    calls: list[tuple[str, dict]] = []
+    errored: dict[str, bool] = {}
+    for line in lines:
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        message = entry.get("message")
+        content = message.get("content") if isinstance(message, dict) else None
+        for block in content if isinstance(content, list) else []:
+            if not isinstance(block, dict):
+                continue
+            if (block.get("type") == "tool_use" and block.get("name") == "StructuredOutput"
+                    and isinstance(block.get("input"), dict)):
+                calls.append((str(block.get("id")), block["input"]))
+            elif block.get("type") == "tool_result":
+                errored[str(block.get("tool_use_id"))] = bool(block.get("is_error"))
+    accepted = [payload for use_id, payload in calls if not errored.get(use_id, False)]
+    return accepted[-1] if accepted else None
+
+
 def journal_results(run_dir: Path) -> list[dict]:
-    """Every agent result recorded in a workflow run's journal.
+    """Every agent result in a workflow run: journal first, transcripts second.
+
+    The journal records each agent's return value. Agents it does not
+    record — for example those of a sub-workflow launched by a generated
+    launcher (``make-launcher``) — are recovered from their transcripts'
+    accepted StructuredOutput payload, so persistence never depends on one
+    harness bookkeeping channel.
 
     Returns:
-        ``[{agent_id, agent_type, result, prompt}]`` — ``result`` is the
-        agent's return value (``None`` when it died), ``prompt`` the spawn
-        prompt from its transcript.
+        ``[{agent_id, agent_type, result, prompt, source}]`` — ``result``
+        is the agent's return value (``None`` when it died), ``prompt`` the
+        spawn prompt, ``source`` "journal" or "transcript".
 
     Raises:
-        LaneError: if the journal is missing.
+        LaneError: if the run directory holds neither journal nor transcripts.
     """
     journal = run_dir / "journal.jsonl"
-    if not journal.is_file():
-        raise LaneError(f"no journal.jsonl in {run_dir}")
+    transcripts = sorted(run_dir.glob("agent-*.jsonl"))
+    if not journal.is_file() and not transcripts:
+        raise LaneError(f"no journal.jsonl or agent transcripts in {run_dir}")
     results = []
-    for line in journal.read_text(encoding="utf-8").splitlines():
+    journal_lines = (journal.read_text(encoding="utf-8").splitlines()
+                     if journal.is_file() else [])
+    for line in journal_lines:
         try:
             entry = json.loads(line)
         except json.JSONDecodeError:
@@ -411,8 +456,55 @@ def journal_results(run_dir: Path) -> list[dict]:
         results.append({"agent_id": agent_id,
                         "agent_type": str(meta.get("agentType") or ""),
                         "result": entry.get("result"),
-                        "prompt": first_user_text(lines)})
+                        "prompt": first_user_text(lines), "source": "journal"})
+    seen = {item["agent_id"] for item in results}
+    for transcript in transcripts:
+        agent_id = transcript.stem.replace("agent-", "")
+        if agent_id in seen:
+            continue
+        meta_path = run_dir / f"agent-{agent_id}.meta.json"
+        meta = (json.loads(meta_path.read_text(encoding="utf-8"))
+                if meta_path.is_file() else {})
+        lines = transcript.read_text(encoding="utf-8").splitlines()
+        results.append({"agent_id": agent_id,
+                        "agent_type": str(meta.get("agentType") or ""),
+                        "result": structured_output(lines),
+                        "prompt": first_user_text(lines), "source": "transcript"})
     return results
+
+
+def cmd_make_launcher(args: argparse.Namespace) -> int:
+    """Write a launcher that runs a committed workflow with embedded args.
+
+    Workflow args must be passed inline, and hand-copying ~10 KB of JSON
+    (hashes included) into a tool call is an unchecked transcription step.
+    The launcher embeds the args file byte-for-byte via ``json.dumps`` and
+    runs the committed workflow file unmodified as a sub-workflow, so the
+    bytes the agents see are exactly the builder's output.
+    """
+    args_path = Path(args.args).expanduser()
+    payload = json.loads(args_path.read_text(encoding="utf-8"))
+    workflow = expand(args.workflow).resolve()
+    if not workflow.is_file():
+        raise LaneError(f"workflow not found: {workflow}")
+    name = workflow.name.removesuffix(".workflow.js")
+    script = (
+        "export const meta = {\n"
+        f"  name: '{name}-launcher',\n"
+        f"  description: 'Run {workflow.name} unmodified with commit-pinned args "
+        f"embedded by reproduction-lane.py make-launcher',\n"
+        "}\n"
+        f"// Generated {now_utc()} by scripts/reproduction-lane.py make-launcher from\n"
+        f"// {display_path(args_path)} (sha256 {sha256_file(args_path)}).\n"
+        f"// Child workflow: {display_path(workflow)} "
+        f"(sha256 {sha256_file(workflow)}).\n"
+        f"const ARGS = {json.dumps(payload, ensure_ascii=False)}\n"
+        f"return await workflow({{ scriptPath: {json.dumps(str(workflow))} }}, ARGS)\n")
+    out = Path(args.out).expanduser()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(script, encoding="utf-8")
+    print(f"wrote {out} (launches {display_path(workflow)})")
+    return 0
 
 
 def select_results(results: list[dict], agent_type: str,
@@ -1307,6 +1399,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--scratch-root", required=True)
     p.add_argument("--out", type=Path, default=None)
     p.set_defaults(func=cmd_build_plan_args)
+
+    p = sub.add_parser("make-launcher", help="launcher embedding args verbatim")
+    p.add_argument("--args", required=True, help="args JSON from a build-*-args step")
+    p.add_argument("--workflow", required=True, help="committed workflow script")
+    p.add_argument("--out", required=True)
+    p.set_defaults(func=cmd_make_launcher)
 
     p = sub.add_parser("persist-plans", help="persist planner payloads + triage")
     p.add_argument("--config", type=Path, required=True)
