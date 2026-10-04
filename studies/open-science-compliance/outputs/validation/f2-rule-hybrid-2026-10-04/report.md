@@ -80,7 +80,12 @@ the pilot F2 items at least as well as the selected model does.
 2026-08-17 packs that every arm read carry no creators, descriptions, or
 keywords (harvester v1.1 kept only identifier, licence, and type fields).
 The model's F2 evidence cites `metadata_record: true` and the Row 2
-entitlement. It could not see that the keyword fields were empty. The
+entitlement. It could not see that the keyword fields were empty, and it
+often said so: 20 of the 90 F2 evidence strings from the five Opus arms
+for crema, herskind, and marwick state that the pack did not show the
+description or keyword fields (for example, opus-5-5-medium, marwick r1
+data: "Description/keywords not shown in pack; scored on existence of a
+structured DataCite record"). The
 v1.2 packs carry these fields, so the pre-census re-validation will show
 whether the model scores F2 correctly once it can see them.
 
