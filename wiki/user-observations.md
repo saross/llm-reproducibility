@@ -705,3 +705,21 @@ considerations, each with a recommendation and a note on which needed a
 ruling. All six were adopted; on "report what repairs would recover",
 Shawn said "great idea". Two needed clarifications were settled with two
 structured questions.
+
+**Candidate E (helpful; Shawn's in-the-moment reaction, relayed) — the
+project's momentum restored across the last few sessions.** At close
+Shawn said: "thanks for a great session, we've really revitalised this
+project, which had stalled for a while", and then "the last few sessions
+were really very good, and I'm relieved/excited to have this work moving
+again". The run of sessions from 2026-10-03 to 10-04 covered:
+
+- the agentic reproduction lane and shakedown;
+- the E8-v2 registration and concordance;
+- the gates ruling;
+- the Opus 5.5 arms and selection;
+- the clarifications and the first mechanical checks.
+
+These moved the study from a stall to a clear path to the registered
+regression gate. What may generalise: long autonomous blocks inside
+pre-approved gates, with dense batched rulings when Shawn is present,
+restored throughput without loosening governance.
