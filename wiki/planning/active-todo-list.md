@@ -841,6 +841,19 @@ adjudication has already named the repair classes it would automate:
   code was reviewed by JAS's reproducibility editor, but only a prose
   acknowledgement records it (adjudication log AP-17); and version-of-record
   detection by published-values match (AP-12, Observation 33).
+- code repair with recovered intent — published code that runs on no public
+  dependency release, repaired where the published materials alone fix the
+  authors' intent. Example: dye-et-al-2023's section-4 occurrence plot
+  indexes raw-CSV columns that every CRAN `read_oxcal()` (1.5, 1.6, 1.8)
+  shifts by one. The column headers plus the paper's 72 interments recover
+  the selection exactly. Ruled fail-and-uplift, 2026-10-04: the reproduction
+  scores the failure, and the repair belongs here
+  (`studies/open-science-compliance/outputs/validation/phase2-shakedown/results-2026-10-03.md`,
+  "Rulings (2026-10-04)", ruling 1).
+- corrected display items — a published figure or table that disagrees with
+  the authors' own deposit is reissued from the deposit. Examples:
+  herskind-riede-2024's Table 1 (four n-grams each one too high) and its
+  Fig. 4 boxes (one missing, one miscoloured; same file, rulings 3 and 4).
 
 **Output:** a deposit-ready package — structured metadata (DataCite, plus
 CodeMeta or CITATION.cff for code), machine-readable data and code, licence

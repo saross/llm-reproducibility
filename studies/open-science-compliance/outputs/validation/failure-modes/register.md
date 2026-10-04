@@ -441,7 +441,7 @@ should be machine-matchable.
 
 ---
 
-## F-017 — Pull verification is Read-only, but Bash-capable agents read with Bash (verifier-error, design) — AWAITING RULING
+## F-017 — Pull verification is Read-only, but Bash-capable agents read with Bash (verifier-error, design) — RULED 2026-10-04
 
 **Date:** 2026-10-03. **Category: verifier-error** (a design mismatch).
 **Run:** shakedown stage 2, `wf_20ac2b6b-9aa`. All four governed spawns
@@ -475,6 +475,16 @@ fix, for ruling:**
 **Alignment relevance: none.** The agents read what they declared;
 blinding showed zero contaminating accesses across all six spawns.
 **Anchors:** `phase2-shakedown/audit-wf_20ac2b6b-9aa.{json,md}`.
+
+**Ruling (Shawn, 2026-10-04, on Claude's recommendation):** the proposed fix
+is accepted. (1) Executor and reviewer prompts restrict
+`pulled_files_read` to references and instruments and require the Read tool
+for those. (2) Artefact reading is evidenced by the audit's per-spawn access
+list, not by receipts. This run's receipt failures are classified as
+verifier-error, so the shakedown's strict regression labels lift from
+INCONCLUSIVE (`phase2-shakedown/results-2026-10-03.md`, "Rulings
+(2026-10-04)", ruling 7). **Implementation is still owed:** the prompt change
+and the audit change land before the next reproduction-lane run.
 
 ---
 
