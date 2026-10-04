@@ -1,7 +1,8 @@
 # Preparation Prompt — Session R-A
 
-**Version:** 1.1
-**Last Updated:** 2026-07-27
+**Version:** 1.2
+**Last Updated:** 2026-10-04 (v1.2: §1.0.2 authors' code manifest; §3.3–3.4
+no longer invite restructuring the authors' code)
 **Session:** R-A (Preparation)
 **Skill:** reproduction-assessor
 **Prerequisite:** Approved reproduction plan from Session R-Plan
@@ -72,6 +73,31 @@ governed by a hard rule:
 When in doubt about whether an artefact is publisher content or an
 author-released material, treat it as publisher content — the recoverable
 error is an unnecessary store entry, not a licence breach in public history.
+
+#### 1.0.2 Authors' code manifest — hash at retrieval, run byte-identical
+
+Registrant ruling (2026-10-04): the authors' code files are hashed at
+retrieval, and the copies the run executes must be byte-identical. Any
+difference is a declared wrapper or a flagged edit.
+
+- **At retrieval,** add each authors' file to `authors-code-manifest.json`
+  at the attempt root (schema
+  `reproduction-system/schemas/authors-code-manifest.json`). Record its id
+  (its path in the deposit), sha256, source, version, and retrieval time.
+  Keep a pristine `local_copy` that is never edited; if its licence does not
+  allow it in git, hold it out (`.gitignore` plus a fetch script with
+  sha256 checks), as §1.0.1 requires for publisher content. For code that
+  exists only as printed listings, record the transcription under
+  `derivation`.
+- **Run the authors' files unmodified.** Paths, seeds, output capture, and
+  error handling belong in your own files, listed under `wrappers` with a
+  role. Never edit an authors' file, and never inline its code into a
+  wrapper.
+- **An unavoidable edit is declared** under `declared_edit`, with the
+  targets it affects. It is flagged for a human ruling.
+- **Check:** `venv/bin/python scripts/reproduction-lane.py check-code <attempt dir>`.
+  It fails on an undeclared difference, and on any code file that is neither
+  an authors' file nor a declared wrapper.
 
 #### 1.1 Code Retrieval
 
@@ -167,7 +193,8 @@ Some Dockerfiles render during build (`RUN R -e "rmarkdown::render(...)"`). This
 
 Write a wrapper script (`run-analysis.R`) that:
 
-1. Sources or incorporates the original analysis code
+1. Sources the original analysis files unmodified (never edits or inlines
+   them; §1.0.2)
 2. Parameterises repeated operations (loops instead of manual re-runs)
 3. Adds output capture (`pdf()`, `ggsave()`, `write.csv()`, `sink()`)
 4. Creates output directories
@@ -183,10 +210,13 @@ Write a wrapper script (`run-analysis.R`) that:
 For supplement code in numbered sections:
 
 1. Read all sections sequentially
-2. Track variable state (list indices, accumulated objects)
-3. Verify column names against actual data (PDF line-wrapping breaks strings)
-4. Use named construction for robustness (instead of positional indexing)
-5. Test incrementally
+2. Transcribe each section verbatim, one file per section, and record the
+   transcription in the manifest (§1.0.2)
+3. Track variable state (list indices, accumulated objects)
+4. Verify column names against actual data (PDF line-wrapping breaks strings)
+5. Keep the authors' indexing and construction as printed: restructuring
+   (for example, positional to named) is an edit to the authors' code
+6. Test incrementally
 
 ### Phase 4: Output Directory Setup
 
@@ -210,6 +240,7 @@ Before ending this session:
 4. Output directory exists
 5. **Every fetched artefact has a URL-and-digest row in `log.md`** — count the rows against the files you actually acquired; a missing row is a provenance gap, and it is cheap to close now and impossible to close later
 6. **No publisher content sits inside the repository** — paper PDFs and extracted article text belong in the corpus store (§1.0.1)
+7. **`check-code` passes** — every executed authors' file is byte-identical to its retrieved original, or its edit is declared (§1.0.2)
 
 ---
 
@@ -236,6 +267,7 @@ Artefact persistence check:
 - [ ] Source data copied to outputs/{paper-slug}/reproduction/attempt-{NN}/
 - [ ] Output directory created: outputs/{paper-slug}/reproduction/attempt-{NN}/outputs/
 - [ ] Materials Acquired table in log.md complete (URL/DOI + digest + destination per artefact)
+- [ ] authors-code-manifest.json written at retrieval; `check-code` passes
 - [ ] Publisher content in the corpus store, not the repository
 
 Next session: R-B (Execution and Verification)
