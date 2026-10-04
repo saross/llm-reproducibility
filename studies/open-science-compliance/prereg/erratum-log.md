@@ -583,3 +583,22 @@ reference scores" without saying how three runs meet one reference score.
    - **Source:** `outputs/validation/opus-5-5-arms-2026-10/results-2026-10-04.md`.
    - **Then:** the registered regression gate and the pre-census
      supplement check run on this configuration.
+6. **Candidate — deterministic checks on scoring outputs** (policy RULED by
+   Shawn 2026-10-04; `wiki/planning/deterministic-output-checks.md`).
+   - **(a) Disclosure.** Derived fields (section totals,
+     `coverage_percentage`, and `coverage_category`) are computed
+     deterministically from the scored items and counts. A model-reported
+     value is kept only as a consistency signal. This implements the
+     registered definitions rather than changing the method.
+   - **(b) Mechanical F2 (AP-15) and platform-row rules.** Lodge these as an
+     adopted rule if their validation completes before lodgement, or else
+     as a planned rule with the criteria declared in advance:
+     - the rule matches the E8-v2 reference on the pilot F2 items at least
+       as well as the selected model does;
+     - the hybrid scorer (the rule for those items, the model elsewhere)
+       clears both gates under the 2026-10-04 ruling.
+   - **(c) Judgement items.** Evidence checks (quote verification, and
+     identifiers present in the paper's text) flag items for adjudication
+     and never override a score.
+   - **(d) Audit.** Both values, the rule's version, and which value
+     governed are recorded for every item a check touches.

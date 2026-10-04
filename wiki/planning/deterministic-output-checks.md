@@ -3,12 +3,17 @@ title: "Deterministic checks on model-produced scoring outputs — planning note
 tags: [validation, census, mechanical-verification]
 created: 2026-10-04
 updated: 2026-10-04
-status: seed
+status: active
 ---
 
 # Deterministic checks on model-produced scoring outputs — planning note
 
-**Status: SEED (2026-10-04).** Shawn asked to "start thinking about
+**Status: ACTIVE — policy RULED 2026-10-04.** Shawn: "I agree with your
+policy for mechanical checks, implement as written". Build sequence:
+(A) Layer 1 checker, computing derived fields; (B) the F2 rule,
+validated as a hybrid scorer; (C) Layer 3 flag-only evidence checks.
+
+*Seed (2026-10-04):* Shawn asked to "start thinking about
 mechanical/deterministic checking of outputs to catch errors like
 mis-counts". This note collects the evidence so far, candidate checks, and
 the questions to settle before anything is built. Nothing here changes a
@@ -76,6 +81,12 @@ responses are already harvested and checksummed):
 
 ## Questions to settle
 
+*Questions 1 and 4 are answered by the disagreement policy below
+(ruled 2026-10-04). Questions 2 and 3 stay open; the operator's default
+is a separate post-hoc pass whose report is committed beside each run
+(2), run retroactively over the committed benchmark arms and reported
+(3).*
+
 1. **Flag or override?** A mechanical rule that disagrees with a model
    score could either flag the item for human adjudication or replace the
    model's score. Replacing it changes the scoring method, which is
@@ -92,7 +103,7 @@ responses are already harvested and checksummed):
    the pilots, is it adopted as the F2 scorer (amendment), or kept as a
    check?
 
-## Proposed position on disagreement (Claude, 2026-10-04, for ruling)
+## Disagreement policy (proposed by Claude; RULED by Shawn 2026-10-04, adopted as written)
 
 Shawn (2026-10-04): open to an amendment; "cases like incorrect arithmetic
 seem like we should defer to the mechanistic check". Proposal: decide by
