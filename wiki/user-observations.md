@@ -562,13 +562,13 @@ closed in a single exchange. The counterweight, which Claude self-flagged:
 several briefs carried errors that were corrected later (a supplements
 framing, a double-counting argument, a misquote, a total off by one).
 
-## Pending review — 2026-10-03 (second session) batch (drafted at handoff, session 4d22016c)
+## 2026-10-03 (second session) batch — adjudicated 2026-10-04 (drafted at handoff, session 4d22016c)
 
-*Candidates for Shawn to accept / edit / discard / replace. Silence
-holds them over — never discards.*
+Verdicts (Shawn, 2026-10-04): A, B, and C **accepted** as drafted; D
+**discarded**. The candidate text is kept below as the accepted record.
 
-**Candidate A — checking the registration before answering a question
-about the model pin.** Shawn asked whether the Opus 5 pin was intentional.
+**Candidate A (ACCEPTED 2026-10-04) — checking the registration before
+answering a question about the model pin.** Shawn asked whether the Opus 5 pin was intentional.
 Claude read the preregistration and amendments before answering. It
 answered the question: the pin was a provisional default, and nothing
 registered binds the lane. It also found that §8 already fixes the
@@ -576,7 +576,8 @@ regression criterion, adds a Crema leg, and orders the registered gate
 after model selection. The run was reframed as a pre-gate shakedown before
 any spend, rather than claimed as the gate afterwards.
 
-**Candidate B — proceeding overnight inside the existing gates.** Asked to
+**Candidate B (ACCEPTED 2026-10-04) — proceeding overnight inside the
+existing gates.** Asked to
 "proceed as far as you can overnight", Claude did the following with no
 new spend:
 
@@ -591,7 +592,8 @@ Everything needing a ruling was queued rather than decided. Built to show
 whether "as far as you can" was read as intended.
 *Relayed reaction (2026-10-04, morning):* "this is excellent work".
 
-**Candidate C (unhelpful) — generalising rulings beyond what was ruled.**
+**Candidate C (unhelpful; ACCEPTED 2026-10-04) — generalising rulings
+beyond what was ruled.**
 Claude turned Shawn's round-1 answers into general rulings R1–R4 for the
 re-plan. Its wording of R3 ("Named values in the text are separate
 targets") led the dye planner to enumerate text restatements of table
@@ -600,7 +602,8 @@ excluded. Dye went from 23 targets to 34. Claude disclosed this at
 triage, but the generalisation should have gone to Shawn before it went
 into the prompt.
 
-**Candidate D (mixed) — engineering against the tool's grain.** To avoid
+**Candidate D (mixed; DISCARDED 2026-10-04) — engineering against the
+tool's grain.** To avoid
 hand-copying 10 KB of arguments, Claude built a launcher script outside
 the repository that ran a nested workflow. The permission dialog then
 offered Shawn only "no" ("sorry, that workflow failed, I had no option to
