@@ -1732,3 +1732,61 @@ the same error classes, including specifics got wrong); Observation 13
 (ledgers drift from their sources). Anchors:
 `studies/open-science-compliance/outputs/validation/phase2-shakedown/results-2026-10-03.md`
 (Headline; T06 and Rulings 2, 3, 7); the WN-ab entry in `wiki/continuity.md`.
+
+## Observation 42: Transcript token accounting errs in both directions, so cost is reported with bounds (2026-10-04)
+
+*(Approved by Shawn 2026-10-04; WN-ac with register F-019.)*
+
+### Context
+
+Every cost, spend-wire, and selection-price figure in the validation work is
+computed from harness transcripts. The harness writes one transcript entry
+per content block (thinking, text, tool use), and the arm assembler and
+`selection-cost.py` derive tokens from those entries. Two register entries
+show that this source is wrong in opposite directions.
+
+### Observation
+
+**WN-ac and F-013: over-count.** The harness repeats a response's whole
+`usage` on every content block, so a per-entry sum counts each request's
+input and cache tokens once per block. Against per-request counts the
+recorded contract-metric tokens were inflated 1.90 to 2.63 times in the six
+recorded arms, and 2.37 to 2.93 in the 2026-08-03 arms recomputed from their
+run directories. The inflation is model-dependent (Sonnet lowest, Fable
+highest), so cross-model cost comparisons on the per-entry metric were
+biased against Opus and Fable.
+
+**F-019: under-count.** The fix (the per-request counter taking each
+field's maximum within a request) introduces the opposite error. In some
+requests no entry carries a `stop_reason`: every entry holds the
+streaming-start snapshot, and `output_tokens` is a placeholder (2 to 16,
+typically 8). Input and cache fields are unaffected. Scoring requests
+missing a final entry, by arm: opus-5 xhigh 7 of 94; opus-5 high 21 of 97;
+opus-5-5 high 6 of 55; medium 7 of 49; xhigh 4 of 69. On Claude Code 2.1.289
+the Haiku reconciliation spawns lose 87 to 89 of 113 to 118 requests.
+
+**Effect on the 2026-10-04 D4 record.** The gates ruling found opus-5 `high`
+"about 11% cheaper" than `xhigh` ($17.27 against $19.46, recorded). Imputing
+the missing requests narrows that to about 2% at the central estimate
+($20.40 against $20.85) and reverses it at the upper bound ($22.88 against
+$22.48). The Opus 5.5 choice survives: medium's upper bound ($9.37) is below
+high's recorded lower bound ($9.55). A note to this effect was added to the
+ruling record at Shawn's direction.
+
+### Implication
+
+The measurement apparatus is part of the instrument, and fixing one
+accounting error can expose the next. Report every cost with bounds
+(`recorded` as the lower bound, plus `central` and `upper` imputations),
+never the recorded figure alone, and test whether a ranking survives the
+bounds before relying on it. For the census, capture usage from a source
+that records final usage rather than from transcripts alone (F-019 ruling,
+items 1 and 3). Relations: Observation 28 (a spend metric dominated by
+effort-independent components: the over-count compounded this);
+Observation 29 (harness behaviour is part of the apparatus); Observation 34
+(the corrected effort-to-cost claim); Observation 39 (the same family of
+silent measurement drift). Anchors: register F-013 and F-019 in
+`studies/open-science-compliance/outputs/validation/failure-modes/register.md`;
+`opus-5-5-arms-2026-10/selection-cost.py` and `selection-cost.json`;
+`gates-ruling-2026-10-04/ruling.md` (the F-019 note); the WN-ac entry in
+`wiki/continuity.md`.
