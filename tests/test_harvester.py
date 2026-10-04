@@ -198,6 +198,146 @@ class HarvestLinkTests(unittest.TestCase):
                          ["article", "supplement"])
 
 
+class V12FieldTests(unittest.TestCase):
+    """v1.2 descriptive fields (F2, I1, I3, AP-12) are extracted as served."""
+
+    def test_datacite_descriptive_fields(self) -> None:
+        document = {"data": {"attributes": {
+            "doi": "10.5281/zenodo.1", "creators": [{"name": "Dye, T."}, {}],
+            "titles": [{"title": "Beads"}],
+            "descriptions": [{"descriptionType": "Abstract",
+                              "description": "<p>MCMC output.</p>"}],
+            "subjects": [{"subject": "radiocarbon"}, {"subject": ""}],
+            "relatedIdentifiers": [{"relationType": "IsSupplementTo",
+                                    "relatedIdentifier": "10.1016/j.x",
+                                    "relatedIdentifierType": "DOI"}],
+            "version": "v1.0.0", "formats": ["text/csv"],
+            "dates": [{"dateType": "Issued", "date": "2024-03-05"}],
+            "created": "2024-03-05T10:00:00Z"}}}
+        fields = harvester.extract_fields("datacite", document)
+        self.assertEqual(fields["creators"], ["Dye, T."])
+        self.assertEqual(fields["titles"], ["Beads"])
+        self.assertEqual(fields["descriptions"],
+                         [{"type": "Abstract", "text": "<p>MCMC output.</p>"}])
+        self.assertEqual(fields["subjects"], ["radiocarbon"])
+        self.assertEqual(fields["related_identifiers"][0]["relation"], "IsSupplementTo")
+        self.assertEqual(fields["version"], "v1.0.0")
+        self.assertEqual(fields["dates"], [{"type": "Issued", "date": "2024-03-05"}])
+
+    def test_datacite_empty_lists_stay_empty(self) -> None:
+        """An empty description or keyword list is recorded as empty, never
+        omitted — the F2 rule must be able to tell 'empty' from 'unknown'."""
+        fields = harvester.extract_fields("datacite", {"data": {"attributes": {}}})
+        for key in ("creators", "titles", "descriptions", "subjects"):
+            self.assertEqual(fields[key], [], key)
+
+    def test_zenodo_descriptive_fields_and_file_formats(self) -> None:
+        document = {"id": 10782943, "doi": "10.5281/zenodo.10782943",
+                    "conceptdoi": "10.5281/zenodo.10782942",
+                    "metadata": {"title": "diffusionCurve", "description": "",
+                                 "keywords": ["archaeology"],
+                                 "creators": [{"name": "Crema, E."}],
+                                 "version": "v1.0.0", "publication_date": "2024-03-05",
+                                 "related_identifiers": [{"relation": "isSupplementTo",
+                                                          "identifier": "https://github.com/x",
+                                                          "scheme": "url"}]},
+                    "files": [{"key": "ercrema/diffusionCurve-v1.0.0.zip", "size": 10,
+                               "checksum": "md5:abc"}]}
+        fields = harvester.extract_fields("zenodo", document)
+        self.assertEqual(fields["title"], "diffusionCurve")
+        self.assertEqual(fields["description"], "")
+        self.assertEqual(fields["keywords"], ["archaeology"])
+        self.assertEqual(fields["files"][0]["format"], "zip")
+        self.assertEqual(fields["concept_doi"], "10.5281/zenodo.10782942")
+
+    def test_zenodo_entries_file_shape(self) -> None:
+        document = {"metadata": {}, "files": {"entries": {
+            "a.csv": {"key": "a.csv", "size": 1, "checksum": "md5:x"}}}}
+        fields = harvester.extract_fields("zenodo", document)
+        self.assertEqual([f["format"] for f in fields["files"]], ["csv"])
+
+    def test_crossref_published_online(self) -> None:
+        document = {"message": {"DOI": "10.1016/j.x",
+                                "published-online": {"date-parts": [[2025, 6, 18]]}}}
+        fields = harvester.extract_fields("crossref", document)
+        self.assertEqual(fields["published_online"], "2025-06-18")
+
+    def test_crossref_without_online_date(self) -> None:
+        fields = harvester.extract_fields("crossref", {"message": {
+            "DOI": "10.1016/j.x", "created": {"date-time": "2025-06-18T01:02:03Z"}}})
+        self.assertIsNone(fields["published_online"])
+        self.assertEqual(fields["created"], "2025-06-18T01:02:03Z")
+
+
+class ScoredVersionTests(unittest.TestCase):
+    """scored_version adds the selected version's record; curation stays out."""
+
+    def setUp(self) -> None:
+        self.original_fetch = harvester.fetch
+        harvester._FETCH_CACHE.clear()
+
+    def tearDown(self) -> None:
+        harvester.fetch = self.original_fetch
+        harvester._FETCH_CACHE.clear()
+
+    def test_expansion_adds_one_entry_per_distinct_version(self) -> None:
+        links = [{"id": "concept", "type": "data+code", "link": "10.5281/zenodo.2",
+                  "role": "principal", "home": "repository",
+                  "scored_version": "10.5281/zenodo.3"},
+                 {"id": "self", "type": "data", "link": "10.5281/zenodo.9",
+                  "scored_version": "10.5281/zenodo.9"}]
+        expanded = harvester.expand_scored_versions(links)
+        self.assertEqual(len(expanded), 3)
+        extra = expanded[-1]
+        self.assertEqual(extra["link"], "10.5281/zenodo.3")
+        self.assertEqual(extra["version_selected_for"], "concept")
+        for key in ("role", "home", "carries", "curation_basis"):
+            self.assertNotIn(key, extra)
+
+    def test_curation_fields_never_reach_the_pack(self) -> None:
+        body = json.dumps({"data": {"attributes": {"doi": "10.5281/zenodo.3"}}}).encode()
+        harvester.fetch = lambda url, headers=None: (200, body)
+        pack = harvester.harvest_paper("fixture", {"links": [
+            {"id": "concept", "type": "data", "link": "10.5284/2",
+             "role": "principal", "home": "repository",
+             "curation_basis": "Sitting 9", "scored_version": "10.5284/3"}]})
+        text = json.dumps(pack)
+        for marker in ("principal", "repository", "Sitting 9", "curation_basis"):
+            self.assertNotIn(marker, text)
+        declarers = [d for r in pack["records"] for d in r["declared_by"]]
+        self.assertIn({"declared_id": "concept@scored-version", "artefact_type": "data",
+                       "version_selected_for": "concept"}, declarers)
+
+
+class RawStoreTests(unittest.TestCase):
+    """Raw bodies are content-addressed in the sink, and only when one is set."""
+
+    def setUp(self) -> None:
+        self.original_fetch = harvester.fetch
+        self.original_raw = harvester.RAW_DIR
+        harvester._FETCH_CACHE.clear()
+
+    def tearDown(self) -> None:
+        harvester.fetch = self.original_fetch
+        harvester.RAW_DIR = self.original_raw
+        harvester._FETCH_CACHE.clear()
+
+    def test_body_written_under_its_sha256(self) -> None:
+        body = b'{"message": {"DOI": "10.1016/j.x"}}'
+        harvester.fetch = lambda url, headers=None: (200, body)
+        with tempfile.TemporaryDirectory() as tmp:
+            harvester.RAW_DIR = Path(tmp) / "registry-responses"
+            records = harvester.harvest_link(
+                {"id": "article", "type": "article", "link": "10.1016/j.x"})
+            digest = records[0]["response_sha256"]
+            stored = harvester.RAW_DIR / f"{digest}.json"
+            self.assertEqual(stored.read_bytes(), body)
+
+    def test_no_sink_writes_nothing(self) -> None:
+        harvester.RAW_DIR = None
+        self.assertIsNone(harvester.store_raw(b"{}"))
+
+
 class TokenTests(unittest.TestCase):
     """The env-file token loader parses without ever printing the value."""
 

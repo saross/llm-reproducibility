@@ -654,13 +654,13 @@ evidence_packs:
   # Delivery to scoring spawns: workflow-prompt injection with the pack's
   # sha256 echoed in receipts, implemented with C9 at D3 prep (audit B3).
   harvester:
-    version: "1.1"
+    version: "1.2"
     file: scripts/harvest-artefact-metadata.py
-    last_updated: "2026-08-17"
-    description: Deterministic artefact-metadata harvester (plan C6); resolves declared links into per-paper evidence packs via the ratified endpoint list (erratum-log Entry 3 item 8). v1.1 adds the bounded identifier-recovery rule (amendment 2 SS2) — registrar + named-repository searches on registered title/author for unresolved links, candidates recorded for curation; curated recovered links flagged recovered_from
+    last_updated: "2026-10-04"
+    description: Deterministic artefact-metadata harvester (plan C6); resolves declared links into per-paper evidence packs via the ratified endpoint list (erratum-log Entry 3 item 8). v1.1 adds the bounded identifier-recovery rule (amendment 2 SS2) — registrar + named-repository searches on registered title/author for unresolved links, candidates recorded for curation; curated recovered links flagged recovered_from. v1.2 (2026-10-04, pre-census upgrade) records creators, titles, descriptions, subject keywords, related identifiers, versions, dates, and file lists with formats (F2, I1, I3, AP-12); resolves each link's registry scored_version; keeps raw bodies out of tree (sha256-addressed); never copies registry curation fields into packs
   links_registry:
     file: corpus/evidence-packs/declared-links.yaml
-    description: Curated declared-artefact-links registry for the five pilots (harvester input; anchors each entry to its extraction record)
+    description: Curated declared-artefact-links registry for the five pilots (harvester input; anchors each entry to its extraction record). Curation fields added 2026-10-04 (role, home, carries, scored_version, unpublished_principal), read by the F2 rule and never copied into packs
   packs:
     dye-et-al-2023:
       file: corpus/evidence-packs/dye-et-al-2023.json
@@ -672,6 +672,25 @@ evidence_packs:
       file: corpus/evidence-packs/marwick-2025.json
     crema-et-al-2024:
       file: corpus/evidence-packs/crema-et-al-2024.json
+  # Harvester v1.2 snapshot (2026-10-04): the census-format packs for the
+  # pre-census re-validation. The packs above stay as the 2026-08-17
+  # snapshot every benchmark arm was validated on.
+  packs_2026_10_04:
+    dye-et-al-2023:
+      file: corpus/evidence-packs/harvest-2026-10-04/dye-et-al-2023.json
+    herskind-riede-2024:
+      file: corpus/evidence-packs/harvest-2026-10-04/herskind-riede-2024.json
+    key-et-al-2024:
+      file: corpus/evidence-packs/harvest-2026-10-04/key-et-al-2024.json
+    marwick-2025:
+      file: corpus/evidence-packs/harvest-2026-10-04/marwick-2025.json
+    crema-et-al-2024:
+      file: corpus/evidence-packs/harvest-2026-10-04/crema-et-al-2024.json
+  f2_rule:
+    version: "1.0"
+    file: scripts/score-f2-rule.py
+    last_updated: "2026-10-04"
+    description: Mechanical F2 rule (AP-15) from registry curation and v1.2 pack DataCite fields — mechanical 0s; complete records go to registrant confirmation; missing inputs fall back to the model's score, flagged (disagreement policy item 2, scope ruled 2026-10-04)
 
 run_reconciliation:
   # Plan C8+C9 (2026-08-15): post-run authoritative verification of governed
@@ -696,6 +715,12 @@ entity_checks:
   evidence_packs.packs.key-et-al-2024: {class: E6, verify: exists}
   evidence_packs.packs.marwick-2025: {class: E6, verify: exists}
   evidence_packs.packs.crema-et-al-2024: {class: E6, verify: exists}
+  evidence_packs.packs_2026_10_04.dye-et-al-2023: {class: E6, verify: exists}
+  evidence_packs.packs_2026_10_04.herskind-riede-2024: {class: E6, verify: exists}
+  evidence_packs.packs_2026_10_04.key-et-al-2024: {class: E6, verify: exists}
+  evidence_packs.packs_2026_10_04.marwick-2025: {class: E6, verify: exists}
+  evidence_packs.packs_2026_10_04.crema-et-al-2024: {class: E6, verify: exists}
+  evidence_packs.f2_rule: {class: E3, version_source: markdown-header}
   # E3/E4/E6 — agentic reproduction lane (2026-10-03)
   reproduction.lane_tool: {class: E3, version_source: markdown-header}
   reproduction.schemas.plan_output: {class: E4, version_source: json-field, json_path: $.version}

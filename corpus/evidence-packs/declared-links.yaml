@@ -22,6 +22,29 @@
 # only route by which such artefacts reach the evidence packs. Unrouted
 # hosts (e.g. personal servers) are recorded as honest gaps, which is
 # itself the informative fact.
+#
+# Curation fields (2026-10-04; read by scripts/score-f2-rule.py, and NEVER
+# copied into packs, because they record adjudication outcomes and packs
+# must carry registry facts only). Each value is anchored to the E8-v2
+# adjudication log (studies/open-science-compliance/outputs/validation/
+# e8-v2-rederivation/adjudication-log.md) in the entry's curation_basis:
+#   role:   principal | mirror | dependency | upstream (article entries omit
+#           it). Principal = the paper's own analysis inputs or scripts
+#           (aggregation rule; Sitting 1 principal-set ruling P1). A mirror
+#           holds the same artefact as a principal deposit (a development
+#           repository archived to Zenodo). Dependencies and upstream
+#           sources never stand in for principal artefacts (AP-7 type case).
+#   home:   principal entries only — repository (a deposit with its own
+#           registry record) | supplement (the journal's supplementary
+#           files: Row 6) | unmanaged (personal or unmanaged hosting, no
+#           record: AP-3).
+#   carries: which artefact classes an entry holds, where the type does not
+#           say so (supplements): [data], [code], or [data, code].
+#   scored_version: for a versioned deposit, the version scored and
+#           reproduced under AP-12 (refined 2026-10-03). The harvester also
+#           resolves it, so the pack holds that version's own record.
+# Paper-level unpublished_principal lists artefact classes with principal
+# items that are unpublished or closed (AP-13), which no link can carry.
 
 papers:
   dye-et-al-2023:
@@ -34,21 +57,32 @@ papers:
       - id: supplement
         type: supplement
         link: "10.1016/j.jas.2023.105765"
+        role: principal
+        home: supplement
+        carries: [data, code]
+        curation_basis: "Sitting 1 P1 (OxCal model, dates embedded); Sitting 2 framing (supplement scripts principal)"
         note: "Data + OxCal model + R scripts in journal supplement; no independent deposit declared"
         source_anchor: "… data_availability + code_availability"
       - id: archaeophases-cran
         type: code
         link: "https://cran.r-project.org/package=ArchaeoPhases"
+        role: dependency
+        curation_basis: "Sitting 2 framing: CRAN evidence is the dependency's, inadmissible for principal scores"
         note: "Third-party R package dependency named in code_availability"
         source_anchor: "… code_availability.repositories"
       - id: ads-deposit
         type: data
         link: "10.5284/1018290"
+        role: upstream
+        curation_basis: "Sitting 1 P1: upstream third-party raw dataset, non-principal"
         note: "Archaeology Data Service DOI cited in the infrastructure record (upstream data)"
         source_anchor: "… reproducibility_infrastructure (cited identifier)"
       - id: beads-mcmc-personal-server
         type: data
         link: "https://tsdye.online/AP/beads-1.csv"
+        role: principal
+        home: unmanaged
+        curation_basis: "Sitting 1 P1 + AP-3"
         note: >-
           MCMC output read by the supplement's R code; personal server
           (shared commercial hosting), no PID, no licence. Principal per
@@ -67,16 +101,26 @@ papers:
       - id: code-data-zenodo
         type: data+code
         link: "10.5281/zenodo.10623550"
+        role: principal
+        home: repository
+        scored_version: "10.5281/zenodo.10801706"
+        curation_basis: "Sitting 3: v2 scored per AP-12 (supplement files match v2 byte for byte)"
         note: "R code and complete data tables (S2, S3)"
         source_anchor: "… code_availability.verbatim_statement"
       - id: supplement-zenodo
         type: supplement
         link: "10.5281/zenodo.10801706"
+        role: principal
+        home: repository
+        carries: [data, code]
+        curation_basis: "Sitting 3: v2 of the same Zenodo concept (10.5281/zenodo.10623549), the version scored"
         note: "Repository-hosted supplement — scores as a platform deposit, never under the thin supplement row (erratum item 3)"
         source_anchor: "… data_availability.verbatim_statement"
 
   key-et-al-2024:
     article_doi: "10.1016/j.jas.2023.105921"
+    unpublished_principal: [data]
+    unpublished_principal_basis: "Sitting 5: 10 of 13 required assemblage datasets unpublished; AP-13 (β)"
     links:
       - id: article
         type: article
@@ -86,6 +130,10 @@ papers:
         type: supplement
         link: "10.1016/j.jas.2023.105921"
         paper_asserted_licence: "CC BY"
+        role: principal
+        home: supplement
+        carries: [code]
+        curation_basis: "Sitting 5: the supplement holds scripts and a header-only template, no input data; Sitting 6: code in mmc1–mmc3"
         note: "Supplementary tables/figures + R scripts on the publisher site; extraction records access as Open access (CC BY)"
         source_anchor: "… data_availability.datasets[0].access_conditions"
 
@@ -99,12 +147,19 @@ papers:
       - id: compendium-zenodo
         type: data+code
         link: "10.5281/zenodo.14897252"
+        role: principal
+        home: repository
+        scored_version: "10.5281/zenodo.15603267"
+        curation_basis: "AP-12 refined (Sitting 9 applications): concept DOI flagged; v1.2 and v1.3 identical on every scored fact, v1.3 scored"
         paper_asserted_licence: "MIT (code); CC0 (data); CC BY (figures)"
         note: "Research compendium; paper asserts three component licences against Zenodo's single licence field — expected conflict-flag exercise"
         source_anchor: "… code_availability.licences + data_availability.access_conditions"
       - id: compendium-zenodo-v1.3
         type: data+code
         link: "10.5281/zenodo.15603267"
+        role: principal
+        home: repository
+        curation_basis: "the scored version itself (AP-12)"
         note: >-
           Zenodo v1.3 (published 2025-06-05) of the research compendium whose
           concept DOI (10.5281/zenodo.14897252) the paper cites; the version
@@ -141,9 +196,15 @@ papers:
       - id: repo-github
         type: data+code
         link: "https://github.com/ercrema/diffusionCurve"
+        role: mirror
+        curation_basis: "Sitting 9: the Zenodo archive v1.0.0 is the version of record; the repository is its development copy"
         source_anchor: "… data_availability.repository_url"
       - id: archive-zenodo
         type: data+code
         link: "10.5281/zenodo.10782942"
+        role: principal
+        home: repository
+        scored_version: "10.5281/zenodo.10782943"
+        curation_basis: "Sitting 9: concept DOI flagged; published-values match selects v1.0.0 (AP-12 refined)"
         note: "Permanent archive of the GitHub repository"
         source_anchor: "… data_availability.persistent_archive"

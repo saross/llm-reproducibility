@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Artefact-metadata harvester — deterministic evidence packs (plan C6).
 
-**Version:** 1.1
+**Version:** 1.2
 
 Resolves each pilot paper's declared artefact links (the curated registry at
 ``corpus/evidence-packs/declared-links.yaml``) into a per-paper evidence pack
@@ -19,6 +19,26 @@ Conflict detection (erratum item 6): where the registry carries a
 record gains a conflict flag naming both sides — the most-restrictive rule
 governs scoring, applied by the scorer, not silently by this script.
 
+v1.2 (2026-10-04, pre-census harvester upgrade; E8-v2 adjudication log
+Sitting 3 finding 4 and AP-15): DataCite and Zenodo records also carry
+creators, titles, descriptions, subject keywords, related identifiers,
+version, version dates, and the file list with formats (F2, I1, I3, and
+AP-12 all turned on these); Crossref records carry the article's first
+online date, else the record's creation date (the AP-12 date check). A
+registry entry may name a
+``scored_version`` (the version scored under AP-12); the harvester then
+resolves that version too, so the pack holds that version's own record,
+marked ``version_selected_for`` in its ``declared_by`` entry. Raw response
+bodies are written to the out-of-tree corpus store, content-addressed
+(``<CORPUS_ROOT>/registry-responses/<sha256>.json``), so every pack field
+can be re-derived from the exact bytes its ``response_sha256`` names.
+They stay out of git because a Crossref body can carry a publisher's
+abstract (corpus rule: never redistribute third-party text). Registry
+curation fields that record adjudication outcomes (``role``, ``home``,
+``carries``) are never copied into packs: packs carry registry facts only,
+and the F2 rule (``scripts/score-f2-rule.py``) reads curation from the
+registry itself.
+
 Network conduct: public metadata APIs only; one request per second; a
 descriptive User-Agent; one retry then a dead-link record (never a silent
 skip). GitHub authentication: reads ``GITHUB_API_TOKEN_LLMR`` from
@@ -29,9 +49,12 @@ to polite unauthenticated requests otherwise.
 Usage:
     venv/bin/python scripts/harvest-artefact-metadata.py            # all papers
     venv/bin/python scripts/harvest-artefact-metadata.py --only crema-et-al-2024
+    venv/bin/python scripts/harvest-artefact-metadata.py \
+        --out corpus/evidence-packs/harvest-2026-10-04          # dated snapshot
 
-Outputs: ``corpus/evidence-packs/<paper-slug>.json`` (sorted keys, stable
-layout — diffs between harvests are meaningful).
+Outputs: ``<out>/<paper-slug>.json`` (default ``corpus/evidence-packs/``;
+sorted keys, stable layout — diffs between harvests are meaningful), plus
+raw bodies in the corpus store unless ``--no-raw``.
 """
 
 from __future__ import annotations
@@ -39,6 +62,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 import time
@@ -55,8 +79,10 @@ REGISTRY_PATH = REPO_ROOT / "corpus" / "evidence-packs" / "declared-links.yaml"
 OUT_DIR = REPO_ROOT / "corpus" / "evidence-packs"
 ENV_PATH = Path.home() / "personal-assistant" / ".env"
 
-HARVESTER_VERSION = "1.1"
-USER_AGENT = ("llm-reproducibility-harvester/1.1 "
+HARVESTER_VERSION = "1.2"
+PACK_SCHEMA = "evidence-pack v1.1 (C3/C6 joint design note; harvester v1.2 fields)"
+DEFAULT_CORPUS_ROOT = "~/corpora/llm-reproducibility"
+USER_AGENT = ("llm-reproducibility-harvester/1.2 "
               "(mailto:shawn@faims.edu.au; research-integrity study OSF "
               "10.17605/OSF.IO/DQNHG)")
 REQUEST_DELAY_S = 1.0
@@ -126,12 +152,36 @@ def canonical_licence(value: str) -> str:
 
 _FETCH_CACHE: dict[str, tuple[int, bytes]] = {}
 
+# Out-of-tree sink for raw response bodies (v1.2). None disables writing —
+# the default, so unit tests and library callers never touch the store;
+# main() sets it from --raw-dir unless --no-raw is given.
+RAW_DIR: Path | None = None
+
+
+def store_raw(body: bytes) -> str | None:
+    """Write one response body to RAW_DIR, named by its sha256.
+
+    Content addressing makes the write idempotent and lets anyone holding
+    a pack check a field against the exact bytes it was extracted from.
+    Returns the digest, or None when there is no body or no sink.
+    """
+    if not body or RAW_DIR is None:
+        return None
+    digest = hashlib.sha256(body).hexdigest()
+    target = RAW_DIR / f"{digest}.json"
+    if not target.exists():
+        RAW_DIR.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(body)
+    return digest
+
 
 def cached_fetch(url: str, extra_headers: dict | None = None) -> tuple[int, bytes]:
     """fetch() memoised per run: two registry entries naming one identifier
-    share a single request (and therefore a single, deduplicable record)."""
+    share a single request (and therefore a single, deduplicable record).
+    Every fetched body is also kept in the raw sink when one is set."""
     if url not in _FETCH_CACHE:
         _FETCH_CACHE[url] = fetch(url, extra_headers)
+        store_raw(_FETCH_CACHE[url][1])
     return _FETCH_CACHE[url]
 
 
@@ -183,6 +233,9 @@ def extract_fields(endpoint: str, document: dict) -> dict:
     """Pull the scoring-relevant fields from one endpoint response."""
     if endpoint == "datacite":
         attributes = (document.get("data") or {}).get("attributes") or {}
+        # v1.2 descriptive fields are recorded as served (strings kept
+        # verbatim, HTML included); judging them is the scorer's or the F2
+        # rule's job, never the harvester's.
         return {
             "doi": attributes.get("doi"),
             "state": attributes.get("state"),
@@ -193,9 +246,30 @@ def extract_fields(endpoint: str, document: dict) -> dict:
                                 for r in attributes.get("rightsList") or []} - {""}),
             "metadata_record": True,
             "identifier_in_metadata": bool(attributes.get("doi")),
+            "creators": [c.get("name") for c in attributes.get("creators") or []
+                         if isinstance(c, dict) and c.get("name")],
+            "titles": [t.get("title") for t in attributes.get("titles") or []
+                       if isinstance(t, dict) and t.get("title")],
+            "descriptions": [{"type": d.get("descriptionType"),
+                              "text": d.get("description")}
+                             for d in attributes.get("descriptions") or []
+                             if isinstance(d, dict)],
+            "subjects": [s.get("subject") for s in attributes.get("subjects") or []
+                         if isinstance(s, dict) and s.get("subject")],
+            "related_identifiers": [{"relation": r.get("relationType"),
+                                     "identifier": r.get("relatedIdentifier"),
+                                     "identifier_type": r.get("relatedIdentifierType")}
+                                    for r in attributes.get("relatedIdentifiers") or []
+                                    if isinstance(r, dict)],
+            "version": attributes.get("version"),
+            "dates": [{"type": d.get("dateType"), "date": d.get("date")}
+                      for d in attributes.get("dates") or [] if isinstance(d, dict)],
+            "formats": list(attributes.get("formats") or []),
+            "created": attributes.get("created"),
         }
     if endpoint == "crossref":
         message = document.get("message") or {}
+        online = ((message.get("published-online") or {}).get("date-parts") or [[]])[0]
         return {
             "doi": message.get("DOI"),
             "type": message.get("type"),
@@ -204,11 +278,20 @@ def extract_fields(endpoint: str, document: dict) -> dict:
                                 for l in message.get("license") or []} - {""}),
             "metadata_record": True,
             "identifier_in_metadata": bool(message.get("DOI")),
+            # AP-12's date check reads the article's first online appearance,
+            # else the record's creation date as proxy. Elsevier records often
+            # omit published-online (all five pilots, 2026-10-04), so both are
+            # recorded and the absence stays visible.
+            "published_online": "-".join(f"{int(p):02d}" for p in online) or None,
+            "created": (message.get("created") or {}).get("date-time"),
         }
     if endpoint == "zenodo":
         metadata = document.get("metadata") or {}
         licence = metadata.get("license")
         licence_id = (licence or {}).get("id") if isinstance(licence, dict) else licence
+        files = document.get("files") or []
+        if isinstance(files, dict):  # newer API shape: {"entries": {...}}
+            files = list((files.get("entries") or {}).values())
         return {
             "record_id_on_service": document.get("id"),
             "doi": document.get("doi") or metadata.get("doi"),
@@ -218,6 +301,23 @@ def extract_fields(endpoint: str, document: dict) -> dict:
             "resource_type": ((metadata.get("resource_type") or {}).get("type")),
             "metadata_record": True,
             "identifier_in_metadata": bool(document.get("doi") or metadata.get("doi")),
+            "creators": [c.get("name") for c in metadata.get("creators") or []
+                         if isinstance(c, dict) and c.get("name")],
+            "title": metadata.get("title"),
+            "description": metadata.get("description"),
+            "keywords": list(metadata.get("keywords") or []),
+            "related_identifiers": [{"relation": r.get("relation"),
+                                     "identifier": r.get("identifier"),
+                                     "scheme": r.get("scheme")}
+                                    for r in metadata.get("related_identifiers") or []
+                                    if isinstance(r, dict)],
+            "version": metadata.get("version"),
+            "publication_date": metadata.get("publication_date"),
+            "files": [{"key": f.get("key"), "size": f.get("size"),
+                       "checksum": f.get("checksum"),
+                       "format": (Path(str(f.get("key") or "")).suffix.lower().lstrip(".")
+                                  or None)}
+                      for f in files if isinstance(f, dict)],
         }
     if endpoint == "github":
         licence = (document.get("license") or {})
@@ -354,6 +454,8 @@ def harvest_link(entry: dict) -> list[dict]:
     """
     link = str(entry["link"])
     declared = {"declared_id": entry.get("id"), "artefact_type": entry.get("type")}
+    if entry.get("version_selected_for"):
+        declared["version_selected_for"] = entry["version_selected_for"]
     records = []
     for endpoint, request_url in classify(link):
         retrieved_at = datetime.now(timezone.utc).isoformat()
@@ -418,6 +520,28 @@ def harvest_link(entry: dict) -> list[dict]:
     return records
 
 
+def expand_scored_versions(links: list[dict]) -> list[dict]:
+    """Append a resolution entry for each declared link's scored version.
+
+    A registry entry naming a concept DOI, or an earlier version, can carry
+    ``scored_version``: the version selected under AP-12 (E8-v2
+    adjudication log). The pack must then hold that version's own record,
+    because F2, I3, and the licence can differ between versions. The extra
+    entry copies only registry facts (type, and the selection marker) and
+    never the curation fields (role, home, carries), which record
+    adjudication outcomes and stay out of packs.
+    """
+    expanded = list(links)
+    for entry in links:
+        version = str(entry.get("scored_version") or "").strip()
+        if version and version != str(entry.get("link") or "").strip():
+            expanded.append({"id": f"{entry.get('id')}@scored-version",
+                             "type": entry.get("type"),
+                             "link": version,
+                             "version_selected_for": entry.get("id")})
+    return expanded
+
+
 def harvest_paper(slug: str, spec: dict) -> dict:
     """Build one paper's evidence pack, deduplicating by record_id.
 
@@ -428,7 +552,7 @@ def harvest_paper(slug: str, spec: dict) -> dict:
     """
     records: list[dict] = []
     by_id: dict[str, dict] = {}
-    for entry in spec.get("links", []):
+    for entry in expand_scored_versions(spec.get("links", [])):
         for record in harvest_link(entry):
             existing = by_id.get(record["record_id"])
             if existing is None:
@@ -441,12 +565,15 @@ def harvest_paper(slug: str, spec: dict) -> dict:
             existing.setdefault("licence_conflicts", []).extend(
                 record.get("licence_conflicts") or [])
     return {
-        "pack_schema": "evidence-pack v1.0 (C3/C6 joint design note)",
+        "pack_schema": PACK_SCHEMA,
         "paper_slug": slug,
         "article_doi": spec.get("article_doi"),
         "harvested_at": datetime.now(timezone.utc).isoformat(),
         "harvester_version": HARVESTER_VERSION,
         "registry": str(REGISTRY_PATH.relative_to(REPO_ROOT)),
+        # Where each record's raw body can be re-read (out of tree, v1.2).
+        "raw_responses": ("$CORPUS_ROOT/registry-responses/<response_sha256>.json"
+                          if RAW_DIR is not None else None),
         "records": records,
     }
 
@@ -457,7 +584,17 @@ def main() -> int:
     parser.add_argument("--only", help="harvest a single paper slug")
     parser.add_argument("--registry", type=Path, default=REGISTRY_PATH)
     parser.add_argument("--out", type=Path, default=OUT_DIR)
+    parser.add_argument("--raw-dir", type=Path, default=None,
+                        help="raw-body sink (default: $CORPUS_ROOT or "
+                             f"{DEFAULT_CORPUS_ROOT}, then /registry-responses)")
+    parser.add_argument("--no-raw", action="store_true",
+                        help="do not keep raw response bodies")
     args = parser.parse_args()
+
+    global RAW_DIR
+    if not args.no_raw:
+        root = Path(os.environ.get("CORPUS_ROOT") or DEFAULT_CORPUS_ROOT).expanduser()
+        RAW_DIR = args.raw_dir or root / "registry-responses"
 
     registry = yaml.safe_load(args.registry.read_text(encoding="utf-8")) or {}
     papers = registry.get("papers") or {}
