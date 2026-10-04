@@ -664,3 +664,44 @@ session start" into the failure register as a rule. The harness
 contradicted it within minutes. The correction was visible, but the
 register is read later as guidance, and one failure did not justify a
 mechanism.
+
+## Pending review — 2026-10-04 (second session) batch (drafted at handoff, session c5ee7a27)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence
+holds them over — never discards.*
+
+**Candidate A (helpful) — a finding that weakened an earlier ruling was
+raised and bounded, not used as a reason to halt.** Mid-arms, Claude found
+that some requests' output tokens are placeholders (F-019). It judged that
+this was not a halt condition, giving reasons: it was pre-existing, it
+affected cost only, and stopping could not fix it. It kept the arms going,
+then quantified the bounds and showed that the morning's D4 "11% cheaper"
+ordering did not survive them. Shawn's ruling was "Agree, add a note".
+
+**Candidate B (helpful) — "is there a substantive lead?" answered with
+item-level evidence.** Asked whether `high` or `xhigh` had any tangible
+advantage, Claude reported:
+
+- the three efforts differ on only 3 of 141 gate items;
+- most of the 9 shared misses are one F2 rule that higher effort does not
+  touch;
+- reading depth is identical;
+- the cost is $0.58 against $1.09 per scoring.
+
+Shawn: "Great, confirm medium."
+
+**Candidate C (mixed) — a backwards rule, corrected after approval.**
+Claude's deprecated-function recommendation said "fail-and-uplift, unless
+no public version runs the original name", and Shawn approved it as
+recommended. Claude's next drafting pass caught the inversion and stated
+the coherent rule. In the moment Shawn said: "ah, thank you, I agree with
+your correction, sorry I missed it". The correction helped. But the error
+was Claude's, and it put a backwards rule in front of him for approval.
+
+**Candidate D (helpful) — "anything else we should consider?" answered
+with concrete, recommended considerations.** After ruling the
+fail-and-uplift line, Shawn asked what else to weigh. Claude gave six
+considerations, each with a recommendation and a note on which needed a
+ruling. All six were adopted; on "report what repairs would recover",
+Shawn said "great idea". Two needed clarifications were settled with two
+structured questions.
