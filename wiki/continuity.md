@@ -30,8 +30,32 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-10-04) — START HERE
+## Repo state (2026-10-04, arms run) — START HERE
 
+- **⏩ START HERE: Shawn's confirmation of the selection.** The three Opus
+  5.5 arms ran clean (`2c93a5d`, `656036f`, `7365e14`), and no halt
+  condition fired. All three clear both gates, and the analysis tool and
+  H13 agree on every figure. **By the pre-declared rule: `claude-opus-5-5`
+  at effort `medium`**, robust to F-019's cost bounds. Results:
+  `studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/results-2026-10-04.md`
+  (`31cdc85`).
+- **Awaiting Shawn:**
+  1. confirm (or not) the selection; if confirmed, add it to amendment 3
+     (running-list item 5), then run the registered regression gate and
+     the pre-census supplement check on it;
+  2. rule on **F-019** (register; output under-count where a request's
+     final transcript entry is missing, `40d9008`), including a note on
+     the 2026-10-04 ruling record, whose opus-5 high versus xhigh cost
+     ordering is not robust to it;
+  3. note the payload whose total disagrees with its items (medium run 3,
+     dye `code_fair`: total 7, items 8). The gates are unaffected, but
+     census analysis should derive totals from items.
+- **Next session:** run `/handoff` for this session (`c5ee7a27`); it has
+  not been done yet.
+
+## Repo state (2026-10-04) — superseded by the section above
+
+- [x] 2026-10-04 **Run the three Opus 5.5 arms** (session `c5ee7a27`).
 - **⏩ START HERE: run the three Opus 5.5 arms. They are APPROVED.**
   Shawn approved API gate stage 2 at session close on 2026-10-04: run all
   three arms, `high` → `medium` → `xhigh`, sequentially with per-arm hard
@@ -55,6 +79,11 @@ merged here as PR #1).
   4. **Reconcile** (authoritative pass, H15):
      `venv/bin/python scripts/reconcile-run.py <transcript-dir> --expect-spawns 15 --require-pack`.
      It must come back clean.
+     **Corrected 2026-10-04:** that command is incomplete. The registered
+     arms' pass also used
+     `--contract-schema assessment-system/schema/benchmark-fair-output-schema.json`
+     and `--out <transcript-dir>/reconciliation-authoritative`, and the
+     assembler refuses to run without the latter.
   5. **Assemble:**
      `venv/bin/python scripts/assemble-arm-record.py <transcript-dir> opus-5-5 studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/arm-opus-5-5-<level> --expect-effort <level> --expect-launch-commit <hash>`.
      Pass `--environment key=value` pairs as in earlier records
