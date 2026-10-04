@@ -1419,10 +1419,10 @@ receipt. The run it nominally guarded was protected entirely by
 orchestrator-side post-hoc verification. The first arm to run under the
 repaired gate (`3b01676`) logged 6 passes and 9 blocks, and the gate blocked
 those 9 of 15 spawns for a reason its own log cannot distinguish from a
-true catch. The other two arms blocked every spawn once, because the
-final-message JSON check cannot see a tool-call structured output. In all,
-39 of 45 spawns were blocked and none of the blocks had a consequence
-(F-007). A control that was wired, tested, and logging was therefore not
+true catch. The opus arm blocked every spawn once, because the
+final-message JSON check cannot see a tool-call structured output. F-007
+counts 39 of 45 spawns blocked across the three arms, with no consequence
+from any block. A control that was wired, tested, and logging was therefore not
 operative.
 
 ### Implication
