@@ -27,6 +27,16 @@ Per-request cost was about $0.71 (scoring about $0.64, reconciliation about
 $0.08). No user-request relay reached the spawn (R2 not observed). The
 record is `p4-probe/`; it is not counted in any arm.
 
+**Arms DEFERRED (Shawn, 2026-10-04, API gate stage 2: "Not now").**
+Everything is built and P4 has passed. A later session launches the arms
+after a fresh stage-2 approval.
+
+**Freeze (operator default, open to the registrant's override):** the Q6
+freeze protects identical governed bytes across the three arms, so it applies
+from arm 1's launch. P4 is not counted in any arm. If any governed file (agent
+definition, instrument, guide, schema, workflow, args builder) changes before
+arm 1, re-run P4 first. Each arm's args are rebuilt at launch.
+
 ## Purpose
 
 At the D4 step, the registrant held selection so that `claude-opus-5-5`
