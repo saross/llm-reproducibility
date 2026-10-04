@@ -512,7 +512,7 @@ and the audit change land before the next reproduction-lane run.
 
 ---
 
-## F-018 — An agent definition created mid-session is invisible to Workflow spawns (harness-constraint) — RECORDED
+## F-018 — An agent definition created mid-session was not yet visible to Workflow spawns (harness-constraint) — RECORDED, corrected same day
 
 **Date:** 2026-10-04. **Category: harness-constraint.**
 **Run:** P4 probe for the Opus 5.5 arms, `wf_656e2363-534`, launch commit
@@ -521,16 +521,21 @@ and the audit change land before the next reproduction-lane run.
 **What happened.** `.claude/agents/fair-assessor-opus-5-5.md` was committed
 mid-session (`c3cb02d`), and the P4 workflow then failed at its first spawn:
 "agent type 'fair-assessor-opus-5-5' not found". The available-agents list
-in the error is exactly the session's start-up list. Claude Code (2.1.289)
-reads agent definitions at session start only.
+in the error is exactly the session's start-up list.
+~~Claude Code (2.1.289) reads agent definitions at session start only.~~
+**Corrected the same day:** minutes after the failure, the harness announced
+`fair-assessor-opus-5-5` as available in the same session. Definitions are
+therefore re-read during a session, but not promptly on file creation: the
+file had existed for several turns before the launch. The trigger is
+unknown.
 
 **Cost: none.** 0 subagent tokens and 0 tool uses in 3.3 s; the workflow
 returned `missing: 1`, `clean: false`. The args checksum guard (workflow
 v1.7) had already passed, so the args arrived intact.
 
-**Rule:** a governed agent definition must exist before the session that
-spawns it starts. A new arm is therefore launched from a fresh (or
-restarted) session. **Alignment relevance:** none.
+**Rule:** before launching a workflow that spawns a newly added agent
+type, confirm the type appears in the session's available-agents list. A
+fresh session guarantees it. **Alignment relevance:** none.
 
 ---
 

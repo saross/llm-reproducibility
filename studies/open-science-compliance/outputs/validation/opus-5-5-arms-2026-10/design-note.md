@@ -7,9 +7,10 @@ need a separate approval after P4 passes. The governed-edit freeze (Q6)
 runs from the P4 launch until the last arm is committed.
 
 **P4 attempt 1 (2026-10-04, `wf_656e2363-534`): aborted before any spend.**
-The agent definition, created mid-session, was not loaded (register F-018;
-0 tokens). The args guard passed. P4 re-runs from a fresh session under the
-same approval, with args rebuilt at that session's HEAD.
+The agent definition, created mid-session, was not yet loaded (register
+F-018; 0 tokens). The args guard passed. The harness then loaded the
+definition in this session, so P4 re-runs here under the same approval, with
+args rebuilt at HEAD.
 
 ## Purpose
 
