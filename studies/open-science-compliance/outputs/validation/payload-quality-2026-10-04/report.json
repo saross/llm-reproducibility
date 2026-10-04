@@ -1,0 +1,330 @@
+{
+  "tool": "scripts/check-payload-quality.py",
+  "rules_version": "1.1",
+  "policy": "wiki/planning/deterministic-output-checks.md, 'Disagreement policy' item 1 and 'Layer 1' (ruled 2026-10-04)",
+  "coverage_tolerance_pp": 0.5,
+  "strict": false,
+  "exit_status": 0,
+  "checks": {
+    "S0": "payload-structure",
+    "C1": "section-total",
+    "C2": "coverage-percentage",
+    "C3": "coverage-category",
+    "C4": "a1-cross-reference",
+    "C5": "unavailable-but-scored",
+    "C6": "pack-refs-validity"
+  },
+  "kinds": {
+    "failure": "invalid pack_ref (C6) or A1-rule violation (C4); exit 1 in every mode",
+    "derived": "derived-field disagreement (C1-C3); the computed value governs; exit 1 only with --strict",
+    "flag": "for human review, never an override (C5, undefined C2/C3 derivation, S0); exit 1 only with --strict",
+    "note": "informational: the A1 outcome differs under the recorded category (C4); the matching C3 finding carries any exit consequence"
+  },
+  "arms": [
+    {
+      "arm": "arm-sonnet-5",
+      "path": "studies/open-science-compliance/outputs/validation/benchmark-2026-08-17/arm-sonnet-5",
+      "summary": {
+        "payloads_checked": 15,
+        "payloads_escalated": 0,
+        "payloads_malformed": 0,
+        "sub_principles_scored": 450,
+        "pack_refs_invalid": 0,
+        "a1_rule_violations": 0,
+        "a1_outcome_changed_by_computed_category": 0,
+        "total_disagreements": 0,
+        "coverage_percentage_disagreements": 0,
+        "coverage_category_disagreements": 0,
+        "coverage_undefined": 0,
+        "unavailable_but_scored": 0,
+        "failures": 0,
+        "derived_disagreements": 0,
+        "flags": 0,
+        "notes": 0
+      },
+      "utilisation": {
+        "sub_principles_citing_pack": 247,
+        "rate": 0.5489,
+        "total_citations": 368
+      },
+      "escalated": []
+    },
+    {
+      "arm": "arm-opus-5",
+      "path": "studies/open-science-compliance/outputs/validation/benchmark-2026-08-17/arm-opus-5",
+      "summary": {
+        "payloads_checked": 15,
+        "payloads_escalated": 0,
+        "payloads_malformed": 0,
+        "sub_principles_scored": 450,
+        "pack_refs_invalid": 0,
+        "a1_rule_violations": 0,
+        "a1_outcome_changed_by_computed_category": 0,
+        "total_disagreements": 0,
+        "coverage_percentage_disagreements": 0,
+        "coverage_category_disagreements": 0,
+        "coverage_undefined": 0,
+        "unavailable_but_scored": 0,
+        "failures": 0,
+        "derived_disagreements": 0,
+        "flags": 0,
+        "notes": 0
+      },
+      "utilisation": {
+        "sub_principles_citing_pack": 365,
+        "rate": 0.8111,
+        "total_citations": 613
+      },
+      "escalated": []
+    },
+    {
+      "arm": "arm-fable-5",
+      "path": "studies/open-science-compliance/outputs/validation/benchmark-2026-08-17/arm-fable-5",
+      "summary": {
+        "payloads_checked": 15,
+        "payloads_escalated": 0,
+        "payloads_malformed": 0,
+        "sub_principles_scored": 450,
+        "pack_refs_invalid": 0,
+        "a1_rule_violations": 0,
+        "a1_outcome_changed_by_computed_category": 0,
+        "total_disagreements": 0,
+        "coverage_percentage_disagreements": 0,
+        "coverage_category_disagreements": 0,
+        "coverage_undefined": 0,
+        "unavailable_but_scored": 1,
+        "failures": 0,
+        "derived_disagreements": 0,
+        "flags": 1,
+        "notes": 0
+      },
+      "utilisation": {
+        "sub_principles_citing_pack": 269,
+        "rate": 0.5978,
+        "total_citations": 419
+      },
+      "escalated": []
+    },
+    {
+      "arm": "arm-sonnet-5-high",
+      "path": "studies/open-science-compliance/outputs/validation/effort-study-2026-08-17/arm-sonnet-5-high",
+      "summary": {
+        "payloads_checked": 15,
+        "payloads_escalated": 0,
+        "payloads_malformed": 0,
+        "sub_principles_scored": 450,
+        "pack_refs_invalid": 0,
+        "a1_rule_violations": 0,
+        "a1_outcome_changed_by_computed_category": 0,
+        "total_disagreements": 0,
+        "coverage_percentage_disagreements": 0,
+        "coverage_category_disagreements": 0,
+        "coverage_undefined": 0,
+        "unavailable_but_scored": 0,
+        "failures": 0,
+        "derived_disagreements": 0,
+        "flags": 0,
+        "notes": 0
+      },
+      "utilisation": {
+        "sub_principles_citing_pack": 210,
+        "rate": 0.4667,
+        "total_citations": 312
+      },
+      "escalated": []
+    },
+    {
+      "arm": "arm-sonnet-5-max",
+      "path": "studies/open-science-compliance/outputs/validation/effort-study-2026-08-17/arm-sonnet-5-max",
+      "summary": {
+        "payloads_checked": 15,
+        "payloads_escalated": 0,
+        "payloads_malformed": 0,
+        "sub_principles_scored": 450,
+        "pack_refs_invalid": 0,
+        "a1_rule_violations": 0,
+        "a1_outcome_changed_by_computed_category": 0,
+        "total_disagreements": 0,
+        "coverage_percentage_disagreements": 0,
+        "coverage_category_disagreements": 0,
+        "coverage_undefined": 0,
+        "unavailable_but_scored": 0,
+        "failures": 0,
+        "derived_disagreements": 0,
+        "flags": 0,
+        "notes": 0
+      },
+      "utilisation": {
+        "sub_principles_citing_pack": 256,
+        "rate": 0.5689,
+        "total_citations": 439
+      },
+      "escalated": []
+    },
+    {
+      "arm": "arm-opus-5-high",
+      "path": "studies/open-science-compliance/outputs/validation/effort-study-2026-08-17/arm-opus-5-high",
+      "summary": {
+        "payloads_checked": 15,
+        "payloads_escalated": 0,
+        "payloads_malformed": 0,
+        "sub_principles_scored": 450,
+        "pack_refs_invalid": 0,
+        "a1_rule_violations": 0,
+        "a1_outcome_changed_by_computed_category": 0,
+        "total_disagreements": 0,
+        "coverage_percentage_disagreements": 0,
+        "coverage_category_disagreements": 0,
+        "coverage_undefined": 0,
+        "unavailable_but_scored": 0,
+        "failures": 0,
+        "derived_disagreements": 0,
+        "flags": 0,
+        "notes": 0
+      },
+      "utilisation": {
+        "sub_principles_citing_pack": 360,
+        "rate": 0.8,
+        "total_citations": 529
+      },
+      "escalated": []
+    },
+    {
+      "arm": "arm-opus-5-5-high",
+      "path": "studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/arm-opus-5-5-high",
+      "summary": {
+        "payloads_checked": 15,
+        "payloads_escalated": 0,
+        "payloads_malformed": 0,
+        "sub_principles_scored": 450,
+        "pack_refs_invalid": 0,
+        "a1_rule_violations": 0,
+        "a1_outcome_changed_by_computed_category": 0,
+        "total_disagreements": 0,
+        "coverage_percentage_disagreements": 0,
+        "coverage_category_disagreements": 0,
+        "coverage_undefined": 0,
+        "unavailable_but_scored": 0,
+        "failures": 0,
+        "derived_disagreements": 0,
+        "flags": 0,
+        "notes": 0
+      },
+      "utilisation": {
+        "sub_principles_citing_pack": 231,
+        "rate": 0.5133,
+        "total_citations": 346
+      },
+      "escalated": []
+    },
+    {
+      "arm": "arm-opus-5-5-medium",
+      "path": "studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/arm-opus-5-5-medium",
+      "summary": {
+        "payloads_checked": 15,
+        "payloads_escalated": 0,
+        "payloads_malformed": 0,
+        "sub_principles_scored": 450,
+        "pack_refs_invalid": 0,
+        "a1_rule_violations": 0,
+        "a1_outcome_changed_by_computed_category": 0,
+        "total_disagreements": 1,
+        "coverage_percentage_disagreements": 0,
+        "coverage_category_disagreements": 0,
+        "coverage_undefined": 0,
+        "unavailable_but_scored": 0,
+        "failures": 0,
+        "derived_disagreements": 1,
+        "flags": 0,
+        "notes": 0
+      },
+      "utilisation": {
+        "sub_principles_citing_pack": 226,
+        "rate": 0.5022,
+        "total_citations": 333
+      },
+      "escalated": []
+    },
+    {
+      "arm": "arm-opus-5-5-xhigh",
+      "path": "studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/arm-opus-5-5-xhigh",
+      "summary": {
+        "payloads_checked": 15,
+        "payloads_escalated": 0,
+        "payloads_malformed": 0,
+        "sub_principles_scored": 450,
+        "pack_refs_invalid": 0,
+        "a1_rule_violations": 0,
+        "a1_outcome_changed_by_computed_category": 0,
+        "total_disagreements": 0,
+        "coverage_percentage_disagreements": 0,
+        "coverage_category_disagreements": 0,
+        "coverage_undefined": 0,
+        "unavailable_but_scored": 0,
+        "failures": 0,
+        "derived_disagreements": 0,
+        "flags": 0,
+        "notes": 0
+      },
+      "utilisation": {
+        "sub_principles_citing_pack": 288,
+        "rate": 0.64,
+        "total_citations": 472
+      },
+      "escalated": []
+    }
+  ],
+  "totals": {
+    "payloads_checked": 135,
+    "payloads_escalated": 0,
+    "payloads_malformed": 0,
+    "sub_principles_scored": 4050,
+    "pack_refs_invalid": 0,
+    "a1_rule_violations": 0,
+    "a1_outcome_changed_by_computed_category": 0,
+    "total_disagreements": 1,
+    "coverage_percentage_disagreements": 0,
+    "coverage_category_disagreements": 0,
+    "coverage_undefined": 0,
+    "unavailable_but_scored": 1,
+    "failures": 0,
+    "derived_disagreements": 1,
+    "flags": 1,
+    "notes": 0
+  },
+  "findings": [
+    {
+      "arm": "arm-fable-5",
+      "payload": "studies/open-science-compliance/outputs/validation/benchmark-2026-08-17/arm-fable-5/run-1/key-et-al-2024.json",
+      "slug": "key-et-al-2024",
+      "run": 1,
+      "check": "C5",
+      "check_name": "unavailable-but-scored",
+      "kind": "flag",
+      "field": "data_fair.available",
+      "model_value": false,
+      "computed_value": null,
+      "governing": "model",
+      "rules_version": "1.1",
+      "detail": "available is false but 1 item(s) scored 1: R1",
+      "items_scored_1": [
+        "R1"
+      ]
+    },
+    {
+      "arm": "arm-opus-5-5-medium",
+      "payload": "studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/arm-opus-5-5-medium/run-3/dye-et-al-2023.json",
+      "slug": "dye-et-al-2023",
+      "run": 3,
+      "check": "C1",
+      "check_name": "section-total",
+      "kind": "derived",
+      "field": "code_fair.total",
+      "model_value": 7,
+      "computed_value": 8,
+      "governing": "computed",
+      "rules_version": "1.1",
+      "detail": "recorded total 7; the 15 items sum to 8"
+    }
+  ]
+}
