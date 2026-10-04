@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Authors' code manifest",
+  "description": "On-disk record written at retrieval to <attempt_dir>/authors-code-manifest.json (reproduction-executor v1.2; preparation prompt v1.2 section 1.0.2). It records a sha256 for every authors' file as retrieved, the copies the run executed, the reproducer's own files (wrappers), and any declared edit to an authors' file. scripts/reproduction-lane.py check-attempt (gate 1.1) and check-code verify it: an executed copy must be byte-identical to its retrieved original; any difference must be a declared edit, which is flagged for human ruling; an undeclared difference fails the gate. Rulings: Shawn 2026-10-04, fail-and-uplift follow-on (3); queued amendment 3 item 7(d), wrapper boundary cases (mechanics in wrappers only, never in the authors' files). All paths are relative to the attempt directory.",
+  "version": "1.0",
+  "type": "object",
+  "required": ["manifest_version", "paper_slug", "originals", "executed", "wrappers"],
+  "additionalProperties": false,
+  "properties": {
+    "manifest_version": {"const": "1.0"},
+    "paper_slug": {"type": "string", "minLength": 1},
+    "no_authors_code_reason": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Required when originals is empty: why no authors' code exists to hash (for example, the paper releases none). Executed must then be empty."
+    },
+    "originals": {
+      "type": "array",
+      "description": "Every authors' file as retrieved, hashed at the moment of retrieval.",
+      "items": {
+        "type": "object",
+        "required": ["id", "sha256", "source", "retrieved_at"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "description": "The file's path within the authors' materials (deposit, repository, or supplement), e.g. analysis/paper/paper.qmd. Unique."},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the bytes as retrieved."},
+          "source": {"type": "string", "minLength": 1, "description": "URL, DOI plus file name, repository plus tag or commit, or corpus-store path the file came from."},
+          "version": {"type": "string", "description": "Deposit version, tag, or commit retrieved (the AP-12 version where one is determined)."},
+          "retrieved_at": {"type": "string", "minLength": 10, "description": "ISO 8601 UTC timestamp of retrieval."},
+          "local_copy": {"type": "string", "minLength": 1, "description": "Pristine copy kept in the attempt directory, never edited. When present the gate re-hashes it."},
+          "archive": {
+            "type": "object",
+            "description": "When the file was extracted from an archive (a Zenodo zip, a supplement zip). If the archive is kept in the attempt directory the gate re-extracts the member and re-hashes it.",
+            "required": ["member"],
+            "additionalProperties": false,
+            "properties": {
+              "path": {"type": "string", "minLength": 1},
+              "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "member": {"type": "string", "minLength": 1}
+            }
+          },
+          "derivation": {
+            "type": "object",
+            "description": "When the authors' code exists only in a form that cannot be executed as bytes (for example, listings printed in a PDF) and the original recorded here is a deterministic transcription. The hash then identifies the transcription, not the publisher's file.",
+            "required": ["method", "from_sha256"],
+            "additionalProperties": false,
+            "properties": {
+              "method": {"type": "string", "minLength": 1},
+              "from": {"type": "string"},
+              "from_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "tool": {"type": "string"}
+            }
+          },
+          "licence": {"type": "string"}
+        }
+      }
+    },
+    "executed": {
+      "type": "array",
+      "description": "Every authors' file the run executed or read as code, by the path the run used.",
+      "items": {
+        "type": "object",
+        "required": ["path", "original"],
+        "additionalProperties": false,
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "original": {"type": "string", "minLength": 1, "description": "The id of the retrieved original this copy must equal byte for byte."},
+          "declared_edit": {
+            "type": "object",
+            "description": "Present only when the executed copy is NOT byte-identical to its original. Declaring the edit turns a gate failure into a flag for human ruling: whether it is routine mechanics placed in the wrong file or a fail-and-uplift edit is not the gate's call.",
+            "required": ["summary", "affected_targets"],
+            "additionalProperties": false,
+            "properties": {
+              "summary": {"type": "string", "minLength": 1},
+              "kind": {"type": "string", "enum": ["mechanical", "repair", "other"]},
+              "affected_targets": {"type": "array", "items": {"type": "string"}},
+              "lines_changed": {"type": "integer", "minimum": 0}
+            }
+          }
+        }
+      }
+    },
+    "wrappers": {
+      "type": "array",
+      "description": "Every code file the reproducer wrote (run scripts, Dockerfile, comparison aids, tools). Mechanics belong here, never in the authors' files.",
+      "items": {
+        "type": "object",
+        "required": ["path", "role", "purpose"],
+        "additionalProperties": false,
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "enum": ["wrapper", "environment", "comparison", "conversion", "tooling"]},
+          "purpose": {"type": "string", "minLength": 1},
+          "value_identity_check": {"type": "string", "description": "For role conversion: the evidence file showing every converted value is unchanged (ruled 2026-10-04, wrapper boundary cases)."}
+        }
+      }
+    },
+    "notes": {"type": "string"}
+  }
+}

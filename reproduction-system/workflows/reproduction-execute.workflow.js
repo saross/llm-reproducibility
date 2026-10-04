@@ -3,7 +3,9 @@ export const meta = {
   description: 'Reproduction lane stage 2: per approved paper, governed executor, deterministic artefact gate, then a fresh-context adversarial reviewer',
   phases: [{ title: 'Execute' }, { title: 'Gate', model: 'haiku' }, { title: 'Review' }],
 }
-// reproduction-execute.workflow.js v1.0 (2026-10-03, Phase 2 shakedown build).
+// reproduction-execute.workflow.js v1.1 (2026-10-04; v1.0 2026-10-03, Phase 2
+// shakedown build). v1.1: the executor writes authors-code-manifest.json, and
+// gate 1.1 flags (declared edits to authors' files) join the human queue.
 //
 // Stage 2 of the agentic reproduction lane (modernisation plan §4.2). Runs
 // only on papers whose plan carries a committed, hash-bound human approval:
@@ -155,6 +157,10 @@ const execPrompt = (p) =>
   `2. Write ONLY under the attempt directory (and the scratch directory for throwaway work). Required ` +
   `artefacts: Dockerfile; your run script(s) at the attempt root; environment.md; log.md (with a ` +
   `Materials Acquired table: URL or DOI, retrieval date, full sha256, destination); ` +
+  `authors-code-manifest.json (every authors' file hashed at retrieval, the executed copies, ` +
+  `your wrappers, and any edit to an authors' file declared — schema ` +
+  `reproduction-system/schemas/authors-code-manifest.json; keep the authors' files byte-identical ` +
+  `and put all mechanics in wrappers); ` +
   `comparisons/comparison-report.md; comparisons/comparison.json; outputs/. Templates: ` +
   `reproduction-system/templates/. Fetch with checksum (reproduction-system/prompts/01-preparation.md ` +
   `§1.0–1.0.1): author-released code and data you consume may be stored in the attempt directory; ` +
@@ -234,6 +240,11 @@ for (const r of done) {
   if (ex.status === 'ESCALATE') queue.push(`${r.slug}: executor ESCALATE — ${ex.escalate_reason}`)
   for (const e of ex.escalations || []) queue.push(`${r.slug}: ${e.kind} ${e.target_id || ''} — ${e.detail}`)
   if (!r.gate || r.gate.verdict !== 'pass') queue.push(`${r.slug}: gate ${r.gate ? r.gate.verdict : 'did not return'}`)
+  // Gate 1.1 flags (declared edits to authors' files, credited targets resting
+  // on them, inlined authors' code) pass the gate but need a human ruling.
+  for (const w of (r.gate && r.gate.warnings) || []) {
+    if (/^FLAG(GED EDIT)?: /.test(w)) queue.push(`${r.slug}: ${w}`)
+  }
   if (!r.review) queue.push(`${r.slug}: review did not return`)
   else if (r.review.status === 'ESCALATE') queue.push(`${r.slug}: reviewer ESCALATE — ${r.review.escalate_reason}`)
   else if (r.review.overall !== 'CONFIRMED') queue.push(`${r.slug}: review ${r.review.overall}`)

@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 """Deterministic orchestration helpers for the agentic reproduction lane.
 
-**Version:** 1.0
+**Version:** 1.1
+
+v1.1 (2026-10-04) adds the authors'-code integrity check (gate 1.1) to
+``check-attempt``, plus a standalone ``check-code``. Shawn's ruling
+(fail-and-uplift follow-on 3): the authors' code files are hashed at
+retrieval and the executed copies checked byte-identical; any difference is a
+declared wrapper or a flagged edit. An undeclared difference fails the gate;
+a declared edit passes with a flag for human ruling.
 
 The reproduction workflows (``reproduction-system/workflows/``) spawn the
 three governed agents — ``reproduction-planner``, ``reproduction-executor``,
@@ -36,10 +43,16 @@ re-run:
     carries an approval whose hash still matches. Unapproved papers are listed
     as skipped, never silently dropped.
 ``check-attempt``
-    The deterministic artefact gate (invariants 3, 5, 6): required files exist
-    and are non-empty; ``comparisons/comparison.json`` validates; its target
-    ids match the locked plan one-to-one; coverage is recomputed from the
-    outcomes; publisher files are absent; the Docker image exists.
+    The deterministic artefact gate (invariants 2, 3, 5, 6): required files
+    exist and are non-empty; ``comparisons/comparison.json`` validates; its
+    target ids match the locked plan one-to-one; coverage is recomputed from
+    the outcomes; publisher files are absent; the Docker image exists; and the
+    authors'-code manifest (``authors-code-manifest.json``) proves every
+    executed authors' file byte-identical to its retrieved original, with
+    every other code file a declared wrapper. Declared edits are flagged.
+``check-code``
+    The authors'-code integrity check alone, for the human lane (no plan
+    JSON) and for retroactive checks.
 ``persist-results``
     Write executor and reviewer payloads from the journal into the attempt
     directory, checking the review's overall verdict against the framework's
@@ -60,7 +73,10 @@ Usage:
     venv/bin/python scripts/reproduction-lane.py build-exec-args \\
         --config <run-config.yaml> --scratch-root <dir> [--out FILE]
     venv/bin/python scripts/reproduction-lane.py check-attempt <attempt-dir> \\
-        [--plan FILE] [--image TAG] [--forbid-sha256 HEX ...] [--out FILE|-]
+        [--plan FILE] [--image TAG] [--forbid-sha256 HEX ...] \\
+        [--code-manifest FILE] [--allow-missing-code-manifest] [--out FILE|-]
+    venv/bin/python scripts/reproduction-lane.py check-code <attempt-dir> \\
+        [--manifest FILE] [--out FILE|-]
     venv/bin/python scripts/reproduction-lane.py persist-results \\
         --config <run-config.yaml> --run-dir <workflow-run-dir> [--force]
     venv/bin/python scripts/reproduction-lane.py audit-run \\
@@ -101,6 +117,26 @@ EXECUTION_FILE = "execution-report.json"
 REVIEW_FILE = "adversarial-review.json"
 COMPARISON_FILE = Path("comparisons") / "comparison.json"
 DEFAULT_COMPARISON_SCHEMA = "reproduction-system/schemas/comparison-record.json"
+GATE_VERSION = "1.1"
+# Authors'-code integrity (gate 1.1; Shawn's ruling 2026-10-04, fail-and-uplift
+# follow-on 3): the authors' files are hashed at retrieval and every executed
+# copy must be byte-identical. Any difference is a declared wrapper or a
+# flagged edit; an undeclared difference fails the gate.
+CODE_MANIFEST_FILE = "authors-code-manifest.json"
+DEFAULT_CODE_MANIFEST_SCHEMA = "reproduction-system/schemas/authors-code-manifest.json"
+# File suffixes (lower-cased) treated as code in the closed-world inventory;
+# names beginning "Dockerfile" count too. outputs/ holds generated files only.
+CODE_SUFFIXES = frozenset({".r", ".rmd", ".qmd", ".rnw", ".py", ".ipynb", ".sh", ".jl",
+                           ".do", ".m", ".sql", ".stan", ".js"})
+CODE_INVENTORY_EXCLUDED = ("outputs",)
+# A wrapper sharing this many substantive lines with an authors' original is
+# flagged: inlined authors' code is an edited copy unless the original runs.
+EMBEDDED_LINES_FLAG = 5
+SUBSTANTIVE_MIN_CHARS = 12
+TRIVIAL_LINE_RE = re.compile(r"^(#|//|library\(|require\(|suppress\w*\(library"
+                             r"|import |from \S+ import )")
+FLAG_EDIT_PREFIX = "FLAGGED EDIT: "
+FLAG_PREFIX = "FLAG: "
 # Coverage numerator (coverage-rules v1.0): reproduced exactly or within the
 # pre-stated tolerance. MINOR_DISCREPANCY is outside tolerance by definition.
 REPRODUCED_OUTCOMES = {"EXACT_MATCH", "WITHIN_PRECISION", "WITHIN_CONFIDENCE"}
@@ -964,9 +1000,365 @@ def cmd_build_exec_args(args: argparse.Namespace) -> int:
     return 0
 
 
+# ---------------------------------------------------------------------------
+# Authors'-code integrity (gate 1.1)
+# ---------------------------------------------------------------------------
+
+def is_code_file(path: Path) -> bool:
+    """True when ``path`` counts as code for the closed-world inventory."""
+    return path.name.lower().startswith("dockerfile") or path.suffix.lower() in CODE_SUFFIXES
+
+
+def inside(target_dir: Path, rel: str) -> Path | None:
+    """Resolve a manifest path inside the attempt directory.
+
+    Args:
+        target_dir: The attempt directory.
+        rel: A path as written in the manifest.
+
+    Returns:
+        The resolved path, or None when ``rel`` is absolute or escapes the
+        attempt directory (the gate can only vouch for files it can read
+        there, and scratch is never part of the artefact set).
+    """
+    if not rel or Path(rel).is_absolute():
+        return None
+    root = target_dir.resolve()
+    resolved = (root / rel).resolve()
+    return resolved if resolved == root or root in resolved.parents else None
+
+
+def substantive_lines(text: str) -> set[str]:
+    """Whitespace-normalised code lines long enough to identify their source.
+
+    Comments, package loads, and short lines (braces, ``}``, ``x <- 1``) are
+    dropped, so a wrapper and an original sharing them proves nothing.
+    """
+    lines = set()
+    for raw in text.splitlines():
+        line = " ".join(raw.split())
+        if len(line) >= SUBSTANTIVE_MIN_CHARS and not TRIVIAL_LINE_RE.match(line):
+            lines.add(line)
+    return lines
+
+
+def lines_changed(original: bytes, edited: bytes) -> dict[str, int]:
+    """Size of an edit as lines changed (ruling 2026-10-04, item 6).
+
+    Uses difflib's opcodes over the two texts' lines. ``changed`` counts each
+    replaced block at the larger of its two sides, plus pure insertions and
+    deletions, so a one-line substitution is 1, not 2.
+
+    Returns:
+        ``{"changed": n, "removed": r, "added": a}``.
+    """
+    import difflib  # local import: only flagged edits need it
+    old = original.decode("utf-8", errors="replace").splitlines()
+    new = edited.decode("utf-8", errors="replace").splitlines()
+    changed = removed = added = 0
+    matcher = difflib.SequenceMatcher(None, old, new, autojunk=False)
+    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+        if tag == "equal":
+            continue
+        changed += max(i2 - i1, j2 - j1)
+        removed += i2 - i1
+        added += j2 - j1
+    return {"changed": changed, "removed": removed, "added": added}
+
+
+def archive_member_bytes(archive: Path, member: str) -> bytes:
+    """Read one member from a zip or tar archive.
+
+    Raises:
+        KeyError: if the member is absent.
+        ValueError: if the archive format is not zip or tar.
+    """
+    import tarfile  # local imports: only archive-backed originals need them
+    import zipfile
+    if zipfile.is_zipfile(archive):
+        with zipfile.ZipFile(archive) as handle:
+            return handle.read(member)
+    if tarfile.is_tarfile(archive):
+        with tarfile.open(archive) as handle:
+            extracted = handle.extractfile(member)
+            if extracted is None:
+                raise KeyError(member)
+            return extracted.read()
+    raise ValueError(f"not a zip or tar archive: {archive.name}")
+
+
+def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
+                         comparison: dict | None = None, plan_slug: str | None = None,
+                         allow_missing: bool = False) -> dict:
+    """Verify the authors' code manifest against the attempt directory.
+
+    The rule (Shawn, 2026-10-04): authors' files are hashed at retrieval and
+    the executed copies checked byte-identical; any difference is a declared
+    wrapper or a flagged edit. So the gate **fails** on anything that would
+    hide a difference — a missing or invalid manifest, an executed copy that
+    differs without a declaration, a pristine copy changed after retrieval,
+    an archive member that does not hash to the recorded value, or a code file
+    that is neither an authors' file nor a declared wrapper. It **flags** (the
+    gate still passes) what is declared but needs a human ruling: each
+    declared edit with its mechanically counted size, a target an edit affects
+    that ``comparison.json`` credits, a wrapper that embeds lines of the
+    authors' code, and a conversion without a value-identity check.
+
+    Args:
+        target_dir: The attempt directory.
+        manifest_path: The manifest (normally ``<attempt>/authors-code-manifest.json``).
+        schema: The full authors-code-manifest schema.
+        comparison: The parsed ``comparison.json``, to cross-check credited
+            targets; None skips that check.
+        plan_slug: The plan's paper slug, which the manifest must name.
+        allow_missing: Downgrade a missing manifest to a warning. Only for
+            attempts executed before gate 1.1 (the pilots); never for new runs.
+
+    Returns:
+        ``{status, errors, flags, warnings, manifest_sha256, originals,
+        executed, wrappers}``. ``status`` is ``fail`` (errors), ``flagged``
+        (flags only), ``identical`` (every executed copy byte-identical),
+        ``no-authors-code``, or ``not-checked``.
+    """
+    errors: list[str] = []
+    flags: list[str] = []
+    warnings: list[str] = []
+    result: dict[str, Any] = {"manifest": display_path(manifest_path), "errors": errors,
+                              "flags": flags, "warnings": warnings, "originals": 0,
+                              "executed": [], "wrappers": 0, "manifest_sha256": None}
+    if not manifest_path.is_file():
+        message = (f"authors' code manifest missing: {manifest_path.name} — hash every "
+                   f"authors' file at retrieval (preparation prompt section 1.0.2)")
+        if allow_missing:
+            warnings.append(message + " [legacy attempt: integrity not checked]")
+            result["status"] = "not-checked"
+        else:
+            errors.append(message)
+            result["status"] = "fail"
+        return result
+    result["manifest_sha256"] = sha256_file(manifest_path)
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"authors' code manifest does not parse: {exc}")
+        result["status"] = "fail"
+        return result
+    problems = schema_problems(manifest, schema)
+    if problems:
+        errors.extend(f"authors' code manifest {p}" for p in problems)
+        result["status"] = "fail"
+        return result
+    if plan_slug is not None and manifest["paper_slug"] != plan_slug:
+        errors.append(f"manifest paper_slug {manifest['paper_slug']!r} != plan {plan_slug!r}")
+
+    originals = manifest["originals"]
+    executed = manifest["executed"]
+    wrappers = manifest["wrappers"]
+    result["originals"], result["wrappers"] = len(originals), len(wrappers)
+    if not originals:
+        if not manifest.get("no_authors_code_reason"):
+            errors.append("manifest lists no originals and gives no no_authors_code_reason")
+        if executed:
+            errors.append("manifest lists executed copies but no originals")
+
+    # -- Originals: unique ids; pristine copies and archive members re-hashed.
+    by_id: dict[str, dict] = {}
+    original_bytes: dict[str, bytes] = {}
+    pristine_paths: set[Path] = set()
+    for item in originals:
+        oid = item["id"]
+        if oid in by_id:
+            errors.append(f"duplicate original id {oid!r}")
+            continue
+        by_id[oid] = item
+        if item.get("local_copy"):
+            local = inside(target_dir, item["local_copy"])
+            if local is None:
+                errors.append(f"original {oid!r}: local_copy must be a relative path inside "
+                              f"the attempt directory")
+            elif not local.is_file():
+                errors.append(f"original {oid!r}: local_copy missing: {item['local_copy']}")
+            else:
+                pristine_paths.add(local)
+                data = local.read_bytes()
+                if hashlib.sha256(data).hexdigest() != item["sha256"]:
+                    errors.append(f"original {oid!r}: pristine copy {item['local_copy']} no "
+                                  f"longer matches its retrieval hash — it was changed after "
+                                  f"retrieval")
+                else:
+                    original_bytes[oid] = data
+        archive = item.get("archive") or {}
+        if archive.get("path"):
+            archive_path = inside(target_dir, archive["path"])
+            if archive_path is None:
+                errors.append(f"original {oid!r}: archive path must be relative and inside "
+                              f"the attempt directory")
+            elif not archive_path.is_file():
+                warnings.append(f"original {oid!r}: archive {archive['path']} not kept; "
+                                f"the retrieval hash is self-reported")
+            else:
+                if archive.get("sha256") and sha256_file(archive_path) != archive["sha256"]:
+                    errors.append(f"original {oid!r}: archive {archive['path']} does not "
+                                  f"match its recorded sha256")
+                try:
+                    member = archive_member_bytes(archive_path, archive["member"])
+                except (KeyError, ValueError, OSError) as exc:
+                    errors.append(f"original {oid!r}: archive member {archive['member']!r} "
+                                  f"unreadable: {exc}")
+                else:
+                    if hashlib.sha256(member).hexdigest() != item["sha256"]:
+                        errors.append(f"original {oid!r}: archive member "
+                                      f"{archive['member']!r} does not hash to the recorded "
+                                      f"retrieval sha256")
+                    else:
+                        original_bytes.setdefault(oid, member)
+        if oid not in original_bytes and not archive.get("path"):
+            warnings.append(f"original {oid!r}: no pristine copy or archive kept; byte "
+                            f"identity is checked against the recorded retrieval hash only")
+        if item.get("derivation"):
+            warnings.append(f"original {oid!r} is a {item['derivation']['method']} of "
+                            f"{item['derivation'].get('from') or 'another file'}; its hash "
+                            f"identifies the derived file, not the source's bytes")
+
+    # -- Executed copies: byte-identical, or a declared (flagged) edit.
+    original_hashes = {item["sha256"]: oid for oid, item in by_id.items()}
+    credited = {}
+    if isinstance(comparison, dict):
+        credited = {t.get("target_id"): t.get("outcome")
+                    for t in comparison.get("targets") or [] if isinstance(t, dict)
+                    and t.get("testable") is not False
+                    and t.get("outcome") in REPRODUCED_OUTCOMES}
+    executed_paths: set[Path] = set()
+    for item in executed:
+        record: dict[str, Any] = {"path": item["path"], "original": item["original"]}
+        result["executed"].append(record)
+        path = inside(target_dir, item["path"])
+        if path is None:
+            errors.append(f"executed {item['path']!r}: must be a relative path inside the "
+                          f"attempt directory")
+            continue
+        if path in executed_paths:
+            errors.append(f"executed {item['path']!r} listed twice")
+        executed_paths.add(path)
+        source = by_id.get(item["original"])
+        if source is None:
+            errors.append(f"executed {item['path']!r}: original {item['original']!r} is not "
+                          f"in originals")
+            continue
+        if not path.is_file():
+            errors.append(f"executed copy missing: {item['path']}")
+            continue
+        data = path.read_bytes()
+        digest = hashlib.sha256(data).hexdigest()
+        record["sha256"] = digest
+        record["identical"] = digest == source["sha256"]
+        edit = item.get("declared_edit")
+        if record["identical"]:
+            if edit:
+                warnings.append(f"executed {item['path']!r} declares an edit but is "
+                                f"byte-identical to {item['original']!r}")
+            continue
+        if not edit:
+            errors.append(f"UNDECLARED DIFFERENCE: {item['path']} (sha256 {digest[:12]}…) is "
+                          f"not byte-identical to original {item['original']!r} (sha256 "
+                          f"{source['sha256'][:12]}…) and declares no edit — mechanics belong "
+                          f"in a wrapper, and any edit to an authors' file must be declared")
+            continue
+        size = (lines_changed(original_bytes[item["original"]], data)
+                if item["original"] in original_bytes else None)
+        record["declared_edit"] = edit
+        record["lines_changed"] = size
+        size_text = (f"{size['changed']} line(s) changed (computed)" if size
+                     else "size not computable (no pristine copy)")
+        if size and "lines_changed" in edit and edit["lines_changed"] != size["changed"]:
+            size_text += f"; declared {edit['lines_changed']} — the computed value governs"
+        flags.append(f"{FLAG_EDIT_PREFIX}{item['path']} differs from original "
+                     f"{item['original']!r}; {size_text}; kind {edit.get('kind', 'unstated')}; "
+                     f"affected targets {edit['affected_targets'] or 'none stated'}; declared: "
+                     f"{edit['summary']}")
+        for target in edit["affected_targets"]:
+            if target in credited:
+                flags.append(f"{FLAG_PREFIX}target {target} is credited ({credited[target]}) "
+                             f"but rests on the flagged edit to {item['path']} — a repaired "
+                             f"result never counts toward coverage or the verdict (queued "
+                             f"amendment 3, item 7(d))")
+
+    # -- Wrappers: exist, are separate files, and do not inline authors' code.
+    wrapper_paths: set[Path] = set()
+    for item in wrappers:
+        path = inside(target_dir, item["path"])
+        if path is None:
+            errors.append(f"wrapper {item['path']!r}: must be a relative path inside the "
+                          f"attempt directory")
+            continue
+        if path in wrapper_paths:
+            errors.append(f"wrapper {item['path']!r} listed twice")
+        wrapper_paths.add(path)
+        if path in executed_paths or path in pristine_paths:
+            errors.append(f"{item['path']} is declared both as a wrapper and as an authors' "
+                          f"file")
+            continue
+        if not path.is_file():
+            errors.append(f"declared wrapper missing: {item['path']}")
+            continue
+        data = path.read_bytes()
+        if hashlib.sha256(data).hexdigest() in original_hashes:
+            errors.append(f"wrapper {item['path']} is byte-identical to authors' original "
+                          f"{original_hashes[hashlib.sha256(data).hexdigest()]!r} — declare "
+                          f"it under executed")
+            continue
+        if item["role"] == "conversion":
+            check = item.get("value_identity_check")
+            check_path = inside(target_dir, check) if check else None
+            if check_path is None or not check_path.is_file():
+                flags.append(f"{FLAG_PREFIX}conversion wrapper {item['path']} names no "
+                             f"value-identity evidence in the attempt directory (a format "
+                             f"conversion is allowed only with a mechanical value-identity "
+                             f"check)")
+        mine = substantive_lines(data.decode("utf-8", errors="replace"))
+        for oid, original in original_bytes.items():
+            shared = mine & substantive_lines(original.decode("utf-8", errors="replace"))
+            if len(shared) >= EMBEDDED_LINES_FLAG:
+                flags.append(f"{FLAG_PREFIX}wrapper {item['path']} embeds {len(shared)} "
+                             f"substantive line(s) of authors' original {oid!r} — inlined "
+                             f"authors' code is an edited copy unless the original file is "
+                             f"what runs")
+
+    # -- Closed-world inventory: every code file is accounted for.
+    known = executed_paths | pristine_paths | wrapper_paths
+    for path in sorted(target_dir.rglob("*")) if target_dir.is_dir() else []:
+        rel = path.relative_to(target_dir)
+        if (not path.is_file() or rel.parts[0] in CODE_INVENTORY_EXCLUDED
+                or "__pycache__" in rel.parts or not is_code_file(path)):
+            continue
+        if path.resolve() in known:
+            continue
+        digest = sha256_file(path)
+        if digest in original_hashes:
+            warnings.append(f"{rel} is a byte-identical, undeclared copy of original "
+                            f"{original_hashes[digest]!r}; declare it under executed if the "
+                            f"run used it")
+        else:
+            errors.append(f"undeclared code file {rel}: neither a byte-identical authors' "
+                          f"file nor a declared wrapper")
+
+    if errors:
+        result["status"] = "fail"
+    elif flags:
+        result["status"] = "flagged"
+    elif not originals:
+        result["status"] = "no-authors-code"
+    else:
+        result["status"] = "identical"
+    return result
+
+
 def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
                   image: str | None = None,
-                  forbid_sha256: tuple[str, ...] = ()) -> dict:
+                  forbid_sha256: tuple[str, ...] = (),
+                  code_manifest: Path | None = None,
+                  code_manifest_schema: dict | None = None,
+                  allow_missing_code_manifest: bool = False) -> dict:
     """The deterministic artefact gate for one attempt directory.
 
     Args:
@@ -976,10 +1368,17 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
         image: Docker image tag that must exist locally, if given.
         forbid_sha256: Hashes of publisher files (paper, supplements) that
             must not appear anywhere in the attempt directory.
+        code_manifest: The authors' code manifest; defaults to
+            ``<attempt>/authors-code-manifest.json``.
+        code_manifest_schema: Its full schema; defaults to the registered file.
+        allow_missing_code_manifest: Legacy attempts only (see
+            ``check_code_integrity``).
 
     Returns:
         A report dict with ``verdict`` ``pass`` or ``fail``, ``errors``,
-        ``warnings``, and recomputed ``coverage``.
+        ``warnings`` (flags included, prefixed ``FLAGGED EDIT:``/``FLAG:`` so a
+        relay copying warnings verbatim carries them), ``flags``, the
+        ``code_integrity`` block, and recomputed ``coverage``.
     """
     errors: list[str] = []
     warnings: list[str] = []
@@ -1079,22 +1478,41 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
                                capture_output=True, text=True, timeout=60)
         if probe.returncode != 0:
             errors.append(f"docker image {image!r} not found locally")
-    return {"gate_version": "1.0", "checked_at": now_utc(),
+
+    integrity = check_code_integrity(
+        target_dir, code_manifest or target_dir / CODE_MANIFEST_FILE,
+        code_manifest_schema or full_schema(expand(DEFAULT_CODE_MANIFEST_SCHEMA)),
+        comparison=comparison if isinstance(comparison, dict) else None,
+        plan_slug=plan_slug, allow_missing=allow_missing_code_manifest)
+    errors += [f"code integrity: {e}" for e in integrity["errors"]]
+    warnings += integrity["warnings"] + integrity["flags"]
+    return {"gate_version": GATE_VERSION, "checked_at": now_utc(),
             "attempt_dir": display_path(target_dir), "plan_file": display_path(plan_path),
             "plan_sha256": plan_digest, "locked_targets": len(locked),
             "verdict": "fail" if errors else "pass", "errors": errors,
-            "warnings": warnings, "coverage": coverage,
+            "warnings": warnings, "flags": integrity["flags"], "coverage": coverage,
+            "code_integrity": {k: integrity[k] for k in (
+                "status", "manifest", "manifest_sha256", "originals", "executed",
+                "wrappers")},
             "executor_verdict": (comparison or {}).get("verdict")
             if isinstance(comparison, dict) else None}
 
 
 def cmd_check_attempt(args: argparse.Namespace) -> int:
-    """CLI wrapper for check_attempt(); exit 0 pass, 1 fail."""
+    """CLI wrapper for check_attempt(); exit 0 pass, 1 fail.
+
+    Flags do not fail the gate; they are printed and recorded so the human
+    queue sees them.
+    """
     target_dir = args.attempt_dir.expanduser().resolve()
     plan_path = (args.plan or target_dir / PLAN_FILE).expanduser().resolve()
     schema = full_schema(expand(args.comparison_schema))
     report = check_attempt(target_dir, plan_path, schema, args.image,
-                           tuple(args.forbid_sha256 or ()))
+                           tuple(args.forbid_sha256 or ()),
+                           code_manifest=(args.code_manifest.expanduser().resolve()
+                                          if args.code_manifest else None),
+                           code_manifest_schema=full_schema(expand(args.code_manifest_schema)),
+                           allow_missing_code_manifest=args.allow_missing_code_manifest)
     if args.out == "-":
         print(json.dumps(report, indent=2))
     else:
@@ -1103,6 +1521,34 @@ def cmd_check_attempt(args: argparse.Namespace) -> int:
         print(json.dumps({k: report.get(k) for k in ("verdict", "errors", "warnings",
                                                        "coverage")}, indent=2))
     return 0 if report["verdict"] == "pass" else 1
+
+
+def cmd_check_code(args: argparse.Namespace) -> int:
+    """Run only the authors'-code integrity check; exit 0 unless it fails.
+
+    For the session-per-phase human lane (no plan JSON) and for retroactive
+    checks. Flags are reported but do not fail it.
+    """
+    target_dir = args.attempt_dir.expanduser().resolve()
+    manifest = (args.manifest.expanduser().resolve() if args.manifest
+                else target_dir / CODE_MANIFEST_FILE)
+    comparison = None
+    if (target_dir / COMPARISON_FILE).is_file():
+        try:
+            comparison = json.loads((target_dir / COMPARISON_FILE).read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            comparison = None
+    report = check_code_integrity(target_dir, manifest,
+                                  full_schema(expand(args.code_manifest_schema)),
+                                  comparison=comparison)
+    report = {"check": "authors-code-integrity", "gate_version": GATE_VERSION,
+              "checked_at": now_utc(), "attempt_dir": display_path(target_dir), **report}
+    if args.out and args.out != "-":
+        write_json(Path(args.out).expanduser(), report)
+        print(f"wrote {args.out}")
+    print(json.dumps({k: report[k] for k in ("status", "errors", "flags", "warnings")},
+                     indent=2, ensure_ascii=False))
+    return 1 if report["status"] == "fail" else 0
 
 
 DIMENSION_KEYS = ("provenance", "quantitative_claims", "scope_completeness",
@@ -1568,8 +2014,21 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--comparison-schema", default=DEFAULT_COMPARISON_SCHEMA)
     p.add_argument("--image", default=None)
     p.add_argument("--forbid-sha256", action="append", default=[])
+    p.add_argument("--code-manifest", type=Path, default=None,
+                   help=f"authors' code manifest (default: <attempt>/{CODE_MANIFEST_FILE})")
+    p.add_argument("--code-manifest-schema", default=DEFAULT_CODE_MANIFEST_SCHEMA)
+    p.add_argument("--allow-missing-code-manifest", action="store_true",
+                   help="legacy attempts executed before gate 1.1 only: a missing manifest "
+                        "warns instead of failing")
     p.add_argument("--out", default=None, help="report path, or - for stdout only")
     p.set_defaults(func=cmd_check_attempt)
+
+    p = sub.add_parser("check-code", help="authors'-code integrity check only")
+    p.add_argument("attempt_dir", type=Path)
+    p.add_argument("--manifest", type=Path, default=None)
+    p.add_argument("--code-manifest-schema", default=DEFAULT_CODE_MANIFEST_SCHEMA)
+    p.add_argument("--out", default=None, help="report path, or - (default) for stdout only")
+    p.set_defaults(func=cmd_check_code)
 
     p = sub.add_parser("persist-results", help="persist executor/reviewer payloads")
     p.add_argument("--config", type=Path, required=True)

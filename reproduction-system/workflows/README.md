@@ -1,6 +1,6 @@
 # Agentic reproduction lane — workflows and runbook
 
-**Version:** 1.0 (2026-10-03)
+**Version:** 1.1 (2026-10-04; 1.0 2026-10-03)
 **Status:** built for the Phase 2 shakedown (`wiki/planning/agentic-modernisation-plan.md`
 §5, Phase 2 option (a), approved 2026-10-02). It sits alongside the
 session-per-phase human lane (`reproduction-system/prompts/`), which remains
@@ -21,8 +21,8 @@ Two workflows rather than one: a human approval must sit between planning and
 execution, and a workflow cannot pause for a person. Splitting at the approval
 point turns invariant 1 into a structural property.
 
-The three agent definitions (`.claude/agents/`, v1.1, pinned to
-`claude-opus-5-5`) receive their instruments by the SubagentStart push hook,
+The three agent definitions (`.claude/agents/`, v1.1; the executor v1.2 since
+2026-10-04; pinned to `claude-opus-5-5`) receive their instruments by the SubagentStart push hook,
 and their receipts are checked by the SubagentStop gate. Both hooks are
 unchanged and serve this lane exactly as they serve the FAIR lane.
 
@@ -72,15 +72,15 @@ configuration (for the shakedown:
     `persist-results` and `audit-run`.
 11. **Human queue:** the workflow's `human_queue` must be cleared before any
     result enters study data (plan §4.4). It lists ESCALATE outputs, failed
-    gates, QUALIFIED or CHALLENGED reviews, and PAPER_ERROR or CANNOT_COMPARE
-    calls.
+    gates, QUALIFIED or CHALLENGED reviews, PAPER_ERROR or CANNOT_COMPARE
+    calls, and gate flags (`FLAGGED EDIT:` or `FLAG:`, below).
 
 ## Where each invariant is enforced
 
 | Invariant | Mechanism |
 |---|---|
 | 1 Plan approval before compute | Separate workflows; `approve` binds the plan sha256; `build-exec-args` refuses unapproved, changed, or uncommitted plans; the executor re-verifies the hash first |
-| 2 Wrapper cardinal rule | Executor instrument and brief; every modification is self-reported with `changes_what_is_computed`; the reviewer audits scripts |
+| 2 Wrapper cardinal rule | Executor instrument and brief; every modification is self-reported with `changes_what_is_computed`; the reviewer audits scripts. Gate 1.1 (`check-attempt`, or `check-code` alone) reads `authors-code-manifest.json`: every executed authors' file must be byte-identical to its hash at retrieval, and every other code file a declared wrapper. An undeclared difference fails the gate. A declared edit passes with a `FLAGGED EDIT:` warning for human ruling, as do credited targets resting on it and wrappers that inline authors' code (`FLAG:`). |
 | 3 Every target accounted for | `check-attempt`: one record per locked target id in `comparisons/comparison.json`, no extras; coverage recomputed from outcomes |
 | 4 Fresh-context review for every paper | The reviewer runs for every paper whose executor returned, gate pass or fail; artefacts-only tools; blinded from earlier attempts |
 | 5 Docker only | Executor brief; `check-attempt --image` confirms the image exists; the reviewer's methodological-soundness dimension |

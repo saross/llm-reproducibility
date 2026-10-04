@@ -83,6 +83,40 @@ def write(path: Path, text: str = "x\n") -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def sha(text: str) -> str:
+    """sha256 of a UTF-8 string, as the manifest records it."""
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+# An authors' script long enough to identify when a wrapper inlines it.
+AUTHORS_R = "".join(f"result_{i} <- compute_statistic(data, index = {i})\n"
+                    for i in range(1, 9))
+
+
+def write_code_manifest(attempt: Path, **overrides) -> dict:
+    """A valid authors'-code manifest for the GateTests fixture.
+
+    One authors' original kept pristine under ``authors-code-raw/`` and executed
+    from ``authors-code/`` byte-identical; the fixture's run script and
+    Dockerfile are declared wrappers.
+    """
+    write(attempt / "authors-code-raw" / "analysis.R", AUTHORS_R)
+    write(attempt / "authors-code" / "analysis.R", AUTHORS_R)
+    manifest = {"manifest_version": "1.0", "paper_slug": "some-paper-2024",
+                "originals": [{"id": "analysis.R", "sha256": sha(AUTHORS_R),
+                               "source": "https://zenodo.org/records/1/files/analysis.R",
+                               "retrieved_at": "2026-10-04T00:00:00Z",
+                               "local_copy": "authors-code-raw/analysis.R"}],
+                "executed": [{"path": "authors-code/analysis.R", "original": "analysis.R"}],
+                "wrappers": [{"path": "run-analysis.R", "role": "wrapper",
+                              "purpose": "sources the authors' file"},
+                             {"path": "Dockerfile", "role": "environment",
+                              "purpose": "pinned environment"}]}
+    manifest.update(overrides)
+    write(attempt / lane.CODE_MANIFEST_FILE, json.dumps(manifest))
+    return manifest
+
+
 class FormatContracts(unittest.TestCase):
     """Workflow prompt lines must match the tool's regexes."""
 
@@ -146,6 +180,7 @@ class GateTests(unittest.TestCase):
         self.plan = Path(self.tmp.name) / "reproduction-plan.json"
         self.plan.write_text(json.dumps(plan_record(["T01", "T02"])), encoding="utf-8")
         self.schema = json.loads(COMPARISON_SCHEMA.read_text(encoding="utf-8"))
+        write_code_manifest(self.dir)
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -223,6 +258,183 @@ class GateTests(unittest.TestCase):
         self.comparison()
         (self.dir / "log.md").unlink()
         self.assertTrue(any("log.md" in e for e in self.run_gate()["errors"]))
+
+    def test_gate_reports_code_integrity(self):
+        self.comparison()
+        report = self.run_gate()
+        self.assertEqual(report["gate_version"], "1.1")
+        self.assertEqual(report["code_integrity"]["status"], "identical")
+        self.assertEqual(report["flags"], [])
+
+    def test_gate_fails_on_undeclared_edit(self):
+        """The T02 class: an index shifted inside the authors' file, undeclared."""
+        self.comparison()
+        write(self.dir / "authors-code" / "analysis.R",
+              AUTHORS_R.replace("index = 4", "index = 3"))
+        report = self.run_gate()
+        self.assertEqual(report["verdict"], "fail")
+        self.assertTrue(any("UNDECLARED DIFFERENCE" in e for e in report["errors"]))
+
+    def test_gate_passes_declared_edit_with_flag_relayed_in_warnings(self):
+        self.comparison()
+        write(self.dir / "authors-code" / "analysis.R",
+              AUTHORS_R.replace("index = 4", "index = 3"))
+        manifest = json.loads((self.dir / lane.CODE_MANIFEST_FILE).read_text())
+        manifest["executed"][0]["declared_edit"] = {
+            "summary": "shifted an index", "kind": "repair", "affected_targets": ["T02"]}
+        write(self.dir / lane.CODE_MANIFEST_FILE, json.dumps(manifest))
+        report = self.run_gate()
+        self.assertEqual(report["verdict"], "pass", report["errors"])
+        self.assertEqual(report["code_integrity"]["status"], "flagged")
+        self.assertTrue(any(w.startswith(lane.FLAG_EDIT_PREFIX) for w in report["warnings"]))
+        # T02 is credited WITHIN_PRECISION in the fixture: a repaired result is flagged.
+        self.assertTrue(any("target T02 is credited" in f for f in report["flags"]))
+
+    def test_gate_missing_manifest_fails_unless_legacy(self):
+        self.comparison()
+        (self.dir / lane.CODE_MANIFEST_FILE).unlink()
+        self.assertEqual(self.run_gate()["verdict"], "fail")
+        legacy = self.run_gate(allow_missing_code_manifest=True)
+        self.assertEqual(legacy["verdict"], "pass", legacy["errors"])
+        self.assertEqual(legacy["code_integrity"]["status"], "not-checked")
+
+
+class CodeIntegrityTests(unittest.TestCase):
+    """check_code_integrity(): hash at retrieval, byte identity at execution."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name) / "attempt-03"
+        write(self.dir / "run-analysis.R", 'source("authors-code/analysis.R")\n')
+        write(self.dir / "Dockerfile", "FROM rocker/r-ver:4.3.2\n")
+        self.manifest = write_code_manifest(self.dir)
+        self.schema = json.loads((REPO_ROOT / lane.DEFAULT_CODE_MANIFEST_SCHEMA)
+                                 .read_text(encoding="utf-8"))
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def check(self, **kwargs) -> dict:
+        return lane.check_code_integrity(self.dir, self.dir / lane.CODE_MANIFEST_FILE,
+                                         self.schema, **kwargs)
+
+    def rewrite(self, **changes) -> None:
+        manifest = dict(self.manifest, **changes)
+        write(self.dir / lane.CODE_MANIFEST_FILE, json.dumps(manifest))
+
+    def test_identical_copy_passes(self):
+        result = self.check(plan_slug="some-paper-2024")
+        self.assertEqual(result["status"], "identical", result["errors"])
+        self.assertTrue(result["executed"][0]["identical"])
+
+    def test_slug_mismatch_fails(self):
+        self.assertEqual(self.check(plan_slug="other-2024")["status"], "fail")
+
+    def test_pristine_copy_changed_after_retrieval_fails(self):
+        write(self.dir / "authors-code-raw" / "analysis.R", AUTHORS_R + "# note\n")
+        result = self.check()
+        self.assertTrue(any("changed after retrieval" in e for e in result["errors"]))
+
+    def test_declared_edit_size_is_computed_and_governs(self):
+        write(self.dir / "authors-code" / "analysis.R",
+              AUTHORS_R.replace("index = 4", "index = 3").replace("index = 6", "index = 5"))
+        executed = [dict(self.manifest["executed"][0], declared_edit={
+            "summary": "two indices", "kind": "repair", "affected_targets": [],
+            "lines_changed": 1})]
+        self.rewrite(executed=executed)
+        result = self.check()
+        self.assertEqual(result["status"], "flagged", result["errors"])
+        self.assertEqual(result["executed"][0]["lines_changed"]["changed"], 2)
+        self.assertIn("declared 1 — the computed value governs", result["flags"][0])
+
+    def test_one_line_substitution_counts_one(self):
+        size = lane.lines_changed(b"a\nb\nc\n", b"a\nB\nc\n")
+        self.assertEqual(size, {"changed": 1, "removed": 1, "added": 1})
+
+    def test_undeclared_code_file_fails(self):
+        write(self.dir / "scripts" / "compare.R", "x <- 1\n")
+        result = self.check()
+        self.assertTrue(any("undeclared code file scripts/compare.R" in e
+                            for e in result["errors"]))
+
+    def test_outputs_are_outside_the_inventory(self):
+        write(self.dir / "outputs" / "generated.R", "x <- 1\n")
+        self.assertEqual(self.check()["status"], "identical")
+
+    def test_undeclared_identical_copy_only_warns(self):
+        write(self.dir / "extra" / "analysis.R", AUTHORS_R)
+        result = self.check()
+        self.assertEqual(result["status"], "identical", result["errors"])
+        self.assertTrue(any("byte-identical, undeclared copy" in w for w in result["warnings"]))
+
+    def test_wrapper_inlining_authors_code_is_flagged(self):
+        write(self.dir / "run-analysis.R", "# reassembled\n" + AUTHORS_R + "write_out()\n")
+        result = self.check()
+        self.assertEqual(result["status"], "flagged", result["errors"])
+        self.assertTrue(any("embeds 8 substantive line(s)" in f for f in result["flags"]))
+
+    def test_wrapper_that_is_an_authors_file_fails(self):
+        write(self.dir / "run-analysis.R", AUTHORS_R)
+        result = self.check()
+        self.assertTrue(any("byte-identical to authors' original" in e
+                            for e in result["errors"]))
+
+    def test_paths_must_stay_inside_the_attempt(self):
+        wrappers = self.manifest["wrappers"] + [
+            {"path": "../elsewhere.R", "role": "tooling", "purpose": "x"}]
+        self.rewrite(wrappers=wrappers)
+        self.assertTrue(any("inside the attempt directory" in e
+                            for e in self.check()["errors"]))
+
+    def test_schema_violation_fails(self):
+        self.rewrite(originals=[{"id": "analysis.R", "sha256": "not-a-hash",
+                                 "source": "x", "retrieved_at": "2026-10-04"}])
+        self.assertEqual(self.check()["status"], "fail")
+
+    def test_archive_member_rehashed(self):
+        import zipfile
+        with zipfile.ZipFile(self.dir / "deposit.zip", "w") as archive:
+            archive.writestr("repo-v1/analysis.R", AUTHORS_R)
+        originals = [dict(self.manifest["originals"][0],
+                          archive={"path": "deposit.zip", "member": "repo-v1/analysis.R",
+                                   "sha256": hashlib.sha256(
+                                       (self.dir / "deposit.zip").read_bytes()).hexdigest()})]
+        self.rewrite(originals=originals)
+        self.assertEqual(self.check()["status"], "identical")
+        originals[0]["sha256"] = sha("something else\n")
+        self.rewrite(originals=originals)
+        result = self.check()
+        self.assertTrue(any("does not hash to the recorded" in e for e in result["errors"]))
+
+    def test_no_authors_code_needs_a_reason(self):
+        (self.dir / "authors-code" / "analysis.R").unlink()
+        (self.dir / "authors-code-raw" / "analysis.R").unlink()
+        self.rewrite(originals=[], executed=[])
+        self.assertEqual(self.check()["status"], "fail")
+        self.rewrite(originals=[], executed=[], no_authors_code_reason="none released")
+        self.assertEqual(self.check()["status"], "no-authors-code")
+
+    def test_conversion_without_identity_evidence_is_flagged(self):
+        write(self.dir / "convert.py", "print('xlsx to csv')\n")
+        wrappers = self.manifest["wrappers"] + [
+            {"path": "convert.py", "role": "conversion", "purpose": "xlsx to csv"}]
+        self.rewrite(wrappers=wrappers)
+        self.assertTrue(any("value-identity" in f for f in self.check()["flags"]))
+
+    def test_check_code_cli_exit_status(self):
+        args = argparse.Namespace(attempt_dir=self.dir, manifest=None, out="-",
+                                  code_manifest_schema=lane.DEFAULT_CODE_MANIFEST_SCHEMA)
+        self.assertEqual(lane.cmd_check_code(args), 0)
+        write(self.dir / "authors-code" / "analysis.R", AUTHORS_R + "fix()\n")
+        self.assertEqual(lane.cmd_check_code(args), 1)
+
+    def test_execute_workflow_carries_manifest_and_flags(self):
+        """The executor is told to write the manifest; flags reach the human queue."""
+        source = (WORKFLOWS / "reproduction-execute.workflow.js").read_text(encoding="utf-8")
+        self.assertIn(lane.CODE_MANIFEST_FILE, source)
+        pattern = re.search(r"/(\^FLAG[^/]*)/\.test\(w\)", source).group(1)
+        for prefix in (lane.FLAG_PREFIX, lane.FLAG_EDIT_PREFIX):
+            self.assertIsNotNone(re.match(pattern, prefix + "x"), prefix)
 
 
 class PlanAndBindingTests(unittest.TestCase):
