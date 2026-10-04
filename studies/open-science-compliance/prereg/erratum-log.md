@@ -602,3 +602,48 @@ reference scores" without saying how three runs meet one reference score.
      and never override a score.
    - **(d) Audit.** Both values, the rule's version, and which value
      governed are recorded for every item a check touches.
+7. **Reproduction-lane instrument clarifications (RULED by Shawn,
+   2026-10-04; from the Phase 2 shakedown).** All four instruments are
+   frozen, so each needs this amendment, and the §8 regression gate must
+   run under the clarified text. Rulings are in
+   `outputs/validation/phase2-shakedown/results-2026-10-03.md`, "Rulings
+   (2026-10-04)", "Clarifications RULED". Draft wording for lodging:
+   - **(a) `verdicts-and-precision.md`, paper error handling.** "When a
+     reproduced value disagrees with a published value, the reproduction
+     is internally consistent, and the authors' own materials support the
+     reproduced value, classify as PAPER_ERROR rather than
+     MAJOR_DISCREPANCY. Admissible evidence, in descending strength: (1)
+     the paper's own tabulated data; (2) the authors' deposited data for
+     that analysis; (3) the authors' own code, run unmodified (invariant
+     2), on the authors' own data. The reproduction's own
+     re-implementation is never evidence. The comparison report names the
+     tier used. PAPER_ERROR findings escalate for human confirmation
+     before entering study data."
+   - **(b) `data-availability-taxonomy.md`, the L2 counting unit.**
+     "Counting unit: the distinct datasets that the paper's verification
+     targets require as inputs, as enumerated in the reproduction plan.
+     Replicate runs presented as one result count as one dataset, which is
+     available only if every part is retrievable. Upstream sources count
+     only when a verification target requires them; otherwise they are
+     provenance."
+   - **(c) `coverage-rules.md`, check scope.** "Each target's verification
+     method states its scope, which must equal the target's full
+     published scope at the pre-stated tolerance. A check that covers part
+     of a target is completed before the target counts as reproduced;
+     otherwise the target is recorded as partially verified and counts
+     against coverage. Where feasible, the plan declares the target's
+     element count, and a deterministic gate compares it with the elements
+     checked."
+   - **(d) `invariants.md`, an invariant 2 corollary.** "Routine (execution
+     environment): choosing among publicly available versions of
+     dependencies and language runtimes, meaning releases from the
+     package's official archive (for example CRAN or PyPI) or a tagged
+     public repository, preferring the version current at publication.
+     The search and the chosen versions are recorded. Fail-and-uplift: any
+     edit to the authors' code that changes logic, indices, data
+     selection, parameters, or the functions called, however obvious the
+     intent. A deprecated function is handled by pinning a public version
+     that still runs it; if none exists, replacing it is an edit, and so
+     fail-and-uplift. A repaired result is
+     recorded as uplift evidence and never counts toward coverage or the
+     verdict."
