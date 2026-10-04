@@ -12,6 +12,21 @@ F-018; 0 tokens). The args guard passed. The harness then loaded the
 definition in this session, so P4 re-runs here under the same approval, with
 args rebuilt at HEAD.
 
+**P4 attempt 2 (`wf_85e5e3d2-e19`, launch commit `0c5fdb3`): PASSED.** All
+criteria were met:
+
+- served model `claude-opus-5-5`;
+- receipt gate pass;
+- `model_id` and `agent_version` correct, and the instrument 2.1 and
+  guide 1.1 receipt tokens match the manifest;
+- status OK, schema-valid, reconciled clean;
+- assembler v1.6 parsed identity `(opus-5-5, 1, marwick-2025)` and
+  provenance `(0c5fdb3…, high)` from a real transcript.
+
+Per-request cost was about $0.71 (scoring about $0.64, reconciliation about
+$0.08). No user-request relay reached the spawn (R2 not observed). The
+record is `p4-probe/`; it is not counted in any arm.
+
 ## Purpose
 
 At the D4 step, the registrant held selection so that `claude-opus-5-5`
