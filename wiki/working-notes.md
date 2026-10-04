@@ -1439,3 +1439,49 @@ the verifier did not model the delivery path its subject rode on. Sources:
 `studies/open-science-compliance/outputs/validation/benchmark-2026-08/`
 (`arm-fable-5` and `arm-opus-5`); register F-007 in
 `studies/open-science-compliance/outputs/validation/failure-modes/register.md`.
+
+## Observation 36: Within-model run disagreement is a rubric-ambiguity locator (2026-10-04)
+
+*(Approved by Shawn 2026-10-04; WN-m, drafted 2026-08-03, with 2026-10-04 corroboration.)*
+
+### Context
+
+Each validation arm scores the five pilot papers three times (15 spawns),
+and the analysis tool lists the items on which the three runs disagree.
+That list says where the model is unsure of the instrument, independent of
+whether the reference is right.
+
+### Observation
+
+Across the three 2026-08-03 arms, run-to-run disagreement concentrated on
+the same five instrument clauses (A1.2, R1.1, A2, R1.3, and F-block
+upstream crediting), and the most capable model was not the most stable.
+Three runs of a single cheap model would have located the same clauses as
+the full cross-model benchmark, which is a diagnostic costing about $3 on
+the candidate's estimate (not re-derived here).
+
+**2026-10-04 corroboration, stated honestly.** The Opus 5.5 medium arm
+(143/150 stable) disagreed on seven items
+(`opus-5-5-arms-2026-10/h13/h13-results.json`, `non_unanimous_items`): crema
+code I3, dye code R1.1, dye data R1.1, herskind data A1, key code R1, key
+code R1.2, and marwick data I1. Two points overlap the 2026-08-03 clause
+list: R1.1 (two of the seven) and the A1 family (herskind data A1). The
+rest do not: I3, I1, R1, and R1.2 were not on that list. Conversely, A2,
+A1.2, R1.3, and F-block crediting were fully stable at medium (their
+sub-principle stability is 1). So a single arm on a newer model locates
+some, not all, of the earlier clauses and adds others. The corroboration is
+partial, and the new items are small in number (7 of 150).
+
+### Implication
+
+Run disagreement locates ambiguity cheaply, but one arm's list is a sample,
+not the clause set: it shifts with the model, and the older "same five
+clauses" finding should be read as stable only across the three models
+tested then. Use repeated runs of one cheap model as the first diagnostic
+for instrument clarification, and pool lists across models before treating
+a clause as unambiguous. The error side tells a different story, because
+the systematic misses (F2 over-credit) are unanimous and so invisible to
+this locator (Observation 34). Relations: Observation 15 (statistics
+depend on design choices); Observation 34 (the Opus 5.5 arms). Sources:
+per-arm stability disagreement lists in the 2026-08-03 run records; the
+Opus 5.5 medium arm's `h13/h13-results.json`.
