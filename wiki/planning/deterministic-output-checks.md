@@ -175,3 +175,10 @@ or as a planned rule with its validation criteria declared in advance.
   each paper's extracted text).
 - [ ] Optional: register the checker in `manifest.yaml` if it joins the
   census pipeline, so the manifest gate catches version drift.
+- [ ] Reproduction lane (ruled 2026-10-04, before the regression gate):
+  hash the authors' code files at retrieval and check that the executed
+  copies are byte-identical; any difference is a declared wrapper or a
+  flagged edit.
+- [ ] Reproduction lane (ruled 2026-10-04, before the regression gate):
+  a one-off audit of each pilot's executed code against the authors'
+  originals, to find undeclared repairs like dye's T02.

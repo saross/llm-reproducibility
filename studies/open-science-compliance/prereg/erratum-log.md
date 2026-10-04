@@ -647,3 +647,27 @@ reference scores" without saying how three runs meet one reference score.
      fail-and-uplift. A repaired result is
      recorded as uplift evidence and never counts toward coverage or the
      verdict."
+     **Added the same day (Shawn, 2026-10-04):**
+     - **Version-search cap.** "The environment is first built with every
+       dependency at the release current at the article's first online
+       appearance. If a specific dependency fails, at most its immediately
+       preceding and following releases are tried, so a dependency has at
+       most three attempts. Each attempt is logged."
+     - **Wrapper boundary cases.** "Mechanics are applied in wrappers only,
+       never in the authors' files. They are recorded, and they include:
+       setting a random seed where the authors set none (stochastic
+       tolerances still apply); converting an input file's format, allowed
+       only when a mechanical check confirms every value is unchanged (any
+       change of value is fail-and-uplift); and choosing the language
+       runtime version, which is routine like any dependency."
+8. **Pre-declared descriptive outcomes for the reproduction lane (RULED by
+   Shawn, 2026-10-04).** Neither enters a verdict or coverage.
+   - **(a) Verdict beside the environment-specification level.** Each
+     paper's verdict is reported alongside the environment-specification
+     level the authors provided. A SUCCESSFUL verdict that depended on the
+     reproducer's version search therefore cannot be read as the authors
+     having captured a working environment.
+   - **(b) Recoverable with repair.** For each fail-and-uplift target, the
+     result a repair recovers and the repair's size are reported. Size is
+     measured as the lines changed in the authors' code. Also reported:
+     recovery against paper age, since deprecations accumulate over time.
