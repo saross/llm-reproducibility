@@ -37,6 +37,13 @@ from arm 1's launch. P4 is not counted in any arm. If any governed file (agent
 definition, instrument, guide, schema, workflow, args builder) changes before
 arm 1, re-run P4 first. Each arm's args are rebuilt at launch.
 
+**API gate stage 2 APPROVED (Shawn, 2026-10-04, at session close):** "I
+approve all three runs, do them all unless something goes wrong". The arms
+run from the next session, `high` → `medium` → `xhigh`, sequentially with
+per-arm hard stops (H3, the H4 wire, checksum refusal, any anomaly → stop
+and report). The procedure is in `wiki/continuity.md`, "Repo state
+(2026-10-04) — START HERE".
+
 ## Purpose
 
 At the D4 step, the registrant held selection so that `claude-opus-5-5`
