@@ -92,6 +92,55 @@ responses are already harvested and checksummed):
    the pilots, is it adopted as the F2 scorer (amendment), or kept as a
    check?
 
+## Proposed position on disagreement (Claude, 2026-10-04, for ruling)
+
+Shawn (2026-10-04): open to an amendment; "cases like incorrect arithmetic
+seem like we should defer to the mechanistic check". Proposal: decide by
+**what kind of quantity it is**.
+
+1. **Derived quantities: compute them; don't merely check them.**
+   - **Scope:** totals, `coverage_percentage`, and `coverage_category`.
+     Each is defined as a function of other fields, so the model should
+     not be their source.
+   - **Rule:** the pipeline computes them from the scored items and
+     counts. The model's value is kept only as a consistency signal. On
+     disagreement the computed value governs automatically, and the
+     disagreement is logged.
+   - **Status:** this implements the registered definition (total = the
+     item sum) rather than changing the method. It should still be
+     disclosed in one line of amendment 3.
+   - **Review:** a miscount can also mean the model wavered on an item
+     (dye r3: total 7, items 8). So the item gets a spot check, not a
+     block. The items are what the gates validated.
+2. **Rule-determined items with structured inputs: validate first, then
+   amend to make the rule authoritative.**
+   - **Scope:** F2 under AP-15 (registry creators, title, description, and
+     keywords), and platform-row implications such as Row 6.
+   - **Validation (no API spend):** score the rule against the E8-v2
+     reference on the five pilots. Then recompute both gate statistics
+     for the **hybrid** scorer (mechanical F2, model elsewhere), because
+     the gates validated the model, not the hybrid.
+   - **Adoption:** if the hybrid clears the gates and the rule matches the
+     reference at least as well as the model, amend so that the rule
+     governs those items.
+   - **Fallback:** where structured inputs are missing (no registry
+     record), the model's score stands and is flagged.
+   - **Reporting:** model–rule disagreement rates are reported as a study
+     finding.
+   - **Until amended:** flag only, with disagreements going to human
+     adjudication.
+3. **Judgement items with evidence checks: flag; never override.**
+   - **Scope:** quote verification and identifier-in-text checks.
+   - **Rule:** a failed check sends the item for re-scoring or
+     adjudication; it is never auto-zeroed. A paraphrase is not a
+     fabrication, and the check cannot make the FAIR judgement.
+4. **Always record both values,** the rule's version, and which one
+   governed, so that every override can be audited.
+
+**Timing:** amendment 3 is still open. It could carry (1) as a disclosure,
+and (2) either as an adopted rule, if validation finishes before lodgement,
+or as a planned rule with its validation criteria declared in advance.
+
 ## Next step (proposed)
 
 Build Layer 1 as a small tested script (`scripts/check-payload-consistency.py`)
