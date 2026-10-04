@@ -1590,3 +1590,57 @@ test such as AP-8 reads a default as a published licence); Observation 31
 platform claims). Anchors: `verification-note.md` and
 `enrichment-addendum-2026-08-15.md` in the platform-rows directory above;
 the WN-q entry in `wiki/continuity.md` (2026-08-15 session).
+
+## Observation 39: Apparatus evolution silently vacates derived statistics, and the A3 promotion consumed its own evidence base (2026-10-04)
+
+*(Approved by Shawn 2026-10-04; WN-y and WN-z, held over from the 2026-08-19 session, with 2026-10-04 corroboration.)*
+
+### Context
+
+Observation 22 recorded a within-sonnet correlation between guideless
+spawns (spawns that never read the principles guide) and minority votes:
+17 of 29 splits, against about 11.3 expected. The analysis tool
+(`studies/open-science-compliance/protocol/validation/analyse-benchmark-disagreements.py`)
+re-checks that correlation per arm. On 2026-08-15 the guide moved from
+pull-on-demand to push delivery (the A3 promotion), after which a spawn's
+receipts no longer show a pull.
+
+### Observation
+
+**WN-y, the predicate went vacuous.** The detector was pull-era: it looked
+for the guide in `pulled_files_read`. After A3 the guide is receipted under
+`instrument_receipts`, so the detector reported every one of the 90 spawns
+in the 2026-08-17 cycles as guideless. The statistic still computed and
+printed, with no error. The fix was two-era detection in the same commit
+(the docstring of `pulled_guide()` states both eras). Derived statistics
+need explicit two-era semantics whenever the apparatus that feeds them
+changes.
+
+**WN-z, the promotion consumed its own evidence base.** After A3, a
+guideless spawn cannot exist, so the treatment group of the guideless-minority
+correlation is empty. The correlation is therefore era-bound and frozen at
+the old-cycle n. Re-testing it would be a deliberate ablation (withholding
+the guide again), not a re-analysis.
+
+**2026-10-04 corroboration.** The corrected tool, run over all nine arms
+(including the three Opus 5.5 arms) with the BI items excluded, reports
+`guideless spawns []` and zero minority votes from a guideless spawn in
+every arm. That is the correct post-A3 answer, and it shows the statistic is
+still structurally unmeasurable: a zero here is "no treatment group", not
+"no effect".
+
+### Implication
+
+When an apparatus change alters what a field means, every statistic derived
+from the field must be re-audited, because the failure mode is a plausible
+number, not an error. Report a derived statistic together with the era it
+is valid for, and treat a zero from a structurally empty group as
+non-evidence. Relations: Observation 22 (the original correlation and the
+premise test); Observation 29 (the harness is part of the measurement
+apparatus: so is the instrument delivery path); Observation 42 (usage
+accounting errs in both directions: the same family of silent measurement
+drift). Anchors: the analysis tool above (`pulled_guide()`, and the
+per-arm guideless report around line 407); the WN-y and WN-z entry in
+`wiki/continuity.md` (2026-08-19 session); the nine-arm run reproduced on
+2026-10-04 from the invocation in
+`studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/results-2026-10-04.md`.
