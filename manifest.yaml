@@ -681,6 +681,11 @@ evidence_packs:
       file: corpus/evidence-packs/harvest-2026-10-04/marwick-2025.json
     crema-et-al-2024:
       file: corpus/evidence-packs/harvest-2026-10-04/crema-et-al-2024.json
+  f2_rule:
+    version: "1.0"
+    file: scripts/score-f2-rule.py
+    last_updated: "2026-10-04"
+    description: Mechanical F2 rule (AP-15) from registry curation and v1.2 pack DataCite fields — mechanical 0s; complete records go to registrant confirmation; missing inputs fall back to the model's score, flagged (disagreement policy item 2, scope ruled 2026-10-04)
 
 run_reconciliation:
   # Plan C8+C9 (2026-08-15): post-run authoritative verification of governed
@@ -710,6 +715,7 @@ entity_checks:
   evidence_packs.packs_2026_10_04.key-et-al-2024: {class: E6, verify: exists}
   evidence_packs.packs_2026_10_04.marwick-2025: {class: E6, verify: exists}
   evidence_packs.packs_2026_10_04.crema-et-al-2024: {class: E6, verify: exists}
+  evidence_packs.f2_rule: {class: E3, version_source: markdown-header}
   # E3/E4/E6 — agentic reproduction lane (2026-10-03)
   reproduction.lane_tool: {class: E3, version_source: markdown-header}
   reproduction.schemas.plan_output: {class: E4, version_source: json-field, json_path: $.version}
