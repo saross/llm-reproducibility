@@ -6,6 +6,11 @@ use of results (Q4). API gate stage 1 (the P4 probe) is approved; the arms
 need a separate approval after P4 passes. The governed-edit freeze (Q6)
 runs from the P4 launch until the last arm is committed.
 
+**P4 attempt 1 (2026-10-04, `wf_656e2363-534`): aborted before any spend.**
+The agent definition, created mid-session, was not loaded (register F-018;
+0 tokens). The args guard passed. P4 re-runs from a fresh session under the
+same approval, with args rebuilt at that session's HEAD.
+
 ## Purpose
 
 At the D4 step, the registrant held selection so that `claude-opus-5-5`
