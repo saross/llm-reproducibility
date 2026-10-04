@@ -1102,7 +1102,10 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
     gate still passes) what is declared but needs a human ruling: each
     declared edit with its mechanically counted size, a target an edit affects
     that ``comparison.json`` credits, a wrapper that embeds lines of the
-    authors' code, and a conversion without a value-identity check.
+    authors' code, a run that executed no authors' file at all (a
+    re-implementation), an original with no pristine copy on disk (so
+    inlining cannot be checked), and a conversion without a value-identity
+    check.
 
     Args:
         target_dir: The attempt directory.
@@ -1171,6 +1174,7 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
             errors.append(f"duplicate original id {oid!r}")
             continue
         by_id[oid] = item
+        errors_before = len(errors)
         if item.get("local_copy"):
             local = inside(target_dir, item["local_copy"])
             if local is None:
@@ -1212,9 +1216,10 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                                       f"retrieval sha256")
                     else:
                         original_bytes.setdefault(oid, member)
-        if oid not in original_bytes and not archive.get("path"):
-            warnings.append(f"original {oid!r}: no pristine copy or archive kept; byte "
-                            f"identity is checked against the recorded retrieval hash only")
+        if oid not in original_bytes and len(errors) == errors_before:
+            flags.append(f"{FLAG_PREFIX}original {oid!r} has no pristine copy in the attempt "
+                         f"directory: byte identity rests on the recorded hash alone, and no "
+                         f"wrapper can be checked for an inlined copy of it")
         if item.get("derivation"):
             warnings.append(f"original {oid!r} is a {item['derivation']['method']} of "
                             f"{item['derivation'].get('from') or 'another file'}; its hash "
@@ -1282,6 +1287,11 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                              f"but rests on the flagged edit to {item['path']} — a repaired "
                              f"result never counts toward coverage or the verdict (queued "
                              f"amendment 3, item 7(d))")
+
+    if originals and not executed:
+        flags.append(f"{FLAG_PREFIX}no authors' file is listed as executed: every result "
+                     f"rests on the reproducer's own code (a re-implementation is not the "
+                     f"authors' code run unmodified)")
 
     # -- Wrappers: exist, are separate files, and do not inline authors' code.
     wrapper_paths: set[Path] = set()

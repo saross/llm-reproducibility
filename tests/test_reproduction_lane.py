@@ -414,6 +414,25 @@ class CodeIntegrityTests(unittest.TestCase):
         self.rewrite(originals=[], executed=[], no_authors_code_reason="none released")
         self.assertEqual(self.check()["status"], "no-authors-code")
 
+    def test_reimplementation_without_executed_original_is_flagged(self):
+        """The pilot pattern: the authors' file kept but never run."""
+        (self.dir / "authors-code" / "analysis.R").unlink()
+        self.rewrite(executed=[])
+        result = self.check()
+        self.assertEqual(result["status"], "flagged", result["errors"])
+        self.assertTrue(any("no authors' file is listed as executed" in f
+                            for f in result["flags"]))
+
+    def test_original_without_pristine_copy_is_flagged(self):
+        (self.dir / "authors-code-raw" / "analysis.R").unlink()
+        originals = [{k: v for k, v in self.manifest["originals"][0].items()
+                      if k != "local_copy"}]
+        self.rewrite(originals=originals)
+        result = self.check()
+        self.assertEqual(result["status"], "flagged", result["errors"])
+        self.assertTrue(result["executed"][0]["identical"])
+        self.assertTrue(any("no pristine copy" in f for f in result["flags"]))
+
     def test_conversion_without_identity_evidence_is_flagged(self):
         write(self.dir / "convert.py", "print('xlsx to csv')\n")
         wrappers = self.manifest["wrappers"] + [
