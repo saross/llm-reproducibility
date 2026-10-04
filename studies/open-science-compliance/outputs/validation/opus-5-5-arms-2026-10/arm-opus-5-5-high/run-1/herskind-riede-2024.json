@@ -1,0 +1,274 @@
+{
+ "code_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "Retrievable over HTTPS from zenodo.org and through DOI resolution (pack http_status 200).",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "A1_1": {
+    "evidence": "Open HTTPS. Pack: access_right 'open'.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "A1_2": {
+    "evidence": "Fully open and needs no authentication (pack access_right 'open'). No restriction is warranted.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "A2": {
+    "evidence": "Platform Row 2 (Zenodo): tombstone on withdrawal with DOI and URL retained, and metadata always publicly accessible.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "F1": {
+    "evidence": "Paper: 'Dedicated R code ... reported in Supplementary Information S2 ... All code and data are available here: https://zenodo.org/records/10623550'. Pack: the record holds its own DataCite DOI 10.5281/zenodo.10623550 (declared artefact_type data+code).",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "F2": {
+    "evidence": "Pack: an independent structured metadata record exists (metadata_record: true; publisher Zenodo; publication_year 2024). Row 2 entitles DataCite metadata.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "F3": {
+    "evidence": "Pack: identifier_in_metadata: true.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "F4": {
+    "evidence": "Pack: DataCite state 'findable', so the DOI is indexed in DataCite.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "I1": {
+    "evidence": "The code is written in R, an open, shared, formal language: 'All analyses were performed in the open-source R programming environment (v.4.2.2 ...)'.",
+    "present": 1
+   },
+   "I2": {
+    "evidence": "No controlled or FAIR vocabularies are evidenced for the code or its metadata in the paper or the pack.",
+    "present": 0
+   },
+   "I3": {
+    "evidence": "The key dependency is cited with a PID and a stated use relation: 'using the Quanteda package (Benoit et al., 2018)', reference 'JOSS 3, 774. https://doi.org/10.21105/joss.00774'. R is cited with its version (v.4.2.2) but no PID.",
+    "present": 1
+   },
+   "R1": {
+    "evidence": "The paper richly describes the analytical procedure the code implements: k-skip-n-grams with k = 13 (maximum 15 motifs per object), 2- to 4-grams, the expected-frequency and PMI formulae, and the exclusion of cooccurrences observed fewer than three times (Table 2).",
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "The paper is silent on the code licence. The service licence is identified in the pack as cc-by-4.0 for the data+code record, with no conflicts.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550",
+     "datacite:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "R1_2": {
+    "evidence": "Provenance is given: the code was authored within the study (CRediT: Herskind, 'Formal analysis'), run in R v4.2.2 with the quanteda package, and its input pipeline (digitised P\u0142onka coding transformed into sentence strings) is described.",
+    "present": 1
+   },
+   "R1_3": {
+    "evidence": "None of the code-specific qualifying standards is evidenced: no package structure, CITATION.cff, CodeMeta, or community review (CRAN, JOSS, rOpenSci) appears in the paper or the pack. The record is typed 'Dataset', and quanteda's JOSS review is a third-party dependency, not the paper's own scripts.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 0
+   }
+  },
+  "total": 13
+ },
+ "data_completeness": {
+  "assessment_scope": "straightforward",
+  "barriers": [
+   "Upstream source P\u0142onka (2003) is an analogue printed monograph ('From this analogue compilation, the South Scandinavian data were manually extracted and digitised'). It is classified Tier 2 (published, but needs manual steps such as library or purchase access and manual table transcription). All 483 records and the variables used in the analysis are carried in the Tier-0 Zenodo deposit, so record-weighted coverage is also 100%.",
+   "Datasets: (1) digitised 483-object corpus, Zenodo DOI 10.5281/zenodo.10623550 / 10.5281/zenodo.10801706, Tier 0; (2) P\u0142onka 2003 catalogue, Tier 2."
+  ],
+  "coverage_category": "complete",
+  "coverage_percentage": 100,
+  "datasets_accessible_tier_0_2": 2,
+  "datasets_enumerated": 2
+ },
+ "data_fair": {
+  "available": true,
+  "sub_principles": {
+   "A1": {
+    "evidence": "Retrievable over HTTPS at zenodo.org records and through DOI resolution (pack http_status 200). Data-completeness coverage is 'complete' because the full 483-object corpus is deposited ('All code and data are available here'), so the A1 completeness rule is satisfied.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "A1_1": {
+    "evidence": "Open HTTPS protocol. Pack: access_right 'open' on both Zenodo records.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "A1_2": {
+    "evidence": "A fully open resource that needs no authentication satisfies A1.2 (pack access_right 'open'). No access control is warranted: the data are a published museum-catalogue compilation, not sensitive data.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "A2": {
+    "evidence": "Platform Row 2 (Zenodo) entitlement: a tombstone page on withdrawal that keeps the DOI and URL, and metadata always publicly accessible. Also supported by the DataCite metadata record in the pack.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550",
+     "datacite:10.5281/zenodo.10623550"
+    ],
+    "present": 1
+   },
+   "F1": {
+    "evidence": "Paper: 'All code and data are available here: https://zenodo.org/records/10623550'; the DAS points to https://zenodo.org/records/10801706. Pack: both records hold their own DataCite DOIs (10.5281/zenodo.10623550, 10.5281/zenodo.10801706) with shared concept DOI 10.5281/zenodo.10623549.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550",
+     "datacite:10.5281/zenodo.10801706",
+     "zenodo:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "F2": {
+    "evidence": "Pack: an independent structured metadata record exists for both deposits (metadata_record: true; publisher Zenodo; resource_type Dataset; publication_year 2024). Platform Row 2 entitles a DataCite metadata record.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550",
+     "datacite:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "F3": {
+    "evidence": "Pack: identifier_in_metadata: true for both Zenodo deposits at DataCite and Zenodo.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10623550",
+     "datacite:10.5281/zenodo.10801706",
+     "zenodo:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "F4": {
+    "evidence": "Pack: DataCite state 'findable' for both DOIs, so both are indexed in the DataCite registry.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550",
+     "datacite:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "I1": {
+    "evidence": "The metadata are expressed in the formal DataCite schema (pack: DataCite records resolved). Per the paper, the data are 'complete data tables' of binary presence/absence motif coding that the deposited open-source R code (quanteda) processes directly, i.e. structured machine-readable tables, not narrative.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550",
+     "datacite:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "I2": {
+    "evidence": "Motifs are coded with P\u0142onka's (2003) ad hoc alphanumeric scheme ('motif types (named A1, A2, etc.)'). Chronology uses the culture labels Maglemose, Kongemose, and Erteb\u00f8lle with no PeriodO or other PID-bearing vocabulary. No FAIR vocabulary is evidenced in the paper or the pack.",
+    "present": 0
+   },
+   "I3": {
+    "evidence": "The upstream source (P\u0142onka 2003) is cited bibliographically with page ranges but has no PID. The pack shows no related identifiers linking the dataset to the article or its sources, only a Zenodo concept-DOI versioning field. No qualified PID references to other (meta)data are evidenced.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550"
+    ],
+    "present": 0
+   },
+   "R1": {
+    "evidence": "The paper describes the dataset richly: 483 objects (S1); variables 'corresponding to the characteristics of each ornamented object and associated metadata such as location, quality of contextual information, and original source'; motif coding per P\u0142onka pp. 315-325 as binary presence/absence; artefact type, chronology, and spatial attributes (Figs 2 and 5, Table 3).",
+    "present": 1
+   },
+   "R1_1": {
+    "evidence": "The paper is silent on the dataset licence. Per the R1.1 rule it is scored on the licence recorded at the service, which the pack identifies as cc-by-4.0 for both Zenodo deposits, with no licence conflicts.",
+    "pack_refs": [
+     "zenodo:10.5281/zenodo.10623550",
+     "datacite:10.5281/zenodo.10623550",
+     "zenodo:10.5281/zenodo.10801706",
+     "datacite:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   },
+   "R1_2": {
+    "evidence": "Provenance is documented: 'From this analogue compilation, the South Scandinavian data were manually extracted and digitised ... transcribed as binary data in the form of presence/absence coding ... then transformed ... into a sentence-imitating structure'. The CRediT statement credits Herskind with data curation, and processing used R v4.2.2 with quanteda.",
+    "present": 1
+   },
+   "R1_3": {
+    "evidence": "Route (a), a generic metadata schema: the deposit carries a DataCite metadata record (pack, DataCite endpoint resolved; Platform Row 2 entitles DataCite metadata). No domain schema is evidenced, but route (a) qualifies.",
+    "pack_refs": [
+     "datacite:10.5281/zenodo.10623550",
+     "datacite:10.5281/zenodo.10801706"
+    ],
+    "present": 1
+   }
+  },
+  "total": 13
+ },
+ "escalate_reason": null,
+ "input_provenance": [
+  {
+   "input": "Digitised South Scandinavian Mesolithic ornamented-artefact corpus (483 objects; presence/absence motif coding plus metadata; Supplementary Information S1/S3; Zenodo records 10623550 and 10801706)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "P\u0142onka (2003), The portable art of Mesolithic Europe: analogue catalogue and motif classification scheme (pp. 315-325), the upstream source of the digitised data",
+   "provenance": "third-party"
+  },
+  {
+   "input": "Dedicated R analysis code (skipgram/PMI analysis; Supplementary Information S2; Zenodo record 10623550)",
+   "provenance": "author-deposited"
+  },
+  {
+   "input": "R (v4.2.2; R Core Team 2021)",
+   "provenance": "third-party"
+  },
+  {
+   "input": "quanteda R package (Benoit et al. 2018, doi:10.21105/joss.00774)",
+   "provenance": "third-party"
+  }
+ ],
+ "paper_slug": "herskind-riede-2024",
+ "receipts": {
+  "agent_version": "fair-assessor-opus-5-5 v1.2",
+  "instrument_receipts": {
+   "fair-instrument": "5ff4c48c4f5c7321",
+   "fair-principles-guide": "0eed0b8d570bf55e"
+  },
+  "instrument_versions": {
+   "fair-instrument": "2.1",
+   "fair-principles-guide": "1.1"
+  },
+  "model_id": "claude-opus-5-5",
+  "pulled_files_read": [
+   "/home/shawn/corpora/llm-reproducibility/herskind-riede-2024/vor.pdf",
+   "/home/shawn/Code/llm-reproducibility/corpus/evidence-packs/herskind-riede-2024.json"
+  ]
+ },
+ "schema_version": "1.1",
+ "stated_availability": "Methods (p. 3): \"Dedicated R code and complete data tables are reported in Supplementary Information S2 and S3 ... All code and data are available here: https://zenodo.org/records/10623550.\" Data availability statement (p. 8): \"Supplementary Information to this article can be found online at https://zenodo.org/records/10801706.\" Appendix A (p. 8): \"Supplementary data to this article can be found online at https://doi.org/10.1016/j.jas.2024.105969.\" Object list given as Supplementary Information S1 (p. 2). Article is open access under CC BY (p. 1).",
+ "status": "OK"
+}
