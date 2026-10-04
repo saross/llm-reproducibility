@@ -2,7 +2,7 @@
 title: "llm-reproducibility — User Observations"
 tags: [human-ai-collaboration]
 created: 2026-07-03
-updated: 2026-08-02
+updated: 2026-10-04
 status: active
 ---
 
@@ -348,10 +348,14 @@ enumerable from the manifest every run and a parallel record would recreate the
 exact drift pathology the corpus plan's decision D-10 exists to prevent.
 
 
-## 2026-08-03 — Candidates
+## 2026-08-03 — Candidates — adjudicated 2026-10-04
 
 *Drafted at handoff (session 0360402e). Pending review; A–C from
 2026-07-27 remain held separately (A and B since accepted, C discarded).*
+
+Verdicts (Shawn, 2026-10-04, as recommended): A and B **accepted** as
+drafted; C **merged** into the 2026-08-15 batch's candidate D (the spend gate
+names its billing route). The candidate text is kept below as the record.
 
 **Candidate A — "While we are waiting" turned idle time into the session's
 highest-value work.** You slotted the wide audit into benchmark wall-clock
@@ -408,7 +412,13 @@ ask precisely where the design genuinely needed your expertise (#6's
 granularity question). Decision-dense sessions may want this as the
 default presentation format.
 
-## Pending review — 2026-08-15 batch (drafted at handoff, session 04169f15)
+## 2026-08-15 batch — adjudicated 2026-10-04 (drafted at handoff, session 04169f15)
+
+Verdicts (Shawn, 2026-10-04, as recommended): A, B, C, and D **accepted** as
+drafted. D also absorbs the 2026-08-03 batch's candidate C (billing
+pre-clearance). For A, the standing practice is to review the halt-condition
+mnemonics during runs; it was missed during the 2026-10-04 Opus 5.5 arms and
+is owed at the next run.
 
 **Candidate A — The tripwire mnemonic landed as wanted training.** Your
 in-the-moment "thanks for the mnemonic, let's continue to review during
@@ -497,10 +507,12 @@ work, build it during dead time rather than waiting for ratification;
 the gate stays where it belongs — on spend, on governed artefacts, and
 on anything hard to reverse.
 
-## Pending review — 2026-08-19 batch (drafted at handoff, session 92427cb5)
+## 2026-08-19 batch — adjudicated 2026-10-04 (drafted at handoff, session 92427cb5)
 
-*Candidates for Shawn to accept / edit / discard / replace. Silence
-holds them over — never discards.*
+Verdicts (Shawn, 2026-10-04, as recommended): A **discarded**, because it
+duplicates the build-while-waiting entry accepted on 2026-08-17 (second
+session, candidate D). B and C **accepted** as drafted. The candidate text
+is kept below as the record.
 
 **Candidate A — the build-while-waiting ruling delivered on its first
 outing.** The session opened blocked on Shawn's worksheet sitting;
@@ -525,10 +537,12 @@ court", Claude answered with a definite ownership audit (nothing
 agent-owned; two named Shawn-tasks; one dated deadline) rather than a
 hedge — which is what makes a multi-day absence safe to start.
 
-## Pending review — 2026-10-03 batch (drafted at handoff, session 003fda8b)
+## 2026-10-03 batch — adjudicated 2026-10-04 (drafted at handoff, session 003fda8b)
 
-*Candidates for Shawn to accept / edit / discard / replace. Silence
-holds them over — never discards.*
+Verdicts (Shawn, 2026-10-04, as recommended): A, B, C, and D **accepted** as
+drafted. D is accepted with its self-flagged counterweight (several briefs
+carried errors that were corrected later). The candidate text is kept below
+as the record.
 
 **Candidate A — tracking minor errors as findings even when no score
 moves.** Claude logged small defects as findings at every sitting —
@@ -611,10 +625,11 @@ approve, just a 'no'"). Claude recovered with the standard invocation plus
 a checksum guard, which is a better design. The detour cost a round trip
 and a failed approval at a moment when Shawn was trying to go to bed.
 
-## Pending review — 2026-10-04 batch (drafted at handoff, session c51bef29)
+## 2026-10-04 batch — adjudicated 2026-10-04 (drafted at handoff, session c51bef29)
 
-*Candidates for Shawn to accept / edit / discard / replace. Silence
-holds them over — never discards.*
+Verdicts (Shawn, 2026-10-04, as recommended): A, B, C, and D **accepted** as
+drafted (A mixed, B and C helpful, D unhelpful). The candidate text is kept
+below as the record.
 
 **Candidate A (mixed) — a reversal brought cleanly, after an avoidable
 first error.** Claude recommended ruling dye T02 "mechanical", partly on

@@ -1540,3 +1540,53 @@ register F-007 and F-010 in
 `arm-opus-5-5-high/run-notes.md` and `arm-opus-5-5-xhigh/run-notes.md`
 under `opus-5-5-arms-2026-10/` in the same validation directory; the
 held-over candidates in `wiki/continuity.md` (2026-08-15 session entry).
+
+## Observation 38: Platform by-construction entitlements are presence floors, not choice floors, and the floors are empirical claims (2026-10-04)
+
+*(Approved by Shawn 2026-10-04; WN-q, held over from the 2026-08-15 session.)*
+
+### Context
+
+The platform-rows table lists what each repository guarantees by
+construction (a licence value, a persistent identifier, metadata
+accessibility after withdrawal), so that the census can credit a deposit
+for what the platform enforces. On 2026-08-15 each row was verified
+against primary sources
+(`studies/open-science-compliance/outputs/validation/platform-rows-2026-08-15/verification-note.md`).
+Every row verdict was "holds with caveat".
+
+### Observation
+
+1. **A presence floor is not a choice floor.** Zenodo pre-fills the licence
+   field with CC-BY-4.0, so a depositor who never touches it publishes a
+   record that looks exactly like a deliberate election. In the 298 newest
+   records sampled on 2026-08-15, 246 (82.6%) carry `cc-by-4.0`. DANS
+   pre-fills CC0 1.0. CRAN is the contrast: its licence field has no
+   default value, so a licence there is evidence of a decision.
+2. **A floor is an empirical claim, and one was contradicted.** The table
+   asserted that DataCite metadata "remains accessible even if the resource
+   goes away". DataCite's own tombstone page says it provides no tombstone
+   pages automatically, and its prescribed workflow sets the DOI to
+   `Registered`, which withdraws the record from the Public API. A
+   harvester cannot tell "tombstoned" from "never existed". Zenodo, by
+   contrast, commits to a tombstone page and retained record, which is
+   stronger than the table credited.
+3. **Floors differ within a row.** ADS, tDAR, and DANS enforce different
+   things (ADS a mandatory validated template; DANS a small generic core
+   with the archaeology vocabulary optional), and 32 of 298 sampled Zenodo
+   records (10.7%) carry no description at all.
+
+### Implication
+
+Credit a platform entitlement only after checking it against the platform's
+own documentation and a sample of its records, and record the date. A
+default value is a presence floor: a licence-presence score at Zenodo or
+DANS is dominated by form defaults, so it needs its own column or footnote
+rather than counting as author intent. The dated verification note is the
+committed form of that check. Relations: Observation 30 (licence conflicts
+are the norm: the defaults here sit beneath those conflicts, and a clarity
+test such as AP-8 reads a default as a published licence); Observation 31
+(the noisy surface); Observation 13 (ledgers drift from their sources: so do
+platform claims). Anchors: `verification-note.md` and
+`enrichment-addendum-2026-08-15.md` in the platform-rows directory above;
+the WN-q entry in `wiki/continuity.md` (2026-08-15 session).
