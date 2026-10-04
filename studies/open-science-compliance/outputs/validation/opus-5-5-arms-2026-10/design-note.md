@@ -1,7 +1,10 @@
 # Opus 5.5 validation arms — design note (2026-10-04)
 
-**Status: DRAFT for the registrant's delta pre-run review (questions Q1–Q7
-below). No spend has occurred.**
+**Status: RULED 2026-10-04 (Shawn).** Q1: **all three** effort levels
+(medium, high, xhigh). Q2–Q7 adopted as drafted, including the pre-declared
+use of results (Q4). API gate stage 1 (the P4 probe) is approved; the arms
+need a separate approval after P4 passes. The governed-edit freeze (Q6)
+runs from the P4 launch until the last arm is committed.
 
 ## Purpose
 
