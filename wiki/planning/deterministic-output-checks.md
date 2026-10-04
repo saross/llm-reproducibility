@@ -167,10 +167,32 @@ or as a planned rule with its validation criteria declared in advance.
 
 - [x] 2026-10-04 Layer 1: `scripts/check-payload-quality.py` v1.1 (`132f95a`,
   report `d10fbb3`).
-- [ ] (B) Prototype the F2 rule (AP-15) from pack registry fields. Score it
-  against the E8-v2 reference on the five pilots, then recompute both
-  gates for the hybrid scorer (the amendment 3 item 6(b) criteria). No API
-  spend is needed.
+- [x] 2026-10-04 (B) The F2 rule (AP-15), validated as a hybrid scorer.
+  Report:
+  `studies/open-science-compliance/outputs/validation/f2-rule-hybrid-2026-10-04/report.md`
+  (`06c1ca9`). The rule matches the reference on 10/10 pilot F2 items (the
+  model, 4/10). The hybrid at `medium` scores gate concordance 137/141 =
+  0.972 and all-items 139/150 = 0.927; stability is unchanged. Both
+  derivations agree.
+  - **The packs lacked the inputs** (found 2026-10-04): harvester v1.1
+    kept no creators, descriptions, or keywords, so the model could not
+    apply AP-15. Harvester v1.2 (`4c77b67`) records them; new packs are in
+    `corpus/evidence-packs/harvest-2026-10-04/` (`6c8ed51`).
+  - **Registry curation** (`8864ceb`): `role`, `home`, `carries`,
+    `scored_version`, and `unpublished_principal`. These record
+    adjudication outcomes, so they never enter packs.
+  - **Scope (Shawn, 2026-10-04):** "the rule gives the 0s; you confirm the
+    1s". The rule never awards F2 = 1. `scripts/score-f2-rule.py` v1.0
+    (`cf0d92e`).
+  - **Limitation:** every pilot reference F2 is 0, so only the rule's 0
+    paths are tested on real data; the rest have unit tests.
+- [ ] **Census-input re-validation** (Shawn, 2026-10-04: re-validate on
+  enriched packs before the census). Fold it into the pre-census supplement
+  check: one `medium` arm (15 scorings, about $9, API gate) on v1.2 packs,
+  supplements, the clarified instruments, and the hybrid F2. Pass criteria
+  declared in amendment 3 before it runs. Split into separate runs only
+  if it fails. The registered §8 regression gate is a reproduction-lane
+  test and does not read packs, so it is not the re-validation.
 - [ ] (C) Layer 3 flag-only evidence checks (quote verification against
   each paper's extracted text).
 - [ ] Optional: register the checker in `manifest.yaml` if it joins the
