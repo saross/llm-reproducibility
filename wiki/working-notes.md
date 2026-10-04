@@ -599,6 +599,8 @@ log Entry 2 coverage correction, 2026-08-02).
 
 *Drafted at handoff; Shawn adjudicates next session. No silent discard.*
 
+*Adjudicated 2026-10-04 (Shawn): WN-l accepted as Observation 35; WN-m accepted as Observation 36.*
+
 **Candidate WN-l — A wired, tested control is aspirational until its log
 shows a real pass.** The receipt gate was designed, wired, and
 build-tested, and its log carried only blocks: it had never validated one
