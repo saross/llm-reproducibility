@@ -488,10 +488,79 @@ paper or its supplement — and, more generally, mechanical verification
 wherever it is possible (pre-census item in
 `wiki/planning/instrument-clarification-plan.md`).
 
+## Entry 5 — 2026-10-04: concordance statistic; BI exclusion at the gates
+
+**Status: registrant rulings recorded 2026-10-04
+(`outputs/validation/gates-ruling-2026-10-04/ruling.md`). Public
+clarification and deviation queued for amendment 3. Both must be lodged
+before census scoring begins.**
+
+**(a) Clarification: the concordance statistic.** Amendment 1 §3 sets "a
+concordance floor of at least 0.90 (same statistic) against the pilot
+reference scores" without saying how three runs meet one reference score.
+
+- The H13 blinded re-derivation (2026-10-04) showed that a fresh reader
+  takes the literal reading: all three runs agree *and* equal the reference.
+- The study has computed concordance since 2026-08-03 as majority-vote item
+  agreement, and amendment 2 reports figures computed that way.
+- The registrant ruled majority vote, the operationalisation in force before
+  the gate data. This corrects an underspecification, not a change of
+  analysis.
+
+**(b) Deviation: the gate statistic excludes beyond-instrument items.**
+
+- E8-v2 tags 9 of 150 reference items as beyond-instrument (BI). Their
+  reference scores rest on supplementary evidence that the benchmark spawns
+  were deliberately not given, and 4 of them also on a principle adopted at
+  adjudication.
+- The registrant ruled the BI-excluded concordance (141 items) admissible as
+  the gate statistic, with the all-items figure reported alongside it.
+- Amendment 2 specified concordance against the re-derived reference with
+  no exclusion, so this is a deviation and is lodged as one.
+
+**Proposed OSF wording (for amendment 3; registrant to edit and lodge):**
+
+> *Concordance statistic (clarifies amendment 1, section 3).* Concordance is
+> majority-vote item agreement. Each item's score is the majority of the
+> three runs, and it is compared with the reference score; the gate is the
+> proportion of items that agree. This is the operationalisation used for
+> every concordance figure the study has reported, including those in
+> amendment 2. A blinded re-derivation before the gates ruling found that
+> the registered phrase "(same statistic)" also admits a stricter reading
+> (all three runs agree and equal the reference). That reading would count
+> each unstable item against concordance as well as stability, and it was
+> not adopted.
+>
+> *Deviation: beyond-instrument items excluded from the concordance gate.*
+>
+> - The re-derived pilot reference tags 9 of 150 items as beyond-instrument.
+>   Their reference scores rest on evidence that the validation spawns were
+>   deliberately not given, namely the papers' supplementary files; four
+>   also rest on a principle adopted during adjudication that the instrument
+>   does not state.
+> - The registrant ruled, before any model selection, that concordance
+>   computed without these items (141) is the gate statistic. Concordance
+>   over all 150 items is reported alongside it.
+> - The tags were assigned on 2 October 2026, before concordance was
+>   computed. The reference adjudication was not blinded to the arms'
+>   scores.
+> - Under this ruling, claude-opus-5 clears both gates at two reasoning
+>   efforts (high: 127/141 = 0.901; xhigh: 130/141 = 0.922). Over all 150
+>   items it does not (0.873 and 0.893). claude-fable-5 clears both readings
+>   but is not selectable on price.
+> - Census scoring will include the papers' published supplementary files,
+>   and the selected configuration is re-checked on the five pilot papers
+>   with supplements before census.
+
 ## Queued amendment 3 scope (running list)
 
 1. Entry 4 — correct amendment 2 §2's precedent case.
 2. Candidates: the pre-census instrument clarifications collected from the
    E8-v2 adjudication (plan pre-census item), if they are lodged as an
    instrument amendment rather than a gated edit.
-
+3. Entry 5(a) — clarify the concordance statistic as majority-vote item
+   agreement.
+4. Entry 5(b) — the deviation admitting the BI-excluded concordance as the
+   gate statistic, with the all-items figure reported alongside it.
+5. Candidate — the selected configuration (model, effort, prices in force),
+   once the registrant confirms the D4 arm choice.
