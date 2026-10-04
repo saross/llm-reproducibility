@@ -50,9 +50,20 @@ script kept in the session scratchpad, not committed):
 | C5 | `available: false` with any item scored 1 | 1 (fable-5, key r1 `data_fair`: 1 item) |
 | C6 | every `pack_refs` id exists in the paper's evidence pack | 0 |
 
-These are pure functions of the payload and pack, so they belong beside the
-reconciler's schema validation as hard checks. They fail the item. They do
-not repair it.
+These are pure functions of the payload and pack. ~~They fail the item.
+They do not repair it.~~ *Superseded by the ruled policy (item 1):* for
+derived fields (C1–C3) the computed value governs and the disagreement is
+reported; C5 is a flag; C4 (A1) and C6 (pack citations) remain failures.
+**Built 2026-10-04:** `scripts/check-payload-quality.py` v1.1 (`132f95a`).
+It extends the existing v1.0 checker rather than adding a script.
+Results over the nine arms are in
+`studies/open-science-compliance/outputs/validation/payload-quality-2026-10-04/`
+(`d10fbb3`) and match the scan above. Coverage note: the instrument's
+primary coverage is the dataset count, and record-weighted coverage is
+supplementary ("where feasible, also compute"). So C2 and C3 override a
+record-weighted figure entered in the primary field (2026-08-03 fable
+herskind r1). A separate optional schema field for record-weighted
+coverage would separate the two (a governed schema change, for ruling).
 
 ## Layer 2: rule-derived checks (instrument rules applied mechanically)
 
@@ -154,7 +165,13 @@ or as a planned rule with its validation criteria declared in advance.
 
 ## Next step (proposed)
 
-Build Layer 1 as a small tested script (`scripts/check-payload-consistency.py`)
-that runs over a run directory or committed arm, plus a prototype of the
-F2 rule scored against the E8-v2 reference on the five pilots. No API
-spend is needed.
+- [x] 2026-10-04 Layer 1: `scripts/check-payload-quality.py` v1.1 (`132f95a`,
+  report `d10fbb3`).
+- [ ] (B) Prototype the F2 rule (AP-15) from pack registry fields. Score it
+  against the E8-v2 reference on the five pilots, then recompute both
+  gates for the hybrid scorer (the amendment 3 item 6(b) criteria). No API
+  spend is needed.
+- [ ] (C) Layer 3 flag-only evidence checks (quote verification against
+  each paper's extracted text).
+- [ ] Optional: register the checker in `manifest.yaml` if it joins the
+  census pipeline, so the manifest gate catches version drift.
