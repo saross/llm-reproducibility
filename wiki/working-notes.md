@@ -1644,3 +1644,44 @@ per-arm guideless report around line 407); the WN-y and WN-z entry in
 `wiki/continuity.md` (2026-08-19 session); the nine-arm run reproduced on
 2026-10-04 from the invocation in
 `studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/results-2026-10-04.md`.
+
+## Observation 40: A coverage denominator moves with ruling wording and run-to-run variation (2026-10-04)
+
+*(Approved by Shawn 2026-10-04; WN-aa, drafted in the 2026-10-03 shakedown session.)*
+
+### Context
+
+The Phase 2 shakedown (an agentic reproduction lane run on herskind-riede-2024
+and dye-et-al-2023) has planners enumerate every reproduction target per
+paper, and coverage (targets computed over targets planned) is the
+preregistered Hypothesis 2 (H2) outcome. The first plan round was superseded
+and re-run with four registrant rulings (R1 to R4) written into
+`run-config.yaml` (`phase2-shakedown/deviations.md`, D2).
+
+### Observation
+
+The same planner configuration enumerated dye at 23 targets in round 1 and
+34 in round 2, and herskind at 14 and 15. Part of the dye jump is wording:
+R3 ("one target per display item") introduced the Supplement section 10
+text restatements of Tables 2 to 10 (T24 to T32), and R1 admitted Figs 2
+and 6 tested with verification aids. Round 1 had excluded all of these. The
+rounds also differ by run-to-run variation, and the two causes cannot be
+separated from this design (deviations.md, D3, "Finding: denominator
+instability"). Coverage then reads 25/34 = 0.735 for dye and, after the
+herskind T11 completion, 11/15 = 0.733 for herskind
+(`results-2026-10-03.md`). Had the denominator stayed at 23, dye's figure
+would be a different number for the same underlying work.
+
+### Implication
+
+Coverage is only as stable as its denominator, and the denominator is the
+planner's enumeration, which moves with wording and between runs. At census
+scale a denominator that shifts by about a third is a risk to H2. The
+proposed safeguard is two independent planners per paper, with a reconciled
+union presented at plan approval; R3's treatment of restatements is to be
+settled before the census. Relations: Observation 20 (an enumeration is a
+finding, not a fact: here the enumeration is the denominator); Observation
+15 (statistics are sensitive to design choices). Anchors:
+`studies/open-science-compliance/outputs/validation/phase2-shakedown/deviations.md`
+(D1 to D3) and `results-2026-10-03.md`; the WN-aa entry in
+`wiki/continuity.md` (2026-10-04 session).
