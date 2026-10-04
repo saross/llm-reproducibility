@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble one benchmark arm's committed artefact set (D3 run contract H6).
 
-**Version:** 1.5
+**Version:** 1.6
 
 From a completed arm workflow's transcript directory, produce the committed
 arm directory: per-run score payloads (`run-<N>/<slug>.json` — the only
@@ -29,6 +29,21 @@ assembly may contain — effort stays hard-uniform, the derived commit set
 must equal the declared set exactly, and the record carries the list.
 Undeclared mixing remains the v1.4 hard error.
 
+v1.6 (2026-10-04; register F-013 and F-015, both ruled 2026-10-04):
+
+- **F-013, tokens counted once per API request.** The harness writes one
+  transcript entry per content block and repeats the response's ``usage``
+  on each, so the v1.5 per-entry sum over-counted by 1.9-2.9x, depending
+  on the model. Usage is now deduplicated by ``requestId`` (falling back to
+  the message id), taking each field's maximum within a request. That
+  matches ``transcript_usage()`` in ``scripts/reproduction-lane.py``.
+  Records assembled before v1.6 keep their recorded values; a
+  ``usage_per_request`` block is replayed beside them
+  (``scripts/replay-arm-usage.py``).
+- **F-015, indented prompts.** Since Claude Code 2.1.288 a workflow spawn
+  receives the script's prompt with every line indented two spaces, so
+  ``PROMPT_RE`` now allows horizontal whitespace before ``Paper:``.
+
 Usage:
     venv/bin/python scripts/assemble-arm-record.py <run_dir> <arm> <out_dir>
 """
@@ -45,7 +60,10 @@ from pathlib import Path
 
 # The prompt sits inside a JSON string in the transcript, so the newline
 # appears as an escaped \n two-character sequence; accept both forms.
-PROMPT_RE = re.compile(r"arm (\S+), run (\d) of 3\)\.(?:\\n|\n)Paper: ([A-Za-z0-9-]+)\.")
+# Since Claude Code 2.1.288 every prompt line is indented (F-015), so
+# horizontal whitespace may precede "Paper:".
+PROMPT_RE = re.compile(
+    r"arm (\S+), run (\d) of 3\)\.(?:\\n|\n)[ \t]*Paper: ([A-Za-z0-9-]+)\.")
 
 # Effort pinning (v1.4): format truth lives in the workflow's scorePrompt
 # (fair-benchmark-arm.workflow.js v1.5) — change both together;
@@ -189,22 +207,44 @@ def transcript_telemetry(lines: list[str]) -> dict:
             "started_at": first_ts, "finished_at": last_ts}
 
 
+USAGE_FIELDS = ("input_tokens", "output_tokens",
+                "cache_creation_input_tokens", "cache_read_input_tokens")
+
+
 def transcript_tokens(lines: list[str]) -> dict:
-    """Contract H4 spend metric: sum usage excluding cache_read_input_tokens."""
-    totals = {"input_tokens": 0, "output_tokens": 0,
-              "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0}
-    for line in lines:
+    """Contract H4 spend metric, counted once per API request (v1.6, F-013).
+
+    The harness repeats a response's ``usage`` on every content-block entry,
+    so usage is grouped by ``requestId`` (else the message id, else the line)
+    and each field taken at its maximum within the request: identical for
+    input and cache fields, cumulative for output.
+
+    Args:
+        lines: The transcript's JSONL lines.
+
+    Returns:
+        Per-field totals over requests, ``api_requests`` (the number of
+        distinct requests), and ``contract_metric_tokens`` (input + output +
+        cache creation, excluding cache reads, per hardening H4).
+    """
+    per_request: dict[str, dict[str, int]] = {}
+    for index, line in enumerate(lines):
         try:
             entry = json.loads(line)
         except json.JSONDecodeError:
             continue
-        usage = ((entry.get("message") or {}).get("usage")
-                 if isinstance(entry.get("message"), dict) else None)
-        if isinstance(usage, dict):
-            for key in totals:
-                value = usage.get(key)
-                if isinstance(value, (int, float)):
-                    totals[key] += int(value)
+        message = entry.get("message")
+        usage = message.get("usage") if isinstance(message, dict) else None
+        if not isinstance(usage, dict):
+            continue
+        key = str(entry.get("requestId") or message.get("id") or f"line-{index}")
+        current = per_request.setdefault(key, {f: 0 for f in USAGE_FIELDS})
+        for field in USAGE_FIELDS:
+            value = usage.get(field)
+            if isinstance(value, (int, float)):
+                current[field] = max(current[field], int(value))
+    totals = {f: sum(r[f] for r in per_request.values()) for f in USAGE_FIELDS}
+    totals["api_requests"] = len(per_request)
     totals["contract_metric_tokens"] = (totals["input_tokens"]
                                         + totals["output_tokens"]
                                         + totals["cache_creation_input_tokens"])
@@ -277,7 +317,8 @@ def main() -> int:
     spawns = []
     arm_tokens = {"input_tokens": 0, "output_tokens": 0,
                   "cache_creation_input_tokens": 0,
-                  "cache_read_input_tokens": 0, "contract_metric_tokens": 0}
+                  "cache_read_input_tokens": 0, "contract_metric_tokens": 0,
+                  "api_requests": 0}
     payload_count = 0
     provenance_values: list[tuple[str, str] | None] = []
     transcripts = [tr for directory in all_dirs
@@ -428,7 +469,8 @@ def main() -> int:
         },
         "usage_contract_metric": {
             "definition": "sum of transcript usage input+output+cache_creation, "
-                          "excluding cache_read_input_tokens, over all arm "
+                          "excluding cache_read_input_tokens, counted once per "
+                          "API request (assembler v1.6, F-013), over all arm "
                           "spawns (D3 contract hardening 4)",
             **arm_tokens,
         },

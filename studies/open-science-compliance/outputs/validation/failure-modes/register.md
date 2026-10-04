@@ -356,8 +356,12 @@ is accepted.
 3. The study cost estimate is re-derived.
 
 The D4 cost comparison already uses per-request counts
-(`gates-ruling-2026-10-04/selection-cost.py`). **Implementation owed** before
-the next FAIR run (it rides with the F-015 fix).
+(`gates-ruling-2026-10-04/selection-cost.py`). **Implemented 2026-10-04:**
+assembler v1.6 counts per request (`tests/test_assembler_v16.py`).
+`scripts/replay-arm-usage.py` wrote `usage_per_request` beside the recorded
+values in all six arm records. Its totals reproduce this entry's table
+exactly, and every recorded value was verified unchanged. **Still owed:**
+re-deriving the study cost estimate.
 
 ---
 
@@ -403,7 +407,7 @@ commit `26344a5`); `audit-wf_5d10728a-820.md`;
 
 ---
 
-## F-015 — Claude Code 2.1.288 wraps and indents workflow spawn prompts (harness-change) — AWAITING RULING
+## F-015 — Claude Code 2.1.288 wraps and indents workflow spawn prompts (harness-change) — RULED 2026-10-04, FIXED
 
 **Date:** 2026-10-03. **Category: harness-change.** **What happened:** under
 Claude Code 2.1.288 (the transcript `version` field of `wf_5d10728a-820`), a
@@ -426,6 +430,14 @@ the next FAIR-lane run. **Alignment relevance:** none. One side effect is
 worth noting: the relayed user message reaches every spawn. In round 1 it
 was "sorry, that workflow failed, I had no option to approve, just a
 'no'". Prompts should not assume the spawn sees only script text.
+
+**Ruling and fix (2026-10-04):** Shawn directed the fix before any FAIR run
+(session brief, 2026-10-04) and approved the build. A real 2.1.288
+computed-task message (`wf_bbf623d0-0ae`) confirmed the shape: every line
+is indented two spaces, and lines are **not** wrapped (the longest is 1,162
+characters). Assembler v1.6 `PROMPT_RE` therefore allows `[ \t]*` before
+`Paper:`. `tests/test_assembler_v16.py` covers the raw, JSON-escaped, and
+legacy forms. No other FAIR-lane parser reads prompts by position.
 
 ---
 
