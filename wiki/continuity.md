@@ -32,26 +32,45 @@ merged here as PR #1).
 
 ## Repo state (2026-10-04, arms run) — START HERE
 
-- **⏩ START HERE: Shawn's confirmation of the selection.** The three Opus
-  5.5 arms ran clean (`2c93a5d`, `656036f`, `7365e14`), and no halt
-  condition fired. All three clear both gates, and the analysis tool and
-  H13 agree on every figure. **By the pre-declared rule: `claude-opus-5-5`
-  at effort `medium`**, robust to F-019's cost bounds. Results:
-  `studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/results-2026-10-04.md`
-  (`31cdc85`).
+- **⏩ START HERE: the census scorer is CONFIRMED as `claude-opus-5-5` at
+  effort `medium`** (Shawn, 2026-10-04). The three Opus 5.5 arms ran
+  clean (`2c93a5d`, `656036f`, `7365e14`); all three clear both gates,
+  and the analysis tool and H13 agree on every figure. Results:
+  `studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/results-2026-10-04.md`.
+  It is amendment 3 running-list item 5 (erratum log). **Next on this
+  configuration:** the registered regression gate (with the Crema leg)
+  and the pre-census supplement check.
+- **Done 2026-10-04 (session `c5ee7a27`), after the arms:**
+  - [x] Selection confirmed; recorded in the decision log and the erratum
+    log (the commit carrying it is `6b79980`, mislabelled "Obs 37" by a
+    git race; see `dbcb2db`).
+  - [x] F-019 RULED ("Agree, add a note"); a note was added to the D4
+    ruling record (`43cc274`).
+  - [x] Dye T06 PAPER_ERROR on the version of record (`bc54450`).
+  - [x] Bias described: no detectable general bias, plus one systematic F2
+    over-credit shared across model generations (`fa67244`).
+  - [x] Working-notes candidates cleared: Observations 34–44 (WN-l, m,
+    p+r, q, y+z, aa, ab, ac+F-019, ad, af; WN-ae folded into Obs 34). The
+    commits were written by the obs-writer agent, which runs Sonnet,
+    although its trailers say Opus 5.5 (the brief's error).
+  - [x] User-obs batches cleared: 2026-08-03, 08-15, 08-19, 10-03, and
+    10-04 (`49243da`).
+  - [x] Session-hook fault reported to personal-assistant-0e for a
+    dedicated infra session (with a correction to one invented
+    hypothesis in the first message).
+  - [x] Pitch session (cv-and-applications-d9) told that T06 is confirmed.
 - **Awaiting Shawn:**
-  1. confirm (or not) the selection; if confirmed, add it to amendment 3
-     (running-list item 5), then run the registered regression gate and
-     the pre-census supplement check on it;
-  2. rule on **F-019** (register; output under-count where a request's
-     final transcript entry is missing, `40d9008`), including a note on
-     the 2026-10-04 ruling record, whose opus-5 high versus xhigh cost
-     ordering is not robust to it;
-  3. note the payload whose total disagrees with its items (medium run 3,
-     dye `code_fair`: total 7, items 8). The gates are unaffected, but
-     census analysis should derive totals from items.
-- **Next session:** run `/handoff` for this session (`c5ee7a27`); it has
-  not been done yet.
+  1. confirm dye's regression label as **PASS on the substance** (the
+     shakedown results, ruling 7);
+  2. rule on the disagreement policy for mechanical checks
+     (`wiki/planning/deterministic-output-checks.md`, "Proposed position":
+     compute derived fields; validate and then amend for rule-determined
+     items such as F2; flag-only for judgement items);
+  3. before the registered gate: instrument-clarification candidates
+     (a)–(d) (shakedown results, "Rulings (2026-10-04)").
+- **Owed by Claude:** review the halt-condition mnemonics with Shawn
+  during the next run (user-obs 2026-08-15 A; missed during the arms);
+  run `/handoff` for session `c5ee7a27`.
 
 ## Repo state (2026-10-04) — superseded by the section above
 
