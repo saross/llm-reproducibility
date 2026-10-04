@@ -1485,3 +1485,58 @@ this locator (Observation 34). Relations: Observation 15 (statistics
 depend on design choices); Observation 34 (the Opus 5.5 arms). Sources:
 per-arm stability disagreement lists in the 2026-08-03 run records; the
 Opus 5.5 medium arm's `h13/h13-results.json`.
+
+## Observation 37: Hook-time gate decisions are advisory in the workflow lane, and a receipt check must verify success, not attempts (2026-10-04)
+
+*(Approved by Shawn 2026-10-04; WN-p and WN-r, held over from the 2026-08-15 session, with 2026-10-04 corroboration.)*
+
+### Context
+
+The validation arms run as workflow spawns. A SubagentStop hook (the
+receipt gate) can block a spawn at the moment it finishes, and a separate
+post-hoc reconciler (reconcile-run, the C8 and C9 builds) re-checks every
+completed transcript. Two held-over candidates concern how much each layer
+can be trusted: WN-p on the hook, and WN-r on what a receipt check should
+count.
+
+### Observation
+
+**WN-p, the hook is advisory.** In the workflow lane a gate's block does not
+stop collection: probe C collected a spawn's output despite a block. Hook-time
+decisions also read the transcript before it is fully written, so the
+2026-08-03 benchmark logged 39 lag false alarms in 45 spawns (register
+F-007). The post-hoc pass over completed artefacts then retro-validated
+all 45 clean. Authoritative verification therefore has to run post-hoc on
+completed artefacts, and the live gate is a signal.
+
+**WN-r, count success, not attempts.** A declared pull whose every Read
+errored never entered the spawn's context (the dye sonnet guideless spawn),
+yet an attempt-counting check would credit it. The rule is now in the gate
+and the reconciler. F-010 applies the same logic to enumerations: judge the
+paths returned, and treat an errored or empty enumeration as at most an
+attempt.
+
+**2026-10-04 corroboration.** In the three Opus 5.5 arms, four of 45 scoring
+spawns logged a SubagentStop `block` ("no structured output found") with
+output present (`blocked_but_output_present`): `a4ae6a0c3df878505` and
+`aaf0570ecf3124fd2` in the high arm, and `aa1ee7a17cd1419c0` and
+`aa1f898ffa100802c` in the xhigh arm. The medium arm's gate events were all
+`pass`. The authoritative post-hoc reconciliation passed all 45 spawns
+(each arm's `reconciliation/reconciliation-report.json`: 15 spawns, 15
+reconciled, `clean: true`).
+
+### Implication
+
+Design the operative control as a post-hoc check on completed artefacts,
+and keep the live hook as an early warning that is allowed to be wrong in
+both directions. Define every receipt check over outcomes (content that
+arrived), never over actions taken. A block with output present is the
+expected signature of the advisory lane, not an incident. Relations:
+Observation 35 (a gate is operative only if its log
+shows passes and catches: the same lesson from the other side);
+Observation 23 (a verifier must model its delivery mechanism). Anchors:
+register F-007 and F-010 in
+`studies/open-science-compliance/outputs/validation/failure-modes/register.md`;
+`arm-opus-5-5-high/run-notes.md` and `arm-opus-5-5-xhigh/run-notes.md`
+under `opus-5-5-arms-2026-10/` in the same validation directory; the
+held-over candidates in `wiki/continuity.md` (2026-08-15 session entry).

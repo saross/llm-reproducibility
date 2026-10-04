@@ -562,5 +562,24 @@ reference scores" without saying how three runs meet one reference score.
    agreement.
 4. Entry 5(b) — the deviation admitting the BI-excluded concordance as the
    gate statistic, with the all-items figure reported alongside it.
-5. Candidate — the selected configuration (model, effort, prices in force),
-   once the registrant confirms the D4 arm choice.
+5. ~~Candidate — the selected configuration (model, effort, prices in
+   force), once the registrant confirms the D4 arm choice.~~ **CONFIRMED
+   (Shawn, 2026-10-04): `claude-opus-5-5` at effort `medium`.** This moves
+   the census scorer off the registered pin (`claude-opus-5`), so it is an
+   amendment item, and the amendment should state:
+   - **Why:** a newer model in the same tier, benchmarked through the same
+     gates under the same pre-declared rule (design note Q4, declared
+     before any data). All three Opus 5.5 efforts were eligible.
+     Stability was 0.953 / 0.953 / 0.967 and BI-excluded majority-vote
+     concordance 0.922 / 0.929 / 0.922 (high / medium / xhigh). The
+     analysis tool and the H13 script agree on every figure.
+   - **Prices in force at selection:** the claude-api skill's table, cached
+     2026-09-25. `claude-opus-5-5` costs $4 / $20 per million tokens, with
+     cache reads at 0.05× input; `claude-opus-5` costs $5 / $25.
+   - **Rule applied:** cheapest eligible. `medium` cost $8.70 for 15
+     scorings, recorded per request; the bounds are $9.25 central and $9.37
+     upper (register F-019). Opus 5 at `high` cost $17.27. The answer is
+     robust to F-019.
+   - **Source:** `outputs/validation/opus-5-5-arms-2026-10/results-2026-10-04.md`.
+   - **Then:** the registered regression gate and the pre-census
+     supplement check run on this configuration.

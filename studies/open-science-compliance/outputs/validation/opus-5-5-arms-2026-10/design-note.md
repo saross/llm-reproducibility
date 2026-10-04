@@ -47,7 +47,7 @@ and report). The procedure is in `wiki/continuity.md`, "Repo state
 **Arms RUN (2026-10-04, session `c5ee7a27`).** All three are clean, and no
 halt condition fired. All three are eligible. By the pre-declared rule
 (Q4) the cheapest eligible configuration is `claude-opus-5-5` at `medium`,
-awaiting the registrant's confirmation. The freeze ended with arm 3's
+**confirmed by the registrant the same day**. The freeze ended with arm 3's
 commit (`7365e14`). Results: `results-2026-10-04.md`. New register entry:
 F-019 (output under-count).
 
