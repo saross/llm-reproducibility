@@ -290,7 +290,7 @@ replay summary as above.
 
 ---
 
-## F-013 — Contract-metric tokens counted once per content block, not once per request (verifier-error) — AWAITING RULING
+## F-013 — Contract-metric tokens counted once per content block, not once per request (verifier-error) — RULED 2026-10-04
 
 **Date:** 2026-10-03 (found while building the reproduction lane's cost
 audit). **Category: verifier-error** (a measurement layer).
@@ -346,6 +346,18 @@ corrected values beside them. Re-derive the study cost estimate.
 run directories `wf_90a571d7-96d`, `wf_67cd3484-a08`, `wf_4f65c469-fcb`,
 `wf_d691e836-2f2`, `wf_17f3336f-c5e`, `wf_46738e9f-9a3` (+ extras listed in
 each record).
+
+**Ruling (Shawn, 2026-10-04, on Claude's recommendation):** the proposed fix
+is accepted.
+
+1. Assembler v1.6 counts usage once per request.
+2. Every arm record is replayed, keeping the recorded values
+   (no-verifier-wins) and adding the corrected values beside them.
+3. The study cost estimate is re-derived.
+
+The D4 cost comparison already uses per-request counts
+(`gates-ruling-2026-10-04/selection-cost.py`). **Implementation owed** before
+the next FAIR run (it rides with the F-015 fix).
 
 ---
 

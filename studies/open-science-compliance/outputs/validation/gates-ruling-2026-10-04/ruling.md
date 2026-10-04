@@ -114,9 +114,13 @@ rider. The 15 Haiku reconciliation spawns cost $1.06–1.08 in either arm.
 
 **Selection by rule: `claude-opus-5` at effort `high`.**
 
-**Status: awaiting the registrant's confirmation.** Next, under amendment 1's
-within-phase ordering, the registered regression gate runs on the selected
-configuration, with both lanes pinned. The census follows.
+~~**Status: awaiting the registrant's confirmation.**~~ **Registrant
+(2026-10-04): selection HELD. Validate Opus 5.5 first.** `claude-opus-5-5`
+is to be benchmarked as a new arm through the same gates, and selection then
+proceeds under an amendment. The `claude-opus-5` @ `high` computation above
+stands as the rule's answer over the registered arms. After selection, under
+amendment 1's within-phase ordering, the registered regression gate runs on
+the selected configuration with both lanes pinned, and the census follows.
 
 ## Open questions recorded with the selection
 
