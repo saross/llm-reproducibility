@@ -1790,3 +1790,58 @@ silent measurement drift). Anchors: register F-013 and F-019 in
 `opus-5-5-arms-2026-10/selection-cost.py` and `selection-cost.json`;
 `gates-ruling-2026-10-04/ruling.md` (the F-019 note); the WN-ac entry in
 `wiki/continuity.md`.
+
+## Observation 43: An operationalisation choice can decide a gate, so fix it in registered text, not in code (2026-10-04)
+
+*(Approved by Shawn 2026-10-04; WN-ad, with 2026-10-04 corroboration.)*
+
+### Context
+
+Amendment 1 section 3 sets "a concordance floor of at least 0.90 (same
+statistic) against the pilot reference scores". It does not say how three
+runs of a spawn meet one reference score. The analysis tool had used the
+majority of the three runs (reading C) since 2026-08-03. In the H13 check, a
+fresh-context agent blinded from earlier derivations read the registered
+text and took four-way unanimity (reading A: all three runs agree and equal
+the reference).
+
+### Observation
+
+The computation was never in doubt: H13 reproduced the tool's figures in
+all 12 cells under reading C. The disagreement was interpretive, and it
+decides eligibility. By the WN-ad account, under reading A no arm is eligible on any choice about
+the beyond-instrument (BI) items. Under reading C with BI items excluded,
+opus-5 clears. Shawn ruled for C on 2026-10-04 (`gates-ruling-2026-10-04/ruling.md`,
+Ruling 1), partly because reading A would penalise instability twice, and
+the choice is to be made public in erratum-log Entry 5. No registered text
+defined the statistic.
+
+**2026-10-04 corroboration.** The Opus 5.5 arms clear on BI-excluded
+concordance under readings A, B (per-run pooled), and C alike
+(`opus-5-5-arms-2026-10/h13/h13-results.json`):
+
+| Arm | A, unanimity | B, per-run | C, majority |
+|---|---|---|---|
+| opus-5-5 medium | 128/141 | 392/423 | 131/141 |
+| opus-5-5 high | 127/141 | 389/423 | 130/141 |
+| opus-5-5 xhigh | 128/141 | 389/423 | 130/141 |
+| opus-5 high | 124/141 | 382/423 | 127/141 |
+| opus-5 xhigh | 126/141 | 388/423 | 130/141 |
+
+For the Opus 5.5 arms the choice is therefore not decisive. It decided
+opus-5's eligibility, since neither opus-5 arm reaches 0.90 under reading A
+(0.879 and 0.894).
+
+### Implication
+
+A statistic named only as "same statistic" is underdetermined, and a
+choice that was reasonable when made can still be the choice that decides a
+gate. Define the operationalisation in registered text before the data
+exist, and report every defensible reading beside the ruled one so that a
+reader can see whether the verdict depended on it. Relations: Observation
+15 (gate statistics are sensitive to design choices: this is a third
+instance, after power and definition). Anchors:
+`studies/open-science-compliance/outputs/validation/gates-ruling-2026-10-04/ruling.md`
+(Ruling 1);
+`studies/open-science-compliance/outputs/validation/h13-rederivation-2026-10-04/operator-comparison.md`;
+the WN-ad entry in `wiki/continuity.md`.
