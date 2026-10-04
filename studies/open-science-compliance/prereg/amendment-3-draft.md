@@ -439,10 +439,20 @@ Neither outcome enters a verdict or coverage.
   content the packs never recorded. §3(b) is corrected accordingly. Those
   five were not deliberately withheld, which the BI `input` definition
   ("deliberately not given") does not quite cover.
+- **D-6. The regression gate's baseline.** The executed-code audit (PR #7,
+  `outputs/validation/executed-code-audit-2026-10-04/findings.json`) found
+  that three pilot attempt-01s (dye, herskind, and key) executed no
+  authors' file, and two (crema and marwick) executed a version other than
+  the AP-12 one. Crema's Table 1 credit compares v2.0.0's re-run with itself:
+  the paper's Japan r is 0.1023, against 0.1003 in the comparison report's
+  "published" column. The §8 gate requires identical verdicts and values
+  against the pilot artefacts, so its baseline may need re-basing, and a
+  re-basing may need declaring here. This depends on the audit's questions
+  Q1–Q5.
 
 ## Pre-lodgement checklist
 
-- [ ] Registrant reads and edits the full draft; decisions D-1 to D-5 ruled.
+- [ ] Registrant reads and edits the full draft; decisions D-1 to D-6 ruled.
 - [ ] Consistency check (maintenance rule 4): §4 and §7 text against the
       adjudication log and the shakedown rulings; §5 and §6 against the
       planning note, the F2 report, and `manifest.yaml`; deliberate
