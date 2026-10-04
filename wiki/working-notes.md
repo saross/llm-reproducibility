@@ -1399,3 +1399,43 @@ Anchors:
 `31cdc85`;
 `studies/open-science-compliance/outputs/validation/failure-modes/register.md`
 F-019.
+
+## Observation 35: A wired, tested control is aspirational until its log shows a real pass (2026-10-04)
+
+*(Approved by Shawn 2026-10-04; WN-l, drafted 2026-08-03.)*
+
+### Context
+
+The receipt gate (a SubagentStop hook that checks each scoring spawn's
+receipt) was designed, wired, and build-tested before the 2026-08-03
+benchmark. Its log is `.claude/hooks/receipt-gate-log.jsonl`. The run
+records of the three 2026-08-03 arms carry its tallies, and register F-007
+summarises them.
+
+### Observation
+
+The gate's log carried only blocks: it had never validated one production
+receipt. The run it nominally guarded was protected entirely by
+orchestrator-side post-hoc verification. The first arm to run under the
+repaired gate (`3b01676`) logged 6 passes and 9 blocks, and the gate blocked
+those 9 of 15 spawns for a reason its own log cannot distinguish from a
+true catch. The other two arms blocked every spawn once, because the
+final-message JSON check cannot see a tool-call structured output. In all,
+39 of 45 spawns were blocked and none of the blocks had a consequence
+(F-007). A control that was wired, tested, and logging was therefore not
+operative.
+
+### Implication
+
+A control's operative status is evidenced by logged passes on real traffic
+plus one observed catch, not by wiring, tests, or the existence of its log
+file. Before relying on a gate, read its log for a real pass and a real
+catch, and ask what the log would look like if the gate were inert. This is
+the companion rule to Observation 14 (a canary probe beats documentation:
+the log is the probe) and Observation 16 (a green check over a narrower
+scope than its readers assume). Observation 23 supplies the mechanism here:
+the verifier did not model the delivery path its subject rode on. Sources:
+`receipt_gate_note` and `gate_events` in the `run-record.json` files under
+`studies/open-science-compliance/outputs/validation/benchmark-2026-08/`
+(`arm-fable-5` and `arm-opus-5`); register F-007 in
+`studies/open-science-compliance/outputs/validation/failure-modes/register.md`.
