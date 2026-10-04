@@ -539,6 +539,68 @@ fresh session guarantees it. **Alignment relevance:** none.
 
 ---
 
+## F-019 — Output tokens under-counted where a request's final transcript entry is missing (verifier-error, measurement) — RECORDED, for ruling
+
+**Date:** 2026-10-04. **Category: verifier-error** (the measurement layer,
+not the model). **Found in:** Opus 5.5 arm 1, `wf_965c388c-bfb`, while
+checking the assembled record's per-spawn usage.
+
+**What happened.** The harness writes one transcript entry per content
+block. Usually the request's last entry carries its final `usage` and a
+`stop_reason`. In some requests **no** entry carries a `stop_reason`: every
+entry holds the streaming-start snapshot, so `output_tokens` is a
+placeholder (2–16, typically 8). Input and cache fields are already final
+at stream start and are unaffected. The per-request counter (F-013 fix,
+`transcript_usage()` in `scripts/reproduction-lane.py`) takes each field's
+maximum within a request. For these requests it therefore keeps the
+placeholder, and output is under-counted. Example: `crema-et-al-2024` r1
+(`agent-a20305775824448c1.jsonl`), whose final `StructuredOutput` request
+(about 14,000 characters of tool input) records `output_tokens: 8`.
+
+**Extent** (`../opus-5-5-arms-2026-10/selection-cost.py`, which counts
+these requests per arm and model):
+
+| Arm | Scoring requests missing a final entry | Of which final `StructuredOutput` |
+|---|---|---|
+| opus-5 xhigh (`wf_67cd3484-a08`, 2.1.233) | 7 of 94 | 2 |
+| opus-5 high (`wf_d691e836-2f2`, 2.1.233) | 21 of 97 | 8 |
+| opus-5-5 high (`wf_965c388c-bfb`, 2.1.289) | 6 of 55 | 4 |
+| opus-5-5 medium (`wf_0f3600c3-5ef`) | 7 of 49 | 3 |
+| opus-5-5 xhigh (`wf_3863b134-e26`) | 4 of 69 | 1 |
+
+On 2.1.289 the Haiku reconciliation spawns lose most of their final entries
+(87–89 of 113–118 requests), against 4–5 on 2.1.233. **Not recoverable from
+the run files:** the workflow journal and the meta sidecars carry no
+per-agent usage.
+
+**Bearing.** Cost only: the selection rule's price leg and any cost claim.
+Scores, gate statistics, reconciliation, and the H4 wire are unaffected.
+The registered D4 computation (`../gates-ruling-2026-10-04/ruling.md`)
+found opus-5 `high` "about 11% cheaper" than `xhigh` ($17.27 against
+$19.46, recorded). The imputed bounds narrow that to about 2% at the
+central estimate ($20.40 against $20.85) and reverse it at the upper
+bound ($22.88 against $22.48). The Opus 5.5 selection is robust to the
+gap: medium's upper bound ($9.37) is below high's recorded lower bound
+($9.55).
+
+**Mitigation in place:** `selection-cost.py` (Opus 5.5 block) reports each
+arm three ways. `recorded` is the lower bound. `central` and `upper` impute
+each affected request's output from the median or maximum of complete
+requests of the same model and kind in the same arm.
+
+**Proposed (for ruling):**
+
+1. Report selection cost as recorded with the bounds, never the recorded
+   figure alone.
+2. Add a note to the 2026-10-04 ruling record that its `high` versus
+   `xhigh` cost ordering is not robust to F-019.
+3. For census cost tracking, capture usage from a source that records
+   final usage, rather than from transcripts alone.
+
+**Alignment relevance:** none.
+
+---
+
 ## Observations for joint analysis (running)
 
 1. **The two genuine model incidents this cycle both came from the most
