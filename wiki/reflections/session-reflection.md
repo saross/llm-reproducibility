@@ -1247,3 +1247,63 @@ checked before asking:
 
 The cost of asking before checking is not only a re-ruling. A wrong
 premise sits in the record under Shawn's name until it is corrected.
+
+## Entry 21 (2026-10-04, second session) — The arms ran clean; the measuring did not
+
+**Project:** llm-reproducibility. **Session:**
+c5ee7a27-c9d0-4641-8bb3-6a5fdcc3ddce. One instance throughout (Opus 5.5),
+no compaction. Shawn was present at the start (a single "Go") and for the
+rulings after the arms. The three arms ran unattended between those
+points.
+
+**What would you do differently if you replayed this session?** The three
+benchmark arms themselves needed nothing: 45 spawns, no halt, about 18
+minutes of wall-clock. Every slip of the session was mine, in the
+apparatus around them.
+
+- **I trusted the handoff's command.** I ran the reconciliation step as
+  written, and it lacked `--contract-schema` and the
+  `reconciliation-authoritative` output the assembler needs. A one-line
+  check against how the registered arms were reconciled would have
+  caught it before it overwrote the per-item stage's report.
+- **I staged files while a background agent was committing in the same
+  checkout.** Its plain `git commit` swept them into its commit, and mine
+  swept its uncommitted Observation into my commit. The second agent ran
+  in its own worktree and merged cleanly by fast-forward. Isolation should
+  have been the default from the first spawn.
+- **I wrote an invented premise into a message to another session.** "c51bef29 was itself the session I'm told failed to hand off
+  cleanly." Nobody told me that. It appeared in a list of hypotheses,
+  where plausibility felt like enough. I caught it on re-reading and sent
+  a correction. The re-read should come before the send.
+- **I wrote a conditional rule backwards.** The deprecated-function
+  recommendation said "fail-and-uplift, unless no public version runs the
+  original name". Shawn approved it as recommended, and only my next
+  drafting pass caught the inversion. He apologised for missing it; the
+  error was mine. A rule with branches should be written as branches.
+
+**What felt uncertain or unresolved at the end?** F-019's mechanism. Some
+requests never persist a final usage entry. On 2.1.289 the Haiku
+reconciliation spawns lose most of theirs, against a handful on 2.1.233,
+and I do not know why. The selection is robust to it, because Opus 5.5
+`medium`'s upper bound sits below every alternative's lower bound. But the
+census's cost record needs a usage source that records final usage. That
+is ruled, not built. Also unresolved: whether `medium` holds up on census
+papers that arrive with their supplements, which is more reading than the
+pilots needed. The pre-census supplement check is where that shows.
+
+**What context from this session will be hardest to reconstruct in six
+months?** How thin the effort choice was. The three Opus 5.5 efforts
+differ on 3 of 141 gate items, two of them split 2–1. The 9 misses they
+share are mostly one F2 rule that every Opus 5 run also gets wrong. "Opus
+5.5 at `medium`" will read as a measured optimum. It is the cheapest of
+three configurations that are indistinguishable at this sample size,
+chosen by a rule declared before the data. Observation 34 says so, and the
+paper should too.
+
+The session's other texture was who checked whom. The obs-writer, on
+Sonnet, caught two factual errors in my brief, including the
+herskind R1.3 claim I had already given Shawn. The checker's builder
+found contradictions in my planning note, and a real nuance in the
+coverage rule that my policy had glossed over. Telling delegates to
+re-verify against sources is usually framed as protection against them.
+This time it protected against me.

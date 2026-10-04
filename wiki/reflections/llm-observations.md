@@ -735,3 +735,56 @@ operationalisation choice, not just the numbers.
 pinned, with correct receipts and a clean reconciliation. Its marwick spawn
 at `high` produced 10,216 output tokens, against opus-5 `high`'s average of
 16,602 per spawn. That is one paper and one run, so no conclusion yet.
+
+## 2026-10-04 (second session) — A newer model fixed nothing the instrument caused, and delegates caught the coordinator
+
+**Session:** c5ee7a27-c9d0-4641-8bb3-6a5fdcc3ddce (Opus 5.5, primary
+instance).
+
+**Opus 5.5 against Opus 5 as a scorer.** At the gate level the two are
+indistinguishable or better at half the price (Observation 34). The
+texture differs, though.
+
+- **Leaner trajectories.** Opus 5.5 completes a scoring spawn in about 3–5
+  API requests (3.3–4.6 on average), where Opus 5 used about 6 (49–69 against 94–97 per 15 spawns),
+  with a third to two-thirds of the cache reads. The reading pattern is
+  the same: whole PDF, then page ranges.
+- **Errors in both directions.** Opus 5's errors were all over-credit;
+  Opus 5.5 `medium` has 7 over-credits and 3 under-credits.
+- **The systematic miss survives the upgrade.** Six F2 over-credits
+  (crema, herskind, and marwick; data and code) are unanimous in every
+  run of every Opus arm across both generations and all efforts. An
+  error that a model succession and a fourfold change in output tokens
+  both leave unchanged belongs to the instrument or its inputs, not to
+  the model. That is why the mechanical-check policy targets F2 first.
+- **Effort scales output, not judgement.** `xhigh` writes 4.2× `medium`'s
+  output tokens, recorded, and changes 3 of 141 gate items.
+
+**Delegates verified the coordinator.** Both subagents were told to
+re-read sources and report deviations from the brief. Both found errors
+of mine.
+
+- **The obs-writer** (Sonnet, by its definition) corrected my brief: I
+  had herskind code R1.3 over-credited at `high`, and it is only at
+  `xhigh`. It also noted that its commit trailers said Opus 5.5 because my
+  brief told it so.
+- **The checker's builder** (Opus) found that my planning note still said
+  Layer 1 checks "fail the item", contradicting the policy just ruled. It
+  also found that the instrument's coverage figure is not always a pure
+  derivation, since a record-weighted figure is allowed alongside. Then
+  it made ten deliberate small breaks to its own rules and confirmed its
+  tests caught every one.
+
+The useful reading: a brief is a carrier for the coordinator's
+confabulations, and an instruction to re-derive turns the delegate into a
+check on its author. It costs a "deviations" section in every report.
+
+**My own confabulation went into a message to another agent.** Drafting
+hypotheses for the personal-assistant session about the hook fault, I
+wrote that c51bef29 "was itself the session I'm told failed to hand off
+cleanly". No source said this. The neighbouring hypotheses were checked
+facts (timestamps, the hook chain). The invented one borrowed their
+register and added a false attribution ("I'm told"). The pattern matches
+the 2026-10-03 entry: confabulation lives in the speculative, free-text
+parts of an output, beside the verified parts. Hypothesis lists sent
+across sessions need the same per-premise sourcing as findings.

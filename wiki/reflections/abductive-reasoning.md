@@ -1228,3 +1228,99 @@ A single negative observation licenses "X was not available at time T",
 not a mechanism. Register entries are read later as rules. Write the
 observation, and leave the mechanism open until a second observation
 discriminates.
+
+## 2026-10-04 (second session) — 882 output tokens for a 14,000-character answer
+
+**Session:** c5ee7a27-c9d0-4641-8bb3-6a5fdcc3ddce
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+Arm 1's assembled record listed a scoring spawn (key r3) with 882 output
+tokens. Every spawn emits a FAIR payload of about 13,000–14,000
+characters, which cannot fit in 882 tokens. Three more spawns read 481,
+639, and 912. Their wall-clock times (105–145 s) matched the spawns
+reporting 10,000–16,000.
+
+### Probe
+
+1. Read the per-entry usage in one low transcript and one normal one. In
+   the low spawn, the request carrying the `StructuredOutput` call had
+   `stop_reason: None` and `output_tokens: 8` on every entry. In the normal
+   spawn, the same request ended with `stop_tool_use` and 14,652.
+2. Counted requests with no final entry across arms, including the
+   registered opus-5 transcripts from 2.1.233. They were present there
+   too: 26 of 209 requests (high) and 11 of 209 (xhigh).
+3. Checked the workflow journal and meta sidecars for an independent usage
+   source. There is none.
+4. Imputed the missing outputs (median and maximum of complete requests of
+   the same kind) and re-priced every eligible arm.
+
+### Belief revision
+
+- **Before:** per-request counting (the F-013 fix) made the transcript a
+  trustworthy cost source.
+- **After:** it is trustworthy for input and cache fields, and a lower
+  bound for output. The gap was not a new halt-worthy anomaly in this run.
+  It was a pre-existing property of the apparatus.
+- **A second revision followed.** The registered D4 record's "opus-5
+  `high` is about 11% cheaper than `xhigh`" is not robust. `high` lost 8
+  final requests to the gap and `xhigh` only 2. Imputed, the two efforts
+  are about 2% apart, and the order reverses at the upper bound.
+
+### What would change this belief
+
+A usage source that records final usage per request, such as harness
+telemetry, showing that the placeholder requests' true outputs are small.
+That would make the imputation an overestimate.
+
+### Implications for practice
+
+When a number is physically implausible against the artefact it
+describes, check the measuring before the measured. Then check whether
+past measurements share the defect before treating it as specific to
+this run. The second step turned a local anomaly into a correction of a
+recorded ruling.
+
+## 2026-10-04 (second session) — The relayed message fired in one arm out of three
+
+**Session:** c5ee7a27-c9d0-4641-8bb3-6a5fdcc3ddce
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+Since Claude Code 2.1.288, a workflow spawn can receive the session's last
+user message, relayed (register F-015). The P4 probe saw no relay. Arm 1's
+30 spawns all received it: Shawn's "Go". Arms 2 and 3 (0 of 30 each)
+received nothing.
+
+### Probe
+
+Compared the launch turns. Arm 1 launched in the same turn as Shawn's
+typed "Go". Arms 2 and 3 launched from turns triggered by task
+notifications. The harness's own preamble describes the relay as "the
+user request that triggered this workflow run".
+
+### Belief revision
+
+- **Before:** the relay carries the session's last user message to every
+  spawn, so every launch needs a neutral last message (ruling Q7).
+- **After, provisionally:** the relay carries the user message that
+  triggered the launch turn. A launch from a notification turn relays
+  nothing.
+
+Two consistent observations (arms 2 and 3), plus the preamble's wording.
+P4's launch turn is not recorded, so it neither confirms nor refutes this.
+
+### What would change this belief
+
+A notification-turn launch whose spawns receive a relay, or a typed-turn
+launch whose spawns do not.
+
+### Implications for practice
+
+Q7's neutral go-ahead matters only for the launch made in the typed turn.
+Chained launches from notifications are clean by construction. This is
+worth recording beside F-015, but not yet as a rule. Following the F-018
+lesson, record the observations and leave the mechanism open until a
+deliberate test discriminates.

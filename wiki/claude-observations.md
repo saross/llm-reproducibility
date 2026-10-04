@@ -1273,3 +1273,80 @@ his availability line up.
 addition, including the fixed costs that make additions cheap. Propose
 long runs early in a session, or package them for the next session's start
 with the approval recorded and the halt conditions explicit.
+
+## claude-obs 63 — 2026-10-04 (second session): He rules a batch in one message and keeps "anything else?" for the bright lines
+
+**Pattern.** This session Shawn made about twenty rulings in five short
+messages, mostly as "as recommended" with overrides by letter. That
+covered the selection, the F-019 ruling, the checks policy, clarifications
+(a)–(d), and six follow-ons. The exception was the fail-and-uplift line:
+having ruled it, he asked "Anything else we should consider with this
+decision?". The six considerations that came back were all adopted, with
+two clarifications settled by structured questions.
+
+**Lesson.** He moves quickly on decisions he can check against a stated
+principle. He slows down on bright lines that will be applied
+mechanically at census scale, where an unconsidered edge case becomes a
+systematic error.
+
+**How to apply.** Keep batched recommendations as the default format for
+dense rulings. When a ruling draws a line that a pipeline will enforce,
+offer the adjacent edge cases unprompted. He is going to ask anyway.
+
+## claude-obs 64 — 2026-10-04 (second session): He anchors methodological lines in the field's own debates
+
+**Pattern.** Ruling on deprecated functions, Shawn tied fail-and-uplift
+to a named position in the reproducibility literature: Marwick and others
+hold that capturing a working environment is the authors'
+responsibility. The ruling came with its scholarly justification
+attached.
+
+**Lesson.** For him, a rule is stronger when it lines up with a
+recognised position, because the paper will have to defend it to that
+audience.
+
+**How to apply.** When recording a methodological ruling, keep his named
+anchor beside it (done in the shakedown results and the decision log).
+When proposing a bright line, say which published position it agrees or
+disagrees with, if I know one.
+
+## claude-obs 65 — 2026-10-04 (second session, self-critique): I staged files while a delegate was committing in the same checkout
+
+**Pattern.** The obs-writer was committing to `main` in my checkout while
+I staged four files for my own commit. Its plain `git commit` swept them
+in, and my `git add` then swept in its half-written Observation. Two
+commits were mislabelled; content was intact. For the second agent I
+used an isolated worktree, and the merge was a clean fast-forward.
+
+**Lesson.** A shared index is a shared resource. Pathspec discipline only
+works if both parties follow it, and a delegate's habits are outside my
+control.
+
+**How to apply.** Run any delegate that commits in its own worktree. If
+one must share the checkout, never leave anything staged: commit with
+`git commit -- <paths>`, or wait for the delegate to finish first.
+
+## claude-obs 66 — 2026-10-04 (second session, self-critique): My errors were in the prose around checked facts
+
+**Pattern.** Three errors this session, all in text I wrote around
+material I had verified:
+
+- an invented premise ("I'm told it failed to hand off") in a peer
+  message whose other hypotheses were checked timestamps;
+- a conditional recommendation written backwards ("unless"), which Shawn
+  approved before I caught it;
+- a herskind R1.3 detail, given to Shawn and written into a brief, that
+  the obs-writer corrected.
+
+The numbers I computed were right. The connecting sentences were not.
+
+**Lesson.** My verification effort goes to quantities, and the
+confabulation risk has moved to framing: attributions, conditionals, and
+summaries of tables.
+
+**How to apply.** Before sending anything that will be acted on, re-read
+three kinds of sentence against their source:
+
+- any attribution ("I'm told", "as ruled");
+- any conditional rule, written as explicit if/otherwise branches;
+- any per-item claim restated from a table.

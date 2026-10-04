@@ -1226,3 +1226,100 @@ cost nothing.
 - Claude Code was at 2.1.289; transcripts record 2.1.288.
 - The session ended for another session's infra work. The arms run from
   the next session.
+
+## Session: 2026-10-04 (second session) — Opus 5.5 arms run; `medium` selected; checks policy, clarifications, and Layer 1 built
+
+**Session:** c5ee7a27-c9d0-4641-8bb3-6a5fdcc3ddce (Opus 5.5). Shawn was
+present at launch (a single neutral "Go") and for the rulings afterwards.
+
+**Spend.**
+
+- **Three benchmark arms**, approved at API gate stage 2 in the previous
+  session. Scoring cost $8.70, $9.55, and $16.33 recorded
+  (medium/high/xhigh), plus about $1.2 of Haiku reconciliation per arm. In
+  total about $38 recorded, or $41 at the central F-019 estimate.
+- **Two subagents:** an obs-writer (Sonnet) and the checker's builder
+  (Opus). Neither used any API spend.
+
+**The arms.**
+
+- **Runs:** `high` (`wf_965c388c-bfb`, `2c93a5d`), `medium`
+  (`wf_0f3600c3-5ef`, `656036f`), and `xhigh` (`wf_3863b134-e26`,
+  `7365e14`). Each returned 15/15 with 0 ESCALATEs and authoritative
+  reconciliation 15/15 clean. H4 per-request tokens were 1.94M, 1.91M,
+  and 2.27M against the 4.5M wire. No halt condition fired.
+- **Procedure fix:** the handoff's reconciliation step lacked
+  `--contract-schema` and the `--out .../reconciliation-authoritative`
+  directory. It was corrected in continuity (`171e0a8`).
+- **Relay (R2):** only arm 1, launched in Shawn's typed turn, received a
+  relayed message ("Go").
+- **F-019** recorded (`40d9008`): output tokens are under-counted when a
+  request's final transcript entry is missing. The registered arms are
+  affected too.
+
+**Gates and selection** (`31cdc85`):
+
+- All three Opus 5.5 efforts are eligible: stability 0.953/0.953/0.967;
+  BI-excluded majority-vote concordance 0.922/0.929/0.922.
+- The analysis tool v1.2 and the H13 script (`ARMS` extended only) agree
+  on every figure across nine arms.
+- By the rule, the selection is `claude-opus-5-5` at `medium`, robust to
+  F-019. Shawn confirmed it ("We will definitely use 5.5"; "confirm
+  medium"). It is amendment 3 item 5, which landed in `6b79980` under a
+  mislabelled message; see below.
+
+**Rulings** (Shawn, all 2026-10-04):
+
+- **F-019:** report cost with bounds; note added to the D4 record
+  (`43cc274`).
+- **Dye T06:** PAPER_ERROR on the version of record (`bc54450`). Dye's
+  regression label is PASS (`22ee93b`).
+- **Bias description:** no detectable general bias, plus one systematic F2
+  over-credit (`fa67244`).
+- **Mechanical-check disagreement policy** adopted as written: derived
+  fields are computed; rule items are validated as a hybrid scorer, then
+  amended; judgement items are flagged only. It is amendment 3 item 6
+  (`22ee93b`).
+- **Reproduction clarifications (a)–(d)** adopted with draft lodging
+  wording as amendment 3 item 7 (`07666c8`).
+- **Follow-ons** (`4e0033e`):
+  - a per-package version-search cap;
+  - the wrapper boundary cases;
+  - code hashing and a pilot code audit as build items;
+  - the verdict reported beside the environment-specification level, and
+    "recoverable with repair", pre-declared as item 8.
+
+**Registers:**
+
+- Observations 34–44 written by the obs-writer (`0393092` to `abbac69`;
+  WN-ae folded into 34).
+- User-obs batches 2026-08-03, 08-15, 08-19, 10-03, and 10-04 adjudicated
+  (`49243da`).
+
+**Build:** `scripts/check-payload-quality.py` v1.1, Layer 1 (`132f95a`).
+
+- Tests went from 326 to 361.
+- The nine-arm report is in `payload-quality-2026-10-04/` (`d10fbb3`): 1
+  total miscount, 1 unavailable section with a scored item, nothing else.
+- It was built in an isolated worktree, reviewed, and fast-forwarded to
+  `main`.
+
+**Messages sent:**
+
+- **personal-assistant-0e:** the session-hook gate fault. A correction
+  followed, retracting one invented hypothesis.
+- **cv-and-applications-d9:** T06 confirmed, and the scorer confirmed.
+
+**Incident:** a git index race between this session and the obs-writer
+mislabelled two commits. `6b79980` ("Obs 37") carries the selection
+confirmation, and `49243da` carries Observation 38. The empty commit
+`dbcb2db` records this; history was not rewritten.
+
+**Contextual assumptions.**
+
+- Prices come from the claude-api skill's table, cached 2026-09-25.
+- The F-019 imputation assumes that complete requests of the same kind in
+  the same arm are representative of the missing ones.
+- The `medium` selection rests on five pilot papers without supplements.
+  The pre-census supplement check is the first test on supplement-sized
+  inputs.
