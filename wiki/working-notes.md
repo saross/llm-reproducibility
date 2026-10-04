@@ -1845,3 +1845,52 @@ instance, after power and definition). Anchors:
 (Ruling 1);
 `studies/open-science-compliance/outputs/validation/h13-rederivation-2026-10-04/operator-comparison.md`;
 the WN-ad entry in `wiki/continuity.md`.
+
+## Observation 44: The fail-and-uplift bright line — version pins are routine, code edits are not (2026-10-04)
+
+*(Approved by Shawn 2026-10-04; WN-af, drafted in the 2026-10-03 shakedown session.)*
+
+### Context
+
+The agentic reproduction lane may adapt an environment to a paper's
+materials, but not the authors' code. The shakedown's dye-et-al-2023
+section-4 analysis failed under ArchaeoPhases 1.8, and the human-directed
+pilot had repaired it by shifting column indices. A reviewer hypothesised
+that an earlier release would run the code as published.
+
+### Observation
+
+The published code ran on no public release. Every CRAN release with
+`read_oxcal()` drops the iteration column with the same line
+(`data <- data[, -1]`): 1.5 (2020-12-01), 1.6 (2022-02-17), and 1.8
+(2022-06-21); there was no 1.7. The reviewer's hypothesis is false for every
+public release, and 1.8 was also current when `beads-1.csv` was dated
+(2022-10-20). The pilot's index repair was nonetheless identity-preserving:
+the authors' indices `c(3:5, 7, 9, 12:78)` select exactly 72 dates in
+raw-CSV numbering, and the pilot's `c(2:4, 6, 8, 11:77)` selects the same 72
+after `read_oxcal()` drops two columns. So the shift repairs a defect in the
+published code; it does not adapt the code to a changed environment.
+
+Shawn ruled it **fail-and-uplift**: CANNOT_COMPARE stands, the executor's
+refusal under its invariant 2 was correct, and the pilot's T02 credit was
+too generous. This is the first case of the bright line (shakedown results,
+"Candidates for instrument clarification before the registered gate", item (d)): choosing among
+publicly available dependency versions is **routine** (pin the release the
+materials fit, leave the code unchanged), whereas any edit that changes
+logic, indices, or data selection is fail-and-uplift, however obvious the
+intent. The recovered-intent evidence goes to the uplift tool.
+
+### Implication
+
+A repair that recovers the authors' evident intent is still a different
+analysis, so a reproduction must report it as an uplift, not a pass. The
+rule keeps the agentic lane from silently crediting its own fixes, as the
+pilot did. It also needs an empirical step before the line is drawn: here,
+checking every public release showed that no version pin could have helped.
+Relations: Observation 41 (the regression audit that surfaced the pilot's
+over-credit); Observation 33 (verification means matching the expected
+target; here the check was against every release). Anchors:
+`studies/open-science-compliance/outputs/validation/phase2-shakedown/results-2026-10-03.md`
+("Rulings (2026-10-04)", ruling 1, and item (d));
+`wiki/planning/instrument-clarification-plan.md` (decision log, 2026-10-04);
+the WN-af entry in `wiki/continuity.md`.
