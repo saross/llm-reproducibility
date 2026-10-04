@@ -1,0 +1,815 @@
+{
+  "audit": "executed-code-audit-2026-10-04",
+  "ruling": "Shawn, 2026-10-04, fail-and-uplift follow-on (4): the pilots' executed code is audited against the authors' originals before the regression gate, to find undeclared repairs like dye's T02",
+  "status": "candidates for ruling; nothing here is ruled",
+  "classes": {
+    "i": "declared wrapper or routine environment mechanics (queued amendment 3 item 7(d))",
+    "ii": "a mechanical change made in or to the authors' code rather than in a wrapper (a process breach under the wrapper boundary rule; not necessarily a repair); includes running a re-assembled or inlined copy instead of the authors' file",
+    "iii": "an edit that changes logic, indices, data selection, parameters, or functions called (the T02 class); 'declared' and 'result-identical' are recorded separately",
+    "iv": "outside the brief's classes: the executed authors' code is a different version from the AP-12 version (not a reproducer edit)",
+    "v": "outside the brief's classes: credited values computed by reproducer-written code that the authors' code does not contain, or inputs reconstructed by the reproducer"
+  },
+  "tools": {
+    "lane_tool": "scripts/reproduction-lane.py v1.1 (substantive_lines, lines_changed)",
+    "audit_checks": "audit-checks.py v1.0 (this directory)",
+    "audit_checks_output": "audit-checks-output.json"
+  },
+  "downloads": [
+    {
+      "url": "https://raw.githubusercontent.com/benmarwick/web-of-science-archaeology/c9332a8089f3f83733874138fe4e3e388d299321/analysis/code/000-import-raw-data.R",
+      "retrieved_at": "2026-10-04T11:56:29+00:00",
+      "bytes": 4251,
+      "sha256": "b2812c1db048c6ff1479b1682923824731ed05dc2dd84989bf83167f624858a3",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/benmarwick/web-of-science-archaeology/c9332a8089f3f83733874138fe4e3e388d299321/analysis/data/BenMarwick_JCR_JournalResults_12_2024.csv",
+      "retrieved_at": "2026-10-04T11:56:30+00:00",
+      "bytes": 14970,
+      "sha256": "0e4245b407520236a9f0e195c29296823dee9369e00595757e255559ad8044bd",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/benmarwick/web-of-science-archaeology/c9332a8089f3f83733874138fe4e3e388d299321/analysis/paper/paper.qmd",
+      "retrieved_at": "2026-10-04T11:56:32+00:00",
+      "bytes": 82275,
+      "sha256": "313247bce36a1a4a03f1090ed25cab69dc1c25bb37306f98f6ba2ec97facdcca",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/benmarwick/web-of-science-archaeology/c9332a8089f3f83733874138fe4e3e388d299321/renv.lock",
+      "retrieved_at": "2026-10-04T11:56:33+00:00",
+      "bytes": 344465,
+      "sha256": "4cbafb587ea6bda3c158e6affef001695e8db98c2f400d5d31bd4bb029573f23",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/benmarwick/web-of-science-archaeology/c9332a8089f3f83733874138fe4e3e388d299321/Dockerfile",
+      "retrieved_at": "2026-10-04T11:56:35+00:00",
+      "bytes": 1257,
+      "sha256": "93dd7ffd893d6174720ae9ae3fd78dfea8d69f641a05e8a3b9cc799d1ee5bc49",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/benmarwick/web-of-science-archaeology/652e5429bcb052b77935fffa892b40f343ebaead/analysis/code/000-import-raw-data.R",
+      "retrieved_at": "2026-10-04T11:56:36+00:00",
+      "bytes": 4382,
+      "sha256": "84c2fbbe0b40a50f78e43c56bc436194124a12d66a24d9eaa8211c5d2affc4a0",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/benmarwick/web-of-science-archaeology/652e5429bcb052b77935fffa892b40f343ebaead/analysis/data/BenMarwick_JCR_JournalResults_12_2024.csv",
+      "retrieved_at": "2026-10-04T11:56:37+00:00",
+      "bytes": 15086,
+      "sha256": "2d0fa916a03ea56f50b805436af4fa0b729c829179aef9d297a446988bcfdd62",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/benmarwick/web-of-science-archaeology/652e5429bcb052b77935fffa892b40f343ebaead/analysis/paper/paper.qmd",
+      "retrieved_at": "2026-10-04T11:56:39+00:00",
+      "bytes": 84648,
+      "sha256": "be33dc6d82d4a5883ef6482c6cd8465d54c73efd565c3e8dc5ebed5e82fd8884",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/benmarwick/web-of-science-archaeology/652e5429bcb052b77935fffa892b40f343ebaead/renv.lock",
+      "retrieved_at": "2026-10-04T11:56:40+00:00",
+      "bytes": 376690,
+      "sha256": "8dd949790670a8901e74e33450499ff979b5de1c80afd8d8928f21cc35b8844a",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/benmarwick/web-of-science-archaeology/652e5429bcb052b77935fffa892b40f343ebaead/Dockerfile",
+      "retrieved_at": "2026-10-04T11:56:42+00:00",
+      "bytes": 1257,
+      "sha256": "93dd7ffd893d6174720ae9ae3fd78dfea8d69f641a05e8a3b9cc799d1ee5bc49",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://zenodo.org/api/records/10782943/files/ercrema/diffusionCurve-v1.0.0.zip/content",
+      "retrieved_at": "2026-10-04T11:57:50+00:00",
+      "bytes": 145637668,
+      "sha256": "0d11a519a100895ac676cfe2c4f6b859c46c51e4344e31caeb27aae00da7dc09",
+      "published_md5_match": "ec1f0c8a664fa8a1d980e62fa2d0f368",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://zenodo.org/api/records/15603267/files/benmarwick/web-of-science-archaeology-1.3.zip/content",
+      "retrieved_at": "2026-10-04T11:59:50+00:00",
+      "bytes": 101350149,
+      "sha256": "7cf98aa59ecf24851ac0db001a4a60cdf8d02be61d75412a41596ec9cb63bb85",
+      "published_md5_match": "6da6952d7d6241e4d730d8084e2f432c",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://zenodo.org/api/records/10623550/files/Herskind&Riede_S2.R/content",
+      "retrieved_at": "2026-10-04T11:53:22Z",
+      "bytes": 18707,
+      "sha256": "712f45382a1773b182d7df921ab8dcb8f823a45674b11c34b462f214c88bacd6",
+      "published_md5_match": "81292f6bbe33dd6da85bc81ce481c395",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0305440323002017-mmc1.zip",
+      "retrieved_at": "2026-10-04T11:54:50Z",
+      "bytes": 1688,
+      "sha256": "ec2b4dd48b3aec3533cf5cc5a6e6befbe4836169d59fcf09acd38b43ae28b916",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0305440323002017-mmc2.zip",
+      "retrieved_at": "2026-10-04T11:54:52Z",
+      "bytes": 2488,
+      "sha256": "ff2688893753e6ba174d412a87afafce1e06e4ba2978cecb590dfbcb3f51e250",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    },
+    {
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0305440323002017-mmc3.zip",
+      "retrieved_at": "2026-10-04T11:54:53Z",
+      "bytes": 1982,
+      "sha256": "76b516b91e88c312f0b7305684b98947a097d5ba0564d56e15ae68dbbda4ed67",
+      "committed": false,
+      "stored": "session scratchpad only (transient); re-fetch by URL and check sha256"
+    }
+  ],
+  "pilots": [
+    {
+      "slug": "crema-et-al-2024",
+      "attempt": "attempt-01",
+      "pilot_verdict": "SUCCESSFUL (queue.yaml; attempt-01 comparison report)",
+      "ap12_version": "v1.0.0, 10.5281/zenodo.10782943 (git tag v1.0.0 = a0d1e66; zip root ercrema-diffusionCurve-a0d1e66)",
+      "executed_version": "git tag v2.0.0 (c6d1aae1d1976738276c924d368522b1d81d7f52), cloned from GitHub main on 2026-02-08, plus one Dockerfile edit",
+      "executed_copy_location": "Docker image diffusion-curve:run (66feaed41a2b) on sapphire; the run's workdirs were docker-cp copies of it and no longer exist; 51 files hashed inside the image",
+      "findings": [
+        {
+          "id": "CREMA-1",
+          "class": "ii",
+          "declared": true,
+          "files": [
+            "Dockerfile"
+          ],
+          "description": "sed edit inside the authors' Dockerfile: RColoBrewer -> RColorBrewer (1 line; git diff in the image shows this as the only content change). The Dockerfile exists only from v2.0.0; v1.0.0 has none",
+          "lines_changed": 1,
+          "affected_targets": [
+            "environment (figures need RColorBrewer)"
+          ],
+          "credited": "n/a (environment)"
+        },
+        {
+          "id": "CREMA-2",
+          "class": "i",
+          "declared": true,
+          "files": [],
+          "description": "rnaturalearthhires installed at runtime with remotes::install_github (untagged GitHub HEAD, not pinned or recorded); .here sentinels touched in workdirs",
+          "affected_targets": [
+            "Figure 2 maps"
+          ],
+          "credited": "qualitative"
+        },
+        {
+          "id": "CREMA-3",
+          "class": "iv",
+          "declared": false,
+          "files": [
+            "analysis/britain_abot.R",
+            "analysis/japan_abot.R",
+            "figures_and_tables/figures_main.R",
+            "figures_and_tables/figures_esm.R",
+            "results/*.RData",
+            "figures_and_tables/table1.csv"
+          ],
+          "description": "v2.0.0 executed instead of v1.0.0. Code: japan_abot.R and figures_main.R lose commented-out lines only; britain_abot.R also adds ppmat.gb.abot to a save() call; figures_esm.R fixes object and file names (v1.0.0 loads simdata1.RData, which v1.0.0 does not contain). Data objects gbdata and burial are identical() across versions. Pre-computed posteriors and table1.csv differ: v2.0.0 re-ran the model",
+          "git_numstat_v1_to_v2": {
+            "analysis/britain_abot.R": "+1/-7",
+            "analysis/japan_abot.R": "+0/-8",
+            "figures_and_tables/figures_main.R": "+0/-4",
+            "figures_and_tables/figures_esm.R": "+30/-32",
+            "figures_and_tables/table1.csv": "+8/-8"
+          },
+          "affected_targets": [
+            "Table 1 (8 medians, 8 HPD intervals, 8 Rhat)"
+          ],
+          "credited": "yes: 'Table 1 from pre-computed posteriors is byte-for-byte identical to the published table1.csv' compares v2.0.0's re-run with v2.0.0's own table; the paper's Table 1 equals v1.0.0's (e.g. Japan r 0.1023, not 0.1003). The fresh-MCMC medians (outputs/table1-fresh-mcmc.csv) all lie inside the paper's own 90% HPD intervals, so the stochastic comparison may survive a re-basing; that is for ruling"
+        }
+      ]
+    },
+    {
+      "slug": "dye-et-al-2023",
+      "attempt": "attempt-02",
+      "pilot_verdict": "n/a (shakedown attempt; PARTIAL, 25/34)",
+      "ap12_version": "journal supplement mmc1.pdf (corpus store supplement-1.pdf, sha256 9b497fc23ef378621a03de6ef447a4309bc81be80b2cd882cfb48953f7018b71): code exists only as printed listings",
+      "executed_version": "authors-code/*.R: deterministic transcription (authors-code-raw/, re-derived by the audit with pdftotext 25.03.0 and tools/transcribe_supplement.py: byte-identical) plus edits",
+      "executed_copy_location": "attempt directory (the image mounts it; no code copied in)",
+      "executed_vs_transcription": {
+        "section-03-replicability.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "bfd705af0057ec076491f7b050044f3ea4f895f033b1f2afa0e8597c27a1bce0",
+          "executed_sha256": "b37f5141abd199255a54c8b066aaf032dbb6ebb757c32089df129a50bf0d9389",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-04-occurrence-plot.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "4f29f5cb7889da34a88fabd33cb2d75d210edd1a92ac5ab545b6cd7dfa8f752b",
+          "executed_sha256": "6e55ee76b1cd51012b4c09468d486bf1e67f5fb42fd0d6a0cc8071a8eb7af024",
+          "lines_changed": {
+            "changed": 10,
+            "removed": 2,
+            "added": 10
+          }
+        },
+        "section-05-bead-classification.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "b26be7216a7ca18c28ed985b4c820d10281d9395e611d18df3988bcdba623173",
+          "executed_sha256": "dc5aad14e8bbeab66eac50f673350f04f8dcb3cb89f8c187f5423cd5cc5a0f8a",
+          "lines_changed": {
+            "changed": 8,
+            "removed": 0,
+            "added": 8
+          }
+        },
+        "section-06-tempo-plot.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "872cafc0bda6eb30dee6716a0285865ab105f20d0cc36e80aa5f8a48dc2d879d",
+          "executed_sha256": "e955e0ad41ca45c59dbcea0526380f1a5669ba169b7710e3dc3334899323a6cf",
+          "lines_changed": {
+            "changed": 10,
+            "removed": 2,
+            "added": 10
+          }
+        },
+        "section-07-stable-branching.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "98868ffb1b6419899a99c2f0550b513019fa3c1c5d74bdf83b82fb1b19c44488",
+          "executed_sha256": "f8eaa4812f325a80d6aebe2c5026659927f6f80d24291cced6bfd45b5b1a7f33",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-08-monochrome-branching.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "6c7fd0864d5424c686cd0fc074e765c0bb53c93cd9adf44778bea8020662fe0d",
+          "executed_sha256": "82d917b40746df54cf61a1968604f9a43f4970b1d390f0a4d1aceaa31f4e8e8f",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-09-dghnt-reticulation.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "e90b7d6f83d0ac8c3d3033bde2bf85a565e0fbd9a058c504fe929f63dd6f770e",
+          "executed_sha256": "bc0e7ccde6d7dcce6583ab2b17509aba37257456c861aa09a1315391a27d31e2",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-10-1-row-1.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "09f543b26a464ebaf3b011a3b81bdb179b16715941987193e6186cbeb6672c5d",
+          "executed_sha256": "817ac88347838e9a64908e9b128e119066928abe66ef212ec79b085fdd2a0a86",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-10-2-row-2.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "fbc556d0c4ad5dfe6cbba2ad2084956963f3545dae0837ec3b06233f87eb395c",
+          "executed_sha256": "4f712d20d8356115e9e4af7c874460c05d1a955658c74b7b99cf2ab3705d2853",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-10-3-row-3.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "bfc2cc30ae545b9bee4f6eb25b362b5306468ac5c941d318ce3de99a2eb38519",
+          "executed_sha256": "3f32f7ea1a16c663ab14d354a8b6ed14caf6bde4e293e403de2e2264e2f6d2b0",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-10-4-row-4.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "56391eca4231bfda5b36fc0e353d1a009bcd42e7cd0cd510f900677966a96b05",
+          "executed_sha256": "6ab3a2924abc29f9f660da7fa4b8a86f7c6d477534aae7bb869134c75c2fabe4",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-10-5-row-5.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "1bd63404ed55c8f223f29aa5aee00e25056440d48717d9c3e951bcb0116d1eb6",
+          "executed_sha256": "fbc3d2dfe632428e7ef77fe0d1cf9b2bf17e96cca4817751c7e58688c2fd5136",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-10-6-row-6.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "d95347226c630ca984b2ca9ed843a086d37c0bf6cb3817753bf8762f62737f0e",
+          "executed_sha256": "a7ff899563fa1a2380378cc5b2c4335afd0d1b51312c3964fd3a6b12eca4e987",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-10-7-row-7.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "f47c93e6cf6976aa36ceb47fbb70e73381096bcc6c7ef0f8ab4574e2b1284575",
+          "executed_sha256": "2faa0e41d6288454fd9db098102ad828776190d4373308de77516d6df1097467",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-10-8-row-8.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "5dea8fa59b33ba790fb919fa51d617d309dea91ae3ffde556aa7b654baa129cc",
+          "executed_sha256": "cac8f295fce4790bcf46e3db883fe5cacc0c3aff5a6cdf1b1cd177a8c0703cb7",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        },
+        "section-10-9-row-9.R": {
+          "comparable": true,
+          "identical": false,
+          "original_sha256": "dafb68addf648f81c046a5eb03166c7eb36730cdaf3620a7b16fce1c94c1c7ab",
+          "executed_sha256": "2d8fa42a4598bb6983680b79c33f76ef6b4e4d0752549b254b01ace0d9869fd3",
+          "lines_changed": {
+            "changed": 9,
+            "removed": 1,
+            "added": 9
+          }
+        }
+      },
+      "findings": [
+        {
+          "id": "DYE2-1",
+          "class": "ii",
+          "declared": true,
+          "files": [
+            "authors-code/section-03-replicability.R",
+            "authors-code/section-04-occurrence-plot.R",
+            "authors-code/section-05-bead-classification.R",
+            "authors-code/section-06-tempo-plot.R",
+            "authors-code/section-07-stable-branching.R",
+            "authors-code/section-08-monochrome-branching.R",
+            "authors-code/section-09-dghnt-reticulation.R",
+            "authors-code/section-10-1-row-1.R",
+            "authors-code/section-10-2-row-2.R",
+            "authors-code/section-10-3-row-3.R",
+            "authors-code/section-10-4-row-4.R",
+            "authors-code/section-10-5-row-5.R",
+            "authors-code/section-10-6-row-6.R",
+            "authors-code/section-10-7-row-7.R",
+            "authors-code/section-10-8-row-8.R",
+            "authors-code/section-10-9-row-9.R"
+          ],
+          "description": "LLMR-PATH edits inside the authors' files: read_oxcal URL or author-local path -> data/beads-1.csv (same sha256) in sections 3, 4, 6, 7, 8, 9, and 10.1-10.9; output file -> outputs/ in sections 4 and 6; an 8-line header comment in all 16. Functional lines: 2 each in sections 4 and 6, 1 elsewhere, 0 in section 5. Declared in log.md and marked inline. Indices and x-limits in section 4 untouched",
+          "lines_changed_including_header": {
+            "section-03-replicability.R": 9,
+            "section-04-occurrence-plot.R": 10,
+            "section-05-bead-classification.R": 8,
+            "section-06-tempo-plot.R": 10,
+            "section-07-stable-branching.R": 9,
+            "section-08-monochrome-branching.R": 9,
+            "section-09-dghnt-reticulation.R": 9,
+            "section-10-1-row-1.R": 9,
+            "section-10-2-row-2.R": 9,
+            "section-10-3-row-3.R": 9,
+            "section-10-4-row-4.R": 9,
+            "section-10-5-row-5.R": 9,
+            "section-10-6-row-6.R": 9,
+            "section-10-7-row-7.R": 9,
+            "section-10-8-row-8.R": 9,
+            "section-10-9-row-9.R": 9
+          },
+          "affected_targets": [
+            "T05",
+            "T07",
+            "T08",
+            "T09",
+            "T12",
+            "T13",
+            "T14",
+            "T15",
+            "T16",
+            "T17",
+            "T18",
+            "T19",
+            "T20",
+            "T24",
+            "T25",
+            "T26",
+            "T27",
+            "T28",
+            "T29",
+            "T30",
+            "T31",
+            "T32",
+            "T03",
+            "T02"
+          ],
+          "credited": "22 credited (T05, T07-T09, T12-T20, T24-T32); T03 MINOR (uncredited); T02 CANNOT_COMPARE"
+        },
+        {
+          "id": "DYE2-2",
+          "class": "i",
+          "declared": true,
+          "files": [
+            "run-analysis.R",
+            "run-all.sh"
+          ],
+          "description": "wrapper sources each section; per-section tryCatch records errors and continues; section 6 run after sections 7-10 (declared deviation from plan step 4); null graphics device",
+          "affected_targets": [
+            "T03"
+          ],
+          "credited": "no (T03 MINOR)"
+        },
+        {
+          "id": "DYE2-3",
+          "class": "i",
+          "declared": true,
+          "files": [
+            "scripts/verification-aids.R",
+            "scripts/compare.R",
+            "scripts/check-labels.R"
+          ],
+          "description": "reproducer-written verification aids under run ruling R1 (documented package functions, read-only lookups); zero substantive lines shared with the authors' code",
+          "affected_targets": [
+            "T01",
+            "T04",
+            "T21",
+            "T22",
+            "T23",
+            "T33",
+            "T34"
+          ],
+          "credited": "T01, T33, T34 credited; T04, T21-T23 MINOR"
+        }
+      ]
+    },
+    {
+      "slug": "dye-et-al-2023",
+      "attempt": "attempt-01",
+      "pilot_verdict": "SUCCESSFUL (queue.yaml); ruled too generous on T02 (2026-10-04)",
+      "ap12_version": "as attempt-02 (supplement listings)",
+      "executed_version": "run-analysis.R: a 476-line reproducer re-assembly of supplement sections 4-10; no authors' file executed",
+      "executed_copy_location": "attempt directory",
+      "findings": [
+        {
+          "id": "DYE1-1",
+          "class": "iii",
+          "declared": true,
+          "files": [
+            "run-analysis.R"
+          ],
+          "description": "T02: burial.dates c(3:5, 7, 9, 12:78) -> c(2:4, 6, 8, 11:77). Declared as an 'adjustment' that 'yields identical 72 interments', not as a repair. Already RULED 2026-10-04: fail-and-uplift; CANNOT_COMPARE stands",
+          "lines_changed": 1,
+          "affected_targets": [
+            "T02 (Figure 3 occurrence plot)"
+          ],
+          "credited": "yes, qualitatively ('72 interments confirmed')"
+        },
+        {
+          "id": "DYE1-2",
+          "class": "iii",
+          "declared": true,
+          "result_identical": true,
+          "files": [
+            "run-analysis.R"
+          ],
+          "description": "bead_list rebuilt by named construction and NULL assignment instead of the authors' positional names(bead_list) <- bead_names_r and bead_list[-c(5,8)]; bead_names made a character vector, then as.list() in tempo_plot. Declared ('for robustness'), following the then R-A prompt section 3.4. The audit compared the 23 bead-type vectors, the bead_names additions, and all 14 updates (5.25-5.38) with the transcription: identical, same order. Not a repair: attempt-02 runs the positional original unmodified and reproduces the same 54 + 12 cells",
+          "affected_targets": [
+            "Supplement Tables 2-10 (54 values)",
+            "stable, monochrome, and reticulation matrices",
+            "tempo plots"
+          ],
+          "credited": "yes (54/54 EXACT)"
+        },
+        {
+          "id": "DYE1-3",
+          "class": "ii",
+          "declared": true,
+          "files": [
+            "run-analysis.R"
+          ],
+          "description": "authors' code inlined into the reproducer's script rather than run from the authors' files; local input path; output file names; validation and unused bead_positions code added. Shares substantive lines with the transcription (section 5: 18; section 10 rows: 3-11 each)",
+          "embedded_lines": {
+            "section-05-bead-classification.R": 18,
+            "section-07-stable-branching.R": 1,
+            "section-08-monochrome-branching.R": 1,
+            "section-10-1-row-1.R": 11,
+            "section-10-2-row-2.R": 9,
+            "section-10-3-row-3.R": 7,
+            "section-10-4-row-4.R": 8,
+            "section-10-5-row-5.R": 6,
+            "section-10-6-row-6.R": 4,
+            "section-10-7-row-7.R": 3,
+            "section-10-8-row-8.R": 3,
+            "section-10-9-row-9.R": 6
+          },
+          "affected_targets": [
+            "all pilot values"
+          ],
+          "credited": "yes"
+        }
+      ]
+    },
+    {
+      "slug": "herskind-riede-2024",
+      "attempt": "attempt-02",
+      "pilot_verdict": "n/a (shakedown attempt; SUCCESSFUL, 12/15 then 11/15 after ruling)",
+      "ap12_version": "v2, 10.5281/zenodo.10801706",
+      "executed_version": "data/Herskind&Riede_S2.R byte-identical to Zenodo v2 (md5 6760ccb30ecc1de7c280bc1e0fa182e5 = published; sha256 487a00a09db92b484dac136f13a5745a3a2ac699c3a01cfccf528d4d550a8720)",
+      "executed_copy_location": "attempt directory (mounted)",
+      "findings": [
+        {
+          "id": "HER2-1",
+          "class": "i",
+          "declared": true,
+          "files": [
+            "run-analysis.R",
+            "Dockerfile"
+          ],
+          "description": "wrapper parses S2.R verbatim and evaluates it statement by statement in order; working directory and a symlink to the data file; captures between parts; cairo devices; Gill Sans MT -> DejaVu Sans fontconfig alias; one authors' statement, font_import(pattern = 'GIL', prompt = FALSE), made error-tolerant. Zero substantive lines of S2.R in any reproducer file",
+          "affected_targets": [],
+          "credited": "n/a"
+        }
+      ]
+    },
+    {
+      "slug": "herskind-riede-2024",
+      "attempt": "attempt-01",
+      "pilot_verdict": "SUCCESSFUL (queue.yaml)",
+      "ap12_version": "v2, 10.5281/zenodo.10801706",
+      "executed_version": "run-analysis.R: a reproducer re-implementation of S2.R v1 (10.5281/zenodo.10623550; 451 lines); no authors' file executed",
+      "executed_copy_location": "attempt directory",
+      "findings": [
+        {
+          "id": "HER1-1",
+          "class": "iv",
+          "declared": true,
+          "files": [
+            "S2.R v1"
+          ],
+          "description": "v1 used instead of the AP-12 v2. v2 computes Table 2 at bigram level and uses Fig. 3 thresholds > 9 / 21 (bigrams), > 4 / 23 (trigrams), > 2 / 20 (quadrigrams); v1 has only the bigram settings and a literal final n <- 4",
+          "affected_targets": [
+            "Table 2",
+            "Fig. 3 panels c-f"
+          ],
+          "credited": "Table 2 not compared (attempt-01's period summaries are quadrigram-level, e.g. Ertebølle max 7.925 vs Table 2's bigram 4.10)"
+        },
+        {
+          "id": "HER1-2",
+          "class": "iii",
+          "declared": false,
+          "files": [
+            "run-analysis.R"
+          ],
+          "description": "Fig. 3 PMI panels: v1's literal head(ksngram_PMI, 21) replaced by n_top <- nrow(observed_freq > 9). Identical for bigrams (21); for trigrams 1 bar instead of 21; quadrigram panels skipped. The report states 'No algorithmic modifications'",
+          "affected_targets": [
+            "Fig. 3 trigram and quadrigram panels"
+          ],
+          "credited": "qualitatively: figure rows marked 'Structural match' under labels that do not correspond to the paper's figures"
+        },
+        {
+          "id": "HER1-3",
+          "class": "iii",
+          "declared": false,
+          "result_identical": true,
+          "files": [
+            "run-analysis.R"
+          ],
+          "description": "t <- 482 replaced by a count of non-empty motif strings (482 on the full data, so the S3 expected frequencies match exactly; for period subsets t differs but those subset PMIs are not used)",
+          "affected_targets": [
+            "S3 tables (291 rows)"
+          ],
+          "credited": "yes (exact)"
+        },
+        {
+          "id": "HER1-4",
+          "class": "ii",
+          "declared": "partly",
+          "files": [
+            "run-analysis.R",
+            "S1.xlsx (renamed)"
+          ],
+          "description": "S2.R logic re-implemented in generate_skipgram_pmi() and loops (33 substantive lines shared with v1); createResultTable wrapped in tryCatch (no 'could not filter' warning in run.log); heatmap token filter (49 of 49 present); font fallback to sans; data file renamed S1.xlsx",
+          "embedded_lines": {
+            "S2.R v2": 32,
+            "S2.R v1": 33
+          },
+          "affected_targets": [
+            "all pilot values"
+          ],
+          "credited": "yes (S3 291/291 exact)"
+        }
+      ]
+    },
+    {
+      "slug": "key-et-al-2024",
+      "attempt": "attempt-01",
+      "pilot_verdict": "PARTIAL (queue.yaml)",
+      "ap12_version": "journal supplements mmc1-3 (PII S0305440323002017; article CC BY 4.0 per Crossref)",
+      "executed_version": "run-analysis.R: inlines OLE.test and re-implements the main script's loop; the kept scripts/ copies (byte-identical to the supplement) were not executed",
+      "executed_copy_location": "attempt directory (Dockerfile COPYs run-analysis.R only)",
+      "findings": [
+        {
+          "id": "KEY-1",
+          "class": "ii",
+          "declared": true,
+          "files": [
+            "run-analysis.R"
+          ],
+          "description": "OLE.test copied from mmc1 lines 26-45: identical apart from trailing whitespace on two lines; the per-dataset loop (mmc1 lines 48-61) re-implemented in run_ole() with the same sort, k-window (10), boundary transforms, alpha (0.05), and extraction. No logic or parameter change found by inspection; 15 substantive lines shared with mmc1",
+          "affected_targets": [
+            "Tables 5 and 6 OLE values"
+          ],
+          "credited": "yes"
+        },
+        {
+          "id": "KEY-2",
+          "class": "v",
+          "declared": true,
+          "files": [
+            "run-analysis.R"
+          ],
+          "description": "Mean and Extension % are computed by reproducer code (round(mean()), and ((max CI - min CI) / (max - min) - 1) x 100 using CI values); mmc1 computes neither",
+          "affected_targets": [
+            "Tables 5-6 Mean (21 credited)",
+            "Tables 5-6 Extension % (15 credited, 2 MAJOR, 4 CANNOT_COMPARE)"
+          ],
+          "credited": "yes (36 values)"
+        },
+        {
+          "id": "KEY-3",
+          "class": "v",
+          "declared": true,
+          "files": [
+            "source-data/olduvai-cleavers-key-et-al-2024.csv",
+            "source-data/key-et-al-2024-paleoindian-points.csv"
+          ],
+          "description": "inputs reconstructed from upstream sources by the reproducer: subtype filter (Cleaver), decigram -> gram conversion, type filter, Width -> Breadth renaming",
+          "affected_targets": [
+            "Tables 5 and 6"
+          ],
+          "credited": "yes"
+        }
+      ]
+    },
+    {
+      "slug": "marwick-2025",
+      "attempt": "attempt-01",
+      "pilot_verdict": "SUCCESSFUL (queue.yaml)",
+      "ap12_version": "1.3, 10.5281/zenodo.15603267 (GitHub tag 1.3 = c9332a8; the 1.3 zip equals the tag for the five files checked)",
+      "executed_version": "GitHub main 652e5429bcb052b77935fffa892b40f343ebaead (last push 2025-07-07; 8 commits past 1.3, including a merged third-party pull request); identified by paper.qmd line and chunk counts, renv.lock R 4.5.1 and 169 packages, and the fig-change-over-time_from_V1_1 chunk the log cites",
+      "executed_copy_location": "not kept (image wos-archaeology:local not present)",
+      "paper_qmd": {
+        "comparable": true,
+        "identical": false,
+        "original_sha256": "313247bce36a1a4a03f1090ed25cab69dc1c25bb37306f98f6ba2ec97facdcca",
+        "executed_sha256": "be33dc6d82d4a5883ef6482c6cd8465d54c73efd565c3e8dc5ebed5e82fd8884",
+        "lines_changed": {
+          "changed": 78,
+          "removed": 7,
+          "added": 76
+        }
+      },
+      "findings": [
+        {
+          "id": "MAR-1",
+          "class": "iv",
+          "declared": false,
+          "files": [
+            "analysis/paper/paper.qmd",
+            "renv.lock",
+            "analysis/data/BenMarwick_JCR_JournalResults_12_2024.csv",
+            "analysis/code/000-import-raw-data.R"
+          ],
+          "description": "post-publication changes executed: the Shannon diversity index is computed differently (group_by(id, journal_name) instead of group_by(id, x) plus a join); a non-published figure chunk is added; renv.lock 152 -> 169 packages and R 4.5.0 -> 4.5.1; the JCR CSV and import script also changed but are not run by the Dockerfile render",
+          "affected_targets": [
+            "Fig. 1 diversity panel",
+            "Fig. 3 journal ranking",
+            "Kendall's W and p-value",
+            "Fig. 2 mapping"
+          ],
+          "credited": "Kendall's W 0.70 credited; p-value 4.08e-07 vs published 2.67e-06 recorded as a discrepancy and attributed to a data revision, which the audit did not test (rank_mean_shannon enters the Kendall test); 'Fig 2 matches published' credits the added chunk, while the published Fig. 2 is the Bayesian GAM image"
+        },
+        {
+          "id": "MAR-2",
+          "class": "i",
+          "declared": true,
+          "files": [],
+          "description": "log reports no code modifications; the authors' Dockerfile was built as is. Self-reported only: the executed copy was not kept",
+          "affected_targets": [],
+          "credited": "n/a"
+        }
+      ]
+    }
+  ],
+  "gate_1_1_replay": {
+    "note": "check_code_integrity run read-only on the real attempt directories with retroactive manifests written by the auditor (session scratchpad, not committed); illustrative, not a ruling",
+    "results": {
+      "dye-attempt-02-undeclared": {
+        "status": "fail",
+        "errors": 16,
+        "flags": 0,
+        "warnings": 16
+      },
+      "dye-attempt-02-declared": {
+        "status": "flagged",
+        "errors": 0,
+        "flags": 16,
+        "warnings": 16
+      },
+      "herskind-attempt-02": {
+        "status": "identical",
+        "errors": 0,
+        "flags": 0,
+        "warnings": 0
+      },
+      "key-attempt-01": {
+        "status": "flagged",
+        "errors": 0,
+        "flags": 4,
+        "warnings": 0
+      },
+      "dye-attempt-01": {
+        "status": "flagged",
+        "errors": 0,
+        "flags": 17,
+        "warnings": 0
+      },
+      "herskind-attempt-01": {
+        "status": "flagged",
+        "errors": 0,
+        "flags": 2,
+        "warnings": 0
+      }
+    }
+  },
+  "open_questions": [
+    "Q1 dye attempt-02 (DYE2-1): path edits made inside the authors' files, declared, before the wrapper-only rule was ruled. Process breach only, or do the 22 credited targets become fail-and-uplift?",
+    "Q2 dye attempt-01 (DYE1-2): a declared, result-identical restructuring that changes indexing form and functions called but repairs nothing. Class (ii) or (iii)?",
+    "Q3 herskind attempt-01 (HER1-2, HER1-3): undeclared parameter changes in a re-implementation; one result-identical, one affecting Fig. 3 trigram and quadrigram panels that were credited only qualitatively. Does either change the pilot baseline?",
+    "Q4 Version deviations (CREMA-3, MAR-1): do the crema and marwick pilot verdicts stand, be re-based on the AP-12 version, or be re-run at it in the regression gate? Crema's pre-computed comparison used v2.0.0's own table; marwick executed post-publication code.",
+    "Q5 key (KEY-2, KEY-3): are reproducer-computed Mean and Extension % values, and reconstructed inputs, admissible as R1-style aids or excluded from credit?",
+    "Q6 Wrapper boundary cases not listed in 7(d): error tolerance of a non-computing authors' statement (herskind font_import), per-section error capture and section re-ordering (dye attempt-02), and an untagged GitHub install at run time (crema rnaturalearthhires).",
+    "Q7 crema (CREMA-1): an environment edit inside an authors' Dockerfile that is itself post-AP-12. Class (ii)?",
+    "Q8 Transcribed listings (dye): accept a deterministic transcription, identified by the source PDF's sha256 and the tool, as the 'original' for byte identity?",
+    "Q9 Gate 1.1 design: flags (not failures) for declared edits; --allow-missing-code-manifest for legacy attempts; five shared lines as the inlining threshold; every reproducer code file must be declared.",
+    "Q10 Downloaded originals are kept out of git and only in a transient scratchpad. Should the crema v1.0.0 and herskind v1 deposits (CC BY 4.0) be held in the corpus store with a manifest entry?"
+  ]
+}
