@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-10-03
+updated: 2026-10-04
 status: active
 ---
 
@@ -29,6 +29,111 @@ merged here as PR #1).
 4. Carry forward open questions.
 
 ---
+
+## Repo state (2026-10-04) — START HERE
+
+- **⏩ START HERE: run the three Opus 5.5 arms. They are APPROVED.**
+  Shawn approved API gate stage 2 at session close on 2026-10-04: run all
+  three arms, `high` → `medium` → `xhigh`, sequentially with per-arm hard
+  stops, and continue unless something goes wrong. The estimate is about
+  $42 API-equivalent, plan-billed. Everything is built, and the P4 probe
+  passed (`wf_85e5e3d2-e19`, commit `9553f46`). Design and rulings:
+  `studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/design-note.md`.
+- **Per-arm procedure** (from the scripts' CLIs, checked 2026-10-04):
+  1. **Check the session.**
+     - The tree is clean.
+     - `fair-assessor-opus-5-5` appears in the available-agents list
+       (register F-018; it is registered in `manifest.yaml`).
+     - If any governed file has changed since `9553f46`, re-run P4 first.
+       Governed files: the agent definition, instrument, guide, schema,
+       workflow, and args builder.
+  2. **Build the args:**
+     `venv/bin/python scripts/build-benchmark-args.py opus-5-5 --effort <level> --out <scratch>/args-<level>.json`.
+     Builder v1.5 stamps `args_checksum`.
+  3. **Launch** `Workflow({scriptPath: "<repo>/studies/open-science-compliance/protocol/validation/fair-benchmark-arm.workflow.js", args: <the JSON, verbatim>})`.
+     Workflow v1.7 refuses altered args.
+  4. **Reconcile** (authoritative pass, H15):
+     `venv/bin/python scripts/reconcile-run.py <transcript-dir> --expect-spawns 15 --require-pack`.
+     It must come back clean.
+  5. **Assemble:**
+     `venv/bin/python scripts/assemble-arm-record.py <transcript-dir> opus-5-5 studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/arm-opus-5-5-<level> --expect-effort <level> --expect-launch-commit <hash>`.
+     Pass `--environment key=value` pairs as in earlier records
+     (`billing_route=max-plan`, `operator_ruling=...`). Assembler v1.6
+     counts tokens per request.
+  6. **Commit the arm, then launch the next.**
+- **Halt conditions:** stop and report, do not continue, on any of:
+  - H3: more than 2 reconciliation failures or ESCALATEs in an arm;
+  - H4: more than 4.5M per-request contract-metric tokens for an arm;
+  - a checksum refusal, or any anomaly.
+
+  The governed-edit freeze runs from arm 1's launch until arm 3 is
+  committed.
+- **After the three arms:**
+  1. Run `analyse-benchmark-disagreements.py` v1.2 over all nine arm
+     directories, with `--reference-key pilot_fair_assessments_v2`, both
+     with and without `--exclude-bi`.
+  2. Run the H13 script as the second derivation.
+     **Gotcha:** `h13-rederivation-2026-10-04/h13-rederive.py` hard-codes
+     the six arms (`ARMS`, line 75), so add the three new ones.
+  3. Run `gates-ruling-2026-10-04/selection-cost.py` with Opus 5.5 pricing.
+     **Gotcha:** it has no `claude-opus-5-5` row ($4 / $20), and it uses a
+     single 0.1× cache-read multiplier. Opus 5.5's cache reads are 0.05×
+     ($0.20), so make the multiplier per-model.
+  4. Apply the **pre-declared** rule (design note Q4): eligible only if
+     both gates clear under the 2026-10-04 ruling; cheapest-eligible
+     across all eligible configurations. Then get Shawn's confirmation,
+     and if Opus 5.5 is selected, add it to amendment 3.
+- **Done this session (2026-10-04):**
+  - shakedown queue ruled (`b446415`);
+  - PRs #6 and #5 merged (`783f7e2`, `d92fd30`) and the `claude-e8v2`
+    worktree removed;
+  - H13 (`976c573`);
+  - gates ruled (`6c00a0b`): majority-vote concordance, BI-excluded
+    admissible, both reported;
+  - erratum-log Entry 5 drafted for amendment 3 (`6fb1f37`);
+  - D4 by rule = `claude-opus-5` @ `high`, held for Opus 5.5 (`ad765b4`);
+  - F-013 and F-015 fixed (`59d643b`);
+  - args guard (`c8eca55`);
+  - Opus 5.5 arm built and probed (`c3cb02d`, `9553f46`).
+
+  Details are in the session log below and in the plan's decision log
+  (`wiki/planning/instrument-clarification-plan.md`, rows dated
+  2026-10-04).
+- **Owed:**
+  - **Shawn:** dye T06 version-of-record check
+    (doi:10.1016/j.jas.2023.105765; record PAPER_ERROR if it still reads
+    0.87).
+  - **F-013:** re-derive the study cost estimate.
+  - **F-017:** implement the prompt and audit changes before the next
+    reproduction-lane run.
+  - **Instrument-clarification candidates (a)–(d)** (shakedown results,
+    "Rulings (2026-10-04)").
+  - **Amendment 3** (erratum-log running list, items 1–5), lodged before
+    census.
+  - **Pre-census items**: supplement inputs, instrument clarifications,
+    and the pre-census supplement check.
+  - **Optional:** marwick-2025 as a third shakedown paper.
+- **Carry-forward:**
+  - The pitch deadline is Fri 9 Oct.
+  - cv-and-applications-d9 was sent the rulings anchor and the herskind
+    12/15 → 11/15 correction. The message was delivered but unread when
+    sent.
+  - Docker images `llmr-*-attempt-02` are still kept.
+  - The archive-drift gate (`scripts/bulk-archive.py` in
+    personal-assistant): status not re-checked this session.
+  - zbook still needs `install-git-hooks.sh` and a venv.
+  - The 128K output cap stands.
+- **PENDING VERDICTS (no silent discard):**
+  - NEW: user-obs 2026-10-04 batch A–D (pending section of
+    `wiki/user-observations.md`);
+  - NEW: working-notes candidates WN-ad, WN-ae, and WN-af (session log
+    below);
+  - still held: WN-aa, WN-ab, and WN-ac (2026-10-03 s2); the 2026-10-03
+    first-session user-obs A–D; WN-y/z and user-obs A–C (2026-08-19);
+    WN-l/m and user-obs A–C (2026-08-03); WN-p/q/r and user-obs A–D
+    (2026-08-15).
+  - The 2026-10-03 s2 user-obs batch was adjudicated today (A–C accepted,
+    D discarded).
 
 ## Repo state (2026-10-03, second session — overnight close)
 
@@ -1345,6 +1450,56 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-04 — Shakedown queue ruled; PRs merged; H13 and gates ruled; Opus 5.5 arm built, probed, approved
+
+One session (c51bef29) on Opus 5.5, with Shawn present throughout, and
+about fifteen rulings taken through structured questions. Spend, each
+stage API-gated: one blinded H13 agent (about $1–3 API-equivalent) and the
+P4 probe (about $0.71 per request; the first attempt cost nothing).
+
+The shakedown queue was cleared. Dye T02 moved from "mechanical" to
+**fail-and-uplift** after a CRAN check showed that no public ArchaeoPhases
+release runs the published code. Herskind T04, T08, and T11 were confirmed
+as PAPER_ERROR; T11 was completed by operator deviation, giving coverage
+11/15.
+
+PRs #6 and #5 were merged. H13 matched the tool in every cell but read
+"(same statistic)" more strictly. The gates were ruled (majority vote;
+BI-excluded admissible, both reported). D4 by rule is `claude-opus-5` @
+`high`, held so Opus 5.5 can be validated first.
+
+F-013 and F-015 were fixed, and an args checksum guard added. The Opus 5.5
+arm was built, its pre-run review ruled, and P4 passed. The arms were
+deferred, then approved at close for the next session.
+
+- Shakedown rulings `b446415`; T11 completion `4bc3200`; fetch script
+  `8949da5`; user-obs adjudication `3bddb55`.
+- Merges `783f7e2` (#6) and `d92fd30` (#5).
+- H13 `976c573`; gates ruling and D4 `6c00a0b`; erratum Entry 5 `6fb1f37`;
+  D4 hold and F-013 ruling `ad765b4`.
+- Assembler v1.6 and record replay `59d643b`; Opus 5.5 arm `c3cb02d`;
+  args guard `c8eca55`.
+- Design note `339e09d`, rulings `ca01789`, F-018 `4815a39` (corrected
+  `0c5fdb3`), P4 `9553f46`, deferral `171fbb9` and `3b20c71`.
+- Reflections `ad538c5`.
+- **Working-notes candidates (held for Shawn's verdict):**
+  - **WN-ad:** amendment 1's "concordance (same statistic)"
+    underdetermines the gate. A blinded reader took four-way unanimity,
+    under which no arm is eligible on any BI choice. The tool's majority
+    vote (since 2026-08-03) admits opus-5 on the BI-excluded statistic. An
+    operationalisation choice can decide a gate outright, so fix it in
+    registered text, not in code.
+  - **WN-ae:** effort → cost, measured per request. Over 15 scorings,
+    opus-5 at `high` cost $17.27 against $19.46 at `xhigh` (−11%), with 36%
+    fewer output tokens, even though per-entry totals made `high` look
+    larger (F-013). Cache writes are a fixed floor of about $6–7 per arm,
+    so effort steps cost only about $1.80 per arm at Opus 5.5 prices.
+  - **WN-af:** dye's published section-4 code ran on no public
+    ArchaeoPhases release (1.5, 1.6, 1.8 all drop the iteration column).
+    The pilot's index repair recovered the intended 72 dates. This is the
+    first case of the fail-and-uplift bright line: version pins are
+    routine, code edits are not.
 
 ### 2026-10-03 (second session) — Agentic lane built and shaken down on herskind + dye; E8-v2 registered; concordance run
 
