@@ -90,6 +90,14 @@ D3 hardenings H1–H15 carry over verbatim, except:
     first live use).
   - The probe spawn is not counted in any arm.
 
+- **Args integrity, added before launch (2026-10-04).** Workflow v1.7 and
+  args builder v1.5 port the reproduction lane's `args_checksum` guard. The
+  roughly 9 KB of args (schema included) travel inline in the Workflow call,
+  so the workflow recomputes the checksum over what arrived and refuses to
+  start on any difference. No prompt text changes: scoring prompts are
+  byte-identical to v1.6 runs, bar the launch commit.
+  `tests/test_benchmark_args_checksum.py` covers it.
+
 ## Comparability residuals
 
 - **R1 (carried): served effort.** The pin is a requested value; spawn

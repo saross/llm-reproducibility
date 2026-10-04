@@ -3,6 +3,9 @@ export const meta = {
   description: 'One validation-benchmark arm: 5 pilot papers x 3 runs of FAIR scoring with per-item reconciliation hard stop',
   phases: [{ title: 'Score' }, { title: 'Reconcile' }],
 }
+// v1.7 (args integrity, 2026-10-04): args_checksum verified before use (see
+// the guard below). No prompt text changes, so the scoring prompts are
+// byte-identical to v1.6 runs bar the Provenance line's launch commit.
 // v1.6 (re-run support + null-guard fix, 2026-08-17). Changes from v1.5
 // (which ran the sonnet-5@max arm): (5) optional args.items — a list of
 // {slug, run} pairs restricting the task set to contract-mandated re-runs
@@ -37,7 +40,28 @@ export const meta = {
 // item. The operator still runs the whole-dir reconciliation afterwards as
 // the authoritative archival pass.
 // Args shape: {agentType, arm, effort, launch_commit, papers: [{slug, path, pack, pack_sha256}], schema, items?: [{slug, run}]}
-const { agentType, arm, effort, launch_commit, papers, schema, items } = (typeof args === "string" ? JSON.parse(args) : args)
+const ARGS = (typeof args === "string" ? JSON.parse(args) : args)
+// Args integrity (v1.7, 2026-10-04). Ported verbatim from the reproduction
+// lane's workflows: build-benchmark-args.py (v1.5) stamps args_checksum over
+// the key-sorted args; recompute it over what actually arrived, BEFORE any
+// mutation (the schema.version delete below), and refuse to start on any
+// difference. tests/test_benchmark_args_checksum.py pins parity with Python
+// and byte-identity with the lane's block.
+const { args_checksum, ...UNSUMMED } = ARGS
+const CANONICAL = JSON.stringify(UNSUMMED)
+let fnv = 2166136261
+let djb = 5381
+for (let i = 0; i < CANONICAL.length; i++) {
+  const unit = CANONICAL.charCodeAt(i)
+  fnv = Math.imul(fnv ^ unit, 16777619) >>> 0
+  djb = (Math.imul(djb, 33) ^ unit) >>> 0
+}
+const COMPUTED = fnv.toString(16).padStart(8, '0') + djb.toString(16).padStart(8, '0')
+if (COMPUTED !== args_checksum) {
+  throw new Error(`args_checksum mismatch: received ${args_checksum}, computed ${COMPUTED} — ` +
+    `the args were altered after build-benchmark-args.py built them; rebuild and pass them unedited`)
+}
+const { agentType, arm, effort, launch_commit, papers, schema, items } = ARGS
 const EFFORT_LEVELS = ["low", "medium", "high", "xhigh", "max"]
 if (!EFFORT_LEVELS.includes(effort)) {
   // Effort pinning: an absent or malformed pin means the spawns would

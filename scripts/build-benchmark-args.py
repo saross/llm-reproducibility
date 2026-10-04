@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the D3 benchmark workflow's args deterministically (audit F15/F17).
 
-**Version:** 1.4
+**Version:** 1.5
 
 The clean-context audit (2026-08-17) found nothing binding the S4 probe's
 schema decision — or anything else — to the arm invocations: args were
@@ -43,12 +43,21 @@ Usage:
     LEVEL ∈ {low, medium, high, xhigh, max}
 
 Output: the args JSON for Workflow({scriptPath, args}) on stdout (or FILE).
+
+v1.5 (2026-10-04): the args carry ``args_checksum``. They travel inline in
+the Workflow tool call (about 9 KB, schema included), so they pass through
+a copy step nothing else re-checks. The workflow (v1.7) recomputes the
+checksum over what arrived and refuses to start on any difference. The
+algorithm is ``args_checksum()`` in ``scripts/reproduction-lane.py``
+(imported, not copied), applied to the key-sorted payload this builder
+writes.
 """
 
 from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import subprocess
@@ -65,6 +74,29 @@ CORPUS_STORE = Path.home() / "corpora" / "llm-reproducibility"
 # registered in manifest.yaml like the three registered arms.
 ARMS = ("sonnet-5", "opus-5", "fable-5", "opus-5-5")
 EFFORT_LEVELS = ("low", "medium", "high", "xhigh", "max")
+
+
+def stamp_checksum(payload: dict) -> dict:
+    """Return the payload, key-sorted, with ``args_checksum`` added.
+
+    The checksum covers the compact, recursively key-sorted JSON of the
+    payload without the checksum field. That is the order the workflow
+    receives, because the file is written with ``sort_keys=True`` and
+    JavaScript keeps parse order.
+
+    Args:
+        payload: The workflow args without a checksum.
+
+    Returns:
+        A new dict: the sorted payload plus ``args_checksum``.
+    """
+    spec = importlib.util.spec_from_file_location(
+        "reproduction_lane", REPO_ROOT / "scripts" / "reproduction-lane.py")
+    lane = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(lane)
+    ordered = json.loads(json.dumps(payload, sort_keys=True))
+    ordered.pop("args_checksum", None)
+    return {**ordered, "args_checksum": lane.args_checksum(ordered)}
 
 
 def resolve_launch_commit(repo_root: Path) -> str:
@@ -186,7 +218,7 @@ def main() -> int:
                   file=sys.stderr)
             return 1
         payload["items"] = items
-    text = json.dumps(payload, indent=1, sort_keys=True) + "\n"
+    text = json.dumps(stamp_checksum(payload), indent=1, sort_keys=True) + "\n"
     if args.out:
         args.out.write_text(text, encoding="utf-8")
         item_note = f", {len(items)} re-run item(s)" if items is not None else ""
