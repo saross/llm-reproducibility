@@ -554,6 +554,11 @@ reference scores" without saying how three runs meet one reference score.
 
 ## Queued amendment 3 scope (running list)
 
+**Consolidated 2026-10-04:** the full draft text of items 1–9 is in
+`amendment-3-draft.md` (this directory), for the registrant to edit and
+lodge. Five registrant decisions (D-1 to D-5) are open in that draft;
+D-5 corrects Entry 5's proposed wording on what the BI items rest on.
+
 1. Entry 4 — correct amendment 2 §2's precedent case.
 2. Candidates: the pre-census instrument clarifications collected from the
    E8-v2 adjudication (plan pre-census item), if they are lodged as an
@@ -671,3 +676,15 @@ reference scores" without saying how three runs meet one reference score.
      result a repair recovers and the repair's size are reported. Size is
      measured as the lines changed in the authors' code. Also reported:
      recovery against paper age, since deprecations accumulate over time.
+9. **Evidence packs (harvester v1.2) and the census-input re-validation
+   (Shawn, 2026-10-04).** Building the F2 rule showed that the 2026-08-17
+   packs carry no creators, descriptions, or keywords, so the scorer was
+   validated on inputs the census will not use. Ruled: upgrade the packs,
+   then re-validate before the census, folded into the pre-census
+   supplement check (one `medium` arm, 15 scorings, API gate) on v1.2
+   packs, supplements, the clarified instruments, and the hybrid F2, with
+   pass criteria declared in amendment 3. The §8 regression gate is a
+   reproduction-lane test that never reads packs, so it is not the
+   re-validation. Validation of the F2 rule:
+   `../outputs/validation/f2-rule-hybrid-2026-10-04/report.md`
+   (`06c1ca9`).
