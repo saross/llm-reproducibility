@@ -1685,3 +1685,50 @@ finding, not a fact: here the enumeration is the denominator); Observation
 `studies/open-science-compliance/outputs/validation/phase2-shakedown/deviations.md`
 (D1 to D3) and `results-2026-10-03.md`; the WN-aa entry in
 `wiki/continuity.md` (2026-10-04 session).
+
+## Observation 41: A regression against a human-directed baseline also audits the baseline (2026-10-04)
+
+*(Approved by Shawn 2026-10-04; WN-ab, drafted in the 2026-10-03 shakedown session.)*
+
+### Context
+
+The shakedown's regression criterion compares an unattended agentic
+reproduction (attempt-02) with the human-directed pilot reproduction
+(attempt-01) of the same two papers. The criterion's subject is the harness,
+and the pilot is treated as the baseline.
+
+### Observation
+
+Every value both attempts computed was identical: herskind 1,601 n-gram
+cells plus the Table 1 counts, dye 54 Supplement-table cells plus the
+12-cell section-7 matrix (`phase2-shakedown/results-2026-10-03.md`,
+Headline). The baseline was nonetheless audited. The agentic run flagged
+errors the pilot had missed or absorbed:
+
+- **Dye p. 16.** The paper prints 0.87 for BE1-Cowrie to BE1-Disc. The
+  authors' code on the published data gives 0.99967, and 0.87 is the
+  Amethyst to Disc cell (0.86717). The pilot's comparison table listed
+  "Published 0.87" against Amethyst to Disc, which the text does not say,
+  so it re-mapped the paper's misattribution. Attempt-02 flagged it, and
+  Shawn's version-of-record check on 2026-10-04 confirmed PAPER_ERROR.
+- **Herskind Table 1.** The pilot's report tabulates the frequency counts
+  as "Table 1 Equivalent" and records no comparison with the printed table
+  (`herskind-riede-2024/reproduction/attempt-01/comparisons/comparison-report.md`).
+  Attempt-02 found 8 of 130 cells one higher than the authors' data (four
+  paired shifts), and ruled PAPER_ERROR.
+
+The ruling record lists every difference from the pilot as explained: the
+pilot over-credited its own T02 repair, absorbed the T06 paper error by
+re-mapping, and the remaining differences are scope expansion.
+
+### Implication
+
+Identical numbers do not show that the baseline was right: a baseline can
+agree with a reproduction that inherits its blind spots, and a strict
+independent run is the cheapest audit of it. Treat a regression run as
+two-way, and expect the baseline's own errors to surface as the "new"
+discrepancies. Relations: Observation 32 (the old pilot assessments carried
+the same error classes, including specifics got wrong); Observation 13
+(ledgers drift from their sources). Anchors:
+`studies/open-science-compliance/outputs/validation/phase2-shakedown/results-2026-10-03.md`
+(Headline; T06 and Rulings 2, 3, 7); the WN-ab entry in `wiki/continuity.md`.
