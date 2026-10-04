@@ -30,7 +30,84 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-10-04, arms run) — START HERE
+## Repo state (2026-10-04, second-session close) — START HERE
+
+- **⏩ START HERE: pre-gate build, then amendment 3, then the registered
+  regression gate.** The census scorer is CONFIRMED as `claude-opus-5-5`
+  at effort `medium` (results:
+  `studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/results-2026-10-04.md`).
+  Next, in order:
+  1. **No-spend pre-gate build** (ruled 2026-10-04; checklist in
+     `wiki/planning/deterministic-output-checks.md`, "Next step"):
+     - (B) the F2 rule (AP-15) from pack registry fields. Score it
+       against the E8-v2 reference on the five pilots, then recompute both
+       gates for the hybrid scorer (amendment 3 item 6(b) criteria);
+     - reproduction lane: hash the authors' code files at retrieval and
+       check that the executed copies are byte-identical;
+     - a one-off audit of each pilot's executed code against the authors'
+       originals, looking for undeclared repairs like dye's T02;
+     - (C) Layer 3 flag-only evidence checks, which can follow the gate.
+  2. **Amendment 3 full text** for Shawn to lodge on OSF. The running list
+     is in `studies/open-science-compliance/prereg/erratum-log.md`, items
+     1–8; items 5–8 were added today with draft wording. **Sequence:**
+     Shawn lodges; then the frozen instruments are edited and
+     version-bumped to the clarified text; then the regression gate runs
+     under that text.
+  3. **The registered regression gate** (with the Crema leg) on Opus 5.5
+     `medium`, then the pre-census supplement check. **API gate:** present
+     the model, mode, call count, and cost, and get Shawn's approval
+     first.
+- **Done 2026-10-04 (session `c5ee7a27`):**
+  - [x] The three Opus 5.5 arms ran clean (`2c93a5d`, `656036f`, `7365e14`).
+  - [x] Selection CONFIRMED: `claude-opus-5-5` at `medium`, amendment 3
+    item 5. The commit carrying it is `6b79980`, mislabelled "Obs 37" by a
+    git race; see `dbcb2db`.
+  - [x] F-019 RULED, with a note added to the D4 record (`43cc274`).
+  - [x] Dye T06 PAPER_ERROR (`bc54450`); dye's regression label is PASS
+    (`22ee93b`).
+  - [x] Bias described (`fa67244`).
+  - [x] Mechanical-check policy RULED (`22ee93b`); Layer 1 built as
+    `check-payload-quality.py` v1.1 (`132f95a`, report `d10fbb3`).
+  - [x] Reproduction clarifications (a)–(d) RULED (`07666c8`), with the
+    follow-ons (`4e0033e`). They are amendment 3 items 7 and 8.
+  - [x] Observations 34–44. The obs-writer runs Sonnet, although its
+    trailers say Opus 5.5 (the brief's error).
+  - [x] All held user-obs batches adjudicated (`49243da`).
+  - [x] Messages sent: the hook fault to personal-assistant-0e, with a
+    correction; T06 and the scorer to cv-and-applications-d9.
+  - [x] /reflect (`f22c72e`) and /handoff.
+- **Awaiting Shawn:**
+  1. **New working-notes candidates WN-ag, WN-ah, and WN-ai** (session log
+     below).
+  2. **New user-obs batch** for 2026-10-04 (second session), A–D
+     (`wiki/user-observations.md`, pending section).
+  3. **Low priority, before the census:** an optional record-weighted
+     coverage field in the output schema. This is a governed schema
+     change; see `deterministic-output-checks.md`, the Layer 1 coverage
+     note.
+  4. **Optional:** log the invented premise in my message to
+     personal-assistant-0e with `/confab`. It is already recorded in
+     `wiki/reflections/llm-observations.md` and claude-obs 66.
+- **Owed by Claude:**
+  - review the halt-condition mnemonics with Shawn during the next run
+    (user-obs 2026-08-15 A);
+  - build a usage source that records final usage before census cost
+    tracking (F-019, item 3).
+- **Carry-forward:**
+  - **Relay (R2), provisional.** It fires only when a workflow launches in
+    the same turn as a typed user message; launches from notification
+    turns receive nothing. This is abductive-reasoning 2026-10-04 (second
+    session), not yet a rule.
+  - **Hook fault** (sync and index steps not refreshing their gates after
+    the archive step): reported to personal-assistant-0e for a dedicated
+    infra session.
+  - **Git hygiene:** run any committing subagent in its own worktree, and
+    commit by pathspec (claude-obs 65).
+  - The pitch deadline is Fri 9 Oct.
+  - zbook still needs `install-git-hooks.sh` and a venv.
+  - Docker images `llmr-*-attempt-02` are still kept.
+
+## Repo state (2026-10-04, arms run) — superseded by the section above
 
 - **⏩ START HERE: the census scorer is CONFIRMED as `claude-opus-5-5` at
   effort `medium`** (Shawn, 2026-10-04). The three Opus 5.5 arms ran
@@ -1498,6 +1575,62 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-04 (second session) — Opus 5.5 arms run; `medium` selected; checks policy, clarifications, and Layer 1 built
+
+One session (c5ee7a27) on Opus 5.5, no compaction. Shawn sent a neutral "Go"
+at launch, then returned for rulings. The three approved Opus 5.5 arms ran
+clean in about 18 minutes. All three efforts clear both gates, and two
+derivations agree on every figure across nine arms. By the pre-declared
+rule the cheapest eligible configuration is `claude-opus-5-5` at `medium`
+($8.70 recorded scoring cost, against opus-5 high's $17.27), and Shawn
+confirmed it.
+
+Along the way:
+
+- **F-019 found.** Output tokens are under-counted where a request's final
+  transcript entry is missing. It is pre-existing and weakens the
+  2026-10-04 D4 record's high-versus-xhigh cost ordering; ruled, and a
+  note added.
+- **Dye.** T06 is PAPER_ERROR, and dye's regression label is PASS.
+- **Mechanical checks.** The disagreement policy was ruled and Layer 1
+  built: `check-payload-quality.py` v1.1.
+- **Clarifications.** The four reproduction-lane clarifications and six
+  follow-ons were ruled as amendment 3 items 6–8.
+- **Registers.** Observations 34–44 were written, and every held user-obs
+  batch adjudicated.
+
+Full factual record: `wiki/reflections/session-log.md` (2026-10-04, second
+session).
+
+- **Commits:**
+  - arms `2c93a5d`, `656036f`, `7365e14`; F-019 `40d9008`; gates and cost
+    `31cdc85`;
+  - rulings `43cc274`, `fa67244`, `bc54450`, `22ee93b`, `07666c8`,
+    `4e0033e`;
+  - Observations `0393092` to `abbac69`; user-obs `49243da`;
+  - checker `132f95a` and `d10fbb3`; race note `dbcb2db`; reflections
+    `f22c72e`.
+- **Working-notes candidates (held for Shawn's verdict):**
+  - **WN-ag:** model-produced structured records carry arithmetic slips at
+    a low but non-zero rate. Under v1.1, 2 of 135 benchmark payloads had
+    one: a total that disagrees with its items, and a scored item in a
+    section marked unavailable. The builder also reported two miscounted
+    totals and a record-weighted coverage figure in the primary field in
+    the August fable arm; I have not re-verified those. Computing derived
+    fields removes the whole class, so the right verb is "compute", not
+    "check".
+  - **WN-ah:** delegates told to re-derive from sources caught the
+    coordinator's errors. The obs-writer corrected the herskind R1.3 claim
+    in my brief, and the checker's builder found contradictions in my
+    planning note and a nuance in the coverage rule. A brief carries the
+    coordinator's confabulations, and a "deviations" section turns the
+    delegate into a check on its author.
+  - **WN-ai:** the harness relays the user's message only into workflows
+    launched in the same turn as a typed message. Arm 1 received "Go";
+    arms 2 and 3 (notification turns) received nothing. This bears on what
+    the methods section can say about how purely scripted the scoring
+    prompts were; it is provisional (abductive-reasoning, same date).
 
 ### 2026-10-04 — Shakedown queue ruled; PRs merged; H13 and gates ruled; Opus 5.5 arm built, probed, approved
 
