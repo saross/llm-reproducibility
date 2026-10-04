@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Claude Observations"
 tags: [human-ai-collaboration, llm-craft]
 created: 2026-07-03
-updated: 2026-08-19
+updated: 2026-10-04
 status: seed
 ---
 
@@ -1187,3 +1187,89 @@ full, because no one is there to prompt the second ritual.
 **How to apply.** At any autonomous or overnight close of a heavy
 session, run `/reflect` alongside `/handoff`, in either order, using the
 symmetric dedup guard. Say in the close-out message that both ran.
+
+## claude-obs 59 — 2026-10-04: His category questions reopen rulings, and that is where premises get tested
+
+**Pattern.** In the morning Shawn ruled dye T02 "mechanical" on my
+recommendation. Mid-afternoon, between other tasks, he asked: "is it a
+routine fix or a fail-and-uplift?". That was not a request to revisit the
+item's detail. It asked which part of the study's architecture the case
+belongs to: scoring, or the uplift tool he had proposed on 2026-10-03.
+Answering it forced the check the morning ruling had skipped, and the
+ruling reversed.
+
+**Lesson.** His architectural questions are the strongest test a ruling
+gets. They place a single case inside the study's design, where a weak
+premise has nowhere to hide. A ruling he has made is not closed if a
+category question about it is still open.
+
+**How to apply.** When he asks which category something falls in, look for
+the premise the answer turns on and check it before answering. If the
+check overturns an earlier ruling, say so first and plainly, and record
+the superseded ruling visibly.
+
+## claude-obs 60 — 2026-10-04: He won't click a recommended option on a concept he can't restate
+
+**Pattern.** On the gates ruling, I offered "Admit; report both
+(Recommended)" for BI exclusion. Shawn answered with a question instead:
+"can you give me a brief explanation of the BI-exclusion?". After the
+explanation he ruled, and immediately connected it to an adjacent design
+question: have we fixed "the paper PDF is the sole paper source" so that
+reproduction can see supplements? That linked the FAIR gate to the
+supplements ruling of 2026-10-02 and to the reproduction lane.
+
+**Lesson.** A "(Recommended)" tag does not substitute for understanding,
+and he will spend a round trip to get understanding. Once he has it, he
+thinks across lanes, so the cross-lane state needs to be to hand.
+
+**How to apply.** When a decision rests on a term I coined or a
+convention adopted mid-adjudication (BI tags, readings A/B/C), put a short
+concrete explanation with one or two real examples in the question itself.
+Before a ruling, check the adjacent protocol notes (here
+`supplements-as-inputs-2026-10-02.md`). His follow-up will likely go there.
+
+## claude-obs 61 — 2026-10-04 (self-critique): I asked before I checked, three times
+
+**Pattern.** Three times today I put a decision to Shawn whose premise I
+could have checked first:
+
+- I offered "test under an older ArchaeoPhases release" as an *option*. It
+  was a two-minute local check that would have changed my
+  recommendation.
+- I raised a "census wrinkle" (supplement-blind census scoring) that his
+  own 2026-10-02 ruling had already resolved.
+- I wrote "6 of 9" into an option description without counting. All 9
+  were the relevant kind.
+
+Each was caught, two by his questions and one by me on the next turn. Each
+cost a round trip, and the first left a superseded ruling in the record.
+
+**Lesson.** Interactive sessions tempt me to hand checks to the human as
+choices, because asking feels collaborative. But the registrant's time is
+the bottleneck (claude-obs on adjudication economics, 2026-10-03). A check
+I can run myself, presented as a choice, spends his minutes on my work.
+
+**How to apply.** Before any AskUserQuestion, run every cheap local check
+the recommendation depends on, and re-verify every number in the option
+text at its source. Reserve options for genuine judgement calls. When a
+check is expensive or needs his access (the JAS version of record), say so
+and offer it as an option.
+
+## claude-obs 62 — 2026-10-04: He buys breadth when the marginal cost is shown, and starts runs fresh
+
+**Pattern.** Asked which Opus 5.5 effort levels to run, Shawn wanted the
+cost of all three before choosing. Once he saw that cache writes made each
+extra level only about $1.80 per arm, he chose all three. He also accepted
+pre-declaring how Opus 5.5 results would be used before any data existed.
+At the arms gate he said "Not now" rather than start a 40-minute block at
+the tail of a long session. At close he approved all three for the next
+session, to run unless something goes wrong.
+
+**Lesson.** He decides scope on marginal cost, not totals, and he prefers
+heavy unattended blocks at a session's start, where a fresh context and
+his availability line up.
+
+**How to apply.** For breadth choices, show the marginal cost of each
+addition, including the fixed costs that make additions cheap. Propose
+long runs early in a session, or package them for the next session's start
+with the approval recorded and the halt conditions explicit.

@@ -1161,3 +1161,68 @@ stage approved at an API gate.
   because the version of record was inaccessible (HTTP 403).
 - The safety classifier timed out for two subagents. Their transcripts
   were reviewed by the operator, not the classifier.
+
+## Session: 2026-10-04 — Shakedown queue ruled; PRs merged; H13 and gates ruled; Opus 5.5 arm built and probed
+
+**Session:** c51bef29-c20e-400f-94db-056e31bb50f3 (Opus 5.5). Shawn was
+present throughout. Spend: one H13 agent (Opus 5.5, about $1–3
+API-equivalent; it used 151K subagent tokens) and the P4 probe (about
+$0.71 per request), each stage approved at an API gate. P4's first attempt
+cost nothing.
+
+- **Shakedown human queue ruled** (results "Rulings (2026-10-04)",
+  `b446415`):
+  - **dye T02 is fail-and-uplift.** CRAN `read_oxcal()` 1.5, 1.6, and 1.8
+    all drop the iteration column, so the pilot's shift repairs a defect.
+  - **T06** is PAPER_ERROR, pending Shawn's version-of-record check.
+  - **Herskind T04, T08, and T11 are PAPER_ERROR.** T11 was completed by
+    operator deviation, with 1,174 of 1,176 cells agreeing (`4bc3200`), so
+    coverage is 11/15.
+  - **F-017** fix accepted; dye stays at L6.
+  - **Held-out files** stay out of git, with a fetch script (`8949da5`).
+- **PRs merged:** #6 (`783f7e2`), then #5 (`d92fd30`), after the 315 tests
+  passed on a simulated merge. The `claude-e8v2` worktree was removed.
+- **cv-and-applications-d9** was sent the rulings anchor and the herskind
+  12/15 → 11/15 correction.
+- **User-observations batch 2026-10-03 s2:** A–C accepted, D discarded
+  (`3bddb55`).
+- **H13** (`976c573`): a blinded fresh agent matched the tool in every
+  cell, but its primary reading of "(same statistic)" was four-way
+  unanimity. Blinding audit clean.
+- **Gates ruled** (`6c00a0b`):
+  - concordance is majority-vote item agreement;
+  - BI-excluded concordance (141 items) is admissible, with all 150
+    reported;
+  - eligible: opus-5 at xhigh (0.922) and high (0.901); fable-5 is
+    eligible but not selectable;
+  - D4 by rule is `claude-opus-5` at `high` ($17.27 against $19.46 per 15
+    scorings, per request).
+  - Erratum-log Entry 5 holds draft OSF wording for amendment 3
+    (`6fb1f37`).
+- **D4 held to validate Opus 5.5 first;** F-013 ruled (`ad765b4`).
+- **Build:**
+  - assembler v1.6: per-request tokens, plus the indented-prompt regex,
+    closing F-013 and F-015. Six arm records replayed, with recorded values
+    untouched (`59d643b`).
+  - the `fair-assessor-opus-5-5` agent definition and its manifest
+    registration (`c3cb02d`).
+  - args checksum guard: workflow v1.7, builder v1.5 (`c8eca55`). The test
+    suite now has 326 tests.
+- **Opus 5.5 arms:**
+  - design note and delta pre-run review ruled: all three efforts, high
+    first, pre-declared use of results (`339e09d`, `ca01789`).
+  - P4 attempt 1 (`wf_656e2363-534`) failed with agent not found, cost 0,
+    and was recorded as F-018 (`4815a39`). That entry was corrected the
+    same day (`0c5fdb3`).
+  - P4 attempt 2 (`wf_85e5e3d2-e19`) passed (`9553f46`).
+  - The arms were deferred at the gate, then approved at session close for
+    the next session (`171fbb9`, `3b20c71`).
+
+**Contextual assumptions:**
+
+- Opus 5.5 and Fable 5.1 had just been released. Prices were taken from
+  the claude-api skill's cached table (2026-09-25).
+- `claude-opus-5` is listed as Active.
+- Claude Code was at 2.1.289; transcripts record 2.1.288.
+- The session ended for another session's infra work. The arms run from
+  the next session.

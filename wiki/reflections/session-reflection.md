@@ -1177,3 +1177,73 @@ asserted by the agent" now holds less tightly for the lane that matters
 most. The honest summary for this session: every error came from my
 orchestration layer, not from the agents, and the controls that held were
 the dumb deterministic ones (sha256s, the artefact gate, checksummed args).
+
+## Entry 20 (2026-10-04) — Rulings that rested on facts nobody had checked
+
+**Project:** llm-reproducibility. **Session:**
+c51bef29-c20e-400f-94db-056e31bb50f3. One instance throughout (Opus 5.5),
+no compaction. Shawn was present for the whole session, apart from a short
+infra break at the end.
+
+**What surprised you about this session?** How much of the morning's
+ruling rested on a hypothesis that two minutes of checking destroyed. I
+recommended ruling dye T02's index shift "mechanical". Part of the case was
+the dye reviewer's suggestion that the authors had run an earlier
+ArchaeoPhases release that kept the `Pass` column. Shawn ruled. Later, his
+question "is it a routine fix or a fail-and-uplift?" forced a category, and
+the category turned on exactly that hypothesis. So I downloaded 1.5 and 1.6
+from the CRAN archive and read `read_oxcal()`. Every public release drops
+the column with the same line.
+
+The shift is still identity-preserving: it selects the same 72 dates. But
+it repairs the published code rather than adapting it to a changed
+environment, and that moved the ruling from routine to fail-and-uplift. I
+had offered "test under an older release" as an *option* for Shawn to
+choose, when it was a check I could have run before asking him anything.
+
+The second surprise was H13. The blinded re-derivation matched the
+analysis tool in every cell, but its first reading of "(same statistic)"
+was four-way unanimity, not majority vote. The independence paid off in
+the reading, not the arithmetic: a fresh reader showed that the registered
+text underdetermines the gate statistic. The tool had quietly settled that
+on 2026-08-03.
+
+**What decision or trade-off made today will look arbitrary without this
+session's context?** Read cold, the gates sequence looks like
+goalpost-moving that happens to admit Opus:
+
+- majority-vote concordance;
+- the beyond-instrument (BI) items excluded from the gate;
+- per-request costing, under which `high` is 11% cheaper even though the
+  per-entry totals said it used more tokens;
+- then selection held for a newer model.
+
+Its defence is the order in which things were fixed:
+
+- majority vote has been the operationalisation since 2026-08-03 and is
+  published in amendment 2's figures;
+- the BI tags were assigned on 2026-10-02, before concordance existed on
+  10-03;
+- F-013's per-request count was found on 10-03 while building another
+  lane, not while choosing an arm;
+- the use of Opus 5.5 results was pre-declared before any Opus 5.5 data.
+
+Erratum-log Entry 5 and the gates ruling record this order. A future
+reader should check those dates before trusting any of the four choices.
+If the order had been different, the choices would not be defensible.
+
+**What was different about this session compared to recent ones?**
+Shawn was in the loop for every decision. About fifteen rulings went
+through structured questions, against the previous session's overnight
+autonomy inside pre-approved gates. The rhythm became: rule, I find
+something, re-rule. Three times what I found was a fact I should have
+checked before asking:
+
+- the T02 release history;
+- the 2026-10-02 supplements ruling, which already answered the "census
+  wrinkle" I raised;
+- the count of BI items tagged `input` only. I put "6 of 9" into an option
+  description without checking it; all 9 are.
+
+The cost of asking before checking is not only a re-ruling. A wrong
+premise sits in the record under Shawn's name until it is corrected.

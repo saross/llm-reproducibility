@@ -672,3 +672,66 @@ fabrication and no contaminating access. The F-007/F-012 pattern recurs:
 in this project, checker error now outnumbers model error, and the
 discipline that caught mine — re-derive every figure at its source
 before reporting it — is the same discipline that caught the pilot's.
+
+## 2026-10-04 — A reviewer's hypothesis is a lead, and a blinded reader's value is the reading
+
+**Session:** c51bef29-c20e-400f-94db-056e31bb50f3 (Opus 5.5, primary
+instance).
+
+**Yesterday's entry over-credited the dye reviewer.** It listed the
+reviewer's refutations and said "the ones I checked were correct". Two of
+its claims about T02 were in play:
+
+- that 1.8 was not the only sufficient ArchaeoPhases release. This is true;
+  the package NEWS shows it.
+- that an earlier release probably kept the `Pass` column, so T02's failure
+  is environmental.
+
+The second I had not checked. Today it fed straight into a ruling. Checked
+against the 1.5 and 1.6 source, it is false: every public `read_oxcal()`
+drops the column.
+
+A fresh-context reviewer writes plausible explanations in the same
+assertive register as its verified findings. Nothing in the text marks
+which is which. The reviewer had only the vendored 1.8 tarball, so it could
+not have tested the hypothesis itself. **Practice:** before a reviewer's
+explanatory hypothesis reaches a ruling, mark it *untested* or test it.
+Most cost minutes.
+
+**The blinded H13 agent did the job well, and its value was
+interpretive.**
+
+- It matched the analysis tool in all 12 concordance cells and all 6
+  stability figures.
+- Unprompted, it enumerated four operationalisations of "(same
+  statistic)", computed all four, and flagged the edge cases: one arm's run
+  sat exactly at 135/150, and one section was marked `available: false` but
+  scored.
+- Its primary reading differed from the tool's, and that disagreement was
+  the finding.
+- Its access log was honest, and my transcript audit confirmed it.
+- The harness blocked its `report.md` write ("Subagents should return
+  findings as text"). It returned the full text instead, and I saved the
+  blocked write's content verbatim from the transcript rather than
+  retyping it.
+
+**Practice:** blinded re-derivations should be briefed to report every
+operationalisation choice, not just the numbers.
+
+**My own confabulations moved into structured UI text.**
+
+- **"6 of 9".** I wrote "6 of 9" into an AskUserQuestion option
+  description, for the number of BI items tagged `input` only, without
+  checking it. All 9 carry `input`. An option label is a claim put to the
+  registrant for a decision, so the anti-confabulation rule applies there
+  at least as strongly as in prose. I caught it on my next turn only
+  because I was re-reading the tag table to explain BI exclusion.
+- **F-018.** I wrote a general rule ("agent definitions load only at
+  session start") from a single failed spawn. The harness contradicted it
+  within minutes by announcing the agent mid-session. One observation
+  supports "not loaded at time T", not a mechanism.
+
+**Opus 5.5, first sight.** The P4 probe served `claude-opus-5-5` as
+pinned, with correct receipts and a clean reconciliation. Its marwick spawn
+at `high` produced 10,216 output tokens, against opus-5 `high`'s average of
+16,602 per spawn. That is one paper and one run, so no conclusion yet.

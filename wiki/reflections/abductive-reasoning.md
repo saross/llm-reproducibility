@@ -1142,3 +1142,89 @@ When a regression disagrees, check the baseline against the primary
 source before attributing the difference to the new system. And design
 regression criteria with an explicit branch for "baseline incorrect,
 confirmed at source".
+
+## 2026-10-04 — No public release ever ran the published code
+
+**Session:** c51bef29-c20e-400f-94db-056e31bb50f3
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+Dye's section-4 code indexes column 78 of a `read_oxcal()` object that
+ArchaeoPhases 1.8 returns with 77 columns. In raw-CSV numbering, though,
+the authors' indices select exactly 72 dates, one per grave, which matches
+the paper's 72 interments. The adversarial reviewer explained this as an
+environment effect: the authors must have used an earlier release whose
+`read_oxcal()` kept the `Pass` column. I relayed that as the likely
+explanation, and Shawn ruled the pilot's −1 shift "mechanical".
+
+### Probe
+
+1. Shawn's question (routine fix or fail-and-uplift?) made the
+   explanation decisive. If a public release keeps `Pass`, pinning it is
+   routine. If none does, the published code is defective.
+2. Listed the CRAN archive. `read_oxcal()` exists only in 1.5
+   (2020-12-01), 1.6 (2022-02-17), and 1.8 (2022-06-21); there was no 1.7.
+3. Downloaded 1.5 and 1.6 and read `R/ImportCSV.R`. Both have
+   `data <- data[, -1]`, the same as 1.8.
+4. Cross-checked dates: `beads-1.csv` is dated 2022-10-20, when 1.8 was
+   the current release.
+
+### Belief revision
+
+The earlier-release hypothesis is false for every public release. The
+authors counted columns in the raw CSV, so the published code never ran
+as printed on any release a reader could obtain. (A contributor's
+development build remains possible: T. S. Dye is listed as a contributor in
+the package's DESCRIPTION.) The −1 shift recovers the intended selection
+exactly, but it is a repair, not an adaptation. The ruling moved to
+fail-and-uplift: CANNOT_COMPARE stands, the pilot's credit was generous,
+and the repair goes to the uplift tool. The bright line now reads:
+choosing among public dependency versions is routine; editing code logic
+is not.
+
+### What would change this belief
+
+A published or archived ArchaeoPhases build (GitHub tag, r-universe
+snapshot) whose `read_oxcal()` keeps the iteration column, dated before the
+paper's analysis. The authors' code would then be correct for that release,
+and T02 would become a routine version pin.
+
+### Implications for practice
+
+When a recommendation rests on a checkable explanation, check it before
+asking for the ruling. Here the check was local, free, and took minutes.
+Offering it to the registrant as an *option* deferred work that was mine,
+and let a ruling stand on an untested premise for most of a morning.
+
+## 2026-10-04 — One failed spawn is not a loading mechanism
+
+**Session:** c51bef29-c20e-400f-94db-056e31bb50f3
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+The P4 probe failed at its first spawn: "agent type
+'fair-assessor-opus-5-5' not found". The agent definition had been
+committed several turns earlier, and the error's agent list was exactly the
+session's start-up list.
+
+### Probe
+
+None worth the name. I read the error, inferred "definitions load only at
+session start", and wrote that rule into register F-018 and the design
+note.
+
+### Belief revision
+
+Minutes later the harness announced the agent as available in the same
+session. Definitions are re-read during a session, on a trigger I do not
+know. I corrected F-018 visibly, striking the claim rather than deleting
+it, relaunched P4 in this session, and it passed.
+
+### Implications for practice
+
+A single negative observation licenses "X was not available at time T",
+not a mechanism. Register entries are read later as rules. Write the
+observation, and leave the mechanism open until a second observation
+discriminates.
