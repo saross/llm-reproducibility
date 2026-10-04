@@ -1310,3 +1310,92 @@ Sitting 3 addendum and AP-12; erratum-log Entry 4; the plan's pre-census
 lines 75–76 (dates) and 433–434 (concept DOI); Zenodo records 10023618,
 10027675, 10782943, and 10816946; ercrema/diffusionCurve tags v1.0.0 and
 v2.0.0.
+
+## Observation 34: Within-tier succession — Opus 5.5 matched or beat Opus 5 on every gate at about half the cost, and effort was not the lever (2026-10-04)
+
+*(Approved by Shawn 2026-10-04; drafted in session c5ee7a27, and folds in a corrected WN-ae.)*
+
+### Context
+
+Opus 5.5 (`claude-opus-5-5`) arrived while the registered model pin was
+`claude-opus-5`. The design note
+(`studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/design-note.md`)
+specified three 15-spawn arms at medium, high, and xhigh effort, judged by
+the two registered gates and the pre-declared cheapest-eligible rule. Both
+gates need at least 0.90: stability, and concordance with the
+beyond-instrument (BI) items excluded, on the ruled majority-vote reading.
+
+### Observation
+
+**Gates.** Every Opus 5.5 arm clears both, and the analysis tool and the
+blinded H13 script agree on every figure.
+
+| Arm | Stability | Concordance, BI excluded |
+|---|---|---|
+| opus-5-5 medium | 143/150 = 0.953 | 131/141 = 0.929 |
+| opus-5-5 high | 143/150 = 0.953 | 130/141 = 0.922 |
+| opus-5-5 xhigh | 145/150 = 0.967 | 130/141 = 0.922 |
+| opus-5 high (registered) | 143/150 = 0.953 | 127/141 = 0.901 |
+| opus-5 xhigh (registered) | 143/150 = 0.953 | 130/141 = 0.922 |
+
+Under the strict four-way-unanimity reading the Opus 5.5 arms still clear
+(0.901–0.908), and neither opus-5 arm does (0.879 high, 0.894 xhigh).
+
+**Cost** (scoring spawns only, 15 per arm; `selection-cost.json`):
+
+| Configuration | Cost recorded / central | Median spawn | Requests | Cache reads |
+|---|---|---|---|---|
+| opus-5-5 medium | $8.70 / $9.25 | 88 s | 49 | 1.58M |
+| opus-5 high | $17.27 / $20.40 | 286 s | 97 | 4.41M |
+
+**Effort was not the lever for accuracy.** On majority vote over the 141
+gate items, the three Opus 5.5 efforts differ on only 3. Crema code I3 is a
+2–1 split at every effort (a miss at medium and high, correct at xhigh).
+Crema code R1.3 is over-credited at high and xhigh and correct at medium.
+Herskind code R1.3 is over-credited at xhigh only (high is a 2–1 split the
+right way). Nine misses are shared by all three efforts, and six of them are
+F2 over-credits (crema, herskind, and marwick; data and code) that every
+opus-5 run makes identically. The residual error is instrument-shaped.
+
+**Effort did drive cost (the corrected WN-ae).** Recorded output tokens
+were 114,502, 152,775, and 479,726 (medium, high, xhigh), costing $8.70,
+$9.55, and $16.33. Cache writes are an effort-independent floor of about
+$6.1 per arm. The earlier claim (WN-ae) that opus-5 high was about 11%
+cheaper than xhigh is **not robust**: register F-019's output under-count
+narrows it to about 2% at the central estimate ($20.40 against $20.85) and
+reverses it at the upper bound ($22.88 against $22.48).
+
+Shawn confirmed `claude-opus-5-5` at effort medium on 2026-10-04.
+
+### Implication
+
+1. Re-benchmarking on succession pays. Gates plus cost turned adoption
+   into a rule application rather than a judgement, and a registered model
+   pin ages within weeks.
+2. Measure the effort default rather than presume it. Medium, Opus 5.5's
+   API default, was the cheapest arm with no measurable loss.
+3. The residual errors are F2-shaped, so the next accuracy gain is
+   instrument clarification or mechanical rules
+   (`wiki/planning/deterministic-output-checks.md`), not model or effort.
+
+**Caveat.** The agreement gains over opus-5 are 0–4 items of 141, well
+inside Observation 15's ~±0.09 between-configuration interval. The
+defensible claim is "at least as good, at about half the price and a third
+of the time", not "more accurate". Medium's cost bound is robust to F-019
+(its upper bound, $9.37, is below high's recorded $9.55).
+
+Relations: Observation 15 (reliability-gate sensitivity: the ±0.09
+interval and the gates-plus-cost rule this selection applied); Observation
+27 (effort pins artefact-derived: output and wall-clock rose monotonically
+with effort, consistent with the pins); Observation 28 (spend metric
+dominated by effort-independent components: the cache-write floor recurs);
+Observation 29 (harness part of the apparatus: F-019 bounds the cost leg);
+Observation 33 (mechanical verification: the F2 rule is a candidate).
+Anchors:
+`studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/results-2026-10-04.md`,
+`selection-cost.json`, `h13/h13-results.json`, and
+`concordance/bi-excluded/summary.json` in the same directory; arm commits
+`2c93a5d` (high), `656036f` (medium), `7365e14` (xhigh); results commit
+`31cdc85`;
+`studies/open-science-compliance/outputs/validation/failure-modes/register.md`
+F-019.
