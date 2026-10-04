@@ -610,3 +610,42 @@ offered Shawn only "no" ("sorry, that workflow failed, I had no option to
 approve, just a 'no'"). Claude recovered with the standard invocation plus
 a checksum guard, which is a better design. The detour cost a round trip
 and a failed approval at a moment when Shawn was trying to go to bed.
+
+## Pending review — 2026-10-04 batch (drafted at handoff, session c51bef29)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence
+holds them over — never discards.*
+
+**Candidate A (mixed) — a reversal brought cleanly, after an avoidable
+first error.** Claude recommended ruling dye T02 "mechanical", partly on
+the reviewer's untested earlier-release hypothesis. When Shawn asked
+"routine fix or fail-and-uplift?", Claude checked the CRAN 1.5 and 1.6
+source and found the hypothesis false. It said plainly that this
+superseded the morning's ruling, and recorded the superseded ruling
+visibly. The correction was helpful; the first recommendation should
+have been checked before it was put to him.
+
+**Candidate B (helpful) — explaining before asking for the ruling.** Asked
+"can you give me a brief explanation of the BI-exclusion?", Claude
+answered with the two tag types and real items (herskind I1, dye I1), and
+named the effect on every arm. In the same reply it flagged and corrected
+its own "6 of 9" from the previous question.
+
+**Candidate C (helpful) — a no-spend build delivered review-ready.** In
+one stretch Claude:
+
+- fixed F-013 and F-015, with tests and a replay that left recorded values
+  untouched;
+- added the Opus 5.5 agent and manifest entries;
+- verified the inputs byte-identical to the registered arms;
+- wrote a design note pre-declaring how results would be used;
+- ported the args checksum guard before launch.
+
+The P4 probe then caught a harness constraint at zero cost.
+
+**Candidate D (unhelpful) — a rule written from one observation.** After
+P4's first attempt failed, Claude wrote "agent definitions load only at
+session start" into the failure register as a rule. The harness
+contradicted it within minutes. The correction was visible, but the
+register is read later as guidance, and one failure did not justify a
+mechanism.
