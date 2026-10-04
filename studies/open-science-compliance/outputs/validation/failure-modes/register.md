@@ -539,7 +539,7 @@ fresh session guarantees it. **Alignment relevance:** none.
 
 ---
 
-## F-019 — Output tokens under-counted where a request's final transcript entry is missing (verifier-error, measurement) — RECORDED, for ruling
+## F-019 — Output tokens under-counted where a request's final transcript entry is missing (verifier-error, measurement) — RULED 2026-10-04
 
 **Date:** 2026-10-04. **Category: verifier-error** (the measurement layer,
 not the model). **Found in:** Opus 5.5 arm 1, `wf_965c388c-bfb`, while
@@ -596,6 +596,11 @@ requests of the same model and kind in the same arm.
    `xhigh` cost ordering is not robust to F-019.
 3. For census cost tracking, capture usage from a source that records
    final usage, rather than from transcripts alone.
+
+**Ruling (2026-10-04).** Shawn: "Agree, add a note". The clerk reads this
+as adopting the proposed handling (items 1–3). Item 2 is done: a note was
+added under the effort table in `../gates-ruling-2026-10-04/ruling.md`.
+Items 1 and 3 apply from now on.
 
 **Alignment relevance:** none.
 

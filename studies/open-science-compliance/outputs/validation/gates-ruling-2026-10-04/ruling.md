@@ -112,6 +112,25 @@ its per-entry contract metric was slightly higher (F-013). This is the
 empirical effort-to-cost datapoint required by the registrant's 2026-08-17
 rider. The 15 Haiku reconciliation spawns cost $1.06–1.08 in either arm.
 
+> **Note (2026-10-04, added at the registrant's direction; register
+> F-019).** The figures above under-count output tokens. In some requests
+> the transcript never records the final usage, so output keeps a
+> streaming-start placeholder. This affects 21 of `high`'s 97 scoring
+> requests (8 of them final `StructuredOutput` requests) but only 7 of
+> `xhigh`'s 94 (2 final). Imputing the affected requests from complete
+> ones in the same arm
+> (`../opus-5-5-arms-2026-10/selection-cost.py`) gives:
+>
+> - `high`: $20.40 central, $22.88 upper;
+> - `xhigh`: $20.85 central, $22.48 upper.
+>
+> So the "about 11% cheaper" ordering is not robust. It falls to about 2%
+> at the central estimate and reverses at the upper bound, and the two
+> efforts' costs are indistinguishable. The selection above was later held
+> for Opus 5.5 and superseded by the Opus 5.5 block
+> (`../opus-5-5-arms-2026-10/results-2026-10-04.md`), whose answer is
+> robust to F-019.
+
 **Selection by rule: `claude-opus-5` at effort `high`.**
 
 ~~**Status: awaiting the registrant's confirmation.**~~ **Registrant
