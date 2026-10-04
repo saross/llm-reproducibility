@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the D3 benchmark workflow's args deterministically (audit F15/F17).
 
-**Version:** 1.3
+**Version:** 1.4
 
 The clean-context audit (2026-08-17) found nothing binding the S4 probe's
 schema decision — or anything else — to the arm invocations: args were
@@ -39,7 +39,7 @@ Usage:
     venv/bin/python scripts/build-benchmark-args.py <arm> --effort LEVEL \\
         [--items slug:run,slug:run] [--out FILE]
 
-    <arm> ∈ {sonnet-5, opus-5, fable-5}
+    <arm> ∈ {sonnet-5, opus-5, fable-5, opus-5-5}
     LEVEL ∈ {low, medium, high, xhigh, max}
 
 Output: the args JSON for Workflow({scriptPath, args}) on stdout (or FILE).
@@ -59,7 +59,11 @@ import yaml
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CORPUS_STORE = Path.home() / "corpora" / "llm-reproducibility"
-ARMS = ("sonnet-5", "opus-5", "fable-5")
+# opus-5-5 (v1.4, 2026-10-04): the Opus 5.5 validation arm, added when the
+# registrant held D4 selection to validate claude-opus-5-5 through the same
+# gates (gates-ruling-2026-10-04/ruling.md). Its agent definition is
+# registered in manifest.yaml like the three registered arms.
+ARMS = ("sonnet-5", "opus-5", "fable-5", "opus-5-5")
 EFFORT_LEVELS = ("low", "medium", "high", "xhigh", "max")
 
 

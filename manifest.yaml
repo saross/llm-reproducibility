@@ -414,6 +414,8 @@ shared_content:
         mechanism: push                 # SubagentStart injection, receipt required
       - agent: fair-assessor-opus-5
         mechanism: push
+      - agent: fair-assessor-opus-5-5   # Opus 5.5 validation arm (exploratory; D4 hold, 2026-10-04)
+        mechanism: push
       - agent: fair-assessor-fable-5
         mechanism: push
       - agent: research-assessor    # human/session lane
@@ -498,6 +500,8 @@ shared_content:
         mechanism: push
       - agent: fair-assessor-opus-5
         mechanism: push
+      - agent: fair-assessor-opus-5-5   # Opus 5.5 validation arm (exploratory; D4 hold, 2026-10-04)
+        mechanism: push
       - agent: fair-assessor-fable-5
         mechanism: push
 
@@ -543,6 +547,11 @@ agent_definitions:
     version: "1.2"
     model: claude-opus-5
     sha256: "17628d11a963bdd32f0ab369deca652910491e171002204ec3917da8aec9950b"
+  fair-assessor-opus-5-5:
+    file: .claude/agents/fair-assessor-opus-5-5.md
+    version: "1.2"
+    model: claude-opus-5-5
+    sha256: "d11195e81e955c50f5d94026a6848ca042a9f11ff9f9f5bcfa08b41a768dd242"
   fair-assessor-fable-5:
     file: .claude/agents/fair-assessor-fable-5.md
     version: "1.2"
@@ -702,6 +711,7 @@ entity_checks:
   # E2 — agent definitions (checks implemented today)
   agent_definitions.fair-assessor-sonnet-5: {class: E2}
   agent_definitions.fair-assessor-opus-5: {class: E2}
+  agent_definitions.fair-assessor-opus-5-5: {class: E2}
   agent_definitions.fair-assessor-fable-5: {class: E2}
   agent_definitions.reproduction-planner: {class: E2}
   agent_definitions.reproduction-executor: {class: E2}
