@@ -3,17 +3,32 @@ title: "Reproduction lane gate 1.3 — consolidated specification"
 tags: [reproduction, validation, mechanical-verification]
 created: 2026-10-05
 updated: 2026-10-05
-status: consolidated-for-review
+status: foundations-built
 ---
 
 # Reproduction lane gate 1.3: consolidated specification
 
-**Status (2026-10-05): consolidated specification, sent to Astra and Fable
-for review before building.** This is the one effective text. It replaces
-the draft's §§1–7 and both of its revision sections. Where it differs from
-them, this text governs. The superseded draft is archived at
+**Status (2026-10-05, revision 1): the foundations are built; the rest is
+not.** This is the one effective text. It replaces the draft's §§1–7 and
+both of its revision sections. Where it differs from them, this text
+governs. The superseded draft is archived at
 `archive/planning/reproduction-gate-1-3-design-draft-2026-10-05.md`, as the
 file stood at `2bd35aa`.
+
+- **Reviews of this text:** Fable's arrived and is folded in below
+  (`~/agent-mail/claude/outbox/claude/20261005T062807.778832Z-claude-pr7-fable-gate-1-3-spec-review.md`,
+  plus two follow-ups by SendMessage on `R CMD`). **Astra's is pending**, so
+  a second revision follows it.
+- **Built:** F1, the record boundary (`0ce7f25`); F2, run and output
+  binding (`f07763a`); F3, issues, rulings, and admission (`59f4e58`). See
+  §15.
+- **Changes in revision 1** (from `53413bc`): the sharpened class A and the
+  pilot re-run (§2); Fable's findings in §2.4; the per-process token, the
+  `FORK` event, duplicate sequence numbers, and explicit log settings (§4);
+  the output layout and console output (§5); the issue codes as built
+  (§6); outputs outside the mount path (§7); trace order, the saved parent
+  profile, `R CMD`, and littler (§8, §10); conversions (§11); host runs
+  (§12); and the matrix (§13).
 
 **Sources consolidated:**
 
@@ -116,7 +131,11 @@ class:
   claims. The digest cache was one. **Always fixed.**
 - **A, ordinary route.** An honest executor could take the route in the
   ordinary course of work, with no intent to hide anything, and the gate
-  would then pass work it should fail or flag. The evidence is one of:
+  would then pass work it should fail or flag. Judge it from the executor's
+  position after a failure, not from a clean start: the executor optimises
+  against the gate's own messages, so a route is ordinary if its first step
+  is suggested by a gate message, a prompt instruction, or a tool default
+  (Fable's review of this text). The evidence is one of:
   - a pilot did it;
   - a common tool does it by default (renv, a Quarto freeze, `callr`,
     `targets`);
@@ -128,8 +147,9 @@ class:
   to hide a deviation. Examples are forging a log line, restoring a
   timestamp, shadowing `source`, committing a forged evidence pack, or
   starting the R binary directly to dodge the process census. **Closed only
-  when the check is cheap:** it uses data the gate already collects, needs
-  no new mechanism, and adds no new kind of false alarm. Otherwise it goes
+  when the check is cheap:** it uses data the gate already collects (any
+  check over `events.log` fields qualifies), needs no new mechanism, and
+  adds no new kind of false alarm. Otherwise it goes
   to §14, where the transcript, the adversarial reviewer, and the human
   ruling are its backstops.
 - **C, outside the model.** The route needs access the executor does not
@@ -143,9 +163,12 @@ class:
    specification. Cheap B findings are added. Other B findings and all C
    findings go to §14.
 2. The built gate gets one final review per reviewer, against this
-   specification and the acceptance tests (§13). **A final round with no D
-   or A finding closes the hardening**, and the gate goes on to the §8
-   regression run.
+   specification and the acceptance tests (§13). That review includes one
+   real pilot re-run through the whole lane: herskind's materials (no
+   renv, a parse-and-evaluate wrapper, a short run), because "a pilot did
+   it", the first kind of evidence for A, cannot come from fixtures.
+   **A final round with no D or A finding closes the hardening**, and the
+   gate goes on to the §8 regression run.
 3. After that, the build reopens only for a D or an A. A route seen in
    practice (in the census, a transcript, or an adversarial review) counts
    as an A on that evidence, whatever class it had before.
@@ -201,6 +224,15 @@ and papers describe it that way, never as tamper-proof.
 | Tool `-e` start-up expressions (probe) | A | §8 |
 | Quarto's engine script loaded from the image (consolidation) | A | §3 |
 | Host runs of comparison aids (consolidation) | D | §12 |
+| Traces installed after the profile (Fable, spec review) | D | §8 |
+| Processes paired by PID alone (Fable) | D | F1: token, §4 |
+| `R CMD INSTALL`'s inner start (Fable) | A | §8 `PKGBUILD` |
+| littler `r` bypasses the shim (Fable) | A, cheap | §8, §10 |
+| Targets read from printed output (Fable) | A | F2: §5 |
+| Outputs written outside the mount path (Fable) | A | §7 prompt |
+| Host run before the final run (Fable, revised) | Flag | §12 |
+| Inserted lines repeat a sequence number (Fable) | B, cheap | F1: §4 |
+| Custom `R CMD` script in `$R_HOME/bin` (Fable) | B | §10 |
 | Hook disabled in-session, e.g. `untrace` (Fable Q2) | B, cheap | §10 |
 | Run records versus transcript calls (Fable Q6.9) | B, cheap | §12 |
 | Command-string evasion of the audit (Astra 10) | B | §14 |
@@ -273,10 +305,13 @@ This resolves the drafts' disagreement on generated code.
 **What the container sees.** Each run mounts exactly these:
 
 - the work copy, read-write, at the mount path (§7);
-- the lane directory (hook, shim, `Renviron`), read-only, at `/lane`;
-- the exec shim, read-only, over `$R_HOME/bin/R` and every byte-identical
-  copy on the image's `PATH`. The lane makes the shim from that image's own
-  script plus one logging line, and records both digests.
+- the lane directory, read-only, at `/lane`: the hook, the shim, the lane
+  `Renviron`, and the image's own front-end script as `R.orig`;
+- the exec shim (`reproduction-system/runtime/r-shim.sh`), read-only, over
+  `$R_HOME/bin/R` and every byte-identical copy on the image's `PATH`
+  (found with `readlink -f`). It writes the `EXEC` event and then execs
+  `/lane/R.orig`, which works from there because the front end hard-codes
+  its `R_HOME`. A `PATH` `R` with other bytes is recorded as unshimmed.
 
 Nothing under `lane-records/` or `outputs/` is ever mounted. The run writes
 only into its work copy (Astra 1).
@@ -292,43 +327,61 @@ held by the daemon on the host:
   fact 5 confirmed.
 
 After the container exits, the lane collects the stream with `docker logs`.
-It stores the raw stream as `events.log` in the run record. Lines without
-the lane prefix are the analysis's own output, kept in the same file.
+The stderr stream, events and the analysis's own stderr together, is
+stored as `events.log` in the run record. The stdout stream is collected as
+the run's console output, `outputs/run-NN/stdout.log` (§5), which keeps
+chatty output out of the events.
+
+**Log settings.** The lane passes `--log-driver json-file` and
+`--log-opt max-size=100g` explicitly, and reads `HostConfig.LogConfig` back
+into `run.json` at start, recording a problem if rotation could apply. A
+rotated stream loses events, and the gap check would then end a multi-hour
+run `incomplete` (Fable's review of this text, Q2). Docker accepts
+`max-size=-1` when creating a container but refuses it at start, hence the
+explicit, effectively unbounded size.
 
 **Event format.** One line per event, at most 4,096 bytes so that each
 write is atomic:
 
 ```text
-LANE1 <run-nonce> <pid> <ppid> <seq> <event> <tab-separated fields>
+LANE1 <run-nonce> <token> <pid> <ppid> <seq> <event> <tab-separated fields>
 ```
 
-`seq` counts from 1 in each process. The events are:
+The **token** is minted by the shim for each process it starts
+(`LANE_PROC`, with `LANE_PROC_PID`), and the R process inherits it. Events
+pair on the token, not the PID, because PIDs repeat in a long run once the
+PID space wraps (Fable, D-2). An R process the shim did not start mints its
+own token. `seq` is 0 for the shim's `EXEC` and counts from 1 in the hook.
+Strings are hex-encoded UTF-8, and an over-long argv is cut and marked,
+never wrapped. The events are:
 
-- `EXEC`: from the shim; argv and working directory;
+- `EXEC`: from the shim; where stdin comes from, the working directory, and
+  argv;
 - `START`: hook version, argv, `R_PROFILE_USER`, `R_ENVIRON_USER`, the md5
   of the site profile and site `Renviron`, and whether a workspace restore
   is pending;
 - `LOAD`, `TEXT`, `CONN`, and `PKG` (§8);
 - `FORK`: emitted by the hook in a forked child (`parallel::mclapply`) before
-  its first event, carrying the parent's PID;
-- `END`: exit status.
+  its first event, carrying the parent's token;
+- `END`: written by an exit finaliser when the process ends normally.
 
 **Incomplete and abnormal processes:**
 
-- A process whose sequence numbers have a gap has lost evidence. It is
-  **incomplete**, and so is its run (§5). This also catches log rotation
-  dropping lines.
+- A process whose sequence numbers have a gap, or repeat, has lost or
+  gained lines. It is **incomplete**, and so is its run (§5). This catches
+  log rotation dropping lines, and a forged line inserted with the next
+  number, which the hook's own next line then repeats.
 - A process with a `START`, no `END`, and no gap **ended abnormally**: its
   events up to the end are whole. Its run is `failed`, not `incomplete`.
 - A forked child inherits the hook. After `FORK` its sequence restarts, and
   it needs no `EXEC`, `START`, or `END`, because forked children leave
   through `_exit`.
 
-**The alternative channel** is a FIFO in a read-only mount with a host
-collector, which the probe also confirmed. It keeps chatty analysis output
-out of the stream, but needs a collector process alive for the whole of a
-multi-hour detached run. The recommendation is the log stream (question 2,
-§16).
+**The alternative channel** was a FIFO in a read-only mount with a host
+collector, which the probe also confirmed. Fable accepted the log stream on
+three conditions, all built: explicit log settings, stdout diverted, and
+the repeated-sequence check. The FIFO's collector would be one more thing
+to die during a detached run. Astra's view is pending (§16, question 2).
 
 **Baseline.** The lane copies the input tree into the work copy and then
 hashes the copy. It must equal the run's pre snapshot of the input tree,
@@ -380,20 +433,28 @@ not pass by name.
    from a different file. The preparation prompt has the executor build
    with that label.
 3. **Pre snapshot, copy, verify, instrument, baseline** (§4). Consumed
-   inputs are declared as `--consume run-NN:<path>`. Each is copied into the
-   work copy at its path and recorded with its digest and its source run.
-4. **Start the container,** with `--init`, `--network none`, `--user
-   uid:gid`, the mounts of §4, `-w <mount path>`, `--cidfile`, and the
-   environment of §8.
+   inputs are declared as `--consume run-NN:files/<path>`. The source run
+   must be sealed `complete` or `failed`, and the output unchanged since it
+   was collected. Each is copied into the work copy at `<path>`, which must
+   not already exist, and recorded as a lane change with its digest and
+   source run.
+4. **Start the container,** named `llmr-<run>-<nonce>`, with `--init`,
+   `--network none`, the log settings of §4, `--user uid:gid`, the mounts of
+   §4, `-w <mount path>`, an explicit `--entrypoint` (`Rscript` or `bash`,
+   by the entry's suffix), and the environment of §8. If `docker run`
+   creates the container but cannot start it, the lane removes it, and
+   leaves no record, lock, or work copy.
 5. **Wait** in the foreground, or return at once with `--detach`. A
    detached run is finished by `run-container --finalise run-NN`, which
    waits for the container to exit (`docker wait`) before doing step 6.
 6. **Collect.**
    - Collect the stream (§4).
    - Diff the work copy against the baseline, and copy every new or changed
-     file to `outputs/run-NN/<relative path>`. Each file is classed as an
-     output, as generated code, or as a changed pre-existing code file,
-     which fails.
+     file to `outputs/run-NN/files/<relative path>`. Each file is classed as
+     an output, as generated code, or as a changed pre-existing code file,
+     which fails. The console output is `outputs/run-NN/stdout.log`, class
+     `console`, so a target read from printed results can cite it (Fable's
+     review of this text).
    - Take the post snapshot, write `outputs.json`, seal the receipt, and
      release the lock.
    - Delete the work copy unless `--keep-work` is given.
@@ -422,8 +483,10 @@ not pass by name.
   - A consumed run whose input tree differs from the final run's in code
     raises an issue: the output was produced by other code.
 - **Comparison records cite outputs.** Comparison schema 1.1 adds
-  `outputs: [{run, path, sha256}]` to each target. The gate checks each
-  citation against the sealed `outputs.json`.
+  `outputs: [{run, path, sha256, lines?}]` to each target, where `path` is
+  as `outputs.json` lists it (`files/…` or `stdout.log`) and `lines` an
+  optional range. The gate checks each citation against the sealed
+  `outputs.json`.
   - A target that cites no run output stays in raw coverage but is not
     admitted until ruled (`target-unbound`).
   - This replaces Fable's rule excluding evidence older than the run's end,
@@ -449,6 +512,27 @@ list means all targets.
 
   Each code's policy version sits in a lane table. It is bumped when that
   check's meaning changes, rather than with every gate release.
+
+**As built (F3).** An issue is a `str` subclass (`Issue` in the lane
+script): it is its own message, so every relay, report, and test that
+carries flags as text keeps working, and the identity travels with it. The
+codes are:
+
+- anchors: `anchor-absent`, `anchor-unbound`, `anchor-unanchorable`,
+  `anchor-registry-unclean`, `anchor-version-unselected`,
+  `anchor-corpus-unselected`, `anchor-git-offline`;
+- originals and edits: `no-pristine-copy`, `transcription`, `edited-copy`,
+  `credited-edited-target`, `no-executed-original`;
+- wrappers: `generated-code`, `conversion-evidence`,
+  `wrapper-embeds-original`, `dynamic-evaluation`, `in-memory-patching`,
+  `docker-fetch`, `docker-build-edit`, `docker-copy`,
+  `external-code-reference`, `wrapper-semantics`;
+- runs: `run-launch-unbound`, `run-failed`, `stray-events`,
+  `consumed-other-code`, `image-stale`, `process-outside-front-end`,
+  `stdin-script`, `workspace-restore`, `target-unbound`.
+
+A plain string left at any site becomes an `unclassified` issue keyed by
+its text: still rulable, but any change of wording lapses its ruling.
 
 **Rulings.** `rule-flags --config --slug --approver --rulings FILE` writes
 entries to `flag-rulings.json`. Each entry holds the issue id, the
@@ -482,14 +566,16 @@ ruling never overrides one (Astra 7).
   - every target, when no authors' file ran or the run loaded unaccounted
     code.
 
-  This replaces `coverage_creditable` from part 1.
+  This supersedes `coverage_creditable` from part 1, which stays in the
+  report until the workflow switches to run records.
 
 **Admission.** `persist-results` writes a study-eligible record only when
 all of these hold:
 
 - the gate did not fail;
 - every issue is ruled;
-- the transcript audit is clean;
+- the transcript audit is clean (`transcript-audit.json`, §12). The audit
+  is not built yet, so no attempt is eligible until it is;
 - every credited run is `complete`, or is `failed` with a ruling.
 
 `--record-unruled` persists the record with `eligible: false` and the
@@ -505,6 +591,10 @@ issues as ruled or unruled.
 - **Shadowed build content.** Warn when the `Dockerfile` has a `COPY` or
   `ADD` whose destination lies under the mount path, since the mount hides
   it.
+- **Outputs outside the mount path** (`~/results/`, `/tmp`) are never
+  collected. The preparation prompt says so: the wrapper copies anything
+  written elsewhere into the work copy before it exits (Fable's review of
+  this text).
 - **renv:**
   - set the library location outside the project (`RENV_PATHS_LIBRARY`) at
     build and restore time as well as at run time;
@@ -536,20 +626,32 @@ This section resolves the drafts' disagreement on skipped start-up hooks.
 The lane intervenes only at steps 2 and 4:
 
 - **Step 2.** `R_ENVIRON_USER=/lane/Renviron`. The lane writes that file from
-  the project's `.Renviron`, verbatim and in order, followed by one pin line
-  that sets `R_PROFILE_USER` to the hook.
+  the project's `.Renviron`, verbatim and in order, then
+  `LANE_PARENT_PROFILE=${R_PROFILE_USER}`, which saves whatever profile the
+  process inherited or the project named, then one pin line that sets
+  `R_PROFILE_USER` to the hook (built in F1).
   - Project variables then apply in the environment phase, where R intends
     them (Astra 3).
   - A project `.Renviron` cannot displace the hook, which probe fact 1
     showed it otherwise does.
   - Children inherit the pin (probe fact 2).
-  - Whether the pin keeps an inherited value (`${R_PROFILE_USER-…}`), so
-    that `callr`'s own profile still runs, is settled by the matrix (§13).
+  - The pin is never conditional, or a project line above it would win
+    again. The saved `LANE_PARENT_PROFILE` lets `callr`'s bootstrap profile
+    still run after the hook (Fable's review of this text, Q3). Whether
+    that bootstrap survives this order is for the matrix (§13).
 - **Step 4.** The hook:
   1. emits `START`, and registers an `END` emitter to run on exit;
-  2. sources `.Rprofile.project` from the project root, if there is one,
-     which keeps renv working. That load is logged like any other;
-  3. installs its traces.
+  2. installs its traces. **Traces come before the profile** (Fable, D-1):
+     otherwise loads made inside the profile, such as renv's
+     `source("renv/activate.R")`, go unlogged, and §8's flag for an
+     executed original no run loaded fires on every renv paper;
+  3. sources one user profile into the global environment, where R
+     evaluates one: the saved `LANE_PARENT_PROFILE` if set and not the
+     hook; otherwise what R would have read, `.Rprofile.project` or
+     `.Rprofile` in the working directory, else `~/.Rprofile`. That load is
+     logged like any other.
+
+  F1 built steps 1 and 3; the traces come with the instrumentation stage.
 
   The lane's injected `.Rprofile` sources the hook too. A child that reads
   the working directory's profile instead of `R_PROFILE_USER` (`callr` in
@@ -562,8 +664,8 @@ The lane intervenes only at steps 2 and 4:
   argv lacks `--no-restore`, `START` records a pending restore. The run gets
   an obligation: a declared input, with a review (probe fact 6).
 
-**Process census.** Every `EXEC` (from the shim) pairs by PID with a
-`START` and an `END` (from the hook):
+**Process census** (built in F1). Every `EXEC` (from the shim) pairs by
+token with a `START` and an `END` (from the hook):
 
 - `EXEC` without `START`, with `--vanilla` or `--no-init-file` in argv:
   **fail** (`hook-skipped`).
@@ -579,6 +681,22 @@ The lane intervenes only at steps 2 and 4:
   wrapper it is an error (§10), with `R -f file` as the alternative.
 - The rule keys on the handshake, not on argv options. A child that a tool
   starts with `--no-site-file`, and that still handshakes, passes (Astra 3).
+- **`R CMD`, `R RHOME`, and `R --version` need no handshake.** The `CMD`
+  process is a shell dispatcher. A subcommand that runs R re-enters the
+  front end, so that start is censused as its own process: `R CMD BATCH`
+  runs `${R_HOME}/bin/R -f ${in}` (`bin/BATCH` line 60 in
+  `rocker/r-ver:4.3.2`), so a `--vanilla` there still fails. Fable and
+  this text agreed on that after checking the image's scripts.
+- **`R CMD INSTALL`** pipes `tools:::.install_packages()` into an R start
+  with init files off (`bin/INSTALL` line 34), so that inner start has no
+  `START` and fails today. Instrumentation adds a `PKGBUILD` binding: the
+  inner start, recognised by its stdin expression and its parent's
+  `CMD INSTALL <path>`, is accounted for when `<path>` is a declared
+  original tree, and the `PKG` flag then covers the installed result.
+- **littler** (`r`, on every rocker image) embeds libR and passes neither
+  the shim nor any profile. Instrumentation shims `/usr/local/bin/r` and
+  `/usr/bin/r` to `exec Rscript` with the arguments, and §10 makes `r
+  file.R` a static error.
 
 A non-empty log no longer stands in for instrumentation. Each process
 accounts for itself (Astra 3).
@@ -666,11 +784,16 @@ refusal, launch-commit anchors, the `Dockerfile` and in-memory patching
 obligations, and the inlining check. Additions:
 
 - **Start-up options in wrappers.** `--vanilla` and `--no-init-file` are
-  errors: they skip the hook. So is a script on standard input (`R <
-  file`), which no load event covers. `--no-environ` and `--no-site-file` are flags:
-  they change start-up meaning without evading the hook, and a child that
-  still handshakes passes the census (§8). This splits the draft's single
-  rule, in line with Astra's point about legitimate children.
+  errors: they skip the hook. So is a script on standard input
+  (`R < file`), which no load event covers. `--no-environ` and
+  `--no-site-file` are flags: they change start-up meaning without evading
+  the hook, and a child that still handshakes passes the census (§8). This
+  splits the draft's single rule, in line with Astra's point about
+  legitimate children.
+- **Launchers that are errors in a wrapper:** littler's `r file.R`
+  (`\br\s+\S+\.[Rr]\b`), which bypasses the shim and every profile; and
+  `R CMD check`, which is not an ordinary reproduction action (Fable's
+  review of this text).
 - **Hook integrity.** These are errors in a wrapper and flags in an
   original:
   - `untrace(` and `tracingState(`;
@@ -684,7 +807,8 @@ obligations, and the inlining check. Additions:
   `R_ENVIRON_USER`, that is flagged, and the hook sources the named profile
   in place of `.Rprofile.project`.
 - **`Dockerfile` obligations** also name `Rprofile.site`, `Renviron.site`,
-  and `/etc/R`.
+  `/etc/R`, and a `COPY` or `ADD` into `$R_HOME/bin`, where a custom
+  `R CMD` subcommand would dispatch to arbitrary code (Fable).
 
 ## 11. Conversions
 
@@ -700,7 +824,9 @@ is fail-and-uplift.
 - `sheet`, which a workbook requires;
 - an optional `range`;
 - `header_row` (default 1);
-- `encoding` (default UTF-8) for text formats.
+- `encoding` (default UTF-8) for text formats;
+- `na`, the converter's string for a missing value (`NA` for R's
+  `write.csv`), if it writes one.
 
 The lane does the comparison and the executor writes no evidence, so the
 executor-written `value_identity_check` field is retired. The comparison's
@@ -722,25 +848,33 @@ wrapper (which may run on the host, §12), or a consumed run's output.
   Error cells are counted. Raw values and cell types are kept beside the
   comparison.
 
-**Equality is exact text.** Nothing is trimmed and nothing is normalised. A
-typed workbook cell has a fixed set of accepted renderings:
+**Equality.** Nothing is trimmed and nothing is normalised. §7(d) asks
+for unchanged *values*. An untyped text field has only its text, so text
+to text (CSV to CSV or TSV) compares raw field text exactly. A typed
+workbook cell has a value, and its accepted renderings are enumerated
+(revised after Fable's review of this text):
 
 | Cell type | Accepted renderings |
 | --- | --- |
 | string | its text, exactly (leading zeros and spaces preserved) |
-| integer | decimal digits |
-| float | shortest round-trip form, or 15 significant digits |
+| number | any text parsing to the same double, at most 15 significant digits |
 | boolean | `TRUE` or `FALSE` |
-| date or datetime | ISO 8601 (see below) |
-| blank | the empty field |
+| date or datetime | ISO 8601 text for the same instant (see below) |
+| blank | the empty field, or exactly the declared `na` string |
 
-The two float renderings are the ones Python (shortest round-trip) and R's
-`write.csv` (15 significant digits) each produce for the same double, so
-accepting both is a rendering rule, not a normalisation. A date at midnight
-renders as `YYYY-MM-DD`; any other datetime as `YYYY-MM-DD HH:MM:SS`, with a
-space or a `T`. A float whose text matches neither, but which parses to the
-same value, is counted as **numeric-equivalent**. CSV to CSV or TSV compares
-raw field text.
+- **Numbers.** R's `write.csv` renders by width under `scipen`, so 100000
+  becomes `1e+05` and 0.0001 becomes `1e-04`. A fixed list of renderings
+  would flag every count column at or above 1e5. Value identity for a
+  double is what §7(d) asks. The leading-zero and identifier risks do not
+  arise for a cell that is already a number: those are strings.
+- **Datetimes.** readxl returns UTC instants, and `write.csv` renders them
+  in the session's timezone. They are compared as instants after a
+  timezone-aware parse, and a value without a zone is read as UTC.
+- A typed cell matched in a rendering other than the canonical one clears,
+  but is counted ("same value, other rendering"), so the human sees it.
+- In text-to-text comparison, a numeric field whose text differs but whose
+  value is equal (`1.50` against `1.5`) is counted as
+  **numeric-equivalent** and never cleared.
 
 **The comparison runs in this order:**
 
@@ -755,8 +889,10 @@ raw field text.
 **What is counted.** Each of these is counted on its own, and none is ever
 cleared:
 
-- numeric-equivalent cells;
-- missing-marker changes (blank, `""`, `NA`, `NaN`, `NULL`);
+- numeric-equivalent fields in text-to-text comparison;
+- missing-marker changes: a blank written as anything but the empty field
+  or the declared `na` string, or `""`, `NA`, `NaN`, and `NULL` traded for
+  one another;
 - whitespace-only differences, leading or trailing;
 - other value changes;
 - formulae, error values, and decoding failures;
@@ -766,7 +902,7 @@ cleared:
 
 - the dimensions are equal, after trimming;
 - the headers are exact;
-- every cell is exact;
+- every cell matches, as above;
 - there are no formulae, error values, or decoding failures.
 
 Anything else is an issue (`conversion-differs`) reporting the counts and
@@ -787,15 +923,23 @@ pattern, which is why §4 binds runs by receipt, not by command name
 - paper code run other than through `run-container`:
   - `docker run`, `exec`, `cp`, `start`, or `compose`;
   - host `Rscript`, `R -f`, `R --file`, `python`, or `bash` naming an
-    original, an executed or edited copy, or a wrapper. Wrappers whose
-    role is `comparison` or `conversion` are exempt: they run on the
-    host, and the lane checks their results itself (§5, §11);
+    original, an executed or edited copy, or a wrapper, **after the final
+    run started**. Wrappers whose role is `comparison` or `conversion` are
+    exempt: they run on the host, and the lane checks their results itself
+    (§5, §11);
 - use of `snapshot-code`, or `run-container --clear-lock`, by the executor;
 - any write (Write, Edit, redirect, `cp`, `mv`, `sed -i`, or `tee`) into
   `lane-records/` or `outputs/`;
 - any write into the input tree after the final run started;
 - a `run-container` call without a run record, or a record without a call
   (Fable Q6.9).
+
+**A flag, not contamination: a host run before the final run**
+(`host-run`). Running a wrapper on the host to see whether it parses, then
+fixing it and running `run-container`, is ordinary debugging. It cannot
+alter what is credited, because credit comes only from sealed outputs
+(Fable's review of this text, revising its own Q6.5). A human rules on it,
+since invariant 5 is an environment rule, not an evidence rule.
 
 ## 13. Acceptance tests
 
@@ -823,6 +967,10 @@ them run on a host with Docker.
   - `Rscript` and `R -f`;
   - `R < file`, which must yield an obligation, not a `LOAD`;
   - `parallel::mclapply`, whose children must show `FORK`;
+  - `R CMD BATCH script.R`: the inner `R -f` handshakes, and the outer
+    dispatcher is exempt;
+  - `R CMD INSTALL <path>`, with `remotes::install_local` and
+    `devtools::install`: the inner start is bound by `PKGBUILD`;
   - `callr::r`, in each profile mode;
   - `targets::tar_make`;
   - `parallel::parLapply` on a PSOCK cluster;
@@ -847,9 +995,19 @@ them run on a host with Docker.
   - a `make.names` header, and a Latin-1 file;
   - a formula cell, an error cell, and trailing empty rows;
   - reordered rows;
-  - both float renderings.
+  - `100000` written by base R (`1e+05`), a datetime under a non-UTC
+    timezone, and a blank written as `NA`.
 - **Semantics neutrality:** a fixture's results, `ls()`, `search()`, and
   random-number state are equal with and without instrumentation.
+- **A pilot re-run** through the whole lane, herskind's (§2.2), in the final
+  review.
+
+Built with F1–F3 (`tests/test_run_container.py`, `tests/test_rulings.py`,
+and `GateTests`): the record boundary, run binding (the image-id, lock,
+consumption, failed-start, and A14 cases; the detached path is exercised
+through `finalise_run`), rulings including the changed-input case, the
+`--vanilla` child, `system()` and PSOCK children, and a project
+`.Renviron`. The rest come with their stages.
 
 ## 14. Limits that remain
 
@@ -876,30 +1034,40 @@ The lane covers R only, as its scope already states.
 
 ## 15. Build order
 
-Rough size: the foundations take about two sessions, the instrumentation
-and its matrix about two, and the rest one or two, plus the review rounds of
+Rough size: the foundations took one session; the instrumentation and its
+matrix about two more, and the rest one or two, plus the review rounds of
 §2.2. `GATE_VERSION` becomes 1.3 when step 7 lands.
 
-1. **F1, the record boundary:**
-   - `run-container`'s skeleton: lock, image id, copy, verify, baseline,
-     mounts, and `--init`;
-   - the exec shim, plus a minimal hook that emits only `START` and `END`;
-   - stream collection, the sealed receipt, and launcher binding.
-2. **F2, run and output binding:**
-   - per-run collection, consumption, and states;
-   - `--detach` and `--finalise`;
-   - comparison schema 1.1 output citations;
-   - the input-tree rule at gate time.
-3. **F3, issues and rulings:**
-   - issue ids and fingerprints, and `rule-flags`;
-   - raw and admitted coverage;
-   - the admission rules in `persist-results` and `human-queue`.
-4. **Instrumentation:** the full hook (§8), the lane `Renviron`, the injected
-   `.Rprofile`, the census rules, and the launcher matrix.
-5. **Fresh computation** (§9).
-6. **Conversions** (§11) and the **static additions** (§10).
-7. **The transcript audit** (§12) and the **remaining acceptance tests**
-   (§13). Then the final review (§2.2).
+- [x] 2026-10-05 **F1, the record boundary** (`0ce7f25`):
+  - `run-container`'s skeleton: lock, image id, copy, verify, baseline,
+    mounts, `--init`, explicit log settings, and a named container removed
+    if it fails to start;
+  - the exec shim, plus a minimal hook that emits `START`, `END`, and the
+    profile `LOAD`, with per-process tokens and the saved parent profile;
+  - stream collection, the sealed receipt, launcher binding, and the
+    census.
+- [x] 2026-10-05 **F2, run and output binding** (`f07763a`; the lifecycle
+  landed with F1):
+  - per-run collection to `outputs/run-NN/files/` and `stdout.log`,
+    consumption, and states;
+  - `--detach` and `--finalise`;
+  - comparison schema 1.1 output citations, and `target-unbound`;
+  - the input-tree rule at gate time, and the credited-run closure.
+- [x] 2026-10-05 **F3, issues and rulings** (`59f4e58`):
+  - issue ids and fingerprints (`Issue`), and `rule-flags`;
+  - raw and admitted coverage;
+  - the admission rules in `persist-results` and `human-queue`.
+- [ ] **Instrumentation:** the full hook (§8), with traces installed before
+  the profile; `PKGBUILD` for `R CMD INSTALL`; the littler shim; the
+  remaining census rules; and the launcher matrix.
+- [ ] **Fresh computation** (§9).
+- [ ] **Conversions** (§11) and the **static additions** (§10).
+- [ ] **The transcript audit** (§12), which writes `transcript-audit.json`;
+  the **remaining acceptance tests** (§13); and **the workflow switch**:
+  the executor prompt and definition use `run-container`, with the §7
+  prompt points; run records become mandatory for new attempts;
+  `snapshot-code` is retired; and `coverage_creditable` is dropped. Then
+  the final review, with the herskind pilot re-run (§2.2).
 
 ## 16. Questions for the reviewers
 
@@ -907,14 +1075,18 @@ Reply by agent mail (Astra) or by agent mail or SendMessage (Fable), never on
 GitHub. Classify each finding as D, A, B, or C (§2.1). For an A, give the
 ordinary sequence of actions.
 
+**Fable answered all five** (2026-10-05; folded into revision 1). **Astra's
+answers are pending.**
+
 1. **Stopping rule.** Do you accept §2 and the classification in §2.4? Name
    any point you would reclassify, and why.
 2. **Channel.** Is Docker's log stream through `/proc/1/fd/2` acceptable as
    the authoritative channel, or should it be the FIFO with a host
    collector?
 3. **Census.** Is the exec shim over `$R_HOME/bin/R`, paired with the hook
-   by PID, sufficient for class A? Which ordinary launcher would bypass it?
+   by per-process token, sufficient for class A? Which ordinary launcher
+   would bypass it?
 4. **Conversions.** Are the accepted renderings in §11 a sound reading of
-   "exact text", given amendment 3 §7(d)?
+   §7(d)'s "every value is unchanged"?
 5. **Contradictions.** Does this text contradict your review anywhere
    without saying so?
