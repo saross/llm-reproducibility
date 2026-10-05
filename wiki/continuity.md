@@ -30,7 +30,111 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-10-05, session ef0412bd close) — START HERE
+## Repo state (2026-10-05, session b1a1e102) — START HERE
+
+- **⏩ START HERE: read Astra's review of the gate 1.3 specification if it
+  has arrived, then build the instrumentation stage.** The integrity gate
+  is on PR #7 (`feat/lane-gate-1-1-code-audit`, head `b409ef5`, **open, not
+  merged**). Its specification is `wiki/planning/reproduction-gate-1-3-design.md`
+  on that branch, at revision 1 with status "foundations-built". Its §15 is
+  the build checklist.
+  1. **Astra's review.** It was requested by
+     `~/agent-mail/claude/outbox/codex/20261005T062134.544396Z-claude-repro-gate13-consolidated.md`,
+     against `53413bc`, and had not arrived by session end. Replies land in
+     `~/agent-mail/codex/outbox/claude/`. Classify its findings by §2.1,
+     fold them in as revision 2, and fix anything D or A it finds in
+     F1–F3.
+  2. **Instrumentation** (§15 step 4):
+     - the full hook (§8), with traces installed *before* the profile
+       (Fable's D-1);
+     - `PKGBUILD` for `R CMD INSTALL`'s inner start;
+     - the littler shim;
+     - the launcher matrix in Docker, on a test image with `callr`,
+       `targets`, `future`, `knitr`, and `rmarkdown` from CRAN.
+
+     Then the remaining steps in §15 order. The last of them, step 7,
+     includes the workflow switch to `run-container`.
+- **Why it matters.** The registered §8 regression gate cannot run until
+  gate 1.3 is merged and the correction ledger (amendment 3 §9) is ruled.
+  §2 of the specification now has a stopping rule for hardening, which
+  session reflection 22 asked for. After the final review, only a defect
+  or an ordinary route reopens the build.
+- **Done this session (2026-10-05):**
+  - [x] 2026-10-05 The digest cache is confined to one snapshot
+    (`664bb72`). Two of its six tests failed on the old cache.
+  - [x] 2026-10-05 **Consolidated specification** (`53413bc`). The draft
+    is archived at
+    `archive/planning/reproduction-gate-1-3-design-draft-2026-10-05.md`.
+    The three conflicts are resolved, and the §2 stopping rule classes
+    findings as defect, ordinary, deliberate, or outside the model. It was
+    sent to Astra by mail and to Fable by SendMessage.
+  - [x] 2026-10-05 **A Docker probe** on `rocker/r-ver:4.3.2` settled
+    start-up facts; they are listed at the top of the specification. For
+    example, a project `.Renviron` overrides `R_PROFILE_USER` set by
+    `docker run -e`.
+  - [x] 2026-10-05 **Fable reviewed the consolidated text**
+    (`~/agent-mail/claude/outbox/claude/20261005T062807.778832Z-claude-pr7-fable-gate-1-3-spec-review.md`,
+    plus two SendMessage follow-ups on `R CMD`). Folded in as revision 1
+    (`b409ef5`).
+  - [x] 2026-10-05 **The foundations are built:**
+    - F1, `run-container` and sealed run records (`0ce7f25`);
+    - F2, consumption, credited runs, and output citations, with
+      comparison schema 1.1 (`f07763a`);
+    - F3, issues, rulings, and admission (`59f4e58`).
+
+    488 tests pass, including 9 Docker tests that skip without the local
+    `rocker/r-ver:4.3.2` image.
+- **Awaiting Shawn:**
+  1. **Amendment 3 decisions D-1 to D-5** (D-6 is ruled) and lodgement on
+     OSF. The order of operations is §10 of the draft.
+  2. **The audit's questions Q2–Q10**, in
+     `studies/open-science-compliance/outputs/validation/executed-code-audit-2026-10-04/findings.json`
+     on PR #7.
+  3. **Astra's two PR #7 reviews posted to GitHub** under your account
+     (claude-obs 70): decide whether that is acceptable.
+  4. **PR #8**, Codex's `AGENTS.md` entry point: your review.
+  5. **Held over:** working-notes candidates WN-ag to WN-al; user-obs
+     2026-10-04 s2 A–E and **2026-10-05 A–E** (the earlier note said A–D;
+     the file has five).
+  6. **New: whether to split `scripts/reproduction-lane.py`**, now 4,647
+     lines. `run-container` went into the single-file tool because the
+     launcher binding hashes one script.
+  7. **Low priority, before the census:** an optional record-weighted
+     coverage field in the output schema.
+- **Owed by Claude:**
+  - review the halt-condition mnemonics with Shawn during the next run
+    (user-obs 2026-08-15 A);
+  - build a usage source that records final usage before census cost
+    tracking (F-019, item 3).
+- **Carry-forward:**
+  - **Nothing is admission-eligible yet, by design.** Admission needs a
+    transcript audit that writes `transcript-audit.json` (§12), which is
+    not built.
+  - **Transition.** The executor and workflow still use `snapshot-code`.
+    Run records become mandatory, and `coverage_creditable` is dropped, at
+    the workflow switch (§15 step 7). Until then, `check-code` verifies run
+    records wherever `lane-records/` exists.
+  - **Worktrees.** The PR #7 worktree is
+    `.claude/worktrees/agent-a8a2378c2a5dbdc98`, branch
+    `worktree-agent-a8a2378c2a5dbdc98`, pushed as
+    `feat/lane-gate-1-1-code-audit`. Fable's worktrees
+    `~/worktrees/llm-reproducibility/claude-fable-pr7` and `…-pr7-fix` can
+    be removed.
+  - **Fable** is the open session `llm-reproducibility-ea`. Reviews by
+    SendMessage work both ways.
+  - **Git safety.** Any code that runs git as a subprocess scrubs `GIT_*`.
+  - **Review briefs** ask for replies by mail or file, never GitHub posts.
+  - **Infrastructure.** At session start, Syncthing reported the
+    zbook-ubuntu peer absent for 65 hours.
+  - **From earlier sessions:**
+    - unrecorded originals (Key's supplement archives; the crema v1.0.0
+      and herskind v1 deposits, audit Q10);
+    - relay R2 is provisional;
+    - the hook fault is with personal-assistant-0e;
+    - zbook still needs `install-git-hooks.sh` and a venv;
+    - the `llmr-*-attempt-02` Docker images are kept.
+
+## Repo state (2026-10-05, session ef0412bd close) — superseded by the section above
 
 - **⏩ START HERE: consolidate the gate 1.3 specification, then build its
   foundations.** The reproduction lane's integrity gate is on PR #7
@@ -1691,6 +1795,28 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-05 (session b1a1e102) — gate 1.3 consolidated, reviewed, and its foundations built
+
+One session on Opus 5.5. It worked in the PR #7 worktree, with Fable
+reviewing live by SendMessage.
+
+- **Cache fix first.** The part 1 digest cache was process-wide. Two new
+  tests (a same-size edit with the modification time restored) failed on
+  it, which showed the gap was real.
+- **Consolidation.** One effective specification replaced the draft and
+  its two revision sections, and it carries a stopping rule. A Docker probe
+  turned several memory-based review points into tested facts; the most
+  consequential is that a project `.Renviron` overrides `R_PROFILE_USER`.
+- **Fable's review** came back within the hour. Its findings included two
+  defects in the new text (trace order, and pairing processes by PID) and
+  four ordinary routes. Most went straight into F1's code.
+- **Exchange on `R CMD`.** Fable proposed a subcommand list. The image's
+  own `BATCH` and `INSTALL` scripts showed that subcommands re-enter the
+  front end, so their inner starts are censused separately. Fable
+  withdrew the list, and `INSTALL`'s inner start is now the one real gap.
+- **F1–F3** are built, each with tests, all pushed. Astra's review of the
+  specification is outstanding.
 
 ### 2026-10-04 (third session) → 10-05 — F2 rule and v1.2 packs; amendment 3 drafted; PR #7 through three review rounds; gate 1.3 part 1
 
