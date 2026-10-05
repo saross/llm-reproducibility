@@ -122,6 +122,8 @@ phase2-shakedown/run-config.yaml --scratch-root /tmp/llmr-scratch \\
 from __future__ import annotations
 
 import argparse
+import contextlib
+import contextvars
 import hashlib
 import importlib.machinery
 import importlib.util
@@ -131,6 +133,7 @@ import re
 import secrets
 import subprocess
 import sys
+from collections.abc import Iterator
 from datetime import datetime, timezone
 from pathlib import Path
 from types import ModuleType
@@ -1163,24 +1166,70 @@ def walk_tree(target_dir: Path) -> tuple[list[Path], list[str]]:
     return sorted(files), problems
 
 
-_DIGEST_CACHE: dict[tuple[str, str, int, int], str] = {}
+# Digests shared within one pass over the tree, keyed by (resolved path,
+# algorithm) and holding (file identity, digest). None means no pass is open,
+# and then nothing is cached. A ContextVar rather than a module global, so
+# that the scope ends exactly where the ``with`` block (or decorated call)
+# that opened it ends.
+_DIGEST_SCOPE: contextvars.ContextVar[
+    dict[tuple[str, str], tuple[tuple[int, ...], str]] | None] = \
+    contextvars.ContextVar("digest_scope", default=None)
+
+
+@contextlib.contextmanager
+def digest_snapshot() -> Iterator[None]:
+    """Share file digests across one pass that treats the tree as immutable.
+
+    A deposit archive can be hundreds of megabytes and is consulted once per
+    original (Fable review, P3-4), so one pass reads each file once. The cache
+    lives only as long as that pass. A cache that outlived it, keyed by size
+    and modification time, returned the old digest for an edit that kept the
+    size and restored the time, so a change across a run went unseen (Astra's
+    gate 1.3 design review, point 5). Each snapshot and each gate check
+    therefore opens its own scope, and an inner scope starts empty.
+
+    Works as a ``with`` block or, through ``contextlib.ContextDecorator``, as
+    a decorator that opens a fresh scope on every call.
+    """
+    token = _DIGEST_SCOPE.set({})
+    try:
+        yield
+    finally:
+        _DIGEST_SCOPE.reset(token)
 
 
 def cached_digest(path: Path, algorithm: str = "sha256") -> str:
-    """A file's digest, cached by path, size, and modification time.
+    """A file's digest, read at most once within the current digest scope.
 
-    A deposit archive can be hundreds of megabytes and is consulted once per
-    original (Fable review, P3-4).
+    Outside a scope (see ``digest_snapshot``) nothing is cached. Inside one,
+    a repeated request returns the first digest once the file's identity
+    (device, inode, size, and modification and change times) is confirmed
+    unchanged. The change time cannot be set back by a user, so a same-size
+    edit with a restored modification time still shows, where the
+    filesystem's clock is fine enough to separate the two writes.
+
+    Raises:
+        LaneError: when a file already read in this scope has changed, since
+            the pass assumed an immutable tree and its result would be mixed.
     """
     stat = path.stat()
-    key = (str(path.resolve()), algorithm, stat.st_size, stat.st_mtime_ns)
-    if key not in _DIGEST_CACHE:
-        digest = hashlib.new(algorithm)
-        with path.open("rb") as handle:
-            for block in iter(lambda: handle.read(1 << 20), b""):
-                digest.update(block)
-        _DIGEST_CACHE[key] = digest.hexdigest()
-    return _DIGEST_CACHE[key]
+    identity = (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
+    cache = _DIGEST_SCOPE.get()
+    key = (str(path.resolve()), algorithm)
+    if cache is not None and key in cache:
+        seen, digest = cache[key]
+        if seen != identity:
+            raise LaneError(f"{display_path(path)} changed while the tree was being read: "
+                            f"re-run once nothing is writing to the attempt")
+        return digest
+    hasher = hashlib.new(algorithm)
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1 << 20), b""):
+            hasher.update(block)
+    digest = hasher.hexdigest()
+    if cache is not None:
+        cache[key] = (identity, digest)
+    return digest
 
 
 def inside(target_dir: Path, rel: str) -> Path | None:
@@ -1620,6 +1669,7 @@ def code_inventory(target_dir: Path, extra_code: set[str] | frozenset[str] = fro
             if rel in extra_code or is_code_file(Path(rel))}
 
 
+@digest_snapshot()  # one scope per snapshot: never shared with another
 def write_snapshot(target_dir: Path, phase: str, force: bool = False) -> Path:
     """Record the attempt's code inventory at one execution boundary.
 
@@ -1768,6 +1818,7 @@ def legacy_allowed(target_dir: Path, allowlist: Path | None = None) -> bool:
                for entry in entries)
 
 
+@digest_snapshot()  # one scope per gate check: never shared with a snapshot
 def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                          comparison: dict | None = None, plan_slug: str | None = None,
                          legacy: bool = False, anchor_root: Path | None = None,

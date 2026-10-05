@@ -1027,6 +1027,77 @@ class FableAttackTests(IntegrityFixture, unittest.TestCase):
         self.assertFalse(any("helper2.R" in o for o in result["review_obligations"]))
 
 
+class DigestScopeTests(IntegrityFixture, unittest.TestCase):
+    """The digest cache is confined to one immutable snapshot (Astra's gate 1.3
+    design review, point 5).
+
+    A cache keyed by path, size, and modification time, and kept for the life
+    of the process, returned the old digest for an edit that keeps the file's
+    size and puts its modification time back. Two snapshots taken in one
+    process, or two runs of the gate, then saw no change.
+    """
+
+    EXECUTED = Path("authors-code") / "analysis.R"
+
+    def same_size_edit(self, path: Path) -> None:
+        """Change ``path`` without changing its size, then restore its mtime."""
+        before = path.stat()
+        text = path.read_text(encoding="utf-8")
+        edited = text.replace("index = 4", "index = 3")
+        self.assertEqual(len(edited), len(text))
+        self.assertNotEqual(edited, text)
+        path.write_text(edited, encoding="utf-8")
+        os.utime(path, ns=(before.st_atime_ns, before.st_mtime_ns))
+        self.assertEqual(path.stat().st_size, before.st_size)
+        self.assertEqual(path.stat().st_mtime_ns, before.st_mtime_ns)
+
+    def test_same_size_edit_with_restored_mtime_is_seen_across_the_run(self):
+        lane.write_snapshot(self.dir, "pre", force=True)
+        self.same_size_edit(self.dir / self.EXECUTED)
+        lane.write_snapshot(self.dir, "post", force=True)
+        result = self.check()
+        self.assertEqual(result["status"], "fail")
+        self.assertIn(f"{self.EXECUTED.as_posix()} was modified during the run",
+                      result["errors"])
+
+    def test_same_size_edit_with_restored_mtime_is_seen_by_a_second_check(self):
+        self.assertEqual(self.check()["status"], "identical")
+        self.same_size_edit(self.dir / self.EXECUTED)
+        result = self.check()
+        self.assertTrue(any(e.startswith(f"{self.EXECUTED.as_posix()} changed after the run "
+                                         f"started") for e in result["errors"]),
+                        result["errors"])
+
+    def test_nothing_is_cached_outside_a_scope(self):
+        path = self.dir / self.EXECUTED
+        first = lane.cached_digest(path)
+        self.same_size_edit(path)
+        self.assertNotEqual(lane.cached_digest(path), first)
+
+    def test_a_file_is_read_once_within_a_scope(self):
+        path = self.dir / self.EXECUTED
+        with lane.digest_snapshot():
+            first = lane.cached_digest(path)
+            with mock.patch.object(lane.hashlib, "new", side_effect=AssertionError("re-read")):
+                self.assertEqual(lane.cached_digest(path), first)
+
+    def test_scopes_do_not_share_digests(self):
+        path = self.dir / self.EXECUTED
+        with lane.digest_snapshot():
+            first = lane.cached_digest(path)
+            with lane.digest_snapshot():  # an inner scope starts empty
+                self.same_size_edit(path)
+                self.assertNotEqual(lane.cached_digest(path), first)
+
+    def test_a_change_seen_within_a_scope_stops_the_pass(self):
+        path = self.dir / self.EXECUTED
+        with lane.digest_snapshot():
+            lane.cached_digest(path)
+            write(path, AUTHORS_R + "extra()\n")
+            with self.assertRaises(lane.LaneError):
+                lane.cached_digest(path)
+
+
 class InheritedGitEnvTests(unittest.TestCase):
     """Fixtures and the gate never act on a repository named by GIT_DIR.
 
