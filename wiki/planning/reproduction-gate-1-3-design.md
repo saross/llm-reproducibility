@@ -216,6 +216,88 @@ admission:
 
 The lane covers R only, as its scope already states.
 
+## Revisions after the Fable design review (2026-10-05)
+
+Fable's review
+(`~/agent-mail/claude/outbox/claude/20261005T053332.582671Z-claude-pr7-fable-gate-1-3-design-review.md`)
+found the shape right and changed the build as follows. Astra's review is
+pending.
+
+- **Mounting** (Q1):
+  - mount the work copy at the image's `WORKDIR`, or `--mount-path`, and set
+    `-w`;
+  - warn when the Dockerfile copies into that path, since the mount hides it;
+  - keep renv libraries outside the project (`RENV_PATHS_LIBRARY`);
+  - copy with `cp -a --reflink=auto`, never hard links;
+  - add a detached mode for multi-hour runs (crema), whose wait step still
+    takes the post snapshot.
+- **Code written by the run.** A new code file in the work copy is treated
+  as `generated` (flagged, inlining check, never loadable). Only a changed
+  pre-existing file fails, so honest renders pass.
+- **Start-up** (Q2):
+  - set `R_ENVIRON_USER` to a lane file as well, and have the hook read the
+    project `.Renviron` explicitly;
+  - the hook sources the project `.Rprofile` from the project root, so renv
+    works, and `renv/activate.R` must then be declared as an original;
+  - `--vanilla`, `--no-init-file`, `--no-environ`, or `--no-site-file` in any
+    wrapper is an error (key's pilot used `Rscript --vanilla`);
+  - an R process that ran with an empty loader log fails.
+- **Child processes.** `run-container` also writes a `.Rprofile` into the
+  work copy that sources the hook and then the project's profile, which is
+  renamed. A Docker test matrix asserts that a child's `source()` is logged
+  for each launcher: `Rscript`, `R -f`, `callr::r`, `targets::tar_make`,
+  `parallel::parLapply`, `future` multisession, and `quarto render` where
+  installed.
+- **Loaders:**
+  - `loadNamespace` is traced, logging each package's provenance; a locally
+    installed package with no repository is flagged, which is the marwick
+    compendium case;
+  - `parse(text = …)` logs the md5 of its text, which the gate compares with
+    the originals, and `-e` expressions are logged;
+  - `reticulate::source_python`, `box::use`, and `modules::import` are
+    traced.
+- **Hook integrity.** `untrace(`, `tracingState(`, `Sys.unsetenv`,
+  `Sys.setenv(...R_PROFILE...)`, and shadowing `source`, `sys.source`, or
+  `parse` are contaminating findings. The hook mirrors each log line to
+  stderr with a fixed prefix, the lane captures stderr, and a line missing
+  from the file fails.
+- **Outputs (A14, new).** `run-container` hashes `outputs/` at the end of
+  each run. The gate fails any `outputs/` file that differs from the last
+  run's record, and each output is attributed to the run that wrote it. A
+  write into `outputs/` after the final run is contaminating in the
+  transcript audit.
+- **Transcript audit:**
+  - host `Rscript`, `R -f`, `python`, or `bash` on attempt paths is
+    contaminating;
+  - every `run-container` call must have a `run-NN/` record, and vice versa.
+- **Function shadowing.** Parse the `name <- function` definitions in the
+  originals, and flag any wrapper, including `.Rprofile`, that assigns those
+  names.
+- **Dockerfile obligations** also name `Rprofile.site`, `Renviron.site`, and
+  `/etc/R`. The prompt says that `--network none` deliberately breaks
+  run-time installs.
+- **Conversions** (Q4):
+  - only exact text after trimming trailing whitespace clears;
+  - numeric-equivalent, missing-marker, and leading-whitespace differences
+    are reported as separate counts and never cleared;
+  - headers are compared separately;
+  - empty trailing Excel rows and columns are trimmed;
+  - the declared encoding is used, defaulting to UTF-8;
+  - dimensions are compared first, and a reordering is reported as one;
+  - dates are compared only as ISO text;
+  - the declaration names the sheet and the header row.
+- **Rulings** (Q5). Each is bound to the sha256 of a flag's text, so a re-run
+  does not expire it. `--record-unruled` records never reach study data.
+  Targets whose comparison evidence predates the last run's end are also
+  excluded from `coverage_creditable`.
+- **Build order** if time is short:
+  1. the loader log, with the start-up belt and braces and the child test
+     matrix;
+  2. the outputs rule;
+  3. the stderr mirror;
+  4. (done in part 1) the inventory and the launch-commit anchors;
+  5. then conversions, rulings, and the remaining patterns.
+
 ## Questions for the reviewers
 
 1. Is the writable-copy design sound? Is copying files the run wrote beside
