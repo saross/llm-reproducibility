@@ -405,6 +405,33 @@ The Phase 2 shakedown (2026-10-03) and the registrant's rulings of
     byte-identical. A change of logic, indices, data selection, parameters,
     or functions called remains fail-and-uplift whatever its effect,
     including a restructuring that gives the same result."
+  - **Further boundary cases (RULED 2026-10-05, executed-code audit Q6).**
+    "A wrapper may make an authors' statement error-tolerant only where the
+    statement computes nothing that enters a result, such as registering a
+    font; the tolerance is declared, and the run log records whether it
+    fired. Per-section error capture is routine, but a target is credited
+    only from a section that completed without error and whose inputs come
+    only from sections that also completed. Sections may run in another
+    order only when they are independent, none reading an object another
+    defines; otherwise re-ordering changes the execution logic and is
+    fail-and-uplift. A dependency fetched from a public repository is
+    installed when the environment is built, pinned to a tagged release or,
+    where the repository has none, to a recorded commit, preferring the one
+    current at publication. An unpinned install at run time is not
+    routine."
+  - **Verification aids and reconstructed inputs (RULED 2026-10-06,
+    executed-code audit Q5).** "Where no authors' code produces a published
+    result, the reproducer may test it with a labelled verification aid: a
+    read-only lookup in the deposited data, or a call to a documented
+    function of the package the authors used, making no new statistical
+    choice. A formula the reproducer infers from the paper's wording
+    qualifies only where it reproduces the paper's own printed values from
+    the paper's own printed inputs, and it is credited only where its
+    inputs come from executing the authors' code. A result resting on
+    inputs the reproducer reconstructed, for example from upstream datasets
+    the authors cite, never counts toward coverage or the verdict: the
+    target stays in the denominator as expected-untestable, and the
+    reconstructed result is reported as uplift evidence."
 
 ### 8. Pre-declared descriptive outcomes for the reproduction lane
 
@@ -566,6 +593,10 @@ registrant's direction to draft them):
   **RULED (Shawn, 2026-10-05): adopt the correction-ledger approach** that
   Astra (GPT, Codex) proposed in its PR #7 review, now drafted as §9. The
   ledger's per-target contents are still to be ruled, from the audit's Q1–Q5.
+  **The audit's questions Q1–Q10 are RULED (2026-10-05 and 06;
+  `question_rulings` in the audit's `findings.json`, PR #7).** The ledger is
+  to be drafted from them, and the general principles of Q5 and Q6 are added to
+  §7(d).
   §9's ledger conditions were drafted on 2026-10-05 from the Fable review, at
   the registrant's direction. The class (ii) consequence is RULED
   (2026-10-05, §7(d)): a result resting on an authors' file edited for
