@@ -816,5 +816,77 @@
     "Q8 Transcribed listings (dye): accept a deterministic transcription, identified by the source PDF's sha256 and the tool, as the 'original' for byte identity?",
     "Q9 Gate 1.1 design: flags (not failures) for declared edits; --allow-missing-code-manifest for legacy attempts; five shared lines as the inlining threshold; every reproducer code file must be declared.",
     "Q10 Downloaded originals are kept out of git and only in a transient scratchpad. Should the crema v1.0.0 and herskind v1 deposits (CC BY 4.0) be held in the corpus store with a manifest entry?"
+  ],
+  "question_rulings": [
+    {
+      "question": "Q1",
+      "ruled_by": "Shawn",
+      "ruled_on": "2026-10-05",
+      "ruling": "Class (ii) has a consequence (amendment 3 §7(d)): a result resting on an authors' file edited for mechanics counts only after a wrapper-only re-run.",
+      "consequence": "Dye's 22 attempt-02 targets need a wrapper-only re-run before they count."
+    },
+    {
+      "question": "Q2",
+      "ruled_by": "Shawn",
+      "ruled_on": "2026-10-05",
+      "ruling": "DYE1-2 is class (iii), applying §7(d) as written ('however obvious the intent'); recorded as declared, result-identical, and not a repair.",
+      "consequence": "Fail-and-uplift for attempt-01's 54 values. No effect on dye's regression credit, which comes from the wrapper-only re-run (Q1)."
+    },
+    {
+      "question": "Q3",
+      "ruled_by": "Shawn",
+      "ruled_on": "2026-10-05",
+      "ruling": "Herskind attempt-02, which ran S2.R v2 byte-identical through a wrapper, is herskind's baseline source. Attempt-01's Fig. 3 trigram and quadrigram credit is withdrawn as unsound; HER1-3 is class (iii), result-identical.",
+      "consequence": "The ledger takes herskind's values from the paper at v2, checked against attempt-02; attempt-01's values appear only as recorded pilot values with explicit corrections."
+    },
+    {
+      "question": "Q4",
+      "ruled_by": "Shawn",
+      "ruled_on": "2026-10-05",
+      "ruling": "Crema and marwick are re-run at the AP-12 version (crema v1.0.0, marwick 1.3) in the §8 regression gate, against the correction ledger. Pilot verdicts are preserved as historical artefacts.",
+      "consequence": "Ledger corrections: crema's deterministic Table 1 credit withdrawn (v2.0.0 compared with itself); marwick's Fig. 2 credit withdrawn (an added chart, not the published GAM image); marwick's 'data revision' explanation recorded as untested."
+    },
+    {
+      "question": "Q5",
+      "ruled_by": "Shawn",
+      "ruled_on": "2026-10-05",
+      "ruling": "(i) Key's 21 Mean values count only after a wrapper-only re-run executes the authors' script, read from its summary() output. (ii) Extension % is admitted as a labelled R1 verification aid: the inferred formula must reproduce the paper's own printed columns, and it is credited only where its OLE inputs come from executing the authors' code; the two inconsistent cells (3.1%, 19.6%) go to the R4 paper-error protocol. (iii) Results resting on inputs the reproducer reconstructed from upstream datasets are excluded from credit: the targets stay in the denominator as expected-untestable (R2), and the reconstructed results are reported as uplift evidence.",
+      "consequence": "Key needs a wrapper-only re-run executing the authors' script; rows on reconstructed inputs are expected-untestable."
+    },
+    {
+      "question": "Q6",
+      "ruled_by": "Shawn",
+      "ruled_on": "2026-10-05",
+      "ruling": "(a) An error-tolerant authors' statement is routine where it computes nothing entering a result, the tolerance is declared, and the log records whether it fired. (b) Per-section error capture is routine, crediting only sections that completed with completed inputs; re-ordering is routine only for independent sections, otherwise class (iii). (c) An untagged run-time install is not routine: install at build time, pinned to a tag or a recorded commit, preferring the one current at publication.",
+      "consequence": "Added to amendment 3 §7(d) as further boundary cases. Herskind's font_import tolerance stands; crema's rnaturalearthhires install must be pinned at build time in the re-run."
+    },
+    {
+      "question": "Q7",
+      "ruled_by": "Shawn",
+      "ruled_on": "2026-10-05",
+      "ruling": "CREMA-1 (sed fix inside the authors' v2.0.0 Dockerfile) is class (ii).",
+      "consequence": "No consequence: the AP-12 re-run at v1.0.0 (Q4) uses a reproducer-written Dockerfile."
+    },
+    {
+      "question": "Q8",
+      "ruled_by": "Shawn",
+      "ruled_on": "2026-10-05",
+      "ruling": "A deterministic transcription, identified by the source PDF's sha256 and the tool, stands as the original for byte identity, but is never 'verified'.",
+      "consequence": "As built in gate 1.3: the anchor is 'recorded' and a 'transcription' issue always asks a human to check the consequential code against the PDF."
+    },
+    {
+      "question": "Q9",
+      "ruled_by": "Shawn",
+      "ruled_on": "2026-10-05",
+      "ruling": "Gate 1.1's design choices are ratified as built and superseded in gates 1.2 and 1.3.",
+      "consequence": "Declared edits are flags governed by the class (ii)/(iii) rulings; the legacy allowlist (reproduction-system/legacy-attempts.yaml) replaced the missing-manifest flag; the five-line inlining threshold stays a heuristic with a reviewer obligation; all reproducer code is declared (closed-world inventory)."
+    },
+    {
+      "question": "Q10",
+      "ruled_by": "Shawn",
+      "ruled_on": "2026-10-05",
+      "ruling": "Hold the crema v1.0.0 and herskind v1 deposits (CC BY 4.0) in the corpus store with manifest entries.",
+      "consequence": "Required for crema's v1.0.0 posterior leg (amendment 3 §9); keeps the audit re-checkable. To do before the regression run."
+    }
   ]
 }
