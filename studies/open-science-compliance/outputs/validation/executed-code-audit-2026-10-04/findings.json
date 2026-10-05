@@ -681,17 +681,22 @@
         },
         {
           "id": "KEY-2",
-          "class": "v",
+          "class": "ii (Mean); v (Extension %)",
           "declared": true,
           "files": [
             "run-analysis.R"
           ],
-          "description": "Mean and Extension % are computed by reproducer code (round(mean()), and ((max CI - min CI) / (max - min) - 1) x 100 using CI values); mmc1 computes neither",
+          "description": "Corrected 2026-10-05 after the cross-model review of PR #7 (Astra), split by quantity. Mean: the reproducer computed and formatted the column with its own code (round(mean())), but the authors' main script also computes column means: it calls print(summary(datalist)) at line 65, and summary() of numeric columns reports the mean. So the Mean values rest on a re-implementation of a computation the authors' code performs, class (ii), not an analysis absent from it; the authors' script was still never executed. Extension %: computed by reproducer code ((max CI - min CI) / (max - min) - 1) x 100 from the confidence-interval estimates; the authors' scripts compute no such quantity, class (v).",
           "affected_targets": [
             "Tables 5-6 Mean (21 credited)",
             "Tables 5-6 Extension % (15 credited, 2 MAJOR, 4 CANNOT_COMPARE)"
           ],
-          "credited": "yes (36 values)"
+          "credited": "yes: 21 Mean values (recounted from the comparison report's tables, 2026-10-05) and 15 Extension % values with 2 further extension discrepancies and 4 cannot-compare cases (Astra's recount, PR #7 review, not re-checked here)",
+          "correction": {
+            "date": "2026-10-05",
+            "source": "PR #7 review by Astra (GPT, Codex), finding 5",
+            "evidence": "studies/open-science-compliance/outputs/key-et-al-2024/reproduction/attempt-01/scripts/Morphology OLE Script _spl_Main_spl_ Supplementary Information.r line 65"
+          }
         },
         {
           "id": "KEY-3",
@@ -738,7 +743,7 @@
             "analysis/data/BenMarwick_JCR_JournalResults_12_2024.csv",
             "analysis/code/000-import-raw-data.R"
           ],
-          "description": "post-publication changes executed: the Shannon diversity index is computed differently (group_by(id, journal_name) instead of group_by(id, x) plus a join); a non-published figure chunk is added; renv.lock 152 -> 169 packages and R 4.5.0 -> 4.5.1; the JCR CSV and import script also changed but are not run by the Dockerfile render",
+          "description": "post-publication changes executed: the Shannon diversity index is computed differently (group_by(id, journal_name) instead of group_by(id, x) plus a join); a non-published figure chunk is added; renv.lock 152 -> 169 packages and R 4.5.0 -> 4.5.1; the JCR CSV and import script also changed but are not run by the Dockerfile render. Stronger evidence (Astra, PR #7 review; confirmed 2026-10-05): the committed rendered output attempt-01/outputs/paper.html contains the post-1.3 calculation group_by(id, journal_name) (line 904), so the post-publication Shannon code is what ran",
           "affected_targets": [
             "Fig. 1 diversity panel",
             "Fig. 3 journal ranking",
@@ -805,7 +810,7 @@
     "Q2 dye attempt-01 (DYE1-2): a declared, result-identical restructuring that changes indexing form and functions called but repairs nothing. Class (ii) or (iii)?",
     "Q3 herskind attempt-01 (HER1-2, HER1-3): undeclared parameter changes in a re-implementation; one result-identical, one affecting Fig. 3 trigram and quadrigram panels that were credited only qualitatively. Does either change the pilot baseline?",
     "Q4 Version deviations (CREMA-3, MAR-1): do the crema and marwick pilot verdicts stand, be re-based on the AP-12 version, or be re-run at it in the regression gate? Crema's pre-computed comparison used v2.0.0's own table; marwick executed post-publication code.",
-    "Q5 key (KEY-2, KEY-3): are reproducer-computed Mean and Extension % values, and reconstructed inputs, admissible as R1-style aids or excluded from credit?",
+    "Q5 key (KEY-2, KEY-3): the Extension % values (reproducer-computed, absent from the authors' code) and the reconstructed inputs: admissible as R1-style aids, or excluded from credit? Separately, do the 21 Mean values, which re-implement a mean the authors' script computes via summary() but which ran no authors' file, count as reproduced?",
     "Q6 Wrapper boundary cases not listed in 7(d): error tolerance of a non-computing authors' statement (herskind font_import), per-section error capture and section re-ordering (dye attempt-02), and an untagged GitHub install at run time (crema rnaturalearthhires).",
     "Q7 crema (CREMA-1): an environment edit inside an authors' Dockerfile that is itself post-AP-12. Class (ii)?",
     "Q8 Transcribed listings (dye): accept a deterministic transcription, identified by the source PDF's sha256 and the tool, as the 'original' for byte identity?",

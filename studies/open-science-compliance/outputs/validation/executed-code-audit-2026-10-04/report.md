@@ -1,5 +1,10 @@
 # Executed-code audit of the five pilots (2026-10-04)
 
+*Corrected 2026-10-05 after the cross-model review of PR #7 (Astra, GPT in
+Codex): KEY-2 is split, because the authors' main script does compute
+means; MAR-1 gains the rendered-output evidence; Q5 is revised. The
+corrections are marked in place.*
+
 *Provenance: written on 2026-10-04 by the reproduction-lane subagent
 (Opus 5.5) that built gate 1.1. Its harness does not let subagents write
 report files, so it returned this text to the parent session, which saved it
@@ -71,7 +76,7 @@ Two kinds of finding fall outside those three classes and are kept apart:
 | dye / 01 | Reproducer re-assembly; no authors' file run (ii) | **T02 index shift** (already ruled); bead-list restructure (declared, result-identical) | T02 credited qualitatively; 54/54 table values credited |
 | herskind / 02 | `S2.R` byte-identical to Zenodo v2 (i only) | none | n/a |
 | herskind / 01 | Re-implementation of v1 (ii, iv) | **Fig. 3 top-N parameter** (undeclared); `t` computed (result-identical) | Fig. 3 credited loosely; S3 291/291 exact |
-| key / 01 | Inlined `OLE.test` plus a re-implemented loop (ii); the kept scripts are byte-identical to the supplement | none found | Mean and Extension % are reproducer-computed (v), 36 values credited |
+| key / 01 | Inlined `OLE.test` plus a re-implemented loop (ii); the kept scripts are byte-identical to the supplement | none found | 21 Mean values re-implement a mean the authors' script computes (ii); 15 Extension % values are reproducer-computed (v) |
 | marwick / 01 | GitHub main `652e542`, 8 commits past AP-12 1.3 (iv) | none (no reproducer edits; self-reported) | Kendall's W credited; Fig. 2 mis-mapped |
 
 **Headline:** apart from T02, no undeclared repair of the authors' own code
@@ -281,11 +286,22 @@ or parameters, with the same:
 The wrapper shares 15 substantive lines with `mmc1`. OLE is optimal linear
 estimation.
 
-**KEY-2 (v):** Mean and Extension % are computed by reproducer code. The
-extension uses the confidence-interval estimates, and `mmc1` computes
-neither quantity. 21 Mean values and 15 Extension % values were credited.
-The two MAJOR_DISCREPANCY calls also rest on this formula, although the
-report's own arithmetic from the paper's values supports them.
+**KEY-2, corrected 2026-10-05.** The original finding said `mmc1` computes
+neither Mean nor Extension %. That is wrong for the Mean: the main script
+calls `print(summary(datalist))` at line 65, and `summary()` of a numeric
+column reports its mean (Astra's PR #7 review, finding 5; checked at the
+retained script). The two quantities therefore fall in different classes:
+
+- **Mean (ii):** the reproducer computed and formatted the column with its own
+  `round(mean())`, re-implementing a computation the authors' code also
+  performs. The authors' script itself was never executed. 21 Mean values
+  were credited (recounted from the comparison report's tables).
+- **Extension % (v):** computed by reproducer code from the
+  confidence-interval estimates; no authors' script computes it. Astra's
+  recount: 15 values credited, 2 further extension discrepancies, and 4
+  cannot-compare cases (not re-checked here). The two MAJOR_DISCREPANCY
+  calls rest on this formula, although the report's own arithmetic from the
+  paper's values supports them.
 
 **KEY-3 (v):** the inputs were reconstructed from upstream sources:
 
@@ -322,6 +338,12 @@ merged third-party pull request.
 - `renv.lock` moved from 152 to 169 packages, and from R 4.5.0 to 4.5.1.
 - The Journal Citation Reports (JCR) CSV and the import script also changed.
   The Dockerfile render runs neither.
+
+**Added 2026-10-05 (Astra, PR #7 review; checked):** the committed rendered
+output `attempt-01/outputs/paper.html` contains the post-1.3 calculation
+`group_by(id, journal_name)` (line 904). That is direct evidence that the
+post-publication Shannon code is what ran, stronger than the file-count
+match above.
 
 The Shannon index enters the Kendall's W test (`rank_mean_shannon`). The
 report's p-value discrepancy (4.08 × 10⁻⁷ reproduced against 2.67 × 10⁻⁶
@@ -364,9 +386,11 @@ and not committed. Results are in `findings.json` under `gate_1_1_replay`:
    verdicts standing? The alternatives are to re-base them on the AP-12
    version, or to re-run that version in the regression gate. Crema's
    comparison basis was v2.0.0's own table.
-5. **Q5 (key):** are the reproducer-computed Mean and Extension % values, and
-   the reconstructed inputs, admissible as R1-style aids, or excluded from
-   credit?
+5. **Q5 (key), revised 2026-10-05:** are the Extension % values (computed
+   by the reproducer; absent from the authors' code) and the reconstructed
+   inputs admissible as R1-style aids, or excluded from credit? Separately,
+   do the 21 Mean values count as reproduced? They re-implement a mean the
+   authors' script computes through `summary()`, but no authors' file ran.
 6. **Q6:** four wrapper boundary cases are not listed in 7(d):
    - error tolerance of a statement that computes nothing (herskind's
      `font_import`);
@@ -382,6 +406,15 @@ and not committed. Results are in `findings.json` under `gate_1_1_replay`:
    - `--allow-missing-code-manifest` for legacy attempts;
    - five shared lines as the inlining threshold;
    - every reproducer code file must be declared.
+
+   *Update 2026-10-05:* gate 1.2 answers the cross-model review on these
+   points. Declared edits stay flags, and `pass` is documented as "every
+   code file accounted for", never as creditable. The legacy option is now
+   `--legacy-attempt`, which works only for attempts listed in
+   `reproduction-system/legacy-attempts.yaml` and marks them ineligible for
+   the current gate. The five-line threshold is documented as a heuristic,
+   with wrapper semantics left to the reviewer. The declaration rule now
+   covers `outputs/` too.
 10. **Q10:** the downloaded originals sit only in a transient scratchpad.
     Should the crema v1.0.0 and herskind v1 deposits (CC BY 4.0) go into the
     corpus store with manifest entries?
