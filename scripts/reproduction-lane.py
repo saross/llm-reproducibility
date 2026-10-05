@@ -155,7 +155,7 @@ from collections.abc import Iterator
 from datetime import datetime, timezone
 from pathlib import Path
 from types import ModuleType
-from typing import Any
+from typing import Any, Self
 
 import yaml
 
@@ -176,6 +176,8 @@ GATE_VERSION = "1.2"
 # copy must be byte-identical. Any difference is a declared wrapper or a
 # flagged edit; an undeclared difference fails the gate.
 CODE_MANIFEST_FILE = "authors-code-manifest.json"
+RULINGS_FILE = "flag-rulings.json"
+AUDIT_FILE = "transcript-audit.json"
 DEFAULT_CODE_MANIFEST_SCHEMA = "reproduction-system/schemas/authors-code-manifest.json"
 # File suffixes (lower-cased) treated as code in the closed-world inventory;
 # names beginning "Dockerfile" count too. Since gate 1.2 nothing is exempt:
@@ -338,6 +340,116 @@ def emit(payload: Any, out: Path | None) -> None:
 
 class LaneError(Exception):
     """A refused operation; the message is shown to the operator verbatim."""
+
+
+# Each issue code's policy version. Bump a code's version when its check's
+# meaning changes; every ruling on that code then expires, and no other.
+ISSUE_POLICY: dict[str, int] = {}
+RULING_DECISIONS = {"flag": ("admissible", "fail-and-uplift", "excluded"),
+                    "obligation": ("discharged", "fail-and-uplift", "excluded")}
+
+
+def json_digest(value: Any) -> str:
+    """sha256 of a value's canonical JSON (sorted keys, no spaces)."""
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"),
+                                     ensure_ascii=False).encode("utf-8")).hexdigest()
+
+
+def file_digests(target_dir: Path, *rels: str | None) -> dict[str, str]:
+    """sha256 of each named attempt file, for an issue's evidence fingerprint.
+
+    A path that is absent, or outside the attempt and the corpus store,
+    records as ``missing``, so a file appearing later changes the print.
+    """
+    digests = {}
+    for rel in rels:
+        if rel:
+            path = resolve_stored(target_dir, rel)
+            digests[rel] = (sha256_file(path) if path is not None and path.is_file()
+                            else "missing")
+    return digests
+
+
+class Issue(str):
+    """A flag or review obligation: its message, with a stable identity.
+
+    Gate 1.3 binds each human ruling to an issue id and an evidence
+    fingerprint, not to the message text (Astra's design review, point 7;
+    spec §6). An ``Issue`` *is* its message, since ``str`` is its base, so
+    every list, report, relay, and test that carries flags as text keeps
+    working; the identity travels with it.
+
+    - ``kind``: ``flag`` or ``obligation``.
+    - ``code`` and ``subject``: the issue id is ``code:subject``, stable
+      across re-runs (``edited-copy:authors-code/analysis.R``).
+    - ``targets``: the target ids it bears on; empty means all.
+    - ``files``: the sha256 of every file it concerns. With the code's
+      policy version, the subject, and the targets, these make the
+      fingerprint, so changed evidence needs a new ruling.
+    """
+
+    kind: str
+    code: str
+    subject: str
+    targets: tuple[str, ...]
+    files: dict[str, str]
+
+    def __new__(cls, message: str, *, kind: str, code: str, subject: str,
+                targets: tuple[str, ...] | list[str] = (),
+                files: dict[str, str] | None = None) -> Self:
+        issue = super().__new__(cls, message)
+        issue.kind, issue.code, issue.subject = kind, code, subject
+        issue.targets = tuple(sorted(set(targets)))
+        issue.files = dict(files or {})
+        return issue
+
+    @classmethod
+    def flag(cls, code: str, subject: str, text: str, prefix: str = FLAG_PREFIX,
+             **identity: Any) -> Self:
+        """A flag, its message prefixed as the human queue expects."""
+        return cls(prefix + text, kind="flag", code=code, subject=subject, **identity)
+
+    @classmethod
+    def obligation(cls, code: str, subject: str, text: str, **identity: Any) -> Self:
+        """A review obligation."""
+        return cls(text, kind="obligation", code=code, subject=subject, **identity)
+
+    @property
+    def issue_id(self) -> str:
+        """``code:subject``."""
+        return f"{self.code}:{self.subject}"
+
+    def fingerprint(self) -> str:
+        """sha256 over the policy version, the id, the targets, and the files."""
+        return json_digest({"code": self.code, "policy": ISSUE_POLICY.get(self.code, 1),
+                            "subject": self.subject, "targets": list(self.targets),
+                            "files": self.files})
+
+    def record(self) -> dict:
+        """The issue as the gate report lists it."""
+        return {"id": self.issue_id, "kind": self.kind, "code": self.code,
+                "subject": self.subject, "targets": list(self.targets),
+                "files": self.files, "fingerprint": self.fingerprint(),
+                "message": str(self)}
+
+
+def issue_records(messages: list[str]) -> list[dict]:
+    """Structured records for a list of flags or obligations.
+
+    A plain string, from a site not yet given an identity, becomes an
+    ``unclassified`` issue keyed by its own text: still rulable, but any
+    change of wording expires its ruling.
+    """
+    records = []
+    for message in messages:
+        if isinstance(message, Issue):
+            records.append(message.record())
+        else:
+            kind = "flag" if str(message).startswith((FLAG_PREFIX, FLAG_EDIT_PREFIX)) \
+                else "obligation"
+            records.append(Issue(message, kind=kind, code="unclassified",
+                                 subject=json_digest(str(message))[:16]).record())
+    return records
 
 
 def args_checksum(payload: dict) -> str:
@@ -1046,6 +1158,59 @@ def cmd_approve(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_rule_flags(args: argparse.Namespace) -> int:
+    """Record human rulings on an attempt's issues (spec §6).
+
+    Each ruling binds to the issue's id and its current evidence
+    fingerprint, read from the authoritative gate report, so it lapses when
+    the evidence changes. The rulings file is JSON: a list (or ``{"rulings":
+    [...]}``) of ``{"issue": "<id>", "decision": "...", "note": "..."}``.
+    Flags take ``admissible``, ``fail-and-uplift``, or ``excluded``;
+    obligations take ``discharged``, ``fail-and-uplift``, or ``excluded``.
+    A gate failure is not an issue and cannot be ruled.
+    """
+    config = load_config(args.config)
+    if args.slug not in {p["slug"] for p in config["papers"]}:
+        raise LaneError(f"unknown paper {args.slug!r}")
+    target_dir = attempt_dir(config, args.slug)
+    gate_path = target_dir / GATE_FILE
+    try:
+        report = json.loads(gate_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise LaneError(f"no readable authoritative gate report: {exc}") from exc
+    issues = {i["id"]: i for i in report.get("issues") or []}
+    if not issues:
+        raise LaneError(f"{display_path(gate_path)} lists no issues (a pre-1.3 report, or "
+                        f"nothing to rule)")
+    given = json.loads(args.rulings.expanduser().read_text(encoding="utf-8"))
+    given = given.get("rulings") if isinstance(given, dict) else given
+    if not isinstance(given, list) or not given:
+        raise LaneError("the rulings file holds no rulings")
+    new = []
+    for entry in given:
+        issue = issues.get(str(entry.get("issue")))
+        if issue is None:
+            raise LaneError(f"no issue {entry.get('issue')!r} in the gate report; its issues "
+                            f"are: {', '.join(sorted(issues))}")
+        allowed = RULING_DECISIONS[issue["kind"]]
+        if entry.get("decision") not in allowed:
+            raise LaneError(f"{issue['id']} is a {issue['kind']}: rule it {', '.join(allowed)}")
+        if not str(entry.get("note") or "").strip():
+            raise LaneError(f"{issue['id']}: a ruling needs a note saying why")
+        new.append({"issue_id": issue["id"], "fingerprint": issue["fingerprint"],
+                    "kind": issue["kind"], "decision": entry["decision"],
+                    "note": entry["note"], "approver": args.approver, "ruled_at": now_utc(),
+                    "gate_report_sha256": sha256_file(gate_path)})
+    rulings = load_rulings(target_dir) + new
+    write_json(target_dir / RULINGS_FILE, {"rulings_version": "1.0", "slug": args.slug,
+                                           "rulings": rulings})
+    open_ids = [i for i, issue in issues.items() if ruling_for(issue, rulings) is None]
+    print(f"recorded {len(new)} ruling(s) for {args.slug} in "
+          f"{display_path(target_dir / RULINGS_FILE)}; {len(open_ids)} issue(s) still "
+          f"unruled" + (f": {', '.join(open_ids)}" if open_ids else ""))
+    return 0
+
+
 # ---------------------------------------------------------------------------
 # Execute stage
 # ---------------------------------------------------------------------------
@@ -1512,29 +1677,39 @@ def verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | Non
         ``recorded`` (a checkable claim the gate cannot settle), ``failed``,
         or ``absent``.
     """
-    state, errors, flags = _verify_anchor(item, target_dir, repo_root, slug, original, launch)
+    state, errors, notes = _verify_anchor(item, target_dir, repo_root, slug, original, launch)
     if state == "verified" and launch is None:
-        return "recorded", errors, flags + [
-            f"{FLAG_PREFIX}original {item['id']!r}: the anchor's records are committed but "
-            f"not bound to a launch commit, so they may postdate the run (pass "
-            f"--launch-commit to the authoritative gate)"]
-    return state, errors, flags
+        notes.append(("anchor-unbound", f"original {item['id']!r}: the anchor's records are "
+                      f"committed but not bound to a launch commit, so they may postdate the "
+                      f"run (pass --launch-commit to the authoritative gate)"))
+        state = "recorded"
+    # Each flag's evidence is the original's recorded digest and the anchor
+    # declaration itself: a changed anchor, or changed bytes, needs a new ruling.
+    evidence = {"original": str(item.get("sha256")),
+                "anchor": json_digest(item.get("anchor") or {})}
+    return state, errors, [Issue.flag(code, str(item["id"]), text, files=evidence)
+                           for code, text in notes]
 
 
 def _verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | None,
                    original: bytes | None,
-                   launch: str | None) -> tuple[str, list[str], list[str]]:
-    """``verify_anchor`` before the launch-commit downgrade (see there)."""
+                   launch: str | None) -> tuple[str, list[str], list[tuple[str, str]]]:
+    """``verify_anchor`` before the launch-commit downgrade (see there).
+
+    Flags are returned as ``(code, text)`` pairs; the caller gives them their
+    identity.
+    """
     oid = item["id"]
     anchor = item.get("anchor") or {}
     if not anchor or anchor.get("kind") == "none":
         reason = f" ({anchor['reason']})" if anchor.get("reason") else ""
-        return "absent", [], [f"{FLAG_PREFIX}original {oid!r} has no independent provenance "
-                              f"anchor{reason}: its identity rests on the executor's own "
-                              f"manifest, which cannot show the file was unedited when hashed"]
+        return "absent", [], [("anchor-absent", f"original {oid!r} has no independent "
+                               f"provenance anchor{reason}: its identity rests on the "
+                               f"executor's own manifest, which cannot show the file was "
+                               f"unedited when hashed")]
     kind = anchor["kind"]
 
-    def failed(message: str) -> tuple[str, list[str], list[str]]:
+    def failed(message: str) -> tuple[str, list[str], list[tuple[str, str]]]:
         return "failed", [f"original {oid!r}: provenance anchor ({kind}): {message}"], []
 
     if kind == "evidence-pack":
@@ -1573,10 +1748,10 @@ def _verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | No
         if not expected or algorithm not in hashlib.algorithms_available:
             # A record without checksums cannot anchor; that is a gap in the
             # pack, not the executor's fault (Fable review, P2-5).
-            return "recorded", [], [f"{FLAG_PREFIX}original {oid!r} is unanchorable: "
-                                    f"{pack_rel} record {anchor['record_id']} publishes no "
-                                    f"usable checksum for {anchor['file']!r} (re-harvest with "
-                                    f"harvester v1.2 or later)"]
+            return "recorded", [], [("anchor-unanchorable", f"original {oid!r} is "
+                                     f"unanchorable: {pack_rel} record {anchor['record_id']} "
+                                     f"publishes no usable checksum for {anchor['file']!r} "
+                                     f"(re-harvest with harvester v1.2 or later)")]
         deposit_rel = (item.get("archive") or {}).get("path") or item.get("local_copy")
         deposit = resolve_stored(target_dir, deposit_rel) if deposit_rel else None
         if deposit is None or not deposit.is_file():
@@ -1590,13 +1765,15 @@ def _verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | No
         selected = registry_selected_dois(repo_root, slug, launch) if slug else None
         doi = str(fields.get("doi") or "").lower()
         if selected is None:
-            return "recorded", [], [f"{FLAG_PREFIX}original {oid!r}: the registry is not "
-                                    f"committed and clean, so the anchored version cannot be "
-                                    f"checked against the version AP-12 selects"]
+            return "recorded", [], [("anchor-registry-unclean", f"original {oid!r}: the "
+                                     f"registry is not committed and clean, so the anchored "
+                                     f"version cannot be checked against the version AP-12 "
+                                     f"selects")]
         if doi not in selected:
-            return "recorded", [], [f"{FLAG_PREFIX}original {oid!r} is anchored to {doi or '?'}, "
-                                    f"which is not a version the registry selects for {slug} "
-                                    f"(AP-12): {sorted(selected) or 'none'}"]
+            return "recorded", [], [("anchor-version-unselected", f"original {oid!r} is "
+                                     f"anchored to {doi or '?'}, which is not a version the "
+                                     f"registry selects for {slug} (AP-12): "
+                                     f"{sorted(selected) or 'none'}")]
         return "verified", [], []
 
     if kind == "corpus-manifest":
@@ -1644,11 +1821,12 @@ def _verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | No
                       f"the corpus role is {role!r}" if role != "supplement" else
                       f"the registry declares no principal artefact held in {slug}'s "
                       f"journal supplement")
-            return "recorded", [], [f"{FLAG_PREFIX}original {oid!r} is anchored to corpus file "
-                                    f"{anchor['entry']}/{anchor['filename']}, which establishes "
-                                    f"its bytes but not that it is this paper's selected "
-                                    f"original: {reason}. A deposit kept in the corpus store is "
-                                    f"anchored through its evidence-pack record instead"]
+            return "recorded", [], [("anchor-corpus-unselected", f"original {oid!r} is "
+                                     f"anchored to corpus file {anchor['entry']}/"
+                                     f"{anchor['filename']}, which establishes its bytes but "
+                                     f"not that it is this paper's selected original: "
+                                     f"{reason}. A deposit kept in the corpus store is "
+                                     f"anchored through its evidence-pack record instead")]
         # A transcription stays "recorded": its fidelity is flagged by the caller.
         return ("recorded" if derivation else "verified"), [], []
 
@@ -1657,10 +1835,11 @@ def _verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | No
             return failed("the original's bytes are not recoverable to compare with the blob")
         if git_blob_sha1(original) != str(anchor["blob_sha1"]).lower():
             return failed(f"blob {anchor['blob_sha1']} does not match the original's bytes")
-        return "recorded", [], [f"{FLAG_PREFIX}original {oid!r} is anchored to blob "
-                                f"{anchor['blob_sha1'][:12]}… at {anchor['repository']}@"
-                                f"{anchor['commit'][:12]}:{anchor['path']}, a claim the gate "
-                                f"cannot verify offline: a reviewer confirms it at the remote"]
+        return "recorded", [], [("anchor-git-offline", f"original {oid!r} is anchored to "
+                                 f"blob {anchor['blob_sha1'][:12]}… at "
+                                 f"{anchor['repository']}@{anchor['commit'][:12]}:"
+                                 f"{anchor['path']}, a claim the gate cannot verify offline: "
+                                 f"a reviewer confirms it at the remote")]
     return failed(f"unknown anchor kind {kind!r}")
 
 
@@ -1791,7 +1970,7 @@ PROJECT_PROFILE = ".Rprofile.project"
 # Everything else in the attempt directory is the input tree.
 DOCUMENT_NAMES = frozenset({
     PLAN_FILE, PLAN_VIEW_FILE, APPROVAL_FILE, CODE_MANIFEST_FILE, EXECUTION_FILE,
-    GATE_FILE, "flag-rulings.json", REVIEW_FILE, "log.md", "environment.md",
+    GATE_FILE, RULINGS_FILE, AUDIT_FILE, REVIEW_FILE, "log.md", "environment.md",
     "comparisons", "outputs", RECORDS_DIR, SNAPSHOT_DIR, "__pycache__"})
 # Interpreters run-container starts the entry with, by suffix.
 ENTRY_INTERPRETERS = {".r": "Rscript", ".sh": "bash"}
@@ -2294,7 +2473,8 @@ def parse_events(text: str, nonce: str) -> tuple[list[dict], list[str]]:
     return events, stray
 
 
-def run_census(events: list[dict]) -> dict:
+def run_census(events: list[dict], run_id: str = "",
+               evidence: dict[str, str] | None = None) -> dict:
     """The process census for one run (spec §8), from its events alone.
 
     Events are grouped by the per-process token the shim mints, not by PID,
@@ -2305,11 +2485,19 @@ def run_census(events: list[dict]) -> dict:
     ``_exit``. A sequence gap or a repeated sequence number means lost or
     inserted lines, so the process is incomplete.
 
+    Args:
+        events: The run's parsed events.
+        run_id: The run, named in each message and issue subject.
+        evidence: Digests of the records the census read (``events.log``),
+            for the issues' fingerprints.
+
     Returns:
         ``{processes, errors, flags, obligations, gaps, abnormal}``, where
         ``gaps`` and ``abnormal`` list tokens (incomplete and abnormally ended
-        processes) and the other lists hold messages.
+        processes), ``errors`` holds messages, and ``flags`` and
+        ``obligations`` hold ``Issue``s.
     """
+    lead = f"{run_id}: " if run_id else ""
     by_token: dict[str, list[dict]] = {}
     for event in events:
         by_token.setdefault(event["token"], []).append(event)
@@ -2335,32 +2523,36 @@ def run_census(events: list[dict]) -> dict:
                    "fork": forked, "exempt": exempt}
         report["processes"].append(process)
         shown = f"{pid} ({' '.join(argv)[:160] or 'no arguments'})"
+        identity = {"subject": f"{run_id}/{token}", "files": evidence or {}}
         seqs = sorted(e["seq"] for e in hooked)
         if seqs != list(range(1, len(seqs) + 1)) or len(execs) > 1:
             report["gaps"].append(token)
         if execs and not starts and not exempt:
             skipped = sorted(HOOK_SKIP_OPTIONS & set(argv))
             if skipped:
-                report["errors"].append(f"R process {shown} skipped the lane hook with "
+                report["errors"].append(f"{lead}R process {shown} skipped the lane hook with "
                                         f"{skipped[0]}: the gate cannot see what it loaded")
             else:
-                report["errors"].append(f"R process {shown} never loaded the lane hook: its "
-                                        f"launcher is not a supported route, so the gate "
+                report["errors"].append(f"{lead}R process {shown} never loaded the lane hook: "
+                                        f"its launcher is not a supported route, so the gate "
                                         f"cannot see what it loaded")
         if starts and not execs:
-            report["flags"].append(f"{FLAG_PREFIX}R process {shown} started outside the R "
-                                   f"front end (no EXEC from the shim)")
+            report["flags"].append(Issue.flag(
+                "process-outside-front-end", text=f"{lead}R process {shown} started outside "
+                f"the R front end (no EXEC from the shim)", **identity))
         if starts and not ends and not forked and token not in report["gaps"]:
             report["abnormal"].append(token)
         if (execs and not exempt and process["stdin"] in ("file", "pipe")
                 and not any(a.startswith(SCRIPT_OPTIONS) for a in argv)):
-            report["obligations"].append(f"R process {shown} read its script from standard "
-                                         f"input (R < file): no load event covers that code, "
-                                         f"so confirm what it ran")
+            report["obligations"].append(Issue.obligation(
+                "stdin-script", text=f"{lead}R process {shown} read its script from standard "
+                f"input (R < file): no load event covers that code, so confirm what it ran",
+                **identity))
         if starts and len(starts[0]["fields"]) > 6 and starts[0]["fields"][6] == "restore":
-            report["obligations"].append(f"R process {shown} restored a saved workspace "
-                                         f"(.RData) in {decode_field(starts[0]['fields'][1])}: "
-                                         f"a declared input needing review")
+            report["obligations"].append(Issue.obligation(
+                "workspace-restore", text=f"{lead}R process {shown} restored a saved "
+                f"workspace (.RData) in {decode_field(starts[0]['fields'][1])}: a declared "
+                f"input needing review", **identity))
     return report
 
 
@@ -2577,9 +2769,11 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
                                   "image_id": (doc.get("image") or {}).get("id"),
                                   "exit_status": doc.get("exit_status")}
         # Launcher binding (Astra's design review, point 10).
+        receipt = {"receipt.json": indexed[run_id]["receipt_sha256"]}
         if launch_commit is None:
-            flags.append(f"{FLAG_PREFIX}{run_id} is not bound to a launch commit, so the lane "
-                         f"that ran it is unverified")
+            flags.append(Issue.flag("run-launch-unbound", run_id, f"{run_id} is not bound to a "
+                                    f"launch commit, so the lane that ran it is unverified",
+                                    files=receipt))
         elif doc.get("launch_commit") != launch_commit:
             errors.append(f"{run_id} records launch commit {doc.get('launch_commit')!r}, not "
                           f"the run's {launch_commit[:12]}")
@@ -2652,37 +2846,48 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
                           f"{report['runs'].get(run_id, {}).get('state', 'missing')}: an "
                           f"incomplete run cannot be ruled")
             continue
-        events, stray = parse_events((records / run_id / "events.log").read_text(
-            encoding="utf-8", errors="replace"), run_doc.get("nonce", ""))
-        census = run_census(events)
-        errors.extend(f"{run_id}: {m}" for m in census["errors"])
+        events_log = records / run_id / "events.log"
+        events, stray = parse_events(events_log.read_text(encoding="utf-8", errors="replace"),
+                                     run_doc.get("nonce", ""))
+        evidence = {f"{run_id}/events.log": sha256_file(events_log)}
+        census = run_census(events, run_id, evidence)
+        errors.extend(census["errors"])
         flags.extend(census["flags"])
-        report["obligations"].extend(f"{run_id}: {m}" for m in census["obligations"])
+        report["obligations"].extend(census["obligations"])
         if stray:
-            flags.append(f"{FLAG_PREFIX}{run_id}'s stream holds {len(stray)} event line(s) "
-                         f"from no process of this run (forged, or another run's)")
+            flags.append(Issue.flag("stray-events", run_id, f"{run_id}'s stream holds "
+                                    f"{len(stray)} event line(s) from no process of this run "
+                                    f"(forged, or another run's)", files=evidence))
         if not census["processes"]:
             errors.append(f"{run_id} recorded no R process: the run's code was not seen")
         if run_doc.get("state") == "failed":
-            flags.append(f"{FLAG_PREFIX}{run_id} failed (exit status "
-                         f"{run_doc.get('exit_status')}"
-                         + (f"; abnormal end of {len(census['abnormal'])} process(es)"
-                            if census["abnormal"] else "")
-                         + "): its partial results need a ruling")
+            flags.append(Issue.flag(
+                "run-failed", run_id, f"{run_id} failed (exit status "
+                f"{run_doc.get('exit_status')}"
+                + (f"; abnormal end of {len(census['abnormal'])} process(es)"
+                   if census["abnormal"] else "")
+                + "): its partial results need a ruling",
+                files={"receipt.json": indexed[run_id]["receipt_sha256"]}))
         if run_id != final:
             run_pre = json.loads((records / run_id / "pre.json").read_text(
                 encoding="utf-8"))["files"]
             run_code = {k: v for k, v in run_pre.items() if is_code_file(Path(k))}
             if run_code != final_code:
                 differences = "; ".join(inventory_difference(final_code, run_code)[:5])
-                flags.append(f"{FLAG_PREFIX}{final} consumed outputs of {run_id}, which ran "
-                             f"other code ({differences})")
+                flags.append(Issue.flag(
+                    "consumed-other-code", f"{final}<-{run_id}", f"{final} consumed outputs "
+                    f"of {run_id}, which ran other code ({differences})",
+                    files={f"{run_id}/pre.json": json_digest(run_code),
+                           f"{final}/pre.json": json_digest(final_code)}))
     image = doc.get("image") or {}
     if image.get("dockerfile_sha256") and image.get("dockerfile_label") != \
             image.get("dockerfile_sha256"):
-        flags.append(f"{FLAG_PREFIX}{final} ran image {str(image.get('id'))[:19]}, whose "
-                     f"llmr.dockerfile.sha256 label does not match the attempt's Dockerfile: "
-                     f"stale, or built from another file")
+        flags.append(Issue.flag(
+            "image-stale", final, f"{final} ran image {str(image.get('id'))[:19]}, whose "
+            f"llmr.dockerfile.sha256 label does not match the attempt's Dockerfile: stale, or "
+            f"built from another file",
+            files={"image": str(image.get("id")), "Dockerfile": str(image.get(
+                "dockerfile_sha256"))}))
     if (doc.get("front_end") or {}).get("unshimmed"):
         report["warnings"].append(f"{final}: R on the PATH at "
                                   f"{doc['front_end']['unshimmed']} is not the front end, so "
@@ -2690,8 +2895,8 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
     return report
 
 
-def citation_findings(targets: list[dict], runs: dict,
-                      locked: list[str]) -> tuple[list[str], list[str], set[str]]:
+def citation_findings(targets: list[dict], runs: dict, locked: list[str],
+                      comparison_sha256: str = "") -> tuple[list[str], list[str], set[str]]:
     """Check comparison citations against sealed run outputs (spec §5).
 
     Each cited output must belong to a credited run (the final run or one it
@@ -2703,9 +2908,11 @@ def citation_findings(targets: list[dict], runs: dict,
         targets: The comparison record's target entries.
         runs: ``check_code_integrity``'s ``runs`` block.
         locked: The plan's locked target ids.
+        comparison_sha256: The comparison record's digest, the evidence an
+            unbound target's issue is fingerprinted on.
 
     Returns:
-        ``(errors, flags, unbound_target_ids)``.
+        ``(errors, flags, unbound_target_ids)``; the flags are ``Issue``s.
     """
     errors: list[str] = []
     flags: list[str] = []
@@ -2726,8 +2933,11 @@ def citation_findings(targets: list[dict], runs: dict,
         if (not cites and tid in locked and target.get("testable") is not False
                 and target.get("outcome") in REPRODUCED_OUTCOMES):
             unbound.add(tid)
-            flags.append(f"{FLAG_PREFIX}{tid} cites no sealed run output, so its result is not "
-                         f"bound to a run (target-unbound): not admitted until ruled")
+            flags.append(Issue.flag("target-unbound", str(tid), f"{tid} cites no sealed run "
+                                    f"output, so its result is not bound to a run "
+                                    f"(target-unbound): not admitted until ruled",
+                                    targets=(str(tid),),
+                                    files={str(COMPARISON_FILE): comparison_sha256}))
     return errors, flags, unbound
 
 
@@ -2966,9 +3176,11 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                     else:
                         original_bytes.setdefault(oid, member)
         if oid not in original_bytes and len(errors) == errors_before:
-            flags.append(f"{FLAG_PREFIX}original {oid!r} has no pristine copy in the attempt "
-                         f"directory: byte identity rests on the recorded hash alone, and no "
-                         f"wrapper can be checked for an inlined copy of it")
+            flags.append(Issue.flag(
+                "no-pristine-copy", str(oid), f"original {oid!r} has no pristine copy in the "
+                f"attempt directory: byte identity rests on the recorded hash alone, and no "
+                f"wrapper can be checked for an inlined copy of it",
+                files={"original": str(item["sha256"])}))
         state, anchor_errors, anchor_flags = verify_anchor(
             item, target_dir, repo_root, manifest["paper_slug"], original_bytes.get(oid),
             launch_commit)
@@ -2976,11 +3188,14 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
         errors.extend(anchor_errors)
         flags.extend(anchor_flags)
         if item.get("derivation"):
-            flags.append(f"{FLAG_PREFIX}original {oid!r} is a {item['derivation']['method']} "
-                         f"of {item['derivation'].get('from') or 'another file'}: a "
-                         f"deterministic transcription shows repeatability, not fidelity to "
-                         f"the page, so a human checks the consequential code against the "
-                         f"source")
+            flags.append(Issue.flag(
+                "transcription", str(oid), f"original {oid!r} is a "
+                f"{item['derivation']['method']} of "
+                f"{item['derivation'].get('from') or 'another file'}: a deterministic "
+                f"transcription shows repeatability, not fidelity to the page, so a human "
+                f"checks the consequential code against the source",
+                files={"original": str(item["sha256"]),
+                       "derivation": json_digest(item["derivation"])}))
 
     # -- Executed copies: byte-identical, or a declared (flagged) edit.
     original_hashes = {item["sha256"]: oid for oid, item in by_id.items()}
@@ -3034,22 +3249,29 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                      else "size not computable (no pristine copy)")
         if size and "lines_changed" in edit and edit["lines_changed"] != size["changed"]:
             size_text += f"; declared {edit['lines_changed']} — the computed value governs"
-        flags.append(f"{FLAG_EDIT_PREFIX}{item['path']} differs from original "
-                     f"{item['original']!r}; {size_text}; kind {edit.get('kind', 'unstated')}; "
-                     f"affected targets {edit['affected_targets'] or 'none stated'}; declared: "
-                     f"{edit['summary']}. Declaring an edit does not make a repaired result "
-                     f"creditable")
+        edit_evidence = {item["path"]: digest, "original": str(source["sha256"]),
+                         "declared_edit": json_digest(edit)}
+        flags.append(Issue.flag(
+            "edited-copy", item["path"], f"{item['path']} differs from original "
+            f"{item['original']!r}; {size_text}; kind {edit.get('kind', 'unstated')}; affected "
+            f"targets {edit['affected_targets'] or 'none stated'}; declared: "
+            f"{edit['summary']}. Declaring an edit does not make a repaired result creditable",
+            prefix=FLAG_EDIT_PREFIX, targets=edit["affected_targets"], files=edit_evidence))
         for target in edit["affected_targets"]:
             if target in credited:
-                flags.append(f"{FLAG_PREFIX}target {target} is credited ({credited[target]}) "
-                             f"but rests on the flagged edit to {item['path']} — a repaired "
-                             f"result never counts toward coverage or the verdict (queued "
-                             f"amendment 3, item 7(d))")
+                flags.append(Issue.flag(
+                    "credited-edited-target", f"{target}@{item['path']}", f"target {target} "
+                    f"is credited ({credited[target]}) but rests on the flagged edit to "
+                    f"{item['path']} — a repaired result never counts toward coverage or the "
+                    f"verdict (queued amendment 3, item 7(d))", targets=(target,),
+                    files=edit_evidence))
 
     if originals and not executed:
-        flags.append(f"{FLAG_PREFIX}no authors' file is listed as executed: every result "
-                     f"rests on the reproducer's own code (a re-implementation is not the "
-                     f"authors' code run unmodified)")
+        flags.append(Issue.flag(
+            "no-executed-original", "attempt", "no authors' file is listed as executed: every "
+            "result rests on the reproducer's own code (a re-implementation is not the "
+            "authors' code run unmodified)",
+            files={manifest_path.name: str(result["manifest_sha256"])}))
 
     # -- Wrappers: exist, are separate files, and do not inline authors' code.
     wrapper_paths: set[Path] = set()
@@ -3087,44 +3309,60 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                 errors.append(f"{item['path']} is declared generated but shares "
                               f"{EMBEDDED_LINES_FLAG}+ substantive lines with authors' "
                               f"original(s) {inlined}: an edited copy is not generated code")
-            flags.append(f"{FLAG_PREFIX}{item['path']} is code the run generated: the gate "
-                         f"cannot show it was not executed, so a human confirms what made it "
-                         f"and that nothing ran it")
+            flags.append(Issue.flag(
+                "generated-code", item["path"], f"{item['path']} is code the run generated: "
+                f"the gate cannot show it was not executed, so a human confirms what made it "
+                f"and that nothing ran it", files={item["path"]: hashlib.sha256(
+                    data).hexdigest()}))
             continue
         if item["role"] == "conversion":
             flag = conversion_evidence_flag(target_dir, item)
             if flag:
-                flags.append(flag)
+                declared = item.get("conversion") if isinstance(item.get("conversion"),
+                                                                dict) else {}
+                flags.append(Issue(flag, kind="flag", code="conversion-evidence",
+                                   subject=item["path"], files=file_digests(
+                                       target_dir, item["path"],
+                                       item.get("value_identity_check"),
+                                       declared.get("input"), declared.get("output"))))
         text = data.decode("utf-8", errors="replace")
         mine = substantive_lines(text)
         for oid, original in original_bytes.items():
             shared = mine & substantive_lines(original.decode("utf-8", errors="replace"))
             if len(shared) >= EMBEDDED_LINES_FLAG:
-                flags.append(f"{FLAG_PREFIX}wrapper {item['path']} embeds {len(shared)} "
-                             f"substantive line(s) of authors' original {oid!r} (a heuristic "
-                             f"for verbatim inlining) — inlined authors' code is an edited "
-                             f"copy unless the original file is what runs")
+                flags.append(Issue.flag(
+                    "wrapper-embeds-original", f"{item['path']}~{oid}", f"wrapper "
+                    f"{item['path']} embeds {len(shared)} substantive line(s) of authors' "
+                    f"original {oid!r} (a heuristic for verbatim inlining) — inlined authors' "
+                    f"code is an edited copy unless the original file is what runs",
+                    files={item["path"]: hashlib.sha256(data).hexdigest()}))
+        wrapper_file = {item["path"]: hashlib.sha256(data).hexdigest()}
         if DYNAMIC_EVAL_RE.search(text):
-            obligations.append(f"{item['path']} evaluates code dynamically (parse, eval, "
-                               f"source of a computed path, or exec): confirm it evaluates "
-                               f"only the declared authors' files, unmodified")
+            obligations.append(Issue.obligation(
+                "dynamic-evaluation", item["path"], f"{item['path']} evaluates code "
+                f"dynamically (parse, eval, source of a computed path, or exec): confirm it "
+                f"evaluates only the declared authors' files, unmodified", files=wrapper_file))
         if PATCHING_RE.search(text):
-            obligations.append(f"{item['path']} can patch functions in memory (body, formals, "
-                               f"trace, assignInNamespace, unlockBinding, or <<-): confirm it "
-                               f"changes no function of the authors' code")
+            obligations.append(Issue.obligation(
+                "in-memory-patching", item["path"], f"{item['path']} can patch functions in "
+                f"memory (body, formals, trace, assignInNamespace, unlockBinding, or <<-): "
+                f"confirm it changes no function of the authors' code", files=wrapper_file))
         if "dockerfile" in path.name.lower():
             if DOCKER_FETCH_RE.search(text):
-                obligations.append(f"{item['path']} brings content into the image from "
-                                   f"outside the attempt directory: confirm none of it is "
-                                   f"analysis code")
+                obligations.append(Issue.obligation(
+                    "docker-fetch", item["path"], f"{item['path']} brings content into the "
+                    f"image from outside the attempt directory: confirm none of it is "
+                    f"analysis code", files=wrapper_file))
             if DOCKER_EDIT_RE.search(text):
-                obligations.append(f"{item['path']} edits files at build time (sed, patch, "
-                                   f"perl -i, awk, tee, a redirect, or a heredoc): confirm it "
-                                   f"edits no authors' file and no R start-up file")
+                obligations.append(Issue.obligation(
+                    "docker-build-edit", item["path"], f"{item['path']} edits files at build "
+                    f"time (sed, patch, perl -i, awk, tee, a redirect, or a heredoc): confirm "
+                    f"it edits no authors' file and no R start-up file", files=wrapper_file))
             if DOCKER_COPY_RE.search(text):
-                obligations.append(f"{item['path']} copies attempt files into the image: "
-                                   f"confirm the run executes the mounted, checked tree and "
-                                   f"not the image's copy")
+                obligations.append(Issue.obligation(
+                    "docker-copy", item["path"], f"{item['path']} copies attempt files into "
+                    f"the image: confirm the run executes the mounted, checked tree and not "
+                    f"the image's copy", files=wrapper_file))
 
     # -- Sealed run records (gate 1.3): the lane, not the executor, recorded
     #    each run. Code a run generated joins the generated files: flagged,
@@ -3150,8 +3388,10 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                 errors.append(f"{rel_text}, generated by the run, shares {EMBEDDED_LINES_FLAG}+ "
                               f"substantive lines with authors' original(s) {inlined}: an "
                               f"edited copy is not generated code")
-            flags.append(f"{FLAG_PREFIX}{rel_text} is code the run generated: never loadable, "
-                         f"so a human confirms what made it and that nothing ran it")
+            flags.append(Issue.flag(
+                "generated-code", rel_text, f"{rel_text} is code the run generated: never "
+                f"loadable, so a human confirms what made it and that nothing ran it",
+                files=file_digests(target_dir, rel_text)))
         if lane["final_pre"] is not None:
             in_run = {item["path"] for item in wrappers
                       if item["role"] in ("wrapper", "tooling")}
@@ -3198,8 +3438,10 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
             named = resolve_reference(literal)
             if named is None:
                 if is_wrapper:
-                    obligations.append(f"{source_rel} names code {literal!r} that is not in "
-                                       f"the attempt directory: confirm where it comes from")
+                    obligations.append(Issue.obligation(
+                        "external-code-reference", f"{source_rel}~{literal}", f"{source_rel} "
+                        f"names code {literal!r} that is not in the attempt directory: confirm "
+                        f"where it comes from", files=file_digests(target_dir, source_rel)))
                 continue
             loaded_as_code.add(named.relative_to(root).as_posix())
             if named in generated_paths:
@@ -3211,9 +3453,12 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                               f"{named.relative_to(root).as_posix()} (a file passed to a "
                               f"loader is code whatever its name)")
     if wrapper_paths:
-        obligations.append("wrapper semantics are not verified by the gate: its line-overlap "
-                           "check is a heuristic, so the reviewer confirms that each wrapper "
-                           "only mechanises the authors' code (paths, seeds, capture)")
+        obligations.append(Issue.obligation(
+            "wrapper-semantics", "wrappers", "wrapper semantics are not verified by the gate: "
+            "its line-overlap check is a heuristic, so the reviewer confirms that each wrapper "
+            "only mechanises the authors' code (paths, seeds, capture)",
+            files=file_digests(target_dir, *sorted(
+                p.relative_to(root).as_posix() for p in wrapper_paths))))
 
     # -- Closed-world inventory: every code file anywhere is accounted for.
     declared_rel = {p.relative_to(root).as_posix()
@@ -3294,6 +3539,7 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                 warnings.append(f"{rel_text} was added after the run: it was not part of the "
                                 f"recorded execution")
 
+    result["issues"] = issue_records(flags + obligations)
     if errors:
         result["status"] = "fail"
     elif flags:
@@ -3303,6 +3549,116 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
     else:
         result["status"] = "identical"
     return result
+
+
+def load_rulings(target_dir: Path) -> list[dict]:
+    """The attempt's recorded rulings (``flag-rulings.json``), oldest first."""
+    path = target_dir / RULINGS_FILE
+    if not path.is_file():
+        return []
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise LaneError(f"{display_path(path)} does not parse: {exc}") from exc
+    return [r for r in doc.get("rulings") or [] if isinstance(r, dict)]
+
+
+def ruling_for(issue: dict, rulings: list[dict]) -> dict | None:
+    """The latest ruling on an issue, if one still applies.
+
+    A ruling applies only when both the issue id and the evidence
+    fingerprint match (spec §6). A re-run that changes the files concerned
+    needs a new ruling; one that changes nothing keeps it.
+    """
+    matches = [r for r in rulings if r.get("issue_id") == issue.get("id")
+               and r.get("fingerprint") == issue.get("fingerprint")]
+    return matches[-1] if matches else None
+
+
+def admitted_coverage(verdict: str, issues: list[dict], rulings: list[dict],
+                      locked: list[str], reproduced_ids: list[str],
+                      structural: dict[str, set[str]]) -> dict:
+    """``coverage_admitted``: what counts once every issue is ruled (spec §6).
+
+    Raw coverage counts outcomes. Admitted coverage removes:
+
+    - every target, when the gate failed (a hard failure cannot be ruled);
+    - targets excluded by structure whatever the ruling: those resting on a
+      declared edit until the class (ii) wrapper-only re-run exists, and all
+      of them when no authors' file ran (``structural``, reason to targets);
+    - every target an unruled issue names, where an empty list names all;
+    - every target an issue was ruled ``fail-and-uplift`` or ``excluded`` on.
+
+    Returns:
+        ``{targets_enumerated, targets_admitted, coverage_fraction,
+        excluded_targets, reasons, unruled_issues}``.
+    """
+    excluded: set[str] = set()
+    reasons: list[str] = []
+    unruled: list[str] = []
+    if verdict != "pass":
+        excluded |= set(locked)
+        reasons.append("the gate failed: a hard failure cannot be ruled")
+    for reason, targets in structural.items():
+        excluded |= targets
+        reasons.append(reason)
+    for issue in issues:
+        named = set(issue.get("targets") or []) or set(locked)
+        ruling = ruling_for(issue, rulings)
+        if ruling is None:
+            unruled.append(issue["id"])
+            excluded |= named
+        elif ruling.get("decision") in ("fail-and-uplift", "excluded"):
+            excluded |= named
+            reasons.append(f"{issue['id']} ruled {ruling['decision']}")
+    if unruled:
+        reasons.append(f"{len(unruled)} unruled issue(s)")
+    kept = [tid for tid in reproduced_ids if tid not in excluded]
+    return {"targets_enumerated": len(locked), "targets_admitted": len(kept),
+            "coverage_fraction": round(len(kept) / len(locked), 4) if locked else 0.0,
+            "excluded_targets": sorted(excluded & set(reproduced_ids)), "reasons": reasons,
+            "unruled_issues": unruled}
+
+
+def admission(target_dir: Path) -> dict:
+    """Whether an attempt's results may enter study data (spec §6).
+
+    Admission needs a passing gate, every issue ruled, every credited run
+    complete (a failed one is covered by its ``run-failed`` issue), and a
+    clean transcript audit (``transcript-audit.json``, spec §12). Nothing
+    here can be overridden: a record persisted while ineligible stays so
+    until ``persist-results`` is run afresh after the rulings.
+    """
+    reasons: list[str] = []
+    try:
+        report = json.loads((target_dir / GATE_FILE).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"eligible": False, "assessed_at": now_utc(),
+                "reasons": ["no readable authoritative gate report"]}
+    runs = (report.get("code_integrity") or {}).get("runs")
+    if runs is None:
+        reasons.append("no sealed run records: the attempt predates gate 1.3")
+    else:
+        for run_id in runs.get("credited_runs") or []:
+            state = (runs.get("runs") or {}).get(run_id, {}).get("state")
+            if state not in ("complete", "failed"):
+                reasons.append(f"credited run {run_id} is {state}")
+    if report.get("verdict") != "pass":
+        reasons.append(f"the gate verdict is {report.get('verdict')!r}")
+    rulings = load_rulings(target_dir)
+    unruled = [i["id"] for i in report.get("issues") or [] if ruling_for(i, rulings) is None]
+    if unruled:
+        reasons.append(f"{len(unruled)} unruled issue(s): {', '.join(unruled[:5])}"
+                       + (" …" if len(unruled) > 5 else ""))
+    try:
+        audit = json.loads((target_dir / AUDIT_FILE).read_text(encoding="utf-8"))
+        if audit.get("contaminating"):
+            reasons.append(f"the transcript audit found {len(audit['contaminating'])} "
+                           f"contaminating finding(s)")
+    except (OSError, json.JSONDecodeError):
+        reasons.append(f"no transcript audit recorded ({AUDIT_FILE}, spec §12)")
+    return {"eligible": not reasons, "assessed_at": now_utc(), "reasons": reasons,
+            "gate_report_sha256": sha256_file(target_dir / GATE_FILE)}
 
 
 def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
@@ -3457,7 +3813,8 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
     flags = list(integrity["flags"])
     unbound: set[str] = set()
     if integrity.get("runs") is not None and isinstance(comparison, dict):
-        cite_errors, cite_flags, unbound = citation_findings(records, integrity["runs"], locked)
+        cite_errors, cite_flags, unbound = citation_findings(
+            records, integrity["runs"], locked, sha256_file(target_dir / COMPARISON_FILE))
         errors += cite_errors
         warnings += cite_flags
         flags += cite_flags
@@ -3467,7 +3824,8 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
     # edit would be counted. Exclude every target a declared edit names (an
     # empty list names them all), and every target when no authors' file was
     # executed. A flagged result is creditable only after a recorded ruling.
-    creditable = None
+    creditable = admitted = None
+    issues = issue_records(flags + integrity["review_obligations"])
     if coverage is not None:
         excluded: set[str] = set()
         reasons: list[str] = []
@@ -3498,13 +3856,24 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
                       "coverage_fraction": round(len(kept) / len(locked), 4) if locked
                       else 0.0, "excluded_targets": sorted(excluded & set(reproduced_ids)),
                       "reasons": reasons}
+        structural = {}
+        edited = excluded - unbound
+        if manifest.get("originals") and not manifest.get("executed"):
+            structural["no authors' file was executed"] = set(locked)
+        elif edited:
+            structural["resting on a declared edit, until the class (ii) wrapper-only "
+                       "re-run"] = edited
+        admitted = admitted_coverage("fail" if errors else "pass", issues,
+                                     load_rulings(target_dir), locked, reproduced_ids,
+                                     structural)
     return {"gate_version": GATE_VERSION, "checked_at": now_utc(),
             "attempt_dir": display_path(target_dir), "plan_file": display_path(plan_path),
             "plan_sha256": plan_digest, "locked_targets": len(locked),
             "verdict": "fail" if errors else "pass", "errors": errors,
             "warnings": warnings, "flags": flags,
             "review_obligations": integrity["review_obligations"], "coverage": coverage,
-            "coverage_creditable": creditable, "launch_commit": launch_commit,
+            "coverage_creditable": creditable, "coverage_admitted": admitted,
+            "issues": issues, "launch_commit": launch_commit,
             "eligible_for_current_gate": integrity["eligible_for_current_gate"],
             "code_integrity": {k: integrity[k] for k in (
                 "status", "manifest", "manifest_sha256", "originals", "executed",
@@ -3648,6 +4017,29 @@ def authoritative_queue(config: dict) -> tuple[list[str], list[str]]:
     return queue, problems
 
 
+def issue_statuses(config: dict) -> list[dict]:
+    """Every issue in the authoritative gate reports, ruled or unruled (spec §6).
+
+    Obligations are listed as well as flags: both block admission until a
+    human rules on them.
+    """
+    statuses = []
+    for paper in config["papers"]:
+        target_dir = attempt_dir(config, paper["slug"])
+        try:
+            report = json.loads((target_dir / GATE_FILE).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        rulings = load_rulings(target_dir)
+        for issue in report.get("issues") or []:
+            ruling = ruling_for(issue, rulings)
+            statuses.append({"slug": paper["slug"], "id": issue["id"], "kind": issue["kind"],
+                             "status": "ruled" if ruling else "unruled",
+                             "decision": ruling.get("decision") if ruling else None,
+                             "message": issue.get("message")})
+    return statuses
+
+
 def cmd_human_queue(args: argparse.Namespace) -> int:
     """Rebuild the human queue from the authoritative gate reports.
 
@@ -3667,8 +4059,10 @@ def cmd_human_queue(args: argparse.Namespace) -> int:
         if not isinstance(relayed, list):
             raise LaneError("workflow result carries no human_queue list")
         lost = [item for item in queue if item not in set(relayed)]
+    issues = issue_statuses(config)
     report = {"run_id": config["run_id"], "built_at": now_utc(), "queue": queue,
-              "problems": problems, "lost_in_relay": lost}
+              "problems": problems, "lost_in_relay": lost, "issues": issues,
+              "unruled": sum(1 for i in issues if i["status"] == "unruled")}
     if args.out:
         write_json(args.out.expanduser(), report)
     print(json.dumps(report, indent=2, ensure_ascii=False))
@@ -3712,6 +4106,17 @@ def cmd_persist_results(args: argparse.Namespace) -> int:
             if path.exists() and not args.force:
                 problems.append(f"{display_path(path)} exists — pass --force to replace")
                 continue
+            # Gate 1.3 admission (spec §6): an attempt with sealed run records
+            # is persisted only when eligible, or, with --record-unruled, as
+            # ineligible. Nothing downstream can make that record eligible.
+            admitted = admission(attempt_dir(config, slug))
+            sealed = (attempt_dir(config, slug) / RECORDS_DIR).is_dir()
+            if role == "executor" and sealed and not admitted["eligible"] \
+                    and not args.record_unruled:
+                problems.append(f"{slug} is not eligible for study data "
+                                f"({'; '.join(admitted['reasons'])}); pass --record-unruled to "
+                                f"persist it as ineligible")
+                continue
             provenance = PROVENANCE_RE.search(item["prompt"])
             write_json(path, {"record_version": "1.0", "run_id": config["run_id"],
                               "workflow_run": run_dir.name, "agent_id": item["agent_id"],
@@ -3719,7 +4124,7 @@ def cmd_persist_results(args: argparse.Namespace) -> int:
                               "launch_commit": provenance.group(2) if provenance else None,
                               "effort": provenance.group(3) if provenance else None,
                               "persisted_at": now_utc(), "orchestrator_notes": notes,
-                              "payload": payload})
+                              "admission": admitted, "payload": payload})
             print(f"persisted {display_path(path)}"
                   + (f" ({len(notes)} note(s))" if notes else ""))
     for problem in problems:
@@ -4126,6 +4531,14 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--force", action="store_true", help="replace a hold/reject")
     p.set_defaults(func=cmd_approve)
 
+    p = sub.add_parser("rule-flags", help="record human rulings on an attempt's issues")
+    p.add_argument("--config", type=Path, required=True)
+    p.add_argument("--slug", required=True)
+    p.add_argument("--approver", required=True)
+    p.add_argument("--rulings", type=Path, required=True,
+                   help='JSON list of {"issue": id, "decision": ..., "note": ...}')
+    p.set_defaults(func=cmd_rule_flags)
+
     p = sub.add_parser("build-exec-args", help="args for the execute workflow")
     p.add_argument("--config", type=Path, required=True)
     p.add_argument("--scratch-root", required=True)
@@ -4206,6 +4619,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--config", type=Path, required=True)
     p.add_argument("--run-dir", type=Path, required=True)
     p.add_argument("--force", action="store_true")
+    p.add_argument("--record-unruled", action="store_true",
+                   help="persist an ineligible gate 1.3 attempt, marked eligible: false")
     p.set_defaults(func=cmd_persist_results)
 
     p = sub.add_parser("audit-run", help="receipts, blinding, cost, wall-clock")

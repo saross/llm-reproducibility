@@ -285,6 +285,39 @@ class GateTests(unittest.TestCase):
         self.assertEqual(report["verdict"], "pass", report["errors"])
         self.assertEqual(report["coverage"]["coverage_fraction"], 1.0)
 
+    def test_report_lists_issues_and_admits_only_ruled_results(self):
+        """Gate 1.3 §6: raw coverage counts outcomes; admitted coverage waits
+        for a ruling on every issue, here the wrapper-semantics obligation."""
+        self.comparison()
+        report = self.run_gate()
+        self.assertEqual(report["coverage"]["targets_reproduced"], 2)
+        self.assertEqual(report["coverage_admitted"]["targets_admitted"], 0)
+        ids = [i["id"] for i in report["issues"]]
+        self.assertIn("wrapper-semantics:wrappers", ids)
+        self.assertNotIn("unclassified", {i["code"] for i in report["issues"]})
+        write(self.dir / lane.RULINGS_FILE, json.dumps({"rulings": [
+            {"issue_id": i["id"], "fingerprint": i["fingerprint"],
+             "decision": "admissible" if i["kind"] == "flag" else "discharged"}
+            for i in report["issues"]]}))
+        self.assertEqual(self.run_gate()["coverage_admitted"]["targets_admitted"], 2)
+
+    def test_changed_wrapper_lapses_its_ruling(self):
+        """Astra's acceptance test: a changed input under an unchanged ruling
+        message. The re-run is clean; the obligation's text is the same."""
+        self.comparison()
+        report = self.run_gate()
+        write(self.dir / lane.RULINGS_FILE, json.dumps({"rulings": [
+            {"issue_id": i["id"], "fingerprint": i["fingerprint"],
+             "decision": "admissible" if i["kind"] == "flag" else "discharged"}
+            for i in report["issues"]]}))
+        write(self.dir / "run-analysis.R", 'source("authors-code/analysis.R")\n# seed\n')
+        snapshot(self.dir)
+        rerun = self.run_gate()
+        self.assertEqual(rerun["verdict"], "pass", rerun["errors"])
+        self.assertEqual(rerun["coverage_admitted"]["unruled_issues"],
+                         ["wrapper-semantics:wrappers"])
+        self.assertEqual(rerun["coverage_admitted"]["targets_admitted"], 0)
+
     def test_missing_locked_target_fails(self):
         record = self.comparison()
         record["targets"] = record["targets"][:1]
