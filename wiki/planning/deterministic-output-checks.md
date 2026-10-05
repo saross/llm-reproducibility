@@ -201,6 +201,16 @@ or as a planned rule with its validation criteria declared in advance.
   hash the authors' code files at retrieval and check that the executed
   copies are byte-identical; any difference is a declared wrapper or a
   flagged edit.
+  *2026-10-05: built on PR #7 (gates 1.1–1.3 part 1; not yet merged).
+  Cross-model review moved it to a lane-owned run command with a loader
+  log; the plan is `wiki/planning/reproduction-gate-1-3-design.md` on that
+  branch. Tick when merged.*
 - [ ] Reproduction lane (ruled 2026-10-04, before the regression gate):
   a one-off audit of each pilot's executed code against the authors'
   originals, to find undeclared repairs like dye's T02.
+  *2026-10-05: done on PR #7
+  (`studies/open-science-compliance/outputs/validation/executed-code-audit-2026-10-04/`;
+  not yet merged). It found no undeclared repair beyond T02, but a weaker
+  pilot baseline: re-implementations, non-AP-12 versions, and crema's
+  Table 1 credited against v2.0.0's own re-run. That led to amendment 3
+  §9's correction ledger. Tick when merged.*
