@@ -1,7 +1,9 @@
 # Preparation Prompt — Session R-A
 
-**Version:** 1.2
-**Last Updated:** 2026-10-04 (v1.2: §1.0.2 authors' code manifest; §3.3–3.4
+**Version:** 1.3
+**Last Updated:** 2026-10-05 (v1.3: §1.0.2 provenance anchors, execution
+snapshots, generated code, and conversion evidence, after the cross-model
+review of PR #7; v1.2, 2026-10-04: §1.0.2 authors' code manifest; §3.3–3.4
 no longer invite restructuring the authors' code)
 **Session:** R-A (Preparation)
 **Skill:** reproduction-assessor
@@ -88,16 +90,49 @@ difference is a declared wrapper or a flagged edit.
   allow it in git, hold it out (`.gitignore` plus a fetch script with
   sha256 checks), as §1.0.1 requires for publisher content. For code that
   exists only as printed listings, record the transcription under
-  `derivation`.
+  `derivation`; a transcription is always flagged, because the gate can show
+  the source's identity but not the transcription's fidelity to the page.
+- **Anchor each original to a record you did not write.** Your manifest
+  alone cannot show that a file was unedited when you hashed it, so the gate
+  verifies an `anchor` against a committed record:
+  - `evidence-pack`: for a deposit file (a Zenodo zip or single file), name
+    the committed evidence pack, the record id of the version the registry
+    selects (AP-12), and the file key. The gate checks the deposit file you
+    kept (`archive.path` or `local_copy`) against the checksum the record
+    publishes.
+  - `corpus-manifest`: for a file in the corpus store (a publisher
+    supplement, or a transcription's source), name the committed corpus
+    manifest, the paper's entry, and the filename. An archive held in the
+    store is named `$CORPUS_ROOT/<slug>/<file>`.
+  - `git`: repository, commit, path, and blob id. The gate checks the blob id
+    against the bytes, but a reviewer must confirm it at the remote, so it is
+    flagged.
+  - `none`, with a reason, when no independent record exists. The result is
+    flagged, never `identical`.
 - **Run the authors' files unmodified.** Paths, seeds, output capture, and
   error handling belong in your own files, listed under `wrappers` with a
   role. Never edit an authors' file, and never inline its code into a
   wrapper.
 - **An unavoidable edit is declared** under `declared_edit`, with the
   targets it affects. It is flagged for a human ruling.
+- **Snapshot the execution boundary.** The run mounts the attempt directory,
+  so its code files are what the run can execute. Immediately before the
+  container run: `venv/bin/python scripts/reproduction-lane.py snapshot-code
+  <attempt dir> --phase pre`; immediately after: the same with
+  `--phase post`. Change no code file afterwards. Nothing is exempt, including
+  `outputs/`: declare any code file the run itself writes as a wrapper with
+  role `generated`. No wrapper may load generated code.
+- **A format conversion needs machine-readable evidence.** Its
+  `value_identity_check` names a JSON record: `{"check": "value-identity",
+  "result": "identical", "input": {"path", "sha256"}, "output": {"path",
+  "sha256"}, "values_compared": n, "values_total": n}`, bound to the files as
+  they are and covering every value. Anything else is flagged.
 - **Check:** `venv/bin/python scripts/reproduction-lane.py check-code <attempt dir>`.
-  It fails on an undeclared difference, and on any code file that is neither
-  an authors' file nor a declared wrapper.
+  It fails on an undeclared difference, on code that changed after or during
+  the run, and on any code file that is neither an authors' file nor a
+  declared wrapper. `pass` means only that every code file is accounted for:
+  flags still need a human ruling, and a repaired result never counts toward
+  coverage.
 
 #### 1.1 Code Retrieval
 

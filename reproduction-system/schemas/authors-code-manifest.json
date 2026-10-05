@@ -1,14 +1,28 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Authors' code manifest",
-  "description": "On-disk record written at retrieval to <attempt_dir>/authors-code-manifest.json (reproduction-executor v1.2; preparation prompt v1.2 section 1.0.2). It records a sha256 for every authors' file as retrieved, the copies the run executed, the reproducer's own files (wrappers), and any declared edit to an authors' file. scripts/reproduction-lane.py check-attempt (gate 1.1) and check-code verify it: an executed copy must be byte-identical to its retrieved original; any difference must be a declared edit, which is flagged for human ruling; an undeclared difference fails the gate. Rulings: Shawn 2026-10-04, fail-and-uplift follow-on (3); queued amendment 3 item 7(d), wrapper boundary cases (mechanics in wrappers only, never in the authors' files). All paths are relative to the attempt directory.",
-  "version": "1.0",
+  "description": "On-disk record written at retrieval to <attempt_dir>/authors-code-manifest.json (reproduction-executor v1.2; preparation prompt v1.2 section 1.0.2). It records a sha256 for every authors' file as retrieved, the copies the run executed, the reproducer's own files (wrappers), and any declared edit to an authors' file. scripts/reproduction-lane.py check-attempt (gate 1.1) and check-code verify it: an executed copy must be byte-identical to its retrieved original; any difference must be a declared edit, which is flagged for human ruling; an undeclared difference fails the gate. Rulings: Shawn 2026-10-04, fail-and-uplift follow-on (3); queued amendment 3 item 7(d), wrapper boundary cases (mechanics in wrappers only, never in the authors' files). v1.1 (2026-10-05, after the cross-model review of PR #7): each original may carry a provenance anchor, verified against a committed record the executor did not write (an evidence pack's published deposit checksum bound to the registry's AP-12 version, or the corpus manifest's sha256); an original without a verified anchor is flagged. Wrapper role 'generated' declares code the run itself produced. Paths are relative to the attempt directory, except archive paths, which may name the corpus store with the prefix $CORPUS_ROOT/.",
+  "version": "1.1",
   "type": "object",
-  "required": ["manifest_version", "paper_slug", "originals", "executed", "wrappers"],
+  "required": [
+    "manifest_version",
+    "paper_slug",
+    "originals",
+    "executed",
+    "wrappers"
+  ],
   "additionalProperties": false,
   "properties": {
-    "manifest_version": {"const": "1.0"},
-    "paper_slug": {"type": "string", "minLength": 1},
+    "manifest_version": {
+      "enum": [
+        "1.0",
+        "1.1"
+      ]
+    },
+    "paper_slug": {
+      "type": "string",
+      "minLength": 1
+    },
     "no_authors_code_reason": {
       "type": "string",
       "minLength": 1,
@@ -19,39 +33,205 @@
       "description": "Every authors' file as retrieved, hashed at the moment of retrieval.",
       "items": {
         "type": "object",
-        "required": ["id", "sha256", "source", "retrieved_at"],
+        "required": [
+          "id",
+          "sha256",
+          "source",
+          "retrieved_at"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id": {"type": "string", "minLength": 1, "description": "The file's path within the authors' materials (deposit, repository, or supplement), e.g. analysis/paper/paper.qmd. Unique."},
-          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the bytes as retrieved."},
-          "source": {"type": "string", "minLength": 1, "description": "URL, DOI plus file name, repository plus tag or commit, or corpus-store path the file came from."},
-          "version": {"type": "string", "description": "Deposit version, tag, or commit retrieved (the AP-12 version where one is determined)."},
-          "retrieved_at": {"type": "string", "minLength": 10, "description": "ISO 8601 UTC timestamp of retrieval."},
-          "local_copy": {"type": "string", "minLength": 1, "description": "Pristine copy kept in the attempt directory, never edited. When present the gate re-hashes it."},
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The file's path within the authors' materials (deposit, repository, or supplement), e.g. analysis/paper/paper.qmd. Unique."
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "sha256 of the bytes as retrieved."
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "description": "URL, DOI plus file name, repository plus tag or commit, or corpus-store path the file came from."
+          },
+          "version": {
+            "type": "string",
+            "description": "Deposit version, tag, or commit retrieved (the AP-12 version where one is determined)."
+          },
+          "retrieved_at": {
+            "type": "string",
+            "minLength": 10,
+            "description": "ISO 8601 UTC timestamp of retrieval."
+          },
+          "local_copy": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Pristine copy kept in the attempt directory, never edited. When present the gate re-hashes it."
+          },
           "archive": {
             "type": "object",
-            "description": "When the file was extracted from an archive (a Zenodo zip, a supplement zip). If the archive is kept in the attempt directory the gate re-extracts the member and re-hashes it.",
-            "required": ["member"],
+            "description": "When the file was extracted from an archive (a Zenodo zip, a supplement zip). The gate re-extracts the member and re-hashes it. The path is relative to the attempt directory, or begins $CORPUS_ROOT/ for an archive held in the corpus store (deposit archives and publisher supplements may not enter git).",
+            "required": [
+              "member"
+            ],
             "additionalProperties": false,
             "properties": {
-              "path": {"type": "string", "minLength": 1},
-              "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-              "member": {"type": "string", "minLength": 1}
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "member": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           },
           "derivation": {
             "type": "object",
             "description": "When the authors' code exists only in a form that cannot be executed as bytes (for example, listings printed in a PDF) and the original recorded here is a deterministic transcription. The hash then identifies the transcription, not the publisher's file.",
-            "required": ["method", "from_sha256"],
+            "required": [
+              "method",
+              "from_sha256"
+            ],
             "additionalProperties": false,
             "properties": {
-              "method": {"type": "string", "minLength": 1},
-              "from": {"type": "string"},
-              "from_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-              "tool": {"type": "string"}
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "from": {
+                "type": "string"
+              },
+              "from_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "tool": {
+                "type": "string"
+              }
             }
           },
-          "licence": {"type": "string"}
+          "licence": {
+            "type": "string"
+          },
+          "anchor": {
+            "type": "object",
+            "description": "Independent provenance for the original's bytes (gate 1.2). kind evidence-pack: pack (a committed evidence pack, repository-relative), record_id (e.g. zenodo:10.5281/zenodo.10782943), and file (the deposit file key whose published checksum the deposit copy must match; the copy is archive.path or local_copy). kind corpus-manifest: manifest (a committed corpus manifest), entry (paper slug), and filename (a file in the corpus store). kind git: repository, commit, path, and blob_sha1 (checked against the original's bytes; the remote is checked by a reviewer). kind none: reason. Without a verified anchor the original is flagged.",
+            "required": [
+              "kind"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "enum": [
+                  "evidence-pack",
+                  "corpus-manifest",
+                  "git",
+                  "none"
+                ]
+              },
+              "pack": {
+                "type": "string",
+                "minLength": 1
+              },
+              "record_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "file": {
+                "type": "string",
+                "minLength": 1
+              },
+              "manifest": {
+                "type": "string",
+                "minLength": 1
+              },
+              "entry": {
+                "type": "string",
+                "minLength": 1
+              },
+              "filename": {
+                "type": "string",
+                "minLength": 1
+              },
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "commit": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{7,40}$"
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "blob_sha1": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "evidence-pack"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "pack",
+                    "record_id",
+                    "file"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "corpus-manifest"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "manifest",
+                    "entry",
+                    "filename"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "git"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "repository",
+                    "commit",
+                    "path",
+                    "blob_sha1"
+                  ]
+                }
+              }
+            ]
+          }
         }
       }
     },
@@ -60,21 +240,52 @@
       "description": "Every authors' file the run executed or read as code, by the path the run used.",
       "items": {
         "type": "object",
-        "required": ["path", "original"],
+        "required": [
+          "path",
+          "original"
+        ],
         "additionalProperties": false,
         "properties": {
-          "path": {"type": "string", "minLength": 1},
-          "original": {"type": "string", "minLength": 1, "description": "The id of the retrieved original this copy must equal byte for byte."},
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "original": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The id of the retrieved original this copy must equal byte for byte."
+          },
           "declared_edit": {
             "type": "object",
             "description": "Present only when the executed copy is NOT byte-identical to its original. Declaring the edit turns a gate failure into a flag for human ruling: whether it is routine mechanics placed in the wrong file or a fail-and-uplift edit is not the gate's call.",
-            "required": ["summary", "affected_targets"],
+            "required": [
+              "summary",
+              "affected_targets"
+            ],
             "additionalProperties": false,
             "properties": {
-              "summary": {"type": "string", "minLength": 1},
-              "kind": {"type": "string", "enum": ["mechanical", "repair", "other"]},
-              "affected_targets": {"type": "array", "items": {"type": "string"}},
-              "lines_changed": {"type": "integer", "minimum": 0}
+              "summary": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "mechanical",
+                  "repair",
+                  "other"
+                ]
+              },
+              "affected_targets": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "lines_changed": {
+                "type": "integer",
+                "minimum": 0
+              }
             }
           }
         }
@@ -85,16 +296,42 @@
       "description": "Every code file the reproducer wrote (run scripts, Dockerfile, comparison aids, tools). Mechanics belong here, never in the authors' files.",
       "items": {
         "type": "object",
-        "required": ["path", "role", "purpose"],
+        "required": [
+          "path",
+          "role",
+          "purpose"
+        ],
         "additionalProperties": false,
         "properties": {
-          "path": {"type": "string", "minLength": 1},
-          "role": {"type": "string", "enum": ["wrapper", "environment", "comparison", "conversion", "tooling"]},
-          "purpose": {"type": "string", "minLength": 1},
-          "value_identity_check": {"type": "string", "description": "For role conversion: the evidence file showing every converted value is unchanged (ruled 2026-10-04, wrapper boundary cases)."}
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "wrapper",
+              "environment",
+              "comparison",
+              "conversion",
+              "tooling",
+              "generated"
+            ],
+            "description": "generated: code the run itself produced (it must be absent from the pre-run snapshot, and no wrapper may load it)."
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value_identity_check": {
+            "type": "string",
+            "description": "For role conversion: a JSON record {check: value-identity, result: identical, input: {path, sha256}, output: {path, sha256}, values_compared, values_total} bound to the current files with full scope. Anything else is flagged as missing, unreadable, failed, stale, or incomplete."
+          }
         }
       }
     },
-    "notes": {"type": "string"}
+    "notes": {
+      "type": "string"
+    }
   }
 }

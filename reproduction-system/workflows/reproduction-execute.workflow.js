@@ -3,9 +3,16 @@ export const meta = {
   description: 'Reproduction lane stage 2: per approved paper, governed executor, deterministic artefact gate, then a fresh-context adversarial reviewer',
   phases: [{ title: 'Execute' }, { title: 'Gate', model: 'haiku' }, { title: 'Review' }],
 }
-// reproduction-execute.workflow.js v1.1 (2026-10-04; v1.0 2026-10-03, Phase 2
-// shakedown build). v1.1: the executor writes authors-code-manifest.json, and
-// gate 1.1 flags (declared edits to authors' files) join the human queue.
+// reproduction-execute.workflow.js v1.2 (2026-10-05; v1.1 2026-10-04; v1.0
+// 2026-10-03, Phase 2 shakedown build). v1.1: the executor writes
+// authors-code-manifest.json, and gate 1.1 flags (declared edits to authors'
+// files) join the human queue. v1.2 (cross-model review of PR #7): the
+// executor anchors each original and takes execution snapshots around the
+// container run; the gate relay must return flags and warnings (required
+// fields), and the queue fails closed when they are missing; the reviewer is
+// told to address the gate's review obligations. The relay stays advisory:
+// reproduction-lane.py human-queue rebuilds the queue from the authoritative
+// gate reports before anything is cleared.
 //
 // Stage 2 of the agentic reproduction lane (modernisation plan §4.2). Runs
 // only on papers whose plan carries a committed, hash-bound human approval:
@@ -95,7 +102,7 @@ for (const s of skipped || []) log(`SKIPPED ${s.slug}: ${s.reason} (not executed
 const GATE_SCHEMA = {
   type: 'object',
   additionalProperties: false,
-  required: ['slug', 'exit_code', 'verdict', 'report_path', 'errors'],
+  required: ['slug', 'exit_code', 'verdict', 'report_path', 'errors', 'warnings', 'flags'],
   properties: {
     slug: { type: 'string' },
     exit_code: { type: 'integer' },
@@ -103,6 +110,7 @@ const GATE_SCHEMA = {
     report_path: { type: 'string' },
     errors: { type: 'array', items: { type: 'string' } },
     warnings: { type: 'array', items: { type: 'string' } },
+    flags: { type: 'array', items: { type: 'string' } },
     detail: { type: 'string' },
   },
 }
@@ -157,16 +165,22 @@ const execPrompt = (p) =>
   `2. Write ONLY under the attempt directory (and the scratch directory for throwaway work). Required ` +
   `artefacts: Dockerfile; your run script(s) at the attempt root; environment.md; log.md (with a ` +
   `Materials Acquired table: URL or DOI, retrieval date, full sha256, destination); ` +
-  `authors-code-manifest.json (every authors' file hashed at retrieval, the executed copies, ` +
-  `your wrappers, and any edit to an authors' file declared — schema ` +
-  `reproduction-system/schemas/authors-code-manifest.json; keep the authors' files byte-identical ` +
+  `authors-code-manifest.json (every authors' file hashed at retrieval and anchored to an ` +
+  `independent record where one exists, the executed copies, your wrappers, and any edit to an ` +
+  `authors' file declared — schema reproduction-system/schemas/authors-code-manifest.json and ` +
+  `reproduction-system/prompts/01-preparation.md §1.0.2; keep the authors' files byte-identical ` +
   `and put all mechanics in wrappers); ` +
   `comparisons/comparison-report.md; comparisons/comparison.json; outputs/. Templates: ` +
   `reproduction-system/templates/. Fetch with checksum (reproduction-system/prompts/01-preparation.md ` +
   `§1.0–1.0.1): author-released code and data you consume may be stored in the attempt directory; ` +
   `publisher content (the paper PDF, journal supplements) never — reference it by path.\n` +
   `3. Run all paper code inside Docker only: docker build -t ${p.image_tag} <attempt dir>, then ` +
-  `docker run --rm with the attempt directory mounted. Never run paper code on the host.\n` +
+  `docker run --rm with the attempt directory mounted. Never run paper code on the host. ` +
+  `Immediately before the run, from the repository root: venv/bin/python ` +
+  `scripts/reproduction-lane.py snapshot-code ${p.attempt_dir} --phase pre; immediately after it: ` +
+  `the same with --phase post. Declare any code file the run itself writes as a wrapper with role ` +
+  `"generated", and change no code file after the post snapshot (the gate fails on code that ` +
+  `changed after the run). If you must re-run, take both snapshots again with --force.\n` +
   `4. comparisons/comparison.json: schema_version "1.0", attempt ${p.attempt}, plan_sha256 ` +
   `${p.plan_sha256}, exactly one record per locked target id — no more, no fewer. Put value-level ` +
   `detail (published vs reproduced, per value) in files under comparisons/ and cite them in evidence.\n` +
@@ -187,8 +201,9 @@ const gatePrompt = (p) =>
   `--image ${p.image_tag} ${forbidArgs(p)}\n` +
   `2. Read ${p.attempt_dir}/gate-report.json.\n` +
   `Return: slug "${p.slug}"; exit_code (the command's exit status); verdict "pass" only if the exit ` +
-  `status is 0 AND the report's verdict is "pass", otherwise "fail"; report_path; errors and warnings ` +
-  `copied verbatim from the report. If the command cannot run at all, verdict "unverifiable" with what ` +
+  `status is 0 AND the report's verdict is "pass", otherwise "fail"; report_path; errors, warnings, ` +
+  `and flags copied verbatim from the report (each a list; return an empty list when the report's ` +
+  `list is empty, and never omit one). If the command cannot run at all, verdict "unverifiable" with what ` +
   `you observed in detail. Do not modify any file and do not re-run with different arguments.`
 
 const reviewPrompt = (p) =>
@@ -208,6 +223,9 @@ const reviewPrompt = (p) =>
   `and instrument_receipts by exactly these pushed-instrument names: ` +
   `${receipt_keys.reviewer.join(', ')}. In pulled_files_read list bare file paths only — no ` +
   `versions, tokens, or comments in the string.\n` +
+  `gate-report.json lists review_obligations: what the mechanical gate cannot verify (wrapper ` +
+  `semantics, dynamic evaluation, content fetched into the image). Address each one explicitly ` +
+  `in your provenance dimension.\n` +
   (rulings.length ? `Registrant rulings the reproduction was run under: ${rulings.join(' ')}\n` : '') +
   `${blindingBlock(p.slug)}`
 
@@ -240,17 +258,24 @@ for (const r of done) {
   if (ex.status === 'ESCALATE') queue.push(`${r.slug}: executor ESCALATE — ${ex.escalate_reason}`)
   for (const e of ex.escalations || []) queue.push(`${r.slug}: ${e.kind} ${e.target_id || ''} — ${e.detail}`)
   if (!r.gate || r.gate.verdict !== 'pass') queue.push(`${r.slug}: gate ${r.gate ? r.gate.verdict : 'did not return'}`)
-  // Gate 1.1 flags (declared edits to authors' files, credited targets resting
-  // on them, inlined authors' code) pass the gate but need a human ruling.
-  for (const w of (r.gate && r.gate.warnings) || []) {
-    if (/^FLAG(GED EDIT)?: /.test(w)) queue.push(`${r.slug}: ${w}`)
+  // Gate flags (declared edits, credited targets resting on them, inlined or
+  // generated code, unanchored originals) pass the gate but need a human
+  // ruling. A relay that omits its flags fails closed: the human must read
+  // the authoritative report (reproduction-lane.py human-queue).
+  if (r.gate && (!Array.isArray(r.gate.flags) || !Array.isArray(r.gate.warnings))) {
+    queue.push(`${r.slug}: gate relay omitted its flags or warnings — rebuild the queue with ` +
+      `reproduction-lane.py human-queue before clearing anything`)
+  }
+  for (const f of (r.gate && Array.isArray(r.gate.flags) ? r.gate.flags : [])) {
+    queue.push(`${r.slug}: ${f}`)
   }
   if (!r.review) queue.push(`${r.slug}: review did not return`)
   else if (r.review.status === 'ESCALATE') queue.push(`${r.slug}: reviewer ESCALATE — ${r.review.escalate_reason}`)
   else if (r.review.overall !== 'CONFIRMED') queue.push(`${r.slug}: review ${r.review.overall}`)
 }
 log(`${done.length}/${papers.length} papers through the pipeline; missing: ${missing.join(', ') || 'none'}; ` +
-    `${queue.length} item(s) for human attention. Next: re-run check-attempt, persist-results, audit-run.`)
+    `${queue.length} item(s) for human attention. Next: re-run check-attempt, then human-queue ` +
+    `(the authoritative queue, reconciled against this one), persist-results, audit-run.`)
 return {
   run_id,
   launch_commit,

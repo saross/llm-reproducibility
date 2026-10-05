@@ -70,17 +70,21 @@ configuration (for the shakedown:
     `reproduction-lane.py check-attempt <attempt dir>`. This is the
     authoritative gate; the in-workflow gate is a relay. Then run
     `persist-results` and `audit-run`.
-11. **Human queue:** the workflow's `human_queue` must be cleared before any
-    result enters study data (plan §4.4). It lists ESCALATE outputs, failed
-    gates, QUALIFIED or CHALLENGED reviews, PAPER_ERROR or CANNOT_COMPARE
-    calls, and gate flags (`FLAGGED EDIT:` or `FLAG:`, below).
+11. **Human queue:** rebuild it from the authoritative gate reports with
+    `reproduction-lane.py human-queue --config $CFG --workflow-result <the
+    workflow's result JSON>`. It lists every failed gate and every gate flag,
+    and exits 1 if a gate report is missing or the relay lost a flag. The
+    queue must be cleared before any result enters study data (plan §4.4):
+    this list together with the workflow's `human_queue`, which adds
+    ESCALATE outputs, QUALIFIED or CHALLENGED reviews, and PAPER_ERROR or
+    CANNOT_COMPARE calls. Never clear from the relay alone.
 
 ## Where each invariant is enforced
 
 | Invariant | Mechanism |
 |---|---|
 | 1 Plan approval before compute | Separate workflows; `approve` binds the plan sha256; `build-exec-args` refuses unapproved, changed, or uncommitted plans; the executor re-verifies the hash first |
-| 2 Wrapper cardinal rule | Executor instrument and brief; every modification is self-reported with `changes_what_is_computed`; the reviewer audits scripts. Gate 1.1 (`check-attempt`, or `check-code` alone) reads `authors-code-manifest.json`: every executed authors' file must be byte-identical to its hash at retrieval, and every other code file a declared wrapper. An undeclared difference fails the gate. A declared edit passes with a `FLAGGED EDIT:` warning for human ruling, as do credited targets resting on it and wrappers that inline authors' code (`FLAG:`). |
+| 2 Wrapper cardinal rule | Executor instrument and brief; every modification is self-reported with `changes_what_is_computed`; the reviewer audits scripts. Gate 1.2 (`check-attempt`, or `check-code` alone) reads `authors-code-manifest.json`: every executed authors' file must be byte-identical to its hash at retrieval, that hash must be anchored to a committed record the executor did not write, and every other code file anywhere in the attempt (`outputs/` included) must be a declared wrapper. `snapshot-code` records the attempt's code immediately before and after the container run, and the gate fails on code that changed after or during the run, or appeared during it undeclared. An undeclared difference fails the gate. A declared edit passes with a `FLAGGED EDIT:` flag for human ruling, as do credited targets resting on it, wrappers that inline authors' code, unanchored or transcribed originals, generated code, and conversions without valid evidence (`FLAG:`). `pass` means only that every code file is accounted for. What the gate cannot see (wrapper semantics, dynamic evaluation, content fetched into the image) is listed under `review_obligations` for the reviewer. |
 | 3 Every target accounted for | `check-attempt`: one record per locked target id in `comparisons/comparison.json`, no extras; coverage recomputed from outcomes |
 | 4 Fresh-context review for every paper | The reviewer runs for every paper whose executor returned, gate pass or fail; artefacts-only tools; blinded from earlier attempts |
 | 5 Docker only | Executor brief; `check-attempt --image` confirms the image exists; the reviewer's methodological-soundness dimension |
@@ -101,7 +105,17 @@ configuration (for the shakedown:
   schemas instead. A per-agent schema map in the gate is the clean follow-up.
 - **Mechanical gate relay.** The in-workflow gate is a cheap agent running
   `check-attempt`, because workflow scripts cannot run commands. Its relay
-  is advisory; step 10's operator re-run is authoritative.
+  is advisory: its flags and warnings are required fields, and the queue
+  fails closed when they are missing, but a relay could still return an
+  empty list wrongly. Step 10's operator re-run is authoritative, and step
+  11's `human-queue` reconciles the two.
+- **What gate 1.2 cannot prove** (cross-model review of PR #7). The
+  snapshots are taken by the lane tool but invoked by the executor. Code
+  created and deleted within one run, code fetched into the image at build
+  time, and a re-implementation spelled differently from the authors' code
+  are invisible to it; these are the reviewer's obligations, not the gate's
+  findings. A deterministic transcription of printed code shows
+  repeatability, not fidelity to the page.
 - **Executor permissions.** The executor writes files and runs Docker and
   network commands from inside a workflow. Check that the session's
   permission settings allow this before stage 2, or spawns will stall on

@@ -158,9 +158,9 @@ reproduction:
       file: reproduction-system/prompts/00-reproduction-plan.md
       description: Session R-Plan — paper analysis, classification, plan production
     preparation:
-      version: "1.2"
+      version: "1.3"
       file: reproduction-system/prompts/01-preparation.md
-      description: Session R-A — materials (fetch-with-checksum, store/scratch destinations, authors'-code manifest hashed at retrieval), Docker, script adaptation (authors' files run unmodified; mechanics in wrappers)
+      description: Session R-A — materials (fetch-with-checksum, store/scratch destinations, authors'-code manifest hashed at retrieval and anchored to committed records, execution snapshots, conversion evidence), Docker, script adaptation (authors' files run unmodified; mechanics in wrappers)
     execution_verification:
       version: "1.0"
       file: reproduction-system/prompts/02-execution-and-verification.md
@@ -201,10 +201,10 @@ reproduction:
       last_updated: "2026-10-03"
       description: On-disk comparisons/comparison.json written by the executor — one record per locked target id; coverage recomputed by the gate
     authors_code_manifest:
-      version: "1.0"
+      version: "1.1"
       file: reproduction-system/schemas/authors-code-manifest.json
-      last_updated: "2026-10-04"
-      description: On-disk authors-code-manifest.json written at retrieval — sha256 of every authors' file, the executed copies, the reproducer's wrappers, and any declared edit; gate 1.1 checks byte identity (ruling 2026-10-04, fail-and-uplift follow-on 3)
+      last_updated: "2026-10-05"
+      description: On-disk authors-code-manifest.json written at retrieval — sha256 of every authors' file, the executed copies, the reproducer's wrappers, and any declared edit; gate 1.1 checks byte identity (ruling 2026-10-04, fail-and-uplift follow-on 3). v1.1 (2026-10-05, cross-model review of PR #7) adds provenance anchors verified against committed records and the generated wrapper role
 
   workflows:
     plan:
@@ -212,13 +212,13 @@ reproduction:
       description: Stage 1 — governed planner fan-out; plans return for persistence and batched human approval (v1.0, 2026-10-03)
     execute:
       file: reproduction-system/workflows/reproduction-execute.workflow.js
-      description: Stage 2 — per approved paper, executor -> mechanical artefact gate -> fresh-context adversarial reviewer (v1.1, 2026-10-04 — executor writes the authors'-code manifest; gate flags join the human queue)
+      description: Stage 2 — per approved paper, executor -> mechanical artefact gate -> fresh-context adversarial reviewer (v1.1, 2026-10-04 — executor writes the authors'-code manifest; gate flags join the human queue. v1.2, 2026-10-05 — execution snapshots; the relay must return flags and warnings and the queue fails closed without them; the reviewer addresses the gate's review obligations)
 
   lane_tool:
-    version: "1.1"
+    version: "1.2"
     file: scripts/reproduction-lane.py
-    last_updated: "2026-10-04"
-    description: Deterministic orchestration for the agentic lane — args builders (commit-pinned, approval-gated), plan persistence + triage, hash-bound approval, the artefact gate (check-attempt; gate 1.1 adds the authors'-code integrity check, also standalone as check-code), result persistence, and the post-run audit (receipts, blinding, per-request token dedup, API-equivalent cost)
+    last_updated: "2026-10-05"
+    description: Deterministic orchestration for the agentic lane — args builders (commit-pinned, approval-gated), plan persistence + triage, hash-bound approval, the artefact gate (check-attempt; gate 1.1 adds the authors'-code integrity check, also standalone as check-code; gate 1.2, after the cross-model review of PR #7, adds provenance anchors, execution snapshots via snapshot-code, wrapper reference checks, conversion-evidence validation, and the legacy allowlist), the authoritative human queue (human-queue), result persistence, and the post-run audit (receipts, blinding, per-request token dedup, API-equivalent cost)
 
   pilot_statistics:
     papers_attempted: 5
@@ -569,9 +569,9 @@ agent_definitions:
     sha256: "d0d32935606d6bef8bd00658688297751bdfff1417b5c17ea5afbb7716b9652c"
   reproduction-executor:
     file: .claude/agents/reproduction-executor.md
-    version: "1.2"
+    version: "1.3"
     model: claude-opus-5-5
-    sha256: "51033ff5e6bff56f2d225ca197bdf2cf1156d726b3d695f4b6a7e26af80a7664"
+    sha256: "b15f1e987aa52c4d40469a5af302bc5f456db17176d781cf76ffa43495235671"
   adversarial-reviewer:
     file: .claude/agents/adversarial-reviewer.md
     version: "1.1"
