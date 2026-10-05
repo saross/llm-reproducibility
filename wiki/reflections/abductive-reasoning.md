@@ -1324,3 +1324,97 @@ Chained launches from notifications are clean by construction. This is
 worth recording beside F-015, but not yet as a rule. Following the F-018
 lesson, record the observations and leave the mechanism open until a
 deliberate test discriminates.
+
+## 2026-10-04 → 10-05 — The scorer's systematic miss was an input gap it had reported
+
+**Session:** ef0412bd-73e2-4c97-b695-695856453f0c
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+Six F2 over-credits were unanimous in every run of every Opus arm, across
+two model generations and four efforts (Observation 34). I had read the
+miss as a stable judgement error, which is why a mechanical F2 rule was
+the first step in the checks policy. Building the rule, I found that the
+evidence packs every arm read contain no creators, descriptions, or
+keywords at all. Harvester v1.1 extracted only identifier, licence, and
+type fields, and kept only a checksum of each raw response.
+
+### Probe
+
+I searched the 90 Opus F2 evidence strings for the three Zenodo pilots
+for any mention of keywords. Twenty of them say the pack did not show the
+description or keyword fields, then credit F2 on the record's existence
+and the platform row. A re-harvest (v1.2) confirmed that all three
+deposits have empty keyword fields and either pointer descriptions or none.
+
+### Belief revision
+
+The miss was not judgement the model could have got right. The model
+lacked the input it would have needed, and in a fifth of the strings it
+said so. "Stable across models and efforts" was evidence that the cause
+lay outside the model, and I had read it as evidence of a robust model
+error. Two consequences:
+- the F2 gate items were counted against the model when their basis was
+  missing input, which makes the gate figures cautious, not generous;
+- the census-input re-validation (amendment 3 §6) became necessary,
+  because the gates had validated the scorer on inputs the census will not
+  use.
+
+### What would change this belief
+
+If the re-validation on v1.2 packs, which show empty keyword fields, still
+gives F2 = 1 on these deposits, the error is judgement after all: credit
+despite visible negative evidence, not credit in its absence.
+
+### Implications for practice
+
+When an error survives a change of model and effort, check what the
+models were given before modelling the error. Search the model's own
+evidence strings for the word you expected it to need. It may have
+already told you it did not have it.
+
+## 2026-10-05 — `git status` in the main checkout said "not a work tree"
+
+**Session:** ef0412bd-73e2-4c97-b695-695856453f0c
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+After a commit attempt in a linked worktree failed its pre-commit test run,
+`git status` in the *main* checkout failed with "this operation must be
+run in a work tree". The worktree branch also carried a new commit called
+"fixture", whose tree was two files.
+
+### Probe
+
+I read the shared `.git/config`, read-only, before changing anything:
+`core.bare = true`. The worktree's reflog showed exactly one "commit:
+fixture". Both matched my new test helper, which runs `git -C <tmp> init`,
+then `add .` and `commit -m fixture`. Git exports `GIT_DIR` and
+`GIT_INDEX_FILE` to hook processes, and these override `-C`. So the
+fixture reinitialised the real repository, writing `core.bare` to the
+shared config, staged the temporary files into the real index, and
+committed them. A search then found the repository's own record of the
+same failure class, in `tests/test_effort_pinning.py` (2026-09-23), with
+the scrubbing idiom I had not used.
+
+### Belief revision
+
+Before this, I treated `git -C <dir>` as confining a command to `<dir>`.
+Under a hook it does not; the inherited environment wins. Unscrubbed test
+fixtures are therefore not hermetic. Whether the suite is run by hand or
+by the hook decides what they touch.
+
+### What would change this belief
+
+None needed for the mechanism; the regression test reproduces it with a
+decoy `GIT_DIR`. What remains open is whether other repositories' suites
+shell out to git without scrubbing.
+
+### Implications for practice
+
+Any code that runs git as a subprocess, in tests or in tools, scrubs `GIT_*`
+from its environment, and is tested once under a decoy `GIT_DIR`. When a
+command fails in a place it should not have touched, read the shared state
+before repairing it, and repair the minimum.

@@ -1323,3 +1323,85 @@ confirmation, and `49243da` carries Observation 38. The empty commit
 - The `medium` selection rests on five pilot papers without supplements.
   The pre-census supplement check is the first test on supplement-sized
   inputs.
+
+## Session: 2026-10-04 (third session) → 2026-10-05 — F2 rule and v1.2 packs; amendment 3 drafted; PR #7 through three review rounds; gate 1.3 part 1
+
+**Session:** ef0412bd-73e2-4c97-b695-695856453f0c (Opus 5.5). Shawn was
+present for most decisions and away for about two hours while Astra
+reviewed.
+
+**Spend.** No model API calls. The other work was free, network-only, or
+plan-billed:
+- **Public metadata fetches:** about 38 requests to DataCite, Zenodo,
+  Crossref, and GitHub (two v1.2 harvests).
+- **The audit subagent** (Opus; reproduction-lane build and audit) made
+  public downloads of the authors' deposits.
+- **Reviews:** Astra (Codex) gave two code reviews and one design review.
+  Fable, a separate Claude session, gave one code review and one design
+  review.
+
+**F2 rule and evidence packs (main):**
+- `8864ceb`: registry curation fields.
+- `4c77b67`: harvester v1.2, recording creators, descriptions, keywords,
+  related identifiers, versions, and files, with raw responses kept out of
+  tree.
+- `6c8ed51`: packs in `corpus/evidence-packs/harvest-2026-10-04/`.
+- `cf0d92e`: `scripts/score-f2-rule.py` v1.0.
+- `06c1ca9` and `ff278ff`: the hybrid validation. The rule matches the
+  reference on 10/10 F2 items, and the model on 4/10. The hybrid at
+  `medium` scores BI-excluded 137/141 = 0.972 and all-items 139/150 =
+  0.927, with stability unchanged at 143/150. Two derivations agree. The
+  stated limitation: every reference F2 is 0.
+- `07b6fba`: planning note.
+
+**Amendment 3 (main):**
+- `4c5bdf7`: the full draft, running-list items 1–9, with decisions D-1 to
+  D-5. D-5 corrects Entry 5's account of the beyond-instrument basis: only
+  the four dye items rest on supplements.
+- `1763b2a`: D-6, the regression baseline.
+- `f3fb3a7`: §9, the correction ledger. D-6 RULED: adopt Astra's approach.
+- `208bf5e`: the ledger conditions from Fable, and the class (ii) consequence
+  RULED in §7(d): a wrapper-only re-run is needed before a result counts.
+  That decides the audit's Q1, so dye's 22 targets need re-running.
+
+**PR #7** (`feat/lane-gate-1-1-code-audit`, open; Shawn merges):
+- **Built by the audit subagent.** Gate 1.1 and the executed-code audit of
+  the pilots: no undeclared repair beyond T02, but pilot attempt-01s that
+  ran re-implementations or non-AP-12 versions, and crema Table 1 credited
+  against v2.0.0's own re-run (0.1003 against the paper's 0.1023, checked
+  at source). The narrative `report.md` was saved on Shawn's instruction
+  (`71e1f21`).
+- **Astra round 1.** Five findings, all fixed in gate 1.2: anchors,
+  snapshots, conversion evidence, the relay and `human-queue`, KEY-2
+  (`458878b`, `43a3453`).
+- **Astra round 2.** Three findings, fixed in `0d87a8f`. Astra later
+  confirmed the narrow fixes.
+- **Fable's review.** Four serious and six moderate findings, all still
+  open at `0d87a8f`. P1-4 was fixed in `5766fb4`, with a new receipt-version
+  test. Gate 1.3 part 1 (`4244a51`) closed the static routes, bound anchors
+  to the launch commit, added `coverage_creditable`, and made each attack a
+  regression test. 421 tests pass.
+- **Design.** The gate 1.3 note (`5e741a3`) was reviewed by Fable
+  (`71fb731`) and Astra (`2bd35aa`). Its status is now **not ready to
+  build**: the next session writes a consolidated specification first.
+
+**Incident (repaired; not pushed).** Hook-run test fixtures inherited
+`GIT_DIR`, set `core.bare = true` in the shared config, and committed a
+fixture tree over the worktree branch. The config was restored, the
+branch reset, and all git calls now scrub `GIT_*`, with a regression test.
+Feedback was sent with `/feedback`.
+
+**Other:**
+- Shawn opened Fable as a separate session. Agent mail cannot carry
+  Claude-to-Claude messages, so briefs went by `SendMessage`. Queued as
+  infrastructure (PA data `64b36a3`).
+- Codex drafted an `AGENTS.md` entry point for this repository as PR #8,
+  awaiting Shawn.
+
+**Contextual assumptions.**
+- No pilot needs a format conversion, so the conversion design was driven
+  by expected census cases.
+- Shawn's choices of the run command now and lane-computed conversions
+  were made before the design reviews, which then enlarged both.
+- The consolidated specification should state a stopping rule for
+  hardening, given that the threat model assumes a good-faith executor.

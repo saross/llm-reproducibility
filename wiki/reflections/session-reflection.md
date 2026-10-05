@@ -1307,3 +1307,74 @@ found contradictions in my planning note, and a real nuance in the
 coverage rule that my policy had glossed over. Telling delegates to
 re-verify against sources is usually framed as protection against them.
 This time it protected against me.
+
+## Entry 22 (2026-10-04 → 10-05) — Each review round found the gate wider than the last
+
+**Project:** llm-reproducibility. **Session:**
+ef0412bd-73e2-4c97-b695-695856453f0c. One instance throughout (Opus 5.5),
+no compaction. Shawn was present for most decisions and away for about two
+hours while Astra reviewed. Two other models worked on this session's
+code: Astra (GPT, Codex), in two code reviews and a design review, and
+Fable, a separate Claude session Shawn opened for one review and one
+design review.
+
+**What is the single most important thing a future reader should know
+about this session?** The pilots are not the baseline the §8 regression
+gate assumes.
+- **Executed-code audit.** In three pilots the first reproduction ran a
+  reproducer's re-implementation, not the authors' files. Two ran a
+  version other than the one AP-12 selects.
+- **Crema's Table 1** was credited against v2.0.0's own re-run. The paper's
+  Japan r is 0.1023; the comparison report's "published" column has
+  0.1003.
+
+The registered gate asks a new pipeline to reproduce those verdicts
+exactly, which would reward it for reproducing the pilots' errors. Shawn
+adopted the correction ledger (amendment 3 §9) because of this. Anyone
+who reads "the regression gate passed" later needs to know which baseline
+it passed against.
+
+**Where did you and the human disagree, and who was right?** Twice, about
+how much to build.
+- **Conversions.** I recommended "always flag" (option A), because no pilot
+  needed a format conversion. Shawn chose the lane-computed comparison
+  (C), expecting conversions to be common in the census. The design reviews
+  then showed that my proposed normalisation rules ran the wrong way:
+  parsing floats would have silently cleared `007` to `7` and `1.50` to
+  `1.5`. Option A would have hidden that from both of us. His choice forced
+  the rules into the open, where two reviewers could correct them.
+- **The run command.** Shawn chose to build the read-only, logged run
+  command now, rather than before the census. I had framed it as optional
+  strengthening. Fable's executed attacks showed that without it,
+  `identical` was reachable by about ten routes using nothing beyond the
+  executor's own write access.
+
+In both cases he leaned towards assurance and I leaned towards the
+smallest sufficient build, and the reviews supported him.
+
+**What question emerged that wasn't pursued?** Whether the hardening
+converges. Each review round found the gate wider than the last:
+- Astra's first review, five findings;
+- its second, three, two of them in my fixes for the first;
+- Fable's review, four serious and six moderate, every one still open after
+  Astra's round;
+- the two design reviews, about two dozen more points between them.
+
+The threat model says the executor acts in good faith and is not a
+determined adversary. The reviewers attacked as if it were one, which
+finds real gaps (a forged pack committed by the operator's own routine)
+but has no natural stopping rule. Nobody asked what residual risk is
+acceptable for a good-faith executor whose every flag goes to a human. The
+consolidated specification should state that stopping rule before the
+build restarts, or the next review round will simply find the next ten
+routes.
+
+The session's other texture was failure under my own hands. My test
+fixtures ran `git init` under the pre-commit hook's `GIT_DIR`, set
+`core.bare = true` in the shared repository config, and committed a
+two-file tree over the PR branch. The repository had already recorded
+the fix for exactly this in `tests/test_effort_pinning.py` three weeks
+earlier, and I wrote new git-touching code without grepping for the idiom.
+The repair was quick and nothing was pushed. Still, the lesson is the
+same one as the delegated-verification point in Entry 21, turned on me:
+the repository remembers things I don't.

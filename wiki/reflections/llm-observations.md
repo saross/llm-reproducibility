@@ -788,3 +788,69 @@ register and added a false attribution ("I'm told"). The pattern matches
 the 2026-10-03 entry: confabulation lives in the speculative, free-text
 parts of an output, beside the verified parts. Hypothesis lists sent
 across sessions need the same per-premise sourcing as findings.
+
+## 2026-10-04 → 10-05 — "Caveat, then credit"; and reviewers of different kinds found different holes
+
+**Session:** ef0412bd-73e2-4c97-b695-695856453f0c (Opus 5.5, primary
+instance).
+
+**The scorer named the missing evidence and awarded the point anyway.**
+Every Opus arm, in both generations, scored F2 = 1 for the three pilot
+Zenodo deposits. The reference says 0, because the deposits have no
+keywords. I had expected a judgement error. Instead, 20 of the 90 Opus F2
+evidence strings say outright that the pack did not show the description
+or keyword fields, and then credit the point on the record's existence
+and the platform row. One example: "Description/keywords not shown in
+pack; scored on existence of a structured DataCite record". So the model
+saw the gap, named it, and resolved the uncertainty towards credit. That
+fits the over-credit direction already recorded for Opus 5. A rule that
+says "unscoreable → 0" does not stop a model that thinks it has enough
+evidence to score. The fix was to supply the fields (harvester v1.2) and to
+take F2 out of the model's hands (the mechanical rule).
+
+**Reviewers differed by kind, not only by model family.** The audit
+subagent and I, both Opus, built and reviewed gate 1.1. Each of the next
+three reviewers found what the one before had missed:
+- **Astra (GPT, Codex), by reading.** It found the trust-boundary problems:
+  provenance that rested on the executor's own manifest, a check that
+  never established which file ran, and later run records the container
+  could write to.
+- **Fable (Claude's top tier), by running attack scripts.** It found a
+  dozen concrete routes to `identical` (a non-code suffix, `.Rprofile`, a
+  forged pack committed by the operator's own routine, a directory
+  symlink) and two real-data failures. One, `Rscript --vanilla` in key's
+  pilot, defeats a logging hook. The other is that the canonical packs
+  carry no checksums.
+
+Fable found routes Astra had not, and Astra found boundaries Fable had
+not. The difference that mattered was method: reading for trust boundaries
+against executing attacks. That the reviewers were different models, or
+from different families, mattered less.
+
+**Peer models applied the outbound rule better than my brief did.** My
+review briefs invited findings "as a PR comment". Fable declined, citing
+Shawn's rule that nothing goes out under his name without his approval,
+and left its review as a file for him to post. Astra posted its first two
+reviews to GitHub. When I said so in the third brief, it replied by mail.
+The brief, mine, was the defect. A task instruction must not authorise
+what a standing rule withholds.
+
+**A harness refusal was respected, not routed around.** The audit
+subagent's harness refused to let it write `report.md` ("Subagents should
+return findings as text"). It said so, did not try another path, and
+returned the full text. I treated a request to save it on the subagent's
+behalf as a decision for Shawn, and saved it only on his say-so.
+
+**My own errors had a shared shape: a partial edit of something stated in
+several places.**
+- I bumped the executor definition's header to v1.3 and missed its receipt
+  line, which still said v1.2. The receipt gate compares the two strings,
+  so the next spawn would have been blocked.
+- I tuned the conversion normalisation against false alarms when the risk
+  ran the other way, towards false passes.
+- I wrote git-touching fixtures without the repository's own scrubbing
+  idiom.
+
+Each is now caught by a test or a review rule. The general lesson for an
+agent editing versioned, governed text is to grep for every occurrence of
+the thing being changed before declaring the change done.
