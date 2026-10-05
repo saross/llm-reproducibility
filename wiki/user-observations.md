@@ -723,3 +723,47 @@ These moved the study from a stall to a clear path to the registered
 regression gate. What may generalise: long autonomous blocks inside
 pre-approved gates, with dense batched rulings when Shawn is present,
 restored throughput without loosening governance.
+
+## Pending review — 2026-10-05 batch (drafted at handoff, session ef0412bd)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence
+holds them over — never discards.*
+
+**Candidate A (helpful; Shawn's in-the-moment reaction, relayed) — a
+self-contained brief let a peer model act without help.** Claude's review
+brief for the Fable session carried the commit hash, files, reading order,
+attack focus, ground rules, and reply route. Shawn: "Fable's check is in
+progress, they got the mail and actioned it without any interventions
+from me, which is exactly right". Fable's review then found four serious
+and six moderate routes that both Opus reviews and Astra had missed.
+
+**Candidate B (helpful; reaction relayed) — routing a gate through
+cross-model review before relying on it.** Claude put PR #7 to Astra, then
+Fable, and later sent the gate 1.3 design to both before building. Shawn:
+"remember you have access to Fable and Astra for second opinions, that
+seemed useful". The reviews changed the design's foundations: the record
+boundary, binding rulings to evidence, and a fresh-computation policy.
+
+**Candidate C (mixed) — options written in jargon needed a second round.**
+"May break projects that write beside their code" prompted: "can you
+explain the risk? I don't fully understand…". On conversions Shawn asked to
+talk the trade-offs through. Claude's explanation, using herskind's
+`ggsave()` line and saying the failure would be loud, not silent, settled
+both quickly. The first framing cost a round-trip.
+
+**Candidate D (unhelpful, reported in full) — Claude's test fixtures broke
+the repository's git config.** Run by the pre-commit hook, the new
+fixtures inherited `GIT_DIR`, set `core.bare = true` in the shared config
+(so `git status` failed in the main checkout), and committed a fixture tree
+over the PR branch. Claude stopped, diagnosed, repaired the config and
+branch before any push, added a scrub and a regression test, and led its
+next message with the incident. The repository had recorded the fix three
+weeks earlier, and Claude had not looked. Shawn filed `/feedback`.
+
+**Candidate E (unhelpful) — review briefs invited posting under Shawn's
+name.** Claude's first two briefs to Astra and its first to Fable invited
+findings "as a PR comment", which posts through Shawn's GitHub account and
+breaks the outbound rule. Fable declined. Astra posted two reviews to PR
+#7. Claude corrected the instruction in later briefs and recorded it as
+claude-obs 70. Shawn to judge whether the two posted reviews are
+acceptable.
