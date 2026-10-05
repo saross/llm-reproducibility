@@ -606,31 +606,67 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
 
     def test_corpus_manifest_anchor_with_store_archive(self):
         """A supplement zip held in the corpus store, anchored by the committed
-        corpus manifest, never copied into the attempt directory."""
+        corpus manifest, never copied into the attempt directory, for a paper
+        whose registry holds its principal code in the journal supplement."""
+        result = self.corpus_case("supplement", True)
+        self.assertEqual(result["status"], "identical", result["errors"] + result["flags"])
+        self.assertEqual(result["anchors"], {"analysis.R": "verified"})
+
+    def commit_corpus(self, digest: str, role: str, supplement_principal: bool,
+                      entry: str = "some-paper-2024") -> None:
+        """Commit a corpus manifest (and, optionally, a registry whose principal
+        artefact is held in the journal supplement) to the anchor repository."""
+        write(self.repo / "corpus.yaml", json.dumps({"papers": [{
+            "slug": entry,
+            "files": [{"filename": "supplement-1.zip", "sha256": digest, "role": role}]}]}))
+        if supplement_principal:
+            write(self.repo / "corpus" / "evidence-packs" / "declared-links.yaml", json.dumps(
+                {"papers": {"some-paper-2024": {"links": [
+                    {"id": "supplement", "type": "supplement", "link": "10.1016/j.x",
+                     "role": "principal", "home": "supplement", "carries": ["code"]}]}}}))
+        git(self.repo, "add", ".")
+        git(self.repo, "commit", "-q", "-m", "corpus manifest")
+
+    def corpus_case(self, role: str, supplement_principal: bool,
+                    entry: str = "some-paper-2024") -> dict:
+        """The corpus-anchor fixture with one binding varied; returns the check."""
         store = Path(self.tmp.name) / "store"
-        (store / "some-paper-2024").mkdir(parents=True)
-        archive = store / "some-paper-2024" / "supplement-1.zip"
+        (store / entry).mkdir(parents=True, exist_ok=True)
+        archive = store / entry / "supplement-1.zip"
         with zipfile.ZipFile(archive, "w") as handle:
             handle.writestr("scripts/analysis.R", AUTHORS_R)
-        digest = hashlib.sha256(archive.read_bytes()).hexdigest()
-        write(self.repo / "corpus.yaml", json.dumps({"papers": [{
-            "slug": "some-paper-2024",
-            "files": [{"filename": "supplement-1.zip", "sha256": digest}]}]}))
-        git(self.repo, "add", "corpus.yaml")
-        git(self.repo, "commit", "-q", "-m", "corpus manifest")
+        self.commit_corpus(hashlib.sha256(archive.read_bytes()).hexdigest(), role=role,
+                           supplement_principal=supplement_principal, entry=entry)
         originals = [dict(
             {k: v for k, v in self.manifest["originals"][0].items() if k != "local_copy"},
-            archive={"path": "$CORPUS_ROOT/some-paper-2024/supplement-1.zip",
+            archive={"path": f"$CORPUS_ROOT/{entry}/supplement-1.zip",
                      "member": "scripts/analysis.R"},
             anchor={"kind": "corpus-manifest", "manifest": "corpus.yaml",
-                    "entry": "some-paper-2024", "filename": "supplement-1.zip"})]
+                    "entry": entry, "filename": "supplement-1.zip"})]
         (self.dir / "authors-code-raw" / "analysis.R").unlink()
         snapshot(self.dir)
         self.rewrite(originals=originals)
         with mock.patch.dict(os.environ, {"CORPUS_ROOT": str(store)}):
-            result = self.check()
-        self.assertEqual(result["status"], "identical", result["errors"] + result["flags"])
-        self.assertEqual(result["anchors"], {"analysis.R": "verified"})
+            return self.check()
+
+    def test_corpus_anchor_for_another_paper_fails(self):
+        """Astra's delta case 1a: a committed corpus entry for a different paper."""
+        result = self.corpus_case("supplement", True, entry="different-paper-2020")
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(any("is not this paper" in e for e in result["errors"]))
+
+    def test_corpus_anchor_without_selected_source_is_flagged(self):
+        """Astra's delta case 1b: a same-paper corpus file that is not the selected
+        source (here a stored deposit, while the registry selects another)."""
+        result = self.corpus_case("deposit", False)
+        self.assertEqual(result["status"], "flagged", result["errors"])
+        self.assertEqual(result["anchors"], {"analysis.R": "recorded"})
+        self.assertTrue(any("not that it is this paper's selected original" in f
+                            for f in result["flags"]))
+
+    def test_corpus_supplement_needs_a_supplement_principal(self):
+        result = self.corpus_case("supplement", False)
+        self.assertEqual(result["status"], "flagged", result["errors"])
 
     def test_transcription_is_always_flagged_for_fidelity(self):
         originals = [dict(self.manifest["originals"][0],
@@ -707,6 +743,34 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
         self.assertEqual(result["status"], "flagged", result["errors"])
         self.assertTrue(any("code the run generated" in f for f in result["flags"]))
 
+    def test_code_missing_at_the_post_boundary_fails_even_if_restored(self):
+        """Astra's delta case 2: delete an executed file after the pre snapshot,
+        take post, restore the bytes, then run the gate."""
+        lane.write_snapshot(self.dir, "pre", force=True)
+        executed = self.dir / "authors-code" / "analysis.R"
+        executed.unlink()
+        lane.write_snapshot(self.dir, "post", force=True)
+        write(executed, AUTHORS_R)
+        result = self.check()
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(any("missing when it ended" in e for e in result["errors"]))
+        self.assertTrue(any("not in both execution snapshots" in e for e in result["errors"]))
+
+    def test_snapshots_from_different_runs_fail(self):
+        lane.write_snapshot(self.dir, "pre", force=True)
+        lane.write_snapshot(self.dir, "post", force=True)
+        lane.write_snapshot(self.dir, "pre", force=True)  # a new run's pre, old post
+        result = self.check()
+        self.assertTrue(any("different run" in e for e in result["errors"]), result["errors"])
+
+    def test_snapshot_phase_label_is_checked(self):
+        post = self.dir / lane.SNAPSHOT_DIR / "post.json"
+        doc = json.loads(post.read_text())
+        doc["phase"] = "pre"
+        post.write_text(json.dumps(doc), encoding="utf-8")
+        result = self.check()
+        self.assertTrue(any("wrong version or phase" in e for e in result["errors"]))
+
     def test_missing_snapshots_fail_a_new_run(self):
         shutil.rmtree(self.dir / lane.SNAPSHOT_DIR)
         result = self.check()
@@ -740,20 +804,28 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
                   evidence if isinstance(evidence, str) else json.dumps(evidence))
         self.rewrite(wrappers=self.manifest["wrappers"] + [
             {"path": "convert.py", "role": "conversion", "purpose": "xlsx to csv",
+             "conversion": {"input": "data/in.xlsx", "output": "data/out.csv"},
              "value_identity_check": "checks/identity.json"}])
         snapshot(self.dir)
         return [f for f in self.check()["flags"] if "conversion wrapper" in f]
 
     def valid_evidence(self) -> dict:
         return {"check": "value-identity", "result": "identical",
+                "converter": {"path": "convert.py", "sha256": sha("print('xlsx to csv')\n")},
                 "input": {"path": "data/in.xlsx", "sha256": sha("raw")},
                 "output": {"path": "data/out.csv", "sha256": sha("a,b\n1,2\n")},
                 "values_compared": 2, "values_total": 2}
 
     def test_conversion_evidence_cases(self):
         self.assertEqual(self.conversion(self.valid_evidence()), [])
+        write(self.dir / "data" / "old-in.xlsx", "old")
+        write(self.dir / "data" / "old-out.csv", "old\n")
+        unrelated = dict(self.valid_evidence(),
+                         input={"path": "data/old-in.xlsx", "sha256": sha("old")},
+                         output={"path": "data/old-out.csv", "sha256": sha("old\n")})
         cases = {"missing": None, "unreadable": "",
                  "failed": dict(self.valid_evidence(), result="different"),
+                 "unbound": unrelated,
                  "stale": dict(self.valid_evidence(),
                                output={"path": "data/out.csv", "sha256": "0" * 64}),
                  "incomplete": dict(self.valid_evidence(), values_compared=1)}
@@ -765,6 +837,9 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
                     flags = [f for f in self.check()["flags"] if "conversion wrapper" in f]
                 self.assertEqual(len(flags), 1, flags)
                 self.assertIn(word, flags[0])
+        # A valid record that names a different converter is unbound too.
+        other = dict(self.valid_evidence(), converter={"path": "other.py", "sha256": "0" * 64})
+        self.assertIn("unbound", self.conversion(other)[0])
 
 
 class InheritedGitEnvTests(unittest.TestCase):

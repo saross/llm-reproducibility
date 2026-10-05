@@ -128,6 +128,7 @@ import importlib.util
 import json
 import os
 import re
+import secrets
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -1189,22 +1190,35 @@ def committed_unmodified(repo_root: Path, rel: str) -> str | None:
     return None if clean.returncode == 0 else f"{rel} has uncommitted changes"
 
 
-def registry_selected_dois(repo_root: Path, slug: str) -> set[str] | None:
-    """The deposit versions the registry selects for a paper (AP-12).
-
-    For each principal link in the curated declared-links registry, its
-    ``scored_version`` if it has one, else the link itself.
+def registry_principal_links(repo_root: Path, slug: str) -> list[dict] | None:
+    """A paper's principal links in the curated declared-links registry.
 
     Returns:
-        Lower-cased identifiers, or None when the registry is not committed
-        and clean.
+        The links whose ``role`` is ``principal``, or None when the registry
+        is not committed and clean (it then cannot vouch for anything).
     """
     if committed_unmodified(repo_root, DEFAULT_REGISTRY) is not None:
         return None
     registry = yaml.safe_load((repo_root / DEFAULT_REGISTRY).read_text(encoding="utf-8")) or {}
     spec = (registry.get("papers") or {}).get(slug) or {}
+    return [link for link in spec.get("links") or [] if link.get("role") == "principal"]
+
+
+def registry_selected_dois(repo_root: Path, slug: str) -> set[str] | None:
+    """The deposit versions the registry selects for a paper (AP-12).
+
+    For each principal link, its ``scored_version`` if it has one, else the
+    link itself.
+
+    Returns:
+        Lower-cased identifiers, or None when the registry is not committed
+        and clean.
+    """
+    links = registry_principal_links(repo_root, slug)
+    if links is None:
+        return None
     return {str(link.get("scored_version") or link.get("link") or "").lower()
-            for link in spec.get("links") or [] if link.get("role") == "principal"}
+            for link in links}
 
 
 def git_blob_sha1(data: bytes) -> str:
@@ -1226,7 +1240,13 @@ def verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | Non
       registry selects under AP-12.
     - ``corpus-manifest``: a committed corpus manifest's sha256 for a file in
       the corpus store (a publisher supplement, or the source of a
-      transcription).
+      transcription). The entry must be this paper's. A checksum establishes
+      the file's bytes, not that it is the paper's selected original, so the
+      anchor verifies only a journal supplement (corpus role ``supplement``)
+      of a paper whose registry declares a principal artefact held in the
+      supplement. Any other corpus file is flagged (PR #7 delta review,
+      finding 1); a deposit kept in the store is anchored through its
+      evidence-pack record, which carries the AP-12 version binding.
     - ``git``: a repository, commit, path, and blob id. The gate checks that the
       blob id matches the original's bytes, but cannot reach the remote, so the
       claim stays a flag for a reviewer to confirm.
@@ -1296,14 +1316,17 @@ def verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | Non
         return "verified", [], []
 
     if kind == "corpus-manifest":
+        if slug is None or anchor["entry"] != slug:
+            return failed(f"the corpus entry {anchor['entry']!r} is not this paper ({slug!r})")
         problem = committed_unmodified(repo_root, anchor["manifest"])
         if problem:
             return failed(problem)
         corpus = yaml.safe_load((repo_root / anchor["manifest"]).read_text(encoding="utf-8"))
         entry = next((p for p in (corpus or {}).get("papers") or []
                       if p.get("slug") == anchor["entry"]), None)
-        recorded = next((f.get("sha256") for f in (entry or {}).get("files") or []
-                         if f.get("filename") == anchor["filename"]), None)
+        record = next((f for f in (entry or {}).get("files") or []
+                       if f.get("filename") == anchor["filename"]), None) or {}
+        recorded = record.get("sha256")
         if not recorded:
             return failed(f"{anchor['manifest']} records no {anchor['filename']!r} for "
                           f"{anchor['entry']}")
@@ -1313,19 +1336,34 @@ def verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | Non
         if sha256_file(stored) != recorded:
             return failed(f"the stored {anchor['filename']} does not match the corpus manifest")
         derivation = item.get("derivation")
-        if derivation:
-            if derivation["from_sha256"] != recorded:
-                return failed("the transcription's source digest differs from the corpus "
-                              "record")
-            return "recorded", [], []  # transcription fidelity is flagged by the caller
-        archive_rel = (item.get("archive") or {}).get("path")
-        archive = resolve_stored(target_dir, archive_rel) if archive_rel else None
-        if archive is not None and archive.resolve() == stored.resolve():
-            return ("verified", [], []) if original is not None else ("failed", [], [])
-        if recorded == item["sha256"]:
-            return "verified", [], []
-        return failed("the anchored corpus file is neither the original nor the archive it "
-                      "was extracted from")
+        if derivation and derivation["from_sha256"] != recorded:
+            return failed("the transcription's source digest differs from the corpus record")
+        if not derivation:
+            archive_rel = (item.get("archive") or {}).get("path")
+            archive = resolve_stored(target_dir, archive_rel) if archive_rel else None
+            if archive is not None and archive.resolve() == stored.resolve():
+                if original is None:
+                    return "failed", [], []  # the member mismatch is already an error
+            elif recorded != item["sha256"]:
+                return failed("the anchored corpus file is neither the original nor the "
+                              "archive it was extracted from")
+        # The bytes are now established; admissibility as this paper's selected
+        # original is a separate question (PR #7 delta review, finding 1).
+        links = registry_principal_links(repo_root, slug)
+        role = str(record.get("role") or "unstated")
+        in_supplement = bool(links) and any(link.get("home") == "supplement" for link in links)
+        if role != "supplement" or not in_supplement:
+            reason = ("the registry is not committed and clean" if links is None else
+                      f"the corpus role is {role!r}" if role != "supplement" else
+                      f"the registry declares no principal artefact held in {slug}'s "
+                      f"journal supplement")
+            return "recorded", [], [f"{FLAG_PREFIX}original {oid!r} is anchored to corpus file "
+                                    f"{anchor['entry']}/{anchor['filename']}, which establishes "
+                                    f"its bytes but not that it is this paper's selected "
+                                    f"original: {reason}. A deposit kept in the corpus store is "
+                                    f"anchored through its evidence-pack record instead"]
+        # A transcription stays "recorded": its fidelity is flagged by the caller.
+        return ("recorded" if derivation else "verified"), [], []
 
     if kind == "git":
         if original is None:
@@ -1372,26 +1410,75 @@ def write_snapshot(target_dir: Path, phase: str, force: bool = False) -> Path:
     if out.exists() and not force:
         raise LaneError(f"{display_path(out)} exists: a snapshot is taken once per run "
                         f"(pass --force only when the run itself is redone)")
-    if phase == "post" and not (target_dir / SNAPSHOT_DIR / "pre.json").is_file():
-        raise LaneError("take the pre snapshot before the run first")
-    write_json(out, {"snapshot_version": "1.0", "phase": phase, "taken_at": now_utc(),
-                     "tool": f"scripts/reproduction-lane.py (gate {GATE_VERSION})",
-                     "files": code_inventory(target_dir)})
+    pre_path = target_dir / SNAPSHOT_DIR / "pre.json"
+    record: dict[str, Any] = {"snapshot_version": "1.0", "phase": phase, "taken_at": now_utc(),
+                              "tool": f"scripts/reproduction-lane.py (gate {GATE_VERSION})"}
+    if phase == "pre":
+        # A fresh token per run: the post snapshot must carry the same one.
+        record["run_token"] = secrets.token_hex(16)
+    else:
+        if not pre_path.is_file():
+            raise LaneError("take the pre snapshot before the run first")
+        try:
+            pre = json.loads(pre_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise LaneError(f"pre snapshot unreadable: {exc}") from exc
+        record["run_token"] = pre.get("run_token")
+        record["pre_sha256"] = sha256_file(pre_path)
+    record["files"] = code_inventory(target_dir)
+    write_json(out, record)
     return out
+
+
+def snapshot_problems(pre_doc: Any, post_doc: Any, pre_digest: str) -> list[str]:
+    """Structural and identity checks on a pair of execution snapshots.
+
+    Reading only each record's ``files`` would not show which phase or which
+    run a record belongs to (PR #7 delta review, finding 2). The pair must be
+    well formed, labelled with its phases, and bound together: the post
+    record carries the pre record's run token and sha256, and is not earlier.
+    """
+    problems: list[str] = []
+    for phase, doc in (("pre", pre_doc), ("post", post_doc)):
+        if not isinstance(doc, dict):
+            problems.append(f"{phase} snapshot is not a JSON object")
+            continue
+        if doc.get("snapshot_version") != "1.0" or doc.get("phase") != phase:
+            problems.append(f"{phase} snapshot has the wrong version or phase label")
+        files = doc.get("files")
+        if not isinstance(files, dict) or not all(
+                isinstance(k, str) and isinstance(v, str) and re.fullmatch(r"[0-9a-f]{64}", v)
+                for k, v in files.items()):
+            problems.append(f"{phase} snapshot's files are not a map of path to sha256")
+        if not isinstance(doc.get("taken_at"), str) or not doc.get("run_token"):
+            problems.append(f"{phase} snapshot lacks taken_at or run_token")
+    if problems:
+        return problems
+    if post_doc.get("run_token") != pre_doc.get("run_token"):
+        problems.append("the post snapshot belongs to a different run than the pre snapshot")
+    if post_doc.get("pre_sha256") != pre_digest:
+        problems.append("the post snapshot does not bind the pre snapshot as it now stands")
+    if post_doc["taken_at"] < pre_doc["taken_at"]:
+        problems.append("the post snapshot is earlier than the pre snapshot")
+    return problems
 
 
 def conversion_evidence_flag(target_dir: Path, item: dict) -> str | None:
     """Validate a conversion wrapper's value-identity evidence (PR #7 review, finding 3).
 
     The ruled condition is that every converted value is unchanged. The
-    evidence must be a JSON record: ``{"check": "value-identity", "result":
-    "identical", "input": {"path", "sha256"}, "output": {"path", "sha256"},
-    "values_compared": n, "values_total": n}``, bound to the files as they
-    are now, with full scope.
+    wrapper declares the conversion it performs (``conversion: {input,
+    output}``). The evidence must be a JSON record: ``{"check":
+    "value-identity", "result": "identical", "converter": {"path",
+    "sha256"}, "input": {"path", "sha256"}, "output": {"path", "sha256"},
+    "values_compared": n, "values_total": n}``. It must name this wrapper at
+    its current digest and the declared input and output (so a valid record
+    for some other conversion cannot clear the flag: PR #7 delta review,
+    finding 3), be current, and cover every value.
 
     Returns:
         None when the evidence is valid, else a flag naming why it is not:
-        missing, unreadable, failed, stale, or incomplete.
+        missing, unreadable, failed, unbound, stale, or incomplete.
     """
     head = f"{FLAG_PREFIX}conversion wrapper {item['path']}: value-identity evidence "
     rel = item.get("value_identity_check")
@@ -1407,6 +1494,22 @@ def conversion_evidence_flag(target_dir: Path, item: dict) -> str | None:
         return head + f"unreadable: {rel} is empty or not a value-identity record"
     if evidence.get("result") != "identical":
         return head + f"failed: {rel} reports result {evidence.get('result')!r}"
+    declared = item.get("conversion") if isinstance(item.get("conversion"), dict) else {}
+    if not declared.get("input") or not declared.get("output"):
+        return head + "unbound: the wrapper declares no conversion input and output, so no " \
+                      "evidence can be tied to it"
+    converter = evidence.get("converter") if isinstance(evidence.get("converter"), dict) else {}
+    wrapper = inside(target_dir, item["path"])
+    if (converter.get("path") != item["path"] or wrapper is None or not wrapper.is_file()
+            or converter.get("sha256") != sha256_file(wrapper)):
+        return head + f"unbound: {rel} does not name this converter ({item['path']}) at its " \
+                      f"current sha256"
+    for side in ("input", "output"):
+        named = (evidence.get(side) or {}).get("path") if isinstance(evidence.get(side),
+                                                                      dict) else None
+        if named != declared[side]:
+            return head + f"unbound: {rel} covers {side} {named!r}, not the declared " \
+                          f"{declared[side]!r}"
     for side in ("input", "output"):
         spec = evidence.get(side) if isinstance(evidence.get(side), dict) else {}
         target = resolve_stored(target_dir, str(spec.get("path") or ""))
@@ -1766,22 +1869,31 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                           f"file nor a declared wrapper")
 
     # -- Execution snapshots: what the run could execute is what the gate sees.
-    snapshots: dict[str, dict[str, str] | None] = {}
+    docs: dict[str, Any] = {}
     for phase in SNAPSHOT_PHASES:
         snap_path = target_dir / SNAPSHOT_DIR / f"{phase}.json"
         try:
-            snapshots[phase] = json.loads(snap_path.read_text(encoding="utf-8"))["files"]
-        except (OSError, KeyError, TypeError, json.JSONDecodeError):
-            snapshots[phase] = None
-        result["snapshots"][phase] = snapshots[phase] is not None
-    if snapshots["pre"] is None or snapshots["post"] is None:
-        message = (f"execution snapshots missing or unreadable ({SNAPSHOT_DIR}/pre.json and "
-                   f"post.json, taken by snapshot-code around the container run): the gate "
-                   f"cannot show which code the run executed")
+            docs[phase] = json.loads(snap_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            docs[phase] = None
+        result["snapshots"][phase] = docs[phase] is not None
+    structural = (snapshot_problems(docs["pre"], docs["post"],
+                                    sha256_file(target_dir / SNAPSHOT_DIR / "pre.json"))
+                  if docs["pre"] is not None and docs["post"] is not None else [])
+    if docs["pre"] is None or docs["post"] is None or structural:
+        message = (f"execution snapshots missing, unreadable, or not a bound pair "
+                   f"({SNAPSHOT_DIR}/pre.json and post.json, taken by snapshot-code around the "
+                   f"container run): the gate cannot show which code the run executed"
+                   + (f" ({'; '.join(structural)})" if structural else ""))
         (warnings if legacy else errors).append(message)
     else:
-        pre, post = snapshots["pre"], snapshots["post"]
+        pre, post = docs["pre"]["files"], docs["post"]["files"]
         generated_rel = {p.relative_to(target_dir.resolve()).as_posix() for p in generated_paths}
+        # Pre-run code missing at the post boundary is a change across the run,
+        # however it is restored afterwards (PR #7 delta review, finding 2).
+        for rel_text in sorted(set(pre) - set(post)):
+            errors.append(f"{rel_text} was present when the run started but missing when it "
+                          f"ended")
         for rel_text, digest in pre.items():
             if rel_text not in current:
                 errors.append(f"{rel_text} was present when the run started and is gone now")
@@ -1798,8 +1910,11 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                               f"generated")
         for path in executed_paths:
             rel_text = path.relative_to(target_dir.resolve()).as_posix()
-            if rel_text not in pre:
-                errors.append(f"executed copy {rel_text} was not present when the run started")
+            if rel_text not in pre or rel_text not in post:
+                errors.append(f"executed copy {rel_text} is not in both execution snapshots")
+            elif not pre[rel_text] == post[rel_text] == current.get(rel_text):
+                errors.append(f"executed copy {rel_text} differs between the snapshots and the "
+                              f"tree the gate sees")
         for rel_text in sorted(set(current) - set(post)):
             warnings.append(f"{rel_text} was added after the run: it was not part of the "
                             f"recorded execution")

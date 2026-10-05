@@ -102,8 +102,11 @@ difference is a declared wrapper or a flagged edit.
     publishes.
   - `corpus-manifest`: for a file in the corpus store (a publisher
     supplement, or a transcription's source), name the committed corpus
-    manifest, the paper's entry, and the filename. An archive held in the
-    store is named `$CORPUS_ROOT/<slug>/<file>`.
+    manifest, this paper's entry, and the filename. An archive held in the
+    store is named `$CORPUS_ROOT/<slug>/<file>`. It verifies only a journal
+    supplement of a paper whose registry holds its principal artefact in the
+    supplement; anything else is flagged. Anchor a deposit kept in the store
+    through its evidence-pack record, which carries the version binding.
   - `git`: repository, commit, path, and blob id. The gate checks the blob id
     against the bytes, but a reviewer must confirm it at the remote, so it is
     flagged.
@@ -122,11 +125,15 @@ difference is a declared wrapper or a flagged edit.
   `--phase post`. Change no code file afterwards. Nothing is exempt, including
   `outputs/`: declare any code file the run itself writes as a wrapper with
   role `generated`. No wrapper may load generated code.
-- **A format conversion needs machine-readable evidence.** Its
-  `value_identity_check` names a JSON record: `{"check": "value-identity",
-  "result": "identical", "input": {"path", "sha256"}, "output": {"path",
-  "sha256"}, "values_compared": n, "values_total": n}`, bound to the files as
-  they are and covering every value. Anything else is flagged.
+- **A format conversion needs machine-readable evidence.** The wrapper
+  declares the conversion it performs (`conversion: {"input", "output"}`).
+  Its `value_identity_check` names a JSON record: `{"check":
+  "value-identity", "result": "identical", "converter": {"path", "sha256"},
+  "input": {"path", "sha256"}, "output": {"path", "sha256"},
+  "values_compared": n, "values_total": n}`. The record must name this
+  wrapper at its current sha256 and exactly the declared input and output,
+  match the files as they are, and cover every value. Anything else is
+  flagged.
 - **Check:** `venv/bin/python scripts/reproduction-lane.py check-code <attempt dir>`.
   It fails on an undeclared difference, on code that changed after or during
   the run, and on any code file that is neither an authors' file nor a

@@ -122,7 +122,7 @@
           },
           "anchor": {
             "type": "object",
-            "description": "Independent provenance for the original's bytes (gate 1.2). kind evidence-pack: pack (a committed evidence pack, repository-relative), record_id (e.g. zenodo:10.5281/zenodo.10782943), and file (the deposit file key whose published checksum the deposit copy must match; the copy is archive.path or local_copy). kind corpus-manifest: manifest (a committed corpus manifest), entry (paper slug), and filename (a file in the corpus store). kind git: repository, commit, path, and blob_sha1 (checked against the original's bytes; the remote is checked by a reviewer). kind none: reason. Without a verified anchor the original is flagged.",
+            "description": "Independent provenance for the original's bytes (gate 1.2). kind evidence-pack: pack (a committed evidence pack, repository-relative), record_id (e.g. zenodo:10.5281/zenodo.10782943), and file (the deposit file key whose published checksum the deposit copy must match; the copy is archive.path or local_copy). kind corpus-manifest: manifest (a committed corpus manifest), entry (this paper's slug), and filename (a file in the corpus store); it verifies only a journal supplement (corpus role supplement) of a paper whose registry declares a principal artefact held in the supplement, and is otherwise flagged. kind git: repository, commit, path, and blob_sha1 (checked against the original's bytes; the remote is checked by a reviewer). kind none: reason. Without a verified anchor the original is flagged.",
             "required": [
               "kind"
             ],
@@ -325,7 +325,26 @@
           },
           "value_identity_check": {
             "type": "string",
-            "description": "For role conversion: a JSON record {check: value-identity, result: identical, input: {path, sha256}, output: {path, sha256}, values_compared, values_total} bound to the current files with full scope. Anything else is flagged as missing, unreadable, failed, stale, or incomplete."
+            "description": "For role conversion: a JSON record {check: value-identity, result: identical, converter: {path, sha256}, input: {path, sha256}, output: {path, sha256}, values_compared, values_total}, naming this wrapper at its current sha256 and the declared conversion input and output, bound to the current files with full scope. Anything else is flagged as missing, unreadable, failed, unbound, stale, or incomplete."
+          },
+          "conversion": {
+            "type": "object",
+            "description": "For role conversion: the input the wrapper converts and the output it writes (paths relative to the attempt directory, or $CORPUS_ROOT/...). The value-identity evidence must name exactly these, and this wrapper at its current sha256.",
+            "required": [
+              "input",
+              "output"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "input": {
+                "type": "string",
+                "minLength": 1
+              },
+              "output": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           }
         }
       }

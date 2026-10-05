@@ -110,12 +110,22 @@ configuration (for the shakedown:
   empty list wrongly. Step 10's operator re-run is authoritative, and step
   11's `human-queue` reconciles the two.
 - **What gate 1.2 cannot prove** (cross-model review of PR #7). The
-  snapshots are taken by the lane tool but invoked by the executor. Code
-  created and deleted within one run, code fetched into the image at build
-  time, and a re-implementation spelled differently from the authors' code
-  are invisible to it; these are the reviewer's obligations, not the gate's
-  findings. A deterministic transcription of printed code shows
-  repeatability, not fidelity to the page.
+  execution snapshots are consistency evidence, not independent proof that
+  the nominated files ran: the lane tool takes them, but the executor
+  invokes it. Code created and deleted within one run, code fetched into
+  the image at build time, dynamic evaluation, and a re-implementation
+  spelled differently from the authors' code are invisible to the gate.
+  They are the reviewer's obligations (`review_obligations`), which must be
+  discharged before a result is admitted. A deterministic transcription of
+  printed code shows repeatability, not fidelity to the page. An anchor
+  record that is clean against today's HEAD does not by itself prove it
+  pre-dated the run.
+- **Strengthening options, not yet built** (Astra's review, 2026-10-05):
+  an operator-controlled run command that takes both snapshots around the
+  recorded container invocation, keeps the image digest and exit status, and
+  mounts the authors' code read-only with outputs separate; and binding
+  anchors to the approved launch commit, so the pre-run provenance claim
+  becomes checkable.
 - **Executor permissions.** The executor writes files and runs Docker and
   network commands from inside a workflow. Check that the session's
   permission settings allow this before stage 2, or spawns will stall on
