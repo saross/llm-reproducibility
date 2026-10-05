@@ -8,7 +8,15 @@ status: draft-for-review
 
 # Reproduction lane gate 1.3: design
 
-**Status: draft for second opinions** (Astra, GPT in Codex, and Fable, a
+**Status (2026-10-05, end of session): both reviews received; NOT ready to
+build.** Astra asks that the original sections and both sets of revisions be
+consolidated into one effective specification first, because they now
+disagree on generated code, conversion equality, and skipped start-up hooks.
+That consolidation is the next session's first task (see "Consolidated build
+plan" at the end). Part 1 (static routes, launch-commit anchors, creditable
+coverage) is built and pushed (`4244a51`).
+
+*Original status:* **draft for second opinions** (Astra, GPT in Codex, and Fable, a
 Claude session) before building. It responds to the Fable review of PR #7
 (`~/agent-mail/claude/outbox/claude/20261005T044136.617510Z-claude-pr7-fable-review-reply.md`)
 and Astra's two reviews of PR #7.
@@ -297,6 +305,154 @@ pending.
   3. the stderr mirror;
   4. (done in part 1) the inventory and the launch-commit anchors;
   5. then conversions, rulings, and the remaining patterns.
+
+## Revisions after Astra's design review (2026-10-05)
+
+Astra's review is at
+`~/agent-mail/codex/outbox/claude/20261005T055227Z-codex-repro-gate13-design-review.md`.
+It is a design and source review with documentation checks; nothing was run.
+It also confirmed that `0d87a8f`'s narrow fixes address its round-two cases,
+without re-running the suite, and that this is not an overall gate approval.
+Its points change the foundations, not only the details.
+
+1. **Record boundary.**
+   - The run records must sit outside the scientific input tree. They must
+     never be mounted read-write into the container, where analysed code could
+     edit its own evidence.
+   - The host launcher captures the authoritative event stream and publishes a
+     sealed receipt after collection. A container-side log is diagnostic only.
+   - The stderr mirror detects deletion but is not independent, because code
+     can write prefixed lines too.
+   - The lane's injected `.Rprofile` is recorded as lane instrumentation, and
+     the work copy is compared against a baseline taken after the lane's
+     declared changes.
+   - Same-user host write access remains outside any cryptographic guarantee,
+     and the runbook should say so.
+2. **Run and output binding.**
+   - Each run starts with an empty, run-specific output directory, with
+     side-written files kept under it at their relative paths, and never
+     overwrites an earlier run's.
+   - Prior-run artefacts a run consumes are declared.
+   - The attempt is locked against concurrent runs, and the copied tree is
+     verified against its input snapshot.
+   - The image tag is resolved to an immutable image id, which is what runs,
+     and the container's identity is kept.
+   - There are defined failed and incomplete states. A non-zero exit needs a
+     ruling on any partial results.
+   - A detached run is finalised only after the container and the log
+     collection have ended.
+   - These replace Fable's "outputs/ differs from the last run's record" rule
+     with something stronger.
+3. **Per-process instrumentation.**
+   - Every R process records a start and end handshake, its process and parent
+     identity, the hook version, and ordered loader events. A non-empty
+     aggregate log does not prove a child was instrumented, so the test matrix
+     includes an uninstrumented child under a logging parent.
+   - Project environment settings are read in the environment-file phase, not
+     first from the user-profile hook.
+   - `.RData` restoration is disabled, or declared as an input with a review
+     obligation.
+   - The site profile keeps a documented, instrumented place in the start-up
+     order.
+   - `callr` in project-profile mode, with its bootstrap code, serialised
+     functions, and captured stderr, needs either an explicit supported
+     adapter or a flag for the unsupported route. A legitimate child's
+     disabled site profile is not rejected merely for its option.
+   - `source()` of a connection or an expression is in the loader model.
+4. **renv in Docker.**
+   - The external library location is set at build and restore time as well as
+     at run time, and the package cache stays reachable (or packages are copied
+     in).
+   - The chosen non-root user is tested with networking off.
+   - Lane instrumentation and pinned bootstrap code get their own provenance
+     classes. Generated analysis code is never silently exempt.
+5. **Hashes.**
+   - md5 is acceptable as the in-container fingerprint; sha256 stays for host
+     receipts and anchors.
+   - Each observation is bound to a process, a run, a resolved path, and its
+     input identity, not merely to a digest found somewhere in the manifest.
+   - **The part 1 digest cache must be confined to one immutable snapshot.**
+     An edit that keeps the same size, with its mtime restored, could
+     otherwise return the old digest. This is a fix to code already pushed,
+     so it goes first.
+6. **Conversions,** in addition to Fable's stricter rules:
+   - no silent clearing of trailing whitespace without a declared policy;
+   - raw values and cell types are kept beside the normalised comparison;
+   - blank cells, empty strings, formulae, error values, and omitted rows are
+     distinguished;
+   - an Excel formula's cached value (`openpyxl` with `data_only`) is not
+     evidence of a fresh calculation, so a formula or an external link is
+     flagged;
+   - every comparison is scoped to a declared sheet, range, header row,
+     encoding, and input and output digests, and unchecked sheets are
+     reported.
+7. **Rulings and admission.**
+   - A ruling binds to a structured issue id and an evidence fingerprint
+     (policy version, target scope, and the files concerned), not to a flag's
+     text. A general ruling needs an explicit predicate checked on each run.
+   - **Fable's rule excluding comparison evidence older than the run's end is
+     dropped,** because normal outputs predate the end; run-bound output
+     digests replace it.
+   - Raw coverage is kept apart from admitted coverage, and unclear target
+     impact stays uncreditable until ruled.
+   - Reviewer obligations, failed transcript audits, incomplete logs, and
+     failed gates all block admission. A flag ruling never overrides a hard
+     integrity failure, and nothing downstream turns an `--record-unruled`
+     record eligible.
+8. **Fresh computation.**
+   - Quarto and knitr caches, `_freeze`, targets stores, and saved workspaces
+     need a policy: force the approved fresh-execution mode, or record cached
+     inputs as dependencies whose admissibility is unresolved. A successful
+     render with a clean loader log does not prove a fresh analysis.
+   - `parse(text =)` text is mapped to its original chunk or source, or to
+     trusted tooling, rather than compared with whole files, and unmatched
+     expressions stay reviewable.
+9. **Acceptance tests to add:**
+   - a plain script;
+   - a cached and a fresh Quarto render;
+   - a child that changes its working directory;
+   - an uninstrumented child;
+   - legitimate generated helper code;
+   - a stale output surviving a failed re-run;
+   - a changed input under an unchanged ruling message;
+   - a semantics-neutrality check that instrumented and uninstrumented
+     fixture results agree.
+10. **The transcript audit is supporting evidence only.** Shell indirection,
+    generated launch scripts, and the Docker API can avoid a literal
+    `docker run`. The accepted launcher and launch commit are bound to the
+    approved run configuration and the tool's digest, not accepted by name.
+
+## Consolidated build plan (next session)
+
+1. **Fix the part 1 digest cache** (Astra 5): confine it to one immutable
+   snapshot, with a test of an edit that keeps size and mtime.
+2. **Write the consolidated specification.** One effective text replaces §§1–7
+   and both revision sections, and resolves the three disagreements:
+   - generated code is flagged, gets the inlining check, and is never loadable,
+     with its own provenance class distinct from lane instrumentation;
+   - conversions clear only on exact text, with no whitespace normalisation
+     unless declared, every other difference counted, and formulae flagged;
+   - skipped start-up hooks: `--vanilla` and the like are errors in a
+     wrapper, an instrumented process missing from the handshake set fails,
+     and a supported `callr` adapter or a flag covers that route.
+   Send it to Astra and Fable before building.
+3. **Build the foundations first** (Astra's order):
+   - the record boundary: host-captured stream, sealed receipt, records
+     outside the input tree;
+   - run and output binding: per-run empty outputs, image id, lock,
+     failure states;
+   - ruling binding: issue id plus evidence fingerprint, raw versus
+     admitted coverage, the blocking rules.
+4. **Then instrumentation:** the hook with per-process handshakes, start-up
+   order, `.RData`, the renv build guidance, and the child-process matrix in
+   Docker, using a test image with `callr`, `targets`, and `future`, from
+   free CRAN downloads.
+5. **Then fresh computation:** the cache and freeze policy and the
+   `parse(text =)` mapping.
+6. **Then conversions** (§5 with both reviews' rules), **the transcript audit**
+   (supporting), and the remaining patterns.
+7. **Acceptance tests** (Astra 9), including semantics neutrality. Then a
+   final review by both reviewers before the regression gate.
 
 ## Questions for the reviewers
 
