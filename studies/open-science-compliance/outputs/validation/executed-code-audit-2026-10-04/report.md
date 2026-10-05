@@ -238,7 +238,9 @@ loops (**HER1-4, ii**). No authors' file was executed, and the wrapper shares
 **HER1-1 (iv):** the AP-12 version is v2, which computes Table 2 at bigram
 level. It sets Fig. 3 thresholds per n-gram level: > 9 with 21 bars for
 bigrams, > 4 with 23 for trigrams, and > 2 with 20 for quadrigrams. v1 has
-only the bigram settings, and its script ends with a literal `n <- 4`.
+only the bigram settings, and it sets `n <- 4` once, in the set-up block at
+line 40, before the analysis (corrected 2026-10-05 from "ends with", Fable
+review P3-6).
 Attempt-01's period summaries are quadrigram-level (Ertebølle maximum
 7.925, against Table 2's bigram 4.10), but they were never compared with
 Table 2.

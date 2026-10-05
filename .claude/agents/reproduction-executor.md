@@ -93,7 +93,7 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
 ## Output contract
 
 Required receipt fields: `instrument_versions`, `instrument_receipts`,
-`agent_version` ("reproduction-executor v1.2"), `model_id`,
+`agent_version` ("reproduction-executor v1.3"), `model_id`,
 `pulled_files_read`. `status` includes `ESCALATE` — on missing input,
 unbuildable ambiguity outside the plan, or a suspected paper error, escalate
 with a reason and stop. PAPER_ERROR and CANNOT_COMPARE calls surface for human
