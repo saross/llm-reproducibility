@@ -76,6 +76,16 @@ re-run:
     ``execution-snapshots/<phase>.json``. The executor runs ``--phase pre``
     immediately before the container run and ``--phase post`` immediately
     after; the gate compares both with the tree it finds.
+``run-container``
+    Gate 1.3's lane-owned run (``wiki/planning/reproduction-gate-1-3-design.md``).
+    Copies the attempt's input tree to a private work copy, instruments it
+    (an exec shim over the image's R front end and a profile hook, so every
+    R process reports itself on Docker's log stream), runs the entry with
+    networking off, collects what the run wrote into ``outputs/run-NN/``,
+    and seals the records in ``lane-records/run-NN/``. ``--detach`` and
+    ``--finalise`` split a multi-hour run. ``check-attempt`` verifies the
+    sealed records in place of ``snapshot-code``'s snapshots wherever they
+    exist.
 ``human-queue``
     Rebuild the human queue for a run from the authoritative on-disk gate
     reports, and report any flag a workflow relay failed to carry.
@@ -105,6 +115,11 @@ Usage:
         [--manifest FILE] [--legacy-attempt] [--out FILE|-]
     venv/bin/python scripts/reproduction-lane.py snapshot-code <attempt-dir> \\
         --phase pre|post [--force]
+    venv/bin/python scripts/reproduction-lane.py run-container <attempt-dir> \\
+        --image TAG --entry FILE [--mount-path PATH] [--launch-commit SHA] \\
+        [--work-root DIR] [--detach] [--keep-work]
+    venv/bin/python scripts/reproduction-lane.py run-container <attempt-dir> \\
+        --finalise run-NN
     venv/bin/python scripts/reproduction-lane.py human-queue \\
         --config <run-config.yaml> [--workflow-result FILE] [--out FILE]
     venv/bin/python scripts/reproduction-lane.py persist-results \\
@@ -131,8 +146,10 @@ import json
 import os
 import re
 import secrets
+import shutil
 import subprocess
 import sys
+import tempfile
 from collections.abc import Iterator
 from datetime import datetime, timezone
 from pathlib import Path
@@ -1743,6 +1760,837 @@ def snapshot_problems(pre_doc: Any, post_doc: Any, pre_digest: str) -> list[str]
     return problems
 
 
+# ---------------------------------------------------------------------------
+# Lane-owned execution: run-container and sealed run records (gate 1.3)
+# ---------------------------------------------------------------------------
+#
+# Specification: wiki/planning/reproduction-gate-1-3-design.md, §§3–5 (F1 and
+# the run lifecycle of F2). The executor no longer starts containers itself.
+# run-container copies the attempt's input tree to a private work copy,
+# instruments it, runs it with networking off, and collects everything the run
+# wrote into outputs/run-NN/. Its records sit in lane-records/run-NN/, which is
+# never mounted, and are sealed by a receipt whose digest is appended to
+# lane-records/index.jsonl. The gate re-checks the whole chain.
+
+RUNTIME_DIR = REPO_ROOT / "reproduction-system" / "runtime"
+RECORDS_DIR = "lane-records"
+RUN_INDEX_FILE = "index.jsonl"
+LOCK_FILE = "lock"
+RUN_ID_RE = re.compile(r"^run-(\d{2,})$")
+RECORD_VERSION = "1.0"
+LANE_MOUNT = "/lane"
+EVENT_PREFIX = "LANE1"
+LANE_PROFILE_MARKER = "# reproduction lane profile"
+LANE_PROFILE = (f"{LANE_PROFILE_MARKER}\n"
+                "# Injected by run-container (gate 1.3): a child R process that reads the\n"
+                "# working directory's profile instead of R_PROFILE_USER still loads the hook.\n"
+                f'sys.source("{LANE_MOUNT}/hook.R", envir = new.env(parent = baseenv()))\n')
+PROJECT_PROFILE = ".Rprofile.project"
+# Executor documents: never copied into a run and never loadable (spec §3).
+# Everything else in the attempt directory is the input tree.
+DOCUMENT_NAMES = frozenset({
+    PLAN_FILE, PLAN_VIEW_FILE, APPROVAL_FILE, CODE_MANIFEST_FILE, EXECUTION_FILE,
+    GATE_FILE, "flag-rulings.json", REVIEW_FILE, "log.md", "environment.md",
+    "comparisons", "outputs", RECORDS_DIR, SNAPSHOT_DIR, "__pycache__"})
+# Interpreters run-container starts the entry with, by suffix.
+ENTRY_INTERPRETERS = {".r": "Rscript", ".sh": "bash"}
+# Front-end calls that start no interpreter needing the hook (R CMD INSTALL,
+# R RHOME, R --version). A CMD that does start R re-enters the front end,
+# and that start is counted on its own.
+CENSUS_EXEMPT = frozenset({"CMD", "RHOME", "--version"})
+HOOK_SKIP_OPTIONS = frozenset({"--vanilla", "--no-init-file"})
+# Options that name the code an R process runs; without one, a script fed on
+# standard input (R < file) is code no load event covers.
+SCRIPT_OPTIONS = ("--file=", "-f", "--file", "-e")
+# An explicit, effectively unbounded log size: a rotated stream loses events,
+# and Docker refuses max-size=-1 at start. The read-back must match it.
+LOG_MAX_SIZE = "100g"
+RECORD_FILES = ("run.json", "pre.json", "baseline.json", "post.json", "events.log",
+                "outputs.json", "lane-renviron.txt")
+
+
+def docker(args: list[str], *, binary: bool = False,
+           timeout: float | None = 600) -> subprocess.CompletedProcess:
+    """Run a docker CLI command and capture its output.
+
+    Args:
+        args: Arguments after ``docker``.
+        binary: Capture bytes rather than text (logs, file contents).
+        timeout: Seconds before giving up; None waits indefinitely.
+
+    Raises:
+        LaneError: when docker is not installed.
+    """
+    try:
+        return subprocess.run(["docker", *args], capture_output=True, text=not binary,
+                              timeout=timeout, check=False)
+    except FileNotFoundError as exc:
+        raise LaneError("docker is not installed or not on PATH") from exc
+
+
+def inspect_image(tag: str) -> dict:
+    """Resolve an image tag to its immutable id, with its working directory.
+
+    The run uses the id, so a tag rebuilt between runs shows up as a new id
+    (Astra's design review, point 2).
+    """
+    proc = docker(["image", "inspect", tag])
+    if proc.returncode:
+        raise LaneError(f"docker image {tag!r} not found locally: {proc.stderr.strip()}")
+    info = json.loads(proc.stdout)[0]
+    config = info.get("Config") or {}
+    return {"tag": tag, "id": info["Id"], "repo_digests": info.get("RepoDigests") or [],
+            "workdir": config.get("WorkingDir") or "", "labels": config.get("Labels") or {}}
+
+
+FRONT_END_PROBE = ('r="$(R RHOME)" || exit 3; printf "%s\\n" "$r"; '
+                   'for d in $(printf "%s" "$PATH" | tr ":" " "); do '
+                   '[ -f "$d/R" ] && readlink -f "$d/R"; done; exit 0')
+
+
+def image_front_end(image_id: str) -> dict:
+    """Find the image's R front end and every copy of it on the PATH.
+
+    The exec shim is mounted over ``$R_HOME/bin/R`` and over each PATH copy
+    with the same bytes (``/usr/local/bin/R`` in the rocker images), so every
+    interpreter start passes through it (spec §4, probe fact 3). A PATH ``R``
+    with other bytes is reported: starts through it would not be counted.
+
+    Returns:
+        ``{r_home, front_end, front_end_bytes, front_end_sha256,
+        shim_targets, unshimmed}``.
+    """
+    probe = docker(["run", "--rm", "--network", "none", "--entrypoint", "sh", image_id,
+                    "-c", FRONT_END_PROBE])
+    lines = [line.strip() for line in probe.stdout.splitlines() if line.strip()]
+    if probe.returncode or not lines:
+        raise LaneError(f"could not find R in image {image_id[:19]}: "
+                        f"{probe.stderr.strip() or 'R RHOME failed'}")
+    r_home, candidates = lines[0], lines[1:]
+    front_end = f"{r_home.rstrip('/')}/bin/R"
+
+    def file_bytes(path: str) -> bytes:
+        got = docker(["run", "--rm", "--network", "none", "--entrypoint", "cat", image_id,
+                      path], binary=True)
+        if got.returncode:
+            raise LaneError(f"could not read {path} from image {image_id[:19]}")
+        return got.stdout
+
+    original = file_bytes(front_end)
+    if not original.startswith(b"#!"):
+        raise LaneError(f"{front_end} in image {image_id[:19]} is not a script front end; "
+                        f"the exec shim cannot stand in for it")
+    targets, unshimmed = [front_end], []
+    for path in dict.fromkeys(candidates):
+        if path == front_end:
+            continue
+        (targets if file_bytes(path) == original else unshimmed).append(path)
+    return {"r_home": r_home, "front_end": front_end, "front_end_bytes": original,
+            "front_end_sha256": hashlib.sha256(original).hexdigest(),
+            "shim_targets": targets, "unshimmed": unshimmed}
+
+
+@digest_snapshot()
+def input_inventory(target_dir: Path) -> tuple[dict[str, str], list[str]]:
+    """sha256 of every file in the input tree, and the tree's symlink problems.
+
+    The input tree is the attempt directory less the executor's documents and
+    the lane's records (spec §3). It is what a run's work copy is made from,
+    and at gate time it must equal the final run's pre snapshot.
+    """
+    files, problems = walk_tree(target_dir)
+    inventory = {}
+    for path in files:
+        rel = path.relative_to(target_dir)
+        if rel.parts[0] not in DOCUMENT_NAMES:
+            inventory[rel.as_posix()] = cached_digest(path)
+    return inventory, problems
+
+
+@digest_snapshot()
+def work_inventory(root: Path) -> tuple[dict[str, str], list[str]]:
+    """sha256 of every file in a work copy, and its symlink problems."""
+    files, problems = walk_tree(root)
+    return {path.relative_to(root).as_posix(): cached_digest(path) for path in files}, problems
+
+
+def inventory_difference(expected: dict[str, str], found: dict[str, str]) -> list[str]:
+    """Paths added, removed, or changed between two inventories, for messages."""
+    added = sorted(set(found) - set(expected))
+    removed = sorted(set(expected) - set(found))
+    changed = sorted(rel for rel in set(expected) & set(found) if expected[rel] != found[rel])
+    return ([f"added {rel}" for rel in added] + [f"removed {rel}" for rel in removed]
+            + [f"changed {rel}" for rel in changed])
+
+
+def run_ids(records: Path) -> list[str]:
+    """The run directories under ``lane-records/``, in run order."""
+    if not records.is_dir():
+        return []
+    found = [p.name for p in records.iterdir() if p.is_dir() and RUN_ID_RE.match(p.name)]
+    return sorted(found, key=lambda name: int(RUN_ID_RE.match(name).group(1)))
+
+
+def acquire_lock(records: Path, run_id: str) -> None:
+    """Take the attempt's run lock, or refuse (one run at a time; spec §5)."""
+    records.mkdir(parents=True, exist_ok=True)
+    lock = records / LOCK_FILE
+    try:
+        handle = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+    except FileExistsError:
+        holder = lock.read_text(encoding="utf-8", errors="replace").strip()
+        raise LaneError(f"{display_path(lock)} exists: another run holds this attempt "
+                        f"({holder}). Finalise that run; if it is gone, the operator clears "
+                        f"the lock with run-container --clear-lock") from None
+    with os.fdopen(handle, "w", encoding="utf-8") as out:
+        out.write(json.dumps({"run": run_id, "pid": os.getpid(), "host": os.uname().nodename,
+                              "since": now_utc()}) + "\n")
+
+
+def release_lock(records: Path, run_id: str) -> None:
+    """Release the lock if, and only if, this run holds it."""
+    lock = records / LOCK_FILE
+    try:
+        holder = json.loads(lock.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return
+    if holder.get("run") == run_id:
+        lock.unlink()
+
+
+def copy_input_tree(target_dir: Path, project: Path) -> None:
+    """Copy the input tree into the work copy, never by hard link.
+
+    ``cp -a --reflink=auto`` shares blocks on filesystems that support it and
+    copies otherwise (Fable's design review, Q1). A hard link would make the
+    originals writable through the work copy. Where ``cp`` lacks
+    ``--reflink`` (BSD), Python copies the files.
+    """
+    project.mkdir(parents=True)
+    for entry in sorted(target_dir.iterdir()):
+        if entry.name in DOCUMENT_NAMES:
+            continue
+        dest = project / entry.name
+        proc = subprocess.run(["cp", "-a", "--reflink=auto", str(entry), str(dest)],
+                              capture_output=True, text=True, check=False)
+        if proc.returncode:
+            if entry.is_dir() and not entry.is_symlink():
+                shutil.copytree(entry, dest, symlinks=True, dirs_exist_ok=True)
+            else:
+                shutil.copy2(entry, dest, follow_symlinks=False)
+
+
+def instrument_work_copy(project: Path) -> list[dict]:
+    """Make the lane's declared changes to a verified work copy (spec §4).
+
+    A project-root ``.Rprofile`` is renamed ``.Rprofile.project`` (the hook
+    sources it in R's place), and the lane's own ``.Rprofile`` is written, so
+    a child that reads the working directory's profile still loads the hook.
+
+    Returns:
+        The changes, as recorded in ``baseline.json``.
+    """
+    changes: list[dict] = []
+    profile = project / ".Rprofile"
+    if (project / PROJECT_PROFILE).exists():
+        raise LaneError(f"the input tree already has a {PROJECT_PROFILE}, the name the lane "
+                        f"gives a project profile: rename it")
+    if profile.is_symlink() or profile.is_dir():
+        raise LaneError(".Rprofile must be a regular file")
+    if profile.is_file():
+        profile.rename(project / PROJECT_PROFILE)
+        changes.append({"change": "renamed", "from": ".Rprofile", "to": PROJECT_PROFILE})
+    profile.write_text(LANE_PROFILE, encoding="utf-8")
+    changes.append({"change": "injected", "path": ".Rprofile",
+                    "sha256": hashlib.sha256(LANE_PROFILE.encode()).hexdigest()})
+    return changes
+
+
+def compose_renviron(project: Path) -> str:
+    """The lane's user ``Renviron``: the project's, verbatim, then the pin.
+
+    R reads ``R_ENVIRON_USER`` in place of the project ``.Renviron``, so the
+    project's variables are copied in to keep them in the environment phase
+    (Astra's design review, point 3). The final line pins ``R_PROFILE_USER``
+    to the hook: probe fact 1 showed a project ``.Renviron`` otherwise
+    displaces it, and probe fact 2 that children re-read the pin. Just before
+    it, ``LANE_PARENT_PROFILE`` saves whatever profile the process inherited,
+    so ``callr``'s bootstrap profile still runs after the hook (Fable's
+    specification review, Q3). The pin is never conditional, or a project
+    line above it would win again.
+    """
+    parts = []
+    project_env = project / ".Renviron"
+    if project_env.is_file():
+        parts.append("# The project .Renviron, verbatim:")
+        parts.append(project_env.read_text(encoding="utf-8", errors="replace").rstrip("\n"))
+    parts.append("# Reproduction lane pin (gate 1.3): save any inherited profile (callr's,")
+    parts.append("# or one the project names) for the hook to source, then pin the hook.")
+    parts.append("LANE_PARENT_PROFILE=${R_PROFILE_USER}")
+    parts.append(f"R_PROFILE_USER={LANE_MOUNT}/hook.R")
+    return "\n".join(parts) + "\n"
+
+
+def stage_lane_dir(lane_dir: Path, project: Path, front_end: bytes) -> dict[str, str]:
+    """Write the read-only lane directory a run mounts at ``/lane``.
+
+    Returns:
+        The sha256 of each lane file, for ``run.json``.
+    """
+    lane_dir.mkdir(parents=True)
+    files = {"hook.R": (RUNTIME_DIR / "hook.R").read_bytes(),
+             "r-shim.sh": (RUNTIME_DIR / "r-shim.sh").read_bytes(),
+             "R.orig": front_end,
+             "Renviron": compose_renviron(project).encode("utf-8")}
+    for name, data in files.items():
+        path = lane_dir / name
+        path.write_bytes(data)
+        path.chmod(0o755 if name in ("r-shim.sh", "R.orig") else 0o644)
+    return {name: hashlib.sha256(data).hexdigest() for name, data in files.items()}
+
+
+def container_argv(image_id: str, project: Path, lane_dir: Path, mount: str,
+                   shim_targets: list[str], interpreter: str, entry: str,
+                   nonce: str, name: str) -> list[str]:
+    """The ``docker run`` command for one run (spec §§4, 5).
+
+    Networking is off, the run is a non-root user, PID 1 is Docker's init
+    (so its stderr is the event stream), and the only writable mount is the
+    work copy. The records and ``outputs/`` are never mounted. The log driver
+    is set explicitly with no size limit, since a rotated stream loses events
+    and a multi-hour run would end incomplete (Fable's specification review,
+    Q2). The entry point is set explicitly too, so an image's own
+    ``ENTRYPOINT`` cannot turn the lane's command into its arguments.
+    """
+    argv = ["docker", "run", "-d", "--name", name, "--init", "--network", "none",
+            "--log-driver", "json-file", "--log-opt", f"max-size={LOG_MAX_SIZE}",
+            "--user", f"{os.getuid()}:{os.getgid()}", "-w", mount,
+            "--mount", f"type=bind,src={project},dst={mount}",
+            "--mount", f"type=bind,src={lane_dir},dst={LANE_MOUNT},readonly"]
+    for target in shim_targets:
+        argv += ["--mount", f"type=bind,src={lane_dir / 'r-shim.sh'},dst={target},readonly"]
+    for variable, value in (("R_ENVIRON_USER", f"{LANE_MOUNT}/Renviron"),
+                            ("R_PROFILE_USER", f"{LANE_MOUNT}/hook.R"),
+                            ("LANE_RUN_NONCE", nonce), ("LANE_PROJECT_ROOT", mount)):
+        argv += ["-e", f"{variable}={value}"]
+    return argv + ["--entrypoint", interpreter, image_id, entry]
+
+
+def start_run(target_dir: Path, image_tag: str, entry: str, *, mount_path: str | None = None,
+              launch_commit: str | None = None, work_root: Path | None = None) -> dict:
+    """Prepare and start one run; the container is left running.
+
+    Steps 1–4 of the lifecycle (spec §5): lock, resolve the image, snapshot
+    and copy the input tree, verify the copy, instrument it, take the
+    baseline, and start the container. ``finalise_run`` does the rest.
+
+    Returns:
+        The run's ``run.json`` record, state ``running``.
+
+    Raises:
+        LaneError: on any refusal. Nothing is left behind except when the
+            container started: then the run stays ``running`` and holds the
+            lock until it is finalised.
+    """
+    entry_rel = Path(entry)
+    if entry_rel.is_absolute() or ".." in entry_rel.parts or not entry_rel.parts:
+        raise LaneError("--entry must be a relative path inside the attempt directory")
+    if entry_rel.parts[0] in DOCUMENT_NAMES:
+        raise LaneError(f"--entry {entry} is in a document directory, which a run never sees")
+    interpreter = ENTRY_INTERPRETERS.get(entry_rel.suffix.lower())
+    if interpreter is None:
+        raise LaneError(f"--entry must be an R script or a shell script "
+                        f"({', '.join(ENTRY_INTERPRETERS)})")
+    image = inspect_image(image_tag)
+    mount = mount_path or image["workdir"]
+    if not mount.startswith("/") or mount == "/":
+        raise LaneError(f"image {image_tag!r} sets no WORKDIR to mount the work copy at: "
+                        f"pass --mount-path (the path the wrappers use, such as /project)")
+    front = image_front_end(image["id"])
+    records = target_dir / RECORDS_DIR
+    existing = run_ids(records)
+    run_id = f"run-{(int(RUN_ID_RE.match(existing[-1]).group(1)) + 1) if existing else 1:02d}"
+    if (target_dir / "outputs" / run_id).exists():
+        raise LaneError(f"outputs/{run_id} already exists: a run starts with an empty output "
+                        f"destination, so remove what is there")
+    acquire_lock(records, run_id)
+    record_dir = records / run_id
+    work_dir: Path | None = None
+    started = False
+    try:
+        record_dir.mkdir()
+        pre, problems = input_inventory(target_dir)
+        if problems:
+            raise LaneError("refusing to run: " + "; ".join(problems))
+        if entry_rel.as_posix() not in pre:
+            raise LaneError(f"--entry {entry} is not a file in the input tree")
+        write_json(record_dir / "pre.json", {"record_version": RECORD_VERSION, "run": run_id,
+                                             "taken_at": now_utc(), "files": pre})
+        work_dir = Path(tempfile.mkdtemp(prefix=f"llmr-{run_id}-", dir=work_root))
+        project, lane_dir = work_dir / "project", work_dir / "lane"
+        copy_input_tree(target_dir, project)
+        copied, _ = work_inventory(project)
+        if copied != pre:
+            raise LaneError("the work copy does not match the input tree: "
+                            + "; ".join(inventory_difference(pre, copied)[:10]))
+        changes = instrument_work_copy(project)
+        baseline, _ = work_inventory(project)
+        write_json(record_dir / "baseline.json",
+                   {"record_version": RECORD_VERSION, "run": run_id, "taken_at": now_utc(),
+                    "changes": changes, "files": baseline})
+        lane_files = stage_lane_dir(lane_dir, project, front["front_end_bytes"])
+        (record_dir / "lane-renviron.txt").write_bytes((lane_dir / "Renviron").read_bytes())
+        nonce = secrets.token_hex(8)
+        name = f"llmr-{run_id}-{nonce}"
+        argv = container_argv(image["id"], project, lane_dir, mount, front["shim_targets"],
+                              interpreter, entry_rel.as_posix(), nonce, name)
+        dockerfile = target_dir / "Dockerfile"
+        label = image["labels"].get("llmr.dockerfile.sha256")
+        doc: dict[str, Any] = {
+            "record_version": RECORD_VERSION, "run": run_id, "state": "running",
+            "started_at": now_utc(), "ended_at": None, "exit_status": None,
+            "image": {"tag": image_tag, "id": image["id"], "repo_digests": image["repo_digests"],
+                      "dockerfile_label": label,
+                      "dockerfile_sha256": sha256_file(dockerfile) if dockerfile.is_file()
+                      else None},
+            "front_end": {k: front[k] for k in ("r_home", "front_end", "front_end_sha256",
+                                                "shim_targets", "unshimmed")},
+            "mount_path": mount, "entry": entry_rel.as_posix(), "interpreter": interpreter,
+            "nonce": nonce, "argv": argv, "lane_files": lane_files,
+            "launch_commit": launch_commit,
+            "lane_script_sha256": sha256_file(Path(__file__).resolve()),
+            "work_dir": str(work_dir), "container_id": None, "problems": []}
+        proc = docker(argv[1:])
+        if proc.returncode:
+            # docker run can create the container and then fail to start it.
+            docker(["rm", "-f", name])
+            raise LaneError(f"docker run failed: {proc.stderr.strip()}")
+        started = True
+        doc["container_id"] = proc.stdout.strip()
+        log_config = docker(["inspect", "--format", "{{json .HostConfig.LogConfig}}",
+                             doc["container_id"]])
+        doc["log_config"] = (json.loads(log_config.stdout) if log_config.returncode == 0
+                             else None)
+        if (doc["log_config"] or {}).get("Type") != "json-file" or \
+                (doc["log_config"].get("Config") or {}).get("max-size") != LOG_MAX_SIZE:
+            doc["problems"].append(f"the container's log configuration "
+                                   f"({doc['log_config']}) could rotate the event stream")
+        write_json(record_dir / "run.json", doc)
+        return doc
+    except BaseException:
+        if not started:
+            # Nothing ran: leave no record, no lock, and no work copy behind.
+            shutil.rmtree(record_dir, ignore_errors=True)
+            if work_dir is not None:
+                shutil.rmtree(work_dir, ignore_errors=True)
+            release_lock(records, run_id)
+        raise
+
+
+def decode_field(field: str) -> str:
+    """Decode one hex-encoded event field (UTF-8; undecodable bytes replaced)."""
+    try:
+        return bytes.fromhex(field).decode("utf-8", errors="replace")
+    except ValueError:
+        return f"<undecodable {field[:20]}>"
+
+
+def parse_events(text: str, nonce: str) -> tuple[list[dict], list[str]]:
+    """The lane events in a run's stream, and lines that claim to be events
+    but do not belong to this run.
+
+    An event line is ``LANE1 <nonce> <token> <pid> <ppid> <seq> <event>``
+    followed by tab-separated fields. Lines without the prefix are the
+    analysis's own stderr and are skipped. A prefixed line with another nonce
+    or a malformed head is reported: it is forged, or comes from another run,
+    and is never counted (spec §14).
+    """
+    events: list[dict] = []
+    stray: list[str] = []
+    for number, line in enumerate(text.splitlines(), 1):
+        if not line.startswith(EVENT_PREFIX + " "):
+            continue
+        head, *fields = line.split("\t")
+        parts = head.split(" ")
+        if (len(parts) != 7 or parts[1] != nonce or not parts[2]
+                or not all(part.isdigit() for part in parts[3:6])):
+            stray.append(f"line {number}: {line[:120]}")
+            continue
+        events.append({"token": parts[2], "pid": int(parts[3]), "ppid": int(parts[4]),
+                       "seq": int(parts[5]), "event": parts[6], "fields": fields,
+                       "line": number})
+    return events, stray
+
+
+def run_census(events: list[dict]) -> dict:
+    """The process census for one run (spec §8), from its events alone.
+
+    Events are grouped by the per-process token the shim mints, not by PID,
+    which can repeat in a long run (Fable's specification review, D-2). Every
+    interpreter start the shim saw (``EXEC``) must pair with the hook's
+    ``START`` and ``END``. A forked child announces itself with ``FORK`` and
+    needs neither ``EXEC`` nor ``END``, since forked children leave through
+    ``_exit``. A sequence gap or a repeated sequence number means lost or
+    inserted lines, so the process is incomplete.
+
+    Returns:
+        ``{processes, errors, flags, obligations, gaps, abnormal}``, where
+        ``gaps`` and ``abnormal`` list tokens (incomplete and abnormally ended
+        processes) and the other lists hold messages.
+    """
+    by_token: dict[str, list[dict]] = {}
+    for event in events:
+        by_token.setdefault(event["token"], []).append(event)
+    report: dict[str, Any] = {"processes": [], "errors": [], "flags": [], "obligations": [],
+                              "gaps": [], "abnormal": []}
+    for token, evs in by_token.items():
+        execs = [e for e in evs if e["event"] == "EXEC"]
+        hooked = [e for e in evs if e["event"] != "EXEC"]
+        starts = [e for e in hooked if e["event"] == "START"]
+        ends = [e for e in hooked if e["event"] == "END"]
+        forked = any(e["event"] == "FORK" for e in hooked)
+        exec_argv = [decode_field(f) for f in execs[-1]["fields"][2:]] if execs else []
+        start_argv = [decode_field(f) for f in starts[0]["fields"][7:]] if starts else []
+        argv = exec_argv or start_argv
+        # R CMD INSTALL and the like start no interpreter needing the hook; a
+        # CMD that does start R re-enters the front end and is counted there.
+        exempt = bool(execs) and all(len(e["fields"]) > 2 and decode_field(e["fields"][2])
+                                     in CENSUS_EXEMPT for e in execs)
+        pid = evs[0]["pid"]
+        process = {"token": token, "pid": pid, "ppid": evs[0]["ppid"], "argv": argv,
+                   "stdin": execs[-1]["fields"][0] if execs and execs[-1]["fields"] else None,
+                   "exec": bool(execs), "start": bool(starts), "end": bool(ends),
+                   "fork": forked, "exempt": exempt}
+        report["processes"].append(process)
+        shown = f"{pid} ({' '.join(argv)[:160] or 'no arguments'})"
+        seqs = sorted(e["seq"] for e in hooked)
+        if seqs != list(range(1, len(seqs) + 1)) or len(execs) > 1:
+            report["gaps"].append(token)
+        if execs and not starts and not exempt:
+            skipped = sorted(HOOK_SKIP_OPTIONS & set(argv))
+            if skipped:
+                report["errors"].append(f"R process {shown} skipped the lane hook with "
+                                        f"{skipped[0]}: the gate cannot see what it loaded")
+            else:
+                report["errors"].append(f"R process {shown} never loaded the lane hook: its "
+                                        f"launcher is not a supported route, so the gate "
+                                        f"cannot see what it loaded")
+        if starts and not execs:
+            report["flags"].append(f"{FLAG_PREFIX}R process {shown} started outside the R "
+                                   f"front end (no EXEC from the shim)")
+        if starts and not ends and not forked and token not in report["gaps"]:
+            report["abnormal"].append(token)
+        if (execs and not exempt and process["stdin"] in ("file", "pipe")
+                and not any(a.startswith(SCRIPT_OPTIONS) for a in argv)):
+            report["obligations"].append(f"R process {shown} read its script from standard "
+                                         f"input (R < file): no load event covers that code, "
+                                         f"so confirm what it ran")
+        if starts and len(starts[0]["fields"]) > 6 and starts[0]["fields"][6] == "restore":
+            report["obligations"].append(f"R process {shown} restored a saved workspace "
+                                         f"(.RData) in {decode_field(starts[0]['fields'][1])}: "
+                                         f"a declared input needing review")
+    return report
+
+
+def collect_outputs(project: Path, baseline: dict[str, str], post: dict[str, str],
+                    dest: Path) -> dict:
+    """Copy everything the run wrote into ``outputs/run-NN/files/`` and class it.
+
+    Collected files keep their work-copy paths under ``files/``, so they
+    cannot collide with the console output at ``outputs/run-NN/stdout.log``.
+
+    A new or changed file that is not code is an output. New code is
+    ``generated`` (flagged, never loadable). A pre-existing code file the run
+    changed is ``changed-code``, which fails the gate (spec §3).
+    """
+    files = []
+    for rel, digest in sorted(post.items()):
+        before = baseline.get(rel)
+        if before == digest:
+            continue
+        code = is_code_file(Path(rel))
+        kind = ("changed-code" if code and before is not None
+                else "generated" if code else "output")
+        target = dest / "files" / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(project / rel, target)
+        files.append({"path": f"files/{rel}", "sha256": digest, "class": kind,
+                      "replaced_input": before is not None})
+    return {"files": files, "deleted": sorted(set(baseline) - set(post))}
+
+
+def seal_run(records: Path, run_id: str, state: str) -> str:
+    """Write the run's receipt and append its digest to the index.
+
+    Returns:
+        The receipt's sha256.
+    """
+    record_dir = records / run_id
+    files = {name: sha256_file(record_dir / name) for name in RECORD_FILES
+             if (record_dir / name).is_file()}
+    write_json(record_dir / "receipt.json",
+               {"record_version": RECORD_VERSION, "run": run_id, "state": state,
+                "sealed_at": now_utc(), "files": files})
+    digest = sha256_file(record_dir / "receipt.json")
+    with (records / RUN_INDEX_FILE).open("a", encoding="utf-8") as index:
+        index.write(json.dumps({"run": run_id, "receipt_sha256": digest, "state": state}) + "\n")
+    return digest
+
+
+def finalise_run(target_dir: Path, run_id: str, keep_work: bool = False) -> dict:
+    """Wait for a run's container, collect and class its results, and seal it.
+
+    Steps 5–7 of the lifecycle (spec §5). A detached run is finished by
+    calling this later (``run-container --finalise``).
+
+    Returns:
+        The sealed ``run.json`` record.
+    """
+    records = target_dir / RECORDS_DIR
+    record_dir = records / run_id
+    try:
+        doc = json.loads((record_dir / "run.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise LaneError(f"no readable run record for {run_id}: {exc}") from exc
+    if doc.get("state") != "running":
+        raise LaneError(f"{run_id} is already sealed (state {doc.get('state')})")
+    problems: list[str] = list(doc.get("problems") or [])
+    cid = doc["container_id"]
+    waited = docker(["wait", cid], timeout=None)
+    status_text = waited.stdout.strip()
+    exit_status = int(status_text) if waited.returncode == 0 and status_text.lstrip(
+        "-").isdigit() else None
+    if exit_status is None:
+        problems.append(f"docker wait failed: {waited.stderr.strip()}")
+    logs = docker(["logs", cid], binary=True, timeout=None)
+    if logs.returncode:
+        problems.append("the container's log stream could not be collected")
+    (record_dir / "events.log").write_bytes(logs.stderr or b"")
+    docker(["rm", cid])
+
+    work_dir = Path(doc["work_dir"])
+    project = work_dir / "project"
+    if not project.is_dir():
+        problems.append("the work copy is gone, so the run's results cannot be collected")
+    else:
+        baseline = json.loads((record_dir / "baseline.json").read_text(encoding="utf-8"))
+        post, symlinks = work_inventory(project)
+        problems.extend(f"work copy: {p}" for p in symlinks)
+        write_json(record_dir / "post.json", {"record_version": RECORD_VERSION, "run": run_id,
+                                              "taken_at": now_utc(), "files": post})
+        collected = collect_outputs(project, baseline["files"], post,
+                                    target_dir / "outputs" / run_id)
+        # The console output is an output like any other, so a target read
+        # from printed results can cite it by path, sha256, and line range
+        # (Fable's specification review, Q1).
+        console = target_dir / "outputs" / run_id / "stdout.log"
+        console.parent.mkdir(parents=True, exist_ok=True)
+        console.write_bytes(logs.stdout or b"")
+        collected["files"].append({"path": "stdout.log", "sha256": sha256_file(console),
+                                   "class": "console", "replaced_input": False})
+        write_json(record_dir / "outputs.json",
+                   {"record_version": RECORD_VERSION, "run": run_id, **collected})
+
+    events, stray = parse_events((record_dir / "events.log").read_text(
+        encoding="utf-8", errors="replace"), doc["nonce"])
+    census = run_census(events)
+    if problems or census["gaps"]:
+        state = "incomplete"
+    elif exit_status != 0 or census["abnormal"]:
+        state = "failed"
+    else:
+        state = "complete"
+    doc.update(state=state, exit_status=exit_status, ended_at=now_utc(), problems=problems,
+               census={"processes": len(census["processes"]), "errors": len(census["errors"]),
+                       "gaps": census["gaps"], "abnormal": census["abnormal"],
+                       "stray_event_lines": len(stray)})
+    write_json(record_dir / "run.json", doc)
+    seal_run(records, run_id, state)
+    release_lock(records, run_id)
+    if not keep_work:
+        shutil.rmtree(work_dir, ignore_errors=True)
+    return doc
+
+
+def clear_lock(target_dir: Path) -> str:
+    """Operator-only: remove a stale lock once its container is gone.
+
+    The run it names stays unsealed, so the gate treats it as incomplete.
+    """
+    records = target_dir / RECORDS_DIR
+    lock = records / LOCK_FILE
+    if not lock.exists():
+        raise LaneError("no lock to clear")
+    holder = json.loads(lock.read_text(encoding="utf-8"))
+    run_doc = records / str(holder.get("run")) / "run.json"
+    cid = None
+    if run_doc.is_file():
+        cid = json.loads(run_doc.read_text(encoding="utf-8")).get("container_id")
+    if cid:
+        state = docker(["inspect", "--format", "{{.State.Running}}", cid])
+        if state.returncode == 0 and state.stdout.strip() == "true":
+            raise LaneError(f"container {cid[:12]} for {holder.get('run')} is still running: "
+                            f"finalise the run instead")
+    lock.unlink()
+    return str(holder.get("run"))
+
+
+def lane_script_at(repo_root: Path, commit: str) -> str | None:
+    """sha256 of ``scripts/reproduction-lane.py`` as committed at ``commit``."""
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    proc = subprocess.run(["git", "-C", str(repo_root), "show",
+                           f"{commit}:scripts/reproduction-lane.py"],
+                          capture_output=True, check=False, env=env)
+    return hashlib.sha256(proc.stdout).hexdigest() if proc.returncode == 0 else None
+
+
+@digest_snapshot()
+def check_run_records(target_dir: Path, launch_commit: str | None,
+                      repo_root: Path = REPO_ROOT) -> dict | None:
+    """Verify an attempt's sealed run records (spec §§4, 5, 8).
+
+    Checks the receipt chain, the launcher binding, each run's collected
+    outputs, the final run's process census, and that the input tree is
+    unchanged since the final run started.
+
+    Returns:
+        None when the attempt has no ``lane-records/`` (it was run before
+        gate 1.3). Otherwise ``{runs, final_run, final_pre, errors, flags,
+        obligations, warnings, generated, collected}``, where ``generated``
+        and ``collected`` are attempt-relative paths under ``outputs/``.
+    """
+    records = target_dir / RECORDS_DIR
+    if not records.is_dir():
+        return None
+    report: dict[str, Any] = {"runs": {}, "final_run": None, "final_pre": None, "errors": [],
+                              "flags": [], "obligations": [], "warnings": [], "generated": [],
+                              "collected": []}
+    errors, flags = report["errors"], report["flags"]
+    indexed: dict[str, dict] = {}
+    index_path = records / RUN_INDEX_FILE
+    lines = (index_path.read_text(encoding="utf-8").splitlines()
+             if index_path.is_file() else [])
+    for number, line in enumerate(lines, 1):
+        try:
+            entry = json.loads(line)
+            indexed.setdefault(entry["run"], entry)
+        except (json.JSONDecodeError, KeyError, TypeError):
+            errors.append(f"{RECORDS_DIR}/{RUN_INDEX_FILE} line {number} is not a run entry")
+    present = run_ids(records)
+    for run_id in sorted(set(indexed) - set(present)):
+        errors.append(f"{run_id} is in the run index but its records are gone")
+    if (records / LOCK_FILE).exists():
+        report["warnings"].append("a run still holds the attempt lock")
+
+    sealed: dict[str, dict] = {}
+    for run_id in present:
+        record_dir = records / run_id
+        if run_id not in indexed:
+            report["runs"][run_id] = {"state": "incomplete", "sealed": False}
+            report["warnings"].append(f"{run_id} was never finalised, so it is incomplete")
+            continue
+        broken = []
+        receipt_path = record_dir / "receipt.json"
+        if not receipt_path.is_file() or sha256_file(receipt_path) != \
+                indexed[run_id]["receipt_sha256"]:
+            broken.append("its receipt does not match the index")
+        else:
+            receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+            for name, digest in (receipt.get("files") or {}).items():
+                if not (record_dir / name).is_file() or sha256_file(record_dir / name) != digest:
+                    broken.append(f"{name} does not match its receipt")
+            for name in ("run.json", "pre.json", "events.log"):
+                if name not in (receipt.get("files") or {}):
+                    broken.append(f"the receipt does not seal {name}")
+        if broken:
+            errors.append(f"{run_id}: broken receipt chain ({'; '.join(broken)})")
+            report["runs"][run_id] = {"state": "broken", "sealed": True}
+            continue
+        doc = json.loads((record_dir / "run.json").read_text(encoding="utf-8"))
+        sealed[run_id] = doc
+        report["runs"][run_id] = {"state": doc.get("state"), "sealed": True,
+                                  "image_id": (doc.get("image") or {}).get("id"),
+                                  "exit_status": doc.get("exit_status")}
+        # Launcher binding (Astra's design review, point 10).
+        if launch_commit is None:
+            flags.append(f"{FLAG_PREFIX}{run_id} is not bound to a launch commit, so the lane "
+                         f"that ran it is unverified")
+        elif doc.get("launch_commit") != launch_commit:
+            errors.append(f"{run_id} records launch commit {doc.get('launch_commit')!r}, not "
+                          f"the run's {launch_commit[:12]}")
+        elif lane_script_at(repo_root, launch_commit) != doc.get("lane_script_sha256"):
+            errors.append(f"{run_id} was run by a lane script other than the one at the "
+                          f"launch commit {launch_commit[:12]}")
+        # Collected outputs must be exactly what the run recorded (Fable A14).
+        outputs_doc = record_dir / "outputs.json"
+        recorded = ({f["path"]: f for f in json.loads(outputs_doc.read_text(
+            encoding="utf-8")).get("files", [])} if outputs_doc.is_file() else {})
+        out_root = target_dir / "outputs" / run_id
+        on_disk, _ = work_inventory(out_root) if out_root.is_dir() else ({}, [])
+        for rel in sorted(set(on_disk) - set(recorded)):
+            errors.append(f"outputs/{run_id}/{rel} was not written by {run_id}")
+        for rel, item in sorted(recorded.items()):
+            shown = f"outputs/{run_id}/{rel}"
+            if rel not in on_disk:
+                errors.append(f"{shown}, written by {run_id}, is missing")
+            elif on_disk[rel] != item["sha256"]:
+                errors.append(f"{shown} changed after {run_id} wrote it")
+            report["collected"].append(shown)
+            if item["class"] == "generated":
+                report["generated"].append(shown)
+            elif item["class"] == "changed-code":
+                errors.append(f"{run_id} changed pre-existing code "
+                              f"{rel.removeprefix('files/')} during the run")
+        problems = doc.get("problems") or []
+        if problems:
+            report["warnings"].append(f"{run_id}: {'; '.join(problems)}")
+
+    credible = [r for r in present if r in sealed
+                and sealed[r].get("state") in ("complete", "failed")]
+    if not credible:
+        errors.append("no run reached complete or failed: there is nothing to credit")
+        return report
+    final = credible[-1]
+    report["final_run"] = final
+    for later in present[present.index(final) + 1:]:
+        report["warnings"].append(f"{later}, after the final run {final}, is "
+                                  f"{report['runs'][later]['state']}")
+    doc = sealed[final]
+    pre = json.loads((records / final / "pre.json").read_text(encoding="utf-8"))["files"]
+    report["final_pre"] = pre
+    current, symlinks = input_inventory(target_dir)
+    errors.extend(symlinks)
+    for change in inventory_difference(pre, current):
+        errors.append(f"input tree {change} after the final run {final} started: re-run")
+    events, stray = parse_events((records / final / "events.log").read_text(
+        encoding="utf-8", errors="replace"), doc.get("nonce", ""))
+    census = run_census(events)
+    errors.extend(f"{final}: {m}" for m in census["errors"])
+    flags.extend(census["flags"])
+    report["obligations"].extend(f"{final}: {m}" for m in census["obligations"])
+    if stray:
+        flags.append(f"{FLAG_PREFIX}{final}'s stream holds {len(stray)} event line(s) from "
+                     f"no process of this run (forged, or another run's)")
+    if not census["processes"]:
+        errors.append(f"{final} recorded no R process: the run's code was not seen")
+    if doc.get("state") == "failed":
+        flags.append(f"{FLAG_PREFIX}{final} failed (exit status {doc.get('exit_status')}"
+                     + (f"; abnormal end of process(es) {census['abnormal']}"
+                        if census["abnormal"] else "")
+                     + "): its partial results need a ruling")
+    image = doc.get("image") or {}
+    if image.get("dockerfile_sha256") and image.get("dockerfile_label") != \
+            image.get("dockerfile_sha256"):
+        flags.append(f"{FLAG_PREFIX}{final} ran image {str(image.get('id'))[:19]}, whose "
+                     f"llmr.dockerfile.sha256 label does not match the attempt's Dockerfile: "
+                     f"stale, or built from another file")
+    if (doc.get("front_end") or {}).get("unshimmed"):
+        report["warnings"].append(f"{final}: R on the PATH at "
+                                  f"{doc['front_end']['unshimmed']} is not the front end, so "
+                                  f"starts through it were not counted")
+    return report
+
+
 def conversion_evidence_flag(target_dir: Path, item: dict) -> str | None:
     """Validate a conversion wrapper's value-identity evidence (PR #7 review, finding 3).
 
@@ -2138,6 +2986,40 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                                    f"confirm the run executes the mounted, checked tree and "
                                    f"not the image's copy")
 
+    # -- Sealed run records (gate 1.3): the lane, not the executor, recorded
+    #    each run. Code a run generated joins the generated files: flagged,
+    #    checked for inlined authors' code, and never loadable (spec §3).
+    lane = check_run_records(target_dir, launch_commit, repo_root)
+    collected_paths: set[Path] = set()
+    if lane is not None:
+        result["runs"] = {"final_run": lane["final_run"], "runs": lane["runs"]}
+        errors.extend(lane["errors"])
+        flags.extend(lane["flags"])
+        warnings.extend(lane["warnings"])
+        obligations.extend(lane["obligations"])
+        collected_paths = {(target_dir / rel).resolve() for rel in lane["collected"]}
+        for rel_text in lane["generated"]:
+            path = (target_dir / rel_text).resolve()
+            generated_paths.add(path)
+            generated_text = path.read_text(encoding="utf-8", errors="replace")
+            inlined = [oid for oid, original in original_bytes.items()
+                       if len(substantive_lines(generated_text) & substantive_lines(
+                           original.decode("utf-8", errors="replace"))) >= EMBEDDED_LINES_FLAG]
+            if inlined:
+                errors.append(f"{rel_text}, generated by the run, shares {EMBEDDED_LINES_FLAG}+ "
+                              f"substantive lines with authors' original(s) {inlined}: an "
+                              f"edited copy is not generated code")
+            flags.append(f"{FLAG_PREFIX}{rel_text} is code the run generated: never loadable, "
+                         f"so a human confirms what made it and that nothing ran it")
+        if lane["final_pre"] is not None:
+            in_run = {item["path"] for item in wrappers
+                      if item["role"] in ("wrapper", "tooling")}
+            for path in executed_paths | {inside(target_dir, rel) for rel in in_run} - {None}:
+                rel_text = path.relative_to(target_dir.resolve()).as_posix()
+                if rel_text not in lane["final_pre"]:
+                    errors.append(f"{rel_text} is declared as run code but was not in the final "
+                                  f"run's input tree ({lane['final_run']})")
+
     # -- Code paths named by wrappers (and loaded by executed authors' files) must
     #    be declared, and never generated code. A file passed to a loader is
     #    code whatever its suffix (Fable review, P1-1).
@@ -2196,7 +3078,7 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
     declared_rel = {p.relative_to(root).as_posix()
                     for p in declared_paths | generated_paths if root in p.parents}
     current = code_inventory(target_dir, loaded_as_code | declared_rel)
-    known = declared_paths | generated_paths
+    known = declared_paths | generated_paths | collected_paths
     for rel_text, digest in current.items():
         path = (target_dir / rel_text).resolve()
         if path in known:
@@ -2209,63 +3091,67 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
             errors.append(f"undeclared code file {rel_text}: neither a byte-identical authors' "
                           f"file nor a declared wrapper")
 
-    # -- Execution snapshots: what the run could execute is what the gate sees.
-    docs: dict[str, Any] = {}
-    for phase in SNAPSHOT_PHASES:
-        snap_path = target_dir / SNAPSHOT_DIR / f"{phase}.json"
-        try:
-            docs[phase] = json.loads(snap_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            docs[phase] = None
-        result["snapshots"][phase] = docs[phase] is not None
-    structural = (snapshot_problems(docs["pre"], docs["post"],
-                                    sha256_file(target_dir / SNAPSHOT_DIR / "pre.json"))
-                  if docs["pre"] is not None and docs["post"] is not None else [])
-    if docs["pre"] is None or docs["post"] is None or structural:
-        message = (f"execution snapshots missing, unreadable, or not a bound pair "
-                   f"({SNAPSHOT_DIR}/pre.json and post.json, taken by snapshot-code around the "
-                   f"container run): the gate cannot show which code the run executed"
-                   + (f" ({'; '.join(structural)})" if structural else ""))
-        (warnings if legacy else errors).append(message)
-    else:
-        # Snapshots record every file (gate 1.3). The code rules apply to code,
-        # meaning anything named as code, loaded as code, or declared; other
-        # files may legitimately change (logs, comparison reports).
-        code_rel = set(current) | loaded_as_code | declared_rel
-        pre = {k: v for k, v in docs["pre"]["files"].items()
-               if k in code_rel or is_code_file(Path(k))}
-        post = {k: v for k, v in docs["post"]["files"].items()
-                if k in code_rel or is_code_file(Path(k))}
-        generated_rel = {p.relative_to(target_dir.resolve()).as_posix() for p in generated_paths}
-        # Pre-run code missing at the post boundary is a change across the run,
-        # however it is restored afterwards (PR #7 delta review, finding 2).
-        for rel_text in sorted(set(pre) - set(post)):
-            errors.append(f"{rel_text} was present when the run started but missing when it "
-                          f"ended")
-        for rel_text, digest in pre.items():
-            if rel_text not in current:
-                errors.append(f"{rel_text} was present when the run started and is gone now")
-            elif current[rel_text] != digest:
-                errors.append(f"{rel_text} changed after the run started: the gate must see "
-                              f"the code that ran")
-            if rel_text in generated_rel:
-                errors.append(f"{rel_text} is declared generated but existed before the run")
-        for rel_text, digest in post.items():
-            if rel_text in pre and pre[rel_text] != digest:
-                errors.append(f"{rel_text} was modified during the run")
-            elif rel_text not in pre and rel_text not in generated_rel:
-                errors.append(f"{rel_text} appeared during the run and is not declared as "
-                              f"generated")
-        for path in executed_paths:
-            rel_text = path.relative_to(target_dir.resolve()).as_posix()
-            if rel_text not in pre or rel_text not in post:
-                errors.append(f"executed copy {rel_text} is not in both execution snapshots")
-            elif not pre[rel_text] == post[rel_text] == current.get(rel_text):
-                errors.append(f"executed copy {rel_text} differs between the snapshots and the "
-                              f"tree the gate sees")
-        for rel_text in sorted(set(current) - set(post)):
-            warnings.append(f"{rel_text} was added after the run: it was not part of the "
-                            f"recorded execution")
+    # -- Execution snapshots (gate 1.2): for an attempt without sealed run
+    #    records, what the run could execute is what the executor-taken
+    #    snapshots show. Run records replace them (spec §5).
+    if lane is None:
+        docs: dict[str, Any] = {}
+        for phase in SNAPSHOT_PHASES:
+            snap_path = target_dir / SNAPSHOT_DIR / f"{phase}.json"
+            try:
+                docs[phase] = json.loads(snap_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                docs[phase] = None
+            result["snapshots"][phase] = docs[phase] is not None
+        structural = (snapshot_problems(docs["pre"], docs["post"],
+                                        sha256_file(target_dir / SNAPSHOT_DIR / "pre.json"))
+                      if docs["pre"] is not None and docs["post"] is not None else [])
+        if docs["pre"] is None or docs["post"] is None or structural:
+            message = (f"execution snapshots missing, unreadable, or not a bound pair "
+                       f"({SNAPSHOT_DIR}/pre.json and post.json, taken by snapshot-code around the "
+                       f"container run): the gate cannot show which code the run executed"
+                       + (f" ({'; '.join(structural)})" if structural else ""))
+            (warnings if legacy else errors).append(message)
+        else:
+            # Snapshots record every file (gate 1.3). The code rules apply to code,
+            # meaning anything named as code, loaded as code, or declared; other
+            # files may legitimately change (logs, comparison reports).
+            code_rel = set(current) | loaded_as_code | declared_rel
+            pre = {k: v for k, v in docs["pre"]["files"].items()
+                   if k in code_rel or is_code_file(Path(k))}
+            post = {k: v for k, v in docs["post"]["files"].items()
+                    if k in code_rel or is_code_file(Path(k))}
+            generated_rel = {p.relative_to(target_dir.resolve()).as_posix()
+                             for p in generated_paths}
+            # Pre-run code missing at the post boundary is a change across the run,
+            # however it is restored afterwards (PR #7 delta review, finding 2).
+            for rel_text in sorted(set(pre) - set(post)):
+                errors.append(f"{rel_text} was present when the run started but missing when it "
+                              f"ended")
+            for rel_text, digest in pre.items():
+                if rel_text not in current:
+                    errors.append(f"{rel_text} was present when the run started and is gone now")
+                elif current[rel_text] != digest:
+                    errors.append(f"{rel_text} changed after the run started: the gate must see "
+                                  f"the code that ran")
+                if rel_text in generated_rel:
+                    errors.append(f"{rel_text} is declared generated but existed before the run")
+            for rel_text, digest in post.items():
+                if rel_text in pre and pre[rel_text] != digest:
+                    errors.append(f"{rel_text} was modified during the run")
+                elif rel_text not in pre and rel_text not in generated_rel:
+                    errors.append(f"{rel_text} appeared during the run and is not declared as "
+                                  f"generated")
+            for path in executed_paths:
+                rel_text = path.relative_to(target_dir.resolve()).as_posix()
+                if rel_text not in pre or rel_text not in post:
+                    errors.append(f"executed copy {rel_text} is not in both execution snapshots")
+                elif not pre[rel_text] == post[rel_text] == current.get(rel_text):
+                    errors.append(f"executed copy {rel_text} differs between the snapshots and the "
+                                  f"tree the gate sees")
+            for rel_text in sorted(set(current) - set(post)):
+                warnings.append(f"{rel_text} was added after the run: it was not part of the "
+                                f"recorded execution")
 
     if errors:
         result["status"] = "fail"
@@ -2544,6 +3430,42 @@ def cmd_snapshot_code(args: argparse.Namespace) -> int:
     files = json.loads(out.read_text(encoding="utf-8"))["files"]
     print(f"wrote {display_path(out)} ({len(files)} code file(s))")
     return 0
+
+
+def cmd_run_container(args: argparse.Namespace) -> int:
+    """CLI wrapper: start a run, finalise one, or clear a stale lock.
+
+    Exit status 0 means the run is sealed ``complete``, or a detached run has
+    started. 1 means it sealed ``failed`` or ``incomplete``; the records are
+    kept either way.
+    """
+    target_dir = args.attempt_dir.expanduser().resolve()
+    if not target_dir.is_dir():
+        raise LaneError(f"attempt directory not found: {display_path(target_dir)}")
+    if args.clear_lock:
+        print(f"cleared the lock held by {clear_lock(target_dir)}; that run stays unsealed "
+              f"and counts as incomplete")
+        return 0
+    if args.finalise:
+        doc = finalise_run(target_dir, args.finalise, keep_work=args.keep_work)
+    else:
+        if not args.image or not args.entry:
+            raise LaneError("a new run needs --image and --entry")
+        doc = start_run(target_dir, args.image, args.entry, mount_path=args.mount_path,
+                        launch_commit=args.launch_commit, work_root=args.work_root)
+        if args.detach:
+            print(f"started {doc['run']} (container {doc['container_id'][:12]}); finish it "
+                  f"with: run-container {display_path(target_dir)} --finalise {doc['run']}")
+            return 0
+        doc = finalise_run(target_dir, doc["run"], keep_work=args.keep_work)
+    census = doc.get("census") or {}
+    print(f"{doc['run']}: {doc['state']} (exit status {doc['exit_status']}; "
+          f"{census.get('processes', 0)} R process(es), {census.get('errors', 0)} census "
+          f"error(s)); outputs in outputs/{doc['run']}/, records in "
+          f"{RECORDS_DIR}/{doc['run']}/")
+    for problem in doc.get("problems") or []:
+        print(f"  problem: {problem}")
+    return 0 if doc["state"] == "complete" else 1
 
 
 def authoritative_queue(config: dict) -> tuple[list[str], list[str]]:
@@ -3093,6 +4015,29 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--force", action="store_true",
                    help="replace an existing snapshot (only when the run itself is redone)")
     p.set_defaults(func=cmd_snapshot_code)
+
+    p = sub.add_parser("run-container",
+                       help="run the attempt's code in the lane-owned container (gate 1.3)")
+    p.add_argument("attempt_dir", type=Path)
+    p.add_argument("--image", default=None, help="image tag; the run uses its immutable id")
+    p.add_argument("--entry", default=None,
+                   help="R or shell script to run, relative to the attempt directory")
+    p.add_argument("--mount-path", default=None,
+                   help="where the work copy is mounted (default: the image's WORKDIR)")
+    p.add_argument("--launch-commit", default=None,
+                   help="the run's launch commit, recorded for the gate's launcher binding")
+    p.add_argument("--work-root", type=Path, default=None,
+                   help="where the work copy is made (default: the system temporary "
+                        "directory; use the attempt's filesystem for large data)")
+    p.add_argument("--detach", action="store_true",
+                   help="return once the container starts; finish with --finalise")
+    p.add_argument("--finalise", metavar="RUN", default=None,
+                   help="wait for a detached run (run-NN), then collect and seal it")
+    p.add_argument("--keep-work", action="store_true",
+                   help="keep the work copy after sealing, for debugging")
+    p.add_argument("--clear-lock", action="store_true",
+                   help="operator only: remove a stale lock once its container is gone")
+    p.set_defaults(func=cmd_run_container)
 
     p = sub.add_parser("human-queue", help="rebuild the human queue from the gate reports")
     p.add_argument("--config", type=Path, required=True)
