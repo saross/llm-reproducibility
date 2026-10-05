@@ -556,7 +556,7 @@ reference scores" without saying how three runs meet one reference score.
 
 **Consolidated 2026-10-04:** the full draft text of items 1–9 is in
 `amendment-3-draft.md` (this directory), for the registrant to edit and
-lodge. Five registrant decisions (D-1 to D-5) are open in that draft;
+lodge. Six registrant decisions (D-1 to D-6) are open in that draft;
 D-5 corrects Entry 5's proposed wording on what the BI items rest on.
 
 1. Entry 4 — correct amendment 2 §2's precedent case.

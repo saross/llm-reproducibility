@@ -397,16 +397,46 @@ Neither outcome enters a verdict or coverage.
   measured as the lines changed in the authors' code. Recovery is also
   reported against paper age, since deprecations accumulate over time.
 
-### 9. Order of operations
+### 9. Deviation: the §8 regression gate's baseline (correction ledger)
+
+The registered gate (§8 of the registration) requires a new pipeline to give
+identical verdicts and identical value-level results when it re-runs at least
+two pilot papers. An audit of the pilots' executed code (2026-10-04) found
+that this baseline is not what the gate assumes. In three pilots (dye,
+herskind, and key) the first reproduction executed a reproducer's
+re-implementation rather than the authors' files. Two pilots (crema and
+marwick) executed a version other than the one §4 item 5 selects, and
+crema's Table 1 was credited against that other version's own re-run.
+For example, the paper's Japan r is 0.1023, against 0.1003 in the pilot
+comparison report's "published" column. Matching those results exactly
+would reward a new pipeline for reproducing the pilots' errors.
+
+- **The pilot artefacts are preserved unchanged.**
+- **A separate, versioned correction ledger** records the registrant's
+  ruling for each affected verification target: the admissible source
+  version (§4 item 5), the published value, the tolerance, the repair status
+  (§7(d)), and the coverage treatment. The ledger is committed and hashed
+  before the regression run, and it does not change during the run.
+- **The gate is reported twice.** The registered strict comparison against
+  the original pilot artefacts is reported as registered, including the
+  Crema archived-posterior leg. The amended comparison is against the frozen
+  ledger, and it is the pass criterion.
+- **A corrected result is never relabelled.** Where a corrected result
+  differs from an erroneous pilot value, it is reported as a correction, not
+  as an unchanged pass, and the pipeline is never adjusted to reproduce a
+  pilot error.
+
+### 10. Order of operations
 
 1. The registrant lodges this amendment on OSF as a versioned registration
    update.
 2. The frozen instruments are edited to the §4 and §7 text and given new
    version numbers, with content-integrity hashes registered.
-3. The §8 regression gate runs on the selected configuration under the
-   clarified text.
-4. The census-input re-validation (§6) runs on the selected configuration.
-5. Census scoring begins only after both pass, or after the remediation
+3. The registrant rules the correction ledger (§9), and it is frozen.
+4. The §8 regression gate runs on the selected configuration under the
+   clarified text, reported against both baselines (§9).
+5. The census-input re-validation (§6) runs on the selected configuration.
+6. Census scoring begins only after both pass, or after the remediation
    ladder resolves a failure.
 
 ---
@@ -439,10 +469,23 @@ Neither outcome enters a verdict or coverage.
   content the packs never recorded. §3(b) is corrected accordingly. Those
   five were not deliberately withheld, which the BI `input` definition
   ("deliberately not given") does not quite cover.
+- **D-6. The regression gate's baseline.** The executed-code audit (PR #7,
+  `outputs/validation/executed-code-audit-2026-10-04/findings.json`) found
+  that three pilot attempt-01s (dye, herskind, and key) executed no
+  authors' file, and two (crema and marwick) executed a version other than
+  the AP-12 one. Crema's Table 1 credit compares v2.0.0's re-run with itself:
+  the paper's Japan r is 0.1023, against 0.1003 in the comparison report's
+  "published" column. The §8 gate requires identical verdicts and values
+  against the pilot artefacts, so its baseline may need re-basing, and a
+  re-basing may need declaring here. This depends on the audit's questions
+  Q1–Q5.
+  **RULED (Shawn, 2026-10-05): adopt the correction-ledger approach** that
+  Astra (GPT, Codex) proposed in its PR #7 review, now drafted as §9. The
+  ledger's per-target contents are still to be ruled, from the audit's Q1–Q5.
 
 ## Pre-lodgement checklist
 
-- [ ] Registrant reads and edits the full draft; decisions D-1 to D-5 ruled.
+- [ ] Registrant reads and edits the full draft; decisions D-1 to D-6 ruled.
 - [ ] Consistency check (maintenance rule 4): §4 and §7 text against the
       adjudication log and the shakedown rulings; §5 and §6 against the
       planning note, the F2 report, and `manifest.yaml`; deliberate
@@ -471,6 +514,7 @@ Neither outcome enters a verdict or coverage.
 | §5 | `wiki/planning/deterministic-output-checks.md` (policy RULED 2026-10-04); `outputs/validation/f2-rule-hybrid-2026-10-04/report.md`; `outputs/validation/payload-quality-2026-10-04/` |
 | §6 | `scripts/harvest-artefact-metadata.py` v1.2; `protocol/supplements-as-inputs-2026-10-02.md`; amendment 2 §§2–4 |
 | §7, §8 | `erratum-log.md` running-list items 7 and 8; `outputs/validation/phase2-shakedown/results-2026-10-03.md` |
+| §9 | `outputs/validation/executed-code-audit-2026-10-04/` (PR #7); Astra's PR #7 review, 2026-10-05; registration §8 |
 
 ## Drafting record (2026-10-04)
 
