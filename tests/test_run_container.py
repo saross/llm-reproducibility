@@ -32,6 +32,7 @@ from __future__ import annotations
 import hashlib
 import importlib.machinery
 import importlib.util
+import json
 import os
 import shutil
 import subprocess
@@ -253,8 +254,9 @@ class RunPieceTests(unittest.TestCase):
         self.assertEqual(problems, [])
 
 
-class RecordCheckTests(unittest.TestCase):
-    """The gate's check of sealed run records, on records built by hand."""
+class RecordFixture:
+    """Shared fixture: an attempt, and sealed run records built by hand the way
+    finalise_run writes them, checked against a committed lane script."""
 
     NONCE = "feedbeef"
 
@@ -271,7 +273,8 @@ class RecordCheckTests(unittest.TestCase):
 
     def seal(self, run_id: str = "run-01", state: str = "complete", exit_status: int = 0,
              events: list[str] | None = None, outputs: dict[str, str] | None = None,
-             launch: str | None = "fixture", script_sha256: str | None = None) -> None:
+             launch: str | None = "fixture", script_sha256: str | None = None,
+             consumed: list[dict] | None = None) -> None:
         """Write and seal one run's records the way finalise_run does."""
         records = self.dir / lane.RECORDS_DIR
         record = records / run_id
@@ -298,12 +301,16 @@ class RecordCheckTests(unittest.TestCase):
             "launch_commit": self.launch if launch == "fixture" else launch,
             "lane_script_sha256": script_sha256 or lane.sha256_file(
                 REPO_ROOT / "scripts" / "reproduction-lane.py"),
-            "problems": []})
+            "consumed": consumed or [], "problems": []})
         lane.seal_run(records, run_id, state)
 
     def check(self, launch: str | None = "fixture") -> dict:
         return lane.check_run_records(self.dir, self.launch if launch == "fixture" else launch,
                                       self.repo)
+
+
+class RecordCheckTests(RecordFixture, unittest.TestCase):
+    """The gate's check of sealed run records (spec §§4, 5)."""
 
     def test_clean_run_passes(self):
         self.seal()
@@ -369,6 +376,70 @@ class RecordCheckTests(unittest.TestCase):
     def test_generated_code_is_reported(self):
         self.seal(outputs={"files/made.R": "y <- 2\n", "stdout.log": ""})
         self.assertEqual(self.check()["generated"], ["outputs/run-01/files/made.R"])
+
+
+class ConsumptionAndCitationTests(RecordFixture, unittest.TestCase):
+    """Runs that consume earlier runs' outputs, and citations (spec §5)."""
+
+    R_CSV = hashlib.sha256(b"1\n").hexdigest()
+
+    def consumed(self, digest: str | None = None) -> list[dict]:
+        return [{"run": "run-01", "source": "files/outputs/r.csv", "path": "outputs/r.csv",
+                 "sha256": digest or self.R_CSV}]
+
+    def test_credit_rests_on_the_final_run_and_what_it_consumed(self):
+        self.seal("run-01")
+        self.seal("run-02", consumed=self.consumed())
+        report = self.check()
+        self.assertEqual((report["errors"], report["flags"]), ([], []))
+        self.assertEqual(report["credited_runs"], ["run-02", "run-01"])
+
+    def test_consumed_digest_must_be_sealed(self):
+        self.seal("run-01")
+        self.seal("run-02", consumed=self.consumed("0" * 64))
+        self.assertTrue(any("did not seal" in e for e in self.check()["errors"]))
+
+    def test_consumed_run_with_other_code_is_flagged(self):
+        self.seal("run-01")
+        write(self.dir / "run-analysis.R", 'write.csv(3, "outputs/r.csv")\n')
+        self.seal("run-02", consumed=self.consumed())
+        self.assertTrue(any("which ran other code" in f for f in self.check()["flags"]))
+
+    def test_consumed_run_is_held_to_the_census(self):
+        self.seal("run-01", events=[exec_line(self.NONCE, "8-a", 8, "--vanilla", "-e", "1"),
+                                    *clean_process(self.NONCE, "7-a", 7, "--file=x.R")])
+        self.seal("run-02", consumed=self.consumed())
+        self.assertTrue(any(e.startswith("run-01: ") and "skipped the lane hook" in e
+                            for e in self.check()["errors"]))
+
+    def test_consume_declarations_are_checked_before_a_run(self):
+        self.seal("run-01")
+        for spec in ("run-01", "run-01:outputs/r.csv", "run-09:files/outputs/r.csv",
+                     "run-01:files/missing.csv"):
+            with self.assertRaises(lane.LaneError, msg=spec):
+                lane.resolve_consumed(self.dir, [spec])
+        write(self.dir / "outputs" / "run-01" / "files" / "outputs" / "r.csv", "2\n")
+        with self.assertRaises(lane.LaneError):
+            lane.resolve_consumed(self.dir, ["run-01:files/outputs/r.csv"])
+
+    def test_citations(self):
+        self.seal("run-01")
+        self.seal("run-02", consumed=self.consumed())
+        runs = self.check()
+        good = {"run": "run-01", "path": "files/outputs/r.csv", "sha256": self.R_CSV}
+        targets = [
+            {"target_id": "T01", "outcome": "EXACT_MATCH", "testable": True, "outputs": [good]},
+            {"target_id": "T02", "outcome": "EXACT_MATCH", "testable": True,
+             "outputs": [dict(good, sha256="0" * 64)]},
+            {"target_id": "T03", "outcome": "EXACT_MATCH", "testable": True,
+             "outputs": [dict(good, run="run-07")]},
+            {"target_id": "T04", "outcome": "EXACT_MATCH", "testable": True},
+            {"target_id": "T05", "outcome": "MAJOR_DISCREPANCY", "testable": True}]
+        errors, flags, unbound = lane.citation_findings(
+            targets, runs, ["T01", "T02", "T03", "T04", "T05"])
+        self.assertEqual([e.split()[0] for e in errors], ["T02", "T03"])
+        self.assertEqual(unbound, {"T04"})
+        self.assertIn("target-unbound", flags[0])
 
 
 def docker_ready() -> bool:
@@ -477,6 +548,23 @@ class RunContainerDockerTests(unittest.TestCase):
         self.assertEqual(lane.run_ids(self.dir / lane.RECORDS_DIR), [])
         self.assertFalse((self.dir / lane.RECORDS_DIR / lane.LOCK_FILE).exists())
         self.assertEqual(list(self.work.iterdir()), [])
+
+    def test_a_run_consumes_a_sealed_output(self):
+        self.run_entry('dir.create("outputs")\nsaveRDS(1:3, "outputs/model.rds")\n')
+        write(self.dir / "run-analysis.R",
+              'm <- readRDS("outputs/model.rds")\nwrite.csv(sum(m), "outputs/sum.csv")\n')
+        doc = lane.start_run(self.dir, IMAGE, "run-analysis.R", mount_path="/project",
+                             launch_commit=self.launch, work_root=self.work,
+                             consume=["run-01:files/outputs/model.rds"])
+        doc = lane.finalise_run(self.dir, doc["run"])
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        report = lane.check_run_records(self.dir, self.launch, self.repo)
+        self.assertEqual(report["credited_runs"], ["run-02", "run-01"])
+        self.assertTrue(any("which ran other code" in f for f in report["flags"]))
+        collected = json.loads((self.dir / lane.RECORDS_DIR / "run-02" / "outputs.json")
+                               .read_text())["files"]
+        self.assertEqual(sorted(f["path"] for f in collected),
+                         ["files/outputs/sum.csv", "stdout.log"])
 
     def test_held_lock_refuses_a_second_run(self):
         write(self.dir / "run-analysis.R", "1\n")

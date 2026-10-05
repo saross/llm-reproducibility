@@ -117,7 +117,8 @@ Usage:
         --phase pre|post [--force]
     venv/bin/python scripts/reproduction-lane.py run-container <attempt-dir> \\
         --image TAG --entry FILE [--mount-path PATH] [--launch-commit SHA] \\
-        [--work-root DIR] [--detach] [--keep-work]
+        [--work-root DIR] [--consume run-NN:files/PATH ...] [--detach] \\
+        [--keep-work]
     venv/bin/python scripts/reproduction-lane.py run-container <attempt-dir> \\
         --finalise run-NN
     venv/bin/python scripts/reproduction-lane.py human-queue \\
@@ -1794,9 +1795,13 @@ DOCUMENT_NAMES = frozenset({
     "comparisons", "outputs", RECORDS_DIR, SNAPSHOT_DIR, "__pycache__"})
 # Interpreters run-container starts the entry with, by suffix.
 ENTRY_INTERPRETERS = {".r": "Rscript", ".sh": "bash"}
-# Front-end calls that start no interpreter needing the hook (R CMD INSTALL,
-# R RHOME, R --version). A CMD that does start R re-enters the front end,
-# and that start is counted on its own.
+# Front-end calls that start no interpreter needing the hook: R RHOME,
+# R --version, and the R CMD dispatcher. A subcommand that runs R re-enters
+# the front end, and that start is counted as its own process: BATCH runs
+# "${R_HOME}/bin/R -f ${in}" (bin/BATCH line 60 in rocker/r-ver:4.3.2), so a
+# --vanilla there still fails the census. INSTALL's inner start, which pipes
+# tools:::.install_packages() into R with init files off (bin/INSTALL line
+# 34), needs the PKGBUILD binding planned for the instrumentation stage.
 CENSUS_EXEMPT = frozenset({"CMD", "RHOME", "--version"})
 HOOK_SKIP_OPTIONS = frozenset({"--vanilla", "--no-init-file"})
 # Options that name the code an R process runs; without one, a script fed on
@@ -2076,13 +2081,70 @@ def container_argv(image_id: str, project: Path, lane_dir: Path, mount: str,
     return argv + ["--entrypoint", interpreter, image_id, entry]
 
 
+def read_run_index(records: Path) -> tuple[dict[str, dict], list[str]]:
+    """The sealed runs listed in ``lane-records/index.jsonl``, and bad lines.
+
+    Returns:
+        ``({run_id: {run, receipt_sha256, state}}, problems)``; the first
+        entry for a run wins, since the index is append-only.
+    """
+    indexed: dict[str, dict] = {}
+    problems: list[str] = []
+    index_path = records / RUN_INDEX_FILE
+    lines = index_path.read_text(encoding="utf-8").splitlines() if index_path.is_file() else []
+    for number, line in enumerate(lines, 1):
+        try:
+            entry = json.loads(line)
+            indexed.setdefault(entry["run"], entry)
+        except (json.JSONDecodeError, KeyError, TypeError):
+            problems.append(f"{RECORDS_DIR}/{RUN_INDEX_FILE} line {number} is not a run entry")
+    return indexed, problems
+
+
+def resolve_consumed(target_dir: Path, specs: list[str]) -> list[dict]:
+    """Resolve ``--consume run-NN:files/<path>`` against sealed earlier runs.
+
+    A run may use an earlier run's output only when it says so (Astra's
+    design review, point 2). The output must be one the earlier run sealed,
+    unchanged since; it is copied into the work copy at its original path.
+
+    Raises:
+        LaneError: on a malformed declaration, an unsealed or incomplete
+            source run, or an output that is missing or changed.
+    """
+    records = target_dir / RECORDS_DIR
+    indexed, _ = read_run_index(records)
+    resolved = []
+    for spec in specs:
+        run_id, sep, rel = spec.partition(":")
+        if not sep or not RUN_ID_RE.match(run_id) or not rel.startswith("files/"):
+            raise LaneError(f"--consume {spec!r}: write run-NN:files/<path>, a file the run "
+                            f"collected")
+        if run_id not in indexed or indexed[run_id].get("state") not in ("complete", "failed"):
+            raise LaneError(f"--consume {spec!r}: {run_id} is not a sealed complete or failed "
+                            f"run")
+        listed = json.loads((records / run_id / "outputs.json").read_text(encoding="utf-8"))
+        item = next((f for f in listed.get("files") or [] if f.get("path") == rel), None)
+        source = target_dir / "outputs" / run_id / rel
+        if item is None or not source.is_file():
+            raise LaneError(f"--consume {spec!r}: {run_id} did not collect {rel}")
+        if sha256_file(source) != item["sha256"]:
+            raise LaneError(f"--consume {spec!r}: outputs/{run_id}/{rel} changed after "
+                            f"{run_id} collected it")
+        resolved.append({"run": run_id, "source": rel, "path": rel.removeprefix("files/"),
+                         "sha256": item["sha256"], "file": source})
+    return resolved
+
+
 def start_run(target_dir: Path, image_tag: str, entry: str, *, mount_path: str | None = None,
-              launch_commit: str | None = None, work_root: Path | None = None) -> dict:
+              launch_commit: str | None = None, work_root: Path | None = None,
+              consume: list[str] | None = None) -> dict:
     """Prepare and start one run; the container is left running.
 
     Steps 1–4 of the lifecycle (spec §5): lock, resolve the image, snapshot
-    and copy the input tree, verify the copy, instrument it, take the
-    baseline, and start the container. ``finalise_run`` does the rest.
+    and copy the input tree, verify the copy, instrument it, add any declared
+    consumed outputs of earlier runs, take the baseline, and start the
+    container. ``finalise_run`` does the rest.
 
     Returns:
         The run's ``run.json`` record, state ``running``.
@@ -2134,6 +2196,15 @@ def start_run(target_dir: Path, image_tag: str, entry: str, *, mount_path: str |
             raise LaneError("the work copy does not match the input tree: "
                             + "; ".join(inventory_difference(pre, copied)[:10]))
         changes = instrument_work_copy(project)
+        consumed = resolve_consumed(target_dir, consume or [])
+        for item in consumed:
+            dest = project / item["path"]
+            if dest.exists():
+                raise LaneError(f"--consume {item['run']}:{item['source']} would overwrite "
+                                f"{item['path']} in the input tree")
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(item.pop("file"), dest)
+            changes.append({"change": "consumed", **item})
         baseline, _ = work_inventory(project)
         write_json(record_dir / "baseline.json",
                    {"record_version": RECORD_VERSION, "run": run_id, "taken_at": now_utc(),
@@ -2159,7 +2230,8 @@ def start_run(target_dir: Path, image_tag: str, entry: str, *, mount_path: str |
             "nonce": nonce, "argv": argv, "lane_files": lane_files,
             "launch_commit": launch_commit,
             "lane_script_sha256": sha256_file(Path(__file__).resolve()),
-            "work_dir": str(work_dir), "container_id": None, "problems": []}
+            "consumed": consumed, "work_dir": str(work_dir), "container_id": None,
+            "problems": []}
         proc = docker(argv[1:])
         if proc.returncode:
             # docker run can create the container and then fail to start it.
@@ -2462,20 +2534,13 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
     records = target_dir / RECORDS_DIR
     if not records.is_dir():
         return None
-    report: dict[str, Any] = {"runs": {}, "final_run": None, "final_pre": None, "errors": [],
-                              "flags": [], "obligations": [], "warnings": [], "generated": [],
+    report: dict[str, Any] = {"runs": {}, "final_run": None, "final_pre": None,
+                              "credited_runs": [], "outputs": {}, "errors": [], "flags": [],
+                              "obligations": [], "warnings": [], "generated": [],
                               "collected": []}
     errors, flags = report["errors"], report["flags"]
-    indexed: dict[str, dict] = {}
-    index_path = records / RUN_INDEX_FILE
-    lines = (index_path.read_text(encoding="utf-8").splitlines()
-             if index_path.is_file() else [])
-    for number, line in enumerate(lines, 1):
-        try:
-            entry = json.loads(line)
-            indexed.setdefault(entry["run"], entry)
-        except (json.JSONDecodeError, KeyError, TypeError):
-            errors.append(f"{RECORDS_DIR}/{RUN_INDEX_FILE} line {number} is not a run entry")
+    indexed, index_problems = read_run_index(records)
+    errors.extend(index_problems)
     present = run_ids(records)
     for run_id in sorted(set(indexed) - set(present)):
         errors.append(f"{run_id} is in the run index but its records are gone")
@@ -2527,6 +2592,7 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
             encoding="utf-8")).get("files", [])} if outputs_doc.is_file() else {})
         out_root = target_dir / "outputs" / run_id
         on_disk, _ = work_inventory(out_root) if out_root.is_dir() else ({}, [])
+        report["outputs"][run_id] = {rel: item["sha256"] for rel, item in recorded.items()}
         for rel in sorted(set(on_disk) - set(recorded)):
             errors.append(f"outputs/{run_id}/{rel} was not written by {run_id}")
         for rel, item in sorted(recorded.items()):
@@ -2562,22 +2628,55 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
     errors.extend(symlinks)
     for change in inventory_difference(pre, current):
         errors.append(f"input tree {change} after the final run {final} started: re-run")
-    events, stray = parse_events((records / final / "events.log").read_text(
-        encoding="utf-8", errors="replace"), doc.get("nonce", ""))
-    census = run_census(events)
-    errors.extend(f"{final}: {m}" for m in census["errors"])
-    flags.extend(census["flags"])
-    report["obligations"].extend(f"{final}: {m}" for m in census["obligations"])
-    if stray:
-        flags.append(f"{FLAG_PREFIX}{final}'s stream holds {len(stray)} event line(s) from "
-                     f"no process of this run (forged, or another run's)")
-    if not census["processes"]:
-        errors.append(f"{final} recorded no R process: the run's code was not seen")
-    if doc.get("state") == "failed":
-        flags.append(f"{FLAG_PREFIX}{final} failed (exit status {doc.get('exit_status')}"
-                     + (f"; abnormal end of process(es) {census['abnormal']}"
-                        if census["abnormal"] else "")
-                     + "): its partial results need a ruling")
+
+    # Credit rests on the final run and every run whose outputs it consumed,
+    # transitively; each must be sealed, and each is held to the same census
+    # (spec §5).
+    credited, queue = [final], [final]
+    while queue:
+        for item in (sealed.get(queue.pop()) or {}).get("consumed") or []:
+            source = item.get("run")
+            if source not in credited:
+                credited.append(source)
+                queue.append(source)
+            recorded_digest = report["outputs"].get(source, {}).get(item.get("source"))
+            if recorded_digest != item.get("sha256"):
+                errors.append(f"a run consumed {source}'s {item.get('source')} at a digest "
+                              f"{source} did not seal")
+    report["credited_runs"] = credited
+    final_code = {k: v for k, v in pre.items() if is_code_file(Path(k))}
+    for run_id in credited:
+        run_doc = sealed.get(run_id)
+        if run_doc is None or run_doc.get("state") not in ("complete", "failed"):
+            errors.append(f"credit rests on {run_id}, which is "
+                          f"{report['runs'].get(run_id, {}).get('state', 'missing')}: an "
+                          f"incomplete run cannot be ruled")
+            continue
+        events, stray = parse_events((records / run_id / "events.log").read_text(
+            encoding="utf-8", errors="replace"), run_doc.get("nonce", ""))
+        census = run_census(events)
+        errors.extend(f"{run_id}: {m}" for m in census["errors"])
+        flags.extend(census["flags"])
+        report["obligations"].extend(f"{run_id}: {m}" for m in census["obligations"])
+        if stray:
+            flags.append(f"{FLAG_PREFIX}{run_id}'s stream holds {len(stray)} event line(s) "
+                         f"from no process of this run (forged, or another run's)")
+        if not census["processes"]:
+            errors.append(f"{run_id} recorded no R process: the run's code was not seen")
+        if run_doc.get("state") == "failed":
+            flags.append(f"{FLAG_PREFIX}{run_id} failed (exit status "
+                         f"{run_doc.get('exit_status')}"
+                         + (f"; abnormal end of {len(census['abnormal'])} process(es)"
+                            if census["abnormal"] else "")
+                         + "): its partial results need a ruling")
+        if run_id != final:
+            run_pre = json.loads((records / run_id / "pre.json").read_text(
+                encoding="utf-8"))["files"]
+            run_code = {k: v for k, v in run_pre.items() if is_code_file(Path(k))}
+            if run_code != final_code:
+                differences = "; ".join(inventory_difference(final_code, run_code)[:5])
+                flags.append(f"{FLAG_PREFIX}{final} consumed outputs of {run_id}, which ran "
+                             f"other code ({differences})")
     image = doc.get("image") or {}
     if image.get("dockerfile_sha256") and image.get("dockerfile_label") != \
             image.get("dockerfile_sha256"):
@@ -2589,6 +2688,47 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
                                   f"{doc['front_end']['unshimmed']} is not the front end, so "
                                   f"starts through it were not counted")
     return report
+
+
+def citation_findings(targets: list[dict], runs: dict,
+                      locked: list[str]) -> tuple[list[str], list[str], set[str]]:
+    """Check comparison citations against sealed run outputs (spec §5).
+
+    Each cited output must belong to a credited run (the final run or one it
+    consumed) and carry the digest that run sealed. A reproduced target that
+    cites nothing has a result not bound to any run: it stays in raw
+    coverage but is not admitted until ruled (``target-unbound``).
+
+    Args:
+        targets: The comparison record's target entries.
+        runs: ``check_code_integrity``'s ``runs`` block.
+        locked: The plan's locked target ids.
+
+    Returns:
+        ``(errors, flags, unbound_target_ids)``.
+    """
+    errors: list[str] = []
+    flags: list[str] = []
+    unbound: set[str] = set()
+    credited = set(runs.get("credited_runs") or [])
+    sealed = runs.get("outputs") or {}
+    for target in targets:
+        tid = target.get("target_id")
+        cites = target.get("outputs") or []
+        for cite in cites:
+            run_id, rel = cite.get("run"), cite.get("path")
+            if run_id not in credited:
+                errors.append(f"{tid} cites {run_id}, which credit does not rest on "
+                              f"(credited: {sorted(credited) or 'none'})")
+            elif sealed.get(run_id, {}).get(rel) != cite.get("sha256"):
+                errors.append(f"{tid} cites outputs/{run_id}/{rel} at a digest {run_id} did "
+                              f"not seal")
+        if (not cites and tid in locked and target.get("testable") is not False
+                and target.get("outcome") in REPRODUCED_OUTCOMES):
+            unbound.add(tid)
+            flags.append(f"{FLAG_PREFIX}{tid} cites no sealed run output, so its result is not "
+                         f"bound to a run (target-unbound): not admitted until ruled")
+    return errors, flags, unbound
 
 
 def conversion_evidence_flag(target_dir: Path, item: dict) -> str | None:
@@ -2992,7 +3132,8 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
     lane = check_run_records(target_dir, launch_commit, repo_root)
     collected_paths: set[Path] = set()
     if lane is not None:
-        result["runs"] = {"final_run": lane["final_run"], "runs": lane["runs"]}
+        result["runs"] = {k: lane[k] for k in ("final_run", "credited_runs", "runs",
+                                               "outputs")}
         errors.extend(lane["errors"])
         flags.extend(lane["flags"])
         warnings.extend(lane["warnings"])
@@ -3313,6 +3454,13 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
         launch_commit=launch_commit)
     errors += [f"code integrity: {e}" for e in integrity["errors"]]
     warnings += integrity["warnings"] + integrity["flags"]
+    flags = list(integrity["flags"])
+    unbound: set[str] = set()
+    if integrity.get("runs") is not None and isinstance(comparison, dict):
+        cite_errors, cite_flags, unbound = citation_findings(records, integrity["runs"], locked)
+        errors += cite_errors
+        warnings += cite_flags
+        flags += cite_flags
 
     # Creditable coverage (Fable review of PR #7, P2-4): the recomputed
     # coverage counts outcomes, so a credited target resting on a declared
@@ -3339,6 +3487,9 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
         if manifest.get("originals") and not manifest.get("executed"):
             excluded |= set(locked)
             reasons.append("no authors' file was executed")
+        if unbound:
+            excluded |= unbound
+            reasons.append(f"no sealed run output cited (target-unbound): {sorted(unbound)}")
         reproduced_ids = [t.get("target_id") for t in records if t.get("target_id") in locked
                           and t.get("testable") is not False
                           and t.get("outcome") in REPRODUCED_OUTCOMES]
@@ -3351,13 +3502,14 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
             "attempt_dir": display_path(target_dir), "plan_file": display_path(plan_path),
             "plan_sha256": plan_digest, "locked_targets": len(locked),
             "verdict": "fail" if errors else "pass", "errors": errors,
-            "warnings": warnings, "flags": integrity["flags"],
+            "warnings": warnings, "flags": flags,
             "review_obligations": integrity["review_obligations"], "coverage": coverage,
             "coverage_creditable": creditable, "launch_commit": launch_commit,
             "eligible_for_current_gate": integrity["eligible_for_current_gate"],
             "code_integrity": {k: integrity[k] for k in (
                 "status", "manifest", "manifest_sha256", "originals", "executed",
-                "wrappers", "anchors", "snapshots")},
+                "wrappers", "anchors", "snapshots")} | (
+                    {"runs": integrity["runs"]} if integrity.get("runs") is not None else {}),
             "executor_verdict": (comparison or {}).get("verdict")
             if isinstance(comparison, dict) else None}
 
@@ -3452,7 +3604,8 @@ def cmd_run_container(args: argparse.Namespace) -> int:
         if not args.image or not args.entry:
             raise LaneError("a new run needs --image and --entry")
         doc = start_run(target_dir, args.image, args.entry, mount_path=args.mount_path,
-                        launch_commit=args.launch_commit, work_root=args.work_root)
+                        launch_commit=args.launch_commit, work_root=args.work_root,
+                        consume=args.consume)
         if args.detach:
             print(f"started {doc['run']} (container {doc['container_id'][:12]}); finish it "
                   f"with: run-container {display_path(target_dir)} --finalise {doc['run']}")
@@ -4029,6 +4182,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--work-root", type=Path, default=None,
                    help="where the work copy is made (default: the system temporary "
                         "directory; use the attempt's filesystem for large data)")
+    p.add_argument("--consume", action="append", default=[], metavar="RUN:PATH",
+                   help="use an earlier run's collected output (run-NN:files/<path>); it is "
+                        "copied into the work copy at <path> (repeatable)")
     p.add_argument("--detach", action="store_true",
                    help="return once the container starts; finish with --finalise")
     p.add_argument("--finalise", metavar="RUN", default=None,
