@@ -100,9 +100,12 @@ AUTHORS_R = "".join(f"result_{i} <- compute_statistic(data, index = {i})\n"
 
 
 # The evidence-pack anchor every fixture original carries: the deposit's own
-# file analysis.R, whose md5 the committed pack publishes.
-ANCHOR = {"kind": "evidence-pack", "pack": "packs/some-paper-2024.json",
-          "record_id": "zenodo:10.5281/zenodo.101", "file": "analysis.R"}
+# file analysis.R, whose md5 the committed pack publishes. The gate chooses
+# the pack itself (gate 1.3), so the anchor names only the record and file.
+ANCHOR = {"kind": "evidence-pack", "record_id": "zenodo:10.5281/zenodo.101",
+          "file": "analysis.R"}
+FIXTURE_PACK = "corpus/evidence-packs/harvest-2026-10-04/some-paper-2024.json"
+CORPUS_MANIFEST = "studies/open-science-compliance/corpus/manifest.yaml"
 
 
 def clean_git_env() -> dict[str, str]:
@@ -138,7 +141,7 @@ def anchor_repo(root: Path, scored_version: str = "10.5281/zenodo.101",
             {"id": "deposit", "type": "data+code", "link": "10.5281/zenodo.100",
              "role": "principal", "home": "repository",
              "scored_version": scored_version}]}}}))
-    write(repo / "packs" / "some-paper-2024.json", json.dumps({"records": [
+    write(repo / FIXTURE_PACK, json.dumps({"records": [
         {"record_id": "zenodo:10.5281/zenodo.101", "status": "resolved",
          "fields": {"doi": "10.5281/zenodo.101", "files": [
              {"key": "analysis.R",
@@ -147,6 +150,12 @@ def anchor_repo(root: Path, scored_version: str = "10.5281/zenodo.101",
     git(repo, "add", ".")
     git(repo, "commit", "-q", "-m", "fixture")
     return repo
+
+
+def head(repo: Path) -> str:
+    """The fixture repository's HEAD commit (the run's launch commit)."""
+    return subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], capture_output=True,
+                          text=True, check=True, env=clean_git_env()).stdout.strip()
 
 
 def snapshot(attempt: Path) -> None:
@@ -245,6 +254,7 @@ class GateTests(unittest.TestCase):
         self.schema = json.loads(COMPARISON_SCHEMA.read_text(encoding="utf-8"))
         write_code_manifest(self.dir)
         self.repo = anchor_repo(Path(self.tmp.name))
+        self.launch = head(self.repo)
         snapshot(self.dir)
 
     def tearDown(self):
@@ -266,6 +276,7 @@ class GateTests(unittest.TestCase):
 
     def run_gate(self, **kwargs) -> dict:
         kwargs.setdefault("anchor_root", self.repo)
+        kwargs.setdefault("launch_commit", self.launch)
         return lane.check_attempt(self.dir, self.plan, self.schema, **kwargs)
 
     def test_clean_attempt_passes(self):
@@ -359,6 +370,22 @@ class GateTests(unittest.TestCase):
         # T02 is credited WITHIN_PRECISION in the fixture: a repaired result is flagged.
         self.assertTrue(any("target T02 is credited" in f for f in report["flags"]))
 
+    def test_flagged_repair_is_not_creditable(self):
+        """Fable P2-4 (A8): an empty affected_targets list names every target, and
+        coverage_creditable excludes them, whatever the outcome-based coverage."""
+        self.comparison()
+        write(self.dir / "authors-code" / "analysis.R",
+              AUTHORS_R.replace("index = 4", "index = 3"))
+        manifest = json.loads((self.dir / lane.CODE_MANIFEST_FILE).read_text())
+        manifest["executed"][0]["declared_edit"] = {
+            "summary": "shifted an index", "kind": "repair", "affected_targets": []}
+        write(self.dir / lane.CODE_MANIFEST_FILE, json.dumps(manifest))
+        snapshot(self.dir)
+        report = self.run_gate()
+        self.assertEqual(report["coverage"]["targets_reproduced"], 2)
+        self.assertEqual(report["coverage_creditable"]["targets_creditable"], 0)
+        self.assertEqual(report["coverage_creditable"]["excluded_targets"], ["T01", "T02"])
+
     def test_gate_missing_manifest_fails_unless_listed_legacy(self):
         self.comparison()
         (self.dir / lane.CODE_MANIFEST_FILE).unlink()
@@ -389,6 +416,7 @@ class IntegrityFixture:
         self.schema = json.loads((REPO_ROOT / lane.DEFAULT_CODE_MANIFEST_SCHEMA)
                                  .read_text(encoding="utf-8"))
         self.repo = anchor_repo(Path(self.tmp.name))
+        self.launch = head(self.repo)
         snapshot(self.dir)
 
     def tearDown(self):
@@ -396,6 +424,7 @@ class IntegrityFixture:
 
     def check(self, **kwargs) -> dict:
         kwargs.setdefault("anchor_root", self.repo)
+        kwargs.setdefault("launch_commit", self.launch)
         return lane.check_code_integrity(self.dir, self.dir / lane.CODE_MANIFEST_FILE,
                                          self.schema, **kwargs)
 
@@ -545,7 +574,7 @@ class CodeIntegrityTests(IntegrityFixture, unittest.TestCase):
         self.rewrite(originals=self.unanchored())
         args = argparse.Namespace(attempt_dir=self.dir, manifest=None, out="-",
                                   code_manifest_schema=lane.DEFAULT_CODE_MANIFEST_SCHEMA,
-                                  legacy_attempt=False)
+                                  legacy_attempt=False, launch_commit=None)
         self.assertEqual(lane.cmd_check_code(args), 0)
         write(self.dir / "authors-code" / "analysis.R", AUTHORS_R + "fix()\n")
         self.assertEqual(lane.cmd_check_code(args), 1)
@@ -593,16 +622,17 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
 
     def test_anchor_to_a_version_the_registry_does_not_select_is_flagged(self):
         repo = anchor_repo(Path(self.tmp.name) / "other", scored_version="10.5281/zenodo.999")
-        result = self.check(anchor_root=repo)
+        result = self.check(anchor_root=repo, launch_commit=head(repo))
         self.assertEqual(result["status"], "flagged", result["errors"])
         self.assertTrue(any("not a version the registry selects" in f
                             for f in result["flags"]))
 
     def test_uncommitted_pack_cannot_anchor(self):
-        pack = self.repo / "packs" / "some-paper-2024.json"
+        pack = self.repo / FIXTURE_PACK
         pack.write_text(pack.read_text() + "\n", encoding="utf-8")
         result = self.check()
-        self.assertTrue(any("has uncommitted changes" in e for e in result["errors"]))
+        self.assertTrue(any("has uncommitted changes" in e for e in result["errors"]),
+                        result["errors"])
 
     def test_corpus_manifest_anchor_with_store_archive(self):
         """A supplement zip held in the corpus store, anchored by the committed
@@ -616,7 +646,7 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
                       entry: str = "some-paper-2024") -> None:
         """Commit a corpus manifest (and, optionally, a registry whose principal
         artefact is held in the journal supplement) to the anchor repository."""
-        write(self.repo / "corpus.yaml", json.dumps({"papers": [{
+        write(self.repo / CORPUS_MANIFEST, json.dumps({"papers": [{
             "slug": entry,
             "files": [{"filename": "supplement-1.zip", "sha256": digest, "role": role}]}]}))
         if supplement_principal:
@@ -626,6 +656,7 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
                      "role": "principal", "home": "supplement", "carries": ["code"]}]}}}))
         git(self.repo, "add", ".")
         git(self.repo, "commit", "-q", "-m", "corpus manifest")
+        self.launch = head(self.repo)
 
     def corpus_case(self, role: str, supplement_principal: bool,
                     entry: str = "some-paper-2024") -> dict:
@@ -641,7 +672,7 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
             {k: v for k, v in self.manifest["originals"][0].items() if k != "local_copy"},
             archive={"path": f"$CORPUS_ROOT/{entry}/supplement-1.zip",
                      "member": "scripts/analysis.R"},
-            anchor={"kind": "corpus-manifest", "manifest": "corpus.yaml",
+            anchor={"kind": "corpus-manifest", "manifest": CORPUS_MANIFEST,
                     "entry": entry, "filename": "supplement-1.zip"})]
         (self.dir / "authors-code-raw" / "analysis.R").unlink()
         snapshot(self.dir)
@@ -700,8 +731,8 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
         self.assertEqual(result["status"], "fail")
         self.assertTrue(any("undeclared code file outputs/edited.R" in e
                             for e in result["errors"]))
-        self.assertTrue(any("names undeclared code outputs/edited.R" in e
-                            for e in result["errors"]))
+        self.assertTrue(any("loads undeclared code outputs/edited.R" in e
+                            for e in result["errors"]), result["errors"])
 
     def test_declaring_the_edited_copy_generated_does_not_help(self):
         write(self.dir / "run-analysis.R", 'source("/project/outputs/edited.R")\n')
@@ -842,6 +873,160 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
         self.assertIn("unbound", self.conversion(other)[0])
 
 
+class FableAttackTests(IntegrityFixture, unittest.TestCase):
+    """Gate 1.3 against the Fable review of PR #7 (attack cases A1–A13).
+
+    Each case once returned ``identical``; each must now fail, flag, or raise
+    a review obligation. Case names follow the review's attack script.
+    """
+
+    EDITED = AUTHORS_R.replace("index = 4", "index = 3")
+
+    def errors_after(self, **files: str) -> list[str]:
+        """Write files (keyword names use __ for /), snapshot, and return errors."""
+        for rel, text in files.items():
+            write(self.dir / rel.replace("__", "/"), text)
+        snapshot(self.dir)
+        return self.check()["errors"]
+
+    def test_a1_non_code_suffix_sourced_fails(self):
+        errors = self.errors_after(**{"authors-code__analysis.txt": self.EDITED,
+                                      "run-analysis.R": 'source("authors-code/analysis.txt")\n'})
+        self.assertTrue(any("loads undeclared code authors-code/analysis.txt" in e
+                            for e in errors), errors)
+
+    def test_a1b_no_suffix_sys_sourced_fails(self):
+        errors = self.errors_after(**{
+            "authors-code__analysis": self.EDITED,
+            "run-analysis.R": 'sys.source("authors-code/analysis", envir = globalenv())\n'})
+        self.assertTrue(any("loads undeclared code authors-code/analysis" in e
+                            for e in errors), errors)
+
+    def test_a2_start_up_files_are_code(self):
+        errors = self.errors_after(**{".Rprofile": "fit_model <- function(...) 0\n",
+                                      "Rprofile.site": "options(digits = 3)\n"})
+        self.assertTrue(any("undeclared code file .Rprofile" in e for e in errors), errors)
+        self.assertTrue(any("undeclared code file Rprofile.site" in e for e in errors), errors)
+
+    def test_a3_dockerfile_build_edit_is_an_obligation(self):
+        write(self.dir / "Dockerfile", "FROM rocker/r-ver:4.3.2\nCOPY . /project\n"
+              "RUN sed -i 's/index = 4/index = 3/' /project/authors-code/analysis.R\n")
+        snapshot(self.dir)
+        obligations = " | ".join(self.check()["review_obligations"])
+        self.assertIn("edits files at build time", obligations)
+        self.assertIn("copies attempt files into the image", obligations)
+
+    def test_a4b_unquoted_shell_launcher_fails(self):
+        write(self.dir / "run.sh", "Rscript outputs/edited.txt\n")
+        self.rewrite(wrappers=self.manifest["wrappers"] + [
+            {"path": "run.sh", "role": "wrapper", "purpose": "runs"}])
+        errors = self.errors_after(**{"outputs__edited.txt": self.EDITED})
+        self.assertTrue(any("loads undeclared code outputs/edited.txt" in e for e in errors),
+                        errors)
+
+    def test_a5_other_mount_prefix_is_resolved(self):
+        errors = self.errors_after(**{"outputs__edited.R": self.EDITED,
+                                      "run-analysis.R": 'source("/work/outputs/edited.R")\n'})
+        self.assertTrue(any("loads undeclared code outputs/edited.R" in e for e in errors),
+                        errors)
+
+    def test_a6_directory_symlink_fails_and_blocks_snapshots(self):
+        outside = Path(self.tmp.name) / "scratch-edited"
+        write(outside / "analysis.R", self.EDITED)
+        (self.dir / "authors-code-live").symlink_to(outside, target_is_directory=True)
+        with self.assertRaises(lane.LaneError):
+            lane.write_snapshot(self.dir, "pre", force=True)
+        errors = self.check()["errors"]
+        self.assertTrue(any("directory symlink authors-code-live" in e for e in errors), errors)
+
+    def test_a6c_file_symlink_outside_the_attempt_fails(self):
+        outside = Path(self.tmp.name) / "scratch-edited.R"
+        write(outside, self.EDITED)
+        (self.dir / "authors-code" / "live.R").symlink_to(outside)
+        errors = self.check()["errors"]
+        self.assertTrue(any("resolves outside the attempt directory" in e for e in errors),
+                        errors)
+
+    def test_a7_forged_pack_inside_the_attempt_cannot_anchor(self):
+        write(self.dir / "evil-pack.json", "{}")
+        originals = [dict(self.manifest["originals"][0],
+                          anchor=dict(ANCHOR, pack="attempt-03/evil-pack.json"))]
+        self.rewrite(originals=originals)
+        snapshot(self.dir)
+        errors = self.check()["errors"]
+        self.assertTrue(any("never anchors" in e for e in errors), errors)
+
+    def test_a7b_pack_added_after_launch_cannot_anchor(self):
+        """A forged pack committed after the launch commit is skipped; the honest
+        pack that predates the run then exposes the edited original."""
+        write(self.dir / "authors-code-raw" / "analysis.R", self.EDITED)
+        write(self.dir / "authors-code" / "analysis.R", self.EDITED)
+        forged = "corpus/evidence-packs/harvest-2026-10-09/some-paper-2024.json"
+        write(self.repo / forged, json.dumps({"records": [
+            {"record_id": "zenodo:10.5281/zenodo.101", "status": "resolved",
+             "fields": {"doi": "10.5281/zenodo.101", "files": [
+                 {"key": "analysis.R",
+                  "checksum": "md5:" + hashlib.md5(self.EDITED.encode()).hexdigest()}]}}]}))
+        git(self.repo, "add", ".")
+        git(self.repo, "commit", "-q", "-m", "forged after launch")
+        self.rewrite(originals=[dict(self.manifest["originals"][0], sha256=sha(self.EDITED))])
+        snapshot(self.dir)
+        result = self.check()  # launch commit is still the fixture's original HEAD
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(any("does not match the md5 checksum" in e for e in result["errors"]),
+                        result["errors"])
+
+    def test_a9_edited_copy_declared_generated_fails(self):
+        lane.write_snapshot(self.dir, "pre", force=True)
+        write(self.dir / "outputs" / "helper.R", self.EDITED)
+        lane.write_snapshot(self.dir, "post", force=True)
+        self.rewrite(wrappers=self.manifest["wrappers"] + [
+            {"path": "outputs/helper.R", "role": "generated", "purpose": "made by the run"}])
+        errors = self.check()["errors"]
+        self.assertTrue(any("an edited copy is not generated code" in e for e in errors), errors)
+
+    def test_a11_dockerfile_variant_is_code(self):
+        errors = self.errors_after(**{"r.dockerfile": "FROM rocker/r-ver:4.3.2\n"})
+        self.assertTrue(any("undeclared code file r.dockerfile" in e for e in errors), errors)
+
+    def test_a13_in_memory_patching_is_an_obligation(self):
+        write(self.dir / "run-analysis.R", 'source("authors-code/analysis.R")\n'
+              'body(fit_model)[[3]] <- quote(index <- index - 1)\n')
+        snapshot(self.dir)
+        obligations = " | ".join(self.check()["review_obligations"])
+        self.assertIn("can patch functions in memory", obligations)
+
+    def test_unanchorable_record_is_a_flag_not_an_error(self):
+        """Fable P2-5: a pack record without checksums cannot anchor; that is a
+        gap in the pack, flagged, not the executor's error."""
+        pack = self.repo / FIXTURE_PACK
+        doc = json.loads(pack.read_text())
+        doc["records"][0]["fields"]["files"] = []
+        pack.write_text(json.dumps(doc), encoding="utf-8")
+        git(self.repo, "add", ".")
+        git(self.repo, "commit", "-q", "-m", "no checksums")
+        result = self.check(launch_commit=head(self.repo))
+        self.assertEqual(result["errors"], [])
+        self.assertTrue(any("is unanchorable" in f for f in result["flags"]))
+
+    def test_anchor_without_launch_commit_is_not_verified(self):
+        result = self.check(launch_commit=None)
+        self.assertEqual(result["anchors"], {"analysis.R": "recorded"})
+        self.assertTrue(any("not bound to a launch commit" in f for f in result["flags"]))
+
+    def test_unique_basename_reference_raises_no_obligation(self):
+        """Fable P3-5: a bare file name after setwd() resolves against the tree."""
+        write(self.dir / "tools" / "helper2.R", "x <- 1\n")
+        write(self.dir / "run-analysis.R", 'source("authors-code/analysis.R")\n'
+              'setwd("tools"); source("helper2.R")\n')
+        self.rewrite(wrappers=self.manifest["wrappers"] + [
+            {"path": "tools/helper2.R", "role": "tooling", "purpose": "helper"}])
+        snapshot(self.dir)
+        result = self.check()
+        self.assertEqual(result["errors"], [])
+        self.assertFalse(any("helper2.R" in o for o in result["review_obligations"]))
+
+
 class InheritedGitEnvTests(unittest.TestCase):
     """Fixtures and the gate never act on a repository named by GIT_DIR.
 
@@ -863,8 +1048,7 @@ class InheritedGitEnvTests(unittest.TestCase):
                        "GIT_INDEX_FILE": str(decoy / ".git" / "index")}
             with mock.patch.dict(os.environ, hostile):
                 repo = anchor_repo(Path(tmp) / "fixture")
-                self.assertIsNone(lane.committed_unmodified(
-                    repo, "packs/some-paper-2024.json"))
+                self.assertIsNone(lane.committed_unmodified(repo, FIXTURE_PACK))
             self.assertEqual((decoy / ".git" / "HEAD").read_text(), head)
             self.assertEqual((decoy / ".git" / "config").read_text(), config)
             log = subprocess.run(["git", "-C", str(decoy), "log", "--format=%s"],

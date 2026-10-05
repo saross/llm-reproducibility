@@ -186,7 +186,7 @@ const execPrompt = (p) =>
   `detail (published vs reproduced, per value) in files under comparisons/ and cite them in evidence.\n` +
   `5. Before finishing, self-check from the repository root (${repo_root}):\n` +
   `   venv/bin/python scripts/reproduction-lane.py check-attempt ${p.attempt_dir} --plan ${p.plan_path} ` +
-  `--image ${p.image_tag} ${forbidArgs(p)} --out -\n` +
+  `--image ${p.image_tag} --launch-commit ${launch_commit} ${forbidArgs(p)} --out -\n` +
   `   Fix artefact defects it reports — never by narrowing scope or editing the plan. The orchestrator ` +
   `re-runs this gate independently.\n` +
   `6. ${blindingBlock(p.slug)}\n` +
@@ -198,7 +198,7 @@ const gatePrompt = (p) =>
   `Paper: ${p.slug}\n` +
   `1. From the repository root ${repo_root} run exactly this one command:\n` +
   `   venv/bin/python scripts/reproduction-lane.py check-attempt ${p.attempt_dir} --plan ${p.plan_path} ` +
-  `--image ${p.image_tag} ${forbidArgs(p)}\n` +
+  `--image ${p.image_tag} --launch-commit ${launch_commit} ${forbidArgs(p)}\n` +
   `2. Read ${p.attempt_dir}/gate-report.json.\n` +
   `Return: slug "${p.slug}"; exit_code (the command's exit status); verdict "pass" only if the exit ` +
   `status is 0 AND the report's verdict is "pass", otherwise "fail"; report_path; errors, warnings, ` +

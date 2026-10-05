@@ -161,7 +161,39 @@ DEFAULT_CODE_MANIFEST_SCHEMA = "reproduction-system/schemas/authors-code-manifes
 # code under outputs/ is inventoried like any other (review of PR #7: an
 # edited copy placed there and sourced by a wrapper went unseen).
 CODE_SUFFIXES = frozenset({".r", ".rmd", ".qmd", ".rnw", ".py", ".ipynb", ".sh", ".jl",
-                           ".do", ".m", ".sql", ".stan", ".js"})
+                           ".do", ".m", ".sql", ".stan", ".js", ".cpp", ".c", ".h", ".hpp",
+                           ".jags", ".bug", ".bugs"})
+# Start-up and build files that run code without a code suffix (Fable review
+# of PR #7, P2-1): R reads ./.Rprofile and Rprofile.site at start-up.
+CODE_NAMES = frozenset({".rprofile", "rprofile.site", ".renviron", "makefile"})
+# A file passed to a loader is code whatever its suffix (Fable review, P1-1:
+# an edited copy saved as .txt and sourced was invisible). R loaders take a
+# quoted path; shell launchers may take an unquoted one.
+LOADER_R_RE = re.compile(
+    r"\b(?:source|sys\.source|parse|knit|knit2html|purl|render|quarto_render|sourceCpp"
+    r"|load_all|jags\.model|stan_model|stan)\s*\(\s*(?:(?:file|input|path|model\.file)\s*="
+    r"\s*)?[\"']([^\"'\n]+)[\"']")
+LOADER_PY_RE = re.compile(r"\bexec\s*\(\s*open\s*\(\s*[\"']([^\"'\n]+)[\"']")
+LOADER_SHELL_RE = re.compile(
+    r"(?:^|[\s;&|(`\"'])(?:Rscript|python3?|bash|sh|quarto\s+render|R\s+-f|R\s+CMD\s+BATCH"
+    r"|source|\.)\s+(?:-{1,2}[\w=-]+\s+)*[\"']?([^\s\"';|&)`]+)", re.MULTILINE)
+# Wrapper constructs that patch functions in memory after the authors' file is
+# sourced (Fable review, P3-1): invisible to byte identity, so a review
+# obligation.
+PATCHING_RE = re.compile(r"\bbody\s*\(|\bformals\s*\(|\btrace\s*\(|assignInNamespace"
+                         r"|unlockBinding|\benvironment\s*\([^)]*\)\s*<-|<<-")
+# Dockerfile lines that edit files at build time, or copy code into the image
+# (Fable review, P1-3).
+DOCKER_EDIT_RE = re.compile(
+    r"^\s*RUN\b.*(?:\bsed\b|\bpatch\b|\bperl\s+-p?i|\bawk\b|\btee\b|>>|<<)",
+    re.IGNORECASE | re.MULTILINE)
+DOCKER_COPY_RE = re.compile(r"^\s*(?:COPY|ADD)\s+(?!https?://)(.+)$",
+                            re.IGNORECASE | re.MULTILINE)
+# Records a provenance anchor may rely on (Fable review, P1-2): the gate, not
+# the manifest, chooses them, and they must exist unchanged at the launch commit.
+EVIDENCE_PACK_ROOT = "corpus/evidence-packs"
+CORPUS_MANIFESTS = ("studies/open-science-compliance/corpus/manifest.yaml",
+                    "corpus/development-manifest.yaml")
 # A wrapper sharing this many substantive lines with an authors' original is
 # flagged. This is a heuristic: it catches verbatim inlining, not a
 # re-implementation spelled differently, so wrapper semantics remain a review
@@ -1059,8 +1091,96 @@ def cmd_build_exec_args(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 
 def is_code_file(path: Path) -> bool:
-    """True when ``path`` counts as code for the closed-world inventory."""
-    return path.name.lower().startswith("dockerfile") or path.suffix.lower() in CODE_SUFFIXES
+    """True when ``path`` counts as code by its name alone.
+
+    Code suffixes, start-up and build files (``.Rprofile``, ``Rprofile.site``,
+    ``.Renviron``, ``Makefile``), and any name containing ``dockerfile``
+    (``r.dockerfile`` included). A file passed to a loader is code whatever
+    its name; ``loader_references`` finds those.
+    """
+    name = path.name.lower()
+    return ("dockerfile" in name or name in CODE_NAMES
+            or path.suffix.lower() in CODE_SUFFIXES)
+
+
+def loader_references(text: str, shell: bool) -> set[str]:
+    """Paths a file passes to a code loader, quoted (R, Python) or not (shell).
+
+    Args:
+        text: The file's text.
+        shell: Also parse unquoted shell launchers (``Rscript x``, ``R -f x``,
+            ``bash x``, ``. x``). R files are parsed for these too, because they
+            appear inside ``system()`` strings.
+    """
+    found = set(LOADER_R_RE.findall(text)) | set(LOADER_PY_RE.findall(text))
+    found |= set(LOADER_SHELL_RE.findall(text)) if shell or "system" in text else set()
+    # A path has a slash or a dot; a bare word (an ``Rscript -e`` expression,
+    # a shell builtin argument) is not a file, and inline expressions are
+    # reported separately as dynamic evaluation.
+    return {ref for ref in found if ref and not ref.startswith(("-", "$", "http"))
+            and ("/" in ref or "." in ref) and "+" not in ref and "(" not in ref}
+
+
+def walk_tree(target_dir: Path) -> tuple[list[Path], list[str]]:
+    """Every regular file in the attempt tree, and its symlink problems.
+
+    A directory symlink would hide a tree from the inventory, and a link
+    resolving outside the attempt would make the gate vouch for files it does
+    not hold (Fable review, P2-2). Both are reported; a file symlink inside
+    the tree is followed and hashed like any file.
+
+    Returns:
+        ``(files, problems)``, with snapshot records and bytecode caches
+        excluded from ``files``.
+    """
+    files: list[Path] = []
+    problems: list[str] = []
+    if not target_dir.is_dir():
+        return files, problems
+    root = target_dir.resolve()
+    for dirpath, dirnames, filenames in os.walk(target_dir, followlinks=False):
+        here = Path(dirpath)
+        rel_dir = here.relative_to(target_dir)
+        if rel_dir.parts[:1] in ((SNAPSHOT_DIR,), ("__pycache__",)) or "__pycache__" in \
+                rel_dir.parts:
+            dirnames[:] = []
+            continue
+        for name in list(dirnames):
+            if (here / name).is_symlink():
+                problems.append(f"directory symlink {(rel_dir / name).as_posix()}: it hides "
+                                f"a tree from the inventory")
+                dirnames.remove(name)
+        for name in sorted(filenames):
+            path = here / name
+            if path.is_symlink():
+                target = path.resolve()
+                if root not in target.parents:
+                    problems.append(f"symlink {(rel_dir / name).as_posix()} resolves outside "
+                                    f"the attempt directory")
+                    continue
+            if path.is_file():
+                files.append(path)
+    return sorted(files), problems
+
+
+_DIGEST_CACHE: dict[tuple[str, str, int, int], str] = {}
+
+
+def cached_digest(path: Path, algorithm: str = "sha256") -> str:
+    """A file's digest, cached by path, size, and modification time.
+
+    A deposit archive can be hundreds of megabytes and is consulted once per
+    original (Fable review, P3-4).
+    """
+    stat = path.stat()
+    key = (str(path.resolve()), algorithm, stat.st_size, stat.st_mtime_ns)
+    if key not in _DIGEST_CACHE:
+        digest = hashlib.new(algorithm)
+        with path.open("rb") as handle:
+            for block in iter(lambda: handle.read(1 << 20), b""):
+                digest.update(block)
+        _DIGEST_CACHE[key] = digest.hexdigest()
+    return _DIGEST_CACHE[key]
 
 
 def inside(target_dir: Path, rel: str) -> Path | None:
@@ -1190,21 +1310,60 @@ def committed_unmodified(repo_root: Path, rel: str) -> str | None:
     return None if clean.returncode == 0 else f"{rel} has uncommitted changes"
 
 
-def registry_principal_links(repo_root: Path, slug: str) -> list[dict] | None:
+def bound_at_launch(repo_root: Path, rel: str, launch: str | None) -> str | None:
+    """Check that a record existed at the launch commit and is unchanged since.
+
+    "Tracked and clean" alone is satisfied by a record the executor writes and
+    the operator later commits with the run's artefacts (Fable review of PR
+    #7, P1-2). A record the run relies on must predate the run.
+
+    Args:
+        repo_root: The repository.
+        rel: The record's repository-relative path.
+        launch: The run's launch commit, or None when not supplied.
+
+    Returns:
+        None when the record is tracked, clean, present at ``launch``, and
+        unchanged since; otherwise the problem. With ``launch`` None, only
+        tracked-and-clean is checked (the caller treats the anchor as unbound).
+    """
+    problem = committed_unmodified(repo_root, rel)
+    if problem or launch is None:
+        return problem
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    try:
+        present = subprocess.run(["git", "-C", str(repo_root), "cat-file", "-e",
+                                  f"{launch}:{rel}"], capture_output=True, text=True,
+                                 timeout=60, env=env)
+        if present.returncode != 0:
+            return f"{rel} did not exist at the launch commit {launch[:12]}"
+        same = subprocess.run(["git", "-C", str(repo_root), "diff", "--quiet", launch,
+                               "HEAD", "--", rel], capture_output=True, text=True,
+                              timeout=60, env=env)
+    except (OSError, subprocess.SubprocessError) as exc:
+        return f"git unavailable to verify {rel} at the launch commit: {exc}"
+    return None if same.returncode == 0 else (f"{rel} changed after the launch commit "
+                                              f"{launch[:12]}")
+
+
+def registry_principal_links(repo_root: Path, slug: str,
+                             launch: str | None = None) -> list[dict] | None:
     """A paper's principal links in the curated declared-links registry.
 
     Returns:
         The links whose ``role`` is ``principal``, or None when the registry
-        is not committed and clean (it then cannot vouch for anything).
+        is not committed and clean, or not as it was at ``launch`` (it then
+        cannot vouch for anything).
     """
-    if committed_unmodified(repo_root, DEFAULT_REGISTRY) is not None:
+    if bound_at_launch(repo_root, DEFAULT_REGISTRY, launch) is not None:
         return None
     registry = yaml.safe_load((repo_root / DEFAULT_REGISTRY).read_text(encoding="utf-8")) or {}
     spec = (registry.get("papers") or {}).get(slug) or {}
     return [link for link in spec.get("links") or [] if link.get("role") == "principal"]
 
 
-def registry_selected_dois(repo_root: Path, slug: str) -> set[str] | None:
+def registry_selected_dois(repo_root: Path, slug: str,
+                           launch: str | None = None) -> set[str] | None:
     """The deposit versions the registry selects for a paper (AP-12).
 
     For each principal link, its ``scored_version`` if it has one, else the
@@ -1212,9 +1371,9 @@ def registry_selected_dois(repo_root: Path, slug: str) -> set[str] | None:
 
     Returns:
         Lower-cased identifiers, or None when the registry is not committed
-        and clean.
+        and clean, or not as it was at ``launch``.
     """
-    links = registry_principal_links(repo_root, slug)
+    links = registry_principal_links(repo_root, slug, launch)
     if links is None:
         return None
     return {str(link.get("scored_version") or link.get("link") or "").lower()
@@ -1226,8 +1385,26 @@ def git_blob_sha1(data: bytes) -> str:
     return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
 
 
+def candidate_packs(repo_root: Path, slug: str, named: str | None) -> list[str]:
+    """Evidence packs that may anchor a paper, newest harvest first.
+
+    The gate chooses: ``corpus/evidence-packs/harvest-*/<slug>.json`` in
+    descending order, then ``corpus/evidence-packs/<slug>.json``. A pack the
+    manifest names is used only if it is one of these (Fable review, P1-2: a
+    pack written inside the attempt directory must never anchor anything).
+    """
+    root = repo_root / EVIDENCE_PACK_ROOT
+    found = sorted((p.relative_to(repo_root).as_posix()
+                    for p in root.glob(f"harvest-*/{slug}.json")), reverse=True)
+    found.append(f"{EVIDENCE_PACK_ROOT}/{slug}.json")
+    if named:
+        return [named] if named in found else []
+    return found
+
+
 def verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | None,
-                  original: bytes | None) -> tuple[str, list[str], list[str]]:
+                  original: bytes | None,
+                  launch: str | None = None) -> tuple[str, list[str], list[str]]:
     """Check one original's provenance anchor against an independent record.
 
     Gate 1.1 compared the executor's files with hashes in the executor's own
@@ -1258,12 +1435,29 @@ def verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | Non
         slug: The paper slug, which binds evidence-pack anchors to the registry.
         original: The original's bytes, recovered from its pristine copy or
             archive member, or None when they could not be recovered.
+        launch: The run's launch commit. Every record an anchor relies on must
+            exist at it, unchanged since. Without it, an anchor that would
+            verify is ``recorded`` and flagged as unbound.
 
     Returns:
         ``(state, errors, flags)``. ``state`` is ``verified`` (a committed,
-        independent record vouches for the bytes), ``recorded`` (a checkable
-        claim the gate cannot settle), ``failed``, or ``absent``.
+        independent record that predates the run vouches for the bytes),
+        ``recorded`` (a checkable claim the gate cannot settle), ``failed``,
+        or ``absent``.
     """
+    state, errors, flags = _verify_anchor(item, target_dir, repo_root, slug, original, launch)
+    if state == "verified" and launch is None:
+        return "recorded", errors, flags + [
+            f"{FLAG_PREFIX}original {item['id']!r}: the anchor's records are committed but "
+            f"not bound to a launch commit, so they may postdate the run (pass "
+            f"--launch-commit to the authoritative gate)"]
+    return state, errors, flags
+
+
+def _verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | None,
+                   original: bytes | None,
+                   launch: str | None) -> tuple[str, list[str], list[str]]:
+    """``verify_anchor`` before the launch-commit downgrade (see there)."""
     oid = item["id"]
     anchor = item.get("anchor") or {}
     if not anchor or anchor.get("kind") == "none":
@@ -1277,33 +1471,56 @@ def verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | Non
         return "failed", [f"original {oid!r}: provenance anchor ({kind}): {message}"], []
 
     if kind == "evidence-pack":
-        problem = committed_unmodified(repo_root, anchor["pack"])
-        if problem:
-            return failed(problem)
-        pack = json.loads((repo_root / anchor["pack"]).read_text(encoding="utf-8"))
-        record = next((r for r in pack.get("records") or []
-                       if r.get("record_id") == anchor["record_id"]
-                       and r.get("status") == "resolved"), None)
+        if slug is None:
+            return failed("the paper slug is unknown, so no pack can be chosen")
+        candidates = candidate_packs(repo_root, slug, anchor.get("pack"))
+        if not candidates:
+            return failed(f"{anchor.get('pack')!r} is not an evidence pack for {slug} under "
+                          f"{EVIDENCE_PACK_ROOT}/; the gate chooses the pack, and a pack "
+                          f"outside that directory never anchors")
+        record = None
+        pack_rel = None
+        unusable: list[str] = []
+        for rel in candidates:
+            if not (repo_root / rel).is_file():
+                continue
+            problem = bound_at_launch(repo_root, rel, launch)
+            if problem:
+                unusable.append(problem)
+                continue
+            pack = json.loads((repo_root / rel).read_text(encoding="utf-8"))
+            record = next((r for r in pack.get("records") or []
+                           if r.get("record_id") == anchor["record_id"]
+                           and r.get("status") == "resolved"), None)
+            if record is not None:
+                pack_rel = rel
+                break
         if record is None:
-            return failed(f"no resolved record {anchor['record_id']} in {anchor['pack']}")
+            return failed(f"no usable evidence pack for {slug} holds a resolved record "
+                          f"{anchor['record_id']}" + (f" ({'; '.join(unusable)})"
+                                                      if unusable else ""))
         fields = record.get("fields") or {}
         entry = next((f for f in fields.get("files") or [] if f.get("key") == anchor["file"]),
                      None)
         algorithm, _, expected = str((entry or {}).get("checksum") or "").partition(":")
         if not expected or algorithm not in hashlib.algorithms_available:
-            return failed(f"{anchor['record_id']} publishes no usable checksum for "
-                          f"{anchor['file']!r}")
+            # A record without checksums cannot anchor; that is a gap in the
+            # pack, not the executor's fault (Fable review, P2-5).
+            return "recorded", [], [f"{FLAG_PREFIX}original {oid!r} is unanchorable: "
+                                    f"{pack_rel} record {anchor['record_id']} publishes no "
+                                    f"usable checksum for {anchor['file']!r} (re-harvest with "
+                                    f"harvester v1.2 or later)"]
         deposit_rel = (item.get("archive") or {}).get("path") or item.get("local_copy")
         deposit = resolve_stored(target_dir, deposit_rel) if deposit_rel else None
         if deposit is None or not deposit.is_file():
             return failed(f"the deposit file {anchor['file']!r} is not kept (archive.path or "
                           f"local_copy), so its published checksum cannot be checked")
-        if hashlib.new(algorithm, deposit.read_bytes()).hexdigest() != expected.lower():
+        if cached_digest(deposit, algorithm) != expected.lower():
             return failed(f"{deposit_rel} does not match the {algorithm} checksum that "
                           f"{anchor['record_id']} publishes for {anchor['file']!r}")
         if original is None:
             return "failed", [], []  # the member or copy mismatch is already an error
-        selected = registry_selected_dois(repo_root, slug) if slug else None
+        selected = registry_selected_dois(repo_root, slug, launch) if slug else None
         doi = str(fields.get("doi") or "").lower()
         if selected is None:
             return "recorded", [], [f"{FLAG_PREFIX}original {oid!r}: the registry is not "
@@ -1318,7 +1535,10 @@ def verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | Non
     if kind == "corpus-manifest":
         if slug is None or anchor["entry"] != slug:
             return failed(f"the corpus entry {anchor['entry']!r} is not this paper ({slug!r})")
-        problem = committed_unmodified(repo_root, anchor["manifest"])
+        if anchor["manifest"] not in CORPUS_MANIFESTS:
+            return failed(f"{anchor['manifest']!r} is not a registered corpus manifest "
+                          f"({', '.join(CORPUS_MANIFESTS)})")
+        problem = bound_at_launch(repo_root, anchor["manifest"], launch)
         if problem:
             return failed(problem)
         corpus = yaml.safe_load((repo_root / anchor["manifest"]).read_text(encoding="utf-8"))
@@ -1333,7 +1553,7 @@ def verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | Non
         stored = corpus_root() / anchor["entry"] / anchor["filename"]
         if not stored.is_file():
             return failed(f"{anchor['entry']}/{anchor['filename']} is not in the corpus store")
-        if sha256_file(stored) != recorded:
+        if cached_digest(stored) != recorded:
             return failed(f"the stored {anchor['filename']} does not match the corpus manifest")
         derivation = item.get("derivation")
         if derivation and derivation["from_sha256"] != recorded:
@@ -1349,7 +1569,7 @@ def verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | Non
                               "archive it was extracted from")
         # The bytes are now established; admissibility as this paper's selected
         # original is a separate question (PR #7 delta review, finding 1).
-        links = registry_principal_links(repo_root, slug)
+        links = registry_principal_links(repo_root, slug, launch)
         role = str(record.get("role") or "unstated")
         in_supplement = bool(links) and any(link.get("home") == "supplement" for link in links)
         if role != "supplement" or not in_supplement:
@@ -1377,20 +1597,27 @@ def verify_anchor(item: dict, target_dir: Path, repo_root: Path, slug: str | Non
     return failed(f"unknown anchor kind {kind!r}")
 
 
-def code_inventory(target_dir: Path) -> dict[str, str]:
+def tree_inventory(target_dir: Path) -> dict[str, str]:
+    """sha256 of every regular file in the attempt tree, keyed by relative path.
+
+    Since gate 1.3 snapshots record every file, not only code (Fable review,
+    P1-1), so a sourced file with any name, and an edited input, are visible.
+    Symlinks that escape are left out here and reported by ``walk_tree``.
+    """
+    files, _ = walk_tree(target_dir)
+    return {path.relative_to(target_dir).as_posix(): cached_digest(path) for path in files}
+
+
+def code_inventory(target_dir: Path, extra_code: set[str] | frozenset[str] = frozenset()
+                   ) -> dict[str, str]:
     """sha256 of every code file in the attempt tree, keyed by relative path.
 
-    Nothing is exempt (gate 1.2), except bytecode caches and the snapshot
-    records themselves.
+    Code is anything ``is_code_file`` names, plus ``extra_code``: the relative
+    paths some file passes to a loader. Nothing is exempt, except bytecode
+    caches and the snapshot records themselves.
     """
-    files: dict[str, str] = {}
-    for path in sorted(target_dir.rglob("*")) if target_dir.is_dir() else []:
-        rel = path.relative_to(target_dir)
-        if (not path.is_file() or "__pycache__" in rel.parts or rel.parts[0] == SNAPSHOT_DIR
-                or not is_code_file(path)):
-            continue
-        files[rel.as_posix()] = sha256_file(path)
-    return files
+    return {rel: digest for rel, digest in tree_inventory(target_dir).items()
+            if rel in extra_code or is_code_file(Path(rel))}
 
 
 def write_snapshot(target_dir: Path, phase: str, force: bool = False) -> Path:
@@ -1425,7 +1652,10 @@ def write_snapshot(target_dir: Path, phase: str, force: bool = False) -> Path:
             raise LaneError(f"pre snapshot unreadable: {exc}") from exc
         record["run_token"] = pre.get("run_token")
         record["pre_sha256"] = sha256_file(pre_path)
-    record["files"] = code_inventory(target_dir)
+    files, problems = walk_tree(target_dir)
+    if problems:
+        raise LaneError("refusing to snapshot: " + "; ".join(problems))
+    record["files"] = tree_inventory(target_dir)
     write_json(out, record)
     return out
 
@@ -1540,7 +1770,8 @@ def legacy_allowed(target_dir: Path, allowlist: Path | None = None) -> bool:
 
 def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                          comparison: dict | None = None, plan_slug: str | None = None,
-                         legacy: bool = False, anchor_root: Path | None = None) -> dict:
+                         legacy: bool = False, anchor_root: Path | None = None,
+                         launch_commit: str | None = None) -> dict:
     """Verify the authors' code manifest against the attempt directory.
 
     The rule (Shawn, 2026-10-04): authors' files are hashed at retrieval and
@@ -1585,6 +1816,8 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
             result is marked ineligible for the current gate.
         anchor_root: The repository whose committed records anchors name
             (default: this repository).
+        launch_commit: The run's launch commit. Anchors verify only against
+            records that existed, unchanged, at it.
 
     Returns:
         ``{status, errors, flags, warnings, review_obligations, anchors,
@@ -1698,7 +1931,8 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                          f"directory: byte identity rests on the recorded hash alone, and no "
                          f"wrapper can be checked for an inlined copy of it")
         state, anchor_errors, anchor_flags = verify_anchor(
-            item, target_dir, repo_root, manifest["paper_slug"], original_bytes.get(oid))
+            item, target_dir, repo_root, manifest["paper_slug"], original_bytes.get(oid),
+            launch_commit)
         result["anchors"][oid] = state
         errors.extend(anchor_errors)
         flags.extend(anchor_flags)
@@ -1804,6 +2038,16 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                           f"it under executed")
             continue
         if item["role"] == "generated":
+            generated_text = data.decode("utf-8", errors="replace")
+            inlined = [oid for oid, original in original_bytes.items()
+                       if len(substantive_lines(generated_text) & substantive_lines(
+                           original.decode("utf-8", errors="replace"))) >= EMBEDDED_LINES_FLAG]
+            if inlined:
+                # An edited copy of an authors' file declared as generated
+                # (Fable review, P3-3).
+                errors.append(f"{item['path']} is declared generated but shares "
+                              f"{EMBEDDED_LINES_FLAG}+ substantive lines with authors' "
+                              f"original(s) {inlined}: an edited copy is not generated code")
             flags.append(f"{FLAG_PREFIX}{item['path']} is code the run generated: the gate "
                          f"cannot show it was not executed, so a human confirms what made it "
                          f"and that nothing ran it")
@@ -1825,36 +2069,82 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
             obligations.append(f"{item['path']} evaluates code dynamically (parse, eval, "
                                f"source of a computed path, or exec): confirm it evaluates "
                                f"only the declared authors' files, unmodified")
-        if path.name.lower().startswith("dockerfile") and DOCKER_FETCH_RE.search(text):
-            obligations.append(f"{item['path']} brings content into the image from outside "
-                               f"the attempt directory: confirm none of it is analysis code")
+        if PATCHING_RE.search(text):
+            obligations.append(f"{item['path']} can patch functions in memory (body, formals, "
+                               f"trace, assignInNamespace, unlockBinding, or <<-): confirm it "
+                               f"changes no function of the authors' code")
+        if "dockerfile" in path.name.lower():
+            if DOCKER_FETCH_RE.search(text):
+                obligations.append(f"{item['path']} brings content into the image from "
+                                   f"outside the attempt directory: confirm none of it is "
+                                   f"analysis code")
+            if DOCKER_EDIT_RE.search(text):
+                obligations.append(f"{item['path']} edits files at build time (sed, patch, "
+                                   f"perl -i, awk, tee, a redirect, or a heredoc): confirm it "
+                                   f"edits no authors' file and no R start-up file")
+            if DOCKER_COPY_RE.search(text):
+                obligations.append(f"{item['path']} copies attempt files into the image: "
+                                   f"confirm the run executes the mounted, checked tree and "
+                                   f"not the image's copy")
 
-    # -- Code paths the wrappers name must be declared, and never generated code.
+    # -- Code paths named by wrappers (and loaded by executed authors' files) must
+    #    be declared, and never generated code. A file passed to a loader is
+    #    code whatever its suffix (Fable review, P1-1).
     declared_paths = executed_paths | pristine_paths | wrapper_paths
-    for wrapper in sorted(wrapper_paths):
-        if not wrapper.is_file():
+    tree_files, symlink_issues = walk_tree(target_dir)
+    errors.extend(symlink_issues)
+    by_basename: dict[str, list[Path]] = {}
+    for path in tree_files:
+        by_basename.setdefault(path.name, []).append(path.resolve())
+    root = target_dir.resolve()
+    loaded_as_code: set[str] = set()
+
+    def resolve_reference(literal: str) -> Path | None:
+        """Resolve a referenced path: container prefixes stripped, then the
+        tree, then a unique basename (after ``setwd``, Fable review P3-5)."""
+        rel = re.sub(r"^(?:/project/|/work/|/home/\w+/|\./)+", "", literal)
+        named = inside(target_dir, rel)
+        if named is not None and named.is_file():
+            return named
+        matches = by_basename.get(Path(rel).name, [])
+        return matches[0] if len(matches) == 1 else None
+
+    for source_path in sorted(wrapper_paths | executed_paths):
+        if not source_path.is_file():
             continue
-        text = wrapper.read_text(encoding="utf-8", errors="replace")
-        for literal in sorted(set(CODE_REF_RE.findall(text))):
-            rel = re.sub(r"^(?:/project/|\./)", "", literal)
-            named = inside(target_dir, rel)
-            wrapper_rel = wrapper.relative_to(target_dir.resolve()).as_posix()
-            if named is not None and named in generated_paths:
-                errors.append(f"wrapper {wrapper_rel} loads {rel}, which the run generated: "
-                              f"generated code is never an authors' file or a declared "
-                              f"wrapper")
-            elif named is None or not named.is_file():
-                obligations.append(f"{wrapper_rel} names code {literal!r} that is not in the "
-                                   f"attempt directory: confirm where it comes from")
+        text = source_path.read_text(encoding="utf-8", errors="replace")
+        is_wrapper = source_path in wrapper_paths
+        shell = source_path.suffix.lower() in (".sh", "") or "dockerfile" in \
+            source_path.name.lower() or source_path.name.lower() == "makefile"
+        literals = loader_references(text, shell)
+        if is_wrapper:
+            literals |= set(CODE_REF_RE.findall(text))
+        source_rel = source_path.relative_to(root).as_posix()
+        for literal in sorted(literals):
+            named = resolve_reference(literal)
+            if named is None:
+                if is_wrapper:
+                    obligations.append(f"{source_rel} names code {literal!r} that is not in "
+                                       f"the attempt directory: confirm where it comes from")
+                continue
+            loaded_as_code.add(named.relative_to(root).as_posix())
+            if named in generated_paths:
+                errors.append(f"{source_rel} loads {named.relative_to(root).as_posix()}, which "
+                              f"the run generated: generated code is never an authors' file "
+                              f"or a declared wrapper")
             elif named not in declared_paths:
-                errors.append(f"wrapper {wrapper_rel} names undeclared code {rel}")
+                errors.append(f"{source_rel} loads undeclared code "
+                              f"{named.relative_to(root).as_posix()} (a file passed to a "
+                              f"loader is code whatever its name)")
     if wrapper_paths:
         obligations.append("wrapper semantics are not verified by the gate: its line-overlap "
                            "check is a heuristic, so the reviewer confirms that each wrapper "
                            "only mechanises the authors' code (paths, seeds, capture)")
 
     # -- Closed-world inventory: every code file anywhere is accounted for.
-    current = code_inventory(target_dir)
+    declared_rel = {p.relative_to(root).as_posix()
+                    for p in declared_paths | generated_paths if root in p.parents}
+    current = code_inventory(target_dir, loaded_as_code | declared_rel)
     known = declared_paths | generated_paths
     for rel_text, digest in current.items():
         path = (target_dir / rel_text).resolve()
@@ -1887,7 +2177,14 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                    + (f" ({'; '.join(structural)})" if structural else ""))
         (warnings if legacy else errors).append(message)
     else:
-        pre, post = docs["pre"]["files"], docs["post"]["files"]
+        # Snapshots record every file (gate 1.3). The code rules apply to code,
+        # meaning anything named as code, loaded as code, or declared; other
+        # files may legitimately change (logs, comparison reports).
+        code_rel = set(current) | loaded_as_code | declared_rel
+        pre = {k: v for k, v in docs["pre"]["files"].items()
+               if k in code_rel or is_code_file(Path(k))}
+        post = {k: v for k, v in docs["post"]["files"].items()
+                if k in code_rel or is_code_file(Path(k))}
         generated_rel = {p.relative_to(target_dir.resolve()).as_posix() for p in generated_paths}
         # Pre-run code missing at the post boundary is a change across the run,
         # however it is restored afterwards (PR #7 delta review, finding 2).
@@ -1937,7 +2234,8 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
                   code_manifest_schema: dict | None = None,
                   legacy_attempt: bool = False,
                   legacy_list: Path | None = None,
-                  anchor_root: Path | None = None) -> dict:
+                  anchor_root: Path | None = None,
+                  launch_commit: str | None = None) -> dict:
     """The deterministic artefact gate for one attempt directory.
 
     Args:
@@ -1957,6 +2255,9 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
         legacy_list: The legacy allowlist (tests override it).
         anchor_root: The repository whose committed records provenance
             anchors name (tests override it).
+        launch_commit: The run's launch commit; provenance anchors verify only
+            against records unchanged since it. The operator's authoritative
+            re-run must pass it.
 
     Returns:
         A report dict with ``verdict`` ``pass`` or ``fail``, ``errors``,
@@ -2071,15 +2372,51 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
         target_dir, code_manifest or target_dir / CODE_MANIFEST_FILE,
         code_manifest_schema or full_schema(expand(DEFAULT_CODE_MANIFEST_SCHEMA)),
         comparison=comparison if isinstance(comparison, dict) else None,
-        plan_slug=plan_slug, legacy=legacy, anchor_root=anchor_root)
+        plan_slug=plan_slug, legacy=legacy, anchor_root=anchor_root,
+        launch_commit=launch_commit)
     errors += [f"code integrity: {e}" for e in integrity["errors"]]
     warnings += integrity["warnings"] + integrity["flags"]
+
+    # Creditable coverage (Fable review of PR #7, P2-4): the recomputed
+    # coverage counts outcomes, so a credited target resting on a declared
+    # edit would be counted. Exclude every target a declared edit names (an
+    # empty list names them all), and every target when no authors' file was
+    # executed. A flagged result is creditable only after a recorded ruling.
+    creditable = None
+    if coverage is not None:
+        excluded: set[str] = set()
+        reasons: list[str] = []
+        manifest = {}
+        manifest_file = code_manifest or target_dir / CODE_MANIFEST_FILE
+        try:
+            manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            manifest = {}
+        for item in manifest.get("executed") or []:
+            edit = item.get("declared_edit") if isinstance(item, dict) else None
+            if edit:
+                named = edit.get("affected_targets") or list(locked)
+                excluded |= set(named)
+                reasons.append(f"declared edit to {item.get('path')}: "
+                               f"{'all targets' if not edit.get('affected_targets') else named}")
+        if manifest.get("originals") and not manifest.get("executed"):
+            excluded |= set(locked)
+            reasons.append("no authors' file was executed")
+        reproduced_ids = [t.get("target_id") for t in records if t.get("target_id") in locked
+                          and t.get("testable") is not False
+                          and t.get("outcome") in REPRODUCED_OUTCOMES]
+        kept = [tid for tid in reproduced_ids if tid not in excluded]
+        creditable = {"targets_enumerated": len(locked), "targets_creditable": len(kept),
+                      "coverage_fraction": round(len(kept) / len(locked), 4) if locked
+                      else 0.0, "excluded_targets": sorted(excluded & set(reproduced_ids)),
+                      "reasons": reasons}
     return {"gate_version": GATE_VERSION, "checked_at": now_utc(),
             "attempt_dir": display_path(target_dir), "plan_file": display_path(plan_path),
             "plan_sha256": plan_digest, "locked_targets": len(locked),
             "verdict": "fail" if errors else "pass", "errors": errors,
             "warnings": warnings, "flags": integrity["flags"],
             "review_obligations": integrity["review_obligations"], "coverage": coverage,
+            "coverage_creditable": creditable, "launch_commit": launch_commit,
             "eligible_for_current_gate": integrity["eligible_for_current_gate"],
             "code_integrity": {k: integrity[k] for k in (
                 "status", "manifest", "manifest_sha256", "originals", "executed",
@@ -2102,7 +2439,8 @@ def cmd_check_attempt(args: argparse.Namespace) -> int:
                            code_manifest=(args.code_manifest.expanduser().resolve()
                                           if args.code_manifest else None),
                            code_manifest_schema=full_schema(expand(args.code_manifest_schema)),
-                           legacy_attempt=args.legacy_attempt)
+                           legacy_attempt=args.legacy_attempt,
+                           launch_commit=args.launch_commit)
     if args.out == "-":
         print(json.dumps(report, indent=2))
     else:
@@ -2135,7 +2473,8 @@ def cmd_check_code(args: argparse.Namespace) -> int:
         return 1
     report = check_code_integrity(target_dir, manifest,
                                   full_schema(expand(args.code_manifest_schema)),
-                                  comparison=comparison, legacy=legacy)
+                                  comparison=comparison, legacy=legacy,
+                                  launch_commit=args.launch_commit)
     report = {"check": "authors-code-integrity", "gate_version": GATE_VERSION,
               "checked_at": now_utc(), "attempt_dir": display_path(target_dir), **report}
     if args.out and args.out != "-":
@@ -2676,6 +3015,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--code-manifest", type=Path, default=None,
                    help=f"authors' code manifest (default: <attempt>/{CODE_MANIFEST_FILE})")
     p.add_argument("--code-manifest-schema", default=DEFAULT_CODE_MANIFEST_SCHEMA)
+    p.add_argument("--launch-commit", default=None,
+                   help="the run's launch commit: anchors verify only against records that "
+                        "existed, unchanged, at it (required for the authoritative gate)")
     p.add_argument("--legacy-attempt", action="store_true",
                    help=f"attempts listed in {LEGACY_ATTEMPTS_FILE} only (executed before "
                         f"gate 1.1): a missing manifest or snapshots warn instead of failing, "
@@ -2687,6 +3029,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("attempt_dir", type=Path)
     p.add_argument("--manifest", type=Path, default=None)
     p.add_argument("--code-manifest-schema", default=DEFAULT_CODE_MANIFEST_SCHEMA)
+    p.add_argument("--launch-commit", default=None,
+                   help="the run's launch commit (see check-attempt)")
     p.add_argument("--legacy-attempt", action="store_true",
                    help=f"attempts listed in {LEGACY_ATTEMPTS_FILE} only")
     p.add_argument("--out", default=None, help="report path, or - (default) for stdout only")
