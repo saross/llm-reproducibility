@@ -24,14 +24,16 @@ echo "Installing pre-commit hook (filename style enforcement)..."
 cat > "$HOOKS_DIR/pre-commit" <<'EOF'
 #!/bin/bash
 # Pre-commit hook: Enforce lowercase-with-hyphens filename convention
-# Per CLAUDE.md: "Use lowercase with hyphens for all filenames"
-# Exceptions: README, CHANGELOG, CONTRIBUTING, CODE_OF_CONDUCT, CLAUDE, SKILL, LICENSE, CITATION
+# Per docs/agent-guidance.md: lowercase-with-hyphens filenames
+# Exceptions: README, CHANGELOG, CONTRIBUTING, CODE_OF_CONDUCT, CLAUDE, AGENTS,
+# SKILL, LICENSE, CITATION
 
 # Find ALL CAPS files in staged changes (excluding exceptions)
 violations=$(git diff --cached --name-only --diff-filter=ACR | \
   grep -E '\.(md|py|json|yaml|yml|txt)$' | \
   grep -E '(^|/)[A-Z][A-Z_-]+\.(md|py|json|yaml|yml|txt)$' | \
-  grep -v -E '(^|/)(README|CHANGELOG|CONTRIBUTING|CODE_OF_CONDUCT|CLAUDE|SKILL|CITATION|LICENSE)\.(md|txt)$')
+  grep -v -E '(^|/)(README|CHANGELOG|CONTRIBUTING|CODE_OF_CONDUCT)\.(md|txt)$' | \
+  grep -v -E '(^|/)(CLAUDE|AGENTS|SKILL|CITATION|LICENSE)\.(md|txt)$')
 
 if [ -n "$violations" ]; then
   echo ""
@@ -44,7 +46,7 @@ if [ -n "$violations" ]; then
   echo "  Example: MY_FILE.md → my-file.md"
   echo ""
   echo "Allowed exceptions (standard files only):"
-  echo "  README.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md, CLAUDE.md,"
+  echo "  README.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md, CLAUDE.md, AGENTS.md,"
   echo "  SKILL.md, LICENSE, CITATION.cff, CHANGELOG.md"
   echo ""
   exit 1
