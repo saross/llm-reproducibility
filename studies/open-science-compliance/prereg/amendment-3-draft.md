@@ -264,9 +264,15 @@ validate.
   every figure (`outputs/validation/f2-rule-hybrid-2026-10-04/report.md`).
 - **Limitation.** Every pilot reference F2 is 0, so the pilots test only the
   rule's 0 paths. That is the reason the rule never awards a 1.
-- **Platform-row implications beyond F2** (for example F3, F4, and A2 for
-  supplement-only deposits) stay flag-only until validated and amended.
-  [D-2]
+- **Platform-row rules beyond F2 (planned, declared in advance).** The
+  platform table's other implications (for example F3, F4, and A2 for a
+  supplement-only deposit) are declared here as planned rules, restricted
+  like the F2 rule to deciding 0s. A row's floors, which award credit, stay
+  with the model, and disagreements are flagged. A planned rule is adopted
+  only if, before census scoring, it matches the E8-v2 reference on every
+  pilot item it decides and the hybrid scorer still clears both gates. A
+  rule that does not validate stays flag-only, and that outcome is
+  reported. [D-2, ruled]
 - **Reporting.** Model–rule disagreement rates are reported as a study
   finding.
 
@@ -317,17 +323,25 @@ items. The re-validation supplies the supplementary files, the
 deposits' file lists and relations, and the §4 rules, which together cover
 most of what the §3(b) exclusion was for. A lockfile's contents remain
 outside the packs.
-The BI-excluded figure is reported alongside. [D-3] If either gate fails,
-the registered remediation ladder applies (amendment 2 §4), and changes are
-re-tested one at a time to find the cause. The result, the F2 model–rule
-disagreement rate, and the scores on the nine BI items are reported with
-the study results.
+The BI-excluded figure is reported alongside. [D-3, ruled] If either gate
+fails, the registered remediation ladder applies (amendment 2 §4), and
+changes are re-tested one at a time to find the cause. The result, the F2
+model–rule disagreement rate, and the scores on the nine BI items are
+reported with the study results.
 
 *(d) Boundaries.* The E8-v2 reference is unchanged and remains unblinded
 (amendment 2 §3). For the pilots, the registry's principal-artefact and
 version curation was taken from the adjudication, so the re-validation does
-not measure curation error. For census papers, curation follows
-[D-4: the census curation procedure, to be stated].
+not measure curation error. For census papers, the curation procedure (who
+curates the registry's curation fields, from which sources, and how the
+curation is checked) is lodged in a further amendment before census scoring
+begins [D-4, ruled]. Three constraints bind it now:
+
+- curation fields are never copied into evidence packs;
+- every identifier in the registry appears verbatim in the paper or its
+  supplement before harvest (§5(c));
+- a human audit checks the curation, with its sample and its agreement
+  threshold declared before any census curation starts.
 
 ### 7. Reproduction-lane instrument clarifications
 
@@ -493,20 +507,39 @@ registrant's direction to draft them):
   The draft lodges them (§4), since the instrument is frozen and the census
   re-validation (§6) runs on the clarified text. The version number v2.2,
   and a matching guide bump, are proposed.
+  **RULED (Shawn, 2026-10-05): lodge here,** as instrument v2.2 with a
+  matching guide bump, so the registered text matches what the census
+  scores.
 - **D-2. Platform-row rules beyond F2.** Item 6(b) named "platform-row
   rules" alongside F2. Only F2 is built and validated, so the draft keeps
   the rest flag-only. Alternative: declare them as planned rules with the
   same two validation criteria.
+  **RULED (Shawn, 2026-10-05): planned rules, restricted to 0s.** They are
+  pre-declared with F2's two validation criteria and, like the F2 rule,
+  decide only failures; floors stay with the model and disagreements are
+  flagged. Avoids adopting a rule after census data exist. §5(b) redrafted
+  to match.
 - **D-3. The re-validation's gate statistic.** The draft uses all 150 items,
   because the re-validation removes most of the reasons for the BI
   exclusion (one, marwick's lockfile contents, remains).
   Alternative: keep the BI-excluded statistic as in §3(b). For context, the
   hybrid at `medium` already scores 139/150 = 0.927 on the old inputs.
+  **RULED (Shawn, 2026-10-05): all 150 items,** with the BI-excluded figure
+  reported alongside, as drafted. The re-validation supplies the inputs
+  whose absence motivated the exclusion; the one item still resting on
+  content outside the inputs (marwick code I3) costs at most 1/150.
 - **D-4. Census registry curation.** The F2 rule and version selection read
   curated fields (`role`, `home`, `carries`, `scored_version`,
   `unpublished_principal`). For the pilots these came from adjudication.
   The census needs a stated procedure (who curates, from which sources, and
   how curation is checked) before §6(d) can be completed.
+  **RULED (Shawn, 2026-10-05): defer the procedure to a further amendment,
+  lodged before census scoring,** with three constraints fixed now in
+  §6(d): curation fields never enter packs; identifiers are checked
+  verbatim against the paper or supplement; and a human audit, with its
+  sample and agreement threshold declared before census curation starts.
+  Neither the §8 regression gate nor the §6 re-validation needs census
+  curation, so this does not block lodging amendment 3.
 - **D-5. Correction to Entry 5's proposed wording.** Entry 5 said the BI
   items rest on "the papers' supplementary files". The worksheet's notes
   show that holds for the four dye items only; the other five (crema data
@@ -514,6 +547,12 @@ registrant's direction to draft them):
   content the packs never recorded. §3(b) is corrected accordingly. Those
   five were not deliberately withheld, which the BI `input` definition
   ("deliberately not given") does not quite cover.
+  **RULED (Shawn, 2026-10-05): lodge the corrected §3(b) wording, and widen
+  the `input` definition** to "evidence the spawns were not given:
+  supplementary files deliberately withheld, or deposit content the packs
+  did not record". The adjudication log and worksheet carry the clarified
+  definition with a dated note that the tagged set is unchanged, and
+  erratum Entry 5 carries a correction pointer.
 - **D-6. The regression gate's baseline.** The executed-code audit (PR #7,
   `outputs/validation/executed-code-audit-2026-10-04/findings.json`) found
   that three pilot attempt-01s (dye, herskind, and key) executed no

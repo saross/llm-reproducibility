@@ -552,6 +552,15 @@ reference scores" without saying how three runs meet one reference score.
 >   and the selected configuration is re-checked on the five pilot papers
 >   with supplements before census.
 
+**Correction (2026-10-05, amendment 3 decision D-5).** The proposed wording
+above overstates what the BI items rest on. Only dye's four items rest on
+the papers' supplementary files. The other five (crema data I1 and I3,
+herskind data I1, marwick data I1 and code I3) rest on deposit content the
+2026-08-17 packs never recorded, which was not deliberately withheld. The
+lodged text is amendment 3 §3(b), and the `input` tag's definition is
+clarified in the adjudication log. Which items are excluded, and every
+figure, are unchanged.
+
 ## Queued amendment 3 scope (running list)
 
 **Consolidated 2026-10-04:** the full draft text of items 1–9 is in

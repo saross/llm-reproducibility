@@ -25,7 +25,8 @@ BI tags (end of the note column) mark **beyond-instrument** items, added
 2026-10-02: `rule` = the score rests on a principle adopted at adjudication
 that the pushed instrument v2.1 and guide v1.1 do not state; `input` = the
 score rests on evidence the benchmark spawns were deliberately not given
-(supplementary files). The JSON twin carries them as `beyond_instrument`.
+(supplementary files). *Clarified 2026-10-05 (amendment 3 D-5):* the tag covered evidence the spawns were not given for either reason: supplementary files deliberately withheld (dye's four items), or deposit content the 2026-08-17 packs did not record (crema data I1 and I3, herskind data I1, marwick data I1 and code I3). The tagged set is unchanged.
+The JSON twin carries them as `beyond_instrument`.
 Concordance is reported with and without BI items — see
 `adjudication-log.md`.
 
