@@ -382,6 +382,15 @@ The Phase 2 shakedown (2026-10-03) and the registrant's rulings of
     mechanical check confirms every value is unchanged (any change of value
     is fail-and-uplift); and choosing the language runtime version, which
     is routine like any dependency."
+  - **Mechanics placed in an authors' file (RULED 2026-10-05).** "A
+    mechanical change made inside an authors' file rather than in a wrapper,
+    such as a changed input path, breaks the wrapper rule even when it
+    changes nothing computed. A result that rests on such a file does not
+    count toward coverage or the verdict until it is re-run with the
+    mechanics moved into a wrapper and the authors' file restored
+    byte-identical. A change of logic, indices, data selection, parameters,
+    or functions called remains fail-and-uplift whatever its effect,
+    including a restructuring that gives the same result."
 
 ### 8. Pre-declared descriptive outcomes for the reproduction lane
 
@@ -425,6 +434,42 @@ would reward a new pipeline for reproducing the pilots' errors.
   differs from an erroneous pilot value, it is reported as a correction, not
   as an unchanged pass, and the pipeline is never adjusted to reproduce a
   pilot error.
+
+Conditions on the ledger (drafted 2026-10-05 from the Fable review of PR #7;
+registrant's direction to draft them):
+
+- **Ledger values come from the paper and the selected deposit only.** Each
+  published value cites the paper, or the deposit with the §7(a) evidence
+  tier named. No value comes from any output of the pipeline under test.
+  The shakedown re-runs of dye and herskind (attempt-02) finished before the
+  ledger was ruled, so their results were known when it was written. They
+  serve only as evidence that the authors' unmodified code yields a value.
+- **Per-target fields:**
+  - the source version, and the deposit file checksum that the lane's
+    provenance check must match;
+  - the published value, with its evidence tier, and the tolerance;
+  - the pilot's recorded value and outcome, so that each correction is an
+    explicit difference;
+  - the repair status and class under §7(d);
+  - credit eligibility, recorded separately from the class;
+  - the coverage treatment;
+  - the expected verdict, derived by applying the verdict rules to the
+    ledger rather than copied from the pilot.
+- **The ledger is frozen in the launch commit.** It is committed at a
+  registered path before the run, its sha256 is recorded in the run
+  configuration, and the run's launch commit contains it.
+- **Two target sets, both counted.** Targets are split into those the ledger
+  leaves unchanged and those it corrects. The strict comparison fails by
+  construction on corrected targets, so a failure there is not a
+  regression. The regression signal is the unchanged set, and its size is
+  reported for each paper.
+- **Crema's archived-posterior leg runs from the posteriors of v1.0.0**, the
+  version §4 item 5 selects, held in the corpus store.
+- **Code integrity is part of the pass criterion.** On each regression paper,
+  the reproduction lane's code-integrity gate must show the authors' code
+  byte-identical and independently anchored, or every flag it raises must
+  carry a recorded registrant ruling, before the §8 verdict is computed. A
+  repaired result never counts.
 
 ### 10. Order of operations
 
@@ -482,6 +527,12 @@ would reward a new pipeline for reproducing the pilots' errors.
   **RULED (Shawn, 2026-10-05): adopt the correction-ledger approach** that
   Astra (GPT, Codex) proposed in its PR #7 review, now drafted as §9. The
   ledger's per-target contents are still to be ruled, from the audit's Q1–Q5.
+  §9's ledger conditions were drafted on 2026-10-05 from the Fable review, at
+  the registrant's direction. The class (ii) consequence is RULED
+  (2026-10-05, §7(d)): a result resting on an authors' file edited for
+  mechanics counts only after a wrapper-only re-run. That answers the
+  audit's Q1 for dye's 22 attempt-02 targets: they need re-running before
+  they count.
 
 ## Pre-lodgement checklist
 

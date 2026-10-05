@@ -676,6 +676,12 @@ D-5 corrects Entry 5's proposed wording on what the BI items rest on.
      result a repair recovers and the repair's size are reported. Size is
      measured as the lines changed in the authors' code. Also reported:
      recovery against paper age, since deprecations accumulate over time.
+   **Added 2026-10-05 (Shawn, adopting the Fable review of PR #7):**
+     - **Mechanics placed in an authors' file.** A result resting on an
+       authors' file edited for mechanics, rather than in a wrapper, counts
+       only after a re-run with the mechanics in a wrapper and the file
+       restored byte-identical. A change of logic, indices, data, parameters,
+       or functions called stays fail-and-uplift whatever its effect.
 9. **Evidence packs (harvester v1.2) and the census-input re-validation
    (Shawn, 2026-10-04).** Building the F2 rule showed that the 2026-08-17
    packs carry no creators, descriptions, or keywords, so the scorer was
@@ -688,3 +694,11 @@ D-5 corrects Entry 5's proposed wording on what the BI items rest on.
    re-validation. Validation of the F2 rule:
    `../outputs/validation/f2-rule-hybrid-2026-10-04/report.md`
    (`06c1ca9`).
+10. **Deviation: the §8 regression gate's baseline (RULED by Shawn,
+    2026-10-05: adopt Astra's correction-ledger approach).** The executed-code
+    audit (PR #7) found pilot verdicts resting on re-implementations and on
+    versions other than the selected one. Pilot artefacts are kept as they
+    are. A frozen per-target correction ledger becomes the pass criterion,
+    and the strict comparison is reported beside it. The conditions on the
+    ledger come from the Fable review. Draft text: `amendment-3-draft.md`
+    §9.
