@@ -1068,6 +1068,10 @@ matrix about two more, and the rest one or two, plus the review rounds of
   prompt points; run records become mandatory for new attempts;
   `snapshot-code` is retired; and `coverage_creditable` is dropped. Then
   the final review, with the herskind pilot re-run (§2.2).
+- [ ] **After gate 1.3 merges** (Shawn, 2026-10-06): split
+  `scripts/reproduction-lane.py` into a few modules (runner, records,
+  rulings, gate) in its own refactoring PR, checked against the existing
+  tests. The launcher binding then hashes the module set, not one file.
 
 ## 16. Questions for the reviewers
 
