@@ -1405,3 +1405,52 @@ Feedback was sent with `/feedback`.
   were made before the design reviews, which then enlarged both.
 - The consolidated specification should state a stopping rule for
   hardening, given that the threat model assumes a good-faith executor.
+
+## Session: 2026-10-05 → 2026-10-06 — Gate 1.3 consolidated, reviewed, and its foundations built; every pending ruling cleared
+
+**Session:** b1a1e102-fc08-4962-a341-6da21988b13d (Opus 5.5). Shawn was
+away for the build and present for the decision walk-through.
+
+**Spend.** No model API calls.
+- **Plan-billed:** Fable (a separate Claude session) reviewed the
+  specification by SendMessage, and one obs-writer subagent (Sonnet) wrote
+  the working notes.
+- **Local only:** Docker runs against the local `rocker/r-ver:4.3.2`
+  image, with no pulls.
+- **GitHub API:** two review edits, one PR merge, and one PR opened.
+
+**Gate 1.3 on PR #7** (`feat/lane-gate-1-1-code-audit`):
+- `664bb72`: the digest cache, confined to one snapshot, with six tests.
+- `53413bc`: the consolidated specification, with a stopping rule. The
+  draft is archived in `archive/planning/`.
+- `0ce7f25`: F1, `run-container`, the exec shim and handshake hook, and
+  sealed run records.
+- `f07763a`: F2, consumption, credited runs, and comparison schema 1.1
+  citations.
+- `59f4e58`: F3, issues as fingerprinted `Issue` strings, `rule-flags`,
+  admitted coverage, and admission.
+- `b409ef5`: specification revision 1, folding in Fable's review.
+- `42da7fc`: the lane-script split planned for after merge.
+- `c4553f9`: the audit's Q1–Q10 rulings recorded in `findings.json`.
+- 488 tests pass, nine of them in Docker.
+
+**Main:**
+- `e0be197`: handoff.
+- `c99c2a0`: amendment 3 decisions D-1 to D-5 ruled.
+- `38b59b0`: the audit's general rules added to §7(d).
+- `7f84e73`: PR #8 merged (Codex's `AGENTS.md`).
+- `a8da2e1`: Observations 45–50 (WN-ag to WN-al).
+- `10a75c0`: user observations adjudicated.
+- `3d0615e`: continuity.
+
+**Elsewhere:**
+- Both of Astra's PR #7 reviews now carry an attribution line.
+- personal-assistant PR #169 proposes review delivery as documents.
+
+**Contextual assumptions.**
+- F1–F3 were built before Astra's review of the specification arrived.
+  Astra replies only when Shawn runs Codex, so the build risked rework
+  for speed.
+- The rulings were taken in one sitting from structured questions. The
+  amendment text written for them (§5(b), §6(d), and two §7(d) bullets)
+  awaits Shawn's full read before lodgement.

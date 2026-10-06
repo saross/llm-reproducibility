@@ -1418,3 +1418,58 @@ Any code that runs git as a subprocess, in tests or in tools, scrubs `GIT_*`
 from its environment, and is tested once under a decoy `GIT_DIR`. When a
 command fails in a place it should not have touched, read the shared state
 before repairing it, and repair the minimum.
+
+## 2026-10-05 — A project file outranked the variable the design relied on
+
+**Session:** b1a1e102-fc08-4962-a341-6da21988b13d
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+The gate 1.3 design loaded its logging hook by setting `R_PROFILE_USER`
+with `docker run -e`, on the assumption that a variable set in the
+process environment governs R's start-up. In the first probe, a fixture
+project held a `.Renviron` naming a different profile. Under every
+launcher tried (`Rscript`, `R -f`, a `system()` child, and a PSOCK
+worker), the project's profile loaded and the lane's hook did not. Only
+`Rscript --no-environ` loaded the hook.
+
+### Probe
+
+I made the next probe discriminating rather than repeating the first. I
+pointed `R_ENVIRON_USER` at a lane file that copies the project's lines
+and then sets `R_PROFILE_USER` to the hook as its final line. The hook
+then loaded, the project's own variable (`PROJECT_VAR`) still applied,
+and a child started after `Sys.unsetenv("R_PROFILE_USER")` loaded the
+hook as well, because the child re-reads the environment file. The same
+container also tested the event channel: `/proc/1/fd/2` and a read-only
+FIFO both reached the host from a grandchild, while R's `system2(stderr =
+TRUE)` captured a child's own stderr.
+
+### Belief revision
+
+Before: the process environment is the authority on start-up variables,
+and a container's `-e` cannot be displaced. After: R reads its
+environment files during start-up, and in this image a value there
+(`R_PROFILE_USER`, the only variable tested) overrode the inherited one.
+The authority is therefore whichever file R reads last, not the variable
+the launcher set. So the lane must own the environment-file
+phase (`R_ENVIRON_USER`), not just the variable. It also changed which
+design the reviewers' points pointed to. Fable's "set `R_ENVIRON_USER`
+too" had read as belt and braces. It was the load-bearing fix.
+
+### What would change this belief
+
+An R version in which `Renviron` values no longer override existing
+variables, or an image whose front end resets them. The launcher matrix
+(specification §13) re-tests the pin on each image the lane meets. A
+project `.Renviron` that names its own profile is now flagged statically
+(§10), so a change in behaviour would surface as a census or static
+finding rather than a silent unhooked run.
+
+### Implications for practice
+
+Where a design's guarantee rests on a runtime precedence rule (which
+setting wins), test the precedence in the target runtime before building
+on it. Arrange the test so that the two candidate authorities disagree:
+an environment that merely agrees with the variable proves nothing.

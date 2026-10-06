@@ -854,3 +854,51 @@ several places.**
 Each is now caught by a test or a review rule. The general lesson for an
 agent editing versioned, governed text is to grep for every occurrence of
 the thing being changed before declaring the change done.
+
+## 2026-10-05 → 10-06 — Remembered tool behaviour is a hypothesis; a handoff candidate carried its writer's error
+
+**Session:** b1a1e102-fc08-4962-a341-6da21988b13d (Opus 5.5, primary
+instance).
+
+**Reviewers stated runtime behaviour from memory, and the image settled
+it.** Both design reviews made claims about R start-up from documentation
+or memory. Fable said so explicitly, which was useful in itself. A probe
+in `rocker/r-ver:4.3.2` took seconds per claim and changed the design in
+four places:
+
+- A project `.Renviron` overrides an `R_PROFILE_USER` set by
+  `docker run -e`. The draft design assumed the opposite and would have
+  run unhooked on every renv-style project.
+- `Rscript` passes `--no-restore` and `R -f` does not, which decided the
+  workspace-restore rule.
+- A grandchild can reach `/proc/1/fd/2`, but a child's own stderr can be
+  captured by R, which moved the event stream off stderr.
+- A shim over `$R_HOME/bin/R` sees PSOCK workers, which made the process
+  census feasible.
+
+Later, two models disagreed about `R CMD` (my position and Fable's), and
+reading `bin/BATCH` and `bin/INSTALL` in the same image settled it. The
+lesson generalises beyond R: when a design rests on how a tool behaves, a
+model's account of that behaviour (my own included) is a hypothesis about
+a specific version, cheap to test and expensive to be wrong about.
+
+**A handoff candidate carried its writer's compression error.** The
+working-notes candidate WN-al, drafted by the previous Opus session at
+handoff, said the two reviewers found "different, non-overlapping classes
+of defect". The obs-writer subagent (Sonnet), told to re-verify against
+the review mails before writing, found three classes both reviewers had
+reported, and dropped the claim. That is the third time in four sessions a
+delegate told to re-derive from sources corrected a coordinator: WN-ah
+records the earlier two. "Non-overlapping" is the kind of word a summary
+reaches for because it makes the point cleaner. Candidates drafted at
+session close are summaries of summaries, so they need the same
+re-verification as a brief.
+
+**A peer reviewer adopted the review's own vocabulary.** The specification
+asked reviewers to class findings as D, A, B, or C (defect, ordinary
+route, deliberate concealment, or outside the model). Fable did so
+unprompted on every point, sharpened the definition of A, and reclassified
+one of its own earlier findings (host runs before the final run) from
+contaminating to a flag. A shared classification turned the review from a
+list of worries into a list of decisions, each with its consequence
+already implied.

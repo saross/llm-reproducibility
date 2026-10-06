@@ -1378,3 +1378,73 @@ earlier, and I wrote new git-touching code without grepping for the idiom.
 The repair was quick and nothing was pushed. Still, the lesson is the
 same one as the delegated-verification point in Entry 21, turned on me:
 the repository remembers things I don't.
+
+## Entry 23 (2026-10-05 → 10-06) — A specification reviewed while it was built, then every ruling in one sitting
+
+**Project:** llm-reproducibility. **Session:**
+b1a1e102-fc08-4962-a341-6da21988b13d. One instance throughout (Opus 5.5),
+no compaction. There were two halves. First, an autonomous build on PR #7,
+with Fable reviewing live by SendMessage and Shawn away. Second, a decision
+walk-through with Shawn present, which cleared every ruling that had
+accumulated over three sessions.
+
+**What was different about this session compared to recent ones?** Two
+things.
+
+- **The review loop ran faster than the build.** In Entry 22, a review
+  round meant a brief, hours of waiting, and a fold-in. This time Fable's
+  review of the consolidated specification came back while I was still
+  writing F1's runner. Three of its findings (per-process tokens, the
+  repeated-sequence check, and console output as a citable output) went
+  into the code before the commit. One disagreement went the other way.
+  Fable proposed exempting `R CMD` by subcommand list. The image's own
+  `bin/BATCH` and `bin/INSTALL` scripts showed that the executing
+  subcommands re-enter the front end, so their inner starts are already
+  counted. Fable withdrew the proposal within one exchange. The scripts
+  settled it, not my argument; neither of us had them in memory.
+- **The rulings were cleared in one sitting.** There were about
+  thirty-four decisions, from amendment 3 to user-observation verdicts.
+  Shawn twice answered a structured question with "can you give me pros
+  and cons?" instead of a choice. The first time, on D-2, preparing the
+  trade-offs made me re-read amendment 2's platform table. It grants
+  floors as well as failures, so my framing had been incomplete, and my
+  recommendation moved from flag-only to rules deciding 0s only. From D-3
+  onwards I led every question with the trade-offs, and only one more
+  round-trip was needed. He kept the 2026-10-05 user-observation about
+  jargon needing a second round, and the same session re-enacted it, then
+  showed the fix.
+
+The asymmetry between reviewers was also new. Fable, a live Claude session,
+answered within the hour. Astra answers only when Shawn runs Codex, and it
+never replied in the session. So revision 1 of the specification carries
+one reviewer's view, and the foundations were built ahead of the other's.
+If Astra finds a defect in F1–F3, that is rework the faster loop risked.
+
+**What decision or trade-off made today will look arbitrary without this
+session's context?**
+
+- **`Issue` is a subclass of `str`.** It looks too clever for a codebase
+  written to be learnt from. The reason: about thirty emission sites,
+  several workflow relays, the human queue, and hundreds of tests all
+  carry flags as text. A string that also carries its own id and evidence
+  fingerprint changed none of them. Tuples or a parallel list would have
+  touched all of them in the middle of a review.
+- **`max-size=100g` for the container log.** Docker accepts `-1`
+  (unbounded) when creating a container and refuses it at start. A test
+  pins the failed-start clean-up path that this discovery exposed.
+- **Q2's class (iii) for a result-identical restructuring.** It looks
+  harsh, since the audit had shown nothing was repaired. The rule's own
+  words, "however obvious the intent", exist so that classification does
+  not depend on judging whether an edit mattered. The identity is
+  recorded beside the class, and dye's credit comes from the wrapper-only
+  re-run either way.
+- **D-3 gates on all 150 items** with a thinner margin. The exclusion it
+  drops was justified by missing inputs, which the re-validation supplies.
+  Keeping it would have protected the scorer from questions it can now
+  answer.
+
+What ties the two halves together: the build was fastest where evidence
+was cheap to get (a one-second probe in the real image, the image's own
+scripts). The rulings were fastest once the trade-offs came before the
+recommendation. In both, the slow path was asserting something before
+looking.

@@ -1423,10 +1423,93 @@ say: "do not post to GitHub; Shawn decides what is posted." Tell Shawn
 which peer posts already exist (Astra's two reviews on PR #7), so he can
 judge whether they are acceptable.
 
-**Resolved (Shawn, 2026-10-06).** Both reviews now open with "Review written
-by Astra (GPT in OpenAI Codex), a review agent, and posted from this
-account. Shawn did not write it." The protocol is standardised for both
-agents: reviews are delivered as documents with an attribution header, and
-nothing is posted under Shawn's account unless he approves a prepared post.
-A machine account or GitHub App for agent reviews follows if review traffic
-grows.
+## claude-obs 71 — 2026-10-06: Shawn turned a one-off incident into a protocol for both agents
+
+**Pattern.** Mid-way through the decision walk-through, after ruling on
+Astra's two posted reviews (claude-obs 70: attribution lines added), Shawn
+raised the general question himself. Claude models were reviewing in
+documents and GPT models on GitHub, so should one way be standardised? He
+weighed a document protocol against posting with an attribution line, and
+chose documents now, with a machine account or GitHub App later if review
+traffic grows. The divergence turned out to be accidental: my briefs had
+invited the posts. He treated it as a missing rule rather than a
+misbehaving agent.
+
+**Lesson.** When an incident involves two agents, Shawn looks for the
+cross-agent rule it reveals, not just the fix for the instance. The
+answer he wants weighs the platform-level effects, here GitHub attributing
+any post to his account whatever its body says, not only the local
+convenience.
+
+**How to apply.** After resolving a cross-agent incident, propose the
+standardising rule in the same breath, phrased for both harnesses, and
+route it to the shared guidance (`common.md`) as a proposal. Here that
+was personal-assistant PR #169.
+
+## claude-obs 72 — 2026-10-06: "Pros and cons?" is Shawn's request to see the decision space, and it caught my framing
+
+*Corroborates claude-obs 68 (he asks for the risk in plain terms before
+choosing); new here: the request also exposed a framing error, and
+leading with trade-offs removed the round-trip.*
+
+**Pattern.** Shawn answered two structured questions (D-2, platform-row
+rules; the record-weighted coverage field) with "can you give me pros and
+cons?" or "more information" instead of picking the recommended option.
+Both were methodological decisions outside routine, where my options had
+been framed tersely. Preparing the D-2 trade-offs made me re-read the
+lodged platform table, and my framing had been incomplete: the table
+grants floors as well as failures. My recommendation changed. From D-3 on
+I led with trade-offs, and he ruled at the first ask on every later
+question but one.
+
+**Lesson.** For a methodological decision, a recommendation without
+visible trade-offs is incomplete. Shawn will ask for them, and assembling
+them is a check on the framing as much as an explanation.
+
+**How to apply.** On any methodological or governance ruling, give each
+option's pros and cons before the recommendation, from the source text
+re-read for the purpose. Keep option-only questions for operational
+choices.
+
+## claude-obs 73 — 2026-10-06: Shawn prunes the user-observation register to transferable lessons
+
+**Pattern.** Adjudicating ten candidates, Shawn kept five and asked for
+two to be generalised. One was "long autonomous blocks inside pre-approved
+gates, with dense batched rulings, restore throughput"; the other was "a
+self-contained brief lets a peer act unaided". He dropped the
+incident-shaped ones, including both "unhelpful" incidents of 2026-10-05
+(the git-config breakage and the posting briefs), whose lessons already
+live in claude-observations and the scratchpad. He also dropped a
+"helpful" candidate whose point was specific to one ruling.
+
+**Lesson.** The user-observation register is for patterns that carry to
+other sessions and projects, phrased as the pattern. Incident narratives
+belong in claude-observations, working notes, or the session log.
+
+**How to apply.** Draft user-observation candidates with the
+generalisable lesson as the title and the incident as evidence. Do not
+re-propose an incident whose lesson is already recorded elsewhere.
+
+## claude-obs 74 — 2026-10-06 (self-critique): Three small precision slips under decision pace
+
+**Pattern.** In the walk-through, three small inaccuracies reached text
+before I re-read it:
+
+- a D-6 note saying the ledger "is drafted" when it is yet to be drafted;
+- a resolution note appended inside claude-obs 70, when the register's
+  rule is that accepted entries are never edited in place (moved to 71
+  here);
+- the D-2 framing that omitted the platform table's floors (claude-obs
+  72).
+
+None reached a ruling uncorrected, and each was caught on my own re-read
+or on Shawn's request for trade-offs. Each was the faster wording winning
+over the checked one.
+
+**Lesson.** At decision pace, I write status words ("drafted", "built",
+"verified") and conventions from momentum. The anti-confabulation rule
+applies to my own fresh text as much as to recalled facts.
+
+**How to apply.** Before committing a ruling note, check each status verb
+against what has actually been done, and check each register's
+edit-in-place rule before touching an existing entry.
