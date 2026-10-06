@@ -1924,7 +1924,8 @@ One session on Fable 5.1, in the main checkout and the PR #7 worktree.
 - **Astra's amendment 3 review** (six blocking, five should-fix) was
   verified premise by premise at source before any edit, and every premise
   held. Three findings needed registrant decisions rather than drafting,
-  so they became D-7 to D-9 with proposed text. Fable gave a second opinion
+  so they became D-7 to D-9 with proposed text. Fable gave a second
+  opinion
   by SendMessage; its refinements went in where verified, and two
   unverified counts were dropped, then restored once Fable supplied anchors
   that checked out.
