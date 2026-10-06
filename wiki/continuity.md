@@ -30,21 +30,32 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-10-05, session b1a1e102) — START HERE
+## Repo state (2026-10-06, session b1a1e102 close) — START HERE
 
-- **⏩ START HERE: read Astra's review of the gate 1.3 specification if it
-  has arrived, then build the instrumentation stage.** The integrity gate
-  is on PR #7 (`feat/lane-gate-1-1-code-audit`, head `b409ef5`, **open, not
-  merged**). Its specification is `wiki/planning/reproduction-gate-1-3-design.md`
-  on that branch, at revision 1 with status "foundations-built". Its §15 is
-  the build checklist.
-  1. **Astra's review.** It was requested by
-     `~/agent-mail/claude/outbox/codex/20261005T062134.544396Z-claude-repro-gate13-consolidated.md`,
-     against `53413bc`, and had not arrived by session end. Replies land in
-     `~/agent-mail/codex/outbox/claude/`. Classify its findings by §2.1,
-     fold them in as revision 2, and fix anything D or A it finds in
-     F1–F3.
-  2. **Instrumentation** (§15 step 4):
+- **⏩ START HERE: amendment 3 lodgement, then Astra's review, then gate 1.3
+  instrumentation.**
+  1. **Lodgement** (Shawn reading the draft at handoff). Once he has read
+     and edited `studies/open-science-compliance/prereg/amendment-3-draft.md`,
+     run the pre-lodgement checklist's steps 2–6 on the final text:
+     - consistency against the logs, rulings, planning note, F2 report, and
+       manifest;
+     - token checks (numbers, identifiers, dates, and quoted strings);
+     - register exit checks;
+     - the manifest gate and tests green at the commit, and the tag
+       `osf-amendment-3-<date>`;
+     - the paste artefact.
+
+     Then **ask before lodging** through the OSF API. Lodgement is step 1
+     of §10; the correction ledger (§9) is ruled after it.
+  2. **Astra's review** of the gate 1.3 specification. It was requested by
+     `~/agent-mail/claude/outbox/codex/20261005T062134.544396Z-claude-repro-gate13-consolidated.md`
+     against `53413bc`, and had not arrived by 2026-10-06. Replies land in
+     `~/agent-mail/codex/outbox/claude/`. Fold it in against revision 1
+     (`b409ef5`) as revision 2, classifying findings by §2.1, and fix
+     anything D or A it finds in F1–F3.
+  3. **Gate 1.3 instrumentation** (§15 step 4) on PR #7
+     (`feat/lane-gate-1-1-code-audit`, head `42da7fc`, **open, not
+     merged**; worktree `.claude/worktrees/agent-a8a2378c2a5dbdc98`):
      - the full hook (§8), with traces installed *before* the profile
        (Fable's D-1);
      - `PKGBUILD` for `R CMD INSTALL`'s inner start;
@@ -52,8 +63,8 @@ merged here as PR #1).
      - the launcher matrix in Docker, on a test image with `callr`,
        `targets`, `future`, `knitr`, and `rmarkdown` from CRAN.
 
-     Then the remaining steps in §15 order. The last of them, step 7,
-     includes the workflow switch to `run-container`.
+     Then the remaining §15 steps, including the workflow switch to
+     `run-container`.
 - **Why it matters.** The registered §8 regression gate cannot run until
   gate 1.3 is merged and the correction ledger (amendment 3 §9) is ruled.
   §2 of the specification now has a stopping rule for hardening, which
@@ -141,6 +152,13 @@ merged here as PR #1).
   - build a usage source that records final usage before census cost
     tracking (F-019, item 3).
 - **Carry-forward:**
+  - **After personal-assistant PR #169 merges:** re-run
+    `scripts/compose-global-claude-md.sh`, then remove the worktree
+    `~/worktrees/personal-assistant/claude-review-protocol`.
+  - [x] 2026-10-06 **Git hook re-installed on AMD-tower-ubuntu** after PR #8. The
+    diff was exactly the `AGENTS` filename exception. Other machines pick
+    it up when they next run `scripts/install-git-hooks.sh`, which zbook
+    still needs anyway.
   - **Nothing is admission-eligible yet, by design.** Admission needs a
     transcript audit that writes `transcript-audit.json` (§12), which is
     not built.
@@ -1830,7 +1848,7 @@ February). Low priority; logged from llm-observations 2026-07-06.
 
 ## Session log
 
-### 2026-10-05 (session b1a1e102) — gate 1.3 consolidated, reviewed, and its foundations built
+### 2026-10-05 → 10-06 (session b1a1e102) — gate 1.3 consolidated, reviewed, and its foundations built; every pending ruling cleared
 
 One session on Opus 5.5. It worked in the PR #7 worktree, with Fable
 reviewing live by SendMessage.
@@ -1851,6 +1869,42 @@ reviewing live by SendMessage.
   withdrew the list, and `INSTALL`'s inner start is now the one real gap.
 - **F1–F3** are built, each with tests, all pushed. Astra's review of the
   specification is outstanding.
+- **Decision walk-through (2026-10-06, Shawn present).** About 34 pending
+  decisions, scattered across three sessions, were cleared in one sitting
+  from structured questions, with each item's context re-assembled from
+  its source:
+  - amendment 3 D-1 to D-5 (`c99c2a0`);
+  - audit Q2–Q10 (`c4553f9`, and `38b59b0` for the general rules);
+  - Astra's posted reviews (attributed; reviews are documents from now
+    on, personal-assistant PR #169);
+  - PR #8, merged (`7f84e73`);
+  - WN-ag to WN-al, as Obs 45–50 (`a8da2e1`);
+  - the user-obs batches (`10a75c0`);
+  - the lane-script split, after merge (`42da7fc`);
+  - record-weighted coverage, not collected.
+
+  Two items needed a pros-and-cons round. In one (D-2), assembling the
+  trade-offs exposed an incomplete framing and changed the recommendation.
+- **Reflections:** `/reflect` (`75cc6d8`), with Entry 23, an abductive
+  entry, and claude-obs 71–74.
+- **Working-notes candidates (held for Shawn's verdict; silence holds
+  them over):**
+  - **WN-am:** instrumenting R reproductions, a project `.Renviron`
+    outranks a container's `-e R_PROFILE_USER`. In `rocker/r-ver:4.3.2`
+    the project's profile loaded in place of the lane hook under every
+    launcher tried, until the lane took over the environment-file phase
+    (`R_ENVIRON_USER`). A naive logging hook would therefore run unhooked
+    on any project that sets its own profile. This bears on the paper's
+    account of how the reproduction lane establishes what code ran.
+    Sources: gate 1.3 specification, probe facts 1–2 (PR #7), and the
+    abductive entry of 2026-10-05.
+  - **WN-an:** the cost of human oversight in the governance loop. About
+    34 decisions had accumulated over three sessions of autonomous work.
+    One sitting cleared them, once each item's context was re-assembled
+    from its source, grouped by what it blocked, and offered with a
+    recommendation; two needed a trade-offs round first. This bears on
+    the paper's account of what supervising an agentic pipeline costs the
+    researcher, and how the cost is batched.
 
 ### 2026-10-04 (third session) → 10-05 — F2 rule and v1.2 packs; amendment 3 drafted; PR #7 through three review rounds; gate 1.3 part 1
 
