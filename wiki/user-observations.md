@@ -776,3 +776,37 @@ Shawn's GitHub account and breaks the outbound rule. Fable declined. Astra
 posted two reviews to PR #7. Claude corrected the instruction in later
 briefs and recorded it as claude-obs 70. Shawn to judge whether the two
 posted reviews are acceptable.
+
+## Pending review — 2026-10-06 batch (drafted at handoff, session b1a1e102)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence
+holds them over — never discards. Titles state the transferable lesson,
+per his 2026-10-06 pruning (claude-obs 73).*
+
+**Candidate A (helpful) — a scattered decision backlog clears in one
+sitting when each item is re-assembled from its source, ordered by what it
+blocks, and offered with a recommendation.** Shawn: "can we work through
+my decisions/questions one-by-one to clear them? I've lost track of
+context for each, which is scattered through our session transcript".
+About 34 decisions from three sessions, from amendment 3 to
+user-observation verdicts, were cleared in one walk-through. Claude
+re-read each item's source rather than its own summary, grouped items by
+what they blocked (lodgement and the regression gate first), and put each
+as a structured question with a recommendation. Two needed a trade-offs
+round first.
+
+**Candidate B (helpful) — a disagreement between models settles fastest
+on the artefact, not on argument.** Fable proposed exempting `R CMD` from
+the process census by subcommand list. Claude read the image's own
+`bin/BATCH` and `bin/INSTALL` scripts, which showed that executing
+subcommands re-enter the shimmed front end. Fable withdrew in one
+exchange, and the one real gap (`INSTALL`'s inner start) was identified
+precisely.
+
+**Candidate C (helpful) — a third option can dissolve a binary.** Asked
+whether agent reviews should be (a) documents or (b) GitHub posts with an
+attribution line, Claude pointed out that the platform attributes a post
+to the account whatever its body says. It offered a machine account or
+GitHub App as the route to native agent reviews without posting as
+Shawn. Shawn chose "documents now, bot account later", an option that was
+not in his original pair.
