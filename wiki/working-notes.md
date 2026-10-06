@@ -1896,3 +1896,411 @@ target; here the check was against every release). Anchors:
 ("Rulings (2026-10-04)", ruling 1, and item (d));
 `wiki/planning/instrument-clarification-plan.md` (decision log, 2026-10-04);
 the WN-af entry in `wiki/continuity.md`.
+
+## Observation 45: Model-produced structured records carry arithmetic slips at a low but non-zero rate, so derived fields are computed, not checked (2026-10-04)
+
+*(Approved by Shawn 2026-10-06; WN-ag.)*
+
+### Context
+
+The Fair Assessment scoring pipeline asks a model to emit a structured
+record per paper. Some fields in that record are not judgements but
+functions of other fields: a section's `total` (the sum of its 15 item
+scores), `coverage_percentage` (accessible datasets over enumerated
+datasets), and `coverage_category` (the instrument's bands). The output
+schema does not tie these fields together, and the reconciler validates only
+against the schema. In Opus 5.5 `medium` run 3, `dye-et-al-2023` `code_fair`
+recorded `total: 7` while its items summed to 8, and the H13
+re-derivation (an independent recomputation of the gate statistics) caught
+it. That prompted a retroactive scan.
+
+### Observation
+
+Payload-quality checker rules v1.1 (`scripts/check-payload-quality.py`,
+`132f95a`) found two slips in 135 payloads (9 arms × 3 runs × 5 pilot
+papers; report `d10fbb3`, in
+`studies/open-science-compliance/outputs/validation/payload-quality-2026-10-04/`):
+
+| Slip | Where | Detail |
+|---|---|---|
+| Total disagrees with items (C1) | opus-5-5 `medium`, run 3, dye `code_fair` | recorded 7, items sum to 8 |
+| Item scored in an unavailable section (C5) | fable-5 (2026-08-17 benchmark), run 1, key `data_fair` | `available: false`, yet R1 scored 1 |
+
+Coverage percentage and category (C2, C3) had zero disagreements, and an
+independent `jq` pass reproduced both findings.
+
+The three 2026-08-03 arms scored on schema v1.0 are outside those 135
+payloads, and the checker's rules are not a like-for-like fit for them. A
+re-read of the 2026-08-03 `arm-fable-5` payloads by this entry's author (the
+coordinator's note that the builder reported these was unverified) found
+three further slips there, none in the 2026-08-03 `arm-sonnet-5` or
+`arm-opus-5` payloads:
+
+- run 2, `marwick-2025`, `data_fair` and `code_fair`: recorded total 14,
+  items sum to 13 (two miscounted totals);
+- run 1, `herskind-riede-2024`: `datasets_enumerated` 2,
+  `datasets_accessible_tier_0_2` 1, `coverage_percentage` 100 and category
+  `complete`. The barrier text says "Record-weighted coverage: 483/483 ...
+  (100%)", so a record-weighted figure sits in the primary field, which the
+  instrument defines as the dataset count (50% here).
+
+The checker was not run over that arm, so these three come from
+re-reading, not from the checker's rules. By its C2 rule the herskind figure
+would be a disagreement (50 against 100).
+
+### Implication
+
+The slips are rare (2 of 135 under v1.1, and three more in one older arm of
+15) but they are not zero, and one reached a committed payload. A check that
+only reports leaves the wrong value in the record. Because each of these
+fields is defined as a function of others, the pipeline should compute it
+and keep the model's value only as a consistency signal, which is what the
+ruled disagreement policy does (Shawn, 2026-10-04: "cases like incorrect
+arithmetic seem like we should defer to the mechanistic check";
+`wiki/planning/deterministic-output-checks.md`, "Disagreement policy",
+item 1). The right verb is "compute", not "check". That removes the whole
+class. Two caveats. A miscount can also mean the model wavered on an item
+(dye r3), so the item gets a spot check, and the gates use items, so they
+are unaffected. And the C5 case is a flag for human review, not an override:
+whether R1 or `available` is wrong is a judgement. On 2026-10-06 Shawn
+ruled not to collect record-weighted coverage at all, so the primary
+coverage is computed and a record-weighted figure has no field to enter.
+Relations: Observation 40 (the coverage denominator is itself unstable);
+Observation 35 (a control counts when its log shows a real pass). Anchors:
+the payload-quality `README.md` and `report.json` (above);
+`studies/open-science-compliance/outputs/validation/benchmark-2026-08/arm-fable-5/`
+(`run-2/marwick-2025.json`, `run-1/herskind-riede-2024.json`); the WN-ag
+entry in `wiki/continuity.md`.
+
+## Observation 46: Delegates told to re-derive from sources caught the coordinator's errors (2026-10-04)
+
+*(Approved by Shawn 2026-10-06; WN-ah.)*
+
+### Context
+
+In the 2026-10-04 second session (c5ee7a27), the coordinating instance
+delegated two jobs with an instruction to re-read the sources and report
+deviations from the brief: an obs-writer (a Sonnet agent) writing Observation
+34, and a builder (an Opus agent) implementing the payload-quality checker.
+The coordinator's brief and planning note were its own drafts from memory
+and earlier context.
+
+### Observation
+
+Both delegates found errors in the coordinator's material
+(`wiki/reflections/session-reflection.md`, Entry 21;
+`wiki/reflections/llm-observations.md`, "Delegates verified the
+coordinator"):
+
+- **The obs-writer corrected the brief.** The brief said herskind code R1.3
+  was over-credited at `high`. The source says it is over-credited at
+  `xhigh` only, with `high` a 2–1 split the right way (Observation 34). The
+  coordinator had already given the wrong claim to Shawn. The reflection
+  counts two factual errors corrected in the brief. The sources itemise only
+  the R1.3 claim; `llm-observations.md` separately records that the
+  obs-writer's commit trailers named the wrong model because the brief said
+  so.
+- **The builder found contradictions in the planning note.**
+  `wiki/planning/deterministic-output-checks.md` still said Layer 1 checks
+  "fail the item" after the ruled policy made derived fields computed (the
+  note now carries the earlier wording struck through and marked
+  superseded). The builder also found that the instrument's coverage figure
+  is not always a pure derivation, because a record-weighted figure is
+  allowed alongside it. That nuance is recorded in the planning note's
+  coverage paragraph. The builder then broke its own rules in ten small
+  ways and confirmed its tests caught every one.
+
+### Implication
+
+A brief carries the coordinator's confabulations: whatever the coordinator
+misremembers, the delegate inherits unless it re-derives. An instruction to
+re-verify is usually framed as protection against the delegate's errors. Here
+it protected against the author's. A required "deviations" section in every
+delegate report converts the delegate into a check on its author, at the
+cost of one section per report. This extends the anti-confabulation rule
+from "re-read before you cite" to "write briefs so that the recipient is
+asked to disagree with them". It does not make the coordinator reliable:
+the delegates caught what they were pointed at, and a fact nobody
+re-derived would pass. Relations: Observation 34 (the entry whose brief was
+corrected); Observation 33 (verification means matching the expected
+target, which is what the delegates did). Anchors:
+`wiki/reflections/session-reflection.md` Entry 21;
+`wiki/planning/deterministic-output-checks.md`; the WN-ah entry in
+`wiki/continuity.md`.
+
+## Observation 47: PROVISIONAL — the harness relayed the user's message only into the workflow launched in the typed turn (2026-10-04)
+
+*(Approved by Shawn 2026-10-06; WN-ai. PROVISIONAL: two consistent observations plus the harness's own wording, with no discriminating test.)*
+
+### Context
+
+Since Claude Code 2.1.288, a workflow spawn can receive the session's last
+user message, relayed (register F-015). The Opus 5.5 benchmark arms were
+meant to be purely scripted, so a relayed user message in a scoring spawn is
+a possible contaminant of the prompt. The ruling (Q7) was to make
+the last user message a neutral go-ahead. The earlier P4 probe saw no relay,
+and its launch turn is not recorded.
+
+### Observation
+
+In the three Opus 5.5 arms (2026-10-04, c5ee7a27), arm 1's 30 spawns all
+received Shawn's typed "Go". Arms 2 and 3 received nothing in any of their
+30 spawns each (`opus-5-5-arms-2026-10/results-2026-10-04.md`, item R2).
+Arm 1 launched in the same turn as the typed "Go". Arms 2 and 3 launched
+from turns triggered by task notifications. The harness's own preamble
+describes the relay as "the user request that triggered this workflow run"
+(`wiki/reflections/abductive-reasoning.md`, "The relayed message fired in one
+arm out of three"). The provisional reading is therefore that the relay
+carries the user message that triggered the launch turn, and a launch from a
+notification turn relays nothing, not that it carries the session's last
+user message to every spawn.
+
+### Implication
+
+If it holds, the neutral go-ahead matters only for a launch made in a typed
+turn, and chained launches from notifications are clean by construction.
+This bears on what the methods section can say about how purely scripted the
+scoring prompts were: arm 1's spawns had one extra user-origin message
+("Go") that arms 2 and 3 lacked, and the paper should report that
+asymmetry rather than describe all three as identically scripted. The
+asymmetry is minimal here because the message was a neutral go-ahead, but
+it is a fact about the apparatus. What would change the belief: a
+notification-turn launch whose spawns receive a relay, or a typed-turn
+launch whose spawns do not. Until a deliberate test discriminates, the
+register records the observations and leaves the mechanism open. Relations:
+Observation 39 (apparatus evolution silently changes what a result rests
+on); Observation 35 (a control is aspirational until its log shows a real
+pass). Anchors: `wiki/reflections/abductive-reasoning.md` (entry above);
+`studies/open-science-compliance/outputs/validation/opus-5-5-arms-2026-10/results-2026-10-04.md`
+(R2) and `design-note.md`; the WN-ai entry in `wiki/continuity.md`.
+
+## Observation 48: The scorer's systematic F2 over-credit was an input gap, not a judgement error (2026-10-04/05)
+
+*(Approved by Shawn 2026-10-06; WN-aj.)*
+
+### Context
+
+Sub-principle F2 (Findable) of the FAIR (Findable, Accessible,
+Interoperable, Reusable) instrument is operationalised by rule AP-15 as creators, a
+title, a substantive description, and at least one subject keyword. Six F2
+over-credits were unanimous in every run of every Opus arm, across two model
+generations and several efforts (Observation 34): every arm scored F2 = 1 for
+the Zenodo deposits of the crema, herskind, and marwick pilots (data and
+code) where the reference says 0. The coordinator read this as a stable
+judgement error, which is why a mechanical F2 rule was the first build in the
+checks policy.
+
+### Observation
+
+The cause was missing input. Evidence-pack harvester v1.1 kept only
+identifier, licence, and type fields, so the packs every arm read carried no
+creators, descriptions, or keywords. The model could not see that the
+keyword fields were empty, and it often said so. Of the 90 F2 evidence
+strings from the five Opus arms for the three Zenodo pilots, 20 state that
+the pack did not show the description or keyword fields and then credit F2
+anyway, on the record's existence and the platform row: "caveat, then
+credit". One example is opus-5-5 `medium`, marwick r1 data: "Description/keywords not shown in pack; scored on existence of a
+structured DataCite record"
+(`studies/open-science-compliance/outputs/validation/f2-rule-hybrid-2026-10-04/report.md`;
+`studies/open-science-compliance/prereg/amendment-3-draft.md` §6(b)). A
+re-harvest with harvester v1.2 confirmed that all three deposits have empty
+keyword fields and either pointer descriptions or none. The mechanical rule
+matches the reference on 10 of 10 pilot F2 items; the model's majority vote
+does so on 4 of 10.
+
+### Implication
+
+The gate figures count missing input against the model: the F2 items were
+scored wrong where the basis for scoring was absent. That makes the
+recorded gate figures cautious, not generous, and it means the gates have
+not yet tested the scorer on the inputs the census will give it. That is
+why amendment 3 §6 adds a pre-census re-validation on v1.2 packs. Three
+cautions. First, 20 of 90 is a fifth of the strings, so most F2 credits did
+not name the gap, and "input gap" explains the cause only where the pack was
+empty. Second, whether the model scores F2 correctly once it can see empty
+keyword fields is untested; if it still credits, the error is judgement
+after all (credit despite visible negative evidence). Third, every pilot
+reference F2 is 0, so only the rule's 0 paths are tested on real data. The
+general lesson is that when an error survives a change of model and effort,
+check what the models were given before modelling the error: the model's own
+evidence strings may have said so already. Relations: Observation 34 (the
+F2 misses are the shared residual); Observation 38 (platform entitlements
+are presence floors, here crediting F2 on the existence of a record);
+Observation 39 (the gates validated the scorer on apparatus the census will
+not use). Anchors: the `f2-rule-hybrid-2026-10-04/report.md` and amendment
+3 §6(b) paths above; `wiki/reflections/abductive-reasoning.md` ("The scorer's
+systematic miss was an input gap it had reported");
+`wiki/reflections/llm-observations.md`; the WN-aj entry in
+`wiki/continuity.md`.
+
+## Observation 49: The pilot regression baseline is weaker than the registration's §8 gate assumes, so reproduction results are reported as artefact-bound (2026-10-04/06)
+
+*(Approved by Shawn 2026-10-06; WN-ak, updated with the resolution: the correction ledger and the rulings on audit questions Q1–Q10.)*
+
+### Context
+
+The registered §8 regression gate asks a new reproduction pipeline to give
+identical verdicts and value-level results to the pilots' first attempts
+(attempt-01) when it re-runs at least two pilot papers. The 2026-10-04
+executed-code audit compared what each pilot actually ran with the authors'
+originals. A deviation is classed (i) declared wrapper mechanics, (ii) a
+mechanical edit in the authors' code, (iii) an edit changing logic, indices,
+data, or parameters, (iv) a different authors' version from the one rule
+AP-12 selects, or (v) credited values from reproducer-written code or
+reconstructed inputs. The audit is on PR #7 (not merged at this writing).
+
+### Observation
+
+The pilots are not the baseline the gate assumes
+(`executed-code-audit-2026-10-04/findings.json`, key `pilots`, on branch
+`feat/lane-gate-1-1-code-audit`):
+
+- **No authors' file executed.** Three pilots' attempt-01s (dye, herskind,
+  key) ran a reproducer's re-implementation or re-assembly, not the
+  authors' files. Key's kept copies of the supplement scripts were
+  byte-identical to the supplement but were not executed.
+- **A version other than AP-12's.** Crema executed v2.0.0 (AP-12 selects
+  v1.0.0) and marwick executed GitHub main `652e542`, eight commits past
+  tag 1.3. The audit also records herskind attempt-01 as class (iv): its
+  re-implementation follows v1 where AP-12 selects v2. So the audit's
+  class (iv) covers three papers, though only crema and marwick executed the
+  authors' code at the wrong version. Amendment 3 §9 and Entry 22 say "two".
+- **Crema's Table 1 credit was circular.** The pilot credited "Table 1 from
+  pre-computed posteriors is byte-for-byte identical to the published
+  table1.csv", which compares v2.0.0's re-run with v2.0.0's own table. The
+  paper's Japan r is 0.1023; the pilot comparison's "published" column has
+  0.1003.
+- **Key's means.** The authors' main script computes the means through
+  `print(summary(datalist))`, but the reproducer computed them with its own
+  `round(mean())`, and the authors' script was never executed. The audit
+  first treated this as a calculation absent from the authors' code and
+  corrected itself after Astra's review (KEY-2).
+- **Marwick.** The committed rendered output shows the post-publication
+  Shannon calculation, and the credited "Fig 2 matches published" refers to
+  an added chart, not the published figure.
+
+**Resolution (Shawn, 2026-10-05/06).** Rather than rewrite the pilot
+artefacts, which are preserved unchanged, Shawn adopted a correction ledger
+(amendment 3 §9). It is a separately versioned, frozen record of the
+admissible source version, published value, tolerance, repair status, and
+coverage treatment per target. The gate is reported twice: the registered
+strict comparison against the original pilot artefacts, and an amended
+comparison against the frozen ledger, which is the pass criterion. A
+corrected result is reported as a correction, never as an unchanged pass.
+He also ruled the audit's open questions (`question_rulings`, Q1–Q10), among
+them:
+
+- Q1: a result resting on an authors' file edited for mechanics counts only
+  after a wrapper-only re-run (dye's 22 attempt-02 targets).
+- Q4: crema and marwick are re-run at the AP-12 version (crema v1.0.0,
+  marwick 1.3) against the ledger; the pilot verdicts stand as historical
+  artefacts.
+- Q5: key's 21 Mean values count only after a wrapper-only re-run executes
+  the authors' script. Results on inputs the reproducer reconstructed from
+  upstream data never count: the targets stay in the denominator as
+  expected-untestable, and the reconstructed results are reported as uplift
+  evidence (amendment 3 §7(d)).
+- Q3: herskind attempt-02, which ran S2.R v2 byte-identically through a
+  wrapper, is herskind's baseline; attempt-01's Fig. 3 trigram and
+  quadrigram credit is withdrawn.
+
+The `ruled_on` dates in `findings.json` are 2026-10-05 throughout, while
+amendment 3 §7(d) dates the Q5 verification-aid paragraph 2026-10-06.
+
+### Implication
+
+A pipeline that reproduced the pilots' results exactly would be rewarded for
+reproducing the pilots' errors, so "the regression gate passed" is
+meaningful only with its baseline named. More generally, a reproduction
+verdict is a property of an artefact: this code, this version, this input,
+this run. It is not a claim about the paper, and the paper should report it
+that way, with the environment-specification level and the repair status
+beside it. Relations: Observation 41 (a regression also audits the human-directed baseline: this is that
+audit's outcome); Observation 44 (the fail-and-uplift bright line that the
+rulings extend). Anchors:
+`studies/open-science-compliance/outputs/validation/executed-code-audit-2026-10-04/`
+(`findings.json`, `report.md`, on `origin/feat/lane-gate-1-1-code-audit`);
+`studies/open-science-compliance/prereg/amendment-3-draft.md` §7(d) and §9;
+`wiki/reflections/session-reflection.md` Entry 22; the WN-ak entry in
+`wiki/continuity.md`.
+
+## Observation 50: Cross-model review of a mechanical gate found different classes of defect, and each round widened the gate (2026-10-05)
+
+*(Approved by Shawn 2026-10-06; WN-al.)*
+
+### Context
+
+The reproduction lane's code-integrity gate (PR #7, gates 1.1 to 1.3 part 1)
+is a mechanical check that the code an executor ran was the authors'
+original. It was built and reviewed by Claude (Opus 5.5), then reviewed by
+two other models: Astra (GPT, in Codex) and Fable (a separate Claude
+session). Their work is in agent mail and on the PR
+(`wiki/reflections/session-reflection.md`, Entry 22).
+
+### Observation
+
+The reviewers worked differently and found different defects:
+
+- **Astra read for trust boundaries.** Its first review (2026-10-05T02:05Z)
+  made five findings from source and artefacts, running no tests: anchor the
+  original hashes independently; verify which code ran; validate conversion
+  evidence; make flag delivery mandatory; and correct KEY-2. Its delta review
+  (04:31Z) ran synthetic probes and found three remaining findings (the
+  reflection counts two of them as defects in the coordinator's fixes for the
+  first round): corpus anchors checked neither paper slug nor
+  version; a deleted-then-restored original passed the post snapshot; and an
+  unrelated conversion record cleared a conversion flag.
+- **Fable ran attack scripts.** Its review (at head `865c8c2`)
+  reported four serious (P1) and six moderate (P2) findings, plus six
+  minor ones, with the scripts attached. Fable states that P1-1 to P1-4 and
+  P2-1 to P2-4 were new relative to both of Astra's reviews. They include an
+  edited copy with a non-code suffix reaching `identical`; a forged
+  evidence pack written inside the attempt directory and then committed by
+  the operator's own routine; a Dockerfile `sed` edit that leaves the
+  attempt tree pristine; `.Rprofile` and other start-up files outside the
+  inventory; and a directory symlink hiding an edited tree. Fable also ran
+  the checker against the real evidence packs and found that the canonical
+  packs cannot anchor anything.
+- **The overlap was partial.** Anchor independence, snapshot authority, and
+  conversion evidence were found by both, Astra by reading and Fable as
+  executed exploits. So the finding is not that the sets were disjoint but
+  that each reviewer found classes the other did not. Astra's design review
+  of gate 1.3 then raised writable run records, an injected `.Rprofile`
+  failing the gate's own comparison, and R start-up order.
+
+Each round found the gate wider than the last, including in the fixes for the
+previous round: the reflection counts five findings, then three (two of them
+in the coordinator's fixes for the first), then Fable's ten, every one still open after Astra's round (per the
+reflection), then about two dozen design
+points. I verified the five, three, and ten against the mail; the
+"two of three in the fixes" and "about two dozen" figures are the
+reflection's and were not re-counted.
+
+### Implication
+
+For the paper's account of LLM-assisted pipeline building: reviewers differ
+by method, reading for trust boundaries against executing attacks, at least
+as much as by model family, and a single reviewer's clean pass says little
+about the other method's classes. A fix is also new code, and fixes were a
+source of the next round's findings. Review of a mechanical gate therefore
+has no natural stopping point unless one is set in advance. The threat model
+says the executor acts in good faith, while the reviewers attacked as if it
+did not, which finds real gaps but never ends. This motivated the gate 1.3
+specification's stopping rule for hardening
+(`wiki/planning/reproduction-gate-1-3-design.md` §2, on branch
+`feat/lane-gate-1-1-code-audit`): findings are classed as defect (always
+fixed), ordinary route (always closed), deliberate concealment (closed only
+if the check is cheap), or outside the model (documented, never built); each
+reviewer gets one review of the specification and one of the built gate; and
+a final round with no defect or ordinary-route finding closes the hardening.
+It reopens only for a defect or an ordinary route seen in practice. Reports
+and papers describe the lane as checked against a good-faith executor, never
+as tamper-proof. Relations: Observation 35 (a control is aspirational until
+its log shows a real pass); Observation 41 (the same PR's audit of the
+pilots). Anchors:
+`~/agent-mail/codex/outbox/claude/20261005T020543Z-codex-repro-pr7-review.md`,
+`20261005T043125Z-codex-repro-pr7-delta-review.md`,
+`20261005T055227Z-codex-repro-gate13-design-review.md`;
+`~/agent-mail/claude/outbox/claude/20261005T044136.617510Z-claude-pr7-fable-review-reply.md`;
+`wiki/reflections/session-reflection.md` Entry 22; the WN-al entry in
+`wiki/continuity.md`.
