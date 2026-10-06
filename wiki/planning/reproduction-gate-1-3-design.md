@@ -2,23 +2,26 @@
 title: "Reproduction lane gate 1.3 — consolidated specification"
 tags: [reproduction, validation, mechanical-verification]
 created: 2026-10-05
-updated: 2026-10-05
+updated: 2026-10-06
 status: foundations-built
 ---
 
 # Reproduction lane gate 1.3: consolidated specification
 
-**Status (2026-10-05, revision 1): the foundations are built; the rest is
+**Status (2026-10-06, revision 2): the foundations are built; the rest is
 not.** This is the one effective text. It replaces the draft's §§1–7 and
 both of its revision sections. Where it differs from them, this text
 governs. The superseded draft is archived at
 `archive/planning/reproduction-gate-1-3-design-draft-2026-10-05.md`, as the
 file stood at `2bd35aa`.
 
-- **Reviews of this text:** Fable's arrived and is folded in below
+- **Reviews of this text:** Fable's is folded in as revision 1
   (`~/agent-mail/claude/outbox/claude/20261005T062807.778832Z-claude-pr7-fable-gate-1-3-spec-review.md`,
-  plus two follow-ups by SendMessage on `R CMD`). **Astra's is pending**, so
-  a second revision follows it.
+  plus two follow-ups by SendMessage on `R CMD`). Astra's is folded in as
+  revision 2
+  (`~/agent-mail/codex/outbox/claude/20261005T071630Z-codex-repro-gate13-consolidated-review.md`,
+  against `b409ef5`). **Both reviews of this text are complete.** The next
+  review is the final one, of the built gate (§2.2).
 - **Built:** F1, the record boundary (`0ce7f25`); F2, run and output
   binding (`f07763a`); F3, issues, rulings, and admission (`59f4e58`). See
   §15.
@@ -29,6 +32,14 @@ file stood at `2bd35aa`.
   (§6); outputs outside the mount path (§7); trace order, the saved parent
   profile, `R CMD`, and littler (§8, §10); conversions (§11); host runs
   (§12); and the matrix (§13).
+- **Changes in revision 2** (from `b409ef5`, Astra's review of this text):
+  the assurance statement (§2.3); delivery and retention pinned, the three
+  completion facts, and `JOIN` for forked children (§4); per-load binding,
+  with the tool-internal exception narrowed to mapped loads (§3, §8);
+  dates and undeclared datetimes as wall-clock values, missing-marker
+  collisions, and unchecked sheets (§11); the matching fixtures (§13); the
+  F1 corrections added to the instrumentation stage (§15); and the review
+  points in §2.4 and §16.
 
 **Sources consolidated:**
 
@@ -177,15 +188,19 @@ Shawn may reclassify any finding.
 
 ### 2.3 What the rule accepts
 
-An undeclared deviation by a good-faith executor reaches an admitted result
-only if all three of these hold:
-
-- it travels by a B or C route, or by a route nobody has found;
-- the adversarial reviewer misses it;
-- the human ruling misses it.
+A review round with no remaining D or A finding establishes one thing: no
+known ordinary route is left unaddressed. It does not establish that an
+undeclared deviation must pass three independent barriers, because a
+route nobody has raised never reaches a human ruling, and §6 requires a
+ruling only on the issues the gate raises (Astra, revision 2, D-1). What
+the rule accepts is therefore this: an undeclared deviation by a
+good-faith executor reaches an admitted result only by a B or C route, or
+by a route nobody has found, with the adversarial review and the required
+rulings as backstops rather than guarantees.
 
 The lane is checked against an executor acting in good faith. Gate reports
-and papers describe it that way, never as tamper-proof.
+and papers describe it that way, never as tamper-proof, and never as
+reviewed to completeness.
 
 ### 2.4 The open review points, classified
 
@@ -239,6 +254,12 @@ and papers describe it that way, never as tamper-proof.
 | Forged event lines in the stream (Astra 1) | B | §14 |
 | Direct `exec/R` start (probe fact 4) | B | §14 |
 | Host rewrite of sealed receipts (Astra 1) | C | §1, runbook |
+| Assurance statement overstated (Astra, spec D-1) | D | §2.3 |
+| Completeness overstated; non-blocking logs (Astra, spec D-2) | D | §4, §13 |
+| Nesting alone confers provenance (Astra, spec D-3) | D | §3, §8, §13 |
+| Workbook datetime read as a UTC instant (Astra, spec D-4) | D | §11, §13 |
+| Missing-marker collision clears a change (Astra, spec A-1) | A | §11, §13 |
+| Unchecked sheets outside the clearing rule (Astra, spec D-5) | D | §11, §13 |
 
 ## 3. Terms: trees, runs, and provenance classes
 
@@ -280,11 +301,17 @@ This resolves the drafts' disagreement on generated code.
    injects into the work copy. The lane knows their digests and records
    them in the receipt. The executor never declares them, and the work copy
    is compared against a baseline taken after they are in place (§4).
-5. **Tool-internal:** code a traced tool loads during a traced call on an
-   accounted file. Examples are chunks `knitr` evaluates while knitting an
-   original, and the wrapper `Rcpp::sourceCpp` writes to the temporary
-   directory and sources. These loads are attributed to the enclosing call
-   by nesting (§8). Code loaded from the image outside the work copy, and
+5. **Tool-internal:** code a traced tool generates and loads during a
+   traced call on an accounted file, where the lane can map the load to
+   its source. Examples are chunks `knitr` evaluates while knitting an
+   original, mapped to that document's chunks by md5, and the wrapper
+   `Rcpp::sourceCpp` writes to the temporary directory and sources, mapped
+   to the `.cpp` it was built from. Nesting alone confers nothing: each
+   load inside the call is still bound on its own to an original, a
+   declared wrapper, lane instrumentation, or an entry on the lane's list
+   of tool-generated bootstrap files and chunk forms, each with its source
+   mapping (§8). An unmapped nested load is unaccounted (Astra, revision
+   2, D-3). Code loaded from the image outside the work copy, and
    not nested in such a call, is **image code**. It is listed, and flagged
    unless it lies in an R library path or is a tool launcher on the lane's
    list, recorded with its digest. Quarto's `knitr` engine script is the
@@ -332,13 +359,22 @@ stored as `events.log` in the run record. The stdout stream is collected as
 the run's console output, `outputs/run-NN/stdout.log` (§5), which keeps
 chatty output out of the events.
 
-**Log settings.** The lane passes `--log-driver json-file` and
-`--log-opt max-size=100g` explicitly, and reads `HostConfig.LogConfig` back
-into `run.json` at start, recording a problem if rotation could apply. A
-rotated stream loses events, and the gap check would then end a multi-hour
-run `incomplete` (Fable's review of this text, Q2). Docker accepts
-`max-size=-1` when creating a container but refuses it at start, hence the
-explicit, effectively unbounded size.
+**Log settings.** The lane passes `--log-driver json-file`,
+`--log-opt max-size=100g`, `--log-opt max-file=1`, and
+`--log-opt mode=blocking` explicitly, and reads `HostConfig.LogConfig` back
+into `run.json` at start. The read-back must show exactly that
+configuration: the driver, one retained file, the size, and blocking
+delivery. Docker's non-blocking mode drops new messages when its buffer
+fills. It is a supported configuration, not daemon misbehaviour, so a
+daemon default of `mode=non-blocking` would lose events silently (Astra,
+revision 2, D-2). A run whose read-back differs is stopped and sealed
+`incomplete`, and no ruling clears it. The finite size is a limit, not
+proof of no rotation, and both streams count towards the one file,
+stdout included, so the read-back and the gap check are both needed. A
+rotated stream loses events, and the gap check would then end a
+multi-hour run `incomplete` (Fable's review of this text, Q2). Docker
+accepts `max-size=-1` when creating a container but refuses it at start,
+hence the explicit, effectively unbounded size.
 
 **Event format.** One line per event, at most 4,096 bytes so that each
 write is atomic:
@@ -365,23 +401,56 @@ never wrapped. The events are:
   its first event, carrying the parent's token;
 - `END`: written by an exit finaliser when the process ends normally.
 
+**What establishes completeness.** A sequence check detects a missing
+middle. It cannot detect a missing tail, a child stream that never
+arrived, or a fork with no terminal event (Astra, revision 2, D-2).
+Completeness therefore rests on three recorded facts, which the gap check
+corroborates but never replaces:
+
+1. **Delivery.** The log configuration read back at start is the
+   blocking, single-file, sized configuration above, so every line the
+   shim or the hook wrote reached the daemon and was retained.
+2. **Stream end.** The container's exit was observed (`docker wait`
+   returned its status), and `docker logs` returned without error after
+   it. The collected stream is then everything the daemon holds for the
+   container.
+3. **Process end.** Each process has its terminal event: `END` for a
+   process the hook runs in, or, for a forked child, a `JOIN` in its
+   parent naming the child's token (below).
+
 **Incomplete and abnormal processes:**
 
 - A process whose sequence numbers have a gap, or repeat, has lost or
   gained lines. It is **incomplete**, and so is its run (§5). This catches
   log rotation dropping lines, and a forged line inserted with the next
   number, which the hook's own next line then repeats.
-- A process with a `START`, no `END`, and no gap **ended abnormally**: its
-  events up to the end are whole. Its run is `failed`, not `incomplete`.
-- A forked child inherits the hook. After `FORK` its sequence restarts, and
-  it needs no `EXEC`, `START`, or `END`, because forked children leave
-  through `_exit`.
+- A process with a `START` and no `END` **ended abnormally** only when
+  facts 1 and 2 hold and it has no gap. Its events up to the end are then
+  whole, and its run is `failed`, not `incomplete`. If either fact is
+  missing, because the read-back differed, the exit was not observed, or
+  the collection errored, the run is **incomplete**, and no ruling clears
+  it. Missing terminal evidence never defaults to `failed`.
+- A forked child inherits the hook. After `FORK` its sequence restarts,
+  and it needs no `EXEC` or `START`, because forked children leave through
+  `_exit` and run no finaliser. Its terminal event is its parent's. The
+  hook traces `parallel::mccollect` and the return of
+  `parallel::mclapply`, and emits `JOIN` with the tokens of the children
+  whose results were collected. A `FORK` that no `JOIN` names by the end
+  of its parent is **incomplete**. A `FORK` that no parent event precedes
+  is unaccounted and fails.
+- A child whose stream never arrived leaves no event to check. Facts 1
+  and 2 exclude a daemon-side loss, so a missing child is one the shim
+  did not start. The census fails it (`uninstrumented-process`, §8)
+  wherever a parent event or the transcript shows the launch. A child
+  that left no trace anywhere is a B route (§14).
 
 **The alternative channel** was a FIFO in a read-only mount with a host
 collector, which the probe also confirmed. Fable accepted the log stream on
 three conditions, all built: explicit log settings, stdout diverted, and
 the repeated-sequence check. The FIFO's collector would be one more thing
-to die during a detached run. Astra's view is pending (§16, question 2).
+to die during a detached run. Astra accepted the log stream too, on the
+condition that delivery and retention are pinned and verified, which
+revision 2 does. The FIFO is not built.
 
 **Baseline.** The lane copies the input tree into the work copy and then
 hashes the copy. It must equal the run's pre snapshot of the input tree,
@@ -725,16 +794,26 @@ accounts for itself (Astra 3).
 **The gate's account of a run:**
 
 - **`LOAD`** must resolve to an original (by md5, computed by the gate for
-  every original), a declared wrapper, or lane instrumentation. A nested
-  load inside a traced tool call on an accounted file is tool-internal.
-  Otherwise the run is generated or unaccounted, and fails.
-- **`TEXT`** is attributed to its innermost enclosing `LOAD`:
-  - inside an original, or a tool call on one, it is the authors' own code;
-  - inside a wrapper, or at depth 0, it must match by md5 one of: an
-    original file; one code chunk of an original R Markdown or Quarto
-    document; or an entry on the lane's list of tool expressions. The
-    PSOCK worker's start-up `-e` expression, seen in the probe, is the
-    first entry, and the launcher matrix supplies the rest.
+  every original), a declared wrapper, or lane instrumentation. The
+  binding is made for every load on its own, whatever call encloses it.
+  The tool-internal exception (§3, class 5) applies only to a nested load
+  the lane can map to its source: a tool-generated bootstrap file on the
+  lane's list, or a chunk file whose content matches by md5 a chunk of
+  the accounted document the enclosing call is knitting. A nested load
+  that maps to nothing, such as a helper sourced from a path taken from a
+  parameter, or a generated file loaded under `knit`, is generated or
+  unaccounted, and fails. Nesting under `knit` waives nothing (Astra,
+  revision 2, D-3).
+- **`TEXT`** is attributed to its innermost enclosing `LOAD`, and must
+  then match by md5 one of: an original file; one code chunk of an
+  original R Markdown or Quarto document; or an entry on the lane's list
+  of tool expressions. The match is required inside an original, or a
+  tool call on one, as much as inside a wrapper or at depth 0, because
+  text evaluated inside an original may have come from a parameter or a
+  string built at run time rather than from the original's own chunks
+  (Astra, revision 2, D-3). The PSOCK worker's start-up `-e` expression,
+  seen in the probe, is the first list entry, and the launcher matrix
+  supplies the rest.
 
   A match is accounted for. Anything else is an obligation
   (`unmatched-text`), not an error, because ordinary bootstrap code also
@@ -826,7 +905,11 @@ is fail-and-uplift.
 - `header_row` (default 1);
 - `encoding` (default UTF-8) for text formats;
 - `na`, the converter's string for a missing value (`NA` for R's
-  `write.csv`), if it writes one.
+  `write.csv`), if it writes one;
+- `timezone`, optional, the source's zone for datetime cells, with the
+  evidence for it (the authors' code or documentation naming the zone);
+- `reader`, optional, the consuming reader and the settings it uses for
+  the missing marker, where a collision (below) is to be cleared.
 
 The lane does the comparison and the executor writes no evidence, so the
 executor-written `value_identity_check` field is retired. The comparison's
@@ -859,7 +942,8 @@ workbook cell has a value, and its accepted renderings are enumerated
 | string | its text, exactly (leading zeros and spaces preserved) |
 | number | any text parsing to the same double, at most 15 significant digits |
 | boolean | `TRUE` or `FALSE` |
-| date or datetime | ISO 8601 text for the same instant (see below) |
+| date | ISO 8601 date text for the same calendar date |
+| datetime | wall-clock fields unless a source `timezone` is declared (below) |
 | blank | the empty field, or exactly the declared `na` string |
 
 - **Numbers.** R's `write.csv` renders by width under `scipen`, so 100000
@@ -867,9 +951,17 @@ workbook cell has a value, and its accepted renderings are enumerated
   would flag every count column at or above 1e5. Value identity for a
   double is what §7(d) asks. The leading-zero and identifier risks do not
   arise for a cell that is already a number: those are strings.
-- **Datetimes.** readxl returns UTC instants, and `write.csv` renders them
-  in the session's timezone. They are compared as instants after a
-  timezone-aware parse, and a value without a zone is read as UTC.
+- **Dates and datetimes.** A workbook datetime carries no timezone.
+  openpyxl returns it naive, and readxl's UTC is a convention, not evidence
+  that the source denoted a UTC instant (Astra, revision 2, D-4). A date
+  cell is compared as a calendar date, and a date rendered with a time or
+  a zone is a value change. An undeclared datetime is compared as
+  wall-clock fields against the output's text, so a rendering that moves
+  the clock, such as `14:00+02:00` for a cell holding `12:00`, differs and
+  stays an issue. Instant equivalence applies only where the declaration
+  carries a `timezone` with its evidence, and both sides are then parsed
+  in that zone. An absent or ambiguous zone is never resolved by
+  assumption.
 - A typed cell matched in a rendering other than the canonical one clears,
   but is counted ("same value, other rendering"), so the human sees it.
 - In text-to-text comparison, a numeric field whose text differs but whose
@@ -893,6 +985,12 @@ cleared:
 - missing-marker changes: a blank written as anything but the empty field
   or the declared `na` string, or `""`, `NA`, `NaN`, and `NULL` traded for
   one another;
+- missing-marker collisions: a column in which the declared `na` string,
+  or the empty field, also occurs as a literal source value, so that a
+  reader applying the marker cannot tell the original text from a missing
+  value. R's `read.csv` treats `NA` as missing by default, in quoted
+  fields too, so a declaration alone proves nothing (Astra, revision 2,
+  A-1);
 - whitespace-only differences, leading or trailing;
 - other value changes;
 - formulae, error values, and decoding failures;
@@ -903,7 +1001,15 @@ cleared:
 - the dimensions are equal, after trimming;
 - the headers are exact;
 - every cell matches, as above;
-- there are no formulae, error values, or decoding failures.
+- there are no formulae, error values, or decoding failures;
+- no column has a missing-marker collision, unless the declaration names
+  the consuming `reader` and its settings and the lane confirms that they
+  keep the literal value and the missing value apart (Astra, revision 2,
+  A-1);
+- every non-empty sheet of a workbook was checked, or the declaration
+  limits the claim to the checked sheet or range and the report states
+  that scope. Identity is never reported for the whole workbook when a
+  non-empty sheet went unchecked (Astra, revision 2, D-5).
 
 Anything else is an issue (`conversion-differs`) reporting the counts and
 the first five differing cells, raw and typed. The human rules
@@ -949,7 +1055,16 @@ them run on a host with Docker.
 - **Record boundary:**
   - a container write to `/lane` or to the run records fails at the mount;
   - the gate passes its own instrumentation;
-  - a broken receipt chain fails.
+  - a broken receipt chain fails;
+  - a stream with a missing tail: `START`, events, and no `END`, with the
+    exit observed and the configuration verified, is `failed`; the same
+    with the collection errored, or the read-back differing, is
+    `incomplete`;
+  - a wholly missing short child: a `FORK` that no `JOIN` names is
+    `incomplete`, and a shimmed child whose `EXEC` has no `START` fails
+    the census;
+  - a non-blocking logger: a read-back showing `mode=non-blocking` seals
+    the run `incomplete`.
 - **Run binding:**
   - an output edited after the run fails (A14);
   - a stale output surviving a failed re-run is not creditable;
@@ -988,7 +1103,12 @@ them run on a host with Docker.
   - a generated file loaded later (fails);
   - `parse(text =)` from `knitr` chunks (accounted for);
   - a wrapper evaluating an edited chunk (an obligation);
-  - a locally installed package (flagged).
+  - a locally installed package (flagged);
+  - an original that sources a helper at a path taken from a parameter,
+    outside the work tree, under `knit` (unaccounted; fails);
+  - a generated file loaded under `knit` (fails);
+  - text evaluated inside an original that came from a parameter rather
+    than from a chunk (an obligation).
 - **Conversions:** fixtures for:
   - `007`, `1.50`, an integer above 2^53, and `1E3` as text;
   - `NA` against `""`, and leading and trailing spaces;
@@ -996,7 +1116,13 @@ them run on a host with Docker.
   - a formula cell, an error cell, and trailing empty rows;
   - reordered rows;
   - `100000` written by base R (`1e+05`), a datetime under a non-UTC
-    timezone, and a blank written as `NA`.
+    timezone, and a blank written as `NA`;
+  - a date-only cell, and a `12:00` cell against `14:00+02:00` (an issue
+    without a declared zone);
+  - a column holding literal `NA` text and a blank, converted with `na`
+    declared as `NA` (a collision; an issue);
+  - a workbook with an additional non-empty unchecked sheet (not cleared;
+    scope-limited identity only when declared).
 - **Semantics neutrality:** a fixture's results, `ls()`, `search()`, and
   random-number state are equal with and without instrumentation.
 - **A pilot re-run** through the whole lane, herskind's (§2.2), in the final
@@ -1059,7 +1185,10 @@ matrix about two more, and the rest one or two, plus the review rounds of
   - the admission rules in `persist-results` and `human-queue`.
 - [ ] **Instrumentation:** the full hook (§8), with traces installed before
   the profile; `PKGBUILD` for `R CMD INSTALL`; the littler shim; the
-  remaining census rules; and the launcher matrix.
+  remaining census rules; the launcher matrix; and the revision-2
+  corrections to F1, namely `max-file=1` and `mode=blocking` passed and
+  read back, the three completion facts in the state rule, `JOIN` for
+  forked children, and per-load binding of nested loads (D-2, D-3).
 - [ ] **Fresh computation** (§9).
 - [ ] **Conversions** (§11) and the **static additions** (§10).
 - [ ] **The transcript audit** (§12), which writes `transcript-audit.json`;
@@ -1079,8 +1208,14 @@ Reply by agent mail (Astra) or by agent mail or SendMessage (Fable), never on
 GitHub. Classify each finding as D, A, B, or C (§2.1). For an A, give the
 ordinary sequence of actions.
 
-**Fable answered all five** (2026-10-05; folded into revision 1). **Astra's
-answers are pending.**
+**Fable answered all five** (2026-10-05; folded into revision 1). **Astra
+answered all five** (2026-10-05, read 2026-10-06; folded into revision
+2): the stopping rule is accepted, with the assurance statement narrowed;
+the log stream is accepted, with delivery and retention pinned; the shim
+is sufficient for class A conditional on the real launcher matrix, and no
+further ordinary bypass is known; the renderings are sound with three
+corrections; and no unstated contradiction was named. Both reviews of
+this text are complete.
 
 1. **Stopping rule.** Do you accept §2 and the classification in §2.4? Name
    any point you would reclassify, and why.
