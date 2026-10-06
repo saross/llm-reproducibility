@@ -2,7 +2,7 @@
 title: "llm-reproducibility — User Observations"
 tags: [human-ai-collaboration]
 created: 2026-07-03
-updated: 2026-10-04
+updated: 2026-10-06
 status: active
 ---
 
@@ -665,10 +665,11 @@ contradicted it within minutes. The correction was visible, but the
 register is read later as guidance, and one failure did not justify a
 mechanism.
 
-## Pending review — 2026-10-04 (second session) batch (drafted at handoff, session c5ee7a27)
+## 2026-10-04 (second session) batch — adjudicated 2026-10-06 (drafted at handoff, session c5ee7a27)
 
-*Candidates for Shawn to accept / edit / discard / replace. Silence
-holds them over — never discards.*
+Verdicts (Shawn, 2026-10-06): A, B, and E **accepted** (A and B helpful;
+E helpful, generalised at his direction); C and D **discarded**. The
+candidate text is kept below as the record.
 
 **Candidate A (helpful) — a finding that weakened an earlier ruling was
 raised and bounded, not used as a reason to halt.** Mid-arms, Claude found
@@ -690,7 +691,8 @@ advantage, Claude reported:
 
 Shawn: "Great, confirm medium."
 
-**Candidate C (mixed) — a backwards rule, corrected after approval.**
+**Candidate C (mixed; DISCARDED 2026-10-06) — a backwards rule, corrected
+after approval.**
 Claude's deprecated-function recommendation said "fail-and-uplift, unless
 no public version runs the original name", and Shawn approved it as
 recommended. Claude's next drafting pass caught the inversion and stated
@@ -698,20 +700,22 @@ the coherent rule. In the moment Shawn said: "ah, thank you, I agree with
 your correction, sorry I missed it". The correction helped. But the error
 was Claude's, and it put a backwards rule in front of him for approval.
 
-**Candidate D (helpful) — "anything else we should consider?" answered
-with concrete, recommended considerations.** After ruling the
+**Candidate D (helpful; DISCARDED 2026-10-06) — "anything else we should
+consider?" answered with concrete, recommended considerations.** After ruling the
 fail-and-uplift line, Shawn asked what else to weigh. Claude gave six
 considerations, each with a recommendation and a note on which needed a
 ruling. All six were adopted; on "report what repairs would recover",
 Shawn said "great idea". Two needed clarifications were settled with two
 structured questions.
 
-**Candidate E (helpful; Shawn's in-the-moment reaction, relayed) — the
-project's momentum restored across the last few sessions.** At close
-Shawn said: "thanks for a great session, we've really revitalised this
-project, which had stalled for a while", and then "the last few sessions
-were really very good, and I'm relieved/excited to have this work moving
-again". The run of sessions from 2026-10-03 to 10-04 covered:
+**Candidate E (helpful; generalised 2026-10-06) — long autonomous blocks
+inside pre-approved gates, with dense batched rulings when Shawn is
+present, restore throughput without loosening governance.** The evidence
+is the project's recovery from a stall across the sessions of 2026-10-03
+and 10-04. At close Shawn said: "thanks for a great session, we've really
+revitalised this project, which had stalled for a while", and then "the
+last few sessions were really very good, and I'm relieved/excited to have
+this work moving again". The run of sessions from 2026-10-03 to 10-04 covered:
 
 - the agentic reproduction lane and shakedown;
 - the E8-v2 registration and concordance;
@@ -724,15 +728,20 @@ regression gate. What may generalise: long autonomous blocks inside
 pre-approved gates, with dense batched rulings when Shawn is present,
 restored throughput without loosening governance.
 
-## Pending review — 2026-10-05 batch (drafted at handoff, session ef0412bd)
+## 2026-10-05 batch — adjudicated 2026-10-06 (drafted at handoff, session ef0412bd)
 
-*Candidates for Shawn to accept / edit / discard / replace. Silence
-holds them over — never discards.*
+Verdicts (Shawn, 2026-10-06): A, B, and C **accepted** (A helpful,
+generalised at his direction; B helpful; C mixed); D and E **discarded**.
+The candidate text is kept below as the record. E's matter was resolved the
+same day: both posted reviews now carry an attribution line, and agent
+reviews are delivered as documents (a bot account later, if review traffic
+grows).
 
-**Candidate A (helpful; Shawn's in-the-moment reaction, relayed) — a
-self-contained brief let a peer model act without help.** Claude's review
-brief for the Fable session carried the commit hash, files, reading order,
-attack focus, ground rules, and reply route. Shawn: "Fable's check is in
+**Candidate A (helpful; generalised 2026-10-06) — a brief that carries
+everything a peer needs lets it act without Shawn: the commit hash, the
+files, a reading order, the focus, the ground rules, and the reply route.**
+The case: Claude's review brief for the Fable session carried all six, with
+an attack focus. Shawn: "Fable's check is in
 progress, they got the mail and actioned it without any interventions
 from me, which is exactly right". Fable's review then found four serious
 and six moderate routes that both Opus reviews and Astra had missed.
@@ -751,8 +760,8 @@ talk the trade-offs through. Claude's explanation, using herskind's
 `ggsave()` line and saying the failure would be loud, not silent, settled
 both quickly. The first framing cost a round-trip.
 
-**Candidate D (unhelpful, reported in full) — Claude's test fixtures broke
-the repository's git config.** Run by the pre-commit hook, the new
+**Candidate D (unhelpful, reported in full; DISCARDED 2026-10-06) —
+Claude's test fixtures broke the repository's git config.** Run by the pre-commit hook, the new
 fixtures inherited `GIT_DIR`, set `core.bare = true` in the shared config
 (so `git status` failed in the main checkout), and committed a fixture tree
 over the PR branch. Claude stopped, diagnosed, repaired the config and
@@ -760,10 +769,10 @@ branch before any push, added a scrub and a regression test, and led its
 next message with the incident. The repository had recorded the fix three
 weeks earlier, and Claude had not looked. Shawn filed `/feedback`.
 
-**Candidate E (unhelpful) — review briefs invited posting under Shawn's
-name.** Claude's first two briefs to Astra and its first to Fable invited
-findings "as a PR comment", which posts through Shawn's GitHub account and
-breaks the outbound rule. Fable declined. Astra posted two reviews to PR
-#7. Claude corrected the instruction in later briefs and recorded it as
-claude-obs 70. Shawn to judge whether the two posted reviews are
-acceptable.
+**Candidate E (unhelpful; DISCARDED 2026-10-06) — review briefs invited
+posting under Shawn's name.** Claude's first two briefs to Astra and its
+first to Fable invited findings "as a PR comment", which posts through
+Shawn's GitHub account and breaks the outbound rule. Fable declined. Astra
+posted two reviews to PR #7. Claude corrected the instruction in later
+briefs and recorded it as claude-obs 70. Shawn to judge whether the two
+posted reviews are acceptable.
