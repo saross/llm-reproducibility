@@ -30,7 +30,71 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-10-06, session b1a1e102 close) — START HERE
+## Repo state (2026-10-06, session fabeab56 close) — START HERE
+
+- **⏩ START HERE: Shawn rules D-7 to D-9 and the Q5/Q6 dates, then lodge
+  amendment 3, then finish the gate 1.3 instrumentation.**
+  1. **Amendment 3** (`23c72fc` on main) is revised after Astra's review
+     and the registrant's read. The revision record at the end of
+     `studies/open-science-compliance/prereg/amendment-3-draft.md` lists
+     each finding's disposition, the consistency check's deliberate
+     differences, the token checks, and the register exit checks.
+     Checklist steps 2–4 are done; steps 5–6 ran on the working tree
+     (gate PASS, 387 tests) and re-run at the lodgement commit. **Shawn
+     rules:** D-7 (supplied pins take precedence over the date search;
+     proposed (a)), D-8 (validation independence; proposed (a), a second
+     rater is (b)), D-9 (the ledger's pass predicate), and the ruling
+     dates of audit Q5 and Q6: `findings.json` says 2026-10-05 for all
+     ten, its commit `c4553f9` is dated 2026-10-06, and the draft labels
+     Q6 10-05 and Q5 10-06. Then strip the `[D-n]` markers, set the banner
+     date, regenerate `osf-amendment-3.txt` (the generator is in this
+     session's scratchpad; the recipe is the README's), re-run the gate
+     and tests at the lodgement commit, tag `osf-amendment-3-<date>`, and
+     **ask before lodging** through the OSF API (the amendment-1 session
+     holds the recipe; `.notes/reference_register-prereg.md`).
+  2. **Gate 1.3 instrumentation** on PR #7 (`feat/lane-gate-1-1-code-audit`,
+     head `7d577b8`; worktree `.claude/worktrees/agent-a8a2378c2a5dbdc98`).
+     Built this session: spec revision 2 (`340f77d`), the F1 completeness
+     corrections (`e6fe231`), and the hook's loader traces (`7d577b8`),
+     525 tests passing. Remaining, in §15's order: the gate's account of
+     `LOAD`, `TEXT`, `CONN`, `PKG`, and `HOOKERR` events, with per-load
+     binding (D-3) and the md5 of every original; `PKGBUILD`, the littler
+     shim, and the remaining census rules; the launcher matrix on a test
+     image (Docker 29.2.1 and `rocker/r-ver:4.3.2` are on this machine);
+     the semantics-neutrality test; then §9, §11 with revision 2's
+     datetime, collision, and sheet rules, §10, §12, and the workflow
+     switch.
+- **Why it matters.** Lodgement is the hard stop before the instrument
+  edits, the regression gate, and the re-validation. The registered gate
+  cannot run until gate 1.3 merges and the correction ledger is ruled.
+- **Done this session (2026-10-06):**
+  - [x] 2026-10-06 Astra's amendment 3 review verified at source, finding
+    by finding, and folded in (`23c72fc`). Fable was consulted on D-7 to
+    D-9 by SendMessage (top-tier spend, deliberate: registered-text
+    consequences). Receipt written; reply at
+    `~/agent-mail/claude/outbox/codex/20261006T080137.160484Z-claude-repro-amendment3-revision.md`.
+  - [x] 2026-10-06 Erratum log Entry 5 carries a correction pointer for the
+    tagging dates (convention 2 October; set complete 3 October).
+  - [x] 2026-10-06 Gate 1.3 specification revision 2 from Astra's review
+    (`340f77d`). Both reviews of the specification are complete; the next
+    review is the final one, of the built gate. Reply and a fork-END
+    correction mailed.
+  - [x] 2026-10-06 Two Docker probes settled the hook design: `trace()`
+    messages go to stderr and are suppressible, but its value auto-prints
+    (wrap in `invisible`); exit tracers do not fire reliably; `mcexit`
+    fires in every forked child; `parse(text =)` is detectable with
+    `missing()`; `loadNamespace` tracing needs a re-entrancy guard that is
+    reset before the imports load.
+- **Still with Shawn:** D-7, D-8, D-9, and the Q5/Q6 dates; WN-am and
+  WN-an (session log of b1a1e102); user-obs 2026-10-06 A–C;
+  personal-assistant PR #169 (still open on 2026-10-06; once merged,
+  re-run `scripts/compose-global-claude-md.sh` and remove
+  `~/worktrees/personal-assistant/claude-review-protocol`).
+- **Carry-forward** (the section below still applies unless listed here):
+  Fable is the open session `llm-reproducibility-ea`; any git subprocess
+  scrubs `GIT_*`; reviews are documents, never posts.
+
+## Repo state (2026-10-06, session b1a1e102 close) — superseded by the section above
 
 - **⏩ START HERE: amendment 3 lodgement, then Astra's review, then gate 1.3
   instrumentation.**
@@ -1852,6 +1916,29 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-06 (session fabeab56) — amendment 3 revised after review; gate 1.3 spec revision 2; the hook's loader traces built
+
+One session on Fable 5.1, in the main checkout and the PR #7 worktree.
+
+- **Astra's amendment 3 review** (six blocking, five should-fix) was
+  verified premise by premise at source before any edit, and every premise
+  held. Three findings needed registrant decisions rather than drafting,
+  so they became D-7 to D-9 with proposed text. Fable gave a second opinion
+  by SendMessage; its refinements went in where verified, and two
+  unverified counts were dropped, then restored once Fable supplied anchors
+  that checked out.
+- **A register pass** brought the revised prose back inside the targets
+  (announcement colons 2.09 to 1.56 per thousand words) without touching
+  the quoted rulings.
+- **Gate 1.3.** Astra's specification review folded in as revision 2; then
+  the F1 completeness corrections and the hook's traces, each probed in
+  Docker before being written. Revision 2's parent-side `JOIN` lasted an
+  hour: the probe showed the child's own `mcexit` is the reliable terminal
+  event, and the text was corrected before any code was built.
+- **Pattern worth keeping.** Every multi-line edit in both repositories
+  went through an exact-once replacement script that aborts before
+  writing, so a partial edit was impossible.
 
 ### 2026-10-05 → 10-06 (session b1a1e102) — gate 1.3 consolidated, reviewed, and its foundations built; every pending ruling cleared
 
