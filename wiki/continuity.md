@@ -1917,7 +1917,7 @@ February). Low priority; logged from llm-observations 2026-07-06.
 
 ## Session log
 
-### 2026-10-06 (session fabeab56) — amendment 3 revised after review; gate 1.3 spec revision 2; the hook's loader traces built
+### 2026-10-06 (session fabeab56) — amendment 3 revised; gate 1.3 traces built
 
 One session on Fable 5.1, in the main checkout and the PR #7 worktree.
 
