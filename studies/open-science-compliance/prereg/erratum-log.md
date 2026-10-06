@@ -561,6 +561,14 @@ lodged text is amendment 3 §3(b), and the `input` tag's definition is
 clarified in the adjudication log. Which items are excluded, and every
 figure, are unchanged.
 
+**Correction (2026-10-06, Astra's amendment 3 review, should-fix 1).** The
+proposed wording's "tags were assigned on 2 October 2026" is only partly
+right. The tagging convention was adopted on 2 October (five items tagged
+at worksheet commit `7298681`), and the nine-item set was completed on
+3 October (`6c0c2ec`, `8905c6c`, `7da90bf`), before the six-arm
+concordance was computed and committed later that day (`6e0d17a`). The
+lodged text is amendment 3 §3(b), which states both dates.
+
 ## Queued amendment 3 scope (running list)
 
 **Consolidated 2026-10-04:** the full draft text of items 1–9 is in
