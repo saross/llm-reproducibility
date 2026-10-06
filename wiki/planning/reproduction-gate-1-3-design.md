@@ -719,7 +719,22 @@ The lane intervenes only at steps 2 and 4:
      `.Rprofile` in the working directory, else `~/.Rprofile`. That load is
      logged like any other.
 
-  F1 built steps 1 and 3; the traces come with the instrumentation stage.
+  F1 built steps 1 and 3. The traces are built (2026-10-06, hook
+  `1.1-inst`): `source`, `sys.source`, `parse`, and `loadNamespace` in base,
+  and, through `setHook(packageEvent(...))` so that an absent package costs
+  nothing, `parallel:::mcexit` (the forked child's `END`), `knitr::knit`,
+  `rmarkdown::render`, `Rcpp::sourceCpp`, `pkgload::load_all`,
+  `reticulate::source_python` and `py_run_file`, `box::use`, and
+  `modules::import`. A tracer calls into the hook through an option and
+  leaves no variable in the traced frame. Nesting is read from the call
+  stack at entry by frame identity, because exit tracers do not fire
+  reliably (probe, 2026-10-06). `parse()` called directly by `source()` or
+  `sys.source()` is their mechanics and is not logged twice; a package's
+  lazy-load stub, which `loadNamespace` sources, is logged as image code
+  nested under its `PKG` event. A tracer that fails reports `HOOKERR` and
+  lets the call continue, and the gate treats `HOOKERR` as an error. The
+  command-line script is a frame-less `LOAD` (`file`), so the first
+  `source()` in it is at depth 0.
 
   The lane's injected `.Rprofile` sources the hook too. A child that reads
   the working directory's profile instead of `R_PROFILE_USER` (`callr` in
@@ -1182,13 +1197,21 @@ matrix about two more, and the rest one or two, plus the review rounds of
   - issue ids and fingerprints (`Issue`), and `rule-flags`;
   - raw and admitted coverage;
   - the admission rules in `persist-results` and `human-queue`.
-- [ ] **Instrumentation:** the full hook (§8), with traces installed before
-  the profile; `PKGBUILD` for `R CMD INSTALL`; the littler shim; the
-  remaining census rules; the launcher matrix; and the revision-2
-  corrections to F1, namely `max-file=1` and `mode=blocking` passed and
-  read back, the three completion facts in the state rule, the forked
-  child's own `END` from `mcexit`, and per-load binding of nested loads
-  (D-2, D-3).
+- [ ] **Instrumentation** (in progress, 2026-10-06, on PR #7):
+  - [x] 2026-10-06 the revision-2 corrections to F1: `max-file=1` and
+    `mode=blocking` passed and read back, the three completion facts in
+    `run_state`, and the forked child's own `END` from `mcexit`
+    (`e6fe231`);
+  - [x] 2026-10-06 the full hook (§8), hook `1.1-inst`, with traces
+    installed before the profile, and a Docker-backed test of nesting,
+    `TEXT` repeats, `CONN`, `PKG`, and forked children;
+  - [ ] the gate's account of `LOAD`, `TEXT`, `CONN`, `PKG`, and `HOOKERR`
+    events (§8), with per-load binding of nested loads (D-3) and md5 of
+    every original computed by the gate;
+  - [ ] `PKGBUILD` for `R CMD INSTALL`; the littler shim; the remaining
+    census rules;
+  - [ ] the launcher matrix (§13), on the test image;
+  - [ ] the semantics-neutrality test (§13).
 - [ ] **Fresh computation** (§9).
 - [ ] **Conversions** (§11) and the **static additions** (§10).
 - [ ] **The transcript audit** (§12), which writes `transcript-audit.json`;

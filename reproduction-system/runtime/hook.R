@@ -1,4 +1,4 @@
-# Reproduction lane hook (gate 1.3, F1: handshake only).
+# Reproduction lane hook (gate 1.3: handshake and loader tracing).
 #
 # run-container makes this the user profile of every R process in a run:
 # R_PROFILE_USER points here, the lane's R_ENVIRON_USER file pins that
@@ -6,35 +6,64 @@
 # fact 1), and the .Rprofile the lane injects into the work copy sources it
 # for children that read the working directory's profile instead.
 #
-# F1 emits the per-process handshake the process census needs (spec §8):
+# Events (spec §8), one line each to PID 1's stderr, the Docker log pipe held
+# on the host, under the 4,096-byte atomic-write limit:
+#   LANE1 <nonce> <token> <pid> <ppid> <seq> <event> <tab> fields...
+#
 #   START  once, as the profile runs: hook version, working directory, the
 #          start-up variables, the site files' md5, whether R will restore a
-#          saved workspace, and argv;
-#   LOAD   for the user profile the hook sources in R's place;
+#          saved workspace, and argv.
+#   LOAD   a file R loads: function, resolved path, md5, size, depth, and the
+#          seq of the enclosing LOAD (0 at the top). Emitted for the script
+#          named on the command line ("file"), the user profile ("profile"),
+#          source(), sys.source(), parse(file =), and, when their packages
+#          load, knitr::knit, rmarkdown::render, Rcpp::sourceCpp,
+#          pkgload::load_all, reticulate::source_python and py_run_file,
+#          box::use, and modules::import.
+#   TEXT   code evaluated from a string, parse(text =) or a -e expression: the
+#          md5 of the text joined by newlines and ending in one, its length
+#          in bytes, depth, and enclosing seq. Repeats of one md5 in one
+#          process are counted, not logged again; END carries the count.
+#   CONN   source() or parse() of a connection or of expressions: the
+#          function, class, and description, depth, and enclosing seq. A path
+#          hash does not cover such content, so the gate makes it an
+#          obligation.
+#   PKG    a namespace load: name, version, library path, the DESCRIPTION's
+#          Repository, RemoteType, RemoteSha, and Packaged fields, and the
+#          DESCRIPTION's md5. Once per package per process.
 #   FORK   first, in a forked child (parallel::mclapply), with the parent's
-#          token;
-#   END    from an exit finaliser, when the process ends normally.
-# Loader tracing (LOAD for source() and friends, TEXT, CONN, PKG) comes in
-# the instrumentation stage. Its traces must be installed BEFORE the user
-# profile is sourced, or loads made inside it (renv's activate.R) go
-# unlogged (Fable's specification review, D-1).
+#          token.
+#   END    from an exit finaliser when the process ends normally, or, in a
+#          forked child, from a trace on parallel:::mcexit, which every
+#          mclapply and mcparallel child calls before it leaves through _exit.
+#          Field: the number of suppressed TEXT repeats.
+#   HOOKERR a tracer failed: the function and the message. A load may then
+#          have gone unlogged, so the gate treats it as an error.
 #
-# Events go to PID 1's stderr, the Docker log pipe held on the host, one line
-# each, under the 4,096-byte atomic-write limit:
-#   LANE1 <nonce> <token> <pid> <ppid> <seq> <event> <tab> fields...
+# The traces are installed BEFORE the user profile is sourced, or loads made
+# inside it (renv's activate.R) would go unlogged (Fable's specification
+# review, D-1). trace() rewrites the traced functions in their namespaces; its
+# messages go to stderr and are suppressed, and its return values are made
+# invisible so that nothing reaches stdout. A tracer runs in the traced
+# function's own frame; it only calls into the hook through an option, so it
+# leaves no variable behind in that frame. Nesting is read from the call
+# stack at entry, by frame identity and sys.parents(), because exit tracers
+# do not fire reliably (2026-10-06 probe).
+#
 # The token is the one the exec shim minted for this process, so the census
-# pairs EXEC and START on it rather than on a PID that can repeat. Strings are
-# hex-encoded UTF-8. The hook keeps its state out of the global environment
-# and the search path, never touches .Random.seed (its own randomness comes
-# from /dev/urandom), and writes nothing to stdout (semantics neutrality,
-# spec §8). If the stream cannot be written, the process stops rather than
-# run unrecorded.
+# pairs EXEC and START on it rather than on a PID that can repeat. Strings
+# are hex-encoded UTF-8. The hook keeps its state out of the global
+# environment and the search path, never touches .Random.seed (its own
+# randomness comes from /dev/urandom), and writes nothing to stdout
+# (semantics neutrality, spec §8). If the stream cannot be written, the
+# process stops rather than run unrecorded.
 
 local({
     if (isTRUE(getOption("lane.hook.loaded"))) {
         return(invisible(NULL))
     }
     options(lane.hook.loaded = TRUE)
+    hook_env <- environment()
 
     hex <- function(x) {
         vapply(x, function(s) {
@@ -42,12 +71,18 @@ local({
         }, character(1), USE.NAMES = FALSE)
     }
     fresh_token <- function() {
-        random <- tryCatch(readBin("/dev/urandom", "raw", 8L), error = function(e) raw(0))
+        # raw = TRUE: /dev/urandom is not a regular file, and R 4.3 warns
+        # otherwise, which would reach the analysis (options(warn = 2)).
+        random <- tryCatch({
+            con <- file("/dev/urandom", open = "rb", raw = TRUE)
+            on.exit(close(con), add = TRUE)
+            readBin(con, "raw", 8L)
+        }, error = function(e) raw(0), warning = function(w) raw(0))
         paste0(Sys.getpid(), "-r", paste(as.character(random), collapse = ""))
     }
 
     state <- new.env(parent = baseenv())
-    state$version <- "1.0-f1"
+    state$version <- "1.1-inst"
     state$nonce <- Sys.getenv("LANE_RUN_NONCE", "none")
     state$seq <- 0L
     state$pid <- Sys.getpid()
@@ -58,6 +93,12 @@ local({
     } else {
         fresh_token()
     }
+    state$loads <- list()          # active LOADs: list(env = <frame>, seq = <seq>)
+    state$text_seen <- new.env(parent = emptyenv())
+    state$text_repeats <- 0L
+    state$pkg_seen <- new.env(parent = emptyenv())
+    state$in_pkg <- FALSE          # re-entrancy guard for the loadNamespace tracer
+    state$ended <- FALSE
 
     parent_pid <- function() {
         # Field 4 of /proc/self/stat, counted after the parenthesised command
@@ -68,8 +109,21 @@ local({
         if (length(fields) >= 2) fields[2] else "0"
     }
 
-    md5_or_none <- function(path) {
-        if (file.exists(path)) unname(tools::md5sum(path)) else "none"
+    is_file <- function(path) {
+        length(path) == 1L && !is.na(path) && file.exists(path) && !dir.exists(path)
+    }
+    md5_or_none <- function(path) if (is_file(path)) unname(tools::md5sum(path)) else "none"
+    size_or_none <- function(path) if (is_file(path)) as.character(file.size(path)) else "none"
+    resolved <- function(path) {
+        tryCatch(normalizePath(path, mustWork = FALSE), error = function(e) as.character(path))
+    }
+    text_md5 <- function(joined) {
+        # tools::md5sum hashes files only (R 4.3), so the text is written with
+        # one final newline; the gate hashes chunks the same way.
+        tmp <- tempfile("lane-text-")
+        on.exit(unlink(tmp), add = TRUE)
+        writeLines(joined, tmp, useBytes = TRUE)
+        unname(tools::md5sum(tmp))
     }
 
     write_line <- function(event, fields) {
@@ -91,6 +145,10 @@ local({
     }
 
     emit <- function(event, fields = character()) {
+        # Fields are computed first: computing them can itself trace an event
+        # (tools::md5sum loads a namespace), which must take its number and
+        # be written before this one.
+        force(fields)
         if (Sys.getpid() != state$pid) {
             # A forked child inherits this state: give it its own token and
             # sequence, and say whose fork it is.
@@ -98,12 +156,249 @@ local({
             state$pid <- Sys.getpid()
             state$token <- fresh_token()
             state$seq <- 1L
+            state$loads <- list()
+            state$ended <- FALSE
             write_line("FORK", parent)
         }
         state$seq <- state$seq + 1L
         write_line(event, fields)
+        state$seq
     }
 
+    emit_end <- function() {
+        if (!state$ended) {
+            state$ended <- TRUE
+            emit("END", as.character(state$text_repeats))
+        }
+    }
+
+    # -- Nesting -----------------------------------------------------------
+    # A tracer runs in the traced function's own frame and hands that frame
+    # to the hook. Active loads are those whose frame environment is still
+    # on the stack; the innermost is the enclosing one. Frame identity and
+    # sys.parents() are used rather than frame arithmetic, because the
+    # tracer's own eval frames sit between the loader and this code.
+    frame_index <- function(env, frames) {
+        for (i in seq_along(frames)) {
+            if (identical(frames[[i]], env)) return(i)
+        }
+        0L
+    }
+    caller_of <- function(env) {
+        # The frame that called the function whose frame is `env`, or NULL at
+        # the top level.
+        frames <- sys.frames()
+        parents <- sys.parents()
+        i <- frame_index(env, frames)
+        if (i > 0L && parents[i] > 0L) frames[[parents[i]]] else NULL
+    }
+    nesting <- function() {
+        frames <- sys.frames()
+        active <- list()
+        for (entry in state$loads) {
+            index <- frame_index(entry$env, frames)
+            if (index > 0L) {
+                active[[length(active) + 1L]] <- list(index = index, seq = entry$seq,
+                                                      env = entry$env)
+            }
+        }
+        state$loads <- lapply(active, function(a) list(env = a$env, seq = a$seq))
+        if (length(active) == 0L) {
+            return(list(depth = 0L, enclosing = 0L))
+        }
+        innermost <- active[[which.max(vapply(active, function(a) a$index, integer(1)))]]
+        list(depth = length(active), enclosing = innermost$seq)
+    }
+    called_from_load <- function(frame) {
+        # Whether the function in `frame` was called directly by an active
+        # load: parse() inside source() is source()'s own mechanics.
+        caller <- caller_of(frame)
+        if (is.null(caller)) return(FALSE)
+        for (entry in state$loads) {
+            if (identical(entry$env, caller)) return(TRUE)
+        }
+        FALSE
+    }
+
+    on_load <- function(fn, path, frame) {
+        nest <- nesting()
+        path <- resolved(path)
+        seq <- emit("LOAD", c(hex(fn), hex(path), md5_or_none(path), size_or_none(path),
+                              as.character(nest$depth), as.character(nest$enclosing)))
+        if (!is.null(frame)) {
+            state$loads[[length(state$loads) + 1L]] <- list(env = frame, seq = seq)
+        }
+        invisible(seq)
+    }
+    on_text <- function(text) {
+        joined <- paste(as.character(text), collapse = "\n")
+        md5 <- text_md5(joined)
+        if (exists(md5, envir = state$text_seen, inherits = FALSE)) {
+            state$text_repeats <- state$text_repeats + 1L
+            return(invisible(NULL))
+        }
+        assign(md5, TRUE, envir = state$text_seen)
+        nest <- nesting()
+        emit("TEXT", c(md5, as.character(nchar(joined, type = "bytes") + 1L),
+                       as.character(nest$depth), as.character(nest$enclosing)))
+    }
+    on_conn <- function(fn, what) {
+        nest <- nesting()
+        description <- if (inherits(what, "connection")) {
+            tryCatch(summary(what)$description, error = function(e) "unknown")
+        } else {
+            "expressions"
+        }
+        emit("CONN", c(hex(fn), hex(class(what)[1]), hex(description),
+                       as.character(nest$depth), as.character(nest$enclosing)))
+    }
+    on_pkg <- function(package, lib.loc) {
+        name <- as.character(package)[1]
+        if (is.na(name) || !nzchar(name) ||
+                exists(name, envir = state$pkg_seen, inherits = FALSE)) {
+            return(invisible(NULL))
+        }
+        assign(name, TRUE, envir = state$pkg_seen)
+        path <- tryCatch(find.package(name, lib.loc, quiet = TRUE),
+                         error = function(e) character())
+        if (length(path) == 0L) {
+            path <- tryCatch(find.package(name, quiet = TRUE), error = function(e) character())
+        }
+        if (length(path) == 0L) {
+            emit("PKG", c(hex(name), "none", "none", "none", "none", "none", "none", "none"))
+            return(invisible(NULL))
+        }
+        description <- file.path(path[1], "DESCRIPTION")
+        fields <- tryCatch(read.dcf(description, fields = c("Version", "Repository",
+                                                              "RemoteType", "RemoteSha",
+                                                              "Packaged"))[1, ],
+                           error = function(e) rep(NA_character_, 5L))
+        field <- function(i) if (is.na(fields[[i]])) "none" else hex(fields[[i]])
+        emit("PKG", c(hex(name), field(1), hex(dirname(path[1])), field(2), field(3),
+                      field(4), field(5), md5_or_none(description)))
+    }
+
+    # -- The tracers' entry points ------------------------------------------
+    # Each takes the traced function's frame and the arguments it needs, and
+    # never errors: a tracer that errors would break the analysis, so a
+    # failure is reported as HOOKERR and the call continues.
+    guard <- function(fn, expr) {
+        tryCatch(expr, error = function(e) {
+            emit("HOOKERR", c(hex(fn), hex(conditionMessage(e))))
+        })
+    }
+    api <- new.env(parent = baseenv())
+    api$source <- function(frame, exprs, file) guard("source", {
+        if (!is.null(exprs)) {
+            on_conn("source", exprs)
+        } else if (is.character(file)) {
+            on_load("source", file, frame)
+        } else {
+            on_conn("source", file)
+        }
+    })
+    api$sys_source <- function(frame, file) guard("sys.source", {
+        if (identical(caller_of(frame), hook_env)) {
+            # The hook's own load of the user profile was logged as "profile"
+            # just before; its frame still counts as that load, so the parse()
+            # inside it is mechanics and not a second LOAD.
+            state$loads[[length(state$loads) + 1L]] <- list(env = frame, seq = state$seq)
+        } else {
+            on_load("sys.source", file, frame)
+        }
+    })
+    api$parse <- function(frame, text, file) guard("parse", {
+        if (!called_from_load(frame)) {
+            if (!is.null(text)) {
+                on_text(text)
+            } else if (is.character(file) && length(file) == 1L && nzchar(file)) {
+                on_load("parse", file, frame)
+            } else if (inherits(file, "connection")) {
+                on_conn("parse", file)
+            }
+        }
+    })
+    api$load_namespace <- function(frame, package, lib.loc) guard("loadNamespace", {
+        # The guard stops the tracer's own calls (find.package, read.dcf)
+        # from recursing; it is reset before returning so that the imports
+        # loadNamespace itself loads next are still seen.
+        if (!isTRUE(state$in_pkg)) {
+            state$in_pkg <- TRUE
+            tryCatch(on_pkg(package, lib.loc), finally = state$in_pkg <- FALSE)
+        }
+        # The sys.source() of a package's lazy-load stub is loadNamespace's
+        # own mechanics, not a load of the authors' code: its frame counts as
+        # the PKG event, so loads made directly from it are skipped and loads
+        # inside package code (an .onLoad that sources a file) nest under it.
+        state$loads[[length(state$loads) + 1L]] <- list(env = frame, seq = state$seq)
+    })
+    api$load <- function(fn, frame, path) guard(fn, on_load(fn, path, frame))
+    api$text <- function(fn, text) guard(fn, on_text(text))
+    api$end <- emit_end
+    options(lane.hook = api)
+
+    # -- Traces ------------------------------------------------------------
+    install <- function(what, where, tracer) {
+        ok <- tryCatch({
+            invisible(suppressMessages(trace(what, where = where, tracer = tracer,
+                                             print = FALSE)))
+            TRUE
+        }, error = function(e) FALSE)
+        if (!ok) emit("HOOKERR", c(hex(paste0("trace:", what)), hex("install failed")))
+        invisible(ok)
+    }
+    for (dependency in c("methods", "tools")) {
+        if (!dependency %in% loadedNamespaces()) suppressMessages(loadNamespace(dependency))
+    }
+    base_ns <- baseenv()
+    install("source", base_ns, quote(getOption("lane.hook")$source(
+        environment(), if (missing(exprs)) NULL else exprs, if (missing(file)) NULL else file)))
+    install("sys.source", base_ns, quote(getOption("lane.hook")$sys_source(
+        environment(), file)))
+    install("parse", base_ns, quote(getOption("lane.hook")$parse(
+        environment(), if (missing(text)) NULL else text, if (missing(file)) NULL else file)))
+    install("loadNamespace", base_ns, quote(getOption("lane.hook")$load_namespace(
+        environment(), package, if (missing(lib.loc)) NULL else lib.loc)))
+
+    # Package-conditional traces, installed when the package loads (or now,
+    # if it already has).
+    on_package <- function(package, what, tracer) {
+        setHook(packageEvent(package, "onLoad"), function(...) {
+            install(what, asNamespace(package), tracer)
+        })
+        if (package %in% loadedNamespaces()) install(what, asNamespace(package), tracer)
+    }
+    on_package("parallel", "mcexit", quote(getOption("lane.hook")$end()))
+    on_package("knitr", "knit", quote(
+        if (!missing(input) && is.character(input)) {
+            getOption("lane.hook")$load("knitr::knit", environment(), input)
+        } else if (!missing(text) && !is.null(text)) {
+            getOption("lane.hook")$text("knitr::knit", text)
+        }))
+    on_package("rmarkdown", "render", quote(
+        if (!missing(input) && is.character(input)) {
+            getOption("lane.hook")$load("rmarkdown::render", environment(), input)
+        }))
+    on_package("Rcpp", "sourceCpp", quote(
+        if (!missing(file) && is.character(file) && nzchar(file)) {
+            getOption("lane.hook")$load("Rcpp::sourceCpp", environment(), file)
+        } else if (!missing(code) && !is.null(code)) {
+            getOption("lane.hook")$text("Rcpp::sourceCpp", code)
+        }))
+    on_package("pkgload", "load_all", quote(
+        getOption("lane.hook")$load("pkgload::load_all", environment(), path)))
+    on_package("reticulate", "source_python", quote(
+        getOption("lane.hook")$load("reticulate::source_python", environment(), file)))
+    on_package("reticulate", "py_run_file", quote(
+        getOption("lane.hook")$load("reticulate::py_run_file", environment(), file)))
+    on_package("box", "use", quote(
+        getOption("lane.hook")$load("box::use", environment(),
+                                    paste(deparse(sys.call()), collapse = " "))))
+    on_package("modules", "import", quote(
+        getOption("lane.hook")$load("modules::import", environment(),
+                                    paste(deparse(sys.call()), collapse = " "))))
+
+    # -- Handshake ---------------------------------------------------------
     args <- commandArgs(trailingOnly = FALSE)
     restore <- file.exists(".RData") &&
         !any(args %in% c("--no-restore", "--no-restore-data", "--vanilla"))
@@ -117,7 +412,17 @@ local({
         if (restore) "restore" else "no-restore",
         hex(args)
     ))
-    reg.finalizer(state, function(e) emit("END"), onexit = TRUE)
+    reg.finalizer(state, function(e) emit_end(), onexit = TRUE)
+
+    # The code named on the command line: Rscript's --file= (the front end
+    # rewrites R -f file to it) is a LOAD that no source() call covers, and
+    # each -e expression is a TEXT.
+    for (path in sub("^--file=", "", grep("^--file=", args, value = TRUE))) {
+        on_load("file", path, NULL)
+    }
+    for (i in which(args == "-e")) {
+        if (i < length(args)) on_text(args[i + 1L])
+    }
 
     # R reads one user profile: R_PROFILE_USER if set, else the working
     # directory's .Rprofile, else ~/.Rprofile. The lane's Renviron saves any
@@ -126,7 +431,8 @@ local({
     # so the hook sources that first; otherwise it does what R would have
     # done. The lane renames a project-root .Rprofile to .Rprofile.project, so
     # that its own injected .Rprofile can stand there. The profile is sourced
-    # into the global environment, where R evaluates a user profile.
+    # into the global environment, where R evaluates a user profile. The
+    # traces above are already in place, so loads inside it are logged.
     is_lane_file <- function(path) {
         identical(normalizePath(path, mustWork = FALSE),
                   normalizePath("/lane/hook.R", mustWork = FALSE)) ||
@@ -142,8 +448,7 @@ local({
     }
     for (path in candidates) {
         if (file.exists(path) && !dir.exists(path) && !is_lane_file(path)) {
-            emit("LOAD", c(hex("profile"), hex(normalizePath(path)), md5_or_none(path),
-                           as.character(file.size(path)), "0", "0"))
+            on_load("profile", normalizePath(path), hook_env)
             sys.source(path, envir = globalenv(), keep.source = FALSE)
             break
         }

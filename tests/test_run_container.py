@@ -112,7 +112,7 @@ def hook_line(nonce: str, token: str, pid: int, seq: int, event: str, *fields: s
 
 def start_line(nonce: str, token: str, pid: int, *argv: str, restore: bool = False) -> str:
     """A START event with the hook's field layout."""
-    return hook_line(nonce, token, pid, 1, "START", hexed("1.0-f1"), hexed("/project"),
+    return hook_line(nonce, token, pid, 1, "START", hexed("1.1-inst"), hexed("/project"),
                      hexed("/lane/hook.R"), hexed("/lane/Renviron"), "none", "none",
                      "restore" if restore else "no-restore", *(hexed(a) for a in argv))
 
@@ -566,6 +566,44 @@ class RunContainerDockerTests(unittest.TestCase):
         self.assertEqual(doc["state"], "complete", doc["problems"])
         self.assertEqual(doc["census"]["processes"], 3)
         self.assertEqual(lane.check_run_records(self.dir, self.launch, self.repo)["errors"], [])
+
+    def test_loader_events_nest_and_children_end(self):
+        """The instrumented hook (spec §8): LOAD nesting by depth and enclosing
+        seq, TEXT repeats counted on END, CONN for a connection, PKG for a
+        namespace, and a forked child's own END from mcexit. Nothing reaches
+        stdout but the script's own line."""
+        doc = self.run_entry('source("helper.R")\n'
+                             'invisible(parse(text = "1 + 1")); invisible(parse(text = "1 + 1"))\n'
+                             'suppressPackageStartupMessages(library(stats4))\n'
+                             'r <- parallel::mclapply(1:2, function(i) i, mc.cores = 2)\n'
+                             'con <- textConnection("x <- 3"); source(con); close(con)\n'
+                             'cat("only this line\\n")\n',
+                             **{"helper.R": 'source("inner.R")\n', "inner.R": "y <- 2\n"})
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertEqual(doc["census"]["unterminated"], [])
+        events, _ = lane.parse_events((self.dir / lane.RECORDS_DIR / "run-01" /
+                                       "events.log").read_text(), doc["nonce"])
+        by_kind = {}
+        for event in events:
+            by_kind.setdefault(event["event"], []).append(event)
+        self.assertNotIn("HOOKERR", by_kind)
+        loads = {lane.decode_field(e["fields"][1]): e for e in by_kind["LOAD"]
+                 if lane.decode_field(e["fields"][0]) == "source"}
+        helper, inner = loads["/project/helper.R"], loads["/project/inner.R"]
+        # The entry script is a frame-less "file" LOAD at the top level, so the
+        # first source() is at depth 0 and the one inside it at depth 1.
+        self.assertEqual((helper["fields"][4], helper["fields"][5]), ("0", "0"))
+        self.assertEqual((inner["fields"][4], inner["fields"][5]), ("1", str(helper["seq"])))
+        self.assertEqual(len(by_kind["TEXT"]), 1)
+        main = [e for e in by_kind["END"] if e["token"] == by_kind["START"][0]["token"]]
+        self.assertEqual(main[0]["fields"], ["1"])  # the repeated parse(text =)
+        self.assertEqual(len(by_kind["FORK"]), 2)
+        self.assertEqual(sorted(e["token"] for e in by_kind["FORK"]),
+                         sorted(e["token"] for e in by_kind["END"] if e["token"] != main[0]["token"]))
+        self.assertEqual(lane.decode_field(by_kind["CONN"][0]["fields"][1]), "textConnection")
+        self.assertIn("stats4", [lane.decode_field(e["fields"][0]) for e in by_kind["PKG"]])
+        self.assertEqual((self.dir / "outputs" / "run-01" / "stdout.log").read_text(),
+                         "only this line\n")
 
     def test_run_cannot_write_the_lane_directory(self):
         doc = self.run_entry('writeLines("x", "/lane/hook.R")\n')
