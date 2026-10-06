@@ -1422,3 +1422,11 @@ actions and not to the work I delegated.
 say: "do not post to GitHub; Shawn decides what is posted." Tell Shawn
 which peer posts already exist (Astra's two reviews on PR #7), so he can
 judge whether they are acceptable.
+
+**Resolved (Shawn, 2026-10-06).** Both reviews now open with "Review written
+by Astra (GPT in OpenAI Codex), a review agent, and posted from this
+account. Shawn did not write it." The protocol is standardised for both
+agents: reviews are delivered as documents with an attribution header, and
+nothing is posted under Shawn's account unless he approves a prepared post.
+A machine account or GitHub App for agent reviews follows if review traffic
+grows.

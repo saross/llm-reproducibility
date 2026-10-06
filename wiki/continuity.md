@@ -84,23 +84,57 @@ merged here as PR #1).
 
     488 tests pass, including 9 Docker tests that skip without the local
     `rocker/r-ver:4.3.2` image.
-- **Awaiting Shawn:**
-  1. **Amendment 3 decisions D-1 to D-5** (D-6 is ruled) and lodgement on
-     OSF. The order of operations is §10 of the draft.
-  2. **The audit's questions Q2–Q10**, in
-     `studies/open-science-compliance/outputs/validation/executed-code-audit-2026-10-04/findings.json`
-     on PR #7.
-  3. **Astra's two PR #7 reviews posted to GitHub** under your account
-     (claude-obs 70): decide whether that is acceptable.
-  4. **PR #8**, Codex's `AGENTS.md` entry point: your review.
-  5. **Held over:** working-notes candidates WN-ag to WN-al; user-obs
-     2026-10-04 s2 A–E and **2026-10-05 A–E** (the earlier note said A–D;
-     the file has five).
-  6. **New: whether to split `scripts/reproduction-lane.py`**, now 4,647
-     lines. `run-container` went into the single-file tool because the
-     launcher binding hashes one script.
-  7. **Low priority, before the census:** an optional record-weighted
-     coverage field in the output schema.
+- **Awaiting Shawn — cleared on 2026-10-06** in a decision walk-through:
+  - [x] 2026-10-06 **Amendment 3 D-1 to D-5 ruled** (`c99c2a0`):
+    - D-1: lodge the clarifications as instrument v2.2;
+    - D-2: planned platform-row rules, deciding 0s only;
+    - D-3: the re-validation gates on all 150 items;
+    - D-4: the census curation procedure is deferred to a later amendment,
+      with constraints fixed now;
+    - D-5: the corrected BI wording, with the `input` tag clarified.
+  - [x] 2026-10-06 **Audit Q2–Q10 ruled**: `question_rulings` in
+    `findings.json` (`c4553f9`, PR #7). The general rules from Q5 and Q6
+    are in amendment §7(d) (`38b59b0`).
+  - [x] 2026-10-06 **Astra's two PR #7 reviews** now open with an
+    attribution line. The review protocol for both agents is documents,
+    not posts, with a bot account later; the shared-guidance proposal is
+    personal-assistant PR #169.
+  - [x] 2026-10-06 **PR #8 merged** (`7f84e73`).
+  - [x] 2026-10-06 **WN-ag to WN-al accepted**, as Obs 45–50 (`a8da2e1`).
+    They were re-verified on writing, and WN-al's "non-overlapping" claim
+    was dropped.
+  - [x] 2026-10-06 **User-obs adjudicated** (`10a75c0`):
+    - 2026-10-04 s2: A, B, and E kept, E generalised;
+    - 2026-10-05: A (generalised), B, and C kept.
+  - [x] 2026-10-06 **Lane script split:** after gate 1.3 merges (§15 of
+    the specification).
+  - [x] 2026-10-06 **Record-weighted coverage:** not collected.
+- **Still with Shawn:**
+  1. **Read amendment 3 in full** (`studies/open-science-compliance/prereg/amendment-3-draft.md`),
+     then Claude runs the pre-lodgement checklist (steps 2–6) and asks
+     before lodging through the OSF API. Text written 2026-10-05/06: §5(b)'s
+     planned-rules bullet, §6(d)'s curation constraints, the two new
+     §7(d) bullets, and the ruling notes.
+  2. **Merge personal-assistant PR #169** (review delivery). Then re-run
+     `scripts/compose-global-claude-md.sh`.
+- **Work the rulings created** (after lodgement, in §10's order unless
+  noted):
+  - **Draft the correction ledger** (§9 fields) from the Q1–Q10 rulings,
+    for Shawn's ruling; it is frozen before the regression run.
+  - **Regression re-runs**, through gate 1.3's `run-container` once it is
+    merged:
+    - dye: wrapper-only, with the authors' files restored;
+    - key: wrapper-only, executing the authors' script; rows on
+      reconstructed inputs are expected-untestable;
+    - crema at v1.0.0, with `rnaturalearthhires` pinned at build;
+    - marwick at 1.3;
+    - herskind: attempt-02 is the baseline.
+  - **Q10:** store the crema v1.0.0 and herskind v1 deposits in the corpus
+    store, with manifest entries (URLs and sha256 are in `findings.json`).
+  - **D-2:** build and validate the 0-only platform-row rules before census
+    scoring.
+  - **D-4:** draft the census curation-procedure amendment before census
+    scoring.
 - **Owed by Claude:**
   - review the halt-condition mnemonics with Shawn during the next run
     (user-obs 2026-08-15 A);

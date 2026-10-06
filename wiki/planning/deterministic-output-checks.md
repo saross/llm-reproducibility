@@ -64,6 +64,10 @@ supplementary ("where feasible, also compute"). So C2 and C3 override a
 record-weighted figure entered in the primary field (2026-08-03 fable
 herskind r1). A separate optional schema field for record-weighted
 coverage would separate the two (a governed schema change, for ruling).
+**RULED (Shawn, 2026-10-06): record-weighted coverage is not collected.**
+The primary, dataset-count coverage is computed; the instrument's
+record-weighted figure is optional, would be an unvalidated model-reported
+number, and is not preregistered. No schema change.
 
 ## Layer 2: rule-derived checks (instrument rules applied mechanically)
 
