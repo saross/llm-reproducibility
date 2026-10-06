@@ -289,7 +289,7 @@ validate.
   decided where the scored version's record lacks creators, a title, a
   non-empty description, or a subject keyword. The test is conjunctive
   across principal artefacts.
-- **The registrant confirms 1s [D-8].** Where every principal deposit has
+- **The registrant confirms 1s [D-8, ruled].** Where every principal deposit has
   all four fields, whether the description is substantive goes to the
   registrant. The rule never awards F2 = 1. The registrant is also the
   human validator of registration §8, so the validation is kept separate
@@ -460,7 +460,7 @@ The Phase 2 shakedown (2026-10-03) and the registrant's rulings of
   pinning a public version that still runs it; if none exists, replacing it
   is an edit, and so fail-and-uplift. A repaired result is recorded as
   uplift evidence and never counts toward coverage or the verdict."
-  - **Supplied pins take precedence [D-7].** "The authors' environment
+  - **Supplied pins take precedence [D-7, ruled].** "The authors' environment
     specification is built as supplied, as the preparation procedure
     already does, so a lockfile is restored, a container specification is
     built, and an explicit runtime or package version is used. Whether a
@@ -474,7 +474,7 @@ The Phase 2 shakedown (2026-10-03) and the registrant's rulings of
     Supplied pins keep precedence so that registered H3, which compares
     build effort between pinned and unpinned environments, measures the
     authors' pins and not a reconstructed environment.
-  - **Version-search cap [D-7].** "An unspecified dependency is first
+  - **Version-search cap [D-7, ruled].** "An unspecified dependency is first
     built at the release current at the article's first online appearance.
     If a specific dependency fails to build, at most its immediately
     preceding and following releases are tried, so a dependency has at
@@ -522,7 +522,7 @@ The Phase 2 shakedown (2026-10-03) and the registrant's rulings of
     read, global options, and random-number state. The dependency sentence
     is read with the precedence rule above, so where the authors pinned the
     dependency, their pin is used.
-  - **Verification aids and reconstructed inputs (RULED 2026-10-06,
+  - **Verification aids and reconstructed inputs (RULED 2026-10-05,
     executed-code audit Q5).** "Where no authors' code produces a published
     result, the reproducer may test it with a labelled verification aid: a
     read-only lookup in the deposited data, or a call to a documented
@@ -618,7 +618,7 @@ registrant's direction to draft them):
   registrant concludes after the run that the ledger was wrong, the
   correction is a dated ledger amendment followed by a re-run, never a
   re-reading of the result.
-- **The amended pass predicate [D-9].** On each regression paper, the gate
+- **The amended pass predicate [D-9, ruled].** On each regression paper, the gate
   passes only if all of these hold. Every unchanged deterministic target
   gives the pilot's outcome and value, equal at the precision the pilot's
   comparison table recorded, after the same rounding. Every unchanged
@@ -630,10 +630,11 @@ registrant's direction to draft them):
   expected value. A changed tolerance is itself a ledger correction with
   a stated reason, and no tolerance is widened to make a corrected target
   pass. A target with several values passes only when every value passes
-  (§7(c)). Every expected-untestable target comes out expected-untestable.
-  One the new pipeline can test is reported as an explained difference
-  for a ruling, not as a failure. The paper's verdict equals the ledger's
-  expected verdict.
+  (§7(c)). Every expected-untestable target comes out expected-untestable,
+  and one that the new pipeline tests instead fails the gate, because
+  testing it may mean reconstructing inputs the ledger excluded. If the
+  ledger was wrong, it is corrected by the dated amendment and re-run
+  above. The paper's verdict equals the ledger's expected verdict.
 - **Two target sets, both counted.** Targets are split into those the ledger
   leaves unchanged and those it corrects. The strict comparison fails by
   construction on corrected targets, so a failure there is not a
@@ -751,10 +752,12 @@ path the launch commit's run configuration records.
   **RULED (Shawn, 2026-10-05): adopt the correction-ledger approach** that
   Astra (GPT, Codex) proposed in its PR #7 review, now drafted as §9. The
   ledger's per-target contents are still to be ruled, from the audit's Q1–Q5.
-  **The audit's questions Q1–Q10 are RULED (2026-10-05 and 06;
+  **The audit's questions Q1–Q10 are RULED (2026-10-05;
   `question_rulings` in the audit's `findings.json`, PR #7).** The ledger is
   to be drafted from them, and the general principles of Q5 and Q6 are added to
-  §7(d).
+  §7(d). Every question was answered between 22:30 and 23:51 on 2026-10-05
+  (AEDT); lodging Q5's general principles was approved at 08:55 on
+  2026-10-06 (archived transcript of session b1a1e102).
   §9's ledger conditions were drafted on 2026-10-05 from the Fable review, at
   the registrant's direction. The class (ii) consequence is RULED
   (2026-10-05, §7(d)): a result resting on an authors' file edited for
@@ -773,7 +776,9 @@ path the launch commit's run configuration records.
   publication-date environment replaces supplied pins, declared as a
   change with its H3 consequence stated. The draft takes (a), with a
   commits-without-releases rule and a separate deprecation search (Fable's
-  refinements, 2026-10-06). **PROPOSED (a); awaiting the registrant.**
+  refinements, 2026-10-06).
+  **RULED (Shawn, 2026-10-06): (a), supplied pins first,** with both
+  refinements, so that H3 measures the authors' pins.
 - **D-8. Human validation independence (Astra, blocking 6).** The
   registrant confirms F2 = 1 candidates and is also the §8 hand-scorer.
   Options: (a) draw the subsample and hand-score before any confirmation on
@@ -782,7 +787,9 @@ path the launch commit's run configuration records.
   confirmed 1s unvalidated; (b) a second rater confirms the twelve papers'
   F2 candidates, the only route to an independent confirmation; (c)
   declare the limitation only. The draft takes (a); (b) can be added if a
-  colleague is available. **PROPOSED (a); awaiting the registrant.**
+  colleague is available.
+  **RULED (Shawn, 2026-10-06): (a), sequence and separate,** as drafted in
+  §5(b).
 - **D-9. The ledger's pass predicate (Astra, should-fix 4).** §9 named the
   fields but not the predicate. The draft states one: exact at recorded
   precision for unchanged deterministic targets, within tolerance for
@@ -797,14 +804,25 @@ path the launch commit's run configuration records.
   its re-assembled wrapper (DYE1-2). Herskind's attempt-01 credits 291
   n-gram values matched against S3.xlsx (its `comparison-report.md` line
   5 and lines 59–63). Anchors from Fable, re-verified 2026-10-06.
-  **PROPOSED; awaiting the registrant.**
+  **RULED (Shawn, 2026-10-06): adopted, with one change.** An
+  expected-untestable target that the new pipeline tests fails the gate,
+  rather than going to a ruling after the run as first drafted. A ruling
+  after the run would conflict with §9's guard that a wrong ledger is
+  corrected by amendment and re-run, never by re-reading the result, and
+  for key's reconstructed-input rows a tested result may itself be the
+  forbidden reconstruction.
 
 ## Pre-lodgement checklist
 
 - [X] Registrant reads and edits the full draft; decisions D-1 to D-6 ruled
       (2026-10-06).
-- [ ] Astra's review (2026-10-06) folded in; D-7 to D-9 ruled; the ruling
-      dates of audit Q5 and Q6 reconciled with `findings.json`.
+- [ ] Registrant re-reads every passage revised on 2026-10-06 (the
+      revision record lists them; the first item's tick predates the
+      revision) and rules the new rules it introduces, which go beyond
+      D-7 to D-9.
+- [x] 2026-10-06 Astra's review folded in; D-7 to D-9 ruled; the ruling
+      dates of audit Q5 and Q6 reconciled with `findings.json` (both
+      2026-10-05, from the archived transcript of session b1a1e102).
 - [x] 2026-10-06 Consistency check (maintenance rule 4): §4 and §7 text
       against the adjudication log and the shakedown rulings; §5 and §6
       against the planning note, the F2 report, and `manifest.yaml`;
@@ -975,16 +993,20 @@ and `amendment-2-draft.md`. Hard-failure list from the gate 1.3
 specification §6. Q5 ruling text from `findings.json` (PR #7).
 Repository URL from `git remote`.
 
-**Open for the registrant before lodgement.** (a) D-7, D-8, and D-9.
-(b) The ruling dates of audit Q5 and Q6: `findings.json` records every
-question as ruled 2026-10-05, its commit `c4553f9` is dated 2026-10-06
-08:56 +1100, the continuity log places the walk-through on 2026-10-06,
-and the draft labels Q6 2026-10-05 and Q5 2026-10-06. The registrant
-confirms the date; the draft and `findings.json` are then made to agree.
-(c) The `[D-n]` markers are resolved and stripped from the paste artefact,
-and its banner date set, at lodgement.
+**Settled by the registrant, 2026-10-06.** (a) D-7, D-8, and D-9 are
+ruled as recorded in the decisions, D-9 with the change to
+expected-untestable targets. (b) The Q5 and Q6 dates: `findings.json`
+records every question as ruled 2026-10-05, while its commit `c4553f9` is
+dated 2026-10-06 08:56 +1100 (21:56 UTC on 2026-10-05). The archived
+transcript of session b1a1e102 shows the Q5 answers at 23:15 and the Q6
+answers at 23:45 on 2026-10-05 (AEDT), and the approval to lodge Q5's
+general principles at 08:55 on 2026-10-06. Both §7(d) bullets now read
+2026-10-05, matching `findings.json`. **Remaining at lodgement:** the
+`[D-n]` markers are stripped from the paste artefact and its banner date
+is set.
 
-**Register exit checks (lodged portion, 6,037 words; academic register
+**Register exit checks (lodged portion, 6,058 words after the
+2026-10-06 rulings; academic register
 gate, `register-gate.py` advisories read item by item).**
 
 - Em-dashes: 0. The gate's 0.52 per thousand is en dashes in ranges.
@@ -1000,6 +1022,6 @@ gate, `register-gate.py` advisories read item by item).**
 - Hedges: 0.12 per hundred words (may 4, could 2, typically 1), under the
   0.72 academic target; registered text hedges where it should.
 - Consecutive short sentences: the one flag is a list-number artefact.
-- Mean sentence length 20.5 words.
+- Mean sentence length 20.6 words.
 - markdownlint: the only findings are the pre-existing Sources table
   (MD013, MD060), outside the lodged portion.
