@@ -1989,6 +1989,49 @@ SCRIPT_OPTIONS = ("--file=", "-f", "--file", "-e")
 # An explicit, effectively unbounded log size: a rotated stream loses events,
 # and Docker refuses max-size=-1 at start. The read-back must match it.
 LOG_MAX_SIZE = "100g"
+
+
+def log_opts() -> dict[str, str]:
+    """The json-file log options a run is created with, and must read back.
+
+    One retained file and blocking delivery, as well as the size: Docker's
+    non-blocking mode drops new messages when its buffer fills, which is a
+    supported configuration and not daemon misbehaviour, so a daemon default
+    of ``mode=non-blocking`` would lose events silently (spec §4; Astra's
+    specification review, D-2).
+    """
+    return {"max-size": LOG_MAX_SIZE, "max-file": "1", "mode": "blocking"}
+
+
+def log_opt_args() -> list[str]:
+    """``--log-driver`` and ``--log-opt`` arguments for ``docker run``."""
+    args = ["--log-driver", "json-file"]
+    for key, value in log_opts().items():
+        args += ["--log-opt", f"{key}={value}"]
+    return args
+
+
+def log_config_problem(config: dict | None) -> str | None:
+    """Why a container's log configuration cannot carry the event stream.
+
+    The read-back of ``HostConfig.LogConfig`` must show the json-file driver
+    with exactly the options of :func:`log_opts`. A differing read-back is a
+    problem, and a run with a problem seals ``incomplete``, which no ruling
+    clears (spec §4, completeness fact 1).
+
+    Returns:
+        The problem text, or ``None`` when the configuration is as required.
+    """
+    if not config or config.get("Type") != "json-file":
+        return (f"the container's log driver is {(config or {}).get('Type')!r}, not "
+                f"json-file: the event stream is not retained")
+    opts = config.get("Config") or {}
+    expected = log_opts()
+    wrong = {key: opts.get(key) for key in expected if opts.get(key) != expected[key]}
+    if wrong:
+        return (f"the container's log options {wrong} differ from {expected}: the event "
+                f"stream could be rotated or dropped")
+    return None
 RECORD_FILES = ("run.json", "pre.json", "baseline.json", "post.json", "events.log",
                 "outputs.json", "lane-renviron.txt")
 
@@ -2241,13 +2284,14 @@ def container_argv(image_id: str, project: Path, lane_dir: Path, mount: str,
     Networking is off, the run is a non-root user, PID 1 is Docker's init
     (so its stderr is the event stream), and the only writable mount is the
     work copy. The records and ``outputs/`` are never mounted. The log driver
-    is set explicitly with no size limit, since a rotated stream loses events
-    and a multi-hour run would end incomplete (Fable's specification review,
-    Q2). The entry point is set explicitly too, so an image's own
+    is set explicitly, with no size limit (a rotated stream loses events, and
+    a multi-hour run would end incomplete: Fable's specification review, Q2),
+    one retained file, and blocking delivery (:func:`log_opts`). The entry
+    point is set explicitly too, so an image's own
     ``ENTRYPOINT`` cannot turn the lane's command into its arguments.
     """
     argv = ["docker", "run", "-d", "--name", name, "--init", "--network", "none",
-            "--log-driver", "json-file", "--log-opt", f"max-size={LOG_MAX_SIZE}",
+            *log_opt_args(),
             "--user", f"{os.getuid()}:{os.getgid()}", "-w", mount,
             "--mount", f"type=bind,src={project},dst={mount}",
             "--mount", f"type=bind,src={lane_dir},dst={LANE_MOUNT},readonly"]
@@ -2422,10 +2466,9 @@ def start_run(target_dir: Path, image_tag: str, entry: str, *, mount_path: str |
                              doc["container_id"]])
         doc["log_config"] = (json.loads(log_config.stdout) if log_config.returncode == 0
                              else None)
-        if (doc["log_config"] or {}).get("Type") != "json-file" or \
-                (doc["log_config"].get("Config") or {}).get("max-size") != LOG_MAX_SIZE:
-            doc["problems"].append(f"the container's log configuration "
-                                   f"({doc['log_config']}) could rotate the event stream")
+        problem = log_config_problem(doc["log_config"])
+        if problem:
+            doc["problems"].append(problem)
         write_json(record_dir / "run.json", doc)
         return doc
     except BaseException:
@@ -2481,8 +2524,12 @@ def run_census(events: list[dict], run_id: str = "",
     which can repeat in a long run (Fable's specification review, D-2). Every
     interpreter start the shim saw (``EXEC``) must pair with the hook's
     ``START`` and ``END``. A forked child announces itself with ``FORK`` and
-    needs neither ``EXEC`` nor ``END``, since forked children leave through
-    ``_exit``. A sequence gap or a repeated sequence number means lost or
+    needs no ``EXEC`` or ``START``, but it must end with its own ``END``: it
+    leaves through ``_exit`` and runs no finaliser, so the hook emits that
+    ``END`` from a trace on ``parallel:::mcexit``, which every ``mclapply``
+    and ``mcparallel`` child calls before it exits. A forked child with no
+    ``END`` is unterminated, and its run is incomplete (spec §4, completeness
+    fact 3). A sequence gap or a repeated sequence number means lost or
     inserted lines, so the process is incomplete.
 
     Args:
@@ -2492,8 +2539,9 @@ def run_census(events: list[dict], run_id: str = "",
             for the issues' fingerprints.
 
     Returns:
-        ``{processes, errors, flags, obligations, gaps, abnormal}``, where
-        ``gaps`` and ``abnormal`` list tokens (incomplete and abnormally ended
+        ``{processes, errors, flags, obligations, gaps, abnormal,
+        unterminated}``, where ``gaps``, ``abnormal``, and ``unterminated``
+        list tokens (incomplete, abnormally ended, and never-ended forked
         processes), ``errors`` holds messages, and ``flags`` and
         ``obligations`` hold ``Issue``s.
     """
@@ -2502,7 +2550,7 @@ def run_census(events: list[dict], run_id: str = "",
     for event in events:
         by_token.setdefault(event["token"], []).append(event)
     report: dict[str, Any] = {"processes": [], "errors": [], "flags": [], "obligations": [],
-                              "gaps": [], "abnormal": []}
+                              "gaps": [], "abnormal": [], "unterminated": []}
     for token, evs in by_token.items():
         execs = [e for e in evs if e["event"] == "EXEC"]
         hooked = [e for e in evs if e["event"] != "EXEC"]
@@ -2542,6 +2590,8 @@ def run_census(events: list[dict], run_id: str = "",
                 f"the R front end (no EXEC from the shim)", **identity))
         if starts and not ends and not forked and token not in report["gaps"]:
             report["abnormal"].append(token)
+        if forked and not ends and token not in report["gaps"]:
+            report["unterminated"].append(token)
         if (execs and not exempt and process["stdin"] in ("file", "pipe")
                 and not any(a.startswith(SCRIPT_OPTIONS) for a in argv)):
             report["obligations"].append(Issue.obligation(
@@ -2658,15 +2708,11 @@ def finalise_run(target_dir: Path, run_id: str, keep_work: bool = False) -> dict
     events, stray = parse_events((record_dir / "events.log").read_text(
         encoding="utf-8", errors="replace"), doc["nonce"])
     census = run_census(events)
-    if problems or census["gaps"]:
-        state = "incomplete"
-    elif exit_status != 0 or census["abnormal"]:
-        state = "failed"
-    else:
-        state = "complete"
+    state = run_state(problems, exit_status, census)
     doc.update(state=state, exit_status=exit_status, ended_at=now_utc(), problems=problems,
                census={"processes": len(census["processes"]), "errors": len(census["errors"]),
                        "gaps": census["gaps"], "abnormal": census["abnormal"],
+                       "unterminated": census["unterminated"],
                        "stray_event_lines": len(stray)})
     write_json(record_dir / "run.json", doc)
     seal_run(records, run_id, state)
@@ -2674,6 +2720,24 @@ def finalise_run(target_dir: Path, run_id: str, keep_work: bool = False) -> dict
     if not keep_work:
         shutil.rmtree(work_dir, ignore_errors=True)
     return doc
+
+
+def run_state(problems: list[str], exit_status: int | None, census: dict) -> str:
+    """The sealed state of a run (spec §5 step 7, under §4's completeness facts).
+
+    ``incomplete`` whenever a completeness fact is in doubt: a recorded
+    problem (a differing log read-back, a failed ``docker wait`` or
+    ``docker logs``, a lost work copy), a process with a sequence gap, or a
+    forked child with no ``END``. Only with those facts whole does a missing
+    ``END`` mean an abnormal end, and the run ``failed``; missing terminal
+    evidence never defaults to ``failed`` (Astra's specification review,
+    D-2). ``complete`` needs exit 0 and every process ended.
+    """
+    if problems or exit_status is None or census["gaps"] or census["unterminated"]:
+        return "incomplete"
+    if exit_status != 0 or census["abnormal"]:
+        return "failed"
+    return "complete"
 
 
 def clear_lock(target_dir: Path) -> str:

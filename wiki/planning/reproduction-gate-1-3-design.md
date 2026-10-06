@@ -34,7 +34,7 @@ file stood at `2bd35aa`.
   (§12); and the matrix (§13).
 - **Changes in revision 2** (from `b409ef5`, Astra's review of this text):
   the assurance statement (§2.3); delivery and retention pinned, the three
-  completion facts, and `JOIN` for forked children (§4); per-load binding,
+  completion facts, and the forked child's own `END` (§4); per-load binding,
   with the tool-internal exception narrowed to mapped loads (§3, §8);
   dates and undeclared datetimes as wall-clock values, missing-marker
   collisions, and unchecked sheets (§11); the matching fixtures (§13); the
@@ -414,9 +414,8 @@ corroborates but never replaces:
    returned its status), and `docker logs` returned without error after
    it. The collected stream is then everything the daemon holds for the
    container.
-3. **Process end.** Each process has its terminal event: `END` for a
-   process the hook runs in, or, for a forked child, a `JOIN` in its
-   parent naming the child's token (below).
+3. **Process end.** Each process has its terminal event, `END`, which a
+   forked child emits too, from a trace on `parallel:::mcexit` (below).
 
 **Incomplete and abnormal processes:**
 
@@ -431,13 +430,13 @@ corroborates but never replaces:
   the collection errored, the run is **incomplete**, and no ruling clears
   it. Missing terminal evidence never defaults to `failed`.
 - A forked child inherits the hook. After `FORK` its sequence restarts,
-  and it needs no `EXEC` or `START`, because forked children leave through
-  `_exit` and run no finaliser. Its terminal event is its parent's. The
-  hook traces `parallel::mccollect` and the return of
-  `parallel::mclapply`, and emits `JOIN` with the tokens of the children
-  whose results were collected. A `FORK` that no `JOIN` names by the end
-  of its parent is **incomplete**. A `FORK` that no parent event precedes
-  is unaccounted and fails.
+  and it needs no `EXEC` or `START`. It leaves through `_exit`, so the
+  exit finaliser never runs. Instead the hook traces `parallel:::mcexit`,
+  which every `mclapply` and `mcparallel` child calls before it exits
+  (the 2026-10-06 probe showed the trace firing in the child), and the
+  child emits its own `END` from there. A forked child with no `END` is
+  **unterminated**, and its run is **incomplete**. A `FORK` that no parent
+  event precedes is unaccounted and fails.
 - A child whose stream never arrived leaves no event to check. Facts 1
   and 2 exclude a daemon-side loss, so a missing child is one the shim
   did not start. The census fails it (`uninstrumented-process`, §8)
@@ -1060,7 +1059,7 @@ them run on a host with Docker.
     exit observed and the configuration verified, is `failed`; the same
     with the collection errored, or the read-back differing, is
     `incomplete`;
-  - a wholly missing short child: a `FORK` that no `JOIN` names is
+  - a wholly missing short child: a `FORK` with no `END` is
     `incomplete`, and a shimmed child whose `EXEC` has no `START` fails
     the census;
   - a non-blocking logger: a read-back showing `mode=non-blocking` seals
@@ -1187,8 +1186,9 @@ matrix about two more, and the rest one or two, plus the review rounds of
   the profile; `PKGBUILD` for `R CMD INSTALL`; the littler shim; the
   remaining census rules; the launcher matrix; and the revision-2
   corrections to F1, namely `max-file=1` and `mode=blocking` passed and
-  read back, the three completion facts in the state rule, `JOIN` for
-  forked children, and per-load binding of nested loads (D-2, D-3).
+  read back, the three completion facts in the state rule, the forked
+  child's own `END` from `mcexit`, and per-load binding of nested loads
+  (D-2, D-3).
 - [ ] **Fresh computation** (§9).
 - [ ] **Conversions** (§11) and the **static additions** (§10).
 - [ ] **The transcript audit** (§12), which writes `transcript-audit.json`;

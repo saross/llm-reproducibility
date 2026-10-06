@@ -179,11 +179,18 @@ class CensusTests(unittest.TestCase):
         report = self.census(exec_line(self.NONCE, "7-a", 7), start_line(self.NONCE, "7-a", 7))
         self.assertEqual((report["abnormal"], report["gaps"]), (["7-a"], []))
 
-    def test_forked_child_needs_no_exec_or_end(self):
-        report = self.census(*clean_process(self.NONCE, "7-a", 7),
-                             hook_line(self.NONCE, "12-f", 12, 1, "FORK", "7-a"),
-                             hook_line(self.NONCE, "12-f", 12, 2, "LOAD", hexed("x")))
-        self.assertEqual((report["errors"], report["abnormal"], report["gaps"]), ([], [], []))
+    def test_forked_child_needs_no_exec_but_its_own_end(self):
+        """Astra's specification review, D-2: a fork needs a terminal event."""
+        lines = [*clean_process(self.NONCE, "7-a", 7),
+                 hook_line(self.NONCE, "12-f", 12, 1, "FORK", "7-a"),
+                 hook_line(self.NONCE, "12-f", 12, 2, "LOAD", hexed("x"))]
+        unterminated = self.census(*lines)
+        self.assertEqual((unterminated["errors"], unterminated["abnormal"],
+                          unterminated["gaps"]), ([], [], []))
+        self.assertEqual(unterminated["unterminated"], ["12-f"])
+        ended = self.census(*lines, hook_line(self.NONCE, "12-f", 12, 3, "END"))
+        self.assertEqual((ended["errors"], ended["abnormal"], ended["gaps"],
+                          ended["unterminated"]), ([], [], [], []))
 
     def test_reused_pid_is_two_processes(self):
         """Fable's specification review, D-2: tokens, not PIDs, pair events."""
@@ -203,6 +210,50 @@ class CensusTests(unittest.TestCase):
                              start_line(self.NONCE, "7-a", 7, "-f", "a.R", restore=True),
                              hook_line(self.NONCE, "7-a", 7, 2, "END"))
         self.assertIn("saved workspace", report["obligations"][0])
+
+
+class CompletenessTests(unittest.TestCase):
+    """Delivery, stream end, and process end decide the state (spec §4, §5;
+    Astra's specification review, D-2)."""
+
+    GOOD = {"Type": "json-file",
+            "Config": {"max-size": "100g", "max-file": "1", "mode": "blocking"}}
+
+    @staticmethod
+    def census(**lists) -> dict:
+        base = {"processes": [{}], "errors": [], "flags": [], "obligations": [],
+                "gaps": [], "abnormal": [], "unterminated": []}
+        return {**base, **lists}
+
+    def test_log_options_are_passed_and_read_back(self):
+        self.assertEqual(lane.log_opt_args(), ["--log-driver", "json-file", "--log-opt",
+                                               "max-size=100g", "--log-opt", "max-file=1",
+                                               "--log-opt", "mode=blocking"])
+        self.assertIsNone(lane.log_config_problem(self.GOOD))
+
+    def test_non_blocking_logger_is_a_problem(self):
+        config = {"Type": "json-file", "Config": {**self.GOOD["Config"],
+                                                   "mode": "non-blocking"}}
+        self.assertIn("'mode': 'non-blocking'", lane.log_config_problem(config))
+        self.assertIn("not json-file", lane.log_config_problem({"Type": "local"}))
+        self.assertIn("not json-file", lane.log_config_problem(None))
+        rotating = {"Type": "json-file", "Config": {**self.GOOD["Config"], "max-file": "3"}}
+        self.assertIn("'max-file': '3'", lane.log_config_problem(rotating))
+
+    def test_missing_tail_is_failed_only_with_the_facts_whole(self):
+        abnormal = self.census(abnormal=["7-a"])
+        self.assertEqual(lane.run_state([], 137, abnormal), "failed")
+        self.assertEqual(lane.run_state(["docker wait failed: x"], None, abnormal),
+                         "incomplete")
+        self.assertEqual(lane.run_state(["the container's log options differ"], 137,
+                                        abnormal), "incomplete")
+
+    def test_unterminated_fork_and_gap_are_incomplete(self):
+        self.assertEqual(lane.run_state([], 0, self.census(unterminated=["12-f"])),
+                         "incomplete")
+        self.assertEqual(lane.run_state([], 0, self.census(gaps=["7-a"])), "incomplete")
+        self.assertEqual(lane.run_state([], 0, self.census()), "complete")
+        self.assertEqual(lane.run_state([], 1, self.census()), "failed")
 
 
 class RunPieceTests(unittest.TestCase):
