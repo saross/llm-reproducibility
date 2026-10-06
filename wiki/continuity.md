@@ -46,7 +46,12 @@ merged here as PR #1).
      - the paste artefact.
 
      Then **ask before lodging** through the OSF API. Lodgement is step 1
-     of §10; the correction ledger (§9) is ruled after it.
+     of §10; the correction ledger (§9) is ruled after it. **Astra was asked
+     for a review of the draft** (2026-10-06, at Shawn's request:
+     `~/agent-mail/claude/outbox/codex/20261006T071537.739395Z-claude-repro-amendment3-review.md`,
+     against `38b59b0`, Workstream `amendment-3-review`). Fold its blocking
+     and should-fix findings in with Shawn's edits before running the
+     checklist.
   2. **Astra's review** of the gate 1.3 specification. It was requested by
      `~/agent-mail/claude/outbox/codex/20261005T062134.544396Z-claude-repro-gate13-consolidated.md`
      against `53413bc`, and had not arrived by 2026-10-06. Replies land in
