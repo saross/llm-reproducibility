@@ -32,26 +32,31 @@ merged here as PR #1).
 
 ## Repo state (2026-10-06, session fabeab56 close) — START HERE
 
-- **⏩ START HERE: Shawn rules D-7 to D-9 and the Q5/Q6 dates, then lodge
-  amendment 3, then finish the gate 1.3 instrumentation.**
-  1. **Amendment 3** (`23c72fc` on main) is revised after Astra's review
-     and the registrant's read. The revision record at the end of
-     `studies/open-science-compliance/prereg/amendment-3-draft.md` lists
-     each finding's disposition, the consistency check's deliberate
-     differences, the token checks, and the register exit checks.
-     Checklist steps 2–4 are done; steps 5–6 ran on the working tree
-     (gate PASS, 387 tests) and re-run at the lodgement commit. **Shawn
-     rules:** D-7 (supplied pins take precedence over the date search;
-     proposed (a)), D-8 (validation independence; proposed (a), a second
-     rater is (b)), D-9 (the ledger's pass predicate), and the ruling
-     dates of audit Q5 and Q6: `findings.json` says 2026-10-05 for all
-     ten, its commit `c4553f9` is dated 2026-10-06, and the draft labels
-     Q6 10-05 and Q5 10-06. Then strip the `[D-n]` markers, set the banner
-     date, regenerate `osf-amendment-3.txt` (the generator is in this
-     session's scratchpad; the recipe is the README's), re-run the gate
-     and tests at the lodgement commit, tag `osf-amendment-3-<date>`, and
-     **ask before lodging** through the OSF API (the amendment-1 session
-     holds the recipe; `.notes/reference_register-prereg.md`).
+- **⏩ START HERE: Shawn re-reads the revised amendment 3 text, then lodge
+  it, then finish the gate 1.3 instrumentation.**
+  1. **Amendment 3: every decision is ruled** (2026-10-06 and 07; the
+     revision record at the end of
+     `studies/open-science-compliance/prereg/amendment-3-draft.md`). D-7
+     (a), D-8 (a), D-9 with expected-untestable strict, Q5 and Q6 dated
+     2026-10-05 from the archived transcript, and the revision's other new
+     rules walked through and accepted (concordance failure stops the
+     census; earliest-released version on a tie; access-controlled
+     deposits scored on their record). **One checklist item is open
+     before lodging:** Shawn re-reads the revised passages in the draft
+     itself, because the rulings were made from summaries. Then, at
+     lodgement:
+     - decide whether the draft's "Why this amendment" paragraph opens the
+       lodged text, as "Nature of this amendment" did in amendments 1
+       and 2;
+     - regenerate the paste artefact with
+       `studies/open-science-compliance/prereg/make-paste-artefact.py
+       amendment-3-draft.md osf-amendment-3.txt <date>`, then
+       `unwrap-paste-file.py`;
+     - re-run the D5 gate and the tests at the lodgement commit, and tag
+       `osf-amendment-3-<date>`;
+     - **ask before lodging** through the OSF API. The route is in
+       `.notes/reference_register-prereg.md` and amendment 1's record; the
+       exact calls are in the archived amendment sessions, not yet located.
   2. **Gate 1.3 instrumentation** on PR #7 (`feat/lane-gate-1-1-code-audit`,
      head `7d577b8`; worktree `.claude/worktrees/agent-a8a2378c2a5dbdc98`).
      Built this session: spec revision 2 (`340f77d`), the F1 completeness
@@ -85,8 +90,8 @@ merged here as PR #1).
     fires in every forked child; `parse(text =)` is detectable with
     `missing()`; `loadNamespace` tracing needs a re-entrancy guard that is
     reset before the imports load.
-- **Still with Shawn:** D-7, D-8, D-9, and the Q5/Q6 dates; WN-am and
-  WN-an (session log of b1a1e102); user-obs 2026-10-06 A–C;
+- **Still with Shawn:** the re-read of amendment 3's revised passages;
+  WN-am and WN-an (session log of b1a1e102); user-obs 2026-10-06 A–C;
   personal-assistant PR #169 (still open on 2026-10-06; once merged,
   re-run `scripts/compose-global-claude-md.sh` and remove
   `~/worktrees/personal-assistant/claude-review-protocol`).

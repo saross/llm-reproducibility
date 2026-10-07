@@ -816,10 +816,12 @@ path the launch commit's run configuration records.
 
 - [X] Registrant reads and edits the full draft; decisions D-1 to D-6 ruled
       (2026-10-06).
-- [ ] Registrant re-reads every passage revised on 2026-10-06 (the
-      revision record lists them; the first item's tick predates the
-      revision) and rules the new rules it introduces, which go beyond
-      D-7 to D-9.
+- [x] 2026-10-07 New rules introduced by the revision, beyond D-7 to D-9,
+      ruled by the registrant from a walk-through of each (revision
+      record, "Rulings on the revision's new rules").
+- [ ] Registrant re-reads the revised passages in the draft itself. The
+      first item's tick predates the revision, and the rulings above were
+      made from summaries, not from the text.
 - [x] 2026-10-06 Astra's review folded in; D-7 to D-9 ruled; the ruling
       dates of audit Q5 and Q6 reconciled with `findings.json` (both
       2026-10-05, from the archived transcript of session b1a1e102).
@@ -1004,6 +1006,29 @@ general principles at 08:55 on 2026-10-06. Both §7(d) bullets now read
 2026-10-05, matching `findings.json`. **Remaining at lodgement:** the
 `[D-n]` markers are stripped from the paste artefact and its banner date
 is set.
+
+**Rulings on the revision's new rules (Shawn, 2026-10-07).** A side
+agent pointed out that the revision wrote binding rules beyond D-7 to
+D-9 into the lodged text, and they were walked through one by one.
+
+- **§6(c) and §10, concordance failure in the re-validation:** stop
+  until a further amendment is lodged, with no fallback declared, so
+  that D-3 stands. Gate threshold 135 of 150 items; the selected hybrid
+  scorer reached 139 of 150 on the old inputs.
+- **§4 item 5, an unresolved choice between versions:** the
+  earliest-released candidate supplies the census value, every candidate
+  is scored, and the others are reported as a sensitivity.
+- **§4 item 6, a deposited but access-controlled dataset:** scored on its
+  record, with AP-13 limited to data deposited nowhere. No pilot reference
+  score changes.
+- **Accepted as drafted:** the version and identifier rules (uplift-only
+  credit for a wrongly cited single version, unavailable versus failed
+  checks, derived identifiers by provenance, "no metadata record"); the
+  planned-rule adoption limits in §5(b); the reproduction-gate rules in
+  §7(d), §9, and §10 (independence over all shared state, unrulable hard
+  integrity failures, the ledger's fields, the locked target list, and an
+  amendment for any gate failure); and the factual disclosures in §2,
+  §3(b), §6(b), and §10.
 
 **Register exit checks (lodged portion, 6,058 words after the
 2026-10-06 rulings; academic register
