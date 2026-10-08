@@ -405,10 +405,10 @@ shared_content_policy:
 shared_content:
   fair-instrument:
     canonical_file: studies/open-science-compliance/protocol/instruments/fair-instrument.md
-    version: "2.1"
-    receipt_token: "5ff4c48c4f5c7321"
-    sha256: "299fe8abc342f6736474c2312cf62ee02a0f26957d6d00a9831ddd60a071851e"  # C7 content-integrity hash (2026-08-15)
-    status: frozen-by-osf-registration  # DOI 10.17605/OSF.IO/DQNHG; v2.1 per erratum Entry 3 (ratified 2026-08-14) + 2026-08-15 platform-table rulings; amendment 2 must lodge before D3 scoring
+    version: "2.2"
+    receipt_token: "bf984697092c0c20"
+    sha256: "4248863269dab3ade8c93476b5a67026de187fa1acc40d50cfd74deeecd2715d"  # C7 content-integrity hash (2026-10-09)
+    status: frozen-by-osf-registration  # DOI 10.17605/OSF.IO/DQNHG; v2.1 per erratum Entry 3 (ratified 2026-08-14) + 2026-08-15 platform-table rulings, lodged in amendment 2; v2.2 per amendment 3 §4 (lodged 2026-10-08), erratum Entry 6
     consumers:
       - agent: fair-assessor-sonnet-5   # per-model variant (benchmark: Sonnet 5 + Opus 5 + Fable 5)
         mechanism: push                 # SubagentStart injection, receipt required
@@ -539,24 +539,24 @@ shared_content:
 agent_definitions:
   fair-assessor-sonnet-5:
     file: .claude/agents/fair-assessor-sonnet-5.md
-    version: "1.2"
+    version: "1.3"
     model: claude-sonnet-5
-    sha256: "42de4ba61acb5cc50d51b2e602cdf95833aaccc5b434aa0932262c2a11b34409"
+    sha256: "8bc6f19f746ed183454f2052d311f910dcc8f973ab0b7e557b7d6a1d3a9beb10"
   fair-assessor-opus-5:
     file: .claude/agents/fair-assessor-opus-5.md
-    version: "1.2"
+    version: "1.3"
     model: claude-opus-5
-    sha256: "17628d11a963bdd32f0ab369deca652910491e171002204ec3917da8aec9950b"
+    sha256: "159497ec4902447fc1c4e9b351b0d8571dab81bee89265d0b76c5ec53e29e97b"
   fair-assessor-opus-5-5:
     file: .claude/agents/fair-assessor-opus-5-5.md
-    version: "1.2"
+    version: "1.3"
     model: claude-opus-5-5
-    sha256: "d11195e81e955c50f5d94026a6848ca042a9f11ff9f9f5bcfa08b41a768dd242"
+    sha256: "732ca59cced0b119e21187e26c635e837f066f45760d4b311dc0c4219da52f2c"
   fair-assessor-fable-5:
     file: .claude/agents/fair-assessor-fable-5.md
-    version: "1.2"
+    version: "1.3"
     model: claude-fable-5
-    sha256: "1c15d0deae13fa57cb8a96317452a72b02d4c929e9e7f039a4f85196e5fda5e5"
+    sha256: "ebd36e32a9ce47cde19a4f54febbfdb79e6af14f7f08845fef4d7985ae8a6502"
   reproduction-planner:
     file: .claude/agents/reproduction-planner.md
     version: "1.1"
