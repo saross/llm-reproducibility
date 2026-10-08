@@ -13,14 +13,26 @@ Two modes:
 
 - ``plan`` reads only, needs no credentials, and changes nothing. It fetches
   the latest approved version anonymously, composes the new Summary, runs
-  every check that can run before writing, and saves the composed text and a
-  report to ``--out``.
+  every check that can run before writing, and saves the previous and the
+  composed Summary to ``--out``.
 - ``lodge`` runs ``plan`` again (the registration may have changed), then
   creates the revision, writes the Summary and the revision justification,
-  and verifies what OSF stored. Only if every check passes does it submit
-  and approve the revision, which makes it public, and then verify the
-  public copy anonymously. A failed check stops it before submission and
-  leaves an unsubmitted revision that only the registrant can see.
+  and checks what OSF stored. Only if every content check passes does it
+  submit and approve the revision, which makes it public, and then verify
+  the public copy anonymously.
+
+What a failure leaves behind depends on when it happens:
+
+- **Before submission** (an HTTP error while creating or writing, or a
+  failed content check): any revision created is unsubmitted, visible only
+  to the registrant, and must be fixed or deleted before a retry. ``plan``
+  refuses while it exists, because it is the newest revision.
+- **Once submission has been attempted**: the revision may already be
+  submitted or approved, even if the request reported an error, and OSF can
+  approve a submitted revision automatically after its waiting period. The
+  script reports the revision identifier and its last confirmed state and
+  makes no claim that it is private. Inspect that revision before any
+  retry.
 
 OSF stores literal ``<`` and ``>`` as HTML entities and renders them back
 correctly (amendment 2's record calls this "the registry's known write
@@ -50,6 +62,11 @@ from pathlib import Path
 API = "https://api.osf.io/v2"
 REGISTRATION = "dqnhg"  # DOI 10.17605/OSF.IO/DQNHG
 SEPARATOR = "=" * 40  # the separator amendments 1 and 2 were lodged under
+PAUSE_SECONDS = 2  # between actions, as in the August lodgements
+
+
+class OsfError(Exception):
+    """An OSF API request that failed, with OSF's response where there was one."""
 
 
 def entity_form(text: str) -> str:
@@ -104,7 +121,7 @@ def request(method: str, path: str, token: str | None = None,
     """Make one OSF API request and return the decoded JSON body.
 
     Raises:
-        SystemExit: on an HTTP error, after printing OSF's response.
+        OsfError: on an HTTP error (with OSF's response) or a network failure.
     """
     headers = {"Content-Type": "application/vnd.api+json"}
     if token:
@@ -115,16 +132,22 @@ def request(method: str, path: str, token: str | None = None,
         with urllib.request.urlopen(req) as response:
             return json.load(response)
     except urllib.error.HTTPError as exc:
-        sys.exit(f"{method} {path}: HTTP {exc.code} {exc.read().decode()[:600]}")
+        raise OsfError(f"{method} {path}: HTTP {exc.code} {exc.read().decode()[:600]}") from exc
+    except (urllib.error.URLError, TimeoutError) as exc:
+        raise OsfError(f"{method} {path}: {exc}") from exc
 
 
 def latest_approved() -> tuple[str, str]:
-    """Return the id and Summary of the newest approved version, anonymously."""
+    """Return the id and Summary of the newest approved version, anonymously.
+
+    Raises:
+        OsfError: if a request fails or the newest revision is not approved.
+    """
     listing = request("GET", f"registrations/{REGISTRATION}/schema_responses/")["data"]
     newest = listing[0]
     if newest["attributes"]["reviews_state"] != "approved":
-        sys.exit(f"the newest revision {newest['id']} is "
-                 f"{newest['attributes']['reviews_state']}, not approved; resolve it first")
+        raise OsfError(f"the newest revision {newest['id']} is "
+                       f"{newest['attributes']['reviews_state']}, not approved")
     body = request("GET", f"schema_responses/{newest['id']}/")
     return newest["id"], body["data"]["attributes"]["revision_responses"]["summary"]
 
@@ -141,10 +164,16 @@ def plan(args: argparse.Namespace) -> tuple[str, str, str]:
     Returns:
         The previous version's Summary, the Summary to send, and the
         justification.
+
+    Raises:
+        SystemExit: if a request fails or any check fails.
     """
     artefact = Path(args.artefact).read_text(encoding="utf-8")
     justification = Path(args.justification).read_text(encoding="utf-8").strip()
-    previous_id, previous = latest_approved()
+    try:
+        previous_id, previous = latest_approved()
+    except OsfError as exc:
+        sys.exit(f"plan stopped, nothing written: {exc}")
     try:
         new = compose_summary(previous, artefact, args.amendment, args.date)
     except ValueError as exc:
@@ -168,22 +197,65 @@ def plan(args: argparse.Namespace) -> tuple[str, str, str]:
     return previous, new, justification
 
 
+def last_state(rid: str, token: str) -> str:
+    """Return a revision's state as OSF now reports it, or why it is unknown."""
+    try:
+        body = request("GET", f"schema_responses/{rid}/", token)
+        return body["data"]["attributes"]["reviews_state"]
+    except OsfError as exc:
+        return f"unknown ({exc})"
+
+
+def submit_and_verify(rid: str, new: str, token: str) -> None:
+    """Submit and approve the revision, then verify the public copy anonymously.
+
+    Raises:
+        OsfError: if a request fails or the public copy does not verify.
+    """
+    for trigger in ("submit", "approve"):
+        action = request("POST", f"schema_responses/{rid}/actions/", token, {"data": {
+            "type": "schema-response-actions", "attributes": {"trigger": trigger},
+            "relationships": {"target": {"data": {"id": rid, "type": "schema-responses"}}}}})
+        print(f"{trigger}: {action['data']['attributes'].get('from_state')} to "
+              f"{action['data']['attributes'].get('to_state')}")
+        time.sleep(PAUSE_SECONDS)
+    public_id, public = latest_approved()
+    results: list[tuple[str, bool]] = []
+    check(results, "the newest approved version is the new revision", public_id == rid)
+    check(results, "the anonymous copy equals the sent Summary under the entity transform",
+          public == entity_form(new))
+    print(f"version URL: https://osf.io/{REGISTRATION}?revisionId={rid}")
+    if not all(passed for _, passed in results):
+        raise OsfError("public verification failed")
+
+
 def lodge(args: argparse.Namespace) -> None:
-    """Create, write, verify, submit, and approve the revision, then verify it publicly."""
+    """Create, write, and check the revision; only then submit, approve, and verify it.
+
+    Raises:
+        SystemExit: on any failure, saying whether submission had been
+            attempted and, if so, the revision's last confirmed state.
+    """
     token = os.environ.get("OSF_API_KEY")
     if not token:
         sys.exit("OSF_API_KEY is not set")
     previous, new, justification = plan(args)
-    created = request("POST", "schema_responses/", token, {"data": {
-        "type": "schema-responses",
-        "relationships": {"registration": {"data": {"id": REGISTRATION,
-                                                    "type": "registrations"}}}}})
-    rid = created["data"]["id"]
-    print(f"created revision {rid} ({created['data']['attributes']['reviews_state']})")
-    patched = request("PATCH", f"schema_responses/{rid}/", token, {"data": {
-        "id": rid, "type": "schema-responses",
-        "attributes": {"revision_responses": {"summary": new},
-                       "revision_justification": justification}}})
+    rid = None
+    try:
+        created = request("POST", "schema_responses/", token, {"data": {
+            "type": "schema-responses",
+            "relationships": {"registration": {"data": {"id": REGISTRATION,
+                                                        "type": "registrations"}}}}})
+        rid = created["data"]["id"]
+        print(f"created revision {rid} ({created['data']['attributes']['reviews_state']})")
+        patched = request("PATCH", f"schema_responses/{rid}/", token, {"data": {
+            "id": rid, "type": "schema-responses",
+            "attributes": {"revision_responses": {"summary": new},
+                           "revision_justification": justification}}})
+    except OsfError as exc:
+        where = f"revision {rid} exists, unsubmitted" if rid else "no revision id was returned"
+        sys.exit(f"stopped before submission ({where}): {exc}. Inspect the registration's "
+                 "revisions, and fix or delete any unsubmitted one before a retry.")
     attributes = patched["data"]["attributes"]
     stored = attributes["revision_responses"]["summary"]
     (Path(args.out) / "stored-summary.txt").write_text(stored, encoding="utf-8")
@@ -197,23 +269,15 @@ def lodge(args: argparse.Namespace) -> None:
     check(results, "the justification was stored", attributes.get("revision_justification")
           == justification)
     if not all(passed for _, passed in results):
-        sys.exit(f"verification failed: revision {rid} is unsubmitted and not public. "
+        sys.exit(f"content check failed: revision {rid} is unsubmitted and not public. "
                  "Inspect it, then fix or delete it before any retry.")
-    for trigger in ("submit", "approve"):
-        action = request("POST", f"schema_responses/{rid}/actions/", token, {"data": {
-            "type": "schema-response-actions", "attributes": {"trigger": trigger},
-            "relationships": {"target": {"data": {"id": rid, "type": "schema-responses"}}}}})
-        print(f"{trigger}: {action['data']['attributes'].get('from_state')} to "
-              f"{action['data']['attributes'].get('to_state')}")
-        time.sleep(2)
-    public_id, public = latest_approved()
-    results = []
-    check(results, "the newest approved version is the new revision", public_id == rid)
-    check(results, "the anonymous copy equals the sent Summary under the entity transform",
-          public == entity_form(new))
-    print(f"version URL: https://osf.io/{REGISTRATION}?revisionId={rid}")
-    if not all(passed for _, passed in results):
-        sys.exit("public verification failed; the revision is public, so inspect it now")
+    try:
+        submit_and_verify(rid, new, token)
+    except OsfError as exc:
+        sys.exit(f"failed after submission was attempted: {exc}. Revision {rid}, last "
+                 f"confirmed state: {last_state(rid, token)}. It may be or become public "
+                 "(OSF can approve a submitted revision automatically). Inspect this "
+                 "revision before any retry.")
 
 
 def main() -> None:
