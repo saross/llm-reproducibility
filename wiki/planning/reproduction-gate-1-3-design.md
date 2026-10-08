@@ -633,7 +633,10 @@ must equal that file at the launch commit (2026-10-08).
 
 **Retired:** the executor-invoked `snapshot-code` and `execution-snapshots/`
 for new attempts. The transcript audit treats their use as contaminating
-(§12).
+(§12). As built (2026-10-09): `snapshot-code` refuses; a new attempt
+without run records fails the gate; an attempt executed under gate 1.2,
+with both snapshots, is still checked by those rules but marked ineligible
+for the current gate, with a warning.
 
 ## 6. Foundation 3: issues, rulings, and admission
 
@@ -714,8 +717,8 @@ ruling never overrides one (Astra 7).
   - every target, when no authors' file ran or the run loaded unaccounted
     code.
 
-  This supersedes `coverage_creditable` from part 1, which stays in the
-  report until the workflow switches to run records.
+  This supersedes `coverage_creditable` from part 1, which left the report
+  at the workflow switch (2026-10-09).
 
 **Admission.** `persist-results` writes a study-eligible record only when
 all of these hold:
@@ -1422,7 +1425,7 @@ The lane covers R only, as its scope already states.
 
 Rough size: the foundations took one session; the instrumentation and its
 matrix about two more, and the rest one or two, plus the review rounds of
-§2.2. `GATE_VERSION` becomes 1.3 when step 7 lands.
+§2.2. `GATE_VERSION` becomes 1.3 when step 7 lands (it did, 2026-10-09).
 
 - [x] 2026-10-05 **F1, the record boundary** (`0ce7f25`):
   - `run-container`'s skeleton: lock, image id, copy, verify, baseline,
@@ -1472,13 +1475,14 @@ matrix about two more, and the rest one or two, plus the review rounds of
 - [x] 2026-10-08 **Conversions** (§11) and the **static additions** (§10).
   - [x] 2026-10-08 the static additions (§10);
   - [x] 2026-10-08 conversions (§11), with the §13 conversion fixtures.
-- [ ] **The transcript audit** (§12), which writes `transcript-audit.json`
-  (built 2026-10-08);
-  the **remaining acceptance tests** (§13); and **the workflow switch**:
-  the executor prompt and definition use `run-container`, with the §7
-  prompt points; run records become mandatory for new attempts;
-  `snapshot-code` is retired; and `coverage_creditable` is dropped. Then
-  the final review, with the herskind pilot re-run (§2.2).
+- [x] 2026-10-09 **The transcript audit** (§12), which writes
+  `transcript-audit.json` (`2cef8c7`); the **remaining acceptance tests**
+  (§13: every store kind gone at run start); and **the workflow switch**:
+  the executor brief (execute workflow v1.3), definition (v1.4), and
+  preparation prompt (v1.4) use `run-container`, with the §7 prompt
+  points; run records are mandatory for new attempts; `snapshot-code` is
+  retired; `coverage_creditable` is dropped; and `GATE_VERSION` is 1.3.
+- [ ] **The final review**, with the herskind pilot re-run (§2.2).
 - [ ] **After gate 1.3 merges** (Shawn, 2026-10-06): split
   `scripts/reproduction-lane.py` into a few modules (runner, records,
   rulings, gate) in its own refactoring PR, checked against the existing
