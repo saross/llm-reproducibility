@@ -72,6 +72,23 @@ merged here as PR #1).
     on PR #7. The run sealed complete and all 34 CSV and text outputs are
     byte-identical to attempt-02's. It found a defect, fixed (`f5b77d7`:
     an original run part by part read as never run), and raised Q1 below.
+  - [x] 2026-10-09 Track 2 on PR #9 (branch
+    `feat/amendment-3-instruments`, head `276b7e5`, open, not merged):
+    five frozen instruments edited to the lodged text, namely
+    fair-instrument 2.2 (§4), and verdicts-and-precision,
+    data-availability-taxonomy, coverage-rules, and invariants 1.1 (§7(a)
+    to (d)). Mirrors re-spliced, seven agent definitions moved to the new
+    versions, manifest digests re-registered, and erratum Entry 6 added.
+    Astra's review is requested by mail (outbox, 2026-10-08T13:34Z).
+  - [x] 2026-10-09 Track 3: **the draft correction ledger is on PR #10**
+    (draft, branch `feat/correction-ledger-draft`, head `8fec4d7`, not
+    merged; worktree `.claude/worktrees/correction-ledger-draft`). Marked
+    DRAFT: not ruled, frozen, or hashed. All five pilots, 46 targets, and 16
+    rulings (L1–L16), in
+    `studies/open-science-compliance/outputs/validation/correction-ledger/`.
+    `check-printed-values.py` finds 239/239 printed values on their cited
+    PDF pages. Astra's review is requested by mail (2026-10-08T14:10Z). Q3
+    and Q4 below.
 - **Track 1 (primary): gate 1.3 instrumentation on PR #7.** Branch
   `feat/lane-gate-1-1-code-audit`, head `7d577b8`, open and not merged.
   Worktree: `.claude/worktrees/agent-a8a2378c2a5dbdc98`. Work in the order
@@ -159,6 +176,29 @@ merged here as PR #1).
     **Recommendation:** after Q1 and the full re-run, one round for both
     reviewers, as §2.2's stopping rule intends. Nothing is sent to Fable
     tonight; Astra's review requests are in agent mail (see below).
+  - **Q3. Rule the correction ledger (PR #10).** The sixteen rulings are in
+    `correction-ledger.md`, each with options and a recommendation. Two
+    carry the rest: **L1**, the target list (no pilot has a locked list, so
+    the draft uses each attempt-01 report's compared items), and **L4**,
+    "unchanged" meaning that the expected result equals the pilot's,
+    whatever the pilot's credit eligibility. **L6 recommends dye and
+    marwick** as the gate papers, plus crema's registered leg: dye has 11
+    testable unchanged targets, marwick 8, herskind 2, key and crema none.
+    The draft also found pilot errors the audit missed:
+    - marwick's printed Kendall's W is 0.64, where the pilot recorded
+      "~0.70" and credited an exact match;
+    - dye's pilot "published" branching values were its own output.
+  - **Q4. A lodged example rests on a pilot transcription slip (ledger
+    L16).** Audit Q5(ii) sends key's "two inconsistent cells (3.1%,
+    19.6%)" to the paper-error protocol, and lodged amendment 3 §7(d)
+    repeats it as an example. The paper prints Midland Thickness 19.6 and
+    Clovis Mass 3.1; the pilot's wrapper swapped them (attempt-01
+    `run-analysis.R` lines 260–261). The rule itself is unaffected; only
+    its example fails. Options: (a) an erratum-log entry only; (b) also an
+    OSF note, now or with the next amendment. **Recommendation: (a) now,
+    with (b) folded into the next amendment.** It changes no rule, so a
+    standalone OSF update would be noise. The gate is unaffected, because
+    every key target is expected-untestable.
 - **Done this session (2026-10-06 to 10-08):**
   - [x] 2026-10-06 Astra's amendment 3 review folded in (`23c72fc`);
     D-7 to D-9 and the revision's new rules ruled (`9536962`, `2f3529d`).
@@ -2011,6 +2051,35 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-08 → 10-09 (session be70c3be) — overnight: gate 1.3 built, instruments edited, ledger drafted
+
+An autonomous overnight session on Opus 5.5, compacted once. It worked in
+the PR #7 worktree (Track 1), the PR #9 worktree (Track 2), and a new
+ledger worktree (Track 3). Results are in "Overnight progress" above.
+
+- **Track 3 method.** Four read-only Opus subagents transcribed the
+  printed values, one per pilot. Each load-bearing claim was then
+  re-checked at source: the text layer, a page render for raster labels,
+  and scripts against the pilot reports and outputs. The re-checks caught
+  three of my own slips before commit: wrong initials for three of key's
+  authors, a differing-cell count (21 written, 18 true), and a missing
+  ruling id.
+- **Network:** public downloads only. Crema's v1.0.0 zip came from Zenodo
+  and marwick's `paper.docx` at tag 1.3 from GitHub; a Zenodo re-download
+  of marwick's zip returned HTTP 504. **Slip, reported:** the first
+  Zenodo request's User-Agent header carried Shawn's email address, which
+  breaks the rule against sending it to unrelated services. Later requests
+  omitted it.
+- **Working-notes candidate (held for Shawn):**
+  - **WN-aq:** in four of the five pilots, the comparison report's
+    "published" column was wrong. Crema's held v2.0.0's own re-run,
+    dye's held branching values taken from its own output, marwick's held
+    a W never read from the paper, and key's swapped two cells. The
+    executed-code audit checked what code ran, not what it was compared
+    against, so it found only crema's. An audit of a reproduction needs
+    both legs. Anchors: PR #10, `correction-ledger/README.md`, "Findings
+    beyond the executed-code audit".
 
 ### 2026-10-06 → 10-08 (session fabeab56) — amendment 3 lodged
 
