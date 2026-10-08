@@ -856,8 +856,10 @@ the path the launch commit's run configuration records.
       folded in: B1 ruled (the pin's own neighbours) and written into
       §7(d); S1 evidence locations corrected and the audit commit tagged;
       S2 script guarantee narrowed, with mocked-request tests.
-- [ ] Astra's re-check of the B1, S1, and S2 fixes reports no regressions
-      (the condition on the lodgement approval).
+- [x] 2026-10-08 Astra's re-check of the B1, S1, and S2 fixes, at
+      `4258db8`: "No blocking issues found" (the condition on the
+      lodgement approval). Its two non-blocking script qualifications were
+      fixed in `4b1ee70`, with tests.
 - [x] 2026-10-06 Astra's review folded in; D-7 to D-9 ruled; the ruling
       dates of audit Q5 and Q6 reconciled with `findings.json` (both
       2026-10-05, from the archived transcript of session b1a1e102).
@@ -872,11 +874,12 @@ the path the launch commit's run configuration records.
       ruling dates of audit Q5 and Q6.
 - [x] 2026-10-06 Register exit checks run on the lodged portion and
       recorded (revision record).
-- [ ] D5 manifest-consistency gate PASS and full test suite green at the
-      lodgement commit; repository tagged `osf-amendment-3-<date>`. Run on
-      the revised working tree 2026-10-06: gate PASS (81/81), 387 tests
-      passed. Re-run 2026-10-08 on the lodgement candidate: gate PASS
-      (81/81), 395 tests passed. Re-run at the tagged commit.
+- [x] 2026-10-08 D5 manifest-consistency gate PASS and full test suite
+      green at the lodgement commit; repository tagged
+      `osf-amendment-3-2026-10-08`. Run on the revised working tree
+      2026-10-06: gate PASS (81/81), 387 tests passed. Re-run 2026-10-08
+      on the lodgement candidate: gate PASS (81/81), 395 tests passed. At
+      the tagged commit: gate PASS (81/81), 410 tests passed.
 - [x] 2026-10-08 Paste artefact regenerated for lodgement, banner dated
       2026-10-08 and tags checked against it by the builder; 6,364 words,
       54 bullets, and 29 numbered lines before and after unwrapping
