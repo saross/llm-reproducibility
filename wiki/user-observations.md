@@ -810,3 +810,40 @@ to the account whatever its body says. It offered a machine account or
 GitHub App as the route to native agent reviews without posting as
 Shawn. Shawn chose "documents now, bot account later", an option that was
 not in his original pair.
+
+## Pending review — 2026-10-08 batch (drafted at handoff, session fabeab56)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence
+holds them over, never discards. Titles state the transferable lesson
+(claude-obs 73). The 2026-10-06 batch above is still pending.*
+
+**Candidate A (helpful): a follow-up review is worth asking for when a
+revision composes rulings, and it should check that the fixes landed
+rather than re-review everything.** Shawn asked whether amendment 3 needed
+another review from Astra or Fable. Claude recommended Astra, scoped to
+"did each finding land, do the new rules contradict, does the paste match".
+It argued against Fable, because Fable had already advised on the rulings,
+and a top-tier pass would mostly repeat that. The follow-up found B1, a
+real blocking gap. Two rulings had been joined into a rule that never
+said which versions follow a failed pin. Claude, Shawn, and Fable had all
+passed it.
+
+**Candidate B (helpful): write an irreversible procedure down as reviewed
+code before running it, not at the moment of running it.** Amendments 1
+and 2 were lodged with API calls written during the lodgement. For
+amendment 3, Claude scripted the route with a read-only `plan` mode and
+put it in Astra's review. Astra found three failure-path defects before
+the live run, and the run then passed every check first time.
+
+**Candidate C (unhelpful): raise a gap you have noticed, even when raising
+it reopens an approval.** Reading amendment 2, Claude saw that both earlier
+amendments say what they leave unchanged and amendment 3 did not. It kept
+quiet, to avoid reopening Shawn's "approve as is". A side agent raised it,
+and Shawn added the sentence in one question. Lodged text cannot be
+corrected except by erratum or amendment, so the omission was the costly
+path.
+
+**Candidate D (unhelpful): do not infer an agent's pronouns from its
+name.** Claude called Astra "she" throughout. Shawn asked which pronoun
+Claude prefers, which surfaced the slip. The existing notes use "it" or
+"they" for Astra.
