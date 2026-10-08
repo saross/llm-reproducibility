@@ -662,7 +662,8 @@ codes are:
   `anchor-corpus-unselected`, `anchor-git-offline`;
 - originals and edits: `no-pristine-copy`, `transcription`, `edited-copy`,
   `credited-edited-target`, `no-executed-original`;
-- wrappers: `generated-code`, `conversion-evidence`,
+- wrappers: `generated-code`, `conversion-differs` (which replaced
+  `conversion-evidence`, 2026-10-08, §11),
   `wrapper-embeds-original`, `dynamic-evaluation`, `in-memory-patching`,
   `docker-fetch`, `docker-build-edit`, `docker-copy`,
   `external-code-reference`, `wrapper-semantics`;
@@ -1220,6 +1221,25 @@ the first five differing cells, raw and typed. The human rules
 `admissible`, where nothing changed in value, or `fail-and-uplift`. An
 unsupported format, a missing file, or an ambiguous sheet stays an issue.
 
+**As built (2026-10-08).** `compare_conversion` reads CSV and TSV with its
+own RFC 4180 tokenizer, which keeps each field's quoting, and `.xlsx`
+workbooks with openpyxl (now in `requirements.txt`; imported only when a
+workbook is compared). The declaration takes the fields above, as the
+manifest schema now does, plus `output_encoding` (default UTF-8) and
+`scope` (`sheet` or `range`, the limit of the identity claimed); a
+`timezone` needs its `timezone_evidence`. The compared output must be in
+the final run's input tree, or a sealed run output, at its current digest,
+or the run did not use it. A collision is cleared only by a reader the lane
+can confirm: `readr::read_csv`, `readr::read_tsv`, or `vroom::vroom` with
+`quoted_na = FALSE`, where the output quotes every colliding literal and
+never a marker; R's `read.csv` reads a quoted `NA` as missing, so it cannot
+clear one. A datetime written with an offset under no declared zone is a
+value change, since the output then claims a zone the source does not
+hold. Every finding is one issue, `conversion-differs`, whose evidence
+fingerprint covers the wrapper, both files, and the declaration. The
+executor's `value_identity_check` is retired: ignored, with a warning,
+and the preparation prompt (v1.4) no longer asks for it.
+
 ## 12. Transcript audit (supporting evidence)
 
 `audit-run` reads the harness transcript, which the executor cannot edit.
@@ -1435,9 +1455,9 @@ matrix about two more, and the rest one or two, plus the review rounds of
     the image, `a3f2b47`);
   - [x] 2026-10-08 the semantics-neutrality test (§13).
 - [x] 2026-10-08 **Fresh computation** (§9).
-- [ ] **Conversions** (§11) and the **static additions** (§10).
+- [x] 2026-10-08 **Conversions** (§11) and the **static additions** (§10).
   - [x] 2026-10-08 the static additions (§10);
-  - [ ] conversions (§11).
+  - [x] 2026-10-08 conversions (§11), with the §13 conversion fixtures.
 - [ ] **The transcript audit** (§12), which writes `transcript-audit.json`;
   the **remaining acceptance tests** (§13); and **the workflow switch**:
   the executor prompt and definition use `run-container`, with the §7
