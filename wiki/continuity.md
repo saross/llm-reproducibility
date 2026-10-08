@@ -90,7 +90,8 @@ merged here as PR #1).
     reset before the imports load.
 - **Still with Shawn:** starting Astra for the amendment 3 follow-up
   (`~/gpt-hub/config/launch-codex.sh --no-alt-screen` from
-  `~/worktrees/llm-reproducibility/sol-repro-entry`); WN-am and WN-an (session log of b1a1e102);
+  `~/worktrees/llm-reproducibility/sol-repro-entry`); WN-am and WN-an
+  (session log of b1a1e102);
   user-obs 2026-10-06 A–C;
   personal-assistant PR #169 (still open on 2026-10-06; once merged,
   re-run `scripts/compose-global-claude-md.sh` and remove
