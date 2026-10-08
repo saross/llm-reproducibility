@@ -227,7 +227,10 @@ class:
    renv, a parse-and-evaluate wrapper, a short run), because "a pilot did
    it", the first kind of evidence for A, cannot come from fixtures.
    **A final round with no D or A finding closes the hardening**, and the
-   gate goes on to the §8 regression run.
+   gate goes on to the §8 regression run. A dry run of the pilot's
+   execution layer (2026-10-09, no agents) is recorded in
+   `wiki/planning/reproduction-gate-1-3-pilot-dry-run.md`: it found one
+   defect, fixed, and raised the question added to §16.
 3. After that, the build reopens only for a D or an A. A route seen in
    practice (in the census, a transcript, or an adversarial review) counts
    as an A on that evidence, whatever class it had before.
@@ -318,6 +321,9 @@ reviewed to completeness.
 | `RemoteType: local` read as provenance (build, probe fact 13) | D | Fixed, §8 |
 | A relative `lib.loc` recorded as the library (build) | D | Fixed, hook `1.3-inst` |
 | An environment-cleared child only a stray, not a census failure (matrix, fact 14) | D | Fixed, nonce file; §4 |
+| An original run part by part read as never run (pilot dry run) | D | Fixed, `f5b77d7`; §8 |
+| A basename shared by pristine and executed copies left unresolved (pilot dry run) | D | Fixed, `f5b77d7` |
+| 119 run-time texts from one ordinary analysis, one obligation each (pilot dry run) | Open | §16, question 6 |
 
 ## 3. Terms: trees, runs, and provenance classes
 
@@ -674,7 +680,8 @@ codes are:
   `consumed-other-code`, `image-stale`, `process-outside-front-end`,
   `stdin-script`, `workspace-restore`, `target-unbound`;
 - loads (§8, 2026-10-08): `unmatched-text`, `connection-load`,
-  `local-package`, `image-code`, `executed-not-loaded`, `package-install`;
+  `local-package`, `image-code`, `executed-not-loaded`, `package-install`,
+  `original-partly-run`;
 - fresh computation and static checks (§9, §10, 2026-10-08):
   `cache-store-input`, `cache-directory`, `startup-option`,
   `hook-integrity`, `function-shadowing`, `renviron-startup`,
@@ -1001,7 +1008,11 @@ installed: Quarto's knitr engine scripts are the first. Quarto's
 intermediate `<stem>.rmarkdown`, written by the run beside a declared
 `<stem>.qmd` and loaded by `render` or `knit`, is that document's input;
 every text knitr evaluates from it must still bind to the original's own
-(probe fact 16). Each obligation's id and
+(probe fact 16). An R original may also run as text in parts: within a
+process, texts that are contiguous, in-order slices of its lines run it
+when they cover every code line, skipping only comment and blank lines;
+slices that leave code unrun are flagged (`original-partly-run`), an
+omission (2026-10-09, from the herskind dry run). Each obligation's id and
 fingerprint rest on content, the text's md5 and the enclosing file, never
 on the run's tokens or `events.log`, so a re-run that changes nothing keeps
 its ruling (§6). An `-e` expression is hashed as R evaluates it (probe fact
@@ -1483,6 +1494,11 @@ matrix about two more, and the rest one or two, plus the review rounds of
   points; run records are mandatory for new attempts; `snapshot-code` is
   retired; `coverage_creditable` is dropped; and `GATE_VERSION` is 1.3.
 - [ ] **The final review**, with the herskind pilot re-run (§2.2).
+  - [x] 2026-10-09 a dry run of the pilot's execution layer
+    (`reproduction-gate-1-3-pilot-dry-run.md`), and its defect fixed
+    (`f5b77d7`);
+  - [ ] the full re-run through the agentic workflow (Shawn starts it);
+  - [ ] Astra's and Fable's reviews of the built gate.
 - [ ] **After gate 1.3 merges** (Shawn, 2026-10-06): split
   `scripts/reproduction-lane.py` into a few modules (runner, records,
   rulings, gate) in its own refactoring PR, checked against the existing
@@ -1515,3 +1531,15 @@ this text are complete.
    §7(d)'s "every value is unchanged"?
 5. **Contradictions.** Does this text contradict your review anywhere
    without saying so?
+
+**For the final review (added 2026-10-09):**
+
+6. **Run-time texts.** The herskind dry run (§2.2) raised 119
+   `unmatched-text` obligations: 107 subset conditions the authors' code
+   builds and dplyr parses, 9 glue placeholders in rlang and cli
+   messages, and 3 names ggplot2 parses. Each is one ruling on an md5. Is
+   that class A (an ordinary route the gate mishandles), or an operability
+   limit outside §2's classes? The dry-run record proposes a design:
+   verbatim short texts with their verified caller, templates for package
+   internals, and one obligation per place and caller. Would it close the
+   problem without opening a route?
