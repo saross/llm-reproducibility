@@ -17,7 +17,8 @@ Repository state at lodgement: tag `osf-amendment-3-2026-10-08`, commit
 `abde9b1`. Amendment version URL:
 <https://osf.io/dqnhg?revisionId=6ac775afb5ed5b4afee88a4a>. Paste
 artefact `osf-amendment-3.txt`; justification
-`osf-amendment-3-justification.txt`. **The instrument edits, the §8
+`osf-amendment-3-justification.txt`. Public page render-checked by the
+registrant. **The instrument edits, the §8
 regression gate, the re-validation, and census scoring are now
 unblocked**, in §10's order.
 
@@ -915,7 +916,8 @@ the path the launch commit's run configuration records.
       the Summary field (revision `6ac775afb5ed5b4afee88a4a`, approved);
       DOI unchanged; round-trip byte check passed before submission and
       after approval; change set exactly `["summary"]`.
-- [ ] Public page render-checked (the registrant, on the version URL).
+- [x] 2026-10-08 Public page render-checked (the registrant, on the
+      version URL: "OSF lodgement looks good").
 - [ ] UNBLOCKED 2026-10-08. Only then: instrument edits, regression gate,
       re-validation, census.
 

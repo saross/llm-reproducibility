@@ -81,8 +81,7 @@ merged here as PR #1).
     fires in every forked child; `parse(text =)` is detectable with
     `missing()`; `loadNamespace` tracing needs a re-entrancy guard that is
     reset before the imports load.
-- **Still with Shawn:** a look at amendment 3's public page (the
-  checklist's render check). To start Astra here, run
+- **Still with Shawn:** to start Astra here, run
   `~/gpt-hub/config/launch-codex.sh --no-alt-screen` from
   `~/worktrees/llm-reproducibility/sol-repro-entry`. WN-am and WN-an
   (session log of b1a1e102);
