@@ -57,7 +57,10 @@ merged here as PR #1).
   Probe R behaviour in Docker before relying on it (Docker 29.2.1 and
   `rocker/r-ver:4.3.2` are local; no pulls are needed). Tick §15 items
   with dates as they land. Commit and push to the PR branch after each
-  step. 525 tests passed at `7d577b8`. The final review (§2.2, with the
+  step. The worktree's local branch (`worktree-agent-a8a2378c2a5dbdc98`)
+  has no upstream, so push with
+  `git push origin HEAD:feat/lane-gate-1-1-code-audit`. 525 tests passed
+  at `7d577b8` (re-run 2026-10-08). The final review (§2.2, with the
   herskind pilot re-run) needs Astra and Fable, so prepare it but do not
   wait on it.
 - **Track 2: §10 step 2, the instrument edits, on a new branch and PR.**
