@@ -26,9 +26,10 @@
 #          R decodes it (~+~, ~n~, ~t~) first. Repeats of one md5 in one
 #          process are counted, not logged again; END carries the count.
 #   CONN   source() or parse() of a connection or of expressions: the
-#          function, class, and description, depth, and enclosing seq. A path
-#          hash does not cover such content, so the gate makes it an
-#          obligation.
+#          function, class, and description, depth, enclosing seq, and the
+#          calling function (namespace::name when verified as that
+#          namespace's own). A path hash does not cover such content, so the
+#          gate makes it an obligation, unless R's NAMESPACE parser read it.
 #   PKG    a namespace load: name, version, library path, the DESCRIPTION's
 #          Repository, RemoteType, RemoteSha, and Packaged fields, and the
 #          DESCRIPTION's md5. Once per package per process.
@@ -84,7 +85,7 @@ local({
     }
 
     state <- new.env(parent = baseenv())
-    state$version <- "1.2-inst"
+    state$version <- "1.3-inst"
     state$nonce <- Sys.getenv("LANE_RUN_NONCE", "none")
     state$seq <- 0L
     state$pid <- Sys.getpid()
@@ -261,7 +262,27 @@ local({
         emit("TEXT", c(md5, as.character(nchar(joined, type = "bytes") + 1L),
                        as.character(nest$depth), as.character(nest$enclosing)))
     }
-    on_conn <- function(fn, what) {
+    caller_label <- function(frame) {
+        # The function that called the loader whose frame is `frame`, as
+        # namespace::name only when that function object is the namespace's
+        # own binding of the name (so a look-alike defined elsewhere does not
+        # pass as base::parseNamespaceFile); otherwise its bare name.
+        caller <- caller_of(frame)
+        if (is.null(caller)) return("top level")
+        index <- frame_index(caller, sys.frames())
+        if (index < 1L) return("unknown")
+        call <- sys.call(index)
+        name <- sub("^.*:::?", "", paste(deparse(call[[1L]]), collapse = ""))
+        fun <- sys.function(index)
+        owner <- environment(fun)
+        if (!is.null(owner) && isNamespace(owner) &&
+                exists(name, envir = owner, inherits = FALSE) &&
+                identical(get(name, envir = owner, inherits = FALSE), fun)) {
+            return(paste0(getNamespaceName(owner), "::", name))
+        }
+        name
+    }
+    on_conn <- function(fn, what, frame) {
         nest <- nesting()
         description <- if (inherits(what, "connection")) {
             tryCatch(summary(what)$description, error = function(e) "unknown")
@@ -269,7 +290,8 @@ local({
             "expressions"
         }
         emit("CONN", c(hex(fn), hex(class(what)[1]), hex(description),
-                       as.character(nest$depth), as.character(nest$enclosing)))
+                       as.character(nest$depth), as.character(nest$enclosing),
+                       hex(caller_label(frame))))
     }
     on_pkg <- function(package, lib.loc) {
         name <- as.character(package)[1]
@@ -293,7 +315,10 @@ local({
                                                               "Packaged"))[1, ],
                            error = function(e) rep(NA_character_, 5L))
         field <- function(i) if (is.na(fields[[i]])) "none" else hex(fields[[i]])
-        emit("PKG", c(hex(name), field(1), hex(dirname(path[1])), field(2), field(3),
+        # The library as an absolute path: lib.loc may be relative ("lib"),
+        # and the gate places the package's own files by it.
+        library <- normalizePath(dirname(path[1]), mustWork = FALSE)
+        emit("PKG", c(hex(name), field(1), hex(library), field(2), field(3),
                       field(4), field(5), md5_or_none(description)))
     }
 
@@ -309,11 +334,11 @@ local({
     api <- new.env(parent = baseenv())
     api$source <- function(frame, exprs, file) guard("source", {
         if (!is.null(exprs)) {
-            on_conn("source", exprs)
+            on_conn("source", exprs, frame)
         } else if (is.character(file)) {
             on_load("source", file, frame)
         } else {
-            on_conn("source", file)
+            on_conn("source", file, frame)
         }
     })
     api$sys_source <- function(frame, file) guard("sys.source", {
@@ -333,7 +358,7 @@ local({
             } else if (is.character(file) && length(file) == 1L && nzchar(file)) {
                 on_load("parse", file, frame)
             } else if (inherits(file, "connection")) {
-                on_conn("parse", file)
+                on_conn("parse", file, frame)
             }
         }
     })
@@ -433,9 +458,11 @@ local({
     ))
     reg.finalizer(state, function(e) emit_end(), onexit = TRUE)
 
-    # The code named on the command line: Rscript's --file= (the front end
-    # rewrites R -f file to it) is a LOAD that no source() call covers, and
-    # each -e expression is a TEXT.
+    # The code named on the command line is a LOAD that no source() call
+    # covers: Rscript's --file=, and R's own -f and --file, which reach R
+    # unrewritten (2026-10-08 probe: callr starts R -f, and commandArgs()
+    # shows "-f", path). Each -e expression is a TEXT. Options end at
+    # --args; what follows is the script's own arguments.
     #
     # R's front end escapes an -e expression's spaces, newlines, and tabs as
     # ~+~, ~n~, and ~t~ (bin/R lines 195-196 in rocker/r-ver:4.3.2), and R's
@@ -450,11 +477,17 @@ local({
         })
         x
     }
-    for (path in sub("^--file=", "", grep("^--file=", args, value = TRUE))) {
+    options_end <- match("--args", args, nomatch = length(args) + 1L) - 1L
+    opts <- args[seq_len(options_end)]
+    scripts <- sub("^--file=", "", grep("^--file=", opts, value = TRUE))
+    for (i in which(opts %in% c("-f", "--file"))) {
+        if (i < length(opts)) scripts <- c(scripts, opts[i + 1L])
+    }
+    for (path in scripts) {
         on_load("file", path, NULL)
     }
-    for (i in which(args == "-e")) {
-        if (i < length(args)) on_text(unescape_e(args[i + 1L]))
+    for (i in which(opts == "-e")) {
+        if (i < length(opts)) on_text(unescape_e(opts[i + 1L]))
     }
 
     # R reads one user profile: R_PROFILE_USER if set, else the working
