@@ -46,6 +46,13 @@ merged here as PR #1).
     launcher-matrix test image is built locally
     (`llmr-launcher-matrix:4.3.2`, from
     `tests/fixtures/launcher-matrix/Dockerfile`).
+  - [x] 2026-10-08 Track 1 step 2, `PKGBUILD`, the littler shim, and the
+    census rules, pushed to PR #7 (`eba8d98`, `40e2c54`, `d7caf2c`; 538
+    tests pass). The probes overturned the spec's premise (`R CMD
+    INSTALL`'s inner start does load the hook; its code arrives on stdin),
+    so the shim now captures stdin scripts and the gate binds them by
+    content. They also found callr children evading the hook (an A, fixed
+    by a re-pin in the shim) and `R -f` scripts unlogged (a D, fixed).
 - **Track 1 (primary): gate 1.3 instrumentation on PR #7.** Branch
   `feat/lane-gate-1-1-code-audit`, head `7d577b8`, open and not merged.
   Worktree: `.claude/worktrees/agent-a8a2378c2a5dbdc98`. Work in the order
