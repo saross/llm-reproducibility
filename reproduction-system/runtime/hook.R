@@ -85,8 +85,14 @@ local({
     }
 
     state <- new.env(parent = baseenv())
-    state$version <- "1.3-inst"
-    state$nonce <- Sys.getenv("LANE_RUN_NONCE", "none")
+    state$version <- "1.4-inst"
+    # The run's nonce, or, where the environment was cleared, the lane's copy.
+    state$nonce <- Sys.getenv("LANE_RUN_NONCE", "")
+    if (!nzchar(state$nonce)) {
+        state$nonce <- tryCatch(readLines("/lane/nonce", n = 1L, warn = FALSE),
+                                error = function(e) "none", warning = function(w) "none")
+        if (length(state$nonce) != 1L || !nzchar(state$nonce)) state$nonce <- "none"
+    }
     state$seq <- 0L
     state$pid <- Sys.getpid()
     # The shim's token, if the shim started this very process; otherwise R

@@ -1397,6 +1397,107 @@ class LauncherDockerTests(AccountRunMixin, unittest.TestCase):
         self.assertEqual((counts["package-install"], counts["text-package-source"]), (1, 1))
 
 
+@unittest.skipUnless(docker_ready(), f"needs Docker and {IMAGE}")
+class MatrixBaseDockerTests(AccountRunMixin, unittest.TestCase):
+    """The launcher matrix (spec §13) in the base image."""
+
+    def test_r_cmd_batch_and_a_child_in_another_directory(self):
+        """R CMD BATCH's dispatcher is exempt and its inner R -f handshakes;
+        a child that changes its working directory still binds by path."""
+        self.attempt('invisible(system("R CMD BATCH --no-timing authors-code/analysis.R '
+                     'batch.Rout"))\n'
+                     'setwd("authors-code"); invisible(system("Rscript analysis.R")); '
+                     'setwd("..")\n'
+                     'dir.create("outputs"); write.csv(1, "outputs/r.csv")\n',
+                     {"analysis.R": AUTHORS})
+        doc, result = self.run_and_check(IMAGE)
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["account"]["runs"]["run-01"]["original"], 2)
+        self.assertEqual(doc["census"]["processes"], 4)
+
+    def test_an_uninstrumented_child_fails_the_census(self):
+        """A child with its environment cleared, no environ file, and no
+        profile where it starts: its EXEC still counts (the lane's nonce
+        file), and it never loaded the hook."""
+        self.attempt('invisible(system("cd /tmp && env -i PATH=$PATH R --no-environ '
+                     '--no-echo -e 1"))\n'
+                     'source("authors-code/analysis.R")\n'
+                     'dir.create("outputs"); write.csv(1, "outputs/r.csv")\n',
+                     {"analysis.R": AUTHORS})
+        doc, result = self.run_and_check(IMAGE)
+        self.assertEqual(doc["census"]["stray_event_lines"], 0)
+        self.assertTrue(any("never loaded the lane hook" in e for e in result["errors"]),
+                        result["errors"])
+
+
+@unittest.skipUnless(image_ready(MATRIX_IMAGE), f"needs Docker and {MATRIX_IMAGE}")
+class MatrixToolDockerTests(AccountRunMixin, unittest.TestCase):
+    """The launcher matrix (spec §13) for common tools, in the
+    launcher-matrix image: each runs the authors' code, and the gate
+    accounts for every load with nothing left to a reviewer."""
+
+    def assert_clean(self, doc: dict, result: dict) -> dict:
+        """The run completed and the account found nothing; its counts."""
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertEqual(doc["census"]["errors"], 0)
+        self.assertEqual(result["errors"], [])
+        self.assertEqual([str(i)[:120] for i in result["review_obligations"]
+                          if getattr(i, "code", "") in QUIET], [])
+        self.assertEqual([str(f)[:120] for f in result["flags"]
+                          if getattr(f, "code", "") in ("image-code", "executed-not-loaded",
+                                                        "generated-code")], [])
+        return result["account"]["runs"]["run-01"]
+
+    def test_callr_in_each_profile_mode(self):
+        self.attempt(''.join(
+            f'x <- callr::r(function() {{ source("authors-code/analysis.R"); x1 }}, '
+            f'user_profile = {mode})\n' for mode in ('"project"', "TRUE", "FALSE"))
+            + 'dir.create("outputs"); write.csv(x, "outputs/r.csv")\n',
+            {"analysis.R": AUTHORS})
+        counts = self.assert_clean(*self.run_and_check(MATRIX_IMAGE))
+        self.assertEqual((counts["original"], counts["tool-internal"]), (3, 6))
+
+    def test_a_targets_pipeline(self):
+        """tar_make runs the deposited _targets.R in a callr child."""
+        self.attempt('setwd("authors-code")\n'
+                     'targets::tar_make(reporter = "silent")\n'
+                     'x <- targets::tar_read(x); setwd("..")\n'
+                     'dir.create("outputs"); write.csv(x, "outputs/r.csv")\n',
+                     {"analysis.R": AUTHORS,
+                      "_targets.R": ('library(targets)\nlist(tar_target(x, {\n'
+                                     '  source("analysis.R"); x1 + x2 }))\n')})
+        counts = self.assert_clean(*self.run_and_check(MATRIX_IMAGE))
+        self.assertGreaterEqual(counts["original"], 3)
+
+    def test_future_multisession(self):
+        """parallelly's worker expressions are tool code with string-literal
+        holes, matched verbatim from the EXEC."""
+        self.attempt('library(future)\nplan(multisession, workers = 2)\n'
+                     'f <- future({ source("authors-code/analysis.R"); x2 })\n'
+                     'x <- value(f); plan(sequential)\n'
+                     'dir.create("outputs"); write.csv(x, "outputs/r.csv")\n',
+                     {"analysis.R": AUTHORS})
+        counts = self.assert_clean(*self.run_and_check(MATRIX_IMAGE))
+        self.assertGreaterEqual(counts["text-tool"], 4)
+
+    def test_rmarkdown_render_and_quarto_render(self):
+        """render() evaluates its format's name; Quarto runs its knitr
+        engine from the image and renders an intermediate beside the .qmd,
+        whose texts all bind to the original's."""
+        quarto = ("---\ntitle: q\nformat: md\n---\n\n```{r setup}\n#| echo: false\n"
+                  "y <- 1\n```\n\nInline `r y`.\n\n```{r}\nz <- y + 1\n```\n")
+        self.attempt('rmarkdown::render("authors-code/report.Rmd", '
+                     'output_format = "md_document", quiet = TRUE)\n'
+                     'invisible(system("cd authors-code && HOME=/tmp quarto render quarto.qmd '
+                     '--to md --quiet"))\n'
+                     'dir.create("outputs"); write.csv(1, "outputs/r.csv")\n',
+                     {"report.Rmd": REPORT, "quarto.qmd": quarto})
+        counts = self.assert_clean(*self.run_and_check(MATRIX_IMAGE))
+        self.assertEqual(counts["image-launcher"], 4)
+        self.assertEqual(counts["text-tool"], 1)
+
+
 @unittest.skipUnless(image_ready(MATRIX_IMAGE), f"needs Docker and {MATRIX_IMAGE}")
 class CallrDockerTests(AccountRunMixin, unittest.TestCase):
     """callr's children (callr 3.7.5), which substitute their own user

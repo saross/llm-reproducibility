@@ -90,6 +90,11 @@ case "${R_ENVIRON_USER:-}" in
         ;;
 esac
 
+# The run's nonce: from the environment, or, for a child whose environment
+# was cleared (env -i), from the lane directory, so that its event still
+# counts and the census sees whether it loaded the hook.
+nonce=${LANE_RUN_NONCE:-$(cat /lane/nonce 2>/dev/null)}
+
 token="$$-$(od -An -N8 -tx1 /dev/urandom | tr -d ' \n')"
 export LANE_PROC="$token" LANE_PROC_PID="$$"
 
@@ -102,7 +107,7 @@ if [ "${#fields}" -gt 3800 ]; then
     fields="$(printf '%.3800s' "$fields")${tab}3c7472756e63617465643e"
 fi
 
-printf 'LANE1 %s %s %s %s 0 EXEC\t%s\n' "${LANE_RUN_NONCE:-none}" "$token" "$$" "$PPID" \
+printf 'LANE1 %s %s %s %s 0 EXEC\t%s\n' "${nonce:-none}" "$token" "$$" "$PPID" \
     "$fields" \
     > /proc/1/fd/2 || {
     echo "lane shim: the event stream is not writable; refusing to start R" >&2

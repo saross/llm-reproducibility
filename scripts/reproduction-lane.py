@@ -2269,8 +2269,15 @@ def compose_renviron(project: Path) -> str:
     return "\n".join(parts) + "\n"
 
 
-def stage_lane_dir(lane_dir: Path, project: Path, front_end: bytes) -> dict[str, str]:
+def stage_lane_dir(lane_dir: Path, project: Path, front_end: bytes,
+                   nonce: str) -> dict[str, str]:
     """Write the read-only lane directory a run mounts at ``/lane``.
+
+    The run's nonce is staged as a file too: a child whose environment was
+    cleared (``env -i``) loses ``LANE_RUN_NONCE``, and its events would
+    otherwise be strays the census never sees; the shim and the hook read
+    the file then, so such a child is still counted, and fails the census
+    if it skipped the hook (spec §13).
 
     Returns:
         The sha256 of each lane file, for ``run.json``.
@@ -2280,7 +2287,8 @@ def stage_lane_dir(lane_dir: Path, project: Path, front_end: bytes) -> dict[str,
              "r-shim.sh": (RUNTIME_DIR / "r-shim.sh").read_bytes(),
              "littler-shim.sh": (RUNTIME_DIR / "littler-shim.sh").read_bytes(),
              "R.orig": front_end,
-             "Renviron": compose_renviron(project).encode("utf-8")}
+             "Renviron": compose_renviron(project).encode("utf-8"),
+             "nonce": nonce.encode("ascii")}
     for name, data in files.items():
         path = lane_dir / name
         path.write_bytes(data)
@@ -2447,9 +2455,9 @@ def start_run(target_dir: Path, image_tag: str, entry: str, *, mount_path: str |
         write_json(record_dir / "baseline.json",
                    {"record_version": RECORD_VERSION, "run": run_id, "taken_at": now_utc(),
                     "changes": changes, "files": baseline})
-        lane_files = stage_lane_dir(lane_dir, project, front["front_end_bytes"])
-        (record_dir / "lane-renviron.txt").write_bytes((lane_dir / "Renviron").read_bytes())
         nonce = secrets.token_hex(8)
+        lane_files = stage_lane_dir(lane_dir, project, front["front_end_bytes"], nonce)
+        (record_dir / "lane-renviron.txt").write_bytes((lane_dir / "Renviron").read_bytes())
         name = f"llmr-{run_id}-{nonce}"
         argv = container_argv(image["id"], project, lane_dir, mount, front["shim_targets"],
                               interpreter, entry_rel.as_posix(), nonce, name,
@@ -2618,9 +2626,11 @@ def run_census(events: list[dict], run_id: str = "") -> dict:
                 report["errors"].append(f"{lead}R process {shown} skipped the lane hook with "
                                         f"{skipped[0]}: the gate cannot see what it loaded")
             else:
-                report["errors"].append(f"{lead}R process {shown} never loaded the lane hook: "
-                                        f"its launcher is not a supported route, so the gate "
-                                        f"cannot see what it loaded")
+                report["errors"].append(f"{lead}R process {shown} never loaded the lane hook, "
+                                        f"so the gate cannot see what it loaded: start R "
+                                        f"through Rscript, R, or a supported tool (callr, "
+                                        f"future, parallel, targets, knitr, rmarkdown, "
+                                        f"Quarto), without clearing its environment")
         if starts and not execs:
             # Identified by what it ran, not by its token, so that a re-run
             # that changes nothing keeps its ruling (spec §6).
@@ -3051,6 +3061,20 @@ TOOL_EXPRESSIONS: dict[str, str] = {
     "tryCatch(parallel:::.workRSOCK,error=function(e)parallel:::.slaveRSOCK)()":
         "a PSOCK worker's start-up expression (parallel, R 4.3.2)",
 }
+# rmarkdown 2.25 evaluates an output format's name, from render()'s call or
+# the document's YAML, as code (create_output_format_function:
+# eval(xfun::parse_only(name))). A name only looks up a function, so its own
+# formats are listed, bare and qualified (2026-10-08 probe). Another
+# package's format name stays an obligation.
+RMARKDOWN_FORMATS = ("beamer_presentation", "context_document", "github_document",
+                     "html_document", "html_fragment", "html_notebook", "html_vignette",
+                     "ioslides_presentation", "latex_document", "latex_fragment",
+                     "md_document", "odt_document", "pdf_document",
+                     "powerpoint_presentation", "rtf_document", "slidy_presentation",
+                     "word_document")
+for _format in RMARKDOWN_FORMATS:
+    for _name in (_format, f"rmarkdown::{_format}"):
+        TOOL_EXPRESSIONS[_name] = "an rmarkdown output format's name (rmarkdown 2.25)"
 # The lane's list of tool-generated bootstrap files (spec §3, class 5), as
 # (within, loader, path pattern, description): a load by that loader whose
 # resolved path matches the pattern is tool-internal. ``within`` names the
@@ -3066,9 +3090,23 @@ TOOL_BOOTSTRAP: tuple[tuple[str | None, str, re.Pattern[str], str], ...] = (
     (None, "file", re.compile(r"/tmp/Rtmp[A-Za-z0-9]+/callr-scr-[0-9a-f]+"),
      "callr's child script"),
 )
-# Tool launchers in the image, by path and md5: image code accepted without
-# a flag (spec §3). The launcher matrix supplies the entries.
-IMAGE_LAUNCHERS: dict[tuple[str, str], str] = {}
+# Tool launchers in the image, by md5 (wherever the tool is installed):
+# image code accepted without a flag (spec §3). The launcher matrix
+# supplies the entries.
+IMAGE_LAUNCHERS: dict[str, str] = {
+    # Quarto 1.10.19's knitr engine: Quarto starts Rscript on rmd.R, which
+    # sources the others (2026-10-08 probe, /opt/quarto/share/rmd/).
+    "fbcea28a6701025defaf608d82284066": "Quarto 1.10.19's knitr engine (rmd.R)",
+    "6b21cd6051e0e5116c7e4b0ecb3466ed": "Quarto 1.10.19's knitr engine (patch.R)",
+    "8916068bceda06893ffbd8b2c54c4fa0": "Quarto 1.10.19's knitr engine (execute.R)",
+    "6b42303a1f03288a5a5afdfe505db302": "Quarto 1.10.19's knitr engine (hooks.R)",
+    "841e8d9a1820518b60900801fcf84556": "Quarto 1.10.19's knitr engine (ojs.R)",
+    "b2f68e6b00c7a2dafc140248d428c484": "Quarto 1.10.19's knitr engine (ojs_static.R)",
+}
+# Quarto's knitr engine renders <stem>.rmarkdown, which it writes beside the
+# document <stem>.qmd and removes afterwards (Quarto 1.10.19: the document,
+# preprocessed; for a plain document, with a blank line appended).
+QUARTO_INTERMEDIATE = ".rmarkdown"
 # Code loaded from a temporary directory was written during the run, by the
 # run or by a tool, so it is not image code.
 TRANSIENT_ROOTS = ("/tmp/", "/var/tmp/", "/dev/shm/")
@@ -3108,6 +3146,19 @@ INSTALLER_SCRIPTS = tuple(re.compile(pattern) for pattern in (
 # Callers the hook verified as R's own NAMESPACE parser, which reads a
 # package's NAMESPACE file through a text connection (2026-10-08 probe).
 NAMESPACE_READERS = frozenset({"base::parseNamespaceFile"})
+# Tool expressions with variable parts, matched against a text the gate
+# holds verbatim: an -e argument in a run's EXEC, which the shim records
+# raw (a TEXT whose md5 is that argument's is that text). As with the
+# installer's scripts, the only holes are string literals. parallelly 1.37
+# starts a future multisession worker with these (2026-10-08 probe).
+TEXT_TEMPLATES = tuple(re.compile(pattern) for pattern in (
+    rf"try\(suppressWarnings\(cat\(Sys\.getpid\(\),file={_DQ}\)\), silent = TRUE\)",
+    rf"file\.exists\({_DQ}\)",
+    r'options\(socketOptions = "no-delay"\)',
+    rf"\.libPaths\(c\({_DQ}(?:,{_DQ})*\)\)",
+    (r"workRSOCK <- tryCatch\(parallel:::\.workRSOCK, "
+     r"error=function\(e\) parallel:::\.slaveRSOCK\); workRSOCK\(\)"),
+))
 PACKAGE_ARCHIVE_RE = re.compile(r"([A-Za-z][A-Za-z0-9.]*)_([0-9][0-9.-]*)\.tar\.gz")
 # R's code-file suffixes in a package's R/ directory (tools'
 # list_files_with_type("code")).
@@ -3580,6 +3631,14 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                                                  for p in INSTALLER_SCRIPTS):
                 sources.add(cwd_of.get(process["token"], ""))
         package_texts = package_source_texts(catalogue["trees"], sources - {""})
+        # Texts the gate holds verbatim: each -e argument the shim recorded.
+        verbatim: dict[str, str] = {}
+        for process in processes:
+            argv = process["argv"]
+            options = argv[:argv.index("--args")] if "--args" in argv else argv
+            for index, option in enumerate(options[:-1]):
+                if option == "-e":
+                    verbatim[text_md5(options[index + 1])] = options[index + 1]
         counts: dict[str, int] = {}
         summary[run_id] = counts
         by_seq: dict[tuple[str, int], dict] = {(e["token"], e["seq"]): e for e in events}
@@ -3686,6 +3745,17 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
             in_work = bool(mount) and path.startswith(mount + "/")
             if in_work:
                 rel = path[len(mount) + 1:]
+                if (rel not in baseline and fn in ("rmarkdown::render", "knitr::knit")
+                        and rel.endswith(QUARTO_INTERMEDIATE)):
+                    # Quarto's intermediate for a declared document: its
+                    # input, not code; every text knitr evaluates from it
+                    # must still bind to the original's own (D-3).
+                    stem = rel[:-len(QUARTO_INTERMEDIATE)]
+                    document = catalogue["paths"].get(f"{stem}.qmd")
+                    if document is not None and document["class"] in ("original",
+                                                                      "edited-copy"):
+                        bind_declared(document, f"{stem}.qmd")
+                        return {"class": "tool-internal", "id": document["id"]}
                 if rel not in baseline:
                     errors.append(f"{where} loaded {rel}, which the run itself wrote: generated "
                                   f"code is never loadable (load the original that generated "
@@ -3752,8 +3822,8 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                 return {"class": "unaccounted"}
             if any(path.startswith(library.rstrip("/") + "/") for library in libraries):
                 return {"class": "library"}
-            if (path, md5) in IMAGE_LAUNCHERS:
-                return {"class": "image-launcher", "id": IMAGE_LAUNCHERS[(path, md5)]}
+            if md5 in IMAGE_LAUNCHERS:
+                return {"class": "image-launcher", "id": IMAGE_LAUNCHERS[md5]}
             add(flags, Issue.flag(
                 "image-code", path, f"{where} loaded {path} from the image, outside the work "
                 f"copy and every R library: image code is not the authors' deposit, so confirm "
@@ -3782,7 +3852,8 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                     count("text-original")
                 elif md5 in chunk_owner:
                     count("text-chunk")
-                elif md5 in expressions:
+                elif md5 in expressions or (md5 in verbatim and any(
+                        p.fullmatch(verbatim[md5]) for p in TEXT_TEMPLATES)):
                     count("text-tool")
                 elif md5 in package_texts:
                     count("text-package-source")
