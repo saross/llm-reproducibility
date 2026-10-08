@@ -30,68 +30,108 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-10-06, session fabeab56 close) — START HERE
+## Repo state (2026-10-08, session fabeab56 close) — START HERE
 
-- **⏩ START HERE: amendment 3 is LODGED (2026-10-08). Next, finish the
-  gate 1.3 instrumentation, then follow amendment 3 §10's order.**
-  1. **Amendment 3 lodged** as OSF revision `6ac775afb5ed5b4afee88a4a`
-     (<https://osf.io/dqnhg?revisionId=6ac775afb5ed5b4afee88a4a>), tag
-     `osf-amendment-3-2026-10-08` at `abde9b1`. It was run by
-     `studies/open-science-compliance/prereg/lodge-osf-amendment.py` on
-     Shawn's approval, conditional on Astra's re-check (at `4258db8`:
-     "No blocking issues found"). Round trip byte-identical, change set
-     `["summary"]`, DOI unchanged, independently re-verified anonymously.
-     On the way: Shawn approved the revision as is, then ruled the
-     opening paragraph's rename, the scope sentence, and Astra's
-     follow-up B1 (a failed pin is followed by its own neighbours) and S1
-     (the audit cited at `c4553f9`, tag `executed-code-audit-2026-10-04`).
-     The draft's status block, checklist, and revision record, and the
-     erratum log, carry the details. The instrument edits, the §8
-     regression gate, the re-validation, and census scoring are unblocked.
-  2. **Gate 1.3 instrumentation** on PR #7 (`feat/lane-gate-1-1-code-audit`,
-     head `7d577b8`; worktree `.claude/worktrees/agent-a8a2378c2a5dbdc98`).
-     Built this session: spec revision 2 (`340f77d`), the F1 completeness
-     corrections (`e6fe231`), and the hook's loader traces (`7d577b8`),
-     525 tests passing. Remaining, in §15's order: the gate's account of
-     `LOAD`, `TEXT`, `CONN`, `PKG`, and `HOOKERR` events, with per-load
-     binding (D-3) and the md5 of every original; `PKGBUILD`, the littler
-     shim, and the remaining census rules; the launcher matrix on a test
-     image (Docker 29.2.1 and `rocker/r-ver:4.3.2` are on this machine);
-     the semantics-neutrality test; then §9, §11 with revision 2's
-     datetime, collision, and sheet rules, §10, §12, and the workflow
-     switch.
-- **Why it matters.** Lodgement is the hard stop before the instrument
-  edits, the regression gate, and the re-validation. The registered gate
-  cannot run until gate 1.3 merges and the correction ledger is ruled.
-- **Done this session (2026-10-06):**
-  - [x] 2026-10-06 Astra's amendment 3 review verified at source, finding
-    by finding, and folded in (`23c72fc`). Fable was consulted on D-7 to
-    D-9 by SendMessage (top-tier spend, deliberate: registered-text
-    consequences). Receipt written; reply at
-    `~/agent-mail/claude/outbox/codex/20261006T080137.160484Z-claude-repro-amendment3-revision.md`.
-  - [x] 2026-10-06 Erratum log Entry 5 carries a correction pointer for the
-    tagging dates (convention 2 October; set complete 3 October).
-  - [x] 2026-10-06 Gate 1.3 specification revision 2 from Astra's review
-    (`340f77d`). Both reviews of the specification are complete; the next
-    review is the final one, of the built gate. Reply and a fork-END
-    correction mailed.
-  - [x] 2026-10-06 Two Docker probes settled the hook design: `trace()`
-    messages go to stderr and are suppressible, but its value auto-prints
-    (wrap in `invisible`); exit tracers do not fire reliably; `mcexit`
-    fires in every forked child; `parse(text =)` is detectable with
-    `missing()`; `loadNamespace` tracing needs a re-entrancy guard that is
-    reset before the imports load.
-- **Still with Shawn:** to start Astra here, run
-  `~/gpt-hub/config/launch-codex.sh --no-alt-screen` from
-  `~/worktrees/llm-reproducibility/sol-repro-entry`. WN-am and WN-an
-  (session log of b1a1e102);
-  user-obs 2026-10-06 A–C;
-  personal-assistant PR #169 (still open on 2026-10-06; once merged,
-  re-run `scripts/compose-global-claude-md.sh` and remove
-  `~/worktrees/personal-assistant/claude-review-protocol`).
-- **Carry-forward** (the section below still applies unless listed here):
-  Fable is the open session `llm-reproducibility-ea`; any git subprocess
-  scrubs `GIT_*`; reviews are documents, never posts.
+- **⏩ START HERE: an AUTONOMOUS OVERNIGHT session (Shawn, 2026-10-08).**
+  Get as far as possible by morning. When blocked on one track, switch to
+  another. Stop and wait only for a decision that is genuinely Shawn's, and
+  record it under "Questions for Shawn" below. Amendment 3 is LODGED, so
+  amendment 3 §10's steps 2 onwards are unblocked.
+- **Track 1 (primary): gate 1.3 instrumentation on PR #7.** Branch
+  `feat/lane-gate-1-1-code-audit`, head `7d577b8`, open and not merged.
+  Worktree: `.claude/worktrees/agent-a8a2378c2a5dbdc98`. Work in the order
+  of the specification's §15 checklist
+  (`wiki/planning/reproduction-gate-1-3-design.md` in the worktree):
+  1. the gate's account of `LOAD`, `TEXT`, `CONN`, `PKG`, and `HOOKERR`
+     (§8), with per-load binding of nested loads (D-3) and the md5 of every
+     original;
+  2. `PKGBUILD` for `R CMD INSTALL`, the littler shim, and the remaining
+     census rules;
+  3. the launcher matrix (§13);
+  4. the semantics-neutrality test (§13);
+  5. fresh computation (§9), conversions (§11, with revision 2's datetime,
+     collision, and sheet rules), and the static additions (§10);
+  6. the transcript audit (§12), the remaining acceptance tests, and the
+     workflow switch.
+
+  Probe R behaviour in Docker before relying on it (Docker 29.2.1 and
+  `rocker/r-ver:4.3.2` are local; no pulls are needed). Tick §15 items
+  with dates as they land. Commit and push to the PR branch after each
+  step. 525 tests passed at `7d577b8`. The final review (§2.2, with the
+  herskind pilot re-run) needs Astra and Fable, so prepare it but do not
+  wait on it.
+- **Track 2: §10 step 2, the instrument edits, on a new branch and PR.**
+  Do not merge. Edit the frozen instruments to amendment 3's lodged text
+  (tag `osf-amendment-3-2026-10-08`):
+  - the FAIR instrument goes from v2.1 to v2.2 with §4's items (AP-3 and
+    AP-7 to AP-17). Keep the Pass 6 mirror's normative blocks
+    byte-identical
+    (`extraction-system/prompts/06-infrastructure_pass6_prompt.md`), and
+    handle the receipt token for the push consumers;
+  - the four reproduction instruments take §7(a) to (d) verbatim:
+    `verdicts-and-precision.md`, `data-availability-taxonomy.md`, and
+    `coverage-rules.md` in
+    `studies/open-science-compliance/protocol/instruments/`, and
+    `.claude/shared/invariants.md`. §7(d) carries the B1 ruling, under
+    which a failed pin is followed by its own neighbours. No lane code or
+    prompt states the version search yet;
+  - new versions and sha256 values go in `manifest.yaml`, following the
+    v2.0 to v2.1 precedent (2026-08-15, erratum Entry 3; the manifest's
+    `fair-instrument` comment);
+  - run the D5 gate and the tests, and check consistency against the
+    lodged text (maintenance rule 4).
+
+  PR #7 also touches `manifest.yaml` and
+  `reproduction-system/prompts/01-preparation.md`, so expect to rebase
+  `manifest.yaml`. Where an instrument cannot take the lodged text
+  cleanly, record a question and do not reinterpret the text.
+- **Track 3 (if time): draft the correction ledger (§9) for Shawn to
+  rule.** Use amendment 3 §9's per-target and per-paper fields, and the
+  executed-code audit at `c4553f9` (tag `executed-code-audit-2026-10-04`,
+  `findings.json`, with Q1 to Q10 ruled). Mark it DRAFT, and do not freeze
+  or hash it. Freezing comes after his ruling (§10 step 3).
+- **Stop rules.**
+  - Never merge a PR. Make no OSF or other public post, and no paid model
+    API call (none is needed).
+  - Do not edit Codex-owned paths. Do not change what lodged text means.
+  - Fable (peer session `llm-reproducibility-ea`, idle) can review by
+    SendMessage. That spends top-tier credit, so use it for
+    registered-text or design questions only, and say so.
+  - Astra answers by mail only when Shawn runs Codex, so mail requests
+    tonight for the morning.
+  - Update this section at natural stopping points, so the morning read is
+    current even if the session ends early.
+- **Questions for Shawn (morning):** none yet. Add them here, each with its
+  options and a recommendation.
+- **Done this session (2026-10-06 to 10-08):**
+  - [x] 2026-10-06 Astra's amendment 3 review folded in (`23c72fc`);
+    D-7 to D-9 and the revision's new rules ruled (`9536962`, `2f3529d`).
+  - [x] 2026-10-06 Gate 1.3 specification revision 2 (`340f77d`), the F1
+    completeness corrections (`e6fe231`), and the hook's loader traces
+    (`7d577b8`).
+  - [x] 2026-10-08 Shawn approved amendment 3. Opening paragraph and
+    scope sentence ruled; Astra's follow-up (B1, S1, S2) folded in
+    (`4258db8`); re-check "No blocking issues found".
+  - [x] 2026-10-08 **Amendment 3 LODGED**: OSF revision
+    `6ac775afb5ed5b4afee88a4a`, tag `osf-amendment-3-2026-10-08` at
+    `abde9b1`, via `lodge-osf-amendment.py`. Round trip byte-identical;
+    public page checked by Shawn. The draft's status block and the
+    erratum log record it.
+  - [x] 2026-10-08 personal-assistant PR #169 merged (2026-10-07). Its
+    worktree was already removed, and the composed `CLAUDE.md` carries
+    its review-delivery rule.
+- **Still with Shawn (not blocking tonight):**
+  - user-observation candidates: the 2026-10-06 batch (A to C) and the
+    2026-10-08 batch (A to D), both pending in `wiki/user-observations.md`;
+  - working-notes candidates WN-am and WN-an (b1a1e102), and WN-ao and
+    WN-ap (session log below);
+  - PR #7's merge, after the final review.
+
+  To start Astra here, run `~/gpt-hub/config/launch-codex.sh
+  --no-alt-screen` from `~/worktrees/llm-reproducibility/sol-repro-entry`.
+- **Carry-forward:** any git subprocess scrubs `GIT_*`. Reviews are
+  documents, never posts. Mail to Astra uses `Project: llm-reproducibility`,
+  `Lane: astra`.
 
 ## Repo state (2026-10-06, session b1a1e102 close) — superseded by the section above
 
@@ -1916,9 +1956,37 @@ February). Low priority; logged from llm-observations 2026-07-06.
 
 ## Session log
 
-### 2026-10-06 (session fabeab56) — amendment 3 revised; gate 1.3 traces built
+### 2026-10-06 → 10-08 (session fabeab56) — amendment 3 lodged
 
-One session on Fable 5.1, in the main checkout and the PR #7 worktree.
+One session: Fable 5.1, then Opus 5.5 from the decision walk-through,
+compacted once. It worked in the main checkout and the PR #7 worktree.
+
+- **2026-10-08: lodgement.** Shawn approved the revision as is, then ruled
+  that the opening paragraph would be renamed and a scope sentence added.
+  Astra's follow-up (at `857702d`) said revise. B1 was blocking: the
+  failed-pin sequence had never been specified, and Shawn ruled the pin's
+  own neighbours. S1 corrected the audit's location, now cited at
+  `c4553f9` with a tag. S2 narrowed the lodgement script's failure
+  guarantee. The re-check (at `4258db8`) found no blocking issues, and the
+  lodgement ran at `abde9b1` as OSF revision `6ac775afb5ed5b4afee88a4a`.
+- **Working-notes candidates (held for Shawn):**
+  - **WN-ao:** a rule joined from two separately reviewed rulings (the
+    4 October cap and D-7's precedence) left the failed-pin sequence
+    unspecified. It passed the drafting session, Fable's advice, and two
+    reads by the registrant. It was caught when a reviewer ran a concrete
+    case (pin P fails; what is attempt two?) against the hypothesis it
+    feeds (H3). Anchors: amendment 3's revision record, "Follow-up
+    review"; Astra's mail `20261008T075615Z-codex-amendment3-followup-review.md`.
+  - **WN-ap:** facts about OSF's schema-response API, from the lodgement
+    and OSF's source.
+    - A Summary of 98,004 characters was accepted.
+    - Text with no `<` or `>` is stored byte-identical.
+    - Anonymous listings show approved revisions only.
+    - A second unfinished revision cannot be created.
+
+    Anchors: the header of `lodge-osf-amendment.py`, and
+    `get_default_queryset` and `create_from_previous_response` on OSF's
+    develop branch, 2026-10-08.
 
 - **Astra's amendment 3 review** (six blocking, five should-fix) was
   verified premise by premise at source before any edit, and every premise
