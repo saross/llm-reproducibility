@@ -1012,7 +1012,14 @@ race needs a change made and undone within the run, which is class B.
 **Semantics neutrality.** The hook keeps its state out of the global
 environment and the search path, never touches `.Random.seed`, and adds no
 output to stdout. An acceptance test checks that results are equal with and
-without it (Astra 9).
+without it (Astra 9). As built (2026-10-08, `SemanticsNeutralityTests`):
+a fixture that draws random numbers, fits a model, sources a file, parses
+text, and forks gives the same results, `ls()`, `search()`, random-number
+state, and stdout with and without the lane. Two traces remain for code
+that looks for them, and the test pins exactly these: the options
+`lane.hook` and `lane.hook.loaded` (the tracers' way into the hook), and
+the `tools` namespace, loaded for `md5sum` but never attached. The traced
+functions' bodies differ too, as tracing requires.
 
 ## 9. Fresh computation
 
@@ -1380,7 +1387,7 @@ matrix about two more, and the rest one or two, plus the review rounds of
   - issue ids and fingerprints (`Issue`), and `rule-flags`;
   - raw and admitted coverage;
   - the admission rules in `persist-results` and `human-queue`.
-- [ ] **Instrumentation** (in progress, 2026-10-06, on PR #7):
+- [x] 2026-10-08 **Instrumentation** (begun 2026-10-06, on PR #7):
   - [x] 2026-10-06 the revision-2 corrections to F1: `max-file=1` and
     `mode=blocking` passed and read back, the three completion facts in
     `run_state`, and the forked child's own `END` from `mcexit`
@@ -1404,7 +1411,7 @@ matrix about two more, and the rest one or two, plus the review rounds of
     hook `1.4-inst` (the nonce file), the verbatim text templates, and the
     rmarkdown and Quarto entries on the lane's lists (`8bae60d`; GLPK in
     the image, `a3f2b47`);
-  - [ ] the semantics-neutrality test (§13).
+  - [x] 2026-10-08 the semantics-neutrality test (§13).
 - [ ] **Fresh computation** (§9).
 - [ ] **Conversions** (§11) and the **static additions** (§10).
 - [ ] **The transcript audit** (§12), which writes `transcript-audit.json`;
