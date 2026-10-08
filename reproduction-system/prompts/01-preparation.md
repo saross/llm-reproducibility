@@ -1,8 +1,9 @@
 # Preparation Prompt — Session R-A
 
 **Version:** 1.4
-**Last Updated:** 2026-10-08 (v1.4: §1.0.2 conversions declared for the
-gate to compare, gate 1.3 §11; v1.3, 2026-10-05: §1.0.2 provenance
+**Last Updated:** 2026-10-09 (v1.4: §1.0.2 runs through `run-container` in
+place of execution snapshots, and conversions declared for the gate to
+compare, gate 1.3; v1.3, 2026-10-05: §1.0.2 provenance
 anchors, execution snapshots, generated code, and conversion evidence,
 after the cross-model review of PR #7; v1.2, 2026-10-04: §1.0.2 authors' code manifest; §3.3–3.4
 no longer invite restructuring the authors' code)
@@ -119,13 +120,20 @@ difference is a declared wrapper or a flagged edit.
   wrapper.
 - **An unavoidable edit is declared** under `declared_edit`, with the
   targets it affects. It is flagged for a human ruling.
-- **Snapshot the execution boundary.** The run mounts the attempt directory,
-  so its code files are what the run can execute. Immediately before the
-  container run: `venv/bin/python scripts/reproduction-lane.py snapshot-code
-  <attempt dir> --phase pre`; immediately after: the same with
-  `--phase post`. Change no code file afterwards. Nothing is exempt, including
-  `outputs/`: declare any code file the run itself writes as a wrapper with
-  role `generated`. No wrapper may load generated code.
+- **Run through the lane.** `venv/bin/python scripts/reproduction-lane.py
+  run-container <attempt dir> --image <tag> --entry <run script>
+  --launch-commit <commit>` copies the attempt's input tree to a private
+  work copy, runs it with networking off as your user, and collects what
+  the run wrote into `outputs/run-NN/`, sealed in `lane-records/run-NN/`;
+  only the lane writes either. Build the image with
+  `--label llmr.dockerfile.sha256=<sha256 of the Dockerfile>`. Never run
+  paper code on the host or with `docker run` yourself. Anything a run
+  writes outside the mount path is lost, so the wrapper copies it into the
+  work copy. Credit comes only from the final run and the runs it consumed
+  (`--consume`), so change no code after the final run. Declare any code
+  file a run writes as a wrapper with role `generated`; nothing may load it.
+  With renv, set `RENV_PATHS_LIBRARY` outside the project at build, restore,
+  and run time; for Quarto, set `HOME` to a temporary directory.
 - **The gate compares a format conversion itself.** The wrapper declares
   the conversion it performs: `conversion: {"input", "output"}`; for a
   workbook, its `sheet`, with `range`, `header_row`, and `scope` where

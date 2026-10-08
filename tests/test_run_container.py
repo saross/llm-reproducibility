@@ -1649,16 +1649,22 @@ class MatrixBaseDockerTests(AccountRunMixin, unittest.TestCase):
         self.assertEqual(result["account"]["runs"]["run-01"]["original"], 2)
         self.assertEqual(doc["census"]["processes"], 4)
 
-    def test_a_knitr_cache_is_gone_when_the_run_starts(self):
-        """Spec §9: the run computes afresh; the store stays in the input
-        tree, and the baseline records its removal."""
+    def test_cache_stores_are_gone_when_the_run_starts(self):
+        """Spec §9 and §13: a knitr cache, Quarto's _freeze and .quarto, and
+        a targets store are all absent from the work copy, so the run
+        computes afresh; each stays in the input tree, and the baseline
+        records its removal."""
         write(self.dir / "authors-code" / "report_cache" / "html" / "old.rdb", "stale\n")
-        self.attempt('cat(dir.exists("authors-code/report_cache"), "\\n")\n'
+        for rel in ("_freeze/report/execute-results/md.json", ".quarto/xref/x.json",
+                    "_targets/objects/x"):
+            write(self.dir / rel, "stale\n")
+        self.attempt('cat(dir.exists(c("authors-code/report_cache", "_freeze", ".quarto", '
+                     '"_targets")), "\\n")\n'
                      'dir.create("outputs"); write.csv(1, "outputs/r.csv")\n',
                      {"report.Rmd": REPORT})
         doc, _ = self.run_and_check(IMAGE)
         self.assertEqual((self.dir / "outputs" / "run-01" / "stdout.log").read_text().strip(),
-                         "FALSE")
+                         "FALSE FALSE FALSE FALSE")
         baseline = json.loads((self.dir / lane.RECORDS_DIR / "run-01" / "baseline.json")
                               .read_text())
         self.assertIn({"change": "removed-store", "path": "authors-code/report_cache",

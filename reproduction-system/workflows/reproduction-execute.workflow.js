@@ -170,20 +170,35 @@ const execPrompt = (p) =>
   `authors' file declared — schema reproduction-system/schemas/authors-code-manifest.json and ` +
   `reproduction-system/prompts/01-preparation.md §1.0.2; keep the authors' files byte-identical ` +
   `and put all mechanics in wrappers); ` +
-  `comparisons/comparison-report.md; comparisons/comparison.json; outputs/. Templates: ` +
+  `comparisons/comparison-report.md; comparisons/comparison.json (outputs/ is the lane's: ` +
+  `run-container writes it, never you). Templates: ` +
   `reproduction-system/templates/. Fetch with checksum (reproduction-system/prompts/01-preparation.md ` +
   `§1.0–1.0.1): author-released code and data you consume may be stored in the attempt directory; ` +
   `publisher content (the paper PDF, journal supplements) never — reference it by path.\n` +
-  `3. Run all paper code inside Docker only: docker build -t ${p.image_tag} <attempt dir>, then ` +
-  `docker run --rm with the attempt directory mounted. Never run paper code on the host. ` +
-  `Immediately before the run, from the repository root: venv/bin/python ` +
-  `scripts/reproduction-lane.py snapshot-code ${p.attempt_dir} --phase pre; immediately after it: ` +
-  `the same with --phase post. Declare any code file the run itself writes as a wrapper with role ` +
-  `"generated", and change no code file after the post snapshot (the gate fails on code that ` +
-  `changed after the run). If you must re-run, take both snapshots again with --force.\n` +
-  `4. comparisons/comparison.json: schema_version "1.0", attempt ${p.attempt}, plan_sha256 ` +
-  `${p.plan_sha256}, exactly one record per locked target id — no more, no fewer. Put value-level ` +
-  `detail (published vs reproduced, per value) in files under comparisons/ and cite them in evidence.\n` +
+  `3. Run paper code only through the lane: never on the host, and never with docker run, exec, ` +
+  `cp, or compose yourself (the transcript audit treats either as contamination). Build the ` +
+  `image labelled with your Dockerfile's digest: docker build --label ` +
+  `llmr.dockerfile.sha256=$(sha256sum ${p.attempt_dir}/Dockerfile | cut -d' ' -f1) ` +
+  `-t ${p.image_tag} ${p.attempt_dir}. Then, from the repository root: venv/bin/python ` +
+  `scripts/reproduction-lane.py run-container ${p.attempt_dir} --image ${p.image_tag} --entry ` +
+  `<your run script> --launch-commit ${launch_commit} (add --mount-path if your scripts expect a ` +
+  `path other than the image's WORKDIR, --consume run-NN:files/<path> to use an earlier run's ` +
+  `output, and --keep-store <path> only to keep a cache store as a declared input). Each call is ` +
+  `one numbered run: its outputs land in outputs/run-NN/ and its records in lane-records/run-NN/, ` +
+  `which only the lane writes. The run has no network and runs as your user: fetch everything in ` +
+  `the Dockerfile; with renv, set RENV_PATHS_LIBRARY outside the project at build, restore, and ` +
+  `run time; for Quarto, set HOME to a temporary directory. Anything written outside the mount ` +
+  `path is lost, so your wrapper copies it into the work copy before it exits. Credit comes only ` +
+  `from the final run and the runs it consumed: after any change to the input tree, run again. ` +
+  `Declare any code file a run writes as a wrapper with role "generated"; nothing may load it. A ` +
+  `conversion wrapper declares its conversion for the gate to compare (01-preparation.md ` +
+  `§1.0.2).\n` +
+  `4. comparisons/comparison.json: schema_version "1.1", attempt ${p.attempt}, plan_sha256 ` +
+  `${p.plan_sha256}, exactly one record per locked target id — no more, no fewer. Each target ` +
+  `cites the sealed run outputs its values were read from: outputs [{run, path, sha256, lines}], ` +
+  `path as the run's outputs.json lists it (files/... or stdout.log); a reproduced target citing ` +
+  `none is not admitted until ruled. Put value-level detail (published vs reproduced, per value) ` +
+  `in files under comparisons/ and cite them in evidence.\n` +
   `5. Before finishing, self-check from the repository root (${repo_root}):\n` +
   `   venv/bin/python scripts/reproduction-lane.py check-attempt ${p.attempt_dir} --plan ${p.plan_path} ` +
   `--image ${p.image_tag} --launch-commit ${launch_commit} ${forbidArgs(p)} --out -\n` +

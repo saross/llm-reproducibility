@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
 """Deterministic orchestration helpers for the agentic reproduction lane.
 
-**Version:** 1.2
+**Version:** 1.3
+
+v1.3 (2026-10-09) is gate 1.3 (``wiki/planning/reproduction-gate-1-3-design.md``).
+The executor no longer starts containers: ``run-container`` runs each attempt
+in a private, instrumented work copy and seals what it ran and wrote, and
+the gate accounts for every load, text, connection, and package the runs'
+event streams record, bound to content it hashes itself. Issues carry ids
+and evidence fingerprints that human rulings bind to; admission needs every
+issue ruled, a passing gate, and a clean transcript audit. The gate also
+removes cache stores before a run, checks wrappers for what would evade
+the hook, and compares declared conversions itself. Execution snapshots and
+the executor's conversion evidence are retired.
 
 v1.2 (2026-10-05) answers the cross-model review of PR #7 (Astra, GPT in
 Codex). Gate 1.1 had checked only that the executor's own records agree with
@@ -72,10 +83,8 @@ re-run:
     The authors'-code integrity check alone, for the human lane (no plan
     JSON) and for retroactive checks.
 ``snapshot-code``
-    Hash every code file in an attempt directory into
-    ``execution-snapshots/<phase>.json``. The executor runs ``--phase pre``
-    immediately before the container run and ``--phase post`` immediately
-    after; the gate compares both with the tree it finds.
+    Retired at gate 1.3 (it refuses). Its snapshots are still read for
+    attempts executed under gate 1.2, which the gate marks ineligible.
 ``run-container``
     Gate 1.3's lane-owned run (``wiki/planning/reproduction-gate-1-3-design.md``).
     Copies the attempt's input tree to a private work copy, instruments it
@@ -83,9 +92,9 @@ re-run:
     R process reports itself on Docker's log stream), runs the entry with
     networking off, collects what the run wrote into ``outputs/run-NN/``,
     and seals the records in ``lane-records/run-NN/``. ``--detach`` and
-    ``--finalise`` split a multi-hour run. ``check-attempt`` verifies the
-    sealed records in place of ``snapshot-code``'s snapshots wherever they
-    exist.
+    ``--finalise`` split a multi-hour run; ``--consume`` declares an earlier
+    run's output as an input; ``--keep-store`` keeps a cache store. At gate
+    1.3 a new attempt needs these records.
 ``human-queue``
     Rebuild the human queue for a run from the authoritative on-disk gate
     reports, and report any flag a workflow relay failed to carry.
@@ -97,7 +106,10 @@ re-run:
     Post-run audit of a workflow run directory: receipts re-validated from
     transcripts (shared with ``reconcile-run.py``), blinded-path accesses
     (Read/Grep/Glob plus Bash commands), writes outside scope, tokens
-    deduplicated per API request, API-equivalent cost, and wall-clock.
+    deduplicated per API request, API-equivalent cost, and wall-clock; and,
+    for each executor, the attempt's ``transcript-audit.json``: paper code
+    run other than through ``run-container``, writes into the lane's records
+    or outputs, and calls and records that do not pair.
 
 Usage:
     venv/bin/python scripts/reproduction-lane.py build-plan-args \\
@@ -113,12 +125,10 @@ Usage:
         [--code-manifest FILE] [--legacy-attempt] [--out FILE|-]
     venv/bin/python scripts/reproduction-lane.py check-code <attempt-dir> \\
         [--manifest FILE] [--legacy-attempt] [--out FILE|-]
-    venv/bin/python scripts/reproduction-lane.py snapshot-code <attempt-dir> \\
-        --phase pre|post [--force]
     venv/bin/python scripts/reproduction-lane.py run-container <attempt-dir> \\
         --image TAG --entry FILE [--mount-path PATH] [--launch-commit SHA] \\
-        [--work-root DIR] [--consume run-NN:files/PATH ...] [--detach] \\
-        [--keep-work]
+        [--work-root DIR] [--consume run-NN:files/PATH ...] [--keep-store PATH ...] \\
+        [--detach] [--keep-work]
     venv/bin/python scripts/reproduction-lane.py run-container <attempt-dir> \\
         --finalise run-NN
     venv/bin/python scripts/reproduction-lane.py human-queue \\
@@ -173,7 +183,7 @@ EXECUTION_FILE = "execution-report.json"
 REVIEW_FILE = "adversarial-review.json"
 COMPARISON_FILE = Path("comparisons") / "comparison.json"
 DEFAULT_COMPARISON_SCHEMA = "reproduction-system/schemas/comparison-record.json"
-GATE_VERSION = "1.2"
+GATE_VERSION = "1.3"
 # Authors'-code integrity (gate 1.1; Shawn's ruling 2026-10-04, fail-and-uplift
 # follow-on 3): the authors' files are hashed at retrieval and every executed
 # copy must be byte-identical. Any difference is a declared wrapper or a
@@ -5178,13 +5188,26 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
         structural = (snapshot_problems(docs["pre"], docs["post"],
                                         sha256_file(target_dir / SNAPSHOT_DIR / "pre.json"))
                       if docs["pre"] is not None and docs["post"] is not None else [])
-        if docs["pre"] is None or docs["post"] is None or structural:
+        if docs["pre"] is None and docs["post"] is None and not legacy:
+            # A new attempt (gate 1.3): only run-container's sealed records
+            # show what a run executed.
+            errors.append(f"no sealed run records ({RECORDS_DIR}/): run the analysis with "
+                          f"run-container (gate 1.3), which records each run; execution "
+                          f"snapshots are retired")
+        elif docs["pre"] is None or docs["post"] is None or structural:
             message = (f"execution snapshots missing, unreadable, or not a bound pair "
                        f"({SNAPSHOT_DIR}/pre.json and post.json, taken by snapshot-code around the "
                        f"container run): the gate cannot show which code the run executed"
                        + (f" ({'; '.join(structural)})" if structural else ""))
             (warnings if legacy else errors).append(message)
         else:
+            if not legacy:
+                # Executed under gate 1.2: checked by its rules, but sealed
+                # run records are what admission rests on now.
+                result["eligible_for_current_gate"] = False
+                warnings.append(f"executed under gate 1.2 (execution snapshots, no sealed "
+                                f"run records): checked, but ineligible at gate "
+                                f"{GATE_VERSION} until re-run with run-container")
             # Snapshots record every file (gate 1.3). The code rules apply to code,
             # meaning anything named as code, loaded as code, or declared; other
             # files may legitimately change (logs, comparison reports).
@@ -5502,24 +5525,25 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
     errors += [f"code integrity: {e}" for e in integrity["errors"]]
     warnings += integrity["warnings"] + integrity["flags"]
     flags = list(integrity["flags"])
-    unbound: set[str] = set()
     if integrity.get("runs") is not None and isinstance(comparison, dict):
-        cite_errors, cite_flags, unbound = citation_findings(
+        # An unbound target is an issue, so admission excludes it until ruled.
+        cite_errors, cite_flags, _ = citation_findings(
             records, integrity["runs"], locked, sha256_file(target_dir / COMPARISON_FILE))
         errors += cite_errors
         warnings += cite_flags
         flags += cite_flags
 
-    # Creditable coverage (Fable review of PR #7, P2-4): the recomputed
-    # coverage counts outcomes, so a credited target resting on a declared
-    # edit would be counted. Exclude every target a declared edit names (an
-    # empty list names them all), and every target when no authors' file was
-    # executed. A flagged result is creditable only after a recorded ruling.
-    creditable = admitted = None
+    # Admitted coverage (spec §6). The recomputed coverage counts outcomes,
+    # so a target resting on a declared edit would be counted: exclude every
+    # target a declared edit names (an empty list names them all), every
+    # target when no authors' file was executed or loaded, and each target
+    # citing no sealed output. A flagged result counts only once ruled.
+    # (coverage_creditable, part 1's interim measure, was dropped at the
+    # workflow switch.)
+    admitted = None
     issues = issue_records(flags + integrity["review_obligations"])
     if coverage is not None:
-        excluded: set[str] = set()
-        reasons: list[str] = []
+        edited: set[str] = set()
         manifest = {}
         manifest_file = code_manifest or target_dir / CODE_MANIFEST_FILE
         try:
@@ -5529,26 +5553,11 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
         for item in manifest.get("executed") or []:
             edit = item.get("declared_edit") if isinstance(item, dict) else None
             if edit:
-                named = edit.get("affected_targets") or list(locked)
-                excluded |= set(named)
-                reasons.append(f"declared edit to {item.get('path')}: "
-                               f"{'all targets' if not edit.get('affected_targets') else named}")
-        if manifest.get("originals") and not manifest.get("executed"):
-            excluded |= set(locked)
-            reasons.append("no authors' file was executed")
-        if unbound:
-            excluded |= unbound
-            reasons.append(f"no sealed run output cited (target-unbound): {sorted(unbound)}")
+                edited |= set(edit.get("affected_targets") or list(locked))
         reproduced_ids = [t.get("target_id") for t in records if t.get("target_id") in locked
                           and t.get("testable") is not False
                           and t.get("outcome") in REPRODUCED_OUTCOMES]
-        kept = [tid for tid in reproduced_ids if tid not in excluded]
-        creditable = {"targets_enumerated": len(locked), "targets_creditable": len(kept),
-                      "coverage_fraction": round(len(kept) / len(locked), 4) if locked
-                      else 0.0, "excluded_targets": sorted(excluded & set(reproduced_ids)),
-                      "reasons": reasons}
         structural = {}
-        edited = excluded - unbound
         account = integrity.get("account")
         if (account is not None and manifest.get("originals") and manifest.get("executed")
                 and not account["originals_loaded"]):
@@ -5569,7 +5578,7 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
             "verdict": "fail" if errors else "pass", "errors": errors,
             "warnings": warnings, "flags": flags,
             "review_obligations": integrity["review_obligations"], "coverage": coverage,
-            "coverage_creditable": creditable, "coverage_admitted": admitted,
+            "coverage_admitted": admitted,
             "issues": issues, "launch_commit": launch_commit,
             "eligible_for_current_gate": integrity["eligible_for_current_gate"],
             "code_integrity": {k: integrity[k] for k in (
@@ -5646,12 +5655,13 @@ def cmd_check_code(args: argparse.Namespace) -> int:
 
 
 def cmd_snapshot_code(args: argparse.Namespace) -> int:
-    """CLI wrapper for write_snapshot(): record one execution boundary."""
-    target_dir = args.attempt_dir.expanduser().resolve()
-    out = write_snapshot(target_dir, args.phase, force=args.force)
-    files = json.loads(out.read_text(encoding="utf-8"))["files"]
-    print(f"wrote {display_path(out)} ({len(files)} code file(s))")
-    return 0
+    """Retired at gate 1.3 (spec §5): run-container records every run.
+
+    The snapshots it wrote are still read for attempts executed under gate
+    1.2, and the transcript audit treats a call as contaminating (§12).
+    """
+    raise LaneError("snapshot-code is retired at gate 1.3: run the analysis with "
+                    "run-container, which records each run in lane-records/")
 
 
 def cmd_run_container(args: argparse.Namespace) -> int:

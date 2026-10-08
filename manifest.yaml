@@ -160,7 +160,7 @@ reproduction:
     preparation:
       version: "1.4"
       file: reproduction-system/prompts/01-preparation.md
-      description: Session R-A — materials (fetch-with-checksum, store/scratch destinations, authors'-code manifest hashed at retrieval and anchored to committed records, execution snapshots, conversions declared for the gate to compare), Docker, script adaptation (authors' files run unmodified; mechanics in wrappers)
+      description: Session R-A — materials (fetch-with-checksum, store/scratch destinations, authors'-code manifest hashed at retrieval and anchored to committed records, runs through run-container, conversions declared for the gate to compare), Docker, script adaptation (authors' files run unmodified; mechanics in wrappers)
     execution_verification:
       version: "1.0"
       file: reproduction-system/prompts/02-execution-and-verification.md
@@ -212,13 +212,13 @@ reproduction:
       description: Stage 1 — governed planner fan-out; plans return for persistence and batched human approval (v1.0, 2026-10-03)
     execute:
       file: reproduction-system/workflows/reproduction-execute.workflow.js
-      description: Stage 2 — per approved paper, executor -> mechanical artefact gate -> fresh-context adversarial reviewer (v1.1, 2026-10-04 — executor writes the authors'-code manifest; gate flags join the human queue. v1.2, 2026-10-05 — execution snapshots; the relay must return flags and warnings and the queue fails closed without them; the reviewer addresses the gate's review obligations)
+      description: Stage 2 — per approved paper, executor -> mechanical artefact gate -> fresh-context adversarial reviewer (v1.1, 2026-10-04 — executor writes the authors'-code manifest; gate flags join the human queue. v1.2, 2026-10-05 — execution snapshots; the relay must return flags and warnings and the queue fails closed without them; the reviewer addresses the gate's review obligations. v1.3, 2026-10-09 — gate 1.3, the executor runs through run-container and comparisons cite sealed run outputs)
 
   lane_tool:
-    version: "1.2"
+    version: "1.3"
     file: scripts/reproduction-lane.py
-    last_updated: "2026-10-05"
-    description: Deterministic orchestration for the agentic lane — args builders (commit-pinned, approval-gated), plan persistence + triage, hash-bound approval, the artefact gate (check-attempt; gate 1.1 adds the authors'-code integrity check, also standalone as check-code; gate 1.2, after the cross-model review of PR #7, adds provenance anchors, execution snapshots via snapshot-code, wrapper reference checks, conversion-evidence validation, and the legacy allowlist), the authoritative human queue (human-queue), result persistence, and the post-run audit (receipts, blinding, per-request token dedup, API-equivalent cost)
+    last_updated: "2026-10-09"
+    description: Deterministic orchestration for the agentic lane — args builders (commit-pinned, approval-gated), plan persistence + triage, hash-bound approval, the artefact gate (check-attempt; gate 1.1 adds the authors'-code integrity check, also standalone as check-code; gate 1.2, after the cross-model review of PR #7, adds provenance anchors, execution snapshots via snapshot-code, wrapper reference checks, conversion-evidence validation, and the legacy allowlist; gate 1.3 adds run-container with sealed run records, the instrumented hook and exec shim, the account of every load, issues and rulings, admitted coverage, fresh computation, static start-up checks, the lane's own conversion comparison, and the transcript audit), the authoritative human queue (human-queue), result persistence, and the post-run audit (receipts, blinding, per-request token dedup, API-equivalent cost)
 
   pilot_statistics:
     papers_attempted: 5
@@ -569,9 +569,9 @@ agent_definitions:
     sha256: "d0d32935606d6bef8bd00658688297751bdfff1417b5c17ea5afbb7716b9652c"
   reproduction-executor:
     file: .claude/agents/reproduction-executor.md
-    version: "1.3"
+    version: "1.4"
     model: claude-opus-5-5
-    sha256: "199f8229776d14a61298f447345867734ce1030f92b03bd1ac99e1a1806b208c"
+    sha256: "3060558243d702ce467bfd1962b03b90095369aac38db8f0983c22196db2a42d"
   adversarial-reviewer:
     file: .claude/agents/adversarial-reviewer.md
     version: "1.1"

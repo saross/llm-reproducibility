@@ -372,11 +372,14 @@ class GateTests(unittest.TestCase):
     def test_gate_reports_code_integrity(self):
         self.comparison()
         report = self.run_gate()
-        self.assertEqual(report["gate_version"], "1.2")
+        self.assertEqual(report["gate_version"], "1.3")
         self.assertEqual(report["code_integrity"]["status"], "identical", report["errors"])
         self.assertEqual(report["code_integrity"]["anchors"], {"analysis.R": "verified"})
         self.assertEqual(report["flags"], [])
-        self.assertTrue(report["eligible_for_current_gate"])
+        # The fixture ran under gate 1.2's snapshots: checked, but ineligible
+        # until re-run with run-container.
+        self.assertFalse(report["eligible_for_current_gate"])
+        self.assertTrue(any("executed under gate 1.2" in w for w in report["warnings"]))
 
     def test_gate_fails_on_undeclared_edit(self):
         """The T02 class: an index shifted inside the authors' file, undeclared."""
@@ -405,7 +408,7 @@ class GateTests(unittest.TestCase):
 
     def test_flagged_repair_is_not_creditable(self):
         """Fable P2-4 (A8): an empty affected_targets list names every target, and
-        coverage_creditable excludes them, whatever the outcome-based coverage."""
+        coverage_admitted excludes them, whatever the outcome-based coverage."""
         self.comparison()
         write(self.dir / "authors-code" / "analysis.R",
               AUTHORS_R.replace("index = 4", "index = 3"))
@@ -416,8 +419,9 @@ class GateTests(unittest.TestCase):
         snapshot(self.dir)
         report = self.run_gate()
         self.assertEqual(report["coverage"]["targets_reproduced"], 2)
-        self.assertEqual(report["coverage_creditable"]["targets_creditable"], 0)
-        self.assertEqual(report["coverage_creditable"]["excluded_targets"], ["T01", "T02"])
+        self.assertEqual(report["coverage_admitted"]["targets_admitted"], 0)
+        self.assertEqual(report["coverage_admitted"]["excluded_targets"], ["T01", "T02"])
+        self.assertNotIn("coverage_creditable", report)
 
     def test_gate_missing_manifest_fails_unless_listed_legacy(self):
         self.comparison()
@@ -615,11 +619,14 @@ class CodeIntegrityTests(IntegrityFixture, unittest.TestCase):
         self.assertEqual(lane.cmd_check_code(args), 1)
 
     def test_execute_workflow_carries_manifest_and_flags(self):
-        """The executor is told to write the manifest and snapshots; the gate relay
-        must carry flags (a required field) and fails closed when it does not."""
+        """The executor is told to write the manifest and to run through
+        run-container (gate 1.3; snapshots are retired); the gate relay must
+        carry flags (a required field) and fails closed when it does not."""
         source = (WORKFLOWS / "reproduction-execute.workflow.js").read_text(encoding="utf-8")
         self.assertIn(lane.CODE_MANIFEST_FILE, source)
-        self.assertIn("snapshot-code", source)
+        self.assertIn("reproduction-lane.py run-container", source)
+        self.assertIn("--launch-commit ${launch_commit}", source)
+        self.assertNotIn("snapshot-code", source)
         schema = re.search(r"const GATE_SCHEMA = \{(.*?)\n\}", source, re.S).group(1)
         required = re.search(r"required: \[([^\]]*)\]", schema).group(1)
         for field in ("'warnings'", "'flags'"):
@@ -837,10 +844,23 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
         result = self.check()
         self.assertTrue(any("wrong version or phase" in e for e in result["errors"]))
 
-    def test_missing_snapshots_fail_a_new_run(self):
+    def test_a_new_run_without_run_records_fails(self):
+        """Gate 1.3: with neither sealed run records nor 1.2-era snapshots,
+        nothing shows what the run executed; run-container is the route."""
         shutil.rmtree(self.dir / lane.SNAPSHOT_DIR)
         result = self.check()
+        self.assertTrue(any("no sealed run records" in e and "run-container" in e
+                            for e in result["errors"]), result["errors"])
+
+    def test_a_lone_snapshot_still_fails(self):
+        (self.dir / lane.SNAPSHOT_DIR / "post.json").unlink()
+        result = self.check()
         self.assertTrue(any("execution snapshots missing" in e for e in result["errors"]))
+
+    def test_snapshot_code_is_retired(self):
+        with self.assertRaises(lane.LaneError):
+            lane.cmd_snapshot_code(argparse.Namespace(attempt_dir=self.dir, phase="pre",
+                                                      force=True))
 
     def test_snapshot_is_taken_once(self):
         with self.assertRaises(lane.LaneError):
