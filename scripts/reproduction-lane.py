@@ -242,6 +242,33 @@ DYNAMIC_EVAL_RE = re.compile(
 DOCKER_FETCH_RE = re.compile(
     r"^\s*ADD\s+https?://|^\s*RUN\b.*\b(?:curl|wget|git\s+clone|install_github"
     r"|install_gitlab|install_url)\b", re.IGNORECASE | re.MULTILINE)
+# Static start-up checks (gate 1.3 spec §10). Start-up options that skip
+# the hook, a script on standard input (R < file), and launchers that avoid
+# the front end are errors in a wrapper; options that change start-up
+# meaning without evading the hook are flags.
+SKIP_HOOK_RE = re.compile(r"(?<![\w-])--(vanilla|no-init-file)\b")
+STARTUP_FLAG_RE = re.compile(r"(?<![\w-])--(no-environ|no-site-file)\b")
+STDIN_SCRIPT_RE = re.compile(r"\bR(?:\s+--?[\w-]+(?:=\S+)?)*\s*<\s*[\w./-]+")
+LITTLER_RE = re.compile(r"\br\s+\S+\.[Rr]\b")
+CMD_CHECK_RE = re.compile(r"\bR\s+CMD\s+check\b")
+# Hook integrity: errors in a wrapper, flags in an original. An "=" counts
+# as assignment only at the start of a statement, so that an argument name
+# (f(parse = TRUE)) does not.
+LOADER_NAMES = r"(?:source|sys\.source|parse|loadNamespace)"
+HOOK_INTEGRITY_RE = re.compile(
+    r"\b(?:untrace|tracingState)\s*\("
+    r"|\bSys\.(?:un)?setenv\s*\([^)]*\bR_(?:PROFILE_USER|ENVIRON_USER|PROFILE)\b"
+    rf"|(?<![\w.$@]){LOADER_NAMES}\s*<<?-"
+    rf"|^\s*{LOADER_NAMES}\s*=(?!=)"
+    rf"|\bassign\s*\(\s*[\"']{LOADER_NAMES}[\"']", re.MULTILINE)
+# A function an original defines, by name (name <- function, name = function).
+FUNCTION_DEF_RE = re.compile(r"^\s*([A-Za-z.][\w.]*)\s*(?:<<?-|=)\s*function\b", re.MULTILINE)
+RENVIRON_STARTUP_RE = re.compile(r"^\s*(R_PROFILE_USER|R_PROFILE|R_ENVIRON_USER)\s*=",
+                                 re.MULTILINE)
+DOCKER_STARTUP_RE = re.compile(
+    r"Rprofile\.site|Renviron\.site|/etc/R\b"
+    r"|^\s*(?:COPY|ADD)\b.*\s(?:\$\{?R_HOME\}?|/usr/local/lib/R|/usr/lib/R)/bin\b",
+    re.IGNORECASE | re.MULTILINE)
 SUBSTANTIVE_MIN_CHARS = 12
 TRIVIAL_LINE_RE = re.compile(r"^(#|//|library\(|require\(|suppress\w*\(library"
                              r"|import |from \S+ import )")
@@ -2218,17 +2245,66 @@ def copy_input_tree(target_dir: Path, project: Path) -> None:
                 shutil.copy2(entry, dest, follow_symlinks=False)
 
 
-def instrument_work_copy(project: Path) -> list[dict]:
+# Cache stores (spec §9): Quarto's _freeze and .quarto, the targets store,
+# and knitr's <stem>_cache beside its document (knitr's default cache.path).
+# A run starts without them, so that it computes afresh.
+STORE_NAMES = frozenset({"_freeze", ".quarto", "_targets"})
+KNITR_DOCUMENTS = frozenset({".rmd", ".qmd", ".rnw", ".rmarkdown"})
+
+
+def cache_stores(root: Path) -> list[str]:
+    """The known cache stores in a tree, as relative directory paths."""
+    found: list[str] = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        here = Path(dirpath)
+        documents = {Path(f).stem for f in filenames
+                     if Path(f).suffix.lower() in KNITR_DOCUMENTS}
+        for name in sorted(dirnames):
+            if name in STORE_NAMES or (name.endswith("_cache") and name[:-6] in documents):
+                found.append((here / name).relative_to(root).as_posix())
+                dirnames.remove(name)
+    return found
+
+
+def tree_digest(root: Path) -> tuple[int, str]:
+    """The number of files under a directory, and a digest of their sha256s."""
+    files = {p.relative_to(root).as_posix(): sha256_file(p)
+             for p in sorted(root.rglob("*")) if p.is_file()}
+    return len(files), json_digest(files)
+
+
+def instrument_work_copy(project: Path, keep_stores: list[str] | None = None) -> list[dict]:
     """Make the lane's declared changes to a verified work copy (spec §4).
 
     A project-root ``.Rprofile`` is renamed ``.Rprofile.project`` (the hook
     sources it in R's place), and the lane's own ``.Rprofile`` is written, so
     a child that reads the working directory's profile still loads the hook.
+    Every known cache store is removed, so the run computes afresh, unless
+    the executor declared it an input (``keep_stores``), which the gate
+    makes an obligation (spec §9).
 
     Returns:
         The changes, as recorded in ``baseline.json``.
+
+    Raises:
+        LaneError: a declared store that is not a known store in the tree.
     """
     changes: list[dict] = []
+    stores = cache_stores(project)
+    for kept in keep_stores or []:
+        if kept.rstrip("/") not in stores:
+            raise LaneError(f"--keep-store {kept}: not a known cache store in the input tree "
+                            f"(found: {', '.join(stores) or 'none'})")
+    kept_set = {k.rstrip("/") for k in keep_stores or []}
+    for store in stores:
+        count, digest = tree_digest(project / store)
+        if store in kept_set:
+            changes.append({"change": "kept-store", "path": store, "files": count,
+                            "sha256": digest})
+        else:
+            shutil.rmtree(project / store)
+            changes.append({"change": "removed-store", "path": store, "files": count,
+                            "sha256": digest})
     profile = project / ".Rprofile"
     if (project / PROJECT_PROFILE).exists():
         raise LaneError(f"the input tree already has a {PROJECT_PROFILE}, the name the lane "
@@ -2384,7 +2460,8 @@ def resolve_consumed(target_dir: Path, specs: list[str]) -> list[dict]:
 
 def start_run(target_dir: Path, image_tag: str, entry: str, *, mount_path: str | None = None,
               launch_commit: str | None = None, work_root: Path | None = None,
-              consume: list[str] | None = None) -> dict:
+              consume: list[str] | None = None,
+              keep_stores: list[str] | None = None) -> dict:
     """Prepare and start one run; the container is left running.
 
     Steps 1–4 of the lifecycle (spec §5): lock, resolve the image, snapshot
@@ -2441,7 +2518,7 @@ def start_run(target_dir: Path, image_tag: str, entry: str, *, mount_path: str |
         if copied != pre:
             raise LaneError("the work copy does not match the input tree: "
                             + "; ".join(inventory_difference(pre, copied)[:10]))
-        changes = instrument_work_copy(project)
+        changes = instrument_work_copy(project, keep_stores)
         consumed = resolve_consumed(target_dir, consume or [])
         for item in consumed:
             dest = project / item["path"]
@@ -3017,6 +3094,38 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
                     f"of {run_id}, which ran other code ({differences})",
                     files={f"{run_id}/pre.json": json_digest(run_code),
                            f"{final}/pre.json": json_digest(final_code)}))
+    # Fresh computation (spec §9): a store a credited run kept as input is a
+    # dependency whose admissibility is unresolved, and any other directory
+    # in the input tree named like a cache is an obligation too.
+    stores: set[str] = set()
+    for run_id, record in report["credited_records"].items():
+        for change in (record["baseline"] or {}).get("changes") or []:
+            if change.get("change") not in ("kept-store", "removed-store"):
+                continue
+            stores.add(str(change.get("path")))
+            if change["change"] == "kept-store" and not any(
+                    getattr(o, "issue_id", "") == f"cache-store-input:{change['path']}"
+                    for o in report["obligations"]):
+                report["obligations"].append(Issue.obligation(
+                    "cache-store-input", str(change["path"]), f"{run_id} kept the cache store "
+                    f"{change['path']} as an input rather than computing afresh: confirm its "
+                    f"cached results may stand", files={str(change["path"]): str(
+                        change.get("sha256"))}))
+    directories: dict[str, dict[str, str]] = {}
+    for rel, digest in pre.items():
+        parts = rel.split("/")[:-1]
+        for depth in range(1, len(parts) + 1):
+            directories.setdefault("/".join(parts[:depth]), {})[rel] = digest
+    raised: list[str] = []
+    for directory, files in sorted(directories.items()):
+        inside_another = any(directory.startswith(d + "/") for d in [*stores, *raised])
+        if ("cache" in directory.rsplit("/", 1)[-1].lower() and directory not in stores
+                and not inside_another):
+            raised.append(directory)
+            report["obligations"].append(Issue.obligation(
+                "cache-directory", directory, f"{directory} in the input tree looks like a "
+                f"cache, but is no store the lane knows to remove: confirm the run did not "
+                f"reuse results from it", files={directory: json_digest(files)}))
     image = doc.get("image") or {}
     if image.get("dockerfile_sha256") and image.get("dockerfile_label") != \
             image.get("dockerfile_sha256"):
@@ -4416,6 +4525,80 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                     f"the image: confirm the run executes the mounted, checked tree and not "
                     f"the image's copy", files=wrapper_file))
 
+    # -- Static start-up checks (spec §10): what would skip, evade, or
+    #    undo the lane hook. Errors in a wrapper; in an original, which
+    #    cannot be changed, the hook-integrity patterns are flags.
+    defined: dict[str, str] = {}
+    for oid, data in original_bytes.items():
+        names = {Path(n).name.lower() for n in (by_id[oid].get("local_copy"),
+                                               (by_id[oid].get("archive") or {}).get("member"))
+                 if n} | {Path(r["path"]).name.lower() for r in result["executed"]
+                          if r.get("original") == oid}
+        if not any(Path(n).suffix in (".r", ".rmd", ".qmd", ".rnw") or n == ".rprofile"
+                   for n in names):
+            continue
+        text = data.decode("utf-8", errors="replace")
+        for name in FUNCTION_DEF_RE.findall(text):
+            defined.setdefault(name, oid)
+        hit = HOOK_INTEGRITY_RE.search(text)
+        if hit:
+            flags.append(Issue.flag(
+                "hook-integrity", str(oid), f"original {oid!r} contains {hit.group(0).strip()!r}, "
+                f"which can undo or evade the lane hook: confirm it does not, in this run",
+                files={"original": str(by_id[oid]["sha256"])}))
+    root_dir = target_dir.resolve()
+    shadowing_sources = sorted(wrapper_paths) + [
+        p for p in [(target_dir / ".Rprofile").resolve()]
+        if p.is_file() and p not in wrapper_paths]
+    for path in shadowing_sources:
+        if not path.is_file():
+            continue
+        rel_text = path.relative_to(root_dir).as_posix()
+        text = path.read_text(encoding="utf-8", errors="replace")
+        evidence = file_digests(target_dir, rel_text)
+        for name in sorted(defined):
+            pattern = (rf"(?<![\w.$@]){re.escape(name)}\s*<<?-"
+                       rf"|^\s*{re.escape(name)}\s*=(?!=)")
+            if re.search(pattern, text, re.MULTILINE):
+                flags.append(Issue.flag(
+                    "function-shadowing", f"{rel_text}~{name}", f"{rel_text} assigns "
+                    f"{name}, which original {defined[name]!r} defines as a function: the run "
+                    f"may use this definition instead of the authors'", files=evidence))
+        if path not in wrapper_paths:
+            continue
+        for pattern, why in ((SKIP_HOOK_RE, "which skips the lane hook"),
+                             (STDIN_SCRIPT_RE, "a script on standard input, which no load "
+                                               "event covers (use R -f file)"),
+                             (LITTLER_RE, "littler, which starts R without the front end "
+                                          "(use Rscript)"),
+                             (CMD_CHECK_RE, "R CMD check, which is not a reproduction "
+                                            "action"),
+                             (HOOK_INTEGRITY_RE, "which can undo or evade the lane hook")):
+            hit = pattern.search(text)
+            if hit:
+                errors.append(f"wrapper {rel_text}: {hit.group(0).strip()!r}, {why}")
+        hit = STARTUP_FLAG_RE.search(text)
+        if hit:
+            flags.append(Issue.flag(
+                "startup-option", f"{rel_text}~{hit.group(1)}", f"wrapper {rel_text} starts R "
+                f"with --{hit.group(1)}, which changes what R reads at start-up: confirm the "
+                f"run's environment is the one the authors' code expects", files=evidence))
+        if "dockerfile" in path.name.lower() and DOCKER_STARTUP_RE.search(text):
+            obligations.append(Issue.obligation(
+                "docker-startup-files", rel_text, f"{rel_text} touches R's start-up files "
+                f"(Rprofile.site, Renviron.site, /etc/R) or R's bin directory, where code "
+                f"runs before the lane hook: confirm what it changes", files=evidence))
+    renviron = target_dir / ".Renviron"
+    if renviron.is_file():
+        hit = RENVIRON_STARTUP_RE.search(renviron.read_text(encoding="utf-8",
+                                                              errors="replace"))
+        if hit:
+            flags.append(Issue.flag(
+                "renviron-startup", hit.group(1), f"the project .Renviron sets {hit.group(1)}, "
+                f"which names start-up code: the hook sources a profile it names in place of "
+                f"the project profile, so confirm what it is",
+                files=file_digests(target_dir, ".Renviron")))
+
     # -- Sealed run records (gate 1.3): the lane, not the executor, recorded
     #    each run. Code a run generated joins the generated files: flagged,
     #    checked for inlined authors' code, and never loadable (spec §3).
@@ -5046,7 +5229,7 @@ def cmd_run_container(args: argparse.Namespace) -> int:
             raise LaneError("a new run needs --image and --entry")
         doc = start_run(target_dir, args.image, args.entry, mount_path=args.mount_path,
                         launch_commit=args.launch_commit, work_root=args.work_root,
-                        consume=args.consume)
+                        consume=args.consume, keep_stores=args.keep_store)
         if args.detach:
             print(f"started {doc['run']} (container {doc['container_id'][:12]}); finish it "
                   f"with: run-container {display_path(target_dir)} --finalise {doc['run']}")
@@ -5670,6 +5853,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--consume", action="append", default=[], metavar="RUN:PATH",
                    help="use an earlier run's collected output (run-NN:files/<path>); it is "
                         "copied into the work copy at <path> (repeatable)")
+    p.add_argument("--keep-store", action="append", default=[], metavar="PATH",
+                   help="keep a cache store (knitr cache, _freeze, .quarto, _targets) as a "
+                        "declared input rather than removing it; an obligation (spec §9)")
     p.add_argument("--detach", action="store_true",
                    help="return once the container starts; finish with --finalise")
     p.add_argument("--finalise", metavar="RUN", default=None,

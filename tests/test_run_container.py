@@ -1059,6 +1059,117 @@ class LoadAccountTests(AccountFixture, unittest.TestCase):
                          ["authors-code/analysis.R", "authors-code/report.Rmd"])
 
 
+class StaticCheckTests(AccountFixture, unittest.TestCase):
+    """Static start-up checks (spec §10), on a second declared wrapper the
+    run does not load, so only the static findings show."""
+
+    def add_wrapper(self, rel: str, content: str, role: str = "wrapper") -> None:
+        write(self.dir / rel, content)
+        manifest = json.loads((self.dir / "authors-code-manifest.json").read_text())
+        manifest["wrappers"].append({"path": rel, "role": role, "purpose": "test"})
+        write(self.dir / "authors-code-manifest.json", json.dumps(manifest))
+
+    def add_original(self, oid: str, content: str) -> None:
+        manifest = json.loads((self.dir / "authors-code-manifest.json").read_text())
+        for root in ("authors-code-raw", "authors-code"):
+            write(self.dir / root / oid, content)
+        manifest["originals"].append({
+            "id": oid, "sha256": hashlib.sha256(content.encode()).hexdigest(),
+            "source": "x", "retrieved_at": "2026-10-08T00:00:00Z",
+            "local_copy": f"authors-code-raw/{oid}", "anchor": {"kind": "none", "reason": "t"}})
+        manifest["executed"].append({"path": f"authors-code/{oid}", "original": oid})
+        write(self.dir / "authors-code-manifest.json", json.dumps(manifest))
+
+    def wrapper_errors(self, content: str) -> list[str]:
+        self.add_wrapper("tools.R", content)
+        return [e for e in self.account()["errors"] if e.startswith("wrapper tools.R")]
+
+    def test_what_skips_or_evades_the_hook_is_an_error_in_a_wrapper(self):
+        for content, why in (
+                ('system("Rscript --vanilla a.R")\n', "skips the lane hook"),
+                ('system("R --no-init-file -f a.R")\n', "skips the lane hook"),
+                ('system("R --no-save < a.R")\n', "a script on standard input"),
+                ('system("r a.R")\n', "littler"),
+                ('system("R CMD check pkg")\n', "R CMD check"),
+                ("untrace(source)\n", "undo or evade"),
+                ('Sys.setenv(R_PROFILE_USER = "x.R")\n', "undo or evade"),
+                ("source <- function(...) NULL\n", "undo or evade"),
+                ("parse = function(...) NULL\n", "undo or evade")):
+            with self.subTest(content=content):
+                self.tearDown()
+                self.setUp()
+                errors = self.wrapper_errors(content)
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn(why, errors[0])
+
+    def test_an_argument_named_like_a_loader_is_no_assignment(self):
+        self.assertEqual(self.wrapper_errors('x <- read.csv("a.csv")\ny <- f(parse = TRUE)\n'),
+                         [])
+
+    def test_start_up_options_that_keep_the_hook_are_flags(self):
+        self.add_wrapper("tools.R", 'system("R --no-environ -f a.R")\n')
+        flags = [f for f in self.account()["flags"] if getattr(f, "code", "") == "startup-option"]
+        self.assertEqual([f.subject for f in flags], ["tools.R~no-environ"])
+
+    def test_hook_integrity_in_an_original_is_a_flag(self):
+        self.add_original("odd.R", "untrace(source)\nz <- 1\n")
+        flags = [f for f in self.account()["flags"] if getattr(f, "code", "") == "hook-integrity"]
+        self.assertEqual([f.subject for f in flags], ["odd.R"])
+
+    def test_a_wrapper_redefining_an_authors_function_is_flagged(self):
+        """Fable Q6.6: a wrapper that shadows a function of the originals."""
+        self.add_original("funs.R", "compute <- function(x) x * 2\n")
+        self.add_wrapper("tools.R", "compute <- function(x) x * 3\n")
+        flags = [f for f in self.account()["flags"]
+                 if getattr(f, "code", "") == "function-shadowing"]
+        self.assertEqual([f.subject for f in flags], ["tools.R~compute"])
+
+    def test_a_project_renviron_naming_start_up_code_is_flagged(self):
+        write(self.dir / ".Renviron", "R_PROFILE_USER=custom.R\n")
+        flags = [f for f in self.account()["flags"] if getattr(f, "code", "") ==
+                 "renviron-startup"]
+        self.assertEqual([f.subject for f in flags], ["R_PROFILE_USER"])
+
+    def test_a_dockerfile_touching_start_up_files_is_an_obligation(self):
+        self.add_wrapper("Dockerfile", "FROM rocker/r-ver:4.3.2\n"
+                         "COPY site.R /usr/local/lib/R/etc/Rprofile.site\n", role="environment")
+        self.assertIn("docker-startup-files", self.codes(self.account()["review_obligations"]))
+
+
+class FreshComputationTests(RecordFixture, unittest.TestCase):
+    """Cache stores (spec §9): removed before a run, or kept as an
+    obligation; other cache-like directories are obligations."""
+
+    def test_stores_are_found_by_name_and_by_their_document(self):
+        for rel in ("report.Rmd", "report_cache/html/x.rdb", "notes_cache/y", "_freeze/a",
+                    "sub/.quarto/b", "_targets/meta/meta"):
+            write(self.dir / rel)
+        self.assertEqual(sorted(lane.cache_stores(self.dir)),
+                         ["_freeze", "_targets", "report_cache", "sub/.quarto"])
+
+    def test_stores_are_removed_unless_kept(self):
+        for rel in ("report.Rmd", "report_cache/x", "_targets/meta"):
+            write(self.dir / rel)
+        changes = lane.instrument_work_copy(self.dir, keep_stores=["_targets"])
+        self.assertFalse((self.dir / "report_cache").exists())
+        self.assertTrue((self.dir / "_targets").exists())
+        self.assertEqual(sorted((c["change"], c["path"]) for c in changes
+                                if "store" in c["change"]),
+                         [("kept-store", "_targets"), ("removed-store", "report_cache")])
+        with self.assertRaises(lane.LaneError):
+            lane.instrument_work_copy(self.dir, keep_stores=["data"])
+
+    def test_a_kept_store_and_a_cache_like_directory_are_obligations(self):
+        write(self.dir / "_targets" / "meta" / "meta", "m\n")
+        write(self.dir / "data_cache" / "a.csv", "1\n")
+        write(self.dir / "data_cache" / "inner_cache" / "b.csv", "2\n")
+        self.seal(changes=[{"change": "kept-store", "path": "_targets", "files": 1,
+                            "sha256": "abc"}])
+        obligations = self.check()["obligations"]
+        self.assertEqual(sorted(o.issue_id for o in obligations),
+                         ["cache-directory:data_cache", "cache-store-input:_targets"])
+
+
 class DocumentTextTests(unittest.TestCase):
     """The lane's mapping of what knitr evaluates from a document."""
 
@@ -1360,7 +1471,9 @@ class LauncherDockerTests(AccountRunMixin, unittest.TestCase):
 
     def test_r_f_r_stdin_and_littler_load_the_original(self):
         """R -f reaches R unrewritten (hook 1.3 reads it); a script on
-        standard input binds by the shim's capture; littler runs Rscript."""
+        standard input binds by the shim's capture; littler runs Rscript.
+        In a wrapper, R < file and littler are static errors (spec §10),
+        and those are the only errors: at run time every load binds."""
         self.attempt('invisible(system("R --no-echo -f authors-code/analysis.R"))\n'
                      'invisible(system("R --no-echo < authors-code/analysis.R"))\n'
                      'invisible(system("r authors-code/analysis.R"))\n'
@@ -1369,7 +1482,8 @@ class LauncherDockerTests(AccountRunMixin, unittest.TestCase):
                      {"analysis.R": AUTHORS})
         doc, result = self.run_and_check(IMAGE)
         self.assertEqual(doc["state"], "complete", doc["problems"])
-        self.assertEqual(result["errors"], [])
+        self.assertEqual(sorted(e.split("', ")[1].split(",")[0] for e in result["errors"]),
+                         ["a script on standard input", "littler"])
         counts = result["account"]["runs"]["run-01"]
         self.assertEqual((counts["original"], counts["stdin-original"]), (2, 1))
         self.assertEqual(doc["census"]["processes"], 5)
@@ -1415,6 +1529,24 @@ class MatrixBaseDockerTests(AccountRunMixin, unittest.TestCase):
         self.assertEqual(result["errors"], [])
         self.assertEqual(result["account"]["runs"]["run-01"]["original"], 2)
         self.assertEqual(doc["census"]["processes"], 4)
+
+    def test_a_knitr_cache_is_gone_when_the_run_starts(self):
+        """Spec §9: the run computes afresh; the store stays in the input
+        tree, and the baseline records its removal."""
+        write(self.dir / "authors-code" / "report_cache" / "html" / "old.rdb", "stale\n")
+        self.attempt('cat(dir.exists("authors-code/report_cache"), "\\n")\n'
+                     'dir.create("outputs"); write.csv(1, "outputs/r.csv")\n',
+                     {"report.Rmd": REPORT})
+        doc, _ = self.run_and_check(IMAGE)
+        self.assertEqual((self.dir / "outputs" / "run-01" / "stdout.log").read_text().strip(),
+                         "FALSE")
+        baseline = json.loads((self.dir / lane.RECORDS_DIR / "run-01" / "baseline.json")
+                              .read_text())
+        self.assertIn({"change": "removed-store", "path": "authors-code/report_cache",
+                       "files": 1, "sha256": lane.json_digest(
+                           {"html/old.rdb": hashlib.sha256(b"stale\n").hexdigest()})},
+                      baseline["changes"])
+        self.assertTrue((self.dir / "authors-code" / "report_cache").is_dir())
 
     def test_an_uninstrumented_child_fails_the_census(self):
         """A child with its environment cleared, no environ file, and no
