@@ -1053,6 +1053,35 @@ class LoadAccountTests(AccountFixture, unittest.TestCase):
                      if getattr(i, "code", "") == "unmatched-text"]
         self.assertEqual([i.subject.split("@")[0] for i in unmatched], [edited])
 
+    @staticmethod
+    def slice_md5(first: int, last: int) -> str:
+        """The TEXT md5 of lines first..last (1-based) of the authors' script."""
+        return lane.text_md5("\n".join(AUTHORS.splitlines()[first - 1:last]))
+
+    def test_an_original_run_in_order_by_slices_is_loaded(self):
+        """herskind's pilot evaluates S2.R part by part with parse(text =):
+        contiguous, in-order slices covering every code line run it."""
+        result = self.account(text(self.slice_md5(1, 3)), text(self.slice_md5(4, 6)))
+        self.assertEqual(result["account"]["originals_loaded"], ["analysis.R"])
+        self.assertEqual(result["account"]["runs"]["run-01"]["text-original-part"], 2)
+        self.assertNotIn("unmatched-text", self.codes(result["review_obligations"]))
+        self.assertNotIn("authors-code/analysis.R", [f.subject for f in result["flags"]
+                                                     if getattr(f, "code", "") ==
+                                                     "executed-not-loaded"])
+
+    def test_slices_that_leave_code_unrun_are_flagged(self):
+        """Running only some of the authors' statements is an omission."""
+        result = self.account(text(self.slice_md5(1, 2)), text(self.slice_md5(5, 6)))
+        partly = [f for f in result["flags"] if getattr(f, "code", "") == "original-partly-run"]
+        self.assertIn("code lines 3-6 unrun", partly[0])
+        self.assertIn("unmatched-text", self.codes(result["review_obligations"]))
+        self.assertEqual(result["account"]["originals_loaded"], [])
+
+    def test_slices_out_of_order_do_not_bind(self):
+        result = self.account(text(self.slice_md5(4, 6)), text(self.slice_md5(1, 3)))
+        self.assertIn("original-partly-run", self.codes(result["flags"]))
+        self.assertIn("unmatched-text", self.codes(result["review_obligations"]))
+
     def test_no_original_loaded_flags_every_executed_copy(self):
         result = self.account()
         self.assertEqual(result["account"]["originals_loaded"], [])
@@ -1287,6 +1316,24 @@ class FreshComputationTests(RecordFixture, unittest.TestCase):
         obligations = self.check()["obligations"]
         self.assertEqual(sorted(o.issue_id for o in obligations),
                          ["cache-directory:data_cache", "cache-store-input:_targets"])
+
+
+class SliceTrackerTests(unittest.TestCase):
+    """Slices of an R original, as herskind's wrapper evaluates them."""
+
+    SCRIPT = b"# header\n\n#PART 1\nx <- 1\n#PART 2\ny <- 2\r\nz <- 3\n"
+
+    def test_comments_and_blank_lines_may_be_skipped(self):
+        tracker = lane.SliceTracker({"s.R": self.SCRIPT})
+        self.assertEqual(tracker.match("t", lane.text_md5("#PART 1\nx <- 1")), "s.R")
+        self.assertEqual(tracker.match("t", lane.text_md5("y <- 2\nz <- 3")), "s.R")
+        self.assertEqual(tracker.missing("t", "s.R"), [])
+
+    def test_each_process_keeps_its_own_place(self):
+        tracker = lane.SliceTracker({"s.R": self.SCRIPT})
+        self.assertEqual(tracker.match("t", lane.text_md5("#PART 1\nx <- 1")), "s.R")
+        self.assertIsNone(tracker.match("u", lane.text_md5("y <- 2\nz <- 3")))
+        self.assertEqual(tracker.missing("t", "s.R"), [(6, 7)])
 
 
 class DocumentTextTests(unittest.TestCase):

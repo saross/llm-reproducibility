@@ -3446,6 +3446,7 @@ def load_catalogue(target_dir: Path, by_id: dict[str, dict], original_bytes: dic
         - ``chunks``: an original document's id to the md5 of each chunk;
         - ``packages``: a package name to ``(original id, version)``, from
           a declared source tree's ``DESCRIPTION``;
+        - ``scripts``: each R original's bytes, for slices evaluated as text;
         - ``trees``: a package name to its declared source tree, as
           ``{roots, code}``: the attempt directories holding it, and its R
           code files' bytes by their path in the tree (``R/f.R``);
@@ -3519,8 +3520,10 @@ def load_catalogue(target_dir: Path, by_id: dict[str, dict], original_bytes: dic
                             and Path(inner).suffix in R_CODE_SUFFIXES):
                         code[inner] = content
         trees[package] = {"roots": sorted(roots), "code": code}
+    scripts = {oid: data for oid, data in original_bytes.items()
+               if any(Path(name).suffix.lower() == ".r" for name in names[oid])}
     return {"paths": paths, "md5": by_md5, "chunks": chunks, "packages": packages,
-            "trees": trees, "executed": executed_map}
+            "trees": trees, "scripts": scripts, "executed": executed_map}
 
 
 def package_source_texts(trees: dict[str, dict], sources: set[str]) -> dict[str, str]:
@@ -3561,6 +3564,74 @@ def lane_md5s(doc: dict) -> dict[str, str]:
     if hashlib.sha256(data).hexdigest() == (doc.get("lane_files") or {}).get("hook.R"):
         found[hashlib.md5(data).hexdigest()] = "hook.R"
     return found
+
+
+class SliceTracker:
+    """An R original evaluated as text in contiguous, in-order slices.
+
+    A wrapper may run the authors' script part by part, evaluating each
+    part's lines with ``parse(text =)`` and ``eval``, in the script's own
+    order (herskind's pilot does, by its ``#PART`` headers). Each slice is a
+    ``TEXT`` whose md5 is that of its lines joined by newlines, with one
+    more at the end, as the hook hashes it. Within a process, the slices
+    must follow one another; between them, and before the first, only
+    comment and blank lines may be skipped, since those run no code. A
+    sequence that covers every code line runs the original; one that does
+    not leaves lines that never ran, which is an omission and is flagged.
+    Hashing is incremental, so a slice is found without enumerating every
+    range.
+    """
+
+    def __init__(self, scripts: dict[str, bytes]) -> None:
+        self.lines = {oid: [line + b"\n" for line in self.split(data)]
+                      for oid, data in scripts.items()}
+        self.cursor: dict[tuple[str, str], int] = {}
+        self.ranges: dict[tuple[str, str], list[tuple[int, int]]] = {}
+
+    @staticmethod
+    def split(data: bytes) -> list[bytes]:
+        """Lines as R's readLines gives them (LF, CRLF, or CR endings)."""
+        lines = re.split(rb"\r\n|\r|\n", data)
+        if lines and lines[-1] == b"":
+            lines.pop()
+        return lines
+
+    @staticmethod
+    def inert(line: bytes) -> bool:
+        """A blank or comment line, which runs no code."""
+        stripped = line.strip()
+        return not stripped or stripped.startswith(b"#")
+
+    def match(self, token: str, md5: str) -> str | None:
+        """The original a text is the next slice of, in this process."""
+        for oid, lines in self.lines.items():
+            start = self.cursor.get((token, oid), 0)
+            starts = [start]
+            while starts[-1] < len(lines) and self.inert(lines[starts[-1]]):
+                starts.append(starts[-1] + 1)
+            for first in starts:
+                hasher = hashlib.md5()
+                for last in range(first, len(lines)):
+                    hasher.update(lines[last])
+                    if hasher.hexdigest() == md5:
+                        self.cursor[(token, oid)] = last + 1
+                        self.ranges.setdefault((token, oid), []).append((first, last))
+                        return oid
+        return None
+
+    def missing(self, token: str, oid: str) -> list[tuple[int, int]]:
+        """1-based ranges of code lines no slice covered, in this process."""
+        covered = {i for first, last in self.ranges.get((token, oid), [])
+                   for i in range(first, last + 1)}
+        gaps: list[tuple[int, int]] = []
+        for index, line in enumerate(self.lines[oid]):
+            if index in covered or self.inert(line):
+                continue
+            if gaps and gaps[-1][1] == index:
+                gaps[-1] = (gaps[-1][0], index + 1)
+            else:
+                gaps.append((index + 1, index + 1))
+        return gaps
 
 
 def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
@@ -3765,6 +3836,7 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                                                  for p in INSTALLER_SCRIPTS):
                 sources.add(cwd_of.get(process["token"], ""))
         package_texts = package_source_texts(catalogue["trees"], sources - {""})
+        slices = SliceTracker(catalogue.get("scripts") or {})
         # Texts the gate holds verbatim: each -e argument the shim recorded.
         verbatim: dict[str, str] = {}
         for process in processes:
@@ -3992,6 +4064,8 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                 elif md5 in package_texts:
                     count("text-package-source")
                     mark_tree(catalogue["trees"][package_texts[md5].split(" ")[0]]["roots"])
+                elif slices.match(token, md5) is not None:
+                    count("text-original-part")
                 elif under_package(event, 3):
                     # Evaluated while a package's namespace loads: that
                     # package's own code, which its provenance or the
@@ -4043,6 +4117,23 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                     f"{decode_field(fields[2])}, which records no repository or remote source: "
                     f"it was installed locally, so {note}",
                     files={"DESCRIPTION": fields[7], "version": version}))
+
+        # An original run part by part: loaded when the slices cover every
+        # code line, in order; otherwise an omission, flagged.
+        for (token, oid), _ in sorted(slices.ranges.items()):
+            gaps = slices.missing(token, oid)
+            if not gaps:
+                originals_loaded.add(oid)
+                loaded_md5s.add(hashlib.md5(catalogue["scripts"][oid]).hexdigest())
+                continue
+            shown = ", ".join(f"{a}" if a == b else f"{a}-{b}" for a, b in gaps[:8])
+            add(flags, Issue.flag(
+                "original-partly-run", f"{oid}@{run_id}", f"{run_id} evaluated original "
+                f"{oid!r} in slices that leave code lines {shown}"
+                + (" and more" if len(gaps) > 8 else "") + " unrun: running only some of "
+                "the authors' statements is an omission, so confirm it changes no result",
+                files={"original": hashlib.sha256(catalogue["scripts"][oid]).hexdigest(),
+                       "gaps": json_digest(gaps)}))
 
         # Each process's script read from standard input, which the exec
         # shim captured, and its restored workspace, bound to content.
@@ -5117,6 +5208,11 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
         if named is not None and named.is_file():
             return named
         matches = by_basename.get(Path(rel).name, [])
+        if len(matches) > 1:
+            # A basename shared by a pristine copy and its executed copy
+            # names the declared executed copy.
+            matches = ([m for m in matches if m in executed_paths]
+                       or [m for m in matches if m in declared_paths])
         return matches[0] if len(matches) == 1 else None
 
     for source_path in sorted(wrapper_paths | executed_paths):
