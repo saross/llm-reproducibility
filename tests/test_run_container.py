@@ -1431,6 +1431,60 @@ class MatrixBaseDockerTests(AccountRunMixin, unittest.TestCase):
                         result["errors"])
 
 
+NEUTRAL_FIXTURE = """\
+seed_at_start <- exists(".Random.seed", envir = globalenv())
+set.seed(42)
+x <- rnorm(5)
+m <- lm(mpg ~ wt, data = mtcars)
+writeLines("helper_val <- 7", "helper.R"); source("helper.R")
+y <- eval(parse(text = "1 + 2"))
+r2 <- runif(3)
+k <- parallel::mclapply(1:2, function(i) i * 2, mc.cores = 2)
+dir.create("outputs", showWarnings = FALSE)
+dput(list(seed_at_start = seed_at_start, x = x, coef = coef(m), helper = helper_val, y = y,
+          r2 = r2, k = k, ls = ls(), search = search(), seed = .Random.seed),
+     file = "outputs/neutral.txt", control = "digits17")
+writeLines(c(sort(names(options())), "--", sort(loadedNamespaces())), "outputs/env.txt")
+cat("x =", format(x, digits = 15), "\\n")
+"""
+
+
+@unittest.skipUnless(docker_ready(), f"needs Docker and {IMAGE}")
+class SemanticsNeutralityTests(unittest.TestCase):
+    """Spec §13: a fixture's results, ls(), search(), and random-number state
+    are equal with and without the instrumentation (Astra 9)."""
+
+    def test_instrumentation_leaves_results_and_state_alone(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            attempt, plain, work = root / "attempt-01", root / "plain", root / "work"
+            for where in (attempt, plain, work):
+                where.mkdir()
+            write(attempt / "run-analysis.R", NEUTRAL_FIXTURE)
+            write(plain / "run-analysis.R", NEUTRAL_FIXTURE)
+            doc = lane.finalise_run(attempt, lane.start_run(
+                attempt, IMAGE, "run-analysis.R", mount_path="/project", work_root=work)["run"])
+            self.assertEqual(doc["state"], "complete", doc["problems"])
+            bare = subprocess.run(
+                ["docker", "run", "--rm", "--network", "none", "--user",
+                 f"{os.getuid()}:{os.getgid()}", "-v", f"{plain}:/project", "-w", "/project",
+                 IMAGE, "Rscript", "run-analysis.R"],
+                capture_output=True, text=True, check=False)
+            self.assertEqual(bare.returncode, 0, bare.stderr)
+            run_out = attempt / "outputs" / doc["run"]
+            self.assertEqual((run_out / "stdout.log").read_text(), bare.stdout)
+            self.assertEqual((run_out / "files" / "outputs" / "neutral.txt").read_text(),
+                             (plain / "outputs" / "neutral.txt").read_text())
+            # The residue the hook leaves for code that looks for it: its two
+            # options (the tracers' way into the hook) and the tools
+            # namespace (for md5sum), loaded but never attached.
+            instrumented = set((run_out / "files" / "outputs" / "env.txt").read_text().split())
+            uninstrumented = set((plain / "outputs" / "env.txt").read_text().split())
+            self.assertEqual(instrumented - uninstrumented,
+                             {"lane.hook", "lane.hook.loaded", "tools"})
+            self.assertEqual(uninstrumented - instrumented, set())
+
+
 @unittest.skipUnless(image_ready(MATRIX_IMAGE), f"needs Docker and {MATRIX_IMAGE}")
 class MatrixToolDockerTests(AccountRunMixin, unittest.TestCase):
     """The launcher matrix (spec §13) for common tools, in the
