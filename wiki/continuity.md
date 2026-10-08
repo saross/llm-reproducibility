@@ -62,6 +62,16 @@ merged here as PR #1).
     `venv/bin/pip install -r requirements.txt` on zbook and amd-tower.
     The matrix image needs a one-off local build on each machine (its
     Docker tests skip without it).
+  - [x] 2026-10-09 Track 1 step 6 pushed to PR #7: the transcript audit
+    (`2cef8c7`) and the workflow switch (`40fdd58`: executor brief v1.3,
+    definition v1.4, preparation prompt v1.4, `GATE_VERSION` 1.3,
+    `snapshot-code` retired, `coverage_creditable` dropped). **The gate 1.3
+    build is complete** (all six §15 steps); 590 tests pass at `230134f`.
+  - [x] 2026-10-09 A dry run of the herskind pilot's execution layer
+    (no agents, no model calls): `wiki/planning/reproduction-gate-1-3-pilot-dry-run.md`
+    on PR #7. The run sealed complete and all 34 CSV and text outputs are
+    byte-identical to attempt-02's. It found a defect, fixed (`f5b77d7`:
+    an original run part by part read as never run), and raised Q1 below.
 - **Track 1 (primary): gate 1.3 instrumentation on PR #7.** Branch
   `feat/lane-gate-1-1-code-audit`, head `7d577b8`, open and not merged.
   Worktree: `.claude/worktrees/agent-a8a2378c2a5dbdc98`. Work in the order
@@ -129,8 +139,26 @@ merged here as PR #1).
     tonight for the morning.
   - Update this section at natural stopping points, so the morning read is
     current even if the session ends early.
-- **Questions for Shawn (morning):** none yet. Add them here, each with its
-  options and a recommendation.
+- **Questions for Shawn (morning):**
+  - **Q1. 119 run-time texts on herskind, one obligation each.** The dry
+    run's analysis builds 107 subset conditions that dplyr parses, and
+    rlang, cli, and ggplot2 parse 12 more texts internally. The gate makes
+    each a separate `unmatched-text` obligation on an md5, which a human
+    cannot judge, and admission would need 119 rulings. Options:
+    (a) build the dry-run record's design before the final review, so that
+    the reviewers see one coherent build: verbatim short texts with their
+    verified caller, templates for package internals, and one obligation
+    per place and caller; (b) ask the reviewers to classify it first
+    (spec §16, question 6), then build; (c) accept it as an operability
+    limit. **Recommendation: (a).** It changes evidence, not rules, and
+    admission is impractical without it on any dplyr or ggplot2 analysis.
+    About an evening's work.
+  - **Q2. When to start the final review.** It needs the full herskind
+    re-run through the agentic workflow, which you start (plan approval,
+    multi-agent launch), and Fable's review spends top-tier credit.
+    **Recommendation:** after Q1 and the full re-run, one round for both
+    reviewers, as §2.2's stopping rule intends. Nothing is sent to Fable
+    tonight; Astra's review requests are in agent mail (see below).
 - **Done this session (2026-10-06 to 10-08):**
   - [x] 2026-10-06 Astra's amendment 3 review folded in (`23c72fc`);
     D-7 to D-9 and the revision's new rules ruled (`9536962`, `2f3529d`).
