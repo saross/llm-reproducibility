@@ -1452,7 +1452,8 @@ looking.
 ## Entry 24 (2026-10-06 → 10-08) — The sentence I did not propose
 
 **Project:** llm-reproducibility. **Session:**
-fabeab56-1b7a-4539-8524-caed6e956c93 (Opus 5.5). **Instance:**
+fabeab56-1b7a-4539-8524-caed6e956c93 (Fable 5.1, then Opus 5.5 from the
+decision walk-through). **Instance:**
 continuation-from-summary for the first half (Astra's first review folded
 in, D-7 to D-9 and the revision's new rules ruled, the gate 1.3 hook
 traces built on PR #7), which I know only from the compaction summary.
@@ -1484,8 +1485,9 @@ had sounded like a policy for both.
   ambiguity was created by the revision. It joined the 4 October cap ruling
   (a failing dependency gets its immediately preceding and following
   releases) to D-7's supplied-pin precedence, and never said whose
-  neighbours follow a failed pin. Fable advised on D-7, Shawn ruled it
-  from a walk-through and then read the diff, and I wrote it. Astra found
+  neighbours follow a failed pin. Fable (the peer session) advised on D-7,
+  this session wrote the text while it was running on Fable 5.1, and Shawn
+  ruled it from a walk-through and then read the diff. Astra found
   the gap in the follow-up by reading the two sentences against H3's
   measure. I had recommended the follow-up for generic reasons (about 600
   changed lines, an irreversible step), not because I suspected anything.

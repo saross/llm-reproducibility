@@ -905,8 +905,8 @@ already implied.
 
 ## 2026-10-06 → 10-08 — An observer outside the task caught what I set aside
 
-**Session:** fabeab56-1b7a-4539-8524-caed6e956c93 (Opus 5.5;
-continuation-from-summary before compaction, primary after).
+**Session:** fabeab56-1b7a-4539-8524-caed6e956c93 (Fable 5.1, then Opus
+5.5; continuation-from-summary before compaction, primary after).
 
 **The working agent's goal shaped what it raised.** Shown amendment 2's
 "Nature of this amendment", I noticed it says what stays unchanged and that
@@ -918,10 +918,11 @@ it by its effect on the task in hand rather than on the record. An observer
 outside the task loop is useful for exactly this reason: the agent doing
 the work has a view of the costs that is tilted towards finishing.
 
-**A rule made by joining two rulings passed three Claude-family readers and
-was caught by a GPT reviewer.** B1 came from joining the 4 October cap
-ruling with D-7's precedence rule. Fable advised on D-7, I wrote the joined
-text, and Shawn approved it twice. Astra found the gap by reading the joined
+**A rule made by joining two rulings passed two Claude models and Shawn,
+and was caught by a GPT reviewer.** B1 came from joining the 4 October cap
+ruling with D-7's precedence rule. Fable (the peer session) advised on
+D-7, this session wrote the joined text while running on Fable 5.1, and
+Shawn approved it twice. Astra found the gap by reading the joined
 sentences against the hypothesis they feed (H3's build-iteration measure),
 not against the ruling they came from. One case does not show a model-family
 effect, since Astra was also the only reader asked to check fixes rather

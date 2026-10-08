@@ -1457,8 +1457,9 @@ away for the build and present for the decision walk-through.
 
 ## Session: 2026-10-06 → 2026-10-08 — Amendment 3 lodged; gate 1.3 traces
 
-**Session:** fabeab56-1b7a-4539-8524-caed6e956c93 (Opus 5.5; compacted
-partway, so the 2026-10-06 work is reconstructed from the summary).
+**Session:** fabeab56-1b7a-4539-8524-caed6e956c93 (Fable 5.1, then Opus
+5.5 from the decision walk-through; compacted partway, so the 2026-10-06
+work is reconstructed from the summary).
 
 **Spend.** No model API calls.
 
