@@ -37,6 +37,15 @@ merged here as PR #1).
   another. Stop and wait only for a decision that is genuinely Shawn's, and
   record it under "Questions for Shawn" below. Amendment 3 is LODGED, so
   amendment 3 §10's steps 2 onwards are unblocked.
+- **Overnight progress (Opus 5.5, session be70c3be, 2026-10-08):**
+  - [x] 2026-10-08 Track 1 step 1, the gate's account of load events,
+    pushed to PR #7 (`4bf14e8`, `1c0bfe0`, `63eb010`, `9944be7`; 520 tests
+    pass). Three defects found and fixed on the way (spec §2.4): `-e` text
+    was hashed escaped, a fork's nesting used the parent's numbering, and
+    the hook and shim were not bound to the launch commit. A
+    launcher-matrix test image is built locally
+    (`llmr-launcher-matrix:4.3.2`, from
+    `tests/fixtures/launcher-matrix/Dockerfile`).
 - **Track 1 (primary): gate 1.3 instrumentation on PR #7.** Branch
   `feat/lane-gate-1-1-code-audit`, head `7d577b8`, open and not merged.
   Worktree: `.claude/worktrees/agent-a8a2378c2a5dbdc98`. Work in the order
