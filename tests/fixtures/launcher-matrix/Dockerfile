@@ -33,3 +33,8 @@ RUN install2.r --error --skipinstalled devtools \
 RUN /rocker_scripts/install_pandoc.sh 3.12.1 \
     && /rocker_scripts/install_quarto.sh 1.10.19 \
     && rm -rf /var/lib/apt/lists/*
+
+# igraph, a dependency of targets, links GLPK at load time.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libglpk40 \
+    && rm -rf /var/lib/apt/lists/*
