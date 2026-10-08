@@ -114,6 +114,28 @@ Probes of 2026-10-08 (the account of load events, §8):
    builds them, `alist( <options, the label quoted> )`.
 9. The PSOCK worker's start-up expression in R 4.3.2 is
    `tryCatch(parallel:::.workRSOCK,error=function(e)parallel:::.slaveRSOCK)()`.
+10. `R -f file` reaches R unrewritten: `commandArgs()` shows `-f` and the
+    path, not `--file=`. callr starts its children this way, and so does
+    `R CMD BATCH`.
+11. `R CMD INSTALL` and `R CMD build` pipe `tools:::.install_packages()`
+    or `tools:::.build_packages()` into an R start with `--no-restore`,
+    init files on (`bin/INSTALL` uses `--vanilla` only with
+    `R_INSTALL_VANILLA` or `--use-vanilla`), passing their arguments after
+    `--args`. The installer then runs helper R processes on scripts it
+    writes to a file: fixed `tools:::` templates whose only variable parts
+    are string literals. For a package with an `Encoding` field it parses
+    each R file as text with a `#line 1 "<source path>"` line first; it
+    reads `NAMESPACE` through `base::parseNamespaceFile` and a text
+    connection.
+12. callr 3.7.5 writes its own user environ file, holding the inherited
+    one verbatim and then its own `R_PROFILE_USER` line, which outranks the
+    lane's pin; its profile then sources the working directory's
+    `.Rprofile`. Its children loaded the hook only where that held the
+    lane's injected profile. `remotes::install_local` and
+    `devtools::install` build and install through callr, and six of their
+    R processes failed the census.
+13. remotes records `RemoteType: local` for a package installed from a
+    local path.
 
 `callr`, `targets`, `future`, and Quarto are not in the base image, so their
 behaviour is left to the build's test matrix (§13).
@@ -277,6 +299,12 @@ reviewed to completeness.
 | `-e` text hashed in its escaped form (build, probe fact 7) | D | Fixed, hook `1.2-inst` |
 | A fork's nesting taken in the parent's numbering (build) | D | Fixed, hook `1.2-inst`; §4 |
 | Hook and shim not bound to the launch commit (build) | D | Fixed, §4 |
+| `R -f` scripts had no `LOAD` (build, probe fact 10) | D | Fixed, hook `1.3-inst` |
+| callr children evade the pin (build, probe fact 12) | A | Fixed, shim; §8 |
+| `R CMD INSTALL`'s inner start said to skip the hook (spec; fact 11) | D | §8 corrected |
+| Census issues keyed on tokens, so rulings lapse on re-run (build) | D | Fixed, §8 |
+| `RemoteType: local` read as provenance (build, probe fact 13) | D | Fixed, §8 |
+| A relative `lib.loc` recorded as the library (build) | D | Fixed, hook `1.3-inst` |
 
 ## 3. Terms: trees, runs, and provenance classes
 
@@ -349,8 +377,11 @@ This resolves the drafts' disagreement on generated code.
 **What the container sees.** Each run mounts exactly these:
 
 - the work copy, read-write, at the mount path (§7);
-- the lane directory, read-only, at `/lane`: the hook, the shim, the lane
-  `Renviron`, and the image's own front-end script as `R.orig`;
+- the lane directory, read-only, at `/lane`: the hook, the shim, the
+  littler shim, the lane `Renviron`, and the image's own front-end script as
+  `R.orig`;
+- the littler shim, read-only, over every littler binary on the image's
+  `PATH`, resolved through its symlink (§8);
 - the exec shim (`reproduction-system/runtime/r-shim.sh`), read-only, over
   `$R_HOME/bin/R` and every byte-identical copy on the image's `PATH`
   (found with `readlink -f`). It writes the `EXEC` event and then execs
@@ -409,7 +440,10 @@ Strings are hex-encoded UTF-8, and an over-long argv is cut and marked,
 never wrapped. The events are:
 
 - `EXEC`: from the shim; where stdin comes from, the working directory, and
-  argv;
+  argv. When no option names the code (`-f`, `--file`, `-e`), a pipe or
+  file on stdin is the script: the shim reads it to a file, records its md5,
+  size, and (up to 1,024 bytes) its text, and runs R on the same bytes
+  (built 2026-10-08), so the gate can bind `R < file` by content;
 - `START`: hook version, argv, `R_PROFILE_USER`, `R_ENVIRON_USER`, the md5
   of the site profile and site `Renviron`, and whether a workspace restore
   is pending;
@@ -623,7 +657,9 @@ codes are:
   `consumed-other-code`, `image-stale`, `process-outside-front-end`,
   `stdin-script`, `workspace-restore`, `target-unbound`;
 - loads (§8, 2026-10-08): `unmatched-text`, `connection-load`,
-  `local-package`, `image-code`, `executed-not-loaded`.
+  `local-package`, `image-code`, `executed-not-loaded`, `package-install`.
+  `stdin-script` and `workspace-restore` are now raised there, keyed on
+  content.
 
 A plain string left at any site becomes an `unclassified` issue keyed by
 its text: still rulable, but any change of wording lapses its ruling.
@@ -797,15 +833,37 @@ token with a `START` and an `END` (from the hook):
   `rocker/r-ver:4.3.2`), so a `--vanilla` there still fails. Fable and
   this text agreed on that after checking the image's scripts.
 - **`R CMD INSTALL`** pipes `tools:::.install_packages()` into an R start
-  with init files off (`bin/INSTALL` line 34), so that inner start has no
-  `START` and fails today. Instrumentation adds a `PKGBUILD` binding: the
-  inner start, recognised by its stdin expression and its parent's
-  `CMD INSTALL <path>`, is accounted for when `<path>` is a declared
-  original tree, and the `PKG` flag then covers the installed result.
+  with init files on, so that inner start handshakes (probe fact 11; this
+  text first said the opposite). What it needed was a binding for its code,
+  which arrives on stdin. The `PKGBUILD` binding (built 2026-10-08) works
+  on the shim's capture: the installer and builder expressions, and the
+  installer's helper templates, are R's own and accounted for; the
+  install's targets, read from its `--args`, must be a declared original
+  tree or archive, or an archive named for a declared tree's package and
+  version when the run built one (`devtools::install` and
+  `remotes::install_local` build an archive in a temporary directory and
+  install that). Any other target is an obligation (`package-install`).
+  The installer's parse of each R file binds by reconstruction, for each
+  directory the run installed from, so an edited copy of the source
+  matches nothing; `NAMESPACE` read by `base::parseNamespaceFile` is
+  package machinery. A bound install counts the tree as run. The `PKG`
+  flag covers the installed result, `RemoteType: local` counting as no
+  provenance.
+- **Launchers that substitute their own user environ file** (callr) outrank
+  the pin (probe fact 12). The shim re-pins: such a process gets a copy of
+  that file with the pin appended, so the hook loads and then sources the
+  launcher's profile as the inherited one, the order Q3 intended. callr's
+  bootstrap profile and child script are on the lane's bootstrap list.
 - **littler** (`r`, on every rocker image) embeds libR and passes neither
-  the shim nor any profile. Instrumentation shims `/usr/local/bin/r` and
-  `/usr/bin/r` to `exec Rscript` with the arguments, and §10 makes `r
-  file.R` a static error.
+  the shim nor any profile. Instrumentation shims every littler binary on
+  the image's `PATH` (resolved through its symlink) to `exec Rscript` with
+  the arguments (built 2026-10-08), and §10 makes `r file.R` a static
+  error.
+- **A `FORK` must name a parent with an earlier event** (built
+  2026-10-08); one that does not fails. Census issues are identified by
+  what the process ran, not by its token, so a ruling survives an
+  unchanged re-run (§6). A script on stdin and a restored workspace are
+  bound by the account of loads, which has the attempt's content.
 
 A non-empty log no longer stands in for instrumentation. Each process
 accounts for itself (Astra 3).
@@ -898,8 +956,15 @@ right (§3, class 2). A `LOAD` is tried in this order:
 11. otherwise image code, flagged (`image-code`).
 
 A `TEXT` matches an original, any text knitr evaluates from an original
-document (its chunks, inline code, and chunk options: probe fact 8), or a
-tool expression (probe fact 9 is the first). Each obligation's id and
+document (its chunks, inline code, and chunk options: probe fact 8), a
+tool expression (probe fact 9 is the first), or the installer's parse of
+a declared package tree (probe fact 11). Text and connections evaluated
+while a package's namespace loads, nested under its `PKG`, are that
+package's own code, which its provenance or the `local-package` flag
+covers; so is `NAMESPACE` read by a caller the hook verifies as
+`base::parseNamespaceFile`. The lane's bootstrap list also covers a
+process's own start-up loads, by loader and path: callr's profile and
+script (probe fact 12). Each obligation's id and
 fingerprint rest on content, the text's md5 and the enclosing file, never
 on the run's tokens or `events.log`, so a re-run that changes nothing keeps
 its ruling (§6). An `-e` expression is hashed as R evaluates it (probe fact
@@ -1218,7 +1283,10 @@ through `finalise_run`), rulings including the changed-input case, the
 `LoadAccountTests`, `DocumentTextTests`, and two Docker runs, one in the
 launcher-matrix image): the loader cases above except the edited chunk and
 the locally installed package's end-to-end run, which come with the matrix.
-The rest come with their stages.
+Built with step 2 (2026-10-08; `LauncherDockerTests`, `CallrDockerTests`):
+of the matrix, `R -f`, `R < file`, littler, `R CMD INSTALL`,
+`remotes::install_local`, `devtools::install`, and `callr::r` with and
+without the user profile. The rest come with their stages.
 
 ## 14. Limits that remain
 
@@ -1234,8 +1302,16 @@ are documented outside the model:
 - **Other languages.** Code in another language called from R, beyond the
   traced `reticulate` calls, appears only as a static loader reference.
 - **Image content** loaded other than through a traced loader.
+- **Package installs.** The installer's concatenated package source, loaded
+  under the package's `PKG` in its staging library, is library code: the
+  `local-package` flag covers it, and the per-file parse binds the source
+  only where the package has an `Encoding` field.
 - **B routes:**
   - forged event lines in the stream;
+  - a file written under a bootstrap name (callr's `callr-scr-…`) and
+    started as that launcher would;
+  - a user hook on a package's load event that evaluates text, which then
+    counts as that package's code;
   - starting `exec/R` directly with a hand-made environment;
   - command indirection that hides a launch from the transcript audit.
 - **C routes:** same-user host rewrites of receipts, the Docker daemon, and
@@ -1282,8 +1358,12 @@ matrix about two more, and the rest one or two, plus the review rounds of
     to the launch commit (`63eb010`); hook `1.2-inst`, the `-e` decoding and
     the fork's nesting (`4bf14e8`); and the launcher-matrix test image
     (`tests/fixtures/launcher-matrix/Dockerfile`, `1c0bfe0`);
-  - [ ] `PKGBUILD` for `R CMD INSTALL`; the littler shim; the remaining
-    census rules;
+  - [x] 2026-10-08 `PKGBUILD` for `R CMD INSTALL` (on the shim's capture of
+    stdin scripts), with `devtools::install` and `remotes::install_local`;
+    the littler shim; the shim's re-pin for callr; the remaining census
+    rules (an orphan `FORK`, issue identities on content); and hook
+    `1.3-inst` (`R -f`, absolute libraries, a `CONN`'s verified caller)
+    (`eba8d98`, `40e2c54`);
   - [ ] the launcher matrix (§13), on the test image;
   - [ ] the semantics-neutrality test (§13).
 - [ ] **Fresh computation** (§9).
