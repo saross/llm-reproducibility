@@ -670,7 +670,11 @@ codes are:
   `consumed-other-code`, `image-stale`, `process-outside-front-end`,
   `stdin-script`, `workspace-restore`, `target-unbound`;
 - loads (§8, 2026-10-08): `unmatched-text`, `connection-load`,
-  `local-package`, `image-code`, `executed-not-loaded`, `package-install`.
+  `local-package`, `image-code`, `executed-not-loaded`, `package-install`;
+- fresh computation and static checks (§9, §10, 2026-10-08):
+  `cache-store-input`, `cache-directory`, `startup-option`,
+  `hook-integrity`, `function-shadowing`, `renviron-startup`,
+  `docker-startup-files`.
   `stdin-script` and `workspace-restore` are now raised there, keyed on
   content.
 
@@ -1038,6 +1042,16 @@ functions' bodies differ too, as tracing requires.
 - **`parse(text =)`** is mapped by nesting and chunk md5 (§8), not compared
   with whole files.
 
+**As built (2026-10-08).** A knitr cache is a `<stem>_cache` directory
+beside a document `<stem>.Rmd` (or `.qmd`, `.Rnw`, `.rmarkdown`), knitr's
+default `cache.path`; `_freeze`, `.quarto`, and `_targets` are stores at
+any depth. Each is removed from the work copy and recorded in the baseline
+with its file count and a digest of its files. The executor declares a
+store as an input with `run-container --keep-store PATH`, recorded as
+`kept-store`; the gate raises `cache-store-input` on it. A directory named
+like a cache that is no known store raises `cache-directory`, once for the
+outermost such directory.
+
 ## 10. Static checks
 
 Part 1 built the code-file definition, loader-reference parsing, symlink
@@ -1070,6 +1084,14 @@ obligations, and the inlining check. Additions:
 - **`Dockerfile` obligations** also name `Rprofile.site`, `Renviron.site`,
   `/etc/R`, and a `COPY` or `ADD` into `$R_HOME/bin`, where a custom
   `R CMD` subcommand would dispatch to arbitrary code (Fable).
+
+**As built (2026-10-08).** The checks run over every declared wrapper's
+text and over every R original (`.R`, `.Rmd`, `.qmd`, `.Rnw`, `.Rprofile`).
+An `=` counts as assignment only at the start of a statement, so an
+argument name (`f(parse = TRUE)`) is not one. Codes: errors in a wrapper
+are messages; the flags are `startup-option`, `hook-integrity` (an
+original), `function-shadowing`, and `renviron-startup`, and the
+obligation is `docker-startup-files`.
 
 ## 11. Conversions
 
@@ -1412,8 +1434,10 @@ matrix about two more, and the rest one or two, plus the review rounds of
     rmarkdown and Quarto entries on the lane's lists (`8bae60d`; GLPK in
     the image, `a3f2b47`);
   - [x] 2026-10-08 the semantics-neutrality test (§13).
-- [ ] **Fresh computation** (§9).
+- [x] 2026-10-08 **Fresh computation** (§9).
 - [ ] **Conversions** (§11) and the **static additions** (§10).
+  - [x] 2026-10-08 the static additions (§10);
+  - [ ] conversions (§11).
 - [ ] **The transcript audit** (§12), which writes `transcript-audit.json`;
   the **remaining acceptance tests** (§13); and **the workflow switch**:
   the executor prompt and definition use `run-container`, with the §7
