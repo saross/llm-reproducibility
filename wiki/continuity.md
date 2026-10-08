@@ -34,8 +34,11 @@ merged here as PR #1).
 
 - **⏩ START HERE: lodge amendment 3 once Astra's follow-up is in, then
   finish the gate 1.3 instrumentation.**
-  1. **Amendment 3 is approved and staged; it waits on Astra's follow-up
-     review and Shawn's go-ahead for the API calls.** Shawn read the
+  1. **Amendment 3 is approved and staged; it waits only on Astra's
+     follow-up review.** Shawn approved the justification and the
+     lodgement (2026-10-08), to run once Astra reports no regressions.
+     A scope sentence was added at his choice (`857702d`, the commit
+     under review; second addendum `20261008T073840…`). Shawn read the
      revision (diff `60ec56d..2f3529d`) and approved it as is on
      2026-10-08. He also ruled that the "Why this amendment" paragraph
      opens the lodged text as "Nature of this amendment" (`37da8e3`).
@@ -48,8 +51,6 @@ merged here as PR #1).
      `20261008T070919…`). Then:
      - fold in any findings. If the date moves, rebuild the artefact; the
        builder refuses a tag that disagrees with its banner;
-     - get Shawn's approval of `osf-amendment-3-justification.txt` (public
-       text) and of the API calls;
      - re-run the D5 gate and the tests, tag `osf-amendment-3-<date>`, push
        the tag, and run `lodge` (the OSF key is in
        `~/personal-assistant/.env`, as in August). Then mark the draft
@@ -87,8 +88,9 @@ merged here as PR #1).
     fires in every forked child; `parse(text =)` is detectable with
     `missing()`; `loadNamespace` tracing needs a re-entrancy guard that is
     reset before the imports load.
-- **Still with Shawn:** approval of amendment 3's justification text and
-  of the lodgement API calls; WN-am and WN-an (session log of b1a1e102);
+- **Still with Shawn:** starting Astra for the amendment 3 follow-up
+  (`~/gpt-hub/config/launch-codex.sh --no-alt-screen` from
+  `~/worktrees/llm-reproducibility/sol-repro-entry`); WN-am and WN-an (session log of b1a1e102);
   user-obs 2026-10-06 A–C;
   personal-assistant PR #169 (still open on 2026-10-06; once merged,
   re-run `scripts/compose-global-claude-md.sh` and remove
