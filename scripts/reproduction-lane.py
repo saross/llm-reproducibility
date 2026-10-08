@@ -145,6 +145,7 @@ import importlib.machinery
 import importlib.util
 import json
 import os
+import posixpath
 import re
 import secrets
 import shutil
@@ -2070,9 +2071,13 @@ def inspect_image(tag: str) -> dict:
             "workdir": config.get("WorkingDir") or "", "labels": config.get("Labels") or {}}
 
 
+LITTLER_MARK = "--littler--"
 FRONT_END_PROBE = ('r="$(R RHOME)" || exit 3; printf "%s\\n" "$r"; '
                    'for d in $(printf "%s" "$PATH" | tr ":" " "); do '
-                   '[ -f "$d/R" ] && readlink -f "$d/R"; done; exit 0')
+                   '[ -f "$d/R" ] && readlink -f "$d/R"; done; '
+                   f'printf "%s\\n" "{LITTLER_MARK}"; '
+                   'for d in $(printf "%s" "$PATH" | tr ":" " "); do '
+                   '[ -f "$d/r" ] && readlink -f "$d/r"; done; exit 0')
 
 
 def image_front_end(image_id: str) -> dict:
@@ -2083,9 +2088,13 @@ def image_front_end(image_id: str) -> dict:
     interpreter start passes through it (spec §4, probe fact 3). A PATH ``R``
     with other bytes is reported: starts through it would not be counted.
 
+    littler's ``r`` embeds libR and starts R without the front end, so the
+    littler shim is mounted over every littler binary on the PATH (resolved
+    through its symlinks), and ``r`` runs ``Rscript`` instead (spec §8).
+
     Returns:
         ``{r_home, front_end, front_end_bytes, front_end_sha256,
-        shim_targets, unshimmed}``.
+        shim_targets, unshimmed, littler_targets}``.
     """
     probe = docker(["run", "--rm", "--network", "none", "--entrypoint", "sh", image_id,
                     "-c", FRONT_END_PROBE])
@@ -2093,7 +2102,9 @@ def image_front_end(image_id: str) -> dict:
     if probe.returncode or not lines:
         raise LaneError(f"could not find R in image {image_id[:19]}: "
                         f"{probe.stderr.strip() or 'R RHOME failed'}")
-    r_home, candidates = lines[0], lines[1:]
+    r_home, found = lines[0], lines[1:]
+    mark = found.index(LITTLER_MARK) if LITTLER_MARK in found else len(found)
+    candidates, littler = found[:mark], list(dict.fromkeys(found[mark + 1:]))
     front_end = f"{r_home.rstrip('/')}/bin/R"
 
     def file_bytes(path: str) -> bytes:
@@ -2114,7 +2125,7 @@ def image_front_end(image_id: str) -> dict:
         (targets if file_bytes(path) == original else unshimmed).append(path)
     return {"r_home": r_home, "front_end": front_end, "front_end_bytes": original,
             "front_end_sha256": hashlib.sha256(original).hexdigest(),
-            "shim_targets": targets, "unshimmed": unshimmed}
+            "shim_targets": targets, "unshimmed": unshimmed, "littler_targets": littler}
 
 
 @digest_snapshot()
@@ -2267,18 +2278,19 @@ def stage_lane_dir(lane_dir: Path, project: Path, front_end: bytes) -> dict[str,
     lane_dir.mkdir(parents=True)
     files = {"hook.R": (RUNTIME_DIR / "hook.R").read_bytes(),
              "r-shim.sh": (RUNTIME_DIR / "r-shim.sh").read_bytes(),
+             "littler-shim.sh": (RUNTIME_DIR / "littler-shim.sh").read_bytes(),
              "R.orig": front_end,
              "Renviron": compose_renviron(project).encode("utf-8")}
     for name, data in files.items():
         path = lane_dir / name
         path.write_bytes(data)
-        path.chmod(0o755 if name in ("r-shim.sh", "R.orig") else 0o644)
+        path.chmod(0o755 if name in ("r-shim.sh", "littler-shim.sh", "R.orig") else 0o644)
     return {name: hashlib.sha256(data).hexdigest() for name, data in files.items()}
 
 
 def container_argv(image_id: str, project: Path, lane_dir: Path, mount: str,
                    shim_targets: list[str], interpreter: str, entry: str,
-                   nonce: str, name: str) -> list[str]:
+                   nonce: str, name: str, littler_targets: list[str] = ()) -> list[str]:
     """The ``docker run`` command for one run (spec §§4, 5).
 
     Networking is off, the run is a non-root user, PID 1 is Docker's init
@@ -2297,6 +2309,9 @@ def container_argv(image_id: str, project: Path, lane_dir: Path, mount: str,
             "--mount", f"type=bind,src={lane_dir},dst={LANE_MOUNT},readonly"]
     for target in shim_targets:
         argv += ["--mount", f"type=bind,src={lane_dir / 'r-shim.sh'},dst={target},readonly"]
+    for target in littler_targets:
+        argv += ["--mount",
+                 f"type=bind,src={lane_dir / 'littler-shim.sh'},dst={target},readonly"]
     for variable, value in (("R_ENVIRON_USER", f"{LANE_MOUNT}/Renviron"),
                             ("R_PROFILE_USER", f"{LANE_MOUNT}/hook.R"),
                             ("LANE_RUN_NONCE", nonce), ("LANE_PROJECT_ROOT", mount)):
@@ -2437,7 +2452,8 @@ def start_run(target_dir: Path, image_tag: str, entry: str, *, mount_path: str |
         nonce = secrets.token_hex(8)
         name = f"llmr-{run_id}-{nonce}"
         argv = container_argv(image["id"], project, lane_dir, mount, front["shim_targets"],
-                              interpreter, entry_rel.as_posix(), nonce, name)
+                              interpreter, entry_rel.as_posix(), nonce, name,
+                              front["littler_targets"])
         dockerfile = target_dir / "Dockerfile"
         label = image["labels"].get("llmr.dockerfile.sha256")
         doc: dict[str, Any] = {
@@ -2448,7 +2464,8 @@ def start_run(target_dir: Path, image_tag: str, entry: str, *, mount_path: str |
                       "dockerfile_sha256": sha256_file(dockerfile) if dockerfile.is_file()
                       else None},
             "front_end": {k: front[k] for k in ("r_home", "front_end", "front_end_sha256",
-                                                "shim_targets", "unshimmed")},
+                                                "shim_targets", "unshimmed",
+                                                "littler_targets")},
             "mount_path": mount, "entry": entry_rel.as_posix(), "interpreter": interpreter,
             "nonce": nonce, "argv": argv, "lane_files": lane_files,
             "launch_commit": launch_commit,
@@ -2516,8 +2533,7 @@ def parse_events(text: str, nonce: str) -> tuple[list[dict], list[str]]:
     return events, stray
 
 
-def run_census(events: list[dict], run_id: str = "",
-               evidence: dict[str, str] | None = None) -> dict:
+def run_census(events: list[dict], run_id: str = "") -> dict:
     """The process census for one run (spec §8), from its events alone.
 
     Events are grouped by the per-process token the shim mints, not by PID,
@@ -2535,20 +2551,28 @@ def run_census(events: list[dict], run_id: str = "",
     Args:
         events: The run's parsed events.
         run_id: The run, named in each message and issue subject.
-        evidence: Digests of the records the census read (``events.log``),
-            for the issues' fingerprints.
+
+    A ``FORK`` must name a parent process with an earlier event in the
+    stream; one that does not is unaccounted, and fails (spec §4). A script
+    read from standard input and a restored workspace are recorded on the
+    process, and the account of loads makes them obligations where their
+    content does not bind (spec §8), since that needs the attempt's files.
 
     Returns:
         ``{processes, errors, flags, obligations, gaps, abnormal,
         unterminated}``, where ``gaps``, ``abnormal``, and ``unterminated``
         list tokens (incomplete, abnormally ended, and never-ended forked
         processes), ``errors`` holds messages, and ``flags`` and
-        ``obligations`` hold ``Issue``s.
+        ``obligations`` hold ``Issue``s. Each process records its argv,
+        working directory, standard input (``stdin``: tty, pipe, file, or
+        other; ``script``: the shim's capture of a script read from it, as
+        ``{md5, bytes, text}``), and whether R restored a saved workspace.
     """
     lead = f"{run_id}: " if run_id else ""
     by_token: dict[str, list[dict]] = {}
     for event in events:
         by_token.setdefault(event["token"], []).append(event)
+    first_line = {token: evs[0]["line"] for token, evs in by_token.items()}
     report: dict[str, Any] = {"processes": [], "errors": [], "flags": [], "obligations": [],
                               "gaps": [], "abnormal": [], "unterminated": []}
     for token, evs in by_token.items():
@@ -2565,13 +2589,26 @@ def run_census(events: list[dict], run_id: str = "",
         exempt = bool(execs) and all(len(e["fields"]) > 2 and decode_field(e["fields"][2])
                                      in CENSUS_EXEMPT for e in execs)
         pid = evs[0]["pid"]
+        stdin, script = None, None
+        if execs and execs[-1]["fields"]:
+            stdin, _, captured = execs[-1]["fields"][0].partition(":")
+            md5, _, rest = captured.partition(":")
+            size, _, text = rest.partition(":")
+            if md5:
+                script = {"md5": md5, "bytes": int(size) if size.isdigit() else None,
+                          "text": bytes.fromhex(text).decode("utf-8", errors="replace")
+                          if text else None}
+        cwd = (decode_field(execs[-1]["fields"][1]) if execs and len(execs[-1]["fields"]) > 1
+               else decode_field(starts[0]["fields"][1])
+               if starts and len(starts[0]["fields"]) > 1 else None)
         process = {"token": token, "pid": pid, "ppid": evs[0]["ppid"], "argv": argv,
-                   "stdin": execs[-1]["fields"][0] if execs and execs[-1]["fields"] else None,
+                   "cwd": cwd, "stdin": stdin, "script": script,
                    "exec": bool(execs), "start": bool(starts), "end": bool(ends),
-                   "fork": forked, "exempt": exempt}
+                   "fork": forked, "exempt": exempt,
+                   "restore": bool(starts) and len(starts[0]["fields"]) > 6
+                   and starts[0]["fields"][6] == "restore"}
         report["processes"].append(process)
         shown = f"{pid} ({' '.join(argv)[:160] or 'no arguments'})"
-        identity = {"subject": f"{run_id}/{token}", "files": evidence or {}}
         seqs = sorted(e["seq"] for e in hooked)
         if seqs != list(range(1, len(seqs) + 1)) or len(execs) > 1:
             report["gaps"].append(token)
@@ -2585,24 +2622,23 @@ def run_census(events: list[dict], run_id: str = "",
                                         f"its launcher is not a supported route, so the gate "
                                         f"cannot see what it loaded")
         if starts and not execs:
+            # Identified by what it ran, not by its token, so that a re-run
+            # that changes nothing keeps its ruling (spec §6).
+            started = " ".join(argv)
             report["flags"].append(Issue.flag(
-                "process-outside-front-end", text=f"{lead}R process {shown} started outside "
-                f"the R front end (no EXEC from the shim)", **identity))
+                "process-outside-front-end", started[:120] or "no arguments",
+                f"{lead}R process {shown} started outside the R front end (no EXEC from the "
+                f"shim)", files={"argv": json_digest(argv)}))
+        for fork in (e for e in hooked if e["event"] == "FORK"):
+            parent = fork["fields"][0] if fork["fields"] else ""
+            if first_line.get(parent, fork["line"]) >= fork["line"]:
+                report["errors"].append(f"{lead}forked process {pid} names parent {parent!r}, "
+                                        f"which has no earlier event in the stream: it is "
+                                        f"unaccounted")
         if starts and not ends and not forked and token not in report["gaps"]:
             report["abnormal"].append(token)
         if forked and not ends and token not in report["gaps"]:
             report["unterminated"].append(token)
-        if (execs and not exempt and process["stdin"] in ("file", "pipe")
-                and not any(a.startswith(SCRIPT_OPTIONS) for a in argv)):
-            report["obligations"].append(Issue.obligation(
-                "stdin-script", text=f"{lead}R process {shown} read its script from standard "
-                f"input (R < file): no load event covers that code, so confirm what it ran",
-                **identity))
-        if starts and len(starts[0]["fields"]) > 6 and starts[0]["fields"][6] == "restore":
-            report["obligations"].append(Issue.obligation(
-                "workspace-restore", text=f"{lead}R process {shown} restored a saved "
-                f"workspace (.RData) in {decode_field(starts[0]['fields'][1])}: a declared "
-                f"input needing review", **identity))
     return report
 
 
@@ -2777,7 +2813,8 @@ def lane_script_at(repo_root: Path, commit: str,
 # shim produce the events the gate reads, so a stale copy of either is a
 # stale lane (spec §4, launcher binding).
 BOUND_RUNTIME_FILES = {"hook.R": "reproduction-system/runtime/hook.R",
-                       "r-shim.sh": "reproduction-system/runtime/r-shim.sh"}
+                       "r-shim.sh": "reproduction-system/runtime/r-shim.sh",
+                       "littler-shim.sh": "reproduction-system/runtime/littler-shim.sh"}
 
 
 @digest_snapshot()
@@ -2933,15 +2970,15 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
         # The sealed records the gate's account of loads reads (spec §8): the
         # events, the run record, the baseline the run started from, and what
         # the run wrote.
+        census = run_census(events, run_id)
         baseline_path = records / run_id / "baseline.json"
         outputs_path = records / run_id / "outputs.json"
         report["credited_records"][run_id] = {
-            "doc": run_doc, "events": events,
+            "doc": run_doc, "events": events, "census": census,
             "baseline": json.loads(baseline_path.read_text(encoding="utf-8"))
             if baseline_path.is_file() else {},
             "outputs": json.loads(outputs_path.read_text(encoding="utf-8")).get("files") or []
             if outputs_path.is_file() else []}
-        census = run_census(events, run_id, evidence)
         errors.extend(census["errors"])
         flags.extend(census["flags"])
         report["obligations"].extend(census["obligations"])
@@ -3014,16 +3051,89 @@ TOOL_EXPRESSIONS: dict[str, str] = {
     "tryCatch(parallel:::.workRSOCK,error=function(e)parallel:::.slaveRSOCK)()":
         "a PSOCK worker's start-up expression (parallel, R 4.3.2)",
 }
-# The lane's list of tool-generated bootstrap files: a load nested in the
-# named tool's call whose resolved path matches the pattern is tool-internal.
-# The launcher matrix (spec §13) supplies the entries.
-TOOL_BOOTSTRAP: tuple[tuple[str, re.Pattern[str], str], ...] = ()
+# The lane's list of tool-generated bootstrap files (spec §3, class 5), as
+# (within, loader, path pattern, description): a load by that loader whose
+# resolved path matches the pattern is tool-internal. ``within`` names the
+# traced tool call it must be nested in; None means a process's own
+# start-up load (the hook's "profile" and "file"), at depth 0. The launcher
+# matrix (spec §13) supplies the entries.
+TOOL_BOOTSTRAP: tuple[tuple[str | None, str, re.Pattern[str], str], ...] = (
+    # callr 3.7.5 starts a child as R -f <callr-scr-...> with R_PROFILE_USER
+    # set to its bootstrap profile <callr-upr-...>, which the hook sources
+    # as the inherited profile (2026-10-08 probe; callr's make_profiles).
+    (None, "profile", re.compile(r"/tmp/Rtmp[A-Za-z0-9]+/callr-upr-[0-9a-f]+"),
+     "callr's bootstrap profile"),
+    (None, "file", re.compile(r"/tmp/Rtmp[A-Za-z0-9]+/callr-scr-[0-9a-f]+"),
+     "callr's child script"),
+)
 # Tool launchers in the image, by path and md5: image code accepted without
 # a flag (spec §3). The launcher matrix supplies the entries.
 IMAGE_LAUNCHERS: dict[tuple[str, str], str] = {}
 # Code loaded from a temporary directory was written during the run, by the
 # run or by a tool, so it is not image code.
 TRANSIENT_ROOTS = ("/tmp/", "/var/tmp/", "/dev/shm/")
+# R's package tools, as scripts on standard input, which the exec shim
+# captures (spec §8, PKGBUILD). bin/INSTALL and bin/build pipe a fixed
+# expression into R, which reads the package paths from its --args; the
+# installer then runs helpers through tools:::R_runR. The helpers' only
+# variable parts are quoted string literals, which these patterns admit
+# without quotes, backslashes, or newlines, so no code rides in them. All
+# were read from a probe (2026-10-08, R 4.3.2); any other script is an
+# obligation, never a pass.
+PACKAGE_INSTALL_SCRIPT = "tools:::.install_packages()\n"
+PACKAGE_BUILD_SCRIPT = "tools:::.build_packages()\n"
+_SQ = r"'[^'\\\n]*'"
+_DQ = r'"[^"\\\n]*"'
+_TF = r"(?:TRUE|FALSE)"
+INSTALLER_SCRIPTS = tuple(re.compile(pattern) for pattern in (
+    # Lazy-load preparation, with the byte compiler's set-up when compiling.
+    (r"(?:Sys\.setenv\(R_ENABLE_JIT = 0L\)\ninvisible\(compiler::enableJIT\(0\)\)\n"
+     r"invisible\(compiler::compilePKGS\([01]L\)\)\n"
+     rf"compiler::setCompilerOptions\(suppressAll = {_TF}\)\n"
+     rf"compiler::setCompilerOptions\(suppressUndefined = {_TF}\)\n"
+     rf"compiler::setCompilerOptions\(suppressNoSuperAssignVar = {_TF}\);\n)?"
+     rf"setwd\({_SQ}\)\nif \(isNamespaceLoaded\({_DQ}\)\) unloadNamespace\({_DQ}\)\n"
+     r"suppressPackageStartupMessages\(\.getRequiredPackages\(quietly = TRUE\)\)\n"
+     rf"tools:::makeLazyLoading\({_DQ}, {_SQ}, keep\.source = {_TF}, "
+     rf"keep\.parse\.data = {_TF}, set\.install\.dir = {_SQ}\)\n"),
+    # The help indices.
+    rf'tools:::\.install_package_indices\("\.",\n{_SQ}\n\)\n',
+    # The load test from the staging library.
+    rf"tools:::\.test_load_package\({_SQ}, {_SQ}\)\n",
+    # The load test from the final library, saving the namespace's contents.
+    (rf"tools:::\.test_load_package\({_SQ}, {_SQ}\)\nf <- base::file\({_SQ}, \"wb\"\)\n"
+     r"base::invisible\(base::suppressWarnings\(base::serialize\(base::as\.list\("
+     rf"base::getNamespace\({_DQ}\), all\.names=TRUE\), f\)\)\)\nbase::close\(f\)\n"),
+))
+# Callers the hook verified as R's own NAMESPACE parser, which reads a
+# package's NAMESPACE file through a text connection (2026-10-08 probe).
+NAMESPACE_READERS = frozenset({"base::parseNamespaceFile"})
+PACKAGE_ARCHIVE_RE = re.compile(r"([A-Za-z][A-Za-z0-9.]*)_([0-9][0-9.-]*)\.tar\.gz")
+# R's code-file suffixes in a package's R/ directory (tools'
+# list_files_with_type("code")).
+R_CODE_SUFFIXES = frozenset({".R", ".r", ".S", ".s", ".q"})
+
+
+def install_targets(argv: list[str]) -> list[str]:
+    """The package paths an ``R CMD INSTALL`` inner start installs.
+
+    bin/INSTALL passes its own arguments to R after ``--args``, each prefixed
+    ``nextArg`` (``nextArg--library=libnextArgmypkg``). Options are skipped,
+    and so is ``-l``'s separate value.
+    """
+    if "--args" not in argv:
+        return []
+    tokens = [t for t in "".join(argv[argv.index("--args") + 1:]).split("nextArg") if t]
+    paths: list[str] = []
+    skip = False
+    for token in tokens:
+        if skip:
+            skip = False
+        elif token == "-l":
+            skip = True
+        elif not token.startswith("-"):
+            paths.append(token)
+    return paths
 # R Markdown and Quarto chunk fences and inline code: knitr 1.45's own
 # patterns (knitr::all_patterns$md), read in the launcher-matrix image.
 CHUNK_START_RE = re.compile(r"^[\t >]*```+\s*\{([a-zA-Z0-9_]+)(.*)\}\s*$")
@@ -3151,6 +3261,9 @@ def load_catalogue(target_dir: Path, by_id: dict[str, dict], original_bytes: dic
         - ``chunks``: an original document's id to the md5 of each chunk;
         - ``packages``: a package name to ``(original id, version)``, from
           a declared source tree's ``DESCRIPTION``;
+        - ``trees``: a package name to its declared source tree, as
+          ``{roots, code}``: the attempt directories holding it, and its R
+          code files' bytes by their path in the tree (``R/f.R``);
         - ``executed``: each executed copy's path to its original's id.
     """
     paths: dict[str, dict] = {}
@@ -3205,8 +3318,49 @@ def load_catalogue(target_dir: Path, by_id: dict[str, dict], original_bytes: dic
             fields = description_fields(data)
             if fields.get("Package"):
                 packages[fields["Package"]] = (oid, fields.get("Version", ""))
+    trees: dict[str, dict] = {}
+    for oid, data in original_bytes.items():
+        roots = {posixpath.dirname(name) for name in names[oid]
+                 if Path(name).name == "DESCRIPTION"}
+        package = description_fields(data).get("Package") if roots else None
+        if not package:
+            continue
+        code: dict[str, bytes] = {}
+        for other, content in original_bytes.items():
+            for name in names[other]:
+                for root in roots:
+                    inner = name[len(root) + 1:] if name.startswith(root + "/") else ""
+                    if (inner.startswith("R/") and inner.count("/") == 1
+                            and Path(inner).suffix in R_CODE_SUFFIXES):
+                        code[inner] = content
+        trees[package] = {"roots": sorted(roots), "code": code}
     return {"paths": paths, "md5": by_md5, "chunks": chunks, "packages": packages,
-            "executed": executed_map}
+            "trees": trees, "executed": executed_map}
+
+
+def package_source_texts(trees: dict[str, dict], sources: set[str]) -> dict[str, str]:
+    """What R CMD INSTALL parses from a declared tree's code, by md5.
+
+    For a package with an Encoding field, the installer parses each R file
+    as text with a ``#line 1 "<path>"`` line before its lines, where the
+    path is the file's absolute path in the source directory it installs
+    from (``tools:::.install_package_code_files``, R 4.3.2; 2026-10-08
+    probe). ``sources`` are the directories a run installed from; an edited
+    copy of the source matches nothing.
+
+    Returns:
+        ``{md5: "<package> <R file>"}``.
+    """
+    texts: dict[str, str] = {}
+    for package, tree in trees.items():
+        for inner, data in tree["code"].items():
+            lines = re.split(r"\r\n|\r|\n", data.decode("utf-8", errors="replace"))
+            if lines and lines[-1] == "":
+                lines.pop()
+            for source in sources:
+                header = f'#line 1 "{posixpath.join(source, inner)}"'
+                texts[text_md5("\n".join([header, *lines]))] = f"{package} {inner}"
+    return texts
 
 
 def lane_md5s(doc: dict) -> dict[str, str]:
@@ -3273,6 +3427,14 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                    for digest in digests}
     summary: dict[str, dict[str, int]] = {}
 
+    def mark_tree(roots: list[str]) -> None:
+        """Count a declared package tree's executed copies as run: an
+        install of the tree runs the authors' package."""
+        for rel, oid in catalogue["executed"].items():
+            if any(rel.startswith(root.rstrip("/") + "/") for root in roots):
+                loaded_paths.add(rel)
+                originals_loaded.add(oid)
+
     # Content anywhere in the attempt, by sha256: the input tree and every
     # sealed output. A run's baseline names content by sha256, and this finds
     # bytes to take its md5 from, wherever the content now sits (a renamed
@@ -3299,6 +3461,87 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
             issued.add(issue.issue_id)
             bucket.append(issue)
 
+    def bind_install(path: str, cwd: str, where: str, built: bool, baseline: dict[str, str],
+                     mount: str) -> None:
+        """PKGBUILD: an install of a declared original tree or archive is
+        accounted for, and so is an archive named for a declared tree's
+        package and version when the run built one (devtools::install and
+        remotes::install_local build first). Anything else is an
+        obligation; the local-package flag covers the installed result."""
+        full = path if path.startswith("/") else posixpath.normpath(posixpath.join(cwd, path))
+        archive = PACKAGE_ARCHIVE_RE.fullmatch(posixpath.basename(full))
+        if mount and full.startswith(mount + "/"):
+            rel = full[len(mount) + 1:]
+            tree = catalogue["paths"].get(posixpath.join(rel, "DESCRIPTION"))
+            if tree is not None and tree["class"] in ("original", "edited-copy"):
+                mark_tree([rel])
+                return
+            archived = catalogue["paths"].get(rel)
+            if archived is not None and archived["class"] in ("original", "edited-copy"):
+                loaded_paths.add(rel)
+                originals_loaded.add(archived["id"])
+                return
+            subject = rel
+            files = {rel: baseline.get(rel) or baseline.get(posixpath.join(
+                rel, "DESCRIPTION")) or "missing"}
+        else:
+            subject = posixpath.basename(full)
+            files = {"archive": subject}
+        note = ""
+        if archive:
+            source = catalogue["packages"].get(archive.group(1))
+            if source is not None and source[1] == archive.group(2) and built:
+                mark_tree(catalogue["trees"].get(archive.group(1), {}).get("roots", []))
+                return
+            if source is not None:
+                note = (f" (the declared tree {source[0]} is version {source[1]}"
+                        + (", and the run built no package)" if not built else ")"))
+        add(obligations, Issue.obligation(
+            "package-install", subject, f"{where} ran R CMD INSTALL on {full}, which is no "
+            f"declared original tree or archive{note}: confirm what was installed",
+            files=files))
+
+    def bind_script(process: dict, where: str, built: bool, baseline: dict[str, str],
+                    mount: str, count: Any) -> None:
+        """A script read from standard input (R < file): an original by
+        content, R's package tools, or an obligation keyed on its content."""
+        argv = process["argv"]
+        options = argv[:argv.index("--args")] if "--args" in argv else argv
+        script = process.get("script")
+        if script is None:
+            # A record from a shim that did not capture the script.
+            if (process["exec"] and not process["exempt"]
+                    and process["stdin"] in ("file", "pipe")
+                    and not any(a.startswith(SCRIPT_OPTIONS) for a in options)):
+                add(obligations, Issue.obligation(
+                    "stdin-script", f"uncaptured@{process.get('cwd')}", f"{where} read its "
+                    f"script from standard input (R < file), which was not captured: confirm "
+                    f"what it ran", files={"argv": json_digest(argv)}))
+            return
+        md5, text = script["md5"], script.get("text")
+        known = catalogue["md5"].get(md5)
+        if known is not None and known[0] in ("original", "edited-copy"):
+            originals_loaded.add(known[1])
+            loaded_md5s.add(md5)
+            count("stdin-original")
+        elif text == PACKAGE_BUILD_SCRIPT:
+            count("package-build")
+        elif text == PACKAGE_INSTALL_SCRIPT:
+            count("package-install")
+            for path in install_targets(argv):
+                bind_install(path, str(process.get("cwd") or mount), where, built, baseline,
+                             mount)
+        elif text is not None and any(p.fullmatch(text) for p in INSTALLER_SCRIPTS):
+            count("installer")
+        else:
+            count("stdin-unmatched")
+            first = (text or "").split("\n", 1)[0][:80]
+            add(obligations, Issue.obligation(
+                "stdin-script", md5, f"{where} read its script from standard input (R < "
+                f"file; md5 {md5[:12]}…" + (f", beginning {first!r}" if first else "")
+                + "): it matches no original and no R package tool, so confirm what it ran",
+                files={"script": md5}))
+
     for run_id, run in runs.items():
         doc, events = run["doc"], run["events"]
         mount = str(doc.get("mount_path") or "").rstrip("/")
@@ -3308,10 +3551,35 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
         injected = {c.get("path") for c in changes if c.get("change") == "injected"}
         renamed = {c.get("to"): c.get("from") for c in changes if c.get("change") == "renamed"}
         lane_files = lane_md5s(doc)
+        processes = (run.get("census") or {}).get("processes") or []
+        cwd_of = {p["token"]: str(p.get("cwd") or "") for p in processes}
+
+        def library_of(event: dict) -> str:
+            # A PKG event's library, absolute; an older hook recorded
+            # lib.loc as given, which may be relative to the process.
+            library = decode_field(event["fields"][2])
+            return (library if library.startswith("/") else
+                    posixpath.normpath(posixpath.join(cwd_of.get(event["token"], "/"), library)))
+
         r_home = str((doc.get("front_end") or {}).get("r_home") or "").rstrip("/")
         libraries = {f"{r_home}/library"} if r_home else set()
-        libraries |= {decode_field(e["fields"][2]) for e in events
+        libraries |= {library_of(e) for e in events
                       if e["event"] == "PKG" and len(e["fields"]) > 2 and e["fields"][2] != "none"}
+        # The directories the run installed packages from: each install's
+        # target, and the staging directory the installer's helpers ran in.
+        sources: set[str] = set()
+        for process in processes:
+            script_text = (process.get("script") or {}).get("text")
+            if script_text == PACKAGE_INSTALL_SCRIPT:
+                for target in install_targets(process["argv"]):
+                    full = (target if target.startswith("/") else posixpath.normpath(
+                        posixpath.join(cwd_of.get(process["token"]) or mount, target)))
+                    if not PACKAGE_ARCHIVE_RE.fullmatch(posixpath.basename(full)):
+                        sources.add(full)
+            elif script_text is not None and any(p.fullmatch(script_text)
+                                                 for p in INSTALLER_SCRIPTS):
+                sources.add(cwd_of.get(process["token"], ""))
+        package_texts = package_source_texts(catalogue["trees"], sources - {""})
         counts: dict[str, int] = {}
         summary[run_id] = counts
         by_seq: dict[tuple[str, int], dict] = {(e["token"], e["seq"]): e for e in events}
@@ -3360,6 +3628,12 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
         def count(kind: str) -> None:
             counts[kind] = counts.get(kind, 0) + 1
 
+        def under_package(event: dict, index: int) -> bool:
+            # Whether the innermost enclosing event is a package's PKG.
+            enclosing = enclosing_of(event, index)
+            outer = lookup(event["token"], enclosing) if enclosing else None
+            return outer is not None and outer["event"] == "PKG"
+
         def tool_call(event: dict) -> tuple[dict | None, dict | None, dict | None]:
             """The innermost enclosing tool LOAD and its binding, and the
             immediately enclosing PKG event, if any."""
@@ -3390,7 +3664,7 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                                 f"so nothing was loaded from it")
                 return {"class": "not-a-file"}
             tool, tool_binding, package = tool_call(event)
-            if package is not None and path.startswith(decode_field(package["fields"][2]) + "/"):
+            if package is not None and path.startswith(library_of(package) + "/"):
                 return {"class": "library"}
             if path.startswith(LANE_MOUNT + "/"):
                 if md5 in lane_files:
@@ -3398,11 +3672,14 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                 errors.append(f"{where} loaded {path} from the lane directory, but its content "
                               f"is no lane file's")
                 return {"class": "unaccounted"}
+            tool_fn = decode_field(tool["fields"][0]) if tool is not None else None
+            depth = int(fields[4]) if fields[4].isdigit() else -1
+            for within, loader, pattern, what in TOOL_BOOTSTRAP:
+                if (loader == fn and pattern.fullmatch(path)
+                        and (within == tool_fn if within is not None
+                             else tool is None and depth == 0)):
+                    return {"class": "tool-internal", "id": what}
             if tool is not None:
-                tool_fn = decode_field(tool["fields"][0])
-                for name, pattern, _what in TOOL_BOOTSTRAP:
-                    if name == tool_fn and pattern.search(path):
-                        return {"class": "tool-internal", "id": tool_fn}
                 document = (tool_binding or {}).get("id")
                 if md5 in catalogue["chunks"].get(document, ()):
                     return {"class": "tool-internal", "id": f"{tool_fn} chunk of {document}"}
@@ -3507,6 +3784,14 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                     count("text-chunk")
                 elif md5 in expressions:
                     count("text-tool")
+                elif md5 in package_texts:
+                    count("text-package-source")
+                    mark_tree(catalogue["trees"][package_texts[md5].split(" ")[0]]["roots"])
+                elif under_package(event, 3):
+                    # Evaluated while a package's namespace loads: that
+                    # package's own code, which its provenance or the
+                    # local-package flag covers.
+                    count("text-package")
                 else:
                     count("text-unmatched")
                     place, evidence = label(event, enclosing_of(event, 3))
@@ -3517,18 +3802,27 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                         files={"text": md5, **evidence}))
             elif kind == "CONN" and len(fields) >= 3:
                 count("connection")
+                caller = decode_field(fields[5]) if len(fields) > 5 else ""
+                if under_package(event, 4) or caller in NAMESPACE_READERS:
+                    # A package's own load, or R reading a NAMESPACE file
+                    # (the installer calls the parser directly): package
+                    # machinery, which the package's provenance covers.
+                    continue
                 place, evidence = label(event, enclosing_of(event, 4))
                 fn, cls, what = (decode_field(f) for f in fields[:3])
                 add(obligations, Issue.obligation(
                     "connection-load", f"{fn}:{cls}:{what}@{place}", f"{where} called {fn} on a "
-                    f"{cls} ({what}) in {place}: no path hash covers a connection's content, so "
-                    f"confirm what it evaluated", files=evidence))
+                    f"{cls} ({what}) in {place}" + (f", from {caller}" if caller else "")
+                    + ": no path hash covers a connection's content, so confirm what it "
+                    "evaluated", files=evidence))
             elif kind == "PKG" and len(fields) >= 8:
                 count("package")
                 name, version = decode_field(fields[0]), fields[1]
-                provenance = [fields[3], fields[4], fields[5]]
-                if name in BASE_PACKAGES or version == "none" or any(
-                        value != "none" for value in provenance[:2]):
+                # remotes records RemoteType "local" for a package installed
+                # from a local path, which is no provenance (2026-10-08 probe).
+                remote_type = decode_field(fields[4]) if fields[4] != "none" else None
+                if (name in BASE_PACKAGES or version == "none" or fields[3] != "none"
+                        or remote_type not in (None, "local")):
                     continue
                 version = decode_field(version)
                 source = catalogue["packages"].get(name)
@@ -3544,6 +3838,25 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                     f"{decode_field(fields[2])}, which records no repository or remote source: "
                     f"it was installed locally, so {note}",
                     files={"DESCRIPTION": fields[7], "version": version}))
+
+        # Each process's script read from standard input, which the exec
+        # shim captured, and its restored workspace, bound to content.
+        built = any((p.get("script") or {}).get("text") == PACKAGE_BUILD_SCRIPT
+                    for p in processes)
+        for process in processes:
+            where = f"{run_id}: process {process['pid']}"
+            bind_script(process, where, built, baseline, mount, count)
+            if process.get("restore"):
+                cwd = str(process.get("cwd") or "")
+                rel = (".RData" if cwd == mount else
+                       posixpath.join(cwd[len(mount) + 1:], ".RData")
+                       if mount and cwd.startswith(mount + "/") else None)
+                subject = rel or posixpath.join(cwd, ".RData")
+                add(obligations, Issue.obligation(
+                    "workspace-restore", subject, f"{where} restored a saved workspace "
+                    f"({subject}): a declared input needing review",
+                    files={subject: baseline.get(rel, "missing") if rel else "outside the "
+                           "work copy"}))
 
     # A run whose entry is a shell script ran it without any R load event.
     final_doc = runs.get(final_run, {}).get("doc") or {}

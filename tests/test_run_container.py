@@ -78,7 +78,8 @@ def git(repo: Path, *args: str) -> str:
 
 
 LANE_FILES = ("scripts/reproduction-lane.py", "reproduction-system/runtime/hook.R",
-              "reproduction-system/runtime/r-shim.sh")
+              "reproduction-system/runtime/r-shim.sh",
+              "reproduction-system/runtime/littler-shim.sh")
 
 
 def lane_repo(root: Path) -> tuple[Path, str]:
@@ -102,6 +103,12 @@ def lane_repo(root: Path) -> tuple[Path, str]:
 def hexed(text: str) -> str:
     """Hex-encode a field as the shim and the hook do."""
     return text.encode("utf-8").hex()
+
+
+def captured(kind: str, script: str) -> str:
+    """The shim's stdin field for a script it captured from a pipe or file."""
+    data = script.encode("utf-8")
+    return f"{kind}:{hashlib.md5(data).hexdigest()}:{len(data)}:{data.hex()}"
 
 
 def exec_line(nonce: str, token: str, pid: int, *argv: str, stdin: str = "other") -> str:
@@ -204,17 +211,36 @@ class CensusTests(unittest.TestCase):
         self.assertEqual(len(report["processes"]), 2)
         self.assertEqual((report["errors"], report["gaps"]), ([], []))
 
-    def test_script_on_standard_input_is_an_obligation(self):
-        report = self.census(exec_line(self.NONCE, "7-a", 7, "--no-save", stdin="file"),
+    def test_a_captured_script_on_standard_input_is_recorded(self):
+        """The shim captures a script read from standard input (R < file);
+        the census records it, and the account of loads binds it."""
+        script = "x <- 1\n"
+        report = self.census(exec_line(self.NONCE, "7-a", 7, "--no-save",
+                                       stdin=captured("file", script)),
                              start_line(self.NONCE, "7-a", 7, "--no-save"),
                              hook_line(self.NONCE, "7-a", 7, 2, "END"))
-        self.assertIn("standard input", report["obligations"][0])
+        self.assertEqual(report["processes"][0]["stdin"], "file")
+        self.assertEqual(report["processes"][0]["script"],
+                         {"md5": hashlib.md5(script.encode()).hexdigest(), "bytes": 7,
+                          "text": script})
+        self.assertEqual(report["obligations"], [])
 
-    def test_workspace_restore_is_an_obligation(self):
+    def test_workspace_restore_is_recorded(self):
         report = self.census(exec_line(self.NONCE, "7-a", 7, "-f", "a.R"),
                              start_line(self.NONCE, "7-a", 7, "-f", "a.R", restore=True),
                              hook_line(self.NONCE, "7-a", 7, 2, "END"))
-        self.assertIn("saved workspace", report["obligations"][0])
+        self.assertTrue(report["processes"][0]["restore"])
+        self.assertEqual(report["processes"][0]["cwd"], "/project")
+
+    def test_a_fork_with_no_earlier_parent_fails(self):
+        """Spec §4: a FORK that no parent event precedes is unaccounted."""
+        fork = [hook_line(self.NONCE, "12-f", 12, 1, "FORK", "7-a", "0"),
+                hook_line(self.NONCE, "12-f", 12, 2, "END")]
+        orphan = self.census(*fork, *clean_process(self.NONCE, "7-a", 7))
+        self.assertTrue(any("names parent '7-a', which has no earlier event" in e
+                            for e in orphan["errors"]), orphan["errors"])
+        child = self.census(*clean_process(self.NONCE, "7-a", 7), *fork)
+        self.assertEqual(child["errors"], [])
 
 
 class CompletenessTests(unittest.TestCase):
@@ -827,6 +853,204 @@ class LoadAccountTests(AccountFixture, unittest.TestCase):
         self.assertTrue(any("an output of run-01 consumed as input" in e
                             for e in result["errors"]), result["errors"])
 
+    def script_process(self, token: str, pid: int, script: str, *argv: str) -> list[str]:
+        """An R process that read ``script`` from standard input, as the
+        shim captures it: EXEC, START, and END."""
+        return [exec_line(self.NONCE, token, pid, *argv, stdin=captured("pipe", script)),
+                start_line(self.NONCE, token, pid, *argv),
+                hook_line(self.NONCE, token, pid, 2, "END", "0")]
+
+    def account_with(self, *extra: list[str], **seal) -> dict:
+        """Seal the entry process plus extra processes, and check."""
+        lines = self.events()
+        for process in extra:
+            lines += process
+        self.seal(events=lines, **seal)
+        return lane.check_code_integrity(self.dir, self.dir / "authors-code-manifest.json",
+                                         self.schema, anchor_root=self.repo,
+                                         launch_commit=self.launch)
+
+    def declare_package(self, version: str = "0.1") -> None:
+        """Declare an authors' package tree, executed from authors-code/mypkg."""
+        files = {"DESCRIPTION": f"Package: mypkg\nVersion: {version}\n",
+                 "NAMESPACE": "export(f)\n", "R/f.R": "f <- function() 42\n"}
+        manifest = json.loads((self.dir / "authors-code-manifest.json").read_text())
+        for rel, content in files.items():
+            write(self.dir / "authors-code-raw" / "mypkg" / rel, content)
+            write(self.dir / "authors-code" / "mypkg" / rel, content)
+            manifest["originals"].append({
+                "id": f"mypkg/{rel}", "sha256": hashlib.sha256(content.encode()).hexdigest(),
+                "source": "https://zenodo.org/records/1/files/mypkg.zip",
+                "retrieved_at": "2026-10-08T00:00:00Z",
+                "local_copy": f"authors-code-raw/mypkg/{rel}",
+                "anchor": {"kind": "none", "reason": "test"}})
+            manifest["executed"].append({"path": f"authors-code/mypkg/{rel}",
+                                         "original": f"mypkg/{rel}"})
+        write(self.dir / "authors-code-manifest.json", json.dumps(manifest))
+
+    INSTALL_HELPERS = (
+        "tools:::.install_package_indices(\".\",\n'/project/lib/00LOCK-mypkg/00new/mypkg'\n)\n",
+        "tools:::.test_load_package('mypkg', '/project/lib/00LOCK-mypkg/00new')\n")
+
+    def install(self, target: str, first_pid: int = 50) -> list[list[str]]:
+        """R CMD INSTALL's dispatcher, its inner start, and two helpers."""
+        return [[exec_line(self.NONCE, f"{first_pid}-c", first_pid, "CMD", "INSTALL",
+                           "--library=lib", target)],
+                self.script_process(f"{first_pid + 1}-i", first_pid + 1,
+                                    lane.PACKAGE_INSTALL_SCRIPT, "--no-restore", "--no-echo",
+                                    "--args", f"nextArg--library=libnextArg{target}"),
+                *(self.script_process(f"{first_pid + 2 + n}-h", first_pid + 2 + n, helper,
+                                      "--no-save", "--no-restore", "--no-echo")
+                  for n, helper in enumerate(self.INSTALL_HELPERS))]
+
+    def test_a_script_on_standard_input_binds_by_content(self):
+        """R < original.R runs the original: the shim's capture binds it."""
+        result = self.account_with(self.script_process("9-s", 9, AUTHORS, "--no-save"))
+        self.assertEqual(result["account"]["originals_loaded"], ["analysis.R"])
+        self.assertNotIn("stdin-script", self.codes(result["review_obligations"]))
+
+    def test_an_unmatched_stdin_script_is_an_obligation_keyed_on_content(self):
+        first = self.account_with(self.script_process("9-s", 9, "q <- 1\n", "--no-save"))
+        issue = next(i for i in first["review_obligations"]
+                     if getattr(i, "code", "") == "stdin-script")
+        self.assertIn("beginning 'q <- 1'", issue)
+        self.seal("run-02", events=self.events(token="8-b") + self.script_process(
+            "10-t", 10, "q <- 1\n", "--no-save"))
+        second = lane.check_code_integrity(self.dir, self.dir / "authors-code-manifest.json",
+                                           self.schema, anchor_root=self.repo,
+                                           launch_commit=self.launch)
+        again = next(i for i in second["review_obligations"]
+                     if getattr(i, "code", "") == "stdin-script")
+        self.assertEqual((again.issue_id, again.fingerprint()),
+                         (issue.issue_id, issue.fingerprint()))
+
+    def test_r_cmd_install_of_a_declared_tree_is_accounted_for(self):
+        """PKGBUILD: the inner start's script is R's installer, its target a
+        declared original tree; the helpers are the installer's own."""
+        self.declare_package()
+        result = self.account_with(*self.install("authors-code/mypkg"))
+        self.assertEqual(result["errors"], [])
+        self.assertEqual([i for i in result["review_obligations"]
+                          if getattr(i, "code", "") in ("stdin-script", "package-install")], [])
+        counts = result["account"]["runs"]["run-01"]
+        self.assertEqual((counts["package-install"], counts["installer"]), (1, 2))
+
+    def test_r_cmd_install_of_an_undeclared_tree_is_an_obligation(self):
+        write(self.dir / "otherpkg" / "DESCRIPTION", "Package: otherpkg\nVersion: 1.0\n")
+        result = self.account_with(*self.install("otherpkg"))
+        issue = next(i for i in result["review_obligations"]
+                     if getattr(i, "code", "") == "package-install")
+        self.assertEqual(issue.subject, "otherpkg")
+
+    def test_an_archive_built_from_a_declared_tree_is_accounted_for(self):
+        """devtools::install and remotes::install_local build an archive in
+        a temporary directory and install that: bound by name and version
+        when the run built one."""
+        self.declare_package()
+        build = self.script_process("40-b", 40, lane.PACKAGE_BUILD_SCRIPT, "--no-restore",
+                                    "--no-echo", "--args", "nextArg/project/authors-code/mypkg")
+        bound = self.account_with(build, *self.install("/tmp/RtmpA/mypkg_0.1.tar.gz"))
+        self.assertNotIn("package-install", self.codes(bound["review_obligations"]))
+        self.assertEqual(bound["account"]["runs"]["run-01"]["package-build"], 1)
+
+    def test_an_archive_of_another_version_is_an_obligation(self):
+        self.declare_package("0.2")
+        build = self.script_process("40-b", 40, lane.PACKAGE_BUILD_SCRIPT, "--no-restore",
+                                    "--no-echo", "--args", "nextArg/tmp/RtmpA/copy/mypkg")
+        result = self.account_with(build, *self.install("/tmp/RtmpA/mypkg_0.1.tar.gz"))
+        issue = next(i for i in result["review_obligations"]
+                     if getattr(i, "code", "") == "package-install")
+        self.assertIn("is version 0.2", issue)
+
+    def test_a_local_remote_type_is_no_provenance(self):
+        """remotes::install_local records RemoteType "local" (probe)."""
+        local = ("PKG", hexed("mypkg"), hexed("0.1"), hexed("/project/lib"), "none",
+                 hexed("local"), "none", "none", md5("mypkg"))
+        github = ("PKG", hexed("ghpkg"), hexed("0.1"), hexed("/project/lib"), "none",
+                  hexed("github"), hexed("abc"), "none", md5("ghpkg"))
+        result = self.account(local, github)
+        self.assertEqual([f.subject for f in result["flags"]
+                          if getattr(f, "code", "") == "local-package"], ["mypkg"])
+
+    def test_a_restored_workspace_is_an_obligation_bound_to_its_content(self):
+        write(self.dir / ".RData", "workspace")
+        restore = [exec_line(self.NONCE, "9-w", 9, "-f", "run-analysis.R"),
+                   start_line(self.NONCE, "9-w", 9, "-f", "run-analysis.R", restore=True),
+                   hook_line(self.NONCE, "9-w", 9, 2, "END", "0")]
+        result = self.account_with(restore)
+        issue = next(i for i in result["review_obligations"]
+                     if getattr(i, "code", "") == "workspace-restore")
+        self.assertEqual(issue.subject, ".RData")
+        self.assertEqual(issue.files, {".RData": hashlib.sha256(b"workspace").hexdigest()})
+
+    def test_callr_bootstrap_files_are_tool_internal_only_at_start_up(self):
+        """callr's profile and script (2026-10-08 probe) bind by loader and
+        path, at a process's own start-up; sourced any other way, or under
+        another name, they are code in a temporary directory."""
+        profile, script = "/tmp/RtmpAb1/callr-upr-1a2b", "/tmp/RtmpAb1/callr-scr-3c4d"
+        child = [exec_line(self.NONCE, "9-c", 9, "-f", script),
+                 start_line(self.NONCE, "9-c", 9, "-f", script),
+                 hook_line(self.NONCE, "9-c", 9, 2, *load("file", script, "7" * 32)),
+                 hook_line(self.NONCE, "9-c", 9, 3, *load("profile", profile, "8" * 32)),
+                 hook_line(self.NONCE, "9-c", 9, 4, "END", "0")]
+        good = self.account_with(child)
+        self.assertEqual(good["errors"], [])
+        self.assertEqual(good["account"]["runs"]["run-01"]["tool-internal"], 2)
+
+    def test_callr_files_loaded_otherwise_are_temporary_code(self):
+        bad = self.account(load("source", "/tmp/RtmpAb1/callr-scr-3c4d", "7" * 32),
+                           load("profile", "/tmp/RtmpAb1/callr-upr-not-hex", "8" * 32))
+        self.assertEqual(len([e for e in bad["errors"] if "temporary directory" in e]), 2)
+
+    def test_the_namespace_reader_and_package_internals_are_package_code(self):
+        """R's NAMESPACE parser (verified caller) and text evaluated while a
+        namespace loads are the package's own machinery."""
+        library = "/usr/local/lib/R/site-library"
+        result = self.account(
+            ("CONN", hexed("parse"), hexed("textConnection"), hexed("tmp"), "0", "0",
+             hexed("base::parseNamespaceFile")),
+            package("dplyr", library, "CRAN"),
+            ("CONN", hexed("parse"), hexed("textConnection"), hexed("tmp"), "1", "4",
+             hexed("loadNamespace")),
+            text(lane.text_md5("dplyr internals"), 1, 4),
+            ("CONN", hexed("parse"), hexed("textConnection"), hexed("tmp"), "0", "0",
+             hexed("parseNamespaceFile")))
+        connections = [i for i in result["review_obligations"]
+                       if getattr(i, "code", "") == "connection-load"]
+        # Only the unverified look-alike caller is left to a reviewer.
+        self.assertEqual(len(connections), 1)
+        self.assertIn("from parseNamespaceFile", connections[0])
+        self.assertNotIn("unmatched-text", self.codes(result["review_obligations"]))
+        self.assertEqual(result["account"]["runs"]["run-01"]["text-package"], 1)
+
+    def test_a_relative_package_library_is_resolved(self):
+        """library(pkg, lib.loc = "lib") recorded "lib" before hook 1.3; the
+        package's stub is then placed by the process's working directory."""
+        result = self.account(("PKG", hexed("dplyr"), hexed("1.0"), hexed("lib"),
+                               hexed("CRAN"), "none", "none", "none", md5("dplyr")),
+                              load("sys.source", "/project/lib/dplyr/R/dplyr", "2" * 32, 1, 3))
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["account"]["runs"]["run-01"]["library"], 1)
+
+    def test_the_installers_parse_of_a_declared_tree_binds(self):
+        """For a package with an Encoding field, R CMD INSTALL parses each R
+        file with a #line header naming its path in the source directory
+        (2026-10-08 probe): bound for the directories the run installed
+        from, so an edited copy of the source matches nothing."""
+        self.declare_package()
+        header = '#line 1 "/project/authors-code/mypkg/R/f.R"'
+        good = lane.text_md5(f"{header}\nf <- function() 42")
+        edited = lane.text_md5(f"{header}\nf <- function() 43")
+        inner = self.install("authors-code/mypkg")
+        inner[1].insert(2, hook_line(self.NONCE, "51-i", 51, 2, *text(good)))
+        inner[1].insert(3, hook_line(self.NONCE, "51-i", 51, 3, *text(edited)))
+        inner[1][-1] = hook_line(self.NONCE, "51-i", 51, 4, "END", "0")
+        result = self.account_with(*inner)
+        self.assertEqual(result["account"]["runs"]["run-01"]["text-package-source"], 1)
+        unmatched = [i for i in result["review_obligations"]
+                     if getattr(i, "code", "") == "unmatched-text"]
+        self.assertEqual([i.subject.split("@")[0] for i in unmatched], [edited])
+
     def test_no_original_loaded_flags_every_executed_copy(self):
         result = self.account()
         self.assertEqual(result["account"]["originals_loaded"], [])
@@ -1114,6 +1338,102 @@ class AccountDockerTests(AccountRunMixin, unittest.TestCase):
                          (3, 1, 1))
         self.assertNotIn("executed-not-loaded", [getattr(f, "code", "")
                                                  for f in result["flags"]])
+
+
+# An authors' package tree. The Encoding field makes R CMD INSTALL parse its
+# R files as text with a #line header (the probed branch).
+PACKAGE = {"mypkg/DESCRIPTION": ("Package: mypkg\nVersion: 0.1\nTitle: Probe\n"
+                                 "Description: Probe package.\nLicense: MIT\nAuthor: t\n"
+                                 "Maintainer: t <t@t.t>\nEncoding: UTF-8\n"),
+           "mypkg/NAMESPACE": "export(f)\n", "mypkg/R/f.R": "f <- function() 42\n"}
+PACKAGE_RUN = ('dir.create("lib"); dir.create("outputs")\n'
+               '.libPaths(c(normalizePath("lib"), .libPaths()))\n'
+               '{install}\n'
+               'library(mypkg, lib.loc = "lib"); write.csv(f(), "outputs/f.csv")\n')
+QUIET = ("stdin-script", "package-install", "connection-load", "unmatched-text")
+
+
+@unittest.skipUnless(docker_ready(), f"needs Docker and {IMAGE}")
+class LauncherDockerTests(AccountRunMixin, unittest.TestCase):
+    """Step 2 of the instrumentation, in the base image: R -f, R < file,
+    littler, and R CMD INSTALL (spec §8)."""
+
+    def test_r_f_r_stdin_and_littler_load_the_original(self):
+        """R -f reaches R unrewritten (hook 1.3 reads it); a script on
+        standard input binds by the shim's capture; littler runs Rscript."""
+        self.attempt('invisible(system("R --no-echo -f authors-code/analysis.R"))\n'
+                     'invisible(system("R --no-echo < authors-code/analysis.R"))\n'
+                     'invisible(system("r authors-code/analysis.R"))\n'
+                     "invisible(system(\"r -e 'q <- 2'\"))\n"
+                     'dir.create("outputs"); write.csv(1, "outputs/r.csv")\n',
+                     {"analysis.R": AUTHORS})
+        doc, result = self.run_and_check(IMAGE)
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertEqual(result["errors"], [])
+        counts = result["account"]["runs"]["run-01"]
+        self.assertEqual((counts["original"], counts["stdin-original"]), (2, 1))
+        self.assertEqual(doc["census"]["processes"], 5)
+        self.assertEqual([i.subject for i in result["review_obligations"]
+                          if getattr(i, "code", "") == "unmatched-text"],
+                         [f"{lane.text_md5('q <- 2')}@the command line"])
+
+    def test_r_cmd_install_of_a_declared_tree(self):
+        """PKGBUILD: the installer and its helpers are R's own; the tree's
+        code binds by reconstruction; the installed package is flagged as
+        local, with its declared source's version compared."""
+        self.attempt(PACKAGE_RUN.format(
+            install='invisible(system("R CMD INSTALL --library=lib authors-code/mypkg"))'),
+            PACKAGE)
+        doc, result = self.run_and_check(IMAGE)
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertEqual(result["errors"], [])
+        self.assertEqual([i for i in result["review_obligations"]
+                          if getattr(i, "code", "") in QUIET], [])
+        local = [f for f in result["flags"] if getattr(f, "code", "") == "local-package"]
+        self.assertEqual([f.subject for f in local], ["mypkg"])
+        self.assertIn("has the same version", local[0])
+        self.assertEqual(sorted(result["account"]["originals_loaded"]), sorted(PACKAGE))
+        counts = result["account"]["runs"]["run-01"]
+        self.assertEqual((counts["package-install"], counts["text-package-source"]), (1, 1))
+
+
+@unittest.skipUnless(image_ready(MATRIX_IMAGE), f"needs Docker and {MATRIX_IMAGE}")
+class CallrDockerTests(AccountRunMixin, unittest.TestCase):
+    """callr's children (callr 3.7.5), which substitute their own user
+    environ file: the shim re-pins the hook (spec §8)."""
+
+    def test_callr_children_are_instrumented_and_accounted_for(self):
+        self.attempt('x <- callr::r(function() { source("authors-code/analysis.R"); x6 })\n'
+                     'y <- callr::r(function() 2, user_profile = FALSE)\n'
+                     'dir.create("outputs"); write.csv(x + y, "outputs/r.csv")\n',
+                     {"analysis.R": AUTHORS})
+        doc, result = self.run_and_check(MATRIX_IMAGE)
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertEqual(doc["census"]["errors"], 0)
+        self.assertEqual(result["errors"], [])
+        self.assertEqual([i for i in result["review_obligations"]
+                          if getattr(i, "code", "") in QUIET], [])
+        self.assertEqual(result["account"]["runs"]["run-01"]["tool-internal"], 4)
+        self.assertEqual(result["account"]["originals_loaded"], ["analysis.R"])
+
+    def test_remotes_and_devtools_installs_are_accounted_for(self):
+        """Both build an archive of the tree in a temporary directory and
+        install that through callr: bound by name and version."""
+        self.attempt(PACKAGE_RUN.format(install=(
+            'remotes::install_local("authors-code/mypkg", lib = "lib", upgrade = "never",\n'
+            '                       force = TRUE, quiet = TRUE)\n'
+            'withr::with_libpaths("lib", devtools::install(\n'
+            '    "authors-code/mypkg", upgrade = "never", quiet = TRUE, reload = FALSE))')),
+            PACKAGE)
+        doc, result = self.run_and_check(MATRIX_IMAGE)
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertEqual(doc["census"]["errors"], 0)
+        self.assertEqual(result["errors"], [])
+        self.assertEqual([i for i in result["review_obligations"]
+                          if getattr(i, "code", "") in QUIET], [])
+        self.assertEqual(sorted(result["account"]["originals_loaded"]), sorted(PACKAGE))
+        counts = result["account"]["runs"]["run-01"]
+        self.assertEqual((counts["package-install"], counts["package-build"]), (2, 2))
 
 
 @unittest.skipUnless(image_ready(MATRIX_IMAGE), f"needs Docker and {MATRIX_IMAGE}")
