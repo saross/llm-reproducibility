@@ -29,7 +29,12 @@ What a failure leaves behind depends on when it happens:
   anonymous ``plan`` cannot see a private revision, so inspect the
   authenticated revision list before retrying. OSF itself refuses to
   create a revision while an unfinished one exists, so a retry cannot
-  stack a second one.
+  stack a second one. (Both behaviours are in OSF's source, checked
+  2026-10-08: ``RegistrationSchemaResponseList.get_default_queryset`` in
+  ``api/registrations/views.py`` shows anonymous callers approved revisions
+  only, and ``SchemaResponse.create_from_previous_response`` in
+  ``osf/models/schema_response.py`` raises while any revision is not
+  approved.)
 - **Once submission has been attempted**: the revision may already be
   submitted or approved, even if the request reported an error, and OSF can
   approve a submitted revision automatically after its waiting period. The
