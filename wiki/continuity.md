@@ -81,14 +81,15 @@ merged here as PR #1).
     versions, manifest digests re-registered, and erratum Entry 6 added.
     Astra's review is requested by mail (outbox, 2026-10-08T13:34Z).
   - [x] 2026-10-09 Track 3: **the draft correction ledger is on PR #10**
-    (draft, branch `feat/correction-ledger-draft`, head `8fec4d7`, not
+    (draft, branch `feat/correction-ledger-draft`, head `0ad4b50`, not
     merged; worktree `.claude/worktrees/correction-ledger-draft`). Marked
     DRAFT: not ruled, frozen, or hashed. All five pilots, 46 targets, and 16
     rulings (L1–L16), in
     `studies/open-science-compliance/outputs/validation/correction-ledger/`.
     `check-printed-values.py` finds 239/239 printed values on their cited
-    PDF pages. Astra's review is requested by mail (2026-10-08T14:10Z). Q3
-    and Q4 below.
+    PDF pages. An operator run of dye's section 5 and 7 code,
+    byte-identical, confirms the corrected 0.999667 (ruling L9). Astra's
+    review is requested by mail (2026-10-08T14:10Z). Q3 and Q4 below.
 - **Track 1 (primary): gate 1.3 instrumentation on PR #7.** Branch
   `feat/lane-gate-1-1-code-audit`, head `7d577b8`, open and not merged.
   Worktree: `.claude/worktrees/agent-a8a2378c2a5dbdc98`. Work in the order
