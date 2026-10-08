@@ -2,8 +2,8 @@
 title: "Reproduction lane gate 1.3 — consolidated specification"
 tags: [reproduction, validation, mechanical-verification]
 created: 2026-10-05
-updated: 2026-10-06
-status: foundations-built
+updated: 2026-10-08
+status: instrumentation-in-progress
 ---
 
 # Reproduction lane gate 1.3: consolidated specification
@@ -23,8 +23,9 @@ file stood at `2bd35aa`.
   against `b409ef5`). **Both reviews of this text are complete.** The next
   review is the final one, of the built gate (§2.2).
 - **Built:** F1, the record boundary (`0ce7f25`); F2, run and output
-  binding (`f07763a`); F3, issues, rulings, and admission (`59f4e58`). See
-  §15.
+  binding (`f07763a`); F3, issues, rulings, and admission (`59f4e58`); and,
+  of the instrumentation, the hook's traces (`7d577b8`) and the gate's
+  account of load events (`63eb010`, §8). See §15.
 - **Changes in revision 1** (from `53413bc`): the sharpened class A and the
   pilot re-run (§2); Fable's findings in §2.4; the per-process token, the
   `FORK` event, duplicate sequence numbers, and explicit log settings (§4);
@@ -100,6 +101,19 @@ memory:
    `system2(..., stderr = TRUE)` captured a child's standard error (stderr),
    so a child's own stderr is not a reliable channel.
 6. `Rscript` passes `--no-restore`; `R -f` does not.
+
+Probes of 2026-10-08 (the account of load events, §8):
+
+7. R's front end escapes an `-e` expression's spaces, newlines, and tabs
+   as `~+~`, `~n~`, and `~t~` (`bin/R` lines 195–196), and R's start-up
+   decodes them, left to right, before evaluating; `commandArgs()` shows the
+   escaped form. A typed `~+~` decodes too.
+8. knitr 1.45 evaluates three kinds of text from a document through
+   `parse(text =)`: each chunk's code less its leading `#|` lines, each
+   inline expression, and each chunk header's options as `parse_params`
+   builds them, `alist( <options, the label quoted> )`.
+9. The PSOCK worker's start-up expression in R 4.3.2 is
+   `tryCatch(parallel:::.workRSOCK,error=function(e)parallel:::.slaveRSOCK)()`.
 
 `callr`, `targets`, `future`, and Quarto are not in the base image, so their
 behaviour is left to the build's test matrix (§13).
@@ -260,6 +274,9 @@ reviewed to completeness.
 | Workbook datetime read as a UTC instant (Astra, spec D-4) | D | §11, §13 |
 | Missing-marker collision clears a change (Astra, spec A-1) | A | §11, §13 |
 | Unchecked sheets outside the clearing rule (Astra, spec D-5) | D | §11, §13 |
+| `-e` text hashed in its escaped form (build, probe fact 7) | D | Fixed, hook `1.2-inst` |
+| A fork's nesting taken in the parent's numbering (build) | D | Fixed, hook `1.2-inst`; §4 |
+| Hook and shim not bound to the launch commit (build) | D | Fixed, §4 |
 
 ## 3. Terms: trees, runs, and provenance classes
 
@@ -398,7 +415,12 @@ never wrapped. The events are:
   is pending;
 - `LOAD`, `TEXT`, `CONN`, and `PKG` (§8);
 - `FORK`: emitted by the hook in a forked child (`parallel::mclapply`) before
-  its first event, carrying the parent's token;
+  its first event, carrying the parent's token and the seq of the parent's
+  innermost active load (0 if none). The child's events inside that load
+  nest under the `FORK`, which the gate follows to the parent's load. (The
+  first build took a child's first nesting in the parent's numbering, which
+  collides with the child's own; hook `1.2-inst` detects the fork before
+  taking any nesting.)
 - `END`: written by an exit finaliser when the process ends normally.
 
 **What establishes completeness.** A sequence check detects a missing
@@ -484,7 +506,9 @@ recomputes every digest in the chain.
 that script at the launch commit. The launch commit must equal the one the
 execute workflow pins in its checksummed arguments. An executor that runs
 `run-container` from a stale checkout therefore fails the binding. It does
-not pass by name.
+not pass by name. The hook and the shim the run staged are bound the same
+way, since they write the events the gate reads: each digest in `run.json`
+must equal that file at the launch commit (2026-10-08).
 
 ## 5. Foundation 2: run and output binding
 
@@ -597,7 +621,9 @@ codes are:
   `external-code-reference`, `wrapper-semantics`;
 - runs: `run-launch-unbound`, `run-failed`, `stray-events`,
   `consumed-other-code`, `image-stale`, `process-outside-front-end`,
-  `stdin-script`, `workspace-restore`, `target-unbound`.
+  `stdin-script`, `workspace-restore`, `target-unbound`;
+- loads (§8, 2026-10-08): `unmatched-text`, `connection-load`,
+  `local-package`, `image-code`, `executed-not-loaded`.
 
 A plain string left at any site becomes an `unclassified` issue keyed by
 its text: still rulable, but any change of wording lapses its ruling.
@@ -838,6 +864,47 @@ accounts for itself (Astra 3).
   the installed `DESCRIPTION` with it.
 - **The declared executed originals:** one that no credited run loaded is
   flagged.
+
+**As built (2026-10-08).** `account_loads` binds every event of every
+credited run on its own, against a catalogue the gate computes itself
+(`load_catalogue`): the md5 of each original from bytes verified against its
+retrieval hash, and of each declared copy and wrapper from the attempt. Here
+"original" covers a declared edited copy too, which is flagged in its own
+right (§3, class 2). A `LOAD` is tried in this order:
+
+1. no readable file: a tool call (a directory for `load_all`, a call for
+   `box::use`) if the loader is a traced tool, else a warning, since nothing
+   was loaded;
+2. a package's lazy-load stub, nested under its `PKG` event and inside that
+   package's library: library code;
+3. under `/lane`: lane instrumentation by md5, else an error;
+4. nested in a traced tool call: tool-internal where it maps, by the lane's
+   bootstrap list or by md5 to the text knitr evaluates from the document
+   being knitted (probe fact 8);
+5. in the work copy: the content must be what that path held at the run's
+   baseline (Astra's design review, Q3). A path the run wrote, or an output
+   consumed from another run, is generated and fails. Otherwise the path's
+   declaration decides, through the lane's rename of a project profile; the
+   injected profile is lane instrumentation; an undeclared path is accepted
+   only when its content is an original's or a wrapper's, and otherwise
+   fails;
+6. anywhere else, by content: an original or wrapper is accounted for, and
+   generated code fails;
+7. still unbound and nested in a tool call: unaccounted, and fails (D-3);
+8. in a temporary directory (`/tmp`, `/var/tmp`, `/dev/shm`): written
+   during the run, mapped to nothing, and fails;
+9. in an R library (R's own, or one a `PKG` event names): library code;
+10. a tool launcher on the lane's list, by path and md5;
+11. otherwise image code, flagged (`image-code`).
+
+A `TEXT` matches an original, any text knitr evaluates from an original
+document (its chunks, inline code, and chunk options: probe fact 8), or a
+tool expression (probe fact 9 is the first). Each obligation's id and
+fingerprint rest on content, the text's md5 and the enclosing file, never
+on the run's tokens or `events.log`, so a re-run that changes nothing keeps
+its ruling (§6). An `-e` expression is hashed as R evaluates it (probe fact
+7). Admitted coverage excludes every target when no credited run loaded an
+authors' file, whatever the manifest lists (§6).
 
 **Hashes.** The hook uses md5 (`tools::md5sum`, present in every R version)
 inside the container. sha256 stays for host receipts and anchors. Both
@@ -1147,7 +1214,11 @@ and `GateTests`): the record boundary, run binding (the image-id, lock,
 consumption, failed-start, and A14 cases; the detached path is exercised
 through `finalise_run`), rulings including the changed-input case, the
 `--vanilla` child, `system()` and PSOCK children, and a project
-`.Renviron`. The rest come with their stages.
+`.Renviron`. Built with the account of load events (2026-10-08;
+`LoadAccountTests`, `DocumentTextTests`, and two Docker runs, one in the
+launcher-matrix image): the loader cases above except the edited chunk and
+the locally installed package's end-to-end run, which come with the matrix.
+The rest come with their stages.
 
 ## 14. Limits that remain
 
@@ -1205,9 +1276,12 @@ matrix about two more, and the rest one or two, plus the review rounds of
   - [x] 2026-10-06 the full hook (§8), hook `1.1-inst`, with traces
     installed before the profile, and a Docker-backed test of nesting,
     `TEXT` repeats, `CONN`, `PKG`, and forked children;
-  - [ ] the gate's account of `LOAD`, `TEXT`, `CONN`, `PKG`, and `HOOKERR`
-    events (§8), with per-load binding of nested loads (D-3) and md5 of
-    every original computed by the gate;
+  - [x] 2026-10-08 the gate's account of `LOAD`, `TEXT`, `CONN`, `PKG`, and
+    `HOOKERR` events (§8), with per-load binding of nested loads (D-3) and
+    md5 of every original computed by the gate, and the hook and shim bound
+    to the launch commit (`63eb010`); hook `1.2-inst`, the `-e` decoding and
+    the fork's nesting (`4bf14e8`); and the launcher-matrix test image
+    (`tests/fixtures/launcher-matrix/Dockerfile`, `1c0bfe0`);
   - [ ] `PKGBUILD` for `R CMD INSTALL`; the littler shim; the remaining
     census rules;
   - [ ] the launcher matrix (§13), on the test image;
