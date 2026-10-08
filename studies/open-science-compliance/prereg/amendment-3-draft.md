@@ -22,7 +22,11 @@ and the hybrid validation) is already committed. That is compliant on the
 amendment-1 precedent: the text describes changes present in the
 repository at lodgement, and no analysis they govern runs before it.
 
-**Why this amendment.** The 2026-10-03 re-derivation of the pilot
+---
+
+## Amendment text (draft for the OSF field)
+
+**Nature of this amendment.** The 2026-10-03 re-derivation of the pilot
 reference (E8-v2) and the 2026-10-04 gates ruling produced three kinds of
 change. First, model selection moved the census scorer off the registered
 pins to a newer model that cleared the same gates. Second, adjudication
@@ -31,10 +35,6 @@ shakedown did the same for the reproduction instruments. Third, two
 measurement defects surfaced: a model miscount that the output schema let
 through, and evidence packs that lacked the fields one sub-principle
 needs. Each is lodged here before the analyses it governs.
-
----
-
-## Amendment text (draft for the OSF field)
 
 ### 1. Correction: amendment 2 §2's precedent case
 
@@ -675,7 +675,7 @@ registrant's direction to draft them):
 
 **Evidence locations.** Every path in this amendment is in the study
 repository, <https://github.com/saross/llm-reproducibility>, at the tagged
-lodgement commit (`osf-amendment-3-<date>`). They include the frozen pilot
+lodgement commit (`osf-amendment-3-2026-10-08`). They include the frozen pilot
 reference and its beyond-instrument tags
 (`studies/open-science-compliance/outputs/validation/e8-v2-rederivation/worksheet.json`),
 the selected-arm results (§2), the F2 rule report (§5), the executed-code
@@ -819,9 +819,13 @@ path the launch commit's run configuration records.
 - [x] 2026-10-07 New rules introduced by the revision, beyond D-7 to D-9,
       ruled by the registrant from a walk-through of each (revision
       record, "Rulings on the revision's new rules").
-- [ ] Registrant re-reads the revised passages in the draft itself. The
-      first item's tick predates the revision, and the rulings above were
-      made from summaries, not from the text.
+- [x] 2026-10-08 Registrant re-reads the revised passages in the draft
+      itself. The first item's tick predates the revision, and the
+      rulings above were made from summaries, not from the text. Read as
+      the diff from `60ec56d` to `2f3529d`; approved as is.
+- [x] 2026-10-08 The draft's "Why this amendment" paragraph opens the
+      lodged text, renamed "Nature of this amendment" as in amendments
+      1 and 2 (registrant); wording unchanged.
 - [x] 2026-10-06 Astra's review folded in; D-7 to D-9 ruled; the ruling
       dates of audit Q5 and Q6 reconciled with `findings.json` (both
       2026-10-05, from the archived transcript of session b1a1e102).
@@ -839,7 +843,11 @@ path the launch commit's run configuration records.
 - [ ] D5 manifest-consistency gate PASS and full test suite green at the
       lodgement commit; repository tagged `osf-amendment-3-<date>`. Run on
       the revised working tree 2026-10-06: gate PASS (81/81), 387 tests
-      passed. Re-run at the lodgement commit.
+      passed. Re-run 2026-10-08 on the lodgement candidate: gate PASS
+      (81/81), 395 tests passed. Re-run at the tagged commit.
+- [x] 2026-10-08 Paste artefact regenerated for lodgement, banner dated
+      2026-10-08 and tags checked against it by the builder; 6,209 words,
+      54 bullets, and 29 numbered lines before and after unwrapping.
 - [x] 2026-10-06 (provisional) Paste artefact `osf-amendment-3.txt`
       produced from the lodged portion and unwrapped with
       `unwrap-paste-file.py`; flowing lines, no tables; word, bullet, and
@@ -1030,23 +1038,33 @@ D-9 into the lodged text, and they were walked through one by one.
   amendment for any gate failure); and the factual disclosures in §2,
   §3(b), §6(b), and §10.
 
-**Register exit checks (lodged portion, 6,058 words after the
-2026-10-06 rulings; academic register
-gate, `register-gate.py` advisories read item by item).**
+**Lodgement text (Shawn, 2026-10-08).** The registrant read the revision
+as the diff from `60ec56d` to `2f3529d` and approved the amendment as
+is. The paragraph that stood in the preamble as "Why this amendment"
+now opens the lodged text as "Nature of this amendment", the heading
+amendments 1 and 2 used; its wording is unchanged, and its specifics
+were checked against the lodged sections they summarise.
 
-- Em-dashes: 0. The gate's 0.52 per thousand is en dashes in ranges.
+**Register exit checks (lodged portion, 6,153 words at lodgement with
+the opening paragraph; 6,058 after the 2026-10-06 rulings; academic
+register gate, `register-gate.py` advisories read item by item; re-run
+2026-10-08).**
+
+- Em-dashes: 0. The gate's 0.51 per thousand is en dashes in ranges.
 - Semicolons: 22, of which 12 end list items, 7 are in the §7 ruling text
   quoted unchanged, and 3 are sentential in revised prose (about 0.5 per
-  thousand against the 3.4 draft target).
-- Announcement colons: 1.56 per thousand, against the 1.6 ceiling (2.09
-  before the register pass). Colon-led lists of three or more: 2, both in
-  text the registrant had already read (§7(a)'s evidence tiers and §9's
-  ledger ruling list).
+  thousand against the 3.4 draft target). The opening paragraph adds none.
+- Announcement colons: 1.53 per thousand, against the 1.6 ceiling (2.09
+  before the register pass; the opening paragraph adds one). Colon-led
+  lists of three or more: 2, both in text the registrant had already read
+  (§7(a)'s evidence tiers and §9's ledger ruling list).
 - Boosters, "whilst", "important to note", and "not X but Y": 0. "The
   authors" refers only to the studied papers' authors.
-- Hedges: 0.12 per hundred words (may 4, could 2, typically 1), under the
-  0.72 academic target; registered text hedges where it should.
+- Hedges: 0.14 per hundred words (may 5, could 2, typically 1), under the
+  0.72 academic target; registered text hedges where it should. The fifth
+  "may" is in §9's D-9 predicate as ruled (`9536962`); the count recorded
+  here before the re-run (may 4) predated that ruling.
 - Consecutive short sentences: the one flag is a list-number artefact.
-- Mean sentence length 20.6 words.
+- Mean sentence length 20.6 words (unchanged at 20.56).
 - markdownlint: the only findings are the pre-existing Sources table
   (MD013, MD060), outside the lodged portion.
