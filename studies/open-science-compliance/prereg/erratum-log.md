@@ -571,6 +571,13 @@ lodged text is amendment 3 §3(b), which states both dates.
 
 ## Queued amendment 3 scope (running list)
 
+**AMENDMENT 3 LODGED 2026-10-08** (SchemaResponse revision
+`6ac775afb5ed5b4afee88a4a`, approved; DOI unchanged; tag
+`osf-amendment-3-2026-10-08` at commit `abde9b1`; round-trip verified byte
+for byte). The items below are folded into the lodged text and
+discharged; the draft's revision record carries the rulings. Version URL:
+<https://osf.io/dqnhg?revisionId=6ac775afb5ed5b4afee88a4a>.
+
 **Consolidated 2026-10-04:** the full draft text of items 1–9 is in
 `amendment-3-draft.md` (this directory), for the registrant to edit and
 lodge. Six registrant decisions (D-1 to D-6) are open in that draft;

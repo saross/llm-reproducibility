@@ -32,29 +32,22 @@ merged here as PR #1).
 
 ## Repo state (2026-10-06, session fabeab56 close) — START HERE
 
-- **⏩ START HERE: lodge amendment 3 once Astra's follow-up is in, then
-  finish the gate 1.3 instrumentation.**
-  1. **Amendment 3 is approved and staged; it waits only on Astra's
-     follow-up review.** Shawn approved the justification and the
-     lodgement (2026-10-08), to run once Astra reports no regressions.
-     A scope sentence was added at his choice (`857702d`, the commit
-     under review; second addendum `20261008T073840…`). Shawn read the
-     revision (diff `60ec56d..2f3529d`) and approved it as is on
-     2026-10-08. He also ruled that the "Why this amendment" paragraph
-     opens the lodged text as "Nature of this amendment" (`37da8e3`).
-     Paste artefact `osf-amendment-3.txt` is built for 2026-10-08. D5 PASS
-     81/81 and 401 tests pass at `51cb532`.
-     `lodge-osf-amendment.py` (`51cb532`) scripts the August API route;
-     its `plan` mode passed against the live registration. Follow-up
-     review requests to Astra are in `~/agent-mail/claude/outbox/codex/`
-     (`20261008T070443…-amendment3-followup.md` and its addendum,
-     `20261008T070919…`). Then:
-     - fold in any findings. If the date moves, rebuild the artefact; the
-       builder refuses a tag that disagrees with its banner;
-     - re-run the D5 gate and the tests, tag `osf-amendment-3-<date>`, push
-       the tag, and run `lodge` (the OSF key is in
-       `~/personal-assistant/.env`, as in August). Then mark the draft
-       LODGED and tick the checklist.
+- **⏩ START HERE: amendment 3 is LODGED (2026-10-08). Next, finish the
+  gate 1.3 instrumentation, then follow amendment 3 §10's order.**
+  1. **Amendment 3 lodged** as OSF revision `6ac775afb5ed5b4afee88a4a`
+     (<https://osf.io/dqnhg?revisionId=6ac775afb5ed5b4afee88a4a>), tag
+     `osf-amendment-3-2026-10-08` at `abde9b1`. It was run by
+     `studies/open-science-compliance/prereg/lodge-osf-amendment.py` on
+     Shawn's approval, conditional on Astra's re-check (at `4258db8`:
+     "No blocking issues found"). Round trip byte-identical, change set
+     `["summary"]`, DOI unchanged, independently re-verified anonymously.
+     On the way: Shawn approved the revision as is, then ruled the
+     opening paragraph's rename, the scope sentence, and Astra's
+     follow-up B1 (a failed pin is followed by its own neighbours) and S1
+     (the audit cited at `c4553f9`, tag `executed-code-audit-2026-10-04`).
+     The draft's status block, checklist, and revision record, and the
+     erratum log, carry the details. The instrument edits, the §8
+     regression gate, the re-validation, and census scoring are unblocked.
   2. **Gate 1.3 instrumentation** on PR #7 (`feat/lane-gate-1-1-code-audit`,
      head `7d577b8`; worktree `.claude/worktrees/agent-a8a2378c2a5dbdc98`).
      Built this session: spec revision 2 (`340f77d`), the F1 completeness
@@ -88,9 +81,10 @@ merged here as PR #1).
     fires in every forked child; `parse(text =)` is detectable with
     `missing()`; `loadNamespace` tracing needs a re-entrancy guard that is
     reset before the imports load.
-- **Still with Shawn:** starting Astra for the amendment 3 follow-up
-  (`~/gpt-hub/config/launch-codex.sh --no-alt-screen` from
-  `~/worktrees/llm-reproducibility/sol-repro-entry`); WN-am and WN-an
+- **Still with Shawn:** a look at amendment 3's public page (the
+  checklist's render check). To start Astra here, run
+  `~/gpt-hub/config/launch-codex.sh --no-alt-screen` from
+  `~/worktrees/llm-reproducibility/sol-repro-entry`. WN-am and WN-an
   (session log of b1a1e102);
   user-obs 2026-10-06 A–C;
   personal-assistant PR #169 (still open on 2026-10-06; once merged,

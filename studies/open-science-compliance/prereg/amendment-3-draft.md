@@ -1,6 +1,28 @@
-# OSF amendment 3 — DRAFT for registrant review (revised 2026-10-06)
+# OSF amendment 3 — LODGED 2026-10-08
 
-**Status: DRAFT, not lodged.** Consolidated on 2026-10-04 from the erratum
+**Status: LODGED 2026-10-08.** Filed through the OSF API as a versioned
+registration update (SchemaResponse revision `6ac775afb5ed5b4afee88a4a`),
+created, written, submitted, and approved the same day by
+`lodge-osf-amendment.py`. The registrant approved lodgement on condition
+that Astra's follow-up review report no blocking issues, and the re-check
+at `4258db8` did. The text was appended to the registration's Summary
+field under the banner "AMENDMENT 3 (2026-10-08)", following the
+amendment-1 and amendment-2 placement. DOI unchanged
+(10.17605/OSF.IO/DQNHG). Round-trip verification, authenticated before
+submission and anonymous after approval: the stored Summary equals the
+sent one byte for byte (the text has no literal comparators, so the
+registry's entity transform does not touch it); the earlier versions' text
+is byte-identical; `updated_response_keys` is exactly `["summary"]`.
+Repository state at lodgement: tag `osf-amendment-3-2026-10-08`, commit
+`abde9b1`. Amendment version URL:
+<https://osf.io/dqnhg?revisionId=6ac775afb5ed5b4afee88a4a>. Paste
+artefact `osf-amendment-3.txt`; justification
+`osf-amendment-3-justification.txt`. **The instrument edits, the §8
+regression gate, the re-validation, and census scoring are now
+unblocked**, in §10's order.
+
+**Drafting-period note (superseded by lodgement).** Consolidated on
+2026-10-04 from the erratum
 log's "Queued amendment 3 scope (running list)", items 1–9
 (`erratum-log.md`), for the registrant to edit and lodge. Revised on
 2026-10-06 after the registrant's read and Astra's review; the revision
@@ -889,10 +911,13 @@ the path the launch commit's run configuration records.
       `unwrap-paste-file.py`; flowing lines, no tables; word, bullet, and
       numbered-line counts unchanged by unwrapping. Regenerate at lodgement
       with the banner date set and the [D-n] markers resolved.
-- [ ] Lodged via the OSF API as a versioned update appended to the Summary
-      field; DOI unchanged; round-trip byte check; change set exactly
-      `["summary"]`; public page render-checked.
-- [ ] Only then: instrument edits, regression gate, re-validation, census.
+- [x] 2026-10-08 Lodged via the OSF API as a versioned update appended to
+      the Summary field (revision `6ac775afb5ed5b4afee88a4a`, approved);
+      DOI unchanged; round-trip byte check passed before submission and
+      after approval; change set exactly `["summary"]`.
+- [ ] Public page render-checked (the registrant, on the version URL).
+- [ ] UNBLOCKED 2026-10-08. Only then: instrument edits, regression gate,
+      re-validation, census.
 
 ## Sources
 
