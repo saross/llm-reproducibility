@@ -93,13 +93,13 @@ Affects: L6.
 
 Affects: DYE-T13, CREMA-T03–T07, MAR-T09, MAR-T11, MAR-T13.
 
-### L9. Evidence for the PAPER_ERROR corrections. Dye's corrected 0.99967 (DYE-T02) comes from attempt-02, whose section 7 file carried a declared input-path edit (class ii), so tier 3's 'run unmodified' holds only in substance. Herskind's Fig. 4 correction (HER-T04) comes from the operator's application of the authors' createResultTable().
+### L9. Evidence for the PAPER_ERROR corrections. Shakedown attempt-02 gave dye's corrected 0.99967 (DYE-T02) from a section 7 file carrying a declared input-path edit (class ii), so tier 3's 'run unmodified' held only in substance. On 2026-10-09 this draft re-ran sections 5 and 7 byte-identical, with the redirect in a wrapper, and got the same value (evidence/l9-dye-section-07/). Herskind's Fig. 4 correction (HER-T04) already rests on the authors' createResultTable(), parsed verbatim from the byte-identical S2.R (phase2-shakedown/t11-completion/). Both are operator runs, not pipeline outputs.
 
 - **(a)** Admit both as tier-3 evidence: the dye edit only points the read at a byte-identical local copy of the same file.
 - **(b)** Before freezing, confirm each with an operator run of the byte-identical authors' code through a wrapper (no model calls; minutes in Docker), and cite that run.
 - **(c)** Keep the printed values as the expected values and record the targets as MAJOR_DISCREPANCY pending author contact.
 
-**Recommendation:** (b). It is cheap, makes the tier-3 condition literal, and does not use the pipeline under test.
+**Recommendation:** (b), which is now done for both: admit the two operator runs as tier-3 evidence. Neither uses the pipeline under test.
 
 Affects: DYE-T02, HER-T04.
 
@@ -449,9 +449,9 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Set | corrected |
 | Printed value corrected | True |
 | Corrected expected value | 1.00 at 2 dp (0.99967) |
-| Evidence tier | 3: the authors' section 7 code on the authors' beads-1.csv (shakedown attempt-02, T06); 0.87 is the Amethyst→Disc cell (0.86717) |
+| Evidence tier | 3: the authors' section 5 and 7 code, byte-identical to the transcription, on the authors' beads-1.csv, in an operator run on 2026-10-09 (evidence/l9-dye-section-07/): 0.999667. 0.87 is the Amethyst→Disc cell (0.867167). Shakedown attempt-02 (T06) gave the same values. |
 | Ruling | shakedown ruling 2 (2026-10-04): PAPER_ERROR, after Shawn checked the typeset version of record |
-| Caveat | attempt-02 ran section 7 with a declared input-path edit inside the authors' file (DYE2-1, class ii), so tier 3's 'run unmodified' is met only in substance; see ruling L9 |
+| Caveat | attempt-02 ran section 7 with a declared input-path edit inside the authors' file (DYE2-1, class ii); the 2026-10-09 operator run kept the files byte-identical and moved the redirect into a wrapper, so tier 3 holds literally if L9 admits operator runs |
 | Repair class and status | DYE1-3 (ii): no authors' file executed; the authors' listings were inlined into a 476-line reproducer script; DYE1-2 (iii, declared, result-identical, not a repair): bead list rebuilt by named construction; Q2 rules it class (iii). Status: gate run: the authors' transcribed files byte-identical to the deterministic transcription of supplement-1.pdf (Q8), mechanics in wrappers only (Q1) |
 | Credit eligibility | pilot: ineligible (DYE1-3; and compared against an unprinted value); gate: PAPER_ERROR records a discrepancy; it is not a reproduced target |
 | Coverage | expected-untestable: False; comparison: exact |

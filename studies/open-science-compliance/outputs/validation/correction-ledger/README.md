@@ -31,6 +31,7 @@ reported.
 | `render-ledger.py` | Renders the JSON as Markdown |
 | `check-printed-values.py` | Re-checks every printed value against its cited PDF page |
 | `deposit-checksums/crema-v1.0.0.sha256` | sha256 of all 50 files in crema's v1.0.0 deposit |
+| `evidence/l9-dye-section-07/` | Operator run of dye's section 5 and 7 code, byte-identical (L9) |
 
 ## How it was drafted
 
@@ -104,7 +105,7 @@ measure the unchanged set (L7).
   changes. **L4:** "unchanged" ignores pilot credit eligibility. **L5:**
   crema's role. **L6:** gate papers. **L7:** how to measure an unchanged set.
 - **L8:** the visual tolerance. **L9:** evidence for two paper-error
-  corrections (recommend an operator confirmation run). **L10:** dye's
+  corrections (the operator runs are done; admit them). **L10:** dye's
   verdict. **L11:** marwick's static figure includes. **L12:** marwick's
   mis-recorded values. **L13:** marwick's review counts. **L14:** key's
   verdict. **L15:** freezing. **L16:** key's swapped cells and the
@@ -117,7 +118,10 @@ measure the unchanged set (L7).
       manifest entries (audit Q10).
 - [ ] Hash marwick's files inside the 1.3 zip; confirm review counts in
       `paper.qmd` at 1.3 (L13).
-- [ ] Confirmation runs for L9, if ruled (b).
+- [x] 2026-10-09 Operator runs for L9: dye's section 5 and 7 code
+      byte-identical (`evidence/l9-dye-section-07/`); herskind's Fig. 4
+      check already used the authors' function verbatim.
+- [ ] Admit the two runs as tier-3 evidence (L9).
 - [ ] Commit the ruled copy as `correction-ledger-v1.0.json` and record its
       sha256 in the run configuration (L15).
 

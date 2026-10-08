@@ -193,7 +193,7 @@
     },
     {
       "id": "L9",
-      "question": "Evidence for the PAPER_ERROR corrections. Dye's corrected 0.99967 (DYE-T02) comes from attempt-02, whose section 7 file carried a declared input-path edit (class ii), so tier 3's 'run unmodified' holds only in substance. Herskind's Fig. 4 correction (HER-T04) comes from the operator's application of the authors' createResultTable().",
+      "question": "Evidence for the PAPER_ERROR corrections. Shakedown attempt-02 gave dye's corrected 0.99967 (DYE-T02) from a section 7 file carrying a declared input-path edit (class ii), so tier 3's 'run unmodified' held only in substance. On 2026-10-09 this draft re-ran sections 5 and 7 byte-identical, with the redirect in a wrapper, and got the same value (evidence/l9-dye-section-07/). Herskind's Fig. 4 correction (HER-T04) already rests on the authors' createResultTable(), parsed verbatim from the byte-identical S2.R (phase2-shakedown/t11-completion/). Both are operator runs, not pipeline outputs.",
       "options": [
         {
           "key": "(a)",
@@ -208,7 +208,7 @@
           "text": "Keep the printed values as the expected values and record the targets as MAJOR_DISCREPANCY pending author contact."
         }
       ],
-      "recommendation": "(b). It is cheap, makes the tier-3 condition literal, and does not use the pipeline under test.",
+      "recommendation": "(b), which is now done for both: admit the two operator runs as tier-3 evidence. Neither uses the pipeline under test.",
       "affects": [
         "DYE-T02",
         "HER-T04"
@@ -1423,9 +1423,9 @@
             "printed_value_corrected": true,
             "printed": "0.87",
             "corrected_expected": "1.00 at 2 dp (0.99967)",
-            "evidence_tier": "3: the authors' section 7 code on the authors' beads-1.csv (shakedown attempt-02, T06); 0.87 is the Amethyst→Disc cell (0.86717)",
+            "evidence_tier": "3: the authors' section 5 and 7 code, byte-identical to the transcription, on the authors' beads-1.csv, in an operator run on 2026-10-09 (evidence/l9-dye-section-07/): 0.999667. 0.87 is the Amethyst→Disc cell (0.867167). Shakedown attempt-02 (T06) gave the same values.",
             "ruling": "shakedown ruling 2 (2026-10-04): PAPER_ERROR, after Shawn checked the typeset version of record",
-            "caveat": "attempt-02 ran section 7 with a declared input-path edit inside the authors' file (DYE2-1, class ii), so tier 3's 'run unmodified' is met only in substance; see ruling L9"
+            "caveat": "attempt-02 ran section 7 with a declared input-path edit inside the authors' file (DYE2-1, class ii); the 2026-10-09 operator run kept the files byte-identical and moved the redirect into a wrapper, so tier 3 holds literally if L9 admits operator runs"
           },
           "repair": {
             "findings": [
