@@ -1271,6 +1271,20 @@ alter what is credited, because credit comes only from sealed outputs
 (Fable's review of this text, revising its own Q6.5). A human rules on it,
 since invariant 5 is an environment rule, not an evidence rule.
 
+**As built (2026-10-08).** `audit-run` audits each executor transcript of
+a workflow run against the attempt its prompt names (`audit_execution`),
+and writes the attempt's `transcript-audit.json`: the `contaminating`
+findings, each with its kind (`docker-direct`, `host-run-after-final`,
+`snapshot-code`, `clear-lock`, `write-to-lane-owned`,
+`input-tree-changed-after-run`, `record-without-call`,
+`run-without-record`), and the `issues` (`host-run`). Shell commands are
+read a segment at a time; a segment that runs the lane itself is never a
+host run; a written path counts when it is absolute, or relative to a `cd`
+in the same command; calls and records pair by the run ids that
+`run-container` prints. Admission refuses a contaminating finding and an
+unruled audit issue, and `rule-flags` and `human-queue` take the audit's
+issues with the gate report's.
+
 ## 13. Acceptance tests
 
 Tests that need Docker skip when Docker is absent. The final review needs
@@ -1458,7 +1472,8 @@ matrix about two more, and the rest one or two, plus the review rounds of
 - [x] 2026-10-08 **Conversions** (§11) and the **static additions** (§10).
   - [x] 2026-10-08 the static additions (§10);
   - [x] 2026-10-08 conversions (§11), with the §13 conversion fixtures.
-- [ ] **The transcript audit** (§12), which writes `transcript-audit.json`;
+- [ ] **The transcript audit** (§12), which writes `transcript-audit.json`
+  (built 2026-10-08);
   the **remaining acceptance tests** (§13); and **the workflow switch**:
   the executor prompt and definition use `run-container`, with the §7
   prompt points; run records become mandatory for new attempts;
