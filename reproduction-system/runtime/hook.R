@@ -22,7 +22,8 @@
 #          box::use, and modules::import.
 #   TEXT   code evaluated from a string, parse(text =) or a -e expression: the
 #          md5 of the text joined by newlines and ending in one, its length
-#          in bytes, depth, and enclosing seq. Repeats of one md5 in one
+#          in bytes, depth, and enclosing seq. An -e expression is decoded as
+#          R decodes it (~+~, ~n~, ~t~) first. Repeats of one md5 in one
 #          process are counted, not logged again; END carries the count.
 #   CONN   source() or parse() of a connection or of expressions: the
 #          function, class, and description, depth, and enclosing seq. A path
@@ -32,7 +33,8 @@
 #          Repository, RemoteType, RemoteSha, and Packaged fields, and the
 #          DESCRIPTION's md5. Once per package per process.
 #   FORK   first, in a forked child (parallel::mclapply), with the parent's
-#          token.
+#          token and the seq of the parent's innermost active load (0 at the
+#          top). The child's events inside that load nest under the FORK.
 #   END    from an exit finaliser when the process ends normally, or, in a
 #          forked child, from a trace on parallel:::mcexit, which every
 #          mclapply and mcparallel child calls before it leaves through _exit.
@@ -82,7 +84,7 @@ local({
     }
 
     state <- new.env(parent = baseenv())
-    state$version <- "1.1-inst"
+    state$version <- "1.2-inst"
     state$nonce <- Sys.getenv("LANE_RUN_NONCE", "none")
     state$seq <- 0L
     state$pid <- Sys.getpid()
@@ -149,17 +151,7 @@ local({
         # (tools::md5sum loads a namespace), which must take its number and
         # be written before this one.
         force(fields)
-        if (Sys.getpid() != state$pid) {
-            # A forked child inherits this state: give it its own token and
-            # sequence, and say whose fork it is.
-            parent <- state$token
-            state$pid <- Sys.getpid()
-            state$token <- fresh_token()
-            state$seq <- 1L
-            state$loads <- list()
-            state$ended <- FALSE
-            write_line("FORK", parent)
-        }
+        check_fork()
         state$seq <- state$seq + 1L
         write_line(event, fields)
         state$seq
@@ -192,7 +184,9 @@ local({
         i <- frame_index(env, frames)
         if (i > 0L && parents[i] > 0L) frames[[parents[i]]] else NULL
     }
-    nesting <- function() {
+    active_loads <- function() {
+        # The recorded loads whose frames are still on the stack, with each
+        # frame's position.
         frames <- sys.frames()
         active <- list()
         for (entry in state$loads) {
@@ -202,12 +196,37 @@ local({
                                                       env = entry$env)
             }
         }
+        active
+    }
+    innermost_seq <- function(active) {
+        if (length(active) == 0L) return(0L)
+        active[[which.max(vapply(active, function(a) a$index, integer(1)))]]$seq
+    }
+    check_fork <- function() {
+        # A forked child (parallel::mclapply) inherits this state. Before its
+        # first event it takes its own token and sequence, and its FORK says
+        # whose fork it is and where in the parent it was made: the seq of
+        # the parent's innermost active load. The parent's frames are still on
+        # the child's stack, so its active loads stay active in the child,
+        # renumbered to the FORK: a load the child makes inside the parent's
+        # knit nests under the FORK, which the gate follows to the parent's
+        # load. This runs before any nesting is taken, so no child event names
+        # a parent's seq.
+        if (Sys.getpid() == state$pid) return(invisible(NULL))
+        active <- active_loads()
+        parent <- state$token
+        state$pid <- Sys.getpid()
+        state$token <- fresh_token()
+        state$seq <- 1L
+        state$loads <- lapply(active, function(a) list(env = a$env, seq = 1L))
+        state$ended <- FALSE
+        write_line("FORK", c(parent, as.character(innermost_seq(active))))
+    }
+    nesting <- function() {
+        check_fork()
+        active <- active_loads()
         state$loads <- lapply(active, function(a) list(env = a$env, seq = a$seq))
-        if (length(active) == 0L) {
-            return(list(depth = 0L, enclosing = 0L))
-        }
-        innermost <- active[[which.max(vapply(active, function(a) a$index, integer(1)))]]
-        list(depth = length(active), enclosing = innermost$seq)
+        list(depth = length(active), enclosing = innermost_seq(active))
     }
     called_from_load <- function(frame) {
         # Whether the function in `frame` was called directly by an active
@@ -417,11 +436,25 @@ local({
     # The code named on the command line: Rscript's --file= (the front end
     # rewrites R -f file to it) is a LOAD that no source() call covers, and
     # each -e expression is a TEXT.
+    #
+    # R's front end escapes an -e expression's spaces, newlines, and tabs as
+    # ~+~, ~n~, and ~t~ (bin/R lines 195-196 in rocker/r-ver:4.3.2), and R's
+    # start-up decodes them, scanning left to right, before it evaluates the
+    # code; commandArgs() shows the escaped form. The TEXT is the code R
+    # evaluated, so it is decoded the same way. The 2026-10-08 probe showed a
+    # typed "~+~" decodes too, and "~n~+~" gives a newline, then "+~".
+    unescape_e <- function(x) {
+        hits <- gregexpr("~[+nt]~", x)
+        regmatches(x, hits) <- lapply(regmatches(x, hits), function(found) {
+            unname(c("~+~" = " ", "~n~" = "\n", "~t~" = "\t")[found])
+        })
+        x
+    }
     for (path in sub("^--file=", "", grep("^--file=", args, value = TRUE))) {
         on_load("file", path, NULL)
     }
     for (i in which(args == "-e")) {
-        if (i < length(args)) on_text(args[i + 1L])
+        if (i < length(args)) on_text(unescape_e(args[i + 1L]))
     }
 
     # R reads one user profile: R_PROFILE_USER if set, else the working
