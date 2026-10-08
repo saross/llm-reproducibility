@@ -136,6 +136,18 @@ Probes of 2026-10-08 (the account of load events, §8):
     R processes failed the census.
 13. remotes records `RemoteType: local` for a package installed from a
     local path.
+14. A child started with its environment cleared (`env -i`) loses
+    `LANE_RUN_NONCE`, so its events were strays the census never saw.
+15. rmarkdown 2.25 evaluates an output format's name as code
+    (`create_output_format_function`).
+16. Quarto 1.10.19 starts `Rscript` on its knitr engine,
+    `share/rmd/rmd.R`, which sources `patch.R`, `execute.R`, and
+    `hooks.R`; it renders `<stem>.rmarkdown`, which it writes beside the
+    `.qmd` and removes afterwards. It needs a writable home or cache
+    directory, which the run's user lacks.
+17. future's multisession workers (parallelly 1.37) start R with `-e`
+    expressions that embed a per-run file path; targets 1.5.1 runs
+    `_targets.R` in a callr child through `parse(file =)`.
 
 `callr`, `targets`, `future`, and Quarto are not in the base image, so their
 behaviour is left to the build's test matrix (§13).
@@ -305,6 +317,7 @@ reviewed to completeness.
 | Census issues keyed on tokens, so rulings lapse on re-run (build) | D | Fixed, §8 |
 | `RemoteType: local` read as provenance (build, probe fact 13) | D | Fixed, §8 |
 | A relative `lib.loc` recorded as the library (build) | D | Fixed, hook `1.3-inst` |
+| An environment-cleared child only a stray, not a census failure (matrix, fact 14) | D | Fixed, nonce file; §4 |
 
 ## 3. Terms: trees, runs, and provenance classes
 
@@ -725,6 +738,9 @@ issues as ruled or unruled.
   collected. The preparation prompt says so: the wrapper copies anything
   written elsewhere into the work copy before it exits (Fable's review of
   this text).
+- **Quarto** needs a writable home or cache directory, which the run's
+  user lacks (probe fact 16): the wrapper sets `HOME` to a temporary
+  directory for `quarto render`. The preparation prompt says so.
 - **renv:**
   - set the library location outside the project (`RENV_PATHS_LIBRARY`) at
     build and restore time as well as at run time;
@@ -819,11 +835,16 @@ token with a `START` and an `END` (from the hook):
   The exception is a tool route the matrix shows cannot be instrumented and
   has no adapter. That route is listed by name in the lane and **flagged**
   (`unsupported-launcher`), and targets resting on the run are not admitted
-  until ruled (Astra 3).
+  until ruled (Astra 3). The matrix (2026-10-08) found no such route, so
+  the list is empty and the flag is not built. A child whose environment
+  was cleared still counts: the run's nonce is staged as `/lane/nonce`,
+  and the shim and the hook read it when `LANE_RUN_NONCE` is gone (probe
+  fact 14).
 - `START` without `EXEC`: flagged as R started outside the front end.
 - A script on standard input (`R < file`): no traced load covers it, so
-  the shim marks the `EXEC` and the gate raises an obligation. In a
-  wrapper it is an error (§10), with `R -f file` as the alternative.
+  the shim captures it (§4), and the gate binds it by content or raises an
+  obligation (`stdin-script`). In a wrapper it is an error (§10), with
+  `R -f file` as the alternative.
 - The rule keys on the handshake, not on argv options. A child that a tool
   starts with `--no-site-file`, and that still handshakes, passes (Astra 3).
 - **`R CMD`, `R RHOME`, and `R --version` need no handshake.** The `CMD`
@@ -964,7 +985,15 @@ package's own code, which its provenance or the `local-package` flag
 covers; so is `NAMESPACE` read by a caller the hook verifies as
 `base::parseNamespaceFile`. The lane's bootstrap list also covers a
 process's own start-up loads, by loader and path: callr's profile and
-script (probe fact 12). Each obligation's id and
+script (probe fact 12). A text the gate holds verbatim, an `-e` argument
+the shim recorded (or a text with the same md5), may match a template
+whose only holes are string literals: future's worker expressions (probe
+fact 17). The lane's tool launchers are keyed by md5 wherever the tool is
+installed: Quarto's knitr engine scripts are the first. Quarto's
+intermediate `<stem>.rmarkdown`, written by the run beside a declared
+`<stem>.qmd` and loaded by `render` or `knit`, is that document's input;
+every text knitr evaluates from it must still bind to the original's own
+(probe fact 16). Each obligation's id and
 fingerprint rest on content, the text's md5 and the enclosing file, never
 on the run's tokens or `events.log`, so a re-run that changes nothing keeps
 its ruling (§6). An `-e` expression is hashed as R evaluates it (probe fact
@@ -1226,7 +1255,8 @@ them run on a host with Docker.
   marker `source()` in each child must appear as a `LOAD`, with a paired
   `EXEC`, `START`, and `END`. The launchers are:
   - `Rscript` and `R -f`;
-  - `R < file`, which must yield an obligation, not a `LOAD`;
+  - `R < file`, which must bind by content or yield an obligation, not a
+    `LOAD`;
   - `parallel::mclapply`, whose children must show `FORK`;
   - `R CMD BATCH script.R`: the inner `R -f` handshakes, and the outer
     dispatcher is exempt;
@@ -1286,7 +1316,13 @@ the locally installed package's end-to-end run, which come with the matrix.
 Built with step 2 (2026-10-08; `LauncherDockerTests`, `CallrDockerTests`):
 of the matrix, `R -f`, `R < file`, littler, `R CMD INSTALL`,
 `remotes::install_local`, `devtools::install`, and `callr::r` with and
-without the user profile. The rest come with their stages.
+without the user profile. Built with step 3 (2026-10-08;
+`MatrixBaseDockerTests`, `MatrixToolDockerTests`): the rest of the
+matrix, `R CMD BATCH`, a child in another directory, the uninstrumented
+child, `callr::r` in all three profile modes, `targets::tar_make`,
+`future` multisession, `rmarkdown::render`, and `quarto render`. Each runs
+the authors' code and leaves no error, flag, or obligation of the account's
+own. The rest come with their stages.
 
 ## 14. Limits that remain
 
@@ -1364,7 +1400,10 @@ matrix about two more, and the rest one or two, plus the review rounds of
     rules (an orphan `FORK`, issue identities on content); and hook
     `1.3-inst` (`R -f`, absolute libraries, a `CONN`'s verified caller)
     (`eba8d98`, `40e2c54`);
-  - [ ] the launcher matrix (§13), on the test image;
+  - [x] 2026-10-08 the launcher matrix (§13), on the test image, with
+    hook `1.4-inst` (the nonce file), the verbatim text templates, and the
+    rmarkdown and Quarto entries on the lane's lists (`8bae60d`; GLPK in
+    the image, `a3f2b47`);
   - [ ] the semantics-neutrality test (§13).
 - [ ] **Fresh computation** (§9).
 - [ ] **Conversions** (§11) and the **static additions** (§10).
