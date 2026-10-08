@@ -77,17 +77,22 @@ def git(repo: Path, *args: str) -> str:
                           env=clean_git_env()).stdout.strip()
 
 
-def lane_repo(root: Path) -> tuple[Path, str]:
-    """A committed repository holding this lane script, and its HEAD.
+LANE_FILES = ("scripts/reproduction-lane.py", "reproduction-system/runtime/hook.R",
+              "reproduction-system/runtime/r-shim.sh")
 
-    The launcher binding compares a run's recorded lane-script digest with
-    the script at the launch commit; the working tree under test may hold
-    uncommitted changes, so the fixture commits the bytes actually running.
+
+def lane_repo(root: Path) -> tuple[Path, str]:
+    """A committed repository holding this lane's files, and its HEAD.
+
+    The launcher binding compares a run's recorded digests of the lane
+    script, the hook, and the shim with those files at the launch commit;
+    the working tree under test may hold uncommitted changes, so the fixture
+    commits the bytes actually running.
     """
     repo = root / "lane-repo"
-    (repo / "scripts").mkdir(parents=True)
-    shutil.copy2(REPO_ROOT / "scripts" / "reproduction-lane.py",
-                 repo / "scripts" / "reproduction-lane.py")
+    for rel in LANE_FILES:
+        (repo / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO_ROOT / rel, repo / rel)
     git(repo, "init", "-q")
     git(repo, "add", ".")
     git(repo, "commit", "-q", "-m", "fixture")
@@ -325,14 +330,22 @@ class RecordFixture:
     def seal(self, run_id: str = "run-01", state: str = "complete", exit_status: int = 0,
              events: list[str] | None = None, outputs: dict[str, str] | None = None,
              launch: str | None = "fixture", script_sha256: str | None = None,
-             consumed: list[dict] | None = None) -> None:
-        """Write and seal one run's records the way finalise_run does."""
+             consumed: list[dict] | None = None, changes: list[dict] | None = None,
+             baseline: dict[str, str] | None = None,
+             lane_files: dict[str, str] | None = None) -> None:
+        """Write and seal one run's records the way finalise_run does.
+
+        ``changes`` and ``baseline`` stand for the lane's declared changes to
+        the work copy (renamed and injected profiles, consumed outputs): the
+        baseline is the input tree with ``baseline`` laid over it.
+        """
         records = self.dir / lane.RECORDS_DIR
         record = records / run_id
         record.mkdir(parents=True)
         pre, _ = lane.input_inventory(self.dir)
         lane.write_json(record / "pre.json", {"run": run_id, "files": pre})
-        lane.write_json(record / "baseline.json", {"run": run_id, "files": pre, "changes": []})
+        lane.write_json(record / "baseline.json", {"run": run_id, "files": {
+            **pre, **(baseline or {})}, "changes": changes or []})
         lane.write_json(record / "post.json", {"run": run_id, "files": pre})
         lines = events if events is not None else clean_process(self.NONCE, "7-a", 7,
                                                                 "--file=run-analysis.R")
@@ -352,6 +365,10 @@ class RecordFixture:
             "launch_commit": self.launch if launch == "fixture" else launch,
             "lane_script_sha256": script_sha256 or lane.sha256_file(
                 REPO_ROOT / "scripts" / "reproduction-lane.py"),
+            "lane_files": lane_files or {name: lane.sha256_file(REPO_ROOT / rel)
+                                         for name, rel in lane.BOUND_RUNTIME_FILES.items()},
+            "mount_path": "/project", "entry": "run-analysis.R", "interpreter": "Rscript",
+            "front_end": {"r_home": "/usr/local/lib/R"},
             "consumed": consumed or [], "problems": []})
         lane.seal_run(records, run_id, state)
 
@@ -408,6 +425,14 @@ class RecordCheckTests(RecordFixture, unittest.TestCase):
     def test_lane_script_other_than_the_launch_commit_fails(self):
         self.seal(script_sha256="0" * 64)
         self.assertTrue(any("lane script other than" in e for e in self.check()["errors"]))
+
+    def test_hook_other_than_the_launch_commit_fails(self):
+        """The hook and the shim write the events the gate reads, so they are
+        bound to the launch commit as the lane script is."""
+        staged = {name: lane.sha256_file(REPO_ROOT / rel)
+                  for name, rel in lane.BOUND_RUNTIME_FILES.items()}
+        self.seal(lane_files=dict(staged, **{"hook.R": "0" * 64}))
+        self.assertTrue(any("ran a hook.R other than" in e for e in self.check()["errors"]))
 
     def test_failed_run_is_flagged_for_a_ruling(self):
         self.seal(state="failed", exit_status=1)
@@ -491,6 +516,340 @@ class ConsumptionAndCitationTests(RecordFixture, unittest.TestCase):
         self.assertEqual([e.split()[0] for e in errors], ["T02", "T03"])
         self.assertEqual(unbound, {"T04"})
         self.assertIn("target-unbound", flags[0])
+
+
+def md5(text: str) -> str:
+    """md5 of a file's UTF-8 content, as the hook records a LOAD."""
+    return hashlib.md5(text.encode("utf-8")).hexdigest()
+
+
+def load(fn: str, path: str, digest: str, depth: int = 0, enclosing: int = 0) -> tuple:
+    """A LOAD event's kind and fields, for ``AccountFixture.events``."""
+    return ("LOAD", hexed(fn), hexed(path), digest, "1", str(depth), str(enclosing))
+
+
+def text(digest: str, depth: int = 0, enclosing: int = 0) -> tuple:
+    """A TEXT event's kind and fields."""
+    return ("TEXT", digest, "1", str(depth), str(enclosing))
+
+
+def package(name: str, library: str, repository: str | None = None) -> tuple:
+    """A PKG event's kind and fields: name, version, library, Repository,
+    RemoteType, RemoteSha, Packaged, and the DESCRIPTION's md5."""
+    return ("PKG", hexed(name), hexed("1.0"), hexed(library),
+            hexed(repository) if repository else "none", "none", "none", "none", md5(name))
+
+
+# An authors' script and an authors' R Markdown document. The document has a
+# labelled chunk with an option, an inline expression, and a chunk whose
+# options are Quarto-style "#|" lines, which knitr drops before evaluating.
+AUTHORS = "".join(f"x{i} <- {i}\n" for i in range(1, 7))
+REPORT = ("---\ntitle: r\n---\n\n```{r setup, echo=FALSE}\ny <- 1\n```\n\n"
+          "Inline `r y`.\n\n```{r}\n#| echo: false\nz <- y + 1\n```\n")
+RUN_ANALYSIS = 'write.csv(1, "outputs/r.csv")\n'
+
+
+class AccountFixture(RecordFixture):
+    """An attempt with a manifest and sealed run records: two originals (a
+    script and a document), each kept pristine and executed byte-identical,
+    and the entry script declared as a wrapper. Anchors are ``none``, so the
+    tests look only at the account's own findings."""
+
+    def setUp(self):
+        super().setUp()
+        for rel, content in (("authors-code-raw/analysis.R", AUTHORS),
+                             ("authors-code/analysis.R", AUTHORS),
+                             ("authors-code-raw/report.Rmd", REPORT),
+                             ("authors-code/report.Rmd", REPORT)):
+            write(self.dir / rel, content)
+        manifest = {
+            "manifest_version": "1.1", "paper_slug": "some-paper-2024",
+            "originals": [
+                {"id": oid, "sha256": hashlib.sha256(content.encode()).hexdigest(),
+                 "source": f"https://zenodo.org/records/1/files/{oid}",
+                 "retrieved_at": "2026-10-08T00:00:00Z",
+                 "local_copy": f"authors-code-raw/{oid}",
+                 "anchor": {"kind": "none", "reason": "test"}}
+                for oid, content in (("analysis.R", AUTHORS), ("report.Rmd", REPORT))],
+            "executed": [{"path": "authors-code/analysis.R", "original": "analysis.R"},
+                         {"path": "authors-code/report.Rmd", "original": "report.Rmd"}],
+            "wrappers": [{"path": "run-analysis.R", "role": "wrapper",
+                          "purpose": "runs the authors' code"}]}
+        write(self.dir / "authors-code-manifest.json", json.dumps(manifest))
+        self.schema = json.loads((REPO_ROOT / lane.DEFAULT_CODE_MANIFEST_SCHEMA)
+                                 .read_text(encoding="utf-8"))
+
+    def events(self, *body: tuple, token: str = "7-a", pid: int = 7) -> list[str]:
+        """One process: EXEC, START, the entry script's LOAD (seq 2), the
+        given events numbered from 3, and END."""
+        lines = [exec_line(self.NONCE, token, pid, "--file=run-analysis.R"),
+                 start_line(self.NONCE, token, pid, "--file=run-analysis.R"),
+                 hook_line(self.NONCE, token, pid, 2, "LOAD", *load(
+                     "file", "/project/run-analysis.R", md5(RUN_ANALYSIS))[1:])]
+        for seq, (kind, *fields) in enumerate(body, 3):
+            lines.append(hook_line(self.NONCE, token, pid, seq, kind, *fields))
+        lines.append(hook_line(self.NONCE, token, pid, len(body) + 3, "END", "0"))
+        return lines
+
+    def account(self, *body: tuple, **seal) -> dict:
+        """Seal one run with these events and run the integrity check."""
+        self.seal(events=self.events(*body), **seal)
+        return lane.check_code_integrity(self.dir, self.dir / "authors-code-manifest.json",
+                                         self.schema, anchor_root=self.repo,
+                                         launch_commit=self.launch)
+
+    @staticmethod
+    def codes(issues: list) -> list[str]:
+        """The issue codes in a list of flags or obligations."""
+        return [i.code for i in issues if isinstance(i, lane.Issue)]
+
+
+class LoadAccountTests(AccountFixture, unittest.TestCase):
+    """The gate's account of LOAD, TEXT, CONN, PKG, and HOOKERR events (spec §8),
+    with per-load binding of nested loads (Astra's specification review, D-3)."""
+
+    def test_sourcing_the_executed_original_is_accounted_for(self):
+        result = self.account(load("source", "/project/authors-code/analysis.R", md5(AUTHORS)))
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["account"]["originals_loaded"], ["analysis.R"])
+        self.assertEqual(result["account"]["runs"]["run-01"]["original"], 1)
+        # The document was never knitted, so its executed copy is flagged.
+        self.assertEqual([f.subject for f in result["flags"]
+                          if getattr(f, "code", "") == "executed-not-loaded"],
+                         ["authors-code/report.Rmd"])
+
+    def test_parse_and_evaluate_counts_as_loading_the_original(self):
+        """herskind's pattern: eval(parse(text = readLines(file))) is a TEXT
+        with the file's own md5, since the hook hashes text with one final
+        newline."""
+        self.assertEqual(lane.text_md5(AUTHORS.rstrip("\n")), md5(AUTHORS))
+        result = self.account(text(md5(AUTHORS)))
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["account"]["originals_loaded"], ["analysis.R"])
+        self.assertNotIn("unmatched-text", self.codes(result["review_obligations"]))
+        self.assertNotIn("authors-code/analysis.R",
+                         [f.subject for f in result["flags"] if isinstance(f, lane.Issue)])
+
+    def test_undeclared_code_in_the_work_copy_fails(self):
+        """A file passed to a loader is code whatever its name (Fable P1-1)."""
+        write(self.dir / "helper.txt", "w <- 2\n")
+        result = self.account(load("source", "/project/helper.txt", md5("w <- 2\n")))
+        self.assertTrue(any("loaded undeclared code helper.txt" in e for e in result["errors"]),
+                        result["errors"])
+
+    def test_a_file_the_run_wrote_is_never_loadable(self):
+        result = self.account(load("source", "/project/made.R", md5("m <- 1\n")))
+        self.assertTrue(any("loaded made.R, which the run itself wrote" in e
+                            for e in result["errors"]), result["errors"])
+
+    def test_content_changed_before_the_load_fails(self):
+        """The observed bytes must be those the path held at the baseline
+        (Astra's design review, Q3)."""
+        result = self.account(load("source", "/project/authors-code/analysis.R",
+                                   md5("x1 <- 99\n")))
+        self.assertTrue(any("changed during the run before it was loaded" in e
+                            for e in result["errors"]), result["errors"])
+
+    def test_a_hook_error_fails(self):
+        result = self.account(("HOOKERR", hexed("source"), hexed("boom")))
+        self.assertTrue(any("the lane hook failed in source (boom)" in e
+                            for e in result["errors"]), result["errors"])
+
+    def test_unmatched_text_is_an_obligation_that_survives_an_identical_rerun(self):
+        """Its issue id and fingerprint rest on content, not on the run's
+        tokens or event log, so a re-run that changes nothing keeps a ruling."""
+        first = self.account(text(lane.text_md5("q <- 1")))
+        issue = next(i for i in first["review_obligations"]
+                     if getattr(i, "code", "") == "unmatched-text")
+        self.assertIn("in run-analysis.R", issue)
+        self.seal("run-02", events=self.events(text(lane.text_md5("q <- 1")), token="9-b"))
+        second = lane.check_code_integrity(self.dir, self.dir / "authors-code-manifest.json",
+                                           self.schema, anchor_root=self.repo,
+                                           launch_commit=self.launch)
+        again = next(i for i in second["review_obligations"]
+                     if getattr(i, "code", "") == "unmatched-text")
+        self.assertEqual((again.issue_id, again.fingerprint()),
+                         (issue.issue_id, issue.fingerprint()))
+
+    def test_a_tool_expression_is_accounted_for(self):
+        expression = next(iter(lane.TOOL_EXPRESSIONS))
+        result = self.account(text(lane.text_md5(expression)))
+        self.assertNotIn("unmatched-text", self.codes(result["review_obligations"]))
+        self.assertEqual(result["account"]["runs"]["run-01"]["text-tool"], 1)
+
+    def test_a_connection_is_an_obligation(self):
+        result = self.account(("CONN", hexed("source"), hexed("textConnection"),
+                               hexed("x <- 3"), "0", "0"))
+        self.assertIn("connection-load", self.codes(result["review_obligations"]))
+
+    def test_only_a_package_without_provenance_is_flagged(self):
+        result = self.account(package("localpkg", "/usr/local/lib/R/site-library"),
+                              package("dplyr", "/usr/local/lib/R/site-library", "CRAN"),
+                              package("stats", "/usr/local/lib/R/library"))
+        flagged = [f for f in result["flags"] if getattr(f, "code", "") == "local-package"]
+        self.assertEqual([f.subject for f in flagged], ["localpkg"])
+        self.assertIn("declare its source tree as an original", flagged[0])
+
+    def test_a_declared_package_source_is_compared(self):
+        write(self.dir / "pkg-raw" / "DESCRIPTION", "Package: localpkg\nVersion: 0.9\n")
+        manifest = json.loads((self.dir / "authors-code-manifest.json").read_text())
+        manifest["originals"].append({
+            "id": "pkg/DESCRIPTION", "sha256": hashlib.sha256(
+                b"Package: localpkg\nVersion: 0.9\n").hexdigest(),
+            "source": "https://zenodo.org/records/1/files/pkg.zip",
+            "retrieved_at": "2026-10-08T00:00:00Z", "local_copy": "pkg-raw/DESCRIPTION",
+            "anchor": {"kind": "none", "reason": "test"}})
+        write(self.dir / "authors-code-manifest.json", json.dumps(manifest))
+        result = self.account(package("localpkg", "/usr/local/lib/R/site-library"))
+        flagged = next(f for f in result["flags"] if getattr(f, "code", "") == "local-package")
+        self.assertIn("is version 0.9, not the installed 1.0", flagged)
+
+    def test_image_library_and_temporary_code(self):
+        """Image code outside every library is flagged; a package's lazy-load
+        stub, nested under its PKG event, is library code; code in a
+        temporary directory was written during the run and fails."""
+        library = "/usr/local/lib/R/site-library"
+        result = self.account(load("source", "/opt/tools/setup.R", "1" * 32),
+                              package("dplyr", library, "CRAN"),
+                              load("sys.source", f"{library}/dplyr/R/dplyr", "2" * 32, 1, 4),
+                              load("source", "/tmp/generated.R", "3" * 32))
+        self.assertEqual([f.subject for f in result["flags"]
+                          if getattr(f, "code", "") == "image-code"], ["/opt/tools/setup.R"])
+        self.assertEqual(result["account"]["runs"]["run-01"]["library"], 1)
+        self.assertTrue(any("/tmp/generated.R, code in a temporary directory" in e
+                            for e in result["errors"]), result["errors"])
+
+    def test_the_lane_directory_holds_only_lane_files(self):
+        hook = (REPO_ROOT / "reproduction-system" / "runtime" / "hook.R").read_bytes()
+        good = self.account(load("source", "/lane/hook.R", hashlib.md5(hook).hexdigest()))
+        self.assertEqual(good["errors"], [])
+        self.assertEqual(good["account"]["runs"]["run-01"]["lane"], 1)
+
+    def test_a_foreign_file_under_the_lane_mount_fails(self):
+        result = self.account(load("source", "/lane/hook.R", "4" * 32))
+        self.assertTrue(any("is no lane file's" in e for e in result["errors"]))
+
+    def test_knitting_an_original_maps_its_chunks_inline_code_and_options(self):
+        """What knitr 1.45 evaluates from a document (2026-10-08 probe): the
+        chunk options as parse_params builds them, each chunk's code less its
+        "#|" lines, and inline expressions. A chunk written to a temporary
+        file and sourced inside the knit is tool-internal."""
+        result = self.account(
+            load("knitr::knit", "/project/authors-code/report.Rmd", md5(REPORT)),
+            text(lane.text_md5("alist( 'setup', echo=FALSE )"), 1, 3),
+            text(lane.text_md5("y <- 1"), 1, 3),
+            text(lane.text_md5("y"), 1, 3),
+            text(lane.text_md5("z <- y + 1"), 1, 3),
+            load("source", "/tmp/RtmpA/chunk.R", lane.text_md5("y <- 1"), 1, 3))
+        self.assertEqual(result["errors"], [])
+        self.assertNotIn("unmatched-text", self.codes(result["review_obligations"]))
+        runs = result["account"]["runs"]["run-01"]
+        self.assertEqual((runs["text-chunk"], runs["tool-internal"]), (4, 1))
+        self.assertIn("report.Rmd", result["account"]["originals_loaded"])
+
+    def test_an_unmapped_load_inside_knit_fails(self):
+        """A helper sourced from a path taken from a parameter, outside the
+        work tree: nesting under knit waives nothing (D-3)."""
+        result = self.account(
+            load("knitr::knit", "/project/authors-code/report.Rmd", md5(REPORT)),
+            load("source", "/data/helper.R", "5" * 32, 1, 3))
+        self.assertTrue(any("inside knitr::knit, but it maps to no original" in e
+                            for e in result["errors"]), result["errors"])
+
+    def test_a_generated_file_loaded_under_knit_fails(self):
+        result = self.account(
+            load("knitr::knit", "/project/authors-code/report.Rmd", md5(REPORT)),
+            load("source", "/project/purled.R", "6" * 32, 1, 3))
+        self.assertTrue(any("loaded purled.R, which the run itself wrote" in e
+                            for e in result["errors"]), result["errors"])
+
+    def test_text_inside_an_original_must_still_match(self):
+        """Text evaluated inside an original may come from a parameter rather
+        than from its chunks (D-3), so it is an obligation there too."""
+        result = self.account(
+            load("knitr::knit", "/project/authors-code/report.Rmd", md5(REPORT)),
+            text(lane.text_md5("evil <- TRUE"), 1, 3))
+        obligation = next(i for i in result["review_obligations"]
+                          if getattr(i, "code", "") == "unmatched-text")
+        self.assertIn("in authors-code/report.Rmd", obligation)
+
+    def test_a_forked_childs_loads_nest_under_its_parents_call(self):
+        """A child forked inside the parent's knit (seq 3) names that load in
+        its FORK, and its own loads inside it nest under the FORK (seq 1),
+        however its own numbering runs."""
+        chunk = lane.text_md5("y <- 1")
+        child = [hook_line(self.NONCE, "12-f", 12, 1, "FORK", "7-a", "3"),
+                 hook_line(self.NONCE, "12-f", 12, 2, *load(
+                     "source", "/tmp/RtmpB/chunk.R", chunk, 1, 1)),
+                 hook_line(self.NONCE, "12-f", 12, 3, *load(
+                     "source", "/tmp/RtmpB/chunk.R", chunk, 1, 1)),
+                 hook_line(self.NONCE, "12-f", 12, 4, "END", "0")]
+        self.seal(events=self.events(load("knitr::knit", "/project/authors-code/report.Rmd",
+                                          md5(REPORT))) + child)
+        result = lane.check_code_integrity(self.dir, self.dir / "authors-code-manifest.json",
+                                           self.schema, anchor_root=self.repo,
+                                           launch_commit=self.launch)
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["account"]["runs"]["run-01"]["tool-internal"], 2)
+
+    def test_the_project_profile_binds_through_its_rename(self):
+        """The lane renames a project .Rprofile to .Rprofile.project and
+        injects its own; each binds to what it is (spec §4)."""
+        profile = "options(digits = 4)\n"
+        write(self.dir / ".Rprofile", profile)
+        manifest = json.loads((self.dir / "authors-code-manifest.json").read_text())
+        manifest["wrappers"].append({"path": ".Rprofile", "role": "environment",
+                                     "purpose": "the project's start-up options"})
+        write(self.dir / "authors-code-manifest.json", json.dumps(manifest))
+        injected = hashlib.sha256(lane.LANE_PROFILE.encode()).hexdigest()
+        result = self.account(
+            load("profile", "/project/.Rprofile.project", md5(profile)),
+            load("source", "/project/.Rprofile", md5(lane.LANE_PROFILE)),
+            baseline={".Rprofile.project": hashlib.sha256(profile.encode()).hexdigest(),
+                      ".Rprofile": injected},
+            changes=[{"change": "renamed", "from": ".Rprofile", "to": ".Rprofile.project"},
+                     {"change": "injected", "path": ".Rprofile", "sha256": injected}])
+        self.assertEqual(result["errors"], [])
+        runs = result["account"]["runs"]["run-01"]
+        self.assertEqual((runs["wrapper"], runs["lane"]), (2, 1))
+
+    def test_a_consumed_output_is_never_loadable_as_code(self):
+        self.seal("run-01", outputs={"files/outputs/r.csv": "1\n", "files/lib.R": "l <- 1\n",
+                                     "stdout.log": ""})
+        lib = hashlib.sha256(b"l <- 1\n").hexdigest()
+        consumed = {"run": "run-01", "source": "files/lib.R", "path": "lib.R", "sha256": lib}
+        self.seal("run-02", consumed=[consumed], baseline={"lib.R": lib},
+                  changes=[{"change": "consumed", **consumed}],
+                  events=self.events(load("source", "/project/lib.R", md5("l <- 1\n"))))
+        result = lane.check_code_integrity(self.dir, self.dir / "authors-code-manifest.json",
+                                           self.schema, anchor_root=self.repo,
+                                           launch_commit=self.launch)
+        self.assertTrue(any("an output of run-01 consumed as input" in e
+                            for e in result["errors"]), result["errors"])
+
+    def test_no_original_loaded_flags_every_executed_copy(self):
+        result = self.account()
+        self.assertEqual(result["account"]["originals_loaded"], [])
+        self.assertEqual(sorted(f.subject for f in result["flags"]
+                                if getattr(f, "code", "") == "executed-not-loaded"),
+                         ["authors-code/analysis.R", "authors-code/report.Rmd"])
+
+
+class DocumentTextTests(unittest.TestCase):
+    """The lane's mapping of what knitr evaluates from a document."""
+
+    def test_label_quoting_follows_knitr(self):
+        for params, quoted in (("setup, echo=FALSE", "'setup', echo=FALSE"),
+                               ("a", "'a'"), ("'q', x=1", "'q', x=1"),
+                               ("echo=FALSE", "echo=FALSE"), (", fig, w=2", "'fig', w=2")):
+            self.assertEqual(lane.knitr_label_quoted(params), quoted, params)
+
+    def test_document_texts(self):
+        found = lane.document_texts(REPORT)
+        for snippet in ("alist( 'setup', echo=FALSE )", "y <- 1", "y", "z <- y + 1",
+                        "#| echo: false\nz <- y + 1"):
+            self.assertIn(lane.text_md5(snippet), found, snippet)
+        self.assertEqual(len(found), 5)
 
 
 def docker_ready() -> bool:
@@ -599,7 +958,8 @@ class RunContainerDockerTests(unittest.TestCase):
         self.assertEqual(main[0]["fields"], ["1"])  # the repeated parse(text =)
         self.assertEqual(len(by_kind["FORK"]), 2)
         self.assertEqual(sorted(e["token"] for e in by_kind["FORK"]),
-                         sorted(e["token"] for e in by_kind["END"] if e["token"] != main[0]["token"]))
+                         sorted(e["token"] for e in by_kind["END"]
+                                if e["token"] != main[0]["token"]))
         self.assertEqual(lane.decode_field(by_kind["CONN"][0]["fields"][1]), "textConnection")
         self.assertIn("stats4", [lane.decode_field(e["fields"][0]) for e in by_kind["PKG"]])
         self.assertEqual((self.dir / "outputs" / "run-01" / "stdout.log").read_text(),
@@ -661,6 +1021,135 @@ class RunContainerDockerTests(unittest.TestCase):
         with self.assertRaises(lane.LaneError):
             lane.start_run(self.dir, IMAGE, "run-analysis.R", mount_path="/project",
                            work_root=self.work)
+
+
+MATRIX_IMAGE = "llmr-launcher-matrix:4.3.2"
+
+
+def image_ready(image: str) -> bool:
+    """Docker answers and ``image`` is local (built from
+    ``tests/fixtures/launcher-matrix/Dockerfile``; tests never build it)."""
+    if shutil.which("docker") is None:
+        return False
+    return subprocess.run(["docker", "image", "inspect", image], capture_output=True,
+                          check=False).returncode == 0
+
+
+class AccountRunMixin:
+    """Real runs through the lane, then the full integrity check with its
+    account of loads (spec §8)."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        root = Path(self.tmp.name)
+        self.dir = root / "attempt-01"
+        self.work = root / "work"
+        self.work.mkdir()
+        self.repo, self.launch = lane_repo(root)
+        self.schema = json.loads((REPO_ROOT / lane.DEFAULT_CODE_MANIFEST_SCHEMA)
+                                 .read_text(encoding="utf-8"))
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def attempt(self, entry: str, originals: dict[str, str]) -> None:
+        """Write the entry wrapper and each original (pristine under
+        ``authors-code-raw/``, executed under ``authors-code/``), and the
+        manifest declaring them."""
+        write(self.dir / "run-analysis.R", entry)
+        for oid, content in originals.items():
+            write(self.dir / "authors-code-raw" / oid, content)
+            write(self.dir / "authors-code" / oid, content)
+        write(self.dir / "authors-code-manifest.json", json.dumps({
+            "manifest_version": "1.1", "paper_slug": "some-paper-2024",
+            "originals": [{"id": oid, "sha256": hashlib.sha256(content.encode()).hexdigest(),
+                           "source": f"https://zenodo.org/records/1/files/{oid}",
+                           "retrieved_at": "2026-10-08T00:00:00Z",
+                           "local_copy": f"authors-code-raw/{oid}",
+                           "anchor": {"kind": "none", "reason": "test"}}
+                          for oid, content in originals.items()],
+            "executed": [{"path": f"authors-code/{oid}", "original": oid}
+                         for oid in originals],
+            "wrappers": [{"path": "run-analysis.R", "role": "wrapper",
+                          "purpose": "runs the authors' code"}]}))
+
+    def run_and_check(self, image: str) -> tuple[dict, dict]:
+        doc = lane.start_run(self.dir, image, "run-analysis.R", mount_path="/project",
+                             launch_commit=self.launch, work_root=self.work)
+        doc = lane.finalise_run(self.dir, doc["run"])
+        return doc, lane.check_code_integrity(
+            self.dir, self.dir / "authors-code-manifest.json", self.schema,
+            anchor_root=self.repo, launch_commit=self.launch)
+
+
+@unittest.skipUnless(docker_ready(), f"needs Docker and {IMAGE}")
+class AccountDockerTests(AccountRunMixin, unittest.TestCase):
+    """The account of a real run in the base image."""
+
+    def test_ordinary_launchers_and_loaders_are_accounted_for(self):
+        """source(), the parse-and-evaluate pattern, an Rscript -e child, a
+        PSOCK worker, and forked children that source the original: every
+        load binds, and only the -e child's own code is left to a reviewer.
+        The -e text is hashed as R evaluates it, unescaped (hook 1.2)."""
+        self.attempt('source("authors-code/analysis.R")\n'
+                     'eval(parse(text = readLines("authors-code/analysis.R")))\n'
+                     "invisible(system(\"Rscript -e 'q <- 1'\"))\n"
+                     'cl <- parallel::makePSOCKcluster(1)\n'
+                     'invisible(parallel::clusterEvalQ(cl, 1))\n'
+                     'parallel::stopCluster(cl)\n'
+                     'r <- parallel::mclapply(1:2, function(i) {\n'
+                     '  source("authors-code/analysis.R"); i }, mc.cores = 2)\n'
+                     'dir.create("outputs"); write.csv(1, "outputs/r.csv")\n',
+                     {"analysis.R": AUTHORS})
+        doc, result = self.run_and_check(IMAGE)
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["account"]["originals_loaded"], ["analysis.R"])
+        unmatched = [i for i in result["review_obligations"]
+                     if getattr(i, "code", "") == "unmatched-text"]
+        self.assertEqual([i.subject for i in unmatched],
+                         [f"{lane.text_md5('q <- 1')}@the command line"])
+        counts = result["account"]["runs"]["run-01"]
+        self.assertEqual((counts["original"], counts["text-original"], counts["text-tool"]),
+                         (3, 1, 1))
+        self.assertNotIn("executed-not-loaded", [getattr(f, "code", "")
+                                                 for f in result["flags"]])
+
+
+@unittest.skipUnless(image_ready(MATRIX_IMAGE), f"needs Docker and {MATRIX_IMAGE}")
+class AccountKnitDockerTests(AccountRunMixin, unittest.TestCase):
+    """The account of a knit, in the launcher-matrix image (knitr 1.45)."""
+
+    def test_knitting_an_original_document_is_accounted_for(self):
+        """Chunk code, inline code, and chunk options all map to the document,
+        and a child forked inside a chunk nests under the knit."""
+        report = REPORT + ("\n```{r forked, echo=FALSE}\n"
+                           "r <- parallel::mclapply(1:2, function(i) {\n"
+                           "  source('analysis.R'); i }, mc.cores = 2)\n```\n")
+        self.attempt('dir.create("outputs")\n'
+                     'knitr::knit("authors-code/report.Rmd", output = "outputs/report.md",\n'
+                     '            quiet = TRUE)\n',
+                     {"report.Rmd": report, "analysis.R": AUTHORS})
+        doc, result = self.run_and_check(MATRIX_IMAGE)
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["account"]["originals_loaded"], ["analysis.R", "report.Rmd"])
+        self.assertNotIn("unmatched-text", [getattr(i, "code", "")
+                                            for i in result["review_obligations"]])
+        counts = result["account"]["runs"]["run-01"]
+        self.assertEqual(counts["text-chunk"], 6)
+        # Each FORK names the parent's knit load, and the child's source()
+        # nests under its own FORK (seq 1), not under a parent's number.
+        events, _ = lane.parse_events((self.dir / lane.RECORDS_DIR / "run-01" /
+                                       "events.log").read_text(), doc["nonce"])
+        knit = next(e for e in events if e["event"] == "LOAD"
+                    and lane.decode_field(e["fields"][0]) == "knitr::knit")
+        forks = [e for e in events if e["event"] == "FORK"]
+        self.assertEqual(len(forks), 2)
+        self.assertEqual({tuple(f["fields"]) for f in forks}, {(knit["token"], str(knit["seq"]))})
+        child_loads = [e for e in events if e["token"] in {f["token"] for f in forks}
+                       and e["event"] == "LOAD"]
+        self.assertEqual({e["fields"][5] for e in child_loads}, {"1"})
 
 
 if __name__ == "__main__":

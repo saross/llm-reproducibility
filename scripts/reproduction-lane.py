@@ -2763,13 +2763,21 @@ def clear_lock(target_dir: Path) -> str:
     return str(holder.get("run"))
 
 
-def lane_script_at(repo_root: Path, commit: str) -> str | None:
-    """sha256 of ``scripts/reproduction-lane.py`` as committed at ``commit``."""
+def lane_script_at(repo_root: Path, commit: str,
+                   rel: str = "scripts/reproduction-lane.py") -> str | None:
+    """sha256 of a lane file (default: the lane script) as committed at ``commit``."""
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
-    proc = subprocess.run(["git", "-C", str(repo_root), "show",
-                           f"{commit}:scripts/reproduction-lane.py"],
+    proc = subprocess.run(["git", "-C", str(repo_root), "show", f"{commit}:{rel}"],
                           capture_output=True, check=False, env=env)
     return hashlib.sha256(proc.stdout).hexdigest() if proc.returncode == 0 else None
+
+
+# The lane files a run stages from the repository, which the launcher binding
+# checks at the launch commit as it checks the lane script: the hook and the
+# shim produce the events the gate reads, so a stale copy of either is a
+# stale lane (spec §4, launcher binding).
+BOUND_RUNTIME_FILES = {"hook.R": "reproduction-system/runtime/hook.R",
+                       "r-shim.sh": "reproduction-system/runtime/r-shim.sh"}
 
 
 @digest_snapshot()
@@ -2793,7 +2801,7 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
     report: dict[str, Any] = {"runs": {}, "final_run": None, "final_pre": None,
                               "credited_runs": [], "outputs": {}, "errors": [], "flags": [],
                               "obligations": [], "warnings": [], "generated": [],
-                              "collected": []}
+                              "collected": [], "credited_records": {}}
     errors, flags = report["errors"], report["flags"]
     indexed, index_problems = read_run_index(records)
     errors.extend(index_problems)
@@ -2844,6 +2852,14 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
         elif lane_script_at(repo_root, launch_commit) != doc.get("lane_script_sha256"):
             errors.append(f"{run_id} was run by a lane script other than the one at the "
                           f"launch commit {launch_commit[:12]}")
+        else:
+            staged = doc.get("lane_files") or {}
+            for name, rel in BOUND_RUNTIME_FILES.items():
+                if name not in staged:
+                    errors.append(f"{run_id} records no digest for the lane's {name}")
+                elif lane_script_at(repo_root, launch_commit, rel) != staged[name]:
+                    errors.append(f"{run_id} ran a {name} other than the one at the launch "
+                                  f"commit {launch_commit[:12]}")
         # Collected outputs must be exactly what the run recorded (Fable A14).
         outputs_doc = record_dir / "outputs.json"
         recorded = ({f["path"]: f for f in json.loads(outputs_doc.read_text(
@@ -2914,6 +2930,17 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
         events, stray = parse_events(events_log.read_text(encoding="utf-8", errors="replace"),
                                      run_doc.get("nonce", ""))
         evidence = {f"{run_id}/events.log": sha256_file(events_log)}
+        # The sealed records the gate's account of loads reads (spec §8): the
+        # events, the run record, the baseline the run started from, and what
+        # the run wrote.
+        baseline_path = records / run_id / "baseline.json"
+        outputs_path = records / run_id / "outputs.json"
+        report["credited_records"][run_id] = {
+            "doc": run_doc, "events": events,
+            "baseline": json.loads(baseline_path.read_text(encoding="utf-8"))
+            if baseline_path.is_file() else {},
+            "outputs": json.loads(outputs_path.read_text(encoding="utf-8")).get("files") or []
+            if outputs_path.is_file() else []}
         census = run_census(events, run_id, evidence)
         errors.extend(census["errors"])
         flags.extend(census["flags"])
@@ -2957,6 +2984,583 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
                                   f"{doc['front_end']['unshimmed']} is not the front end, so "
                                   f"starts through it were not counted")
     return report
+
+
+# ---------------------------------------------------------------------------
+# The gate's account of what each credited run loaded (gate 1.3, spec §8)
+# ---------------------------------------------------------------------------
+#
+# Every LOAD, TEXT, CONN, PKG, and HOOKERR event of a credited run is bound on
+# its own. An observation is bound to its run, its process, its resolved path,
+# and the content that path held when the run started, not to a digest found
+# anywhere in the manifest (Astra's design review, Q3). Nesting confers
+# nothing: a load inside a tool call is accounted for only where the lane can
+# map it to its source (Astra's specification review, D-3).
+
+# The packages that ship with R. They carry no Repository field, so they are
+# exempt from the local-package flag by name.
+BASE_PACKAGES = frozenset({"base", "compiler", "datasets", "graphics", "grDevices", "grid",
+                           "methods", "parallel", "splines", "stats", "stats4", "tcltk",
+                           "tools", "utils"})
+# The hook's names for traced tool loaders. A load nested in one of their
+# calls may be tool-internal (spec §3, class 5), but only where it maps.
+TOOL_LOADERS = frozenset({"knitr::knit", "rmarkdown::render", "Rcpp::sourceCpp",
+                          "pkgload::load_all", "reticulate::source_python",
+                          "reticulate::py_run_file", "box::use", "modules::import"})
+# The lane's list of tool expressions: code a common tool evaluates from a
+# string, by its exact text. Each entry was seen in a probe.
+TOOL_EXPRESSIONS: dict[str, str] = {
+    # parallel::makePSOCKcluster's worker start-up -e (2026-10-08 probe, R 4.3.2).
+    "tryCatch(parallel:::.workRSOCK,error=function(e)parallel:::.slaveRSOCK)()":
+        "a PSOCK worker's start-up expression (parallel, R 4.3.2)",
+}
+# The lane's list of tool-generated bootstrap files: a load nested in the
+# named tool's call whose resolved path matches the pattern is tool-internal.
+# The launcher matrix (spec §13) supplies the entries.
+TOOL_BOOTSTRAP: tuple[tuple[str, re.Pattern[str], str], ...] = ()
+# Tool launchers in the image, by path and md5: image code accepted without
+# a flag (spec §3). The launcher matrix supplies the entries.
+IMAGE_LAUNCHERS: dict[tuple[str, str], str] = {}
+# Code loaded from a temporary directory was written during the run, by the
+# run or by a tool, so it is not image code.
+TRANSIENT_ROOTS = ("/tmp/", "/var/tmp/", "/dev/shm/")
+# R Markdown and Quarto chunk fences and inline code: knitr 1.45's own
+# patterns (knitr::all_patterns$md), read in the launcher-matrix image.
+CHUNK_START_RE = re.compile(r"^[\t >]*```+\s*\{([a-zA-Z0-9_]+)(.*)\}\s*$")
+CHUNK_END_RE = re.compile(r"^[\t >]*```+\s*$")
+INLINE_CODE_RE = re.compile(r"(?<!^``)(?<!\n``)`r[ #]([^`]+)\s*`")
+DOCUMENT_SUFFIXES = (".rmd", ".qmd")
+
+
+def text_md5(text: str) -> str:
+    """The md5 the hook gives a text: its UTF-8 bytes and one final newline.
+
+    The hook writes the text with ``writeLines`` before hashing it, because
+    ``tools::md5sum`` hashes files only, so text joined by newlines gains one
+    more at the end (spec §8, ``TEXT``). A whole file evaluated as text
+    (``parse(text = readLines(f))``) therefore has the file's own md5 when
+    the file ends in a newline.
+    """
+    return hashlib.md5((text + "\n").encode("utf-8")).hexdigest()
+
+
+def knitr_label_quoted(params: str) -> str:
+    """knitr's ``quote_label``: quote an unquoted chunk label (knitr 1.45).
+
+    ``setup, echo=FALSE`` becomes ``'setup', echo=FALSE``. The two patterns
+    are knitr's own; Python's backtracking finds the same match as R's
+    leftmost-longest one for these anchored patterns.
+    """
+    params = re.sub(r"^\s*,?", "", params, count=1)
+    if re.match(r"^\s*[^'\"](,|\s*$)", params):
+        return re.sub(r"^\s*([^'\"])(,|\s*$)", r"'\1'\2", params, count=1)
+    if re.match(r"^\s*[^'\"](,|[^=]*(,|\s*$))", params):
+        return re.sub(r"^\s*([^'\"][^=]*)(,|\s*$)", r"'\1'\2", params, count=1)
+    return params
+
+
+def document_texts(text: str) -> dict[str, str]:
+    """What knitr evaluates from an R Markdown or Quarto document, by md5.
+
+    The 2026-10-08 probe (knitr 1.45, in the launcher-matrix image) showed
+    knitr evaluating three kinds of text from a document through
+    ``parse(text =)``, each a deterministic derivation of the document's own
+    content (spec §8, ``TEXT``):
+
+    - each R chunk's code, less its leading ``#|`` option lines, which knitr
+      reads as options (``partition_chunk``); the code with those lines is
+      kept too, should a tool evaluate it whole;
+    - each inline expression (`` `r expr` ``), exactly as captured;
+    - each chunk header's options, as ``parse_params`` builds them for
+      evaluation: ``alist( <options, the label quoted> )``.
+
+    Returns:
+        ``{md5: description}``, the description naming the chunk.
+    """
+    texts: dict[str, str] = {}
+    body: list[str] | None = None
+    prose: list[str] = []
+    number = 0
+    for line in text.splitlines():
+        if body is None:
+            start = CHUNK_START_RE.match(line)
+            if start and start.group(1).lower() == "r":
+                number += 1
+                body = []
+                params = re.sub(r"^\s*,*|,*\s*$", "", start.group(2))
+                if params:
+                    texts[text_md5(f"alist( {knitr_label_quoted(params)} )")] = \
+                        f"chunk {number}'s options"
+            elif start is None:
+                prose.append(line)
+        elif CHUNK_END_RE.match(line):
+            texts[text_md5("\n".join(body))] = f"chunk {number}"
+            options = 0
+            while options < len(body) and body[options].startswith("#|"):
+                options += 1
+            if 0 < options < len(body):
+                texts[text_md5("\n".join(body[options:]))] = f"chunk {number}"
+            body = None
+        else:
+            body.append(line)
+    for inline in INLINE_CODE_RE.findall("\n".join(prose)):
+        texts.setdefault(text_md5(inline), "inline code")
+    return texts
+
+
+def description_fields(data: bytes) -> dict[str, str]:
+    """The fields of an R ``DESCRIPTION`` file (Debian control format)."""
+    fields: dict[str, str] = {}
+    key = None
+    for line in data.decode("utf-8", errors="replace").splitlines():
+        if line[:1] in (" ", "\t") and key:
+            fields[key] += " " + line.strip()
+        elif ":" in line:
+            key, _, value = line.partition(":")
+            key = key.strip()
+            fields[key] = value.strip()
+    return fields
+
+
+def load_catalogue(target_dir: Path, by_id: dict[str, dict], original_bytes: dict[str, bytes],
+                   executed: list[dict], wrappers: list[dict],
+                   generated: list[str]) -> dict:
+    """What a credited run may load, as the gate itself computes it (spec §8).
+
+    The gate computes the md5 of every original from bytes it has verified
+    against the retrieval hash, and of every declared copy and wrapper from
+    the attempt directory, so a load is bound to content, never to a digest
+    the executor wrote down.
+
+    Args:
+        target_dir: The attempt directory.
+        by_id: The manifest's originals, by id.
+        original_bytes: Verified bytes of each original that has them.
+        executed: ``check_code_integrity``'s executed records (path, original,
+            identical).
+        wrappers: The manifest's wrappers.
+        generated: Attempt-relative paths of code the runs generated.
+
+    Returns:
+        ``{paths, md5, chunks, packages, executed}``:
+
+        - ``paths``: attempt-relative path to ``{class, id, md5}``, where the
+          class is ``original``, ``edited-copy``, ``wrapper``, or
+          ``generated``, and the id an original's id or a wrapper's role;
+        - ``md5``: md5 to ``(class, id)``, for content found off its path;
+        - ``chunks``: an original document's id to the md5 of each chunk;
+        - ``packages``: a package name to ``(original id, version)``, from
+          a declared source tree's ``DESCRIPTION``;
+        - ``executed``: each executed copy's path to its original's id.
+    """
+    paths: dict[str, dict] = {}
+    by_md5: dict[str, tuple[str, str]] = {}
+    chunks: dict[str, set[str]] = {}
+    packages: dict[str, tuple[str, str]] = {}
+    names: dict[str, set[str]] = {oid: set() for oid in by_id}
+
+    def file_md5(rel: str) -> str | None:
+        path = inside(target_dir, rel)
+        return cached_digest(path, "md5") if path is not None and path.is_file() else None
+
+    for oid, data in original_bytes.items():
+        by_md5[hashlib.md5(data).hexdigest()] = ("original", oid)
+    for oid, item in by_id.items():
+        if item.get("local_copy"):
+            names[oid].add(item["local_copy"])
+            digest = file_md5(item["local_copy"])
+            if digest and oid in original_bytes:
+                paths[item["local_copy"]] = {"class": "original", "id": oid, "md5": digest}
+        member = (item.get("archive") or {}).get("member")
+        if member:
+            names[oid].add(member)
+    executed_map: dict[str, str] = {}
+    for record in executed:
+        oid, rel = record.get("original"), record.get("path")
+        if oid not in by_id or "sha256" not in record:
+            continue
+        names[oid].add(rel)
+        executed_map[rel] = oid
+        digest = file_md5(rel)
+        if digest is None:
+            continue
+        kind = "original" if record.get("identical") else "edited-copy"
+        paths[rel] = {"class": kind, "id": oid, "md5": digest}
+        by_md5.setdefault(digest, (kind, oid))
+    for item in wrappers:
+        digest = file_md5(item["path"])
+        if digest is not None:
+            kind = "generated" if item["role"] == "generated" else "wrapper"
+            paths[item["path"]] = {"class": kind, "id": item["role"], "md5": digest}
+            by_md5.setdefault(digest, (kind, item["path"]))
+    for rel in generated:
+        digest = file_md5(rel)
+        if digest is not None:
+            by_md5.setdefault(digest, ("generated", rel))
+    for oid, data in original_bytes.items():
+        suffixes = {Path(name).suffix.lower() for name in names[oid]}
+        if suffixes & set(DOCUMENT_SUFFIXES):
+            chunks[oid] = set(document_texts(data.decode("utf-8", errors="replace")))
+        if any(Path(name).name == "DESCRIPTION" for name in names[oid]):
+            fields = description_fields(data)
+            if fields.get("Package"):
+                packages[fields["Package"]] = (oid, fields.get("Version", ""))
+    return {"paths": paths, "md5": by_md5, "chunks": chunks, "packages": packages,
+            "executed": executed_map}
+
+
+def lane_md5s(doc: dict) -> dict[str, str]:
+    """md5 of each lane R file a run staged, where the gate holds its bytes.
+
+    Only the hook is R code a process could load from ``/lane``. Its bytes
+    are taken from the runtime directory when their sha256 is the one the run
+    recorded; the launcher binding has already tied that digest to the
+    launch commit.
+    """
+    found = {}
+    data = (RUNTIME_DIR / "hook.R").read_bytes()
+    if hashlib.sha256(data).hexdigest() == (doc.get("lane_files") or {}).get("hook.R"):
+        found[hashlib.md5(data).hexdigest()] = "hook.R"
+    return found
+
+
+def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
+                  final_run: str) -> dict:
+    """The gate's account of every load in the credited runs (spec §8).
+
+    - ``LOAD``: each is bound on its own, whatever call encloses it. In the
+      work copy, the loaded content must be what that path held at the run's
+      baseline, and the path must be an original, a declared edited copy or
+      wrapper, or lane instrumentation; code the run wrote is never loadable.
+      Under ``/lane`` it must be a lane file. Elsewhere it is an original or
+      wrapper by content, a tool-internal load the lane can map, library
+      code, or image code, which is flagged. A temporary directory holds
+      code written during the run, so a load from one that maps to nothing
+      fails.
+    - ``TEXT`` must match by md5 an original (or a declared edited copy,
+      flagged in its own right), a code chunk of an original document, or a
+      tool expression on the lane's list. Anything else is an obligation
+      (``unmatched-text``).
+    - ``CONN`` is always an obligation (``connection-load``): a path hash does
+      not cover a connection's content.
+    - ``PKG``: a package that is not base and has no repository or remote
+      provenance is flagged (``local-package``).
+    - ``HOOKERR`` is an error: a load may have gone unlogged.
+
+    Finally, a declared executed copy that no credited run loaded is flagged
+    (``executed-not-loaded``).
+
+    Args:
+        target_dir: The attempt directory.
+        runs: ``check_run_records``' ``credited_records``.
+        catalogue: ``load_catalogue``'s result.
+        final_run: The final run's id.
+
+    Returns:
+        ``{errors, flags, obligations, warnings, originals_loaded, runs}``,
+        where ``runs`` counts each run's loads by class.
+    """
+    errors: list[str] = []
+    flags: list[str] = []
+    obligations: list[str] = []
+    warnings: list[str] = []
+    issued: set[str] = set()
+    loaded_paths: set[str] = set()
+    loaded_md5s: set[str] = set()
+    originals_loaded: set[str] = set()
+    expressions = {text_md5(text): what for text, what in TOOL_EXPRESSIONS.items()}
+    chunk_owner = {digest: oid for oid, digests in catalogue["chunks"].items()
+                   for digest in digests}
+    summary: dict[str, dict[str, int]] = {}
+
+    # Content anywhere in the attempt, by sha256: the input tree and every
+    # sealed output. A run's baseline names content by sha256, and this finds
+    # bytes to take its md5 from, wherever the content now sits (a renamed
+    # project profile, an output consumed from an earlier run).
+    content: dict[str, Path] = {}
+    tree, _ = input_inventory(target_dir)
+    for rel, digest in tree.items():
+        content.setdefault(digest, target_dir / rel)
+    for run_id, run in runs.items():
+        for item in run["outputs"]:
+            path = target_dir / "outputs" / run_id / item.get("path", "")
+            if item.get("sha256") and path.is_file():
+                content.setdefault(item["sha256"], path)
+    lane_profile = LANE_PROFILE.encode("utf-8")
+
+    def content_md5(sha256: str | None) -> str | None:
+        if sha256 == hashlib.sha256(lane_profile).hexdigest():
+            return hashlib.md5(lane_profile).hexdigest()
+        path = content.get(sha256 or "")
+        return cached_digest(path, "md5") if path is not None else None
+
+    def add(bucket: list[str], issue: Issue) -> None:
+        if issue.issue_id not in issued:
+            issued.add(issue.issue_id)
+            bucket.append(issue)
+
+    for run_id, run in runs.items():
+        doc, events = run["doc"], run["events"]
+        mount = str(doc.get("mount_path") or "").rstrip("/")
+        baseline = (run["baseline"] or {}).get("files") or {}
+        changes = (run["baseline"] or {}).get("changes") or []
+        consumed = {c.get("path"): c.get("run") for c in changes if c.get("change") == "consumed"}
+        injected = {c.get("path") for c in changes if c.get("change") == "injected"}
+        renamed = {c.get("to"): c.get("from") for c in changes if c.get("change") == "renamed"}
+        lane_files = lane_md5s(doc)
+        r_home = str((doc.get("front_end") or {}).get("r_home") or "").rstrip("/")
+        libraries = {f"{r_home}/library"} if r_home else set()
+        libraries |= {decode_field(e["fields"][2]) for e in events
+                      if e["event"] == "PKG" and len(e["fields"]) > 2 and e["fields"][2] != "none"}
+        counts: dict[str, int] = {}
+        summary[run_id] = counts
+        by_seq: dict[tuple[str, int], dict] = {(e["token"], e["seq"]): e for e in events}
+        forked_from = {e["token"]: e["fields"][0] for e in events
+                       if e["event"] == "FORK" and e["fields"]}
+        top_file: dict[str, dict] = {}
+        bindings: dict[tuple[str, int], dict] = {}
+
+        def lookup(token: str, seq: int) -> dict | None:
+            # A forked child's events inside a load its parent had open at the
+            # fork nest under the child's FORK, which names that load's seq in
+            # the parent (0 when none was open); follow it there.
+            found = by_seq.get((token, seq))
+            while found is not None and found["event"] == "FORK":
+                fields = found["fields"]
+                outer = int(fields[1]) if len(fields) > 1 and fields[1].isdigit() else 0
+                found = by_seq.get((fields[0], outer)) if outer else None
+            return found
+
+        def script_of(token: str) -> dict | None:
+            # The command-line script a process runs, or, for a forked child,
+            # its parent's.
+            seen: set[str] = set()
+            while token not in top_file and token in forked_from and token not in seen:
+                seen.add(token)
+                token = forked_from[token]
+            return top_file.get(token)
+
+        def enclosing_of(event: dict, index: int) -> int:
+            fields = event["fields"]
+            return int(fields[index]) if len(fields) > index and fields[index].isdigit() else 0
+
+        def label(event: dict, enclosing: int) -> tuple[str, dict[str, str]]:
+            """Where a text or connection was evaluated: the enclosing load,
+            else the process's own script, as a label and its evidence."""
+            outer = lookup(event["token"], enclosing) if enclosing else None
+            if outer is None or outer["event"] != "LOAD":
+                outer = script_of(event["token"])
+            if outer is None:
+                return "the command line", {}
+            where = decode_field(outer["fields"][1])
+            if mount and where.startswith(mount + "/"):
+                where = where[len(mount) + 1:]
+            return where, {where: outer["fields"][2]}
+
+        def count(kind: str) -> None:
+            counts[kind] = counts.get(kind, 0) + 1
+
+        def tool_call(event: dict) -> tuple[dict | None, dict | None, dict | None]:
+            """The innermost enclosing tool LOAD and its binding, and the
+            immediately enclosing PKG event, if any."""
+            enclosing = enclosing_of(event, 5)
+            parent = lookup(event["token"], enclosing) if enclosing else None
+            package = parent if parent is not None and parent["event"] == "PKG" else None
+            while parent is not None and parent["event"] == "LOAD":
+                if decode_field(parent["fields"][0]) in TOOL_LOADERS:
+                    return parent, bindings.get((parent["token"], parent["seq"])), package
+                outer = enclosing_of(parent, 5)
+                parent = lookup(parent["token"], outer) if outer else None
+            return None, None, package
+
+        def bind_declared(declared: dict, rel: str) -> dict:
+            if declared["class"] in ("original", "edited-copy"):
+                originals_loaded.add(declared["id"])
+            loaded_paths.add(rel)
+            loaded_md5s.add(declared["md5"])
+            return dict(declared, rel=rel)
+
+        def bind_load(event: dict, where: str) -> dict:
+            fields = event["fields"]
+            fn, path, md5 = decode_field(fields[0]), decode_field(fields[1]), fields[2]
+            if md5 == "none":
+                if fn in TOOL_LOADERS:
+                    return {"class": "tool-call"}
+                warnings.append(f"{where} called {fn} on {path}, which is not a readable file, "
+                                f"so nothing was loaded from it")
+                return {"class": "not-a-file"}
+            tool, tool_binding, package = tool_call(event)
+            if package is not None and path.startswith(decode_field(package["fields"][2]) + "/"):
+                return {"class": "library"}
+            if path.startswith(LANE_MOUNT + "/"):
+                if md5 in lane_files:
+                    return {"class": "lane", "id": lane_files[md5]}
+                errors.append(f"{where} loaded {path} from the lane directory, but its content "
+                              f"is no lane file's")
+                return {"class": "unaccounted"}
+            if tool is not None:
+                tool_fn = decode_field(tool["fields"][0])
+                for name, pattern, _what in TOOL_BOOTSTRAP:
+                    if name == tool_fn and pattern.search(path):
+                        return {"class": "tool-internal", "id": tool_fn}
+                document = (tool_binding or {}).get("id")
+                if md5 in catalogue["chunks"].get(document, ()):
+                    return {"class": "tool-internal", "id": f"{tool_fn} chunk of {document}"}
+            in_work = bool(mount) and path.startswith(mount + "/")
+            if in_work:
+                rel = path[len(mount) + 1:]
+                if rel not in baseline:
+                    errors.append(f"{where} loaded {rel}, which the run itself wrote: generated "
+                                  f"code is never loadable (load the original that generated "
+                                  f"it)")
+                    return {"class": "generated"}
+                if rel in consumed:
+                    errors.append(f"{where} loaded {rel}, an output of {consumed[rel]} consumed "
+                                  f"as input: generated code is never loadable")
+                    return {"class": "generated"}
+                expected = content_md5(baseline[rel])
+                if expected is None:
+                    warnings.append(f"{where} loaded {rel}, whose baseline content is no longer "
+                                    f"in the attempt, so the gate cannot check what was loaded")
+                elif expected != md5:
+                    errors.append(f"{where} loaded {rel} at md5 {md5[:12]}…, but the run's "
+                                  f"baseline holds md5 {expected[:12]}…: it changed during the "
+                                  f"run before it was loaded")
+                    return {"class": "unaccounted"}
+                if rel in injected:
+                    return {"class": "lane", "id": rel}
+                declared_rel = renamed.get(rel, rel)
+                declared = catalogue["paths"].get(declared_rel)
+                if declared is not None:
+                    if declared["class"] == "generated":
+                        errors.append(f"{where} loaded {declared_rel}, declared as generated "
+                                      f"code, which is never loadable")
+                        return {"class": "generated"}
+                    if declared["md5"] != md5:
+                        message = (f"{where} loaded {declared_rel} at content other than the "
+                                   f"declared file's")
+                        if run_id == final_run:
+                            errors.append(message)
+                            return {"class": "unaccounted"}
+                        # An earlier, consumed run that ran other code is the
+                        # consumed-other-code issue's business.
+                        warnings.append(message + " (see consumed-other-code)")
+                    return bind_declared(declared, declared_rel)
+            known = catalogue["md5"].get(md5)
+            if known is not None:
+                kind, ident = known
+                if kind == "generated":
+                    errors.append(f"{where} loaded {path}, whose content is generated code "
+                                  f"({ident}), which is never loadable")
+                    return {"class": "generated"}
+                if kind in ("original", "edited-copy"):
+                    originals_loaded.add(ident)
+                loaded_md5s.add(md5)
+                return {"class": kind, "id": ident}
+            if in_work:
+                errors.append(f"{where} loaded undeclared code {path[len(mount) + 1:]}: neither "
+                              f"an authors' file, a declared wrapper, nor lane instrumentation")
+                return {"class": "unaccounted"}
+            if tool is not None:
+                # Nesting waives nothing: a load inside a tool call that maps
+                # to no source is unaccounted, never image code (Astra's
+                # specification review, D-3).
+                errors.append(f"{where} loaded {path} inside {decode_field(tool['fields'][0])}, "
+                              f"but it maps to no original, declared wrapper, chunk of the "
+                              f"document, or tool-generated file")
+                return {"class": "unaccounted"}
+            if path.startswith(TRANSIENT_ROOTS):
+                errors.append(f"{where} loaded {path}, code in a temporary directory that maps "
+                              f"to no original, declared wrapper, or tool-generated file")
+                return {"class": "unaccounted"}
+            if any(path.startswith(library.rstrip("/") + "/") for library in libraries):
+                return {"class": "library"}
+            if (path, md5) in IMAGE_LAUNCHERS:
+                return {"class": "image-launcher", "id": IMAGE_LAUNCHERS[(path, md5)]}
+            add(flags, Issue.flag(
+                "image-code", path, f"{where} loaded {path} from the image, outside the work "
+                f"copy and every R library: image code is not the authors' deposit, so confirm "
+                f"what it is", files={path: md5}))
+            return {"class": "image"}
+
+        for event in events:
+            kind, fields, token = event["event"], event["fields"], event["token"]
+            where = f"{run_id}: process {event['pid']}"
+            if kind == "HOOKERR":
+                errors.append(f"{where}: the lane hook failed in {decode_field(fields[0])} "
+                              f"({decode_field(fields[1]) if len(fields) > 1 else 'no message'})"
+                              f", so a load may have gone unlogged")
+            elif kind == "LOAD" and len(fields) >= 6:
+                binding = bind_load(event, where)
+                bindings[(token, event["seq"])] = binding
+                count(binding["class"])
+                if decode_field(fields[0]) == "file":
+                    top_file.setdefault(token, event)
+            elif kind == "TEXT" and fields:
+                md5 = fields[0]
+                known = catalogue["md5"].get(md5)
+                if known is not None and known[0] in ("original", "edited-copy"):
+                    originals_loaded.add(known[1])
+                    loaded_md5s.add(md5)
+                    count("text-original")
+                elif md5 in chunk_owner:
+                    count("text-chunk")
+                elif md5 in expressions:
+                    count("text-tool")
+                else:
+                    count("text-unmatched")
+                    place, evidence = label(event, enclosing_of(event, 3))
+                    add(obligations, Issue.obligation(
+                        "unmatched-text", f"{md5}@{place}", f"{where} evaluated code from a "
+                        f"string (md5 {md5[:12]}…) in {place} that matches no original, no chunk "
+                        f"of an original document, and no tool expression: confirm what it ran",
+                        files={"text": md5, **evidence}))
+            elif kind == "CONN" and len(fields) >= 3:
+                count("connection")
+                place, evidence = label(event, enclosing_of(event, 4))
+                fn, cls, what = (decode_field(f) for f in fields[:3])
+                add(obligations, Issue.obligation(
+                    "connection-load", f"{fn}:{cls}:{what}@{place}", f"{where} called {fn} on a "
+                    f"{cls} ({what}) in {place}: no path hash covers a connection's content, so "
+                    f"confirm what it evaluated", files=evidence))
+            elif kind == "PKG" and len(fields) >= 8:
+                count("package")
+                name, version = decode_field(fields[0]), fields[1]
+                provenance = [fields[3], fields[4], fields[5]]
+                if name in BASE_PACKAGES or version == "none" or any(
+                        value != "none" for value in provenance[:2]):
+                    continue
+                version = decode_field(version)
+                source = catalogue["packages"].get(name)
+                if source is None:
+                    note = "declare its source tree as an original"
+                elif source[1] == version:
+                    note = f"its declared source tree ({source[0]}) has the same version"
+                else:
+                    note = (f"its declared source tree ({source[0]}) is version {source[1]}, "
+                            f"not the installed {version}")
+                add(flags, Issue.flag(
+                    "local-package", name, f"{where} loaded package {name} {version} from "
+                    f"{decode_field(fields[2])}, which records no repository or remote source: "
+                    f"it was installed locally, so {note}",
+                    files={"DESCRIPTION": fields[7], "version": version}))
+
+    # A run whose entry is a shell script ran it without any R load event.
+    final_doc = runs.get(final_run, {}).get("doc") or {}
+    if final_doc.get("interpreter") == "bash" and final_doc.get("entry") in catalogue["executed"]:
+        loaded_paths.add(final_doc["entry"])
+        originals_loaded.add(catalogue["executed"][final_doc["entry"]])
+    for rel, oid in sorted(catalogue["executed"].items()):
+        declared = catalogue["paths"].get(rel)
+        if rel in loaded_paths or (declared is not None and declared["md5"] in loaded_md5s):
+            continue
+        add(flags, Issue.flag(
+            "executed-not-loaded", rel, f"{rel} is declared as an executed copy of {oid!r}, but "
+            f"no credited run loaded it: confirm how it ran, or that it did not",
+            files=file_digests(target_dir, rel)))
+    return {"errors": errors, "flags": flags, "obligations": obligations,
+            "warnings": warnings, "originals_loaded": sorted(originals_loaded),
+            "runs": summary}
 
 
 def citation_findings(targets: list[dict], runs: dict, locked: list[str],
@@ -3456,6 +4060,18 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                 "generated-code", rel_text, f"{rel_text} is code the run generated: never "
                 f"loadable, so a human confirms what made it and that nothing ran it",
                 files=file_digests(target_dir, rel_text)))
+        # The account of every load the credited runs made (spec §8), bound
+        # to content the gate computes itself.
+        if lane["final_run"] is not None:
+            catalogue = load_catalogue(target_dir, by_id, original_bytes, result["executed"],
+                                       wrappers, lane["generated"])
+            account = account_loads(target_dir, lane["credited_records"], catalogue,
+                                    lane["final_run"])
+            errors.extend(account["errors"])
+            flags.extend(account["flags"])
+            obligations.extend(account["obligations"])
+            warnings.extend(account["warnings"])
+            result["account"] = {k: account[k] for k in ("originals_loaded", "runs")}
         if lane["final_pre"] is not None:
             in_run = {item["path"] for item in wrappers
                       if item["role"] in ("wrapper", "tooling")}
@@ -3922,6 +4538,12 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
                       "reasons": reasons}
         structural = {}
         edited = excluded - unbound
+        account = integrity.get("account")
+        if (account is not None and manifest.get("originals") and manifest.get("executed")
+                and not account["originals_loaded"]):
+            # The run records show what ran (spec §6): a manifest listing
+            # executed copies is not enough when no credited run loaded one.
+            structural["no credited run loaded an authors' file"] = set(locked)
         if manifest.get("originals") and not manifest.get("executed"):
             structural["no authors' file was executed"] = set(locked)
         elif edited:
@@ -3942,7 +4564,9 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
             "code_integrity": {k: integrity[k] for k in (
                 "status", "manifest", "manifest_sha256", "originals", "executed",
                 "wrappers", "anchors", "snapshots")} | (
-                    {"runs": integrity["runs"]} if integrity.get("runs") is not None else {}),
+                    {"runs": integrity["runs"]} if integrity.get("runs") is not None else {}) | (
+                    {"account": integrity["account"]} if integrity.get("account") is not None
+                    else {}),
             "executor_verdict": (comparison or {}).get("verdict")
             if isinstance(comparison, dict) else None}
 
