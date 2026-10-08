@@ -472,25 +472,28 @@ The Phase 2 shakedown (2026-10-03) and the registrant's rulings of
     built, and an explicit runtime or package version is used. Whether a
     component is specified is judged per dependency, not per project,
     because a container image can pin the runtime and a package snapshot
-    date without naming each package. The date-based search below governs
-    only what the specification leaves unspecified, and a specified
-    component whose build fails. Each such fallback is logged against the
+    date without naming each package. The version search below governs
+    what the specification leaves unspecified, anchored on the release
+    current at publication, and a specified component whose build fails,
+    anchored on its supplied pin. Each such fallback is logged against the
     component. The run reports, beside the verdict (§8(a)), whether the
     pins were honoured in full, with how many fallbacks, or not at all."
     Supplied pins keep precedence so that registered H3, which compares
     build effort between pinned and unpinned environments, measures the
     authors' pins and not a reconstructed environment.
-  - **Version-search cap [D-7, ruled].** "An unspecified dependency is first
-    built at the release current at the article's first online appearance.
-    If a specific dependency fails to build, at most its immediately
-    preceding and following releases are tried, so a dependency has at
-    most three attempts. A specified dependency that failed counts its
-    pinned version as the first of its three. Where a repository publishes
-    commits but no releases, the release current at publication is the
-    last commit on the default branch at or before first online
-    appearance, and the adjacent attempts are the nearest earlier and
-    later commits that change the package's declared version, or, where
-    none does, that change the package's files. The cap governs build
+  - **Version-search cap [D-7, ruled].** "A specified dependency is first
+    built at its supplied pin, and an unspecified dependency at the release
+    current at the article's first online appearance. If a dependency
+    fails to build at that anchor, its immediately preceding release is
+    tried, then its immediately following release, stopping at the first
+    that builds, so a dependency has at most three attempts. A failed pin
+    is never replaced by the release current at publication. Where a
+    repository publishes commits but no releases, the release current at
+    publication is the last commit on the default branch at or before
+    first online appearance, and a pinned commit is its own anchor. The
+    adjacent attempts are the nearest earlier and later commits that
+    change the package's declared version, or, where none does, that
+    change the package's files. The cap governs build
     failures only. A deprecated function is handled by a separate logged
     search backwards to the last public release that still carries it,
     without this cap. Each attempt is logged."
@@ -681,12 +684,21 @@ registrant's direction to draft them):
 
 **Evidence locations.** Every path in this amendment is in the study
 repository, <https://github.com/saross/llm-reproducibility>, at the tagged
-lodgement commit (`osf-amendment-3-2026-10-08`). They include the frozen pilot
-reference and its beyond-instrument tags
-(`studies/open-science-compliance/outputs/validation/e8-v2-rederivation/worksheet.json`),
-the selected-arm results (§2), the F2 rule report (§5), the executed-code
-audit and its rulings (§9), and, once ruled, the correction ledger at the
-path the launch commit's run configuration records.
+lodgement commit (`osf-amendment-3-2026-10-08`), except the executed-code
+audit. Paths beginning `outputs/` are relative to
+`studies/open-science-compliance/`, and other paths to the repository
+root. The instrument files §7 names are in
+`studies/open-science-compliance/protocol/instruments/`, except
+`invariants.md`, which is at `.claude/shared/invariants.md`. The evidence
+includes the frozen pilot reference and its beyond-instrument tags
+(`outputs/validation/e8-v2-rederivation/worksheet.json`), the selected-arm
+results (§2), and the F2 rule report (§5). The executed-code audit and its
+rulings (§9) are in
+`studies/open-science-compliance/outputs/validation/executed-code-audit-2026-10-04/`
+at commit `c4553f90f1e0dfa3089b3511a1a7d61c2e031a19` on the reproduction
+lane's review branch, kept reachable by the tag
+`executed-code-audit-2026-10-04`. The correction ledger, once ruled, is at
+the path the launch commit's run configuration records.
 
 ---
 
@@ -784,7 +796,11 @@ path the launch commit's run configuration records.
   commits-without-releases rule and a separate deprecation search (Fable's
   refinements, 2026-10-06).
   **RULED (Shawn, 2026-10-06): (a), supplied pins first,** with both
-  refinements, so that H3 measures the authors' pins.
+  refinements, so that H3 measures the authors' pins. **Failed-pin
+  sequence RULED (Shawn, 2026-10-08)** on Astra's follow-up finding B1:
+  the pin's own neighbours (pin, preceding release, following release,
+  stopping at the first that builds), never the publication-date release,
+  so pinned and unpinned dependencies both have at most three attempts.
 - **D-8. Human validation independence (Astra, blocking 6).** The
   registrant confirms F2 = 1 candidates and is also the §8 hand-scorer.
   Options: (a) draw the subsample and hand-score before any confirmation on
@@ -836,6 +852,12 @@ path the launch commit's run configuration records.
       (registrant chose the precise form); revision justification
       approved (`osf-amendment-3-justification.txt`); lodgement approved
       to run once Astra's follow-up review reports no regressions.
+- [x] 2026-10-08 Astra's follow-up review (at `857702d`, verdict revise)
+      folded in: B1 ruled (the pin's own neighbours) and written into
+      §7(d); S1 evidence locations corrected and the audit commit tagged;
+      S2 script guarantee narrowed, with mocked-request tests.
+- [ ] Astra's re-check of the B1, S1, and S2 fixes reports no regressions
+      (the condition on the lodgement approval).
 - [x] 2026-10-06 Astra's review folded in; D-7 to D-9 ruled; the ruling
       dates of audit Q5 and Q6 reconciled with `findings.json` (both
       2026-10-05, from the archived transcript of session b1a1e102).
@@ -856,9 +878,9 @@ path the launch commit's run configuration records.
       passed. Re-run 2026-10-08 on the lodgement candidate: gate PASS
       (81/81), 395 tests passed. Re-run at the tagged commit.
 - [x] 2026-10-08 Paste artefact regenerated for lodgement, banner dated
-      2026-10-08 and tags checked against it by the builder; 6,279 words,
+      2026-10-08 and tags checked against it by the builder; 6,364 words,
       54 bullets, and 29 numbered lines before and after unwrapping
-      (rebuilt after the scope sentence).
+      (rebuilt after the scope sentence and the follow-up fixes).
 - [x] 2026-10-06 (provisional) Paste artefact `osf-amendment-3.txt`
       produced from the lodged portion and unwrapped with
       `unwrap-paste-file.py`; flowing lines, no tables; word, bullet, and
@@ -1064,9 +1086,45 @@ definition changes" would be true of the definitions but would hide that
 §4 and §7 clarify the rules computing H2's coverage endpoint and bounding
 H3's build attempts, so the sentence names them.
 
-**Register exit checks (lodged portion, 6,218 words at lodgement with
-the opening paragraph and its scope sentence; 6,058 after the 2026-10-06
-rulings; academic
+**Follow-up review (Astra, 2026-10-08, at `857702d`).** Verdict: revise
+before lodgement, with one blocking and two should-fix findings, each
+verified at source. Every earlier finding was reported resolved except
+blocking 4's remainder (B1). The paste artefact, the justification, and
+the scope sentence were reported faithful and accurate.
+
+- **B1, the failed-pin sequence.** §7(d) said the date-based search
+  governs a specified component whose build fails, and also that the
+  failed pin is the first of three attempts, without naming the anchor
+  for the other two. Neither D-7 nor the 2026-10-04 cap ruling
+  (`phase2-shakedown/results-2026-10-03.md`, "Follow-on rulings", item 2)
+  settles it. **RULED (Shawn, 2026-10-08): the pin's own neighbours.**
+  §7(d) now anchors the three attempts on the supplied pin for a specified
+  dependency and on the release current at publication otherwise, tries
+  the preceding release before the following one, stops at the first that
+  builds, and never replaces a failed pin with the publication-date
+  release. Pinned and unpinned dependencies therefore have the same cap,
+  which keeps H3's comparison even.
+- **S1, evidence locations.** The executed-code audit is not on `main`.
+  It is on PR #7's branch, last changed at `c4553f9` ("record rulings on
+  audit Q1-Q10"). **RULED (Shawn, 2026-10-08): cite that commit and keep
+  it reachable with the tag `executed-code-audit-2026-10-04`.** The
+  paragraph also states the three path conventions the text uses
+  (`outputs/` relative to the study directory, other paths to the
+  repository root, and the instrument files' directory, with
+  `invariants.md` at `.claude/shared/`). Every cited path was checked to
+  exist at those locations.
+- **S2, the lodgement script's failure guarantee.** The header promised a
+  private, unsubmitted revision on any failed check, which is false once
+  submission has been attempted. OSF can auto-approve a submitted
+  revision. The guarantee now covers the pre-submission content checks
+  only. After submission is attempted, any failure reports the revision
+  identifier and its last confirmed state and requires inspecting that
+  revision before a retry. Mocked-request tests show that a failed content
+  check never reaches submit or approve.
+
+**Register exit checks (lodged portion, 6,302 words at lodgement, with
+the opening paragraph, its scope sentence, and the follow-up review's B1
+and S1 fixes; 6,058 after the 2026-10-06 rulings; academic
 register gate, `register-gate.py` advisories read item by item; re-run
 2026-10-08).**
 
@@ -1074,7 +1132,7 @@ register gate, `register-gate.py` advisories read item by item; re-run
 - Semicolons: 22, of which 12 end list items, 7 are in the §7 ruling text
   quoted unchanged, and 3 are sentential in revised prose (about 0.5 per
   thousand against the 3.4 draft target). The opening paragraph adds none.
-- Announcement colons: 1.52 per thousand, against the 1.6 ceiling (2.09
+- Announcement colons: 1.49 per thousand, against the 1.6 ceiling (2.09
   before the register pass; the opening paragraph adds one). Colon-led
   lists of three or more: 2, both in text the registrant had already read
   (§7(a)'s evidence tiers and §9's ledger ruling list).
@@ -1085,6 +1143,6 @@ register gate, `register-gate.py` advisories read item by item; re-run
   "may" is in §9's D-9 predicate as ruled (`9536962`); the count recorded
   here before the re-run (may 4) predated that ruling.
 - Consecutive short sentences: the one flag is a list-number artefact.
-- Mean sentence length 20.6 words (20.57 at lodgement).
+- Mean sentence length 20.6 words (20.51 at lodgement).
 - markdownlint: the only findings are the pre-existing Sources table
   (MD013, MD060), outside the lodged portion.
