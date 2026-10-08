@@ -1473,3 +1473,52 @@ Where a design's guarantee rests on a runtime precedence rule (which
 setting wins), test the precedence in the target runtime before building
 on it. Arrange the test so that the two candidate authorities disagree:
 an environment that merely agrees with the variable proves nothing.
+
+## 2026-10-08 — The guard against a stray revision could never fire
+
+**Session:** fabeab56-1b7a-4539-8524-caed6e956c93
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+`lodge-osf-amendment.py` reads the registration's revision list
+anonymously and refuses to continue if the newest revision is not
+approved. I wrote that guard, and the header's account of failure recovery
+relied on it: a failed write would leave an unsubmitted revision, and the
+next `plan` would see it and stop. Astra's re-check said the guard is
+inert, because OSF filters the anonymous listing to approved revisions. An
+unsubmitted revision is invisible to the call that was meant to detect it.
+
+### Probe
+
+I fetched OSF's source from its develop branch (2026-10-08).
+`RegistrationSchemaResponseList.get_default_queryset`
+(`api/registrations/views.py`) returns every revision to contributors,
+pending and approved ones to moderators, and approved ones only to anyone
+else. `SchemaResponse.create_from_previous_response`
+(`osf/models/schema_response.py`) raises `PreviousSchemaResponseError`
+while any revision on the registration is not approved.
+
+### Belief revision
+
+I had assumed that a list endpoint shows a resource's full state and that
+authentication only changes what you may do. On OSF, authentication also
+changes what you can see, so an anonymous reader can be correctly told that
+everything is in order while a private revision exists. The safety I
+attributed to `plan` sits with the server: the authenticated create refuses
+while an unfinished revision exists. The script was safe all along, but
+for a different reason from the one its header gave. The header now gives
+the server's reason, with the source cited.
+
+### What would change this belief
+
+An OSF change that lets a second unfinished revision be created, or an
+anonymous listing that shows pending ones. Either would bring back the case
+the guard was written for. The check is the two functions named above.
+
+### Implications for practice
+
+A guard should be tested against the visibility of the caller that runs
+it. The fake OSF in the tests returns the same listing whoever asks, which
+is why the tests could not catch this. When a check reads remote state,
+record which identity it reads as, and what that identity cannot see.

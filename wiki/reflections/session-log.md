@@ -1454,3 +1454,57 @@ away for the build and present for the decision walk-through.
 - The rulings were taken in one sitting from structured questions. The
   amendment text written for them (§5(b), §6(d), and two §7(d) bullets)
   awaits Shawn's full read before lodgement.
+
+## Session: 2026-10-06 → 2026-10-08 — Amendment 3 lodged; gate 1.3 traces
+
+**Session:** fabeab56-1b7a-4539-8524-caed6e956c93 (Opus 5.5; compacted
+partway, so the 2026-10-06 work is reconstructed from the summary).
+
+**Spend.** No model API calls.
+
+- **Plan-billed:** Fable was consulted on D-7 to D-9 by SendMessage
+  (2026-10-06).
+- **OSF API:** 8 calls in the lodgement run, plus anonymous reads for
+  `plan` and verification. No cost.
+- **Local only:** Docker probes on `rocker/r-ver:4.3.2`.
+
+**Amendment 3, 2026-10-06 (from the summary):**
+
+- `23c72fc`: Astra's first review folded in.
+- `9536962`: D-7 to D-9 and the Q5/Q6 dates ruled.
+- `2f3529d`: the revision's other new rules ruled, and the paste builder
+  `make-paste-artefact.py` added with its tests.
+
+**Amendment 3, 2026-10-08:**
+
+- Shawn read the diff `60ec56d..2f3529d` and approved it as is. He then
+  ruled four further points:
+  - the opening paragraph moves into the lodged text as "Nature of this
+    amendment" (`37da8e3`);
+  - the precise scope sentence (`857702d`);
+  - after Astra's follow-up, B1, a failed pin is followed by its own
+    neighbours, and S1, the audit is cited at `c4553f9` with the tag
+    `executed-code-audit-2026-10-04` (`4258db8`).
+- `3c57e93`: the builder refuses a lodged tag that disagrees with its
+  banner.
+- `51cb532`, `94a0d3a`, `4b1ee70`: `lodge-osf-amendment.py` (plan and lodge
+  modes) and its 15 offline tests, revised after Astra's S2 and two
+  re-check qualifications.
+- Astra reviewed twice: a follow-up at `857702d` (revise: B1 blocking, S1
+  and S2 should-fix), then a re-check at `4258db8` ("No blocking issues
+  found"). Both are mail in `~/agent-mail/codex/outbox/claude/`, receipted.
+- `abde9b1`: the lodgement commit, tagged `osf-amendment-3-2026-10-08`.
+  D5 PASS 81/81, 410 tests.
+- Lodged as OSF revision `6ac775afb5ed5b4afee88a4a`, approved. The stored
+  copy is byte-identical to what was sent, the change set is `["summary"]`,
+  and the DOI is unchanged. The public page was checked by Shawn.
+  `93ff291` and `e8de935` record it in the draft and the erratum log.
+
+**Gate 1.3 on PR #7, 2026-10-06 (from the summary):** specification
+revision 2 (`340f77d`), the F1 completeness corrections (`e6fe231`), and
+the hook's loader traces (`7d577b8`); 525 tests passed on the branch.
+
+**Contextual assumptions.** Shawn approved lodgement conditional on Astra
+reporting no blocking issues. The lodgement date
+(2026-10-08) was fixed in the text, so a reply after midnight Sydney time
+would have meant a rebuild. Astra replied at 21:46 local time.

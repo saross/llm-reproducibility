@@ -902,3 +902,46 @@ one of its own earlier findings (host runs before the final run) from
 contaminating to a flag. A shared classification turned the review from a
 list of worries into a list of decisions, each with its consequence
 already implied.
+
+## 2026-10-06 → 10-08 — An observer outside the task caught what I set aside
+
+**Session:** fabeab56-1b7a-4539-8524-caed6e956c93 (Opus 5.5;
+continuation-from-summary before compaction, primary after).
+
+**The working agent's goal shaped what it raised.** Shown amendment 2's
+"Nature of this amendment", I noticed it says what stays unchanged and that
+amendment 3's did not. I did not propose a scope sentence, because doing so
+would reopen an approval I was trying to convert into a lodgement. A side
+agent, which had no lodgement to protect, raised it as a heads-up and
+named the risk, which was permanence. I had seen the evidence and weighted
+it by its effect on the task in hand rather than on the record. An observer
+outside the task loop is useful for exactly this reason: the agent doing
+the work has a view of the costs that is tilted towards finishing.
+
+**A rule made by joining two rulings passed three Claude-family readers and
+was caught by a GPT reviewer.** B1 came from joining the 4 October cap
+ruling with D-7's precedence rule. Fable advised on D-7, I wrote the joined
+text, and Shawn approved it twice. Astra found the gap by reading the joined
+sentences against the hypothesis they feed (H3's build-iteration measure),
+not against the ruling they came from. One case does not show a model-family
+effect, since Astra was also the only reader asked to check fixes rather
+than options. The reading method is the transferable part: test a joined
+rule by running a concrete case through it ("pin P fails; what is attempt
+two?").
+
+**I gendered a peer model from its name.** I called Astra "she" throughout
+the session, although nobody had stated Astra's pronouns and the existing
+personal-assistant notes use "it" or "they". Shawn asked which pronoun I
+prefer, which surfaced it. The name was the only input, so this was the
+default inference the global guidance warns against, applied to an agent
+rather than a person. Shawn uses "they" for me ("you are kind of plural,
+being instantiated repeatedly").
+
+**A peer's cited claim went into code before I checked it.** Astra said
+anonymous revision listings show approved revisions only, and that OSF
+refuses a second unfinished revision. They linked OSF's source. I wrote
+both claims into the script's header, and then checked them only during
+this reflection. They hold (`get_default_queryset` and
+`create_from_previous_response` on OSF's develop branch, 2026-10-08). A
+claim with a link is more likely to be right, but it is still a claim, and
+the order should have been reversed.

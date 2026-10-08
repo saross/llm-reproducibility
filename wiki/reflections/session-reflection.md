@@ -1448,3 +1448,73 @@ was cheap to get (a one-second probe in the real image, the image's own
 scripts). The rulings were fastest once the trade-offs came before the
 recommendation. In both, the slow path was asserting something before
 looking.
+
+## Entry 24 (2026-10-06 → 10-08) — The sentence I did not propose
+
+**Project:** llm-reproducibility. **Session:**
+fabeab56-1b7a-4539-8524-caed6e956c93 (Opus 5.5). **Instance:**
+continuation-from-summary for the first half (Astra's first review folded
+in, D-7 to D-9 and the revision's new rules ruled, the gate 1.3 hook
+traces built on PR #7), which I know only from the compaction summary.
+Primary for the second half, from Shawn's approval of amendment 3 on
+2026-10-08 to its lodgement that evening. This entry is about the second
+half.
+
+**What would you do differently if you replayed this session?** I would
+have proposed the scope sentence myself. To settle where amendment 3's
+opening paragraph belonged, I read amendment 2's, and saw that both earlier
+amendments say what they leave unchanged while amendment 3 did not. I
+decided not to raise it, because new lodged text after Shawn's "approve as
+is" would reopen his review and Astra's. A side agent raised it later, Shawn
+chose the precise form in one question, and Astra found it accurate. The
+cost I was avoiding was one question and one review pass. The cost of the
+omission would have been permanent, since lodged text changes only by
+erratum or amendment. I had ranked reopening as the expensive path when the
+irreversible step was the expensive one.
+
+The same instinct produced a smaller slip. I left a scope clause out of the
+justification because the lodged text did not contain one, and said so.
+Shawn read that as my having ruled that we should not say it, and I had to
+correct his summary of my position. A constraint I applied to one document
+had sounded like a policy for both.
+
+**What felt uncertain or unresolved at the end?**
+
+- **How many composed rules carry B1's kind of gap.** The failed-pin
+  ambiguity was created by the revision. It joined the 4 October cap ruling
+  (a failing dependency gets its immediately preceding and following
+  releases) to D-7's supplied-pin precedence, and never said whose
+  neighbours follow a failed pin. Fable advised on D-7, Shawn ruled it
+  from a walk-through and then read the diff, and I wrote it. Astra found
+  the gap in the follow-up by reading the two sentences against H3's
+  measure. I had recommended the follow-up for generic reasons (about 600
+  changed lines, an irreversible step), not because I suspected anything.
+  The follow-up's scope was the fixes, so other places in §7 and §9 where
+  two rulings meet have had no reading of that kind.
+- **The code that ran was not exactly the code reviewed.** After Astra's
+  "No blocking issues found", I fixed their two non-blocking error-path
+  points before the run, with tests. The run took the success path at
+  every step, so the unreviewed lines never executed. A stricter reading
+  of Shawn's condition would have lodged with the reviewed code and fixed
+  the paths afterwards. I judged the tested change worth more than strict
+  fidelity, and said so to both of them; neither objected.
+- **OSF's limit on the Summary field** was unknown before the run. The
+  field now holds 98,004 characters, and no source I found states a
+  ceiling. Amendment 4 will meet the same unknown with a larger number.
+
+**What's the single most important thing a future reader should know?**
+The lodgement script exists because amendments 1 and 2 were lodged with API
+calls written at the moment of lodging, and nobody could review them in
+advance. Writing the calls down first let Astra find three failure-path
+defects:
+
+- the header promised a private revision after any failure, including after
+  submission;
+- anonymous `plan` cannot see a private revision, so its guard against one
+  could never fire;
+- a malformed reply escaped the handler.
+
+None would have published unchecked text. Each would have given an
+operator a misleading account of the registration at the moment they most
+needed an accurate one. The text of an amendment had three review passes in
+this project. Until this session, the procedure that publishes it had none.
