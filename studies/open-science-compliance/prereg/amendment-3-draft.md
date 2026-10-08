@@ -34,7 +34,13 @@ exposed rules the instruments do not state, and the reproduction-lane
 shakedown did the same for the reproduction instruments. Third, two
 measurement defects surfaced: a model miscount that the output schema let
 through, and evidence packs that lacked the fields one sub-principle
-needs. Each is lodged here before the analyses it governs.
+needs. No hypothesis, sampling frame, or hypothesis test changes. The
+registered outcomes keep their definitions, and §4 and §7 clarify the
+instrument rules that produce them, including which results count toward
+reproduction coverage (the H2 primary endpoint) and how many build
+attempts a dependency receives (H3). Two descriptive outcomes are added
+(§8), neither of which enters a verdict or coverage, and §3(b) and §9
+record deviations. Each is lodged here before the analyses it governs.
 
 ### 1. Correction: amendment 2 §2's precedent case
 
@@ -826,6 +832,10 @@ path the launch commit's run configuration records.
 - [x] 2026-10-08 The draft's "Why this amendment" paragraph opens the
       lodged text, renamed "Nature of this amendment" as in amendments
       1 and 2 (registrant); wording unchanged.
+- [x] 2026-10-08 Scope sentence added to the opening paragraph
+      (registrant chose the precise form); revision justification
+      approved (`osf-amendment-3-justification.txt`); lodgement approved
+      to run once Astra's follow-up review reports no regressions.
 - [x] 2026-10-06 Astra's review folded in; D-7 to D-9 ruled; the ruling
       dates of audit Q5 and Q6 reconciled with `findings.json` (both
       2026-10-05, from the archived transcript of session b1a1e102).
@@ -846,8 +856,9 @@ path the launch commit's run configuration records.
       passed. Re-run 2026-10-08 on the lodgement candidate: gate PASS
       (81/81), 395 tests passed. Re-run at the tagged commit.
 - [x] 2026-10-08 Paste artefact regenerated for lodgement, banner dated
-      2026-10-08 and tags checked against it by the builder; 6,209 words,
-      54 bullets, and 29 numbered lines before and after unwrapping.
+      2026-10-08 and tags checked against it by the builder; 6,279 words,
+      54 bullets, and 29 numbered lines before and after unwrapping
+      (rebuilt after the scope sentence).
 - [x] 2026-10-06 (provisional) Paste artefact `osf-amendment-3.txt`
       produced from the lodged portion and unwrapped with
       `unwrap-paste-file.py`; flowing lines, no tables; word, bullet, and
@@ -1043,10 +1054,19 @@ as the diff from `60ec56d` to `2f3529d` and approved the amendment as
 is. The paragraph that stood in the preamble as "Why this amendment"
 now opens the lodged text as "Nature of this amendment", the heading
 amendments 1 and 2 used; its wording is unchanged, and its specifics
-were checked against the lodged sections they summarise.
+were checked against the lodged sections they summarise. On a side
+agent's note that amendments 1 and 2 both say what their amendment leaves
+unchanged, a scope sentence was added, in the form the registrant chose
+from a precise and a short draft (2026-10-08). It was
+checked against the registration's H1 to H5, sampling frames, and outcome
+definitions (§4, §6, and §7.6 of the registration). A blanket "no outcome
+definition changes" would be true of the definitions but would hide that
+§4 and §7 clarify the rules computing H2's coverage endpoint and bounding
+H3's build attempts, so the sentence names them.
 
-**Register exit checks (lodged portion, 6,153 words at lodgement with
-the opening paragraph; 6,058 after the 2026-10-06 rulings; academic
+**Register exit checks (lodged portion, 6,218 words at lodgement with
+the opening paragraph and its scope sentence; 6,058 after the 2026-10-06
+rulings; academic
 register gate, `register-gate.py` advisories read item by item; re-run
 2026-10-08).**
 
@@ -1054,7 +1074,7 @@ register gate, `register-gate.py` advisories read item by item; re-run
 - Semicolons: 22, of which 12 end list items, 7 are in the §7 ruling text
   quoted unchanged, and 3 are sentential in revised prose (about 0.5 per
   thousand against the 3.4 draft target). The opening paragraph adds none.
-- Announcement colons: 1.53 per thousand, against the 1.6 ceiling (2.09
+- Announcement colons: 1.52 per thousand, against the 1.6 ceiling (2.09
   before the register pass; the opening paragraph adds one). Colon-led
   lists of three or more: 2, both in text the registrant had already read
   (§7(a)'s evidence tiers and §9's ledger ruling list).
@@ -1065,6 +1085,6 @@ register gate, `register-gate.py` advisories read item by item; re-run
   "may" is in §9's D-9 predicate as ruled (`9536962`); the count recorded
   here before the re-run (may 4) predated that ruling.
 - Consecutive short sentences: the one flag is a list-number artefact.
-- Mean sentence length 20.6 words (unchanged at 20.56).
+- Mean sentence length 20.6 words (20.57 at lodgement).
 - markdownlint: the only findings are the pre-existing Sources table
   (MD013, MD060), outside the lodged portion.
