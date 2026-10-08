@@ -594,13 +594,15 @@ class CodeIntegrityTests(IntegrityFixture, unittest.TestCase):
         self.assertTrue(result["executed"][0]["identical"])
         self.assertTrue(any("no pristine copy" in f for f in result["flags"]))
 
-    def test_conversion_without_identity_evidence_is_flagged(self):
+    def test_conversion_without_a_declaration_is_flagged(self):
+        """The lane can compare only a conversion it knows (spec §11)."""
         write(self.dir / "convert.py", "print('xlsx to csv')\n")
         wrappers = self.manifest["wrappers"] + [
             {"path": "convert.py", "role": "conversion", "purpose": "xlsx to csv"}]
         self.rewrite(wrappers=wrappers)
-        self.assertTrue(any("value-identity evidence missing" in f
-                            for f in self.check()["flags"]))
+        flags = [f for f in self.check()["flags"] if getattr(f, "code", "") ==
+                 "conversion-differs"]
+        self.assertIn("declares no conversion input and output", flags[0])
 
     def test_check_code_cli_exit_status(self):
         # The CLI anchors against this repository, which holds no fixture pack.
@@ -856,54 +858,169 @@ class GateHardeningTests(IntegrityFixture, unittest.TestCase):
         self.assertIn("brings content into the image", obligations)
         self.assertIn("wrapper semantics are not verified", obligations)
 
-    # -- Finding 3: conversion evidence must be a valid, current check.
 
-    def conversion(self, evidence) -> list[str]:
-        """Flags for a conversion wrapper with the given evidence content."""
-        write(self.dir / "data" / "in.xlsx", "raw")
-        write(self.dir / "data" / "out.csv", "a,b\n1,2\n")
-        write(self.dir / "convert.py", "print('xlsx to csv')\n")
-        if evidence is not None:
-            write(self.dir / "checks" / "identity.json",
-                  evidence if isinstance(evidence, str) else json.dumps(evidence))
+try:
+    import openpyxl
+except ImportError:  # the gate reads workbooks only for conversions
+    openpyxl = None
+
+
+class ConversionTests(IntegrityFixture, unittest.TestCase):
+    """The lane's own check of a declared conversion (gate 1.3 spec §11).
+
+    The fixtures follow §13's list: text compared as text; a typed workbook
+    cell by its accepted renderings; missing markers, collisions, formulae,
+    error values, dates and datetimes, reordered rows, headers, encodings,
+    and unchecked sheets.
+    """
+
+    def convert(self, source: str, data: bytes, output: str, out_name: str = "out.csv",
+                **declaration) -> tuple[list[str], dict]:
+        """Declare data/<source> converted to data/<out_name>; the
+        conversion-differs flags and the conversion's report."""
+        (self.dir / "data").mkdir(exist_ok=True)
+        (self.dir / "data" / source).write_bytes(data)
+        (self.dir / "data" / out_name).write_bytes(output.encode("utf-8"))
+        write(self.dir / "convert.R", "# writes the CSV\n")
         self.rewrite(wrappers=self.manifest["wrappers"] + [
-            {"path": "convert.py", "role": "conversion", "purpose": "xlsx to csv",
-             "conversion": {"input": "data/in.xlsx", "output": "data/out.csv"},
-             "value_identity_check": "checks/identity.json"}])
+            {"path": "convert.R", "role": "conversion", "purpose": "convert",
+             "conversion": {"input": f"data/{source}", "output": f"data/{out_name}",
+                            **declaration}}])
         snapshot(self.dir)
-        return [f for f in self.check()["flags"] if "conversion wrapper" in f]
+        result = self.check()
+        return ([f for f in result["flags"] if getattr(f, "code", "") == "conversion-differs"],
+                result["conversions"][-1])
 
-    def valid_evidence(self) -> dict:
-        return {"check": "value-identity", "result": "identical",
-                "converter": {"path": "convert.py", "sha256": sha("print('xlsx to csv')\n")},
-                "input": {"path": "data/in.xlsx", "sha256": sha("raw")},
-                "output": {"path": "data/out.csv", "sha256": sha("a,b\n1,2\n")},
-                "values_compared": 2, "values_total": 2}
+    def workbook(self, rows: list[list], extra_sheet: bool = False,
+                 formats: dict[str, str] | None = None) -> bytes:
+        """An .xlsx whose first sheet, Data, holds the rows. A format on an
+        empty cell makes a formatted but empty cell, as real workbooks have."""
+        book = openpyxl.Workbook()
+        sheet = book.active
+        sheet.title = "Data"
+        for row in rows:
+            sheet.append(row)
+        for ref, fmt in (formats or {}).items():
+            sheet[ref].number_format = fmt
+        if extra_sheet:
+            book.create_sheet("Notes").append(["a note"])
+        path = Path(self.tmp.name) / "book.xlsx"
+        book.save(path)
+        return path.read_bytes()
 
-    def test_conversion_evidence_cases(self):
-        self.assertEqual(self.conversion(self.valid_evidence()), [])
-        write(self.dir / "data" / "old-in.xlsx", "old")
-        write(self.dir / "data" / "old-out.csv", "old\n")
-        unrelated = dict(self.valid_evidence(),
-                         input={"path": "data/old-in.xlsx", "sha256": sha("old")},
-                         output={"path": "data/old-out.csv", "sha256": sha("old\n")})
-        cases = {"missing": None, "unreadable": "",
-                 "failed": dict(self.valid_evidence(), result="different"),
-                 "unbound": unrelated,
-                 "stale": dict(self.valid_evidence(),
-                               output={"path": "data/out.csv", "sha256": "0" * 64}),
-                 "incomplete": dict(self.valid_evidence(), values_compared=1)}
-        for word, evidence in cases.items():
-            with self.subTest(word):
-                flags = self.conversion(evidence)
-                if evidence is None:
-                    (self.dir / "checks" / "identity.json").unlink(missing_ok=True)
-                    flags = [f for f in self.check()["flags"] if "conversion wrapper" in f]
-                self.assertEqual(len(flags), 1, flags)
-                self.assertIn(word, flags[0])
-        # A valid record that names a different converter is unbound too.
-        other = dict(self.valid_evidence(), converter={"path": "other.py", "sha256": "0" * 64})
-        self.assertIn("unbound", self.conversion(other)[0])
+    def test_an_exact_text_copy_clears(self):
+        flags, report = self.convert("in.csv", b"a,b\r\n1,x\r\n", "a,b\n1,x\n")
+        self.assertEqual(flags, [])
+        self.assertTrue(report["cleared"])
+
+    def test_text_fields_compare_as_text(self):
+        """007, 1.50, an integer above 2^53, and 1E3 as text: equal values in
+        other text are numeric-equivalent, counted and never cleared."""
+        flags, report = self.convert(
+            "in.csv", b"v,w,x,y\n007,1.50,9007199254740993,1E3\n",
+            "v,w,x,y\n7,1.5,9007199254740992,1000\n")
+        self.assertEqual(report["counts"]["numeric-equivalent fields"], 4)
+        self.assertEqual(len(flags), 1)
+
+    def test_missing_markers_and_whitespace_are_counted(self):
+        flags, report = self.convert("in.csv", b"a,b\nNA, x \n", "a,b\n,x\n")
+        self.assertEqual((report["counts"]["missing-marker changes"],
+                          report["counts"]["whitespace-only differences"]), (1, 1))
+        self.assertEqual(len(flags), 1)
+
+    def test_a_make_names_header_is_reported(self):
+        flags, report = self.convert("in.csv", b"my col,b\n1,2\n", "my.col,b\n1,2\n")
+        self.assertIn("1 R make.names rewrite", "; ".join(report["notes"]))
+        self.assertEqual(len(flags), 1)
+
+    def test_a_latin1_file_needs_its_encoding_declared(self):
+        latin1 = "nom\ncaf\u00e9\n".encode("latin-1")
+        flags, report = self.convert("in.csv", latin1, "nom\ncaf\u00e9\n")
+        self.assertEqual(report["counts"].get("decoding failures"), 1)
+        self.assertEqual(len(flags), 1)
+        flags, report = self.convert("in.csv", latin1, "nom\ncaf\u00e9\n", encoding="latin-1")
+        self.assertEqual(flags, [])
+
+    def test_reordered_rows_are_reported_as_such(self):
+        flags, report = self.convert("in.csv", b"a,b\n1,x\n2,y\n", "a,b\n2,y\n1,x\n")
+        self.assertIn("the rows are the same multiset in another order", report["notes"])
+        self.assertEqual(len(flags), 1)
+
+    @unittest.skipIf(openpyxl is None, "needs openpyxl")
+    def test_typed_cells_clear_in_their_accepted_renderings(self):
+        """100000 written by base R as 1e+05, a blank written as the declared
+        NA, a boolean, a date-only cell, and a string, all cleared; the
+        other rendering is counted."""
+        from datetime import date
+        data = self.workbook([["n", "m", "t", "d", "s"],
+                              [100000, None, True, date(2024, 3, 1), "007"]],
+                             formats={"D2": "yyyy-mm-dd"})
+        flags, report = self.convert("in.xlsx", data, "n,m,t,d,s\n1e+05,NA,TRUE,2024-03-01,007\n",
+                                     sheet="Data", na="NA")
+        self.assertEqual(flags, [], report)
+        self.assertEqual(report["counts"]["same value, other rendering"], 1)
+
+    @unittest.skipIf(openpyxl is None, "needs openpyxl")
+    def test_formulae_errors_and_trailing_rows(self):
+        data = self.workbook([["a", "b"], [1, "=A2*2"], [2, "#DIV/0!"]],
+                             formats={"A4": "0.00", "B5": "0.00"})
+        flags, report = self.convert("in.xlsx", data, "a,b\n1,2\n2,\n", sheet="Data")
+        self.assertEqual((report["counts"]["formulae"], report["counts"]["error values"],
+                          report["counts"]["trailing empty rows trimmed"]), (1, 1, 2))
+        self.assertEqual(len(flags), 1)
+
+    @unittest.skipIf(openpyxl is None, "needs openpyxl")
+    def test_datetimes_compare_as_wall_clock_unless_a_zone_is_declared(self):
+        """A 12:00 cell against 14:00+02:00 is an issue without a declared
+        zone (Astra, revision 2, D-4); with the zone and its evidence, the
+        same instant clears as another rendering."""
+        from datetime import datetime as dt
+        data = self.workbook([["when"], [dt(2024, 1, 1, 12, 0)]],
+                             formats={"A2": "yyyy-mm-dd hh:mm"})
+        flags, _ = self.convert("in.xlsx", data, "when\n2024-01-01T14:00:00+02:00\n",
+                                sheet="Data")
+        self.assertEqual(len(flags), 1)
+        flags, _ = self.convert("in.xlsx", data, "when\n2024-01-01 12:00:00\n", sheet="Data")
+        self.assertEqual(flags, [])
+        flags, report = self.convert("in.xlsx", data, "when\n2024-01-01T10:00:00Z\n",
+                                     sheet="Data", timezone="Europe/Sofia",
+                                     timezone_evidence="analysis.R line 3 names Sofia time")
+        self.assertEqual(flags, [], report)
+        self.assertEqual(report["counts"]["same value, other rendering"], 1)
+
+    @unittest.skipIf(openpyxl is None, "needs openpyxl")
+    def test_a_missing_marker_collision_needs_a_confirming_reader(self):
+        """A column holding literal NA text and a blank, written with na NA:
+        read.csv cannot tell them apart (Astra, revision 2, A-1). A quoted
+        literal and an unquoted marker, read by readr with quoted_na FALSE,
+        can be confirmed."""
+        data = self.workbook([["code", "n"], ["NA", 1], [None, 2]])
+        flags, report = self.convert("in.xlsx", data, "code,n\nNA,1\nNA,2\n", sheet="Data",
+                                     na="NA")
+        self.assertEqual(report["counts"]["missing-marker collisions"], 1)
+        self.assertEqual(len(flags), 1)
+        flags, report = self.convert("in.xlsx", data, 'code,n\n"NA",1\nNA,2\n', sheet="Data",
+                                     na="NA", reader={"function": "readr::read_csv",
+                                                      "quoted_na": False})
+        self.assertEqual(flags, [], report)
+
+    @unittest.skipIf(openpyxl is None, "needs openpyxl")
+    def test_an_unchecked_sheet_blocks_identity_unless_the_scope_is_declared(self):
+        """Astra, revision 2, D-5: identity is never reported for the whole
+        workbook when a non-empty sheet went unchecked."""
+        data = self.workbook([["a"], [1]], extra_sheet=True)
+        flags, report = self.convert("in.xlsx", data, "a\n1\n", sheet="Data")
+        self.assertEqual(report["counts"]["unchecked sheets"], 1)
+        self.assertEqual(len(flags), 1)
+        flags, report = self.convert("in.xlsx", data, "a\n1\n", sheet="Data", scope="sheet")
+        self.assertEqual(flags, [])
+        self.assertIn("identity is claimed for the checked sheet only", report["notes"])
+
+    def test_an_unsupported_format_and_a_missing_sheet_stay_issues(self):
+        flags, report = self.convert("in.sav", b"x", "a\n1\n")
+        self.assertIn("input format .sav is unsupported", flags[0])
+        flags, report = self.convert("in.xlsx", b"x", "a\n1\n")
+        self.assertIn("needs its sheet declared", flags[0])
 
 
 class FableAttackTests(IntegrityFixture, unittest.TestCase):

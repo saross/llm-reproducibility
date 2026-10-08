@@ -1136,6 +1136,30 @@ class StaticCheckTests(AccountFixture, unittest.TestCase):
         self.assertIn("docker-startup-files", self.codes(self.account()["review_obligations"]))
 
 
+class ConversionBindingTests(StaticCheckTests):
+    """A conversion's compared output must be the one the run used (spec
+    §11): in the final run's input tree at its digest."""
+
+    def test_an_output_the_run_did_not_use_stays_an_issue(self):
+        write(self.dir / "data" / "in.csv", "a\n1\n")
+        write(self.dir / "data" / "out.csv", "a\n1\n")
+        manifest = json.loads((self.dir / "authors-code-manifest.json").read_text())
+        manifest["wrappers"].append({"path": "convert.R", "role": "conversion",
+                                     "purpose": "copy", "conversion": {
+                                         "input": "data/in.csv", "output": "data/out.csv"}})
+        write(self.dir / "convert.R", "# copies\n")
+        write(self.dir / "authors-code-manifest.json", json.dumps(manifest))
+        used = self.account()
+        self.assertEqual([f for f in used["flags"]
+                          if getattr(f, "code", "") == "conversion-differs"], [])
+        write(self.dir / "data" / "out.csv", "a\n2\n")
+        changed = lane.check_code_integrity(self.dir, self.dir / "authors-code-manifest.json",
+                                            self.schema, anchor_root=self.repo,
+                                            launch_commit=self.launch)
+        differs = [f for f in changed["flags"] if getattr(f, "code", "") == "conversion-differs"]
+        self.assertIn("the run did not use it", differs[0])
+
+
 class FreshComputationTests(RecordFixture, unittest.TestCase):
     """Cache stores (spec §9): removed before a run, or kept as an
     obligation; other cache-like directories are obligations."""

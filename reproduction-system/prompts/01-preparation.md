@@ -1,9 +1,10 @@
 # Preparation Prompt — Session R-A
 
-**Version:** 1.3
-**Last Updated:** 2026-10-05 (v1.3: §1.0.2 provenance anchors, execution
-snapshots, generated code, and conversion evidence, after the cross-model
-review of PR #7; v1.2, 2026-10-04: §1.0.2 authors' code manifest; §3.3–3.4
+**Version:** 1.4
+**Last Updated:** 2026-10-08 (v1.4: §1.0.2 conversions declared for the
+gate to compare, gate 1.3 §11; v1.3, 2026-10-05: §1.0.2 provenance
+anchors, execution snapshots, generated code, and conversion evidence,
+after the cross-model review of PR #7; v1.2, 2026-10-04: §1.0.2 authors' code manifest; §3.3–3.4
 no longer invite restructuring the authors' code)
 **Session:** R-A (Preparation)
 **Skill:** reproduction-assessor
@@ -125,15 +126,15 @@ difference is a declared wrapper or a flagged edit.
   `--phase post`. Change no code file afterwards. Nothing is exempt, including
   `outputs/`: declare any code file the run itself writes as a wrapper with
   role `generated`. No wrapper may load generated code.
-- **A format conversion needs machine-readable evidence.** The wrapper
-  declares the conversion it performs (`conversion: {"input", "output"}`).
-  Its `value_identity_check` names a JSON record: `{"check":
-  "value-identity", "result": "identical", "converter": {"path", "sha256"},
-  "input": {"path", "sha256"}, "output": {"path", "sha256"},
-  "values_compared": n, "values_total": n}`. The record must name this
-  wrapper at its current sha256 and exactly the declared input and output,
-  match the files as they are, and cover every value. Anything else is
-  flagged.
+- **The gate compares a format conversion itself.** The wrapper declares
+  the conversion it performs: `conversion: {"input", "output"}`; for a
+  workbook, its `sheet`, with `range`, `header_row`, and `scope` where
+  they apply; `encoding` for a text input; `na`, the string the converter
+  writes for a missing value (`NA` for R's `write.csv`); and, for datetime
+  cells, a `timezone` with `timezone_evidence` (the authors' code or
+  documentation naming the zone). A conversion counts only when every value
+  is unchanged. Write no evidence record: `value_identity_check` is retired
+  and ignored.
 - **Check:** `venv/bin/python scripts/reproduction-lane.py check-code <attempt dir>`.
   It fails on an undeclared difference, on code that changed after or during
   the run, and on any code file that is neither an authors' file nor a

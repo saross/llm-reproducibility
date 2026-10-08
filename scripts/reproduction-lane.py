@@ -152,11 +152,13 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from collections import Counter
 from collections.abc import Iterator
-from datetime import datetime, timezone
+from datetime import date as date_type, datetime, time as time_type, timedelta, timezone
 from pathlib import Path
 from types import ModuleType
 from typing import Any, Self
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import yaml
 
@@ -4102,65 +4104,482 @@ def citation_findings(targets: list[dict], runs: dict, locked: list[str],
     return errors, flags, unbound
 
 
-def conversion_evidence_flag(target_dir: Path, item: dict) -> str | None:
-    """Validate a conversion wrapper's value-identity evidence (PR #7 review, finding 3).
+# ---------------------------------------------------------------------------
+# Conversions (gate 1.3, spec §11)
+# ---------------------------------------------------------------------------
+#
+# Amendment 3 §7(d) allows a format conversion "only when a mechanical check
+# confirms every value is unchanged", and any change of value is
+# fail-and-uplift. The lane makes that check itself; the executor writes no
+# evidence. Nothing is trimmed and nothing is normalised: text compares as
+# text, and a typed workbook cell by its accepted renderings (spec §11).
 
-    The ruled condition is that every converted value is unchanged. The
-    wrapper declares the conversion it performs (``conversion: {input,
-    output}``). The evidence must be a JSON record: ``{"check":
-    "value-identity", "result": "identical", "converter": {"path",
-    "sha256"}, "input": {"path", "sha256"}, "output": {"path", "sha256"},
-    "values_compared": n, "values_total": n}``. It must name this wrapper at
-    its current digest and the declared input and output (so a valid record
-    for some other conversion cannot clear the flag: PR #7 delta review,
-    finding 3), be current, and cover every value.
+TEXT_DELIMITERS = {".csv": ",", ".tsv": "\t", ".tab": "\t"}
+WORKBOOK_SUFFIXES = (".xlsx", ".xlsm")
+MISSING_MARKERS = frozenset({"", "NA", "NaN", "NULL"})
+NUMBER_RE = re.compile(r"[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?")
+DATE_RE = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
+DATETIME_RE = re.compile(r"(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})(?::(\d{2})(\.\d+)?)?"
+                         r"(Z|[+-]\d{2}:?\d{2})?")
+# Collision clearing (spec §11): the only reader the lane can confirm keeps a
+# literal value and a missing value apart is one that reads a quoted field as
+# text whatever its content, with the output quoting every literal and never
+# a missing value. R's read.csv reads "NA" as missing even when quoted.
+QUOTE_AWARE_READERS = frozenset({"readr::read_csv", "readr::read_tsv", "vroom::vroom"})
+DIFFERENCES_SHOWN = 5
+
+
+def read_delimited(data: bytes, encoding: str, delimiter: str) -> list[list[tuple[str, bool]]]:
+    """A delimited text file's rows, each field as ``(text, quoted)``.
+
+    RFC 4180 quoting: a field opening with a double quote runs to the next
+    lone one, and a doubled quote inside it is one quote character. The
+    quoting is kept, because a missing-marker collision can be cleared only
+    by a reader that tells a quoted literal from an unquoted marker.
+
+    Raises:
+        UnicodeDecodeError, LookupError: the bytes do not decode as declared.
+    """
+    text = data.decode(encoding)
+    rows: list[list[tuple[str, bool]]] = []
+    row: list[tuple[str, bool]] = []
+    field: list[str] = []
+    quoted = in_quotes = False
+    index, length = 0, len(text)
+    while index < length:
+        char = text[index]
+        if in_quotes:
+            if char == '"' and index + 1 < length and text[index + 1] == '"':
+                field.append('"')
+                index += 2
+                continue
+            if char == '"':
+                in_quotes = False
+            else:
+                field.append(char)
+        elif char == '"' and not field and not quoted:
+            in_quotes = quoted = True
+        elif char == delimiter:
+            row.append(("".join(field), quoted))
+            field, quoted = [], False
+        elif char in "\r\n":
+            row.append(("".join(field), quoted))
+            rows.append(row)
+            row, field, quoted = [], [], False
+            if char == "\r" and index + 1 < length and text[index + 1] == "\n":
+                index += 1
+        else:
+            field.append(char)
+        index += 1
+    if field or quoted or row:
+        row.append(("".join(field), quoted))
+        rows.append(row)
+    return rows
+
+
+def read_workbook(path: Path, sheet: str, cell_range: str | None, header_row: int) -> dict:
+    """One sheet of an Excel workbook, typed, as the comparison needs it.
+
+    The workbook is read twice with openpyxl: once for formulas, once for
+    cached values. A formula or external-link cell is counted whatever its
+    cached value, since a cached value is not evidence of a fresh
+    calculation (Astra 6). Fully empty trailing rows and columns are trimmed
+    and counted, and rows above the header are skipped and counted.
 
     Returns:
-        None when the evidence is valid, else a flag naming why it is not:
-        missing, unreadable, failed, unbound, stale, or incomplete.
+        ``{rows, formulas, errors, trimmed_rows, trimmed_columns, skipped_rows,
+        other_sheets}``, where each row is a list of ``(type, value)`` cells
+        (blank, string, number, boolean, date, datetime, time, error, or
+        formula, the last carrying its cached value) and ``other_sheets``
+        names the workbook's other non-empty sheets.
+
+    Raises:
+        LaneError: openpyxl is not installed, or the sheet is not in the book.
     """
-    head = f"{FLAG_PREFIX}conversion wrapper {item['path']}: value-identity evidence "
-    rel = item.get("value_identity_check")
-    path = inside(target_dir, rel) if rel else None
-    if path is None or not path.is_file():
-        return head + f"missing ({rel or 'none named'}); a format conversion is allowed only " \
-                      f"with a mechanical value-identity check"
     try:
-        evidence = json.loads(path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, UnicodeDecodeError):
-        evidence = None
-    if not isinstance(evidence, dict) or evidence.get("check") != "value-identity":
-        return head + f"unreadable: {rel} is empty or not a value-identity record"
-    if evidence.get("result") != "identical":
-        return head + f"failed: {rel} reports result {evidence.get('result')!r}"
+        import openpyxl  # imported here: only a workbook conversion needs it
+        from openpyxl.styles.numbers import is_date_format
+    except ImportError as exc:
+        raise LaneError("openpyxl is not installed (requirements.txt), so the gate cannot "
+                        "read a workbook") from exc
+    formulas_book = openpyxl.load_workbook(path, data_only=False)
+    values_book = openpyxl.load_workbook(path, data_only=True)
+    if sheet not in values_book.sheetnames:
+        raise LaneError(f"sheet {sheet!r} is not in {path.name} "
+                        f"(sheets: {', '.join(values_book.sheetnames)})")
+    formula_sheet, value_sheet = formulas_book[sheet], values_book[sheet]
+    grid_values = (value_sheet[cell_range] if cell_range
+                   else tuple(value_sheet.iter_rows()))
+    grid_formulas = (formula_sheet[cell_range] if cell_range
+                     else tuple(formula_sheet.iter_rows()))
+    rows: list[list[tuple[str, Any]]] = []
+    formulas = errors = 0
+    for value_row, formula_row in zip(grid_values, grid_formulas):
+        row = []
+        for cell, source in zip(value_row, formula_row):
+            value = cell.value
+            if source.data_type == "f" or (isinstance(source.value, str)
+                                           and source.value.startswith("=")):
+                formulas += 1
+                row.append(("formula", value))
+            elif cell.data_type == "e":
+                errors += 1
+                row.append(("error", value))
+            elif value is None:
+                row.append(("blank", None))
+            elif isinstance(value, bool):
+                row.append(("boolean", value))
+            elif isinstance(value, (int, float)):
+                row.append(("number", value))
+            elif isinstance(value, datetime):
+                fmt = (cell.number_format or "").lower()
+                timed = is_date_format(fmt) and bool(re.search(r"[hs]|am/pm", fmt))
+                row.append(("datetime", value) if timed or value.time() != datetime.min.time()
+                           else ("date", value.date()))
+            elif isinstance(value, date_type):
+                row.append(("date", value))
+            elif isinstance(value, time_type):
+                row.append(("time", value))
+            else:
+                row.append(("string", str(value)))
+        rows.append(row)
+    # Trim fully empty trailing rows and columns, and count them.
+    original_rows = len(rows)
+    while rows and all(kind == "blank" for kind, _ in rows[-1]):
+        rows.pop()
+    trimmed_rows = original_rows - len(rows)
+    width = max((len(r) for r in rows), default=0)
+    last = max((i for r in rows for i, (kind, _) in enumerate(r) if kind != "blank"),
+               default=-1) + 1
+    rows = [r[:last] for r in rows]
+    skipped = min(header_row - 1, len(rows))
+    other = []
+    for name in values_book.sheetnames:
+        if name != sheet and any(c.value is not None for r in values_book[name].iter_rows()
+                                 for c in r):
+            other.append(name)
+    return {"rows": rows[skipped:], "formulas": formulas, "errors": errors,
+            "trimmed_rows": trimmed_rows, "trimmed_columns": width - last,
+            "skipped_rows": skipped, "other_sheets": other}
+
+
+def make_names(name: str) -> str:
+    """R's make.names for one name: what read.csv's check.names makes of it."""
+    made = re.sub(r"[^A-Za-z0-9._]", ".", name)
+    if not re.match(r"[A-Za-z]|\.(?![0-9])", made):
+        made = "X" + made
+    return made
+
+
+def canonical_number(value: float) -> str:
+    """A number rendered at 15 significant digits, as R's write.csv does."""
+    return format(float(value), ".15g")
+
+
+def cell_text(kind: str, value: Any, na: str | None) -> str:
+    """A typed cell's canonical rendering, for headers and reorder checks."""
+    if kind in ("blank", "error"):
+        return na or ""
+    if kind == "boolean":
+        return "TRUE" if value else "FALSE"
+    if kind == "number":
+        return canonical_number(value)
+    if kind in ("date", "datetime", "time"):
+        return value.isoformat(sep=" ") if kind == "datetime" else value.isoformat()
+    if kind == "formula":
+        return cell_text(*(("blank", None) if value is None else (
+            "number", value) if isinstance(value, (int, float)) and not isinstance(
+                value, bool) else ("string", str(value))), na)
+    return str(value)
+
+
+def wall_clock(text: str) -> tuple[datetime, str | None] | None:
+    """An ISO datetime's wall-clock fields and its offset text, if it is one."""
+    match = DATETIME_RE.fullmatch(text)
+    if not match:
+        return None
+    year, month, day, hour, minute, second, fraction, offset = match.groups()
+    micro = int(round(float(fraction) * 1_000_000)) if fraction else 0
+    return datetime(int(year), int(month), int(day), int(hour), int(minute),
+                    int(second or 0), micro), offset
+
+
+def compare_cell(kind: str, value: Any, field: str, na: str | None,
+                 zone: str | None) -> str:
+    """How an output field renders a typed workbook cell (spec §11 table).
+
+    Returns:
+        ``match`` (the canonical rendering), ``rendering`` (the same value,
+        another rendering: cleared but counted), ``missing-marker``,
+        ``whitespace``, ``formula``, ``error``, or ``changed``.
+    """
+    if kind == "formula":
+        return "formula"
+    if kind == "error":
+        return "error"
+    if kind == "blank":
+        if field == "" or (na is not None and field == na):
+            return "match"
+        return "missing-marker" if field in MISSING_MARKERS else "changed"
+    if kind == "string":
+        if field == value:
+            return "match"
+        if field.strip() == value.strip():
+            return "whitespace"
+        if field in MISSING_MARKERS and value in MISSING_MARKERS:
+            return "missing-marker"
+        return "changed"
+    if kind == "boolean":
+        return "match" if field == ("TRUE" if value else "FALSE") else "changed"
+    if kind == "number":
+        if field == canonical_number(value):
+            return "match"
+        if NUMBER_RE.fullmatch(field) and canonical_number(float(field)) == canonical_number(
+                value):
+            return "rendering"
+        return "missing-marker" if field in MISSING_MARKERS else "changed"
+    if kind == "date":
+        return "match" if field == value.isoformat() else "changed"
+    if kind == "datetime":
+        parsed = wall_clock(field)
+        if parsed is None:
+            return "changed"
+        clock, offset = parsed
+        if zone is None:
+            # No declared zone: compare the wall-clock fields, and any zone
+            # the output asserts is a value change (spec §11, D-4).
+            if offset is not None:
+                return "changed"
+            return "match" if clock == value else "changed"
+        tz = ZoneInfo(zone)
+        source_instant = value.replace(tzinfo=tz)
+        if offset is None:
+            field_instant = clock.replace(tzinfo=tz)
+        else:
+            sign = 1 if offset[0] == "+" else -1
+            hours, minutes = (0, 0) if offset == "Z" else (
+                int(offset[1:3]), int(offset[-2:]))
+            field_instant = clock.replace(tzinfo=timezone(sign * timedelta(
+                hours=hours, minutes=minutes)))
+        if field_instant != source_instant:
+            return "changed"
+        return "match" if offset is None and clock == value else "rendering"
+    if kind == "time":
+        return "match" if field == value.isoformat() else "changed"
+    return "changed"
+
+
+def compare_text_field(source: str, field: str) -> str:
+    """How an output field renders a source text field (text to text)."""
+    if field == source:
+        return "match"
+    if NUMBER_RE.fullmatch(source) and NUMBER_RE.fullmatch(field) and float(source) == float(
+            field):
+        return "numeric-equivalent"
+    if field.strip() == source.strip():
+        return "whitespace"
+    if field in MISSING_MARKERS and source in MISSING_MARKERS:
+        return "missing-marker"
+    return "changed"
+
+
+def compare_conversion(target_dir: Path, item: dict, final_pre: dict[str, str] | None,
+                       sealed_outputs: dict[str, dict[str, str]]) -> tuple[Issue | None, dict]:
+    """The lane's check of one declared conversion (spec §11).
+
+    Args:
+        target_dir: The attempt directory.
+        item: The conversion wrapper's manifest entry.
+        final_pre: The final run's pre snapshot, or None without run records.
+        sealed_outputs: Each run's sealed outputs, ``{run: {path: sha256}}``.
+
+    Returns:
+        ``(issue, report)``: no issue when every value is unchanged under §11's
+        rules; otherwise a ``conversion-differs`` issue with the counts and the
+        first differing cells, raw and typed. The report holds the counts.
+    """
     declared = item.get("conversion") if isinstance(item.get("conversion"), dict) else {}
+    wrapper_rel = item["path"]
+    evidence = file_digests(target_dir, wrapper_rel, declared.get("input"),
+                            declared.get("output"))
+    evidence["declaration"] = json_digest(declared)
+    report: dict[str, Any] = {"wrapper": wrapper_rel, "input": declared.get("input"),
+                              "output": declared.get("output"), "counts": {},
+                              "differences": [], "notes": [], "cleared": False}
+
+    def issue(reason: str, note: bool = True) -> tuple[Issue, dict]:
+        if note:
+            report["notes"].append(reason)
+        return Issue.flag("conversion-differs", wrapper_rel, f"conversion wrapper "
+                          f"{wrapper_rel} ({declared.get('input')} to "
+                          f"{declared.get('output')}): {reason}. A conversion counts only when "
+                          f"every value is unchanged (amendment 3 §7(d)); a human rules "
+                          f"admissible, where nothing changed in value, or fail-and-uplift",
+                          files=evidence), report
+
     if not declared.get("input") or not declared.get("output"):
-        return head + "unbound: the wrapper declares no conversion input and output, so no " \
-                      "evidence can be tied to it"
-    converter = evidence.get("converter") if isinstance(evidence.get("converter"), dict) else {}
-    wrapper = inside(target_dir, item["path"])
-    if (converter.get("path") != item["path"] or wrapper is None or not wrapper.is_file()
-            or converter.get("sha256") != sha256_file(wrapper)):
-        return head + f"unbound: {rel} does not name this converter ({item['path']}) at its " \
-                      f"current sha256"
-    for side in ("input", "output"):
-        named = (evidence.get(side) or {}).get("path") if isinstance(evidence.get(side),
-                                                                      dict) else None
-        if named != declared[side]:
-            return head + f"unbound: {rel} covers {side} {named!r}, not the declared " \
-                          f"{declared[side]!r}"
-    for side in ("input", "output"):
-        spec = evidence.get(side) if isinstance(evidence.get(side), dict) else {}
-        target = resolve_stored(target_dir, str(spec.get("path") or ""))
-        if (not spec.get("sha256") or target is None or not target.is_file()
-                or sha256_file(target) != spec["sha256"]):
-            return head + f"stale: its {side} ({spec.get('path') or 'unnamed'}) is missing or " \
-                          f"no longer matches the recorded sha256"
-    compared, total = evidence.get("values_compared"), evidence.get("values_total")
-    if not (isinstance(compared, int) and isinstance(total, int) and total > 0
-            and compared == total):
-        return head + f"incomplete: {compared!r} of {total!r} values compared"
-    return None
+        return issue("the wrapper declares no conversion input and output")
+    if declared.get("timezone") and not declared.get("timezone_evidence"):
+        return issue("a timezone is declared without the evidence for it")
+    source_path = resolve_stored(target_dir, declared["input"])
+    output_path = inside(target_dir, declared["output"])
+    if source_path is None or not source_path.is_file():
+        return issue(f"the input {declared['input']} is missing")
+    if output_path is None or not output_path.is_file():
+        return issue(f"the output {declared['output']} is missing")
+    # The compared output must be the one a credited run used.
+    output_rel = declared["output"]
+    output_digest = sha256_file(output_path)
+    in_tree = final_pre is not None and final_pre.get(output_rel) == output_digest
+    collected = output_rel.startswith("outputs/") and any(
+        output_rel == f"outputs/{run}/{path}" and digest == output_digest
+        for run, paths in sealed_outputs.items() for path, digest in paths.items())
+    if final_pre is not None and not (in_tree or collected):
+        return issue(f"the output {output_rel} is not in the final run's input tree, nor a "
+                     f"sealed run output, at its current digest: the run did not use it")
+    source_suffix = source_path.suffix.lower()
+    output_delimiter = TEXT_DELIMITERS.get(output_path.suffix.lower())
+    if output_delimiter is None:
+        return issue(f"the output format {output_path.suffix or '(none)'} is unsupported")
+    na = declared.get("na")
+    zone = declared.get("timezone")
+    if zone:
+        try:
+            ZoneInfo(zone)
+        except (ZoneInfoNotFoundError, ValueError):
+            return issue(f"the declared timezone {zone!r} is unknown")
+    try:
+        output_rows = read_delimited(output_path.read_bytes(),
+                                     declared.get("output_encoding", "utf-8"), output_delimiter)
+    except (UnicodeDecodeError, LookupError) as exc:
+        report["counts"]["decoding failures"] = 1
+        return issue(f"the output does not decode as declared ({exc})")
+    counts: dict[str, int] = {}
+
+    def count(key: str, by: int = 1) -> None:
+        if by:
+            counts[key] = counts.get(key, 0) + by
+
+    workbook = source_suffix in WORKBOOK_SUFFIXES
+    if workbook:
+        if not declared.get("sheet"):
+            return issue("a workbook input needs its sheet declared")
+        try:
+            book = read_workbook(source_path, declared["sheet"], declared.get("range"),
+                                 int(declared.get("header_row", 1)))
+        except LaneError as exc:
+            return issue(str(exc))
+        except Exception as exc:  # openpyxl raises many types for a bad file
+            return issue(f"the workbook could not be read ({type(exc).__name__}: {exc})")
+        source_rows: list[list[tuple[str, Any]]] = book["rows"]
+        count("formulae", book["formulas"])
+        count("error values", book["errors"])
+        count("trailing empty rows trimmed", book["trimmed_rows"])
+        count("trailing empty columns trimmed", book["trimmed_columns"])
+        if book["other_sheets"]:
+            count("unchecked sheets", len(book["other_sheets"]))
+            report["notes"].append(f"non-empty sheets not checked: {book['other_sheets']}")
+    elif source_suffix in TEXT_DELIMITERS:
+        try:
+            text_rows = read_delimited(source_path.read_bytes(),
+                                       declared.get("encoding", "utf-8"),
+                                       TEXT_DELIMITERS[source_suffix])
+        except (UnicodeDecodeError, LookupError) as exc:
+            report["counts"]["decoding failures"] = 1
+            return issue(f"the input does not decode as {declared.get('encoding', 'UTF-8')} "
+                         f"({exc})")
+        source_rows = [[("text", text) for text, _ in row] for row in text_rows]
+    else:
+        return issue(f"the input format {source_suffix or '(none)'} is unsupported")
+
+    # 1-2. Dimensions, with rows in another order reported as such.
+    source_header, source_data = (source_rows[0], source_rows[1:]) if source_rows else ([], [])
+    output_header, output_data = (output_rows[0], output_rows[1:]) if output_rows else ([], [])
+    width = max((len(r) for r in source_rows), default=0)
+    out_width = max((len(r) for r in output_rows), default=0)
+    dimensions_equal = (len(source_data) == len(output_data) and width == out_width)
+    if not dimensions_equal:
+        report["notes"].append(f"dimensions differ: {len(source_data)} x {width} in, "
+                               f"{len(output_data)} x {out_width} out")
+    # 3. Headers, on their own line.
+    rendered = [text if kind == "text" else cell_text(kind, text, None)
+                for kind, text in source_header]
+    output_names = [text for text, _ in output_header]
+    headers_exact = rendered == output_names
+    if not headers_exact:
+        rewrites = [n for s, n in zip(rendered, output_names) if s != n and make_names(s) == n]
+        report["notes"].append(f"headers differ ({len(rewrites)} R make.names rewrite(s))")
+        count("header differences", sum(1 for s, n in zip(rendered, output_names) if s != n)
+              + abs(len(rendered) - len(output_names)))
+    # 4. Cells, position by position.
+    collisions: dict[int, list[tuple[bool, bool]]] = {}
+    for r, (source_row, output_row) in enumerate(zip(source_data, output_data), start=2):
+        for c in range(max(len(source_row), len(output_row))):
+            kind, value = source_row[c] if c < len(source_row) else ("blank", None)
+            field, quoted = output_row[c] if c < len(output_row) else ("", False)
+            outcome = (compare_text_field(value, field) if kind == "text"
+                       else compare_cell(kind, value, field, na, zone))
+            # A typed source's literal that a reader would take for the
+            # marker; a text-to-text conversion writes no marker.
+            literal = kind == "string" and (value == "" or (na is not None and value == na))
+            if literal or kind == "blank":
+                collisions.setdefault(c, []).append((literal, quoted))
+            if outcome == "match":
+                continue
+            count({"rendering": "same value, other rendering",
+                   "numeric-equivalent": "numeric-equivalent fields",
+                   "missing-marker": "missing-marker changes",
+                   "whitespace": "whitespace-only differences", "formula": "formulae",
+                   "error": "error values", "changed": "other value changes"}[outcome],
+                  0 if outcome in ("formula", "error") else 1)
+            if outcome != "rendering" and len(report["differences"]) < DIFFERENCES_SHOWN:
+                report["differences"].append({"row": r, "column": c + 1, "type": kind,
+                                              "source": str(value), "output": field,
+                                              "outcome": outcome})
+    reordered = False
+    if dimensions_equal and any(k in counts for k in ("other value changes",
+                                                      "missing-marker changes")):
+        def norm(text: str) -> str:
+            return canonical_number(float(text)) if NUMBER_RE.fullmatch(text) else text
+        reordered = (Counter(tuple(norm(v if k == "text" else cell_text(k, v, na))
+                                   for k, v in row) for row in source_data)
+                     == Counter(tuple(norm(f) for f, _ in row) for row in output_data))
+        if reordered:
+            report["notes"].append("the rows are the same multiset in another order")
+    # Missing-marker collisions: a column where the marker also occurs as a
+    # literal source value (spec §11, A-1); cleared only by a reader that the
+    # lane can confirm keeps the two apart.
+    reader = declared.get("reader") or {}
+    confirmable = (reader.get("function") in QUOTE_AWARE_READERS
+                   and reader.get("quoted_na") is False)
+    colliding = [c for c, seen in collisions.items() if any(lit for lit, _ in seen)]
+    unresolved = [c for c in colliding
+                  if not (confirmable and all(q == lit for lit, q in collisions[c]))]
+    count("missing-marker collisions", len(unresolved))
+    if colliding and not unresolved:
+        report["notes"].append(f"missing-marker collisions in {len(colliding)} column(s), "
+                               f"kept apart by {reader['function']} (quoted_na = FALSE)")
+    report["counts"] = counts
+    scope = declared.get("scope")
+    sheets_ok = "unchecked sheets" not in counts or scope in ("sheet", "range")
+    if scope and "unchecked sheets" in counts:
+        report["notes"].append(f"identity is claimed for the checked {scope} only")
+    cleared = (dimensions_equal and headers_exact and sheets_ok
+               and not any(k in counts for k in (
+                   "other value changes", "missing-marker changes", "whitespace-only "
+                   "differences", "numeric-equivalent fields", "formulae", "error values",
+                   "missing-marker collisions", "header differences")))
+    report["cleared"] = cleared
+    if cleared:
+        return None, report
+    shown = "; ".join(f"{n} {k}" for k, n in sorted(counts.items()) if not k.startswith(
+        "trailing") and k != "same value, other rendering")
+    first = "; ".join(f"row {d['row']} column {d['column']} ({d['type']}): "
+                      f"{d['source']!r} -> {d['output']!r}" for d in report["differences"])
+    parts = [shown or "", "; ".join(report["notes"]), f"first differences: {first}"
+             if first else ""]
+    return issue(". ".join(p for p in parts if p) or "the values could not be confirmed",
+                 note=False)
 
 
 def legacy_allowed(target_dir: Path, allowlist: Path | None = None) -> bool:
@@ -4436,6 +4855,7 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
 
     # -- Wrappers: exist, are separate files, and do not inline authors' code.
     wrapper_paths: set[Path] = set()
+    conversions: list[dict] = []
     generated_paths: set[Path] = set()
     for item in wrappers:
         path = inside(target_dir, item["path"])
@@ -4477,15 +4897,7 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                     data).hexdigest()}))
             continue
         if item["role"] == "conversion":
-            flag = conversion_evidence_flag(target_dir, item)
-            if flag:
-                declared = item.get("conversion") if isinstance(item.get("conversion"),
-                                                                dict) else {}
-                flags.append(Issue(flag, kind="flag", code="conversion-evidence",
-                                   subject=item["path"], files=file_digests(
-                                       target_dir, item["path"],
-                                       item.get("value_identity_check"),
-                                       declared.get("input"), declared.get("output"))))
+            conversions.append(item)
         text = data.decode("utf-8", errors="replace")
         mine = substantive_lines(text)
         for oid, original in original_bytes.items():
@@ -4647,6 +5059,20 @@ def check_code_integrity(target_dir: Path, manifest_path: Path, schema: dict,
                 if rel_text not in lane["final_pre"]:
                     errors.append(f"{rel_text} is declared as run code but was not in the final "
                                   f"run's input tree ({lane['final_run']})")
+
+    # -- Conversions (spec §11): the lane compares each declared conversion's
+    #    files itself; an executor-written record is retired.
+    result["conversions"] = []
+    for item in conversions:
+        if item.get("value_identity_check"):
+            warnings.append(f"conversion wrapper {item['path']}: value_identity_check is "
+                            f"retired and ignored; the gate compares the files itself")
+        issue, conversion_report = compare_conversion(
+            target_dir, item, lane["final_pre"] if lane is not None else None,
+            lane["outputs"] if lane is not None else {})
+        result["conversions"].append(conversion_report)
+        if issue is not None:
+            flags.append(issue)
 
     # -- Code paths named by wrappers (and loaded by executed authors' files) must
     #    be declared, and never generated code. A file passed to a loader is
@@ -5133,6 +5559,8 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
                 "wrappers", "anchors", "snapshots")} | (
                     {"runs": integrity["runs"]} if integrity.get("runs") is not None else {}) | (
                     {"account": integrity["account"]} if integrity.get("account") is not None
+                    else {}) | (
+                    {"conversions": integrity["conversions"]} if integrity.get("conversions")
                     else {}),
             "executor_verdict": (comparison or {}).get("verdict")
             if isinstance(comparison, dict) else None}
