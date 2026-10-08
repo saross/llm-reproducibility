@@ -53,6 +53,15 @@ merged here as PR #1).
     so the shim now captures stdin scripts and the gate binds them by
     content. They also found callr children evading the hook (an A, fixed
     by a re-pin in the shim) and `R -f` scripts unlogged (a D, fixed).
+  - [x] 2026-10-08 Track 1 steps 3 to 5 pushed to PR #7: the launcher
+    matrix (every §13 launcher runs the authors' code with no finding of
+    the account's own; `a3f2b47`, `8bae60d`), the semantics-neutrality
+    test (`77b577e`), fresh computation and static checks (`ed9dd23`), and
+    the lane's own conversion comparison (`a45d3c6`), with spec records
+    after each. 575 tests pass. **`openpyxl` is now a requirement**: run
+    `venv/bin/pip install -r requirements.txt` on zbook and amd-tower.
+    The matrix image needs a one-off local build on each machine (its
+    Docker tests skip without it).
 - **Track 1 (primary): gate 1.3 instrumentation on PR #7.** Branch
   `feat/lane-gate-1-1-code-audit`, head `7d577b8`, open and not merged.
   Worktree: `.claude/worktrees/agent-a8a2378c2a5dbdc98`. Work in the order
