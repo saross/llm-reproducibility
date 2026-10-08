@@ -358,7 +358,8 @@ class RecordFixture:
              launch: str | None = "fixture", script_sha256: str | None = None,
              consumed: list[dict] | None = None, changes: list[dict] | None = None,
              baseline: dict[str, str] | None = None,
-             lane_files: dict[str, str] | None = None) -> None:
+             lane_files: dict[str, str] | None = None,
+             started_at: str = "2026-10-08T10:00:00Z") -> None:
         """Write and seal one run's records the way finalise_run does.
 
         ``changes`` and ``baseline`` stand for the lane's declared changes to
@@ -387,6 +388,7 @@ class RecordFixture:
         lane.write_json(record / "outputs.json", {"run": run_id, "files": files, "deleted": []})
         lane.write_json(record / "run.json", {
             "run": run_id, "state": state, "exit_status": exit_status, "nonce": self.NONCE,
+            "started_at": started_at,
             "image": {"id": "sha256:" + "0" * 64},
             "launch_commit": self.launch if launch == "fixture" else launch,
             "lane_script_sha256": script_sha256 or lane.sha256_file(
@@ -1158,6 +1160,99 @@ class ConversionBindingTests(StaticCheckTests):
                                             launch_commit=self.launch)
         differs = [f for f in changed["flags"] if getattr(f, "code", "") == "conversion-differs"]
         self.assertIn("the run did not use it", differs[0])
+
+
+class TranscriptAuditTests(RecordFixture, unittest.TestCase):
+    """The transcript audit of an attempt's execution (spec §12), on
+    synthetic transcripts against sealed run records (run-01 started
+    2026-10-08T10:00:00Z)."""
+
+    BEFORE, AFTER = "2026-10-08T09:00:00Z", "2026-10-08T11:00:00Z"
+    MANIFEST = {"originals": [{"id": "a.R", "local_copy": "raw/a.R"}],
+                "executed": [{"path": "code/a.R", "original": "a.R"}],
+                "wrappers": [{"path": "run-analysis.R", "role": "wrapper"},
+                             {"path": "compare.py", "role": "comparison"}]}
+
+    def transcript(self, *calls: tuple) -> list[str]:
+        """Transcript lines for (tool, input, timestamp, output[, errored])."""
+        lines = []
+        for n, (tool, given, at, output, *errored) in enumerate(calls):
+            lines.append(json.dumps({"timestamp": at, "message": {"content": [
+                {"type": "tool_use", "id": f"t{n}", "name": tool, "input": given}]}}))
+            lines.append(json.dumps({"timestamp": at, "message": {"content": [
+                {"type": "tool_result", "tool_use_id": f"t{n}", "content": output,
+                 "is_error": bool(errored and errored[0])}]}}))
+        return lines
+
+    def bash(self, command: str, at: str, output: str = "", errored: bool = False) -> tuple:
+        return ("Bash", {"command": command}, at, output, errored)
+
+    def run_call(self) -> tuple:
+        return self.bash(f"venv/bin/python scripts/reproduction-lane.py run-container {self.dir} "
+                         f"--image img --entry run-analysis.R", self.BEFORE,
+                         "run-01: complete (exit status 0; 1 R process(es))")
+
+    def audit(self, *calls: tuple) -> dict:
+        self.seal()
+        return lane.audit_execution(self.transcript(self.run_call(), *calls), self.dir,
+                                    self.MANIFEST)
+
+    def kinds(self, report: dict) -> list[str]:
+        return sorted(c["kind"] for c in report["contaminating"])
+
+    def test_a_clean_execution(self):
+        report = self.audit(("Write", {"file_path": str(self.dir / "log.md")}, self.AFTER, "ok"),
+                            self.bash(f"python3 {self.dir}/compare.py", self.AFTER))
+        self.assertEqual((report["contaminating"], report["issues"]), ([], []))
+        self.assertEqual(report["runs_called"], ["run-01"])
+
+    def test_direct_docker_runs_are_contaminating(self):
+        report = self.audit(self.bash(f"docker run --rm -v {self.dir}:/p img Rscript /p/a.R",
+                                      self.BEFORE),
+                            self.bash("docker build -t img .", self.BEFORE))
+        self.assertEqual(self.kinds(report), ["docker-direct"])
+
+    def test_host_runs_contaminate_after_the_final_run_and_flag_before(self):
+        after = self.audit(self.bash(f"Rscript {self.dir}/run-analysis.R", self.AFTER))
+        self.assertEqual(self.kinds(after), ["host-run-after-final"])
+        self.tearDown()
+        self.setUp()
+        before = self.audit(self.bash(f"cd {self.dir} && Rscript run-analysis.R", self.BEFORE))
+        self.assertEqual((before["contaminating"], [i["code"] for i in before["issues"]]),
+                         ([], ["host-run"]))
+
+    def test_writes_into_lane_records_or_outputs_are_contaminating(self):
+        report = self.audit(
+            ("Write", {"file_path": str(self.dir / "outputs" / "run-01" / "files" / "x.csv")},
+             self.BEFORE, "ok"),
+            self.bash(f"echo forged >> {self.dir}/lane-records/run-01/events.log", self.BEFORE))
+        self.assertEqual(self.kinds(report), ["write-to-lane-owned", "write-to-lane-owned"])
+
+    def test_changing_the_input_tree_after_the_final_run_is_contaminating(self):
+        report = self.audit(
+            ("Edit", {"file_path": str(self.dir / "run-analysis.R")}, self.AFTER, "ok"),
+            self.bash(f"cp /tmp/x.csv {self.dir}/data/x.csv", self.AFTER),
+            ("Edit", {"file_path": str(self.dir / "run-analysis.R")}, self.BEFORE, "ok"))
+        self.assertEqual(self.kinds(report), ["input-tree-changed-after-run"] * 2)
+
+    def test_snapshot_code_and_clearing_a_lock_are_contaminating(self):
+        report = self.audit(
+            self.bash(f"venv/bin/python scripts/reproduction-lane.py snapshot-code {self.dir} "
+                      f"--phase pre", self.BEFORE),
+            self.bash(f"venv/bin/python scripts/reproduction-lane.py run-container {self.dir} "
+                      f"--clear-lock", self.BEFORE))
+        self.assertEqual(self.kinds(report), ["clear-lock", "snapshot-code"])
+
+    def test_calls_and_records_must_pair(self):
+        """Fable Q6.9: a record without a call, or a call without a record."""
+        self.seal()
+        orphan = lane.audit_execution([], self.dir, self.MANIFEST)
+        self.assertEqual(self.kinds(orphan), ["record-without-call"])
+        silent = self.bash(f"venv/bin/python scripts/reproduction-lane.py run-container "
+                           f"{self.dir} --image img --entry x.R", self.BEFORE, "nothing here")
+        report = lane.audit_execution(self.transcript(self.run_call(), silent), self.dir,
+                                      self.MANIFEST)
+        self.assertEqual(self.kinds(report), ["run-without-record"])
 
 
 class FreshComputationTests(RecordFixture, unittest.TestCase):

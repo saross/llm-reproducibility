@@ -227,6 +227,27 @@ class RuleFlagsTests(unittest.TestCase):
         self.assertIn("run-01 is incomplete", reasons)
         self.assertIn("verdict is 'fail'", reasons)
 
+    def test_a_transcript_audit_flag_is_listed_ruled_and_admitted(self):
+        """Spec §12: a host run before the final run is a flag in the audit,
+        which the human queue lists and rule-flags rules like any other."""
+        host = lane.Issue.flag("host-run", "run-analysis.R", "the executor ran it on the host",
+                               files={"run-analysis.R": "abc"})
+        write(self.dir / lane.AUDIT_FILE, json.dumps({"contaminating": [],
+                                                      "issues": [host.record()]}))
+        self.report(verdict="pass", runs={"credited_runs": ["run-01"],
+                                          "runs": {"run-01": {"state": "complete"}}})
+        statuses = {i["id"] for i in lane.issue_statuses(lane.load_config(self.config))}
+        self.assertIn("host-run:run-analysis.R", statuses)
+        self.rule({"issue": "wrapper-semantics:wrappers", "decision": "discharged",
+                   "note": "checked"},
+                  {"issue": "edited-copy:authors-code/analysis.R",
+                   "decision": "fail-and-uplift", "note": "a logic edit"})
+        reasons = " | ".join(lane.admission(self.dir)["reasons"])
+        self.assertIn("1 unruled transcript-audit issue(s): host-run:run-analysis.R", reasons)
+        self.rule({"issue": "host-run:run-analysis.R", "decision": "admissible",
+                   "note": "a parse check before the run"})
+        self.assertTrue(lane.admission(self.dir)["eligible"])
+
     def test_human_queue_lists_issues_as_ruled_or_unruled(self):
         self.rule({"issue": "wrapper-semantics:wrappers", "decision": "discharged",
                    "note": "checked"})

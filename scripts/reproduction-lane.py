@@ -1188,6 +1188,19 @@ def cmd_approve(args: argparse.Namespace) -> int:
     return 0
 
 
+def attempt_issues(target_dir: Path, report: dict) -> dict[str, dict]:
+    """An attempt's rulable issues, by id: the gate report's, then the
+    transcript audit's (spec §12: a host run before the final run)."""
+    issues = {i["id"]: i for i in report.get("issues") or []}
+    try:
+        audit = json.loads((target_dir / AUDIT_FILE).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        audit = {}
+    for issue in audit.get("issues") or []:
+        issues.setdefault(issue["id"], issue)
+    return issues
+
+
 def cmd_rule_flags(args: argparse.Namespace) -> int:
     """Record human rulings on an attempt's issues (spec §6).
 
@@ -1208,7 +1221,7 @@ def cmd_rule_flags(args: argparse.Namespace) -> int:
         report = json.loads(gate_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise LaneError(f"no readable authoritative gate report: {exc}") from exc
-    issues = {i["id"]: i for i in report.get("issues") or []}
+    issues = attempt_issues(target_dir, report)
     if not issues:
         raise LaneError(f"{display_path(gate_path)} lists no issues (a pre-1.3 report, or "
                         f"nothing to rule)")
@@ -5328,6 +5341,11 @@ def admission(target_dir: Path) -> dict:
         if audit.get("contaminating"):
             reasons.append(f"the transcript audit found {len(audit['contaminating'])} "
                            f"contaminating finding(s)")
+        audit_unruled = [i["id"] for i in audit.get("issues") or []
+                         if ruling_for(i, rulings) is None]
+        if audit_unruled:
+            reasons.append(f"{len(audit_unruled)} unruled transcript-audit issue(s): "
+                           f"{', '.join(audit_unruled[:5])}")
     except (OSError, json.JSONDecodeError):
         reasons.append(f"no transcript audit recorded ({AUDIT_FILE}, spec §12)")
     return {"eligible": not reasons, "assessed_at": now_utc(), "reasons": reasons,
@@ -5714,7 +5732,7 @@ def issue_statuses(config: dict) -> list[dict]:
         except (OSError, json.JSONDecodeError):
             continue
         rulings = load_rulings(target_dir)
-        for issue in report.get("issues") or []:
+        for issue in attempt_issues(target_dir, report).values():
             ruling = ruling_for(issue, rulings)
             statuses.append({"slug": paper["slug"], "id": issue["id"], "kind": issue["kind"],
                              "status": "ruled" if ruling else "unruled",
@@ -6077,6 +6095,223 @@ def reconcile_telemetry(lines: list[str]) -> dict:
                                        .total_seconds(), 1)}
 
 
+# ---------------------------------------------------------------------------
+# Transcript audit of an attempt's execution (gate 1.3, spec §12)
+# ---------------------------------------------------------------------------
+#
+# The harness transcript is the one record the executor cannot edit. The
+# audit reads it for paper code run other than through run-container, for
+# writes into the lane's records or a run's outputs, for changes to the input
+# tree after the final run started, and for run-container calls and run
+# records that do not pair. Contaminating findings block admission (spec §6).
+# It is supporting evidence: shell indirection can avoid any pattern, which
+# is why runs are bound by receipt, not by command (Astra 10).
+
+TRANSCRIPT_AUDIT_VERSION = "1.0"
+SEGMENT_SPLIT_RE = re.compile(r"&&|\|\||;|\||\n")
+DOCKER_RUN_RE = re.compile(
+    r"\bdocker(?:-compose|\s+(?:container\s+)?(run|exec|cp|start|compose))\b")
+HOST_RUN_RE = re.compile(r"(?:^|[\s/])(Rscript|R\s+(?:--file|-f)|python3?|bash)\b")
+CD_RE = re.compile(r"\bcd\s+([^\s;&|]+)")
+REDIRECT_RE = re.compile(r"(?<![0-9&])>>?\s*([^\s;&|<>]+)")
+COPY_LIKE_RE = re.compile(r"(?:^|\s)(cp|mv|install|rsync)\s+(.*)")
+TEE_RE = re.compile(r"(?:^|\s)tee\s+(.*)")
+SED_IN_PLACE_RE = re.compile(
+    r"(?:^|\s)sed\s+(?:[^|;&]*\s)?(?:-[a-zA-Z]*i[a-zA-Z]*|--in-place)\s+(.*)")
+
+
+def timed_tool_calls(lines: list[str]) -> list[dict]:
+    """Every tool call in a transcript, in order, with its time and outcome.
+
+    Returns:
+        ``[{name, input, at, errored, output}]``, ``at`` the timestamp of the
+        entry that made the call.
+    """
+    calls: list[dict] = []
+    by_id: dict[str, dict] = {}
+    for line in lines:
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        message = entry.get("message")
+        content = message.get("content") if isinstance(message, dict) else None
+        for block in content if isinstance(content, list) else []:
+            if not isinstance(block, dict):
+                continue
+            if block.get("type") == "tool_use":
+                call = {"name": block.get("name"), "input": block.get("input") or {},
+                        "at": entry.get("timestamp"), "errored": None, "output": ""}
+                calls.append(call)
+                by_id[str(block.get("id"))] = call
+            elif block.get("type") == "tool_result" and str(block.get("tool_use_id")) in by_id:
+                call = by_id[str(block.get("tool_use_id"))]
+                call["errored"] = bool(block.get("is_error"))
+                raw = block.get("content")
+                call["output"] = ("".join(str(p.get("text", "")) for p in raw
+                                          if isinstance(p, dict))
+                                  if isinstance(raw, list) else str(raw or ""))
+    return calls
+
+
+def segment_writes(segment: str) -> list[str]:
+    """Paths a shell segment writes: redirects, cp/mv/install/rsync
+    destinations, tee's files, and sed -i's files."""
+    targets = list(REDIRECT_RE.findall(segment))
+    copy = COPY_LIKE_RE.search(segment)
+    if copy:
+        args = [a for a in copy.group(2).split() if not a.startswith("-")]
+        if len(args) >= 2:
+            targets.append(args[-1])
+    tee = TEE_RE.search(segment)
+    if tee:
+        targets += [a for a in tee.group(1).split() if not a.startswith("-")]
+    sed = SED_IN_PLACE_RE.search(segment)
+    if sed:
+        args = [a for a in sed.group(1).split() if not a.startswith("-")]
+        targets += args[1:]
+    return [t.strip("'\"") for t in targets if t and not t.startswith("/dev/")]
+
+
+def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | None) -> dict:
+    """The §12 audit of one attempt's executor transcript.
+
+    Args:
+        lines: The executor's transcript.
+        target_dir: The attempt directory.
+        manifest_doc: The authors' code manifest, for the code paths a host
+            run must not name.
+
+    Returns:
+        The ``transcript-audit.json`` record: ``contaminating`` findings
+        (hard failures), ``issues`` (flags for a ruling: ``host-run``), and
+        what the audit compared.
+    """
+    root = target_dir.resolve()
+    records = root / RECORDS_DIR
+    indexed, _ = read_run_index(records)
+    sealed = {}
+    for run_id in run_ids(records):
+        try:
+            sealed[run_id] = json.loads((records / run_id / "run.json").read_text(
+                encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+    credible = [r for r in run_ids(records)
+                if r in indexed and sealed.get(r, {}).get("state") in ("complete", "failed")]
+    final = credible[-1] if credible else None
+    final_start = sealed[final].get("started_at") if final else None
+    # Code a host run must not name: originals' copies, executed copies, and
+    # wrappers, except those that run on the host by design (§5, §11).
+    manifest_doc = manifest_doc or {}
+    host_exempt = {w["path"] for w in manifest_doc.get("wrappers") or []
+                   if w.get("role") in ("comparison", "conversion")}
+    code_paths = sorted({p for p in (
+        [o.get("local_copy") for o in manifest_doc.get("originals") or []]
+        + [e.get("path") for e in manifest_doc.get("executed") or []]
+        + [w.get("path") for w in manifest_doc.get("wrappers") or []
+           if w.get("role") != "generated"]) if p and p not in host_exempt})
+    contaminating: list[dict] = []
+    issues: list[Issue] = []
+
+    def after_final(stamp: str | None) -> bool:
+        return bool(final_start and stamp and stamp.replace("Z", "+00:00") >=
+                    str(final_start).replace("Z", "+00:00"))
+
+    def place(path_text: str, cwd: str | None) -> str | None:
+        """An attempt-relative path, when a written or named path is in the
+        attempt: absolute, or relative to an explicit cd."""
+        if not path_text:
+            return None
+        path = Path(path_text).expanduser()
+        if not path.is_absolute():
+            if cwd is None:
+                return None
+            path = Path(cwd).expanduser() / path
+        try:
+            return Path(os.path.normpath(path)).relative_to(root).as_posix()
+        except ValueError:
+            return None
+
+    def find(kind: str, at: str | None, detail: str) -> None:
+        contaminating.append({"kind": kind, "at": at, "detail": detail[:400]})
+
+    def written(rel: str, at: str | None, how: str) -> None:
+        first = rel.split("/", 1)[0]
+        if first in (RECORDS_DIR, "outputs"):
+            find("write-to-lane-owned", at, f"{how} wrote {rel}, which only the lane writes")
+        elif first not in DOCUMENT_NAMES and after_final(at):
+            find("input-tree-changed-after-run", at, f"{how} wrote {rel} after the final run "
+                 f"{final} started")
+
+    runs_called: set[str] = set()
+    for call in timed_tool_calls(lines):
+        at = call["at"]
+        if call["name"] in ("Write", "Edit", "NotebookEdit", "MultiEdit"):
+            target = call["input"].get("file_path") or call["input"].get("notebook_path")
+            rel = place(str(target or ""), None)
+            if rel is not None:
+                written(rel, at, call["name"])
+            continue
+        if call["name"] != "Bash":
+            continue
+        command = str(call["input"].get("command") or "")
+        cd = CD_RE.search(command)
+        cwd = cd.group(1).strip("'\"") if cd else None
+        for segment in SEGMENT_SPLIT_RE.split(command):
+            segment = segment.strip()
+            if not segment:
+                continue
+            if "reproduction-lane.py" in segment:
+                if re.search(r"\bsnapshot-code\b", segment):
+                    find("snapshot-code", at, f"the executor ran snapshot-code: {segment}")
+                elif re.search(r"\brun-container\b", segment):
+                    if "--clear-lock" in segment:
+                        find("clear-lock", at, f"the executor cleared a run lock: {segment}")
+                    elif "--finalise" not in segment:
+                        named = set(re.findall(r"\b(run-\d{2,})\b", call["output"]))
+                        runs_called |= named
+                        if not named and call["errored"] is False:
+                            find("run-without-record", at, f"run-container reported no run: "
+                                 f"{segment}")
+                    else:
+                        runs_called |= set(re.findall(r"\b(run-\d{2,})\b", segment))
+                continue
+            docker = DOCKER_RUN_RE.search(segment)
+            if docker:
+                find("docker-direct", at, f"paper code may run other than through "
+                     f"run-container: {segment}")
+                continue
+            if HOST_RUN_RE.search(segment):
+                named = [p for p in code_paths if p in segment or str(root / p) in segment]
+                if named:
+                    if after_final(at):
+                        find("host-run-after-final", at, f"a host run named {named[0]} after "
+                             f"the final run {final} started: {segment}")
+                    else:
+                        issues.append(Issue.flag(
+                            "host-run", named[0], f"the executor ran {named[0]} on the host "
+                            f"before the final run ({segment[:160]}): credit comes only from "
+                            f"sealed outputs, but invariant 5 is an environment rule, so a "
+                            f"human rules on it", files={named[0]: json_digest(segment)}))
+            for target in segment_writes(segment):
+                rel = place(target, cwd)
+                if rel is not None:
+                    written(rel, at, "a shell command")
+    for run_id in run_ids(records):
+        if run_id not in runs_called:
+            find("record-without-call", None, f"{run_id} has a run record but no "
+                 f"run-container call in the transcript names it")
+    deduped = {(c["kind"], c["detail"]): c for c in contaminating}
+    seen: set[str] = set()
+    unique_issues = [i for i in issues if not (i.issue_id in seen or seen.add(i.issue_id))]
+    return {"audit_version": TRANSCRIPT_AUDIT_VERSION, "audited_at": now_utc(),
+            "attempt_dir": display_path(target_dir), "final_run": final,
+            "final_run_started_at": final_start, "runs_called": sorted(runs_called),
+            "contaminating": list(deduped.values()),
+            "issues": issue_records(unique_issues)}
+
+
 def cmd_audit_run(args: argparse.Namespace) -> int:
     """Audit every agent in a workflow run directory; exit 1 if any is unclean."""
     config = load_config(args.config)
@@ -6098,6 +6333,24 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
         record = audit_agent(lines, str(meta.get("agentType") or ""), config, manifest,
                              reconcile, gate, hooklib)
         record["agent_id"] = transcript.stem.replace("agent-", "")
+        # The executor's transcript also gets the attempt's own audit (spec
+        # §12), written into the attempt as admission requires.
+        attempt = ATTEMPT_DIR_RE.search(first_user_text(lines))
+        if meta.get("agentType") == config["agents"]["executor"] and attempt:
+            attempt_path = expand(attempt.group(1))
+            manifest_path = attempt_path / CODE_MANIFEST_FILE
+            try:
+                manifest_doc = json.loads(manifest_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                manifest_doc = None
+            execution = audit_execution(lines, attempt_path, manifest_doc)
+            execution["transcript"] = display_path(transcript)
+            if attempt_path.is_dir():
+                write_json(attempt_path / AUDIT_FILE, execution)
+            record["execution_audit"] = {"contaminating": execution["contaminating"],
+                                         "issues": len(execution["issues"])}
+            if execution["contaminating"]:
+                record["clean"] = False
         if not meta.get("agentType"):
             record["clean"] = False
             record["unattributable"] = True
