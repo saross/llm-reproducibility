@@ -32,31 +32,28 @@ merged here as PR #1).
 
 ## Repo state (2026-10-06, session fabeab56 close) — START HERE
 
-- **⏩ START HERE: Shawn re-reads the revised amendment 3 text, then lodge
-  it, then finish the gate 1.3 instrumentation.**
-  1. **Amendment 3: every decision is ruled** (2026-10-06 and 07; the
-     revision record at the end of
-     `studies/open-science-compliance/prereg/amendment-3-draft.md`). D-7
-     (a), D-8 (a), D-9 with expected-untestable strict, Q5 and Q6 dated
-     2026-10-05 from the archived transcript, and the revision's other new
-     rules walked through and accepted (concordance failure stops the
-     census; earliest-released version on a tie; access-controlled
-     deposits scored on their record). **One checklist item is open
-     before lodging:** Shawn re-reads the revised passages in the draft
-     itself, because the rulings were made from summaries. Then, at
-     lodgement:
-     - decide whether the draft's "Why this amendment" paragraph opens the
-       lodged text, as "Nature of this amendment" did in amendments 1
-       and 2;
-     - regenerate the paste artefact with
-       `studies/open-science-compliance/prereg/make-paste-artefact.py
-       amendment-3-draft.md osf-amendment-3.txt <date>`, then
-       `unwrap-paste-file.py`;
-     - re-run the D5 gate and the tests at the lodgement commit, and tag
-       `osf-amendment-3-<date>`;
-     - **ask before lodging** through the OSF API. The route is in
-       `.notes/reference_register-prereg.md` and amendment 1's record; the
-       exact calls are in the archived amendment sessions, not yet located.
+- **⏩ START HERE: lodge amendment 3 once Astra's follow-up is in, then
+  finish the gate 1.3 instrumentation.**
+  1. **Amendment 3 is approved and staged; it waits on Astra's follow-up
+     review and Shawn's go-ahead for the API calls.** Shawn read the
+     revision (diff `60ec56d..2f3529d`) and approved it as is on
+     2026-10-08. He also ruled that the "Why this amendment" paragraph
+     opens the lodged text as "Nature of this amendment" (`37da8e3`).
+     Paste artefact `osf-amendment-3.txt` is built for 2026-10-08. D5 PASS
+     81/81 and 401 tests pass at `51cb532`.
+     `lodge-osf-amendment.py` (`51cb532`) scripts the August API route;
+     its `plan` mode passed against the live registration. Follow-up
+     review requests to Astra are in `~/agent-mail/claude/outbox/codex/`
+     (`20261008T070443…-amendment3-followup.md` and its addendum,
+     `20261008T070919…`). Then:
+     - fold in any findings. If the date moves, rebuild the artefact; the
+       builder refuses a tag that disagrees with its banner;
+     - get Shawn's approval of `osf-amendment-3-justification.txt` (public
+       text) and of the API calls;
+     - re-run the D5 gate and the tests, tag `osf-amendment-3-<date>`, push
+       the tag, and run `lodge` (the OSF key is in
+       `~/personal-assistant/.env`, as in August). Then mark the draft
+       LODGED and tick the checklist.
   2. **Gate 1.3 instrumentation** on PR #7 (`feat/lane-gate-1-1-code-audit`,
      head `7d577b8`; worktree `.claude/worktrees/agent-a8a2378c2a5dbdc98`).
      Built this session: spec revision 2 (`340f77d`), the F1 completeness
@@ -90,8 +87,9 @@ merged here as PR #1).
     fires in every forked child; `parse(text =)` is detectable with
     `missing()`; `loadNamespace` tracing needs a re-entrancy guard that is
     reset before the imports load.
-- **Still with Shawn:** the re-read of amendment 3's revised passages;
-  WN-am and WN-an (session log of b1a1e102); user-obs 2026-10-06 A–C;
+- **Still with Shawn:** approval of amendment 3's justification text and
+  of the lodgement API calls; WN-am and WN-an (session log of b1a1e102);
+  user-obs 2026-10-06 A–C;
   personal-assistant PR #169 (still open on 2026-10-06; once merged,
   re-run `scripts/compose-global-claude-md.sh` and remove
   `~/worktrees/personal-assistant/claude-review-protocol`).
