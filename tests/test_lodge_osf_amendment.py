@@ -15,6 +15,7 @@ from __future__ import annotations
 import importlib.machinery
 import argparse
 import importlib.util
+import io
 import os
 import tempfile
 import unittest
@@ -74,14 +75,16 @@ class FakeOsf:
         keys: The ``updated_response_keys`` the PATCH reports.
         fail: Optional ``(method, path)`` predicate; a matching call raises.
         public: Optional Summary the public copy shows after approval.
+        malformed: Optional ``(method, path)`` predicate; a matching call
+            returns an empty body instead of OSF's structure.
     """
 
     RID = "new-revision"
 
     def __init__(self, previous: str, mangle=None, keys=("summary",), fail=None,
-                 public: str | None = None) -> None:
+                 public: str | None = None, malformed=None) -> None:
         self.previous, self.mangle, self.keys = previous, mangle, list(keys)
-        self.fail, self.public = fail, public
+        self.fail, self.public, self.malformed = fail, public, malformed
         self.calls: list[tuple[str, str]] = []
         self.sent: str | None = None
         self.approved = False
@@ -90,6 +93,11 @@ class FakeOsf:
         self.calls.append((method, path))
         if self.fail and self.fail(method, path):
             raise lodger.OsfError(f"{method} {path}: HTTP 500")
+        if self.malformed and self.malformed(method, path):
+            if path.endswith("/actions/"):
+                trigger = payload["data"]["attributes"]["trigger"]
+                self.approved = self.approved or trigger == "approve"
+            return {}
         if method == "GET" and path.startswith("registrations/"):
             newest = self.RID if self.approved else "old-revision"
             return {"data": [{"id": newest, "attributes": {"reviews_state": "approved"}}]}
@@ -182,11 +190,38 @@ class LodgeSequenceTests(unittest.TestCase):
         self.assertIn("last confirmed state: unapproved", message)
         self.assertNotIn("not public", message)
 
+    def test_malformed_response_after_submit_is_handled(self) -> None:
+        # The approve request takes effect but its reply lacks OSF's
+        # structure; the state query then fails the same way.
+        fake = FakeOsf(PREVIOUS, malformed=lambda method, path: (
+            path.endswith("/actions/") and fake.calls.count((method, path)) == 2
+            or (method == "GET" and path == f"schema_responses/{FakeOsf.RID}/")))
+        message = self.run_lodge(fake)
+        self.assertIn("after submission was attempted", message)
+        self.assertIn(FakeOsf.RID, message)
+        self.assertIn("last confirmed state: unknown (KeyError", message)
+
+    def test_malformed_write_reply_never_submits(self) -> None:
+        fake = FakeOsf(PREVIOUS, malformed=lambda method, path: method == "PATCH")
+        self.assertIn("stopped before submission", self.run_lodge(fake))
+        self.assertFalse(fake.acted())
+
     def test_public_mismatch_is_reported_after_submission(self) -> None:
         fake = FakeOsf(PREVIOUS, public="something else")
         message = self.run_lodge(fake)
         self.assertIn("after submission was attempted", message)
         self.assertIn("public verification failed", message)
+
+
+class RequestTests(unittest.TestCase):
+    """``request`` turns a non-JSON reply into ``OsfError``."""
+
+    def test_non_json_reply_raises_osf_error(self) -> None:
+        reply = mock.MagicMock()
+        reply.__enter__.return_value = io.BytesIO(b"<html>maintenance</html>")
+        with mock.patch.object(lodger.urllib.request, "urlopen", return_value=reply):
+            with self.assertRaises(lodger.OsfError):
+                lodger.request("GET", "schema_responses/x/")
 
 
 if __name__ == "__main__":

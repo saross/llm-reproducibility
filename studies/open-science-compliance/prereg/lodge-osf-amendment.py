@@ -25,14 +25,21 @@ What a failure leaves behind depends on when it happens:
 
 - **Before submission** (an HTTP error while creating or writing, or a
   failed content check): any revision created is unsubmitted, visible only
-  to the registrant, and must be fixed or deleted before a retry. ``plan``
-  refuses while it exists, because it is the newest revision.
+  to the registrant, and must be fixed or deleted before a retry. The
+  anonymous ``plan`` cannot see a private revision, so inspect the
+  authenticated revision list before retrying. OSF itself refuses to
+  create a revision while an unfinished one exists, so a retry cannot
+  stack a second one.
 - **Once submission has been attempted**: the revision may already be
   submitted or approved, even if the request reported an error, and OSF can
   approve a submitted revision automatically after its waiting period. The
-  script reports the revision identifier and its last confirmed state and
-  makes no claim that it is private. Inspect that revision before any
-  retry.
+  script reports the revision identifier and its last confirmed state (or
+  that the state could not be read) and makes no claim that it is private.
+  Inspect that revision before any retry.
+
+Handled failures are HTTP errors, network errors, responses that are not
+JSON or lack the expected fields, and failed checks. Any other exception
+ends the script with a traceback, before submission or after it.
 
 OSF stores literal ``<`` and ``>`` as HTML entities and renders them back
 correctly (amendment 2's record calls this "the registry's known write
@@ -121,7 +128,8 @@ def request(method: str, path: str, token: str | None = None,
     """Make one OSF API request and return the decoded JSON body.
 
     Raises:
-        OsfError: on an HTTP error (with OSF's response) or a network failure.
+        OsfError: on an HTTP error (with OSF's response), a network failure,
+            or a response that is not JSON.
     """
     headers = {"Content-Type": "application/vnd.api+json"}
     if token:
@@ -131,6 +139,8 @@ def request(method: str, path: str, token: str | None = None,
     try:
         with urllib.request.urlopen(req) as response:
             return json.load(response)
+    except json.JSONDecodeError as exc:
+        raise OsfError(f"{method} {path}: the response is not JSON ({exc})") from exc
     except urllib.error.HTTPError as exc:
         raise OsfError(f"{method} {path}: HTTP {exc.code} {exc.read().decode()[:600]}") from exc
     except (urllib.error.URLError, TimeoutError) as exc:
@@ -202,8 +212,8 @@ def last_state(rid: str, token: str) -> str:
     try:
         body = request("GET", f"schema_responses/{rid}/", token)
         return body["data"]["attributes"]["reviews_state"]
-    except OsfError as exc:
-        return f"unknown ({exc})"
+    except (OsfError, KeyError, TypeError) as exc:
+        return f"unknown ({type(exc).__name__}: {exc})"
 
 
 def submit_and_verify(rid: str, new: str, token: str) -> None:
@@ -252,12 +262,13 @@ def lodge(args: argparse.Namespace) -> None:
             "id": rid, "type": "schema-responses",
             "attributes": {"revision_responses": {"summary": new},
                            "revision_justification": justification}}})
-    except OsfError as exc:
+        attributes = patched["data"]["attributes"]
+        stored = attributes["revision_responses"]["summary"]
+    except (OsfError, KeyError, TypeError) as exc:
         where = f"revision {rid} exists, unsubmitted" if rid else "no revision id was returned"
-        sys.exit(f"stopped before submission ({where}): {exc}. Inspect the registration's "
-                 "revisions, and fix or delete any unsubmitted one before a retry.")
-    attributes = patched["data"]["attributes"]
-    stored = attributes["revision_responses"]["summary"]
+        sys.exit(f"stopped before submission ({where}): {type(exc).__name__}: {exc}. Inspect "
+                 "the registration's revisions, and fix or delete any unsubmitted one before "
+                 "a retry.")
     (Path(args.out) / "stored-summary.txt").write_text(stored, encoding="utf-8")
     results: list[tuple[str, bool]] = []
     check(results, "stored Summary equals the sent one under the entity transform",
@@ -273,8 +284,9 @@ def lodge(args: argparse.Namespace) -> None:
                  "Inspect it, then fix or delete it before any retry.")
     try:
         submit_and_verify(rid, new, token)
-    except OsfError as exc:
-        sys.exit(f"failed after submission was attempted: {exc}. Revision {rid}, last "
+    except (OsfError, KeyError, TypeError) as exc:
+        sys.exit(f"failed after submission was attempted: {type(exc).__name__}: {exc}. "
+                 f"Revision {rid}, last "
                  f"confirmed state: {last_state(rid, token)}. It may be or become public "
                  "(OSF can approve a submitted revision automatically). Inspect this "
                  "revision before any retry.")
