@@ -63,6 +63,14 @@ class ConversionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             builder.to_plain("a→b\n")
 
+    def test_tag_must_match_the_banner(self) -> None:
+        builder.check_tags("at tag osf-amendment-3-2026-10-08.", 3, "2026-10-08")
+        for stale in ("osf-amendment-3-<date>", "osf-amendment-3-2026-10-07"):
+            with self.assertRaises(ValueError, msg=stale):
+                builder.check_tags(f"commit ({stale}). Next", 3, "2026-10-08")
+        # Another amendment's tag is a citation, not this lodgement's tag.
+        builder.check_tags("tag osf-amendment-2-2026-08-17", 3, "2026-10-08")
+
 
 class Amendment3Tests(unittest.TestCase):
     """The current amendment-3 draft converts cleanly."""

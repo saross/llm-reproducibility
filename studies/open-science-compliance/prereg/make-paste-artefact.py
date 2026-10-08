@@ -22,7 +22,10 @@ by hand, following the conventions the lodged amendment-2 artefact
   and the repository tag.
 
 Tables are refused outright: they do not survive a plain-text paste (README,
-"Tables: avoid entirely"). The result still has hard line-breaks; run
+"Tables: avoid entirely"). So is any repository tag in the text that differs
+from the banner's, such as a ``<date>`` placeholder or a tag left at an
+earlier lodgement date: the lodged text names its own tag, and the two must
+agree. The result still has hard line-breaks; run
 ``unwrap-paste-file.py`` on it afterwards, and check that word, bullet, and
 numbered-line counts are unchanged by the unwrap.
 
@@ -119,6 +122,29 @@ def to_plain(body: str) -> str:
     return re.sub(r"\n{3,}", "\n\n", body)
 
 
+def check_tags(body: str, amendment: int, date: str) -> None:
+    """Refuse any tag for this amendment that is not the banner's tag.
+
+    Args:
+        body: The plain lodged text.
+        amendment: The amendment number.
+        date: The lodgement date the banner names.
+
+    Raises:
+        ValueError: if the text names this amendment's tag with another date
+            or a placeholder.
+
+    Example:
+        >>> check_tags("at tag osf-amendment-3-2026-10-08.", 3, "2026-10-08")
+    """
+    expected = f"osf-amendment-{amendment}-{date}"
+    # A tag runs to the first space or closing punctuation; the trailing
+    # full stop of a sentence is not part of it.
+    for tag in re.findall(rf"osf-amendment-{amendment}-[^\s),;]+", body):
+        if tag.rstrip(".") != expected:
+            raise ValueError(f"the text names {tag}, not the banner's {expected}")
+
+
 def banner(date: str, amendment: int) -> str:
     """The registration banner line that opens the paste artefact."""
     return (f"{PRIOR_LODGEMENTS} Amendment {amendment} lodged {date}; artefact set "
@@ -135,12 +161,14 @@ def main(argv: list[str]) -> int:
     if not match:
         print(f"cannot tell the amendment number from {draft.name}", file=sys.stderr)
         return 2
+    amendment = int(match.group(1))
     try:
         body = to_plain(lodged_portion(draft.read_text(encoding="utf-8")))
+        check_tags(body, amendment, date)
     except ValueError as exc:
         print(f"refused: {exc}", file=sys.stderr)
         return 1
-    out.write_text(banner(date, int(match.group(1))) + body.lstrip("\n"), encoding="utf-8")
+    out.write_text(banner(date, amendment) + body.lstrip("\n"), encoding="utf-8")
     print(f"wrote {out}: {len(body.split())} words in the lodged portion")
     return 0
 
