@@ -1,6 +1,6 @@
 {
   "title": "Correction ledger for the §8 regression gate (amendment 3 §9) — DRAFT",
-  "ledger_version": "0.2.0-draft",
+  "ledger_version": "0.2.1-draft",
   "status": "DRAFT, ruled in part. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09; L5 and L17 are open. Not frozen and not hashed. No run may use any value here until every ruling is made, the frozen copy is committed, and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).",
   "drafted": {
     "date": "2026-10-09",
@@ -2892,7 +2892,7 @@
         },
         {
           "id": "HER-T02",
-          "display_item": "Five S3 rows the pilot singled out as 'Top PMI Values'; all five are printed as Fig. 3 bar labels at 4 dp",
+          "display_item": "Five S3 rows the pilot singled out as 'Top PMI Values', compared at the pilot table's 3 dp (Fig. 3 prints all five at 4 dp; those labels are HER-T03's)",
           "pilot_item": "comparison report 'Top PMI Values (Verification)'",
           "location": {
             "source": "vor",
@@ -2913,10 +2913,11 @@
               "page_pdf": 5,
               "pilot_value": "7.925",
               "pilot_outcome": "EXACT_MATCH (against S3)",
-              "expected": "7.9248",
+              "expected": "7.925",
               "expected_outcome": "EXACT_MATCH",
               "raster": "figure label in a raster image (no text layer); read on a 250 dpi render, 2026-10-09",
-              "deposit_value": "7.92477508905717"
+              "deposit_value": "7.92477508905717",
+              "comparison_precision": "3 dp (the pilot table's)"
             },
             {
               "label": "Trigram C4 C5 C12, PMI (Fig. 3d, bar 1)",
@@ -2925,10 +2926,11 @@
               "page_pdf": 5,
               "pilot_value": "6.575",
               "pilot_outcome": "EXACT_MATCH (against S3)",
-              "expected": "6.5751",
+              "expected": "6.575",
               "expected_outcome": "EXACT_MATCH",
               "raster": "figure label in a raster image (no text layer); read on a 250 dpi render, 2026-10-09",
-              "deposit_value": "6.57514471230887"
+              "deposit_value": "6.57514471230887",
+              "comparison_precision": "3 dp (the pilot table's)"
             },
             {
               "label": "Bigram I5 I13, PMI (Fig. 3b, bar 1)",
@@ -2937,10 +2939,11 @@
               "page_pdf": 5,
               "pilot_value": "4.099",
               "pilot_outcome": "EXACT_MATCH (against S3)",
-              "expected": "4.0985",
+              "expected": "4.099",
               "expected_outcome": "EXACT_MATCH",
               "raster": "figure label in a raster image (no text layer); read on a 250 dpi render, 2026-10-09",
-              "deposit_value": "4.09850257237077"
+              "deposit_value": "4.09850257237077",
+              "comparison_precision": "3 dp (the pilot table's)"
             },
             {
               "label": "Bigram C4 C12, PMI (Fig. 3b)",
@@ -2949,10 +2952,11 @@
               "page_pdf": 5,
               "pilot_value": "3.288",
               "pilot_outcome": "EXACT_MATCH (against S3)",
-              "expected": "3.2876",
+              "expected": "3.288",
               "expected_outcome": "EXACT_MATCH",
               "raster": "figure label in a raster image (no text layer); read on a 250 dpi render, 2026-10-09",
-              "deposit_value": "3.28757235615444"
+              "deposit_value": "3.28757235615444",
+              "comparison_precision": "3 dp (the pilot table's)"
             },
             {
               "label": "Bigram C12 C13, PMI (Fig. 3b)",
@@ -2961,15 +2965,16 @@
               "page_pdf": 5,
               "pilot_value": "3.288",
               "pilot_outcome": "EXACT_MATCH (against S3)",
-              "expected": "3.2876",
+              "expected": "3.288",
               "expected_outcome": "EXACT_MATCH",
               "raster": "figure label in a raster image (no text layer); read on a 250 dpi render, 2026-10-09",
-              "deposit_value": "3.28757235615444"
+              "deposit_value": "3.28757235615444",
+              "comparison_precision": "3 dp (the pilot table's)"
             }
           ],
           "tolerance": {
-            "category": "exact at the printed 4 dp",
-            "basis": "the pilot compared at 3 dp against S3; the figure prints 4 dp, which the deposit values round to"
+            "category": "exact at the pilot table's 3 dp, after the same rounding",
+            "basis": "amendment 3 §9: an unchanged deterministic target gives the pilot's value at the precision the pilot's comparison table recorded, after the same rounding. The pilot's 'Top PMI Values' table records 3 dp. No deposit value lies on a 3-dp rounding boundary, so the rounding rule cannot change the outcome. The 4-dp figure labels are tested under HER-T03 (corrected)"
           },
           "pilot": {
             "outcome": "EXACT_MATCH (5/5, against S3)",
@@ -2979,7 +2984,7 @@
           "correction": {
             "set": "unchanged",
             "printed_value_corrected": false,
-            "note": "a subset of HER-T01's rows, kept because the pilot listed it; its values are unchanged"
+            "note": "a subset of HER-T01's rows, kept because the pilot listed it; compared at the pilot table's 3 dp, so its values are unchanged. The draft's 4-dp check changed the predicate without a recorded correction (Astra's review of PR #10 at 9b66683 (2026-10-09), B2)"
           },
           "repair": {
             "findings": [
@@ -5443,9 +5448,11 @@
             "credited": true
           },
           "correction": {
-            "set": "unchanged",
-            "what": "comparison basis becomes the version of record; the diversity panel depends on the Shannon calculation, which version 1.3 computes as published",
-            "printed_value_corrected": false
+            "set": "corrected",
+            "what": "comparison basis becomes the version of record. The pilot's figure differs from the published one in content, not styling: in the 'Diversity of references' panel the archaeology boxplot covers a different, narrower range of Shannon index values, which moves it against the three comparison boxplots. 652e542 changed the Shannon calculation; version 1.3 computes it as published. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/marwick-2025/reproduction/attempt-01/outputs/paper.html, embedded image 0)",
+            "printed_value_corrected": false,
+            "evidence_tier": "visual comparison of the pilot's embedded figure with the version of record (PDF p. 3); found by Astra's review of PR #10 at 9b66683 (2026-10-09), B1, and confirmed by Claude the same day",
+            "ruling": "L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content"
           },
           "repair": {
             "findings": [
@@ -5464,6 +5471,7 @@
           },
           "expected_outcome": "REPRODUCED_VISUAL",
           "rulings": [
+            "L4",
             "L8"
           ]
         },
@@ -5540,9 +5548,11 @@
             "credited": true
           },
           "correction": {
-            "set": "unchanged",
-            "what": "comparison basis becomes the version of record; panel E and the Borda ranking depend on the Shannon calculation",
-            "printed_value_corrected": false
+            "set": "corrected",
+            "what": "comparison basis becomes the version of record. The pilot's figure differs from the published one in content, not styling: panel E (diversity of references) orders the journals differently, and panel F's Borda ranking changes. For example, the Journal of Archaeological Science is third in the pilot and fifth in the version of record, Antiquity fifth against third, and Geoarchaeology thirteenth against ninth. 652e542 changed the Shannon calculation; version 1.3 computes it as published. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/marwick-2025/reproduction/attempt-01/outputs/paper.html, embedded image 2)",
+            "printed_value_corrected": false,
+            "evidence_tier": "visual comparison of the pilot's embedded figure with the version of record (PDF p. 5); found by Astra's review of PR #10 at 9b66683 (2026-10-09), B1, and confirmed by Claude the same day",
+            "ruling": "L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content"
           },
           "repair": {
             "findings": [
@@ -5561,6 +5571,7 @@
           },
           "expected_outcome": "REPRODUCED_VISUAL",
           "rulings": [
+            "L4",
             "L8"
           ]
         },
@@ -5685,9 +5696,9 @@
       "sets": {
         "targets": 13,
         "in_gate": 13,
-        "unchanged": 8,
-        "unchanged_testable": 8,
-        "corrected": 5,
+        "unchanged": 6,
+        "unchanged_testable": 6,
+        "corrected": 7,
         "scope_changed": 0,
         "expected_untestable": 0,
         "not_in_gate": 0

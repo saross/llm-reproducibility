@@ -2,7 +2,7 @@
 
 **Status:** DRAFT, ruled in part. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09; L5 and L17 are open. Not frozen and not hashed. No run may use any value here until every ruling is made, the frozen copy is committed, and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
 
-**Ledger version:** 0.2.0-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
+**Ledger version:** 0.2.1-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
 
 This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit the JSON, never this file.
 
@@ -14,7 +14,7 @@ This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit 
 | dye-et-al-2023 | SUCCESSFUL | PARTIAL | 13 | 11 (11) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 | herskind-riede-2024 | SUCCESSFUL | SUCCESSFUL | 4 | 2 (2) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 | key-et-al-2024 | PARTIAL | BLOCKED (coverage 0) | 0 | 0 (0) | 0 | 0 | 0 | 9 | not a gate paper (L6 (c)); its record keeps the expected verdict and the strict comparison's baseline |
-| marwick-2025 | SUCCESSFUL | SUCCESSFUL (provisional on L17) | 13 | 8 (8) | 5 | 0 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
+| marwick-2025 | SUCCESSFUL | SUCCESSFUL (provisional on L17) | 13 | 6 (6) | 7 | 0 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 
 ## Rulings
 
@@ -849,7 +849,7 @@ Herskind, L.L.P., & Riede, F. (2024). A computational linguistic methodology for
 
 Elements by reference: Herskind&Riede_S3.xlsx (Zenodo v2, 10.5281/zenodo.10801706), sha256 `1199acac5d1edb916dc4528d5e994295e206e798cb132e91c3be59cc9e328eed`. cell-identical to Zenodo v1's S3 (input-drift-herskind.md: 0 changed, added, or removed cells in all three sheets)
 
-#### HER-T02 — Five S3 rows the pilot singled out as 'Top PMI Values'; all five are printed as Fig. 3 bar labels at 4 dp
+#### HER-T02 — Five S3 rows the pilot singled out as 'Top PMI Values', compared at the pilot table's 3 dp (Fig. 3 prints all five at 4 dp; those labels are HER-T03's)
 
 | Field | Value |
 |---|---|
@@ -858,7 +858,7 @@ Elements by reference: Herskind&Riede_S3.xlsx (Zenodo v2, 10.5281/zenodo.1080170
 | Analysis type | deterministic |
 | Gate scope | in_gate: herskind is a gate paper (L6 (c)) |
 | Elements | published: 5; pilot_compared: 5 |
-| Tolerance | exact at the printed 4 dp (basis: the pilot compared at 3 dp against S3; the figure prints 4 dp, which the deposit values round to) |
+| Tolerance | exact at the pilot table's 3 dp, after the same rounding (basis: amendment 3 §9: an unchanged deterministic target gives the pilot's value at the precision the pilot's comparison table recorded, after the same rounding. The pilot's 'Top PMI Values' table records 3 dp. No deposit value lies on a 3-dp rounding boundary, so the rounding rule cannot change the outcome. The 4-dp figure labels are tested under HER-T03 (corrected)) |
 | Pilot outcome | EXACT_MATCH (5/5, against S3) |
 | Set | unchanged |
 | Printed value corrected | False |
@@ -870,11 +870,11 @@ Elements by reference: Herskind&Riede_S3.xlsx (Zenodo v2, 10.5281/zenodo.1080170
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
-| Quadrigram C1 C4 C5 C12, PMI (Fig. 3f, bar 1) | 7.9248 | 5 | 7.925 | EXACT_MATCH (against S3) | 7.9248 | EXACT_MATCH |
-| Trigram C4 C5 C12, PMI (Fig. 3d, bar 1) | 6.5751 | 5 | 6.575 | EXACT_MATCH (against S3) | 6.5751 | EXACT_MATCH |
-| Bigram I5 I13, PMI (Fig. 3b, bar 1) | 4.0985 | 5 | 4.099 | EXACT_MATCH (against S3) | 4.0985 | EXACT_MATCH |
-| Bigram C4 C12, PMI (Fig. 3b) | 3.2876 | 5 | 3.288 | EXACT_MATCH (against S3) | 3.2876 | EXACT_MATCH |
-| Bigram C12 C13, PMI (Fig. 3b) | 3.2876 | 5 | 3.288 | EXACT_MATCH (against S3) | 3.2876 | EXACT_MATCH |
+| Quadrigram C1 C4 C5 C12, PMI (Fig. 3f, bar 1) | 7.9248 | 5 | 7.925 | EXACT_MATCH (against S3) | 7.925 | EXACT_MATCH |
+| Trigram C4 C5 C12, PMI (Fig. 3d, bar 1) | 6.5751 | 5 | 6.575 | EXACT_MATCH (against S3) | 6.575 | EXACT_MATCH |
+| Bigram I5 I13, PMI (Fig. 3b, bar 1) | 4.0985 | 5 | 4.099 | EXACT_MATCH (against S3) | 4.099 | EXACT_MATCH |
+| Bigram C4 C12, PMI (Fig. 3b) | 3.2876 | 5 | 3.288 | EXACT_MATCH (against S3) | 3.288 | EXACT_MATCH |
+| Bigram C12 C13, PMI (Fig. 3b) | 3.2876 | 5 | 3.288 | EXACT_MATCH (against S3) | 3.288 | EXACT_MATCH |
 
 #### HER-T03 — Fig. 3 (six panels a–f of motif co-occurrence bars; 128 bars, each with a 4-dp PMI label)
 
@@ -1479,14 +1479,16 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision) |
 | Pilot outcome | credited; compared against the repository's paper.docx at 652e542, not the published article |
-| Set | unchanged |
-| Correction | comparison basis becomes the version of record; the diversity panel depends on the Shannon calculation, which version 1.3 computes as published |
+| Set | corrected |
+| Correction | comparison basis becomes the version of record. The pilot's figure differs from the published one in content, not styling: in the 'Diversity of references' panel the archaeology boxplot covers a different, narrower range of Shannon index values, which moves it against the three comparison boxplots. 652e542 changed the Shannon calculation; version 1.3 computes it as published. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/marwick-2025/reproduction/attempt-01/outputs/paper.html, embedded image 0) |
 | Printed value corrected | False |
+| Evidence tier | visual comparison of the pilot's embedded figure with the version of record (PDF p. 3); found by Astra's review of PR #10 at 9b66683 (2026-10-09), B1, and confirmed by Claude the same day |
+| Ruling | L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content |
 | Repair class and status | MAR-1 (iv): GitHub main 652e542 executed, 8 commits past the AP-12 version 1.3, including a changed Shannon diversity calculation (group_by(id, journal_name), rendered at attempt-01 outputs/paper.html line 904); MAR-2 (i): no code modifications (self-reported). Status: no repair; the gate re-runs version 1.3 (Q4) |
 | Credit eligibility | pilot: historical (Q4); gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings | L8 |
+| Rulings | L4, L8 |
 
 #### MAR-T10 — Fig. 2 (Bayesian generalised additive model (GAM) trends over time; static image in paper.qmd)
 
@@ -1519,14 +1521,16 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision) |
 | Pilot outcome | credited; compared against the repository's paper.docx at 652e542, not the published article |
-| Set | unchanged |
-| Correction | comparison basis becomes the version of record; panel E and the Borda ranking depend on the Shannon calculation |
+| Set | corrected |
+| Correction | comparison basis becomes the version of record. The pilot's figure differs from the published one in content, not styling: panel E (diversity of references) orders the journals differently, and panel F's Borda ranking changes. For example, the Journal of Archaeological Science is third in the pilot and fifth in the version of record, Antiquity fifth against third, and Geoarchaeology thirteenth against ninth. 652e542 changed the Shannon calculation; version 1.3 computes it as published. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/marwick-2025/reproduction/attempt-01/outputs/paper.html, embedded image 2) |
 | Printed value corrected | False |
+| Evidence tier | visual comparison of the pilot's embedded figure with the version of record (PDF p. 5); found by Astra's review of PR #10 at 9b66683 (2026-10-09), B1, and confirmed by Claude the same day |
+| Ruling | L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content |
 | Repair class and status | MAR-1 (iv): GitHub main 652e542 executed, 8 commits past the AP-12 version 1.3, including a changed Shannon diversity calculation (group_by(id, journal_name), rendered at attempt-01 outputs/paper.html line 904); MAR-2 (i): no code modifications (self-reported). Status: no repair; the gate re-runs version 1.3 (Q4) |
 | Credit eligibility | pilot: historical (Q4); gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings | L8 |
+| Rulings | L4, L8 |
 
 #### MAR-T12 — Fig. 4 (PCA biplot of journal means; axis labels PC1 (71%), PC2 (18%))
 

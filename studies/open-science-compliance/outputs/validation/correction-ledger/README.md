@@ -1,6 +1,6 @@
 # Correction ledger for the §8 regression gate — DRAFT
 
-**Status: DRAFT, ruled in part (ledger 0.2.0-draft). Shawn ruled L1 to L4
+**Status: DRAFT, ruled in part (ledger 0.2.1-draft). Shawn ruled L1 to L4
 and L6 to L16 on 2026-10-09; L5 and L17 are open. Not frozen and not
 hashed.** No run may use any value here until every ruling is made, the
 ruled copy is committed, and its sha256 is recorded in the gate's run
@@ -92,6 +92,22 @@ reported.
    `results_brms.RData`, is not in the tag 1.3 tree. Found 2026-10-09 while
    applying ruling L11; it raises ruling L17.
 
+**Astra's review (2026-10-09, at `9b66683`)** confirmed the key and marwick
+printed-value findings independently and found two errors, both fixed in
+ledger 0.2.1-draft:
+
+- **B1. Two marwick figures were labelled unchanged though their content
+  changes.** The pilot's Fig. 1 and Fig. 3, rendered from 652e542, differ
+  from the version of record in the diversity panels and in Fig. 3's Borda
+  ranking, not just in styling. MAR-T09 and MAR-T11 are now corrected, with
+  the pilot figures kept as their historical baseline; marwick's unchanged
+  set falls from eight to six. Fig. 5 (MAR-T13) was checked the same way
+  and matches, so it stays unchanged.
+- **B2. HER-T02 tightened the pilot's precision without a correction.**
+  Amendment 3 §9 compares an unchanged deterministic target at the pilot
+  table's precision, after the same rounding. HER-T02 now compares at 3 dp;
+  the 4-dp figure labels stay with HER-T03 (corrected).
+
 Shawn accepted L16's finding on 2026-10-09: the erratum log's Entry 7
 records the key slip, and the public correction is queued for the next OSF
 amendment.
@@ -104,7 +120,7 @@ amendment.
 | dye | 11 | 2 | PARTIAL (SUCCESSFUL) |
 | herskind | 2, including the 1,601-cell S3 table | 2 | SUCCESSFUL (SUCCESSFUL) |
 | key | 0; all nine targets untestable | 2 | BLOCKED (PARTIAL) |
-| marwick | 8 | 5 | SUCCESSFUL, provisional on L17 (SUCCESSFUL) |
+| marwick | 6 | 7 | SUCCESSFUL, provisional on L17 (SUCCESSFUL) |
 
 **Ruled (L6 (c), 2026-10-09): the gate runs dye, herskind, and marwick,**
 plus crema's mandatory archived-posterior leg. Key is not a gate paper; its
