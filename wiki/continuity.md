@@ -37,7 +37,16 @@ merged here as PR #1).
   - **Q1 (a):** build the dry-run record's design on PR #7 before the final
     review: verbatim short texts with their verified caller, templates for
     package internals, and one obligation per place and caller.
-    [ ] In progress (session be70c3be).
+    [x] 2026-10-09 Built on PR #7 (head `8eeefd3`): hook `1.5-inst`
+    carries each text up to 512 bytes and its caller (`65d9eb2`); the gate
+    checks it against the md5, matches 3 package templates, and groups the
+    rest per place and caller as `run-time-texts` (`a018a0a`); records in
+    the spec and dry-run note (`8eeefd3`). The re-run: 119 obligations
+    become 1 (all 107 conditions listed), 12 texts match templates, 142 of
+    142 verbatim texts hash to their md5s, and the 34 outputs stay
+    identical to attempt-02's. One defect found and fixed: R reports a
+    promise forced in a data mask as its own parent, so the conditions'
+    caller read as `base::parse`; it is now `promise`. 595 tests pass.
   - **Q2:** start the final review after Q1 (a). That means the full
     herskind re-run through the agentic workflow (Shawn approves the plan
     and launches it; it passes the API review gate), then one round with
@@ -59,8 +68,20 @@ merged here as PR #1).
       stated scope limit like crema's full-MCMC path.
   - **Q4 (a):** erratum-log Entry 7 on PR #10 (`9b66683`), with the OSF
     note queued as item 1 of a new "Queued amendment 4 scope" list.
-  - **Working notes:** Shawn accepted every pending candidate (WN-am to
-    WN-aq), to be written as Obs 51 to 55. **User observations:** deferred.
+  - **Working notes:** Shawn accepted every pending candidate.
+    [x] 2026-10-09 WN-am to WN-aq written as Obs 51 to 55 (`35a0f84`),
+    re-verified at source. On the way, the writer corrected two anchors:
+    the abductive entry of 2026-10-05 is in
+    `wiki/reflections/abductive-reasoning.md`, and WN-ap's 98,004
+    characters come from `session-reflection.md` Entry 24, not the
+    lodgement script's header. Obs 53 places D-7's ruling in session
+    fabeab56's walk-through, not b1a1e102's. **User observations:**
+    deferred.
+  - **Next, Q2:** the full herskind re-run through the agentic workflow,
+    which Shawn launches (API gate, plan approval), then one review round
+    with Astra and Fable. Open decision: run it on PR #7's branch with the
+    shakedown's settings (attempt-03, effort high, rulings R1 to R4), or
+    after PR #9's instruments merge.
   - Astra was mailed PR #10's new head (outbox,
     `20261009T021635.717643Z-claude-correction-ledger-ruled-new-head.md`).
 
