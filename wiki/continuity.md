@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-10-05
+updated: 2026-10-09
 status: active
 ---
 
@@ -30,7 +30,39 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-10-08, session fabeab56 close) — START HERE
+## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
+
+- **⏩ NOW: Shawn ruled the overnight questions (2026-10-09, by remote
+  session from a tablet).**
+  - **Q1 (a):** build the dry-run record's design on PR #7 before the final
+    review: verbatim short texts with their verified caller, templates for
+    package internals, and one obligation per place and caller.
+    [ ] In progress (session be70c3be).
+  - **Q2:** start the final review after Q1 (a). That means the full
+    herskind re-run through the agentic workflow (Shawn approves the plan
+    and launches it; it passes the API review gate), then one round with
+    Astra and Fable.
+  - **Q3, the correction ledger:** ruled except L5 and L17. L1 (a), L2
+    (a), L3 (a), L4 (a), **L6 (c): the gate runs dye, herskind, and
+    marwick**, plus crema's leg, L7 (a), L8 (a), L9 (b), L10 (a), L11 (a),
+    L12 (a), L13 (a), L14 (a), L15 (a), and L16 (a). Applied on PR #10 at
+    `e4f5b94` (ledger 0.2.0-draft).
+    - **Open, L5:** Shawn asked whether crema's figures repeat Table 1.
+      They mostly do not: Table 1 covers case studies 1a and 1b only, and
+      Figs 2 (simulation tests) and 5 (all of case study 2) appear nowhere
+      else. The recommendation is revised to (c), all five figures in the
+      leg.
+    - **Open, L17 (new):** under L11 (a), marwick's Fig. 2 can be
+      regenerated only from `supplement-GAMS-details.qmd`'s `eval: false`
+      brms chunk ("this takes a few hours"), and its saved fit is not in
+      the tag 1.3 tree. The recommendation is (a): outside the gate, as a
+      stated scope limit like crema's full-MCMC path.
+  - **Q4 (a):** erratum-log Entry 7 on PR #10 (`9b66683`), with the OSF
+    note queued as item 1 of a new "Queued amendment 4 scope" list.
+  - **Working notes:** Shawn accepted every pending candidate (WN-am to
+    WN-aq), to be written as Obs 51 to 55. **User observations:** deferred.
+  - Astra was mailed PR #10's new head (outbox,
+    `20261009T021635.717643Z-claude-correction-ledger-ruled-new-head.md`).
 
 - **⏩ START HERE: an AUTONOMOUS OVERNIGHT session (Shawn, 2026-10-08).**
   Get as far as possible by morning. When blocked on one track, switch to
@@ -157,7 +189,8 @@ merged here as PR #1).
     tonight for the morning.
   - Update this section at natural stopping points, so the morning read is
     current even if the session ends early.
-- **Questions for Shawn (morning):**
+- **Questions for Shawn (morning). All four RULED 2026-10-09; see NOW
+  above:**
   - **Q1. 119 run-time texts on herskind, one obligation each.** The dry
     run's analysis builds 107 subset conditions that dplyr parses, and
     rlang, cli, and ggplot2 parse 12 more texts internally. The gate makes
@@ -219,9 +252,10 @@ merged here as PR #1).
     its review-delivery rule.
 - **Still with Shawn (not blocking tonight):**
   - user-observation candidates: the 2026-10-06 batch (A to C) and the
-    2026-10-08 batch (A to D), both pending in `wiki/user-observations.md`;
-  - working-notes candidates WN-am and WN-an (b1a1e102), and WN-ao and
-    WN-ap (session log below);
+    2026-10-08 batch (A to D), both pending in `wiki/user-observations.md`.
+    Deferred by Shawn, 2026-10-09;
+  - [x] 2026-10-09 working-notes candidates WN-am and WN-an (b1a1e102),
+    and WN-ao and WN-ap (session log below): accepted, with WN-aq;
   - PR #7's merge, after the final review.
 
   To start Astra here, run `~/gpt-hub/config/launch-codex.sh
