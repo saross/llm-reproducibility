@@ -1455,6 +1455,12 @@ class RunContainerDockerTests(unittest.TestCase):
         self.assertEqual((helper["fields"][4], helper["fields"][5]), ("0", "0"))
         self.assertEqual((inner["fields"][4], inner["fields"][5]), ("1", str(helper["seq"])))
         self.assertEqual(len(by_kind["TEXT"]), 1)
+        # The text verbatim, as the bytes hashed, and its caller (gate 1.3,
+        # pilot dry run): a top-level parse() has no calling function.
+        fields = by_kind["TEXT"][0]["fields"]
+        self.assertEqual(fields[0], lane.text_md5("1 + 1"))
+        self.assertEqual((bytes.fromhex(fields[4]), lane.decode_field(fields[5])),
+                         (b"1 + 1", "top level"))
         main = [e for e in by_kind["END"] if e["token"] == by_kind["START"][0]["token"]]
         self.assertEqual(main[0]["fields"], ["1"])  # the repeated parse(text =)
         self.assertEqual(len(by_kind["FORK"]), 2)

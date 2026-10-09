@@ -22,9 +22,15 @@
 #          box::use, and modules::import.
 #   TEXT   code evaluated from a string, parse(text =) or a -e expression: the
 #          md5 of the text joined by newlines and ending in one, its length
-#          in bytes, depth, and enclosing seq. An -e expression is decoded as
-#          R decodes it (~+~, ~n~, ~t~) first. Repeats of one md5 in one
-#          process are counted, not logged again; END carries the count.
+#          in bytes, depth, enclosing seq, the text itself when it is at most
+#          TEXT_VERBATIM_MAX bytes (the very bytes hashed, so the gate can
+#          check one against the other; "none" when longer), and the caller:
+#          the function that called parse() (namespace::name when verified
+#          as that namespace's own, as for CONN), the tracing tool's name for
+#          knitr::knit and Rcpp::sourceCpp text, or "command line" for -e. An
+#          -e expression is decoded as R decodes it (~+~, ~n~, ~t~) first.
+#          Repeats of one text from one caller in one process are counted,
+#          not logged again; END carries the count.
 #   CONN   source() or parse() of a connection or of expressions: the
 #          function, class, and description, depth, enclosing seq, and the
 #          calling function (namespace::name when verified as that
@@ -85,7 +91,14 @@ local({
     }
 
     state <- new.env(parent = baseenv())
-    state$version <- "1.4-inst"
+    state$version <- "1.5-inst"
+    # The longest text a TEXT event carries verbatim, in bytes: as hex it
+    # doubles, and the line must stay under the 4,096-byte atomic write.
+    TEXT_VERBATIM_MAX <- 512L
+    # The longest caller label carried: a verified namespace::name is short,
+    # and an anonymous function's deparsed call is cut rather than allowed to
+    # overflow the line.
+    CALLER_MAX <- 120L
     # The run's nonce, or, where the environment was cleared, the lane's copy.
     state$nonce <- Sys.getenv("LANE_RUN_NONCE", "")
     if (!nzchar(state$nonce)) {
@@ -256,23 +269,12 @@ local({
         }
         invisible(seq)
     }
-    on_text <- function(text) {
-        joined <- paste(as.character(text), collapse = "\n")
-        md5 <- text_md5(joined)
-        if (exists(md5, envir = state$text_seen, inherits = FALSE)) {
-            state$text_repeats <- state$text_repeats + 1L
-            return(invisible(NULL))
-        }
-        assign(md5, TRUE, envir = state$text_seen)
-        nest <- nesting()
-        emit("TEXT", c(md5, as.character(nchar(joined, type = "bytes") + 1L),
-                       as.character(nest$depth), as.character(nest$enclosing)))
-    }
     caller_label <- function(frame) {
         # The function that called the loader whose frame is `frame`, as
         # namespace::name only when that function object is the namespace's
         # own binding of the name (so a look-alike defined elsewhere does not
-        # pass as base::parseNamespaceFile); otherwise its bare name.
+        # pass as base::parseNamespaceFile); otherwise its bare name, cut to
+        # CALLER_MAX characters.
         caller <- caller_of(frame)
         if (is.null(caller)) return("top level")
         index <- frame_index(caller, sys.frames())
@@ -286,7 +288,32 @@ local({
                 identical(get(name, envir = owner, inherits = FALSE), fun)) {
             return(paste0(getNamespaceName(owner), "::", name))
         }
-        name
+        if (nchar(name) > CALLER_MAX) paste0(substr(name, 1L, CALLER_MAX - 3L), "...") else name
+    }
+    on_text <- function(text, frame = NULL, caller = NULL) {
+        # `caller` names the route where it is known (a tool, the command
+        # line); otherwise it is read from the frame of the parse() call.
+        joined <- paste(as.character(text), collapse = "\n")
+        md5 <- text_md5(joined)
+        if (is.null(caller)) caller <- if (is.null(frame)) "unknown" else caller_label(frame)
+        key <- paste(md5, caller)
+        if (exists(key, envir = state$text_seen, inherits = FALSE)) {
+            state$text_repeats <- state$text_repeats + 1L
+            return(invisible(NULL))
+        }
+        assign(key, TRUE, envir = state$text_seen)
+        # The verbatim copy is the bytes text_md5 wrote (writeLines with
+        # useBytes), not a re-encoding, so the gate can hash it back.
+        bytes <- charToRaw(joined)
+        verbatim <- if (length(bytes) <= TEXT_VERBATIM_MAX) {
+            paste(as.character(bytes), collapse = "")
+        } else {
+            "none"
+        }
+        nest <- nesting()
+        emit("TEXT", c(md5, as.character(length(bytes) + 1L),
+                       as.character(nest$depth), as.character(nest$enclosing),
+                       if (nzchar(verbatim)) verbatim else "empty", hex(caller)))
     }
     on_conn <- function(fn, what, frame) {
         nest <- nesting()
@@ -360,7 +387,7 @@ local({
     api$parse <- function(frame, text, file) guard("parse", {
         if (!called_from_load(frame)) {
             if (!is.null(text)) {
-                on_text(text)
+                on_text(text, frame = frame)
             } else if (is.character(file) && length(file) == 1L && nzchar(file)) {
                 on_load("parse", file, frame)
             } else if (inherits(file, "connection")) {
@@ -383,7 +410,7 @@ local({
         state$loads[[length(state$loads) + 1L]] <- list(env = frame, seq = state$seq)
     })
     api$load <- function(fn, frame, path) guard(fn, on_load(fn, path, frame))
-    api$text <- function(fn, text) guard(fn, on_text(text))
+    api$text <- function(fn, text) guard(fn, on_text(text, caller = fn))
     api$end <- emit_end
     options(lane.hook = api)
 
@@ -493,7 +520,7 @@ local({
         on_load("file", path, NULL)
     }
     for (i in which(opts == "-e")) {
-        if (i < length(opts)) on_text(unescape_e(opts[i + 1L]))
+        if (i < length(opts)) on_text(unescape_e(opts[i + 1L]), caller = "command line")
     }
 
     # R reads one user profile: R_PROFILE_USER if set, else the working
