@@ -218,8 +218,9 @@ tolerance with potential to affect conclusions.
 | GAM/regression | Coefficient comparison | Within reported precision | Marwick (minor p-value difference) |
 | Proprietary upstream | Document scope limitation | N/A | Dye (OxCal not reproduced) |
 
-Deterministic analyses: every value must match — differences indicate a bug in
-the reproduction, not expected variation. Stochastic analyses: fresh runs
+Deterministic analyses: every value must match — a difference indicates a bug
+in the reproduction or, where the paper-error rule below is met, a
+PAPER_ERROR; never expected variation. Stochastic analyses: fresh runs
 produce different point estimates; verify point estimates within published
 HPD/CI intervals, qualitative conclusions unchanged, direction and magnitude of
 effects consistent. Figure verification is visual (layout, patterns, relative
@@ -275,10 +276,11 @@ strength: (1) the paper's own tabulated data; (2) the authors' deposited data
 for that analysis; (3) the authors' own code, run unmodified (invariant 2), on
 the authors' own data. The reproduction's own re-implementation is never
 evidence. The comparison report names the tier used. PAPER_ERROR findings
-escalate for human confirmation before entering study data. To verify a
-suspected paper error: apply the published formula to the paper's own input
-values and check whether the paper's reported output is consistent. Document
-the verification in the comparison report.
+escalate for human confirmation before entering study data. Where the paper
+supplies the formula and its input values, a calculation from those tabulated
+inputs can check their consistency with the reported output. Record the
+calculation and the admissible evidence tier. This diagnostic does not
+replace the evidence and human-confirmation requirements above.
 
 <!-- mirror-end: verdicts-and-precision#discrepancy -->
 

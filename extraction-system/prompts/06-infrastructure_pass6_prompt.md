@@ -204,7 +204,8 @@ artefact(s): those whose absence would block reproduction of the reported
 results. For data, a sub-principle scores 1 only if it holds for every
 principal dataset (conjunctive scoring — mirroring the most-restrictive rule
 for licence conflicts); proportional coverage of the full required set,
-including non-principal upstream sources, is carried by the data-completeness
+including a non-principal upstream source only where reproducing the reported
+results needs it (v2.2 clarification 3), is carried by the data-completeness
 lane and feeds the A1 override as registered. For code, the paper's own
 analysis scripts are always principal; third-party dependencies are never
 substitutes for them and enter scoring only through citation quality (I3)
