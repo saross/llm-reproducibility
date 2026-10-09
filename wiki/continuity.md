@@ -32,7 +32,32 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NOW: Shawn ruled the overnight questions (2026-10-09, by remote
+- **⏩ NOW (2026-10-09, later): merges before any run (Shawn).** Astra
+  reviewed PR #9 and PR #10 (mail 08:46Z and 08:53Z); both had blocking
+  items, all fixed and re-review requested by mail.
+  - [x] 2026-10-09 **PR #9** at `062c20a`: B1 (the v2.1 aggregation rule
+    still counted "non-principal upstream sources"; now qualified by v2.2
+    clarification 3) and N1 (paper-error procedure made an optional
+    diagnostic; tolerance rule admits PAPER_ERROR). Mirrors re-spliced,
+    digests and Entry 6 updated; D5 PASS; 410 tests pass. N2 deferred:
+    the FAIR guide's v2.1 pointer needs guide v1.2 plus four assessor
+    definitions (before §10 step 5); schema strings and
+    `reproduction-lane.py:104` after PR #7 merges.
+  - [x] 2026-10-09 **PR #10** at `916eb7b` (ledger 0.2.1-draft): B1
+    confirmed visually (MAR-T09 and MAR-T11 corrected; marwick unchanged
+    8 to 6; MAR-T13 checked and unchanged; Astra's panel F example was
+    wrong and the mail says so), and B2 (HER-T02 back to the pilot's 3 dp).
+  - **L17 recommendation withdrawn from (a), now (c) after a local probe,
+    (b) as the fallback.** Astra was right: registration §8's exception is
+    crema's leg only; eligibility criterion 4's cap is 168 h per paper;
+    §7.6 locks the denominator. Dropping MAR-T10 would need a prospective
+    amendment. The JSON still carries the old text; revise with the ruling.
+  - **Merge order proposed:** PR #9 (after Astra's re-review), then rebase
+    PR #7 on main (manifest and executor-definition conflict), then the
+    herskind re-run and the final review, then PR #7. PR #10 merges once
+    ruled and frozen (before the §8 gate, not before the re-run). Fable is
+    not needed until the re-run is done.
+- **Earlier: Shawn ruled the overnight questions (2026-10-09, by remote
   session from a tablet).**
   - **Q1 (a):** build the dry-run record's design on PR #7 before the final
     review: verbatim short texts with their verified caller, templates for
