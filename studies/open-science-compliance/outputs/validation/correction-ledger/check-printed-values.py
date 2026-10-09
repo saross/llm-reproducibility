@@ -41,7 +41,7 @@ import os
 import re
 import subprocess
 import sys
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -49,7 +49,7 @@ PDF_SOURCES = {"vor": "vor.pdf", "supplement-1": "supplement-1.pdf",
                "preprint": "preprint.pdf"}
 
 
-@lru_cache(maxsize=None)
+@cache
 def page_text(pdf: Path, page: int, layout: bool) -> str:
     """Return one page's text with runs of whitespace collapsed.
 

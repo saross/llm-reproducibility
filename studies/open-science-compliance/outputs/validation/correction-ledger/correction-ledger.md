@@ -1,8 +1,8 @@
 # Correction ledger for the §8 regression gate (amendment 3 §9) — DRAFT
 
-**Status:** DRAFT for the registrant's ruling. Not ruled, not frozen, and not hashed. No run may use any value here until the registrant has ruled it and a frozen copy's sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
+**Status:** DRAFT, ruled in part. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09; L5 and L17 are open. Not frozen and not hashed. No run may use any value here until every ruling is made, the frozen copy is committed, and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
 
-**Ledger version:** 0.1.0-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
+**Ledger version:** 0.2.0-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
 
 This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit the JSON, never this file.
 
@@ -10,15 +10,19 @@ This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit 
 
 | Paper | Pilot verdict | Expected verdict | In-gate targets | Unchanged (testable) | Corrected | Scope-changed | Expected-untestable | Outside the gate or conditional | Gate role |
 |---|---|---|---|---|---|---|---|---|---|
-| crema-et-al-2024 | SUCCESSFUL | SUCCESSFUL | 1 | 0 (0) | 1 | 0 | 0 | 6 | mandatory: the registered archived-posterior leg (CREMA-T01). Whether crema is also one of the two gate papers is ruling L5. |
-| dye-et-al-2023 | SUCCESSFUL | PARTIAL | 13 | 11 (11) | 2 | 1 | 0 | 0 | candidate (ruling L6) |
-| herskind-riede-2024 | SUCCESSFUL | SUCCESSFUL | 4 | 2 (2) | 2 | 1 | 0 | 0 | candidate (ruling L6) |
-| key-et-al-2024 | PARTIAL | BLOCKED (coverage 0) | 9 | 7 (0) | 2 | 0 | 9 | 0 | not suitable: no testable unchanged target (ruling L6) |
-| marwick-2025 | SUCCESSFUL | SUCCESSFUL (provisional on L11) | 13 | 8 (8) | 5 | 0 | 0 | 0 | candidate (ruling L6) |
+| crema-et-al-2024 | SUCCESSFUL | SUCCESSFUL | 1 | 0 (0) | 1 | 0 | 0 | 6 | mandatory: the registered archived-posterior leg (CREMA-T01). Whether the leg also covers crema's five figures is ruling L5 (open). |
+| dye-et-al-2023 | SUCCESSFUL | PARTIAL | 13 | 11 (11) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
+| herskind-riede-2024 | SUCCESSFUL | SUCCESSFUL | 4 | 2 (2) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
+| key-et-al-2024 | PARTIAL | BLOCKED (coverage 0) | 0 | 0 (0) | 0 | 0 | 0 | 9 | not a gate paper (L6 (c)); its record keeps the expected verdict and the strict comparison's baseline |
+| marwick-2025 | SUCCESSFUL | SUCCESSFUL (provisional on L17) | 13 | 8 (8) | 5 | 0 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 
-## Rulings needed
+## Rulings
+
+Ruled by Shawn Ross (registrant) on 2026-10-09: L1, L2, L3, L4, L6, L7, L8, L9, L10, L11, L12, L13, L14, L15, L16. Open: L5, L17.
 
 ### L1. What is 'the pilot's locked target list'? No pilot attempt-01 has a reproduction plan or a locked list; the pilots predate the locked-list instrument.
+
+**Ruled 2026-10-09: (a).**
 
 - **(a)** The de facto list: every item the attempt-01 comparison report compared against a printed or deposited value, mapped to the paper's display item, with the exclusions of L2. This draft takes (a).
 - **(b)** For dye and herskind, the shakedown's approved attempt-02 lists (34 and 15 targets); (a) for the other three.
@@ -30,6 +34,8 @@ Affects: all papers.
 
 ### L2. Pilot items with nothing published to compare against: drop them from the list?
 
+**Ruled 2026-10-09: (a).**
+
 - **(a)** Exclude, and list each exclusion with its reason (this draft). Examples: dye's 0.83 and Amethyst→Disc 0.87, which the paper never prints (the pilot's 'Published' column was its own output); herskind's frequency table and period summaries, which were tabulated but never compared; marwick's checklist infographic.
 - **(b)** Keep them as targets with an outcome such as 'no published value', counted in the denominator.
 
@@ -38,6 +44,8 @@ Affects: all papers.
 Affects: DYE excluded items, HER excluded items, MAR excluded items.
 
 ### L3. Scope changes: where the pilot compared only part of a published item, does the target extend to the item's full scope (amendment 3 §7(c))?
+
+**Ruled 2026-10-09: (a).**
 
 - **(a)** Extend, mark the target scope-changed, and pass it only if the pilot's elements match the pilot (the unchanged rule) and the added elements match the printed values at the target's tolerance (this draft: DYE-T04 gains six printed zeros; HER-T03 becomes Fig. 3's six panels).
 - **(b)** Keep the pilot's partial scope and record the shortfall.
@@ -48,6 +56,8 @@ Affects: DYE-T04, HER-T03.
 
 ### L4. Does a target stay 'unchanged' when the pilot's result was ineligible for credit (a re-implementation, class ii or iii), but the expected outcome and value equal the pilot's?
 
+**Ruled 2026-10-09: (a).**
+
 - **(a)** Yes: the set records whether the expected result differs from the pilot's; eligibility is a separate field (this draft).
 - **(b)** No: every target whose pilot result was ineligible is corrected.
 
@@ -57,14 +67,19 @@ Affects: DYE-T01, DYE-T03–T11, DYE-T13, HER-T01, HER-T02.
 
 ### L5. Crema's role. The registration names a crema 'stochastic-path leg' that regenerates the published tables from archived posteriors, and says the full-MCMC path is not re-run.
 
-- **(a)** The leg is mandatory and covers Table 1 only (CREMA-T01). The two gate papers are chosen from the other four. Crema's figures (CREMA-T03–T07) are recorded but not run (this draft).
-- **(b)** Crema is one of the two gate papers: the leg plus its five figures from the archived posteriors.
+**Open.** The registrant asked on 2026-10-09 whether the figures repeat the table; the recommendation is revised from (a) to (c).
 
-**Recommendation:** (a). The registered wording is 'regeneration of published tables', and CREMA-T01 is corrected, so crema has no unchanged in-gate target to offer as a regression signal.
+- **(a)** The leg is mandatory and covers Table 1 only (CREMA-T01). Crema's figures (CREMA-T03–T07) are recorded but not run (this draft).
+- **(b)** Crema is also a gate paper: the leg plus its five figures from the archived posteriors.
+- **(c)** The leg covers Table 1 and all five figures (CREMA-T03 to T07), each drawn by v1.0.0's figures_main.R from the deposit's data and archived posteriors in the same run (minutes). Crema is not counted as a gate paper. Fig. 1 needs rnaturalearthhires installed at build time, pinned to a tag or recorded commit.
+
+**Recommendation:** (c), revised 2026-10-09 after the registrant asked whether the figures repeat the table. They mostly do not. Table 1 gives the hierarchical model's parameters for case studies 1a and 1b only. Fig. 2 (the simulation tests of both models) and Fig. 5 (case study 2, the ICAR model of British cremation) appear nowhere else, and Figs 3 and 4 add the posterior predictive fit to the parameters. Under (a), case study 2 would go untested. The registration's 'regeneration of published tables' names the path the leg exercises; adding the figures supplements the leg without changing it.
 
 Affects: CREMA-T01–T07.
 
 ### L6. Which two papers does the gate run (amendment 3 §9: chosen by the size of their unchanged sets)?
+
+**Ruled 2026-10-09: (c).** dye, herskind, and marwick, plus crema's registered leg. Each paper's agentic run passes the API review gate before it starts..
 
 - **(a)** dye and marwick: the two largest testable unchanged sets (11 and 8 targets), plus crema's mandatory leg. Marwick has never run through the agentic lane, so it also tests a Quarto render and an renv restore that the shakedown did not.
 - **(b)** dye and herskind: the shakedown pair. Herskind's unchanged set is only two targets, but one is the 1,601-cell S3 table, the strongest value-level signal in the ledger.
@@ -76,6 +91,8 @@ Affects: gate configuration.
 
 ### L7. How is the size of an unchanged set measured?
 
+**Ruled 2026-10-09: (a).**
+
 - **(a)** Testable unchanged targets, with element counts beside them (this draft).
 - **(b)** All unchanged targets, including those expected to come out untestable.
 - **(c)** Elements (values) rather than targets.
@@ -86,6 +103,8 @@ Affects: L6.
 
 ### L8. Visual targets: what does 'the pilot's outcome' mean for a figure?
 
+**Ruled 2026-10-09: (a).**
+
 - **(a)** The outcome class: reproduced or not. Differences of styling only (theme, font, label spacing) count as reproduced, following the instrument's 'the scientific content must match' (this draft).
 - **(b)** Any visible difference is MINOR_DISCREPANCY and not reproduced, as attempt-02's plan pre-classed dye's ggplot2 theme.
 
@@ -94,6 +113,8 @@ Affects: L6.
 Affects: DYE-T13, CREMA-T03–T07, MAR-T09, MAR-T11, MAR-T13.
 
 ### L9. Evidence for the PAPER_ERROR corrections. Shakedown attempt-02 gave dye's corrected 0.99967 (DYE-T02) from a section 7 file carrying a declared input-path edit (class ii), so tier 3's 'run unmodified' held only in substance. On 2026-10-09 this draft re-ran sections 5 and 7 byte-identical, with the redirect in a wrapper, and got the same value (evidence/l9-dye-section-07/). Herskind's Fig. 4 correction (HER-T04) already rests on the authors' createResultTable(), parsed verbatim from the byte-identical S2.R (phase2-shakedown/t11-completion/). Both are operator runs, not pipeline outputs.
+
+**Ruled 2026-10-09: (b).** both operator runs are done (dye: evidence/l9-dye-section-07/; herskind: phase2-shakedown/t11-completion/) and are admitted as tier-3 evidence.
 
 - **(a)** Admit both as tier-3 evidence: the dye edit only points the read at a byte-identical local copy of the same file.
 - **(b)** Before freezing, confirm each with an operator run of the byte-identical authors' code through a wrapper (no model calls; minutes in Docker), and cite that run.
@@ -105,6 +126,8 @@ Affects: DYE-T02, HER-T04.
 
 ### L10. Dye's expected verdict at the pilot's scope.
 
+**Ruled 2026-10-09: (a).**
+
 - **(a)** PARTIAL: 11/13 targets reproduce, the published section 4 code cannot produce Fig. 3 under any public release, and one printed value is a paper error (this draft).
 - **(b)** SUCCESSFUL: 'nearly all values reproduced'.
 
@@ -113,6 +136,8 @@ Affects: DYE-T02, HER-T04.
 Affects: dye expected verdict.
 
 ### L11. Marwick's static figure includes. The published Fig. 2 (Bayesian GAMs) and Fig. 4 (PCA biplot) enter paper.qmd as pre-made PNGs. Fig. 4's data are regenerated by the render (plot_pca_means.svg); Fig. 2 comes from the deposit's supplement-GAMS-details.qmd, which the Dockerfile does not run.
+
+**Ruled 2026-10-09: (a).** Fig. 4 is regenerated by the render (plot_pca_means.svg). Fig. 2 can be regenerated only by a multi-hour MCMC re-run, which raises L17..
 
 - **(a)** A static include never counts. Expected REPRODUCED_VISUAL only when the figure is regenerated from the deposit's code (the render's SVG for Fig. 4; the supplement's qmd for Fig. 2); otherwise not reproduced.
 - **(b)** Expected CANNOT_COMPARE for both, within the pilot's scope (the Docker render only).
@@ -123,6 +148,8 @@ Affects: MAR-T10, MAR-T12, marwick expected verdict.
 
 ### L12. Confirm two corrections the audit did not find: the pilot recorded marwick's published Kendall's W as '~0.70' (printed 0.64) and said PC1's variance is not printed (printed 71 %).
 
+**Ruled 2026-10-09: (a).**
+
 - **(a)** Confirm: the printed values stand, the pilot's outcomes become discrepancies from version 652e542, and version 1.3 is expected to give the printed values, as its own rendered paper.docx does (this draft).
 
 **Recommendation:** (a).
@@ -130,6 +157,8 @@ Affects: MAR-T10, MAR-T12, marwick expected verdict.
 Affects: MAR-T04, MAR-T06.
 
 ### L13. Marwick's review counts (25 manuscripts; 11 published) may be typed prose rather than computed. Keep them as targets?
+
+**Ruled 2026-10-09: (a).** kept; checked against paper.qmd at 1.3 before freezing.
 
 - **(a)** Keep them: the pilot listed them, and the deposit's 'JAS AER data analysis.csv' may compute them (this draft).
 - **(b)** Exclude them if paper.qmd at 1.3 types them as text.
@@ -140,6 +169,8 @@ Affects: MAR-T07, MAR-T08.
 
 ### L14. Key: every value the pilot compared rests on inputs the reproducer reconstructed from upstream datasets (audit KEY-3; Q5(iii)), so every compared target is expected-untestable. What is key's expected verdict?
 
+**Ruled 2026-10-09: (a).**
+
 - **(a)** BLOCKED, coverage 0: no target can be tested on admissible inputs.
 - **(b)** PARTIAL, as the pilot found.
 
@@ -148,6 +179,8 @@ Affects: MAR-T07, MAR-T08.
 Affects: key expected verdict.
 
 ### L16. Audit Q5(ii) sends key's 'two inconsistent cells (3.1%, 19.6%)' to the paper-error protocol, and lodged amendment 3 §7(d) repeats it ('as the ruling directs for its two inconsistent cells'). The premise is the pilot's transcription error: the paper prints Midland Thickness 19.6 and Clovis Mass 3.1, and the pilot's wrapper swapped them (attempt-01 run-analysis.R lines 260–261). With the printed values, Clovis Mass is reproduced by the inferred formula, and no printed Extension % is shown wrong by printed inputs alone: all 21 lie inside the band that rounding of the printed inputs allows, although 10 of the 16 Table 6 values miss at 1 dp.
+
+**Ruled 2026-10-09: (a).** erratum log Entry 7 records the slip; the public correction is queued for the next OSF amendment.
 
 - **(a)** Record the error and its correction: no key cell goes to the paper-error protocol on this evidence. The general rule in §7(d) is unaffected; only its example is. Log the factual slip in the erratum log, and decide whether it needs a note on OSF (it changes no rule).
 - **(b)** Send every Table 6 Extension % that the formula misses at 1 dp (10 cells) to the protocol, reading §7(d)'s rule literally.
@@ -158,11 +191,25 @@ Affects: KEY-T02, erratum log, amendment 3 §7(d) example.
 
 ### L15. Freezing: where does the ruled ledger live?
 
+**Ruled 2026-10-09: (a).**
+
 - **(a)** Ruled copy committed as outputs/validation/correction-ledger/correction-ledger-v1.0.json, its sha256 recorded in the gate's run configuration, and the launch commit containing it (amendment 3 §9).
 
 **Recommendation:** (a). Before freezing: hold the crema v1.0.0 and herskind v1 deposits in the corpus store with manifest entries (audit Q10), hash marwick's files inside the 1.3 zip, and settle L9.
 
 Affects: freezing.
+
+### L17. Marwick's Fig. 2 under L11 (a). The published image comes from supplement-GAMS-details.qmd at 1.3. Its model-fitting chunk is marked 'eval: false', with the authors' comment 'this takes a few hours': five brms models, each with 4 chains of 50,000 iterations, adapt_delta 0.99999, and seed 123. The chunk saves results_brms.RData ('quite a large file'), which the tag 1.3 tree does not contain. So nothing archived can be redrawn, and regenerating Fig. 2 means a multi-hour MCMC re-run.
+
+**Open.**
+
+- **(a)** Outside the gate, as a stated scope limit like crema's full-MCMC path (CREMA-T02): MAR-T10 is recorded but not run, and marwick's gate verdict rests on its other 12 targets.
+- **(b)** In the gate, expected CANNOT_COMPARE: the fit is not deposited and the gate does not re-run multi-hour MCMC. Marwick's expected verdict then needs a further call (SUCCESSFUL as 'nearly all', or PARTIAL).
+- **(c)** In the gate, expected REPRODUCED_VISUAL: the run fits the five models (hours of compute; seeded, so close but not guaranteed identical across platforms).
+
+**Recommendation:** (a). It follows the registration's own treatment of a multi-hour MCMC path ('stated rather than silent'), keeps L11 (a)'s rule that a static include is never credited, and keeps marwick's gate verdict about what the gate actually runs.
+
+Affects: MAR-T10, marwick expected verdict.
 
 ## Definitions
 
@@ -210,7 +257,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Credit eligibility | pilot: withdrawn (Q4); gate: eligible when table_main.R runs byte-identical on v1.0.0's results/*.RData through a wrapper |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH on all 24 cells |
-| Rulings needed | L5 |
+| Rulings | L5 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -257,7 +304,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Credit eligibility | pilot: historical (Q4: pilot verdicts preserved as artefacts); gate: not run |
 | Coverage | expected-untestable: False; comparison: tolerance |
 | Expected outcome | not run in the gate |
-| Rulings needed | L5 |
+| Rulings | L5 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -293,7 +340,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Pilot item | comparison report 'Figure Comparison' row Figure 2 'Site distribution maps (3 panels)' |
 | Location | vor, PDF p. 5 (printed p. 5) |
 | Analysis type | visual (figure from archived posteriors or data) |
-| Gate scope | conditional: in the gate only if crema is also one of the two gate papers (ruling L5) |
+| Gate scope | conditional: in the leg only if L5 extends it to the figures (open) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision: figure verification is visual; the scientific content must match) |
 | Pilot outcome | 'Visually identical' / 'Identical', but between the pilot's own pre-computed and fresh runs, not against the paper; run from v2.0.0 posteriors |
@@ -304,7 +351,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings needed | L5, L8 |
+| Rulings | L5, L8 |
 | Note | Needs rnaturalearthhires (ne_countries(scale = 10)); install it at build time pinned to a tag or recorded commit (Q6(c); amendment 3 §7(d)). |
 
 #### CREMA-T04 — Fig. 2 (Performance of the hierarchical (a and b, simulations 1a and 1b) and the ICAR model (c, simulation 2) …)
@@ -314,7 +361,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Pilot item | comparison report 'Figure Comparison' row Figure 1 'Diffusion curves (3 panels)' |
 | Location | vor, PDF p. 6 (printed p. 6) |
 | Analysis type | visual (figure from archived posteriors or data) |
-| Gate scope | conditional: in the gate only if crema is also one of the two gate papers (ruling L5) |
+| Gate scope | conditional: in the leg only if L5 extends it to the figures (open) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision: figure verification is visual; the scientific content must match) |
 | Pilot outcome | 'Visually identical' / 'Identical', but between the pilot's own pre-computed and fresh runs, not against the paper; run from v2.0.0 posteriors |
@@ -325,7 +372,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings needed | L5, L8 |
+| Rulings | L5, L8 |
 | Note | Drawn from the archived simulation posteriors in sim/results/. |
 
 #### CREMA-T05 — Fig. 3 (Posterior predictive check of the fitted hierarchical Model on observed proportion SPD … in Japan (case study 1a))
@@ -335,7 +382,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Pilot item | comparison report 'Figure Comparison' row Figure 3 'Japan posterior predictive check' |
 | Location | vor, PDF p. 7 (printed p. 7) |
 | Analysis type | visual (figure from archived posteriors or data) |
-| Gate scope | conditional: in the gate only if crema is also one of the two gate papers (ruling L5) |
+| Gate scope | conditional: in the leg only if L5 extends it to the figures (open) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision: figure verification is visual; the scientific content must match) |
 | Pilot outcome | 'Visually identical' / 'Identical', but between the pilot's own pre-computed and fresh runs, not against the paper; run from v2.0.0 posteriors |
@@ -346,7 +393,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings needed | L5, L8 |
+| Rulings | L5, L8 |
 
 #### CREMA-T06 — Fig. 4 (Posterior predictive check of the fitted hierarchical Model on observed proportion SPD … in Britain (case study 1b))
 
@@ -355,7 +402,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Pilot item | comparison report 'Figure Comparison' row Figure 4 'Britain posterior predictive check' |
 | Location | vor, PDF p. 7 (printed p. 7) |
 | Analysis type | visual (figure from archived posteriors or data) |
-| Gate scope | conditional: in the gate only if crema is also one of the two gate papers (ruling L5) |
+| Gate scope | conditional: in the leg only if L5 extends it to the figures (open) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision: figure verification is visual; the scientific content must match) |
 | Pilot outcome | 'Visually identical' / 'Identical', but between the pilot's own pre-computed and fresh runs, not against the paper; run from v2.0.0 posteriors |
@@ -366,7 +413,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings needed | L5, L8 |
+| Rulings | L5, L8 |
 
 #### CREMA-T07 — Fig. 5 (Estimated proportion of cremation dates in Britain (case study 2))
 
@@ -375,7 +422,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Pilot item | comparison report 'Figure Comparison' row Figure 5 'Burial cremation proportions' |
 | Location | vor, PDF p. 7 (printed p. 7) |
 | Analysis type | visual (figure from archived posteriors or data) |
-| Gate scope | conditional: in the gate only if crema is also one of the two gate papers (ruling L5) |
+| Gate scope | conditional: in the leg only if L5 extends it to the figures (open) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision: figure verification is visual; the scientific content must match) |
 | Pilot outcome | 'Visually identical' / 'Identical', but between the pilot's own pre-computed and fresh runs, not against the paper; run from v2.0.0 posteriors |
@@ -386,7 +433,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings needed | L5, L8 |
+| Rulings | L5, L8 |
 
 ### Pilot items excluded from the target list
 
@@ -418,7 +465,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Stable Solid Branching', rows BE3-Amber → BE1-Amethyst and BE3-Amber → BE1-Cowrie |
 | Location | vor, PDF p. 17 (printed p. 16, ll. 372–374) |
 | Analysis type | deterministic (section 7 oFD matrix) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 2; pilot_compared: 2 |
 | Tolerance | exact (verbal claim read as probability 1 at 2 dp) (basis: pilot report; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH |
@@ -428,7 +475,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible: no authors' file executed (DYE1-3); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH |
-| Rulings needed | L4 |
+| Rulings | L4 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -442,7 +489,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Stable Solid Branching', row BE1-Cowrie → BE1-Disc (pilot 'Published' 1.00) |
 | Location | vor, PDF p. 17 (printed p. 16, ll. 374–376) |
 | Analysis type | deterministic (section 7 oFD matrix) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | exact at 2 dp (basis: pilot report) |
 | Pilot outcome | EXACT_MATCH |
@@ -451,12 +498,12 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Corrected expected value | 1.00 at 2 dp (0.99967) |
 | Evidence tier | 3: the authors' section 5 and 7 code, byte-identical to the transcription, on the authors' beads-1.csv, in an operator run on 2026-10-09 (evidence/l9-dye-section-07/): 0.999667. 0.87 is the Amethyst→Disc cell (0.867167). Shakedown attempt-02 (T06) gave the same values. |
 | Ruling | shakedown ruling 2 (2026-10-04): PAPER_ERROR, after Shawn checked the typeset version of record |
-| Caveat | attempt-02 ran section 7 with a declared input-path edit inside the authors' file (DYE2-1, class ii); the 2026-10-09 operator run kept the files byte-identical and moved the redirect into a wrapper, so tier 3 holds literally if L9 admits operator runs |
+| Caveat | attempt-02 ran section 7 with a declared input-path edit inside the authors' file (DYE2-1, class ii); the 2026-10-09 operator run kept the files byte-identical and moved the redirect into a wrapper, so tier 3 holds literally; L9 (b), ruled 2026-10-09, admits the operator run as tier-3 evidence |
 | Repair class and status | DYE1-3 (ii): no authors' file executed; the authors' listings were inlined into a 476-line reproducer script; DYE1-2 (iii, declared, result-identical, not a repair): bead list rebuilt by named construction; Q2 rules it class (iii). Status: gate run: the authors' transcribed files byte-identical to the deterministic transcription of supplement-1.pdf (Q8), mechanics in wrappers only (Q1) |
 | Credit eligibility | pilot: ineligible (DYE1-3; and compared against an unprinted value); gate: PAPER_ERROR records a discrepancy; it is not a reproduced target |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | PAPER_ERROR (reproduced 1.00 against printed 0.87) |
-| Rulings needed | L9 |
+| Rulings | L9 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -469,7 +516,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Table 2 — Row 1' |
 | Location | supplement-1, PDF p. 38 (printed p. 38) |
 | Analysis type | deterministic (post-processing of the archived MCMC output) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 16; pilot_compared: 16 |
 | Tolerance | exact at the printed precision (2 dp) (basis: pilot report: 'match … exactly (to 2 decimal places, as reported)'; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH on every listed cell |
@@ -479,7 +526,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible: fail-and-uplift by Q2 (class iii); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH on every cell |
-| Rulings needed | L4 |
+| Rulings | L4 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -507,7 +554,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Table 3 — Row 2' |
 | Location | supplement-1, PDF p. 39 (printed p. 39) |
 | Analysis type | deterministic (post-processing of the archived MCMC output) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 7; pilot_compared: 1 |
 | Tolerance | exact at the printed precision (2 dp) (basis: pilot report: 'match … exactly (to 2 decimal places, as reported)'; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH on every listed cell |
@@ -518,7 +565,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible: fail-and-uplift by Q2 (class iii); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH on every cell |
-| Rulings needed | L3, L4 |
+| Rulings | L3, L4 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -537,7 +584,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Table 4 — Row 3' |
 | Location | supplement-1, PDF p. 40 (printed p. 40) |
 | Analysis type | deterministic (post-processing of the archived MCMC output) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 5; pilot_compared: 5 |
 | Tolerance | exact at the printed precision (2 dp) (basis: pilot report: 'match … exactly (to 2 decimal places, as reported)'; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH on every listed cell |
@@ -547,7 +594,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible: fail-and-uplift by Q2 (class iii); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH on every cell |
-| Rulings needed | L4 |
+| Rulings | L4 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -564,7 +611,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Table 5 — Row 4' |
 | Location | supplement-1, PDF p. 41 (printed p. 41) |
 | Analysis type | deterministic (post-processing of the archived MCMC output) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 12; pilot_compared: 12 |
 | Tolerance | exact at the printed precision (2 dp) (basis: pilot report: 'match … exactly (to 2 decimal places, as reported)'; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH on every listed cell |
@@ -574,7 +621,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible: fail-and-uplift by Q2 (class iii); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH on every cell |
-| Rulings needed | L4 |
+| Rulings | L4 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -598,7 +645,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Table 6 — Row 5' |
 | Location | supplement-1, PDF p. 42 (printed p. 42) |
 | Analysis type | deterministic (post-processing of the archived MCMC output) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 6; pilot_compared: 6 |
 | Tolerance | exact at the printed precision (2 dp) (basis: pilot report: 'match … exactly (to 2 decimal places, as reported)'; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH on every listed cell |
@@ -608,7 +655,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible: fail-and-uplift by Q2 (class iii); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH on every cell |
-| Rulings needed | L4 |
+| Rulings | L4 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -626,7 +673,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Table 7 — Row 6' |
 | Location | supplement-1, PDF p. 43 (printed p. 43) |
 | Analysis type | deterministic (post-processing of the archived MCMC output) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 2; pilot_compared: 2 |
 | Tolerance | exact at the printed precision (2 dp) (basis: pilot report: 'match … exactly (to 2 decimal places, as reported)'; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH on every listed cell |
@@ -636,7 +683,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible: fail-and-uplift by Q2 (class iii); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH on every cell |
-| Rulings needed | L4 |
+| Rulings | L4 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -650,7 +697,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Table 8 — Row 7' |
 | Location | supplement-1, PDF p. 44 (printed p. 44) |
 | Analysis type | deterministic (post-processing of the archived MCMC output) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | exact at the printed precision (2 dp) (basis: pilot report: 'match … exactly (to 2 decimal places, as reported)'; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH on every listed cell |
@@ -660,7 +707,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible: fail-and-uplift by Q2 (class iii); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH on every cell |
-| Rulings needed | L4 |
+| Rulings | L4 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -673,7 +720,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Table 9 — Row 8' |
 | Location | supplement-1, PDF p. 45 (printed p. 45) |
 | Analysis type | deterministic (post-processing of the archived MCMC output) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | exact at the printed precision (2 dp) (basis: pilot report: 'match … exactly (to 2 decimal places, as reported)'; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH on every listed cell |
@@ -683,7 +730,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible: fail-and-uplift by Q2 (class iii); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH on every cell |
-| Rulings needed | L4 |
+| Rulings | L4 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -696,7 +743,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Table 10 — Row 9' |
 | Location | supplement-1, PDF p. 46 (printed p. 46) |
 | Analysis type | deterministic (post-processing of the archived MCMC output) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 4; pilot_compared: 4 |
 | Tolerance | exact at the printed precision (2 dp) (basis: pilot report: 'match … exactly (to 2 decimal places, as reported)'; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH on every listed cell |
@@ -706,7 +753,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible: fail-and-uplift by Q2 (class iii); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH on every cell |
-| Rulings needed | L4 |
+| Rulings | L4 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -722,7 +769,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Occurrence Plot (Paper Figure 7)' |
 | Location | vor, PDF p. 14 (printed p. 13) |
 | Analysis type | visual (supplement section 4 code) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision) |
 | Pilot outcome | credited qualitatively ('72 interments confirmed') |
@@ -735,7 +782,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible: fail-and-uplift; gate: not creditable without the repair |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | CANNOT_COMPARE (the published code errors; fail-and-uplift) |
-| Rulings needed | none |
+| Rulings | none |
 
 #### DYE-T13 — Fig. 4, tempo plots of 23 bead types
 
@@ -744,7 +791,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Pilot item | comparison report 'Tempo Plots (Paper Figure 8)' |
 | Location | vor, PDF p. 16 (printed p. 15) |
 | Analysis type | visual (supplement section 6 code) |
-| Gate scope | in_gate if dye is a gate paper |
+| Gate scope | in_gate: dye is a gate paper (L6 (c)) |
 | Elements | published: 23; pilot_compared: 23 |
 | Tolerance | visual: the scientific content must match; styling differences are not discrepancies (basis: verdicts-and-precision tolerance rules; the pilot checked 'layout and style') |
 | Pilot outcome | credited qualitatively (23 panels, two shape patterns) |
@@ -754,7 +801,7 @@ Dye, T.S., Buck, C.E., DiNapoli, R.J., & Philippe, A. (2023). Bayesian chronolog
 | Credit eligibility | pilot: ineligible (DYE1-2, DYE1-3); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings needed | L4, L8 |
+| Rulings | L4, L8 |
 
 ### Pilot items excluded from the target list
 
@@ -788,7 +835,7 @@ Herskind, L.L.P., & Riede, F. (2024). A computational linguistic methodology for
 | Pilot item | comparison report 'Table Verification (S3.xlsx Reference)' |
 | Location | deposit:Herskind&Riede_S3.xlsx |
 | Analysis type | deterministic |
-| Gate scope | in_gate if herskind is a gate paper |
+| Gate scope | in_gate: herskind is a gate paper (L6 (c)) |
 | Elements | published: 291 rows; 1,601 numeric cells (2,329 non-empty); pilot_compared: 291 rows, every column, and the sort order |
 | Tolerance | exact (row membership, order, every cell) (basis: pilot report: identical 'to full IEEE 754 double-precision') |
 | Pilot outcome | EXACT_MATCH, 291/291 rows (max \|PMI diff\| 5.03 × 10⁻¹⁷) |
@@ -798,7 +845,7 @@ Herskind, L.L.P., & Riede, F. (2024). A computational linguistic methodology for
 | Credit eligibility | pilot: ineligible: re-implementation (HER1-4) with a class (iii) edit (HER1-3, Q3); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH on every cell and the row order |
-| Rulings needed | L4 |
+| Rulings | L4 |
 
 Elements by reference: Herskind&Riede_S3.xlsx (Zenodo v2, 10.5281/zenodo.10801706), sha256 `1199acac5d1edb916dc4528d5e994295e206e798cb132e91c3be59cc9e328eed`. cell-identical to Zenodo v1's S3 (input-drift-herskind.md: 0 changed, added, or removed cells in all three sheets)
 
@@ -809,7 +856,7 @@ Elements by reference: Herskind&Riede_S3.xlsx (Zenodo v2, 10.5281/zenodo.1080170
 | Pilot item | comparison report 'Top PMI Values (Verification)' |
 | Location | vor, PDF p. 5 (printed p. 5) |
 | Analysis type | deterministic |
-| Gate scope | in_gate if herskind is a gate paper |
+| Gate scope | in_gate: herskind is a gate paper (L6 (c)) |
 | Elements | published: 5; pilot_compared: 5 |
 | Tolerance | exact at the printed 4 dp (basis: the pilot compared at 3 dp against S3; the figure prints 4 dp, which the deposit values round to) |
 | Pilot outcome | EXACT_MATCH (5/5, against S3) |
@@ -819,7 +866,7 @@ Elements by reference: Herskind&Riede_S3.xlsx (Zenodo v2, 10.5281/zenodo.1080170
 | Credit eligibility | pilot: ineligible (as HER-T01); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH |
-| Rulings needed | L4 |
+| Rulings | L4 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -836,7 +883,7 @@ Elements by reference: Herskind&Riede_S3.xlsx (Zenodo v2, 10.5281/zenodo.1080170
 | Pilot item | comparison report 'Figure Comparison' rows 'Figure 3 (Maglemose patterns)', 'Figure 4 (Kongemose patterns)', 'Figure 5 (Ertebølle patterns)' |
 | Location | vor, PDF p. 5 (printed p. 5) |
 | Analysis type | deterministic (labels and bar order) and visual |
-| Gate scope | in_gate if herskind is a gate paper |
+| Gate scope | in_gate: herskind is a gate paper (L6 (c)) |
 | Elements | published: 6 panels; 128 labelled bars (21, 21, 23, 23, 20, 20); pilot_compared: no published figure; 'bar heights match table values' |
 | Tolerance | exact on the PMI labels (4 dp) and bar order; visual on the rest (basis: verdicts-and-precision; no pilot plan exists) |
 | Pilot outcome | 'Structural match' (credited), under per-period labels that match none of the paper's figures. The pilot's own plots map onto Fig. 3: bigram panels a and b (21 bars) agree; its trigram plots have 1 bar against 23; it made no quadrigram plots (audit HER1-2). |
@@ -850,7 +897,7 @@ Elements by reference: Herskind&Riede_S3.xlsx (Zenodo v2, 10.5281/zenodo.1080170
 | Credit eligibility | pilot: withdrawn (Q3); gate: eligible under the wrapper-only rule |
 | Coverage | expected-untestable: False; comparison: exact (labels) |
 | Expected outcome | EXACT_MATCH on all 128 labels and bar order |
-| Rulings needed | L3 |
+| Rulings | L3 |
 
 #### HER-T04 — Fig. 4 (bigram PMI heatmap over 49 motifs, with hand-drawn single-culture boxes)
 
@@ -859,7 +906,7 @@ Elements by reference: Herskind&Riede_S3.xlsx (Zenodo v2, 10.5281/zenodo.1080170
 | Pilot item | comparison report 'Figure Comparison' row 'PMI heatmap' |
 | Location | vor, PDF p. 6 (printed p. 6) |
 | Analysis type | visual, with a deterministic cell check |
-| Gate scope | in_gate if herskind is a gate paper |
+| Gate scope | in_gate: herskind is a gate paper (L6 (c)) |
 | Elements | published: 1,176 displayed cells and their boxes; pilot_compared: internal matrix only ('Matrix values identical'); not the published figure |
 | Tolerance | visual; the box layer checked cell by cell (basis: shakedown ruling 4 standing principle: a check's planned scope must cover the target's full tolerance) |
 | Pilot outcome | 'Computational match' (credited) |
@@ -872,7 +919,7 @@ Elements by reference: Herskind&Riede_S3.xlsx (Zenodo v2, 10.5281/zenodo.1080170
 | Credit eligibility | pilot: ineligible (as HER-T01); gate: PAPER_ERROR is not a reproduced target |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | PAPER_ERROR (two box-layer cells) |
-| Rulings needed | L9 |
+| Rulings | L9 |
 
 ### Pilot items excluded from the target list
 
@@ -905,7 +952,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Pilot item | comparison report 'Table 5: Olduvai Bed IV Cleavers' |
 | Location | vor, PDF p. 12 (printed p. 12) |
 | Analysis type | deterministic (OLE, mmc1) |
-| Gate scope | in_gate if key is a gate paper |
+| Gate scope | outside_gate: key is not a gate paper (L6 (c)) |
 | Elements | published: 30; pilot_compared: 30 |
 | Tolerance | exact at the printed precision (basis: pilot report ('All values should match exactly')) |
 | Pilot outcome | 24 EXACT_MATCH and 6 WITHIN_PRECISION (credited); one of the six (Thickness Mean) rests on a mis-transcribed 42.3, so against the printed 42.2 it is exact |
@@ -917,7 +964,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Credit eligibility | pilot: excluded (Q5(iii)); gate: not creditable on reconstructed inputs |
 | Coverage | expected-untestable: True; comparison: n/a |
 | Expected outcome | EXPECTED_UNTESTABLE |
-| Rulings needed | L14 |
+| Rulings | L14 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -959,7 +1006,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Pilot item | comparison report 'Table 6: Paleoindian Projectile Points' |
 | Location | vor, PDF p. 13 (printed p. 13) |
 | Analysis type | deterministic (OLE, mmc1) |
-| Gate scope | in_gate if key is a gate paper |
+| Gate scope | outside_gate: key is not a gate paper (L6 (c)) |
 | Elements | published: 96; pilot_compared: 96 |
 | Tolerance | exact at the printed precision (basis: pilot report ('All values should match exactly')) |
 | Pilot outcome | 65 EXACT_MATCH, 21 WITHIN_PRECISION, 8 CANNOT_COMPARE, and 2 MAJOR_DISCREPANCY. The two majors rest on the pilot's own swap of two printed cells: the paper prints Midland Thickness 19.6 and Clovis Mass 3.1, not 3.1 and 19.6. Against the printed values, Clovis Mass is exact (3.1) and Midland Thickness differs by 1.6 points (21.2). |
@@ -971,7 +1018,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Credit eligibility | pilot: excluded (Q5(iii)); gate: not creditable on reconstructed inputs |
 | Coverage | expected-untestable: True; comparison: n/a |
 | Expected outcome | EXPECTED_UNTESTABLE |
-| Rulings needed | L14, L16 |
+| Rulings | L14, L16 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -1079,7 +1126,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Pilot item | comparison report 'Scope Limitations' (not reproduced) |
 | Location | vor, PDF p. 6 (printed p. 6) |
 | Analysis type | deterministic or stochastic (see the paper) |
-| Gate scope | in_gate if key is a gate paper |
+| Gate scope | outside_gate: key is not a gate paper (L6 (c)) |
 | Elements | published: the whole item; pilot_compared: 0 |
 | Tolerance | n/a (untestable) (basis: pilot report) |
 | Pilot outcome | not reproduced: replica assemblage data not published |
@@ -1089,7 +1136,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Credit eligibility | pilot: not credited; gate: not creditable |
 | Coverage | expected-untestable: True; comparison: n/a |
 | Expected outcome | UNTESTABLE (input data not available) |
-| Rulings needed | L7 |
+| Rulings | L7 |
 
 #### KEY-T04 — Table 3 (OLE validation, replica Archaic points)
 
@@ -1098,7 +1145,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Pilot item | comparison report 'Scope Limitations' (not reproduced) |
 | Location | vor, PDF p. 7 (printed p. 7) |
 | Analysis type | deterministic or stochastic (see the paper) |
-| Gate scope | in_gate if key is a gate paper |
+| Gate scope | outside_gate: key is not a gate paper (L6 (c)) |
 | Elements | published: the whole item; pilot_compared: 0 |
 | Tolerance | n/a (untestable) (basis: pilot report) |
 | Pilot outcome | not reproduced: replica assemblage data not published |
@@ -1108,7 +1155,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Credit eligibility | pilot: not credited; gate: not creditable |
 | Coverage | expected-untestable: True; comparison: n/a |
 | Expected outcome | UNTESTABLE (input data not available) |
-| Rulings needed | L7 |
+| Rulings | L7 |
 
 #### KEY-T05 — Table 4 (validation summary, both replica assemblages)
 
@@ -1117,7 +1164,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Pilot item | comparison report 'Scope Limitations' (not reproduced) |
 | Location | vor, PDF p. 12 (printed p. 12) |
 | Analysis type | deterministic or stochastic (see the paper) |
-| Gate scope | in_gate if key is a gate paper |
+| Gate scope | outside_gate: key is not a gate paper (L6 (c)) |
 | Elements | published: the whole item; pilot_compared: 0 |
 | Tolerance | n/a (untestable) (basis: pilot report) |
 | Pilot outcome | not reproduced: replica assemblage data not published |
@@ -1127,7 +1174,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Credit eligibility | pilot: not credited; gate: not creditable |
 | Coverage | expected-untestable: True; comparison: n/a |
 | Expected outcome | UNTESTABLE (input data not available) |
-| Rulings needed | L7 |
+| Rulings | L7 |
 
 #### KEY-T06 — Table 5, the eight case studies other than Olduvai
 
@@ -1136,7 +1183,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Pilot item | comparison report 'Scope Limitations' (not reproduced) |
 | Location | vor, PDF p. 12 (printed p. 12) |
 | Analysis type | deterministic or stochastic (see the paper) |
-| Gate scope | in_gate if key is a gate paper |
+| Gate scope | outside_gate: key is not a gate paper (L6 (c)) |
 | Elements | published: the whole item; pilot_compared: 0 |
 | Tolerance | n/a (untestable) (basis: pilot report) |
 | Pilot outcome | not reproduced: data held by co-authors or in closed-access monographs |
@@ -1146,7 +1193,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Credit eligibility | pilot: not credited; gate: not creditable |
 | Coverage | expected-untestable: True; comparison: n/a |
 | Expected outcome | UNTESTABLE (input data not available) |
-| Rulings needed | L7 |
+| Rulings | L7 |
 
 #### KEY-T07 — Table 7 (Iberian Mesolithic geometric microliths)
 
@@ -1155,7 +1202,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Pilot item | comparison report 'Scope Limitations' (not reproduced) |
 | Location | vor, PDF p. 13 (printed p. 13) |
 | Analysis type | deterministic or stochastic (see the paper) |
-| Gate scope | in_gate if key is a gate paper |
+| Gate scope | outside_gate: key is not a gate paper (L6 (c)) |
 | Elements | published: the whole item; pilot_compared: 0 |
 | Tolerance | n/a (untestable) (basis: pilot report) |
 | Pilot outcome | not reproduced: morphometric measurements not public; the randomised script (mmc2) sets no seed |
@@ -1165,7 +1212,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Credit eligibility | pilot: not credited; gate: not creditable |
 | Coverage | expected-untestable: True; comparison: n/a |
 | Expected outcome | UNTESTABLE (input data not available) |
-| Rulings needed | L7 |
+| Rulings | L7 |
 
 #### KEY-T08 — Fig. 5 (validation results)
 
@@ -1174,7 +1221,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Pilot item | comparison report 'Scope Limitations' (not reproduced) |
 | Location | vor, PDF p. 11 (printed p. 11) |
 | Analysis type | deterministic or stochastic (see the paper) |
-| Gate scope | in_gate if key is a gate paper |
+| Gate scope | outside_gate: key is not a gate paper (L6 (c)) |
 | Elements | published: the whole item; pilot_compared: 0 |
 | Tolerance | n/a (untestable) (basis: pilot report) |
 | Pilot outcome | not reproduced: 'require the full dataset across all case studies' (the reason is wrong for Fig. 5, which uses the replica data) |
@@ -1184,7 +1231,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Credit eligibility | pilot: not credited; gate: not creditable |
 | Coverage | expected-untestable: True; comparison: n/a |
 | Expected outcome | UNTESTABLE (input data not available) |
-| Rulings needed | L7 |
+| Rulings | L7 |
 
 #### KEY-T09 — Fig. 6 (sample size against range extension)
 
@@ -1193,7 +1240,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Pilot item | comparison report 'Scope Limitations' (not reproduced) |
 | Location | vor, PDF p. 14 (printed p. 14) |
 | Analysis type | deterministic or stochastic (see the paper) |
-| Gate scope | in_gate if key is a gate paper |
+| Gate scope | outside_gate: key is not a gate paper (L6 (c)) |
 | Elements | published: the whole item; pilot_compared: 0 |
 | Tolerance | n/a (untestable) (basis: pilot report) |
 | Pilot outcome | not reproduced: 'require the full dataset across all case studies' |
@@ -1203,7 +1250,7 @@ Key, A., Eren, M.I., Bebber, M.R., Buchanan, B., Cortell-Nicolau, A., Martín-Ra
 | Credit eligibility | pilot: not credited; gate: not creditable |
 | Coverage | expected-untestable: True; comparison: n/a |
 | Expected outcome | UNTESTABLE (input data not available) |
-| Rulings needed | L7 |
+| Rulings | L7 |
 
 ### Notes
 
@@ -1222,7 +1269,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 - `Dockerfile`: sha256 `93dd7ffd893d6174720ae9ae3fd78dfea8d69f641a05e8a3b9cc799d1ee5bc49`
 - `analysis/paper/paper.docx`: sha256 `f548ec4b24173b34e0122a1e7e500a42e2341edc324c85a64f52b0ac8e40350f` (the authors' rendered output at 1.3; corroborates MAR-T04 to T06)
 - **Pilot:** attempt-01, verdict SUCCESSFUL; executed GitHub main 652e542 (8 commits past 1.3); audit findings MAR-1, MAR-2.
-- **Expected verdict:** SUCCESSFUL (provisional on L11). Version 1.3 is expected to give the printed values for MAR-T01 to T08, as its own rendered paper.docx shows for Wt, p, and PC1, and the dynamic figures are expected to reproduce. MAR-T10 and T12 depend on L11: if a static include is not a reproduction and the gate does not regenerate them, both are not reproduced and the verdict becomes PARTIAL.
+- **Expected verdict:** SUCCESSFUL (provisional on L17). Version 1.3 is expected to give the printed values for MAR-T01 to T08, as its own rendered paper.docx shows for W, p, and PC1. The dynamic figures are expected to reproduce, Fig. 4 among them, regenerated by the render (L11 (a)). Fig. 2 (MAR-T10) depends on L17: outside the gate under (a); counted under (b) or (c).
 
 ### Targets
 
@@ -1233,7 +1280,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Key Statistics' row 'Total articles' |
 | Location | vor, PDF p. 2 |
 | Analysis type | deterministic |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | exact at the printed precision (basis: pilot report; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH |
@@ -1243,7 +1290,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4: pilot verdicts preserved as artefacts); executed a non-AP-12 version; gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH |
-| Rulings needed | none |
+| Rulings | none |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -1256,7 +1303,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Key Statistics' row 'Journals' |
 | Location | vor, PDF p. 2 |
 | Analysis type | deterministic |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | exact at the printed precision (basis: pilot report; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH |
@@ -1266,7 +1313,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4: pilot verdicts preserved as artefacts); executed a non-AP-12 version; gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH |
-| Rulings needed | none |
+| Rulings | none |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -1279,7 +1326,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Key Statistics' row 'Time span' |
 | Location | vor, PDF p. 2 |
 | Analysis type | deterministic |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | exact at the printed precision (basis: pilot report; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH |
@@ -1289,7 +1336,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4: pilot verdicts preserved as artefacts); executed a non-AP-12 version; gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH |
-| Rulings needed | none |
+| Rulings | none |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -1302,7 +1349,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Key Statistics' row 'Kendall's W' |
 | Location | vor, PDF p. 3 |
 | Analysis type | deterministic |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | exact at the printed precision (basis: pilot report; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH (against '~0.70', a value the paper does not print) |
@@ -1315,7 +1362,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4: pilot verdicts preserved as artefacts); executed a non-AP-12 version; gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH |
-| Rulings needed | L12 |
+| Rulings | L12 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -1328,7 +1375,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Key Statistics' row 'Kendall's p-value' |
 | Location | vor, PDF p. 3 |
 | Analysis type | deterministic |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | exact at the printed 3 significant figures (basis: pilot report; no pilot plan exists) |
 | Pilot outcome | MINOR discrepancy ('data revision', untested) |
@@ -1341,7 +1388,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4: pilot verdicts preserved as artefacts); executed a non-AP-12 version; gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH |
-| Rulings needed | none |
+| Rulings | none |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -1354,7 +1401,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Key Statistics' row 'PC1 variance explained' |
 | Location | vor, PDF p. 4 |
 | Analysis type | deterministic |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | exact at the printed precision (basis: pilot report; no pilot plan exists) |
 | Pilot outcome | N/A ('Not specified in paper text') |
@@ -1367,7 +1414,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4: pilot verdicts preserved as artefacts); executed a non-AP-12 version; gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH |
-| Rulings needed | L12 |
+| Rulings | L12 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
 |---|---|---|---|---|---|---|
@@ -1380,7 +1427,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Key Statistics' row 'Reproducibility reviews' |
 | Location | vor, PDF p. 7 |
 | Analysis type | deterministic |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | exact at the printed precision (basis: pilot report; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH |
@@ -1390,7 +1437,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4: pilot verdicts preserved as artefacts); executed a non-AP-12 version; gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH |
-| Rulings needed | L13 |
+| Rulings | L13 |
 | Note | possibly typed prose rather than inline R (the pilot's environment.md annotates only the article and journal counts as inline R) |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
@@ -1404,7 +1451,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Key Statistics' row 'Published from reviews' |
 | Location | vor, PDF p. 7 |
 | Analysis type | deterministic |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | exact at the printed precision (basis: pilot report; no pilot plan exists) |
 | Pilot outcome | EXACT_MATCH |
@@ -1414,7 +1461,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4: pilot verdicts preserved as artefacts); executed a non-AP-12 version; gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: exact |
 | Expected outcome | EXACT_MATCH |
-| Rulings needed | L13 |
+| Rulings | L13 |
 | Note | as MAR-T07 |
 
 | Element | Printed | Page | Pilot value | Pilot outcome | Expected | Expected outcome |
@@ -1428,7 +1475,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Figure Comparison' row 'Fig 1 fig-compare-other-fields' (dynamic) |
 | Location | vor, PDF p. 3 |
 | Analysis type | visual |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision) |
 | Pilot outcome | credited; compared against the repository's paper.docx at 652e542, not the published article |
@@ -1439,7 +1486,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4); gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings needed | L8 |
+| Rulings | L8 |
 
 #### MAR-T10 — Fig. 2 (Bayesian generalised additive model (GAM) trends over time; static image in paper.qmd)
 
@@ -1448,7 +1495,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Figure Comparison' row 'Fig 3 fig-change-over-time' (static PNG include) and 'Fig 2 fig-change-over-time_from_V1_1' (dynamic) |
 | Location | vor, PDF p. 4 |
 | Analysis type | visual |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)); L17 (open) may place it outside the gate |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision) |
 | Pilot outcome | credited; compared against the repository's paper.docx at 652e542, not the published article |
@@ -1458,8 +1505,8 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Repair class and status | MAR-1 (iv): GitHub main 652e542 executed, 8 commits past the AP-12 version 1.3, including a changed Shannon diversity calculation (group_by(id, journal_name), rendered at attempt-01 outputs/paper.html line 904); MAR-2 (i): no code modifications (self-reported). Status: no repair; the gate re-runs version 1.3 (Q4) |
 | Credit eligibility | pilot: historical (Q4); gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: visual |
-| Expected outcome | RULING NEEDED (L11) |
-| Rulings needed | L11 |
+| Expected outcome | RULING NEEDED (L17) |
+| Rulings | L11, L17 |
 
 #### MAR-T11 — Fig. 3 (journal variation, panels A–E, and the Borda Count consensus ranking, panel F)
 
@@ -1468,7 +1515,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Figure Comparison' row 'Fig 5 fig-variation-by-journal' (dynamic) |
 | Location | vor, PDF p. 5 |
 | Analysis type | visual |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision) |
 | Pilot outcome | credited; compared against the repository's paper.docx at 652e542, not the published article |
@@ -1479,7 +1526,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4); gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings needed | L8 |
+| Rulings | L8 |
 
 #### MAR-T12 — Fig. 4 (PCA biplot of journal means; axis labels PC1 (71%), PC2 (18%))
 
@@ -1488,7 +1535,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Figure Comparison' row 'Fig 4 fig-pca' (static PNG include) |
 | Location | vor, PDF p. 6 |
 | Analysis type | visual |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision) |
 | Pilot outcome | credited; compared against the repository's paper.docx at 652e542, not the published article |
@@ -1498,8 +1545,8 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Repair class and status | MAR-1 (iv): GitHub main 652e542 executed, 8 commits past the AP-12 version 1.3, including a changed Shannon diversity calculation (group_by(id, journal_name), rendered at attempt-01 outputs/paper.html line 904); MAR-2 (i): no code modifications (self-reported). Status: no repair; the gate re-runs version 1.3 (Q4) |
 | Credit eligibility | pilot: historical (Q4); gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: visual |
-| Expected outcome | RULING NEEDED (L11) |
-| Rulings needed | L11 |
+| Expected outcome | REPRODUCED_VISUAL, against the figure the render regenerates (plot_pca_means.svg); the static PNG include is never credited (L11 (a)) |
+| Rulings | L11 |
 
 #### MAR-T13 — Fig. 5 (summary of reproducibility reviews for JAS, panels A–E)
 
@@ -1508,7 +1555,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Figure Comparison' row 'Fig 6 fig-aer-summary' (dynamic) |
 | Location | vor, PDF p. 7 |
 | Analysis type | visual |
-| Gate scope | in_gate if marwick is a gate paper |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision) |
 | Pilot outcome | credited; compared against the repository's paper.docx at 652e542, not the published article |
@@ -1519,7 +1566,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4); gate: eligible when version 1.3 runs unmodified |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings needed | L8 |
+| Rulings | L8 |
 
 ### Pilot items excluded from the target list
 

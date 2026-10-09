@@ -1,9 +1,10 @@
 # Correction ledger for the §8 regression gate — DRAFT
 
-**Status: DRAFT for Shawn's ruling (2026-10-09). Not ruled, not frozen, and
-not hashed.** No run may use any value here until the registrant has ruled
-the open questions, the ruled copy is committed, and its sha256 is recorded in
-the gate's run configuration (amendment 3 §9 and §10 step 3).
+**Status: DRAFT, ruled in part (ledger 0.2.0-draft). Shawn ruled L1 to L4
+and L6 to L16 on 2026-10-09; L5 and L17 are open. Not frozen and not
+hashed.** No run may use any value here until every ruling is made, the
+ruled copy is committed, and its sha256 is recorded in the gate's run
+configuration (amendment 3 §9 and §10 step 3).
 
 ## What this is
 
@@ -84,6 +85,16 @@ reported.
    Its frequency table silently differs from the printed Table 1, which has
    eight paper-error cells (shakedown ruling 3), and its "top PMI"
    (pointwise mutual information) values are not the global top five.
+6. **Marwick: Fig. 2 cannot be redrawn from the deposit.** The published
+   image comes from `supplement-GAMS-details.qmd`, whose model-fitting chunk
+   is marked `eval: false` with the authors' note "this takes a few hours"
+   (five brms models, 4 chains of 50,000 iterations each). Its saved fit,
+   `results_brms.RData`, is not in the tag 1.3 tree. Found 2026-10-09 while
+   applying ruling L11; it raises ruling L17.
+
+Shawn accepted L16's finding on 2026-10-09: the erratum log's Entry 7
+records the key slip, and the public correction is queued for the next OSF
+amendment.
 
 ## Sets and gate selection
 
@@ -93,27 +104,42 @@ reported.
 | dye | 11 | 2 | PARTIAL (SUCCESSFUL) |
 | herskind | 2, including the 1,601-cell S3 table | 2 | SUCCESSFUL (SUCCESSFUL) |
 | key | 0; all nine targets untestable | 2 | BLOCKED (PARTIAL) |
-| marwick | 8 | 5 | SUCCESSFUL, provisional on L11 (SUCCESSFUL) |
+| marwick | 8 | 5 | SUCCESSFUL, provisional on L17 (SUCCESSFUL) |
 
-The recommendation (L6) is dye and marwick, plus crema's mandatory
-archived-posterior leg. Herskind is the alternative if elements, not targets,
-measure the unchanged set (L7).
+**Ruled (L6 (c), 2026-10-09): the gate runs dye, herskind, and marwick,**
+plus crema's mandatory archived-posterior leg. Key is not a gate paper; its
+record keeps the expected verdict for the strict comparison. Each paper's
+agentic run passes the API review gate before it starts.
 
-## Rulings needed (details in `correction-ledger.md`)
+## Rulings (details in `correction-ledger.md`)
 
-- **L1:** the de facto target list. **L2:** exclusions. **L3:** scope
-  changes. **L4:** "unchanged" ignores pilot credit eligibility. **L5:**
-  crema's role. **L6:** gate papers. **L7:** how to measure an unchanged set.
-- **L8:** the visual tolerance. **L9:** evidence for two paper-error
-  corrections (the operator runs are done; admit them). **L10:** dye's
-  verdict. **L11:** marwick's static figure includes. **L12:** marwick's
-  mis-recorded values. **L13:** marwick's review counts. **L14:** key's
-  verdict. **L15:** freezing. **L16:** key's swapped cells and the
-  amendment's example.
+Ruled by Shawn on 2026-10-09:
+
+- **L1 (a):** the de facto target list. **L2 (a):** exclusions listed with
+  reasons. **L3 (a):** scope changes extend the target. **L4 (a):**
+  "unchanged" ignores pilot credit eligibility. **L6 (c):** dye, herskind,
+  and marwick. **L7 (a):** testable unchanged targets.
+- **L8 (a):** styling-only differences count as reproduced. **L9 (b):** the
+  two operator runs are admitted as tier-3 evidence. **L10 (a):** dye
+  PARTIAL. **L11 (a):** a static include never counts. **L12 (a):**
+  marwick's printed values stand. **L13 (a):** review counts kept, checked
+  before freezing. **L14 (a):** key BLOCKED. **L15 (a):** freezing.
+  **L16 (a):** erratum-log Entry 7; OSF note with the next amendment.
+
+Open:
+
+- **L5:** crema's figures. Recommendation revised to (c), all five figures
+  in the leg, after Shawn asked whether they repeat Table 1 (they mostly do
+  not: Figs 2 and 5 appear nowhere else).
+- **L17:** marwick's Fig. 2, which only a multi-hour MCMC re-run can
+  regenerate. Recommendation (a), outside the gate as a stated scope
+  limit.
 
 ## Before freezing
 
-- [ ] Rule L1–L16 and apply the rulings to the JSON (then re-render).
+- [x] 2026-10-09 Rule L1–L4 and L6–L16 and apply them to the JSON
+      (ledger 0.2.0-draft, re-rendered).
+- [ ] Rule L5 and L17 and apply them.
 - [ ] Hold the crema v1.0.0 and herskind v1 deposits in the corpus store with
       manifest entries (audit Q10).
 - [ ] Hash marwick's files inside the 1.3 zip; confirm review counts in
@@ -121,7 +147,7 @@ measure the unchanged set (L7).
 - [x] 2026-10-09 Operator runs for L9: dye's section 5 and 7 code
       byte-identical (`evidence/l9-dye-section-07/`); herskind's Fig. 4
       check already used the authors' function verbatim.
-- [ ] Admit the two runs as tier-3 evidence (L9).
+- [x] 2026-10-09 Admit the two runs as tier-3 evidence (L9 (b)).
 - [ ] Commit the ruled copy as `correction-ledger-v1.0.json` and record its
       sha256 in the run configuration (L15).
 

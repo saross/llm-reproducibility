@@ -55,8 +55,8 @@ def render_target(t: dict) -> list[str]:
         ("Analysis type", t.get("analysis_type")),
         ("Gate scope", t.get("gate_scope")),
         ("Elements", "; ".join(f"{k}: {v}" for k, v in t.get("element_count", {}).items())),
-        ("Tolerance", f"{t['tolerance'].get('category')} (basis: "
-                      f"{t['tolerance'].get('basis')})"),
+        ("Tolerance", (f"{t['tolerance'].get('category')} (basis: "
+                       f"{t['tolerance'].get('basis')})")),
         ("Pilot outcome", t["pilot"].get("outcome")),
         ("Set", corr.get("set")),
         ("Correction", corr.get("what")),
@@ -68,12 +68,12 @@ def render_target(t: dict) -> list[str]:
         ("Caveat", corr.get("caveat")),
         ("Repair class and status", "; ".join(t["repair"].get("findings", []))
          + f". Status: {t['repair'].get('status')}"),
-        ("Credit eligibility", f"pilot: {t['credit_eligibility'].get('pilot')}; gate: "
-                               f"{t['credit_eligibility'].get('gate')}"),
-        ("Coverage", f"expected-untestable: {t['coverage'].get('expected_untestable')}; "
-                     f"comparison: {t['coverage'].get('comparison')}"),
+        ("Credit eligibility", (f"pilot: {t['credit_eligibility'].get('pilot')}; gate: "
+                                f"{t['credit_eligibility'].get('gate')}")),
+        ("Coverage", (f"expected-untestable: {t['coverage'].get('expected_untestable')}; "
+                      f"comparison: {t['coverage'].get('comparison')}")),
         ("Expected outcome", t.get("expected_outcome")),
-        ("Rulings needed", ", ".join(t.get("rulings", [])) or "none"),
+        ("Rulings", ", ".join(t.get("rulings", [])) or "none"),
         ("Note", t.get("note")),
     ]
     lines += ["| Field | Value |", "|---|---|"]
@@ -81,8 +81,8 @@ def render_target(t: dict) -> list[str]:
     lines.append("")
     els = t.get("elements", [])
     if els:
-        lines += ["| Element | Printed | Page | Pilot value | Pilot outcome | Expected | "
-                  "Expected outcome |", "|---|---|---|---|---|---|---|"]
+        lines += [("| Element | Printed | Page | Pilot value | Pilot outcome | Expected | "
+                   "Expected outcome |"), "|---|---|---|---|---|---|---|"]
         for e in els:
             lines.append("| " + " | ".join(esc(x) for x in (
                 e["label"], e["printed"], e.get("page_pdf"), e.get("pilot_value"),
@@ -91,9 +91,24 @@ def render_target(t: dict) -> list[str]:
         lines.append("")
     if t.get("elements_reference"):
         ref = t["elements_reference"]
-        lines += [f"Elements by reference: {esc(ref.get('file'))}, sha256 "
-                  f"`{ref.get('sha256')}`. {esc(ref.get('v1_identity', ''))}", ""]
+        lines += [(f"Elements by reference: {esc(ref.get('file'))}, sha256 "
+                   f"`{ref.get('sha256')}`. {esc(ref.get('v1_identity', ''))}"), ""]
     return lines
+
+
+def ruling_line(ruling: dict) -> str:
+    """State a ruling's outcome in one bold line.
+
+    Args:
+        ruling: the ruling's record, with ``status`` "ruled" or "open".
+
+    Returns:
+        A Markdown line, for example "**Ruled 2026-10-09: (a).** note".
+    """
+    note = f" {ruling['note']}." if ruling.get("note") else ""
+    if ruling.get("status") == "ruled":
+        return f"**Ruled {ruling['date']}: {ruling['decision']}.**{note}"
+    return f"**Open.**{note}"
 
 
 def render(ledger: dict) -> str:
@@ -107,14 +122,14 @@ def render(ledger: dict) -> str:
     """
     out = [f"# {ledger['title']}", "",
            f"**Status:** {ledger['status']}", "",
-           f"**Ledger version:** {ledger['ledger_version']}. **Drafted:** "
-           f"{ledger['drafted']['date']} by {ledger['drafted']['by']}.", "",
-           "This file is rendered from `correction-ledger.json` by `render-ledger.py`. "
-           "Edit the JSON, never this file.", "",
+           (f"**Ledger version:** {ledger['ledger_version']}. **Drafted:** "
+            f"{ledger['drafted']['date']} by {ledger['drafted']['by']}."), "",
+           ("This file is rendered from `correction-ledger.json` by `render-ledger.py`. "
+            "Edit the JSON, never this file."), "",
            "## Summary by paper", "",
-           "| Paper | Pilot verdict | Expected verdict | In-gate targets | Unchanged "
-           "(testable) | Corrected | Scope-changed | Expected-untestable | Outside the "
-           "gate or conditional | Gate role |",
+           ("| Paper | Pilot verdict | Expected verdict | In-gate targets | Unchanged "
+            "(testable) | Corrected | Scope-changed | Expected-untestable | Outside the "
+            "gate or conditional | Gate role |"),
            "|---|---|---|---|---|---|---|---|---|---|"]
     for p in ledger["papers"]:
         s = p["sets"]
@@ -123,9 +138,14 @@ def render(ledger: dict) -> str:
             s["in_gate"], f"{s['unchanged']} ({s['unchanged_testable']})", s["corrected"],
             s["scope_changed"], s["expected_untestable"], s["not_in_gate"],
             p["gate_role"])) + " |")
-    out += ["", "## Rulings needed", ""]
-    for r in ledger["rulings_needed"]:
+    ruled = ledger.get("ruled", {})
+    out += ["", "## Rulings", ""]
+    if ruled:
+        out += [(f"Ruled by {ruled['by']} on {ruled['date']}: {', '.join(ruled['ruled'])}. "
+                 f"Open: {', '.join(ruled['open']) or 'none'}."), ""]
+    for r in ledger["rulings"]:
         out += [f"### {r['id']}. {r['question']}", ""]
+        out += [ruling_line(r.get("ruling", {})), ""]
         out += [f"- **{o['key']}** {o['text']}" for o in r["options"]]
         out += ["", f"**Recommendation:** {r['recommendation']}", ""]
         if r.get("affects"):
@@ -144,11 +164,11 @@ def render(ledger: dict) -> str:
         for f in dep.get("files", []):
             out.append(f"- `{f['path']}`: sha256 `{f['sha256']}`"
                        + (f" ({esc(f['note'])})" if f.get("note") else ""))
-        out += [f"- **Pilot:** {p['pilot']['attempt']}, verdict {p['pilot']['verdict']}; "
-                f"executed {esc(p['pilot']['executed_version'])}; audit findings "
-                f"{', '.join(p['pilot']['audit_findings'])}.",
-                f"- **Expected verdict:** {p['expected_verdict']['verdict']}. "
-                f"{esc(p['expected_verdict']['derivation'])}", ""]
+        out += [(f"- **Pilot:** {p['pilot']['attempt']}, verdict {p['pilot']['verdict']}; "
+                 f"executed {esc(p['pilot']['executed_version'])}; audit findings "
+                 f"{', '.join(p['pilot']['audit_findings'])}."),
+                (f"- **Expected verdict:** {p['expected_verdict']['verdict']}. "
+                 f"{esc(p['expected_verdict']['derivation'])}"), ""]
         out += ["### Targets", ""]
         for t in p["targets"]:
             out += render_target(t)
