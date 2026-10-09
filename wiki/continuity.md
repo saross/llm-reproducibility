@@ -52,6 +52,16 @@ merged here as PR #1).
     crema's leg only; eligibility criterion 4's cap is 168 h per paper;
     §7.6 locks the denominator. Dropping MAR-T10 would need a prospective
     amendment. The JSON still carries the old text; revise with the ruling.
+  - [ ] **Hold sapphire for reproduction runs until its memory fix is
+    confirmed** (personal-assistant session, 2026-10-10: a load-dependent
+    single-bit fault, non-ECC, that can silently alter values in runs that
+    appear to succeed; worst under sustained multi-worker load). Checked
+    2026-10-10: no llm-reproducibility compute ran there since 2026-10-05
+    (amd-tower transcripts and the `~/cc-archives/llm-reproducibility`
+    mirror; the only matches are greps of the execution prompt), so nothing
+    needs re-running. But `02-execution-and-verification.md` §1.2 and the
+    plan guide send runs over an hour to sapphire. Pin the herskind re-run
+    and any L17 local fit to amd-tower, and say so in the plan approval.
   - **Merge order proposed:** PR #9 (after Astra's re-review), then rebase
     PR #7 on main (manifest and executor-definition conflict), then the
     herskind re-run and the final review, then PR #7. PR #10 merges once
