@@ -2,7 +2,7 @@
 title: "Reproduction lane gate 1.3 — consolidated specification"
 tags: [reproduction, validation, mechanical-verification]
 created: 2026-10-05
-updated: 2026-10-08
+updated: 2026-10-09
 status: instrumentation-in-progress
 ---
 
@@ -230,7 +230,9 @@ class:
    gate goes on to the §8 regression run. A dry run of the pilot's
    execution layer (2026-10-09, no agents) is recorded in
    `wiki/planning/reproduction-gate-1-3-pilot-dry-run.md`: it found one
-   defect, fixed, and raised the question added to §16.
+   defect, fixed, and raised the question added to §16. Shawn ruled that
+   the record's design be built before the final review (Q1 (a),
+   2026-10-09); it is, and the re-run found one more defect, fixed (§8).
 3. After that, the build reopens only for a D or an A. A route seen in
    practice (in the census, a transcript, or an adversarial review) counts
    as an A on that evidence, whatever class it had before.
@@ -323,7 +325,8 @@ reviewed to completeness.
 | An environment-cleared child only a stray, not a census failure (matrix, fact 14) | D | Fixed, nonce file; §4 |
 | An original run part by part read as never run (pilot dry run) | D | Fixed, `f5b77d7`; §8 |
 | A basename shared by pristine and executed copies left unresolved (pilot dry run) | D | Fixed, `f5b77d7` |
-| 119 run-time texts from one ordinary analysis, one obligation each (pilot dry run) | Open | §16, question 6 |
+| 119 run-time texts from one ordinary analysis, one obligation each (pilot dry run) | Open | Design built (Q1 (a)): one grouped obligation, 12 package templates; §8; §16, question 6 |
+| A promise's caller read as the traced `parse()` itself (dry-run re-run) | D | Fixed, hook `1.5-inst`; §8 |
 
 ## 3. Terms: trees, runs, and provenance classes
 
@@ -916,8 +919,17 @@ accounts for itself (Astra 3).
   - `reticulate::source_python` and `py_run_file`, `box::use`, and
     `modules::import`.
 - **`TEXT`**, for `parse(text =)` and `-e` expressions: the md5 of the text
-  joined by newlines, its length, depth, and enclosing event. Repeats of one
-  md5 in one process are counted, not logged again.
+  joined by newlines, its length, depth, and enclosing event. Since hook
+  `1.5-inst` (2026-10-09, Q1 (a)), it also carries the text itself when it
+  is at most 512 bytes, as the very bytes hashed, and its caller: the
+  function that called `parse()`, as `namespace::name` only when verified
+  as that namespace's own (as for `CONN`); the tool, for `knitr::knit` and
+  `Rcpp::sourceCpp` text; `command line`, for `-e`; or `promise`, when no
+  frame called it. R reports a frame as its own parent when its call was
+  evaluated in an environment that is no frame on the stack, as when
+  dplyr forces `filter()`'s condition in its data mask or `delayedAssign`
+  makes a promise (2026-10-09 probe). Repeats of one text from one caller
+  in one process are counted, not logged again.
 - **`CONN`**, for `source()` of a connection or expression: its class and
   description. It is always an obligation, because a path hash does not
   cover its content.
@@ -949,9 +961,14 @@ accounts for itself (Astra 3).
   seen in the probe, is the first list entry, and the launcher matrix
   supplies the rest.
 
-  A match is accounted for. Anything else is an obligation
-  (`unmatched-text`), not an error, because ordinary bootstrap code also
-  arrives this way (Astra 8).
+  A match is accounted for. Anything else is an obligation, not an error,
+  because ordinary bootstrap code also arrives this way (Astra 8). Since
+  2026-10-09 (Q1 (a)), a text held verbatim may also match a package
+  template, by its caller and a pattern whose holes are R names, which add
+  no logic of their own. The texts held verbatim that remain are grouped
+  into one obligation per place and caller, listing every text
+  (`run-time-texts`), so a reviewer reads what ran and rules once. A text
+  not held verbatim is an obligation on its own (`unmatched-text`).
 - **`PKG`:** a package that is not base, and has no repository or remote
   provenance, is flagged as installed locally: declare its source tree as an
   original (Fable, marwick). When that tree is declared, the gate compares
@@ -1012,10 +1029,23 @@ every text knitr evaluates from it must still bind to the original's own
 process, texts that are contiguous, in-order slices of its lines run it
 when they cover every code line, skipping only comment and blank lines;
 slices that leave code unrun are flagged (`original-partly-run`), an
-omission (2026-10-09, from the herskind dry run). Each obligation's id and
-fingerprint rest on content, the text's md5 and the enclosing file, never
-on the run's tokens or `events.log`, so a re-run that changes nothing keeps
-its ruling (§6). An `-e` expression is hashed as R evaluates it (probe fact
+omission (2026-10-09, from the herskind dry run). A text the hook carries
+verbatim must hash back to the event's md5, or the stream is inconsistent
+(an error). It may match a package template (`PACKAGE_TEXTS`), which names
+the callers it was seen from and a pattern whose holes are R names: a name
+only looks a value up, so whatever it reads or calls was defined by code
+that reached the gate by its own route. The herskind dry run supplies the
+three entries: ggplot2's scale names (`scale_x_continuous()`) and theme
+element names (`theme(legend.position.inside)`), both parsed through
+`rlang::chr_parse`, and glue placeholders that are one name, from rlang's
+and cli's message templates (the caller `.transformer`, a bare name the
+hook cannot verify; the pattern alone carries the safety). The other texts
+held verbatim form one `run-time-texts` obligation per place and caller,
+whose message lists every text and whose identity covers each text's md5.
+Each obligation's id and fingerprint rest on content, the texts' md5s and
+the enclosing file, never on the run's tokens or `events.log`, so a re-run
+that changes nothing keeps its ruling, and a changed set of texts needs a
+new one (§6). An `-e` expression is hashed as R evaluates it (probe fact
 7). Admitted coverage excludes every target when no credited run loaded an
 authors' file, whatever the manifest lists (§6).
 
@@ -1497,6 +1527,11 @@ matrix about two more, and the rest one or two, plus the review rounds of
   - [x] 2026-10-09 a dry run of the pilot's execution layer
     (`reproduction-gate-1-3-pilot-dry-run.md`), and its defect fixed
     (`f5b77d7`);
+  - [x] 2026-10-09 the dry-run record's design for run-time texts (Shawn,
+    Q1 (a)): hook `1.5-inst` carries each short text and its caller
+    (`65d9eb2`), and the gate's package templates and grouped obligations
+    (`a018a0a`). The re-run leaves one `run-time-texts` obligation where
+    there were 119;
   - [ ] the full re-run through the agentic workflow (Shawn starts it);
   - [ ] Astra's and Fable's reviews of the built gate.
 - [ ] **After gate 1.3 merges** (Shawn, 2026-10-06): split
@@ -1534,12 +1569,19 @@ this text are complete.
 
 **For the final review (added 2026-10-09):**
 
-6. **Run-time texts.** The herskind dry run (§2.2) raised 119
+6. **Run-time texts (built 2026-10-09; review the build).** The herskind
+   dry run (§2.2) raised 119
    `unmatched-text` obligations: 107 subset conditions the authors' code
    builds and dplyr parses, 9 glue placeholders in rlang and cli
    messages, and 3 names ggplot2 parses. Each is one ruling on an md5. Is
    that class A (an ordinary route the gate mishandles), or an operability
-   limit outside §2's classes? The dry-run record proposes a design:
+   limit outside §2's classes? The dry-run record proposed a design:
    verbatim short texts with their verified caller, templates for package
-   internals, and one obligation per place and caller. Would it close the
-   problem without opening a route?
+   internals, and one obligation per place and caller. Shawn ruled to build
+   it before this review (Q1 (a)), and it is built (§8; `65d9eb2`,
+   `a018a0a`): the re-run leaves one obligation listing the 107 conditions,
+   and the 12 package texts match templates. Does it close the problem
+   without opening a route? In particular: is a template's safety rightly
+   carried by its pattern (holes that are R names) rather than its caller,
+   given that glue's caller is a bare name the hook cannot verify? Should a
+   text over 512 bytes stay an obligation on its md5 alone?

@@ -110,7 +110,7 @@ But a reviewer cannot judge an md5, and 119 rulings for one ordinary
 dplyr and ggplot2 analysis would make admission impractical. herskind is
 not unusual; any analysis using these packages does the same.
 
-**A possible design, for the reviewers and Shawn, not built:**
+**The design proposed** (built since; see below):
 
 1. The `TEXT` event carries a short text verbatim (up to 512 bytes,
    hex-encoded) and its verified caller, as `CONN` now does. A reviewer can
@@ -123,10 +123,52 @@ not unusual; any analysis using these packages does the same.
    caller), listing them, rather than one each. The authors' 107 subset
    conditions would then be one ruling with all 107 shown.
 
-Each piece changes the evidence a ruling rests on, so the design needs the
-reviewers' classification before it is built. Is the noise class A (an
+Each piece changes the evidence a ruling rests on. Is the noise class A (an
 ordinary route the gate mishandles), or an operability limit outside §2's
-classes? Shawn decides whether to build it before the final review.
+classes? That stays a question for the reviewers (specification §16,
+question 6), now about the built design.
+
+## The design, built (2026-10-09)
+
+Shawn ruled that the design be built before the final review, so that the
+reviewers see one coherent build (Q1 (a), 2026-10-09).
+
+- **Hook `1.5-inst`** (`65d9eb2`). A `TEXT` event carries the text when it
+  is at most 512 bytes, as the very bytes hashed, and its caller. Repeats
+  are counted per text and caller.
+- **Gate** (`a018a0a`). A verbatim text must hash back to its md5. Package
+  templates (`PACKAGE_TEXTS`) match by caller and by a pattern whose holes
+  are R names. The texts held verbatim that remain form one `run-time-texts`
+  obligation per place and caller, listing every text; a text not held
+  verbatim stays an `unmatched-text` on its own.
+- **A defect found on the way, fixed.** The first re-run labelled the 107
+  conditions' caller `base::parse`, the traced function itself. R reports a
+  frame as its own parent when its call was evaluated in an environment
+  that is no frame on the stack: dplyr forces `filter()`'s condition in its
+  data mask, and `delayedAssign` does the same in base R (probe,
+  2026-10-09). The hook now names that caller `promise`.
+
+**The re-run** (fresh attempt directory, same image and inputs, launch
+commit `a018a0a`):
+
+| Measure | Before (`f5b77d7`) | After (`a018a0a`) |
+| --- | --- | --- |
+| Run state | complete, exit 0 | complete, exit 0 |
+| Outputs (CSV and text) identical to attempt-02's | 34 of 34 | 34 of 34 |
+| `TEXT` events | 142 | 142 |
+| Every verbatim text hashes to its md5 | (not carried) | 142 of 142 |
+| Package templates matched | 0 | 12 (9 glue placeholders, 3 ggplot2 names) |
+| Run-time text obligations | 119 `unmatched-text` | 1 `run-time-texts` |
+
+The one obligation reads: 107 texts built at run time and evaluated in
+`run-analysis.R`, with no calling function (a promise, as in a dplyr data
+mask), listing every condition from `"A1 == 1 & A24 == 1"` on. Its place is
+the wrapper, the process's script, because the wrapper's slices of `S2.R`
+are texts, not loads, so nothing encloses them; a reviewer reads the
+conditions against `S2.R` line 368
+(`filter(eval(parse(text = filter_condition)))`). What remains besides is
+unchanged: the stale image label (a real re-run builds with it), the two
+`dynamic-evaluation` obligations, and `wrapper-semantics`.
 
 ## Reproducing this
 
