@@ -3293,6 +3293,28 @@ TEXT_TEMPLATES = tuple(re.compile(pattern) for pattern in (
     (r"workRSOCK <- tryCatch\(parallel:::\.workRSOCK, "
      r"error=function\(e\) parallel:::\.slaveRSOCK\); workRSOCK\(\)"),
 ))
+# An R name as a template hole. A syntactic name only looks a value up, so a
+# text whose holes are names adds no logic of its own: it reads or calls what
+# other code defined, and that code reached the gate by its own route.
+_NAME = r"(?:[A-Za-z]|\.(?![0-9]))[A-Za-z0-9._]*"
+# Package-internal texts, matched against the text a TEXT event carries
+# verbatim (hook 1.5) and the caller it names. Each pattern is safe alone, as
+# above; the callers narrow it to the route a probe saw. A caller without
+# "::" is a bare name the hook could not verify as a namespace's own. All
+# were seen in the herskind pilot dry run (2026-10-09; ggplot2 3.5.0, rlang,
+# glue, and cli in the attempt-02 image).
+PACKAGE_TEXTS: tuple[tuple[frozenset[str], re.Pattern[str], str], ...] = (
+    (frozenset({"rlang::chr_parse"}), re.compile(r"scale_[a-z]+_[a-z]+\(\)"),
+     "ggplot2 parsing a scale's name (rlang::parse_expr)"),
+    (frozenset({"rlang::chr_parse"}), re.compile(rf"theme\({_NAME}\)"),
+     "ggplot2 parsing a theme element's name (rlang::parse_expr)"),
+    (frozenset({".transformer"}), re.compile(rf" ?{_NAME} ?"),
+     "a glue placeholder that is one name, in an rlang or cli message template"),
+)
+# Callers the hook names without a function: how each reads in a message.
+CALLER_ROUTES = {"top level": "at the top level", "promise": "with no calling function "
+                 "(a promise, as in a dplyr data mask)", "command line": "on the command line",
+                 "unknown": "from an unknown caller"}
 PACKAGE_ARCHIVE_RE = re.compile(r"([A-Za-z][A-Za-z0-9.]*)_([0-9][0-9.-]*)\.tar\.gz")
 # R's code-file suffixes in a package's R/ directory (tools'
 # list_files_with_type("code")).
@@ -3325,6 +3347,37 @@ CHUNK_START_RE = re.compile(r"^[\t >]*```+\s*\{([a-zA-Z0-9_]+)(.*)\}\s*$")
 CHUNK_END_RE = re.compile(r"^[\t >]*```+\s*$")
 INLINE_CODE_RE = re.compile(r"(?<!^``)(?<!\n``)`r[ #]([^`]+)\s*`")
 DOCUMENT_SUFFIXES = (".rmd", ".qmd")
+
+
+def text_fields(fields: list[str]) -> tuple[bytes | None, str | None]:
+    """A TEXT event's verbatim bytes and caller (hook 1.5).
+
+    Args:
+        fields: The event's fields: md5, bytes, depth, enclosing seq, the
+            text as hex (``empty``, or ``none`` when it was too long), and the
+            caller as hex.
+
+    Returns:
+        ``(bytes, caller)``, either None when the event does not carry it (an
+        older hook, or a text over the hook's verbatim limit).
+
+    Raises:
+        ValueError: if the verbatim field is not hex.
+    """
+    if len(fields) < 6:
+        return None, None
+    held = fields[4]
+    raw = b"" if held == "empty" else None if held == "none" else bytes.fromhex(held)
+    return raw, decode_field(fields[5])
+
+
+def caller_phrase(caller: str) -> str:
+    """How a TEXT event's caller reads in a message."""
+    if caller in CALLER_ROUTES:
+        return CALLER_ROUTES[caller]
+    if "::" in caller:
+        return f"called from {caller}"
+    return f"called from {caller} (a bare name the hook could not verify)"
 
 
 def text_md5(text: str) -> str:
@@ -3649,8 +3702,12 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
       fails.
     - ``TEXT`` must match by md5 an original (or a declared edited copy,
       flagged in its own right), a code chunk of an original document, or a
-      tool expression on the lane's list. Anything else is an obligation
-      (``unmatched-text``).
+      tool expression on the lane's list, or, by the text the event carries
+      verbatim and its caller, a package template (``PACKAGE_TEXTS``). A
+      verbatim text must hash back to its md5. Anything else is an
+      obligation: texts held verbatim are grouped into one per place and
+      caller, listing every text (``run-time-texts``); a text not held
+      verbatim is one on its own (``unmatched-text``).
     - ``CONN`` is always an obligation (``connection-load``): a path hash does
       not cover a connection's content.
     - ``PKG``: a package that is not base and has no repository or remote
@@ -3682,6 +3739,8 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
     chunk_owner = {digest: oid for oid, digests in catalogue["chunks"].items()
                    for digest in digests}
     summary: dict[str, dict[str, int]] = {}
+    # Unmatched texts held verbatim, by (place, caller), across the runs.
+    groups: dict[tuple[str, str], dict] = {}
 
     def mark_tree(roots: list[str]) -> None:
         """Count a declared package tree's executed copies as run: an
@@ -4051,6 +4110,22 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                     top_file.setdefault(token, event)
             elif kind == "TEXT" and fields:
                 md5 = fields[0]
+                # The text itself, where the hook carried it, must hash back
+                # to the md5; otherwise the stream is not consistent.
+                try:
+                    raw, caller = text_fields(fields)
+                except ValueError:
+                    raw, caller = None, None
+                    errors.append(f"{where}: a TEXT event (md5 {md5[:12]}…) carries a "
+                                  f"verbatim field that is not hex")
+                if raw is not None and hashlib.md5(raw + b"\n").hexdigest() != md5:
+                    errors.append(f"{where}: a TEXT event's verbatim text does not hash to its "
+                                  f"md5 {md5[:12]}…, so the event stream is not consistent")
+                    raw = None
+                try:
+                    held = raw.decode("utf-8") if raw is not None else None
+                except UnicodeDecodeError:
+                    held = None
                 known = catalogue["md5"].get(md5)
                 if known is not None and known[0] in ("original", "edited-copy"):
                     originals_loaded.add(known[1])
@@ -4071,13 +4146,31 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                     # package's own code, which its provenance or the
                     # local-package flag covers.
                     count("text-package")
+                elif held is not None and any(
+                        caller in callers and pattern.fullmatch(held)
+                        for callers, pattern, _ in PACKAGE_TEXTS):
+                    count("text-template")
+                elif held is not None:
+                    # Held verbatim, so a reviewer can read it: grouped with
+                    # the other texts from this place and caller, and ruled
+                    # once with every text shown.
+                    count("text-unmatched")
+                    place, evidence = label(event, enclosing_of(event, 3))
+                    group = groups.setdefault((place, caller or "unknown"),
+                                              {"texts": {}, "evidence": {}, "runs": []})
+                    group["texts"].setdefault(md5, held)
+                    group["evidence"].update(evidence)
+                    if run_id not in group["runs"]:
+                        group["runs"].append(run_id)
                 else:
                     count("text-unmatched")
                     place, evidence = label(event, enclosing_of(event, 3))
+                    route = f", {caller_phrase(caller)}," if caller else ""
                     add(obligations, Issue.obligation(
                         "unmatched-text", f"{md5}@{place}", f"{where} evaluated code from a "
-                        f"string (md5 {md5[:12]}…) in {place} that matches no original, no chunk "
-                        f"of an original document, and no tool expression: confirm what it ran",
+                        f"string (md5 {md5[:12]}…, not held verbatim) in {place}{route} that "
+                        f"matches no original, no chunk of an original document, and no tool "
+                        f"expression: confirm what it ran",
                         files={"text": md5, **evidence}))
             elif kind == "CONN" and len(fields) >= 3:
                 count("connection")
@@ -4153,6 +4246,22 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                     f"({subject}): a declared input needing review",
                     files={subject: baseline.get(rel, "missing") if rel else "outside the "
                            "work copy"}))
+
+    # Run-time texts held verbatim: one obligation per place and caller,
+    # listing every text, so that one ruling sees them all. Its identity is
+    # the place, the caller, and every text's md5, so a changed set needs a
+    # new ruling.
+    for (place, caller), group in sorted(groups.items()):
+        texts = group["texts"]
+        listed = "; ".join(json.dumps(t, ensure_ascii=False)
+                           for t in sorted(texts.values()))
+        add(obligations, Issue.obligation(
+            "run-time-texts", f"{place}|{caller}",
+            f"{', '.join(group['runs'])}: {len(texts)} text(s) built at run time and "
+            f"evaluated in {place}, {caller_phrase(caller)}, match no original, no chunk "
+            f"of an original document, and no tool expression or package template: confirm "
+            f"what they ran. The texts: {listed}",
+            files={**group["evidence"], **{f"text:{m}": m for m in sorted(texts)}}))
 
     # A run whose entry is a shell script ran it without any R load event.
     final_doc = runs.get(final_run, {}).get("doc") or {}

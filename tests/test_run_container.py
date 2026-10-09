@@ -561,6 +561,13 @@ def text(digest: str, depth: int = 0, enclosing: int = 0) -> tuple:
     return ("TEXT", digest, "1", str(depth), str(enclosing))
 
 
+def held(body: str, caller: str, depth: int = 0, enclosing: int = 0) -> tuple:
+    """A hook 1.5 TEXT event carrying its text verbatim and its caller."""
+    raw = body.encode("utf-8")
+    return ("TEXT", lane.text_md5(body), str(len(raw) + 1), str(depth), str(enclosing),
+            raw.hex() or "empty", hexed(caller))
+
+
 def package(name: str, library: str, repository: str | None = None) -> tuple:
     """A PKG event's kind and fields: name, version, library, Repository,
     RemoteType, RemoteSha, Packaged, and the DESCRIPTION's md5."""
@@ -704,6 +711,66 @@ class LoadAccountTests(AccountFixture, unittest.TestCase):
         result = self.account(text(lane.text_md5(expression)))
         self.assertNotIn("unmatched-text", self.codes(result["review_obligations"]))
         self.assertEqual(result["account"]["runs"]["run-01"]["text-tool"], 1)
+
+    def test_texts_held_verbatim_are_grouped_by_place_and_caller(self):
+        """The herskind dry run's 107 subset conditions become one obligation
+        listing every text, not one per md5 (Q1 (a), 2026-10-09)."""
+        result = self.account(held("A1 == 1 & C1 == 1", "promise"),
+                              held("A1 == 1 & G1 == 1", "promise"),
+                              held("A1 == 1 & C1 == 1", "promise"),
+                              held("q <- 1", "helper"))
+        self.assertEqual(result["errors"], [])
+        grouped = [i for i in result["review_obligations"]
+                   if getattr(i, "code", "") == "run-time-texts"]
+        self.assertEqual(sorted(i.subject for i in grouped),
+                         ["run-analysis.R|helper", "run-analysis.R|promise"])
+        conditions = next(i for i in grouped if i.subject.endswith("|promise"))
+        self.assertIn('2 text(s)', conditions)
+        self.assertIn('"A1 == 1 & C1 == 1"; "A1 == 1 & G1 == 1"', conditions)
+        self.assertIn("with no calling function (a promise", conditions)
+        self.assertIn("a bare name the hook could not verify",
+                      next(i for i in grouped if i.subject.endswith("|helper")))
+        self.assertNotIn("unmatched-text", self.codes(result["review_obligations"]))
+        self.assertEqual(result["account"]["runs"]["run-01"]["text-unmatched"], 4)
+
+    def test_a_grouped_ruling_survives_a_rerun_and_expires_when_a_text_changes(self):
+        first = self.account(held("A1 == 1", "promise"), held("C1 == 1", "promise"))
+        issue = next(i for i in first["review_obligations"]
+                     if getattr(i, "code", "") == "run-time-texts")
+        for run, texts, same in (("run-02", ("C1 == 1", "A1 == 1"), True),
+                                 ("run-03", ("A1 == 1", "C1 == 2"), False)):
+            self.seal(run, events=self.events(*(held(t, "promise") for t in texts),
+                                              token=f"9-{run}"))
+            again = next(i for i in lane.check_code_integrity(
+                self.dir, self.dir / "authors-code-manifest.json", self.schema,
+                anchor_root=self.repo, launch_commit=self.launch)["review_obligations"]
+                if getattr(i, "code", "") == "run-time-texts")
+            self.assertEqual(again.issue_id, issue.issue_id)
+            self.assertEqual(again.fingerprint() == issue.fingerprint(), same, run)
+
+    def test_package_templates_need_their_caller_and_a_name_hole(self):
+        result = self.account(held("scale_x_continuous()", "rlang::chr_parse"),
+                              held("theme(legend.position.inside)", "rlang::chr_parse"),
+                              held(" arg ", ".transformer"), held("v5", ".transformer"),
+                              held("scale_x_continuous()", "my_parse"),
+                              held('system("id")', ".transformer"),
+                              held("theme(f())", "rlang::chr_parse"))
+        self.assertEqual(result["account"]["runs"]["run-01"]["text-template"], 4)
+        grouped = {i.subject: i for i in result["review_obligations"]
+                   if getattr(i, "code", "") == "run-time-texts"}
+        self.assertEqual(sorted(grouped), ["run-analysis.R|.transformer",
+                                           "run-analysis.R|my_parse",
+                                           "run-analysis.R|rlang::chr_parse"])
+        self.assertIn('"system(\\"id\\")"', grouped["run-analysis.R|.transformer"])
+
+    def test_a_verbatim_text_must_hash_to_its_md5(self):
+        forged = ("TEXT", lane.text_md5("A1 == 1"), "8", "0", "0", b"q <- 1".hex(),
+                  hexed("promise"))
+        result = self.account(forged)
+        self.assertTrue(any("does not hash to its md5" in e for e in result["errors"]),
+                        result["errors"])
+        # The text is then not trusted, so it stays an obligation on its md5.
+        self.assertIn("unmatched-text", self.codes(result["review_obligations"]))
 
     def test_a_connection_is_an_obligation(self):
         result = self.account(("CONN", hexed("source"), hexed("textConnection"),
@@ -1472,6 +1539,34 @@ class RunContainerDockerTests(unittest.TestCase):
         self.assertEqual((self.dir / "outputs" / "run-01" / "stdout.log").read_text(),
                          "only this line\n")
 
+    def test_text_callers_and_verbatim_limit(self):
+        """Hook 1.5: each TEXT names its caller. A promise forced in an
+        environment that is no frame (delayedAssign here; dplyr's data mask
+        in herskind) reports itself as its own parent, so it is "promise",
+        not the traced parse(). A text over 512 bytes is not carried."""
+        long_text = "x <- " + "1" * 600
+        doc = self.run_entry('e <- new.env()\n'
+                             'delayedAssign("v", parse(text = "1 + 2"), eval.env = e)\n'
+                             'invisible(v)\n'
+                             'g <- function() parse(text = "2 + 3")\n'
+                             'invisible(g())\n'
+                             f'invisible(parse(text = "{long_text}"))\n'
+                             'invisible(parse(text = "2 + 3"))\n')
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        events, _ = lane.parse_events((self.dir / lane.RECORDS_DIR / "run-01" /
+                                       "events.log").read_text(), doc["nonce"])
+        seen = {}
+        for event in events:
+            if event["event"] == "TEXT":
+                raw, caller = lane.text_fields(event["fields"])
+                seen[(event["fields"][0], caller)] = raw
+        self.assertEqual(seen, {
+            (lane.text_md5("1 + 2"), "promise"): b"1 + 2",
+            (lane.text_md5("2 + 3"), "g"): b"2 + 3",
+            (lane.text_md5(long_text), "top level"): None,
+            # The same text from a second caller is a second event.
+            (lane.text_md5("2 + 3"), "top level"): b"2 + 3"})
+
     def test_run_cannot_write_the_lane_directory(self):
         doc = self.run_entry('writeLines("x", "/lane/hook.R")\n')
         self.assertEqual(doc["state"], "failed")
@@ -1596,8 +1691,9 @@ class AccountDockerTests(AccountRunMixin, unittest.TestCase):
     def test_ordinary_launchers_and_loaders_are_accounted_for(self):
         """source(), the parse-and-evaluate pattern, an Rscript -e child, a
         PSOCK worker, and forked children that source the original: every
-        load binds, and only the -e child's own code is left to a reviewer.
-        The -e text is hashed as R evaluates it, unescaped (hook 1.2)."""
+        load binds, and only the -e child's own code is left to a reviewer,
+        shown verbatim (hook 1.5). The -e text is hashed as R evaluates it,
+        unescaped (hook 1.2)."""
         self.attempt('source("authors-code/analysis.R")\n'
                      'eval(parse(text = readLines("authors-code/analysis.R")))\n'
                      "invisible(system(\"Rscript -e 'q <- 1'\"))\n"
@@ -1613,9 +1709,11 @@ class AccountDockerTests(AccountRunMixin, unittest.TestCase):
         self.assertEqual(result["errors"], [])
         self.assertEqual(result["account"]["originals_loaded"], ["analysis.R"])
         unmatched = [i for i in result["review_obligations"]
-                     if getattr(i, "code", "") == "unmatched-text"]
-        self.assertEqual([i.subject for i in unmatched],
-                         [f"{lane.text_md5('q <- 1')}@the command line"])
+                     if getattr(i, "code", "") in ("unmatched-text", "run-time-texts")]
+        self.assertEqual([(i.subject, i.files.get(f"text:{lane.text_md5('q <- 1')}"))
+                          for i in unmatched],
+                         [("the command line|command line", lane.text_md5("q <- 1"))])
+        self.assertIn('The texts: "q <- 1"', unmatched[0])
         counts = result["account"]["runs"]["run-01"]
         self.assertEqual((counts["original"], counts["text-original"], counts["text-tool"]),
                          (3, 1, 1))
@@ -1659,9 +1757,11 @@ class LauncherDockerTests(AccountRunMixin, unittest.TestCase):
         counts = result["account"]["runs"]["run-01"]
         self.assertEqual((counts["original"], counts["stdin-original"]), (2, 1))
         self.assertEqual(doc["census"]["processes"], 5)
-        self.assertEqual([i.subject for i in result["review_obligations"]
-                          if getattr(i, "code", "") == "unmatched-text"],
-                         [f"{lane.text_md5('q <- 2')}@the command line"])
+        self.assertEqual([(i.code, i.subject, list(i.files)[-1])
+                          for i in result["review_obligations"]
+                          if getattr(i, "code", "") in ("unmatched-text", "run-time-texts")],
+                         [("run-time-texts", "the command line|command line",
+                           f"text:{lane.text_md5('q <- 2')}")])
 
     def test_r_cmd_install_of_a_declared_tree(self):
         """PKGBUILD: the installer and its helpers are R's own; the tree's

@@ -198,11 +198,15 @@ local({
     }
     caller_of <- function(env) {
         # The frame that called the function whose frame is `env`, or NULL at
-        # the top level.
+        # the top level or when no frame did. R reports a frame as its own
+        # parent when its call was evaluated in an environment that is no
+        # frame on the stack: a promise forced in a data mask (dplyr's
+        # filter) or made by delayedAssign (2026-10-09 probe). Only an
+        # earlier frame is a caller.
         frames <- sys.frames()
         parents <- sys.parents()
         i <- frame_index(env, frames)
-        if (i > 0L && parents[i] > 0L) frames[[parents[i]]] else NULL
+        if (i > 0L && parents[i] > 0L && parents[i] < i) frames[[parents[i]]] else NULL
     }
     active_loads <- function() {
         # The recorded loads whose frames are still on the stack, with each
@@ -274,11 +278,14 @@ local({
         # namespace::name only when that function object is the namespace's
         # own binding of the name (so a look-alike defined elsewhere does not
         # pass as base::parseNamespaceFile); otherwise its bare name, cut to
-        # CALLER_MAX characters.
-        caller <- caller_of(frame)
-        if (is.null(caller)) return("top level")
-        index <- frame_index(caller, sys.frames())
-        if (index < 1L) return("unknown")
+        # CALLER_MAX characters. "promise" when no frame called it (see
+        # caller_of).
+        frames <- sys.frames()
+        own <- frame_index(frame, frames)
+        if (own < 1L) return("unknown")
+        index <- sys.parents()[own]
+        if (index == 0L) return("top level")
+        if (index >= own) return("promise")
         call <- sys.call(index)
         name <- sub("^.*:::?", "", paste(deparse(call[[1L]]), collapse = ""))
         fun <- sys.function(index)
