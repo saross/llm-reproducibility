@@ -726,3 +726,52 @@ D-5 corrects Entry 5's proposed wording on what the BI items rest on.
     and the strict comparison is reported beside it. The conditions on the
     ledger come from the Fable review. Draft text: `amendment-3-draft.md`
     §9.
+
+---
+
+## Entry 7 — 2026-10-09: amendment 3 §7(d)'s example rests on a pilot slip
+
+**Status: correction recorded; public correction queued for the next OSF
+lodgement (registrant decision, 2026-10-09; correction-ledger ruling L16
+(a)).**
+
+**Lodged text affected.** Amendment 3 §7(d) (lodged 2026-10-08, revision
+`6ac775afb5ed5b4afee88a4a`) ends its verification-aid ruling with: "A
+printed value that the formula does not reproduce is never credited and
+goes to the paper-error protocol of section 7(a), as the ruling directs for
+its two inconsistent cells." The ruling is executed-code audit Q5(ii)
+(2026-10-05), which sends key-et-al-2024's "two inconsistent cells (3.1%,
+19.6%)" to the paper-error protocol.
+
+**Defect.** The cells are not inconsistent in the paper. Table 6 of the
+version of record (PDF page 13) prints an OLE (optimal linear estimation)
+range extension of 19.6 % for Midland thickness and 3.1 % for Clovis mass.
+The pilot's wrapper
+(`studies/open-science-compliance/outputs/key-et-al-2024/reproduction/attempt-01/run-analysis.R`,
+lines 260–261) swapped the two, and its comparison report (lines 246–253)
+then called each printed value inconsistent with its own row. With the
+printed values, the inferred formula gives 3.14 for Clovis mass and 20.00
+for Midland thickness. All 16 of Table 6's printed percentages lie inside
+the band that rounding the printed inputs to one decimal place allows,
+although 10 of the 16 differ from the formula's value at one decimal place.
+No printed key value is shown wrong by the printed inputs alone. Found
+2026-10-09 while drafting the correction ledger (PR #10).
+
+**Propagation.** The pilot's comparison report, the audit's Q5(ii) ruling,
+and the lodged §7(d) sentence.
+
+**Unaffected.** The §7(d) rule itself, which stands as lodged, and every
+registered analysis. The §8 gate is unaffected too: every key target is
+expected-untestable (Q5(iii); ledger ruling L14), and key is not a gate
+paper (ledger ruling L6).
+
+**Repository-side corrections (2026-10-09).** The correction ledger records
+the printed values and the swap (target KEY-T02, ruling L16). No key cell
+goes to the paper-error protocol on this evidence. The pilot artefacts and
+the audit stay as dated records.
+
+## Queued amendment 4 scope (running list)
+
+1. Entry 7: correct amendment 3 §7(d)'s example. It is a factual note and
+   changes no rule, so it waits for the next amendment rather than being
+   lodged alone (registrant decision, 2026-10-09).
