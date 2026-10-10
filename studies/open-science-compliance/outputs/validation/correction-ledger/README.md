@@ -1,8 +1,10 @@
 # Correction ledger for the §8 regression gate — DRAFT
 
-**Status: DRAFT, fully ruled (ledger 0.3.2-draft). Shawn ruled L1 to L4
-and L6 to L16 on 2026-10-09, and L5, L17, and L18 on 2026-10-10. Not frozen
-and not hashed:** L17's probe and the pre-freeze checks below remain. No run
+**Status: DRAFT (ledger 0.3.3-draft). Shawn ruled L1 to L4 and L6 to L16
+on 2026-10-09, and L5 and L17 on 2026-10-10. L18 was ruled (a) the same day
+and reopened after Astra's review with complete options. Not frozen and not
+hashed:** L18, the compliant crema environment (Astra's B3), L17's probe,
+and the pre-freeze checks below remain. No run
 may use any value here until the frozen copy is committed and its sha256 is
 recorded in the gate's run configuration (amendment 3 §9 and §10 step 3).
 
@@ -104,9 +106,12 @@ reported.
    the deposit's PDFs. From v1.0.0's `post_sim1a.RData`, panel a's 95 %
    band at the curve's late end reads 0.592 to 0.729; the version of record
    reads 0.567 to 0.691, as do the deposit's own `figure2.pdf` and the
-   pilot's render from v2.0.0's archive. Both bands contain the simulated
-   true value (0.65). Found 2026-10-10 by the L5 probe
-   (`evidence/crema-figures-probe/`); it raises ruling L18.
+   pilot's render from v2.0.0's archive. Across the whole curve the bands
+   differ by up to 0.082 on the rising limb. The regenerated band still
+   contains the true curve at every year, so §5.1's recovery claim holds.
+   The images do not identify the posterior the authors used. Found
+   2026-10-10 by the L5 probe (`evidence/crema-figures-probe/`); it raises
+   ruling L18.
 
 **Astra's review (2026-10-09, at `9b66683`)** confirmed the key and marwick
 printed-value findings independently and found two errors, both fixed in
@@ -132,7 +137,7 @@ amendment.
 
 | Paper | Testable unchanged targets | Corrected | Expected verdict (pilot) |
 |---|---|---|---|
-| crema | 2 (registered leg: Figs 1 and 5) | 4 | SUCCESSFUL, with a note on CREMA-T04 (SUCCESSFUL) |
+| crema | 2 (registered leg: Figs 1 and 5) | 4 | SUCCESSFUL, provisional on L18 (SUCCESSFUL) |
 | dye | 11 | 2 | PARTIAL (SUCCESSFUL) |
 | herskind | 2, including the 1,601-cell S3 table | 2 | SUCCESSFUL (SUCCESSFUL) |
 | key | 0; all nine targets untestable | 2 | BLOCKED (PARTIAL) |
@@ -174,11 +179,14 @@ Ruled by Shawn on 2026-10-10:
   the opposite of what the study's runs must do. If the probe fails, Shawn
   re-rules with (b) the fallback.
 
-- **L18 (a):** CREMA-T04 (Fig. 2) is expected MINOR_DISCREPANCY ("small
-  difference, conclusions unchanged"). v1.0.0's archive regenerates panel a
-  about 0.03 higher than published (finding 8), but both bands contain the
-  simulated true value. Crema's expected verdict stays SUCCESSFUL, with a
-  note.
+Reopened:
+
+- **L18:** CREMA-T04 (Fig. 2). Shawn ruled (a) on the first framing; Astra's
+  review found the options lacked the PAPER_ERROR route (amendment 3
+  §7(a)), the comparison covered only the plateau, and the gate's expected
+  content was unstated. Put again with four options and whole-curve
+  evidence. Recommendation (a), MINOR_DISCREPANCY with the expected figure
+  and its tolerance stated, so that the label alone cannot pass.
 
 ## Before freezing
 
@@ -189,7 +197,10 @@ Ruled by Shawn on 2026-10-10:
 - [x] 2026-10-10 Probe crema's figures (L5): Figs 1, 3, 4, and 5
       regenerate pixel-identical; Fig. 2's panel a does not (finding 8,
       `evidence/crema-figures-probe/`).
-- [x] 2026-10-10 Rule L18 and apply it (ledger 0.3.2-draft).
+- [ ] Re-rule L18 on the complete options and apply it.
+- [ ] Rebuild crema's probe environment honouring every session-info pin,
+      attached and namespace-only (Astra's B3), assert the full inventory,
+      and confirm the figures there.
 - [ ] Probe marwick's Fig. 2: the fitting chunk run verbatim from a wrapper
       on amd-tower, then the supplement rendered unchanged and the figure
       compared with the version of record (L17). Sapphire is held until its

@@ -1,8 +1,8 @@
 # Correction ledger for the §8 regression gate (amendment 3 §9) — DRAFT
 
-**Status:** DRAFT, fully ruled. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, and L5, L17, and L18 on 2026-10-10. Not frozen and not hashed: L17's probe and the pre-freeze checks remain. No run may use any value here until the frozen copy is committed and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
+**Status:** DRAFT. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, and L5 and L17 on 2026-10-10. L18 was ruled (a) the same day and reopened after review with complete options. Not frozen and not hashed: L18, the compliant crema environment (B3), L17's probe, and the pre-freeze checks remain. No run may use any value here until the frozen copy is committed and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
 
-**Ledger version:** 0.3.2-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
+**Ledger version:** 0.3.3-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
 
 This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit the JSON, never this file.
 
@@ -10,7 +10,7 @@ This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit 
 
 | Paper | Pilot verdict | Expected verdict | In-gate targets | Unchanged (testable) | Corrected | Scope-changed | Expected-untestable | Outside the gate or conditional | Gate role |
 |---|---|---|---|---|---|---|---|---|---|
-| crema-et-al-2024 | SUCCESSFUL | SUCCESSFUL, with a note on CREMA-T04 (L18 (a)) | 6 | 2 (2) | 4 | 0 | 0 | 1 | mandatory: the registered archived-posterior leg, covering Table 1 (CREMA-T01) and the five main figures (CREMA-T03 to T07), ruled L5 (c) on 2026-10-10 |
+| crema-et-al-2024 | SUCCESSFUL | SUCCESSFUL, provisional on L18 | 6 | 2 (2) | 4 | 0 | 0 | 1 | mandatory: the registered archived-posterior leg, covering Table 1 (CREMA-T01) and the five main figures (CREMA-T03 to T07), ruled L5 (c) on 2026-10-10 |
 | dye-et-al-2023 | SUCCESSFUL | PARTIAL | 13 | 11 (11) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 | herskind-riede-2024 | SUCCESSFUL | SUCCESSFUL | 4 | 2 (2) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 | key-et-al-2024 | PARTIAL | BLOCKED (coverage 0) | 0 | 0 (0) | 0 | 0 | 0 | 9 | not a gate paper (L6 (c)); its record keeps the expected verdict and the strict comparison's baseline |
@@ -18,7 +18,7 @@ This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit 
 
 ## Rulings
 
-Ruled by Shawn Ross (registrant) on 2026-10-09 and 2026-10-10: L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12, L13, L14, L15, L16, L17, L18. Open: none.
+Ruled by Shawn Ross (registrant) on 2026-10-09 and 2026-10-10: L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12, L13, L14, L15, L16, L17. Open: L18.
 
 ### L1. What is 'the pilot's locked target list'? No pilot attempt-01 has a reproduction plan or a locked list; the pilots predate the locked-list instrument.
 
@@ -201,7 +201,7 @@ Affects: freezing.
 
 ### L17. Marwick's Fig. 2 under L11 (a). The published image comes from supplement-GAMS-details.qmd at 1.3. Its model-fitting chunk is marked 'eval: false', with the authors' comment 'this takes a few hours': five brms models, each with 4 chains of 50,000 iterations, adapt_delta 0.99999, and seed 123. The chunk saves results_brms.RData ('quite a large file'), which the tag 1.3 tree does not contain. So nothing archived can be redrawn, and regenerating Fig. 2 means a multi-hour MCMC re-run.
 
-**Ruled 2026-10-10: (c).** Probe first. Before the ledger freezes, a local probe on amd-tower runs the fitting chunk's code verbatim from a wrapper, renders the supplement unchanged, and compares the figure with the version of record; the approved plan then names that operator step. If the probe fails, the registrant re-rules on its evidence, with (b) the fallback. The gate tests the lane, not the papers: it need not mirror the study's runs exactly, but should be as realistic as possible (registrant, 2026-10-10).
+**Ruled 2026-10-10: (c).** Probe first. Before the ledger freezes, a local probe runs (on zbook, which the registrant made available on 2026-10-10; sapphire is held for a memory fault) the fitting chunk's code verbatim from a wrapper, renders the supplement unchanged, and compares the figure with the version of record; the approved plan then names that operator step. If the probe fails, the registrant re-rules on its evidence, with (b) the fallback. The gate tests the lane, not the papers: it need not mirror the study's runs exactly, but should be as realistic as possible (registrant, 2026-10-10).
 
 - **(a)** Outside the gate, as a stated scope limit like crema's full-MCMC path (CREMA-T02): MAR-T10 is recorded but not run, and marwick's gate verdict rests on its other 12 targets.
 - **(b)** In the gate, expected CANNOT_COMPARE: the fit is not deposited and the gate does not re-run multi-hour MCMC. Marwick's expected verdict then needs a further call (SUCCESSFUL as 'nearly all', or PARTIAL).
@@ -211,15 +211,16 @@ Affects: freezing.
 
 Affects: MAR-T10, marwick expected verdict.
 
-### L18. CREMA-T04 (Fig. 2) from v1.0.0's archive. The probe of 2026-10-10 regenerates Figs 1, 3, 4, and 5 pixel-identical to the deposit's own PDFs, but not Fig. 2's panel a (simulation 1a). v1.0.0's archived posterior (sim/results/post_sim1a.RData, matching the deposit checksum) gives the plateau mu_k a median of 0.660, 95% interval 0.591 to 0.734, against a simulated true value of 0.65. At the curve's late end, the regenerated 95% band reads 0.592 to 0.729; the version of record reads 0.567 to 0.691, as do the deposit's own figure2.pdf (0.570 to 0.693) and the pilot's render from v2.0.0's archive (0.565 to 0.693). Panel c is identical and panel b differs only by edge pixels. So the published panel a was drawn from a posterior that v2.0.0 archives and v1.0.0, the selected version, does not (evidence/crema-figures-probe/).
+### L18. CREMA-T04 (Fig. 2) from v1.0.0's archive. The probe of 2026-10-10 regenerates Figs 1, 3, 4, and 5 pixel-identical to the deposit's own PDFs, but not Fig. 2's panel a (simulation 1a). Panel b's band agrees within one pixel row (0.005) and panel c is pixel-identical. In panel a, the band regenerated from v1.0.0's archived posterior (sim/results/post_sim1a.RData, checksum verified) differs from the published one, which the deposit's own figure2.pdf and the pilot's render from v2.0.0's archive both match: by up to 0.082 in proportion on the rising limb and about 0.03 on the plateau (late-end band 0.592 to 0.729 against 0.567 to 0.691), with the band's edges crossing fixed values between 50 years earlier and 90 years later. The regenerated band contains the true curve at every year in both panels a and b (2,301 of 2,301 and 4,001 of 4,001 years; smallest margin 0.026 and 0.028 where the true proportion exceeds 0.05), so §5.1's claim, 'the true curve within the 95% posterior fitted range (Fig. 2a and b)', holds under v1.0.0's archive. The images show that v1.0.0's inputs and code do not regenerate the published panel a, while v2.0.0's come close; they do not identify the posterior the authors used, or show that no file in v1.0.0 holds it (evidence/crema-figures-probe/curve-comparison.json, curve-containment-output.log, band-measurement.json).
 
-**Ruled 2026-10-10: (a).**
+**Open.** The registrant ruled (a) on 2026-10-10 on the first framing. Reopened the same day after Astra's review of PR #10: the options lacked the PAPER_ERROR route, the comparison covered only the plateau, and the gate's expected content was unstated. Put again with complete options and whole-curve evidence.
 
-- **(a)** Expected MINOR_DISCREPANCY ('small difference, conclusions unchanged'; SUCCESSFUL with note): the band sits about 0.03 higher, and both bands contain the simulated true value, which is what the figure shows. Crema's expected verdict stays SUCCESSFUL. The archive inconsistency is reported as a finding about the deposit.
-- **(b)** Expected REPRODUCED_VISUAL: the shift is within visual tolerance ('exact pixel matching is not expected').
+- **(a)** Expected MINOR_DISCREPANCY ('small difference, conclusions unchanged'; SUCCESSFUL with note), with the expected content stated. The gate's Fig. 2 must match the figure regenerated from v1.0.0's archive in the compliant probe environment: band edges within one pixel row at 220 dpi (0.005) of the probe's in panels a and b, and panel c identical. Its comparison against the version of record must report panel a's difference as above, with the true curve contained throughout, and panels b and c reproduced. The label alone does not pass the target. The archive inconsistency is reported as a finding about the deposit. Crema's expected verdict stays SUCCESSFUL.
+- **(b)** Expected REPRODUCED_VISUAL, treating the difference as within visual tolerance.
 - **(c)** Expected MAJOR_DISCREPANCY: the published panel cannot be regenerated from the selected version's archive. Crema's expected verdict becomes PARTIAL.
+- **(d)** Expected PAPER_ERROR (amendment 3 §7(a)): the authors' deposited posterior and their unmodified code, tier-2 and tier-3 evidence, support the regenerated panel over the published one. Escalates for human confirmation.
 
-**Recommendation:** (a). The shift is visible at the page's scale and moves a plotted posterior, so (b) predicts a call that a careful comparison would not make, and the gate would then fail on a correct lane. The figure's conclusion, that the model recovers the simulated diffusion curve, holds in both, so (c) overstates it. The registered categories give exactly this case, a small difference with conclusions unchanged, as MINOR_DISCREPANCY.
+**Recommendation:** (a). (b) fails because the difference is in scientific content, a posterior band that moves by up to 0.08, and 'exact pixel matching is not expected' does not cover that. (c) fails because the conclusion the figure supports holds under v1.0.0's archive: the true curve lies inside the regenerated band at every year. (d) fails on §7(a)'s own test, that 'the authors' own materials support the reproduced value'. The same v1.0.0 deposit holds figure2.pdf, which matches the published figure, so the authors' materials conflict with each other rather than showing the paper wrong. Any valid posterior from the authors' model can be drawn in this figure, and the published one is not shown to be erroneous; what is shown is that the deposited posterior is not the one drawn. That is an archive inconsistency, not a paper error. (a) also states the expected figure content and its tolerance, so the gate cannot pass on the label alone.
 
 Affects: CREMA-T04, crema expected verdict.
 
@@ -230,7 +231,7 @@ Affects: CREMA-T04, crema expected verdict.
 - **corrected:** an in-gate target whose expected outcome or value differs from the pilot's recorded one, so the strict comparison fails on it by construction (amendment 3 §9). The printed value is never overwritten; where it is itself wrong, the corrected expected value sits beside it with its evidence tier and ruling.
 - **scope_changed:** a target whose elements are extended to the published item's full scope, or mapped to a different published item, identified separately from a corrected value (amendment 3 §9).
 - **expected_untestable:** a target that stays in the denominator but must come out untestable, because its result would rest on inputs the reproducer reconstructed (amendment 3 §7(d); audit Q5(iii)), or because the pilot found its data unavailable. A pipeline that tests it instead fails the gate.
-- **not_in_gate:** a pilot target outside the gate's scope: crema's fresh-MCMC path (registration §8: not re-run) and crema's figures unless crema is also a gate paper (ruling L5).
+- **not_in_gate:** a pilot target outside the gate's scope: crema's fresh-MCMC path (registration §8: not re-run). Crema's five main figures are in the gate, in the registered archived-posterior leg (ruling L5 (c), 2026-10-10).
 - **REPRODUCED_VISUAL:** this ledger's label for a figure whose scientific content matches under the visual tolerance (verdicts-and-precision).
 - **evidence tiers:** amendment 3 §7(a): (1) the paper's own tabulated data; (2) the authors' deposited data for that analysis; (3) the authors' own code, run unmodified, on the authors' own data.
 
@@ -245,7 +246,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 - `results/post_jp_abot.RData`: sha256 `180682de0e83d01f5ae0965ed1ef17270e465d8ccd3a2ebd19c5448927f9b988`
 - `results/post_gb_abot.RData`: sha256 `f1d53e0adafc92f66dd3961084621a20cc8371b65a5b3a20412cc665d79bee32`
 - **Pilot:** attempt-01, verdict SUCCESSFUL; executed git tag v2.0.0 (c6d1aae) plus one Dockerfile edit; audit findings CREMA-1, CREMA-2, CREMA-3.
-- **Expected verdict:** SUCCESSFUL, with a note on CREMA-T04 (L18 (a)). CREMA-T01 reproduces all 24 printed cells exactly. v1.0.0's figures_main.R redraws the five main figures from the deposit's data and archived results in the same run (L5 (c)); the probe of 2026-10-10 regenerates Figs 1, 3, 4, and 5 pixel-identical to the deposit's own PDFs. Fig. 2's panel a is a minor discrepancy, conclusions unchanged, which the registered categories score SUCCESSFUL with a note (L18 (a)). The fresh-MCMC path is not run.
+- **Expected verdict:** SUCCESSFUL, provisional on L18. CREMA-T01 reproduces all 24 printed cells exactly. v1.0.0's figures_main.R redraws the five main figures from the deposit's data and archived results in the same run (L5 (c)); the probe of 2026-10-10 regenerates Figs 1, 3, 4, and 5 pixel-identical to the deposit's own PDFs. Fig. 2's panel a does not match; its expected outcome is L18 (SUCCESSFUL under (a) or (b), PARTIAL under (c); (d) escalates). The fresh-MCMC path is not run.
 
 ### Targets
 
@@ -386,7 +387,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Repair class and status | CREMA-3 (iv); CREMA-2 (i): rnaturalearthhires installed unpinned at run time (Fig. 1 only). Status: no repair |
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
-| Expected outcome | MINOR_DISCREPANCY: regenerated from v1.0.0's archived posterior, panel a's band sits about 0.03 above the published one. Both contain the simulated true value (0.65), so the conclusion is unchanged. Panels b and c reproduce (L18 (a)) |
+| Expected outcome | RULING NEEDED (L18, reopened) |
 | Rulings | L4, L5, L8, L18 |
 | Note | Drawn from the archived simulation posteriors in sim/results/. The probe of 2026-10-10 regenerates panel a from v1.0.0's archived posterior about 0.03 higher than published; see L18 and evidence/crema-figures-probe/. |
 
@@ -1532,7 +1533,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
 | Rulings | L11, L17 |
-| Note | The approved plan names the operator step: run the code of supplement-GAMS-details.qmd's eval: false fitting chunk verbatim from a wrapper (five brms models, each with 4 chains of 50,000 iterations and seed 123; the authors note 'this takes a few hours'), then render the supplement unchanged. Its unconditional readRDS loads the saved fit, and its fig-smooth-plots-paper chunk redraws the figure. The authors' files are not edited. A local probe on amd-tower checks this before the ledger freezes (L17 (c)). |
+| Note | The approved plan names the operator step: run the code of supplement-GAMS-details.qmd's eval: false fitting chunk verbatim from a wrapper (five brms models, each with 4 chains of 50,000 iterations and seed 123; the authors note 'this takes a few hours'), then render the supplement unchanged. Its unconditional readRDS loads the saved fit, and its fig-smooth-plots-paper chunk redraws the figure. The authors' files are not edited. A local probe on zbook checks this before the ledger freezes (L17 (c)). |
 
 #### MAR-T11 — Fig. 3 (journal variation, panels A–E, and the Borda Count consensus ranking, panel F)
 
