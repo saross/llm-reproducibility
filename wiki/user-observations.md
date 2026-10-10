@@ -2,7 +2,7 @@
 title: "llm-reproducibility — User Observations"
 tags: [human-ai-collaboration]
 created: 2026-07-03
-updated: 2026-10-04
+updated: 2026-10-06
 status: active
 ---
 
@@ -665,10 +665,11 @@ contradicted it within minutes. The correction was visible, but the
 register is read later as guidance, and one failure did not justify a
 mechanism.
 
-## Pending review — 2026-10-04 (second session) batch (drafted at handoff, session c5ee7a27)
+## 2026-10-04 (second session) batch — adjudicated 2026-10-06 (drafted at handoff, session c5ee7a27)
 
-*Candidates for Shawn to accept / edit / discard / replace. Silence
-holds them over — never discards.*
+Verdicts (Shawn, 2026-10-06): A, B, and E **accepted** (A and B helpful;
+E helpful, generalised at his direction); C and D **discarded**. The
+candidate text is kept below as the record.
 
 **Candidate A (helpful) — a finding that weakened an earlier ruling was
 raised and bounded, not used as a reason to halt.** Mid-arms, Claude found
@@ -690,7 +691,8 @@ advantage, Claude reported:
 
 Shawn: "Great, confirm medium."
 
-**Candidate C (mixed) — a backwards rule, corrected after approval.**
+**Candidate C (mixed; DISCARDED 2026-10-06) — a backwards rule, corrected
+after approval.**
 Claude's deprecated-function recommendation said "fail-and-uplift, unless
 no public version runs the original name", and Shawn approved it as
 recommended. Claude's next drafting pass caught the inversion and stated
@@ -698,20 +700,22 @@ the coherent rule. In the moment Shawn said: "ah, thank you, I agree with
 your correction, sorry I missed it". The correction helped. But the error
 was Claude's, and it put a backwards rule in front of him for approval.
 
-**Candidate D (helpful) — "anything else we should consider?" answered
-with concrete, recommended considerations.** After ruling the
+**Candidate D (helpful; DISCARDED 2026-10-06) — "anything else we should
+consider?" answered with concrete, recommended considerations.** After ruling the
 fail-and-uplift line, Shawn asked what else to weigh. Claude gave six
 considerations, each with a recommendation and a note on which needed a
 ruling. All six were adopted; on "report what repairs would recover",
 Shawn said "great idea". Two needed clarifications were settled with two
 structured questions.
 
-**Candidate E (helpful; Shawn's in-the-moment reaction, relayed) — the
-project's momentum restored across the last few sessions.** At close
-Shawn said: "thanks for a great session, we've really revitalised this
-project, which had stalled for a while", and then "the last few sessions
-were really very good, and I'm relieved/excited to have this work moving
-again". The run of sessions from 2026-10-03 to 10-04 covered:
+**Candidate E (helpful; generalised 2026-10-06) — long autonomous blocks
+inside pre-approved gates, with dense batched rulings when Shawn is
+present, restore throughput without loosening governance.** The evidence
+is the project's recovery from a stall across the sessions of 2026-10-03
+and 10-04. At close Shawn said: "thanks for a great session, we've really
+revitalised this project, which had stalled for a while", and then "the
+last few sessions were really very good, and I'm relieved/excited to have
+this work moving again". The run of sessions from 2026-10-03 to 10-04 covered:
 
 - the agentic reproduction lane and shakedown;
 - the E8-v2 registration and concordance;
@@ -723,3 +727,123 @@ These moved the study from a stall to a clear path to the registered
 regression gate. What may generalise: long autonomous blocks inside
 pre-approved gates, with dense batched rulings when Shawn is present,
 restored throughput without loosening governance.
+
+## 2026-10-05 batch — adjudicated 2026-10-06 (drafted at handoff, session ef0412bd)
+
+Verdicts (Shawn, 2026-10-06): A, B, and C **accepted** (A helpful,
+generalised at his direction; B helpful; C mixed); D and E **discarded**.
+The candidate text is kept below as the record. E's matter was resolved the
+same day: both posted reviews now carry an attribution line, and agent
+reviews are delivered as documents (a bot account later, if review traffic
+grows).
+
+**Candidate A (helpful; generalised 2026-10-06) — a brief that carries
+everything a peer needs lets it act without Shawn: the commit hash, the
+files, a reading order, the focus, the ground rules, and the reply route.**
+The case: Claude's review brief for the Fable session carried all six, with
+an attack focus. Shawn: "Fable's check is in
+progress, they got the mail and actioned it without any interventions
+from me, which is exactly right". Fable's review then found four serious
+and six moderate routes that both Opus reviews and Astra had missed.
+
+**Candidate B (helpful; reaction relayed) — routing a gate through
+cross-model review before relying on it.** Claude put PR #7 to Astra, then
+Fable, and later sent the gate 1.3 design to both before building. Shawn:
+"remember you have access to Fable and Astra for second opinions, that
+seemed useful". The reviews changed the design's foundations: the record
+boundary, binding rulings to evidence, and a fresh-computation policy.
+
+**Candidate C (mixed) — options written in jargon needed a second round.**
+"May break projects that write beside their code" prompted: "can you
+explain the risk? I don't fully understand…". On conversions Shawn asked to
+talk the trade-offs through. Claude's explanation, using herskind's
+`ggsave()` line and saying the failure would be loud, not silent, settled
+both quickly. The first framing cost a round-trip.
+
+**Candidate D (unhelpful, reported in full; DISCARDED 2026-10-06) —
+Claude's test fixtures broke the repository's git config.** Run by the pre-commit hook, the new
+fixtures inherited `GIT_DIR`, set `core.bare = true` in the shared config
+(so `git status` failed in the main checkout), and committed a fixture tree
+over the PR branch. Claude stopped, diagnosed, repaired the config and
+branch before any push, added a scrub and a regression test, and led its
+next message with the incident. The repository had recorded the fix three
+weeks earlier, and Claude had not looked. Shawn filed `/feedback`.
+
+**Candidate E (unhelpful; DISCARDED 2026-10-06) — review briefs invited
+posting under Shawn's name.** Claude's first two briefs to Astra and its
+first to Fable invited findings "as a PR comment", which posts through
+Shawn's GitHub account and breaks the outbound rule. Fable declined. Astra
+posted two reviews to PR #7. Claude corrected the instruction in later
+briefs and recorded it as claude-obs 70. Shawn to judge whether the two
+posted reviews are acceptable.
+
+## Pending review — 2026-10-06 batch (drafted at handoff, session b1a1e102)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence
+holds them over — never discards. Titles state the transferable lesson,
+per his 2026-10-06 pruning (claude-obs 73).*
+
+**Candidate A (helpful) — a scattered decision backlog clears in one
+sitting when each item is re-assembled from its source, ordered by what it
+blocks, and offered with a recommendation.** Shawn: "can we work through
+my decisions/questions one-by-one to clear them? I've lost track of
+context for each, which is scattered through our session transcript".
+About 34 decisions from three sessions, from amendment 3 to
+user-observation verdicts, were cleared in one walk-through. Claude
+re-read each item's source rather than its own summary, grouped items by
+what they blocked (lodgement and the regression gate first), and put each
+as a structured question with a recommendation. Two needed a trade-offs
+round first.
+
+**Candidate B (helpful) — a disagreement between models settles fastest
+on the artefact, not on argument.** Fable proposed exempting `R CMD` from
+the process census by subcommand list. Claude read the image's own
+`bin/BATCH` and `bin/INSTALL` scripts, which showed that executing
+subcommands re-enter the shimmed front end. Fable withdrew in one
+exchange, and the one real gap (`INSTALL`'s inner start) was identified
+precisely.
+
+**Candidate C (helpful) — a third option can dissolve a binary.** Asked
+whether agent reviews should be (a) documents or (b) GitHub posts with an
+attribution line, Claude pointed out that the platform attributes a post
+to the account whatever its body says. It offered a machine account or
+GitHub App as the route to native agent reviews without posting as
+Shawn. Shawn chose "documents now, bot account later", an option that was
+not in his original pair.
+
+## Pending review — 2026-10-08 batch (drafted at handoff, session fabeab56)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence
+holds them over, never discards. Titles state the transferable lesson
+(claude-obs 73). The 2026-10-06 batch above is still pending.*
+
+**Candidate A (helpful): a follow-up review is worth asking for when a
+revision composes rulings, and it should check that the fixes landed
+rather than re-review everything.** Shawn asked whether amendment 3 needed
+another review from Astra or Fable. Claude recommended Astra, scoped to
+"did each finding land, do the new rules contradict, does the paste match".
+It argued against Fable, because Fable had already advised on the rulings,
+and a top-tier pass would mostly repeat that. The follow-up found B1, a
+real blocking gap. Two rulings had been joined into a rule that never
+said which versions follow a failed pin. Claude, Shawn, and Fable had all
+passed it.
+
+**Candidate B (helpful): write an irreversible procedure down as reviewed
+code before running it, not at the moment of running it.** Amendments 1
+and 2 were lodged with API calls written during the lodgement. For
+amendment 3, Claude scripted the route with a read-only `plan` mode and
+put it in Astra's review. Astra found three failure-path defects before
+the live run, and the run then passed every check first time.
+
+**Candidate C (unhelpful): raise a gap you have noticed, even when raising
+it reopens an approval.** Reading amendment 2, Claude saw that both earlier
+amendments say what they leave unchanged and amendment 3 did not. It kept
+quiet, to avoid reopening Shawn's "approve as is". A side agent raised it,
+and Shawn added the sentence in one question. Lodged text cannot be
+corrected except by erratum or amendment, so the omission was the costly
+path.
+
+**Candidate D (unhelpful): do not infer an agent's pronouns from its
+name.** Claude called Astra "she" throughout. Shawn asked which pronoun
+Claude prefers, which surfaced the slip. The existing notes use "it" or
+"they" for Astra.

@@ -410,10 +410,10 @@ shared_content_policy:
 shared_content:
   fair-instrument:
     canonical_file: studies/open-science-compliance/protocol/instruments/fair-instrument.md
-    version: "2.1"
-    receipt_token: "5ff4c48c4f5c7321"
-    sha256: "299fe8abc342f6736474c2312cf62ee02a0f26957d6d00a9831ddd60a071851e"  # C7 content-integrity hash (2026-08-15)
-    status: frozen-by-osf-registration  # DOI 10.17605/OSF.IO/DQNHG; v2.1 per erratum Entry 3 (ratified 2026-08-14) + 2026-08-15 platform-table rulings; amendment 2 must lodge before D3 scoring
+    version: "2.2"
+    receipt_token: "bf984697092c0c20"
+    sha256: "3b94b57591b631067e9dadd09b73ce4daa673e998caf235714924588564de7b4"  # C7 content-integrity hash (2026-10-09)
+    status: frozen-by-osf-registration  # DOI 10.17605/OSF.IO/DQNHG; v2.1 per erratum Entry 3 (ratified 2026-08-14) + 2026-08-15 platform-table rulings, lodged in amendment 2; v2.2 per amendment 3 §4 (lodged 2026-10-08), erratum Entry 6
     consumers:
       - agent: fair-assessor-sonnet-5   # per-model variant (benchmark: Sonnet 5 + Opus 5 + Fable 5)
         mechanism: push                 # SubagentStart injection, receipt required
@@ -428,19 +428,19 @@ shared_content:
         mirror_file: extraction-system/prompts/06-infrastructure_pass6_prompt.md
   data-availability-taxonomy:
     canonical_file: studies/open-science-compliance/protocol/instruments/data-availability-taxonomy.md
-    version: "1.0"
-    receipt_token: "068d5f05793429d7"
-    sha256: "1c6ce7dc2109335a043403ca2aabaaa1cc852b8887197988ff5014ffe6b1416e"  # C7 content-integrity hash (2026-08-15)
-    status: frozen-by-osf-registration  # prereg §7.3; L-levels assigned at reproduction time only
+    version: "1.1"
+    receipt_token: "464c1474a18abab6"
+    sha256: "beb5889dfd384838524087cb929b5a88685583e5ead15c1ba277547130efb9d4"  # C7 content-integrity hash (2026-10-09)
+    status: frozen-by-osf-registration  # prereg §7.3; L-levels assigned at reproduction time only; v1.1 per amendment 3 §7(b) (lodged 2026-10-08), erratum Entry 6
     consumers:
       - agent: reproduction-planner
         mechanism: push
   verdicts-and-precision:
     canonical_file: studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md
-    version: "1.0"
-    receipt_token: "fe9bca3d3c95f931"
-    sha256: "dfbbdb5b738d44f84f4c0cf250c548943b21c94e7f9c8e790f89235d90b3d290"  # C7 content-integrity hash (2026-08-15)
-    status: frozen-by-osf-registration  # prereg §7.2/§7.4/§7.5 + reproduction protocol v1.1
+    version: "1.1"
+    receipt_token: "46eb4ad0bfcb3b92"
+    sha256: "e1ef6ab0841986a00696b6df3d76c266023c5b65d4f89c4fc96d74442b6073da"  # C7 content-integrity hash (2026-10-09)
+    status: frozen-by-osf-registration  # prereg §7.2/§7.4/§7.5 + reproduction protocol v1.1; v1.1 per amendment 3 §7(a) (lodged 2026-10-08), erratum Entry 6
     consumers:
       - agent: reproduction-executor
         mechanism: push
@@ -454,10 +454,10 @@ shared_content:
         mirror_mode: region
   coverage-rules:
     canonical_file: studies/open-science-compliance/protocol/instruments/coverage-rules.md
-    version: "1.0"
-    receipt_token: "a2a4c0a899291c2b"
-    sha256: "b271126191888cc4792a51493284e3427bb56d7c51e56e0aecd44b0032501dbd"  # C7 content-integrity hash (2026-08-15)
-    status: frozen-by-osf-registration  # prereg §7.6; denominator lock
+    version: "1.1"
+    receipt_token: "414de27c0d871a1d"
+    sha256: "b211a2318c7162ce5d482d94657da679632867e9ee77b0111c00db3c0a65eed9"  # C7 content-integrity hash (2026-10-09)
+    status: frozen-by-osf-registration  # prereg §7.6; denominator lock; v1.1 per amendment 3 §7(c) (lodged 2026-10-08), erratum Entry 6
     consumers:
       - agent: reproduction-planner
         mechanism: push
@@ -474,10 +474,10 @@ shared_content:
         mechanism: push
   pipeline-invariants:
     canonical_file: .claude/shared/invariants.md
-    version: "1.0"
-    receipt_token: "f847020d25d57382"
-    sha256: "1983c03468f5ae22732787c348946fd995c5487cf3b85a80dc6c2d900755c534"  # C7 content-integrity hash (2026-08-15)
-    status: frozen-by-osf-registration  # anchored in prereg §8; plan §4.3
+    version: "1.1"
+    receipt_token: "c70d484af7e75ec4"
+    sha256: "f74f393385d3074bc1eb328ff37eecd0cbc0ba0c38bbc9e26ab906c2008a6be4"  # C7 content-integrity hash (2026-10-09)
+    status: frozen-by-osf-registration  # anchored in prereg §8; plan §4.3; v1.1 per amendment 3 §7(d) (lodged 2026-10-08), erratum Entry 6
     consumers:
       - agent: reproduction-planner
         mechanism: push
@@ -544,39 +544,39 @@ shared_content:
 agent_definitions:
   fair-assessor-sonnet-5:
     file: .claude/agents/fair-assessor-sonnet-5.md
-    version: "1.2"
+    version: "1.3"
     model: claude-sonnet-5
-    sha256: "42de4ba61acb5cc50d51b2e602cdf95833aaccc5b434aa0932262c2a11b34409"
+    sha256: "8bc6f19f746ed183454f2052d311f910dcc8f973ab0b7e557b7d6a1d3a9beb10"
   fair-assessor-opus-5:
     file: .claude/agents/fair-assessor-opus-5.md
-    version: "1.2"
+    version: "1.3"
     model: claude-opus-5
-    sha256: "17628d11a963bdd32f0ab369deca652910491e171002204ec3917da8aec9950b"
+    sha256: "159497ec4902447fc1c4e9b351b0d8571dab81bee89265d0b76c5ec53e29e97b"
   fair-assessor-opus-5-5:
     file: .claude/agents/fair-assessor-opus-5-5.md
-    version: "1.2"
+    version: "1.3"
     model: claude-opus-5-5
-    sha256: "d11195e81e955c50f5d94026a6848ca042a9f11ff9f9f5bcfa08b41a768dd242"
+    sha256: "732ca59cced0b119e21187e26c635e837f066f45760d4b311dc0c4219da52f2c"
   fair-assessor-fable-5:
     file: .claude/agents/fair-assessor-fable-5.md
-    version: "1.2"
+    version: "1.3"
     model: claude-fable-5
-    sha256: "1c15d0deae13fa57cb8a96317452a72b02d4c929e9e7f039a4f85196e5fda5e5"
+    sha256: "ebd36e32a9ce47cde19a4f54febbfdb79e6af14f7f08845fef4d7985ae8a6502"
   reproduction-planner:
     file: .claude/agents/reproduction-planner.md
-    version: "1.1"
+    version: "1.2"
     model: claude-opus-5-5
-    sha256: "d0d32935606d6bef8bd00658688297751bdfff1417b5c17ea5afbb7716b9652c"
+    sha256: "4e62fe4ef62e535e1ab9b0ef3c222c255f2d90822d529ec59e959b88ccf35215"
   reproduction-executor:
     file: .claude/agents/reproduction-executor.md
-    version: "1.4"
+    version: "1.5"
     model: claude-opus-5-5
-    sha256: "3060558243d702ce467bfd1962b03b90095369aac38db8f0983c22196db2a42d"
+    sha256: "7c79fae419b46dcf6906241558cf608869a337f64a4941b86741978bd45ec8d4"
   adversarial-reviewer:
     file: .claude/agents/adversarial-reviewer.md
-    version: "1.1"
+    version: "1.2"
     model: claude-opus-5-5
-    sha256: "356982bd1b52eb3a05a91c2fb24fa560a5da4bb907c70149886a18cef2d099b0"
+    sha256: "6652bbc1543684b42bfbf2f0fa7e682a70855cd8325338a7e1e45e08725f0b74"
 
 # Reference datasets read as ground truth by registered analyses
 # (monitoring plan §4 class E8; §9 Q4: register-without-rewrite —

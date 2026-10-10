@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-10-04
+updated: 2026-10-09
 status: active
 ---
 
@@ -30,7 +30,610 @@ merged here as PR #1).
 
 ---
 
-## Repo state (2026-10-04, second-session close) — START HERE
+## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
+
+- **⏩ NOW (2026-10-10): L5 and L17 ruled, probes running, L18 open.**
+  - [x] 2026-10-10 **PR #9 at `4252e43`, ready for Shawn's merge.** A side
+    agent caught that `062c20a`'s N1 rewordings reworded frozen text that
+    amendment 3 does not lodge (routing design §6 rule 3: an OSF amendment
+    is required before an affected run). Reverted; B1 kept (it applies
+    lodged clarification 3). Astra re-reviewed (mail 06:33Z): no blocker,
+    and she withdrew her own N1 acceptance. D5 PASS; 378 tests + 16
+    subtests (the venv at `venv/bin/python -m pytest tests`).
+  - [x] 2026-10-10 **Shawn ruled L5 (c) and L17 (c), probes first**
+    (PR #10 `ddd4dcf`). Crema's leg covers Table 1 + five figures; CREMA-T04
+    to T06 corrected (pilot's v2.0.0 figures differ from v1.0.0's). MAR-T10
+    in the gate; its `eval: false` chunk runs verbatim from a wrapper. Shawn:
+    the gate tests the lane, not the papers, so it should be as realistic as
+    possible without slavishly mirroring production. Amendment 4 queue
+    (Entry 7) gained the N1 rewordings, a rule for author-disabled code,
+    and a figure-centrality heuristic (Shawn's request; not in the gate).
+  - [x] 2026-10-10 **Crema probe done** (amd-tower; PR #10 `353e151`,
+    `evidence/crema-figures-probe/`): Figs 1, 3, 4, 5 pixel-identical to
+    the deposit's PDFs; Fig. 2 panel a is not, because v1.0.0's
+    `post_sim1a.RData` is not the posterior behind its own published panel
+    (v2.0.0's is). **L18 open** (CREMA-T04's expected outcome); recommended
+    (a) MINOR_DISCREPANCY. Astra asked to review (mail 07:07Z).
+  - [ ] **Marwick L17 probe running on zbook** since 17:56 AEDT (container
+    `llmr-probe-marwick-fig2`; files and `out/` under
+    `~/scratch/llmr-probes/marwick-fig2/` on zbook; amd-tower holds the
+    build files). The authors' Dockerfile fails as supplied (rstan binary vs
+    lockfile RcppParallel); `probe.Dockerfile` builds StanHeaders and rstan
+    from source at their pins. Five models run one after another, 4 cores
+    each, as the authors wrote them. When done: compare
+    `fig-smooth-plots-paper-probe.png` with the version of record, commit
+    evidence to PR #10, and report to Shawn.
+  - **zbook is available as secondary compute** (Shawn, 2026-10-10); sapphire
+    stays held until its memory soak test is done.
+  - Marwick's 1.3 zip is downloaded (`~/scratch/llmr-probes/marwick-fig2/dl/`,
+    md5 matches Zenodo), so the in-zip hashing pre-freeze task can be done.
+
+- **⏩ Earlier (2026-10-09, later): merges before any run (Shawn).** Astra
+  reviewed PR #9 and PR #10 (mail 08:46Z and 08:53Z); both had blocking
+  items, all fixed and re-review requested by mail.
+  - [x] 2026-10-09 **PR #9** at `062c20a`: B1 (the v2.1 aggregation rule
+    still counted "non-principal upstream sources"; now qualified by v2.2
+    clarification 3) and N1 (paper-error procedure made an optional
+    diagnostic; tolerance rule admits PAPER_ERROR). Mirrors re-spliced,
+    digests and Entry 6 updated; D5 PASS; 410 tests pass. N2 deferred:
+    the FAIR guide's v2.1 pointer needs guide v1.2 plus four assessor
+    definitions (before §10 step 5); schema strings and
+    `reproduction-lane.py:104` after PR #7 merges.
+  - [x] 2026-10-09 **PR #10** at `916eb7b` (ledger 0.2.1-draft): B1
+    confirmed visually (MAR-T09 and MAR-T11 corrected; marwick unchanged
+    8 to 6; MAR-T13 checked and unchanged; Astra's panel F example was
+    wrong and the mail says so), and B2 (HER-T02 back to the pilot's 3 dp).
+  - **L17 recommendation withdrawn from (a), now (c) after a local probe,
+    (b) as the fallback.** Astra was right: registration §8's exception is
+    crema's leg only; eligibility criterion 4's cap is 168 h per paper;
+    §7.6 locks the denominator. Dropping MAR-T10 would need a prospective
+    amendment. The JSON still carries the old text; revise with the ruling.
+  - [ ] **Hold sapphire for reproduction runs until its memory fix is
+    confirmed** (personal-assistant session, 2026-10-10: a load-dependent
+    single-bit fault, non-ECC, that can silently alter values in runs that
+    appear to succeed; worst under sustained multi-worker load). Checked
+    2026-10-10: no llm-reproducibility compute ran there since 2026-10-05
+    (amd-tower transcripts and the `~/cc-archives/llm-reproducibility`
+    mirror; the only matches are greps of the execution prompt), so nothing
+    needs re-running. But `02-execution-and-verification.md` §1.2 and the
+    plan guide send runs over an hour to sapphire. Pin the herskind re-run
+    and any L17 local fit to amd-tower, and say so in the plan approval.
+  - **Merge order proposed:** PR #9 (after Astra's re-review), then rebase
+    PR #7 on main (manifest and executor-definition conflict), then the
+    herskind re-run and the final review, then PR #7. PR #10 merges once
+    ruled and frozen (before the §8 gate, not before the re-run). Fable is
+    not needed until the re-run is done.
+- **Earlier: Shawn ruled the overnight questions (2026-10-09, by remote
+  session from a tablet).**
+  - **Q1 (a):** build the dry-run record's design on PR #7 before the final
+    review: verbatim short texts with their verified caller, templates for
+    package internals, and one obligation per place and caller.
+    [x] 2026-10-09 Built on PR #7 (head `8eeefd3`): hook `1.5-inst`
+    carries each text up to 512 bytes and its caller (`65d9eb2`); the gate
+    checks it against the md5, matches 3 package templates, and groups the
+    rest per place and caller as `run-time-texts` (`a018a0a`); records in
+    the spec and dry-run note (`8eeefd3`). The re-run: 119 obligations
+    become 1 (all 107 conditions listed), 12 texts match templates, 142 of
+    142 verbatim texts hash to their md5s, and the 34 outputs stay
+    identical to attempt-02's. One defect found and fixed: R reports a
+    promise forced in a data mask as its own parent, so the conditions'
+    caller read as `base::parse`; it is now `promise`. 595 tests pass.
+  - **Q2:** start the final review after Q1 (a). That means the full
+    herskind re-run through the agentic workflow (Shawn approves the plan
+    and launches it; it passes the API review gate), then one round with
+    Astra and Fable.
+  - **Q3, the correction ledger:** ruled except L5 and L17. L1 (a), L2
+    (a), L3 (a), L4 (a), **L6 (c): the gate runs dye, herskind, and
+    marwick**, plus crema's leg, L7 (a), L8 (a), L9 (b), L10 (a), L11 (a),
+    L12 (a), L13 (a), L14 (a), L15 (a), and L16 (a). Applied on PR #10 at
+    `e4f5b94` (ledger 0.2.0-draft).
+    - **Open, L5:** Shawn asked whether crema's figures repeat Table 1.
+      They mostly do not: Table 1 covers case studies 1a and 1b only, and
+      Figs 2 (simulation tests) and 5 (all of case study 2) appear nowhere
+      else. The recommendation is revised to (c), all five figures in the
+      leg.
+    - **Open, L17 (new):** under L11 (a), marwick's Fig. 2 can be
+      regenerated only from `supplement-GAMS-details.qmd`'s `eval: false`
+      brms chunk ("this takes a few hours"), and its saved fit is not in
+      the tag 1.3 tree. The recommendation is (a): outside the gate, as a
+      stated scope limit like crema's full-MCMC path.
+  - **Q4 (a):** erratum-log Entry 7 on PR #10 (`9b66683`), with the OSF
+    note queued as item 1 of a new "Queued amendment 4 scope" list.
+  - **Working notes:** Shawn accepted every pending candidate.
+    [x] 2026-10-09 WN-am to WN-aq written as Obs 51 to 55 (`35a0f84`),
+    re-verified at source. On the way, the writer corrected two anchors:
+    the abductive entry of 2026-10-05 is in
+    `wiki/reflections/abductive-reasoning.md`, and WN-ap's 98,004
+    characters come from `session-reflection.md` Entry 24, not the
+    lodgement script's header. Obs 53 places D-7's ruling in session
+    fabeab56's walk-through, not b1a1e102's. **User observations:**
+    deferred.
+  - **Next, Q2:** the full herskind re-run through the agentic workflow,
+    which Shawn launches (API gate, plan approval), then one review round
+    with Astra and Fable. Open decision: run it on PR #7's branch with the
+    shakedown's settings (attempt-03, effort high, rulings R1 to R4), or
+    after PR #9's instruments merge.
+  - Astra was mailed PR #10's new head (outbox,
+    `20261009T021635.717643Z-claude-correction-ledger-ruled-new-head.md`).
+
+- **⏩ START HERE: an AUTONOMOUS OVERNIGHT session (Shawn, 2026-10-08).**
+  Get as far as possible by morning. When blocked on one track, switch to
+  another. Stop and wait only for a decision that is genuinely Shawn's, and
+  record it under "Questions for Shawn" below. Amendment 3 is LODGED, so
+  amendment 3 §10's steps 2 onwards are unblocked.
+- **Overnight progress (Opus 5.5, session be70c3be, 2026-10-08):**
+  - [x] 2026-10-08 Track 1 step 1, the gate's account of load events,
+    pushed to PR #7 (`4bf14e8`, `1c0bfe0`, `63eb010`, `9944be7`; 520 tests
+    pass). Three defects found and fixed on the way (spec §2.4): `-e` text
+    was hashed escaped, a fork's nesting used the parent's numbering, and
+    the hook and shim were not bound to the launch commit. A
+    launcher-matrix test image is built locally
+    (`llmr-launcher-matrix:4.3.2`, from
+    `tests/fixtures/launcher-matrix/Dockerfile`).
+  - [x] 2026-10-08 Track 1 step 2, `PKGBUILD`, the littler shim, and the
+    census rules, pushed to PR #7 (`eba8d98`, `40e2c54`, `d7caf2c`; 538
+    tests pass). The probes overturned the spec's premise (`R CMD
+    INSTALL`'s inner start does load the hook; its code arrives on stdin),
+    so the shim now captures stdin scripts and the gate binds them by
+    content. They also found callr children evading the hook (an A, fixed
+    by a re-pin in the shim) and `R -f` scripts unlogged (a D, fixed).
+  - [x] 2026-10-08 Track 1 steps 3 to 5 pushed to PR #7: the launcher
+    matrix (every §13 launcher runs the authors' code with no finding of
+    the account's own; `a3f2b47`, `8bae60d`), the semantics-neutrality
+    test (`77b577e`), fresh computation and static checks (`ed9dd23`), and
+    the lane's own conversion comparison (`a45d3c6`), with spec records
+    after each. 575 tests pass. **`openpyxl` is now a requirement**: run
+    `venv/bin/pip install -r requirements.txt` on zbook and amd-tower.
+    The matrix image needs a one-off local build on each machine (its
+    Docker tests skip without it).
+  - [x] 2026-10-09 Track 1 step 6 pushed to PR #7: the transcript audit
+    (`2cef8c7`) and the workflow switch (`40fdd58`: executor brief v1.3,
+    definition v1.4, preparation prompt v1.4, `GATE_VERSION` 1.3,
+    `snapshot-code` retired, `coverage_creditable` dropped). **The gate 1.3
+    build is complete** (all six §15 steps); 590 tests pass at `230134f`.
+  - [x] 2026-10-09 A dry run of the herskind pilot's execution layer
+    (no agents, no model calls): `wiki/planning/reproduction-gate-1-3-pilot-dry-run.md`
+    on PR #7. The run sealed complete and all 34 CSV and text outputs are
+    byte-identical to attempt-02's. It found a defect, fixed (`f5b77d7`:
+    an original run part by part read as never run), and raised Q1 below.
+  - [x] 2026-10-09 Track 2 on PR #9 (branch
+    `feat/amendment-3-instruments`, head `276b7e5`, open, not merged):
+    five frozen instruments edited to the lodged text, namely
+    fair-instrument 2.2 (§4), and verdicts-and-precision,
+    data-availability-taxonomy, coverage-rules, and invariants 1.1 (§7(a)
+    to (d)). Mirrors re-spliced, seven agent definitions moved to the new
+    versions, manifest digests re-registered, and erratum Entry 6 added.
+    Astra's review is requested by mail (outbox, 2026-10-08T13:34Z).
+  - [x] 2026-10-09 Track 3: **the draft correction ledger is on PR #10**
+    (draft, branch `feat/correction-ledger-draft`, head `0ad4b50`, not
+    merged; worktree `.claude/worktrees/correction-ledger-draft`). Marked
+    DRAFT: not ruled, frozen, or hashed. All five pilots, 46 targets, and 16
+    rulings (L1–L16), in
+    `studies/open-science-compliance/outputs/validation/correction-ledger/`.
+    `check-printed-values.py` finds 239/239 printed values on their cited
+    PDF pages. An operator run of dye's section 5 and 7 code,
+    byte-identical, confirms the corrected 0.999667 (ruling L9). Astra's
+    review is requested by mail (2026-10-08T14:10Z). Q3 and Q4 below.
+- **Track 1 (primary): gate 1.3 instrumentation on PR #7.** Branch
+  `feat/lane-gate-1-1-code-audit`, head `7d577b8`, open and not merged.
+  Worktree: `.claude/worktrees/agent-a8a2378c2a5dbdc98`. Work in the order
+  of the specification's §15 checklist
+  (`wiki/planning/reproduction-gate-1-3-design.md` in the worktree):
+  1. the gate's account of `LOAD`, `TEXT`, `CONN`, `PKG`, and `HOOKERR`
+     (§8), with per-load binding of nested loads (D-3) and the md5 of every
+     original;
+  2. `PKGBUILD` for `R CMD INSTALL`, the littler shim, and the remaining
+     census rules;
+  3. the launcher matrix (§13);
+  4. the semantics-neutrality test (§13);
+  5. fresh computation (§9), conversions (§11, with revision 2's datetime,
+     collision, and sheet rules), and the static additions (§10);
+  6. the transcript audit (§12), the remaining acceptance tests, and the
+     workflow switch.
+
+  Probe R behaviour in Docker before relying on it (Docker 29.2.1 and
+  `rocker/r-ver:4.3.2` are local; no pulls are needed). Tick §15 items
+  with dates as they land. Commit and push to the PR branch after each
+  step. The worktree's local branch (`worktree-agent-a8a2378c2a5dbdc98`)
+  has no upstream, so push with
+  `git push origin HEAD:feat/lane-gate-1-1-code-audit`. 525 tests passed
+  at `7d577b8` (re-run 2026-10-08). The final review (§2.2, with the
+  herskind pilot re-run) needs Astra and Fable, so prepare it but do not
+  wait on it.
+- **Track 2: §10 step 2, the instrument edits, on a new branch and PR.**
+  Do not merge. Edit the frozen instruments to amendment 3's lodged text
+  (tag `osf-amendment-3-2026-10-08`):
+  - the FAIR instrument goes from v2.1 to v2.2 with §4's items (AP-3 and
+    AP-7 to AP-17). Keep the Pass 6 mirror's normative blocks
+    byte-identical
+    (`extraction-system/prompts/06-infrastructure_pass6_prompt.md`), and
+    handle the receipt token for the push consumers;
+  - the four reproduction instruments take §7(a) to (d) verbatim:
+    `verdicts-and-precision.md`, `data-availability-taxonomy.md`, and
+    `coverage-rules.md` in
+    `studies/open-science-compliance/protocol/instruments/`, and
+    `.claude/shared/invariants.md`. §7(d) carries the B1 ruling, under
+    which a failed pin is followed by its own neighbours. No lane code or
+    prompt states the version search yet;
+  - new versions and sha256 values go in `manifest.yaml`, following the
+    v2.0 to v2.1 precedent (2026-08-15, erratum Entry 3; the manifest's
+    `fair-instrument` comment);
+  - run the D5 gate and the tests, and check consistency against the
+    lodged text (maintenance rule 4).
+
+  PR #7 also touches `manifest.yaml` and
+  `reproduction-system/prompts/01-preparation.md`, so expect to rebase
+  `manifest.yaml`. Where an instrument cannot take the lodged text
+  cleanly, record a question and do not reinterpret the text.
+- **Track 3 (if time): draft the correction ledger (§9) for Shawn to
+  rule.** Use amendment 3 §9's per-target and per-paper fields, and the
+  executed-code audit at `c4553f9` (tag `executed-code-audit-2026-10-04`,
+  `findings.json`, with Q1 to Q10 ruled). Mark it DRAFT, and do not freeze
+  or hash it. Freezing comes after his ruling (§10 step 3).
+- **Stop rules.**
+  - Never merge a PR. Make no OSF or other public post, and no paid model
+    API call (none is needed).
+  - Do not edit Codex-owned paths. Do not change what lodged text means.
+  - Fable (peer session `llm-reproducibility-ea`, idle) can review by
+    SendMessage. That spends top-tier credit, so use it for
+    registered-text or design questions only, and say so.
+  - Astra answers by mail only when Shawn runs Codex, so mail requests
+    tonight for the morning.
+  - Update this section at natural stopping points, so the morning read is
+    current even if the session ends early.
+- **Questions for Shawn (morning). All four RULED 2026-10-09; see NOW
+  above:**
+  - **Q1. 119 run-time texts on herskind, one obligation each.** The dry
+    run's analysis builds 107 subset conditions that dplyr parses, and
+    rlang, cli, and ggplot2 parse 12 more texts internally. The gate makes
+    each a separate `unmatched-text` obligation on an md5, which a human
+    cannot judge, and admission would need 119 rulings. Options:
+    (a) build the dry-run record's design before the final review, so that
+    the reviewers see one coherent build: verbatim short texts with their
+    verified caller, templates for package internals, and one obligation
+    per place and caller; (b) ask the reviewers to classify it first
+    (spec §16, question 6), then build; (c) accept it as an operability
+    limit. **Recommendation: (a).** It changes evidence, not rules, and
+    admission is impractical without it on any dplyr or ggplot2 analysis.
+    About an evening's work.
+  - **Q2. When to start the final review.** It needs the full herskind
+    re-run through the agentic workflow, which you start (plan approval,
+    multi-agent launch), and Fable's review spends top-tier credit.
+    **Recommendation:** after Q1 and the full re-run, one round for both
+    reviewers, as §2.2's stopping rule intends. Nothing is sent to Fable
+    tonight; Astra's review requests are in agent mail (see below).
+  - **Q3. Rule the correction ledger (PR #10).** The sixteen rulings are in
+    `correction-ledger.md`, each with options and a recommendation. Two
+    carry the rest: **L1**, the target list (no pilot has a locked list, so
+    the draft uses each attempt-01 report's compared items), and **L4**,
+    "unchanged" meaning that the expected result equals the pilot's,
+    whatever the pilot's credit eligibility. **L6 recommends dye and
+    marwick** as the gate papers, plus crema's registered leg: dye has 11
+    testable unchanged targets, marwick 8, herskind 2, key and crema none.
+    The draft also found pilot errors the audit missed:
+    - marwick's printed Kendall's W is 0.64, where the pilot recorded
+      "~0.70" and credited an exact match;
+    - dye's pilot "published" branching values were its own output.
+  - **Q4. A lodged example rests on a pilot transcription slip (ledger
+    L16).** Audit Q5(ii) sends key's "two inconsistent cells (3.1%,
+    19.6%)" to the paper-error protocol, and lodged amendment 3 §7(d)
+    repeats it as an example. The paper prints Midland Thickness 19.6 and
+    Clovis Mass 3.1; the pilot's wrapper swapped them (attempt-01
+    `run-analysis.R` lines 260–261). The rule itself is unaffected; only
+    its example fails. Options: (a) an erratum-log entry only; (b) also an
+    OSF note, now or with the next amendment. **Recommendation: (a) now,
+    with (b) folded into the next amendment.** It changes no rule, so a
+    standalone OSF update would be noise. The gate is unaffected, because
+    every key target is expected-untestable.
+- **Done this session (2026-10-06 to 10-08):**
+  - [x] 2026-10-06 Astra's amendment 3 review folded in (`23c72fc`);
+    D-7 to D-9 and the revision's new rules ruled (`9536962`, `2f3529d`).
+  - [x] 2026-10-06 Gate 1.3 specification revision 2 (`340f77d`), the F1
+    completeness corrections (`e6fe231`), and the hook's loader traces
+    (`7d577b8`).
+  - [x] 2026-10-08 Shawn approved amendment 3. Opening paragraph and
+    scope sentence ruled; Astra's follow-up (B1, S1, S2) folded in
+    (`4258db8`); re-check "No blocking issues found".
+  - [x] 2026-10-08 **Amendment 3 LODGED**: OSF revision
+    `6ac775afb5ed5b4afee88a4a`, tag `osf-amendment-3-2026-10-08` at
+    `abde9b1`, via `lodge-osf-amendment.py`. Round trip byte-identical;
+    public page checked by Shawn. The draft's status block and the
+    erratum log record it.
+  - [x] 2026-10-08 personal-assistant PR #169 merged (2026-10-07). Its
+    worktree was already removed, and the composed `CLAUDE.md` carries
+    its review-delivery rule.
+- **Still with Shawn (not blocking tonight):**
+  - user-observation candidates: the 2026-10-06 batch (A to C) and the
+    2026-10-08 batch (A to D), both pending in `wiki/user-observations.md`.
+    Deferred by Shawn, 2026-10-09;
+  - [x] 2026-10-09 working-notes candidates WN-am and WN-an (b1a1e102),
+    and WN-ao and WN-ap (session log below): accepted, with WN-aq;
+  - PR #7's merge, after the final review.
+
+  To start Astra here, run `~/gpt-hub/config/launch-codex.sh
+  --no-alt-screen` from `~/worktrees/llm-reproducibility/sol-repro-entry`.
+- **Carry-forward:** any git subprocess scrubs `GIT_*`. Reviews are
+  documents, never posts. Mail to Astra uses `Project: llm-reproducibility`,
+  `Lane: astra`.
+
+## Repo state (2026-10-06, session b1a1e102 close) — superseded by the section above
+
+- **⏩ START HERE: amendment 3 lodgement, then Astra's review, then gate 1.3
+  instrumentation.**
+  1. **Lodgement** (Shawn reading the draft at handoff). Once he has read
+     and edited `studies/open-science-compliance/prereg/amendment-3-draft.md`,
+     run the pre-lodgement checklist's steps 2–6 on the final text:
+     - consistency against the logs, rulings, planning note, F2 report, and
+       manifest;
+     - token checks (numbers, identifiers, dates, and quoted strings);
+     - register exit checks;
+     - the manifest gate and tests green at the commit, and the tag
+       `osf-amendment-3-<date>`;
+     - the paste artefact.
+
+     Then **ask before lodging** through the OSF API. Lodgement is step 1
+     of §10; the correction ledger (§9) is ruled after it. **Astra was asked
+     for a review of the draft** (2026-10-06, at Shawn's request:
+     `~/agent-mail/claude/outbox/codex/20261006T071537.739395Z-claude-repro-amendment3-review.md`,
+     against `38b59b0`, Workstream `amendment-3-review`). Fold its blocking
+     and should-fix findings in with Shawn's edits before running the
+     checklist.
+  2. **Astra's review** of the gate 1.3 specification. It was requested by
+     `~/agent-mail/claude/outbox/codex/20261005T062134.544396Z-claude-repro-gate13-consolidated.md`
+     against `53413bc`, and had not arrived by 2026-10-06. Replies land in
+     `~/agent-mail/codex/outbox/claude/`. Fold it in against revision 1
+     (`b409ef5`) as revision 2, classifying findings by §2.1, and fix
+     anything D or A it finds in F1–F3.
+  3. **Gate 1.3 instrumentation** (§15 step 4) on PR #7
+     (`feat/lane-gate-1-1-code-audit`, head `42da7fc`, **open, not
+     merged**; worktree `.claude/worktrees/agent-a8a2378c2a5dbdc98`):
+     - the full hook (§8), with traces installed *before* the profile
+       (Fable's D-1);
+     - `PKGBUILD` for `R CMD INSTALL`'s inner start;
+     - the littler shim;
+     - the launcher matrix in Docker, on a test image with `callr`,
+       `targets`, `future`, `knitr`, and `rmarkdown` from CRAN.
+
+     Then the remaining §15 steps, including the workflow switch to
+     `run-container`.
+- **Why it matters.** The registered §8 regression gate cannot run until
+  gate 1.3 is merged and the correction ledger (amendment 3 §9) is ruled.
+  §2 of the specification now has a stopping rule for hardening, which
+  session reflection 22 asked for. After the final review, only a defect
+  or an ordinary route reopens the build.
+- **Done this session (2026-10-05):**
+  - [x] 2026-10-05 The digest cache is confined to one snapshot
+    (`664bb72`). Two of its six tests failed on the old cache.
+  - [x] 2026-10-05 **Consolidated specification** (`53413bc`). The draft
+    is archived at
+    `archive/planning/reproduction-gate-1-3-design-draft-2026-10-05.md`.
+    The three conflicts are resolved, and the §2 stopping rule classes
+    findings as defect, ordinary, deliberate, or outside the model. It was
+    sent to Astra by mail and to Fable by SendMessage.
+  - [x] 2026-10-05 **A Docker probe** on `rocker/r-ver:4.3.2` settled
+    start-up facts; they are listed at the top of the specification. For
+    example, a project `.Renviron` overrides `R_PROFILE_USER` set by
+    `docker run -e`.
+  - [x] 2026-10-05 **Fable reviewed the consolidated text**
+    (`~/agent-mail/claude/outbox/claude/20261005T062807.778832Z-claude-pr7-fable-gate-1-3-spec-review.md`,
+    plus two SendMessage follow-ups on `R CMD`). Folded in as revision 1
+    (`b409ef5`).
+  - [x] 2026-10-05 **The foundations are built:**
+    - F1, `run-container` and sealed run records (`0ce7f25`);
+    - F2, consumption, credited runs, and output citations, with
+      comparison schema 1.1 (`f07763a`);
+    - F3, issues, rulings, and admission (`59f4e58`).
+
+    488 tests pass, including 9 Docker tests that skip without the local
+    `rocker/r-ver:4.3.2` image.
+- **Awaiting Shawn — cleared on 2026-10-06** in a decision walk-through:
+  - [x] 2026-10-06 **Amendment 3 D-1 to D-5 ruled** (`c99c2a0`):
+    - D-1: lodge the clarifications as instrument v2.2;
+    - D-2: planned platform-row rules, deciding 0s only;
+    - D-3: the re-validation gates on all 150 items;
+    - D-4: the census curation procedure is deferred to a later amendment,
+      with constraints fixed now;
+    - D-5: the corrected BI wording, with the `input` tag clarified.
+  - [x] 2026-10-06 **Audit Q2–Q10 ruled**: `question_rulings` in
+    `findings.json` (`c4553f9`, PR #7). The general rules from Q5 and Q6
+    are in amendment §7(d) (`38b59b0`).
+  - [x] 2026-10-06 **Astra's two PR #7 reviews** now open with an
+    attribution line. The review protocol for both agents is documents,
+    not posts, with a bot account later; the shared-guidance proposal is
+    personal-assistant PR #169.
+  - [x] 2026-10-06 **PR #8 merged** (`7f84e73`).
+  - [x] 2026-10-06 **WN-ag to WN-al accepted**, as Obs 45–50 (`a8da2e1`).
+    They were re-verified on writing, and WN-al's "non-overlapping" claim
+    was dropped.
+  - [x] 2026-10-06 **User-obs adjudicated** (`10a75c0`):
+    - 2026-10-04 s2: A, B, and E kept, E generalised;
+    - 2026-10-05: A (generalised), B, and C kept.
+  - [x] 2026-10-06 **Lane script split:** after gate 1.3 merges (§15 of
+    the specification).
+  - [x] 2026-10-06 **Record-weighted coverage:** not collected.
+- **Still with Shawn:**
+  1. **Read amendment 3 in full** (`studies/open-science-compliance/prereg/amendment-3-draft.md`),
+     then Claude runs the pre-lodgement checklist (steps 2–6) and asks
+     before lodging through the OSF API. Text written 2026-10-05/06: §5(b)'s
+     planned-rules bullet, §6(d)'s curation constraints, the two new
+     §7(d) bullets, and the ruling notes.
+  2. **Merge personal-assistant PR #169** (review delivery). Then re-run
+     `scripts/compose-global-claude-md.sh`.
+- **Work the rulings created** (after lodgement, in §10's order unless
+  noted):
+  - **Draft the correction ledger** (§9 fields) from the Q1–Q10 rulings,
+    for Shawn's ruling; it is frozen before the regression run.
+  - **Regression re-runs**, through gate 1.3's `run-container` once it is
+    merged:
+    - dye: wrapper-only, with the authors' files restored;
+    - key: wrapper-only, executing the authors' script; rows on
+      reconstructed inputs are expected-untestable;
+    - crema at v1.0.0, with `rnaturalearthhires` pinned at build;
+    - marwick at 1.3;
+    - herskind: attempt-02 is the baseline.
+  - **Q10:** store the crema v1.0.0 and herskind v1 deposits in the corpus
+    store, with manifest entries (URLs and sha256 are in `findings.json`).
+  - **D-2:** build and validate the 0-only platform-row rules before census
+    scoring.
+  - **D-4:** draft the census curation-procedure amendment before census
+    scoring.
+- **Owed by Claude:**
+  - review the halt-condition mnemonics with Shawn during the next run
+    (user-obs 2026-08-15 A);
+  - build a usage source that records final usage before census cost
+    tracking (F-019, item 3).
+- **Carry-forward:**
+  - **After personal-assistant PR #169 merges:** re-run
+    `scripts/compose-global-claude-md.sh`, then remove the worktree
+    `~/worktrees/personal-assistant/claude-review-protocol`.
+  - [x] 2026-10-06 **Git hook re-installed on AMD-tower-ubuntu** after PR #8. The
+    diff was exactly the `AGENTS` filename exception. Other machines pick
+    it up when they next run `scripts/install-git-hooks.sh`, which zbook
+    still needs anyway.
+  - **Nothing is admission-eligible yet, by design.** Admission needs a
+    transcript audit that writes `transcript-audit.json` (§12), which is
+    not built.
+  - **Transition.** The executor and workflow still use `snapshot-code`.
+    Run records become mandatory, and `coverage_creditable` is dropped, at
+    the workflow switch (§15 step 7). Until then, `check-code` verifies run
+    records wherever `lane-records/` exists.
+  - **Worktrees.** The PR #7 worktree is
+    `.claude/worktrees/agent-a8a2378c2a5dbdc98`, branch
+    `worktree-agent-a8a2378c2a5dbdc98`, pushed as
+    `feat/lane-gate-1-1-code-audit`. Fable's worktrees
+    `~/worktrees/llm-reproducibility/claude-fable-pr7` and `…-pr7-fix` can
+    be removed.
+  - **Fable** is the open session `llm-reproducibility-ea`. Reviews by
+    SendMessage work both ways.
+  - **Git safety.** Any code that runs git as a subprocess scrubs `GIT_*`.
+  - **Review briefs** ask for replies by mail or file, never GitHub posts.
+  - **Infrastructure.** At session start, Syncthing reported the
+    zbook-ubuntu peer absent for 65 hours.
+  - **From earlier sessions:**
+    - unrecorded originals (Key's supplement archives; the crema v1.0.0
+      and herskind v1 deposits, audit Q10);
+    - relay R2 is provisional;
+    - the hook fault is with personal-assistant-0e;
+    - zbook still needs `install-git-hooks.sh` and a venv;
+    - the `llmr-*-attempt-02` Docker images are kept.
+
+## Repo state (2026-10-05, session ef0412bd close) — superseded by the section above
+
+- **⏩ START HERE: consolidate the gate 1.3 specification, then build its
+  foundations.** The reproduction lane's integrity gate is on PR #7
+  (`feat/lane-gate-1-1-code-audit`, head `2bd35aa`, **open, not merged**).
+  Its plan is `wiki/planning/reproduction-gate-1-3-design.md` on that
+  branch: status "NOT ready to build", and its last section, "Consolidated
+  build plan", gives the order. In that order:
+  1. **Fix the part 1 digest cache** (`cached_digest` in
+     `scripts/reproduction-lane.py`). Confine it to one immutable snapshot,
+     since an edit that keeps the size, with its mtime restored, could
+     return a stale digest (Astra's design review, point 5). Add a test.
+  2. **Write the consolidated specification:** one text replacing §§1–7 and
+     both revision sections. Resolve the three conflicts it lists, and state
+     a **stopping rule for hardening**, since the threat model assumes a
+     good-faith executor (session reflection 22). Send it to Astra (mail,
+     Lane astra) and Fable (a Claude session; by SendMessage if it is still
+     open, otherwise Shawn starts one) before building.
+  3. **Build the foundations, in Astra's order:**
+     - the record boundary: a host-captured stream and sealed receipt, with
+       records outside the input tree;
+     - run and output binding: per-run empty outputs, the image id, a lock,
+       and failure states;
+     - ruling binding: issue id plus evidence fingerprint, raw against
+       admitted coverage, and the blocking rules.
+
+     Then the R loader hook and child-process matrix in Docker
+     (`rocker/r-ver:4.3.2` is local), fresh-computation policy,
+     conversions, transcript audit, and acceptance tests. Then a final
+     review by both peers.
+- **Why it matters.** The registered §8 regression gate cannot run until
+  gate 1.3 is merged and the correction ledger (amendment 3 §9) is ruled.
+  The executed-code audit found the pilot baseline weaker than the gate
+  assumes:
+  - three pilot attempt-01s ran re-implementations;
+  - crema and marwick ran versions other than the AP-12 one;
+  - crema's Table 1 was credited against v2.0.0's own re-run (0.1003,
+    against the paper's 0.1023).
+- **Done this session (2026-10-04 third session → 10-05):**
+  - [x] 2026-10-04 The F2 rule (AP-15), harvester v1.2, the v1.2 packs, and
+    the hybrid validation:
+    - commits `8864ceb`, `4c77b67`, `6c8ed51`, `cf0d92e`, `06c1ca9`,
+      `ff278ff`, and `07b6fba`;
+    - the rule matches the reference on 10/10 pilot F2 items (the model on
+      4/10);
+    - the hybrid at `medium` scores 137/141 (BI excluded) and 139/150
+      (all items).
+  - [x] 2026-10-04 The F2 miss is an input gap: the v1.1 packs had no
+    keywords, and 20 of 90 Opus F2 evidence strings say so.
+  - [x] 2026-10-05 **Amendment 3 full draft**,
+    `studies/open-science-compliance/prereg/amendment-3-draft.md` (`4c5bdf7`,
+    `1763b2a`, `f3fb3a7`, `208bf5e`). Shawn's rulings:
+    - D-6 RULED: adopt Astra's correction ledger, now §9;
+    - Fable's ledger conditions drafted into §9;
+    - **class (ii) consequence RULED** in §7(d): a result resting on an
+      authors' file edited for mechanics counts only after a wrapper-only
+      re-run. So **dye's 22 attempt-02 targets need re-running.**
+  - [x] 2026-10-05 Reproduction-lane code hashing and the one-off
+    executed-code audit, built on PR #7. Not yet merged, so the two checklist
+    items in `wiki/planning/deterministic-output-checks.md` stay open until
+    the merge.
+  - [x] 2026-10-05 PR #7 went through three cross-model review rounds:
+    - Astra, two code reviews and one design review;
+    - Fable, one code review and one design review.
+
+    Gate 1.2 (`458878b`, `43a3453`, `0d87a8f`) and gate 1.3 part 1
+    (`5766fb4`, `4244a51`) are built, and 421 tests pass. Design review
+    commits: `5e741a3`, `71fb731`, `2bd35aa`.
+  - [x] 2026-10-05 Claude-to-Claude agent mail queued as infrastructure
+    (PA data `64b36a3`).
+- **Awaiting Shawn:**
+  1. **Amendment 3 decisions D-1 to D-5** (D-6 is ruled) and lodgement on
+     OSF. The order of operations is §10 of the draft.
+  2. **The audit's questions Q2–Q10**, in
+     `studies/open-science-compliance/outputs/validation/executed-code-audit-2026-10-04/findings.json`
+     on PR #7. Q1 is answered by the class (ii) rule. These feed the
+     correction ledger.
+  3. **Astra posted two PR #7 reviews to GitHub under your account,**
+     because my first two briefs invited it (claude-obs 70). Decide whether
+     that is acceptable. Fable's review is unposted, at
+     `~/agent-mail/claude/outbox/claude/20261005T044136.617510Z-claude-pr7-fable-review-reply.md`.
+  4. **PR #8**, Codex's `AGENTS.md` entry point (`sol/repo-agent-guidance`):
+     your review. It is a Codex-owned file.
+  5. **Held over:** working-notes candidates WN-ag to WN-ai (previous
+     session) and **WN-aj to WN-al** (session log below); user-obs
+     2026-10-04 s2 A–E and **2026-10-05 A–D**
+     (`wiki/user-observations.md`).
+  6. **Low priority, before the census:** an optional record-weighted
+     coverage field in the output schema.
+- **Owed by Claude:**
+  - review the halt-condition mnemonics with Shawn during the next run
+    (user-obs 2026-08-15 A);
+  - build a usage source that records final usage before census cost
+    tracking (F-019, item 3).
+- **Carry-forward:**
+  - **Worktrees.** The PR #7 worktree is
+    `.claude/worktrees/agent-a8a2378c2a5dbdc98`, branch
+    `worktree-agent-a8a2378c2a5dbdc98`, pushed as
+    `feat/lane-gate-1-1-code-audit`. Fable's worktrees
+    `~/worktrees/llm-reproducibility/claude-fable-pr7` and `…-pr7-fix` are
+    clean and can be removed.
+  - **Git safety.** Any code that runs git as a subprocess scrubs `GIT_*`.
+    Hook-run fixtures without the scrub set `core.bare = true` on
+    2026-10-05; it was repaired, and the scratchpad has the principle.
+  - **Review briefs** ask for replies by mail or file, never GitHub posts.
+  - **Claude-to-Claude.** Use SendMessage to live sessions; agent mail drops
+    self-addressed messages until the backlog item lands.
+  - **Unrecorded originals.** Key's supplement archives are not in the corpus
+    store or manifest. The crema v1.0.0 and herskind v1 deposits are not
+    kept either (audit Q10); URLs and sha256 are in `findings.json`.
+  - **From earlier sessions:**
+    - relay R2 is still provisional;
+    - the hook fault is with personal-assistant-0e;
+    - zbook still needs `install-git-hooks.sh` and a venv;
+    - the `llmr-*-attempt-02` Docker images are kept.
+
+## Repo state (2026-10-04, second-session close) — superseded by the section above
 
 - **⏩ START HERE: pre-gate build, then amendment 3, then the registered
   regression gate.** The census scorer is CONFIRMED as `claude-opus-5-5`
@@ -1575,6 +2178,205 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-08 → 10-09 (session be70c3be) — overnight: gate 1.3 built, instruments edited, ledger drafted
+
+An autonomous overnight session on Opus 5.5, compacted once. It worked in
+the PR #7 worktree (Track 1), the PR #9 worktree (Track 2), and a new
+ledger worktree (Track 3). Results are in "Overnight progress" above.
+
+- **Track 3 method.** Four read-only Opus subagents transcribed the
+  printed values, one per pilot. Each load-bearing claim was then
+  re-checked at source: the text layer, a page render for raster labels,
+  and scripts against the pilot reports and outputs. The re-checks caught
+  three of my own slips before commit: wrong initials for three of key's
+  authors, a differing-cell count (21 written, 18 true), and a missing
+  ruling id.
+- **Network:** public downloads only. Crema's v1.0.0 zip came from Zenodo
+  and marwick's `paper.docx` at tag 1.3 from GitHub; a Zenodo re-download
+  of marwick's zip returned HTTP 504. **Slip, reported:** the first
+  Zenodo request's User-Agent header carried Shawn's email address, which
+  breaks the rule against sending it to unrelated services. Later requests
+  omitted it.
+- **Working-notes candidate (held for Shawn):**
+  - **WN-aq:** in four of the five pilots, the comparison report's
+    "published" column was wrong. Crema's held v2.0.0's own re-run,
+    dye's held branching values taken from its own output, marwick's held
+    a W never read from the paper, and key's swapped two cells. The
+    executed-code audit checked what code ran, not what it was compared
+    against, so it found only crema's. An audit of a reproduction needs
+    both legs. Anchors: PR #10, `correction-ledger/README.md`, "Findings
+    beyond the executed-code audit".
+
+### 2026-10-06 → 10-08 (session fabeab56) — amendment 3 lodged
+
+One session: Fable 5.1, then Opus 5.5 from the decision walk-through,
+compacted once. It worked in the main checkout and the PR #7 worktree.
+
+- **2026-10-08: lodgement.** Shawn approved the revision as is, then ruled
+  that the opening paragraph would be renamed and a scope sentence added.
+  Astra's follow-up (at `857702d`) said revise. B1 was blocking: the
+  failed-pin sequence had never been specified, and Shawn ruled the pin's
+  own neighbours. S1 corrected the audit's location, now cited at
+  `c4553f9` with a tag. S2 narrowed the lodgement script's failure
+  guarantee. The re-check (at `4258db8`) found no blocking issues, and the
+  lodgement ran at `abde9b1` as OSF revision `6ac775afb5ed5b4afee88a4a`.
+- **Working-notes candidates (held for Shawn):**
+  - **WN-ao:** a rule joined from two separately reviewed rulings (the
+    4 October cap and D-7's precedence) left the failed-pin sequence
+    unspecified. It passed the drafting session, Fable's advice, and two
+    reads by the registrant. It was caught when a reviewer ran a concrete
+    case (pin P fails; what is attempt two?) against the hypothesis it
+    feeds (H3). Anchors: amendment 3's revision record, "Follow-up
+    review"; Astra's mail `20261008T075615Z-codex-amendment3-followup-review.md`.
+  - **WN-ap:** facts about OSF's schema-response API, from the lodgement
+    and OSF's source.
+    - A Summary of 98,004 characters was accepted.
+    - Text with no `<` or `>` is stored byte-identical.
+    - Anonymous listings show approved revisions only.
+    - A second unfinished revision cannot be created.
+
+    Anchors: the header of `lodge-osf-amendment.py`, and
+    `get_default_queryset` and `create_from_previous_response` on OSF's
+    develop branch, 2026-10-08.
+
+- **Astra's amendment 3 review** (six blocking, five should-fix) was
+  verified premise by premise at source before any edit, and every premise
+  held. Three findings needed registrant decisions rather than drafting,
+  so they became D-7 to D-9 with proposed text. Fable gave a second
+  opinion
+  by SendMessage; its refinements went in where verified, and two
+  unverified counts were dropped, then restored once Fable supplied anchors
+  that checked out.
+- **A register pass** brought the revised prose back inside the targets
+  (announcement colons 2.09 to 1.56 per thousand words) without touching
+  the quoted rulings.
+- **Gate 1.3.** Astra's specification review folded in as revision 2; then
+  the F1 completeness corrections and the hook's traces, each probed in
+  Docker before being written. Revision 2's parent-side `JOIN` lasted an
+  hour: the probe showed the child's own `mcexit` is the reliable terminal
+  event, and the text was corrected before any code was built.
+- **Pattern worth keeping.** Every multi-line edit in both repositories
+  went through an exact-once replacement script that aborts before
+  writing, so a partial edit was impossible.
+
+### 2026-10-05 → 10-06 (session b1a1e102) — gate 1.3 consolidated, reviewed, and its foundations built; every pending ruling cleared
+
+One session on Opus 5.5. It worked in the PR #7 worktree, with Fable
+reviewing live by SendMessage.
+
+- **Cache fix first.** The part 1 digest cache was process-wide. Two new
+  tests (a same-size edit with the modification time restored) failed on
+  it, which showed the gap was real.
+- **Consolidation.** One effective specification replaced the draft and
+  its two revision sections, and it carries a stopping rule. A Docker probe
+  turned several memory-based review points into tested facts; the most
+  consequential is that a project `.Renviron` overrides `R_PROFILE_USER`.
+- **Fable's review** came back within the hour. Its findings included two
+  defects in the new text (trace order, and pairing processes by PID) and
+  four ordinary routes. Most went straight into F1's code.
+- **Exchange on `R CMD`.** Fable proposed a subcommand list. The image's
+  own `BATCH` and `INSTALL` scripts showed that subcommands re-enter the
+  front end, so their inner starts are censused separately. Fable
+  withdrew the list, and `INSTALL`'s inner start is now the one real gap.
+- **F1–F3** are built, each with tests, all pushed. Astra's review of the
+  specification is outstanding.
+- **Decision walk-through (2026-10-06, Shawn present).** About 34 pending
+  decisions, scattered across three sessions, were cleared in one sitting
+  from structured questions, with each item's context re-assembled from
+  its source:
+  - amendment 3 D-1 to D-5 (`c99c2a0`);
+  - audit Q2–Q10 (`c4553f9`, and `38b59b0` for the general rules);
+  - Astra's posted reviews (attributed; reviews are documents from now
+    on, personal-assistant PR #169);
+  - PR #8, merged (`7f84e73`);
+  - WN-ag to WN-al, as Obs 45–50 (`a8da2e1`);
+  - the user-obs batches (`10a75c0`);
+  - the lane-script split, after merge (`42da7fc`);
+  - record-weighted coverage, not collected.
+
+  Two items needed a pros-and-cons round. In one (D-2), assembling the
+  trade-offs exposed an incomplete framing and changed the recommendation.
+- **Reflections:** `/reflect` (`75cc6d8`), with Entry 23, an abductive
+  entry, and claude-obs 71–74.
+- **Working-notes candidates (held for Shawn's verdict; silence holds
+  them over):**
+  - **WN-am:** instrumenting R reproductions, a project `.Renviron`
+    outranks a container's `-e R_PROFILE_USER`. In `rocker/r-ver:4.3.2`
+    the project's profile loaded in place of the lane hook under every
+    launcher tried, until the lane took over the environment-file phase
+    (`R_ENVIRON_USER`). A naive logging hook would therefore run unhooked
+    on any project that sets its own profile. This bears on the paper's
+    account of how the reproduction lane establishes what code ran.
+    Sources: gate 1.3 specification, probe facts 1–2 (PR #7), and the
+    abductive entry of 2026-10-05.
+  - **WN-an:** the cost of human oversight in the governance loop. About
+    34 decisions had accumulated over three sessions of autonomous work.
+    One sitting cleared them, once each item's context was re-assembled
+    from its source, grouped by what it blocked, and offered with a
+    recommendation; two needed a trade-offs round first. This bears on
+    the paper's account of what supervising an agentic pipeline costs the
+    researcher, and how the cost is batched.
+
+### 2026-10-04 (third session) → 10-05 — F2 rule and v1.2 packs; amendment 3 drafted; PR #7 through three review rounds; gate 1.3 part 1
+
+One session (ef0412bd) on Opus 5.5, no compaction. The plan was the
+no-spend pre-gate build, then amendment 3.
+
+- **F2 rule.** Building it exposed that the evidence packs lacked the F2
+  fields, which changed the plan to a census-input re-validation (amendment
+  3 §6). The rule and hybrid validated without API spend.
+- **Amendment 3** is drafted in full, with six decisions. Two are ruled: the
+  correction ledger and the class (ii) consequence.
+- **Reproduction-lane audit.** A subagent built the code-integrity gate and
+  ran the executed-code audit, which weakened the pilot baseline (see START
+  HERE).
+- **Review rounds.** Shawn put PR #7 through cross-model review, adding Fable
+  for a second opinion: three rounds by Astra and two by Fable. They found,
+  in turn, provenance resting on the executor's manifest, execution never
+  bound, and about a dozen executed bypass routes.
+- **Gate status.** Gates 1.2 and 1.3 part 1 are built. The run command
+  (Shawn: build it now, writable-copy design) and lane-computed conversions
+  (option C) are designed and reviewed, but not built.
+- **Incident.** Hook-run test fixtures inherited `GIT_DIR` and set
+  `core.bare` in the shared config. It was repaired before any push and
+  reported with `/feedback`.
+
+Full record: `wiki/reflections/session-log.md`; reflections at `7da4177`.
+
+- **Commits (main):**
+  - `8864ceb`, `4c77b67`, `6c8ed51`, `cf0d92e`, `06c1ca9`, `07b6fba`, and
+    `ff278ff` (F2 work);
+  - `4c5bdf7`, `1763b2a`, `f3fb3a7`, and `208bf5e` (amendment 3);
+  - `7da4177` (reflections);
+  - PA data `64b36a3` (backlog).
+- **Commits (PR #7, `feat/lane-gate-1-1-code-audit`):**
+  - `916a097`, `ff5f911`, `2907806`, and `dc67b81` (subagent);
+  - `71e1f21` (audit report);
+  - `458878b`, `43a3453`, `0d87a8f`, `5766fb4`, and `4244a51` (gates 1.2
+    and 1.3 part 1);
+  - `5e741a3`, `71fb731`, and `2bd35aa` (gate 1.3 design and reviews).
+- **Working-notes candidates (held for Shawn's verdict):**
+  - **WN-aj:** the scorer's systematic F2 over-credit was an input gap, not
+    a judgement error. The v1.1 packs carried no keywords or descriptions,
+    and 20 of the 90 Opus F2 evidence strings for the Zenodo pilots name
+    that gap and credit F2 anyway ("caveat, then credit"). The gate figures
+    therefore count missing input against the model.
+  - **WN-ak:** the pilot regression baseline is weaker than §8 assumes.
+    - Three attempt-01s executed no authors' file.
+    - Two executed a non-AP-12 version.
+    - Crema's Table 1 credit compared v2.0.0's re-run with itself (0.1003
+      against the paper's 0.1023).
+    - In key, the authors' script computes the means (`summary()`), but the
+      reproducer recomputed them.
+
+    This is evidence for reporting reproduction results as artefact-bound,
+    not as claims about the paper.
+  - **WN-al:** cross-model review of a mechanical gate. Reading for trust
+    boundaries (Astra) and running attack scripts (Fable) found different,
+    non-overlapping classes of defect. Each round found new routes,
+    including in the fixes for the previous round's findings. A method
+    finding for the paper's account of LLM-assisted pipeline building.
 
 ### 2026-10-04 (second session) — Opus 5.5 arms run; `medium` selected; checks policy, clarifications, and Layer 1 built
 

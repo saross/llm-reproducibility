@@ -104,18 +104,20 @@ Infrastructure is NOT in Methods/Results/Discussion. Target these specific locat
 
 ---
 
-## 🚨 CRITICAL: FAIR Assessment Framework (v2.1)
+## 🚨 CRITICAL: FAIR Assessment Framework (v2.2)
 
 > **Canonical home (2026-07-24):** the FAIR instrument lives at
 > `studies/open-science-compliance/protocol/instruments/fair-instrument.md`
-> (v2.1, receipt token `5ff4c48c4f5c7321`, FROZEN by the OSF registration,
-> amended under erratum-log Entry 3 + the 2026-08-15 platform-table rulings).
+> (v2.2, receipt token `bf984697092c0c20`, FROZEN by the OSF registration,
+> amended under erratum-log Entry 3 + the 2026-08-15 platform-table rulings,
+> and by OSF amendment 3 §4 under erratum-log Entry 6).
 > This section and the Data Completeness Assessment below **mirror it** for the
 > human/session lane; the manifest consistency check verifies the mirror.
 > **Edit only the canonical file** — instrument edits require the §8 regression
 > gate + erratum-log entry + OSF amendment.
 
-**Rubric version:** 2.1 (clarifications 2026-08-15; v2.0 standardised 2026-02-11)
+**Rubric version:** 2.2 (amendment 3 clarifications 2026-10-09; v2.1 2026-08-15;
+v2.0 standardised 2026-02-11)
 
 **For detailed criteria, examples, and context-dependent guidance:**
 → See `references/infrastructure/fair-principles-guide.md` in research-assessor skill
@@ -155,6 +157,7 @@ FINDABLE (max 4):
       of 4/4 (own-PID deposit), 1/4 (supplement under the article DOI),
       0/4 (unpublished).
   F2: Rich metadata (structured: authors, title, keywords, description)     /1
+      (what F2 requires: v2.2 clarification 8)
   F3: Metadata explicitly includes the identifier                           /1
   F4: Resource indexed in searchable registry (Zenodo, CRAN, DataCite)      /1
 
@@ -173,16 +176,23 @@ ACCESSIBLE (max 4):
 
 INTEROPERABLE (max 3 — NOT 4):
   I1: Uses formal, accessible, shared knowledge representation              /1
+      (the artefact as served: v2.2 clarification 1)
   I2: Vocabularies follow FAIR principles themselves                        /1
   I3: Includes qualified references to other resources (PIDs)               /1
+      (reference metadata: v2.2 clarification 7; code dependency
+      manifests: clarification 9)
 
 REUSABLE (max 4):
   R1:   Richly described with plurality of relevant attributes              /1
+        (documentation: v2.2 clarification 7)
   R1.1: Released with clear, accessible data usage licence                  /1
-        (licence semantics: see the R1.1 section below)
+        (licence semantics: see the R1.1 section below and v2.2
+        clarifications 2 and 11)
   R1.2: Associated with detailed provenance                                 /1
+        (documentation: v2.2 clarification 7)
   R1.3: Meets domain-relevant community standards                           /1
-        (qualifying standards: see the R1.3 section below)
+        (qualifying standards: see the R1.3 section below and v2.2
+        clarifications 4 and 10)
 
 TOTAL per artefact type: /15
 ```
@@ -194,11 +204,14 @@ artefact(s): those whose absence would block reproduction of the reported
 results. For data, a sub-principle scores 1 only if it holds for every
 principal dataset (conjunctive scoring — mirroring the most-restrictive rule
 for licence conflicts); proportional coverage of the full required set,
-including non-principal upstream sources, is carried by the data-completeness
+including a non-principal upstream source only where reproducing the reported
+results needs it (v2.2 clarification 3), is carried by the data-completeness
 lane and feeds the A1 override as registered. For code, the paper's own
 analysis scripts are always principal; third-party dependencies are never
 substitutes for them and enter scoring only through citation quality (I3)
-and the evidence pack.
+and the evidence pack. Unpublished principal data, principal artefacts on
+unmanaged hosting, and versioned deposits: v2.2 clarifications 6, 12,
+and 5.
 
 ## Evidence admissibility — the two-rung ladder (v2.1)
 
@@ -343,6 +356,135 @@ do not qualify. Route (c) is operationalised by the platform entitlement
 table's graded Row 4: currently ADS by construction; DANS and tDAR require
 rung-(i) evidence.
 
+## Amendment 3 clarifications (v2.2)
+
+Quoted from amendment 3 §4 as lodged on OSF on 2026-10-08 (revision
+`6ac775afb5ed5b4afee88a4a`; repository tag `osf-amendment-3-2026-10-08`),
+word for word. Section numbers inside the quotation are amendment 3's.
+
+The E8-v2 adjudication (registrant, 2026-09-03 to 2026-10-03) adopted the
+principles below while re-deriving the pilot reference. Each item is scored
+as stated from instrument v2.2 onwards. Their reasoning and the cases that
+produced them are recorded in the adjudication log
+(outputs/validation/e8-v2-rederivation/adjudication-log.md, principles AP-3
+and AP-8 to AP-17). Each was checked before adoption for foreseeable
+perverse results when generalised (AP-7).
+
+1. I1 assesses the artefact as served (AP-9). Code or data available only as
+   text or tables inside a PDF fails I1, whatever formal language underlies
+   it, because extracting it is reconstruction. Two guards apply. Where the
+   same artefact is also served in a machine-actionable form, I1 scores the
+   best form. Illustrative snippets are not principal artefacts. For
+   example, dye-et-al-2023's OxCal model and R code are served only inside a
+   supplement PDF, so I1 = 0 for both.
+2. R1.1 tests whether any usage licence is published (AP-8). R1.1 = 1 when a
+   licence is published for the artefact, however restrictive. Same-artefact
+   contradictions still resolve to the most restrictive licence, which
+   passes if it is itself a published licence. "Available on request" and an
+   "all rights reserved" notice with no grant score 0. A grant followed by
+   "all other rights reserved" passes, and a copyright notice beside a
+   licence is not a conflict. R1.1 does not adjudicate whether the licensor
+   holds the rights it licenses (item 11).
+3. Completeness counts only what reproduction requires (AP-10). An upstream
+   source enters the data-completeness denominator only if reproducing the
+   reported results needs it. A source the authors fully transcribed into
+   their deposited inputs is provenance, scored at R1.2 and listed with its
+   tier but not counted. If the transcription is partial and the results
+   need fields only the source holds, the source counts. For example,
+   herskind-riede-2024's printed catalogue (Płonka 2003), fully transcribed
+   into S1.xlsx.
+4. A DataCite-registered deposit with its mandatory metadata passes R1.3 for
+   data (AP-11). A minimal record's poverty is scored at F2, not R1.3. For
+   code, R1.3 uses the instrument's code list (package structure,
+   CITATION.cff, CodeMeta, or community review) and not this route. A
+   research compendium without package metadata does not meet the code list,
+   although its lockfile and container are credited at R1.2 and I3 (an
+   initial decision, open to reconsideration).
+5. Version selection for versioned deposits (AP-12, as refined 2026-10-03).
+   Where the paper cites exactly one version (a version DOI, tagged release,
+   or commit), that version is scored and reproduced. Three checks always
+   run where their inputs exist. They compare the deposit's files with the
+   published supplement by checksum, test whether its deposited outputs
+   reproduce the values printed in the paper (a published-values match), and
+   read its dates against the article history. A check whose inputs do not
+   exist, because there is no supplement or no deposited numerical output,
+   is recorded as unavailable, not as failed. A cited version that fails a
+   check is a version-citation finding. The score still assesses the cited
+   version. Reproduction tries it first, as a reader would, and then the
+   version the checks identify, recorded as a recoverable repair whose
+   results are uplift evidence under section 7(d) and never count toward
+   coverage or the verdict. Where no single version is cited (a concept DOI,
+   an untagged repository URL, or more than one version), this is flagged,
+   and the checks choose in that order, the date check selecting the latest
+   version released before the article first appeared online. If the
+   candidates do not differ on any scored fact, the choice is recorded as
+   immaterial. If they differ and nothing settles it, every candidate is
+   scored, the earliest-released candidate supplies the value the census
+   analyses use, and the others are reported as a sensitivity. For example,
+   crema-et-al-2024 cites a concept DOI, and the published-values match
+   selects v1.0.0. A date-only rule would have chosen v2.0.0, which never
+   produced the published numbers.
+6. Unpublished principal data fail conjunctively (AP-13). Under the
+   aggregation rule, a principal dataset that is deposited nowhere, whether
+   unpublished, "available on request", or held only by the authors, fails
+   every artefact-property sub-principle (F1, A1.1, A1.2, R1.1, and the
+   rest), because it has no persistent identifier, no retrieval protocol, no
+   access mechanism, and no licence for the evidence to show. This is the
+   registered unscoreable-scores-0 default applied as written. It does not
+   reach a deposited dataset under access control, which is scored on what
+   its record evidences. Its persistent identifier passes F1, its published
+   licence passes R1.1 (item 2), and a documented and justified access
+   mechanism passes A1.2 (amendment 2 section 1 item 4, and the
+   registration's ethical and legal exception in section 7.1). The article
+   and its summary statistics are never scored as if they were the data. For
+   example, key-et-al-2024 requires 13 assemblage datasets, of which 10 are
+   deposited nowhere. The completeness percentage carries the nuance that
+   conjunction removes.
+7. Documentation earns R1 and R1.2, but the paper is never the metadata for
+   machine-actionable sub-principles (AP-14). R1 and R1.2 can be satisfied
+   by the paper's documentation even for closed data, because FAIR separates
+   metadata from data (A2). Conjunction still applies to R1.2. Prose in a
+   paper never supplies F2, F3, F4, I1–I3, or R1.3. Dependency identifiers
+   count for I3 when they are deposited in the article's machine-readable
+   reference metadata, as Crossref records them.
+8. F2 needs a machine-readable record that itself describes the artefact
+   (AP-15). F2 = 1 requires all four of creators, title, a substantive
+   description of the artefact's own content, and at least one subject
+   keyword, in the deposit's own record. A description that is empty or only
+   cites the paper fails, as do bare registrar-mandatory fields. The
+   instrument's own F2 wording names keywords ("structured: authors, title,
+   keywords, description"), as does F-UJI's core-descriptive-metadata test.
+   A rich description without keywords therefore scores 0, a harshness the
+   registered wording accepts. For example, marwick-2025's Zenodo record has
+   a one-sentence description citing the paper and no keywords, so F2 = 0.
+   section 5(b) applies this item mechanically.
+9. A complete machine-readable dependency manifest satisfies code I3
+   (AP-16). A lockfile or manifest that pins every dependency by name, exact
+   version, and source counts as qualified references (for example
+   renv.lock, a pinned requirements.txt, a versioned DESCRIPTION, or
+   environment.yml). For example, marwick-2025's renv.lock pins 152
+   packages.
+10. Independent code review counts for code R1.3 only when recorded
+    machine-readably (AP-17). A journal reproducibility review or a
+    CODECHECK counts as community review when it leaves a machine-readable
+    record, such as a certificate DOI or a badge or relation in the deposit
+    or article metadata. A prose acknowledgement is recorded as the finding
+    "reviewed, unrecorded" and does not score.
+11. Rights problems are coded, not scored. Where an open licence covers
+    content the licensor may not hold rights to, the census records a
+    non-scoring finding. For data the coding variable is "data shared,
+    rights-incompatible". For example, marwick-2025 deposits Web of Science
+    exports under an open licence, and key-et-al-2024 distributes code
+    adapted from a GPL-2 package under CC BY.
+12. Principal artefacts on unmanaged hosting (AP-3). An artefact served from
+    a personal or unmanaged host, with no metadata record of its own, is
+    principal if reproduction needs it, and it fails what the evidence shows
+    it fails (typically F1, F2, A2, and R1.1). For example, dye-et-al-2023's
+    beads-1.csv, read by the supplement's R code from a personal server.
+
+Items 1 and 9 extend the instrument's text, so reference items decided by
+them carry the BI rule tag (section 3(b)).
+
 ## Independent data and code scoring
 
 - Score `data_fair` (/15) and `code_fair` (/15) separately.
@@ -371,7 +513,7 @@ completeness rule and captures a dimension FAIR infrastructure scoring alone
 misses.
 
 1. **Enumerate datasets** referenced in Methods/Results (including upstream
-   sources).
+   sources; which of them count toward completeness: v2.2 clarification 3).
 2. **Classify each** using the five-tier access classification (Tier 0-4):
    - Tier 0: Direct download (DOI-based repository, open supplement)
    - Tier 1: Programmatic extraction (HTML tables, API)

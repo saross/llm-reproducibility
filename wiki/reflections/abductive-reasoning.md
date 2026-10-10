@@ -1324,3 +1324,201 @@ Chained launches from notifications are clean by construction. This is
 worth recording beside F-015, but not yet as a rule. Following the F-018
 lesson, record the observations and leave the mechanism open until a
 deliberate test discriminates.
+
+## 2026-10-04 → 10-05 — The scorer's systematic miss was an input gap it had reported
+
+**Session:** ef0412bd-73e2-4c97-b695-695856453f0c
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+Six F2 over-credits were unanimous in every run of every Opus arm, across
+two model generations and four efforts (Observation 34). I had read the
+miss as a stable judgement error, which is why a mechanical F2 rule was
+the first step in the checks policy. Building the rule, I found that the
+evidence packs every arm read contain no creators, descriptions, or
+keywords at all. Harvester v1.1 extracted only identifier, licence, and
+type fields, and kept only a checksum of each raw response.
+
+### Probe
+
+I searched the 90 Opus F2 evidence strings for the three Zenodo pilots
+for any mention of keywords. Twenty of them say the pack did not show the
+description or keyword fields, then credit F2 on the record's existence
+and the platform row. A re-harvest (v1.2) confirmed that all three
+deposits have empty keyword fields and either pointer descriptions or none.
+
+### Belief revision
+
+The miss was not judgement the model could have got right. The model
+lacked the input it would have needed, and in a fifth of the strings it
+said so. "Stable across models and efforts" was evidence that the cause
+lay outside the model, and I had read it as evidence of a robust model
+error. Two consequences:
+- the F2 gate items were counted against the model when their basis was
+  missing input, which makes the gate figures cautious, not generous;
+- the census-input re-validation (amendment 3 §6) became necessary,
+  because the gates had validated the scorer on inputs the census will not
+  use.
+
+### What would change this belief
+
+If the re-validation on v1.2 packs, which show empty keyword fields, still
+gives F2 = 1 on these deposits, the error is judgement after all: credit
+despite visible negative evidence, not credit in its absence.
+
+### Implications for practice
+
+When an error survives a change of model and effort, check what the
+models were given before modelling the error. Search the model's own
+evidence strings for the word you expected it to need. It may have
+already told you it did not have it.
+
+## 2026-10-05 — `git status` in the main checkout said "not a work tree"
+
+**Session:** ef0412bd-73e2-4c97-b695-695856453f0c
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+After a commit attempt in a linked worktree failed its pre-commit test run,
+`git status` in the *main* checkout failed with "this operation must be
+run in a work tree". The worktree branch also carried a new commit called
+"fixture", whose tree was two files.
+
+### Probe
+
+I read the shared `.git/config`, read-only, before changing anything:
+`core.bare = true`. The worktree's reflog showed exactly one "commit:
+fixture". Both matched my new test helper, which runs `git -C <tmp> init`,
+then `add .` and `commit -m fixture`. Git exports `GIT_DIR` and
+`GIT_INDEX_FILE` to hook processes, and these override `-C`. So the
+fixture reinitialised the real repository, writing `core.bare` to the
+shared config, staged the temporary files into the real index, and
+committed them. A search then found the repository's own record of the
+same failure class, in `tests/test_effort_pinning.py` (2026-09-23), with
+the scrubbing idiom I had not used.
+
+### Belief revision
+
+Before this, I treated `git -C <dir>` as confining a command to `<dir>`.
+Under a hook it does not; the inherited environment wins. Unscrubbed test
+fixtures are therefore not hermetic. Whether the suite is run by hand or
+by the hook decides what they touch.
+
+### What would change this belief
+
+None needed for the mechanism; the regression test reproduces it with a
+decoy `GIT_DIR`. What remains open is whether other repositories' suites
+shell out to git without scrubbing.
+
+### Implications for practice
+
+Any code that runs git as a subprocess, in tests or in tools, scrubs `GIT_*`
+from its environment, and is tested once under a decoy `GIT_DIR`. When a
+command fails in a place it should not have touched, read the shared state
+before repairing it, and repair the minimum.
+
+## 2026-10-05 — A project file outranked the variable the design relied on
+
+**Session:** b1a1e102-fc08-4962-a341-6da21988b13d
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+The gate 1.3 design loaded its logging hook by setting `R_PROFILE_USER`
+with `docker run -e`, on the assumption that a variable set in the
+process environment governs R's start-up. In the first probe, a fixture
+project held a `.Renviron` naming a different profile. Under every
+launcher tried (`Rscript`, `R -f`, a `system()` child, and a PSOCK
+worker), the project's profile loaded and the lane's hook did not. Only
+`Rscript --no-environ` loaded the hook.
+
+### Probe
+
+I made the next probe discriminating rather than repeating the first. I
+pointed `R_ENVIRON_USER` at a lane file that copies the project's lines
+and then sets `R_PROFILE_USER` to the hook as its final line. The hook
+then loaded, the project's own variable (`PROJECT_VAR`) still applied,
+and a child started after `Sys.unsetenv("R_PROFILE_USER")` loaded the
+hook as well, because the child re-reads the environment file. The same
+container also tested the event channel: `/proc/1/fd/2` and a read-only
+FIFO both reached the host from a grandchild, while R's `system2(stderr =
+TRUE)` captured a child's own stderr.
+
+### Belief revision
+
+Before: the process environment is the authority on start-up variables,
+and a container's `-e` cannot be displaced. After: R reads its
+environment files during start-up, and in this image a value there
+(`R_PROFILE_USER`, the only variable tested) overrode the inherited one.
+The authority is therefore whichever file R reads last, not the variable
+the launcher set. So the lane must own the environment-file
+phase (`R_ENVIRON_USER`), not just the variable. It also changed which
+design the reviewers' points pointed to. Fable's "set `R_ENVIRON_USER`
+too" had read as belt and braces. It was the load-bearing fix.
+
+### What would change this belief
+
+An R version in which `Renviron` values no longer override existing
+variables, or an image whose front end resets them. The launcher matrix
+(specification §13) re-tests the pin on each image the lane meets. A
+project `.Renviron` that names its own profile is now flagged statically
+(§10), so a change in behaviour would surface as a census or static
+finding rather than a silent unhooked run.
+
+### Implications for practice
+
+Where a design's guarantee rests on a runtime precedence rule (which
+setting wins), test the precedence in the target runtime before building
+on it. Arrange the test so that the two candidate authorities disagree:
+an environment that merely agrees with the variable proves nothing.
+
+## 2026-10-08 — The guard against a stray revision could never fire
+
+**Session:** fabeab56-1b7a-4539-8524-caed6e956c93
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+`lodge-osf-amendment.py` reads the registration's revision list
+anonymously and refuses to continue if the newest revision is not
+approved. I wrote that guard, and the header's account of failure recovery
+relied on it: a failed write would leave an unsubmitted revision, and the
+next `plan` would see it and stop. Astra's re-check said the guard is
+inert, because OSF filters the anonymous listing to approved revisions. An
+unsubmitted revision is invisible to the call that was meant to detect it.
+
+### Probe
+
+I fetched OSF's source from its develop branch (2026-10-08).
+`RegistrationSchemaResponseList.get_default_queryset`
+(`api/registrations/views.py`) returns every revision to contributors,
+pending and approved ones to moderators, and approved ones only to anyone
+else. `SchemaResponse.create_from_previous_response`
+(`osf/models/schema_response.py`) raises `PreviousSchemaResponseError`
+while any revision on the registration is not approved.
+
+### Belief revision
+
+I had assumed that a list endpoint shows a resource's full state and that
+authentication only changes what you may do. On OSF, authentication also
+changes what you can see, so an anonymous reader can be correctly told that
+everything is in order while a private revision exists. The safety I
+attributed to `plan` sits with the server: the authenticated create refuses
+while an unfinished revision exists. The script was safe all along, but
+for a different reason from the one its header gave. The header now gives
+the server's reason, with the source cited.
+
+### What would change this belief
+
+An OSF change that lets a second unfinished revision be created, or an
+anonymous listing that shows pending ones. Either would bring back the case
+the guard was written for. The check is the two functions named above.
+
+### Implications for practice
+
+A guard should be tested against the visibility of the caller that runs
+it. The fake OSF in the tests returns the same listing whoever asks, which
+is why the tests could not catch this. When a check reads remote state,
+record which identity it reads as, and what that identity cannot see.

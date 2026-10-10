@@ -28,6 +28,20 @@ repository hosts multiple studies.
 | `phase-2-preregistration-draft.pdf` | Reading copy of the full preregistration — upload alongside the canonical `.md` |
 | `pilot-findings-report.pdf` | Reading copy of pilot findings report v1.2 — upload alongside the canonical `.md` |
 
+## Amendment tooling
+
+Amendments append to the registration's Summary field. Each has a draft
+(`amendment-N-draft.md`), a paste artefact (`osf-amendment-N.txt`), and,
+from amendment 3, a revision justification (`osf-amendment-N-justification.txt`,
+the text OSF shows in the version history).
+
+- `make-paste-artefact.py` builds the paste artefact from the draft's lodged
+  portion; run `unwrap-paste-file.py` on the result.
+- `lodge-osf-amendment.py` lodges it through the OSF Application Programming
+  Interface (API). `plan` reads only and needs no credentials. `lodge`
+  writes the revision, verifies what OSF stored, and only then submits and
+  approves it.
+
 ## Canonical sources (upload the `.md` files as the frozen artefacts)
 
 1. `../protocol/phase-2-preregistration-draft.md` (v0.7)

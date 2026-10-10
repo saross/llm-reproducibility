@@ -1307,3 +1307,216 @@ found contradictions in my planning note, and a real nuance in the
 coverage rule that my policy had glossed over. Telling delegates to
 re-verify against sources is usually framed as protection against them.
 This time it protected against me.
+
+## Entry 22 (2026-10-04 → 10-05) — Each review round found the gate wider than the last
+
+**Project:** llm-reproducibility. **Session:**
+ef0412bd-73e2-4c97-b695-695856453f0c. One instance throughout (Opus 5.5),
+no compaction. Shawn was present for most decisions and away for about two
+hours while Astra reviewed. Two other models worked on this session's
+code: Astra (GPT, Codex), in two code reviews and a design review, and
+Fable, a separate Claude session Shawn opened for one review and one
+design review.
+
+**What is the single most important thing a future reader should know
+about this session?** The pilots are not the baseline the §8 regression
+gate assumes.
+- **Executed-code audit.** In three pilots the first reproduction ran a
+  reproducer's re-implementation, not the authors' files. Two ran a
+  version other than the one AP-12 selects.
+- **Crema's Table 1** was credited against v2.0.0's own re-run. The paper's
+  Japan r is 0.1023; the comparison report's "published" column has
+  0.1003.
+
+The registered gate asks a new pipeline to reproduce those verdicts
+exactly, which would reward it for reproducing the pilots' errors. Shawn
+adopted the correction ledger (amendment 3 §9) because of this. Anyone
+who reads "the regression gate passed" later needs to know which baseline
+it passed against.
+
+**Where did you and the human disagree, and who was right?** Twice, about
+how much to build.
+- **Conversions.** I recommended "always flag" (option A), because no pilot
+  needed a format conversion. Shawn chose the lane-computed comparison
+  (C), expecting conversions to be common in the census. The design reviews
+  then showed that my proposed normalisation rules ran the wrong way:
+  parsing floats would have silently cleared `007` to `7` and `1.50` to
+  `1.5`. Option A would have hidden that from both of us. His choice forced
+  the rules into the open, where two reviewers could correct them.
+- **The run command.** Shawn chose to build the read-only, logged run
+  command now, rather than before the census. I had framed it as optional
+  strengthening. Fable's executed attacks showed that without it,
+  `identical` was reachable by about ten routes using nothing beyond the
+  executor's own write access.
+
+In both cases he leaned towards assurance and I leaned towards the
+smallest sufficient build, and the reviews supported him.
+
+**What question emerged that wasn't pursued?** Whether the hardening
+converges. Each review round found the gate wider than the last:
+- Astra's first review, five findings;
+- its second, three, two of them in my fixes for the first;
+- Fable's review, four serious and six moderate, every one still open after
+  Astra's round;
+- the two design reviews, about two dozen more points between them.
+
+The threat model says the executor acts in good faith and is not a
+determined adversary. The reviewers attacked as if it were one, which
+finds real gaps (a forged pack committed by the operator's own routine)
+but has no natural stopping rule. Nobody asked what residual risk is
+acceptable for a good-faith executor whose every flag goes to a human. The
+consolidated specification should state that stopping rule before the
+build restarts, or the next review round will simply find the next ten
+routes.
+
+The session's other texture was failure under my own hands. My test
+fixtures ran `git init` under the pre-commit hook's `GIT_DIR`, set
+`core.bare = true` in the shared repository config, and committed a
+two-file tree over the PR branch. The repository had already recorded
+the fix for exactly this in `tests/test_effort_pinning.py` three weeks
+earlier, and I wrote new git-touching code without grepping for the idiom.
+The repair was quick and nothing was pushed. Still, the lesson is the
+same one as the delegated-verification point in Entry 21, turned on me:
+the repository remembers things I don't.
+
+## Entry 23 (2026-10-05 → 10-06) — A specification reviewed while it was built, then every ruling in one sitting
+
+**Project:** llm-reproducibility. **Session:**
+b1a1e102-fc08-4962-a341-6da21988b13d. One instance throughout (Opus 5.5),
+no compaction. There were two halves. First, an autonomous build on PR #7,
+with Fable reviewing live by SendMessage and Shawn away. Second, a decision
+walk-through with Shawn present, which cleared every ruling that had
+accumulated over three sessions.
+
+**What was different about this session compared to recent ones?** Two
+things.
+
+- **The review loop ran faster than the build.** In Entry 22, a review
+  round meant a brief, hours of waiting, and a fold-in. This time Fable's
+  review of the consolidated specification came back while I was still
+  writing F1's runner. Three of its findings (per-process tokens, the
+  repeated-sequence check, and console output as a citable output) went
+  into the code before the commit. One disagreement went the other way.
+  Fable proposed exempting `R CMD` by subcommand list. The image's own
+  `bin/BATCH` and `bin/INSTALL` scripts showed that the executing
+  subcommands re-enter the front end, so their inner starts are already
+  counted. Fable withdrew the proposal within one exchange. The scripts
+  settled it, not my argument; neither of us had them in memory.
+- **The rulings were cleared in one sitting.** There were about
+  thirty-four decisions, from amendment 3 to user-observation verdicts.
+  Shawn twice answered a structured question with "can you give me pros
+  and cons?" instead of a choice. The first time, on D-2, preparing the
+  trade-offs made me re-read amendment 2's platform table. It grants
+  floors as well as failures, so my framing had been incomplete, and my
+  recommendation moved from flag-only to rules deciding 0s only. From D-3
+  onwards I led every question with the trade-offs, and only one more
+  round-trip was needed. He kept the 2026-10-05 user-observation about
+  jargon needing a second round, and the same session re-enacted it, then
+  showed the fix.
+
+The asymmetry between reviewers was also new. Fable, a live Claude session,
+answered within the hour. Astra answers only when Shawn runs Codex, and it
+never replied in the session. So revision 1 of the specification carries
+one reviewer's view, and the foundations were built ahead of the other's.
+If Astra finds a defect in F1–F3, that is rework the faster loop risked.
+
+**What decision or trade-off made today will look arbitrary without this
+session's context?**
+
+- **`Issue` is a subclass of `str`.** It looks too clever for a codebase
+  written to be learnt from. The reason: about thirty emission sites,
+  several workflow relays, the human queue, and hundreds of tests all
+  carry flags as text. A string that also carries its own id and evidence
+  fingerprint changed none of them. Tuples or a parallel list would have
+  touched all of them in the middle of a review.
+- **`max-size=100g` for the container log.** Docker accepts `-1`
+  (unbounded) when creating a container and refuses it at start. A test
+  pins the failed-start clean-up path that this discovery exposed.
+- **Q2's class (iii) for a result-identical restructuring.** It looks
+  harsh, since the audit had shown nothing was repaired. The rule's own
+  words, "however obvious the intent", exist so that classification does
+  not depend on judging whether an edit mattered. The identity is
+  recorded beside the class, and dye's credit comes from the wrapper-only
+  re-run either way.
+- **D-3 gates on all 150 items** with a thinner margin. The exclusion it
+  drops was justified by missing inputs, which the re-validation supplies.
+  Keeping it would have protected the scorer from questions it can now
+  answer.
+
+What ties the two halves together: the build was fastest where evidence
+was cheap to get (a one-second probe in the real image, the image's own
+scripts). The rulings were fastest once the trade-offs came before the
+recommendation. In both, the slow path was asserting something before
+looking.
+
+## Entry 24 (2026-10-06 → 10-08) — The sentence I did not propose
+
+**Project:** llm-reproducibility. **Session:**
+fabeab56-1b7a-4539-8524-caed6e956c93 (Fable 5.1, then Opus 5.5 from the
+decision walk-through). **Instance:**
+continuation-from-summary for the first half (Astra's first review folded
+in, D-7 to D-9 and the revision's new rules ruled, the gate 1.3 hook
+traces built on PR #7), which I know only from the compaction summary.
+Primary for the second half, from Shawn's approval of amendment 3 on
+2026-10-08 to its lodgement that evening. This entry is about the second
+half.
+
+**What would you do differently if you replayed this session?** I would
+have proposed the scope sentence myself. To settle where amendment 3's
+opening paragraph belonged, I read amendment 2's, and saw that both earlier
+amendments say what they leave unchanged while amendment 3 did not. I
+decided not to raise it, because new lodged text after Shawn's "approve as
+is" would reopen his review and Astra's. A side agent raised it later, Shawn
+chose the precise form in one question, and Astra found it accurate. The
+cost I was avoiding was one question and one review pass. The cost of the
+omission would have been permanent, since lodged text changes only by
+erratum or amendment. I had ranked reopening as the expensive path when the
+irreversible step was the expensive one.
+
+The same instinct produced a smaller slip. I left a scope clause out of the
+justification because the lodged text did not contain one, and said so.
+Shawn read that as my having ruled that we should not say it, and I had to
+correct his summary of my position. A constraint I applied to one document
+had sounded like a policy for both.
+
+**What felt uncertain or unresolved at the end?**
+
+- **How many composed rules carry B1's kind of gap.** The failed-pin
+  ambiguity was created by the revision. It joined the 4 October cap ruling
+  (a failing dependency gets its immediately preceding and following
+  releases) to D-7's supplied-pin precedence, and never said whose
+  neighbours follow a failed pin. Fable (the peer session) advised on D-7,
+  this session wrote the text while it was running on Fable 5.1, and Shawn
+  ruled it from a walk-through and then read the diff. Astra found
+  the gap in the follow-up by reading the two sentences against H3's
+  measure. I had recommended the follow-up for generic reasons (about 600
+  changed lines, an irreversible step), not because I suspected anything.
+  The follow-up's scope was the fixes, so other places in §7 and §9 where
+  two rulings meet have had no reading of that kind.
+- **The code that ran was not exactly the code reviewed.** After Astra's
+  "No blocking issues found", I fixed their two non-blocking error-path
+  points before the run, with tests. The run took the success path at
+  every step, so the unreviewed lines never executed. A stricter reading
+  of Shawn's condition would have lodged with the reviewed code and fixed
+  the paths afterwards. I judged the tested change worth more than strict
+  fidelity, and said so to both of them; neither objected.
+- **OSF's limit on the Summary field** was unknown before the run. The
+  field now holds 98,004 characters, and no source I found states a
+  ceiling. Amendment 4 will meet the same unknown with a larger number.
+
+**What's the single most important thing a future reader should know?**
+The lodgement script exists because amendments 1 and 2 were lodged with API
+calls written at the moment of lodging, and nobody could review them in
+advance. Writing the calls down first let Astra find three failure-path
+defects:
+
+- the header promised a private revision after any failure, including after
+  submission;
+- anonymous `plan` cannot see a private revision, so its guard against one
+  could never fire;
+- a malformed reply escaped the handler.
+
+None would have published unchecked text. Each would have given an
+operator a misleading account of the registration at the moment they most
+needed an accurate one. The text of an amendment had three review passes in
+this project. Until this session, the procedure that publishes it had none.

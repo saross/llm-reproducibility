@@ -1323,3 +1323,189 @@ confirmation, and `49243da` carries Observation 38. The empty commit
 - The `medium` selection rests on five pilot papers without supplements.
   The pre-census supplement check is the first test on supplement-sized
   inputs.
+
+## Session: 2026-10-04 (third session) → 2026-10-05 — F2 rule and v1.2 packs; amendment 3 drafted; PR #7 through three review rounds; gate 1.3 part 1
+
+**Session:** ef0412bd-73e2-4c97-b695-695856453f0c (Opus 5.5). Shawn was
+present for most decisions and away for about two hours while Astra
+reviewed.
+
+**Spend.** No model API calls. The other work was free, network-only, or
+plan-billed:
+- **Public metadata fetches:** about 38 requests to DataCite, Zenodo,
+  Crossref, and GitHub (two v1.2 harvests).
+- **The audit subagent** (Opus; reproduction-lane build and audit) made
+  public downloads of the authors' deposits.
+- **Reviews:** Astra (Codex) gave two code reviews and one design review.
+  Fable, a separate Claude session, gave one code review and one design
+  review.
+
+**F2 rule and evidence packs (main):**
+- `8864ceb`: registry curation fields.
+- `4c77b67`: harvester v1.2, recording creators, descriptions, keywords,
+  related identifiers, versions, and files, with raw responses kept out of
+  tree.
+- `6c8ed51`: packs in `corpus/evidence-packs/harvest-2026-10-04/`.
+- `cf0d92e`: `scripts/score-f2-rule.py` v1.0.
+- `06c1ca9` and `ff278ff`: the hybrid validation. The rule matches the
+  reference on 10/10 F2 items, and the model on 4/10. The hybrid at
+  `medium` scores BI-excluded 137/141 = 0.972 and all-items 139/150 =
+  0.927, with stability unchanged at 143/150. Two derivations agree. The
+  stated limitation: every reference F2 is 0.
+- `07b6fba`: planning note.
+
+**Amendment 3 (main):**
+- `4c5bdf7`: the full draft, running-list items 1–9, with decisions D-1 to
+  D-5. D-5 corrects Entry 5's account of the beyond-instrument basis: only
+  the four dye items rest on supplements.
+- `1763b2a`: D-6, the regression baseline.
+- `f3fb3a7`: §9, the correction ledger. D-6 RULED: adopt Astra's approach.
+- `208bf5e`: the ledger conditions from Fable, and the class (ii) consequence
+  RULED in §7(d): a wrapper-only re-run is needed before a result counts.
+  That decides the audit's Q1, so dye's 22 targets need re-running.
+
+**PR #7** (`feat/lane-gate-1-1-code-audit`, open; Shawn merges):
+- **Built by the audit subagent.** Gate 1.1 and the executed-code audit of
+  the pilots: no undeclared repair beyond T02, but pilot attempt-01s that
+  ran re-implementations or non-AP-12 versions, and crema Table 1 credited
+  against v2.0.0's own re-run (0.1003 against the paper's 0.1023, checked
+  at source). The narrative `report.md` was saved on Shawn's instruction
+  (`71e1f21`).
+- **Astra round 1.** Five findings, all fixed in gate 1.2: anchors,
+  snapshots, conversion evidence, the relay and `human-queue`, KEY-2
+  (`458878b`, `43a3453`).
+- **Astra round 2.** Three findings, fixed in `0d87a8f`. Astra later
+  confirmed the narrow fixes.
+- **Fable's review.** Four serious and six moderate findings, all still
+  open at `0d87a8f`. P1-4 was fixed in `5766fb4`, with a new receipt-version
+  test. Gate 1.3 part 1 (`4244a51`) closed the static routes, bound anchors
+  to the launch commit, added `coverage_creditable`, and made each attack a
+  regression test. 421 tests pass.
+- **Design.** The gate 1.3 note (`5e741a3`) was reviewed by Fable
+  (`71fb731`) and Astra (`2bd35aa`). Its status is now **not ready to
+  build**: the next session writes a consolidated specification first.
+
+**Incident (repaired; not pushed).** Hook-run test fixtures inherited
+`GIT_DIR`, set `core.bare = true` in the shared config, and committed a
+fixture tree over the worktree branch. The config was restored, the
+branch reset, and all git calls now scrub `GIT_*`, with a regression test.
+Feedback was sent with `/feedback`.
+
+**Other:**
+- Shawn opened Fable as a separate session. Agent mail cannot carry
+  Claude-to-Claude messages, so briefs went by `SendMessage`. Queued as
+  infrastructure (PA data `64b36a3`).
+- Codex drafted an `AGENTS.md` entry point for this repository as PR #8,
+  awaiting Shawn.
+
+**Contextual assumptions.**
+- No pilot needs a format conversion, so the conversion design was driven
+  by expected census cases.
+- Shawn's choices of the run command now and lane-computed conversions
+  were made before the design reviews, which then enlarged both.
+- The consolidated specification should state a stopping rule for
+  hardening, given that the threat model assumes a good-faith executor.
+
+## Session: 2026-10-05 → 2026-10-06 — Gate 1.3 consolidated, reviewed, and its foundations built; every pending ruling cleared
+
+**Session:** b1a1e102-fc08-4962-a341-6da21988b13d (Opus 5.5). Shawn was
+away for the build and present for the decision walk-through.
+
+**Spend.** No model API calls.
+- **Plan-billed:** Fable (a separate Claude session) reviewed the
+  specification by SendMessage, and one obs-writer subagent (Sonnet) wrote
+  the working notes.
+- **Local only:** Docker runs against the local `rocker/r-ver:4.3.2`
+  image, with no pulls.
+- **GitHub API:** two review edits, one PR merge, and one PR opened.
+
+**Gate 1.3 on PR #7** (`feat/lane-gate-1-1-code-audit`):
+- `664bb72`: the digest cache, confined to one snapshot, with six tests.
+- `53413bc`: the consolidated specification, with a stopping rule. The
+  draft is archived in `archive/planning/`.
+- `0ce7f25`: F1, `run-container`, the exec shim and handshake hook, and
+  sealed run records.
+- `f07763a`: F2, consumption, credited runs, and comparison schema 1.1
+  citations.
+- `59f4e58`: F3, issues as fingerprinted `Issue` strings, `rule-flags`,
+  admitted coverage, and admission.
+- `b409ef5`: specification revision 1, folding in Fable's review.
+- `42da7fc`: the lane-script split planned for after merge.
+- `c4553f9`: the audit's Q1–Q10 rulings recorded in `findings.json`.
+- 488 tests pass, nine of them in Docker.
+
+**Main:**
+- `e0be197`: handoff.
+- `c99c2a0`: amendment 3 decisions D-1 to D-5 ruled.
+- `38b59b0`: the audit's general rules added to §7(d).
+- `7f84e73`: PR #8 merged (Codex's `AGENTS.md`).
+- `a8da2e1`: Observations 45–50 (WN-ag to WN-al).
+- `10a75c0`: user observations adjudicated.
+- `3d0615e`: continuity.
+
+**Elsewhere:**
+- Both of Astra's PR #7 reviews now carry an attribution line.
+- personal-assistant PR #169 proposes review delivery as documents.
+
+**Contextual assumptions.**
+- F1–F3 were built before Astra's review of the specification arrived.
+  Astra replies only when Shawn runs Codex, so the build risked rework
+  for speed.
+- The rulings were taken in one sitting from structured questions. The
+  amendment text written for them (§5(b), §6(d), and two §7(d) bullets)
+  awaits Shawn's full read before lodgement.
+
+## Session: 2026-10-06 → 2026-10-08 — Amendment 3 lodged; gate 1.3 traces
+
+**Session:** fabeab56-1b7a-4539-8524-caed6e956c93 (Fable 5.1, then Opus
+5.5 from the decision walk-through; compacted partway, so the 2026-10-06
+work is reconstructed from the summary).
+
+**Spend.** No model API calls.
+
+- **Plan-billed:** Fable was consulted on D-7 to D-9 by SendMessage
+  (2026-10-06).
+- **OSF API:** 8 calls in the lodgement run, plus anonymous reads for
+  `plan` and verification. No cost.
+- **Local only:** Docker probes on `rocker/r-ver:4.3.2`.
+
+**Amendment 3, 2026-10-06 (from the summary):**
+
+- `23c72fc`: Astra's first review folded in.
+- `9536962`: D-7 to D-9 and the Q5/Q6 dates ruled.
+- `2f3529d`: the revision's other new rules ruled, and the paste builder
+  `make-paste-artefact.py` added with its tests.
+
+**Amendment 3, 2026-10-08:**
+
+- Shawn read the diff `60ec56d..2f3529d` and approved it as is. He then
+  ruled four further points:
+  - the opening paragraph moves into the lodged text as "Nature of this
+    amendment" (`37da8e3`);
+  - the precise scope sentence (`857702d`);
+  - after Astra's follow-up, B1, a failed pin is followed by its own
+    neighbours, and S1, the audit is cited at `c4553f9` with the tag
+    `executed-code-audit-2026-10-04` (`4258db8`).
+- `3c57e93`: the builder refuses a lodged tag that disagrees with its
+  banner.
+- `51cb532`, `94a0d3a`, `4b1ee70`: `lodge-osf-amendment.py` (plan and lodge
+  modes) and its 15 offline tests, revised after Astra's S2 and two
+  re-check qualifications.
+- Astra reviewed twice: a follow-up at `857702d` (revise: B1 blocking, S1
+  and S2 should-fix), then a re-check at `4258db8` ("No blocking issues
+  found"). Both are mail in `~/agent-mail/codex/outbox/claude/`, receipted.
+- `abde9b1`: the lodgement commit, tagged `osf-amendment-3-2026-10-08`.
+  D5 PASS 81/81, 410 tests.
+- Lodged as OSF revision `6ac775afb5ed5b4afee88a4a`, approved. The stored
+  copy is byte-identical to what was sent, the change set is `["summary"]`,
+  and the DOI is unchanged. The public page was checked by Shawn.
+  `93ff291` and `e8de935` record it in the draft and the erratum log.
+
+**Gate 1.3 on PR #7, 2026-10-06 (from the summary):** specification
+revision 2 (`340f77d`), the F1 completeness corrections (`e6fe231`), and
+the hook's loader traces (`7d577b8`); 525 tests passed on the branch.
+
+**Contextual assumptions.** Shawn approved lodgement conditional on Astra
+reporting no blocking issues. The lodgement date
+(2026-10-08) was fixed in the text, so a reply after midnight Sydney time
+would have meant a rebuild. Astra replied at 21:46 local time.

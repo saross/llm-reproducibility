@@ -552,7 +552,31 @@ reference scores" without saying how three runs meet one reference score.
 >   and the selected configuration is re-checked on the five pilot papers
 >   with supplements before census.
 
+**Correction (2026-10-05, amendment 3 decision D-5).** The proposed wording
+above overstates what the BI items rest on. Only dye's four items rest on
+the papers' supplementary files. The other five (crema data I1 and I3,
+herskind data I1, marwick data I1 and code I3) rest on deposit content the
+2026-08-17 packs never recorded, which was not deliberately withheld. The
+lodged text is amendment 3 §3(b), and the `input` tag's definition is
+clarified in the adjudication log. Which items are excluded, and every
+figure, are unchanged.
+
+**Correction (2026-10-06, Astra's amendment 3 review, should-fix 1).** The
+proposed wording's "tags were assigned on 2 October 2026" is only partly
+right. The tagging convention was adopted on 2 October (five items tagged
+at worksheet commit `7298681`), and the nine-item set was completed on
+3 October (`6c0c2ec`, `8905c6c`, `7da90bf`), before the six-arm
+concordance was computed and committed later that day (`6e0d17a`). The
+lodged text is amendment 3 §3(b), which states both dates.
+
 ## Queued amendment 3 scope (running list)
+
+**AMENDMENT 3 LODGED 2026-10-08** (SchemaResponse revision
+`6ac775afb5ed5b4afee88a4a`, approved; DOI unchanged; tag
+`osf-amendment-3-2026-10-08` at commit `abde9b1`; round-trip verified byte
+for byte). The items below are folded into the lodged text and
+discharged; the draft's revision record carries the rulings. Version URL:
+<https://osf.io/dqnhg?revisionId=6ac775afb5ed5b4afee88a4a>.
 
 **Consolidated 2026-10-04:** the full draft text of items 1–9 is in
 `amendment-3-draft.md` (this directory), for the registrant to edit and
@@ -676,6 +700,12 @@ D-5 corrects Entry 5's proposed wording on what the BI items rest on.
      result a repair recovers and the repair's size are reported. Size is
      measured as the lines changed in the authors' code. Also reported:
      recovery against paper age, since deprecations accumulate over time.
+   **Added 2026-10-05 (Shawn, adopting the Fable review of PR #7):**
+     - **Mechanics placed in an authors' file.** A result resting on an
+       authors' file edited for mechanics, rather than in a wrapper, counts
+       only after a re-run with the mechanics in a wrapper and the file
+       restored byte-identical. A change of logic, indices, data, parameters,
+       or functions called stays fail-and-uplift whatever its effect.
 9. **Evidence packs (harvester v1.2) and the census-input re-validation
    (Shawn, 2026-10-04).** Building the F2 rule showed that the 2026-08-17
    packs carry no creators, descriptions, or keywords, so the scorer was
@@ -688,3 +718,87 @@ D-5 corrects Entry 5's proposed wording on what the BI items rest on.
    re-validation. Validation of the F2 rule:
    `../outputs/validation/f2-rule-hybrid-2026-10-04/report.md`
    (`06c1ca9`).
+10. **Deviation: the §8 regression gate's baseline (RULED by Shawn,
+    2026-10-05: adopt Astra's correction-ledger approach).** The executed-code
+    audit (PR #7) found pilot verdicts resting on re-implementations and on
+    versions other than the selected one. Pilot artefacts are kept as they
+    are. A frozen per-target correction ledger becomes the pass criterion,
+    and the strict comparison is reported beside it. The conditions on the
+    ledger come from the Fable review. Draft text: `amendment-3-draft.md`
+    §9.
+
+---
+
+## Entry 6 — 2026-10-09: amendment 3 applied to the frozen instruments
+
+**Status: repository-side application of lodged text (amendment 3 §10 step
+2). Pending review and the registrant's merge; not yet in force for any
+run.**
+
+Amendment 3 (lodged 2026-10-08, revision `6ac775afb5ed5b4afee88a4a`, tag
+`osf-amendment-3-2026-10-08`) clarifies five frozen instruments. §10 step 2
+edits them to the lodged text, with new versions and content hashes. Branch
+`feat/amendment-3-instruments` (not merged).
+
+| Instrument | Version | Receipt token | sha256 (first 16) | Lodged text |
+| --- | --- | --- | --- | --- |
+| `fair-instrument.md` | 2.1 to 2.2 | `bf984697092c0c20` | `3b94b57591b63106` | §4, items 1 to 12 |
+| `verdicts-and-precision.md` | 1.0 to 1.1 | `46eb4ad0bfcb3b92` | `e1ef6ab0841986a0` | §7(a) |
+| `data-availability-taxonomy.md` | 1.0 to 1.1 | `464c1474a18abab6` | `beb5889dfd384838` | §7(b) |
+| `coverage-rules.md` | 1.0 to 1.1 | `414de27c0d871a1d` | `b211a2318c7162ce` | §7(c) |
+| `invariants.md` | 1.0 to 1.1 | `c70d484af7e75ec4` | `f74f393385d3074b` | §7(d), with its six ruled cases |
+
+**How the text was placed.** Every lodged word was read from
+`osf-amendment-3.txt` at the tag and only re-wrapped. A whitespace-collapsed
+comparison finds each lodged paragraph in its instrument (routing design §6,
+maintenance rule 4): §4's preamble, twelve items, and BI note in the FAIR
+instrument's new v2.2 section; and §7's quoted text, labels, and the
+amendment's own readings in the four reproduction instruments. Existing
+sentences are left as they stand, except where the lodged text supersedes
+them:
+
+- the FAIR rubric lines, aggregation rule, and completeness procedure gain
+  pointers to the items that govern them;
+- the aggregation rule's "including non-principal upstream sources" is
+  qualified to "including a non-principal upstream source only where
+  reproducing the reported results needs it (v2.2 clarification 3)", since
+  unqualified it still told the completeness lane to count the fully
+  transcribed source that item 3 excludes (Astra's review of PR #9, B1,
+  2026-10-09);
+- the L2 definition's old counting-unit parenthetical points to the lodged
+  counting unit;
+- the paper-error paragraph's first sentence is replaced by the lodged
+  text.
+
+**Deliberate differences (rule 4).** One. The v1.0 paper-error paragraph's
+verification procedure ("apply the published formula to the paper's own
+input values and check whether the paper's reported output is consistent.
+Document the verification in the comparison report.") is kept after the
+lodged text. The lodged text neither repeats nor contradicts it, and §7(d)'s
+verification-aid ruling relies on the same check. Its pointer to
+modernisation plan §4.4 is dropped, since the lodged text states the
+escalation itself.
+
+**Rewording withdrawn and queued (2026-10-10).** Astra's review of PR #9
+(N1, non-blocking) proposed rewording this procedure as an optional
+diagnostic and naming PAPER_ERROR in the tolerance rule's "differences
+indicate a bug in the reproduction". Both were applied at `062c20a` and
+are reverted here. Neither sentence is lodged text, and routing design §6
+rule 3 requires an OSF amendment before an affected analysis runs under a
+post-lodgement edit, so the §8 gate would have run under unlodged text.
+Both rewordings are queued for amendment 4.
+
+**Consumers.** The Pass 6 prompt's mirror of the FAIR canon region and the
+reproduction skill's mirror of the paper-error segment are re-spliced byte
+for byte, and each banner cites the new version and token. The agents told
+to verify these versions move with them: the four FAIR assessors (definition
+v1.2 to v1.3), and the reproduction planner, executor, and adversarial
+reviewer (v1.1 to v1.2). All digests are re-registered in `manifest.yaml`.
+The D5 gate passes. The executor's definition is also edited on PR #7, so
+whichever change merges second renumbers it.
+
+**Not done here.** §10 steps 3 to 6: the correction ledger's ruling and
+freeze, the §8 regression gate under the clarified text, and the census
+re-validation. Routing design rule 6 asks that the regression gate's
+checklist re-confirm the routing class of every changed file: none changes
+class (each instrument stays pushed; both mirrors stay mirrors).

@@ -9,7 +9,7 @@ model: claude-opus-5-5
 tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
-# Role: reproduction executor (agent definition v1.4)
+# Role: reproduction executor (agent definition v1.5)
 
 You execute a single approved reproduction plan in a preregistered study
 (OSF DOI 10.17605/OSF.IO/DQNHG) — the merged R-A + R-B workflow: materials,
@@ -22,6 +22,9 @@ are hashed at retrieval and executed byte-identical. v1.3 (2026-10-05, after
 the cross-model review of PR #7): provenance anchors and execution snapshots
 (gate 1.2). v1.4 (2026-10-09, gate 1.3): every run goes through the lane's
 `run-container`, which records it; execution snapshots are retired.
+v1.5 (2026-10-10): merges main's separately numbered v1.2 (PR #9,
+2026-10-09), which moved the pushed instruments to their amendment 3
+versions (v1.1).
 The FAIR-lane benchmark arms do not bind this lane. A model change is a §8
 regression-gate trigger (amendment 1 §3). Opus 5.5 defaults to medium effort,
 so the invoking workflow pins effort explicitly. The pin lives only in this
@@ -29,13 +32,13 @@ definition and the manifest.
 
 ## Pushed instruments (injected at spawn, receipts required)
 
-- `.claude/shared/invariants.md` (v1.0) — especially invariant 2, the wrapper
+- `.claude/shared/invariants.md` (v1.1) — especially invariant 2, the wrapper
   cardinal rule: change *how* code runs, never *what* it computes.
 - `studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md`
-  (v1.0) — verdicts, precision categories, tolerance rules, discrepancy
+  (v1.1) — verdicts, precision categories, tolerance rules, discrepancy
   classification (incl. CANNOT_COMPARE and PAPER_ERROR), environment levels.
 - `studies/open-science-compliance/protocol/instruments/coverage-rules.md`
-  (v1.0) — score only against the locked list; untestable targets count in
+  (v1.1) — score only against the locked list; untestable targets count in
   the denominator.
 
 Verify each version line; quote each end-of-file receipt token in your output.
@@ -109,7 +112,7 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
 ## Output contract
 
 Required receipt fields: `instrument_versions`, `instrument_receipts`,
-`agent_version` ("reproduction-executor v1.4"), `model_id`,
+`agent_version` ("reproduction-executor v1.5"), `model_id`,
 `pulled_files_read`. `status` includes `ESCALATE` — on missing input,
 unbuildable ambiguity outside the plan, or a suspected paper error, escalate
 with a reason and stop. PAPER_ERROR and CANNOT_COMPARE calls surface for human

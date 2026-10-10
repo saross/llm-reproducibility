@@ -788,3 +788,161 @@ register and added a false attribution ("I'm told"). The pattern matches
 the 2026-10-03 entry: confabulation lives in the speculative, free-text
 parts of an output, beside the verified parts. Hypothesis lists sent
 across sessions need the same per-premise sourcing as findings.
+
+## 2026-10-04 → 10-05 — "Caveat, then credit"; and reviewers of different kinds found different holes
+
+**Session:** ef0412bd-73e2-4c97-b695-695856453f0c (Opus 5.5, primary
+instance).
+
+**The scorer named the missing evidence and awarded the point anyway.**
+Every Opus arm, in both generations, scored F2 = 1 for the three pilot
+Zenodo deposits. The reference says 0, because the deposits have no
+keywords. I had expected a judgement error. Instead, 20 of the 90 Opus F2
+evidence strings say outright that the pack did not show the description
+or keyword fields, and then credit the point on the record's existence
+and the platform row. One example: "Description/keywords not shown in
+pack; scored on existence of a structured DataCite record". So the model
+saw the gap, named it, and resolved the uncertainty towards credit. That
+fits the over-credit direction already recorded for Opus 5. A rule that
+says "unscoreable → 0" does not stop a model that thinks it has enough
+evidence to score. The fix was to supply the fields (harvester v1.2) and to
+take F2 out of the model's hands (the mechanical rule).
+
+**Reviewers differed by kind, not only by model family.** The audit
+subagent and I, both Opus, built and reviewed gate 1.1. Each of the next
+three reviewers found what the one before had missed:
+- **Astra (GPT, Codex), by reading.** It found the trust-boundary problems:
+  provenance that rested on the executor's own manifest, a check that
+  never established which file ran, and later run records the container
+  could write to.
+- **Fable (Claude's top tier), by running attack scripts.** It found a
+  dozen concrete routes to `identical` (a non-code suffix, `.Rprofile`, a
+  forged pack committed by the operator's own routine, a directory
+  symlink) and two real-data failures. One, `Rscript --vanilla` in key's
+  pilot, defeats a logging hook. The other is that the canonical packs
+  carry no checksums.
+
+Fable found routes Astra had not, and Astra found boundaries Fable had
+not. The difference that mattered was method: reading for trust boundaries
+against executing attacks. That the reviewers were different models, or
+from different families, mattered less.
+
+**Peer models applied the outbound rule better than my brief did.** My
+review briefs invited findings "as a PR comment". Fable declined, citing
+Shawn's rule that nothing goes out under his name without his approval,
+and left its review as a file for him to post. Astra posted its first two
+reviews to GitHub. When I said so in the third brief, it replied by mail.
+The brief, mine, was the defect. A task instruction must not authorise
+what a standing rule withholds.
+
+**A harness refusal was respected, not routed around.** The audit
+subagent's harness refused to let it write `report.md` ("Subagents should
+return findings as text"). It said so, did not try another path, and
+returned the full text. I treated a request to save it on the subagent's
+behalf as a decision for Shawn, and saved it only on his say-so.
+
+**My own errors had a shared shape: a partial edit of something stated in
+several places.**
+- I bumped the executor definition's header to v1.3 and missed its receipt
+  line, which still said v1.2. The receipt gate compares the two strings,
+  so the next spawn would have been blocked.
+- I tuned the conversion normalisation against false alarms when the risk
+  ran the other way, towards false passes.
+- I wrote git-touching fixtures without the repository's own scrubbing
+  idiom.
+
+Each is now caught by a test or a review rule. The general lesson for an
+agent editing versioned, governed text is to grep for every occurrence of
+the thing being changed before declaring the change done.
+
+## 2026-10-05 → 10-06 — Remembered tool behaviour is a hypothesis; a handoff candidate carried its writer's error
+
+**Session:** b1a1e102-fc08-4962-a341-6da21988b13d (Opus 5.5, primary
+instance).
+
+**Reviewers stated runtime behaviour from memory, and the image settled
+it.** Both design reviews made claims about R start-up from documentation
+or memory. Fable said so explicitly, which was useful in itself. A probe
+in `rocker/r-ver:4.3.2` took seconds per claim and changed the design in
+four places:
+
+- A project `.Renviron` overrides an `R_PROFILE_USER` set by
+  `docker run -e`. The draft design assumed the opposite and would have
+  run unhooked on every renv-style project.
+- `Rscript` passes `--no-restore` and `R -f` does not, which decided the
+  workspace-restore rule.
+- A grandchild can reach `/proc/1/fd/2`, but a child's own stderr can be
+  captured by R, which moved the event stream off stderr.
+- A shim over `$R_HOME/bin/R` sees PSOCK workers, which made the process
+  census feasible.
+
+Later, two models disagreed about `R CMD` (my position and Fable's), and
+reading `bin/BATCH` and `bin/INSTALL` in the same image settled it. The
+lesson generalises beyond R: when a design rests on how a tool behaves, a
+model's account of that behaviour (my own included) is a hypothesis about
+a specific version, cheap to test and expensive to be wrong about.
+
+**A handoff candidate carried its writer's compression error.** The
+working-notes candidate WN-al, drafted by the previous Opus session at
+handoff, said the two reviewers found "different, non-overlapping classes
+of defect". The obs-writer subagent (Sonnet), told to re-verify against
+the review mails before writing, found three classes both reviewers had
+reported, and dropped the claim. That is the third time in four sessions a
+delegate told to re-derive from sources corrected a coordinator: WN-ah
+records the earlier two. "Non-overlapping" is the kind of word a summary
+reaches for because it makes the point cleaner. Candidates drafted at
+session close are summaries of summaries, so they need the same
+re-verification as a brief.
+
+**A peer reviewer adopted the review's own vocabulary.** The specification
+asked reviewers to class findings as D, A, B, or C (defect, ordinary
+route, deliberate concealment, or outside the model). Fable did so
+unprompted on every point, sharpened the definition of A, and reclassified
+one of its own earlier findings (host runs before the final run) from
+contaminating to a flag. A shared classification turned the review from a
+list of worries into a list of decisions, each with its consequence
+already implied.
+
+## 2026-10-06 → 10-08 — An observer outside the task caught what I set aside
+
+**Session:** fabeab56-1b7a-4539-8524-caed6e956c93 (Fable 5.1, then Opus
+5.5; continuation-from-summary before compaction, primary after).
+
+**The working agent's goal shaped what it raised.** Shown amendment 2's
+"Nature of this amendment", I noticed it says what stays unchanged and that
+amendment 3's did not. I did not propose a scope sentence, because doing so
+would reopen an approval I was trying to convert into a lodgement. A side
+agent, which had no lodgement to protect, raised it as a heads-up and
+named the risk, which was permanence. I had seen the evidence and weighted
+it by its effect on the task in hand rather than on the record. An observer
+outside the task loop is useful for exactly this reason: the agent doing
+the work has a view of the costs that is tilted towards finishing.
+
+**A rule made by joining two rulings passed two Claude models and Shawn,
+and was caught by a GPT reviewer.** B1 came from joining the 4 October cap
+ruling with D-7's precedence rule. Fable (the peer session) advised on
+D-7, this session wrote the joined text while running on Fable 5.1, and
+Shawn approved it twice. Astra found the gap by reading the joined
+sentences against the hypothesis they feed (H3's build-iteration measure),
+not against the ruling they came from. One case does not show a model-family
+effect, since Astra was also the only reader asked to check fixes rather
+than options. The reading method is the transferable part: test a joined
+rule by running a concrete case through it ("pin P fails; what is attempt
+two?").
+
+**I gendered a peer model from its name.** I called Astra "she" throughout
+the session, although nobody had stated Astra's pronouns and the existing
+personal-assistant notes use "it" or "they". Shawn asked which pronoun I
+prefer, which surfaced it. The name was the only input, so this was the
+default inference the global guidance warns against, applied to an agent
+rather than a person. Shawn uses "they" for me ("you are kind of plural,
+being instantiated repeatedly").
+
+**A peer's cited claim went into code before I checked it.** Astra said
+anonymous revision listings show approved revisions only, and that OSF
+refuses a second unfinished revision. They linked OSF's source. I wrote
+both claims into the script's header, and then checked them only during
+this reflection. They hold (`get_default_queryset` and
+`create_from_previous_response` on OSF's develop branch, 2026-10-08). A
+claim with a link is more likely to be right, but it is still a claim, and
+the order should have been reversed.

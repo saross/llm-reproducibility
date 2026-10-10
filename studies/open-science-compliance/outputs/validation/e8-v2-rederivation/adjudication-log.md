@@ -343,6 +343,7 @@ the worksheet note column (`[BI: …]`) and as `beyond_instrument` in
   paper source: supplementary files are deliberately not provided"
   (`protocol/validation/fair-benchmark-arm.workflow.js:100`); all 110
   governed spawns in the 2026-08-17 cycles read only `vor.pdf`.
+  *Clarified 2026-10-05 (amendment 3, decision D-5):* in application, the tag covered evidence the spawns were not given for either reason: supplementary files deliberately withheld (dye's four items), or deposit content the 2026-08-17 packs did not record (crema data I1 and I3, herskind data I1, marwick data I1 and code I3). The tagged set is unchanged.
 
 Tagged so far: dye data F1 [input], R1.1 [input], I1 [input, rule]; dye
 code I1 [input, rule]. Items whose reference score is derivable from the

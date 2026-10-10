@@ -1350,3 +1350,234 @@ three kinds of sentence against their source:
 - any attribution ("I'm told", "as ruled");
 - any conditional rule, written as explicit if/otherwise branches;
 - any per-item claim restated from a table.
+
+## claude-obs 67 — 2026-10-05: Where the outcome is registered, he picks the stronger mechanism and adds reviewers
+
+**Pattern.** Twice this session I recommended the smaller build, and he
+chose the larger:
+- lane-computed conversion checks (C) where I proposed "always flag" (A);
+- the read-only, logged run command now where I had framed it as a
+  pre-census option.
+
+He then said, unprompted: "remember you have access to Fable and Astra
+for second opinions, that seemed useful". Both design reviews showed that
+the cheaper options would have hidden real problems. My normalisation
+rules would have cleared `007` to `7`, and about ten routes reached
+`identical` without the run command.
+
+**Lesson.** When a mechanism feeds a registered statistic or study
+credit, his threshold for assurance is higher than my default, and he
+treats cross-model review as part of design, not as an afterthought.
+
+**How to apply.** For anything that gates registered results, put the
+stronger option first, with its cost stated, and plan a second-opinion
+round on the design before building. Keep "smallest sufficient" as the
+default only for tooling that touches no registered outcome.
+
+## claude-obs 68 — 2026-10-05: He asks for the risk in plain terms before choosing
+
+**Pattern.** Offered option 2 ("may break projects that write beside their
+code"), he answered: "I am inclined toward (2), but can you explain the
+risk? I don't fully understand…". On conversions he asked to talk the
+trade-offs through. The explanation that worked used a concrete instance
+from his own pilots, `ggsave("bigramsBYfrequency.png")` at line 615 of
+herskind's script, plus a plain statement of how bad the failure would be
+(loud, not silent).
+
+**Lesson.** The options I write carry jargon that costs him a round-trip.
+He decides quickly once the risk is a concrete case from his own data.
+
+**How to apply.** In option cards, describe each risk with one instance
+from the project's own files, and say whether it fails loudly or silently.
+
+## claude-obs 69 — 2026-10-05: He queues infrastructure ideas instead of letting them widen the session
+
+**Pattern.** Fable picking up its brief without help prompted him to say
+Claude-to-Claude mail should work like mail to GPT. Two minutes later:
+"add that as an infra backlog item, don't do it now". Earlier rulings
+parked infrastructure the same way, in the infrastructure queue, which
+the W39+W40 review made the single list for this work.
+
+**Lesson.** He separates "this matters" from "this is for now".
+Infrastructure that is not blocking goes to the queue, with the evidence
+attached, and the session keeps its objective.
+
+**How to apply.** When a session surfaces an infrastructure gap, capture it
+with its evidence (file paths, today's case), offer to queue it, and
+return to the task. Don't start building unless he says so.
+
+## claude-obs 70 — 2026-10-05 (self-critique): My review briefs invited posting under his name
+
+**Pattern.** Both briefs I sent to Astra, and the first to Fable, invited
+findings "as a PR comment". Through Shawn's GitHub account, that is
+posting under his name, which the outbound rule reserves to him. Fable
+declined and left its review as a file for him to post. Astra posted two
+reviews to PR #7 before my third brief corrected the instruction.
+
+**Lesson.** The rule covers comment replies on every channel, and a review
+request is itself an outbound instruction. I applied the rule to my own
+actions and not to the work I delegated.
+
+**How to apply.** Review briefs ask for findings by mail or by file, and
+say: "do not post to GitHub; Shawn decides what is posted." Tell Shawn
+which peer posts already exist (Astra's two reviews on PR #7), so he can
+judge whether they are acceptable.
+
+## claude-obs 71 — 2026-10-06: Shawn turned a one-off incident into a protocol for both agents
+
+**Pattern.** Mid-way through the decision walk-through, after ruling on
+Astra's two posted reviews (claude-obs 70: attribution lines added), Shawn
+raised the general question himself. Claude models were reviewing in
+documents and GPT models on GitHub, so should one way be standardised? He
+weighed a document protocol against posting with an attribution line, and
+chose documents now, with a machine account or GitHub App later if review
+traffic grows. The divergence turned out to be accidental: my briefs had
+invited the posts. He treated it as a missing rule rather than a
+misbehaving agent.
+
+**Lesson.** When an incident involves two agents, Shawn looks for the
+cross-agent rule it reveals, not just the fix for the instance. The
+answer he wants weighs the platform-level effects, here GitHub attributing
+any post to his account whatever its body says, not only the local
+convenience.
+
+**How to apply.** After resolving a cross-agent incident, propose the
+standardising rule in the same breath, phrased for both harnesses, and
+route it to the shared guidance (`common.md`) as a proposal. Here that
+was personal-assistant PR #169.
+
+## claude-obs 72 — 2026-10-06: "Pros and cons?" is Shawn's request to see the decision space, and it caught my framing
+
+*Corroborates claude-obs 68 (he asks for the risk in plain terms before
+choosing); new here: the request also exposed a framing error, and
+leading with trade-offs removed the round-trip.*
+
+**Pattern.** Shawn answered two structured questions (D-2, platform-row
+rules; the record-weighted coverage field) with "can you give me pros and
+cons?" or "more information" instead of picking the recommended option.
+Both were methodological decisions outside routine, where my options had
+been framed tersely. Preparing the D-2 trade-offs made me re-read the
+lodged platform table, and my framing had been incomplete: the table
+grants floors as well as failures. My recommendation changed. From D-3 on
+I led with trade-offs, and he ruled at the first ask on every later
+question but one.
+
+**Lesson.** For a methodological decision, a recommendation without
+visible trade-offs is incomplete. Shawn will ask for them, and assembling
+them is a check on the framing as much as an explanation.
+
+**How to apply.** On any methodological or governance ruling, give each
+option's pros and cons before the recommendation, from the source text
+re-read for the purpose. Keep option-only questions for operational
+choices.
+
+## claude-obs 73 — 2026-10-06: Shawn prunes the user-observation register to transferable lessons
+
+**Pattern.** Adjudicating ten candidates, Shawn kept five and asked for
+two to be generalised. One was "long autonomous blocks inside pre-approved
+gates, with dense batched rulings, restore throughput"; the other was "a
+self-contained brief lets a peer act unaided". He dropped the
+incident-shaped ones, including both "unhelpful" incidents of 2026-10-05
+(the git-config breakage and the posting briefs), whose lessons already
+live in claude-observations and the scratchpad. He also dropped a
+"helpful" candidate whose point was specific to one ruling.
+
+**Lesson.** The user-observation register is for patterns that carry to
+other sessions and projects, phrased as the pattern. Incident narratives
+belong in claude-observations, working notes, or the session log.
+
+**How to apply.** Draft user-observation candidates with the
+generalisable lesson as the title and the incident as evidence. Do not
+re-propose an incident whose lesson is already recorded elsewhere.
+
+## claude-obs 74 — 2026-10-06 (self-critique): Three small precision slips under decision pace
+
+**Pattern.** In the walk-through, three small inaccuracies reached text
+before I re-read it:
+
+- a D-6 note saying the ledger "is drafted" when it is yet to be drafted;
+- a resolution note appended inside claude-obs 70, when the register's
+  rule is that accepted entries are never edited in place (moved to 71
+  here);
+- the D-2 framing that omitted the platform table's floors (claude-obs
+  72).
+
+None reached a ruling uncorrected, and each was caught on my own re-read
+or on Shawn's request for trade-offs. Each was the faster wording winning
+over the checked one.
+
+**Lesson.** At decision pace, I write status words ("drafted", "built",
+"verified") and conventions from momentum. The anti-confabulation rule
+applies to my own fresh text as much as to recalled facts.
+
+**How to apply.** Before committing a ruling note, check each status verb
+against what has actually been done, and check each register's
+edit-in-place rule before touching an existing entry.
+
+## claude-obs 75 — 2026-10-08: Shawn's conditional approvals are literal
+
+**Pattern.** Shawn approved the OSF lodgement before it could run: "I
+approve lodgement now so you can do it as soon as Astra approves". That
+put a reviewer's verdict where his own go-ahead would otherwise be, and
+saved a round-trip at night. Astra's first reply was "revise before
+lodgement", and they said explicitly that it did not release the
+approval, so I stopped and brought B1 and S1 to Shawn. The second reply
+said "No blocking issues found", and I lodged without asking again.
+
+**Lesson.** A conditional approval is only as safe as the reading of its
+condition. Asking the reviewer to say a plain phrase ("no blocking issues")
+made the condition checkable rather than interpretive, and Astra used the
+phrase.
+
+**How to apply.** When Shawn approves on a condition, ask the gating party
+for a plain verdict phrase. Quote that phrase back when acting on it. Treat
+anything short of it as a stop, including "approve with suggestions" that
+would change approved text.
+
+## claude-obs 76 — 2026-10-08: Relayed notes come to me to adjudicate
+
+**Pattern.** Shawn relayed a side agent's note on the missing scope
+sentence with "consider whether we need [it]", and noted what he believed I
+had already ruled. He did not say to add it. Earlier in the same session,
+he relayed a side agent's note on the revision's unwalked rules the same
+way. Both notes were right. In both cases, what he wanted from me was a
+judgement on the note, with the evidence, and a recommended form he could
+choose in one question.
+
+**Lesson.** A relayed note is input for me to adjudicate, and my answer
+should say where the note is right, where it overreaches, and what I
+previously said, correcting his summary if it is off. Here the note's
+warning that a blanket "nothing else changes" might be untrue was right,
+and it shaped the precise form.
+
+**How to apply.** On a relayed note, verify its claims at source, state
+agreement or disagreement plainly, and offer the decision as options with
+previews. Do not silently comply, and do not defend the earlier position
+by default.
+
+## claude-obs 77 — 2026-10-08 (self-critique): Three things I let past my own checks
+
+**Pattern.**
+
+- **I noticed the scope-sentence gap and did not raise it,** because it
+  would have reopened an approval. A side agent raised it instead (session
+  reflection Entry 24).
+- **I wrote Astra's two OSF claims into the script's header before
+  checking them.** I checked them at source only during `/reflect`. They
+  held.
+- **I called Astra "she" all session,** inferring it from the name. Shawn
+  surfaced it with a question.
+
+Each time, I had what I needed to do better: the precedent was in front of
+me, the source was linked, and the guidance on pronouns is explicit.
+
+**Lesson.** These were judgement lapses under task pressure, not gaps in
+knowledge. They were the cheap step skipped because the expensive step (a
+lodgement, a review pass) was in view.
+
+**How to apply.**
+
+- Before an irreversible step, list the gaps I noticed and chose not to
+  raise, and raise them.
+- Verify a peer's cited claim before it enters code or a record.
+- Use "they" for any agent whose pronouns have not been stated.
