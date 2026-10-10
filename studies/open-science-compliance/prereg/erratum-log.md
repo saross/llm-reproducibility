@@ -775,3 +775,22 @@ the audit stay as dated records.
 1. Entry 7: correct amendment 3 §7(d)'s example. It is a factual note and
    changes no rule, so it waits for the next amendment rather than being
    lodged alone (registrant decision, 2026-10-09).
+2. Two `verdicts-and-precision.md` rewordings, withdrawn from PR #9 because
+   amendment 3 does not lodge them (Entry 6, "Rewording withdrawn and
+   queued", 2026-10-10). The tolerance rule names PAPER_ERROR as the other
+   cause of a deterministic difference. The paper-error formula procedure
+   becomes an optional diagnostic that does not replace the lodged evidence
+   tiers (Astra's review of PR #9, N1).
+3. Author-disabled long-running code (ruling L17 (c), 2026-10-10). Where the
+   only code producing a published result is switched off by its authors
+   (for example a chunk marked `eval: false`), the study's runs execute it
+   verbatim from a wrapper within the 168-hour cap, and the approved plan
+   names the operator step. To be drafted from L17's probe.
+4. Figure centrality (registrant's request, 2026-10-10, with ruling L5). A
+   rule, or at least a heuristic, separating key figures from ancillary ones
+   in the study's runs, so that an ancillary figure's failure is reported in
+   context rather than weighing like a key result. Proposed: classified at
+   plan time, before any result, and locked with the denominator; how an
+   ancillary outcome enters the verdict's "all or nearly all" to be
+   specified. Provisional, and revisited as cases accumulate. It does not
+   apply in the §8 gate.

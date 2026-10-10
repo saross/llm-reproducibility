@@ -1,8 +1,8 @@
 # Correction ledger for the §8 regression gate (amendment 3 §9) — DRAFT
 
-**Status:** DRAFT, ruled in part. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09; L5 and L17 are open. Not frozen and not hashed. No run may use any value here until every ruling is made, the frozen copy is committed, and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
+**Status:** DRAFT, fully ruled. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, and L5 and L17 on 2026-10-10. Not frozen and not hashed: L5's and L17's probes and the pre-freeze checks remain. No run may use any value here until the frozen copy is committed and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
 
-**Ledger version:** 0.2.1-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
+**Ledger version:** 0.3.0-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
 
 This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit the JSON, never this file.
 
@@ -10,15 +10,15 @@ This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit 
 
 | Paper | Pilot verdict | Expected verdict | In-gate targets | Unchanged (testable) | Corrected | Scope-changed | Expected-untestable | Outside the gate or conditional | Gate role |
 |---|---|---|---|---|---|---|---|---|---|
-| crema-et-al-2024 | SUCCESSFUL | SUCCESSFUL | 1 | 0 (0) | 1 | 0 | 0 | 6 | mandatory: the registered archived-posterior leg (CREMA-T01). Whether the leg also covers crema's five figures is ruling L5 (open). |
+| crema-et-al-2024 | SUCCESSFUL | SUCCESSFUL (provisional on the figures probe) | 6 | 2 (2) | 4 | 0 | 0 | 1 | mandatory: the registered archived-posterior leg, covering Table 1 (CREMA-T01) and the five main figures (CREMA-T03 to T07), ruled L5 (c) on 2026-10-10 |
 | dye-et-al-2023 | SUCCESSFUL | PARTIAL | 13 | 11 (11) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 | herskind-riede-2024 | SUCCESSFUL | SUCCESSFUL | 4 | 2 (2) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 | key-et-al-2024 | PARTIAL | BLOCKED (coverage 0) | 0 | 0 (0) | 0 | 0 | 0 | 9 | not a gate paper (L6 (c)); its record keeps the expected verdict and the strict comparison's baseline |
-| marwick-2025 | SUCCESSFUL | SUCCESSFUL (provisional on L17) | 13 | 6 (6) | 7 | 0 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
+| marwick-2025 | SUCCESSFUL | SUCCESSFUL (provisional on the L17 probe) | 13 | 6 (6) | 7 | 0 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 
 ## Rulings
 
-Ruled by Shawn Ross (registrant) on 2026-10-09: L1, L2, L3, L4, L6, L7, L8, L9, L10, L11, L12, L13, L14, L15, L16. Open: L5, L17.
+Ruled by Shawn Ross (registrant) on 2026-10-09 and 2026-10-10: L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12, L13, L14, L15, L16, L17. Open: none.
 
 ### L1. What is 'the pilot's locked target list'? No pilot attempt-01 has a reproduction plan or a locked list; the pilots predate the locked-list instrument.
 
@@ -67,7 +67,7 @@ Affects: DYE-T01, DYE-T03–T11, DYE-T13, HER-T01, HER-T02.
 
 ### L5. Crema's role. The registration names a crema 'stochastic-path leg' that regenerates the published tables from archived posteriors, and says the full-MCMC path is not re-run.
 
-**Open.** The registrant asked on 2026-10-09 whether the figures repeat the table; the recommendation is revised from (a) to (c).
+**Ruled 2026-10-10: (c).** A local probe of v1.0.0's figures_main.R precedes the freeze. The registrant also asked for a rule, or at least a heuristic, separating key figures from ancillary ones in the study's runs, so that an ancillary figure's failure is reported in context rather than weighing like a key result. It is provisional, to be revisited as cases accumulate, and is queued for amendment 4. It does not apply in the gate, where every in-scope figure is compared.
 
 - **(a)** The leg is mandatory and covers Table 1 only (CREMA-T01). Crema's figures (CREMA-T03–T07) are recorded but not run (this draft).
 - **(b)** Crema is also a gate paper: the leg plus its five figures from the archived posteriors.
@@ -201,13 +201,13 @@ Affects: freezing.
 
 ### L17. Marwick's Fig. 2 under L11 (a). The published image comes from supplement-GAMS-details.qmd at 1.3. Its model-fitting chunk is marked 'eval: false', with the authors' comment 'this takes a few hours': five brms models, each with 4 chains of 50,000 iterations, adapt_delta 0.99999, and seed 123. The chunk saves results_brms.RData ('quite a large file'), which the tag 1.3 tree does not contain. So nothing archived can be redrawn, and regenerating Fig. 2 means a multi-hour MCMC re-run.
 
-**Open.**
+**Ruled 2026-10-10: (c).** Probe first. Before the ledger freezes, a local probe on amd-tower runs the fitting chunk's code verbatim from a wrapper, renders the supplement unchanged, and compares the figure with the version of record; the approved plan then names that operator step. If the probe fails, the registrant re-rules on its evidence, with (b) the fallback. The gate tests the lane, not the papers: it need not mirror the study's runs exactly, but should be as realistic as possible (registrant, 2026-10-10).
 
 - **(a)** Outside the gate, as a stated scope limit like crema's full-MCMC path (CREMA-T02): MAR-T10 is recorded but not run, and marwick's gate verdict rests on its other 12 targets.
 - **(b)** In the gate, expected CANNOT_COMPARE: the fit is not deposited and the gate does not re-run multi-hour MCMC. Marwick's expected verdict then needs a further call (SUCCESSFUL as 'nearly all', or PARTIAL).
 - **(c)** In the gate, expected REPRODUCED_VISUAL: the run fits the five models (hours of compute; seeded, so close but not guaranteed identical across platforms).
 
-**Recommendation:** (a). It follows the registration's own treatment of a multi-hour MCMC path ('stated rather than silent'), keeps L11 (a)'s rule that a static include is never credited, and keeps marwick's gate verdict about what the gate actually runs.
+**Recommendation:** (c), revised 2026-10-10. (a) is withdrawn: the registration's full-MCMC exception (§8) belongs to crema's leg, Fig. 2's few hours are far inside the 168-hour cap (eligibility criterion 4), and §7.6's denominator lock keeps MAR-T10 counted (Astra's review of PR #10, 2026-10-09). (b) would fail the gate if the lane did attempt the fit and reproduce the figure, so it would need the plan to forbid the attempt, which rehearses the opposite of what the study's runs must do. Under (c) the gate exercises a behaviour the study needs: running the authors' long fit, including code they switched off, within the cap. The risk is a gate failure for an incidental reason, which a probe before freezing addresses.
 
 Affects: MAR-T10, marwick expected verdict.
 
@@ -233,7 +233,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 - `results/post_jp_abot.RData`: sha256 `180682de0e83d01f5ae0965ed1ef17270e465d8ccd3a2ebd19c5448927f9b988`
 - `results/post_gb_abot.RData`: sha256 `f1d53e0adafc92f66dd3961084621a20cc8371b65a5b3a20412cc665d79bee32`
 - **Pilot:** attempt-01, verdict SUCCESSFUL; executed git tag v2.0.0 (c6d1aae) plus one Dockerfile edit; audit findings CREMA-1, CREMA-2, CREMA-3.
-- **Expected verdict:** SUCCESSFUL. In the gate's scope, CREMA-T01 reproduces all 24 printed cells exactly (expected). If the figures join the gate (L5), each is expected REPRODUCED_VISUAL. The fresh-MCMC path is not run.
+- **Expected verdict:** SUCCESSFUL (provisional on the figures probe). CREMA-T01 reproduces all 24 printed cells exactly. v1.0.0's figures_main.R redraws the five main figures from the deposit's data and archived results in the same run (L5 (c)), each expected REPRODUCED_VISUAL. The fresh-MCMC path is not run.
 
 ### Targets
 
@@ -340,13 +340,14 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Pilot item | comparison report 'Figure Comparison' row Figure 2 'Site distribution maps (3 panels)' |
 | Location | vor, PDF p. 5 (printed p. 5) |
 | Analysis type | visual (figure from archived posteriors or data) |
-| Gate scope | conditional: in the leg only if L5 extends it to the figures (open) |
+| Gate scope | in_gate: the registered archived-posterior leg, extended to the figures (L5 (c), ruled 2026-10-10) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision: figure verification is visual; the scientific content must match) |
 | Pilot outcome | 'Visually identical' / 'Identical', but between the pilot's own pre-computed and fresh runs, not against the paper; run from v2.0.0 posteriors |
 | Set | unchanged |
 | Correction | comparison basis becomes the paper's figure, drawn from v1.0.0's archived posteriors; expected outcome unchanged (reproduced) |
 | Printed value corrected | False |
+| Evidence tier | the pilot's PDF and the deposit's own v1.0.0 PDF render pixel-identical at 110 dpi (evidence/crema-figures-content/), so the value is unchanged |
 | Repair class and status | CREMA-3 (iv); CREMA-2 (i): rnaturalearthhires installed unpinned at run time (Fig. 1 only). Status: no repair |
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
@@ -361,18 +362,20 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Pilot item | comparison report 'Figure Comparison' row Figure 1 'Diffusion curves (3 panels)' |
 | Location | vor, PDF p. 6 (printed p. 6) |
 | Analysis type | visual (figure from archived posteriors or data) |
-| Gate scope | conditional: in the leg only if L5 extends it to the figures (open) |
+| Gate scope | in_gate: the registered archived-posterior leg, extended to the figures (L5 (c), ruled 2026-10-10) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision: figure verification is visual; the scientific content must match) |
 | Pilot outcome | 'Visually identical' / 'Identical', but between the pilot's own pre-computed and fresh runs, not against the paper; run from v2.0.0 posteriors |
-| Set | unchanged |
-| Correction | comparison basis becomes the paper's figure, drawn from v1.0.0's archived posteriors; expected outcome unchanged (reproduced) |
+| Set | corrected |
+| Correction | comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: panels a and b (simulations 1a and 1b) place the 95% HPD band and the posterior mean slightly differently; panel c matches. figures_main.R draws no random numbers, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure2.pdf) |
 | Printed value corrected | False |
+| Evidence tier | pixel comparison of the pilot's PDF with the deposit's own v1.0.0 figure2.pdf, both rendered at 110 dpi: 1.158% of pixels differ, all inside the plotted bands (evidence/crema-figures-content/); confirmed visually by Claude, 2026-10-10 |
+| Ruling | L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content |
 | Repair class and status | CREMA-3 (iv); CREMA-2 (i): rnaturalearthhires installed unpinned at run time (Fig. 1 only). Status: no repair |
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings | L5, L8 |
+| Rulings | L4, L5, L8 |
 | Note | Drawn from the archived simulation posteriors in sim/results/. |
 
 #### CREMA-T05 — Fig. 3 (Posterior predictive check of the fitted hierarchical Model on observed proportion SPD … in Japan (case study 1a))
@@ -382,18 +385,20 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Pilot item | comparison report 'Figure Comparison' row Figure 3 'Japan posterior predictive check' |
 | Location | vor, PDF p. 7 (printed p. 7) |
 | Analysis type | visual (figure from archived posteriors or data) |
-| Gate scope | conditional: in the leg only if L5 extends it to the figures (open) |
+| Gate scope | in_gate: the registered archived-posterior leg, extended to the figures (L5 (c), ruled 2026-10-10) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision: figure verification is visual; the scientific content must match) |
 | Pilot outcome | 'Visually identical' / 'Identical', but between the pilot's own pre-computed and fresh runs, not against the paper; run from v2.0.0 posteriors |
-| Set | unchanged |
-| Correction | comparison basis becomes the paper's figure, drawn from v1.0.0's archived posteriors; expected outcome unchanged (reproduced) |
+| Set | corrected |
+| Correction | comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: the 90% prediction envelope's edges differ. figures_main.R draws no random numbers, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure3.pdf) |
 | Printed value corrected | False |
+| Evidence tier | pixel comparison of the pilot's PDF with the deposit's own v1.0.0 figure3.pdf, both rendered at 110 dpi: 0.730% of pixels differ, all inside the plotted bands (evidence/crema-figures-content/); confirmed visually by Claude, 2026-10-10 |
+| Ruling | L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content |
 | Repair class and status | CREMA-3 (iv); CREMA-2 (i): rnaturalearthhires installed unpinned at run time (Fig. 1 only). Status: no repair |
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings | L5, L8 |
+| Rulings | L4, L5, L8 |
 
 #### CREMA-T06 — Fig. 4 (Posterior predictive check of the fitted hierarchical Model on observed proportion SPD … in Britain (case study 1b))
 
@@ -402,18 +407,20 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Pilot item | comparison report 'Figure Comparison' row Figure 4 'Britain posterior predictive check' |
 | Location | vor, PDF p. 7 (printed p. 7) |
 | Analysis type | visual (figure from archived posteriors or data) |
-| Gate scope | conditional: in the leg only if L5 extends it to the figures (open) |
+| Gate scope | in_gate: the registered archived-posterior leg, extended to the figures (L5 (c), ruled 2026-10-10) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision: figure verification is visual; the scientific content must match) |
 | Pilot outcome | 'Visually identical' / 'Identical', but between the pilot's own pre-computed and fresh runs, not against the paper; run from v2.0.0 posteriors |
-| Set | unchanged |
-| Correction | comparison basis becomes the paper's figure, drawn from v1.0.0's archived posteriors; expected outcome unchanged (reproduced) |
+| Set | corrected |
+| Correction | comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: the 90% prediction envelope's edges differ, and with them the extent of the deviation regions. figures_main.R draws no random numbers, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure4.pdf) |
 | Printed value corrected | False |
+| Evidence tier | pixel comparison of the pilot's PDF with the deposit's own v1.0.0 figure4.pdf, both rendered at 110 dpi: 1.258% of pixels differ, all inside the plotted bands (evidence/crema-figures-content/); confirmed visually by Claude, 2026-10-10 |
+| Ruling | L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content |
 | Repair class and status | CREMA-3 (iv); CREMA-2 (i): rnaturalearthhires installed unpinned at run time (Fig. 1 only). Status: no repair |
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings | L5, L8 |
+| Rulings | L4, L5, L8 |
 
 #### CREMA-T07 — Fig. 5 (Estimated proportion of cremation dates in Britain (case study 2))
 
@@ -422,13 +429,14 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Pilot item | comparison report 'Figure Comparison' row Figure 5 'Burial cremation proportions' |
 | Location | vor, PDF p. 7 (printed p. 7) |
 | Analysis type | visual (figure from archived posteriors or data) |
-| Gate scope | conditional: in the leg only if L5 extends it to the figures (open) |
+| Gate scope | in_gate: the registered archived-posterior leg, extended to the figures (L5 (c), ruled 2026-10-10) |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision: figure verification is visual; the scientific content must match) |
 | Pilot outcome | 'Visually identical' / 'Identical', but between the pilot's own pre-computed and fresh runs, not against the paper; run from v2.0.0 posteriors |
 | Set | unchanged |
 | Correction | comparison basis becomes the paper's figure, drawn from v1.0.0's archived posteriors; expected outcome unchanged (reproduced) |
 | Printed value corrected | False |
+| Evidence tier | the pilot's PDF and the deposit's own v1.0.0 PDF render pixel-identical at 110 dpi (evidence/crema-figures-content/), so the value is unchanged |
 | Repair class and status | CREMA-3 (iv); CREMA-2 (i): rnaturalearthhires installed unpinned at run time (Fig. 1 only). Status: no repair |
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
@@ -1269,7 +1277,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 - `Dockerfile`: sha256 `93dd7ffd893d6174720ae9ae3fd78dfea8d69f641a05e8a3b9cc799d1ee5bc49`
 - `analysis/paper/paper.docx`: sha256 `f548ec4b24173b34e0122a1e7e500a42e2341edc324c85a64f52b0ac8e40350f` (the authors' rendered output at 1.3; corroborates MAR-T04 to T06)
 - **Pilot:** attempt-01, verdict SUCCESSFUL; executed GitHub main 652e542 (8 commits past 1.3); audit findings MAR-1, MAR-2.
-- **Expected verdict:** SUCCESSFUL (provisional on L17). Version 1.3 is expected to give the printed values for MAR-T01 to T08, as its own rendered paper.docx shows for W, p, and PC1. The dynamic figures are expected to reproduce, Fig. 4 among them, regenerated by the render (L11 (a)). Fig. 2 (MAR-T10) depends on L17: outside the gate under (a); counted under (b) or (c).
+- **Expected verdict:** SUCCESSFUL (provisional on the L17 probe). Version 1.3 is expected to give the printed values for MAR-T01 to T08, as its own rendered paper.docx shows for W, p, and PC1. The dynamic figures are expected to reproduce, Fig. 4 among them, regenerated by the render (L11 (a)). Fig. 2 (MAR-T10) is regenerated by fitting the supplement's five models (L17 (c)) and is expected to reproduce visually. If the probe fails, L17 is re-ruled.
 
 ### Targets
 
@@ -1497,7 +1505,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Pilot item | comparison report 'Figure Comparison' row 'Fig 3 fig-change-over-time' (static PNG include) and 'Fig 2 fig-change-over-time_from_V1_1' (dynamic) |
 | Location | vor, PDF p. 4 |
 | Analysis type | visual |
-| Gate scope | in_gate: marwick is a gate paper (L6 (c)); L17 (open) may place it outside the gate |
+| Gate scope | in_gate: marwick is a gate paper (L6 (c)); L17 (c) keeps Fig. 2 in the gate |
 | Elements | published: 1; pilot_compared: 1 |
 | Tolerance | visual (basis: verdicts-and-precision) |
 | Pilot outcome | credited; compared against the repository's paper.docx at 652e542, not the published article |
@@ -1505,10 +1513,11 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Correction | the pilot credited a static include as 'Identical' and an added chart with no published counterpart (never output by its render). Q4 withdrew the Fig. 2 credit. The published image is produced by the deposit's supplement-GAMS-details.qmd, which the Dockerfile's render does not run. |
 | Printed value corrected | False |
 | Repair class and status | MAR-1 (iv): GitHub main 652e542 executed, 8 commits past the AP-12 version 1.3, including a changed Shannon diversity calculation (group_by(id, journal_name), rendered at attempt-01 outputs/paper.html line 904); MAR-2 (i): no code modifications (self-reported). Status: no repair; the gate re-runs version 1.3 (Q4) |
-| Credit eligibility | pilot: historical (Q4); gate: eligible when version 1.3 runs unmodified |
+| Credit eligibility | pilot: historical (Q4); gate: eligible when version 1.3 runs unmodified and the switched-off fitting chunk's code runs verbatim from a wrapper (L17 (c)) |
 | Coverage | expected-untestable: False; comparison: visual |
-| Expected outcome | RULING NEEDED (L17) |
+| Expected outcome | REPRODUCED_VISUAL |
 | Rulings | L11, L17 |
+| Note | The approved plan names the operator step: run the code of supplement-GAMS-details.qmd's eval: false fitting chunk verbatim from a wrapper (five brms models, each with 4 chains of 50,000 iterations and seed 123; the authors note 'this takes a few hours'), then render the supplement unchanged. Its unconditional readRDS loads the saved fit, and its fig-smooth-plots-paper chunk redraws the figure. The authors' files are not edited. A local probe on amd-tower checks this before the ledger freezes (L17 (c)). |
 
 #### MAR-T11 — Fig. 3 (journal variation, panels A–E, and the Borda Count consensus ranking, panel F)
 

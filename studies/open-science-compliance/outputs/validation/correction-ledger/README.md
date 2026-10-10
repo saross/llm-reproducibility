@@ -1,10 +1,10 @@
 # Correction ledger for the §8 regression gate — DRAFT
 
-**Status: DRAFT, ruled in part (ledger 0.2.1-draft). Shawn ruled L1 to L4
-and L6 to L16 on 2026-10-09; L5 and L17 are open. Not frozen and not
-hashed.** No run may use any value here until every ruling is made, the
-ruled copy is committed, and its sha256 is recorded in the gate's run
-configuration (amendment 3 §9 and §10 step 3).
+**Status: DRAFT, fully ruled (ledger 0.3.0-draft). Shawn ruled L1 to L4
+and L6 to L16 on 2026-10-09, and L5 and L17 on 2026-10-10. Not frozen and
+not hashed:** the two probes and the pre-freeze checks below remain. No run
+may use any value here until the frozen copy is committed and its sha256 is
+recorded in the gate's run configuration (amendment 3 §9 and §10 step 3).
 
 ## What this is
 
@@ -33,6 +33,7 @@ reported.
 | `check-printed-values.py` | Re-checks every printed value against its cited PDF page |
 | `deposit-checksums/crema-v1.0.0.sha256` | sha256 of all 50 files in crema's v1.0.0 deposit |
 | `evidence/l9-dye-section-07/` | Operator run of dye's section 5 and 7 code, byte-identical (L9) |
+| `evidence/crema-figures-content/` | Pilot against v1.0.0 figures, pixel by pixel (L4, L5) |
 
 ## How it was drafted
 
@@ -91,6 +92,12 @@ reported.
    (five brms models, 4 chains of 50,000 iterations each). Its saved fit,
    `results_brms.RData`, is not in the tag 1.3 tree. Found 2026-10-09 while
    applying ruling L11; it raises ruling L17.
+7. **Crema: the pilot's Figs 2 to 4 are not v1.0.0's.** Drawn from version
+   2.0.0's archived results, they differ in content from the deposit's own
+   v1.0.0 figures: the simulation fits' bands in Fig. 2 (panels a and b) and
+   the prediction envelopes in Figs 3 and 4. Figs 1 and 5 render
+   pixel-identical. Found 2026-10-10 while applying ruling L5
+   (`evidence/crema-figures-content/`).
 
 **Astra's review (2026-10-09, at `9b66683`)** confirmed the key and marwick
 printed-value findings independently and found two errors, both fixed in
@@ -116,14 +123,15 @@ amendment.
 
 | Paper | Testable unchanged targets | Corrected | Expected verdict (pilot) |
 |---|---|---|---|
-| crema | 0 (registered leg, Table 1 only) | 1 | SUCCESSFUL (SUCCESSFUL) |
+| crema | 2 (registered leg: Figs 1 and 5) | 4 | SUCCESSFUL, provisional on the figures probe (SUCCESSFUL) |
 | dye | 11 | 2 | PARTIAL (SUCCESSFUL) |
 | herskind | 2, including the 1,601-cell S3 table | 2 | SUCCESSFUL (SUCCESSFUL) |
 | key | 0; all nine targets untestable | 2 | BLOCKED (PARTIAL) |
-| marwick | 6 | 7 | SUCCESSFUL, provisional on L17 (SUCCESSFUL) |
+| marwick | 6 | 7 | SUCCESSFUL, provisional on the L17 probe (SUCCESSFUL) |
 
 **Ruled (L6 (c), 2026-10-09): the gate runs dye, herskind, and marwick,**
-plus crema's mandatory archived-posterior leg. Key is not a gate paper; its
+plus crema's mandatory archived-posterior leg, which covers Table 1 and the
+five main figures (L5 (c)). Key is not a gate paper; its
 record keeps the expected verdict for the strict comparison. Each paper's
 agentic run passes the API review gate before it starts.
 
@@ -142,20 +150,34 @@ Ruled by Shawn on 2026-10-09:
   before freezing. **L14 (a):** key BLOCKED. **L15 (a):** freezing.
   **L16 (a):** erratum-log Entry 7; OSF note with the next amendment.
 
-Open:
+Ruled by Shawn on 2026-10-10:
 
-- **L5:** crema's figures. Recommendation revised to (c), all five figures
-  in the leg, after Shawn asked whether they repeat Table 1 (they mostly do
-  not: Figs 2 and 5 appear nowhere else).
-- **L17:** marwick's Fig. 2, which only a multi-hour MCMC re-run can
-  regenerate. Recommendation (a), outside the gate as a stated scope
-  limit.
+- **L5 (c):** crema's leg covers Table 1 and all five main figures, drawn by
+  v1.0.0's `figures_main.R` in the same run. Figs 2 to 4 become corrected
+  (finding 7); Figs 1 and 5 stay unchanged. Shawn also asked for a rule, or
+  at least a heuristic, separating key figures from ancillary ones in the
+  study's runs. It is queued for amendment 4 and does not apply in the gate.
+- **L17 (c), probe first:** marwick's Fig. 2 stays in the gate, expected
+  REPRODUCED_VISUAL. The approved plan names the operator step: the
+  supplement's `eval: false` fitting chunk runs verbatim from a wrapper,
+  then the supplement renders unchanged. (a) was withdrawn after Astra's
+  review. (b) would have needed the plan to forbid the attempt, rehearsing
+  the opposite of what the study's runs must do. If the probe fails, Shawn
+  re-rules with (b) the fallback.
 
 ## Before freezing
 
 - [x] 2026-10-09 Rule L1–L4 and L6–L16 and apply them to the JSON
       (ledger 0.2.0-draft, re-rendered).
-- [ ] Rule L5 and L17 and apply them.
+- [x] 2026-10-10 Rule L5 and L17 and apply them (ledger 0.3.0-draft,
+      re-rendered).
+- [ ] Probe crema's figures: v1.0.0's `figures_main.R` in a constructed
+      environment, compared with the deposit's PDFs and the version of
+      record (L5).
+- [ ] Probe marwick's Fig. 2: the fitting chunk run verbatim from a wrapper
+      on amd-tower, then the supplement rendered unchanged and the figure
+      compared with the version of record (L17). Sapphire is held until its
+      memory fix is confirmed.
 - [ ] Hold the crema v1.0.0 and herskind v1 deposits in the corpus store with
       manifest entries (audit Q10).
 - [ ] Hash marwick's files inside the 1.3 zip; confirm review counts in

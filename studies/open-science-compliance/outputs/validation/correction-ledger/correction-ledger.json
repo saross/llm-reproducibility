@@ -1,19 +1,20 @@
 {
   "title": "Correction ledger for the §8 regression gate (amendment 3 §9) — DRAFT",
-  "ledger_version": "0.2.1-draft",
-  "status": "DRAFT, ruled in part. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09; L5 and L17 are open. Not frozen and not hashed. No run may use any value here until every ruling is made, the frozen copy is committed, and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).",
+  "ledger_version": "0.3.0-draft",
+  "status": "DRAFT, fully ruled. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, and L5 and L17 on 2026-10-10. Not frozen and not hashed: L5's and L17's probes and the pre-freeze checks remain. No run may use any value here until the frozen copy is committed and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).",
   "drafted": {
     "date": "2026-10-09",
     "by": "Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py"
   },
   "ruled": {
-    "date": "2026-10-09",
+    "date": "2026-10-09 and 2026-10-10",
     "by": "Shawn Ross (registrant)",
     "ruled": [
       "L1",
       "L2",
       "L3",
       "L4",
+      "L5",
       "L6",
       "L7",
       "L8",
@@ -24,12 +25,10 @@
       "L13",
       "L14",
       "L15",
-      "L16"
-    ],
-    "open": [
-      "L5",
+      "L16",
       "L17"
-    ]
+    ],
+    "open": []
   },
   "basis": {
     "amendment": "OSF amendment 3 §9, lodged 2026-10-08 (OSF revision 6ac775afb5ed5b4afee88a4a; repository tag osf-amendment-3-2026-10-08)",
@@ -178,8 +177,11 @@
         "CREMA-T01–T07"
       ],
       "ruling": {
-        "status": "open",
-        "note": "The registrant asked on 2026-10-09 whether the figures repeat the table; the recommendation is revised from (a) to (c)"
+        "status": "ruled",
+        "decision": "(c)",
+        "date": "2026-10-10",
+        "by": "Shawn Ross (registrant)",
+        "note": "A local probe of v1.0.0's figures_main.R precedes the freeze. The registrant also asked for a rule, or at least a heuristic, separating key figures from ancillary ones in the study's runs, so that an ancillary figure's failure is reported in context rather than weighing like a key result. It is provisional, to be revisited as cases accumulate, and is queued for amendment 4. It does not apply in the gate, where every in-scope figure is compared"
       }
     },
     {
@@ -483,14 +485,17 @@
           "text": "In the gate, expected REPRODUCED_VISUAL: the run fits the five models (hours of compute; seeded, so close but not guaranteed identical across platforms)."
         }
       ],
-      "recommendation": "(a). It follows the registration's own treatment of a multi-hour MCMC path ('stated rather than silent'), keeps L11 (a)'s rule that a static include is never credited, and keeps marwick's gate verdict about what the gate actually runs.",
+      "recommendation": "(c), revised 2026-10-10. (a) is withdrawn: the registration's full-MCMC exception (§8) belongs to crema's leg, Fig. 2's few hours are far inside the 168-hour cap (eligibility criterion 4), and §7.6's denominator lock keeps MAR-T10 counted (Astra's review of PR #10, 2026-10-09). (b) would fail the gate if the lane did attempt the fit and reproduce the figure, so it would need the plan to forbid the attempt, which rehearses the opposite of what the study's runs must do. Under (c) the gate exercises a behaviour the study needs: running the authors' long fit, including code they switched off, within the cap. The risk is a gate failure for an incidental reason, which a probe before freezing addresses.",
       "affects": [
         "MAR-T10",
         "marwick expected verdict"
       ],
       "ruling": {
-        "status": "open",
-        "raised": "2026-10-09"
+        "status": "ruled",
+        "decision": "(c)",
+        "date": "2026-10-10",
+        "by": "Shawn Ross (registrant)",
+        "note": "Probe first. Before the ledger freezes, a local probe on amd-tower runs the fitting chunk's code verbatim from a wrapper, renders the supplement unchanged, and compares the figure with the version of record; the approved plan then names that operator step. If the probe fails, the registrant re-rules on its evidence, with (b) the fallback. The gate tests the lane, not the papers: it need not mirror the study's runs exactly, but should be as realistic as possible (registrant, 2026-10-10)"
       }
     }
   ],
@@ -545,7 +550,7 @@
           "CREMA-3"
         ]
       },
-      "gate_role": "mandatory: the registered archived-posterior leg (CREMA-T01). Whether the leg also covers crema's five figures is ruling L5 (open).",
+      "gate_role": "mandatory: the registered archived-posterior leg, covering Table 1 (CREMA-T01) and the five main figures (CREMA-T03 to T07), ruled L5 (c) on 2026-10-10",
       "targets": [
         {
           "id": "CREMA-T01",
@@ -1148,7 +1153,7 @@
             "page_printed": "5"
           },
           "analysis_type": "visual (figure from archived posteriors or data)",
-          "gate_scope": "conditional: in the leg only if L5 extends it to the figures (open)",
+          "gate_scope": "in_gate: the registered archived-posterior leg, extended to the figures (L5 (c), ruled 2026-10-10)",
           "element_count": {
             "published": 1,
             "pilot_compared": 1
@@ -1166,7 +1171,8 @@
             "set": "unchanged",
             "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived posteriors; expected outcome unchanged (reproduced)",
             "printed_value_corrected": false,
-            "label_note": "the pilot report labels this figure Figure 2 'Site distribution maps (3 panels)'; the paper's and the code's Fig. 1 is the maps and Fig. 2 the simulation fits (figures_main.R lines 28 and 81 at v1.0.0)"
+            "label_note": "the pilot report labels this figure Figure 2 'Site distribution maps (3 panels)'; the paper's and the code's Fig. 1 is the maps and Fig. 2 the simulation fits (figures_main.R lines 28 and 81 at v1.0.0)",
+            "evidence_tier": "the pilot's PDF and the deposit's own v1.0.0 PDF render pixel-identical at 110 dpi (evidence/crema-figures-content/), so the value is unchanged"
           },
           "repair": {
             "findings": [
@@ -1200,7 +1206,7 @@
             "page_printed": "6"
           },
           "analysis_type": "visual (figure from archived posteriors or data)",
-          "gate_scope": "conditional: in the leg only if L5 extends it to the figures (open)",
+          "gate_scope": "in_gate: the registered archived-posterior leg, extended to the figures (L5 (c), ruled 2026-10-10)",
           "element_count": {
             "published": 1,
             "pilot_compared": 1
@@ -1215,9 +1221,11 @@
             "credited": true
           },
           "correction": {
-            "set": "unchanged",
-            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived posteriors; expected outcome unchanged (reproduced)",
+            "set": "corrected",
+            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: panels a and b (simulations 1a and 1b) place the 95% HPD band and the posterior mean slightly differently; panel c matches. figures_main.R draws no random numbers, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure2.pdf)",
             "printed_value_corrected": false,
+            "evidence_tier": "pixel comparison of the pilot's PDF with the deposit's own v1.0.0 figure2.pdf, both rendered at 110 dpi: 1.158% of pixels differ, all inside the plotted bands (evidence/crema-figures-content/); confirmed visually by Claude, 2026-10-10",
+            "ruling": "L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content",
             "label_note": "the pilot report labels this figure Figure 1 'Diffusion curves (3 panels)'; the paper's and the code's Fig. 1 is the maps and Fig. 2 the simulation fits (figures_main.R lines 28 and 81 at v1.0.0)"
           },
           "repair": {
@@ -1237,6 +1245,7 @@
           },
           "expected_outcome": "REPRODUCED_VISUAL",
           "rulings": [
+            "L4",
             "L5",
             "L8"
           ],
@@ -1252,7 +1261,7 @@
             "page_printed": "7"
           },
           "analysis_type": "visual (figure from archived posteriors or data)",
-          "gate_scope": "conditional: in the leg only if L5 extends it to the figures (open)",
+          "gate_scope": "in_gate: the registered archived-posterior leg, extended to the figures (L5 (c), ruled 2026-10-10)",
           "element_count": {
             "published": 1,
             "pilot_compared": 1
@@ -1267,9 +1276,11 @@
             "credited": true
           },
           "correction": {
-            "set": "unchanged",
-            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived posteriors; expected outcome unchanged (reproduced)",
-            "printed_value_corrected": false
+            "set": "corrected",
+            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: the 90% prediction envelope's edges differ. figures_main.R draws no random numbers, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure3.pdf)",
+            "printed_value_corrected": false,
+            "evidence_tier": "pixel comparison of the pilot's PDF with the deposit's own v1.0.0 figure3.pdf, both rendered at 110 dpi: 0.730% of pixels differ, all inside the plotted bands (evidence/crema-figures-content/); confirmed visually by Claude, 2026-10-10",
+            "ruling": "L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content"
           },
           "repair": {
             "findings": [
@@ -1288,6 +1299,7 @@
           },
           "expected_outcome": "REPRODUCED_VISUAL",
           "rulings": [
+            "L4",
             "L5",
             "L8"
           ]
@@ -1302,7 +1314,7 @@
             "page_printed": "7"
           },
           "analysis_type": "visual (figure from archived posteriors or data)",
-          "gate_scope": "conditional: in the leg only if L5 extends it to the figures (open)",
+          "gate_scope": "in_gate: the registered archived-posterior leg, extended to the figures (L5 (c), ruled 2026-10-10)",
           "element_count": {
             "published": 1,
             "pilot_compared": 1
@@ -1317,9 +1329,11 @@
             "credited": true
           },
           "correction": {
-            "set": "unchanged",
-            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived posteriors; expected outcome unchanged (reproduced)",
-            "printed_value_corrected": false
+            "set": "corrected",
+            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: the 90% prediction envelope's edges differ, and with them the extent of the deviation regions. figures_main.R draws no random numbers, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure4.pdf)",
+            "printed_value_corrected": false,
+            "evidence_tier": "pixel comparison of the pilot's PDF with the deposit's own v1.0.0 figure4.pdf, both rendered at 110 dpi: 1.258% of pixels differ, all inside the plotted bands (evidence/crema-figures-content/); confirmed visually by Claude, 2026-10-10",
+            "ruling": "L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content"
           },
           "repair": {
             "findings": [
@@ -1338,6 +1352,7 @@
           },
           "expected_outcome": "REPRODUCED_VISUAL",
           "rulings": [
+            "L4",
             "L5",
             "L8"
           ]
@@ -1352,7 +1367,7 @@
             "page_printed": "7"
           },
           "analysis_type": "visual (figure from archived posteriors or data)",
-          "gate_scope": "conditional: in the leg only if L5 extends it to the figures (open)",
+          "gate_scope": "in_gate: the registered archived-posterior leg, extended to the figures (L5 (c), ruled 2026-10-10)",
           "element_count": {
             "published": 1,
             "pilot_compared": 1
@@ -1369,7 +1384,8 @@
           "correction": {
             "set": "unchanged",
             "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived posteriors; expected outcome unchanged (reproduced)",
-            "printed_value_corrected": false
+            "printed_value_corrected": false,
+            "evidence_tier": "the pilot's PDF and the deposit's own v1.0.0 PDF render pixel-identical at 110 dpi (evidence/crema-figures-content/), so the value is unchanged"
           },
           "repair": {
             "findings": [
@@ -1404,8 +1420,8 @@
         }
       ],
       "expected_verdict": {
-        "verdict": "SUCCESSFUL",
-        "derivation": "In the gate's scope, CREMA-T01 reproduces all 24 printed cells exactly (expected). If the figures join the gate (L5), each is expected REPRODUCED_VISUAL. The fresh-MCMC path is not run.",
+        "verdict": "SUCCESSFUL (provisional on the figures probe)",
+        "derivation": "CREMA-T01 reproduces all 24 printed cells exactly. v1.0.0's figures_main.R redraws the five main figures from the deposit's data and archived results in the same run (L5 (c)), each expected REPRODUCED_VISUAL. The fresh-MCMC path is not run.",
         "pilot_verdict": "SUCCESSFUL"
       },
       "notes": [
@@ -1414,13 +1430,13 @@
       ],
       "sets": {
         "targets": 7,
-        "in_gate": 1,
-        "unchanged": 0,
-        "unchanged_testable": 0,
-        "corrected": 1,
+        "in_gate": 6,
+        "unchanged": 2,
+        "unchanged_testable": 2,
+        "corrected": 4,
         "scope_changed": 0,
         "expected_untestable": 0,
-        "not_in_gate": 6
+        "not_in_gate": 1
       }
     },
     {
@@ -5484,7 +5500,7 @@
             "page_pdf": 4
           },
           "analysis_type": "visual",
-          "gate_scope": "in_gate: marwick is a gate paper (L6 (c)); L17 (open) may place it outside the gate",
+          "gate_scope": "in_gate: marwick is a gate paper (L6 (c)); L17 (c) keeps Fig. 2 in the gate",
           "element_count": {
             "published": 1,
             "pilot_compared": 1
@@ -5512,17 +5528,18 @@
           },
           "credit_eligibility": {
             "pilot": "historical (Q4)",
-            "gate": "eligible when version 1.3 runs unmodified"
+            "gate": "eligible when version 1.3 runs unmodified and the switched-off fitting chunk's code runs verbatim from a wrapper (L17 (c))"
           },
           "coverage": {
             "expected_untestable": false,
             "comparison": "visual"
           },
-          "expected_outcome": "RULING NEEDED (L17)",
+          "expected_outcome": "REPRODUCED_VISUAL",
           "rulings": [
             "L11",
             "L17"
-          ]
+          ],
+          "note": "The approved plan names the operator step: run the code of supplement-GAMS-details.qmd's eval: false fitting chunk verbatim from a wrapper (five brms models, each with 4 chains of 50,000 iterations and seed 123; the authors note 'this takes a few hours'), then render the supplement unchanged. Its unconditional readRDS loads the saved fit, and its fig-smooth-plots-paper chunk redraws the figure. The authors' files are not edited. A local probe on amd-tower checks this before the ledger freezes (L17 (c))."
         },
         {
           "id": "MAR-T11",
@@ -5684,8 +5701,8 @@
         }
       ],
       "expected_verdict": {
-        "verdict": "SUCCESSFUL (provisional on L17)",
-        "derivation": "Version 1.3 is expected to give the printed values for MAR-T01 to T08, as its own rendered paper.docx shows for W, p, and PC1. The dynamic figures are expected to reproduce, Fig. 4 among them, regenerated by the render (L11 (a)). Fig. 2 (MAR-T10) depends on L17: outside the gate under (a); counted under (b) or (c).",
+        "verdict": "SUCCESSFUL (provisional on the L17 probe)",
+        "derivation": "Version 1.3 is expected to give the printed values for MAR-T01 to T08, as its own rendered paper.docx shows for W, p, and PC1. The dynamic figures are expected to reproduce, Fig. 4 among them, regenerated by the render (L11 (a)). Fig. 2 (MAR-T10) is regenerated by fitting the supplement's five models (L17 (c)) and is expected to reproduce visually. If the probe fails, L17 is re-ruled.",
         "pilot_verdict": "SUCCESSFUL"
       },
       "notes": [
