@@ -10,9 +10,10 @@ same figure content.
 
 Both sets of PDFs are rasterised with pdftoppm at the same resolution and
 compared pixel by pixel. A figure whose renders are pixel-identical has an
-unchanged value. figures_main.R at v1.0.0 draws no random numbers, so any
-difference comes from the archived inputs or the plotting functions, not from
-the run.
+unchanged value. The figure code's only random call, plot.fitted()'s sample()
+in src/utility.R, permutes all the draws, which leaves the plotted means and
+quantiles unchanged; two runs give pixel-identical figures. So any difference
+comes from the archived inputs or the plotting functions, not from the run.
 
 Usage:
     python3 compare-figures.py <pilot-figure-dir> <deposit-figure-dir> <out.json>

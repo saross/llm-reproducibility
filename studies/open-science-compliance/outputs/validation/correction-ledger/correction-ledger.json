@@ -1,7 +1,7 @@
 {
   "title": "Correction ledger for the §8 regression gate (amendment 3 §9) — DRAFT",
-  "ledger_version": "0.3.0-draft",
-  "status": "DRAFT, fully ruled. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, and L5 and L17 on 2026-10-10. Not frozen and not hashed: L5's and L17's probes and the pre-freeze checks remain. No run may use any value here until the frozen copy is committed and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).",
+  "ledger_version": "0.3.1-draft",
+  "status": "DRAFT. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, and L5 and L17 on 2026-10-10; L18, raised by the crema figures probe on 2026-10-10, is open. Not frozen and not hashed: L18, L17's probe, and the pre-freeze checks remain. No run may use any value here until the frozen copy is committed and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).",
   "drafted": {
     "date": "2026-10-09",
     "by": "Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py"
@@ -28,7 +28,9 @@
       "L16",
       "L17"
     ],
-    "open": []
+    "open": [
+      "L18"
+    ]
   },
   "basis": {
     "amendment": "OSF amendment 3 §9, lodged 2026-10-08 (OSF revision 6ac775afb5ed5b4afee88a4a; repository tag osf-amendment-3-2026-10-08)",
@@ -496,6 +498,33 @@
         "date": "2026-10-10",
         "by": "Shawn Ross (registrant)",
         "note": "Probe first. Before the ledger freezes, a local probe on amd-tower runs the fitting chunk's code verbatim from a wrapper, renders the supplement unchanged, and compares the figure with the version of record; the approved plan then names that operator step. If the probe fails, the registrant re-rules on its evidence, with (b) the fallback. The gate tests the lane, not the papers: it need not mirror the study's runs exactly, but should be as realistic as possible (registrant, 2026-10-10)"
+      }
+    },
+    {
+      "id": "L18",
+      "question": "CREMA-T04 (Fig. 2) from v1.0.0's archive. The probe of 2026-10-10 regenerates Figs 1, 3, 4, and 5 pixel-identical to the deposit's own PDFs, but not Fig. 2's panel a (simulation 1a). v1.0.0's archived posterior (sim/results/post_sim1a.RData, matching the deposit checksum) gives the plateau mu_k a median of 0.660, 95% interval 0.591 to 0.734, against a simulated true value of 0.65. At the curve's late end, the regenerated 95% band reads 0.592 to 0.729; the version of record reads 0.567 to 0.691, as do the deposit's own figure2.pdf (0.570 to 0.693) and the pilot's render from v2.0.0's archive (0.565 to 0.693). Panel c is identical and panel b differs only by edge pixels. So the published panel a was drawn from a posterior that v2.0.0 archives and v1.0.0, the selected version, does not (evidence/crema-figures-probe/).",
+      "options": [
+        {
+          "key": "(a)",
+          "text": "Expected MINOR_DISCREPANCY ('small difference, conclusions unchanged'; SUCCESSFUL with note): the band sits about 0.03 higher, and both bands contain the simulated true value, which is what the figure shows. Crema's expected verdict stays SUCCESSFUL. The archive inconsistency is reported as a finding about the deposit."
+        },
+        {
+          "key": "(b)",
+          "text": "Expected REPRODUCED_VISUAL: the shift is within visual tolerance ('exact pixel matching is not expected')."
+        },
+        {
+          "key": "(c)",
+          "text": "Expected MAJOR_DISCREPANCY: the published panel cannot be regenerated from the selected version's archive. Crema's expected verdict becomes PARTIAL."
+        }
+      ],
+      "recommendation": "(a). The shift is visible at the page's scale and moves a plotted posterior, so (b) predicts a call that a careful comparison would not make, and the gate would then fail on a correct lane. The figure's conclusion, that the model recovers the simulated diffusion curve, holds in both, so (c) overstates it. The registered categories give exactly this case, a small difference with conclusions unchanged, as MINOR_DISCREPANCY.",
+      "affects": [
+        "CREMA-T04",
+        "crema expected verdict"
+      ],
+      "ruling": {
+        "status": "open",
+        "raised": "2026-10-10"
       }
     }
   ],
@@ -1194,7 +1223,7 @@
             "L5",
             "L8"
           ],
-          "note": "Needs rnaturalearthhires (ne_countries(scale = 10)); install it at build time pinned to a tag or recorded commit (Q6(c); amendment 3 §7(d))."
+          "note": "Needs rnaturalearthhires (ne_countries(scale = 10)); install it at build time pinned to a tag or recorded commit (Q6(c); amendment 3 §7(d)). The probe of 2026-10-10 regenerates it pixel-identical to the deposit's own v1.0.0 PDF (evidence/crema-figures-probe/)."
         },
         {
           "id": "CREMA-T04",
@@ -1222,7 +1251,7 @@
           },
           "correction": {
             "set": "corrected",
-            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: panels a and b (simulations 1a and 1b) place the 95% HPD band and the posterior mean slightly differently; panel c matches. figures_main.R draws no random numbers, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure2.pdf)",
+            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: panels a and b (simulations 1a and 1b) place the 95% HPD band and the posterior mean slightly differently; panel c matches. the figure code's only random call (plot.fitted()'s sample() in src/utility.R) permutes all the draws, and two runs give pixel-identical figures, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure2.pdf)",
             "printed_value_corrected": false,
             "evidence_tier": "pixel comparison of the pilot's PDF with the deposit's own v1.0.0 figure2.pdf, both rendered at 110 dpi: 1.158% of pixels differ, all inside the plotted bands (evidence/crema-figures-content/); confirmed visually by Claude, 2026-10-10",
             "ruling": "L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content",
@@ -1243,13 +1272,14 @@
             "expected_untestable": false,
             "comparison": "visual"
           },
-          "expected_outcome": "REPRODUCED_VISUAL",
+          "expected_outcome": "RULING NEEDED (L18)",
           "rulings": [
             "L4",
             "L5",
-            "L8"
+            "L8",
+            "L18"
           ],
-          "note": "Drawn from the archived simulation posteriors in sim/results/."
+          "note": "Drawn from the archived simulation posteriors in sim/results/. The probe of 2026-10-10 regenerates panel a from v1.0.0's archived posterior about 0.03 higher than published; see L18 and evidence/crema-figures-probe/."
         },
         {
           "id": "CREMA-T05",
@@ -1277,7 +1307,7 @@
           },
           "correction": {
             "set": "corrected",
-            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: the 90% prediction envelope's edges differ. figures_main.R draws no random numbers, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure3.pdf)",
+            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: the 90% prediction envelope's edges differ. the figure code's only random call (plot.fitted()'s sample() in src/utility.R) permutes all the draws, and two runs give pixel-identical figures, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure3.pdf)",
             "printed_value_corrected": false,
             "evidence_tier": "pixel comparison of the pilot's PDF with the deposit's own v1.0.0 figure3.pdf, both rendered at 110 dpi: 0.730% of pixels differ, all inside the plotted bands (evidence/crema-figures-content/); confirmed visually by Claude, 2026-10-10",
             "ruling": "L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content"
@@ -1302,7 +1332,8 @@
             "L4",
             "L5",
             "L8"
-          ]
+          ],
+          "note": "The probe of 2026-10-10 regenerates it pixel-identical to the deposit's own v1.0.0 PDF (evidence/crema-figures-probe/)."
         },
         {
           "id": "CREMA-T06",
@@ -1330,7 +1361,7 @@
           },
           "correction": {
             "set": "corrected",
-            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: the 90% prediction envelope's edges differ, and with them the extent of the deviation regions. figures_main.R draws no random numbers, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure4.pdf)",
+            "what": "comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: the 90% prediction envelope's edges differ, and with them the extent of the deviation regions. the figure code's only random call (plot.fitted()'s sample() in src/utility.R) permutes all the draws, and two runs give pixel-identical figures, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure4.pdf)",
             "printed_value_corrected": false,
             "evidence_tier": "pixel comparison of the pilot's PDF with the deposit's own v1.0.0 figure4.pdf, both rendered at 110 dpi: 1.258% of pixels differ, all inside the plotted bands (evidence/crema-figures-content/); confirmed visually by Claude, 2026-10-10",
             "ruling": "L4 (a): unchanged requires the pilot's outcome and value; L8 (a) covers styling only, not content"
@@ -1355,7 +1386,8 @@
             "L4",
             "L5",
             "L8"
-          ]
+          ],
+          "note": "The probe of 2026-10-10 regenerates it pixel-identical to the deposit's own v1.0.0 PDF (evidence/crema-figures-probe/)."
         },
         {
           "id": "CREMA-T07",
@@ -1406,7 +1438,8 @@
           "rulings": [
             "L5",
             "L8"
-          ]
+          ],
+          "note": "The probe of 2026-10-10 regenerates it pixel-identical to the deposit's own v1.0.0 PDF (evidence/crema-figures-probe/)."
         }
       ],
       "excluded_pilot_items": [
@@ -1420,8 +1453,8 @@
         }
       ],
       "expected_verdict": {
-        "verdict": "SUCCESSFUL (provisional on the figures probe)",
-        "derivation": "CREMA-T01 reproduces all 24 printed cells exactly. v1.0.0's figures_main.R redraws the five main figures from the deposit's data and archived results in the same run (L5 (c)), each expected REPRODUCED_VISUAL. The fresh-MCMC path is not run.",
+        "verdict": "SUCCESSFUL (provisional on L18)",
+        "derivation": "CREMA-T01 reproduces all 24 printed cells exactly. v1.0.0's figures_main.R redraws the five main figures from the deposit's data and archived results in the same run (L5 (c)); the probe of 2026-10-10 regenerates Figs 1, 3, 4, and 5 pixel-identical to the deposit's own PDFs. Fig. 2's panel a does not match (L18; SUCCESSFUL under (a) or (b), PARTIAL under (c)). The fresh-MCMC path is not run.",
         "pilot_verdict": "SUCCESSFUL"
       },
       "notes": [

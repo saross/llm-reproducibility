@@ -23,9 +23,14 @@ The differences lie inside the plotted bands, not in axes, labels, or
 legends. In Fig. 2, panels a and b (simulations 1a and 1b) place the 95 %
 highest posterior density (HPD) band and the posterior mean slightly
 differently, and panel c matches. In Figs 3 and 4, the edges of the 90 %
-prediction envelope differ. `figures_main.R` at v1.0.0 draws no random
-numbers, so the differences come from version 2.0.0's archived inputs or
-plotting functions, not from the run.
+prediction envelope differ. The figure code's only random call,
+`plot.fitted()`'s `sample()` in `src/utility.R`, permutes all the draws and
+leaves the plotted means and quantiles unchanged, and two runs of v1.0.0's
+script give pixel-identical figures (`../crema-figures-probe/`). So the
+differences come from version 2.0.0's archived inputs or plotting
+functions, not from the run. (Corrected 2026-10-10: the first version of
+this note said `figures_main.R` draws no random numbers, having searched
+that file only.)
 
 Visual inspection of side-by-side renders, made the same day, agrees.
 Those renders are not kept here, since they reproduce third-party figures.
