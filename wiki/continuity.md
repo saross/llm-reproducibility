@@ -32,7 +32,43 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NOW (2026-10-09, later): merges before any run (Shawn).** Astra
+- **⏩ NOW (2026-10-10): L5 and L17 ruled, probes running, L18 open.**
+  - [x] 2026-10-10 **PR #9 at `4252e43`, ready for Shawn's merge.** A side
+    agent caught that `062c20a`'s N1 rewordings reworded frozen text that
+    amendment 3 does not lodge (routing design §6 rule 3: an OSF amendment
+    is required before an affected run). Reverted; B1 kept (it applies
+    lodged clarification 3). Astra re-reviewed (mail 06:33Z): no blocker,
+    and she withdrew her own N1 acceptance. D5 PASS; 378 tests + 16
+    subtests (the venv at `venv/bin/python -m pytest tests`).
+  - [x] 2026-10-10 **Shawn ruled L5 (c) and L17 (c), probes first**
+    (PR #10 `ddd4dcf`). Crema's leg covers Table 1 + five figures; CREMA-T04
+    to T06 corrected (pilot's v2.0.0 figures differ from v1.0.0's). MAR-T10
+    in the gate; its `eval: false` chunk runs verbatim from a wrapper. Shawn:
+    the gate tests the lane, not the papers, so it should be as realistic as
+    possible without slavishly mirroring production. Amendment 4 queue
+    (Entry 7) gained the N1 rewordings, a rule for author-disabled code,
+    and a figure-centrality heuristic (Shawn's request; not in the gate).
+  - [x] 2026-10-10 **Crema probe done** (amd-tower; PR #10 `353e151`,
+    `evidence/crema-figures-probe/`): Figs 1, 3, 4, 5 pixel-identical to
+    the deposit's PDFs; Fig. 2 panel a is not, because v1.0.0's
+    `post_sim1a.RData` is not the posterior behind its own published panel
+    (v2.0.0's is). **L18 open** (CREMA-T04's expected outcome); recommended
+    (a) MINOR_DISCREPANCY. Astra asked to review (mail 07:07Z).
+  - [ ] **Marwick L17 probe running on zbook** since 17:56 AEDT (container
+    `llmr-probe-marwick-fig2`; files and `out/` under
+    `~/scratch/llmr-probes/marwick-fig2/` on zbook; amd-tower holds the
+    build files). The authors' Dockerfile fails as supplied (rstan binary vs
+    lockfile RcppParallel); `probe.Dockerfile` builds StanHeaders and rstan
+    from source at their pins. Five models run one after another, 4 cores
+    each, as the authors wrote them. When done: compare
+    `fig-smooth-plots-paper-probe.png` with the version of record, commit
+    evidence to PR #10, and report to Shawn.
+  - **zbook is available as secondary compute** (Shawn, 2026-10-10); sapphire
+    stays held until its memory soak test is done.
+  - Marwick's 1.3 zip is downloaded (`~/scratch/llmr-probes/marwick-fig2/dl/`,
+    md5 matches Zenodo), so the in-zip hashing pre-freeze task can be done.
+
+- **⏩ Earlier (2026-10-09, later): merges before any run (Shawn).** Astra
   reviewed PR #9 and PR #10 (mail 08:46Z and 08:53Z); both had blocking
   items, all fixed and re-review requested by mail.
   - [x] 2026-10-09 **PR #9** at `062c20a`: B1 (the v2.1 aggregation rule
