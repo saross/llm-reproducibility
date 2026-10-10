@@ -1,9 +1,8 @@
 # Correction ledger for the §8 regression gate — DRAFT
 
-**Status: DRAFT (ledger 0.3.1-draft). Shawn ruled L1 to L4 and L6 to L16
-on 2026-10-09, and L5 and L17 on 2026-10-10. L18, raised by the crema
-figures probe the same day, is open. Not frozen and not hashed:** L18,
-L17's probe, and the pre-freeze checks below remain. No run
+**Status: DRAFT, fully ruled (ledger 0.3.2-draft). Shawn ruled L1 to L4
+and L6 to L16 on 2026-10-09, and L5, L17, and L18 on 2026-10-10. Not frozen
+and not hashed:** L17's probe and the pre-freeze checks below remain. No run
 may use any value here until the frozen copy is committed and its sha256 is
 recorded in the gate's run configuration (amendment 3 §9 and §10 step 3).
 
@@ -133,7 +132,7 @@ amendment.
 
 | Paper | Testable unchanged targets | Corrected | Expected verdict (pilot) |
 |---|---|---|---|
-| crema | 2 (registered leg: Figs 1 and 5) | 4 | SUCCESSFUL, provisional on L18 (SUCCESSFUL) |
+| crema | 2 (registered leg: Figs 1 and 5) | 4 | SUCCESSFUL, with a note on CREMA-T04 (SUCCESSFUL) |
 | dye | 11 | 2 | PARTIAL (SUCCESSFUL) |
 | herskind | 2, including the 1,601-cell S3 table | 2 | SUCCESSFUL (SUCCESSFUL) |
 | key | 0; all nine targets untestable | 2 | BLOCKED (PARTIAL) |
@@ -175,12 +174,11 @@ Ruled by Shawn on 2026-10-10:
   the opposite of what the study's runs must do. If the probe fails, Shawn
   re-rules with (b) the fallback.
 
-Open:
-
-- **L18:** what CREMA-T04 (Fig. 2) is expected to give, since v1.0.0's
-  archive regenerates panel a about 0.03 higher than published (finding
-  8). Recommendation (a), MINOR_DISCREPANCY ("small difference, conclusions
-  unchanged"), which keeps crema's expected verdict SUCCESSFUL.
+- **L18 (a):** CREMA-T04 (Fig. 2) is expected MINOR_DISCREPANCY ("small
+  difference, conclusions unchanged"). v1.0.0's archive regenerates panel a
+  about 0.03 higher than published (finding 8), but both bands contain the
+  simulated true value. Crema's expected verdict stays SUCCESSFUL, with a
+  note.
 
 ## Before freezing
 
@@ -191,7 +189,7 @@ Open:
 - [x] 2026-10-10 Probe crema's figures (L5): Figs 1, 3, 4, and 5
       regenerate pixel-identical; Fig. 2's panel a does not (finding 8,
       `evidence/crema-figures-probe/`).
-- [ ] Rule L18 and apply it.
+- [x] 2026-10-10 Rule L18 and apply it (ledger 0.3.2-draft).
 - [ ] Probe marwick's Fig. 2: the fitting chunk run verbatim from a wrapper
       on amd-tower, then the supplement rendered unchanged and the figure
       compared with the version of record (L17). Sapphire is held until its
