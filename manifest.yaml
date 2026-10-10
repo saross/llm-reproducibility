@@ -158,9 +158,9 @@ reproduction:
       file: reproduction-system/prompts/00-reproduction-plan.md
       description: Session R-Plan — paper analysis, classification, plan production
     preparation:
-      version: "1.1"
+      version: "1.4"
       file: reproduction-system/prompts/01-preparation.md
-      description: Session R-A — materials (fetch-with-checksum, store/scratch destinations), Docker, script adaptation
+      description: Session R-A — materials (fetch-with-checksum, store/scratch destinations, authors'-code manifest hashed at retrieval and anchored to committed records, runs through run-container, conversions declared for the gate to compare), Docker, script adaptation (authors' files run unmodified; mechanics in wrappers)
     execution_verification:
       version: "1.0"
       file: reproduction-system/prompts/02-execution-and-verification.md
@@ -196,10 +196,15 @@ reproduction:
       last_updated: "2026-10-03"
       description: Structured-output contract for adversarial-reviewer spawns (five framework dimensions, CONFIRMED/QUALIFIED/CHALLENGED)
     comparison_record:
-      version: "1.0"
+      version: "1.1"
       file: reproduction-system/schemas/comparison-record.json
-      last_updated: "2026-10-03"
-      description: On-disk comparisons/comparison.json written by the executor — one record per locked target id; coverage recomputed by the gate
+      last_updated: "2026-10-05"
+      description: On-disk comparisons/comparison.json written by the executor — one record per locked target id; coverage recomputed by the gate. v1.1 (2026-10-05, gate 1.3 §5) adds per-target citations of sealed run outputs (run, path, sha256, optional line range); a reproduced target citing none is target-unbound
+    authors_code_manifest:
+      version: "1.1"
+      file: reproduction-system/schemas/authors-code-manifest.json
+      last_updated: "2026-10-05"
+      description: On-disk authors-code-manifest.json written at retrieval — sha256 of every authors' file, the executed copies, the reproducer's wrappers, and any declared edit; gate 1.1 checks byte identity (ruling 2026-10-04, fail-and-uplift follow-on 3). v1.1 (2026-10-05, cross-model review of PR #7) adds provenance anchors verified against committed records and the generated wrapper role
 
   workflows:
     plan:
@@ -207,13 +212,13 @@ reproduction:
       description: Stage 1 — governed planner fan-out; plans return for persistence and batched human approval (v1.0, 2026-10-03)
     execute:
       file: reproduction-system/workflows/reproduction-execute.workflow.js
-      description: Stage 2 — per approved paper, executor -> mechanical artefact gate -> fresh-context adversarial reviewer (v1.0, 2026-10-03)
+      description: Stage 2 — per approved paper, executor -> mechanical artefact gate -> fresh-context adversarial reviewer (v1.1, 2026-10-04 — executor writes the authors'-code manifest; gate flags join the human queue. v1.2, 2026-10-05 — execution snapshots; the relay must return flags and warnings and the queue fails closed without them; the reviewer addresses the gate's review obligations. v1.3, 2026-10-09 — gate 1.3, the executor runs through run-container and comparisons cite sealed run outputs)
 
   lane_tool:
-    version: "1.0"
+    version: "1.3"
     file: scripts/reproduction-lane.py
-    last_updated: "2026-10-03"
-    description: Deterministic orchestration for the agentic lane — args builders (commit-pinned, approval-gated), plan persistence + triage, hash-bound approval, the artefact gate (check-attempt), result persistence, and the post-run audit (receipts, blinding, per-request token dedup, API-equivalent cost)
+    last_updated: "2026-10-09"
+    description: Deterministic orchestration for the agentic lane — args builders (commit-pinned, approval-gated), plan persistence + triage, hash-bound approval, the artefact gate (check-attempt; gate 1.1 adds the authors'-code integrity check, also standalone as check-code; gate 1.2, after the cross-model review of PR #7, adds provenance anchors, execution snapshots via snapshot-code, wrapper reference checks, conversion-evidence validation, and the legacy allowlist; gate 1.3 adds run-container with sealed run records, the instrumented hook and exec shim, the account of every load, issues and rulings, admitted coverage, fresh computation, static start-up checks, the lane's own conversion comparison, and the transcript audit), the authoritative human queue (human-queue), result persistence, and the post-run audit (receipts, blinding, per-request token dedup, API-equivalent cost)
 
   pilot_statistics:
     papers_attempted: 5
@@ -564,9 +569,9 @@ agent_definitions:
     sha256: "4e62fe4ef62e535e1ab9b0ef3c222c255f2d90822d529ec59e959b88ccf35215"
   reproduction-executor:
     file: .claude/agents/reproduction-executor.md
-    version: "1.2"
+    version: "1.5"
     model: claude-opus-5-5
-    sha256: "df0c1103f873c3ffb085dece060b2a49731f5617f0e4651b797a1b7de55685b7"
+    sha256: "7c79fae419b46dcf6906241558cf608869a337f64a4941b86741978bd45ec8d4"
   adversarial-reviewer:
     file: .claude/agents/adversarial-reviewer.md
     version: "1.2"
@@ -722,6 +727,7 @@ entity_checks:
   reproduction.schemas.execution_output: {class: E4, version_source: json-field, json_path: $.version}
   reproduction.schemas.review_output: {class: E4, version_source: json-field, json_path: $.version}
   reproduction.schemas.comparison_record: {class: E4, version_source: json-field, json_path: $.version}
+  reproduction.schemas.authors_code_manifest: {class: E4, version_source: json-field, json_path: $.version}
   reproduction.workflows.plan: {class: E6, verify: exists}
   reproduction.workflows.execute: {class: E6, verify: exists}
   # E1 — frozen canonical instruments (checks implemented today)

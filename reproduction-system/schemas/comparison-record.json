@@ -1,13 +1,13 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Reproduction comparison record",
-  "description": "On-disk machine-readable comparison written by reproduction-executor to <attempt_dir>/comparisons/comparison.json (agent definition v1.1, workflow step 4). One record per locked target id from the approved plan — no more, no fewer (pipeline invariant 3); scripts/reproduction-lane.py check-attempt enforces the one-to-one match and recomputes coverage from the outcomes. Outcome categories are the verdicts-and-precision v1.0 discrepancy classification plus PAPER_ERROR (its paper-error handling rule). Coverage numerator per coverage-rules v1.0: targets reproduced exactly or within pre-stated tolerance = EXACT_MATCH, WITHIN_PRECISION, WITHIN_CONFIDENCE.",
-  "version": "1.0",
+  "description": "On-disk machine-readable comparison written by reproduction-executor to <attempt_dir>/comparisons/comparison.json (agent definition v1.1, workflow step 4). One record per locked target id from the approved plan — no more, no fewer (pipeline invariant 3); scripts/reproduction-lane.py check-attempt enforces the one-to-one match and recomputes coverage from the outcomes. Outcome categories are the verdicts-and-precision v1.0 discrepancy classification plus PAPER_ERROR (its paper-error handling rule). Coverage numerator per coverage-rules v1.0: targets reproduced exactly or within pre-stated tolerance = EXACT_MATCH, WITHIN_PRECISION, WITHIN_CONFIDENCE. v1.1 (2026-10-05, gate 1.3 §5) adds per-target output citations: for an attempt run through run-container, each target cites the sealed run outputs it was read from, and a reproduced target that cites none is not admitted until ruled.",
+  "version": "1.1",
   "type": "object",
   "required": ["schema_version", "paper_slug", "attempt", "plan_sha256", "verdict", "targets"],
   "additionalProperties": false,
   "properties": {
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"enum": ["1.0", "1.1"]},
     "paper_slug": {"type": "string", "minLength": 1},
     "attempt": {"type": "integer", "minimum": 1},
     "plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the approved reproduction-plan.json this comparison scores against"},
@@ -28,7 +28,22 @@
           "values_matched": {"type": "integer", "minimum": 0},
           "max_abs_difference": {"type": ["number", "null"]},
           "evidence": {"type": "string", "minLength": 1, "description": "Path (relative to the attempt directory) of the value-level detail file, or the comparison procedure for visual targets"},
-          "notes": {"type": "string"}
+          "notes": {"type": "string"},
+          "outputs": {
+            "type": "array",
+            "description": "v1.1: the sealed run outputs this target's values were read from. run is a credited run (the final run or one it consumed); path is relative to outputs/<run>/ as that run's outputs.json lists it (files/<work-copy path>, or stdout.log for printed results); sha256 must equal the sealed digest; lines optionally narrows a text output to a line range",
+            "items": {
+              "type": "object",
+              "required": ["run", "path", "sha256"],
+              "additionalProperties": false,
+              "properties": {
+                "run": {"type": "string", "pattern": "^run-[0-9]{2,}$"},
+                "path": {"type": "string", "minLength": 1},
+                "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                "lines": {"type": "string", "pattern": "^[0-9]+(-[0-9]+)?$"}
+              }
+            }
+          }
         }
       }
     },
