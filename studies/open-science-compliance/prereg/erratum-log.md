@@ -743,7 +743,7 @@ edits them to the lodged text, with new versions and content hashes. Branch
 | Instrument | Version | Receipt token | sha256 (first 16) | Lodged text |
 | --- | --- | --- | --- | --- |
 | `fair-instrument.md` | 2.1 to 2.2 | `bf984697092c0c20` | `3b94b57591b63106` | §4, items 1 to 12 |
-| `verdicts-and-precision.md` | 1.0 to 1.1 | `46eb4ad0bfcb3b92` | `e76c2057b9e0a170` | §7(a) |
+| `verdicts-and-precision.md` | 1.0 to 1.1 | `46eb4ad0bfcb3b92` | `e1ef6ab0841986a0` | §7(a) |
 | `data-availability-taxonomy.md` | 1.0 to 1.1 | `464c1474a18abab6` | `beb5889dfd384838` | §7(b) |
 | `coverage-rules.md` | 1.0 to 1.1 | `414de27c0d871a1d` | `b211a2318c7162ce` | §7(c) |
 | `invariants.md` | 1.0 to 1.1 | `c70d484af7e75ec4` | `f74f393385d3074b` | §7(d), with its six ruled cases |
@@ -768,22 +768,25 @@ them:
 - the L2 definition's old counting-unit parenthetical points to the lodged
   counting unit;
 - the paper-error paragraph's first sentence is replaced by the lodged
-  text, and the tolerance rule's "differences indicate a bug in the
-  reproduction" now admits a supported PAPER_ERROR as the other cause
-  (the same review, N1).
+  text.
 
 **Deliberate differences (rule 4).** One. The v1.0 paper-error paragraph's
-verification procedure is kept after the lodged text, reworded from an
-instruction ("To verify a suspected paper error: apply the published formula
-to the paper's own input values…") to an optional diagnostic: a calculation
-from the paper's own formula and tabulated inputs can check their
-consistency with the reported output, is recorded with its evidence tier,
-and does not replace the lodged evidence and confirmation requirements. As
-an instruction it could read as a prerequisite for the lodged tiers, or as
-licence to treat a reproducer's formula as evidence (the same review, N1).
-§7(d)'s verification-aid ruling relies on the same check, which survives as
-the diagnostic. Its pointer to modernisation plan §4.4 is dropped, since the
-lodged text states the escalation itself.
+verification procedure ("apply the published formula to the paper's own
+input values and check whether the paper's reported output is consistent.
+Document the verification in the comparison report.") is kept after the
+lodged text. The lodged text neither repeats nor contradicts it, and §7(d)'s
+verification-aid ruling relies on the same check. Its pointer to
+modernisation plan §4.4 is dropped, since the lodged text states the
+escalation itself.
+
+**Rewording withdrawn and queued (2026-10-10).** Astra's review of PR #9
+(N1, non-blocking) proposed rewording this procedure as an optional
+diagnostic and naming PAPER_ERROR in the tolerance rule's "differences
+indicate a bug in the reproduction". Both were applied at `062c20a` and
+are reverted here. Neither sentence is lodged text, and routing design §6
+rule 3 requires an OSF amendment before an affected analysis runs under a
+post-lodgement edit, so the §8 gate would have run under unlodged text.
+Both rewordings are queued for amendment 4.
 
 **Consumers.** The Pass 6 prompt's mirror of the FAIR canon region and the
 reproduction skill's mirror of the paper-error segment are re-spliced byte
