@@ -50,10 +50,16 @@ build-effort terms below; its instructions are as built.
 - **Inventory:** all 152 lockfile packages are installed at their locked
   versions (`verify-lockfile.R`, `lockfile-inventory.csv`,
   `verify-lockfile-output.log`).
-- **R runtime:** 4.4.1, from the authors' Dockerfile (`rocker/verse:4.4.1`).
-  The lockfile records R 4.5.0. That is the only issue `renv::status()`
-  reports. The probe follows the Dockerfile, the authors' executable
-  specification; the two supplied specifications disagree on this point.
+- **R runtime: the supplied specifications conflict.** The authors'
+  Dockerfile builds on `rocker/verse:4.4.1`; their lockfile records R
+  4.5.0. That is the only issue `renv::status()` reports. Amendment 3
+  §7(d) sets no precedence between conflicting supplied specifications.
+  The probe follows the Dockerfile, the authors' executable recipe, so it
+  honours the Dockerfile's runtime and does not follow the lockfile's. No
+  R 4.5.0 build was attempted, so this is not a fallback under the
+  version-search cap. Ruling L20 (a), 2026-10-11: the gate does the same,
+  and reports the conflict beside the verdict as a minor discrepancy in
+  the deposit.
 
 ## Run
 
@@ -74,6 +80,27 @@ This is far inside the study's 168-hour cap. Memory peaked at 5.6 GiB
 during fitting and 19.6 GiB during the render (`resource-usage.log`, one
 sample a minute). A gate run needs a memory limit above the render's peak.
 
+### Sampler diagnostics
+
+The run completed, but its sampler diagnostics are not clean, and they
+differ from the authors'. The fit warned of divergent transitions
+(`probe-run-output.log`, lines 119 to 126). The rendered supplements'
+diagnostics tables (Table 1, "num_divergent") read:
+
+| Model | Probe | Authors' deposited supplement |
+|---|---|---|
+| Recency of references | 3 | 6 |
+| Diversity of references | 0 | 0 |
+| Relative title length (ln) | 4 | 0 |
+| N. of authors | 0 | 0 |
+| N. of pages | 0 | 0 |
+
+The minimum effective sample sizes differ too. So the probe's fit is not
+identical to the authors', despite the same seed (123); a different R
+version or machine is enough to change a sampler's path. All R-hat values
+are 1 in both. The probe reports this as found and does not change the
+authors' model.
+
 ## Comparison
 
 The probe's figure is compared with the authors' deposited image
@@ -87,9 +114,12 @@ shows the same figure with the same five Pseudo R² labels.
 - **Trend lines.** In every column of all five panels, the purple line's
   top and bottom edges agree to within one pixel, on a line about 59
   pixels thick. One pixel is 0.001 inch.
-- **Data points.** All 47,235 pixels that differ by 60 or more grey levels
-  lie within four pixels of text, a frame, a tick, or a trend line. None
-  differ among the points. The empty sixth cell is identical.
+- **Data points.** No strong point discrepancies were detected outside the
+  excluded marks: all 47,235 pixels that differ by 60 or more grey levels
+  lie within four pixels of text, a frame, a tick, or a trend line. This
+  does not prove every point identical. The check ignores weaker
+  differences, and points under the excluded marks. The empty sixth cell
+  is identical.
 - **Text.** Glyph edges differ throughout, as the same text was rasterised
   differently.
 - **Pseudo R² labels**, read by eye:
@@ -104,12 +134,15 @@ shows the same figure with the same five Pseudo R² labels.
 
   The labels come from `brms::bayes_R2(model, ndraws = 10000)`. brms picks
   those 10,000 draws with `sample()`, and the supplement's only seed is
-  the fit's, so the labels' fourth digit can change between renders of the
-  same fit. In the rendered supplement's R² table, the 95 % intervals are
-  0.03 to 0.04 for title length and 0.07 to 0.09 for authors, at two
-  decimals, so both differences are well within them. The paper's reading
-  of the figure is unchanged: number of authors has the highest R², and
-  every trend keeps its direction.
+  the fit's, so the labels can change between renders of the same fit.
+  The fit itself also differs from the authors' (above). The differences
+  are therefore consistent with stochastic variation, from the fit, the
+  subsample, or both; this comparison does not separate the two. The
+  authors' deposited supplement (Table 3, Bayesian R-squared) gives 95 %
+  intervals of 0.03 to 0.04 for title length and 0.07 to 0.09 for
+  authors, at two decimals, so both differences lie well within them. The
+  paper's reading of the figure is unchanged: number of authors has the
+  highest R², and every trend keeps its direction.
 
 ## Result
 
@@ -117,6 +150,13 @@ The operator step works as the approved plan will name it, and the redrawn
 figure matches the published one in scientific content. The differences
 are rasterisation and the last printed digit of two stochastic labels. This
 supports L17 (c)'s expected outcome for MAR-T10, REPRODUCED_VISUAL.
+
+The gate is not held to the probe's own agreement, since its fit may vary
+further. Ruling L19 (a), 2026-10-11: the gate's figure must match the
+authors' deposited image (sha256 `dc03e1be…`) in content, and each Pseudo
+R² label must fall within its model's 95 % interval in the authors'
+deposited supplement (sha256 `5b84fe31…`), read at the table's two
+decimals.
 
 ## Files
 

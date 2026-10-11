@@ -1,8 +1,8 @@
 # Correction ledger for the §8 regression gate (amendment 3 §9) — DRAFT
 
-**Status:** DRAFT. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, and L5 and L17 on 2026-10-10. L18 was ruled (a) the same day and reopened after review with complete options. Not frozen and not hashed: L18 and the pre-freeze checks remain. Crema's compliant build (B3) and L17's probe were completed on 2026-10-11. No run may use any value here until the frozen copy is committed and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
+**Status:** DRAFT. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, L5 and L17 on 2026-10-10, and L18 (re-ruled on complete options), L19, and L20 on 2026-10-11. Crema's compliant build (B3) and L17's probe were completed on 2026-10-11. Not frozen and not hashed: the pre-freeze checks remain. No run may use any value here until the frozen copy is committed and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
 
-**Ledger version:** 0.3.4-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
+**Ledger version:** 0.3.5-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
 
 This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit the JSON, never this file.
 
@@ -10,7 +10,7 @@ This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit 
 
 | Paper | Pilot verdict | Expected verdict | In-gate targets | Unchanged (testable) | Corrected | Scope-changed | Expected-untestable | Outside the gate or conditional | Gate role |
 |---|---|---|---|---|---|---|---|---|---|
-| crema-et-al-2024 | SUCCESSFUL | SUCCESSFUL, provisional on L18 | 6 | 2 (2) | 4 | 0 | 0 | 1 | mandatory: the registered archived-posterior leg, covering Table 1 (CREMA-T01) and the five main figures (CREMA-T03 to T07), ruled L5 (c) on 2026-10-10 |
+| crema-et-al-2024 | SUCCESSFUL | SUCCESSFUL | 6 | 2 (2) | 4 | 0 | 0 | 1 | mandatory: the registered archived-posterior leg, covering Table 1 (CREMA-T01) and the five main figures (CREMA-T03 to T07), ruled L5 (c) on 2026-10-10 |
 | dye-et-al-2023 | SUCCESSFUL | PARTIAL | 13 | 11 (11) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 | herskind-riede-2024 | SUCCESSFUL | SUCCESSFUL | 4 | 2 (2) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 | key-et-al-2024 | PARTIAL | BLOCKED (coverage 0) | 0 | 0 (0) | 0 | 0 | 0 | 9 | not a gate paper (L6 (c)); its record keeps the expected verdict and the strict comparison's baseline |
@@ -18,7 +18,7 @@ This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit 
 
 ## Rulings
 
-Ruled by Shawn Ross (registrant) on 2026-10-09 and 2026-10-10: L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12, L13, L14, L15, L16, L17. Open: L18.
+Ruled by Shawn Ross (registrant) on 2026-10-09, 2026-10-10, and 2026-10-11: L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12, L13, L14, L15, L16, L17, L18, L19, L20. Open: none.
 
 ### L1. What is 'the pilot's locked target list'? No pilot attempt-01 has a reproduction plan or a locked list; the pilots predate the locked-list instrument.
 
@@ -211,18 +211,40 @@ Affects: freezing.
 
 Affects: MAR-T10, marwick expected verdict.
 
-### L18. CREMA-T04 (Fig. 2) from v1.0.0's archive. The probe of 2026-10-10 regenerates Figs 1, 3, 4, and 5 pixel-identical to the deposit's own PDFs, but not Fig. 2's panel a (simulation 1a). Panel b's band agrees within one pixel row (0.005) and panel c is pixel-identical. In panel a, the band regenerated from v1.0.0's archived posterior (sim/results/post_sim1a.RData, checksum verified) differs from the published one, which the deposit's own figure2.pdf and the pilot's render from v2.0.0's archive both match: by up to 0.082 in proportion on the rising limb and about 0.03 on the plateau (late-end band 0.592 to 0.729 against 0.567 to 0.691), with the band's edges crossing fixed values between 50 years earlier and 90 years later. The regenerated band contains the true curve at every year in both panels a and b (2,301 of 2,301 and 4,001 of 4,001 years; smallest margin 0.026 and 0.028 where the true proportion exceeds 0.05), so §5.1's claim, 'the true curve within the 95% posterior fitted range (Fig. 2a and b)', holds under v1.0.0's archive. The images show that v1.0.0's inputs and code do not regenerate the published panel a, while v2.0.0's come close; they do not identify the posterior the authors used, or show that no file in v1.0.0 holds it (evidence/crema-figures-probe/curve-comparison.json, curve-containment-output.log, band-measurement.json).
+### L18. CREMA-T04 (Fig. 2) from v1.0.0's archive. The probe of 2026-10-10 regenerates Figs 1, 3, 4, and 5 pixel-identical to the deposit's own PDFs, but not Fig. 2's panel a (simulation 1a). The compliant rebuild of 2026-10-11, honouring every supplied pin, gives the same figures (evidence/crema-figures-probe/v3-vs-run1.json). Panel b's band agrees within one pixel row (0.005) and panel c is pixel-identical. In panel a, the band regenerated from v1.0.0's archived posterior (sim/results/post_sim1a.RData, checksum verified) differs from the published one, which the deposit's own figure2.pdf and the pilot's render from v2.0.0's archive both match: by up to 0.082 in proportion on the rising limb and about 0.03 on the plateau (late-end band 0.592 to 0.729 against 0.567 to 0.691), with the band's edges crossing fixed values between 50 years earlier and 90 years later. The regenerated band contains the true curve at every year in both panels a and b (2,301 of 2,301 and 4,001 of 4,001 years; smallest margin 0.026 and 0.028 where the true proportion exceeds 0.05), so §5.1's claim, 'the true curve within the 95% posterior fitted range (Fig. 2a and b)', holds under v1.0.0's archive. The images show that v1.0.0's inputs and code do not regenerate the published panel a, while v2.0.0's come close; they do not identify the posterior the authors used, or show that no file in v1.0.0 holds it (evidence/crema-figures-probe/curve-comparison.json, curve-containment-output.log, band-measurement.json).
 
-**Open.** The registrant ruled (a) on 2026-10-10 on the first framing. Reopened the same day after Astra's review of PR #10: the options lacked the PAPER_ERROR route, the comparison covered only the plateau, and the gate's expected content was unstated. Put again with complete options and whole-curve evidence.
+**Ruled 2026-10-11: (a).** Ruled (a) on 2026-10-10 on the first framing, and reopened the same day after Astra's review of PR #10: the options lacked the PAPER_ERROR route, the comparison covered only the plateau, and the gate's expected content was unstated. Ruled (a) again on 2026-10-11 on the complete options, with (a)'s full-figure scope and reference added after Astra's re-review. The registrant: 'exactly the kind of minor error we should point out, without failing the entire run'..
 
-- **(a)** Expected MINOR_DISCREPANCY ('small difference, conclusions unchanged'; SUCCESSFUL with note), with the expected content stated. The gate's Fig. 2 must match the figure regenerated from v1.0.0's archive in the compliant probe environment: band edges within one pixel row at 220 dpi (0.005) of the probe's in panels a and b, and panel c identical. Its comparison against the version of record must report panel a's difference as above, with the true curve contained throughout, and panels b and c reproduced. The label alone does not pass the target. The archive inconsistency is reported as a finding about the deposit. Crema's expected verdict stays SUCCESSFUL.
+- **(a)** Expected MINOR_DISCREPANCY ('small difference, conclusions unchanged'; SUCCESSFUL with note), with the expected content stated. The gate's Fig. 2 must match the reference figure regenerated from v1.0.0's archive in the compliant probe environment (v3 figure2.pdf, sha256 cf61c685a7baa4d67d6b0f141ea3fa6913250dedc64b558fe54172dd9cc6fa2d) in all three panels, including the 95 % bands, posterior-mean and true-model curves, axes, and legends. Band edges must lie within one pixel row at 220 dpi (0.005) of the reference in panels a and b, measured by compare-curve.py (evidence/crema-figures-probe/), and panel c must be identical. Its comparison against the version of record must report panel a's difference as above, with the true curve contained throughout, and panels b and c reproduced. The label alone does not pass the target. The archive inconsistency is reported as a finding about the deposit. Crema's expected verdict stays SUCCESSFUL.
 - **(b)** Expected REPRODUCED_VISUAL, treating the difference as within visual tolerance.
 - **(c)** Expected MAJOR_DISCREPANCY: the published panel cannot be regenerated from the selected version's archive. Crema's expected verdict becomes PARTIAL.
 - **(d)** Expected PAPER_ERROR (amendment 3 §7(a)): the authors' deposited posterior and their unmodified code, tier-2 and tier-3 evidence, support the regenerated panel over the published one. Escalates for human confirmation.
 
-**Recommendation:** (a). (b) fails because the difference is in scientific content, a posterior band that moves by up to 0.08, and 'exact pixel matching is not expected' does not cover that. (c) fails because the conclusion the figure supports holds under v1.0.0's archive: the true curve lies inside the regenerated band at every year. (d) fails on §7(a)'s own test, that 'the authors' own materials support the reproduced value'. The same v1.0.0 deposit holds figure2.pdf, which matches the published figure, so the authors' materials conflict with each other rather than showing the paper wrong. Any valid posterior from the authors' model can be drawn in this figure, and the published one is not shown to be erroneous; what is shown is that the deposited posterior is not the one drawn. That is an archive inconsistency, not a paper error. (a) also states the expected figure content and its tolerance, so the gate cannot pass on the label alone.
+**Recommendation:** (a). (b) fails because the difference is in scientific content, a posterior band that moves by up to 0.08, and 'exact pixel matching is not expected' does not cover that. (c) fails because the conclusion the figure supports holds under v1.0.0's archive: the true curve lies inside the regenerated band at every year. PAPER_ERROR (d) is not established by this evidence. The selected archived posterior and unmodified code support the regenerated panel, while the deposited figure agrees with the paper. This demonstrates an inconsistency within the supplied materials without establishing which artefact is in error. The recommendation is to record the archive inconsistency and MINOR_DISCREPANCY; the registrant confirms the classification. (a) also states the expected figure content and its tolerance, so the gate cannot pass on the label alone. Revised 2026-10-11 after Astra's re-review of PR #10: the earlier text excluded (d) categorically, and claimed to know that the deposited posterior was not the one drawn.
 
 Affects: CREMA-T04, crema expected verdict.
+
+### L19. MAR-T10 (Fig. 2): the expected content and tolerance. L17 (c) expects REPRODUCED_VISUAL but states only the generic visual tolerance. The probe's fit is not identical to the authors' despite seed 123: the deposited supplement's diagnostics table reports 6 and 0 divergent transitions for recency and title length, the probe's 3 and 4, and the effective sample sizes differ. Two of the five Pseudo R² labels differ in the fourth digit (0.0329 against 0.0328, 0.0827 against 0.0826). The labels come from brms::bayes_R2(model, ndraws = 10000), a random subsample of posterior draws with no seed of its own, so the differences are consistent with stochastic variation from the fit, the subsample, or both. The gate's own fit may vary further than the probe's did (Astra's re-review of PR #10, 2026-10-11; evidence/marwick-fig2-probe/).
+
+**Ruled 2026-10-11: (a).** Raised by Astra's re-review of PR #10 (2026-10-11), which asked that MAR-T10 get the same explicit content-and-tolerance treatment as CREMA-T04..
+
+- **(a)** The gate's Fig. 2 must match the authors' deposited image (analysis/figures/fig-smooth-plots-paper.png at 1.3, the image paper.qmd includes as Fig. 2, sha256 dc03e1be2b80b35aaf5ae16c4f6d78c813c9a67f7cbef2d3da3532b8f27d7602) in content: five panels, the same data points, trend shapes and relative positions, and axes, checked visually and with compare-trend.py (evidence/marwick-fig2-probe/). Each panel's Pseudo R² label must lie within that model's 95 % interval in the authors' deposited analysis/paper/supplement-GAMS-details.html (Table 3, Bayesian R-squared; sha256 5b84fe31a89f36c4432610a9a0d3407d2c501cc02b8a1ec36f1ea43f302ce35b): recency 0.01 to 0.02, diversity 0.04 to 0.05, title length 0.03 to 0.04, authors 0.07 to 0.09, and pages 0.01 to 0.01. The table prints two decimals, so a label passes if it rounds into its interval. The label alone does not pass the target.
+- **(b)** The probe's observed agreement as the tolerance: trend-line edges within one pixel at 1,000 dpi, and each label within 0.0001 of the published one.
+
+**Recommendation:** (a). The instrument's tolerance for stochastic results is the published interval (verdicts-and-precision.md: 'Stochastic (MCMC)', within HPD intervals, on the basis of published confidence intervals), and the deposited supplement supplies it as an author artefact. (b) takes a tolerance from one run, and the gate's fit may drift further than the probe's did.
+
+Affects: MAR-T10.
+
+### L20. Marwick's runtime. The authors supply two environment specifications that disagree on R: the Dockerfile builds on rocker/verse:4.4.1, and renv.lock records R 4.5.0. Amendment 3 §7(d) sets no precedence between conflicting supplied specifications. The probe followed the Dockerfile. All 152 lockfile packages were installed at their locked versions, with no version substitution and one build-repair event (StanHeaders and rstan, built from source at their pins), and renv::status() reports only the R version mismatch. No R 4.5.0 build was attempted, so this is not a fallback under the version-search cap (evidence/marwick-fig2-probe/; Astra's re-review of PR #10, 2026-10-11).
+
+**Ruled 2026-10-11: (a).** The registrant also asked that the conflict be documented as another minor discrepancy, a finding about the deposit reported beside the verdict, like crema's archive inconsistency (L18): 'these discrepancy reports are extremely valuable'..
+
+- **(a)** Keep the Dockerfile's R 4.4.1 for the gate. The run reports beside the verdict that the package pins were honoured in full (152 of 152, no substitutions, one build repair affecting two components), and that the supplied specifications conflict on the runtime: the Dockerfile's R 4.4.1 was honoured and the lockfile's R 4.5.0 was not followed. Neither is counted as a fallback.
+- **(b)** Use the lockfile's R 4.5.0. Untested: the probe ran on 4.4.1, which the authors' own container uses.
+
+**Recommendation:** (a), as Astra recommends. The Dockerfile is the authors' executable recipe, and the initial build follows it. Both facts sit beside the verdict, so the environment is not labelled fully pin-compliant.
+
+Affects: MAR-T10, marwick expected verdict.
 
 ## Definitions
 
@@ -246,7 +268,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 - `results/post_jp_abot.RData`: sha256 `180682de0e83d01f5ae0965ed1ef17270e465d8ccd3a2ebd19c5448927f9b988`
 - `results/post_gb_abot.RData`: sha256 `f1d53e0adafc92f66dd3961084621a20cc8371b65a5b3a20412cc665d79bee32`
 - **Pilot:** attempt-01, verdict SUCCESSFUL; executed git tag v2.0.0 (c6d1aae) plus one Dockerfile edit; audit findings CREMA-1, CREMA-2, CREMA-3.
-- **Expected verdict:** SUCCESSFUL, provisional on L18. CREMA-T01 reproduces all 24 printed cells exactly. v1.0.0's figures_main.R redraws the five main figures from the deposit's data and archived results in the same run (L5 (c)); the probe of 2026-10-10 regenerates Figs 1, 3, 4, and 5 pixel-identical to the deposit's own PDFs. Fig. 2's panel a does not match; its expected outcome is L18 (SUCCESSFUL under (a) or (b), PARTIAL under (c); (d) escalates). The fresh-MCMC path is not run.
+- **Expected verdict:** SUCCESSFUL. CREMA-T01 reproduces all 24 printed cells exactly. v1.0.0's figures_main.R redraws the five main figures from the deposit's data and archived results in the same run (L5 (c)); the probe of 2026-10-10 regenerates Figs 1, 3, 4, and 5 pixel-identical to the deposit's own PDFs. Fig. 2's panel a does not match the published figure. Under L18 (a), CREMA-T04 is expected MINOR_DISCREPANCY against the version of record while matching the figure regenerated from v1.0.0's archive, and the archive inconsistency is reported as a finding about the deposit. The fresh-MCMC path is not run.
 
 ### Targets
 
@@ -377,7 +399,7 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Analysis type | visual (figure from archived posteriors or data) |
 | Gate scope | in_gate: the registered archived-posterior leg, extended to the figures (L5 (c), ruled 2026-10-10) |
 | Elements | published: 1; pilot_compared: 1 |
-| Tolerance | visual (basis: verdicts-and-precision: figure verification is visual; the scientific content must match) |
+| Tolerance | visual (basis: L18 (a): the reference figure regenerated from v1.0.0's archive in the compliant probe environment (v3 figure2.pdf, sha256 cf61c685a7baa4d67d6b0f141ea3fa6913250dedc64b558fe54172dd9cc6fa2d); band edges within one pixel row at 220 dpi (0.005) in panels a and b by compare-curve.py, panel c identical, and the bands, posterior-mean and true-model curves, axes, and legends matching in all three panels) |
 | Pilot outcome | 'Visually identical' / 'Identical', but between the pilot's own pre-computed and fresh runs, not against the paper; run from v2.0.0 posteriors |
 | Set | corrected |
 | Correction | comparison basis becomes the paper's figure, drawn from v1.0.0's archived results. The pilot's figure, drawn from v2.0.0's, differs in content: panels a and b (simulations 1a and 1b) place the 95% HPD band and the posterior mean slightly differently; panel c matches. the figure code's only random call (plot.fitted()'s sample() in src/utility.R) permutes all the draws, and two runs give pixel-identical figures, so the difference comes from v2.0.0's archived inputs or plotting functions, not from the run. The pilot figure stays as the historical baseline (studies/open-science-compliance/outputs/crema-et-al-2024/reproduction/attempt-01/outputs/figures-from-precomputed/figure2.pdf) |
@@ -387,9 +409,9 @@ Crema, E.R., Bloxam, A., Stevens, C.J., & Vander Linden, M. (2024). Modelling di
 | Repair class and status | CREMA-3 (iv); CREMA-2 (i): rnaturalearthhires installed unpinned at run time (Fig. 1 only). Status: no repair |
 | Credit eligibility | pilot: historical (Q4); gate: eligible if run under the wrapper rule |
 | Coverage | expected-untestable: False; comparison: visual |
-| Expected outcome | RULING NEEDED (L18, reopened) |
+| Expected outcome | MINOR_DISCREPANCY against the version of record (SUCCESSFUL with note), matching the figure regenerated from v1.0.0's archive (L18 (a)) |
 | Rulings | L4, L5, L8, L18 |
-| Note | Drawn from the archived simulation posteriors in sim/results/. The probe of 2026-10-10 regenerates panel a from v1.0.0's archived posterior about 0.03 higher than published; see L18 and evidence/crema-figures-probe/. |
+| Note | Drawn from the archived simulation posteriors in sim/results/. The probe of 2026-10-10, and the compliant rebuild of 2026-10-11, regenerate panel a from v1.0.0's archived posterior with a 95 % band that differs from the published one by up to 0.082 on the rising limb and about 0.03 on the plateau; the true curve stays inside it at every year (evidence/crema-figures-probe/). Expected content and tolerance: L18 (a). |
 
 #### CREMA-T05 — Fig. 3 (Posterior predictive check of the fitted hierarchical Model on observed proportion SPD … in Japan (case study 1a))
 
@@ -1293,7 +1315,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 - `Dockerfile`: sha256 `93dd7ffd893d6174720ae9ae3fd78dfea8d69f641a05e8a3b9cc799d1ee5bc49`
 - `analysis/paper/paper.docx`: sha256 `f548ec4b24173b34e0122a1e7e500a42e2341edc324c85a64f52b0ac8e40350f` (the authors' rendered output at 1.3; corroborates MAR-T04 to T06)
 - **Pilot:** attempt-01, verdict SUCCESSFUL; executed GitHub main 652e542 (8 commits past 1.3); audit findings MAR-1, MAR-2.
-- **Expected verdict:** SUCCESSFUL. Version 1.3 is expected to give the printed values for MAR-T01 to T08, as its own rendered paper.docx shows for W, p, and PC1. The dynamic figures are expected to reproduce, Fig. 4 among them, regenerated by the render (L11 (a)). Fig. 2 (MAR-T10) is regenerated by fitting the supplement's five models (L17 (c)) and is expected to reproduce visually. The probe of 2026-10-11 did so in content, with two Pseudo R² labels differing in the fourth digit (evidence/marwick-fig2-probe/).
+- **Expected verdict:** SUCCESSFUL. Version 1.3 is expected to give the printed values for MAR-T01 to T08, as its own rendered paper.docx shows for W, p, and PC1. The dynamic figures are expected to reproduce, Fig. 4 among them, regenerated by the render (L11 (a)). Fig. 2 (MAR-T10) is regenerated by fitting the supplement's five models (L17 (c)) and is expected to reproduce visually. The probe of 2026-10-11 did so in content, with two Pseudo R² labels differing in the fourth digit and inside the authors' published intervals (evidence/marwick-fig2-probe/). Expected content and tolerance: L19 (a). The deposit's two specifications conflict on the R version; the run follows the Dockerfile and reports the conflict beside the verdict as a minor discrepancy in the deposit (L20 (a)).
 
 ### Targets
 
@@ -1523,7 +1545,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Analysis type | visual |
 | Gate scope | in_gate: marwick is a gate paper (L6 (c)); L17 (c) keeps Fig. 2 in the gate |
 | Elements | published: 1; pilot_compared: 1 |
-| Tolerance | visual (basis: verdicts-and-precision) |
+| Tolerance | visual, with stochastic labels (basis: L19 (a): content as the authors' deposited image (sha256 dc03e1be2b80b35aaf5ae16c4f6d78c813c9a67f7cbef2d3da3532b8f27d7602), checked visually and with compare-trend.py; each Pseudo R² label within its model's 95 % interval in the deposited supplement's Table 3 (sha256 5b84fe31a89f36c4432610a9a0d3407d2c501cc02b8a1ec36f1ea43f302ce35b), at its two decimals) |
 | Pilot outcome | credited; compared against the repository's paper.docx at 652e542, not the published article |
 | Set | corrected |
 | Correction | the pilot credited a static include as 'Identical' and an added chart with no published counterpart (never output by its render). Q4 withdrew the Fig. 2 credit. The published image is produced by the deposit's supplement-GAMS-details.qmd, which the Dockerfile's render does not run. |
@@ -1532,8 +1554,8 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Credit eligibility | pilot: historical (Q4); gate: eligible when version 1.3 runs unmodified and the switched-off fitting chunk's code runs verbatim from a wrapper (L17 (c)) |
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
-| Rulings | L11, L17 |
-| Note | The approved plan names the operator step: run the code of supplement-GAMS-details.qmd's eval: false fitting chunk verbatim from a wrapper (five brms models, each with 4 chains of 50,000 iterations and seed 123; the authors note 'this takes a few hours'), then render the supplement unchanged. Its unconditional readRDS loads the saved fit, and its fig-smooth-plots-paper chunk redraws the figure. The authors' files are not edited. A local probe on zbook ran this on 2026-10-10 and 11 (evidence/marwick-fig2-probe/): the fitting chunk took 19.2 hours and the render 3 minutes, with memory peaking at 19.6 GiB during the render. The redrawn figure matches the version of record in content: trend lines within one pixel at 1,000 dpi and data points identical. Two Pseudo R² labels differ in the fourth digit (0.0329 against 0.0328, 0.0827 against 0.0826); the supplement computes them from a random subsample of 10,000 posterior draws with no seed of its own. |
+| Rulings | L11, L17, L19, L20 |
+| Note | The approved plan names the operator step: run the code of supplement-GAMS-details.qmd's eval: false fitting chunk verbatim from a wrapper (five brms models, each with 4 chains of 50,000 iterations and seed 123; the authors note 'this takes a few hours'), then render the supplement unchanged. Its unconditional readRDS loads the saved fit, and its fig-smooth-plots-paper chunk redraws the figure. The authors' files are not edited. A local probe on zbook ran this on 2026-10-10 and 11 (evidence/marwick-fig2-probe/): the fitting chunk took 19.2 hours and the render 3 minutes, with memory peaking at 19.6 GiB during the render. The redrawn figure matches the version of record in content: trend lines within one pixel at 1,000 dpi, and no strong point discrepancies detected outside the excluded marks. Two Pseudo R² labels differ in the fourth digit (0.0329 against 0.0328, 0.0827 against 0.0826), both inside the authors' published intervals. The fit is not identical to the authors' despite seed 123 (divergent transitions 3 and 4 for recency and title length, against the deposited supplement's 6 and 0), and the labels come from an unseeded subsample of 10,000 posterior draws, so the differences are consistent with stochastic variation. Expected content and tolerance: L19 (a). Runtime: L20 (a). |
 
 #### MAR-T11 — Fig. 3 (journal variation, panels A–E, and the Borda Count consensus ranking, panel F)
 

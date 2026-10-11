@@ -1,9 +1,9 @@
 # Correction ledger for the §8 regression gate — DRAFT
 
-**Status: DRAFT (ledger 0.3.4-draft). Shawn ruled L1 to L4 and L6 to L16
-on 2026-10-09, and L5 and L17 on 2026-10-10. L18 was ruled (a) the same day
-and reopened after Astra's review with complete options. Not frozen and not
-hashed:** L18 and the pre-freeze checks below remain. No run
+**Status: DRAFT (ledger 0.3.5-draft). Shawn ruled L1 to L4 and L6 to L16
+on 2026-10-09, L5 and L17 on 2026-10-10, and L18 (re-ruled on complete
+options), L19, and L20 on 2026-10-11. Not frozen and not hashed:** the
+pre-freeze checks below remain. No run
 may use any value here until the frozen copy is committed and its sha256 is
 recorded in the gate's run configuration (amendment 3 §9 and §10 step 3).
 
@@ -36,6 +36,7 @@ reported.
 | `evidence/l9-dye-section-07/` | Operator run of dye's section 5 and 7 code, byte-identical (L9) |
 | `evidence/crema-figures-content/` | Pilot against v1.0.0 figures, pixel by pixel (L4, L5) |
 | `evidence/crema-figures-probe/` | v1.0.0's figure script run in a probe environment (L5, L18) |
+| `evidence/marwick-fig2-probe/` | Marwick's switched-off fitting chunk run and Fig. 2 redrawn (L17, L19, L20) |
 
 ## How it was drafted
 
@@ -111,7 +112,18 @@ reported.
    The images do not identify the posterior the authors used. Found
    2026-10-10 by the L5 probe and confirmed on 2026-10-11 in an
    environment honouring every supplied pin (`evidence/crema-figures-probe/`);
-   it raises ruling L18.
+   it raises ruling L18. The deposited posterior and unmodified code support
+   the regenerated panel, while the deposit's own figure agrees with the
+   paper: an inconsistency within the supplied materials that does not show
+   which artefact is in error. Ruled L18 (a) on 2026-10-11: a minor
+   discrepancy, reported as a finding about the deposit.
+9. **Marwick: the deposit's two environment specifications disagree on
+   R.** The `Dockerfile` builds on `rocker/verse:4.4.1`; `renv.lock`
+   records R 4.5.0. Amendment 3 §7(d) sets no precedence between them. The
+   probe followed the Dockerfile and honoured all 152 package pins. Found
+   2026-10-11 by the L17 probe, and ruled L20 (a): the gate keeps R 4.4.1
+   and reports the conflict beside the verdict as a minor discrepancy in
+   the deposit.
 
 **Astra's review (2026-10-09, at `9b66683`)** confirmed the key and marwick
 printed-value findings independently and found two errors, both fixed in
@@ -129,6 +141,16 @@ ledger 0.2.1-draft:
   table's precision, after the same rounding. HER-T02 now compares at 3 dp;
   the 4-dp figure labels stay with HER-T03 (corrected).
 
+**Astra's re-review (2026-10-11, at `d6beec4`)** accepted the compliant
+crema build (B3) and supported L18 (a), with three changes, all applied in
+ledger 0.3.5-draft. L18's recommendation no longer excludes PAPER_ERROR
+categorically, since the evidence shows conflicting author artefacts
+without showing which is wrong. L18 (a) now covers the whole figure and
+names its reference. MAR-T10 gains explicit content and a tolerance from
+the authors' published intervals (L19), and marwick's conflicting R
+versions are recorded as a conflict, not as a fallback (L20). The probe
+write-ups were corrected where they claimed more than their checks show.
+
 Shawn accepted L16's finding on 2026-10-09: the erratum log's Entry 7
 records the key slip, and the public correction is queued for the next OSF
 amendment.
@@ -137,7 +159,7 @@ amendment.
 
 | Paper | Testable unchanged targets | Corrected | Expected verdict (pilot) |
 |---|---|---|---|
-| crema | 2 (registered leg: Figs 1 and 5) | 4 | SUCCESSFUL, provisional on L18 (SUCCESSFUL) |
+| crema | 2 (registered leg: Figs 1 and 5) | 4 | SUCCESSFUL (SUCCESSFUL) |
 | dye | 11 | 2 | PARTIAL (SUCCESSFUL) |
 | herskind | 2, including the 1,601-cell S3 table | 2 | SUCCESSFUL (SUCCESSFUL) |
 | key | 0; all nine targets untestable | 2 | BLOCKED (PARTIAL) |
@@ -182,14 +204,27 @@ Ruled by Shawn on 2026-10-10:
   in content, with two Pseudo R² labels differing in the fourth digit
   (`evidence/marwick-fig2-probe/`).
 
-Reopened:
+Ruled by Shawn on 2026-10-11:
 
-- **L18:** CREMA-T04 (Fig. 2). Shawn ruled (a) on the first framing; Astra's
-  review found the options lacked the PAPER_ERROR route (amendment 3
-  §7(a)), the comparison covered only the plateau, and the gate's expected
-  content was unstated. Put again with four options and whole-curve
-  evidence. Recommendation (a), MINOR_DISCREPANCY with the expected figure
-  and its tolerance stated, so that the label alone cannot pass.
+- **L18 (a), re-ruled:** CREMA-T04 (Fig. 2) is expected MINOR_DISCREPANCY
+  against the version of record (SUCCESSFUL with note). Shawn first ruled
+  (a) on 2026-10-10; Astra's review found the options lacked the
+  PAPER_ERROR route (amendment 3 §7(a)), the comparison covered only the
+  plateau, and the gate's expected content was unstated. Put again with
+  four options and whole-curve evidence, and ruled (a) again. The gate's
+  figure must match the one regenerated from v1.0.0's archive in the
+  compliant environment, in all three panels, so the label alone cannot
+  pass. Shawn: "exactly the kind of minor error we should point out,
+  without failing the entire run".
+- **L19 (a):** MAR-T10 (marwick's Fig. 2) must match the authors'
+  deposited image in content, and each Pseudo R² label must fall within
+  its model's 95 % interval in the authors' deposited supplement, not
+  within the probe's own agreement.
+- **L20 (a):** the gate keeps the Dockerfile's R 4.4.1 and reports, beside
+  the verdict, the package pins honoured in full and the runtime conflict
+  with the lockfile's R 4.5.0, documented as a minor discrepancy in the
+  deposit (finding 9). Shawn: "these discrepancy reports are extremely
+  valuable".
 
 ## Before freezing
 
@@ -200,7 +235,8 @@ Reopened:
 - [x] 2026-10-10 Probe crema's figures (L5): Figs 1, 3, 4, and 5
       regenerate pixel-identical; Fig. 2's panel a does not (finding 8,
       `evidence/crema-figures-probe/`).
-- [ ] Re-rule L18 on the complete options and apply it.
+- [x] 2026-10-11 Re-rule L18 on the complete options and apply it (a);
+      rule and apply L19 (a) and L20 (a) (ledger 0.3.5-draft, re-rendered).
 - [x] 2026-10-11 Rebuild crema's probe environment honouring every
       session-info pin, attached and namespace-only (Astra's B3), assert the
       full inventory, and confirm the figures there: 67 of 68 pins honoured,
@@ -214,6 +250,10 @@ Reopened:
       (`evidence/marwick-fig2-probe/`).
 - [ ] Hold the crema v1.0.0 and herskind v1 deposits in the corpus store with
       manifest entries (audit Q10).
+- [ ] Hold L18's reference figure (crema v3 `figure2.pdf`, sha256
+      `cf61c685…`) in the corpus store with a manifest entry, so the gate's
+      comparison can reach it; it is a render of a third-party figure, so it
+      stays out of git.
 - [ ] Hash marwick's files inside the 1.3 zip; confirm review counts in
       `paper.qmd` at 1.3 (L13).
 - [x] 2026-10-09 Operator runs for L9: dye's section 5 and 7 code

@@ -15,9 +15,11 @@ results exactly, so the findings below hold in the compliant environment.
 ## Environment
 
 The deposit has no Dockerfile or lockfile. Its README's session info is the
-authors' environment specification: R 4.3.1 and 68 package versions, 11
-attached and 57 loaded via a namespace. Under §7(d) each is a supplied pin,
-judged per dependency, not by whether `library()` attached it.
+authors' environment specification: R 4.3.1 and 68 non-base package
+versions, 11 attached and 57 loaded via a namespace. Under §7(d) each is a
+supplied pin, judged per dependency, not by whether `library()` attached
+it. The session info also lists five base packages at 4.3.1 (tools,
+parallel, compiler, splines, and grid); the R runtime supplies them.
 
 ### Compliant environment (v3)
 
@@ -32,9 +34,11 @@ article's first online appearance (2024-03-16), from a Posit Package Manager
 snapshot of that date. It then asserts the final inventory and fails on any
 mismatch.
 
-- **Inventory** (`pin-inventory.csv`): 67 supplied pins honoured, 1
-  fallback, and 14 unspecified dependencies from the snapshot (82
-  packages).
+- **Inventory** (`pin-inventory.csv`): 67 of the 68 non-base supplied pins
+  honoured, 1 fallback, and 14 unspecified dependencies from the snapshot
+  (82 packages). The script asserts it before the Dockerfile installs
+  rnaturalearthhires (below), so it does not list that package; the
+  Dockerfile checks its version itself.
 - **The fallback: nimbleCarbon 0.2.4.** It is unavailable in the checked
   release sources: CRAN's archive and current release hold 0.1.1, 0.1.2,
   0.2.1, 0.2.5, and 0.2.6, and the GitHub repository's tags are
@@ -121,7 +125,14 @@ not identify the posterior the authors used, or show that no file in v1.0.0
 holds it; the band measurements are consistent with that inference but do
 not prove it. The regenerated bands contain the true curve throughout
 panels a and b, so the recovery claim the figure supports (§5.1, p. 7) holds
-under v1.0.0's archive. The expected outcome is ruling L18.
+under v1.0.0's archive.
+
+The deposited posterior and unmodified code support the regenerated panel,
+while the deposit's own `figure2.pdf` agrees with the paper. That is an
+inconsistency within the supplied materials; it does not show which
+artefact is in error. Ruling L18 (a), 2026-10-11, expects a minor
+discrepancy against the version of record, with the gate's figure matching
+v3's regenerated `figure2.pdf` (sha256 `cf61c685…`) in all three panels.
 
 ## Files
 
