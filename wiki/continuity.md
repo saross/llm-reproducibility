@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-10-09
+updated: 2026-10-11
 status: active
 ---
 
@@ -32,7 +32,31 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NOW (2026-10-10): L5 and L17 ruled, probes running, L18 open.**
+- **⏩ NOW (2026-10-11): both probes done; L18 awaits Shawn's re-ruling.**
+  - [x] 2026-10-10 **PR #9 merged** by Shawn (`2dcd3d5` on main). PR #7
+    merged main in at `66792b1` (reproduction-executor v1.5).
+  - [ ] **L18 reopened** (PR #10 `a722e14`) after Astra's review (mail
+    07:24Z): four options, now including (d) PAPER_ERROR; recommendation
+    (a) MINOR_DISCREPANCY with the expected selected-archive figure and
+    tolerance stated. Shawn's earlier "(a)" was on the incomplete framing;
+    he must re-rule.
+  - [x] 2026-10-11 **B3 fixed** (PR #10 `3f4dcb0`): crema rebuilt honouring
+    all 68 session-info pins (v3; 67 honoured, nimbleCarbon 0.2.4 → 0.2.1);
+    every figure and Fig. 2 check identical to the first probe. v2 (unused)
+    had two install-script defects, recorded in the probe README.
+  - [x] 2026-10-11 **Marwick probe passed** (PR #10 `d6beec4`, ledger
+    0.3.4-draft, `evidence/marwick-fig2-probe/`): fit 19.19 h on zbook,
+    render 3 min, peak memory 19.6 GiB (render). Trend lines within 1 px,
+    points identical; two R² labels differ in the fourth digit (unseeded
+    `bayes_R2` subsample). Marwick's expected verdict no longer
+    provisional. The 1.7 GB fit stays in the stopped container on zbook.
+  - [ ] **Astra re-review requested** (mail `20261011T022409.862798Z`): B3,
+    probe READMEs, L18 framing, and the R 4.4.1 (Dockerfile) vs 4.5.0
+    (lockfile) point for marwick.
+  - [ ] Pre-freeze checks still open: hash marwick's in-zip files; L13
+    review counts; Q10 corpus-store deposits.
+
+- **⏩ Earlier (2026-10-10): L5 and L17 ruled, probes running, L18 open.**
   - [x] 2026-10-10 **PR #9 at `4252e43`, ready for Shawn's merge.** A side
     agent caught that `062c20a`'s N1 rewordings reworded frozen text that
     amendment 3 does not lodge (routing design §6 rule 3: an OSF amendment
@@ -54,7 +78,7 @@ merged here as PR #1).
     `post_sim1a.RData` is not the posterior behind its own published panel
     (v2.0.0's is). **L18 open** (CREMA-T04's expected outcome); recommended
     (a) MINOR_DISCREPANCY. Astra asked to review (mail 07:07Z).
-  - [ ] **Marwick L17 probe running on zbook** since 17:56 AEDT (container
+  - [x] 2026-10-11 **Marwick L17 probe running on zbook** since 17:56 AEDT (container
     `llmr-probe-marwick-fig2`; files and `out/` under
     `~/scratch/llmr-probes/marwick-fig2/` on zbook; amd-tower holds the
     build files). The authors' Dockerfile fails as supplied (rstan binary vs
