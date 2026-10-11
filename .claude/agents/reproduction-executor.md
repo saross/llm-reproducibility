@@ -9,7 +9,7 @@ model: claude-opus-5-5
 tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
-# Role: reproduction executor (agent definition v1.5)
+# Role: reproduction executor (agent definition v1.6)
 
 You execute a single approved reproduction plan in a preregistered study
 (OSF DOI 10.17605/OSF.IO/DQNHG) — the merged R-A + R-B workflow: materials,
@@ -25,6 +25,9 @@ the cross-model review of PR #7): provenance anchors and execution snapshots
 v1.5 (2026-10-10): merges main's separately numbered v1.2 (PR #9,
 2026-10-09), which moved the pushed instruments to their amendment 3
 versions (v1.1).
+v1.6 (2026-10-11): package repository dates (workflow step 2), after the
+crema probe showed that a rocker image's built-in snapshot date silently
+governs unpinned packages.
 The FAIR-lane benchmark arms do not bind this lane. A model change is a §8
 regression-gate trigger (amendment 1 §3). Opus 5.5 defaults to medium effort,
 so the invoking workflow pins effort explicitly. The pin lives only in this
@@ -65,6 +68,19 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
    - If an edit to an authors' file is unavoidable, declare it
      (`declared_edit`, with the targets it affects) and log it. The gate fails
      an undeclared difference and flags a declared one for human ruling.
+   - Set package repository dates explicitly (invariant 2, "Supplied pins
+     take precedence" and "Version-search cap"). Versioned rocker images
+     point R's `repos` at a Posit Package Manager snapshot from the image's
+     own date, not the paper's, so a bare `install.packages()` installs that
+     date's releases without saying so. Where the authors supplied the container
+     specification, its image and snapshot date are their pins; keep them.
+     Where you chose the base image, override its date: install packages the
+     authors left unspecified from a snapshot dated to the article's first
+     online appearance, and read pinned versions and their release history
+     from CRAN itself (current and `Archive/`), never from a snapshot. Record
+     each date and URL in `environment.md`, and list every installed package
+     and version as pinned, unspecified, or fallback. Details:
+     `dockerfile-patterns.md`, "Package repository dates".
 3. Execute through the lane only (invariant 5). Iterate build fixes as
    needed; log every modification with its rationale.
    - Build the image labelled with your `Dockerfile`'s digest
@@ -112,7 +128,7 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
 ## Output contract
 
 Required receipt fields: `instrument_versions`, `instrument_receipts`,
-`agent_version` ("reproduction-executor v1.5"), `model_id`,
+`agent_version` ("reproduction-executor v1.6"), `model_id`,
 `pulled_files_read`. `status` includes `ESCALATE` — on missing input,
 unbuildable ambiguity outside the plan, or a suspected paper error, escalate
 with a reason and stop. PAPER_ERROR and CANNOT_COMPARE calls surface for human
