@@ -32,14 +32,34 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NOW (2026-10-11): both probes done; L18 awaits Shawn's re-ruling.**
+- **⏩ NOW (2026-10-11, later): all rulings in (L1–L20); PR #7 merged;
+  PR #10 needs only the pre-freeze checks.**
+  - [x] 2026-10-11 **Shawn ruled L18 (a) again, L19 (a), and L20 (a)**
+    (PR #10 `2d40bde`, ledger 0.3.5-draft, nothing open). L18: CREMA-T04
+    MINOR_DISCREPANCY vs the VoR, matching v3's regenerated figure2.pdf
+    (`cf61c685…`) in all three panels; crema SUCCESSFUL. L19: MAR-T10's R²
+    labels within the deposited supplement's Table 3 95 % intervals. L20:
+    keep the Dockerfile's R 4.4.1; report the conflict with the lockfile's
+    4.5.0 beside the verdict as a minor discrepancy (README finding 9).
+    Shawn: "exactly the kind of minor error we should point out, without
+    failing the entire run"; "these discrepancy reports are extremely
+    valuable".
+  - [x] 2026-10-11 **Astra's re-review received** (mail 07:08Z, at
+    `d6beec4`): B3 accepted; L18 (a) supported with PAPER_ERROR wording
+    softened and (a) widened to the full figure; asked for L19 and L20.
+    All applied in `2d40bde`; reply sent (mail `20261011T104239.952791Z`).
+  - [x] 2026-10-11 **PR #7 merged** on Shawn's instruction (`3be8313`),
+    including `306181f`: executor v1.6 sets package repository dates
+    (rocker images default to their own snapshot date; `r-ver:4.3.1` →
+    2023-10-30). Merged before the planned final cross-model review;
+    Astra asked for a post-merge review by mail.
   - [x] 2026-10-10 **PR #9 merged** by Shawn (`2dcd3d5` on main). PR #7
     merged main in at `66792b1` (reproduction-executor v1.5).
-  - [ ] **L18 reopened** (PR #10 `a722e14`) after Astra's review (mail
+  - [x] 2026-10-11 **L18 reopened** (PR #10 `a722e14`) after Astra's review (mail
     07:24Z): four options, now including (d) PAPER_ERROR; recommendation
     (a) MINOR_DISCREPANCY with the expected selected-archive figure and
     tolerance stated. Shawn's earlier "(a)" was on the incomplete framing;
-    he must re-rule.
+    he must re-rule. Re-ruled (a) on 2026-10-11 (above).
   - [x] 2026-10-11 **B3 fixed** (PR #10 `3f4dcb0`): crema rebuilt honouring
     all 68 session-info pins (v3; 67 honoured, nimbleCarbon 0.2.4 → 0.2.1);
     every figure and Fig. 2 check identical to the first probe. v2 (unused)
@@ -50,11 +70,20 @@ merged here as PR #1).
     points identical; two R² labels differ in the fourth digit (unseeded
     `bayes_R2` subsample). Marwick's expected verdict no longer
     provisional. The 1.7 GB fit stays in the stopped container on zbook.
-  - [ ] **Astra re-review requested** (mail `20261011T022409.862798Z`): B3,
-    probe READMEs, L18 framing, and the R 4.4.1 (Dockerfile) vs 4.5.0
-    (lockfile) point for marwick.
+    **Corrected 2026-10-11 (`2d40bde`):** "points identical" overclaimed;
+    the check finds no strong point discrepancies outside excluded marks.
+    The fit differs from the authors' despite seed 123 (divergences 3/4
+    vs 6/0), so the R² differences are consistent with stochastic
+    variation from the fit or the subsample, not the subsample alone.
+  - [x] 2026-10-11 **Astra re-review requested** (mail
+    `20261011T022409.862798Z`): B3, probe READMEs, L18 framing, and the R
+    4.4.1 (Dockerfile) vs 4.5.0 (lockfile) point for marwick. Received
+    07:08Z (above).
   - [ ] Pre-freeze checks still open: hash marwick's in-zip files; L13
-    review counts; Q10 corpus-store deposits.
+    review counts; Q10 corpus-store deposits; hold L18's reference render
+    (crema v3 `figure2.pdf`) in the corpus store. Then merge main into PR
+    #10 (expect the erratum-log Entry 6/7 conflict), freeze as v1.0 with
+    its sha256, and Shawn merges.
 
 - **⏩ Earlier (2026-10-10): L5 and L17 ruled, probes running, L18 open.**
   - [x] 2026-10-10 **PR #9 at `4252e43`, ready for Shawn's merge.** A side
