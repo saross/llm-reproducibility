@@ -1,8 +1,8 @@
 # Correction ledger for the §8 regression gate (amendment 3 §9) — DRAFT
 
-**Status:** DRAFT. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, and L5 and L17 on 2026-10-10. L18 was ruled (a) the same day and reopened after review with complete options. Not frozen and not hashed: L18, the compliant crema environment (B3), L17's probe, and the pre-freeze checks remain. No run may use any value here until the frozen copy is committed and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
+**Status:** DRAFT. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, and L5 and L17 on 2026-10-10. L18 was ruled (a) the same day and reopened after review with complete options. Not frozen and not hashed: L18 and the pre-freeze checks remain. Crema's compliant build (B3) and L17's probe were completed on 2026-10-11. No run may use any value here until the frozen copy is committed and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
 
-**Ledger version:** 0.3.3-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
+**Ledger version:** 0.3.4-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
 
 This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit the JSON, never this file.
 
@@ -14,7 +14,7 @@ This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit 
 | dye-et-al-2023 | SUCCESSFUL | PARTIAL | 13 | 11 (11) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 | herskind-riede-2024 | SUCCESSFUL | SUCCESSFUL | 4 | 2 (2) | 2 | 1 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 | key-et-al-2024 | PARTIAL | BLOCKED (coverage 0) | 0 | 0 (0) | 0 | 0 | 0 | 9 | not a gate paper (L6 (c)); its record keeps the expected verdict and the strict comparison's baseline |
-| marwick-2025 | SUCCESSFUL | SUCCESSFUL (provisional on the L17 probe) | 13 | 6 (6) | 7 | 0 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
+| marwick-2025 | SUCCESSFUL | SUCCESSFUL | 13 | 6 (6) | 7 | 0 | 0 | 0 | gate paper (L6 (c), ruled 2026-10-09) |
 
 ## Rulings
 
@@ -201,7 +201,7 @@ Affects: freezing.
 
 ### L17. Marwick's Fig. 2 under L11 (a). The published image comes from supplement-GAMS-details.qmd at 1.3. Its model-fitting chunk is marked 'eval: false', with the authors' comment 'this takes a few hours': five brms models, each with 4 chains of 50,000 iterations, adapt_delta 0.99999, and seed 123. The chunk saves results_brms.RData ('quite a large file'), which the tag 1.3 tree does not contain. So nothing archived can be redrawn, and regenerating Fig. 2 means a multi-hour MCMC re-run.
 
-**Ruled 2026-10-10: (c).** Probe first. Before the ledger freezes, a local probe runs (on zbook, which the registrant made available on 2026-10-10; sapphire is held for a memory fault) the fitting chunk's code verbatim from a wrapper, renders the supplement unchanged, and compares the figure with the version of record; the approved plan then names that operator step. If the probe fails, the registrant re-rules on its evidence, with (b) the fallback. The gate tests the lane, not the papers: it need not mirror the study's runs exactly, but should be as realistic as possible (registrant, 2026-10-10).
+**Ruled 2026-10-10: (c).** Probe first. Before the ledger freezes, a local probe runs (on zbook, which the registrant made available on 2026-10-10; sapphire is held for a memory fault) the fitting chunk's code verbatim from a wrapper, renders the supplement unchanged, and compares the figure with the version of record; the approved plan then names that operator step. If the probe fails, the registrant re-rules on its evidence, with (b) the fallback. The gate tests the lane, not the papers: it need not mirror the study's runs exactly, but should be as realistic as possible (registrant, 2026-10-10). The probe ran to completion on 2026-10-11 and its figure matches the version of record in content (evidence/marwick-fig2-probe/), so the (b) fallback is not triggered.
 
 - **(a)** Outside the gate, as a stated scope limit like crema's full-MCMC path (CREMA-T02): MAR-T10 is recorded but not run, and marwick's gate verdict rests on its other 12 targets.
 - **(b)** In the gate, expected CANNOT_COMPARE: the fit is not deposited and the gate does not re-run multi-hour MCMC. Marwick's expected verdict then needs a further call (SUCCESSFUL as 'nearly all', or PARTIAL).
@@ -1293,7 +1293,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 - `Dockerfile`: sha256 `93dd7ffd893d6174720ae9ae3fd78dfea8d69f641a05e8a3b9cc799d1ee5bc49`
 - `analysis/paper/paper.docx`: sha256 `f548ec4b24173b34e0122a1e7e500a42e2341edc324c85a64f52b0ac8e40350f` (the authors' rendered output at 1.3; corroborates MAR-T04 to T06)
 - **Pilot:** attempt-01, verdict SUCCESSFUL; executed GitHub main 652e542 (8 commits past 1.3); audit findings MAR-1, MAR-2.
-- **Expected verdict:** SUCCESSFUL (provisional on the L17 probe). Version 1.3 is expected to give the printed values for MAR-T01 to T08, as its own rendered paper.docx shows for W, p, and PC1. The dynamic figures are expected to reproduce, Fig. 4 among them, regenerated by the render (L11 (a)). Fig. 2 (MAR-T10) is regenerated by fitting the supplement's five models (L17 (c)) and is expected to reproduce visually. If the probe fails, L17 is re-ruled.
+- **Expected verdict:** SUCCESSFUL. Version 1.3 is expected to give the printed values for MAR-T01 to T08, as its own rendered paper.docx shows for W, p, and PC1. The dynamic figures are expected to reproduce, Fig. 4 among them, regenerated by the render (L11 (a)). Fig. 2 (MAR-T10) is regenerated by fitting the supplement's five models (L17 (c)) and is expected to reproduce visually. The probe of 2026-10-11 did so in content, with two Pseudo R² labels differing in the fourth digit (evidence/marwick-fig2-probe/).
 
 ### Targets
 
@@ -1533,7 +1533,7 @@ Marwick, B. (2025). Is archaeology a science? Insights and imperatives from 10,0
 | Coverage | expected-untestable: False; comparison: visual |
 | Expected outcome | REPRODUCED_VISUAL |
 | Rulings | L11, L17 |
-| Note | The approved plan names the operator step: run the code of supplement-GAMS-details.qmd's eval: false fitting chunk verbatim from a wrapper (five brms models, each with 4 chains of 50,000 iterations and seed 123; the authors note 'this takes a few hours'), then render the supplement unchanged. Its unconditional readRDS loads the saved fit, and its fig-smooth-plots-paper chunk redraws the figure. The authors' files are not edited. A local probe on zbook checks this before the ledger freezes (L17 (c)). |
+| Note | The approved plan names the operator step: run the code of supplement-GAMS-details.qmd's eval: false fitting chunk verbatim from a wrapper (five brms models, each with 4 chains of 50,000 iterations and seed 123; the authors note 'this takes a few hours'), then render the supplement unchanged. Its unconditional readRDS loads the saved fit, and its fig-smooth-plots-paper chunk redraws the figure. The authors' files are not edited. A local probe on zbook ran this on 2026-10-10 and 11 (evidence/marwick-fig2-probe/): the fitting chunk took 19.2 hours and the render 3 minutes, with memory peaking at 19.6 GiB during the render. The redrawn figure matches the version of record in content: trend lines within one pixel at 1,000 dpi and data points identical. Two Pseudo R² labels differ in the fourth digit (0.0329 against 0.0328, 0.0827 against 0.0826); the supplement computes them from a random subsample of 10,000 posterior draws with no seed of its own. |
 
 #### MAR-T11 — Fig. 3 (journal variation, panels A–E, and the Borda Count consensus ranking, panel F)
 

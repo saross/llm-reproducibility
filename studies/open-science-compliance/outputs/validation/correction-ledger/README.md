@@ -1,9 +1,9 @@
 # Correction ledger for the §8 regression gate — DRAFT
 
-**Status: DRAFT (ledger 0.3.3-draft). Shawn ruled L1 to L4 and L6 to L16
+**Status: DRAFT (ledger 0.3.4-draft). Shawn ruled L1 to L4 and L6 to L16
 on 2026-10-09, and L5 and L17 on 2026-10-10. L18 was ruled (a) the same day
 and reopened after Astra's review with complete options. Not frozen and not
-hashed:** L18, L17's probe, and the pre-freeze checks below remain. No run
+hashed:** L18 and the pre-freeze checks below remain. No run
 may use any value here until the frozen copy is committed and its sha256 is
 recorded in the gate's run configuration (amendment 3 §9 and §10 step 3).
 
@@ -141,7 +141,7 @@ amendment.
 | dye | 11 | 2 | PARTIAL (SUCCESSFUL) |
 | herskind | 2, including the 1,601-cell S3 table | 2 | SUCCESSFUL (SUCCESSFUL) |
 | key | 0; all nine targets untestable | 2 | BLOCKED (PARTIAL) |
-| marwick | 6 | 7 | SUCCESSFUL, provisional on the L17 probe (SUCCESSFUL) |
+| marwick | 6 | 7 | SUCCESSFUL (SUCCESSFUL) |
 
 **Ruled (L6 (c), 2026-10-09): the gate runs dye, herskind, and marwick,**
 plus crema's mandatory archived-posterior leg, which covers Table 1 and the
@@ -177,7 +177,10 @@ Ruled by Shawn on 2026-10-10:
   then the supplement renders unchanged. (a) was withdrawn after Astra's
   review. (b) would have needed the plan to forbid the attempt, rehearsing
   the opposite of what the study's runs must do. If the probe fails, Shawn
-  re-rules with (b) the fallback.
+  re-rules with (b) the fallback. It did not: on 2026-10-11 the fit ran in
+  19.2 hours on zbook and the redrawn figure matched the version of record
+  in content, with two Pseudo R² labels differing in the fourth digit
+  (`evidence/marwick-fig2-probe/`).
 
 Reopened:
 
@@ -203,10 +206,12 @@ Reopened:
       full inventory, and confirm the figures there: 67 of 68 pins honoured,
       nimbleCarbon 0.2.4 to 0.2.1 by the bounded search, and every result
       identical to the first probe's (`evidence/crema-figures-probe/`).
-- [ ] Probe marwick's Fig. 2: the fitting chunk run verbatim from a wrapper
-      on amd-tower, then the supplement rendered unchanged and the figure
-      compared with the version of record (L17). Sapphire is held until its
-      memory fix is confirmed.
+- [x] 2026-10-11 Probe marwick's Fig. 2: the fitting chunk run verbatim
+      from a wrapper on zbook, then the supplement rendered unchanged and
+      the figure compared with the version of record (L17). Trend lines
+      within one pixel and data points identical; one build repair, no
+      version substitution; 152 of 152 lockfile pins installed
+      (`evidence/marwick-fig2-probe/`).
 - [ ] Hold the crema v1.0.0 and herskind v1 deposits in the corpus store with
       manifest entries (audit Q10).
 - [ ] Hash marwick's files inside the 1.3 zip; confirm review counts in
