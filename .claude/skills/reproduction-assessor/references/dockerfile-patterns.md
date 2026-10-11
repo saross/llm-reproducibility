@@ -25,6 +25,62 @@ images bundle packages the paper may never use, inflating build time and image s
 3. `sessionInfo()` output printed in the paper or supplementary materials
 4. Paper publication date — use the current R release as of that date
 
+## Package repository dates
+
+Amendment 3 §7(d) (invariant 2 in `.claude/shared/invariants.md`) fixes
+which release of each package to install. A version the authors supplied is
+built at that version. A package they left unspecified is installed at the
+release current at the article's first online appearance. A failed build
+gets at most two further attempts: the immediately preceding release, then
+the immediately following one.
+
+**The trap.** Versioned rocker images set R's `repos` option to a Posit
+Package Manager snapshot from the image's own date, not the paper's. Checked
+2026-10-11: `rocker/r-ver:4.3.1` reads from
+`https://p3m.dev/cran/__linux__/jammy/2023-10-30`, and `rocker/r-ver:4.3.2`
+from `.../2024-02-28`. A bare `install.packages("pkg")` therefore installs
+the image date's release, and nothing in the log says so. The crema-et-al-2024
+figures probe (2026-10-10) fell into this: its unpinned packages came from
+2023-10-30, not the article's 2024-03-16.
+
+**Whose date is it?** Judge each dependency separately:
+
+- **The authors supplied the container** (their own Dockerfile names the
+  image): the image's snapshot date is part of their specification. Keep it.
+- **You chose the base image** (no Dockerfile, or only a session-info
+  listing): the image's date is not the authors'. Override it as below.
+
+**The override:**
+
+```r
+# Packages the authors left unspecified: the release current at the
+# article's first online appearance (here crema-et-al-2024, 2024-03-16).
+SNAPSHOT <- "https://packagemanager.posit.co/cran/__linux__/jammy/2024-03-16"
+# Pinned versions and their release history: CRAN itself. A snapshot's
+# archive index is incomplete, and lists nothing released after its date.
+CRAN <- "https://cloud.r-project.org"
+options(repos = c(CRAN = CRAN))
+```
+
+- Read release histories (`tools:::CRAN_archive_db()`, `available.packages()`)
+  only after setting `repos`, because both read `getOption("repos")`.
+- Build each pinned version from its own source tarball (`src/contrib/` or
+  `src/contrib/Archive/<pkg>/`), in the dependency order given by *that
+  version's* DESCRIPTION, not the current release's.
+- `install.packages()` reports a failed build only as a warning
+  ("installation of package ... had non-zero exit status"). Promote it to an
+  error, so a failure starts the bounded search rather than passing silently.
+- A GitHub-only package (no CRAN releases) installs at the tag current at
+  first online appearance: `remotes::install_github("owner/repo@<tag>")`,
+  never the default branch.
+- Assert the final inventory: every installed package and version, each
+  marked pinned, unspecified, or fallback, and fail the build on any
+  mismatch. Record the snapshot date and both URLs in `environment.md`.
+
+The correction ledger's crema probe (PR #10,
+`evidence/crema-figures-probe/install-pins.R`) implements all of this for a
+session-info pin list.
+
 ## Common System Dependencies
 
 When `install.packages()` fails with `configure: error`, the message typically names the missing
@@ -112,8 +168,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# R packages
-RUN R -e "install.packages(c('package1', 'package2'), repos='https://cloud.r-project.org')"
+# R packages the authors left unspecified, at the article's first online
+# appearance (see "Package repository dates"; pinned versions come from CRAN)
+RUN R -e "install.packages(c('package1', 'package2'), \
+    repos='https://packagemanager.posit.co/cran/__linux__/jammy/{FIRST_ONLINE_DATE}')"
 
 # Copy analysis files
 COPY . /project
@@ -122,7 +180,8 @@ WORKDIR /project
 CMD ["Rscript", "run-analysis.R"]
 ```
 
-Replace `{VERSION}` with the target R version (e.g., `4.3.1`). Add system dependencies and R
+Replace `{VERSION}` with the target R version (e.g., `4.3.1`) and `{FIRST_ONLINE_DATE}` with
+the article's first online appearance (e.g., `2024-03-16`). Add system dependencies and R
 packages as identified during the iterative build process.
 
 ## Volume Mount vs COPY Strategy
@@ -153,9 +212,10 @@ Lessons learned from actual reproduction attempts:
   `.git` folder. If the analysis uses the `here` package, it cannot find the project root. Create
   an empty `.here` file in the mounted directory to serve as the sentinel.
 
-- **`rnaturalearthhires` not on CRAN:** This package is only available from GitHub. Install it with
-  `remotes::install_github("ropensci/rnaturalearthhires")` or
-  `install.packages("rnaturalearthhires", repos="https://ropensci.r-universe.dev")`.
+- **`rnaturalearthhires` not on CRAN:** This package is only available from GitHub. Install the
+  tag current at the article's first online appearance, for example
+  `remotes::install_github("ropensci/rnaturalearthhires@v1.0.0")` for crema-et-al-2024. The
+  default branch and r-universe both serve today's version, not the paper's.
 
 - **Ampersands in filenames:** Docker volume mount paths containing `&` cause shell parsing issues.
   Rename files on the host before mounting, or use the long-form `--mount` syntax instead of `-v`.
