@@ -32,7 +32,24 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NOW (2026-10-11, later): all rulings in (L1–L20); PR #7 merged;
+- **⏩ NOW (2026-10-11, evening): herskind pilot re-run done; gate 1.3
+  final review out to Astra and Fable.**
+  - [x] 2026-10-11 **Herskind attempt-03 through the agentic lane** (Shawn
+    approved at the API gate; Max plan). Plan `wf_14d5db9b-bed` ($1.21,
+    audit clean); execute `wf_7c18dfdc-298` ($12.73, 42 min). SUCCESSFUL,
+    17/20, authoritative gate pass (no flags), review QUALIFIED. Both
+    PAPER_ERROR calls match the shakedown and HER-T04, found blind.
+    Artefacts `78137fe`.
+  - [ ] **Final review**: brief `wiki/planning/reproduction-gate-1-3-final-review-brief.md`
+    (`d03f658`); Astra mailed (`20261011T120856.313092Z`); Shawn wakes
+    Fable (top-tier credit). Provisional defects F1 (transcript audit's
+    false hard failures: `>` in quoted awk/heredoc, `--help`) and F2
+    (receipt check misses `cat` reads); F3–F4 possible ordinary routes.
+  - [ ] Human queue for attempt-03: six unruled items plus two PAPER_ERROR
+    calls and the T06 method change; not study data, so it can wait for
+    the review.
+
+- **⏩ Earlier (2026-10-11, later): all rulings in (L1–L20); PR #7 merged;
   PR #10 needs only the pre-freeze checks.**
   - [x] 2026-10-11 **Shawn ruled L18 (a) again, L19 (a), and L20 (a)**
     (PR #10 `2d40bde`, ledger 0.3.5-draft, nothing open). L18: CREMA-T04
