@@ -3,8 +3,7 @@
 **Status: DRAFT (ledger 0.3.3-draft). Shawn ruled L1 to L4 and L6 to L16
 on 2026-10-09, and L5 and L17 on 2026-10-10. L18 was ruled (a) the same day
 and reopened after Astra's review with complete options. Not frozen and not
-hashed:** L18, the compliant crema environment (Astra's B3), L17's probe,
-and the pre-freeze checks below remain. No run
+hashed:** L18, L17's probe, and the pre-freeze checks below remain. No run
 may use any value here until the frozen copy is committed and its sha256 is
 recorded in the gate's run configuration (amendment 3 §9 and §10 step 3).
 
@@ -101,7 +100,7 @@ reported.
    the prediction envelopes in Figs 3 and 4. Figs 1 and 5 render
    pixel-identical. Found 2026-10-10 while applying ruling L5
    (`evidence/crema-figures-content/`).
-8. **Crema: v1.0.0 does not archive the posterior behind its own Fig. 2
+8. **Crema: v1.0.0's archived inputs do not regenerate its own Fig. 2
    panel a.** The probe regenerates Figs 1, 3, 4, and 5 pixel-identical to
    the deposit's PDFs. From v1.0.0's `post_sim1a.RData`, panel a's 95 %
    band at the curve's late end reads 0.592 to 0.729; the version of record
@@ -110,8 +109,9 @@ reported.
    differ by up to 0.082 on the rising limb. The regenerated band still
    contains the true curve at every year, so §5.1's recovery claim holds.
    The images do not identify the posterior the authors used. Found
-   2026-10-10 by the L5 probe (`evidence/crema-figures-probe/`); it raises
-   ruling L18.
+   2026-10-10 by the L5 probe and confirmed on 2026-10-11 in an
+   environment honouring every supplied pin (`evidence/crema-figures-probe/`);
+   it raises ruling L18.
 
 **Astra's review (2026-10-09, at `9b66683`)** confirmed the key and marwick
 printed-value findings independently and found two errors, both fixed in
@@ -198,9 +198,11 @@ Reopened:
       regenerate pixel-identical; Fig. 2's panel a does not (finding 8,
       `evidence/crema-figures-probe/`).
 - [ ] Re-rule L18 on the complete options and apply it.
-- [ ] Rebuild crema's probe environment honouring every session-info pin,
-      attached and namespace-only (Astra's B3), assert the full inventory,
-      and confirm the figures there.
+- [x] 2026-10-11 Rebuild crema's probe environment honouring every
+      session-info pin, attached and namespace-only (Astra's B3), assert the
+      full inventory, and confirm the figures there: 67 of 68 pins honoured,
+      nimbleCarbon 0.2.4 to 0.2.1 by the bounded search, and every result
+      identical to the first probe's (`evidence/crema-figures-probe/`).
 - [ ] Probe marwick's Fig. 2: the fitting chunk run verbatim from a wrapper
       on amd-tower, then the supplement rendered unchanged and the figure
       compared with the version of record (L17). Sapphire is held until its
