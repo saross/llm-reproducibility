@@ -1,0 +1,210 @@
+{
+  "record_version": "1.0",
+  "run_id": "gate-1-3-pilot-rerun-2026-10",
+  "workflow_run": "wf_7c18dfdc-298",
+  "agent_id": "a49f673690b524c9c",
+  "agent_type": "adversarial-reviewer",
+  "launch_commit": "cd5d54ac890fafc9061547694c7d0fad9c065912",
+  "effort": "high",
+  "persisted_at": "2026-10-11T12:03:32+00:00",
+  "orchestrator_notes": [],
+  "admission": {
+    "eligible": false,
+    "assessed_at": "2026-10-11T12:03:32+00:00",
+    "reasons": [
+      "4 unruled issue(s): dynamic-evaluation:Dockerfile, dynamic-evaluation:run-analysis.R, run-time-texts:run-analysis.R|promise, wrapper-semantics:wrappers",
+      "no transcript audit recorded (transcript-audit.json, spec §12)"
+    ],
+    "gate_report_sha256": "30637d3772ffbfda855d3d412c44493d06d31515b6fc14777f8f8918bcc2400a"
+  },
+  "payload": {
+    "status": "OK",
+    "paper_slug": "herskind-riede-2024",
+    "overall": "QUALIFIED",
+    "escalate_reason": null,
+    "receipts": {
+      "instrument_versions": {
+        "pipeline-invariants": "1.1",
+        "adversarial-review-framework": "1.1"
+      },
+      "instrument_receipts": {
+        "pipeline-invariants": "c70d484af7e75ec4",
+        "adversarial-review-framework": "0f83c3181c5dbe00"
+      },
+      "agent_version": "adversarial-reviewer v1.2",
+      "model_id": "claude-opus-5-5",
+      "pulled_files_read": [
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/coverage-rules.md"
+      ]
+    },
+    "artefacts_reviewed": [
+      "/home/shawn/corpora/llm-reproducibility/herskind-riede-2024/vor.pdf",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/reproduction-plan.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/plan-approval.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/Dockerfile",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/run-analysis.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/run-reproduction.sh",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/compare-results.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/authors-code-manifest.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/environment.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/log.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/gate-report.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/comparisons/comparison-report.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/comparisons/comparison.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/comparisons/values/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/published-values/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/tools/read-published-fig2.py",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/tools/read-published-fig4.py",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/materials/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/lane-records/run-04/",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/outputs/run-04/stdout.log",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03/outputs/run-04/files/"
+    ],
+    "dimensions": {
+      "provenance": {
+        "verdict": "PASS",
+        "findings": [
+          "Reproduced values trace to the sealed Docker run. run-04 lane records show docker run with --network none and --user 1000:1000. Mounts are a temporary project copy plus read-only lane hook and shim files, with no host library mounts. The same image id (sha256:9519b8da...) is used in all four sealed runs, and the run took 11 s, which is plausible for a closed-form workload.",
+          "Current hashes of every input, wrapper, tool, and published-values file match lane-records/run-04/pre.json, so nothing changed after the run. comparisons/values/* are byte-identical to outputs/run-04/files/comparison-out/*. The authors' outputs (Bigrams/Trigrams/Quadrigrams.csv, heatmapPMI.png, artefact_type_chronology.png) are byte-identical across runs 01-04, as a deterministic analysis should be.",
+          "S2.R sha256 is 487a00a0... and md5 is 6760ccb3... before and after the run (stdout.log). These match the Zenodo v2 md5 in the plan, and the gate reports code_integrity=identical.",
+          "Review obligation 1 (dynamic evaluation in the Dockerfile): the Rscript -e steps only download the seven CRAN Archive tarballs, install them and their unspecified dependencies from the P3M 2024-04-03 snapshot, assert versions, and write a package inventory. No authors' file is evaluated. Fetched content: the inventory's Repository fields (CRAN for the seven pins, RSPM for dependencies) and session-info.txt confirm that R 4.3.2 and all seven README pins were loaded during the run.",
+          "Review obligation 2 (dynamic evaluation in run-analysis.R): parse() reads only materials/Herskind&Riede_S2.R, whose hash was verified. Its 133 top-level expressions are evaluated in source order in globalenv. Nothing is skipped or re-ordered: expression-log.csv has 132 ok and 1 declared tolerance.",
+          "Review obligation 3 (107 run-time texts): these are the authors' own filter strings, built by paste(strsplit(skipgram, ' ')[[1]], '== 1', collapse=' & ') at S2.R line 367 and evaluated inside dplyr filter() at line 368 in createResultTable(). The published Fig. 3 transcription has exactly 107 unique skipgrams across its six panels, matching the 107 texts, and their form matches.",
+          "Review obligation 4 (wrapper semantics): run-analysis.R only (a) copies S1 into the working directory, (b) auto-prints visible values as Rscript does, (c) captures conditions per expression, with one declared tolerance on font_import (it fired), (d) sends top-level plot prints to a cairo PNG device, and (e) takes read-only captures (bigrams before line 633, save of the session, sessionInfo). Wrapper state is kept in local(). compare-results.R runs in a separate R process after the analysis has finished, so it cannot alter S2.R's computation. No change to logic, parameters, or data selection was found.",
+          "Gap: the Docker build log is not in the artefact set. So 'one build, 0 failures' and the tarball sha256 values in environment.md cannot be verified from artefacts, and the framework lists a missing build log as a red flag. This is mitigated by run-time evidence (session-info, the inventory produced at build time, and image-id consistency), so it does not undermine where the values came from."
+        ]
+      },
+      "quantitative_claims": {
+        "verdict": "PASS",
+        "findings": [
+          "Table 1, Table 2, Table 3, and the named values were transcribed correctly: published-values/*.csv matches the PDF text layer for every value I checked.",
+          "The reproduced Table 1 counts in the report match the printed table() and length() output in stdout.log (bigram: 1225, 153, 60, 31, 20, 14, 9, 5, ...; trigram: 4095, 221, ...; quadrigram identical). The Table 2 unrounded summaries in stdout.log match the report, and all 18 values round to the published 2 dp.",
+          "The T01 PAPER_ERROR call is independently corroborated. I parsed S3.xlsx with stdlib Python, and the deposited bigram sheet's frequency distribution gives 5, 9, 31, and 60 bigrams at frequencies 8, 7, 4, and 3. These are the reproduced values, not the published 6, 8, 32, and 59. From S1 I recomputed the sum of C(motifs per object, n) as 2513, 4961, and 8622, against published column sums of 2516, 4962, and 8622.",
+          "From S1 I independently confirmed 483 objects, a maximum of 15 motifs (and Total column 15), chronology counts 205/168/87/23, and T20 = 10 objects carrying at least 2 cluster motifs, all Ertebølle and with the same S1 numbers as Table 3. I also confirmed the T06 disagreement objects: F13+C5 occurs only on No. 96 (Kongemose), and B2+B1 only on No. 367 (Maglemose).",
+          "Recomputing T14-T18 from the transcribed published Fig. 3 gives 0 single-class bars in panel a, 0 Maglemose-only and 1 Kongemose-only (B10 F38) in panel b, and 9 Ertebølle-only including C5 C12, with a maximum frequency of 5. This agrees with the reproduction.",
+          "Fig. 3 labels are raster text. A high-resolution OCR pipe matched the transcription for most labels I sampled (e.g., 4.0985, 4.3529, 4.1705, 5.4358, 7.9248, 3.5386). The remaining differences look like OCR digit confusions (3/8, 5/6), and closed-form checks such as A1 C1 G1 = ln(19/7.098) = 0.9846 support the transcription. I could not fully exclude that some labels were filled from S3, which was at hand during transcription.",
+          "Minor reporting inconsistencies that do not affect the verdict: (a) stdout reports T09 2/2, T10 3/3, T11 3/3, and T20 2/2, while the report counts 1, 1, 2, and 1 because cross-checks are not counted (this is explained); (b) the T06 headline of 2350/2352 is inflated by roughly 886 cells that trivially agree as 'no box', and the informative ratio is 289/291 boxes, which the report also states; (c) the wrapper header lists Rplots.pdf among outputs, but none is produced because of the PNG device override."
+        ]
+      },
+      "scope_completeness": {
+        "verdict": "PASS",
+        "findings": [
+          "All 20 locked targets (T01-T20) appear in the comparison report and comparison.json with an outcome. The denominator is unchanged at 20, and coverage is 17/20 = 0.85, agreeing with the gate report.",
+          "Every display item is accounted for: Figs 1-5, Tables 1-3, and S3. Fig. 1 (photographs) is excluded with a reason. A scan of the PDF text for numeric statements turned up no un-enumerated named value. The 'nearly half' exclusion and the R1 map aids were explicitly approved (plan-approval.json).",
+          "Uncredited targets are not hidden. T01 and T06 (PAPER_ERROR) and T04 (MINOR_DISCREPANCY) are excluded from coverage, which is conservative under coverage-rules, since MINOR_DISCREPANCY could arguably be scored differently.",
+          "Partial sub-scope within visual targets is disclosed, not silent: Fig. 4 large 'particularly high PMI' boxes and inset drawings are not scored; Fig. 5 patch geometry and the Fig. 2 map are compared by eye; typography is not scored. Version 1 of the deposit is deliberately unused under AP-12, so the hypothesis that Table 1 reflects an earlier data state is untested. That limitation is stated."
+        ]
+      },
+      "confirmation_bias": {
+        "verdict": "PASS",
+        "findings": [
+          "The SUCCESSFUL verdict holds whichever way the escalations are decided. If the human rejects both PAPER_ERROR calls, the T01 differences (8 off-by-one counts, distinct totals equal) and the T06 differences (2 of 291 hand-drawn boxes) still leave conclusions unchanged. That fits MINOR_DISCREPANCY ('SUCCESSFUL with note'), not MAJOR_DISCREPANCY, so the verdict does not depend on a favourable reading.",
+          "Judgement calls lean against the reproduction rather than for it. T04 is scored MINOR_DISCREPANCY and left uncredited, and the stacking-order mismatch in 7 of 18 bars is reported openly. Widening the T06 lookup to pairs of any frequency exposed two disagreements that the plan's frequency > 2 lookup would not have reached.",
+          "Published Fig. 2, 4, and 5 values were transcribed after the reproduced values were known: published-values timestamps fall between 22:43 and 22:46, after runs 02-03. Figs 2 and 4 were read with deterministic image tools that use no reproduced data, which limits the risk. The Fig. 5 pies were read by eye, but they are independently consistent with the printed Table 3 motif lists.",
+          "The T06 PAPER_ERROR rests on a box criterion the reproducer inferred, and the report labels it evidence tier 2 (S1). The data are the authors', but the mapping from data to boxes is the reproducer's inference, so this evidence is weaker than the T01 case. The human confirming the escalation should weigh that. The Q5 ruling routes such cases to the paper-error protocol, and the call is escalated."
+        ]
+      },
+      "methodological_soundness": {
+        "verdict": "CONCERN",
+        "findings": [
+          "Docker isolation is sound. The base image is pinned by digest (rocker/r-ver:4.3.2@sha256:4e32...), networking is off, the run user is non-root, no host libraries are mounted, and the locale is UTF-8 as S2.R requires. All seven supplied pins were honoured with 0 fallbacks. Unspecified dependencies come from a P3M snapshot dated to first online appearance (2024-04-03), which follows invariant 2's version rule.",
+          "The correct version of record was used: Zenodo v2, with md5 values for S1, S2, S3, and README matching the plan. S3, the authors' precomputed tables, was verified cell by cell (2329/2329), as well as serving as a reference.",
+          "CONCERN, plan deviation without re-approval: the approved plan fixed T06's box aid as a lookup of frequency > 2 bigrams, with any contradicted box as MAJOR_DISCREPANCY. After visually inspecting the published figure (log.md 11:37), the executor replaced this with a criterion inferred from the caption and applied to all co-occurring pairs at any frequency, and scored the two contradictions as PAPER_ERROR. Pre-stated tolerances and comparison methods are meant to be fixed before execution. The change made the test stricter and T06 is not credited, but the PAPER_ERROR call depends on a post-hoc criterion that the approver never saw.",
+          "The lane injects its own .Rprofile and R_PROFILE_USER hook (baseline.json 'injected .Rprofile'; hook.R sha256 17f39eb2...). This is orchestrator instrumentation whose content is not in the artefact set. I assume it is audited at the gate level, but this review cannot confirm from artefacts that it is computation-neutral.",
+          "Host-side work is limited to published-value transcription: tools/read-published-fig2.py and read-published-fig4.py read publisher figure images held in scratch. Nothing reproduced is computed on the host, so I found no host contamination of reproduced values. The extracted figure images are kept out of the repository for copyright reasons, so the tool outputs cannot be re-derived from the artefacts alone."
+        ]
+      }
+    },
+    "verdict_challenge": {
+      "executor_verdict": "SUCCESSFUL",
+      "reviewer_supports_verdict": true,
+      "rationale": "S2.R ran unmodified in the environment the authors specified. Every value the code computes reproduces exactly: Table 2, all 128 Fig. 3 bars, all 2329 S3 cells, the Fig. 4 matrix, and all 12 named values. I independently confirmed key facts from the deposited S1 and S3 with stdlib parsing. The two non-credited discrepancies (Table 1 off-by-one counts, which S3 itself contradicts; and 2 of 291 hand-drawn Fig. 4 boxes) and the Fig. 2 stacking order do not affect the paper's conclusions, so the verdict holds as SUCCESSFUL even if the PAPER_ERROR calls are downgraded to MINOR_DISCREPANCY. The review is QUALIFIED rather than CONFIRMED for two reasons. First, the T06 comparison method was changed after inspecting the published figure, without re-approval. Second, the Docker build log and the lane hook content are not in the artefact set. Both PAPER_ERROR calls need human confirmation in any case."
+    },
+    "spot_checks": [
+      {
+        "check": "PDF identity",
+        "method": "sha256sum of vor.pdf",
+        "result": "5c60cc3d...fad0, matches the spawn manifest"
+      },
+      {
+        "check": "Deposit file integrity",
+        "method": "sha256sum and md5sum of materials/*, compared with the plan's Zenodo md5 values and authors-code-manifest.json",
+        "result": "All four match (S1 0bcde6d1, S2 6760ccb3, S3 812be545, README 8b5ef4c5)"
+      },
+      {
+        "check": "No post-run edits",
+        "method": "Recomputed sha256 of every file listed in lane-records/run-04/pre.json; also the plan hash",
+        "result": "All 20 files OK; plan sha256 89f2c937... equals plan-approval.json"
+      },
+      {
+        "check": "Comparison values come from the sealed run",
+        "method": "cmp of comparisons/values/* against outputs/run-04/files/comparison-out/*; cmp of authors' outputs across runs 01-04",
+        "result": "24/24 identical; authors' CSVs and PNGs identical in every run"
+      },
+      {
+        "check": "Table 1 transcription and reproduction",
+        "method": "pdftotext -layout on p.4, compared with the report; stdout.log table() output from EXPR 34-41",
+        "result": "Published and reproduced values exactly as reported; the 8 differing cells are confirmed"
+      },
+      {
+        "check": "Table 1 PAPER_ERROR evidence",
+        "method": "Stdlib parse of S3.xlsx bigram sheet (observed frequency distribution) and S1 (sum of C(motifs, n) per object)",
+        "result": "S3: 5, 9, 31, 60 bigrams at frequencies 8, 7, 4, 3 (= reproduction). Sums 2513/4961/8622 against published-implied 2516/4962/8622"
+      },
+      {
+        "check": "Tables 2 and 3 transcription",
+        "method": "pdftotext -layout on pp.6-7",
+        "result": "All 18 Table 2 values and the Table 3 rows I checked match published-values and the report"
+      },
+      {
+        "check": "Named values T09, T10, and T20 from raw data",
+        "method": "Stdlib parse of S1: object count, maximum motif row sum over columns 31:289, objects with at least 2 of C4/C5/C12/C13/D7",
+        "result": "483; 15 (Total column 15); 10 objects, all Ertebølle, S1 numbers 23, 51, 88, 116, 141, 189, 225, 240, 252, 278"
+      },
+      {
+        "check": "T06 disagreement cells",
+        "method": "S1 lookup of objects carrying F13+C5 and B2+B1",
+        "result": "Only No. 96 (Kongemose) and only No. 367 (Maglemose), as reported"
+      },
+      {
+        "check": "T14-T18 from published Fig. 3 transcription",
+        "method": "Python over published-values/fig3.csv segment columns",
+        "result": "3a: 0 single-class; 3b: 0 Maglemose-only, 1 Kongemose-only (B10 F38), 9 Ertebølle-only including C5 C12, maximum frequency 5"
+      },
+      {
+        "check": "Fig. 3 label transcription fidelity",
+        "method": "pdftoppm at 800 dpi piped to tesseract (no files written), compared with fig3.csv; closed-form PMI check for A1 C1 G1",
+        "result": "Most sampled labels agree; differences look like OCR digit confusions. A1 C1 G1 = ln(19/7.098) = 0.9846, as transcribed"
+      },
+      {
+        "check": "107 run-time texts",
+        "method": "Read S2.R lines 360-375; counted unique skipgrams in fig3.csv",
+        "result": "Texts come from the authors' createResultTable filter strings; 107 unique skipgrams = 107 texts"
+      },
+      {
+        "check": "Wrapper semantics",
+        "method": "Read run-analysis.R, run-reproduction.sh, and the Dockerfile in full; grepped compare-results.R structure; read expression-log status counts",
+        "result": "Mechanics only; 132 ok and 1 declared font tolerance; no skipped or re-ordered expressions"
+      },
+      {
+        "check": "Fig. 2 stacking-order claim",
+        "method": "Viewed the authors' artefact_type_chronology.png and the published Fig. 2 (PDF p.3)",
+        "result": "Reproduced order is Maglemose, Kongemose/Ertebølle, Kongemose, Ertebølle. The published order differs in mixed bars, consistent with the report"
+      },
+      {
+        "check": "Docker build log presence",
+        "method": "find for build artefacts in the attempt directory",
+        "result": "None present; build success inferred from the image id, the Dockerfile label, and the run-time inventory"
+      }
+    ],
+    "recommendations": [
+      "Persist the Docker build log (or the orchestrator's build record), including the printed sha256 values of the pinned tarballs, in the attempt artefact set so that the environment.md claims can be verified.",
+      "Record the T06 change of method (frequency > 2 lookup replaced by an any-frequency criterion inferred from the caption) as a plan deviation and get the approver's ruling on it before the T06 PAPER_ERROR enters study data.",
+      "When confirming the T06 PAPER_ERROR, note that the evidence is S1 data mapped through a box criterion the reproducer inferred, which is weaker than the T01 case, where the deposited S3 directly contradicts Table 1.",
+      "For T01, the confirming human should consider whether Table 1 reflects the v1 deposit's data state (the paper's methods cite v1). If so, a version-citation or data-revision finding may describe it better than a transcription error. AP-12 kept v1 out of scope here.",
+      "Align the element counts for named values between stdout and the report (counted elements against cross-checks), and report the T06 box comparison mainly as 289/291 rather than 2350/2352.",
+      "In future runs, transcribe published values for figures before the reproduced values are known, or record the order of transcription and run explicitly, to remove any appearance of unblinded reading."
+    ]
+  }
+}

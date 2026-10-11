@@ -1,0 +1,224 @@
+Expressions with untolerated errors: 0 
+COMPARE T01: 122/130 matched (rows 63 = 126 cells, header totals 4; element gate expects 130)
+      level frequency n_published n_reproduced frequency_match match n_in_s3
+81   bigram         8           6            5            TRUE FALSE       5
+71   bigram         7           8            9            TRUE FALSE       9
+41   bigram         4          32           31            TRUE FALSE      31
+32   bigram         3          59           60            TRUE FALSE      60
+210  bigram         2         154          153            TRUE FALSE      NA
+110  bigram         1        1224         1225            TRUE FALSE      NA
+211 trigram         2         222          221            TRUE FALSE      NA
+112 trigram         1        4094         4095            TRUE FALSE      NA
+                level published_sum_f_times_n reproduced_sum_f_times_n
+bigram         bigram                    2516                     2513
+trigram       trigram                    4962                     4961
+quadrigram quadrigram                    8622                     8622
+           deposited_data_sum_choose
+bigram                          2513
+trigram                         4961
+quadrigram                      8622
+T02 cross-check: Ertebolle max 4.098503 vs S3 top PMI 4.098503 
+COMPARE T02: 18/18 matched (exact at 2 dp: 18; max |diff| 0.00486)
+COMPARE T03: 50/50 matched (R1 aid: read-only S1 lookup)
+T04 left panel: bars 18 ; objects 483 
+T04 left panel: segment counts matching 72 of 72 ; bars whose stack order matches 11 of 18 
+                                              published_stack_order
+Maglemose   Maglemose > Kongemose > Kongemose/Ertebølle > Ertebølle
+Maglemose3                        Maglemose > Kongemose > Ertebølle
+Maglemose5                                                Maglemose
+Maglemose7                                    Maglemose > Ertebølle
+Maglemose8                          Kongemose/Ertebølle > Ertebølle
+Maglemose12                                               Ertebølle
+Maglemose14                                   Maglemose > Kongemose
+                                             reproduced_stack_order
+Maglemose   Maglemose > Kongemose/Ertebølle > Kongemose > Ertebølle
+Maglemose3                        Maglemose > Kongemose > Ertebølle
+Maglemose5                                                Maglemose
+Maglemose7                                    Maglemose > Ertebølle
+Maglemose8                          Kongemose/Ertebølle > Ertebølle
+Maglemose12                                               Ertebølle
+Maglemose14                                   Maglemose > Kongemose
+COMPARE T04: 72/72 matched (left panel: 18 bars x 4 chronology segments; stack order matches in 11 of 18 bars; map by eye)
+COMPARE T05: 256/256 matched (bars 128; label+PMI 128; totals 128; segments 128/128; element gate expects 256)
+T05 cross-check: published labels agreeing with S3 at 4 dp: 128 of 128 
+T06: matrix 49 x 49 ; axis order as specified: TRUE ; non-zero off-diagonal cells (lower triangle): 165 
+T06 aid: freq>2 bigrams 165 ; confined to one Chronology class 32 
+
+Ertebølle Kongemose Maglemose 
+       21         5         6 
+T06 extended aid: co-occurring pairs 467 ; single-class 291 ; single-class with >= 2 objects 76 
+           
+             1  2  3
+  Ertebølle 82 21 21
+  Kongemose 90 11  5
+  Maglemose 43 12  6
+T06 scored: cells 1176 ; box states matching 1174 ; published boxes 290 ; lookup single-class 291 
+T06 scored: fill coloured/uncoloured matching 1176 of 1176 ; colour distance quantiles 0 0 0 0 0 
+    x_motif y_motif box_class expected_box objects
+60       B2      B1              Maglemose       1
+762     F13      C5 Ertebølle    Kongemose       1
+[1] x_motif         y_motif         PMI             expected_fill  
+[5] centre_r        centre_g        centre_b        colour_distance
+<0 rows> (or 0-length row.names)
+    cell published_box  No          Site Chronology       Region
+1  B2 B1               367     Lundby II  Maglemose East Denmark
+2 F13 C5     Ertebølle  96 Jordløse Mose  Kongemose East Denmark
+COMPARE T06: 2350/2352 matched (cells 1176: box states 1174/1176, fill states 1176/1176; axis order as published TRUE)
+T07: pie membership matching 50 of 50 ; pairwise orderings matching 79 of 79 
+COMPARE T07: 129/129 matched (pie membership + pairwise relative positions; motif extents compared by eye)
+        sheet rows_s3 rows_reproduced only_in_s3 only_in_reproduction
+1     bigrams     165             165          0                    0
+2    trigrams     106             106          0                    0
+3 quadrigrams      20              20          0                    0
+  rows_in_same_position order_consistent_up_to_ties
+1                   165                        TRUE
+2                   106                        TRUE
+3                    20                        TRUE
+COMPARE T08: 2329/2329 matched (max abs diff 0; element gate expects 2329)
+New names:
+• `` -> `...17`
+• `` -> `...18`
+• `` -> `...19`
+• `` -> `...20`
+• `` -> `...21`
+• `` -> `...22`
+• `` -> `...23`
+• `` -> `...24`
+• `` -> `...25`
+• `` -> `...26`
+• `` -> `...27`
+• `` -> `...28`
+• `` -> `...29`
+• `` -> `...30`
+   target_id element                                                           
+1  T09       objects in corpus (nrow of the authors' data)                     
+2  T09       cross-check: S1 rows with a non-empty No. (R1 aid)                
+3  T10       max motifs on one object (row sums of S1 columns 31:289; R1 aid)  
+4  T10       cross-check: max S1 Total column                                  
+5  T10       cross-check: max tokens per document (quanteda::ntoken)           
+6  T11       top bigram frequency                                              
+7  T11       bigrams at top frequency                                          
+8  T11       cross-check: top frequency in full `bigrams` before Part 7        
+9  T12       share of objects carrying each top bigram (%)                     
+10 T13       frequency of A1 G1                                                
+11 T13       rank of A1 G1 by descending frequency                             
+12 T14       Fig. 3a bigrams confined to one Chronology class                  
+13 T15       Fig. 3b bigrams exclusive to Maglemose                            
+14 T16       Fig. 3b bigrams specific to Kongemose (count)                     
+15 T16       Fig. 3b bigrams specific to Kongemose (identity)                  
+16 T17       Fig. 3b bigrams unique to Ertebolle (count)                       
+17 T17       the eight listed identities all present                           
+18 T17       unlisted Ertebolle-only bigram(s) (record only)                   
+19 T18       max co-occurrence frequency among culture-specific Fig. 3b bigrams
+20 T19       cluster objects that are antler axes                              
+21 T19       cluster objects that are antler shafts                            
+22 T20       objects carrying >= 2 of C4, C5, C12, C13, D7 (inferred rule)     
+23 T20       cross-check: that set equals the ten Table 3 objects              
+   published                                            
+1  483                                                  
+2  483                                                  
+3  15                                                   
+4  15                                                   
+5  15                                                   
+6  44                                                   
+7  A1 C1;C1 G1                                          
+8  44                                                   
+9  approximately 9                                      
+10 28                                                   
+11 3                                                    
+12 0                                                    
+13 0                                                    
+14 1                                                    
+15 B10 F38                                              
+16 9                                                    
+17 I5 I13;C5 D7;C4 C12;C12 C13;C4 C5;I1 I13;C5 C13;I1 I5
+18 (not listed in text)                                 
+19 5                                                    
+20 9                                                    
+21 1                                                    
+22 10                                                   
+23 Table 3 rows                                         
+   reproduced                                            match
+1  483                                                   TRUE 
+2  483                                                   TRUE 
+3  15                                                    TRUE 
+4  15                                                    TRUE 
+5  15                                                    TRUE 
+6  44                                                    TRUE 
+7  A1 C1;C1 G1                                           TRUE 
+8  44                                                    TRUE 
+9  9.11                                                  TRUE 
+10 28                                                    TRUE 
+11 3                                                     TRUE 
+12 0                                                     TRUE 
+13 0                                                     TRUE 
+14 1                                                     TRUE 
+15 B10 F38                                               TRUE 
+16 9                                                     TRUE 
+17 I5 I13;C5 D7;C4 C12;C12 C13;C4 C5;I1 I13;C5 C13;I1 I5 TRUE 
+18 C5 C12                                                  NA 
+19 5                                                     TRUE 
+20 9                                                     TRUE 
+21 1                                                     TRUE 
+22 10                                                    TRUE 
+23 23;51;88;116;141;189;225;240;252;278                  TRUE 
+COMPARE T09: 2/2 matched 
+COMPARE T10: 3/3 matched 
+COMPARE T11: 3/3 matched 
+COMPARE T12: 1/1 matched 
+COMPARE T13: 2/2 matched 
+COMPARE T14: 1/1 matched 
+COMPARE T15: 1/1 matched 
+COMPARE T16: 2/2 matched 
+COMPARE T17: 2/2 matched 
+COMPARE T18: 1/1 matched 
+COMPARE T19: 2/2 matched 
+COMPARE T20: 2/2 matched 
+   target_id values_compared values_matched
+1  T01        130             122          
+2  T02         18              18          
+3  T03         50              50          
+4  T04         72              72          
+5  T05        256             256          
+6  T06       2352            2350          
+7  T07        129             129          
+8  T08       2329            2329          
+9  T09          2               2          
+10 T10          3               3          
+11 T11          3               3          
+12 T12          1               1          
+13 T13          2               2          
+14 T14          1               1          
+15 T15          1               1          
+16 T16          2               2          
+17 T17          2               2          
+18 T18          1               1          
+19 T19          2               2          
+20 T20          2               2          
+   note                                                                                           
+1  (rows 63 = 126 cells, header totals 4; element gate expects 130)                               
+2  (exact at 2 dp: 18; max |diff| 0.00486)                                                        
+3  (R1 aid: read-only S1 lookup)                                                                  
+4  (left panel: 18 bars x 4 chronology segments; stack order matches in 11 of 18 bars; map by eye)
+5  (bars 128; label+PMI 128; totals 128; segments 128/128; element gate expects 256)              
+6  (cells 1176: box states 1174/1176, fill states 1176/1176; axis order as published TRUE)        
+7  (pie membership + pairwise relative positions; motif extents compared by eye)                  
+8  (max abs diff 0; element gate expects 2329)                                                    
+9                                                                                                 
+10                                                                                                
+11                                                                                                
+12                                                                                                
+13                                                                                                
+14                                                                                                
+15                                                                                                
+16                                                                                                
+17                                                                                                
+18                                                                                                
+19                                                                                                
+20                                                                                                
+compare-results.R finished
+Warning messages:
+1: In data.frame(lon = as.numeric(dat$Coord.Long), lat = as.numeric(dat$Coord.Lat),  :
+  NAs introduced by coercion
+2: In data.frame(lon = as.numeric(dat$Coord.Long), lat = as.numeric(dat$Coord.Lat),  :
+  NAs introduced by coercion

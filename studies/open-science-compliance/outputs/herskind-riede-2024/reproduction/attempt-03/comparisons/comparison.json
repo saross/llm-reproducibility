@@ -1,0 +1,556 @@
+{
+  "schema_version": "1.1",
+  "paper_slug": "herskind-riede-2024",
+  "attempt": 3,
+  "plan_sha256": "89f2c93784d4e962971fcd19b9ecdee43c9c82258f610e69b25f0d6b73df55b5",
+  "verdict": "SUCCESSFUL",
+  "verdict_rationale": "The authors' S2.R ran byte-identical in the README-pinned environment (R 4.3.2, seven exact package versions, 0 fallbacks) and reproduced every computed result exactly: Table 2, all 128 Fig. 3 bars, all 2329 S3 cells, the Fig. 4 matrix and colours, and all named values. 17 of 20 locked targets are reproduced within tolerance (coverage 0.85). The remaining three do not contradict the paper's findings. Two are suspected paper errors in hand-made steps, where the authors' own deposited data and code support the reproduction: Table 1 has 8 counts off by one, and Fig. 4 has 2 wrong box annotations out of 291. The third is a presentation difference (Fig. 2 segment stacking order). Conclusions confirmed. The verdict stands subject to human confirmation of the two PAPER_ERROR calls.",
+  "targets": [
+    {
+      "target_id": "T01",
+      "outcome": "PAPER_ERROR",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 130,
+      "values_matched": 122,
+      "max_abs_difference": 1,
+      "evidence": "comparisons/values/t01-table1-cells.csv",
+      "notes": "Table 1: 63 rows x 2 values + 4 header totals = 130 (declared 130). All 63 frequency values, all 4 totals (230, 1543, 4422, 8466), and all 31 unigram and 5 quadrigram counts match. 8 counts differ by 1 in compensating pairs: bigram n at frequencies 8/7/4/3/2/1 is published 6/8/32/59/154/1224 and reproduced 5/9/31/60/153/1225; trigram n at frequencies 2/1 is published 222/4094 and reproduced 221/4095. Paper-error protocol: tier 2 (the authors' deposited S3 tables list 5, 9, 31, 60 bigrams at frequencies 8, 7, 4, 3, the reproduced values) and tier 3 (the authors' S2.R run unmodified on S1). Consistency check: the published bigram and trigram columns imply 2516 and 4962 occurrences; the deposited data imply 2513 and 4961 (sum over objects of choose(tokens, n)); quadrigrams agree at 8622. Escalated for human confirmation.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "stdout.log",
+          "sha256": "d0e71c8ffb6ad81265de629f64ff17140490b1b1048080d347913fe02cfeb493",
+          "lines": "162-197"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t01-table1-cells.csv",
+          "sha256": "25155d2d74ae04d6fe776dcd63d2ced58cde8e82d120d12d25e85fd3a7d00957"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t01-table1-totals.csv",
+          "sha256": "d6cb7a2dc457fe29b060a4fd22718cc44dd0256031c50745631866755376a0ab"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t01-occurrence-totals.csv",
+          "sha256": "397ae075e49a8c9d0a266af77183a222a830837262f4ba5bdbc5eaf0bbe2f053"
+        }
+      ]
+    },
+    {
+      "target_id": "T02",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 18,
+      "values_matched": 18,
+      "max_abs_difference": 0.00486,
+      "evidence": "comparisons/values/t02-table2.csv",
+      "notes": "All 18 summary statistics equal the published values when rounded to 2 dp; the largest unrounded difference is 0.00486 (Ertebølle 3rd quartile, 1.2951 vs 1.30). Printed summary() output is in stdout.log. The Ertebølle maximum, 4.0985, equals the top S3 bigram PMI (I5 I13).",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "stdout.log",
+          "sha256": "d0e71c8ffb6ad81265de629f64ff17140490b1b1048080d347913fe02cfeb493",
+          "lines": "284-295"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t02-table2.csv",
+          "sha256": "a434a4e89038a1f1212f74d4c8acd469854c5d942097456142ebfc7366648261"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t02-printed-summaries.txt",
+          "sha256": "2d5f22d6ac2f8ee1003d5b7f041adb5603219b6c5048690914b3c5c4faa38f39"
+        }
+      ]
+    },
+    {
+      "target_id": "T03",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 50,
+      "values_matched": 50,
+      "max_abs_difference": null,
+      "evidence": "comparisons/values/t03-table3.csv",
+      "notes": "R1 aid: read-only lookup in S1 by Figure reference (and Site). 10 rows x 5 columns = 50 (declared 50). The only normalisation applied is case, in the composed S1 'Material + Artefact type' (e.g. 'antler axe' vs 'Antler axe'). Sites, regions, motif sets, and figure references match as printed.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t03-table3.csv",
+          "sha256": "05e17f21b6819c686e47b7f1ccbb8eb1a6b3c751de70415ed7b5346ff5ac9067"
+        }
+      ]
+    },
+    {
+      "target_id": "T04",
+      "outcome": "MINOR_DISCREPANCY",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 72,
+      "values_matched": 72,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t04-fig2-left-compare.csv",
+      "notes": "Left panel (authors' code): 18 bars x 4 chronology segments = 72 counts, all equal to the published segments measured on the 300 ppi figure (tools/read-published-fig2.py); bar order identical; 483 objects. The difference: in the 7 bars holding both Kongemose and Kongemose/Ertebølle objects, the published panel stacks Kongemose before Kongemose/Ertebølle. The authors' deposited code stacks them the other way round (ggplot2's default level order, as in the published Fig. 3). Segment sizes and colours are unchanged. Right panel (map; R1 aid plotting S1 coordinates by Chronology, approved as full scope): the spatial pattern and per-class colours match. 466 objects are mapped; 17 at 'Unknown' sites with '-' coordinates cannot be. Basemap and projection are unpublished conventions. Conclusions unchanged.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/authors-run/artefact_type_chronology.png",
+          "sha256": "49a9346fbf0da54a6962c7101e3bbb55e44ff9f5f4f02167c051d666c0f88a06"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t04-fig2-left-bars.csv",
+          "sha256": "f66fa3065236049509ab4d506ea9309e46a484e8ee769e9cfa30797f17ad5c01"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t04-fig2-left-compare.csv",
+          "sha256": "51080b68774dee1ff4a8946ee3cc937579183ad7e4f2b095de095f7bbeb31fa5"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/aid-plots/t04-fig2-map-aid.png",
+          "sha256": "dd5142c95cdfc6c3d0c66e2e4683b84756d39b0bb339e69253f7cc38ba00c331"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t04-fig2-map-counts.csv",
+          "sha256": "27cf721653ba731f5ba19fc3be1d967292f39fd2e88a10a3ad9378dbe67c3113"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t04-fig2-map-unplotted.csv",
+          "sha256": "bbfa69124823f3a12c7d6aa3aa95bf0fae6386d43eca4c9d9622b2f518ed290b"
+        }
+      ]
+    },
+    {
+      "target_id": "T05",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 256,
+      "values_matched": 256,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t05-fig3-bars.csv",
+      "notes": "Six panels, 128 bars (declared 256 = 128 label+PMI + 128 totals): every skipgram identity, rank, 4-dp PMI label, and bar total matches, and all 128 per-chronology stack segments also match. The published labels agree with S3 at 4 dp for 128 of 128. The planner's low-resolution reading of the 3b I5 I13 label (4.0965) is 4.0985 at full resolution. Typography (Gill Sans MT) and GIMP composition are not scored.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/authors-run/bigramsBYfrequency.png",
+          "sha256": "6804da9e83c9745918d3850c5cc4d3f4f9d8b147f26575828ebdc2799f6d60fb"
+        },
+        {
+          "run": "run-04",
+          "path": "files/authors-run/bigramsBYpmi.png",
+          "sha256": "77f1d4fd511366f0c2122b7be68e0a8262df2ee05e6321ba69337ee453a7f4ba"
+        },
+        {
+          "run": "run-04",
+          "path": "files/authors-run/trigramsBYfrequency.png",
+          "sha256": "17a5664e2ddc62e5ad805dd43537a8e125b25df526226a0aa6cf5e56d2c899f8"
+        },
+        {
+          "run": "run-04",
+          "path": "files/authors-run/trigramsBYpmi.png",
+          "sha256": "43920fb2b71cf6e33b2511b69025f81c93aba5f1078ef0dc2e3d92ac621575e9"
+        },
+        {
+          "run": "run-04",
+          "path": "files/authors-run/quadrigramsBYfrequency.png",
+          "sha256": "2392cdc000ff5c6e3f29dc900950ebe1ace4de0ebc4d7c2a935b48eecdaffbfd"
+        },
+        {
+          "run": "run-04",
+          "path": "files/authors-run/quadrigramsBYpmi.png",
+          "sha256": "e544acea9d8468cb0645a6ea46ee563ee544ee635b3682bf7a244aea68b2756a"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t05-fig3-bars.csv",
+          "sha256": "67adfdd11187adf8c38a30c7b0c5f8dd86e60af81ab867bcd8d2135858bca690"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t05-fig3-vs-s3.csv",
+          "sha256": "3d22d9521f5b06b58f235e777e6d953488f2896e6fe3ee9c3a294aa225820e44"
+        }
+      ]
+    },
+    {
+      "target_id": "T06",
+      "outcome": "PAPER_ERROR",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2352,
+      "values_matched": 2350,
+      "max_abs_difference": null,
+      "evidence": "comparisons/values/t06-fig4-cells.csv",
+      "notes": "1176 lower-triangle cells x (box state, fill) = 2352. The axis order is identical to the published figure, and all 1176 cell fills match: the 58 visibly coloured cells have exactly the RGB of the authors' heatmap fills. Boxes: the published small boxes mark motif pairs whose co-occurring objects all belong to one culture complex, at any frequency. This criterion is inferred from the caption, and 289 of 291 boxes reproduce in presence and colour. Two cells disagree with the authors' deposited data (tier 2). F13-C5 is boxed yellow (Ertebølle), but its only co-occurrence is S1 No. 96, Jordløse Mose, which is Kongemose. B2-B1 is unboxed, although its only co-occurrence is S1 No. 367, Lundby II, which is Maglemose. The boxes were added by hand in GIMP. Escalated for human confirmation.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/authors-run/heatmapPMI.png",
+          "sha256": "3b5fa90635e1c4d9cc77189ddc15215f771a4472e9c074bcae50db31ab40d140"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t06-fig4-cells.csv",
+          "sha256": "11d7d5637233aae3a20b42ff766f2b22d783a4befb3a3c3a3116ad1f3e68c086"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t06-fig4-all-pairs-lookup.csv",
+          "sha256": "9a12e7d239554733a29f96a5b81f64742cfb95c0628b567fe09377e6e3458443"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t06-fig4-box-disagreements.csv",
+          "sha256": "107957fb046ad88568a8903340d8a45e44131792dfe726433f8b339dc6230653"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t06-fig4-exclusive-lookup.csv",
+          "sha256": "2d24b78cdde713ddca9df3fc6ad8bd5fea90da90c35c30edfac6beee932b4474"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/aid-plots/t06-fig4-all-pairs-aid.png",
+          "sha256": "c96731dd9d8b8a8958710ff9ad66299c71563d69d30c9f484578539094d9857a"
+        }
+      ]
+    },
+    {
+      "target_id": "T07",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 129,
+      "values_matched": 129,
+      "max_abs_difference": null,
+      "evidence": "comparisons/values/t07-fig5-membership.csv",
+      "notes": "R1 aid (approved as full scope). Pie membership: 10 objects x 5 motifs = 50 of 50 against S1. Relative positions: 79 of 79 pairwise east-west and north-south orderings (pairs at least 0.15 degrees apart) are consistent with the published pie positions. Motif extent patches were compared by eye with the S1 points for each motif: every point lies within its motif's patch, and the C12/C13 east versus C4/C5/D7 west pattern holds. Patch geometry is an unpublished construction and was not regenerated.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t07-fig5-membership.csv",
+          "sha256": "aa2f814c0427ab6c0ed307dc5699c81c6e6f6703c228961e982043e7a68f5ad6"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t07-fig5-relative-positions.csv",
+          "sha256": "20076cba779ed3efc8844bb3878673c5884a02895311d41c7c5452b54a262738"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t07-fig5-objects.csv",
+          "sha256": "63931ae442b7c693abbcc0a08b416d470dbe9acc34a665fbad7bbb1e1d56ec31"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t07-fig5-motif-object-counts.csv",
+          "sha256": "5e5c315466c5cefb7f551c5a7e74fe4c8ac1831ef0ea08cc1462f0cd438d564a"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/aid-plots/t07-fig5-aid.png",
+          "sha256": "9661313782ee7dae0cb731db8e8cc573110e68cd0d85dce4ea00426f94d0a5e4"
+        }
+      ]
+    },
+    {
+      "target_id": "T08",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2329,
+      "values_matched": 2329,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t08-s3-cells.csv",
+      "notes": "The authors' Bigrams/Trigrams/Quadrigrams.csv against the deposited S3.xlsx: the row sets are equal (165/106/20), every one of the 2329 cells is identical (max abs difference 0), and the rows are in the same positions.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/authors-run/Bigrams.csv",
+          "sha256": "7e934c8af96d81d676f6559af4337754aa5ea5f4c76df6b1a11f2990d8ecf91d"
+        },
+        {
+          "run": "run-04",
+          "path": "files/authors-run/Trigrams.csv",
+          "sha256": "4765b982f6a9f10cb770f3c7fbc230d4cef76f0a8019c92ea50db7750b1bd2d5"
+        },
+        {
+          "run": "run-04",
+          "path": "files/authors-run/Quadrigrams.csv",
+          "sha256": "801d448a690f6abce05665be3c61e45fa862358ef360157308adc15f8fd6b811"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t08-s3-cells.csv",
+          "sha256": "df8b15d553e63343c78c2947da348561ff8cf5afd7c22353dccf5b86a48af61e"
+        },
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t08-s3-rows.csv",
+          "sha256": "2e16ea5cb9a0fdf21f2887b73372025a1f118f8ccc8a3b84fc8a3c7c1df5ac03"
+        }
+      ]
+    },
+    {
+      "target_id": "T09",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "nrow of the authors' read_excel() object = 483 (readxl drops S1's 18 formatted empty rows). Cross-check: 483 S1 rows have a non-empty No.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        }
+      ]
+    },
+    {
+      "target_id": "T10",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "R1 aid: the maximum row sum of S1 columns 31:289 is 15. Cross-checks: the maximum of the S1 Total column is 15, and the maximum tokens per document (quanteda::ntoken on the authors' corpus) is 15.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        }
+      ]
+    },
+    {
+      "target_id": "T11",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2,
+      "values_matched": 2,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "Part 4 bigramfreqs: the maximum frequency is 44, held by exactly A1 C1 and C1 G1. Cross-check: the maximum observed_freq in the full bigrams table before Part 7 is 44.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        },
+        {
+          "run": "run-04",
+          "path": "stdout.log",
+          "sha256": "d0e71c8ffb6ad81265de629f64ff17140490b1b1048080d347913fe02cfeb493",
+          "lines": "169-174"
+        }
+      ]
+    },
+    {
+      "target_id": "T12",
+      "outcome": "WITHIN_PRECISION",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": null,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "R1 aid (inferred formula, inputs from the authors' code): 44 / 483 = 9.11%, which rounds to the stated 'approximately 9%'.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        }
+      ]
+    },
+    {
+      "target_id": "T13",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2,
+      "values_matched": 2,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "Part 4 bigramfreqs: A1 G1 = 28, rank 3 by descending frequency (after the two at 44).",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        },
+        {
+          "run": "run-04",
+          "path": "stdout.log",
+          "sha256": "d0e71c8ffb6ad81265de629f64ff17140490b1b1048080d347913fe02cfeb493",
+          "lines": "169-174"
+        }
+      ]
+    },
+    {
+      "target_id": "T14",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "Plot data of the authors' bigramsBYfrequency: 0 of the 21 Fig. 3a bigrams are confined to one Chronology class.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        }
+      ]
+    },
+    {
+      "target_id": "T15",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "Plot data of the authors' bigramsBYpmi: 0 Fig. 3b bigrams are exclusive to Maglemose.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        }
+      ]
+    },
+    {
+      "target_id": "T16",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2,
+      "values_matched": 2,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "Plot data of bigramsBYpmi: exactly 1 Kongemose-only bigram, B10 F38.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        }
+      ]
+    },
+    {
+      "target_id": "T17",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2,
+      "values_matched": 2,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "Plot data of bigramsBYpmi: 9 Ertebølle-only bigrams (the stated value, R4), including all 8 listed pairs. A text inconsistency is recorded, as the approver ruled: the unlisted ninth is C5 C12.",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        }
+      ]
+    },
+    {
+      "target_id": "T18",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "The maximum total frequency among the 10 culture-specific Fig. 3b bigrams is 5 (C4 C5).",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        }
+      ]
+    },
+    {
+      "target_id": "T19",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 2,
+      "values_matched": 2,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "R1 aid (read-only S1 lookup of the 10 Table 3 objects): 9 antler axes and 1 antler shaft (No. 278, Ydernæs 6).",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        }
+      ]
+    },
+    {
+      "target_id": "T20",
+      "outcome": "EXACT_MATCH",
+      "testable": true,
+      "failure_mode": null,
+      "values_compared": 1,
+      "values_matched": 1,
+      "max_abs_difference": 0,
+      "evidence": "comparisons/values/t09-t20-named-values.csv",
+      "notes": "R1 aid with the inferred rule (an object carrying at least 2 of C4, C5, C12, C13, D7): exactly 10 S1 objects, and the set equals the 10 Table 3 objects. The rule reproduces the printed count, so it is credited (Q5 ruling).",
+      "outputs": [
+        {
+          "run": "run-04",
+          "path": "files/comparison-out/t09-t20-named-values.csv",
+          "sha256": "5a7bfc6127d23a99057130dc6e676424fa67966c1f6fba610a86ec53c3fe2bf0"
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "targets_enumerated": 20,
+    "targets_reproduced": 17,
+    "coverage_fraction": 0.85
+  },
+  "escalations": [
+    {
+      "kind": "PAPER_ERROR",
+      "target_id": "T01",
+      "detail": "Table 1 (p. 4): 8 of 126 cells differ by 1 from the authors' code run unmodified on the deposited S1. Bigram n at frequencies 8, 7, 4, 3, 2, 1 is published as 6, 8, 32, 59, 154, 1224 and reproduced as 5, 9, 31, 60, 153, 1225; trigram n at frequencies 2, 1 is published as 222, 4094 and reproduced as 221, 4095. The distinct-item totals agree. Evidence tier 2: the authors' deposited S3 tables give 5, 9, 31, 60 bigrams at frequencies 8, 7, 4, 3. Consistency check: the published columns imply 2516 bigram and 4962 trigram occurrences, against 2513 and 4961 from the deposited data. Hypothesis, untested because version 1 is excluded by AP-12: Table 1 was transcribed from an earlier data state. Needs human confirmation."
+    },
+    {
+      "kind": "PAPER_ERROR",
+      "target_id": "T06",
+      "detail": "Fig. 4 (p. 6), box annotations added by hand in GIMP: 289 of 291 single-complex co-occurrences are boxed correctly. Two disagree with the deposited S1 (tier 2). Cell F13-C5 carries an Ertebølle (yellow) box, but its only co-occurring object is S1 No. 96, Jordløse Mose, which is Kongemose. Cell B2-B1 has no box, although its only co-occurring object is S1 No. 367, Lundby II, which is Maglemose (a single complex). The box criterion is inferred from the caption; under the Q5 ruling, printed values it does not reproduce go to the paper-error protocol. The matrix, axis order, and all cell colours reproduce exactly. Needs human confirmation."
+    },
+    {
+      "kind": "OTHER",
+      "target_id": "T17",
+      "detail": "Recorded text inconsistency, not escalated against the score (as the approval ruled): the text says nine Ertebølle-only bigrams but lists eight. The reproduction gives nine, and the unlisted ninth is C5 C12."
+    }
+  ]
+}
