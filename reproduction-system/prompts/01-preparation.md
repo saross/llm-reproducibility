@@ -1,7 +1,7 @@
 # Preparation Prompt — Session R-A
 
 **Version:** 1.5
-**Last Updated:** 2026-10-12 (v1.5: Phase 5 checks the wrapper's syntax inside the container, not on the host, after the gate 1.3 final review; v1.4, 2026-10-09: §1.0.2 runs through `run-container` in
+**Last Updated:** 2026-10-12 (v1.5: Phase 5 checks the wrapper's syntax inside the container, not on the host, and statement-by-statement runs use the lane's evaluator, after the gate 1.3 final review; v1.4, 2026-10-09: §1.0.2 runs through `run-container` in
 place of execution snapshots, and conversions declared for the gate to
 compare, gate 1.3; v1.3, 2026-10-05: §1.0.2 provenance
 anchors, execution snapshots, generated code, and conversion evidence,
@@ -117,7 +117,11 @@ difference is a declared wrapper or a flagged edit.
 - **Run the authors' files unmodified.** Paths, seeds, output capture, and
   error handling belong in your own files, listed under `wrappers` with a
   role. Never edit an authors' file, and never inline its code into a
-  wrapper.
+  wrapper. To run an original statement by statement (a tolerated error, or
+  errors captured per section), call the lane's evaluator,
+  `getOption("lane.hook")$run_file(path, tolerate = <lines>)`, never your
+  own `parse(file =)` loop, which the gate flags as `parsed-not-run`
+  (`wrapper-script-patterns.md`).
 - **An unavoidable edit is declared** under `declared_edit`, with the
   targets it affects. It is flagged for a human ruling.
 - **Run through the lane.** `venv/bin/python scripts/reproduction-lane.py

@@ -3953,6 +3953,11 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                        if e["event"] == "FORK" and e["fields"]}
         top_file: dict[str, dict] = {}
         bindings: dict[tuple[str, int], dict] = {}
+        # The lane's evaluator (hook 1.6, A-new-1): each run_file LOAD's
+        # parsed statements and their evaluations, by (token, load seq).
+        load_fns: dict[tuple[str, int], str] = {}
+        parsed: dict[tuple[str, int], dict[int, tuple[str, str]]] = {}
+        evaluated: dict[tuple[str, int], dict[int, tuple[str, str]]] = {}
 
         def lookup(token: str, seq: int) -> dict | None:
             # A forked child's events inside a load its parent had open at the
@@ -4147,6 +4152,7 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
             elif kind == "LOAD" and len(fields) >= 6:
                 binding = bind_load(event, where)
                 bindings[(token, event["seq"])] = binding
+                load_fns[(token, event["seq"])] = decode_field(fields[0])
                 count(binding["class"])
                 if decode_field(fields[0]) == "file":
                     top_file.setdefault(token, event)
@@ -4214,6 +4220,13 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                         f"matches no original, no chunk of an original document, and no tool "
                         f"expression: confirm what it ran",
                         files={"text": md5, **evidence}))
+            elif kind == "STMT" and len(fields) >= 5 and fields[0].isdigit():
+                parsed.setdefault((token, int(fields[0])), {})[int(fields[1])] = (
+                    fields[2], fields[3])
+            elif kind == "EVAL" and len(fields) >= 4 and fields[0].isdigit():
+                message = decode_field(fields[3]) if fields[3] != "none" else ""
+                evaluated.setdefault((token, int(fields[0])), {})[int(fields[1])] = (
+                    fields[2], message)
             elif kind == "CONN" and len(fields) >= 3:
                 count("connection")
                 caller = decode_field(fields[5]) if len(fields) > 5 else ""
@@ -4252,6 +4265,58 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                     f"{decode_field(fields[2])}, which records no repository or remote source: "
                     f"it was installed locally, so {note}",
                     files={"DESCRIPTION": fields[7], "version": version}))
+
+        # The lane's evaluator (A-new-1): an original it ran must have every
+        # parsed statement evaluated. A skipped statement is an omission, and
+        # a tolerated or continued error is a flag for the Q6 ruling. An
+        # original parsed by parse(file =) outside the evaluator was then run
+        # by the wrapper's own loop, which only the wrapper records.
+        for key, binding in sorted(bindings.items()):
+            oid = binding.get("id")
+            if binding.get("class") not in ("original", "edited-copy") or oid is None:
+                continue
+            fn = load_fns.get(key)
+            if fn == "parse":
+                add(flags, Issue.flag(
+                    "parsed-not-run", f"{oid}@{run_id}", f"{run_id} parsed original {oid!r} "
+                    f"with parse(file =) outside the lane's evaluator, so only the wrapper's "
+                    f"own record shows which of its statements ran, and whether any was "
+                    f"altered or skipped: run it with getOption(\"lane.hook\")$run_file()",
+                    files={"original": binding.get("md5") or oid}))
+                continue
+            if fn != "lane::run_file":
+                continue
+            statements = parsed.get(key, {})
+            outcomes = evaluated.get(key, {})
+
+            def lines_of(index: int, spans: dict = statements) -> str:
+                first, last = spans.get(index, ("?", "?"))
+                return first if first == last else f"{first}-{last}"
+
+            skipped = [i for i in sorted(statements) if i not in outcomes]
+            if skipped:
+                shown = ", ".join(lines_of(i) for i in skipped[:8])
+                add(flags, Issue.flag(
+                    "original-partly-run", f"{oid}@{run_id}/statements", f"{run_id}: the "
+                    f"lane's evaluator ran {len(outcomes)} of {len(statements)} statements of "
+                    f"original {oid!r}; lines {shown}" + (" and more" if len(skipped) > 8
+                                                         else "")
+                    + " never ran: running only some of the authors' statements is an "
+                    "omission, so confirm it changes no result",
+                    files={"original": binding.get("md5") or oid,
+                           "skipped": json_digest(skipped)}))
+            for index, (status, message) in sorted(outcomes.items()):
+                if status == "ok":
+                    continue
+                code = "tolerated-statement" if status == "tolerated" else "statement-error"
+                add(flags, Issue.flag(
+                    code, f"{oid}:{lines_of(index)}@{run_id}", f"{run_id}: statement "
+                    f"{index} of original {oid!r} (lines {lines_of(index)}) errored "
+                    f"({message[:200]}) and the evaluator {status}: a target is credited "
+                    f"only from statements that completed, so confirm it computes nothing "
+                    f"that enters a result",
+                    files={"original": binding.get("md5") or oid,
+                           "outcome": json_digest([index, status, message])}))
 
         # An original run part by part: loaded when the slices cover every
         # code line, in order; otherwise an omission, flagged.

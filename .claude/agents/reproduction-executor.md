@@ -30,8 +30,9 @@ crema probe showed that a rocker image's built-in snapshot date silently
 governs unpinned packages. v1.7 (2026-10-12, the gate 1.3 final review): each
 target declares whether its comparison followed the approved plan's method
 (F4), published values are transcribed from the source before the first run
-(F6), and the package-date rule covers unversioned tags, floating mirrors,
-and conflicting specifications.
+(F6), the package-date rule covers unversioned tags, floating mirrors, and
+conflicting specifications, and statement-by-statement runs go through the
+lane's evaluator (A-new-1).
 The FAIR-lane benchmark arms do not bind this lane. A model change is a §8
 regression-gate trigger (amendment 1 §3). Opus 5.5 defaults to medium effort,
 so the invoking workflow pins effort explicitly. The pin lives only in this
@@ -68,7 +69,10 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
      the result is then flagged, never `identical`.
    - Run the authors' files byte-identical. Put every mechanic (paths, seeds,
      output capture, error handling) in your own files, declared under
-     `wrappers`; never edit or inline the authors' code.
+     `wrappers`; never edit or inline the authors' code. To run an original
+     statement by statement, use the lane's evaluator,
+     `getOption("lane.hook")$run_file(path, tolerate = <lines>)`, not your
+     own `parse(file =)` loop, which the gate flags (`parsed-not-run`).
    - If an edit to an authors' file is unavoidable, declare it
      (`declared_edit`, with the targets it affects) and log it. The gate fails
      an undeclared difference and flags a declared one for human ruling.

@@ -48,6 +48,26 @@
 #          Field: the number of suppressed TEXT repeats.
 #   HOOKERR a tracer failed: the function and the message. A load may then
 #          have gone unlogged, so the gate treats it as an error.
+#   STMT   from the lane's evaluator (run_file, below): one per top-level
+#          statement it parsed, with the seq of its LOAD, the statement's
+#          index, its first and last line, and the md5 of its source text.
+#   EVAL   from the lane's evaluator: one per statement it evaluated, with
+#          the seq of its LOAD, the index, the status ("ok", "tolerated",
+#          "error" when the wrapper asked to continue past errors, or
+#          "stopped"), and the error message for any status but "ok".
+#
+# The lane's evaluator (hook 1.6, 2026-10-12, the gate 1.3 final review's
+# A-new-1). A wrapper that evaluated an original statement by statement after
+# its own parse(file =) was the only record of which statements ran, and Fable
+# showed that one altered in memory passed the gate as identical. A wrapper
+# that must run an authors' script statement by statement (to tolerate one
+# declared statement's error, or to capture errors per section) calls
+# getOption("lane.hook")$run_file(path, tolerate = <lines>,
+# continue_on_error = FALSE). The lane parses the file and evaluates each
+# top-level statement itself, in order, in the global environment, printing
+# visible values as Rscript does, so nothing can alter or skip a statement
+# between the parse and the evaluation; the gate binds the EVAL events to the
+# STMT events.
 #
 # The traces are installed BEFORE the user profile is sourced, or loads made
 # inside it (renv's activate.R) would go unlogged (Fable's specification
@@ -91,7 +111,7 @@ local({
     }
 
     state <- new.env(parent = baseenv())
-    state$version <- "1.5-inst"
+    state$version <- "1.6-inst"
     # The longest text a TEXT event carries verbatim, in bytes: as hex it
     # doubles, and the line must stay under the 4,096-byte atomic write.
     TEXT_VERBATIM_MAX <- 512L
@@ -417,6 +437,54 @@ local({
         state$loads[[length(state$loads) + 1L]] <- list(env = frame, seq = state$seq)
     })
     api$load <- function(fn, frame, path) guard(fn, on_load(fn, path, frame))
+    api$run_file <- function(path, tolerate = integer(), continue_on_error = FALSE,
+                             envir = globalenv()) {
+        # The lane's evaluator (see the header). `tolerate` names lines of
+        # the file: a statement spanning one of them may error without
+        # stopping the run, and its EVAL says so. With continue_on_error, any
+        # statement may, and each error is an EVAL with status "error".
+        # Otherwise the first error stops the run, as it stops Rscript.
+        frame <- environment()
+        seq <- guard("lane::run_file", on_load("lane::run_file", path, frame))
+        # This parse() is the evaluator's own mechanics: its frame is an
+        # active load, so the parse tracer does not log it again.
+        exprs <- parse(file = path, keep.source = TRUE)
+        refs <- attr(exprs, "srcref")
+        spans <- vector("list", length(exprs))
+        for (i in seq_along(exprs)) {
+            span <- if (is.null(refs)) c(NA_integer_, NA_integer_)
+                    else c(refs[[i]][1L], refs[[i]][3L])
+            spans[[i]] <- span
+            source_text <- if (is.null(refs)) deparse(exprs[[i]]) else as.character(refs[[i]])
+            guard("lane::run_file", emit("STMT", c(as.character(seq), as.character(i),
+                                                   as.character(span[1L]),
+                                                   as.character(span[2L]),
+                                                   text_md5(paste(source_text,
+                                                                  collapse = "\n")))))
+        }
+        tolerate <- as.integer(tolerate)
+        for (i in seq_along(exprs)) {
+            span <- spans[[i]]
+            outcome <- tryCatch(withVisible(eval(exprs[[i]], envir)),
+                                error = function(e) e)
+            if (inherits(outcome, "error")) {
+                tolerated <- !anyNA(span) && any(tolerate >= span[1L] & tolerate <= span[2L])
+                status <- if (tolerated) "tolerated"
+                          else if (isTRUE(continue_on_error)) "error" else "stopped"
+                guard("lane::run_file", emit("EVAL", c(
+                    as.character(seq), as.character(i), status,
+                    hex(substr(conditionMessage(outcome), 1L, 300L)))))
+                if (status == "stopped") stop(outcome)
+                message("Error (", status, " by the lane's evaluator): ",
+                        conditionMessage(outcome))
+                next
+            }
+            if (outcome$visible) print(outcome$value)
+            guard("lane::run_file", emit("EVAL", c(as.character(seq), as.character(i),
+                                                   "ok", "none")))
+        }
+        invisible(NULL)
+    }
     api$text <- function(fn, text) guard(fn, on_text(text, caller = fn))
     api$end <- emit_end
     options(lane.hook = api)

@@ -1798,6 +1798,64 @@ class AccountDockerTests(AccountRunMixin, unittest.TestCase):
                                                  for f in result["flags"]])
 
 
+# The gate 1.3 final review's A-new-1: an authors' script for the lane's
+# evaluator. Statement 2 errors only when FAIL is set; statement 3 is the one
+# Fable's experiment altered in memory.
+EVALUATED = ('x <- c(1, 2, 3, 4)\n'
+             'if (exists("FAIL")) stop("no such font")\n'
+             'kept <- x[x > 2]\n'
+             'dir.create("outputs", showWarnings = FALSE)\n'
+             'write.csv(kept, "outputs/kept.csv")\n')
+
+
+@unittest.skipUnless(docker_ready(), f"needs Docker and {IMAGE}")
+class EvaluatorDockerTests(AccountRunMixin, unittest.TestCase):
+    """The lane's evaluator (hook 1.6): run_file parses and evaluates an
+    original itself, so the gate binds every evaluated statement to a parsed
+    one, and the old parse-and-evaluate pattern is flagged."""
+
+    def run_wrapper(self, wrapper: str) -> tuple[dict, dict, list[str]]:
+        self.attempt(wrapper, {"analysis.R": EVALUATED})
+        doc, result = self.run_and_check(IMAGE)
+        return doc, result, [getattr(f, "issue_id", str(f)) for f in result["flags"]]
+
+    def test_the_evaluator_runs_every_statement_and_raises_nothing(self):
+        doc, result, flags = self.run_wrapper(
+            'getOption("lane.hook")$run_file("authors-code/analysis.R")\n')
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["account"]["originals_loaded"], ["analysis.R"])
+        self.assertFalse([f for f in flags if f.split(":")[0] in (
+            "parsed-not-run", "original-partly-run", "tolerated-statement",
+            "statement-error")], flags)
+
+    def test_a_tolerated_statement_is_a_flag_naming_its_lines(self):
+        doc, _, flags = self.run_wrapper(
+            'FAIL <- TRUE\n'
+            'getOption("lane.hook")$run_file("authors-code/analysis.R", tolerate = 2L)\n')
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertIn("tolerated-statement:analysis.R:2@run-01", flags)
+        self.assertNotIn("original-partly-run:analysis.R@run-01/statements", flags)
+
+    def test_an_untolerated_error_stops_the_run_and_leaves_statements_unrun(self):
+        doc, _, flags = self.run_wrapper(
+            'FAIL <- TRUE\n'
+            'getOption("lane.hook")$run_file("authors-code/analysis.R")\n')
+        self.assertNotEqual(doc["state"], "complete")
+        self.assertIn("statement-error:analysis.R:2@run-01", flags)
+        self.assertIn("original-partly-run:analysis.R@run-01/statements", flags)
+
+    def test_parse_then_evaluate_in_the_wrapper_is_flagged(self):
+        """Fable's experiment: statement 3 altered in memory after the
+        wrapper's own parse(file =). Gate 1.3 called the code identical."""
+        doc, _result, flags = self.run_wrapper(
+            'exprs <- parse(file = "authors-code/analysis.R")\n'
+            'exprs[[3]] <- quote(kept <- x[x > 3])\n'
+            'for (e in exprs) eval(e, globalenv())\n')
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertIn("parsed-not-run:analysis.R@run-01", flags)
+
+
 # An authors' package tree. The Encoding field makes R CMD INSTALL parse its
 # R files as text with a #line header (the probed branch).
 PACKAGE = {"mypkg/DESCRIPTION": ("Package: mypkg\nVersion: 0.1\nTitle: Probe\n"
