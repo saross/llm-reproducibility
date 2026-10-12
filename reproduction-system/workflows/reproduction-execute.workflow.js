@@ -165,9 +165,10 @@ const execPrompt = (p) =>
   `names: ${receipt_keys.executor.join(', ')}. In pulled_files_read list bare file paths only — ` +
   `no versions, tokens, or comments in the string. ` +
   `List a file in pulled_files_read only if you read all of it (Read with no limit or ` +
-  `offset, or cat with nothing but tee or cat after it); head, tail, sed -n, grep, and a ` +
-  `piped cat are partial reads, which make your receipts invalid and the run ` +
-  `inadmissible, so read the file in full or leave it out.\n` +
+  `offset, or a Bash command that is only cat <path>, perhaps after cd <dir> &&); head, ` +
+  `tail, sed -n, grep, and a cat that is piped, redirected, or one step among other ` +
+  `commands do not count, and make your receipts invalid and the run inadmissible, so ` +
+  `read the file in full or leave it out.\n` +
   (rulings.length ? `Registrant rulings (apply to every paper): ${rulings.join(' ')}\n` : '') +
   `1. First verify the approval: sha256sum the plan file and confirm it equals both the hash above and ` +
   `the approval record's plan_sha256, with decision "approve". Any mismatch: ESCALATE and stop.\n` +
@@ -255,9 +256,10 @@ const reviewPrompt = (p) =>
   `${receipt_keys.reviewer.join(', ')}. In pulled_files_read list bare file paths only — no ` +
   `versions, tokens, or comments in the string. ` +
   `List a file in pulled_files_read only if you read all of it (Read with no limit or ` +
-  `offset, or cat with nothing but tee or cat after it); head, tail, sed -n, grep, and a ` +
-  `piped cat are partial reads, which make your receipts invalid and the run ` +
-  `inadmissible, so read the file in full or leave it out.\n` +
+  `offset, or a Bash command that is only cat <path>, perhaps after cd <dir> &&); head, ` +
+  `tail, sed -n, grep, and a cat that is piped, redirected, or one step among other ` +
+  `commands do not count, and make your receipts invalid and the run inadmissible, so ` +
+  `read the file in full or leave it out.\n` +
   `gate-report.json lists review_obligations: what the mechanical gate cannot verify (wrapper ` +
   `semantics, dynamic evaluation, content fetched into the image). Address each one explicitly ` +
   `in your provenance dimension.\n` +

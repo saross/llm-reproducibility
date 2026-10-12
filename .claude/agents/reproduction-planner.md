@@ -60,11 +60,14 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
 ## Output contract
 
 List a file in `pulled_files_read` only if you read all of it: a Read with no
-`limit` or `offset`, or `cat` with nothing but `tee` or `cat` after it.
-`head`, `tail`, `sed -n`, `grep`, and a `cat` piped into anything else are
-partial reads; a declared file you read only partly makes your receipts
-invalid and the run inadmissible, and no ruling can change that. Read the
-file in full, or leave it out of the list.
+`limit` or `offset`, or a Bash command that is only `cat <path>` (several
+paths, `cd <dir> &&` before it, or `2>&1` after it are fine). A `cat` that is
+piped or redirected, follows `||` or `;`, or shares its command with anything
+but `cd`, `echo`, or another `cat` does not count, because its success does
+not show that you received the file; nor do `head`, `tail`, `sed -n`, or
+`grep`. A declared file not read that way makes your receipts invalid and the
+run inadmissible, and no ruling can change that. Read the file in full, or
+leave it out of the list.
 
 Required receipt fields: `instrument_versions`, `instrument_receipts`,
 `agent_version` ("reproduction-planner v1.3"), `model_id`,

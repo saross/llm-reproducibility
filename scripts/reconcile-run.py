@@ -415,6 +415,13 @@ def revalidate(lines: list[str], agent_type: str, manifest: dict, gate,
             problems.append(f"declared pull truncated ({how}): {declared_path}")
         elif verdict == "searched":
             problems.append(f"declared pull only searched, never read: {declared_path}")
+        elif verdict == "undelivered":
+            problems.append(f"declared pull {how}: {declared_path}")
+        elif verdict != "read":
+            # Fail-closed (Astra's delta review of gate 1.3.1, D-Astra-1): a
+            # verdict this list does not name is not a clean read.
+            problems.append(f"declared pull has unrecognised verdict {verdict!r}: "
+                            f"{declared_path}")
 
     # D3 pack verification (amendment 2 §2): a workflow-declared evidence
     # pack must still hash to its declared value AND have been fully read —

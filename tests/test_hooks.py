@@ -387,9 +387,70 @@ class ReceiptGateTests(unittest.TestCase):
             self.assertEqual(self._gate_bash(
                 [command], ["/repo/reproduction-system/templates/README.md"]), ["block"],
                 command)
+
+    # Astra's delta review of gate 1.3.1, D-Astra-1: a successful command
+    # need not deliver a file's contents.
+
+    def test_reads_whose_delivery_is_not_established_block(self) -> None:
+        """Redirected, skipped, replaced, piped on, backgrounded, sequenced,
+        substituted, and commented reads do not verify a pull; tee was
+        accepted until this review, but without pipefail the pipeline's
+        success is tee's, not cat's."""
+        undelivered = ("cat /ref/guide.md > /tmp/copy.md", "true || cat /ref/guide.md",
+                       "cat /ref/guide.md; true", "cat /ref/guide.md &",
+                       "cat /ref/guide.md >&2", "cat /ref/guide.md &> /tmp/log",
+                       "cat /ref/guide.md $(true)", "false && true || cat /ref/guide.md")
+        for command in undelivered:
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["block"], command)
+            self.assertIn("read it on its own", self.events[-1]["reason"], command)
+        for command in ("cat /ref/guide.md | cat /ref/other.md",
+                        "cat /ref/guide.md | tee /tmp/copy.md"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["block"], command)
+            self.assertIn("piped into another command", self.events[-1]["reason"], command)
+        for command in ("# x; cat /ref/guide.md", "(cat /ref/guide.md)",
+                        "cat /tmp/copy.md > /ref/guide.md"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["block"], command)
+            self.assertIn("no matching", self.events[-1]["reason"], command)
+
+    def test_established_shell_reads_verify_pulls(self) -> None:
+        """One && chain of cd, full reads, and echo, with standard error
+        redirected at most, a trailing comment, or a continued line."""
+        for command in ("cd /ref && cat guide.md 2>&1", "cat /ref/guide.md 2>/dev/null",
+                        "cat /ref/guide.md # the guide", "cd /ref &&\n  cat guide.md",
+                        "cat /ref/a.md && echo --- && cat /ref/guide.md"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["pass"], command)
+
+    def test_read_and_spill_paths_match_whole(self) -> None:
+        """A Read of guide.md.bak verifies neither guide.md nor, for a
+        spilled read, the spill file it was named after."""
+        self.assertEqual(self.run_gate(None, transcript=self._transcript_with_read(
+            "/ref/guide.md.bak", False, {**valid_payload(), "receipts": {
+                **valid_payload()["receipts"], "pulled_files_read": ["/ref/guide.md"]}})),
+            ["block"])
         self.events.clear()
-        self.assertEqual(self._gate_bash(["cat /ref/guide.md | tee /tmp/copy.md"],
-                                         ["/ref/guide.md"]), ["pass"])
+        spilled = ("<persisted-output>\nOutput too large (40KB). Full output saved to: "
+                   "/tmp/spill/out.txt\n</persisted-output>")
+        payload = valid_payload()
+        payload["receipts"]["pulled_files_read"] = ["/ref/big.md"]
+        calls = [("Bash", {"command": "cat /ref/big.md"}, spilled, False),
+                 ("Read", {"file_path": "/tmp/spill/out.txt.old"}, "body", False)]
+        self.assertEqual(self.run_gate(None, transcript=self._transcript_with_calls(
+            calls, payload)), ["block"])
+
+    def test_a_glob_matches_as_the_shell_expands_it(self) -> None:
+        """* stays within one component and skips dot files, and a quoted
+        pattern is a literal name."""
+        self.assertEqual(self._gate_bash(["cat /ref/*.md"], ["/ref/x.md"]), ["pass"])
+        for command, declared in (("cat /ref/*.md", "/ref/sub/x.md"),
+                                  ("cat /ref/*.md", "/ref/.hidden.md"),
+                                  ('cat "/ref/*.md"', "/ref/x.md")):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], [declared]), ["block"],
+                             (command, declared))
 
     def test_a_heredoc_body_is_not_a_shell_read(self) -> None:
         self.assertEqual(self._gate_bash(["python3 - <<'EOF'\ncat /ref/guide.md\nEOF"],
