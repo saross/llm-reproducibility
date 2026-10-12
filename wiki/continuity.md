@@ -39,14 +39,20 @@ merged here as PR #1).
   - [ ] **Astra's delta review of `1d875d2`** (in progress at handoff; it
     arrives in `~/agent-mail/codex/outbox/claude/`). Receipt it, fix any
     finding on the branch with tests, and mail the closures.
-  - [ ] **Pilot re-run under gate 1.3.1:** a new run configuration
-    (herskind attempt 4, a new run id) beside
+  - [ ] **Merge order (side note, 2026-10-12):** the re-run must test PR
+    #11's code. The session's agent definitions, hooks, and workflow
+    scripts load from the main checkout, so launching before PR #11 merges
+    would test the old gate. Order: Astra's delta review comes back clean,
+    then Shawn merges PR #11, then the pilot runs from main. Any defect the
+    pilot finds goes into a follow-up PR.
+  - [ ] **Pilot re-run under gate 1.3.1 (from main, after PR #11 merges):**
+    a new run configuration (herskind attempt 4, a new run id) beside
     `validation/gate-1-3-pilot-rerun/run-config.yaml`. Then the API review
     gate (≈$14 API-equivalent on the Max plan, as before), and plan
     approval. Launch each stage with exactly `Run the approved stage.`
     Then the post-run order: check-attempt, audit-run, human-queue,
     rulings, persist-results. Fable's view: with a clean re-run the
-    hardening closes. Then Shawn merges PR #11.
+    hardening closes.
   - [ ] **Haiku 5.5 pricing** (Sonnet subagent, 2026-10-12, verified
     against platform.claude.com/docs/en/about-claude/pricing). It has two
     tiers by prompt length, in USD per million tokens (input, output,
