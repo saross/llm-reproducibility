@@ -94,7 +94,11 @@ configuration (for the shakedown:
     writes outside scope, cost), and into each attempt the transcript audit
     (`transcript-audit.json`) and the run audit (`run-audit.json`): each
     governed role's verdict, the launch commit and plan it ran under, and
-    flags for every escalation, review concern, and blinding warning.
+    flags for every escalation, review concern, and blinding warning. The
+    run audit is bound to this workflow run, to each role's agent and
+    accepted payload (by digest), and to the attempt state the in-workflow
+    gate check recorded just before the review. It selects results as
+    `persist-results` does and refuses two results for one paper.
 12. **Human queue:** rebuild it from the authoritative records with
     `reproduction-lane.py human-queue --config $CFG --workflow-result <the
     workflow's result JSON> --out <file>`. It lists every failed gate and
@@ -109,9 +113,15 @@ configuration (for the shakedown:
     `venv/bin/python scripts/reproduction-lane.py persist-results --config $CFG --run-dir <workflow run dir>`,
     last. It persists an attempt's payloads only when the attempt is
     eligible: a passing gate, a clean transcript audit, a run audit with
-    both roles clean, and every issue ruled. To keep payloads before then,
-    `--record-unruled` records them as ineligible, and a fresh
-    `persist-results --force` is needed after the rulings.
+    both roles clean, and every issue ruled. The run audit must be the one
+    for this workflow run and must have cleared these very results, and the
+    attempt must be unchanged since the gate check that preceded its review:
+    after a changed artefact, re-run the review, since re-auditing cannot
+    supply a review of the new state. Rulings, the authoritative gate
+    report, the audits, and the persisted results are not part of that
+    state. To keep payloads before then, `--record-unruled` records them as
+    ineligible, and a fresh `persist-results --force` is needed after the
+    rulings.
 
 ## Where each invariant is enforced
 

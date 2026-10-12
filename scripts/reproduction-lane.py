@@ -5814,8 +5814,80 @@ def admitted_coverage(verdict: str, issues: list[dict], rulings: list[dict],
             "unruled_issues": unruled}
 
 
-def run_audit_reasons(target_dir: Path, report: dict, rulings: list[dict]) -> list[str]:
-    """Why an attempt's run audit keeps it out of study data (F8)."""
+# Astra's delta review of gate 1.3.1, D-Astra-3: a run audit clears one
+# workflow's results, for the attempt as its reviewer was handed it.
+# Version 1.1 records the workflow run, each role's agent and accepted
+# payload digest, and the reviewed artefact state; admission refuses an audit
+# without them.
+RUN_AUDIT_VERSION = "1.1"
+# Records written after the review, or that hold its results: the rest of
+# the attempt is the state the reviewer was handed. A run lock is transient.
+POST_REVIEW_FILES = frozenset({GATE_FILE, EXECUTION_FILE, REVIEW_FILE, RULINGS_FILE,
+                               AUDIT_FILE, RUN_AUDIT_FILE, f"{RECORDS_DIR}/{LOCK_FILE}"})
+ARTEFACT_STATE_RE = re.compile(r'"artefact_state_sha256":\s*"([0-9a-f]{64})"')
+
+
+def artefact_state(target_dir: Path) -> str:
+    """One digest of an attempt's reviewable state.
+
+    The sha256 of every file in the attempt tree (as ``tree_inventory``
+    lists it) except the post-review records, digested together with the
+    files' relative paths. check-attempt reports and prints it; audit-run
+    and persist-results compare it with the attempt as it stands, so a
+    comparison changed after the review cannot reuse that review's
+    clearance (D-Astra-3).
+    """
+    with digest_snapshot():
+        inventory = tree_inventory(target_dir)
+    return json_digest({rel: digest for rel, digest in inventory.items()
+                        if rel not in POST_REVIEW_FILES})
+
+
+def reviewed_states(run_dir: Path, config: dict) -> dict[str, list[str]]:
+    """The attempt state each paper's in-workflow gate check recorded.
+
+    The execute workflow runs check-attempt for a paper after its executor
+    and before its reviewer, through an ungoverned gate agent, and the
+    command prints the attempt's artefact state. The last state in each
+    gate agent's transcript is therefore the one the reviewer was handed,
+    as the harness recorded the command's output, not as a model relayed it.
+
+    Returns:
+        ``{slug: [states]}``, one state per gate agent that recorded one,
+        sorted; more than one distinct state is ambiguous.
+    """
+    governed = {config["agents"]["executor"], config["agents"]["reviewer"]}
+    states: dict[str, set[str]] = {}
+    for transcript in sorted(run_dir.glob("agent-*.jsonl")):
+        meta_path = transcript.with_name(f"{transcript.stem}.meta.json")
+        meta = (json.loads(meta_path.read_text(encoding="utf-8"))
+                if meta_path.is_file() else {})
+        if str(meta.get("agentType") or "") in governed:
+            continue
+        lines = transcript.read_text(encoding="utf-8").splitlines()
+        paper = PAPER_RE.search(first_user_text(lines))
+        found = [state for call in timed_tool_calls(lines)
+                 if call["name"] == "Bash" and "check-attempt" in str(
+                     call["input"].get("command") or "")
+                 for state in ARTEFACT_STATE_RE.findall(call["output"])]
+        if paper and found:
+            states.setdefault(paper.group(1), set()).add(found[-1])
+    return {slug: sorted(found) for slug, found in states.items()}
+
+
+def run_audit_reasons(target_dir: Path, report: dict, rulings: list[dict],
+                      bound: dict | None = None) -> list[str]:
+    """Why an attempt's run audit keeps it out of study data (F8).
+
+    Args:
+        target_dir: The attempt directory.
+        report: Its authoritative gate report.
+        rulings: Its rulings.
+        bound: The results being persisted: ``{run_id, workflow_run, roles:
+            {role: {agent_id, payload_sha256}}}``. The run audit must have
+            cleared exactly these, for the attempt as it stands (D-Astra-3);
+            None, or a role missing, is a reason.
+    """
     try:
         run_audit = json.loads((target_dir / RUN_AUDIT_FILE).read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -5830,6 +5902,40 @@ def run_audit_reasons(target_dir: Path, report: dict, rulings: list[dict]) -> li
         elif not entry.get("clean"):
             reasons.append(f"the run audit found the {role} unclean: "
                            f"{'; '.join(entry.get('problems') or [])[:400]}")
+    if run_audit.get("run_audit_version") != RUN_AUDIT_VERSION:
+        reasons.append(f"the run audit is version {run_audit.get('run_audit_version')!r}, "
+                       f"which does not bind results (run audit-run again)")
+    if bound is None:
+        reasons.append("no result was named to bind the run audit to (admission is assessed "
+                       "for the results persist-results is persisting)")
+    else:
+        for key in ("run_id", "workflow_run"):
+            if run_audit.get(key) != bound.get(key):
+                reasons.append(f"the run audit is for {key} {run_audit.get(key)!r}, not "
+                               f"{bound.get(key)!r}: run audit-run on the workflow run being "
+                               f"persisted")
+        for role in ("executor", "reviewer"):
+            given = (bound.get("roles") or {}).get(role)
+            audited = roles.get(role) or {}
+            if not given:
+                reasons.append(f"workflow run {bound.get('workflow_run')!r} has no {role} "
+                               f"result for this attempt")
+            elif audited.get("agent_id") != given.get("agent_id"):
+                reasons.append(f"the run audit cleared {role} agent "
+                               f"{audited.get('agent_id')!r}, not {given.get('agent_id')!r}")
+            elif audited.get("payload_sha256") != given.get("payload_sha256"):
+                reasons.append(f"the {role}'s result is not the one the run audit cleared "
+                               f"(its payload digest differs)")
+    reviewed = run_audit.get("reviewed_state_sha256")
+    recorded = run_audit.get("reviewed_states") or []
+    if not reviewed:
+        reasons.append("no in-workflow gate check recorded the attempt state the reviewer was "
+                       "handed" if not recorded else f"the in-workflow gate checks recorded "
+                       f"{len(recorded)} different attempt states, so which one was reviewed "
+                       f"is ambiguous")
+    elif reviewed != artefact_state(target_dir):
+        reasons.append("the attempt has changed since the gate check that preceded its review, "
+                       "so the review does not cover it: review it again")
     if report.get("launch_commit") and run_audit.get("launch_commit") \
             and run_audit["launch_commit"] != report["launch_commit"]:
         reasons.append("the run audit's launch commit is not the gate report's")
@@ -5905,7 +6011,8 @@ def review_issues(role: str, payload: dict | None, warnings: list[dict]) -> list
 
 
 def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
-                      roles: dict[str, tuple[dict, dict | None]]) -> dict:
+                      roles: dict[str, tuple[dict, dict | None]],
+                      reviewed: list[str] | None = None) -> dict:
     """The attempt's run audit: each governed role's verdict, the workflow
     identities it was made under, and the issues for a ruling (F8).
 
@@ -5913,14 +6020,22 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
         config: The run configuration.
         run_dir_name: The workflow run's directory name.
         target_dir: The attempt directory.
-        roles: ``{role: (agent audit record, final payload)}`` for the
-            executor and the reviewer that worked on this attempt.
+        roles: ``{role: (agent audit record, accepted payload)}`` for the
+            executor and the reviewer that worked on this attempt, as
+            ``select_results`` chose them.
+        reviewed: The attempt states the workflow's gate checks recorded
+            (``reviewed_states``); exactly one is the reviewed state.
     """
     try:
         approval = json.loads((target_dir / APPROVAL_FILE).read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         approval = {}
-    audits = {role: role_audit(record) for role, (record, _) in roles.items()}
+    # Each role is bound to its accepted result by digest (D-Astra-3), so a
+    # retried result cannot inherit this audit's clearance.
+    audits = {role: {**role_audit(record),
+                     "payload_sha256": json_digest(payload) if payload is not None else None}
+              for role, (record, payload) in roles.items()}
+    reviewed = sorted(set(reviewed or ()))
     issues: list[Issue] = []
     for role, (_, payload) in sorted(roles.items()):
         issues += review_issues(role, payload, audits[role]["warnings"])
@@ -5934,15 +6049,19 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
     seen: set[str] = set()
     unique = [i for i in issues if not (i.issue_id in seen or seen.add(i.issue_id))]
     executor = roles.get("executor", ({}, None))[0]
-    return {"run_audit_version": "1.0", "audited_at": now_utc(), "run_id": config["run_id"],
+    return {"run_audit_version": RUN_AUDIT_VERSION, "audited_at": now_utc(),
+            "run_id": config["run_id"],
             "workflow_run": run_dir_name, "attempt_dir": display_path(target_dir),
             "launch_commit": (executor.get("provenance") or {}).get("launch_commit"),
             "plan_sha256": approval.get("plan_sha256"),
+            "reviewed_state_sha256": reviewed[0] if len(reviewed) == 1 else None,
+            "reviewed_states": reviewed,
+            "artefact_state_sha256": artefact_state(target_dir),
             "roles": audits, "missing_roles": sorted({"executor", "reviewer"} - set(roles)),
             "issues": issue_records(unique)}
 
 
-def admission(target_dir: Path) -> dict:
+def admission(target_dir: Path, bound: dict | None = None) -> dict:
     """Whether an attempt's results may enter study data (spec §6).
 
     Admission needs a passing gate, every issue ruled, every credited run
@@ -5950,9 +6069,18 @@ def admission(target_dir: Path) -> dict:
     transcript audit (``transcript-audit.json``, spec §12), and a run audit
     (``run-audit.json``, F8) in which the executor and the reviewer are both
     present and clean, bound to the same launch commit and approved plan,
-    with every escalation, review concern, and blinding warning ruled.
-    Nothing here can be overridden: a record persisted while ineligible stays
-    so until ``persist-results`` is run afresh after the rulings.
+    with every escalation, review concern, and blinding warning ruled. The
+    run audit must also have cleared the very results being persisted
+    (``bound``: their workflow run, agents, and payload digests), for the
+    attempt as its reviewer was handed it (D-Astra-3). Nothing here can be
+    overridden: a record persisted while ineligible stays so until
+    ``persist-results`` is run afresh after the rulings.
+
+    Args:
+        target_dir: The attempt directory.
+        bound: The identities of the results being persisted, as
+            ``run_audit_reasons`` takes them; without them nothing is
+            eligible.
     """
     reasons: list[str] = []
     try:
@@ -5987,9 +6115,9 @@ def admission(target_dir: Path) -> dict:
                            f"{', '.join(audit_unruled[:5])}")
     except (OSError, json.JSONDecodeError):
         reasons.append(f"no transcript audit recorded ({AUDIT_FILE}, spec §12)")
-    reasons += run_audit_reasons(target_dir, report, rulings)
+    reasons += run_audit_reasons(target_dir, report, rulings, bound)
     return {"eligible": not reasons, "assessed_at": now_utc(), "reasons": reasons,
-            "gate_report_sha256": sha256_file(target_dir / GATE_FILE)}
+            "gate_report_sha256": sha256_file(target_dir / GATE_FILE), "bound": bound}
 
 
 def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
@@ -6255,7 +6383,8 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
                     {"conversions": integrity["conversions"]} if integrity.get("conversions")
                     else {}),
             "executor_verdict": (comparison or {}).get("verdict")
-            if isinstance(comparison, dict) else None}
+            if isinstance(comparison, dict) else None,
+            "artefact_state_sha256": artefact_state(target_dir)}
 
 
 def cmd_check_attempt(args: argparse.Namespace) -> int:
@@ -6279,8 +6408,12 @@ def cmd_check_attempt(args: argparse.Namespace) -> int:
     else:
         out = Path(args.out).expanduser() if args.out else target_dir / GATE_FILE
         write_json(out, report)
+        # The artefact state is printed so that the transcript of the
+        # in-workflow gate check, which runs just before the review, records
+        # the state the reviewer was handed (D-Astra-3).
         print(json.dumps({k: report.get(k) for k in ("verdict", "errors", "warnings",
-                                                       "coverage")}, indent=2))
+                                                       "coverage", "artefact_state_sha256")},
+                         indent=2))
     return 0 if report["verdict"] == "pass" else 1
 
 
@@ -6476,11 +6609,21 @@ def cmd_persist_results(args: argparse.Namespace) -> int:
     run_dir = args.run_dir.expanduser().resolve()
     results = journal_results(run_dir)
     problems = []
-    for role, filename, schema_key in (("executor", EXECUTION_FILE, "execution"),
-                                       ("reviewer", REVIEW_FILE, "review")):
-        chosen, dead = select_results(results, config["agents"][role], config)
+    selections: dict[str, dict[str, dict]] = {}
+    for role in ("executor", "reviewer"):
+        selections[role], dead = select_results(results, config["agents"][role], config)
         problems += [f"{role} for {slug} returned no result — re-run that item"
                      for slug in dead]
+    # What admission must find the run audit cleared (D-Astra-3): this
+    # workflow run's results for each paper, by agent and payload digest.
+    bound = {slug: {"run_id": config["run_id"], "workflow_run": run_dir.name,
+                    "roles": {role: {"agent_id": chosen[slug]["agent_id"],
+                                     "payload_sha256": json_digest(chosen[slug]["result"])}
+                              for role, chosen in selections.items() if slug in chosen}}
+             for slug in sorted({slug for chosen in selections.values() for slug in chosen})}
+    for role, filename, schema_key in (("executor", EXECUTION_FILE, "execution"),
+                                       ("reviewer", REVIEW_FILE, "review")):
+        chosen = selections[role]
         schema = full_schema(expand(config["schemas"][schema_key]))
         for slug, item in sorted(chosen.items()):
             payload = item["result"]
@@ -6497,7 +6640,7 @@ def cmd_persist_results(args: argparse.Namespace) -> int:
             # Gate 1.3 admission (spec §6): an attempt with sealed run records
             # is persisted only when eligible, or, with --record-unruled, as
             # ineligible. Nothing downstream can make that record eligible.
-            admitted = admission(attempt_dir(config, slug))
+            admitted = admission(attempt_dir(config, slug), bound[slug])
             sealed = (attempt_dir(config, slug) / RECORDS_DIR).is_dir()
             if role == "executor" and sealed and not admitted["eligible"] \
                     and not args.record_unruled:
@@ -6939,6 +7082,45 @@ def mask_quoted(text: str) -> str:
     return "".join(out)
 
 
+def mask_comments(text: str) -> str:
+    """The text with shell comments blanked, same length, newlines kept.
+
+    A ``#`` starts a comment only at the start of an unquoted word (after a
+    blank, an operator character, or a line start), so ``$#``, ``${#x}``,
+    ``a#b``, and a quoted ``#`` stay, as in the shell. The receipt hook
+    keeps a copy (``_mask_comments``); change both together.
+    """
+    out = list(text)
+    quote: str | None = None
+    word_start = True
+    i = 0
+    while i < len(text):
+        ch = text[i]
+        if quote == "'":
+            quote = None if ch == "'" else quote
+        elif quote == '"':
+            if ch == "\\":
+                i += 1
+            elif ch == '"':
+                quote = None
+        elif ch == "\\":
+            i += 1
+            word_start = False
+        elif ch in "'\"":
+            quote = ch
+            word_start = False
+        elif ch == "#" and word_start:
+            end = text.find("\n", i)
+            end = len(text) if end == -1 else end
+            out[i:end] = " " * (end - i)
+            i = end
+            continue
+        else:
+            word_start = ch in " \t\n;&|()<>"
+        i += 1
+    return "".join(out)
+
+
 def mask_tests(masked: str) -> str:
     """Blank the insides of [[ ]] and (( )), where > compares and does not
     redirect."""
@@ -7093,45 +7275,6 @@ def segment_writes(segment: str) -> list[str]:
 
     The segment must already be free of heredoc bodies (``split_heredocs``).
     """
-def mask_comments(text: str) -> str:
-    """The text with shell comments blanked, same length, newlines kept.
-
-    A ``#`` starts a comment only at the start of an unquoted word (after a
-    blank, an operator character, or a line start), so ``$#``, ``${#x}``,
-    ``a#b``, and a quoted ``#`` stay, as in the shell. The receipt hook
-    keeps a copy (``_mask_comments``); change both together.
-    """
-    out = list(text)
-    quote: str | None = None
-    word_start = True
-    i = 0
-    while i < len(text):
-        ch = text[i]
-        if quote == "'":
-            quote = None if ch == "'" else quote
-        elif quote == '"':
-            if ch == "\\":
-                i += 1
-            elif ch == '"':
-                quote = None
-        elif ch == "\\":
-            i += 1
-            word_start = False
-        elif ch in "'\"":
-            quote = ch
-            word_start = False
-        elif ch == "#" and word_start:
-            end = text.find("\n", i)
-            end = len(text) if end == -1 else end
-            out[i:end] = " " * (end - i)
-            i = end
-            continue
-        else:
-            word_start = ch in " \t\n;&|()<>"
-        i += 1
-    return "".join(out)
-
-
     masked = mask_tests(mask_quoted(mask_comments(segment)))
     targets: list[str] = []
     for found in REDIRECT_OP_RE.finditer(masked):
@@ -7277,6 +7420,8 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
         # herskind pilot's executor wrote its published values that way.
         variables = dict(variables or {})
         text, bodies = split_heredocs(command)
+        # Comments are blanked, not removed, so heredoc offsets still hold.
+        text = mask_comments(text)
         for offset, raw in shell_segments(text):
             segment = raw.strip()
             if not segment:
@@ -7284,6 +7429,9 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
             if cwd is not None:
                 # $(pwd) is the tracked directory (Fable's delta review).
                 segment = segment.replace("$(pwd)", cwd).replace("`pwd`", cwd)
+            # Expanded in the segment's text, where its quoting is still
+            # visible, and only then split into words (D-Astra-2).
+            segment = expand_variables(segment, variables)
             words = shell_words(segment)
             k, name = command_word(words)
             assigned = words[:k] if k == len(words) else (
@@ -7398,7 +7546,13 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
     current = hooklib.load_manifest()
     launch_manifests: dict[str, dict | None] = {}
     agents = []
-    per_attempt: dict[Path, dict[str, tuple[dict, dict | None]]] = {}
+    # Each role's result is chosen as persist-results chooses it, which
+    # refuses two results for one paper rather than keeping the last
+    # transcript in filename order (D-Astra-3).
+    results = journal_results(run_dir)
+    selections = {role: select_results(results, config["agents"][role], config)[0]
+                  for role in ("executor", "reviewer")}
+    records: dict[str, dict] = {}
     for transcript in sorted(run_dir.glob("agent-*.jsonl")):
         meta_path = transcript.with_name(f"{transcript.stem}.meta.json")
         meta = (json.loads(meta_path.read_text(encoding="utf-8"))
@@ -7416,20 +7570,7 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
                                               else "today's manifest.yaml (the launch "
                                                    "commit's could not be read)")
         record["agent_id"] = transcript.stem.replace("agent-", "")
-        # Bind each governed role to its paper's attempt by the Paper: line,
-        # which every executor and reviewer prompt carries; the reviewer's
-        # Comments are blanked, not removed, so heredoc offsets still hold.
-        text = mask_comments(text)
-        # has no "Attempt directory:" line (Fable's delta review, D-1).
-        role = {config["agents"]["executor"]: "executor",
-                config["agents"]["reviewer"]: "reviewer"}.get(str(meta.get("agentType")))
-        slugs = {p["slug"] for p in config["papers"]}
-        if role and record.get("paper") in slugs:
-            per_attempt.setdefault(attempt_dir(config, record["paper"]), {})[role] = (
-                record, gate.structured_output_from_transcript(lines))
-            # Expanded in the segment's text, where its quoting is still
-            # visible, and only then split into words (D-Astra-2).
-            segment = expand_variables(segment, variables)
+        records[record["agent_id"]] = record
         # The executor's transcript also gets the attempt's own audit (spec
         # §12), written into the attempt as admission requires.
         attempt = ATTEMPT_DIR_RE.search(first_user_text(lines))
@@ -7453,10 +7594,19 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
             record["unattributable"] = True
         agents.append(record)
     # F8: bind each attempt to this run's agent audit and open questions.
-    for attempt_path, roles in sorted(per_attempt.items()):
+    # Roles are bound by paper through select_results, which matches the
+    # prompt's Paper: line to the payload's paper_slug; the reviewer's
+    # prompt has no "Attempt directory:" line (Fable's delta review, D-1).
+    states = reviewed_states(run_dir, config)
+    for slug in sorted({slug for chosen in selections.values() for slug in chosen}):
+        attempt_path = attempt_dir(config, slug)
+        roles = {role: (records[chosen[slug]["agent_id"]], chosen[slug]["result"])
+                 for role, chosen in selections.items()
+                 if slug in chosen and chosen[slug]["agent_id"] in records}
         if attempt_path.is_dir():
             write_json(attempt_path / RUN_AUDIT_FILE,
-                       attempt_run_audit(config, run_dir.name, attempt_path, roles))
+                       attempt_run_audit(config, run_dir.name, attempt_path, roles,
+                                         states.get(slug)))
     per_paper: dict[str, dict] = {}
     for record in agents:
         bucket = per_paper.setdefault(record["paper"] or "(none)", {
