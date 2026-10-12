@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """Deterministic orchestration helpers for the agentic reproduction lane.
 
-**Version:** 1.3
+**Version:** 1.4
+
+v1.4 (2026-10-12) is gate 1.3.1, the gate 1.3 final review's fixes: the
+transcript audit scans shell text with its quoting (1.1); admission reads
+the workflow's run audit (receipts, blinding, the relayed launch message,
+escalations, and review concerns); comparisons declare each target's method
+and are checked against declared element counts; images are built through
+``build-image``, which keeps the build log; and the hook's ``run_file``
+evaluator binds every statement it ran to one it parsed. See the note at
+the top of the design.
 
 v1.3 (2026-10-09) is gate 1.3 (``wiki/planning/reproduction-gate-1-3-design.md``).
 The executor no longer starts containers: ``run-container`` runs each attempt
@@ -185,7 +194,7 @@ EXECUTION_FILE = "execution-report.json"
 REVIEW_FILE = "adversarial-review.json"
 COMPARISON_FILE = Path("comparisons") / "comparison.json"
 DEFAULT_COMPARISON_SCHEMA = "reproduction-system/schemas/comparison-record.json"
-GATE_VERSION = "1.3"
+GATE_VERSION = "1.3.1"
 # Authors'-code integrity (gate 1.1; Shawn's ruling 2026-10-04, fail-and-uplift
 # follow-on 3): the authors' files are hashed at retrieval and every executed
 # copy must be byte-identical. Any difference is a declared wrapper or a

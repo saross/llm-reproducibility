@@ -424,7 +424,7 @@ class GateTests(unittest.TestCase):
     def test_gate_reports_code_integrity(self):
         self.comparison()
         report = self.run_gate()
-        self.assertEqual(report["gate_version"], "1.3")
+        self.assertEqual(report["gate_version"], "1.3.1")
         self.assertEqual(report["code_integrity"]["status"], "identical", report["errors"])
         self.assertEqual(report["code_integrity"]["anchors"], {"analysis.R": "verified"})
         self.assertEqual(report["flags"], [])
