@@ -2,7 +2,7 @@
 title: "llm-reproducibility — User Observations"
 tags: [human-ai-collaboration]
 created: 2026-07-03
-updated: 2026-10-06
+updated: 2026-10-12
 status: active
 ---
 
@@ -847,3 +847,34 @@ path.
 name.** Claude called Astra "she" throughout. Shawn asked which pronoun
 Claude prefers, which surfaced the slip. The existing notes use "it" or
 "they" for Astra.
+
+## 2026-10-12 — Keep Fable in the review rotation: it still catches subtle-but-important errors that Opus 5.5 and Astra miss
+
+*(Shawn's own observation, 2026-10-12; recorded at his request, so no
+adjudication is pending.)*
+
+Shawn: "while Opus 5.5 is excellent as my daily driver, and Astra routinely
+makes important contributions during review, Fable still catches
+subtle-but-important errors that the others miss and should stay in
+rotation".
+
+The case: gate 1.3's final review (brief
+`wiki/planning/reproduction-gate-1-3-final-review-brief.md`, outcome at
+`c73eea6`). Astra and Fable reviewed the same commit independently. Both
+confirmed the brief's defects, and each found something the other missed.
+Astra found that admission ignores the workflow audit (also found by Fable)
+and that declared element counts are never compared (F9). Fable found the
+round's most serious route, A-new-1, and proved it by running the lane: a
+parse-and-evaluate wrapper altered one of the authors' statements in memory,
+and the gate still certified the code `identical` while the Fig. 4 results
+changed. Fable also corrected the opus lane's own brief, which had
+attributed the Fig. 4 box finding to the shakedown agent. The earlier round
+went the same way (the 2026-10-05 batch, candidate A: four serious and six
+moderate routes that both Opus reviews and Astra had missed).
+
+**What generalises:** each lane has a role. Opus 5.5 is the daily driver
+and builder. Astra gives a routine, independent cross-model review. Fable
+is the deep adversarial pass for work whose errors would be costly and
+hard to see, such as gates, lodged text, and final reviews, and it is worth
+its top-tier credit there. This matches the subagent model policy, which
+reserves the top tier for "subtle adversarial verification".
