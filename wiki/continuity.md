@@ -36,9 +36,31 @@ merged here as PR #1).
   The ledger is frozen and on main. Gate 1.3.1 is on PR #11 (head
   `1d875d2`, worktree `.claude/worktrees/gate-1-3-1`), awaiting Astra's
   delta review. Fable's delta findings are closed.
-  - [ ] **Astra's delta review of `1d875d2`** (in progress at handoff; it
-    arrives in `~/agent-mail/codex/outbox/claude/`). Receipt it, fix any
-    finding on the branch with tests, and mail the closures.
+  - [x] 2026-10-13 **Astra's delta review of `1d875d2`** received
+    (`2026-10-12-codex-gate131-delta-review.md`, receipted): changes
+    required, three class D incomplete closures. D-Astra-1 (F2: shell reads
+    credited without delivery; Read matched by substring), D-Astra-2 (F1:
+    a comment and `grep cp` became hard write failures), D-Astra-3 (F8:
+    persistence could use another workflow's cleared run audit). All
+    closed on PR #11 (head `3a411f8`: `1b5b2d1`, `9bec885`, `dae59da`,
+    docs `3a411f8`); 665 tests pass with Docker; Astra's probes rerun give
+    the intended verdicts. Closures mailed
+    (`20261012T222048.473640Z-claude-gate131-astra-delta-closed.md`, with
+    the rerun probe beside it).
+  - [ ] **Astra's check of those closures** at `3a411f8` (arrives in
+    `~/agent-mail/codex/outbox/claude/`). If clean, ask Shawn to merge
+    PR #11.
+  - [x] 2026-10-13 **Shawn's ruling: the reviewed-state binding stays
+    strict.** A result is admitted only if the attempt matches the state
+    the in-workflow gate check recorded just before its review (the
+    lane's post-review records aside). Any other edit needs a new review,
+    and no ruling overrides it; corrections go into new attempts, and the
+    human queue stays beside the run configuration. Options declined:
+    excluding prose notes from the state, and a rulable state-change flag.
+  - [ ] **Follow-up PR after the pilot: a review-only re-run mode** in the
+    execute workflow (gate check and reviewer on an existing attempt), so
+    a post-review fix costs one reviewer spawn rather than all of stage 2
+    (Shawn, 2026-10-13).
   - [ ] **Merge order (side note, 2026-10-12):** the re-run must test PR
     #11's code. The session's agent definitions, hooks, and workflow
     scripts load from the main checkout, so launching before PR #11 merges
