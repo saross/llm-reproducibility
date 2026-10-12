@@ -1,0 +1,106 @@
+{
+  "record_version": "1.0",
+  "run": "run-02",
+  "state": "complete",
+  "started_at": "2026-10-11T11:36:06+00:00",
+  "ended_at": "2026-10-11T11:36:17+00:00",
+  "exit_status": 0,
+  "image": {
+    "tag": "llmr-herskind-riede-2024-attempt-03",
+    "id": "sha256:9519b8dac291dc275bd40f7f6c0759eebeda8b5ebd38e5b50f64871ae2c58e5e",
+    "repo_digests": [],
+    "dockerfile_label": "5b17276d68ea1f6a81ee72f77c330858c6338693d8fe43a7b1e5af7a91e1fb01",
+    "dockerfile_sha256": "5b17276d68ea1f6a81ee72f77c330858c6338693d8fe43a7b1e5af7a91e1fb01"
+  },
+  "front_end": {
+    "r_home": "/usr/local/lib/R",
+    "front_end": "/usr/local/lib/R/bin/R",
+    "front_end_sha256": "50b1b3cd6717083374a8d56851e943ab2a383b531d3f148f03ac81192e3a6313",
+    "shim_targets": [
+      "/usr/local/lib/R/bin/R",
+      "/usr/local/bin/R"
+    ],
+    "unshimmed": [],
+    "littler_targets": [
+      "/usr/local/lib/R/site-library/littler/bin/r"
+    ]
+  },
+  "mount_path": "/project",
+  "entry": "run-reproduction.sh",
+  "interpreter": "bash",
+  "nonce": "a1f84e6ff104c0a1",
+  "argv": [
+    "docker",
+    "run",
+    "-d",
+    "--name",
+    "llmr-run-02-a1f84e6ff104c0a1",
+    "--init",
+    "--network",
+    "none",
+    "--log-driver",
+    "json-file",
+    "--log-opt",
+    "max-size=100g",
+    "--log-opt",
+    "max-file=1",
+    "--log-opt",
+    "mode=blocking",
+    "--user",
+    "1000:1000",
+    "-w",
+    "/project",
+    "--mount",
+    "type=bind,src=/tmp/llmr-run-02-gufg8or_/project,dst=/project",
+    "--mount",
+    "type=bind,src=/tmp/llmr-run-02-gufg8or_/lane,dst=/lane,readonly",
+    "--mount",
+    "type=bind,src=/tmp/llmr-run-02-gufg8or_/lane/r-shim.sh,dst=/usr/local/lib/R/bin/R,readonly",
+    "--mount",
+    "type=bind,src=/tmp/llmr-run-02-gufg8or_/lane/r-shim.sh,dst=/usr/local/bin/R,readonly",
+    "--mount",
+    "type=bind,src=/tmp/llmr-run-02-gufg8or_/lane/littler-shim.sh,dst=/usr/local/lib/R/site-library/littler/bin/r,readonly",
+    "-e",
+    "R_ENVIRON_USER=/lane/Renviron",
+    "-e",
+    "R_PROFILE_USER=/lane/hook.R",
+    "-e",
+    "LANE_RUN_NONCE=a1f84e6ff104c0a1",
+    "-e",
+    "LANE_PROJECT_ROOT=/project",
+    "--entrypoint",
+    "bash",
+    "sha256:9519b8dac291dc275bd40f7f6c0759eebeda8b5ebd38e5b50f64871ae2c58e5e",
+    "run-reproduction.sh"
+  ],
+  "lane_files": {
+    "hook.R": "17f39eb26026dbed5bed40c357d98037bcc6bff6455a6d79eda730c0b245b4c8",
+    "r-shim.sh": "8b5bb45a223dbc7d861ea360a532a960d0bdac0c7ad095fd017c1324cde5b59d",
+    "littler-shim.sh": "082ce255e9eefc22851759a298efad75de9b12268456bfad418f9b9e78b6079f",
+    "R.orig": "50b1b3cd6717083374a8d56851e943ab2a383b531d3f148f03ac81192e3a6313",
+    "Renviron": "b96c2deeff8b34b63981872ae2dd823917b54673fa67c13427154c7f10abd560",
+    "nonce": "64ed0b34da3e44948663c9d4ce61e3205f8dcd9743c839c39cca6760e14b8d80"
+  },
+  "launch_commit": "cd5d54ac890fafc9061547694c7d0fad9c065912",
+  "lane_script_sha256": "7fd577e018a94ea84afac93c50d1766f1835d4964b0bc301f84b3fca1a04462b",
+  "consumed": [],
+  "work_dir": "/tmp/llmr-run-02-gufg8or_",
+  "container_id": "6e9f20c6e11335ca86c333ada010aab18baf3af486b4f3a8d23b56ac2c8db48a",
+  "problems": [],
+  "log_config": {
+    "Type": "json-file",
+    "Config": {
+      "max-file": "1",
+      "max-size": "100g",
+      "mode": "blocking"
+    }
+  },
+  "census": {
+    "processes": 2,
+    "errors": 0,
+    "gaps": [],
+    "abnormal": [],
+    "unterminated": [],
+    "stray_event_lines": 0
+  }
+}

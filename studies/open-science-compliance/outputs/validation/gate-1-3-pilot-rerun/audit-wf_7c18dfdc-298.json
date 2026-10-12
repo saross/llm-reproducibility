@@ -1,0 +1,209 @@
+{
+  "audit_version": "1.0",
+  "audited_at": "2026-10-11T12:03:32+00:00",
+  "run_id": "gate-1-3-pilot-rerun-2026-10",
+  "workflow_run": "wf_7c18dfdc-298",
+  "agents": [
+    {
+      "agent_type": "reproduction-executor",
+      "paper": "herskind-riede-2024",
+      "governed": true,
+      "provenance": {
+        "run_id": "gate-1-3-pilot-rerun-2026-10",
+        "launch_commit": "cd5d54ac890fafc9061547694c7d0fad9c065912",
+        "effort": "high"
+      },
+      "receipts": {
+        "valid": false,
+        "problems": [
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/.claude/skills/reproduction-assessor/references/dockerfile-patterns.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/.claude/skills/reproduction-assessor/references/wrapper-script-patterns.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/templates/comparison-report-template.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/templates/environment-template.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/templates/log-template.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/templates/README.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/prompts/01-preparation.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/prompts/02-execution-and-verification.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/schemas/comparison-record.json",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/reproduction-system/schemas/authors-code-manifest.json",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/data-availability-taxonomy.md"
+        ],
+        "paper_slug": "herskind-riede-2024",
+        "receipted": {
+          "instrument_versions": {
+            "verdicts-and-precision": "1.1",
+            "coverage-rules": "1.1",
+            "pipeline-invariants": "1.1"
+          },
+          "instrument_receipts": {
+            "verdicts-and-precision": "46eb4ad0bfcb3b92",
+            "coverage-rules": "414de27c0d871a1d",
+            "pipeline-invariants": "c70d484af7e75ec4"
+          },
+          "model_id": "claude-opus-5-5",
+          "agent_version": "reproduction-executor v1.6"
+        }
+      },
+      "blinding": {
+        "contaminating": [],
+        "warnings": [
+          {
+            "tool": "Bash",
+            "path": "verification-strategies.md",
+            "rule": "blinded path named in command output (review)",
+            "command": "ls reproduction-system/templates/ reproduction-system/schemas/ reproduction-system/prompts/ .claude/skills/reproduction-assessor/references/; wc -l reproduction-system/schemas/*.json reproduction-system/prompts/01-preparation.md reproduction-system/prompts/02-execution-and-verification.md .claude/sk"
+          },
+          {
+            "tool": "Bash",
+            "path": "references/verification-strategies.md",
+            "rule": "blinded path named in command output (review)",
+            "command": "cat reproduction-system/prompts/02-execution-and-verification.md reproduction-system/templates/*.md"
+          },
+          {
+            "tool": "Bash",
+            "path": "crema-et-al-2024.json",
+            "rule": "blinded path named in command output (review)",
+            "command": "venv/bin/python scripts/reproduction-lane.py --help; venv/bin/python scripts/reproduction-lane.py run-container --help; venv/bin/python scripts/reproduction-lane.py check-attempt --help; ls corpus/evidence-packs/ | head -50; ls corpus/evidence-packs/harvest-* -d 2>/dev/null"
+          }
+        ]
+      },
+      "writes_outside_scope": [],
+      "usage": {
+        "input_tokens": 244,
+        "output_tokens": 69693,
+        "cache_creation_input_tokens": 473164,
+        "cache_read_input_tokens": 33482321,
+        "cache_write_5m": 473164,
+        "cache_write_1h": 0,
+        "requests": 122,
+        "models": [
+          "claude-opus-5-5"
+        ]
+      },
+      "cost_usd": 10.4571,
+      "started_at": "2026-10-11T11:21:04.381Z",
+      "finished_at": "2026-10-11T11:56:08.181Z",
+      "wallclock_seconds": 2103.8,
+      "clean": false,
+      "agent_id": "a3825ccd2ec76de27",
+      "execution_audit": {
+        "contaminating": [
+          {
+            "kind": "run-without-record",
+            "at": "2026-10-11T11:21:28.701Z",
+            "detail": "run-container reported no run: venv/bin/python scripts/reproduction-lane.py run-container --help"
+          },
+          {
+            "kind": "write-to-lane-owned",
+            "at": "2026-10-11T11:35:34.053Z",
+            "detail": "a shell command wrote outputs/run-01/files/1, which only the lane writes"
+          },
+          {
+            "kind": "input-tree-changed-after-run",
+            "at": "2026-10-11T11:47:01.919Z",
+            "detail": "a shell command wrote 1 after the final run run-04 started"
+          },
+          {
+            "kind": "input-tree-changed-after-run",
+            "at": "2026-10-11T11:52:21.346Z",
+            "detail": "a shell command wrote = after the final run run-04 started"
+          }
+        ],
+        "issues": 2
+      }
+    },
+    {
+      "agent_type": "adversarial-reviewer",
+      "paper": "herskind-riede-2024",
+      "governed": true,
+      "provenance": {
+        "run_id": "gate-1-3-pilot-rerun-2026-10",
+        "launch_commit": "cd5d54ac890fafc9061547694c7d0fad9c065912",
+        "effort": "high"
+      },
+      "receipts": {
+        "valid": false,
+        "problems": [
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md",
+          "declared pull not in transcript: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/coverage-rules.md"
+        ],
+        "paper_slug": "herskind-riede-2024",
+        "receipted": {
+          "instrument_versions": {
+            "pipeline-invariants": "1.1",
+            "adversarial-review-framework": "1.1"
+          },
+          "instrument_receipts": {
+            "pipeline-invariants": "c70d484af7e75ec4",
+            "adversarial-review-framework": "0f83c3181c5dbe00"
+          },
+          "model_id": "claude-opus-5-5",
+          "agent_version": "adversarial-reviewer v1.2"
+        }
+      },
+      "blinding": {
+        "contaminating": [],
+        "warnings": []
+      },
+      "writes_outside_scope": [],
+      "usage": {
+        "input_tokens": 70,
+        "output_tokens": 15547,
+        "cache_creation_input_tokens": 196762,
+        "cache_read_input_tokens": 4890097,
+        "cache_write_5m": 196762,
+        "cache_write_1h": 0,
+        "requests": 35,
+        "models": [
+          "claude-opus-5-5"
+        ]
+      },
+      "cost_usd": 2.273,
+      "started_at": "2026-10-11T11:56:22.306Z",
+      "finished_at": "2026-10-11T12:03:00.083Z",
+      "wallclock_seconds": 397.8,
+      "clean": false,
+      "agent_id": "a49f673690b524c9c"
+    },
+    {
+      "agent_type": "general-purpose",
+      "paper": "herskind-riede-2024",
+      "governed": false,
+      "provenance": null,
+      "blinding": {
+        "contaminating": [],
+        "warnings": []
+      },
+      "writes_outside_scope": [],
+      "usage": {
+        "input_tokens": 4,
+        "output_tokens": 957,
+        "cache_creation_input_tokens": 51478,
+        "cache_read_input_tokens": 47652,
+        "cache_write_5m": 51478,
+        "cache_write_1h": 0,
+        "requests": 2,
+        "models": [
+          "claude-haiku-5-5"
+        ]
+      },
+      "cost_usd": null,
+      "started_at": "2026-10-11T11:56:11.474Z",
+      "finished_at": "2026-10-11T11:56:20.362Z",
+      "wallclock_seconds": 8.9,
+      "clean": true,
+      "agent_id": "ab1a1f652d87ed49c"
+    }
+  ],
+  "per_paper": {
+    "herskind-riede-2024": {
+      "agents": 3,
+      "output_tokens": 86197,
+      "input_side_tokens": 39141792,
+      "cost_usd": 12.7301,
+      "agent_wallclock_seconds": 2510.5000000000005,
+      "unpriced_agents": 1
+    }
+  },
+  "clean": false
+}

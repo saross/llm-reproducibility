@@ -2304,3 +2304,374 @@ pilots). Anchors:
 `~/agent-mail/claude/outbox/claude/20261005T044136.617510Z-claude-pr7-fable-review-reply.md`;
 `wiki/reflections/session-reflection.md` Entry 22; the WN-al entry in
 `wiki/continuity.md`.
+
+## Observation 51: A project `.Renviron` outranks a container's `-e R_PROFILE_USER`, so an R logging hook must own the environment-file phase (2026-10-05)
+
+*(Approved by Shawn 2026-10-09; WN-am.)*
+
+### Context
+
+Gate 1.3 of the reproduction lane establishes what code an R reproduction
+ran by loading a logging hook into every R process. The first design loaded
+the hook by setting `R_PROFILE_USER` with `docker run -e`, on the assumption
+that a variable set in the process environment governs R's start-up
+(`wiki/reflections/abductive-reasoning.md`, entry of 2026-10-05). Fable's
+design review (its Q2, recorded at `71fb731`) proposed, as belt and braces
+against `--vanilla` and a project `.Renviron`, that the lane also set
+`R_ENVIRON_USER` to a lane file. The consolidated specification of
+2026-10-05 (`53413bc`, on pull request (PR) #7) settled this and other
+review points by probing the image rather than arguing from documentation
+or memory.
+
+### Observation
+
+The probes ran in `rocker/r-ver:4.3.2` (R 4.3.2). The specification records
+them as probe facts 1 and 2:
+
+- **The project file won.** A fixture project held a `.Renviron` naming a
+  different profile. Under every launcher tried (`Rscript`, `R -f`, a
+  `system()` child, and a parallel socket-cluster (PSOCK) worker), the
+  project's profile loaded in place of the lane's hook. Only
+  `Rscript --no-environ` loaded the hook.
+- **Owning the environment file fixed it.** `R_ENVIRON_USER` was pointed at
+  a lane file that copies the project's lines and then sets
+  `R_PROFILE_USER` to the hook as its final line. The hook loaded, and the
+  project's own variable still applied. A child started after
+  `Sys.unsetenv("R_PROFILE_USER")` also loaded the hook, because it re-reads
+  the environment file.
+
+R reads the site `Renviron`, then the user `Renviron` (`R_ENVIRON_USER`),
+then the site profile, then the user profile (`R_PROFILE_USER`). A value
+read from an environment file during start-up overrode the inherited one,
+so the authority is the file R reads last, not the variable the launcher
+set. The specification now builds on this:
+
+- §8, step 2: the lane writes `/lane/Renviron` from the project's
+  `.Renviron`, verbatim and in order, saves any inherited or project-named
+  profile as `LANE_PARENT_PROFILE`, and ends with an unconditional pin line.
+  The hook installs its traces and then sources the saved profile.
+- §10 flags a project `.Renviron` that names `R_PROFILE_USER`,
+  `R_PROFILE`, or `R_ENVIRON_USER`.
+- §13's launcher matrix re-tests the pin on each image the lane meets.
+
+The stopping rule (§2) classes the finding as an ordinary route (class A):
+one an honest executor could take in the ordinary course of work. Scope: one
+image, one R version, and one variable (`R_PROFILE_USER`) were tested.
+Fable's `R_ENVIRON_USER` proposal had read as belt and braces; the probe
+showed it was the load-bearing fix.
+
+### Implication
+
+For the paper's account of how the reproduction lane establishes what code
+ran: a hook injected through an inherited environment variable alone would
+have left unhooked exactly the runs of projects whose `.Renviron` names a
+profile of their own. The design's guarantee rested on a runtime
+precedence rule (which setting wins), so it had to be tested in the target
+runtime with the two candidate authorities set to disagree; an environment
+in which they agree proves nothing. A probe in the real image took seconds
+per claim, and this one changed the design in the consolidation
+(`53413bc`), before the first foundation was built on it (F1, `0ce7f25`).
+Relations: Observation 50 (the review rounds on the same gate, and the
+stopping rule that classes this finding); Observation 35 (a control is
+aspirational until its log shows a real pass). Anchors:
+`wiki/planning/reproduction-gate-1-3-design.md` on branch
+`feat/lane-gate-1-1-code-audit` (PR #7, head `230134f`), "Facts established
+by probe" items 1–2 (lines 79–89), the §2 table, §8 step 2, §10, and §13;
+`wiki/reflections/abductive-reasoning.md`, "2026-10-05 — A project file
+outranked the variable the design relied on"; the WN-am entry in
+`wiki/continuity.md`.
+
+## Observation 52: About 34 decisions from three autonomous sessions cleared in one walk-through once each was re-assembled from its source (2026-10-05/06)
+
+*(Approved by Shawn 2026-10-09; WN-an.)*
+
+### Context
+
+The project's governance loop reserves many decisions for Shawn as
+registrant: amendment rulings, audit rulings, and verdicts on observation
+candidates. Autonomous sessions therefore accumulate them. By the end of
+the first half of session b1a1e102, about 34 decisions had accumulated over
+three sessions, scattered through transcripts, and Shawn asked to work
+through them one by one because he had lost track of each item's context
+(`wiki/user-observations.md`, "Pending review — 2026-10-06 batch",
+Candidate A, still pending at this writing).
+
+### Observation
+
+One decision walk-through cleared them all. Its outputs, from the session
+log, with each commit re-checked:
+
+- amendment 3 D-1 to D-5 (`c99c2a0`);
+- audit Q2–Q10 (`c4553f9`, and `38b59b0` for the general rules);
+- Astra's posted reviews (attributed; reviews are documents from then on);
+- PR #8, merged (`7f84e73`);
+- WN-ag to WN-al, as Observations 45–50 (`a8da2e1`);
+- the user-observation batches (`10a75c0`);
+- the lane-script split, after merge (`42da7fc`);
+- record-weighted coverage, not collected.
+
+Three things made it work. Claude re-read each item's source rather than its
+own summary; grouped items by what they blocked, lodgement and the
+regression gate first; and put each as a structured question with a
+recommendation. Two items needed a trade-offs round. On D-2, Shawn asked
+for pros and cons instead of choosing. Preparing them made Claude re-read
+amendment 2's platform table, which grants floors as well as failures, so
+the framing had been incomplete, and the recommendation moved from
+flag-only to rules deciding 0s only. From D-3 on, every question led with
+the trade-offs, and only one more round-trip was needed
+(`wiki/reflections/session-reflection.md`, Entry 23).
+
+The records call it one sitting, but it was not one continuous period. Its
+commits run from `c99c2a0` (2026-10-05 22:21 Australian Eastern Daylight
+Time, AEDT) to `42da7fc` (2026-10-06 17:37 AEDT). Amendment 3's revision
+record places the Q5 and Q6 answers at 23:15 and 23:45 on 2026-10-05 and the
+approval to lodge Q5's general principles at 08:55 on 2026-10-06. No
+duration of Shawn's time was measured.
+
+### Implication
+
+For the paper's account of what supervising an agentic pipeline costs the
+researcher: the expensive part of oversight was not deciding but
+recovering each decision's context, and that part can be delegated to the
+agent, provided it rebuilds the context from sources rather than from its
+own summaries. Batching then turns many interruptions into one
+walk-through, and ordering by what each item blocks keeps the batch from
+holding up the work. A recommendation built from a summary can still be wrong: D-2's was,
+and asking for trade-offs exposed it. So the trade-offs belong before the
+recommendation, not after a request. The paper can report the count and
+the method; it cannot report a time cost, which was not measured.
+Relations: Observation 46 (delegates told to re-derive from sources caught
+the coordinator's errors; here the same discipline applied to the
+coordinator's own presentation); Observation 49 (its audit rulings were
+largely made in this walk-through). Anchors:
+`wiki/reflections/session-reflection.md` Entry 23; `wiki/continuity.md`,
+session-log entry "2026-10-05 → 10-06 (session b1a1e102)";
+`wiki/user-observations.md`, 2026-10-06 batch, Candidate A;
+`studies/open-science-compliance/prereg/amendment-3-draft.md`, "Settled by
+the registrant, 2026-10-06"; the commits listed above; the WN-an entry in
+`wiki/continuity.md`.
+
+## Observation 53: A rule joined from two separately reviewed rulings left the failed-pin sequence unspecified, and a worked case against H3 exposed it (2026-10-06/08)
+
+*(Approved by Shawn 2026-10-09; WN-ao.)*
+
+### Context
+
+Amendment 3 §7(d) bounds the reproduction lane's build attempts. Two
+rulings fed it:
+
+- **The cap (Shawn, 2026-10-04).** Every dependency is built at the release
+  current at first online appearance, and a failing dependency gets at most
+  its immediately preceding and following releases, three attempts in all
+  (`studies/open-science-compliance/outputs/validation/phase2-shakedown/results-2026-10-03.md`,
+  "Follow-on rulings on (d)", item 2).
+- **D-7 (ruled 2026-10-06).** Supplied pins take precedence, judged per
+  dependency. The date-based search governs what the specification leaves
+  unspecified, and a specified component whose build fails.
+
+Registered H3 compares build effort between pinned and unpinned
+environments, measured as Docker build iterations: 1 plus the number of
+failed-build-then-modify cycles before the first successful build
+(`studies/open-science-compliance/protocol/phase-2-preregistration-draft.md`,
+H3).
+
+### Observation
+
+The revised §7(d) said both that the date-based search governs a specified
+component whose build fails and that the failed pin is the first of three
+attempts. It never named the anchor for the other two. Astra's follow-up
+review (2026-10-08T07:56Z, at `857702d`), finding B1, worked a concrete
+case: an older pin P and a substantially later publication-date release D.
+Two readings stayed plausible:
+
+- try P, then P's immediately preceding and following releases;
+- try P, fall back to D, then use the one remaining attempt around D.
+
+They can give different build success and effort, which is what H3
+measures. The gap had passed the drafting session, Fable's advice on D-7,
+Shawn's ruling of D-7 (2026-10-06, in session fabeab56's own walk-through,
+not the one in Observation 52), and his read of the revision as the diff
+from `60ec56d` to `2f3529d`, which he approved as is on 2026-10-08.
+Amendment 3's revision record states that neither D-7 nor the cap ruling
+settles it.
+
+Shawn ruled the same day: the pin's own neighbours. The supplied pin
+anchors a specified dependency, and the release current at publication
+anchors an unspecified one. The preceding release is tried before the
+following one, the search stops at the first that builds, and a failed pin
+is never replaced by the publication-date release. Pinned and unpinned
+dependencies therefore have the same cap, which keeps H3's comparison even.
+The re-check at `4258db8` found no blocking issues, and amendment 3 lodged
+at `abde9b1` as Open Science Framework (OSF) revision
+`6ac775afb5ed5b4afee88a4a`.
+
+Claude had recommended the follow-up for generic reasons (about 600 changed
+lines and an irreversible step), not from any suspicion. The follow-up was
+scoped to the fixes, so the other places in §7 and §9 where two rulings
+meet have had no reading of this kind
+(`wiki/reflections/session-reflection.md`, Entry 24).
+
+### Implication
+
+Each ruling can be sound and the rule that joins them still be
+underspecified. The defect lives in the composition, where no review of a
+single ruling looks, and four passes, two of them by the person who made
+both rulings, did not see it. What found it was operational: run one
+concrete case through the joined rule and ask what the registered measure
+would record. Before lodging text that composes rulings, work at least one case
+through each junction against the hypothesis it feeds. Relations:
+Observation 43 (an operationalisation choice can decide a gate, so fix it
+in registered text; here the operationalisation of H3's attempts);
+Observation 44 (the fail-and-uplift bright line, under which version pins
+are routine and the cap governs them); Observation 50 (reviewers differ by
+method). Anchors:
+`studies/open-science-compliance/prereg/amendment-3-draft.md`, decision D-7
+and the revision record's "Follow-up review (Astra, 2026-10-08, at
+`857702d`)", B1;
+`~/agent-mail/codex/outbox/claude/20261008T075615Z-codex-amendment3-followup-review.md`;
+`wiki/reflections/session-reflection.md` Entry 24; the WN-ao entry in
+`wiki/continuity.md`.
+
+## Observation 54: Facts about OSF's schema-response API, from amendment 3's lodgement and OSF's source (2026-10-08)
+
+*(Approved by Shawn 2026-10-09; WN-ap.)*
+
+### Context
+
+The Open Science Framework (OSF) Application Programming Interface (API)
+stores each version of a registration as a "schema response". An amendment
+is a new schema response whose Summary field is the previous Summary with
+the amendment appended under a dated banner, and the Digital Object
+Identifier (DOI) does not change. Amendments 1 and 2 were lodged with API
+calls written at the moment of lodging. Amendment 3 was lodged on
+2026-10-08 by a reviewed script, `lodge-osf-amendment.py`, as revision
+`6ac775afb5ed5b4afee88a4a` (Observation 53). Writing the calls down first
+let Astra review them before they ran
+(`wiki/reflections/session-reflection.md`, Entry 24).
+
+### Observation
+
+1. **A Summary of 98,004 characters was accepted.** That is the length of
+   the Summary after amendment 3. No source found states a ceiling
+   (`wiki/reflections/session-reflection.md`, Entry 24).
+2. **Text with no `<` or `>` is stored byte-identical.** OSF stores literal
+   `<` and `>` as HyperText Markup Language (HTML) entities and renders them
+   back (amendment 2's record calls this "the registry's known write
+   transform"). Amendment 3's text has no literal comparators. Its
+   round-trip checks, authenticated before submission and anonymous after
+   approval, found the stored Summary equal to the sent one byte for byte,
+   the earlier versions' text byte-identical, and `updated_response_keys`
+   exactly `["summary"]`.
+3. **Anonymous listings show approved revisions only.**
+   `RegistrationSchemaResponseList.get_default_queryset`
+   (`api/registrations/views.py`) returns every revision to contributors,
+   pending and approved ones to moderators, and approved ones only to
+   anyone else.
+4. **A second unfinished revision cannot be created.**
+   `SchemaResponse.create_from_previous_response`
+   (`osf/models/schema_response.py`) raises `PreviousSchemaResponseError`
+   while any revision on the registration is not approved.
+
+Facts 3 and 4 come from OSF's develop branch as read on 2026-10-08. They
+had a direct consequence. The script's anonymous `plan` mode refused to
+continue if the newest listed revision was not approved, as a guard against
+a stray unsubmitted revision. By fact 3, that guard could never fire, and
+Astra's re-check said so. The protection it was meant to give comes from
+the server instead (fact 4), and the header now cites that reason. The
+header also records, following Astra's finding S2 and OSF's API
+specification, that a failure after submission is attempted leaves a
+revision that may already be submitted or approved, since OSF can approve a
+submitted revision automatically after its waiting period.
+
+### Implication
+
+The next amendment will meet the same unknown ceiling with a longer
+Summary, so the stored length belongs in its round-trip check. Any check
+that reads remote state should record which identity it reads as and what
+that identity cannot see. The tests' fake OSF returned the same listing to
+every caller, which is why they could not catch the inert guard. Facts 3
+and 4 are behaviour of OSF's code at a date, not documented guarantees, and
+should be re-read before they are relied on again. Relations:
+Observation 53 (the same lodgement); Observation 35 (a wired, tested
+control is aspirational until its log shows a real pass; here the test
+double could not show the failure). Anchors: the header docstring of
+`studies/open-science-compliance/prereg/lodge-osf-amendment.py`;
+`studies/open-science-compliance/prereg/amendment-3-draft.md`, status
+block; `amendment-2-draft.md`, status block;
+`wiki/reflections/abductive-reasoning.md`, "2026-10-08 — The guard against
+a stray revision could never fire"; OSF revision
+<https://osf.io/dqnhg?revisionId=6ac775afb5ed5b4afee88a4a>; the WN-ap entry
+in `wiki/continuity.md`.
+
+## Observation 55: In four of five pilots the comparison report's "published" column was wrong, so an audit of a reproduction needs both legs (2026-10-08/09)
+
+*(Approved by Shawn 2026-10-09; WN-aq.)*
+
+### Context
+
+Amendment 3 §9 re-bases the §8 regression gate on a correction ledger
+(Observation 49). Drafting it (session be70c3be; PR #10, draft, branch
+`feat/correction-ledger-draft`, head `0ad4b50`) meant re-deriving every
+pilot target's printed value from the paper and the selected deposit,
+independently of the pilot reports. Four read-only Opus subagents
+transcribed the values, one per pilot, and every value was then checked
+mechanically: `check-printed-values.py` finds 239 of 239 text-layer values
+on their cited Portable Document Format (PDF) pages.
+
+### Observation
+
+A comparison has two legs: the value the reproduction computed, and the
+published value it is compared against. The executed-code audit of
+2026-10-04 checked what code ran. The ledger checked the comparator. In four
+of the five pilots' attempt-01 comparison reports, the "published" column
+was wrong:
+
+| Pilot | "Published" column held | The source prints |
+|---|---|---|
+| crema | v2.0.0's own `table1.csv` (Japan r 0.1003) | Table 1, equal to v1.0.0's `table1.csv` in all 24 cells (Japan r 0.1023); 18 of the pilot's 24 archived-posterior values differ from it |
+| dye | three of five branching values, each matching the pilot's own output: 0.83 (Amber→Disc), 0.87 (Amethyst→Disc), and 1.00 (Cowrie→Disc) | of these, only Cowrie→Disc, as 0.87; 0.83 appears nowhere in the paper or supplement |
+| marwick | Kendall's W "~0.70 (moderate to strong)", credited as an exact match | W 0.64, as does version 1.3's own rendered `paper.docx` |
+| key | optimal linear estimation (OLE) Range Extension % of 3.1 for Midland Thickness and 19.6 for Clovis Mass | the reverse, 19.6 and 3.1: the pilot's wrapper swapped them (attempt-01 `run-analysis.R` lines 260–261) |
+
+The audit found only crema's. It recorded crema's Table 1 credit as
+circular, listed marwick's W of 0.70 as credited without questioning the
+published value, and its ruling Q5(ii) sent key's "two inconsistent cells
+(3.1%, 19.6%)" to the paper-error protocol. Lodged amendment 3 §7(d) cites that
+ruling as its example. Part of dye's surfaced earlier, when the shakedown
+flagged the pilot's "Published 0.87" against Amethyst→Disc
+(Observation 41). The fifth pilot, herskind, had problems of another kind:
+figure labels matching none of the paper's figures, and a frequency table
+that silently differs from the printed one. The ledger also found that all
+three of marwick's pilot differences trace to running post-1.3 code (audit
+finding MAR-1), so the pilot's "data revision" explanation is unsupported.
+
+Shawn accepted the finding on 2026-10-09 and ruled ledger L16 (a): key's
+swap gets an erratum-log entry. When this entry was written, the ledger at
+`0ad4b50` was still marked DRAFT and the ruling had not yet been applied to
+it or to the erratum log. The gate itself is unaffected, because every key
+target is expected-untestable.
+
+### Implication
+
+Auditing what ran says nothing about what it was compared with. Two of the
+four errors put output of the very code that ran in the comparator's place
+(crema, v2.0.0's own table; dye, the pilot's own output), which makes
+agreement circular. The other two are transcription slips (marwick and
+key). Each produced or protected an exact match or a
+paper error: outcomes that end scrutiny rather than invite it. The second
+leg needs the comparator re-derived from the printed source, independently
+of the report under audit, and checked mechanically against page and
+deposit version. For the paper: value-level agreement is reported only with
+its comparator's provenance. An unchecked comparator also propagates: here
+it reached an audit ruling and a lodged registration example. Relations:
+Observation 49 (the pilot baseline and the ledger's origin); Observation 41
+(a regression also audits its baseline, where dye's 0.87 first surfaced);
+Observation 32 (model-produced pilot assessments got specifics wrong and
+assessed the wrong version; the same classes recur in the reproduction
+reports). Anchors, on branch `feat/correction-ledger-draft`:
+`studies/open-science-compliance/outputs/validation/correction-ledger/README.md`,
+"Findings beyond the executed-code audit", and `correction-ledger.json`
+(targets CREMA-T01, DYE-T02 and its exclusions, MAR-T04, KEY-T02; ruling
+L16); `executed-code-audit-2026-10-04/findings.json` on
+`origin/feat/lane-gate-1-1-code-audit`; the WN-aq entry in
+`wiki/continuity.md`.

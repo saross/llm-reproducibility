@@ -1,0 +1,62 @@
+{
+  "audit_version": "1.0",
+  "audited_at": "2026-10-11T12:03:32+00:00",
+  "attempt_dir": "studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03",
+  "final_run": "run-04",
+  "final_run_started_at": "2026-10-11T11:46:44+00:00",
+  "runs_called": [
+    "run-01",
+    "run-02",
+    "run-03",
+    "run-04"
+  ],
+  "contaminating": [
+    {
+      "kind": "run-without-record",
+      "at": "2026-10-11T11:21:28.701Z",
+      "detail": "run-container reported no run: venv/bin/python scripts/reproduction-lane.py run-container --help"
+    },
+    {
+      "kind": "write-to-lane-owned",
+      "at": "2026-10-11T11:35:34.053Z",
+      "detail": "a shell command wrote outputs/run-01/files/1, which only the lane writes"
+    },
+    {
+      "kind": "input-tree-changed-after-run",
+      "at": "2026-10-11T11:47:01.919Z",
+      "detail": "a shell command wrote 1 after the final run run-04 started"
+    },
+    {
+      "kind": "input-tree-changed-after-run",
+      "at": "2026-10-11T11:52:21.346Z",
+      "detail": "a shell command wrote = after the final run run-04 started"
+    }
+  ],
+  "issues": [
+    {
+      "id": "host-run:tools/read-published-fig4.py",
+      "kind": "flag",
+      "code": "host-run",
+      "subject": "tools/read-published-fig4.py",
+      "targets": [],
+      "files": {
+        "tools/read-published-fig4.py": "b1f4259a0ad114c3117fb172a869118267f4d1237643e4d171dac7e159810332"
+      },
+      "fingerprint": "22781fb2b34b93ff05d3876fe569e2842a932facf1da216b41485831f686812e",
+      "message": "FLAG: the executor ran tools/read-published-fig4.py on the host before the final run (python3 -I tools/read-published-fig4.py <fig-000.jpg> > published-values/fig4-cells.csv): credit comes only from sealed outputs, but invariant 5 is an environment rule, so a human rules on it"
+    },
+    {
+      "id": "host-run:tools/read-published-fig2.py",
+      "kind": "flag",
+      "code": "host-run",
+      "subject": "tools/read-published-fig2.py",
+      "targets": [],
+      "files": {
+        "tools/read-published-fig2.py": "71de6f1fb5131d178eba17cc62754396ebe43f755896551c3d7e1b3fd086e9bb"
+      },
+      "fingerprint": "de40c77a60b823b741dd802c89b21cfd795b433d7c9e072a06cdb03ed6c59c21",
+      "message": "FLAG: the executor ran tools/read-published-fig2.py on the host before the final run (python3 -I tools/read-published-fig2.py <fig-000.jpg> > published-values/fig2-left.csv): credit comes only from sealed outputs, but invariant 5 is an environment rule, so a human rules on it"
+    }
+  ],
+  "transcript": "~/.claude/projects/-home-shawn-Code-llm-reproducibility/be70c3be-5053-4390-8f8a-b73ebee1a2cc/subagents/workflows/wf_7c18dfdc-298/agent-a3825ccd2ec76de27.jsonl"
+}

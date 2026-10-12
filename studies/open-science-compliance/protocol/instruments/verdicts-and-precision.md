@@ -1,9 +1,12 @@
-# Reproduction verdicts, precision, and tolerances v1.0 — canonical file
+# Reproduction verdicts, precision, and tolerances v1.1 — canonical file
 
-**Status: FROZEN by OSF registration 2026-07-20 (DOI 10.17605/OSF.IO/DQNHG)** —
+**Status: FROZEN by OSF registration 2026-07-20 (DOI 10.17605/OSF.IO/DQNHG);
+v1.1 applies OSF amendment 3 §7(a) (lodged 2026-10-08) under erratum-log
+Entry 6** —
 changes require the §8 regression gate + an erratum-log entry + an OSF amendment
 before any affected analysis runs.
-**Version:** 1.0 (composed 2026-07-24 from preregistration §7.2, §7.4, §7.5 and
+**Version:** 1.1 (paper error handling clarified 2026-10-09 by amendment 3
+§7(a); v1.0 composed 2026-07-24 from preregistration §7.2, §7.4, §7.5 and
 the reproduction-assessor protocol v1.1 used in the pilot — the source the
 registration's §7.2 "definitions as in" clause points to)
 **Canonical home** per routing design §4. The reproduction-assessor `SKILL.md`
@@ -81,14 +84,18 @@ data formatting mismatches. Distinct from MAJOR_DISCREPANCY because the
 algorithm is not wrong; the input conditions differ from those (often
 undocumented) that produced the published result.
 
-**Paper error handling:** when a reproduced value disagrees with a published
-value but the reproduction is internally consistent and the paper's own
-tabulated data supports the reproduced value, classify as PAPER_ERROR rather
-than MAJOR_DISCREPANCY. To verify a suspected paper error: apply the published
-formula to the paper's own input values and check whether the paper's reported
-output is consistent. Document the verification in the comparison report.
-PAPER_ERROR findings escalate for human confirmation before entering study
-data (modernisation plan §4.4).
+**Paper error handling (v1.1, amendment 3 §7(a)).** When a reproduced value
+disagrees with a published value, the reproduction is internally consistent,
+and the authors' own materials support the reproduced value, classify as
+PAPER_ERROR rather than MAJOR_DISCREPANCY. Admissible evidence, in descending
+strength: (1) the paper's own tabulated data; (2) the authors' deposited data
+for that analysis; (3) the authors' own code, run unmodified (invariant 2), on
+the authors' own data. The reproduction's own re-implementation is never
+evidence. The comparison report names the tier used. PAPER_ERROR findings
+escalate for human confirmation before entering study data. To verify a
+suspected paper error: apply the published formula to the paper's own input
+values and check whether the paper's reported output is consistent. Document
+the verification in the comparison report.
 
 <!-- canon-end: verdicts-and-precision#discrepancy -->
 
@@ -124,4 +131,4 @@ documented, excluded from comparison, and flagged as FAIR findings.
 
 ---
 
-Receipt-token: fe9bca3d3c95f931
+Receipt-token: 46eb4ad0bfcb3b92

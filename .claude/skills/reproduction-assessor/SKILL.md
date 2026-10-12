@@ -192,7 +192,8 @@ Even if the Dockerfile has minor issues, fix rather than reconstruct:
 > **Canonical home (2026-07-24):** verdicts, precision categories, tolerance
 > rules, discrepancy classification, and scope-limitation taxonomy live at
 > `studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md`
-> (v1.0, receipt token `fe9bca3d3c95f931`, FROZEN by the OSF registration).
+> (v1.1, receipt token `46eb4ad0bfcb3b92`, FROZEN by the OSF registration;
+> v1.1 applies OSF amendment 3 §7(a)).
 > Sections C, E, F, and H below **mirror it byte for byte** for the
 > human/session lane, in marker-delimited segments the manifest consistency
 > check compares against the canonical file. **Edit only the canonical
@@ -266,14 +267,18 @@ data formatting mismatches. Distinct from MAJOR_DISCREPANCY because the
 algorithm is not wrong; the input conditions differ from those (often
 undocumented) that produced the published result.
 
-**Paper error handling:** when a reproduced value disagrees with a published
-value but the reproduction is internally consistent and the paper's own
-tabulated data supports the reproduced value, classify as PAPER_ERROR rather
-than MAJOR_DISCREPANCY. To verify a suspected paper error: apply the published
-formula to the paper's own input values and check whether the paper's reported
-output is consistent. Document the verification in the comparison report.
-PAPER_ERROR findings escalate for human confirmation before entering study
-data (modernisation plan §4.4).
+**Paper error handling (v1.1, amendment 3 §7(a)).** When a reproduced value
+disagrees with a published value, the reproduction is internally consistent,
+and the authors' own materials support the reproduced value, classify as
+PAPER_ERROR rather than MAJOR_DISCREPANCY. Admissible evidence, in descending
+strength: (1) the paper's own tabulated data; (2) the authors' deposited data
+for that analysis; (3) the authors' own code, run unmodified (invariant 2), on
+the authors' own data. The reproduction's own re-implementation is never
+evidence. The comparison report names the tier used. PAPER_ERROR findings
+escalate for human confirmation before entering study data. To verify a
+suspected paper error: apply the published formula to the paper's own input
+values and check whether the paper's reported output is consistent. Document
+the verification in the comparison report.
 
 <!-- mirror-end: verdicts-and-precision#discrepancy -->
 

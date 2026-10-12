@@ -1,14 +1,18 @@
-# Data-availability taxonomy v1.0 — canonical file
+# Data-availability taxonomy v1.1 — canonical file
 
-**Status: FROZEN by OSF registration 2026-07-20 (DOI 10.17605/OSF.IO/DQNHG)** —
+**Status: FROZEN by OSF registration 2026-07-20 (DOI 10.17605/OSF.IO/DQNHG);
+v1.1 applies OSF amendment 3 §7(b) (lodged 2026-10-08) under erratum-log
+Entry 6** —
 changes require the §8 regression gate + an erratum-log entry + an OSF amendment
 before any affected analysis runs.
-**Version:** 1.0 (six-level friction ordering adopted 2026-07-18; new instrument
+**Version:** 1.1 (the L2 counting unit clarified 2026-10-09 by amendment 3 §7(b);
+v1.0: six-level friction ordering adopted 2026-07-18; new instrument
 drafted for the Phase 2 registration per pilot report §8.2)
 **Canonical home** per routing design §4 (extracted 2026-07-24 from
 preregistration §7.3).
 **Registration consistency:** matches preregistration §7.3 word-for-word in the
-normative definitions; formatting adapted for instrument use.
+normative definitions, except the L2 counting unit, which amendment 3 §7(b)
+clarifies (quoted word for word below); formatting adapted for instrument use.
 **Consumers:** `reproduction-planner` (pushed, with read receipt; L-levels are
 assigned at reproduction time); registered in `manifest.yaml` `shared_content`.
 
@@ -23,8 +27,8 @@ procedural or discretionary (the L3/L4 boundary).
 - **L1 open-complete:** all analysis data machine-retrievable via standard
   protocol (persistent identifier resolves to the data), no authentication.
 - **L2 open-partial:** more than 50% of the paper's datasets (counting unit:
-  distinct datasets enumerated in the paper's data availability statement and
-  methods) machine-retrievable as for L1; remainder higher-friction or missing.
+  the L2 counting unit below) machine-retrievable as for L1; remainder
+  higher-friction or missing.
 - **L3 authenticated:** retrievable after standard registration or
   authentication with a repository or service whose access grant is procedural
   (automatic, or routine review under published criteria — e.g. registration
@@ -37,6 +41,13 @@ procedural or discretionary (the L3/L4 boundary).
   route for this study.
 - **L6 absent:** no availability route (no statement, dead links) or an
   unfulfilled open-availability claim.
+
+**L2 counting unit (v1.1, amendment 3 §7(b)).** Counting unit: the distinct
+datasets that the paper's verification targets require as inputs, as
+enumerated in the reproduction plan. Replicate runs presented as one result
+count as one dataset, which is available only if every part is retrievable.
+Upstream sources count only when a verification target requires them;
+otherwise they are provenance.
 
 ## Assignment rules
 
@@ -67,4 +78,4 @@ documented.
 
 ---
 
-Receipt-token: 068d5f05793429d7
+Receipt-token: 464c1474a18abab6

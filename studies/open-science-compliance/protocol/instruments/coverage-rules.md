@@ -1,9 +1,12 @@
-# Verification-target coverage rules v1.0 — canonical file
+# Verification-target coverage rules v1.1 — canonical file
 
-**Status: FROZEN by OSF registration 2026-07-20 (DOI 10.17605/OSF.IO/DQNHG)** —
+**Status: FROZEN by OSF registration 2026-07-20 (DOI 10.17605/OSF.IO/DQNHG);
+v1.1 applies OSF amendment 3 §7(c) (lodged 2026-10-08) under erratum-log
+Entry 6** —
 changes require the §8 regression gate + an erratum-log entry + an OSF amendment
 before any affected analysis runs.
-**Version:** 1.0 (extracted 2026-07-24 from preregistration §7.6)
+**Version:** 1.1 (check scope clarified 2026-10-09 by amendment 3 §7(c); v1.0
+extracted 2026-07-24 from preregistration §7.6)
 **Canonical home** per routing design §4. Coverage is the H2 outcome; the
 denominator lock below is the single most silent-failure-prone rule in the
 study — treat every word as load-bearing.
@@ -30,6 +33,15 @@ Coverage = (targets reproduced exactly or within pre-stated tolerance)
   be added, removed, or redefined after plan approval; a discovered enumeration
   error is a deviation to document, not a list to edit.
 
+## Check scope (v1.1, amendment 3 §7(c))
+
+Each target's verification method states its scope, which must equal the
+target's full published scope at the pre-stated tolerance. A check that covers
+part of a target is completed before the target counts as reproduced;
+otherwise the target is recorded as partially verified and counts against
+coverage. Where feasible, the plan declares the target's element count, and a
+deterministic gate compares it with the elements checked.
+
 ## Planner-side duties
 
 - Enumerate every published table, figure, and named value as a candidate
@@ -53,4 +65,4 @@ Coverage = (targets reproduced exactly or within pre-stated tolerance)
 
 ---
 
-Receipt-token: a2a4c0a899291c2b
+Receipt-token: 414de27c0d871a1d
