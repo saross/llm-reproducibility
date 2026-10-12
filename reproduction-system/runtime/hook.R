@@ -51,6 +51,13 @@
 #   STMT   from the lane's evaluator (run_file, below): one per top-level
 #          statement it parsed, with the seq of its LOAD, the statement's
 #          index, its first and last line, and the md5 of its source text.
+#   RUNCTX from the lane's evaluator, just after its LOAD: the LOAD's seq,
+#          the declared tolerance (lines), whether to continue past errors,
+#          whether the environment is the global one, the parse encoding,
+#          the names of the function objects already in the global
+#          environment, and the search path's entries beyond R's defaults.
+#          A wrapper that redefines a function the authors call, or
+#          attaches a package that masks one, shows here (hook 1.7).
 #   EVAL   from the lane's evaluator: one per statement it evaluated, with
 #          the seq of its LOAD, the index, the status ("ok", "tolerated",
 #          "error" when the wrapper asked to continue past errors, or
@@ -111,7 +118,7 @@ local({
     }
 
     state <- new.env(parent = baseenv())
-    state$version <- "1.6-inst"
+    state$version <- "1.7-inst"
     # The longest text a TEXT event carries verbatim, in bytes: as hex it
     # doubles, and the line must stay under the 4,096-byte atomic write.
     TEXT_VERBATIM_MAX <- 512L
@@ -438,7 +445,7 @@ local({
     })
     api$load <- function(fn, frame, path) guard(fn, on_load(fn, path, frame))
     api$run_file <- function(path, tolerate = integer(), continue_on_error = FALSE,
-                             envir = globalenv()) {
+                             envir = globalenv(), encoding = "unknown") {
         # The lane's evaluator (see the header). `tolerate` names lines of
         # the file: a statement spanning one of them may error without
         # stopping the run, and its EVAL says so. With continue_on_error, any
@@ -446,9 +453,28 @@ local({
         # Otherwise the first error stops the run, as it stops Rscript.
         frame <- environment()
         seq <- guard("lane::run_file", on_load("lane::run_file", path, frame))
+        # The run's context, before anything runs (hook 1.7).
+        guard("lane::run_file", {
+            defaults <- c(".GlobalEnv", "package:stats", "package:graphics",
+                          "package:grDevices", "package:utils", "package:datasets",
+                          "package:methods", "Autoloads", "package:base")
+            globals <- ls(globalenv(), all.names = TRUE)
+            globals <- globals[vapply(globals, function(n) {
+                is.function(get(n, envir = globalenv(), inherits = FALSE))
+            }, logical(1))]
+            extra <- setdiff(search(), defaults)
+            cut <- function(x) substr(paste(x, collapse = ","), 1L, 600L)
+            emit("RUNCTX", c(as.character(seq),
+                             if (length(tolerate)) cut(as.integer(tolerate)) else "none",
+                             if (isTRUE(continue_on_error)) "continue" else "stop",
+                             if (identical(envir, globalenv())) "global" else "other",
+                             hex(encoding),
+                             if (length(globals)) hex(cut(globals)) else "none",
+                             if (length(extra)) hex(cut(extra)) else "none"))
+        })
         # This parse() is the evaluator's own mechanics: its frame is an
         # active load, so the parse tracer does not log it again.
-        exprs <- parse(file = path, keep.source = TRUE)
+        exprs <- parse(file = path, keep.source = TRUE, encoding = encoding)
         refs <- attr(exprs, "srcref")
         spans <- vector("list", length(exprs))
         for (i in seq_along(exprs)) {
@@ -627,4 +653,9 @@ local({
             break
         }
     }
-})
+},
+# Hook 1.7 (Fable's delta review, B-1): the hook's own closures are built in
+# an environment whose parent is base, not the global environment, so a
+# wrapper that defines eval(), parse(), print(), or paste0() in the global
+# environment cannot change what the hook or its evaluator calls.
+envir = new.env(parent = baseenv()))

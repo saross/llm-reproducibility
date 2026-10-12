@@ -1922,6 +1922,32 @@ class EvaluatorDockerTests(AccountRunMixin, unittest.TestCase):
         self.assertIn("statement-error:analysis.R:2@run-01", flags)
         self.assertIn("original-partly-run:analysis.R@run-01/statements", flags)
 
+    def kept(self) -> str:
+        return (self.dir / "outputs" / "run-01" / "files" / "outputs" / "kept.csv").read_text()
+
+    def test_a_wrapper_eval_cannot_alter_the_evaluator(self):
+        """Fable's delta review, B-1: a global eval() that swapped statement
+        3 ran with EVAL ok. With hook 1.7 the evaluator calls base's eval, the
+        output is the authors', and the global function is flagged."""
+        doc, result, flags = self.run_wrapper(
+            'eval <- function(expr, envir = parent.frame(), ...) {\n'
+            '  if (identical(expr, quote(kept <- x[x > 2]))) expr <- quote(kept <- x[x > 3])\n'
+            '  base::eval(expr, envir)\n'
+            '}\n'
+            'getOption("lane.hook")$run_file("authors-code/analysis.R")\n')
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertIn('"x"\n"1",3\n"2",4\n', self.kept())
+        self.assertIn("run-context:analysis.R@run-01", flags)
+        self.assertTrue(any("eval <-" in e for e in result["errors"]), result["errors"])
+
+    def test_a_wrapper_function_the_authors_call_is_flagged(self):
+        """B-1's second probe: a global write.csv() changes what the authors'
+        statement writes. The evaluator cannot stop that, so it is flagged."""
+        _doc, _result, flags = self.run_wrapper(
+            'write.csv <- function(x, ...) utils::write.csv(x * 10, ...)\n'
+            'getOption("lane.hook")$run_file("authors-code/analysis.R")\n')
+        self.assertIn("run-context:analysis.R@run-01", flags)
+
     def test_parse_then_evaluate_in_the_wrapper_is_flagged(self):
         """Fable's experiment: statement 3 altered in memory after the
         wrapper's own parse(file =). Gate 1.3 called the code identical."""

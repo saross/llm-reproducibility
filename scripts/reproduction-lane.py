@@ -283,7 +283,9 @@ CMD_CHECK_RE = re.compile(r"\bR\s+CMD\s+check\b")
 # Hook integrity: errors in a wrapper, flags in an original. An "=" counts
 # as assignment only at the start of a statement, so that an argument name
 # (f(parse = TRUE)) does not.
-LOADER_NAMES = r"(?:source|sys\.source|parse|loadNamespace)"
+# eval, evalq, withVisible, and print: the lane evaluator's own calls (Fable's
+# delta review, B-1).
+LOADER_NAMES = r"(?:source|sys\.source|parse|loadNamespace|eval|evalq|withVisible|print)"
 HOOK_INTEGRITY_RE = re.compile(
     r"\b(?:untrace|tracingState)\s*\("
     r"|\bSys\.(?:un)?setenv\s*\([^)]*\bR_(?:PROFILE_USER|ENVIRON_USER|PROFILE)\b"
@@ -4068,6 +4070,7 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
         # parsed statements and their evaluations, by (token, load seq).
         load_fns: dict[tuple[str, int], str] = {}
         parsed: dict[tuple[str, int], dict[int, tuple[str, str]]] = {}
+        contexts: dict[tuple[str, int], list[str]] = {}
         evaluated: dict[tuple[str, int], dict[int, tuple[str, str]]] = {}
 
         def lookup(token: str, seq: int) -> dict | None:
@@ -4334,6 +4337,8 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
             elif kind == "STMT" and len(fields) >= 5 and fields[0].isdigit():
                 parsed.setdefault((token, int(fields[0])), {})[int(fields[1])] = (
                     fields[2], fields[3])
+            elif kind == "RUNCTX" and len(fields) >= 7 and fields[0].isdigit():
+                contexts[(token, int(fields[0]))] = fields
             elif kind == "EVAL" and len(fields) >= 4 and fields[0].isdigit():
                 message = decode_field(fields[3]) if fields[3] != "none" else ""
                 evaluated.setdefault((token, int(fields[0])), {})[int(fields[1])] = (
@@ -4399,6 +4404,39 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                 continue
             statements = parsed.get(key, {})
             outcomes = evaluated.get(key, {})
+            # The run's context (hook 1.7, B-1): functions already in the
+            # global environment and packages attached beyond R's defaults
+            # can change what the authors' statements call; a blanket
+            # continue or another environment changes how they run.
+            context = contexts.get(key)
+            if context is None:
+                warnings.append(f"{run_id}: the lane's evaluator ran {oid!r} with no RUNCTX "
+                                f"event (a hook before 1.7)")
+            else:
+                tolerated_lines, mode, scope = context[1], context[2], context[3]
+                encoding = decode_field(context[4])
+                defined = decode_field(context[5]) if context[5] != "none" else ""
+                attached = decode_field(context[6]) if context[6] != "none" else ""
+                warnings.append(f"{run_id}: the lane's evaluator ran {oid!r} with tolerance "
+                                f"{tolerated_lines}, mode {mode}, environment {scope}, "
+                                f"encoding {encoding}")
+                concerns = []
+                if defined:
+                    concerns.append(f"functions defined in the global environment ({defined})")
+                if attached:
+                    concerns.append(f"packages attached beyond R's defaults ({attached})")
+                if mode == "continue":
+                    concerns.append("every statement's error allowed (continue_on_error)")
+                if scope != "global":
+                    concerns.append("an environment other than the global one")
+                if concerns:
+                    add(flags, Issue.flag(
+                        "run-context", f"{oid}@{run_id}", f"{run_id}: the lane's evaluator ran "
+                        f"original {oid!r} with {'; '.join(concerns)}: a function the authors "
+                        f"call may resolve to the wrapper's, so confirm nothing they compute "
+                        f"is changed (honest wrappers keep their state in local())",
+                        files={"original": binding.get("md5") or oid,
+                               "context": json_digest(context)}))
 
             def lines_of(index: int, spans: dict = statements) -> str:
                 first, last = spans.get(index, ("?", "?"))
