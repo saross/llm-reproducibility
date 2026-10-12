@@ -285,6 +285,37 @@ class GateTests(unittest.TestCase):
         self.assertEqual(report["verdict"], "pass", report["errors"])
         self.assertEqual(report["coverage"]["coverage_fraction"], 1.0)
 
+    def test_declared_value_counts_are_compared(self):
+        """The gate 1.3 final review's F9 (amendment 3 §7(c)): equal passes;
+        short, or no count, cannot be credited; an excess is a warning; an
+        unspecified plan count and an honest partial outcome are untouched."""
+        plan = plan_record(["T01", "T02"])
+        for target, n in zip(plan["plan"]["verification_targets"], (3, 1), strict=True):
+            target["n_values"] = n
+        self.plan.write_text(json.dumps(plan), encoding="utf-8")
+        self.comparison()
+        self.assertEqual(self.run_gate()["verdict"], "pass")
+        base = self.comparison()["targets"]
+        short = [{**base[0], "values_compared": 1, "values_matched": 1}, base[1]]
+        self.comparison(targets=short)
+        report = self.run_gate()
+        self.assertIn("T01: 1 of the plan's 3 declared value(s) compared", " ".join(
+            report["errors"]))
+        uncounted = [{k: v for k, v in base[0].items() if k != "values_compared"}, base[1]]
+        self.comparison(targets=uncounted)
+        self.assertIn("gives no values_compared", " ".join(self.run_gate()["errors"]))
+        excess = [base[0], {**base[1], "values_compared": 2, "values_matched": 2}]
+        self.comparison(targets=excess)
+        report = self.run_gate()
+        self.assertEqual(report["verdict"], "pass", report["errors"])
+        self.assertIn("T02: 2 values compared against the plan's 1", " ".join(
+            report["warnings"]))
+        partial = [{**base[0], "outcome": "MINOR_DISCREPANCY", "values_compared": 1,
+                    "values_matched": 1}, base[1]]
+        self.comparison(targets=partial, coverage={"targets_enumerated": 2,
+                                                   "targets_reproduced": 1})
+        self.assertEqual(self.run_gate()["verdict"], "pass")
+
     def test_report_lists_issues_and_admits_only_ruled_results(self):
         """Gate 1.3 §6: raw coverage counts outcomes; admitted coverage waits
         for a ruling on every issue, here the wrapper-semantics obligation."""

@@ -5775,6 +5775,8 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
     try:
         plan_record = json.loads(plan_path.read_text(encoding="utf-8"))
         locked = [t["target_id"] for t in plan_record["plan"]["verification_targets"]]
+        declared_counts = {t["target_id"]: t.get("n_values")
+                           for t in plan_record["plan"]["verification_targets"]}
         plan_slug = plan_record["plan"]["paper_slug"]
         plan_digest = sha256_file(plan_path)
     except (OSError, KeyError, TypeError, json.JSONDecodeError) as exc:
@@ -5820,6 +5822,24 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
                 errors.append(f"{tid}: untestable/CANNOT_COMPARE without failure_mode")
             if t.get("testable") is False and t.get("outcome") in REPRODUCED_OUTCOMES:
                 errors.append(f"{tid}: marked untestable but outcome {t.get('outcome')}")
+            # The gate 1.3 final review's F9 (amendment 3 §7(c)): a target
+            # counts as reproduced only when its check covered the plan's
+            # declared element count. An honest partial or untestable
+            # outcome is untouched; an excess (cross-checks) is a warning.
+            expected = declared_counts.get(tid)
+            compared = t.get("values_compared")
+            if isinstance(expected, int) and t.get("outcome") in REPRODUCED_OUTCOMES:
+                if not isinstance(compared, int):
+                    errors.append(f"{tid}: the plan declares {expected} value(s) but the "
+                                  f"record gives no values_compared, so it cannot be "
+                                  f"credited as {t.get('outcome')}")
+                elif compared < expected:
+                    errors.append(f"{tid}: {compared} of the plan's {expected} declared "
+                                  f"value(s) compared; a partial check cannot be credited as "
+                                  f"{t.get('outcome')} (record it as partially verified)")
+                elif compared > expected:
+                    warnings.append(f"{tid}: {compared} values compared against the plan's "
+                                    f"{expected} (cross-checks, or a miscount?)")
             evidence = str(t.get("evidence") or "")
             if (evidence and " " not in evidence and "/" in evidence
                     and not (target_dir / evidence).exists()):
