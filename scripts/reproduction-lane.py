@@ -158,6 +158,7 @@ import os
 import posixpath
 import re
 import secrets
+import shlex
 import shutil
 import subprocess
 import sys
@@ -6322,17 +6323,22 @@ def reconcile_telemetry(lines: list[str]) -> dict:
 # It is supporting evidence: shell indirection can avoid any pattern, which
 # is why runs are bound by receipt, not by command (Astra 10).
 
-TRANSCRIPT_AUDIT_VERSION = "1.0"
-SEGMENT_SPLIT_RE = re.compile(r"&&|\|\||;|\||\n")
+TRANSCRIPT_AUDIT_VERSION = "1.1"
 DOCKER_RUN_RE = re.compile(
     r"\bdocker(?:-compose|\s+(?:container\s+)?(run|exec|cp|start|compose))\b")
 HOST_RUN_RE = re.compile(r"(?:^|[\s/])(Rscript|R\s+(?:--file|-f)|python3?|bash)\b")
-CD_RE = re.compile(r"\bcd\s+([^\s;&|]+)")
-REDIRECT_RE = re.compile(r"(?<![0-9&])>>?\s*([^\s;&|<>]+)")
-COPY_LIKE_RE = re.compile(r"(?:^|\s)(cp|mv|install|rsync)\s+(.*)")
-TEE_RE = re.compile(r"(?:^|\s)tee\s+(.*)")
-SED_IN_PLACE_RE = re.compile(
-    r"(?:^|\s)sed\s+(?:[^|;&]*\s)?(?:-[a-zA-Z]*i[a-zA-Z]*|--in-place)\s+(.*)")
+# Version 1.1 (2026-10-12, the gate 1.3 final review's F1): shell text is
+# scanned with its quoting and heredocs, not split by regex. Version 1.0 read
+# ">" inside a quoted awk program or a Python heredoc as a redirect, and a
+# run-container --help call as a run that left no record, so a clean run
+# failed the hard-failure rule (amendment 3 §9).
+HEREDOC_RE = re.compile(r"(?<!<)<<(?!<)(-?)[ \t]*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\2")
+REDIRECT_OP_RE = re.compile(r"(?<![<>&])(?:&>>?|[0-9]*>>?\|?)")
+NON_EXECUTING_RE = re.compile(r"(?:^|\s)(?:-h|--help|--version)(?=\s|$)")
+SHELL_INTERPRETERS = frozenset({"bash", "sh", "dash", "zsh"})
+COPY_COMMANDS = frozenset({"cp", "mv", "install", "rsync"})
+COMMAND_PREFIXES = frozenset({"sudo", "env", "time", "nohup", "nice", "timeout", "command",
+                              "exec"})
 
 
 def timed_tool_calls(lines: list[str]) -> list[dict]:
@@ -6369,23 +6375,215 @@ def timed_tool_calls(lines: list[str]) -> list[dict]:
     return calls
 
 
+def mask_quoted(text: str) -> str:
+    """The text with every quoted or escaped character blanked, same length.
+
+    Quote characters themselves stay, so a scanner can still see where a
+    quoted word starts. Newlines inside quotes, and escaped newlines, become
+    spaces, so a quoted multi-line string is not split into commands. Inside
+    single quotes a backslash is literal, as in the shell.
+    """
+    out: list[str] = []
+    quote: str | None = None
+    escaped = False
+    for ch in text:
+        if escaped:
+            out.append(" ")
+            escaped = False
+        elif quote == "'":
+            out.append(ch if ch == "'" else " ")
+            quote = None if ch == "'" else quote
+        elif ch == "\\":
+            out.append(" ")
+            escaped = True
+        elif quote == '"':
+            out.append(ch if ch == '"' else " ")
+            quote = None if ch == '"' else quote
+        else:
+            if ch in "'\"":
+                quote = ch
+            out.append(ch)
+    return "".join(out)
+
+
+def mask_tests(masked: str) -> str:
+    """Blank the insides of [[ ]] and (( )), where > compares and does not
+    redirect."""
+    for opener, closer in (("[[", "]]"), ("((", "))")):
+        start = masked.find(opener)
+        while start != -1:
+            end = masked.find(closer, start + 2)
+            if end == -1:
+                break
+            masked = masked[:start + 2] + " " * (end - start - 2) + masked[end:]
+            start = masked.find(opener, end + 2)
+    return masked
+
+
+def split_heredocs(command: str) -> tuple[str, dict[int, list[str]]]:
+    """Separate heredoc bodies from the command text that introduces them.
+
+    Returns:
+        The command without its heredoc bodies, and each body keyed by the
+        offset (in the returned text) of the ``<<`` that introduced it.
+    """
+    kept: list[str] = []
+    length = 0
+    bodies: dict[int, list[str]] = {}
+    pending: list[tuple[str, bool, int]] = []
+    body: list[str] = []
+    for line in command.splitlines(keepends=True):
+        if pending:
+            delimiter, strip_tabs, at = pending[0]
+            bare = line.rstrip("\n")
+            if (bare.lstrip("\t") if strip_tabs else bare) == delimiter:
+                bodies.setdefault(at, []).append("".join(body))
+                body = []
+                pending.pop(0)
+            else:
+                body.append(line)
+            continue
+        masked = mask_quoted(line)
+        for found in HEREDOC_RE.finditer(line):
+            if masked[found.start():found.start() + 2] == "<<":
+                pending.append((found.group(3), found.group(1) == "-",
+                                length + found.start()))
+        kept.append(line)
+        length += len(line)
+    if pending and body:
+        bodies.setdefault(pending[0][2], []).append("".join(body))
+    return "".join(kept), bodies
+
+
+def shell_segments(text: str) -> list[tuple[int, str]]:
+    """Split shell text at unquoted ``&&``, ``||``, ``;``, ``|``, and newlines.
+
+    Returns:
+        ``[(start offset, segment text)]``, segments stripped of nothing, so
+        offsets index ``text``.
+    """
+    masked = mask_quoted(text)
+    segments: list[tuple[int, str]] = []
+    start = i = 0
+    while i < len(text):
+        pair = masked[i:i + 2]
+        if pair in ("&&", "||"):
+            segments.append((start, text[start:i]))
+            i += 2
+            start = i
+        elif masked[i] in ";\n" or (masked[i] == "|" and masked[i - 1:i] != ">"):
+            segments.append((start, text[start:i]))
+            i += 1
+            start = i
+        else:
+            i += 1
+    segments.append((start, text[start:]))
+    return segments
+
+
+def read_word(text: str, i: int) -> str:
+    """The shell word starting at or after ``i``, with its quotes removed."""
+    while i < len(text) and text[i] in " \t":
+        i += 1
+    word: list[str] = []
+    quote: str | None = None
+    while i < len(text):
+        ch = text[i]
+        if quote:
+            if ch == quote:
+                quote = None
+            elif ch == "\\" and quote == '"' and i + 1 < len(text):
+                i += 1
+                word.append(text[i])
+            else:
+                word.append(ch)
+        elif ch in "'\"":
+            quote = ch
+        elif ch == "\\" and i + 1 < len(text):
+            i += 1
+            word.append(text[i])
+        elif ch in " \t;&|<>()":
+            break
+        else:
+            word.append(ch)
+        i += 1
+    return "".join(word)
+
+
+def shell_words(segment: str) -> list[str]:
+    """A segment's words, quotes removed, comments dropped, and redirections
+    (operator and target) left out."""
+    try:
+        words = shlex.split(segment, comments=True)
+    except ValueError:
+        words = segment.split()
+    kept: list[str] = []
+    skip = False
+    for word in words:
+        if skip:
+            skip = False
+            continue
+        operator = re.fullmatch(r"(?:&>>?|[0-9]*>>?\|?|[0-9]*<)(.*)", word)
+        if operator:
+            skip = not operator.group(1)
+            continue
+        kept.append(word)
+    return kept
+
+
+def command_word(words: list[str]) -> tuple[int, str]:
+    """The index and basename of a segment's command, past assignments and
+    prefixes such as ``env`` or ``timeout``."""
+    for k, word in enumerate(words):
+        if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*=.*", word) or word in COMMAND_PREFIXES:
+            continue
+        if words[k - 1:k] == ["timeout"] and re.fullmatch(r"[0-9.]+[smhd]?", word):
+            continue
+        return k, posixpath.basename(word)
+    return len(words), ""
+
+
 def segment_writes(segment: str) -> list[str]:
-    """Paths a shell segment writes: redirects, cp/mv/install/rsync
-    destinations, tee's files, and sed -i's files."""
-    targets = list(REDIRECT_RE.findall(segment))
-    copy = COPY_LIKE_RE.search(segment)
-    if copy:
-        args = [a for a in copy.group(2).split() if not a.startswith("-")]
-        if len(args) >= 2:
+    """Paths a shell segment writes: redirect targets outside quotes and
+    tests, cp/mv/install/rsync destinations, tee's files, and sed -i's files.
+
+    The segment must already be free of heredoc bodies (``split_heredocs``).
+    """
+    masked = mask_tests(mask_quoted(segment))
+    targets: list[str] = []
+    for found in REDIRECT_OP_RE.finditer(masked):
+        rest = masked[found.end():].lstrip(" \t")
+        if not found.group() or rest.startswith(("&", "(")):
+            continue
+        target = read_word(segment, found.end())
+        if target:
+            targets.append(target)
+    words = shell_words(segment)
+    for k, word in enumerate(words):
+        name = posixpath.basename(word)
+        args = [a for a in words[k + 1:] if not a.startswith("-")]
+        if name in COPY_COMMANDS and len(args) >= 2:
             targets.append(args[-1])
-    tee = TEE_RE.search(segment)
-    if tee:
-        targets += [a for a in tee.group(1).split() if not a.startswith("-")]
-    sed = SED_IN_PLACE_RE.search(segment)
-    if sed:
-        args = [a for a in sed.group(1).split() if not a.startswith("-")]
-        targets += args[1:]
-    return [t.strip("'\"") for t in targets if t and not t.startswith("/dev/")]
+            break
+        if name == "tee":
+            targets += args
+            break
+        if name == "sed" and any(re.fullmatch(r"-[a-zA-Z]*i[a-zA-Z]*|--in-place(=.*)?", a)
+                                 for a in words[k + 1:]):
+            targets += args[1:]
+            break
+    return [t for t in targets if t and not t.startswith("/dev/")]
+
+
+def after_stamp(stamp: str | None, since: str | None) -> bool:
+    """Whether a transcript timestamp is at or after a run's start, compared
+    as times rather than strings."""
+    if not (stamp and since):
+        return False
+    try:
+        return datetime.fromisoformat(str(stamp)) >= datetime.fromisoformat(str(since))
+    except ValueError:
+        return str(stamp).replace("Z", "+00:00") >= str(since).replace("Z", "+00:00")
 
 
 def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | None) -> dict:
@@ -6421,8 +6619,13 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
     manifest_doc = manifest_doc or {}
     host_exempt = {w["path"] for w in manifest_doc.get("wrappers") or []
                    if w.get("role") in ("comparison", "conversion")}
+    # Only code can be run: an original that is data (a workbook, a CSV)
+    # named in a host command is being read, not run. Version 1.0 counted
+    # it, which its regex splitting hid (version 1.1 found it on the
+    # herskind pilot's `python3 -c` reads of the deposited workbooks).
     code_paths = sorted({p for p in (
-        [o.get("local_copy") for o in manifest_doc.get("originals") or []]
+        [o.get("local_copy") for o in manifest_doc.get("originals") or []
+         if o.get("local_copy") and is_code_file(Path(o["local_copy"]))]
         + [e.get("path") for e in manifest_doc.get("executed") or []]
         + [w.get("path") for w in manifest_doc.get("wrappers") or []
            if w.get("role") != "generated"]) if p and p not in host_exempt})
@@ -6430,8 +6633,7 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
     issues: list[Issue] = []
 
     def after_final(stamp: str | None) -> bool:
-        return bool(final_start and stamp and stamp.replace("Z", "+00:00") >=
-                    str(final_start).replace("Z", "+00:00"))
+        return after_stamp(stamp, final_start)
 
     def place(path_text: str, cwd: str | None) -> str | None:
         """An attempt-relative path, when a written or named path is in the
@@ -6460,6 +6662,75 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
                  f"{final} started")
 
     runs_called: set[str] = set()
+
+    def scan_shell(command: str, call: dict, cwd: str | None, depth: int) -> str | None:
+        """Audit one shell command: its segments, in order, with cd tracked.
+
+        Heredoc bodies are data, except a body fed to a shell, which is
+        audited as commands (up to three levels deep).
+
+        Returns:
+            The working directory after the command, where it is known.
+        """
+        at = call["at"]
+        text, bodies = split_heredocs(command)
+        for offset, raw in shell_segments(text):
+            segment = raw.strip()
+            if not segment:
+                continue
+            words = shell_words(segment)
+            k, name = command_word(words)
+            if name == "cd":
+                target = words[k + 1] if len(words) > k + 1 else "~"
+                path = Path(target).expanduser()
+                cwd = (str(path) if path.is_absolute()
+                       else str(Path(cwd) / path) if cwd is not None else None)
+                continue
+            if "reproduction-lane.py" in segment:
+                if NON_EXECUTING_RE.search(mask_quoted(segment)):
+                    continue
+                if re.search(r"\bsnapshot-code\b", segment):
+                    find("snapshot-code", at, f"the executor ran snapshot-code: {segment}")
+                elif re.search(r"\brun-container\b", segment):
+                    if "--clear-lock" in segment:
+                        find("clear-lock", at, f"the executor cleared a run lock: {segment}")
+                    elif "--finalise" not in segment:
+                        named = set(re.findall(r"\b(run-\d{2,})\b", call["output"]))
+                        runs_called.update(named)
+                        if not named and call["errored"] is False:
+                            find("run-without-record", at, f"run-container reported no "
+                                 f"run: {segment}")
+                    else:
+                        runs_called.update(re.findall(r"\b(run-\d{2,})\b", segment))
+                continue
+            visible = mask_quoted(segment)
+            if DOCKER_RUN_RE.search(visible):
+                find("docker-direct", at, f"paper code may run other than through "
+                     f"run-container: {segment}")
+                continue
+            if HOST_RUN_RE.search(visible):
+                named = [c for c in code_paths if c in segment or str(root / c) in segment]
+                if named:
+                    if after_final(at):
+                        find("host-run-after-final", at, f"a host run named {named[0]} "
+                             f"after the final run {final} started: {segment}")
+                    else:
+                        issues.append(Issue.flag(
+                            "host-run", named[0], f"the executor ran {named[0]} on the host "
+                            f"before the final run ({segment[:160]}): credit comes only "
+                            f"from sealed outputs, but invariant 5 is an environment rule, "
+                            f"so a human rules on it", files={named[0]: json_digest(segment)}))
+            for target in segment_writes(segment):
+                rel = place(target, cwd)
+                if rel is not None:
+                    written(rel, at, "a shell command")
+            fed = [b for at_offset, found in bodies.items()
+                   if offset <= at_offset < offset + len(raw) for b in found]
+            if fed and name in SHELL_INTERPRETERS and "-c" not in words[k + 1:] and depth < 3:
+                for body in fed:
+                    cwd = scan_shell(body, call, cwd, depth + 1)
+        return cwd
+
     for call in timed_tool_calls(lines):
         at = call["at"]
         if call["name"] in ("Write", "Edit", "NotebookEdit", "MultiEdit"):
@@ -6470,49 +6741,7 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
             continue
         if call["name"] != "Bash":
             continue
-        command = str(call["input"].get("command") or "")
-        cd = CD_RE.search(command)
-        cwd = cd.group(1).strip("'\"") if cd else None
-        for segment in SEGMENT_SPLIT_RE.split(command):
-            segment = segment.strip()
-            if not segment:
-                continue
-            if "reproduction-lane.py" in segment:
-                if re.search(r"\bsnapshot-code\b", segment):
-                    find("snapshot-code", at, f"the executor ran snapshot-code: {segment}")
-                elif re.search(r"\brun-container\b", segment):
-                    if "--clear-lock" in segment:
-                        find("clear-lock", at, f"the executor cleared a run lock: {segment}")
-                    elif "--finalise" not in segment:
-                        named = set(re.findall(r"\b(run-\d{2,})\b", call["output"]))
-                        runs_called |= named
-                        if not named and call["errored"] is False:
-                            find("run-without-record", at, f"run-container reported no run: "
-                                 f"{segment}")
-                    else:
-                        runs_called |= set(re.findall(r"\b(run-\d{2,})\b", segment))
-                continue
-            docker = DOCKER_RUN_RE.search(segment)
-            if docker:
-                find("docker-direct", at, f"paper code may run other than through "
-                     f"run-container: {segment}")
-                continue
-            if HOST_RUN_RE.search(segment):
-                named = [p for p in code_paths if p in segment or str(root / p) in segment]
-                if named:
-                    if after_final(at):
-                        find("host-run-after-final", at, f"a host run named {named[0]} after "
-                             f"the final run {final} started: {segment}")
-                    else:
-                        issues.append(Issue.flag(
-                            "host-run", named[0], f"the executor ran {named[0]} on the host "
-                            f"before the final run ({segment[:160]}): credit comes only from "
-                            f"sealed outputs, but invariant 5 is an environment rule, so a "
-                            f"human rules on it", files={named[0]: json_digest(segment)}))
-            for target in segment_writes(segment):
-                rel = place(target, cwd)
-                if rel is not None:
-                    written(rel, at, "a shell command")
+        scan_shell(str(call["input"].get("command") or ""), call, None, 0)
     for run_id in run_ids(records):
         if run_id not in runs_called:
             find("record-without-call", None, f"{run_id} has a run record but no "

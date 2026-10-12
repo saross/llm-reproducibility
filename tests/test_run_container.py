@@ -1350,6 +1350,71 @@ class TranscriptAuditTests(RecordFixture, unittest.TestCase):
                                       self.MANIFEST)
         self.assertEqual(self.kinds(report), ["run-without-record"])
 
+    # Gate 1.3 final review, F1 (2026-10-12): the herskind pilot's executor
+    # transcript gave four false hard failures. These are its command shapes.
+
+    def test_comparisons_inside_quoted_programs_are_not_redirects(self):
+        files = self.dir / "outputs" / "run-01" / "files"
+        report = self.audit(
+            self.bash(f"cd {files} && find out -type f | sort; head -3 log.csv; "
+                      "awk -F, 'NR>1 && $4!=\"\\\"ok\\\"\"' log.csv", self.BEFORE),
+            self.bash(f"cd {self.dir} && awk -F, 'NR>1 && $5<240' published/x.csv | head -5",
+                      self.AFTER),
+            self.bash("python3 -c \"print(1 >= 0)\" > /dev/null 2>&1", self.AFTER))
+        self.assertEqual(report["contaminating"], [])
+
+    def test_heredoc_bodies_are_data_not_commands(self):
+        report = self.audit(self.bash(
+            f"cd {self.dir} && python3 -I - <<'EOF'\nok = 2 >= 1\n"
+            f"note = 'cp x outputs/run-01/files/y'\nEOF", self.AFTER))
+        self.assertEqual(report["contaminating"], [])
+
+    def test_help_and_version_calls_are_not_runs(self):
+        report = self.audit(self.bash(
+            "venv/bin/python scripts/reproduction-lane.py --help; venv/bin/python "
+            "scripts/reproduction-lane.py run-container --help; venv/bin/python "
+            "scripts/reproduction-lane.py snapshot-code --help", self.BEFORE,
+            "usage: reproduction-lane.py run-container [-h] ..."))
+        self.assertEqual(report["contaminating"], [])
+
+    def test_real_writes_are_still_caught(self):
+        """Negative controls for the scanner: unquoted, quoted-target, heredoc
+        (the redirect, not the body), cd-relative, and shell-fed writes."""
+        files = self.dir / "outputs" / "run-01" / "files"
+        report = self.audit(
+            self.bash(f"echo forged > {files}/a.csv 2>&1", self.BEFORE),
+            self.bash(f"echo forged >> \"{files}/b c.csv\"", self.BEFORE),
+            self.bash(f"cat > {self.dir}/lane-records/run-01/x.log <<'EOF'\nforged\nEOF",
+                      self.BEFORE),
+            self.bash(f"cd /tmp && cd {self.dir} && cp /tmp/x.csv outputs/run-01/files/d.csv",
+                      self.BEFORE),
+            self.bash(f"bash <<'EOF'\ncp /tmp/x {files}/e.csv\nEOF", self.BEFORE))
+        self.assertEqual(self.kinds(report), ["write-to-lane-owned"] * 5)
+
+    def test_reading_a_data_original_on_the_host_is_not_a_run(self):
+        """Found re-auditing the pilot: python3 -c reads of the deposited
+        workbooks named data originals, not code."""
+        manifest = {**self.MANIFEST, "originals": self.MANIFEST["originals"]
+                    + [{"id": "d.xlsx", "local_copy": "raw/d.xlsx"}]}
+        self.seal()
+        read = self.bash(f"cd {self.dir} && python3 -c \"import openpyxl; "
+                         f"openpyxl.load_workbook('raw/d.xlsx')\"", self.AFTER)
+        run = self.bash(f"cd {self.dir} && python3 -c \"exec(open('raw/a.R').read())\"",
+                        self.AFTER)
+        report = lane.audit_execution(self.transcript(self.run_call(), read, run), self.dir,
+                                      manifest)
+        self.assertEqual((self.kinds(report), report["issues"]), (["host-run-after-final"], []))
+
+    def test_run_start_is_compared_as_a_time(self):
+        """A write a millisecond-stamped transcript records after the final
+        run's start counts as after it, whatever the two stamps' formats."""
+        report = self.audit(self.bash(f"echo x > {self.dir}/data/late.csv",
+                                      "2026-10-08T10:00:00.500Z"),
+                            self.bash(f"echo x > {self.dir}/data/early.csv",
+                                      "2026-10-08T09:59:59.999Z"))
+        self.assertEqual([c["detail"].split(" after")[0] for c in report["contaminating"]],
+                         ["a shell command wrote data/late.csv"])
+
 
 class FreshComputationTests(RecordFixture, unittest.TestCase):
     """Cache stores (spec §9): removed before a run, or kept as an
