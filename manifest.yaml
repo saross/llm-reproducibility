@@ -199,7 +199,7 @@ reproduction:
       version: "1.2"
       file: reproduction-system/schemas/comparison-record.json
       last_updated: "2026-10-12"
-      description: On-disk comparisons/comparison.json written by the executor — one record per locked target id; coverage recomputed by the gate. v1.1 (2026-10-05, gate 1.3 §5) adds per-target citations of sealed run outputs (run, path, sha256, optional line range); a reproduced target citing none is target-unbound. v1.2 (2026-10-12, final review F4) adds the per-target method_as_planned declaration and method_deviation text; a declared deviation is a flag for a ruling
+      description: On-disk comparisons/comparison.json written by the executor — one record per locked target id; coverage recomputed by the gate. v1.1 (2026-10-05, gate 1.3 §5) adds per-target citations of sealed run outputs (run, path, sha256, optional line range); a reproduced target citing none is target-unbound. v1.2 (2026-10-12, final review F4) adds the per-target method_as_planned declaration and method_deviation text; a declared deviation is a flag for a ruling; schema_version enumerates 1.2 (delta review D-3)
     authors_code_manifest:
       version: "1.1"
       file: reproduction-system/schemas/authors-code-manifest.json
@@ -212,7 +212,7 @@ reproduction:
       description: Stage 1 — governed planner fan-out; plans return for persistence and batched human approval (v1.0, 2026-10-03)
     execute:
       file: reproduction-system/workflows/reproduction-execute.workflow.js
-      description: Stage 2 — per approved paper, executor -> mechanical artefact gate -> fresh-context adversarial reviewer (v1.1, 2026-10-04 — executor writes the authors'-code manifest; gate flags join the human queue. v1.2, 2026-10-05 — execution snapshots; the relay must return flags and warnings and the queue fails closed without them; the reviewer addresses the gate's review obligations. v1.3, 2026-10-09 — gate 1.3, the executor runs through run-container and comparisons cite sealed run outputs. v1.4, 2026-10-12 — the closing message gives the post-run order, audit before persistence (final review F7))
+      description: Stage 2 — per approved paper, executor -> mechanical artefact gate -> fresh-context adversarial reviewer (v1.1, 2026-10-04 — executor writes the authors'-code manifest; gate flags join the human queue. v1.2, 2026-10-05 — execution snapshots; the relay must return flags and warnings and the queue fails closed without them; the reviewer addresses the gate's review obligations. v1.3, 2026-10-09 — gate 1.3, the executor runs through run-container and comparisons cite sealed run outputs. v1.4, 2026-10-12 — the closing message gives the post-run order, audit before persistence (final review F7); in the same version the executor brief names build-image, run_file, comparison schema 1.2's method and count fields, and read-in-full pulls)
 
   lane_tool:
     version: "1.4"
@@ -564,19 +564,19 @@ agent_definitions:
     sha256: "ebd36e32a9ce47cde19a4f54febbfdb79e6af14f7f08845fef4d7985ae8a6502"
   reproduction-planner:
     file: .claude/agents/reproduction-planner.md
-    version: "1.2"
+    version: "1.3"
     model: claude-opus-5-5
-    sha256: "4e62fe4ef62e535e1ab9b0ef3c222c255f2d90822d529ec59e959b88ccf35215"
+    sha256: "2fa175b57a6627591c57480c22b36fb6b18fff186081e80959b2d8c353bc4827"
   reproduction-executor:
     file: .claude/agents/reproduction-executor.md
     version: "1.7"
     model: claude-opus-5-5
-    sha256: "7c0d6a1471abe6966004847bf367aecfa396d298d03cefc1cf5c571e2f60e483"
+    sha256: "7734240a3f97e9b76c3ab153e47816445dff69fdc5ccd2486e518764bbb25d87"
   adversarial-reviewer:
     file: .claude/agents/adversarial-reviewer.md
     version: "1.3"
     model: claude-opus-5-5
-    sha256: "3f5c295302f2937909f64613f4343dff40941a376634b6be69bf419fa1e498c1"
+    sha256: "40692d0b6eb4f7e7e6a95f7d6c31bc065818f01ea512e0a20066d94ddecc7d31"
 
 # Reference datasets read as ground truth by registered analyses
 # (monitoring plan §4 class E8; §9 Q4: register-without-rewrite —

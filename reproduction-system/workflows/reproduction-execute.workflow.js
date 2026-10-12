@@ -16,7 +16,8 @@ export const meta = {
 // executor runs through run-container and comparisons cite sealed run
 // outputs. v1.4 (2026-10-12, the gate 1.3 final review's F7): the closing
 // message gives the post-run order, with the audit before the queue, the
-// rulings, and persistence last.
+// rulings, and persistence last; executors write comparison schema 1.2, with
+// a method_as_planned declaration per target.
 //
 // Stage 2 of the agentic reproduction lane (modernisation plan §4.2). Runs
 // only on papers whose plan carries a committed, hash-bound human approval:
@@ -162,7 +163,11 @@ const execPrompt = (p) =>
   `Execute the approved plan exactly per your agent brief and the output schema. Set paper_slug to ` +
   `"${p.slug}". Key instrument_versions and instrument_receipts by exactly these pushed-instrument ` +
   `names: ${receipt_keys.executor.join(', ')}. In pulled_files_read list bare file paths only — ` +
-  `no versions, tokens, or comments in the string.\n` +
+  `no versions, tokens, or comments in the string. ` +
+  `List a file in pulled_files_read only if you read all of it (Read with no limit or ` +
+  `offset, or cat with nothing but tee or cat after it); head, tail, sed -n, grep, and a ` +
+  `piped cat are partial reads, which make your receipts invalid and the run ` +
+  `inadmissible, so read the file in full or leave it out.\n` +
   (rulings.length ? `Registrant rulings (apply to every paper): ${rulings.join(' ')}\n` : '') +
   `1. First verify the approval: sha256sum the plan file and confirm it equals both the hash above and ` +
   `the approval record's plan_sha256, with decision "approve". Any mismatch: ESCALATE and stop.\n` +
@@ -181,9 +186,13 @@ const execPrompt = (p) =>
   `publisher content (the paper PDF, journal supplements) never — reference it by path.\n` +
   `3. Run paper code only through the lane: never on the host, and never with docker run, exec, ` +
   `cp, or compose yourself (the transcript audit treats either as contamination). Build the ` +
-  `image labelled with your Dockerfile's digest: docker build --label ` +
-  `llmr.dockerfile.sha256=$(sha256sum ${p.attempt_dir}/Dockerfile | cut -d' ' -f1) ` +
-  `-t ${p.image_tag} ${p.attempt_dir}. Then, from the repository root: venv/bin/python ` +
+  `image through the lane, which labels it and keeps the build log: venv/bin/python ` +
+  `scripts/reproduction-lane.py build-image ${p.attempt_dir} --tag ${p.image_tag} ` +
+  `--launch-commit ${launch_commit}. To run an authors' script statement by statement, use ` +
+  `getOption("lane.hook")$run_file(path, tolerate = <lines>) in your wrapper, never your own ` +
+  `parse(file =) loop, and keep the wrapper's own objects inside local(). Transcribe published ` +
+  `values into published-values/ before your first run where you can. Then, from the repository ` +
+  `root: venv/bin/python ` +
   `scripts/reproduction-lane.py run-container ${p.attempt_dir} --image ${p.image_tag} --entry ` +
   `<your run script> --launch-commit ${launch_commit} (add --mount-path if your scripts expect a ` +
   `path other than the image's WORKDIR, --consume run-NN:files/<path> to use an earlier run's ` +
@@ -197,11 +206,14 @@ const execPrompt = (p) =>
   `Declare any code file a run writes as a wrapper with role "generated"; nothing may load it. A ` +
   `conversion wrapper declares its conversion for the gate to compare (01-preparation.md ` +
   `§1.0.2).\n` +
-  `4. comparisons/comparison.json: schema_version "1.1", attempt ${p.attempt}, plan_sha256 ` +
+  `4. comparisons/comparison.json: schema_version "1.2", attempt ${p.attempt}, plan_sha256 ` +
   `${p.plan_sha256}, exactly one record per locked target id — no more, no fewer. Each target ` +
   `cites the sealed run outputs its values were read from: outputs [{run, path, sha256, lines}], ` +
   `path as the run's outputs.json lists it (files/... or stdout.log); a reproduced target citing ` +
-  `none is not admitted until ruled. Put value-level detail (published vs reproduced, per value) ` +
+  `none is not admitted until ruled. Each target also records values_compared, at least the ` +
+  `plan's n_values when it is credited as reproduced, and method_as_planned (with ` +
+  `method_deviation when false) against the plan's comparison_method and tolerance. ` +
+  `Put value-level detail (published vs reproduced, per value) ` +
   `in files under comparisons/ and cite them in evidence.\n` +
   `5. Before finishing, self-check from the repository root (${repo_root}):\n` +
   `   venv/bin/python scripts/reproduction-lane.py check-attempt ${p.attempt_dir} --plan ${p.plan_path} ` +
@@ -241,7 +253,11 @@ const reviewPrompt = (p) =>
   `the analysis and write nothing anywhere. Set paper_slug to "${p.slug}". Key instrument_versions ` +
   `and instrument_receipts by exactly these pushed-instrument names: ` +
   `${receipt_keys.reviewer.join(', ')}. In pulled_files_read list bare file paths only — no ` +
-  `versions, tokens, or comments in the string.\n` +
+  `versions, tokens, or comments in the string. ` +
+  `List a file in pulled_files_read only if you read all of it (Read with no limit or ` +
+  `offset, or cat with nothing but tee or cat after it); head, tail, sed -n, grep, and a ` +
+  `piped cat are partial reads, which make your receipts invalid and the run ` +
+  `inadmissible, so read the file in full or leave it out.\n` +
   `gate-report.json lists review_obligations: what the mechanical gate cannot verify (wrapper ` +
   `semantics, dynamic evaluation, content fetched into the image). Address each one explicitly ` +
   `in your provenance dimension.\n` +

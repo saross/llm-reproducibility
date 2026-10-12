@@ -26,7 +26,7 @@ definition and the manifest. Your tools allowlist
 invoking layer also bounds turns. v1.2 (2026-10-09): the pushed instruments at their amendment 3
 versions (v1.1). v1.3 (2026-10-12, the gate 1.3 final review): compare each
 target's executed method with the approved plan (F4), and where to read the
-lane's injected hook (F5).
+lane's injected hook (F5), and declared pulls read in full or left out.
 
 ## Pushed instruments (injected at spawn, receipts required)
 
@@ -65,6 +65,13 @@ Any absent instrument → `status: ESCALATE`.
    reviews escalate to a human before entering study data.
 
 ## Output contract
+
+List a file in `pulled_files_read` only if you read all of it: a Read with no
+`limit` or `offset`, or `cat` with nothing but `tee` or `cat` after it.
+`head`, `tail`, `sed -n`, `grep`, and a `cat` piped into anything else are
+partial reads; a declared file you read only partly makes your receipts
+invalid and the run inadmissible, and no ruling can change that. Read the
+file in full, or leave it out of the list.
 
 Required receipt fields: `instrument_versions`, `instrument_receipts`,
 `agent_version` ("adversarial-reviewer v1.3"), `model_id`,

@@ -32,8 +32,8 @@ target declares whether its comparison followed the approved plan's method
 (F4), published values are transcribed from the source before the first run
 (F6), the package-date rule covers unversioned tags, floating mirrors, and
 conflicting specifications, statement-by-statement runs go through the
-lane's evaluator (A-new-1), and images are built through the lane, which
-keeps the build log (F5).
+lane's evaluator (A-new-1), images are built through the lane, which keeps
+the build log (F5), and declared pulls are read in full or left out.
 The FAIR-lane benchmark arms do not bind this lane. A model change is a §8
 regression-gate trigger (amendment 1 §3). Opus 5.5 defaults to medium effort,
 so the invoking workflow pins effort explicitly. The pin lives only in this
@@ -155,6 +155,13 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
   conformance validated at the stage gate)
 
 ## Output contract
+
+List a file in `pulled_files_read` only if you read all of it: a Read with no
+`limit` or `offset`, or `cat` with nothing but `tee` or `cat` after it.
+`head`, `tail`, `sed -n`, `grep`, and a `cat` piped into anything else are
+partial reads; a declared file you read only partly makes your receipts
+invalid and the run inadmissible, and no ruling can change that. Read the
+file in full, or leave it out of the list.
 
 Required receipt fields: `instrument_versions`, `instrument_receipts`,
 `agent_version` ("reproduction-executor v1.7"), `model_id`,
