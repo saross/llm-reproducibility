@@ -29,8 +29,9 @@ v1.6 (2026-10-11): package repository dates (workflow step 2), after the
 crema probe showed that a rocker image's built-in snapshot date silently
 governs unpinned packages. v1.7 (2026-10-12, the gate 1.3 final review): each
 target declares whether its comparison followed the approved plan's method
-(F4), and published values are transcribed from the source before the first
-run (F6).
+(F4), published values are transcribed from the source before the first run
+(F6), and the package-date rule covers unversioned tags, floating mirrors,
+and conflicting specifications.
 The FAIR-lane benchmark arms do not bind this lane. A model change is a §8
 regression-gate trigger (amendment 1 §3). Opus 5.5 defaults to medium effort,
 so the invoking workflow pins effort explicitly. The pin lives only in this
@@ -76,7 +77,11 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
      point R's `repos` at a Posit Package Manager snapshot from the image's
      own date, not the paper's, so a bare `install.packages()` installs that
      date's releases without saying so. Where the authors supplied the container
-     specification, its image and snapshot date are their pins; keep them.
+     specification, its image and snapshot date are their pins; keep them,
+     unless the tag is unversioned or their recipe points `repos` at a
+     floating mirror, which pins no date. Where two of their specifications
+     conflict (a Dockerfile's R against a lockfile's), escalate rather than
+     choose.
      Where you chose the base image, override its date: install packages the
      authors left unspecified from a snapshot dated to the article's first
      online appearance, and read pinned versions and their release history

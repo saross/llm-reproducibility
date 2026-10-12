@@ -1,7 +1,7 @@
 # Preparation Prompt — Session R-A
 
-**Version:** 1.4
-**Last Updated:** 2026-10-09 (v1.4: §1.0.2 runs through `run-container` in
+**Version:** 1.5
+**Last Updated:** 2026-10-12 (v1.5: Phase 5 checks the wrapper's syntax inside the container, not on the host, after the gate 1.3 final review; v1.4, 2026-10-09: §1.0.2 runs through `run-container` in
 place of execution snapshots, and conversions declared for the gate to
 compare, gate 1.3; v1.3, 2026-10-05: §1.0.2 provenance
 anchors, execution snapshots, generated code, and conversion evidence,
@@ -286,7 +286,10 @@ outputs/{paper-slug}/reproduction/attempt-{NN}/
 Before ending this session:
 
 1. Docker image builds successfully
-2. Analysis script syntax is valid (`Rscript --vanilla -e "parse('run-analysis.R')"`)
+2. Analysis script syntax is valid: check it inside the container, through
+   `run-container` (an entry that only parses the wrapper will do), never with
+   `Rscript` on the host, which the transcript audit flags as a host run of
+   your wrapper
 3. All data files are in place
 4. Output directory exists
 5. **Every fetched artefact has a URL-and-digest row in `log.md`** — count the rows against the files you actually acquired; a missing row is a provenance gap, and it is cheap to close now and impossible to close later

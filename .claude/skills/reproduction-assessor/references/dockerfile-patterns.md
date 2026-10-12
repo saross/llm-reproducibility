@@ -49,6 +49,18 @@ figures probe (2026-10-10) fell into this: its unpinned packages came from
   image): the image's snapshot date is part of their specification. Keep it.
 - **You chose the base image** (no Dockerfile, or only a session-info
   listing): the image's date is not the authors'. Override it as below.
+- **The authors' container pins no date** when its image tag is unversioned
+  (`rocker/r-ver:latest`, or `rocker/tidyverse` with no tag), or when their
+  recipe points `repos` at a floating mirror such as
+  `https://cloud.r-project.org`. Packages it installs bare are then
+  unspecified, and take the first-online anchor as below.
+- **Two of the authors' specifications conflict** (a Dockerfile's R version
+  against a lockfile's, as in marwick-2025): do not choose silently. Record
+  both and escalate for a ruling (correction ledger ruling L20 is the
+  precedent).
+- Where the authors' snapshot date governs, still record the first-online
+  date beside it in `environment.md`: the gap between the two is evidence
+  for registered hypothesis H3.
 
 **The override:**
 
@@ -60,6 +72,10 @@ SNAPSHOT <- "https://packagemanager.posit.co/cran/__linux__/jammy/2024-03-16"
 # archive index is incomplete, and lists nothing released after its date.
 CRAN <- "https://cloud.r-project.org"
 options(repos = c(CRAN = CRAN))
+
+# ... build each pinned version from CRAN's own tarball (below), then install
+# the unspecified packages from the dated snapshot, by naming it:
+install.packages(unspecified, repos = SNAPSHOT)
 ```
 
 - Read release histories (`tools:::CRAN_archive_db()`, `available.packages()`)
@@ -70,9 +86,12 @@ options(repos = c(CRAN = CRAN))
 - `install.packages()` reports a failed build only as a warning
   ("installation of package ... had non-zero exit status"). Promote it to an
   error, so a failure starts the bounded search rather than passing silently.
-- A GitHub-only package (no CRAN releases) installs at the tag current at
-  first online appearance: `remotes::install_github("owner/repo@<tag>")`,
-  never the default branch.
+- A GitHub-only package (no CRAN releases) installs at the supplied pin;
+  otherwise at the release current at first online appearance
+  (`remotes::install_github("owner/repo@<tag>")`); or, where the repository
+  publishes no releases, at §7(d)'s dated commit, the last commit on the
+  default branch at or before first online appearance. Never the default
+  branch's head. Absence from CRAN does not mean a release tag exists.
 - Assert the final inventory: every installed package and version, each
   marked pinned, unspecified, or fallback, and fail the build on any
   mismatch. Record the snapshot date and both URLs in `environment.md`.
