@@ -23,7 +23,11 @@ compared (F9); and the hook's own statement evaluator, `run_file`, with
 `parsed-not-run`, `original-partly-run`, and statement flags (A-new-1, hook
 `1.6-inst`). `GATE_VERSION` is 1.3.1. Under §2.2 the next round is a delta
 review of these fixes, with one pilot re-run, since A-new-1 changes what
-executors write.
+executors write. Astra's delta review found three incomplete closures
+(D-Astra-1 to 3, of F2, F1, and F8), closed on the same branch: reads
+credited only when their delivery is established, transcript audit 1.2, and
+run audit 1.1 bound to the persisted results and the reviewed artefact
+state (the brief's "Delta review outcome").
 
 **Status (2026-10-06, revision 2): the foundations are built; the rest is
 not.** This is the one effective text. It replaces the draft's §§1–7 and
@@ -1565,7 +1569,10 @@ matrix about two more, and the rest one or two, plus the review rounds of
     A: F3, F4, F5, A-new-1);
   - [x] 2026-10-12 the fixes, as gate 1.3.1 (see the note at the top);
   - [ ] the delta review of the fixes by both reviewers, and one pilot
-    re-run through the lane (API review gate first).
+    re-run through the lane (API review gate first). [x] 2026-10-12 Fable's
+    delta review, closed at `1d875d2`; [x] 2026-10-12 Astra's delta review
+    of `1d875d2` (three D, closed on the branch); [ ] Astra's check of
+    those closures; [ ] the pilot re-run, after PR #11 merges.
 - [ ] **After gate 1.3 merges** (Shawn, 2026-10-06): split
   `scripts/reproduction-lane.py` into a few modules (runner, records,
   rulings, gate) in its own refactoring PR, checked against the existing
