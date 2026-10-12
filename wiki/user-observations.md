@@ -878,3 +878,37 @@ is the deep adversarial pass for work whose errors would be costly and
 hard to see, such as gates, lodged text, and final reviews, and it is worth
 its top-tier credit there. This matches the subagent model policy, which
 reserves the top tier for "subtle adversarial verification".
+
+## Pending review — 2026-10-12 batch (drafted at handoff, session be70c3be)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence holds
+them over, never discards. Titles state the transferable lesson. The
+2026-10-06 and 2026-10-08 batches above are still pending.*
+
+**Candidate A (unhelpful): when carrying out an instruction that skips a
+planned step, name the step first.** Shawn asked Claude to merge PR #7.
+The plan, which Claude was tracking, put a final review by Astra and Fable
+before that merge. Claude merged without saying so. A side agent raised it,
+and Shawn asked: "did I miss prompting a review? I didn't realise we still
+needed one?" The review ran post-merge and found enough for a second PR
+(#11). The merge was Shawn's call; the reminder was Claude's job.
+
+**Candidate B (helpful; in-the-moment reaction): reporting the small
+inconsistencies inside an authors' deposit, not only pass or fail.** Claude
+explained that crema's deposit disagreed with itself: its saved results
+and code redraw a panel a that its own `figure2.pdf` does not show. Claude
+recommended recording that as a minor discrepancy rather than failing the
+paper. Shawn: "this is *exactly* the kind of minor error we should point
+out, without failing the entire run. Details are hard; the fact that our
+reproductions catch them is *outstanding* -- thank you!!" Later, on
+marwick's two conflicting R versions: "these discrepancy reports are
+*extremely* valuable".
+
+**Candidate C (helpful): answering "is this OK?" from the registered text,
+with the gap named.** Asked whether minor discrepancies could ever drop a
+paper to PARTIAL, Claude read both instruments before answering. It
+reported that the current approach matches the registered rules, but that
+two lodged sentences diverge when minor discrepancies are many: SUCCESSFUL
+needs "nearly all" values within tolerance, yet each minor discrepancy maps
+to "SUCCESSFUL with note". It proposed three options for amendment 4.
+Shawn had said "I just want us to be deliberate", and queued all three.
