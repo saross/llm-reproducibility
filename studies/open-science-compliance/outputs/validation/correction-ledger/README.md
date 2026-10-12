@@ -1,9 +1,9 @@
 # Correction ledger for the §8 regression gate — DRAFT
 
-**Status: DRAFT (ledger 0.3.5-draft). Shawn ruled L1 to L4 and L6 to L16
+**Status: DRAFT (ledger 0.3.6-draft). Shawn ruled L1 to L4 and L6 to L16
 on 2026-10-09, L5 and L17 on 2026-10-10, and L18 (re-ruled on complete
-options), L19, and L20 on 2026-10-11. Not frozen and not hashed:** the
-pre-freeze checks below remain. No run
+options), L19, and L20 on 2026-10-11. The pre-freeze checks were completed
+on 2026-10-12. Not yet frozen:** only the freeze itself remains. No run
 may use any value here until the frozen copy is committed and its sha256 is
 recorded in the gate's run configuration (amendment 3 §9 and §10 step 3).
 
@@ -33,6 +33,7 @@ reported.
 | `render-ledger.py` | Renders the JSON as Markdown |
 | `check-printed-values.py` | Re-checks every printed value against its cited PDF page |
 | `deposit-checksums/crema-v1.0.0.sha256` | sha256 of all 50 files in crema's v1.0.0 deposit |
+| `deposit-checksums/marwick-1.3.sha256` | sha256 of all 116 files in marwick's 1.3 deposit zip |
 | `evidence/l9-dye-section-07/` | Operator run of dye's section 5 and 7 code, byte-identical (L9) |
 | `evidence/crema-figures-content/` | Pilot against v1.0.0 figures, pixel by pixel (L4, L5) |
 | `evidence/crema-figures-probe/` | v1.0.0's figure script run in a probe environment (L5, L18) |
@@ -248,14 +249,21 @@ Ruled by Shawn on 2026-10-11:
       within one pixel and data points identical; one build repair, no
       version substitution; 152 of 152 lockfile pins installed
       (`evidence/marwick-fig2-probe/`).
-- [ ] Hold the crema v1.0.0 and herskind v1 deposits in the corpus store with
-      manifest entries (audit Q10).
-- [ ] Hold L18's reference figure (crema v3 `figure2.pdf`, sha256
-      `cf61c685…`) in the corpus store with a manifest entry, so the gate's
-      comparison can reach it; it is a render of a third-party figure, so it
-      stays out of git.
-- [ ] Hash marwick's files inside the 1.3 zip; confirm review counts in
-      `paper.qmd` at 1.3 (L13).
+- [x] 2026-10-12 Hold the crema v1.0.0 and herskind v1 deposits in the
+      corpus store with manifest entries (audit Q10), with marwick's 1.3
+      zip. Every hash equals the audit's or ledger's record, and herskind's
+      md5s equal Zenodo's published checksums (main `280165d`).
+- [x] 2026-10-12 Hold L18's reference figure (crema v3 `figure2.pdf`,
+      sha256 `cf61c685…`) in the corpus store with a manifest entry, so the
+      gate's comparison can reach it; it is a render of a third-party
+      figure, so it stays out of git (main `280165d`).
+- [x] 2026-10-12 Hash marwick's files inside the 1.3 zip
+      (`deposit-checksums/marwick-1.3.sha256`): the four cited files equal
+      their GitHub hashes, and L19's two files are added. Confirm review
+      counts in `paper.qmd` at 1.3 (L13): typed prose at line 974, but the
+      deposited `JAS AER data analysis.csv` gives both, 25 manuscripts and
+      11 published in JAS, so the gate can verify them from the authors'
+      data.
 - [x] 2026-10-09 Operator runs for L9: dye's section 5 and 7 code
       byte-identical (`evidence/l9-dye-section-07/`); herskind's Fig. 4
       check already used the authors' function verbatim.
