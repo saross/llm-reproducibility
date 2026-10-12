@@ -1425,6 +1425,21 @@ class TranscriptAuditTests(RecordFixture, unittest.TestCase):
         self.assertEqual([i["id"] for i in report["issues"]],
                          ["transcription-after-run:published-values/fig4.csv"])
 
+    def test_shell_variables_set_in_the_command_are_followed(self):
+        """The pilot's executor wrote through variables: A=<attempt>; cat >
+        $A/published-values/..., and P=<dir>; cd $P; cat > table.csv."""
+        report = self.audit(
+            self.bash(f"A={self.dir}; cat > $A/published-values/fig5.csv <<'EOF'\nx\nEOF",
+                      "2026-10-08T10:30:00Z"),
+            self.bash(f"P={self.dir}/published-values; mkdir -p $P; cd $P\n"
+                      f"cat > table1.csv <<'EOF'\ny\nEOF", "2026-10-08T10:31:00Z"),
+            self.bash(f"export B={self.dir}/outputs; echo forged > ${{B}}/run-01/x",
+                      self.BEFORE))
+        self.assertEqual(sorted(i["id"] for i in report["issues"]),
+                         ["transcription-after-run:published-values/fig5.csv",
+                          "transcription-after-run:published-values/table1.csv"])
+        self.assertIn("write-to-lane-owned", self.kinds(report))
+
     def test_run_start_is_compared_as_a_time(self):
         """A write a millisecond-stamped transcript records after the final
         run's start counts as after it, whatever the two stamps' formats."""

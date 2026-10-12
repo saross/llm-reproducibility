@@ -6756,6 +6756,14 @@ SHELL_INTERPRETERS = frozenset({"bash", "sh", "dash", "zsh"})
 COPY_COMMANDS = frozenset({"cp", "mv", "install", "rsync"})
 COMMAND_PREFIXES = frozenset({"sudo", "env", "time", "nohup", "nice", "timeout", "command",
                               "exec"})
+SHELL_VARIABLE_RE = re.compile(r"\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?")
+ASSIGNMENT_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)=(.*)", re.DOTALL)
+
+
+def expand_variables(text: str, variables: dict[str, str]) -> str:
+    """``$NAME`` and ``${NAME}`` replaced where the command set them; others
+    are left as written."""
+    return SHELL_VARIABLE_RE.sub(lambda m: variables.get(m.group(1), m.group(0)), text)
 
 
 def timed_tool_calls(lines: list[str]) -> list[dict]:
@@ -7091,7 +7099,8 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
 
     runs_called: set[str] = set()
 
-    def scan_shell(command: str, call: dict, cwd: str | None, depth: int) -> str | None:
+    def scan_shell(command: str, call: dict, cwd: str | None, depth: int,
+                   variables: dict[str, str] | None = None) -> str | None:
         """Audit one shell command: its segments, in order, with cd tracked.
 
         Heredoc bodies are data, except a body fed to a shell, which is
@@ -7101,6 +7110,10 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
             The working directory after the command, where it is known.
         """
         at = call["at"]
+        # Simple assignments (A=/path; export B=...) are followed within the
+        # command, so a write to "$A/outputs/x" or a "cd $P" is placed: the
+        # herskind pilot's executor wrote its published values that way.
+        variables = dict(variables or {})
         text, bodies = split_heredocs(command)
         for offset, raw in shell_segments(text):
             segment = raw.strip()
@@ -7108,6 +7121,16 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
                 continue
             words = shell_words(segment)
             k, name = command_word(words)
+            assigned = words[:k] if k == len(words) else (
+                words[k + 1:] if name == "export" else [])
+            for word in assigned:
+                found = ASSIGNMENT_RE.fullmatch(word)
+                if found and "$(" not in found.group(2) and "`" not in found.group(2):
+                    variables[found.group(1)] = expand_variables(found.group(2), variables)
+            if assigned and (k == len(words) or name == "export"):
+                continue
+            segment = expand_variables(segment, variables)
+            words = [expand_variables(w, variables) for w in words]
             if name == "cd":
                 target = words[k + 1] if len(words) > k + 1 else "~"
                 path = Path(target).expanduser()
@@ -7156,7 +7179,7 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
                    if offset <= at_offset < offset + len(raw) for b in found]
             if fed and name in SHELL_INTERPRETERS and "-c" not in words[k + 1:] and depth < 3:
                 for body in fed:
-                    cwd = scan_shell(body, call, cwd, depth + 1)
+                    cwd = scan_shell(body, call, cwd, depth + 1, variables)
         return cwd
 
     for call in timed_tool_calls(lines):
