@@ -735,6 +735,9 @@ D-5 corrects Entry 5's proposed wording on what the BI items rest on.
 2). Pending review and the registrant's merge; not yet in force for any
 run.**
 
+*Merged by the registrant on 2026-10-10 (PR #9, `2dcd3d5`); this note added
+2026-10-12 when PR #10 merged main.*
+
 Amendment 3 (lodged 2026-10-08, revision `6ac775afb5ed5b4afee88a4a`, tag
 `osf-amendment-3-2026-10-08`) clarifies five frozen instruments. §10 step 2
 edits them to the lodged text, with new versions and content hashes. Branch
@@ -802,3 +805,71 @@ freeze, the §8 regression gate under the clarified text, and the census
 re-validation. Routing design rule 6 asks that the regression gate's
 checklist re-confirm the routing class of every changed file: none changes
 class (each instrument stays pushed; both mirrors stay mirrors).
+
+---
+
+## Entry 7 — 2026-10-09: amendment 3 §7(d)'s example rests on a pilot slip
+
+**Status: correction recorded; public correction queued for the next OSF
+lodgement (registrant decision, 2026-10-09; correction-ledger ruling L16
+(a)).**
+
+**Lodged text affected.** Amendment 3 §7(d) (lodged 2026-10-08, revision
+`6ac775afb5ed5b4afee88a4a`) ends its verification-aid ruling with: "A
+printed value that the formula does not reproduce is never credited and
+goes to the paper-error protocol of section 7(a), as the ruling directs for
+its two inconsistent cells." The ruling is executed-code audit Q5(ii)
+(2026-10-05), which sends key-et-al-2024's "two inconsistent cells (3.1%,
+19.6%)" to the paper-error protocol.
+
+**Defect.** The cells are not inconsistent in the paper. Table 6 of the
+version of record (PDF page 13) prints an OLE (optimal linear estimation)
+range extension of 19.6 % for Midland thickness and 3.1 % for Clovis mass.
+The pilot's wrapper
+(`studies/open-science-compliance/outputs/key-et-al-2024/reproduction/attempt-01/run-analysis.R`,
+lines 260–261) swapped the two, and its comparison report (lines 246–253)
+then called each printed value inconsistent with its own row. With the
+printed values, the inferred formula gives 3.14 for Clovis mass and 20.00
+for Midland thickness. All 16 of Table 6's printed percentages lie inside
+the band that rounding the printed inputs to one decimal place allows,
+although 10 of the 16 differ from the formula's value at one decimal place.
+No printed key value is shown wrong by the printed inputs alone. Found
+2026-10-09 while drafting the correction ledger (PR #10).
+
+**Propagation.** The pilot's comparison report, the audit's Q5(ii) ruling,
+and the lodged §7(d) sentence.
+
+**Unaffected.** The §7(d) rule itself, which stands as lodged, and every
+registered analysis. The §8 gate is unaffected too: every key target is
+expected-untestable (Q5(iii); ledger ruling L14), and key is not a gate
+paper (ledger ruling L6).
+
+**Repository-side corrections (2026-10-09).** The correction ledger records
+the printed values and the swap (target KEY-T02, ruling L16). No key cell
+goes to the paper-error protocol on this evidence. The pilot artefacts and
+the audit stay as dated records.
+
+## Queued amendment 4 scope (running list)
+
+1. Entry 7: correct amendment 3 §7(d)'s example. It is a factual note and
+   changes no rule, so it waits for the next amendment rather than being
+   lodged alone (registrant decision, 2026-10-09).
+2. Two `verdicts-and-precision.md` rewordings, withdrawn from PR #9 because
+   amendment 3 does not lodge them (Entry 6, "Rewording withdrawn and
+   queued", 2026-10-10). The tolerance rule names PAPER_ERROR as the other
+   cause of a deterministic difference. The paper-error formula procedure
+   becomes an optional diagnostic that does not replace the lodged evidence
+   tiers (Astra's review of PR #9, N1).
+3. Author-disabled long-running code (ruling L17 (c), 2026-10-10). Where the
+   only code producing a published result is switched off by its authors
+   (for example a chunk marked `eval: false`), the study's runs execute it
+   verbatim from a wrapper within the 168-hour cap, and the approved plan
+   names the operator step. To be drafted from L17's probe.
+4. Figure centrality (registrant's request, 2026-10-10, with ruling L5). A
+   rule, or at least a heuristic, separating key figures from ancillary ones
+   in the study's runs, so that an ancillary figure's failure is reported in
+   context rather than weighing like a key result. Proposed: classified at
+   plan time, before any result, and locked with the denominator; how an
+   ancillary outcome enters the verdict's "all or nearly all" to be
+   specified. Provisional, and revisited as cases accumulate. It does not
+   apply in the §8 gate.
