@@ -32,7 +32,32 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NOW (2026-10-11, evening): herskind pilot re-run done; gate 1.3
+- **⏩ NOW (2026-10-12): ledger frozen (PR #10 ready to merge); gate 1.3.1
+  fixes on PR #11; delta review requested.**
+  - [x] 2026-10-12 **Both final reviews in** (Fable mail
+    `20261012T032928.805148Z`, Astra `2026-10-12-codex-gate13-final-review.md`):
+    the round does not close the hardening. Consolidated in the brief
+    (`c73eea6`).
+  - [x] 2026-10-12 **Step 1: ledger frozen** (PR #10): pre-freeze checks
+    (`3c97be2`; corpus store `280165d` on main), main merged in (`9ff97c9`),
+    frozen as `correction-ledger-v1.0.json` (`a299416`, sha256
+    `189e8a33…`). Astra accepted L18–L20 (no blocker). **Shawn merges.**
+  - [x] 2026-10-12 **Step 2: gate 1.3.1** (PR #11, head `c34cc73`): every D
+    and A finding fixed with tests (648 pass with Docker); hook `1.6-inst`
+    `run_file` evaluator; `build-image`; run audit in admission; pilot
+    re-audit in `validation/gate-1-3-pilot-rerun/reaudit-gate-1.3.1/`.
+  - [ ] **Step 3:** delta review requested (Astra codex outbox, Fable claude
+    outbox, `20261012T051040.065096Z`); Shawn wakes Fable. Then one pilot
+    re-run (API gate), then Shawn merges PR #11.
+  - [ ] Shawn's coverage question (2026-10-12): proposed amendment 4 items
+    (minor discrepancies never alone lower the verdict; a second,
+    descriptive coverage; revisit R1's unpublished-convention rule).
+    Awaiting his go to queue them. Also: the §8 comparison script maps the
+    ledger's `REPRODUCED_VISUAL` to any within-tolerance outcome.
+  - [x] 2026-10-12 Shawn's user observation recorded (`460b736`): keep
+    Fable in the review rotation.
+
+- **⏩ Earlier (2026-10-11, evening): herskind pilot re-run done; gate 1.3
   final review out to Astra and Fable.**
   - [x] 2026-10-11 **Herskind attempt-03 through the agentic lane** (Shawn
     approved at the API gate; Max plan). Plan `wf_14d5db9b-bed` ($1.21,
