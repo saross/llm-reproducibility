@@ -373,6 +373,24 @@ class ReceiptGateTests(unittest.TestCase):
         self.assertEqual(self.run_gate(None, transcript=self._transcript_with_calls(
             calls, payload)), ["pass"])
 
+    def test_piped_and_same_named_reads_do_not_verify_pulls(self) -> None:
+        """Fable's delta review, D-2: a full reader piped into head, wc, or
+        grep is partial, and a bare file name matches only the file at the
+        recorded working directory, never a same-named file elsewhere."""
+        for command in ("cat /ref/guide.md | head -40", "cat /ref/guide.md | wc -l",
+                        "cat /ref/guide.md | grep -n Receipt"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["block"], command)
+            self.assertIn("truncated", self.events[-1]["reason"], command)
+        for command in ("cat README.md", "cat docs/README.md"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash(
+                [command], ["/repo/reproduction-system/templates/README.md"]), ["block"],
+                command)
+        self.events.clear()
+        self.assertEqual(self._gate_bash(["cat /ref/guide.md | tee /tmp/copy.md"],
+                                         ["/ref/guide.md"]), ["pass"])
+
     def test_a_heredoc_body_is_not_a_shell_read(self) -> None:
         self.assertEqual(self._gate_bash(["python3 - <<'EOF'\ncat /ref/guide.md\nEOF"],
                                          ["/ref/guide.md"]), ["block"])

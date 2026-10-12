@@ -183,7 +183,7 @@ def _tool_calls(lines: list[str], name: str) -> list[dict]:
 
     A call with no recorded result counts as errored, as in read_calls().
     """
-    uses: list[tuple[str, dict]] = []
+    uses: list[tuple[str, dict, str | None]] = []
     results: dict[str, tuple[bool, str]] = {}
     for line in lines:
         try:
@@ -199,7 +199,7 @@ def _tool_calls(lines: list[str], name: str) -> list[dict]:
                 continue
             if blk.get("type") == "tool_use" and blk.get("name") == name \
                     and isinstance(blk.get("input"), dict):
-                uses.append((str(blk.get("id")), blk["input"]))
+                uses.append((str(blk.get("id")), blk["input"], entry.get("cwd")))
             elif blk.get("type") == "tool_result":
                 raw = blk.get("content")
                 text = ("".join(str(part.get("text", "")) for part in raw
@@ -207,7 +207,8 @@ def _tool_calls(lines: list[str], name: str) -> list[dict]:
                         if isinstance(raw, list) else str(raw or ""))
                 results[str(blk.get("tool_use_id"))] = (bool(blk.get("is_error")), text)
     return [{"input": call_input, "error": results.get(use_id, (True, ""))[0],
-             "text": results.get(use_id, (True, ""))[1]} for use_id, call_input in uses]
+             "text": results.get(use_id, (True, ""))[1], "cwd": cwd}
+            for use_id, call_input, cwd in uses]
 
 
 def _mask_quoted(text: str) -> str:
@@ -235,9 +236,10 @@ def _mask_quoted(text: str) -> str:
     return "".join(out)
 
 
-def _shell_segments(command: str) -> list[str]:
-    """A command's simple commands: heredoc bodies dropped, split at
-    unquoted &&, ||, ;, |, and newlines."""
+def _shell_pipelines(command: str) -> list[list[str]]:
+    """A command's pipelines, each a list of its stages: heredoc bodies
+    dropped, commands split at unquoted &&, ||, ;, and newlines, and stages
+    at unquoted single |."""
     kept: list[str] = []
     delimiter: str | None = None
     for line in command.splitlines():
@@ -251,21 +253,43 @@ def _shell_segments(command: str) -> list[str]:
         kept.append(line)
     text = "\n".join(kept)
     masked = _mask_quoted(text)
-    segments: list[str] = []
+    pipelines: list[list[str]] = []
+    stages: list[str] = []
     start = i = 0
     while i < len(text):
-        if masked[i:i + 2] in ("&&", "||"):
-            segments.append(text[start:i])
-            i += 2
+        if masked[i:i + 2] in ("&&", "||") or masked[i] in ";\n":
+            stages.append(text[start:i])
+            pipelines.append(stages)
+            stages = []
+            i += 2 if masked[i:i + 2] in ("&&", "||") else 1
             start = i
-        elif masked[i] in ";|\n":
-            segments.append(text[start:i])
+        elif masked[i] == "|":
+            stages.append(text[start:i])
             i += 1
             start = i
         else:
             i += 1
-    segments.append(text[start:])
-    return [seg.strip() for seg in segments if seg.strip()]
+    stages.append(text[start:])
+    pipelines.append(stages)
+    return [[st.strip() for st in pipe if st.strip()] for pipe in pipelines
+            if any(st.strip() for st in pipe)]
+
+
+def _stage_words(stage: str) -> tuple[str, list[str]]:
+    """A stage's command name (basename) and its arguments, quotes removed,
+    redirections and assignments dropped."""
+    try:
+        words = shlex.split(stage, comments=True)
+    except ValueError:
+        words = stage.split()
+    words = [w for w in words if not re.fullmatch(r"[0-9&]*[<>].*", w)]
+    k = 0
+    while k < len(words) and (words[k] in COMMAND_PREFIXES
+                              or re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*=.*", words[k])):
+        k += 1
+    if k >= len(words):
+        return "", []
+    return posixpath.basename(words[k]), words[k + 1:]
 
 
 def bash_reads(lines: list[str]) -> list[dict]:
@@ -273,64 +297,66 @@ def bash_reads(lines: list[str]) -> list[dict]:
 
     Returns:
         ``[{"path", "cwd", "kind", "error", "spill"}]``: ``kind`` is
-        ``complete`` (cat and the like), ``partial`` (head, tail, sed, awk,
-        cut), or ``searched`` (grep and the like); ``spill`` is the file the
-        harness saved a truncated output to, if it did.
+        ``complete`` (cat and the like, with nothing downstream but tee or
+        cat), ``partial`` (head, tail, sed, awk, cut, or a complete reader
+        piped into anything else, such as head, wc, or grep), or
+        ``searched`` (grep and the like). ``cwd`` is the directory a relative
+        path is read from: a ``cd`` in the command, else the working
+        directory the transcript records for the call. ``spill`` is the file
+        the harness saved a truncated output to, if it did.
     """
     reads: list[dict] = []
     for call in _tool_calls(lines, "Bash"):
         command = str(call["input"].get("command") or "")
         spilled = SPILL_PATH_RE.search(call["text"])
         truncated = any(marker in call["text"] for marker in SPILL_MARKERS)
-        cwd: str | None = None
-        for segment in _shell_segments(command):
-            try:
-                words = shlex.split(segment, comments=True)
-            except ValueError:
-                words = segment.split()
-            words = [w for w in words if not re.fullmatch(r"[0-9&]*[<>].*", w)]
-            k = 0
-            while k < len(words) and (words[k] in COMMAND_PREFIXES
-                                      or re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*=.*", words[k])):
-                k += 1
-            if k >= len(words):
-                continue
-            name = posixpath.basename(words[k])
-            args = [w for w in words[k + 1:] if not w.startswith("-")]
-            if name == "cd":
-                target = args[0] if args else "~"
-                cwd = (target if target.startswith(("/", "~"))
-                       else posixpath.join(cwd, target) if cwd else None)
-                continue
-            if name in FULL_READERS:
-                kind, files = "complete", args
-            elif name in PARTIAL_READERS:
-                kind = "partial"
-                files = args[1:] if name in ("sed", "awk") else args
-            elif name in SEARCHERS:
-                kind, files = "searched", args[1:]
-            else:
-                continue
-            for path in files:
-                reads.append({"path": path, "cwd": cwd, "kind": kind, "error": call["error"],
-                              "spill": (spilled.group(1) if spilled else "") if truncated
-                              else None})
+        cwd: str | None = call.get("cwd")
+        for stages in _shell_pipelines(command):
+            for position, stage in enumerate(stages):
+                name, rest = _stage_words(stage)
+                args = [w for w in rest if not w.startswith("-")]
+                if name == "cd" and len(stages) == 1:
+                    target = args[0] if args else "~"
+                    cwd = (target if target.startswith(("/", "~"))
+                           else posixpath.join(cwd, target) if cwd else None)
+                    continue
+                downstream = [_stage_words(later)[0] for later in stages[position + 1:]]
+                if name in FULL_READERS:
+                    kind = ("complete" if all(d in ("tee", "cat") for d in downstream)
+                            else "partial")
+                    files = args
+                elif name in PARTIAL_READERS:
+                    kind = "partial"
+                    files = args[1:] if name in ("sed", "awk") else args
+                elif name in SEARCHERS:
+                    kind, files = "searched", args[1:]
+                else:
+                    continue
+                for path in files:
+                    reads.append({"path": path, "cwd": cwd, "kind": kind,
+                                  "error": call["error"],
+                                  "spill": (spilled.group(1) if spilled else "") if truncated
+                                  else None})
     return reads
 
 
 def _names(declared: str, written: str, cwd: str | None) -> bool:
-    """Whether a path or glob as written in a command names a declared file."""
-    candidates = [written]
-    if cwd and not written.startswith(("/", "~")):
-        candidates.append(posixpath.normpath(posixpath.join(cwd, written)))
-    for cand in candidates:
-        tail = cand.removeprefix("./")
-        if any(ch in cand for ch in "*?["):
-            if fnmatch.fnmatchcase(declared, cand) or fnmatch.fnmatchcase(declared, "*/" + tail):
-                return True
-        elif declared in cand or declared == tail or declared.endswith("/" + tail):
-            return True
-    return False
+    """Whether a path or glob as written in a command names a declared file.
+
+    Both are compared as whole, normalised paths: a relative path is read
+    from ``cwd`` (the command's own cd, or the working directory the
+    transcript records), and a relative declaration from the repository
+    root. A bare file name never matches a same-named file elsewhere (Fable's
+    delta review, D-2).
+    """
+    base = cwd or str(REPO_ROOT)
+    path = written if written.startswith("/") else posixpath.join(base, written)
+    path = posixpath.normpath(posixpath.expanduser(path))
+    target = declared if declared.startswith("/") else posixpath.join(str(REPO_ROOT), declared)
+    target = posixpath.normpath(posixpath.expanduser(target))
+    if any(ch in written for ch in "*?["):
+        return fnmatch.fnmatchcase(target, path)
+    return target == path
 
 
 def pull_verdict(declared: str, reads: list[dict], shell: list[dict]) -> tuple[str, str]:
