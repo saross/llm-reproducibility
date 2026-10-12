@@ -2255,6 +2255,105 @@ def inventory_difference(expected: dict[str, str], found: dict[str, str]) -> lis
             + [f"changed {rel}" for rel in changed])
 
 
+BUILD_ID_RE = re.compile(r"^build-(\d{2,})$")
+DOCKERFILE_LABEL = "llmr.dockerfile.sha256"
+
+
+def build_image(target_dir: Path, tag: str, context: Path | None = None,
+                launch_commit: str | None = None, timeout_s: int = 6 * 3600) -> dict:
+    """Build the attempt's image through the lane, keeping the evidence.
+
+    The gate 1.3 final review's F5: the review framework asks for a build
+    log, which nothing kept, and the image's Dockerfile label was whatever
+    the executor's build command said. Here the lane runs ``docker build``
+    on the attempt's ``Dockerfile``, labels the image with that file's
+    sha256 itself, and writes ``lane-records/build-NN/`` with the full log
+    and a record of the command, the image id, and the log's hash.
+
+    Args:
+        target_dir: The attempt directory, holding ``Dockerfile``.
+        tag: The image tag.
+        context: The build context (default: the attempt directory).
+        launch_commit: The run's launch commit, recorded.
+        timeout_s: How long the build may take.
+
+    Returns:
+        The build record.
+    """
+    dockerfile = target_dir / "Dockerfile"
+    if not dockerfile.is_file():
+        raise LaneError(f"no Dockerfile in {display_path(target_dir)}")
+    records = target_dir / RECORDS_DIR
+    records.mkdir(exist_ok=True)
+    numbers = [int(m.group(1)) for m in (BUILD_ID_RE.match(p.name) for p in records.iterdir())
+               if m]
+    build_id = f"build-{max(numbers, default=0) + 1:02d}"
+    build_dir = records / build_id
+    build_dir.mkdir()
+    digest = sha256_file(dockerfile)
+    command = ["docker", "build", "--progress=plain", "-f", str(dockerfile), "-t", tag,
+               "--label", f"{DOCKERFILE_LABEL}={digest}", str(context or target_dir)]
+    started = now_utc()
+    log_path = build_dir / "build.log"
+    with log_path.open("wb") as log:
+        try:
+            status = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT,
+                                    timeout=timeout_s, check=False).returncode
+        except subprocess.TimeoutExpired:
+            status = None
+    image_id = None
+    if status == 0:
+        probe = subprocess.run(["docker", "image", "inspect", tag, "--format", "{{.Id}}"],
+                               capture_output=True, text=True, timeout=60, check=False)
+        image_id = probe.stdout.strip() or None
+    doc = {"record_version": RECORD_VERSION, "build": build_id, "tag": tag,
+           "image_id": image_id, "dockerfile_sha256": digest, "started_at": started,
+           "ended_at": now_utc(), "exit_status": status, "command": command,
+           "launch_commit": launch_commit,
+           "lane_script_sha256": sha256_file(Path(__file__).resolve()),
+           "log_sha256": sha256_file(log_path)}
+    write_json(build_dir / "build.json", doc)
+    return doc
+
+
+def build_evidence(target_dir: Path, image: dict) -> tuple[list[str], list[Issue]]:
+    """Errors and obligations for the build behind a run's image (F5).
+
+    A lane build record whose image id is the run's, built from the attempt's
+    current Dockerfile, and whose log still hashes to its record, evidences
+    the build. Without one, the build history (failed attempts, fetched
+    tarballs) is unevidenced: an obligation, never an inference of a clean
+    build.
+    """
+    errors: list[str] = []
+    records = target_dir / RECORDS_DIR
+    image_id = image.get("id")
+    if not image_id:
+        return errors, []
+    for path in sorted(records.glob("build-*/build.json")) if records.is_dir() else []:
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            errors.append(f"{display_path(path)} does not parse")
+            continue
+        if doc.get("image_id") != image_id or doc.get("exit_status") != 0:
+            continue
+        log = path.parent / "build.log"
+        if not log.is_file() or sha256_file(log) != doc.get("log_sha256"):
+            errors.append(f"{path.parent.name}: the build log is missing or does not hash to "
+                          f"its record")
+        elif doc.get("dockerfile_sha256") != image.get("dockerfile_sha256"):
+            continue
+        else:
+            return errors, []
+    return errors, [Issue.obligation(
+        "build-evidence", str(image_id)[:19], f"the run's image {str(image_id)[:19]} has no "
+        f"lane build record from the attempt's Dockerfile (reproduction-lane.py "
+        f"build-image), so its build history, failed attempts and fetched sources included, "
+        f"is unevidenced: the reviewer confirms it, or the image is rebuilt through the lane",
+        files={"image": str(image_id), "Dockerfile": str(image.get("dockerfile_sha256"))})]
+
+
 def run_ids(records: Path) -> list[str]:
     """The run directories under ``lane-records/``, in run order."""
     if not records.is_dir():
@@ -3202,6 +3301,9 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
             f"built from another file",
             files={"image": str(image.get("id")), "Dockerfile": str(image.get(
                 "dockerfile_sha256"))}))
+    build_errors, build_obligations = build_evidence(target_dir, image)
+    report["errors"] += build_errors
+    report["obligations"] += build_obligations
     if (doc.get("front_end") or {}).get("unshimmed"):
         report["warnings"].append(f"{final}: R on the PATH at "
                                   f"{doc['front_end']['unshimmed']} is not the front end, so "
@@ -6156,6 +6258,18 @@ def cmd_snapshot_code(args: argparse.Namespace) -> int:
                     "run-container, which records each run in lane-records/")
 
 
+def cmd_build_image(args: argparse.Namespace) -> int:
+    """CLI wrapper: build the attempt's image through the lane (F5)."""
+    target_dir = args.attempt_dir.expanduser().resolve()
+    if not target_dir.is_dir():
+        raise LaneError(f"attempt directory not found: {display_path(target_dir)}")
+    doc = build_image(target_dir, args.tag, context=args.context, launch_commit=args.launch_commit)
+    print(f"{doc['build']}: exit status {doc['exit_status']}; image "
+          f"{(doc['image_id'] or 'none')[:19]}; log in "
+          f"{RECORDS_DIR}/{doc['build']}/build.log")
+    return 0 if doc["exit_status"] == 0 else 1
+
+
 def cmd_run_container(args: argparse.Namespace) -> int:
     """CLI wrapper: start a run, finalise one, or clear a stale lock.
 
@@ -7279,6 +7393,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--force", action="store_true",
                    help="replace an existing snapshot (only when the run itself is redone)")
     p.set_defaults(func=cmd_snapshot_code)
+
+    p = sub.add_parser("build-image",
+                       help="build the attempt's image through the lane, keeping its log (F5)")
+    p.add_argument("attempt_dir", type=Path)
+    p.add_argument("--tag", required=True)
+    p.add_argument("--context", type=Path, default=None,
+                   help="the build context (default: the attempt directory)")
+    p.add_argument("--launch-commit", default=None)
+    p.set_defaults(func=cmd_build_image)
 
     p = sub.add_parser("run-container",
                        help="run the attempt's code in the lane-owned container (gate 1.3)")

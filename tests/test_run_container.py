@@ -359,7 +359,7 @@ class RecordFixture:
              consumed: list[dict] | None = None, changes: list[dict] | None = None,
              baseline: dict[str, str] | None = None,
              lane_files: dict[str, str] | None = None,
-             started_at: str = "2026-10-08T10:00:00Z") -> None:
+             started_at: str = "2026-10-08T10:00:00Z", build: bool = True) -> None:
         """Write and seal one run's records the way finalise_run does.
 
         ``changes`` and ``baseline`` stand for the lane's declared changes to
@@ -369,6 +369,14 @@ class RecordFixture:
         records = self.dir / lane.RECORDS_DIR
         record = records / run_id
         record.mkdir(parents=True)
+        if build and not (records / "build-01").exists():
+            # The lane's build record for the fixture image (F5).
+            (records / "build-01").mkdir()
+            (records / "build-01" / "build.log").write_text("built\n", encoding="utf-8")
+            lane.write_json(records / "build-01" / "build.json", {
+                "build": "build-01", "image_id": "sha256:" + "0" * 64, "exit_status": 0,
+                "dockerfile_sha256": None,
+                "log_sha256": lane.sha256_file(records / "build-01" / "build.log")})
         pre, _ = lane.input_inventory(self.dir)
         lane.write_json(record / "pre.json", {"run": run_id, "files": pre})
         lane.write_json(record / "baseline.json", {"run": run_id, "files": {
@@ -1428,6 +1436,31 @@ class TranscriptAuditTests(RecordFixture, unittest.TestCase):
                          ["a shell command wrote data/late.csv"])
 
 
+class BuildEvidenceTests(RecordFixture, unittest.TestCase):
+    """The gate 1.3 final review's F5: the run's image needs a lane build
+    record; without one its build history is an obligation, and a build log
+    that no longer hashes to its record is an error."""
+
+    def check(self) -> dict:
+        return lane.check_run_records(self.dir, self.launch)
+
+    def test_a_lane_build_record_evidences_the_image(self):
+        self.seal()
+        report = self.check()
+        self.assertNotIn("build-evidence", [o.code for o in report["obligations"]])
+
+    def test_without_a_build_record_the_build_is_an_obligation(self):
+        self.seal(build=False)
+        self.assertIn("build-evidence", [o.code for o in self.check()["obligations"]])
+
+    def test_a_changed_build_log_is_an_error(self):
+        self.seal()
+        (self.dir / lane.RECORDS_DIR / "build-01" / "build.log").write_text("edited\n")
+        report = self.check()
+        self.assertIn("build-01: the build log is missing or does not hash to its record",
+                      report["errors"])
+
+
 class FreshComputationTests(RecordFixture, unittest.TestCase):
     """Cache stores (spec §9): removed before a run, or kept as an
     obligation; other cache-like directories are obligations."""
@@ -1796,6 +1829,35 @@ class AccountDockerTests(AccountRunMixin, unittest.TestCase):
                          (3, 1, 1))
         self.assertNotIn("executed-not-loaded", [getattr(f, "code", "")
                                                  for f in result["flags"]])
+
+
+@unittest.skipUnless(docker_ready(), f"needs Docker and {IMAGE}")
+class BuildImageDockerTests(unittest.TestCase):
+    """build-image (F5): the lane runs docker build, labels the image with the
+    Dockerfile's sha256 itself, and keeps the log and its hash."""
+
+    def test_a_lane_build_is_labelled_and_recorded(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            attempt = Path(tmp) / "attempt-01"
+            write(attempt / "Dockerfile", f"FROM {IMAGE}\nRUN echo lane-build-probe\n")
+            tag = "llmr-test-build-image:latest"
+            try:
+                doc = lane.build_image(attempt, tag)
+                self.assertEqual(doc["exit_status"], 0)
+                label = subprocess.run(
+                    ["docker", "image", "inspect", tag, "--format",
+                     '{{ index .Config.Labels "llmr.dockerfile.sha256" }}'],
+                    capture_output=True, text=True, check=False).stdout.strip()
+                self.assertEqual(label, lane.sha256_file(attempt / "Dockerfile"))
+                log = attempt / lane.RECORDS_DIR / "build-01" / "build.log"
+                self.assertIn("lane-build-probe", log.read_text(encoding="utf-8"))
+                self.assertEqual(doc["log_sha256"], lane.sha256_file(log))
+                errors, obligations = lane.build_evidence(attempt, {
+                    "id": doc["image_id"], "dockerfile_sha256": doc["dockerfile_sha256"]})
+                self.assertEqual((errors, obligations), ([], []))
+            finally:
+                subprocess.run(["docker", "image", "rm", "-f", tag], capture_output=True,
+                               check=False)
 
 
 # The gate 1.3 final review's A-new-1: an authors' script for the lane's

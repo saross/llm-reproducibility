@@ -31,8 +31,9 @@ governs unpinned packages. v1.7 (2026-10-12, the gate 1.3 final review): each
 target declares whether its comparison followed the approved plan's method
 (F4), published values are transcribed from the source before the first run
 (F6), the package-date rule covers unversioned tags, floating mirrors, and
-conflicting specifications, and statement-by-statement runs go through the
-lane's evaluator (A-new-1).
+conflicting specifications, statement-by-statement runs go through the
+lane's evaluator (A-new-1), and images are built through the lane, which
+keeps the build log (F5).
 The FAIR-lane benchmark arms do not bind this lane. A model change is a §8
 regression-gate trigger (amendment 1 §3). Opus 5.5 defaults to medium effort,
 so the invoking workflow pins effort explicitly. The pin lives only in this
@@ -95,8 +96,12 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
      `dockerfile-patterns.md`, "Package repository dates".
 3. Execute through the lane only (invariant 5). Iterate build fixes as
    needed; log every modification with its rationale.
-   - Build the image labelled with your `Dockerfile`'s digest
-     (`--label llmr.dockerfile.sha256=...`), then run with
+   - Build the image through the lane, `reproduction-lane.py build-image
+     <attempt dir> --tag <tag> --launch-commit <commit>`, which runs
+     `docker build`, labels the image with your `Dockerfile`'s digest, and
+     keeps the full build log; a failed build is kept too, as evidence. An
+     image built any other way has no build record, which the gate raises
+     for review. Then run with
      `reproduction-lane.py run-container <attempt dir> --image <tag> --entry
      <run script> --launch-commit <commit>`. Never use `docker run`, `exec`,
      `cp`, or `compose` yourself, and never run paper code on the host: the

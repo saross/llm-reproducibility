@@ -75,7 +75,8 @@ configuration (for the shakedown:
    persist-plans and approve both refuse to replace it, because the target
    list is now the coverage denominator.
 7. **Commit** the plans and approvals.
-8. **Execute args:**
+8. **Execute args** (the executor builds its image with `reproduction-lane.py
+   build-image`, which keeps the build log under `lane-records/build-NN/`):
    `venv/bin/python scripts/reproduction-lane.py build-exec-args --config $CFG --scratch-root $SCRATCH --out $SCRATCH/exec-args.json`
    Only papers with a committed approval whose hash still matches go in.
    Others are listed in `skipped`, never dropped silently.
