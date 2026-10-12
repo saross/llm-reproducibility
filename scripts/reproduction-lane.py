@@ -192,6 +192,10 @@ GATE_VERSION = "1.3"
 CODE_MANIFEST_FILE = "authors-code-manifest.json"
 RULINGS_FILE = "flag-rulings.json"
 AUDIT_FILE = "transcript-audit.json"
+# The workflow run's agent audit, bound to the attempt (2026-10-12, the gate
+# 1.3 final review's F8): each governed role's receipts, blinding, and write
+# scope, and the escalations and review concerns a human must resolve.
+RUN_AUDIT_FILE = "run-audit.json"
 DEFAULT_CODE_MANIFEST_SCHEMA = "reproduction-system/schemas/authors-code-manifest.json"
 # File suffixes (lower-cased) treated as code in the closed-world inventory;
 # names beginning "Dockerfile" count too. Since gate 1.2 nothing is exempt:
@@ -1201,14 +1205,16 @@ def cmd_approve(args: argparse.Namespace) -> int:
 
 def attempt_issues(target_dir: Path, report: dict) -> dict[str, dict]:
     """An attempt's rulable issues, by id: the gate report's, then the
-    transcript audit's (spec §12: a host run before the final run)."""
+    transcript audit's (spec §12: a host run before the final run), then the
+    run audit's (F8: escalations, review concerns, and blinding warnings)."""
     issues = {i["id"]: i for i in report.get("issues") or []}
-    try:
-        audit = json.loads((target_dir / AUDIT_FILE).read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        audit = {}
-    for issue in audit.get("issues") or []:
-        issues.setdefault(issue["id"], issue)
+    for name in (AUDIT_FILE, RUN_AUDIT_FILE):
+        try:
+            audit = json.loads((target_dir / name).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            audit = {}
+        for issue in audit.get("issues") or []:
+            issues.setdefault(issue["id"], issue)
     return issues
 
 
@@ -2024,7 +2030,8 @@ PROJECT_PROFILE = ".Rprofile.project"
 # Everything else in the attempt directory is the input tree.
 DOCUMENT_NAMES = frozenset({
     PLAN_FILE, PLAN_VIEW_FILE, APPROVAL_FILE, CODE_MANIFEST_FILE, EXECUTION_FILE,
-    GATE_FILE, RULINGS_FILE, AUDIT_FILE, REVIEW_FILE, "log.md", "environment.md",
+    GATE_FILE, RULINGS_FILE, AUDIT_FILE, RUN_AUDIT_FILE, REVIEW_FILE, "log.md",
+    "environment.md",
     "comparisons", "outputs", RECORDS_DIR, SNAPSHOT_DIR, "__pycache__"})
 # Interpreters run-container starts the entry with, by suffix.
 ENTRY_INTERPRETERS = {".r": "Rscript", ".sh": "bash"}
@@ -5535,14 +5542,137 @@ def admitted_coverage(verdict: str, issues: list[dict], rulings: list[dict],
             "unruled_issues": unruled}
 
 
+def run_audit_reasons(target_dir: Path, report: dict, rulings: list[dict]) -> list[str]:
+    """Why an attempt's run audit keeps it out of study data (F8)."""
+    try:
+        run_audit = json.loads((target_dir / RUN_AUDIT_FILE).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return [f"no run audit recorded ({RUN_AUDIT_FILE}: run audit-run on the workflow "
+                f"run that produced this attempt)"]
+    reasons = []
+    roles = run_audit.get("roles") or {}
+    for role in ("executor", "reviewer"):
+        entry = roles.get(role)
+        if not entry:
+            reasons.append(f"the run audit has no {role}")
+        elif not entry.get("clean"):
+            reasons.append(f"the run audit found the {role} unclean: "
+                           f"{'; '.join(entry.get('problems') or [])[:400]}")
+    if report.get("launch_commit") and run_audit.get("launch_commit") \
+            and run_audit["launch_commit"] != report["launch_commit"]:
+        reasons.append("the run audit's launch commit is not the gate report's")
+    try:
+        approval = json.loads((target_dir / APPROVAL_FILE).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        approval = {}
+    if run_audit.get("plan_sha256") and approval.get("plan_sha256") \
+            and run_audit["plan_sha256"] != approval["plan_sha256"]:
+        reasons.append("the run audit was made under a different approved plan")
+    unruled = [i["id"] for i in run_audit.get("issues") or [] if ruling_for(i, rulings) is None]
+    if unruled:
+        reasons.append(f"{len(unruled)} unruled run-audit issue(s): {', '.join(unruled[:5])}"
+                       + (" …" if len(unruled) > 5 else ""))
+    return reasons
+
+
+def role_audit(record: dict) -> dict:
+    """One governed agent's audit, as the attempt's run audit keeps it."""
+    problems = list((record.get("receipts") or {}).get("problems") or [])
+    blinding = record.get("blinding") or {}
+    problems += [f"blinded access: {c.get('path')} ({c.get('rule')})"
+                 for c in blinding.get("contaminating") or []]
+    problems += [f"write outside scope: {w}" for w in record.get("writes_outside_scope") or []]
+    problems += [f"transcript audit: {c.get('kind')}" for c in
+                 (record.get("execution_audit") or {}).get("contaminating") or []]
+    return {"agent_id": record.get("agent_id"), "agent_type": record.get("agent_type"),
+            "clean": bool(record.get("clean")), "problems": problems,
+            "warnings": list(blinding.get("warnings") or [])}
+
+
+def review_issues(role: str, payload: dict | None, warnings: list[dict]) -> list[Issue]:
+    """The questions one agent's result leaves for a human (F8).
+
+    The executor's escalations (PAPER_ERROR, CANNOT_COMPARE, other), a
+    reviewer's QUALIFIED or CHALLENGED verdict, any escalation without a
+    named finding, and each blinding warning become flags, so the human
+    queue lists them and admission waits for their rulings.
+    """
+    issues: list[Issue] = []
+    payload = payload or {}
+    escalations = payload.get("escalations") or []
+    for item in escalations:
+        kind = str(item.get("kind") or "OTHER")
+        target = item.get("target_id")
+        issues.append(Issue.flag(
+            "escalation", f"{role}:{kind}:{target or 'paper'}",
+            f"the {role} escalated {kind}{f' on {target}' if target else ''}: "
+            f"{str(item.get('detail') or '')[:400]} (a human confirms or rejects it)",
+            targets=[target] if target else (), files={"escalation": json_digest(item)}))
+    if payload.get("status") == "ESCALATE" and not escalations:
+        issues.append(Issue.flag(
+            "escalation", f"{role}:status", f"the {role} returned ESCALATE: "
+            f"{str(payload.get('escalate_reason') or '')[:400]}",
+            files={"reason": json_digest(payload.get("escalate_reason"))}))
+    overall = payload.get("overall")
+    if role == "reviewer" and overall in ("QUALIFIED", "CHALLENGED"):
+        dims = payload.get("dimensions") or {}
+        concerns = [k for k in DIMENSION_KEYS if (dims.get(k) or {}).get("verdict") == "CONCERN"]
+        support = (payload.get("verdict_challenge") or {}).get("reviewer_supports_verdict")
+        issues.append(Issue.flag(
+            "review", overall.lower(), f"the adversarial review is {overall} (concerns: "
+            f"{', '.join(concerns) or 'none named'}; supports the verdict: {support}): a "
+            f"human resolves each concern before the result enters study data",
+            files={"review": json_digest({"dimensions": dims, "overall": overall})}))
+    for warning in warnings:
+        issues.append(Issue.flag(
+            "blinding-warning", f"{role}:{warning.get('path')}",
+            f"{warning.get('rule')}: {str(warning.get('command') or '')[:200]}",
+            files={"warning": json_digest(warning)}))
+    return issues
+
+
+def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
+                      roles: dict[str, tuple[dict, dict | None]]) -> dict:
+    """The attempt's run audit: each governed role's verdict, the workflow
+    identities it was made under, and the issues for a ruling (F8).
+
+    Args:
+        config: The run configuration.
+        run_dir_name: The workflow run's directory name.
+        target_dir: The attempt directory.
+        roles: ``{role: (agent audit record, final payload)}`` for the
+            executor and the reviewer that worked on this attempt.
+    """
+    try:
+        approval = json.loads((target_dir / APPROVAL_FILE).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        approval = {}
+    audits = {role: role_audit(record) for role, (record, _) in roles.items()}
+    issues: list[Issue] = []
+    for role, (_, payload) in sorted(roles.items()):
+        issues += review_issues(role, payload, audits[role]["warnings"])
+    seen: set[str] = set()
+    unique = [i for i in issues if not (i.issue_id in seen or seen.add(i.issue_id))]
+    executor = roles.get("executor", ({}, None))[0]
+    return {"run_audit_version": "1.0", "audited_at": now_utc(), "run_id": config["run_id"],
+            "workflow_run": run_dir_name, "attempt_dir": display_path(target_dir),
+            "launch_commit": (executor.get("provenance") or {}).get("launch_commit"),
+            "plan_sha256": approval.get("plan_sha256"),
+            "roles": audits, "missing_roles": sorted({"executor", "reviewer"} - set(roles)),
+            "issues": issue_records(unique)}
+
+
 def admission(target_dir: Path) -> dict:
     """Whether an attempt's results may enter study data (spec §6).
 
     Admission needs a passing gate, every issue ruled, every credited run
-    complete (a failed one is covered by its ``run-failed`` issue), and a
-    clean transcript audit (``transcript-audit.json``, spec §12). Nothing
-    here can be overridden: a record persisted while ineligible stays so
-    until ``persist-results`` is run afresh after the rulings.
+    complete (a failed one is covered by its ``run-failed`` issue), a clean
+    transcript audit (``transcript-audit.json``, spec §12), and a run audit
+    (``run-audit.json``, F8) in which the executor and the reviewer are both
+    present and clean, bound to the same launch commit and approved plan,
+    with every escalation, review concern, and blinding warning ruled.
+    Nothing here can be overridden: a record persisted while ineligible stays
+    so until ``persist-results`` is run afresh after the rulings.
     """
     reasons: list[str] = []
     try:
@@ -5577,6 +5707,7 @@ def admission(target_dir: Path) -> dict:
                            f"{', '.join(audit_unruled[:5])}")
     except (OSError, json.JSONDecodeError):
         reasons.append(f"no transcript audit recorded ({AUDIT_FILE}, spec §12)")
+    reasons += run_audit_reasons(target_dir, report, rulings)
     return {"eligible": not reasons, "assessed_at": now_utc(), "reasons": reasons,
             "gate_report_sha256": sha256_file(target_dir / GATE_FILE)}
 
@@ -6769,6 +6900,7 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
         sys.path.pop(0)
     manifest = hooklib.load_manifest()
     agents = []
+    per_attempt: dict[str, dict[str, tuple[dict, dict | None]]] = {}
     for transcript in sorted(run_dir.glob("agent-*.jsonl")):
         meta_path = transcript.with_name(f"{transcript.stem}.meta.json")
         meta = (json.loads(meta_path.read_text(encoding="utf-8"))
@@ -6777,6 +6909,12 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
         record = audit_agent(lines, str(meta.get("agentType") or ""), config, manifest,
                              reconcile, gate, hooklib)
         record["agent_id"] = transcript.stem.replace("agent-", "")
+        found = ATTEMPT_DIR_RE.search(first_user_text(lines))
+        role = {config["agents"]["executor"]: "executor",
+                config["agents"]["reviewer"]: "reviewer"}.get(str(meta.get("agentType")))
+        if role and found:
+            per_attempt.setdefault(found.group(1), {})[role] = (
+                record, gate.structured_output_from_transcript(lines))
         # The executor's transcript also gets the attempt's own audit (spec
         # §12), written into the attempt as admission requires.
         attempt = ATTEMPT_DIR_RE.search(first_user_text(lines))
@@ -6799,6 +6937,12 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
             record["clean"] = False
             record["unattributable"] = True
         agents.append(record)
+    # F8: bind each attempt to this run's agent audit and open questions.
+    for attempt_text, roles in sorted(per_attempt.items()):
+        attempt_path = expand(attempt_text)
+        if attempt_path.is_dir():
+            write_json(attempt_path / RUN_AUDIT_FILE,
+                       attempt_run_audit(config, run_dir.name, attempt_path, roles))
     per_paper: dict[str, dict] = {}
     for record in agents:
         bucket = per_paper.setdefault(record["paper"] or "(none)", {

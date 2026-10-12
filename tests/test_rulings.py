@@ -185,6 +185,18 @@ class RuleFlagsTests(unittest.TestCase):
             "verdict": verdict, "flags": [str(self.issues[0])], "code_integrity": integrity,
             "issues": [i.record() for i in self.issues]}))
 
+    def run_audit(self, executor: dict | None = None, reviewer: dict | None = None,
+                  **fields) -> None:
+        """Write a run audit from (agent audit record, payload) pairs (F8)."""
+        clean = {"clean": True, "receipts": {"valid": True, "problems": []},
+                 "blinding": {"contaminating": [], "warnings": []}, "writes_outside_scope": []}
+        roles = {"executor": (executor or clean, {"status": "OK", "verdict": "SUCCESSFUL"}),
+                 "reviewer": (reviewer or clean, {"status": "OK", "overall": "CONFIRMED"})}
+        roles.update(fields.pop("roles", {}))
+        doc = lane.attempt_run_audit(lane.load_config(self.config), "wf_x", self.dir, roles)
+        doc.update(fields)
+        write(self.dir / lane.RUN_AUDIT_FILE, json.dumps(doc))
+
     def rule(self, *entries: dict) -> int:
         self.rulings_file.write_text(json.dumps(list(entries)), encoding="utf-8")
         return lane.cmd_rule_flags(argparse.Namespace(
@@ -219,6 +231,8 @@ class RuleFlagsTests(unittest.TestCase):
                   {"issue": "edited-copy:authors-code/analysis.R",
                    "decision": "fail-and-uplift", "note": "a logic edit"})
         write(self.dir / lane.AUDIT_FILE, json.dumps({"contaminating": []}))
+        self.assertIn("no run audit recorded", " | ".join(lane.admission(self.dir)["reasons"]))
+        self.run_audit()
         verdict = lane.admission(self.dir)
         self.assertEqual((verdict["eligible"], verdict["reasons"]), (True, []))
         self.report(verdict="fail", runs={"credited_runs": ["run-01"],
@@ -236,6 +250,7 @@ class RuleFlagsTests(unittest.TestCase):
                                                       "issues": [host.record()]}))
         self.report(verdict="pass", runs={"credited_runs": ["run-01"],
                                           "runs": {"run-01": {"state": "complete"}}})
+        self.run_audit()
         statuses = {i["id"] for i in lane.issue_statuses(lane.load_config(self.config))}
         self.assertIn("host-run:run-analysis.R", statuses)
         self.rule({"issue": "wrapper-semantics:wrappers", "decision": "discharged",
@@ -247,6 +262,83 @@ class RuleFlagsTests(unittest.TestCase):
         self.rule({"issue": "host-run:run-analysis.R", "decision": "admissible",
                    "note": "a parse check before the run"})
         self.assertTrue(lane.admission(self.dir)["eligible"])
+
+    # The gate 1.3 final review's F8 (2026-10-12): admission reads the run
+    # audit, so receipts, blinding, and review questions block it.
+
+    def eligible_but_for_the_run_audit(self) -> None:
+        self.report(verdict="pass", runs={"credited_runs": ["run-01"],
+                                          "runs": {"run-01": {"state": "complete"}}})
+        self.rule({"issue": "wrapper-semantics:wrappers", "decision": "discharged",
+                   "note": "checked"},
+                  {"issue": "edited-copy:authors-code/analysis.R",
+                   "decision": "fail-and-uplift", "note": "a logic edit"})
+        write(self.dir / lane.AUDIT_FILE, json.dumps({"contaminating": []}))
+
+    def reasons(self) -> str:
+        return " | ".join(lane.admission(self.dir)["reasons"])
+
+    def test_an_unclean_role_cannot_be_ruled_into_admission(self):
+        self.eligible_but_for_the_run_audit()
+        invalid = {"clean": False, "receipts": {"valid": False, "problems": [
+            "declared pull truncated (a partial shell read): tax.md"]},
+            "blinding": {"contaminating": [], "warnings": []}, "writes_outside_scope": []}
+        self.run_audit(executor=invalid)
+        self.assertIn("the run audit found the executor unclean: declared pull truncated",
+                      self.reasons())
+        blinded = {"clean": False, "receipts": {"valid": True, "problems": []},
+                   "blinding": {"contaminating": [{"path": "attempt-02/x", "rule": "r"}],
+                                "warnings": []}, "writes_outside_scope": []}
+        self.run_audit(reviewer=blinded)
+        self.assertIn("the run audit found the reviewer unclean: blinded access",
+                      self.reasons())
+
+    def test_a_missing_review_blocks_admission(self):
+        self.eligible_but_for_the_run_audit()
+        self.run_audit()
+        doc = json.loads((self.dir / lane.RUN_AUDIT_FILE).read_text())
+        del doc["roles"]["reviewer"]
+        write(self.dir / lane.RUN_AUDIT_FILE, json.dumps(doc))
+        self.assertIn("the run audit has no reviewer", self.reasons())
+
+    def test_review_concerns_and_escalations_are_issues_to_rule(self):
+        self.eligible_but_for_the_run_audit()
+        clean = {"clean": True, "receipts": {"valid": True, "problems": []},
+                 "blinding": {"contaminating": [], "warnings": [
+                     {"path": "x/verification-strategies.md", "rule": "named in output",
+                      "command": "ls refs"}]}, "writes_outside_scope": []}
+        executor = {"status": "ESCALATE", "verdict": "SUCCESSFUL", "escalations": [
+            {"kind": "PAPER_ERROR", "target_id": "T01", "detail": "8 cells off by one"}]}
+        reviewer = {"status": "OK", "overall": "QUALIFIED", "dimensions": {
+            k: {"verdict": "CONCERN" if k == "methodological_soundness" else "PASS",
+                "findings": []} for k in lane.DIMENSION_KEYS},
+            "verdict_challenge": {"reviewer_supports_verdict": True}}
+        quiet = {**clean, "blinding": {"contaminating": [], "warnings": []}}
+        self.run_audit(roles={"executor": (clean, executor), "reviewer": (quiet, reviewer)})
+        statuses = {i["id"]: i["status"] for i in lane.issue_statuses(
+            lane.load_config(self.config))}
+        for issue_id in ("escalation:executor:PAPER_ERROR:T01", "review:qualified",
+                         "blinding-warning:executor:x/verification-strategies.md"):
+            self.assertEqual(statuses.get(issue_id), "unruled", issue_id)
+        self.assertIn("3 unruled run-audit issue(s)", self.reasons())
+        self.rule({"issue": "escalation:executor:PAPER_ERROR:T01", "decision": "admissible",
+                   "note": "confirmed against S3"},
+                  {"issue": "review:qualified", "decision": "admissible",
+                   "note": "the method change was ruled separately"},
+                  {"issue": "blinding-warning:executor:x/verification-strategies.md",
+                   "decision": "admissible", "note": "a directory listing, not a read"})
+        self.assertTrue(lane.admission(self.dir)["eligible"])
+
+    def test_the_run_audit_is_bound_to_the_launch_and_the_plan(self):
+        self.eligible_but_for_the_run_audit()
+        write(self.dir / lane.APPROVAL_FILE, json.dumps({"plan_sha256": "a" * 64}))
+        doc_report = json.loads((self.dir / lane.GATE_FILE).read_text())
+        doc_report["launch_commit"] = "c" * 40
+        write(self.dir / lane.GATE_FILE, json.dumps(doc_report))
+        self.run_audit(launch_commit="d" * 40, plan_sha256="b" * 64)
+        reasons = self.reasons()
+        self.assertIn("launch commit is not the gate report's", reasons)
+        self.assertIn("under a different approved plan", reasons)
 
     def test_human_queue_lists_issues_as_ruled_or_unruled(self):
         self.rule({"issue": "wrapper-semantics:wrappers", "decision": "discharged",
