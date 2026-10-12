@@ -316,6 +316,82 @@ class ReceiptGateTests(unittest.TestCase):
         self.assertEqual(self.run_gate(None, transcript=transcript), ["block"])
         self.assertIn("never actually read", self.events[0]["reason"])
 
+    # The gate 1.3 final review's F2 (2026-10-12): reads made through Bash.
+
+    def _transcript_with_calls(self, calls: list[tuple], payload: dict) -> str:
+        """Transcript with (tool, input, result text, is_error) calls, then the
+        structured output."""
+        entries = []
+        for n, (tool, given, text, error) in enumerate(calls):
+            entries.append({"message": {"content": [{"type": "tool_use", "name": tool,
+                                                      "id": f"toolu_{n}", "input": given}]}})
+            entries.append({"message": {"content": [{"type": "tool_result",
+                                                      "tool_use_id": f"toolu_{n}",
+                                                      "is_error": error, "content": text}]}})
+        entries.append({"message": {"content": [{"type": "tool_use",
+                                                  "name": "StructuredOutput",
+                                                  "id": "toolu_s", "input": payload}]}})
+        with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as f:
+            for entry in entries:
+                f.write(json.dumps(entry) + "\n")
+            transcript = f.name
+        self.addCleanup(os.unlink, transcript)
+        return transcript
+
+    def _gate_bash(self, commands: list[str], declared: list[str], text: str = "body",
+                   **overrides) -> list[str]:
+        payload = valid_payload(**overrides)
+        payload["receipts"]["pulled_files_read"] = declared
+        calls = [("Bash", {"command": c}, text, False) for c in commands]
+        return self.run_gate(None, transcript=self._transcript_with_calls(calls, payload))
+
+    def test_complete_shell_reads_verify_pulls(self) -> None:
+        """cat by absolute path, relative to a cd, and by glob; and nl."""
+        self.assertEqual(self._gate_bash(
+            ["cat /ref/guide.md", "cd /ref && cat templates/*.md", "nl /ref/b.R"],
+            ["/ref/guide.md", "/ref/templates/log.md", "/ref/b.R"]), ["pass"])
+
+    def test_partial_and_search_only_reads_block(self) -> None:
+        self.assertEqual(self._gate_bash(["sed -n 21,70p /ref/tax.md"], ["/ref/tax.md"]),
+                         ["block"])
+        self.assertIn("truncated (a partial shell read", self.events[-1]["reason"])
+        self.events.clear()
+        self.assertEqual(self._gate_bash(["grep -n L1 /ref/rules.md"], ["/ref/rules.md"]),
+                         ["block"])
+        self.assertIn("only searched", self.events[-1]["reason"])
+
+    def test_a_truncated_shell_read_counts_only_once_its_spill_is_read(self) -> None:
+        spilled = ("<persisted-output>\nOutput too large (40KB). Full output saved to: "
+                   "/tmp/spill/out.txt\n</persisted-output>")
+        self.assertEqual(self._gate_bash(["cat /ref/big.md"], ["/ref/big.md"], text=spilled),
+                         ["block"])
+        self.events.clear()
+        payload = valid_payload()
+        payload["receipts"]["pulled_files_read"] = ["/ref/big.md"]
+        calls = [("Bash", {"command": "cat /ref/big.md"}, spilled, False),
+                 ("Read", {"file_path": "/tmp/spill/out.txt"}, "body", False)]
+        self.assertEqual(self.run_gate(None, transcript=self._transcript_with_calls(
+            calls, payload)), ["pass"])
+
+    def test_a_heredoc_body_is_not_a_shell_read(self) -> None:
+        self.assertEqual(self._gate_bash(["python3 - <<'EOF'\ncat /ref/guide.md\nEOF"],
+                                         ["/ref/guide.md"]), ["block"])
+
+    def test_an_escalation_carrying_a_result_is_pull_checked(self) -> None:
+        """The herskind pilot's executor returned SUCCESSFUL as ESCALATE and
+        was never checked; an escalation with no result still passes through."""
+        self.assertEqual(self._gate_bash([], ["/ref/unread.md"], status="ESCALATE",
+                                         escalate_reason="paper error", verdict="SUCCESSFUL"),
+                         ["block"])
+        self.events.clear()
+        self.assertEqual(self._gate_bash([], ["/ref/unread.md"], status="ESCALATE",
+                                         escalate_reason="input missing"),
+                         ["escalate-passthrough"])
+        self.events.clear()
+        self.assertEqual(self._gate_bash(["cat /ref/read.md"], ["/ref/read.md"],
+                                         status="ESCALATE", escalate_reason="paper error",
+                                         verdict="SUCCESSFUL"), ["escalate-passthrough"])
+
     def test_successful_pull_passes(self) -> None:
         payload = valid_payload()
         payload["receipts"]["pulled_files_read"] = ["/ref/guide.md"]

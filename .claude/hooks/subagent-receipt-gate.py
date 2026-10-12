@@ -15,10 +15,14 @@ the layered read receipts in the agent's structured output:
   agent, tolerating the harness's ``[1m]`` context-window marker suffix
   (hard gate, review D-7; marker observed on the 2026-08-03 opus arm);
 - version check — `agent_version` matches "<agent_type> v<registry version>";
-- pull check — every path declared in `pulled_files_read` has a matching Read
-  tool call in the harness-recorded transcript with no `limit`/`offset`
-  truncation. Transcripts are written asynchronously and can lag — the hook
-  retries briefly before blocking (review D-12).
+- pull check — every path declared in `pulled_files_read` was read in full:
+  a successful Read call with no `limit`/`offset`, or (since 2026-10-12, the
+  gate 1.3 final review's F2) a successful Bash `cat`, `less`, `more`, or
+  `nl` whose output was not truncated, or was spilled to a file the agent
+  then Read in full. `head`, `tail`, `sed`, `awk`, and `cut` reads are
+  partial and `grep` is a search, so none of them verifies a declared pull.
+  Transcripts are written asynchronously and can lag — the hook retries
+  briefly before blocking (review D-12).
 
 The structured output is located in the final assistant message OR, for
 workflow-lane spawns whose schema-forced output rides a structured-output
@@ -27,7 +31,10 @@ final-message-only search blocked every workflow spawn once).
 
 `status: ESCALATE` outputs are passed through to the orchestrator ONLY after
 the receipt and model-identity checks pass — escalation is a valid outcome,
-but it is not an exemption from provenance (audit 2026-08-03 C5).
+but it is not an exemption from provenance (audit 2026-08-03 C5). An
+ESCALATE that carries a result (a verdict, a review, or a target list) must
+also pass the pull check (2026-10-12, F2: the herskind pilot's executor
+returned a complete SUCCESSFUL result as ESCALATE and so was never checked).
 
 Fail-closed (policy decided ONCE for both hooks, audit item 3, 2026-08-14):
 unexpected payload shapes, unattributable events (unparseable or non-object
@@ -41,7 +48,11 @@ the same subagent instead of failing the batch item (§3.2 self-healing).
 
 from __future__ import annotations
 
+import fnmatch
 import json
+import posixpath
+import re
+import shlex
 import sys
 import time
 from pathlib import Path
@@ -152,6 +163,209 @@ def read_calls(lines: list[str]) -> list[dict]:
                 errors[str(blk.get("tool_use_id"))] = bool(blk.get("is_error"))
     return [{"input": call_input, "error": errors.get(use_id, True)}
             for use_id, call_input in uses]
+
+
+# Reads made through Bash (2026-10-12, the gate 1.3 final review's F2). Agents
+# in the harness's auto mode are told to read files with cat or sed -n, so a
+# Read-only check failed every such run while saying nothing true about it.
+FULL_READERS = frozenset({"cat", "less", "more", "nl"})
+PARTIAL_READERS = frozenset({"head", "tail", "sed", "awk", "cut"})
+SEARCHERS = frozenset({"grep", "egrep", "fgrep", "rg", "ugrep", "ag"})
+COMMAND_PREFIXES = frozenset({"sudo", "env", "time", "nohup", "nice", "command"})
+SPILL_PATH_RE = re.compile(r"Full output saved to:\s*(\S+)")
+SPILL_MARKERS = ("<persisted-output>", "Full output saved to:")
+HEREDOC_START_RE = re.compile(r"(?<!<)<<(?!<)-?[ \t]*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\1")
+RESULT_KEYS = ("verdict", "overall", "verification_targets", "coverage", "dimensions")
+
+
+def _tool_calls(lines: list[str], name: str) -> list[dict]:
+    """Calls to one tool, each with its result: {input, error, text}.
+
+    A call with no recorded result counts as errored, as in read_calls().
+    """
+    uses: list[tuple[str, dict]] = []
+    results: dict[str, tuple[bool, str]] = {}
+    for line in lines:
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        content = ((entry.get("message") or {}).get("content")
+                   if isinstance(entry.get("message"), dict) else entry.get("content"))
+        if not isinstance(content, list):
+            continue
+        for blk in content:
+            if not isinstance(blk, dict):
+                continue
+            if blk.get("type") == "tool_use" and blk.get("name") == name \
+                    and isinstance(blk.get("input"), dict):
+                uses.append((str(blk.get("id")), blk["input"]))
+            elif blk.get("type") == "tool_result":
+                raw = blk.get("content")
+                text = ("".join(str(part.get("text", "")) for part in raw
+                                if isinstance(part, dict))
+                        if isinstance(raw, list) else str(raw or ""))
+                results[str(blk.get("tool_use_id"))] = (bool(blk.get("is_error")), text)
+    return [{"input": call_input, "error": results.get(use_id, (True, ""))[0],
+             "text": results.get(use_id, (True, ""))[1]} for use_id, call_input in uses]
+
+
+def _mask_quoted(text: str) -> str:
+    """The text with quoted and escaped characters blanked (same length)."""
+    out: list[str] = []
+    quote: str | None = None
+    escaped = False
+    for ch in text:
+        if escaped:
+            out.append(" ")
+            escaped = False
+        elif quote == "'":
+            out.append(ch if ch == "'" else " ")
+            quote = None if ch == "'" else quote
+        elif ch == "\\":
+            out.append(" ")
+            escaped = True
+        elif quote == '"':
+            out.append(ch if ch == '"' else " ")
+            quote = None if ch == '"' else quote
+        else:
+            if ch in "'\"":
+                quote = ch
+            out.append(ch)
+    return "".join(out)
+
+
+def _shell_segments(command: str) -> list[str]:
+    """A command's simple commands: heredoc bodies dropped, split at
+    unquoted &&, ||, ;, |, and newlines."""
+    kept: list[str] = []
+    delimiter: str | None = None
+    for line in command.splitlines():
+        if delimiter is not None:
+            if line.strip() == delimiter:
+                delimiter = None
+            continue
+        found = HEREDOC_START_RE.search(line)
+        if found and _mask_quoted(line)[found.start():found.start() + 2] == "<<":
+            delimiter = found.group(2)
+        kept.append(line)
+    text = "\n".join(kept)
+    masked = _mask_quoted(text)
+    segments: list[str] = []
+    start = i = 0
+    while i < len(text):
+        if masked[i:i + 2] in ("&&", "||"):
+            segments.append(text[start:i])
+            i += 2
+            start = i
+        elif masked[i] in ";|\n":
+            segments.append(text[start:i])
+            i += 1
+            start = i
+        else:
+            i += 1
+    segments.append(text[start:])
+    return [seg.strip() for seg in segments if seg.strip()]
+
+
+def bash_reads(lines: list[str]) -> list[dict]:
+    """Files that Bash commands read, and how.
+
+    Returns:
+        ``[{"path", "cwd", "kind", "error", "spill"}]``: ``kind`` is
+        ``complete`` (cat and the like), ``partial`` (head, tail, sed, awk,
+        cut), or ``searched`` (grep and the like); ``spill`` is the file the
+        harness saved a truncated output to, if it did.
+    """
+    reads: list[dict] = []
+    for call in _tool_calls(lines, "Bash"):
+        command = str(call["input"].get("command") or "")
+        spilled = SPILL_PATH_RE.search(call["text"])
+        truncated = any(marker in call["text"] for marker in SPILL_MARKERS)
+        cwd: str | None = None
+        for segment in _shell_segments(command):
+            try:
+                words = shlex.split(segment, comments=True)
+            except ValueError:
+                words = segment.split()
+            words = [w for w in words if not re.fullmatch(r"[0-9&]*[<>].*", w)]
+            k = 0
+            while k < len(words) and (words[k] in COMMAND_PREFIXES
+                                      or re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*=.*", words[k])):
+                k += 1
+            if k >= len(words):
+                continue
+            name = posixpath.basename(words[k])
+            args = [w for w in words[k + 1:] if not w.startswith("-")]
+            if name == "cd":
+                target = args[0] if args else "~"
+                cwd = (target if target.startswith(("/", "~"))
+                       else posixpath.join(cwd, target) if cwd else None)
+                continue
+            if name in FULL_READERS:
+                kind, files = "complete", args
+            elif name in PARTIAL_READERS:
+                kind = "partial"
+                files = args[1:] if name in ("sed", "awk") else args
+            elif name in SEARCHERS:
+                kind, files = "searched", args[1:]
+            else:
+                continue
+            for path in files:
+                reads.append({"path": path, "cwd": cwd, "kind": kind, "error": call["error"],
+                              "spill": (spilled.group(1) if spilled else "") if truncated
+                              else None})
+    return reads
+
+
+def _names(declared: str, written: str, cwd: str | None) -> bool:
+    """Whether a path or glob as written in a command names a declared file."""
+    candidates = [written]
+    if cwd and not written.startswith(("/", "~")):
+        candidates.append(posixpath.normpath(posixpath.join(cwd, written)))
+    for cand in candidates:
+        tail = cand.removeprefix("./")
+        if any(ch in cand for ch in "*?["):
+            if fnmatch.fnmatchcase(declared, cand) or fnmatch.fnmatchcase(declared, "*/" + tail):
+                return True
+        elif declared in cand or declared == tail or declared.endswith("/" + tail):
+            return True
+    return False
+
+
+def pull_verdict(declared: str, reads: list[dict], shell: list[dict]) -> tuple[str, str]:
+    """How a declared pull was read: ``read``, ``truncated``, ``searched``,
+    ``errored``, or ``missing``, with a short account of how.
+
+    Args:
+        declared: the path the agent declared in ``pulled_files_read``.
+        reads: ``read_calls(lines)``.
+        shell: ``bash_reads(lines)``.
+    """
+    tool = [c for c in reads if declared in str(c["input"].get("file_path", ""))]
+    tool_ok = [c for c in tool if not c["error"]]
+    bash = [b for b in shell if _names(declared, b["path"], b["cwd"])]
+    bash_ok = [b for b in bash if not b["error"]]
+
+    def spill_read(spill: str | None) -> bool:
+        return spill is None or any(
+            spill and spill in str(c["input"].get("file_path", "")) and not c["error"]
+            and "limit" not in c["input"] and "offset" not in c["input"] for c in reads)
+
+    if any("limit" not in c["input"] and "offset" not in c["input"] for c in tool_ok) or \
+            any(b["kind"] == "complete" and spill_read(b["spill"]) for b in bash_ok):
+        return "read", ""
+    if tool_ok or any(b["kind"] in ("complete", "partial") for b in bash_ok):
+        how = ("Read with limit/offset" if tool_ok else
+               "a partial shell read (head, tail, sed, awk, or cut)"
+               if any(b["kind"] == "partial" for b in bash_ok)
+               else "a shell read whose output the harness truncated")
+        return "truncated", how
+    if bash_ok:
+        return "searched", "only searched (grep), never read"
+    if tool or bash:
+        return "errored", "every attempt errored"
+    return "missing", ""
 
 
 def structured_output_from_transcript(lines: list[str]) -> dict | None:
@@ -331,8 +545,10 @@ def validate(event: dict) -> int:
                                      f"schema; orchestrator attention needed, not a "
                                      f"retry: escalate", ctx)
 
-    # ESCALATE passes through to the orchestrator only after provenance holds.
-    if str(payload.get("status", "")) == "ESCALATE":
+    # ESCALATE passes through to the orchestrator only after provenance holds,
+    # and, when it carries a result, only after the pull check too (F2).
+    escalated = str(payload.get("status", "")) == "ESCALATE"
+    if escalated and not any(key in payload for key in RESULT_KEYS):
         log_jsonl(GATE_LOG, {"event": "escalate-passthrough", "agent_type": agent_type,
                              **ctx, "model_id": got_model,
                              "reason": payload.get("escalate_reason")})
@@ -348,6 +564,7 @@ def validate(event: dict) -> int:
                                      "verify declared pulled-file reads (D-12 fail-closed)",
                          ctx)
         calls = read_calls(lines)
+        shell = bash_reads(lines)
         for declared in pulled:
             declared_path = str(declared).strip()
             if not declared_path:
@@ -356,28 +573,30 @@ def validate(event: dict) -> int:
                 return block(agent_type, "pulled_files_read contains an empty path — "
                                          "declare the actual file read or remove the "
                                          "entry", ctx)
-            matching = [c for c in calls
-                        if declared_path in str(c["input"].get("file_path", ""))]
-            if not matching:
+            verdict, how = pull_verdict(declared_path, calls, shell)
+            if verdict == "missing":
                 return block(agent_type, f"declared pulled read {declared!r} has no matching "
-                                         f"Read call in the transcript — re-read it in full "
-                                         f"and re-emit receipts", ctx)
-            successful = [c for c in matching if not c["error"]]
-            if not successful:
+                                         f"Read call or shell read in the transcript — "
+                                         f"re-read it in full and re-emit receipts", ctx)
+            if verdict == "errored":
                 # 2026-08-15: attempts are not reads — a declared pull whose
-                # every Read errored (wrong path, missing file) never
-                # entered the agent's context.
+                # every attempt errored never entered the agent's context.
                 return block(agent_type, f"declared pulled read {declared!r} was attempted "
                                          f"but every matching Read errored — the file was "
                                          f"never actually read; re-read it in full from "
                                          f"its canonical path and re-emit receipts", ctx)
-            if not any("limit" not in c["input"] and "offset" not in c["input"]
-                       for c in successful):
-                return block(agent_type, f"pulled read {declared!r} was truncated with "
-                                         f"limit/offset — re-read the file in full", ctx)
+            if verdict == "searched":
+                return block(agent_type, f"declared pulled read {declared!r} was {how} — "
+                                         f"read the file in full and re-emit receipts", ctx)
+            if verdict == "truncated":
+                return block(agent_type, f"pulled read {declared!r} was truncated ({how}) — "
+                                         f"re-read the file in full", ctx)
 
-    log_jsonl(GATE_LOG, {"event": "pass", "agent_type": agent_type,
-                         **ctx, "model_id": got_model, "pulled": len(pulled)})
+    log_jsonl(GATE_LOG, {"event": "escalate-passthrough" if escalated else "pass",
+                         "agent_type": agent_type, **ctx, "model_id": got_model,
+                         "pulled": len(pulled),
+                         **({"reason": payload.get("escalate_reason"), "checked": True}
+                            if escalated else {})})
     return 0
 
 
