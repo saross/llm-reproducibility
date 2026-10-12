@@ -6809,7 +6809,7 @@ def reconcile_telemetry(lines: list[str]) -> dict:
 # It is supporting evidence: shell indirection can avoid any pattern, which
 # is why runs are bound by receipt, not by command (Astra 10).
 
-TRANSCRIPT_AUDIT_VERSION = "1.1"
+TRANSCRIPT_AUDIT_VERSION = "1.2"
 DOCKER_RUN_RE = re.compile(
     r"\bdocker(?:-compose|\s+(?:container\s+)?(run|exec|cp|start|compose))\b")
 DOCKER_BUILD_RE = re.compile(r"\bdocker\s+(?:image\s+)?(?:build|buildx\s+build)\b")
@@ -6818,7 +6818,11 @@ HOST_RUN_RE = re.compile(r"(?:^|[\s/])(Rscript|R\s+(?:--file|-f)|python3?|bash)\
 # scanned with its quoting and heredocs, not split by regex. Version 1.0 read
 # ">" inside a quoted awk program or a Python heredoc as a redirect, and a
 # run-container --help call as a run that left no record, so a clean run
-# failed the hard-failure rule (amendment 3 §9).
+# failed the hard-failure rule (amendment 3 §9). Version 1.2 (2026-10-12,
+# Astra's delta review of gate 1.3.1, D-Astra-2): comments are not scanned,
+# copy, tee, and in-place edits are recognised only as the command, and a
+# variable expands as the shell expands it. Version 1.1 read "# echo x > f"
+# and the "cp" in "grep cp README.md f" as writes to f, both unwaivable.
 HEREDOC_RE = re.compile(r"(?<!<)<<(?!<)(-?)[ \t]*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\2")
 REDIRECT_OP_RE = re.compile(r"(?<![<>&])(?:&>>?|[0-9]*>>?\|?)")
 NON_EXECUTING_RE = re.compile(r"(?:^|\s)(?:-h|--help|--version)(?=\s|$)")
@@ -6826,14 +6830,48 @@ SHELL_INTERPRETERS = frozenset({"bash", "sh", "dash", "zsh"})
 COPY_COMMANDS = frozenset({"cp", "mv", "install", "rsync"})
 COMMAND_PREFIXES = frozenset({"sudo", "env", "time", "nohup", "nice", "timeout", "command",
                               "exec"})
-SHELL_VARIABLE_RE = re.compile(r"\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?")
+SHELL_VARIABLE_RE = re.compile(r"\$(?:\{([A-Za-z_][A-Za-z0-9_]*)\}|([A-Za-z_][A-Za-z0-9_]*))")
 ASSIGNMENT_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)=(.*)", re.DOTALL)
 
 
 def expand_variables(text: str, variables: dict[str, str]) -> str:
-    """``$NAME`` and ``${NAME}`` replaced where the command set them; others
-    are left as written."""
-    return SHELL_VARIABLE_RE.sub(lambda m: variables.get(m.group(1), m.group(0)), text)
+    """Shell text with ``$NAME`` and ``${NAME}`` replaced where the command
+    set them, as the shell would expand them; others are left as written.
+
+    Nothing inside single quotes or after a backslash expands. Inside double
+    quotes a value is one word, escaped so it cannot end the string. Outside
+    quotes a value splits into words at its spaces, each quoted, so that, as
+    in the shell, none of its characters becomes an operator: version 1.1
+    expanded single-quoted literals too, and a value holding ``>`` would have
+    read as a redirect (Astra's delta review, D-Astra-2).
+    """
+    out: list[str] = []
+    quote: str | None = None
+    i = 0
+    while i < len(text):
+        ch = text[i]
+        if quote == "'":
+            quote = None if ch == "'" else quote
+        elif ch == "\\":
+            out.append(text[i:i + 2])
+            i += 2
+            continue
+        elif ch in "'\"" and quote is None:
+            quote = ch
+        elif ch == '"':
+            quote = None
+        elif ch == "$":
+            found = SHELL_VARIABLE_RE.match(text, i)
+            name = (found.group(1) or found.group(2)) if found else None
+            if name in variables:
+                value = variables[name]
+                out.append(re.sub(r'(["\\$`])', r"\\\1", value) if quote == '"'
+                           else " ".join(shlex.quote(part) for part in value.split()))
+                i = found.end()
+                continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
 
 
 def timed_tool_calls(lines: list[str]) -> list[dict]:
@@ -6938,7 +6976,9 @@ def split_heredocs(command: str) -> tuple[str, dict[int, list[str]]]:
             else:
                 body.append(line)
             continue
-        masked = mask_quoted(line)
+        # A << in a comment starts no heredoc, or the lines after it would be
+        # dropped from the scan as its body.
+        masked = mask_quoted(mask_comments(line))
         for found in HEREDOC_RE.finditer(line):
             if masked[found.start():found.start() + 2] == "<<":
                 pending.append((found.group(3), found.group(1) == "-",
@@ -7039,12 +7079,60 @@ def command_word(words: list[str]) -> tuple[int, str]:
 
 
 def segment_writes(segment: str) -> list[str]:
-    """Paths a shell segment writes: redirect targets outside quotes and
-    tests, cp/mv/install/rsync destinations, tee's files, and sed -i's files.
+    """Paths a shell segment writes: redirect targets outside quotes,
+    comments, and tests, and, when the segment's command is cp, mv,
+    install, or rsync, its destination, when it is tee, its files, and when
+    it is sed -i, the files it edits.
+
+    Only the command itself, past assignments and prefixes such as ``sudo``
+    or ``timeout``, is matched against those names (Astra's delta review,
+    D-Astra-2): version 1.1 matched every word, so the search pattern in
+    ``grep cp README.md f`` read as a copy into ``f``. A copy run through
+    ``xargs`` or ``find -exec`` is therefore not seen; the audit is
+    supporting evidence, and runs are bound by receipt.
 
     The segment must already be free of heredoc bodies (``split_heredocs``).
     """
-    masked = mask_tests(mask_quoted(segment))
+def mask_comments(text: str) -> str:
+    """The text with shell comments blanked, same length, newlines kept.
+
+    A ``#`` starts a comment only at the start of an unquoted word (after a
+    blank, an operator character, or a line start), so ``$#``, ``${#x}``,
+    ``a#b``, and a quoted ``#`` stay, as in the shell. The receipt hook
+    keeps a copy (``_mask_comments``); change both together.
+    """
+    out = list(text)
+    quote: str | None = None
+    word_start = True
+    i = 0
+    while i < len(text):
+        ch = text[i]
+        if quote == "'":
+            quote = None if ch == "'" else quote
+        elif quote == '"':
+            if ch == "\\":
+                i += 1
+            elif ch == '"':
+                quote = None
+        elif ch == "\\":
+            i += 1
+            word_start = False
+        elif ch in "'\"":
+            quote = ch
+            word_start = False
+        elif ch == "#" and word_start:
+            end = text.find("\n", i)
+            end = len(text) if end == -1 else end
+            out[i:end] = " " * (end - i)
+            i = end
+            continue
+        else:
+            word_start = ch in " \t\n;&|()<>"
+        i += 1
+    return "".join(out)
+
+
+    masked = mask_tests(mask_quoted(mask_comments(segment)))
     targets: list[str] = []
     for found in REDIRECT_OP_RE.finditer(masked):
         rest = masked[found.end():].lstrip(" \t")
@@ -7054,19 +7142,23 @@ def segment_writes(segment: str) -> list[str]:
         if target:
             targets.append(target)
     words = shell_words(segment)
-    for k, word in enumerate(words):
-        name = posixpath.basename(word)
-        args = [a for a in words[k + 1:] if not a.startswith("-")]
-        if name in COPY_COMMANDS and len(args) >= 2:
+    k, name = command_word(words)
+    given = words[k + 1:]
+    args = [a for a in given if not a.startswith("-")]
+    if name in COPY_COMMANDS:
+        # -t DIR and --target-directory=DIR name the destination up front.
+        directory = next((given[j + 1] for j, a in enumerate(given[:-1]) if a == "-t"), None) \
+            or next((a.split("=", 1)[1] for a in given if a.startswith("--target-directory=")),
+                    None)
+        if directory:
+            targets.append(directory)
+        elif len(args) >= 2:
             targets.append(args[-1])
-            break
-        if name == "tee":
-            targets += args
-            break
-        if name == "sed" and any(re.fullmatch(r"-[a-zA-Z]*i[a-zA-Z]*|--in-place(=.*)?", a)
-                                 for a in words[k + 1:]):
-            targets += args[1:]
-            break
+    elif name == "tee":
+        targets += args
+    elif name == "sed" and any(re.fullmatch(r"-[a-zA-Z]*i\S*|--in-place(=.*)?", a)
+                               for a in given):
+        targets += args[1:]
     return [t for t in targets if t and not t.startswith("/dev/")]
 
 
@@ -7199,11 +7291,9 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
             for word in assigned:
                 found = ASSIGNMENT_RE.fullmatch(word)
                 if found and "$(" not in found.group(2) and "`" not in found.group(2):
-                    variables[found.group(1)] = expand_variables(found.group(2), variables)
+                    variables[found.group(1)] = found.group(2)
             if assigned and (k == len(words) or name == "export"):
                 continue
-            segment = expand_variables(segment, variables)
-            words = [expand_variables(w, variables) for w in words]
             if name in SHELL_INTERPRETERS and "-c" in words[k + 1:] and depth < 3:
                 # A shell's -c string is commands, as a fed heredoc is.
                 script = words[words.index("-c", k + 1) + 1:words.index("-c", k + 1) + 2]
@@ -7328,6 +7418,8 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
         record["agent_id"] = transcript.stem.replace("agent-", "")
         # Bind each governed role to its paper's attempt by the Paper: line,
         # which every executor and reviewer prompt carries; the reviewer's
+        # Comments are blanked, not removed, so heredoc offsets still hold.
+        text = mask_comments(text)
         # has no "Attempt directory:" line (Fable's delta review, D-1).
         role = {config["agents"]["executor"]: "executor",
                 config["agents"]["reviewer"]: "reviewer"}.get(str(meta.get("agentType")))
@@ -7335,6 +7427,9 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
         if role and record.get("paper") in slugs:
             per_attempt.setdefault(attempt_dir(config, record["paper"]), {})[role] = (
                 record, gate.structured_output_from_transcript(lines))
+            # Expanded in the segment's text, where its quoting is still
+            # visible, and only then split into words (D-Astra-2).
+            segment = expand_variables(segment, variables)
         # The executor's transcript also gets the attempt's own audit (spec
         # §12), written into the attempt as admission requires.
         attempt = ATTEMPT_DIR_RE.search(first_user_text(lines))

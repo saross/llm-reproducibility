@@ -1452,6 +1452,45 @@ class TranscriptAuditTests(RecordFixture, unittest.TestCase):
         self.assertEqual(self.kinds(report), ["write-to-lane-owned"] * 2)
         self.assertEqual([i["code"] for i in report["issues"]], ["docker-build-direct"])
 
+    # Astra's delta review of gate 1.3.1, D-Astra-2: comments, search
+    # patterns, and expanded values are not writes; real writes still are.
+
+    def test_comments_and_literal_arguments_are_not_writes(self):
+        """Astra's two probes (a commented redirect; cp as grep's pattern),
+        a comment holding ; and a quote, and a value holding > expanded
+        unquoted, which the shell prints rather than redirects."""
+        files = self.dir / "outputs" / "run-01" / "files"
+        report = self.audit(
+            self.bash(f"cd {self.dir}\n# echo x > outputs/run-01/files/x\n:", self.BEFORE),
+            self.bash(f"cd {self.dir} && grep cp README.md outputs/run-01/files/x", self.BEFORE),
+            self.bash(f"grep -n tee {files}/x; echo done  # then cp a {files}/y", self.BEFORE),
+            self.bash(f"echo \"it's\" # it's noted; echo x > {files}/z", self.BEFORE),
+            self.bash(f"X='> {files}/v'; echo $X \"$X\" '$X'", self.BEFORE))
+        self.assertEqual(report["contaminating"], [])
+
+    def test_real_writes_are_caught_past_comments_and_prefixes(self):
+        """Negative controls: a comment's << starts no heredoc, a redirect
+        before a comment, copy and tee behind sudo and timeout, cp -t, sed
+        -i with a suffix, and writes through expanded variables."""
+        files = self.dir / "outputs" / "run-01" / "files"
+        report = self.audit(
+            self.bash(f"# cat <<EOF\necho forged > {files}/a", self.BEFORE),
+            self.bash(f"echo forged > {files}/b # cp note", self.BEFORE),
+            self.bash(f"sudo cp /tmp/x {files}/c", self.BEFORE),
+            self.bash(f"timeout 5 tee {files}/d < /tmp/x", self.BEFORE),
+            self.bash(f"cp -t {files}/e /tmp/x", self.BEFORE),
+            self.bash(f"sed -i.bak s/a/b/ {files}/f", self.BEFORE),
+            self.bash(f"X={files}/g; echo forged > $X", self.BEFORE),
+            self.bash(f"Y={files}; echo forged > \"$Y/h\"", self.BEFORE))
+        self.assertEqual(self.kinds(report), ["write-to-lane-owned"] * 8)
+
+    def test_variables_expand_as_the_shell_expands_them(self):
+        """Not in single quotes or after a backslash; one escaped word in
+        double quotes; quoted words outside them (D-Astra-2)."""
+        self.assertEqual(
+            lane.expand_variables("echo '$A' \"$A\" $A ${A} \\$A $Z", {"A": 'x > "y"'}),
+            "echo '$A' \"x > \\\"y\\\"\" x '>' '\"y\"' x '>' '\"y\"' \\$A $Z")
+
     def test_run_start_is_compared_as_a_time(self):
         """A write a millisecond-stamped transcript records after the final
         run's start counts as after it, whatever the two stamps' formats."""
