@@ -316,6 +316,27 @@ class GateTests(unittest.TestCase):
                                                    "targets_reproduced": 1})
         self.assertEqual(self.run_gate()["verdict"], "pass")
 
+    def test_method_deviations_are_flags_and_adherence_an_obligation(self):
+        """The gate 1.3 final review's F4: a declared departure from the
+        plan's method is a flag on its target, an undeclared one a warning,
+        and every attempt carries the reviewer's method-adherence obligation."""
+        base = self.comparison()["targets"]
+        changed = [{**base[0], "method_as_planned": False,
+                    "method_deviation": "criterion inferred from the caption after viewing "
+                                        "the figure"},
+                   {**base[1], "method_as_planned": True}]
+        self.comparison(targets=changed)
+        report = self.run_gate()
+        self.assertEqual(report["verdict"], "pass", report["errors"])
+        issues = {i["id"]: i for i in report["issues"]}
+        self.assertEqual(issues["method-deviation:T01"]["targets"], ["T01"])
+        self.assertEqual(issues["method-adherence:targets"]["kind"], "obligation")
+        self.assertIn("method-deviation:T01", report["coverage_admitted"]["unruled_issues"])
+        self.assertIn("T01", report["coverage_admitted"]["excluded_targets"])
+        self.comparison()
+        warnings = " ".join(self.run_gate()["warnings"])
+        self.assertIn("T01: the record does not declare method_as_planned", warnings)
+
     def test_report_lists_issues_and_admits_only_ruled_results(self):
         """Gate 1.3 §6: raw coverage counts outcomes; admitted coverage waits
         for a ruling on every issue, here the wrapper-semantics obligation."""

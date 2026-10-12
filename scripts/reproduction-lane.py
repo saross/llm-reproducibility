@@ -196,6 +196,8 @@ AUDIT_FILE = "transcript-audit.json"
 # 1.3 final review's F8): each governed role's receipts, blinding, and write
 # scope, and the escalations and review concerns a human must resolve.
 RUN_AUDIT_FILE = "run-audit.json"
+# Where the executor transcribes published values (executor v1.7, F6).
+PUBLISHED_VALUES_DIR = "published-values"
 DEFAULT_CODE_MANIFEST_SCHEMA = "reproduction-system/schemas/authors-code-manifest.json"
 # File suffixes (lower-cased) treated as code in the closed-world inventory;
 # names beginning "Dockerfile" count too. Since gate 1.2 nothing is exempt:
@@ -5889,6 +5891,33 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
         errors += cite_errors
         warnings += cite_flags
         flags += cite_flags
+    # The gate 1.3 final review's F4: the gate checks counts, not methods.
+    # A declared departure from the approved plan's method is a flag on its
+    # target, and every attempt carries one obligation for the reviewer to
+    # compare each target's executed method with the plan's wording, so an
+    # undeclared change also has a named owner.
+    method_obligations: list[Issue] = []
+    if isinstance(comparison, dict):
+        for t in records:
+            tid = t.get("target_id")
+            if tid not in locked:
+                continue
+            if t.get("method_as_planned") is False:
+                flag = Issue.flag(
+                    "method-deviation", str(tid), f"{tid}: the comparison departed from the "
+                    f"approved plan's method: {str(t.get('method_deviation') or '')[:300]} "
+                    f"(a human rules on it; the original plan stands as approved)",
+                    targets=[str(tid)], files={"record": json_digest(t)})
+                flags.append(flag)
+                warnings.append(flag)
+            elif "method_as_planned" not in t:
+                warnings.append(f"{tid}: the record does not declare method_as_planned")
+        method_obligations.append(Issue.obligation(
+            "method-adherence", "targets", "the gate checks counts, not methods: the reviewer "
+            "compares each target's executed comparison method and tolerance with the "
+            "approved plan's wording, and names every departure, declared or not",
+            files={"plan": plan_digest,
+                   "comparison": sha256_file(target_dir / COMPARISON_FILE)}))
 
     # Admitted coverage (spec §6). The recomputed coverage counts outcomes,
     # so a target resting on a declared edit would be counted: exclude every
@@ -5898,7 +5927,8 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
     # (coverage_creditable, part 1's interim measure, was dropped at the
     # workflow switch.)
     admitted = None
-    issues = issue_records(flags + integrity["review_obligations"])
+    obligations_all = list(integrity["review_obligations"]) + method_obligations
+    issues = issue_records(flags + obligations_all)
     if coverage is not None:
         edited: set[str] = set()
         manifest = {}
@@ -5934,7 +5964,7 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
             "plan_sha256": plan_digest, "locked_targets": len(locked),
             "verdict": "fail" if errors else "pass", "errors": errors,
             "warnings": warnings, "flags": flags,
-            "review_obligations": integrity["review_obligations"], "coverage": coverage,
+            "review_obligations": obligations_all, "coverage": coverage,
             "coverage_admitted": admitted,
             "issues": issues, "launch_commit": launch_commit,
             "eligible_for_current_gate": integrity["eligible_for_current_gate"],
@@ -6765,6 +6795,7 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
                 if r in indexed and sealed.get(r, {}).get("state") in ("complete", "failed")]
     final = credible[-1] if credible else None
     final_start = sealed[final].get("started_at") if final else None
+    first_start = sealed[credible[0]].get("started_at") if credible else None
     # Code a host run must not name: originals' copies, executed copies, and
     # wrappers, except those that run on the host by design (§5, §11).
     manifest_doc = manifest_doc or {}
@@ -6808,7 +6839,17 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
         first = rel.split("/", 1)[0]
         if first in (RECORDS_DIR, "outputs"):
             find("write-to-lane-owned", at, f"{how} wrote {rel}, which only the lane writes")
-        elif first not in DOCUMENT_NAMES and after_final(at):
+            return
+        if first == PUBLISHED_VALUES_DIR and after_stamp(at, first_start):
+            # The gate 1.3 final review's F6: a published value transcribed
+            # after a reproduced one exists can agree with it for the wrong
+            # reason, so the ordering goes to a ruling.
+            issues.append(Issue.flag(
+                "transcription-after-run", rel, f"{how} wrote the published values {rel} "
+                f"after the first run started ({first_start}): a human rules on whether "
+                f"the transcription was made from the source alone",
+                files={rel: json_digest({"at": at, "how": how})}))
+        if first not in DOCUMENT_NAMES and after_final(at):
             find("input-tree-changed-after-run", at, f"{how} wrote {rel} after the final run "
                  f"{final} started")
 

@@ -9,7 +9,7 @@ model: claude-opus-5-5
 tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
-# Role: reproduction executor (agent definition v1.6)
+# Role: reproduction executor (agent definition v1.7)
 
 You execute a single approved reproduction plan in a preregistered study
 (OSF DOI 10.17605/OSF.IO/DQNHG) — the merged R-A + R-B workflow: materials,
@@ -27,7 +27,10 @@ v1.5 (2026-10-10): merges main's separately numbered v1.2 (PR #9,
 versions (v1.1).
 v1.6 (2026-10-11): package repository dates (workflow step 2), after the
 crema probe showed that a rocker image's built-in snapshot date silently
-governs unpinned packages.
+governs unpinned packages. v1.7 (2026-10-12, the gate 1.3 final review): each
+target declares whether its comparison followed the approved plan's method
+(F4), and published values are transcribed from the source before the first
+run (F6).
 The FAIR-lane benchmark arms do not bind this lane. A model change is a §8
 regression-gate trigger (amendment 1 §3). Opus 5.5 defaults to medium effort,
 so the invoking workflow pins effort explicitly. The pin lives only in this
@@ -110,6 +113,18 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
    human-readable `comparisons/comparison-report.md`. Each target cites the
    sealed run outputs its values were read from (`outputs`: run, path,
    sha256, and optionally lines).
+   - Declare for every target whether the comparison followed the approved
+     plan's `comparison_method` and `tolerance` (`method_as_planned`). If it
+     did not, for any reason, set it to `false` and say in
+     `method_deviation` what changed, when, and why, and report the planned
+     method's own result too where it can be computed. The plan stands as
+     approved: a deviation is a flag for a human ruling, never a quiet
+     improvement, above all one made after seeing the published value.
+   - Transcribe published values into `published-values/` from the paper and
+     its supplements before the first `run-container` call, where
+     practicable. A transcription made later is flagged for a ruling, since
+     a value read after the reproduced one is known can agree with it for
+     the wrong reason; say in `log.md` why it was late.
 5. Assign the data-availability L-level from actual retrieval attempts (per
    the taxonomy pushed to the planner and echoed in the plan), with
    per-dataset route/steps/outcome logs.
@@ -128,7 +143,7 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
 ## Output contract
 
 Required receipt fields: `instrument_versions`, `instrument_receipts`,
-`agent_version` ("reproduction-executor v1.6"), `model_id`,
+`agent_version` ("reproduction-executor v1.7"), `model_id`,
 `pulled_files_read`. `status` includes `ESCALATE` — on missing input,
 unbuildable ambiguity outside the plan, or a suspected paper error, escalate
 with a reason and stop. PAPER_ERROR and CANNOT_COMPARE calls surface for human

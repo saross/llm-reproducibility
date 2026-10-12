@@ -1405,6 +1405,18 @@ class TranscriptAuditTests(RecordFixture, unittest.TestCase):
                                       manifest)
         self.assertEqual((self.kinds(report), report["issues"]), (["host-run-after-final"], []))
 
+    def test_transcribing_published_values_after_a_run_is_flagged(self):
+        """The gate 1.3 final review's F6: a write into published-values/
+        after the first run started is a flag for a ruling; one before it
+        is not."""
+        report = self.audit(
+            ("Write", {"file_path": str(self.dir / "published-values" / "table1.csv")},
+             "2026-10-08T09:30:00Z", "ok"),
+            ("Write", {"file_path": str(self.dir / "published-values" / "fig4.csv")},
+             "2026-10-08T10:30:00Z", "ok"))
+        self.assertEqual([i["id"] for i in report["issues"]],
+                         ["transcription-after-run:published-values/fig4.csv"])
+
     def test_run_start_is_compared_as_a_time(self):
         """A write a millisecond-stamped transcript records after the final
         run's start counts as after it, whatever the two stamps' formats."""
