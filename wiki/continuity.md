@@ -51,11 +51,12 @@ merged here as PR #1).
     outbox, `20261012T051040.065096Z`); Fable's review is coming; Astra
     delayed by an upgrade (Shawn, 2026-10-12). Then one pilot
     re-run (API gate), then Shawn merges PR #11.
-  - [ ] Shawn's coverage question (2026-10-12): proposed amendment 4 items
-    (minor discrepancies never alone lower the verdict; a second,
-    descriptive coverage; revisit R1's unpublished-convention rule).
-    Awaiting his go to queue them. Also: the §8 comparison script maps the
-    ledger's `REPRODUCED_VISUAL` to any within-tolerance outcome.
+  - [x] 2026-10-12 Shawn's coverage question: the three proposals are
+    queued as amendment 4 items 5–7 in `prereg/erratum-log.md` (`e6997a0`).
+  - [ ] For the §8 gate run: its comparison script maps the ledger's
+    `REPRODUCED_VISUAL` to any within-tolerance outcome.
+  - [ ] Haiku 5.5's API-equivalent price for the run configurations: a
+    search agent is checking Anthropic's pricing (2026-10-12).
   - [x] 2026-10-12 Shawn's user observation recorded (`460b736`): keep
     Fable in the review rotation.
 
