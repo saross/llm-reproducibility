@@ -3072,6 +3072,29 @@ def lane_script_at(repo_root: Path, commit: str,
     return hashlib.sha256(proc.stdout).hexdigest() if proc.returncode == 0 else None
 
 
+def manifest_at(repo_root: Path, commit: str | None) -> dict | None:
+    """``manifest.yaml`` as committed at ``commit``, or None when it cannot
+    be read.
+
+    A run's receipts are checked against the manifest it was launched under
+    (its Provenance line names the commit), not today's: with admission
+    strict, a definition merged between a run and its audit would otherwise
+    make the run inadmissible for no fault of its own (2026-10-12, a side
+    note on the gate 1.3 delta round).
+    """
+    if not commit:
+        return None
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    proc = subprocess.run(["git", "-C", str(repo_root), "show", f"{commit}:manifest.yaml"],
+                          capture_output=True, check=False, env=env)
+    if proc.returncode != 0:
+        return None
+    try:
+        return yaml.safe_load(proc.stdout.decode("utf-8")) or {}
+    except yaml.YAMLError:
+        return None
+
+
 # The lane files a run stages from the repository, which the launcher binding
 # checks at the launch commit as it checks the lane script: the hook and the
 # shim produce the events the gate reads, so a stale copy of either is a
@@ -7256,7 +7279,8 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
         import hooklib  # noqa: PLC0415 — hooks dir is not a package
     finally:
         sys.path.pop(0)
-    manifest = hooklib.load_manifest()
+    current = hooklib.load_manifest()
+    launch_manifests: dict[str, dict | None] = {}
     agents = []
     per_attempt: dict[Path, dict[str, tuple[dict, dict | None]]] = {}
     for transcript in sorted(run_dir.glob("agent-*.jsonl")):
@@ -7264,8 +7288,17 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
         meta = (json.loads(meta_path.read_text(encoding="utf-8"))
                 if meta_path.is_file() else {})
         lines = transcript.read_text(encoding="utf-8").splitlines()
+        provenance = PROVENANCE_RE.search(first_user_text(lines))
+        launch = provenance.group(2) if provenance else None
+        if launch not in launch_manifests:
+            launch_manifests[launch] = manifest_at(REPO_ROOT, launch)
+        manifest = launch_manifests[launch] or current
         record = audit_agent(lines, str(meta.get("agentType") or ""), config, manifest,
                              reconcile, gate, hooklib)
+        record["receipts_checked_against"] = (f"manifest.yaml at launch commit {launch}"
+                                              if launch_manifests[launch] is not None
+                                              else "today's manifest.yaml (the launch "
+                                                   "commit's could not be read)")
         record["agent_id"] = transcript.stem.replace("agent-", "")
         # Bind each governed role to its paper's attempt by the Paper: line,
         # which every executor and reviewer prompt carries; the reviewer's

@@ -7,19 +7,21 @@ the code on branch `feat/gate-1-3-1-review-fixes`. The attempt's own gate 1.3
 records (`herskind-riede-2024/reproduction/attempt-03/`) and the original
 audit (`../audit-wf_7c18dfdc-298.json`) are unchanged.
 
-`reaudit.py` repeats `audit-run`'s steps for workflow run `wf_7c18dfdc-298`,
-writing here instead of into the attempt. `gate-report.json` is
-`check-attempt --launch-commit cd5d54a…` under `GATE_VERSION` 1.3.1.
+`reaudit.py` runs the lane's own `audit-run` (`cmd_audit_run`) on workflow run
+`wf_7c18dfdc-298`, redirecting the files it would write into the attempt to
+this folder. (Its first version keyed roles itself and so hid Fable's
+delta-review D-1, which this one exercises.) Receipts are checked against the
+manifest at the run's launch commit. `gate-report.json` is `check-attempt
+--launch-commit cd5d54a…` under `GATE_VERSION` 1.3.1.
 
 | | Gate 1.3 (original) | Gate 1.3.1 (this re-audit) |
 |---|---|---|
 | Transcript audit hard failures | 4 (all parser false positives, F1) | 0 |
 | Transcript audit flags | 2 host-run | 2 host-run, 4 transcription-after-run (Figs 2, 4, and 5, and that folder's README; F6) |
-| Receipt problems | 13 "declared pull not in transcript" (11 executor, 2 reviewer), from a Read-only check | the 3 genuine ones: 2 partial `sed -n` reads, 1 grep-only (F2), plus the version mismatch below |
+| Receipt problems | 13 "declared pull not in transcript" (11 executor, 2 reviewer), from a Read-only check | the 3 genuine ones: 2 partial `sed -n` reads, 1 grep-only (F2) |
 | Gate issues | 4 obligations | adds `parsed-not-run` (A-new-1), `build-evidence` (F5), and `method-adherence` (F4) |
-| Run audit (new, F8) | none | 3 escalations, the QUALIFIED review, 3 blinding warnings, and the launch message (F3) |
+| Run audit (new, F8) | none | both roles bound; 3 escalations, the QUALIFIED review, 3 blinding warnings, and the launch message (F3) |
 
-The receipts also show `agent_version` mismatches: the pilot's agents ran as
-executor v1.6 and reviewer v1.2, and the manifest now pins v1.7 and v1.3.
-That is expected when an old run is re-audited against new definitions. The
-pilot is not study data, and nothing here is ruled.
+Both governed roles are unclean, for their genuine faulty read declarations,
+so under gate 1.3.1 the pilot is not admissible, as intended. The pilot is not
+study data, and nothing here is ruled.

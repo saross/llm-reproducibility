@@ -1636,6 +1636,21 @@ class AuditTests(unittest.TestCase):
         self.assertFalse(record["clean"])
 
 
+class LaunchManifestTests(unittest.TestCase):
+    """Receipts are checked against the manifest at the run's launch commit,
+    not today's (2026-10-12): the herskind pilot launched at cd5d54a, when
+    the executor was v1.6."""
+
+    PILOT_LAUNCH = "cd5d54ac890fafc9061547694c7d0fad9c065912"
+
+    def test_the_manifest_is_read_at_the_launch_commit(self):
+        then = lane.manifest_at(lane.REPO_ROOT, self.PILOT_LAUNCH)
+        if then is None:
+            self.skipTest("the pilot's launch commit is not in this clone's history")
+        self.assertEqual(then["agent_definitions"]["reproduction-executor"]["version"], "1.6")
+        self.assertIsNone(lane.manifest_at(lane.REPO_ROOT, "0" * 40))
+
+
 class LaunchMessageTests(unittest.TestCase):
     """The gate 1.3 final review's F3: the harness relays the user message
     that started a workflow to every spawn, above the computed task."""

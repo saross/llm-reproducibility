@@ -1,6 +1,6 @@
 {
   "audit_version": "1.0",
-  "audited_at": "2026-10-12T05:07:42+00:00",
+  "audited_at": "2026-10-12T11:53:27+00:00",
   "run_id": "gate-1-3-pilot-rerun-2026-10",
   "workflow_run": "wf_7c18dfdc-298",
   "agents": [
@@ -17,7 +17,6 @@
       "receipts": {
         "valid": false,
         "problems": [
-          "agent_version mismatch: 'reproduction-executor v1.6'",
           "declared pull truncated (a partial shell read (head, tail, sed, awk, or cut)): /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/data-availability-taxonomy.md"
         ],
         "paper_slug": "herskind-riede-2024",
@@ -77,6 +76,7 @@
       "finished_at": "2026-10-11T11:56:08.181Z",
       "wallclock_seconds": 2103.8,
       "clean": false,
+      "receipts_checked_against": "manifest.yaml at launch commit cd5d54ac890fafc9061547694c7d0fad9c065912",
       "agent_id": "a3825ccd2ec76de27",
       "execution_audit": {
         "contaminating": [],
@@ -96,7 +96,6 @@
       "receipts": {
         "valid": false,
         "problems": [
-          "agent_version mismatch: 'adversarial-reviewer v1.2'",
           "declared pull truncated (a partial shell read (head, tail, sed, awk, or cut)): /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md",
           "declared pull only searched, never read: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/coverage-rules.md"
         ],
@@ -136,6 +135,7 @@
       "finished_at": "2026-10-11T12:03:00.083Z",
       "wallclock_seconds": 397.8,
       "clean": false,
+      "receipts_checked_against": "manifest.yaml at launch commit cd5d54ac890fafc9061547694c7d0fad9c065912",
       "agent_id": "a49f673690b524c9c"
     },
     {
@@ -166,10 +166,19 @@
       "finished_at": "2026-10-11T11:56:20.362Z",
       "wallclock_seconds": 8.9,
       "clean": true,
+      "receipts_checked_against": "today's manifest.yaml (the launch commit's could not be read)",
       "agent_id": "ab1a1f652d87ed49c"
     }
   ],
-  "clean": false,
-  "per_paper": {},
-  "note": "re-audit with gate 1.3.1 (2026-10-12); the original gate 1.3 audit is audit-wf_7c18dfdc-298.json"
+  "per_paper": {
+    "herskind-riede-2024": {
+      "agents": 3,
+      "output_tokens": 86197,
+      "input_side_tokens": 39141792,
+      "cost_usd": 12.7301,
+      "agent_wallclock_seconds": 2510.5000000000005,
+      "unpriced_agents": 1
+    }
+  },
+  "clean": false
 }
