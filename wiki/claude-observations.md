@@ -1658,3 +1658,20 @@ than testing them.
   produce a finding.
 - Re-check every specific at the source before it goes into a document a
   reviewer will act on, as I would before telling Shawn.
+
+## claude-obs 82 — 2026-10-12 (self-critique): I offered a test run that would not have tested the change
+
+**Pattern.** Proposing the timing of the gate 1.3.1 pilot re-run, I gave
+Shawn the option to "run it now". That run would have launched from main,
+whose agent definitions, hooks, and workflow scripts are still gate 1.3:
+about $14 API-equivalent spent confirming the old code. A side agent caught
+it at handoff. I had tracked what the run should test, but not which
+checkout would supply the code under test.
+
+**Lesson.** A test run tests whatever its launch point loads. In this
+repository that is the main checkout's `.claude/` and workflow scripts,
+whatever branch the fixes live on.
+
+**How to apply.** Before proposing or approving any run meant to exercise
+a change, name the commit it will launch from, and check that the change is
+in it. If it is not, the change merges first or the run is not offered.
