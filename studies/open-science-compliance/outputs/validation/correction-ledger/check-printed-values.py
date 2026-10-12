@@ -23,7 +23,7 @@ the page passes too, so short values (``1``, ``0``) are weak evidence.
 
 Usage
 -----
-    python3 check-printed-values.py [--ledger correction-ledger.json]
+    python3 check-printed-values.py [--ledger correction-ledger-v1.0.json]
                                     [--corpus-root ~/corpora/llm-reproducibility]
 
 ``CORPUS_ROOT`` in the environment overrides the default corpus root, as in
@@ -79,7 +79,7 @@ def found(needle: str, pdf: Path, page: int) -> bool:
 def main() -> int:
     """Run the check and print one line per failure plus a summary."""
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--ledger", type=Path, default=HERE / "correction-ledger.json")
+    ap.add_argument("--ledger", type=Path, default=HERE / "correction-ledger-v1.0.json")
     ap.add_argument("--corpus-root", type=Path,
                     default=Path(os.environ.get("CORPUS_ROOT",
                                                 "~/corpora/llm-reproducibility")))

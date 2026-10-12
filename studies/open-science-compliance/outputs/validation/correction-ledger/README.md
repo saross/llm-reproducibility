@@ -1,9 +1,12 @@
-# Correction ledger for the §8 regression gate — DRAFT
+# Correction ledger for the §8 regression gate — version 1.0 (frozen)
 
-**Status: DRAFT (ledger 0.3.6-draft). Shawn ruled L1 to L4 and L6 to L16
-on 2026-10-09, L5 and L17 on 2026-10-10, and L18 (re-ruled on complete
-options), L19, and L20 on 2026-10-11. The pre-freeze checks were completed
-on 2026-10-12. Not yet frozen:** only the freeze itself remains. No run
+**Status: FROZEN on 2026-10-12 as version 1.0 (ruling L15 (a)).
+`correction-ledger-v1.0.json`, sha256 `189e8a33c9ceaa99eee18736e92314deff10862c51dcbdc2c0aa0e05dc090317`
+(`correction-ledger-v1.0.json.sha256`).** Shawn ruled L1 to L4 and L6 to
+L16 on 2026-10-09, L5 and L17 on 2026-10-10, and L18 (re-ruled on complete
+options), L19, and L20 on 2026-10-11; the pre-freeze checks were completed
+on 2026-10-12. The file does not change during the gate run, and a change
+needs a new version, ruled and frozen in the same way. No run
 may use any value here until the frozen copy is committed and its sha256 is
 recorded in the gate's run configuration (amendment 3 §9 and §10 step 3).
 
@@ -28,7 +31,8 @@ reported.
 
 | File | Role |
 |---|---|
-| `correction-ledger.json` | The ledger: the artefact to be ruled, frozen, and hashed |
+| `correction-ledger-v1.0.json` | The frozen ledger, version 1.0 (renamed from the draft `correction-ledger.json` at the freeze, so no draft copy can drift from it) |
+| `correction-ledger-v1.0.json.sha256` | Its sha256, for the gate's run configuration |
 | `correction-ledger.md` | Rendered review copy (`render-ledger.py`); never edit it by hand |
 | `render-ledger.py` | Renders the JSON as Markdown |
 | `check-printed-values.py` | Re-checks every printed value against its cited PDF page |
@@ -268,8 +272,12 @@ Ruled by Shawn on 2026-10-11:
       byte-identical (`evidence/l9-dye-section-07/`); herskind's Fig. 4
       check already used the authors' function verbatim.
 - [x] 2026-10-09 Admit the two runs as tier-3 evidence (L9 (b)).
-- [ ] Commit the ruled copy as `correction-ledger-v1.0.json` and record its
-      sha256 in the run configuration (L15).
+- [x] 2026-10-12 Commit the ruled copy as `correction-ledger-v1.0.json`
+      (sha256 `189e8a33c9ceaa99…`, in `correction-ledger-v1.0.json.sha256`) and
+      record its sha256 in the run configuration (L15). The gate's run
+      configuration does not exist yet: whoever writes it copies the hash
+      from the `.sha256` file, and its launch commit must contain this
+      file.
 
 ## Re-running the checks
 

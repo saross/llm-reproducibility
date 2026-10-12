@@ -3,15 +3,15 @@
 
 Purpose
 -------
-The ledger's JSON (``correction-ledger.json``) is the artefact that will be
-ruled, frozen, and hashed (amendment 3 §9). This script renders it as
+The ledger's JSON (``correction-ledger-v1.0.json``, frozen 2026-10-12) is the
+ruled, frozen, and hashed artefact (amendment 3 §9). This script renders it as
 ``correction-ledger.md`` so the registrant can review it target by target.
 The Markdown is derived output: edit the JSON, never the Markdown, and
 re-render.
 
 Usage
 -----
-    python3 render-ledger.py [--ledger correction-ledger.json]
+    python3 render-ledger.py [--ledger correction-ledger-v1.0.json]
                              [--out correction-ledger.md]
 
 Requires: Python 3.10+ (standard library only).
@@ -111,11 +111,12 @@ def ruling_line(ruling: dict) -> str:
     return f"**Open.**{note}"
 
 
-def render(ledger: dict) -> str:
+def render(ledger: dict, source: str = "correction-ledger-v1.0.json") -> str:
     """Render the whole ledger.
 
     Args:
         ledger: the parsed ledger JSON.
+        source: the JSON file's name, quoted in the rendered header.
 
     Returns:
         The Markdown document as a string.
@@ -124,7 +125,7 @@ def render(ledger: dict) -> str:
            f"**Status:** {ledger['status']}", "",
            (f"**Ledger version:** {ledger['ledger_version']}. **Drafted:** "
             f"{ledger['drafted']['date']} by {ledger['drafted']['by']}."), "",
-           ("This file is rendered from `correction-ledger.json` by `render-ledger.py`. "
+           (f"This file is rendered from `{source}` by `render-ledger.py`. "
             "Edit the JSON, never this file."), "",
            "## Summary by paper", "",
            ("| Paper | Pilot verdict | Expected verdict | In-gate targets | Unchanged "
@@ -186,11 +187,11 @@ def render(ledger: dict) -> str:
 def main() -> None:
     """Parse arguments and write the Markdown."""
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--ledger", type=Path, default=HERE / "correction-ledger.json")
+    ap.add_argument("--ledger", type=Path, default=HERE / "correction-ledger-v1.0.json")
     ap.add_argument("--out", type=Path, default=HERE / "correction-ledger.md")
     a = ap.parse_args()
     ledger = json.loads(a.ledger.read_text(encoding="utf-8"))
-    a.out.write_text(render(ledger), encoding="utf-8")
+    a.out.write_text(render(ledger, a.ledger.name), encoding="utf-8")
     print(f"wrote {a.out}")
 
 

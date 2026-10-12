@@ -1,10 +1,10 @@
-# Correction ledger for the §8 regression gate (amendment 3 §9) — DRAFT
+# Correction ledger for the §8 regression gate (amendment 3 §9), version 1.0
 
-**Status:** DRAFT. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, L5 and L17 on 2026-10-10, and L18 (re-ruled on complete options), L19, and L20 on 2026-10-11. Crema's compliant build (B3) and L17's probe were completed on 2026-10-11. The pre-freeze checks were completed on 2026-10-12: marwick's in-zip hashes, L13's review counts, and the audit Q10 deposits and L18's reference render in the corpus store. Not yet frozen. No run may use any value here until the frozen copy is committed and its sha256 is recorded in a run configuration (amendment 3 §9 and §10 step 3).
+**Status:** FROZEN on 2026-10-12 as version 1.0 (ruling L15 (a)), at the registrant's instruction of 2026-10-12. The registrant ruled L1 to L4 and L6 to L16 on 2026-10-09, L5 and L17 on 2026-10-10, and L18 (re-ruled on complete options), L19, and L20 on 2026-10-11; the pre-freeze checks were completed on 2026-10-12. This file does not change during the gate run. Its sha256 is recorded in correction-ledger-v1.0.json.sha256 and must be recorded in the gate's run configuration, and the run's launch commit must contain it (amendment 3 §9 and §10 step 3). A change needs a new version, ruled and frozen in the same way.
 
-**Ledger version:** 0.3.6-draft. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
+**Ledger version:** 1.0. **Drafted:** 2026-10-09 by Claude (Opus 5.5, claude-opus-5-5) in Claude Code, autonomous overnight session; printed values transcribed with four read-only Opus subagents and re-checked by check-printed-values.py.
 
-This file is rendered from `correction-ledger.json` by `render-ledger.py`. Edit the JSON, never this file.
+This file is rendered from `correction-ledger-v1.0.json` by `render-ledger.py`. Edit the JSON, never this file.
 
 ## Summary by paper
 
