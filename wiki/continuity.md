@@ -41,13 +41,15 @@ merged here as PR #1).
   - [x] 2026-10-12 **Step 1: ledger frozen** (PR #10): pre-freeze checks
     (`3c97be2`; corpus store `280165d` on main), main merged in (`9ff97c9`),
     frozen as `correction-ledger-v1.0.json` (`a299416`, sha256
-    `189e8a33…`). Astra accepted L18–L20 (no blocker). **Shawn merges.**
+    `189e8a33…`). Astra accepted L18–L20 (no blocker). [x] 2026-10-12
+    **Merged** on Shawn's instruction (`d0e6dfc`); hash re-verified on main.
   - [x] 2026-10-12 **Step 2: gate 1.3.1** (PR #11, head `c34cc73`): every D
     and A finding fixed with tests (648 pass with Docker); hook `1.6-inst`
     `run_file` evaluator; `build-image`; run audit in admission; pilot
     re-audit in `validation/gate-1-3-pilot-rerun/reaudit-gate-1.3.1/`.
   - [ ] **Step 3:** delta review requested (Astra codex outbox, Fable claude
-    outbox, `20261012T051040.065096Z`); Shawn wakes Fable. Then one pilot
+    outbox, `20261012T051040.065096Z`); Fable's review is coming; Astra
+    delayed by an upgrade (Shawn, 2026-10-12). Then one pilot
     re-run (API gate), then Shawn merges PR #11.
   - [ ] Shawn's coverage question (2026-10-12): proposed amendment 4 items
     (minor discrepancies never alone lower the verdict; a second,
