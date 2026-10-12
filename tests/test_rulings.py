@@ -340,6 +340,29 @@ class RuleFlagsTests(unittest.TestCase):
         self.assertIn("launch commit is not the gate report's", reasons)
         self.assertIn("under a different approved plan", reasons)
 
+    def test_audit_run_binds_both_roles_through_the_real_command(self):
+        """Fable's delta review, D-1: the reviewer's prompt has no "Attempt
+        directory:" line, so audit-run must bind it by its Paper: line, or
+        no attempt is ever admissible."""
+        run = Path(self.tmp.name) / "wf_test"
+        run.mkdir()
+        prompts = {"e": f"  Paper: paper-a\n  Attempt directory: {self.dir}\n",
+                   "r": "  Paper: paper-a\n  Review the attempt for paper-a.\n"}
+        for agent_id, agent_type in (("aaa", "e"), ("bbb", "r")):
+            lines = [{"message": {"role": "user", "content": prompts[agent_type]}},
+                     {"message": {"role": "assistant", "content": [
+                         {"type": "text", "text": "done"}]}}]
+            (run / f"agent-{agent_id}.jsonl").write_text(
+                "\n".join(json.dumps(line) for line in lines) + "\n", encoding="utf-8")
+            (run / f"agent-{agent_id}.meta.json").write_text(
+                json.dumps({"agentType": agent_type}), encoding="utf-8")
+        lane.cmd_audit_run(argparse.Namespace(config=self.config, run_dir=run,
+                                              out=Path(self.tmp.name) / "audit.json"))
+        doc = json.loads((self.dir / lane.RUN_AUDIT_FILE).read_text())
+        self.assertEqual((sorted(doc["roles"]), doc["missing_roles"]),
+                         (["executor", "reviewer"], []))
+        self.assertNotIn("has no reviewer", " | ".join(lane.admission(self.dir)["reasons"]))
+
     def test_human_queue_lists_issues_as_ruled_or_unruled(self):
         self.rule({"issue": "wrapper-semantics:wrappers", "decision": "discharged",
                    "note": "checked"})

@@ -7220,7 +7220,7 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
         sys.path.pop(0)
     manifest = hooklib.load_manifest()
     agents = []
-    per_attempt: dict[str, dict[str, tuple[dict, dict | None]]] = {}
+    per_attempt: dict[Path, dict[str, tuple[dict, dict | None]]] = {}
     for transcript in sorted(run_dir.glob("agent-*.jsonl")):
         meta_path = transcript.with_name(f"{transcript.stem}.meta.json")
         meta = (json.loads(meta_path.read_text(encoding="utf-8"))
@@ -7229,11 +7229,14 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
         record = audit_agent(lines, str(meta.get("agentType") or ""), config, manifest,
                              reconcile, gate, hooklib)
         record["agent_id"] = transcript.stem.replace("agent-", "")
-        found = ATTEMPT_DIR_RE.search(first_user_text(lines))
+        # Bind each governed role to its paper's attempt by the Paper: line,
+        # which every executor and reviewer prompt carries; the reviewer's
+        # has no "Attempt directory:" line (Fable's delta review, D-1).
         role = {config["agents"]["executor"]: "executor",
                 config["agents"]["reviewer"]: "reviewer"}.get(str(meta.get("agentType")))
-        if role and found:
-            per_attempt.setdefault(found.group(1), {})[role] = (
+        slugs = {p["slug"] for p in config["papers"]}
+        if role and record.get("paper") in slugs:
+            per_attempt.setdefault(attempt_dir(config, record["paper"]), {})[role] = (
                 record, gate.structured_output_from_transcript(lines))
         # The executor's transcript also gets the attempt's own audit (spec
         # §12), written into the attempt as admission requires.
@@ -7258,8 +7261,7 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
             record["unattributable"] = True
         agents.append(record)
     # F8: bind each attempt to this run's agent audit and open questions.
-    for attempt_text, roles in sorted(per_attempt.items()):
-        attempt_path = expand(attempt_text)
+    for attempt_path, roles in sorted(per_attempt.items()):
         if attempt_path.is_dir():
             write_json(attempt_path / RUN_AUDIT_FILE,
                        attempt_run_audit(config, run_dir.name, attempt_path, roles))
