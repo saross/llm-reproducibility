@@ -163,6 +163,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import textwrap
 from collections import Counter
 from collections.abc import Iterator
 from datetime import date as date_type, datetime, time as time_type, timedelta, timezone
@@ -309,6 +310,12 @@ PROVENANCE_RE = re.compile(
 PAPER_RE = re.compile(r"^\s*Paper: (\S+)$", re.MULTILINE)
 SCRATCH_RE = re.compile(r"^\s*Scratch directory: (\S+)$", re.MULTILINE)
 ATTEMPT_DIR_RE = re.compile(r"^\s*Attempt directory: (\S+)$", re.MULTILINE)
+# The harness relays the user message that started a workflow to every spawn,
+# ahead of the computed task and above it in authority (the gate 1.3 final
+# review's F3). The runbook's fixed launch message is the only one that needs
+# no ruling.
+RELAY_FRAME = "[Workflow harness — user request]"
+NEUTRAL_LAUNCH_RE = re.compile(r"\s*Run the approved stage\.?\s*", re.IGNORECASE)
 # Tokens in a Bash command that could name a local file: split on shell
 # punctuation, then keep path-like tokens that are not URLs (a URL's path
 # segment — e.g. a Wikipedia /wiki/ link — is not a local access).
@@ -748,6 +755,31 @@ def cmd_build_plan_args(args: argparse.Namespace) -> int:
                "schema": runtime_schema(expand(config["schemas"]["plan"])),
                "blinding": blinding_args(config), "papers": papers}, args.out)
     return 0
+
+
+def relayed_request(lines: list[str]) -> str | None:
+    """The user request the harness relayed into a workflow spawn, verbatim
+    (its indentation removed), or None when the spawn carries none."""
+    for line in lines:
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        message = entry.get("message")
+        if not isinstance(message, dict):
+            continue
+        if message.get("role") == "assistant":
+            return None
+        if message.get("role") != "user":
+            continue
+        content = message.get("content")
+        text = (content if isinstance(content, str) else
+                "".join(str(b.get("text", "")) for b in content or []
+                        if isinstance(b, dict) and b.get("type") == "text"))
+        if text.startswith(RELAY_FRAME):
+            body = text.split("\n", 1)[1] if "\n" in text else ""
+            return textwrap.dedent(body).strip()
+    return None
 
 
 def first_user_text(lines: list[str]) -> str:
@@ -5588,7 +5620,8 @@ def role_audit(record: dict) -> dict:
                  (record.get("execution_audit") or {}).get("contaminating") or []]
     return {"agent_id": record.get("agent_id"), "agent_type": record.get("agent_type"),
             "clean": bool(record.get("clean")), "problems": problems,
-            "warnings": list(blinding.get("warnings") or [])}
+            "warnings": list(blinding.get("warnings") or []),
+            "launch_message": record.get("launch_message")}
 
 
 def review_issues(role: str, payload: dict | None, warnings: list[dict]) -> list[Issue]:
@@ -5653,6 +5686,13 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
     issues: list[Issue] = []
     for role, (_, payload) in sorted(roles.items()):
         issues += review_issues(role, payload, audits[role]["warnings"])
+    for text in sorted({a["launch_message"] for a in audits.values() if a["launch_message"]}):
+        if not NEUTRAL_LAUNCH_RE.fullmatch(text):
+            issues.append(Issue.flag(
+                "launch-message", json_digest(text)[:12], f"the workflow was launched with "
+                f"{text[:300]!r}, not the runbook's fixed phrase, and the harness relayed it to "
+                f"every agent ahead of the workflow's instructions: a human rules whether it "
+                f"could steer or unblind the run", files={"text": json_digest(text)}))
     seen: set[str] = set()
     unique = [i for i in issues if not (i.issue_id in seen or seen.add(i.issue_id))]
     executor = roles.get("executor", ({}, None))[0]
@@ -6409,6 +6449,8 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
     governed = agent_type in (manifest.get("agent_definitions") or {})
     record: dict[str, Any] = {"agent_type": agent_type, "paper": own_slug,
                               "governed": governed}
+    launch = relayed_request(lines)
+    record["launch_message"] = launch
     provenance = PROVENANCE_RE.search(prompt)
     record["provenance"] = ({"run_id": provenance.group(1),
                              "launch_commit": provenance.group(2),
@@ -6454,6 +6496,12 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
             warnings.append({"tool": "Bash", "path": output_hits[0],
                              "rule": "blinded path named in command output (review)",
                              "command": call["command"][:300]})
+    # F3: the relayed launch message reaches the agent ahead of everything it
+    # opens, so a blinded path named there is a blinded access.
+    for token in path_tokens(launch or ""):
+        rule = blinding.hit(token)
+        if rule:
+            contaminating.append({"tool": "launch-message", "path": token, "rule": rule})
     record["blinding"] = {"contaminating": contaminating, "warnings": warnings}
     allowed_roots = [m.group(1) for m in (ATTEMPT_DIR_RE.search(prompt),
                                           SCRATCH_RE.search(prompt)) if m]
