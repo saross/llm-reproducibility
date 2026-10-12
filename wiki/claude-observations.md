@@ -1581,3 +1581,80 @@ lodgement, a review pass) was in view.
   raise, and raise them.
 - Verify a peer's cited claim before it enters code or a record.
 - Use "they" for any agent whose pronouns have not been stated.
+
+## claude-obs 78 — 2026-10-11: Shawn separates understanding from deciding
+
+**Pattern.** On L18 Shawn ruled and asked a question in the same breath:
+"(a) still looks correct, and I don't think your answer to the above
+question will change it (I just want to understand properly)". He wanted
+to know what the deposit's internal disagreement was. He was not asking to
+reopen the choice. My answer included a correction of my own earlier
+reasoning (Astra's point that the deposited posterior does support the
+regenerated panel), and he took that in without revisiting the ruling.
+
+**Lesson.** When Shawn asks why after he has decided, he wants the
+mechanism. A correction to my earlier account belongs in the answer even
+when it does not move the decision; re-arguing the recommendation does not.
+
+**How to apply.** Answer the mechanism plainly, in his domain's terms
+(ingredients and picture, not posterior and render). Say in one line if
+anything I said earlier was wrong. Do not restate the case for the option.
+
+## claude-obs 79 — 2026-10-11 (self-critique): I executed an instruction without naming the step it skipped
+
+**Pattern.** Shawn asked me to merge PR #7. The plan, in the continuity
+note and on my own pending list, put a final review by Astra and Fable
+before that merge. I merged without saying so. A side agent raised it, and
+Shawn asked: "did I miss prompting a review? I didn't realise we still
+needed one?" The review then ran post-merge and found enough for a second
+PR.
+
+**Lesson.** Following an instruction is right; following it silently when
+I hold information that bears on it is not. The merge was his call. Telling
+him that the review was still owed was my job.
+
+**How to apply.** Before a merge or other hard-to-reverse step, check the
+pending list for any planned step the action bypasses. If there is one,
+say so in one line, then act as instructed, unless he changes course.
+
+## claude-obs 80 — 2026-10-12: Shawn values small, honest discrepancies over a clean pass
+
+**Pattern.** Three times Shawn welcomed findings that complicate a result
+without failing it. On L18: "this is *exactly* the kind of minor error we
+should point out, without failing the entire run". On L20: "these
+discrepancy reports are *extremely* valuable". On coverage: "it seems OK to
+me ('successful' but with x/n coverage) … I just want us to be deliberate".
+He asked for the R-version conflict to be documented as a minor
+discrepancy, although no rule required it.
+
+**Lesson.** For this study, a reproduction's value includes its catalogue
+of small inconsistencies in the authors' materials. Shawn wants them
+recorded beside the verdict and kept separate from it.
+
+**How to apply.** When a check finds a small inconsistency that does not
+change a conclusion, record it as a named finding (ledger README,
+comparison report), never smooth it into the verdict or drop it. When a
+rule's handling of such cases is ambiguous, put the ambiguity to him
+explicitly.
+
+## claude-obs 81 — 2026-10-12 (self-critique): My checks were weaker than the code they checked
+
+**Pattern.** Three of this session's errors were in my own verification:
+
+- a re-audit pointed at the worktree's copy of the attempt, which returned
+  nothing, and I nearly reported the nothing;
+- a second re-audit keyed roles itself and so hid D-1;
+- a review brief carried two specifics from memory (the Fig. 4 match, and
+  "§8" for the hard-failure rule), both wrong, both caught by reviewers.
+
+**Lesson.** A check that re-implements the step it checks, or that can
+return empty without having seen the evidence, confirms my beliefs rather
+than testing them.
+
+**How to apply.**
+
+- Run verification through the real command, redirecting only its outputs.
+- Before believing an empty result, run the check on a case known to
+  produce a finding.
+- Re-check every specific at the source before it goes into a document a
+  reviewer will act on, as I would before telling Shawn.

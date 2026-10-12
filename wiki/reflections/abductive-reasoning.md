@@ -1522,3 +1522,54 @@ A guard should be tested against the visibility of the caller that runs
 it. The fake OSF in the tests returns the same listing whoever asks, which
 is why the tests could not catch this. When a check reads remote state,
 record which identity it reads as, and what that identity cannot see.
+
+## 2026-10-12 — A re-audit found no late transcriptions the reviewer had seen
+
+**Session:** be70c3be-5053-4390-8f8a-b73ebee1a2cc
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+The fix for F6 flags any write into `published-values/` after a run's
+first start. The herskind pilot's reviewer had reported published values
+for Figs 2, 4, and 5 written after runs 02 and 03. Yet re-auditing that
+transcript with the new code returned no `transcription-after-run` flag at
+all, only the two `host-run` flags the old audit had.
+
+### Probe
+
+I listed every executor command that touched `published-values/`, with its
+timestamp, against the four runs' start times. The late writes were real
+(11:45 to 11:46, after run-01 at 11:34:59), and they went through shell
+variables: `A=<attempt>; cat > $A/published-values/fig5-pies.csv`, and
+`P=<dir>; cd $P`. The audit did not expand variables, so I added that and
+re-ran the audit. Still nothing. The second probe was the re-audit itself.
+It passed the audit the worktree's copy of the attempt, while the
+transcript names the main checkout's path. So every written path fell
+outside the attempt root, and none could be placed. Pointed at the main
+checkout's identical copy, the audit flagged all four late transcriptions.
+
+### Belief revision
+
+I had read the empty result first as the fix failing on real data, and then
+as the variable gap alone. The first part was true: the variable gap was
+real, ordinary, and worth closing. The rest was the re-audit's own
+configuration. A check whose output is the absence of a finding reports
+the same thing when the run was clean and when the check could not see.
+I had not separated the two before believing the result.
+
+### What would change this belief
+
+A transcript audit that reports how many writes it placed and how many it
+could not place. A zero in the second count would make an empty result
+mean something.
+
+### Implications for practice
+
+When a re-check reports nothing, first confirm that it saw the evidence:
+run it on a case known to produce a finding. Here that meant the late
+writes the reviewer had listed. The same lesson came back the same day.
+Fable's delta review found that my re-audit script bound agents to
+attempts itself, so it confirmed a fix while bypassing the code that was
+broken (D-1). A re-check is only evidence for the code path it actually
+exercises.

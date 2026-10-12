@@ -1509,3 +1509,73 @@ the hook's loader traces (`7d577b8`); 525 tests passed on the branch.
 reporting no blocking issues. The lodgement date
 (2026-10-08) was fixed in the text, so a reply after midnight Sydney time
 would have meant a rebuild. Astra replied at 21:46 local time.
+
+## Session: 2026-10-10 → 2026-10-12 — Ledger ruled and frozen; PR #7 merged; herskind pilot re-run; gate 1.3.1
+
+*Session be70c3be (Opus 5.5). The probes and the first L18 framing
+(2026-10-10 to 11) are from the compaction summary; the rest is primary.*
+
+**Correction ledger (PR #10, merged `d0e6dfc` on 2026-10-12):**
+
+- Probes, from the summary: crema's compliant rebuild, B3 (`3f4dcb0`,
+  67 of 68 pins, nimbleCarbon 0.2.4 to 0.2.1); marwick's Fig. 2 fit on
+  zbook, 19.2 h, figure matches in content (`d6beec4`).
+- Shawn ruled L18 (a) again on the complete options, L19 (a) (MAR-T10's R²
+  labels within the deposited supplement's intervals), and L20 (a)
+  (keep the Dockerfile's R 4.4.1; report the conflict with the
+  lockfile's 4.5.0 as a minor discrepancy). Applied with Astra's
+  corrections in `2d40bde`; Astra accepted (mail
+  `2026-10-12-codex-pr10-rulings-review.md`).
+- Pre-freeze checks (`3c97be2`): marwick's 116 in-zip files hashed; L13's
+  review counts typed prose but verifiable from the deposited CSV (25
+  manuscripts, 11 in JAS); the audit Q10 deposits, marwick's zip, and
+  L18's reference render held in the corpus store (main `280165d`).
+- Main merged in (`9ff97c9`; erratum-log Entries 6 and 7 both kept);
+  frozen as `correction-ledger-v1.0.json` (`a299416`, sha256 `189e8a33…`).
+  PR #10 was still a draft, so it was marked ready, then merged on
+  Shawn's instruction.
+
+**Gate 1.3 (PR #7, merged `3be8313` on 2026-10-11):** `306181f` (executor
+v1.6 sets package repository dates; from a side note) was the last commit.
+Shawn asked for the merge before the planned final review, which I did not
+remind him was still owed; the review ran post-merge.
+
+**Herskind pilot re-run** (run config `ad03008`; Max plan):
+
+- Plan `wf_14d5db9b-bed` ($1.21 API-equivalent; audit clean); plan
+  approved by Shawn with all five recommendations (`cd5d54a`).
+- Execute `wf_7c18dfdc-298` ($12.73; 42 min): SUCCESSFUL, 17/20, review
+  QUALIFIED; both PAPER_ERROR calls match the ledger's evidence.
+  Artefacts `78137fe`.
+
+**Final review of gate 1.3:** brief `d03f658`; Fable and Astra both found
+that the round did not close the hardening; consolidated in `c73eea6`.
+
+**Gate 1.3.1 (PR #11, head `1d875d2`, open):**
+
+- First round: F1 `4dc74d7`, F2 `7103f9b`, F8 `471d39c`, F7 `d135f0b`,
+  F9 `3a37cb3`, F4 and F6 `67061c7`, F3 `7468b08`, D-new-3 `bdd1236`,
+  A-new-1 `c32e1b8` (hook `run_file` evaluator), F5 `9a5d745`
+  (`build-image`), versions `da39279`, variables and re-audit `c34cc73`.
+- Fable's delta review (mail `20261012T113743.407608Z`): D-1 `77659b0`,
+  D-2 `7aac076`, B-1 `d6a8096` (hook 1.7-inst), D-3 and the read-in-full
+  rule `4559bbd`, receipts at the launch commit `9e1f123`, notes
+  `1d875d2`. 654 tests pass with Docker.
+- Re-audit of the pilot through the real `audit-run`:
+  `validation/gate-1-3-pilot-rerun/reaudit-gate-1.3.1/`.
+
+**Other:** Shawn's user observation on keeping Fable in the review rotation
+(`460b736`); amendment 4 items 5–7 on minor discrepancies and coverage
+(`e6997a0`); Haiku 5.5 pricing checked by a Sonnet subagent (two-tier by
+prompt length; follow-up deferred until Astra's delta review).
+
+**Mail sent:** to Astra, `20261011T104239.952791Z`,
+`20261011T120856.313092Z`, `20261012T051040.065096Z`, and
+`20261012T120008.812403Z`; to Fable, the last two.
+
+**API use:** two Workflow stages on the Max plan, about $14
+API-equivalent in total; one Sonnet subagent (web search only).
+
+**Contextual assumptions.** Sapphire was held for its memory fault, so the
+marwick fit ran on zbook and the pilot on amd-tower. Astra's delta review
+was delayed by an upgrade on Shawn's side and was in progress at handoff.

@@ -1520,3 +1520,65 @@ None would have published unchecked text. Each would have given an
 operator a misleading account of the registration at the moment they most
 needed an accurate one. The text of an amendment had three review passes in
 this project. Until this session, the procedure that publishes it had none.
+
+## Entry 25 (2026-10-10 → 10-12) — The instruments I built to check the gate were the gate's weakest part
+
+**Project:** llm-reproducibility. **Session:**
+be70c3be-5053-4390-8f8a-b73ebee1a2cc (Opus 5.5). **Instance:**
+continuation-from-summary for the first part (the crema and marwick
+probes, the compliant crema rebuild, and L18's first framing), which I know
+only from the compaction summary. Primary from the report after compaction
+onward: L18 to L20 ruled, PR #7 merged, the herskind pilot re-run, both
+final reviews, gate 1.3.1, Fable's delta review, and the ledger frozen.
+
+**What surprised you about this session?** How often the defect sat in
+something I had built to check the work, not in the work. The transcript
+audit, written to catch contamination, gave the pilot's clean run four
+hard failures, from `>` inside a quoted awk program. My first re-audit of
+that run used the worktree's copy of the attempt, while the transcript
+named the main checkout's, so no write could be placed. It came back
+reporting no late transcriptions, and I nearly took the silence as a
+finding. The second re-audit keyed agents to attempts itself instead of
+calling the lane's `audit-run`. It confirmed the run-audit fix while
+bypassing exactly the code Fable then showed was broken: the reviewer's
+prompt has no "Attempt directory:" line, so through the real command no
+attempt could ever have been admitted. A checking script that
+re-implements the step it checks can only confirm what its author already
+believes.
+
+The second surprise was where the brittleness came from. Each fix made the
+gate stricter, and the next problem was then the cost of strictness.
+Admission became unrulable for unclean audits. Then a side note pointed out
+that nothing told agents to read declared files in full. Then another
+showed that receipts were checked against today's manifest, so merging a
+definition between a run and its audit would have sunk the run. Neither
+reviewer raised those two. The side agents found them, with the rocker
+snapshot date at the start of the session. Shawn forwarded each without
+comment and they went straight into commits. I have stopped treating these
+notes as interruptions.
+
+**What question emerged that wasn't pursued?** Whether any real run can
+now pass end to end. The gate 1.3.1 pilot re-audit is correct, and the
+attempt is inadmissible: two partial reads and one grep-only declaration,
+plus the flags and obligations that need rulings. That is right for the
+run. But no attempt in this project has yet come through the lane
+admissible, so we have tested each check's failures and never all of them
+passing together. The next pilot re-run is the first chance. A related
+question came up in Shawn's coverage discussion and was left alone: the
+registered formula counts a PAPER_ERROR against coverage. So a
+reproduction that shows the paper wrong scores lower than one that agrees
+with it. The three amendment 4 items queued today do not touch this.
+
+**What context from this session will be hardest to reconstruct in six
+months?** The order of events around PR #7. It merged on 2026-10-11 before
+its planned final review, because I did not remind Shawn the review was
+still owed. The review then happened post-merge, and found enough that its
+fixes became their own PR (#11, gate 1.3.1), now on its second review
+round. Someone reading the history will see gate 1.3 merged and then
+substantially repaired, and could read that as review being bypassed. What
+happened is that the review was moved after the merge, and nothing has run
+on the unreviewed code. Also easy to lose: the frozen ledger
+(`correction-ledger-v1.0.json`) predates gate 1.3.1. Its `REPRODUCED_VISUAL`
+label has no counterpart in the lane's comparison schema, so the §8
+comparison script must map it to any within-tolerance outcome. That
+requirement lives in the continuity note and the PR body, not in the ledger.

@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-10-04
+updated: 2026-10-12
 status: active
 ---
 
@@ -946,3 +946,62 @@ this reflection. They hold (`get_default_queryset` and
 `create_from_previous_response` on OSF's develop branch, 2026-10-08). A
 claim with a link is more likely to be right, but it is still a claim, and
 the order should have been reversed.
+
+## 2026-10-10 → 10-12 — Reviewers who ran the code against the real artefacts found what reading could not
+
+*Project: llm-reproducibility; session be70c3be (Opus 5.5); primary for the
+herskind re-run, both review rounds, and gate 1.3.1, and
+continuation-from-summary for the probes before compaction.*
+
+**The decisive findings came from runs, not reads.** In the final review,
+Fable's most serious finding (A-new-1) came from running the lane: it
+altered one of herskind's statements in memory and watched the gate certify
+the code `identical`. In the delta round it found D-1 by running a regex
+over the pilot's three real transcripts, which showed that the reviewer's
+prompt has no "Attempt directory:" line. My tests used prompts I had
+written, so they could not see it. Astra's two additions (F8, F9) also came
+from isolated probes of the real functions. Shawn's observation the same day
+(user-obs, 2026-10-12) was that Fable still catches subtle, important errors
+the others miss. The method is the transferable part: a reviewer who runs
+the code on the project's own artefacts tests my assumptions as well as my
+code.
+
+**Side agents caught the consequences of decisions; the reviewers caught
+defects in code.** Five side notes arrived over the session:
+
+- the rocker snapshot date;
+- PR #7 merged before its review;
+- minor discrepancies counting against coverage;
+- a partial read making a run unrulable;
+- audits checking receipts against today's manifest.
+
+Every one was right. None was a code defect a reviewer was asked to find.
+Each was about how a choice interacts with sequencing or policy, things a
+reviewer reading a diff is not shown. The side agents see the conversation,
+including what I decide and announce, and so catch what follows from it.
+
+**Two specifics I wrote into a review brief were wrong, and both were
+caught.**
+
+- I wrote that both of herskind's PAPER_ERROR calls matched the shakedown.
+  The Fig. 4 boxes matched an operator's follow-up run instead (Fable).
+- I cited amendment 3 §8 for the unwaivable hard-failure rule. It is §9
+  (Astra).
+
+Both came from summary-level memory, written into a document meant to be
+read by reviewers who would act on it. The anti-confabulation rule has no
+exception for briefs. They need re-checking at the source as much as
+anything said to Shawn.
+
+**The workflow harness relays the triggering user message to every spawn,
+above the computed task.** The frame reads "Where the computed task
+conflicts with this request, this request wins". The planner treated
+Shawn's billing question as a question to answer, and listed it among the
+approver questions. That behaviour became finding F3, and it now shapes
+the runbook: launch each stage with one fixed sentence.
+
+**A Sonnet search agent's report was cheap to verify because the brief
+asked for verbatim quotes and saved sources.** The Haiku 5.5 pricing agent
+returned each figure with its quoted table row, and kept the raw page. Two
+`grep`s against that file confirmed it. Without the saved page, checking
+would have meant fetching it again myself.
