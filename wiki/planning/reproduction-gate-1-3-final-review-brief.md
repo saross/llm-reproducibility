@@ -57,9 +57,13 @@ with the audits and the human queue beside the run configuration.
 no errors and no flags. The review is QUALIFIED and supports the verdict.
 The executor escalated two PAPER_ERROR calls, Table 1's eight off-by-one
 cells and two of Fig. 4's 291 hand-drawn boxes (F13–C5 and B2–B1). Both
-match the shakedown's findings and the correction ledger's HER-T04, so a
-blinded run found them again. They are Shawn's to confirm, not the
-reviewers'.
+match the correction ledger's HER-T04 and its evidence, so a blinded run
+found them again. They are Shawn's to confirm, not the reviewers'.
+*Corrected 2026-10-12 (Fable's review):* the Table 1 cells match the
+shakedown's agentic result; the Fig. 4 boxes match the operator's
+`t11-completion` run, which the ledger cites, not the shakedown agent's
+(its T11 was WITHIN_PRECISION, 32 of 32 boxes). The re-run found them by
+departing from its approved T06 method (F4).
 
 ## Candidate findings from the run
 
@@ -76,9 +80,10 @@ Classified provisionally under §2.1; reclassify freely.
     outputs/run-01/files/1" and "wrote 1 after the final run";
   - 11:52:21Z, a Python heredoc containing `>=`: read as a write to `=`.
 
-  The parser ignores quoting and heredoc bodies. Amendment 3 §8 makes a
-  hard failure unwaivable by ruling, so as built a clean run fails the §8
-  code-integrity criterion.
+  The parser ignores quoting and heredoc bodies. Amendment 3 §9 makes a
+  hard failure unwaivable by ruling, so as built a clean run fails the
+  code-integrity condition of the registration's §8 gate. (*Corrected
+  2026-10-12, Astra's review:* the brief first said amendment 3 §8.)
 - **F2 (D): the receipt check misses reads made through Bash.**
   `audit-run` marks both Opus agents' receipts INVALID ("declared pull not
   in transcript"). The executor read every declared file in full with `cat`
@@ -134,3 +139,51 @@ Astra by agent mail; Fable by agent mail or SendMessage; never on GitHub.
 Start with your lane, the date, and the commit reviewed (`78137fe` or
 later). Classify each finding as D, A, B, or C, and give the ordinary
 sequence of actions for an A.
+
+## Review outcome (2026-10-12)
+
+Both reviews are in, and both find that the round does not close the
+hardening (§2.2): Fable's (Claude Fable 5.1,
+`~/agent-mail/claude/outbox/claude/20261012T032928.805148Z-claude-gate13-final-review-fable.md`,
+with two scripts beside it) and Astra's
+(`~/agent-mail/codex/outbox/claude/2026-10-12-codex-gate13-final-review.md`,
+probes under `~/agent-mail/codex/review-evidence/2026-10-12-llmr-gate13/`).
+Both reviewed `main` at `8b8b4d8`. Neither found a D or A that needs a paid
+run to fix or to test; one pilot re-run follows the fixes, because A-new-1
+changes what executors are told to write.
+
+| Finding | Fable | Astra | Closure, in short |
+|---|---|---|---|
+| F1 transcript audit's false hard failures | D | D | Shell-aware parsing (quotes, heredoc bodies, working directory); `--help` and other non-executing lane calls are no run; real redirects stay caught; re-audit the pilot's transcript, never waive |
+| F2 receipt check misses Bash reads | D | D | Count complete Bash reads (globs, spill files); report partial, truncated, failed, and grep-only reads; the live hook's ESCALATE passthrough must not skip the check |
+| F3 relayed launch message | A | A | Record the relayed text separately in the audit; raise an issue unless it is a fixed, reviewed launch phrase |
+| F4 method change after approval | A | A | Per-target method-deviation field and flag for a ruling; the reviewer compares each method with the plan; a plan-against-ledger check at approval for §8 |
+| F5 build evidence | B | A | A lane-owned `build-image` that keeps the build log and computes the Dockerfile label; absent evidence is an open issue |
+| F5 hook access | D | D | Give the reviewer the commit-bound `reproduction-system/runtime/hook.R` and its neutrality evidence |
+| F6 transcription order | operability | A risk | Flag writes to published-values files after the first run; source-only transcription where practicable |
+| F7 runbook order | D | D | Audit before persistence, in the runbook and the execute workflow's closing message |
+| A-new-1 parse-and-evaluate statements are self-reported (Fable; verified by a lane run: an altered statement passed as `identical`) | A | — | A lane-owned evaluator in the hook binding each evaluated statement to a parsed one: altered fails, skipped and tolerated are flags |
+| F8 / D-new-1 admission ignores the workflow audit and the review and escalation queue | D | D | Bind admission to a clean audit, the required roles, and recorded dispositions; `human-queue` lists the full set |
+| F9 declared element counts not compared (Astra) | — | D | Compare the plan's `n_values` with `values_compared`; a shortfall cannot be credited in full |
+| D-new-2 runbook still describes gate 1.2 | D | (stale) | Rewrite `reproduction-system/workflows/README.md` for gate 1.3 |
+| D-new-3 smaller documentation defects | D | — | `dockerfile-patterns.md` snippet never passes `repos = SNAPSHOT`; `01-preparation.md` host `parse` instruction; Haiku 5.5 unpriced in the run configuration |
+
+**`306181f`.** Both accept the reading. Add the cases it does not cover: an
+unversioned image tag pins no date; an authors' `repos` override to a
+floating mirror leaves those packages unspecified; a GitHub-only package
+with no releases takes §7(d)'s dated-commit route; and record the authors'
+snapshot date beside the first-online date.
+
+**§16 question 6.** Both accept the grouped run-time texts. Astra
+re-derived all 107 conditions from the published Fig. 3. Open notes: a text
+over the 512-byte capture limit stays an obligation until its text is held
+(Fable: raise the limit, or spill longer texts to a lane-named file);
+attribute texts to the authors' line, not the wrapper; a general ruling by
+pattern is the right first general ruling. Correction: run-04 shows 17
+template matches and 30 package-source texts; twelve is the number of
+templates, so design §16 question 6's "12 package texts" should be fixed.
+
+**Next.** One follow-up PR (gate 1.3.1) closing every D and A above, with
+the reviewers' regression cases and a re-audit of the pilot's transcripts;
+then a delta review by both, and one pilot re-run through the lane, which
+passes the API review gate first.
