@@ -12,7 +12,11 @@ export const meta = {
 // fields), and the queue fails closed when they are missing; the reviewer is
 // told to address the gate's review obligations. The relay stays advisory:
 // reproduction-lane.py human-queue rebuilds the queue from the authoritative
-// gate reports before anything is cleared.
+// gate reports before anything is cleared. v1.3 (2026-10-09, gate 1.3): the
+// executor runs through run-container and comparisons cite sealed run
+// outputs. v1.4 (2026-10-12, the gate 1.3 final review's F7): the closing
+// message gives the post-run order, with the audit before the queue, the
+// rulings, and persistence last.
 //
 // Stage 2 of the agentic reproduction lane (modernisation plan §4.2). Runs
 // only on papers whose plan carries a committed, hash-bound human approval:
@@ -289,8 +293,9 @@ for (const r of done) {
   else if (r.review.overall !== 'CONFIRMED') queue.push(`${r.slug}: review ${r.review.overall}`)
 }
 log(`${done.length}/${papers.length} papers through the pipeline; missing: ${missing.join(', ') || 'none'}; ` +
-    `${queue.length} item(s) for human attention. Next: re-run check-attempt, then human-queue ` +
-    `(the authoritative queue, reconciled against this one), persist-results, audit-run.`)
+    `${queue.length} item(s) for human attention. Next, in this order: check-attempt with ` +
+    `--launch-commit, audit-run, human-queue (the authoritative queue, reconciled against this ` +
+    `one), rule-flags, and persist-results last.`)
 return {
   run_id,
   launch_commit,
