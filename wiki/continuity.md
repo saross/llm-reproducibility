@@ -47,10 +47,17 @@ merged here as PR #1).
     and A finding fixed with tests (648 pass with Docker); hook `1.6-inst`
     `run_file` evaluator; `build-image`; run audit in admission; pilot
     re-audit in `validation/gate-1-3-pilot-rerun/reaudit-gate-1.3.1/`.
-  - [ ] **Step 3:** delta review requested (Astra codex outbox, Fable claude
-    outbox, `20261012T051040.065096Z`); Fable's review is coming; Astra
-    delayed by an upgrade (Shawn, 2026-10-12). Then one pilot
-    re-run (API gate), then Shawn merges PR #11.
+  - [x] 2026-10-12 **Fable's delta review** (mail
+    `20261012T113743.407608Z`): every finding landed; three second-pass
+    items (D-1 reviewer never bound by audit-run; D-2 piped and same-named
+    reads; B-1 evaluator resolved through globalenv) plus D-3 and notes.
+    All closed on PR #11 (head `1d875d2`), with two side-note fixes:
+    receipts checked at the run's launch commit (`9e1f123`) and "read
+    declared pulls in full" in all three definitions (`4559bbd`). 654 tests
+    pass. Closures mailed (`20261012T120008.812403Z`). Fable: with these
+    closed and a clean pilot re-run, the hardening closes.
+  - [ ] **Astra's delta review** of `1d875d2` (delayed by an upgrade; Shawn,
+    2026-10-12). Then one pilot re-run (API gate), then Shawn merges PR #11.
   - [x] 2026-10-12 Shawn's coverage question: the three proposals are
     queued as amendment 4 items 5–7 in `prereg/erratum-log.md` (`e6997a0`).
   - [ ] For the §8 gate run: its comparison script maps the ledger's
