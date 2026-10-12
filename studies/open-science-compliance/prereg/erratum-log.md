@@ -873,3 +873,32 @@ the audit stay as dated records.
    ancillary outcome enters the verdict's "all or nearly all" to be
    specified. Provisional, and revisited as cases accumulate. It does not
    apply in the §8 gate.
+5. Minor discrepancies and the verdict (queued by the registrant, 2026-10-12;
+   with item 4). Two lodged sentences diverge when a paper has many minor
+   discrepancies. `verdicts-and-precision.md` maps each MINOR_DISCREPANCY to
+   "SUCCESSFUL with note" (its discrepancy table), but defines SUCCESSFUL as
+   "All (or nearly all) values reproduced within expected tolerances;
+   conclusions confirmed", which a minor discrepancy, being outside
+   tolerance, does not meet. Today the executor's and reviewer's judgement
+   settles it. Proposed rule: minor discrepancies alone never lower the
+   verdict; the verdict follows whether each key result's conclusion holds
+   (item 4 says which results are key); a MAJOR_DISCREPANCY or an
+   untestable key result makes it PARTIAL; and coverage carries the count.
+   Found when herskind's re-run came out SUCCESSFUL at 17/20 (the gate 1.3
+   pilot re-run, 2026-10-11).
+6. A second, descriptive coverage (queued by the registrant, 2026-10-12). The
+   registered coverage (`coverage-rules.md`: targets "reproduced exactly or
+   within pre-stated tolerance" over targets enumerated) stays the primary
+   measure. Beside it, report a descriptive "conclusions-consistent"
+   coverage that also counts MINOR_DISCREPANCY, so that a result reads, for
+   example, "SUCCESSFUL, 17/20 strict, 18/20 consistent". Declared before
+   census scoring; it enters no hypothesis test.
+7. Revisit ruling R1's convention clause (queued by the registrant, 2026-10-12).
+   The shakedown's registrant ruling R1 (2026-10-03,
+   `../outputs/validation/phase2-shakedown/run-config.yaml`) makes "a
+   difference caused only by an unpublished convention (for example
+   histogram bin edges)" a MINOR_DISCREPANCY. For a figure, such a
+   difference (a basemap, a stacking order) arguably meets the lodged visual
+   tolerance, "the scientific content must match", and would then count as
+   reproduced. Decide which reading the census uses, with herskind's Fig. 2
+   (T04: chronology stacking order in 7 of 18 bars) as the worked case.
