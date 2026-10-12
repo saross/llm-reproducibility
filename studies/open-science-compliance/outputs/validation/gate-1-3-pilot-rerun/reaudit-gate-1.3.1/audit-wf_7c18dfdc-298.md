@@ -1,6 +1,6 @@
 # Run audit — gate-1-3-pilot-rerun-2026-10
 
-Workflow run `wf_7c18dfdc-298`, audited 2026-10-12T11:53:27+00:00. **Clean: False**
+Workflow run `wf_7c18dfdc-298`, audited 2026-10-12T11:58:34+00:00. **Clean: False**
 
 | Agent | Type | Paper | Receipts | Contaminating | Warnings | Writes out of scope | Output tok | Input-side tok | USD | Wall-clock (s) |
 |---|---|---|---|---|---|---|---|---|---|---|

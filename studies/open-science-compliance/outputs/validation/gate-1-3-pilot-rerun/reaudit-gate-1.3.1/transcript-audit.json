@@ -1,6 +1,6 @@
 {
   "audit_version": "1.1",
-  "audited_at": "2026-10-12T11:53:26+00:00",
+  "audited_at": "2026-10-12T11:58:34+00:00",
   "attempt_dir": "~/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03",
   "final_run": "run-04",
   "final_run_started_at": "2026-10-11T11:46:44+00:00",
@@ -12,6 +12,18 @@
   ],
   "contaminating": [],
   "issues": [
+    {
+      "id": "docker-build-direct:7aa82184f26f",
+      "kind": "flag",
+      "code": "docker-build-direct",
+      "subject": "7aa82184f26f",
+      "targets": [],
+      "files": {
+        "command": "7aa82184f26fe31ab5a3bf8a530bbebb719750eccdf5cd65c23b82d791b21716"
+      },
+      "fingerprint": "8c36b23ee38f29b4463e4d56d22d2133754286c8767c192b128f4b0b3cfd3590",
+      "message": "FLAG: the executor ran docker build itself (docker build --progress=plain --label llmr.dockerfile.sha256=$D -t llmr-herskind-riede-2024-attempt-03 /home/shawn/Code/llm-reproducibility/studies/open-science), not reproduction-lane.py build-image, so no lane record keeps that build's log"
+    },
     {
       "id": "host-run:tools/read-published-fig4.py",
       "kind": "flag",

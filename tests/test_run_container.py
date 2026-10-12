@@ -1440,6 +1440,18 @@ class TranscriptAuditTests(RecordFixture, unittest.TestCase):
                           "transcription-after-run:published-values/table1.csv"])
         self.assertIn("write-to-lane-owned", self.kinds(report))
 
+    def test_shell_c_strings_pwd_and_direct_builds(self):
+        """Fable's delta-review notes: a bash -c string is audited as
+        commands, $(pwd) is the tracked directory, and a docker build
+        outside the lane is flagged."""
+        report = self.audit(
+            self.bash(f"bash -c 'echo forged > {self.dir}/outputs/run-01/files/a'", self.BEFORE),
+            self.bash(f"cd {self.dir} && A=$(pwd) && echo x > $A/lane-records/run-01/b",
+                      self.BEFORE),
+            self.bash(f"docker build -t img {self.dir}", self.BEFORE))
+        self.assertEqual(self.kinds(report), ["write-to-lane-owned"] * 2)
+        self.assertEqual([i["code"] for i in report["issues"]], ["docker-build-direct"])
+
     def test_run_start_is_compared_as_a_time(self):
         """A write a millisecond-stamped transcript records after the final
         run's start counts as after it, whatever the two stamps' formats."""

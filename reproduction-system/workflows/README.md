@@ -147,9 +147,11 @@ configuration (for the shakedown:
   §14. In short: a re-implementation spelled differently from the authors'
   code, content fetched into the image at build time, and wrapper semantics
   stay the reviewer's obligations, and blinding remains instruction plus
-  detection. The final review (2026-10-12) added, among others, that a
-  parse-and-evaluate wrapper's own record of which statements ran is
-  self-reported; see `wiki/planning/reproduction-gate-1-3-final-review-brief.md`.
+  detection. A wrapper that runs an original statement by statement does it
+  through the hook's `run_file` evaluator, which records every statement it
+  parsed and ran; the old pattern, a wrapper's own `parse(file =)` loop, is
+  flagged `parsed-not-run` (the final review's A-new-1; see
+  `wiki/planning/reproduction-gate-1-3-final-review-brief.md`).
 - **Executor permissions.** The executor writes files and runs Docker and
   network commands from inside a workflow. Check that the session's
   permission settings allow this before stage 2, or spawns will stall on

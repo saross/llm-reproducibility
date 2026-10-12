@@ -17,7 +17,7 @@ manifest at the run's launch commit. `gate-report.json` is `check-attempt
 | | Gate 1.3 (original) | Gate 1.3.1 (this re-audit) |
 |---|---|---|
 | Transcript audit hard failures | 4 (all parser false positives, F1) | 0 |
-| Transcript audit flags | 2 host-run | 2 host-run, 4 transcription-after-run (Figs 2, 4, and 5, and that folder's README; F6) |
+| Transcript audit flags | 2 host-run | 2 host-run, 4 transcription-after-run (Figs 2, 4, and 5, and that folder's README; F6), and 1 docker-build-direct (the image was built outside the lane; F5) |
 | Receipt problems | 13 "declared pull not in transcript" (11 executor, 2 reviewer), from a Read-only check | the 3 genuine ones: 2 partial `sed -n` reads, 1 grep-only (F2) |
 | Gate issues | 4 obligations | adds `parsed-not-run` (A-new-1), `build-evidence` (F5), and `method-adherence` (F4) |
 | Run audit (new, F8) | none | both roles bound; 3 escalations, the QUALIFIED review, 3 blinding warnings, and the launch message (F3) |

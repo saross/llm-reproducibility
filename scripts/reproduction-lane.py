@@ -326,6 +326,7 @@ ATTEMPT_DIR_RE = re.compile(r"^\s*Attempt directory: (\S+)$", re.MULTILINE)
 # review's F3). The runbook's fixed launch message is the only one that needs
 # no ruling.
 RELAY_FRAME = "[Workflow harness — user request]"
+COMPUTED_FRAME = "[Workflow harness — computed task]"
 NEUTRAL_LAUNCH_RE = re.compile(r"\s*Run the approved stage\.?\s*", re.IGNORECASE)
 # Tokens in a Bash command that could name a local file: split on shell
 # punctuation, then keep path-like tokens that are not URLs (a URL's path
@@ -6700,6 +6701,13 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
                               "governed": governed}
     launch = relayed_request(lines)
     record["launch_message"] = launch
+    # The spawn prompt itself, so that a relay the frame text no longer
+    # matches is still on record (Fable's delta review, on F3).
+    record["prompt_sha256"] = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+    record["prompt_head"] = prompt[:4000]
+    if governed and launch is None and COMPUTED_FRAME not in prompt:
+        record["prompt_warning"] = ("the spawn prompt carries neither harness frame, so any "
+                                    "relayed launch message went unscreened: read prompt_head")
     provenance = PROVENANCE_RE.search(prompt)
     record["provenance"] = ({"run_id": provenance.group(1),
                              "launch_commit": provenance.group(2),
@@ -6804,6 +6812,7 @@ def reconcile_telemetry(lines: list[str]) -> dict:
 TRANSCRIPT_AUDIT_VERSION = "1.1"
 DOCKER_RUN_RE = re.compile(
     r"\bdocker(?:-compose|\s+(?:container\s+)?(run|exec|cp|start|compose))\b")
+DOCKER_BUILD_RE = re.compile(r"\bdocker\s+(?:image\s+)?(?:build|buildx\s+build)\b")
 HOST_RUN_RE = re.compile(r"(?:^|[\s/])(Rscript|R\s+(?:--file|-f)|python3?|bash)\b")
 # Version 1.1 (2026-10-12, the gate 1.3 final review's F1): shell text is
 # scanned with its quoting and heredocs, not split by regex. Version 1.0 read
@@ -7180,6 +7189,9 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
             segment = raw.strip()
             if not segment:
                 continue
+            if cwd is not None:
+                # $(pwd) is the tracked directory (Fable's delta review).
+                segment = segment.replace("$(pwd)", cwd).replace("`pwd`", cwd)
             words = shell_words(segment)
             k, name = command_word(words)
             assigned = words[:k] if k == len(words) else (
@@ -7192,6 +7204,12 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
                 continue
             segment = expand_variables(segment, variables)
             words = [expand_variables(w, variables) for w in words]
+            if name in SHELL_INTERPRETERS and "-c" in words[k + 1:] and depth < 3:
+                # A shell's -c string is commands, as a fed heredoc is.
+                script = words[words.index("-c", k + 1) + 1:words.index("-c", k + 1) + 2]
+                if script:
+                    cwd = scan_shell(script[0], call, cwd, depth + 1, variables)
+                continue
             if name == "cd":
                 target = words[k + 1] if len(words) > k + 1 else "~"
                 path = Path(target).expanduser()
@@ -7216,6 +7234,14 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
                         runs_called.update(re.findall(r"\b(run-\d{2,})\b", segment))
                 continue
             visible = mask_quoted(segment)
+            if DOCKER_BUILD_RE.search(visible) and "reproduction-lane.py" not in segment:
+                # An image built outside the lane has no build record; say so
+                # at once rather than only as build-evidence later (F5 note).
+                issues.append(Issue.flag(
+                    "docker-build-direct", json_digest(segment)[:12], f"the executor ran "
+                    f"docker build itself ({segment[:160]}), not reproduction-lane.py "
+                    f"build-image, so no lane record keeps that build's log",
+                    files={"command": json_digest(segment)}))
             if DOCKER_RUN_RE.search(visible):
                 find("docker-direct", at, f"paper code may run other than through "
                      f"run-container: {segment}")
