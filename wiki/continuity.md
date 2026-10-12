@@ -32,8 +32,43 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NOW (2026-10-12): ledger frozen (PR #10 ready to merge); gate 1.3.1
-  fixes on PR #11; delta review requested.**
+- **⏩ NEXT SESSION (from the 2026-10-12 handoff, session be70c3be).**
+  The ledger is frozen and on main. Gate 1.3.1 is on PR #11 (head
+  `1d875d2`, worktree `.claude/worktrees/gate-1-3-1`), awaiting Astra's
+  delta review. Fable's delta findings are closed.
+  - [ ] **Astra's delta review of `1d875d2`** (in progress at handoff; it
+    arrives in `~/agent-mail/codex/outbox/claude/`). Receipt it, fix any
+    finding on the branch with tests, and mail the closures.
+  - [ ] **Pilot re-run under gate 1.3.1:** a new run configuration
+    (herskind attempt 4, a new run id) beside
+    `validation/gate-1-3-pilot-rerun/run-config.yaml`. Then the API review
+    gate (≈$14 API-equivalent on the Max plan, as before), and plan
+    approval. Launch each stage with exactly `Run the approved stage.`
+    Then the post-run order: check-attempt, audit-run, human-queue,
+    rulings, persist-results. Fable's view: with a clean re-run the
+    hardening closes. Then Shawn merges PR #11.
+  - [ ] **Haiku 5.5 pricing** (Sonnet subagent, 2026-10-12, verified
+    against platform.claude.com/docs/en/about-claude/pricing). It has two
+    tiers by prompt length, in USD per million tokens (input, output,
+    5-minute and 1-hour cache writes, cache read). Up to 100,000 tokens:
+    0.10, 0.50, 0.125, 0.20, 0.01. Over: 0.50, 2.50, 0.625, 1.00, 0.05. The
+    tier is set per request, so `price_usage` must price request by
+    request. Add both rows to the run configurations. Deferred until
+    Astra's delta review lands.
+  - [ ] Fable's delta notes, accepted as notes and not built: published
+    values kept under `comparisons/` are invisible to the F6 check; build
+    records are not sealed into `index.jsonl`; `run_file` prints warnings
+    together at the end (documented in the wrapper reference).
+  - [ ] Worktrees on merged branches, all clean at handoff, can be removed:
+    `.claude/worktrees/correction-ledger-draft` (PR #10),
+    `agent-a8a2378c2a5dbdc98` (PR #7), and `amendment-3-instruments`
+    (PR #9).
+  - [ ] Held for Shawn: three user-observation candidates (pending section
+    in `wiki/user-observations.md`) and two working-notes candidates (the
+    session log entry below).
+
+- **⏩ Earlier (2026-10-12): ledger frozen (PR #10 ready to merge); gate
+  1.3.1 fixes on PR #11; delta review requested.**
   - [x] 2026-10-12 **Both final reviews in** (Fable mail
     `20261012T032928.805148Z`, Astra `2026-10-12-codex-gate13-final-review.md`):
     the round does not close the hardening. Consolidated in the brief
@@ -62,8 +97,8 @@ merged here as PR #1).
     queued as amendment 4 items 5–7 in `prereg/erratum-log.md` (`e6997a0`).
   - [ ] For the §8 gate run: its comparison script maps the ledger's
     `REPRODUCED_VISUAL` to any within-tolerance outcome.
-  - [ ] Haiku 5.5's API-equivalent price for the run configurations: a
-    search agent is checking Anthropic's pricing (2026-10-12).
+  - [x] 2026-10-12 Haiku 5.5's API-equivalent price checked (two tiers;
+    see NEXT SESSION above).
   - [x] 2026-10-12 Shawn's user observation recorded (`460b736`): keep
     Fable in the review rotation.
 
@@ -2283,6 +2318,38 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-10 → 10-12 (session be70c3be) — ledger frozen, PR #7 merged, herskind pilot re-run, gate 1.3.1
+
+One long session on Opus 5.5, compacted once (after the probes). The
+results are in the NOW blocks above. The factual record is in
+`wiki/reflections/session-log.md`, and the reflections are at `7592099`.
+
+- **Merged:** PR #7 (`3be8313`, before its final review, which then ran
+  post-merge) and PR #10 (`d0e6dfc`, the ledger frozen as v1.0).
+- **Run:** herskind attempt-03 through the agentic lane (`78137fe`). It
+  came out SUCCESSFUL at 17/20, but it is inadmissible under gate 1.3.1,
+  correctly so, for its agents' partial reads.
+- **Open:** PR #11 (gate 1.3.1), with Fable's delta findings closed and
+  Astra's review pending.
+- **Side notes Shawn relayed** turned into fixes:
+  - the rocker snapshot date;
+  - PR #7's skipped review;
+  - coverage and minor discrepancies (amendment 4 items 5–7);
+  - partial reads being unrulable;
+  - audits checking against today's manifest.
+- **Working-notes candidates (held for Shawn):**
+  - **WN-ar:** both final reviews found their most serious defects by
+    running the lane's code on the pilot's real artefacts: Fable's
+    in-memory alteration, and the reviewer prompt lacking "Attempt
+    directory:". Neither came from reading the code. A gate review should
+    budget for one adversarial run, not only a read. Anchors: Fable's
+    mails `20261012T032928.805148Z` and `20261012T113743.407608Z`.
+  - **WN-as:** the transcript audit's false hard failures came from
+    regex splitting of shell commands, and every one was a common idiom
+    (`awk 'NR>1'`, a heredoc with `>=`, `--help`). An unwaivable check
+    built on pattern matching must be tested on real agent transcripts
+    before it is trusted. Anchor: PR #11 `4dc74d7`.
 
 ### 2026-10-08 → 10-09 (session be70c3be) — overnight: gate 1.3 built, instruments edited, ledger drafted
 
