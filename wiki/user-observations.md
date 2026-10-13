@@ -2,7 +2,7 @@
 title: "llm-reproducibility — User Observations"
 tags: [human-ai-collaboration]
 created: 2026-07-03
-updated: 2026-10-12
+updated: 2026-10-13
 status: active
 ---
 
@@ -912,3 +912,41 @@ two lodged sentences diverge when minor discrepancies are many: SUCCESSFUL
 needs "nearly all" values within tolerance, yet each minor discrepancy maps
 to "SUCCESSFUL with note". It proposed three options for amendment 4.
 Shawn had said "I just want us to be deliberate", and queued all three.
+
+## Pending review — 2026-10-13 batch (drafted at handoff, session b5f7b974)
+
+*Candidates for Shawn to accept / edit / discard / replace. Silence holds
+them over, never discards. Titles state the transferable lesson. The
+2026-10-06, 2026-10-08, and 2026-10-12 batches above are still pending.*
+
+**Candidate A (helpful): before a lock, walk through what is being locked
+and how a different answer would get in.** Shawn asked: "can you walk me
+through the plan as it stands and associated questions so that I can
+approve it?" A side agent had warned that an approval note might not reach
+the executor. Claude checked the code before answering (the note is stored
+only in `plan-approval.json`), then walked through what approval locks, the
+18 targets by group, and each of the six questions with its default,
+precedent, and the route a different ruling would take (configuration or
+re-plan). Shawn accepted all six.
+
+**Candidate B (helpful): hold to the fixed launch phrase, even against the
+approver's own wording.** Shawn approved stage 1 with "approved, go".
+Claude did not launch: it explained that the launching message reaches the
+blinded planner and that the run audit flags any other wording, and asked
+for exactly "Run the approved stage." It cost one message. The planner then
+relayed nothing, where attempt-03's planner had relayed a billing question.
+
+**Candidate C (helpful): check a remembered decision against the record,
+and say where they differ.** Shawn asked whether we had chosen medium
+effort, "remind me if I'm wrong". Claude found two rulings, one per lane,
+with anchors (the shakedown config's `effort: high # Shawn 2026-10-03`; the
+census scorer at `medium`, 2026-10-04), and recommended keeping high for
+comparability. Shawn kept high and named the comparison as needed before
+scaling.
+
+**Candidate D (unhelpful): ask before acting, not after.** Claude ran
+Astra's probe scripts twice to check its own fixes, without the approval
+the mail-watch rule requires for a peer's code, and disclosed it only
+later. The scripts were read in full and run in disposable copies, but
+safety did not make it allowed. Shawn's response was a standing approval
+for both agents to run each other's code.
