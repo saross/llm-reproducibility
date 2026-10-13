@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-10-11
+updated: 2026-10-13
 status: active
 ---
 
@@ -32,10 +32,27 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NEXT SESSION (from the 2026-10-12 handoff, session be70c3be).**
-  The ledger is frozen and on main. Gate 1.3.1 is on PR #11 (head
-  `1d875d2`, worktree `.claude/worktrees/gate-1-3-1`), awaiting Astra's
-  delta review. Fable's delta findings are closed.
+- **⏩ NEXT SESSION (from the 2026-10-13 handoff, session b5f7b974).**
+  Gate 1.3.1 is on main (PR #11 merged, `10500ea`, after Astra's approval).
+  The pilot re-run is half done: stage 1 ran clean
+  (`wf_db7d121a-5d5`, $1.2969 API-equivalent, audit clean) and Shawn
+  approved the attempt-04 plan (18 locked targets). **Stage 2 (execute)
+  is next, at the API review gate.** Its args were built at `e2b42c6`;
+  the handoff commits moved `HEAD`, so **rebuild them** first
+  (`build-exec-args`, no API cost), then present the gate (≈$13–18
+  API-equivalent, 45–60 min) and launch with exactly `Run the approved
+  stage.` Keep main fixed at the launch commit until the run ends.
+  PR #12 (per-request pricing) awaits Astra's check of `154b637`; do not
+  merge it while stage 2 is pending or running (it moves `HEAD`); merge it
+  before the post-run `audit-run`, so the Haiku gate step is priced.
+  - [ ] **Stage 2, then the post-run order**: authoritative
+    `check-attempt` (with `--launch-commit`), `audit-run`, `human-queue`
+    (written beside the run config, never into the attempt), rulings,
+    `persist-results`. Fable's view: with a clean re-run the hardening
+    closes.
+  - [ ] **Mail:** Astra's check of PR #12 at `154b637`, in
+    `~/agent-mail/codex/outbox/claude/`. If clean, ask Shawn to merge
+    (outside the stage-2 window).
   - [x] 2026-10-13 **Astra's delta review of `1d875d2`** received
     (`2026-10-12-codex-gate131-delta-review.md`, receipted): changes
     required, three class D incomplete closures. D-Astra-1 (F2: shell reads
@@ -110,8 +127,14 @@ merged here as PR #1).
     bigrams; "nearly half" excluded). Plan sha256 `6837cf60785a…`, 18 locked
     targets. Attempt-03's planner listed 20 targets, so coverage compares
     only roughly; the gate test is unaffected.
+  - [x] 2026-10-13 **Stage 1 audited** (`audit-wf_db7d121a-5d5.json`):
+    planner clean, receipts valid, no blinded access, no writes outside
+    scope; $1.2969 API-equivalent, 17 requests, 436.5 s.
   - [ ] **Stage 2 (execute)** at Shawn's API review gate: executor, Haiku
-    gate step, and reviewer, ≈$13 API-equivalent on attempt-03's figures.
+    gate step, and reviewer, ≈$13–18 API-equivalent, 45–60 min. Args built
+    at `e2b42c6` (checksum `5423adb95a43673f`); rebuild at the current
+    `HEAD` before presenting the gate. Shawn asked for `/reflect` and
+    `/handoff` first, so the next session starts here.
   - [ ] **Effort comparison before scaling** (Shawn, 2026-10-13): measure the
     reproduction lane at `medium` against `high`. The FAIR scorer's result
     (effort steps ≈$1.80 per arm, results insensitive; scorer confirmed at
@@ -140,26 +163,30 @@ merged here as PR #1).
     approval. Launch each stage with exactly `Run the approved stage.`
     Then the post-run order: check-attempt, audit-run, human-queue,
     rulings, persist-results. Fable's view: with a clean re-run the
-    hardening closes.
-  - [ ] **Haiku 5.5 pricing** (Sonnet subagent, 2026-10-12, verified
-    against platform.claude.com/docs/en/about-claude/pricing). It has two
+    hardening closes. [x] 2026-10-13 config, stage 1, and plan approval
+    done (above); stage 2 and the post-run order remain.
+  - [x] 2026-10-13 **Haiku 5.5 pricing** (Sonnet subagent, 2026-10-12,
+    verified against platform.claude.com/docs/en/about-claude/pricing). It has two
     tiers by prompt length, in USD per million tokens (input, output,
     5-minute and 1-hour cache writes, cache read). Up to 100,000 tokens:
     0.10, 0.50, 0.125, 0.20, 0.01. Over: 0.50, 2.50, 0.625, 1.00, 0.05. The
     tier is set per request, so `price_usage` must price request by
     request. Add both rows to the run configurations. Deferred until
-    Astra's delta review lands.
+    Astra's delta review lands. Rates and the prompt-length rule
+    re-verified on the live page 2026-10-13; built as PR #12 (see above).
   - [ ] Fable's delta notes, accepted as notes and not built: published
     values kept under `comparisons/` are invisible to the F6 check; build
     records are not sealed into `index.jsonl`; `run_file` prints warnings
     together at the end (documented in the wrapper reference).
-  - [ ] Worktrees on merged branches, all clean at handoff, can be removed:
+  - [x] 2026-10-13 Worktrees on merged branches, all clean at handoff, can be removed:
     `.claude/worktrees/correction-ledger-draft` (PR #10),
     `agent-a8a2378c2a5dbdc98` (PR #7), and `amendment-3-instruments`
-    (PR #9).
+    (PR #9). Removed, with `.claude/worktrees/gate-1-3-1` (PR #11).
   - [ ] Held for Shawn: three user-observation candidates (pending section
     in `wiki/user-observations.md`) and two working-notes candidates (the
-    session log entry below).
+    session log entry below). Still held 2026-10-13, now with four more
+    user-observation candidates and two working-notes candidates from
+    session b5f7b974.
 
 - **⏩ Earlier (2026-10-12): ledger frozen (PR #10 ready to merge); gate
   1.3.1 fixes on PR #11; delta review requested.**
@@ -2412,6 +2439,39 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-12 → 10-13 (session b5f7b974) — gate 1.3.1 merged, pilot stage 1 run and approved, PR #12 pricing
+
+One session on Opus 5.5, no compaction, with a mail watch on Astra's
+reviews. The results are in the NEXT SESSION block above; the factual
+record is in `wiki/reflections/session-log.md`.
+
+- **Merged:** PR #11 (`10500ea`), after Astra's delta review (three class
+  D findings), her closure review (two residuals), and her approval.
+- **Ruled by Shawn:** the reviewed-state binding stays strict
+  (review-only mode later); the attempt-04 plan, accepting all six
+  approver questions; the pilot stays at effort `high`, with a
+  medium-against-high comparison before scaling; standing approval for
+  Claude and Astra to run each other's code.
+- **Run:** pilot stage 1 (`wf_db7d121a-5d5`), clean; stage 2 waits at its
+  API gate.
+- **Open:** PR #12 (lane v1.5), Astra's check pending.
+- **Disclosed:** Claude ran Astra's probe scripts twice before the
+  standing approval existed.
+- **Working-notes candidates (held for Shawn):**
+  - **WN-at:** two blinded planner runs on herskind with the same model,
+    effort, rulings, and instruments gave different denominators: 20
+    targets and 7 exclusions (attempt-03, launch `ad03008`) against 18 and
+    4 (attempt-04, launch `5fdaf87`). The 8 display-item targets match;
+    the named values differ (12 against 10), which the planner flags as a
+    hand enumeration. Coverage denominators therefore vary between
+    planning runs, a quantity worth measuring before production scale.
+    Anchors: both attempts' `reproduction-plan.json`.
+  - **WN-au:** the fixed launch phrase stopped relayed-message
+    contamination in a live run. Attempt-03's planner, launched with a
+    free-text message, listed Shawn's billing question among its approver
+    questions (F3); attempt-04's planner, launched with "Run the approved
+    stage", relayed nothing. Anchors: both plans' `questions_for_approver`.
 
 ### 2026-10-10 → 10-12 (session be70c3be) — ledger frozen, PR #7 merged, herskind pilot re-run, gate 1.3.1
 
