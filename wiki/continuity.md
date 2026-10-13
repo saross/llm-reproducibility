@@ -40,8 +40,10 @@ merged here as PR #1).
   is next, at the API review gate.** Its args were built at `e2b42c6`;
   the handoff commits moved `HEAD`, so **rebuild them** first
   (`build-exec-args`, no API cost), then present the gate (≈$13–18
-  API-equivalent, 45–60 min) and launch with exactly `Run the approved
-  stage.` Keep main fixed at the launch commit until the run ends.
+  API-equivalent, 45–60 min). Settle the launch first: Shawn wants a
+  serious pre-run review or an easy trigger, not a fixed phrase (the
+  launch-mechanism item below). Keep main fixed at the launch commit until
+  the run ends.
   PR #12 (per-request pricing) awaits Astra's check of `154b637`; do not
   merge it while stage 2 is pending or running (it moves `HEAD`); merge it
   before the post-run `audit-run`, so the Haiku gate step is priced.
@@ -52,7 +54,20 @@ merged here as PR #1).
     closes.
   - [ ] **Mail:** Astra's check of PR #12 at `154b637`, in
     `~/agent-mail/codex/outbox/claude/`. If clean, ask Shawn to merge
-    (outside the stage-2 window).
+    (outside the stage-2 window). At handoff (16:58 AEDT) nothing about
+    `154b637` had arrived: the PR #12 mails of 16:04 to 16:09 all reviewed
+    `43d4b72` and are closed. Shawn: "we'll sort out the review" next
+    session.
+  - [ ] **Launch mechanism (Shawn, 2026-10-13), before stage 2.** He finds
+    "repeat this exact phrase" annoying, not useful: "I'd like a more
+    serious review before a launch … or trigger easily". So, for stage 2:
+    offer the pre-run review (the `pre-run-review` skill, in which he
+    explains the run back in his own words: what it does, when it stops),
+    and propose a launch that keeps the relayed message neutral without a
+    fixed phrase. Options to weigh, none built: widen `NEUTRAL_LAUNCH_RE`
+    to short approvals ("go", "approved, go"); or treat Shawn's approval
+    message as the launch message and record it, since an approval says
+    nothing about results. The relay itself (F3) is the harness's.
   - [x] 2026-10-13 **Astra's delta review of `1d875d2`** received
     (`2026-10-12-codex-gate131-delta-review.md`, receipted): changes
     required, three class D incomplete closures. D-Astra-1 (F2: shell reads
@@ -184,9 +199,10 @@ merged here as PR #1).
     (PR #9). Removed, with `.claude/worktrees/gate-1-3-1` (PR #11).
   - [ ] Held for Shawn: three user-observation candidates (pending section
     in `wiki/user-observations.md`) and two working-notes candidates (the
-    session log entry below). Still held 2026-10-13, now with four more
-    user-observation candidates and two working-notes candidates from
-    session b5f7b974.
+    session log entry below). Still held 2026-10-13. Session b5f7b974's
+    own batch was adjudicated the same day: user-obs A and C accepted, B
+    replaced by Shawn's observation on launches, D discarded; WN-at and
+    WN-au accepted as Observations 56 and 57.
 
 - **⏩ Earlier (2026-10-12): ledger frozen (PR #10 ready to merge); gate
   1.3.1 fixes on PR #11; delta review requested.**
@@ -2458,7 +2474,8 @@ record is in `wiki/reflections/session-log.md`.
 - **Open:** PR #12 (lane v1.5), Astra's check pending.
 - **Disclosed:** Claude ran Astra's probe scripts twice before the
   standing approval existed.
-- **Working-notes candidates (held for Shawn):**
+- **Working-notes candidates (accepted by Shawn 2026-10-13 as
+  Observations 56 and 57):**
   - **WN-at:** two blinded planner runs on herskind with the same model,
     effort, rulings, and instruments gave different denominators: 20
     targets and 7 exclusions (attempt-03, launch `ad03008`) against 18 and
