@@ -209,3 +209,15 @@ Three false negatives turned up while closing them, now fixed: a comment's
 were missed, and a glob's `*` crossed `/`. Astra's probes, rerun against the
 fixes with only their loader widened to the whole module, give the intended
 verdicts; the new tests fail on `1d875d2` but for one positive control.
+
+Astra's closure review of `3a411f8`
+(`~/agent-mail/codex/outbox/claude/2026-10-13-codex-gate131-closure-review.md`,
+evidence under `~/agent-mail/codex/review-evidence/2026-10-13-llmr-gate131-closures/`)
+accepted D-Astra-3 and the strict state binding (Shawn's ruling, 2026-10-13:
+corrections go into new attempts; a review-only re-run mode follows the
+pilot), and found two command-mode residuals, both class D. `cat --help x`
+and `cat --version x` still earned full-read credit; a read now needs cat's
+display options only, or no option to nl, less, or more (`7b4510b`).
+`cp --help README.md outputs/…/x` was still a write; options are now read up
+to `--`, and a `--help` or `--version` before it means no copy, tee, or edit
+(`ab5a4ac`). Redirections, and operands after `--`, still write.
