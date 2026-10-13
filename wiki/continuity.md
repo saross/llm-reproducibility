@@ -55,8 +55,17 @@ merged here as PR #1).
     `ab5a4ac`, docs `579104b`); 667 tests pass with Docker; her closure
     probes rerun as intended. Mailed
     (`20261013T030316.777082Z-claude-gate131-astra-residuals-closed.md`).
-  - [ ] **Astra's check of the two residual closures** at `579104b`. If
-    clean, ask Shawn to merge PR #11.
+  - [x] 2026-10-13 **Astra's check of the two residual closures** at
+    `579104b` (`20261013-codex-gate131-option-closure-approval.md`,
+    receipted): source approval, no remaining blocker (not pilot, Docker,
+    or live-workflow acceptance).
+  - [x] 2026-10-13 **PR #11 merged** on Shawn's instruction ("complete all
+    merges that are ready"), as a merge commit pinned to the approved head
+    (`10500ea`); its branch is kept, as for earlier PRs. Main's code is
+    identical to `579104b`; 667 tests pass on main. No other PR was open,
+    and every other remote branch is fully merged, so nothing was mailed
+    for review. The worktree `.claude/worktrees/gate-1-3-1` is now on a
+    merged branch and can be removed.
   - [x] 2026-10-13 Removed the clean worktrees on merged branches
     (`correction-ledger-draft`, `agent-a8a2378c2a5dbdc98`,
     `amendment-3-instruments`); their branches remain.
@@ -71,7 +80,8 @@ merged here as PR #1).
     execute workflow (gate check and reviewer on an existing attempt), so
     a post-review fix costs one reviewer spawn rather than all of stage 2
     (Shawn, 2026-10-13).
-  - [ ] **Merge order (side note, 2026-10-12):** the re-run must test PR
+  - [x] 2026-10-13 (PR #11 merged before the pilot, as ordered)
+    **Merge order (side note, 2026-10-12):** the re-run must test PR
     #11's code. The session's agent definitions, hooks, and workflow
     scripts load from the main checkout, so launching before PR #11 merges
     would test the old gate. Order: Astra's delta review comes back clean,
