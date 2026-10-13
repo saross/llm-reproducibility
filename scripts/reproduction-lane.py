@@ -168,6 +168,7 @@ import hashlib
 import importlib.machinery
 import importlib.util
 import json
+import math
 import os
 import posixpath
 import re
@@ -6726,6 +6727,41 @@ def transcript_usage(lines: list[str]) -> dict:
 RATE_FIELDS = ("input", "output", "cache_write_5m", "cache_write_1h", "cache_read")
 
 
+def valid_card(card: Any) -> bool:
+    """Whether every rate on a card is a finite, non-negative number; a
+    boolean is not one, though Python counts it as an int."""
+    return isinstance(card, dict) and all(
+        isinstance(card.get(f), (int, float)) and not isinstance(card.get(f), bool)
+        and math.isfinite(card[f]) and card[f] >= 0 for f in RATE_FIELDS)
+
+
+def valid_tiers(tiers: Any) -> bool:
+    """Whether a tier list is usable as it stands, before any is selected.
+
+    Every tier is a valid card. Every tier but the last has a
+    ``max_prompt_tokens`` that is a positive integer (not a boolean), each
+    greater than the one before; the last may have one or not. A tier
+    without a bound before the last would shadow every later price, so an
+    invalid entry rejects the list rather than being skipped (Astra's
+    review of PR #12).
+    """
+    if not isinstance(tiers, list) or not tiers:
+        return False
+    previous = 0
+    for index, tier in enumerate(tiers):
+        if not valid_card(tier):
+            return False
+        if "max_prompt_tokens" not in tier:
+            if index < len(tiers) - 1:
+                return False
+            continue
+        bound = tier["max_prompt_tokens"]
+        if isinstance(bound, bool) or not isinstance(bound, int) or bound <= previous:
+            return False
+        previous = bound
+    return True
+
+
 def request_rates(rates: Any, prompt_tokens: int | None) -> dict | None:
     """The rate card that prices one request, or None if none applies.
 
@@ -6733,19 +6769,16 @@ def request_rates(rates: Any, prompt_tokens: int | None) -> dict | None:
     cache_write_1h, cache_read}``) or, for a model priced by prompt length,
     ``{"tiers": [card, ...]}``, each card but the last with
     ``max_prompt_tokens``: the first tier whose limit the prompt does not
-    exceed applies. A tiered model needs ``prompt_tokens``; a malformed card
-    prices nothing rather than raising.
+    exceed applies. A tiered model needs ``prompt_tokens``. A card that
+    ``valid_card`` or ``valid_tiers`` rejects prices nothing, rather than
+    raising or yielding a negative or non-finite cost.
     """
     if isinstance(rates, dict) and "tiers" in rates:
-        if prompt_tokens is None or not isinstance(rates["tiers"], list):
+        if prompt_tokens is None or not valid_tiers(rates["tiers"]):
             return None
-        rates = next((tier for tier in rates["tiers"] if isinstance(tier, dict)
-                      and prompt_tokens <= tier.get("max_prompt_tokens", float("inf"))),
-                     None)
-    if not isinstance(rates, dict) or not all(
-            isinstance(rates.get(f), (int, float)) for f in RATE_FIELDS):
-        return None
-    return rates
+        rates = next((tier for tier in rates["tiers"]
+                      if prompt_tokens <= tier.get("max_prompt_tokens", math.inf)), None)
+    return rates if valid_card(rates) else None
 
 
 def price_usage(usage: dict, pricing: dict) -> float | None:
@@ -6761,7 +6794,10 @@ def price_usage(usage: dict, pricing: dict) -> float | None:
     agent's model when it has exactly one. Without ``by_request`` the
     totals are priced at a flat card, and a tiered model is unpriceable.
     Any request whose model has no usable card makes the whole agent
-    unpriceable, so a partial cost is never reported.
+    unpriceable, so a partial cost is never reported, and so does a
+    transcript with no request usage at all: missing telemetry is an
+    unknown cost, not a free agent (Astra's review of PR #12). A request
+    that reports zero tokens is priced, at zero.
     """
     def base(model: str) -> str:
         return DATE_SUFFIX_RE.sub("", model.replace("[1m]", ""))
@@ -6772,6 +6808,8 @@ def price_usage(usage: dict, pricing: dict) -> float | None:
         if len(models) != 1:
             return None
         requests = [{**usage, "model": next(iter(models)), "prompt": None}]
+    if not requests:
+        return None
     cost = 0.0
     for request in requests:
         model = base(request["model"]) if request.get("model") else (

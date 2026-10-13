@@ -33,6 +33,7 @@ import hashlib
 import importlib.machinery
 import importlib.util
 import json
+import math
 import os
 import re
 import shutil
@@ -1640,6 +1641,52 @@ class AuditTests(unittest.TestCase):
         for card in ({"tiers": "x"}, {"input": 0.1}, {"tiers": [{"max_prompt_tokens": 10,
                                                                  **self.HAIKU_5_5["tiers"][0]}]}):
             self.assertIsNone(lane.price_usage(haiku, {"claude-haiku-5-5": card}), card)
+
+    def test_unusable_cards_price_nothing(self):
+        """Astra's review of PR #12: a tier bound that is a string, null,
+        a boolean, missing before the last tier, or not increasing, and a
+        rate that is negative, infinite, NaN, or a boolean, make the agent
+        unpriceable instead of raising or reporting a wrong cost. The valid
+        card, changed in nothing else, still prices."""
+        haiku = lane.transcript_usage(transcript(
+            self.request("r1", "claude-haiku-5-5", 1_000_000)))
+        lower, upper = self.HAIKU_5_5["tiers"]
+        self.assertEqual(lane.price_usage(haiku, {"claude-haiku-5-5": self.HAIKU_5_5}), 0.5)
+        unbounded = {k: v for k, v in lower.items() if k != "max_prompt_tokens"}
+        bad_tiers = [[{**lower, "max_prompt_tokens": "100000"}, upper],
+                     [{**lower, "max_prompt_tokens": None}, upper],
+                     [{**lower, "max_prompt_tokens": True}, upper],
+                     [unbounded, upper],
+                     [{**lower, "max_prompt_tokens": 100_000},
+                      {**upper, "max_prompt_tokens": 100_000}, upper],
+                     []]
+        bad_rates = [-0.5, math.inf, math.nan, True, "0.10", None]
+        cards = [{"tiers": tiers} for tiers in bad_tiers]
+        cards += [{"tiers": [lower, {**upper, "input": rate}]} for rate in bad_rates]
+        cards += [{**upper, "input": rate} for rate in bad_rates]
+        for card in cards:
+            self.assertIsNone(lane.price_usage(haiku, {"claude-haiku-5-5": card}), card)
+
+    def test_missing_usage_is_unpriced_not_free(self):
+        """Astra's review of PR #12: a transcript with no request usage, or
+        with messages but no usage, is an unknown cost, and the audit record
+        says so; a request reporting zero tokens is priced at zero."""
+        pricing = {"claude-haiku-5-5": self.HAIKU_5_5}
+        self.assertIsNone(lane.price_usage(lane.transcript_usage([]), pricing))
+        silent = transcript({"message": {"role": "assistant", "model": "claude-haiku-5-5",
+                                         "content": [{"type": "text", "text": "done"}]}})
+        self.assertIsNone(lane.price_usage(lane.transcript_usage(silent), pricing))
+        zero = transcript(self.request("r1", "claude-haiku-5-5"))
+        self.assertEqual(lane.price_usage(lane.transcript_usage(zero), pricing), 0.0)
+        config = {"run_id": "t", "effort": "high", "schemas": {},
+                  "agents": {"planner": "p", "executor": "e", "reviewer": "r"},
+                  "pricing_usd_per_mtok": pricing,
+                  "blinding": {"forbidden_substrings": [], "cross_paper_slugs": []}}
+        reconcile = load_script("reconcile_run_price", "reconcile-run.py")
+        record = lane.audit_agent(silent, "general-purpose", config, {"agent_definitions": {}},
+                                  reconcile, reconcile.load_gate_module(), None)
+        self.assertIsNone(record["cost_usd"])
+        self.assertEqual(record["usage"]["requests"], 0)
 
     def test_blinding_rules(self):
         config = {"blinding": {"forbidden_substrings": ["reproduction/attempt-01", "wiki/"],
