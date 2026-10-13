@@ -6966,6 +6966,9 @@ HOST_RUN_RE = re.compile(r"(?:^|[\s/])(Rscript|R\s+(?:--file|-f)|python3?|bash)\
 # copy, tee, and in-place edits are recognised only as the command, and a
 # variable expands as the shell expands it. Version 1.1 read "# echo x > f"
 # and the "cp" in "grep cp README.md f" as writes to f, both unwaivable.
+# Still within 1.2, unreleased (Astra's closure review): options are read
+# up to "--", and a copy, tee, or sed in its --help or --version mode
+# writes nothing.
 HEREDOC_RE = re.compile(r"(?<!<)<<(?!<)(-?)[ \t]*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\2")
 REDIRECT_OP_RE = re.compile(r"(?<![<>&])(?:&>>?|[0-9]*>>?\|?)")
 NON_EXECUTING_RE = re.compile(r"(?:^|\s)(?:-h|--help|--version)(?=\s|$)")
@@ -7287,12 +7290,21 @@ def segment_writes(segment: str) -> list[str]:
     words = shell_words(segment)
     k, name = command_word(words)
     given = words[k + 1:]
-    args = [a for a in given if not a.startswith("-")]
-    if name in COPY_COMMANDS:
+    # Options end at "--", after which every word is an operand. GNU tools
+    # permute their arguments, so a --help or --version anywhere before it
+    # means nothing is copied, teed, or edited: "cp --help README.md f"
+    # writes nothing (Astra's closure review, D-Astra-2 residual). The
+    # redirections above still count, since "cp --help > f" writes f.
+    end = given.index("--") if "--" in given else len(given)
+    options = [a for a in given[:end] if a.startswith("-") and a != "-"]
+    args = [a for a in given[:end] if not a.startswith("-")] + given[end + 1:]
+    if {"--help", "--version"} & set(options):
+        pass
+    elif name in COPY_COMMANDS:
         # -t DIR and --target-directory=DIR name the destination up front.
-        directory = next((given[j + 1] for j, a in enumerate(given[:-1]) if a == "-t"), None) \
-            or next((a.split("=", 1)[1] for a in given if a.startswith("--target-directory=")),
-                    None)
+        directory = next((given[j + 1] for j in range(end - 1) if given[j] == "-t"), None) \
+            or next((a.split("=", 1)[1] for a in options
+                     if a.startswith("--target-directory=")), None)
         if directory:
             targets.append(directory)
         elif len(args) >= 2:
@@ -7300,7 +7312,7 @@ def segment_writes(segment: str) -> list[str]:
     elif name == "tee":
         targets += args
     elif name == "sed" and any(re.fullmatch(r"-[a-zA-Z]*i\S*|--in-place(=.*)?", a)
-                               for a in given):
+                               for a in options):
         targets += args[1:]
     return [t for t in targets if t and not t.startswith("/dev/")]
 

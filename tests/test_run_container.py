@@ -1484,6 +1484,28 @@ class TranscriptAuditTests(RecordFixture, unittest.TestCase):
             self.bash(f"Y={files}; echo forged > \"$Y/h\"", self.BEFORE))
         self.assertEqual(self.kinds(report), ["write-to-lane-owned"] * 8)
 
+    def test_help_modes_of_copy_commands_write_nothing(self):
+        """Astra's closure review, D-Astra-2 residual: cp, tee, mv, and sed
+        in their --help or --version mode write nothing, wherever the flag
+        sits before --; a redirect, and operands after --, still write."""
+        files = self.dir / "outputs" / "run-01" / "files"
+        clean = self.audit(
+            self.bash(f"cd {self.dir} && cp --help README.md outputs/run-01/files/x",
+                      self.BEFORE),
+            self.bash(f"tee --version {files}/y", self.BEFORE),
+            self.bash(f"mv {files}/a {files}/b --help", self.BEFORE),
+            self.bash(f"sed --help -i s/a/b/ {files}/z", self.BEFORE))
+        self.assertEqual(clean["contaminating"], [])
+        self.tearDown()
+        self.setUp()
+        files = self.dir / "outputs" / "run-01" / "files"
+        report = self.audit(
+            self.bash(f"cp --help > {files}/a", self.BEFORE),
+            self.bash(f"cp -- --help {files}/b", self.BEFORE),
+            self.bash(f"cp -- -x {files}/c", self.BEFORE),
+            self.bash(f"cp -t {files}/d -- /tmp/x", self.BEFORE))
+        self.assertEqual(self.kinds(report), ["write-to-lane-owned"] * 4)
+
     def test_variables_expand_as_the_shell_expands_them(self):
         """Not in single quotes or after a backslash; one escaped word in
         double quotes; quoted words outside them (D-Astra-2)."""
