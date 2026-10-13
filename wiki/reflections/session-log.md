@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-10-04
+updated: 2026-10-13
 status: active
 ---
 
@@ -1579,3 +1579,49 @@ API-equivalent in total; one Sonnet subagent (web search only).
 **Contextual assumptions.** Sapphire was held for its memory fault, so the
 marwick fit ran on zbook and the pilot on amd-tower. Astra's delta review
 was delayed by an upgrade on Shawn's side and was in progress at handoff.
+
+## Session: 2026-10-12 → 2026-10-13 — Gate 1.3.1 delta closures; PR #11 merged; pilot stage 1 run and approved; PR #12 pricing
+
+*Session b5f7b974 (Opus 5.5); primary throughout.*
+
+**Gate 1.3.1 (PR #11, merged `10500ea` on 2026-10-13):**
+
+- Astra's delta review of `1d875d2`: changes required, three class D
+  incomplete closures (D-Astra-1, F2 reads credited without delivery;
+  D-Astra-2, F1 false writes from a comment and `grep cp`; D-Astra-3, F8
+  persistence under another workflow's audit). Closed in `1b5b2d1`,
+  `9bec885`, `dae59da`, docs `3a411f8`; 665 tests with Docker.
+- Shawn ruled the reviewed-state binding strict (any post-review edit
+  outside lane records needs a new review; review-only mode as a follow-up
+  after the pilot).
+- Astra's closure review of `3a411f8`: D-Astra-3 accepted; two
+  command-mode residuals (`cat --help` credited; `cp --help` a write),
+  closed in `7b4510b`, `ab5a4ac`, docs `579104b`; 667 tests. Astra's
+  approval: no remaining blocker.
+- Merged on Shawn's instruction as a merge commit pinned to `579104b`;
+  667 tests pass on main.
+
+**Pilot re-run under gate 1.3.1 (run `gate-1-3-1-pilot-rerun-2026-10`):**
+
+- Config `0513572` (herskind attempt 4, effort high, R1 to R4; blinding
+  adds attempt-03 and the old run's scratch and result files).
+- Stage 1 approved at the API gate and launched with the neutral phrase:
+  `wf_db7d121a-5d5`, one Opus 5.5 planner, 7.4 min, status OK, 18 targets,
+  4 exclusions. Shawn approved the plan after a walk-through, accepting
+  all six approver questions (plan sha256 `6837cf60785a…`; `e2b42c6`).
+- Stage 2 args built at `e2b42c6`; stage 2 waits for its API gate.
+
+**PR #12 (lane v1.5, per-request pricing):** Haiku 5.5's two cards checked
+against the live pricing page; `43d4b72`; two Astra reviews and a
+reconciliation (rate cards unvalidated; missing usage priced at zero),
+closed in `154b637`; awaiting her check.
+
+**Other:** four worktrees on merged branches removed; the effort
+comparison (medium against high on the lane) queued before scaling;
+Shawn's standing approval for Claude and Astra to run each other's code,
+with the formal rule change to follow.
+
+**Contextual assumptions:** Max plan, so costs are API-equivalent. The
+main checkout must stay at the launch commit during a run, because agents,
+hooks, and the lane load from it. An approval note reaches no agent; only
+the locked plan, the configuration's rulings, and the run notes do.

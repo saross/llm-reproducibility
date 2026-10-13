@@ -6,7 +6,7 @@ audience: "researchers"
 conditions: "debugging with surprising results, hypothesis generation, belief revision, default-following corrections"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-10-04
+updated: 2026-10-13
 status: active
 ---
 
@@ -1573,3 +1573,49 @@ Fable's delta review found that my re-audit script bound agents to
 attempts itself, so it confirmed a fix while bypassing the code that was
 broken (D-1). A re-check is only evidence for the code path it actually
 exercises.
+
+## 2026-10-13 — A command that met every shape rule printed only help
+
+**Session:** b5f7b974-17f5-49f8-be72-c695ab54e181
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+I had closed D-Astra-1 with a shape rule: a Bash read is credited only in
+one `&&` chain of `cd`, full readers, and quiet steps, with no pipe,
+output redirection, substitution, or background. Astra's closure review of
+`3a411f8` showed `cat --help guide.md` and `cat --version guide.md`
+exiting 0 and earning full-read credit, having printed none of the guide.
+
+### Probe
+
+`bash_reads` dropped every word starting with `-` before classifying the
+rest as files, and `_established` checked only the command's name and the
+shell structure. The reader's mode was never examined. The regression test
+written for the fix (`test_reader_modes_that_print_no_file_block`) fails
+on `3a411f8`.
+
+### Belief revision
+
+I had treated delivery as a matter of structure: whether the step ran,
+whether it succeeded, and whether its output reached the agent. That is
+necessary but not sufficient; the command's mode decides what it prints.
+It is the same error as the write scanner's `grep cp`, which I fixed the
+same day by asking which role a word plays. I asked that question of
+positions and not of options. I had also enumerated exactly the dimensions
+the reviewer named and stopped there: default-following on the reviewer's
+list.
+
+### What would change this belief
+
+If the option allow-list (cat's display options only; no options for nl,
+less, or more) turns out to reject common legitimate reads often enough to
+cost re-prompts, a deny-list of known non-printing modes might serve
+better. The receipt gate's log from the pilot's stage 2 will show it.
+
+### Implications for practice
+
+For a conservative check over a command grammar, list every role a word can
+take (command, prefix, option, option value, operand, operand after `--`,
+redirection and its target) and decide each one, rather than closing only
+the categories a reviewer happened to name.

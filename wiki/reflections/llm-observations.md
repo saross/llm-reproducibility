@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-10-12
+updated: 2026-10-13
 status: active
 ---
 
@@ -1005,3 +1005,46 @@ asked for verbatim quotes and saved sources.** The Haiku 5.5 pricing agent
 returned each figure with its quoted table row, and kept the raw page. Two
 `grep`s against that file confirmed it. Without the saved page, checking
 would have meant fetching it again myself.
+
+## 2026-10-12 → 10-13 — Concurrent reviewers, a mode I did not see, and a launch that stayed clean
+
+*Session b5f7b974 (Opus 5.5); primary throughout.*
+
+**Two Astra sessions reviewed PR #12 at the same time, and one reconciled
+the two unprompted.** Both found the same rate-card defect independently;
+the second also found that missing usage was priced at zero. The
+reconciliation mail said the shared finding needed one correction, not
+two. Running two reviewers on one change was not waste: the overlap
+showed the main finding was robust, and the reconciliation kept me from
+fixing it twice.
+
+**Astra's closure specifications made fixes fast.** Each finding came with
+a reproduction on the real functions and a stated closure, often with an
+explicit floor: "conservatively rejecting ambiguous delivery and requesting
+a simple full read is sufficient". That sentence licensed the whitelist
+design. Each review also stated its limits ("not runtime sign-off", "does
+not authorise a model run"), so an approval could not be read as more
+than it was.
+
+**My conservative check covered exactly the dimensions the reviewer named.**
+Astra listed redirection, control flow, and downstream arguments; I closed
+all three and missed option modes (`cat --help`). A reviewer's list of
+failure modes becomes the boundary of the fix unless I enumerate the
+grammar myself. See the abductive entry of 2026-10-13.
+
+**The neutral launch phrase worked in a real run.** Attempt-03's planner
+had listed Shawn's billing question among its approver questions (F3).
+Stage 1 of attempt 4, launched with "Run the approved stage", relayed no
+message at all. It is the first live confirmation that the F3 closure
+changes agent behaviour, not only the audit.
+
+**The pricing skill gave the rates; only the live page gave the rule the
+code needed.** The `claude-api` skill's cached table matched the live
+pricing page on every Haiku 5.5 rate. Only the page said what prompt
+length means: input, cache writes, and cache reads together, priced per
+request. A cached figure is enough for an estimate, not for code.
+
+**Side agents again caught consequences, not defects.** Two notes: the
+strict binding's cost (any post-review edit forces a new review, and no
+review-only path exists), and that an approval note never reaches the
+executor. I confirmed the second in the code before answering Shawn.

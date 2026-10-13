@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-10-04
+updated: 2026-10-13
 status: active
 ---
 
@@ -1582,3 +1582,60 @@ on the unreviewed code. Also easy to lose: the frozen ledger
 label has no counterpart in the lane's comparison schema, so the §8
 comparison script must map it to any within-tolerance outcome. That
 requirement lives in the continuity note and the PR body, not in the ledger.
+
+## Entry 26 (2026-10-12 → 10-13) — Rules I applied to agents before myself
+
+**Project:** llm-reproducibility. **Session:**
+b5f7b974-17f5-49f8-be72-c695ab54e181 (Opus 5.5). **Instance:** primary
+throughout; no compaction.
+
+**What would you do differently if you replayed this session?** Two things,
+both rules I knew and enforced on agents before I applied them to myself.
+I ran Astra's probe scripts twice to check my own fixes. I read each in
+full first and ran it in a throwaway copy, with no network or API, and
+only later, writing a mail, noticed that the mail-watch rule loaded the
+same session says a peer's code needs Shawn's approval. Reading the code
+made the run safe; it did not make it allowed. I disclosed it, and Shawn
+turned it into a standing approval, but asking first was the right order.
+The second: a continuity commit moved main past the launch commit just
+after I had built the plan args, and I rebuilt them. It cost nothing, but
+the lane binds every run to its commit, and I had treated my own notes as
+outside that binding. Documentation commits belong before the args are
+built.
+
+A third, in the code. My first fix for the read check was a shape rule:
+one `&&` chain of `cd`, full readers, and `echo`, with no pipe, output
+redirect, or substitution. I dropped option words as noise. The same day I
+had fixed the write scanner by asking what role a word plays (`grep cp` is
+a pattern, not a copy), and I did not carry the question over to options.
+`cat --help guide.md` passes the shape and delivers nothing. Astra found
+it in the closure round, with its mirror on the write side, `cp --help`.
+
+**Where did you and the human disagree, and who was right?** Twice, and
+briefly. Shawn approved stage 1 with "approved, go", and I asked for the
+fixed launch phrase instead, because the harness relays the launching
+message to the blinded planner and the run audit flags anything else. He
+sent the phrase, without its full stop, which the pattern allows. It cost
+one message, and I think the rule should stay mechanical. The other was a
+memory check rather than a disagreement. Shawn remembered choosing medium
+effort because there was little difference between the levels. He had, for
+the FAIR census scorer (2026-10-04); the reproduction lane's ruling is
+high (2026-10-03). He had the decision right and the lane wrong, and two
+searches of the records settled it. He kept high for this run, so it
+compares with attempt-03, and named the comparison as something that will
+matter at scale.
+
+**What decision made today will look arbitrary without this session's
+context?** That the reviewed state is taken from a Haiku general-purpose
+agent's transcript. It looks like trusting the weakest participant. But
+the authoritative `check-attempt` runs after the review and overwrites the
+gate report, so no file records what the reviewer saw. The in-workflow
+gate step runs `check-attempt` just before the review, and its tool result
+is the harness's record of the printed digest, not something a model
+relayed. Also likely to look arbitrary: three agent definitions changed
+their text at unchanged versions (planner 1.3, executor 1.7, reviewer
+1.3), because those versions were unreleased and unrun and the PR had
+already folded several changes into each; and a binding so strict that
+editing `log.md` after the review needs a new review, with no review-only
+path yet. Shawn chose that knowingly, after a side agent spelled out the
+cost; the review-only mode follows the pilot.
