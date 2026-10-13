@@ -913,11 +913,23 @@ needs "nearly all" values within tolerance, yet each minor discrepancy maps
 to "SUCCESSFUL with note". It proposed three options for amendment 4.
 Shawn had said "I just want us to be deliberate", and queued all three.
 
-## Pending review — 2026-10-13 batch (drafted at handoff, session b5f7b974)
+## 2026-10-13 batch — adjudicated 2026-10-13 (drafted at handoff, session b5f7b974)
 
-*Candidates for Shawn to accept / edit / discard / replace. Silence holds
-them over, never discards. Titles state the transferable lesson. The
-2026-10-06, 2026-10-08, and 2026-10-12 batches above are still pending.*
+Verdicts (Shawn, 2026-10-13): A and C **accepted**; B **replaced** by
+Shawn's own observation, below; D **discarded** ("not a big deal, drop
+it"). The candidate text is kept below as the record. The 2026-10-06,
+2026-10-08, and 2026-10-12 batches above are still pending.
+
+**Accepted in place of B (unhelpful; Shawn's words): give a launch a serious
+review or an easy trigger, not a phrase to repeat.** "I'd like a more
+serious review before a launch (previously you asked me questions about
+it, I had to explain in my own words what it did, when it would stop,
+etc.), or trigger easily, I don't find the 'repeat this exact phrase'
+useful, just annoying." The earlier review he means is the pre-run review
+(the `pre-run-review` skill), in which he explained the run back in his
+own words. The launch mechanism is to be redesigned so that the neutral
+relayed message no longer depends on Shawn typing a fixed phrase (wiki
+continuity, 2026-10-13 handoff).
 
 **Candidate A (helpful): before a lock, walk through what is being locked
 and how a different answer would get in.** Shawn asked: "can you walk me

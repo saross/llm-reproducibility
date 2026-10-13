@@ -5,7 +5,7 @@ title: "Working Notes"
 audience: "researchers"
 tags: [research-methodology, llm-craft, open-science]
 created: 2026-02-09
-updated: 2026-08-02
+updated: 2026-10-13
 status: active
 ---
 
@@ -2675,3 +2675,66 @@ reports). Anchors, on branch `feat/correction-ledger-draft`:
 L16); `executed-code-audit-2026-10-04/findings.json` on
 `origin/feat/lane-gate-1-1-code-audit`; the WN-aq entry in
 `wiki/continuity.md`.
+
+## Observation 56: Two blinded planning runs on one paper gave different denominators; the display items held, the named values did not (2026-10-13)
+
+*(Approved by Shawn 2026-10-13; WN-at.)*
+
+### Context
+
+Herskind-riede-2024 has now been planned twice through the agentic lane,
+blind to each other: attempt-03 (gate 1.3 pilot re-run, launch `ad03008`)
+and attempt-04 (gate 1.3.1 pilot re-run, launch `5fdaf87`, workflow
+`wf_db7d121a-5d5`). Both used Opus 5.5 at effort `high`, rulings R1 to R4,
+and the same pushed instruments, invariants, plan workflow, and plan
+schema. Between the two launches only the planner definition changed (v1.2
+to v1.3), and only in its rule for declaring pulled files.
+
+### Observation
+
+| Plan | Targets | Display items | Named values | Exclusions |
+|---|---|---|---|---|
+| attempt-03 | 20 | 8 | 12 | 7 |
+| attempt-04 | 18 | 8 | 10 | 4 |
+
+The display-item targets agree; the named values from the text and the
+exclusions do not. The attempt-04 planner flagged its named-value
+enumeration for the approver because it is made by hand, not by a
+deterministic count. Anchors: both attempts' `reproduction-plan.json`
+(`plan.verification_targets`, `plan.exclusions`).
+
+### Implication
+
+The coverage denominator depends on the planning run, through the named
+values. Coverage figures from different planning runs on one paper are
+therefore comparable only roughly, and denominator variance is a quantity
+to measure (several blind plans per paper) before the lane runs at
+production scale. A deterministic or rule-bound named-value enumeration
+would remove most of it.
+
+## Observation 57: The fixed launch phrase stopped relayed-message contamination in a live run (2026-10-13)
+
+*(Approved by Shawn 2026-10-13; WN-au.)*
+
+### Context
+
+The workflow harness relays the user message that starts a workflow to
+every spawn, ahead of the computed task (finding F3 of the gate 1.3 final
+review). Attempt-03's plan stage was launched with a free-text message;
+attempt-04's with "Run the approved stage", the runbook's fixed phrase,
+which the run audit treats as neutral.
+
+### Observation
+
+Attempt-03's planner listed Shawn's relayed billing question ("I assume
+you're using my max account?") first among its approver questions.
+Attempt-04's planner relayed nothing: none of its six approver questions
+comes from the launch message. Anchors: both attempts'
+`reproduction-plan.json` (`plan.questions_for_approver`).
+
+### Implication
+
+Keeping the launch message neutral works. Shawn finds typing the exact
+phrase annoying (user-observations, 2026-10-13), so the protection should
+not depend on it; a redesign should keep the relayed message neutral by
+mechanism rather than by the operator's wording.
