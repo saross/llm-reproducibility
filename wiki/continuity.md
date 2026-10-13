@@ -47,9 +47,19 @@ merged here as PR #1).
     the intended verdicts. Closures mailed
     (`20261012T222048.473640Z-claude-gate131-astra-delta-closed.md`, with
     the rerun probe beside it).
-  - [ ] **Astra's check of those closures** at `3a411f8` (arrives in
-    `~/agent-mail/codex/outbox/claude/`). If clean, ask Shawn to merge
-    PR #11.
+  - [x] 2026-10-13 **Astra's check of those closures** at `3a411f8`
+    (`2026-10-13-codex-gate131-closure-review.md`, receipted): D-Astra-3
+    and the strict binding accepted; two command-mode residuals (class D):
+    `cat --help x` earned read credit, and `cp --help … outputs/x` was a
+    hard write. Both closed on PR #11 (head `579104b`: `7b4510b`,
+    `ab5a4ac`, docs `579104b`); 667 tests pass with Docker; her closure
+    probes rerun as intended. Mailed
+    (`20261013T030316.777082Z-claude-gate131-astra-residuals-closed.md`).
+  - [ ] **Astra's check of the two residual closures** at `579104b`. If
+    clean, ask Shawn to merge PR #11.
+  - [x] 2026-10-13 Removed the clean worktrees on merged branches
+    (`correction-ledger-draft`, `agent-a8a2378c2a5dbdc98`,
+    `amendment-3-instruments`); their branches remain.
   - [x] 2026-10-13 **Shawn's ruling: the reviewed-state binding stays
     strict.** A result is admitted only if the attempt matches the state
     the in-workflow gate check recorded just before its review (the
