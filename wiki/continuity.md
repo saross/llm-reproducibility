@@ -87,6 +87,20 @@ merged here as PR #1).
     would test the old gate. Order: Astra's delta review comes back clean,
     then Shawn merges PR #11, then the pilot runs from main. Any defect the
     pilot finds goes into a follow-up PR.
+  - [x] 2026-10-13 **Pilot configuration committed** (`0513572`):
+    `validation/gate-1-3-1-pilot-rerun/run-config.yaml`, run
+    `gate-1-3-1-pilot-rerun-2026-10`, herskind attempt 4, effort high,
+    rulings R1 to R4; blinding adds attempt-03 and its scratch, args, and
+    workflow-result files under `~/scratch/llmr-runs`. Plan args built at
+    `0513572` (`~/scratch/llmr-runs/gate-1-3-1-pilot-rerun-2026-10/plan-args.json`,
+    checksum `b6171603468f9a69`). **Stage 1 is at Shawn's API review gate**
+    (1 Opus planner, ≈$1.20 API-equivalent); launch with exactly `Run the
+    approved stage.` Rebuild the args if `HEAD` moves first.
+  - [ ] **PR #12, per-request pricing (lane v1.5)** for Haiku 5.5's two
+    cards, verified against the live pricing page on 2026-10-13; review
+    requested from Astra
+    (`20261013T040331.861684Z-claude-pr12-pricing-review-request.md`).
+    Worktree `~/worktrees/llm-reproducibility/claude-opus-pricing`.
   - [ ] **Pilot re-run under gate 1.3.1 (from main, after PR #11 merges):**
     a new run configuration (herskind attempt 4, a new run id) beside
     `validation/gate-1-3-pilot-rerun/run-config.yaml`. Then the API review
