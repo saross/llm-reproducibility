@@ -424,6 +424,27 @@ class ReceiptGateTests(unittest.TestCase):
             self.events.clear()
             self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["pass"], command)
 
+    def test_reader_modes_that_print_no_file_block(self) -> None:
+        """Astra's closure review, D-Astra-1 residual: cat --help and
+        --version exit 0 having printed no file, so only cat's display
+        options, and no option to nl, keep a read credited; options end at
+        --, and cd --help stays put."""
+        for command in ("cat --help /ref/guide.md", "cat --version /ref/guide.md",
+                        "cat -z /ref/guide.md", "nl -v 5 /ref/guide.md"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["block"], command)
+            self.assertIn("such as --help", self.events[-1]["reason"], command)
+        for command, declared in (("cat -n /ref/guide.md", "/ref/guide.md"),
+                                  ("cat -As --number /ref/guide.md", "/ref/guide.md"),
+                                  ("cat -- /ref/guide.md", "/ref/guide.md"),
+                                  ("cd /ref && cat -- -guide.md", "/ref/-guide.md"),
+                                  ("cat guide.md", "guide.md")):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], [declared]), ["pass"], command)
+        self.events.clear()
+        self.assertEqual(self._gate_bash(["cd --help && cat guide.md"], ["guide.md"]),
+                         ["block"])
+
     def test_read_and_spill_paths_match_whole(self) -> None:
         """A Read of guide.md.bak verifies neither guide.md nor, for a
         spilled read, the spill file it was named after."""

@@ -181,6 +181,13 @@ COMMAND_PREFIXES = frozenset({"sudo", "env", "time", "nohup", "nice", "command"}
 # Steps that may share a command with a verified read: none of them can skip,
 # end, or redirect a later step (Astra's delta review, D-Astra-1).
 QUIET_STEPS = frozenset({"echo", "printf", "true", ":"})
+# Options that change how cat prints a file, not whether it does. Any other
+# option, or any option to nl, less, or more, leaves a read uncredited:
+# `cat --help guide.md` exits 0 having printed only help (Astra's closure
+# review, D-Astra-1 residual).
+CAT_OPTIONS = frozenset({"--number", "--number-nonblank", "--squeeze-blank",
+                         "--show-nonprinting", "--show-ends", "--show-all", "--show-tabs"})
+CAT_SHORT_OPTIONS_RE = re.compile(r"-[AbeEnstTuv]+")
 SPILL_PATH_RE = re.compile(r"Full output saved to:\s*(\S+)")
 SPILL_MARKERS = ("<persisted-output>", "Full output saved to:")
 HEREDOC_START_RE = re.compile(r"(?<!<)<<(?!<)-?[ \t]*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\1")
@@ -440,6 +447,35 @@ def _command(words: list[dict]) -> tuple[str, list[dict]]:
     return posixpath.basename(words[k]["text"]), words[k + 1:]
 
 
+def _operands(words: list[dict]) -> tuple[list[dict], list[str]]:
+    """A command's operands and options, as getopt reads them.
+
+    A word starting with ``-`` (other than ``-`` alone) is an option until a
+    ``--``; every word after ``--`` is an operand, so ``cat -- -x.md`` reads
+    a file named ``-x.md``.
+    """
+    operands: list[dict] = []
+    options: list[str] = []
+    ended = False
+    for word in words:
+        text = word["text"]
+        if not ended and text == "--":
+            ended = True
+        elif not ended and text.startswith("-") and text != "-":
+            options.append(text)
+        else:
+            operands.append(word)
+    return operands, options
+
+
+def _prints_whole(name: str, options: list[str]) -> bool:
+    """Whether a full reader's options leave it printing its files whole:
+    cat's display options only, and no option to nl, less, or more."""
+    if name == "cat":
+        return all(o in CAT_OPTIONS or CAT_SHORT_OPTIONS_RE.fullmatch(o) for o in options)
+    return not options
+
+
 def _established(pipelines: list[dict],
                  parsed: list[list[tuple[list[dict], list[tuple[str, str, str]]]]]) -> bool:
     """Whether a successful call's exit status shows that every step ran,
@@ -477,8 +513,9 @@ def bash_reads(lines: list[str]) -> list[dict]:
     Returns:
         ``[{"path", "glob", "cwd", "kind", "error", "spill"}]``. ``kind`` is
         ``complete`` (cat, nl, less, or more, in a command whose success
-        establishes the read's delivery: ``_established``), ``undelivered``
-        (the same readers in any other command), ``piped`` (a full reader
+        establishes the read's delivery, ``_established``, with no option
+        but cat's display options, ``_prints_whole``), ``undelivered`` (the
+        same readers otherwise, such as ``cat --help x``), ``piped`` (a full reader
         piped into another stage, such as head, wc, grep, or a cat of
         another file), ``partial`` (head, tail, sed, awk, cut, or less or
         more from a ``+`` offset), or ``searched`` (grep and the like).
@@ -502,21 +539,26 @@ def bash_reads(lines: list[str]) -> list[dict]:
         for stages in parsed:
             for position, (words, _) in enumerate(stages):
                 name, rest = _command(words)
-                args = [w for w in rest if not w["text"].startswith(("-", "+"))]
+                operands, options = _operands(rest)
+                args = [w for w in operands if w["text"] != "-"]
                 if name == "cd" and len(stages) == 1:
+                    # cd - goes to a directory the transcript does not hold,
+                    # and cd --help prints help and stays put.
                     target = args[0]["text"] if args else "~"
-                    cwd = (None if any(w["text"] == "-" for w in rest)
-                           else _resolve(target, cwd))
+                    cwd = (None if any(w["text"] == "-" for w in operands)
+                           or set(options) - {"-L", "-P"} else _resolve(target, cwd))
                     continue
                 if name in ("pushd", "popd"):
                     cwd = None
                     continue
                 if name in FULL_READERS:
-                    kind = ("partial" if name in ("less", "more")
-                            and any(w["text"].startswith("+") for w in rest)
+                    paged = name in ("less", "more")
+                    offset = paged and any(w["text"].startswith("+") for w in args)
+                    files = [w for w in args if not (paged and w["text"].startswith("+"))]
+                    kind = ("partial" if offset
                             else "piped" if position < len(stages) - 1
-                            else "complete" if established else "undelivered")
-                    files = args
+                            else "complete" if established and _prints_whole(name, options)
+                            else "undelivered")
                 elif name in PARTIAL_READERS:
                     kind = "partial"
                     files = args[1:] if name in ("sed", "awk") else args
@@ -626,7 +668,9 @@ def pull_verdict(declared: str, reads: list[dict], shell: list[dict]) -> tuple[s
     if any(b["kind"] == "undelivered" for b in bash_ok):
         return "undelivered", ("read in a shell command whose success does not show that "
                                "you received it (its output redirected, its step conditional "
-                               "or in the background, or one step among others)")
+                               "or in the background, one step among others, or the reader "
+                               "given an option such as --help that the check does not "
+                               "recognise)")
     if bash_ok:
         return "searched", "only searched (grep), never read"
     if tool or bash:
