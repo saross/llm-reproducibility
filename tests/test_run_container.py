@@ -359,7 +359,7 @@ class RecordFixture:
              consumed: list[dict] | None = None, changes: list[dict] | None = None,
              baseline: dict[str, str] | None = None,
              lane_files: dict[str, str] | None = None,
-             started_at: str = "2026-10-08T10:00:00Z") -> None:
+             started_at: str = "2026-10-08T10:00:00Z", build: bool = True) -> None:
         """Write and seal one run's records the way finalise_run does.
 
         ``changes`` and ``baseline`` stand for the lane's declared changes to
@@ -369,6 +369,14 @@ class RecordFixture:
         records = self.dir / lane.RECORDS_DIR
         record = records / run_id
         record.mkdir(parents=True)
+        if build and not (records / "build-01").exists():
+            # The lane's build record for the fixture image (F5).
+            (records / "build-01").mkdir()
+            (records / "build-01" / "build.log").write_text("built\n", encoding="utf-8")
+            lane.write_json(records / "build-01" / "build.json", {
+                "build": "build-01", "image_id": "sha256:" + "0" * 64, "exit_status": 0,
+                "dockerfile_sha256": None,
+                "log_sha256": lane.sha256_file(records / "build-01" / "build.log")})
         pre, _ = lane.input_inventory(self.dir)
         lane.write_json(record / "pre.json", {"run": run_id, "files": pre})
         lane.write_json(record / "baseline.json", {"run": run_id, "files": {
@@ -1350,6 +1358,196 @@ class TranscriptAuditTests(RecordFixture, unittest.TestCase):
                                       self.MANIFEST)
         self.assertEqual(self.kinds(report), ["run-without-record"])
 
+    # Gate 1.3 final review, F1 (2026-10-12): the herskind pilot's executor
+    # transcript gave four false hard failures. These are its command shapes.
+
+    def test_comparisons_inside_quoted_programs_are_not_redirects(self):
+        files = self.dir / "outputs" / "run-01" / "files"
+        report = self.audit(
+            self.bash(f"cd {files} && find out -type f | sort; head -3 log.csv; "
+                      "awk -F, 'NR>1 && $4!=\"\\\"ok\\\"\"' log.csv", self.BEFORE),
+            self.bash(f"cd {self.dir} && awk -F, 'NR>1 && $5<240' published/x.csv | head -5",
+                      self.AFTER),
+            self.bash("python3 -c \"print(1 >= 0)\" > /dev/null 2>&1", self.AFTER))
+        self.assertEqual(report["contaminating"], [])
+
+    def test_heredoc_bodies_are_data_not_commands(self):
+        report = self.audit(self.bash(
+            f"cd {self.dir} && python3 -I - <<'EOF'\nok = 2 >= 1\n"
+            f"note = 'cp x outputs/run-01/files/y'\nEOF", self.AFTER))
+        self.assertEqual(report["contaminating"], [])
+
+    def test_help_and_version_calls_are_not_runs(self):
+        report = self.audit(self.bash(
+            "venv/bin/python scripts/reproduction-lane.py --help; venv/bin/python "
+            "scripts/reproduction-lane.py run-container --help; venv/bin/python "
+            "scripts/reproduction-lane.py snapshot-code --help", self.BEFORE,
+            "usage: reproduction-lane.py run-container [-h] ..."))
+        self.assertEqual(report["contaminating"], [])
+
+    def test_real_writes_are_still_caught(self):
+        """Negative controls for the scanner: unquoted, quoted-target, heredoc
+        (the redirect, not the body), cd-relative, and shell-fed writes."""
+        files = self.dir / "outputs" / "run-01" / "files"
+        report = self.audit(
+            self.bash(f"echo forged > {files}/a.csv 2>&1", self.BEFORE),
+            self.bash(f"echo forged >> \"{files}/b c.csv\"", self.BEFORE),
+            self.bash(f"cat > {self.dir}/lane-records/run-01/x.log <<'EOF'\nforged\nEOF",
+                      self.BEFORE),
+            self.bash(f"cd /tmp && cd {self.dir} && cp /tmp/x.csv outputs/run-01/files/d.csv",
+                      self.BEFORE),
+            self.bash(f"bash <<'EOF'\ncp /tmp/x {files}/e.csv\nEOF", self.BEFORE))
+        self.assertEqual(self.kinds(report), ["write-to-lane-owned"] * 5)
+
+    def test_reading_a_data_original_on_the_host_is_not_a_run(self):
+        """Found re-auditing the pilot: python3 -c reads of the deposited
+        workbooks named data originals, not code."""
+        manifest = {**self.MANIFEST, "originals": self.MANIFEST["originals"]
+                    + [{"id": "d.xlsx", "local_copy": "raw/d.xlsx"}]}
+        self.seal()
+        read = self.bash(f"cd {self.dir} && python3 -c \"import openpyxl; "
+                         f"openpyxl.load_workbook('raw/d.xlsx')\"", self.AFTER)
+        run = self.bash(f"cd {self.dir} && python3 -c \"exec(open('raw/a.R').read())\"",
+                        self.AFTER)
+        report = lane.audit_execution(self.transcript(self.run_call(), read, run), self.dir,
+                                      manifest)
+        self.assertEqual((self.kinds(report), report["issues"]), (["host-run-after-final"], []))
+
+    def test_transcribing_published_values_after_a_run_is_flagged(self):
+        """The gate 1.3 final review's F6: a write into published-values/
+        after the first run started is a flag for a ruling; one before it
+        is not."""
+        report = self.audit(
+            ("Write", {"file_path": str(self.dir / "published-values" / "table1.csv")},
+             "2026-10-08T09:30:00Z", "ok"),
+            ("Write", {"file_path": str(self.dir / "published-values" / "fig4.csv")},
+             "2026-10-08T10:30:00Z", "ok"))
+        self.assertEqual([i["id"] for i in report["issues"]],
+                         ["transcription-after-run:published-values/fig4.csv"])
+
+    def test_shell_variables_set_in_the_command_are_followed(self):
+        """The pilot's executor wrote through variables: A=<attempt>; cat >
+        $A/published-values/..., and P=<dir>; cd $P; cat > table.csv."""
+        report = self.audit(
+            self.bash(f"A={self.dir}; cat > $A/published-values/fig5.csv <<'EOF'\nx\nEOF",
+                      "2026-10-08T10:30:00Z"),
+            self.bash(f"P={self.dir}/published-values; mkdir -p $P; cd $P\n"
+                      f"cat > table1.csv <<'EOF'\ny\nEOF", "2026-10-08T10:31:00Z"),
+            self.bash(f"export B={self.dir}/outputs; echo forged > ${{B}}/run-01/x",
+                      self.BEFORE))
+        self.assertEqual(sorted(i["id"] for i in report["issues"]),
+                         ["transcription-after-run:published-values/fig5.csv",
+                          "transcription-after-run:published-values/table1.csv"])
+        self.assertIn("write-to-lane-owned", self.kinds(report))
+
+    def test_shell_c_strings_pwd_and_direct_builds(self):
+        """Fable's delta-review notes: a bash -c string is audited as
+        commands, $(pwd) is the tracked directory, and a docker build
+        outside the lane is flagged."""
+        report = self.audit(
+            self.bash(f"bash -c 'echo forged > {self.dir}/outputs/run-01/files/a'", self.BEFORE),
+            self.bash(f"cd {self.dir} && A=$(pwd) && echo x > $A/lane-records/run-01/b",
+                      self.BEFORE),
+            self.bash(f"docker build -t img {self.dir}", self.BEFORE))
+        self.assertEqual(self.kinds(report), ["write-to-lane-owned"] * 2)
+        self.assertEqual([i["code"] for i in report["issues"]], ["docker-build-direct"])
+
+    # Astra's delta review of gate 1.3.1, D-Astra-2: comments, search
+    # patterns, and expanded values are not writes; real writes still are.
+
+    def test_comments_and_literal_arguments_are_not_writes(self):
+        """Astra's two probes (a commented redirect; cp as grep's pattern),
+        a comment holding ; and a quote, and a value holding > expanded
+        unquoted, which the shell prints rather than redirects."""
+        files = self.dir / "outputs" / "run-01" / "files"
+        report = self.audit(
+            self.bash(f"cd {self.dir}\n# echo x > outputs/run-01/files/x\n:", self.BEFORE),
+            self.bash(f"cd {self.dir} && grep cp README.md outputs/run-01/files/x", self.BEFORE),
+            self.bash(f"grep -n tee {files}/x; echo done  # then cp a {files}/y", self.BEFORE),
+            self.bash(f"echo \"it's\" # it's noted; echo x > {files}/z", self.BEFORE),
+            self.bash(f"X='> {files}/v'; echo $X \"$X\" '$X'", self.BEFORE))
+        self.assertEqual(report["contaminating"], [])
+
+    def test_real_writes_are_caught_past_comments_and_prefixes(self):
+        """Negative controls: a comment's << starts no heredoc, a redirect
+        before a comment, copy and tee behind sudo and timeout, cp -t, sed
+        -i with a suffix, and writes through expanded variables."""
+        files = self.dir / "outputs" / "run-01" / "files"
+        report = self.audit(
+            self.bash(f"# cat <<EOF\necho forged > {files}/a", self.BEFORE),
+            self.bash(f"echo forged > {files}/b # cp note", self.BEFORE),
+            self.bash(f"sudo cp /tmp/x {files}/c", self.BEFORE),
+            self.bash(f"timeout 5 tee {files}/d < /tmp/x", self.BEFORE),
+            self.bash(f"cp -t {files}/e /tmp/x", self.BEFORE),
+            self.bash(f"sed -i.bak s/a/b/ {files}/f", self.BEFORE),
+            self.bash(f"X={files}/g; echo forged > $X", self.BEFORE),
+            self.bash(f"Y={files}; echo forged > \"$Y/h\"", self.BEFORE))
+        self.assertEqual(self.kinds(report), ["write-to-lane-owned"] * 8)
+
+    def test_help_modes_of_copy_commands_write_nothing(self):
+        """Astra's closure review, D-Astra-2 residual: cp, tee, mv, and sed
+        in their --help or --version mode write nothing, wherever the flag
+        sits before --; a redirect, and operands after --, still write."""
+        files = self.dir / "outputs" / "run-01" / "files"
+        clean = self.audit(
+            self.bash(f"cd {self.dir} && cp --help README.md outputs/run-01/files/x",
+                      self.BEFORE),
+            self.bash(f"tee --version {files}/y", self.BEFORE),
+            self.bash(f"mv {files}/a {files}/b --help", self.BEFORE),
+            self.bash(f"sed --help -i s/a/b/ {files}/z", self.BEFORE))
+        self.assertEqual(clean["contaminating"], [])
+        self.tearDown()
+        self.setUp()
+        files = self.dir / "outputs" / "run-01" / "files"
+        report = self.audit(
+            self.bash(f"cp --help > {files}/a", self.BEFORE),
+            self.bash(f"cp -- --help {files}/b", self.BEFORE),
+            self.bash(f"cp -- -x {files}/c", self.BEFORE),
+            self.bash(f"cp -t {files}/d -- /tmp/x", self.BEFORE))
+        self.assertEqual(self.kinds(report), ["write-to-lane-owned"] * 4)
+
+    def test_variables_expand_as_the_shell_expands_them(self):
+        """Not in single quotes or after a backslash; one escaped word in
+        double quotes; quoted words outside them (D-Astra-2)."""
+        self.assertEqual(
+            lane.expand_variables("echo '$A' \"$A\" $A ${A} \\$A $Z", {"A": 'x > "y"'}),
+            "echo '$A' \"x > \\\"y\\\"\" x '>' '\"y\"' x '>' '\"y\"' \\$A $Z")
+
+    def test_run_start_is_compared_as_a_time(self):
+        """A write a millisecond-stamped transcript records after the final
+        run's start counts as after it, whatever the two stamps' formats."""
+        report = self.audit(self.bash(f"echo x > {self.dir}/data/late.csv",
+                                      "2026-10-08T10:00:00.500Z"),
+                            self.bash(f"echo x > {self.dir}/data/early.csv",
+                                      "2026-10-08T09:59:59.999Z"))
+        self.assertEqual([c["detail"].split(" after")[0] for c in report["contaminating"]],
+                         ["a shell command wrote data/late.csv"])
+
+
+class BuildEvidenceTests(RecordFixture, unittest.TestCase):
+    """The gate 1.3 final review's F5: the run's image needs a lane build
+    record; without one its build history is an obligation, and a build log
+    that no longer hashes to its record is an error."""
+
+    def check(self) -> dict:
+        return lane.check_run_records(self.dir, self.launch)
+
+    def test_a_lane_build_record_evidences_the_image(self):
+        self.seal()
+        report = self.check()
+        self.assertNotIn("build-evidence", [o.code for o in report["obligations"]])
+
+    def test_without_a_build_record_the_build_is_an_obligation(self):
+        self.seal(build=False)
+        self.assertIn("build-evidence", [o.code for o in self.check()["obligations"]])
+
+    def test_a_changed_build_log_is_an_error(self):
+        self.seal()
+        (self.dir / lane.RECORDS_DIR / "build-01" / "build.log").write_text("edited\n")
+        report = self.check()
+        self.assertIn("build-01: the build log is missing or does not hash to its record",
+                      report["errors"])
+
 
 class FreshComputationTests(RecordFixture, unittest.TestCase):
     """Cache stores (spec §9): removed before a run, or kept as an
@@ -1719,6 +1917,119 @@ class AccountDockerTests(AccountRunMixin, unittest.TestCase):
                          (3, 1, 1))
         self.assertNotIn("executed-not-loaded", [getattr(f, "code", "")
                                                  for f in result["flags"]])
+
+
+@unittest.skipUnless(docker_ready(), f"needs Docker and {IMAGE}")
+class BuildImageDockerTests(unittest.TestCase):
+    """build-image (F5): the lane runs docker build, labels the image with the
+    Dockerfile's sha256 itself, and keeps the log and its hash."""
+
+    def test_a_lane_build_is_labelled_and_recorded(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            attempt = Path(tmp) / "attempt-01"
+            write(attempt / "Dockerfile", f"FROM {IMAGE}\nRUN echo lane-build-probe\n")
+            tag = "llmr-test-build-image:latest"
+            try:
+                doc = lane.build_image(attempt, tag)
+                self.assertEqual(doc["exit_status"], 0)
+                label = subprocess.run(
+                    ["docker", "image", "inspect", tag, "--format",
+                     '{{ index .Config.Labels "llmr.dockerfile.sha256" }}'],
+                    capture_output=True, text=True, check=False).stdout.strip()
+                self.assertEqual(label, lane.sha256_file(attempt / "Dockerfile"))
+                log = attempt / lane.RECORDS_DIR / "build-01" / "build.log"
+                self.assertIn("lane-build-probe", log.read_text(encoding="utf-8"))
+                self.assertEqual(doc["log_sha256"], lane.sha256_file(log))
+                errors, obligations = lane.build_evidence(attempt, {
+                    "id": doc["image_id"], "dockerfile_sha256": doc["dockerfile_sha256"]})
+                self.assertEqual((errors, obligations), ([], []))
+            finally:
+                subprocess.run(["docker", "image", "rm", "-f", tag], capture_output=True,
+                               check=False)
+
+
+# The gate 1.3 final review's A-new-1: an authors' script for the lane's
+# evaluator. Statement 2 errors only when FAIL is set; statement 3 is the one
+# Fable's experiment altered in memory.
+EVALUATED = ('x <- c(1, 2, 3, 4)\n'
+             'if (exists("FAIL")) stop("no such font")\n'
+             'kept <- x[x > 2]\n'
+             'dir.create("outputs", showWarnings = FALSE)\n'
+             'write.csv(kept, "outputs/kept.csv")\n')
+
+
+@unittest.skipUnless(docker_ready(), f"needs Docker and {IMAGE}")
+class EvaluatorDockerTests(AccountRunMixin, unittest.TestCase):
+    """The lane's evaluator (hook 1.6): run_file parses and evaluates an
+    original itself, so the gate binds every evaluated statement to a parsed
+    one, and the old parse-and-evaluate pattern is flagged."""
+
+    def run_wrapper(self, wrapper: str) -> tuple[dict, dict, list[str]]:
+        self.attempt(wrapper, {"analysis.R": EVALUATED})
+        doc, result = self.run_and_check(IMAGE)
+        return doc, result, [getattr(f, "issue_id", str(f)) for f in result["flags"]]
+
+    def test_the_evaluator_runs_every_statement_and_raises_nothing(self):
+        doc, result, flags = self.run_wrapper(
+            'getOption("lane.hook")$run_file("authors-code/analysis.R")\n')
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["account"]["originals_loaded"], ["analysis.R"])
+        self.assertFalse([f for f in flags if f.split(":")[0] in (
+            "parsed-not-run", "original-partly-run", "tolerated-statement",
+            "statement-error")], flags)
+
+    def test_a_tolerated_statement_is_a_flag_naming_its_lines(self):
+        doc, _, flags = self.run_wrapper(
+            'FAIL <- TRUE\n'
+            'getOption("lane.hook")$run_file("authors-code/analysis.R", tolerate = 2L)\n')
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertIn("tolerated-statement:analysis.R:2@run-01", flags)
+        self.assertNotIn("original-partly-run:analysis.R@run-01/statements", flags)
+
+    def test_an_untolerated_error_stops_the_run_and_leaves_statements_unrun(self):
+        doc, _, flags = self.run_wrapper(
+            'FAIL <- TRUE\n'
+            'getOption("lane.hook")$run_file("authors-code/analysis.R")\n')
+        self.assertNotEqual(doc["state"], "complete")
+        self.assertIn("statement-error:analysis.R:2@run-01", flags)
+        self.assertIn("original-partly-run:analysis.R@run-01/statements", flags)
+
+    def kept(self) -> str:
+        return (self.dir / "outputs" / "run-01" / "files" / "outputs" / "kept.csv").read_text()
+
+    def test_a_wrapper_eval_cannot_alter_the_evaluator(self):
+        """Fable's delta review, B-1: a global eval() that swapped statement
+        3 ran with EVAL ok. With hook 1.7 the evaluator calls base's eval, the
+        output is the authors', and the global function is flagged."""
+        doc, result, flags = self.run_wrapper(
+            'eval <- function(expr, envir = parent.frame(), ...) {\n'
+            '  if (identical(expr, quote(kept <- x[x > 2]))) expr <- quote(kept <- x[x > 3])\n'
+            '  base::eval(expr, envir)\n'
+            '}\n'
+            'getOption("lane.hook")$run_file("authors-code/analysis.R")\n')
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertIn('"x"\n"1",3\n"2",4\n', self.kept())
+        self.assertIn("run-context:analysis.R@run-01", flags)
+        self.assertTrue(any("eval <-" in e for e in result["errors"]), result["errors"])
+
+    def test_a_wrapper_function_the_authors_call_is_flagged(self):
+        """B-1's second probe: a global write.csv() changes what the authors'
+        statement writes. The evaluator cannot stop that, so it is flagged."""
+        _doc, _result, flags = self.run_wrapper(
+            'write.csv <- function(x, ...) utils::write.csv(x * 10, ...)\n'
+            'getOption("lane.hook")$run_file("authors-code/analysis.R")\n')
+        self.assertIn("run-context:analysis.R@run-01", flags)
+
+    def test_parse_then_evaluate_in_the_wrapper_is_flagged(self):
+        """Fable's experiment: statement 3 altered in memory after the
+        wrapper's own parse(file =). Gate 1.3 called the code identical."""
+        doc, _result, flags = self.run_wrapper(
+            'exprs <- parse(file = "authors-code/analysis.R")\n'
+            'exprs[[3]] <- quote(kept <- x[x > 3])\n'
+            'for (e in exprs) eval(e, globalenv())\n')
+        self.assertEqual(doc["state"], "complete", doc["problems"])
+        self.assertIn("parsed-not-run:analysis.R@run-01", flags)
 
 
 # An authors' package tree. The Encoding field makes R CMD INSTALL parse its

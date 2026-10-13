@@ -31,6 +31,41 @@ The wrapper is infrastructure, not analysis. If a reviewer cannot distinguish
 the analytical results of the wrapper from the original script, the wrapper is
 correct. If results differ, the wrapper has introduced a bug.
 
+## Running a Script Statement by Statement
+
+When a script must run statement by statement (one statement errors under
+the built environment but computes nothing that enters a result, such as
+registering a font, or errors must be captured per section), do not parse it
+and loop over the expressions yourself. Use the lane's evaluator:
+
+```r
+# Statement on line 12 registers a font; tolerate its error (Q6 ruling).
+getOption("lane.hook")$run_file("materials/analysis.R", tolerate = 12L)
+# Or capture every statement's error and carry on:
+getOption("lane.hook")$run_file("materials/analysis.R", continue_on_error = TRUE)
+```
+
+The lane parses the file and evaluates each top-level statement itself, in
+order, in the global environment, printing visible values as `Rscript`
+does, and records every statement it parsed and how each evaluation ended.
+The gate binds the two, so a skipped statement is an omission and a
+tolerated or captured error is a flag for a ruling. A wrapper that calls
+`parse(file =)` on an original and evaluates the result in its own loop is
+flagged (`parsed-not-run`): only the wrapper's own record would show which
+statements ran, or whether one was altered (the gate 1.3 final review's
+A-new-1). Without the need to tolerate or capture errors, `source()` the
+original as usual.
+
+Keep the wrapper's own objects inside `local()`: functions in the global
+environment, or packages the wrapper attaches, are listed when `run_file`
+starts and flagged (`run-context`), since a function the authors call may
+then resolve to the wrapper's. Pass `encoding = "UTF-8"` when the script has
+non-ASCII names or strings. Two differences from `Rscript`, both shared
+with `source()`: a statement's own `parent.frame()` is not the global
+environment (functions it calls are unaffected), and warnings are printed
+together when `run_file` returns, at most fifty, rather than after each
+statement.
+
 ## Parameterised Function Pattern
 
 For scripts that must be run multiple times with different parameters (e.g.,

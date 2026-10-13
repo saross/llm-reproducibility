@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """Deterministic orchestration helpers for the agentic reproduction lane.
 
-**Version:** 1.3
+**Version:** 1.4
+
+v1.4 (2026-10-12) is gate 1.3.1, the gate 1.3 final review's fixes: the
+transcript audit scans shell text with its quoting (1.1); admission reads
+the workflow's run audit (receipts, blinding, the relayed launch message,
+escalations, and review concerns); comparisons declare each target's method
+and are checked against declared element counts; images are built through
+``build-image``, which keeps the build log; and the hook's ``run_file``
+evaluator binds every statement it ran to one it parsed. See the note at
+the top of the design.
 
 v1.3 (2026-10-09) is gate 1.3 (``wiki/planning/reproduction-gate-1-3-design.md``).
 The executor no longer starts containers: ``run-container`` runs each attempt
@@ -158,10 +167,12 @@ import os
 import posixpath
 import re
 import secrets
+import shlex
 import shutil
 import subprocess
 import sys
 import tempfile
+import textwrap
 from collections import Counter
 from collections.abc import Iterator
 from datetime import date as date_type, datetime, time as time_type, timedelta, timezone
@@ -183,7 +194,7 @@ EXECUTION_FILE = "execution-report.json"
 REVIEW_FILE = "adversarial-review.json"
 COMPARISON_FILE = Path("comparisons") / "comparison.json"
 DEFAULT_COMPARISON_SCHEMA = "reproduction-system/schemas/comparison-record.json"
-GATE_VERSION = "1.3"
+GATE_VERSION = "1.3.1"
 # Authors'-code integrity (gate 1.1; Shawn's ruling 2026-10-04, fail-and-uplift
 # follow-on 3): the authors' files are hashed at retrieval and every executed
 # copy must be byte-identical. Any difference is a declared wrapper or a
@@ -191,6 +202,12 @@ GATE_VERSION = "1.3"
 CODE_MANIFEST_FILE = "authors-code-manifest.json"
 RULINGS_FILE = "flag-rulings.json"
 AUDIT_FILE = "transcript-audit.json"
+# The workflow run's agent audit, bound to the attempt (2026-10-12, the gate
+# 1.3 final review's F8): each governed role's receipts, blinding, and write
+# scope, and the escalations and review concerns a human must resolve.
+RUN_AUDIT_FILE = "run-audit.json"
+# Where the executor transcribes published values (executor v1.7, F6).
+PUBLISHED_VALUES_DIR = "published-values"
 DEFAULT_CODE_MANIFEST_SCHEMA = "reproduction-system/schemas/authors-code-manifest.json"
 # File suffixes (lower-cased) treated as code in the closed-world inventory;
 # names beginning "Dockerfile" count too. Since gate 1.2 nothing is exempt:
@@ -266,7 +283,9 @@ CMD_CHECK_RE = re.compile(r"\bR\s+CMD\s+check\b")
 # Hook integrity: errors in a wrapper, flags in an original. An "=" counts
 # as assignment only at the start of a statement, so that an argument name
 # (f(parse = TRUE)) does not.
-LOADER_NAMES = r"(?:source|sys\.source|parse|loadNamespace)"
+# eval, evalq, withVisible, and print: the lane evaluator's own calls (Fable's
+# delta review, B-1).
+LOADER_NAMES = r"(?:source|sys\.source|parse|loadNamespace|eval|evalq|withVisible|print)"
 HOOK_INTEGRITY_RE = re.compile(
     r"\b(?:untrace|tracingState)\s*\("
     r"|\bSys\.(?:un)?setenv\s*\([^)]*\bR_(?:PROFILE_USER|ENVIRON_USER|PROFILE)\b"
@@ -302,6 +321,13 @@ PROVENANCE_RE = re.compile(
 PAPER_RE = re.compile(r"^\s*Paper: (\S+)$", re.MULTILINE)
 SCRATCH_RE = re.compile(r"^\s*Scratch directory: (\S+)$", re.MULTILINE)
 ATTEMPT_DIR_RE = re.compile(r"^\s*Attempt directory: (\S+)$", re.MULTILINE)
+# The harness relays the user message that started a workflow to every spawn,
+# ahead of the computed task and above it in authority (the gate 1.3 final
+# review's F3). The runbook's fixed launch message is the only one that needs
+# no ruling.
+RELAY_FRAME = "[Workflow harness — user request]"
+COMPUTED_FRAME = "[Workflow harness — computed task]"
+NEUTRAL_LAUNCH_RE = re.compile(r"\s*Run the approved stage\.?\s*", re.IGNORECASE)
 # Tokens in a Bash command that could name a local file: split on shell
 # punctuation, then keep path-like tokens that are not URLs (a URL's path
 # segment — e.g. a Wikipedia /wiki/ link — is not a local access).
@@ -741,6 +767,31 @@ def cmd_build_plan_args(args: argparse.Namespace) -> int:
                "schema": runtime_schema(expand(config["schemas"]["plan"])),
                "blinding": blinding_args(config), "papers": papers}, args.out)
     return 0
+
+
+def relayed_request(lines: list[str]) -> str | None:
+    """The user request the harness relayed into a workflow spawn, verbatim
+    (its indentation removed), or None when the spawn carries none."""
+    for line in lines:
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        message = entry.get("message")
+        if not isinstance(message, dict):
+            continue
+        if message.get("role") == "assistant":
+            return None
+        if message.get("role") != "user":
+            continue
+        content = message.get("content")
+        text = (content if isinstance(content, str) else
+                "".join(str(b.get("text", "")) for b in content or []
+                        if isinstance(b, dict) and b.get("type") == "text"))
+        if text.startswith(RELAY_FRAME):
+            body = text.split("\n", 1)[1] if "\n" in text else ""
+            return textwrap.dedent(body).strip()
+    return None
 
 
 def first_user_text(lines: list[str]) -> str:
@@ -1200,14 +1251,16 @@ def cmd_approve(args: argparse.Namespace) -> int:
 
 def attempt_issues(target_dir: Path, report: dict) -> dict[str, dict]:
     """An attempt's rulable issues, by id: the gate report's, then the
-    transcript audit's (spec §12: a host run before the final run)."""
+    transcript audit's (spec §12: a host run before the final run), then the
+    run audit's (F8: escalations, review concerns, and blinding warnings)."""
     issues = {i["id"]: i for i in report.get("issues") or []}
-    try:
-        audit = json.loads((target_dir / AUDIT_FILE).read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        audit = {}
-    for issue in audit.get("issues") or []:
-        issues.setdefault(issue["id"], issue)
+    for name in (AUDIT_FILE, RUN_AUDIT_FILE):
+        try:
+            audit = json.loads((target_dir / name).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            audit = {}
+        for issue in audit.get("issues") or []:
+            issues.setdefault(issue["id"], issue)
     return issues
 
 
@@ -2023,7 +2076,8 @@ PROJECT_PROFILE = ".Rprofile.project"
 # Everything else in the attempt directory is the input tree.
 DOCUMENT_NAMES = frozenset({
     PLAN_FILE, PLAN_VIEW_FILE, APPROVAL_FILE, CODE_MANIFEST_FILE, EXECUTION_FILE,
-    GATE_FILE, RULINGS_FILE, AUDIT_FILE, REVIEW_FILE, "log.md", "environment.md",
+    GATE_FILE, RULINGS_FILE, AUDIT_FILE, RUN_AUDIT_FILE, REVIEW_FILE, "log.md",
+    "environment.md",
     "comparisons", "outputs", RECORDS_DIR, SNAPSHOT_DIR, "__pycache__"})
 # Interpreters run-container starts the entry with, by suffix.
 ENTRY_INTERPRETERS = {".r": "Rscript", ".sh": "bash"}
@@ -2211,6 +2265,105 @@ def inventory_difference(expected: dict[str, str], found: dict[str, str]) -> lis
     changed = sorted(rel for rel in set(expected) & set(found) if expected[rel] != found[rel])
     return ([f"added {rel}" for rel in added] + [f"removed {rel}" for rel in removed]
             + [f"changed {rel}" for rel in changed])
+
+
+BUILD_ID_RE = re.compile(r"^build-(\d{2,})$")
+DOCKERFILE_LABEL = "llmr.dockerfile.sha256"
+
+
+def build_image(target_dir: Path, tag: str, context: Path | None = None,
+                launch_commit: str | None = None, timeout_s: int = 6 * 3600) -> dict:
+    """Build the attempt's image through the lane, keeping the evidence.
+
+    The gate 1.3 final review's F5: the review framework asks for a build
+    log, which nothing kept, and the image's Dockerfile label was whatever
+    the executor's build command said. Here the lane runs ``docker build``
+    on the attempt's ``Dockerfile``, labels the image with that file's
+    sha256 itself, and writes ``lane-records/build-NN/`` with the full log
+    and a record of the command, the image id, and the log's hash.
+
+    Args:
+        target_dir: The attempt directory, holding ``Dockerfile``.
+        tag: The image tag.
+        context: The build context (default: the attempt directory).
+        launch_commit: The run's launch commit, recorded.
+        timeout_s: How long the build may take.
+
+    Returns:
+        The build record.
+    """
+    dockerfile = target_dir / "Dockerfile"
+    if not dockerfile.is_file():
+        raise LaneError(f"no Dockerfile in {display_path(target_dir)}")
+    records = target_dir / RECORDS_DIR
+    records.mkdir(exist_ok=True)
+    numbers = [int(m.group(1)) for m in (BUILD_ID_RE.match(p.name) for p in records.iterdir())
+               if m]
+    build_id = f"build-{max(numbers, default=0) + 1:02d}"
+    build_dir = records / build_id
+    build_dir.mkdir()
+    digest = sha256_file(dockerfile)
+    command = ["docker", "build", "--progress=plain", "-f", str(dockerfile), "-t", tag,
+               "--label", f"{DOCKERFILE_LABEL}={digest}", str(context or target_dir)]
+    started = now_utc()
+    log_path = build_dir / "build.log"
+    with log_path.open("wb") as log:
+        try:
+            status = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT,
+                                    timeout=timeout_s, check=False).returncode
+        except subprocess.TimeoutExpired:
+            status = None
+    image_id = None
+    if status == 0:
+        probe = subprocess.run(["docker", "image", "inspect", tag, "--format", "{{.Id}}"],
+                               capture_output=True, text=True, timeout=60, check=False)
+        image_id = probe.stdout.strip() or None
+    doc = {"record_version": RECORD_VERSION, "build": build_id, "tag": tag,
+           "image_id": image_id, "dockerfile_sha256": digest, "started_at": started,
+           "ended_at": now_utc(), "exit_status": status, "command": command,
+           "launch_commit": launch_commit,
+           "lane_script_sha256": sha256_file(Path(__file__).resolve()),
+           "log_sha256": sha256_file(log_path)}
+    write_json(build_dir / "build.json", doc)
+    return doc
+
+
+def build_evidence(target_dir: Path, image: dict) -> tuple[list[str], list[Issue]]:
+    """Errors and obligations for the build behind a run's image (F5).
+
+    A lane build record whose image id is the run's, built from the attempt's
+    current Dockerfile, and whose log still hashes to its record, evidences
+    the build. Without one, the build history (failed attempts, fetched
+    tarballs) is unevidenced: an obligation, never an inference of a clean
+    build.
+    """
+    errors: list[str] = []
+    records = target_dir / RECORDS_DIR
+    image_id = image.get("id")
+    if not image_id:
+        return errors, []
+    for path in sorted(records.glob("build-*/build.json")) if records.is_dir() else []:
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            errors.append(f"{display_path(path)} does not parse")
+            continue
+        if doc.get("image_id") != image_id or doc.get("exit_status") != 0:
+            continue
+        log = path.parent / "build.log"
+        if not log.is_file() or sha256_file(log) != doc.get("log_sha256"):
+            errors.append(f"{path.parent.name}: the build log is missing or does not hash to "
+                          f"its record")
+        elif doc.get("dockerfile_sha256") != image.get("dockerfile_sha256"):
+            continue
+        else:
+            return errors, []
+    return errors, [Issue.obligation(
+        "build-evidence", str(image_id)[:19], f"the run's image {str(image_id)[:19]} has no "
+        f"lane build record from the attempt's Dockerfile (reproduction-lane.py "
+        f"build-image), so its build history, failed attempts and fetched sources included, "
+        f"is unevidenced: the reviewer confirms it, or the image is rebuilt through the lane",
+        files={"image": str(image_id), "Dockerfile": str(image.get("dockerfile_sha256"))})]
 
 
 def run_ids(records: Path) -> list[str]:
@@ -2920,6 +3073,29 @@ def lane_script_at(repo_root: Path, commit: str,
     return hashlib.sha256(proc.stdout).hexdigest() if proc.returncode == 0 else None
 
 
+def manifest_at(repo_root: Path, commit: str | None) -> dict | None:
+    """``manifest.yaml`` as committed at ``commit``, or None when it cannot
+    be read.
+
+    A run's receipts are checked against the manifest it was launched under
+    (its Provenance line names the commit), not today's: with admission
+    strict, a definition merged between a run and its audit would otherwise
+    make the run inadmissible for no fault of its own (2026-10-12, a side
+    note on the gate 1.3 delta round).
+    """
+    if not commit:
+        return None
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    proc = subprocess.run(["git", "-C", str(repo_root), "show", f"{commit}:manifest.yaml"],
+                          capture_output=True, check=False, env=env)
+    if proc.returncode != 0:
+        return None
+    try:
+        return yaml.safe_load(proc.stdout.decode("utf-8")) or {}
+    except yaml.YAMLError:
+        return None
+
+
 # The lane files a run stages from the repository, which the launcher binding
 # checks at the launch commit as it checks the lane script: the hook and the
 # shim produce the events the gate reads, so a stale copy of either is a
@@ -3160,6 +3336,9 @@ def check_run_records(target_dir: Path, launch_commit: str | None,
             f"built from another file",
             files={"image": str(image.get("id")), "Dockerfile": str(image.get(
                 "dockerfile_sha256"))}))
+    build_errors, build_obligations = build_evidence(target_dir, image)
+    report["errors"] += build_errors
+    report["obligations"] += build_obligations
     if (doc.get("front_end") or {}).get("unshimmed"):
         report["warnings"].append(f"{final}: R on the PATH at "
                                   f"{doc['front_end']['unshimmed']} is not the front end, so "
@@ -3911,6 +4090,12 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                        if e["event"] == "FORK" and e["fields"]}
         top_file: dict[str, dict] = {}
         bindings: dict[tuple[str, int], dict] = {}
+        # The lane's evaluator (hook 1.6, A-new-1): each run_file LOAD's
+        # parsed statements and their evaluations, by (token, load seq).
+        load_fns: dict[tuple[str, int], str] = {}
+        parsed: dict[tuple[str, int], dict[int, tuple[str, str]]] = {}
+        contexts: dict[tuple[str, int], list[str]] = {}
+        evaluated: dict[tuple[str, int], dict[int, tuple[str, str]]] = {}
 
         def lookup(token: str, seq: int) -> dict | None:
             # A forked child's events inside a load its parent had open at the
@@ -4105,6 +4290,7 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
             elif kind == "LOAD" and len(fields) >= 6:
                 binding = bind_load(event, where)
                 bindings[(token, event["seq"])] = binding
+                load_fns[(token, event["seq"])] = decode_field(fields[0])
                 count(binding["class"])
                 if decode_field(fields[0]) == "file":
                     top_file.setdefault(token, event)
@@ -4172,6 +4358,15 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                         f"matches no original, no chunk of an original document, and no tool "
                         f"expression: confirm what it ran",
                         files={"text": md5, **evidence}))
+            elif kind == "STMT" and len(fields) >= 5 and fields[0].isdigit():
+                parsed.setdefault((token, int(fields[0])), {})[int(fields[1])] = (
+                    fields[2], fields[3])
+            elif kind == "RUNCTX" and len(fields) >= 7 and fields[0].isdigit():
+                contexts[(token, int(fields[0]))] = fields
+            elif kind == "EVAL" and len(fields) >= 4 and fields[0].isdigit():
+                message = decode_field(fields[3]) if fields[3] != "none" else ""
+                evaluated.setdefault((token, int(fields[0])), {})[int(fields[1])] = (
+                    fields[2], message)
             elif kind == "CONN" and len(fields) >= 3:
                 count("connection")
                 caller = decode_field(fields[5]) if len(fields) > 5 else ""
@@ -4210,6 +4405,91 @@ def account_loads(target_dir: Path, runs: dict[str, dict], catalogue: dict,
                     f"{decode_field(fields[2])}, which records no repository or remote source: "
                     f"it was installed locally, so {note}",
                     files={"DESCRIPTION": fields[7], "version": version}))
+
+        # The lane's evaluator (A-new-1): an original it ran must have every
+        # parsed statement evaluated. A skipped statement is an omission, and
+        # a tolerated or continued error is a flag for the Q6 ruling. An
+        # original parsed by parse(file =) outside the evaluator was then run
+        # by the wrapper's own loop, which only the wrapper records.
+        for key, binding in sorted(bindings.items()):
+            oid = binding.get("id")
+            if binding.get("class") not in ("original", "edited-copy") or oid is None:
+                continue
+            fn = load_fns.get(key)
+            if fn == "parse":
+                add(flags, Issue.flag(
+                    "parsed-not-run", f"{oid}@{run_id}", f"{run_id} parsed original {oid!r} "
+                    f"with parse(file =) outside the lane's evaluator, so only the wrapper's "
+                    f"own record shows which of its statements ran, and whether any was "
+                    f"altered or skipped: run it with getOption(\"lane.hook\")$run_file()",
+                    files={"original": binding.get("md5") or oid}))
+                continue
+            if fn != "lane::run_file":
+                continue
+            statements = parsed.get(key, {})
+            outcomes = evaluated.get(key, {})
+            # The run's context (hook 1.7, B-1): functions already in the
+            # global environment and packages attached beyond R's defaults
+            # can change what the authors' statements call; a blanket
+            # continue or another environment changes how they run.
+            context = contexts.get(key)
+            if context is None:
+                warnings.append(f"{run_id}: the lane's evaluator ran {oid!r} with no RUNCTX "
+                                f"event (a hook before 1.7)")
+            else:
+                tolerated_lines, mode, scope = context[1], context[2], context[3]
+                encoding = decode_field(context[4])
+                defined = decode_field(context[5]) if context[5] != "none" else ""
+                attached = decode_field(context[6]) if context[6] != "none" else ""
+                warnings.append(f"{run_id}: the lane's evaluator ran {oid!r} with tolerance "
+                                f"{tolerated_lines}, mode {mode}, environment {scope}, "
+                                f"encoding {encoding}")
+                concerns = []
+                if defined:
+                    concerns.append(f"functions defined in the global environment ({defined})")
+                if attached:
+                    concerns.append(f"packages attached beyond R's defaults ({attached})")
+                if mode == "continue":
+                    concerns.append("every statement's error allowed (continue_on_error)")
+                if scope != "global":
+                    concerns.append("an environment other than the global one")
+                if concerns:
+                    add(flags, Issue.flag(
+                        "run-context", f"{oid}@{run_id}", f"{run_id}: the lane's evaluator ran "
+                        f"original {oid!r} with {'; '.join(concerns)}: a function the authors "
+                        f"call may resolve to the wrapper's, so confirm nothing they compute "
+                        f"is changed (honest wrappers keep their state in local())",
+                        files={"original": binding.get("md5") or oid,
+                               "context": json_digest(context)}))
+
+            def lines_of(index: int, spans: dict = statements) -> str:
+                first, last = spans.get(index, ("?", "?"))
+                return first if first == last else f"{first}-{last}"
+
+            skipped = [i for i in sorted(statements) if i not in outcomes]
+            if skipped:
+                shown = ", ".join(lines_of(i) for i in skipped[:8])
+                add(flags, Issue.flag(
+                    "original-partly-run", f"{oid}@{run_id}/statements", f"{run_id}: the "
+                    f"lane's evaluator ran {len(outcomes)} of {len(statements)} statements of "
+                    f"original {oid!r}; lines {shown}" + (" and more" if len(skipped) > 8
+                                                         else "")
+                    + " never ran: running only some of the authors' statements is an "
+                    "omission, so confirm it changes no result",
+                    files={"original": binding.get("md5") or oid,
+                           "skipped": json_digest(skipped)}))
+            for index, (status, message) in sorted(outcomes.items()):
+                if status == "ok":
+                    continue
+                code = "tolerated-statement" if status == "tolerated" else "statement-error"
+                add(flags, Issue.flag(
+                    code, f"{oid}:{lines_of(index)}@{run_id}", f"{run_id}: statement "
+                    f"{index} of original {oid!r} (lines {lines_of(index)}) errored "
+                    f"({message[:200]}) and the evaluator {status}: a target is credited "
+                    f"only from statements that completed, so confirm it computes nothing "
+                    f"that enters a result",
+                    files={"original": binding.get("md5") or oid,
+                           "outcome": json_digest([index, status, message])}))
 
         # An original run part by part: loaded when the slices cover every
         # code line, in order; otherwise an omission, flagged.
@@ -5534,14 +5814,273 @@ def admitted_coverage(verdict: str, issues: list[dict], rulings: list[dict],
             "unruled_issues": unruled}
 
 
-def admission(target_dir: Path) -> dict:
+# Astra's delta review of gate 1.3.1, D-Astra-3: a run audit clears one
+# workflow's results, for the attempt as its reviewer was handed it.
+# Version 1.1 records the workflow run, each role's agent and accepted
+# payload digest, and the reviewed artefact state; admission refuses an audit
+# without them.
+RUN_AUDIT_VERSION = "1.1"
+# Records written after the review, or that hold its results: the rest of
+# the attempt is the state the reviewer was handed. A run lock is transient.
+POST_REVIEW_FILES = frozenset({GATE_FILE, EXECUTION_FILE, REVIEW_FILE, RULINGS_FILE,
+                               AUDIT_FILE, RUN_AUDIT_FILE, f"{RECORDS_DIR}/{LOCK_FILE}"})
+ARTEFACT_STATE_RE = re.compile(r'"artefact_state_sha256":\s*"([0-9a-f]{64})"')
+
+
+def artefact_state(target_dir: Path) -> str:
+    """One digest of an attempt's reviewable state.
+
+    The sha256 of every file in the attempt tree (as ``tree_inventory``
+    lists it) except the post-review records, digested together with the
+    files' relative paths. check-attempt reports and prints it; audit-run
+    and persist-results compare it with the attempt as it stands, so a
+    comparison changed after the review cannot reuse that review's
+    clearance (D-Astra-3).
+    """
+    with digest_snapshot():
+        inventory = tree_inventory(target_dir)
+    return json_digest({rel: digest for rel, digest in inventory.items()
+                        if rel not in POST_REVIEW_FILES})
+
+
+def reviewed_states(run_dir: Path, config: dict) -> dict[str, list[str]]:
+    """The attempt state each paper's in-workflow gate check recorded.
+
+    The execute workflow runs check-attempt for a paper after its executor
+    and before its reviewer, through an ungoverned gate agent, and the
+    command prints the attempt's artefact state. The last state in each
+    gate agent's transcript is therefore the one the reviewer was handed,
+    as the harness recorded the command's output, not as a model relayed it.
+
+    Returns:
+        ``{slug: [states]}``, one state per gate agent that recorded one,
+        sorted; more than one distinct state is ambiguous.
+    """
+    governed = {config["agents"]["executor"], config["agents"]["reviewer"]}
+    states: dict[str, set[str]] = {}
+    for transcript in sorted(run_dir.glob("agent-*.jsonl")):
+        meta_path = transcript.with_name(f"{transcript.stem}.meta.json")
+        meta = (json.loads(meta_path.read_text(encoding="utf-8"))
+                if meta_path.is_file() else {})
+        if str(meta.get("agentType") or "") in governed:
+            continue
+        lines = transcript.read_text(encoding="utf-8").splitlines()
+        paper = PAPER_RE.search(first_user_text(lines))
+        found = [state for call in timed_tool_calls(lines)
+                 if call["name"] == "Bash" and "check-attempt" in str(
+                     call["input"].get("command") or "")
+                 for state in ARTEFACT_STATE_RE.findall(call["output"])]
+        if paper and found:
+            states.setdefault(paper.group(1), set()).add(found[-1])
+    return {slug: sorted(found) for slug, found in states.items()}
+
+
+def run_audit_reasons(target_dir: Path, report: dict, rulings: list[dict],
+                      bound: dict | None = None) -> list[str]:
+    """Why an attempt's run audit keeps it out of study data (F8).
+
+    Args:
+        target_dir: The attempt directory.
+        report: Its authoritative gate report.
+        rulings: Its rulings.
+        bound: The results being persisted: ``{run_id, workflow_run, roles:
+            {role: {agent_id, payload_sha256}}}``. The run audit must have
+            cleared exactly these, for the attempt as it stands (D-Astra-3);
+            None, or a role missing, is a reason.
+    """
+    try:
+        run_audit = json.loads((target_dir / RUN_AUDIT_FILE).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return [f"no run audit recorded ({RUN_AUDIT_FILE}: run audit-run on the workflow "
+                f"run that produced this attempt)"]
+    reasons = []
+    roles = run_audit.get("roles") or {}
+    for role in ("executor", "reviewer"):
+        entry = roles.get(role)
+        if not entry:
+            reasons.append(f"the run audit has no {role}")
+        elif not entry.get("clean"):
+            reasons.append(f"the run audit found the {role} unclean: "
+                           f"{'; '.join(entry.get('problems') or [])[:400]}")
+    if run_audit.get("run_audit_version") != RUN_AUDIT_VERSION:
+        reasons.append(f"the run audit is version {run_audit.get('run_audit_version')!r}, "
+                       f"which does not bind results (run audit-run again)")
+    if bound is None:
+        reasons.append("no result was named to bind the run audit to (admission is assessed "
+                       "for the results persist-results is persisting)")
+    else:
+        for key in ("run_id", "workflow_run"):
+            if run_audit.get(key) != bound.get(key):
+                reasons.append(f"the run audit is for {key} {run_audit.get(key)!r}, not "
+                               f"{bound.get(key)!r}: run audit-run on the workflow run being "
+                               f"persisted")
+        for role in ("executor", "reviewer"):
+            given = (bound.get("roles") or {}).get(role)
+            audited = roles.get(role) or {}
+            if not given:
+                reasons.append(f"workflow run {bound.get('workflow_run')!r} has no {role} "
+                               f"result for this attempt")
+            elif audited.get("agent_id") != given.get("agent_id"):
+                reasons.append(f"the run audit cleared {role} agent "
+                               f"{audited.get('agent_id')!r}, not {given.get('agent_id')!r}")
+            elif audited.get("payload_sha256") != given.get("payload_sha256"):
+                reasons.append(f"the {role}'s result is not the one the run audit cleared "
+                               f"(its payload digest differs)")
+    reviewed = run_audit.get("reviewed_state_sha256")
+    recorded = run_audit.get("reviewed_states") or []
+    if not reviewed:
+        reasons.append("no in-workflow gate check recorded the attempt state the reviewer was "
+                       "handed" if not recorded else f"the in-workflow gate checks recorded "
+                       f"{len(recorded)} different attempt states, so which one was reviewed "
+                       f"is ambiguous")
+    elif reviewed != artefact_state(target_dir):
+        reasons.append("the attempt has changed since the gate check that preceded its review, "
+                       "so the review does not cover it: review it again")
+    if report.get("launch_commit") and run_audit.get("launch_commit") \
+            and run_audit["launch_commit"] != report["launch_commit"]:
+        reasons.append("the run audit's launch commit is not the gate report's")
+    try:
+        approval = json.loads((target_dir / APPROVAL_FILE).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        approval = {}
+    if run_audit.get("plan_sha256") and approval.get("plan_sha256") \
+            and run_audit["plan_sha256"] != approval["plan_sha256"]:
+        reasons.append("the run audit was made under a different approved plan")
+    unruled = [i["id"] for i in run_audit.get("issues") or [] if ruling_for(i, rulings) is None]
+    if unruled:
+        reasons.append(f"{len(unruled)} unruled run-audit issue(s): {', '.join(unruled[:5])}"
+                       + (" …" if len(unruled) > 5 else ""))
+    return reasons
+
+
+def role_audit(record: dict) -> dict:
+    """One governed agent's audit, as the attempt's run audit keeps it."""
+    problems = list((record.get("receipts") or {}).get("problems") or [])
+    blinding = record.get("blinding") or {}
+    problems += [f"blinded access: {c.get('path')} ({c.get('rule')})"
+                 for c in blinding.get("contaminating") or []]
+    problems += [f"write outside scope: {w}" for w in record.get("writes_outside_scope") or []]
+    problems += [f"transcript audit: {c.get('kind')}" for c in
+                 (record.get("execution_audit") or {}).get("contaminating") or []]
+    return {"agent_id": record.get("agent_id"), "agent_type": record.get("agent_type"),
+            "clean": bool(record.get("clean")), "problems": problems,
+            "warnings": list(blinding.get("warnings") or []),
+            "launch_message": record.get("launch_message")}
+
+
+def review_issues(role: str, payload: dict | None, warnings: list[dict]) -> list[Issue]:
+    """The questions one agent's result leaves for a human (F8).
+
+    The executor's escalations (PAPER_ERROR, CANNOT_COMPARE, other), a
+    reviewer's QUALIFIED or CHALLENGED verdict, any escalation without a
+    named finding, and each blinding warning become flags, so the human
+    queue lists them and admission waits for their rulings.
+    """
+    issues: list[Issue] = []
+    payload = payload or {}
+    escalations = payload.get("escalations") or []
+    for item in escalations:
+        kind = str(item.get("kind") or "OTHER")
+        target = item.get("target_id")
+        issues.append(Issue.flag(
+            "escalation", f"{role}:{kind}:{target or 'paper'}",
+            f"the {role} escalated {kind}{f' on {target}' if target else ''}: "
+            f"{str(item.get('detail') or '')[:400]} (a human confirms or rejects it)",
+            targets=[target] if target else (), files={"escalation": json_digest(item)}))
+    if payload.get("status") == "ESCALATE" and not escalations:
+        issues.append(Issue.flag(
+            "escalation", f"{role}:status", f"the {role} returned ESCALATE: "
+            f"{str(payload.get('escalate_reason') or '')[:400]}",
+            files={"reason": json_digest(payload.get("escalate_reason"))}))
+    overall = payload.get("overall")
+    if role == "reviewer" and overall in ("QUALIFIED", "CHALLENGED"):
+        dims = payload.get("dimensions") or {}
+        concerns = [k for k in DIMENSION_KEYS if (dims.get(k) or {}).get("verdict") == "CONCERN"]
+        support = (payload.get("verdict_challenge") or {}).get("reviewer_supports_verdict")
+        issues.append(Issue.flag(
+            "review", overall.lower(), f"the adversarial review is {overall} (concerns: "
+            f"{', '.join(concerns) or 'none named'}; supports the verdict: {support}): a "
+            f"human resolves each concern before the result enters study data",
+            files={"review": json_digest({"dimensions": dims, "overall": overall})}))
+    for warning in warnings:
+        issues.append(Issue.flag(
+            "blinding-warning", f"{role}:{warning.get('path')}",
+            f"{warning.get('rule')}: {str(warning.get('command') or '')[:200]}",
+            files={"warning": json_digest(warning)}))
+    return issues
+
+
+def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
+                      roles: dict[str, tuple[dict, dict | None]],
+                      reviewed: list[str] | None = None) -> dict:
+    """The attempt's run audit: each governed role's verdict, the workflow
+    identities it was made under, and the issues for a ruling (F8).
+
+    Args:
+        config: The run configuration.
+        run_dir_name: The workflow run's directory name.
+        target_dir: The attempt directory.
+        roles: ``{role: (agent audit record, accepted payload)}`` for the
+            executor and the reviewer that worked on this attempt, as
+            ``select_results`` chose them.
+        reviewed: The attempt states the workflow's gate checks recorded
+            (``reviewed_states``); exactly one is the reviewed state.
+    """
+    try:
+        approval = json.loads((target_dir / APPROVAL_FILE).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        approval = {}
+    # Each role is bound to its accepted result by digest (D-Astra-3), so a
+    # retried result cannot inherit this audit's clearance.
+    audits = {role: {**role_audit(record),
+                     "payload_sha256": json_digest(payload) if payload is not None else None}
+              for role, (record, payload) in roles.items()}
+    reviewed = sorted(set(reviewed or ()))
+    issues: list[Issue] = []
+    for role, (_, payload) in sorted(roles.items()):
+        issues += review_issues(role, payload, audits[role]["warnings"])
+    for text in sorted({a["launch_message"] for a in audits.values() if a["launch_message"]}):
+        if not NEUTRAL_LAUNCH_RE.fullmatch(text):
+            issues.append(Issue.flag(
+                "launch-message", json_digest(text)[:12], f"the workflow was launched with "
+                f"{text[:300]!r}, not the runbook's fixed phrase, and the harness relayed it to "
+                f"every agent ahead of the workflow's instructions: a human rules whether it "
+                f"could steer or unblind the run", files={"text": json_digest(text)}))
+    seen: set[str] = set()
+    unique = [i for i in issues if not (i.issue_id in seen or seen.add(i.issue_id))]
+    executor = roles.get("executor", ({}, None))[0]
+    return {"run_audit_version": RUN_AUDIT_VERSION, "audited_at": now_utc(),
+            "run_id": config["run_id"],
+            "workflow_run": run_dir_name, "attempt_dir": display_path(target_dir),
+            "launch_commit": (executor.get("provenance") or {}).get("launch_commit"),
+            "plan_sha256": approval.get("plan_sha256"),
+            "reviewed_state_sha256": reviewed[0] if len(reviewed) == 1 else None,
+            "reviewed_states": reviewed,
+            "artefact_state_sha256": artefact_state(target_dir),
+            "roles": audits, "missing_roles": sorted({"executor", "reviewer"} - set(roles)),
+            "issues": issue_records(unique)}
+
+
+def admission(target_dir: Path, bound: dict | None = None) -> dict:
     """Whether an attempt's results may enter study data (spec §6).
 
     Admission needs a passing gate, every issue ruled, every credited run
-    complete (a failed one is covered by its ``run-failed`` issue), and a
-    clean transcript audit (``transcript-audit.json``, spec §12). Nothing
-    here can be overridden: a record persisted while ineligible stays so
-    until ``persist-results`` is run afresh after the rulings.
+    complete (a failed one is covered by its ``run-failed`` issue), a clean
+    transcript audit (``transcript-audit.json``, spec §12), and a run audit
+    (``run-audit.json``, F8) in which the executor and the reviewer are both
+    present and clean, bound to the same launch commit and approved plan,
+    with every escalation, review concern, and blinding warning ruled. The
+    run audit must also have cleared the very results being persisted
+    (``bound``: their workflow run, agents, and payload digests), for the
+    attempt as its reviewer was handed it (D-Astra-3). Nothing here can be
+    overridden: a record persisted while ineligible stays so until
+    ``persist-results`` is run afresh after the rulings.
+
+    Args:
+        target_dir: The attempt directory.
+        bound: The identities of the results being persisted, as
+            ``run_audit_reasons`` takes them; without them nothing is
+            eligible.
     """
     reasons: list[str] = []
     try:
@@ -5576,8 +6115,9 @@ def admission(target_dir: Path) -> dict:
                            f"{', '.join(audit_unruled[:5])}")
     except (OSError, json.JSONDecodeError):
         reasons.append(f"no transcript audit recorded ({AUDIT_FILE}, spec §12)")
+    reasons += run_audit_reasons(target_dir, report, rulings, bound)
     return {"eligible": not reasons, "assessed_at": now_utc(), "reasons": reasons,
-            "gate_report_sha256": sha256_file(target_dir / GATE_FILE)}
+            "gate_report_sha256": sha256_file(target_dir / GATE_FILE), "bound": bound}
 
 
 def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
@@ -5643,6 +6183,8 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
     try:
         plan_record = json.loads(plan_path.read_text(encoding="utf-8"))
         locked = [t["target_id"] for t in plan_record["plan"]["verification_targets"]]
+        declared_counts = {t["target_id"]: t.get("n_values")
+                           for t in plan_record["plan"]["verification_targets"]}
         plan_slug = plan_record["plan"]["paper_slug"]
         plan_digest = sha256_file(plan_path)
     except (OSError, KeyError, TypeError, json.JSONDecodeError) as exc:
@@ -5688,6 +6230,24 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
                 errors.append(f"{tid}: untestable/CANNOT_COMPARE without failure_mode")
             if t.get("testable") is False and t.get("outcome") in REPRODUCED_OUTCOMES:
                 errors.append(f"{tid}: marked untestable but outcome {t.get('outcome')}")
+            # The gate 1.3 final review's F9 (amendment 3 §7(c)): a target
+            # counts as reproduced only when its check covered the plan's
+            # declared element count. An honest partial or untestable
+            # outcome is untouched; an excess (cross-checks) is a warning.
+            expected = declared_counts.get(tid)
+            compared = t.get("values_compared")
+            if isinstance(expected, int) and t.get("outcome") in REPRODUCED_OUTCOMES:
+                if not isinstance(compared, int):
+                    errors.append(f"{tid}: the plan declares {expected} value(s) but the "
+                                  f"record gives no values_compared, so it cannot be "
+                                  f"credited as {t.get('outcome')}")
+                elif compared < expected:
+                    errors.append(f"{tid}: {compared} of the plan's {expected} declared "
+                                  f"value(s) compared; a partial check cannot be credited as "
+                                  f"{t.get('outcome')} (record it as partially verified)")
+                elif compared > expected:
+                    warnings.append(f"{tid}: {compared} values compared against the plan's "
+                                    f"{expected} (cross-checks, or a miscount?)")
             evidence = str(t.get("evidence") or "")
             if (evidence and " " not in evidence and "/" in evidence
                     and not (target_dir / evidence).exists()):
@@ -5737,6 +6297,33 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
         errors += cite_errors
         warnings += cite_flags
         flags += cite_flags
+    # The gate 1.3 final review's F4: the gate checks counts, not methods.
+    # A declared departure from the approved plan's method is a flag on its
+    # target, and every attempt carries one obligation for the reviewer to
+    # compare each target's executed method with the plan's wording, so an
+    # undeclared change also has a named owner.
+    method_obligations: list[Issue] = []
+    if isinstance(comparison, dict):
+        for t in records:
+            tid = t.get("target_id")
+            if tid not in locked:
+                continue
+            if t.get("method_as_planned") is False:
+                flag = Issue.flag(
+                    "method-deviation", str(tid), f"{tid}: the comparison departed from the "
+                    f"approved plan's method: {str(t.get('method_deviation') or '')[:300]} "
+                    f"(a human rules on it; the original plan stands as approved)",
+                    targets=[str(tid)], files={"record": json_digest(t)})
+                flags.append(flag)
+                warnings.append(flag)
+            elif "method_as_planned" not in t:
+                warnings.append(f"{tid}: the record does not declare method_as_planned")
+        method_obligations.append(Issue.obligation(
+            "method-adherence", "targets", "the gate checks counts, not methods: the reviewer "
+            "compares each target's executed comparison method and tolerance with the "
+            "approved plan's wording, and names every departure, declared or not",
+            files={"plan": plan_digest,
+                   "comparison": sha256_file(target_dir / COMPARISON_FILE)}))
 
     # Admitted coverage (spec §6). The recomputed coverage counts outcomes,
     # so a target resting on a declared edit would be counted: exclude every
@@ -5746,7 +6333,8 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
     # (coverage_creditable, part 1's interim measure, was dropped at the
     # workflow switch.)
     admitted = None
-    issues = issue_records(flags + integrity["review_obligations"])
+    obligations_all = list(integrity["review_obligations"]) + method_obligations
+    issues = issue_records(flags + obligations_all)
     if coverage is not None:
         edited: set[str] = set()
         manifest = {}
@@ -5782,7 +6370,7 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
             "plan_sha256": plan_digest, "locked_targets": len(locked),
             "verdict": "fail" if errors else "pass", "errors": errors,
             "warnings": warnings, "flags": flags,
-            "review_obligations": integrity["review_obligations"], "coverage": coverage,
+            "review_obligations": obligations_all, "coverage": coverage,
             "coverage_admitted": admitted,
             "issues": issues, "launch_commit": launch_commit,
             "eligible_for_current_gate": integrity["eligible_for_current_gate"],
@@ -5795,7 +6383,8 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
                     {"conversions": integrity["conversions"]} if integrity.get("conversions")
                     else {}),
             "executor_verdict": (comparison or {}).get("verdict")
-            if isinstance(comparison, dict) else None}
+            if isinstance(comparison, dict) else None,
+            "artefact_state_sha256": artefact_state(target_dir)}
 
 
 def cmd_check_attempt(args: argparse.Namespace) -> int:
@@ -5819,8 +6408,12 @@ def cmd_check_attempt(args: argparse.Namespace) -> int:
     else:
         out = Path(args.out).expanduser() if args.out else target_dir / GATE_FILE
         write_json(out, report)
+        # The artefact state is printed so that the transcript of the
+        # in-workflow gate check, which runs just before the review, records
+        # the state the reviewer was handed (D-Astra-3).
         print(json.dumps({k: report.get(k) for k in ("verdict", "errors", "warnings",
-                                                       "coverage")}, indent=2))
+                                                       "coverage", "artefact_state_sha256")},
+                         indent=2))
     return 0 if report["verdict"] == "pass" else 1
 
 
@@ -5867,6 +6460,18 @@ def cmd_snapshot_code(args: argparse.Namespace) -> int:
     """
     raise LaneError("snapshot-code is retired at gate 1.3: run the analysis with "
                     "run-container, which records each run in lane-records/")
+
+
+def cmd_build_image(args: argparse.Namespace) -> int:
+    """CLI wrapper: build the attempt's image through the lane (F5)."""
+    target_dir = args.attempt_dir.expanduser().resolve()
+    if not target_dir.is_dir():
+        raise LaneError(f"attempt directory not found: {display_path(target_dir)}")
+    doc = build_image(target_dir, args.tag, context=args.context, launch_commit=args.launch_commit)
+    print(f"{doc['build']}: exit status {doc['exit_status']}; image "
+          f"{(doc['image_id'] or 'none')[:19]}; log in "
+          f"{RECORDS_DIR}/{doc['build']}/build.log")
+    return 0 if doc["exit_status"] == 0 else 1
 
 
 def cmd_run_container(args: argparse.Namespace) -> int:
@@ -6004,11 +6609,21 @@ def cmd_persist_results(args: argparse.Namespace) -> int:
     run_dir = args.run_dir.expanduser().resolve()
     results = journal_results(run_dir)
     problems = []
-    for role, filename, schema_key in (("executor", EXECUTION_FILE, "execution"),
-                                       ("reviewer", REVIEW_FILE, "review")):
-        chosen, dead = select_results(results, config["agents"][role], config)
+    selections: dict[str, dict[str, dict]] = {}
+    for role in ("executor", "reviewer"):
+        selections[role], dead = select_results(results, config["agents"][role], config)
         problems += [f"{role} for {slug} returned no result — re-run that item"
                      for slug in dead]
+    # What admission must find the run audit cleared (D-Astra-3): this
+    # workflow run's results for each paper, by agent and payload digest.
+    bound = {slug: {"run_id": config["run_id"], "workflow_run": run_dir.name,
+                    "roles": {role: {"agent_id": chosen[slug]["agent_id"],
+                                     "payload_sha256": json_digest(chosen[slug]["result"])}
+                              for role, chosen in selections.items() if slug in chosen}}
+             for slug in sorted({slug for chosen in selections.values() for slug in chosen})}
+    for role, filename, schema_key in (("executor", EXECUTION_FILE, "execution"),
+                                       ("reviewer", REVIEW_FILE, "review")):
+        chosen = selections[role]
         schema = full_schema(expand(config["schemas"][schema_key]))
         for slug, item in sorted(chosen.items()):
             payload = item["result"]
@@ -6025,7 +6640,7 @@ def cmd_persist_results(args: argparse.Namespace) -> int:
             # Gate 1.3 admission (spec §6): an attempt with sealed run records
             # is persisted only when eligible, or, with --record-unruled, as
             # ineligible. Nothing downstream can make that record eligible.
-            admitted = admission(attempt_dir(config, slug))
+            admitted = admission(attempt_dir(config, slug), bound[slug])
             sealed = (attempt_dir(config, slug) / RECORDS_DIR).is_dir()
             if role == "executor" and sealed and not admitted["eligible"] \
                     and not args.record_unruled:
@@ -6227,6 +6842,15 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
     governed = agent_type in (manifest.get("agent_definitions") or {})
     record: dict[str, Any] = {"agent_type": agent_type, "paper": own_slug,
                               "governed": governed}
+    launch = relayed_request(lines)
+    record["launch_message"] = launch
+    # The spawn prompt itself, so that a relay the frame text no longer
+    # matches is still on record (Fable's delta review, on F3).
+    record["prompt_sha256"] = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+    record["prompt_head"] = prompt[:4000]
+    if governed and launch is None and COMPUTED_FRAME not in prompt:
+        record["prompt_warning"] = ("the spawn prompt carries neither harness frame, so any "
+                                    "relayed launch message went unscreened: read prompt_head")
     provenance = PROVENANCE_RE.search(prompt)
     record["provenance"] = ({"run_id": provenance.group(1),
                              "launch_commit": provenance.group(2),
@@ -6272,6 +6896,12 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
             warnings.append({"tool": "Bash", "path": output_hits[0],
                              "rule": "blinded path named in command output (review)",
                              "command": call["command"][:300]})
+    # F3: the relayed launch message reaches the agent ahead of everything it
+    # opens, so a blinded path named there is a blinded access.
+    for token in path_tokens(launch or ""):
+        rule = blinding.hit(token)
+        if rule:
+            contaminating.append({"tool": "launch-message", "path": token, "rule": rule})
     record["blinding"] = {"contaminating": contaminating, "warnings": warnings}
     allowed_roots = [m.group(1) for m in (ATTEMPT_DIR_RE.search(prompt),
                                           SCRATCH_RE.search(prompt)) if m]
@@ -6322,17 +6952,72 @@ def reconcile_telemetry(lines: list[str]) -> dict:
 # It is supporting evidence: shell indirection can avoid any pattern, which
 # is why runs are bound by receipt, not by command (Astra 10).
 
-TRANSCRIPT_AUDIT_VERSION = "1.0"
-SEGMENT_SPLIT_RE = re.compile(r"&&|\|\||;|\||\n")
+TRANSCRIPT_AUDIT_VERSION = "1.2"
 DOCKER_RUN_RE = re.compile(
     r"\bdocker(?:-compose|\s+(?:container\s+)?(run|exec|cp|start|compose))\b")
+DOCKER_BUILD_RE = re.compile(r"\bdocker\s+(?:image\s+)?(?:build|buildx\s+build)\b")
 HOST_RUN_RE = re.compile(r"(?:^|[\s/])(Rscript|R\s+(?:--file|-f)|python3?|bash)\b")
-CD_RE = re.compile(r"\bcd\s+([^\s;&|]+)")
-REDIRECT_RE = re.compile(r"(?<![0-9&])>>?\s*([^\s;&|<>]+)")
-COPY_LIKE_RE = re.compile(r"(?:^|\s)(cp|mv|install|rsync)\s+(.*)")
-TEE_RE = re.compile(r"(?:^|\s)tee\s+(.*)")
-SED_IN_PLACE_RE = re.compile(
-    r"(?:^|\s)sed\s+(?:[^|;&]*\s)?(?:-[a-zA-Z]*i[a-zA-Z]*|--in-place)\s+(.*)")
+# Version 1.1 (2026-10-12, the gate 1.3 final review's F1): shell text is
+# scanned with its quoting and heredocs, not split by regex. Version 1.0 read
+# ">" inside a quoted awk program or a Python heredoc as a redirect, and a
+# run-container --help call as a run that left no record, so a clean run
+# failed the hard-failure rule (amendment 3 §9). Version 1.2 (2026-10-12,
+# Astra's delta review of gate 1.3.1, D-Astra-2): comments are not scanned,
+# copy, tee, and in-place edits are recognised only as the command, and a
+# variable expands as the shell expands it. Version 1.1 read "# echo x > f"
+# and the "cp" in "grep cp README.md f" as writes to f, both unwaivable.
+# Still within 1.2, unreleased (Astra's closure review): options are read
+# up to "--", and a copy, tee, or sed in its --help or --version mode
+# writes nothing.
+HEREDOC_RE = re.compile(r"(?<!<)<<(?!<)(-?)[ \t]*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\2")
+REDIRECT_OP_RE = re.compile(r"(?<![<>&])(?:&>>?|[0-9]*>>?\|?)")
+NON_EXECUTING_RE = re.compile(r"(?:^|\s)(?:-h|--help|--version)(?=\s|$)")
+SHELL_INTERPRETERS = frozenset({"bash", "sh", "dash", "zsh"})
+COPY_COMMANDS = frozenset({"cp", "mv", "install", "rsync"})
+COMMAND_PREFIXES = frozenset({"sudo", "env", "time", "nohup", "nice", "timeout", "command",
+                              "exec"})
+SHELL_VARIABLE_RE = re.compile(r"\$(?:\{([A-Za-z_][A-Za-z0-9_]*)\}|([A-Za-z_][A-Za-z0-9_]*))")
+ASSIGNMENT_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)=(.*)", re.DOTALL)
+
+
+def expand_variables(text: str, variables: dict[str, str]) -> str:
+    """Shell text with ``$NAME`` and ``${NAME}`` replaced where the command
+    set them, as the shell would expand them; others are left as written.
+
+    Nothing inside single quotes or after a backslash expands. Inside double
+    quotes a value is one word, escaped so it cannot end the string. Outside
+    quotes a value splits into words at its spaces, each quoted, so that, as
+    in the shell, none of its characters becomes an operator: version 1.1
+    expanded single-quoted literals too, and a value holding ``>`` would have
+    read as a redirect (Astra's delta review, D-Astra-2).
+    """
+    out: list[str] = []
+    quote: str | None = None
+    i = 0
+    while i < len(text):
+        ch = text[i]
+        if quote == "'":
+            quote = None if ch == "'" else quote
+        elif ch == "\\":
+            out.append(text[i:i + 2])
+            i += 2
+            continue
+        elif ch in "'\"" and quote is None:
+            quote = ch
+        elif ch == '"':
+            quote = None
+        elif ch == "$":
+            found = SHELL_VARIABLE_RE.match(text, i)
+            name = (found.group(1) or found.group(2)) if found else None
+            if name in variables:
+                value = variables[name]
+                out.append(re.sub(r'(["\\$`])', r"\\\1", value) if quote == '"'
+                           else " ".join(shlex.quote(part) for part in value.split()))
+                i = found.end()
+                continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
 
 
 def timed_tool_calls(lines: list[str]) -> list[dict]:
@@ -6369,23 +7054,278 @@ def timed_tool_calls(lines: list[str]) -> list[dict]:
     return calls
 
 
+def mask_quoted(text: str) -> str:
+    """The text with every quoted or escaped character blanked, same length.
+
+    Quote characters themselves stay, so a scanner can still see where a
+    quoted word starts. Newlines inside quotes, and escaped newlines, become
+    spaces, so a quoted multi-line string is not split into commands. Inside
+    single quotes a backslash is literal, as in the shell.
+    """
+    out: list[str] = []
+    quote: str | None = None
+    escaped = False
+    for ch in text:
+        if escaped:
+            out.append(" ")
+            escaped = False
+        elif quote == "'":
+            out.append(ch if ch == "'" else " ")
+            quote = None if ch == "'" else quote
+        elif ch == "\\":
+            out.append(" ")
+            escaped = True
+        elif quote == '"':
+            out.append(ch if ch == '"' else " ")
+            quote = None if ch == '"' else quote
+        else:
+            if ch in "'\"":
+                quote = ch
+            out.append(ch)
+    return "".join(out)
+
+
+def mask_comments(text: str) -> str:
+    """The text with shell comments blanked, same length, newlines kept.
+
+    A ``#`` starts a comment only at the start of an unquoted word (after a
+    blank, an operator character, or a line start), so ``$#``, ``${#x}``,
+    ``a#b``, and a quoted ``#`` stay, as in the shell. The receipt hook
+    keeps a copy (``_mask_comments``); change both together.
+    """
+    out = list(text)
+    quote: str | None = None
+    word_start = True
+    i = 0
+    while i < len(text):
+        ch = text[i]
+        if quote == "'":
+            quote = None if ch == "'" else quote
+        elif quote == '"':
+            if ch == "\\":
+                i += 1
+            elif ch == '"':
+                quote = None
+        elif ch == "\\":
+            i += 1
+            word_start = False
+        elif ch in "'\"":
+            quote = ch
+            word_start = False
+        elif ch == "#" and word_start:
+            end = text.find("\n", i)
+            end = len(text) if end == -1 else end
+            out[i:end] = " " * (end - i)
+            i = end
+            continue
+        else:
+            word_start = ch in " \t\n;&|()<>"
+        i += 1
+    return "".join(out)
+
+
+def mask_tests(masked: str) -> str:
+    """Blank the insides of [[ ]] and (( )), where > compares and does not
+    redirect."""
+    for opener, closer in (("[[", "]]"), ("((", "))")):
+        start = masked.find(opener)
+        while start != -1:
+            end = masked.find(closer, start + 2)
+            if end == -1:
+                break
+            masked = masked[:start + 2] + " " * (end - start - 2) + masked[end:]
+            start = masked.find(opener, end + 2)
+    return masked
+
+
+def split_heredocs(command: str) -> tuple[str, dict[int, list[str]]]:
+    """Separate heredoc bodies from the command text that introduces them.
+
+    Returns:
+        The command without its heredoc bodies, and each body keyed by the
+        offset (in the returned text) of the ``<<`` that introduced it.
+    """
+    kept: list[str] = []
+    length = 0
+    bodies: dict[int, list[str]] = {}
+    pending: list[tuple[str, bool, int]] = []
+    body: list[str] = []
+    for line in command.splitlines(keepends=True):
+        if pending:
+            delimiter, strip_tabs, at = pending[0]
+            bare = line.rstrip("\n")
+            if (bare.lstrip("\t") if strip_tabs else bare) == delimiter:
+                bodies.setdefault(at, []).append("".join(body))
+                body = []
+                pending.pop(0)
+            else:
+                body.append(line)
+            continue
+        # A << in a comment starts no heredoc, or the lines after it would be
+        # dropped from the scan as its body.
+        masked = mask_quoted(mask_comments(line))
+        for found in HEREDOC_RE.finditer(line):
+            if masked[found.start():found.start() + 2] == "<<":
+                pending.append((found.group(3), found.group(1) == "-",
+                                length + found.start()))
+        kept.append(line)
+        length += len(line)
+    if pending and body:
+        bodies.setdefault(pending[0][2], []).append("".join(body))
+    return "".join(kept), bodies
+
+
+def shell_segments(text: str) -> list[tuple[int, str]]:
+    """Split shell text at unquoted ``&&``, ``||``, ``;``, ``|``, and newlines.
+
+    Returns:
+        ``[(start offset, segment text)]``, segments stripped of nothing, so
+        offsets index ``text``.
+    """
+    masked = mask_quoted(text)
+    segments: list[tuple[int, str]] = []
+    start = i = 0
+    while i < len(text):
+        pair = masked[i:i + 2]
+        if pair in ("&&", "||"):
+            segments.append((start, text[start:i]))
+            i += 2
+            start = i
+        elif masked[i] in ";\n" or (masked[i] == "|" and masked[i - 1:i] != ">"):
+            segments.append((start, text[start:i]))
+            i += 1
+            start = i
+        else:
+            i += 1
+    segments.append((start, text[start:]))
+    return segments
+
+
+def read_word(text: str, i: int) -> str:
+    """The shell word starting at or after ``i``, with its quotes removed."""
+    while i < len(text) and text[i] in " \t":
+        i += 1
+    word: list[str] = []
+    quote: str | None = None
+    while i < len(text):
+        ch = text[i]
+        if quote:
+            if ch == quote:
+                quote = None
+            elif ch == "\\" and quote == '"' and i + 1 < len(text):
+                i += 1
+                word.append(text[i])
+            else:
+                word.append(ch)
+        elif ch in "'\"":
+            quote = ch
+        elif ch == "\\" and i + 1 < len(text):
+            i += 1
+            word.append(text[i])
+        elif ch in " \t;&|<>()":
+            break
+        else:
+            word.append(ch)
+        i += 1
+    return "".join(word)
+
+
+def shell_words(segment: str) -> list[str]:
+    """A segment's words, quotes removed, comments dropped, and redirections
+    (operator and target) left out."""
+    try:
+        words = shlex.split(segment, comments=True)
+    except ValueError:
+        words = segment.split()
+    kept: list[str] = []
+    skip = False
+    for word in words:
+        if skip:
+            skip = False
+            continue
+        operator = re.fullmatch(r"(?:&>>?|[0-9]*>>?\|?|[0-9]*<)(.*)", word)
+        if operator:
+            skip = not operator.group(1)
+            continue
+        kept.append(word)
+    return kept
+
+
+def command_word(words: list[str]) -> tuple[int, str]:
+    """The index and basename of a segment's command, past assignments and
+    prefixes such as ``env`` or ``timeout``."""
+    for k, word in enumerate(words):
+        if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*=.*", word) or word in COMMAND_PREFIXES:
+            continue
+        if words[k - 1:k] == ["timeout"] and re.fullmatch(r"[0-9.]+[smhd]?", word):
+            continue
+        return k, posixpath.basename(word)
+    return len(words), ""
+
+
 def segment_writes(segment: str) -> list[str]:
-    """Paths a shell segment writes: redirects, cp/mv/install/rsync
-    destinations, tee's files, and sed -i's files."""
-    targets = list(REDIRECT_RE.findall(segment))
-    copy = COPY_LIKE_RE.search(segment)
-    if copy:
-        args = [a for a in copy.group(2).split() if not a.startswith("-")]
-        if len(args) >= 2:
+    """Paths a shell segment writes: redirect targets outside quotes,
+    comments, and tests, and, when the segment's command is cp, mv,
+    install, or rsync, its destination, when it is tee, its files, and when
+    it is sed -i, the files it edits.
+
+    Only the command itself, past assignments and prefixes such as ``sudo``
+    or ``timeout``, is matched against those names (Astra's delta review,
+    D-Astra-2): version 1.1 matched every word, so the search pattern in
+    ``grep cp README.md f`` read as a copy into ``f``. A copy run through
+    ``xargs`` or ``find -exec`` is therefore not seen; the audit is
+    supporting evidence, and runs are bound by receipt.
+
+    The segment must already be free of heredoc bodies (``split_heredocs``).
+    """
+    masked = mask_tests(mask_quoted(mask_comments(segment)))
+    targets: list[str] = []
+    for found in REDIRECT_OP_RE.finditer(masked):
+        rest = masked[found.end():].lstrip(" \t")
+        if not found.group() or rest.startswith(("&", "(")):
+            continue
+        target = read_word(segment, found.end())
+        if target:
+            targets.append(target)
+    words = shell_words(segment)
+    k, name = command_word(words)
+    given = words[k + 1:]
+    # Options end at "--", after which every word is an operand. GNU tools
+    # permute their arguments, so a --help or --version anywhere before it
+    # means nothing is copied, teed, or edited: "cp --help README.md f"
+    # writes nothing (Astra's closure review, D-Astra-2 residual). The
+    # redirections above still count, since "cp --help > f" writes f.
+    end = given.index("--") if "--" in given else len(given)
+    options = [a for a in given[:end] if a.startswith("-") and a != "-"]
+    args = [a for a in given[:end] if not a.startswith("-")] + given[end + 1:]
+    if {"--help", "--version"} & set(options):
+        pass
+    elif name in COPY_COMMANDS:
+        # -t DIR and --target-directory=DIR name the destination up front.
+        directory = next((given[j + 1] for j in range(end - 1) if given[j] == "-t"), None) \
+            or next((a.split("=", 1)[1] for a in options
+                     if a.startswith("--target-directory=")), None)
+        if directory:
+            targets.append(directory)
+        elif len(args) >= 2:
             targets.append(args[-1])
-    tee = TEE_RE.search(segment)
-    if tee:
-        targets += [a for a in tee.group(1).split() if not a.startswith("-")]
-    sed = SED_IN_PLACE_RE.search(segment)
-    if sed:
-        args = [a for a in sed.group(1).split() if not a.startswith("-")]
+    elif name == "tee":
+        targets += args
+    elif name == "sed" and any(re.fullmatch(r"-[a-zA-Z]*i\S*|--in-place(=.*)?", a)
+                               for a in options):
         targets += args[1:]
-    return [t.strip("'\"") for t in targets if t and not t.startswith("/dev/")]
+    return [t for t in targets if t and not t.startswith("/dev/")]
+
+
+def after_stamp(stamp: str | None, since: str | None) -> bool:
+    """Whether a transcript timestamp is at or after a run's start, compared
+    as times rather than strings."""
+    if not (stamp and since):
+        return False
+    try:
+        return datetime.fromisoformat(str(stamp)) >= datetime.fromisoformat(str(since))
+    except ValueError:
+        return str(stamp).replace("Z", "+00:00") >= str(since).replace("Z", "+00:00")
 
 
 def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | None) -> dict:
@@ -6416,13 +7356,19 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
                 if r in indexed and sealed.get(r, {}).get("state") in ("complete", "failed")]
     final = credible[-1] if credible else None
     final_start = sealed[final].get("started_at") if final else None
+    first_start = sealed[credible[0]].get("started_at") if credible else None
     # Code a host run must not name: originals' copies, executed copies, and
     # wrappers, except those that run on the host by design (§5, §11).
     manifest_doc = manifest_doc or {}
     host_exempt = {w["path"] for w in manifest_doc.get("wrappers") or []
                    if w.get("role") in ("comparison", "conversion")}
+    # Only code can be run: an original that is data (a workbook, a CSV)
+    # named in a host command is being read, not run. Version 1.0 counted
+    # it, which its regex splitting hid (version 1.1 found it on the
+    # herskind pilot's `python3 -c` reads of the deposited workbooks).
     code_paths = sorted({p for p in (
-        [o.get("local_copy") for o in manifest_doc.get("originals") or []]
+        [o.get("local_copy") for o in manifest_doc.get("originals") or []
+         if o.get("local_copy") and is_code_file(Path(o["local_copy"]))]
         + [e.get("path") for e in manifest_doc.get("executed") or []]
         + [w.get("path") for w in manifest_doc.get("wrappers") or []
            if w.get("role") != "generated"]) if p and p not in host_exempt})
@@ -6430,8 +7376,7 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
     issues: list[Issue] = []
 
     def after_final(stamp: str | None) -> bool:
-        return bool(final_start and stamp and stamp.replace("Z", "+00:00") >=
-                    str(final_start).replace("Z", "+00:00"))
+        return after_stamp(stamp, final_start)
 
     def place(path_text: str, cwd: str | None) -> str | None:
         """An attempt-relative path, when a written or named path is in the
@@ -6455,11 +7400,125 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
         first = rel.split("/", 1)[0]
         if first in (RECORDS_DIR, "outputs"):
             find("write-to-lane-owned", at, f"{how} wrote {rel}, which only the lane writes")
-        elif first not in DOCUMENT_NAMES and after_final(at):
+            return
+        if first == PUBLISHED_VALUES_DIR and after_stamp(at, first_start):
+            # The gate 1.3 final review's F6: a published value transcribed
+            # after a reproduced one exists can agree with it for the wrong
+            # reason, so the ordering goes to a ruling.
+            issues.append(Issue.flag(
+                "transcription-after-run", rel, f"{how} wrote the published values {rel} "
+                f"after the first run started ({first_start}): a human rules on whether "
+                f"the transcription was made from the source alone",
+                files={rel: json_digest({"at": at, "how": how})}))
+        if first not in DOCUMENT_NAMES and after_final(at):
             find("input-tree-changed-after-run", at, f"{how} wrote {rel} after the final run "
                  f"{final} started")
 
     runs_called: set[str] = set()
+
+    def scan_shell(command: str, call: dict, cwd: str | None, depth: int,
+                   variables: dict[str, str] | None = None) -> str | None:
+        """Audit one shell command: its segments, in order, with cd tracked.
+
+        Heredoc bodies are data, except a body fed to a shell, which is
+        audited as commands (up to three levels deep).
+
+        Returns:
+            The working directory after the command, where it is known.
+        """
+        at = call["at"]
+        # Simple assignments (A=/path; export B=...) are followed within the
+        # command, so a write to "$A/outputs/x" or a "cd $P" is placed: the
+        # herskind pilot's executor wrote its published values that way.
+        variables = dict(variables or {})
+        text, bodies = split_heredocs(command)
+        # Comments are blanked, not removed, so heredoc offsets still hold.
+        text = mask_comments(text)
+        for offset, raw in shell_segments(text):
+            segment = raw.strip()
+            if not segment:
+                continue
+            if cwd is not None:
+                # $(pwd) is the tracked directory (Fable's delta review).
+                segment = segment.replace("$(pwd)", cwd).replace("`pwd`", cwd)
+            # Expanded in the segment's text, where its quoting is still
+            # visible, and only then split into words (D-Astra-2).
+            segment = expand_variables(segment, variables)
+            words = shell_words(segment)
+            k, name = command_word(words)
+            assigned = words[:k] if k == len(words) else (
+                words[k + 1:] if name == "export" else [])
+            for word in assigned:
+                found = ASSIGNMENT_RE.fullmatch(word)
+                if found and "$(" not in found.group(2) and "`" not in found.group(2):
+                    variables[found.group(1)] = found.group(2)
+            if assigned and (k == len(words) or name == "export"):
+                continue
+            if name in SHELL_INTERPRETERS and "-c" in words[k + 1:] and depth < 3:
+                # A shell's -c string is commands, as a fed heredoc is.
+                script = words[words.index("-c", k + 1) + 1:words.index("-c", k + 1) + 2]
+                if script:
+                    cwd = scan_shell(script[0], call, cwd, depth + 1, variables)
+                continue
+            if name == "cd":
+                target = words[k + 1] if len(words) > k + 1 else "~"
+                path = Path(target).expanduser()
+                cwd = (str(path) if path.is_absolute()
+                       else str(Path(cwd) / path) if cwd is not None else None)
+                continue
+            if "reproduction-lane.py" in segment:
+                if NON_EXECUTING_RE.search(mask_quoted(segment)):
+                    continue
+                if re.search(r"\bsnapshot-code\b", segment):
+                    find("snapshot-code", at, f"the executor ran snapshot-code: {segment}")
+                elif re.search(r"\brun-container\b", segment):
+                    if "--clear-lock" in segment:
+                        find("clear-lock", at, f"the executor cleared a run lock: {segment}")
+                    elif "--finalise" not in segment:
+                        named = set(re.findall(r"\b(run-\d{2,})\b", call["output"]))
+                        runs_called.update(named)
+                        if not named and call["errored"] is False:
+                            find("run-without-record", at, f"run-container reported no "
+                                 f"run: {segment}")
+                    else:
+                        runs_called.update(re.findall(r"\b(run-\d{2,})\b", segment))
+                continue
+            visible = mask_quoted(segment)
+            if DOCKER_BUILD_RE.search(visible) and "reproduction-lane.py" not in segment:
+                # An image built outside the lane has no build record; say so
+                # at once rather than only as build-evidence later (F5 note).
+                issues.append(Issue.flag(
+                    "docker-build-direct", json_digest(segment)[:12], f"the executor ran "
+                    f"docker build itself ({segment[:160]}), not reproduction-lane.py "
+                    f"build-image, so no lane record keeps that build's log",
+                    files={"command": json_digest(segment)}))
+            if DOCKER_RUN_RE.search(visible):
+                find("docker-direct", at, f"paper code may run other than through "
+                     f"run-container: {segment}")
+                continue
+            if HOST_RUN_RE.search(visible):
+                named = [c for c in code_paths if c in segment or str(root / c) in segment]
+                if named:
+                    if after_final(at):
+                        find("host-run-after-final", at, f"a host run named {named[0]} "
+                             f"after the final run {final} started: {segment}")
+                    else:
+                        issues.append(Issue.flag(
+                            "host-run", named[0], f"the executor ran {named[0]} on the host "
+                            f"before the final run ({segment[:160]}): credit comes only "
+                            f"from sealed outputs, but invariant 5 is an environment rule, "
+                            f"so a human rules on it", files={named[0]: json_digest(segment)}))
+            for target in segment_writes(segment):
+                rel = place(target, cwd)
+                if rel is not None:
+                    written(rel, at, "a shell command")
+            fed = [b for at_offset, found in bodies.items()
+                   if offset <= at_offset < offset + len(raw) for b in found]
+            if fed and name in SHELL_INTERPRETERS and "-c" not in words[k + 1:] and depth < 3:
+                for body in fed:
+                    cwd = scan_shell(body, call, cwd, depth + 1, variables)
+        return cwd
+
     for call in timed_tool_calls(lines):
         at = call["at"]
         if call["name"] in ("Write", "Edit", "NotebookEdit", "MultiEdit"):
@@ -6470,49 +7529,7 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
             continue
         if call["name"] != "Bash":
             continue
-        command = str(call["input"].get("command") or "")
-        cd = CD_RE.search(command)
-        cwd = cd.group(1).strip("'\"") if cd else None
-        for segment in SEGMENT_SPLIT_RE.split(command):
-            segment = segment.strip()
-            if not segment:
-                continue
-            if "reproduction-lane.py" in segment:
-                if re.search(r"\bsnapshot-code\b", segment):
-                    find("snapshot-code", at, f"the executor ran snapshot-code: {segment}")
-                elif re.search(r"\brun-container\b", segment):
-                    if "--clear-lock" in segment:
-                        find("clear-lock", at, f"the executor cleared a run lock: {segment}")
-                    elif "--finalise" not in segment:
-                        named = set(re.findall(r"\b(run-\d{2,})\b", call["output"]))
-                        runs_called |= named
-                        if not named and call["errored"] is False:
-                            find("run-without-record", at, f"run-container reported no run: "
-                                 f"{segment}")
-                    else:
-                        runs_called |= set(re.findall(r"\b(run-\d{2,})\b", segment))
-                continue
-            docker = DOCKER_RUN_RE.search(segment)
-            if docker:
-                find("docker-direct", at, f"paper code may run other than through "
-                     f"run-container: {segment}")
-                continue
-            if HOST_RUN_RE.search(segment):
-                named = [p for p in code_paths if p in segment or str(root / p) in segment]
-                if named:
-                    if after_final(at):
-                        find("host-run-after-final", at, f"a host run named {named[0]} after "
-                             f"the final run {final} started: {segment}")
-                    else:
-                        issues.append(Issue.flag(
-                            "host-run", named[0], f"the executor ran {named[0]} on the host "
-                            f"before the final run ({segment[:160]}): credit comes only from "
-                            f"sealed outputs, but invariant 5 is an environment rule, so a "
-                            f"human rules on it", files={named[0]: json_digest(segment)}))
-            for target in segment_writes(segment):
-                rel = place(target, cwd)
-                if rel is not None:
-                    written(rel, at, "a shell command")
+        scan_shell(str(call["input"].get("command") or ""), call, None, 0)
     for run_id in run_ids(records):
         if run_id not in runs_called:
             find("record-without-call", None, f"{run_id} has a run record but no "
@@ -6538,16 +7555,34 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
         import hooklib  # noqa: PLC0415 — hooks dir is not a package
     finally:
         sys.path.pop(0)
-    manifest = hooklib.load_manifest()
+    current = hooklib.load_manifest()
+    launch_manifests: dict[str, dict | None] = {}
     agents = []
+    # Each role's result is chosen as persist-results chooses it, which
+    # refuses two results for one paper rather than keeping the last
+    # transcript in filename order (D-Astra-3).
+    results = journal_results(run_dir)
+    selections = {role: select_results(results, config["agents"][role], config)[0]
+                  for role in ("executor", "reviewer")}
+    records: dict[str, dict] = {}
     for transcript in sorted(run_dir.glob("agent-*.jsonl")):
         meta_path = transcript.with_name(f"{transcript.stem}.meta.json")
         meta = (json.loads(meta_path.read_text(encoding="utf-8"))
                 if meta_path.is_file() else {})
         lines = transcript.read_text(encoding="utf-8").splitlines()
+        provenance = PROVENANCE_RE.search(first_user_text(lines))
+        launch = provenance.group(2) if provenance else None
+        if launch not in launch_manifests:
+            launch_manifests[launch] = manifest_at(REPO_ROOT, launch)
+        manifest = launch_manifests[launch] or current
         record = audit_agent(lines, str(meta.get("agentType") or ""), config, manifest,
                              reconcile, gate, hooklib)
+        record["receipts_checked_against"] = (f"manifest.yaml at launch commit {launch}"
+                                              if launch_manifests[launch] is not None
+                                              else "today's manifest.yaml (the launch "
+                                                   "commit's could not be read)")
         record["agent_id"] = transcript.stem.replace("agent-", "")
+        records[record["agent_id"]] = record
         # The executor's transcript also gets the attempt's own audit (spec
         # §12), written into the attempt as admission requires.
         attempt = ATTEMPT_DIR_RE.search(first_user_text(lines))
@@ -6570,6 +7605,20 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
             record["clean"] = False
             record["unattributable"] = True
         agents.append(record)
+    # F8: bind each attempt to this run's agent audit and open questions.
+    # Roles are bound by paper through select_results, which matches the
+    # prompt's Paper: line to the payload's paper_slug; the reviewer's
+    # prompt has no "Attempt directory:" line (Fable's delta review, D-1).
+    states = reviewed_states(run_dir, config)
+    for slug in sorted({slug for chosen in selections.values() for slug in chosen}):
+        attempt_path = attempt_dir(config, slug)
+        roles = {role: (records[chosen[slug]["agent_id"]], chosen[slug]["result"])
+                 for role, chosen in selections.items()
+                 if slug in chosen and chosen[slug]["agent_id"] in records}
+        if attempt_path.is_dir():
+            write_json(attempt_path / RUN_AUDIT_FILE,
+                       attempt_run_audit(config, run_dir.name, attempt_path, roles,
+                                         states.get(slug)))
     per_paper: dict[str, dict] = {}
     for record in agents:
         bucket = per_paper.setdefault(record["paper"] or "(none)", {
@@ -6732,6 +7781,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--force", action="store_true",
                    help="replace an existing snapshot (only when the run itself is redone)")
     p.set_defaults(func=cmd_snapshot_code)
+
+    p = sub.add_parser("build-image",
+                       help="build the attempt's image through the lane, keeping its log (F5)")
+    p.add_argument("attempt_dir", type=Path)
+    p.add_argument("--tag", required=True)
+    p.add_argument("--context", type=Path, default=None,
+                   help="the build context (default: the attempt directory)")
+    p.add_argument("--launch-commit", default=None)
+    p.set_defaults(func=cmd_build_image)
 
     p = sub.add_parser("run-container",
                        help="run the attempt's code in the lane-owned container (gate 1.3)")

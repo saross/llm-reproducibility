@@ -285,6 +285,58 @@ class GateTests(unittest.TestCase):
         self.assertEqual(report["verdict"], "pass", report["errors"])
         self.assertEqual(report["coverage"]["coverage_fraction"], 1.0)
 
+    def test_declared_value_counts_are_compared(self):
+        """The gate 1.3 final review's F9 (amendment 3 §7(c)): equal passes;
+        short, or no count, cannot be credited; an excess is a warning; an
+        unspecified plan count and an honest partial outcome are untouched."""
+        plan = plan_record(["T01", "T02"])
+        for target, n in zip(plan["plan"]["verification_targets"], (3, 1), strict=True):
+            target["n_values"] = n
+        self.plan.write_text(json.dumps(plan), encoding="utf-8")
+        self.comparison()
+        self.assertEqual(self.run_gate()["verdict"], "pass")
+        base = self.comparison()["targets"]
+        short = [{**base[0], "values_compared": 1, "values_matched": 1}, base[1]]
+        self.comparison(targets=short)
+        report = self.run_gate()
+        self.assertIn("T01: 1 of the plan's 3 declared value(s) compared", " ".join(
+            report["errors"]))
+        uncounted = [{k: v for k, v in base[0].items() if k != "values_compared"}, base[1]]
+        self.comparison(targets=uncounted)
+        self.assertIn("gives no values_compared", " ".join(self.run_gate()["errors"]))
+        excess = [base[0], {**base[1], "values_compared": 2, "values_matched": 2}]
+        self.comparison(targets=excess)
+        report = self.run_gate()
+        self.assertEqual(report["verdict"], "pass", report["errors"])
+        self.assertIn("T02: 2 values compared against the plan's 1", " ".join(
+            report["warnings"]))
+        partial = [{**base[0], "outcome": "MINOR_DISCREPANCY", "values_compared": 1,
+                    "values_matched": 1}, base[1]]
+        self.comparison(targets=partial, coverage={"targets_enumerated": 2,
+                                                   "targets_reproduced": 1})
+        self.assertEqual(self.run_gate()["verdict"], "pass")
+
+    def test_method_deviations_are_flags_and_adherence_an_obligation(self):
+        """The gate 1.3 final review's F4: a declared departure from the
+        plan's method is a flag on its target, an undeclared one a warning,
+        and every attempt carries the reviewer's method-adherence obligation."""
+        base = self.comparison()["targets"]
+        changed = [{**base[0], "method_as_planned": False,
+                    "method_deviation": "criterion inferred from the caption after viewing "
+                                        "the figure"},
+                   {**base[1], "method_as_planned": True}]
+        self.comparison(targets=changed)
+        report = self.run_gate()
+        self.assertEqual(report["verdict"], "pass", report["errors"])
+        issues = {i["id"]: i for i in report["issues"]}
+        self.assertEqual(issues["method-deviation:T01"]["targets"], ["T01"])
+        self.assertEqual(issues["method-adherence:targets"]["kind"], "obligation")
+        self.assertIn("method-deviation:T01", report["coverage_admitted"]["unruled_issues"])
+        self.assertIn("T01", report["coverage_admitted"]["excluded_targets"])
+        self.comparison()
+        warnings = " ".join(self.run_gate()["warnings"])
+        self.assertIn("T01: the record does not declare method_as_planned", warnings)
+
     def test_report_lists_issues_and_admits_only_ruled_results(self):
         """Gate 1.3 §6: raw coverage counts outcomes; admitted coverage waits
         for a ruling on every issue, here the wrapper-semantics obligation."""
@@ -372,7 +424,7 @@ class GateTests(unittest.TestCase):
     def test_gate_reports_code_integrity(self):
         self.comparison()
         report = self.run_gate()
-        self.assertEqual(report["gate_version"], "1.3")
+        self.assertEqual(report["gate_version"], "1.3.1")
         self.assertEqual(report["code_integrity"]["status"], "identical", report["errors"])
         self.assertEqual(report["code_integrity"]["anchors"], {"analysis.R": "verified"})
         self.assertEqual(report["flags"], [])
@@ -1582,6 +1634,72 @@ class AuditTests(unittest.TestCase):
         self.assertEqual([c["tool"] for c in record["blinding"]["contaminating"]], ["Read"])
         self.assertEqual(record["writes_outside_scope"], ["/elsewhere/notes.md"])
         self.assertFalse(record["clean"])
+
+
+class LaunchManifestTests(unittest.TestCase):
+    """Receipts are checked against the manifest at the run's launch commit,
+    not today's (2026-10-12): the herskind pilot launched at cd5d54a, when
+    the executor was v1.6."""
+
+    PILOT_LAUNCH = "cd5d54ac890fafc9061547694c7d0fad9c065912"
+
+    def test_the_manifest_is_read_at_the_launch_commit(self):
+        then = lane.manifest_at(lane.REPO_ROOT, self.PILOT_LAUNCH)
+        if then is None:
+            self.skipTest("the pilot's launch commit is not in this clone's history")
+        self.assertEqual(then["agent_definitions"]["reproduction-executor"]["version"], "1.6")
+        self.assertIsNone(lane.manifest_at(lane.REPO_ROOT, "0" * 40))
+
+
+class LaunchMessageTests(unittest.TestCase):
+    """The gate 1.3 final review's F3: the harness relays the user message
+    that started a workflow to every spawn, above the computed task."""
+
+    FRAME = ("[Workflow harness — user request] The harness relays, verbatim and indented "
+             "below, the user request that triggered this workflow run. Where the computed "
+             "task conflicts with this request, this request wins:\n  ")
+
+    def lines(self, request: str) -> list[str]:
+        return transcript(
+            {"message": {"role": "user", "content": self.FRAME + request.replace(
+                "\n", "\n  ")}},
+            {"message": {"role": "user", "content": "  Paper: a-2024\n"}},
+            {"message": {"role": "assistant", "content": [{"type": "text", "text": "ok"}]}})
+
+    def test_the_relayed_request_is_read_verbatim(self):
+        self.assertEqual(lane.relayed_request(self.lines("approve;\nTable 1 is 6/8/32/59")),
+                         "approve;\nTable 1 is 6/8/32/59")
+        self.assertIsNone(lane.relayed_request(transcript(
+            {"message": {"role": "user", "content": "  Paper: a-2024\n"}})))
+
+    def test_a_blinded_path_in_the_launch_message_is_a_blinded_access(self):
+        config = {"run_id": "t", "effort": "high",
+                  "agents": {"planner": "p", "executor": "e", "reviewer": "r"},
+                  "schemas": {}, "pricing_usd_per_mtok": {},
+                  "blinding": {"forbidden_substrings": ["reproduction/attempt-01"],
+                               "cross_paper_slugs": []}}
+        reconcile = load_script("reconcile_run_l", "reconcile-run.py")
+        record = lane.audit_agent(
+            self.lines("go; compare with out/a-2024/reproduction/attempt-01/log.md"),
+            "general-purpose", config, {"agent_definitions": {}}, reconcile,
+            reconcile.load_gate_module(), None)
+        self.assertEqual([c["tool"] for c in record["blinding"]["contaminating"]],
+                         ["launch-message"])
+        self.assertFalse(record["clean"])
+
+    def test_only_the_fixed_phrase_needs_no_ruling(self):
+        clean = {"clean": True, "receipts": {"valid": True, "problems": []},
+                 "blinding": {"contaminating": [], "warnings": []}, "writes_outside_scope": []}
+        config = {"run_id": "t"}
+        with tempfile.TemporaryDirectory() as tmp:
+            for text, flagged in (("Run the approved stage.", False),
+                                  ("I accept all of your recommendations and approve. Please "
+                                   "proceed and run stage 2", True)):
+                roles = {role: ({**clean, "launch_message": text}, {"status": "OK"})
+                         for role in ("executor", "reviewer")}
+                doc = lane.attempt_run_audit(config, "wf_x", Path(tmp), roles)
+                ids = [i["id"] for i in doc["issues"]]
+                self.assertEqual(any(i.startswith("launch-message:") for i in ids), flagged, ids)
 
 
 class SpillExemptionTests(unittest.TestCase):

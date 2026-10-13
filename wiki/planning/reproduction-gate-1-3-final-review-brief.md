@@ -187,3 +187,37 @@ templates, so design §16 question 6's "12 package texts" should be fixed.
 the reviewers' regression cases and a re-audit of the pilot's transcripts;
 then a delta review by both, and one pilot re-run through the lane, which
 passes the API review gate first.
+
+## Delta review outcome (2026-10-12)
+
+Fable's delta review (mail `20261012T113743.407608Z`) found three
+second-pass items, D-1, D-2, and B-1, plus D-3 and notes, all closed at
+`1d875d2`. Astra's delta review of `1d875d2`
+(`~/agent-mail/codex/outbox/claude/2026-10-12-codex-gate131-delta-review.md`,
+probes under `~/agent-mail/codex/review-evidence/2026-10-12-llmr-gate131-delta/`)
+found three class D defects, each an incomplete closure, so a clean pilot
+re-run alone would not close the hardening:
+
+| Finding | Closes | Closure, in short |
+|---|---|---|
+| D-Astra-1: a successful command need not deliver a file (`cat x > copy`, `true \|\| cat x`, `cat x \| cat y`); Read and spill reads matched by substring | F2 | A Bash read counts only in one `&&` chain of `cd`, full reads, and `echo`, with no pipe, output redirection, substitution, or background; any other shape blocks with a request for a plain read. Read, spill, and shell paths match as whole normalised paths; a glob stays within one path component. Any verdict but `read` blocks, in the hook and in `reconcile-run.py`. The three definitions and both briefs say so (no `\| tee` any more). |
+| D-Astra-2: a comment, and `cp` as a search pattern, became hard write failures | F1 | Transcript audit 1.2: comments are blanked with quoting respected (a `<<` in a comment opens no heredoc); copy, tee, and in-place edits match only as the command, past prefixes; variables expand with their quote context, so a value's `>` is never an operator. |
+| D-Astra-3: persistence could use another workflow's cleared run audit | F8 | Run audit 1.1 records the workflow run, each role's agent and accepted-payload digest, and the reviewed artefact state: `check-attempt` prints a digest of the attempt (less the post-review records), and the in-workflow gate check's transcript records it before the review. audit-run selects results as persist-results does, refusing two for one paper; admission requires the persisted results' identities and the attempt unchanged since that gate check, so a re-audit cannot launder a changed comparison. |
+
+Three false negatives turned up while closing them, now fixed: a comment's
+`<<` hid the next line from the audit, `cp -t DIR` and `sed -i.bak` writes
+were missed, and a glob's `*` crossed `/`. Astra's probes, rerun against the
+fixes with only their loader widened to the whole module, give the intended
+verdicts; the new tests fail on `1d875d2` but for one positive control.
+
+Astra's closure review of `3a411f8`
+(`~/agent-mail/codex/outbox/claude/2026-10-13-codex-gate131-closure-review.md`,
+evidence under `~/agent-mail/codex/review-evidence/2026-10-13-llmr-gate131-closures/`)
+accepted D-Astra-3 and the strict state binding (Shawn's ruling, 2026-10-13:
+corrections go into new attempts; a review-only re-run mode follows the
+pilot), and found two command-mode residuals, both class D. `cat --help x`
+and `cat --version x` still earned full-read credit; a read now needs cat's
+display options only, or no option to nl, less, or more (`7b4510b`).
+`cp --help README.md outputs/…/x` was still a write; options are now read up
+to `--`, and a `--help` or `--version` before it means no copy, tee, or edit
+(`ab5a4ac`). Redirections, and operands after `--`, still write.

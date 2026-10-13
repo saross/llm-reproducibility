@@ -1,0 +1,156 @@
+{
+  "run_audit_version": "1.0",
+  "audited_at": "2026-10-12T11:58:34+00:00",
+  "run_id": "gate-1-3-pilot-rerun-2026-10",
+  "workflow_run": "wf_7c18dfdc-298",
+  "attempt_dir": "~/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03",
+  "launch_commit": "cd5d54ac890fafc9061547694c7d0fad9c065912",
+  "plan_sha256": "89f2c93784d4e962971fcd19b9ecdee43c9c82258f610e69b25f0d6b73df55b5",
+  "roles": {
+    "executor": {
+      "agent_id": "a3825ccd2ec76de27",
+      "agent_type": "reproduction-executor",
+      "clean": false,
+      "problems": [
+        "declared pull truncated (a partial shell read (head, tail, sed, awk, or cut)): /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/data-availability-taxonomy.md"
+      ],
+      "warnings": [
+        {
+          "tool": "Bash",
+          "path": "verification-strategies.md",
+          "rule": "blinded path named in command output (review)",
+          "command": "ls reproduction-system/templates/ reproduction-system/schemas/ reproduction-system/prompts/ .claude/skills/reproduction-assessor/references/; wc -l reproduction-system/schemas/*.json reproduction-system/prompts/01-preparation.md reproduction-system/prompts/02-execution-and-verification.md .claude/sk"
+        },
+        {
+          "tool": "Bash",
+          "path": "references/verification-strategies.md",
+          "rule": "blinded path named in command output (review)",
+          "command": "cat reproduction-system/prompts/02-execution-and-verification.md reproduction-system/templates/*.md"
+        },
+        {
+          "tool": "Bash",
+          "path": "crema-et-al-2024.json",
+          "rule": "blinded path named in command output (review)",
+          "command": "venv/bin/python scripts/reproduction-lane.py --help; venv/bin/python scripts/reproduction-lane.py run-container --help; venv/bin/python scripts/reproduction-lane.py check-attempt --help; ls corpus/evidence-packs/ | head -50; ls corpus/evidence-packs/harvest-* -d 2>/dev/null"
+        }
+      ],
+      "launch_message": "I accept all of your recommendations and approve. Please proceed and run stage 2"
+    },
+    "reviewer": {
+      "agent_id": "a49f673690b524c9c",
+      "agent_type": "adversarial-reviewer",
+      "clean": false,
+      "problems": [
+        "declared pull truncated (a partial shell read (head, tail, sed, awk, or cut)): /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md",
+        "declared pull only searched, never read: /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/coverage-rules.md"
+      ],
+      "warnings": [],
+      "launch_message": "I accept all of your recommendations and approve. Please proceed and run stage 2"
+    }
+  },
+  "missing_roles": [],
+  "issues": [
+    {
+      "id": "escalation:executor:PAPER_ERROR:T01",
+      "kind": "flag",
+      "code": "escalation",
+      "subject": "executor:PAPER_ERROR:T01",
+      "targets": [
+        "T01"
+      ],
+      "files": {
+        "escalation": "0eda062664a365a2ef9dfe14f147fe366bec716c1ca208656b6e07cc01a54408"
+      },
+      "fingerprint": "cfca6de137e89129e42d3fc8374420c5af02482e2696960c1b1c8ea3b5099680",
+      "message": "FLAG: the executor escalated PAPER_ERROR on T01: Table 1 (p. 4): 8 of 126 cells differ by 1 from the authors' S2.R run unmodified on the deposited S1. Bigram n at frequencies 8/7/4/3/2/1 is published 6/8/32/59/154/1224 and reproduced 5/9/31/60/153/1225; trigram n at 2/1 is 222/4094 vs 221/4095. All distinct-item totals and all unigram and quadrigram counts match. Tier 2: the deposited S3 tables give 5/9/31/60 bigrams at frequencies 8/7/4/3. The  (a human confirms or rejects it)"
+    },
+    {
+      "id": "escalation:executor:PAPER_ERROR:T06",
+      "kind": "flag",
+      "code": "escalation",
+      "subject": "executor:PAPER_ERROR:T06",
+      "targets": [
+        "T06"
+      ],
+      "files": {
+        "escalation": "eb37e15b3350c8bb580189e0ef39d2d684c2d38af0da6eb2f0a0dc1351052969"
+      },
+      "fingerprint": "d52a52be0f74271f4d67959280bf2db2319fa78db069299cccee8696e43cfecc",
+      "message": "FLAG: the executor escalated PAPER_ERROR on T06: Fig. 4 (p. 6), box annotations added by hand in GIMP: 289 of 291 single-complex co-occurrence boxes reproduce in presence and colour (criterion inferred from the caption, any frequency). F13-C5 is boxed yellow (Ertebølle), but its only co-occurrence is S1 No. 96, Jordløse Mose, Kongemose. B2-B1 is unboxed, although its only co-occurrence is S1 No. 367, Lundby II, Maglemose. The matrix, axis order, (a human confirms or rejects it)"
+    },
+    {
+      "id": "escalation:executor:OTHER:T17",
+      "kind": "flag",
+      "code": "escalation",
+      "subject": "executor:OTHER:T17",
+      "targets": [
+        "T17"
+      ],
+      "files": {
+        "escalation": "b6a83ac498cc465dbe1e70f1f89532e4d72ab8aff72fe5f9cf62aec148964d23"
+      },
+      "fingerprint": "ce4bb7bed00d0c76834d3d8b508633fc3b8797a833c163a666f462e32829a8a9",
+      "message": "FLAG: the executor escalated OTHER on T17: Recorded text inconsistency, scored against the stated nine (R4) as the approval ruled: the text lists eight Ertebølle-only bigrams; the unlisted ninth is C5 C12. (a human confirms or rejects it)"
+    },
+    {
+      "id": "blinding-warning:executor:verification-strategies.md",
+      "kind": "flag",
+      "code": "blinding-warning",
+      "subject": "executor:verification-strategies.md",
+      "targets": [],
+      "files": {
+        "warning": "33343bbed9fa12b50398be665e3a3472f6395ee9cc889ec514e252aec7c5a905"
+      },
+      "fingerprint": "8b77c38328801f148c61c181a37d29ca1de45d9f2c889469103be6054bedbd85",
+      "message": "FLAG: blinded path named in command output (review): ls reproduction-system/templates/ reproduction-system/schemas/ reproduction-system/prompts/ .claude/skills/reproduction-assessor/references/; wc -l reproduction-system/schemas/*.json reproduction-syst"
+    },
+    {
+      "id": "blinding-warning:executor:references/verification-strategies.md",
+      "kind": "flag",
+      "code": "blinding-warning",
+      "subject": "executor:references/verification-strategies.md",
+      "targets": [],
+      "files": {
+        "warning": "bdeaf499da6133e4151027e867df3a82c83e7b290fb13eeed880d815388a4686"
+      },
+      "fingerprint": "bc8b59d94694f76ca62a8a2a21a19bb33796e68204ad9e3e608bb16a7b38b845",
+      "message": "FLAG: blinded path named in command output (review): cat reproduction-system/prompts/02-execution-and-verification.md reproduction-system/templates/*.md"
+    },
+    {
+      "id": "blinding-warning:executor:crema-et-al-2024.json",
+      "kind": "flag",
+      "code": "blinding-warning",
+      "subject": "executor:crema-et-al-2024.json",
+      "targets": [],
+      "files": {
+        "warning": "0ab5fb918de33cfecb470921fe1a203584319a568018f67636945bc8807b3637"
+      },
+      "fingerprint": "4e740e797d028ffd98c315d7f8c168942b85a21bd69506b0e3449f9652698746",
+      "message": "FLAG: blinded path named in command output (review): venv/bin/python scripts/reproduction-lane.py --help; venv/bin/python scripts/reproduction-lane.py run-container --help; venv/bin/python scripts/reproduction-lane.py check-attempt --help; ls corpus/evi"
+    },
+    {
+      "id": "review:qualified",
+      "kind": "flag",
+      "code": "review",
+      "subject": "qualified",
+      "targets": [],
+      "files": {
+        "review": "0106e35063df4a4cbd680c255ed6f596847bb4f318b7f1a0a902237556740276"
+      },
+      "fingerprint": "fec6fcc1d95b60d355d361d01a668a7be2eae013e068b50336d092f53877a226",
+      "message": "FLAG: the adversarial review is QUALIFIED (concerns: methodological_soundness; supports the verdict: True): a human resolves each concern before the result enters study data"
+    },
+    {
+      "id": "launch-message:178a88c232c0",
+      "kind": "flag",
+      "code": "launch-message",
+      "subject": "178a88c232c0",
+      "targets": [],
+      "files": {
+        "text": "178a88c232c022fbd78f17c1ed34a7b79595e20760e35fe5fb750ebb0762b416"
+      },
+      "fingerprint": "65101a209c94d2f03389b69c287ddb73ef398329768817a2a79306f0963406d7",
+      "message": "FLAG: the workflow was launched with 'I accept all of your recommendations and approve. Please proceed and run stage 2', not the runbook's fixed phrase, and the harness relayed it to every agent ahead of the workflow's instructions: a human rules whether it could steer or unblind the run"
+    }
+  ]
+}

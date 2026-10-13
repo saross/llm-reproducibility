@@ -316,6 +316,182 @@ class ReceiptGateTests(unittest.TestCase):
         self.assertEqual(self.run_gate(None, transcript=transcript), ["block"])
         self.assertIn("never actually read", self.events[0]["reason"])
 
+    # The gate 1.3 final review's F2 (2026-10-12): reads made through Bash.
+
+    def _transcript_with_calls(self, calls: list[tuple], payload: dict) -> str:
+        """Transcript with (tool, input, result text, is_error) calls, then the
+        structured output."""
+        entries = []
+        for n, (tool, given, text, error) in enumerate(calls):
+            entries.append({"message": {"content": [{"type": "tool_use", "name": tool,
+                                                      "id": f"toolu_{n}", "input": given}]}})
+            entries.append({"message": {"content": [{"type": "tool_result",
+                                                      "tool_use_id": f"toolu_{n}",
+                                                      "is_error": error, "content": text}]}})
+        entries.append({"message": {"content": [{"type": "tool_use",
+                                                  "name": "StructuredOutput",
+                                                  "id": "toolu_s", "input": payload}]}})
+        with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as f:
+            for entry in entries:
+                f.write(json.dumps(entry) + "\n")
+            transcript = f.name
+        self.addCleanup(os.unlink, transcript)
+        return transcript
+
+    def _gate_bash(self, commands: list[str], declared: list[str], text: str = "body",
+                   **overrides) -> list[str]:
+        payload = valid_payload(**overrides)
+        payload["receipts"]["pulled_files_read"] = declared
+        calls = [("Bash", {"command": c}, text, False) for c in commands]
+        return self.run_gate(None, transcript=self._transcript_with_calls(calls, payload))
+
+    def test_complete_shell_reads_verify_pulls(self) -> None:
+        """cat by absolute path, relative to a cd, and by glob; and nl."""
+        self.assertEqual(self._gate_bash(
+            ["cat /ref/guide.md", "cd /ref && cat templates/*.md", "nl /ref/b.R"],
+            ["/ref/guide.md", "/ref/templates/log.md", "/ref/b.R"]), ["pass"])
+
+    def test_partial_and_search_only_reads_block(self) -> None:
+        self.assertEqual(self._gate_bash(["sed -n 21,70p /ref/tax.md"], ["/ref/tax.md"]),
+                         ["block"])
+        self.assertIn("truncated (a partial shell read", self.events[-1]["reason"])
+        self.events.clear()
+        self.assertEqual(self._gate_bash(["grep -n L1 /ref/rules.md"], ["/ref/rules.md"]),
+                         ["block"])
+        self.assertIn("only searched", self.events[-1]["reason"])
+
+    def test_a_truncated_shell_read_counts_only_once_its_spill_is_read(self) -> None:
+        spilled = ("<persisted-output>\nOutput too large (40KB). Full output saved to: "
+                   "/tmp/spill/out.txt\n</persisted-output>")
+        self.assertEqual(self._gate_bash(["cat /ref/big.md"], ["/ref/big.md"], text=spilled),
+                         ["block"])
+        self.events.clear()
+        payload = valid_payload()
+        payload["receipts"]["pulled_files_read"] = ["/ref/big.md"]
+        calls = [("Bash", {"command": "cat /ref/big.md"}, spilled, False),
+                 ("Read", {"file_path": "/tmp/spill/out.txt"}, "body", False)]
+        self.assertEqual(self.run_gate(None, transcript=self._transcript_with_calls(
+            calls, payload)), ["pass"])
+
+    def test_piped_and_same_named_reads_do_not_verify_pulls(self) -> None:
+        """Fable's delta review, D-2: a full reader piped into head, wc, or
+        grep is partial, and a bare file name matches only the file at the
+        recorded working directory, never a same-named file elsewhere."""
+        for command in ("cat /ref/guide.md | head -40", "cat /ref/guide.md | wc -l",
+                        "cat /ref/guide.md | grep -n Receipt"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["block"], command)
+            self.assertIn("truncated", self.events[-1]["reason"], command)
+        for command in ("cat README.md", "cat docs/README.md"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash(
+                [command], ["/repo/reproduction-system/templates/README.md"]), ["block"],
+                command)
+
+    # Astra's delta review of gate 1.3.1, D-Astra-1: a successful command
+    # need not deliver a file's contents.
+
+    def test_reads_whose_delivery_is_not_established_block(self) -> None:
+        """Redirected, skipped, replaced, piped on, backgrounded, sequenced,
+        substituted, and commented reads do not verify a pull; tee was
+        accepted until this review, but without pipefail the pipeline's
+        success is tee's, not cat's."""
+        undelivered = ("cat /ref/guide.md > /tmp/copy.md", "true || cat /ref/guide.md",
+                       "cat /ref/guide.md; true", "cat /ref/guide.md &",
+                       "cat /ref/guide.md >&2", "cat /ref/guide.md &> /tmp/log",
+                       "cat /ref/guide.md $(true)", "false && true || cat /ref/guide.md")
+        for command in undelivered:
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["block"], command)
+            self.assertIn("read it on its own", self.events[-1]["reason"], command)
+        for command in ("cat /ref/guide.md | cat /ref/other.md",
+                        "cat /ref/guide.md | tee /tmp/copy.md"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["block"], command)
+            self.assertIn("piped into another command", self.events[-1]["reason"], command)
+        for command in ("# x; cat /ref/guide.md", "(cat /ref/guide.md)",
+                        "cat /tmp/copy.md > /ref/guide.md"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["block"], command)
+            self.assertIn("no matching", self.events[-1]["reason"], command)
+
+    def test_established_shell_reads_verify_pulls(self) -> None:
+        """One && chain of cd, full reads, and echo, with standard error
+        redirected at most, a trailing comment, or a continued line."""
+        for command in ("cd /ref && cat guide.md 2>&1", "cat /ref/guide.md 2>/dev/null",
+                        "cat /ref/guide.md # the guide", "cd /ref &&\n  cat guide.md",
+                        "cat /ref/a.md && echo --- && cat /ref/guide.md"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["pass"], command)
+
+    def test_reader_modes_that_print_no_file_block(self) -> None:
+        """Astra's closure review, D-Astra-1 residual: cat --help and
+        --version exit 0 having printed no file, so only cat's display
+        options, and no option to nl, keep a read credited; options end at
+        --, and cd --help stays put."""
+        for command in ("cat --help /ref/guide.md", "cat --version /ref/guide.md",
+                        "cat -z /ref/guide.md", "nl -v 5 /ref/guide.md"):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], ["/ref/guide.md"]), ["block"], command)
+            self.assertIn("such as --help", self.events[-1]["reason"], command)
+        for command, declared in (("cat -n /ref/guide.md", "/ref/guide.md"),
+                                  ("cat -As --number /ref/guide.md", "/ref/guide.md"),
+                                  ("cat -- /ref/guide.md", "/ref/guide.md"),
+                                  ("cd /ref && cat -- -guide.md", "/ref/-guide.md"),
+                                  ("cat guide.md", "guide.md")):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], [declared]), ["pass"], command)
+        self.events.clear()
+        self.assertEqual(self._gate_bash(["cd --help && cat guide.md"], ["guide.md"]),
+                         ["block"])
+
+    def test_read_and_spill_paths_match_whole(self) -> None:
+        """A Read of guide.md.bak verifies neither guide.md nor, for a
+        spilled read, the spill file it was named after."""
+        self.assertEqual(self.run_gate(None, transcript=self._transcript_with_read(
+            "/ref/guide.md.bak", False, {**valid_payload(), "receipts": {
+                **valid_payload()["receipts"], "pulled_files_read": ["/ref/guide.md"]}})),
+            ["block"])
+        self.events.clear()
+        spilled = ("<persisted-output>\nOutput too large (40KB). Full output saved to: "
+                   "/tmp/spill/out.txt\n</persisted-output>")
+        payload = valid_payload()
+        payload["receipts"]["pulled_files_read"] = ["/ref/big.md"]
+        calls = [("Bash", {"command": "cat /ref/big.md"}, spilled, False),
+                 ("Read", {"file_path": "/tmp/spill/out.txt.old"}, "body", False)]
+        self.assertEqual(self.run_gate(None, transcript=self._transcript_with_calls(
+            calls, payload)), ["block"])
+
+    def test_a_glob_matches_as_the_shell_expands_it(self) -> None:
+        """* stays within one component and skips dot files, and a quoted
+        pattern is a literal name."""
+        self.assertEqual(self._gate_bash(["cat /ref/*.md"], ["/ref/x.md"]), ["pass"])
+        for command, declared in (("cat /ref/*.md", "/ref/sub/x.md"),
+                                  ("cat /ref/*.md", "/ref/.hidden.md"),
+                                  ('cat "/ref/*.md"', "/ref/x.md")):
+            self.events.clear()
+            self.assertEqual(self._gate_bash([command], [declared]), ["block"],
+                             (command, declared))
+
+    def test_a_heredoc_body_is_not_a_shell_read(self) -> None:
+        self.assertEqual(self._gate_bash(["python3 - <<'EOF'\ncat /ref/guide.md\nEOF"],
+                                         ["/ref/guide.md"]), ["block"])
+
+    def test_an_escalation_carrying_a_result_is_pull_checked(self) -> None:
+        """The herskind pilot's executor returned SUCCESSFUL as ESCALATE and
+        was never checked; an escalation with no result still passes through."""
+        self.assertEqual(self._gate_bash([], ["/ref/unread.md"], status="ESCALATE",
+                                         escalate_reason="paper error", verdict="SUCCESSFUL"),
+                         ["block"])
+        self.events.clear()
+        self.assertEqual(self._gate_bash([], ["/ref/unread.md"], status="ESCALATE",
+                                         escalate_reason="input missing"),
+                         ["escalate-passthrough"])
+        self.events.clear()
+        self.assertEqual(self._gate_bash(["cat /ref/read.md"], ["/ref/read.md"],
+                                         status="ESCALATE", escalate_reason="paper error",
+                                         verdict="SUCCESSFUL"), ["escalate-passthrough"])
+
     def test_successful_pull_passes(self) -> None:
         payload = valid_payload()
         payload["receipts"]["pulled_files_read"] = ["/ref/guide.md"]

@@ -2,11 +2,32 @@
 title: "Reproduction lane gate 1.3 — consolidated specification"
 tags: [reproduction, validation, mechanical-verification]
 created: 2026-10-05
-updated: 2026-10-09
-status: instrumentation-in-progress
+updated: 2026-10-12
+status: final-review-fixes
 ---
 
 # Reproduction lane gate 1.3: consolidated specification
+
+**Gate 1.3.1 (2026-10-12): the final review's fixes.** Both final reviews
+(Fable and Astra, of `main` at `8b8b4d8`) found the round did not close the
+hardening. Their findings, and each closure, are consolidated in
+`reproduction-gate-1-3-final-review-brief.md` ("Review outcome"). The fixes,
+on branch `feat/gate-1-3-1-review-fixes`, are: the transcript audit 1.1's
+shell-aware parsing (F1); Bash reads in the receipt check, and escalations
+that carry a result checked (F2); the launch message recorded and screened
+(F3); per-target method declarations, a method-adherence obligation, and
+comparison schema 1.2 (F4); `build-image` and a build-evidence obligation
+(F5); late transcription flagged (F6); the runbook's order and gate 1.3 text
+(F7); the run audit bound into admission (F8); declared element counts
+compared (F9); and the hook's own statement evaluator, `run_file`, with
+`parsed-not-run`, `original-partly-run`, and statement flags (A-new-1, hook
+`1.6-inst`). `GATE_VERSION` is 1.3.1. Under §2.2 the next round is a delta
+review of these fixes, with one pilot re-run, since A-new-1 changes what
+executors write. Astra's delta review found three incomplete closures
+(D-Astra-1 to 3, of F2, F1, and F8), closed on the same branch: reads
+credited only when their delivery is established, transcript audit 1.2, and
+run audit 1.1 bound to the persisted results and the reviewed artefact
+state (the brief's "Delta review outcome").
 
 **Status (2026-10-06, revision 2): the foundations are built; the rest is
 not.** This is the one effective text. It replaces the draft's §§1–7 and
@@ -1286,6 +1307,14 @@ and the preparation prompt (v1.4) no longer asks for it.
 
 ## 12. Transcript audit (supporting evidence)
 
+*Version 1.1 (2026-10-12, the final review's F1): commands are scanned with
+their quoting and heredocs (a heredoc body fed to a shell is audited as
+commands), `cd` is tracked command by command, `--help` and `--version`
+calls are no runs, run starts are compared as times, and only code (not a
+data original) can be run on the host. Version 1.0's regex splitting gave
+the herskind pilot four false hard failures. It also flags writes into
+`published-values/` after the first run (F6).*
+
 `audit-run` reads the harness transcript, which the executor cannot edit.
 Contaminating findings block admission (§6). The audit is supporting
 evidence: shell indirection and the Docker API can avoid any command
@@ -1532,8 +1561,18 @@ matrix about two more, and the rest one or two, plus the review rounds of
     (`65d9eb2`), and the gate's package templates and grouped obligations
     (`a018a0a`). The re-run leaves one `run-time-texts` obligation where
     there were 119;
-  - [ ] the full re-run through the agentic workflow (Shawn starts it);
-  - [ ] Astra's and Fable's reviews of the built gate.
+  - [x] 2026-10-11 the full re-run through the agentic workflow (herskind
+    attempt-03; plan `wf_14d5db9b-bed`, execute `wf_7c18dfdc-298`;
+    artefacts `78137fe`);
+  - [x] 2026-10-12 Astra's and Fable's reviews of the built gate: the round
+    does not close the hardening (D: F1, F2, F7, F8, F9, and documentation;
+    A: F3, F4, F5, A-new-1);
+  - [x] 2026-10-12 the fixes, as gate 1.3.1 (see the note at the top);
+  - [ ] the delta review of the fixes by both reviewers, and one pilot
+    re-run through the lane (API review gate first). [x] 2026-10-12 Fable's
+    delta review, closed at `1d875d2`; [x] 2026-10-12 Astra's delta review
+    of `1d875d2` (three D, closed on the branch); [ ] Astra's check of
+    those closures; [ ] the pilot re-run, after PR #11 merges.
 - [ ] **After gate 1.3 merges** (Shawn, 2026-10-06): split
   `scripts/reproduction-lane.py` into a few modules (runner, records,
   rulings, gate) in its own refactoring PR, checked against the existing
@@ -1580,7 +1619,9 @@ this text are complete.
    internals, and one obligation per place and caller. Shawn ruled to build
    it before this review (Q1 (a)), and it is built (§8; `65d9eb2`,
    `a018a0a`): the re-run leaves one obligation listing the 107 conditions,
-   and the 12 package texts match templates. Does it close the problem
+   and the package texts match the 12 templates (*corrected 2026-10-12,
+   Fable's final review: run-04 shows 17 template matches and 30
+   package-source texts; twelve is the number of templates*). Does it close the problem
    without opening a route? In particular: is a template's safety rightly
    carried by its pattern (holes that are R names) rather than its caller,
    given that glue's caller is a bare name the hook cannot verify? Should a

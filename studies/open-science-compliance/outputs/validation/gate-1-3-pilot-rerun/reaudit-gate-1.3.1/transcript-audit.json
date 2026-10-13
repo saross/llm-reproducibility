@@ -1,0 +1,101 @@
+{
+  "audit_version": "1.1",
+  "audited_at": "2026-10-12T11:58:34+00:00",
+  "attempt_dir": "~/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-03",
+  "final_run": "run-04",
+  "final_run_started_at": "2026-10-11T11:46:44+00:00",
+  "runs_called": [
+    "run-01",
+    "run-02",
+    "run-03",
+    "run-04"
+  ],
+  "contaminating": [],
+  "issues": [
+    {
+      "id": "docker-build-direct:7aa82184f26f",
+      "kind": "flag",
+      "code": "docker-build-direct",
+      "subject": "7aa82184f26f",
+      "targets": [],
+      "files": {
+        "command": "7aa82184f26fe31ab5a3bf8a530bbebb719750eccdf5cd65c23b82d791b21716"
+      },
+      "fingerprint": "8c36b23ee38f29b4463e4d56d22d2133754286c8767c192b128f4b0b3cfd3590",
+      "message": "FLAG: the executor ran docker build itself (docker build --progress=plain --label llmr.dockerfile.sha256=$D -t llmr-herskind-riede-2024-attempt-03 /home/shawn/Code/llm-reproducibility/studies/open-science), not reproduction-lane.py build-image, so no lane record keeps that build's log"
+    },
+    {
+      "id": "host-run:tools/read-published-fig4.py",
+      "kind": "flag",
+      "code": "host-run",
+      "subject": "tools/read-published-fig4.py",
+      "targets": [],
+      "files": {
+        "tools/read-published-fig4.py": "8ef418840c681ba90cd7a5f2cc59fa9967919d78dd2d582e22940cb3dde35ab2"
+      },
+      "fingerprint": "69fde491007547c5b5ee0281ea312cf52e0f33fa07d32bb10eebfe59a31bffc2",
+      "message": "FLAG: the executor ran tools/read-published-fig4.py on the host before the final run (python3 -I tools/read-published-fig4.py /home/shawn/scratch/llmr-runs/gate-1-3-pilot-rerun-2026-10/herskind-riede-2024/executor/fig6/fig-000.jpg > published-val): credit comes only from sealed outputs, but invariant 5 is an environment rule, so a human rules on it"
+    },
+    {
+      "id": "transcription-after-run:published-values/fig4-cells.csv",
+      "kind": "flag",
+      "code": "transcription-after-run",
+      "subject": "published-values/fig4-cells.csv",
+      "targets": [],
+      "files": {
+        "published-values/fig4-cells.csv": "2fba2988353b56ac7026273ec5203f4fb09e55655bf4405f67ae273c24a55a7c"
+      },
+      "fingerprint": "2b2b7dd03ef5cdee60faafc36e6dcbd3eff82ffdc9a40f633d1e0d85dabad397",
+      "message": "FLAG: a shell command wrote the published values published-values/fig4-cells.csv after the first run started (2026-10-11T11:34:59+00:00): a human rules on whether the transcription was made from the source alone"
+    },
+    {
+      "id": "host-run:tools/read-published-fig2.py",
+      "kind": "flag",
+      "code": "host-run",
+      "subject": "tools/read-published-fig2.py",
+      "targets": [],
+      "files": {
+        "tools/read-published-fig2.py": "f84f70a4d7362327fd904a45b9d9e143d1455f590e6584c64bbf38052e6863e3"
+      },
+      "fingerprint": "c5dc8114e0fd020642a66e40dd8cf4bb38e1f252be2fae3c17ee8b50cb9611fc",
+      "message": "FLAG: the executor ran tools/read-published-fig2.py on the host before the final run (python3 -I tools/read-published-fig2.py /home/shawn/scratch/llmr-runs/gate-1-3-pilot-rerun-2026-10/herskind-riede-2024/executor/fig3p/fig-000.jpg > published-va): credit comes only from sealed outputs, but invariant 5 is an environment rule, so a human rules on it"
+    },
+    {
+      "id": "transcription-after-run:published-values/fig2-left.csv",
+      "kind": "flag",
+      "code": "transcription-after-run",
+      "subject": "published-values/fig2-left.csv",
+      "targets": [],
+      "files": {
+        "published-values/fig2-left.csv": "839f2fc10e92d91a4116a0984715fc9c5d12912856e45284c021345830eab7f0"
+      },
+      "fingerprint": "f5e82a28ef0c1f4837fabdf112d0da7081f9a592014f770e03bf9c135ad9d63e",
+      "message": "FLAG: a shell command wrote the published values published-values/fig2-left.csv after the first run started (2026-10-11T11:34:59+00:00): a human rules on whether the transcription was made from the source alone"
+    },
+    {
+      "id": "transcription-after-run:published-values/fig5-pies.csv",
+      "kind": "flag",
+      "code": "transcription-after-run",
+      "subject": "published-values/fig5-pies.csv",
+      "targets": [],
+      "files": {
+        "published-values/fig5-pies.csv": "edef639bd49c989968749cd47da930d6c030165b5f36de8b960d0b0fe84e188f"
+      },
+      "fingerprint": "ce8680afa74d45a73a815ae351f56b4684a68c12c8a6be68ac8853cb8c5c0be0",
+      "message": "FLAG: a shell command wrote the published values published-values/fig5-pies.csv after the first run started (2026-10-11T11:34:59+00:00): a human rules on whether the transcription was made from the source alone"
+    },
+    {
+      "id": "transcription-after-run:published-values/README.md",
+      "kind": "flag",
+      "code": "transcription-after-run",
+      "subject": "published-values/README.md",
+      "targets": [],
+      "files": {
+        "published-values/README.md": "edef639bd49c989968749cd47da930d6c030165b5f36de8b960d0b0fe84e188f"
+      },
+      "fingerprint": "1f0f2e64eaa89254a45019c0bb8324582875501066b0f6e3d5a660d45853e30d",
+      "message": "FLAG: a shell command wrote the published values published-values/README.md after the first run started (2026-10-11T11:34:59+00:00): a human rules on whether the transcription was made from the source alone"
+    }
+  ],
+  "transcript": "~/.claude/projects/-home-shawn-Code-llm-reproducibility/be70c3be-5053-4390-8f8a-b73ebee1a2cc/subagents/workflows/wf_7c18dfdc-298/agent-a3825ccd2ec76de27.jsonl"
+}

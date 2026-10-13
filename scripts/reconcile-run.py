@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Post-run reconciliation of governed workflow spawns (plan C8 + C9).
 
-**Version:** 1.5
+**Version:** 1.6
 
 The C2 probes established that SubagentStop gate decisions are advisory in
 the workflow lane (a block is logged but the output is collected anyway)
@@ -12,7 +12,8 @@ verdict from the completed artefacts —
 1. **Receipt re-validation (C9):** for each agent transcript, locate the
    structured output and validate its receipts against the manifest
    (instrument versions, receipt tokens, model pin, agent version,
-   declared pulled reads verified against transcript Read calls) — the
+   declared pulled reads verified against transcript Read calls and, since
+   v1.6, complete Bash reads) — the
    same checks as the live gate, run when the transcript is complete and
    lag cannot exist.
 2. **File-access derivation (C8; amendment 1 §4):** list every Read, Grep,
@@ -396,22 +397,31 @@ def revalidate(lines: list[str], agent_type: str, manifest: dict, gate,
     if str(fields["agent_version"]).strip() != expected:
         problems.append(f"agent_version mismatch: {fields['agent_version']!r}")
     calls = gate.read_calls(lines)
+    # The hook's own verdict (2026-10-12, F2): complete Bash reads count,
+    # and partial, truncated, and search-only reads are named as such.
+    shell = gate.bash_reads(lines)
     for declared in fields["pulled_files_read"]:
         declared_path = str(declared).strip()
         if not declared_path:
             problems.append("empty pulled path declared")
             continue
-        matching = [c for c in calls
-                    if declared_path in str(c["input"].get("file_path", ""))]
-        successful = [c for c in matching if not c["error"]]
-        if not matching:
+        verdict, how = gate.pull_verdict(declared_path, calls, shell)
+        if verdict == "missing":
             problems.append(f"declared pull not in transcript: {declared_path}")
-        elif not successful:
+        elif verdict == "errored":
             problems.append(f"declared pull attempted but every Read errored "
                             f"(never actually read): {declared_path}")
-        elif not any("limit" not in c["input"] and "offset" not in c["input"]
-                     for c in successful):
-            problems.append(f"declared pull truncated: {declared_path}")
+        elif verdict == "truncated":
+            problems.append(f"declared pull truncated ({how}): {declared_path}")
+        elif verdict == "searched":
+            problems.append(f"declared pull only searched, never read: {declared_path}")
+        elif verdict == "undelivered":
+            problems.append(f"declared pull {how}: {declared_path}")
+        elif verdict != "read":
+            # Fail-closed (Astra's delta review of gate 1.3.1, D-Astra-1): a
+            # verdict this list does not name is not a clean read.
+            problems.append(f"declared pull has unrecognised verdict {verdict!r}: "
+                            f"{declared_path}")
 
     # D3 pack verification (amendment 2 §2): a workflow-declared evidence
     # pack must still hash to its declared value AND have been fully read —
