@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """Deterministic orchestration helpers for the agentic reproduction lane.
 
-**Version:** 1.4
+**Version:** 1.5
+
+v1.5 (2026-10-13) prices usage request by request, so that a model whose
+price depends on each request's prompt length (Claude Haiku 5.5, two
+cards split at 100,000 prompt tokens) is priced as billed. Rate cards may
+be tiered; the gate is unchanged (``GATE_VERSION`` 1.3.1).
 
 v1.4 (2026-10-12) is gate 1.3.1, the gate 1.3 final review's fixes: the
 transcript audit scans shell text with its quoting (1.1); admission reads
@@ -6711,20 +6716,77 @@ def transcript_usage(lines: list[str]) -> dict:
     totals = {f: sum(r[f] for r in per_request.values()) for f in fields}
     totals["requests"] = len(per_request)
     totals["models"] = sorted(set(models.values()))
+    # Each request with its model (None for harness-synthetic entries), so
+    # that a model priced by prompt length is priced request by request.
+    totals["by_request"] = [{**values, "model": models.get(key)}
+                            for key, values in per_request.items()]
     return totals
 
 
-def price_usage(usage: dict, pricing: dict) -> float | None:
-    """API-equivalent USD for one agent's usage, or None if unpriceable."""
-    models = {DATE_SUFFIX_RE.sub("", m.replace("[1m]", "")) for m in usage["models"]}
-    if len(models) != 1 or next(iter(models)) not in pricing:
+RATE_FIELDS = ("input", "output", "cache_write_5m", "cache_write_1h", "cache_read")
+
+
+def request_rates(rates: Any, prompt_tokens: int | None) -> dict | None:
+    """The rate card that prices one request, or None if none applies.
+
+    ``rates`` is a flat card (``{input, output, cache_write_5m,
+    cache_write_1h, cache_read}``) or, for a model priced by prompt length,
+    ``{"tiers": [card, ...]}``, each card but the last with
+    ``max_prompt_tokens``: the first tier whose limit the prompt does not
+    exceed applies. A tiered model needs ``prompt_tokens``; a malformed card
+    prices nothing rather than raising.
+    """
+    if isinstance(rates, dict) and "tiers" in rates:
+        if prompt_tokens is None or not isinstance(rates["tiers"], list):
+            return None
+        rates = next((tier for tier in rates["tiers"] if isinstance(tier, dict)
+                      and prompt_tokens <= tier.get("max_prompt_tokens", float("inf"))),
+                     None)
+    if not isinstance(rates, dict) or not all(
+            isinstance(rates.get(f), (int, float)) for f in RATE_FIELDS):
         return None
-    rates = pricing[next(iter(models))]
-    cost = (usage["input_tokens"] * rates["input"]
-            + usage["output_tokens"] * rates["output"]
-            + usage["cache_write_5m"] * rates["cache_write_5m"]
-            + usage["cache_write_1h"] * rates["cache_write_1h"]
-            + usage["cache_read_input_tokens"] * rates["cache_read"]) / 1_000_000
+    return rates
+
+
+def price_usage(usage: dict, pricing: dict) -> float | None:
+    """API-equivalent USD for one agent's usage, or None if unpriceable.
+
+    Priced request by request when ``usage`` carries ``by_request``
+    (``transcript_usage`` gives it), since Claude Haiku 5.5's price depends
+    on each request's prompt length: its input tokens, cache writes, and
+    cache reads together, and a request over 100,000 tokens pays the higher
+    card on every token, output included
+    (platform.claude.com/docs/en/about-claude/pricing, read 2026-10-13). A
+    request with no model id, such as a harness-synthetic entry, takes the
+    agent's model when it has exactly one. Without ``by_request`` the
+    totals are priced at a flat card, and a tiered model is unpriceable.
+    Any request whose model has no usable card makes the whole agent
+    unpriceable, so a partial cost is never reported.
+    """
+    def base(model: str) -> str:
+        return DATE_SUFFIX_RE.sub("", model.replace("[1m]", ""))
+
+    models = {base(m) for m in usage["models"]}
+    requests = usage.get("by_request")
+    if requests is None:
+        if len(models) != 1:
+            return None
+        requests = [{**usage, "model": next(iter(models)), "prompt": None}]
+    cost = 0.0
+    for request in requests:
+        model = base(request["model"]) if request.get("model") else (
+            next(iter(models)) if len(models) == 1 else None)
+        prompt = request.get("prompt", request["input_tokens"]
+                             + request.get("cache_creation_input_tokens", 0)
+                             + request["cache_read_input_tokens"])
+        rates = request_rates(pricing.get(model), prompt) if model else None
+        if rates is None:
+            return None
+        cost += (request["input_tokens"] * rates["input"]
+                 + request["output_tokens"] * rates["output"]
+                 + request["cache_write_5m"] * rates["cache_write_5m"]
+                 + request["cache_write_1h"] * rates["cache_write_1h"]
+                 + request["cache_read_input_tokens"] * rates["cache_read"]) / 1_000_000
     return round(cost, 4)
 
 
@@ -6910,7 +6972,8 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
         if not any(str(Path(t).expanduser()).startswith(root.rstrip("/") + "/")
                    for root in allowed_roots)]
     usage = transcript_usage(lines)
-    record["usage"] = usage
+    # The per-request detail prices the agent; the record keeps the totals.
+    record["usage"] = {k: v for k, v in usage.items() if k != "by_request"}
     record["cost_usd"] = price_usage(usage, config.get("pricing_usd_per_mtok") or {})
     telemetry = reconcile_telemetry(lines)
     record.update(telemetry)
