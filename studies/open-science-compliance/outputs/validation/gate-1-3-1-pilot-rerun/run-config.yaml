@@ -1,0 +1,128 @@
+# Gate 1.3.1 pilot re-run — reproduction-lane run configuration
+#
+# Single source of run inputs for scripts/reproduction-lane.py (build-plan-args,
+# persist-plans, approve, build-exec-args, audit-run). The workflow scripts
+# never read this file (workflow scripts have no filesystem access); the
+# builder turns it into hashed, commit-pinned args.
+#
+# Framing: the one pilot re-run through the whole lane that the gate 1.3.1
+# delta reviews call for (wiki/planning/reproduction-gate-1-3-design.md §2.2;
+# the final-review brief's "Delta review outcome"). Gate 1.3.1 (PR #11,
+# merged 2026-10-13 as 10500ea) changes what executors write (the lane's
+# run_file evaluator, method declarations, build-image) and how receipts,
+# the transcript audit, and admission are checked, so this run tests that
+# code on main. It is NOT the registered §8 regression gate, which runs later
+# against the frozen correction ledger. Settings are the gate 1.3 pilot
+# re-run's (gate-1-3-pilot-rerun/run-config.yaml): the same paper, effort,
+# and rulings, as attempt 4. Each stage passes the API review gate before it
+# is launched.
+
+run_id: gate-1-3-1-pilot-rerun-2026-10
+config_version: "1.0"
+attempt: 4            # attempt-01 pilot, -02 shakedown, -03 gate 1.3 pilot re-run
+effort: high          # Opus 5.5 defaults to medium, so pinned
+output_root: studies/open-science-compliance/outputs
+
+# Registrant rulings (Shawn, 2026-10-03), carried over verbatim from the
+# Phase 2 shakedown and the gate 1.3 pilot re-run.
+rulings:
+  - >-
+    R1 No author code: a target whose published result has no supplied code
+    may be tested with clearly labelled verification aids. Aids are
+    read-only lookups in the deposited data, and calls to documented
+    functions of the package the authors used. They make no new
+    statistical choices, and they live in a separate comparison script,
+    never in the authors' code. A difference caused only by an unpublished
+    convention (for example histogram bin edges) is MINOR_DISCREPANCY.
+  - >-
+    R2 Unavailable inputs: a target whose inputs cannot be obtained stays
+    in the locked denominator as expected-untestable and counts against
+    coverage. Never drop it to narrow scope.
+  - >-
+    R3 Granularity: one target per display item. A multi-panel figure is
+    one target, and its panels are described within it. Named values in
+    the text are separate targets.
+  - >-
+    R4 Internal inconsistency: where the paper's text and its own tables or
+    figures disagree, score against the stated value. Apply the PAPER_ERROR
+    protocol if the reproduction disagrees, and escalate.
+
+agents:
+  planner: reproduction-planner
+  executor: reproduction-executor
+  reviewer: adversarial-reviewer
+
+schemas:
+  plan: reproduction-system/schemas/reproduction-plan-output.json
+  execution: reproduction-system/schemas/reproduction-execution-output.json
+  review: reproduction-system/schemas/adversarial-review-output.json
+  comparison_record: reproduction-system/schemas/comparison-record.json
+
+# Blinding: the gate 1.3 pilot re-run's list, plus that run's own attempt
+# (reproduction/attempt-03) and its scratch and argument files, so this run
+# cannot anchor on any earlier agentic run's plan, outputs, or verdict.
+# Agents are told never to touch any path containing one of these
+# substrings; audit-run scans every transcript afterwards (instruction plus
+# detection, amendment 2 §4).
+blinding:
+  forbidden_substrings:
+    - reproduction/attempt-01          # the pilot's artefacts (regression baseline)
+    - reproduction/attempt-02          # the shakedown's agentic run
+    - reproduction/attempt-03          # the gate 1.3 pilot re-run
+    - gate-1-3-pilot-rerun             # that run's scratch tree and validation records
+    - llmr-runs/exec-                  # that run's execute args and workflow result
+    - llmr-runs/plan-args.json         # that run's plan args
+    - extraction.json                  # pilot extractions incl. FAIR assessments
+    - /assessment/                     # credibility assessments
+    - outputs/validation/              # benchmark records, ledger, these runs
+    - open-science-compliance/reports/ # pilot findings report
+    - outputs/variability-test
+    - reproduction-system-review       # v1.0 review of the pilot
+    - pilot-reproduction-summary
+    - references/examples/             # skill worked examples (pilot outcomes)
+    - verification-strategies.md       # states the pilot's value-level outcomes
+    - wiki/
+    - .claude/projects/                # session transcripts
+    - cc-archives
+    - personal-assistant/
+    - agent-mail/
+    - llmr-probes                      # the ledger's local probes
+  # Harness push-channel spill files live under .claude/projects/; reading
+  # them IS instrument delivery (reconcile-run v1.4 precedent).
+  exempt_regex: '/tool-results/hook-[0-9a-f-]+-\d+-additionalContext\.txt$'
+  # Each paper's agents must also stay out of the other papers' output trees.
+  cross_paper_slugs:
+    - herskind-riede-2024
+    - dye-et-al-2023
+    - key-et-al-2024
+    - marwick-2025
+    - crema-et-al-2024
+
+# API-equivalent prices, USD per million tokens. The Max plan bills by
+# subscription; these figures are the API-equivalent for the cost gate.
+# claude-haiku-5-5 (the in-workflow gate step) is priced in two tiers by
+# each request's prompt length, which needs per-request pricing in the lane;
+# its row is added with that change, before stage 2. Until then audit-run
+# reports the gate agent as unpriced (two requests in the last pilot).
+pricing_usd_per_mtok:
+  claude-opus-5-5: {input: 4.00, output: 20.00, cache_write_5m: 5.00, cache_write_1h: 8.00, cache_read: 0.20}
+
+papers:
+  - slug: herskind-riede-2024
+    paper_pdf: ~/corpora/llm-reproducibility/herskind-riede-2024/vor.pdf
+    supplements: []
+    deposits:
+      - identifier: https://doi.org/10.5281/zenodo.10801706
+        description: >-
+          Zenodo record, version 2 (2024-03-10): S1.xlsx (data), S2.R (code),
+          S3.xlsx (precomputed tables), README.txt. Reproduce THIS version.
+    run_notes: >-
+      Version selection (adjudication rule AP-12, Shawn 2026-10-02/03):
+      reproduce with the code and data as of the paper. The paper's methods
+      cite version 1 (10.5281/zenodo.10623550) and its data-availability
+      statement cites version 2; the publisher's supplementary files are
+      byte-identical to version 2, so version 2 is the version of record.
+      Do not use version 1 or the concept DOI. Compute: run everything on
+      this machine through run-container. Do not send any run to sapphire,
+      whatever the plan guide or preparation prompt says about long runs;
+      sapphire is held for a memory fault (Shawn, 2026-10-10).
