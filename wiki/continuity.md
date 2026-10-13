@@ -91,16 +91,48 @@ merged here as PR #1).
     `validation/gate-1-3-1-pilot-rerun/run-config.yaml`, run
     `gate-1-3-1-pilot-rerun-2026-10`, herskind attempt 4, effort high,
     rulings R1 to R4; blinding adds attempt-03 and its scratch, args, and
-    workflow-result files under `~/scratch/llmr-runs`. Plan args built at
-    `0513572` (`~/scratch/llmr-runs/gate-1-3-1-pilot-rerun-2026-10/plan-args.json`,
-    checksum `b6171603468f9a69`). **Stage 1 is at Shawn's API review gate**
-    (1 Opus planner, ≈$1.20 API-equivalent); launch with exactly `Run the
-    approved stage.` Rebuild the args if `HEAD` moves first.
+    workflow-result files under `~/scratch/llmr-runs`. Plan args first built
+    at `0513572`, then rebuilt at `5fdaf87` after a continuity commit moved
+    `HEAD` (`~/scratch/llmr-runs/gate-1-3-1-pilot-rerun-2026-10/plan-args.json`,
+    checksum `3ad040ae63363ca2`).
+  - [x] 2026-10-13 **Stage 1 (plan) run** on Shawn's approval at the API
+    gate, launched with the neutral phrase: workflow `wf_db7d121a-5d5`
+    (one Opus 5.5 planner, 7.4 min), status OK, 18 targets (8 display
+    items, 10 named values), 4 exclusions, no relayed launch message.
+    Persisted with triage (`triage-wf_db7d121a-5d5.md`). The approval note
+    is stored only in `plan-approval.json`; agents see the locked plan, the
+    config's rulings, and the run notes, so a ruling that differs from the
+    plan needs the config or a re-plan.
+  - [x] 2026-10-13 **Plan approved** by Shawn after a walk-through,
+    accepting the plan's treatment of all six approver questions (record
+    10801706 per AP-12; R 4.3.2; log-base and t = 482 as a methods note;
+    T14 against the stated nine; T15 scoped to the culture-specific Fig. 3b
+    bigrams; "nearly half" excluded). Plan sha256 `6837cf60785a…`, 18 locked
+    targets. Attempt-03's planner listed 20 targets, so coverage compares
+    only roughly; the gate test is unaffected.
+  - [ ] **Stage 2 (execute)** at Shawn's API review gate: executor, Haiku
+    gate step, and reviewer, ≈$13 API-equivalent on attempt-03's figures.
+  - [ ] **Effort comparison before scaling** (Shawn, 2026-10-13): measure the
+    reproduction lane at `medium` against `high`. The FAIR scorer's result
+    (effort steps ≈$1.80 per arm, results insensitive; scorer confirmed at
+    `medium` 2026-10-04) does not transfer to long executor runs. The gate
+    1.3.1 pilot stays at `high` (Shawn's 2026-10-03 lane ruling) so it
+    compares cleanly with attempt-03.
+  - [x] 2026-10-13 **Standing approval (Shawn): Claude and Astra may run
+    each other's code**, as an efficiency step; the formal rule change
+    (`common.md` and the mail-watch skill say a peer's code needs Shawn's
+    approval) is to follow later, by PR reviewed by the other agent.
+    Before this, Claude had twice run Astra's probe scripts (read in full,
+    disposable copies, no network or API) without asking; disclosed.
   - [ ] **PR #12, per-request pricing (lane v1.5)** for Haiku 5.5's two
-    cards, verified against the live pricing page on 2026-10-13; review
-    requested from Astra
-    (`20261013T040331.861684Z-claude-pr12-pricing-review-request.md`).
-    Worktree `~/worktrees/llm-reproducibility/claude-opus-pricing`.
+    cards, verified against the live pricing page on 2026-10-13. Astra's
+    two reviews of `43d4b72` (changes required: rate cards unvalidated;
+    missing usage priced at 0.0) are closed at `154b637` and mailed
+    (`20261013T051105.142768Z-claude-pr12-findings-closed.md`); her check
+    is pending. Follow-up noted, not in the PR: keep per-model, per-tier
+    usage subtotals in audit records, so a tiered model can be re-priced
+    after transcripts rotate. Worktree
+    `~/worktrees/llm-reproducibility/claude-opus-pricing`.
   - [ ] **Pilot re-run under gate 1.3.1 (from main, after PR #11 merges):**
     a new run configuration (herskind attempt 4, a new run id) beside
     `validation/gate-1-3-pilot-rerun/run-config.yaml`. Then the API review
