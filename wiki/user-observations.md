@@ -777,7 +777,7 @@ posted two reviews to PR #7. Claude corrected the instruction in later
 briefs and recorded it as claude-obs 70. Shawn to judge whether the two
 posted reviews are acceptable.
 
-## Pending review — 2026-10-06 batch (drafted at handoff, session b1a1e102)
+## Closed unreviewed 2026-10-14, user-obs redesign — 2026-10-06 batch (drafted at handoff, session b1a1e102)
 
 *Candidates for Shawn to accept / edit / discard / replace. Silence
 holds them over — never discards. Titles state the transferable lesson,
@@ -811,7 +811,7 @@ GitHub App as the route to native agent reviews without posting as
 Shawn. Shawn chose "documents now, bot account later", an option that was
 not in his original pair.
 
-## Pending review — 2026-10-08 batch (drafted at handoff, session fabeab56)
+## Closed unreviewed 2026-10-14, user-obs redesign — 2026-10-08 batch (drafted at handoff, session fabeab56)
 
 *Candidates for Shawn to accept / edit / discard / replace. Silence
 holds them over, never discards. Titles state the transferable lesson
@@ -879,7 +879,7 @@ hard to see, such as gates, lodged text, and final reviews, and it is worth
 its top-tier credit there. This matches the subagent model policy, which
 reserves the top tier for "subtle adversarial verification".
 
-## Pending review — 2026-10-12 batch (drafted at handoff, session be70c3be)
+## Closed unreviewed 2026-10-14, user-obs redesign — 2026-10-12 batch (drafted at handoff, session be70c3be)
 
 *Candidates for Shawn to accept / edit / discard / replace. Silence holds
 them over, never discards. Titles state the transferable lesson. The
@@ -962,3 +962,22 @@ the mail-watch rule requires for a peer's code, and disclosed it only
 later. The scripts were read in full and run in disposable copies, but
 safety did not make it allowed. Shawn's response was a standing approval
 for both agents to run each other's code.
+
+## 2026-10-14 — Remarks carried from the closed backlog
+
+When the user-obs backlog closed on 2026-10-14 (handoff redesign; see
+`~/personal-assistant/global-claude-md/handoff-protocol.md`, step 4),
+these candidates quoted a remark Shawn made in passing about something
+Claude did. The quotes are as recorded in the candidate sets; they have
+not been re-checked against the transcripts. Shawn reviews them (keep,
+correct, or delete) from the personal-assistant inbox. Under the redesign,
+new entries here are only his remarks, quoted, and nothing awaits a
+verdict.
+
+- 2026-10-12 (Candidate B): "this is *exactly* the kind of minor error we
+  should point out, without failing the entire run. Details are hard; the
+  fact that our reproductions catch them is *outstanding* -- thank you!!"
+  … and "these discrepancy reports are *extremely* valuable" — Claude
+  reported internal inconsistencies in authors' deposits (code redrawing a
+  panel the published figure lacks; two conflicting R versions) as minor
+  discrepancies rather than failures.

@@ -1735,3 +1735,26 @@ outside the binding.
 (continuity, reflections, records); build the args last; and freeze main
 until the run ends. If a commit must land later, rebuild the args and say
 so.
+
+<!-- claude-obs 87–87: converted 2026-10-14 from the closed user-obs backlog; each is dated by its original observation. -->
+
+## claude-obs 87 — 2026-10-06: A scattered decision backlog clears in one sitting when each item is rebuilt from its source
+
+**Pattern.** Shawn asked to work through his open decisions one by one:
+"I've lost track of context for each, which is scattered through our
+session transcript". About 34, from three sessions, cleared in one
+sitting. I re-read each item's source rather than my summary, ordered them
+by what they blocked (lodgement and the regression gate first), and put
+each as a structured question with a recommendation; two needed a
+trade-offs round first (claude-obs 72).
+
+**Lesson.** Open decisions lose their context for him long before they
+lose their importance, and a scattered backlog becomes a blocker in
+itself. My summaries of past items are pointers; the source is what he
+decides on.
+
+**How to apply.** Keep a running list of open decisions with source
+anchors. When it spans sessions, offer the walk-through unprompted: order
+by what each blocks, re-read each at source, and recommend, with
+trade-offs for methodological ones. Source: converted 2026-10-14 from
+user-obs candidate A, 2026-10-06 batch (wiki/user-observations.md).
