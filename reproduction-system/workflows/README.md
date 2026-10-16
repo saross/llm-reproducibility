@@ -49,7 +49,11 @@ configuration (for the shakedown:
 2. **Plan args:**
    `venv/bin/python scripts/reproduction-lane.py build-plan-args --config $CFG --scratch-root $SCRATCH --out $SCRATCH/plan-args.json`
 3. **API gate** (global rule): state the model, the number of spawns, and the
-   estimated cost, and get explicit approval.
+   estimated cost, and get explicit approval. State the estimate's time and
+   cost with its basis (the plan's compute estimate, earlier attempts of the
+   paper), because both vary from paper to paper. The run's tripwires derive
+   from it: at the top of the estimate the operator checks progress, and at
+   1.5 times the top the workflow is halted (Shawn, 2026-10-17).
 4. **Run** `reproduction-plan.workflow.js` from the repository with the
    `Workflow` tool: `scriptPath` set to the committed file, `args` set to the
    builder's JSON, passed unedited. The builder stamps `args_checksum`. The
@@ -59,7 +63,12 @@ configuration (for the shakedown:
    that starts a workflow to every agent, ahead of the workflow's own
    instructions. Start each stage with exactly `Run the approved stage.`,
    and put no results, expectations, or opinions in that message: whatever
-   it says reaches blinded agents.
+   it says reaches blinded agents. Launch only in direct reply to a typed
+   approval, never after an answer given through a question tool, where
+   what the harness relays is untested.
+   **During the run, leave the main checkout alone** until the authoritative
+   gate (step 10) has run: no commit, pull, merge, or checkout. The agents
+   load their definitions, hooks, and the lane script from it.
 5. **Persist:**
    `venv/bin/python scripts/reproduction-lane.py persist-plans --config $CFG --run-dir <workflow run dir>`
    This writes `reproduction-plan.json` and `.md` into each attempt directory,
@@ -80,6 +89,10 @@ configuration (for the shakedown:
    `venv/bin/python scripts/reproduction-lane.py build-exec-args --config $CFG --scratch-root $SCRATCH --out $SCRATCH/exec-args.json`
    Only papers with a committed approval whose hash still matches go in.
    Others are listed in `skipped`, never dropped silently.
+   An attempt whose execution stopped partway is used up: the builder
+   refuses only an attempt that already has `comparisons/comparison.json`,
+   so do not re-run into one that holds a partial run's files. The next
+   try is a new attempt.
 9. **API gate** again (each stage is approved separately), then run
    `reproduction-execute.workflow.js` the same way, with the same launch
    message.

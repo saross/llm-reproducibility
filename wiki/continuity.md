@@ -52,13 +52,37 @@ merged here as PR #1).
     (written beside the run config, never into the attempt), rulings,
     `persist-results`. Fable's view: with a clean re-run the hardening
     closes.
-  - [ ] **Mail:** Astra's check of PR #12 at `154b637`, in
-    `~/agent-mail/codex/outbox/claude/`. If clean, ask Shawn to merge
-    (outside the stage-2 window). At handoff (16:58 AEDT) nothing about
-    `154b637` had arrived: the PR #12 mails of 16:04 to 16:09 all reviewed
-    `43d4b72` and are closed. Shawn: "we'll sort out the review" next
-    session.
-  - [ ] **Launch mechanism (Shawn, 2026-10-13), before stage 2.** He finds
+  - [x] 2026-10-17 **Mail:** Astra's check of PR #12 at `154b637` arrived
+    2026-10-13 17:31 (`2026-10-13-codex-pr12-closure-review.md`, receipted
+    2026-10-17): source approval, both findings closed, no remaining
+    blocker. Merge at step 2 of the post-run order (H2 of the pre-run
+    review), with Shawn's approval.
+  - [x] 2026-10-17 **Pre-run review of stage 2** (the `pre-run-review`
+    skill; sections 2026-10-13, Shawn's explain-back and decisions
+    2026-10-17). Hardenings H1–H7 in
+    `studies/open-science-compliance/outputs/validation/gate-1-3-1-pilot-rerun/pre-run-review-stage-2.md`
+    (a blinded path, so no agent reads it): no-touch window, post-run
+    order with PR #12 at step 2, cost and time tripwires derived per run
+    from the gate estimate (check at the top, halt at 1.5 times; Shawn:
+    they vary from paper to paper), an attempt stopped halfway is used up,
+    a material difference from attempt-03 is a finding, the launch message,
+    and amd-tower as the approved plan says. General rules added to
+    `reproduction-system/workflows/README.md`. The launch commit and the
+    repeated pre-launch checks are recorded here after the run (H1).
+  - [ ] **Sapphire for runs (Shawn, 2026-10-17):** sapphire's problems are
+    solved and he wants runs moved there. Attempt 4's locked plan says
+    amd-tower only, and `run-container` bind-mounts local paths
+    (`scripts/reproduction-lane.py`, `container_argv`), so a remote
+    Docker host cannot see the attempt. Needs a session running on
+    sapphire, or lane support for a remote host; update the run notes in
+    later configurations.
+  - [ ] **Follow-up PRs after the pilot:** the launch word rule (below);
+    `build-exec-args` refuses an attempt holding any execution artefact
+    (H4); a lane subcommand for the cost and time watcher (H3; the
+    session's scratch `watch-run.py` did the job for stage 2).
+  - [x] 2026-10-17 **Launch mechanism decided** (Shawn): the word rule,
+    built as a PR after the pilot; stage 2 launches on his plain go-ahead
+    and he rules the audit's flag once. Original item: He finds
     "repeat this exact phrase" annoying, not useful: "I'd like a more
     serious review before a launch … or trigger easily". So, for stage 2:
     offer the pre-run review (the `pre-run-review` skill, in which he
@@ -167,7 +191,7 @@ merged here as PR #1).
     two reviews of `43d4b72` (changes required: rate cards unvalidated;
     missing usage priced at 0.0) are closed at `154b637` and mailed
     (`20261013T051105.142768Z-claude-pr12-findings-closed.md`); her check
-    is pending. Follow-up noted, not in the PR: keep per-model, per-tier
+    approved `154b637` (2026-10-13, see Mail above). Follow-up noted, not in the PR: keep per-model, per-tier
     usage subtotals in audit records, so a tiered model can be re-priced
     after transcripts rotate. Worktree
     `~/worktrees/llm-reproducibility/claude-opus-pricing`.
