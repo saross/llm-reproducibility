@@ -42,8 +42,13 @@ merged here as PR #1).
   study coverage **13/18** (T17 not creditable under amendment 3 §7(d)),
   while the lane admits 14/18. Both blind runs (attempts 03 and 04) found
   the same Table 1 cells and Fig. 4 boxes.
-  - [ ] **Shawn's decision: does a run with these findings close the
-    hardening?** Fable's earlier view: a clean re-run closes it. The gate's
+  - [x] 2026-10-17 **Decided (Shawn): gate 1.3.1 closes for the findings
+    it addressed, and gate 1.3.2 opens for the three gaps below** (recorded
+    at the top of `wiki/planning/reproduction-gate-1-3-design.md`). Mail
+    the outcome to Fable and Astra (drafted for Shawn's review). **Credit
+    is limited (Shawn, 2026-10-17): this follow-up with Fable is the last
+    Fable use for now; ration aggressively after it.** The question was:
+    does a run with these findings close the hardening? Fable's earlier view: a clean re-run closes it. The gate's
     mechanics all worked (receipts, blinding, sealed runs, strict binding,
     audit, admission), but the pilot found three gaps. (1) The executor's
     `method_as_planned` declarations caught one departure of five (T13);

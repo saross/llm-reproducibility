@@ -2,11 +2,38 @@
 title: "Reproduction lane gate 1.3 — consolidated specification"
 tags: [reproduction, validation, mechanical-verification]
 created: 2026-10-05
-updated: 2026-10-12
-status: final-review-fixes
+updated: 2026-10-17
+status: 1-3-1-closed-1-3-2-open
 ---
 
 # Reproduction lane gate 1.3: consolidated specification
+
+**Gate 1.3.1 closed; gate 1.3.2 opened (Shawn, 2026-10-17).** The pilot
+re-run under gate 1.3.1 ran from main (herskind attempt 4: stage 1
+`wf_db7d121a-5d5`, stage 2 `wf_4fd7a886-ada` at launch commit `6b18505`).
+Every post-run step passed: authoritative gate, clean audit, 17 issues ruled,
+attempt eligible. Verdict SUCCESSFUL, study coverage 13/18. The gate's
+mechanisms worked in a live run, so gate 1.3.1 closes for the findings it
+addressed. The run also found three gaps, which open gate 1.3.2, to land
+before the §8 regression gate:
+
+1. **Method declarations are weak.** The executor's per-target
+   `method_as_planned` (F4) declared one departure of five; the reviewer's
+   method-adherence obligation found the other four (T01, T03, T04, T12).
+   The obligation worked; the self-declaration did not.
+2. **Review concerns cannot be ruled per target.** The `review:qualified`
+   issue names no targets, so a ruling on it covers all of them. T17,
+   not creditable under amendment 3 §7(d), therefore stays in the lane's
+   admitted 14/18.
+3. **A plan paraphrased a lodged rule.** The approved plan cited ruling Q5
+   without its input condition, and plan approval did not catch it.
+
+Also in scope: admitted coverage recorded after the rulings (the gate
+report keeps only its pre-ruling snapshot), and the lane follow-ups listed
+in `wiki/continuity.md` (the launch word rule, the args-builder guard
+against partly executed attempts, a cost and time watcher, a review-only
+re-run mode). Records:
+`studies/open-science-compliance/outputs/validation/gate-1-3-1-pilot-rerun/`.
 
 **Gate 1.3.1 (2026-10-12): the final review's fixes.** Both final reviews
 (Fable and Astra, of `main` at `8b8b4d8`) found the round did not close the
