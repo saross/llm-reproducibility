@@ -44,8 +44,13 @@ merged here as PR #1).
   the same Table 1 cells and Fig. 4 boxes.
   - [x] 2026-10-17 **Decided (Shawn): gate 1.3.1 closes for the findings
     it addressed, and gate 1.3.2 opens for the three gaps below** (recorded
-    at the top of `wiki/planning/reproduction-gate-1-3-design.md`). Mail
-    the outcome to Fable and Astra (drafted for Shawn's review). **Credit
+    at the top of `wiki/planning/reproduction-gate-1-3-design.md`). Outcome
+    mailed with Shawn's approval, 2026-10-17, each asking two questions
+    (does a gap reopen a finding; is the 1.3.2 scope complete):
+    `~/agent-mail/claude/outbox/claude/20261017T073937.869344Z-claude-gate131-closed-fable.md`
+    (bounded ask) and
+    `~/agent-mail/claude/outbox/codex/20261017T073937.869344Z-claude-gate131-closed-astra.md`
+    (no token limit; Astra has plenty of credit). [ ] Await both replies. **Credit
     is limited (Shawn, 2026-10-17): this follow-up with Fable is the last
     Fable use for now; ration aggressively after it.** The question was:
     does a run with these findings close the hardening? Fable's earlier view: a clean re-run closes it. The gate's
