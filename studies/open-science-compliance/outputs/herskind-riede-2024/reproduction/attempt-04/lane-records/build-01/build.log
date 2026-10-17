@@ -1,0 +1,1052 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 DONE 0.0s
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.30kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/rocker/r-ver:4.3.2
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/5] FROM docker.io/rocker/r-ver:4.3.2
+#4 CACHED
+
+#5 [internal] load build context
+#5 transferring context: 9.16kB done
+#5 DONE 0.0s
+
+#6 [2/5] RUN apt-get update && apt-get install -y --no-install-recommends         build-essential         gfortran         libxml2-dev         libicu-dev         libcurl4-openssl-dev         libssl-dev         zlib1g-dev         libfontconfig1         libfreetype6         libcairo2         fonts-liberation         fonts-dejavu-core     && rm -rf /var/lib/apt/lists/*
+#6 0.765 Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+#6 0.773 Get:2 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+#6 1.910 Get:3 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [96.8 kB]
+#6 2.118 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+#6 2.292 Get:5 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [4429 kB]
+#6 2.607 Get:6 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+#6 2.933 Get:7 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+#6 3.573 Get:8 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1325 kB]
+#6 3.656 Get:9 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [7955 kB]
+#6 4.789 Get:10 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+#6 4.871 Get:11 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+#6 4.887 Get:12 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+#6 4.900 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [104 kB]
+#6 4.909 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1627 kB]
+#6 5.029 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [4758 kB]
+#6 5.320 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [8243 kB]
+#6 5.828 Get:17 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [82.9 kB]
+#6 5.832 Get:18 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.6 kB]
+#6 6.051 Fetched 49.0 MB in 6s (8443 kB/s)
+#6 6.051 Reading package lists...
+#6 6.874 Reading package lists...
+#6 7.653 Building dependency tree...
+#6 7.830 Reading state information...
+#6 7.992 gfortran is already the newest version (4:11.2.0-1ubuntu1).
+#6 7.992 libfontconfig1 is already the newest version (2.13.1-4.2ubuntu5).
+#6 7.992 libfontconfig1 set to manually installed.
+#6 7.992 The following additional packages will be installed:
+#6 7.992   bzip2 dpkg-dev icu-devtools libbz2-1.0 libcurl4 libdpkg-perl libgdbm-compat4
+#6 7.992   libgdbm6 libperl5.34 libssl3 libxml2 lto-disabled-list patch perl perl-base
+#6 7.992   perl-modules-5.34 xz-utils
+#6 7.993 Suggested packages:
+#6 7.993   bzip2-doc debian-keyring libcurl4-doc libidn11-dev libkrb5-dev libldap2-dev
+#6 7.993   librtmp-dev libssh2-1-dev pkg-config gnupg git bzr gdbm-l10n icu-doc
+#6 7.993   libssl-doc ed diffutils-doc perl-doc libterm-readline-gnu-perl
+#6 7.993   | libterm-readline-perl-perl libtap-harness-archive-perl
+#6 7.993 Recommended packages:
+#6 7.993   fakeroot gnupg libalgorithm-merge-perl libfile-fcntllock-perl
+#6 7.993   liblocale-gettext-perl netbase
+#6 8.070 The following NEW packages will be installed:
+#6 8.070   build-essential bzip2 dpkg-dev fonts-dejavu-core fonts-liberation
+#6 8.070   icu-devtools libcurl4-openssl-dev libdpkg-perl libgdbm-compat4 libgdbm6
+#6 8.071   libicu-dev libperl5.34 libssl-dev libxml2-dev lto-disabled-list patch perl
+#6 8.071   perl-modules-5.34 xz-utils zlib1g-dev
+#6 8.072 The following packages will be upgraded:
+#6 8.072   libbz2-1.0 libcairo2 libcurl4 libfreetype6 libssl3 libxml2 perl-base
+#6 8.580 7 upgraded, 20 newly installed, 0 to remove and 105 not upgraded.
+#6 8.580 Need to get 32.6 MB of archives.
+#6 8.580 After this operation, 125 MB of additional disk space will be used.
+#6 8.580 Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl-base amd64 5.34.0-3ubuntu1.9 [1762 kB]
+#6 8.590 Get:2 http://security.ubuntu.com/ubuntu jammy-security/main amd64 libcurl4 amd64 7.81.0-1ubuntu1.30 [293 kB]
+#6 9.924 Get:3 http://security.ubuntu.com/ubuntu jammy-security/main amd64 libcurl4-openssl-dev amd64 7.81.0-1ubuntu1.30 [387 kB]
+#6 10.53 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl-modules-5.34 all 5.34.0-3ubuntu1.9 [2977 kB]
+#6 10.87 Get:5 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libbz2-1.0 amd64 1.0.8-5ubuntu0.1 [34.5 kB]
+#6 10.88 Get:6 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgdbm6 amd64 1.23-1 [33.9 kB]
+#6 10.88 Get:7 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgdbm-compat4 amd64 1.23-1 [6606 B]
+#6 10.88 Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libperl5.34 amd64 5.34.0-3ubuntu1.9 [4796 kB]
+#6 11.19 Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 perl amd64 5.34.0-3ubuntu1.9 [232 kB]
+#6 11.20 Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libssl3 amd64 3.0.2-0ubuntu1.30 [1907 kB]
+#6 11.30 Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libxml2 amd64 2.9.13+dfsg-1ubuntu0.14 [765 kB]
+#6 11.34 Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 xz-utils amd64 5.2.5-2ubuntu1.1 [84.8 kB]
+#6 11.34 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libdpkg-perl all 1.21.1ubuntu2.6 [237 kB]
+#6 11.36 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 bzip2 amd64 1.0.8-5ubuntu0.1 [34.8 kB]
+#6 11.36 Get:15 http://archive.ubuntu.com/ubuntu jammy/main amd64 patch amd64 2.7.6-7build2 [109 kB]
+#6 11.37 Get:16 http://archive.ubuntu.com/ubuntu jammy/main amd64 lto-disabled-list all 24 [12.5 kB]
+#6 11.38 Get:17 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 dpkg-dev all 1.21.1ubuntu2.6 [922 kB]
+#6 11.58 Get:18 http://archive.ubuntu.com/ubuntu jammy/main amd64 build-essential amd64 12.9ubuntu3 [4744 B]
+#6 11.58 Get:19 http://archive.ubuntu.com/ubuntu jammy/main amd64 fonts-dejavu-core all 2.37-2build1 [1041 kB]
+#6 11.60 Get:20 http://archive.ubuntu.com/ubuntu jammy/main amd64 fonts-liberation all 1:1.07.4-11 [822 kB]
+#6 11.61 Get:21 http://archive.ubuntu.com/ubuntu jammy/main amd64 icu-devtools amd64 70.1-2 [197 kB]
+#6 11.81 Get:22 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libfreetype6 amd64 2.11.1+dfsg-1ubuntu0.4 [388 kB]
+#6 11.82 Get:23 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcairo2 amd64 1.16.0-5ubuntu2.1 [628 kB]
+#6 11.83 Get:24 http://archive.ubuntu.com/ubuntu jammy/main amd64 libicu-dev amd64 70.1-2 [11.6 MB]
+#6 12.53 Get:25 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libssl-dev amd64 3.0.2-0ubuntu1.30 [2377 kB]
+#6 12.65 Get:26 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libxml2-dev amd64 2.9.13+dfsg-1ubuntu0.14 [805 kB]
+#6 12.74 Get:27 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 zlib1g-dev amd64 1:1.2.11.dfsg-2ubuntu9.2 [164 kB]
+#6 12.88 debconf: delaying package configuration, since apt-utils is not installed
+#6 12.92 Fetched 32.6 MB in 5s (6978 kB/s)
+#6 12.94 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13504 files and directories currently installed.)
+#6 12.98 Preparing to unpack .../perl-base_5.34.0-3ubuntu1.9_amd64.deb ...
+#6 13.00 Unpacking perl-base (5.34.0-3ubuntu1.9) over (5.34.0-3ubuntu1.3) ...
+#6 13.89 Setting up perl-base (5.34.0-3ubuntu1.9) ...
+#6 13.92 Selecting previously unselected package perl-modules-5.34.
+#6 13.92 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13504 files and directories currently installed.)
+#6 13.93 Preparing to unpack .../perl-modules-5.34_5.34.0-3ubuntu1.9_all.deb ...
+#6 13.93 Unpacking perl-modules-5.34 (5.34.0-3ubuntu1.9) ...
+#6 14.14 Preparing to unpack .../libbz2-1.0_1.0.8-5ubuntu0.1_amd64.deb ...
+#6 14.14 Unpacking libbz2-1.0:amd64 (1.0.8-5ubuntu0.1) over (1.0.8-5build1) ...
+#6 14.17 Setting up libbz2-1.0:amd64 (1.0.8-5ubuntu0.1) ...
+#6 14.20 Selecting previously unselected package libgdbm6:amd64.
+#6 14.20 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 14905 files and directories currently installed.)
+#6 14.21 Preparing to unpack .../libgdbm6_1.23-1_amd64.deb ...
+#6 14.21 Unpacking libgdbm6:amd64 (1.23-1) ...
+#6 14.23 Selecting previously unselected package libgdbm-compat4:amd64.
+#6 14.23 Preparing to unpack .../libgdbm-compat4_1.23-1_amd64.deb ...
+#6 14.23 Unpacking libgdbm-compat4:amd64 (1.23-1) ...
+#6 14.25 Selecting previously unselected package libperl5.34:amd64.
+#6 14.25 Preparing to unpack .../libperl5.34_5.34.0-3ubuntu1.9_amd64.deb ...
+#6 14.25 Unpacking libperl5.34:amd64 (5.34.0-3ubuntu1.9) ...
+#6 14.39 Selecting previously unselected package perl.
+#6 14.39 Preparing to unpack .../perl_5.34.0-3ubuntu1.9_amd64.deb ...
+#6 14.39 Unpacking perl (5.34.0-3ubuntu1.9) ...
+#6 14.43 Preparing to unpack .../libssl3_3.0.2-0ubuntu1.30_amd64.deb ...
+#6 14.44 Unpacking libssl3:amd64 (3.0.2-0ubuntu1.30) over (3.0.2-0ubuntu1.15) ...
+#6 14.51 Setting up libssl3:amd64 (3.0.2-0ubuntu1.30) ...
+#6 14.56 debconf: unable to initialize frontend: Dialog
+#6 14.56 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#6 14.56 debconf: falling back to frontend: Readline
+#6 14.61 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 15492 files and directories currently installed.)
+#6 14.62 Preparing to unpack .../00-libxml2_2.9.13+dfsg-1ubuntu0.14_amd64.deb ...
+#6 14.62 Unpacking libxml2:amd64 (2.9.13+dfsg-1ubuntu0.14) over (2.9.13+dfsg-1ubuntu0.4) ...
+#6 14.66 Selecting previously unselected package xz-utils.
+#6 14.67 Preparing to unpack .../01-xz-utils_5.2.5-2ubuntu1.1_amd64.deb ...
+#6 14.67 Unpacking xz-utils (5.2.5-2ubuntu1.1) ...
+#6 14.69 Selecting previously unselected package libdpkg-perl.
+#6 14.69 Preparing to unpack .../02-libdpkg-perl_1.21.1ubuntu2.6_all.deb ...
+#6 14.69 Unpacking libdpkg-perl (1.21.1ubuntu2.6) ...
+#6 14.72 Selecting previously unselected package bzip2.
+#6 14.72 Preparing to unpack .../03-bzip2_1.0.8-5ubuntu0.1_amd64.deb ...
+#6 14.73 Unpacking bzip2 (1.0.8-5ubuntu0.1) ...
+#6 14.75 Selecting previously unselected package patch.
+#6 14.75 Preparing to unpack .../04-patch_2.7.6-7build2_amd64.deb ...
+#6 14.75 Unpacking patch (2.7.6-7build2) ...
+#6 14.77 Selecting previously unselected package lto-disabled-list.
+#6 14.77 Preparing to unpack .../05-lto-disabled-list_24_all.deb ...
+#6 14.77 Unpacking lto-disabled-list (24) ...
+#6 14.79 Selecting previously unselected package dpkg-dev.
+#6 14.79 Preparing to unpack .../06-dpkg-dev_1.21.1ubuntu2.6_all.deb ...
+#6 14.79 Unpacking dpkg-dev (1.21.1ubuntu2.6) ...
+#6 14.83 Selecting previously unselected package build-essential.
+#6 14.83 Preparing to unpack .../07-build-essential_12.9ubuntu3_amd64.deb ...
+#6 14.83 Unpacking build-essential (12.9ubuntu3) ...
+#6 14.85 Selecting previously unselected package fonts-dejavu-core.
+#6 14.85 Preparing to unpack .../08-fonts-dejavu-core_2.37-2build1_all.deb ...
+#6 14.85 Unpacking fonts-dejavu-core (2.37-2build1) ...
+#6 14.93 Selecting previously unselected package fonts-liberation.
+#6 14.93 Preparing to unpack .../09-fonts-liberation_1%3a1.07.4-11_all.deb ...
+#6 14.93 Unpacking fonts-liberation (1:1.07.4-11) ...
+#6 14.98 Selecting previously unselected package icu-devtools.
+#6 14.99 Preparing to unpack .../10-icu-devtools_70.1-2_amd64.deb ...
+#6 14.99 Unpacking icu-devtools (70.1-2) ...
+#6 15.01 Preparing to unpack .../11-libfreetype6_2.11.1+dfsg-1ubuntu0.4_amd64.deb ...
+#6 15.02 Unpacking libfreetype6:amd64 (2.11.1+dfsg-1ubuntu0.4) over (2.11.1+dfsg-1ubuntu0.2) ...
+#6 15.05 Preparing to unpack .../12-libcairo2_1.16.0-5ubuntu2.1_amd64.deb ...
+#6 15.06 Unpacking libcairo2:amd64 (1.16.0-5ubuntu2.1) over (1.16.0-5ubuntu2) ...
+#6 15.09 Preparing to unpack .../13-libcurl4_7.81.0-1ubuntu1.30_amd64.deb ...
+#6 15.10 Unpacking libcurl4:amd64 (7.81.0-1ubuntu1.30) over (7.81.0-1ubuntu1.16) ...
+#6 15.13 Selecting previously unselected package libcurl4-openssl-dev:amd64.
+#6 15.13 Preparing to unpack .../14-libcurl4-openssl-dev_7.81.0-1ubuntu1.30_amd64.deb ...
+#6 15.13 Unpacking libcurl4-openssl-dev:amd64 (7.81.0-1ubuntu1.30) ...
+#6 15.16 Selecting previously unselected package libicu-dev:amd64.
+#6 15.16 Preparing to unpack .../15-libicu-dev_70.1-2_amd64.deb ...
+#6 15.16 Unpacking libicu-dev:amd64 (70.1-2) ...
+#6 15.30 Selecting previously unselected package libssl-dev:amd64.
+#6 15.31 Preparing to unpack .../16-libssl-dev_3.0.2-0ubuntu1.30_amd64.deb ...
+#6 15.31 Unpacking libssl-dev:amd64 (3.0.2-0ubuntu1.30) ...
+#6 15.37 Selecting previously unselected package libxml2-dev:amd64.
+#6 15.37 Preparing to unpack .../17-libxml2-dev_2.9.13+dfsg-1ubuntu0.14_amd64.deb ...
+#6 15.37 Unpacking libxml2-dev:amd64 (2.9.13+dfsg-1ubuntu0.14) ...
+#6 15.40 Selecting previously unselected package zlib1g-dev:amd64.
+#6 15.41 Preparing to unpack .../18-zlib1g-dev_1%3a1.2.11.dfsg-2ubuntu9.2_amd64.deb ...
+#6 15.41 Unpacking zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu9.2) ...
+#6 15.44 Setting up lto-disabled-list (24) ...
+#6 15.44 Setting up perl-modules-5.34 (5.34.0-3ubuntu1.9) ...
+#6 15.45 Setting up bzip2 (1.0.8-5ubuntu0.1) ...
+#6 15.45 Setting up libfreetype6:amd64 (2.11.1+dfsg-1ubuntu0.4) ...
+#6 15.45 Setting up xz-utils (5.2.5-2ubuntu1.1) ...
+#6 15.47 update-alternatives: using /usr/bin/xz to provide /usr/bin/lzma (lzma) in auto mode
+#6 15.47 update-alternatives: warning: skip creation of /usr/share/man/man1/lzma.1.gz because associated file /usr/share/man/man1/xz.1.gz (of link group lzma) doesn't exist
+#6 15.47 update-alternatives: warning: skip creation of /usr/share/man/man1/unlzma.1.gz because associated file /usr/share/man/man1/unxz.1.gz (of link group lzma) doesn't exist
+#6 15.47 update-alternatives: warning: skip creation of /usr/share/man/man1/lzcat.1.gz because associated file /usr/share/man/man1/xzcat.1.gz (of link group lzma) doesn't exist
+#6 15.47 update-alternatives: warning: skip creation of /usr/share/man/man1/lzmore.1.gz because associated file /usr/share/man/man1/xzmore.1.gz (of link group lzma) doesn't exist
+#6 15.47 update-alternatives: warning: skip creation of /usr/share/man/man1/lzless.1.gz because associated file /usr/share/man/man1/xzless.1.gz (of link group lzma) doesn't exist
+#6 15.47 update-alternatives: warning: skip creation of /usr/share/man/man1/lzdiff.1.gz because associated file /usr/share/man/man1/xzdiff.1.gz (of link group lzma) doesn't exist
+#6 15.47 update-alternatives: warning: skip creation of /usr/share/man/man1/lzcmp.1.gz because associated file /usr/share/man/man1/xzcmp.1.gz (of link group lzma) doesn't exist
+#6 15.47 update-alternatives: warning: skip creation of /usr/share/man/man1/lzgrep.1.gz because associated file /usr/share/man/man1/xzgrep.1.gz (of link group lzma) doesn't exist
+#6 15.47 update-alternatives: warning: skip creation of /usr/share/man/man1/lzegrep.1.gz because associated file /usr/share/man/man1/xzegrep.1.gz (of link group lzma) doesn't exist
+#6 15.47 update-alternatives: warning: skip creation of /usr/share/man/man1/lzfgrep.1.gz because associated file /usr/share/man/man1/xzfgrep.1.gz (of link group lzma) doesn't exist
+#6 15.47 Setting up libssl-dev:amd64 (3.0.2-0ubuntu1.30) ...
+#6 15.48 Setting up patch (2.7.6-7build2) ...
+#6 15.48 Setting up icu-devtools (70.1-2) ...
+#6 15.48 Setting up fonts-dejavu-core (2.37-2build1) ...
+#6 15.51 Setting up zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu9.2) ...
+#6 15.51 Setting up fonts-liberation (1:1.07.4-11) ...
+#6 15.52 Setting up libcurl4:amd64 (7.81.0-1ubuntu1.30) ...
+#6 15.52 Setting up libicu-dev:amd64 (70.1-2) ...
+#6 15.53 Setting up libxml2:amd64 (2.9.13+dfsg-1ubuntu0.14) ...
+#6 15.53 Setting up libgdbm6:amd64 (1.23-1) ...
+#6 15.54 Setting up libcairo2:amd64 (1.16.0-5ubuntu2.1) ...
+#6 15.54 Setting up libxml2-dev:amd64 (2.9.13+dfsg-1ubuntu0.14) ...
+#6 15.54 Setting up libcurl4-openssl-dev:amd64 (7.81.0-1ubuntu1.30) ...
+#6 15.55 Setting up libgdbm-compat4:amd64 (1.23-1) ...
+#6 15.56 Setting up libperl5.34:amd64 (5.34.0-3ubuntu1.9) ...
+#6 15.56 Setting up perl (5.34.0-3ubuntu1.9) ...
+#6 15.57 Setting up libdpkg-perl (1.21.1ubuntu2.6) ...
+#6 15.58 Setting up dpkg-dev (1.21.1ubuntu2.6) ...
+#6 15.58 Setting up build-essential (12.9ubuntu3) ...
+#6 15.59 Processing triggers for libc-bin (2.35-0ubuntu3.6) ...
+#6 15.66 Processing triggers for fontconfig (2.13.1-4.2ubuntu5) ...
+#6 DONE 15.9s
+
+#7 [3/5] COPY install-pins.R /opt/llmr/install-pins.R
+#7 DONE 0.0s
+
+#8 [4/5] RUN Rscript /opt/llmr/install-pins.R
+#8 1.259 [install-pins] data.table 1.15.0 from https://cloud.r-project.org/src/contrib/Archive/data.table/data.table_1.15.0.tar.gz
+#8 3.475 Installing package into ‘/usr/local/lib/R/site-library’
+#8 3.475 (as ‘lib’ is unspecified)
+#8 4.133 * installing *source* package ‘data.table’ ...
+#8 4.163 ** package ‘data.table’ successfully unpacked and MD5 sums checked
+#8 4.163 ** using staged installation
+#8 4.433 gcc 11.4.0
+#8 4.433 *** pkg-config is not installed.
+#8 4.433 *** Compilation will now be attempted and if it works you can ignore this message. In
+#8 4.433 *** particular, this should be the case on Mac where zlib is built in or pkg-config
+#8 4.433 *** is not installed. However, if compilation fails, try 'locate zlib.h zconf.h' and
+#8 4.433 *** ensure the zlib development library is installed :
+#8 4.433 ***   deb: zlib1g-dev (Debian, Ubuntu, ...)
+#8 4.433 ***   rpm: zlib-devel (Fedora, EPEL, ...)
+#8 4.433 ***   There is a zlib in brew for OSX but the built in zlib should work.
+#8 4.433 *** Note that zlib is required to compile R itself so you may find the advice in the R-admin
+#8 4.433 *** guide helpful regarding zlib. On Debian/Ubuntu, zlib1g-dev is a dependency of r-base as
+#8 4.433 *** shown by 'apt-cache showsrc r-base | grep ^Build-Depends | grep zlib', and therefore
+#8 4.433 *** 'sudo apt-get build-dep r-base' should be sufficient too.
+#8 4.433 *** To silence this message, please ensure that :
+#8 4.433 ***   1) 'pkg-config --exists zlib' succeeds (i.e. $? -eq 0)
+#8 4.433 ***   2) 'pkg-config --libs zlib' contains -lz
+#8 4.433 *** Compilation will now be attempted ...
+#8 4.613 R CMD SHLIB supports OpenMP without any extra hint
+#8 4.622 *** Compilation without compression support in fwrite
+#8 4.643 ** libs
+#8 4.655 using C compiler: ‘gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0’
+#8 4.657 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c assign.c -o assign.o
+#8 5.462 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c between.c -o between.o
+#8 5.630 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c bmerge.c -o bmerge.o
+#8 5.944 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c chmatch.c -o chmatch.o
+#8 6.023 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c cj.c -o cj.o
+#8 6.114 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c coalesce.c -o coalesce.o
+#8 6.221 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c dogroups.c -o dogroups.o
+#8 6.447 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c fastmean.c -o fastmean.o
+#8 6.505 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c fcast.c -o fcast.o
+#8 6.572 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c fifelse.c -o fifelse.o
+#8 6.740 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c fmelt.c -o fmelt.o
+#8 7.025 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c forder.c -o forder.o
+#8 7.539 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c frank.c -o frank.o
+#8 7.646 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c fread.c -o fread.o
+#8 8.489 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c freadR.c -o freadR.o
+#8 8.703 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c froll.c -o froll.o
+#8 8.893 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c frollR.c -o frollR.o
+#8 9.018 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c frolladaptive.c -o frolladaptive.o
+#8 9.180 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c fsort.c -o fsort.o
+#8 9.308 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c fwrite.c -o fwrite.o
+#8 9.549 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c fwriteR.c -o fwriteR.o
+#8 9.647 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c gsumm.c -o gsumm.o
+#8 10.45 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c idatetime.c -o idatetime.o
+#8 10.51 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c ijoin.c -o ijoin.o
+#8 10.77 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c init.c -o init.o
+#8 10.82 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c inrange.c -o inrange.o
+#8 10.86 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c nafill.c -o nafill.o
+#8 10.99 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c negate.c -o negate.o
+#8 11.03 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c nqrecreateindices.c -o nqrecreateindices.o
+#8 11.07 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c openmp-utils.c -o openmp-utils.o
+#8 11.13 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c programming.c -o programming.o
+#8 11.18 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c quickselect.c -o quickselect.o
+#8 11.25 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c rbindlist.c -o rbindlist.o
+#8 11.50 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c reorder.c -o reorder.o
+#8 11.59 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c shift.c -o shift.o
+#8 11.71 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c snprintf.c -o snprintf.o
+#8 11.80 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c subset.c -o subset.o
+#8 11.99 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c transpose.c -o transpose.o
+#8 12.05 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c types.c -o types.o
+#8 12.11 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c uniqlist.c -o uniqlist.o
+#8 12.30 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c utils.c -o utils.o
+#8 12.43 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c vecseq.c -o vecseq.o
+#8 12.47 gcc -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include   -fopenmp -DNOZLIB -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c wrappers.c -o wrappers.o
+#8 12.53 gcc -shared -L/usr/local/lib/R/lib -L/usr/local/lib -o data.table.so assign.o between.o bmerge.o chmatch.o cj.o coalesce.o dogroups.o fastmean.o fcast.o fifelse.o fmelt.o forder.o frank.o fread.o freadR.o froll.o frollR.o frolladaptive.o fsort.o fwrite.o fwriteR.o gsumm.o idatetime.o ijoin.o init.o inrange.o nafill.o negate.o nqrecreateindices.o openmp-utils.o programming.o quickselect.o rbindlist.o reorder.o shift.o snprintf.o subset.o transpose.o types.o uniqlist.o utils.o vecseq.o wrappers.o -fopenmp -L/usr/local/lib/R/lib -lR
+#8 12.57 PKG_CFLAGS = -fopenmp -DNOZLIB
+#8 12.57 PKG_LIBS = -fopenmp
+#8 12.57 if [ "data.table.so" != "data_table.so" ]; then mv data.table.so data_table.so; fi
+#8 12.58 if [ "" != "Windows_NT" ] && [ `uname -s` = 'Darwin' ]; then install_name_tool -id data_table.so data_table.so; fi
+#8 12.58 installing to /usr/local/lib/R/site-library/00LOCK-data.table/00new/data.table/libs
+#8 12.58 ** R
+#8 12.60 ** inst
+#8 12.61 ** byte-compile and prepare package for lazy loading
+#8 16.30 ** help
+#8 16.52 *** installing help indices
+#8 16.65 ** building package indices
+#8 16.92 ** installing vignettes
+#8 16.92 ** testing if installed package can be loaded from temporary location
+#8 17.15 ** checking absolute paths in shared objects and dynamic libraries
+#8 17.17 ** testing if installed package can be loaded from final location
+#8 17.49 ** testing if installed package keeps a record of temporary installation path
+#8 17.50 * DONE (data.table)
+#8 18.22 [install-pins] forcats 1.0.0 from https://cloud.r-project.org/src/contrib/Archive/forcats/forcats_1.0.0.tar.gz
+#8 18.64 [install-pins]   dependencies from snapshot 2024-04-03: cli, glue, lifecycle, magrittr, rlang, tibble
+#8 18.64 Installing packages into ‘/usr/local/lib/R/site-library’
+#8 18.64 (as ‘lib’ is unspecified)
+#8 21.57 also installing the dependencies ‘utf8’, ‘fansi’, ‘pillar’, ‘pkgconfig’, ‘vctrs’
+#8 21.57 
+#8 21.57 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/utf8_1.2.4.tar.gz'
+#8 23.57 Content type 'binary/octet-stream' length 146772 bytes (143 KB)
+#8 23.57 ==================================================
+#8 23.58 downloaded 143 KB
+#8 23.58 
+#8 23.58 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/fansi_1.0.6.tar.gz'
+#8 25.62 Content type 'binary/octet-stream' length 307856 bytes (300 KB)
+#8 25.62 ==================================================
+#8 25.63 downloaded 300 KB
+#8 25.63 
+#8 25.63 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/pillar_1.9.0.tar.gz'
+#8 27.86 Content type 'binary/octet-stream' length 646162 bytes (631 KB)
+#8 27.86 ==================================================
+#8 28.61 downloaded 631 KB
+#8 28.61 
+#8 28.61 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/pkgconfig_2.0.3.tar.gz'
+#8 29.97 Content type 'binary/octet-stream' length 17613 bytes (17 KB)
+#8 29.97 ==================================================
+#8 29.97 downloaded 17 KB
+#8 29.97 
+#8 29.97 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/vctrs_0.6.5.tar.gz'
+#8 32.00 Content type 'binary/octet-stream' length 1285618 bytes (1.2 MB)
+#8 32.00 ==================================================
+#8 32.02 downloaded 1.2 MB
+#8 32.02 
+#8 32.02 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/cli_3.6.2.tar.gz'
+#8 34.05 Content type 'binary/octet-stream' length 1275567 bytes (1.2 MB)
+#8 34.05 ==================================================
+#8 34.06 downloaded 1.2 MB
+#8 34.06 
+#8 34.06 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/glue_1.7.0.tar.gz'
+#8 36.10 Content type 'binary/octet-stream' length 150249 bytes (146 KB)
+#8 36.10 ==================================================
+#8 36.10 downloaded 146 KB
+#8 36.10 
+#8 36.11 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/lifecycle_1.0.4.tar.gz'
+#8 38.12 Content type 'binary/octet-stream' length 123449 bytes (120 KB)
+#8 38.12 ==================================================
+#8 38.13 downloaded 120 KB
+#8 38.13 
+#8 38.13 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/magrittr_2.0.3.tar.gz'
+#8 40.15 Content type 'binary/octet-stream' length 221005 bytes (215 KB)
+#8 40.15 ==================================================
+#8 40.16 downloaded 215 KB
+#8 40.16 
+#8 40.16 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/rlang_1.1.3.tar.gz'
+#8 42.21 Content type 'binary/octet-stream' length 1547650 bytes (1.5 MB)
+#8 42.21 ==================================================
+#8 42.23 downloaded 1.5 MB
+#8 42.23 
+#8 42.23 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/tibble_3.2.1.tar.gz'
+#8 44.25 Content type 'binary/octet-stream' length 672104 bytes (656 KB)
+#8 44.25 ==================================================
+#8 44.27 downloaded 656 KB
+#8 44.27 
+#8 44.37 begin installing package ‘fansi’
+#8 44.37 begin installing package ‘utf8’
+#8 44.37 begin installing package ‘pkgconfig’
+#8 44.37 begin installing package ‘cli’
+#8 44.37 begin installing package ‘glue’
+#8 44.37 begin installing package ‘magrittr’
+#8 44.37 begin installing package ‘rlang’
+#8 44.62 * installing *binary* package ‘pkgconfig’ ...
+#8 44.62 * DONE (pkgconfig)
+#8 44.63 * installing *binary* package ‘glue’ ...
+#8 44.63 * DONE (glue)
+#8 44.63 * installing *binary* package ‘fansi’ ...
+#8 44.63 * DONE (fansi)
+#8 44.64 * installing *binary* package ‘utf8’ ...
+#8 44.64 * DONE (utf8)
+#8 44.65 * installing *binary* package ‘magrittr’ ...
+#8 44.65 * DONE (magrittr)
+#8 44.69 * installing *binary* package ‘rlang’ ...
+#8 44.69 * DONE (rlang)
+#8 44.69 * installing *binary* package ‘cli’ ...
+#8 44.69 * DONE (cli)
+#8 44.70 begin installing package ‘lifecycle’
+#8 44.93 * installing *binary* package ‘lifecycle’ ...
+#8 44.93 * DONE (lifecycle)
+#8 44.93 begin installing package ‘vctrs’
+#8 45.19 * installing *binary* package ‘vctrs’ ...
+#8 45.19 * DONE (vctrs)
+#8 45.19 begin installing package ‘pillar’
+#8 45.45 * installing *binary* package ‘pillar’ ...
+#8 45.45 * DONE (pillar)
+#8 45.45 begin installing package ‘tibble’
+#8 45.71 * installing *binary* package ‘tibble’ ...
+#8 45.71 * DONE (tibble)
+#8 45.71 
+#8 45.71 The downloaded source packages are in
+#8 45.71 	‘/tmp/Rtmp0mrl6e/downloaded_packages’
+#8 45.71 Installing package into ‘/usr/local/lib/R/site-library’
+#8 45.71 (as ‘lib’ is unspecified)
+#8 45.94 * installing *source* package ‘forcats’ ...
+#8 45.95 ** package ‘forcats’ successfully unpacked and MD5 sums checked
+#8 45.95 ** using staged installation
+#8 45.96 ** R
+#8 45.96 ** data
+#8 45.96 *** moving datasets to lazyload DB
+#8 46.02 ** inst
+#8 46.02 ** byte-compile and prepare package for lazy loading
+#8 46.66 ** help
+#8 46.70 *** installing help indices
+#8 46.73 *** copying figures
+#8 46.73 ** building package indices
+#8 46.93 ** installing vignettes
+#8 46.93 ** testing if installed package can be loaded from temporary location
+#8 47.20 ** testing if installed package can be loaded from final location
+#8 47.48 ** testing if installed package keeps a record of temporary installation path
+#8 47.48 * DONE (forcats)
+#8 48.36 [install-pins] dplyr 1.1.4 from https://cloud.r-project.org/src/contrib/Archive/dplyr/dplyr_1.1.4.tar.gz
+#8 49.00 [install-pins]   dependencies from snapshot 2024-04-03: generics, R6, tidyselect
+#8 49.00 Installing packages into ‘/usr/local/lib/R/site-library’
+#8 49.00 (as ‘lib’ is unspecified)
+#8 49.17 also installing the dependency ‘withr’
+#8 49.17 
+#8 49.17 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/withr_3.0.0.tar.gz'
+#8 51.24 Content type 'binary/octet-stream' length 237909 bytes (232 KB)
+#8 51.24 ==================================================
+#8 51.83 downloaded 232 KB
+#8 51.83 
+#8 51.83 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/generics_0.1.3.tar.gz'
+#8 53.86 Content type 'binary/octet-stream' length 76079 bytes (74 KB)
+#8 53.86 ==================================================
+#8 53.86 downloaded 74 KB
+#8 53.86 
+#8 53.86 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/R6_2.5.1.tar.gz'
+#8 55.88 Content type 'binary/octet-stream' length 82436 bytes (80 KB)
+#8 55.88 ==================================================
+#8 55.88 downloaded 80 KB
+#8 55.88 
+#8 55.88 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/tidyselect_1.2.1.tar.gz'
+#8 57.12 Content type 'binary/octet-stream' length 221776 bytes (216 KB)
+#8 57.12 ==================================================
+#8 57.13 downloaded 216 KB
+#8 57.13 
+#8 57.23 begin installing package ‘withr’
+#8 57.23 begin installing package ‘generics’
+#8 57.23 begin installing package ‘R6’
+#8 57.45 * installing *binary* package ‘generics’ ...
+#8 57.45 * DONE (generics)
+#8 57.46 * installing *binary* package ‘R6’ ...
+#8 57.46 * DONE (R6)
+#8 57.46 * installing *binary* package ‘withr’ ...
+#8 57.46 * DONE (withr)
+#8 57.46 begin installing package ‘tidyselect’
+#8 57.67 * installing *binary* package ‘tidyselect’ ...
+#8 57.67 * DONE (tidyselect)
+#8 57.68 
+#8 57.68 The downloaded source packages are in
+#8 57.68 	‘/tmp/Rtmp0mrl6e/downloaded_packages’
+#8 57.68 Installing package into ‘/usr/local/lib/R/site-library’
+#8 57.68 (as ‘lib’ is unspecified)
+#8 58.08 * installing *source* package ‘dplyr’ ...
+#8 58.09 ** package ‘dplyr’ successfully unpacked and MD5 sums checked
+#8 58.09 ** using staged installation
+#8 58.10 ** libs
+#8 58.12 using C++ compiler: ‘g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0’
+#8 58.12 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c chop.cpp -o chop.o
+#8 58.31 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c filter.cpp -o filter.o
+#8 58.48 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c funs.cpp -o funs.o
+#8 58.62 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c group_by.cpp -o group_by.o
+#8 59.08 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c group_data.cpp -o group_data.o
+#8 59.21 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c imports.cpp -o imports.o
+#8 59.34 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c init.cpp -o init.o
+#8 59.48 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c mask.cpp -o mask.o
+#8 59.62 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c mutate.cpp -o mutate.o
+#8 59.76 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c reconstruct.cpp -o reconstruct.o
+#8 59.89 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c slice.cpp -o slice.o
+#8 60.02 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG   -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c summarise.cpp -o summarise.o
+#8 60.18 g++ -std=gnu++17 -shared -L/usr/local/lib/R/lib -L/usr/local/lib -o dplyr.so chop.o filter.o funs.o group_by.o group_data.o imports.o init.o mask.o mutate.o reconstruct.o slice.o summarise.o -L/usr/local/lib/R/lib -lR
+#8 60.23 installing to /usr/local/lib/R/site-library/00LOCK-dplyr/00new/dplyr/libs
+#8 60.24 ** R
+#8 60.27 ** data
+#8 60.27 *** moving datasets to lazyload DB
+#8 60.34 ** inst
+#8 60.35 ** byte-compile and prepare package for lazy loading
+#8 63.75 ** help
+#8 64.09 *** installing help indices
+#8 64.21 *** copying figures
+#8 64.21 ** building package indices
+#8 64.51 ** installing vignettes
+#8 64.52 ** testing if installed package can be loaded from temporary location
+#8 64.93 ** checking absolute paths in shared objects and dynamic libraries
+#8 64.95 ** testing if installed package can be loaded from final location
+#8 65.51 ** testing if installed package keeps a record of temporary installation path
+#8 65.52 * DONE (dplyr)
+#8 66.41 [install-pins] ggplot2 3.5.0 from https://cloud.r-project.org/src/contrib/Archive/ggplot2/ggplot2_3.5.0.tar.gz
+#8 68.66 [install-pins]   dependencies from snapshot 2024-04-03: gtable, isoband, scales
+#8 68.66 Installing packages into ‘/usr/local/lib/R/site-library’
+#8 68.66 (as ‘lib’ is unspecified)
+#8 68.85 also installing the dependencies ‘colorspace’, ‘farver’, ‘labeling’, ‘munsell’, ‘RColorBrewer’, ‘viridisLite’
+#8 68.85 
+#8 68.85 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/colorspace_2.1-0.tar.gz'
+#8 70.10 Content type 'binary/octet-stream' length 2593119 bytes (2.5 MB)
+#8 70.10 ==================================================
+#8 70.12 downloaded 2.5 MB
+#8 70.12 
+#8 70.13 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/farver_2.1.1.tar.gz'
+#8 72.03 Content type 'binary/octet-stream' length 1457375 bytes (1.4 MB)
+#8 72.03 ==================================================
+#8 72.05 downloaded 1.4 MB
+#8 72.05 
+#8 72.05 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/labeling_0.4.3.tar.gz'
+#8 73.43 Content type 'binary/octet-stream' length 60124 bytes (58 KB)
+#8 73.43 ==================================================
+#8 73.43 downloaded 58 KB
+#8 73.43 
+#8 73.43 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/munsell_0.5.1.tar.gz'
+#8 75.43 Content type 'binary/octet-stream' length 243864 bytes (238 KB)
+#8 75.43 ==================================================
+#8 75.43 downloaded 238 KB
+#8 75.43 
+#8 75.43 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/RColorBrewer_1.1-3.tar.gz'
+#8 76.80 Content type 'binary/octet-stream' length 53125 bytes (51 KB)
+#8 76.80 ==================================================
+#8 76.80 downloaded 51 KB
+#8 76.80 
+#8 76.80 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/viridisLite_0.4.2.tar.gz'
+#8 78.84 Content type 'binary/octet-stream' length 1296749 bytes (1.2 MB)
+#8 78.84 ==================================================
+#8 78.86 downloaded 1.2 MB
+#8 78.86 
+#8 78.86 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/gtable_0.3.4.tar.gz'
+#8 80.21 Content type 'binary/octet-stream' length 215928 bytes (210 KB)
+#8 80.21 ==================================================
+#8 80.22 downloaded 210 KB
+#8 80.22 
+#8 80.22 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/isoband_0.2.7.tar.gz'
+#8 82.25 Content type 'binary/octet-stream' length 1642393 bytes (1.6 MB)
+#8 82.25 ==================================================
+#8 82.27 downloaded 1.6 MB
+#8 82.27 
+#8 82.27 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/scales_1.3.0.tar.gz'
+#8 84.31 Content type 'binary/octet-stream' length 698096 bytes (681 KB)
+#8 84.51 ==================================================
+#8 85.10 downloaded 681 KB
+#8 85.10 
+#8 85.19 begin installing package ‘colorspace’
+#8 85.19 begin installing package ‘farver’
+#8 85.19 begin installing package ‘labeling’
+#8 85.19 begin installing package ‘RColorBrewer’
+#8 85.19 begin installing package ‘viridisLite’
+#8 85.19 begin installing package ‘gtable’
+#8 85.19 begin installing package ‘isoband’
+#8 85.45 * installing *binary* package ‘RColorBrewer’ ...
+#8 85.45 * DONE (RColorBrewer)
+#8 85.45 * installing *binary* package ‘labeling’ ...
+#8 85.45 * DONE (labeling)
+#8 85.48 * installing *binary* package ‘gtable’ ...
+#8 85.48 * DONE (gtable)
+#8 85.49 * installing *binary* package ‘viridisLite’ ...
+#8 85.49 * DONE (viridisLite)
+#8 85.51 * installing *binary* package ‘isoband’ ...
+#8 85.51 * DONE (isoband)
+#8 85.52 * installing *binary* package ‘farver’ ...
+#8 85.52 * DONE (farver)
+#8 85.60 * installing *binary* package ‘colorspace’ ...
+#8 85.60 * DONE (colorspace)
+#8 85.60 begin installing package ‘munsell’
+#8 85.81 * installing *binary* package ‘munsell’ ...
+#8 85.81 * DONE (munsell)
+#8 85.81 begin installing package ‘scales’
+#8 86.03 * installing *binary* package ‘scales’ ...
+#8 86.03 * DONE (scales)
+#8 86.03 
+#8 86.03 The downloaded source packages are in
+#8 86.03 	‘/tmp/Rtmp0mrl6e/downloaded_packages’
+#8 86.03 Installing package into ‘/usr/local/lib/R/site-library’
+#8 86.03 (as ‘lib’ is unspecified)
+#8 86.77 * installing *source* package ‘ggplot2’ ...
+#8 86.80 ** package ‘ggplot2’ successfully unpacked and MD5 sums checked
+#8 86.80 ** using staged installation
+#8 86.82 ** R
+#8 86.89 ** data
+#8 86.89 *** moving datasets to lazyload DB
+#8 87.20 ** inst
+#8 87.21 ** byte-compile and prepare package for lazy loading
+#8 94.09 ** help
+#8 94.65 *** installing help indices
+#8 94.97 *** copying figures
+#8 94.98 ** building package indices
+#8 95.47 ** installing vignettes
+#8 95.48 ** testing if installed package can be loaded from temporary location
+#8 96.04 ** testing if installed package can be loaded from final location
+#8 96.75 ** testing if installed package keeps a record of temporary installation path
+#8 96.76 * DONE (ggplot2)
+#8 97.65 [install-pins] readxl 1.4.3 from https://cloud.r-project.org/src/contrib/Archive/readxl/readxl_1.4.3.tar.gz
+#8 99.70 [install-pins]   dependencies from snapshot 2024-04-03: cellranger, cpp11, progress
+#8 99.70 Installing packages into ‘/usr/local/lib/R/site-library’
+#8 99.70 (as ‘lib’ is unspecified)
+#8 99.84 also installing the dependencies ‘rematch’, ‘crayon’, ‘hms’, ‘prettyunits’
+#8 99.84 
+#8 99.84 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/rematch_2.0.0.tar.gz'
+#8 101.8 Content type 'binary/octet-stream' length 15941 bytes (15 KB)
+#8 101.8 ==================================================
+#8 101.8 downloaded 15 KB
+#8 101.8 
+#8 101.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/crayon_1.5.2.tar.gz'
+#8 103.9 Content type 'binary/octet-stream' length 159787 bytes (156 KB)
+#8 103.9 ==================================================
+#8 104.3 downloaded 156 KB
+#8 104.3 
+#8 104.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/hms_1.1.3.tar.gz'
+#8 106.3 Content type 'binary/octet-stream' length 98388 bytes (96 KB)
+#8 106.3 ==================================================
+#8 106.3 downloaded 96 KB
+#8 106.3 
+#8 106.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/prettyunits_1.2.0.tar.gz'
+#8 107.7 Content type 'binary/octet-stream' length 155069 bytes (151 KB)
+#8 107.7 ==================================================
+#8 107.7 downloaded 151 KB
+#8 107.7 
+#8 107.7 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/cellranger_1.1.0.tar.gz'
+#8 109.7 Content type 'binary/octet-stream' length 100874 bytes (98 KB)
+#8 109.7 ==================================================
+#8 110.1 downloaded 98 KB
+#8 110.1 
+#8 110.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/cpp11_0.4.7.tar.gz'
+#8 112.1 Content type 'binary/octet-stream' length 280144 bytes (273 KB)
+#8 112.1 ==================================================
+#8 112.2 downloaded 273 KB
+#8 112.2 
+#8 112.2 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/progress_1.2.3.tar.gz'
+#8 114.2 Content type 'binary/octet-stream' length 86808 bytes (84 KB)
+#8 114.2 ==================================================
+#8 114.2 downloaded 84 KB
+#8 114.2 
+#8 114.3 begin installing package ‘rematch’
+#8 114.3 begin installing package ‘crayon’
+#8 114.3 begin installing package ‘hms’
+#8 114.3 begin installing package ‘prettyunits’
+#8 114.3 begin installing package ‘cpp11’
+#8 114.5 * installing *binary* package ‘rematch’ ...
+#8 114.5 * DONE (rematch)
+#8 114.5 begin installing package ‘cellranger’
+#8 114.5 * installing *binary* package ‘hms’ ...
+#8 114.5 * DONE (hms)
+#8 114.5 * installing *binary* package ‘prettyunits’ ...
+#8 114.5 * DONE (prettyunits)
+#8 114.5 * installing *binary* package ‘crayon’ ...
+#8 114.5 * DONE (crayon)
+#8 114.5 begin installing package ‘progress’
+#8 114.6 * installing *binary* package ‘cpp11’ ...
+#8 114.6 * DONE (cpp11)
+#8 114.8 * installing *binary* package ‘cellranger’ ...
+#8 114.8 * DONE (cellranger)
+#8 114.8 * installing *binary* package ‘progress’ ...
+#8 114.8 * DONE (progress)
+#8 114.8 
+#8 114.8 The downloaded source packages are in
+#8 114.8 	‘/tmp/Rtmp0mrl6e/downloaded_packages’
+#8 114.8 Installing package into ‘/usr/local/lib/R/site-library’
+#8 114.8 (as ‘lib’ is unspecified)
+#8 115.1 * installing *source* package ‘readxl’ ...
+#8 115.1 ** package ‘readxl’ successfully unpacked and MD5 sums checked
+#8 115.1 ** using staged installation
+#8 115.2 ** libs
+#8 115.2 using C compiler: ‘gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0’
+#8 115.2 using C++ compiler: ‘g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0’
+#8 115.2 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -Iunix -I. -I'/usr/local/lib/R/site-library/cpp11/include' -I'/usr/local/lib/R/site-library/progress/include' -I/usr/local/include   -fvisibility=hidden -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c cpp11.cpp -o cpp11.o
+#8 116.0 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -Iunix -I. -I'/usr/local/lib/R/site-library/cpp11/include' -I'/usr/local/lib/R/site-library/progress/include' -I/usr/local/include   -fvisibility=hidden -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c XlsWorkBook.cpp -o XlsWorkBook.o
+#8 116.9 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -Iunix -I. -I'/usr/local/lib/R/site-library/cpp11/include' -I'/usr/local/lib/R/site-library/progress/include' -I/usr/local/include   -fvisibility=hidden -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c XlsxWorkBook.cpp -o XlsxWorkBook.o
+#8 118.9 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -Iunix -I. -I'/usr/local/lib/R/site-library/cpp11/include' -I'/usr/local/lib/R/site-library/progress/include' -I/usr/local/include   -fvisibility=hidden -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c zip.cpp -o zip.o
+#8 119.9 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -Iunix -I. -I'/usr/local/lib/R/site-library/cpp11/include' -I'/usr/local/lib/R/site-library/progress/include' -I/usr/local/include   -fvisibility=hidden -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c Read.cpp -o Read.o
+#8 123.8 gcc -I"/usr/local/lib/R/include" -DNDEBUG -Iunix -I. -I'/usr/local/lib/R/site-library/cpp11/include' -I'/usr/local/lib/R/site-library/progress/include' -I/usr/local/include   -fvisibility=hidden -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c cran.c -o cran.o
+#8 123.8 gcc -I"/usr/local/lib/R/include" -DNDEBUG -Iunix -I. -I'/usr/local/lib/R/site-library/cpp11/include' -I'/usr/local/lib/R/site-library/progress/include' -I/usr/local/include   -fvisibility=hidden -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c libxls/xlstool.c -o libxls/xlstool.o
+#8 123.9 gcc -I"/usr/local/lib/R/include" -DNDEBUG -Iunix -I. -I'/usr/local/lib/R/site-library/cpp11/include' -I'/usr/local/lib/R/site-library/progress/include' -I/usr/local/include   -fvisibility=hidden -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c libxls/endian.c -o libxls/endian.o
+#8 124.0 gcc -I"/usr/local/lib/R/include" -DNDEBUG -Iunix -I. -I'/usr/local/lib/R/site-library/cpp11/include' -I'/usr/local/lib/R/site-library/progress/include' -I/usr/local/include   -fvisibility=hidden -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c libxls/ole.c -o libxls/ole.o
+#8 124.1 gcc -I"/usr/local/lib/R/include" -DNDEBUG -Iunix -I. -I'/usr/local/lib/R/site-library/cpp11/include' -I'/usr/local/lib/R/site-library/progress/include' -I/usr/local/include   -fvisibility=hidden -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c libxls/xls.c -o libxls/xls.o
+#8 124.4 gcc -I"/usr/local/lib/R/include" -DNDEBUG -Iunix -I. -I'/usr/local/lib/R/site-library/cpp11/include' -I'/usr/local/lib/R/site-library/progress/include' -I/usr/local/include   -fvisibility=hidden -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c libxls/locale.c -o libxls/locale.o
+#8 124.4 g++ -std=gnu++17 -shared -L/usr/local/lib/R/lib -L/usr/local/lib -o readxl.so cpp11.o XlsWorkBook.o XlsxWorkBook.o zip.o Read.o cran.o libxls/xlstool.o libxls/endian.o libxls/ole.o libxls/xls.o libxls/locale.o -L/usr/local/lib/R/lib -lR
+#8 124.5 installing to /usr/local/lib/R/site-library/00LOCK-readxl/00new/readxl/libs
+#8 124.5 ** R
+#8 124.5 ** inst
+#8 124.5 ** byte-compile and prepare package for lazy loading
+#8 124.8 ** help
+#8 124.8 *** installing help indices
+#8 124.8 *** copying figures
+#8 124.8 ** building package indices
+#8 125.0 ** installing vignettes
+#8 125.0 ** testing if installed package can be loaded from temporary location
+#8 125.2 ** checking absolute paths in shared objects and dynamic libraries
+#8 125.2 ** testing if installed package can be loaded from final location
+#8 125.3 ** testing if installed package keeps a record of temporary installation path
+#8 125.3 * DONE (readxl)
+#8 126.2 [install-pins] extrafont 0.19 from https://cloud.r-project.org/src/contrib/Archive/extrafont/extrafont_0.19.tar.gz
+#8 126.6 [install-pins]   dependencies from snapshot 2024-04-03: extrafontdb, Rttf2pt1
+#8 126.6 Installing packages into ‘/usr/local/lib/R/site-library’
+#8 126.6 (as ‘lib’ is unspecified)
+#8 126.8 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/extrafontdb_1.0.tar.gz'
+#8 128.9 Content type 'binary/octet-stream' length 6885 bytes
+#8 128.9 ==================================================
+#8 128.9 downloaded 6885 bytes
+#8 128.9 
+#8 128.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/Rttf2pt1_1.3.12.tar.gz'
+#8 130.9 Content type 'binary/octet-stream' length 273800 bytes (267 KB)
+#8 130.9 ==================================================
+#8 130.9 downloaded 267 KB
+#8 130.9 
+#8 131.0 begin installing package ‘extrafontdb’
+#8 131.0 begin installing package ‘Rttf2pt1’
+#8 131.3 * installing *binary* package ‘extrafontdb’ ...
+#8 131.3 * DONE (extrafontdb)
+#8 131.3 * installing *binary* package ‘Rttf2pt1’ ...
+#8 131.3 * DONE (Rttf2pt1)
+#8 131.3 
+#8 131.3 The downloaded source packages are in
+#8 131.3 	‘/tmp/Rtmp0mrl6e/downloaded_packages’
+#8 131.3 Installing package into ‘/usr/local/lib/R/site-library’
+#8 131.3 (as ‘lib’ is unspecified)
+#8 131.5 * installing *source* package ‘extrafont’ ...
+#8 131.5 ** package ‘extrafont’ successfully unpacked and MD5 sums checked
+#8 131.5 ** using staged installation
+#8 131.5 ** R
+#8 131.5 ** byte-compile and prepare package for lazy loading
+#8 131.8 ** help
+#8 131.8 *** installing help indices
+#8 131.8 ** building package indices
+#8 132.0 ** testing if installed package can be loaded from temporary location
+#8 132.2 ** testing if installed package can be loaded from final location
+#8 132.3 ** testing if installed package keeps a record of temporary installation path
+#8 132.3 * DONE (extrafont)
+#8 133.2 [install-pins] quanteda 3.3.1 from https://cloud.r-project.org/src/contrib/Archive/quanteda/quanteda_3.3.1.tar.gz
+#8 135.5 [install-pins]   dependencies from snapshot 2024-04-03: fastmatch, jsonlite, Rcpp, RcppParallel, SnowballC, stopwords, stringi, xml2, yaml, RcppArmadillo
+#8 135.5 Installing packages into ‘/usr/local/lib/R/site-library’
+#8 135.5 (as ‘lib’ is unspecified)
+#8 135.7 also installing the dependency ‘ISOcodes’
+#8 135.7 
+#8 135.7 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/ISOcodes_2024.02.12.tar.gz'
+#8 138.0 Content type 'binary/octet-stream' length 309415 bytes (302 KB)
+#8 138.0 ==================================================
+#8 138.5 downloaded 302 KB
+#8 138.5 
+#8 138.5 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/fastmatch_1.1-4.tar.gz'
+#8 140.7 Content type 'binary/octet-stream' length 34502 bytes (33 KB)
+#8 140.7 ==================================================
+#8 140.9 downloaded 33 KB
+#8 140.9 
+#8 140.9 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/jsonlite_1.8.8.tar.gz'
+#8 143.0 Content type 'binary/octet-stream' length 1086893 bytes (1.0 MB)
+#8 143.2 ==================================================
+#8 144.0 downloaded 1.0 MB
+#8 144.0 
+#8 144.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/Rcpp_1.0.12.tar.gz'
+#8 146.0 Content type 'binary/octet-stream' length 2148224 bytes (2.0 MB)
+#8 146.0 ==================================================
+#8 146.0 downloaded 2.0 MB
+#8 146.0 
+#8 146.0 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/RcppParallel_5.1.7.tar.gz'
+#8 148.2 Content type 'binary/octet-stream' length 1880043 bytes (1.8 MB)
+#8 148.4 ==================================================
+#8 149.4 downloaded 1.8 MB
+#8 149.4 
+#8 149.4 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/SnowballC_0.7.1.tar.gz'
+#8 151.7 Content type 'binary/octet-stream' length 372906 bytes (364 KB)
+#8 151.7 ==================================================
+#8 152.3 downloaded 364 KB
+#8 152.3 
+#8 152.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/stopwords_2.3.tar.gz'
+#8 154.5 Content type 'binary/octet-stream' length 224978 bytes (219 KB)
+#8 154.5 ==================================================
+#8 155.1 downloaded 219 KB
+#8 155.1 
+#8 155.1 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/stringi_1.8.3.tar.gz'
+#8 157.3 Content type 'binary/octet-stream' length 3269496 bytes (3.1 MB)
+#8 157.5 ==================================================
+#8 158.6 downloaded 3.1 MB
+#8 158.6 
+#8 158.7 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/xml2_1.3.6.tar.gz'
+#8 160.7 Content type 'binary/octet-stream' length 274687 bytes (268 KB)
+#8 160.7 ==================================================
+#8 161.3 downloaded 268 KB
+#8 161.3 
+#8 161.3 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/yaml_2.3.8.tar.gz'
+#8 163.4 Content type 'binary/octet-stream' length 114139 bytes (111 KB)
+#8 163.4 ==================================================
+#8 163.8 downloaded 111 KB
+#8 163.8 
+#8 163.8 trying URL 'https://packagemanager.posit.co/cran/__linux__/jammy/2024-04-03/src/contrib/RcppArmadillo_0.12.8.1.0.tar.gz'
+#8 165.9 Content type 'binary/octet-stream' length 1076024 bytes (1.0 MB)
+#8 166.2 ==================================================
+#8 167.0 downloaded 1.0 MB
+#8 167.0 
+#8 167.1 begin installing package ‘ISOcodes’
+#8 167.1 begin installing package ‘fastmatch’
+#8 167.1 begin installing package ‘jsonlite’
+#8 167.1 begin installing package ‘Rcpp’
+#8 167.1 begin installing package ‘RcppParallel’
+#8 167.1 begin installing package ‘SnowballC’
+#8 167.1 begin installing package ‘stringi’
+#8 167.1 begin installing package ‘xml2’
+#8 167.3 * installing *binary* package ‘fastmatch’ ...
+#8 167.3 * DONE (fastmatch)
+#8 167.3 begin installing package ‘yaml’
+#8 167.3 * installing *binary* package ‘ISOcodes’ ...
+#8 167.3 * DONE (ISOcodes)
+#8 167.3 begin installing package ‘stopwords’
+#8 167.4 * installing *binary* package ‘xml2’ ...
+#8 167.4 * DONE (xml2)
+#8 167.4 * installing *binary* package ‘SnowballC’ ...
+#8 167.4 * DONE (SnowballC)
+#8 167.4 * installing *binary* package ‘jsonlite’ ...
+#8 167.4 * DONE (jsonlite)
+#8 167.6 * installing *binary* package ‘stringi’ ...
+#8 167.6 * DONE (stringi)
+#8 167.6 * installing *binary* package ‘RcppParallel’ ...
+#8 167.6 * DONE (RcppParallel)
+#8 167.6 * installing *binary* package ‘stopwords’ ...
+#8 167.6 * DONE (stopwords)
+#8 167.6 * installing *binary* package ‘yaml’ ...
+#8 167.6 * DONE (yaml)
+#8 167.9 * installing *binary* package ‘Rcpp’ ...
+#8 167.9 * DONE (Rcpp)
+#8 167.9 begin installing package ‘RcppArmadillo’
+#8 168.5 * installing *binary* package ‘RcppArmadillo’ ...
+#8 168.5 * DONE (RcppArmadillo)
+#8 168.5 
+#8 168.5 The downloaded source packages are in
+#8 168.5 	‘/tmp/Rtmp0mrl6e/downloaded_packages’
+#8 168.5 Installing package into ‘/usr/local/lib/R/site-library’
+#8 168.5 (as ‘lib’ is unspecified)
+#8 169.0 * installing *source* package ‘quanteda’ ...
+#8 169.0 ** package ‘quanteda’ successfully unpacked and MD5 sums checked
+#8 169.0 ** using staged installation
+#8 169.0 ** libs
+#8 169.0 using C++ compiler: ‘g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0’
+#8 169.0 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c RcppExports.cpp -o RcppExports.o
+#8 173.6 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c fcm.cpp -o fcm.o
+#8 178.6 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c index.cpp -o index.o
+#8 184.2 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c tokens_chunk.cpp -o tokens_chunk.o
+#8 189.7 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c tokens_compound.cpp -o tokens_compound.o
+#8 196.0 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c tokens_lookup.cpp -o tokens_lookup.o
+#8 202.0 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c tokens_ngrams.cpp -o tokens_ngrams.o
+#8 207.9 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c tokens_recompile.cpp -o tokens_recompile.o
+#8 213.1 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c tokens_replace.cpp -o tokens_replace.o
+#8 218.9 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c tokens_restore.cpp -o tokens_restore.o
+#8 224.9 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c tokens_segment.cpp -o tokens_segment.o
+#8 231.0 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c tokens_select.cpp -o tokens_select.o
+#8 236.8 g++ -std=gnu++17 -I"/usr/local/lib/R/include" -DNDEBUG -DARMA_DONT_PRINT_OPENMP_WARNING  -I../inst/include -I'/usr/local/lib/R/site-library/Rcpp/include' -I'/usr/local/lib/R/site-library/RcppParallel/include' -I'/usr/local/lib/R/site-library/RcppArmadillo/include' -I/usr/local/include    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c utility.cpp -o utility.o
+#8 241.1 g++ -std=gnu++17 -shared -L/usr/local/lib/R/lib -L/usr/local/lib -o quanteda.so RcppExports.o fcm.o index.o tokens_chunk.o tokens_compound.o tokens_lookup.o tokens_ngrams.o tokens_recompile.o tokens_replace.o tokens_restore.o tokens_segment.o tokens_select.o utility.o -llapack -lblas -lgfortran -lm -lquadmath -L/usr/local/lib/R/lib -lR
+#8 241.4 installing to /usr/local/lib/R/site-library/00LOCK-quanteda/00new/quanteda/libs
+#8 241.4 ** R
+#8 241.5 ** data
+#8 241.5 *** moving datasets to lazyload DB
+#8 241.6 ** inst
+#8 241.6 ** byte-compile and prepare package for lazy loading
+#8 247.8 ** help
+#8 248.1 *** installing help indices
+#8 248.3 ** building package indices
+#8 248.6 ** installing vignettes
+#8 248.6 ** testing if installed package can be loaded from temporary location
+#8 249.6 ** checking absolute paths in shared objects and dynamic libraries
+#8 249.7 ** testing if installed package can be loaded from final location
+#8 250.7 ** testing if installed package keeps a record of temporary installation path
+#8 250.7 * DONE (quanteda)
+#8 251.0        package    version    priority                       libpath
+#8 251.0     data.table     1.15.0             /usr/local/lib/R/site-library
+#8 251.0          dplyr      1.1.4             /usr/local/lib/R/site-library
+#8 251.0      extrafont       0.19             /usr/local/lib/R/site-library
+#8 251.0        forcats      1.0.0             /usr/local/lib/R/site-library
+#8 251.0        ggplot2      3.5.0             /usr/local/lib/R/site-library
+#8 251.0       quanteda      3.3.1             /usr/local/lib/R/site-library
+#8 251.0         readxl      1.4.3             /usr/local/lib/R/site-library
+#8 251.0         docopt      0.7.1             /usr/local/lib/R/site-library
+#8 251.0        littler     0.3.19             /usr/local/lib/R/site-library
+#8 251.0           boot   1.3-28.1 recommended      /usr/local/lib/R/library
+#8 251.0          class     7.3-22 recommended      /usr/local/lib/R/library
+#8 251.0        cluster      2.1.4 recommended      /usr/local/lib/R/library
+#8 251.0      codetools     0.2-19 recommended      /usr/local/lib/R/library
+#8 251.0        foreign     0.8-85 recommended      /usr/local/lib/R/library
+#8 251.0     KernSmooth    2.23-22 recommended      /usr/local/lib/R/library
+#8 251.0        lattice     0.21-9 recommended      /usr/local/lib/R/library
+#8 251.0           MASS     7.3-60 recommended      /usr/local/lib/R/library
+#8 251.0         Matrix    1.6-1.1 recommended      /usr/local/lib/R/library
+#8 251.0           mgcv      1.9-0 recommended      /usr/local/lib/R/library
+#8 251.0           nlme    3.1-163 recommended      /usr/local/lib/R/library
+#8 251.0           nnet     7.3-19 recommended      /usr/local/lib/R/library
+#8 251.0          rpart     4.1.21 recommended      /usr/local/lib/R/library
+#8 251.0        spatial     7.3-17 recommended      /usr/local/lib/R/library
+#8 251.0       survival      3.5-7 recommended      /usr/local/lib/R/library
+#8 251.0     cellranger      1.1.0             /usr/local/lib/R/site-library
+#8 251.0            cli      3.6.2             /usr/local/lib/R/site-library
+#8 251.0     colorspace      2.1-0             /usr/local/lib/R/site-library
+#8 251.0          cpp11      0.4.7             /usr/local/lib/R/site-library
+#8 251.0         crayon      1.5.2             /usr/local/lib/R/site-library
+#8 251.0    extrafontdb        1.0             /usr/local/lib/R/site-library
+#8 251.0          fansi      1.0.6             /usr/local/lib/R/site-library
+#8 251.0         farver      2.1.1             /usr/local/lib/R/site-library
+#8 251.0      fastmatch      1.1-4             /usr/local/lib/R/site-library
+#8 251.0       generics      0.1.3             /usr/local/lib/R/site-library
+#8 251.0           glue      1.7.0             /usr/local/lib/R/site-library
+#8 251.0         gtable      0.3.4             /usr/local/lib/R/site-library
+#8 251.0            hms      1.1.3             /usr/local/lib/R/site-library
+#8 251.0        isoband      0.2.7             /usr/local/lib/R/site-library
+#8 251.0       ISOcodes 2024.02.12             /usr/local/lib/R/site-library
+#8 251.0       jsonlite      1.8.8             /usr/local/lib/R/site-library
+#8 251.0       labeling      0.4.3             /usr/local/lib/R/site-library
+#8 251.0      lifecycle      1.0.4             /usr/local/lib/R/site-library
+#8 251.0       magrittr      2.0.3             /usr/local/lib/R/site-library
+#8 251.0        munsell      0.5.1             /usr/local/lib/R/site-library
+#8 251.0         pillar      1.9.0             /usr/local/lib/R/site-library
+#8 251.0      pkgconfig      2.0.3             /usr/local/lib/R/site-library
+#8 251.0    prettyunits      1.2.0             /usr/local/lib/R/site-library
+#8 251.0       progress      1.2.3             /usr/local/lib/R/site-library
+#8 251.0             R6      2.5.1             /usr/local/lib/R/site-library
+#8 251.0   RColorBrewer      1.1-3             /usr/local/lib/R/site-library
+#8 251.0           Rcpp     1.0.12             /usr/local/lib/R/site-library
+#8 251.0  RcppArmadillo 0.12.8.1.0             /usr/local/lib/R/site-library
+#8 251.0   RcppParallel      5.1.7             /usr/local/lib/R/site-library
+#8 251.0        rematch      2.0.0             /usr/local/lib/R/site-library
+#8 251.0          rlang      1.1.3             /usr/local/lib/R/site-library
+#8 251.0       Rttf2pt1     1.3.12             /usr/local/lib/R/site-library
+#8 251.0         scales      1.3.0             /usr/local/lib/R/site-library
+#8 251.0      SnowballC      0.7.1             /usr/local/lib/R/site-library
+#8 251.0      stopwords        2.3             /usr/local/lib/R/site-library
+#8 251.0        stringi      1.8.3             /usr/local/lib/R/site-library
+#8 251.0         tibble      3.2.1             /usr/local/lib/R/site-library
+#8 251.0     tidyselect      1.2.1             /usr/local/lib/R/site-library
+#8 251.0           utf8      1.2.4             /usr/local/lib/R/site-library
+#8 251.0          vctrs      0.6.5             /usr/local/lib/R/site-library
+#8 251.0    viridisLite      0.4.2             /usr/local/lib/R/site-library
+#8 251.0          withr      3.0.0             /usr/local/lib/R/site-library
+#8 251.0           xml2      1.3.6             /usr/local/lib/R/site-library
+#8 251.0           yaml      2.3.8             /usr/local/lib/R/site-library
+#8 251.0                                       status snapshot_version
+#8 251.0                                       pinned           1.15.4
+#8 251.0                                       pinned            1.1.4
+#8 251.0                                       pinned             0.19
+#8 251.0                                       pinned            1.0.0
+#8 251.0                                       pinned            3.5.0
+#8 251.0                                       pinned            3.3.1
+#8 251.0                                       pinned            1.4.3
+#8 251.0  unspecified (base image rocker/r-ver:4.3.2)            0.7.1
+#8 251.0  unspecified (base image rocker/r-ver:4.3.2)           0.3.20
+#8 251.0           unspecified (shipped with R 4.3.2)           1.3-30
+#8 251.0           unspecified (shipped with R 4.3.2)           7.3-22
+#8 251.0           unspecified (shipped with R 4.3.2)            2.1.6
+#8 251.0           unspecified (shipped with R 4.3.2)           0.2-20
+#8 251.0           unspecified (shipped with R 4.3.2)           0.8-86
+#8 251.0           unspecified (shipped with R 4.3.2)          2.23-22
+#8 251.0           unspecified (shipped with R 4.3.2)           0.22-6
+#8 251.0           unspecified (shipped with R 4.3.2)       7.3-60.0.1
+#8 251.0           unspecified (shipped with R 4.3.2)            1.6-5
+#8 251.0           unspecified (shipped with R 4.3.2)            1.9-1
+#8 251.0           unspecified (shipped with R 4.3.2)          3.1-164
+#8 251.0           unspecified (shipped with R 4.3.2)           7.3-19
+#8 251.0           unspecified (shipped with R 4.3.2)           4.1.23
+#8 251.0           unspecified (shipped with R 4.3.2)           7.3-17
+#8 251.0           unspecified (shipped with R 4.3.2)            3.5-8
+#8 251.0            unspecified (snapshot 2024-04-03)            1.1.0
+#8 251.0            unspecified (snapshot 2024-04-03)            3.6.2
+#8 251.0            unspecified (snapshot 2024-04-03)            2.1-0
+#8 251.0            unspecified (snapshot 2024-04-03)            0.4.7
+#8 251.0            unspecified (snapshot 2024-04-03)            1.5.2
+#8 251.0            unspecified (snapshot 2024-04-03)              1.0
+#8 251.0            unspecified (snapshot 2024-04-03)            1.0.6
+#8 251.0            unspecified (snapshot 2024-04-03)            2.1.1
+#8 251.0            unspecified (snapshot 2024-04-03)            1.1-4
+#8 251.0            unspecified (snapshot 2024-04-03)            0.1.3
+#8 251.0            unspecified (snapshot 2024-04-03)            1.7.0
+#8 251.0            unspecified (snapshot 2024-04-03)            0.3.4
+#8 251.0            unspecified (snapshot 2024-04-03)            1.1.3
+#8 251.0            unspecified (snapshot 2024-04-03)            0.2.7
+#8 251.0            unspecified (snapshot 2024-04-03)       2024.02.12
+#8 251.0            unspecified (snapshot 2024-04-03)            1.8.8
+#8 251.0            unspecified (snapshot 2024-04-03)            0.4.3
+#8 251.0            unspecified (snapshot 2024-04-03)            1.0.4
+#8 251.0            unspecified (snapshot 2024-04-03)            2.0.3
+#8 251.0            unspecified (snapshot 2024-04-03)            0.5.1
+#8 251.0            unspecified (snapshot 2024-04-03)            1.9.0
+#8 251.0            unspecified (snapshot 2024-04-03)            2.0.3
+#8 251.0            unspecified (snapshot 2024-04-03)            1.2.0
+#8 251.0            unspecified (snapshot 2024-04-03)            1.2.3
+#8 251.0            unspecified (snapshot 2024-04-03)            2.5.1
+#8 251.0            unspecified (snapshot 2024-04-03)            1.1-3
+#8 251.0            unspecified (snapshot 2024-04-03)           1.0.12
+#8 251.0            unspecified (snapshot 2024-04-03)       0.12.8.1.0
+#8 251.0            unspecified (snapshot 2024-04-03)            5.1.7
+#8 251.0            unspecified (snapshot 2024-04-03)            2.0.0
+#8 251.0            unspecified (snapshot 2024-04-03)            1.1.3
+#8 251.0            unspecified (snapshot 2024-04-03)           1.3.12
+#8 251.0            unspecified (snapshot 2024-04-03)            1.3.0
+#8 251.0            unspecified (snapshot 2024-04-03)            0.7.1
+#8 251.0            unspecified (snapshot 2024-04-03)              2.3
+#8 251.0            unspecified (snapshot 2024-04-03)            1.8.3
+#8 251.0            unspecified (snapshot 2024-04-03)            3.2.1
+#8 251.0            unspecified (snapshot 2024-04-03)            1.2.1
+#8 251.0            unspecified (snapshot 2024-04-03)            1.2.4
+#8 251.0            unspecified (snapshot 2024-04-03)            0.6.5
+#8 251.0            unspecified (snapshot 2024-04-03)            0.4.2
+#8 251.0            unspecified (snapshot 2024-04-03)            3.0.0
+#8 251.0            unspecified (snapshot 2024-04-03)            1.3.6
+#8 251.0            unspecified (snapshot 2024-04-03)            2.3.8
+#8 251.0     package version
+#8 251.0  data.table  1.15.0
+#8 251.0     forcats   1.0.0
+#8 251.0       dplyr   1.1.4
+#8 251.0     ggplot2   3.5.0
+#8 251.0      readxl   1.4.3
+#8 251.0   extrafont    0.19
+#8 251.0    quanteda   3.3.1
+#8 251.0                                                                                  url
+#8 251.0  https://cloud.r-project.org/src/contrib/Archive/data.table/data.table_1.15.0.tar.gz
+#8 251.0         https://cloud.r-project.org/src/contrib/Archive/forcats/forcats_1.0.0.tar.gz
+#8 251.0             https://cloud.r-project.org/src/contrib/Archive/dplyr/dplyr_1.1.4.tar.gz
+#8 251.0         https://cloud.r-project.org/src/contrib/Archive/ggplot2/ggplot2_3.5.0.tar.gz
+#8 251.0           https://cloud.r-project.org/src/contrib/Archive/readxl/readxl_1.4.3.tar.gz
+#8 251.0      https://cloud.r-project.org/src/contrib/Archive/extrafont/extrafont_0.19.tar.gz
+#8 251.0       https://cloud.r-project.org/src/contrib/Archive/quanteda/quanteda_3.3.1.tar.gz
+#8 251.0  success
+#8 251.0     TRUE
+#8 251.0     TRUE
+#8 251.0     TRUE
+#8 251.0     TRUE
+#8 251.0     TRUE
+#8 251.0     TRUE
+#8 251.0     TRUE
+#8 251.0 [install-pins] all pins honoured: TRUE (fallbacks: 0)
+#8 DONE 251.1s
+
+#9 [5/5] WORKDIR /project
+#9 DONE 0.0s
+
+#10 exporting to image
+#10 exporting layers
+#10 exporting layers 0.7s done
+#10 writing image sha256:d333d7285568e4ac204b94a7dc2da7128d0c728c6e0ef3d9ca24a16b53ee7548 done
+#10 naming to docker.io/library/llmr-herskind-riede-2024-attempt-04 done
+#10 DONE 0.7s
