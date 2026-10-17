@@ -142,7 +142,27 @@ The skill's clean-context agent pass was not run. Its purpose is to audit new
 contract code; PR #11's code had several review rounds with Fable and Astra,
 and this pilot run is itself its test.
 
+## Outcome (2026-10-17)
+
+Launched at 16:16 AEDT from `6b18505` on Shawn's "go" (relayed verbatim;
+H6), as workflow `wf_4fd7a886-ada`. It finished in 42 min at $14.02
+API-equivalent, inside both estimates, so no tripwire was reached. The
+post-run order ran as H2 set it out, with PR #12 merged as `a29f16a`
+between the authoritative gate and the audit.
+
+**Correction to H3.** The watcher measured elapsed time from the earliest
+transcript's change time (`st_ctime`), which moves on every write, so its
+time check could not have fired during the run. Its cost check worked. A
+lane subcommand must measure from the workflow's launch.
+
+**H5.** The verdict matched attempt-03's (SUCCESSFUL). Coverage was lower
+(14/18 admitted, 13/18 in study terms, against 17/20) because this plan
+pre-declared the Fig. 5 extent patches not comparable and grouped the
+named values differently. Both runs found the same eight Table 1 cells and
+the same two Fig. 4 boxes.
+
 ## Changelog
 
 - 2026-10-17: created after the review dialogue (2026-10-13) and Shawn's
   explain-back and decisions (2026-10-17).
+- 2026-10-17: outcome added, with the correction to H3's watcher.

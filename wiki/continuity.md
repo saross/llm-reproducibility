@@ -32,7 +32,42 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NEXT SESSION (from the 2026-10-13 handoff, session b5f7b974).**
+- **⏩ NEXT SESSION (2026-10-17, session 8e28871d): the gate 1.3.1 pilot
+  re-run is complete; decide whether the hardening closes.** Stage 2 ran
+  (`wf_4fd7a886-ada`, launch commit `6b18505`, 42 min, $14.02
+  API-equivalent), and every post-run step is done: authoritative
+  `check-attempt` pass, PR #12 merged (`a29f16a`, Shawn), `audit-run`
+  clean, human queue of 17 issues, all ruled by Shawn, and
+  `persist-results` eligible (`2f9beff`, `67dd4af`). Verdict SUCCESSFUL;
+  study coverage **13/18** (T17 not creditable under amendment 3 §7(d)),
+  while the lane admits 14/18. Both blind runs (attempts 03 and 04) found
+  the same Table 1 cells and Fig. 4 boxes.
+  - [ ] **Shawn's decision: does a run with these findings close the
+    hardening?** Fable's earlier view: a clean re-run closes it. The gate's
+    mechanics all worked (receipts, blinding, sealed runs, strict binding,
+    audit, admission), but the pilot found three gaps. (1) The executor's
+    `method_as_planned` declarations caught one departure of five (T13);
+    the reviewer found T01, T03, T04, and T12 (side agent, 2026-10-17).
+    (2) A review concern cannot be ruled against one target: the review
+    issue names no targets, so it is all or nothing, and T17 stays in the
+    lane's 14/18. (3) The approved plan paraphrased ruling Q5 without its
+    input condition, and plan approval (Shawn's, and Claude's walk-through)
+    did not catch it. Consider mailing Fable and Astra the outcome.
+  - [ ] **Follow-up PRs before the §8 gate** (to add to the list below):
+    target-scoped review issues; a stronger method-adherence check (a
+    per-target reviewer table, or reviewer-named departures as issues);
+    plans quote a lodged rule verbatim with its source; the lane records
+    admitted coverage after rulings (`gate-report.json` keeps only the
+    pre-ruling snapshot, 0/18); the cost and time watcher measured elapsed
+    time from file change times, so **its time check could not fire**
+    (cost check worked; fix in the lane subcommand).
+  - [x] 2026-10-17 Repeated pre-launch checks at `6b18505`: 699 tests pass,
+    Docker 29.2.1, 30 GB free, Zenodo 200, attempt-04 holds only the plan
+    and approval, no attempt-04 image. Launched on Shawn's "go", which
+    passed the word rule and was relayed verbatim (checked in the
+    executor's transcript).
+
+- **⏩ Earlier (from the 2026-10-13 handoff, session b5f7b974).**
   Gate 1.3.1 is on main (PR #11 merged, `10500ea`, after Astra's approval).
   The pilot re-run is half done: stage 1 ran clean
   (`wf_db7d121a-5d5`, $1.2969 API-equivalent, audit clean) and Shawn
@@ -47,11 +82,11 @@ merged here as PR #1).
   PR #12 (per-request pricing) awaits Astra's check of `154b637`; do not
   merge it while stage 2 is pending or running (it moves `HEAD`); merge it
   before the post-run `audit-run`, so the Haiku gate step is priced.
-  - [ ] **Stage 2, then the post-run order**: authoritative
+  - [x] 2026-10-17 **Stage 2, then the post-run order**: authoritative
     `check-attempt` (with `--launch-commit`), `audit-run`, `human-queue`
     (written beside the run config, never into the attempt), rulings,
     `persist-results`. Fable's view: with a clean re-run the hardening
-    closes.
+    closes. Done; see the 2026-10-17 block above.
   - [x] 2026-10-17 **Mail:** Astra's check of PR #12 at `154b637` arrived
     2026-10-13 17:31 (`2026-10-13-codex-pr12-closure-review.md`, receipted
     2026-10-17): source approval, both findings closed, no remaining
