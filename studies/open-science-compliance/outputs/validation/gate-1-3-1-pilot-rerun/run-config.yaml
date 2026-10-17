@@ -100,12 +100,17 @@ blinding:
 
 # API-equivalent prices, USD per million tokens. The Max plan bills by
 # subscription; these figures are the API-equivalent for the cost gate.
-# claude-haiku-5-5 (the in-workflow gate step) is priced in two tiers by
-# each request's prompt length, which needs per-request pricing in the lane;
-# its row is added with that change, before stage 2. Until then audit-run
-# reports the gate agent as unpriced (two requests in the last pilot).
+# claude-haiku-5-5 (the in-workflow gate step) has two cards, chosen per
+# request by its prompt length (input, cache writes, and cache reads
+# together): up to 100,000 tokens the first, over it the second on every
+# token. Source: platform.claude.com/docs/en/about-claude/pricing, read
+# 2026-10-13; the lane prices request by request from v1.5.
 pricing_usd_per_mtok:
   claude-opus-5-5: {input: 4.00, output: 20.00, cache_write_5m: 5.00, cache_write_1h: 8.00, cache_read: 0.20}
+  claude-haiku-5-5:
+    tiers:
+      - {max_prompt_tokens: 100000, input: 0.10, output: 0.50, cache_write_5m: 0.125, cache_write_1h: 0.20, cache_read: 0.01}
+      - {input: 0.50, output: 2.50, cache_write_5m: 0.625, cache_write_1h: 1.00, cache_read: 0.05}
 
 papers:
   - slug: herskind-riede-2024

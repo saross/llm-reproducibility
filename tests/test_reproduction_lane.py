@@ -33,6 +33,7 @@ import hashlib
 import importlib.machinery
 import importlib.util
 import json
+import math
 import os
 import re
 import shutil
@@ -1586,6 +1587,106 @@ class AuditTests(unittest.TestCase):
                  "cache_read_input_tokens": 0}
         self.assertEqual(lane.price_usage(usage, pricing), 1.0)
         self.assertIsNone(lane.price_usage(dict(usage, models=["mystery"]), pricing))
+
+    # Claude Haiku 5.5's two cards (platform pricing page, read 2026-10-13).
+    HAIKU_5_5 = {"tiers": [
+        {"max_prompt_tokens": 100_000, "input": 0.10, "output": 0.50,
+         "cache_write_5m": 0.125, "cache_write_1h": 0.20, "cache_read": 0.01},
+        {"input": 0.50, "output": 2.50, "cache_write_5m": 0.625, "cache_write_1h": 1.00,
+         "cache_read": 0.05}]}
+
+    @staticmethod
+    def request(request_id: str, model: str, input_tokens: int = 0, read: int = 0,
+                written: int = 0, output: int = 0) -> dict:
+        """One transcript entry carrying a request's usage."""
+        return {"requestId": request_id, "message": {"model": model, "usage": {
+            "input_tokens": input_tokens, "cache_read_input_tokens": read,
+            "cache_creation_input_tokens": written, "output_tokens": output}}}
+
+    def test_a_model_priced_by_prompt_length_is_priced_per_request(self):
+        """A request's prompt is its input, cache writes, and cache reads
+        together: up to 100,000 tokens takes the lower card, and over it
+        every token, output included, takes the higher."""
+        pricing = {"claude-haiku-5-5": self.HAIKU_5_5}
+        lines = transcript(
+            self.request("r1", "claude-haiku-5-5", 1_000, read=99_000, output=1_000_000),
+            self.request("r2", "claude-haiku-5-5", 1_000, read=99_001, output=1_000_000),
+            self.request("r3", "claude-haiku-5-5", 1, written=100_000))
+        usage = lane.transcript_usage(lines)
+        expected = ((1_000 * 0.10 + 99_000 * 0.01 + 1_000_000 * 0.50)      # exactly 100,000
+                    + (1_000 * 0.50 + 99_001 * 0.05 + 1_000_000 * 2.50)    # 100,001
+                    + (1 * 0.50 + 100_000 * 0.625)) / 1_000_000            # writes count
+        self.assertEqual(lane.price_usage(usage, pricing), round(expected, 4))
+        # The totals alone cannot say which card each request took.
+        totals = {k: v for k, v in usage.items() if k != "by_request"}
+        self.assertIsNone(lane.price_usage(totals, pricing))
+
+    def test_each_request_takes_its_own_models_card(self):
+        """Mixed models are priced request by request; a synthetic request
+        with tokens is unpriceable once there is more than one model, and a
+        malformed card prices nothing rather than raising."""
+        pricing = {"claude-haiku-5-5": self.HAIKU_5_5,
+                   "claude-opus-5-5": {"input": 4.0, "output": 20.0, "cache_write_5m": 5.0,
+                                       "cache_write_1h": 8.0, "cache_read": 0.2}}
+        mixed = [self.request("r1", "claude-opus-5-5", 1_000_000),
+                 self.request("r2", "claude-haiku-5-5", 1_000_000)]
+        self.assertEqual(lane.price_usage(lane.transcript_usage(transcript(*mixed)), pricing),
+                         4.5)
+        synthetic = self.request("r3", "<synthetic>", 10)
+        self.assertIsNone(lane.price_usage(
+            lane.transcript_usage(transcript(*mixed, synthetic)), pricing))
+        alone = lane.transcript_usage(transcript(mixed[0], synthetic))
+        self.assertEqual(lane.price_usage(alone, pricing), 4.0)
+        haiku = lane.transcript_usage(transcript(mixed[1]))
+        for card in ({"tiers": "x"}, {"input": 0.1}, {"tiers": [{"max_prompt_tokens": 10,
+                                                                 **self.HAIKU_5_5["tiers"][0]}]}):
+            self.assertIsNone(lane.price_usage(haiku, {"claude-haiku-5-5": card}), card)
+
+    def test_unusable_cards_price_nothing(self):
+        """Astra's review of PR #12: a tier bound that is a string, null,
+        a boolean, missing before the last tier, or not increasing, and a
+        rate that is negative, infinite, NaN, or a boolean, make the agent
+        unpriceable instead of raising or reporting a wrong cost. The valid
+        card, changed in nothing else, still prices."""
+        haiku = lane.transcript_usage(transcript(
+            self.request("r1", "claude-haiku-5-5", 1_000_000)))
+        lower, upper = self.HAIKU_5_5["tiers"]
+        self.assertEqual(lane.price_usage(haiku, {"claude-haiku-5-5": self.HAIKU_5_5}), 0.5)
+        unbounded = {k: v for k, v in lower.items() if k != "max_prompt_tokens"}
+        bad_tiers = [[{**lower, "max_prompt_tokens": "100000"}, upper],
+                     [{**lower, "max_prompt_tokens": None}, upper],
+                     [{**lower, "max_prompt_tokens": True}, upper],
+                     [unbounded, upper],
+                     [{**lower, "max_prompt_tokens": 100_000},
+                      {**upper, "max_prompt_tokens": 100_000}, upper],
+                     []]
+        bad_rates = [-0.5, math.inf, math.nan, True, "0.10", None]
+        cards = [{"tiers": tiers} for tiers in bad_tiers]
+        cards += [{"tiers": [lower, {**upper, "input": rate}]} for rate in bad_rates]
+        cards += [{**upper, "input": rate} for rate in bad_rates]
+        for card in cards:
+            self.assertIsNone(lane.price_usage(haiku, {"claude-haiku-5-5": card}), card)
+
+    def test_missing_usage_is_unpriced_not_free(self):
+        """Astra's review of PR #12: a transcript with no request usage, or
+        with messages but no usage, is an unknown cost, and the audit record
+        says so; a request reporting zero tokens is priced at zero."""
+        pricing = {"claude-haiku-5-5": self.HAIKU_5_5}
+        self.assertIsNone(lane.price_usage(lane.transcript_usage([]), pricing))
+        silent = transcript({"message": {"role": "assistant", "model": "claude-haiku-5-5",
+                                         "content": [{"type": "text", "text": "done"}]}})
+        self.assertIsNone(lane.price_usage(lane.transcript_usage(silent), pricing))
+        zero = transcript(self.request("r1", "claude-haiku-5-5"))
+        self.assertEqual(lane.price_usage(lane.transcript_usage(zero), pricing), 0.0)
+        config = {"run_id": "t", "effort": "high", "schemas": {},
+                  "agents": {"planner": "p", "executor": "e", "reviewer": "r"},
+                  "pricing_usd_per_mtok": pricing,
+                  "blinding": {"forbidden_substrings": [], "cross_paper_slugs": []}}
+        reconcile = load_script("reconcile_run_price", "reconcile-run.py")
+        record = lane.audit_agent(silent, "general-purpose", config, {"agent_definitions": {}},
+                                  reconcile, reconcile.load_gate_module(), None)
+        self.assertIsNone(record["cost_usd"])
+        self.assertEqual(record["usage"]["requests"], 0)
 
     def test_blinding_rules(self):
         config = {"blinding": {"forbidden_substrings": ["reproduction/attempt-01", "wiki/"],
