@@ -981,3 +981,17 @@ verdict.
   reported internal inconsistencies in authors' deposits (code redrawing a
   panel the published figure lacks; two conflicting R versions) as minor
   discrepancies rather than failures.
+
+## 2026-10-17 — llm-reproducibility: session 8e28871d (gate 1.3.1 pilot stage 2)
+
+- "I agree with your proposed tripwires, but be careful how you generalise
+  tome and cost, as they will rory from paper to paper" [sic] — Claude had
+  proposed a time check at 90 minutes, derived from this one paper's
+  estimate, as if it were a general figure.
+- "I agree with your proposal for what happens if it stops half way." —
+  Claude had found that the args builder would let a second run into a
+  partly executed attempt, and proposed treating such an attempt as used up.
+- "Astra has plenty of credit, so you can loosen the ask there. Let's
+  clarify, the anti-tick gate should apply only to prose meant to be read
+  by a human other than me." — Claude had written the same credit-saving
+  ask for both reviewers and run the prose gate on mail between agents.

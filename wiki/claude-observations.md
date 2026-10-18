@@ -1758,3 +1758,75 @@ anchors. When it spans sessions, offer the walk-through unprompted: order
 by what each blocks, re-read each at source, and recommend, with
 trade-offs for methodological ones. Source: converted 2026-10-14 from
 user-obs candidate A, 2026-10-06 batch (wiki/user-observations.md).
+
+## claude-obs 88 — 2026-10-17: Shawn's explain-back covered the procedure and added a stop class of his own
+
+**Pattern.** Asked to explain stage 2 back after the pre-run review, Shawn
+described it as a build-and-run procedure ending in "confirms successful
+completion". He left out the comparison against the locked targets, the
+two checks after the executor, and two stop classes (substitutes and
+environment). He then added a class I had not proposed as general, cost
+and time overruns, with a caution I had not given: "be careful how you
+generalise time and cost, as they will vary from paper to paper".
+
+**Lesson.** The explain-back worked in both directions. It surfaced a
+framing worth correcting (success as the default outcome, where the run
+reports a verdict) and improved the design: per-run tripwires derived from
+each gate's estimate came from his caution.
+
+**How to apply.** Compare his restatement with the review's sections and
+name only the gaps, briefly. Take his additions into the controlling
+document as rules, in his words where possible.
+
+## claude-obs 89 — 2026-10-17/18: Shawn sets cost and polish per audience, not uniformly
+
+**Pattern.** I wrote one bounded, credit-saving ask for both reviewers and
+ran the anti-tic gate on mail between agents. Shawn corrected both: "Astra
+has plenty of credit, so you can loosen the ask there", and the gate
+"should apply only to prose meant to be read by a human other than me".
+Fable stays rationed.
+
+**Lesson.** I had generalised two rules beyond their purpose. Credit
+limits belong to a lane, and the prose gate belongs to human readers other
+than him.
+
+**How to apply.** When one message goes to several recipients, set the ask
+per recipient's cost. Before applying a rule to everything, check whom it
+is for.
+
+## claude-obs 90 — 2026-10-17 (self-critique): I validated half a tripwire and reported the whole
+
+**Pattern.** Shawn made cost and time overruns stop conditions. I built a
+watcher, tested it on stage 1, a finished run, and told him it worked. The
+test confirmed the cost reading; it could not test the clock, because a
+finished run's files no longer change. The clock used `st_ctime`, which
+moves on every write, so the time check could never have fired. I found it
+only after the run, and disclosed it.
+
+**Lesson.** A test on finished data says nothing about a check that
+depends on the run being live. "It works" covered conditions I had not
+tested.
+
+**How to apply.** Before reporting that a tripwire works, list each
+condition it watches and how each was tested, and name the untested ones
+in the report. Test time-based checks on a run that is still writing.
+
+## claude-obs 91 — 2026-10-18: Shawn froze the record while a reviewer was reading it
+
+**Pattern.** With Astra's reply in and Fable's pending, I offered to fold
+Astra's criteria into the design document. Shawn: "Fable is reviewing now,
+please hold off on edits and monitor mail until you get Fable's reply".
+Fable's reply cited `main` at `702417b`; had I committed Astra's criteria
+first, Fable would have reviewed a document that changed mid-read, or
+reviewed the pre-edit one and been answered against the post-edit one.
+Meanwhile the Fable session itself committed to continuity in this
+checkout (`eb8b356`).
+
+**Lesson.** Shawn applies to reviewers the rule the lane applies to agents:
+keep the reviewed state still until the review lands. It also kept the two
+reviews comparable, since both read a document neither had shaped.
+
+**How to apply.** When a reviewer is mid-review, hold edits to the files
+under review and watch for the reply; fold several reviews in together,
+afterwards. Expect the reviewing session to commit in the same checkout,
+and fetch before writing.
