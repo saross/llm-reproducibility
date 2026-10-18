@@ -1443,6 +1443,22 @@ class LodgedRuleTests(unittest.TestCase):
         self.assertIn("holds 'maybe'", problems)
         self.assertIn("inputs-from-authors-code gives no evidence", problems)
 
+    def test_a_malformed_plan_is_reported_not_crashed_on(self):
+        """persist-plans checks a payload even when its schema fails."""
+        plan = self.applied()
+        plan["rules_applied"][0]["applications"][0]["conditions"].append("text")
+        plan["rules_applied"][1]["applications"].append(None)
+        plan["rules_applied"].append(["not", "an", "object"])
+        problems = " | ".join(lane.rule_problems(plan, self.rules))
+        for expected in ("Q5 on T17: a condition is not an object",
+                         "R1: an application is not an object",
+                         "a rules_applied entry is not an object"):
+            self.assertIn(expected, problems)
+        self.assertEqual(lane.plan_exclusions(plan),
+                         {"not creditable under Q5 by the approved plan": {"T17"}})
+        self.assertEqual(lane.rule_problems({"rules_applied": "Q5"}, self.rules),
+                         ["rules_applied is not a list"])
+
     def test_approval_checks_the_rules_and_binds_the_registry(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -1130,7 +1130,15 @@ def rule_problems(plan: dict, rules: dict[str, dict]) -> list[str]:
                if isinstance(t, dict)}
     applied: set[tuple[str, str]] = set()
     seen: set[str] = set()
-    for entry in plan.get("rules_applied") or []:
+    # persist-plans runs these checks on a payload that may also fail its
+    # schema, so a malformed part is reported, never a crash.
+    entries = plan.get("rules_applied") or []
+    if not isinstance(entries, list):
+        return ["rules_applied is not a list"]
+    for entry in entries:
+        if not isinstance(entry, dict):
+            problems.append("a rules_applied entry is not an object")
+            continue
         rule_id = str(entry.get("rule_id") or "")
         rule = rules.get(rule_id)
         if rule is None:
@@ -1145,6 +1153,9 @@ def rule_problems(plan: dict, rules: dict[str, dict]) -> list[str]:
                             f"quote it whole from {rule.get('source')}")
         conditions = rule.get("conditions") or {}
         for application in entry.get("applications") or []:
+            if not isinstance(application, dict):
+                problems.append(f"{rule_id}: an application is not an object")
+                continue
             target = str(application.get("target_id") or "")
             where = f"{rule_id} on {target or '?'}"
             if target not in targets:
@@ -1156,8 +1167,10 @@ def rule_problems(plan: dict, rules: dict[str, dict]) -> list[str]:
             applied.add((rule_id, target))
             stated: dict[str, dict] = {}
             for item in application.get("conditions") or []:
-                cid = str(item.get("condition_id") or "")
-                if cid not in conditions:
+                cid = str(item.get("condition_id") or "") if isinstance(item, dict) else ""
+                if not isinstance(item, dict):
+                    problems.append(f"{where}: a condition is not an object")
+                elif cid not in conditions:
                     problems.append(f"{where}: {cid!r} is not one of {rule_id}'s conditions "
                                     f"({', '.join(conditions) or 'it lists none'})")
                 elif cid in stated:
@@ -1203,9 +1216,11 @@ def plan_exclusions(plan: dict | None) -> dict[str, set[str]]:
         ``{reason: targets}``, one reason per rule.
     """
     excluded: dict[str, set[str]] = {}
-    for entry in (plan or {}).get("rules_applied") or []:
-        for application in entry.get("applications") or []:
-            if application.get("credit") == "not-creditable":
+    entries = (plan or {}).get("rules_applied") or []
+    for entry in entries if isinstance(entries, list) else []:
+        applications = entry.get("applications") if isinstance(entry, dict) else None
+        for application in applications if isinstance(applications, list) else []:
+            if isinstance(application, dict) and application.get("credit") == "not-creditable":
                 excluded.setdefault(f"not creditable under {entry.get('rule_id')} by the "
                                     f"approved plan", set()).add(str(application.get("target_id")))
     return excluded
