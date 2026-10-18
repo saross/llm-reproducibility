@@ -2738,3 +2738,67 @@ Keeping the launch message neutral works. Shawn finds typing the exact
 phrase annoying (user-observations, 2026-10-13), so the protection should
 not depend on it; a redesign should keep the relayed message neutral by
 mechanism rather than by the operator's wording.
+
+## Observation 58: The executor's own method declarations caught one departure of five; the reviewer found the rest (2026-10-17)
+
+*(Approved by Shawn 2026-10-18; WN-av.)*
+
+### Context
+
+Gate 1.3.1's F4 closure asks the executor to declare, per locked target,
+whether it followed the approved plan's comparison method
+(`method_as_planned`, comparison schema 1.2). A declared departure raises a
+`method-deviation:<target>` flag, and the adversarial reviewer carries a
+named method-adherence obligation for the undeclared case. Herskind attempt
+04 (stage 2 `wf_4fd7a886-ada`) was the first live test.
+
+### Observation
+
+The executor declared one departure (T13). It recorded T01, T03, T04, and
+T12 as following the plan, and the reviewer, under the obligation, named
+all four as departures: a numeric pixel comparison with an
+executor-chosen threshold where the plan says visual (T01), a tolerance
+failure classified as a minor discrepancy (T03), positions compared by
+Spearman correlation (T04), and a different source table (T12). None
+changed an outcome. Anchors: attempt-04 `comparisons/comparison.json`
+(`method_as_planned`, `false` only for T13), `adversarial-review.json`
+(`payload.dimensions.methodological_soundness`, CONCERN),
+`flag-rulings.json` (`method-adherence:targets`).
+
+### Implication
+
+An agent's self-declared departures are weak evidence even when it is
+asked target by target; the reviewer's named duty was the working
+mechanism. Gate 1.3.2 therefore makes the reviewer's per-target method row
+the source of method flags, with the executor's declaration one input the
+reviewer may contradict (`wiki/planning/reproduction-gate-1-3-design.md`,
+criterion 2).
+
+## Observation 59: Two blind runs on independently planned denominators found the same discrepancies and labelled them differently (2026-10-17)
+
+*(Approved by Shawn 2026-10-18; WN-aw.)*
+
+### Context
+
+Herskind attempts 03 and 04 ran blind to each other through the agentic
+lane, with the same model, effort, rulings, and paper, under plans drawn up
+separately (20 targets for attempt 03, 18 for attempt 04; Observation 56).
+
+### Observation
+
+Both runs found the same eight Table 1 cells, each off by one count, with
+the authors' deposited S3 agreeing with the reproduction, and the same two
+Fig. 4 box mismatches (C5-F13 and B1-B2). They labelled the Fig. 4 finding
+differently (PAPER_ERROR in attempt 03, MINOR_DISCREPANCY in attempt 04)
+and scored Fig. 5 differently (EXACT_MATCH, with the extent patches judged
+by eye, against CANNOT_COMPARE, the patches pre-declared not comparable), as
+each plan scoped the target. Anchors: both attempts'
+`comparisons/comparison.json` and `reproduction-plan.json`.
+
+### Implication
+
+The findings replicated across planning runs; the outcome labels varied
+with plan wording. Coverage and verdict counts built on labels inherit the
+plan's variance (attempt 03 17/20, attempt 04 14/18 raw and 13/18 ruled),
+so comparisons across attempts should align targets by display item and
+compare findings before labels.

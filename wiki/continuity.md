@@ -2563,7 +2563,13 @@ above; the factual record is in `wiki/reflections/session-log.md`.
 - **Reviews:** Astra (2026-10-17) and Fable (2026-10-18) on the closure and
   scope, both concurring; criteria folded into the design document.
 - **Disclosed:** the watcher's time check could not have fired.
-- **Working-notes candidates (held for Shawn's verdict):**
+- **How we work (Shawn, 2026-10-18; standing rules in the global
+  scratchpad):** the full pre-run review with his explain-back before every
+  paid multi-agent stage, a short walk-through for single-agent runs; hold
+  edits to files a reviewer is reading until the reply lands; Fable spend
+  needs his OK every time, mail asks and spawns alike.
+- **Working-notes candidates (accepted by Shawn 2026-10-18 as
+  Observations 58 and 59):**
   - **WN-av:** the executor's per-target `method_as_planned` declarations
     caught one method departure of five on herskind attempt 04 (T13
     declared; T01, T03, T04, and T12 recorded as following the plan),
