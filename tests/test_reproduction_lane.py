@@ -425,7 +425,7 @@ class GateTests(unittest.TestCase):
     def test_gate_reports_code_integrity(self):
         self.comparison()
         report = self.run_gate()
-        self.assertEqual(report["gate_version"], "1.3.1")
+        self.assertEqual(report["gate_version"], "1.3.2")
         self.assertEqual(report["code_integrity"]["status"], "identical", report["errors"])
         self.assertEqual(report["code_integrity"]["anchors"], {"analysis.R": "verified"})
         self.assertEqual(report["flags"], [])
@@ -475,6 +475,22 @@ class GateTests(unittest.TestCase):
         self.assertEqual(report["coverage_admitted"]["targets_admitted"], 0)
         self.assertEqual(report["coverage_admitted"]["excluded_targets"], ["T01", "T02"])
         self.assertNotIn("coverage_creditable", report)
+
+    def test_a_declared_edit_naming_an_unlocked_target_fails(self):
+        """Gate 1.3.2: an edit naming only T09 would exclude nothing, so the
+        resting target would be credited; it fails rather than passing."""
+        self.comparison()
+        write(self.dir / "authors-code" / "analysis.R",
+              AUTHORS_R.replace("index = 4", "index = 3"))
+        manifest = json.loads((self.dir / lane.CODE_MANIFEST_FILE).read_text())
+        manifest["executed"][0]["declared_edit"] = {
+            "summary": "shifted an index", "kind": "repair", "affected_targets": ["T09"]}
+        write(self.dir / lane.CODE_MANIFEST_FILE, json.dumps(manifest))
+        snapshot(self.dir)
+        report = self.run_gate()
+        self.assertEqual(report["verdict"], "fail")
+        self.assertTrue(any("names targets not in the locked plan: ['T09']" in e
+                            for e in report["errors"]), report["errors"])
 
     def test_gate_missing_manifest_fails_unless_listed_legacy(self):
         self.comparison()

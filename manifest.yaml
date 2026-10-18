@@ -191,10 +191,10 @@ reproduction:
       last_updated: "2026-10-03"
       description: Structured-output contract for reproduction-executor spawns (self-report; persistence verified from disk, invariant 6)
     review_output:
-      version: "1.0"
+      version: "1.1"
       file: reproduction-system/schemas/adversarial-review-output.json
-      last_updated: "2026-10-03"
-      description: Structured-output contract for adversarial-reviewer spawns (five framework dimensions, CONFIRMED/QUALIFIED/CHALLENGED)
+      last_updated: "2026-10-18"
+      description: Structured-output contract for adversarial-reviewer spawns (five framework dimensions, CONFIRMED/QUALIFIED/CHALLENGED). v1.1 (2026-10-18, gate 1.3.2) adds concerns, each with a stable id, its dimension, an explicit scope (locked targets, or the paper), and its evidence files; the lane makes each its own issue, so a ruling can resolve it per target
     comparison_record:
       version: "1.2"
       file: reproduction-system/schemas/comparison-record.json
@@ -212,13 +212,13 @@ reproduction:
       description: Stage 1 — governed planner fan-out; plans return for persistence and batched human approval (v1.0, 2026-10-03)
     execute:
       file: reproduction-system/workflows/reproduction-execute.workflow.js
-      description: Stage 2 — per approved paper, executor -> mechanical artefact gate -> fresh-context adversarial reviewer (v1.1, 2026-10-04 — executor writes the authors'-code manifest; gate flags join the human queue. v1.2, 2026-10-05 — execution snapshots; the relay must return flags and warnings and the queue fails closed without them; the reviewer addresses the gate's review obligations. v1.3, 2026-10-09 — gate 1.3, the executor runs through run-container and comparisons cite sealed run outputs. v1.4, 2026-10-12 — the closing message gives the post-run order, audit before persistence (final review F7); in the same version the executor brief names build-image, run_file, comparison schema 1.2's method and count fields, and read-in-full pulls; after Astra's delta review of gate 1.3.1, a pull counts only as a Read or a plain cat)
+      description: Stage 2 — per approved paper, executor -> mechanical artefact gate -> fresh-context adversarial reviewer (v1.1, 2026-10-04 — executor writes the authors'-code manifest; gate flags join the human queue. v1.2, 2026-10-05 — execution snapshots; the relay must return flags and warnings and the queue fails closed without them; the reviewer addresses the gate's review obligations. v1.3, 2026-10-09 — gate 1.3, the executor runs through run-container and comparisons cite sealed run outputs. v1.4, 2026-10-12 — the closing message gives the post-run order, audit before persistence (final review F7); in the same version the executor brief names build-image, run_file, comparison schema 1.2's method and count fields, and read-in-full pulls; after Astra's delta review of gate 1.3.1, a pull counts only as a Read or a plain cat. v1.5, 2026-10-18, gate 1.3.2 — the closing message ends the post-run order with adjudicate)
 
   lane_tool:
-    version: "1.5"
+    version: "1.6"
     file: scripts/reproduction-lane.py
-    last_updated: "2026-10-13"
-    description: Deterministic orchestration for the agentic lane — args builders (commit-pinned, approval-gated), plan persistence + triage, hash-bound approval, the artefact gate (check-attempt; gate 1.1 adds the authors'-code integrity check, also standalone as check-code; gate 1.2, after the cross-model review of PR #7, adds provenance anchors, execution snapshots via snapshot-code, wrapper reference checks, conversion-evidence validation, and the legacy allowlist; gate 1.3 adds run-container with sealed run records, the instrumented hook and exec shim, the account of every load, issues and rulings, admitted coverage, fresh computation, static start-up checks, the lane's own conversion comparison, and the transcript audit), the authoritative human queue (human-queue), result persistence, and the post-run audit (receipts, blinding, per-request token dedup, API-equivalent cost); gate 1.3.1 (v1.4, 2026-10-12, the final review's fixes) adds the shell-aware transcript audit (1.2 after Astra's delta review: comments, command-position copies, and quote-aware expansion), the run audit bound into admission (1.1 after the same review: bound to the workflow run, each role's agent and payload digest, and the reviewed artefact state that check-attempt prints), the launch-message record, method-deviation flags and the method-adherence obligation, declared-count checks, build-image with a build-evidence obligation, late-transcription flags, and the binding of the hook's run_file evaluator events; v1.5 (2026-10-13) prices usage request by request, with tiered rate cards for a model priced by prompt length (Claude Haiku 5.5)
+    last_updated: "2026-10-18"
+    description: Deterministic orchestration for the agentic lane — args builders (commit-pinned, approval-gated), plan persistence + triage, hash-bound approval, the artefact gate (check-attempt; gate 1.1 adds the authors'-code integrity check, also standalone as check-code; gate 1.2, after the cross-model review of PR #7, adds provenance anchors, execution snapshots via snapshot-code, wrapper reference checks, conversion-evidence validation, and the legacy allowlist; gate 1.3 adds run-container with sealed run records, the instrumented hook and exec shim, the account of every load, issues and rulings, admitted coverage, fresh computation, static start-up checks, the lane's own conversion comparison, and the transcript audit), the authoritative human queue (human-queue), result persistence, and the post-run audit (receipts, blinding, per-request token dedup, API-equivalent cost); gate 1.3.1 (v1.4, 2026-10-12, the final review's fixes) adds the shell-aware transcript audit (1.2 after Astra's delta review: comments, command-position copies, and quote-aware expansion), the run audit bound into admission (1.1 after the same review: bound to the workflow run, each role's agent and payload digest, and the reviewed artefact state that check-attempt prints), the launch-message record, method-deviation flags and the method-adherence obligation, declared-count checks, build-image with a build-evidence obligation, late-transcription flags, and the binding of the hook's run_file evaluator events; v1.5 (2026-10-13) prices usage request by request, with tiered rate cards for a model priced by prompt length (Claude Haiku 5.5); v1.6 (2026-10-18) is gate 1.3.2 criterion 1: issues state their scope (targets or paper), a target reference outside the locked plan fails the gate or makes an agent's item paper-wide, the reviewer's concerns become per-target issues, rulings may dispose of single targets, record a ruled classification, and set the ruled verdict on the review's verdict flag (never creating credit), and adjudicate derives the attempt's adjudicated result, which study reporting reads and nothing earlier
 
   pilot_statistics:
     papers_attempted: 5
@@ -574,9 +574,9 @@ agent_definitions:
     sha256: "b8cfac3fd5c05e320c71e48ba3988b4b980fd3293f561a96842c37ef471356f4"
   adversarial-reviewer:
     file: .claude/agents/adversarial-reviewer.md
-    version: "1.3"
+    version: "1.4"
     model: claude-opus-5-5
-    sha256: "498b224dab62ce920d91522c0c7ec807586673f4cc5f2d8fdc5a784aba0f9e46"
+    sha256: "794e0103d09a794b600bfecad77f9034e2775958639daac7d7ef06029e8932d3"
 
 # Reference datasets read as ground truth by registered analyses
 # (monitoring plan §4 class E8; §9 Q4: register-without-rewrite —

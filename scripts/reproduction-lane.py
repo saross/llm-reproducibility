@@ -1,7 +1,21 @@
 #!/usr/bin/env python3
 """Deterministic orchestration helpers for the agentic reproduction lane.
 
-**Version:** 1.5
+**Version:** 1.6
+
+v1.6 (2026-10-18) is gate 1.3.2, criterion 1 (the design's opening note):
+every issue states its scope (``targets`` or ``paper``), and a target
+reference outside the locked plan never excludes nothing: in the gate's
+own issues it fails the gate, and in an agent's payload it makes the item
+paper-wide, to be ruled. The reviewer's concerns (review schema 1.1) each
+become their own issue, bound to their evidence and target scope; a
+malformed one is paper-wide until ruled (Shawn, 2026-10-18: a reviewer's
+slip costs a ruling, not a re-run). A ruling may
+dispose of single targets within its issue (``targets``), record a ruled
+classification (``classification``), and, on the review's verdict flag, the
+ruled verdict; a ruling never creates credit. ``adjudicate`` derives the
+attempt's authoritative result, per target, from the reviewed records and
+the rulings, and study reporting reads only that result.
 
 v1.5 (2026-10-13) prices usage request by request, so that a model whose
 price depends on each request's prompt length (Claude Haiku 5.5, two
@@ -116,6 +130,13 @@ re-run:
     Write executor and reviewer payloads from the journal into the attempt
     directory, checking the review's overall verdict against the framework's
     concern-count rule.
+``adjudicate``
+    Derive ``adjudicated-result.json``, the attempt's authoritative result:
+    per target, the credit, the ruled classification, and the rulings that
+    set them, with the ruled coverage and verdict, bound by digest to every
+    record it was derived from. Written only when final; ``--check``
+    re-derives it and fails on a stale record. Study reporting and export
+    read this record (through ``verify_adjudicated``) and nothing earlier.
 ``audit-run``
     Post-run audit of a workflow run directory: receipts re-validated from
     transcripts (shared with ``reconcile-run.py``), blinded-path accesses
@@ -149,6 +170,7 @@ Usage:
         --config <run-config.yaml> [--workflow-result FILE] [--out FILE]
     venv/bin/python scripts/reproduction-lane.py persist-results \\
         --config <run-config.yaml> --run-dir <workflow-run-dir> [--force]
+    venv/bin/python scripts/reproduction-lane.py adjudicate <attempt-dir> [--check]
     venv/bin/python scripts/reproduction-lane.py audit-run \\
         --config <run-config.yaml> --run-dir <workflow-run-dir> [--out FILE]
 
@@ -200,7 +222,9 @@ EXECUTION_FILE = "execution-report.json"
 REVIEW_FILE = "adversarial-review.json"
 COMPARISON_FILE = Path("comparisons") / "comparison.json"
 DEFAULT_COMPARISON_SCHEMA = "reproduction-system/schemas/comparison-record.json"
-GATE_VERSION = "1.3.1"
+GATE_VERSION = "1.3.2"
+ADJUDICATED_FILE = "adjudicated-result.json"
+ADJUDICATION_VERSION = "1.0"
 # Authors'-code integrity (gate 1.1; Shawn's ruling 2026-10-04, fail-and-uplift
 # follow-on 3): the authors' files are hashed at retrieval and every executed
 # copy must be byte-identical. Any difference is a declared wrapper or a
@@ -419,6 +443,9 @@ class LaneError(Exception):
 ISSUE_POLICY: dict[str, int] = {}
 RULING_DECISIONS = {"flag": ("admissible", "fail-and-uplift", "excluded"),
                     "obligation": ("discharged", "fail-and-uplift", "excluded")}
+# Decisions that remove a target's credit. Under amendment 3 §7(d),
+# fail-and-uplift makes the result uplift evidence, which never counts.
+NEGATIVE_DECISIONS = frozenset({"fail-and-uplift", "excluded"})
 
 
 def json_digest(value: Any) -> str:
@@ -454,7 +481,8 @@ class Issue(str):
     - ``kind``: ``flag`` or ``obligation``.
     - ``code`` and ``subject``: the issue id is ``code:subject``, stable
       across re-runs (``edited-copy:authors-code/analysis.R``).
-    - ``targets``: the target ids it bears on; empty means all.
+    - ``targets``: the target ids it bears on; empty means all, and the
+      record states that scope explicitly as ``paper`` (gate 1.3.2).
     - ``files``: the sha256 of every file it concerns. With the code's
       policy version, the subject, and the targets, these make the
       fingerprint, so changed evidence needs a new ruling.
@@ -501,6 +529,7 @@ class Issue(str):
         """The issue as the gate report lists it."""
         return {"id": self.issue_id, "kind": self.kind, "code": self.code,
                 "subject": self.subject, "targets": list(self.targets),
+                "scope": "targets" if self.targets else "paper",
                 "files": self.files, "fingerprint": self.fingerprint(),
                 "message": str(self)}
 
@@ -522,6 +551,36 @@ def issue_records(messages: list[str]) -> list[dict]:
             records.append(Issue(message, kind=kind, code="unclassified",
                                  subject=json_digest(str(message))[:16]).record())
     return records
+
+
+def issue_scope(issue: dict) -> str:
+    """``targets`` when an issue names targets, else ``paper`` (gate 1.3.2).
+
+    The scope derives from the target list the fingerprint already covers,
+    so stating it changes no fingerprint and lapses no ruling; it is
+    recomputed here for reports written before the record carried it.
+    """
+    return "targets" if issue.get("targets") else "paper"
+
+
+def scoped_targets(issue: dict, locked: list[str]) -> list[str]:
+    """The targets an issue bears on: those it names, or every locked one."""
+    return list(issue.get("targets") or []) or list(locked)
+
+
+def target_decision(ruling: dict, target: str) -> str | None:
+    """A ruling's decision on one target: its per-target one, else its own.
+
+    Gate 1.3.2: a ruling on an issue that bears on several targets may
+    dispose of some of them differently (``"targets": {"T17": "excluded"}``),
+    so a concern can be ruled against one target without excluding the rest.
+    """
+    return (ruling.get("targets") or {}).get(target, ruling.get("decision"))
+
+
+def unknown_targets(issue: dict, locked: list[str]) -> list[str]:
+    """The targets an issue names that the locked plan does not list."""
+    return sorted(set(issue.get("targets") or []) - set(locked))
 
 
 def args_checksum(payload: dict) -> str:
@@ -1270,6 +1329,124 @@ def attempt_issues(target_dir: Path, report: dict) -> dict[str, dict]:
     return issues
 
 
+def locked_targets(target_dir: Path) -> list[str] | None:
+    """The approved plan's locked target ids, or None when it is unreadable."""
+    try:
+        plan = json.loads((target_dir / PLAN_FILE).read_text(encoding="utf-8"))
+        return [str(t["target_id"]) for t in plan["plan"]["verification_targets"]]
+    except (OSError, KeyError, TypeError, json.JSONDecodeError):
+        return None
+
+
+def target_records(target_dir: Path) -> dict[str, dict]:
+    """The comparison record's per-target records, by id ({} if unreadable)."""
+    try:
+        comparison = json.loads((target_dir / COMPARISON_FILE).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return {str(t.get("target_id")): t for t in comparison.get("targets") or []
+            if isinstance(t, dict)}
+
+
+def reproduced_record(record: dict | None) -> bool:
+    """Whether a target's comparison record counts as reproduced."""
+    return bool(record) and record.get("testable") is not False \
+        and record.get("outcome") in REPRODUCED_OUTCOMES
+
+
+def comparison_values() -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """The comparison schema's outcome and verdict values, from the schema."""
+    schema = full_schema(expand(DEFAULT_COMPARISON_SCHEMA))
+    return (tuple(schema["properties"]["targets"]["items"]["properties"]["outcome"]["enum"]),
+            tuple(schema["properties"]["verdict"]["enum"]))
+
+
+def names_target(note: str, target: str) -> bool:
+    """Whether a note names a target id as a word (``T1`` is not in ``T17``)."""
+    return re.search(rf"(?<![A-Za-z0-9]){re.escape(target)}(?![A-Za-z0-9])", note) is not None
+
+
+def scoped_ruling_problems(entry: dict, issue: dict, locked: list[str] | None,
+                           records: dict[str, dict]) -> list[str]:
+    """What is wrong with a ruling's target-scoped parts (gate 1.3.2).
+
+    A ruling may carry ``targets`` (a decision per target, overriding its
+    own for those targets), ``classification`` (a ruled outcome per
+    target), and ``verdict`` (the ruled verdict). Each target it names must
+    be locked and within its issue's scope. A per-target decision must be
+    one the issue's kind takes, and a ruled classification an outcome the
+    comparison schema defines. A ruling never creates credit: it may relabel
+    an outcome or remove credit, but an outcome the comparison did not
+    reproduce cannot be ruled into a reproduced one (Shawn, 2026-10-18), so
+    credit always rests on a checked comparison. A ruled verdict is set only
+    on the review's verdict flag (code ``review``; Shawn, 2026-10-18). The
+    note must name every target the ruling singles out, since it is the
+    only record of why.
+
+    Args:
+        entry: The ruling, as given to ``rule-flags`` or as stored.
+        issue: The issue record it rules on.
+        locked: The locked target ids, or None when the plan is unreadable.
+        records: The comparison's per-target records, by id.
+
+    Returns:
+        Readable problems; empty when the ruling has no target-scoped parts.
+    """
+    scoped = {field: entry.get(field) for field in ("targets", "classification", "verdict")}
+    if all(value is None for value in scoped.values()):
+        return []
+    issue_id = issue["id"]
+    if locked is None:
+        return [f"{issue_id}: the approved plan is unreadable, so a ruling's target-scoped "
+                f"parts cannot be checked"]
+    problems: list[str] = []
+    in_scope = set(scoped_targets(issue, locked))
+    outcomes, verdicts = comparison_values()
+    singled: list[str] = []
+    for field in ("targets", "classification"):
+        value = scoped[field]
+        if value is None:
+            continue
+        if not isinstance(value, dict) or not value:
+            problems.append(f"{issue_id}: {field} must map target ids to values")
+            continue
+        for target, given in value.items():
+            if target not in locked:
+                problems.append(f"{issue_id}: {field} names {target!r}, which is not a locked "
+                                f"target")
+                continue
+            if target not in in_scope:
+                problems.append(f"{issue_id}: {field} names {target}, outside the issue's "
+                                f"targets ({', '.join(sorted(in_scope))})")
+                continue
+            singled.append(target)
+            if field == "targets" and given not in RULING_DECISIONS[issue["kind"]]:
+                problems.append(f"{issue_id}: {target} ruled {given!r}, but {issue['kind']}s "
+                                f"are ruled {', '.join(RULING_DECISIONS[issue['kind']])}")
+            elif field == "classification" and given not in outcomes:
+                problems.append(f"{issue_id}: {target} classified {given!r}, which is not a "
+                                f"comparison outcome ({', '.join(outcomes)})")
+            elif field == "classification" and given in REPRODUCED_OUTCOMES \
+                    and not reproduced_record(records.get(target)):
+                problems.append(f"{issue_id}: {target} cannot be ruled {given}: its comparison "
+                                f"did not reproduce it "
+                                f"({(records.get(target) or {}).get('outcome')!r}), and a ruling "
+                                f"never creates credit")
+    if scoped["verdict"] is not None:
+        if issue.get("code") != "review":
+            problems.append(f"{issue_id}: a ruled verdict is set only on the review's verdict "
+                            f"flag (review:...)")
+        elif scoped["verdict"] not in verdicts:
+            problems.append(f"{issue_id}: verdict {scoped['verdict']!r} is not one of "
+                            f"{', '.join(verdicts)}")
+    note = str(entry.get("note") or "")
+    unnamed = [t for t in dict.fromkeys(singled) if not names_target(note, t)]
+    if unnamed:
+        problems.append(f"{issue_id}: the note must say why for each target the ruling singles "
+                        f"out, and does not name {', '.join(unnamed)}")
+    return problems
+
+
 def cmd_rule_flags(args: argparse.Namespace) -> int:
     """Record human rulings on an attempt's issues (spec §6).
 
@@ -1280,6 +1457,11 @@ def cmd_rule_flags(args: argparse.Namespace) -> int:
     Flags take ``admissible``, ``fail-and-uplift``, or ``excluded``;
     obligations take ``discharged``, ``fail-and-uplift``, or ``excluded``.
     A gate failure is not an issue and cannot be ruled.
+
+    Gate 1.3.2: an entry may also carry ``targets`` (``{"T17":
+    "excluded"}``, a decision for those targets only), ``classification``
+    (``{"T03": "PAPER_ERROR"}``), and, on the review's verdict flag,
+    ``verdict``; ``scoped_ruling_problems`` sets their rules.
     """
     config = load_config(args.config)
     if args.slug not in {p["slug"] for p in config["papers"]}:
@@ -1298,6 +1480,7 @@ def cmd_rule_flags(args: argparse.Namespace) -> int:
     given = given.get("rulings") if isinstance(given, dict) else given
     if not isinstance(given, list) or not given:
         raise LaneError("the rulings file holds no rulings")
+    locked, records = locked_targets(target_dir), target_records(target_dir)
     new = []
     for entry in given:
         issue = issues.get(str(entry.get("issue")))
@@ -1309,8 +1492,13 @@ def cmd_rule_flags(args: argparse.Namespace) -> int:
             raise LaneError(f"{issue['id']} is a {issue['kind']}: rule it {', '.join(allowed)}")
         if not str(entry.get("note") or "").strip():
             raise LaneError(f"{issue['id']}: a ruling needs a note saying why")
+        problems = scoped_ruling_problems(entry, issue, locked, records)
+        if problems:
+            raise LaneError("; ".join(problems))
         new.append({"issue_id": issue["id"], "fingerprint": issue["fingerprint"],
                     "kind": issue["kind"], "decision": entry["decision"],
+                    **{field: entry[field] for field in ("targets", "classification", "verdict")
+                       if entry.get(field) is not None},
                     "note": entry["note"], "approver": args.approver, "ruled_at": now_utc(),
                     "gate_report_sha256": sha256_file(gate_path)})
     rulings = load_rulings(target_dir) + new
@@ -5775,6 +5963,69 @@ def ruling_for(issue: dict, rulings: list[dict]) -> dict | None:
     return matches[-1] if matches else None
 
 
+def structural_exclusions(manifest: dict, account: dict | None,
+                          locked: list[str]) -> dict[str, set[str]]:
+    """Targets excluded by structure, whatever any ruling says (spec §6).
+
+    Those resting on a declared edit, until the class (ii) wrapper-only
+    re-run exists (an edit naming no targets names them all), and every
+    target when no authors' file was executed or no credited run loaded
+    one. The gate and ``adjudicate`` both call this, so the two cannot
+    disagree.
+
+    Args:
+        manifest: The authors' code manifest ({} when unreadable).
+        account: The gate's account of the runs' loads, or None.
+        locked: The locked target ids.
+
+    Returns:
+        ``{reason: targets}``.
+    """
+    edited: set[str] = set()
+    for item in manifest.get("executed") or []:
+        edit = item.get("declared_edit") if isinstance(item, dict) else None
+        if edit:
+            edited |= set(edit.get("affected_targets") or list(locked))
+    structural: dict[str, set[str]] = {}
+    if (account is not None and manifest.get("originals") and manifest.get("executed")
+            and not account.get("originals_loaded")):
+        # The run records show what ran (spec §6): a manifest listing
+        # executed copies is not enough when no credited run loaded one.
+        structural["no credited run loaded an authors' file"] = set(locked)
+    if manifest.get("originals") and not manifest.get("executed"):
+        structural["no authors' file was executed"] = set(locked)
+    elif edited:
+        structural["resting on a declared edit, until the class (ii) wrapper-only "
+                   "re-run"] = edited
+    return structural
+
+
+def ruled_classifications(issues: list[dict], rulings: list[dict],
+                          locked: list[str]) -> dict[str, list[tuple[str, str]]]:
+    """Each target's ruled classifications, from the rulings that apply.
+
+    Gate 1.3.2: a ruling's ``classification`` relabels a target's outcome
+    (T03's ruled PAPER_ERROR) without editing the reviewed comparison.
+    Only a ruling that still applies to its issue counts, and only for a
+    target within that issue's scope.
+
+    Returns:
+        ``{target: [(outcome, issue id), ...]}``; more than one distinct
+        outcome for a target is a conflict, which callers must not resolve
+        by order.
+    """
+    found: dict[str, list[tuple[str, str]]] = {}
+    for issue in issues:
+        ruling = ruling_for(issue, rulings)
+        if ruling is None:
+            continue
+        in_scope = set(scoped_targets(issue, locked))
+        for target, outcome in (ruling.get("classification") or {}).items():
+            if target in in_scope:
+                found.setdefault(target, []).append((str(outcome), issue["id"]))
+    return found
+
+
 def admitted_coverage(verdict: str, issues: list[dict], rulings: list[dict],
                       locked: list[str], reproduced_ids: list[str],
                       structural: dict[str, set[str]]) -> dict:
@@ -5787,7 +6038,12 @@ def admitted_coverage(verdict: str, issues: list[dict], rulings: list[dict],
       declared edit until the class (ii) wrapper-only re-run exists, and all
       of them when no authors' file ran (``structural``, reason to targets);
     - every target an unruled issue names, where an empty list names all;
-    - every target an issue was ruled ``fail-and-uplift`` or ``excluded`` on.
+    - every target an issue was ruled ``fail-and-uplift`` or ``excluded`` on,
+      where a ruling's per-target decisions override its own for the
+      targets they name (gate 1.3.2);
+    - every target ruled to an outcome that is not reproduced, or given
+      conflicting ruled classifications. A ruled classification never adds
+      a target: credit comes only from the comparison.
 
     Returns:
         ``{targets_enumerated, targets_admitted, coverage_fraction,
@@ -5803,14 +6059,30 @@ def admitted_coverage(verdict: str, issues: list[dict], rulings: list[dict],
         excluded |= targets
         reasons.append(reason)
     for issue in issues:
-        named = set(issue.get("targets") or []) or set(locked)
+        named = scoped_targets(issue, locked)
         ruling = ruling_for(issue, rulings)
         if ruling is None:
             unruled.append(issue["id"])
-            excluded |= named
-        elif ruling.get("decision") in ("fail-and-uplift", "excluded"):
-            excluded |= named
-            reasons.append(f"{issue['id']} ruled {ruling['decision']}")
+            excluded |= set(named)
+            continue
+        negative: dict[str, list[str]] = {}
+        for target in named:
+            decision = target_decision(ruling, target)
+            if decision in NEGATIVE_DECISIONS:
+                negative.setdefault(decision, []).append(target)
+        for decision, targets in sorted(negative.items()):
+            excluded |= set(targets)
+            whole = decision == ruling.get("decision") and len(targets) == len(named)
+            reasons.append(f"{issue['id']} ruled {decision}"
+                           + ("" if whole else f" on {', '.join(sorted(targets))}"))
+    for target, ruled in sorted(ruled_classifications(issues, rulings, locked).items()):
+        outcomes = sorted({outcome for outcome, _ in ruled})
+        if len(outcomes) > 1:
+            excluded.add(target)
+            reasons.append(f"{target}: conflicting ruled classifications ({', '.join(outcomes)})")
+        elif outcomes[0] not in REPRODUCED_OUTCOMES and target in reproduced_ids:
+            excluded.add(target)
+            reasons.append(f"{target} ruled {outcomes[0]} on {ruled[0][1]}")
     if unruled:
         reasons.append(f"{len(unruled)} unruled issue(s)")
     kept = [tid for tid in reproduced_ids if tid not in excluded]
@@ -5828,8 +6100,11 @@ def admitted_coverage(verdict: str, issues: list[dict], rulings: list[dict],
 RUN_AUDIT_VERSION = "1.1"
 # Records written after the review, or that hold its results: the rest of
 # the attempt is the state the reviewer was handed. A run lock is transient.
+# The adjudicated result (gate 1.3.2) is derived from the others, so writing
+# it must not move the reviewed state.
 POST_REVIEW_FILES = frozenset({GATE_FILE, EXECUTION_FILE, REVIEW_FILE, RULINGS_FILE,
-                               AUDIT_FILE, RUN_AUDIT_FILE, f"{RECORDS_DIR}/{LOCK_FILE}"})
+                               AUDIT_FILE, RUN_AUDIT_FILE, ADJUDICATED_FILE,
+                               f"{RECORDS_DIR}/{LOCK_FILE}"})
 ARTEFACT_STATE_RE = re.compile(r'"artefact_state_sha256":\s*"([0-9a-f]{64})"')
 
 
@@ -5974,13 +6249,179 @@ def role_audit(record: dict) -> dict:
             "launch_message": record.get("launch_message")}
 
 
-def review_issues(role: str, payload: dict | None, warnings: list[dict]) -> list[Issue]:
+# adversarial-reviewer v1.4 (review schema 1.1, gate 1.3.2) states each
+# concern with its targets; an earlier reviewer's prose findings keep the
+# single verdict flag, so rulings already made on them still apply.
+REVIEWER_CONCERNS_FROM = (1, 4)
+
+
+def agent_version(payload: dict | None) -> tuple[int, int] | None:
+    """The ``vX.Y`` in a payload's receipted agent version, if any."""
+    text = str(((payload or {}).get("receipts") or {}).get("agent_version") or "")
+    match = re.search(r"\bv(\d+)\.(\d+)\b", text)
+    return (int(match.group(1)), int(match.group(2))) if match else None
+
+
+def evidence_rel(target_dir: Path | None, text: str) -> str:
+    """A concern's evidence path in the form the lane binds files by.
+
+    Attempt-relative and ``$CORPUS_ROOT/`` paths are kept. An absolute (or
+    ``~``) path inside the attempt or the corpus store is rewritten to that
+    form, so a reviewer quoting the prompt's absolute paper path binds the
+    same file. Anything else is returned unchanged and resolves to nothing.
+    """
+    if text.startswith(CORPUS_PREFIX) or not text.startswith(("/", "~")):
+        return text
+    path = Path(text).expanduser().resolve()
+    if target_dir is not None and target_dir.resolve() in path.parents:
+        return path.relative_to(target_dir.resolve()).as_posix()
+    if corpus_root() in path.parents:
+        return CORPUS_PREFIX + path.relative_to(corpus_root()).as_posix()
+    return text
+
+
+def concern_defects(concern: dict, flagged: set[str], known: set[str] | None,
+                    target_dir: Path | None) -> list[str]:
+    """What is malformed in one concern a reviewer stated (gate 1.3.2).
+
+    A concern must sit under a dimension the review marks CONCERN; be
+    scoped to ``targets`` (at least one, each locked) or to ``paper`` (no
+    targets); and cite evidence, each item a file in the attempt or the
+    corpus store, so its binding means something.
+
+    Args:
+        concern: The concern, as the payload states it.
+        flagged: The dimensions the review marks CONCERN.
+        known: The locked target ids, or None when the plan is unreadable
+            (admission then fails on the plan itself).
+        target_dir: The attempt directory, to resolve evidence paths.
+
+    Returns:
+        Readable defects; empty when the concern is well formed.
+    """
+    defects: list[str] = []
+    if not concern.get("concern_id"):
+        defects.append("it has no concern_id")
+    if concern.get("dimension") not in flagged:
+        defects.append(f"it is filed under {concern.get('dimension')!r}, which the review does "
+                       f"not mark CONCERN")
+    scope, targets = concern.get("scope"), [str(t) for t in concern.get("targets") or []]
+    if scope == "paper" and targets:
+        defects.append(f"it is paper-wide but names targets {targets}")
+    elif scope == "targets" and not targets:
+        defects.append("it is scoped to targets but names none")
+    elif scope not in ("targets", "paper"):
+        defects.append(f"its scope is {scope!r}, not 'targets' or 'paper'")
+    if scope == "targets" and known is not None and set(targets) - known:
+        defects.append(f"it names targets not in the locked plan: {sorted(set(targets) - known)}")
+    evidence = [str(p) for p in concern.get("evidence") or []]
+    if not evidence:
+        defects.append("it cites no evidence")
+    for text in evidence:
+        path = (resolve_stored(target_dir, evidence_rel(target_dir, text))
+                if target_dir is not None else None)
+        if target_dir is not None and (path is None or not path.is_file()):
+            defects.append(f"its evidence {text} is not a file in the attempt or the corpus "
+                           f"store")
+    return defects
+
+
+def concern_issues(payload: dict, locked: list[str] | None,
+                   target_dir: Path | None) -> list[Issue]:
+    """One flag per concern a v1.4 reviewer states, and one per defect (gate 1.3.2).
+
+    Each concern becomes ``review-concern:<id>``, scoped to its targets or
+    to the whole paper and fingerprinted with the concern and the sha256 of
+    each evidence file, so a ruling can resolve it against one target and
+    lapses when its evidence changes.
+
+    A reviewer's slip never passes silently and never needs a re-run
+    (Shawn, 2026-10-18). A concern with any defect (``concern_defects``)
+    bears on the whole paper, so while unruled it blocks every target's
+    credit, and its message names the defect; a ruling may still dispose of
+    it target by target. A repeated id gets a numbered subject, so no
+    concern hides behind another's identity. A dimension marked CONCERN
+    with no concern under it, and a v1.4 review with no concerns list, are
+    paper-wide ``review-defect`` flags. A payload with no receipted version
+    is treated as earlier, since the receipt check already fails it.
+    """
+    issues: list[Issue] = []
+    concerns = payload.get("concerns")
+    if concerns is None:
+        version = agent_version(payload)
+        if version is not None and version >= REVIEWER_CONCERNS_FROM:
+            issues.append(Issue.flag(
+                "review-defect", "no-concerns", "the review states no concerns list "
+                "(adversarial-reviewer v1.4 and later give each concern its targets), so its "
+                "findings bear on the whole paper until a human rules them",
+                files={"review": json_digest(payload.get("dimensions"))}))
+        return issues
+    if not isinstance(concerns, list):
+        return [Issue.flag("review-defect", "concerns", "the review's concerns are not a list, "
+                           "so they bear on the whole paper until a human rules them",
+                           files={"concerns": json_digest(concerns)})]
+    dims = payload.get("dimensions") or {}
+    flagged = {k for k in DIMENSION_KEYS if (dims.get(k) or {}).get("verdict") == "CONCERN"}
+    known = set(locked) if locked is not None else None
+    seen: Counter[str] = Counter()
+    covered: set[str] = set()
+    for n, concern in enumerate(concerns):
+        if not isinstance(concern, dict):
+            issues.append(Issue.flag(
+                "review-defect", f"concern-{n}", f"concern {n} is not an object, so it bears "
+                f"on the whole paper until a human rules it",
+                files={"concern": json_digest(concern)}))
+            continue
+        cid = str(concern.get("concern_id") or "") or f"concern-{n}"
+        seen[cid] += 1
+        subject = cid if seen[cid] == 1 else f"{cid}#{seen[cid]}"
+        defects = concern_defects(concern, flagged, known, target_dir)
+        if seen[cid] > 1:
+            defects.append(f"its id {cid} is used by an earlier concern")
+        if concern.get("dimension") in flagged:
+            covered.add(str(concern.get("dimension")))
+        paper = concern.get("scope") == "paper" or bool(defects)
+        targets = [] if paper else [str(t) for t in concern.get("targets") or []]
+        evidence = [evidence_rel(target_dir, str(p)) for p in concern.get("evidence") or []]
+        named = ", ".join(str(t) for t in concern.get("targets") or []) or "the whole paper"
+        issues.append(Issue.flag(
+            "review-concern", subject, f"the reviewer's {concern.get('dimension')} concern "
+            f"{cid} on {named}: {str(concern.get('summary') or '')[:400]}"
+            + (f" [malformed: {'; '.join(defects)}; it bears on the whole paper until ruled, "
+               f"and a ruling may dispose of it per target]" if defects else "")
+            + " (a human resolves it before the result enters study data)", targets=targets,
+            files={"concern": json_digest(concern),
+                   **(file_digests(target_dir, *evidence) if target_dir is not None else {})}))
+    for dimension in sorted(flagged - covered):
+        issues.append(Issue.flag(
+            "review-defect", f"uncovered:{dimension}", f"the review marks {dimension} CONCERN "
+            f"but states no concern under it, so its findings bear on the whole paper until a "
+            f"human rules them", files={"dimension": json_digest(dims.get(dimension))}))
+    return issues
+
+
+def review_issues(role: str, payload: dict | None, warnings: list[dict],
+                  target_dir: Path | None = None,
+                  locked: list[str] | None = None) -> list[Issue]:
     """The questions one agent's result leaves for a human (F8).
 
     The executor's escalations (PAPER_ERROR, CANNOT_COMPARE, other), a
     reviewer's QUALIFIED or CHALLENGED verdict, any escalation without a
     named finding, and each blinding warning become flags, so the human
     queue lists them and admission waits for their rulings.
+
+    Gate 1.3.2: each concern a v1.4 reviewer states is its own flag
+    (``concern_issues``), and the verdict flag then stands for the verdict
+    disposition alone. An escalation naming a target the plan does not lock
+    bears on the whole paper, so it excludes every target until ruled
+    rather than excluding nothing.
+
+    Args:
+        role: ``executor`` or ``reviewer``.
+        payload: The accepted payload.
+        warnings: The role's blinding warnings.
+        target_dir: The attempt directory, to bind concerns' evidence.
+        locked: The locked target ids, to check target references.
     """
     issues: list[Issue] = []
     payload = payload or {}
@@ -5988,25 +6429,36 @@ def review_issues(role: str, payload: dict | None, warnings: list[dict]) -> list
     for item in escalations:
         kind = str(item.get("kind") or "OTHER")
         target = item.get("target_id")
+        unknown = bool(target) and locked is not None and target not in locked
         issues.append(Issue.flag(
             "escalation", f"{role}:{kind}:{target or 'paper'}",
-            f"the {role} escalated {kind}{f' on {target}' if target else ''}: "
-            f"{str(item.get('detail') or '')[:400]} (a human confirms or rejects it)",
-            targets=[target] if target else (), files={"escalation": json_digest(item)}))
+            f"the {role} escalated {kind}{f' on {target}' if target else ''}"
+            + (f" ({target} is not a locked target, so it bears on the whole paper)"
+               if unknown else "")
+            + f": {str(item.get('detail') or '')[:400]} (a human confirms or rejects it)",
+            targets=[target] if target and not unknown else (),
+            files={"escalation": json_digest(item)}))
     if payload.get("status") == "ESCALATE" and not escalations:
         issues.append(Issue.flag(
             "escalation", f"{role}:status", f"the {role} returned ESCALATE: "
             f"{str(payload.get('escalate_reason') or '')[:400]}",
             files={"reason": json_digest(payload.get("escalate_reason"))}))
+    structured = payload.get("concerns") if role == "reviewer" else None
+    if role == "reviewer" and payload.get("status") == "OK":
+        issues += concern_issues(payload, locked, target_dir)
     overall = payload.get("overall")
     if role == "reviewer" and overall in ("QUALIFIED", "CHALLENGED"):
         dims = payload.get("dimensions") or {}
         concerns = [k for k in DIMENSION_KEYS if (dims.get(k) or {}).get("verdict") == "CONCERN"]
         support = (payload.get("verdict_challenge") or {}).get("reviewer_supports_verdict")
+        named = [str(c.get("concern_id")) for c in structured or [] if isinstance(c, dict)]
+        what = (f"concerns {', '.join(named)}, each its own issue; supports the verdict: "
+                f"{support}): a human rules the verdict"
+                if isinstance(structured, list) and structured else
+                f"concerns: {', '.join(concerns) or 'none named'}; supports the verdict: "
+                f"{support}): a human resolves each concern before the result enters study data")
         issues.append(Issue.flag(
-            "review", overall.lower(), f"the adversarial review is {overall} (concerns: "
-            f"{', '.join(concerns) or 'none named'}; supports the verdict: {support}): a "
-            f"human resolves each concern before the result enters study data",
+            "review", overall.lower(), f"the adversarial review is {overall} ({what}",
             files={"review": json_digest({"dimensions": dims, "overall": overall})}))
     for warning in warnings:
         issues.append(Issue.flag(
@@ -6041,10 +6493,13 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
     audits = {role: {**role_audit(record),
                      "payload_sha256": json_digest(payload) if payload is not None else None}
               for role, (record, payload) in roles.items()}
+    # Gate 1.3.2: target references are checked against the locked plan; a
+    # malformed one becomes a paper-wide issue to rule, not a hard failure.
+    locked = locked_targets(target_dir)
     reviewed = sorted(set(reviewed or ()))
     issues: list[Issue] = []
     for role, (_, payload) in sorted(roles.items()):
-        issues += review_issues(role, payload, audits[role]["warnings"])
+        issues += review_issues(role, payload, audits[role]["warnings"], target_dir, locked)
     for text in sorted({a["launch_message"] for a in audits.values() if a["launch_message"]}):
         if not NEUTRAL_LAUNCH_RE.fullmatch(text):
             issues.append(Issue.flag(
@@ -6104,6 +6559,18 @@ def admission(target_dir: Path, bound: dict | None = None) -> dict:
                 reasons.append(f"credited run {run_id} is {state}")
     if report.get("verdict") != "pass":
         reasons.append(f"the gate verdict is {report.get('verdict')!r}")
+    # Gate 1.3.2: every issue's targets are checked against the locked plan,
+    # whichever record raised it, because a target the plan does not lock
+    # would exclude nothing and so pass silently.
+    locked = locked_targets(target_dir)
+    if locked is None:
+        reasons.append(f"no readable approved plan ({PLAN_FILE}), so issue targets cannot be "
+                       f"checked")
+    else:
+        for issue in attempt_issues(target_dir, report).values():
+            unknown = unknown_targets(issue, locked)
+            if unknown:
+                reasons.append(f"{issue['id']} names targets not in the locked plan: {unknown}")
     rulings = load_rulings(target_dir)
     unruled = [i["id"] for i in report.get("issues") or [] if ruling_for(i, rulings) is None]
     if unruled:
@@ -6341,33 +6808,27 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
     admitted = None
     obligations_all = list(integrity["review_obligations"]) + method_obligations
     issues = issue_records(flags + obligations_all)
-    if coverage is not None:
-        edited: set[str] = set()
+    manifest_file = code_manifest or target_dir / CODE_MANIFEST_FILE
+    try:
+        manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
         manifest = {}
-        manifest_file = code_manifest or target_dir / CODE_MANIFEST_FILE
-        try:
-            manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            manifest = {}
-        for item in manifest.get("executed") or []:
-            edit = item.get("declared_edit") if isinstance(item, dict) else None
-            if edit:
-                edited |= set(edit.get("affected_targets") or list(locked))
+    # Gate 1.3.2: a target reference the plan does not lock would exclude
+    # nothing, so it fails rather than passing silently.
+    for issue in issues:
+        unknown = unknown_targets(issue, locked)
+        if unknown:
+            errors.append(f"{issue['id']} names targets not in the locked plan: {unknown}")
+    for item in manifest.get("executed") or []:
+        edit = item.get("declared_edit") if isinstance(item, dict) else None
+        unknown = sorted(set((edit or {}).get("affected_targets") or []) - set(locked))
+        if unknown:
+            errors.append(f"the declared edit to {item.get('path')} names targets not in the "
+                          f"locked plan: {unknown}")
+    if coverage is not None:
         reproduced_ids = [t.get("target_id") for t in records if t.get("target_id") in locked
-                          and t.get("testable") is not False
-                          and t.get("outcome") in REPRODUCED_OUTCOMES]
-        structural = {}
-        account = integrity.get("account")
-        if (account is not None and manifest.get("originals") and manifest.get("executed")
-                and not account["originals_loaded"]):
-            # The run records show what ran (spec §6): a manifest listing
-            # executed copies is not enough when no credited run loaded one.
-            structural["no credited run loaded an authors' file"] = set(locked)
-        if manifest.get("originals") and not manifest.get("executed"):
-            structural["no authors' file was executed"] = set(locked)
-        elif edited:
-            structural["resting on a declared edit, until the class (ii) wrapper-only "
-                       "re-run"] = edited
+                          and reproduced_record(t)]
+        structural = structural_exclusions(manifest, integrity.get("account"), locked)
         admitted = admitted_coverage("fail" if errors else "pass", issues,
                                      load_rulings(target_dir), locked, reproduced_ids,
                                      structural)
@@ -6561,6 +7022,8 @@ def issue_statuses(config: dict) -> list[dict]:
         for issue in attempt_issues(target_dir, report).values():
             ruling = ruling_for(issue, rulings)
             statuses.append({"slug": paper["slug"], "id": issue["id"], "kind": issue["kind"],
+                             "scope": issue_scope(issue),
+                             "targets": list(issue.get("targets") or []),
                              "status": "ruled" if ruling else "unruled",
                              "decision": ruling.get("decision") if ruling else None,
                              "message": issue.get("message")})
@@ -6667,6 +7130,251 @@ def cmd_persist_results(args: argparse.Namespace) -> int:
     for problem in problems:
         print(f"SKIPPED: {problem}", file=sys.stderr)
     return 1 if problems else 0
+
+
+# ---------------------------------------------------------------------------
+# Adjudicated result (gate 1.3.2)
+# ---------------------------------------------------------------------------
+
+def read_record(target_dir: Path, name: str) -> dict | None:
+    """One of the attempt's JSON records, or None when absent or unreadable."""
+    try:
+        doc = json.loads((target_dir / name).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return doc if isinstance(doc, dict) else None
+
+
+def ruling_ref(issue: dict, ruling: dict) -> dict:
+    """How the adjudicated result cites a ruling: its issue and who made it when."""
+    return {"issue_id": issue["id"], "fingerprint": issue["fingerprint"],
+            "approver": ruling.get("approver"), "ruled_at": ruling.get("ruled_at")}
+
+
+def adjudicate(target_dir: Path) -> dict:
+    """The attempt's adjudicated result, derived and final (gate 1.3.2).
+
+    The comparison stays as reviewed (strict binding), so what a human ruled
+    lives in the rulings. This derives, from the reviewed records and the
+    rulings that apply, the result study reporting reads:
+
+    - per locked target: its raw outcome, its ruled outcome and the ruling
+      that set it, its credit (``credited``, ``excluded``, ``uplift``, or
+      ``not-reproduced``), the reasons, and the issues that bear on it
+      alone or that a ruling disposed of for it;
+    - the ruled coverage over every locked target, and the verdict
+      disposition (the executor's verdict, or the one ruled on the review's
+      verdict flag);
+    - as history, the raw coverage and the admitted coverage the gate
+      report recorded when it was checked (before rulings, for a run that
+      followed the post-run order);
+    - the sha256 of every record it was derived from.
+
+    It is final only when admission passes for the persisted results, the
+    plan, gate report, and comparison agree, every ruling's target-scoped
+    parts are valid, and no target has conflicting ruled classifications or
+    the verdict conflicting rulings. Otherwise it raises (Shawn,
+    2026-10-18: written only when final). Timestamps are left out, so the
+    same records always derive the same result.
+
+    Raises:
+        LaneError: listing every reason the result is not final.
+    """
+    reasons: list[str] = []
+    plan_path = target_dir / PLAN_FILE
+    locked = locked_targets(target_dir)
+    report = read_record(target_dir, GATE_FILE)
+    comparison = read_record(target_dir, COMPARISON_FILE)
+    execution = read_record(target_dir, EXECUTION_FILE)
+    review = read_record(target_dir, REVIEW_FILE)
+    if locked is None or report is None or comparison is None or execution is None \
+            or review is None:
+        absent = [name for name, doc in ((PLAN_FILE, locked), (GATE_FILE, report),
+                                         (str(COMPARISON_FILE), comparison),
+                                         (EXECUTION_FILE, execution), (REVIEW_FILE, review))
+                  if doc is None]
+        raise LaneError(f"the attempt cannot be adjudicated: no readable {', '.join(absent)} "
+                        f"(persist-results writes {EXECUTION_FILE} and {REVIEW_FILE})")
+    plan_digest = sha256_file(plan_path)
+    if report.get("plan_sha256") != plan_digest:
+        reasons.append("the gate report was not made under this plan")
+    if comparison.get("plan_sha256") != plan_digest:
+        reasons.append("the comparison was not made under this plan")
+    # The results being adjudicated are the persisted ones; admission is
+    # assessed afresh for exactly them (D-Astra-3's binding).
+    bound = {"run_id": execution.get("run_id"), "workflow_run": execution.get("workflow_run"),
+             "roles": {role: {"agent_id": doc.get("agent_id"),
+                              "payload_sha256": json_digest(doc.get("payload"))}
+                       for role, doc in (("executor", execution), ("reviewer", review))}}
+    for key in ("run_id", "workflow_run"):
+        if review.get(key) != execution.get(key):
+            reasons.append(f"the persisted executor and reviewer results differ in {key}")
+    # Spec §6: a record persisted ineligible becomes eligible only through a
+    # fresh persist-results after the rulings, never downstream of it.
+    for name, doc in ((EXECUTION_FILE, execution), (REVIEW_FILE, review)):
+        if not (doc.get("admission") or {}).get("eligible"):
+            reasons.append(f"{name} was persisted ineligible: run persist-results --force after "
+                           f"the rulings")
+    verdict_check = admission(target_dir, bound)
+    reasons += [f"not admitted: {r}" for r in verdict_check["reasons"]]
+    issues = list(attempt_issues(target_dir, report).values())
+    rulings = load_rulings(target_dir)
+    records = target_records(target_dir)
+    applying: dict[str, dict] = {}
+    for issue in issues:
+        ruling = ruling_for(issue, rulings)
+        if ruling is None:
+            reasons.append(f"{issue['id']} is unruled")
+            continue
+        applying[issue["id"]] = ruling
+        reasons += scoped_ruling_problems(ruling, issue, locked, records)
+    classified = ruled_classifications(issues, rulings, locked)
+    for target, ruled in sorted(classified.items()):
+        if len({outcome for outcome, _ in ruled}) > 1:
+            reasons.append(f"{target} has conflicting ruled classifications: "
+                           + "; ".join(f"{o} on {i}" for o, i in ruled))
+    verdict_rulings = [(issue, applying[issue["id"]]) for issue in issues
+                       if issue["id"] in applying and issue.get("code") == "review"
+                       and applying[issue["id"]].get("verdict") is not None]
+    if len({r["verdict"] for _, r in verdict_rulings}) > 1:
+        reasons.append("the review's verdict flags were ruled to different verdicts: "
+                       + "; ".join(f"{r['verdict']} on {i['id']}" for i, r in verdict_rulings))
+    executor_verdict = comparison.get("verdict")
+    payload_verdict = (execution.get("payload") or {}).get("verdict")
+    if payload_verdict is not None and payload_verdict != executor_verdict:
+        reasons.append(f"the executor reported {payload_verdict!r} but the comparison records "
+                       f"{executor_verdict!r}")
+    if reasons:
+        raise LaneError("the attempt's result is not final: " + "; ".join(reasons))
+
+    manifest = read_record(target_dir, CODE_MANIFEST_FILE) or {}
+    account = (report.get("code_integrity") or {}).get("account")
+    structural = structural_exclusions(manifest, account, locked)
+    by_id = {issue["id"]: issue for issue in issues}
+    paper_issues = [{**ruling_ref(issue, applying[issue["id"]]), "kind": issue["kind"],
+                     "decision": applying[issue["id"]].get("decision")}
+                    for issue in issues if issue_scope(issue) == "paper"]
+    rows = []
+    for target in locked:
+        record = records.get(target) or {}
+        raw = record.get("outcome")
+        ruled = classified.get(target)
+        ruled_outcome = ruled[0][0] if ruled else raw
+        reproduced = reproduced_record({**record, "outcome": ruled_outcome})
+        why = [reason for reason, targets in structural.items() if target in targets]
+        bearing: list[dict] = []
+        negative: set[str] = set()
+        for issue in issues:
+            if target not in scoped_targets(issue, locked):
+                continue
+            ruling = applying[issue["id"]]
+            decision = target_decision(ruling, target)
+            # A paper-wide issue is listed once, under paper_issues, unless
+            # its ruling singles this target out.
+            singled = target in (ruling.get("targets") or {}) \
+                or target in (ruling.get("classification") or {})
+            if issue_scope(issue) == "targets" or singled:
+                bearing.append({**ruling_ref(issue, ruling), "kind": issue["kind"],
+                                "scope": issue_scope(issue), "decision": decision})
+            if decision in NEGATIVE_DECISIONS:
+                negative.add(decision)
+                why.append(f"{issue['id']} ruled {decision}"
+                           + (f" on {target}" if issue_scope(issue) == "paper" else ""))
+        if not reproduced:
+            why.append(f"outcome {ruled_outcome}"
+                       + (" (untestable)" if record.get("testable") is False else "")
+                       + " is not a reproduced outcome")
+        if any(target in targets for targets in structural.values()) or "excluded" in negative:
+            credit = "excluded"
+        elif "fail-and-uplift" in negative:
+            credit = "uplift"
+        else:
+            credit = "credited" if reproduced else "not-reproduced"
+        rows.append({"target_id": target, "raw_outcome": raw,
+                     "testable": record.get("testable") is not False,
+                     "ruled_outcome": ruled_outcome,
+                     "classification_set_by": (ruling_ref(by_id[ruled[0][1]],
+                                                          applying[ruled[0][1]])
+                                               if ruled else None),
+                     "credit": credit, "credited": credit == "credited",
+                     "reasons": why, "issues": bearing})
+    credited = [r["target_id"] for r in rows if r["credited"]]
+    set_by = verdict_rulings[0] if verdict_rulings else None
+    challenge = (review.get("payload") or {}).get("verdict_challenge") or {}
+    return {
+        "adjudication_version": ADJUDICATION_VERSION, "gate_version": report.get("gate_version"),
+        "attempt_dir": display_path(target_dir),
+        "run_id": execution.get("run_id"), "workflow_run": execution.get("workflow_run"),
+        "coverage": {"targets_enumerated": len(locked), "targets_credited": len(credited),
+                     "coverage_fraction": round(len(credited) / len(locked), 4) if locked
+                     else 0.0,
+                     "credited_targets": credited,
+                     **{f"{kind.replace('-', '_')}_targets":
+                        [r["target_id"] for r in rows if r["credit"] == kind]
+                        for kind in ("excluded", "uplift", "not-reproduced")}},
+        "verdict": {"executor": executor_verdict,
+                    "review_overall": (review.get("payload") or {}).get("overall"),
+                    "reviewer_supports_verdict": challenge.get("reviewer_supports_verdict"),
+                    "ruled": set_by[1]["verdict"] if set_by else executor_verdict,
+                    "set_by": ruling_ref(*set_by) if set_by else None},
+        "targets": rows, "paper_issues": paper_issues,
+        "history": {"raw_coverage": report.get("coverage"),
+                    "gate_coverage_admitted": report.get("coverage_admitted"),
+                    "gate_checked_at": report.get("checked_at")},
+        "bindings": {
+            "plan_sha256": plan_digest,
+            **{f"{key}_sha256": (sha256_file(target_dir / name)
+                                 if (target_dir / name).is_file() else None)
+               for key, name in (("comparison", COMPARISON_FILE), ("gate_report", GATE_FILE),
+                                 ("rulings", RULINGS_FILE), ("transcript_audit", AUDIT_FILE),
+                                 ("run_audit", RUN_AUDIT_FILE),
+                                 ("code_manifest", CODE_MANIFEST_FILE))},
+            "executor_payload_sha256": bound["roles"]["executor"]["payload_sha256"],
+            "reviewer_payload_sha256": bound["roles"]["reviewer"]["payload_sha256"],
+            "artefact_state_sha256": artefact_state(target_dir)}}
+
+
+def verify_adjudicated(target_dir: Path) -> dict:
+    """The attempt's adjudicated result, if it still matches its records.
+
+    Study reporting and export read an attempt's result through this and
+    nothing earlier: it re-derives the result and refuses one that is
+    missing, no longer final, or differs from the stored record in any
+    field but the time it was written, so a ruling added or a record
+    changed after adjudication cannot be read past.
+
+    Raises:
+        LaneError: when there is no current adjudicated result.
+    """
+    stored = read_record(target_dir, ADJUDICATED_FILE)
+    if stored is None:
+        raise LaneError(f"no adjudicated result ({ADJUDICATED_FILE}): run adjudicate")
+    fresh = adjudicate(target_dir)
+    kept = {k: v for k, v in stored.items() if k != "adjudicated_at"}
+    if kept != fresh:
+        stale = sorted(k for k in set(kept) | set(fresh) if kept.get(k) != fresh.get(k))
+        raise LaneError(f"{ADJUDICATED_FILE} is stale (it differs in {', '.join(stale)}): run "
+                        f"adjudicate again")
+    return stored
+
+
+def cmd_adjudicate(args: argparse.Namespace) -> int:
+    """Write the attempt's adjudicated result, or check the stored one."""
+    target_dir = args.attempt_dir.expanduser().resolve()
+    if args.check:
+        stored = verify_adjudicated(target_dir)
+        print(f"{ADJUDICATED_FILE} is current: {stored['coverage']['targets_credited']}/"
+              f"{stored['coverage']['targets_enumerated']} credited; verdict "
+              f"{stored['verdict']['ruled']}")
+        return 0
+    result = adjudicate(target_dir)
+    write_json(target_dir / ADJUDICATED_FILE, {**result, "adjudicated_at": now_utc()})
+    coverage = result["coverage"]
+    print(f"wrote {display_path(target_dir / ADJUDICATED_FILE)}: "
+          f"{coverage['targets_credited']}/{coverage['targets_enumerated']} credited; "
+          f"excluded {coverage['excluded_targets'] or 'none'}; uplift "
+          f"{coverage['uplift_targets'] or 'none'}; verdict {result['verdict']['ruled']}")
+    return 0
 
 
 # ---------------------------------------------------------------------------
@@ -7935,6 +8643,13 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--record-unruled", action="store_true",
                    help="persist an ineligible gate 1.3 attempt, marked eligible: false")
     p.set_defaults(func=cmd_persist_results)
+
+    p = sub.add_parser("adjudicate",
+                       help="derive the attempt's adjudicated result, which study data reads")
+    p.add_argument("attempt_dir", type=Path)
+    p.add_argument("--check", action="store_true",
+                   help="re-derive the stored result and fail if it is stale or not final")
+    p.set_defaults(func=cmd_adjudicate)
 
     p = sub.add_parser("audit-run", help="receipts, blinding, cost, wall-clock")
     p.add_argument("--config", type=Path, required=True)
