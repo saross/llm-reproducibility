@@ -1625,3 +1625,55 @@ with the formal rule change to follow.
 main checkout must stay at the launch commit during a run, because agents,
 hooks, and the lane load from it. An approval note reaches no agent; only
 the locked plan, the configuration's rulings, and the run notes do.
+
+## Session: 2026-10-13 → 2026-10-18 — Pilot stage 2 run, ruled, and persisted; PR #12 merged; gate 1.3.1 closed and 1.3.2 scoped
+
+**Session:** 8e28871d-5f38-4e2a-96ef-a08f0f12af9e (Opus 5.5).
+
+**Launch mechanism and pre-run review:**
+
+- Designed the launch word rule at Shawn's request (a message of approval
+  words only, checked before launch; the run audit flags anything else).
+  Shawn chose to launch stage 2 on a plain go-ahead with one ruling, and
+  to build the rule as a PR after the pilot.
+- Pre-run review (`pre-run-review` skill): sections 2026-10-13; Shawn's
+  explain-back and decisions 2026-10-17. Hardenings H1–H7 in
+  `studies/open-science-compliance/outputs/validation/gate-1-3-1-pilot-rerun/pre-run-review-stage-2.md`;
+  general rules in `reproduction-system/workflows/README.md` (`6b18505`).
+  Shawn added cost and time overruns as stop conditions, set per run.
+- Shawn reported sapphire fixed and asked to move runs there. Attempt 4
+  stayed on amd-tower, as its locked plan says; `run-container`
+  bind-mounts local paths (`container_argv`).
+
+**Stage 2 and the post-run order:**
+
+- Launched on Shawn's "go" from `6b18505`: `wf_4fd7a886-ada`, 42 min,
+  $14.02 API-equivalent (executor $10.7056, reviewer $3.3045, Haiku
+  $0.0092). Verdict SUCCESSFUL, raw coverage 14/18, review QUALIFIED.
+- Authoritative `check-attempt` pass (two flags). PR #12 merged as
+  `a29f16a` after Astra's approval of `154b637`; 703 tests pass.
+  `audit-run` clean. Human queue of 17 issues, all ruled by Shawn: T05
+  PAPER_ERROR confirmed, T03 recorded as PAPER_ERROR, T17 not creditable
+  under amendment 3 §7(d), so study coverage 13/18. `persist-results`
+  eligible. Commits `2f9beff`, `67dd4af`, `3567041`.
+- Compared with attempt-03 (H5): the same eight Table 1 cells and two
+  Fig. 4 boxes; coverage differences come from plan scope.
+
+**Closure and the next round:**
+
+- Gate 1.3.1 closed for the findings it addressed, version-scoped, and
+  gate 1.3.2 opened (`dfaa1a5`). Outcome mailed to Fable (bounded ask) and
+  Astra (`702417b`); both concurred. Their acceptance criteria were folded
+  into the design document (`7a506aa`): target-scoped concerns and an
+  adjudicated result, a reviewer method row per target, lodged rules quoted
+  whole with their application checked, and a live check through the
+  review-only mode on attempt 04. The operational fixes are separate PRs.
+- The watcher's time check measured file change times and could not have
+  fired; disclosed and recorded.
+- Scratchpad: Fable rationed (credit limited); the anti-tic gate scoped to
+  prose read by people other than Shawn.
+
+**Contextual assumptions:** Max plan, so costs are API-equivalent. Fable
+credit is limited and Astra's is not. From 10-17 Shawn worked over remote
+control. A Fable session reviewed in the same checkout and committed
+`eb8b356` during this session's work.

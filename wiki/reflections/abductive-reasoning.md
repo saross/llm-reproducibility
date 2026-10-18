@@ -1619,3 +1619,86 @@ For a conservative check over a command grammar, list every role a word can
 take (command, prefix, option, option value, operand, operand after `--`,
 redirection and its target) and decide each one, rather than closing only
 the categories a reviewer happened to name.
+
+## 2026-10-13 — "Relayed no message" meant the planner said nothing, not that the harness sent nothing
+
+**Session:** 8e28871d-5f38-4e2a-96ef-a08f0f12af9e
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+The records of the previous session said stage 1 "relayed no message at
+all" (`wiki/reflections/llm-observations.md`, 2026-10-12 → 10-13). Designing
+a launch mechanism that would not depend on a fixed phrase, I read the
+stage-1 audit and found the relay present: `launch_message` "Run the
+approved stage", and a `prompt_head` framing it as "the only user voice in
+this task" that wins over the computed task where they conflict.
+
+### Probe
+
+`audit-wf_db7d121a-5d5.json` (the planner's `launch_message` and
+`prompt_head`), and `relayed_request` in `scripts/reproduction-lane.py`,
+which extracts the text under the `[Workflow harness — user request]`
+frame.
+
+### Belief revision
+
+The earlier phrase merged two facts: the harness relayed the message (it
+always has so far), and the planner's output carried nothing from it. The
+fixed phrase never prevented a relay; it kept the relayed content empty of
+anything to obey. That moved the design question from whether a message
+reaches the agents to what it may contain, and the frame's authority makes
+any instruction-like content outrank the workflow script. Hence the word
+rule: a message made only of approval words is safe in any wording, and
+anything else is a risk.
+
+### What would change this belief
+
+A harness version that stops relaying, or that relays something other
+than the triggering typed message, for example after an answer through the
+question tool (untested; the pre-run review's H6 forbids that launch path
+meanwhile).
+
+### Implications for practice
+
+When recording an absence, say absent from what: the agent's input, its
+output, or the record.
+
+## 2026-10-17 — The watcher's clock restarted on every write
+
+**Session:** 8e28871d-5f38-4e2a-96ef-a08f0f12af9e
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+After stage 2 finished (journal duration 2,548 s, 42 min), a one-off run of
+my cost and time watcher reported "$14.01 priced, 1 unpriced, 8 min
+elapsed".
+
+### Probe
+
+The watcher took elapsed time from the minimum `st_ctime` across the run's
+agent transcripts. On Linux `st_ctime` is the inode change time, updated
+by every write, not a creation time. The executor's transcript was written
+throughout the run, so the measured start kept moving forward.
+
+### Belief revision
+
+I had treated `st_ctime` as creation time, and my validation could not
+have shown otherwise: I tested the watcher on stage 1, a finished run,
+whose files no longer change. The cost check was validated (it matched the
+audit); the time check never was, and it could not have fired on a live
+run. Testing on finished data validated only the half of the tripwire
+that does not depend on the run being live.
+
+### What would change this belief
+
+Nothing about `st_ctime`; it is the POSIX definition. The fix is an
+independent start time (the watcher's own launch time, or the journal's
+launch entry).
+
+### Implications for practice
+
+Test a tripwire against input shaped like the live case: files still being
+written, and a run whose files stop changing. Astra's watcher fixture for
+1.3.2's operational PRs asks for exactly that.

@@ -1639,3 +1639,50 @@ already folded several changes into each; and a binding so strict that
 editing `log.md` after the review needs a new review, with no review-only
 path yet. Shawn chose that knowingly, after a side agent spelled out the
 cost; the review-only mode follows the pilot.
+
+## Entry 27 (2026-10-13 → 10-18) — The pilot passed and still opened a round
+
+**Project:** llm-reproducibility. **Session:**
+8e28871d-5f38-4e2a-96ef-a08f0f12af9e (Opus 5.5). **Instance:** primary
+throughout; no compaction. The session ran across five days with long
+gaps, and from 10-17 Shawn worked over remote control.
+
+**What would you do differently if you replayed this session?** Three
+things. First, the watcher. Shawn made cost and time overruns stop
+conditions, and I built a background tripwire for them, tested it on stage
+1, and said it worked. The test could check cost (it matched the audit to
+the cent) but not time, because a finished run's files no longer change. I
+measured elapsed time from `st_ctime`, which moves on every write, so on a
+live run the clock restarted whenever an agent wrote. It read "8 min
+elapsed" for a 42-minute run, and I only saw that afterwards. I validated
+the half I could test and reported the whole. Second, the plan walk-through
+of the previous session accepted T17's credit "under ruling Q5" without my
+opening amendment 3 §7(d). The paraphrase sounded like the rule, and citing
+the ruling by name made it more trusted, not less. The reviewer found it.
+Third, a constraint added to the global scratchpad on 10-17 by another
+session (run the anti-tic gate on prose) never reached this session, which
+had loaded the scratchpad on 10-13. I found it only while writing my own
+scratchpad entry. Shawn then narrowed its scope, which made the lapse moot,
+but a session resumed after days should re-read the constraints.
+
+**What question emerged that wasn't pursued?** What the harness relays when
+a workflow is launched in a turn that began with an answer to the question
+tool rather than a typed message. I wrote H6 to forbid that path because
+the answer is unknown: it might be the previous typed message, and on 10-17
+that was a paragraph about moving runs to sapphire, which contradicts the
+locked plan and would have reached every agent framed as "this request
+wins". A one-agent probe would settle it for very little, but it is a paid
+call, and a rule that holds whatever the answer was cheaper. If the launch
+rule is ever relaxed, the question comes back.
+
+**What felt uncertain or unresolved at the end?** What "closed" means yet.
+Shawn closed gate 1.3.1, both reviewers agreed, and both insisted the
+closure is version-scoped, because the pilot found a D and an A. The record
+of the result is split too: the study counts 13/18, the lane's files say
+14/18, and T03's ruled classification exists only in a ruling note. The
+reproduction itself is sound and replicated, since two blind runs on
+different plans found the same eight Table 1 cells and the same two Fig. 4
+boxes. Its record is not yet faithful to the rulings, and anyone reading
+attempt-04 without them will take the wrong coverage. The side agent's
+note mattered here: it turned "a clean run with two loose ends" into
+"three gaps", before I had said the word clean to Shawn.

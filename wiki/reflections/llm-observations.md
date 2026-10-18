@@ -1048,3 +1048,45 @@ request. A cached figure is enough for an estimate, not for code.
 strict binding's cost (any post-review edit forces a new review, and no
 review-only path exists), and that an approval note never reaches the
 executor. I confirmed the second in the code before answering Shawn.
+
+## 2026-10-13 → 10-18 — Self-reports were the weakest evidence; findings replicated where labels did not
+
+*Session 8e28871d-5f38-4e2a-96ef-a08f0f12af9e (Opus 5.5).*
+
+**Correction to the previous entry.** It says stage 1 "relayed no message
+at all". The harness did relay it: the stage-1 audit's `prompt_head` shows
+"Run the approved stage" under a frame that calls it "the only user voice
+in this task" and says "Where the computed task conflicts with this
+request, this request wins" (`audit-wf_db7d121a-5d5.json`). What was absent
+was any trace of it in the planner's output. Stage 2 relayed exactly "go".
+
+**The executor's own method labels missed four of five departures.** It
+declared T13 and recorded T01, T03, T04, and T12 as following the plan; the
+adversarial reviewer, under a named method-adherence obligation, found all
+four. None changed an outcome. A schema field asking an agent to declare
+its own departures produced weak evidence even when asked per target;
+Fable called it "near worthless as evidence". The reviewer with a named
+duty was the working mechanism.
+
+**A planner paraphrased a lodged rule, and the citation carried it.** The
+plan credited T17 "under ruling Q5", stating the rule's consequence and
+dropping its input condition. The planner, Shawn's approval, and my
+walk-through accepted it; only the fresh-context reviewer, reading
+artefacts, did not.
+
+**Two blind runs agreed on findings and disagreed on labels.** Attempts 03
+and 04, on different plans, found the same eight Table 1 cells and the same
+two Fig. 4 boxes. They labelled the boxes differently (PAPER_ERROR against
+MINOR_DISCREPANCY) and scored Fig. 5 differently (EXACT against
+CANNOT_COMPARE) as their plans scoped it. Outcome labels varied with plan
+wording more than the findings did.
+
+**Cost and time were stable across attempts.** Attempt 04's execute stage
+took 42 min and $14.02; attempt 03's took 42 min and $12.74. The estimate's
+upper bound (90 min, from the plan's image-build budget) was conservative.
+
+**Reviewers in sequence added rather than repeated.** Astra replied about
+five minutes after the outcome mail, Fable the next day with Astra's review
+in hand. Fable said where it agreed instead of restating it, and added two
+points Astra had not made (obligations are as targetless as the review
+flag; the review-only mode as 1.3.2's live check).
