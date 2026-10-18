@@ -192,8 +192,8 @@ plan's exclusions.
   and R2 list the verbatim clauses on which they deny credit. Generated
   from the sources, never retyped, and tested against them and, for the
   amendment's rules, against the lodged text (`osf-amendment-3.txt`), so it
-  amends nothing. The condition lists are a reading, for Shawn's approval
-  in the PR.
+  amends nothing. The condition lists are a reading; Shawn approved them on
+  2026-10-19 ("these lists reflect my understanding").
 - **Plans** (plan schema 1.1, reproduction-planner v1.4, plan workflow
   v1.1): `rules_applied` quotes each rule relied on whole and, per target,
   states every listed condition (`yes`, `no`, `unknown`,
