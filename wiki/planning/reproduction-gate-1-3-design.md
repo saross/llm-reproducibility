@@ -181,6 +181,40 @@ duty.
   `method-disagreement:T13`. `MethodRowTests` covers every executor claim
   against every row, and missing, repeated, malformed, and unknown rows.
 
+**Criterion 3 as built (2026-10-18, same branch).** Shawn's rulings of
+2026-10-18: the lane reads the rules from a registry, and the gate enforces a
+plan's exclusions.
+
+- **The registry** (`reproduction-system/lodged-rules.yaml`, version 1.0):
+  amendment 3's §7(a), §7(c), the §7(d) corollary, mechanics in an authors'
+  file, Q5, and Q6, as the pushed instruments carry them, and the
+  registrant rulings R1 to R4. Each has its text, source, and version; Q5
+  and R2 list the verbatim clauses on which they deny credit. Generated
+  from the sources, never retyped, and tested against them and, for the
+  amendment's rules, against the lodged text (`osf-amendment-3.txt`), so it
+  amends nothing. The condition lists are a reading, for Shawn's approval
+  in the PR.
+- **Plans** (plan schema 1.1, reproduction-planner v1.4, plan workflow
+  v1.1): `rules_applied` quotes each rule relied on whole and, per target,
+  states every listed condition (`yes`, `no`, `unknown`,
+  `not-applicable`, with evidence) and the credit that follows. The
+  workflow hands the planner the registry; `build-plan-args` refuses a run
+  configuration whose rulings differ from it.
+- **Checks** (`rule_problems`, at `persist-plans` and again at `approve`,
+  which records the registry's sha256): the quotation equals the rule; every
+  condition is stated once with evidence; a condition that denies credit
+  makes the target not creditable; a target whose text cites a rule applies
+  it. The plan view gives a "Lodged rules applied" table for the approver,
+  whose job is whether each stated condition is true.
+- **Enforcement**: a target planned not creditable is a structural
+  exclusion in the gate and the adjudicated result, whatever its outcome
+  and rulings.
+- **Fixtures.** Attempt 04's approved plan fails: T17 cites Q5 without
+  applying it (as do T01, T03, T04 with R1 and T14, T15 with R4). With Q5
+  quoted whole and "inputs from the authors' code: no", it passes and T17
+  is not creditable; the same quotation with T17 marked creditable fails
+  (the wrong branch); a paraphrase or a fragment fails.
+
 **Operational follow-ups, as separate PRs outside the gate's review**
 (Fable's placement; Astra's test requirements kept):
 

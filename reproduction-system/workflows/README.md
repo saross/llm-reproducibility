@@ -83,6 +83,16 @@ configuration (for the shakedown:
    The approval binds to the plan file's sha256. An approved plan is locked:
    persist-plans and approve both refuse to replace it, because the target
    list is now the coverage denominator.
+   Since gate 1.3.2 the plan quotes each lodged rule it relies on whole
+   (`reproduction-system/lodged-rules.yaml`), and persist-plans and approve
+   refuse a paraphrase, a missing condition, a target citing a rule it does
+   not apply, and a condition that denies credit on a target planned
+   creditable. What they cannot check is whether each stated condition is
+   true of the target's inputs: that is the approval's job. Read the plan's
+   "Lodged rules applied" table against each target's method (for example,
+   are T17's inputs really the authors' code's outputs?). A target planned
+   not creditable is never credited by the gate. Approval never amends a
+   rule; a rule that is wrong is changed where it was lodged.
 7. **Commit** the plans and approvals.
 8. **Execute args** (the executor builds its image with `reproduction-lane.py
    build-image`, which keeps the build log under `lane-records/build-NN/`):
