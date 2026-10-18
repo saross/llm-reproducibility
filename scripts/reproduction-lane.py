@@ -7174,8 +7174,9 @@ def adjudicate(target_dir: Path) -> dict:
     plan, gate report, and comparison agree, every ruling's target-scoped
     parts are valid, and no target has conflicting ruled classifications or
     the verdict conflicting rulings. Otherwise it raises (Shawn,
-    2026-10-18: written only when final). Timestamps are left out, so the
-    same records always derive the same result.
+    2026-10-18: written only when final). The time and the attempt's path
+    are left out (``cmd_adjudicate`` writes them as ``WRITTEN_FIELDS``), so
+    the same records always derive the same result, wherever they sit.
 
     Raises:
         LaneError: listing every reason the result is not final.
@@ -7303,7 +7304,6 @@ def adjudicate(target_dir: Path) -> dict:
     challenge = (review.get("payload") or {}).get("verdict_challenge") or {}
     return {
         "adjudication_version": ADJUDICATION_VERSION, "gate_version": report.get("gate_version"),
-        "attempt_dir": display_path(target_dir),
         "run_id": execution.get("run_id"), "workflow_run": execution.get("workflow_run"),
         "coverage": {"targets_enumerated": len(locked), "targets_credited": len(credited),
                      "coverage_fraction": round(len(credited) / len(locked), 4) if locked
@@ -7334,14 +7334,18 @@ def adjudicate(target_dir: Path) -> dict:
             "artefact_state_sha256": artefact_state(target_dir)}}
 
 
+# Written beside the derived result, and not compared when it is checked.
+WRITTEN_FIELDS = ("adjudicated_at", "attempt_dir")
+
+
 def verify_adjudicated(target_dir: Path) -> dict:
     """The attempt's adjudicated result, if it still matches its records.
 
     Study reporting and export read an attempt's result through this and
     nothing earlier: it re-derives the result and refuses one that is
     missing, no longer final, or differs from the stored record in any
-    field but the time it was written, so a ruling added or a record
-    changed after adjudication cannot be read past.
+    field but those written beside it (``WRITTEN_FIELDS``), so a ruling
+    added or a record changed after adjudication cannot be read past.
 
     Raises:
         LaneError: when there is no current adjudicated result.
@@ -7350,7 +7354,7 @@ def verify_adjudicated(target_dir: Path) -> dict:
     if stored is None:
         raise LaneError(f"no adjudicated result ({ADJUDICATED_FILE}): run adjudicate")
     fresh = adjudicate(target_dir)
-    kept = {k: v for k, v in stored.items() if k != "adjudicated_at"}
+    kept = {k: v for k, v in stored.items() if k not in WRITTEN_FIELDS}
     if kept != fresh:
         stale = sorted(k for k in set(kept) | set(fresh) if kept.get(k) != fresh.get(k))
         raise LaneError(f"{ADJUDICATED_FILE} is stale (it differs in {', '.join(stale)}): run "
@@ -7368,7 +7372,8 @@ def cmd_adjudicate(args: argparse.Namespace) -> int:
               f"{stored['verdict']['ruled']}")
         return 0
     result = adjudicate(target_dir)
-    write_json(target_dir / ADJUDICATED_FILE, {**result, "adjudicated_at": now_utc()})
+    write_json(target_dir / ADJUDICATED_FILE, {**result, "attempt_dir": display_path(target_dir),
+                                               "adjudicated_at": now_utc()})
     coverage = result["coverage"]
     print(f"wrote {display_path(target_dir / ADJUDICATED_FILE)}: "
           f"{coverage['targets_credited']}/{coverage['targets_enumerated']} credited; "

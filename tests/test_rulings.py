@@ -1067,6 +1067,16 @@ class PilotAdjudicationTests(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
+    def as_ruled_on_2026_10_17(self) -> None:
+        """The copy's rulings as they stood before the restatement: the
+        2026-10-17 rulings, none with target-scoped parts."""
+        path = self.dir / lane.RULINGS_FILE
+        doc = json.loads(path.read_text())
+        doc["rulings"] = [r for r in doc["rulings"]
+                          if not any(k in r for k in ("targets", "classification", "verdict"))]
+        write(path, json.dumps(doc))
+        (self.dir / lane.ADJUDICATED_FILE).unlink(missing_ok=True)
+
     def restate_rulings(self) -> None:
         """The two rulings' target-scoped parts, as Shawn's notes state them."""
         rulings = Path(self.tmp.name) / "rulings.json"
@@ -1087,12 +1097,14 @@ class PilotAdjudicationTests(unittest.TestCase):
                                                    approver="fixture", rulings=rulings))
 
     def test_the_notes_alone_leave_the_lanes_14_of_18(self):
+        self.as_ruled_on_2026_10_17()
         result = lane.adjudicate(self.dir)
         self.assertEqual(result["coverage"]["targets_credited"], 14)
         self.assertIn("T17", result["coverage"]["credited_targets"])
         self.assertEqual(result["targets"][2]["ruled_outcome"], "MINOR_DISCREPANCY")
 
     def test_the_ruled_result_is_13_of_18(self):
+        self.as_ruled_on_2026_10_17()
         self.restate_rulings()
         result = lane.adjudicate(self.dir)
         coverage = result["coverage"]
@@ -1119,6 +1131,16 @@ class PilotAdjudicationTests(unittest.TestCase):
         self.assertEqual(lane.verify_adjudicated(self.dir)["coverage"]["targets_credited"], 13)
         self.assertEqual(lane.artefact_state(self.dir), json.loads(
             (self.dir / lane.RUN_AUDIT_FILE).read_text())["reviewed_state_sha256"])
+
+    def test_the_recorded_result_is_current(self):
+        """Shawn approved the restated rulings (2026-10-18); the attempt's own
+        adjudicated result, as committed, still derives from its records."""
+        if not (ATTEMPT_04 / lane.ADJUDICATED_FILE).is_file():
+            self.skipTest("attempt 04 has no adjudicated result in this checkout")
+        stored = lane.verify_adjudicated(self.dir)
+        self.assertEqual((stored["coverage"]["targets_credited"],
+                          stored["coverage"]["excluded_targets"],
+                          stored["verdict"]["ruled"]), (13, ["T17"], "SUCCESSFUL"))
 
 
 if __name__ == "__main__":
