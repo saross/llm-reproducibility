@@ -2,7 +2,7 @@
 title: "Reproduction lane gate 1.3 — consolidated specification"
 tags: [reproduction, validation, mechanical-verification]
 created: 2026-10-05
-updated: 2026-10-17
+updated: 2026-10-18
 status: 1-3-1-closed-1-3-2-open
 ---
 
@@ -90,6 +90,64 @@ Fable,
 
 1.3.2 closes with focused regression evidence for each criterion and a
 review of the final changes before §8.
+
+**Criterion 1 as built (2026-10-18, branch `feat/gate-1-3-2`; lane v1.6,
+`GATE_VERSION` 1.3.2).** Shawn's rulings of 2026-10-18 set four choices:
+
+- a ruling never creates credit: it may relabel an outcome or remove
+  credit, but an outcome the comparison did not reproduce cannot be ruled
+  into a reproduced one;
+- the ruled verdict is set only by the ruling on the review's verdict flag,
+  and otherwise the executor's verdict stands;
+- the adjudicated result is written only when final;
+- a reviewer's slip in naming targets costs a ruling, not a re-run: the
+  item is made paper-wide, so while unruled it blocks every target, rather
+  than the role being marked unclean (a side agent's note raised this).
+
+What was built:
+
+- **Scope on every issue.** Each issue record states `scope`, `targets` or
+  `paper`, derived from its target list. The fingerprint already covers
+  that list, so no existing ruling lapses. A target outside the locked plan
+  fails the gate in the gate's own issues and declared edits; in an agent's
+  payload it makes the item paper-wide; and admission refuses any issue
+  naming one, and any attempt with no readable plan.
+- **The reviewer's concerns** (review schema 1.1, reviewer v1.4). Each has
+  a `concern_id`, its dimension, a scope (`targets` with locked ids, or
+  `paper`), a summary, and evidence files. Each becomes
+  `review-concern:<id>`, fingerprinted with the concern and the sha256 of
+  each evidence file. A malformed concern (an unknown or missing target, a
+  dimension not marked CONCERN, evidence that is not a file, a repeated id)
+  is paper-wide and names its defect; a CONCERN dimension with no concern,
+  and a v1.4 review with no concerns list, are paper-wide `review-defect`
+  flags. The verdict flag then stands for the verdict disposition alone. A
+  v1.3 review keeps its single flag, so attempt 04's rulings still apply.
+- **Target-scoped rulings.** `rule-flags` takes `targets` (a decision per
+  target, within the issue's scope), `classification` (a ruled outcome per
+  target), and, on the verdict flag only, `verdict`. The note must name
+  every target singled out. `admitted_coverage` honours both.
+- **The adjudicated result.** `adjudicate <attempt>` writes
+  `adjudicated-result.json`: per locked target, the raw and ruled outcome,
+  the ruling that set the classification, the credit (`credited`,
+  `excluded`, `uplift`, `not-reproduced`), the reasons, and the issues
+  singling it out; the ruled coverage and verdict; the gate's raw and
+  recorded admitted coverage as history; and the sha256 of the plan,
+  comparison, gate report, rulings, both audits, the manifest, both
+  payloads, and the artefact state. It is a post-review file, so writing it
+  leaves the reviewed state alone. `verify_adjudicated` (or `adjudicate
+  --check`) re-derives it and refuses a stale one; study reporting and
+  export read through it and nothing earlier (runbook step 15).
+- **Fixture.** On a copy of attempt 04's real records,
+  `PilotAdjudicationTests` derives the lane's 14/18 from the notes alone,
+  then 13/18 once the T17 and T03 rulings are restated with their
+  target-scoped parts: only T17 excluded, all 18 in the denominator, T03
+  ruled PAPER_ERROR over its raw MINOR_DISCREPANCY, the verdict SUCCESSFUL
+  set on `review:qualified`, and the raw 14/18 and pre-ruling 0/18 kept as
+  history. `AdjudicationTests` and `ScopedCoverageTests` cover several
+  concerns on one target, one concern on several targets, paper-wide
+  concerns, changed evidence and rulings, conflicting classifications, and
+  incomplete dispositions. The real attempt 04 is unchanged: restating its
+  two rulings in the attempt itself needs Shawn's approval of the text.
 
 **Operational follow-ups, as separate PRs outside the gate's review**
 (Fable's placement; Astra's test requirements kept):
