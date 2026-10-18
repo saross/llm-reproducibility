@@ -80,7 +80,21 @@ merged here as PR #1).
     (4) a live check through the review-only mode on attempt 04 (one
     reviewer spawn, its own API gate). Close with regression evidence and
     a review of the final changes. Branch + PR (schema and admission
-    changes).
+    changes). [x] 2026-10-18 **Criterion 1 built** on `feat/gate-1-3-2`
+    (worktree `.claude/worktrees/gate-1-3-2`; lane v1.6, `GATE_VERSION`
+    1.3.2; review schema 1.1; adversarial-reviewer v1.4): `2ccda2e`,
+    `081040c`, `89f70ef`. 735 tests pass. Shawn's rulings (2026-10-18): a
+    ruling never creates credit; the verdict is ruled only on the review
+    flag; the adjudicated result is written only when final; a reviewer's
+    target slip makes the item paper-wide to rule, not a hard failure (a
+    side agent's note). Shawn approved restating two attempt-04 rulings
+    (T17 excluded on `review:qualified`, verdict SUCCESSFUL; T03 PAPER_ERROR
+    on `escalation:executor:OTHER:T03`); recorded and adjudicated
+    (`f9328ed`): **13/18, only T17 excluded**. **Draft PR #13**
+    (https://github.com/saross/llm-reproducibility/pull/13), title and body
+    as Shawn approved them, read back identical. [ ] Criteria 2 and 3 on the
+    same branch, then request Astra's review of the one PR (Shawn); then
+    criterion 4 at the API gate.
   - [ ] **Operational follow-up PRs, outside the gate's review:** the
     launch word rule (screen the whole relayed message); the args-builder
     guard (allow the planned initial state, reject prior execution
