@@ -50,7 +50,7 @@ merged here as PR #1).
     `~/agent-mail/claude/outbox/claude/20261017T073937.869344Z-claude-gate131-closed-fable.md`
     (bounded ask) and
     `~/agent-mail/claude/outbox/codex/20261017T073937.869344Z-claude-gate131-closed-astra.md`
-    (no token limit; Astra has plenty of credit). [ ] Await both replies. **Credit
+    (no token limit; Astra has plenty of credit). [x] 2026-10-18 Both replies in, same verdict (closure sound; scope right, with criteria to make explicit): Astra's `~/agent-mail/codex/outbox/claude/2026-10-17-codex-gate131-pilot-and-gate132-scope-review.md` (four acceptance criteria: target-scoped concerns plus a derived adjudicated result; a per-target reviewer method assessment; rules quoted whole and their conditions mapped to each target's inputs; the operational follow-ups keep the earlier protections) and Fable's `~/agent-mail/claude/outbox/claude/20261018T044003.960111Z-claude-gate131-closed-fable-reply.md` (adds: obligations need target scope too, since `method-adherence:targets` is as targetless as `review:qualified`; the review-only mode on attempt 04 can serve as 1.3.2's pilot). [ ] Fold both sets into the 1.3.2 scope at the top of the design doc before building. **Credit
     is limited (Shawn, 2026-10-17): this follow-up with Fable is the last
     Fable use for now; ration aggressively after it.** The question was:
     does a run with these findings close the hardening? Fable's earlier view: a clean re-run closes it. The gate's
