@@ -32,8 +32,13 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NEXT SESSION (2026-10-17, session 8e28871d): the gate 1.3.1 pilot
-  re-run is complete; decide whether the hardening closes.** Stage 2 ran
+- **⏩ NEXT SESSION (from the 2026-10-18 handoff, session 8e28871d): build
+  gate 1.3.2 on a branch, to the acceptance criteria at the top of
+  `wiki/planning/reproduction-gate-1-3-design.md`.** Gate 1.3.1 is closed
+  (version-scoped); the hardening stays open until 1.3.2 lands and is
+  reviewed, before the §8 gate. Fable is rationed (credit limited); route
+  reviews to Astra, who has plenty. The operational fixes are separate
+  PRs. Background, the pilot re-run: stage 2 ran
   (`wf_4fd7a886-ada`, launch commit `6b18505`, 42 min, $14.02
   API-equivalent), and every post-run step is done: authoritative
   `check-attempt` pass, PR #12 merged (`a29f16a`, Shawn), `audit-run`
@@ -80,9 +85,10 @@ merged here as PR #1).
     launch word rule (screen the whole relayed message); the args-builder
     guard (allow the planned initial state, reject prior execution
     evidence or an active run); the cost and time watcher (independent
-    start time; the session's scratch `watch-run.py` measured file change
-    times, so **its time check could not fire**; test a run whose files
-    stop changing, restart, and missing telemetry).
+    start time; session 8e28871d's watcher, a session-scratch script not
+    kept, priced with `transcript_usage` and `price_usage` but measured
+    file change times, so **its time check could not fire**; test a run
+    whose files stop changing, restart, and missing telemetry).
   - [x] 2026-10-17 Repeated pre-launch checks at `6b18505`: 699 tests pass,
     Docker 29.2.1, 30 GB free, Zenodo 200, attempt-04 holds only the plan
     and approval, no attempt-04 image. Launched on Shawn's "go", which
@@ -280,7 +286,9 @@ merged here as PR #1).
     (PR #9). Removed, with `.claude/worktrees/gate-1-3-1` (PR #11).
   - [ ] Held for Shawn: three user-observation candidates (pending section
     in `wiki/user-observations.md`) and two working-notes candidates (the
-    session log entry below). Still held 2026-10-13. Session b5f7b974's
+    session log entry below). Still held 2026-10-13. [x] 2026-10-14 the
+    user-obs part closed with the backlog redesign (`2ccd4f7`); the two
+    working-notes candidates are still held. Session b5f7b974's
     own batch was adjudicated the same day: user-obs A and C accepted, B
     replaced by Shawn's observation on launches, D discarded; WN-at and
     WN-au accepted as Observations 56 and 57.
@@ -2536,6 +2544,45 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-13 → 10-18 (session 8e28871d) — pilot stage 2 run, ruled, and persisted; gate 1.3.1 closed, 1.3.2 scoped
+
+One session on Opus 5.5 across five days, no compaction; from 10-17 Shawn
+worked over remote control. The results are in the NEXT SESSION block
+above; the factual record is in `wiki/reflections/session-log.md`.
+
+- **Run:** pilot stage 2 (`wf_4fd7a886-ada`, launch `6b18505`, 42 min,
+  $14.02), after a pre-run review with Shawn's explain-back
+  (`pre-run-review-stage-2.md`, H1–H7) and launched on his bare "go".
+- **Merged:** PR #12 (`a29f16a`), between the authoritative gate and the
+  audit.
+- **Ruled by Shawn:** all 17 issues (T17 not creditable, study coverage
+  13/18); gate 1.3.1 closed and 1.3.2 opened; the launch word rule as a PR
+  after the pilot; cost and time overruns as stop conditions set per run;
+  attempt 4 kept on amd-tower.
+- **Reviews:** Astra (2026-10-17) and Fable (2026-10-18) on the closure and
+  scope, both concurring; criteria folded into the design document.
+- **Disclosed:** the watcher's time check could not have fired.
+- **Working-notes candidates (held for Shawn's verdict):**
+  - **WN-av:** the executor's per-target `method_as_planned` declarations
+    caught one method departure of five on herskind attempt 04 (T13
+    declared; T01, T03, T04, and T12 recorded as following the plan),
+    while the adversarial reviewer, under a named method-adherence
+    obligation, found all four undeclared ones. None changed an outcome.
+    Self-declared deviations are weak evidence; the reviewer duty is the
+    working mechanism. Anchors: attempt-04 `comparisons/comparison.json`
+    (`method_as_planned`), `adversarial-review.json`
+    (`methodological_soundness`), `flag-rulings.json`
+    (`method-adherence:targets`).
+  - **WN-aw:** two blind executor runs on herskind, under independently
+    planned denominators (attempt 03, 20 targets; attempt 04, 18),
+    reproduced the same discrepancy findings: the same eight Table 1 cells
+    and the same two Fig. 4 boxes. They labelled them differently (Fig. 4
+    PAPER_ERROR against MINOR_DISCREPANCY; Fig. 5 EXACT_MATCH against
+    CANNOT_COMPARE), as each plan scoped the target. Findings replicated;
+    outcome labels varied with plan wording. Extends Observation 56.
+    Anchors: both attempts' `comparisons/comparison.json` and
+    `reproduction-plan.json`.
 
 ### 2026-10-12 → 10-13 (session b5f7b974) — gate 1.3.1 merged, pilot stage 1 run and approved, PR #12 pricing
 
