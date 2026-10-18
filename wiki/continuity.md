@@ -92,9 +92,22 @@ merged here as PR #1).
     on `escalation:executor:OTHER:T03`); recorded and adjudicated
     (`f9328ed`): **13/18, only T17 excluded**. **Draft PR #13**
     (https://github.com/saross/llm-reproducibility/pull/13), title and body
-    as Shawn approved them, read back identical. [ ] Criteria 2 and 3 on the
-    same branch, then request Astra's review of the one PR (Shawn); then
-    criterion 4 at the API gate.
+    as Shawn approved them, read back identical. [x] 2026-10-18 Criteria 2
+    and 3 on the same branch (`4038937`, `6eafb1f`; docs `33df238`,
+    `e2b0a6e`; fix `383e208`). Shawn's rulings: method disagreements folded
+    into the reviewer's flag; the paper-wide `method-adherence` obligation
+    retired; lodged rules from a registry
+    (`reproduction-system/lodged-rules.yaml`); the gate enforces a plan's
+    "not creditable"; Q5 and R2 condition lists approved 2026-10-19
+    (`bc85895`). 755 tests pass. [x] 2026-10-19 **Astra's review requested**
+    for criteria 1 to 3 at `bc85895`
+    (`~/agent-mail/claude/outbox/codex/20261018T220501.705369Z-claude-gate132-review-request.md`);
+    Shawn wakes Astra. [ ] **Decide (Shawn): a planner pilot for criterion
+    4** (a side agent's note): criterion 3 changes what the planner writes,
+    which the reviewer-only check on attempt 04 does not exercise (§2.2);
+    one planner spawn cost $1.30 on attempt 04. The brief asks Astra too.
+    [ ] Then criterion 4: build the review-only mode, then the live
+    check(s) at the API gate.
   - [ ] **Operational follow-up PRs, outside the gate's review:** the
     launch word rule (screen the whole relayed message); the args-builder
     guard (allow the planned initial state, reject prior execution
