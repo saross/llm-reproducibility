@@ -339,6 +339,26 @@ class GateTests(unittest.TestCase):
         warnings = " ".join(self.run_gate()["warnings"])
         self.assertIn("T01: the record does not declare method_as_planned", warnings)
 
+    def test_a_target_planned_not_creditable_is_never_credited(self):
+        """Gate 1.3.2, criterion 3 (Shawn, 2026-10-18): a target the approved
+        plan marks not creditable under a lodged rule is excluded by
+        structure, so its EXACT_MATCH counts for nothing, ruled or not."""
+        record = plan_record(["T01", "T02"])
+        record["plan"]["rules_applied"] = [{"rule_id": "Q5", "quotation": "q", "applications": [
+            {"target_id": "T01", "conditions": [], "credit": "not-creditable"}]}]
+        self.plan.write_text(json.dumps(record), encoding="utf-8")
+        self.comparison()
+        report = self.run_gate()
+        self.assertEqual(report["verdict"], "pass", report["errors"])
+        write(self.dir / lane.RULINGS_FILE, json.dumps({"rulings": [
+            {"issue_id": i["id"], "fingerprint": i["fingerprint"],
+             "decision": "admissible" if i["kind"] == "flag" else "discharged"}
+            for i in report["issues"]]}))
+        admitted = self.run_gate()["coverage_admitted"]
+        self.assertEqual((admitted["targets_admitted"], admitted["excluded_targets"]),
+                         (1, ["T01"]))
+        self.assertIn("not creditable under Q5 by the approved plan", admitted["reasons"])
+
     def test_report_lists_issues_and_admits_only_ruled_results(self):
         """Gate 1.3 §6: raw coverage counts outcomes; admitted coverage waits
         for a ruling on every issue, here the wrapper-semantics obligation."""

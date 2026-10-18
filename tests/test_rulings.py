@@ -39,6 +39,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import yaml
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -922,9 +924,14 @@ class AdjudicationTests(unittest.TestCase):
             "papers": [{"slug": "paper-a"}]}), encoding="utf-8")
         self.dir = root / "outputs" / "paper-a" / "reproduction" / "attempt-02"
         self.rulings_file = root / "rulings.json"
+        self.build()
+
+    def build(self, rules_applied: list[dict] | None = None) -> None:
+        """The attempt, eligible but unruled, under a plan with ``rules_applied``."""
         write(self.dir / lane.PLAN_FILE, json.dumps({"plan": {
             "paper_slug": "paper-a",
-            "verification_targets": [{"target_id": t} for t in self.LOCKED]}}))
+            "verification_targets": [{"target_id": t} for t in self.LOCKED],
+            **({"rules_applied": rules_applied} if rules_applied else {})}}))
         plan_sha = lane.sha256_file(self.dir / lane.PLAN_FILE)
         write(self.dir / "comparisons" / "comparison.json", json.dumps({
             "paper_slug": "paper-a", "plan_sha256": plan_sha, "verdict": "SUCCESSFUL",
@@ -1061,6 +1068,17 @@ class AdjudicationTests(unittest.TestCase):
         self.assertEqual((verdict["executor"], verdict["ruled"],
                           verdict["set_by"]["issue_id"]),
                          ("SUCCESSFUL", "PARTIAL", "review:qualified"))
+
+    def test_a_target_planned_not_creditable_is_never_credited(self):
+        """Criterion 3 (Shawn, 2026-10-18): the approved plan's exclusion
+        holds whatever the outcome and whatever the rulings."""
+        self.build(rules_applied=[{"rule_id": "Q5", "quotation": "q", "applications": [
+            {"target_id": "T02", "conditions": [], "credit": "not-creditable"}]}])
+        self.rule_all()
+        result = self.adjudicated()
+        self.assertEqual(self.credit(result)["T02"], "excluded")
+        self.assertIn("not creditable under Q5 by the approved plan",
+                      result["targets"][1]["reasons"])
 
     def test_a_slip_costs_a_ruling_not_a_rerun(self):
         """Shawn, 2026-10-18: a concern naming an unknown target bears on the
@@ -1292,6 +1310,182 @@ class PilotAdjudicationTests(unittest.TestCase):
         self.assertEqual((stored["coverage"]["targets_credited"],
                           stored["coverage"]["excluded_targets"],
                           stored["verdict"]["ruled"]), (13, ["T17"], "SUCCESSFUL"))
+
+
+# ---------------------------------------------------------------------------
+# Gate 1.3.2, criterion 3: lodged rules quoted whole, application checked
+# ---------------------------------------------------------------------------
+
+LODGED_TEXT = (REPO_ROOT / "studies" / "open-science-compliance" / "prereg"
+               / "osf-amendment-3.txt")
+
+
+@unittest.skipUnless((ATTEMPT_04 / lane.PLAN_FILE).is_file(),
+                     "attempt 04's plan is not in this checkout")
+class LodgedRuleTests(unittest.TestCase):
+    """Plans quote the lodged rules whole and state every condition per target.
+
+    Attempt 04's approved plan is the negative fixture: its T17 cites ruling
+    Q5 and states the consequence without the input condition. The same
+    plan with Q5 quoted whole and applied passes; quoted whole but applied
+    on the wrong branch, it fails.
+    """
+
+    def setUp(self):
+        self.rules = lane.load_lodged_rules()
+        self.record = json.loads((ATTEMPT_04 / lane.PLAN_FILE).read_text(encoding="utf-8"))
+
+    def applied(self, t17_credit: str = "not-creditable", t17_inputs: str = "no",
+                quotation: str | None = None) -> dict:
+        """Attempt 04's plan with the rules its targets cite applied."""
+        plan = json.loads(json.dumps(self.record["plan"]))
+        plan["rules_applied"] = [
+            {"rule_id": "Q5", "quotation": quotation or self.rules["Q5"]["text"],
+             "applications": [{"target_id": "T17", "credit": t17_credit, "conditions": [
+                 {"condition_id": "no-authors-code", "holds": "yes",
+                  "evidence": "no authors' code counts the objects bearing the strings"},
+                 {"condition_id": "printed-inputs", "holds": "unknown",
+                  "evidence": "whether the inferred rule gives the printed 10 is known once run"},
+                 {"condition_id": "inputs-from-authors-code", "holds": t17_inputs,
+                  "evidence": "an S1 lookup: its inputs are the deposited data, not outputs "
+                              "of executing the authors' code"},
+                 {"condition_id": "reconstructed-inputs", "holds": "no",
+                  "evidence": "S1 is the authors' deposited data"}]}]},
+            {"rule_id": "R1", "quotation": self.rules["R1"]["text"],
+             "applications": [{"target_id": t, "conditions": [], "credit": "creditable"}
+                              for t in ("T01", "T03", "T04")]},
+            {"rule_id": "R4", "quotation": self.rules["R4"]["text"],
+             "applications": [{"target_id": t, "conditions": [], "credit": "creditable"}
+                              for t in ("T14", "T15")]}]
+        return plan
+
+    def test_the_registry_quotes_its_sources_word_for_word(self):
+        """The registry amends nothing: each text is in its source at the
+        stated version, and each of the amendment's rules in the lodged text."""
+        lodged = lane.normalised(LODGED_TEXT.read_text(encoding="utf-8")).replace('"', "")
+        for rule_id, rule in self.rules.items():
+            source = REPO_ROOT / rule["source"]
+            text = lane.normalised(rule["text"])
+            if source.suffix == ".yaml":
+                config = yaml.safe_load(source.read_text(encoding="utf-8"))
+                self.assertIn(text, [lane.normalised(r) for r in config["rulings"]], rule_id)
+                self.assertEqual(config["config_version"], rule["source_version"], rule_id)
+            else:
+                body = source.read_text(encoding="utf-8")
+                self.assertIn(text, lane.normalised(body), rule_id)
+                self.assertIn(f"v{rule['source_version']}", body[:400], rule_id)
+            if str(rule["lodged"]).startswith("OSF amendment 3"):
+                self.assertIn(text.replace('"', ""), lodged, rule_id)
+
+    def test_attempt_04s_plan_is_caught_where_it_paraphrased(self):
+        problems = " | ".join(lane.rule_problems(self.record["plan"], self.rules))
+        self.assertIn("T17 cites Q5, but the plan does not apply it", problems)
+        for target, rule_id in (("T01", "R1"), ("T03", "R1"), ("T04", "R1"),
+                                ("T14", "R4"), ("T15", "R4")):
+            self.assertIn(f"{target} cites {rule_id}", problems)
+
+    def test_an_r_version_is_not_a_ruling(self):
+        """'R4.3.2' names R's version, not ruling R4; 'R4' and 'R4.' cite it."""
+        plan = self.applied()
+        target = plan["verification_targets"][1]
+        for text, cited in (("built on R4.3.2", False), ("per R4", True),
+                            ("as R4. says", True)):
+            target["comparison_method"] = text
+            problems = " | ".join(lane.rule_problems(plan, self.rules))
+            self.assertEqual(f"{target['target_id']} cites R4" in problems, cited, text)
+
+    def test_the_rule_quoted_whole_and_applied_passes(self):
+        plan = self.applied()
+        self.assertEqual(lane.rule_problems(plan, self.rules), [])
+        self.assertEqual(lane.plan_exclusions(plan),
+                         {"not creditable under Q5 by the approved plan": {"T17"}})
+
+    def test_the_right_quotation_on_the_wrong_branch_fails(self):
+        problems = lane.rule_problems(self.applied(t17_credit="creditable"), self.rules)
+        self.assertEqual(problems, ["Q5 on T17: inputs-from-authors-code is 'no', so Q5 makes "
+                                    "the target not creditable, but the plan marks it "
+                                    "'creditable'"])
+        # Stated truthfully as unknown, the target may be planned creditable:
+        # whether its inputs are the authors' outputs is the approver's check.
+        self.assertEqual(lane.rule_problems(
+            self.applied(t17_credit="creditable", t17_inputs="unknown"), self.rules), [])
+
+    def test_a_paraphrase_or_a_fragment_fails(self):
+        whole = self.rules["Q5"]["text"]
+        fragment = whole[:whole.index(", and it is credited only")] + "."
+        for quotation in (self.record["plan"]["verification_targets"][16]["comparison_method"],
+                          fragment):
+            self.assertIn("Q5: the quotation is not the lodged rule word for word",
+                          " | ".join(lane.rule_problems(self.applied(quotation=quotation),
+                                                        self.rules)))
+
+    def test_every_condition_is_stated_once_with_evidence(self):
+        plan = self.applied()
+        conditions = plan["rules_applied"][0]["applications"][0]["conditions"]
+        conditions[2] = {"condition_id": "made-up", "holds": "maybe", "evidence": " "}
+        plan["rules_applied"][1]["applications"].append(
+            {"target_id": "T99", "conditions": [], "credit": "creditable"})
+        plan["rules_applied"][2]["applications"].append(
+            {"target_id": "T14", "conditions": [], "credit": "creditable"})
+        plan["rules_applied"].append({"rule_id": "Q9", "quotation": "q", "applications": []})
+        plan["rules_applied"].append(dict(plan["rules_applied"][2]))
+        problems = " | ".join(lane.rule_problems(plan, self.rules))
+        for expected in ("'made-up' is not one of Q5's conditions",
+                         "does not say whether inputs-from-authors-code holds",
+                         "R1 on T99: 'T99' is not one of the plan's targets",
+                         "R4 on T14: applied more than once",
+                         "'Q9', which is not a lodged rule",
+                         "R4 is applied in more than one rules_applied entry"):
+            self.assertIn(expected, problems)
+        conditions[2] = {"condition_id": "inputs-from-authors-code", "holds": "maybe",
+                         "evidence": " "}
+        problems = " | ".join(lane.rule_problems(plan, self.rules))
+        self.assertIn("holds 'maybe'", problems)
+        self.assertIn("inputs-from-authors-code gives no evidence", problems)
+
+    def test_approval_checks_the_rules_and_binds_the_registry(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = root / "run-config.yaml"
+            config.write_text(json.dumps({
+                "run_id": "r", "attempt": 4, "effort": "high", "output_root": str(root),
+                "agents": {"planner": "p", "executor": "e", "reviewer": "r"},
+                "schemas": {"plan": "p", "execution": "e", "review": "r",
+                            "comparison_record": "c"},
+                "blinding": {"forbidden_substrings": []},
+                "papers": [{"slug": "herskind-riede-2024"}]}), encoding="utf-8")
+            target = root / "herskind-riede-2024" / "reproduction" / "attempt-04"
+            write(target / lane.PLAN_FILE, json.dumps(self.record))
+            approve = argparse.Namespace(config=config, slug="herskind-riede-2024",
+                                         decision="approve", approver="Shawn", note="",
+                                         force=False)
+            with self.assertRaisesRegex(lane.LaneError, "T17 cites Q5"):
+                lane.cmd_approve(approve)
+            self.assertFalse((target / lane.APPROVAL_FILE).exists())
+            write(target / lane.PLAN_FILE, json.dumps({**self.record, "plan": self.applied()}))
+            with contextlib.redirect_stdout(io.StringIO()):
+                lane.cmd_approve(approve)
+            approval = json.loads((target / lane.APPROVAL_FILE).read_text())
+            self.assertEqual(approval["lodged_rules_sha256"],
+                             lane.sha256_file(REPO_ROOT / lane.LODGED_RULES_FILE))
+
+    def test_a_configuration_cannot_reword_a_ruling(self):
+        r1 = self.rules["R1"]["text"]
+        given = {r["rule_id"]: r for r in lane.lodged_rules_args({"rulings": [r1]})}
+        self.assertEqual([c["condition_id"] for c in given["Q5"]["conditions"]],
+                         ["no-authors-code", "printed-inputs", "inputs-from-authors-code",
+                          "reconstructed-inputs"])
+        with self.assertRaisesRegex(lane.LaneError, "words ruling R1 differently"):
+            lane.lodged_rules_args({"rulings": [r1.replace("read-only", "simple")]})
+        with self.assertRaisesRegex(lane.LaneError, "'R9' is not in the lodged-rule registry"):
+            lane.lodged_rules_args({"rulings": ["R9 Something new."]})
+
+    def test_the_plan_view_sets_each_condition_beside_the_rule(self):
+        view = lane.render_plan({"plan": self.applied(), "run_id": "r", "workflow_run": "w",
+                                 "agent_id": "a"})
+        self.assertIn("## Lodged rules applied", view)
+        self.assertIn("| T17 | inputs-from-authors-code | no | an S1 lookup", view)
+        self.assertIn("not-creditable", view)
 
 
 if __name__ == "__main__":

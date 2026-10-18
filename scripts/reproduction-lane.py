@@ -13,7 +13,12 @@ malformed one is paper-wide until ruled (Shawn, 2026-10-18: a reviewer's
 slip costs a ruling, not a re-run). Criterion 2: the reviewer also gives one method
 row per locked target, read against the executor's declaration, and each
 departure, unverifiable method, disagreement, or missing row is a flag on
-its target; the gate's paper-wide method-adherence obligation is retired. A ruling may
+its target; the gate's paper-wide method-adherence obligation is retired.
+Criterion 3: plans quote each lodged rule they rely on whole, from the
+registry (``reproduction-system/lodged-rules.yaml``), and state every
+condition per target; ``persist-plans`` and ``approve`` refuse a paraphrase,
+a missing condition, an unapplied citation, or credit a condition denies,
+and the gate never credits a target a plan marks not creditable. A ruling may
 dispose of single targets within its issue (``targets``), record a ruled
 classification (``classification``), and, on the review's verdict flag, the
 ruled verdict; a ruling never creates credit. ``adjudicate`` derives the
@@ -806,9 +811,38 @@ def blinding_args(config: dict) -> dict:
 # Plan stage
 # ---------------------------------------------------------------------------
 
+def lodged_rules_args(config: dict) -> list[dict]:
+    """The lodged rules as the plan workflow hands them to the planner.
+
+    Gate 1.3.2, criterion 3: the planner quotes from these, and each
+    registrant ruling the run configuration carries must be one of them,
+    word for word, so a configuration cannot restate a ruling differently.
+
+    Raises:
+        LaneError: on a configuration ruling the registry lacks or words
+            differently.
+    """
+    rules = load_lodged_rules()
+    for text in config.get("rulings") or []:
+        rule_id = str(text).split()[0] if str(text).split() else ""
+        if rule_id not in rules:
+            raise LaneError(f"the run configuration's ruling {rule_id!r} is not in the lodged-rule "
+                            f"registry ({LODGED_RULES_FILE}); register it first")
+        if normalised(text) != normalised(rules[rule_id].get("text")):
+            raise LaneError(f"the run configuration words ruling {rule_id} differently from the "
+                            f"lodged-rule registry; a configuration never amends a rule")
+    return [{"rule_id": rule_id, "title": rule.get("title"), "source": rule.get("source"),
+             "text": normalised(rule.get("text")),
+             "conditions": [{"condition_id": cid, "clause": normalised(c.get("clause")),
+                             "not_creditable_when": c.get("not_creditable_when")}
+                            for cid, c in (rule.get("conditions") or {}).items()]}
+            for rule_id, rule in rules.items()]
+
+
 def cmd_build_plan_args(args: argparse.Namespace) -> int:
     """Build args for reproduction-plan.workflow.js."""
     config = load_config(args.config)
+    lodged = lodged_rules_args(config)
     launch_commit = resolve_launch_commit()
     papers = []
     for paper in config["papers"]:
@@ -832,6 +866,8 @@ def cmd_build_plan_args(args: argparse.Namespace) -> int:
                "agent_type": config["agents"]["planner"],
                "receipt_keys": receipt_keys(config["agents"]["planner"]),
                "rulings": [str(r).strip() for r in config.get("rulings") or []],
+               "lodged_rules": lodged,
+               "lodged_rules_sha256": sha256_file(REPO_ROOT / LODGED_RULES_FILE),
                "schema": runtime_schema(expand(config["schemas"]["plan"])),
                "blinding": blinding_args(config), "papers": papers}, args.out)
     return 0
@@ -1022,8 +1058,163 @@ def select_results(results: list[dict], agent_type: str,
     return chosen, dead
 
 
+# Gate 1.3.2, criterion 3: the rules a plan may rely on, quoted whole.
+LODGED_RULES_FILE = "reproduction-system/lodged-rules.yaml"
+HOLDS = ("yes", "no", "unknown", "not-applicable")
+PLANNED_CREDIT = ("creditable", "not-creditable")
+# The target fields a rule citation is looked for in.
+RULE_TEXT_FIELDS = ("display_item", "description", "comparison_method", "tolerance",
+                    "published_values_source")
+
+
+def normalised(text: Any) -> str:
+    """Text with its whitespace collapsed, for word-for-word comparison."""
+    return " ".join(str(text or "").split())
+
+
+def load_lodged_rules(path: Path | None = None) -> dict[str, dict]:
+    """The lodged-rule registry (``reproduction-system/lodged-rules.yaml``), by id.
+
+    Raises:
+        LaneError: if it is unreadable, a condition's clause is not a
+            verbatim part of its rule, or a consequence is not a holds value.
+    """
+    path = path or REPO_ROOT / LODGED_RULES_FILE
+    try:
+        doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError) as exc:
+        raise LaneError(f"lodged-rule registry unreadable: {exc}") from exc
+    rules = {str(k): v for k, v in (doc.get("rules") or {}).items()}
+    for rule_id, rule in rules.items():
+        for cid, condition in (rule.get("conditions") or {}).items():
+            if normalised(condition.get("clause")) not in normalised(rule.get("text")):
+                raise LaneError(f"lodged-rule registry: {rule_id}'s condition {cid} is not a "
+                                f"verbatim part of the rule")
+            if condition.get("not_creditable_when") not in (None, *HOLDS):
+                raise LaneError(f"lodged-rule registry: {rule_id}'s condition {cid} has "
+                                f"not_creditable_when {condition.get('not_creditable_when')!r}")
+    return rules
+
+
+def rule_problems(plan: dict, rules: dict[str, dict]) -> list[str]:
+    """Where a plan's use of the lodged rules fails (gate 1.3.2, criterion 3).
+
+    In the gate 1.3.1 pilot, attempt 04's plan cited ruling Q5 for T17 and
+    stated its consequence without its input condition, and two approvals
+    passed it. A plan therefore quotes each rule it relies on whole, word
+    for word (whitespace aside), in ``rules_applied``, and for each target
+    states whether each of the rule's listed conditions holds, with the
+    evidence, and the credit that follows. The checks:
+
+    - the rule is in the registry, applied in one entry, and quoted whole;
+    - each application is to one of the plan's targets, once, and states
+      every listed condition once, with a holds value and evidence;
+    - where a condition holds as the registry's ``not_creditable_when``
+      says, the target is planned ``not-creditable`` (a correctly quoted
+      rule applied on the wrong branch fails here);
+    - a target whose text cites a rule (``cited_as``) carries an
+      application of it (the pilot's paraphrase fails here).
+
+    What no check can settle is whether a stated condition is true of the
+    target's inputs; plan approval checks that, from the plan's table.
+
+    Args:
+        plan: The planner's payload.
+        rules: The registry, as ``load_lodged_rules`` returns it.
+
+    Returns:
+        Readable problems, each blocking persistence and approval.
+    """
+    problems: list[str] = []
+    targets = {str(t.get("target_id")): t for t in plan.get("verification_targets") or []
+               if isinstance(t, dict)}
+    applied: set[tuple[str, str]] = set()
+    seen: set[str] = set()
+    for entry in plan.get("rules_applied") or []:
+        rule_id = str(entry.get("rule_id") or "")
+        rule = rules.get(rule_id)
+        if rule is None:
+            problems.append(f"rules_applied names {rule_id!r}, which is not a lodged rule "
+                            f"({', '.join(rules)})")
+            continue
+        if rule_id in seen:
+            problems.append(f"{rule_id} is applied in more than one rules_applied entry")
+        seen.add(rule_id)
+        if normalised(entry.get("quotation")) != normalised(rule.get("text")):
+            problems.append(f"{rule_id}: the quotation is not the lodged rule word for word; "
+                            f"quote it whole from {rule.get('source')}")
+        conditions = rule.get("conditions") or {}
+        for application in entry.get("applications") or []:
+            target = str(application.get("target_id") or "")
+            where = f"{rule_id} on {target or '?'}"
+            if target not in targets:
+                problems.append(f"{where}: {target!r} is not one of the plan's targets")
+                continue
+            if (rule_id, target) in applied:
+                problems.append(f"{where}: applied more than once")
+                continue
+            applied.add((rule_id, target))
+            stated: dict[str, dict] = {}
+            for item in application.get("conditions") or []:
+                cid = str(item.get("condition_id") or "")
+                if cid not in conditions:
+                    problems.append(f"{where}: {cid!r} is not one of {rule_id}'s conditions "
+                                    f"({', '.join(conditions) or 'it lists none'})")
+                elif cid in stated:
+                    problems.append(f"{where}: condition {cid} is stated more than once")
+                else:
+                    stated[cid] = item
+                    if item.get("holds") not in HOLDS:
+                        problems.append(f"{where}: condition {cid} holds "
+                                        f"{item.get('holds')!r}, not {', '.join(HOLDS)}")
+                    if not normalised(item.get("evidence")):
+                        problems.append(f"{where}: condition {cid} gives no evidence")
+            missing = [cid for cid in conditions if cid not in stated]
+            if missing:
+                problems.append(f"{where}: the plan does not say whether {', '.join(missing)} "
+                                f"holds")
+            credit = application.get("credit")
+            if credit not in PLANNED_CREDIT:
+                problems.append(f"{where}: credit {credit!r}, not {', '.join(PLANNED_CREDIT)}")
+            failing = [f"{cid} is {item.get('holds')!r}" for cid, item in stated.items()
+                       if conditions[cid].get("not_creditable_when") is not None
+                       and item.get("holds") == conditions[cid]["not_creditable_when"]]
+            if failing and credit != "not-creditable":
+                problems.append(f"{where}: {'; '.join(failing)}, so {rule_id} makes the target "
+                                f"not creditable, but the plan marks it {credit!r}")
+    for target_id, target in targets.items():
+        text = " ".join(str(target.get(field) or "") for field in RULE_TEXT_FIELDS)
+        for rule_id, rule in rules.items():
+            if (rule_id, target_id) not in applied and any(
+                    re.search(pattern, text) for pattern in rule.get("cited_as") or []):
+                problems.append(f"{target_id} cites {rule_id}, but the plan does not apply it: "
+                                f"quote the rule whole in rules_applied and state whether each "
+                                f"of its conditions holds for {target_id}")
+    return problems
+
+
+def plan_exclusions(plan: dict | None) -> dict[str, set[str]]:
+    """Targets an approved plan marks not creditable under a lodged rule.
+
+    Shawn, 2026-10-18: the gate enforces them, so an executor's outcome
+    on such a target is never credited, whatever it is.
+
+    Returns:
+        ``{reason: targets}``, one reason per rule.
+    """
+    excluded: dict[str, set[str]] = {}
+    for entry in (plan or {}).get("rules_applied") or []:
+        for application in entry.get("applications") or []:
+            if application.get("credit") == "not-creditable":
+                excluded.setdefault(f"not creditable under {entry.get('rule_id')} by the "
+                                    f"approved plan", set()).add(str(application.get("target_id")))
+    return excluded
+
+
 def plan_checks(plan: dict) -> tuple[list[str], list[str]]:
     """Plan-level checks the runtime schema cannot express.
+
+    Gate 1.3.2 adds the lodged-rule checks (``rule_problems``).
 
     Returns:
         ``(errors, warnings)``. Errors block persistence; warnings go to the
@@ -1064,6 +1255,7 @@ def plan_checks(plan: dict) -> tuple[list[str], list[str]]:
                 "within_compute_cap"):
         if eligibility.get(key) is False:
             warnings.append(f"eligibility.{key} is false")
+    errors += rule_problems(plan, load_lodged_rules())
     return errors, warnings
 
 
@@ -1122,6 +1314,21 @@ def render_plan(record: dict) -> str:
     for t in plan.get("verification_targets") or []:
         out.append(f"- **{t.get('target_id')}** {t.get('description')} "
                    f"*Method:* {t.get('comparison_method')}")
+    # Gate 1.3.2, criterion 3: what approval checks is whether each stated
+    # condition is true of the target's inputs, so the table sets each
+    # condition's verdict and evidence beside the rule's own words.
+    out += ["", "## Lodged rules applied", ""]
+    if not plan.get("rules_applied"):
+        out.append("- none")
+    for entry in plan.get("rules_applied") or []:
+        out += [f"### {entry.get('rule_id')}", "", f"> {normalised(entry.get('quotation'))}", "",
+                "| Target | Condition | Holds | Evidence | Credit |", "|---|---|---|---|---|"]
+        for application in entry.get("applications") or []:
+            for item in application.get("conditions") or [{}]:
+                out.append("| " + " | ".join(md_cell(v) for v in (
+                    application.get("target_id"), item.get("condition_id"), item.get("holds"),
+                    item.get("evidence"), application.get("credit"))) + " |")
+        out.append("")
     out += ["", "## Exclusions", ""]
     out += [f"- {e.get('item')} ({e.get('location')}): {e.get('reason')}"
             for e in plan.get("exclusions") or []] or ["- none"]
@@ -1303,13 +1510,23 @@ def cmd_approve(args: argparse.Namespace) -> int:
     plan = json.loads(plan_path.read_text(encoding="utf-8"))["plan"]
     if args.decision == "approve" and plan.get("status") != "OK":
         raise LaneError("cannot approve a plan whose status is not OK")
-    record = {"approval_record_version": "1.0", "run_id": config["run_id"],
+    # Gate 1.3.2, criterion 3: approval checks the plan's use of the lodged
+    # rules against the registry as it stands now, and records which
+    # registry it checked; it never amends a rule.
+    registry = REPO_ROOT / LODGED_RULES_FILE
+    if args.decision == "approve":
+        problems = rule_problems(plan, load_lodged_rules(registry))
+        if problems:
+            raise LaneError("the plan's use of the lodged rules fails, so it cannot be "
+                            "approved (re-plan): " + "; ".join(problems))
+    record = {"approval_record_version": "1.1", "run_id": config["run_id"],
               "slug": args.slug, "attempt": config["attempt"],
               "decision": args.decision, "approver": args.approver,
               "decided_at": now_utc(), "plan_file": display_path(plan_path),
               "plan_sha256": digest,
               "locked_target_ids": [t["target_id"]
                                     for t in plan.get("verification_targets") or []],
+              "lodged_rules_sha256": sha256_file(registry) if registry.is_file() else None,
               "note": args.note or ""}
     write_json(approval_path, record)
     print(f"recorded {args.decision} for {args.slug} → {display_path(approval_path)} "
@@ -5966,20 +6183,22 @@ def ruling_for(issue: dict, rulings: list[dict]) -> dict | None:
     return matches[-1] if matches else None
 
 
-def structural_exclusions(manifest: dict, account: dict | None,
-                          locked: list[str]) -> dict[str, set[str]]:
+def structural_exclusions(manifest: dict, account: dict | None, locked: list[str],
+                          plan: dict | None = None) -> dict[str, set[str]]:
     """Targets excluded by structure, whatever any ruling says (spec §6).
 
     Those resting on a declared edit, until the class (ii) wrapper-only
-    re-run exists (an edit naming no targets names them all), and every
+    re-run exists (an edit naming no targets names them all); every
     target when no authors' file was executed or no credited run loaded
-    one. The gate and ``adjudicate`` both call this, so the two cannot
-    disagree.
+    one; and, from gate 1.3.2, every target the approved plan marks not
+    creditable under a lodged rule (``plan_exclusions``). The gate and
+    ``adjudicate`` both call this, so the two cannot disagree.
 
     Args:
         manifest: The authors' code manifest ({} when unreadable).
         account: The gate's account of the runs' loads, or None.
         locked: The locked target ids.
+        plan: The approved plan's payload, or None.
 
     Returns:
         ``{reason: targets}``.
@@ -6000,6 +6219,8 @@ def structural_exclusions(manifest: dict, account: dict | None,
     elif edited:
         structural["resting on a declared edit, until the class (ii) wrapper-only "
                    "re-run"] = edited
+    for reason, targets in plan_exclusions(plan).items():
+        structural.setdefault(reason, set()).update(targets & set(locked))
     return structural
 
 
@@ -6992,7 +7213,8 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
     if coverage is not None:
         reproduced_ids = [t.get("target_id") for t in records if t.get("target_id") in locked
                           and reproduced_record(t)]
-        structural = structural_exclusions(manifest, integrity.get("account"), locked)
+        structural = structural_exclusions(manifest, integrity.get("account"), locked,
+                                           plan_record["plan"])
         admitted = admitted_coverage("fail" if errors else "pass", issues,
                                      load_rulings(target_dir), locked, reproduced_ids,
                                      structural)
@@ -7414,7 +7636,8 @@ def adjudicate(target_dir: Path) -> dict:
 
     manifest = read_record(target_dir, CODE_MANIFEST_FILE) or {}
     account = (report.get("code_integrity") or {}).get("account")
-    structural = structural_exclusions(manifest, account, locked)
+    structural = structural_exclusions(manifest, account, locked,
+                                       (read_record(target_dir, PLAN_FILE) or {}).get("plan"))
     by_id = {issue["id"]: issue for issue in issues}
     paper_issues = [{**ruling_ref(issue, applying[issue["id"]]), "kind": issue["kind"],
                      "decision": applying[issue["id"]].get("decision")}

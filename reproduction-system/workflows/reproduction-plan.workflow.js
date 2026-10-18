@@ -3,7 +3,10 @@ export const meta = {
   description: 'Reproduction lane stage 1: one governed planner spawn per paper; plans return for orchestrator persistence and batched human approval',
   phases: [{ title: 'Plan' }],
 }
-// reproduction-plan.workflow.js v1.0 (2026-10-03, Phase 2 shakedown build).
+// reproduction-plan.workflow.js v1.1 (2026-10-18, gate 1.3.2 criterion 3: the
+// planner is handed the lodged-rule registry and quotes each rule it relies on
+// whole in rules_applied, with every condition stated per target); v1.0
+// (2026-10-03, Phase 2 shakedown build).
 //
 // Stage 1 of the agentic reproduction lane (modernisation plan §4.2, Phase 2
 // option (a)). Fans the governed `reproduction-planner` agent over the papers
@@ -30,7 +33,8 @@ export const meta = {
 //  {forbidden_substrings, cross_paper_slugs}, papers: [{slug, attempt_dir,
 //  paper_pdf, paper_pdf_sha256, supplements: [{path, sha256}], deposits:
 //  [{identifier, description}], run_notes, scratch_dir}], receipt_keys, rulings,
-//  args_checksum}
+//  lodged_rules: [{rule_id, title, source, text, conditions: [{condition_id,
+//  clause, not_creditable_when}]}], lodged_rules_sha256, args_checksum}
 const ARGS = (typeof args === 'string' ? JSON.parse(args) : args)
 
 // Args integrity (2026-10-03). Args travel inline in the Workflow tool call,
@@ -56,7 +60,7 @@ if (COMPUTED !== args_checksum) {
 }
 const {
   run_id, attempt, effort, launch_commit, agent_type, receipt_keys, rulings, schema, blinding,
-  papers,
+  papers, lodged_rules, lodged_rules_sha256,
 } = ARGS
 
 const EFFORT_LEVELS = ['low', 'medium', 'high', 'xhigh', 'max']
@@ -74,6 +78,12 @@ if (agent_type !== 'reproduction-planner') {
 if (!Array.isArray(papers) || papers.length === 0) throw new Error('papers: empty')
 if (!Array.isArray(receipt_keys) || receipt_keys.length === 0) throw new Error('receipt_keys: empty')
 if (!Array.isArray(rulings)) throw new Error('rulings: must be a list (may be empty)')
+if (!Array.isArray(lodged_rules) || lodged_rules.length === 0) {
+  throw new Error('lodged_rules: must be a non-empty list (gate 1.3.2; rebuild the args)')
+}
+if (!/^[0-9a-f]{64}$/.test(lodged_rules_sha256 || '')) {
+  throw new Error(`lodged_rules_sha256 must be a sha256, got: ${lodged_rules_sha256}`)
+}
 for (const p of papers) {
   for (const key of ['slug', 'attempt_dir', 'paper_pdf', 'paper_pdf_sha256', 'scratch_dir']) {
     if (!p[key]) throw new Error(`paper ${p.slug || '?'}: missing ${key}`)
@@ -98,6 +108,22 @@ const blindingBlock = (slug) =>
   `This run tests whether the pipeline reaches results independently; any other access to a ` +
   `blinded path fails the run.`
 
+// Gate 1.3.2, criterion 3: the rules a plan may rely on, each quoted whole. The
+// lane checks the quotation, the conditions, and the credit at persist-plans
+// and again at approval (reproduction-lane.py rule_problems).
+const lodgedBlock =
+  `Lodged rules (registry sha256 ${lodged_rules_sha256.slice(0, 12)}). For every rule a target relies ` +
+  `on or names (Q5, R1, ...), add a rules_applied entry: rule_id, the rule's text below as the ` +
+  `quotation, whole and word for word, and one application per target it bears on, stating every ` +
+  `condition listed for it (holds yes, no, unknown, or not-applicable, with the evidence from this ` +
+  `paper's materials and your method) and the credit that follows. Where a condition holds as its ` +
+  `"not creditable when" says, mark the target not-creditable: it stays in the locked denominator, ` +
+  `and the gate never credits it. Never paraphrase a rule, and never drop a condition.\n` +
+  lodged_rules.map(r => `- ${r.rule_id} (${r.title}; ${r.source}): "${r.text}"\n` +
+    r.conditions.map(c => `  - condition ${c.condition_id}: "${c.clause}"` +
+      (c.not_creditable_when ? ` (not creditable when ${c.not_creditable_when})` : ' (state it)') +
+      '\n').join('')).join('')
+
 const planPrompt = (p) =>
   `Reproduction-lane planning task (run ${run_id}, attempt ${attempt}).\n` +
   `Paper: ${p.slug}\n` +
@@ -117,6 +143,7 @@ const planPrompt = (p) =>
   `pushed-instrument names: ${receipt_keys.join(', ')}. In pulled_files_read list bare file paths ` +
   `only — no versions, tokens, or comments in the string.\n` +
   (rulings.length ? `Registrant rulings (apply to every paper): ${rulings.join(' ')}\n` : '') +
+  lodgedBlock +
   `- Tolerances: the verdicts-and-precision instrument is not pushed to you. Read ` +
   `studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md in full, declare it ` +
   `in pulled_files_read, and state each target's tolerance in its terms.\n` +

@@ -1,0 +1,204 @@
+# Lodged-rule registry — reproduction lane, gate 1.3.2 (criterion 3)
+#
+# The rules a reproduction plan may rely on, each quoted whole from the file
+# its agents are given, so that a plan can be checked against the rule itself
+# rather than against a paraphrase. In the gate 1.3.1 pilot the approved plan
+# for herskind T17 cited ruling Q5 by name but dropped its input condition
+# ("credited only where its inputs come from executing the authors' code"),
+# and two approvals passed it (wiki/planning/reproduction-gate-1-3-design.md).
+#
+# Rules (scripts/reproduction-lane.py, ``rule_problems``):
+# - A plan that relies on a rule quotes its ``text`` whole, word for word
+#   (whitespace aside), in ``rules_applied``. A target whose text cites a
+#   rule by a ``cited_as`` pattern must carry an application of it.
+# - Each application states, for every listed condition, whether it holds
+#   (yes, no, unknown, not-applicable) and the evidence. Where a condition
+#   holds as its ``not_creditable_when`` says, the target is planned
+#   not-creditable, and the gate excludes it whatever its outcome.
+#   ``not_creditable_when: null`` means the plan states it, with no
+#   automatic consequence.
+#
+# This file amends nothing. Every ``text`` is the lodged or ruled wording as
+# its ``source`` carries it, and every ``clause`` is a verbatim part of its
+# rule; tests/test_rulings.py checks both against the sources and, for the
+# amendment's rules, against the lodged text
+# (studies/open-science-compliance/prereg/osf-amendment-3.txt). Condition
+# lists are a reading of where each rule turns, approved by the registrant
+# (Shawn Ross) in the gate 1.3.2 pull request. Change a rule only where it
+# was changed, with a new registry_version.
+
+registry_version: "1.0"
+rules:
+  Q5:
+    title: "Verification aids and reconstructed inputs"
+    lodged: >-
+      OSF amendment 3 §7(d), lodged 2026-10-08 (RULED 2026-10-05, executed-code audit Q5)
+    source: .claude/shared/invariants.md
+    source_version: "1.1"
+    cited_as: ['\bQ5\b']
+    text: >-
+      Where no authors' code produces a published result, the reproducer may test it with a
+      labelled verification aid: a read-only lookup in the deposited data, or a call to a
+      documented function of the package the authors used, making no new statistical choice. A
+      formula the reproducer infers from the paper's wording qualifies only where it reproduces
+      the paper's own printed values from the paper's own printed inputs, and it is credited only
+      where its inputs come from executing the authors' code. A result resting on inputs the
+      reproducer reconstructed, for example from upstream datasets the authors cite, never counts
+      toward coverage or the verdict: the target stays in the denominator as expected-untestable,
+      and the reconstructed result is reported as uplift evidence. A printed value that the
+      formula does not reproduce is never credited and goes to the paper-error protocol of section
+      7(a), as the ruling directs for its two inconsistent cells.
+    conditions:
+      no-authors-code:
+        clause: >-
+          Where no authors' code produces a published result
+        not_creditable_when: null
+      printed-inputs:
+        clause: >-
+          A formula the reproducer infers from the paper's wording qualifies only where it
+          reproduces the paper's own printed values from the paper's own printed inputs
+        not_creditable_when: 'no'
+      inputs-from-authors-code:
+        clause: >-
+          it is credited only where its inputs come from executing the authors' code
+        not_creditable_when: 'no'
+      reconstructed-inputs:
+        clause: >-
+          A result resting on inputs the reproducer reconstructed, for example from upstream
+          datasets the authors cite, never counts toward coverage or the verdict
+        not_creditable_when: 'yes'
+  Q6:
+    title: "Further boundary cases"
+    lodged: >-
+      OSF amendment 3 §7(d), lodged 2026-10-08 (RULED 2026-10-05, executed-code audit Q6)
+    source: .claude/shared/invariants.md
+    source_version: "1.1"
+    cited_as: ['\bQ6\b']
+    text: >-
+      A wrapper may make an authors' statement error-tolerant only where the statement computes
+      nothing that enters a result, such as registering a font; the tolerance is declared, and the
+      run log records whether it fired. Per-section error capture is routine, but a target is
+      credited only from a section that completed without error and whose inputs come only from
+      sections that also completed. Sections may run in another order only when they are
+      independent, none reading an object another defines; otherwise re-ordering changes the
+      execution logic and is fail-and-uplift. A dependency fetched from a public repository is
+      installed when the environment is built, pinned to a tagged release or, where the repository
+      has none, to a recorded commit, preferring the one current at publication. An unpinned
+      install at run time is not routine. Independence between sections is judged on every state a
+      section can pass to another, namely named objects, files written and read, global options,
+      and random-number state. The dependency sentence is read with the precedence rule above, so
+      where the authors pinned the dependency, their pin is used.
+  7a-paper-error:
+    title: "Paper error handling"
+    lodged: >-
+      OSF amendment 3 §7(a), lodged 2026-10-08
+    source: studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md
+    source_version: "1.1"
+    cited_as: []
+    text: >-
+      When a reproduced value disagrees with a published value, the reproduction is internally
+      consistent, and the authors' own materials support the reproduced value, classify as
+      PAPER_ERROR rather than MAJOR_DISCREPANCY. Admissible evidence, in descending strength: (1)
+      the paper's own tabulated data; (2) the authors' deposited data for that analysis; (3) the
+      authors' own code, run unmodified (invariant 2), on the authors' own data. The
+      reproduction's own re-implementation is never evidence. The comparison report names the tier
+      used. PAPER_ERROR findings escalate for human confirmation before entering study data.
+  7c-check-scope:
+    title: "Check scope"
+    lodged: >-
+      OSF amendment 3 §7(c), lodged 2026-10-08
+    source: studies/open-science-compliance/protocol/instruments/coverage-rules.md
+    source_version: "1.1"
+    cited_as: []
+    text: >-
+      Each target's verification method states its scope, which must equal the target's full
+      published scope at the pre-stated tolerance. A check that covers part of a target is
+      completed before the target counts as reproduced; otherwise the target is recorded as
+      partially verified and counts against coverage. Where feasible, the plan declares the
+      target's element count, and a deterministic gate compares it with the elements checked.
+  7d-fail-and-uplift:
+    title: "Invariant 2 corollary: routine and fail-and-uplift"
+    lodged: >-
+      OSF amendment 3 §7(d), lodged 2026-10-08
+    source: .claude/shared/invariants.md
+    source_version: "1.1"
+    cited_as: []
+    text: >-
+      Routine (execution environment): choosing among publicly available versions of dependencies
+      and language runtimes, meaning releases from the package's official archive (for example
+      CRAN or PyPI) or a tagged public repository, preferring the version current at publication.
+      The search and the chosen versions are recorded. Fail-and-uplift: any edit to the authors'
+      code that changes logic, indices, data selection, parameters, or the functions called,
+      however obvious the intent. A deprecated function is handled by pinning a public version
+      that still runs it; if none exists, replacing it is an edit, and so fail-and-uplift. A
+      repaired result is recorded as uplift evidence and never counts toward coverage or the
+      verdict.
+  7d-mechanics:
+    title: "Mechanics placed in an authors' file"
+    lodged: >-
+      OSF amendment 3 §7(d), lodged 2026-10-08 (RULED 2026-10-05)
+    source: .claude/shared/invariants.md
+    source_version: "1.1"
+    cited_as: []
+    text: >-
+      A mechanical change made inside an authors' file rather than in a wrapper, such as a changed
+      input path, breaks the wrapper rule even when it changes nothing computed. A result that
+      rests on such a file does not count toward coverage or the verdict until it is re-run with
+      the mechanics moved into a wrapper and the authors' file restored byte-identical. A change
+      of logic, indices, data selection, parameters, or functions called remains fail-and-uplift
+      whatever its effect, including a restructuring that gives the same result.
+  R1:
+    title: "No author code"
+    lodged: >-
+      registrant ruling, Shawn Ross, 2026-10-03 (Phase 2 shakedown; carried verbatim in run
+      configurations)
+    source: studies/open-science-compliance/outputs/validation/phase2-shakedown/run-config.yaml
+    source_version: "1.0"
+    cited_as: ['\bR1\b(?![.]\d)']
+    text: >-
+      R1 No author code: a target whose published result has no supplied code may be tested with
+      clearly labelled verification aids. Aids are read-only lookups in the deposited data, and
+      calls to documented functions of the package the authors used. They make no new statistical
+      choices, and they live in a separate comparison script, never in the authors' code. A
+      difference caused only by an unpublished convention (for example histogram bin edges) is
+      MINOR_DISCREPANCY.
+  R2:
+    title: "Unavailable inputs"
+    lodged: >-
+      registrant ruling, Shawn Ross, 2026-10-03 (Phase 2 shakedown; carried verbatim in run
+      configurations)
+    source: studies/open-science-compliance/outputs/validation/phase2-shakedown/run-config.yaml
+    source_version: "1.0"
+    cited_as: ['\bR2\b(?![.]\d)']
+    text: >-
+      R2 Unavailable inputs: a target whose inputs cannot be obtained stays in the locked
+      denominator as expected-untestable and counts against coverage. Never drop it to narrow
+      scope.
+    conditions:
+      inputs-unobtainable:
+        clause: >-
+          a target whose inputs cannot be obtained
+        not_creditable_when: 'yes'
+  R3:
+    title: "Granularity"
+    lodged: >-
+      registrant ruling, Shawn Ross, 2026-10-03 (Phase 2 shakedown; carried verbatim in run
+      configurations)
+    source: studies/open-science-compliance/outputs/validation/phase2-shakedown/run-config.yaml
+    source_version: "1.0"
+    cited_as: ['\bR3\b(?![.]\d)']
+    text: >-
+      R3 Granularity: one target per display item. A multi-panel figure is one target, and its
+      panels are described within it. Named values in the text are separate targets.
+  R4:
+    title: "Internal inconsistency"
+    lodged: >-
+      registrant ruling, Shawn Ross, 2026-10-03 (Phase 2 shakedown; carried verbatim in run
+      configurations)
+    source: studies/open-science-compliance/outputs/validation/phase2-shakedown/run-config.yaml
+    source_version: "1.0"
+    cited_as: ['\bR4\b(?![.]\d)']
+    text: >-
+      R4 Internal inconsistency: where the paper's text and its own tables or figures disagree,
+      score against the stated value. Apply the PAPER_ERROR protocol if the reproduction
+      disagrees, and escalate.
