@@ -617,16 +617,29 @@ def review_concern(cid: str, targets: tuple[str, ...] = ("T02",), **fields) -> d
             "summary": f"concern {cid}", "evidence": ["comparisons/t02.csv"], **fields}
 
 
+def method_row(target: str, as_planned: str = "yes", **fields) -> dict:
+    """A reviewer's method row for one target (criterion 2)."""
+    departs = as_planned != "yes"
+    return {"target_id": target, "as_planned": as_planned,
+            "aspects": ["method"] if as_planned == "no" else [],
+            "departure": f"{target} compared another way" if departs else None,
+            "outcome_affected": "no", "after_published_value": "unknown",
+            "evidence": ["comparisons/t02.csv"] if departs else [], **fields}
+
+
 def review_payload(*concerns: dict, concern_dims: tuple[str, ...] = ("methodological_soundness",),
-                   version: str = "v1.4", **fields) -> dict:
-    """A QUALIFIED v1.4 review stating ``concerns``."""
+                   version: str = "v1.4", rows: list[dict] | None = None, **fields) -> dict:
+    """A QUALIFIED v1.4 review stating ``concerns``, and by default a method
+    row ``yes`` for each of T01 to T03."""
     return {"status": "OK", "paper_slug": "paper-a", "overall": "QUALIFIED",
             "receipts": {"agent_version": f"adversarial-reviewer {version}"},
             "dimensions": {k: {"verdict": "CONCERN" if k in concern_dims else "PASS",
                                "findings": []} for k in lane.DIMENSION_KEYS},
             "verdict_challenge": {"executor_verdict": "SUCCESSFUL",
                                   "reviewer_supports_verdict": True, "rationale": "r"},
-            "concerns": list(concerns), **fields}
+            "concerns": list(concerns),
+            "method_assessment": [method_row(t) for t in ("T01", "T02", "T03")]
+            if rows is None else rows, **fields}
 
 
 class ScopedCoverageTests(unittest.TestCase):
@@ -796,6 +809,98 @@ class ReviewConcernTests(unittest.TestCase):
              "reviewer": (clean, review_payload(review_concern("C1", targets=["T99"])))})
         self.assertTrue(doc["roles"]["reviewer"]["clean"])
         self.assertIn("review-concern:C1", [i["id"] for i in doc["issues"]])
+
+
+class MethodRowTests(unittest.TestCase):
+    """The reviewer's per-target method rows (gate 1.3.2, criterion 2).
+
+    T01's record says as planned, T02's declares a departure, and T03's
+    declares nothing, so each row is read against a different executor
+    claim.
+    """
+
+    LOCKED = ["T01", "T02", "T03"]
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name)
+        write(self.dir / "comparisons" / "t02.csv", "a,b\n1,2\n")
+        self.records({"T01": True, "T02": False, "T03": None})
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def records(self, declared: dict[str, bool | None]) -> None:
+        write(self.dir / "comparisons" / "comparison.json", json.dumps({"targets": [
+            {"target_id": t, "outcome": "EXACT_MATCH",
+             **({} if d is None else {"method_as_planned": d})} for t, d in declared.items()]}))
+
+    def issues(self, rows: list[dict] | None, version: str = "v1.4") -> dict[str, dict]:
+        payload = review_payload(rows=rows or [], version=version)
+        if rows is None:
+            del payload["method_assessment"]
+        return {r["id"]: r for r in lane.issue_records(lane.method_issues(
+            payload, self.LOCKED, self.dir))}
+
+    def test_each_executor_claim_against_each_row(self):
+        found = self.issues([method_row("T01", "no"), method_row("T02", "no"),
+                             method_row("T03", "unable_to_verify")])
+        self.assertEqual(sorted(found), ["method-deviation:reviewer:T01",
+                                         "method-deviation:reviewer:T02",
+                                         "method-unverified:T03"])
+        self.assertIn("[undeclared: the executor recorded it as planned]",
+                      found["method-deviation:reviewer:T01"]["message"])
+        self.assertIn("[declared by the executor too]",
+                      found["method-deviation:reviewer:T02"]["message"])
+        self.assertEqual(found["method-deviation:reviewer:T01"]["targets"], ["T01"])
+        self.assertIn("the executor made no declaration", found["method-unverified:T03"]["message"])
+
+    def test_an_as_planned_claim_never_suppresses_the_reviewer(self):
+        found = self.issues([method_row("T01", "unable_to_verify"), method_row("T02"),
+                             method_row("T03")])
+        self.assertIn("which does not settle it", found["method-unverified:T01"]["message"])
+        # A "yes" against T02's declared departure is a disagreement to rule;
+        # agreement on T03 raises nothing.
+        self.assertEqual(sorted(found), ["method-disagreement:T02", "method-unverified:T01"])
+
+    def test_missing_repeated_and_malformed_rows_leave_their_target_unassessed(self):
+        found = self.issues([method_row("T01", "no", aspects=[]), method_row("T02"),
+                             method_row("T02", "no")])
+        self.assertEqual(sorted(found), ["method-unassessed:T01", "method-unassessed:T02",
+                                         "method-unassessed:T03"])
+        self.assertIn("names no aspect", found["method-unassessed:T01"]["message"])
+        self.assertIn("2 method rows", found["method-unassessed:T02"]["message"])
+        self.assertIn("no method row", found["method-unassessed:T03"]["message"])
+        self.assertEqual(found["method-unassessed:T03"]["targets"], ["T03"])
+        for fields, defect in (({"evidence": []}, "cites no evidence"),
+                               ({"evidence": ["absent.R"]}, "is not a file"),
+                               ({"departure": " "}, "says neither what departed"),
+                               ({"aspects": ["mood"]}, "not among method"),
+                               ({"outcome_affected": "maybe"}, "its outcome_affected")):
+            found = self.issues([method_row("T01", "no", **fields), method_row("T02"),
+                                 method_row("T03")])
+            self.assertIn(defect, found["method-unassessed:T01"]["message"], fields)
+
+    def test_a_row_for_an_unlocked_target_is_paper_wide(self):
+        found = self.issues([method_row(t) for t in self.LOCKED] + [method_row("T99")])
+        self.assertEqual(found["review-defect:method-row:T99"]["scope"], "paper")
+
+    def test_a_review_without_rows(self):
+        """v1.4 must give rows; on a gate 1.3.2 attempt, so must any reviewer,
+        since the gate no longer raises the method-adherence obligation; a
+        v1.3 review of a 1.3.1 attempt keeps that obligation instead."""
+        self.assertIn("review-defect:no-method-assessment", self.issues(None))
+        write(self.dir / lane.GATE_FILE, json.dumps({"gate_version": "1.3.1"}))
+        self.assertEqual(self.issues(None, version="v1.3"), {})
+        write(self.dir / lane.GATE_FILE, json.dumps({"gate_version": "1.3.2"}))
+        self.assertIn("review-defect:no-method-assessment", self.issues(None, version="v1.3"))
+
+    def test_a_changed_declaration_needs_a_new_ruling(self):
+        rows = [method_row("T01", "no"), method_row("T02"), method_row("T03")]
+        before = self.issues(rows)["method-deviation:reviewer:T01"]["fingerprint"]
+        self.records({"T01": False, "T02": False, "T03": None})
+        self.assertNotEqual(self.issues(rows)["method-deviation:reviewer:T01"]["fingerprint"],
+                            before)
 
 
 class AdjudicationTests(unittest.TestCase):
@@ -1131,6 +1236,52 @@ class PilotAdjudicationTests(unittest.TestCase):
         self.assertEqual(lane.verify_adjudicated(self.dir)["coverage"]["targets_credited"], 13)
         self.assertEqual(lane.artefact_state(self.dir), json.loads(
             (self.dir / lane.RUN_AUDIT_FILE).read_text())["reviewed_state_sha256"])
+
+    # Criterion 2's fixture: the departures the v1.3 reviewer found in prose
+    # (Shawn's ruling on method-adherence:targets, 2026-10-17), stated as
+    # v1.4 rows against attempt 04's real comparison and declarations.
+    DEPARTURES = {
+        "T01": (["method", "tolerance"], "a numeric pixel comparison with an executor-chosen "
+                "one-object threshold, where the plan says visual"),
+        "T03": (["method", "classification"], "all 1,176 pairs checked, and a tolerance "
+                "failure classified MINOR_DISCREPANCY"),
+        "T04": (["method"], "positions compared by Spearman correlation"),
+        "T12": (["inputs"], "the Bigrams.csv export instead of the Part 3 table"),
+        "T13": (["inputs"], "the aid's quanteda calls instead of the captured token_freqs"),
+    }
+
+    def method_flags(self, **overrides: str) -> dict[str, dict]:
+        locked = lane.locked_targets(self.dir)
+        rows = []
+        for target in locked:
+            aspects, departure = self.DEPARTURES.get(target, ([], None))
+            verdict = overrides.get(target, "no" if departure else "yes")
+            rows.append({"target_id": target, "as_planned": verdict,
+                         "aspects": aspects if verdict == "no" else [],
+                         "departure": departure if verdict == "no" else None,
+                         "outcome_affected": "no", "after_published_value": "unknown",
+                         "evidence": ["comparisons/compare.py", lane.PLAN_FILE]
+                         if verdict == "no" else []})
+        payload = {"status": "OK", "receipts": {"agent_version": "adversarial-reviewer v1.4"},
+                   "method_assessment": rows}
+        return {r["id"]: r for r in lane.issue_records(
+            lane.method_issues(payload, locked, self.dir))}
+
+    def test_the_four_undeclared_departures_are_flagged(self):
+        """Criterion 2's fixture: the executor recorded T01, T03, T04, and
+        T12 as planned and declared T13. Each departure is its own flag on
+        its target, the four marked undeclared, and nothing else is raised."""
+        found = self.method_flags()
+        self.assertEqual(sorted(found), [f"method-deviation:reviewer:{t}"
+                                         for t in ("T01", "T03", "T04", "T12", "T13")])
+        for target in ("T01", "T03", "T04", "T12"):
+            issue = found[f"method-deviation:reviewer:{target}"]
+            self.assertEqual(issue["targets"], [target])
+            self.assertIn("[undeclared: the executor recorded it as planned]", issue["message"])
+        self.assertIn("[declared by the executor too]",
+                      found["method-deviation:reviewer:T13"]["message"])
+        # Had the reviewer judged T13 as planned, the roles would disagree.
+        self.assertIn("method-disagreement:T13", self.method_flags(T13="yes"))
 
     def test_the_recorded_result_is_current(self):
         """Shawn approved the restated rulings (2026-10-18); the attempt's own

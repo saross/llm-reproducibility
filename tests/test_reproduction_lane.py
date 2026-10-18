@@ -317,10 +317,11 @@ class GateTests(unittest.TestCase):
                                                    "targets_reproduced": 1})
         self.assertEqual(self.run_gate()["verdict"], "pass")
 
-    def test_method_deviations_are_flags_and_adherence_an_obligation(self):
+    def test_method_deviations_are_flags_and_adherence_the_reviewers(self):
         """The gate 1.3 final review's F4: a declared departure from the
-        plan's method is a flag on its target, an undeclared one a warning,
-        and every attempt carries the reviewer's method-adherence obligation."""
+        plan's method is a flag on its target, and an undeclared one a
+        warning. Gate 1.3.2 retires the paper-wide method-adherence
+        obligation: the reviewer's per-target rows carry that duty."""
         base = self.comparison()["targets"]
         changed = [{**base[0], "method_as_planned": False,
                     "method_deviation": "criterion inferred from the caption after viewing "
@@ -331,7 +332,7 @@ class GateTests(unittest.TestCase):
         self.assertEqual(report["verdict"], "pass", report["errors"])
         issues = {i["id"]: i for i in report["issues"]}
         self.assertEqual(issues["method-deviation:T01"]["targets"], ["T01"])
-        self.assertEqual(issues["method-adherence:targets"]["kind"], "obligation")
+        self.assertNotIn("method-adherence:targets", issues)
         self.assertIn("method-deviation:T01", report["coverage_admitted"]["unruled_issues"])
         self.assertIn("T01", report["coverage_admitted"]["excluded_targets"])
         self.comparison()

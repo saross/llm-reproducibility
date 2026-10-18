@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Adversarial review output",
-  "description": "Structured-output contract for adversarial-reviewer spawns (agent definition v1.1), supplied at spawn by the reproduction-execute workflow. Dimension names and the PASS/CONCERN and CONFIRMED/QUALIFIED/CHALLENGED scales follow the adversarial-review framework v1.1 (pushed instrument). The orchestrator persists the payload as <attempt_dir>/adversarial-review.json (the reviewer writes nothing). The framework's overall rule (0 concerns CONFIRMED; 1-2 QUALIFIED; 3+ CHALLENGED) and the agent definition's ambiguity default are checked post-run by scripts/reproduction-lane.py, not here. Runtime-safe: no top-level allOf or conditionals. v1.1 (2026-10-18, gate 1.3.2, agent definition v1.4): concerns, one per concern the review raises, each with a stable concern_id, the dimension it sits under, an explicit scope (targets, naming locked target ids, or paper, naming none), and the attempt files (or $CORPUS_ROOT/ paths) that evidence it. The lane makes each concern its own issue, so a ruling can resolve it per target; scope consistency, locked-target membership, and evidence files are checked post-run, and a malformed concern bears on the whole paper until ruled.",
+  "description": "Structured-output contract for adversarial-reviewer spawns (agent definition v1.1), supplied at spawn by the reproduction-execute workflow. Dimension names and the PASS/CONCERN and CONFIRMED/QUALIFIED/CHALLENGED scales follow the adversarial-review framework v1.1 (pushed instrument). The orchestrator persists the payload as <attempt_dir>/adversarial-review.json (the reviewer writes nothing). The framework's overall rule (0 concerns CONFIRMED; 1-2 QUALIFIED; 3+ CHALLENGED) and the agent definition's ambiguity default are checked post-run by scripts/reproduction-lane.py, not here. Runtime-safe: no top-level allOf or conditionals. v1.1 (2026-10-18, gate 1.3.2, agent definition v1.4): concerns, one per concern the review raises, each with a stable concern_id, the dimension it sits under, an explicit scope (targets, naming locked target ids, or paper, naming none), and the attempt files (or $CORPUS_ROOT/ paths) that evidence it. The lane makes each concern its own issue, so a ruling can resolve it per target; scope consistency, locked-target membership, and evidence files are checked post-run, and a malformed concern bears on the whole paper until ruled. Also in v1.1 (criterion 2): method_assessment, one row per locked target saying whether its comparison followed the approved plan (yes, no, unable_to_verify), which aspects departed (method, inputs, tolerance, classification), what changed, whether the outcome was affected, and whether it was decided after the published value was seen, with evidence files. The lane reads each row against the executor's method_as_planned; a missing, repeated, or malformed row leaves its target unassessed until ruled.",
   "version": "1.1",
   "type": "object",
   "required": ["status", "paper_slug", "receipts"],
@@ -36,6 +36,7 @@
       }
     },
     "concerns": {"type": "array", "items": {"$ref": "#/definitions/concern"}},
+    "method_assessment": {"type": "array", "items": {"$ref": "#/definitions/method_row"}},
     "overall": {"type": "string", "enum": ["CONFIRMED", "QUALIFIED", "CHALLENGED"]},
     "verdict_challenge": {
       "type": "object",
@@ -63,6 +64,20 @@
     "recommendations": {"type": "array", "items": {"type": "string", "minLength": 1}}
   },
   "definitions": {
+    "method_row": {
+      "type": "object",
+      "required": ["target_id", "as_planned", "aspects", "departure", "outcome_affected", "after_published_value", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "target_id": {"type": "string", "pattern": "^T[0-9]{2,3}$"},
+        "as_planned": {"type": "string", "enum": ["yes", "no", "unable_to_verify"]},
+        "aspects": {"type": "array", "items": {"type": "string", "enum": ["method", "inputs", "tolerance", "classification"]}},
+        "departure": {"type": ["string", "null"]},
+        "outcome_affected": {"type": "string", "enum": ["yes", "no", "unknown"]},
+        "after_published_value": {"type": "string", "enum": ["yes", "no", "unknown"]},
+        "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
     "concern": {
       "type": "object",
       "required": ["concern_id", "dimension", "scope", "targets", "summary", "evidence"],

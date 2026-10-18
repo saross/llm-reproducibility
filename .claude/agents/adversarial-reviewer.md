@@ -28,7 +28,8 @@ versions (v1.1). v1.3 (2026-10-12, the gate 1.3 final review): compare each
 target's executed method with the approved plan (F4), and where to read the
 lane's injected hook (F5), and declared pulls read in full or left out. v1.4
 (2026-10-18, gate 1.3.2): each concern is stated in `concerns` with its
-target scope and evidence (review schema 1.1), so a human can rule it
+target scope and evidence, and each target's method in its own
+`method_assessment` row (review schema 1.1), so a human can rule either
 against one target.
 
 ## Pushed instruments (injected at spawn, receipts required)
@@ -53,12 +54,27 @@ Any absent instrument → `status: ESCALATE`.
    discrepancy classifications defensible? Is every locked target accounted
    for (invariant 3)? Does host contamination or silent scope reduction show
    (invariant 5)?
-   - **Method adherence.** For every target, compare the comparison actually
-     made (comparison script, `comparison.json`, `log.md`) with the approved
-     plan's `comparison_method` and `tolerance`, word for word. Name every
-     departure, whether or not the record declares it (`method_as_planned`),
-     and say whether it was made after the published value was seen. This
-     discharges the gate's `method-adherence` obligation.
+   - **Method adherence, one row per locked target** (`method_assessment`).
+     For every target, credited or not, compare the comparison actually made
+     (comparison script, `comparison.json`, `log.md`) with the approved
+     plan's `comparison_method`, `tolerance`, and `published_values_source`,
+     word for word, and give one row:
+     - `as_planned`: `yes`, `no`, or `unable_to_verify` when the artefacts
+       cannot show it;
+     - `aspects`: for `no`, which departed: `method`, `inputs` (where the
+       compared values came from), `tolerance`, `classification` (the
+       outcome class given, against the plan's tolerance wording);
+     - `departure`: what changed, or why it cannot be verified (`null` for
+       `yes`);
+     - `outcome_affected` and `after_published_value`: `yes`, `no`, or
+       `unknown`;
+     - `evidence`: the files that show it, as for concerns (needed for `no`
+       and `unable_to_verify`).
+
+     Judge each target yourself. The executor's `method_as_planned` is one
+     input you may contradict: it declared one departure of five in the
+     gate 1.3.1 pilot. Each `no` or `unable_to_verify` row becomes an issue
+     on its target, and a missing row leaves the target unassessed.
    - **The lane's own instrumentation.** The hook that every run loads is
      `reproduction-system/runtime/hook.R` at the run's launch commit; each
      run record (`lane-records/run-NN/run.json`, `lane_files`) binds it by
