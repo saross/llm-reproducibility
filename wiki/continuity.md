@@ -50,7 +50,7 @@ merged here as PR #1).
     `~/agent-mail/claude/outbox/claude/20261017T073937.869344Z-claude-gate131-closed-fable.md`
     (bounded ask) and
     `~/agent-mail/claude/outbox/codex/20261017T073937.869344Z-claude-gate131-closed-astra.md`
-    (no token limit; Astra has plenty of credit). [x] 2026-10-18 Both replies in, same verdict (closure sound; scope right, with criteria to make explicit): Astra's `~/agent-mail/codex/outbox/claude/2026-10-17-codex-gate131-pilot-and-gate132-scope-review.md` (four acceptance criteria: target-scoped concerns plus a derived adjudicated result; a per-target reviewer method assessment; rules quoted whole and their conditions mapped to each target's inputs; the operational follow-ups keep the earlier protections) and Fable's `~/agent-mail/claude/outbox/claude/20261018T044003.960111Z-claude-gate131-closed-fable-reply.md` (adds: obligations need target scope too, since `method-adherence:targets` is as targetless as `review:qualified`; the review-only mode on attempt 04 can serve as 1.3.2's pilot). [ ] Fold both sets into the 1.3.2 scope at the top of the design doc before building. **Credit
+    (no token limit; Astra has plenty of credit). [x] 2026-10-18 Both replies in, same verdict (closure sound; scope right, with criteria to make explicit): Astra's `~/agent-mail/codex/outbox/claude/2026-10-17-codex-gate131-pilot-and-gate132-scope-review.md` (four acceptance criteria: target-scoped concerns plus a derived adjudicated result; a per-target reviewer method assessment; rules quoted whole and their conditions mapped to each target's inputs; the operational follow-ups keep the earlier protections) and Fable's `~/agent-mail/claude/outbox/claude/20261018T044003.960111Z-claude-gate131-closed-fable-reply.md` (adds: obligations need target scope too, since `method-adherence:targets` is as targetless as `review:qualified`; the review-only mode on attempt 04 can serve as 1.3.2's pilot). [x] 2026-10-18 Folded both sets into the 1.3.2 scope at the top of the design doc (Shawn: "proceed as suggested"): gaps classed (gap 2 a D, gap 3 an A, gap 1 a strengthening of F4); four acceptance criteria; the operational fixes as separate PRs outside the gate's review, as Fable placed them. **Credit
     is limited (Shawn, 2026-10-17): this follow-up with Fable is the last
     Fable use for now; ration aggressively after it.** The question was:
     does a run with these findings close the hardening? Fable's earlier view: a clean re-run closes it. The gate's
@@ -63,14 +63,26 @@ merged here as PR #1).
     lane's 14/18. (3) The approved plan paraphrased ruling Q5 without its
     input condition, and plan approval (Shawn's, and Claude's walk-through)
     did not catch it. Consider mailing Fable and Astra the outcome.
-  - [ ] **Follow-up PRs before the §8 gate** (to add to the list below):
-    target-scoped review issues; a stronger method-adherence check (a
-    per-target reviewer table, or reviewer-named departures as issues);
-    plans quote a lodged rule verbatim with its source; the lane records
-    admitted coverage after rulings (`gate-report.json` keeps only the
-    pre-ruling snapshot, 0/18); the cost and time watcher measured elapsed
-    time from file change times, so **its time check could not fire**
-    (cost check worked; fix in the lane subcommand).
+  - [ ] **Gate 1.3.2, before the §8 gate: build to the acceptance criteria
+    at the top of `wiki/planning/reproduction-gate-1-3-design.md`**
+    (2026-10-18, from both reviews): (1) target-scoped concerns and
+    obligations, plus a derived adjudicated result that study reporting
+    reads (fixture: 13/18 from attempt 04, T17 only excluded, T03 as
+    PAPER_ERROR); (2) a reviewer row per locked target, raising
+    `method-deviation:<target>` and flagging disagreement with the
+    executor; (3) lodged rules quoted whole, with each target's condition
+    and evidence stated and checked at approval (T17 the negative fixture);
+    (4) a live check through the review-only mode on attempt 04 (one
+    reviewer spawn, its own API gate). Close with regression evidence and
+    a review of the final changes. Branch + PR (schema and admission
+    changes).
+  - [ ] **Operational follow-up PRs, outside the gate's review:** the
+    launch word rule (screen the whole relayed message); the args-builder
+    guard (allow the planned initial state, reject prior execution
+    evidence or an active run); the cost and time watcher (independent
+    start time; the session's scratch `watch-run.py` measured file change
+    times, so **its time check could not fire**; test a run whose files
+    stop changing, restart, and missing telemetry).
   - [x] 2026-10-17 Repeated pre-launch checks at `6b18505`: 699 tests pass,
     Docker 29.2.1, 30 GB free, Zenodo 200, attempt-04 holds only the plan
     and approval, no attempt-04 image. Launched on Shawn's "go", which

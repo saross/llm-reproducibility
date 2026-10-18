@@ -14,25 +14,95 @@ re-run under gate 1.3.1 ran from main (herskind attempt 4: stage 1
 Every post-run step passed: authoritative gate, clean audit, 17 issues ruled,
 attempt eligible. Verdict SUCCESSFUL, study coverage 13/18. The gate's
 mechanisms worked in a live run, so gate 1.3.1 closes for the findings it
-addressed. The run also found three gaps, which open gate 1.3.2, to land
-before the §8 regression gate:
+addressed: F1 to F9, A-new-1, Fable's D-1, D-2, B-1, and D-3, and Astra's
+D-Astra-1 to 3 with the two command-mode residuals. **This closure is
+version-scoped. It is not closure of the hardening:** §2.2 still requires
+every D and A finding closed before the §8 regression gate. The run found
+three gaps, which open gate 1.3.2:
 
-1. **Method declarations are weak.** The executor's per-target
-   `method_as_planned` (F4) declared one departure of five; the reviewer's
-   method-adherence obligation found the other four (T01, T03, T04, T12).
-   The obligation worked; the self-declaration did not.
-2. **Review concerns cannot be ruled per target.** The `review:qualified`
-   issue names no targets, so a ruling on it covers all of them. T17,
-   not creditable under amendment 3 §7(d), therefore stays in the lane's
-   admitted 14/18.
-3. **A plan paraphrased a lodged rule.** The approved plan cited ruling Q5
-   without its input condition, and plan approval did not catch it.
+1. **Method declarations are weak (strengthens F4; not a reopening).** The
+   executor's per-target `method_as_planned` declared one departure of
+   five. The flag for the declared one (`method-deviation:T13`) and the
+   reviewer's method-adherence obligation both fired, and the reviewer
+   named the other four (T01, T03, T04, T12). The self-declaration is near
+   worthless as evidence, so the reviewer obligation is the mechanism
+   rather than a backstop.
+2. **Review concerns and obligations cannot be ruled per target (class
+   D).** `review_issues` raises one targetless `review` flag, and
+   `method-adherence:targets` is targetless in the same way. The persisted
+   lane result therefore credits T17 (14/18) where the lodged rule and the
+   ruling deny it (13/18), and T03's ruled PAPER_ERROR exists only in a
+   ruling note. Strict binding rightly stops anyone editing the comparison.
+3. **A plan paraphrased a lodged rule (class A, a route seen in practice
+   under §2.2(3)).** The approved plan's T17 cited ruling Q5 without its
+   input condition, and two approvals passed it.
 
-Also in scope: admitted coverage recorded after the rulings (the gate
-report keeps only its pre-ruling snapshot), and the lane follow-ups listed
-in `wiki/continuity.md` (the launch word rule, the args-builder guard
-against partly executed attempts, a cost and time watcher, a review-only
-re-run mode). Records:
+Both reviews concur on closure and scope (Astra,
+`~/agent-mail/codex/outbox/claude/2026-10-17-codex-gate131-pilot-and-gate132-scope-review.md`;
+Fable,
+`~/agent-mail/claude/outbox/claude/20261018T044003.960111Z-claude-gate131-closed-fable-reply.md`).
+
+**Gate 1.3.2 acceptance criteria (both reviews):**
+
+1. **Target-scoped concerns that reach the final result.** Each review
+   concern and obligation gets a stable identity, an evidence binding, and
+   an explicit target scope; paper-wide concerns stay explicitly
+   paper-wide. An unresolved concern blocks the credit it affects, and an
+   unknown or omitted target reference fails rather than passing silently.
+   The fingerprint and reviewed-state protections stay as they are. A
+   derived, authoritative **adjudicated result** per attempt records, per
+   target, the credit, the ruled classification, and the ruling that set
+   it, plus the ruled coverage and verdict disposition. It is bound to the
+   gate report digest, the raw payloads, the audit, and the rulings, and
+   study reporting and export read it and nothing earlier; the raw records
+   are kept. Fixture: from attempt 04's real records, derive 13/18 with
+   only T17 excluded, all 18 in the denominator, and T03 shown as
+   PAPER_ERROR, keeping the raw 14/18 and the pre-ruling 0/18 as history.
+   Also test several concerns on one target, one concern on several
+   targets, paper-wide concerns, changed evidence or rulings, and
+   incomplete dispositions.
+2. **The reviewer's method assessment, one row per locked target.** Rows
+   (`target_id`, `as_planned`, `departure`, `outcome_affected`) cover
+   uncredited targets too, and compare method, input provenance,
+   tolerance, and outcome classification with the approved plan. The gate
+   raises `method-deviation:<target>` from a reviewer row as it does from
+   an executor declaration, and a flag wherever the two roles disagree; an
+   executor's "as planned" never suppresses a reviewer discrepancy or an
+   "unable to verify". Missing, duplicate, and unknown rows fail the
+   payload. The executor is never asked to edit the reviewed comparison.
+   Fixtures: attempt 04's four undeclared departures and its declared T13.
+3. **Lodged rules quoted whole, with their application checked.** A plan
+   quotes each lodged rule it relies on verbatim, with a versioned source,
+   and states for each affected target which condition applies and the
+   evidence for it. Plan approval checks that statement against the rule,
+   and never amends a lodged rule. Negative fixtures: attempt 04's T17
+   (the paraphrase), and a plan that quotes Q5 correctly but applies the
+   wrong branch (for T17, inputs from executing the authors' code: no, an
+   S1 lookup).
+4. **A live check through the review-only re-run mode** (Fable's proposal).
+   1.3.2 changes what the reviewer writes, so under §2.2 it needs a live
+   check: the review-only mode, run once on attempt 04 with the new
+   reviewer, costs one reviewer spawn and also pilots the mode. It binds
+   the original executor result explicitly, takes a fresh reviewed-state
+   record, and produces a matching audit; it never inherits the old
+   review's clearance. Test a reviewer retry and a changed comparison. It
+   is a separately approved run at the API gate.
+
+1.3.2 closes with focused regression evidence for each criterion and a
+review of the final changes before §8.
+
+**Operational follow-ups, as separate PRs outside the gate's review**
+(Fable's placement; Astra's test requirements kept):
+
+- the launch word rule, screening the whole relayed message, so that "go"
+  followed by outcome-bearing prose does not pass;
+- the args-builder guard, allowing the planned initial state but rejecting
+  prior execution evidence or an active run;
+- the cost and time watcher, with an independent start time, a test for a
+  run whose files stop changing, and restart and missing-telemetry
+  behaviour.
+
+Records:
 `studies/open-science-compliance/outputs/validation/gate-1-3-1-pilot-rerun/`.
 
 **Gate 1.3.1 (2026-10-12): the final review's fixes.** Both final reviews
