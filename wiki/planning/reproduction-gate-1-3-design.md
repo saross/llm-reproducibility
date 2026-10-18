@@ -148,6 +148,38 @@ What was built:
   concerns, changed evidence and rulings, conflicting classifications, and
   incomplete dispositions. The real attempt 04 is unchanged: restating its
   two rulings in the attempt itself needs Shawn's approval of the text.
+  [Shawn approved it, 2026-10-18: the two rulings are restated in attempt
+  04, which adjudicates to 13/18 (`f9328ed`); draft PR #13.]
+
+**Criterion 2 as built (2026-10-18, same branch).** Shawn's rulings of
+2026-10-18 set two choices: a disagreement between executor and reviewer is
+named in the reviewer's flag (folded), with a separate flag only where the
+reviewer has none to carry it; and the gate's paper-wide
+`method-adherence:targets` obligation is retired, the rows carrying its
+duty.
+
+- **Rows** (review schema 1.1, `method_assessment`): one per locked target,
+  credited or not, with `as_planned` (`yes`, `no`, `unable_to_verify`), the
+  `aspects` that departed (`method`, `inputs`, `tolerance`,
+  `classification`), the `departure`, `outcome_affected` and
+  `after_published_value` (`yes`, `no`, `unknown`), and `evidence`.
+- **Flags** (`method_issues`), each on its target and fingerprinted with
+  the row, its evidence, and the target's comparison record: a `no` is
+  `method-deviation:reviewer:<target>`, its own id so the gate's
+  executor-declared `method-deviation:<target>` cannot hide it, marked
+  undeclared unless the executor declared it; `unable_to_verify` is
+  `method-unverified:<target>`, whatever the executor claimed; a `yes`
+  against a declared departure is `method-disagreement:<target>`. A
+  missing, repeated, or malformed row is `method-unassessed:<target>`; a
+  row for an unlocked target is a paper-wide `review-defect`. A review
+  without rows is a paper-wide defect from reviewer v1.4 or gate 1.3.2 on,
+  so the retired obligation's duty cannot lapse; attempt 04 (gate 1.3.1,
+  reviewer v1.3) keeps its ruled obligation.
+- **Fixture.** On a copy of attempt 04, rows restating the v1.3 reviewer's
+  findings flag T01, T03, T04, and T12 each on its own target, marked
+  undeclared, and T13 as declared by both roles; a `yes` for T13 raises
+  `method-disagreement:T13`. `MethodRowTests` covers every executor claim
+  against every row, and missing, repeated, malformed, and unknown rows.
 
 **Operational follow-ups, as separate PRs outside the gate's review**
 (Fable's placement; Astra's test requirements kept):
