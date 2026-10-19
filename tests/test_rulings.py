@@ -785,6 +785,32 @@ class ReviewConcernTests(unittest.TestCase):
         del legacy["concerns"]
         self.assertEqual(sorted(self.issues(legacy)), ["review:qualified"])
 
+    def test_scalar_collections_are_defects_not_crashes(self):
+        """Astra's review, D-Astra-132-3: a scalar where a list belongs is a
+        paper-wide defect, never a crash."""
+        for field, defect in (("targets", "its targets are not a list"),
+                              ("evidence", "its evidence is not a list")):
+            concern = review_concern("C1")
+            concern[field] = 1
+            issue = self.issues(review_payload(concern))["review-concern:C1"]
+            self.assertEqual(issue["scope"], "paper", field)
+            self.assertIn(defect, issue["message"], field)
+        lacking = review_concern("C1")
+        del lacking["summary"]
+        self.assertIn("it lacks summary",
+                      self.issues(review_payload(lacking))["review-concern:C1"]["message"])
+        found = self.issues({"status": "ESCALATE", "escalations": 1}, role="executor")
+        self.assertEqual(found["escalation:executor:malformed"]["scope"], "paper")
+        found = self.issues({"status": "ESCALATE", "escalations": ["T03 is off"]},
+                            role="executor")
+        self.assertIn("escalation:executor:item-0", found)
+        # A dimension that is not an object marks nothing CONCERN, so the
+        # concern under it is malformed, and nothing crashes.
+        odd = review_payload(review_concern("C1"))
+        odd["dimensions"] = {"methodological_soundness": "CONCERN"}
+        self.assertIn("which the review does not mark CONCERN",
+                      self.issues(odd)["review-concern:C1"]["message"])
+
     def test_an_escalation_on_an_unknown_target_is_paper_wide(self):
         found = self.issues({"status": "ESCALATE", "escalations": [
             {"kind": "PAPER_ERROR", "target_id": "T99", "detail": "d"},
@@ -883,6 +909,33 @@ class MethodRowTests(unittest.TestCase):
                                  method_row("T03")])
             self.assertIn(defect, found["method-unassessed:T01"]["message"], fields)
 
+    def test_a_contradictory_or_incomplete_row_leaves_its_target_unassessed(self):
+        """Astra's review, D-Astra-132-2: a 'yes' that describes a departure,
+        and a row missing its fields, raised nothing and was credited. Both
+        now leave the target unassessed, the row kept in the fingerprint."""
+        contradictory = method_row("T01", "yes", aspects=["inputs"], outcome_affected="yes",
+                                   departure="reconstructed inputs replaced the authors' outputs")
+        found = self.issues([contradictory, method_row("T02"), method_row("T03")])
+        message = found["method-unassessed:T01"]["message"]
+        for defect in ("names aspects that departed (inputs)", "describes a departure",
+                       "says the outcome was affected"):
+            self.assertIn(defect, message)
+        self.assertEqual(found["method-unassessed:T01"]["files"]["row"],
+                         lane.json_digest(contradictory))
+        sparse = {"target_id": "T01", "as_planned": "yes", "outcome_affected": "no",
+                  "after_published_value": "unknown"}
+        found = self.issues([sparse, method_row("T02"), method_row("T03")])
+        self.assertIn("it lacks aspects, departure, evidence",
+                      found["method-unassessed:T01"]["message"])
+
+    def test_scalar_collections_in_a_row_are_defects_not_crashes(self):
+        for field in ("aspects", "evidence"):
+            found = self.issues([method_row("T01", "no", **{field: 1}), method_row("T02"),
+                                 method_row("T03")])
+            self.assertIn(f"its {field} are not a list" if field == "aspects"
+                          else "its evidence is not a list",
+                          found["method-unassessed:T01"]["message"], field)
+
     def test_a_row_for_an_unlocked_target_is_paper_wide(self):
         found = self.issues([method_row(t) for t in self.LOCKED] + [method_row("T99")])
         self.assertEqual(found["review-defect:method-row:T99"]["scope"], "paper")
@@ -926,8 +979,10 @@ class AdjudicationTests(unittest.TestCase):
         self.rulings_file = root / "rulings.json"
         self.build()
 
-    def build(self, rules_applied: list[dict] | None = None) -> None:
-        """The attempt, eligible but unruled, under a plan with ``rules_applied``."""
+    def build(self, rules_applied: list[dict] | None = None,
+              declared: dict[str, bool] | None = None) -> None:
+        """The attempt, eligible but unruled, under a plan with ``rules_applied``,
+        the comparison declaring ``method_as_planned`` as ``declared`` says."""
         write(self.dir / lane.PLAN_FILE, json.dumps({"plan": {
             "paper_slug": "paper-a",
             "verification_targets": [{"target_id": t} for t in self.LOCKED],
@@ -935,9 +990,11 @@ class AdjudicationTests(unittest.TestCase):
         plan_sha = lane.sha256_file(self.dir / lane.PLAN_FILE)
         write(self.dir / "comparisons" / "comparison.json", json.dumps({
             "paper_slug": "paper-a", "plan_sha256": plan_sha, "verdict": "SUCCESSFUL",
-            "targets": [{"target_id": "T01", "outcome": "EXACT_MATCH"},
-                        {"target_id": "T02", "outcome": "EXACT_MATCH"},
-                        {"target_id": "T03", "outcome": "MINOR_DISCREPANCY"}]}))
+            "targets": [{"target_id": t, "outcome": outcome,
+                         **({"method_as_planned": (declared or {})[t]}
+                            if t in (declared or {}) else {})}
+                        for t, outcome in (("T01", "EXACT_MATCH"), ("T02", "EXACT_MATCH"),
+                                           ("T03", "MINOR_DISCREPANCY"))]}))
         write(self.dir / "comparisons" / "t02.csv", "a,b\n1,2\n")
         issues = [semantics_obligation(),
                   lane.Issue.flag("method-deviation", "T01", "T01 departed", targets=("T01",),
@@ -1079,6 +1136,52 @@ class AdjudicationTests(unittest.TestCase):
         self.assertEqual(self.credit(result)["T02"], "excluded")
         self.assertIn("not creditable under Q5 by the approved plan",
                       result["targets"][1]["reasons"])
+
+    def test_the_verdict_ruling_is_bound_to_the_challenge(self):
+        """Astra's review, D-Astra-132-1: a fresh review that stops supporting
+        the verdict, challenges another, or argues otherwise needs a new
+        ruling on the verdict flag; an unchanged one keeps it."""
+        self.rule_all(**{"review:qualified": {"verdict": "SUCCESSFUL",
+                                              "note": "the review supports the verdict"}})
+        self.assertEqual(self.adjudicated()["verdict"]["ruled"], "SUCCESSFUL")
+        original = json.loads((self.dir / lane.REVIEW_FILE).read_text())["payload"]
+        self.audit(original)
+        self.assertEqual(self.adjudicated()["verdict"]["set_by"]["issue_id"], "review:qualified")
+        for change in ({"reviewer_supports_verdict": False}, {"executor_verdict": "PARTIAL"},
+                       {"rationale": "SUCCESSFUL is not supported"}):
+            changed = json.loads(json.dumps(original))
+            changed["verdict_challenge"].update(change)
+            self.audit(changed)
+            with self.assertRaisesRegex(lane.LaneError, "review:qualified is unruled",
+                                        msg=change):
+                self.adjudicated()
+
+    def test_a_contradictory_row_is_not_credited_silently(self):
+        """D-Astra-132-2 through audit, admission, and adjudication, against an
+        executor's as-planned claim: the target waits for a ruling, and the
+        ruling, not the row, decides."""
+        self.build(declared={"T01": True})
+        rows = [method_row(t) for t in self.LOCKED]
+        rows[0].update(aspects=["inputs"], outcome_affected="yes",
+                       departure="reconstructed inputs replaced the authors' outputs")
+        self.audit(review_payload(review_concern("C1"), review_concern(
+            "C2", (), evidence=[lane.PLAN_FILE]), rows=rows))
+        issues = lane.attempt_issues(self.dir, lane.read_record(self.dir, lane.GATE_FILE))
+        self.assertIn("the executor recorded it as planned",
+                      issues["method-unassessed:T01"]["message"])
+        audit = json.loads((self.dir / lane.RUN_AUDIT_FILE).read_text())
+        bound = {"run_id": audit["run_id"], "workflow_run": audit["workflow_run"],
+                 "roles": {role: {"agent_id": entry["agent_id"],
+                                  "payload_sha256": entry["payload_sha256"]}
+                           for role, entry in audit["roles"].items()}}
+        self.assertIn("method-unassessed:T01",
+                      " | ".join(lane.admission(self.dir, bound)["reasons"]))
+        with self.assertRaisesRegex(lane.LaneError, "method-unassessed:T01 is unruled"):
+            self.adjudicated()
+        self.rule_all(**{"method-unassessed:T01": {"decision": "excluded",
+                                                   "note": "T01's inputs were reconstructed"}})
+        result = self.adjudicated()
+        self.assertEqual(self.credit(result)["T01"], "excluded")
 
     def test_a_slip_costs_a_ruling_not_a_rerun(self):
         """Shawn, 2026-10-18: a concern naming an unknown target bears on the
@@ -1301,6 +1404,16 @@ class PilotAdjudicationTests(unittest.TestCase):
         # Had the reviewer judged T13 as planned, the roles would disagree.
         self.assertIn("method-disagreement:T13", self.method_flags(T13="yes"))
 
+    def test_a_v1_3_review_keeps_its_verdict_fingerprint(self):
+        """D-Astra-132-1's fix binds the verdict challenge from reviewer v1.4
+        only, so the fingerprint attempt 04's ruling binds to is unchanged."""
+        payload = json.loads((self.dir / lane.REVIEW_FILE).read_text())["payload"]
+        recorded = {i["id"]: i["fingerprint"] for i in json.loads(
+            (self.dir / lane.RUN_AUDIT_FILE).read_text())["issues"]}
+        recomputed = {i.issue_id: i.fingerprint() for i in lane.review_issues(
+            "reviewer", payload, [], self.dir, lane.locked_targets(self.dir))}
+        self.assertEqual(recomputed["review:qualified"], recorded["review:qualified"])
+
     def test_the_recorded_result_is_current(self):
         """Shawn approved the restated rulings (2026-10-18); the attempt's own
         adjudicated result, as committed, still derives from its records."""
@@ -1405,10 +1518,97 @@ class LodgedRuleTests(unittest.TestCase):
         self.assertEqual(problems, ["Q5 on T17: inputs-from-authors-code is 'no', so Q5 makes "
                                     "the target not creditable, but the plan marks it "
                                     "'creditable'"])
-        # Stated truthfully as unknown, the target may be planned creditable:
-        # whether its inputs are the authors' outputs is the approver's check.
+        # Shawn, 2026-10-19: the plan settles whether its own inputs are the
+        # authors' outputs, so "unknown" cannot keep T17 creditable; "yes"
+        # can, and whether it is true is the approver's check.
         self.assertEqual(lane.rule_problems(
-            self.applied(t17_credit="creditable", t17_inputs="unknown"), self.rules), [])
+            self.applied(t17_credit="creditable", t17_inputs="yes"), self.rules), [])
+
+    def test_unknown_is_refused_where_the_plan_decides(self):
+        """A side agent's route (2026-10-19): Q5's input condition left
+        'unknown' would let a T17-style credit through. Where the run
+        decides (Q5's printed values), 'unknown' stays allowed."""
+        for credit in ("creditable", "not-creditable"):
+            problems = lane.rule_problems(
+                self.applied(t17_credit=credit, t17_inputs="unknown"), self.rules)
+            self.assertEqual(problems, ["Q5 on T17: condition inputs-from-authors-code is "
+                                        "settled at planning, so it cannot be 'unknown': say "
+                                        "yes, no, or not-applicable from what the planned "
+                                        "method uses"], credit)
+        decided = {cid: c["decided_at"] for cid, c in self.rules["Q5"]["conditions"].items()}
+        self.assertEqual(decided, {"no-authors-code": "plan", "printed-inputs": "execution",
+                                   "inputs-from-authors-code": "plan",
+                                   "reconstructed-inputs": "plan"})
+        self.assertEqual(self.rules["R2"]["conditions"]["inputs-unobtainable"]["decided_at"],
+                         "execution")
+
+    def test_a_condition_without_decided_at_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            registry = Path(tmp) / "rules.yaml"
+            registry.write_text(yaml.safe_dump({"rules": {"Q9": {
+                "text": "a rule", "conditions": {"c": {"clause": "a rule",
+                                                       "not_creditable_when": "no"}}}}}))
+            with self.assertRaisesRegex(lane.LaneError, "decided_at None"):
+                lane.load_lodged_rules(registry)
+
+    def test_scalar_collections_are_plan_errors(self):
+        """Astra's review, D-Astra-132-3: no crash, a blocking problem."""
+        plan = self.applied()
+        plan["rules_applied"][1]["applications"] = 1
+        plan["rules_applied"][0]["applications"][0]["conditions"] = 1
+        problems = " | ".join(lane.rule_problems(plan, self.rules))
+        self.assertIn("R1: its applications are not a list", problems)
+        self.assertIn("Q5 on T17: its conditions are not a list", problems)
+        self.assertIn("does not say whether no-authors-code", problems)
+        view = lane.render_plan({"plan": plan, "run_id": "r", "workflow_run": "w",
+                                 "agent_id": "a"})
+        self.assertIn("### Q5", view)
+
+    def test_a_malformed_plan_costs_only_its_own_paper(self):
+        """Through the real persist-plans: one paper's malformed rules are a
+        readable block; the other paper's plan and the triage are written."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            schemas = REPO_ROOT / "reproduction-system" / "schemas"
+            config = root / "run-config.yaml"
+            config.write_text(json.dumps({
+                "run_id": "r", "attempt": 5, "effort": "high", "output_root": str(root / "out"),
+                "agents": {"planner": "p", "executor": "e", "reviewer": "r"},
+                "schemas": {"plan": str(schemas / "reproduction-plan-output.json"),
+                            "execution": "e", "review": "r", "comparison_record": "c"},
+                "blinding": {"forbidden_substrings": []},
+                "papers": [{"slug": "herskind-riede-2024"}, {"slug": "paper-b"}]}))
+            good = self.applied()
+            bad = {**self.applied(), "paper_slug": "paper-b"}
+            bad["rules_applied"][0]["applications"] = 1
+            run = root / "wf_plan"
+            run.mkdir()
+            for agent_id, plan in (("g1", good), ("b1", bad)):
+                prompt = (f"  Paper: {plan['paper_slug']}\n  Provenance: run r; launch commit "
+                          f"{'a' * 40}; reasoning effort pinned: high.\n")
+                lines = [{"message": {"role": "user", "content": prompt}},
+                         {"message": {"role": "assistant", "content": [
+                             {"type": "tool_use", "id": "s", "name": "StructuredOutput",
+                              "input": plan}]}},
+                         {"message": {"role": "user", "content": [
+                             {"type": "tool_result", "tool_use_id": "s",
+                              "content": "accepted"}]}}]
+                (run / f"agent-{agent_id}.jsonl").write_text(
+                    "\n".join(json.dumps(line) for line in lines) + "\n")
+                (run / f"agent-{agent_id}.meta.json").write_text(json.dumps({"agentType": "p"}))
+            err = io.StringIO()
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(err):
+                status = lane.cmd_persist_plans(argparse.Namespace(config=config, run_dir=run,
+                                                                   force=False))
+            self.assertEqual(status, 1)
+            self.assertIn("BLOCKED paper-b", err.getvalue())
+            self.assertIn("Q5: its applications are not a list", err.getvalue())
+            written = root / "out" / "herskind-riede-2024" / "reproduction" / "attempt-05"
+            self.assertTrue((written / lane.PLAN_FILE).is_file())
+            self.assertIn("## Lodged rules applied",
+                          (written / lane.PLAN_VIEW_FILE).read_text())
+            self.assertFalse((root / "out" / "paper-b").exists())
+            self.assertTrue((root / "triage-wf_plan.md").is_file())
 
     def test_a_paraphrase_or_a_fragment_fails(self):
         whole = self.rules["Q5"]["text"]

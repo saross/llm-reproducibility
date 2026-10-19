@@ -64,6 +64,10 @@ Any absent or version-mismatched instrument → `status: ESCALATE`.
      `holds` (`yes`, `no`, `unknown`, or `not-applicable`) and the evidence
      from the paper's materials and your planned method. Judge each against
      what the target's inputs actually are, not against the rule's intent.
+     A condition marked "settle it now" is decided by your own plan (for
+     example, whether a target's inputs come from executing the authors'
+     code is fixed by the method you choose), so `unknown` is not accepted
+     there; only a condition the run decides may be `unknown`.
    - `credit`: `not-creditable` wherever a condition holds as its "not
      creditable when" says. The target stays in the locked denominator and
      the gate never credits it; say so in its comparison method rather than

@@ -122,6 +122,7 @@ const lodgedBlock =
   lodged_rules.map(r => `- ${r.rule_id} (${r.title}; ${r.source}): "${r.text}"\n` +
     r.conditions.map(c => `  - condition ${c.condition_id}: "${c.clause}"` +
       (c.not_creditable_when ? ` (not creditable when ${c.not_creditable_when})` : ' (state it)') +
+      (c.decided_at === 'plan' ? '; settle it now: unknown is not accepted' : '; may be unknown until run') +
       '\n').join('')).join('')
 
 const planPrompt = (p) =>

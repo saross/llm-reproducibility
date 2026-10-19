@@ -17,6 +17,11 @@
 #   not-creditable, and the gate excludes it whatever its outcome.
 #   ``not_creditable_when: null`` means the plan states it, with no
 #   automatic consequence.
+# - ``decided_at: plan`` marks a condition the plan can settle from its own
+#   method and the materials, so ``unknown`` is refused there; ``execution``
+#   marks one only the run settles, where ``unknown`` is allowed (Shawn,
+#   2026-10-19, after a side agent showed that ``unknown`` on Q5's input
+#   condition would let a T17-style credit through).
 #
 # This file amends nothing. Every ``text`` is the lodged or ruled wording as
 # its ``source`` carries it, and every ``clause`` is a verbatim part of its
@@ -53,20 +58,24 @@ rules:
         clause: >-
           Where no authors' code produces a published result
         not_creditable_when: null
+        decided_at: plan
       printed-inputs:
         clause: >-
           A formula the reproducer infers from the paper's wording qualifies only where it
           reproduces the paper's own printed values from the paper's own printed inputs
         not_creditable_when: 'no'
+        decided_at: execution
       inputs-from-authors-code:
         clause: >-
           it is credited only where its inputs come from executing the authors' code
         not_creditable_when: 'no'
+        decided_at: plan
       reconstructed-inputs:
         clause: >-
           A result resting on inputs the reproducer reconstructed, for example from upstream
           datasets the authors cite, never counts toward coverage or the verdict
         not_creditable_when: 'yes'
+        decided_at: plan
   Q6:
     title: "Further boundary cases"
     lodged: >-
@@ -179,6 +188,7 @@ rules:
         clause: >-
           a target whose inputs cannot be obtained
         not_creditable_when: 'yes'
+        decided_at: execution
   R3:
     title: "Granularity"
     lodged: >-

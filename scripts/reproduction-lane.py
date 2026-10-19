@@ -834,7 +834,8 @@ def lodged_rules_args(config: dict) -> list[dict]:
     return [{"rule_id": rule_id, "title": rule.get("title"), "source": rule.get("source"),
              "text": normalised(rule.get("text")),
              "conditions": [{"condition_id": cid, "clause": normalised(c.get("clause")),
-                             "not_creditable_when": c.get("not_creditable_when")}
+                             "not_creditable_when": c.get("not_creditable_when"),
+                             "decided_at": c.get("decided_at")}
                             for cid, c in (rule.get("conditions") or {}).items()]}
             for rule_id, rule in rules.items()]
 
@@ -1062,6 +1063,9 @@ def select_results(results: list[dict], agent_type: str,
 LODGED_RULES_FILE = "reproduction-system/lodged-rules.yaml"
 HOLDS = ("yes", "no", "unknown", "not-applicable")
 PLANNED_CREDIT = ("creditable", "not-creditable")
+# Whether a plan can settle a condition (``plan``: then ``unknown`` is
+# refused) or only the run can (``execution``); Shawn, 2026-10-19.
+DECIDED_AT = ("plan", "execution")
 # The target fields a rule citation is looked for in.
 RULE_TEXT_FIELDS = ("display_item", "description", "comparison_method", "tolerance",
                     "published_values_source")
@@ -1093,6 +1097,10 @@ def load_lodged_rules(path: Path | None = None) -> dict[str, dict]:
             if condition.get("not_creditable_when") not in (None, *HOLDS):
                 raise LaneError(f"lodged-rule registry: {rule_id}'s condition {cid} has "
                                 f"not_creditable_when {condition.get('not_creditable_when')!r}")
+            if condition.get("decided_at") not in DECIDED_AT:
+                raise LaneError(f"lodged-rule registry: {rule_id}'s condition {cid} has "
+                                f"decided_at {condition.get('decided_at')!r}, not "
+                                f"{' or '.join(DECIDED_AT)}")
     return rules
 
 
@@ -1112,6 +1120,9 @@ def rule_problems(plan: dict, rules: dict[str, dict]) -> list[str]:
     - where a condition holds as the registry's ``not_creditable_when``
       says, the target is planned ``not-creditable`` (a correctly quoted
       rule applied on the wrong branch fails here);
+    - a condition the plan can settle (``decided_at: plan``) is never
+      ``unknown`` (Shawn, 2026-10-19), so the T17 route cannot return by
+      leaving the input condition open while planning credit;
     - a target whose text cites a rule (``cited_as``) carries an
       application of it (the pilot's paraphrase fails here).
 
@@ -1152,7 +1163,10 @@ def rule_problems(plan: dict, rules: dict[str, dict]) -> list[str]:
             problems.append(f"{rule_id}: the quotation is not the lodged rule word for word; "
                             f"quote it whole from {rule.get('source')}")
         conditions = rule.get("conditions") or {}
-        for application in entry.get("applications") or []:
+        applications = listed(entry.get("applications"))
+        if applications is None:
+            problems.append(f"{rule_id}: its applications are not a list")
+        for application in applications or []:
             if not isinstance(application, dict):
                 problems.append(f"{rule_id}: an application is not an object")
                 continue
@@ -1166,7 +1180,10 @@ def rule_problems(plan: dict, rules: dict[str, dict]) -> list[str]:
                 continue
             applied.add((rule_id, target))
             stated: dict[str, dict] = {}
-            for item in application.get("conditions") or []:
+            items = listed(application.get("conditions"))
+            if items is None:
+                problems.append(f"{where}: its conditions are not a list")
+            for item in items or []:
                 cid = str(item.get("condition_id") or "") if isinstance(item, dict) else ""
                 if not isinstance(item, dict):
                     problems.append(f"{where}: a condition is not an object")
@@ -1180,6 +1197,11 @@ def rule_problems(plan: dict, rules: dict[str, dict]) -> list[str]:
                     if item.get("holds") not in HOLDS:
                         problems.append(f"{where}: condition {cid} holds "
                                         f"{item.get('holds')!r}, not {', '.join(HOLDS)}")
+                    elif item.get("holds") == "unknown" \
+                            and conditions[cid].get("decided_at") == "plan":
+                        problems.append(f"{where}: condition {cid} is settled at planning, so "
+                                        f"it cannot be 'unknown': say yes, no, or "
+                                        f"not-applicable from what the planned method uses")
                     if not normalised(item.get("evidence")):
                         problems.append(f"{where}: condition {cid} gives no evidence")
             missing = [cid for cid in conditions if cid not in stated]
@@ -1335,11 +1357,16 @@ def render_plan(record: dict) -> str:
     out += ["", "## Lodged rules applied", ""]
     if not plan.get("rules_applied"):
         out.append("- none")
-    for entry in plan.get("rules_applied") or []:
+    for entry in listed(plan.get("rules_applied")) or []:
+        if not isinstance(entry, dict):
+            continue
         out += [f"### {entry.get('rule_id')}", "", f"> {normalised(entry.get('quotation'))}", "",
                 "| Target | Condition | Holds | Evidence | Credit |", "|---|---|---|---|---|"]
-        for application in entry.get("applications") or []:
-            for item in application.get("conditions") or [{}]:
+        for application in listed(entry.get("applications")) or []:
+            if not isinstance(application, dict):
+                continue
+            for item in [i for i in listed(application.get("conditions")) or []
+                         if isinstance(i, dict)] or [{}]:
                 out.append("| " + " | ".join(md_cell(v) for v in (
                     application.get("target_id"), item.get("condition_id"), item.get("holds"),
                     item.get("evidence"), application.get("credit"))) + " |")
@@ -6519,6 +6546,29 @@ def evidence_rel(target_dir: Path | None, text: str) -> str:
     return text
 
 
+def listed(value: Any) -> list | None:
+    """A payload collection: the list itself, [] when absent, None when not a list.
+
+    Astra's review of gate 1.3.2, D-Astra-132-3: the run audit reads a
+    payload whatever its schema check found, so a scalar where a list
+    belongs is recorded as a defect rather than crashing the audit.
+    """
+    if value is None:
+        return []
+    return value if isinstance(value, list) else None
+
+
+def concern_dimensions(payload: dict) -> set[str]:
+    """The dimensions a review marks CONCERN, from a dimensions block of any shape."""
+    dims = payload.get("dimensions")
+    dims = dims if isinstance(dims, dict) else {}
+    return {k for k in DIMENSION_KEYS
+            if isinstance(dims.get(k), dict) and dims[k].get("verdict") == "CONCERN"}
+
+
+CONCERN_FIELDS = ("concern_id", "dimension", "scope", "targets", "summary", "evidence")
+
+
 def concern_defects(concern: dict, flagged: set[str], known: set[str] | None,
                     target_dir: Path | None) -> list[str]:
     """What is malformed in one concern a reviewer stated (gate 1.3.2).
@@ -6539,12 +6589,21 @@ def concern_defects(concern: dict, flagged: set[str], known: set[str] | None,
         Readable defects; empty when the concern is well formed.
     """
     defects: list[str] = []
-    if not concern.get("concern_id"):
+    missing = [field for field in CONCERN_FIELDS if field not in concern]
+    if missing:
+        defects.append(f"it lacks {', '.join(missing)}")
+    if "concern_id" not in missing and not concern.get("concern_id"):
         defects.append("it has no concern_id")
     if concern.get("dimension") not in flagged:
         defects.append(f"it is filed under {concern.get('dimension')!r}, which the review does "
                        f"not mark CONCERN")
-    scope, targets = concern.get("scope"), [str(t) for t in concern.get("targets") or []]
+    if "summary" not in missing and not str(concern.get("summary") or "").strip():
+        defects.append("it gives no summary")
+    targets = listed(concern.get("targets"))
+    if targets is None:
+        defects.append("its targets are not a list")
+    targets = [str(t) for t in targets or []]
+    scope = concern.get("scope")
     if scope == "paper" and targets:
         defects.append(f"it is paper-wide but names targets {targets}")
     elif scope == "targets" and not targets:
@@ -6553,10 +6612,12 @@ def concern_defects(concern: dict, flagged: set[str], known: set[str] | None,
         defects.append(f"its scope is {scope!r}, not 'targets' or 'paper'")
     if scope == "targets" and known is not None and set(targets) - known:
         defects.append(f"it names targets not in the locked plan: {sorted(set(targets) - known)}")
-    evidence = [str(p) for p in concern.get("evidence") or []]
-    if not evidence:
+    evidence = listed(concern.get("evidence"))
+    if evidence is None:
+        defects.append("its evidence is not a list")
+    elif not evidence:
         defects.append("it cites no evidence")
-    for text in evidence:
+    for text in [str(p) for p in evidence or []]:
         path = (resolve_stored(target_dir, evidence_rel(target_dir, text))
                 if target_dir is not None else None)
         if target_dir is not None and (path is None or not path.is_file()):
@@ -6599,8 +6660,8 @@ def concern_issues(payload: dict, locked: list[str] | None,
         return [Issue.flag("review-defect", "concerns", "the review's concerns are not a list, "
                            "so they bear on the whole paper until a human rules them",
                            files={"concerns": json_digest(concerns)})]
-    dims = payload.get("dimensions") or {}
-    flagged = {k for k in DIMENSION_KEYS if (dims.get(k) or {}).get("verdict") == "CONCERN"}
+    dims = payload.get("dimensions") if isinstance(payload.get("dimensions"), dict) else {}
+    flagged = concern_dimensions(payload)
     known = set(locked) if locked is not None else None
     seen: Counter[str] = Counter()
     covered: set[str] = set()
@@ -6620,9 +6681,11 @@ def concern_issues(payload: dict, locked: list[str] | None,
         if concern.get("dimension") in flagged:
             covered.add(str(concern.get("dimension")))
         paper = concern.get("scope") == "paper" or bool(defects)
-        targets = [] if paper else [str(t) for t in concern.get("targets") or []]
-        evidence = [evidence_rel(target_dir, str(p)) for p in concern.get("evidence") or []]
-        named = ", ".join(str(t) for t in concern.get("targets") or []) or "the whole paper"
+        targets = [] if paper else [str(t) for t in listed(concern.get("targets")) or []]
+        evidence = [evidence_rel(target_dir, str(p))
+                    for p in listed(concern.get("evidence")) or []]
+        named = ", ".join(str(t) for t in listed(concern.get("targets")) or []) \
+            or "the whole paper"
         issues.append(Issue.flag(
             "review-concern", subject, f"the reviewer's {concern.get('dimension')} concern "
             f"{cid} on {named}: {str(concern.get('summary') or '')[:400]}"
@@ -6647,6 +6710,8 @@ METHOD_ROWS_FROM_GATE = (1, 3, 2)
 METHOD_VERDICTS = ("yes", "no", "unable_to_verify")
 METHOD_ASPECTS = ("method", "inputs", "tolerance", "classification")
 TRISTATE = ("yes", "no", "unknown")
+METHOD_ROW_FIELDS = ("target_id", "as_planned", "aspects", "departure", "outcome_affected",
+                     "after_published_value", "evidence")
 
 
 def version_tuple(text: Any) -> tuple[int, ...] | None:
@@ -6658,16 +6723,34 @@ def version_tuple(text: Any) -> tuple[int, ...] | None:
 def row_defects(row: dict, target_dir: Path | None) -> list[str]:
     """What is malformed in one method row (gate 1.3.2, criterion 2).
 
-    A row says whether the target's comparison followed the approved plan
-    (``yes``, ``no``, or ``unable_to_verify``). A departure names the
-    aspects that departed and what changed; a departure or an unverifiable
-    row cites evidence, each a file in the attempt or the corpus store.
+    A row carries every field of the schema and says whether the target's
+    comparison followed the approved plan (``yes``, ``no``, or
+    ``unable_to_verify``). A departure names the aspects that departed and
+    what changed; a departure or an unverifiable row cites evidence, each a
+    file in the attempt or the corpus store. Astra's review, D-Astra-132-2:
+    a ``yes`` that also names departed aspects, describes a departure, or
+    says the outcome was affected contradicts itself, so the lane neither
+    credits it nor guesses which answer was meant.
     """
     defects: list[str] = []
+    missing = [field for field in METHOD_ROW_FIELDS if field not in row]
+    if missing:
+        defects.append(f"it lacks {', '.join(missing)}")
     verdict = row.get("as_planned")
     if verdict not in METHOD_VERDICTS:
         defects.append(f"its as_planned is {verdict!r}, not {', '.join(METHOD_VERDICTS)}")
-    aspects = [str(a) for a in row.get("aspects") or []]
+    aspects = listed(row.get("aspects"))
+    if aspects is None:
+        defects.append("its aspects are not a list")
+    aspects = [str(a) for a in aspects or []]
+    departure = row.get("departure")
+    if departure is not None and not isinstance(departure, str):
+        defects.append("its departure is not text")
+    departure = departure.strip() if isinstance(departure, str) else ""
+    evidence = listed(row.get("evidence"))
+    if evidence is None:
+        defects.append("its evidence is not a list")
+    evidence = [str(p) for p in evidence or []]
     if set(aspects) - set(METHOD_ASPECTS):
         defects.append(f"it names aspects {sorted(set(aspects) - set(METHOD_ASPECTS))}, not "
                        f"among {', '.join(METHOD_ASPECTS)}")
@@ -6677,11 +6760,19 @@ def row_defects(row: dict, target_dir: Path | None) -> list[str]:
         if row.get(field) not in TRISTATE:
             defects.append(f"its {field} is {row.get(field)!r}, not {', '.join(TRISTATE)}")
     if verdict in ("no", "unable_to_verify"):
-        if not str(row.get("departure") or "").strip():
+        if not departure:
             defects.append("it says neither what departed nor why it cannot be verified")
-        if not row.get("evidence"):
+        if not evidence and "evidence" not in missing:
             defects.append("it cites no evidence")
-    for text in [str(p) for p in row.get("evidence") or []]:
+    if verdict == "yes":
+        if aspects:
+            defects.append(f"it says as planned but names aspects that departed "
+                           f"({', '.join(aspects)})")
+        if departure:
+            defects.append("it says as planned but describes a departure")
+        if row.get("outcome_affected") == "yes":
+            defects.append("it says as planned but says the outcome was affected")
+    for text in evidence:
         path = (resolve_stored(target_dir, evidence_rel(target_dir, text))
                 if target_dir is not None else None)
         if target_dir is not None and (path is None or not path.is_file()):
@@ -6769,7 +6860,7 @@ def method_issues(payload: dict, locked: list[str] | None,
                 files={"rows": json_digest(given), "record": json_digest(record)}))
             continue
         row = given[0]
-        evidence = [evidence_rel(target_dir, str(p)) for p in row.get("evidence") or []]
+        evidence = [evidence_rel(target_dir, str(p)) for p in listed(row.get("evidence")) or []]
         files = {"row": json_digest(row), "record": json_digest(record),
                  **(file_digests(target_dir, *evidence) if target_dir is not None else {})}
         defects = row_defects(row, target_dir)
@@ -6780,7 +6871,8 @@ def method_issues(payload: dict, locked: list[str] | None,
                 f"plan ({claim}); a human rules on it", targets=[target], files=files))
             continue
         departure = str(row.get("departure") or "")[:300]
-        detail = (f"aspects: {', '.join(row.get('aspects') or []) or 'none named'}; outcome "
+        aspects = ", ".join(map(str, listed(row.get("aspects")) or [])) or "none named"
+        detail = (f"aspects: {aspects}; outcome "
                   f"affected: {row.get('outcome_affected')}; made after the published value "
                   f"was seen: {row.get('after_published_value')}")
         if row["as_planned"] == "no":
@@ -6830,8 +6922,20 @@ def review_issues(role: str, payload: dict | None, warnings: list[dict],
     """
     issues: list[Issue] = []
     payload = payload or {}
-    escalations = payload.get("escalations") or []
-    for item in escalations:
+    escalations = listed(payload.get("escalations"))
+    if escalations is None:
+        issues.append(Issue.flag(
+            "escalation", f"{role}:malformed", f"the {role}'s escalations are not a list, so "
+            f"they bear on the whole paper until a human rules them",
+            files={"escalations": json_digest(payload.get("escalations"))}))
+        escalations = []
+    for n, item in enumerate(escalations):
+        if not isinstance(item, dict):
+            issues.append(Issue.flag(
+                "escalation", f"{role}:item-{n}", f"the {role}'s escalation {n} is not an "
+                f"object, so it bears on the whole paper until a human rules it",
+                files={"escalation": json_digest(item)}))
+            continue
         kind = str(item.get("kind") or "OTHER")
         target = item.get("target_id")
         unknown = bool(target) and locked is not None and target not in locked
@@ -6855,17 +6959,27 @@ def review_issues(role: str, payload: dict | None, warnings: list[dict],
     overall = payload.get("overall")
     if role == "reviewer" and overall in ("QUALIFIED", "CHALLENGED"):
         dims = payload.get("dimensions") or {}
-        concerns = [k for k in DIMENSION_KEYS if (dims.get(k) or {}).get("verdict") == "CONCERN"]
-        support = (payload.get("verdict_challenge") or {}).get("reviewer_supports_verdict")
-        named = [str(c.get("concern_id")) for c in structured or [] if isinstance(c, dict)]
+        concerns = sorted(concern_dimensions(payload), key=DIMENSION_KEYS.index)
+        challenge = payload.get("verdict_challenge")
+        support = (challenge if isinstance(challenge, dict) else {}).get(
+            "reviewer_supports_verdict")
+        named = [str(c.get("concern_id")) for c in listed(structured) or []
+                 if isinstance(c, dict)]
         what = (f"concerns {', '.join(named)}, each its own issue; supports the verdict: "
                 f"{support}): a human rules the verdict"
                 if isinstance(structured, list) and structured else
                 f"concerns: {', '.join(concerns) or 'none named'}; supports the verdict: "
                 f"{support}): a human resolves each concern before the result enters study data")
+        # Astra's review, D-Astra-132-1: from reviewer v1.4 the ruling on this
+        # flag sets the ruled verdict, so it binds the whole verdict challenge
+        # too; a review that stops supporting the verdict needs a new ruling.
+        # An earlier review keeps its fingerprint, so attempt 04's rulings hold.
+        bound = {"dimensions": dims, "overall": overall}
+        if "concerns" in payload or (agent_version(payload) or (0, 0)) >= REVIEWER_CONCERNS_FROM:
+            bound["verdict_challenge"] = challenge
         issues.append(Issue.flag(
             "review", overall.lower(), f"the adversarial review is {overall} ({what}",
-            files={"review": json_digest({"dimensions": dims, "overall": overall})}))
+            files={"review": json_digest(bound)}))
     for warning in warnings:
         issues.append(Issue.flag(
             "blinding-warning", f"{role}:{warning.get('path')}",
@@ -7748,6 +7862,10 @@ def verify_adjudicated(target_dir: Path) -> dict:
     missing, no longer final, or differs from the stored record in any
     field but those written beside it (``WRITTEN_FIELDS``), so a ruling
     added or a record changed after adjudication cannot be read past.
+    It re-derives from the attempt's records and audits as they stand; it
+    does not re-hash files in the external corpus store, whose digests the
+    run audit bound when it was made, so a current check is no statement
+    about the store's present contents (Astra's review of gate 1.3.2).
 
     Raises:
         LaneError: when there is no current adjudicated result.
