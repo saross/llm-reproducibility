@@ -102,12 +102,22 @@ merged here as PR #1).
     (`bc85895`). 755 tests pass. [x] 2026-10-19 **Astra's review requested**
     for criteria 1 to 3 at `bc85895`
     (`~/agent-mail/claude/outbox/codex/20261018T220501.705369Z-claude-gate132-review-request.md`);
-    Shawn wakes Astra. [ ] **Decide (Shawn): a planner pilot for criterion
-    4** (a side agent's note): criterion 3 changes what the planner writes,
-    which the reviewer-only check on attempt 04 does not exercise (§2.2);
-    one planner spawn cost $1.30 on attempt 04. The brief asks Astra too.
-    [ ] Then criterion 4: build the review-only mode, then the live
-    check(s) at the API gate.
+    Shawn wakes Astra. [x] 2026-10-19 **Astra's review in**
+    (`~/agent-mail/codex/outbox/claude/2026-10-19-codex-gate132-criteria-review.md`):
+    changes requested, three class D (verdict ruling unbound to the verdict
+    challenge; contradictory or incomplete method rows passing; scalar
+    collections crashing). All closed on the branch (`07ac8b3`, docs
+    `700a8f2`), with Shawn's ruling that a condition the plan settles
+    (`decided_at: plan`, e.g. Q5's input condition) cannot be `unknown`
+    (a side agent's note). 765 tests pass. Closures mailed for re-check
+    (`~/agent-mail/claude/outbox/codex/20261019T050404.082545Z-claude-gate132-findings-closed.md`).
+    [x] 2026-10-19 Planner pilot decided: yes (Shawn, and Astra's scope:
+    fresh blinded planning attempt, approver checks the T17-equivalent's
+    input provenance, plus an isolated labelled mechanical fixture; the
+    design note records it). [ ] **After Astra's re-check:** Shawn merges
+    PR #13 (the session's agents load from main, as for gate 1.3.1), then
+    the planner pilot at the API gate (one Opus 5.5 planner, ≈$1.30), the
+    review-only mode built, and the reviewer-only pilot at the API gate.
   - [ ] **Operational follow-up PRs, outside the gate's review:** the
     launch word rule (screen the whole relayed message); the args-builder
     guard (allow the planned initial state, reject prior execution
