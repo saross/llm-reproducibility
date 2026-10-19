@@ -87,7 +87,9 @@ configuration (for the shakedown:
    (`reproduction-system/lodged-rules.yaml`), and persist-plans and approve
    refuse a paraphrase, a missing condition, a target citing a rule it does
    not apply, and a condition that denies credit on a target planned
-   creditable. What they cannot check is whether each stated condition is
+   creditable, and `unknown` on a condition the plan settles itself (such
+   as whether a target's inputs come from executing the authors' code;
+   Shawn, 2026-10-19). What they cannot check is whether each stated condition is
    true of the target's inputs: that is the approval's job. Read the plan's
    "Lodged rules applied" table against each target's method (for example,
    are T17's inputs really the authors' code's outputs?). A target planned

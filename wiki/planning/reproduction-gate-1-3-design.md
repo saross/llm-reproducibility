@@ -215,6 +215,56 @@ plan's exclusions.
   is not creditable; the same quotation with T17 marked creditable fails
   (the wrong branch); a paraphrase or a fragment fails.
 
+**Astra's review of criteria 1 to 3 (2026-10-19,
+`~/agent-mail/codex/outbox/claude/2026-10-19-codex-gate132-criteria-review.md`,
+at `bc85895`): changes requested, three class D findings, all closed on the
+branch.** She accepted Shawn's rulings (slips as rulable defects, folded
+disagreements, the retired obligation, the registry) and the fixtures.
+
+- **D-Astra-132-1, the verdict ruling not bound to the verdict challenge.**
+  From reviewer v1.4 the verdict flag's fingerprint covers the whole
+  `verdict_challenge`, so a fresh review that stops supporting the verdict,
+  challenges another, or argues otherwise needs a new ruling. A v1.3
+  review keeps its fingerprint; a test recomputes attempt 04's and finds
+  it unchanged.
+- **D-Astra-132-2, contradictory or incomplete method rows passing.** A row
+  must carry every schema field, and a `yes` that names departed aspects,
+  describes a departure, or says the outcome was affected contradicts
+  itself; either leaves the target `method-unassessed`, the row kept in
+  the fingerprint. Tested through audit, admission, and adjudication
+  against an executor's as-planned claim.
+- **D-Astra-132-3, scalar collections crashing the validators.** Every
+  collection is type-checked before use (`listed`): a malformed concern is
+  paper-wide, a malformed row leaves its target unassessed, a malformed rule
+  application is a blocking plan error, and escalations are checked too. A
+  two-paper `persist-plans` test shows one paper's malformed rules block
+  only that paper.
+- **Her scope note:** `verify_adjudicated` re-derives from the attempt's
+  records and audits; it does not re-hash the external corpus store, and
+  its docstring now says so.
+
+**Shawn's ruling on `unknown` (2026-10-19, after a side agent's note).** A
+plan could leave Q5's input condition `unknown` and still plan T17
+creditable, repeating attempt 04. Each registry condition now states
+`decided_at`: `plan` where the plan settles it from its own method (Q5's
+no-authors-code, inputs-from-authors-code, and reconstructed-inputs), so
+`unknown` is refused there; `execution` where only the run does (Q5's
+printed-inputs, R2's inputs-unobtainable), where `unknown` stays allowed.
+
+**Criterion 4 (Astra's scope, 2026-10-19):** a planner pilot as well as
+the reviewer-only pilot. The planner pilot is a fresh, separately blinded
+planning attempt, normally persisted and triaged, with whole quotations and
+every condition stated, and the approver explicitly checking the input
+provenance of the target that corresponds to the old T17 (which may have
+another id); an unsupported creditable or unknown answer is a pilot
+finding, never corrected silently. Then an isolated, labelled mechanical
+fixture shows a real not-creditable application from that output is
+excluded by the gate and adjudication against a reproduced outcome. The
+reviewer-only pilot keeps the original executor binding, a fresh reviewed
+state, a fresh reviewer identity and audit, and the retry and
+changed-comparison tests. No executor spawn is needed. Each pilot is
+separately approved at the API gate, after these fixes are re-checked.
+
 **Operational follow-ups, as separate PRs outside the gate's review**
 (Fable's placement; Astra's test requirements kept):
 
