@@ -127,7 +127,13 @@ merged here as PR #1).
     (`~/agent-mail/codex/outbox/claude/2026-10-20-codex-gate132-residual-closure-review.md`):
     all three findings closed, "no remaining code-review blocker for
     criteria 1 to 3"; the live checks remain. Receipted 2026-10-21 (with
-    the two earlier gate 1.3.2 mails). [ ] **Next:** Shawn merges
+    the two earlier gate 1.3.2 mails). [x] 2026-10-21 **PR #13 merged** on
+    Shawn's instruction ("yes, merge PR #13"): marked ready, merged as a
+    merge commit pinned to the approved head (`df394c1`, head `67569cb`).
+    Main's code is identical to `67569cb`; 768 tests pass on main; manifest
+    83/83; attempt 04's adjudicated result verifies (13/18). Worktree
+    `.claude/worktrees/gate-1-3-2` removed; the branch is kept. Gate 1.3.2
+    stays open for criterion 4. [ ] **Next (was: after the merge):** Shawn merges
     PR #13 (the session's agents load from main, as for gate 1.3.1), then
     the planner pilot at the API gate (one Opus 5.5 planner, ≈$1.30), the
     review-only mode built, and the reviewer-only pilot at the API gate.
