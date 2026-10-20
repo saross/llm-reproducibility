@@ -46,7 +46,8 @@ wrong agent version and the audit would reject the run.
    (expect 1) and `venv/bin/python scripts/check-manifest-consistency.py`.
 3. Build the args (no API cost):
    `venv/bin/python scripts/reproduction-lane.py build-plan-args --config studies/open-science-compliance/outputs/validation/gate-1-3-2-planner-pilot/run-config.yaml --scratch-root ~/scratch/llmr-runs --out ~/scratch/llmr-runs/gate-1-3-2-planner-pilot-2026-10/plan-args.json`.
-   Check the args carry `lodged_rules` (10 rules) and `lodged_rules_sha256`.
+   Check the args carry `lodged_rules` (10 rules), `lodged_rules_sha256`, and
+   26 blinding entries.
    If a commit moves `HEAD` after this, rebuild.
 4. API gate: present this table with the args checksum; Shawn approves.
 5. Launch: the Workflow tool with `scriptPath` set to the committed workflow
@@ -109,6 +110,13 @@ wrong agent version and the audit would reject the run.
   under `outputs/validation/`, which is blinded. The full rule text is in
   the prompt, so the planner never needs the file; opening it would be a
   contaminating access.
+- The lane script is readable, deliberately: the run notes name
+  run-container, and any command naming a blinded path is a contaminating
+  access, so blinding the script would void the run if the planner ran
+  `run-container --help`. Its docstrings were reworded on 2026-10-21 so that
+  neither the source nor its help text names attempt 04's outcome; older
+  notes on the herskind dry run's mechanics remain, as for earlier
+  planners. The registry, runbook, and rulings tests stay blinded.
 - Git history and PR #13 describe the conclusions. Neither is path-blinded;
   the audit flags blinded path names in command output, and the planner is
   told never to seek earlier attempts.

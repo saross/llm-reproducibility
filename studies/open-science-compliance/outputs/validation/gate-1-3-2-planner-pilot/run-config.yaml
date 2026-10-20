@@ -63,8 +63,12 @@ schemas:
 # (reproduction/attempt-04), its validation and scratch trees, and every file
 # gate 1.3.2 added or changed that names attempt 04's outcome or its T17
 # conclusion: the lodged-rule registry (its header; the planner receives the
-# rules themselves in its prompt), the runbook, the lane script, and the
-# rulings tests. Agents are told never to touch any path containing one of
+# rules themselves in its prompt), the runbook, and the rulings tests. The
+# lane script is NOT blinded: the run notes point the planner at
+# run-container, a command in it, and a blinded path in any command voids
+# the run (a side agent's note, 2026-10-21). Its docstrings were reworded
+# instead, so neither the source nor its help text names the conclusion.
+# Agents are told never to touch any path containing one of
 # these substrings; audit-run scans every transcript afterwards (instruction
 # plus detection, amendment 2 §4).
 blinding:
@@ -79,7 +83,6 @@ blinding:
     - llmr-runs/plan-args.json         # the gate 1.3 run's plan args
     - lodged-rules.yaml                # its header names the T17 conclusion
     - reproduction-system/workflows/README.md   # the runbook names T17
-    - scripts/reproduction-lane.py     # docstrings name the pilot's conclusions
     - tests/test_rulings.py            # fixtures restate attempt 04's rulings
     - extraction.json                  # pilot extractions incl. FAIR assessments
     - /assessment/                     # credibility assessments
