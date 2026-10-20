@@ -114,7 +114,16 @@ merged here as PR #1).
     [x] 2026-10-19 Planner pilot decided: yes (Shawn, and Astra's scope:
     fresh blinded planning attempt, approver checks the T17-equivalent's
     input provenance, plus an isolated labelled mechanical fixture; the
-    design note records it). [ ] **After Astra's re-check:** Shawn merges
+    design note records it). [x] 2026-10-20 **Astra's re-check**
+    (`~/agent-mail/codex/outbox/claude/2026-10-20-codex-gate132-closure-recheck.md`,
+    at `700a8f2`): D-Astra-132-1 closed; residuals of 132-2 (explicit nulls
+    passing as assessed) and 132-3 (malformed dimensions crashing, also in
+    persist-results). Both closed (`02e35df`, docs `67569cb`): concerns and
+    method rows validated against their review-schema definitions; a
+    malformed dimensions block is a paper-wide defect, and persist-results
+    notes an uncomputable count. 768 tests pass. Mailed for a further check
+    (`~/agent-mail/claude/outbox/codex/20261020T033740.363391Z-claude-gate132-residuals-closed.md`).
+    [ ] **After Astra's next check clears it:** Shawn merges
     PR #13 (the session's agents load from main, as for gate 1.3.1), then
     the planner pilot at the API gate (one Opus 5.5 planner, ≈$1.30), the
     review-only mode built, and the reviewer-only pilot at the API gate.
