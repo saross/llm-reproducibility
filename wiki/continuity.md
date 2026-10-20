@@ -133,12 +133,21 @@ merged here as PR #1).
     Main's code is identical to `67569cb`; 768 tests pass on main; manifest
     83/83; attempt 04's adjudicated result verifies (13/18). Worktree
     `.claude/worktrees/gate-1-3-2` removed; the branch is kept. Gate 1.3.2
-    stays open for criterion 4. [ ] **Next, criterion 4 (Astra's scope, in
-    the design note):** (1) the planner pilot: a run configuration for a
-    fresh, blinded herskind attempt 05 (stage 1 only), committed, then the
-    API gate (one Opus 5.5 planner, ≈$1.30), ideally from a fresh session so
-    reproduction-planner v1.4 loads from main; the approver checks the input
-    provenance of the target matching the old T17; (2) an isolated, labelled
+    stays open for criterion 4. [x] 2026-10-21 **Planner pilot prepared**
+    (`99b9c04`): `validation/gate-1-3-2-planner-pilot/run-config.yaml` (run
+    `gate-1-3-2-planner-pilot-2026-10`, herskind attempt 05, stage 1 only;
+    the gate 1.3.1 run's rulings, deposits, and prices unchanged; six new
+    blinding entries) and `api-gate-brief.md` beside it (estimate $1.20 to
+    $1.80, 6 to 12 min, from the last planner run's $1.2969 and 436.5 s;
+    tripwires $1.80/12 min check, $2.70/18 min halt; launch checklist,
+    Astra's acceptance, stop states, blinding limits). Dry-run args build
+    clean (10 lodged rules, 4 rulings, 27 blinding entries). [ ] **Next,
+    criterion 4 (Astra's scope, in the design note):** (1) the planner
+    pilot, launched by Shawn from a **fresh session** (so
+    reproduction-planner v1.4 loads from main) by the brief's checklist:
+    rebuild the args at the launch commit, API gate, launch, persist-plans,
+    audit-run, then the approver's check of the old T17's input provenance
+    and an `approve` decision; (2) an isolated, labelled
     mechanical fixture showing that plan's not-creditable target excluded;
     (3) build the review-only mode (its own review), then the reviewer-only
     pilot on attempt 04 at the API gate.
