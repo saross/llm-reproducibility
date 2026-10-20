@@ -142,6 +142,16 @@ with reproduction status
 - **R-C** — `03-adversarial-review.md`: 5-dimension sceptical audit, in a
   fresh context. 30-60 min.
 
+### Paid agentic runs
+
+- **Launch from a fresh session once agent definitions or hooks have
+  changed** (Shawn, 2026-10-21). A running session may keep the agent
+  definitions, hooks, and workflow scripts it started with, so a paid run
+  launched in it after such a change reaches `main` can run the old ones;
+  the run audit then rejects the receipts and the spend is lost. After any
+  change to `.claude/agents/`, `.claude/hooks/`, or a workflow script, start
+  a new session for the next paid run.
+
 ### Reproduction artefact set
 
 Each reproduction produces artefacts in

@@ -54,6 +54,13 @@ configuration (for the shakedown:
    paper), because both vary from paper to paper. The run's tripwires derive
    from it: at the top of the estimate the operator checks progress, and at
    1.5 times the top the workflow is halted (Shawn, 2026-10-17).
+   **Before a blinded run, scan the prompts** (Shawn, 2026-10-21). Render
+   each agent's full prompt from the built args (the workflow script run
+   with `agent()` stubbed to capture each prompt) and scan it against the
+   run's blinding list. A blinded substring anywhere but the blinding
+   instruction is a leak to remove, or a pointer an obedient agent would
+   follow into a contaminating access; the gate 1.3.2 planner pilot had two
+   such pointers before its launch.
 4. **Run** `reproduction-plan.workflow.js` from the repository with the
    `Workflow` tool: `scriptPath` set to the committed file, `args` set to the
    builder's JSON, passed unedited. The builder stamps `args_checksum`. The
@@ -66,6 +73,9 @@ configuration (for the shakedown:
    it says reaches blinded agents. Launch only in direct reply to a typed
    approval, never after an answer given through a question tool, where
    what the harness relays is untested.
+   **Launch from a fresh session** if agent definitions, hooks, or workflow
+   scripts changed since the current session started
+   (`docs/agent-guidance.md`, "Paid agentic runs").
    **During the run, leave the main checkout alone** until the authoritative
    gate (step 10) has run: no commit, pull, merge, or checkout. The agents
    load their definitions, hooks, and the lane script from it.
@@ -142,7 +152,9 @@ configuration (for the shakedown:
     note must name each target singled out, and a ruling never creates
     credit: an outcome the comparison did not reproduce cannot be ruled into
     a reproduced one. Rule outcomes this way, never in the note alone, since
-    the adjudicated result (step 15) reads only these fields.
+    the adjudicated result (step 15) reads only these fields. Whoever drafts
+    the rulings drafts these parts with them, at ruling time, rather than
+    restating a note afterwards (Shawn, 2026-10-21).
 14. **Persist results:**
     `venv/bin/python scripts/reproduction-lane.py persist-results --config $CFG --run-dir <workflow run dir>`.
     It persists an attempt's payloads only when the attempt is
