@@ -141,7 +141,17 @@ merged here as PR #1).
     $1.80, 6 to 12 min, from the last planner run's $1.2969 and 436.5 s;
     tripwires $1.80/12 min check, $2.70/18 min halt; launch checklist,
     Astra's acceptance, stop states, blinding limits). Dry-run args build
-    clean (10 lodged rules, 4 rulings, 27 blinding entries). [ ] **Next,
+    clean (10 lodged rules, 4 rulings, 27 blinding entries). [x] 2026-10-21
+    Two side-agent notes fixed before launch, both routes by which a blinded
+    path would have voided the run: (a) the lane script was blinded while
+    the run notes name run-container in it; its seven docstring lines naming
+    attempt 04's outcome are reworded (`a37a1f6`, Shawn chose this over
+    keeping it blinded) and the config unblinds it (26 entries, `71fdd72`);
+    (b) the planner's rules block named R1 to R4's blinded source; plan
+    workflow v1.2 drops source paths from the prompt (`3307000`). A full
+    render of the pilot's prompt names no blinded path outside the blinding
+    instruction; brief updated (`c649259`). Tell Astra about v1.2 with the
+    criterion 4 material (it changed after her approval). [ ] **Next,
     criterion 4 (Astra's scope, in the design note):** (1) the planner
     pilot, launched by Shawn from a **fresh session** (so
     reproduction-planner v1.4 loads from main) by the brief's checklist:
