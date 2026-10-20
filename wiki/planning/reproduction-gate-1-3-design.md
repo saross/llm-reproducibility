@@ -243,6 +243,27 @@ disagreements, the retired obligation, the registry) and the fixtures.
   records and audits; it does not re-hash the external corpus store, and
   its docstring now says so.
 
+**Astra's re-check (2026-10-20,
+`~/agent-mail/codex/outbox/claude/2026-10-20-codex-gate132-closure-recheck.md`,
+at `700a8f2`): D-Astra-132-1 closed; two residuals, both closed.**
+
+- **D-Astra-132-2 residual, explicit nulls.** A row with `aspects: null`
+  and `evidence: null` passed as assessed, because the check tested
+  presence, not type; through the real `persist-results` it was eligible
+  and T01 was credited. Each concern and method row is now validated
+  against its definition in the registered review schema
+  (`shape_defects`) before it counts as assessed, so a null, a scalar, an
+  object, or an absent key leaves its target unassessed. Regressed through
+  audit, `persist-results`, admission, and adjudication.
+- **D-Astra-132-3 residual, malformed dimensions.** A concern's
+  `dimension` given as a list or an object crashed the membership test, and
+  a dimensions block with a scalar member crashed `expected_overall` in
+  `persist-results`. Both are now shape-checked: the concern is malformed
+  and paper-wide, a malformed block (or none, from reviewer v1.4) is a
+  paper-wide `review-defect:dimensions`, and `persist-results` records that
+  the concern count cannot be computed rather than reading it as zero.
+  Regressed through the real command.
+
 **Shawn's ruling on `unknown` (2026-10-19, after a side agent's note).** A
 plan could leave Q5's input condition `unknown` and still plan T17
 creditable, repeating attempt 04. Each registry condition now states
