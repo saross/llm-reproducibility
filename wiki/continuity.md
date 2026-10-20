@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-10-13
+updated: 2026-10-21
 status: active
 ---
 
@@ -32,7 +32,39 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NEXT SESSION (from the 2026-10-18 handoff, session 8e28871d): build
+- **⏩ NEXT SESSION (from the 2026-10-21 handoff, session a1bac2e9):
+  monitor and analyse the gate 1.3.2 planner pilot, then the rest of
+  criterion 4.** Gate 1.3.2's criteria 1 to 3 are on main: PR #13 merged as
+  `df394c1`, after Astra approved `67569cb` in her third round. Attempt 04
+  adjudicates to 13/18. Shawn launched the planner pilot on 2026-10-21 from
+  a fresh session (run `gate-1-3-2-planner-pilot-2026-10`, herskind attempt
+  05, stage 1 only); its configuration and brief are in
+  `studies/open-science-compliance/outputs/validation/gate-1-3-2-planner-pilot/`.
+  This session did not see the launch. Find the workflow run as the newest
+  `wf_*` under
+  `~/.claude/projects/-home-shawn-Code-llm-reproducibility/*/subagents/workflows/`
+  (or ask Shawn for its id), and check whether the launching session has
+  already run the post-run steps before repeating any.
+  - [ ] **Post-run, by the brief** (`api-gate-brief.md`, launch checklist
+    step 6 and "Acceptance"): `persist-plans`; `audit-run` (receipts must
+    show `reproduction-planner v1.4`, and no contaminating access); read the
+    triage and `attempt-05/reproduction-plan.md`. Then Shawn's explicit
+    check of the input provenance of the target matching the old T17 (the
+    named value that the cluster ornament strings occur on only ten
+    objects, p. 7), and an `approve` or hold decision. An unsupported
+    creditable or unknown answer is a pilot finding, recorded as found.
+  - [ ] Then the isolated, labelled mechanical fixture: the plan's actual
+    not-creditable application, excluded by the gate and adjudication
+    against a reproduced outcome.
+  - [ ] Then the review-only mode (branch + PR, Astra's review) and the
+    reviewer-only pilot on attempt 04 at the API gate.
+  - [ ] Mail Astra the criterion 4 results, and that plan workflow v1.2
+    (`3307000`) changed after her approval (prompt only: rule sources are
+    no longer named).
+  - [ ] Working-notes candidates WN-ax and WN-ay (session log, 2026-10-18
+    → 10-21) await Shawn's verdict.
+
+- **⏩ Earlier (from the 2026-10-18 handoff, session 8e28871d): build
   gate 1.3.2 on a branch, to the acceptance criteria at the top of
   `wiki/planning/reproduction-gate-1-3-design.md`.** Gate 1.3.1 is closed
   (version-scoped); the hardening stays open until 1.3.2 lands and is
@@ -2624,6 +2656,49 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-18 → 10-21 (session a1bac2e9) — gate 1.3.2 criteria 1 to 3 built, reviewed, merged; planner pilot launched
+
+One session on Opus 5.5 across four days, no compaction. The state is in
+the NEXT SESSION block above; the factual record is in
+`wiki/reflections/session-log.md`.
+
+- **Built:** criteria 1 to 3 on `feat/gate-1-3-2` (target-scoped concerns
+  and rulings, `adjudicate`; reviewer method rows; the lodged-rule registry
+  and `rules_applied`), merged as PR #13 (`df394c1`).
+- **Ruled by Shawn:** about a dozen design choices (in the design's gate
+  1.3.2 note); the restated attempt-04 rulings (`f9328ed`); the PR text;
+  the Q5 and R2 condition lists; `unknown` refused where the plan settles a
+  condition; the lane script neutralised and unblinded for the pilot.
+- **Reviews:** Astra, three rounds (three class D, then two residuals,
+  then approval). Fable not used (rationed).
+- **Side agents:** five notes, all adopted: slips as rulable flags, the
+  planner pilot, `unknown`, the blinded lane script, the blinded rule
+  source in the prompt.
+- **Working-notes candidates (held for Shawn's verdict):**
+  - **WN-ax:** hand-enumerated malformed-shape checks took three review
+    rounds; validating against the agent's own output schema closed the
+    class. Astra's first review (2026-10-19) found scalar collections
+    crashing the review validators; the guards closed the named sites, and
+    her re-check (2026-10-20) found a present `null` passing as assessed
+    and a list-valued `dimension` still crashing, including in
+    `persist-results`. Validating each concern and method row against its
+    definition in `adversarial-review-output.json` (`shape_defects`,
+    `02e35df`) closed both, and her third round approved. Anchors: her mails
+    `2026-10-19-codex-gate132-criteria-review.md`,
+    `2026-10-20-codex-gate132-closure-recheck.md`,
+    `2026-10-20-codex-gate132-residual-closure-review.md`; commits
+    `07ac8b3`, `02e35df`.
+  - **WN-ay:** a blinding list can contaminate an obedient agent when the
+    prompt points at what it forbids. Two such routes in the planner pilot:
+    the run notes named `run-container`, in the blinded lane script, and
+    the prompt named R1 to R4's source, in the blinded `outputs/validation/`.
+    `audit_agent` counts any Bash command naming a blinded path as
+    contaminating unless it errored. Base rate: the previous herskind
+    planner (`wf_db7d121a-5d5`) made 19 tool calls and touched neither.
+    After the fixes (`a37a1f6`, `71fdd72`, `3307000`), a full render of the
+    pilot's prompt from dry-run args named no blinded path outside the
+    blinding instruction.
 
 ### 2026-10-13 → 10-18 (session 8e28871d) — pilot stage 2 run, ruled, and persisted; gate 1.3.1 closed, 1.3.2 scoped
 
