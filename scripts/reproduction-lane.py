@@ -581,7 +581,7 @@ def target_decision(ruling: dict, target: str) -> str | None:
     """A ruling's decision on one target: its per-target one, else its own.
 
     Gate 1.3.2: a ruling on an issue that bears on several targets may
-    dispose of some of them differently (``"targets": {"T17": "excluded"}``),
+    dispose of some of them differently (``"targets": {"T08": "excluded"}``),
     so a concern can be ruled against one target without excluding the rest.
     """
     return (ruling.get("targets") or {}).get(target, ruling.get("decision"))
@@ -1108,9 +1108,9 @@ def load_lodged_rules(path: Path | None = None) -> dict[str, dict]:
 def rule_problems(plan: dict, rules: dict[str, dict]) -> list[str]:
     """Where a plan's use of the lodged rules fails (gate 1.3.2, criterion 3).
 
-    In the gate 1.3.1 pilot, attempt 04's plan cited ruling Q5 for T17 and
-    stated its consequence without its input condition, and two approvals
-    passed it. A plan therefore quotes each rule it relies on whole, word
+    In the gate 1.3.1 pilot, an approved plan cited a lodged ruling by name
+    and stated its consequence without its input condition, and two
+    approvals passed it. A plan therefore quotes each rule it relies on whole, word
     for word (whitespace aside), in ``rules_applied``, and for each target
     states whether each of the rule's listed conditions holds, with the
     evidence, and the credit that follows. The checks:
@@ -1122,8 +1122,8 @@ def rule_problems(plan: dict, rules: dict[str, dict]) -> list[str]:
       says, the target is planned ``not-creditable`` (a correctly quoted
       rule applied on the wrong branch fails here);
     - a condition the plan can settle (``decided_at: plan``) is never
-      ``unknown`` (Shawn, 2026-10-19), so the T17 route cannot return by
-      leaving the input condition open while planning credit;
+      ``unknown`` (Shawn, 2026-10-19), so a plan cannot leave an input
+      condition open while planning credit;
     - a target whose text cites a rule (``cited_as``) carries an
       application of it (the pilot's paraphrase fails here).
 
@@ -1625,7 +1625,7 @@ def comparison_values() -> tuple[tuple[str, ...], tuple[str, ...]]:
 
 
 def names_target(note: str, target: str) -> bool:
-    """Whether a note names a target id as a word (``T1`` is not in ``T17``)."""
+    """Whether a note names a target id as a word (``T1`` is not in ``T10``)."""
     return re.search(rf"(?<![A-Za-z0-9]){re.escape(target)}(?![A-Za-z0-9])", note) is not None
 
 
@@ -1721,9 +1721,9 @@ def cmd_rule_flags(args: argparse.Namespace) -> int:
     obligations take ``discharged``, ``fail-and-uplift``, or ``excluded``.
     A gate failure is not an issue and cannot be ruled.
 
-    Gate 1.3.2: an entry may also carry ``targets`` (``{"T17":
+    Gate 1.3.2: an entry may also carry ``targets`` (``{"T08":
     "excluded"}``, a decision for those targets only), ``classification``
-    (``{"T03": "PAPER_ERROR"}``), and, on the review's verdict flag,
+    (``{"T09": "PAPER_ERROR"}``), and, on the review's verdict flag,
     ``verdict``; ``scoped_ruling_problems`` sets their rules.
     """
     config = load_config(args.config)
@@ -6272,7 +6272,8 @@ def ruled_classifications(issues: list[dict], rulings: list[dict],
     """Each target's ruled classifications, from the rulings that apply.
 
     Gate 1.3.2: a ruling's ``classification`` relabels a target's outcome
-    (T03's ruled PAPER_ERROR) without editing the reviewed comparison.
+    (a ruled PAPER_ERROR over a raw MINOR_DISCREPANCY, for example) without
+    editing the reviewed comparison.
     Only a ruling that still applies to its issue counts, and only for a
     target within that issue's scope.
 
@@ -7030,7 +7031,7 @@ def review_issues(role: str, payload: dict | None, warnings: list[dict],
         # Astra's review, D-Astra-132-1: from reviewer v1.4 the ruling on this
         # flag sets the ruled verdict, so it binds the whole verdict challenge
         # too; a review that stops supporting the verdict needs a new ruling.
-        # An earlier review keeps its fingerprint, so attempt 04's rulings hold.
+        # An earlier review keeps its fingerprint, so rulings made on it hold.
         bound = {"dimensions": dims, "overall": overall}
         if new_contract:
             bound["verdict_challenge"] = challenge
