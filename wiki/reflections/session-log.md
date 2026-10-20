@@ -1677,3 +1677,62 @@ the locked plan, the configuration's rulings, and the run notes do.
 credit is limited and Astra's is not. From 10-17 Shawn worked over remote
 control. A Fable session reviewed in the same checkout and committed
 `eb8b356` during this session's work.
+
+## Session: 2026-10-18 → 2026-10-21 — Gate 1.3.2 criteria 1 to 3 built, reviewed in three rounds, merged (PR #13); planner pilot prepared and launched
+
+**Session:** a1bac2e9-e223-467e-b31c-f6f94e9bfa62 (Opus 5.5).
+
+**Criterion 1, target-scoped concerns and the adjudicated result:**
+
+- Shawn's rulings (10-18): a ruling never creates credit; the ruled
+  verdict is set only on the review flag; the adjudicated result is written
+  only when final; a reviewer's target slip is a paper-wide flag to rule,
+  not a hard failure (a side agent's note).
+- Built on `feat/gate-1-3-2` in a worktree: `2ccda2e`, docs `081040c`, fix
+  `89f70ef`. Shawn approved restating two attempt-04 rulings (T17 excluded
+  on `review:qualified`, verdict SUCCESSFUL; T03 PAPER_ERROR); recorded and
+  adjudicated to 13/18 (`f9328ed`).
+- Draft PR #13 opened with the title and body Shawn approved, read back
+  identical.
+
+**Criterion 2, the reviewer's method rows:** Shawn ruled disagreements
+folded into the reviewer's flag and the paper-wide method-adherence
+obligation retired. `4038937`, docs `33df238`.
+
+**Criterion 3, lodged rules:** Shawn chose a registry
+(`reproduction-system/lodged-rules.yaml`) and gate enforcement of a plan's
+exclusions; he approved the Q5 and R2 condition lists on 10-19.
+`6eafb1f`, docs `e2b0a6e`, fix `383e208`, approval recorded `bc85895`.
+
+**Review (Astra, three rounds):**
+
+- 10-19, at `bc85895`: three class D (the verdict ruling unbound to the
+  verdict challenge; contradictory or incomplete method rows passing;
+  scalar collections crashing). Closed in `07ac8b3`, docs `700a8f2`, with
+  Shawn's ruling that a plan-settled condition cannot be `unknown`
+  (`decided_at`; a side agent's note).
+- 10-20, at `700a8f2`: D-Astra-132-1 closed; residuals of the other two
+  (explicit nulls; malformed dimensions, also in `persist-results`). Closed
+  by validating concerns and rows against their review-schema definitions
+  (`02e35df`, docs `67569cb`).
+- 10-20, at `67569cb`: approved, "no remaining code-review blocker for
+  criteria 1 to 3". 768 tests pass.
+
+**Merge and the planner pilot:**
+
+- PR #13 merged on Shawn's instruction as `df394c1`, pinned to `67569cb`;
+  verified on main (code identical, 768 tests, manifest 83/83, attempt 04
+  at 13/18). Worktree removed; branch kept.
+- Planner pilot configuration and API-gate brief committed (`99b9c04`):
+  herskind attempt 05, stage 1 only, estimate $1.20 to $1.80.
+- Two side-agent notes fixed before launch: the lane script's docstrings
+  neutralised and the script unblinded (`a37a1f6`, `71fdd72`; Shawn's
+  choice); plan workflow v1.2 stops naming rule sources in the prompt
+  (`3307000`); brief updated (`c649259`). A full render of the prompt names
+  no blinded path outside the blinding instruction.
+- Shawn launched the pilot from a fresh session on 10-21.
+
+**Contextual assumptions:** Fable was not used (rationed). Shawn woke Astra
+by hand between rounds. Max plan, so costs are API-equivalent. Plan
+workflow v1.2 changed after Astra's approval; continuity notes to tell her
+with the criterion 4 material.

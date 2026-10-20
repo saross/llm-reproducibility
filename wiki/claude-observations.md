@@ -1830,3 +1830,57 @@ reviews comparable, since both read a document neither had shaped.
 under review and watch for the reply; fold several reviews in together,
 afterwards. Expect the reviewing session to commit in the same checkout,
 and fetch before writing.
+
+## claude-obs 92 — 2026-10-18/21: Shawn takes the stated recommendation and lets side agents review it
+
+**Pattern.** Across gate 1.3.2's build Shawn made about a dozen design
+rulings through the question tool and took the recommended option each
+time. The challenges came instead from side agents, five notes in all, and
+two of them changed my position: a reviewer's slip should cost a ruling
+rather than a paid re-run, and `unknown` on Q5's input condition was a route
+around the rule. Both times the side agent priced a consequence (dollars, a
+voided run) that I had framed as a question of correctness.
+
+**Lesson.** Shawn's acceptance of a recommendation is a delegation, not a
+review; the side agents are the review. A recommendation that understates a
+cost is likely to be accepted as written.
+
+**How to apply.** State each option's cost in the terms a side agent would
+price it: money, re-runs, runs voided, rulings owed. When a side note
+arrives, treat it as the review of my recommendation, and check the code
+before agreeing with it.
+
+## claude-obs 93 — 2026-10-21 (self-critique): I filed a run-voiding risk as an accepted limit
+
+**Pattern.** Preparing the planner pilot, I noticed that R1 to R4's source
+file sits in a blinded folder, and recorded it in the brief under "known
+limits", reasoning that the planner had no need to open it. The side agent's
+note said it plainly: "listed only as an accepted limit in the pilot brief,
+not in chat". Opening that file would have voided a paid run, and the fix
+(stop naming sources in the prompt) took one small commit.
+
+**Lesson.** A risk that can void a paid run is a decision for Shawn, with a
+fix offered, not a limit noted in a document he may not read before
+launching.
+
+**How to apply.** Before a paid run, list each known limit and ask whether
+it can cost the run. Those that can go to Shawn in chat with options;
+only the ones that cannot stay as notes in the brief.
+
+## claude-obs 94 — 2026-10-19/20 (self-critique): I closed the cases a reviewer named, twice
+
+**Pattern.** Astra's first review listed scalar collections that crashed
+the validators; I guarded the listed sites. Her re-check found a present
+`null` and a list-valued `dimension` beside them, and a consumer in
+`persist-results` my guards never reached. In the same batch I wrote two
+test assertions that could not fail (`if False else`), found only on
+re-reading. This repeats claude-obs on the `cat --help` closure (2026-10-13):
+I let a reviewer's list set the boundary of the fix.
+
+**Lesson.** A reviewer's examples name a class. Closing the examples invites
+the next round; closing the class (here, validating against the schema)
+ends it. And a test I have not read for "can this fail?" is not yet a test.
+
+**How to apply.** For each finding, write down the class before the fix,
+and say in the closure mail what covers the class. Re-read every new
+assertion before committing, asking whether any input could make it fail.

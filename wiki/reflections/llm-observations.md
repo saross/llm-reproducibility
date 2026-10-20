@@ -1090,3 +1090,39 @@ five minutes after the outcome mail, Fable the next day with Astra's review
 in hand. Fable said where it agreed instead of restating it, and added two
 points Astra had not made (obligations are as targetless as the review
 flag; the review-only mode as 1.3.2's live check).
+
+## 2026-10-18 → 10-21 — Reviews through the full command found what unit tests missed; my tests asserted nothing twice
+
+*Session a1bac2e9-e223-467e-b31c-f6f94e9bfa62 (Opus 5.5); primary throughout.*
+
+**Astra's re-check ran the real commands.** Her first review probed the
+helper functions. Her re-check pushed synthetic accepted transcripts
+through the real `persist-results` and found a malformed dimensions block
+that passed the audit, where my guards were, and crashed `expected_overall`
+downstream. My regression tests had stopped at the function I changed. Each
+round stated its limits ("not approval to merge or a closure of gate
+1.3.2"), and the third round's approval named the live checks still due.
+
+**I wrote vacuous assertions under momentum.** In one test batch I twice
+wrote an `if False else` expression that left an assertion comparing a
+string with itself, and a third test misused my own fixture helper. All
+three surfaced on re-reading before commit; the third only because the
+helper raised. Tests written by a model need the adversarial read its code
+gets: an assertion that cannot fail looks like coverage.
+
+**Side agents found interactions between rules, not defects in code.** Five
+notes: the cost of a hard failure for reviewer slips, the planner pilot that
+§2.2 required, `unknown` as a route around Q5, a blinded script the run
+notes pointed at, and a blinded source named in the prompt. Each concerned
+how two correct pieces combined, and none would have shown in a test.
+
+**A base rate set the urgency of a fix.** To weigh whether a planner would
+run the lane script, I counted the previous planner's tool calls on this
+paper: 19, none touching it. Shawn still chose the cheap fix that removed
+the risk; the base rate told us it was not urgent, not that it was
+unnecessary.
+
+**A peer's receipt answered whether a review had arrived.** Shawn reported
+that Astra saw no pending request. Her side had already receipted my mail,
+and the receipt named her reply. Checking the mailbox before arming a
+watcher avoided waiting for something already delivered.

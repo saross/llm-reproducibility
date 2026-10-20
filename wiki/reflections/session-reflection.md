@@ -1686,3 +1686,53 @@ boxes. Its record is not yet faithful to the rulings, and anyone reading
 attempt-04 without them will take the wrong coverage. The side agent's
 note mattered here: it turned "a clean run with two loose ends" into
 "three gaps", before I had said the word clean to Shawn.
+
+## Entry 28 (2026-10-18 → 10-21) — The class I kept closing one case at a time
+
+**Project:** llm-reproducibility. **Session:**
+a1bac2e9-e223-467e-b31c-f6f94e9bfa62 (Opus 5.5). **Instance:** primary
+throughout; no compaction. The session ran across four days. Shawn answered
+most design questions through the question tool and woke Astra by hand
+between review rounds.
+
+**What surprised you about this session?** That one defect class took three
+review rounds. Astra's first review found that a scalar where a list belongs
+crashed the validators. I guarded each collection she named and added a
+helper that turned a missing value into an empty list. Her re-check found
+that the helper also turned a present `null` into an empty list, so a method
+row with null aspects and evidence passed as assessed and the real
+`persist-results` admitted it. The same re-check found a dimension given as
+a list still crashing, and a consumer in persistence my guards never
+reached. Each round I closed the cases named, and the next case sat beside
+them. What ended it was to stop enumerating and validate each concern and
+row against its definition in the review schema, which had been in the
+repository the whole time. A smaller surprise: the blinding list could void
+the run it protected. I blinded the lane script because its docstrings named
+T17, while the run notes told the planner to plan through a command in that
+script, and the prompt named R1 to R4's source, which sits in a blinded
+folder. Two side agents found these. I had written the second into the
+brief as an accepted limit.
+
+**What context from this session will be hardest to reconstruct in 6
+months?** The reasons for things in the code that will look arbitrary. The
+verdict flag's fingerprint has two formulas, by reviewer version, so attempt
+04's rulings stay valid. A reviewer's slip is a paper-wide flag, not a
+failure, though both scope reviews said "fail": Shawn ruled that a slip
+should cost a ruling rather than a $3.30 re-run, after a side agent priced
+it. The registry's conditions carry `decided_at` because a side agent showed
+that `unknown` on Q5's input condition would repeat attempt 04. The lane's
+docstrings use T08 and T09 as examples, and the plan workflow stopped naming
+rule sources, both for the pilot's blinding. And attempt 04's adjudicated
+record exists only because Shawn approved restating two rulings with
+target-scoped parts; from the 2026-10-17 notes alone, the lane's own
+derivation still gives 14/18.
+
+**What was different about this session compared to recent ones?** The
+ratio of decisions to code. Shawn made about a dozen rulings, nearly all
+through the question tool, and took the recommended option each time. Five
+side-agent notes changed the design or the pilot. Fable was not used, by the
+rationing rule, so Astra's three rounds were the only review. Because my
+recommendations were accepted without amendment, the burden of a wrong
+default sat in how honestly I stated each trade-off. The two times a side
+agent improved on my position (the hard failure, and `unknown`), it came
+from pricing a consequence I had treated as a design question.

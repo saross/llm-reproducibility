@@ -1702,3 +1702,84 @@ launch entry).
 Test a tripwire against input shaped like the live case: files still being
 written, and a run whose files stop changing. Astra's watcher fixture for
 1.3.2's operational PRs asks for exactly that.
+
+## 2026-10-20 — A present null passed the check I wrote for absent keys
+
+**Session:** a1bac2e9-e223-467e-b31c-f6f94e9bfa62
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+I had closed D-Astra-132-2 (incomplete method rows passing as assessed) by
+requiring every field to be present. Astra's re-check of `700a8f2` showed a
+row with `aspects: null` and `evidence: null` passing the audit, persisting
+as eligible through the real `persist-results`, and its target credited.
+
+### Probe
+
+My helper `listed(None)` returned `[]`; I wrote it for absent keys and it
+also caught present nulls. The required-field check in `row_defects` tested
+`field in row`, which a null satisfies. The row schema rejected both values,
+but in `persist-results` a schema violation reaches only the record's
+`orchestrator_notes`.
+
+### Belief revision
+
+I had treated "malformed" as a list of shapes to name: missing, scalar,
+contradictory. Each fix covered the shapes named, and each review round
+found the next one beside them. The definition of a well-formed row already
+existed, as the schema the reviewer writes to, and validating against it
+covers the class; hand checks should only add what a schema cannot say,
+such as a `yes` row that describes a departure. And the schema check had
+been in the pipeline all along, as a note, so "validated" had meant
+"reported", not "gated".
+
+### What would change this belief
+
+A shape that matters but that the runtime-safe schema cannot express (it has
+no conditional requirements) still needs a hand check. The contradiction
+rules are that case already.
+
+### Implications for practice
+
+When a reviewer finds one malformed shape, ask what defines well-formed and
+validate against that, rather than adding the shape to a list. Then check
+where the validation's result goes: a note is not a gate.
+
+## 2026-10-21 — The blinding list could void the run it protected
+
+**Session:** a1bac2e9-e223-467e-b31c-f6f94e9bfa62
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+Two side agents showed that the planner pilot's blinding would contaminate a
+planner that followed its instructions. The run notes said to plan every run
+through `run-container`, a command in the blinded lane script, and the
+prompt named R1 to R4's source, a run configuration in a blinded folder.
+
+### Probe
+
+`audit_agent` counts any Bash command whose path tokens contain a forbidden
+substring as contaminating, unless the command errored, so
+`run-container --help` would have voided the run. The previous planner on
+this paper made 19 tool calls and touched neither file, but the prompt
+pointed at both. A full render of the pilot's prompt from dry-run args,
+scanned against the list, found no other pointer outside the blinding
+instruction.
+
+### Belief revision
+
+I built the blinding list as a set of files to hide and checked it against
+what could leak, not against what the prompt asks the agent to do. Blinding
+here is instruction plus detection, so a path the prompt points at and the
+list forbids is a trap for an obedient agent. I had written the R1 to R4
+case into the brief as an accepted limit, reasoning that the instruction
+would suffice; the detection side makes that wrong.
+
+### Implications for practice
+
+Before a blinded run, render the agent's full prompt and scan it against
+the blinding list: every hit outside the blinding instruction is a leak to
+remove or a pointer to fix. Where a file the task needs also leaks, change
+the file rather than blinding it.
