@@ -16,7 +16,7 @@ design's gate 1.3.2 note) asks for this pilot. Configuration:
 
 | Item | Value |
 |---|---|
-| Workflow | `reproduction-system/workflows/reproduction-plan.workflow.js` v1.1 (stage 1 only) |
+| Workflow | `reproduction-system/workflows/reproduction-plan.workflow.js` v1.2 (stage 1 only) |
 | Paper | herskind-riede-2024, new attempt 05 |
 | Agent and model | `reproduction-planner` v1.4, `claude-opus-5-5`, effort high |
 | Mode | real-time workflow on the Max plan, priced API-equivalent; not batch |
@@ -106,10 +106,12 @@ wrong agent version and the audit would reject the run.
   gate 1.3.1 pilot a plan stated Q5's consequence without its input
   condition". It names no paper or target. That is the contract under
   test, not a leak of the answer, but a planner is primed by it.
-- The registry gives R1 to R4's source as the shakedown run configuration,
-  under `outputs/validation/`, which is blinded. The full rule text is in
-  the prompt, so the planner never needs the file; opening it would be a
-  contaminating access.
+- R1 to R4's registered source is the shakedown run configuration, under
+  the blinded `outputs/validation/`. Plan workflow v1.2 (2026-10-21, a side
+  agent's note) no longer names any rule's source in the prompt, and says
+  each text is complete as given. A full render of this pilot's prompt from
+  dry-run args names no blinded path outside the blinding instruction
+  itself.
 - The lane script is readable, deliberately: the run notes name
   run-container, and any command naming a blinded path is a contaminating
   access, so blinding the script would void the run if the planner ran
