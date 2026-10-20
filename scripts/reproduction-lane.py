@@ -230,6 +230,7 @@ EXECUTION_FILE = "execution-report.json"
 REVIEW_FILE = "adversarial-review.json"
 COMPARISON_FILE = Path("comparisons") / "comparison.json"
 DEFAULT_COMPARISON_SCHEMA = "reproduction-system/schemas/comparison-record.json"
+DEFAULT_REVIEW_SCHEMA = "reproduction-system/schemas/adversarial-review-output.json"
 GATE_VERSION = "1.3.2"
 ADJUDICATED_FILE = "adjudicated-result.json"
 ADJUDICATION_VERSION = "1.0"
@@ -6558,6 +6559,41 @@ def listed(value: Any) -> list | None:
     return value if isinstance(value, list) else None
 
 
+def review_definition(name: str) -> dict:
+    """One definition from the registered review schema (``concern``, ``method_row``)."""
+    return full_schema(expand(DEFAULT_REVIEW_SCHEMA))["definitions"][name]
+
+
+def shape_defects(item: dict, definition: str) -> list[str]:
+    """Where an item breaks its definition in the registered review schema.
+
+    Astra's re-check of gate 1.3.2 (D-Astra-132-2 residual): presence is not
+    validity, so a present ``null`` where a list belongs passed as assessed.
+    A concern or method row is treated as assessed only once it meets its
+    schema definition in full; any violation is a defect on it.
+    """
+    return [problem.replace("schema violation at ", "")
+            for problem in schema_problems(item, review_definition(definition))]
+
+
+def dimensions_defects(payload: dict) -> list[str]:
+    """Where a review's dimensions block is malformed, so its concern count is
+    not computable (Astra's re-check of gate 1.3.2, D-Astra-132-3 residual)."""
+    dims = payload.get("dimensions")
+    if not isinstance(dims, dict):
+        return [f"the dimensions block is {type(dims).__name__}, not an object"]
+    defects = []
+    for key in DIMENSION_KEYS:
+        entry = dims.get(key)
+        if not isinstance(entry, dict):
+            defects.append(f"{key} is {'missing' if key not in dims else 'not an object'}")
+        elif entry.get("verdict") not in ("PASS", "CONCERN"):
+            defects.append(f"{key}'s verdict is {entry.get('verdict')!r}")
+        elif not isinstance(entry.get("findings"), list):
+            defects.append(f"{key}'s findings are not a list")
+    return defects
+
+
 def concern_dimensions(payload: dict) -> set[str]:
     """The dimensions a review marks CONCERN, from a dimensions block of any shape."""
     dims = payload.get("dimensions")
@@ -6592,9 +6628,13 @@ def concern_defects(concern: dict, flagged: set[str], known: set[str] | None,
     missing = [field for field in CONCERN_FIELDS if field not in concern]
     if missing:
         defects.append(f"it lacks {', '.join(missing)}")
+    defects += [f"it breaks the concern schema at {problem}"
+                for problem in shape_defects(concern, "concern")
+                if "is a required property" not in problem]
     if "concern_id" not in missing and not concern.get("concern_id"):
         defects.append("it has no concern_id")
-    if concern.get("dimension") not in flagged:
+    dimension = concern.get("dimension")
+    if not (isinstance(dimension, str) and dimension in flagged):
         defects.append(f"it is filed under {concern.get('dimension')!r}, which the review does "
                        f"not mark CONCERN")
     if "summary" not in missing and not str(concern.get("summary") or "").strip():
@@ -6678,8 +6718,8 @@ def concern_issues(payload: dict, locked: list[str] | None,
         defects = concern_defects(concern, flagged, known, target_dir)
         if seen[cid] > 1:
             defects.append(f"its id {cid} is used by an earlier concern")
-        if concern.get("dimension") in flagged:
-            covered.add(str(concern.get("dimension")))
+        if isinstance(concern.get("dimension"), str) and concern["dimension"] in flagged:
+            covered.add(concern["dimension"])
         paper = concern.get("scope") == "paper" or bool(defects)
         targets = [] if paper else [str(t) for t in listed(concern.get("targets")) or []]
         evidence = [evidence_rel(target_dir, str(p))
@@ -6736,6 +6776,9 @@ def row_defects(row: dict, target_dir: Path | None) -> list[str]:
     missing = [field for field in METHOD_ROW_FIELDS if field not in row]
     if missing:
         defects.append(f"it lacks {', '.join(missing)}")
+    defects += [f"it breaks the row schema at {problem}"
+                for problem in shape_defects(row, "method_row")
+                if "is a required property" not in problem]
     verdict = row.get("as_planned")
     if verdict not in METHOD_VERDICTS:
         defects.append(f"its as_planned is {verdict!r}, not {', '.join(METHOD_VERDICTS)}")
@@ -6953,7 +6996,21 @@ def review_issues(role: str, payload: dict | None, warnings: list[dict],
             f"{str(payload.get('escalate_reason') or '')[:400]}",
             files={"reason": json_digest(payload.get("escalate_reason"))}))
     structured = payload.get("concerns") if role == "reviewer" else None
+    # Reviewer v1.4's contract: structured concerns, a verdict flag bound to
+    # the verdict challenge, and a dimensions block that must be well formed.
+    new_contract = "concerns" in payload \
+        or (agent_version(payload) or (0, 0)) >= REVIEWER_CONCERNS_FROM
     if role == "reviewer" and payload.get("status") == "OK":
+        # A present but malformed block, or none at all from reviewer v1.4,
+        # leaves the framework's concern count uncomputable: a paper-wide
+        # defect to rule, never zero concerns.
+        problems = dimensions_defects(payload)
+        if problems and ("dimensions" in payload or new_contract):
+            issues.append(Issue.flag(
+                "review-defect", "dimensions", f"the review's dimensions block is malformed "
+                f"({'; '.join(problems)}), so the framework's concern count cannot be "
+                f"computed: it bears on the whole paper until a human rules it",
+                files={"dimensions": json_digest(payload.get("dimensions"))}))
         issues += concern_issues(payload, locked, target_dir)
         issues += method_issues(payload, locked, target_dir)
     overall = payload.get("overall")
@@ -6975,7 +7032,7 @@ def review_issues(role: str, payload: dict | None, warnings: list[dict],
         # too; a review that stops supporting the verdict needs a new ruling.
         # An earlier review keeps its fingerprint, so attempt 04's rulings hold.
         bound = {"dimensions": dims, "overall": overall}
-        if "concerns" in payload or (agent_version(payload) or (0, 0)) >= REVIEWER_CONCERNS_FROM:
+        if new_contract:
             bound["verdict_challenge"] = challenge
         issues.append(Issue.flag(
             "review", overall.lower(), f"the adversarial review is {overall} ({what}",
@@ -7579,10 +7636,14 @@ DIMENSION_KEYS = ("provenance", "quantitative_claims", "scope_completeness",
 
 
 def expected_overall(review: dict) -> str | None:
-    """The framework's overall rule: 0 concerns CONFIRMED, 1–2 QUALIFIED, 3+ CHALLENGED."""
-    dims = review.get("dimensions") or {}
-    if not all(k in dims for k in DIMENSION_KEYS):
+    """The framework's overall rule: 0 concerns CONFIRMED, 1–2 QUALIFIED, 3+ CHALLENGED.
+
+    None when the dimensions block is malformed or incomplete, so the count
+    cannot be computed (never read as zero concerns).
+    """
+    if dimensions_defects(review):
         return None
+    dims = review["dimensions"]
     concerns = sum(1 for k in DIMENSION_KEYS if dims[k].get("verdict") == "CONCERN")
     return "CONFIRMED" if concerns == 0 else "QUALIFIED" if concerns <= 2 else "CHALLENGED"
 
@@ -7614,7 +7675,11 @@ def cmd_persist_results(args: argparse.Namespace) -> int:
             notes = schema_problems(payload, schema)
             if role == "reviewer" and payload.get("status") == "OK":
                 expected = expected_overall(payload)
-                if expected and payload.get("overall") != expected:
+                if expected is None:
+                    notes.append("the framework's concern count cannot be computed: the "
+                                 "dimensions block is malformed or incomplete (the run "
+                                 "audit's review-defect:dimensions carries it to a ruling)")
+                elif payload.get("overall") != expected:
                     notes.append(f"overall {payload.get('overall')!r} disagrees with the "
                                  f"framework's concern-count rule ({expected!r})")
             path = attempt_dir(config, slug) / filename
@@ -7817,7 +7882,8 @@ def adjudicate(target_dir: Path) -> dict:
                      "reasons": why, "issues": bearing})
     credited = [r["target_id"] for r in rows if r["credited"]]
     set_by = verdict_rulings[0] if verdict_rulings else None
-    challenge = (review.get("payload") or {}).get("verdict_challenge") or {}
+    challenge = (review.get("payload") or {}).get("verdict_challenge")
+    challenge = challenge if isinstance(challenge, dict) else {}
     return {
         "adjudication_version": ADJUDICATION_VERSION, "gate_version": report.get("gate_version"),
         "run_id": execution.get("run_id"), "workflow_run": execution.get("workflow_run"),

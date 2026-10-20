@@ -795,6 +795,11 @@ class ReviewConcernTests(unittest.TestCase):
             issue = self.issues(review_payload(concern))["review-concern:C1"]
             self.assertEqual(issue["scope"], "paper", field)
             self.assertIn(defect, issue["message"], field)
+        for dimension in ([], {}):
+            odd = review_concern("C1", dimension=dimension)
+            issue = self.issues(review_payload(odd))["review-concern:C1"]
+            self.assertEqual(issue["scope"], "paper", dimension)
+            self.assertIn("breaks the concern schema at dimension", issue["message"])
         lacking = review_concern("C1")
         del lacking["summary"]
         self.assertIn("it lacks summary",
@@ -928,6 +933,24 @@ class MethodRowTests(unittest.TestCase):
         self.assertIn("it lacks aspects, departure, evidence",
                       found["method-unassessed:T01"]["message"])
 
+    def test_each_shape_of_a_required_collection(self):
+        """Astra's re-check (D-Astra-132-2 residual): presence is not validity.
+        A null, a scalar, an object, or an absent key leaves the target
+        unassessed; a valid empty list on a 'yes' row does not."""
+        for value in (None, 1, {}, "absent"):
+            for field in ("aspects", "evidence"):
+                row = method_row("T01")
+                if value == "absent":
+                    del row[field]
+                else:
+                    row[field] = value
+                found = self.issues([row, method_row("T02"), method_row("T03")])
+                self.assertIn("method-unassessed:T01", found, (field, value))
+        # Valid empty lists leave every target assessed; T02's declared
+        # departure against a 'yes' is the fixture's expected disagreement.
+        self.assertEqual(sorted(self.issues([method_row(t) for t in self.LOCKED])),
+                         ["method-disagreement:T02"])
+
     def test_scalar_collections_in_a_row_are_defects_not_crashes(self):
         for field in ("aspects", "evidence"):
             found = self.issues([method_row("T01", "no", **{field: 1}), method_row("T02"),
@@ -971,12 +994,17 @@ class AdjudicationTests(unittest.TestCase):
             "run_id": "run-x", "attempt": 2, "effort": "medium",
             "output_root": str(root / "outputs"),
             "agents": {"planner": "p", "executor": "e", "reviewer": "r"},
-            "schemas": {"plan": "p", "execution": "e", "review": "r",
-                        "comparison_record": "c"},
+            "schemas": {name: str(REPO_ROOT / "reproduction-system" / "schemas" / file)
+                        for name, file in (
+                            ("plan", "reproduction-plan-output.json"),
+                            ("execution", "reproduction-execution-output.json"),
+                            ("review", "adversarial-review-output.json"),
+                            ("comparison_record", "comparison-record.json"))},
             "blinding": {"forbidden_substrings": []},
             "papers": [{"slug": "paper-a"}]}), encoding="utf-8")
         self.dir = root / "outputs" / "paper-a" / "reproduction" / "attempt-02"
         self.rulings_file = root / "rulings.json"
+        (self.dir / lane.RECORDS_DIR).mkdir(parents=True)
         self.build()
 
     def build(self, rules_applied: list[dict] | None = None,
@@ -1056,6 +1084,30 @@ class AdjudicationTests(unittest.TestCase):
 
     def adjudicated(self) -> dict:
         return lane.adjudicate(self.dir)
+
+    def persist(self, review: dict) -> tuple[int, str]:
+        """The real persist-results, on a workflow run of this attempt's two
+        roles whose results are those the run audit cleared."""
+        run = Path(self.tmp.name) / "wf_x"
+        run.mkdir(exist_ok=True)
+        prompts = {"e": f"  Paper: paper-a\n  Attempt directory: {self.dir}\n",
+                   "r": "  Paper: paper-a\n  Review the attempt.\n"}
+        for agent_id, agent_type, payload in (("e1", "e", self.execution), ("r1", "r", review)):
+            lines = [{"message": {"role": "user", "content": prompts[agent_type]}},
+                     {"message": {"role": "assistant", "content": [
+                         {"type": "tool_use", "id": "s", "name": "StructuredOutput",
+                          "input": payload}]}},
+                     {"message": {"role": "user", "content": [
+                         {"type": "tool_result", "tool_use_id": "s", "content": "accepted"}]}}]
+            (run / f"agent-{agent_id}.jsonl").write_text(
+                "\n".join(json.dumps(line) for line in lines) + "\n", encoding="utf-8")
+            (run / f"agent-{agent_id}.meta.json").write_text(
+                json.dumps({"agentType": agent_type}), encoding="utf-8")
+        err = io.StringIO()
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(err):
+            status = lane.cmd_persist_results(argparse.Namespace(
+                config=self.config, run_dir=run, force=True, record_unruled=False))
+        return status, err.getvalue()
 
     def write_adjudicated(self, check: bool = False) -> int:
         """Run the adjudicate command (``--check`` when ``check``)."""
@@ -1155,6 +1207,46 @@ class AdjudicationTests(unittest.TestCase):
             with self.assertRaisesRegex(lane.LaneError, "review:qualified is unruled",
                                         msg=change):
                 self.adjudicated()
+
+    def test_a_null_row_is_unassessed_through_persistence(self):
+        """Astra's re-check (D-Astra-132-2 residual), through the real
+        commands: a 'yes' row with null aspects and evidence, against an
+        executor's as-planned claim, blocks persistence until ruled, and
+        the ruling decides T01's credit."""
+        self.build(declared={"T01": True})
+        rows = [method_row(t) for t in self.LOCKED]
+        rows[0].update(aspects=None, evidence=None)
+        review = review_payload(review_concern("C1"), review_concern(
+            "C2", (), evidence=[lane.PLAN_FILE]), rows=rows)
+        self.audit(review)
+        status, err = self.persist(review)
+        self.assertEqual(status, 1)
+        self.assertIn("method-unassessed:T01", err)
+        self.assertFalse(json.loads((self.dir / lane.REVIEW_FILE).read_text())[
+            "admission"]["eligible"])
+        with self.assertRaisesRegex(lane.LaneError, "persisted ineligible"):
+            self.adjudicated()
+        self.rule_all(**{"method-unassessed:T01": {"decision": "excluded",
+                                                   "note": "T01's row was never completed"}})
+        self.assertEqual(self.persist(review)[0], 0)
+        self.assertEqual(self.credit(self.adjudicated())["T01"], "excluded")
+
+    def test_a_malformed_dimensions_block_through_persistence(self):
+        """Astra's re-check (D-Astra-132-3 residual): a dimension given as the
+        scalar 'CONCERN' is a paper-wide defect in the audit, and the real
+        persist-results records the uncomputable count instead of crashing."""
+        review = review_payload(review_concern("C1"), review_concern(
+            "C2", (), evidence=[lane.PLAN_FILE]))
+        review["dimensions"]["methodological_soundness"] = "CONCERN"
+        self.audit(review)
+        issues = lane.attempt_issues(self.dir, lane.read_record(self.dir, lane.GATE_FILE))
+        self.assertEqual(issues["review-defect:dimensions"]["scope"], "paper")
+        self.assertEqual(issues["review-concern:C1"]["scope"], "paper")
+        self.rule_all()
+        self.assertEqual(self.persist(review)[0], 0)
+        notes = json.loads((self.dir / lane.REVIEW_FILE).read_text())["orchestrator_notes"]
+        self.assertIn("concern count cannot be computed", " | ".join(notes))
+        self.assertEqual(self.adjudicated()["coverage"]["targets_credited"], 2)
 
     def test_a_contradictory_row_is_not_credited_silently(self):
         """D-Astra-132-2 through audit, admission, and adjudication, against an
