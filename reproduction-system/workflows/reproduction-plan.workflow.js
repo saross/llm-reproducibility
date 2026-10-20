@@ -3,7 +3,10 @@ export const meta = {
   description: 'Reproduction lane stage 1: one governed planner spawn per paper; plans return for orchestrator persistence and batched human approval',
   phases: [{ title: 'Plan' }],
 }
-// reproduction-plan.workflow.js v1.1 (2026-10-18, gate 1.3.2 criterion 3: the
+// reproduction-plan.workflow.js v1.2 (2026-10-21: the rules block no longer
+// names each rule's source file, since R1 to R4's sits in a blinded location
+// and opening it would void a blinded run; the texts are complete as given).
+// v1.1 (2026-10-18, gate 1.3.2 criterion 3: the
 // planner is handed the lodged-rule registry and quotes each rule it relies on
 // whole in rules_applied, with every condition stated per target); v1.0
 // (2026-10-03, Phase 2 shakedown build).
@@ -118,8 +121,9 @@ const lodgedBlock =
   `condition listed for it (holds yes, no, unknown, or not-applicable, with the evidence from this ` +
   `paper's materials and your method) and the credit that follows. Where a condition holds as its ` +
   `"not creditable when" says, mark the target not-creditable: it stays in the locked denominator, ` +
-  `and the gate never credits it. Never paraphrase a rule, and never drop a condition.\n` +
-  lodged_rules.map(r => `- ${r.rule_id} (${r.title}; ${r.source}): "${r.text}"\n` +
+  `and the gate never credits it. Never paraphrase a rule, and never drop a condition. Each ` +
+  `rule's text below is complete as lodged: quote it from here, and do not open its source file.\n` +
+  lodged_rules.map(r => `- ${r.rule_id} (${r.title}): "${r.text}"\n` +
     r.conditions.map(c => `  - condition ${c.condition_id}: "${c.clause}"` +
       (c.not_creditable_when ? ` (not creditable when ${c.not_creditable_when})` : ' (state it)') +
       (c.decided_at === 'plan' ? '; settle it now: unknown is not accepted' : '; may be unknown until run') +
