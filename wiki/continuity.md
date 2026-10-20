@@ -133,10 +133,15 @@ merged here as PR #1).
     Main's code is identical to `67569cb`; 768 tests pass on main; manifest
     83/83; attempt 04's adjudicated result verifies (13/18). Worktree
     `.claude/worktrees/gate-1-3-2` removed; the branch is kept. Gate 1.3.2
-    stays open for criterion 4. [ ] **Next (was: after the merge):** Shawn merges
-    PR #13 (the session's agents load from main, as for gate 1.3.1), then
-    the planner pilot at the API gate (one Opus 5.5 planner, ≈$1.30), the
-    review-only mode built, and the reviewer-only pilot at the API gate.
+    stays open for criterion 4. [ ] **Next, criterion 4 (Astra's scope, in
+    the design note):** (1) the planner pilot: a run configuration for a
+    fresh, blinded herskind attempt 05 (stage 1 only), committed, then the
+    API gate (one Opus 5.5 planner, ≈$1.30), ideally from a fresh session so
+    reproduction-planner v1.4 loads from main; the approver checks the input
+    provenance of the target matching the old T17; (2) an isolated, labelled
+    mechanical fixture showing that plan's not-creditable target excluded;
+    (3) build the review-only mode (its own review), then the reviewer-only
+    pilot on attempt 04 at the API gate.
   - [ ] **Operational follow-up PRs, outside the gate's review:** the
     launch word rule (screen the whole relayed message); the args-builder
     guard (allow the planned initial state, reject prior execution
