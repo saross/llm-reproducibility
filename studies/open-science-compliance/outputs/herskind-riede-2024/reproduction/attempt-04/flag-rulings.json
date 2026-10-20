@@ -171,6 +171,33 @@
       "approver": "Shawn Ross",
       "ruled_at": "2026-10-17T07:17:13+00:00",
       "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "review:qualified",
+      "fingerprint": "565a668ebdfa87a444808cccb8f637485b2b8c1b6c5924a03ce4aa8364fd7705",
+      "kind": "flag",
+      "decision": "admissible",
+      "targets": {
+        "T17": "excluded"
+      },
+      "verdict": "SUCCESSFUL",
+      "note": "Restated 2026-10-18 with target-scoped parts (gate 1.3.2). The original ruling of 2026-10-17 reads: Admissible. Concerns resolved: (1) T16 keeps the approved plan's pair-level reading, since rescoring after results would be post hoc; at motif level C5 (one Kongemose object) and C12 (one Maglemose, one Kongemose) are not exclusive, and three of the ten pairs rest on a single object. (2) The undeclared method departures (T01, T03, T04, T12), the unqualified SUCCESSFUL in comparison.json, comparisons run on run-04 before run-05 was credited, and the unpinned base image are recorded; none can be corrected in this attempt without a new review. (3) T17 is NOT creditable under amendment 3 s7(d) (ruling Q5): its rule (at least two of the five cluster motifs) was inferred from Table 3 and applied to S1, not to outputs of the authors' code; the approved plan paraphrased Q5 without that condition. Study coverage is therefore 13/18. The lane's admitted coverage reads 14/18 because this issue names no targets and a ruling cannot remove one target alone (follow-up PR: target-scoped review issues). The verdict SUCCESSFUL stands: every value the authors' code produces was reproduced. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-18T06:14:25+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "escalation:executor:OTHER:T03",
+      "fingerprint": "a17681b6513b1f4585e64e5fdd0754c8e2e4c5f9b829ad24fd0a4825044e97b7",
+      "kind": "flag",
+      "decision": "admissible",
+      "classification": {
+        "T03": "PAPER_ERROR"
+      },
+      "note": "Restated 2026-10-18 with target-scoped parts (gate 1.3.2). The original ruling of 2026-10-17 reads: Admissible, recorded as PAPER_ERROR rather than the executor's MINOR_DISCREPANCY: the two mismatches (C5-F13 boxed Ertebolle though its single object is Kongemose in S1; B1-B2 exclusive to Maglemose but unboxed) are differences of content against the authors' deposited S1 (tier 2), and the plan reserved MINOR for GIMP styling. Attempt-03 classified the same two cells PAPER_ERROR. T03 is uncredited either way; comparison.json is unchanged (strict binding). Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-18T06:14:25+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
     }
   ]
 }

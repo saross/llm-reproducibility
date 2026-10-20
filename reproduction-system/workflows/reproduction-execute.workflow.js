@@ -17,7 +17,9 @@ export const meta = {
 // outputs. v1.4 (2026-10-12, the gate 1.3 final review's F7): the closing
 // message gives the post-run order, with the audit before the queue, the
 // rulings, and persistence last; executors write comparison schema 1.2, with
-// a method_as_planned declaration per target.
+// a method_as_planned declaration per target. v1.5 (2026-10-18, gate 1.3.2):
+// the closing message ends the post-run order with adjudicate, whose record
+// study data reads; the reviewer (v1.4) states its concerns per target.
 //
 // Stage 2 of the agentic reproduction lane (modernisation plan §4.2). Runs
 // only on papers whose plan carries a committed, hash-bound human approval:
@@ -313,7 +315,7 @@ for (const r of done) {
 log(`${done.length}/${papers.length} papers through the pipeline; missing: ${missing.join(', ') || 'none'}; ` +
     `${queue.length} item(s) for human attention. Next, in this order: check-attempt with ` +
     `--launch-commit, audit-run, human-queue (the authoritative queue, reconciled against this ` +
-    `one), rule-flags, and persist-results last.`)
+    `one), rule-flags, persist-results, and adjudicate last (study data reads its record).`)
 return {
   run_id,
   launch_commit,

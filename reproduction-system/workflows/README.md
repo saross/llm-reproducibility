@@ -1,6 +1,6 @@
 # Agentic reproduction lane — workflows and runbook
 
-**Version:** 1.2 (2026-10-12, gate 1.3; 1.1 2026-10-04; 1.0 2026-10-03)
+**Version:** 1.3 (2026-10-18, gate 1.3.2: target-scoped rulings and the adjudicated result; 1.2 2026-10-12, gate 1.3; 1.1 2026-10-04; 1.0 2026-10-03)
 **Status:** built for the Phase 2 shakedown (`wiki/planning/agentic-modernisation-plan.md`
 §5, Phase 2 option (a), approved 2026-10-02). It sits alongside the
 session-per-phase human lane (`reproduction-system/prompts/`), which remains
@@ -83,6 +83,18 @@ configuration (for the shakedown:
    The approval binds to the plan file's sha256. An approved plan is locked:
    persist-plans and approve both refuse to replace it, because the target
    list is now the coverage denominator.
+   Since gate 1.3.2 the plan quotes each lodged rule it relies on whole
+   (`reproduction-system/lodged-rules.yaml`), and persist-plans and approve
+   refuse a paraphrase, a missing condition, a target citing a rule it does
+   not apply, and a condition that denies credit on a target planned
+   creditable, and `unknown` on a condition the plan settles itself (such
+   as whether a target's inputs come from executing the authors' code;
+   Shawn, 2026-10-19). What they cannot check is whether each stated condition is
+   true of the target's inputs: that is the approval's job. Read the plan's
+   "Lodged rules applied" table against each target's method (for example,
+   are T17's inputs really the authors' code's outputs?). A target planned
+   not creditable is never credited by the gate. Approval never amends a
+   rule; a rule that is wrong is changed where it was lodged.
 7. **Commit** the plans and approvals.
 8. **Execute args** (the executor builds its image with `reproduction-lane.py
    build-image`, which keeps the build log under `lane-records/build-NN/`):
@@ -121,10 +133,19 @@ configuration (for the shakedown:
 13. **Rulings** (human): for each issue, record a decision with
     `reproduction-lane.py rule-flags --config $CFG --slug <slug> --approver "<name>" --rulings <file>`.
     A ruling binds to the issue's evidence fingerprint, so it lapses if the
-    evidence changes.
+    evidence changes. Each issue states its scope: `targets` (the ones it
+    names) or `paper` (all of them). Since gate 1.3.2 a ruling can also
+    dispose of single targets within its issue, `"targets": {"T17":
+    "excluded"}`; record a ruled classification, `"classification":
+    {"T03": "PAPER_ERROR"}`; and, on the review's verdict flag
+    (`review:...`), set the ruled verdict, `"verdict": "SUCCESSFUL"`. The
+    note must name each target singled out, and a ruling never creates
+    credit: an outcome the comparison did not reproduce cannot be ruled into
+    a reproduced one. Rule outcomes this way, never in the note alone, since
+    the adjudicated result (step 15) reads only these fields.
 14. **Persist results:**
-    `venv/bin/python scripts/reproduction-lane.py persist-results --config $CFG --run-dir <workflow run dir>`,
-    last. It persists an attempt's payloads only when the attempt is
+    `venv/bin/python scripts/reproduction-lane.py persist-results --config $CFG --run-dir <workflow run dir>`.
+    It persists an attempt's payloads only when the attempt is
     eligible: a passing gate, a clean transcript audit, a run audit with
     both roles clean, and every issue ruled. The run audit must be the one
     for this workflow run and must have cleared these very results, and the
@@ -135,6 +156,20 @@ configuration (for the shakedown:
     state. To keep payloads before then, `--record-unruled` records them as
     ineligible, and a fresh `persist-results --force` is needed after the
     rulings.
+15. **Adjudicate**, last:
+    `venv/bin/python scripts/reproduction-lane.py adjudicate <attempt dir>`
+    writes `adjudicated-result.json`, the attempt's result as study data
+    reads it (gate 1.3.2). It records, per locked target, the credit, the
+    ruled classification, and the rulings that set them, with the ruled
+    coverage over every locked target and the verdict disposition; it keeps
+    the gate's raw and pre-ruling coverage as history, and binds every record
+    it was derived from by digest. It is written only when final: admission
+    passes for the persisted results, every issue is ruled, and no rulings
+    conflict. Writing it does not change the reviewed state. **Study
+    reporting and export read this record, through `verify_adjudicated` (or
+    `adjudicate --check`), and nothing earlier**: neither the comparison's
+    outcomes nor the gate's coverage reflect the rulings. After any later
+    ruling, adjudicate again, since the check refuses a stale record.
 
 ## Where each invariant is enforced
 

@@ -2,7 +2,7 @@
 title: "Reproduction lane gate 1.3 — consolidated specification"
 tags: [reproduction, validation, mechanical-verification]
 created: 2026-10-05
-updated: 2026-10-17
+updated: 2026-10-18
 status: 1-3-1-closed-1-3-2-open
 ---
 
@@ -90,6 +90,201 @@ Fable,
 
 1.3.2 closes with focused regression evidence for each criterion and a
 review of the final changes before §8.
+
+**Criterion 1 as built (2026-10-18, branch `feat/gate-1-3-2`; lane v1.6,
+`GATE_VERSION` 1.3.2).** Shawn's rulings of 2026-10-18 set four choices:
+
+- a ruling never creates credit: it may relabel an outcome or remove
+  credit, but an outcome the comparison did not reproduce cannot be ruled
+  into a reproduced one;
+- the ruled verdict is set only by the ruling on the review's verdict flag,
+  and otherwise the executor's verdict stands;
+- the adjudicated result is written only when final;
+- a reviewer's slip in naming targets costs a ruling, not a re-run: the
+  item is made paper-wide, so while unruled it blocks every target, rather
+  than the role being marked unclean (a side agent's note raised this).
+
+What was built:
+
+- **Scope on every issue.** Each issue record states `scope`, `targets` or
+  `paper`, derived from its target list. The fingerprint already covers
+  that list, so no existing ruling lapses. A target outside the locked plan
+  fails the gate in the gate's own issues and declared edits; in an agent's
+  payload it makes the item paper-wide; and admission refuses any issue
+  naming one, and any attempt with no readable plan.
+- **The reviewer's concerns** (review schema 1.1, reviewer v1.4). Each has
+  a `concern_id`, its dimension, a scope (`targets` with locked ids, or
+  `paper`), a summary, and evidence files. Each becomes
+  `review-concern:<id>`, fingerprinted with the concern and the sha256 of
+  each evidence file. A malformed concern (an unknown or missing target, a
+  dimension not marked CONCERN, evidence that is not a file, a repeated id)
+  is paper-wide and names its defect; a CONCERN dimension with no concern,
+  and a v1.4 review with no concerns list, are paper-wide `review-defect`
+  flags. The verdict flag then stands for the verdict disposition alone. A
+  v1.3 review keeps its single flag, so attempt 04's rulings still apply.
+- **Target-scoped rulings.** `rule-flags` takes `targets` (a decision per
+  target, within the issue's scope), `classification` (a ruled outcome per
+  target), and, on the verdict flag only, `verdict`. The note must name
+  every target singled out. `admitted_coverage` honours both.
+- **The adjudicated result.** `adjudicate <attempt>` writes
+  `adjudicated-result.json`: per locked target, the raw and ruled outcome,
+  the ruling that set the classification, the credit (`credited`,
+  `excluded`, `uplift`, `not-reproduced`), the reasons, and the issues
+  singling it out; the ruled coverage and verdict; the gate's raw and
+  recorded admitted coverage as history; and the sha256 of the plan,
+  comparison, gate report, rulings, both audits, the manifest, both
+  payloads, and the artefact state. It is a post-review file, so writing it
+  leaves the reviewed state alone. `verify_adjudicated` (or `adjudicate
+  --check`) re-derives it and refuses a stale one; study reporting and
+  export read through it and nothing earlier (runbook step 15).
+- **Fixture.** On a copy of attempt 04's real records,
+  `PilotAdjudicationTests` derives the lane's 14/18 from the notes alone,
+  then 13/18 once the T17 and T03 rulings are restated with their
+  target-scoped parts: only T17 excluded, all 18 in the denominator, T03
+  ruled PAPER_ERROR over its raw MINOR_DISCREPANCY, the verdict SUCCESSFUL
+  set on `review:qualified`, and the raw 14/18 and pre-ruling 0/18 kept as
+  history. `AdjudicationTests` and `ScopedCoverageTests` cover several
+  concerns on one target, one concern on several targets, paper-wide
+  concerns, changed evidence and rulings, conflicting classifications, and
+  incomplete dispositions. The real attempt 04 is unchanged: restating its
+  two rulings in the attempt itself needs Shawn's approval of the text.
+  [Shawn approved it, 2026-10-18: the two rulings are restated in attempt
+  04, which adjudicates to 13/18 (`f9328ed`); draft PR #13.]
+
+**Criterion 2 as built (2026-10-18, same branch).** Shawn's rulings of
+2026-10-18 set two choices: a disagreement between executor and reviewer is
+named in the reviewer's flag (folded), with a separate flag only where the
+reviewer has none to carry it; and the gate's paper-wide
+`method-adherence:targets` obligation is retired, the rows carrying its
+duty.
+
+- **Rows** (review schema 1.1, `method_assessment`): one per locked target,
+  credited or not, with `as_planned` (`yes`, `no`, `unable_to_verify`), the
+  `aspects` that departed (`method`, `inputs`, `tolerance`,
+  `classification`), the `departure`, `outcome_affected` and
+  `after_published_value` (`yes`, `no`, `unknown`), and `evidence`.
+- **Flags** (`method_issues`), each on its target and fingerprinted with
+  the row, its evidence, and the target's comparison record: a `no` is
+  `method-deviation:reviewer:<target>`, its own id so the gate's
+  executor-declared `method-deviation:<target>` cannot hide it, marked
+  undeclared unless the executor declared it; `unable_to_verify` is
+  `method-unverified:<target>`, whatever the executor claimed; a `yes`
+  against a declared departure is `method-disagreement:<target>`. A
+  missing, repeated, or malformed row is `method-unassessed:<target>`; a
+  row for an unlocked target is a paper-wide `review-defect`. A review
+  without rows is a paper-wide defect from reviewer v1.4 or gate 1.3.2 on,
+  so the retired obligation's duty cannot lapse; attempt 04 (gate 1.3.1,
+  reviewer v1.3) keeps its ruled obligation.
+- **Fixture.** On a copy of attempt 04, rows restating the v1.3 reviewer's
+  findings flag T01, T03, T04, and T12 each on its own target, marked
+  undeclared, and T13 as declared by both roles; a `yes` for T13 raises
+  `method-disagreement:T13`. `MethodRowTests` covers every executor claim
+  against every row, and missing, repeated, malformed, and unknown rows.
+
+**Criterion 3 as built (2026-10-18, same branch).** Shawn's rulings of
+2026-10-18: the lane reads the rules from a registry, and the gate enforces a
+plan's exclusions.
+
+- **The registry** (`reproduction-system/lodged-rules.yaml`, version 1.0):
+  amendment 3's §7(a), §7(c), the §7(d) corollary, mechanics in an authors'
+  file, Q5, and Q6, as the pushed instruments carry them, and the
+  registrant rulings R1 to R4. Each has its text, source, and version; Q5
+  and R2 list the verbatim clauses on which they deny credit. Generated
+  from the sources, never retyped, and tested against them and, for the
+  amendment's rules, against the lodged text (`osf-amendment-3.txt`), so it
+  amends nothing. The condition lists are a reading; Shawn approved them on
+  2026-10-19 ("these lists reflect my understanding").
+- **Plans** (plan schema 1.1, reproduction-planner v1.4, plan workflow
+  v1.1): `rules_applied` quotes each rule relied on whole and, per target,
+  states every listed condition (`yes`, `no`, `unknown`,
+  `not-applicable`, with evidence) and the credit that follows. The
+  workflow hands the planner the registry; `build-plan-args` refuses a run
+  configuration whose rulings differ from it.
+- **Checks** (`rule_problems`, at `persist-plans` and again at `approve`,
+  which records the registry's sha256): the quotation equals the rule; every
+  condition is stated once with evidence; a condition that denies credit
+  makes the target not creditable; a target whose text cites a rule applies
+  it. The plan view gives a "Lodged rules applied" table for the approver,
+  whose job is whether each stated condition is true.
+- **Enforcement**: a target planned not creditable is a structural
+  exclusion in the gate and the adjudicated result, whatever its outcome
+  and rulings.
+- **Fixtures.** Attempt 04's approved plan fails: T17 cites Q5 without
+  applying it (as do T01, T03, T04 with R1 and T14, T15 with R4). With Q5
+  quoted whole and "inputs from the authors' code: no", it passes and T17
+  is not creditable; the same quotation with T17 marked creditable fails
+  (the wrong branch); a paraphrase or a fragment fails.
+
+**Astra's review of criteria 1 to 3 (2026-10-19,
+`~/agent-mail/codex/outbox/claude/2026-10-19-codex-gate132-criteria-review.md`,
+at `bc85895`): changes requested, three class D findings, all closed on the
+branch.** She accepted Shawn's rulings (slips as rulable defects, folded
+disagreements, the retired obligation, the registry) and the fixtures.
+
+- **D-Astra-132-1, the verdict ruling not bound to the verdict challenge.**
+  From reviewer v1.4 the verdict flag's fingerprint covers the whole
+  `verdict_challenge`, so a fresh review that stops supporting the verdict,
+  challenges another, or argues otherwise needs a new ruling. A v1.3
+  review keeps its fingerprint; a test recomputes attempt 04's and finds
+  it unchanged.
+- **D-Astra-132-2, contradictory or incomplete method rows passing.** A row
+  must carry every schema field, and a `yes` that names departed aspects,
+  describes a departure, or says the outcome was affected contradicts
+  itself; either leaves the target `method-unassessed`, the row kept in
+  the fingerprint. Tested through audit, admission, and adjudication
+  against an executor's as-planned claim.
+- **D-Astra-132-3, scalar collections crashing the validators.** Every
+  collection is type-checked before use (`listed`): a malformed concern is
+  paper-wide, a malformed row leaves its target unassessed, a malformed rule
+  application is a blocking plan error, and escalations are checked too. A
+  two-paper `persist-plans` test shows one paper's malformed rules block
+  only that paper.
+- **Her scope note:** `verify_adjudicated` re-derives from the attempt's
+  records and audits; it does not re-hash the external corpus store, and
+  its docstring now says so.
+
+**Astra's re-check (2026-10-20,
+`~/agent-mail/codex/outbox/claude/2026-10-20-codex-gate132-closure-recheck.md`,
+at `700a8f2`): D-Astra-132-1 closed; two residuals, both closed.**
+
+- **D-Astra-132-2 residual, explicit nulls.** A row with `aspects: null`
+  and `evidence: null` passed as assessed, because the check tested
+  presence, not type; through the real `persist-results` it was eligible
+  and T01 was credited. Each concern and method row is now validated
+  against its definition in the registered review schema
+  (`shape_defects`) before it counts as assessed, so a null, a scalar, an
+  object, or an absent key leaves its target unassessed. Regressed through
+  audit, `persist-results`, admission, and adjudication.
+- **D-Astra-132-3 residual, malformed dimensions.** A concern's
+  `dimension` given as a list or an object crashed the membership test, and
+  a dimensions block with a scalar member crashed `expected_overall` in
+  `persist-results`. Both are now shape-checked: the concern is malformed
+  and paper-wide, a malformed block (or none, from reviewer v1.4) is a
+  paper-wide `review-defect:dimensions`, and `persist-results` records that
+  the concern count cannot be computed rather than reading it as zero.
+  Regressed through the real command.
+
+**Shawn's ruling on `unknown` (2026-10-19, after a side agent's note).** A
+plan could leave Q5's input condition `unknown` and still plan T17
+creditable, repeating attempt 04. Each registry condition now states
+`decided_at`: `plan` where the plan settles it from its own method (Q5's
+no-authors-code, inputs-from-authors-code, and reconstructed-inputs), so
+`unknown` is refused there; `execution` where only the run does (Q5's
+printed-inputs, R2's inputs-unobtainable), where `unknown` stays allowed.
+
+**Criterion 4 (Astra's scope, 2026-10-19):** a planner pilot as well as
+the reviewer-only pilot. The planner pilot is a fresh, separately blinded
+planning attempt, normally persisted and triaged, with whole quotations and
+every condition stated, and the approver explicitly checking the input
+provenance of the target that corresponds to the old T17 (which may have
+another id); an unsupported creditable or unknown answer is a pilot
+finding, never corrected silently. Then an isolated, labelled mechanical
+fixture shows a real not-creditable application from that output is
+excluded by the gate and adjudication against a reproduced outcome. The
+reviewer-only pilot keeps the original executor binding, a fresh reviewed
+state, a fresh reviewer identity and audit, and the retry and
+changed-comparison tests. No executor spawn is needed. Each pilot is
+separately approved at the API gate, after these fixes are re-checked.
 
 **Operational follow-ups, as separate PRs outside the gate's review**
 (Fable's placement; Astra's test requirements kept):

@@ -317,10 +317,11 @@ class GateTests(unittest.TestCase):
                                                    "targets_reproduced": 1})
         self.assertEqual(self.run_gate()["verdict"], "pass")
 
-    def test_method_deviations_are_flags_and_adherence_an_obligation(self):
+    def test_method_deviations_are_flags_and_adherence_the_reviewers(self):
         """The gate 1.3 final review's F4: a declared departure from the
-        plan's method is a flag on its target, an undeclared one a warning,
-        and every attempt carries the reviewer's method-adherence obligation."""
+        plan's method is a flag on its target, and an undeclared one a
+        warning. Gate 1.3.2 retires the paper-wide method-adherence
+        obligation: the reviewer's per-target rows carry that duty."""
         base = self.comparison()["targets"]
         changed = [{**base[0], "method_as_planned": False,
                     "method_deviation": "criterion inferred from the caption after viewing "
@@ -331,12 +332,32 @@ class GateTests(unittest.TestCase):
         self.assertEqual(report["verdict"], "pass", report["errors"])
         issues = {i["id"]: i for i in report["issues"]}
         self.assertEqual(issues["method-deviation:T01"]["targets"], ["T01"])
-        self.assertEqual(issues["method-adherence:targets"]["kind"], "obligation")
+        self.assertNotIn("method-adherence:targets", issues)
         self.assertIn("method-deviation:T01", report["coverage_admitted"]["unruled_issues"])
         self.assertIn("T01", report["coverage_admitted"]["excluded_targets"])
         self.comparison()
         warnings = " ".join(self.run_gate()["warnings"])
         self.assertIn("T01: the record does not declare method_as_planned", warnings)
+
+    def test_a_target_planned_not_creditable_is_never_credited(self):
+        """Gate 1.3.2, criterion 3 (Shawn, 2026-10-18): a target the approved
+        plan marks not creditable under a lodged rule is excluded by
+        structure, so its EXACT_MATCH counts for nothing, ruled or not."""
+        record = plan_record(["T01", "T02"])
+        record["plan"]["rules_applied"] = [{"rule_id": "Q5", "quotation": "q", "applications": [
+            {"target_id": "T01", "conditions": [], "credit": "not-creditable"}]}]
+        self.plan.write_text(json.dumps(record), encoding="utf-8")
+        self.comparison()
+        report = self.run_gate()
+        self.assertEqual(report["verdict"], "pass", report["errors"])
+        write(self.dir / lane.RULINGS_FILE, json.dumps({"rulings": [
+            {"issue_id": i["id"], "fingerprint": i["fingerprint"],
+             "decision": "admissible" if i["kind"] == "flag" else "discharged"}
+            for i in report["issues"]]}))
+        admitted = self.run_gate()["coverage_admitted"]
+        self.assertEqual((admitted["targets_admitted"], admitted["excluded_targets"]),
+                         (1, ["T01"]))
+        self.assertIn("not creditable under Q5 by the approved plan", admitted["reasons"])
 
     def test_report_lists_issues_and_admits_only_ruled_results(self):
         """Gate 1.3 §6: raw coverage counts outcomes; admitted coverage waits
@@ -425,7 +446,7 @@ class GateTests(unittest.TestCase):
     def test_gate_reports_code_integrity(self):
         self.comparison()
         report = self.run_gate()
-        self.assertEqual(report["gate_version"], "1.3.1")
+        self.assertEqual(report["gate_version"], "1.3.2")
         self.assertEqual(report["code_integrity"]["status"], "identical", report["errors"])
         self.assertEqual(report["code_integrity"]["anchors"], {"analysis.R": "verified"})
         self.assertEqual(report["flags"], [])
@@ -475,6 +496,22 @@ class GateTests(unittest.TestCase):
         self.assertEqual(report["coverage_admitted"]["targets_admitted"], 0)
         self.assertEqual(report["coverage_admitted"]["excluded_targets"], ["T01", "T02"])
         self.assertNotIn("coverage_creditable", report)
+
+    def test_a_declared_edit_naming_an_unlocked_target_fails(self):
+        """Gate 1.3.2: an edit naming only T09 would exclude nothing, so the
+        resting target would be credited; it fails rather than passing."""
+        self.comparison()
+        write(self.dir / "authors-code" / "analysis.R",
+              AUTHORS_R.replace("index = 4", "index = 3"))
+        manifest = json.loads((self.dir / lane.CODE_MANIFEST_FILE).read_text())
+        manifest["executed"][0]["declared_edit"] = {
+            "summary": "shifted an index", "kind": "repair", "affected_targets": ["T09"]}
+        write(self.dir / lane.CODE_MANIFEST_FILE, json.dumps(manifest))
+        snapshot(self.dir)
+        report = self.run_gate()
+        self.assertEqual(report["verdict"], "fail")
+        self.assertTrue(any("names targets not in the locked plan: ['T09']" in e
+                            for e in report["errors"]), report["errors"])
 
     def test_gate_missing_manifest_fails_unless_listed_legacy(self):
         self.comparison()
