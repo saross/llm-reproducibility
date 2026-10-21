@@ -45,22 +45,49 @@ merged here as PR #1).
   `~/.claude/projects/-home-shawn-Code-llm-reproducibility/*/subagents/workflows/`
   (or ask Shawn for its id), and check whether the launching session has
   already run the post-run steps before repeating any.
-  - [ ] **Post-run, by the brief** (`api-gate-brief.md`, launch checklist
-    step 6 and "Acceptance"): `persist-plans`; `audit-run` (receipts must
-    show `reproduction-planner v1.4`, and no contaminating access); read the
-    triage and `attempt-05/reproduction-plan.md`. Then Shawn's explicit
-    check of the input provenance of the target matching the old T17 (the
-    named value that the cluster ornament strings occur on only ten
-    objects, p. 7), and an `approve` or hold decision. An unsupported
-    creditable or unknown answer is a pilot finding, recorded as found.
-  - [ ] Then the isolated, labelled mechanical fixture: the plan's actual
-    not-creditable application, excluded by the gate and adjudication
-    against a reproduced outcome.
+  **Correction (session a9c4834d):** at handoff the launch session
+  (`e854d6a4`) was still paused at the API gate; Shawn's go came at 09:58
+  AEDT and the run started at 09:59. A second session (a9c4834d, started
+  from this handoff) ran pre-flight in parallel; its args rebuild was
+  byte-identical, so no harm, but two sessions then worked one run in one
+  checkout. Shawn moved the run to a9c4834d after the hold.
+  - [x] 2026-10-21 **Post-run, by the brief.** Run `wf_88429e16-a85`
+    (launch commit `904d70d`); `persist-plans` and `audit-run` (`741345b`):
+    receipts `reproduction-planner v1.4`, audit clean, $2.59 API-equivalent
+    (estimate $1.20 to $1.80; halt $2.70), 15.8 min. Checks 1, 2, and 4
+    met; **check 3 failed**: T15 (the old T17) planned creditable with Q5
+    `inputs-from-authors-code: yes`, on `data`, which is
+    `Herskind&Riede_S2.R` line 30 (`read_excel` of S1, never modified).
+    Shawn ruled the condition `no` and **held** the plan (`aea100f`), and
+    ruled the run admissible on blinding (the planner's `ls` printed the
+    blinded name `lodged-rules.yaml`; never opened). Results:
+    `validation/gate-1-3-2-planner-pilot/results-2026-10-21.md`
+    (`5cc0f33`, `02376eb`, `2476c64`).
+  - [x] 2026-10-21 **Mechanical fixture, route A** (`f34a756`): the plan
+    wrote no not-creditable application (138 of 138 creditable), so a
+    labelled, approver-amended copy
+    (`tests/fixtures/planner-pilot-t15-approver-amendment.json`) shows
+    approval, gate, and adjudication excluding T15 (16 of 17) against a
+    synthetic reproduced outcome. 773 tests pass. The planner half stays
+    open until the long-term fix's re-plan.
+  - [x] 2026-10-21 **Mailed Astra** (Shawn approved the text): pilot
+    results, the v1.2 and docstring changes since her approval, route A,
+    the long-term fix, and the audit gaps; three questions
+    (`~/agent-mail/claude/outbox/codex/20261021T125238.665157Z-claude-gate132-planner-pilot-results.md`).
+  - [ ] **Await Astra's reply:** (1) does route A close check 5's
+    mechanical half; (2) is the fix sound, and is it a gate 1.3.2
+    addendum or gate 1.3.3; (3) does the delta since `67569cb` reopen
+    anything.
+  - [ ] **The long-term fix** (results doc, "The long-term fix"; branch +
+    PR after Astra's scoping): the registrant's reading of
+    `inputs-from-authors-code` (**text approved by Shawn 2026-10-21**) into
+    the registry beside the condition; per-input lineage declared by the
+    plan, the condition derived by the lane, "computed by" citations of
+    load-only lines refused; no credit on a reading put to the approver;
+    optionally a fresh-context verifier; T15 as a negative fixture. Then a
+    re-plan under its own API gate, estimated from this run's $2.59 basis.
   - [ ] Then the review-only mode (branch + PR, Astra's review) and the
     reviewer-only pilot on attempt 04 at the API gate.
-  - [ ] Mail Astra the criterion 4 results, and that plan workflow v1.2
-    (`3307000`) changed after her approval (prompt only: rule sources are
-    no longer named).
   - [ ] Working-notes candidates WN-ax and WN-ay (session log, 2026-10-18
     → 10-21) await Shawn's verdict.
 
@@ -200,7 +227,17 @@ merged here as PR #1).
     start time; session 8e28871d's watcher, a session-scratch script not
     kept, priced with `transcript_usage` and `price_usage` but measured
     file change times, so **its time check could not fire**; test a run
-    whose files stop changing, restart, and missing telemetry).
+    whose files stop changing, restart, and missing telemetry). Added from
+    the gate 1.3.2 planner pilot (2026-10-21, results doc F3 and F4): the
+    live cost check lags by one turn (the last and largest turn is
+    invisible until the run ends); the run audit's
+    `writes_outside_scope` cannot fire for a planner (it counts only
+    Write, Edit, and NotebookEdit; use `segment_writes()` for Bash); the
+    blinding scan's `path_tokens()` drops bare names, so a blinded name in
+    output raises no warning and `cd <dir> && cat <blinded-name>` gives no
+    hit at all (`file_accesses()` covers only Read, Grep, and Glob); and
+    the harness scratchpad competes with the run's scratch directory (F5).
+    Also screen for a second live session on the same run before launch.
   - [x] 2026-10-17 Repeated pre-launch checks at `6b18505`: 699 tests pass,
     Docker 29.2.1, 30 GB free, Zenodo 200, attempt-04 holds only the plan
     and approval, no attempt-04 image. Launched on Shawn's "go", which
