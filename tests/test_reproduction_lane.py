@@ -129,20 +129,22 @@ def git(repo: Path, *args: str) -> None:
 
 
 def anchor_repo(root: Path, scored_version: str = "10.5281/zenodo.101",
-                checksum_of: str = AUTHORS_R) -> Path:
+                checksum_of: str = AUTHORS_R, slug: str = "some-paper-2024") -> Path:
     """A committed repository holding a registry and an evidence pack.
 
-    The registry selects ``scored_version`` for some-paper-2024; the pack's
+    The registry selects ``scored_version`` for ``slug``; the pack's
     record 10.5281/zenodo.101 publishes the md5 of ``checksum_of`` for its
-    file analysis.R. Provenance anchors are verified against these.
+    file analysis.R. Provenance anchors are verified against these. The
+    gate finds a pack by slug, so a fixture under a real plan names its
+    paper here (the planner pilot's fixture, 2026-10-21).
     """
     repo = root / "anchor-repo"
     write(repo / "corpus" / "evidence-packs" / "declared-links.yaml", json.dumps(
-        {"papers": {"some-paper-2024": {"links": [
+        {"papers": {slug: {"links": [
             {"id": "deposit", "type": "data+code", "link": "10.5281/zenodo.100",
              "role": "principal", "home": "repository",
              "scored_version": scored_version}]}}}))
-    write(repo / FIXTURE_PACK, json.dumps({"records": [
+    write(repo / FIXTURE_PACK.replace("some-paper-2024", slug), json.dumps({"records": [
         {"record_id": "zenodo:10.5281/zenodo.101", "status": "resolved",
          "fields": {"doi": "10.5281/zenodo.101", "files": [
              {"key": "analysis.R",
@@ -239,6 +241,52 @@ class FormatContracts(unittest.TestCase):
         # would read it as a permitted write root.
         source = (WORKFLOWS / "reproduction-plan.workflow.js").read_text(encoding="utf-8")
         self.assertNotIn("`Attempt directory:", source)
+
+
+# The gate 1.3.2 planner pilot's labelled fixture (acceptance check 5, route
+# A): the held attempt 05 plan with one approver amendment. Shared with
+# test_rulings.PlannerPilotFixtureTests, which runs approval and adjudication.
+PILOT_FIXTURE = REPO_ROOT / "tests" / "fixtures" / "planner-pilot-t15-approver-amendment.json"
+
+
+def pilot_plan(amend: bool = True) -> dict:
+    """The held planner-pilot plan record, with the fixture's amendment.
+
+    The source must still be the plan Shawn held (its sha256 is in the
+    fixture), and the planner's values must be as the fixture records them,
+    so the amendment changes exactly one condition and one credit. The
+    record carries the fixture's label. Nothing is written.
+
+    Args:
+        amend: False returns the plan as the planner wrote it.
+
+    Returns:
+        A persisted plan record (``{"plan": ...}`` plus its metadata).
+    """
+    fixture = json.loads(PILOT_FIXTURE.read_text(encoding="utf-8"))
+    source = REPO_ROOT / fixture["source_plan"]
+    if lane.sha256_file(source) != fixture["source_plan_sha256"]:
+        raise AssertionError(f"{fixture['source_plan']} is not the held plan")
+    record = json.loads(source.read_text(encoding="utf-8"))
+    if not amend:
+        return record
+    change = fixture["amendment"]
+    [application] = [a for entry in record["plan"]["rules_applied"]
+                     if entry["rule_id"] == change["rule_id"]
+                     for a in entry["applications"] if a["target_id"] == change["target_id"]]
+    [condition] = [c for c in application["conditions"]
+                   if c["condition_id"] == change["condition_id"]]
+    if (condition["holds"], application["credit"]) != (change["holds"]["planner"],
+                                                       change["credit"]["planner"]):
+        raise AssertionError("the held plan does not state what the fixture amends")
+    condition.update(holds=change["holds"]["approver"], evidence=change["evidence"])
+    application["credit"] = change["credit"]["approver"]
+    record["fixture_label"] = fixture["label"]
+    return record
+
+
+PILOT_PLAN_PRESENT = (REPO_ROOT / json.loads(
+    PILOT_FIXTURE.read_text(encoding="utf-8"))["source_plan"]).is_file()
 
 
 class GateTests(unittest.TestCase):
@@ -358,6 +406,39 @@ class GateTests(unittest.TestCase):
         self.assertEqual((admitted["targets_admitted"], admitted["excluded_targets"]),
                          (1, ["T01"]))
         self.assertIn("not creditable under Q5 by the approved plan", admitted["reasons"])
+
+    @unittest.skipUnless(PILOT_PLAN_PRESENT, "the planner pilot's plan is not in this checkout")
+    def test_the_planner_pilots_amended_t15_is_excluded_by_the_gate(self):
+        """Gate 1.3.2 planner pilot, check 5 (route A; LABELLED FIXTURE, not
+        planner output): the real attempt 05 plan, with T15's Q5 application
+        amended per Shawn's hold ruling, under a synthetic outcome where all
+        17 targets reproduce. The gate passes and, once its issues are
+        ruled, admits 16: T15 is excluded by the plan, whatever its outcome.
+        Approval and adjudication: test_rulings.PlannerPilotFixtureTests."""
+        record = pilot_plan()
+        slug = record["plan"]["paper_slug"]
+        self.repo = anchor_repo(Path(self.tmp.name) / "pilot", slug=slug)
+        self.launch = head(self.repo)
+        write_code_manifest(self.dir, paper_slug=slug)
+        snapshot(self.dir)
+        self.plan.write_text(json.dumps(record), encoding="utf-8")
+        targets = [{"target_id": t["target_id"], "outcome": "EXACT_MATCH", "testable": True,
+                    "values_compared": t.get("n_values") or 1,
+                    "values_matched": t.get("n_values") or 1, "evidence": "synthetic"}
+                   for t in record["plan"]["verification_targets"]]
+        self.comparison(paper_slug=slug, targets=targets,
+                        coverage={"targets_enumerated": 17, "targets_reproduced": 17})
+        report = self.run_gate()
+        self.assertEqual(report["verdict"], "pass", report["errors"])
+        self.assertEqual(report["coverage"]["targets_reproduced"], 17)
+        write(self.dir / lane.RULINGS_FILE, json.dumps({"rulings": [
+            {"issue_id": i["id"], "fingerprint": i["fingerprint"],
+             "decision": "admissible" if i["kind"] == "flag" else "discharged"}
+            for i in report["issues"]]}))
+        admitted = self.run_gate()["coverage_admitted"]
+        self.assertEqual((admitted["targets_enumerated"], admitted["targets_admitted"],
+                          admitted["excluded_targets"]), (17, 16, ["T15"]))
+        self.assertEqual(admitted["reasons"], ["not creditable under Q5 by the approved plan"])
 
     def test_report_lists_issues_and_admits_only_ruled_results(self):
         """Gate 1.3 §6: raw coverage counts outcomes; admitted coverage waits

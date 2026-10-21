@@ -1,0 +1,18 @@
+{
+  "fixture": "planner-pilot-t15-approver-amendment",
+  "label": "APPROVER-AMENDED FIXTURE, NOT PLANNER OUTPUT. A copy of the held gate 1.3.2 planner pilot plan (herskind-riede-2024, attempt 05) with one change, made per Shawn Ross's hold ruling of 2026-10-21. It is never an approved plan and is never executed: tests apply it to temporary copies and never write attempt 05.",
+  "created": "2026-10-21",
+  "purpose": "Gate 1.3.2 criterion 4, the planner pilot's acceptance check 5 (route A): show, on the real plan's shape and against a reproduced outcome, that approval, the gate, and adjudication exclude a target the plan marks not-creditable under a lodged rule. The pilot's planner wrote no not-creditable application (every one of its 138 is creditable; results-2026-10-21.md, F1), so this amendment supplies the application the approver ruled. It shows the mechanics, not that a planner writes such an application.",
+  "source_plan": "studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-05/reproduction-plan.json",
+  "source_plan_sha256": "aab8410e4b1baee4733f99918cf2bd5cc86123f61a3148c27e7e90b1b9db0333",
+  "ruling": "studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-05/plan-approval.json (decision hold, decided 2026-10-21T05:57:30+00:00; reason in its note)",
+  "amendment": {
+    "rule_id": "Q5",
+    "target_id": "T15",
+    "condition_id": "inputs-from-authors-code",
+    "holds": {"planner": "yes", "approver": "no"},
+    "credit": {"planner": "creditable", "approver": "not-creditable"},
+    "evidence": "Approver's ruling (Shawn Ross, 2026-10-21), replacing the planner's: the presence columns for C4, C5, C12, C13, and D7 are columns of the deposited S1, which Herskind&Riede_S2.R loads at line 30 (read_excel) and never modifies. They are deposited data, not inputs from executing the authors' code."
+  },
+  "synthetic_outcome": "Every locked target EXACT_MATCH with its planned value count: an outcome invented for the fixture, not a run."
+}

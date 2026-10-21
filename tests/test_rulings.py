@@ -1796,5 +1796,197 @@ class LodgedRuleTests(unittest.TestCase):
         self.assertIn("not-creditable", view)
 
 
+# ---------------------------------------------------------------------------
+# Gate 1.3.2, criterion 4: the planner pilot's labelled fixture (check 5)
+# ---------------------------------------------------------------------------
+
+PILOT_FIXTURE = REPO_ROOT / "tests" / "fixtures" / "planner-pilot-t15-approver-amendment.json"
+PILOT = json.loads(PILOT_FIXTURE.read_text(encoding="utf-8"))
+
+
+def pilot_plan(amend: bool = True, credit: str | None = None) -> dict:
+    """The held planner-pilot plan record, with the fixture's amendment.
+
+    Kept in step with ``test_reproduction_lane.pilot_plan`` (each test module
+    here is self-contained). The source must be the plan Shawn held, and the
+    planner's values as the fixture records them, so exactly one condition
+    and one credit change; the record carries the fixture's label.
+
+    Args:
+        amend: False returns the plan as the planner wrote it.
+        credit: overrides the amended credit (to test the wrong branch).
+    """
+    source = REPO_ROOT / PILOT["source_plan"]
+    if lane.sha256_file(source) != PILOT["source_plan_sha256"]:
+        raise AssertionError(f"{PILOT['source_plan']} is not the held plan")
+    record = json.loads(source.read_text(encoding="utf-8"))
+    if not amend:
+        return record
+    change = PILOT["amendment"]
+    [application] = [a for entry in record["plan"]["rules_applied"]
+                     if entry["rule_id"] == change["rule_id"]
+                     for a in entry["applications"] if a["target_id"] == change["target_id"]]
+    [condition] = [c for c in application["conditions"]
+                   if c["condition_id"] == change["condition_id"]]
+    if (condition["holds"], application["credit"]) != (change["holds"]["planner"],
+                                                       change["credit"]["planner"]):
+        raise AssertionError("the held plan does not state what the fixture amends")
+    condition.update(holds=change["holds"]["approver"], evidence=change["evidence"])
+    application["credit"] = credit or change["credit"]["approver"]
+    record["fixture_label"] = PILOT["label"]
+    return record
+
+
+@unittest.skipUnless((REPO_ROOT / PILOT["source_plan"]).is_file(),
+                     "the planner pilot's plan is not in this checkout")
+class PlannerPilotFixtureTests(unittest.TestCase):
+    """The gate 1.3.2 planner pilot's acceptance check 5, on route A.
+
+    LABELLED FIXTURE, NOT PLANNER OUTPUT: the held attempt 05 plan with one
+    approver amendment (``tests/fixtures/planner-pilot-t15-approver-amendment.json``):
+    T15's Q5 ``inputs-from-authors-code`` set to ``no`` and its credit to
+    ``not-creditable``, per Shawn's hold ruling of 2026-10-21. The planner
+    wrote no not-creditable application, so this shows the mechanics on the
+    real plan's shape, not that a planner writes one. Everything runs in a
+    temporary copy; attempt 05 is never written. The gate end is in
+    ``test_reproduction_lane.GateTests``
+    (``test_the_planner_pilots_amended_t15_is_excluded_by_the_gate``).
+    """
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        root = Path(self.tmp.name)
+        self.slug = pilot_plan(amend=False)["plan"]["paper_slug"]
+        self.config = root / "run-config.yaml"
+        self.config.write_text(json.dumps({
+            "run_id": "gate-1-3-2-planner-pilot-fixture", "attempt": 5, "effort": "high",
+            "output_root": str(root / "outputs"),
+            "agents": {"planner": "p", "executor": "e", "reviewer": "r"},
+            "schemas": {"plan": "p", "execution": "e", "review": "r",
+                        "comparison_record": "c"},
+            "blinding": {"forbidden_substrings": []},
+            "papers": [{"slug": self.slug}]}), encoding="utf-8")
+        self.dir = root / "outputs" / self.slug / "reproduction" / "attempt-05"
+        (self.dir / lane.RECORDS_DIR).mkdir(parents=True)
+        self.rulings_file = root / "rulings.json"
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def place(self, record: dict) -> None:
+        write(self.dir / lane.PLAN_FILE, json.dumps(record))
+
+    def approve(self) -> int:
+        with contextlib.redirect_stdout(io.StringIO()):
+            return lane.cmd_approve(argparse.Namespace(
+                config=self.config, slug=self.slug, decision="approve",
+                approver="fixture", note="labelled fixture, not an approval", force=False))
+
+    def test_the_held_plan_passes_every_mechanical_check(self):
+        """The pilot's finding F1, stated mechanically: as the planner wrote
+        it, T15's unsupported 'yes' agrees with its credit, so the rule
+        checks pass, nothing is excluded, and approval would lock T15
+        creditable. Only the approver's check of the evidence caught it."""
+        record = pilot_plan(amend=False)
+        self.assertEqual(lane.rule_problems(record["plan"], lane.load_lodged_rules()), [])
+        self.assertEqual(lane.plan_exclusions(record["plan"]), {})
+        self.place(record)
+        self.assertEqual(self.approve(), 0)
+
+    def test_the_ruled_condition_without_its_consequence_is_refused(self):
+        """The wrong branch on the real plan: 'no' with T15 still creditable."""
+        self.place(pilot_plan(credit="creditable"))
+        with self.assertRaisesRegex(lane.LaneError, "Q5 on T15: inputs-from-authors-code is "
+                                                    "'no', so Q5 makes the target not "
+                                                    "creditable, but the plan marks it "
+                                                    "'creditable'"):
+            self.approve()
+        self.assertFalse((self.dir / lane.APPROVAL_FILE).exists())
+
+    def test_the_amended_plan_is_approved_and_bound_to_the_registry(self):
+        """Approval's rule re-check, run on the real plan's shape."""
+        record = pilot_plan()
+        self.assertEqual(lane.plan_exclusions(record["plan"]),
+                         {"not creditable under Q5 by the approved plan": {"T15"}})
+        self.place(record)
+        self.assertEqual(self.approve(), 0)
+        approval = json.loads((self.dir / lane.APPROVAL_FILE).read_text())
+        self.assertEqual(approval["lodged_rules_sha256"],
+                         lane.sha256_file(REPO_ROOT / lane.LODGED_RULES_FILE))
+        self.assertEqual(len(approval["locked_target_ids"]), 17)
+
+    def reproduced_attempt(self, record: dict) -> list[str]:
+        """The attempt under ``record`` with every locked target EXACT_MATCH
+        (a synthetic outcome), eligible and unruled, as AdjudicationTests
+        builds one. Returns the locked target ids."""
+        self.place(record)
+        locked = [t["target_id"] for t in record["plan"]["verification_targets"]]
+        plan_sha = lane.sha256_file(self.dir / lane.PLAN_FILE)
+        write(self.dir / "comparisons" / "comparison.json", json.dumps({
+            "paper_slug": self.slug, "plan_sha256": plan_sha, "verdict": "SUCCESSFUL",
+            "targets": [{"target_id": t, "outcome": "EXACT_MATCH"} for t in locked]}))
+        records = [semantics_obligation().record()]
+        write(self.dir / lane.GATE_FILE, json.dumps({
+            "gate_version": lane.GATE_VERSION, "checked_at": "2026-10-21T00:00:00+00:00",
+            "verdict": "pass", "plan_sha256": plan_sha, "flags": [],
+            "coverage": {"targets_enumerated": len(locked),
+                         "targets_reproduced": len(locked), "coverage_fraction": 1.0},
+            "coverage_admitted": lane.admitted_coverage(
+                "pass", records, [], locked, locked, lane.plan_exclusions(record["plan"])),
+            "code_integrity": {"runs": {"credited_runs": ["run-01"],
+                                        "runs": {"run-01": {"state": "complete"}}}},
+            "issues": records}))
+        write(self.dir / lane.AUDIT_FILE, json.dumps({"contaminating": [], "issues": []}))
+        execution = {"status": "OK", "paper_slug": self.slug, "verdict": "SUCCESSFUL",
+                     "escalations": []}
+        review = review_payload(concern_dims=(), paper_slug=self.slug, overall="CONFIRMED",
+                                rows=[method_row(t) for t in locked])
+        clean = {"clean": True, "receipts": {"valid": True, "problems": []},
+                 "blinding": {"contaminating": [], "warnings": []}, "writes_outside_scope": []}
+        roles = {"executor": ({**clean, "agent_id": "e1"}, execution),
+                 "reviewer": ({**clean, "agent_id": "r1"}, review)}
+        write(self.dir / lane.RUN_AUDIT_FILE, json.dumps(lane.attempt_run_audit(
+            lane.load_config(self.config), "wf_fixture", self.dir, roles,
+            [lane.artefact_state(self.dir)])))
+        for name, agent_id, payload in ((lane.EXECUTION_FILE, "e1", execution),
+                                        (lane.REVIEW_FILE, "r1", review)):
+            write(self.dir / name, json.dumps({"record_version": "1.0",
+                                               "run_id": "gate-1-3-2-planner-pilot-fixture",
+                                               "workflow_run": "wf_fixture",
+                                               "agent_id": agent_id,
+                                               "admission": {"eligible": True},
+                                               "payload": payload}))
+        issues = lane.attempt_issues(self.dir, json.loads(
+            (self.dir / lane.GATE_FILE).read_text()))
+        self.rulings_file.write_text(json.dumps([
+            {"issue": issue_id, "decision": "discharged" if issue["kind"] == "obligation"
+             else "admissible", "note": f"fixture: checked ({issue_id})"}
+            for issue_id, issue in issues.items()]), encoding="utf-8")
+        with contextlib.redirect_stdout(io.StringIO()):
+            lane.cmd_rule_flags(argparse.Namespace(config=self.config, slug=self.slug,
+                                                   approver="fixture",
+                                                   rulings=self.rulings_file))
+        return locked
+
+    def test_adjudication_excludes_t15_against_a_reproduced_outcome(self):
+        """All 17 targets reproduce, every issue is ruled admissible, and the
+        derived result still credits 16 of 17: T15 is excluded by the plan,
+        and all 17 stay in the denominator. Without the amendment the same
+        records credit all 17, which is what holding the plan prevented."""
+        locked = self.reproduced_attempt(pilot_plan())
+        result = lane.adjudicate(self.dir)
+        coverage = result["coverage"]
+        self.assertEqual((coverage["targets_enumerated"], coverage["targets_credited"],
+                          coverage["excluded_targets"]), (17, 16, ["T15"]))
+        rows = {row["target_id"]: row for row in result["targets"]}
+        self.assertEqual(len(rows), len(locked))
+        self.assertEqual((rows["T15"]["raw_outcome"], rows["T15"]["credit"]),
+                         ("EXACT_MATCH", "excluded"))
+        self.assertIn("not creditable under Q5 by the approved plan", rows["T15"]["reasons"])
+        self.assertEqual(result["verdict"]["ruled"], "SUCCESSFUL")
+        self.reproduced_attempt(pilot_plan(amend=False))
+        self.assertEqual(lane.adjudicate(self.dir)["coverage"]["targets_credited"], 17)
+
+
 if __name__ == "__main__":
     unittest.main()
