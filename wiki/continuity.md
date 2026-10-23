@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-10-21
+updated: 2026-10-23
 status: active
 ---
 
@@ -32,7 +32,74 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NEXT SESSION (from the 2026-10-21 handoff, session a1bac2e9):
+- **⏩ NEXT SESSION (from the 2026-10-23 handoff, session a9c4834d). Shawn
+  works from zbook for the week of eResearch Australasia.** The gate 1.3.2
+  planner pilot is run, ruled, held, fixtured, and mailed to Astra; the
+  record is
+  `studies/open-science-compliance/outputs/validation/gate-1-3-2-planner-pilot/results-2026-10-21.md`.
+  Criterion 4 now waits on Astra's reply. Work that does not wait on her
+  is listed below. Fable is still rationed; reviews go to Astra.
+  - [ ] **On zbook, first (Shawn, once): `sudo apt install docker-buildx`.**
+    zbook's Docker (Ubuntu `docker.io` 29.1.3) has no buildx plugin, so the
+    lane's `docker build --progress=plain` (`build_image` in
+    `scripts/reproduction-lane.py`) exits 125 and
+    `tests/test_run_container.py::BuildImageDockerTests` fails. The
+    pre-commit hook runs the whole suite, so **every commit on zbook is
+    blocked until it is installed**; never use `--no-verify`. Afterwards
+    `venv/bin/python -m pytest -q` should pass, with the seven
+    launcher-matrix tests skipping (no `llmr-launcher-matrix:4.3.2` image
+    on zbook).
+  - **zbook was synced on 2026-10-23** (session a9c4834d, from amd-tower
+    over SSH): clone fast-forwarded from `e3fd5b2` and level with origin;
+    pre-commit hook re-installed with `scripts/install-git-hooks.sh` (it
+    was the 24 July version); venv matched to amd-tower's package set
+    (`pytest` and `openpyxl` were missing); corpus store copied to
+    `~/corpora/llm-reproducibility` (`fetch-corpus.py verify`: 18/18 and
+    16/16 files OK) with the `corpus/store` link. Every branch, worktree,
+    and stash on amd-tower was checked: nothing unpushed.
+  - **Agent mail lives on amd-tower only.** `~/agent-mail` is not a git
+    repository and not in Syncthing, zbook has no copy (checked
+    2026-10-23), and Astra runs on amd-tower, where Shawn wakes her. On the
+    home network, zbook reads it over SSH
+    (`ssh amd-tower 'ls -t ~/agent-mail/codex/outbox/claude/ | head'`;
+    worked 2026-10-23). **Away from home it is unreachable from zbook**:
+    amd-tower is `192.168.1.70`, and neither machine runs a VPN. During
+    the conference, Astra's reply is readable only through a
+    remote-control session on amd-tower, or once Shawn is home; zbook
+    sessions take the work that does not wait on her.
+  - [ ] **Astra's reply** to
+    `~/agent-mail/claude/outbox/codex/20261021T125238.665157Z-claude-gate132-planner-pilot-results.md`
+    (on amd-tower): (1) does route A close check 5's mechanical half;
+    (2) is the long-term fix sound, and is it a gate 1.3.2 addendum or
+    gate 1.3.3; (3) does the delta since `67569cb` reopen anything.
+  - [ ] **The long-term fix**, after her scoping (branch + PR): the
+    registrant's reading of `inputs-from-authors-code`, **text approved by
+    Shawn on 2026-10-21** and quoted in the results doc, into the registry
+    beside the condition; per-input lineage declared by the plan, the
+    condition derived by the lane, and "computed by" citations of load-only
+    lines refused; no credit on a reading put to the approver; optionally
+    a fresh-context verifier; the T15 application as a negative fixture.
+    Then a re-plan under its own API gate, estimated from this run's basis
+    ($2.59, 73,985 output tokens).
+  - [ ] **Not waiting on Astra (suggested order):** (1) the operational
+    follow-up PRs below, each on a branch + PR, starting with the blinding
+    audit gap (a bare-name Bash read of a blinded file is missed outright),
+    since it guards the re-plan; (2) the review-only mode (branch + PR,
+    Astra's review), then the reviewer-only pilot on attempt 04 at the API
+    gate.
+  - [ ] Working-notes candidates WN-ax, WN-ay (session log, 2026-10-18 →
+    10-21) and WN-az, WN-ba (session log, 2026-10-21 → 10-23) await
+    Shawn's verdict.
+  - **Only on amd-tower:** the pilot's workflow transcript
+    (`~/.claude/projects/-home-shawn-Code-llm-reproducibility/e854d6a4-f815-47a6-911a-1b8de0c8d07a/subagents/workflows/wf_88429e16-a85/`,
+    needed only to re-run `audit-run`) and its scratch
+    (`~/scratch/llmr-runs/gate-1-3-2-planner-pilot-2026-10/`, including
+    the planner's two stray scripts under
+    `evidence-planner-stray-scripts/`). The archive-drift gate (35
+    sessions not archived; `~/personal-assistant/scripts/bulk-archive.py`)
+    was still open at handoff.
+
+- **⏩ Earlier (from the 2026-10-21 handoff, session a1bac2e9):
   monitor and analyse the gate 1.3.2 planner pilot, then the rest of
   criterion 4.** Gate 1.3.2's criteria 1 to 3 are on main: PR #13 merged as
   `df394c1`, after Astra approved `67569cb` in her third round. Attempt 04
@@ -90,6 +157,7 @@ merged here as PR #1).
     reviewer-only pilot on attempt 04 at the API gate.
   - [ ] Working-notes candidates WN-ax and WN-ay (session log, 2026-10-18
     → 10-21) await Shawn's verdict.
+  - The open items above are carried forward in the 2026-10-23 block.
 
 - **⏩ Earlier (from the 2026-10-18 handoff, session 8e28871d): build
   gate 1.3.2 on a branch, to the acceptance criteria at the top of
@@ -2693,6 +2761,58 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-21 → 10-23 (session a9c4834d) — gate 1.3.2 planner pilot analysed, held, fixtured, and mailed; zbook synced
+
+One session on Opus 5.5, worked partly over remote control, no
+compaction. It opened from the a1bac2e9 handoff to monitor the pilot,
+which had not yet launched: the launch session (`e854d6a4`) was paused at
+the API gate, and Shawn's go there at 09:58 AEDT on 2026-10-21 started it
+while this session ran pre-flight in parallel (byte-identical args, so
+harmless). `e854d6a4` ran `persist-plans`, `audit-run`, and the hold;
+Shawn then moved the run here. The state is in the NEXT SESSION block.
+
+- **Run:** `wf_88429e16-a85`, $2.59, 15.8 min, audit clean. Acceptance
+  checks 1, 2, and 4 met; 3 failed on T15 (the old T17), credited on
+  `data`, which is `Herskind&Riede_S2.R` line 30 (`read_excel` of S1).
+- **Ruled by Shawn:** T15's Q5 input condition `no`; the plan held
+  (`aea100f`); the run admissible on blinding; route A for check 5; the
+  registrant's reading of `inputs-from-authors-code` (text in the results
+  doc); the mail to Astra.
+- **Built:** the labelled route A fixture (`f34a756`; five tests; 773
+  pass on amd-tower).
+- **Docs:** the results doc (`5cc0f33` from `e854d6a4`; `02376eb`
+  corrected its claim that the hold re-ran the rule checks; `2476c64`);
+  continuity (`1c88d69`, and this handoff).
+- **Found:** the blinding audit misses a bare-name Bash read outright;
+  `writes_outside_scope` cannot fire for a planner; the cost estimate was
+  low by about half.
+- **zbook synced** for the week away (NEXT SESSION block): clone, hook,
+  venv, and corpus store; `docker-buildx` left for Shawn (needs sudo).
+- **Working-notes candidates (held for Shawn's verdict):**
+  - **WN-az:** a plan contract's mechanical checks pass a condition
+    answered consistently but falsely. In the gate 1.3.2 planner pilot the
+    planner quoted all 10 lodged rules whole across 138 applications,
+    stated every condition, and planned T15 creditable on true but
+    irrelevant evidence ("Presence columns are read from `data` created by
+    executing the authors' PART 1"; `data` is S1 loaded by `read_excel`).
+    `rule_problems` found nothing, and only the approver's check of the
+    authors' code caught it. The planner had flagged its own reading for
+    the approver and claimed the credit anyway. Anchors: results doc F1;
+    `PlannerPilotFixtureTests.test_the_held_plan_passes_every_mechanical_check`
+    (`f34a756`).
+  - **WN-ba:** per-target rule applications multiplied a planner's output
+    and hid it from the live cost check. The pilot's planner wrote 73,985
+    output tokens, against 20,303 for the same paper's previous planner
+    (`wf_db7d121a-5d5`), at $2.59 against $1.2969, both over 17 requests;
+    the estimate's "a few thousand tokens" for `rules_applied` missed that
+    10 rules over 17 targets gave 138 applications with evidence. Its last
+    turn alone was 46,825 output tokens, and the watcher, pricing completed
+    turns, read $1.655 at 12.6 minutes and still at 15.6, so a cost
+    tripwire can be overshot by one turn. Anchors:
+    `audit-wf_88429e16-a85.json`,
+    `../gate-1-3-1-pilot-rerun/audit-wf_db7d121a-5d5.json`; results doc
+    F2 and F3.
 
 ### 2026-10-18 → 10-21 (session a1bac2e9) — gate 1.3.2 criteria 1 to 3 built, reviewed, merged; planner pilot launched
 
