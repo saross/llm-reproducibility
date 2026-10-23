@@ -995,3 +995,12 @@ verdict.
   clarify, the anti-tick gate should apply only to prose meant to be read
   by a human other than me." — Claude had written the same credit-saving
   ask for both reviewers and run the prose gate on mail between agents.
+
+## 2026-10-21 — llm-reproducibility: session a9c4834d (gate 1.3.2 planner pilot)
+
+- "This plan sounds good, please proceed. Thank you for the explanation" —
+  Shawn had asked for "the principled, generalisable, long term fix" to a
+  blocked acceptance check; Claude answered with a diagnosis (gate 1.3.1's
+  paraphrase and the pilot's wrong branch as one failure at two depths), a
+  four-part design (facts declared, condition derived, credit carrying the
+  burden, an optional verifier), and three next steps.

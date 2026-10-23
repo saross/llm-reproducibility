@@ -1884,3 +1884,78 @@ ends it. And a test I have not read for "can this fail?" is not yet a test.
 **How to apply.** For each finding, write down the class before the fix,
 and say in the closure mail what covers the class. Re-read every new
 assertion before committing, asking whether any input could make it fail.
+
+## claude-obs 95 — 2026-10-21 (self-critique): I prepared a paid run another live session was launching
+
+**Pattern.** Opened from a handoff that said the pilot had launched, I
+found no run, read the launch session's transcript, saw it paused at the
+API gate, and then ran pre-flight myself, rebuilding the run's args in its
+scratch folder. The launch session had resumed on Shawn's go a minute
+earlier and was rebuilding the same file. The two builds were
+byte-identical, so nothing broke, but only because the builder is
+deterministic. Both sessions then analysed the run in one checkout, and
+Shawn's answers landed in the other one.
+
+**Lesson.** `git fetch` guards against other machines, not against another
+session on this one. A transcript that is still being written means a live
+owner, whatever state it was last seen in.
+
+**How to apply.** Before writing anything a paid run uses, check the
+transcripts of other sessions in the project for recent writes (mtime, last
+entries). If one is live on the same run, stay read-only and ask Shawn which
+session owns it before acting.
+
+## claude-obs 96 — 2026-10-21: offered three routes, Shawn asked for the principled fix
+
+**Pattern.** The planner pilot left acceptance check 5 blocked, and I set
+out three tactical routes (a labelled fixture, record it as untestable,
+reword and re-plan). Shawn answered the others in a word and asked of this
+one: "what is he principled, generalisable, long term fix?" The answer (the
+planner states facts, the lane derives the condition, credit carries the
+burden) reframed both earlier gates' failures as one, and he approved it
+with "This plan sounds good, please proceed."
+
+**Lesson.** When a check fails, Shawn wants the root cause named before the
+workarounds. Routes presented without one invite this question.
+
+**How to apply.** When presenting options for a blocked step, lead with a
+one-paragraph diagnosis and the principled fix, then list the tactical
+routes as steps toward it or stopgaps until it lands.
+
+## claude-obs 97 — 2026-10-21: an override across sessions is about authority, not erasure
+
+**Pattern.** Working by remote control, Shawn answered the other session's
+questions there by accident, then told me: "please override anything coming
+form tree other session ... This session holds it". The other session had
+already recorded a hold and his blinding ruling, from words he typed. I
+kept the hold, since it matched what he ruled here, named the one part that
+rested only on his answer there (blinding admissible), and corrected one
+false claim in its draft, rather than re-recording with `--force`.
+
+**Lesson.** Rulings Shawn typed in another session are still his. An
+override moves who acts, not what he decided.
+
+**How to apply.** On an override, inventory what the other session did with
+his answers; keep what matches his current word, name anything that rests
+only on the other session, and verify the other session's factual claims
+before building on them.
+
+## claude-obs 98 — 2026-10-23 (self-critique): "synced" had meant git only
+
+**Pattern.** Asked to fully sync the repository for a week on zbook, I
+found git level everywhere, which earlier handoffs had treated as done. On
+zbook itself the hook dated from 24 July, the venv lacked `pytest` and
+`openpyxl` (so the hook's test gate could not run as designed), there was
+no corpus store, and there was no agent mailbox. Running the suite there
+found one more: no Docker buildx, which fails one test and so blocks every
+commit through the hook.
+
+**Lesson.** For a repository worked from two machines, the environment is
+part of the sync: hooks, packages, out-of-tree stores, system tools the
+tests need, and where the inter-agent mail lives. Only running the suite on
+the target machine proves it.
+
+**How to apply.** Before a machine switch, check over SSH: clone level and
+clean, hook equal to the installer's output, venv equal to the working
+machine's, out-of-tree stores present and verified, and the full suite run
+there. Say which gaps need Shawn (sudo) and which are fixed.
