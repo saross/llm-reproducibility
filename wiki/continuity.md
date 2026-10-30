@@ -98,6 +98,81 @@ merged here as PR #1).
       text in that session's scratchpad, `astra-review-request-pr14.md`;
       file a copy in `~/agent-mail/claude/outbox/codex/` once on
       amd-tower). Merge after her review.
+      - [x] 2026-10-30 Astra's review at `7876470` (pasted by Shawn):
+        changes requested, four findings (the harness-file exemption's
+        directory form; subshell scopes, both directions; clustered value
+        options; file-name suffixes over roles), all closed at `b23ef4f`
+        (`1b93991`, `31892ad`). Shawn ruled roles replace the
+        "file name with an extension" leg. Her probes, run from a copy at
+        `1b93991`, give the intended results; parity holds (1,152 cases).
+        PR comment posted with Shawn's approval (issuecomment-6514208269).
+      - [x] 2026-10-30 **Astra's re-check at `b23ef4f`** (pasted by
+        Shawn): the exemption and option findings closed; three residual
+        false blocks (R1, a `cd` or assignment in a branch Bash may skip;
+        R2, awk `name=value` operands; R3, unresolved expansions such as
+        `"${F:-x}"`), all closed in `774bddf`, regression test `b2c9586`.
+        Her unmodified harness passes at `774bddf` (nine tests, 1,152
+        parity cases, original and residual Bash fixtures); 778 pass.
+      - [x] 2026-10-30 **Possible reads labelled** (`fac4805`, after a
+        side agent's note): a warning on a path argument the scan could
+        not resolve says "possibly a blinded read" and to check the
+        transcript before ruling; the runbook's rulings step says so.
+      - [x] 2026-10-30 Astra's re-check at `b2c9586` (pasted by Shawn): R2
+        and R3 closed; R1 open in two modes (a condition lost across an
+        assignment, a regression; a skipped branch overwriting the state
+        Bash kept, a miss). Closed in `f5dcb7b` by replacing the
+        certainty flags with a walk over every possible shell state
+        (directory, variables, last status): an access only when the
+        command reads a blinded path in every state it runs in; `true`,
+        `:`, and `false` known. Her full final-check harness passes (twelve
+        tests, 1,152 parity cases, all three Bash fixture sets); 779 pass.
+      - [x] 2026-10-30 Astra's re-check at `f5dcb7b` (pasted by Shawn): a
+        pipeline skipped by the && before it revived the skipped states
+        (six of her 160 Bash state cases). Closed in `d7ecf0d`: a pipeline
+        runs whole where its first command runs, and only its last
+        command's status reaches those states. Her harness, unmodified:
+        thirteen tests, 1,152 parity cases, all fixture sets, and 160 state
+        cases with 0 failures; 780 pass.
+      - [ ] **Astra's re-check at `d7ecf0d`**: the reply is
+        `astra-reply-pr14-pipelines.md` in session 789afcf9's scratchpad,
+        for Shawn to paste; file it, the earlier replies, and all her
+        reviews in agent mail once on amd-tower.
+    - [ ] **The review-only mode: PR #15 open** (session 789afcf9, branch
+      `feat/review-only-mode`, `c601fe3` and `d02e75b`; lane v1.8, run
+      audit 1.2, `reproduction-review.workflow.js` v1.0). Shawn's choices
+      (2026-10-30): the pilot reviews a labelled copy of attempt 04 (its
+      13/18 untouched), and the reviewer reads a clean staged copy. Design
+      in `wiki/planning/reproduction-gate-1-3-design.md`, "The review-only
+      mode as designed". Also fixes a gate 1.3.2 defect: re-gating any
+      adjudicated attempt failed (`DOCUMENT_NAMES` lacked
+      `adjudicated-result.json`). **Awaiting Astra's review**, relayed by
+      hand (`astra-review-request-review-only-mode.md` in that session's
+      scratchpad; file a copy in agent mail once on amd-tower). Whichever
+      of #14 and #15 merges second needs a rebase (lane header, manifest).
+      - [x] 2026-10-30 Astra's review at `d02e75b` (pasted by Shawn):
+        changes requested, four findings (the executor's cleared state
+        relabelled by a later review; a fresh reviewer inheriting earlier
+        rulings; the staged copy never re-checked; an ineligible executor
+        record making an unrecoverable run), all closed in `a3ac8dc` and
+        `ac0d99c`; 789 pass. Recorded in the design note.
+      - [x] 2026-10-30 A re-audit of the same run keeps its staging
+        verification once the scratch copy is gone (`097233c`, after a side
+        agent's note); 790 pass.
+      - [x] 2026-10-30 Astra's re-check at `ac0d99c` (pasted by Shawn):
+        F1, F3, F4 closed; F2's identity binding overwrote the verdict
+        flag's `review` content digest, so a changed verdict challenge
+        kept its ruling on a same-run re-audit. Closed in `4e490b3` (the
+        identity under `review_identity`); 791 pass.
+      - [ ] **Astra's re-check at `4e490b3`**: the reply is
+        `astra-reply-pr15-closure.md` in session 789afcf9's scratchpad,
+        for Shawn to paste. Then rebase on #14, or #14 on this, and test
+        the two together (her merge note).
+    - [ ] **Then the reviewer-only pilot** (after #15 merges): its own run
+      configuration (`mode: review-only`), the labelled copy of attempt 04
+      outside any path study reporting reads, a blinding list that blinds
+      the original attempt 04, a pre-run review, the API gate, a launch
+      from a fresh session (a workflow script was added), on a machine
+      holding attempt 04's image (amd-tower).
   - [ ] Working-notes candidates WN-ax, WN-ay (session log, 2026-10-18 →
     10-21) and WN-az, WN-ba (session log, 2026-10-21 → 10-23) await
     Shawn's verdict.
