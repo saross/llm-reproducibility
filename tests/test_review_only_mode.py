@@ -65,14 +65,19 @@ def load_script(name: str, filename: str):
 lane = load_script("reproduction_lane_review_only", "reproduction-lane.py")
 
 
-def reviewer_record(agent_id: str) -> dict:
-    """A clean governed reviewer's agent audit, as ``audit_agent`` gives it."""
+def reviewer_record(agent_id: str, review_copy: str = "") -> dict:
+    """A clean governed reviewer's agent audit, as ``audit_agent`` gives it,
+    its prompt naming the staged copy it was handed."""
     return {"agent_id": agent_id, "agent_type": "adversarial-reviewer", "clean": True,
             "receipts": {"valid": True, "problems": []},
             "blinding": {"contaminating": [], "warnings": [], "noted": []},
             "writes_outside_scope": [], "launch_message": None,
+            "prompt_head": f"Paper: {SLUG}\nReview copy: {review_copy}\n",
             "provenance": {"run_id": "review-only-test", "launch_commit": COMMIT,
                            "effort": "high"}}
+
+
+STAGING_KEYS = ("review_dir", "artefact_state_sha256", "gate_report_sha256")
 
 
 def new_review(locked: list[str], summary: str = "T02's comparison rests on one cell") -> dict:
@@ -126,12 +131,20 @@ class ReviewOnlyTests(unittest.TestCase):
 
     # -- helpers -------------------------------------------------------------
 
-    def audit(self, run: str, payload: dict, agent_id: str = "rev-1") -> dict:
-        """Write the copy's run audit for one review-only run, as audit-run does."""
-        state = lane.artefact_state(self.dir)
+    def stage(self, run: str) -> dict:
+        """Stage the reviewer's copy for one run, as its gate step does."""
+        staged = lane.stage_review(self.dir, self.root / "scratch" / run / "review")
+        return {key: staged[key] for key in STAGING_KEYS}
+
+    def audit(self, run: str, payload: dict, agent_id: str = "rev-1",
+              staged: dict | None = None) -> dict:
+        """Write the copy's run audit for one review-only run, as audit-run
+        does, from a staging record (staged afresh unless given)."""
+        staged = staged or self.stage(run)
         return lane.write_attempt_run_audit(
-            self.config, run, self.dir, {"reviewer": (reviewer_record(agent_id), payload)},
-            [state])
+            self.config, run, self.dir,
+            {"reviewer": (reviewer_record(agent_id, staged["review_dir"]), payload)},
+            [], [staged])
 
     def run_dir(self, run: str, *results: tuple[str, dict]) -> Path:
         """A workflow run directory holding reviewer results in its journal."""
@@ -376,6 +389,114 @@ class ReviewOnlyTests(unittest.TestCase):
         self.assertEqual(set(before) - set(fresh), {"method-adherence:targets"})
         self.assertEqual({k: before[k] for k in fresh}, fresh)
 
+    # -- Astra's review of PR #15 (2026-10-30) -------------------------------
+
+    def test_a_later_review_cannot_relabel_the_executors_cleared_state(self):
+        """F1: the executor was cleared for state A. A review audit that
+        records state B, followed by the attempt becoming B, must not leave
+        the executor cleared for B."""
+        original = lane.artefact_state(self.dir)
+        staged = self.stage("wf_review-1")
+        path = self.dir / lane.COMPARISON_FILE
+        body = path.read_bytes()
+        self.audit("wf_review-1", new_review(self.locked),
+                   staged={**staged, "artefact_state_sha256": "b" * 64})
+        audit = json.loads((self.dir / lane.RUN_AUDIT_FILE).read_text(encoding="utf-8"))
+        self.assertEqual(audit["roles"]["executor"]["cleared_state_sha256"], original)
+        path.write_bytes(body + b"\n")
+        entry, _, problems = lane.carried_executor(self.dir)
+        self.assertEqual(entry["cleared_state_sha256"], original)
+        self.assertFalse(entry["clean"])
+        self.assertTrue(any("corrections go into a new attempt" in p for p in problems))
+
+    def test_a_fresh_reviewer_meets_no_earlier_rulings(self):
+        """F2: identical review content from another run's reviewer is new
+        to rule; a re-audit of the same run keeps its rulings, and the
+        executor's issues keep theirs."""
+        payload = new_review(self.locked)
+        staged = self.stage("wf_review-1")
+        first = self.audit("wf_review-1", payload, staged=staged)
+        rulings = [{"issue_id": i["id"], "fingerprint": i["fingerprint"]}
+                   for i in first["issues"]]
+        again = self.audit("wf_review-1", payload, staged=staged)
+        self.assertEqual([i["fingerprint"] for i in again["issues"]],
+                         [i["fingerprint"] for i in first["issues"]])
+        second = self.audit("wf_review-2", json.loads(json.dumps(payload)), "rev-2")
+        inherited = sorted(i["id"] for i in second["issues"] if lane.ruling_for(i, rulings))
+        # Only the executor's issues, and its own run's launch message, carry.
+        self.assertTrue(inherited)
+        self.assertTrue(all(":executor:" in i or (i.startswith("launch-message:") and "@" not in i)
+                            for i in inherited), inherited)
+        for issue in ("review-concern:C1", "review:qualified"):
+            self.assertIn(issue, {i["id"] for i in second["issues"]})
+            self.assertNotIn(issue, inherited)
+
+    def test_the_staged_copy_must_be_unchanged_and_the_one_reviewed(self):
+        """F3: a staged copy changed after staging, a reviewer handed another
+        copy, a copy no longer there, and a run with no successful staging
+        are each refused; the staged state alone is the reviewed state."""
+        staged = self.stage("wf_review-1")
+        copy = Path(staged["review_dir"])
+        doc = json.loads((copy / lane.COMPARISON_FILE).read_text(encoding="utf-8"))
+        doc["targets"][0]["outcome"] = "BLOCKED"
+        (copy / lane.COMPARISON_FILE).write_text(json.dumps(doc), encoding="utf-8")
+        audit = self.audit("wf_review-1", new_review(self.locked), staged=staged)
+        self.assertFalse(audit["staging"]["verified"])
+        reasons = lane.run_audit_reasons(self.dir, {}, [], None)
+        self.assertTrue(any("staged copy changed" in r for r in reasons), reasons)
+        shutil.rmtree(copy)
+        self.assertIn("the staged copy is gone, so it cannot be shown unchanged",
+                      lane.verify_staging([staged], f"Review copy: {staged['review_dir']}")[
+                          "problems"])
+        other = self.stage("wf_review-2")
+        result = lane.verify_staging([other], "Review copy: /elsewhere/review")
+        self.assertIn("the reviewer's prompt does not name the staged copy", result["problems"])
+        self.assertIn("no successful stage-review record", lane.verify_staging([], "")["problems"])
+        self.assertTrue(lane.verify_staging([other, dict(other)],
+                                            f"Review copy: {other['review_dir']}")["verified"])
+
+    def test_staging_is_read_only_from_a_successful_stage_review(self):
+        """F3: a failed stage-review never falls back to a check-attempt digest."""
+        run = self.root / "runs" / "wf_gate"
+        run.mkdir(parents=True)
+        staged = self.stage("wf_gate")
+
+        def call(n: int, command: str, output: str, error: bool) -> list[dict]:
+            return [{"message": {"role": "assistant", "content": [
+                        {"type": "tool_use", "id": f"g{n}", "name": "Bash",
+                         "input": {"command": command}}]}},
+                    {"message": {"role": "user", "content": [
+                        {"type": "tool_result", "tool_use_id": f"g{n}", "content": output,
+                         "is_error": error}]}}]
+        state = '{"artefact_state_sha256": "' + "a" * 64 + '"}'
+        entries = [{"message": {"role": "user", "content": f"Paper: {SLUG}\n"}}]
+        entries += call(1, "reproduction-lane.py check-attempt x", state, False)
+        entries += call(2, "reproduction-lane.py stage-review x --to y", "error: not empty",
+                        True)
+        (run / "agent-g.meta.json").write_text(json.dumps({"agentType": "general-purpose"}),
+                                               encoding="utf-8")
+        (run / "agent-g.jsonl").write_text("\n".join(json.dumps(e) for e in entries) + "\n",
+                                           encoding="utf-8")
+        self.assertEqual(lane.staging_records(run, self.config), {})
+        entries += call(3, "reproduction-lane.py stage-review x --to y", json.dumps(staged),
+                        False)
+        (run / "agent-g.jsonl").write_text("\n".join(json.dumps(e) for e in entries) + "\n",
+                                           encoding="utf-8")
+        self.assertEqual(lane.staging_records(run, self.config), {SLUG: [staged]})
+
+    def test_an_executor_persisted_ineligible_is_refused_before_any_spend(self):
+        """F4: review-only persistence never re-persists the executor, so an
+        executor record persisted ineligible is refused at args-building."""
+        path = self.dir / lane.EXECUTION_FILE
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        doc["admission"]["eligible"] = False
+        path.write_text(json.dumps(doc), encoding="utf-8")
+        with mock.patch.object(lane, "require_committed"), \
+                mock.patch.object(lane, "resolve_launch_commit", return_value=COMMIT), \
+                self.assertRaisesRegex(lane.LaneError, "persisted ineligible"):
+            lane.cmd_build_review_args(argparse.Namespace(
+                config=self.config_path, scratch_root=str(self.root / "scratch"), out=None))
+
     def test_a_1_1_audit_binds_both_roles_to_its_run(self):
         audit = json.loads((ATTEMPT_04 / lane.RUN_AUDIT_FILE).read_text(encoding="utf-8"))
         self.assertEqual(audit["run_audit_version"], "1.1")
@@ -469,6 +590,7 @@ async function pipeline(items, ...stages) {{
         prompt = run["calls"][1]["prompt"]
         self.assertIn("/s/review/reproduction-plan.json", prompt)
         self.assertIn(f"workflow run {ORIGINAL_RUN}", prompt)
+        self.assertEqual(lane.REVIEW_COPY_RE.search(prompt).group(1), "/s/review")
         self.assertNotIn("/repo/a/attempt-04", prompt)
         self.assertIsNotNone(lane.PROVENANCE_RE.search(prompt))
         self.assertIn("--launch-commit " + "e" * 40, run["calls"][0]["prompt"])

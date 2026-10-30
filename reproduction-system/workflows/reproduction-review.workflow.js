@@ -30,7 +30,8 @@ export const meta = {
 // the attempt's earlier run audit), rules the new issues, persists the review
 // with persist-results, and adjudicates. Prompt line formats are the single
 // source of truth for the regexes in scripts/reproduction-lane.py (PAPER_RE,
-// PROVENANCE_RE) — change both together.
+// PROVENANCE_RE, REVIEW_COPY_RE) — change both together. audit-run binds the
+// review to the copy its gate step staged: the "Review copy:" line must name it.
 //
 // Args shape (built only by reproduction-lane.py build-review-args):
 // {mode: "review-only", run_id, attempt, effort, launch_commit,
@@ -168,6 +169,7 @@ const reviewPrompt = (p) =>
   `Adversarial review task (run ${run_id}, attempt ${attempt}; review-only re-run).\n` +
   `Paper: ${p.slug}\n` +
   `Provenance: run ${run_id}; launch commit ${launch_commit}; reasoning effort pinned: ${effort}.\n` +
+  `Review copy: ${p.review_dir}\n` +
   `This reproduction was executed earlier, in workflow run ${p.executor.workflow_run}; no ` +
   `executor runs now. The lane staged a copy of its reviewable state, with its gate report, in ` +
   `${p.review_dir}, and that copy is the attempt directory for this review: every path you cite ` +

@@ -386,6 +386,8 @@ PROVENANCE_RE = re.compile(
 PAPER_RE = re.compile(r"^\s*Paper: (\S+)$", re.MULTILINE)
 SCRATCH_RE = re.compile(r"^\s*Scratch directory: (\S+)$", re.MULTILINE)
 ATTEMPT_DIR_RE = re.compile(r"^\s*Attempt directory: (\S+)$", re.MULTILINE)
+# The review-only reviewer's prompt names the staged copy it was handed.
+REVIEW_COPY_RE = re.compile(r"^\s*Review copy: (\S+)$", re.MULTILINE)
 # The harness relays the user message that started a workflow to every spawn,
 # ahead of the computed task and above it in authority (the gate 1.3 final
 # review's F3). The runbook's fixed launch message is the only one that needs
@@ -1935,7 +1937,15 @@ def cmd_build_review_args(args: argparse.Namespace) -> int:
         if problems:
             raise LaneError(f"{slug}: the executor result cannot be bound: "
                             + "; ".join(problems))
-        scratch = Path(args.scratch_root).expanduser() / config["run_id"] / slug
+        # Review-only persistence never re-persists the executor, and
+        # adjudication needs its record persisted eligible, so an ineligible
+        # one is refused before any spend (Astra's review of PR #15, F4).
+        execution = read_record(target_dir, EXECUTION_FILE) or {}
+        if not (execution.get("admission") or {}).get("eligible"):
+            raise LaneError(f"{slug}: {EXECUTION_FILE} was persisted ineligible: finish its "
+                            f"own run's rulings and persist-results --force for that run "
+                            f"before a review-only run")
+        scratch = (Path(args.scratch_root).expanduser() / config["run_id"] / slug).resolve()
         papers.append({**item, "review_dir": str(scratch / "review"),
                        "executor": {key: entry.get(key) for key in (
                            "run_id", "workflow_run", "agent_id", "payload_sha256",
@@ -6553,11 +6563,9 @@ def reviewed_states(run_dir: Path, config: dict) -> dict[str, list[str]]:
             continue
         lines = transcript.read_text(encoding="utf-8").splitlines()
         paper = PAPER_RE.search(first_user_text(lines))
-        # The review-only workflow's gate step also stages the reviewer's
-        # copy, which prints the state it copied.
         found = [state for call in timed_tool_calls(lines)
-                 if call["name"] == "Bash" and re.search(r"\b(?:check-attempt|stage-review)\b",
-                                                         str(call["input"].get("command") or ""))
+                 if call["name"] == "Bash" and "check-attempt" in str(
+                     call["input"].get("command") or "")
                  for state in ARTEFACT_STATE_RE.findall(call["output"])]
         if paper and found:
             states.setdefault(paper.group(1), set()).add(found[-1])
@@ -6623,6 +6631,20 @@ def run_audit_reasons(target_dir: Path, report: dict, rulings: list[dict],
                     if key in given and cleared.get(key) != given[key]:
                         reasons.append(f"the run audit cleared the {role} of {key} "
                                        f"{cleared.get(key)!r}, not {given[key]!r}")
+    executor = roles.get("executor") or {}
+    if executor.get("carried_from") or "staging" in run_audit:
+        # A review-only audit (PR #15 review, F1 and F3): the reviewer's
+        # copy was staged and verified, and the state reviewed is the state
+        # the executor was cleared for.
+        staging = run_audit.get("staging") or {}
+        if not staging.get("verified"):
+            reasons.append("the review-only run's staged copy was not verified: "
+                           + ("; ".join(staging.get("problems") or [])
+                              or "no staging record"))
+        elif staging.get("artefact_state_sha256") != run_audit.get("reviewed_state_sha256"):
+            reasons.append("the reviewed state is not the staged copy's")
+        if executor.get("cleared_state_sha256") != run_audit.get("reviewed_state_sha256"):
+            reasons.append("the review was of a state the executor was not cleared for")
     reviewed = run_audit.get("reviewed_state_sha256")
     recorded = run_audit.get("reviewed_states") or []
     if not reviewed:
@@ -7268,8 +7290,13 @@ def carried_executor(target_dir: Path, workflow_run: str | None = None
                         f"does not bind results")
     entry = dict((prior.get("roles") or {}).get("executor") or {})
     if prior and (workflow_run is None or prior.get("workflow_run") != workflow_run):
-        entry.update(role_identity(prior, "executor"))
-        entry["cleared_state_sha256"] = prior.get("reviewed_state_sha256")
+        # The state the executor was cleared for is set once, from the audit
+        # of the executor's own run (its reviewer's state), and carried
+        # unchanged by every later review-only audit: a later review's state
+        # never relabels it (Astra's review of PR #15, F1).
+        if "cleared_state_sha256" not in entry:
+            entry.update(role_identity(prior, "executor"))
+            entry["cleared_state_sha256"] = prior.get("reviewed_state_sha256")
         entry["carried_from"] = {"workflow_run": prior.get("workflow_run"),
                                  "run_audit_sha256": sha256_file(target_dir / RUN_AUDIT_FILE)}
     payload = execution.get("payload")
@@ -7344,10 +7371,86 @@ def stage_review(target_dir: Path, review_dir: Path) -> dict:
             "gate_report_sha256": sha256_file(review_dir / GATE_FILE)}
 
 
+def staging_records(run_dir: Path, config: dict) -> dict[str, list[dict]]:
+    """Each paper's successful ``stage-review`` records in a review-only run.
+
+    The gate step's ``stage-review`` prints the copy it made, and the
+    harness records that output in the gate agent's transcript, as it
+    records check-attempt's. Only a call that succeeded and printed the
+    record counts: a failed staging never falls back to a check-attempt
+    digest as evidence of what the reviewer was handed (Astra's review of
+    PR #15, F3).
+
+    Returns:
+        ``{slug: [record]}``, each ``{review_dir, artefact_state_sha256,
+        gate_report_sha256}``.
+    """
+    governed = {config["agents"]["executor"], config["agents"]["reviewer"]}
+    found: dict[str, list[dict]] = {}
+    for transcript in sorted(run_dir.glob("agent-*.jsonl")):
+        meta_path = transcript.with_name(f"{transcript.stem}.meta.json")
+        meta = (json.loads(meta_path.read_text(encoding="utf-8"))
+                if meta_path.is_file() else {})
+        if str(meta.get("agentType") or "") in governed:
+            continue
+        lines = transcript.read_text(encoding="utf-8").splitlines()
+        paper = PAPER_RE.search(first_user_text(lines))
+        for call in timed_tool_calls(lines):
+            if call["name"] != "Bash" or call["errored"] is not False or not re.search(
+                    r"\bstage-review\b", str(call["input"].get("command") or "")):
+                continue
+            try:
+                record = json.loads(call["output"])
+            except json.JSONDecodeError:
+                continue
+            keys = ("review_dir", "artefact_state_sha256", "gate_report_sha256")
+            if paper and isinstance(record, dict) and all(record.get(k) for k in keys):
+                found.setdefault(paper.group(1), []).append({k: record[k] for k in keys})
+    return found
+
+
+def verify_staging(records: list[dict], reviewer_prompt: str) -> dict:
+    """Whether the staged copy a review-only reviewer read is the one that
+    was staged, unchanged (Astra's review of PR #15, F3).
+
+    Exactly one distinct staging record must exist; the reviewer's prompt
+    must name its copy (``Review copy:``); and the copy and its gate report
+    must still digest as staged. A reviewer that changed the copy, or a
+    copy changed by anything else after staging, fails, and so does a copy
+    no longer there: audit a review-only run before clearing its scratch
+    folder.
+
+    Returns:
+        The staging record with ``verified``, ``problems``, and the time.
+    """
+    distinct = [json.loads(s) for s in sorted({json.dumps(r, sort_keys=True) for r in records})]
+    problems: list[str] = []
+    if len(distinct) != 1:
+        problems.append("no successful stage-review record" if not distinct
+                        else f"{len(distinct)} different stage-review records")
+    record = distinct[-1] if distinct else {}
+    named = REVIEW_COPY_RE.search(reviewer_prompt or "")
+    if record and (not named or Path(named.group(1)).expanduser().resolve()
+                   != Path(record["review_dir"]).resolve()):
+        problems.append("the reviewer's prompt does not name the staged copy")
+    copy_dir = Path(record.get("review_dir") or "")
+    if record and not copy_dir.is_dir():
+        problems.append("the staged copy is gone, so it cannot be shown unchanged")
+    elif record:
+        if artefact_state(copy_dir) != record["artefact_state_sha256"]:
+            problems.append("the staged copy changed after it was staged")
+        gate = copy_dir / GATE_FILE
+        if not gate.is_file() or sha256_file(gate) != record["gate_report_sha256"]:
+            problems.append("the staged gate report changed after it was staged")
+    return {**record, "verified": not problems, "problems": problems,
+            "verified_at": now_utc()}
+
+
 def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
                       roles: dict[str, tuple[dict, dict | None]],
                       reviewed: list[str] | None = None,
-                      carried: tuple[dict, dict | None] | None = None) -> dict:
+                      carried: tuple[dict, dict | None] | None = None,
+                      staging: dict | None = None) -> dict:
     """The attempt's run audit: each governed role's verdict, the workflow
     identities it was made under, and the issues for a ruling (F8).
 
@@ -7364,7 +7467,13 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
             from ``carried_executor``: the earlier run audit's clearance of
             the executor, which no spawn in this run produced. Its issues
             are derived again from its payload, so they keep their
-            fingerprints and rulings.
+            fingerprints and rulings. The reviewer's issues, and the review
+            run's launch message, are bound to the review's identity (its
+            run, workflow run, and agent), so a fresh reviewer never meets
+            an earlier reviewer's rulings, while a re-audit of the same run
+            keeps its own (Astra's review of PR #15, F2).
+        staging: In review-only mode, the verified staging record
+            (``verify_staging``); its state is the reviewed state.
     """
     try:
         approval = json.loads((target_dir / APPROVAL_FILE).read_text(encoding="utf-8"))
@@ -7386,17 +7495,31 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
     locked = locked_targets(target_dir)
     reviewed = sorted(set(reviewed or ()))
     issues: list[Issue] = []
+    identity = None
+    if carried is not None and "reviewer" in audits:
+        identity = json_digest({"run_id": config["run_id"], "workflow_run": run_dir_name,
+                                "agent_id": audits["reviewer"].get("agent_id")})
     for role, payload in sorted(payloads.items()):
-        issues += review_issues(role, payload, audits[role].get("warnings") or [], target_dir,
-                                locked)
-    for text in sorted({a["launch_message"] for a in audits.values()
-                        if a.get("launch_message")}):
+        found = review_issues(role, payload, audits[role].get("warnings") or [], target_dir,
+                              locked)
+        if role == "reviewer" and identity:
+            found = [Issue(str(i), kind=i.kind, code=i.code, subject=i.subject,
+                           targets=i.targets, files={**i.files, "review": identity})
+                     for i in found]
+        issues += found
+    # The executor's (or a shared run's) launch message keeps its issue; a
+    # review-only run's own is its own issue, bound to the review.
+    launches = sorted({(role == "reviewer" and identity is not None, a["launch_message"])
+                       for role, a in audits.items() if a.get("launch_message")})
+    for own, text in launches:
         if not NEUTRAL_LAUNCH_RE.fullmatch(text):
             issues.append(Issue.flag(
-                "launch-message", json_digest(text)[:12], f"the workflow was launched with "
+                "launch-message", json_digest(text)[:12] + (f"@{run_dir_name}" if own else ""),
+                f"the workflow was launched with "
                 f"{text[:300]!r}, not the runbook's fixed phrase, and the harness relayed it to "
                 f"every agent ahead of the workflow's instructions: a human rules whether it "
-                f"could steer or unblind the run", files={"text": json_digest(text)}))
+                f"could steer or unblind the run",
+                files={"text": json_digest(text), **({"review": identity} if own else {})}))
     seen: set[str] = set()
     unique = [i for i in issues if not (i.issue_id in seen or seen.add(i.issue_id))]
     # The audit's launch commit is the executor's, which the gate checks the
@@ -7410,6 +7533,7 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
             "reviewed_states": reviewed,
             "artefact_state_sha256": artefact_state(target_dir),
             "roles": audits, "missing_roles": sorted({"executor", "reviewer"} - set(audits)),
+            **({"staging": staging} if staging is not None else {}),
             "issues": issue_records(unique)}
 
 
@@ -9302,19 +9426,26 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
 
 def write_attempt_run_audit(config: dict, run_dir_name: str, attempt_path: Path,
                             roles: dict[str, tuple[dict, dict | None]],
-                            reviewed: list[str] | None) -> dict:
+                            reviewed: list[str] | None,
+                            staged: list[dict] | None = None) -> dict:
     """Write an attempt's run audit for one workflow run (``audit-run``).
 
     In review-only mode the executor's clearance is carried from the
     attempt's earlier run audit (``carried_executor``), and that audit
     becomes history under its own workflow run before this one replaces it;
-    a re-audit of the same run replaces its own audit.
+    a re-audit of the same run replaces its own audit. The reviewed state is
+    then the run's verified staging record (``staged``, from
+    ``staging_records``), never a check-attempt digest.
 
     Returns:
         The run audit written.
     """
-    carried = None
+    carried = staging = None
     if config["mode"] == "review-only":
+        reviewer = roles.get("reviewer", ({}, None))[0]
+        staging = verify_staging(staged or [], str(reviewer.get("prompt_head") or ""))
+        reviewed = [staging["artefact_state_sha256"]] if staging.get(
+            "artefact_state_sha256") else []
         entry, payload, problems = carried_executor(attempt_path, run_dir_name)
         carried = (entry, payload)
         for problem in problems:
@@ -9322,7 +9453,8 @@ def write_attempt_run_audit(config: dict, run_dir_name: str, attempt_path: Path,
         prior = read_record(attempt_path, RUN_AUDIT_FILE) or {}
         if prior.get("workflow_run") not in (None, run_dir_name):
             supersede(attempt_path, RUN_AUDIT_FILE, prior.get("workflow_run"))
-    doc = attempt_run_audit(config, run_dir_name, attempt_path, roles, reviewed, carried)
+    doc = attempt_run_audit(config, run_dir_name, attempt_path, roles, reviewed, carried,
+                            staging)
     write_json(attempt_path / RUN_AUDIT_FILE, doc)
     return doc
 
@@ -9396,6 +9528,7 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
     # prompt's Paper: line to the payload's paper_slug; the reviewer's
     # prompt has no "Attempt directory:" line (Fable's delta review, D-1).
     states = reviewed_states(run_dir, config)
+    staged = staging_records(run_dir, config) if review_only else {}
     for slug in sorted({slug for chosen in selections.values() for slug in chosen}):
         attempt_path = attempt_dir(config, slug)
         roles = {role: (records[chosen[slug]["agent_id"]], chosen[slug]["result"])
@@ -9403,7 +9536,7 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
                  if slug in chosen and chosen[slug]["agent_id"] in records}
         if attempt_path.is_dir():
             write_attempt_run_audit(config, run_dir.name, attempt_path, roles,
-                                    states.get(slug))
+                                    states.get(slug), staged.get(slug))
     per_paper: dict[str, dict] = {}
     for record in agents:
         bucket = per_paper.setdefault(record["paper"] or "(none)", {
