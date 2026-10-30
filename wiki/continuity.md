@@ -152,7 +152,12 @@ merged here as PR #1).
       - [x] 2026-10-30 A re-audit of the same run keeps its staging
         verification once the scratch copy is gone (`097233c`, after a side
         agent's note); 790 pass.
-      - [ ] **Astra's re-check at `097233c`**: the reply is
+      - [x] 2026-10-30 Astra's re-check at `ac0d99c` (pasted by Shawn):
+        F1, F3, F4 closed; F2's identity binding overwrote the verdict
+        flag's `review` content digest, so a changed verdict challenge
+        kept its ruling on a same-run re-audit. Closed in `4e490b3` (the
+        identity under `review_identity`); 791 pass.
+      - [ ] **Astra's re-check at `4e490b3`**: the reply is
         `astra-reply-pr15-closure.md` in session 789afcf9's scratchpad,
         for Shawn to paste. Then rebase on #14, or #14 on this, and test
         the two together (her merge note).
