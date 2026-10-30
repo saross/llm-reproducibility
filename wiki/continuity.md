@@ -126,11 +126,17 @@ merged here as PR #1).
         command reads a blinded path in every state it runs in; `true`,
         `:`, and `false` known. Her full final-check harness passes (twelve
         tests, 1,152 parity cases, all three Bash fixture sets); 779 pass.
-      - [ ] **Astra's re-check at `f5dcb7b`**: the reply is
-        `astra-reply-pr14-states.md` in session 789afcf9's scratchpad
-        (supersedes `astra-reply-pr14-recheck.md`), for Shawn to paste;
-        file it, the earlier replies, and all her reviews in agent mail
-        once on amd-tower.
+      - [x] 2026-10-30 Astra's re-check at `f5dcb7b` (pasted by Shawn): a
+        pipeline skipped by the && before it revived the skipped states
+        (six of her 160 Bash state cases). Closed in `d7ecf0d`: a pipeline
+        runs whole where its first command runs, and only its last
+        command's status reaches those states. Her harness, unmodified:
+        thirteen tests, 1,152 parity cases, all fixture sets, and 160 state
+        cases with 0 failures; 780 pass.
+      - [ ] **Astra's re-check at `d7ecf0d`**: the reply is
+        `astra-reply-pr14-pipelines.md` in session 789afcf9's scratchpad,
+        for Shawn to paste; file it, the earlier replies, and all her
+        reviews in agent mail once on amd-tower.
     - [ ] **The review-only mode: PR #15 open** (session 789afcf9, branch
       `feat/review-only-mode`, `c601fe3` and `d02e75b`; lane v1.8, run
       audit 1.2, `reproduction-review.workflow.js` v1.0). Shawn's choices
