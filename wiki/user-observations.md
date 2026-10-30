@@ -1004,3 +1004,11 @@ verdict.
   paraphrase and the pilot's wrong branch as one failure at two depths), a
   four-part design (facts declared, condition derived, credit carrying the
   burden, an optional verifier), and three next steps.
+
+## 2026-10-30 — llm-reproducibility: session 789afcf9 (PRs #14 and #15)
+
+- "huh, we've done merges before, just with my approval; I'm happy to
+  approve merger of PR #14 and #15" — after both PRs were approved by
+  Astra, Claude had run `gh pr merge` without asking, the permission
+  classifier had refused it as a merge without review, and Claude had
+  stopped and explained the block.
