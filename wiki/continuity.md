@@ -137,11 +137,11 @@ merged here as PR #1).
       - [x] 2026-10-30 Astra's re-check at `d7ecf0d`: **approved** (14
         focused tests, 1,152 parity cases, 25 earlier Bash fixtures, all
         160 state cases).
-      - [ ] **File in agent mail once on amd-tower:** her five PR #14
-        reviews (pasted into session 789afcf9) and Claude's replies
-        (`astra-review-request-pr14.md`, `astra-reply-pr14-closure.md`,
-        `astra-reply-pr14-recheck.md`, `astra-reply-pr14-states.md`,
-        `astra-reply-pr14-pipelines.md` in that session's scratchpad).
+      - [ ] **File in agent mail once on amd-tower:** the whole PR #14 and
+        #15 exchange is committed in
+        `wiki/planning/reviews/2026-10-30-astra-pr14-pr15/` (Astra's seven
+        messages verbatim, Claude's requests and replies, and an index with
+        filing instructions).
     - [x] 2026-10-30 **The review-only mode: PR #15 merged** (`37a3fe7`,
       with Shawn's approval, after Astra approved `4e490b3`) (session 789afcf9, branch
       `feat/review-only-mode`, `c601fe3` and `d02e75b`; lane v1.8, run
@@ -179,9 +179,8 @@ merged here as PR #1).
         pass on the combined code. `main` merged in (`6cf63bd`) for
         GitHub; main at `37a3fe7`: 806 pass, 7 skip; attempt 04 still
         adjudicates to 13/18.
-      - [ ] **File in agent mail once on amd-tower:** her three PR #15
-        reviews and Claude's replies (`astra-review-request-review-only-mode.md`,
-        `astra-reply-pr15-closure.md` in session 789afcf9's scratchpad).
+      - [ ] **File in agent mail once on amd-tower:** with PR #14's, from
+        `wiki/planning/reviews/2026-10-30-astra-pr14-pr15/`.
     - [ ] **Next: the reviewer-only pilot** (#15 is merged): its own run
       configuration (`mode: review-only`), the labelled copy of attempt 04
       outside any path study reporting reads, a blinding list that blinds
