@@ -1,6 +1,6 @@
 # Agentic reproduction lane — workflows and runbook
 
-**Version:** 1.3 (2026-10-18, gate 1.3.2: target-scoped rulings and the adjudicated result; 1.2 2026-10-12, gate 1.3; 1.1 2026-10-04; 1.0 2026-10-03)
+**Version:** 1.4 (2026-10-31, the review-only re-run, independent of the review it replaces; 1.3 2026-10-18, gate 1.3.2: target-scoped rulings and the adjudicated result; 1.2 2026-10-12, gate 1.3; 1.1 2026-10-04; 1.0 2026-10-03)
 **Status:** built for the Phase 2 shakedown (`wiki/planning/agentic-modernisation-plan.md`
 §5, Phase 2 option (a), approved 2026-10-02). It sits alongside the
 session-per-phase human lane (`reproduction-system/prompts/`), which remains
@@ -219,7 +219,12 @@ follow the main runbook, with these differences:
    harness records the copy the reviewer was handed. The reviewer reads
    only the copy, named in its prompt as `Review copy:`. The executor's
    report, the earlier review, the rulings, the audits, and the
-   adjudicated result are withheld.
+   adjudicated result are withheld. So is anything derived from the
+   rulings: the copied gate report's admitted coverage is recomputed with
+   no rulings (lane v1.9), so the reviewer meets every issue unruled, as a
+   first reviewer does, and never learns what a human admitted with the
+   replaced review in hand. The attempt's own gate report keeps the ruled
+   figure for the operator.
 4. **Authoritative gate** as in step 10, with the executor's launch commit.
 5. **Audit** as in step 11, **before clearing the scratch folder**. The run
    audit (1.2) carries the executor's clearance from the attempt's earlier
@@ -227,14 +232,23 @@ follow the main runbook, with these differences:
    state is the successful staging record's, never a `check-attempt`
    digest, and the audit re-hashes the staged copy and its gate report and
    checks the reviewer was handed that copy; admission needs it verified.
+   It also fails a staged gate report that counts any issue as ruled.
    A later re-audit of the same run that finds the copy gone keeps that
    first verification, so the scratch folder may be cleared once this audit
    has passed; a copy still there but changed fails.
-6. **Human queue** and **rulings** as in steps 12 and 13. The new review's
-   concerns, method rows, and verdict flag are new issues and need new
-   rulings, even where their content repeats an earlier review's, since
-   they are fingerprinted with this review's identity; the executor's
-   issues and gate issues whose fingerprints are unchanged keep theirs.
+6. **Human queue** and **rulings** as in steps 12 and 13. **Every issue
+   needs a new ruling** (Shawn, 2026-10-31). Rulings follow the review:
+   obligations are discharged on its findings, and rulings on the
+   executor's own issues have cited them too, while a ruling's note cannot
+   show which did. So once the audit makes this review the review of
+   record, every issue the attempt holds (the gate's flags and
+   obligations, the transcript audit's, and the executor's) is bound to
+   this review's identity, as its own concerns, method rows, and verdict
+   flag are (lane v1.9). Rule each against the new review; where an
+   earlier decision still holds, restate it, with a note saying it was
+   checked against the new review. The earlier rulings stay in the
+   rulings file as history. A re-audit of the same run keeps the new
+   rulings.
 7. **Persist results** as in step 14. Only the review is persisted. The
    review it replaces, and the adjudicated result derived from that
    review, move to `superseded/<their workflow run>/`. Admission binds the

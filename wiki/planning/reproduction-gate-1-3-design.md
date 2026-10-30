@@ -391,6 +391,52 @@ review of record, and the pilot's copy exercises that path.
   script (the paid-run rule in `docs/agent-guidance.md`), and on a machine
   holding attempt 04's image.
 
+**Independence of a re-review (2026-10-31, lane v1.9, branch
+`fix/review-only-independence`).** Found while preparing the reviewer-only
+pilot. Shawn's principle (2026-10-31): information moves one way, from
+execution to review to rulings, so a re-review is handed what a first
+review is handed, and nothing downstream of a review outlives its
+replacement. Both gaps hold in production, not only in the pilot: a
+review-only run needs its executor record persisted eligible (F4), which
+needs every issue ruled, so every re-review meets a fully ruled attempt.
+
+- **Input: the reviewer's gate report.** The workflow's gate step
+  re-gates the attempt, and the report's `coverage_admitted` is a derived
+  copy of the rulings. On attempt 04's copy it read 14 of 18 admitted with
+  nothing unruled, where the first reviewer had seen 0 of 18 with seven
+  unruled. Four of those rulings discharge review obligations on the
+  earlier reviewer's findings, so a fresh reviewer told to address those
+  obligations would learn the replaced review had satisfied them.
+  `stage-review` now writes the reviewer's gate report with
+  `coverage_admitted` computed with no rulings (`unruled_coverage`). On
+  attempt 04 that equals the first reviewer's report exactly, and it
+  equals `check-attempt`'s own figure on the attempt without a rulings
+  file. `audit-run` fails a staged report that counts any issue as ruled,
+  and the staging record keeps the digest of the attempt's report it was
+  made from. The attempt's own report keeps the ruled figure.
+- **Output: every ruling lapses with the review it was made with.** First
+  built for the review obligations only. A side agent noted, and the
+  rulings file confirms, that three executor-side rulings on attempt 04
+  also cite the earlier review's findings: the tolerated statement at
+  `S2.R` line 27, T13's departure, and T05's PAPER_ERROR. A free-text note
+  cannot show which rulings leaned on the review. Shawn ruled
+  (2026-10-31) that all lapse. Once a review-only audit makes a new review
+  the review of record, every issue the attempt holds (the gate's, the
+  transcript audit's, and the executor's run-audit issues) is bound to
+  that review's identity (`review_bound`), as F2 bound the review's own.
+  `check-attempt`'s admitted coverage, admission, `adjudicate`,
+  `rule-flags`, and the human queue all read issues that way, so each is
+  ruled again on the new review, and the earlier rulings stay in the file
+  as history. Binding is idempotent, and a re-audit of the same run keeps
+  the new rulings. Execute-mode attempts are unchanged; attempt 04 still
+  adjudicates to 13/18. **This reverses PR #15's "the executor's issues and
+  gate issues whose fingerprints are unchanged keep theirs."**
+- **Also from the pilot's preparation:** `adversarial-reviewer` v1.4.1
+  (`9527f1b`, on main). The definition's example evidence path,
+  `comparisons/t17-cluster-objects-vs-table3.csv`, named the file the
+  earlier review cited for its T17 concern, and the definition is pushed
+  to every reviewer outside any blinding.
+
 **Operational follow-ups, as separate PRs outside the gate's review**
 (Fable's placement; Astra's test requirements kept):
 
