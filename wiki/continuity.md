@@ -98,6 +98,24 @@ merged here as PR #1).
       text in that session's scratchpad, `astra-review-request-pr14.md`;
       file a copy in `~/agent-mail/claude/outbox/codex/` once on
       amd-tower). Merge after her review.
+    - [ ] **The review-only mode: PR #15 open** (session 789afcf9, branch
+      `feat/review-only-mode`, `c601fe3` and `d02e75b`; lane v1.8, run
+      audit 1.2, `reproduction-review.workflow.js` v1.0). Shawn's choices
+      (2026-10-30): the pilot reviews a labelled copy of attempt 04 (its
+      13/18 untouched), and the reviewer reads a clean staged copy. Design
+      in `wiki/planning/reproduction-gate-1-3-design.md`, "The review-only
+      mode as designed". Also fixes a gate 1.3.2 defect: re-gating any
+      adjudicated attempt failed (`DOCUMENT_NAMES` lacked
+      `adjudicated-result.json`). **Awaiting Astra's review**, relayed by
+      hand (`astra-review-request-review-only-mode.md` in that session's
+      scratchpad; file a copy in agent mail once on amd-tower). Whichever
+      of #14 and #15 merges second needs a rebase (lane header, manifest).
+    - [ ] **Then the reviewer-only pilot** (after #15 merges): its own run
+      configuration (`mode: review-only`), the labelled copy of attempt 04
+      outside any path study reporting reads, a blinding list that blinds
+      the original attempt 04, a pre-run review, the API gate, a launch
+      from a fresh session (a workflow script was added), on a machine
+      holding attempt 04's image (amd-tower).
   - [ ] Working-notes candidates WN-ax, WN-ay (session log, 2026-10-18 →
     10-21) and WN-az, WN-ba (session log, 2026-10-21 → 10-23) await
     Shawn's verdict.
