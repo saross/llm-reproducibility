@@ -117,10 +117,20 @@ merged here as PR #1).
         side agent's note): a warning on a path argument the scan could
         not resolve says "possibly a blinded read" and to check the
         transcript before ruling; the runbook's rulings step says so.
-      - [ ] **Astra's second re-check at `fac4805`**: the reply is
-        `astra-reply-pr14-recheck.md` in session 789afcf9's scratchpad,
-        for Shawn to paste; file it, the first closure reply, and both her
-        reviews in agent mail once on amd-tower.
+      - [x] 2026-10-30 Astra's re-check at `b2c9586` (pasted by Shawn): R2
+        and R3 closed; R1 open in two modes (a condition lost across an
+        assignment, a regression; a skipped branch overwriting the state
+        Bash kept, a miss). Closed in `f5dcb7b` by replacing the
+        certainty flags with a walk over every possible shell state
+        (directory, variables, last status): an access only when the
+        command reads a blinded path in every state it runs in; `true`,
+        `:`, and `false` known. Her full final-check harness passes (twelve
+        tests, 1,152 parity cases, all three Bash fixture sets); 779 pass.
+      - [ ] **Astra's re-check at `f5dcb7b`**: the reply is
+        `astra-reply-pr14-states.md` in session 789afcf9's scratchpad
+        (supersedes `astra-reply-pr14-recheck.md`), for Shawn to paste;
+        file it, the earlier replies, and all her reviews in agent mail
+        once on amd-tower.
     - [ ] **The review-only mode: PR #15 open** (session 789afcf9, branch
       `feat/review-only-mode`, `c601fe3` and `d02e75b`; lane v1.8, run
       audit 1.2, `reproduction-review.workflow.js` v1.0). Shawn's choices
@@ -139,7 +149,10 @@ merged here as PR #1).
         rulings; the staged copy never re-checked; an ineligible executor
         record making an unrecoverable run), all closed in `a3ac8dc` and
         `ac0d99c`; 789 pass. Recorded in the design note.
-      - [ ] **Astra's re-check at `ac0d99c`**: the reply is
+      - [x] 2026-10-30 A re-audit of the same run keeps its staging
+        verification once the scratch copy is gone (`097233c`, after a side
+        agent's note); 790 pass.
+      - [ ] **Astra's re-check at `097233c`**: the reply is
         `astra-reply-pr15-closure.md` in session 789afcf9's scratchpad,
         for Shawn to paste. Then rebase on #14, or #14 on this, and test
         the two together (her merge note).
