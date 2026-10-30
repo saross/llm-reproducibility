@@ -8586,27 +8586,50 @@ def shell_names(command: str) -> list[tuple[str, bool]]:
         ``[(form, evident)]`` in the order judged, each form once; a form
         reached as evident by any word is evident.
     """
-    names: dict[str, bool] = {}
+    return [(form, grade == ACCESS) for form, grade in shell_name_grades(command)]
 
-    def judge(forms: list[str], evident: bool) -> None:
+
+# The grades of a command's names (shell_name_grades): a match is a blinded
+# access, a possible read (a path argument whose directory or expansion the
+# scan could not resolve, which may well have opened the blinded file), or
+# text (a word in another role, such as a pattern).
+ACCESS = 2
+POSSIBLE_READ = 1
+TEXT = 0
+
+
+def shell_name_grades(command: str) -> list[tuple[str, int]]:
+    """``shell_names`` with each warning-grade form split by why: a
+    ``POSSIBLE_READ`` is a path argument under an uncertain directory or
+    with an unresolved expansion, such as ``false || cd x && cat y`` or
+    ``cat "${F:-y}"``, either of which can open the blinded file (a side
+    agent's note on Astra's re-check); ``TEXT`` is any other word.
+
+    Returns:
+        ``[(form, grade)]`` in the order judged, each form once, at the
+        highest grade any word reached it with.
+    """
+    names: dict[str, int] = {}
+
+    def judge(forms: list[str], grade: int) -> None:
         for form in forms:
-            names[form] = names.get(form, False) or evident
+            names[form] = max(names.get(form, TEXT), grade)
 
     for token in SHELL_SPLIT_RE.split(command):
         forms = name_forms(token)
-        judge(forms[:1], path_like(token))
-        judge(forms[1:], False)
+        judge(forms[:1], ACCESS if path_like(token) else TEXT)
+        judge(forms[1:], TEXT)
     for place in shell_places(command):
         around = [place["cwd"]] if place["cwd"] else []
         for token in SHELL_SPLIT_RE.split(place["segment"]):
-            judge(name_forms(token, around), False)
+            judge(name_forms(token, around), TEXT)
         for word in place["paths"]:
             sure = name_forms(word, around if place["certain"] else [])
-            judge(sure + [form.rstrip("/") + "/" for form in sure], True)
-            judge(name_forms(word, around), False)
+            judge(sure + [form.rstrip("/") + "/" for form in sure], ACCESS)
+            judge(name_forms(word, around), POSSIBLE_READ)
         for word in place["unsure_paths"]:
             forms = name_forms(word, around)
-            judge(forms + [form.rstrip("/") + "/" for form in forms], False)
+            judge(forms + [form.rstrip("/") + "/" for form in forms], POSSIBLE_READ)
     return list(names.items())
 
 
@@ -8711,19 +8734,26 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
                 break
     for call in bash_calls(lines):
         command = call["command"][:300]
-        command_hits = [(form, evident, rule) for form, evident in shell_names(call["command"])
+        command_hits = [(form, grade, rule)
+                        for form, grade in shell_name_grades(call["command"])
                         for rule in [blinding.hit(form)] if rule]
-        evident_hits = [hit for hit in command_hits if hit[1]]
+        evident_hits = [hit for hit in command_hits if hit[1] == ACCESS]
         if evident_hits:
             bucket = warnings if call["errored"] else contaminating
             bucket.append({"tool": "Bash", "path": evident_hits[0][0],
                            "rule": evident_hits[0][2], "command": command})
             continue
         if command_hits:
-            warnings.append({"tool": "Bash", "path": command_hits[0][0],
-                             "rule": f"{command_hits[0][2]}, named by a word that may be a "
-                                     f"search pattern, not a path (review)",
-                             "command": command})
+            # A possible read is named first, and says so: it may be a real
+            # blinded read the scan could not confirm, so a human checks the
+            # transcript before ruling it admissible.
+            form, grade, rule = max(command_hits, key=lambda hit: hit[1])
+            warnings.append({"tool": "Bash", "path": form, "rule": (
+                f"{rule}, possibly a blinded read: a path argument whose directory or "
+                f"expansion the scan could not resolve; check in the transcript what the "
+                f"command opened before ruling it admissible" if grade == POSSIBLE_READ else
+                f"{rule}, named by a word that may be a search pattern, not a path (review)"),
+                "command": command})
         # A listing names entries bare, relative to the directory listed, so
         # each output token is also judged under the command's directories.
         # A path-like token (scan 1.0's) that matches is a warning, as in 1.0;

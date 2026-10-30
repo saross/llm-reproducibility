@@ -1998,6 +1998,24 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(self.tier("D=reproduction; D=$(pwd); cd $D; cat attempt-04/plan.json",
                                    blinded), "none")
 
+    def test_a_possible_read_says_so(self):
+        """A side agent's note on the re-check: a warning on a path argument
+        the scan could not resolve may be a real blinded read (in Astra's
+        Bash fixtures these opened the file), so its rule says to check the
+        transcript; a pattern's says it may be a pattern."""
+        blinding = self.bash_audit(
+            ["reproduction/attempt-04", "lodged-rules.yaml"],
+            ("cd /repo; false || cd reproduction && cat attempt-04/plan.json", "BLINDED"),
+            ('cat "${F:-lodged-rules.yaml}"', "BLINDED"),
+            ("grep -rn lodged-rules.yaml .", ""))
+        self.assertEqual(blinding["contaminating"], [])
+        rules = [w["rule"] for w in blinding["warnings"]]
+        self.assertEqual(len(rules), 3)
+        for rule in rules[:2]:
+            self.assertIn("possibly a blinded read", rule)
+            self.assertIn("check in the transcript", rule)
+        self.assertIn("may be a search pattern", rules[2])
+
     def test_awk_assignments_are_not_files(self):
         """R2: awk takes name=value operands as variable assignments."""
         self.assertEqual(self.tier("awk 'BEGIN {print 1}' label=lodged-rules.yaml",

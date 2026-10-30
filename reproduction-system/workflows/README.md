@@ -143,7 +143,10 @@ configuration (for the shakedown:
 13. **Rulings** (human): for each issue, record a decision with
     `reproduction-lane.py rule-flags --config $CFG --slug <slug> --approver "<name>" --rulings <file>`.
     A ruling binds to the issue's evidence fingerprint, so it lapses if the
-    evidence changes. Each issue states its scope: `targets` (the ones it
+    evidence changes. A blinding warning that says "possibly a blinded read"
+    may be a real read the scan could not confirm (a `cd` in a branch Bash
+    may skip, a fallback expansion such as `"${F:-x}"`): check in the
+    transcript what the command opened before ruling it admissible. Each issue states its scope: `targets` (the ones it
     names) or `paper` (all of them). Since gate 1.3.2 a ruling can also
     dispose of single targets within its issue, `"targets": {"T17":
     "excluded"}`; record a ruled classification, `"classification":
