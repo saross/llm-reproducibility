@@ -7474,7 +7474,12 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
             run's launch message, are bound to the review's identity (its
             run, workflow run, and agent), so a fresh reviewer never meets
             an earlier reviewer's rulings, while a re-audit of the same run
-            keeps its own (Astra's review of PR #15, F2).
+            keeps its own (Astra's review of PR #15, F2). The identity sits
+            under its own key, ``review_identity``, beside the issue's
+            content digests: the verdict flag's ``review`` digest of the
+            dimensions and verdict challenge must still change its
+            fingerprint (her re-check, which found the identity written over
+            it).
         staging: In review-only mode, the verified staging record
             (``verify_staging``); its state is the reviewed state.
     """
@@ -7507,7 +7512,7 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
                               locked)
         if role == "reviewer" and identity:
             found = [Issue(str(i), kind=i.kind, code=i.code, subject=i.subject,
-                           targets=i.targets, files={**i.files, "review": identity})
+                           targets=i.targets, files={**i.files, "review_identity": identity})
                      for i in found]
         issues += found
     # The executor's (or a shared run's) launch message keeps its issue; a
@@ -7522,7 +7527,8 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
                 f"{text[:300]!r}, not the runbook's fixed phrase, and the harness relayed it to "
                 f"every agent ahead of the workflow's instructions: a human rules whether it "
                 f"could steer or unblind the run",
-                files={"text": json_digest(text), **({"review": identity} if own else {})}))
+                files={"text": json_digest(text),
+                       **({"review_identity": identity} if own else {})}))
     seen: set[str] = set()
     unique = [i for i in issues if not (i.issue_id in seen or seen.add(i.issue_id))]
     # The audit's launch commit is the executor's, which the gate checks the

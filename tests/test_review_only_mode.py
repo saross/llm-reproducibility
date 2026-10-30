@@ -431,6 +431,28 @@ class ReviewOnlyTests(unittest.TestCase):
             self.assertIn(issue, {i["id"] for i in second["issues"]})
             self.assertNotIn(issue, inherited)
 
+    def test_changed_verdict_content_needs_a_new_ruling_in_the_same_run(self):
+        """Astra's re-check of F2 at ac0d99c: the review identity overwrote the
+        verdict flag's content digest, so a review that stopped supporting the
+        executor's verdict kept its ruling on re-audit. The identity has its
+        own key; the content still moves the fingerprint."""
+        payload = new_review(self.locked)
+        staged = self.stage("wf_review-1")
+        first = self.audit("wf_review-1", payload, staged=staged)
+        rulings = [{"issue_id": i["id"], "fingerprint": i["fingerprint"]}
+                   for i in first["issues"]]
+        verdict = next(i for i in first["issues"] if i["id"] == "review:qualified")
+        self.assertIn("review", verdict["files"])
+        self.assertIn("review_identity", verdict["files"])
+        changed = json.loads(json.dumps(payload))
+        changed["verdict_challenge"]["reviewer_supports_verdict"] = False
+        again = self.audit("wf_review-1", changed, staged=staged)
+        after = next(i for i in again["issues"] if i["id"] == "review:qualified")
+        self.assertNotEqual(after["fingerprint"], verdict["fingerprint"])
+        self.assertIsNone(lane.ruling_for(after, rulings))
+        self.assertTrue(any("review:qualified" in r for r in
+                            lane.run_audit_reasons(self.dir, {}, rulings, None)))
+
     def test_the_staged_copy_must_be_unchanged_and_the_one_reviewed(self):
         """F3: a staged copy changed after staging, a reviewer handed another
         copy, a copy no longer there, and a run with no successful staging
