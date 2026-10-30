@@ -201,15 +201,22 @@ configuration (for the shakedown:
   transcript (Read, Grep, and Glob paths, and every token of Bash commands,
   bare names included, also placed under a `cd` earlier in the same command;
   URLs are excluded) and reports contaminating accesses. Since blinding scan
-  1.1 (lane v1.7), a match is contaminating only when its word is evidently
-  a path (it holds a `/`, is an operand of `ls`, `cat`, `cd`, and the like,
-  or is a file name with an extension); any other matching word, such as a
-  search pattern, is a warning for human review. Blinded paths named in
-  command output are warnings for human review; blinded names listed bare
-  in output (an `ls` of a parent directory) are recorded in the audit, with
-  no ruling (Shawn, 2026-10-30). Not detected: a recursive read of a
-  blinded directory's parent (`grep -r x outputs/`) whose output names no
-  blinded path, and a path built by command substitution.
+  1.1 (lane v1.7), a match in a command is contaminating when scan 1.0 would
+  have found it (a word holding a `/`, or ending in `.json`, `.md`, or
+  `.csv`), or when its word is a path argument (of `ls`, `cat`, `cd`, and
+  the like, or a file argument of `grep`, `sed`, or `awk`) at a location the
+  walk is sure of. Any other match, such as a pattern, an option's value,
+  literal text, or a path under an uncertain directory, is a warning for
+  human review (Shawn, 2026-10-30, refined by role after Astra's review).
+  The walk keeps a subshell's and a command substitution's directory and
+  variables to themselves. Blinded paths named in command output are
+  warnings for human review; blinded names listed bare in output (an `ls`
+  of a parent directory) are recorded in the audit, with no ruling (Shawn,
+  2026-10-30). Not detected: a recursive read of a blinded directory's
+  parent (`grep -r x outputs/`) whose output names no blinded path; a path
+  built by command substitution; and a `cd` or a read inside a heredoc fed
+  to a shell (`bash <<EOF`), whose words are judged as text but whose
+  directory changes are not followed.
 - **The receipt gate's `schema_version` check is FAIR-specific**
   (`subagent-receipt-gate.py` compares any declared `schema_version` with the
   benchmark contract). The reproduction schemas therefore carry no
