@@ -16,9 +16,10 @@ scan 1.0 would have found it, or when its word is a path argument at a
 location the walk is sure of, and otherwise a warning to rule on; a name
 listed bare in output is recorded, with no ruling. The walk keeps the
 directory and variables of a subshell or command substitution to itself,
-follows every state the shell can be in through ``&&`` and ``||`` (a match
-is an access only when the command reads a blinded path in every state it
-runs in), grades an argument it cannot resolve as a warning, reads value-taking options in every form, leaves awk's
+follows every state the shell can be in through ``&&``, ``||``, and
+pipelines (a match is an access only when the command reads a blinded path
+in every state it runs in), grades an argument it cannot resolve as a
+warning, reads value-taking options in every form, leaves awk's
 ``name=value`` operands out of the paths, and judges the harness-file
 exemption on the file each form names. Nothing scan 1.0 caught is judged
 more leniently, and the run audit's format is unchanged
@@ -8454,6 +8455,9 @@ def shell_places(command: str) -> list[dict]:
     ``true``, ``:``, and ``false`` have known statuses; any other command
     may do either, so a state splits in two where an ``&&`` or ``||``
     follows it; ``exit`` and ``return`` end the states that run them. A
+    pipeline runs, whole, in the states its first command runs in, and only
+    its last command's status reaches them; states that skipped it keep
+    theirs. A
     subshell or a command substitution keeps its directory and variables
     to itself (P1-2), and a command in a pipeline runs in a subshell, so
     its ``cd`` and assignments change nothing after it. An assignment from
@@ -8479,7 +8483,9 @@ def shell_places(command: str) -> list[dict]:
     text, _ = split_heredocs(command)
     text = mask_comments(text)
     segments = shell_segments(text)
-    previous: list[State] = list(states)
+    # The states the current pipeline's first command ran in: the whole
+    # pipeline runs in exactly those (Astra's re-check of PR #14 at f5dcb7b).
+    piping: list[State] = []
     prior: list[State] = list(states)  # the states before the last command ran
 
     def known(state: State) -> dict[str, str]:
@@ -8511,7 +8517,7 @@ def shell_places(command: str) -> list[dict]:
             states = settle(states)
         wanted = {"&&": "ok", "||": "fail"}.get(before)
         if before == "|":
-            running = [s for s in states if s in previous]
+            running = [s for s in states if s in piping]
         elif wanted:
             running = [s for s in states if s[2] == wanted]
         else:
@@ -8521,6 +8527,8 @@ def shell_places(command: str) -> list[dict]:
             stack.append((list(states), list(running), True))
             states = list(running)
         piped = "|" in (before, after)
+        if after == "|" and before != "|":
+            piping = list(running)
         # A command no state runs (``cd x || cat y``, as cd is assumed to
         # succeed) would run where the command before it failed: judge it
         # there, and in the present states, as at most a possible read.
@@ -8558,8 +8566,11 @@ def shell_places(command: str) -> list[dict]:
                         cwd = posixpath.normpath(
                             target if target.startswith(("/", "~")) or cwd is None
                             else cwd + "/" + target)
-            # A pipeline's status is its last command's, which overwrites this.
-            status = ("ok" if not name or name in ("cd", "pushd", "export")
+            # A pipeline's status is its last command's; the commands before
+            # it change nothing, so the states that entered it stay as they
+            # are until its last command sets their status.
+            status = (state[2] if after == "|" else
+                      "ok" if not name or name in ("cd", "pushd", "export")
                       else KNOWN_STATUS.get(name, "unknown"))
             ended = name in ("exit", "return") and not piped
             effects[state] = [] if ended else [(cwd, tuple(sorted(variables.items())), status)]
@@ -8568,7 +8579,6 @@ def shell_places(command: str) -> list[dict]:
         if running:
             prior = list(states)
             states = merged([new for s in states for new in effects.get(s, [s])])
-            previous = [new for s in running for new in effects.get(s, [])]
         for _ in range(max(net, 0)):
             # A command substitution's commands run in its own states.
             stack.append((list(states), list(states), False))

@@ -2015,6 +2015,27 @@ class AuditTests(unittest.TestCase):
         for command, grade in cases.items():
             self.assertEqual(self.tier("cd /fx; " + command, blinded), grade, command)
 
+    def test_a_pipeline_runs_whole_where_its_first_command_runs(self):
+        """Astra's re-check of PR #14 at f5dcb7b, confirmed with real Bash: a
+        pipeline the && before it skips must not revive the states it skipped;
+        it runs, whole, where its first command runs, and only its last
+        command's status reaches them. Both directions, with known and
+        unknown conditions."""
+        blinded = ["reproduction/attempt-04"]
+        read = "cd $D; cat attempt-04/plan.json"
+        cases = {
+            f"D=safe; false && true | true && D=reproduction; {read}": "none",
+            f"D=reproduction; false && true | true && D=safe; {read}": "access",
+            f"D=safe; true && true | true && D=reproduction; {read}": "access",
+            f"D=reproduction; true && true | true && D=safe; {read}": "none",
+            f"D=safe; test -d x && true | true && D=reproduction; {read}": "warning",
+            f"D=reproduction; test -d x && true | true && D=safe; {read}": "warning",
+            f"D=safe; true | false && D=reproduction; {read}": "none",
+            f"D=safe; false | true && D=reproduction; {read}": "access",
+        }
+        for command, grade in cases.items():
+            self.assertEqual(self.tier("cd /fx; " + command, blinded), grade, command)
+
     def test_a_possible_read_says_so(self):
         """A side agent's note on the re-check: a warning on a path argument
         the scan could not resolve may be a real blinded read (in Astra's
