@@ -16,9 +16,9 @@ scan 1.0 would have found it, or when its word is a path argument at a
 location the walk is sure of, and otherwise a warning to rule on; a name
 listed bare in output is recorded, with no ruling. The walk keeps the
 directory and variables of a subshell or command substitution to itself,
-treats a ``cd`` or an assignment reached through ``||``, or after another
-command's ``&&``, as possibly skipped, grades an argument it cannot resolve
-as a warning, reads value-taking options in every form, leaves awk's
+follows every state the shell can be in through ``&&`` and ``||`` (a match
+is an access only when the command reads a blinded path in every state it
+runs in), grades an argument it cannot resolve as a warning, reads value-taking options in every form, leaves awk's
 ``name=value`` operands out of the paths, and judges the harness-file
 exemption on the file each form names. Nothing scan 1.0 caught is judged
 more leniently, and the run audit's format is unchanged
@@ -231,7 +231,7 @@ import sys
 import tempfile
 import textwrap
 from collections import Counter
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from datetime import date as date_type, datetime, time as time_type, timedelta, timezone
 from pathlib import Path
 from types import ModuleType
@@ -8426,166 +8426,172 @@ def unbracket(segment: str) -> tuple[str, int, int]:
     return body, opened, net
 
 
+# Commands whose exit status the walk knows without running them; every
+# other command may succeed or fail.
+KNOWN_STATUS = {"true": "ok", ":": "ok", "false": "fail"}
+# The most shell states the walk keeps; past it, nothing is definite.
+MAX_STATES = 16
+
+
 def shell_places(command: str) -> list[dict]:
-    """Each segment of a shell command, its variables expanded, with the
-    directory an earlier ``cd`` in the same command moved it to and whether
-    that location is certain.
+    """Each segment of a shell command, with every state of the shell it can
+    run in: the directory an earlier ``cd`` moved it to and the variables
+    then set, for the blinding scan.
 
-    The walk is the write-provenance scan's (``scan_shell``): assignments
-    are followed, so ``D=out/x; cd $D`` is placed; heredoc bodies are left
-    out; and the directory starts unknown at each call, since a subagent's
-    ``cd`` does not carry to its next call. A ``cd`` from that unknown start
-    leaves a relative directory, under which a blinded substring can still
-    be met.
+    The walk follows the write-provenance scan (``scan_shell``): assignments
+    are followed, heredoc bodies are left out, and the directory starts
+    unknown at each call, since a subagent's ``cd`` does not carry to its
+    next call. A ``cd`` from that unknown start leaves a relative directory,
+    under which a blinded substring can still be met.
 
-    Scopes follow the shell (Astra's review of PR #14, P1-2): a subshell or
-    a command substitution keeps its own directory and variables, restored
-    when it closes, and a command in a pipeline runs in a subshell, so its
-    ``cd`` and assignments change nothing after it. Commands are assumed to
-    succeed, but not to be reached: in an and-or list a command after
-    ``||`` may be skipped, and one after ``&&`` hangs on the command before
-    it (Astra's re-check, R1). So a location is uncertain:
-
-    - after a ``cd`` reached through ``||`` (``true || cd x && cat y``,
-      where the ``cd`` never runs);
-    - after a ``cd`` that another command's success decided
-      (``[ -d x ] && cd x``), once its ``&&`` chain ends;
-    - after a ``cd x ||``, unless what follows the ``||`` is ``exit`` or
-      ``return``;
-    - after a ``cd`` to a target the walk cannot resolve (an unset or
-      uncertain variable, ``-``), which leaves the directory unknown;
-    - throughout a command whose brackets do not balance.
-
-    A variable is uncertain when its assignment was reached through ``&&``
-    or ``||`` after another command (``false && D=x``), or made from an
-    uncertain one; an assignment from a command substitution is forgotten,
-    since its value is unknown. A path argument is definite only when it
-    holds no expansion left unresolved and its segment uses no uncertain
-    variable; any other is unsure.
+    It keeps a set of possible shell states, each a directory, the
+    variables, and the last exit status (Astra's re-checks of PR #14, R1:
+    flags of certainty lost a condition across an assignment and let a
+    skipped branch overwrite the state Bash kept). In an and-or list a
+    command after ``&&`` runs in the states whose last status is success,
+    one after ``||`` in those where it is failure, and one after ``;`` or a
+    newline in all. ``cd`` and assignments are assumed to succeed;
+    ``true``, ``:``, and ``false`` have known statuses; any other command
+    may do either, so a state splits in two where an ``&&`` or ``||``
+    follows it; ``exit`` and ``return`` end the states that run them. A
+    subshell or a command substitution keeps its directory and variables
+    to itself (P1-2), and a command in a pipeline runs in a subshell, so
+    its ``cd`` and assignments change nothing after it. An assignment from
+    a command substitution, or a ``cd`` to a target the walk cannot
+    resolve, leaves that variable or directory unknown.
 
     Returns:
-        ``[{"cwd", "certain", "segment", "name", "paths", "unsure_paths"}]``:
-        the directory in effect for the segment (None while unknown),
-        whether it is certain, the segment, its command's name, and the
-        words that command takes as paths (``path_arguments``), definite and
-        unsure.
+        ``[{"name", "runs", "ran", "sure"}]``: the segment's command name,
+        ``runs`` (one ``{"cwd", "segment", "paths"}`` per distinct state it
+        runs in, with the segment expanded there and the words its command
+        takes as paths there), whether it runs in any state (if not, its
+        runs are the states before and after the command it hangs on), and
+        ``sure``, false when
+        the brackets do not balance or the states overflowed
+        (``MAX_STATES``), so that nothing in it is definite.
     """
-    variables: dict[str, str] = {}
-    unsure: set[str] = set()
-    cwd: str | None = None
-    certain, chained, balanced = True, False, True
-    stack: list[tuple[str | None, bool, bool, dict[str, str], set[str]]] = []
+    # A state: (cwd or None, variables (a value or None when unknown), status).
+    State = tuple[str | None, tuple[tuple[str, str | None], ...], str]
+    states: list[State] = [(None, (), "ok")]
+    stack: list[tuple[list[State], list[State], bool]] = []
     places: list[dict] = []
+    balanced, overflowed = True, False
     text, _ = split_heredocs(command)
     text = mask_comments(text)
     segments = shell_segments(text)
-    last = ""  # the kind of the previous segment: "cd", "assign", or "command"
+    previous: list[State] = list(states)
+    prior: list[State] = list(states)  # the states before the last command ran
+
+    def known(state: State) -> dict[str, str]:
+        return {name: value for name, value in state[1] if value is not None}
+
+    def settle(pool: list[State]) -> list[State]:
+        """Split each state of unknown status into a success and a failure."""
+        out: list[State] = []
+        for cwd, variables, status in pool:
+            out += ([(cwd, variables, "ok"), (cwd, variables, "fail")]
+                    if status == "unknown" else [(cwd, variables, status)])
+        return out
+
+    def merged(pool: list[State]) -> list[State]:
+        nonlocal overflowed
+        unique = list(dict.fromkeys(pool))
+        if len(unique) > MAX_STATES:
+            overflowed = True
+            unique = unique[:MAX_STATES]
+        return unique
+
     for n, (offset, raw) in enumerate(segments):
         before = (text[segments[n - 1][0] + len(segments[n - 1][1]):offset].strip()
                   if n else "")
         after = (text[offset + len(raw):segments[n + 1][0]].strip()
                  if n + 1 < len(segments) else "")
         body, opened, net = unbracket(raw)
+        if before in ("&&", "||"):
+            states = settle(states)
+        wanted = {"&&": "ok", "||": "fail"}.get(before)
+        if before == "|":
+            running = [s for s in states if s in previous]
+        elif wanted:
+            running = [s for s in states if s[2] == wanted]
+        else:
+            running = list(states)
         for _ in range(opened):
-            stack.append((cwd, certain, chained, dict(variables), set(unsure)))
-        # A cd decided by another command's success holds only along the
-        # && chain that follows it.
-        if chained and before != "&&":
-            certain, chained = False, False
-        referenced = {m.group(1) or m.group(2) for m in SHELL_VARIABLE_RE.finditer(body)}
-        doubtful = bool(referenced & unsure)
-        segment = expand_variables(body, variables)
-        if segment:
+            # A subshell: only the states that enter it run inside it.
+            stack.append((list(states), list(running), True))
+            states = list(running)
+        piped = "|" in (before, after)
+        # A command no state runs (``cd x || cat y``, as cd is assumed to
+        # succeed) would run where the command before it failed: judge it
+        # there, and in the present states, as at most a possible read.
+        pool = running or list(dict.fromkeys(prior + states)) or [(None, (), "ok")]
+        runs: list[dict] = []
+        effects: dict[State, list[State]] = {}
+        name = ""
+        for state in pool:
+            segment = expand_variables(body, known(state))
+            if not segment:
+                continue
             words = shell_words(segment)
             k, name = command_word(words)
-            given = path_arguments(name, words[k + 1:])
-            definite = [] if doubtful else [w for w in given if "$" not in w and "`" not in w]
-            places.append({"cwd": cwd, "certain": certain, "segment": segment,
-                           "name": name, "paths": definite,
-                           "unsure_paths": [w for w in given if w not in definite]})
-            # Reached only if the command before succeeded (&&) or failed (||).
-            conditional = before == "||" or (before == "&&" and last == "command")
-            if "|" not in (before, after):
+            paths = path_arguments(name, words[k + 1:])
+            run = {"cwd": state[0], "segment": segment, "paths": paths}
+            if run not in runs:
+                runs.append(run)
+            if not running:
+                continue
+            cwd, variables = state[0], dict(state[1])
+            if not piped:
                 assigned = words[:k] if k == len(words) else (
                     words[k + 1:] if name == "export" else [])
                 for word in assigned:
                     found = ASSIGNMENT_RE.fullmatch(word)
-                    if not found:
-                        continue
-                    if "$(" in found.group(2) or "`" in found.group(2):
-                        variables.pop(found.group(1), None)
-                        unsure.add(found.group(1))
-                        continue
-                    variables[found.group(1)] = found.group(2)
-                    if conditional or doubtful:
-                        unsure.add(found.group(1))
-                    else:
-                        unsure.discard(found.group(1))
+                    if found:
+                        value = found.group(2)
+                        variables[found.group(1)] = (None if "$(" in value or "`" in value
+                                                     else value)
                 if name in ("cd", "pushd"):
-                    target = given[0] if given else "~"
+                    target = paths[0] if paths else "~"
                     if target == "-" or "$" in target or "`" in target:
-                        cwd, certain, chained = None, False, False
+                        cwd = None
                     else:
-                        absolute = target.startswith(("/", "~"))
-                        if before == "||" or doubtful:
-                            certain, chained = False, False
-                        elif before == "&&" and last == "command":
-                            certain, chained = absolute or cwd is None or certain, True
-                        elif before == "&&":
-                            certain = absolute or certain
-                        else:
-                            certain, chained = absolute or cwd is None or certain, False
-                        cwd = posixpath.normpath(target if absolute or cwd is None
-                                                 else cwd + "/" + target)
-                        rescue = (shell_words(unbracket(segments[n + 1][1])[0])
-                                  if n + 1 < len(segments) else [])
-                        if after == "||" and command_word(rescue)[1] not in ("exit", "return"):
-                            certain, chained = False, False
-            last = "cd" if name in ("cd", "pushd") else "assign" if not name else "command"
+                        cwd = posixpath.normpath(
+                            target if target.startswith(("/", "~")) or cwd is None
+                            else cwd + "/" + target)
+            # A pipeline's status is its last command's, which overwrites this.
+            status = ("ok" if not name or name in ("cd", "pushd", "export")
+                      else KNOWN_STATUS.get(name, "unknown"))
+            ended = name in ("exit", "return") and not piped
+            effects[state] = [] if ended else [(cwd, tuple(sorted(variables.items())), status)]
+        if body and runs:
+            places.append({"name": name, "runs": runs, "ran": bool(running), "sure": True})
+        if running:
+            prior = list(states)
+            states = merged([new for s in states for new in effects.get(s, [s])])
+            previous = [new for s in running for new in effects.get(s, [])]
         for _ in range(max(net, 0)):
-            stack.append((cwd, certain, chained, dict(variables), set(unsure)))
+            # A command substitution's commands run in its own states.
+            stack.append((list(states), list(states), False))
         for _ in range(max(-net, 0)):
             if not stack:
                 balanced = False
                 break
-            cwd, certain, chained, variables, unsure = stack.pop()
-    if stack or not balanced:
+            outer, entered, subshell = stack.pop()
+            # The subshell's status is not followed: the states that entered
+            # it leave with an unknown one.
+            states = [((cwd, variables, "unknown") if subshell and (cwd, variables, status)
+                       in entered else (cwd, variables, status))
+                      for cwd, variables, status in outer]
+    if stack or not balanced or overflowed:
         for place in places:
-            place["certain"] = False
+            place["sure"] = False
     return places
 
 
 def shell_names(command: str) -> list[tuple[str, bool]]:
     """Every form of every name a Bash command could open, for the blinding
-    scan, each with whether a match on it is a blinded access.
-
-    Judged: each token of the command as written (heredoc bodies and
-    comments included, as in scan 1.0), and each token of each segment,
-    variables expanded, under the directory an earlier ``cd`` moved it to.
-    The tiers (Shawn, 2026-10-30, refined by role after Astra's review of
-    PR #14):
-
-    - a token scan 1.0 judged (``path_like``), as written, keeps 1.0's
-      evidence, whatever its role;
-    - a path argument (``path_arguments``) is evident as written,
-      normalised, as a directory (``ls wiki`` meets ``wiki/``), and placed
-      under a ``cd``'s directory when that location is certain;
-    - every other form is warning-grade: words in other roles (a pattern,
-      an option's value, literal text), placed forms where the location is
-      uncertain, and path arguments the walk could not resolve, such as
-      ``"${F:-x}"``, ``"$(...)"``, or a path from an uncertain variable
-      (Astra's re-check, R3).
-
-    A read by bare name is judged, so ``cd …/reproduction-system && cat
-    lodged-rules.yaml`` is caught, as ``cat reproduction-system/lodged-rules.yaml``
-    always was. Not judged: a recursive read of a blinded directory's
-    parent (``grep -r x outputs/``), which only its output can show; a path
-    built by command substitution; and a ``cd`` in a heredoc fed to a shell.
-
-    Returns:
-        ``[(form, evident)]`` in the order judged, each form once; a form
-        reached as evident by any word is evident.
-    """
+    scan, each with whether it is evident (``shell_name_grades`` with no
+    blinding given, as if every form matched)."""
     return [(form, grade == ACCESS) for form, grade in shell_name_grades(command)]
 
 
@@ -8598,18 +8604,50 @@ POSSIBLE_READ = 1
 TEXT = 0
 
 
-def shell_name_grades(command: str) -> list[tuple[str, int]]:
-    """``shell_names`` with each warning-grade form split by why: a
-    ``POSSIBLE_READ`` is a path argument under an uncertain directory or
-    with an unresolved expansion, such as ``false || cd x && cat y`` or
-    ``cat "${F:-y}"``, either of which can open the blinded file (a side
-    agent's note on Astra's re-check); ``TEXT`` is any other word.
+def shell_name_grades(command: str, hit: Callable[[str], object] | None = None
+                      ) -> list[tuple[str, int]]:
+    """Every form of every name a Bash command could open, with the grade of
+    a blinded match on it.
+
+    Judged: each token of the command as written (heredoc bodies and
+    comments included, as in scan 1.0), and each token of each segment in
+    each shell state it can run in (``shell_places``), expanded there and
+    placed under that state's directory. The grades (Shawn, 2026-10-30,
+    refined by role and by state after Astra's review and re-checks of
+    PR #14):
+
+    - ``ACCESS``: a token scan 1.0 judged (``path_like``), as written,
+      whatever its role; and a path argument (``path_arguments``) of a
+      command that reads a blinded path in every state it runs in, as
+      written, normalised, as a directory (``ls wiki`` meets ``wiki/``),
+      and placed under that state's directory;
+    - ``POSSIBLE_READ``: a path argument of a command that reads a blinded
+      path in some of its states but not all (a ``cd`` in a branch Bash may
+      skip), that may not run at all, whose expansion the walk could not
+      resolve (``"${F:-x}"``, ``"$(...)"``), or whose command's brackets do
+      not balance. Such a match may be a real read: in Astra's Bash
+      fixtures these opened the blinded file;
+    - ``TEXT``: every other form, such as a pattern, an option's value, or
+      literal text.
+
+    A read by bare name is judged, so ``cd …/reproduction-system && cat
+    lodged-rules.yaml`` is caught, as ``cat reproduction-system/lodged-rules.yaml``
+    always was. Not judged: a recursive read of a blinded directory's
+    parent (``grep -r x outputs/``), which only its output can show; a path
+    built by command substitution; and a ``cd`` in a heredoc fed to a shell.
+
+    Args:
+        command: The Bash command.
+        hit: Whether a form is blinded (``Blinding.hit``). Without it every
+            form is taken to match, so that a path argument in every state
+            is evident.
 
     Returns:
         ``[(form, grade)]`` in the order judged, each form once, at the
         highest grade any word reached it with.
     """
     names: dict[str, int] = {}
+    matches = hit or (lambda form: True)
 
     def judge(forms: list[str], grade: int) -> None:
         for form in forms:
@@ -8620,37 +8658,44 @@ def shell_name_grades(command: str) -> list[tuple[str, int]]:
         judge(forms[:1], ACCESS if path_like(token) else TEXT)
         judge(forms[1:], TEXT)
     for place in shell_places(command):
-        around = [place["cwd"]] if place["cwd"] else []
-        for token in SHELL_SPLIT_RE.split(place["segment"]):
-            judge(name_forms(token, around), TEXT)
-        for word in place["paths"]:
-            sure = name_forms(word, around if place["certain"] else [])
-            judge(sure + [form.rstrip("/") + "/" for form in sure], ACCESS)
-            judge(name_forms(word, around), POSSIBLE_READ)
-        for word in place["unsure_paths"]:
-            forms = name_forms(word, around)
-            judge(forms + [form.rstrip("/") + "/" for form in forms], POSSIBLE_READ)
+        found: list[tuple[list[str], list[str]]] = []
+        for run in place["runs"]:
+            around = [run["cwd"]] if run["cwd"] else []
+            for token in SHELL_SPLIT_RE.split(run["segment"]):
+                judge(name_forms(token, around), TEXT)
+            resolved: list[str] = []
+            unresolved: list[str] = []
+            for word in run["paths"]:
+                forms = name_forms(word, around)
+                forms += [form.rstrip("/") + "/" for form in forms]
+                (unresolved if "$" in word or "`" in word else resolved).extend(forms)
+            found.append((resolved, unresolved))
+        definite = place["ran"] and place["sure"] and all(
+            any(matches(form) for form in resolved) for resolved, _ in found)
+        for resolved, unresolved in found:
+            judge(resolved, ACCESS if definite else POSSIBLE_READ)
+            judge(unresolved, POSSIBLE_READ)
     return list(names.items())
 
 
 def shell_directories(command: str) -> list[str]:
     """Directories whose entries a command's output may name bare: each
-    directory a ``cd`` put it in, and each directory a listing command
-    (``LISTING_COMMANDS``) is given, placed under the ``cd`` too, so the
-    ``attempt-04`` that ``ls out/x/reproduction`` prints is judged as
-    ``out/x/reproduction/attempt-04``. A file a command reads is no
-    directory: joined under it, the words of its text would be judged as
-    paths inside it."""
+    directory a ``cd`` put it in, in any state, and each directory a listing
+    command (``LISTING_COMMANDS``) is given, placed under that state's
+    directory too, so the ``attempt-04`` that ``ls out/x/reproduction``
+    prints is judged as ``out/x/reproduction/attempt-04``. A file a command
+    reads is no directory: joined under it, the words of its text would be
+    judged as paths inside it."""
     found: list[str] = []
     for place in shell_places(command):
-        cwd = place["cwd"]
-        if cwd:
-            found.append(cwd)
-        listed = place["paths"] + place["unsure_paths"]
-        for token in listed if place["name"] in LISTING_COMMANDS else []:
-            found.append(token)
-            if cwd and not token.startswith(("/", "~", "-", "$")):
-                found.append(posixpath.normpath(cwd + "/" + token))
+        for run in place["runs"]:
+            cwd = run["cwd"]
+            if cwd:
+                found.append(cwd)
+            for token in run["paths"] if place["name"] in LISTING_COMMANDS else []:
+                found.append(token)
+                if cwd and not token.startswith(("/", "~", "-", "$")):
+                    found.append(posixpath.normpath(cwd + "/" + token))
     return list(dict.fromkeys(found))
 
 
@@ -8735,7 +8780,7 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
     for call in bash_calls(lines):
         command = call["command"][:300]
         command_hits = [(form, grade, rule)
-                        for form, grade in shell_name_grades(call["command"])
+                        for form, grade in shell_name_grades(call["command"], blinding.hit)
                         for rule in [blinding.hit(form)] if rule]
         evident_hits = [hit for hit in command_hits if hit[1] == ACCESS]
         if evident_hits:

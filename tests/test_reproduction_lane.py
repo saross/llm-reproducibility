@@ -1935,7 +1935,8 @@ class AuditTests(unittest.TestCase):
         def evident(command: str) -> list[str]:
             blind = lane.Blinding({"blinding": {"forbidden_substrings":
                                                 ["reproduction/attempt-04"]}}, "a-2024")
-            return [f for f, e in lane.shell_names(command) if e and blind.hit(f)][:1]
+            return [f for f, g in lane.shell_name_grades(command, blind.hit)
+                    if g == lane.ACCESS and blind.hit(f)][:1]
         self.assertEqual(evident("cd /repo; (cd reproduction && pwd); cat attempt-04/plan.json"),
                          [])
         self.assertEqual(evident("cd /repo/reproduction; (cd /tmp && pwd); "
@@ -1961,14 +1962,15 @@ class AuditTests(unittest.TestCase):
                                             ["reproduction/attempt-04"]}}, "a-2024")
 
         def tier(command: str) -> str:
-            hits = [e for f, e in lane.shell_names(command) if blind.hit(f)]
-            return "access" if any(hits) else "warning" if hits else "none"
+            return self.tier(command, ["reproduction/attempt-04"])
         for command in ("[ -d reproduction ] && cd reproduction; cat attempt-04/plan.json",
-                        "cd /r/reproduction || true; cat attempt-04/plan.json",
-                        "cd /r/reproduction && cat attempt-04/plan.json)"):
+                        "cd /r/reproduction && cat attempt-04/plan.json)",
+                        "cd /r/reproduction; cd /tmp || cat attempt-04/plan.json"):
             self.assertEqual(tier(command), "warning", command)
+        # cd is assumed to succeed, so the || branch never runs.
         for command in ("[ -d /r/reproduction ] && cd /r/reproduction && cat attempt-04/x",
                         "cd /r/reproduction || exit 1; cat attempt-04/plan.json",
+                        "cd /r/reproduction || true; cat attempt-04/plan.json",
                         "cd /r/reproduction; cat attempt-04/plan.json"):
             self.assertEqual(tier(command), "access", command)
 
@@ -1977,26 +1979,41 @@ class AuditTests(unittest.TestCase):
         """How the scan grades a command: a blinded access, a warning, or
         nothing."""
         blind = lane.Blinding({"blinding": {"forbidden_substrings": forbidden}}, "a-2024")
-        hits = [e for f, e in lane.shell_names(command) if blind.hit(f)]
-        return "access" if any(hits) else "warning" if hits else "none"
+        hits = [g for f, g in lane.shell_name_grades(command, blind.hit) if blind.hit(f)]
+        return ("access" if lane.ACCESS in hits else "warning" if hits else "none")
 
     def test_a_branch_the_shell_may_skip_leaves_its_location_uncertain(self):
-        """Astra's re-check of PR #14, R1, confirmed with real Bash: a cd or
-        an assignment reached through || or after another command's && may
-        not run, so what it would place is a warning, never an access."""
+        """Astra's re-checks of PR #14 (R1 at b23ef4f, and at b2c9586), each
+        case confirmed with real Bash: a command after && runs only where the
+        last status is success, one after || only where it is failure, and a
+        skipped branch leaves the state Bash kept. The walk follows every
+        possible state; a read in all of them is an access, in some a
+        warning. true, :, and false have known statuses."""
         blinded = ["reproduction/attempt-04"]
-        for command in ("cd /repo; true || cd reproduction && cat attempt-04/plan.json",
-                        "cd /repo; false || cd reproduction && cat attempt-04/plan.json",
-                        "D=safe; false && D=reproduction; cd $D; cat attempt-04/plan.json",
-                        'D=safe; false && D=reproduction; cd "$D"; cat attempt-04/plan.json',
-                        "D=safe; true && D=reproduction; cd $D; cat attempt-04/plan.json"):
-            self.assertEqual(self.tier(command, blinded), "warning", command)
-        for command in ("D=/r/reproduction; cd $D && cat attempt-04/plan.json",
-                        "D=/r/reproduction && cd $D && cat attempt-04/plan.json"):
-            self.assertEqual(self.tier(command, blinded), "access", command)
-        # An assignment from a command substitution is forgotten, not left stale.
-        self.assertEqual(self.tier("D=reproduction; D=$(pwd); cd $D; cat attempt-04/plan.json",
-                                   blinded), "none")
+        cases = {
+            # Her chain fixtures: Bash read SAFE where "none", BLINDED where "access".
+            "D=safe; false && X=1 && D=reproduction; cd $D; cat attempt-04/plan.json": "none",
+            "D=safe; true && X=1 && D=reproduction; cd $D; cat attempt-04/plan.json": "access",
+            "false && X=1 && cd reproduction; cat attempt-04/plan.json": "none",
+            "true && X=1 && cd reproduction; cat attempt-04/plan.json": "access",
+            "D=safe; false && D=other && D=reproduction; cd $D; cat attempt-04/plan.json": "none",
+            "D=reproduction; cd $D; cat attempt-04/plan.json": "access",
+            "D=reproduction; false && D=safe; cd $D; cat attempt-04/plan.json": "access",
+            "cd reproduction; true || cd ../safe; cat attempt-04/plan.json": "access",
+            # Her R1 cases at b23ef4f.
+            "true || cd reproduction && cat attempt-04/plan.json": "none",
+            "false || cd reproduction && cat attempt-04/plan.json": "access",
+            'D=safe; false && D=reproduction; cd "$D"; cat attempt-04/plan.json': "none",
+            # The same shapes after a command of unknown status.
+            "test -d x && X=1 && cd reproduction; cat attempt-04/plan.json": "warning",
+            "D=reproduction; test -d x && D=safe; cd $D; cat attempt-04/plan.json": "warning",
+            "test -d x || cd reproduction && cat attempt-04/plan.json": "warning",
+            "D=/r/reproduction && cd $D && cat attempt-04/plan.json": "access",
+            # An assignment from a command substitution is unknown, not stale.
+            "D=reproduction; D=$(pwd); cd $D; cat attempt-04/plan.json": "none",
+        }
+        for command, grade in cases.items():
+            self.assertEqual(self.tier("cd /fx; " + command, blinded), grade, command)
 
     def test_a_possible_read_says_so(self):
         """A side agent's note on the re-check: a warning on a path argument
@@ -2005,7 +2022,7 @@ class AuditTests(unittest.TestCase):
         transcript; a pattern's says it may be a pattern."""
         blinding = self.bash_audit(
             ["reproduction/attempt-04", "lodged-rules.yaml"],
-            ("cd /repo; false || cd reproduction && cat attempt-04/plan.json", "BLINDED"),
+            ("cd /repo; test -d x || cd reproduction && cat attempt-04/plan.json", "BLINDED"),
             ('cat "${F:-lodged-rules.yaml}"', "BLINDED"),
             ("grep -rn lodged-rules.yaml .", ""))
         self.assertEqual(blinding["contaminating"], [])
@@ -2042,7 +2059,7 @@ class AuditTests(unittest.TestCase):
         for command in ("ls -I wiki .", "ls -lI wiki .", "ls -Iwiki .", "ls -lIwiki .",
                         "ls --ignore wiki .", "ls --ignore=wiki ."):
             places = lane.shell_places(command)
-            self.assertEqual(places[0]["paths"], ["."], command)
+            self.assertEqual(places[0]["runs"][0]["paths"], ["."], command)
         cases = {"head -n20 a.R": ["a.R"], "head -n 20 a.R": ["a.R"], "tail -20 a.R": ["a.R"],
                  "grep -A 3 pat f1 f2": ["f1", "f2"], "grep -e pat f1": ["f1"],
                  "grep -rniepat f1": ["f1"], "grep -rn pat f1": ["f1"],
@@ -2051,7 +2068,8 @@ class AuditTests(unittest.TestCase):
                  "file -f names.txt": ["names.txt"], "cat -- -x": ["-x"],
                  "printf '%s' f1": [], "echo wiki": []}
         for command, paths in cases.items():
-            self.assertEqual(lane.shell_places(command)[0]["paths"], paths, command)
+            self.assertEqual(lane.shell_places(command)[0]["runs"][0]["paths"], paths,
+                             command)
 
     def test_bare_names_in_a_listing_are_noted_without_a_ruling(self):
         """Shawn, 2026-10-30, after his 2026-10-21 ruling on the pilot's ls of

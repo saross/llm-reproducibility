@@ -212,10 +212,15 @@ configuration (for the shakedown:
   literal text, a path under an uncertain directory, or an argument whose
   expansion the walk cannot resolve (`"${F:-x}"`, `"$(...)"`, a variable set
   in a branch that may not run), is a warning for human review (Shawn,
-  2026-10-30, refined by role after Astra's review and re-check). The walk
-  keeps a subshell's and a command substitution's directory and variables
-  to themselves, and treats a `cd` or an assignment reached through `||`,
-  or after another command's `&&`, as possibly skipped. Blinded paths named in command output are
+  2026-10-30, refined by role after Astra's review and re-checks). The walk
+  follows every state the shell can be in (its directory, its variables,
+  and the last command's status): a command after `&&` or `||` runs only
+  in the states where it would, `cd` and assignments are assumed to
+  succeed, `true`, `:`, and `false` have known statuses, and any other
+  command may do either. A match is an access when the command reads a
+  blinded path in every state it runs in, and a warning ("possibly a
+  blinded read") when in only some. A subshell or command substitution
+  keeps its directory and variables to itself. Blinded paths named in command output are
   warnings for human review; blinded names listed bare in output (an `ls`
   of a parent directory) are recorded in the audit, with no ruling (Shawn,
   2026-10-30). Not detected: a recursive read of a blinded directory's
