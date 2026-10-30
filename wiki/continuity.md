@@ -106,9 +106,17 @@ merged here as PR #1).
         "file name with an extension" leg. Her probes, run from a copy at
         `1b93991`, give the intended results; parity holds (1,152 cases).
         PR comment posted with Shawn's approval (issuecomment-6514208269).
-      - [ ] **Astra's re-check at `b23ef4f`**: the reply is
-        `astra-reply-pr14-closure.md` in session 789afcf9's scratchpad,
-        for Shawn to paste; file both in agent mail once on amd-tower.
+      - [x] 2026-10-30 **Astra's re-check at `b23ef4f`** (pasted by
+        Shawn): the exemption and option findings closed; three residual
+        false blocks (R1, a `cd` or assignment in a branch Bash may skip;
+        R2, awk `name=value` operands; R3, unresolved expansions such as
+        `"${F:-x}"`), all closed in `774bddf`, regression test `b2c9586`.
+        Her unmodified harness passes at `774bddf` (nine tests, 1,152
+        parity cases, original and residual Bash fixtures); 778 pass.
+      - [ ] **Astra's second re-check at `b2c9586`**: the reply is
+        `astra-reply-pr14-recheck.md` in session 789afcf9's scratchpad,
+        for Shawn to paste; file it, the first closure reply, and both her
+        reviews in agent mail once on amd-tower.
     - [ ] **The review-only mode: PR #15 open** (session 789afcf9, branch
       `feat/review-only-mode`, `c601fe3` and `d02e75b`; lane v1.8, run
       audit 1.2, `reproduction-review.workflow.js` v1.0). Shawn's choices
