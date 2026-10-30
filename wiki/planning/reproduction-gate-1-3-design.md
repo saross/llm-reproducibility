@@ -286,6 +286,111 @@ state, a fresh reviewer identity and audit, and the retry and
 changed-comparison tests. No executor spawn is needed. Each pilot is
 separately approved at the API gate, after these fixes are re-checked.
 
+**The review-only mode as designed (2026-10-30, branch
+`feat/review-only-mode`).** Shawn's choices of 2026-10-30: the pilot reviews
+a labelled copy of attempt 04, so attempt 04's 13/18, its review, and its
+rulings stay untouched; and the fresh reviewer reads a staged copy holding
+only the reviewed files and the gate report, never the attempt with the old
+review blinded by name (a search over the folder would return the old
+review's text and make the reviewer unclean). The mode is built to replace a
+review of record, and the pilot's copy exercises that path.
+
+- **What it re-reviews.** Only an attempt still exactly as its executor's
+  run handed it to its first reviewer: the attempt's artefact state must
+  equal the reviewed state its run audit recorded. Shawn ruled on
+  2026-10-13 that corrections go into new attempts, so a changed comparison
+  is refused, not reviewed into clearance. This is the "changed comparison"
+  test, at args-building and again at admission.
+- **The executor binding.** The persisted `execution-report.json` names the
+  executor result (its run, workflow run, agent, payload digest, and launch
+  commit). The attempt's run audit must have cleared exactly that result,
+  clean, or the mode refuses. No executor is spawned.
+- **Configuration.** A run configuration states `mode: review-only` (the
+  default is `execute`); `build-review-args` refuses any other, and
+  `build-exec-args` refuses it.
+- **The workflow** (`reproduction-review.workflow.js` v1.0). Per paper, a
+  mechanical gate step runs `check-attempt` with the executor's launch
+  commit (the sealed run records are checked against it, line 3631), then
+  `stage-review`, which copies the attempt's reviewable state and its gate
+  report into a scratch folder, checks the copy's digest against the
+  attempt's, and prints it, so the harness records the fresh reviewed state
+  as the execute workflow's gate step does. The reviewer then reads only
+  the copy, told that the executor's and the earlier reviewer's records are
+  withheld by design.
+- **Run audit 1.2.** Each role's entry records its own run, workflow run,
+  and launch commit. In review-only mode the executor's entry is carried
+  from the attempt's previous run audit, only if that audit cleared the
+  bound executor for the state as it stands; the previous audit moves to
+  `superseded/<workflow run>/`. The reviewed state is the review run's.
+  Audits at 1.1, where both roles share one workflow run, are still read,
+  so attempt 04's record stands.
+- **Persistence and adjudication.** `persist-results` in review-only mode
+  persists only the reviewer, binding the executor from its record; a
+  review of record from another workflow run, and the adjudicated result
+  derived from it, move to `superseded/<workflow run>/`. Admission binds
+  each role to its own run. `adjudicate` no longer requires one workflow
+  run for both roles, since admission now enforces each binding, and it
+  names the review's run only when it differs, so existing results
+  re-derive unchanged. `superseded/` is excluded from the artefact state.
+- **Never inherited.** The new review's concerns, method rows, and verdict
+  flag are new issues with new fingerprints and need new rulings; gate
+  issues whose fingerprints are unchanged keep theirs. A retried reviewer
+  (two results in one run) is refused as today; a second review-only run,
+  or a payload changed after its audit, cannot use another run's clearance.
+- **Blinding the withheld records.** The reviewer is pointed at the copy,
+  but the attempt directory is still reachable, and blinding is
+  instruction plus detection. In review-only mode the lane therefore adds
+  each attempt's withheld records (the post-review files but the gate
+  report, and `superseded/`) to the blinded substrings, in the prompt and
+  in `audit-run` alike. The gate step names none of them.
+- **Found while building it: re-gating an adjudicated attempt failed.**
+  `DOCUMENT_NAMES`, the lane records the input-tree check exempts, never
+  gained `adjudicated-result.json` when gate 1.3.2 added it, so
+  `check-attempt` on attempt 04 now fails with "input tree added
+  adjudicated-result.json after the final run run-05 started". Added, with
+  `superseded/`. Re-gated at 1.3.2 (on a copy, without the image), attempt
+  04 passes with its 1.3.1 issues' ids and fingerprints unchanged, less
+  `method-adherence:targets`, which gate 1.3.2 retired; its existing
+  rulings therefore carry, and the v1.4 reviewer's rows take the retired
+  obligation's place.
+- **Astra's review of PR #15 (2026-10-30, at `d02e75b`): changes
+  requested, four findings, closed on the branch.**
+  - **F1, the executor's cleared state relabelled.** A review audit that
+    recorded another state carried the executor forward, and the next
+    review-only audit took that state as the executor's. The cleared
+    state is now set once, from the executor's own run, and carried
+    unchanged; admission also requires the reviewed state to equal it.
+  - **F2, a fresh reviewer inherited rulings.** Identical review content
+    from another run kept its fingerprints. In review-only mode the
+    reviewer's issues, and the review run's launch message, are
+    fingerprinted with the review's identity (run, workflow run, agent);
+    a re-audit of the same run keeps its rulings, and the executor's and
+    the gate's issues keep theirs.
+  - **F3, the staged copy unchecked.** Admission compared the printed
+    digest with the attempt, never with the copy. The reviewed state now
+    comes only from a successful `stage-review` record in the gate
+    agent's transcript (never a `check-attempt` digest), and `audit-run`
+    re-hashes the copy and its gate report and checks that the reviewer's
+    prompt (`Review copy:`) named it; admission needs that verification.
+    So audit a review-only run before clearing its scratch folder.
+  - **F4, an ineligible executor record.** Review-only persistence never
+    re-persists the executor, and adjudication needs its record persisted
+    eligible, so `build-review-args` now refuses an ineligible one before
+    any spend.
+  - Her other answers: the per-role binding, re-gating with the
+    executor's launch commit, the `DOCUMENT_NAMES` exclusions (attempt
+    04's 22-file input inventory equals run-05's sealed pre-inventory),
+    and the automatic blinding are sound; the pilot must still blind the
+    original attempt 04; and a trial merge with PR #14 conflicts only in
+    the lane header, keeping both the automatic withholding and #14's
+    exemption fix, to be tested together once #14 lands.
+- **The pilot** is a separate step, with its own configuration, labelled
+  copy, blinding list (the original attempt 04 is blinded; the copy's
+  withheld records are never handed over), pre-run review, and API gate.
+  It launches from a fresh session, because the change adds a workflow
+  script (the paid-run rule in `docs/agent-guidance.md`), and on a machine
+  holding attempt 04's image.
+
 **Operational follow-ups, as separate PRs outside the gate's review**
 (Fable's placement; Astra's test requirements kept):
 
