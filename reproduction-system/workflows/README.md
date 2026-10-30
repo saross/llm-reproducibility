@@ -202,7 +202,9 @@ follow the main runbook, with these differences:
    `venv/bin/python scripts/reproduction-lane.py build-review-args --config $CFG --scratch-root $SCRATCH --out $SCRATCH/review-args.json`
    binds each attempt's executor result (its run, workflow run, agent,
    payload digest, and launch commit) and names a fresh review folder
-   under the scratch root.
+   under the scratch root. It refuses an executor record persisted
+   ineligible: finish that run's rulings and its `persist-results --force`
+   first.
 2. **API gate**, then run the workflow as in step 4. Launch from a fresh
    session after any change to agent definitions, hooks, or workflow
    scripts.
@@ -210,17 +212,23 @@ follow the main runbook, with these differences:
    **executor's** launch commit, since the sealed run records are checked
    against it, and then `stage-review <attempt> --to <review folder>`.
    That copies the reviewable state and the gate report, checks the copy's
-   digest against the attempt's, and prints it, so the harness records the
-   state the reviewer was handed. The reviewer reads only the copy. The
-   executor's report, the earlier review, the rulings, the audits, and the
+   digest against the attempt's, and prints the staging record, so the
+   harness records the copy the reviewer was handed. The reviewer reads
+   only the copy, named in its prompt as `Review copy:`. The executor's
+   report, the earlier review, the rulings, the audits, and the
    adjudicated result are withheld.
 4. **Authoritative gate** as in step 10, with the executor's launch commit.
-5. **Audit** as in step 11. The run audit (1.2) carries the executor's
-   clearance from the attempt's earlier run audit, which moves to
-   `superseded/<its workflow run>/`. The reviewed state is this run's.
+5. **Audit** as in step 11, **before clearing the scratch folder**. The run
+   audit (1.2) carries the executor's clearance from the attempt's earlier
+   run audit, which moves to `superseded/<its workflow run>/`. The reviewed
+   state is the successful staging record's, never a `check-attempt`
+   digest, and the audit re-hashes the staged copy and its gate report and
+   checks the reviewer was handed that copy; admission needs it verified.
 6. **Human queue** and **rulings** as in steps 12 and 13. The new review's
    concerns, method rows, and verdict flag are new issues and need new
-   rulings; gate issues whose fingerprints are unchanged keep theirs.
+   rulings, even where their content repeats an earlier review's, since
+   they are fingerprinted with this review's identity; the executor's
+   issues and gate issues whose fingerprints are unchanged keep theirs.
 7. **Persist results** as in step 14. Only the review is persisted. The
    review it replaces, and the adjudicated result derived from that
    review, move to `superseded/<their workflow run>/`. Admission binds the

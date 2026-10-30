@@ -353,6 +353,37 @@ review of record, and the pilot's copy exercises that path.
   `method-adherence:targets`, which gate 1.3.2 retired; its existing
   rulings therefore carry, and the v1.4 reviewer's rows take the retired
   obligation's place.
+- **Astra's review of PR #15 (2026-10-30, at `d02e75b`): changes
+  requested, four findings, closed on the branch.**
+  - **F1, the executor's cleared state relabelled.** A review audit that
+    recorded another state carried the executor forward, and the next
+    review-only audit took that state as the executor's. The cleared
+    state is now set once, from the executor's own run, and carried
+    unchanged; admission also requires the reviewed state to equal it.
+  - **F2, a fresh reviewer inherited rulings.** Identical review content
+    from another run kept its fingerprints. In review-only mode the
+    reviewer's issues, and the review run's launch message, are
+    fingerprinted with the review's identity (run, workflow run, agent);
+    a re-audit of the same run keeps its rulings, and the executor's and
+    the gate's issues keep theirs.
+  - **F3, the staged copy unchecked.** Admission compared the printed
+    digest with the attempt, never with the copy. The reviewed state now
+    comes only from a successful `stage-review` record in the gate
+    agent's transcript (never a `check-attempt` digest), and `audit-run`
+    re-hashes the copy and its gate report and checks that the reviewer's
+    prompt (`Review copy:`) named it; admission needs that verification.
+    So audit a review-only run before clearing its scratch folder.
+  - **F4, an ineligible executor record.** Review-only persistence never
+    re-persists the executor, and adjudication needs its record persisted
+    eligible, so `build-review-args` now refuses an ineligible one before
+    any spend.
+  - Her other answers: the per-role binding, re-gating with the
+    executor's launch commit, the `DOCUMENT_NAMES` exclusions (attempt
+    04's 22-file input inventory equals run-05's sealed pre-inventory),
+    and the automatic blinding are sound; the pilot must still blind the
+    original attempt 04; and a trial merge with PR #14 conflicts only in
+    the lane header, keeping both the automatic withholding and #14's
+    exemption fix, to be tested together once #14 lands.
 - **The pilot** is a separate step, with its own configuration, labelled
   copy, blinding list (the original attempt 04 is blinded; the copy's
   withheld records are never handed over), pre-run review, and API gate.
