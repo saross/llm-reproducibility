@@ -10,11 +10,16 @@ judged only path-like tokens, so a blinded file read by its bare name
 blinded name in a listing raised nothing. Every token is now judged, also
 under the directory a ``cd`` earlier in the command moved to, and the
 operands of ``ls``, ``cat``, ``cd``, and the like are judged as
-directories too. Shawn's tiering (2026-10-30): a match in a command is a
-blinded access only when its word is evidently a path, and otherwise a
-warning to rule on; a name listed bare in output is recorded, with no
-ruling. Nothing scan 1.0 caught is judged more leniently, and the run
-audit's format is unchanged (``RUN_AUDIT_VERSION`` 1.1).
+directories too. Shawn's tiering (2026-10-30), refined by role after
+Astra's review of PR #14: a match in a command is a blinded access when
+scan 1.0 would have found it, or when its word is a path argument at a
+location the walk is sure of, and otherwise a warning to rule on; a name
+listed bare in output is recorded, with no ruling. The walk keeps the
+directory and variables of a subshell or command substitution to itself,
+reads value-taking options in every form, and judges the harness-file
+exemption on the file each form names. Nothing scan 1.0 caught is judged
+more leniently, and the run audit's format is unchanged
+(``RUN_AUDIT_VERSION`` 1.1).
 
 v1.6 (2026-10-18) is gate 1.3.2, criterion 1 (the design's opening note):
 every issue states its scope (``targets`` or ``paper``), and a target
@@ -8217,26 +8222,35 @@ def own_spill_files(lines: list[str]) -> set[str]:
     return spills
 
 
-def path_tokens(text: str) -> list[str]:
-    """Path-like tokens in shell text (URLs excluded).
+def path_like(token: str) -> bool:
+    """Whether scan 1.0 judged a token: it holds a ``/`` or ends in
+    ``.json``, ``.md``, or ``.csv``, and is no URL."""
+    return bool(token) and "://" not in token and (
+        "/" in token or token.endswith((".json", ".md", ".csv")))
 
-    The launch-message scan's filter. Bash commands and their output are
-    judged by ``shell_names`` and ``name_forms``, which keep bare names.
+
+def path_tokens(text: str) -> list[str]:
+    """Path-like tokens in shell text (URLs excluded): scan 1.0's filter.
+
+    The launch-message scan's filter, and the tier of a Bash command's
+    tokens that scan 1.1 judges as 1.0 did. Commands and their output are
+    otherwise judged by ``shell_names`` and ``name_forms``.
     """
-    return [t for t in SHELL_SPLIT_RE.split(text)
-            if t and "://" not in t and ("/" in t or t.endswith((".json", ".md", ".csv")))]
+    return [t for t in SHELL_SPLIT_RE.split(text) if path_like(t)]
 
 
 # Version 1.0 judged only path_tokens, so a file named bare after a cd went
 # unjudged and a bare name in a listing raised nothing (the gate 1.3.2
 # planner pilot, results F4). Version 1.1 judges every token, tiered by
-# Shawn (2026-10-30): a match in a command is a blinded access only when
-# the word is evidently a path, and otherwise a warning to rule; a name
-# listed bare in output is recorded, with no ruling. Nothing 1.0 caught is
-# judged more leniently. The audit record carries this version.
+# Shawn (2026-10-30) and refined by role after Astra's review of PR #14: a
+# match in a command is a blinded access when scan 1.0 would have found it,
+# or when the word is a path argument (of ls, cat, cd, and the like, or a
+# file argument of grep, sed, or awk) at a certain location; any other
+# match, such as a pattern, an option's value, or literal text, is a
+# warning to rule. A name listed bare in output is recorded, with no
+# ruling. Nothing 1.0 caught is judged more leniently. The audit record
+# carries this version.
 BLINDING_SCAN_VERSION = "1.1"
-# A bare word with a file extension names a file (lodged-rules.yaml, S1.xlsx).
-FILE_NAME_RE = re.compile(r"[^/]*\.[A-Za-z0-9]{1,10}")
 
 
 def name_forms(token: str, directories: Iterable[str] = ()) -> list[str]:
@@ -8256,7 +8270,8 @@ def name_forms(token: str, directories: Iterable[str] = ()) -> list[str]:
         directories: Directories the token may be relative to.
 
     Returns:
-        The forms, empty for an empty token or a URL.
+        The forms, the token as written first; empty for an empty token or
+        a URL.
     """
     if not token or "://" in token:
         return []
@@ -8272,25 +8287,67 @@ def name_forms(token: str, directories: Iterable[str] = ()) -> list[str]:
 
 
 # Commands whose every operand is a path, so that ``ls wiki`` is judged as
-# the directory ``wiki/``. Not grep, sed, or awk, whose first operand is a
-# pattern or a program. For find, only the starting points before its
+# the directory ``wiki/``. For find, only the starting points before its
 # expression (``-name wiki`` is a pattern, ``-exec`` a command).
 PATH_OPERAND_COMMANDS = frozenset({"cd", "pushd", "ls", "tree", "find", "du", "stat", "file",
                                    "cat", "head", "tail", "less", "more", "wc"})
-# Their options that take the next word as a count, format, or pattern, so
-# that word is no operand: the pattern in ``ls -I wiki`` hides wiki.
-VALUE_OPTIONS = {"head": {"-n", "-c"}, "tail": {"-n", "-c"},
-                 "ls": {"-I", "--ignore", "--hide", "-w", "--width", "-T", "--tabsize"},
-                 "tree": {"-L", "-I", "-P", "-o", "-H", "-T", "--filelimit", "--timefmt"},
-                 "du": {"-d", "--max-depth", "-B", "--block-size", "-t", "--threshold",
-                        "--exclude", "-X", "--exclude-from"},
-                 "stat": {"-c", "--format", "--printf"}, "file": {"-m", "--magic-file"}}
+# Commands that print the entries of the directories they are given, under
+# which their output's bare names are judged.
+LISTING_COMMANDS = frozenset({"ls", "tree", "find", "du"})
+# Commands whose first operand is a pattern or a program and whose other
+# operands are files, unless an option gives the pattern (``grep -e x f``).
+PATTERN_FIRST_COMMANDS = frozenset({"grep", "egrep", "fgrep", "rg", "sed", "awk", "gawk"})
+# Options that take a value, by command: (the short letters, the long
+# names, and the options that give the pattern). A value is the rest of a
+# short cluster, or the next word when its letter ends the cluster
+# (``ls -lI wiki``), or a long option's ``=`` part or next word. Values are
+# counts, formats, patterns, or programs, never path operands (Astra's
+# review of PR #14, P2-3). ``file -f`` is not one: it reads its names from
+# that file, which is a path.
+VALUE_OPTIONS: dict[str, tuple[str, frozenset[str], frozenset[str]]] = {
+    "head": ("nc", frozenset({"--lines", "--bytes"}), frozenset()),
+    "tail": ("nc", frozenset({"--lines", "--bytes", "--pid", "--sleep-interval",
+                              "--max-unchanged-stats"}), frozenset()),
+    "ls": ("IwT", frozenset({"--ignore", "--hide", "--width", "--tabsize", "--format", "--sort",
+                             "--time", "--block-size", "--quoting-style", "--indicator-style",
+                             "--time-style"}), frozenset()),
+    "tree": ("LIPoHT", frozenset({"--filelimit", "--timefmt", "--charset"}), frozenset()),
+    "du": ("dBtX", frozenset({"--max-depth", "--block-size", "--threshold", "--exclude",
+                              "--exclude-from", "--time-style"}), frozenset()),
+    "stat": ("c", frozenset({"--format", "--printf"}), frozenset()),
+    "file": ("mF", frozenset({"--magic-file", "--separator"}), frozenset()),
+    "grep": ("efmABCdD", frozenset({"--regexp", "--file", "--max-count", "--after-context",
+                                    "--before-context", "--context", "--include", "--exclude",
+                                    "--exclude-dir", "--exclude-from", "--binary-files",
+                                    "--devices", "--directories", "--label"}),
+             frozenset({"-e", "-f", "--regexp", "--file"})),
+    "rg": ("efgtTmABCjMrE", frozenset({"--regexp", "--file", "--glob", "--iglob", "--type",
+                                       "--type-not", "--max-count", "--after-context",
+                                       "--before-context", "--context", "--threads",
+                                       "--max-columns", "--replace", "--encoding",
+                                       "--max-depth", "--sort", "--sortr"}),
+           frozenset({"-e", "-f", "--regexp", "--file"})),
+    "sed": ("efl", frozenset({"--expression", "--file", "--line-length"}),
+            frozenset({"-e", "-f", "--expression", "--file"})),
+    "awk": ("fvF", frozenset({"--file", "--assign", "--field-separator"}),
+            frozenset({"-f", "--file"})),
+}
+VALUE_OPTIONS["egrep"] = VALUE_OPTIONS["fgrep"] = VALUE_OPTIONS["grep"]
+VALUE_OPTIONS["gawk"] = VALUE_OPTIONS["awk"]
 
 
-def path_operands(name: str, given: list[str]) -> list[str]:
-    """The words after a ``PATH_OPERAND_COMMANDS`` command that are paths:
-    not its options or their values, and for find only the starting points
-    (past -H, -L, -P, -D, and -O, up to the first word of its expression)."""
+def path_arguments(name: str, given: list[str]) -> list[str]:
+    """The words after a command that it takes as paths.
+
+    Every operand of a ``PATH_OPERAND_COMMANDS`` command (for find, only
+    its starting points, past -H, -L, -P, -D, and -O, up to the first word
+    of its expression), and every operand but the pattern of a
+    ``PATTERN_FIRST_COMMANDS`` command, whose first operand is the pattern
+    unless an option gives it. Options and their values (``VALUE_OPTIONS``)
+    are never paths; words after ``--`` always are. Any other command takes
+    no path arguments here, and its words are judged as text (Astra's
+    review of PR #14, P2-4).
+    """
     if name == "find":
         words = list(given)
         while words and re.fullmatch(r"-[HLP]|-D\S*|-O\d*", words[0]):
@@ -8301,137 +8358,223 @@ def path_operands(name: str, given: list[str]) -> list[str]:
                 break
             points.append(word)
         return points
-    takes_value = VALUE_OPTIONS.get(name, set())
+    if name not in PATH_OPERAND_COMMANDS and name not in PATTERN_FIRST_COMMANDS:
+        return []
+    letters, longs, gives_pattern = VALUE_OPTIONS.get(name, ("", frozenset(), frozenset()))
     operands: list[str] = []
-    skip = False
+    pattern_given = skip = ended = False
     for word in given:
         if skip:
             skip = False
-        elif word == "-" or not word.startswith("-"):
+        elif ended or word == "-" or not word.startswith("-"):
             operands.append(word)
+        elif word == "--":
+            ended = True
+        elif word.startswith("--"):
+            option = word.split("=", 1)[0]
+            pattern_given |= option in gives_pattern
+            skip = option in longs and "=" not in word
         else:
-            skip = word in takes_value
+            # A short cluster: flags, up to a letter that takes a value.
+            for k, letter in enumerate(word[1:], start=1):
+                if letter in letters:
+                    pattern_given |= f"-{letter}" in gives_pattern
+                    skip = k == len(word) - 1
+                    break
+    if name in PATTERN_FIRST_COMMANDS and not pattern_given:
+        operands = operands[1:]
     return operands
 
 
-def unbracket(segment: str) -> str:
-    """A segment without the unbalanced brackets of a subshell or group
-    around it, as in ``(cd x && ls y)``; ``$(pwd)`` and ``${D}`` are
-    balanced and stay."""
+def unbracket(segment: str) -> tuple[str, int, int]:
+    """A segment without the brackets of a subshell or group around its
+    command, as in ``(cd x && ls y)``, with the subshells it opens before
+    its command and the parentheses the rest leaves open (positive) or
+    closes (negative). An open ``$(`` counts, since a command substitution
+    is a subshell; ``$(pwd)``, ``${D}``, and ``(( n ))`` are balanced and
+    stay. Quoted brackets are not counted.
+
+    Returns:
+        ``(command text, subshells opened before it, net parentheses)``.
+    """
     text = segment.strip()
-    for opener, closer in (("(", ")"), ("{", "}")):
-        while text.startswith(opener) and text.count(opener) > text.count(closer):
+    opened = 0
+    while True:
+        if text.startswith("(") and not text.startswith("(("):
+            text, opened = text[1:].lstrip(), opened + 1
+        elif re.match(r"\{\s", text):
             text = text[1:].lstrip()
-        while text.endswith(closer) and text.count(closer) > text.count(opener):
-            text = text[:-1].rstrip()
-    return text
+        else:
+            break
+    masked = mask_quoted(text)
+    net = masked.count("(") - masked.count(")")
+    body = text
+    while body and body[-1] in ")}":
+        closer = body[-1]
+        shown = mask_quoted(body)
+        if shown.count(closer) <= shown.count("(" if closer == ")" else "{"):
+            break
+        body = body[:-1].rstrip()
+    return body, opened, net
 
 
 def shell_places(command: str) -> list[dict]:
     """Each segment of a shell command, its variables expanded, with the
-    directory an earlier ``cd`` in the same command moved it to.
+    directory an earlier ``cd`` in the same command moved it to and whether
+    that location is certain.
 
     The walk is the write-provenance scan's (``scan_shell``): assignments
     are followed, so ``D=out/x; cd $D`` is placed; heredoc bodies are left
     out; and the directory starts unknown at each call, since a subagent's
-    ``cd`` does not carry to its next call. A ``cd`` from that unknown
-    start leaves a relative directory, under which a blinded substring can
-    still be met. A ``cd`` inside ``( )`` is kept past the subshell, which
-    can only add names to judge.
+    ``cd`` does not carry to its next call. A ``cd`` from that unknown start
+    leaves a relative directory, under which a blinded substring can still
+    be met.
+
+    Scopes follow the shell (Astra's review of PR #14, P1-2): a subshell or
+    a command substitution keeps its own directory and variables, restored
+    when it closes, and a command in a pipeline runs in a subshell, so its
+    ``cd`` and assignments change nothing after it. Commands are assumed to
+    succeed. A location is uncertain where that cannot settle it: after a
+    ``cd`` that another command's success decided (``[ -d x ] && cd x``),
+    once its ``&&`` chain ends; after a ``cd x ||``, unless what follows the
+    ``||`` is ``exit`` or ``return``; after a ``cd`` to a
+    target the walk cannot resolve (a variable it did not see set, ``-``),
+    which leaves the directory unknown; and throughout a command whose
+    brackets do not balance.
 
     Returns:
-        ``[{"cwd", "segment", "operands"}]``: the directory in effect for
-        the segment (None before any ``cd``), the segment, and, when its
-        command is in ``PATH_OPERAND_COMMANDS``, its operands.
+        ``[{"cwd", "certain", "segment", "name", "paths"}]``: the directory in
+        effect for the segment (None while unknown), whether it is certain,
+        the segment, its command's name, and the words that command takes
+        as paths (``path_arguments``).
     """
     variables: dict[str, str] = {}
     cwd: str | None = None
+    certain, chained, balanced = True, False, True
+    stack: list[tuple[str | None, bool, bool, dict[str, str]]] = []
     places: list[dict] = []
     text, _ = split_heredocs(command)
-    for _, raw in shell_segments(mask_comments(text)):
-        segment = expand_variables(unbracket(raw), variables)
-        if not segment:
-            continue
-        words = shell_words(segment)
-        k, name = command_word(words)
-        assigned = words[:k] if k == len(words) else (
-            words[k + 1:] if name == "export" else [])
-        for word in assigned:
-            found = ASSIGNMENT_RE.fullmatch(word)
-            if found and "$(" not in found.group(2) and "`" not in found.group(2):
-                variables[found.group(1)] = found.group(2)
-        operands = (path_operands(name, words[k + 1:])
-                    if name in PATH_OPERAND_COMMANDS else [])
-        places.append({"cwd": cwd, "segment": segment, "operands": operands})
-        if name in ("cd", "pushd"):
-            target = operands[0] if operands else "~"
-            cwd = None if target == "-" else posixpath.normpath(
-                target if cwd is None or target.startswith(("/", "~")) else cwd + "/" + target)
+    text = mask_comments(text)
+    segments = shell_segments(text)
+    last = ""
+    for n, (offset, raw) in enumerate(segments):
+        before = (text[segments[n - 1][0] + len(segments[n - 1][1]):offset].strip()
+                  if n else "")
+        after = (text[offset + len(raw):segments[n + 1][0]].strip()
+                 if n + 1 < len(segments) else "")
+        body, opened, net = unbracket(raw)
+        for _ in range(opened):
+            stack.append((cwd, certain, chained, dict(variables)))
+        # A cd decided by another command's success holds only along the
+        # && chain that follows it.
+        if chained and before != "&&":
+            certain, chained = False, False
+        segment = expand_variables(body, variables)
+        if segment:
+            words = shell_words(segment)
+            k, name = command_word(words)
+            paths = path_arguments(name, words[k + 1:])
+            places.append({"cwd": cwd, "certain": certain, "segment": segment,
+                           "name": name, "paths": paths})
+            if "|" not in (before, after):
+                assigned = words[:k] if k == len(words) else (
+                    words[k + 1:] if name == "export" else [])
+                for word in assigned:
+                    found = ASSIGNMENT_RE.fullmatch(word)
+                    if found and "$(" not in found.group(2) and "`" not in found.group(2):
+                        variables[found.group(1)] = found.group(2)
+                if name in ("cd", "pushd"):
+                    target = paths[0] if paths else "~"
+                    if target == "-" or "$" in target or "`" in target:
+                        cwd, certain, chained = None, False, False
+                    else:
+                        absolute = target.startswith(("/", "~"))
+                        certain = absolute or cwd is None or certain
+                        cwd = posixpath.normpath(target if absolute or cwd is None
+                                                 else cwd + "/" + target)
+                        chained = before in ("&&", "||") and last not in ("cd", "pushd")
+                        rescue = (shell_words(unbracket(segments[n + 1][1])[0])
+                                  if n + 1 < len(segments) else [])
+                        if after == "||" and command_word(rescue)[1] not in ("exit", "return"):
+                            certain, chained = False, False
+            last = name
+        for _ in range(max(net, 0)):
+            stack.append((cwd, certain, chained, dict(variables)))
+        for _ in range(max(-net, 0)):
+            if not stack:
+                balanced = False
+                break
+            cwd, certain, chained, variables = stack.pop()
+    if stack or not balanced:
+        for place in places:
+            place["certain"] = False
     return places
 
 
 def shell_names(command: str) -> list[tuple[str, bool]]:
     """Every form of every name a Bash command could open, for the blinding
-    scan, each with whether its word is evidently a path.
+    scan, each with whether a match on it is a blinded access.
 
     Judged: each token of the command as written (heredoc bodies and
     comments included, as in scan 1.0), and each token of each segment,
     variables expanded, under the directory an earlier ``cd`` moved it to.
-    An operand of a command in ``PATH_OPERAND_COMMANDS`` is also judged as
-    a directory, with a trailing slash, so ``ls wiki`` meets ``wiki/``.
+    The tiers (Shawn, 2026-10-30, refined by role after Astra's review of
+    PR #14):
 
-    A word is evidently a path when it holds a ``/``, is such an operand,
-    or is a file name with an extension (``FILE_NAME_RE``); every word scan
-    1.0 judged is one. Any other word may be a search pattern, as
-    ``attempt-04`` is in ``cd …/reproduction && grep -r attempt-04 .``, so
-    its match is a warning to rule, not a blinded access (Shawn,
-    2026-10-30).
+    - a token scan 1.0 judged (``path_like``), as written, keeps 1.0's
+      evidence, whatever its role;
+    - a path argument (``path_arguments``) is evident as written,
+      normalised, as a directory (``ls wiki`` meets ``wiki/``), and placed
+      under a ``cd``'s directory when that location is certain;
+    - every other form is warning-grade: words in other roles (a pattern,
+      an option's value, literal text), and placed forms where the location
+      is uncertain.
 
     A read by bare name is judged, so ``cd …/reproduction-system && cat
     lodged-rules.yaml`` is caught, as ``cat reproduction-system/lodged-rules.yaml``
     always was. Not judged: a recursive read of a blinded directory's
-    parent (``grep -r x outputs/``), which only its output can show, and a
-    path built by command substitution.
+    parent (``grep -r x outputs/``), which only its output can show; a path
+    built by command substitution; and a ``cd`` in a heredoc fed to a shell.
 
     Returns:
         ``[(form, evident)]`` in the order judged, each form once; a form
-        reached by an evident word and another word is evident.
+        reached as evident by any word is evident.
     """
     names: dict[str, bool] = {}
 
-    def judge(token: str, around: list[str], operand: bool = False) -> None:
-        evident = operand or "/" in token or bool(FILE_NAME_RE.fullmatch(token))
-        forms = name_forms(token, around)
-        if operand:
-            forms += [form.rstrip("/") + "/" for form in forms]
+    def judge(forms: list[str], evident: bool) -> None:
         for form in forms:
             names[form] = names.get(form, False) or evident
 
     for token in SHELL_SPLIT_RE.split(command):
-        judge(token, [])
+        forms = name_forms(token)
+        judge(forms[:1], path_like(token))
+        judge(forms[1:], False)
     for place in shell_places(command):
         around = [place["cwd"]] if place["cwd"] else []
         for token in SHELL_SPLIT_RE.split(place["segment"]):
-            judge(token, around)
-        for operand in place["operands"]:
-            judge(operand, around, operand=True)
+            judge(name_forms(token, around), False)
+        for word in place["paths"]:
+            sure = name_forms(word, around if place["certain"] else [])
+            judge(sure + [form.rstrip("/") + "/" for form in sure], True)
+            judge(name_forms(word, around), False)
     return list(names.items())
 
 
 def shell_directories(command: str) -> list[str]:
     """Directories whose entries a command's output may name bare: each
-    directory a ``cd`` put it in, and each path or path operand it names
-    (placed under the ``cd`` too), so the ``attempt-04`` that
-    ``ls out/x/reproduction`` prints is judged as
-    ``out/x/reproduction/attempt-04``."""
+    directory a ``cd`` put it in, and each directory a listing command
+    (``LISTING_COMMANDS``) is given, placed under the ``cd`` too, so the
+    ``attempt-04`` that ``ls out/x/reproduction`` prints is judged as
+    ``out/x/reproduction/attempt-04``. A file a command reads is no
+    directory: joined under it, the words of its text would be judged as
+    paths inside it."""
     found: list[str] = []
     for place in shell_places(command):
         cwd = place["cwd"]
         if cwd:
             found.append(cwd)
-        paths = [t for t in SHELL_SPLIT_RE.split(place["segment"])
-                 if "/" in t and "://" not in t]
-        for token in paths + place["operands"]:
+        for token in place["paths"] if place["name"] in LISTING_COMMANDS else []:
             found.append(token)
             if cwd and not token.startswith(("/", "~", "-", "$")):
                 found.append(posixpath.normpath(cwd + "/" + token))
@@ -8449,8 +8592,13 @@ class Blinding:
         self.others = [s for s in blinding.get("cross_paper_slugs") or [] if s != own_slug]
 
     def hit(self, path: str) -> str | None:
-        """The rule a path breaks, or None when it is in scope."""
-        if self.exempt and self.exempt.search(path):
+        """The rule a path breaks, or None when it is in scope.
+
+        The exemption is judged on the file a form names, so the directory
+        form the scan generates (a trailing slash) cannot escape a pattern
+        anchored at the file name (Astra's review of PR #14, P1-1).
+        """
+        if self.exempt and self.exempt.search(path.rstrip("/") or path):
             return None
         for substring in self.forbidden:
             if substring in path:
