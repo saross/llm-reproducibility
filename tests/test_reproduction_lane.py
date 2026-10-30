@@ -1978,7 +1978,8 @@ class AuditTests(unittest.TestCase):
             self.assertEqual(places[0]["paths"], ["."], command)
         cases = {"head -n20 a.R": ["a.R"], "head -n 20 a.R": ["a.R"], "tail -20 a.R": ["a.R"],
                  "grep -A 3 pat f1 f2": ["f1", "f2"], "grep -e pat f1": ["f1"],
-                 "grep -rniepat f1": ["f1"], "grep -rn pat f1": ["f1"], "sed -n 1,5p f1": ["f1"], "sed -e s/a/b/ f1": ["f1"],
+                 "grep -rniepat f1": ["f1"], "grep -rn pat f1": ["f1"],
+                 "sed -n 1,5p f1": ["f1"], "sed -e s/a/b/ f1": ["f1"],
                  "awk -F, '{print $1}' f1": ["f1"], "awk -f prog.awk f1": ["f1"],
                  "file -f names.txt": ["names.txt"], "cat -- -x": ["-x"],
                  "printf '%s' f1": [], "echo wiki": []}
